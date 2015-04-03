@@ -102,13 +102,17 @@ class RangeWidget(QtGui.QWidget):
             self.setFocusPolicy(QtCore.Qt.NoFocus)
             self.setRange(0, ranges.ds_steps-1)
             self.setValue(ranges.default)
-            self.setPageStep(ranges.step)
-            self.setSingleStep(ranges.step)
-            self.setTickPosition(1)
-            self.setTickInterval(ranges.ds_steps)
-            self.setTracking(False)
-            self.setInvertedControls(True)
+            self.setPageStep(1)
+            self.setSingleStep(1)
+            self.setTickPosition(2)
             self.valueChanged.connect(slot)
+
+        def mousePressEvent(self, event):
+            if((event.button() == QtCore.Qt.LeftButton)):
+                newVal = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+                self.setValue(newVal)
+                event.accept()
+            QtGui.QSlider.mousePressEvent(self, event)
 
     class Counter(QtGui.QDoubleSpinBox):
         """ Creates the range using a counter """
