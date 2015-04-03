@@ -90,8 +90,8 @@ class RangeWidget(QtGui.QWidget):
             QtGui.QDial.__init__(self, parent)
             self.setRange(0, ranges.ds_steps-1)
             self.setSingleStep(ranges.step)
+            self.setNotchTarget(1)
             self.setNotchesVisible(True)
-            self.setNotchTarget(ranges.step)
             temp = [abs(x-ranges.default) for x in ranges.ds_vals]
             self.setValue(temp.index(min(temp)))
             self.valueChanged.connect(slot)
