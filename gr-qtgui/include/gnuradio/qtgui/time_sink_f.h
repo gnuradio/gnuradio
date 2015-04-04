@@ -149,6 +149,7 @@ namespace gr {
       virtual void enable_semilogy(bool en=true) = 0;
       virtual void enable_control_panel(bool en=true) = 0;
       virtual void enable_tags(int which, bool en) = 0;
+      virtual void disable_legend() = 0;
 
       virtual int nsamps() const = 0;
       virtual void reset() = 0;

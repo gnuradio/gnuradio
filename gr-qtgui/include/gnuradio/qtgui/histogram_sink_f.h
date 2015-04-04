@@ -129,6 +129,7 @@ namespace gr {
       virtual void set_line_alpha(int which, double alpha) = 0;
       virtual void set_nsamps(const int newsize) = 0;
       virtual void set_bins(const int bins) = 0;
+      virtual void disable_legend() = 0;
     };
 
   } /* namespace qtgui */
