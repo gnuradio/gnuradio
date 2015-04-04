@@ -84,9 +84,9 @@ namespace gr {
 
     int
     repack_bits_bb_impl::work (int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
+                               gr_vector_int &ninput_items,
+                               gr_vector_const_void_star &input_items,
+                               gr_vector_void_star &output_items)
     {
       gr::thread::scoped_lock guard(d_setlock);
       const unsigned char *in = (const unsigned char *) input_items[0];
