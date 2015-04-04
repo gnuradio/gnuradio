@@ -197,7 +197,7 @@ namespace gr {
     {
       if(d_detail->d_max_output_buffer.size() == 0)
         throw std::length_error("hier_block2::max_output_buffer: out_sig greater than zero, buff_vect isn't");
-      for(size_t idx = 0; idx < output_signature()->max_streams(); idx++){
+      for(size_t idx = 0; idx < (size_t)output_signature()->max_streams(); idx++){
         d_detail->d_max_output_buffer[idx] = max_output_buffer;
       }
     }
@@ -228,7 +228,7 @@ namespace gr {
     {
       if(d_detail->d_min_output_buffer.size() == 0)
         throw std::length_error("hier_block2::min_output_buffer: out_sig greater than zero, buff_vect isn't");
-      for(size_t idx = 0; idx < output_signature()->max_streams(); idx++){
+      for(size_t idx = 0; idx < (size_t)output_signature()->max_streams(); idx++){
         d_detail->d_min_output_buffer[idx] = min_output_buffer;
       }
     }
@@ -249,7 +249,7 @@ namespace gr {
   {
     if(d_detail->d_min_output_buffer.size() > 0){
       bool all_equal = true;
-      for(int idx = 1; (idx < d_detail->d_min_output_buffer.size()) && all_equal; idx++){
+      for(int idx = 1; (idx < (int)d_detail->d_min_output_buffer.size()) && all_equal; idx++){
         if(d_detail->d_min_output_buffer[0] != d_detail->d_min_output_buffer[idx])
           all_equal = false;
       }
@@ -264,7 +264,7 @@ namespace gr {
   {
     if(d_detail->d_max_output_buffer.size() > 0){
       bool all_equal = true;
-      for(int idx = 1; (idx < d_detail->d_max_output_buffer.size()) && all_equal; idx++){
+      for(int idx = 1; (idx < (int)d_detail->d_max_output_buffer.size()) && all_equal; idx++){
         if(d_detail->d_max_output_buffer[0] != d_detail->d_max_output_buffer[idx])
           all_equal = false;
       }

@@ -130,7 +130,7 @@ namespace gr {
         } else {
             nblocks = nbits_in / d_decoder->get_input_size();
             nbits_out = nblocks * d_decoder->get_output_size();
-            if(nblocks * d_decoder->get_input_size() != nbits_in){
+            if((size_t)(nblocks * d_decoder->get_input_size()) != nbits_in){
                 throw std::runtime_error("bad block multiple in!");
             }
         }

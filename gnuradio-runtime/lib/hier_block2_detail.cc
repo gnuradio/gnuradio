@@ -552,7 +552,7 @@ namespace gr {
         if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
-            if(bb->min_output_buffer(0) != min_buff){
+            if((size_t)bb->min_output_buffer(0) != min_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
                 std::cout << "Block (" << (bb->alias()).c_str()
                           << ") min_buff (" << min_buff
@@ -579,7 +579,7 @@ namespace gr {
         if(max_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
-            if(bb->max_output_buffer(0) != max_buff){
+            if((size_t)bb->max_output_buffer(0) != max_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
                 std::cout << "Block (" << (bb->alias()).c_str()
                           << ") max_buff (" << max_buff
@@ -614,7 +614,7 @@ namespace gr {
         if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
-            if(bb->min_output_buffer(0) != min_buff){
+            if((size_t)bb->min_output_buffer(0) != min_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
                 std::cout << "Block (" << (bb->alias()).c_str()
                           << ") min_buff (" << min_buff
@@ -641,7 +641,7 @@ namespace gr {
         if(max_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
-            if(bb->max_output_buffer(0) != max_buff){
+            if((size_t)bb->max_output_buffer(0) != max_buff){
               if(HIER_BLOCK2_DETAIL_DEBUG)
                 std::cout << "Block (" << (bb->alias()).c_str()
                           << ") max_buff (" << max_buff
