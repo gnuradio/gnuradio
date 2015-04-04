@@ -99,6 +99,7 @@ MENU_BAR_LIST = (
         Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
         Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
         Actions.TOGGLE_SNAP_TO_GRID,
+        Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
         None,
         Actions.ERRORS_WINDOW_DISPLAY,
         Actions.FIND_BLOCKS,

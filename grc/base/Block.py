@@ -185,6 +185,17 @@ class Block(Element):
                              })
                     ))
 
+        self.get_params().append(self.get_parent().get_parent().Param(
+                block=self,
+                n=odict({'name': 'Comment',
+                         'key': 'comment',
+                         'type': 'multiline',
+                         'hide': 'part',
+                         'value': '',
+                         'tab': ADVANCED_PARAM_TAB
+                         })
+                ))
+
 
     def back_ofthe_bus(self, portlist):
         portlist.sort(key=lambda p: p._type == 'bus')
@@ -226,6 +237,7 @@ class Block(Element):
     def get_children(self): return self.get_ports() + self.get_params()
     def get_children_gui(self): return self.get_ports_gui() + self.get_params()
     def get_block_wrapper_path(self): return self._block_wrapper_path
+    def get_comment(self): return self.get_param('comment').get_value()
 
     ##############################################
     # Access Params
