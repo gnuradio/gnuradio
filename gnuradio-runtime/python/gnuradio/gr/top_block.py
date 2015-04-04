@@ -22,7 +22,7 @@
 from runtime_swig import top_block_swig, \
     top_block_wait_unlocked, top_block_run_unlocked, \
     top_block_start_unlocked, top_block_stop_unlocked, \
-    dot_graph_tb
+    top_block_unlock_unlocked, dot_graph_tb
 
 #import gnuradio.gr.gr_threading as _threading
 import gr_threading as _threading
@@ -117,6 +117,12 @@ class top_block(hier_block2):
         """
         self.start(max_noutput_items)
         self.wait()
+
+    def unlock(self):
+        """
+        Release lock and continue execution of flow-graph.
+        """
+        top_block_unlock_unlocked(self._impl)
 
     def wait(self):
         """
