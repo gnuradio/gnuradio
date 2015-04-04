@@ -35,6 +35,9 @@ import pango
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
 <span foreground="$foreground" font_desc="$font"><b>$encode($block.get_name())</b></span>"""
+COMMENT_MARKUP_TMPL="""\
+#set $foreground = $block.get_enabled() and '#444' or '#888'
+<span foreground="$foreground" font_desc="$font">$encode($block.get_comment())</span>"""
 
 class Block(Element):
     """The graphical signal block."""
@@ -68,6 +71,7 @@ class Block(Element):
             })
         ))
         Element.__init__(self)
+        self._comment_pixmap = None
 
     def get_coordinate(self):
         """
@@ -203,6 +207,22 @@ class Block(Element):
                 for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ]
         ))
+        self.create_comment_label()
+
+    def create_comment_label(self):
+        comment = self.get_comment()
+        if comment:
+            layout = gtk.DrawingArea().create_pango_layout('')
+            layout.set_markup(Utils.parse_template(COMMENT_MARKUP_TMPL, block=self, font=BLOCK_FONT))
+            width, height = layout.get_pixel_size()
+            pixmap = self.get_parent().new_pixmap(width, height)
+            gc = pixmap.new_gc()
+            gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)
+            pixmap.draw_rectangle(gc, True, 0, 0, width, height)
+            pixmap.draw_layout(gc, 0, 0, layout)
+            self._comment_pixmap = pixmap
+        else:
+            self._comment_pixmap = None
 
     def draw(self, gc, window):
         """
@@ -243,3 +263,11 @@ class Block(Element):
             port_selected = port.what_is_selected(coor, coor_m)
             if port_selected: return port_selected
         return Element.what_is_selected(self, coor, coor_m)
+
+    def draw_comment(self, gc, window):
+        if not self._comment_pixmap:
+            return
+
+        x, y = self.get_coordinate()
+        window.draw_drawable(gc, self._comment_pixmap, 0, 0, x,
+                             y + self.H + BLOCK_LABEL_PADDING, -1, -1)
