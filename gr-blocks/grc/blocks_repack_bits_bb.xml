@@ -42,7 +42,6 @@
     </option>
   </param>
 
-
   <param>
     <name>Endianness</name>
     <key>endianness</key>
@@ -51,7 +50,7 @@
     <hide>part</hide>
     <option>
       <name>MSB</name>
-     <key>gr.GR_MSB_FIRST</key>
+      <key>gr.GR_MSB_FIRST</key>
     </option>
     <option>
       <name>LSB</name>
