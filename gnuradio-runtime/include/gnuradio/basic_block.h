@@ -61,7 +61,6 @@ namespace gr {
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
 
   private:
-    //msg_handler_t d_msg_handler;
     typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comparator> d_msg_handlers_t;
     d_msg_handlers_t d_msg_handlers;
 
