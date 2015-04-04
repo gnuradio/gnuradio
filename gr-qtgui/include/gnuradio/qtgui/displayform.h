@@ -86,6 +86,8 @@ public slots:
 
   void saveFigure();
 
+  void disableLegend();
+
 private slots:
   virtual void newData(const QEvent*) = 0;
   virtual void autoScale(bool) = 0;

@@ -28,6 +28,7 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/timecontrolpanel.h
     ${qtgui_mod_includedir}/timerasterdisplayform.h
     ${qtgui_mod_includedir}/freqdisplayform.h
+    ${qtgui_mod_includedir}/freqcontrolpanel.h
     ${qtgui_mod_includedir}/constellationdisplayform.h
     ${qtgui_mod_includedir}/waterfalldisplayform.h
     ${qtgui_mod_includedir}/histogramdisplayform.h
@@ -72,6 +73,7 @@ set(qtgui_sources
     timecontrolpanel.cc
     timerasterdisplayform.cc
     freqdisplayform.cc
+    freqcontrolpanel.cc
     constellationdisplayform.cc
     histogramdisplayform.cc
     numberdisplayform.cc

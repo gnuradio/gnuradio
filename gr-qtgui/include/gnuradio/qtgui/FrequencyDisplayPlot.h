@@ -70,9 +70,6 @@ public:
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
 
-  void clearMaxData();
-  void clearMinData();
-
   void replot();
 
   void setYaxis(double min, double max);
@@ -117,8 +114,12 @@ public slots:
   void onPickerPointSelected6(const QPointF & p);
 
   void setAutoScale(bool state);
+  void setAutoScaleShot();
 
   void setPlotPosHalf(bool half);
+
+  void clearMaxData();
+  void clearMinData();
 
 private:
   void _resetXAxisPoints();
@@ -164,6 +165,8 @@ private:
   double d_peak_amplitude;
 
   double d_noise_floor_amplitude;
+
+  bool d_autoscale_shot;
 };
 
 #endif /* FREQUENCY_DISPLAY_PLOT_HPP */
