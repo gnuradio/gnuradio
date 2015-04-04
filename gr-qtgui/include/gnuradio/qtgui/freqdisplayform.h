@@ -104,15 +104,22 @@ public slots:
   void notifyFFTWindow(const QString &s);
   void notifyMaxHold(bool en);
   void notifyMinHold(bool en);
+  void notifyTriggerMode(const QString &mode);
+  void notifyTriggerLevelPlus();
+  void notifyTriggerLevelMinus();
+
 
 signals:
   void signalFFTSize(int size);
   void signalFFTWindow(gr::filter::firdes::win_type win);
-  void signalReplot();
   void signalClearMaxData();
   void signalClearMinData();
   void signalSetMaxFFTVisible(bool en);
   void signalSetMinFFTVisible(bool en);
+  void signalTriggerMode(gr::qtgui::trigger_mode mode);
+  void signalTriggerLevel(float level);
+  void signalReplot();
+
 
 private slots:
   void newData(const QEvent *updateEvent);

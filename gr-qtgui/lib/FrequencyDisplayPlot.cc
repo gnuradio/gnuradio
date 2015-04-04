@@ -234,6 +234,12 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 
 #endif /* QWT_VERSION < 0x060100 */
 
+  d_trigger_line = new QwtPlotMarker();
+  d_trigger_line->setLineStyle(QwtPlotMarker::HLine);
+  d_trigger_line->setLinePen(QPen(Qt::red, 0.6, Qt::DashLine));
+  d_trigger_line->setRenderHint(QwtPlotItem::RenderAntialiased);
+  d_trigger_line->setXValue(0.0);
+  d_trigger_line->setYValue(0.0);
 
   replot();
 }
@@ -734,6 +740,23 @@ const QColor
 FrequencyDisplayPlot::getMarkerCFColor() const
 {
   return d_marker_cf_color;
+}
+
+void
+FrequencyDisplayPlot::attachTriggerLine(bool en)
+{
+  if(en) {
+    d_trigger_line->attach(this);
+  }
+  else {
+    d_trigger_line->detach();
+  }
+}
+
+void
+FrequencyDisplayPlot::setTriggerLine(double level)
+{
+  d_trigger_line->setYValue(level);
 }
 
 #endif /* FREQUENCY_DISPLAY_PLOT_C */

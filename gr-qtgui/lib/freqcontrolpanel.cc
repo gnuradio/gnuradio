@@ -99,6 +99,25 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   d_fft_win_combo->addItem("Kaiser");
   d_fft_win_combo->addItem("Flat-top");
 
+  // Trigger box setup
+  d_trigger_box = new QGroupBox("Trigger");
+  d_trigger_layout = new QVBoxLayout;
+  d_trigger_mode_combo = new QComboBox();
+  d_trigger_mode_combo->addItem("Free");
+  d_trigger_mode_combo->addItem("Auto");
+  d_trigger_mode_combo->addItem("Normal");
+  d_trigger_mode_combo->addItem("Tag");
+
+  d_trigger_level_layout = new QHBoxLayout;
+  d_trigger_level_label = new QLabel("Level:");
+  d_trigger_level_plus = new QPushButton("+");
+  d_trigger_level_minus = new QPushButton("-");
+  d_trigger_level_plus->setMaximumWidth(30);
+  d_trigger_level_minus->setMaximumWidth(30);
+  d_trigger_level_layout->addWidget(d_trigger_level_label);
+  d_trigger_level_layout->addWidget(d_trigger_level_plus);
+  d_trigger_level_layout->addWidget(d_trigger_level_minus);
+
 
   // Set up the boxes into the layout
   d_trace_layout->addWidget(d_maxhold_check);
@@ -116,9 +135,14 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   d_fft_layout->addWidget(d_fft_win_combo);
   d_fft_box->setLayout(d_fft_layout);
 
+  d_trigger_layout->addWidget(d_trigger_mode_combo);
+  d_trigger_layout->addLayout(d_trigger_level_layout);
+  d_trigger_box->setLayout(d_trigger_layout);
+
   addWidget(d_trace_box);
   addWidget(d_axes_box);
   addWidget(d_fft_box);
+  addWidget(d_trigger_box);
 
   addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum,
                           QSizePolicy::Expanding));
@@ -152,14 +176,25 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
 	  d_parent, SLOT(notifyFFTSize(const QString&)));
   connect(d_fft_win_combo, SIGNAL(currentIndexChanged(const QString&)),
 	  d_parent, SLOT(notifyFFTWindow(const QString&)));
+
+  connect(d_trigger_mode_combo, SIGNAL(currentIndexChanged(const QString&)),
+	  d_parent, SLOT(notifyTriggerMode(const QString&)));
+  connect(d_trigger_level_plus, SIGNAL(pressed(void)),
+	  d_parent, SLOT(notifyTriggerLevelPlus()));
+  connect(d_trigger_level_minus, SIGNAL(pressed(void)),
+	  d_parent, SLOT(notifyTriggerLevelMinus()));
 }
 
 FreqControlPanel::~FreqControlPanel()
 {
   removeWidget(d_axes_box);
   removeWidget(d_trace_box);
+  removeWidget(d_fft_box);
+  removeWidget(d_trigger_box);
   delete d_axes_box;
   delete d_trace_box;
+  delete d_fft_box;
+  delete d_trigger_box;
 
   // All other children of the boxes are automatically deleted.
 }
@@ -216,4 +251,10 @@ FreqControlPanel::toggleFFTWindow(const gr::filter::firdes::win_type win)
     d_fft_win_combo->setCurrentIndex(6);
   else if(win == gr::filter::firdes::WIN_FLATTOP)
     d_fft_win_combo->setCurrentIndex(7);
+}
+
+void
+FreqControlPanel::toggleTriggerMode(gr::qtgui::trigger_mode mode)
+{
+  d_trigger_mode_combo->setCurrentIndex(static_cast<int>(mode));
 }

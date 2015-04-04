@@ -51,6 +51,8 @@ public slots:
   void toggleFFTSize(int val);
   void toggleFFTWindow(const gr::filter::firdes::win_type win);
 
+  void toggleTriggerMode(gr::qtgui::trigger_mode mode);
+
 signals:
   void signalAvgSlider(float val);
   void signalAvg(bool en);
@@ -89,6 +91,13 @@ private:
   QComboBox *d_fft_win_combo;
 
   int d_slider_max, d_slider_min, d_slider_step;
+
+  QGroupBox *d_trigger_box;
+  QVBoxLayout *d_trigger_layout;
+  QHBoxLayout *d_trigger_level_layout;
+  QLabel *d_trigger_level_label;
+  QComboBox *d_trigger_mode_combo;
+  QPushButton *d_trigger_level_plus, *d_trigger_level_minus;
 };
 
 #endif /* FREQ_CONTROL_PANEL_H */

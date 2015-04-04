@@ -110,6 +110,8 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   setTriggerLevel(0);
   connect(d_tr_level_act, SIGNAL(whichTrigger(QString)),
 	  this, SLOT(setTriggerLevel(QString)));
+  connect(this, SIGNAL(signalTriggerLevel(float)),
+	  this, SLOT(setTriggerLevel(float)));
 
   setTriggerChannel(0);
   connect(d_tr_channel_menu, SIGNAL(whichTrigger(int)),
@@ -182,11 +184,16 @@ FreqDisplayForm::setupControlPanel()
           d_controlpanel, SLOT(toggleMaxHold(bool)));
   connect(d_minhold_act, SIGNAL(triggered(bool)),
           d_controlpanel, SLOT(toggleMinHold(bool)));
+  connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
+	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
+  connect(this, SIGNAL(signalTriggerMode(gr::qtgui::trigger_mode)),
+	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
 
   d_layout->addLayout(d_controlpanel, 0, 1);
 
   d_controlpanel->toggleGrid(d_grid_act->isChecked());
   d_controlpanelmenu->setChecked(true);
+  d_controlpanel->toggleTriggerMode(getTriggerMode());
 
   emit signalFFTSize(getFFTSize());
   emit signalFFTWindow(getFFTWindowType());
@@ -401,18 +408,36 @@ FreqDisplayForm::setTriggerMode(gr::qtgui::trigger_mode mode)
 {
   d_trig_mode = mode;
   d_tr_mode_menu->getAction(mode)->setChecked(true);
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->attachTriggerLine(true);
+  }
+  else {
+    getPlot()->attachTriggerLine(false);
+  }
+
+  emit signalReplot();
+  emit signalTriggerMode(mode);
 }
 
 void
 FreqDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
 {
   // If auto or normal mode, popup trigger level box to set
-  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM))
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
     d_tr_level_act->activate(QAction::Trigger);
+    getPlot()->attachTriggerLine(true);
+  }
+  else {
+    getPlot()->attachTriggerLine(false);
+  }
 
   // if tag mode, popup tag key box to set
   if(d_trig_mode == gr::qtgui::TRIG_MODE_TAG)
     d_tr_tag_key_act->activate(QAction::Trigger);
+
+  emit signalReplot();
+  emit signalTriggerMode(mode);
 }
 
 gr::qtgui::trigger_mode
@@ -425,6 +450,12 @@ void
 FreqDisplayForm::setTriggerLevel(QString s)
 {
   d_trig_level = s.toFloat();
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->setTriggerLine(d_trig_level);
+  }
+
+  emit signalReplot();
 }
 
 void
@@ -432,6 +463,12 @@ FreqDisplayForm::setTriggerLevel(float level)
 {
   d_trig_level = level;
   d_tr_level_act->setText(QString().setNum(d_trig_level));
+
+  if((d_trig_mode == gr::qtgui::TRIG_MODE_AUTO) || (d_trig_mode == gr::qtgui::TRIG_MODE_NORM)) {
+    getPlot()->setTriggerLine(d_trig_level);
+  }
+
+  emit signalReplot();
 }
 
 float
@@ -445,6 +482,7 @@ FreqDisplayForm::setTriggerChannel(int channel)
 {
   d_trig_channel = channel;
   d_tr_channel_menu->getAction(d_trig_channel)->setChecked(true);
+  emit signalReplot();
 }
 
 int
@@ -464,6 +502,7 @@ FreqDisplayForm::setTriggerTagKey(const std::string &key)
 {
   d_trig_tag_key = key;
   d_tr_tag_key_act->setText(QString().fromStdString(d_trig_tag_key));
+  emit signalReplot();
 }
 
 std::string
@@ -605,4 +644,36 @@ FreqDisplayForm::notifyMinHold(bool en)
   d_minhold_act->setChecked(en);
   emit signalClearMinData();
   emit signalSetMinFFTVisible(en);
+}
+
+
+void
+FreqDisplayForm::notifyTriggerMode(const QString &mode)
+{
+  if(mode == "Free") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
+  }
+  else if(mode == "Auto") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_AUTO);
+  }
+  else if(mode == "Normal") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_NORM);
+  }
+  else if(mode == "Tag") {
+    setTriggerMode(gr::qtgui::TRIG_MODE_TAG);
+    updateTrigger(gr::qtgui::TRIG_MODE_TAG);
+  }
+}
+
+
+void
+FreqDisplayForm::notifyTriggerLevelPlus()
+{
+  emit signalTriggerLevel(getTriggerLevel() + 1);
+}
+
+void
+FreqDisplayForm::notifyTriggerLevelMinus()
+{
+  emit signalTriggerLevel(getTriggerLevel() - 1);
 }

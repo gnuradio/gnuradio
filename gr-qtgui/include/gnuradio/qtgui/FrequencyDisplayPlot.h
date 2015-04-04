@@ -121,6 +121,9 @@ public slots:
   void clearMaxData();
   void clearMinData();
 
+  void attachTriggerLine(bool en);
+  void setTriggerLine(double value);
+
 private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
@@ -167,6 +170,8 @@ private:
   double d_noise_floor_amplitude;
 
   bool d_autoscale_shot;
+
+  QwtPlotMarker *d_trigger_line;
 };
 
 #endif /* FREQUENCY_DISPLAY_PLOT_HPP */
