@@ -39,7 +39,6 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.tpc_encoder_make($row_
             <name>2</name>
             <key>2</key>
         </option>
-
     </param>
 
     <param>

@@ -54,18 +54,18 @@ class FEC_API tpc_encoder : public generic_encoder {
     int inputSizeWithPad;
     std::vector<unsigned char> inputWithPad;
     
-    std::vector< std::vector<float> > rowEncodedBits;
+    std::vector< std::vector<uint8_t> > rowEncodedBits;
     std::vector<unsigned char> rowToEncode;
     int numRowsToEncode;
-    std::vector<float> rowEncoded_block;
+    std::vector<uint8_t> rowEncoded_block;
     
-    std::vector< std::vector<float> > colEncodedBits;
+    std::vector< std::vector<uint8_t> > colEncodedBits;
     std::vector<unsigned char> colToEncode;
     int numColsToEncode;
-    std::vector<float> colEncoded_block;
+    std::vector<uint8_t> colEncoded_block;
     
-    void block_conv_encode( std::vector<float> &output,
-                               std::vector<unsigned char> input, 
+    void block_conv_encode( std::vector<uint8_t> &output,
+                               std::vector<uint8_t> input, 
                                std::vector< std::vector<int> > transOutputVec,
                                std::vector< std::vector<int> > transNextStateVec,
                                std::vector<int> tail,

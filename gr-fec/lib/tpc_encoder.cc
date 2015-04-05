@@ -47,7 +47,7 @@ tpc_encoder::tpc_encoder (std::vector<int> row_polys, std::vector<int> col_polys
     outputSize = ((d_krow+rowEncoder_m)*rowEncoder_n)*((d_kcol+colEncoder_m)*colEncoder_n) - d_bval;
     
     //DEBUG_PRINT("inputSize=%d outputSize=%d\n", inputSize, outputSize);
-    fp = fopen("c_encoder_output.txt", "w");
+    //fp = fopen("c_encoder_output.txt", "w");
     
     // resize internal matrices
     rowNumStates = 1 << (rowEncoder_K-1);       // 2^(row_mm)
@@ -80,12 +80,12 @@ tpc_encoder::tpc_encoder (std::vector<int> row_polys, std::vector<int> col_polys
     numRowsToEncode = inputSizeWithPad/d_krow;      // this should be OK w/ integer division -- TODO: check this?
     rowToEncode.resize(d_krow,0);
     rowEncoded_block.resize(d_krow+(rowEncoder_m*rowEncoder_n), 0);
-    rowEncodedBits.resize(d_kcol, std::vector<float>(rowEncoder_m*rowEncoder_n,0) );
+    rowEncodedBits.resize(d_kcol, std::vector<uint8_t>(rowEncoder_m*rowEncoder_n,0) );
     
     numColsToEncode = d_krow+(rowEncoder_m*rowEncoder_n);
     colToEncode.resize(d_kcol,0);
     colEncoded_block.resize(d_kcol+(colEncoder_m*colEncoder_n), 0);
-    colEncodedBits.resize(d_krow+(rowEncoder_m*rowEncoder_n), std::vector<float>(colEncoder_m*colEncoder_n,0) );
+    colEncodedBits.resize(d_krow+(rowEncoder_m*rowEncoder_n), std::vector<uint8_t>(colEncoder_m*colEncoder_n,0) );
 }
 
 int tpc_encoder::get_output_size() {
@@ -96,8 +96,8 @@ int tpc_encoder::get_input_size() {
     return inputSize;
 }
 
-void tpc_encoder::block_conv_encode( std::vector<float> &output,
-                               std::vector<unsigned char> input, 
+void tpc_encoder::block_conv_encode( std::vector<uint8_t> &output,
+                               std::vector<uint8_t> input, 
                                std::vector< std::vector<int> > transOutputVec,
                                std::vector< std::vector<int> > transNextStateVec,
                                std::vector<int> tail,
@@ -123,7 +123,7 @@ void tpc_encoder::block_conv_encode( std::vector<float> &output,
 
         // Assign to output : TODO: investigate using memcpy for this?
         for (jj=0;jj<nn;jj++) {
-            output[nn*ii+jj] = (float) binVec[jj];
+            output[nn*ii+jj] = binVec[jj];
         }
     }
 
@@ -140,17 +140,16 @@ void tpc_encoder::block_conv_encode( std::vector<float> &output,
 
         // Assign to output : TODO: investigate using memcpy for this?
         for (jj=0;jj<nn;jj++) {
-            output[nn*ii+jj] = (float) binVec[jj];
+            output[nn*ii+jj] = binVec[jj];
         }
     }
 }
 
 void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
-    const unsigned char *in = (const unsigned char *) inBuffer;
-    float *out = (float *) outBuffer;
+    const uint8_t *in = (const uint8_t *) inBuffer;
+    uint8_t *out = (uint8_t *) outBuffer;
 
     int ii, jj;     // indexing var
-    int tmp;
     
     //DEBUG_PRINT_UCHAR_ARRAY(in, inputSize);
     
@@ -182,13 +181,12 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
                            rowEncoder_n);
         
         //DEBUG_PRINT("Row Encoded Block=[%d] -->\n",ii);
-        tmp = rowEncoded_block.size();
         //DEBUG_PRINT_FLOAT_ARRAY_AS_UCHAR(&rowEncoded_block[0], tmp);
         //DEBUG_PRINT_F(fp, "Row Encoded Block=[%d] -->\n",ii);
         //DEBUG_PRINT_FLOAT_ARRAY_AS_UCHAR_F(fp, &rowEncoded_block[0], tmp);
         
         // store only the encoded bits, b/c we read out the data in a special way
-        memcpy(&rowEncodedBits[ii][0], &rowEncoded_block[d_krow], sizeof(float)*(rowEncoder_m*rowEncoder_n));
+        memcpy(&rowEncodedBits[ii][0], &rowEncoded_block[d_krow], sizeof(uint8_t)*(rowEncoder_m*rowEncoder_n));
         
 //         DEBUG_PRINT("Row Encoded Bits");
 //         tmp = rowEncoder_m*rowEncoder_n;
@@ -219,13 +217,12 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
                            colEncoder_n);
         
         //DEBUG_PRINT("Col Encoded Block=[%d] -->\n",ii);
-        tmp = colEncoded_block.size();
         //DEBUG_PRINT_FLOAT_ARRAY_AS_UCHAR(&colEncoded_block[0], tmp);
         //DEBUG_PRINT_F(fp, "Col Encoded Block=[%d] -->\n",ii);
         //DEBUG_PRINT_FLOAT_ARRAY_AS_UCHAR_F(fp, &colEncoded_block[0], tmp);
         
         // store only the encoded bits, b/c we read the data out in a special way
-        memcpy(&colEncodedBits[ii][0], &colEncoded_block[d_kcol], sizeof(float)*(colEncoder_m*colEncoder_n));
+        memcpy(&colEncodedBits[ii][0], &colEncoded_block[d_kcol], sizeof(uint8_t)*(colEncoder_m*colEncoder_n));
         
 //         DEBUG_PRINT("Col Encoded Bits");
 //         tmp = colEncoder_m*colEncoder_n;
@@ -254,7 +251,6 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
                            colEncoder_n);
         
         //DEBUG_PRINT("Col Encoded Block=[%d] -->\n",ii+numDataColsToEncode);
-        tmp = colEncoded_block.size();
         //DEBUG_PRINT_FLOAT_ARRAY_AS_UCHAR(&colEncoded_block[0], tmp);
         
         //DEBUG_PRINT_F(fp, "Col Encoded Block=[%d] -->\n",ii+numDataColsToEncode);
@@ -262,7 +258,7 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
         
         
         // store only the encoded bits, b/c we read the data out in a special way
-        memcpy(&colEncodedBits[ii+numDataColsToEncode][0], &colEncoded_block[d_kcol], sizeof(float)*(colEncoder_m*colEncoder_n));
+        memcpy(&colEncodedBits[ii+numDataColsToEncode][0], &colEncoded_block[d_kcol], sizeof(uint8_t)*(colEncoder_m*colEncoder_n));
         
 //         DEBUG_PRINT("Col Encoded Bits");
 //         tmp = colEncoder_m*colEncoder_n;
@@ -270,8 +266,7 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
     }
     
     unsigned char* inputDataPtr;
-    float *outputDataPtr = out;
-    float *tmpPtr = outputDataPtr;
+    uint8_t *outputDataPtr = out;
     
     int curRowInRowEncodedBits = 0;
     // read out the data along the rows into the "out" array
@@ -280,29 +275,27 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
     inputDataPtr =  &inputWithPad[d_bval];
     int firstRowRemainingBits = d_krow-d_bval;
     for(ii=0; ii<firstRowRemainingBits; ii++) {
-        *outputDataPtr++ = (float)(*inputDataPtr++);
+        *outputDataPtr++ = (uint8_t)(*inputDataPtr++);
     }
     
     // copy the encoded bits
     memcpy(outputDataPtr, &rowEncodedBits[curRowInRowEncodedBits++][0], 
-            sizeof(float)*(rowEncoder_m*rowEncoder_n));
+            sizeof(uint8_t)*(rowEncoder_m*rowEncoder_n));
     
     outputDataPtr += (rowEncoder_m*rowEncoder_n);
-    tmpPtr = outputDataPtr;
     
     // copy out the rest of the data
     for(ii=1; ii<d_kcol; ii++) {        // ii starts at 1, b/c we already did idx=0
         // copy systematic bits
         for(jj=0; jj<d_krow; jj++) {
-            *outputDataPtr++ = (float)(*inputDataPtr++);
+            *outputDataPtr++ = (uint8_t)(*inputDataPtr++);
         }
         
         // copy the encoded bits
         memcpy(outputDataPtr, &rowEncodedBits[curRowInRowEncodedBits++][0], 
-               sizeof(float)*(rowEncoder_m*rowEncoder_n));
+               sizeof(uint8_t)*(rowEncoder_m*rowEncoder_n));
         
         outputDataPtr += (rowEncoder_m*rowEncoder_n);
-        tmpPtr = outputDataPtr;
     }
     
     // copy the encoded cols

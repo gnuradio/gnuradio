@@ -49,7 +49,7 @@ tpc_decoder::tpc_decoder (std::vector<int> row_polys, std::vector<int> col_polys
     outputSize = (d_krow*d_kcol - (d_bval+d_qval));
     
     //DEBUG_PRINT("inputSize=%d outputSize=%d\n", inputSize, outputSize);
-    fp = fopen("c_decoder_output.txt", "w");
+    //fp = fopen("c_decoder_output.txt", "w");
     
     rowNumStates = 1 << (rowEncoder_m);       // 2^(row_mm)
     colNumStates = 1 << (colEncoder_m);       // 2^(col_mm)
