@@ -125,8 +125,6 @@ public:
   DisplayPlot(int nplots, QWidget*);
   virtual ~DisplayPlot();
 
-  void disableLegend();
-
   virtual void replot() = 0;
 
   const QColor getLineColor1 () const;
@@ -191,6 +189,7 @@ public:
   // void PlotNewData(...);
 
 public slots:
+  virtual void disableLegend();
   virtual void setYaxis(double min, double max);
   virtual void setXaxis(double min, double max);
   virtual void setLineLabel(int which, QString label);
