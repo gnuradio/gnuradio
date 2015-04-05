@@ -64,6 +64,7 @@ public slots:
   void setNPoints(const int);
   void setStem(bool en);
   void autoScale(bool en);
+  void autoScaleShot();
   void setSemilogx(bool en);
   void setSemilogy(bool en);
   void tagMenuSlot(bool en);

@@ -57,6 +57,7 @@ public slots:
 		     const std::string &strunits);
 
   void setAutoScale(bool state);
+  void setAutoScaleShot();
   void setSemilogx(bool en);
   void setSemilogy(bool en);
 
@@ -82,6 +83,7 @@ private:
 
   bool d_semilogx;
   bool d_semilogy;
+  bool d_autoscale_shot;
 
   std::vector< std::vector<QwtPlotMarker*> > d_tag_markers;
   std::vector<bool> d_tag_markers_en;
