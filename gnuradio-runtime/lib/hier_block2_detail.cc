@@ -516,8 +516,9 @@ namespace gr {
 
     // Only run setup_rpc if ControlPort config param is enabled.
     bool ctrlport_on = prefs::singleton()->get_bool("ControlPort", "on", false);
-    
-    size_t min_buff(0), max_buff(0);
+
+    int min_buff = 0;
+    int max_buff = 0;
     // Determine how the buffers should be set
     bool set_all_min_buff = d_owner->all_min_output_buffer_p();
     bool set_all_max_buff = d_owner->all_max_output_buffer_p();
