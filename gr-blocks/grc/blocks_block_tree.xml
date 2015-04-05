@@ -221,4 +221,8 @@
       <block>blocks_vco_f</block>
       <block>blocks_vco_c</block>
    </cat>
+   <cat>
+      <name>Variables</name>
+      <block>variable_tag_object</block>
+   </cat>
 </cat>

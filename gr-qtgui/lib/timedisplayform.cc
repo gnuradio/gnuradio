@@ -308,6 +308,13 @@ TimeDisplayForm::autoScale(bool en)
 }
 
 void
+TimeDisplayForm::autoScaleShot()
+{
+  getPlot()->setAutoScaleShot();
+  emit signalReplot();
+}
+
+void
 TimeDisplayForm::setSemilogx(bool en)
 {
   d_semilogx = en;

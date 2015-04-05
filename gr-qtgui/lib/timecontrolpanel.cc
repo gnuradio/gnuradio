@@ -29,7 +29,7 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
   // Set up the box for axes items
   d_axes_box = new QGroupBox("Axes");
   d_axes_layout = new QVBoxLayout;
-  d_autorange_check = new QCheckBox("Autorange");
+  d_autoscale_check = new QCheckBox("Autoscale");
   d_grid_check = new QCheckBox("Grid");
 
   d_yoff_layout = new QHBoxLayout;
@@ -96,9 +96,15 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
   d_trigger_delay_layout->addWidget(d_trigger_delay_plus);
   d_trigger_delay_layout->addWidget(d_trigger_delay_minus);
 
+  // Set up the box for other items
+  d_extras_box = new QGroupBox("Extras");
+  d_extras_layout = new QVBoxLayout;
+  d_autoscale_button = new QPushButton("Autoscale");
+  d_stop_button = new QPushButton("Stop");
+  d_stop_button->setCheckable(true);
 
   // Set up the boxes into the layout
-  d_axes_layout->addWidget(d_autorange_check);
+  d_axes_layout->addWidget(d_autoscale_check);
   d_axes_layout->addWidget(d_grid_check);
   d_axes_layout->addLayout(d_yoff_layout);
   d_axes_layout->addLayout(d_yrange_layout);
@@ -111,12 +117,18 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
   d_trigger_layout->addLayout(d_trigger_delay_layout);
   d_trigger_box->setLayout(d_trigger_layout);
 
+  d_extras_layout->addWidget(d_autoscale_button);
+  d_extras_layout->addWidget(d_stop_button);
+  d_extras_box->setLayout(d_extras_layout);
+
   addWidget(d_axes_box);
   addWidget(d_trigger_box);
+  addWidget(d_extras_box);
   addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum,
                           QSizePolicy::Expanding));
 
-  connect(d_autorange_check, SIGNAL(clicked(bool)),
+  // Connect up the control signals/slots
+  connect(d_autoscale_check, SIGNAL(clicked(bool)),
 	  d_parent, SLOT(autoScale(bool)));
   connect(d_grid_check, SIGNAL(clicked(bool)),
 	  d_parent, SLOT(setGrid(bool)));
@@ -146,14 +158,21 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
 	  d_parent, SLOT(notifyTriggerDelayPlus()));
   connect(d_trigger_delay_minus, SIGNAL(pressed(void)),
 	  d_parent, SLOT(notifyTriggerDelayMinus()));
+
+  connect(d_autoscale_button, SIGNAL(pressed(void)),
+	  d_parent, SLOT(autoScaleShot(void)));
+  connect(d_stop_button, SIGNAL(pressed(void)),
+          d_parent, SLOT(setStop(void)));
 }
 
 TimeControlPanel::~TimeControlPanel()
 {
   removeWidget(d_axes_box);
   removeWidget(d_trigger_box);
+  removeWidget(d_extras_box);
   delete d_axes_box;
   delete d_trigger_box;
+  delete d_extras_box;
 
   // All other children of the boxes are automatically deleted.
 }
@@ -161,7 +180,7 @@ TimeControlPanel::~TimeControlPanel()
 void
 TimeControlPanel::toggleAutoScale(bool en)
 {
-  d_autorange_check->setChecked(en);
+  d_autoscale_check->setChecked(en);
 }
 
 void
