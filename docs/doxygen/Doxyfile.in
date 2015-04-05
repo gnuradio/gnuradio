@@ -145,8 +145,6 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gnuradio-runtime/include \
                          @CMAKE_SOURCE_DIR@/gr-analog/include \
                          @CMAKE_BINARY_DIR@/gr-analog/include \
-                         @CMAKE_SOURCE_DIR@/gr-atsc/include \
-                         @CMAKE_BINARY_DIR@/gr-atsc/include \
                          @CMAKE_SOURCE_DIR@/gr-audio/include \
                          @CMAKE_BINARY_DIR@/gr-audio/include \
                          @CMAKE_SOURCE_DIR@/gr-blocks/include \
@@ -744,9 +742,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \
-                         @abs_top_builddir@/gr-atsc/swig/atsc_swig.py \
-                         @abs_top_builddir@/gr-atsc/lib/gen_encoder.py \
-                         @abs_top_builddir@/gr-atsc/python \
                          @abs_top_builddir@/gr-pager/swig/pager_swig.py \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/gr-trellis/swig/trellis_swig.py \
@@ -762,8 +757,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gnuradio-runtime/lib \
                          @abs_top_srcdir@/gr-analog/lib \
                          @abs_top_builddir@/gr-analog/lib \
-                         @abs_top_srcdir@/gr-atsc/lib \
-                         @abs_top_builddir@/gr-atsc/lib \
                          @abs_top_srcdir@/gr-audio/lib \
                          @abs_top_builddir@/gr-audio/lib \
                          @abs_top_srcdir@/gr-blocks/lib \
@@ -818,7 +811,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
                          */.svn/* \
                          */CVS/* \
                          */__init__.py \
-                         */gr-atsc/src/lib/Gr* \
                          */moc_*.cc \
                          */qa_*.cc \
                          */qa_*.h \
