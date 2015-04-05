@@ -78,6 +78,9 @@ list(APPEND gnuradio_fec_sources
   gf2vec.cc
   gf2mat.cc
   alist.cc
+  tpc_common.cc
+  tpc_decoder.cc
+  tpc_encoder.cc 
 )
 
 #Add Windows DLL resource file if using MSVC
