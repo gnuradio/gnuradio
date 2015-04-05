@@ -194,6 +194,8 @@ FreqDisplayForm::setupControlPanel()
   d_controlpanel->toggleGrid(d_grid_act->isChecked());
   d_controlpanelmenu->setChecked(true);
   d_controlpanel->toggleTriggerMode(getTriggerMode());
+  d_controlpanel->toggleMaxHold(d_maxhold_act->isChecked());
+  d_controlpanel->toggleMinHold(d_minhold_act->isChecked());
 
   emit signalFFTSize(getFFTSize());
   emit signalFFTWindow(getFFTWindowType());
