@@ -152,6 +152,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
 
   d_semilogx = false;
   d_semilogy = false;
+  d_autoscale_shot = false;
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   setXaxis(0, d_numPoints);
@@ -401,6 +402,10 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	  }
 	}
 	_autoScale(bottom, top);
+        if(d_autoscale_shot) {
+          d_autoscale_state = false;
+          d_autoscale_shot = false;
+        }
       }
 
       replot();
@@ -488,6 +493,14 @@ TimeDomainDisplayPlot::setAutoScale(bool state)
 {
   d_autoscale_state = state;
 }
+
+void
+TimeDomainDisplayPlot::setAutoScaleShot()
+{
+  d_autoscale_state = true;
+  d_autoscale_shot = true;
+}
+
 
 void
 TimeDomainDisplayPlot::setSampleRate(double sr, double units,
