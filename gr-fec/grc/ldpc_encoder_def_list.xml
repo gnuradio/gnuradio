@@ -1,9 +1,4 @@
 <?xml version="1.0"?>
-<!--
-###################################################
-# FEC MAKING FOR GREAT JUSTICE
-###################################################
- -->
 <block>
     <name>LDPC Encoder Definition</name>
     <key>variable_ldpc_encoder_def</key>
