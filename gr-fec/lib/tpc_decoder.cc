@@ -213,11 +213,11 @@ void tpc_decoder::siso_decode_row() {
     // this initialization is saying that the likelihood that the reverse sweep
     // starts at state=0 is 100%, b/c state 1, 2, 3's likelihood's are basically -inf
     // this implies that the forward trellis terminated at the 0 state
-//    for(state=1; state<max_states_row; state++) {
-//		beta_row[LL+rowEncoder_K-1][state] = -MAXLOG;
-//	}
-    // filling w/ 0xCCCC yields a value close to -MAXLOG, and memset is faster than for loops
-    memset(&beta_row[LL+rowEncoder_K-1][1], 0xCCCC, sizeof(float)*(max_states_row-1));
+    //    for(state=1; state<max_states_row; state++) {
+    //		beta_row[LL+rowEncoder_K-1][state] = -MAXLOG;
+    //	}
+    // filling w/ 0xCC yields a value close to -MAXLOG, and memset is faster than for loops
+    memset(&beta_row[LL+rowEncoder_K-1][1], 0xCC, sizeof(float)*(max_states_row-1));
     
     // initialize alpha_prime_row (current time instant), alpha_prime_row then gets updated
     // by shifting in alpha_row at the end of each time instant of processing
@@ -226,10 +226,10 @@ void tpc_decoder::siso_decode_row() {
     // the initialization below is saying that the likelihood of starting at state=0 is
     // 100%, b/c state 1, 2, 3's likelihoods are basically -inf
     // as with the beta_row array, this implies that the forward trellis started at state=0
-//    for (state=1;state<max_states_row;state++) {
-//		alpha_prime_row[state] = -MAXLOG;
-//	}
-    memset(&alpha_prime_row[1], 0xCCCC, sizeof(float)*(max_states_row-1));
+    //    for (state=1;state<max_states_row;state++) {
+    //		alpha_prime_row[state] = -MAXLOG;
+    //	}
+    memset(&alpha_prime_row[1], 0xCC, sizeof(float)*(max_states_row-1));
     
     // compute the beta_row matrix first, which is the reverse sweep (hence we start at the last
     // time instant-1 and work our way back to t=0).  we start at last time instant-1 b/c
@@ -304,7 +304,7 @@ void tpc_decoder::siso_decode_row() {
 //        for (state=0;state<max_states_row;state++) {
 //			alpha_row[state] = -MAXLOG;
 //		}
-        memset(&alpha_row[0], 0xCCCC, max_states_row*sizeof(float));
+        memset(&alpha_row[0], 0xCC, max_states_row*sizeof(float));
 
         // assign inputs
         if (k-1 < LL)
@@ -426,7 +426,7 @@ void tpc_decoder::siso_decode_col() {
 //    for(state=1; state<max_states_col; state++) {
 //		beta_col[LL+colEncoder_K-1][state] = -MAXLOG;
 //	}
-    memset(&beta_col[LL+colEncoder_K-1][1], 0xCCCC, sizeof(float)*(max_states_col-1));
+    memset(&beta_col[LL+colEncoder_K-1][1], 0xCC, sizeof(float)*(max_states_col-1));
 
     // initialize alpha_prime_col (current time instant), alpha_prime_col then gets updated
     // by shifting in alpha_col at the end of each time instant of processing
@@ -438,7 +438,7 @@ void tpc_decoder::siso_decode_col() {
 //    for (state=1;state<max_states_col;state++) {
 //		alpha_prime_col[state] = -MAXLOG;
 //	}
-    memset(&alpha_prime_col[1], 0xCCCC, sizeof(float)*(max_states_col-1));
+    memset(&alpha_prime_col[1], 0xCC, sizeof(float)*(max_states_col-1));
 
     // compute the beta_col matrix first, which is the reverse sweep (hence we start at the last
     // time instant-1 and work our way back to t=0).  we start at last time instant-1 b/c
@@ -513,7 +513,7 @@ void tpc_decoder::siso_decode_col() {
 //        for (state=0;state<max_states_col;state++) {
 //			alpha_col[state] = -MAXLOG;
 //		}
-        memset(&alpha_col[0], 0xCCCC, max_states_col*sizeof(float));
+        memset(&alpha_col[0], 0xCC, max_states_col*sizeof(float));
 
         // assign inputs
         if (k-1 < LL)
