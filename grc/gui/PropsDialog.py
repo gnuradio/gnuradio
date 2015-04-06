@@ -201,7 +201,7 @@ class PropsDialog(gtk.Dialog):
         return False  # forward the keypress
 
     def _handle_response(self, widget, response):
-        if response == gtk.RESPONSE_APPLY:
+        if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
             for tab, label, vbox in self._params_boxes:
                 vbox.forall(lambda c: c.apply_pending_changes())
             self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
