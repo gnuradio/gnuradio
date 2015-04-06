@@ -48,6 +48,11 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
   d_clicked = false;
   d_clicked_freq = 0;
 
+  d_trig_mode = gr::qtgui::TRIG_MODE_FREE;
+  d_trig_level = 0;
+  d_trig_channel = 0;
+  d_trig_tag_key = "";
+
   d_sizemenu = new FFTSizeMenu(this);
   d_avgmenu = new FFTAverageMenu(this);
   d_winmenu = new FFTWindowMenu(this);
@@ -435,7 +440,7 @@ FreqDisplayForm::updateTrigger(gr::qtgui::trigger_mode mode)
   }
 
   // if tag mode, popup tag key box to set
-  if(d_trig_mode == gr::qtgui::TRIG_MODE_TAG)
+  if((d_trig_tag_key == "") && (d_trig_mode == gr::qtgui::TRIG_MODE_TAG))
     d_tr_tag_key_act->activate(QAction::Trigger);
 
   emit signalReplot();
