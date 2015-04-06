@@ -113,7 +113,7 @@ namespace gr {
       // bits added on to the transmitted frame.
       int diff = d_decoder->rate()*d_decoder->get_input_size() - d_decoder->get_output_size();
 
-      int nbits_in = pmt::length(bits);
+      size_t nbits_in = pmt::length(bits);
       size_t nbits_out = 0;        
       size_t nblocks = 1;
       bool variable_frame_size = d_decoder->set_frame_size(nbits_out);
@@ -157,13 +157,13 @@ namespace gr {
       }
 
       if(d_decoder->get_shift() != 0) {
-        for(int n = 0; n < nbits_in; n++)
+        for(size_t n = 0; n < nbits_in; n++)
           d_tmp_f32[n] += d_decoder->get_shift();
       }
 
       if(strncmp(d_decoder->get_input_conversion(), "uchar", 5) == 0) {
         //volk_32f_s32f_convert_8i(d_tmp_u8, d_tmp_f32, 1, nbits_in);
-        for(int n = 0; n < nbits_in; n++)
+        for(size_t n = 0; n < nbits_in; n++)
           d_tmp_u8[n] = static_cast<uint8_t>(d_tmp_f32[n]);
 
         d_decoder->generic_work((void*)d_tmp_u8, (void*)u8out);
@@ -186,7 +186,7 @@ namespace gr {
       pmt::pmt_t bits(pmt::cdr(msg));
 
       size_t o0 = 0;
-      int nbits_in = pmt::length(bits);
+      size_t nbits_in = pmt::length(bits);
       int nbits_out = nbits_in*d_decoder->rate();
       int nbytes_out = nbits_out/8;
 
@@ -210,13 +210,13 @@ namespace gr {
       }
 
       if(d_decoder->get_shift() != 0) {
-        for(int n = 0; n < nbits_in; n++)
+        for(size_t n = 0; n < nbits_in; n++)
           d_tmp_f32[n] += d_decoder->get_shift();
       }
 
       if(strncmp(d_decoder->get_input_conversion(), "uchar", 5) == 0) {
         //volk_32f_s32f_convert_8i(d_tmp_u8, d_tmp_f32, 1.0, nbits_in);
-        for(int n = 0; n < nbits_in; n++)
+        for(size_t n = 0; n < nbits_in; n++)
           d_tmp_u8[n] = static_cast<uint8_t>(d_tmp_f32[n]);
 
         d_decoder->generic_work((void*)d_tmp_u8, (void*)d_bits_out);
