@@ -51,11 +51,11 @@ class FEC_API tpc_decoder : public generic_decoder {
     int get_output_size();
     int get_input_size();
 
-    unsigned int d_krow;
-    unsigned int d_kcol;
-    
     std::vector<int> d_rowpolys;
     std::vector<int> d_colpolys;
+    
+    unsigned int d_krow;
+    unsigned int d_kcol;
     
     int d_bval;
     int d_qval;
