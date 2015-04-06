@@ -116,12 +116,12 @@ void tpc_encoder::block_conv_encode( std::vector<uint8_t> &output,
                                std::vector< std::vector<int> > transOutputVec,
                                std::vector< std::vector<int> > transNextStateVec,
                                std::vector<int> tail,
-                               int KK, 
-                               int nn)
+                               size_t KK, 
+                               size_t nn)
 {
-    int outsym, ii, jj;
+    size_t outsym, ii, jj;
     int state = 0;
-    int LL = input.size();
+    size_t LL = input.size();
 
     std::vector<int> binVec(nn,0);
     
@@ -164,7 +164,7 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
     const uint8_t *in = (const uint8_t *) inBuffer;
     uint8_t *out = (uint8_t *) outBuffer;
 
-    int ii, jj;     // indexing var
+    size_t ii, jj;     // indexing var
     
     //DEBUG_PRINT_UCHAR_ARRAY(in, inputSize);
     
@@ -209,8 +209,8 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
     }
     
     // encode the column data
-    int numDataColsToEncode = d_krow;
-    int numCheckColsToEncode = numColsToEncode-numDataColsToEncode;
+    size_t numDataColsToEncode = d_krow;
+    size_t numCheckColsToEncode = numColsToEncode-numDataColsToEncode;
     for(ii=0; ii<numDataColsToEncode; ii++) {
         // populate colToEncode
         for(jj=0; jj<d_kcol; jj++) {
@@ -288,7 +288,8 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
     
     // skip B zeros & do the first row
     inputDataPtr =  &inputWithPad[d_bval];
-    int firstRowRemainingBits = d_krow-d_bval;
+    if(d_bval > d_krow){ throw std::runtime_error("bval must be < krow"); }
+    size_t firstRowRemainingBits = d_krow-d_bval;
     for(ii=0; ii<firstRowRemainingBits; ii++) {
         *outputDataPtr++ = (uint8_t)(*inputDataPtr++);
     }
