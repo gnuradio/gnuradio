@@ -111,14 +111,14 @@ namespace gr {
       const uint8_t* bits_in = pmt::u8vector_elements(bits, o0);
 
       bool variable_framesize = d_encoder->set_frame_size(nbits_in);
-      size_t nbits_out = 0;
-      size_t nblocks = 1;
+      int nbits_out = 0;
+      int nblocks = 1;
       if( variable_framesize ){
         nbits_out = d_encoder->get_output_size();
         } else {
         nblocks = nbits_in / d_encoder->get_input_size();
         if( nblocks * d_encoder->get_input_size() != nbits_in ){
-            printf("nblocks: %d, in_block_size: %d, got_input_size: %d\n",
+            printf("nblocks: %u, in_block_size: %d, got_input_size: %d\n",
                 nblocks, d_encoder->get_input_size(), nbits_in);
             throw std::runtime_error("input does not divide into code block size!");
             }
@@ -135,7 +135,7 @@ namespace gr {
         d_encoder->generic_work((void*)d_bits_in, (void*)bits_out);
       }
       else {
-        for(size_t i=0; i<nblocks; i++){
+        for(int i=0; i<nblocks; i++){
             d_encoder->generic_work((void*) &bits_in[i*d_encoder->get_input_size()], (void*)&bits_out[i*d_encoder->get_output_size()]);
             }
       }
