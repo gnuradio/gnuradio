@@ -298,8 +298,6 @@ protected:
   QList<QColor> d_trace_colors;
 
   bool d_autoscale_state;
-
-  QwtLegend d_legend;
 };
 
 #endif /* DOMAIN_DISPLAY_PLOT_H */

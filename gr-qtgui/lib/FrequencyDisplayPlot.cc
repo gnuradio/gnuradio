@@ -216,7 +216,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   // Turn off min/max hold plots in legend
 #if QWT_VERSION < 0x060100
   QWidget *w;
-  d_legend = legend();
   w = legend()->find(d_min_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
   w = legend()->find(d_max_fft_plot_curve);
