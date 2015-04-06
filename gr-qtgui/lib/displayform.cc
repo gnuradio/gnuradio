@@ -374,3 +374,9 @@ DisplayForm::saveFigure()
 
   delete filebox;
 }
+
+void
+DisplayForm::disableLegend()
+{
+  d_display_plot->disableLegend();
+}

@@ -363,6 +363,12 @@ namespace gr {
     }
 
     void
+    histogram_sink_f_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
+    }
+
+    void
     histogram_sink_f_impl::autoscalex()
     {
       d_main_gui->autoScaleX();

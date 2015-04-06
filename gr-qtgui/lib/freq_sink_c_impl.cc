@@ -391,6 +391,27 @@ namespace gr {
     }
 
     void
+    freq_sink_c_impl::enable_control_panel(bool en)
+    {
+      if(en)
+        d_main_gui->setupControlPanel();
+      else
+        d_main_gui->teardownControlPanel();
+    }
+
+    void
+    freq_sink_c_impl::enable_max_hold(bool en)
+    {
+      d_main_gui->notifyMaxHold(en);
+    }
+
+    void
+    freq_sink_c_impl::enable_min_hold(bool en)
+    {
+      d_main_gui->notifyMinHold(en);
+    }
+
+    void
     freq_sink_c_impl::clear_max_hold()
     {
       d_main_gui->clearMaxHold();
@@ -400,6 +421,12 @@ namespace gr {
     freq_sink_c_impl::clear_min_hold()
     {
       d_main_gui->clearMinHold();
+    }
+
+    void
+    freq_sink_c_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
     }
 
     void

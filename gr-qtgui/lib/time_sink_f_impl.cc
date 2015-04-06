@@ -430,6 +430,12 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
+    }
+
+    void
     time_sink_f_impl::reset()
     {
       gr::thread::scoped_lock lock(d_setlock);

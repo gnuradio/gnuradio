@@ -351,6 +351,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_f_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
+    }
+
+    void
     waterfall_sink_f_impl::fft(float *data_out, const float *data_in, int size)
     {
       // float to complex conversion

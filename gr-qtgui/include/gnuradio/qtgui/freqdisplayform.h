@@ -31,6 +31,8 @@
 
 #include <gnuradio/qtgui/displayform.h>
 
+class FreqControlPanel;
+
 /*!
  * \brief DisplayForm child for managing frequency (PSD) plots.
  * \ingroup qtgui_blk
@@ -76,6 +78,7 @@ public slots:
   void setYMax(const QString &m);
   void setYMin(const QString &m);
   void autoScale(bool en);
+  void autoScaleShot();
   void setPlotPosHalf(bool half);
   void clearMaxHold();
   void clearMinHold();
@@ -88,6 +91,35 @@ public slots:
   void setTriggerChannel(int chan);
   void setTriggerTagKey(QString s);
   void setTriggerTagKey(const std::string &s);
+
+  void setupControlPanel(bool en);
+  void setupControlPanel();
+  void teardownControlPanel();
+
+  void notifyYAxisPlus();
+  void notifyYAxisMinus();
+  void notifyYRangePlus();
+  void notifyYRangeMinus();
+  void notifyFFTSize(const QString &s);
+  void notifyFFTWindow(const QString &s);
+  void notifyMaxHold(bool en);
+  void notifyMinHold(bool en);
+  void notifyTriggerMode(const QString &mode);
+  void notifyTriggerLevelPlus();
+  void notifyTriggerLevelMinus();
+
+
+signals:
+  void signalFFTSize(int size);
+  void signalFFTWindow(gr::filter::firdes::win_type win);
+  void signalClearMaxData();
+  void signalClearMinData();
+  void signalSetMaxFFTVisible(bool en);
+  void signalSetMinFFTVisible(bool en);
+  void signalTriggerMode(gr::qtgui::trigger_mode mode);
+  void signalTriggerLevel(float level);
+  void signalReplot();
+
 
 private slots:
   void newData(const QEvent *updateEvent);
@@ -109,7 +141,7 @@ private:
   FFTSizeMenu *d_sizemenu;
   FFTAverageMenu *d_avgmenu;
   FFTWindowMenu *d_winmenu;
-  QAction *d_clearmin_act, *d_clearmax_act;
+  QAction *d_minhold_act, *d_maxhold_act;
 
   QMenu *d_triggermenu;
   TriggerModeMenu *d_tr_mode_menu;
@@ -121,6 +153,9 @@ private:
   float d_trig_level;
   int d_trig_channel;
   std::string d_trig_tag_key;
+
+  QAction *d_controlpanelmenu;
+  FreqControlPanel *d_controlpanel;
 };
 
 #endif /* FREQ_DISPLAY_FORM_H */

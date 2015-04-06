@@ -37,6 +37,7 @@
 #include <qwt_plot_magnifier.h>
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
+#include <qwt_legend.h>
 #include <gnuradio/qtgui/utils.h>
 
 #if QWT_VERSION >= 0x060000
@@ -45,6 +46,13 @@
 
 typedef QList<QColor> QColorList;
 Q_DECLARE_METATYPE ( QColorList )
+
+#if QWT_VERSION < 0x060100
+#include <qwt_legend_item.h>
+#else /* QWT_VERSION < 0x060100 */
+#include <qwt_legend_data.h>
+#include <qwt_legend_label.h>
+#endif /* QWT_VERSION < 0x060100 */
 
 /*!
  * \brief QWidget base plot to build QTGUI plotting tools.
@@ -181,6 +189,7 @@ public:
   // void PlotNewData(...);
 
 public slots:
+  virtual void disableLegend();
   virtual void setYaxis(double min, double max);
   virtual void setXaxis(double min, double max);
   virtual void setLineLabel(int which, QString label);

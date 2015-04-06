@@ -346,6 +346,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_c_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
+    }
+
+    void
     waterfall_sink_c_impl::fft(float *data_out, const gr_complex *data_in, int size)
     {
       if(d_window.size()) {

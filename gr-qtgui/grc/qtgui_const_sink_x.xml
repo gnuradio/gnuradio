@@ -23,6 +23,9 @@ self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
 
+if not $legend:
+  self.$(id).disable_legend()
+
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
 widths = [$width1, $width2, $width3, $width4, $width5,
@@ -235,6 +238,24 @@ $(gui_hint()($win))</make>
   </param>
 
 
+
+  <!-- Begin Config Tab items -->
+  <param>
+    <name>Legend</name>
+    <key>legend</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <tab>Config</tab>
+  </param>
 
   <param>
     <name>Line 1 Label</name>

@@ -27,16 +27,9 @@
 
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <qwt_scale_draw.h>
-#include <qwt_legend.h>
 #include <QColor>
 #include <iostream>
 
-#if QWT_VERSION < 0x060100
-#include <qwt_legend_item.h>
-#else /* QWT_VERSION < 0x060100 */
-#include <qwt_legend_data.h>
-#include <qwt_legend_label.h>
-#endif /* QWT_VERSION < 0x060100 */
 
 /***********************************************************************
  * Widget to provide mouse pointer coordinate text
@@ -95,6 +88,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   d_max_fft_data = new double[d_numPoints];
   d_xdata = new double[d_numPoints];
   d_half_freq = false;
+  d_autoscale_shot = false;
 
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
@@ -222,18 +216,29 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   // Turn off min/max hold plots in legend
 #if QWT_VERSION < 0x060100
   QWidget *w;
-  QwtLegend* legendDisplay = legend();
-  w = legendDisplay->find(d_min_fft_plot_curve);
+  w = legend()->find(d_min_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
-  w = legendDisplay->find(d_max_fft_plot_curve);
+  w = legend()->find(d_max_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
+  legend()->setVisible(false);
 #else /* QWT_VERSION < 0x060100 */
   QWidget *w;
   w = ((QwtLegend*)legend())->legendWidget(itemToInfo(d_min_fft_plot_curve));
   ((QwtLegendLabel*)w)->setChecked(true);
+  ((QwtLegendLabel*)w)->setVisible(false);
+
   w = ((QwtLegend*)legend())->legendWidget(itemToInfo(d_max_fft_plot_curve));
   ((QwtLegendLabel*)w)->setChecked(true);
+  ((QwtLegendLabel*)w)->setVisible(false);
+
 #endif /* QWT_VERSION < 0x060100 */
+
+  d_trigger_line = new QwtPlotMarker();
+  d_trigger_line->setLineStyle(QwtPlotMarker::HLine);
+  d_trigger_line->setLinePen(QPen(Qt::red, 0.6, Qt::DashLine));
+  d_trigger_line->setRenderHint(QwtPlotItem::RenderAntialiased);
+  d_trigger_line->setXValue(0.0);
+  d_trigger_line->setYValue(0.0);
 
   replot();
 }
@@ -412,8 +417,13 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 	}
       }
 
-      if(d_autoscale_state)
+      if(d_autoscale_state) {
 	_autoScale(bottom, top);
+        if(d_autoscale_shot) {
+          d_autoscale_state = false;
+          d_autoscale_shot = false;
+        }
+      }
 
       d_noise_floor_amplitude = noiseFloorAmplitude;
       d_peak_frequency = peakFrequency;
@@ -467,6 +477,13 @@ void
 FrequencyDisplayPlot::setAutoScale(bool state)
 {
   d_autoscale_state = state;
+}
+
+void
+FrequencyDisplayPlot::setAutoScaleShot()
+{
+  d_autoscale_state = true;
+  d_autoscale_shot = true;
 }
 
 void
@@ -722,6 +739,23 @@ const QColor
 FrequencyDisplayPlot::getMarkerCFColor() const
 {
   return d_marker_cf_color;
+}
+
+void
+FrequencyDisplayPlot::attachTriggerLine(bool en)
+{
+  if(en) {
+    d_trigger_line->attach(this);
+  }
+  else {
+    d_trigger_line->detach();
+  }
+}
+
+void
+FrequencyDisplayPlot::setTriggerLine(double level)
+{
+  d_trigger_line->setYValue(level);
 }
 
 #endif /* FREQUENCY_DISPLAY_PLOT_C */

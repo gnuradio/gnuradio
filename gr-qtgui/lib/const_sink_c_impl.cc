@@ -360,6 +360,12 @@ namespace gr {
     }
 
     void
+    const_sink_c_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
+    }
+
+    void
     const_sink_c_impl::reset()
     {
       gr::thread::scoped_lock lock(d_setlock);
