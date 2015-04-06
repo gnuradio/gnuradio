@@ -119,6 +119,12 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   d_trigger_level_layout->addWidget(d_trigger_level_minus);
 
 
+  // Set up the box for other items
+  d_extras_box = new QGroupBox("Extras");
+  d_extras_layout = new QVBoxLayout;
+  d_stop_button = new QPushButton("Stop");
+  d_stop_button->setCheckable(true);
+
   // Set up the boxes into the layout
   d_trace_layout->addWidget(d_maxhold_check);
   d_trace_layout->addWidget(d_minhold_check);
@@ -139,10 +145,14 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   d_trigger_layout->addLayout(d_trigger_level_layout);
   d_trigger_box->setLayout(d_trigger_layout);
 
+  d_extras_layout->addWidget(d_stop_button);
+  d_extras_box->setLayout(d_extras_layout);
+
   addWidget(d_trace_box);
   addWidget(d_axes_box);
   addWidget(d_fft_box);
   addWidget(d_trigger_box);
+  addWidget(d_extras_box);
 
   addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum,
                           QSizePolicy::Expanding));
@@ -183,6 +193,9 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
 	  d_parent, SLOT(notifyTriggerLevelPlus()));
   connect(d_trigger_level_minus, SIGNAL(pressed(void)),
 	  d_parent, SLOT(notifyTriggerLevelMinus()));
+
+  connect(d_stop_button, SIGNAL(pressed(void)),
+          d_parent, SLOT(setStop(void)));
 }
 
 FreqControlPanel::~FreqControlPanel()
@@ -191,10 +204,12 @@ FreqControlPanel::~FreqControlPanel()
   removeWidget(d_trace_box);
   removeWidget(d_fft_box);
   removeWidget(d_trigger_box);
+  removeWidget(d_extras_box);
   delete d_axes_box;
   delete d_trace_box;
   delete d_fft_box;
   delete d_trigger_box;
+  delete d_extras_box;
 
   // All other children of the boxes are automatically deleted.
 }

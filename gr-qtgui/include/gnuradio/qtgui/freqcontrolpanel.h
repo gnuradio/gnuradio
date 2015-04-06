@@ -98,6 +98,10 @@ private:
   QLabel *d_trigger_level_label;
   QComboBox *d_trigger_mode_combo;
   QPushButton *d_trigger_level_plus, *d_trigger_level_minus;
+
+  QGroupBox *d_extras_box;
+  QVBoxLayout *d_extras_layout;
+  QPushButton *d_stop_button;
 };
 
 #endif /* FREQ_CONTROL_PANEL_H */
