@@ -118,7 +118,7 @@ namespace gr {
         } else {
         nblocks = nbits_in / d_encoder->get_input_size();
         if( nblocks * d_encoder->get_input_size() != nbits_in ){
-            printf("nblocks: %d, in_block_size: %d, got_input_size: %d\n",
+            printf("nblocks: %u, in_block_size: %d, got_input_size: %d\n",
                 nblocks, d_encoder->get_input_size(), nbits_in);
             throw std::runtime_error("input does not divide into code block size!");
             }
