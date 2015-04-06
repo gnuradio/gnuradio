@@ -1321,7 +1321,7 @@ namespace gr {
       int temp, offset_bits = 0;
       unsigned char b, value;
       unsigned int shift[6];
-      int plen = FRAME_SIZE_SHORT - NBCH_1_4;
+      int plen = FRAME_SIZE_SHORT - NBCH_1_2;
       const unsigned char *d;
       unsigned char *p;
       unsigned char *l1post = l1_interleave;
