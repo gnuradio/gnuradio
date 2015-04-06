@@ -752,8 +752,8 @@ template <typename T> int tpc_decoder::sgn(T val) {
 void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
     const float *inPtr = (const float *) inBuffer;
     unsigned char *out = (unsigned char *) outBuffer;
-    
-    int m, n, ii;
+        
+    unsigned int m, n, ii;
     int iter;
     
     for(ii=0; ii<numInitLoadIter; ii++) {

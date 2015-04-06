@@ -80,8 +80,8 @@ class FEC_API tpc_decoder : public generic_decoder {
     int outputSize;
     int inputSize;
     
-    int codeword_M;
-    int codeword_N;
+    uint32_t codeword_M;
+    uint32_t codeword_N;
     
     int mInit, nInit;
 
@@ -100,7 +100,7 @@ class FEC_API tpc_decoder : public generic_decoder {
     std::vector<float> output_c_rows;
     std::vector<float> output_c_cols;
     
-    int numInitLoadIter;
+    uint32_t numInitLoadIter;
     int numInitRemaining;
     int output_c_col_idx;
 
