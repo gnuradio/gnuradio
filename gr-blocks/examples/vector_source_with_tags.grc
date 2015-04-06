@@ -308,10 +308,6 @@
       <value>0.10</value>
     </param>
     <param>
-      <key>ctrlpanel</key>
-      <value>False</value>
-    </param>
-    <param>
       <key>entags</key>
       <value>True</value>
     </param>
@@ -342,6 +338,14 @@
     <param>
       <key>tr_tag</key>
       <value>mark</value>
+    </param>
+    <param>
+      <key>ctrlpanel</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>legend</key>
+      <value>True</value>
     </param>
     <param>
       <key>label1</key>
@@ -648,112 +652,6 @@
     </param>
   </block>
   <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>tag1_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Tag 1 Offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(256, 323)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_tag_object</key>
-    <param>
-      <key>id</key>
-      <value>tag1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>offset</key>
-      <value>tag1_offset</value>
-    </param>
-    <param>
-      <key>key</key>
-      <value>pmt.intern("mark2")</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>pmt.from_long(12345)</value>
-    </param>
-    <param>
-      <key>src</key>
-      <value>pmt.intern("tag1")</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(112, 195)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_tag_debug</key>
     <param>
       <key>id</key>
@@ -802,6 +700,49 @@
     <param>
       <key>_coordinate</key>
       <value>(456, 195)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tag_object</key>
+    <param>
+      <key>id</key>
+      <value>tag1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>key</key>
+      <value>pmt.intern("mark2")</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>pmt.from_long(12345)</value>
+    </param>
+    <param>
+      <key>src</key>
+      <value>pmt.intern("tag1")</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(112, 195)</value>
     </param>
     <param>
       <key>_rotation</key>
