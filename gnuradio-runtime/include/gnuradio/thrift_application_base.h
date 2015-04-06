@@ -83,7 +83,7 @@ public:
   /*!
    * Destructor for the application. Since shutdown and cleanup of the
    * runtime is typically custom to a particular booter
-   * implementation, this must be implemented as a specalized function
+   * implementation, this must be implemented as a specialized function
    * for a particular booter. Thus a template implementation is not
    * provided here.
    */
