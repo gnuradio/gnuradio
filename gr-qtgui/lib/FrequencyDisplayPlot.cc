@@ -218,8 +218,10 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   QWidget *w;
   w = legend()->find(d_min_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
+  ((QwtLegendItem*)w)->setVisible(false);
   w = legend()->find(d_max_fft_plot_curve);
   ((QwtLegendItem*)w)->setChecked(true);
+  ((QwtLegendItem*)w)->setVisible(false);
   legend()->setVisible(false);
 #else /* QWT_VERSION < 0x060100 */
   QWidget *w;
