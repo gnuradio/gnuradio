@@ -43,14 +43,14 @@ class FEC_API tpc_encoder : public generic_encoder {
     int get_output_size();
     int get_input_size();
 
-    unsigned int d_krow;
-    unsigned int d_kcol;
-    
     std::vector<int> d_rowpolys;
     std::vector<int> d_colpolys;
     
-    int d_bval;
-    int d_qval;
+    unsigned int d_krow;
+    unsigned int d_kcol;
+    
+    unsigned int d_bval;
+    unsigned int d_qval;
         
     // store the state transitions & outputs
     int rowNumStates;
@@ -64,10 +64,10 @@ class FEC_API tpc_encoder : public generic_encoder {
     std::vector<int> colTail;
     
     int rowEncoder_K;
-    int rowEncoder_n;
+    size_t rowEncoder_n;
     int rowEncoder_m;
     int colEncoder_K;
-    int colEncoder_n;
+    size_t colEncoder_n;
     int colEncoder_m;
     int outputSize;
     int inputSize;
@@ -78,7 +78,7 @@ class FEC_API tpc_encoder : public generic_encoder {
     
     std::vector< std::vector<uint8_t> > rowEncodedBits;
     std::vector<unsigned char> rowToEncode;
-    int numRowsToEncode;
+    size_t numRowsToEncode;
     std::vector<uint8_t> rowEncoded_block;
     
     std::vector< std::vector<uint8_t> > colEncodedBits;
@@ -91,8 +91,8 @@ class FEC_API tpc_encoder : public generic_encoder {
                                std::vector< std::vector<int> > transOutputVec,
                                std::vector< std::vector<int> > transNextStateVec,
                                std::vector<int> tail,
-                               int KK, 
-                               int nn);
+                               size_t KK, 
+                               size_t nn);
 
     FILE *fp;
     
