@@ -102,6 +102,12 @@ DisplayPlot::~DisplayPlot()
   // d_zoomer and d_panner deleted when parent deleted
 }
 
+void
+DisplayPlot::disableLegend()
+{
+  // Haven't found a good way to toggle it on/off
+  insertLegend(NULL);
+}
 
 void
 DisplayPlot::setYaxis(double min, double max)

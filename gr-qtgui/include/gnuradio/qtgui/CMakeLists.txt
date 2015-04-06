@@ -31,6 +31,7 @@ install(FILES
   DisplayPlot.h
   form_menus.h
   freqdisplayform.h
+  freqcontrolpanel.h
   freq_sink_c.h
   freq_sink_f.h
   FrequencyDisplayPlot.h
