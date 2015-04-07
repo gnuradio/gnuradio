@@ -144,6 +144,7 @@ namespace gr {
     virtual ~basic_block();
     long unique_id() const { return d_unique_id; }
     long symbolic_id() const { return d_symbolic_id; }
+    size_t max_nmsgs;
 
     /*! The name of the block */
     std::string name() const { return d_name; }
