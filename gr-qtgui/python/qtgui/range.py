@@ -156,7 +156,15 @@ class RangeWidget(QtGui.QWidget):
                 new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
                 self.setValue(new)
                 event.accept()
-            QtGui.QSlider.mousePressEvent(self, event)
+            # Use repaint rather than calling the super mousePressEvent.
+            # Calling super causes issue where slider jumps to wrong value.
+            QtGui.QSlider.repaint(self)
+
+        def mouseMoveEvent(self, event):
+            new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+            self.setValue(new)
+            event.accept()
+            QtGui.QSlider.repaint(self)
 
     class Counter(QtGui.QDoubleSpinBox):
         """ Creates the range using a counter """
