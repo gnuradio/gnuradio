@@ -28,7 +28,7 @@ class Range(object):
     def __init__(self, minv, maxv, step, default, min_length):
         self.min = float(minv)
         self.max = float(maxv)
-        self.step = float(step)
+        self.step = float(step) if (float(step) > (self.max-self.min)/1000.0) else ((self.max-self.min)/100.0)
         self.default = float(default)
         self.min_length = min_length
         self.find_precision()
