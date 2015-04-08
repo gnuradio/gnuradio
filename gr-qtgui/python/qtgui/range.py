@@ -22,7 +22,6 @@
 #
 
 from PyQt4 import Qt, QtCore, QtGui
-import numpy
 
 class Range(object):
     def __init__(self, minv, maxv, step, default, min_length):
