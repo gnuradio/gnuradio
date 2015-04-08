@@ -34,11 +34,15 @@ class Range(object):
         self.find_nsteps()
 
     def find_precision(self):
-        temp = str(float(self.step)-int(self.step))[2:]
-        if len(temp) > 13:
-          self.precision = 15
+        # Get the decimal part of the step
+        temp = str(float(self.step) - int(self.step))[2:]
+        precision = len(temp) if temp is not '0' else 0
+        precision = min(precision, 13)
+
+        if precision == 0 and self.max < 100:
+            self.precision = 1  # Always have a decimal in this case
         else:
-          self.precision = len(temp)+2
+            self.precision = (precision + 2) if precision > 0 else 0
 
     def find_nsteps(self):
         self.nsteps = (self.max + self.step - self.min)/self.step
@@ -76,8 +80,6 @@ class RangeWidget(QtGui.QWidget):
             self.d_widget = self.Slider(self, self.range, self.ds_modified_slot)
         elif style == "counter":
             self.d_widget = self.Counter(self, self.range, self.c_modified_slot)
-        elif style == "counter_slider":
-            self.d_widget = self.CounterSlider(self, self.range, self.ds_modified_slot, self.c_modified_slot)
         else:
             self.d_widget = self.CounterSlider(self, self.range, self.ds_modified_slot, self.c_modified_slot)
 
