@@ -42,7 +42,12 @@ class Range(object):
           self.precision = len(temp)+2
 
     def find_nsteps(self):
-        temp = numpy.arange(self.min,self.max+self.step,self.step)
+        npoints = (self.max - self.min)/self.step
+        if npoints > 1000:
+            step = 1.0/1000.0
+        else:
+            step = self.step
+        temp = numpy.arange(self.min,self.max+step,step)
         self.ds_steps = len(temp)
         self.ds_vals  = (numpy.linspace(self.min,self.max,num=self.ds_steps)).tolist()
 
@@ -78,7 +83,8 @@ class RangeWidget(QtGui.QWidget):
         if self.style == "counter_slider":
           self.d_widget.set_counter(self.range.ds_vals[val])
 
-    def c_modified_slot(self,val):
+    def c_modified_slot(self):
+        val = self.d_widget.counter_value()
         self.slot(val)
         if self.style == "counter_slider":
           temp = [abs(x-val) for x in self.range.ds_vals]
@@ -122,9 +128,12 @@ class RangeWidget(QtGui.QWidget):
             QtGui.QDoubleSpinBox.__init__(self, parent)
             self.setRange(ranges.min, ranges.max)
             self.setValue(ranges.default)
-            self.setSingleStep(ranges.step)
             self.setDecimals(ranges.precision)
-            self.valueChanged.connect(slot)
+            self.editingFinished.connect(slot)
+            self.setSingleStep(ranges.step)
+
+        def counter_value(self):
+            return self.value()
 
     class CounterSlider(QtGui.QWidget):
         """ Creates the range using a counter and slider """
@@ -143,9 +152,7 @@ class RangeWidget(QtGui.QWidget):
             layout.addWidget(self.counter)
 
             # Wire the events to each other
-            #counter.valueChanged.connect(slider.setValue)
-            #slider.valueChanged.connect(counter.setValue)
-            self.counter.valueChanged.connect(c_slot)
+            self.counter.editingFinished.connect(c_slot)
             self.slider.valueChanged.connect(s_slot)
 
             self.setLayout(layout)
@@ -155,9 +162,5 @@ class RangeWidget(QtGui.QWidget):
         def set_counter(self,val):
             self.counter.setValue(val)
 
-
-
-
-
-
-
+        def counter_value(self):
+            return self.counter.value()
