@@ -8,7 +8,7 @@
 	<name>Peak Detector2</name>
 	<key>blocks_peak_detector2_fb</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.peak_detector2_fb($threshold_factor_rise, $look_ahead, $alpha)</make>
+	<make>blocks.peak_detector2_fb($threshold_factor_rise, $look_ahead, $alpha, $cont_avg)</make>
 	<callback>set_threshold_factor_rise($threshold_factor_rise)</callback>
 	<callback>set_look_ahead($look_ahead)</callback>
 	<callback>set_alpha($alpha)</callback>
@@ -30,12 +30,49 @@
                 <value>0.001</value>
 		<type>real</type>
 	</param>
+        <param>
+        	<name>Average Type</name>
+        	<key>cont_avg</key>
+        	<value>True</value>
+        	<type>enum</type>
+        	<option>
+          		<name>Continuous</name>
+          		<key>True</key>
+        	</option>
+        	<option>
+          		<name>Intermittent</name>
+          		<key>False</key>
+        	</option>
+        </param>
+        <param>
+            <name>Debug</name>
+            <key>debug</key>
+            <value>True</value>
+            <type>enum</type>
+            <hide>part</hide>
+            <option>
+              <name>No</name>
+              <key>True</key>
+            </option>
+            <option>
+              <name>Yes</name>
+              <key>False</key>
+            </option>
+          </param>
+
 	<sink>
 		<name>in</name>
 		<type>float</type>
 	</sink>
+
 	<source>
 		<name>out</name>
 		<type>byte</type>
+	</source>
+	<source>
+		<name>sigout</name>
+		<type>float</type>
+                <optional>1</optional>
+                <hide>$debug</hide>
 	</source>
 </block>

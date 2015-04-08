@@ -33,20 +33,20 @@ namespace gr {
 
     peak_detector2_fb::sptr
     peak_detector2_fb::make(float threshold_factor_rise,
-                            int look_ahead, float alpha)
+                            int look_ahead, float alpha, bool cont_avg)
     {
       return gnuradio::get_initial_sptr
         (new peak_detector2_fb_impl(threshold_factor_rise,
-                                    look_ahead, alpha));
+                                    look_ahead, alpha, cont_avg));
     }
 
     peak_detector2_fb_impl::peak_detector2_fb_impl(float threshold_factor_rise,
-                                                   int look_ahead, float alpha)
+                                                   int look_ahead, float alpha, bool cont_avg)
       : sync_block("peak_detector2_fb",
                       io_signature::make(1, 1, sizeof(float)),
                       io_signature::make2(1, 2, sizeof(char), sizeof(float))),
         d_threshold_factor_rise(threshold_factor_rise),
-        d_look_ahead(look_ahead), d_alpha(alpha), d_avg(0.0f), d_found(false)
+        d_look_ahead(look_ahead), d_alpha(alpha), d_avg(0.0f), d_found(false), d_cont_avg(cont_avg)
     {
     }
 
@@ -61,58 +61,62 @@ namespace gr {
     {
       float *iptr = (float *)input_items[0];
       char *optr = (char *)output_items[0];
+      float *sigout;
 
-      assert(noutput_items >= 2);
+      //printf("nout=%d\n",noutput_items);
+      if(output_items.size() == 2)
+          sigout = (float *)output_items[1];
 
       memset(optr, 0, noutput_items*sizeof(char));
 
-      for(int i = 0; i < noutput_items; i++) {
-        if(!d_found) {
-          // Have not yet detected presence of peak
-          if(iptr[i] > d_avg * (1.0f + d_threshold_factor_rise)) {
+      if(d_found==false) { // have not crossed threshold yet
+        //printf("State: d_found=false\n");
+        for(int i=0;i<noutput_items;i++) {
+          d_avg = d_alpha*iptr[i] + (1.0f - d_alpha)*d_avg;
+          //printf("avg=%f\n",d_avg);
+          if(output_items.size() == 2)
+            sigout[i]=d_avg;
+          if(iptr[i] > d_avg * d_threshold_factor_rise) {
+            //printf("i= %d, THRESHOLD CROSSED upwards\n", i);
             d_found = true;
-            d_look_ahead_remaining = d_look_ahead;
             d_peak_val = -(float)INFINITY;
-          }
-          else {
-            d_avg = d_alpha*iptr[i] + (1.0f - d_alpha)*d_avg;
+            d_remaining = d_look_ahead;
+            return i;
           }
         }
-        else {
-          // Detected presence of peak
+        return noutput_items;
+      } // end d_found==false
+      else { // d_found==true
+        //printf("State: d_found=true, d_remaining=%d, nout=%d\n",d_remaining,noutput_items);
+        int nn=std::min(d_remaining,noutput_items); // minimum samples we can process
+        for(int i=0;i<nn;i++) {
+          if(d_cont_avg){
+            d_avg = d_alpha*iptr[i] + (1.0f - d_alpha)*d_avg;
+            //printf("avg=%f\n",d_avg);
+          }
+          if(output_items.size() == 2)
+            sigout[i]=d_avg;
           if(iptr[i] > d_peak_val) {
             d_peak_val = iptr[i];
-            d_peak_ind = i;
+            d_peak_ind =i;
+            //printf("found peak=%f, at %d\n",d_peak_val,d_peak_ind);
           }
-          else if(d_look_ahead_remaining <= 0) {
+        }
+
+        if(d_remaining<=noutput_items) { // done
             optr[d_peak_ind] = 1;
-            d_found = false;
-            d_avg = iptr[i];
-          }
-
-          // Have not yet located peak, loop and keep searching.
-          d_look_ahead_remaining--;
+            d_found = false; // start searching again
+            return d_remaining;
+        }
+        else {
+             d_remaining-=d_peak_ind;
+             int pi=d_peak_ind;
+             d_peak_ind=0;
+             return pi; // process all input before peak
         }
 
-        // Every iteration of the loop, write debugging signal out if
-        // connected:
-        if(output_items.size() == 2) {
-          float *sigout = (float *)output_items[1];
-          sigout[i] = d_avg;
-        }
-      } // loop
-
-      if(!d_found)
-        return noutput_items;
-
-      // else if detected presence, keep searching during the next call to work.
-      int tmp = d_peak_ind;
-      d_peak_ind = 1;
-
-      return tmp - 1;
+      } // end d_found==true
     }
 
   } /* namespace blocks */
 } /* namespace gr */
-
-
