@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+########################################################################
+## Convenience wrapper for calling firdes.root_raised_cosine_filter(...)
+########################################################################
+ -->
+<block>
+  <name>RRC Filter Taps</name>
+  <key>variable_rrc_filter_taps</key>
+  <import>from gnuradio.filter import firdes</import>
+  <var_make>
+self.$(id) = $(id) = firdes.root_raised_cosine($gain, $samp_rate, $sym_rate, $alpha, $ntaps)
+  </var_make>
+  <var_value>firdes.root_raised_cosine($gain, $samp_rate, $sym_rate, $alpha, $ntaps)</var_value>
+  <make></make>
+
+  <param>
+    <name>Gain</name>
+    <key>gain</key>
+    <value>1.0</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Sample Rate (Hz)</name>
+    <key>samp_rate</key>
+    <value>samp_rate</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Symbol Rate (Hz)</name>
+    <key>sym_rate</key>
+    <value></value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Excess BW</name>
+    <key>alpha</key>
+    <value>0.35</value>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Num Taps</name>
+    <key>ntaps</key>
+    <value>11*sps</value>
+    <type>int</type>
+  </param>
+  <doc>
+    This is a convenience wrapper for calling firdes.root_raised_cosine(...).
+  </doc>
+</block>
