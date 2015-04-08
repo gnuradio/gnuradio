@@ -42,7 +42,12 @@ class Range(object):
           self.precision = len(temp)+2
 
     def find_nsteps(self):
-        temp = numpy.arange(self.min,self.max+self.step,self.step)
+        npoints = (self.max - self.min)/self.step
+        if npoints > 1000:
+            step = 1.0/1000.0
+        else:
+            step = self.step
+        temp = numpy.arange(self.min,self.max+step,step)
         self.ds_steps = len(temp)
         self.ds_vals  = (numpy.linspace(self.min,self.max,num=self.ds_steps)).tolist()
 
@@ -123,9 +128,9 @@ class RangeWidget(QtGui.QWidget):
             QtGui.QDoubleSpinBox.__init__(self, parent)
             self.setRange(ranges.min, ranges.max)
             self.setValue(ranges.default)
-            self.setSingleStep(ranges.step)
             self.setDecimals(ranges.precision)
             self.editingFinished.connect(slot)
+            self.setSingleStep(ranges.step)
 
         def counter_value(self):
             return self.value()
