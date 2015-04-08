@@ -32,6 +32,7 @@
       <name>Filters</name>
       <!-- FIR filter tap generators -->
       <block>variable_low_pass_filter_taps</block>
+      <block>variable_high_pass_filter_taps</block>
       <!-- FIR convenience filters -->
       <block>low_pass_filter</block>
       <block>high_pass_filter</block>
