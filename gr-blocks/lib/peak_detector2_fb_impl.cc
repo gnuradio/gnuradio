@@ -43,8 +43,8 @@ namespace gr {
     peak_detector2_fb_impl::peak_detector2_fb_impl(float threshold_factor_rise,
                                                    int look_ahead, float alpha)
       : sync_block("peak_detector2_fb",
-                      io_signature::make(1, 1, sizeof(float)),
-                      io_signature::make2(1, 2, sizeof(char), sizeof(float))),
+                   io_signature::make(1, 1, sizeof(float)),
+                   io_signature::make2(1, 2, sizeof(char), sizeof(float))),
         d_threshold_factor_rise(threshold_factor_rise),
         d_look_ahead(look_ahead), d_alpha(alpha), d_avg(0.0f), d_found(false)
     {
@@ -61,8 +61,6 @@ namespace gr {
     {
       float *iptr = (float *)input_items[0];
       char *optr = (char *)output_items[0];
-
-      assert(noutput_items >= 2);
 
       memset(optr, 0, noutput_items*sizeof(char));
 
@@ -114,5 +112,3 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-
-
