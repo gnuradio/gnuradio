@@ -23,6 +23,7 @@
 
 from PyQt4 import Qt, QtCore, QtGui
 
+
 class Range(object):
     def __init__(self, minv, maxv, step, default, min_length):
         self.min = float(minv)
@@ -47,19 +48,20 @@ class Range(object):
     def find_nsteps(self):
         self.nsteps = (self.max + self.step - self.min)/self.step
 
-    def demap_range(self,val):
+    def demap_range(self, val):
         if val > self.max:
-          val = self.max
+            val = self.max
         if val < self.min:
-          val = self.min
+            val = self.min
         return ((val-self.min)/self.step)
 
-    def map_range(self,val):
+    def map_range(self, val):
         if val > self.nsteps:
-          val = self.max
+            val = self.max
         if val < 0:
-          val = 0
+            val = 0
         return (val*self.step+self.min)
+
 
 class RangeWidget(QtGui.QWidget):
     def __init__(self, ranges, slot, label, style):
@@ -67,80 +69,92 @@ class RangeWidget(QtGui.QWidget):
         QtGui.QWidget.__init__(self)
 
         self.range = ranges
-        self.slot = slot
         self.style = style
+
+        # Top-block function to call when any value changes
+        # Some widgets call this directly when their value changes.
+        # Others have intermediate functions to map the value into the right range.
+        self.notifyChanged = slot
 
         layout = Qt.QHBoxLayout()
         label = Qt.QLabel(label)
         layout.addWidget(label)
 
         if style == "dial":
-            self.d_widget = self.Dial(self, self.range, self.ds_modified_slot)
+            self.d_widget = self.Dial(self, self.range, self.notifyChanged)
         elif style == "slider":
-            self.d_widget = self.Slider(self, self.range, self.ds_modified_slot)
+            self.d_widget = self.Slider(self, self.range, self.notifyChanged)
         elif style == "counter":
-            self.d_widget = self.Counter(self, self.range, self.c_modified_slot)
+            # The counter widget can be directly wired to the notifyChanged slot
+            self.d_widget = self.Counter(self, self.range, self.notifyChanged)
         else:
-            self.d_widget = self.CounterSlider(self, self.range, self.ds_modified_slot, self.c_modified_slot)
+            # The CounterSlider needs its own internal handlers before calling notifyChanged
+            self.d_widget = self.CounterSlider(self, self.range, self.notifyChanged)
 
         layout.addWidget(self.d_widget)
         self.setLayout(layout)
-
-    def ds_modified_slot(self,val):
-        nval = self.range.map_range(val)
-        self.slot(nval)
-        if self.style == "counter_slider":
-          self.d_widget.set_counter(nval)
-
-    def c_modified_slot(self,val):
-        self.slot(val)
-        if self.style == "counter_slider":
-          temp = self.range.demap_range(val)
-          if temp-int(temp) >= 0.5:
-            self.d_widget.set_slider(int(temp)+1)
-          else:
-            self.d_widget.set_slider(int(temp))
 
     class Dial(QtGui.QDial):
         """ Creates the range using a dial """
         def __init__(self, parent, ranges, slot):
             QtGui.QDial.__init__(self, parent)
+
+            # Setup the dial
             self.setRange(0, ranges.nsteps-1)
             self.setSingleStep(1)
             self.setNotchesVisible(True)
-            temp = ranges.demap_range(ranges.default)
-            if temp-int(temp) >= 0.5:
-              temp = int(temp)+1
-            else:
-              temp = int(temp)
+            self.range = ranges
+
+            # Round the initial value to the closest tick
+            temp = int(round(ranges.demap_range(ranges.default), 0))
             self.setValue(temp)
-            self.valueChanged.connect(slot)
+
+            # Setup the slots
+            self.valueChanged.connect(self.changed)
+            self.notifyChanged = slot
+
+        def changed(self, value):
+            """ Handles maping the value to the right range before calling the slot. """
+            val = self.range.map_range(value)
+            self.notifyChanged(val)
 
     class Slider(QtGui.QSlider):
         """ Creates the range using a slider """
         def __init__(self, parent, ranges, slot):
             QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
-            self.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.setRange(0, ranges.nsteps-1)
-            temp = ranges.demap_range(ranges.default)
-            if temp-int(temp) >= 0.5:
-              temp = int(temp)+1
-            else:
-              temp = int(temp)
-            self.setValue(temp)
-            self.setPageStep(1)
-            self.setSingleStep(1)
+
+            # Setup the slider
+            #self.setFocusPolicy(QtCore.Qt.NoFocus)
+            self.setRange(0, ranges.nsteps - 1)
             self.setTickPosition(2)
+            self.setSingleStep(1)
+            self.range = ranges
+
+            # Round the initial value to the closest tick
+            temp = int(round(ranges.demap_range(ranges.default), 0))
+            self.setValue(temp)
+
             if ranges.nsteps > ranges.min_length:
-              self.setTickInterval(int(ranges.nsteps/ranges.min_length))
+                interval = int(ranges.nsteps/ranges.min_length)
+                self.setTickInterval(interval)
+                self.setPageStep(interval)
             else:
-              self.setTickInterval(1)
-            self.valueChanged.connect(slot)
+                self.setTickInterval(1)
+                self.setPageStep(1)
+
+            # Setup the handler function
+            self.valueChanged.connect(self.changed)
+            self.notifyChanged = slot
+
+        def changed(self, value):
+            """ Handle the valueChanged signal and map the value into the correct range """
+            val = self.range.map_range(value)
+            self.notifyChanged(val)
 
         def mousePressEvent(self, event):
             if((event.button() == QtCore.Qt.LeftButton)):
-                newVal = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
-                self.setValue(newVal)
+                new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
+                self.setValue(new)
                 event.accept()
             QtGui.QSlider.mousePressEvent(self, event)
 
@@ -148,45 +162,57 @@ class RangeWidget(QtGui.QWidget):
         """ Creates the range using a counter """
         def __init__(self, parent, ranges, slot):
             QtGui.QDoubleSpinBox.__init__(self, parent)
+
+            # Setup the counter
             self.setRange(ranges.min, ranges.max)
             self.setValue(ranges.default)
             self.setSingleStep(ranges.step)
             self.setKeyboardTracking(False)
             self.setDecimals(ranges.precision)
+
+            # The counter already handles floats and can be connected directly.
             self.valueChanged.connect(slot)
 
     class CounterSlider(QtGui.QWidget):
         """ Creates the range using a counter and slider """
-        def __init__(self, parent, ranges, s_slot, c_slot):
+        def __init__(self, parent, ranges, slot):
             QtGui.QWidget.__init__(self, parent)
 
-            # Need another horizontal layout
+            # Slot to call in the parent
+            self.notifyChanged = slot
+
+            self.slider = RangeWidget.Slider(parent, ranges, self.sliderChanged)
+            self.counter = RangeWidget.Counter(parent, ranges, self.counterChanged)
+
+            # Need another horizontal layout to wrap the other widgets.
             layout = Qt.QHBoxLayout()
-
-            # Create a slider with the top-level widget as the parent
-            self.slider = RangeWidget.Slider(parent,ranges,s_slot)
             layout.addWidget(self.slider)
-
-            # Setup the counter
-            self.counter = RangeWidget.Counter(parent,ranges,c_slot)
             layout.addWidget(self.counter)
-
-            # Wire the events to each other
-            #counter.valueChanged.connect(slider.setValue)
-            #slider.valueChanged.connect(counter.setValue)
-            self.counter.valueChanged.connect(c_slot)
-            self.slider.valueChanged.connect(s_slot)
-
             self.setLayout(layout)
 
-        def set_slider(self,val):
-            self.slider.setValue(val)
-        def set_counter(self,val):
-            self.counter.setValue(val)
+            # Flag to ignore the slider event caused by a change to the counter.
+            self.ignoreSlider = False
+            self.range = ranges
 
+        def sliderChanged(self, value):
+            """ Handles changing the counter when the slider is updated """
+            # If the counter was changed, ignore any of these events
+            if not self.ignoreSlider:
+                # Value is already float. Just set the counter
+                self.counter.setValue(value)
+                self.notifyChanged(value)
+            self.ignoreSlider = False
 
+        def counterChanged(self, value):
+            """ Handles changing the slider when the counter is updated """
+            # Get the current slider value and check to see if the new value changes it
+            current = self.slider.value()
+            new = int(round(self.range.demap_range(value), 0))
 
+            # If it needs to change, ignore the slider event
+            # Otherwise, the slider will cause the counter to round to the nearest tick
+            if current != new:
+                self.ignoreSlider = True
+                self.slider.setValue(new)
 
-
-
-
+            self.notifyChanged(value)
