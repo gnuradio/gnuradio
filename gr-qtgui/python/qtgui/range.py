@@ -42,9 +42,21 @@ class Range(object):
           self.precision = len(temp)+2
 
     def find_nsteps(self):
-        temp = numpy.arange(self.min,self.max+self.step,self.step)
-        self.ds_steps = len(temp)
-        self.ds_vals  = (numpy.linspace(self.min,self.max,num=self.ds_steps)).tolist()
+        self.nsteps = (self.max + self.step - self.min)/self.step
+
+    def demap_range(self,val):
+        if val > self.max:
+          val = self.max
+        if val < self.min:
+          val = self.min
+        return ((val-self.min)/self.step)
+
+    def map_range(self,val):
+        if val > self.nsteps:
+          val = self.max
+        if val < 0:
+          val = 0
+        return (val*self.step+self.min)
 
 class RangeWidget(QtGui.QWidget):
     def __init__(self, ranges, slot, label, style):
@@ -74,26 +86,33 @@ class RangeWidget(QtGui.QWidget):
         self.setLayout(layout)
 
     def ds_modified_slot(self,val):
-        self.slot(self.range.ds_vals[val])
+        nval = self.range.map_range(val)
+        self.slot(nval)
         if self.style == "counter_slider":
-          self.d_widget.set_counter(self.range.ds_vals[val])
+          self.d_widget.set_counter(nval)
 
     def c_modified_slot(self,val):
         self.slot(val)
         if self.style == "counter_slider":
-          temp = [abs(x-val) for x in self.range.ds_vals]
-          self.d_widget.set_slider(temp.index(min(temp)))
+          temp = self.range.demap_range(val)
+          if temp-int(temp) >= 0.5:
+            self.d_widget.set_slider(int(temp)+1)
+          else:
+            self.d_widget.set_slider(int(temp))
 
     class Dial(QtGui.QDial):
         """ Creates the range using a dial """
         def __init__(self, parent, ranges, slot):
             QtGui.QDial.__init__(self, parent)
-            self.setRange(0, ranges.ds_steps-1)
-            self.setSingleStep(ranges.step)
-            self.setNotchTarget(1)
+            self.setRange(0, ranges.nsteps-1)
+            self.setSingleStep(1)
             self.setNotchesVisible(True)
-            temp = [abs(x-ranges.default) for x in ranges.ds_vals]
-            self.setValue(temp.index(min(temp)))
+            temp = ranges.demap_range(ranges.default)
+            if temp-int(temp) >= 0.5:
+              temp = int(temp)+1
+            else:
+              temp = int(temp)
+            self.setValue(temp)
             self.valueChanged.connect(slot)
 
     class Slider(QtGui.QSlider):
@@ -101,12 +120,20 @@ class RangeWidget(QtGui.QWidget):
         def __init__(self, parent, ranges, slot):
             QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
             self.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.setRange(0, ranges.ds_steps-1)
-            temp = [abs(x-ranges.default) for x in ranges.ds_vals]
-            self.setValue(temp.index(min(temp)))
+            self.setRange(0, ranges.nsteps-1)
+            temp = ranges.demap_range(ranges.default)
+            if temp-int(temp) >= 0.5:
+              temp = int(temp)+1
+            else:
+              temp = int(temp)
+            self.setValue(temp)
             self.setPageStep(1)
             self.setSingleStep(1)
             self.setTickPosition(2)
+            if ranges.nsteps > ranges.min_length:
+              self.setTickInterval(int(ranges.nsteps/ranges.min_length))
+            else:
+              self.setTickInterval(1)
             self.valueChanged.connect(slot)
 
         def mousePressEvent(self, event):
@@ -123,6 +150,7 @@ class RangeWidget(QtGui.QWidget):
             self.setRange(ranges.min, ranges.max)
             self.setValue(ranges.default)
             self.setSingleStep(ranges.step)
+            self.setKeyboardTracking(False)
             self.setDecimals(ranges.precision)
             self.valueChanged.connect(slot)
 
