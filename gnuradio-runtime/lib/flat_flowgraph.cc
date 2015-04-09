@@ -109,12 +109,9 @@ namespace gr {
 
       // Update the block's max_output_buffer based on what was actually allocated.
       if((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1))
-        GR_LOG_WARN(d_logger, boost::format("Block (%1%) max output buffer set to %2% instead of requested %3%") \
-                      % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
-        //std::cout << ">>> Warning: Block (" << grblock->alias()
-        //          << ") max output buffer set to " << buffer->bufsize()
-        //          << " instead of requested " << grblock->max_output_buffer(i)
-        //          << std::endl;
+        GR_LOG_WARN(d_logger, boost::format("Block (%1%) max output buffer set to %2%"
+                                            " instead of requested %3%") \
+                    % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
       grblock->set_max_output_buffer(i, buffer->bufsize());
     }
 
