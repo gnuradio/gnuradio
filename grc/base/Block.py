@@ -141,8 +141,9 @@ class Block(Element):
                                      and (self._key != "virtual_sink") \
                                      and (self._key != "pad_source") \
                                      and (self._key != "pad_sink"))
+        is_variable = self._key.startswith('variable')
 
-        if is_not_virtual_or_pad:
+        if is_not_virtual_or_pad and not is_variable:
             self.get_params().append(self.get_parent().get_parent().Param(
                 block=self,
                 n=odict({'name': 'Block Alias',
