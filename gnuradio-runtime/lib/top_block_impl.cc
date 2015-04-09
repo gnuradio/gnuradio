@@ -80,7 +80,7 @@ namespace gr {
 
   top_block_impl::top_block_impl(top_block *owner)
     : d_owner(owner), d_ffg(),
-      d_state(IDLE), d_lock_count(0)
+      d_state(IDLE), d_lock_count(0), d_retry_wait(false)
   {
   }
 
@@ -141,6 +141,10 @@ namespace gr {
       {
         gr::thread::scoped_lock lock(d_mutex);
         if (!d_lock_count) {
+          if(d_retry_wait) {
+            d_retry_wait = false;
+            continue;
+          }
           d_state = IDLE;
           break;
         }
@@ -181,8 +185,8 @@ namespace gr {
     if(d_lock_count > 0 || d_state == IDLE) // nothing to do
       return;
 
-    d_lock_cond.notify_all();
     restart();
+    d_lock_cond.notify_all();
   }
 
   /*
@@ -201,6 +205,7 @@ namespace gr {
 
     // Create a new scheduler to execute it
     d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_retry_wait = true;
   }
 
   std::string
