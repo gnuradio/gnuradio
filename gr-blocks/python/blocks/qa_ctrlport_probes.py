@@ -62,7 +62,6 @@ class test_ctrlport_probes(gr_unittest.TestCase):
         argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
-        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
@@ -103,7 +102,6 @@ class test_ctrlport_probes(gr_unittest.TestCase):
         argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
-        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
@@ -143,7 +141,6 @@ class test_ctrlport_probes(gr_unittest.TestCase):
         argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
-        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
@@ -184,7 +181,6 @@ class test_ctrlport_probes(gr_unittest.TestCase):
         argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
-        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 
@@ -224,7 +220,6 @@ class test_ctrlport_probes(gr_unittest.TestCase):
         argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
-        from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
         radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
         radio = radiosys.client
 

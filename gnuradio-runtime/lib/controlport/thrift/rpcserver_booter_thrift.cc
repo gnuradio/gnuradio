@@ -42,8 +42,7 @@ namespace {
 rpcserver_booter_thrift::rpcserver_booter_thrift() :
   thrift_server_template<rpcserver_base,
                          rpcserver_thrift,
-                         rpcserver_booter_thrift,
-                         boost::shared_ptr<GNURadio::ControlPortIf> >(this),
+                         rpcserver_booter_thrift>(this),
   d_type(std::string(CONTROL_PORT_CLASS))
 {;}
 
@@ -54,8 +53,7 @@ rpcserver_base*
 rpcserver_booter_thrift::i()
 {
   return thrift_server_template<rpcserver_base, rpcserver_thrift,
-                                rpcserver_booter_thrift,
-                                GNURadio::ControlPortIf>::i();
+                                rpcserver_booter_thrift>::i();
 }
 
 /*!
@@ -66,8 +64,7 @@ const std::vector<std::string>
 rpcserver_booter_thrift::endpoints()
 {
   return thrift_server_template<rpcserver_base, rpcserver_thrift,
-                                rpcserver_booter_thrift,
-                                GNURadio::ControlPortIf>::endpoints();
+                                rpcserver_booter_thrift>::endpoints();
 }
 
 // Specialized thrift_application_base attributes and functions
@@ -87,7 +84,7 @@ const unsigned int thrift_application_base<rpcserver_base, rpcserver_booter_thri
     ALRIGHT_DEFAULT_BUFFER_SIZE);
 
 template<class rpcserver_base,  class rpcserver_booter_thrift>
-std::auto_ptr<thrift_application_base_impl>
+boost::scoped_ptr<thrift_application_base_impl>
   thrift_application_base<rpcserver_base,  rpcserver_booter_thrift>::p_impl(
       new thrift_application_base_impl());
 

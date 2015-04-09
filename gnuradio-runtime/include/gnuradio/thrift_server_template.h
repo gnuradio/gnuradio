@@ -39,7 +39,7 @@
 
 using namespace apache;
 
-template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
+template<typename TserverBase, typename TserverClass, typename TImplClass>
 class thrift_server_template : public thrift_application_base<TserverBase, TImplClass>
 {
 public:
@@ -56,7 +56,6 @@ private:
   boost::shared_ptr<thrift::transport::TServerTransport> d_serverTransport;
   boost::shared_ptr<thrift::transport::TTransportFactory> d_transportFactory;
   boost::shared_ptr<thrift::protocol::TProtocolFactory> d_protocolFactory;
-  boost::shared_ptr<thrift::concurrency::ThreadManager> d_threadManager;
   /**
    * Custom TransportFactory that allows you to override the default Thrift buffer size
    * of 512 bytes.
@@ -80,15 +79,14 @@ private:
   };
 };
 
-template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
-thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::thrift_server_template
+template<typename TserverBase, typename TserverClass, typename TImplClass>
+thrift_server_template<TserverBase, TserverClass, TImplClass>::thrift_server_template
 (TImplClass* _this) : thrift_application_base<TserverBase, TImplClass>(_this),
 d_handler(new TserverClass()),
 d_processor(new GNURadio::ControlPortProcessor(d_handler)),
 d_serverTransport(),
 d_transportFactory(),
-d_protocolFactory(new thrift::protocol::TBinaryProtocolFactory()),
-d_threadManager()
+d_protocolFactory(new thrift::protocol::TBinaryProtocolFactory())
 {
   gr::logger_ptr logger, debug_logger;
   gr::configure_default_loggers(logger, debug_logger, "controlport");
@@ -123,28 +121,29 @@ d_threadManager()
   }
   else {
       //std::cout << "Thrift Multi-threaded server : " << d_nthreads << std::endl;
-      d_threadManager = thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads);
+      boost::shared_ptr<thrift::concurrency::ThreadManager> threadManager(
+          thrift::concurrency::ThreadManager::newSimpleThreadManager(nthreads));
 
-      d_threadManager->threadFactory(
+      threadManager->threadFactory(
           boost::shared_ptr<thrift::concurrency::PlatformThreadFactory>(
               new thrift::concurrency::PlatformThreadFactory()));
 
-      d_threadManager->start();
+      threadManager->start();
 
       thrift_application_base<TserverBase, TImplClass>::d_thriftserver.reset(
           new thrift::server::TThreadPoolServer(d_processor, d_serverTransport,
                                                 d_transportFactory, d_protocolFactory,
-                                                d_threadManager));
+                                                threadManager));
   }
 }
 
-template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
-thrift_server_template<TserverBase, TserverClass,TImplClass, TThriftClass>::~thrift_server_template()
+template<typename TserverBase, typename TserverClass, typename TImplClass>
+thrift_server_template<TserverBase, TserverClass,TImplClass>::~thrift_server_template()
 {
 }
 
-template<typename TserverBase, typename TserverClass, typename TImplClass, typename TThriftClass>
-TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass, TThriftClass>::i_impl()
+template<typename TserverBase, typename TserverClass, typename TImplClass>
+TserverBase* thrift_server_template<TserverBase, TserverClass, TImplClass>::i_impl()
 {
   //std::cerr << "thrift_server_template: i_impl" << std::endl;
 
