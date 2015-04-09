@@ -74,7 +74,7 @@ def ensure_blocks_path():
 
 def get_source_tree_root():
     source_tree_subpath = "/grc/scripts"
-    script_path = os.path.dirname(__file__)
+    script_path = os.path.dirname(os.path.abspath(__file__))
     if script_path.endswith(source_tree_subpath):
         return script_path[:-len(source_tree_subpath)]
 
