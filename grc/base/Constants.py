@@ -38,3 +38,5 @@ DOMAIN_DTD = os.path.join(DATA_DIR, 'domain.dtd')
 GR_STREAM_DOMAIN = "gr_stream"
 GR_MESSAGE_DOMAIN = "gr_message"
 DEFAULT_DOMAIN = GR_STREAM_DOMAIN
+
+BLOCK_FLAG_THROTTLE = 'throttle'

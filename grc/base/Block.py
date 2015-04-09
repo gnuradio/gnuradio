@@ -18,12 +18,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from . import odict
-from . Constants import ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB
+from . Constants import ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB, BLOCK_FLAG_THROTTLE
 from Element import Element
 
 from Cheetah.Template import Template
 from UserDict import UserDict
 from itertools import imap
+
+from .. gui import Messages
+
 
 class TemplateArg(UserDict):
     """
@@ -46,10 +49,15 @@ class TemplateArg(UserDict):
     def __call__(self):
         return self._param.get_evaluated()
 
-def _get_keys(lst): return [elem.get_key() for elem in lst]
+
+def _get_keys(lst):
+    return [elem.get_key() for elem in lst]
+
+
 def _get_elem(lst, key):
     try: return lst[_get_keys(lst).index(key)]
     except ValueError: raise ValueError, 'Key "%s" not found in %s.'%(key, _get_keys(lst))
+
 
 class Block(Element):
 
@@ -73,6 +81,9 @@ class Block(Element):
         self._name = n.find('name')
         self._key = n.find('key')
         self._category = n.find('category') or ''
+        self._flags = n.find('flags') or ''
+        if n.find('throttle') and BLOCK_FLAG_THROTTLE not in self._flags:  # backwards-compatibility
+            self._flags += BLOCK_FLAG_THROTTLE
         self._grc_source = n.find('grc_source') or ''
         self._block_wrapper_path = n.find('block_wrapper_path')
         self._bussify_sink = n.find('bus_sink')
@@ -239,6 +250,9 @@ class Block(Element):
     def get_children_gui(self): return self.get_ports_gui() + self.get_params()
     def get_block_wrapper_path(self): return self._block_wrapper_path
     def get_comment(self): return self.get_param('comment').get_value()
+
+    def get_flags(self): return self._flags
+    def throttle(self): return "throttle" in self._flags
 
     ##############################################
     # Access Params
