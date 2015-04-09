@@ -413,12 +413,9 @@ class ActionHandler:
             if selected_block:
                 dialog = PropsDialog(selected_block)
                 response = gtk.RESPONSE_APPLY
-                while response == gtk.RESPONSE_APPLY:  # do while construct: rerun the dialog if Apply was hit
+                while response == gtk.RESPONSE_APPLY:  # rerun the dialog if Apply was hit
                     response = dialog.run()
-                    if response == gtk.RESPONSE_APPLY:
-                        self.get_flow_graph().update()
-                        Actions.ELEMENT_SELECT()  # empty action, that updates the main window and flowgraph
-                    elif response == gtk.RESPONSE_ACCEPT:
+                    if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
                         self.get_flow_graph().update()
                         self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
                         self.get_page().set_saved(False)
@@ -426,6 +423,9 @@ class ActionHandler:
                         n = self.get_page().get_state_cache().get_current_state()
                         self.get_flow_graph().import_data(n)
                         self.get_flow_graph().update()
+                    if response == gtk.RESPONSE_APPLY:
+                        # null action, that updates the main window
+                        Actions.ELEMENT_SELECT()
                 dialog.destroy()
         ##################################################
         # View Parser Errors
