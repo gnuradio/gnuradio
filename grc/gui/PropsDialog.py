@@ -142,9 +142,8 @@ class PropsDialog(gtk.Dialog):
         self._block.rewrite()
         self._block.validate()
         self._update_gui()
-        self._activate_apply()
 
-    def _activate_apply(self):
+    def _activate_apply(self, *args):
         self.set_response_sensitive(gtk.RESPONSE_APPLY, True)
 
     def _update_gui(self, *args):
