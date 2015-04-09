@@ -50,6 +50,7 @@ rpcserver_thrift::registerConfigureCallback(const std::string &id,
                                             const configureCallback_t callback)
 {
   {
+    boost::mutex::scoped_lock lock(d_callback_lock);
     ConfigureCallbackMap_t::const_iterator iter(d_setcallbackmap.find(id));
     if(iter != d_setcallbackmap.end()) {
       std::stringstream s;
@@ -68,6 +69,7 @@ rpcserver_thrift::registerConfigureCallback(const std::string &id,
 void
 rpcserver_thrift::unregisterConfigureCallback(const std::string &id)
 {
+  boost::mutex::scoped_lock lock(d_callback_lock);
   ConfigureCallbackMap_t::iterator iter(d_setcallbackmap.find(id));
   if(iter == d_setcallbackmap.end()) {
     std::stringstream s;
@@ -86,6 +88,7 @@ void
 rpcserver_thrift::registerQueryCallback(const std::string &id,
                                         const queryCallback_t callback)
 {
+  boost::mutex::scoped_lock lock(d_callback_lock);
   {
     QueryCallbackMap_t::const_iterator iter(d_getcallbackmap.find(id));
     if(iter != d_getcallbackmap.end()) {
@@ -105,6 +108,7 @@ rpcserver_thrift::registerQueryCallback(const std::string &id,
 void
 rpcserver_thrift::unregisterQueryCallback(const std::string &id)
 {
+  boost::mutex::scoped_lock lock(d_callback_lock);
   QueryCallbackMap_t::iterator iter(d_getcallbackmap.find(id));
   if(iter == d_getcallbackmap.end()) {
     std::stringstream s;

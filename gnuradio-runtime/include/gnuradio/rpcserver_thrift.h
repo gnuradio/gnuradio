@@ -32,6 +32,7 @@
 #include "thrift/ControlPort.h"
 #include "thrift/gnuradio_types.h"
 #include <boost/format.hpp>
+#include <boost/thread/mutex.hpp>
 
 #define S(x) #x
 #define S_(x) S(x)
@@ -61,6 +62,8 @@ public:
   virtual void shutdown();
 
  private:
+  boost::mutex d_callback_lock;
+
   typedef std::map<std::string, configureCallback_t> ConfigureCallbackMap_t;
   ConfigureCallbackMap_t d_setcallbackmap;
 
