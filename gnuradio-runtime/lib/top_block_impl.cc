@@ -125,8 +125,12 @@ namespace gr {
   void
   top_block_impl::stop()
   {
+    gr::thread::scoped_lock lock(d_mutex);
+
     if(d_scheduler)
       d_scheduler->stop();
+
+    d_state = IDLE;
   }
 
   void
@@ -137,6 +141,7 @@ namespace gr {
       {
         gr::thread::scoped_lock lock(d_mutex);
         if (!d_lock_count) {
+          d_state = IDLE;
           break;
         }
         d_lock_cond.wait(lock);
@@ -149,8 +154,6 @@ namespace gr {
   {
     if(d_scheduler)
       d_scheduler->wait();
-
-    d_state = IDLE;
   }
 
   // N.B. lock() and unlock() cannot be called from a flow graph
@@ -159,7 +162,8 @@ namespace gr {
   top_block_impl::lock()
   {
     gr::thread::scoped_lock lock(d_mutex);
-    stop();
+    if(d_scheduler)
+      d_scheduler->stop();
     d_lock_count++;
   }
 
@@ -197,7 +201,6 @@ namespace gr {
 
     // Create a new scheduler to execute it
     d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
-    d_state = RUNNING;
   }
 
   std::string
