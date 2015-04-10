@@ -3,58 +3,18 @@
 <flow_graph>
   <timestamp>Tue May 13 19:32:00 2014</timestamp>
   <block>
-    <key>options</key>
+    <key>variable</key>
     <param>
       <key>id</key>
-      <value>ber_curve_gen</value>
+      <value>framebits</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>title</key>
-      <value></value>
-    </param>
-    <param>
-      <key>author</key>
-      <value></value>
-    </param>
-    <param>
-      <key>description</key>
-      <value></value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>2000,2000</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>qt_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>max_nouts</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>thread_safe_setters</key>
-      <value></value>
+      <key>value</key>
+      <value>4096</value>
     </param>
     <param>
       <key>alias</key>
@@ -66,7 +26,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(8, 11)</value>
+      <value>(112, 75)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -201,37 +161,6 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>4096</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(112, 75)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
       <value>esno_0</value>
     </param>
     <param>
@@ -260,6 +189,784 @@
     </param>
   </block>
   <block>
+    <key>variable_tpc_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_tpc_2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(416, 483)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_tpc_3</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(616, 483)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_tpc_4</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(896, 483)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_tpc_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>decoder_type</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(216, 675)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_tpc_2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>decoder_type</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(416, 675)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_tpc_3</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>decoder_type</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(616, 675)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_tpc_4</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>decoder_type</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(896, 675)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_decoder_def</key>
+    <param>
+      <key>id</key>
+      <value>dec_tpc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>decoder_type</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 675)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_tpc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 483)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tpc_encoder_def</key>
+    <param>
+      <key>id</key>
+      <value>enc_tpc_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"ok"</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>len(esno_0)</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>row_poly</key>
+      <value>[3]</value>
+    </param>
+    <param>
+      <key>col_poly</key>
+      <value>[43]</value>
+    </param>
+    <param>
+      <key>krow</key>
+      <value>26</value>
+    </param>
+    <param>
+      <key>kcol</key>
+      <value>6</value>
+    </param>
+    <param>
+      <key>bval</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>qval</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(216, 483)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>fec_bercurve_generator</key>
+    <param>
+      <key>id</key>
+      <value>fec_bercurve_generator_0_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>esno</key>
+      <value>esno_0</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate_0</value>
+    </param>
+    <param>
+      <key>encoder_list</key>
+      <value>enc_tpc_4</value>
+    </param>
+    <param>
+      <key>decoder_list</key>
+      <value>dec_tpc_4</value>
+    </param>
+    <param>
+      <key>puncpat</key>
+      <value>'11'</value>
+    </param>
+    <param>
+      <key>threadtype</key>
+      <value>"capillary"</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>-100</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(248, 395)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <bus_source>1</bus_source>
+  </block>
+  <block>
     <key>fec_bercurve_generator</key>
     <param>
       <key>id</key>
@@ -279,11 +986,11 @@
     </param>
     <param>
       <key>encoder_list</key>
-      <value>enc_ldpc</value>
+      <value>enc_tpc_3</value>
     </param>
     <param>
       <key>decoder_list</key>
-      <value>dec_ldpc</value>
+      <value>dec_tpc_3</value>
     </param>
     <param>
       <key>puncpat</key>
@@ -347,11 +1054,11 @@
     </param>
     <param>
       <key>encoder_list</key>
-      <value>enc_cc</value>
+      <value>enc_tpc_2</value>
     </param>
     <param>
       <key>decoder_list</key>
-      <value>dec_cc</value>
+      <value>dec_tpc_2</value>
     </param>
     <param>
       <key>puncpat</key>
@@ -415,11 +1122,11 @@
     </param>
     <param>
       <key>encoder_list</key>
-      <value>enc_rep</value>
+      <value>enc_tpc_1</value>
     </param>
     <param>
       <key>decoder_list</key>
-      <value>dec_rep</value>
+      <value>dec_tpc_1</value>
     </param>
     <param>
       <key>puncpat</key>
@@ -483,11 +1190,11 @@
     </param>
     <param>
       <key>encoder_list</key>
-      <value>enc_dummy</value>
+      <value>enc_tpc_0</value>
     </param>
     <param>
       <key>decoder_list</key>
-      <value>dec_dummy</value>
+      <value>dec_tpc_0</value>
     </param>
     <param>
       <key>puncpat</key>
@@ -579,7 +1286,7 @@
     </param>
     <param>
       <key>label1</key>
-      <value>None</value>
+      <value>Linear LOG-MAP</value>
     </param>
     <param>
       <key>width1</key>
@@ -603,7 +1310,7 @@
     </param>
     <param>
       <key>label2</key>
-      <value>Rep. (Rate=3)</value>
+      <value>MAX LOG-MAP</value>
     </param>
     <param>
       <key>width2</key>
@@ -627,7 +1334,7 @@
     </param>
     <param>
       <key>label3</key>
-      <value>CC (K=7, Rate=2)</value>
+      <value>Constant LOG-MAP</value>
     </param>
     <param>
       <key>width3</key>
@@ -651,7 +1358,7 @@
     </param>
     <param>
       <key>label4</key>
-      <value>LDPC</value>
+      <value>LOG-MAP (LUT)</value>
     </param>
     <param>
       <key>width4</key>
@@ -675,7 +1382,7 @@
     </param>
     <param>
       <key>label5</key>
-      <value>TPC</value>
+      <value>LOG-MAP (C Correction)</value>
     </param>
     <param>
       <key>width5</key>
@@ -840,54 +1547,58 @@
     <bus_sink>1</bus_sink>
   </block>
   <block>
-    <key>variable_tpc_encoder_def</key>
+    <key>options</key>
     <param>
       <key>id</key>
-      <value>enc_tpc</value>
+      <value>tpc_ber_curve_gen</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>value</key>
-      <value>"ok"</value>
+      <key>title</key>
+      <value></value>
     </param>
     <param>
-      <key>ndim</key>
-      <value>2</value>
+      <key>author</key>
+      <value></value>
     </param>
     <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
+      <key>description</key>
+      <value></value>
     </param>
     <param>
-      <key>dim2</key>
-      <value>1</value>
+      <key>window_size</key>
+      <value>2000,2000</value>
     </param>
     <param>
-      <key>row_poly</key>
-      <value>[3]</value>
+      <key>generate_options</key>
+      <value>qt_gui</value>
     </param>
     <param>
-      <key>col_poly</key>
-      <value>[43]</value>
+      <key>category</key>
+      <value>Custom</value>
     </param>
     <param>
-      <key>krow</key>
-      <value>26</value>
+      <key>run_options</key>
+      <value>prompt</value>
     </param>
     <param>
-      <key>kcol</key>
-      <value>6</value>
+      <key>run</key>
+      <value>True</value>
     </param>
     <param>
-      <key>bval</key>
-      <value>9</value>
+      <key>max_nouts</key>
+      <value>0</value>
     </param>
     <param>
-      <key>qval</key>
-      <value>3</value>
+      <key>realtime_scheduling</key>
+      <value></value>
+    </param>
+    <param>
+      <key>thread_safe_setters</key>
+      <value></value>
     </param>
     <param>
       <key>alias</key>
@@ -899,591 +1610,12 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(776, 467)</value>
+      <value>(8, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
-  </block>
-  <block>
-    <key>variable_dummy_encoder_def</key>
-    <param>
-      <key>id</key>
-      <value>enc_dummy</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(424, 659)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_repetition_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_rep</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>rep</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>prob</key>
-      <value>0.5</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(216, 739)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_dummy_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_dummy</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(424, 771)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_cc_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_cc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>k</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>polys</key>
-      <value>polys</value>
-    </param>
-    <param>
-      <key>state_start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>state_end</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>mode</key>
-      <value>fec.CC_STREAMING</value>
-    </param>
-    <param>
-      <key>padding</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 659)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_cc_encoder_def</key>
-    <param>
-      <key>id</key>
-      <value>enc_cc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>k</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>rate</value>
-    </param>
-    <param>
-      <key>polys</key>
-      <value>polys</value>
-    </param>
-    <param>
-      <key>state_start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>mode</key>
-      <value>fec.CC_STREAMING</value>
-    </param>
-    <param>
-      <key>padding</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 451)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_repetition_encoder_def</key>
-    <param>
-      <key>id</key>
-      <value>enc_rep</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>framebits</key>
-      <value>framebits</value>
-    </param>
-    <param>
-      <key>rep</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(216, 603)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_tpc_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_tpc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>row_poly</key>
-      <value>[3]</value>
-    </param>
-    <param>
-      <key>col_poly</key>
-      <value>[43]</value>
-    </param>
-    <param>
-      <key>krow</key>
-      <value>26</value>
-    </param>
-    <param>
-      <key>kcol</key>
-      <value>6</value>
-    </param>
-    <param>
-      <key>bval</key>
-      <value>9</value>
-    </param>
-    <param>
-      <key>qval</key>
-      <value>3</value>
-    </param>
-    <param>
-      <key>max_iter</key>
-      <value>6</value>
-    </param>
-    <param>
-      <key>decoder_type</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(776, 659)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_ldpc_decoder_def</key>
-    <param>
-      <key>id</key>
-      <value>dec_ldpc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>271.127.3.112</value>
-    </param>
-    <param>
-      <key>sigma</key>
-      <value>0.5</value>
-    </param>
-    <param>
-      <key>max_iter</key>
-      <value>50</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(608, 739)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_ldpc_encoder_def</key>
-    <param>
-      <key>id</key>
-      <value>enc_ldpc</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"ok"</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>dim1</key>
-      <value>len(esno_0)</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>271.127.3.112</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(608, 627)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>fec_bercurve_generator</key>
-    <param>
-      <key>id</key>
-      <value>fec_bercurve_generator_0_1_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>esno</key>
-      <value>esno_0</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate_0</value>
-    </param>
-    <param>
-      <key>encoder_list</key>
-      <value>enc_tpc</value>
-    </param>
-    <param>
-      <key>decoder_list</key>
-      <value>dec_tpc</value>
-    </param>
-    <param>
-      <key>puncpat</key>
-      <value>'11'</value>
-    </param>
-    <param>
-      <key>threadtype</key>
-      <value>"capillary"</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>-100</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(248, 395)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <bus_source>1</bus_source>
   </block>
   <connection>
     <source_block_id>fec_bercurve_generator_0_1_0</source_block_id>
