@@ -21,6 +21,7 @@ include(GrPython)
 
 install(
     FILES
+    271.127.3.112
     ber_test.grc
     ber_curve_gen.grc
     fecapi_decoders.grc
@@ -31,6 +32,7 @@ install(
     fecapi_async_packed_decoders.grc
     fecapi_tagged_decoders.grc
     fecapi_tagged_encoders.grc
+    tpc_ber_curve_gen.grc
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
 )
