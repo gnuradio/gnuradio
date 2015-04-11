@@ -398,7 +398,7 @@ namespace gr {
      * the system page size, which may be larger than the value asked
      * for here.
      *
-     * \parem port the output port the request applies to.
+     * \param port the output port the request applies to.
      * \param max_output_buffer the requested maximum output size in items.
      */
     void set_max_output_buffer(int port, long max_output_buffer);
@@ -441,7 +441,7 @@ namespace gr {
      * the system page size, which may be larger than the value asked
      * for here.
      *
-     * \parem port the output port the request applies to.
+     * \param port the output port the request applies to.
      * \param min_output_buffer the requested minimum output size in items.
      */
     void set_min_output_buffer(int port, long min_output_buffer);
