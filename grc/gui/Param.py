@@ -169,6 +169,7 @@ class EnumParam(InputParam):
         self._input = gtk.combo_box_new_text()
         for option in self.param.get_options(): self._input.append_text(option.get_name())
         self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
+        self._input.connect('changed', self._editing_callback)
         self._input.connect('changed', self._apply_change)
         self.pack_start(self._input, False)
     def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
@@ -248,6 +249,7 @@ class FileParam(EntryParam):
         if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
             file_path = file_dialog.get_filename() #get the file path
             self._input.set_text(file_path)
+            self._editing_callback()
             self._apply_change()
         file_dialog.destroy() #destroy the dialog
 
