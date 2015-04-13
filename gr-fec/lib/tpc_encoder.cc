@@ -61,6 +61,7 @@ tpc_encoder::tpc_encoder (std::vector<int> row_polys, std::vector<int> col_polys
 
     outputSize = ((d_krow+rowEncoder_m)*rowEncoder_n)*((d_kcol+colEncoder_m)*colEncoder_n) - d_bval;
 
+    fp = NULL;
     //DEBUG_PRINT("inputSize=%d outputSize=%d\n", inputSize, outputSize);
     //fp = fopen("c_encoder_output.txt", "w");
 
