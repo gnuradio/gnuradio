@@ -35,8 +35,8 @@
 
 #include <gnuradio/fec/maxstar.h>
 
-namespace gr { 
- namespace fec { 
+namespace gr {
+ namespace fec {
 
 generic_decoder::sptr
 tpc_decoder::make(std::vector<int> row_polys, std::vector<int> col_polys, int krow, int kcol, int bval, int qval, int max_iter, int decoder_type)
@@ -51,46 +51,47 @@ tpc_decoder::tpc_decoder (std::vector<int> row_polys, std::vector<int> col_polys
     // first we operate on data chunks of get_input_size()
     // TODO: should we verify this and throw an error if it doesn't match?  YES
     // hwo do we do that?
-    
+
     rowEncoder_K = ceil(log(d_rowpolys[0])/log(2));    // rowEncoder_K is the constraint length of the row encoder polynomial
     rowEncoder_n = d_rowpolys.size();
     rowEncoder_m = rowEncoder_K - 1;
     colEncoder_K = ceil(log(d_colpolys[0])/log(2));    // colEncoder_K is the constraint length of the col encoder polynomial
     colEncoder_n = d_colpolys.size();
     colEncoder_m = colEncoder_K - 1;
-    
+
     // calculate the input and output sizes
     inputSize = ((d_krow+rowEncoder_m)*rowEncoder_n)*((d_kcol+colEncoder_m)*colEncoder_n) - d_bval;
     outputSize = (d_krow*d_kcol - (d_bval+d_qval));
-    
+
+    fp = NULL;
     //DEBUG_PRINT("inputSize=%d outputSize=%d\n", inputSize, outputSize);
     //fp = fopen("c_decoder_output.txt", "w");
-    
+
     rowNumStates = 1 << (rowEncoder_m);       // 2^(row_mm)
     colNumStates = 1 << (colEncoder_m);       // 2^(col_mm)
     rowOutputs.resize(2, std::vector<int>(rowNumStates,0));
     rowNextStates.resize(2, std::vector<int>(rowNumStates,0));
     colOutputs.resize(2, std::vector<int>(colNumStates,0));
     colNextStates.resize(2, std::vector<int>(colNumStates,0));;
-    
+
     // precalculate the state transition matrix for the row polynomial
-    tpc_common::precomputeStateTransitionMatrix_RSCPoly(rowNumStates, d_rowpolys, rowEncoder_K, rowEncoder_n, 
+    tpc_common::precomputeStateTransitionMatrix_RSCPoly(rowNumStates, d_rowpolys, rowEncoder_K, rowEncoder_n,
                                                         rowOutputs, rowNextStates);
-    
+
     // precalculate the state transition matrix for the column polynomial
-    tpc_common::precomputeStateTransitionMatrix_RSCPoly(colNumStates, d_colpolys, colEncoder_K, colEncoder_n, 
+    tpc_common::precomputeStateTransitionMatrix_RSCPoly(colNumStates, d_colpolys, colEncoder_K, colEncoder_n,
                                                         colOutputs, colNextStates);
-   
+
     codeword_M = d_kcol + colEncoder_K - 1;
     codeword_N = d_krow + rowEncoder_K - 1;
-    
+
     // pre-allocate memory we use for encoding
     inputSizeWithPad = inputSize + d_bval;
-        
+
     channel_llr.resize(codeword_M, std::vector<float>(codeword_N, 0));
     Z.resize(codeword_M, std::vector<float>(codeword_N, 0));
     extrinsic_info.resize(codeword_M*codeword_N, 0);
-    
+
     input_u_rows.resize(d_krow, 0);
     input_u_cols.resize(d_kcol, 0);
     input_c_rows.resize(codeword_N, 0);
@@ -98,10 +99,10 @@ tpc_decoder::tpc_decoder (std::vector<int> row_polys, std::vector<int> col_polys
     output_u_rows.resize(d_krow, 0);
     output_u_cols.resize(d_kcol, 0);
     output_c_rows.resize(codeword_N, 0);
-    
+
     output_c_cols.resize(codeword_M*codeword_N, 0);
     output_c_col_idx = 0;
-    
+
     // setup the max_star function based on decoder type
     switch(d_decoder_type) {
         case 0:
@@ -123,7 +124,7 @@ tpc_decoder::tpc_decoder (std::vector<int> row_polys, std::vector<int> col_polys
             max_star = &tpc_decoder::linear_log_map;
             break;
     }
-    
+
 	// declare the reverse sweep trellis
 	// the beta vector is logically layed out in memory as follows, assuming the
 	// following values (for educational purposes)
@@ -199,7 +200,7 @@ int tpc_decoder::get_input_size() {
 // as well as some comments being added to help understand
 // exactly what is going on w/ the siso decoder
 void tpc_decoder::siso_decode_row() {
-    
+
     int LL, state, k, ii, symbol, mask;
     float app_in, delta1, delta2;
     LL = input_u_rows.size();        // code length
@@ -208,7 +209,7 @@ void tpc_decoder::siso_decode_row() {
     float num_llr_u;
     // log-likelihood ratio of the uncoded bit being a 0
     float den_llr_u;
-    
+
     // initialize beta_row trellis
     // this initialization is saying that the likelihood that the reverse sweep
     // starts at state=0 is 100%, b/c state 1, 2, 3's likelihood's are basically -inf
@@ -218,7 +219,7 @@ void tpc_decoder::siso_decode_row() {
     //	}
     // filling w/ 0xCC yields a value close to -MAXLOG, and memset is faster than for loops
     memset(&beta_row[LL+rowEncoder_K-1][1], 0xCC, sizeof(float)*(max_states_row-1));
-    
+
     // initialize alpha_prime_row (current time instant), alpha_prime_row then gets updated
     // by shifting in alpha_row at the end of each time instant of processing
     // alpha_row needs to get initialized at the beginning of each processing loop, so we
@@ -230,7 +231,7 @@ void tpc_decoder::siso_decode_row() {
     //		alpha_prime_row[state] = -MAXLOG;
     //	}
     memset(&alpha_prime_row[1], 0xCC, sizeof(float)*(max_states_row-1));
-    
+
     // compute the beta_row matrix first, which is the reverse sweep (hence we start at the last
     // time instant-1 and work our way back to t=0).  we start at last time instant-1 b/c
     // we already filled in beta_row values for the last time instant, forcing the trellis to
@@ -245,30 +246,30 @@ void tpc_decoder::siso_decode_row() {
         else {
             app_in = 0;
         }
-        
+
         // get the input associated w/ this time instant
         memcpy(&rec_array_row[0], &input_c_rows[rowEncoder_n*k], sizeof(float)*rowEncoder_n);
-        
+
 //         DEBUG_PRINT("k=%d\n", k);
 //         DEBUG_PRINT_F(fp, "k=%d\n", k);
-//         
+//
 //         DEBUG_PRINT("rec_array -->\n");
 //         DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&rec_array_row[0], rec_array_row.size());
 //         DEBUG_PRINT_F(fp, "rec_array -->\n");
 //         DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT_F(fp, &rec_array_row[0], rec_array_row.size());
-        
-        // for each input at this time instant, create a metric which 
+
+        // for each input at this time instant, create a metric which
         // represents the likelihood that this input corresponds to
         // each of the possible symbols
         for(symbol=0; symbol<num_symbols_row; symbol++) {
             metric_c_row[symbol] = gamma(rec_array_row, symbol);
         }
-        
+
 //         DEBUG_PRINT("metric_c -->\n");
 //         DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&metric_c_row[0], metric_c_row.size());
 //         DEBUG_PRINT_F(fp, "metric_c -->\n");
 //         DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT_F(fp, &metric_c_row[0], metric_c_row.size());
-        
+
         // step through all states -- populating the beta_row values for each node
         // in the trellis diagram as shown above w/ the maximum-likelihood
         // of this current node coming from the previous node
@@ -279,19 +280,19 @@ void tpc_decoder::siso_decode_row() {
             delta2 = beta_row[k+1][rowNextStates[1][state]] + metric_c_row[rowOutputs[1][state]] + app_in;
             // update beta_row
             beta_row[k][state] = (*this.*max_star)(delta1, delta2);
-            
+
 //             DEBUG_PRINT("delta1=%f delta2=%f beta=%f\n", delta1, delta2, beta_row[k][state]);
 //             DEBUG_PRINT_F(fp, "delta1=%f delta2=%f beta=%f\n", delta1, delta2, beta_row[k][state]);
         }
-                
+
         // normalize beta_row
         for (state=1;state<max_states_row;state++) {
         	beta_row[k][state] = beta_row[k][state] - beta_row[k][0];
         }
         beta_row[k][0] = 0;
-        
+
     }
-    
+
     // compute the forward sweep (alpha_row values), and update the llr's
     // notice that we start at time index=1, b/c time index=0 has already been
     // initialized, and we are forcing the trellis to start from state=0
@@ -299,7 +300,7 @@ void tpc_decoder::siso_decode_row() {
         // initialize the llr's for the uncoded bits
         num_llr_u = -MAXLOG;
         den_llr_u = -MAXLOG;
-        
+
         // intialize alpha_row
 //        for (state=0;state<max_states_row;state++) {
 //			alpha_row[state] = -MAXLOG;
@@ -319,18 +320,18 @@ void tpc_decoder::siso_decode_row() {
             num_llr_c_row[ii] = -MAXLOG;
             rec_array_row[ii] = input_c_rows[rowEncoder_n*(k-1)+ii];
         }
-        
-        // for each input at this time instant, create a metric which 
+
+        // for each input at this time instant, create a metric which
         // represents the likelihood that this input corresponds to
         // each of the possible symbols
         for(symbol=0; symbol<num_symbols_row; symbol++) {
             metric_c_row[ii] = gamma(rec_array_row, symbol);
         }
-        
+
         // compute the alpha_row vector
         // to understand the loop below, we need to think about the forward trellis.
         // we know that any node, at any time instant in the trellis diagram can have
-        // multiple transitions into that node (i.e. any number of nodes in the 
+        // multiple transitions into that node (i.e. any number of nodes in the
         // previous time instance can transition into this current node, based on the
         // polynomial).  SO, in the loop below, delta1 represents the transition from
         // the previous time instant for input (either 0 or 1) and the current state
@@ -352,7 +353,7 @@ void tpc_decoder::siso_decode_row() {
             delta2 = alpha_row[rowNextStates[1][state]];
             alpha_row[rowNextStates[1][state]] = (*this.*max_star)(delta1, delta2);
         }
-        
+
         // compute the llr's
         for (state=0;state<max_states_row;state++)  {
             // data 0 branch (departing)
@@ -374,7 +375,7 @@ void tpc_decoder::siso_decode_row() {
                 }
                 mask = mask>>1;
             }
-            
+
             // data 1 branch (departing)
             delta1 = alpha_prime_row[state] + metric_c_row[rowOutputs[1][state]] + beta_row[k][rowNextStates[1][state]] + app_in;
             // the information bit
@@ -398,8 +399,8 @@ void tpc_decoder::siso_decode_row() {
             // shift alpha_row back to alpha_prime_row
             alpha_prime_row[state] = alpha_row[state] - alpha_row[0];
         }
-        
-        // assign uncoded outputs 
+
+        // assign uncoded outputs
         if (k-1<LL) {
             output_u_rows[k-1] = num_llr_u - den_llr_u;
         }
@@ -619,7 +620,7 @@ void tpc_decoder::siso_decode_col() {
 
 float tpc_decoder::linear_log_map(const float delta1, const float delta2) {
     float diff;
-    
+
     diff = delta2 - delta1;
 
     if ( diff > TJIAN )
@@ -641,7 +642,7 @@ float tpc_decoder::max_log_map(const float delta1, const float delta2) {
 float tpc_decoder::constant_log_map(const float delta1, const float delta2) {
     // Return maximum of delta1 and delta2
     // and in correction value if |delta1-delta2| < TVALUE
-    register float diff;    
+    register float diff;
     diff = delta2 - delta1;
 
     if ( diff > TVALUE )
@@ -657,7 +658,7 @@ float tpc_decoder::constant_log_map(const float delta1, const float delta2) {
 float tpc_decoder::log_map_lut_correction(const float delta1, const float delta2) {
     float diff;
     diff = (float) fabs( delta2 - delta1 );
-    
+
     if (delta1 > delta2) {
         if (diff > BOUNDARY8 )
             return( delta1 );
@@ -672,7 +673,7 @@ float tpc_decoder::log_map_lut_correction(const float delta1, const float delta2
                     return( delta1 + VALUE5 + SLOPE5*(diff-BOUNDARY5) );
                 else
                     return( delta1 + VALUE4 + SLOPE4*(diff-BOUNDARY4) );
-            }   
+            }
         } else {
             if (diff > BOUNDARY2 ) {
                 if ( diff > BOUNDARY3 )
@@ -700,7 +701,7 @@ float tpc_decoder::log_map_lut_correction(const float delta1, const float delta2
                     return( delta2 + VALUE5 + SLOPE5*(diff-BOUNDARY5) );
                 else
                     return( delta2 + VALUE4 + SLOPE4*(diff-BOUNDARY4) );
-            }   
+            }
         } else {
             if (diff > BOUNDARY2 ) {
                 if ( diff > BOUNDARY3 )
@@ -720,9 +721,9 @@ float tpc_decoder::log_map_lut_correction(const float delta1, const float delta2
 float tpc_decoder::log_map_cfunction_correction(const float delta1, const float delta2) {
     // Use C-function calls to compute the correction function
     if (delta1 > delta2) {
-        return( (float) (delta1 + log( 1 + exp( delta2-delta1) ) ) );       
+        return( (float) (delta1 + log( 1 + exp( delta2-delta1) ) ) );
     } else  {
-        return( (float) (delta2 + log( 1 + exp( delta1-delta2) ) ) );       
+        return( (float) (delta2 + log( 1 + exp( delta1-delta2) ) ) );
     }
 }
 
@@ -731,7 +732,7 @@ float tpc_decoder::gamma(const std::vector<float> rx_array, const int symbol) {
     int ii;
     int mask;
     int nn = rx_array.size();
-    
+
     mask = 1;
     for (ii=0;ii<nn;ii++) {
         if (symbol&mask)
@@ -741,7 +742,7 @@ float tpc_decoder::gamma(const std::vector<float> rx_array, const int symbol) {
 
 //     DEBUG_PRINT("nn=%d symbol=%d rm = %f\n", nn, symbol, rm);
 //     DEBUG_PRINT_F(fp, "nn=%d symbol=%d rm = %f\n", nn, symbol, rm);
-    
+
     return(rm);
 }
 
@@ -752,10 +753,10 @@ template <typename T> int tpc_decoder::sgn(T val) {
 void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
     const float *inPtr = (const float *) inBuffer;
     unsigned char *out = (unsigned char *) outBuffer;
-        
+
     unsigned int m, n, ii;
     int iter;
-    
+
     for(ii=0; ii<numInitLoadIter; ii++) {
     	memset(&channel_llr[ii][0], 0, sizeof(float)*codeword_N);
     	memset(&Z[ii][0], 0, sizeof(float)*codeword_N);
@@ -775,7 +776,7 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
     memset(&extrinsic_info[0], 0, sizeof(float)*extrinsic_info.size());
 
     //DEBUG_PRINT("Starting TURBO Decoding\n");
-    
+
     for(iter=0; iter<d_max_iter; iter++) {
         //DEBUG_PRINT("Turbo Iter=%d\n", iter+1);
         //DEBUG_PRINT_F(fp, "Turbo Iter=%d\n", iter+1);
@@ -788,10 +789,10 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&input_c_rows[0], codeword_N);
             //DEBUG_PRINT_F(fp, "input_c_rows -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT_F(fp, &input_c_rows[0], codeword_N);
-            
+
             // call siso decode
             siso_decode_row();
-            
+
             //DEBUG_PRINT("output_u_rows -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&output_u_rows[0], output_u_rows.size());
             //DEBUG_PRINT_F(fp, "output_u_rows -->\n");
@@ -800,12 +801,12 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&output_c_rows[0], output_c_rows.size());
             //DEBUG_PRINT_F(fp, "output_c_rows -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT_F(fp, &output_c_rows[0], output_c_rows.size());
-            
+
             // copy the output coded back into Z, so we can feed it back through the decoder
             // for more iterations
             volk_32f_x2_subtract_32f(&Z[m][0], &output_c_rows[0], &extrinsic_info[m*codeword_N], codeword_N);
         }
-        
+
         // decode each col
         earlyExit = true;
         output_c_col_idx = 0;
@@ -814,15 +815,15 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
             for(ii=0; ii<codeword_M; ii++) {
                 input_c_cols[ii] = Z[ii][n];
             }
-            
+
             //DEBUG_PRINT("input_c_cols -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&input_c_cols[0], codeword_M);
             //DEBUG_PRINT_F(fp, "input_c_cols -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT_F(fp, &input_c_cols[0], codeword_M);
-            
+
             // call siso decode
             siso_decode_col();
-            
+
             //DEBUG_PRINT("output_u_cols -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&output_u_cols[0], output_u_cols.size());
             //DEBUG_PRINT_F(fp, "output_u_cols -->\n");
@@ -831,13 +832,13 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT(&output_c_cols[output_c_col_idx], codeword_M);
             //DEBUG_PRINT_F(fp, "output_c_cols -->\n");
             //DEBUG_PRINT_FLOAT_ARRAY_AS_FLOAT_F(fp, &output_c_cols[output_c_col_idx], codeword_M);
-            
+
             // create the extrinsic_info vector, which subtracts from input_c_cols to prevent feedback
             //DEBUG_PRINT("extrinsic_info -->\n");
             //DEBUG_PRINT_F(fp, "extrinsic_info -->\n");
             for(ii=0; ii<codeword_M; ii++) {
             	extrinsic_info[ii*codeword_N+n] = output_c_cols[output_c_col_idx+ii] - input_c_cols[ii];
-                
+
             	if(earlyExit) {
             		if(sgn(output_c_cols[output_c_col_idx+ii])!=sgn(input_c_cols[ii])) {
 						earlyExit = false;
@@ -850,7 +851,7 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
             }
             //DEBUG_PRINT("\n");
             //DEBUG_PRINT_F(fp, "\n");
-            
+
             output_c_col_idx += codeword_M;
         }
         if(earlyExit) break;
@@ -874,7 +875,7 @@ void tpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
 			}
 		}
 	}
-    
+
     //DEBUG_PRINT(("Output\n"));
     //DEBUG_PRINT_UCHAR_ARRAY(out, outputSize);
     //DEBUG_PRINT_F(fp, "Output\n");
@@ -901,7 +902,9 @@ const char* tpc_decoder::get_conversion() {
     return "none";
 }
 
-tpc_decoder::~tpc_decoder() {
+tpc_decoder::~tpc_decoder()
+{
+  if(fp)
     fclose(fp);
 }
 
