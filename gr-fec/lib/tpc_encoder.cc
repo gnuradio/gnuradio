@@ -336,7 +336,8 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
 
 tpc_encoder::~tpc_encoder()
 {
-    fclose(fp);
+    if(fp)
+      fclose(fp);
 }
 
 }
