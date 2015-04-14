@@ -1,0 +1,4 @@
+[thrift]
+port = 9090
+nthreads = 2
+buffersize = 1434
