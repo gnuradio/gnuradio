@@ -42,6 +42,7 @@ GR_PYTHON_INSTALL(PROGRAMS
 
 install(
     FILES
+    filter_taps.grc
     resampler_demo.grc
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
     COMPONENT "filter_python"

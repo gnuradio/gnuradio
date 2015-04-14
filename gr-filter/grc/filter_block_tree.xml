@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- Copyright 2012 Free Software Foundation, Inc.
+ Copyright 2012,2015 Free Software Foundation, Inc.
 
  This file is part of GNU Radio
 
@@ -30,6 +30,12 @@
    <name></name> <!-- Blank for Root Name -->
    <cat>
       <name>Filters</name>
+      <!-- FIR filter tap generators -->
+      <block>variable_low_pass_filter_taps</block>
+      <block>variable_high_pass_filter_taps</block>
+      <block>variable_band_pass_filter_taps</block>
+      <block>variable_band_reject_filter_taps</block>
+      <block>variable_rrc_filter_taps</block>
       <!-- FIR convenience filters -->
       <block>low_pass_filter</block>
       <block>high_pass_filter</block>

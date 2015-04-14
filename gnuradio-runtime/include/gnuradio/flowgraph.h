@@ -147,7 +147,7 @@ namespace gr {
     friend GR_RUNTIME_API flowgraph_sptr make_flowgraph();
 
     // Destruct an arbitrary flowgraph
-    ~flowgraph();
+    virtual ~flowgraph();
 
     // Connect two endpoints
     void connect(const endpoint &src, const endpoint &dst);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,6 +52,7 @@
 #include "gnuradio/digital/constellation_decoder_cb.h"
 #include "gnuradio/digital/constellation_receiver_cb.h"
 #include "gnuradio/digital/constellation_soft_decoder_cf.h"
+#include "gnuradio/digital/corr_est_cc.h"
 #include "gnuradio/digital/correlate_access_code_bb.h"
 #include "gnuradio/digital/correlate_access_code_tag_bb.h"
 #include "gnuradio/digital/correlate_access_code_bb_ts.h"
@@ -78,6 +79,7 @@
 #include "gnuradio/digital/lms_dd_equalizer_cc.h"
 #include "gnuradio/digital/map_bb.h"
 #include "gnuradio/digital/metric_type.h"
+#include "gnuradio/digital/modulate_vector.h"
 #include "gnuradio/digital/mpsk_receiver_cc.h"
 #include "gnuradio/digital/mpsk_snr_est.h"
 #include "gnuradio/digital/mpsk_snr_est_cc.h"
@@ -128,6 +130,7 @@
 %include "gnuradio/digital/constellation_decoder_cb.h"
 %include "gnuradio/digital/constellation_receiver_cb.h"
 %include "gnuradio/digital/constellation_soft_decoder_cf.h"
+%include "gnuradio/digital/corr_est_cc.h"
 %include "gnuradio/digital/correlate_access_code_bb.h"
 %include "gnuradio/digital/correlate_access_code_tag_bb.h"
 %include "gnuradio/digital/correlate_access_code_bb_ts.h"
@@ -154,6 +157,7 @@
 %include "gnuradio/digital/lms_dd_equalizer_cc.h"
 %include "gnuradio/digital/map_bb.h"
 %include "gnuradio/digital/metric_type.h"
+%include "gnuradio/digital/modulate_vector.h"
 %include "gnuradio/digital/mpsk_receiver_cc.h"
 %include "gnuradio/digital/mpsk_snr_est.h"
 %include "gnuradio/digital/mpsk_snr_est_cc.h"
@@ -199,6 +203,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_soft_decoder_cf);
+GR_SWIG_BLOCK_MAGIC2(digital, corr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb_ts);
