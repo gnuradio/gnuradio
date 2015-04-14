@@ -110,6 +110,8 @@ macro(GR_SWIG_MAKE name)
     # vector<long unsigned int> (on 64-bit machines). Use this to test
     # the size of size_t, then set SIZE_T_32 if it's a 32-bit machine
     # or not if it's 64-bit. The logic in gr_type.i handles the rest.
+    # Only use these checks for older broken swigs less than 3.0.
+    if (SWIG_VERSION VERSION_LESS "3.0.0")
     INCLUDE(CheckTypeSize)
     CHECK_TYPE_SIZE("size_t" SIZEOF_SIZE_T)
     CHECK_TYPE_SIZE("unsigned int" SIZEOF_UINT)
@@ -120,6 +122,7 @@ macro(GR_SWIG_MAKE name)
     if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_ULONG})
       list(APPEND GR_SWIG_FLAGS -DSIZE_T_LONG)
     endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_ULONG})
+    endif()
 
     #do swig doc generation if specified
     if(GR_SWIG_DOC_FILE)
@@ -173,7 +176,12 @@ macro(GR_SWIG_MAKE name)
     set_source_files_properties(${ifiles} PROPERTIES CPLUSPLUS ON)
 
     #setup the actual swig library target to be built
-    include(UseSWIG)
+    #use a custom modified UseSWIG when less than 3.0
+    if (SWIG_VERSION VERSION_LESS "3.0.0")
+        include(GrUseSWIGCustom)
+    else()
+        include(UseSWIG)
+    endif()
     SWIG_ADD_MODULE(${name} python ${ifiles})
     SWIG_LINK_LIBRARIES(${name} ${PYTHON_LIBRARIES} ${GR_SWIG_LIBRARIES})
     if(${name} STREQUAL "runtime_swig")

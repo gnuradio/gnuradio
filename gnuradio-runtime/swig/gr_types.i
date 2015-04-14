@@ -80,6 +80,10 @@ namespace std {
 %template(gr_vector_vector_complexf) std::vector< std::vector< std::complex<float> > >;
 %template(gr_vector_vector_complexd) std::vector< std::vector< std::complex<double> > >;
 
+////////////////////////////////////////////////////////////////////////
+//only use this work-around for older swigs below 3.0
+//which may have had improper size_t typedefs on 32-bit systems
+#if SWIG_VERSION < 0x030000
 // Fix for Issue #529
 #ifdef SIZE_T_32
   // On 32-bit systems, whenever we see std::vector<size_t>, replace it
@@ -90,5 +94,7 @@ namespace std {
   // with vector<long unsigned int>
   %apply std::vector<long unsigned int> { std::vector<size_t> };
 #endif
+#endif //SWIG_VERSION
+////////////////////////////////////////////////////////////////////////
 
 #endif /* SWIG_GR_TYPES_I */
