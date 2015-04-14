@@ -38,6 +38,7 @@ namespace gr {
       size_t d_len;
       unsigned int d_disp_mask;
 
+      size_t d_index;
       std::vector<signed char> d_buffer;
       rpcbufferedget< std::vector<signed char> > buffered_get;
 
@@ -64,4 +65,3 @@ namespace gr {
 } /* namespace gr */
 
 #endif /* INCLUDED_CTRLPORT_PROBE2_C_IMPL_H */
-
