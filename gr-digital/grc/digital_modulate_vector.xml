@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+# modulate_vector_bc
+###################################################
+ -->
+<block>
+  <name>Modulate Vector</name>
+  <key>variable_modulate_vector</key>
+  <category>Modulators</category>
+  <import>from gnuradio import digital</import>
+  <var_make>self.$(id) = $(id) = digital.modulate_vector_bc($mod .to_basic_block(), $data, $taps)</var_make>
+  <var_value>digital.modulate_vector_bc($mod .to_basic_block(), $data, $taps)</var_value>
+  <make></make>
+
+  <param>
+    <name>Modulator</name>
+    <key>mod</key>
+    <value></value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>Data vector</name>
+    <key>data</key>
+    <value></value>
+    <type>int_vector</type>
+  </param>
+  <param>
+    <name>Filter taps</name>
+    <key>taps</key>
+    <value></value>
+    <type>float_vector</type>
+  </param>
+</block>
