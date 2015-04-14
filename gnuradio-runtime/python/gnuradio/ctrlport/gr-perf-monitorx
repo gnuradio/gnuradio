@@ -254,17 +254,22 @@ class DataTable(QtGui.QWidget):
     def update(self):
         print "update"
 
+    def closeEvent(self, event):
+        self.timer = None
+
     def __init__(self, radioclient, G):
         QtGui.QWidget.__init__( self)
 
-        self.layout = QtGui.QVBoxLayout(self);
-        self.hlayout = QtGui.QHBoxLayout();
-        self.layout.addLayout(self.hlayout);
+        self.layout = QtGui.QVBoxLayout(self)
+        self.hlayout = QtGui.QHBoxLayout()
+        self.layout.addLayout(self.hlayout)
 
-        self.G = G;
-        self.radioclient = radioclient;
+        self.G = G
+        self.radioclient = radioclient
 
         self._keymap = None
+
+        self.disp = None
 
         # Create a combobox to set the type of statistic we want.
         self._statistic = "Instantaneous"
@@ -276,7 +281,7 @@ class DataTable(QtGui.QWidget):
         self.stattype.addItem("Average")
         self.stattype.addItem("Variance")
         self.stattype.setMaximumWidth(200)
-        self.hlayout.addWidget(self.stattype);
+        self.hlayout.addWidget(self.stattype)
         self.stattype.currentIndexChanged.connect(self.stat_changed)
 
         # Create a checkbox to toggle sorting of graphs
@@ -287,18 +292,18 @@ class DataTable(QtGui.QWidget):
         self.checksort.stateChanged.connect(self.checksort_changed)
 
         # set up table
-        self.perfTable = Qt.QTableWidget();
+        self.perfTable = Qt.QTableWidget()
         self.perfTable.setColumnCount(2)
-        self.perfTable.verticalHeader().hide();
-        self.perfTable.setHorizontalHeaderLabels( ["Block Name", "Percent Runtime"] );
-        self.perfTable.horizontalHeader().setStretchLastSection(True);
+        self.perfTable.verticalHeader().hide()
+        self.perfTable.setHorizontalHeaderLabels( ["Block Name", "Percent Runtime"] )
+        self.perfTable.horizontalHeader().setStretchLastSection(True)
         self.perfTable.setSortingEnabled(True)
         nodes = self.G.nodes(data=True)
 
         # set up plot
         self.f = plt.figure(figsize=(10,8), dpi=90)
-        self.sp = self.f.add_subplot(111);
-        self.sp.autoscale_view(True,True,True);
+        self.sp = self.f.add_subplot(111)
+        self.sp.autoscale_view(True,True,True)
         self.sp.set_autoscale_on(True)
         self.canvas = FigureCanvas(self.f)
 
@@ -339,63 +344,71 @@ class DataTable(QtGui.QWidget):
 class DataTableBuffers(DataTable):
     def __init__(self, radioclient, G):
         super(DataTableBuffers, self).__init__(radioclient, G)
-        self.perfTable.setHorizontalHeaderLabels( ["Block Name", "Percent Buffer Full"] );
+        self.perfTable.setHorizontalHeaderLabels( ["Block Name", "Percent Buffer Full"] )
 
     def update(self):
         nodes = self.G.nodes();
 
         # get buffer fullness for all blocks
         kl = map(lambda x: "%s::%soutput %% full" % \
-                     (x, self._statistics_table[self._statistic]),
+                 (x, self._statistics_table[self._statistic]),
                  nodes);
         buf_knobs = self.radioclient.getKnobs(kl)
 
         # strip values out of ctrlport response
         buffer_fullness = dict(zip(
-                    map(lambda x: x.split("::")[0], buf_knobs.keys()),
-                    map(lambda x: x.value, buf_knobs.values())))
+            map(lambda x: x.split("::")[0], buf_knobs.keys()),
+            map(lambda x: x.value, buf_knobs.values())))
 
         blockport_fullness = {}
         for blk in buffer_fullness:
             bdata = buffer_fullness[blk]
             if bdata:
                 for port in range(0,len(bdata)):
-                    blockport_fullness["%s:%d"%(blk,port)] =  bdata[port];
+                    blockport_fullness["%s:%d"%(blk,port)] =  bdata[port]
 
-        self.table_update(blockport_fullness);
+        if(self.perfTable.isVisible()):
+            self.table_update(blockport_fullness);
 
-        if(self._sort):
-            sorted_fullness = sorted(blockport_fullness.iteritems(), key=operator.itemgetter(1))
-            self._keymap = map(operator.itemgetter(0), sorted_fullness)
         else:
-            if self._keymap:
-                sorted_fullness = len(self._keymap)*['',]
-                for b in blockport_fullness:
-                    sorted_fullness[self._keymap.index(b)] = (b, blockport_fullness[b])
+            if(self._sort):
+                sorted_fullness = sorted(blockport_fullness.iteritems(),
+                                         key=operator.itemgetter(1))
+                self._keymap = map(operator.itemgetter(0), sorted_fullness)
             else:
-                sorted_fullness = blockport_fullness.items()
+                if self._keymap:
+                    sorted_fullness = len(self._keymap)*['',]
+                    for b in blockport_fullness:
+                        sorted_fullness[self._keymap.index(b)] = (b, blockport_fullness[b])
+                else:
+                    sorted_fullness = blockport_fullness.items()
 
-        self.sp.clear();
-        self.sp.bar(range(0,len(sorted_fullness)), map(lambda x: x[1], sorted_fullness),
-                    alpha=0.5)
-        self.sp.set_ylabel("% Buffers Full");
-        self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_fullness))))
-        self.sp.set_xticklabels( map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness)),
-                                 rotation="vertical", verticalalignment="bottom" )
-        self.canvas.draw()
-        self.canvas.show()
+            if(not self.disp):
+                self.disp = self.sp.bar(range(0,len(sorted_fullness)),
+                                        map(lambda x: x[1], sorted_fullness),
+                                        alpha=0.5)
+                self.sp.set_ylabel("% Buffers Full");
+                self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_fullness))))
+                self.sp.set_xticklabels(map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness)),
+                                        rotation="vertical", verticalalignment="bottom")
+            else:
+                self.sp.set_xticklabels(map(lambda x: "  " + x, map(lambda x: x[0], sorted_fullness)),
+                                        rotation="vertical", verticalalignment="bottom")
+                for r,w in zip(self.disp, sorted_fullness):
+                    r.set_height(w[1])
+
+            self.canvas.draw()
 
 class DataTableRuntimes(DataTable):
     def __init__(self, radioclient, G):
         super(DataTableRuntimes, self).__init__( radioclient, G)
-        #self.perfTable.setRowCount(len( self.G.nodes() ))
 
     def update(self):
         nodes = self.G.nodes();
 
         # get work time for all blocks
         kl = map(lambda x: "%s::%swork time" % \
-                     (x, self._statistics_table[self._statistic]),
+                 (x, self._statistics_table[self._statistic]),
                  nodes);
         wrk_knobs = self.radioclient.getKnobs(kl)
 
@@ -408,31 +421,37 @@ class DataTableRuntimes(DataTable):
             map(lambda x: x.value/total_work, wrk_knobs.values())))
 
         # update table view
-        self.table_update(work_times)
+        if(self.perfTable.isVisible()):
+            self.table_update(work_times)
 
-        if(self._sort):
-            sorted_work = sorted(work_times.iteritems(), key=operator.itemgetter(1))
-            self._keymap = map(operator.itemgetter(0), sorted_work)
         else:
-            if self._keymap:
-                sorted_work = len(self._keymap)*['',]
-                for b in work_times:
-                    sorted_work[self._keymap.index(b)] = (b, work_times[b])
+            if(self._sort):
+                sorted_work = sorted(work_times.iteritems(), key=operator.itemgetter(1))
+                self._keymap = map(operator.itemgetter(0), sorted_work)
             else:
-                sorted_work = work_times.items()
+                if self._keymap:
+                    sorted_work = len(self._keymap)*['',]
+                    for b in work_times:
+                        sorted_work[self._keymap.index(b)] = (b, work_times[b])
+                else:
+                    sorted_work = work_times.items()
 
-        self.sp.clear();
-        plt.figure(self.f.number)
-        plt.subplot(111);
-        self.sp.bar(range(0,len(sorted_work)), map(lambda x: x[1], sorted_work),
-                    alpha=0.5)
-        self.sp.set_ylabel("% Runtime");
-        self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_work))))
-        self.sp.set_xticklabels( map(lambda x: "  " + x[0], sorted_work),
-                                 rotation="vertical", verticalalignment="bottom" )
+            f = plt.figure(self.f.number)
+            if(not self.disp):
+                self.disp = self.sp.bar(range(0,len(sorted_work)),
+                                        map(lambda x: x[1], sorted_work),
+                                        alpha=0.5)
+                self.sp.set_ylabel("% Runtime");
+                self.sp.set_xticks( map(lambda x: x+0.5, range(0,len(sorted_work))))
+                self.sp.set_xticklabels( map(lambda x: "  " + x[0], sorted_work),
+                                         rotation="vertical", verticalalignment="bottom" )
+            else:
+                self.sp.set_xticklabels( map(lambda x: "  " + x[0], sorted_work),
+                                         rotation="vertical", verticalalignment="bottom" )
+                for r,w in zip(self.disp, sorted_work):
+                    r.set_height(w[1])
 
-        self.canvas.draw();
-        self.canvas.show();
+            self.canvas.draw()
 
 class MForm(QtGui.QWidget):
     def update(self):
