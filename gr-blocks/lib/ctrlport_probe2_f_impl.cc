@@ -63,21 +63,26 @@ namespace gr {
     }
 
     std::vector<float>
-    ctrlport_probe2_f_impl::get() {
+    ctrlport_probe2_f_impl::get()
+    {
       return buffered_get.get();
     }
 
     void
     ctrlport_probe2_f_impl::set_length(int len)
     {
+      gr::thread::scoped_lock guard(d_setlock);
+
       if(len > 8191) {
-        std::cerr << "probe2_f: length " << len
-                  << " exceeds maximum buffer size of 8191" << std::endl;
+        GR_LOG_WARN(d_logger,
+                    boost::format("probe2_f: length %1% exceeds maximum"
+                                  " buffer size of 8191") % len);
         len = 8191;
       }
 
       d_len = len;
-      d_buffer.reserve(d_len);
+      d_buffer.resize(d_len);
+      d_index = 0;
     }
 
     int
@@ -93,21 +98,21 @@ namespace gr {
     {
       const float *in = (const float*)input_items[0];
 
-      // copy samples to get buffer if we need samples
-      if(d_buffer.size() < d_len) {
-        // copy smaller of remaining buffer space and num inputs to work()
-        int num_copy = std::min( (int)(d_len - d_buffer.size()), noutput_items );
+      gr::thread::scoped_lock guard(d_setlock);
 
-        // TODO: convert this to a copy operator for speed...
-        for(int i = 0; i < num_copy; i++) {
-          d_buffer.push_back(in[i]);
-        }
+      // copy samples to get buffer if we need samples
+      if(d_index < d_len) {
+        // copy smaller of remaining buffer space and num inputs to work()
+        int num_copy = std::min( (int)(d_len - d_index), noutput_items );
+
+        memcpy(&d_buffer[d_index], in, num_copy*sizeof(float));
+        d_index += num_copy;
       }
 
-
       // notify the waiting get() if we fill up the buffer
-      if(d_buffer.size() == d_len) {
-          buffered_get.offer_data(d_buffer);
+      if(d_index == d_len) {
+        buffered_get.offer_data(d_buffer);
+        d_index = 0;
       }
 
       return noutput_items;
