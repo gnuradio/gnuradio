@@ -91,7 +91,6 @@ boost::scoped_ptr<thrift_application_base_impl>
 template<class rpcserver_base, class rpcserver_booter_thrift>
 thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::~thrift_application_base()
 {
-  GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: shutdown");
   if(d_thirft_is_running) {
     d_thriftserver->stop();
     d_thirft_is_running = false;
@@ -122,7 +121,7 @@ bool thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::applicati
     const std::string boost_hostname(boost::asio::ip::host_name());
 
     std::string endpoint = boost::str(boost::format("-h %1% -p %2%") % boost_hostname % used_port);
-    //std::cout << "Thrift endpoint: " << endpoint << " boost hostname: " << boost_hostname << std::endl;
+
     set_endpoint(endpoint);
 
     GR_LOG_INFO(d_logger, "Apache Thrift: " + endpoint);
