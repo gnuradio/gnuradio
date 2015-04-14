@@ -109,13 +109,13 @@ GF2Vec GF2Mat::get_col(int i) {
 
 void GF2Mat::add_cols(int i, int j) {
     for ( int row = 0; row < M; row++ ) {
-        H[row][i] = H[row][i] xor H[row][j];
+        H[row][i] = H[row][i] ^ H[row][j];
     }
 }
 
 void GF2Mat::add_rows(int i, int j) {
     for ( int col = 0; col < N; col++ ) {
-        H[i][col] = H[i][col] xor H[j][col];
+        H[i][col] = H[i][col] ^ H[j][col];
     }
 }
 
