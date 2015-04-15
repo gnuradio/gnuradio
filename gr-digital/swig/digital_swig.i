@@ -83,6 +83,7 @@
 #include "gnuradio/digital/mpsk_receiver_cc.h"
 #include "gnuradio/digital/mpsk_snr_est.h"
 #include "gnuradio/digital/mpsk_snr_est_cc.h"
+#include "gnuradio/digital/msk_timing_recovery_cc.h"
 #include "gnuradio/digital/ofdm_carrier_allocator_cvc.h"
 #include "gnuradio/digital/ofdm_chanest_vcvc.h"
 #include "gnuradio/digital/ofdm_cyclic_prefixer.h"
@@ -161,6 +162,7 @@
 %include "gnuradio/digital/mpsk_receiver_cc.h"
 %include "gnuradio/digital/mpsk_snr_est.h"
 %include "gnuradio/digital/mpsk_snr_est_cc.h"
+%include "gnuradio/digital/msk_timing_recovery_cc.h"
 %include "gnuradio/digital/ofdm_carrier_allocator_cvc.h"
 %include "gnuradio/digital/ofdm_chanest_vcvc.h"
 %include "gnuradio/digital/ofdm_cyclic_prefixer.h"
@@ -229,6 +231,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, msk_timing_recovery_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_carrier_allocator_cvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);

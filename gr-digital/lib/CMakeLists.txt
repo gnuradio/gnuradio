@@ -90,6 +90,7 @@ list(APPEND digital_sources
     mpsk_receiver_cc_impl.cc
     mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
+    msk_timing_recovery_cc_impl.cc
     ofdm_carrier_allocator_cvc_impl.cc
     ofdm_chanest_vcvc_impl.cc
     ofdm_cyclic_prefixer_impl.cc
