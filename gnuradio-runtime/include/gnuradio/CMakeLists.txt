@@ -86,6 +86,16 @@ install(FILES
   COMPONENT "runtime_devel"
 )
 
+if(THRIFT_FOUND)
+install(FILES
+  rpcserver_booter_thrift.h
+  thrift_application_base.h
+  thrift_server_template.h
+  DESTINATION ${GR_INCLUDE_DIR}/gnuradio
+  COMPONENT "runtime_devel"
+)
+endif(THRIFT_FOUND)
+
 ##########################################################################
 # Configure logger
 ##########################################################################

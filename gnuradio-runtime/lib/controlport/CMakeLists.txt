@@ -19,8 +19,13 @@
 
 if(ENABLE_GR_CTRLPORT)
 
+# Keep track of the number of backends ControlPort supports
+SET(CTRLPORT_BACKENDS 0)
+
 # Add definition so we can compile in ControlPort to the blocks.
-ADD_DEFINITIONS(-DGR_CTRLPORT)
+add_definitions(-DGR_CTRLPORT)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.cc
@@ -29,14 +34,71 @@ list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
 )
 
+
+OPTION(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ON)
+
+if(ENABLE_CTRLPORT_THRIFT)
+
+# Look if Thrift is installed and use it as a ControlPort backend.
+FIND_PACKAGE(Thrift)
+
+if(THRIFT_FOUND)
+
+MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
+
+# Indicate thrift as an installed backend in the cmake summary.
+message(STATUS "Found and enabling Thrift backend to ControlPort")
+GR_APPEND_SUBCOMPONENT("thrift")
+
+# Run Thrrift To compile C++ and Python files
+message(STATUS "Running thrift to build C++ bindings")
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/thrift/)
+EXECUTE_PROCESS(
+   COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/thrift/gnuradio.thrift
+   OUTPUT_VARIABLE THRIFT_CPP_OUTPUT
+   ERROR_VARIABLE THRIFT_CPP_ERROR
+   )
+
+list(APPEND gnuradio_ctrlport_sources
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcpmtconverters_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_booter_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thrift/thrift_application_base.cc
+)
+
+# add files built by compiling gnuradio.thrift
+list(APPEND gnuradio_ctrlport_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_types.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/ControlPort.cpp
+)
+
+# Add  required libraries here
+list(APPEND gnuradio_runtime_libs
+  ${THRIFT_LIBRARIES}
+)
+
+# Add install rule to move example Thrift configuration file into
+# $prefix/etc/gnuradio
+install(
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/thrift/thrift.conf.example
+  DESTINATION ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}
+  COMPONENT "runtime_runtime"
+)
+
+endif(THRIFT_FOUND)
+endif(ENABLE_CTRLPORT_THRIFT)
+
 ########################################################################
 # Add controlport stuff to gnuradio-runtime
 ########################################################################
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-# Add any required libraries here
-#list(APPEND gnuradio_runtime_libs
-#)
+# Save the number of backends for testing against later
+set(
+  CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
+  CACHE INTERNAL "Number of ControlPort backends available"
+)
 
 endif(ENABLE_GR_CTRLPORT)

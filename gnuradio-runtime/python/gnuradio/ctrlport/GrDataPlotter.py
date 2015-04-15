@@ -23,7 +23,7 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
-from gnuradio.ctrlport import GNURadio
+from gnuradio.ctrlport.GNURadio import ControlPort
 import sys, time, struct
 
 try:
@@ -442,7 +442,7 @@ class GrDataPlotterValueTable:
                 units = str(knobprops[itemKey].units)
                 descr = str(knobprops[itemKey].description)
 
-                if(type(v) == GNURadio.complex):
+                if(type(v) == ControlPort.complex):
                     v = v.re + v.im*1j
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
@@ -468,7 +468,7 @@ class GrDataPlotterValueTable:
         for k in knobs.keys():
             if k not in foundKeys:
                 v = knobs[k].value
-                if(type(v) == GNURadio.complex):
+                if(type(v) == ControlPort.complex):
                     v = v.re + v.im*1j
                 # If it's a byte stream, Python thinks it's a string.
                 # Unpack and convert to floats for plotting.
