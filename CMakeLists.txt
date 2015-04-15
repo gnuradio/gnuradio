@@ -408,10 +408,13 @@ if(ENABLE_GR_CTRLPORT)
   set(GR_CTRLPORT True)
   add_definitions(-DGR_CTRLPORT)
 
-  if(THRIFT_FOUND)
+  if(CTRLPORT_BACKENDS GREATER 0)
     set(GR_RPCSERVER_ENABLED True)
-    set(GR_RPCSERVER_THRIFT True)
-  endif(THRIFT_FOUND)
+
+    if(THRIFT_FOUND)
+      set(GR_RPCSERVER_THRIFT True)
+    endif(THRIFT_FOUND)
+  endif(CTRLPORT_BACKENDS GREATER 0)
 endif(ENABLE_GR_CTRLPORT)
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio

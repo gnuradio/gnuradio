@@ -19,6 +19,9 @@
 
 if(ENABLE_GR_CTRLPORT)
 
+# Keep track of the number of backends ControlPort supports
+SET(CTRLPORT_BACKENDS 0)
+
 # Add definition so we can compile in ControlPort to the blocks.
 add_definitions(-DGR_CTRLPORT)
 
@@ -40,6 +43,8 @@ if(ENABLE_CTRLPORT_THRIFT)
 FIND_PACKAGE(Thrift)
 
 if(THRIFT_FOUND)
+
+MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
 
 # Indicate thrift as an installed backend in the cmake summary.
 message(STATUS "Found and enabling Thrift backend to ControlPort")
@@ -89,5 +94,11 @@ endif(ENABLE_CTRLPORT_THRIFT)
 ########################################################################
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+# Save the number of backends for testing against later
+set(
+  CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
+  CACHE INTERNAL "Number of ControlPort backends available"
+)
 
 endif(ENABLE_GR_CTRLPORT)
