@@ -30,6 +30,12 @@
 #ifndef GR_CTRLPORT
 #cmakedefine GR_CTRLPORT
 #endif
+#ifndef GR_RPCSERVER_ENABLED
+#cmakedefine GR_RPCSERVER_ENABLED
+#endif
+#ifndef GR_RPCSERVER_THRIFT
+#cmakedefine GR_RPCSERVER_THRIFT
+#endif
 #ifndef ENABLE_GR_LOG
 #cmakedefine ENABLE_GR_LOG
 #endif

@@ -43,14 +43,14 @@ if(ENABLE_TESTING)
   include(GrTest)
   file(GLOB py_qa_test_files "qa_*.py")
 
-  # Force out the controlport QA tests if we've disabled it.
-  if(NOT ENABLE_GR_CTRLPORT)
+  # Force out the controlport QA tests if we have no backends to use.
+  if(CTRLPORT_BACKENDS EQUAL 0)
     list(REMOVE_ITEM py_qa_test_files
       ${CMAKE_CURRENT_SOURCE_DIR}/qa_cpp_py_binding.py
       ${CMAKE_CURRENT_SOURCE_DIR}/qa_cpp_py_binding_set.py
       ${CMAKE_CURRENT_SOURCE_DIR}/qa_ctrlport_probes.py
       )
-  endif(NOT ENABLE_GR_CTRLPORT)
+  endif(CTRLPORT_BACKENDS EQUAL 0)
 
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
