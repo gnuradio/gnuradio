@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<block>
+  <name>MSK Timing Recovery</name>
+  <key>digital_msk_timing_recovery_cc</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.msk_timing_recovery_cc($sps, $gain, $limit, $osps)</make>
+  <callback>set_gain($gain)</callback>
+  <callback>set_sps($sps)</callback>
+  <callback>set_limit($limit)</callback>
+  <param>
+    <name>Gain</name>
+    <key>gain</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Samples per symbol</name>
+    <key>sps</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Error limit</name>
+    <key>limit</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Output samples per symbol</name>
+    <key>osps</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+  <source>
+    <name>err</name>
+    <type>float</type>
+    <optional>1</optional>
+  </source>
+  <source>
+    <name>omega</name>
+    <type>float</type>
+    <optional>1</optional>
+  </source>
+
+</block>
