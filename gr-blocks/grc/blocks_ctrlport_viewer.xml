@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright 2012 Free Software Foundation, Inc.
+
+ This file is part of GNU Radio
+
+ GNU Radio is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3, or (at your option)
+ any later version.
+
+ GNU Radio is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with GNU Radio; see the file COPYING.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street,
+ Boston, MA 02110-1301, USA.
+-->
+
+<block>
+  <name>CtrlPort Monitor</name>
+  <key>blocks_ctrlport_monitor</key>
+  <import>from gnuradio.ctrlport.monitor import *</import>
+  <make>not $en or monitor()</make>
+  <param>
+    <name>Enabled</name>
+    <key>en</key>
+    <value></value>
+    <type>enum</type>
+        <option>
+            <name>True</name>
+            <key>True</key>
+        </option>
+        <option>
+            <name>False</name>
+            <key>False</key>
+      </option>
+  </param>
+
+  <doc>
+    Place this in a graph to launch a QtPy GR CtrlPort Monitor app.
+  </doc>
+
+</block>

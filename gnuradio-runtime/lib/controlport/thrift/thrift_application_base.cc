@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,15 +20,4 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef RPCSERVER_SELECTOR
-#define RPCSERVER_SELECTOR
-
-#include <gnuradio/config.h>
-
-//#define GR_RPCSERVER_ENABLED
-//#define GR_RPCSERVER_ICE
-//#define GR_RPCSERVER_THRIFT
-//#define GR_RPCSERVER_ERLANG
-//#define GR_RPCSERVER_XMLRPC
-
-#endif
+#include <gnuradio/thrift_application_base.h>
