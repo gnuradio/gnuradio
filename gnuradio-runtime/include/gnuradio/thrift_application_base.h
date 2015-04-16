@@ -28,6 +28,7 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/thread/thread.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace {
   // Time, in milliseconds, to wait between checks to the Thrift runtime to see if
@@ -83,7 +84,7 @@ public:
   /*!
    * Destructor for the application. Since shutdown and cleanup of the
    * runtime is typically custom to a particular booter
-   * implementation, this must be implemented as a specalized function
+   * implementation, this must be implemented as a specialized function
    * for a particular booter. Thus a template implementation is not
    * provided here.
    */
@@ -118,7 +119,7 @@ protected:
   /*!
    * Reference to the Thrift runtime.
    */
-  std::auto_ptr<apache::thrift::server::TServer> d_thriftserver;
+  boost::scoped_ptr<apache::thrift::server::TServer> d_thriftserver;
 
   /*!
    * Max number of attempts when checking the Thrift runtime for
@@ -175,7 +176,7 @@ private:
 
   // Pointer to the structure containing staticly allocated
   // state information for the applicaiton_base singleton.
-  static std::auto_ptr<thrift_application_base_impl > p_impl;
+  static boost::scoped_ptr<thrift_application_base_impl > p_impl;
 
   // Mutex to protect the endpoint string.
   gr::thread::mutex d_lock;
