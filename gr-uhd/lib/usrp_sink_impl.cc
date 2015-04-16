@@ -809,7 +809,7 @@ namespace gr {
         _metadata.time_spec = _start_time;
       }
       else {
-        _metadata.time_spec = get_time_now() + ::uhd::time_spec_t(0.01);
+        _metadata.time_spec = get_time_now() + ::uhd::time_spec_t(0.15);
       }
 
 #ifdef GR_UHD_USE_STREAM_API

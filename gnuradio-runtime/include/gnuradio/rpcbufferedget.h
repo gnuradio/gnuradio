@@ -25,7 +25,6 @@
 
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/mutex.hpp>
-#include <stdio.h>
 
 template<typename TdataType>
 class rpcbufferedget {
@@ -49,8 +48,8 @@ public:
   }
 
   TdataType get() {
-    d_data_needed = true;
     boost::mutex::scoped_lock lock(d_buffer_lock);
+    d_data_needed = true;
     d_data_ready.wait(lock);
     return d_buffer;
   }
