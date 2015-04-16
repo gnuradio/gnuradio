@@ -34,8 +34,7 @@ class rpcserver_booter_thrift
   : public virtual rpcserver_booter_base,
     public virtual thrift_server_template<rpcserver_base,
                                           rpcserver_thrift,
-                                          rpcserver_booter_thrift,
-                                          boost::shared_ptr<GNURadio::ControlPortIf> >
+                                          rpcserver_booter_thrift>
 {
  public:
   rpcserver_booter_thrift();
