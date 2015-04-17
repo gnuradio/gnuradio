@@ -81,7 +81,7 @@ namespace gr {
        * \param length_tag_name: the name of the tagged stream length
        *                         tag key.
        */
-      static sptr make(const std::vector<@I_TYPE@> &taps,
+      static sptr make(const std::vector<@O_TYPE@> &taps,
                        int pre_padding=0, int post_padding=0,
                        bool insert_phasing=false,
                        const std::string &length_tag_name="packet_len");
@@ -89,24 +89,24 @@ namespace gr {
       /*!
        * Returns the amount of zero padding inserted before each burst.
        */
-      virtual unsigned int pre_padding() const = 0;
+      virtual int pre_padding() const = 0;
 
       /*!
        * Returns the amount of zero padding inserted after each burst.
        */
-      virtual unsigned int post_padding() const = 0;
+      virtual int post_padding() const = 0;
 
       /*!
        * Returns the total amount of zero padding and phasing symbols
        * inserted before each burst.
        */
-      virtual unsigned int prefix_length() const = 0;
+      virtual int prefix_length() const = 0;
 
       /*!
        * Returns the total amount of zero padding and phasing symbols
        * inserted after each burst.
        */
-      virtual unsigned int suffix_length() const = 0;
+      virtual int suffix_length() const = 0;
     };
 
   } // namespace digital

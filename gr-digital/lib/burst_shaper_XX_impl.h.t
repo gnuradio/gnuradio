@@ -37,18 +37,28 @@ namespace gr {
                     STATE_COPY, STATE_RAMPDOWN, STATE_POSTPAD};
 
     private:
-      const std::vector<@I_TYPE@> d_upflank;
-      const std::vector<@I_TYPE@> d_downflank;
+      const std::vector<@O_TYPE@> d_up_flank;
+      const std::vector<@O_TYPE@> d_down_flank;
       const int d_nprepad;
       const int d_npostpad;
       const bool d_insert_phasing;
       const pmt::pmt_t d_length_tag_key;
-      std::vector<@I_TYPE@> d_phasing;
-      int d_remaining;
+      std::vector<@O_TYPE@> d_up_phasing;
+      std::vector<@O_TYPE@> d_down_phasing;
+      uint64_t d_nremaining;
       state_t d_state;
 
+      void enter_waiting() { d_state = STATE_WAITING; }
+      void enter_prepad() { d_state = STATE_PREPAD; }
+      void enter_rampup() { d_state = STATE_RAMPUP; }
+      void enter_copy() { d_state = STATE_COPY; }
+      void enter_rampdown() { d_state = STATE_RAMPDOWN; }
+      void enter_postpad() { d_state = STATE_POSTPAD; }
+      void add_length_tag(int offset);
+      void propagate_tag(tag_t &tag, int offset);
+
     public:
-      @IMPL_NAME@(const std::vector<@I_TYPE@> &taps, int pre_padding,
+      @IMPL_NAME@(const std::vector<@O_TYPE@> &taps, int pre_padding,
                   int post_padding, bool insert_phasing,
                   const std::string &length_tag_name);
       ~@IMPL_NAME@();
@@ -60,12 +70,12 @@ namespace gr {
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
 		       gr_vector_void_star &output_items);
-      unsigned int pre_padding() const { return d_nprepad; }
-      unsigned int post_padding() const { return d_npostpad; }
-      unsigned int prefix_length() const { return d_nprepad +
-                                           d_upflank.size(); }
-      unsigned int suffix_length() const { return d_npostpad +
-                                           d_downflank.size(); }
+      int pre_padding() const { return d_nprepad; }
+      int post_padding() const { return d_npostpad; }
+      int prefix_length() const { return d_nprepad +
+                                         d_up_flank.size(); }
+      int suffix_length() const { return d_npostpad +
+                                         d_down_flank.size(); }
     };
 
   } // namespace digital
