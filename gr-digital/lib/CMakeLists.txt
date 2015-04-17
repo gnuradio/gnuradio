@@ -45,6 +45,7 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 include(GrMiscUtils)
 GR_EXPAND_X_CC_H(digital chunks_to_symbols_XX_impl     bf bc sf sc if ic)
+GR_EXPAND_X_CC_H(digital burst_shaper_XX_impl     cc ff)
 
 ########################################################################
 # Setup library
