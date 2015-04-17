@@ -22,6 +22,7 @@
 #######################################################################
 include(GrMiscUtils)
 GR_EXPAND_X_H(digital chunks_to_symbols_XX     bf bc sf sc if ic)
+GR_EXPAND_X_H(digital burst_shaper_XX     cc ff)
 
 add_custom_target(digital_generated_includes DEPENDS
     ${generated_includes}
