@@ -26,8 +26,17 @@
 #include "config.h"
 #endif
 
+#include <boost/format.hpp>
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 #include "@IMPL_NAME@.h"
+
+#ifndef VOLK_MULT_gr_complex
+#define VOLK_MULT_gr_complex volk_32fc_x2_multiply_32fc
+#endif
+#ifndef VOLK_MULT_float
+#define VOLK_MULT_float volk_32f_x2_multiply_32f
+#endif
 
 namespace gr {
   namespace digital {
@@ -50,28 +59,32 @@ namespace gr {
       : gr::block("@BASE_NAME@",
               gr::io_signature::make(1, 1, sizeof(@I_TYPE@)),
               gr::io_signature::make(1, 1, sizeof(@O_TYPE@))),
-        d_up_flank(taps.begin(), taps.begin() + taps.size()/2 + taps.size()%2),
-        d_down_flank(taps.begin() + taps.size()/2, taps.end()),
+        d_up_ramp(taps.begin(), taps.begin() + taps.size()/2 + taps.size()%2),
+        d_down_ramp(taps.begin() + taps.size()/2, taps.end()),
         d_nprepad(pre_padding),
         d_npostpad(post_padding),
         d_insert_phasing(insert_phasing),
         d_length_tag_key(pmt::string_to_symbol(length_tag_name)),
-        d_state(STATE_WAITING)
+        d_ncopy(0),
+        d_limit(0),
+        d_index(0),
+        d_nprocessed(0),
+        d_finished(false),
+        d_state(STATE_WAIT)
     {
-        assert(d_up_flank.size() == d_down_flank.size());
+        assert(d_up_ramp.size() == d_down_ramp.size());
 
-        d_up_phasing.resize(d_up_flank.size());
-        d_down_phasing.resize(d_up_flank.size());
-        if(d_insert_phasing) {
-            @I_TYPE@ symbol;
-            for(unsigned int i = 0; i < d_up_flank.size(); i++) {
-                symbol = (i%2) ? @I_TYPE@(1.0f) : @I_TYPE@(-1.0f);
-                d_up_phasing.push_back(symbol * d_up_flank[i]);
-                d_down_phasing.push_back(symbol * d_down_flank[i]);
-            }
+        d_up_phasing.resize(d_up_ramp.size());
+        d_down_phasing.resize(d_down_ramp.size());
+
+        @I_TYPE@ symbol;
+        for(unsigned int i = 0; i < d_up_ramp.size(); i++) {
+            symbol = (i%2 == 0) ? @I_TYPE@(1.0f) : @I_TYPE@(-1.0f);
+            d_up_phasing[i] = symbol * d_up_ramp[i];
+            d_down_phasing[i] = symbol * d_down_ramp[i];
         }
 
-        set_relative_rate(1.0);
+        //set_relative_rate(1.0);
         set_tag_propagation_policy(TPP_DONT);
     }
 
@@ -80,8 +93,9 @@ namespace gr {
     }
 
     void
-    @IMPL_NAME@::forecast(int noutput_items, gr_vector_int &ninput_items_required)
-    {
+    @IMPL_NAME@::forecast(int noutput_items,
+                          gr_vector_int &ninput_items_required) {
+        //if(d_state == STATE_COPY
         ninput_items_required[0] = noutput_items;
     }
 
@@ -91,71 +105,157 @@ namespace gr {
                       gr_vector_const_void_star &input_items,
                       gr_vector_void_star &output_items)
     {
-        const @I_TYPE@ *in = (const @I_TYPE@ *) input_items[0];
-        @O_TYPE@ *out = (@O_TYPE@ *) output_items[0];
+        const @I_TYPE@ *in = reinterpret_cast<const @I_TYPE@ *>(input_items[0]);
+        @O_TYPE@ *out = reinterpret_cast<@O_TYPE@ *>(output_items[0]);
 
         int nwritten = 0;
         int nread = 0;
-        int nstart = 0;
-        int nstop = 0;
-        int nremaining = 0;
-        int nprocessed = 0;
+        int nspace = 0;
+        int nskip = 0;
         uint64_t curr_tag_index = nitems_read(0);
 
-        std::vector<tag_t> tags;
+        std::vector<tag_t> length_tags, tags;
+        get_tags_in_window(length_tags, 0, 0, ninput_items[0], d_length_tag_key);
         get_tags_in_window(tags, 0, 0, ninput_items[0]);
-	std::sort(tags.begin(), tags.end(), tag_t::offset_compare);
+        std::sort(length_tags.rbegin(), length_tags.rend(), tag_t::offset_compare);
+        std::sort(tags.rbegin(), tags.rend(), tag_t::offset_compare);
 
         while((nwritten < noutput_items) && (nread < ninput_items[0])) {
-            nremaining = noutput_items - nwritten;
+            if(d_finished) {
+                d_finished = false;
+                break;
+            }
+            nspace = noutput_items - nwritten;
             switch(d_state) {
-                case(STATE_WAITING):
-                    curr_tag_index = tags[0].offset;
-                    d_nremaining = pmt::to_long(tags[0].value) +
-                                   prefix_length() + suffix_length();
-                    nprocessed += (int)curr_tag_index;  // drop orphaned samples
-                    add_length_tag(nwritten);
-                    enter_prepad();
-                    break;
-
-                case(STATE_PREPAD):
-		    std::memset(out, 0x00, nprocess * sizeof(@O_TYPE@));
-                    break;
-
-                case(STATE_RAMPUP):
-                    nprocess = std::min(
-                    if(d_insert_phasing) {
-                        
+                case(STATE_WAIT):
+                    if(!tags.empty()) {
+                        curr_tag_index = tags.back().offset;
+                        d_ncopy = pmt::to_long(tags.back().value);
+                        tags.pop_back();
+                        nskip = (int)(curr_tag_index - d_nprocessed);
+                        add_length_tag(nwritten);
+                        enter_prepad();
+                    }
+                    else {
+                        nskip = ninput_items[0] - nread;
+                    }
+                    if(nskip > 0) {
+                        GR_LOG_WARN(d_logger,
+                                    boost::format("Dropping %1% samples") %
+                                    nskip);
+                        nread += nskip;
+                        d_nprocessed += nskip;
                     }
                     break;
 
+                case(STATE_PREPAD):
+                    write_padding(out, nwritten, nspace);
+                    if(d_index == d_limit)
+                        enter_rampup();
+                    break;
+
+                case(STATE_RAMPUP):
+                    apply_ramp(out, in, nwritten, nread, nspace);
+                    if(d_index == d_limit)
+                        enter_copy();
+                    break;
+
                 case(STATE_COPY):
-                    std::memcpy(out, in, nprocess * sizeof(@O_TYPE@));
+                    copy_items(out, in, nwritten, nread, nspace);
+                    if(d_index == d_limit)
+                        enter_rampdown();
                     break;
 
                 case(STATE_RAMPDOWN):
+                    apply_ramp(out, in, nwritten, nread, nspace);
+                    if(d_index == d_limit)
+                        enter_postpad();
                     break;
 
                 case(STATE_POSTPAD):
-		    std::memset(out, 0x00, nprocess * sizeof(@O_TYPE@));
+                    write_padding(out, nwritten, nspace);
+                    if(d_index == d_limit)
+                        enter_wait();
                     break;
 
                 default:
-                    throw std::runtime_error("burst_shaper: invalid state reached");
+                    throw std::runtime_error("@BASE_NAME@: invalid state");
             }
         }
 
-        consume_each (nconsumed);
+        consume_each(nread);
 
-        // Tell runtime system how many output items we produced.
-        return noutput_items;
+        return nwritten;
+    }
+
+    int
+    @IMPL_NAME@::prefix_length() const {
+        return (d_insert_phasing) ?
+               d_nprepad + d_up_ramp.size() : d_nprepad;
+    }
+
+    int
+    @IMPL_NAME@::suffix_length() const {
+        return (d_insert_phasing) ?
+               d_npostpad + d_down_ramp.size() : d_npostpad;
+    }
+
+    void
+    @IMPL_NAME@::write_padding(@O_TYPE@ *&dst, int &nwritten, int nspace) {
+        int nprocess = std::min(d_limit - d_index, nspace);
+        std::memset(dst, 0x00, nprocess * sizeof(@O_TYPE@));
+        dst += nprocess;
+        nwritten += nprocess;
+        d_index += nprocess;
+    }
+
+    void
+    @IMPL_NAME@::copy_items(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
+                            int &nread, int nspace) {
+        int nprocess = std::min(d_limit - d_index, nspace);
+        std::memcpy(dst, src, nprocess * sizeof(@O_TYPE@));
+        dst += nprocess;
+        nwritten += nprocess;
+        src += nprocess;
+        nread += nprocess;
+        d_index += nprocess;
+    }
+
+    void
+    @IMPL_NAME@::apply_ramp(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
+                            int &nread, int nspace) {
+        int nprocess = std::min(d_limit - d_index, nspace);
+        @O_TYPE@ *phasing;
+        const @O_TYPE@ *ramp;
+
+        if(d_state == STATE_RAMPUP) {
+            phasing = &d_up_phasing[d_index];
+            ramp = &d_up_ramp[d_index];
+        }
+        else {
+            phasing = &d_down_phasing[d_index];
+            ramp = &d_down_ramp[d_index];
+        }
+
+        if(d_insert_phasing)
+            std::memcpy(dst, phasing, nprocess * sizeof(@O_TYPE@));
+        else {
+            VOLK_MULT_@O_TYPE@(dst, src, ramp, nprocess);
+            src += nprocess;
+            nread += nprocess;
+        }
+
+        dst += nprocess;
+        nwritten += nprocess;
+        d_index += nprocess;
     }
 
     void
     @IMPL_NAME@::add_length_tag(int offset)
     {
         add_item_tag(0, nitems_written(0) + offset, d_length_tag_key,
-                     pmt::from_long(d_nremaining),
+                     pmt::from_long(d_ncopy + prefix_length() +
+                                    suffix_length()),
                      pmt::string_to_symbol(name()));
     }
 
@@ -170,5 +270,60 @@ namespace gr {
             add_item_tag(0, new_tag);
         }
     }
+
+    void
+    @IMPL_NAME@::enter_wait() {
+        d_finished = true;
+        d_nprocessed += d_ncopy;
+        d_index = 0;
+        d_state = STATE_WAIT;
+    }
+
+    void
+    @IMPL_NAME@::enter_prepad() {
+        d_limit = d_nprepad;
+        d_index = 0;
+        d_state = STATE_PREPAD;
+    }
+
+    void
+    @IMPL_NAME@::enter_rampup() {
+        if(d_insert_phasing)
+            d_limit = d_up_ramp.size();
+        else
+            d_limit = std::min((size_t)(d_ncopy/2), d_up_ramp.size());
+        d_index = 0;
+        d_state = STATE_RAMPUP;
+    }
+
+    void
+    @IMPL_NAME@::enter_copy() {
+        if(d_insert_phasing)
+            d_limit = d_ncopy;
+        else
+            d_limit = d_ncopy - std::min((size_t)((d_ncopy/2)*2),
+                                         d_up_ramp.size() +
+                                         d_down_ramp.size());
+        d_index = 0;
+        d_state = STATE_COPY;
+    }
+
+    void
+    @IMPL_NAME@::enter_rampdown() {
+        if(d_insert_phasing)
+            d_limit = d_down_ramp.size();
+        else
+            d_limit = std::min((size_t)(d_ncopy/2), d_down_ramp.size());
+        d_index = 0;
+        d_state = STATE_RAMPDOWN;
+    }
+
+    void
+    @IMPL_NAME@::enter_postpad() {
+        d_limit = d_npostpad;
+        d_index = 0;
+        d_state = STATE_POSTPAD;
+    }
+
   } /* namespace digital */
 } /* namespace gr */
