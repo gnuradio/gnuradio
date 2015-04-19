@@ -33,29 +33,38 @@ namespace gr {
     class @IMPL_NAME@ : public @BASE_NAME@
     {
     protected:
-      enum state_t {STATE_WAITING, STATE_PREPAD, STATE_RAMPUP,
+      enum state_t {STATE_WAIT, STATE_PREPAD, STATE_RAMPUP,
                     STATE_COPY, STATE_RAMPDOWN, STATE_POSTPAD};
 
     private:
-      const std::vector<@O_TYPE@> d_up_flank;
-      const std::vector<@O_TYPE@> d_down_flank;
+      const std::vector<@O_TYPE@> d_up_ramp;
+      const std::vector<@O_TYPE@> d_down_ramp;
       const int d_nprepad;
       const int d_npostpad;
       const bool d_insert_phasing;
       const pmt::pmt_t d_length_tag_key;
       std::vector<@O_TYPE@> d_up_phasing;
       std::vector<@O_TYPE@> d_down_phasing;
-      uint64_t d_nremaining;
+      int d_ncopy;
+      int d_limit;
+      int d_index;
+      uint64_t d_nprocessed;
+      bool d_finished;
       state_t d_state;
 
-      void enter_waiting() { d_state = STATE_WAITING; }
-      void enter_prepad() { d_state = STATE_PREPAD; }
-      void enter_rampup() { d_state = STATE_RAMPUP; }
-      void enter_copy() { d_state = STATE_COPY; }
-      void enter_rampdown() { d_state = STATE_RAMPDOWN; }
-      void enter_postpad() { d_state = STATE_POSTPAD; }
+      void write_padding(@O_TYPE@ *&dst, int &nwritten, int nspace);
+      void copy_items(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
+                      int &nread, int nspace);
+      void apply_ramp(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
+                      int &nread, int nspace);
       void add_length_tag(int offset);
-      void propagate_tag(tag_t &tag, int offset);
+      void propagate_tags(std::vector<tag_t> &tags, int offset);
+      void enter_wait();
+      void enter_prepad();
+      void enter_rampup();
+      void enter_copy();
+      void enter_rampdown();
+      void enter_postpad();
 
     public:
       @IMPL_NAME@(const std::vector<@O_TYPE@> &taps, int pre_padding,
@@ -63,8 +72,7 @@ namespace gr {
                   const std::string &length_tag_name);
       ~@IMPL_NAME@();
 
-      void forecast(int noutput_items,
-                    gr_vector_int &ninput_items_required);
+      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,
@@ -72,10 +80,8 @@ namespace gr {
 		       gr_vector_void_star &output_items);
       int pre_padding() const { return d_nprepad; }
       int post_padding() const { return d_npostpad; }
-      int prefix_length() const { return d_nprepad +
-                                         d_up_flank.size(); }
-      int suffix_length() const { return d_npostpad +
-                                         d_down_flank.size(); }
+      int prefix_length() const;
+      int suffix_length() const;
     };
 
   } // namespace digital

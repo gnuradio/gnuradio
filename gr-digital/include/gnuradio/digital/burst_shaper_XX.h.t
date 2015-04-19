@@ -54,7 +54,7 @@ namespace gr {
      * \li input: stream of @I_TYPE@
      * \li output: stream of @O_TYPE@
      */
-    class DIGITAL_API @NAME@ : virtual public gr::block
+    class DIGITAL_API @NAME@ : virtual public block
     {
     public:
       // gr::digital::@BASE_NAME@::sptr
