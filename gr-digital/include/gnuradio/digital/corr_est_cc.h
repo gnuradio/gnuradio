@@ -104,6 +104,12 @@ namespace gr {
 
       virtual std::vector<gr_complex> symbols() const = 0;
       virtual void set_symbols(const std::vector<gr_complex> &symbols) = 0;
+
+      virtual unsigned int mark_delay() const = 0;
+      virtual void set_mark_delay(unsigned int mark_delay) = 0;
+
+      virtual float threshold() const = 0;
+      virtual void set_threshold(float threshold) = 0;
     };
 
   } // namespace digital
