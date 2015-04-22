@@ -20,6 +20,7 @@
 install(
   FILES
   matrix_multiplexer.grc
+  peak_detector2.grc
   vector_source_with_tags.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/blocks
   COMPONENT "runtime_python"
