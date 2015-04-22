@@ -854,10 +854,10 @@ class MForm(QtGui.QWidget):
 class MyApp(object):
     def __init__(self, args):
         p = gr.prefs()
-        cp_on = p.get_bool("ControlPort", "on", None)
-        cp_edges = p.get_bool("ControlPort", "edges_list", None)
-        pcs_on = p.get_bool("PerfCounters", "on", None)
-        pcs_exported = p.get_bool("PerfCounters", "export", None)
+        cp_on = p.get_bool("ControlPort", "on", False)
+        cp_edges = p.get_bool("ControlPort", "edges_list", False)
+        pcs_on = p.get_bool("PerfCounters", "on", False)
+        pcs_exported = p.get_bool("PerfCounters", "export", False)
         if(not (pcs_on and cp_on and pcs_exported and cp_edges)):
             print("Configuration has not turned on all of the appropriate ControlPort features:")
             print("\t[ControlPort] on = {0}".format(cp_on))
