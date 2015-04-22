@@ -21,8 +21,7 @@ pmt_@TAG@vector::pmt_@TAG@vector(size_t k, @TYPE@ fill)
 pmt_@TAG@vector::pmt_@TAG@vector(size_t k, const @TYPE@ *data)
   : d_v(k)
 {
-  for (size_t i = 0; i < k; i++)
-    d_v[i] = data[i];
+  memcpy( &d_v[0], data, k * sizeof(@TYPE@) );
 }
 
 @TYPE@
