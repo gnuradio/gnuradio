@@ -55,6 +55,14 @@ def show_gtk_error_dialog(title, message):
     d.run()
 
 
+def check_gtk_init():
+    try:
+        gtk.init_check()
+    except RuntimeError:
+        print 'GTK initialization failed - bailing'
+        exit(-1)
+
+
 def check_gnuradio_import():
     try:
         from gnuradio import gr
@@ -108,6 +116,7 @@ def main():
 
 
 if __name__ == '__main__':
+    check_gtk_init()
     check_gnuradio_import()
     ensure_blocks_path()
     main()
