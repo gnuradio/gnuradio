@@ -16,7 +16,7 @@
 	#set $label = '"%s"'%$id
 #end if
 $(range) = Range($start, $stop, $step, $value, $min_len)
-$(win) = RangeWidget($range, self.set_$(id), $label, "$widget", $astype)
+$(win) = RangeWidget($range, self.set_$(id), $label, "$widget", $rangeType)
 $(gui_hint()($win))</make>
   <callback>self.set_$(id)($value)</callback>
 
@@ -30,41 +30,40 @@ $(gui_hint()($win))</make>
 
   <param>
     <name>Type</name>
-    <key>astype</key>
+    <key>rangeType</key>
     <value>"float"</value>
     <type>enum</type>
     <hide>part</hide>
-    <option><name>Float</name><key>"float"</key></option>
-    <option><name>Int</name><key>"int"</key></option>
-    <option><name>Long</name><key>"long"</key></option>
+    <option><name>Float</name><key>float</key><opt>type:float</opt></option>
+    <option><name>Int</name><key>int</key><opt>type:int</opt></option>
   </param>
 
   <param>
     <name>Default Value</name>
     <key>value</key>
     <value>50</value>
-    <type>real</type>
+    <type>$rangeType.type</type>
   </param>
 
   <param>
     <name>Start</name>
     <key>start</key>
     <value>0</value>
-    <type>real</type>
+    <type>$rangeType.type</type>
   </param>
 
   <param>
     <name>Stop</name>
     <key>stop</key>
     <value>100</value>
-    <type>real</type>
+    <type>$rangeType.type</type>
   </param>
 
   <param>
     <name>Step</name>
     <key>step</key>
     <value>1</value>
-    <type>real</type>
+    <type>$rangeType.type</type>
   </param>
 
   <param>
