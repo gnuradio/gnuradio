@@ -109,6 +109,7 @@ private:
 
   double d_start_frequency;
   double d_stop_frequency;
+  double d_center_frequency;
   int    d_xaxis_multiplier;
   bool   d_half_freq;
   bool   d_legend_enabled;

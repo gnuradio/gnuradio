@@ -138,7 +138,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   d_stop_frequency = 1;
 
   resize(parent->width(), parent->height());
-  d_numPoints = 1024;
+  d_numPoints = 0;
   d_half_freq = false;
   d_legend_enabled = true;
 
@@ -230,7 +230,7 @@ WaterfallDisplayPlot::setFrequencyRange(const double centerfreq,
   double startFreq;
   double stopFreq = (centerfreq + bandwidth/2.0f) / units;
   if(d_half_freq)
-    startFreq = 0;
+    startFreq = centerfreq / units;
   else
     startFreq = (centerfreq - bandwidth/2.0f) / units;
 
@@ -244,6 +244,7 @@ WaterfallDisplayPlot::setFrequencyRange(const double centerfreq,
   if(stopFreq > startFreq) {
     d_start_frequency = startFreq;
     d_stop_frequency = stopFreq;
+    d_center_frequency = centerfreq / units;
 
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
       double display_units = ceil(log10(units)/2.0);
@@ -633,7 +634,7 @@ WaterfallDisplayPlot::setPlotPosHalf(bool half)
 {
   d_half_freq = half;
   if(half)
-    d_start_frequency = 0;
+    d_start_frequency = d_center_frequency;
 }
 
 
