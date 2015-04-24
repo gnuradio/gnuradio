@@ -68,7 +68,6 @@ namespace gr {
         d_ncopy(0),
         d_limit(0),
         d_index(0),
-        d_nprocessed(0),
         d_finished(false),
         d_state(STATE_WAIT)
     {
@@ -118,7 +117,7 @@ namespace gr {
         get_tags_in_window(length_tags, 0, 0, ninput_items[0], d_length_tag_key);
         get_tags_in_window(tags, 0, 0, ninput_items[0]);
         std::sort(length_tags.rbegin(), length_tags.rend(), tag_t::offset_compare);
-        std::sort(tags.rbegin(), tags.rend(), tag_t::offset_compare);
+        std::sort(tags.begin(), tags.end(), tag_t::offset_compare);
 
         while((nwritten < noutput_items) && (nread < ninput_items[0])) {
             if(d_finished) {
@@ -128,11 +127,11 @@ namespace gr {
             nspace = noutput_items - nwritten;
             switch(d_state) {
                 case(STATE_WAIT):
-                    if(!tags.empty()) {
-                        curr_tag_index = tags.back().offset;
-                        d_ncopy = pmt::to_long(tags.back().value);
-                        tags.pop_back();
-                        nskip = (int)(curr_tag_index - d_nprocessed);
+                    if(!length_tags.empty()) {
+                        curr_tag_index = length_tags.back().offset;
+                        d_ncopy = pmt::to_long(length_tags.back().value);
+                        length_tags.pop_back();
+                        nskip = (int)(curr_tag_index - nread - nitems_read(0));
                         add_length_tag(nwritten);
                         enter_prepad();
                     }
@@ -144,7 +143,7 @@ namespace gr {
                                     boost::format("Dropping %1% samples") %
                                     nskip);
                         nread += nskip;
-                        d_nprocessed += nskip;
+                        in += nskip;
                     }
                     break;
 
@@ -274,7 +273,6 @@ namespace gr {
     void
     @IMPL_NAME@::enter_wait() {
         d_finished = true;
-        d_nprocessed += d_ncopy;
         d_index = 0;
         d_state = STATE_WAIT;
     }

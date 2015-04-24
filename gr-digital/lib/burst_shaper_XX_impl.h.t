@@ -48,7 +48,6 @@ namespace gr {
       int d_ncopy;
       int d_limit;
       int d_index;
-      uint64_t d_nprocessed;
       bool d_finished;
       state_t d_state;
 

@@ -244,28 +244,35 @@ class qa_burst_shaper (gr_unittest.TestCase):
         prepad = 10
         postpad = 10
         length = 20
-        data = np.ones(2*length + 10) # need 10 more to push things through
+        gap_len = 5
+        data = np.arange(2*length + 10,
+                         dtype=float)   # need 10 more to push things through
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
-        tags = (make_length_tag(0, length), make_length_tag(length + 5, length))
-        expected = np.concatenate((np.zeros(prepad), window[0:5],
-                                   np.ones(length - len(window)), window[5:10],
-                                   np.zeros(postpad)))
-        etags = (make_length_tag(0, length + prepad + postpad),
-                 make_length_tag(length + prepad + postpad,
-                                 length + prepad + postpad))
+        ewindow = window * np.array([1,-1,1,-1,1,1,-1,1,-1,1],dtype=float)
+        tags = (make_length_tag(0, length),
+                make_length_tag(length + gap_len, length))
+        expected = np.concatenate((np.zeros(prepad), ewindow[0:5],
+                                   np.arange(0, length, dtype=float),
+                                   ewindow[5:10], np.zeros(postpad),
+                                   np.zeros(prepad), ewindow[0:5],
+                                   np.arange(length + gap_len,
+                                             2*length + gap_len, dtype=float),
+                                   ewindow[5:10], np.zeros(postpad)))
+        burst_len = length + len(window) + prepad + postpad
+        etags = (make_length_tag(0, burst_len),
+                 make_length_tag(burst_len, burst_len))
 
         # flowgraph
         source = blocks.vector_source_f(data, tags=tags)
         shaper = digital.burst_shaper_ff(window, pre_padding=prepad,
-                                         post_padding=postpad)
+                                         post_padding=postpad,
+                                         insert_phasing=True)
         sink = blocks.vector_sink_f()
         self.tb.connect(source, shaper, sink)
         self.tb.run ()
 
         # checks
-        self.assertFloatTuplesAlmostEqual(sink.data(),
-                                          np.concatenate((expected, expected),
-                                          6))
+        self.assertFloatTuplesAlmostEqual(sink.data(), expected, 6)
         for i in xrange(len(etags)):
             self.assertTrue(compare_tags(sink.tags()[i], etags[i]))
 
