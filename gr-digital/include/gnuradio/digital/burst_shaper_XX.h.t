@@ -49,7 +49,15 @@ namespace gr {
      * directly to the head and tail of each burst.
      *
      * Length tags will be updated to include the length of any added
-     * zero padding or phasing symbols.
+     * zero padding or phasing symbols and will be placed at the
+     * beginning of the modified tagged stream. Any other tags found at
+     * the same offset as a length tag will also be placed at the
+     * beginning of the modified tagged stream, since these tags are
+     * assumed to be associated with the burst rather than a specific
+     * sample. For example, if "tx_time" tags are used to control
+     * bursts, their offsets should be consistent with their associated
+     * burst's length tags. Tags at other offsets will be placed with
+     * the samples on which they were found.
      *
      * \li input: stream of @I_TYPE@
      * \li output: stream of @O_TYPE@
