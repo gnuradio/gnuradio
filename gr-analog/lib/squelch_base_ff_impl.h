@@ -24,6 +24,7 @@
 #define INCLUDED_GR_SQUELCH_BASE_FF_IMPL_H
 
 #include <gnuradio/analog/squelch_base_ff.h>
+#include <pmt/pmt.h>
 
 namespace gr {
   namespace analog {
@@ -36,6 +37,8 @@ namespace gr {
       bool   d_gate;
       double d_envelope;
       enum { ST_MUTED, ST_ATTACK, ST_UNMUTED, ST_DECAY } d_state;
+      const pmt::pmt_t d_sob_key, d_eob_key;
+      bool d_tag_next_unmuted;
 
     protected:
       virtual void update_state(const float &sample) {};
