@@ -34,11 +34,13 @@
 	<param>
 		<name>Alpha</name>
 		<key>alpha</key>
+		<value>1e-4</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Ramp</name>
 		<key>ramp</key>
+		<value>0</value>
 		<type>int</type>
 	</param>
 	<param>
