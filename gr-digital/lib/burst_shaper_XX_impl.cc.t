@@ -68,7 +68,7 @@ namespace gr {
         d_ncopy(0),
         d_limit(0),
         d_index(0),
-        d_nprocessed(0),
+        d_length_tag_offset(0),
         d_finished(false),
         d_state(STATE_WAIT)
     {
@@ -94,8 +94,8 @@ namespace gr {
 
     void
     @IMPL_NAME@::forecast(int noutput_items,
-                          gr_vector_int &ninput_items_required) {
-        //if(d_state == STATE_COPY
+                          gr_vector_int &ninput_items_required)
+    {
         ninput_items_required[0] = noutput_items;
     }
 
@@ -112,13 +112,11 @@ namespace gr {
         int nread = 0;
         int nspace = 0;
         int nskip = 0;
-        uint64_t curr_tag_index = nitems_read(0);
+        int curr_tag_index = 0;
 
-        std::vector<tag_t> length_tags, tags;
+        std::vector<tag_t> length_tags;
         get_tags_in_window(length_tags, 0, 0, ninput_items[0], d_length_tag_key);
-        get_tags_in_window(tags, 0, 0, ninput_items[0]);
         std::sort(length_tags.rbegin(), length_tags.rend(), tag_t::offset_compare);
-        std::sort(tags.rbegin(), tags.rend(), tag_t::offset_compare);
 
         while((nwritten < noutput_items) && (nread < ninput_items[0])) {
             if(d_finished) {
@@ -128,12 +126,14 @@ namespace gr {
             nspace = noutput_items - nwritten;
             switch(d_state) {
                 case(STATE_WAIT):
-                    if(!tags.empty()) {
-                        curr_tag_index = tags.back().offset;
-                        d_ncopy = pmt::to_long(tags.back().value);
-                        tags.pop_back();
-                        nskip = (int)(curr_tag_index - d_nprocessed);
+                    if(!length_tags.empty()) {
+                        d_length_tag_offset = length_tags.back().offset;
+                        curr_tag_index = (int)(d_length_tag_offset - nitems_read(0));
+                        d_ncopy = pmt::to_long(length_tags.back().value);
+                        length_tags.pop_back();
+                        nskip = curr_tag_index - nread;
                         add_length_tag(nwritten);
+                        propagate_tags(curr_tag_index, nwritten, 1, false);
                         enter_prepad();
                     }
                     else {
@@ -144,7 +144,7 @@ namespace gr {
                                     boost::format("Dropping %1% samples") %
                                     nskip);
                         nread += nskip;
-                        d_nprocessed += nskip;
+                        in += nskip;
                     }
                     break;
 
@@ -189,19 +189,22 @@ namespace gr {
     }
 
     int
-    @IMPL_NAME@::prefix_length() const {
+    @IMPL_NAME@::prefix_length() const
+    {
         return (d_insert_phasing) ?
                d_nprepad + d_up_ramp.size() : d_nprepad;
     }
 
     int
-    @IMPL_NAME@::suffix_length() const {
+    @IMPL_NAME@::suffix_length() const
+    {
         return (d_insert_phasing) ?
                d_npostpad + d_down_ramp.size() : d_npostpad;
     }
 
     void
-    @IMPL_NAME@::write_padding(@O_TYPE@ *&dst, int &nwritten, int nspace) {
+    @IMPL_NAME@::write_padding(@O_TYPE@ *&dst, int &nwritten, int nspace)
+    {
         int nprocess = std::min(d_limit - d_index, nspace);
         std::memset(dst, 0x00, nprocess * sizeof(@O_TYPE@));
         dst += nprocess;
@@ -211,8 +214,10 @@ namespace gr {
 
     void
     @IMPL_NAME@::copy_items(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
-                            int &nread, int nspace) {
+                            int &nread, int nspace)
+    {
         int nprocess = std::min(d_limit - d_index, nspace);
+        propagate_tags(nread, nwritten, nprocess);
         std::memcpy(dst, src, nprocess * sizeof(@O_TYPE@));
         dst += nprocess;
         nwritten += nprocess;
@@ -223,7 +228,8 @@ namespace gr {
 
     void
     @IMPL_NAME@::apply_ramp(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
-                            int &nread, int nspace) {
+                            int &nread, int nspace)
+    {
         int nprocess = std::min(d_limit - d_index, nspace);
         @O_TYPE@ *phasing;
         const @O_TYPE@ *ramp;
@@ -240,6 +246,7 @@ namespace gr {
         if(d_insert_phasing)
             std::memcpy(dst, phasing, nprocess * sizeof(@O_TYPE@));
         else {
+            propagate_tags(nread, nwritten, nprocess);
             VOLK_MULT_@O_TYPE@(dst, src, ramp, nprocess);
             src += nprocess;
             nread += nprocess;
@@ -260,34 +267,48 @@ namespace gr {
     }
 
     void
-    @IMPL_NAME@::propagate_tags(std::vector<tag_t> &tags, int offset)
+    @IMPL_NAME@::propagate_tags(int in_offset, int out_offset, int count, bool skip)
     {
-        // FIXME: need to handle offsets correctly
-        std::vector<tag_t>::iterator tag;
-        for(tag = tags.begin(); tag != tags.end(); tag++) {
-            tag_t new_tag = *tag;
-            new_tag.offset = nitems_written(0) + offset;
-            add_item_tag(0, new_tag);
+        uint64_t abs_start = nitems_read(0) + in_offset;
+        uint64_t abs_end = abs_start + count;
+        uint64_t abs_offset = nitems_written(0) + out_offset;
+        tag_t temp_tag;
+
+        std::vector<tag_t> tags;
+        std::vector<tag_t>::iterator it;
+
+        get_tags_in_range(tags, 0, abs_start, abs_end);
+
+        for(it = tags.begin(); it != tags.end(); it++) {
+            if(!pmt::equal(it->key, d_length_tag_key)) {
+                if(skip && (it->offset == d_length_tag_offset))
+                    continue;
+                temp_tag = *it;
+                temp_tag.offset = abs_offset + it->offset - abs_start;
+                add_item_tag(0, temp_tag);
+            }
         }
     }
 
     void
-    @IMPL_NAME@::enter_wait() {
+    @IMPL_NAME@::enter_wait()
+    {
         d_finished = true;
-        d_nprocessed += d_ncopy;
         d_index = 0;
         d_state = STATE_WAIT;
     }
 
     void
-    @IMPL_NAME@::enter_prepad() {
+    @IMPL_NAME@::enter_prepad()
+    {
         d_limit = d_nprepad;
         d_index = 0;
         d_state = STATE_PREPAD;
     }
 
     void
-    @IMPL_NAME@::enter_rampup() {
+    @IMPL_NAME@::enter_rampup()
+    {
         if(d_insert_phasing)
             d_limit = d_up_ramp.size();
         else
@@ -297,7 +318,8 @@ namespace gr {
     }
 
     void
-    @IMPL_NAME@::enter_copy() {
+    @IMPL_NAME@::enter_copy()
+    {
         if(d_insert_phasing)
             d_limit = d_ncopy;
         else
@@ -309,7 +331,8 @@ namespace gr {
     }
 
     void
-    @IMPL_NAME@::enter_rampdown() {
+    @IMPL_NAME@::enter_rampdown()
+    {
         if(d_insert_phasing)
             d_limit = d_down_ramp.size();
         else
@@ -319,7 +342,8 @@ namespace gr {
     }
 
     void
-    @IMPL_NAME@::enter_postpad() {
+    @IMPL_NAME@::enter_postpad()
+    {
         d_limit = d_npostpad;
         d_index = 0;
         d_state = STATE_POSTPAD;

@@ -48,7 +48,7 @@ namespace gr {
       int d_ncopy;
       int d_limit;
       int d_index;
-      uint64_t d_nprocessed;
+      uint64_t d_length_tag_offset;
       bool d_finished;
       state_t d_state;
 
@@ -58,7 +58,7 @@ namespace gr {
       void apply_ramp(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
                       int &nread, int nspace);
       void add_length_tag(int offset);
-      void propagate_tags(std::vector<tag_t> &tags, int offset);
+      void propagate_tags(int in_offset, int out_offset, int count, bool skip=true);
       void enter_wait();
       void enter_prepad();
       void enter_rampup();
