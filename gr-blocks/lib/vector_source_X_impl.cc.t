@@ -133,7 +133,8 @@ namespace gr {
         }
         for(unsigned t = 0; t < d_tags.size(); t++) {
           if((d_tags[t].offset >= d_offset) && (d_tags[t].offset < d_offset+n))
-            add_item_tag(0, d_tags[t].offset, d_tags[t].key, d_tags[t].value);
+            add_item_tag(0, d_tags[t].offset, d_tags[t].key, d_tags[t].value,
+                         d_tags[t].srcid);
         }
         d_offset += n;
         return n/d_vlen;
