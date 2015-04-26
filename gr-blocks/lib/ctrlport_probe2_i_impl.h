@@ -38,6 +38,7 @@ namespace gr {
       size_t d_len;
       unsigned int d_disp_mask;
 
+      size_t d_index;
       std::vector<int> d_buffer;
       rpcbufferedget< std::vector<int> > buffered_get;
 
