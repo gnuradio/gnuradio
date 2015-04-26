@@ -290,7 +290,7 @@ FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
   double startFreq;
   double stopFreq = (centerfreq + bandwidth/2.0f) / units;
   if(d_half_freq)
-    startFreq = 0;
+    startFreq = centerfreq / units;
   else
     startFreq = (centerfreq - bandwidth/2.0f) / units;
 
@@ -303,6 +303,7 @@ FrequencyDisplayPlot::setFrequencyRange(const double centerfreq,
   if(stopFreq > startFreq) {
     d_start_frequency = startFreq;
     d_stop_frequency = stopFreq;
+    d_center_frequency = centerfreq / units;
 
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
       double display_units = ceil(log10(units)/2.0);
@@ -493,7 +494,7 @@ FrequencyDisplayPlot::setPlotPosHalf(bool half)
 {
   d_half_freq = half;
   if(half)
-    d_start_frequency = 0;
+    d_start_frequency = d_center_frequency;
 }
 
 

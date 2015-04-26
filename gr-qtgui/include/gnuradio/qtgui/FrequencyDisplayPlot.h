@@ -147,6 +147,7 @@ private:
 
   double d_start_frequency;
   double d_stop_frequency;
+  double d_center_frequency;
   double d_ymax;
   double d_ymin;
   bool   d_half_freq;

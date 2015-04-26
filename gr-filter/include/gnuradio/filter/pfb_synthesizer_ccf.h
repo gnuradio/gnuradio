@@ -123,9 +123,11 @@ namespace gr {
 
       /*!
        * Set the channel map. Channels are numbers as:
-       *     N/2+1 | ... | N-1 | 0 | 1 |  2 | ... | N/2
-       *    <------------------- 0 -------------------->
-       *                        freq
+       * <pre>
+       *  N/2+1 | ... | N-1 | 0 | 1 |  2 | ... | N/2
+       * <------------------- 0 -------------------->
+       *                    freq
+       * </pre>
        *
        * So input stream 0 goes to channel 0, etc. Setting a new channel
        * map allows the user to specify where in frequency he/she wants
