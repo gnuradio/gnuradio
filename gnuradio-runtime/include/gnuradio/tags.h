@@ -60,6 +60,18 @@ namespace gr {
       return (t.key == key) && (t.value == value) && \
       (t.srcid == srcid) && (t.offset == offset);
     }
+
+    tag_t()
+      : offset(0),
+        key(pmt::PMT_NIL),
+        value(pmt::PMT_NIL),
+        srcid(pmt::PMT_F)    // consistent with default srcid value in block::add_item_tag
+    {
+    }
+
+    ~tag_t()
+    {
+    }
   };
 
 } /* namespace gr */
