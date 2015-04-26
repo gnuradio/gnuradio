@@ -8,7 +8,7 @@ class PythonTag(object):
         self.offset = None
         self.key    = None
         self.value  = None
-        self.srcid  = None
+        self.srcid  = pmt.PMT_F
 
 def tag_to_python(tag):
     """ Convert a stream tag to a Python-readable object """
