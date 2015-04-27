@@ -62,16 +62,8 @@ namespace gr {
       }
       std::reverse(d_symbols.begin(), d_symbols.end());
 
-      d_mark_delay = mark_delay >= d_symbols.size() ? d_symbols.size() - 1
-                                                    : mark_delay;
-
-      // Compute a correlation threshold.
-      // Compute the value of the discrete autocorrelation of the matched
-      // filter with offset 0 (aka the autocorrelation peak).
-      float corr = 0;
-      for(size_t i = 0; i < d_symbols.size(); i++)
-        corr += abs(d_symbols[i]*conj(d_symbols[i]));
-      d_thresh = threshold*corr*corr;
+      set_mark_delay(mark_delay);
+      set_threshold(threshold);
 
       // Correlation filter
       d_filter = new kernel::fft_filter_ccc(1, d_symbols);
@@ -157,8 +149,65 @@ namespace gr {
       declare_sample_delay(1, 0);
       declare_sample_delay(0, d_symbols.size());
 
-      d_mark_delay = d_mark_delay >= d_symbols.size() ? d_symbols.size()-1
-                                                      : d_mark_delay;
+      _set_mark_delay(d_stashed_mark_delay);
+      _set_threshold(d_stashed_threshold);
+    }
+
+    unsigned int
+    corr_est_cc_impl::mark_delay() const
+    {
+      return d_mark_delay;
+    }
+
+    void
+    corr_est_cc_impl::_set_mark_delay(unsigned int mark_delay)
+    {
+      d_stashed_mark_delay = mark_delay;
+
+      if(mark_delay >= d_symbols.size()) {
+        d_mark_delay = d_symbols.size()-1;
+        GR_LOG_WARN(d_logger, boost::format("set_mark_delay: asked for %1% but due "
+                                            "to the symbol size constraints, "
+                                            "mark delay set to %2%.") \
+                    % mark_delay % d_mark_delay);
+      }
+      else {
+        d_mark_delay = mark_delay;
+      }
+    }
+
+    void
+    corr_est_cc_impl::set_mark_delay(unsigned int mark_delay)
+    {
+      gr::thread::scoped_lock lock(d_setlock);
+      _set_mark_delay(mark_delay);
+    }
+
+    float
+    corr_est_cc_impl::threshold() const
+    {
+      return d_thresh;
+    }
+
+    void
+    corr_est_cc_impl::_set_threshold(float threshold)
+    {
+      d_stashed_threshold = threshold;
+
+      // Compute a correlation threshold.
+      // Compute the value of the discrete autocorrelation of the matched
+      // filter with offset 0 (aka the autocorrelation peak).
+      float corr = 0;
+      for(size_t i = 0; i < d_symbols.size(); i++)
+        corr += abs(d_symbols[i]*conj(d_symbols[i]));
+      d_thresh = threshold*corr*corr;
+    }
+
+    void
+    corr_est_cc_impl::set_threshold(float threshold)
+    {
+      gr::thread::scoped_lock lock(d_setlock);
+      _set_threshold(threshold);
     }
 
     int
