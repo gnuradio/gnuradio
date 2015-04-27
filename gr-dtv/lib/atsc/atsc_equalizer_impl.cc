@@ -90,6 +90,12 @@ namespace gr {
     {
     }
 
+    std::vector<float>
+    atsc_equalizer_impl::taps() const
+    {
+      return d_taps;
+    }
+
     void
     atsc_equalizer_impl::filterN(const float *input_samples,
                                  float *output_samples,
@@ -185,6 +191,22 @@ namespace gr {
 
       consume_each(noutput_items);
       return output_produced;
+    }
+
+    void
+    atsc_equalizer_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<atsc_equalizer, std::vector<float> >(
+	  alias(), "taps",
+	  &atsc_equalizer::taps,
+	  pmt::make_f32vector(1,-10),
+	  pmt::make_f32vector(1,10),
+	  pmt::make_f32vector(1,0),
+	  "", "Equalizer Taps", RPC_PRIVLVL_MIN,
+          DISPTIME)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace dtv */
