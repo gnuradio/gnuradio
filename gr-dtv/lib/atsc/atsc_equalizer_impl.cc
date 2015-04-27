@@ -28,6 +28,7 @@
 #include "atsc_types.h"
 #include "atsc_pnXXX_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace dtv {
@@ -76,10 +77,13 @@ namespace gr {
       init_field_sync_common(training_sequence1, 0);
       init_field_sync_common(training_sequence2, 1);
 
-      for (int i = 0; i < NTAPS; i++)
-        d_taps[i] = 0.0;
+      d_taps.resize(NTAPS, 0.0f);
 
       d_buff_not_filled = true;
+
+      const int alignment_multiple =
+	volk_get_alignment() / sizeof(float);
+      set_alignment(std::max(1, alignment_multiple));
     }
 
     atsc_equalizer_impl::~atsc_equalizer_impl()
@@ -87,12 +91,15 @@ namespace gr {
     }
 
     void
-    atsc_equalizer_impl::filterN(const float *input_samples, float *output_samples, int nsamples)
+    atsc_equalizer_impl::filterN(const float *input_samples,
+                                 float *output_samples,
+                                 int nsamples)
     {
       for (int j = 0; j < nsamples; j++) {
         output_samples[j] = 0;
-        for(int i = 0; i < NTAPS; i++)
-          output_samples[j] += d_taps[i] * input_samples[j + i];
+        volk_32f_x2_dot_prod_32f(&output_samples[j],
+                                 &input_samples[j],
+                                 &d_taps[0], NTAPS);
       }
     }
 
@@ -107,14 +114,16 @@ namespace gr {
 
       for(int j = 0; j < nsamples; j++) {
         output_samples[j] = 0;
-        for( int i = 0; i < NTAPS; i++ )
-          output_samples[j] += d_taps[i] * input_samples[j + i];
+        volk_32f_x2_dot_prod_32f(&output_samples[j],
+                                 &input_samples[j],
+                                 &d_taps[0], NTAPS);
 
-        double e = output_samples[j] - training_pattern[j];
+        float e = output_samples[j] - training_pattern[j];
 
         // update taps...
-        for( int i = 0; i < NTAPS; i++ )
-          d_taps[i] -= BETA * e * (double)(input_samples[j + i]);
+        float tmp_taps[NTAPS];
+        volk_32f_s32f_multiply_32f(tmp_taps, &input_samples[j], BETA*e, NTAPS);
+        volk_32f_x2_subtract_32f(&d_taps[0], &d_taps[0], tmp_taps, NTAPS);
       }
     }
 
@@ -131,8 +140,8 @@ namespace gr {
       int i = 0;
 
       if(d_buff_not_filled) {
-        for(int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++)
-          data_mem[NPRETAPS + j] = in[i].data[j];
+        memcpy(&data_mem[NPRETAPS], in[i].data,
+               ATSC_DATA_SEGMENT_LENGTH*sizeof(float));
         d_flags = in[i].pli._flags;
         d_segno = in[i].pli._segno;
         d_buff_not_filled = false;
@@ -141,8 +150,8 @@ namespace gr {
 
       for (; i < noutput_items; i++) {
 
-        for(int j = 0; j < NTAPS - NPRETAPS; j++)
-          data_mem[ATSC_DATA_SEGMENT_LENGTH + NPRETAPS + j] = in[i].data[j];
+        memcpy(&data_mem[ATSC_DATA_SEGMENT_LENGTH + NPRETAPS], in[i].data,
+               (NTAPS - NPRETAPS)*sizeof(float));
 
         if(d_segno == -1) {
           if(d_flags & 0x0010) {
@@ -157,19 +166,18 @@ namespace gr {
         else {
           filterN(data_mem, data_mem2, ATSC_DATA_SEGMENT_LENGTH);
 
-          for(int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++)
-            out[output_produced].data[j] = data_mem2[j];
+          memcpy(out[output_produced].data, data_mem2,
+                 ATSC_DATA_SEGMENT_LENGTH*sizeof(float));
 
           out[output_produced].pli._flags = d_flags;
           out[output_produced].pli._segno = d_segno;
           output_produced++;
         }
 
-        for( int j = 0; j < NPRETAPS; j++ )
-          data_mem[j] = data_mem[ATSC_DATA_SEGMENT_LENGTH + j];
-
-        for(int j = 0; j < ATSC_DATA_SEGMENT_LENGTH; j++)
-          data_mem[NPRETAPS + j] = in[i].data[j];
+        memcpy(data_mem, &data_mem[ATSC_DATA_SEGMENT_LENGTH],
+               NPRETAPS*sizeof(float));
+        memcpy(&data_mem[NPRETAPS], in[i].data,
+               ATSC_DATA_SEGMENT_LENGTH*sizeof(float));
 
         d_flags = in[i].pli._flags;
         d_segno = in[i].pli._segno;
