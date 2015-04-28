@@ -251,18 +251,20 @@ GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONEN
 if(ENABLE_STATIC_LIBS)
   # Remove controlport-specific source files from staticlibs build
   if(ENABLE_GR_CTRLPORT)
-    list(REMOVE_ITEM gr_blocks_sources
-      ${blocks_ctrlport_sources}
-      )
+    if(ICE_FOUND)
+      list(REMOVE_ITEM gr_blocks_sources
+        ${blocks_ctrlport_sources}
+        )
 
-    # Remove GR_CTRLPORT set this target's definitions.
-    # Makes sure we don't try to use ControlPort stuff in source files
-    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+      # Remove GR_CTRLPORT set this target's definitions.
+      # Makes sure we don't try to use ControlPort stuff in source files
+      GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+      list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+      SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
 
-    # readd it to the target since we removed it from the directory-wide list.
-    SET_PROPERTY(TARGET gnuradio-blocks APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+      # readd it to the target since we removed it from the directory-wide list.
+      SET_PROPERTY(TARGET gnuradio-blocks APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+    endif(ICE_FOUND)
   endif(ENABLE_GR_CTRLPORT)
 
   add_library(gnuradio-blocks_static STATIC ${gr_blocks_sources})
