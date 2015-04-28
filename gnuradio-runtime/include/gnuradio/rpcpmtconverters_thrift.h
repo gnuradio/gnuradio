@@ -34,6 +34,7 @@ namespace rpcpmtconverter
 
   struct to_pmt_f {
     to_pmt_f() {;}
+    virtual ~to_pmt_f() {}
     virtual pmt::pmt_t operator()(const GNURadio::Knob& knob);
   };
 
