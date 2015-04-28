@@ -43,7 +43,8 @@ namespace gr {
       /*!
        * Make a tagged stream align
        *
-       * \param lengthtagname Length tag key
+       * \param itemsize The size (in bytes) of the item datatype.
+       * \param lengthtagname Name of the TSB's length tag key.
        */
       static sptr make(size_t itemsize, const std::string &lengthtagname);
     };
@@ -52,4 +53,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_TAGGED_STREAM_ALIGN_H */
-
