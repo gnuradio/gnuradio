@@ -126,13 +126,13 @@ class FlowGraph(Element):
     def get_block(self, id): return filter(lambda b: b.get_id() == id, self.get_blocks())[0]
     def get_blocks_unordered(self): return filter(lambda e: e.is_block(), self.get_elements())
     def get_blocks(self):
-        blocks = self.get_blocks_unordered();
-        for i in range(len(blocks)):
-            if blocks[i].get_key() == 'variable':
-                blk = blocks[i];
-                blocks.remove(blk);
-                blocks.insert(1, blk);
-        return blocks;
+        # refactored the slow, ugly version
+        # don't know why we need this here, using it for sorted export_data()
+        return sorted(self.get_blocks_unordered(), key=lambda b: (
+            b.get_key() != 'options',  # options to the front
+            not b.get_key().startswith('variable'),  # then vars
+            str(b)
+        ))
     def get_connections(self): return filter(lambda e: e.is_connection(), self.get_elements())
     def get_children(self): return self.get_elements()
     def get_elements(self):
@@ -250,8 +250,8 @@ class FlowGraph(Element):
         """
         n = odict()
         n['timestamp'] = self._timestamp
-        n['block'] = [block.export_data() for block in self.get_blocks()]
-        n['connection'] = [connection.export_data() for connection in self.get_connections()]
+        n['block'] = [b.export_data() for b in self.get_blocks()]  # already sorted
+        n['connection'] = [c.export_data() for c in sorted(self.get_connections(), key=str)]
         instructions = odict({
             'created': self.get_parent().get_version_short(),
             'format': FLOW_GRAPH_FILE_FORMAT_VERSION,
