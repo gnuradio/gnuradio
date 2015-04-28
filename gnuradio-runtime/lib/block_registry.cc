@@ -27,6 +27,7 @@
 #include <gnuradio/tpb_detail.h>
 #include <stdio.h>
 
+//gr::block_registry global_block_registry;
 
 gr::block_registry* global_block_registry()
 {

@@ -671,7 +671,7 @@ struct rpcbasic_register_set : public rpcbasic_base
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_display = display_;
-    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
+    d_object = dynamic_cast<T*>(global_block_registry()->block_lookup(pmt::intern(block_alias)).get());
 #ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
       extractor(new rpcbasic_extractor<T,Tto>(d_object, function),
@@ -829,7 +829,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base
   {
     d_desc = desc_;
     d_minpriv = minpriv_;
-    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
+    d_object = dynamic_cast<T*>(global_block_registry()->block_lookup(pmt::intern(block_alias)).get());
 #ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
       extractor(new rpcbasic_extractor<T,void>(d_object, function),
@@ -987,7 +987,7 @@ public:
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_display = display_;
-    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
+    d_object = dynamic_cast<T*>(global_block_registry()->block_lookup(pmt::intern(block_alias)).get());
 #ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
       inserter(new rpcbasic_inserter<T,Tfrom>(d_object, function),
@@ -1021,7 +1021,7 @@ public:
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_display = display_;
-    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
+    d_object = dynamic_cast<T*>(global_block_registry()->block_lookup(pmt::intern(block_alias)).get());
 #ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
       inserter(new rpcbasic_inserter<T,Tfrom>(d_object, (Tfrom (T::*)())function),
