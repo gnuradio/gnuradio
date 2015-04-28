@@ -413,7 +413,7 @@ class Block(Element):
         """
         n = odict()
         n['key'] = self.get_key()
-        n['param'] = map(lambda p: p.export_data(), self.get_params())
+        n['param'] = map(lambda p: p.export_data(), sorted(self.get_params(), key=str))
         if 'bus' in map(lambda a: a.get_type(), self.get_sinks()):
             n['bus_sink'] = str(1);
         if 'bus' in map(lambda a: a.get_type(), self.get_sources()):
