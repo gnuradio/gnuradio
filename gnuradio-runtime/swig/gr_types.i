@@ -80,15 +80,19 @@ namespace std {
 %template(gr_vector_vector_complexf) std::vector< std::vector< std::complex<float> > >;
 %template(gr_vector_vector_complexd) std::vector< std::vector< std::complex<double> > >;
 
-// Fix for Issue #529
-#ifdef SIZE_T_32
-  // On 32-bit systems, whenever we see std::vector<size_t>, replace it
-  // with vector<unsigned int>
+// Fix for Issue #529: replace std::vector<size_t> with its equivalent
+// in element size, one of "unsigned int", "unsigned long", or
+// "unsigned long long". The replacement depends on the sizeof each
+// type, as determined in GrSwig.cmake GR_SWIG_MAKE. For SWIG >=
+// 3.0.0, none of these will be defined because this issue seems to
+// have been fixed.
+
+#if defined(SIZE_T_UINT)
   %apply std::vector<unsigned int> { std::vector<size_t> };
-#else
-  // On 64-bit systems, whenever we see std::vector<size_t>, replace it
-  // with vector<long unsigned int>
-  %apply std::vector<long unsigned int> { std::vector<size_t> };
+#elif defined(SIZE_T_UL)
+  %apply std::vector<unsigned long> { std::vector<size_t> };
+#elif defined(SIZE_T_ULL)
+  %apply std::vector<unsigned long long> { std::vector<size_t> };
 #endif
 
 #endif /* SWIG_GR_TYPES_I */
