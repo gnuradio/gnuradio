@@ -131,6 +131,7 @@ namespace gr {
     {
       d_y1 = 0;
       d_y2 = 0;
+      d_y3 = 0;
       d_counter = 1;
     }
 

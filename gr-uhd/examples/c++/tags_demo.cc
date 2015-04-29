@@ -24,6 +24,7 @@
 #include <gnuradio/uhd/usrp_sink.h>
 #include <tag_source_demo.h>
 #include <tag_sink_demo.h>
+#include <uhd/utils/safe_main.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/thread/thread.hpp> //sleep
 #include <boost/program_options.hpp>
@@ -41,7 +42,7 @@ void sig_int_handler(int){stop_signal_called = true;}
 /***********************************************************************
  * Main w/ program options
  **********************************************************************/
-int main(int argc, char *argv[]){
+int UHD_SAFE_MAIN(int argc, char *argv[]){
 
     std::string device_addr, length_tag;
     double center_freq, samp_rate, burst_dur, idle_dur;
