@@ -54,7 +54,7 @@ class GF2Mat
     int get_M();
 
     //! Returns the variable N
-    int get_N(); 
+    int get_N();
 
     //! Set the element at (i, j) coordinate to val
     void set_element(int i, int j, char val);
@@ -93,17 +93,18 @@ class GF2Mat
     std::vector<std::vector<char> > get_H();
 
     /*!
-      \brief Obtains an equivalent representation of H for encoding
-
-      For encoding a G matrix in the form [I P] is obtained from the
-      parity matrix H, by (a) Column permutations, (b) Row additions
-      and (c) Row permutations. Details of encoding is given in
-      section A.1 of the reference given below.
-       - "Modern Coding Theory", T Richardson and R Urbanke.
-
-      \param p is the column permutation during this operation
-      \
-    */
+     * \brief Obtains an equivalent representation of H for encoding
+     *
+     * For encoding a G matrix in the form [I P] obtained from the
+     * parity matrix H, by (a) Column permutations, (b) Row additions
+     * and (c) Row permutations. Details of encoding is given in
+     * section A.1 of the reference:
+     *
+     *  - "Modern Coding Theory", T Richardson and R Urbanke.
+     *
+     * \param p The column permutation during this operation.
+     * \param rank The rank of the matrix.
+     */
     GF2Mat get_G(std::vector<int> & p, int & rank);
 
 };
