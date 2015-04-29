@@ -30,6 +30,14 @@
 namespace gr {
   namespace uhd {
 
+    /*! Base class for USRP blocks.
+     * \ingroup uhd_blk
+     *
+     * Note that many of the functions defined here differ between
+     * Rx and Tx configurations. As an example, set_center_freq()
+     * will set the Rx frequency for a usrp_source object, and the
+     * Tx frequency on a usrp_sink object.
+     */
     class GR_UHD_API usrp_block : public gr::sync_block
     {
      protected:
@@ -38,6 +46,7 @@ namespace gr {
                  gr::io_signature::sptr input_signature,
                  gr::io_signature::sptr output_signature);
      public:
+
       /*!
        * Set the frontend specification.
        *

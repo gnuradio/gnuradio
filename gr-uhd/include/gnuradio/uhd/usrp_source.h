@@ -25,7 +25,7 @@
 
 #include <gnuradio/uhd/usrp_block.h>
 
-// TODO In 3.8, UHD 3.4 will be required and we can remove all these ifdefs
+// TODO In 3.8, UHD 3.6 will be required and we can remove all these ifdefs
 #ifndef INCLUDED_UHD_STREAM_HPP
 namespace uhd {
   struct GR_UHD_API stream_args_t
@@ -52,6 +52,30 @@ namespace gr {
 
     class uhd_usrp_source;
 
+    /*! USRP Source -- Radio Receiver
+     * \ingroup uhd_blk
+     *
+     * The USRP source block receives samples and writes to a stream.
+     * The source block also provides API calls for receiver settings.
+     * See also gr::uhd::usrp_block for more public API calls.
+     *
+     * RX Stream tagging:
+     *
+     * The following tag keys will be produced by the work function:
+     *  - pmt::string_to_symbol("rx_time")
+     *
+     * The timestamp tag value is a pmt tuple of the following:
+     * (uint64 seconds, and double fractional seconds).
+     * A timestamp tag is produced at start() and after overflows.
+     *
+     * \section uhd_rx_command_iface Command interface
+     *
+     * This block has a message port, which consumes UHD PMT commands.
+     * For a description of the command syntax, see Section \ref uhd_command_syntax.
+     *
+     * For a more general description of the gr-uhd components, see \ref page_uhd.
+     *
+     */
     class GR_UHD_API usrp_source : virtual public usrp_block
     {
     public:
@@ -70,27 +94,6 @@ namespace gr {
                        size_t num_channels);
 
       /*!
-       * \brief Make a new USRP source block (usually a radio receiver).
-       *
-       * The USRP source block receives samples and writes to a stream.
-       * The source block also provides API calls for receiver settings.
-       *
-       * RX Stream tagging:
-       *
-       * The following tag keys will be produced by the work function:
-       *  - pmt::string_to_symbol("rx_time")
-       *
-       * The timestamp tag value is a pmt tuple of the following:
-       * (uint64 seconds, and double fractional seconds).
-       * A timestamp tag is produced at start() and after overflows.
-       *
-       * \section uhd_rx_command_iface Command interface
-       *
-       * This block has a message port, which consumes UHD PMT commands.
-       * For a description of the command syntax, see Section \ref uhd_command_syntax.
-       *
-       * For a more general description of the gr-uhd components, see \ref page_uhd.
-       *
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
        * \return a new USRP source block object
