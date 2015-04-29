@@ -12,15 +12,10 @@ as:
     from gnuradio import uhd
 \endcode
 
-The relevant blocks are listed in the \ref uhd_blk group.
-
-A quick listing of the details can be found in Python after importing
-by using:
-
-\code
-    help(uhd)
-\endcode
-
+The relevant blocks are listed in the \ref uhd_blk group. The most important
+components are the gr::uhd::usrp_source and gr::uhd::usrp_sink blocks, which
+act as receivers/transmitters. Both are derived from gr::uhd::usrp_block, which
+defines many of the shared functions between those blocks.
 
 \section uhd_external_docs External Documentation
 
