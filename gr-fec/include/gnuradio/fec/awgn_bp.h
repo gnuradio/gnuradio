@@ -119,13 +119,14 @@ class FEC_API awgn_bp
     int get_max_iterations();
 
     /*!
-      \brief Decodes the given vector rx_word by message passing.
-
-      \param *niterations is the number of message passing iterations
-      done to decode this codeword
+     * \brief Decodes the given vector rx_word by message passing.
+     *
+     * \param rx_word The received samples for decoding.
+     * \param niterations The number of message passing iterations
+     *        done to decode this codeword.
     */
     std::vector<char> decode (std::vector<float> rx_word,
-            int *niterations);
+                              int *niterations);
   private:
     //! The number of check nodes in the tanner-graph
     int M;

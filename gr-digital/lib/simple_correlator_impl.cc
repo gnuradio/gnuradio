@@ -51,6 +51,7 @@ namespace gr {
                  io_signature::make(1, 1, sizeof(unsigned char))),
         d_payload_bytesize(payload_bytesize),
         d_state(ST_LOOKING), d_osi(0),
+        d_transition_osi(0), d_center_osi(0),
         d_bblen((payload_bytesize + GRSF_PAYLOAD_OVERHEAD) * GRSF_BITS_PER_BYTE),
         d_bitbuf(new unsigned char[d_bblen]),
         d_pktbuf(new unsigned char[d_bblen/GRSF_BITS_PER_BYTE]),
