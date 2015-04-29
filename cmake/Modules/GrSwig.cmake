@@ -105,17 +105,36 @@ endfunction(GR_SWIG_MAKE_DOCS)
 macro(GR_SWIG_MAKE name)
     set(ifiles ${ARGN})
 
-    # Shimming this in here to take care of a SWIG bug with handling
-    # vector<size_t> and vector<unsigned int> (on 32-bit machines) and
-    # vector<long unsigned int> (on 64-bit machines). Use this to test
-    # the size of size_t, then set SIZE_T_32 if it's a 32-bit machine
-    # or not if it's 64-bit. The logic in gr_type.i handles the rest.
-    INCLUDE(CheckTypeSize)
-    CHECK_TYPE_SIZE("size_t" SIZEOF_SIZE_T)
-    CHECK_TYPE_SIZE("unsigned int" SIZEOF_UINT)
-    if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
-      list(APPEND GR_SWIG_FLAGS -DSIZE_T_32)
-    endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
+    # Take care of a SWIG < 3.0 bug with handling std::vector<size_t>,
+    # by mapping to the correct sized type on the runtime system, one
+    # of "unsigned int", "unsigned long", or "unsigned long long".
+    # Compare the sizeof(size_t) with the sizeof the other types, and
+    # pick the first one in the list with the same sizeof. The logic
+    # in gnuradio-runtime/swig/gr_types.i handles the rest. It is
+    # probably not necessary to do this assignment all of the time,
+    # but it's easier to do it this way than to figure out the
+    # conditions when it is necessary -- and doing it this way won't
+    # hurt.  This bug seems to have been fixed with SWIG >= 3.0, and
+    # mostly happens when not doing a native build (e.g., on Mac OS X
+    # when using a 64-bit CPU but building for 32-bit).
+
+    if(SWIG_VERSION VERSION_LESS "3.0.0")
+        include(CheckTypeSize)
+        check_type_size("size_t" SIZEOF_SIZE_T)
+        check_type_size("unsigned int" SIZEOF_UINT)
+        check_type_size("unsigned long" SIZEOF_UL)
+        check_type_size("unsigned long long" SIZEOF_ULL)
+
+        if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
+            list(APPEND GR_SWIG_FLAGS -DSIZE_T_UINT)
+        elseif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UL})
+            list(APPEND GR_SWIG_FLAGS -DSIZE_T_UL)
+        elseif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_ULL})
+            list(APPEND GR_SWIG_FLAGS -DSIZE_T_ULL)
+        else()
+            message(FATAL_ERROR "GrSwig: Unable to find replace for std::vector<size_t>; this should never happen!")
+        endif()
+    endif()
 
     #do swig doc generation if specified
     if(GR_SWIG_DOC_FILE)
