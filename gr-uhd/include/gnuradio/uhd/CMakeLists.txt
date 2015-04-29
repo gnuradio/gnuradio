@@ -22,6 +22,7 @@
 ########################################################################
 install(FILES
     api.h
+    usrp_block.h
     usrp_source.h
     usrp_sink.h
     amsg_source.h
