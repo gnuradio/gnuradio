@@ -20,10 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "usrp_common.h"
 #include "usrp_source_impl.h"
 #include "gr_uhd_common.h"
-#include <gnuradio/io_signature.h>
 #include <boost/format.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/make_shared.hpp>
@@ -64,49 +62,15 @@ namespace gr {
 
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
                                        const ::uhd::stream_args_t &stream_args):
-      sync_block("usrp_source",
-                    io_signature::make(0, 0, 0),
-                    args_to_io_sig(stream_args)),
-      usrp_common_impl(device_addr, stream_args, ""),
+      usrp_block("usrp_source",
+                 io_signature::make(0, 0, 0),
+                 args_to_io_sig(stream_args)),
+      usrp_block_impl(device_addr, stream_args, ""),
       _tag_now(false)
     {
       std::stringstream str;
       str << name() << unique_id();
       _id = pmt::string_to_symbol(str.str());
-
-      message_port_register_in(pmt::mp("command"));
-      set_msg_handler(
-          pmt::mp("command"),
-          boost::bind(&usrp_source_impl::msg_handler_command, this, _1)
-      );
-
-      _check_sensors_locked();
-    }
-
-    bool usrp_source_impl::_check_sensors_locked()
-    {
-      bool clocks_locked = true;
-
-      // Check ref lock for all mboards
-      for (size_t mboard_index = 0; mboard_index < _dev->get_num_mboards(); mboard_index++) {
-        std::string sensor_name = "ref_locked";
-        if (_dev->get_clock_source(mboard_index) == "internal") {
-          continue;
-        }
-        else if (_dev->get_clock_source(mboard_index) == "mimo") {
-          sensor_name = "mimo_locked";
-        }
-        if (not _wait_for_locked_sensor(
-                get_mboard_sensor_names(mboard_index),
-                sensor_name,
-                boost::bind(&usrp_source_impl::get_mboard_sensor, this, _1, mboard_index)
-            )) {
-          GR_LOG_WARN(d_logger, boost::format("Sensor '%s' failed to lock within timeout on motherboard %d.") % sensor_name % mboard_index);
-          clocks_locked = false;
-        }
-      }
-
-      return clocks_locked;
     }
 
     usrp_source_impl::~usrp_source_impl()
@@ -173,6 +137,20 @@ namespace gr {
       _center_freq = this->get_center_freq(user_chan);
       _tag_now = true;
       return res;
+    }
+
+    ::uhd::tune_result_t
+    usrp_source_impl::_set_center_freq_from_internals(size_t chan)
+    {
+      _chans_to_tune[chan] = false;
+      if (_curr_lo_offset[chan] == 0.0) {
+        return _dev->set_rx_freq(_curr_freq[chan], _stream_args.channels[chan]);
+      } else {
+        return _dev->set_rx_freq(
+            ::uhd::tune_request_t(_curr_freq[chan], _curr_lo_offset[chan]),
+            _stream_args.channels[chan]
+        );
+      }
     }
 
     double
@@ -364,173 +342,11 @@ namespace gr {
       return _dev->get_rx_sensor_names(chan);
     }
 
-    ::uhd::sensor_value_t
-    usrp_source_impl::get_mboard_sensor(const std::string &name, size_t mboard)
-    {
-      return _dev->get_mboard_sensor(name, mboard);
-    }
-
-    std::vector<std::string>
-    usrp_source_impl::get_mboard_sensor_names(size_t mboard)
-    {
-      return _dev->get_mboard_sensor_names(mboard);
-    }
-
-    void
-    usrp_source_impl::set_clock_config(const ::uhd::clock_config_t &clock_config,
-                                       size_t mboard)
-    {
-      return _dev->set_clock_config(clock_config, mboard);
-    }
-
-    void
-    usrp_source_impl::set_time_source(const std::string &source,
-                                      const size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
-      return _dev->set_time_source(source, mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    std::string
-    usrp_source_impl::get_time_source(const size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
-      return _dev->get_time_source(mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    std::vector<std::string>
-    usrp_source_impl::get_time_sources(const size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
-      return _dev->get_time_sources(mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    void
-    usrp_source_impl::set_clock_source(const std::string &source,
-                                       const size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
-      return _dev->set_clock_source(source, mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    std::string
-    usrp_source_impl::get_clock_source(const size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
-      return _dev->get_clock_source(mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    std::vector<std::string>
-    usrp_source_impl::get_clock_sources(const size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_REF_SOURCES_API
-      return _dev->get_clock_sources(mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    double
-    usrp_source_impl::get_clock_rate(size_t mboard)
-    {
-      return _dev->get_master_clock_rate(mboard);
-    }
-
-    void
-    usrp_source_impl::set_clock_rate(double rate, size_t mboard)
-    {
-      return _dev->set_master_clock_rate(rate, mboard);
-    }
-
-    ::uhd::time_spec_t
-    usrp_source_impl::get_time_now(size_t mboard)
-    {
-      return _dev->get_time_now(mboard);
-    }
-
-    ::uhd::time_spec_t
-    usrp_source_impl::get_time_last_pps(size_t mboard)
-    {
-      return _dev->get_time_last_pps(mboard);
-    }
-
-    void
-    usrp_source_impl::set_time_now(const ::uhd::time_spec_t &time_spec,
-                                   size_t mboard)
-    {
-      return _dev->set_time_now(time_spec, mboard);
-    }
-
-    void
-    usrp_source_impl::set_time_next_pps(const ::uhd::time_spec_t &time_spec)
-    {
-      return _dev->set_time_next_pps(time_spec);
-    }
-
-    void
-    usrp_source_impl::set_time_unknown_pps(const ::uhd::time_spec_t &time_spec)
-    {
-      return _dev->set_time_unknown_pps(time_spec);
-    }
-
-    void
-    usrp_source_impl::set_command_time(const ::uhd::time_spec_t &time_spec, size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
-      return _dev->set_command_time(time_spec, mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
-    void
-    usrp_source_impl::clear_command_time(size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_COMMAND_TIME_API
-      return _dev->clear_command_time(mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
-    }
-
     ::uhd::usrp::dboard_iface::sptr
     usrp_source_impl::get_dboard_iface(size_t chan)
     {
       chan = _stream_args.channels[chan];
       return _dev->get_rx_dboard_iface(chan);
-    }
-
-    ::uhd::usrp::multi_usrp::sptr
-    usrp_source_impl::get_device(void)
-    {
-      return _dev;
-    }
-
-    void
-    usrp_source_impl::set_user_register(const uint8_t addr,
-                                        const uint32_t data,
-                                        size_t mboard)
-    {
-#ifdef UHD_USRP_MULTI_USRP_USER_REGS_API
-      _dev->set_user_register(addr, data, mboard);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     void
@@ -741,60 +557,6 @@ namespace gr {
       }
 
       return num_samps;
-    }
-
-
-    /************** External interfaces (RPC + Message passing) ********************/
-    void usrp_source_impl::msg_handler_command(pmt::pmt_t msg)
-    {
-      std::string command;
-      pmt::pmt_t cmd_value;
-      int chan = -1;
-      if (not _unpack_chan_command(command, cmd_value, chan, msg)) {
-	GR_LOG_ALERT(d_logger, "Error while unpacking command PMT.");
-      }
-      if (command == "freq") {
-	double freq = pmt::to_double(cmd_value);
-	for (size_t i = 0; i < _nchan; i++) {
-	  if (chan == -1 || chan == int(i)) {
-	    set_center_freq(freq, i);
-	  }
-	}
-	// TODO: implement
-      //} else if (command == "lo_offset") {
-	//;
-      } else if (command == "gain") {
-	double gain = pmt::to_double(cmd_value);
-	for (size_t i = 0; i < _nchan; i++) {
-	  if (chan == -1 || chan == int(i)) {
-	    set_gain(gain, i);
-	  }
-	}
-      } else {
-	GR_LOG_ALERT(d_logger, boost::format("Received unknown command: %s") % command);
-      }
-    }
-
-    void
-    usrp_source_impl::setup_rpc()
-    {
-#ifdef GR_CTRLPORT
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<usrp_source, double>(
-	  alias(), "samp_rate",
-	  &usrp_source::get_samp_rate,
-	  pmt::mp(100000.0f), pmt::mp(25000000.0f), pmt::mp(1000000.0f),
-	  "sps", "RX Sample Rate", RPC_PRIVLVL_MIN,
-          DISPTIME | DISPOPTSTRIP)));
-
-      add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<usrp_source, double>(
-	  alias(), "samp_rate",
-	  &usrp_source::set_samp_rate,
-	  pmt::mp(100000.0f), pmt::mp(25000000.0f), pmt::mp(1000000.0f),
-	  "sps", "RX Sample Rate",
-	  RPC_PRIVLVL_MIN, DISPNULL)));
-#endif /* GR_CTRLPORT */
     }
 
   } /* namespace uhd */
