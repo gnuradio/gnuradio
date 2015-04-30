@@ -46,6 +46,7 @@ link_directories(${LOG4CPP_LIBRARY_DIRS})
 # Setup library
 ########################################################################
 list(APPEND gr_uhd_sources
+    usrp_block_impl.cc
     usrp_source_impl.cc
     usrp_sink_impl.cc
     amsg_source_impl.cc
