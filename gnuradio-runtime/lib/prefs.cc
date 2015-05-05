@@ -63,7 +63,7 @@ namespace gr {
     std::vector<std::string> fnames;
 
 #if ANDROID
-    fs::path dir = fs::path(gr::tmp_path());
+    fs::path dir = fs::path("/sdcard");
 #else
     fs::path dir = prefsdir();
 #endif
@@ -83,7 +83,7 @@ namespace gr {
     // the end of the file list to override any preferences in the
     // installed path config files.
 #if ANDROID
-    fs::path homedir = fs::path(gr::tmp_path());
+    fs::path homedir = fs::path("/sdcard");
 #else
     fs::path homedir = fs::path(gr::appdata_path());
 #endif
