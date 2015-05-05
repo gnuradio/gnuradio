@@ -124,7 +124,7 @@ bool thrift_application_base<rpcserver_base, rpcserver_booter_thrift>::applicati
 
     set_endpoint(endpoint);
 
-    GR_LOG_INFO(d_logger, "Apache Thrift: " + endpoint);
+    GR_INFO("thrift_application_base", "Apache Thrift: " + endpoint);
     d_thirft_is_running = true;
     result = true;
   }

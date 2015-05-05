@@ -162,7 +162,7 @@ rpcpmtconverter::to_pmt_int_f::operator()(const GNURadio::Knob& knob)
 pmt::pmt_t
 rpcpmtconverter::to_pmt_long_f::operator()(const GNURadio::Knob& knob)
 {
-  return pmt::mp(knob.value.a_long);
+  return pmt::from_long(knob.value.a_long);
 }
 
 pmt::pmt_t
