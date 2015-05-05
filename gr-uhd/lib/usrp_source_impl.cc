@@ -145,19 +145,7 @@ namespace gr {
       return res;
     }
 
-    ::uhd::tune_result_t
-    usrp_source_impl::_set_center_freq_from_internals(size_t chan)
-    {
-      _chans_to_tune[chan] = false;
-      if (_curr_lo_offset[chan] == 0.0) {
-        return _dev->set_rx_freq(_curr_freq[chan], _stream_args.channels[chan]);
-      } else {
-        return _dev->set_rx_freq(
-            ::uhd::tune_request_t(_curr_freq[chan], _curr_lo_offset[chan]),
-            _stream_args.channels[chan]
-        );
-      }
-    }
+    SET_CENTER_FREQ_FROM_INTERNALS(usrp_source_impl, set_rx_freq);
 
     double
     usrp_source_impl::get_center_freq(size_t chan)

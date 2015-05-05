@@ -27,6 +27,20 @@ using namespace gr::uhd;
 
 const double usrp_block_impl::LOCK_TIMEOUT = 1.5;
 
+const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
+const pmt::pmt_t CMD_GAIN_KEY = pmt::mp("gain");
+const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
+const pmt::pmt_t CMD_LO_OFFSET_KEY = pmt::mp("lo_offset");
+const pmt::pmt_t CMD_TUNE_KEY = pmt::mp("tune");
+const pmt::pmt_t CMD_LO_FREQ_KEY = pmt::mp("lo_freq");
+const pmt::pmt_t CMD_DSP_FREQ_KEY = pmt::mp("dsp_freq");
+const pmt::pmt_t CMD_RATE_KEY = pmt::mp("rate");
+const pmt::pmt_t CMD_BANDWIDTH_KEY = pmt::mp("bandwidth");
+const pmt::pmt_t CMD_TIME_KEY = pmt::mp("time");
+const pmt::pmt_t CMD_MBOARD_KEY = pmt::mp("mboard");
+const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("antenna");
+
+
 /**********************************************************************
  * Structors
  *********************************************************************/
@@ -47,11 +61,10 @@ usrp_block_impl::usrp_block_impl(
     _nchan(stream_args.channels.size()),
     _stream_now(_nchan == 1 and ts_tag_name.empty()),
     _start_time_set(false),
-    _curr_freq(stream_args.channels.size(), 0.0),
-    _curr_lo_offset(stream_args.channels.size(), 0.0),
-    _curr_gain(stream_args.channels.size(), 0.0),
+    _curr_tune_req(stream_args.channels.size(), ::uhd::tune_request_t()),
     _chans_to_tune(stream_args.channels.size())
 {
+  // TODO remove this when we update UHD
   if(stream_args.cpu_format == "fc32")
     _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
   if(stream_args.cpu_format == "sc16")
@@ -66,6 +79,19 @@ usrp_block_impl::usrp_block_impl(
       pmt::mp("command"),
       boost::bind(&usrp_block_impl::msg_handler_command, this, _1)
   );
+
+// cuz we lazy:
+#define REGISTER_CMD_HANDLER(key, _handler) register_msg_cmd_handler(key, boost::bind(&usrp_block_impl::_handler, this, _1, _2, _3))
+  // Register default command handlers:
+  REGISTER_CMD_HANDLER(CMD_FREQ_KEY, _cmd_handler_freq);
+  REGISTER_CMD_HANDLER(CMD_GAIN_KEY, _cmd_handler_gain);
+  REGISTER_CMD_HANDLER(CMD_LO_OFFSET_KEY, _cmd_handler_looffset);
+  REGISTER_CMD_HANDLER(CMD_TUNE_KEY, _cmd_handler_tune);
+  REGISTER_CMD_HANDLER(CMD_LO_FREQ_KEY, _cmd_handler_lofreq);
+  REGISTER_CMD_HANDLER(CMD_DSP_FREQ_KEY, _cmd_handler_dspfreq);
+  REGISTER_CMD_HANDLER(CMD_RATE_KEY, _cmd_handler_rate);
+  REGISTER_CMD_HANDLER(CMD_BANDWIDTH_KEY, _cmd_handler_bw);
+  REGISTER_CMD_HANDLER(CMD_ANTENNA_KEY, _cmd_handler_antenna);
 }
 
 usrp_block_impl::~usrp_block_impl()
@@ -185,10 +211,9 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
 void
 usrp_block_impl::_set_center_freq_from_internals_allchans()
 {
-  for (size_t chan = 0; chan < _nchan; chan++) {
-    if (_chans_to_tune[chan]) {
-      _set_center_freq_from_internals(chan);
-    }
+  while (_chans_to_tune.any()) {
+    // This resets() bits, so this loop should not run indefinitely
+    _set_center_freq_from_internals(_chans_to_tune.find_first());
   }
 }
 
@@ -389,40 +414,245 @@ usrp_block_impl::setup_rpc()
 
 void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
 {
-  std::string command;
-  pmt::pmt_t cmd_value;
-  int chan = -1;
-  if (not _unpack_chan_command(command, cmd_value, chan, msg)) {
-    GR_LOG_ALERT(d_logger, boost::format("Error while unpacking command PMT: %s") % msg);
+  // Legacy code back compat: If we receive a tuple, we convert
+  // it to a dict, and call the function again. Yep, this comes
+  // at a slight performance hit. Sometime in the future, we can
+  // hopefully remove this:
+  if (pmt::is_tuple(msg)) {
+    if (pmt::length(msg) != 2 && pmt::length(msg) != 3) {
+      GR_LOG_ALERT(d_logger, boost::format("Error while unpacking command PMT: %s") % msg);
+      return;
+    }
+    pmt::pmt_t new_msg = pmt::make_dict();
+    new_msg = pmt::dict_add(new_msg, pmt::tuple_ref(msg, 0), pmt::tuple_ref(msg, 1));
+    if (pmt::length(msg) == 3) {
+      new_msg = pmt::dict_add(new_msg, pmt::mp("chan"), pmt::tuple_ref(msg, 2));
+    }
+    GR_LOG_WARN(d_debug_logger, boost::format("Using legacy message format (tuples): %s") % msg);
+    return msg_handler_command(new_msg);
+  }
+  // End of legacy backward compat code.
+
+  // Turn pair into dict
+  if (!pmt::is_dict(msg)) {
+    GR_LOG_ERROR(d_logger, boost::format("Command message is neither dict nor pair: %s") % msg);
     return;
   }
-  GR_LOG_DEBUG(d_debug_logger, boost::format("Received command: %s") % command);
+
+  // OK, here comes the horrible part. Pairs pass is_dict(), but they're not dicts. Such dicks.
   try {
-    if (command == "freq") {
-      _chans_to_tune = _update_vector_from_cmd_val<double>(
-          _curr_freq, chan, pmt::to_double(cmd_value), true
-      );
-      _set_center_freq_from_internals_allchans();
-    } else if (command == "lo_offset") {
-      _chans_to_tune = _update_vector_from_cmd_val<double>(
-          _curr_lo_offset, chan, pmt::to_double(cmd_value), true
-      );
-      _set_center_freq_from_internals_allchans();
-    } else if (command == "gain") {
-      boost::dynamic_bitset<> chans_to_change = _update_vector_from_cmd_val<double>(
-          _curr_gain, chan, pmt::to_double(cmd_value), true
-      );
-      if (chans_to_change.any()) {
-        for (size_t i = 0; i < chans_to_change.size(); i++) {
-          if (chans_to_change[i]) {
-            set_gain(_curr_gain[i], i);
-          }
-        }
-      }
+    // This will fail if msg is a pair:
+    pmt::pmt_t keys = pmt::dict_keys(msg);
+  } catch (const pmt::wrong_type &e) {
+    // So we fix it:
+    GR_LOG_DEBUG(d_debug_logger, boost::format("Converting pair to dict: %s") % msg);
+    msg = pmt::dict_add(pmt::make_dict(), pmt::car(msg), pmt::cdr(msg));
+  }
+
+  /*** Start the actual message processing *************************/
+  /// 1) Check if there's a time stamp
+  if (pmt::dict_has_key(msg, CMD_TIME_KEY)) {
+    size_t mboard_index = pmt::to_long(
+        pmt::dict_ref(
+          msg, CMD_MBOARD_KEY,
+          pmt::from_long( ::uhd::usrp::multi_usrp::ALL_MBOARDS ) // Default to all mboards
+        )
+    );
+    pmt::pmt_t timespec_p = pmt::dict_ref(msg, CMD_TIME_KEY, pmt::PMT_NIL);
+    if (timespec_p == pmt::PMT_NIL) {
+      clear_command_time(mboard_index);
     } else {
-      GR_LOG_ALERT(d_logger, boost::format("Received unknown command: %s") % command);
+      ::uhd::time_spec_t timespec(
+          time_t(pmt::to_uint64(pmt::car(timespec_p))), // Full secs
+          pmt::to_double(pmt::cdr(timespec_p)) // Frac secs
+      );
+      GR_LOG_DEBUG(d_debug_logger, boost::format("Setting command time on mboard %d") % mboard_index);
+      set_command_time(timespec, mboard_index);
     }
-  } catch (pmt::wrong_type &e) {
-    GR_LOG_ALERT(d_logger, boost::format("Received command '%s' with invalid command value: %s") % command % cmd_value);
+  }
+
+  /// 2) Read chan value
+  int chan = int(pmt::to_long(
+      pmt::dict_ref(
+        msg, CMD_CHAN_KEY,
+        pmt::from_long(-1) // Default to all chans
+      )
+  ));
+
+  /// 3) Loop through all the values
+  GR_LOG_DEBUG(d_debug_logger, boost::format("Processing command message %s") % msg);
+  pmt::pmt_t msg_items = pmt::dict_items(msg);
+  for (size_t i = 0; i < pmt::length(msg_items); i++) {
+    try {
+      dispatch_msg_cmd_handler(
+          pmt::car(pmt::nth(i, msg_items)),
+          pmt::cdr(pmt::nth(i, msg_items)),
+          chan, msg
+      );
+    } catch (pmt::wrong_type &e) {
+      GR_LOG_ALERT(d_logger, boost::format("Invalid command value for key %s: %s") % pmt::car(pmt::nth(i, msg_items)) % pmt::cdr(pmt::nth(i, msg_items)));
+      break;
+    }
+  }
+
+  /// 4) Check if we need to re-tune
+  _set_center_freq_from_internals_allchans();
+}
+
+
+void usrp_block_impl::dispatch_msg_cmd_handler(const pmt::pmt_t &cmd, const pmt::pmt_t &val, int chan, pmt::pmt_t &msg)
+{
+  if (_msg_cmd_handlers.has_key(cmd)) {
+    _msg_cmd_handlers[cmd](val, chan, msg);
   }
 }
+
+void usrp_block_impl::register_msg_cmd_handler(const pmt::pmt_t &cmd, cmd_handler_t handler)
+{
+  _msg_cmd_handlers[cmd] = handler;
+}
+
+void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t &tune_req, int chan)
+{
+  if (chan == -1) {
+    for (size_t i = 0; i < _nchan; i++) {
+      _update_curr_tune_req(tune_req, int(i));
+      return;
+    }
+  }
+
+  if (tune_req.target_freq != _curr_tune_req[chan].target_freq ||
+      tune_req.rf_freq_policy != _curr_tune_req[chan].rf_freq_policy ||
+      tune_req.rf_freq != _curr_tune_req[chan].rf_freq ||
+      tune_req.dsp_freq != _curr_tune_req[chan].dsp_freq ||
+      tune_req.dsp_freq_policy != _curr_tune_req[chan].dsp_freq_policy
+      ) {
+    _curr_tune_req[chan] = tune_req;
+    _chans_to_tune.set(chan);
+  }
+}
+
+// Default handlers:
+void usrp_block_impl::_cmd_handler_freq(const pmt::pmt_t &freq_, int chan, const pmt::pmt_t &msg)
+{
+  double freq = pmt::to_double(freq_);
+  ::uhd::tune_request_t new_tune_reqest(freq);
+  if (pmt::dict_has_key(msg, CMD_LO_OFFSET_KEY)) {
+    double lo_offset = pmt::to_double(pmt::dict_ref(msg, CMD_LO_OFFSET_KEY, pmt::PMT_NIL));
+    new_tune_reqest = ::uhd::tune_request_t(freq, lo_offset);
+  }
+
+  _update_curr_tune_req(new_tune_reqest, chan);
+}
+
+void usrp_block_impl::_cmd_handler_looffset(const pmt::pmt_t &lo_offset, int chan, const pmt::pmt_t &msg)
+{
+  if (pmt::dict_has_key(msg, CMD_FREQ_KEY)) {
+    // Then it's already taken care of
+    return;
+  }
+
+  double lo_offs = pmt::to_double(lo_offset);
+  ::uhd::tune_request_t new_tune_request = _curr_tune_req[chan];
+  new_tune_request.rf_freq = new_tune_request.target_freq + lo_offs;
+  new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
+  new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_AUTO;
+
+  _update_curr_tune_req(new_tune_request, chan);
+}
+
+void usrp_block_impl::_cmd_handler_gain(const pmt::pmt_t &gain_, int chan, const pmt::pmt_t &msg)
+{
+  double gain = pmt::to_double(gain_);
+  if (chan == -1) {
+    for (size_t i = 0; i < _nchan; i++) {
+      set_gain(gain, i);
+    }
+    return;
+  }
+
+  set_gain(gain, chan);
+}
+
+void usrp_block_impl::_cmd_handler_antenna(const pmt::pmt_t &ant, int chan, const pmt::pmt_t &msg)
+{
+  const std::string antenna(pmt::symbol_to_string(ant));
+  if (chan == -1) {
+    for (size_t i = 0; i < _nchan; i++) {
+      set_antenna(antenna, i);
+    }
+    return;
+  }
+
+  set_antenna(antenna, chan);
+}
+
+void usrp_block_impl::_cmd_handler_rate(const pmt::pmt_t &rate_, int, const pmt::pmt_t &)
+{
+  const double rate = pmt::to_double(rate_);
+  set_samp_rate(rate);
+}
+
+void usrp_block_impl::_cmd_handler_tune(const pmt::pmt_t &tune, int chan, const pmt::pmt_t &msg)
+{
+  double freq = pmt::to_double(pmt::car(tune));
+  double lo_offset = pmt::to_double(pmt::cdr(tune));
+  ::uhd::tune_request_t new_tune_reqest(freq, lo_offset);
+  _update_curr_tune_req(new_tune_reqest, chan);
+}
+
+void usrp_block_impl::_cmd_handler_bw(const pmt::pmt_t &bw, int chan, const pmt::pmt_t &msg)
+{
+  double bandwidth = pmt::to_double(bw);
+  if (chan == -1) {
+    for (size_t i = 0; i < _nchan; i++) {
+      set_bandwidth(bandwidth, i);
+    }
+    return;
+  }
+
+  set_bandwidth(bandwidth, chan);
+}
+
+void usrp_block_impl::_cmd_handler_lofreq(const pmt::pmt_t &lofreq, int chan, const pmt::pmt_t &msg)
+{
+  if (chan == -1) {
+    for (size_t i = 0; i < _nchan; i++) {
+      _cmd_handler_lofreq(lofreq, int(i), msg);
+    }
+    return;
+  }
+
+  ::uhd::tune_request_t new_tune_request = _curr_tune_req[chan];
+  new_tune_request.rf_freq = pmt::to_double(lofreq);
+  if (pmt::dict_has_key(msg, CMD_DSP_FREQ_KEY)) {
+    new_tune_request.dsp_freq = pmt::to_double(pmt::dict_ref(msg, CMD_DSP_FREQ_KEY, pmt::PMT_NIL));
+  }
+  new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
+  new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
+
+  _update_curr_tune_req(new_tune_request, chan);
+}
+
+void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t &dspfreq, int chan, const pmt::pmt_t &msg)
+{
+  if (pmt::dict_has_key(msg, CMD_LO_FREQ_KEY)) {
+    // Then it's already dealt with
+    return;
+  }
+
+  if (chan == -1) {
+    for (size_t i = 0; i < _nchan; i++) {
+      _cmd_handler_dspfreq(dspfreq, int(i), msg);
+    }
+    return;
+  }
+
+  ::uhd::tune_request_t new_tune_request = _curr_tune_req[chan];
+  new_tune_request.dsp_freq = pmt::to_double(dspfreq);
+  new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
+  new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
+
+  _update_curr_tune_req(new_tune_request, chan);
+}
+

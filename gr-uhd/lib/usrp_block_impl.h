@@ -27,6 +27,15 @@
 #include <pmt/pmt.h>
 #include <uhd/usrp/multi_usrp.hpp>
 #include <boost/dynamic_bitset.hpp>
+#include <boost/bind.hpp>
+
+#define SET_CENTER_FREQ_FROM_INTERNALS(usrp_class, tune_method) \
+    ::uhd::tune_result_t \
+    usrp_class::_set_center_freq_from_internals(size_t chan) \
+    { \
+      _chans_to_tune.reset(chan); \
+      return _dev->tune_method(_curr_tune_req[chan], _stream_args.channels[chan]); \
+    }
 
 namespace gr {
   namespace uhd {
@@ -35,6 +44,7 @@ namespace gr {
     {
      public:
       typedef boost::function< ::uhd::sensor_value_t (const std::string&)> get_sensor_fn_t;
+      typedef boost::function<void(const pmt::pmt_t &, int, const pmt::pmt_t &)> cmd_handler_t;
 
       static const double LOCK_TIMEOUT;
 
@@ -91,12 +101,34 @@ namespace gr {
       //! Receives commands and handles them
       void msg_handler_command(pmt::pmt_t msg);
 
+      //! For a given argument, call the associated handler, or if none exists,
+      // show a warning through the logging interface.
+      void dispatch_msg_cmd_handler(const pmt::pmt_t &cmd, const pmt::pmt_t &val, int chan, pmt::pmt_t &msg);
+
+      //! Register a new handler for command key \p cmd
+      void register_msg_cmd_handler(const pmt::pmt_t &cmd, cmd_handler_t handler);
+
+
+      // Default handlers
+      void _cmd_handler_freq(const pmt::pmt_t &freq, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_looffset(const pmt::pmt_t &lo_offset, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_gain(const pmt::pmt_t &gain, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_antenna(const pmt::pmt_t &ant, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_rate(const pmt::pmt_t &rate, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_tune(const pmt::pmt_t &tune, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_bw(const pmt::pmt_t &bw, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_lofreq(const pmt::pmt_t &lofreq, int chan, const pmt::pmt_t &msg);
+      void _cmd_handler_dspfreq(const pmt::pmt_t &dspfreq, int chan, const pmt::pmt_t &msg);
+
       /**********************************************************************
        * Helpers
        **********************************************************************/
       bool _check_mboard_sensors_locked();
 
       void _update_stream_args(const ::uhd::stream_args_t &stream_args_);
+
+      // should be const, doesn't work though 'cause missing operator=() for tune_request_t
+      void _update_curr_tune_req(::uhd::tune_request_t &tune_req, int chan);
 
       /*! \brief Wait until a timeout or a sensor returns 'locked'.
        *
@@ -180,16 +212,13 @@ namespace gr {
       /****** Command interface related **********/
       //! Stores a list of commands for later execution
       std::vector<pmt::pmt_t> _pending_cmds;
-      //! Stores the last value we told the USRP to tune to for every channel
+      //! Shadows the last value we told the USRP to tune to for every channel
       // (this is not necessarily the true value the USRP is currently tuned to!).
-      // We could theoretically ask the device, but during streaming, we want to minimize
-      // communication with the USRP.
-      std::vector<double> _curr_freq;
-      //! Stores the last value we told the USRP to have the LO offset for every channel.
-      std::vector<double> _curr_lo_offset;
-      //! Stores the last gain value we told the USRP to have for every channel.
-      std::vector<double> _curr_gain;
+      std::vector< ::uhd::tune_request_t > _curr_tune_req;
       boost::dynamic_bitset<> _chans_to_tune;
+
+      //! Stores the individual command handlers
+      ::uhd::dict<pmt::pmt_t, cmd_handler_t> _msg_cmd_handlers;
     };
 
   } /* namespace uhd */
