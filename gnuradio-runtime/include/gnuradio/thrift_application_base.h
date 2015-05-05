@@ -197,14 +197,11 @@ thrift_application_base<TserverBase, TserverClass>::thrift_application_base(Tser
 {
   gr::configure_default_loggers(d_logger, d_debug_logger, "controlport");
   d_application = _app;
-  //GR_LOG_DEBUG(d_debug_logger, "thrift_application_base: ctor");
 }
 
 template<typename TserverBase, typename TserverClass>
 void thrift_application_base<TserverBase, TserverClass>::start_application()
 {
-  //std::cerr << "thrift_application_base: start_application" << std::endl;
-
   unsigned int max_init_attempts = \
     static_cast<unsigned int>(gr::prefs::singleton()->get_long("thrift", "init_attempts",
                                                                d_default_max_init_attempts));
@@ -220,7 +217,8 @@ void thrift_application_base<TserverBase, TserverClass>::start_application()
     }
 
     if(!app_started) {
-      std::cerr << "thrift_application_base::start_application(), timeout waiting to port number might have failed?" << std::endl;
+      GR_WARN("thrift", "thrift_application_base::start_application(), "
+              "timeout waiting to port number might have failed?");
     }
 
     p_impl->d_application_initilized = true;
