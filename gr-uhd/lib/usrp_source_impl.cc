@@ -71,6 +71,12 @@ namespace gr {
       std::stringstream str;
       str << name() << unique_id();
       _id = pmt::string_to_symbol(str.str());
+
+      _samp_rate = this->get_samp_rate();
+      _center_freq = this->get_center_freq(0);
+#ifdef GR_UHD_USE_STREAM_API
+      _samps_per_packet = 1;
+#endif
     }
 
     usrp_source_impl::~usrp_source_impl()

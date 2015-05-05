@@ -71,7 +71,7 @@ namespace gr {
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
         _nitems_to_send(0)
     {
-      // nop
+      _sample_rate = get_samp_rate();
     }
 
     usrp_sink_impl::~usrp_sink_impl()
