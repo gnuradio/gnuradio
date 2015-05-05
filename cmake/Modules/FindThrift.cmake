@@ -58,9 +58,14 @@ if(THRIFT_VERSION VERSION_LESS THRIFT_REQ_VERSION)
 endif(THRIFT_VERSION VERSION_LESS THRIFT_REQ_VERSION)
 
 
-# Check that Thrift for Python is available
-include(GrPython)
-GR_PYTHON_CHECK_MODULE("Thrift" thrift "1" PYTHON_THRIFT_FOUND)
+# If we're not cross-compiling, Check that Thrift for Python is
+# available. If we are, don't worry about Python.
+if(NOT CMAKE_CROSSCOMPILING)
+  include(GrPython)
+  GR_PYTHON_CHECK_MODULE("Thrift" thrift "1" PYTHON_THRIFT_FOUND)
+else(NOT CMAKE_CROSSCOMPILING)
+  set(PYTHON_THRIFT_FOUND True)
+endif(NOT CMAKE_CROSSCOMPILING)
 
 # Set to found if we've made it this far
 if(THRIFT_INCLUDE_DIRS AND THRIFT_LIBRARIES AND PYTHON_THRIFT_FOUND)
