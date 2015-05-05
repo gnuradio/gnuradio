@@ -68,10 +68,16 @@ namespace gr {
 
     std::vector<gr::vmcircbuf_factory *> all = all_factories ();
 
+    // FIXME: Clean up between Android/normal
+    #if ANDROID
+    int ret = 35;
+    char name[35] = "gr::vmcircbuf_mmap_tmpfile_factory";
+    #else
     char name[1024];
-    //gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY, name, sizeof(name));
-    name = "gr::vmcircbuf_mmap_tmpfile_factory";
-    if(name) {
+    int ret = gr::vmcircbuf_prefs::get(FACTORY_PREF_KEY, name, sizeof(name));
+    #endif
+
+    if(ret) {
       for(unsigned int i = 0; i < all.size (); i++) {
         if(strncmp(name, all[i]->name(), strlen(all[i]->name())) == 0) {
           s_default_factory = all[i];
