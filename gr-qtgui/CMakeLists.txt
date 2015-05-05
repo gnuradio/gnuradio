@@ -38,7 +38,6 @@ include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(qt_gui_python_deps
         PYQT4_FOUND
-        #we could check for pyqwt, but its not strictly required
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
@@ -138,6 +137,18 @@ install(
 install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf
     DESTINATION ${GR_PREFSDIR}
+    COMPONENT "qtgui"
+)
+
+
+########################################################################
+# Install the themes (QSS) files
+########################################################################
+install(
+    FILES
+    themes/dark.qss
+    themes/alt.qss
+    DESTINATION ${GR_THEMES_DIR}
     COMPONENT "qtgui"
 )
 

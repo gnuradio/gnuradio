@@ -8,11 +8,11 @@
   <name>TUNTAP PDU</name>
   <key>blocks_tuntap_pdu</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.tuntap_pdu($ifn, $mtu)</make>
+  <make>blocks.tuntap_pdu($ifn, $mtu, $istunflag)</make>
   <param>
     <name>Interface Name</name>
     <key>ifn</key>
-    <value>tun0</value>
+    <value>tap0</value>
     <type>string</type>
   </param>
   <param>
@@ -20,6 +20,20 @@
     <key>mtu</key>
     <value>10000</value>
     <type>int</type>
+  </param>
+  <param>
+    <name>Flag</name>
+    <key>istunflag</key>
+    <value>False</value>
+    <type>enum</type>
+    <option>
+	<name>TUN(IP Packet)</name>
+	<key>True</key>
+    </option>
+    <option>
+	<name>TAP(Ethernet Frame)</name>
+	<key>False</key>
+    </option>
   </param>
   <sink>
     <name>pdus</name>

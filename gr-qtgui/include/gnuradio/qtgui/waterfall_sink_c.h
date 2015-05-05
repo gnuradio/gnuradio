@@ -139,6 +139,7 @@ namespace gr {
 
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_grid(bool en=true) = 0;
+      virtual void disable_legend() = 0;
 
       QApplication *d_qApplication;
     };

@@ -45,7 +45,7 @@ namespace gr {
       void set_vector_from_pmt(std::vector<gr_complex> &symbol_table, pmt::pmt_t &symbol_table_pmt);
 
       void handle_set_symbol_table(pmt::pmt_t symbol_table_pmt);
-      void set_symbol_table(std::vector<@O_TYPE@> &symbol_table);
+      void set_symbol_table(const std::vector<@O_TYPE@> &symbol_table);
       
       int D() const { return d_D; }
       std::vector<@O_TYPE@> symbol_table() const { return d_symbol_table; }

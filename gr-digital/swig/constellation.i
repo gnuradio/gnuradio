@@ -69,3 +69,15 @@ constellation_dqpsk = constellation_dqpsk.make;
 constellation_8psk_sptr.__repr__ = lambda self: "<constellation 8PSK>"
 constellation_8psk = constellation_8psk.make;
 %}
+
+%template(constellation_8psk_natural_sptr) boost::shared_ptr<gr::digital::constellation_8psk_natural>;
+%pythoncode %{
+constellation_8psk_natural_sptr.__repr__ = lambda self: "<constellation 8PSK_natural>"
+constellation_8psk_natural = constellation_8psk_natural.make;
+%}
+
+%template(constellation_16qam_sptr) boost::shared_ptr<gr::digital::constellation_16qam>;
+%pythoncode %{
+constellation_16qam_sptr.__repr__ = lambda self: "<constellation 16qam>"
+constellation_16qam = constellation_16qam.make;
+%}

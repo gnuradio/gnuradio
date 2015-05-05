@@ -25,7 +25,7 @@
 
 #include <gnuradio/blocks/ctrlport_probe2_s.h>
 #include <gnuradio/rpcregisterhelpers.h>
-#include <boost/thread/shared_mutex.hpp>
+#include <gnuradio/rpcbufferedget.h>
 
 namespace gr {
   namespace blocks {
@@ -37,11 +37,10 @@ namespace gr {
       std::string d_desc;
       size_t d_len;
       unsigned int d_disp_mask;
-      boost::shared_mutex mutex_buffer;
-      mutable boost::mutex mutex_notify;
-      boost::condition_variable condition_buffer_ready;
 
+      size_t d_index;
       std::vector<short> d_buffer;
+      rpcbufferedget< std::vector<short> > buffered_get;
 
     public:
       ctrlport_probe2_s_impl(const std::string &id, const std::string &desc,
@@ -66,4 +65,3 @@ namespace gr {
 } /* namespace gr */
 
 #endif /* INCLUDED_CTRLPORT_PROBE2_S_IMPL_H */
-

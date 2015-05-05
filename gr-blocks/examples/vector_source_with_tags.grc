@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='ASCII'?>
-<?grc format='1' created='3.7.6'?>
+<?grc format='1' created='3.7.7'?>
 <flow_graph>
   <timestamp>Mon Sep 22 11:59:58 2014</timestamp>
   <block>
@@ -53,66 +53,20 @@
       <value></value>
     </param>
     <param>
+      <key>thread_safe_setters</key>
+      <value></value>
+    </param>
+    <param>
       <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
       <value></value>
     </param>
     <param>
       <key>_coordinate</key>
       <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>tag1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>gr.tag_utils.python_to_tag((1, pmt.intern('mark'), pmt.PMT_T))</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 267)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>tag0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>gr.tag_utils.python_to_tag((0, pmt.intern('mark'), pmt.PMT_T, pmt.intern("src")))</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(16, 203)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -135,6 +89,10 @@
     </param>
     <param>
       <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
       <value></value>
     </param>
     <param>
@@ -162,6 +120,10 @@
     </param>
     <param>
       <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
       <value></value>
     </param>
     <param>
@@ -216,59 +178,12 @@
       <value>0</value>
     </param>
     <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(272, 123)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_tag_debug</key>
-    <param>
-      <key>id</key>
-      <value>blocks_tag_debug_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value></value>
-    </param>
-    <param>
-      <key>filter</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>display</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(456, 195)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -320,6 +235,10 @@
     <param>
       <key>maxoutbuf</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -419,6 +338,14 @@
     <param>
       <key>tr_tag</key>
       <value>mark</value>
+    </param>
+    <param>
+      <key>ctrlpanel</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>legend</key>
+      <value>True</value>
     </param>
     <param>
       <key>label1</key>
@@ -669,8 +596,153 @@
       <value></value>
     </param>
     <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(456, 107)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tag_object</key>
+    <param>
+      <key>id</key>
+      <value>tag0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>key</key>
+      <value>pmt.intern("mark")</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>pmt.PMT_T</value>
+    </param>
+    <param>
+      <key>src</key>
+      <value>pmt.intern("src")</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(16, 195)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blocks_tag_debug</key>
+    <param>
+      <key>id</key>
+      <value>blocks_tag_debug_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value></value>
+    </param>
+    <param>
+      <key>filter</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>display</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(456, 195)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_tag_object</key>
+    <param>
+      <key>id</key>
+      <value>tag1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>key</key>
+      <value>pmt.intern("mark2")</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>pmt.from_long(12345)</value>
+    </param>
+    <param>
+      <key>src</key>
+      <value>pmt.intern("tag1")</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(112, 195)</value>
     </param>
     <param>
       <key>_rotation</key>

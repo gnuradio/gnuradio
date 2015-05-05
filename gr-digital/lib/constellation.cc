@@ -846,5 +846,143 @@ namespace gr {
       return ret;
     }
 
+
+    /********************************************************************/
+
+
+    constellation_8psk_natural::sptr 
+    constellation_8psk_natural::make()
+    {
+      return constellation_8psk_natural::sptr(new constellation_8psk_natural());
+    }
+
+    constellation_8psk_natural::constellation_8psk_natural()
+    {
+      float angle = M_PI/8.0;
+      d_constellation.resize(8);
+      // Natural-mapping
+      d_constellation[0] = gr_complex(cos( 15*angle), sin( 15*angle));
+      d_constellation[1] = gr_complex(cos( 1*angle), sin( 1*angle));
+      d_constellation[2] = gr_complex(cos(3*angle), sin(3*angle));
+      d_constellation[3] = gr_complex(cos( 5*angle), sin( 5*angle));
+      d_constellation[4] = gr_complex(cos( 7*angle), sin( 7*angle));
+      d_constellation[5] = gr_complex(cos( 9*angle), sin( 9*angle));
+      d_constellation[6] = gr_complex(cos(11*angle), sin(11*angle));
+      d_constellation[7] = gr_complex(cos(13*angle), sin(13*angle));
+      d_rotational_symmetry = 8;
+      d_dimensionality = 1;
+      calc_arity();
+    }
+
+    constellation_8psk_natural::~constellation_8psk_natural()
+    {
+    }
+
+    unsigned int
+    constellation_8psk_natural::decision_maker(const gr_complex *sample)
+    {
+      unsigned int ret = 0;
+
+      float re = sample->real();
+      float im = sample->imag();
+
+      if((re+im) < 0)
+        ret  = 4;
+      if(fabsf(im) > fabsf(re)){
+        ret |= 2;
+	if(re*im < 0)
+          ret |= 1;
+	}
+      if(fabsf(im) < fabsf(re) && re*im > 0)
+        ret |= 1;
+
+      return ret;
+    }
+
+
+    /********************************************************************/
+
+
+    constellation_16qam::sptr 
+    constellation_16qam::make()
+    {
+      return constellation_16qam::sptr(new constellation_16qam());
+    }
+
+    constellation_16qam::constellation_16qam()
+    {
+      const float level = sqrt(float(0.1));
+      d_constellation.resize(16);
+      // The mapping used in 16qam set partition
+      d_constellation[0] = gr_complex(1*level,-1*level);
+      d_constellation[1] = gr_complex(-1*level,-1*level);
+      d_constellation[2] = gr_complex(3*level,-3*level);
+      d_constellation[3] = gr_complex(-3*level,-3*level);
+      d_constellation[4] = gr_complex(-3*level,-1*level);
+      d_constellation[5] = gr_complex(3*level,-1*level);
+      d_constellation[6] = gr_complex(-1*level,-3*level);
+      d_constellation[7] = gr_complex(1*level,-3*level);
+      d_constellation[8] = gr_complex(-3*level,3*level);
+      d_constellation[9] = gr_complex(3*level,3*level);
+      d_constellation[10] = gr_complex(-1*level,1*level);
+      d_constellation[11] = gr_complex(1*level,1*level);
+      d_constellation[12] = gr_complex(1*level,3*level);
+      d_constellation[13] = gr_complex(-1*level,3*level);
+      d_constellation[14] = gr_complex(3*level,1*level);
+      d_constellation[15] = gr_complex(-3*level,1*level);
+      d_rotational_symmetry = 4;
+      d_dimensionality = 1;
+      calc_arity();
+    }
+
+    constellation_16qam::~constellation_16qam()
+    {
+    }
+
+    unsigned int
+    constellation_16qam::decision_maker(const gr_complex *sample)
+    {
+      unsigned int ret = 0;
+      const float level = sqrt(float(0.1));
+      float re = sample->real();
+      float im = sample->imag();
+
+      if(im <= 0 && im >= -2*level && re >= 0 && re <= 2*level)
+	ret = 0;
+      else if(im <= 0 && im >= -2*level && re <= 0 && re >= -2*level)
+	ret = 1;
+      else if(im <= -2*level && re >= 2*level)
+	ret = 2;
+      else if(im <= -2*level && re <= -2*level)
+	ret = 3;
+      else if(im <= 0 && im >= -2*level && re <= -2*level)
+	ret = 4;
+      else if(im <= 0 && im >= -2*level && re >= 2*level)
+	ret = 5;
+      else if(im <= -2*level && re <= 0 && re >= -2*level)
+	ret = 6;
+      else if(im <= -2*level && re >= 0 && re <= 2*level)
+	ret = 7;
+      else if(im >= 2*level && re <= -2*level)
+	ret = 8;
+      else if(im >= 2*level && re >= 2*level)
+	ret = 9;
+      else if(im >= 0 && im <= 2*level && re <= 0 && re <= -2*level)
+	ret = 10;
+      else if(im >= 0 && im <= 2*level && re >= 0 && re <= 2*level)
+	ret = 11;
+      else if(im >= 2*level && re >= 0 && re <= 2*level)
+	ret = 12;
+      else if(im >= 2*level && re <= 0 && re >= -2*level)
+	ret = 13;
+      else if(im >= 0 && im <= 2*level && re >= 2*level)
+	ret = 14;
+      else if(im >= 0 && im <= 2*level && re <= -2*level)
+	ret = 15;
+
+      return ret;
+    }
+
+
   } /* namespace digital */
 } /* namespace gr */

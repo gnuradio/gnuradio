@@ -5,39 +5,44 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
-	<cat>
-		<name>Misc</name>
-		<block>pad_source</block>
-		<block>pad_sink</block>
-		<block>virtual_source</block>
-		<block>virtual_sink</block>
+   <name></name> <!-- Blank for Root Name -->
+   <cat>
+      <name>Misc</name>
+      <block>pad_source</block>
+      <block>pad_sink</block>
+      <block>virtual_source</block>
+      <block>virtual_sink</block>
 
-		<block>note</block>
-		<block>import</block>
+      <block>bus_sink</block>
+      <block>bus_source</block>
+      <block>bus_structure_sink</block>
+      <block>bus_structure_source</block>
 
-		<block>blks2_selector</block>
-		<block>blks2_valve</block>
-		<block>blks2_error_rate</block>
+      <block>note</block>
+      <block>import</block>
 
-		<block>xmlrpc_server</block>
-		<block>xmlrpc_client</block>
-	</cat>
-	<cat>
-		<name>Networking Tools</name>
-		<block>blks2_tcp_source</block>
-		<block>blks2_tcp_sink</block>
-	</cat>
-	<cat>
-		<name>Packet Operators</name>
-		<block>blks2_packet_decoder</block>
-		<block>blks2_packet_encoder</block>
-	</cat>
-	<cat>
-		<name>Variables</name>
-		<block>variable</block>
-		<block>variable_config</block>
-		<block>variable_function_probe</block>
-		<block>parameter</block>
-	</cat>
+      <block>blks2_selector</block>
+      <block>blks2_valve</block>
+      <block>blks2_error_rate</block>
+
+      <block>xmlrpc_server</block>
+      <block>xmlrpc_client</block>
+   </cat>
+   <cat>
+      <name>Networking Tools</name>
+      <block>blks2_tcp_source</block>
+      <block>blks2_tcp_sink</block>
+   </cat>
+   <cat>
+      <name>Packet Operators</name>
+      <block>blks2_packet_decoder</block>
+      <block>blks2_packet_encoder</block>
+   </cat>
+   <cat>
+      <name>Variables</name>
+      <block>variable</block>
+      <block>variable_config</block>
+      <block>variable_function_probe</block>
+      <block>parameter</block>
+   </cat>
 </cat>

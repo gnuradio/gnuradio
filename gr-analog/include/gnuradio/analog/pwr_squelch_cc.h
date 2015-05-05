@@ -49,10 +49,14 @@ namespace gr {
        * \brief Make power-based squelch block.
        *
        * \param db threshold (in dB) for power squelch
-       * \param alpha Gain of averaging filter
-       * \param ramp sets response characteristic.
+       * \param alpha Gain of averaging filter. Defaults to 0.0001.
+       * \param ramp sets response characteristic. Defaults to 0.
        * \param gate if true, no output if no squelch tone.
-       *             if false, output 0's if no squelch tone.
+       *             if false, output 0's if no squelch tone (default).
+       *
+       * The block will emit a tag with the key pmt::intern("squelch_sob")
+       * with the value of pmt::PMT_NIL on the first item it passes, and with
+       * the key pmt::intern("squelch:eob") on the last item it passes.
        */
       static sptr make(double db, double alpha=0.0001,
 		       int ramp=0, bool gate=false);

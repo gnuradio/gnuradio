@@ -1,5 +1,5 @@
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,6 +39,8 @@
 %{
 #include "gnuradio/digital/additive_scrambler_bb.h"
 #include "gnuradio/digital/binary_slicer_fb.h"
+#include "gnuradio/digital/burst_shaper_cc.h"
+#include "gnuradio/digital/burst_shaper_ff.h"
 #include "gnuradio/digital/chunks_to_symbols_bc.h"
 #include "gnuradio/digital/chunks_to_symbols_bf.h"
 #include "gnuradio/digital/chunks_to_symbols_ic.h"
@@ -52,6 +54,7 @@
 #include "gnuradio/digital/constellation_decoder_cb.h"
 #include "gnuradio/digital/constellation_receiver_cb.h"
 #include "gnuradio/digital/constellation_soft_decoder_cf.h"
+#include "gnuradio/digital/corr_est_cc.h"
 #include "gnuradio/digital/correlate_access_code_bb.h"
 #include "gnuradio/digital/correlate_access_code_tag_bb.h"
 #include "gnuradio/digital/correlate_access_code_bb_ts.h"
@@ -78,9 +81,11 @@
 #include "gnuradio/digital/lms_dd_equalizer_cc.h"
 #include "gnuradio/digital/map_bb.h"
 #include "gnuradio/digital/metric_type.h"
+#include "gnuradio/digital/modulate_vector.h"
 #include "gnuradio/digital/mpsk_receiver_cc.h"
 #include "gnuradio/digital/mpsk_snr_est.h"
 #include "gnuradio/digital/mpsk_snr_est_cc.h"
+#include "gnuradio/digital/msk_timing_recovery_cc.h"
 #include "gnuradio/digital/ofdm_carrier_allocator_cvc.h"
 #include "gnuradio/digital/ofdm_chanest_vcvc.h"
 #include "gnuradio/digital/ofdm_cyclic_prefixer.h"
@@ -115,6 +120,8 @@
 
 %include "gnuradio/digital/additive_scrambler_bb.h"
 %include "gnuradio/digital/binary_slicer_fb.h"
+%include "gnuradio/digital/burst_shaper_cc.h"
+%include "gnuradio/digital/burst_shaper_ff.h"
 %include "gnuradio/digital/chunks_to_symbols_bc.h"
 %include "gnuradio/digital/chunks_to_symbols_bf.h"
 %include "gnuradio/digital/chunks_to_symbols_ic.h"
@@ -128,6 +135,7 @@
 %include "gnuradio/digital/constellation_decoder_cb.h"
 %include "gnuradio/digital/constellation_receiver_cb.h"
 %include "gnuradio/digital/constellation_soft_decoder_cf.h"
+%include "gnuradio/digital/corr_est_cc.h"
 %include "gnuradio/digital/correlate_access_code_bb.h"
 %include "gnuradio/digital/correlate_access_code_tag_bb.h"
 %include "gnuradio/digital/correlate_access_code_bb_ts.h"
@@ -154,9 +162,11 @@
 %include "gnuradio/digital/lms_dd_equalizer_cc.h"
 %include "gnuradio/digital/map_bb.h"
 %include "gnuradio/digital/metric_type.h"
+%include "gnuradio/digital/modulate_vector.h"
 %include "gnuradio/digital/mpsk_receiver_cc.h"
 %include "gnuradio/digital/mpsk_snr_est.h"
 %include "gnuradio/digital/mpsk_snr_est_cc.h"
+%include "gnuradio/digital/msk_timing_recovery_cc.h"
 %include "gnuradio/digital/ofdm_carrier_allocator_cvc.h"
 %include "gnuradio/digital/ofdm_chanest_vcvc.h"
 %include "gnuradio/digital/ofdm_cyclic_prefixer.h"
@@ -187,6 +197,8 @@
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, binary_slicer_fb);
+GR_SWIG_BLOCK_MAGIC2(digital, burst_shaper_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, burst_shaper_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bc);
 GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bf);
 GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_ic);
@@ -199,6 +211,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, cma_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_decoder_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_receiver_cb);
 GR_SWIG_BLOCK_MAGIC2(digital, constellation_soft_decoder_cf);
+GR_SWIG_BLOCK_MAGIC2(digital, corr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb_ts);
@@ -224,6 +237,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, map_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, msk_timing_recovery_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_carrier_allocator_cvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);

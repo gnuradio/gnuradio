@@ -203,13 +203,13 @@ namespace gr {
          * such that the output has \p rate * \p n_to_read amount of
          * space available in the \p output buffer.
          *
-         * \param input An input vector of samples to be resampled
          * \param output The output samples at the new sample rate.
+         * \param input An input vector of samples to be resampled
          * \param n_to_read Number of samples to read from \p input.
          * \param n_read (out) Number of samples actually read from \p input.
          * \return Number of samples put into \p output.
          */
-        int filter(gr_complex *input, gr_complex *output,
+        int filter(gr_complex *output, gr_complex *input,
                    int n_to_read, int &n_read);
       };
 
@@ -329,13 +329,13 @@ namespace gr {
          * such that the output has \p rate * \p n_to_read amount of
          * space available in the \p output buffer.
          *
-         * \param input An input vector of samples to be resampled
          * \param output The output samples at the new sample rate.
+         * \param input An input vector of samples to be resampled
          * \param n_to_read Number of samples to read from \p input.
          * \param n_read (out) Number of samples actually read from \p input.
          * \return Number of samples put into \p output.
          */
-        int filter(gr_complex *input, gr_complex *output,
+        int filter(gr_complex *output, gr_complex *input,
                    int n_to_read, int &n_read);
       };
 
@@ -516,13 +516,13 @@ namespace gr {
          * such that the output has \p rate * \p n_to_read amount of
          * space available in the \p output buffer.
          *
-         * \param input An input vector of samples to be resampled
          * \param output The output samples at the new sample rate.
+         * \param input An input vector of samples to be resampled
          * \param n_to_read Number of samples to read from \p input.
          * \param n_read (out) Number of samples actually read from \p input.
          * \return Number of samples put into \p output.
          */
-        int filter(float *input, float *output,
+        int filter(float *output, float *input,
                    int n_to_read, int &n_read);
       };
 

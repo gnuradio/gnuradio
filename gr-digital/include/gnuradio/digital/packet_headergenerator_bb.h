@@ -64,6 +64,8 @@ namespace gr {
       static sptr make(
 	   long header_len,
 	   const std::string &len_tag_key = "packet_len");
+
+      virtual void set_header_formatter(packet_header_default::sptr header_formatter)=0;
     };
 
   } // namespace digital

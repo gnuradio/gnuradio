@@ -37,9 +37,10 @@ namespace gr {
       int             d_timeout; // microseconds, -1 is blocking
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
+      bool            d_pass_tags;
 
      public:
-      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout);
+      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
       ~sub_source_impl();
 
       int work(int noutput_items,

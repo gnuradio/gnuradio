@@ -116,7 +116,7 @@ class TextDisplay(gtk.TextView):
         menu.show_all()
         return False
 
-def MessageDialogHelper(type, buttons, title=None, markup=None):
+def MessageDialogHelper(type, buttons, title=None, markup=None, default_response=None, extra_buttons=None):
     """
     Create a modal message dialog and run it.
 
@@ -126,8 +126,10 @@ def MessageDialogHelper(type, buttons, title=None, markup=None):
         gtk.BUTTONS_NONE, gtk.BUTTONS_OK, gtk.BUTTONS_CLOSE, gtk.BUTTONS_CANCEL, gtk.BUTTONS_YES_NO, gtk.BUTTONS_OK_CANCEL
 
     Args:
-        tittle: the title of the window (string)
+        title: the title of the window (string)
         markup: the message text with pango markup
+        default_response: if set, determines which button is highlighted by default
+        extra_buttons: a tuple containing pairs of values; each value is the button's text and the button's return value
 
     Returns:
         the gtk response from run()
@@ -135,6 +137,8 @@ def MessageDialogHelper(type, buttons, title=None, markup=None):
     message_dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, type, buttons)
     if title: message_dialog.set_title(title)
     if markup: message_dialog.set_markup(markup)
+    if extra_buttons: message_dialog.add_buttons(*extra_buttons)
+    if default_response: message_dialog.set_default_response(default_response)
     response = message_dialog.run()
     message_dialog.destroy()
     return response

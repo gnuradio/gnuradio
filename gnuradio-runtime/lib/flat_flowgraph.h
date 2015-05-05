@@ -26,6 +26,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/block.h>
+#include <gnuradio/logger.h>
 
 namespace gr {
 
@@ -44,7 +45,7 @@ namespace gr {
     friend GR_RUNTIME_API flat_flowgraph_sptr make_flat_flowgraph();
 
     // Destruct an arbitrary gr::flat_flowgraph
-    ~flat_flowgraph();
+    virtual ~flat_flowgraph();
 
     // Wire list of gr::block together in new flat_flowgraph
     void setup_connections();
@@ -89,6 +90,9 @@ namespace gr {
      * start and restarts.
      */
     void setup_buffer_alignment(block_sptr block);
+
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
   };
 
 } /* namespace gr */

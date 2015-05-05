@@ -51,6 +51,7 @@
 #include "gnuradio/blocks/sub_ii.h"
 #include "gnuradio/blocks/sub_cc.h"
 #include "gnuradio/blocks/tag_gate.h"
+#include "gnuradio/blocks/tagged_stream_align.h"
 #include "gnuradio/blocks/tagged_stream_mux.h"
 #include "gnuradio/blocks/tagged_stream_multiply_length.h"
 #include "gnuradio/blocks/tagged_stream_to_pdu.h"
@@ -93,6 +94,7 @@
 %include "gnuradio/blocks/sub_ii.h"
 %include "gnuradio/blocks/sub_cc.h"
 %include "gnuradio/blocks/tag_gate.h"
+%include "gnuradio/blocks/tagged_stream_align.h"
 %include "gnuradio/blocks/tagged_stream_mux.h"
 %include "gnuradio/blocks/tagged_stream_multiply_length.h"
 %include "gnuradio/blocks/tagged_stream_to_pdu.h"
@@ -134,6 +136,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sub_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sub_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_gate);
+GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_align);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_multiply_length);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);

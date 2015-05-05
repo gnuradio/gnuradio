@@ -21,6 +21,7 @@ include(GrPython)
 
 install(
     FILES
+    271.127.3.112
     ber_test.grc
     ber_curve_gen.grc
     ber_curve_gen_ldpc.grc
@@ -34,6 +35,7 @@ install(
     fecapi_tagged_encoders.grc
     n_1800_k_0902_gap_28.alist
     simple_g_matrix.alist
+    tpc_ber_curve_gen.grc
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
 )

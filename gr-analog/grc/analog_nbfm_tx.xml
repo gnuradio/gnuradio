@@ -36,7 +36,7 @@
 		<value>5e3</value>
 		<type>real</type>
 	</param>
-	<check>$quad_rate%$audio_rate == 0</check>
+	<check>($quad_rate)%($audio_rate) == 0</check>
 	<sink>
 		<name>in</name>
 		<type>float</type>

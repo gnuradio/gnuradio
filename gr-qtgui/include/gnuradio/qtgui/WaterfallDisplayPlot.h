@@ -96,6 +96,9 @@ public slots:
   void setUserDefinedLowIntensityColor(QColor);
   void setUserDefinedHighIntensityColor(QColor);
   void setPlotPosHalf(bool half);
+  void disableLegend();
+  void enableLegend();
+  void enableLegend(bool en);
 
 signals:
   void updatedLowerIntensityLevel(const double);
@@ -106,8 +109,10 @@ private:
 
   double d_start_frequency;
   double d_stop_frequency;
+  double d_center_frequency;
   int    d_xaxis_multiplier;
   bool   d_half_freq;
+  bool   d_legend_enabled;
 
   std::vector<WaterfallData*> d_data;
 

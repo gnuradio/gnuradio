@@ -86,6 +86,8 @@ public slots:
 
   void saveFigure();
 
+  void disableLegend();
+
 private slots:
   virtual void newData(const QEvent*) = 0;
   virtual void autoScale(bool) = 0;
@@ -95,6 +97,7 @@ private slots:
 
 signals:
   void plotPointSelected(const QPointF p, int type);
+  void toggleGrid(bool en);
 
 protected:
   bool d_isclosed;

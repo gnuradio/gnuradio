@@ -80,6 +80,7 @@ namespace gr {
        */
       static sptr make(int k, int l=8, const std::string &tsb_tag_key="",
                        bool align_output=false, endianness_t endianness=GR_LSB_FIRST);
+      virtual void set_k_and_l(int k, int l) =0;//callback function for bits per input byte k and bits per output byte l.
     };
 
   } // namespace blocks

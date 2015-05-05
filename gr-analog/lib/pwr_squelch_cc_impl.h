@@ -51,8 +51,8 @@ namespace gr {
       std::vector<float> squelch_range() const;
 
       double threshold() const { return 10*log10(d_threshold); }
-      void set_threshold(double db) { d_threshold = std::pow(10.0, db/10); }
-      void set_alpha(double alpha) { d_iir.set_taps(alpha); }
+      void set_threshold(double db);
+      void set_alpha(double alpha);
 
       int ramp() const { return squelch_base_cc_impl::ramp(); }
       void set_ramp(int ramp) { squelch_base_cc_impl::set_ramp(ramp); }

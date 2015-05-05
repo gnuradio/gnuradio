@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2014 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -53,7 +53,7 @@ namespace gr {
      * to gr::blocks::@NAME@::TPP_SELECT_BY_MATRIX, a tag is propagated from input k
      * to output l if \f$(A)_{l,k} \neq 0\f$.
      *
-     * \section blocks_matrixmult_msgports Message Ports
+     * \section blocks_matrixmult_msgports_@NAME@ Message Ports
      *
      * This block as one input message port (\p set_A). A message sent to this port will
      * be converted to a std::vector<std::vector<@O_TYPE@> >, and then passed on to set_A().
@@ -91,13 +91,11 @@ namespace gr {
        */
       virtual void set_tag_propagation_policy(gr::block::tag_propagation_policy_t p) = 0;
 
-      static const int TPP_SELECT_BY_MATRIX = 999;
+      static const int TPP_SELECT_BY_MATRIX;
       static const std::string MSG_PORT_NAME_SET_A;
     };
-    const std::string @NAME@::MSG_PORT_NAME_SET_A = "set_A";
 
   } // namespace blocks
 } // namespace gr
 
 #endif /* @GUARD_NAME */
-

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -37,9 +37,10 @@ namespace gr {
       float           d_timeout;
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
+      bool            d_pass_tags;
 
     public:
-      pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout);
+      pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
       ~pub_sink_impl();
 
       int work(int noutput_items,

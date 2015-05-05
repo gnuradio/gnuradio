@@ -142,8 +142,12 @@ namespace gr {
       void enable_menu(bool en);
       void enable_grid(bool en);
       void enable_autoscale(bool en);
+      void enable_control_panel(bool en);
+      void enable_max_hold(bool en);
+      void enable_min_hold(bool en);
       void clear_max_hold();
       void clear_min_hold();
+      void disable_legend();
       void reset();
 
       int work(int noutput_items,

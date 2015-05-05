@@ -330,7 +330,7 @@ namespace gr {
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
     {
-      typedef gr_int16 sample_t;  // the type of samples we're creating
+      typedef int16_t sample_t;  // the type of samples we're creating
       static const float scale_factor = std::pow(2.0f, 16-1) - 1;
 
       unsigned int nchan = input_items.size();
@@ -370,7 +370,7 @@ namespace gr {
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
     {
-      typedef gr_int32 sample_t; // the type of samples we're creating
+      typedef int32_t sample_t; // the type of samples we're creating
       static const float scale_factor = std::pow(2.0f, 32-1) - 1;
 
       unsigned int nchan = input_items.size();
@@ -411,7 +411,7 @@ namespace gr {
                             gr_vector_const_void_star &input_items,
                             gr_vector_void_star &output_items)
     {
-      typedef gr_int16 sample_t; // the type of samples we're creating
+      typedef int16_t sample_t; // the type of samples we're creating
       static const float scale_factor = std::pow(2.0f, 16-1) - 1;
 
       assert(input_items.size () == 1);
@@ -452,7 +452,7 @@ namespace gr {
                             gr_vector_const_void_star &input_items,
                             gr_vector_void_star &output_items)
     {
-      typedef gr_int32 sample_t; // the type of samples we're creating
+      typedef int32_t sample_t; // the type of samples we're creating
       static const float scale_factor = std::pow(2.0f, 32-1) - 1;
 
       assert(input_items.size () == 1);

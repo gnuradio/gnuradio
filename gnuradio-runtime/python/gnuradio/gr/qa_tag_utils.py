@@ -76,6 +76,38 @@ class test_tag_utils (gr_unittest.TestCase):
         self.assertTrue(pmt.equal(t_tuple.value, value))
         self.assertEqual(t_tuple.offset, offset)
 
+    def test_003(self):
+        offsets = (6, 3, 8)
+        key = pmt.string_to_symbol('key')
+        srcid = pmt.string_to_symbol('qa_tag_utils')
+        tags = []
+
+        for k in offsets:
+            t = gr.tag_t()
+            t.offset = k
+            t.key = key
+            t.value = pmt.from_long(k)
+            t.srcid = srcid
+            tags.append(t)
+
+        for k, t in zip(sorted(offsets),
+                        sorted(tags, key=gr.tag_t_offset_compare_key())):
+            self.assertEqual(t.offset, k)
+            self.assertTrue(pmt.equal(t.key, key))
+            self.assertTrue(pmt.equal(t.value, pmt.from_long(k)))
+            self.assertTrue(pmt.equal(t.srcid, srcid))
+
+        tmin = min(tags, key=gr.tag_t_offset_compare_key())
+        self.assertEqual(tmin.offset, min(offsets))
+        self.assertTrue(pmt.equal(tmin.key, key))
+        self.assertTrue(pmt.equal(tmin.value, pmt.from_long(min(offsets))))
+        self.assertTrue(pmt.equal(tmin.srcid, srcid))
+
+        tmax = max(tags, key=gr.tag_t_offset_compare_key())
+        self.assertEqual(tmax.offset, max(offsets))
+        self.assertTrue(pmt.equal(tmax.key, key))
+        self.assertTrue(pmt.equal(tmax.value, pmt.from_long(max(offsets))))
+        self.assertTrue(pmt.equal(tmax.srcid, srcid))
 
 
 if __name__ == '__main__':

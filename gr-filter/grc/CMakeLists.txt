@@ -45,6 +45,11 @@ install(FILES
     filter_band_pass_filter.xml
     filter_band_reject_filter.xml
     filter_root_raised_cosine_filter.xml
+    variable_low_pass_filter_taps.xml
+    variable_high_pass_filter_taps.xml
+    variable_band_pass_filter_taps.xml
+    variable_band_reject_filter_taps.xml
+    variable_rrc_filter_taps.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "filter_python"
 )

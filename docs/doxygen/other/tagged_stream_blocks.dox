@@ -1,6 +1,6 @@
 /*! \page page_tagged_stream_blocks Tagged Stream Blocks
 
-\section intro Introduction
+\section tsb_introduction Introduction
 
 A tagged stream block is a block that works on streamed, but packetized input data.
 Think of packet data transmission: A data packet consists of N bytes. However, in
@@ -15,7 +15,7 @@ gr::sync_block etc.) in that they are driven by the input: The PDU length tag te
 operate, whereas other blocks are output-driven (the scheduler tries to fill up the output
 buffer are much as possible).
 
-\subsection howtheywork How do they work?
+\subsection tsb_howtheywork How do they work?
 
 As the name implies, tagged stream blocks use tags to identify PDU boundaries.
 On the first item of a streamed PDU, there \em must be a tag with a specific
@@ -26,7 +26,7 @@ The scheduler then takes care of everything. When the work function is called, i
 is guaranteed to contain exactly one complete PDU and enough space in the output buffer for
 the output.
 
-\subsection relatestootherblocks How do they relate to other block types (e.g. sync blocks)?
+\subsection tsb_relatestootherblocks How do they relate to other block types (e.g. sync blocks)?
 
 Tagged stream blocks and sync blocks are really orthogonal concepts, and a block could be
 both (gr::digital::ofdm_frame_equalizer_vcvc is such a block). However, because the work
@@ -41,7 +41,7 @@ The way gr::tagged_stream_block works, it is still beneficial to specify a relat
 if possible.
 
 
-\section creating Creating a tagged stream block
+\section tsb_creating Creating a tagged stream block
 
 To create a tagged stream block, the block must be derived from gr::tagged_stream_block.
 Here's a minimal example of how the header file could look:
@@ -106,7 +106,7 @@ output items. Note how this relates to the fact that these blocks are input-driv
 These two overrides (\p work() and \p calculate_output_stream_length() ) are what you need
 for most tagged stream blocks. There are cases when you don't need to override the latter
 because the default behaviour is enough, and other cases where you have to override more
-than these two functions. These are discussed in \ref adv_usage.
+than these two functions. These are discussed in \ref tsb_adv_usage.
 
 Finally, this is part of the actual block implementation (heavily cropped again, to highlight the relevant parts):
 \code
@@ -179,7 +179,7 @@ signal processing code, the following things must be kept in mind:
   Don't forget to return WORK_CALLED_PRODUCE in that case.
 
 
-\subsection note_on_tp A note on tag propagation
+\subsection tsb_note_on_tp A note on tag propagation
 
 Despite using tags for a special purpose, all tags that are not the length tag are treated
 exactly as before: use gr::block::set_tag_propagation_policy() in the constructor.
@@ -208,7 +208,7 @@ to write the new length tag yourself. The key for the output length tag is the s
 on the input, if you don't want this, you must override gr::tagged_stream_block::update_length_tags().
 
 
-\section connecting Connecting regular streaming blocks and tagged stream blocks
+\section tsb_connecting Connecting regular streaming blocks and tagged stream blocks
 
 From the scheduler's point of view, all blocks are equivalent, and as long as the I/O
 signatures are compatible, all of these blocks can be connected.
@@ -231,13 +231,13 @@ Mixing block types: This is possible if none of the regular stream blocks change
 the rate. The ofdm_tx and ofdm_rx hierarchical blocks do this.
 
 
-\section adv_usage Advanced Usage
+\section tsb_adv_usage Advanced Usage
 
 It is generally recommended to read the block documentation of gr::tagged_stream_block.
 
 A few special cases are described here:
 
-\subsection multiplelentags Multiple length tags
+\subsection tsb_multiplelentags Multiple length tags
 
 In some cases, a single tag is not enough. One example is the OFDM receiver: one OFDM frame contains a certain number of OFDM symbols, and another number of bytes--these numbers are only
 very loosely related, and one cannot be calculated from the other.
@@ -246,7 +246,7 @@ gr::digital::ofdm_serializer_vcc is such a block. It is driven by the number of 
 but the output is determined by the number of complex symbols. In order to use multiple length
 tag keys, it overrides gr::tagged_stream_block::update_length_tags().
 
-\subsection backtogrblock Falling back to gr::block behaviour
+\subsection tsb_backtogrblock Falling back to gr::block behaviour
 
 If, at compile-time, it is uncertain whether or not a block should be a
 gr::tagged_stream_block, there is the possibility of falling back to gr::block behaviour.
@@ -262,40 +262,40 @@ gr::tagged_stream_block::d_length_tag_key_str is empty is a good choice.
 
 gr::digital::ofdm_cyclic_prefixer implements this.
 
-\subsection otherwaysdetermineninput Other ways to determine the number of input items
+\subsection tsb_otherwaysdetermineninput Other ways to determine the number of input items
 
 If the number of input items is not stored as a pmt::pmt_integer, but there is a way to determine
 it, gr::tagged_stream_block::parse_length_tags() can be overridden to figure out the length
 of the PDU.
 
-\section examples Examples
+\section tsb_examples Examples
 
-\subsection CRC32 CRC32
+\subsection tsb_CRC32 CRC32
 
 Block: gr::digital::crc32_bb
 
 This is a very simple block, and a good example to start with.
 
-\subsection ofdmeq OFDM Frame Equalizer
+\subsection tsb_ofdmeq OFDM Frame Equalizer
 
 Block: gr::digital::ofdm_frame_equalizer_vcvc
 
 This block would be a sync block if tagged stream blocks didn't exist. It also uses more
 than one tag to determine the output.
 
-\subsection muxer Tagged Stream Muxer
+\subsection tsb_muxer Tagged Stream Muxer
 
 Block: gr::blocks::tagged_stream_mux
 
 Use this to multiplex any number of tagged streams.
 
-\subsection ofdmprefixer Cyclic Prefixer (OFDM)
+\subsection tsb_ofdmprefixer Cyclic Prefixer (OFDM)
 
 Block: gr::digital::ofdm_cyclic_prefixer
 
 This block uses the gr::block behaviour fallback.
 
-\section troubleshooting Troubleshooting
+\section tsb_troubleshooting Troubleshooting
 
 <b>My flow graph crashes with the error message "Missing length tag".</b>
 

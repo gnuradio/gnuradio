@@ -351,6 +351,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_f_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
+    }
+
+    void
     waterfall_sink_f_impl::fft(float *data_out, const float *data_in, int size)
     {
       // float to complex conversion
@@ -465,7 +471,7 @@ namespace gr {
         }
       }
     }
-    
+
     void
     waterfall_sink_f_impl::set_time_per_fft(double t)
     {
@@ -502,7 +508,7 @@ namespace gr {
               for(int x = 0; x < d_fftsize; x++) {
                 d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
               }
-              //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
+              //volk_32f_convert_64f(d_magbufs[n], d_fbuf, d_fftsize);
             }
 
 	    d_last_time = gr::high_res_timer_now();

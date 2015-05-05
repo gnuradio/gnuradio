@@ -1,4 +1,4 @@
-/*! \page build_guide Build Instructions and Information
+        /*! \page build_guide Build Instructions and Information
 
 \section dependencies Dependencies
 
@@ -24,11 +24,11 @@ installation tool (apt-get, pkg_install, YaST, yum, urpmi, etc.)
 first. Most recent systems have these packages available.
 
 \subsection dep_global Global Dependencies
-\li git                      http://code.google.com/p/msysgit
+\li git                      http://git-scm.com/downloads
 \li cmake       (>= 2.6.3)   http://www.cmake.org/cmake/resources/software.html
-\li boost       (>= 1.35)    http://www.boostpro.com/download
-\li cppunit     (>= 1.9.14)  http://gaiacrtn.free.fr/cppunit/index.html
-\li fftw3f      (>= 3.0.1)   http://www.fftw.org/install/windows.html
+\li boost       (>= 1.35)    http://www.boost.org/users/download/
+\li cppunit     (>= 1.9.14)  http://freedesktop.org/wiki/Software/cppunit/
+\li fftw3f      (>= 3.0.1)   http://www.fftw.org/download.html
 
 \subsection dep_python Python Wrappers
 \li python      (>= 2.5)     http://www.python.org/download/
@@ -50,7 +50,6 @@ first. Most recent systems have these packages available.
 \li qt4         (>= 4.4.0)   http://qt.nokia.com/downloads/
 \li qwt         (>= 5.2.0)   http://sourceforge.net/projects/qwt/
 \li pyqt        (>= 4.10.0)  http://www.riverbankcomputing.co.uk/software/pyqt/download
-\li pyqwt*      (>= 5.2.0)   http://pyqwt.sourceforge.net/download.html
 
 \subsection dep_gr_wxgui gr-wxgui: The WX-based Graphical User Interface
 \li wxpython    (>= 2.8)     http://www.wxpython.org/
@@ -64,7 +63,7 @@ first. Most recent systems have these packages available.
 \li audio-osx
 \li audio-windows
 
-* Optional but recommended dependencies.
+<b>Optional but recommended dependencies.</b>
 
 It is not necessary to satisfy all of these dependencies; just the
 one(s) that are right for your system. On Linux, don't expect
@@ -81,6 +80,17 @@ audio-osx and audio-windows to be either satisfied or built.
 
 \subsection dep_gr_log gr-log: Logging Tools (Optional)
 \li log4cpp     (>= 1.0)     http://log4cpp.sourceforge.net/
+
+
+<b>Optional</b>
+
+\ref page_ctrlport may use various backends to perform the RPC
+process, and each is its own dependency.
+
+Currently, ControlPort only supports the Apache Thrift backend.
+
+\li thrift       (>= 0.9.2)   https://thrift.apache.org/
+
 
 
 \section build_gr_cmake Building GNU Radio
@@ -166,7 +176,7 @@ If not specified, the "Release" mode is the default.
 
 Here are som other potentially helpful CMake flags. These are to help you specifically locate certain dependencies. While the CMake scripts themselves should generally find these for us, we can use these to help direct CMake to specific locations if we have installed a different version elsewhere on the system that CMake doesn't know about.
 
-\li QWT_LIBRARIES: shared library to use for Qwt (in the form <path>/libqwt.so).
+\li QWT_LIBRARIES: shared library to use for Qwt (in the form \<path\>/libqwt.so).
 \li QWT_INCLUDE_DIRS: path to Qwt include files (e.g., /usr/include/qwt).
 \li PYTHON_EXECUTABLE: Location of the 'python' binary you want to use (e.g., /usr/bin/python2.7).
 \li PYTHON_INCLUDE_PATH: path to Python include files (e.g., /usr/include/python2.7).

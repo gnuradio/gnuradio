@@ -108,7 +108,7 @@ class ActionHandler:
     def _handle_action(self, action):
         #print action
         ##################################################
-        # Initalize/Quit
+        # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
             for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
@@ -122,14 +122,15 @@ class ActionHandler:
                 Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
                 Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
                 Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
-                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
                 Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
 
             if not self.init_file_paths:
-                self.init_file_paths = Preferences.files_open()
+                self.init_file_paths = filter(os.path.exists, Preferences.files_open())
             if not self.init_file_paths: self.init_file_paths = ['']
             for file_path in self.init_file_paths:
                 if file_path: self.main_window.new_page(file_path) #load pages from file paths
@@ -143,7 +144,8 @@ class ActionHandler:
                 Actions.TOGGLE_BLOCKS_WINDOW,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
                 Actions.TOGGLE_SCROLL_LOCK,
-                Actions.TOGGLE_SNAP_TO_GRID
+                Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
             ): action.load_from_preferences()
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
@@ -401,22 +403,30 @@ class ActionHandler:
                 page.get_flow_graph().create_shapes()
         elif action == Actions.TOGGLE_SNAP_TO_GRID:
             action.save_to_preferences()
+        elif action == Actions.TOGGLE_SHOW_BLOCK_COMMENTS:
+            action.save_to_preferences()
         ##################################################
         # Param Modifications
         ##################################################
         elif action == Actions.BLOCK_PARAM_MODIFY:
             selected_block = self.get_flow_graph().get_selected_block()
             if selected_block:
-                if PropsDialog(selected_block).run():
-                    #save the new state
-                    self.get_flow_graph().update()
-                    self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
-                    self.get_page().set_saved(False)
-                else:
-                    #restore the current state
-                    n = self.get_page().get_state_cache().get_current_state()
-                    self.get_flow_graph().import_data(n)
-                    self.get_flow_graph().update()
+                dialog = PropsDialog(selected_block)
+                response = gtk.RESPONSE_APPLY
+                while response == gtk.RESPONSE_APPLY:  # rerun the dialog if Apply was hit
+                    response = dialog.run()
+                    if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
+                        self.get_flow_graph().update()
+                        self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
+                        self.get_page().set_saved(False)
+                    else:  # restore the current state
+                        n = self.get_page().get_state_cache().get_current_state()
+                        self.get_flow_graph().import_data(n)
+                        self.get_flow_graph().update()
+                    if response == gtk.RESPONSE_APPLY:
+                        # null action, that updates the main window
+                        Actions.ELEMENT_SELECT()
+                dialog.destroy()
         ##################################################
         # View Parser Errors
         ##################################################

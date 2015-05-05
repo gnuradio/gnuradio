@@ -151,7 +151,7 @@ class my_top_block(gr.top_block):
         npts = 2048
 
         self.qapp = QtGui.QApplication(sys.argv)
-        ss = open('dark.qss')
+        ss = open(gr.prefix() + '/share/gnuradio/themes/dark.qss')
         sstext = ss.read()
         ss.close()
         self.qapp.setStyleSheet(sstext)
@@ -191,4 +191,3 @@ if __name__ == "__main__":
     tb.start()
     tb.qapp.exec_()
     tb.stop()
-

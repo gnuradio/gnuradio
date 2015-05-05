@@ -63,6 +63,8 @@ namespace gr {
       d_corr_v(sync_symbol2),
       d_known_symbol_diffs(0, 0),
       d_new_symbol_diffs(0, 0),
+      d_first_active_carrier(0),
+      d_last_active_carrier(sync_symbol2.size()-1),
       d_interpolate(false)
     {
       // Set index of first and last active carrier

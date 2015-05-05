@@ -78,6 +78,16 @@ list(APPEND gnuradio_fec_sources
   ldpc_HorG_mtrx.cc
   ldpc_gen_mtrx_encoder_impl.cc
   fec_mtrx.cc
+  ldpc_encoder.cc
+  ldpc_decoder.cc
+  cldpc.cc
+  awgn_bp.cc
+  gf2vec.cc
+  gf2mat.cc
+  alist.cc
+  tpc_common.cc
+  tpc_decoder.cc
+  tpc_encoder.cc 
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -97,7 +107,7 @@ endif(MSVC)
 list(APPEND gnuradio_fec_libs
     gnuradio-blocks
     gnuradio-runtime
-    volk
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
     ${GSL_LIBRARIES}

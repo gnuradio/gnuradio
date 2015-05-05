@@ -61,11 +61,6 @@ namespace gr {
         // Get the information word length k
         unsigned int k() const;
 
-        ///////////////////////////////////
-        // TODO add a boolean for whether or not parity part comes first
-        ///////////////////////////////////
-
-
         // Subtract matrices using mod2 operation
         gsl_matrix *add_matrices_mod2(const gsl_matrix *,
                                       const gsl_matrix *) const;

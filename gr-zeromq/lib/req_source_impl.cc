@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2014 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -26,30 +26,34 @@
 
 #include <gnuradio/io_signature.h>
 #include "req_source_impl.h"
+#include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
 
     req_source::sptr
-    req_source::make(size_t itemsize, size_t vlen, char *address, int timeout)
+    req_source::make(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
     {
       return gnuradio::get_initial_sptr
-        (new req_source_impl(itemsize, vlen, address, timeout));
+        (new req_source_impl(itemsize, vlen, address, timeout, pass_tags));
     }
 
-    req_source_impl::req_source_impl(size_t itemsize, size_t vlen, char *address, int timeout)
+    req_source_impl::req_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags)
       : gr::sync_block("req_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
-        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout)
+        d_itemsize(itemsize), d_vlen(vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
+
       if (major < 3) {
         d_timeout = timeout*1000;
       }
+
       d_context = new zmq::context_t(1);
       d_socket = new zmq::socket_t(*d_context, ZMQ_REQ);
+
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->connect (address);
@@ -81,7 +85,7 @@ namespace gr {
       }
 
       zmq::pollitem_t itemsin[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
-      zmq::poll (&itemsin[0], 1, d_timeout);
+      zmq::poll(&itemsin[0], 1, d_timeout);
 
       //  If we got a reply, process
       if (itemsin[0].revents & ZMQ_POLLIN) {
@@ -89,9 +93,23 @@ namespace gr {
         zmq::message_t reply;
         d_socket->recv(&reply);
 
+        // Deserialize header data / tags
+        std::string buf(static_cast<char*>(reply.data()), reply.size());
+
+        if(d_pass_tags){
+          uint64_t rcv_offset;
+          std::vector<gr::tag_t> tags;
+          buf = parse_tag_header(buf, rcv_offset, tags);
+          for(size_t i=0; i<tags.size(); i++){
+            tags[i].offset -= rcv_offset - nitems_written(0);
+            add_item_tag(0, tags[i]);
+          }
+        }
+
+
         // Copy to ouput buffer and return
-        memcpy(out, (void *)reply.data(), reply.size());
-        return reply.size()/(d_itemsize*d_vlen);
+        memcpy(out, (void *)&buf[0], buf.size());
+        return buf.size()/(d_itemsize*d_vlen);
       }
 
       return 0;

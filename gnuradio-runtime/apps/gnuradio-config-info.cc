@@ -26,26 +26,29 @@
 
 #include <gnuradio/constants.h>
 #include <boost/program_options.hpp>
+#include <boost/format.hpp>
 #include <iostream>
 
 namespace po = boost::program_options;
+using boost::format;
 
 int
 main(int argc, char **argv)
 {
-  po::options_description desc("Program options: gnuradio [options]");
+  po::options_description desc((format("Program options: %1% [options]") % argv[0]).str());
   po::variables_map vm;
 
   desc.add_options()
     ("help,h", "print help message")
-    ("prefix", "print gnuradio installation prefix")
-    ("sysconfdir", "print gnuradio system configuration directory")
-    ("prefsdir", "print gnuradio preferences directory")
-    ("builddate", "print gnuradio build date (RFC2822 format)")
-    ("cc", "print gnuradio C compiler version")
-    ("cxx", "print gnuradio C++ compiler version")
-    ("cflags", "print gnuradio CFLAGS")
-    ("version,v", "print gnuradio version")
+    ("prefix", "print GNU Radio installation prefix")
+    ("sysconfdir", "print GNU Radio system configuration directory")
+    ("prefsdir", "print GNU Radio preferences directory")
+    ("builddate", "print GNU Radio build date (RFC2822 format)")
+    ("enabled-components", "print GNU Radio build time enabled components")
+    ("cc", "print GNU Radio C compiler version")
+    ("cxx", "print GNU Radio C++ compiler version")
+    ("cflags", "print GNU Radio CFLAGS")
+    ("version,v", "print GNU Radio version")
     ;
 
   try {
@@ -74,6 +77,9 @@ main(int argc, char **argv)
 
   if(vm.count("builddate"))
     std::cout << gr::build_date() << std::endl;
+
+  if(vm.count("enabled-components"))
+    std::cout << gr::build_time_enabled_components() << std::endl;
 
   if(vm.count("version"))
     std::cout << gr::version() << std::endl;

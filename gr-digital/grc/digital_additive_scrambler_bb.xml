@@ -8,7 +8,7 @@
 	<name>Additive Scrambler</name>
 	<key>digital_additive_scrambler_bb</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.additive_scrambler_bb($mask, $seed, $len, $count)</make>
+	<make>digital.additive_scrambler_bb($mask, $seed, $len, $count, reset_tag_key=$reset_tag_key)</make>
 	<param>
 		<name>Mask</name>
 		<key>mask</key>
@@ -32,6 +32,12 @@
 		<key>count</key>
 		<value>0</value>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Reset tag key</name>
+		<key>reset_tag_key</key>
+		<value></value>
+		<type>string</type>
 	</param>
 	<sink>
 		<name>in</name>

@@ -77,6 +77,7 @@ class Block(_Block, _GUIBlock):
             return clean_bus_structure
 
         except: return ''
+
     def throttle(self): return bool(self._throttle)
 
     def validate(self):
@@ -101,6 +102,11 @@ class Block(_Block, _GUIBlock):
                 self.get_parent().evaluate(value)
             except Exception as err:
                 self.add_error_message('Value "%s" cannot be evaluated:\n%s' % (value, err))
+        # check if this is a GUI block and matches the selected generate option
+        current_generate_option = self.get_parent().get_option('generate_options')
+        for label, option in (('WX GUI', 'wx_gui'), ('QT GUI', 'qt_gui')):
+            if self.get_name().startswith(label) and current_generate_option != option:
+                self.add_error_message("Can't generate this block in mode " + repr(option))
 
     def rewrite(self):
         """

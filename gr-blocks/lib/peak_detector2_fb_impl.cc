@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2007,2010,2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -43,15 +43,46 @@ namespace gr {
     peak_detector2_fb_impl::peak_detector2_fb_impl(float threshold_factor_rise,
                                                    int look_ahead, float alpha)
       : sync_block("peak_detector2_fb",
-                      io_signature::make(1, 1, sizeof(float)),
-                      io_signature::make2(1, 2, sizeof(char), sizeof(float))),
-        d_threshold_factor_rise(threshold_factor_rise),
-        d_look_ahead(look_ahead), d_alpha(alpha), d_avg(0.0f), d_found(false)
+                   io_signature::make(1, 1, sizeof(float)),
+                   io_signature::make2(1, 2, sizeof(char), sizeof(float))),
+        d_avg(0.0f), d_found(false)
     {
+      set_threshold_factor_rise(threshold_factor_rise);
+      set_look_ahead(look_ahead);
+      set_alpha(alpha);
     }
 
     peak_detector2_fb_impl::~peak_detector2_fb_impl()
     {
+    }
+
+    void
+    peak_detector2_fb_impl::set_threshold_factor_rise(float thr)
+    {
+      gr::thread::scoped_lock lock(d_setlock);
+      d_threshold_factor_rise = thr;
+      invalidate();
+    }
+
+    void
+    peak_detector2_fb_impl::set_look_ahead(int look)
+    {
+      gr::thread::scoped_lock lock(d_setlock);
+      d_look_ahead = look;
+      invalidate();
+    }
+
+    void
+    peak_detector2_fb_impl::set_alpha(float alpha)
+    {
+      d_alpha = alpha;
+    }
+
+    void
+    peak_detector2_fb_impl::invalidate()
+    {
+      d_found = false;
+      set_output_multiple(1);
     }
 
     int
@@ -61,58 +92,54 @@ namespace gr {
     {
       float *iptr = (float *)input_items[0];
       char *optr = (char *)output_items[0];
+      float *sigout;
 
-      assert(noutput_items >= 2);
+      if(output_items.size() == 2)
+        sigout = (float *)output_items[1];
 
       memset(optr, 0, noutput_items*sizeof(char));
 
-      for(int i = 0; i < noutput_items; i++) {
-        if(!d_found) {
-          // Have not yet detected presence of peak
+      gr::thread::scoped_lock lock(d_setlock);
+
+      // have not crossed threshold yet
+      if(d_found==false) {
+        for(int i = 0; i < noutput_items; i++) {
+          d_avg = d_alpha*iptr[i] + (1.0f - d_alpha)*d_avg;
+          if(output_items.size() == 2)
+            sigout[i]=d_avg;
           if(iptr[i] > d_avg * (1.0f + d_threshold_factor_rise)) {
             d_found = true;
-            d_look_ahead_remaining = d_look_ahead;
             d_peak_val = -(float)INFINITY;
-          }
-          else {
-            d_avg = d_alpha*iptr[i] + (1.0f - d_alpha)*d_avg;
+            set_output_multiple(d_look_ahead);
+            return i;
           }
         }
-        else {
-          // Detected presence of peak
+        return noutput_items;
+      } // end d_found==false
+
+      // can complete in this call
+      else if(noutput_items >= d_look_ahead) {
+        for(int i = 0; i < d_look_ahead; i++) {
+          d_avg = d_alpha*iptr[i] + (1.0f - d_alpha)*d_avg;
+          if(output_items.size() == 2)
+            sigout[i]=d_avg;
           if(iptr[i] > d_peak_val) {
             d_peak_val = iptr[i];
-            d_peak_ind = i;
+            d_peak_ind =i;
           }
-          else if(d_look_ahead_remaining <= 0) {
-            optr[d_peak_ind] = 1;
-            d_found = false;
-            d_avg = iptr[i];
-          }
-
-          // Have not yet located peak, loop and keep searching.
-          d_look_ahead_remaining--;
         }
+        optr[d_peak_ind] = 1;
 
-        // Every iteration of the loop, write debugging signal out if
-        // connected:
-        if(output_items.size() == 2) {
-          float *sigout = (float *)output_items[1];
-          sigout[i] = d_avg;
-        }
-      } // loop
+        // restart the search
+        invalidate();
+        return d_look_ahead;
+      } // end can complete in this call
 
-      if(!d_found)
-        return noutput_items;
-
-      // else if detected presence, keep searching during the next call to work.
-      int tmp = d_peak_ind;
-      d_peak_ind = 1;
-
-      return tmp - 1;
+      // cannot complete in this call
+      else {
+        return 0; // ask for more
+      }
     }
 
   } /* namespace blocks */
 } /* namespace gr */
-
-

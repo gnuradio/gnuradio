@@ -64,6 +64,10 @@
 #include "gnuradio/fec/ldpc_bit_flip_decoder.h"
 #include "gnuradio/fec/ldpc_R_U_encoder.h"
 #include "gnuradio/fec/ldpc_gen_mtrx_encoder.h"
+#include "gnuradio/fec/ldpc_encoder.h"
+#include "gnuradio/fec/ldpc_decoder.h"
+#include "gnuradio/fec/tpc_encoder.h"
+#include "gnuradio/fec/tpc_decoder.h"
 %}
 
 %include "gnuradio/fec/generic_decoder.h"
@@ -94,6 +98,10 @@
 %include "gnuradio/fec/ldpc_bit_flip_decoder.h"
 %include "gnuradio/fec/ldpc_R_U_encoder.h"
 %include "gnuradio/fec/ldpc_gen_mtrx_encoder.h"
+%include "gnuradio/fec/ldpc_encoder.h"
+%include "gnuradio/fec/ldpc_decoder.h"
+%include "gnuradio/fec/tpc_encoder.h"
+%include "gnuradio/fec/tpc_decoder.h"
 
 GR_SWIG_BLOCK_MAGIC2(fec, decoder);
 GR_SWIG_BLOCK_MAGIC2(fec, encoder);

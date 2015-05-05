@@ -44,7 +44,7 @@ namespace gr {
       bool d_packed;
       bool d_rev_pack;
 
-      int d_max_bits_in;
+      size_t d_max_bits_in;
       float *d_tmp_f32;
       int8_t *d_tmp_u8;
       uint8_t *d_bits_out;

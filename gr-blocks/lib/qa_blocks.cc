@@ -28,6 +28,7 @@
 #include <qa_blocks.h>
 #include <qa_block_tags.h>
 #include <qa_rotator.h>
+#include <qa_gr_block.h>
 
 CppUnit::TestSuite *
 qa_blocks::suite()
@@ -36,6 +37,7 @@ qa_blocks::suite()
 
   s->addTest(qa_block_tags::suite());
   s->addTest(qa_rotator::suite());
+  s->addTest(qa_gr_block::suite());
 
   return s;
 }

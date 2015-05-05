@@ -45,13 +45,14 @@ namespace gr {
       /*!
        * \brief Return a shared_ptr to a new instance of gr::zeromq::pull_source.
        *
-       * \param itemsize Size of a stream item in bytes
+       * \param itemsize Size of a stream item in bytes.
        * \param vlen Vector length of the input items. Note that one vector is one item.
-       * \param address  ZMQ socket address specifier
-       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
-       *
+       * \param address  ZMQ socket address specifier.
+       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments.
+       * \param pass_tags Whether source will look for and deserialize tags.
        */
-      static sptr make(size_t itemsize, size_t vlen, char *address, int timeout=100);
+      static sptr make(size_t itemsize, size_t vlen, char *address,
+                       int timeout=100, bool pass_tags=false);
     };
 
   } // namespace zeromq

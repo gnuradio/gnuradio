@@ -33,7 +33,7 @@ namespace gr {
     {
     private:
       bool d_updated;
-      kernel::iir_filter<float,float,double> *d_iir;
+      kernel::iir_filter<float,float,double,double> *d_iir;
       std::vector<double> d_new_fftaps;
       std::vector<double> d_new_fbtaps;
 

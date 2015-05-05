@@ -25,8 +25,10 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/spectrumdisplayform.h
     ${qtgui_mod_includedir}/displayform.h
     ${qtgui_mod_includedir}/timedisplayform.h
+    ${qtgui_mod_includedir}/timecontrolpanel.h
     ${qtgui_mod_includedir}/timerasterdisplayform.h
     ${qtgui_mod_includedir}/freqdisplayform.h
+    ${qtgui_mod_includedir}/freqcontrolpanel.h
     ${qtgui_mod_includedir}/constellationdisplayform.h
     ${qtgui_mod_includedir}/waterfalldisplayform.h
     ${qtgui_mod_includedir}/histogramdisplayform.h
@@ -68,8 +70,10 @@ set(qtgui_sources
     spectrumdisplayform.cc
     displayform.cc
     timedisplayform.cc
+    timecontrolpanel.cc
     timerasterdisplayform.cc
     freqdisplayform.cc
+    freqcontrolpanel.cc
     constellationdisplayform.cc
     histogramdisplayform.cc
     numberdisplayform.cc
@@ -148,7 +152,7 @@ list(APPEND qtgui_libs
     gnuradio-runtime
     gnuradio-fft
     gnuradio-filter
-    volk
+    ${VOLK_LIBRARIES}
     ${QWT_LIBRARIES}
     ${QT_LIBRARIES}
     ${FFTW3F_LIBRARIES}

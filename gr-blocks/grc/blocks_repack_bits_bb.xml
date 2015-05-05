@@ -3,7 +3,7 @@
   <key>blocks_repack_bits_bb</key>
   <import>from gnuradio import blocks</import>
   <make>blocks.repack_bits_bb($k, $l, $len_tag_key, $align_output, $endianness)</make>
-
+  <callback>set_k_and_l($k,$l)</callback>
   <param>
     <name>Bits per input byte</name>
     <key>k</key>
@@ -42,7 +42,6 @@
     </option>
   </param>
 
-
   <param>
     <name>Endianness</name>
     <key>endianness</key>
@@ -51,7 +50,7 @@
     <hide>part</hide>
     <option>
       <name>MSB</name>
-     <key>gr.GR_MSB_FIRST</key>
+      <key>gr.GR_MSB_FIRST</key>
     </option>
     <option>
       <name>LSB</name>

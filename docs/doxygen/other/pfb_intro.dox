@@ -1,13 +1,13 @@
 /*! \page page_pfb Polyphase Filterbanks
 
-\section Introduction
+\section pfb_introduction Introduction
 
 Polyphase filterbanks (PFB) are a very powerful set of filtering tools
 that can efficiently perform many multi-rate signal processing
 tasks. GNU Radio has a set of polyphase filterbank blocks to be used
 in all sorts of applications.
 
-\section Usage
+\section pfb_Usage
 
 See the documentation for the individual blocks for details about what
 they can do and how they should be used. Furthermore, there are
@@ -78,7 +78,7 @@ examples (<b>gr-uhd/examples</b>) use this ability to create a
 received matched filter or channel filter that also resamples the
 signal.
 
-\section Examples
+\section pfb_examples Examples
 
 The following is an example of the using the channelizer. It creates
 the appropriate filter to channelizer 9 channels out of an original
@@ -93,7 +93,7 @@ run this example.
 \include gr-filter/examples/channelize.py
 
 
-\section pfb_arb_resampl The PFB Arbitrary Resampler Kernel
+\section pfb_arb_resampler The PFB Arbitrary Resampler Kernel
 
 GNU Radio has a PFB arbitrary resampler block that can be used to
 resample a signal to any arbitrary and real resampling rate. The

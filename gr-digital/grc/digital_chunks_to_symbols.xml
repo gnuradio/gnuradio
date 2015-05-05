@@ -9,6 +9,7 @@
 	<key>digital_chunks_to_symbols_xx</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.chunks_to_symbols_$(in_type.fcn)$(out_type.fcn)($symbol_table, $dimension)</make>
+        <callback>set_symbol_table($symbol_table)</callback>
 	<param>
 		<name>Input Type</name>
 		<key>in_type</key>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2014 Free Software Foundation, Inc.
+ * Copyright 2010-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,9 +23,7 @@
 #ifndef INCLUDED_GR_UHD_USRP_SINK_H
 #define INCLUDED_GR_UHD_USRP_SINK_H
 
-#include <gnuradio/uhd/api.h>
-#include <gnuradio/sync_block.h>
-#include <uhd/usrp/multi_usrp.hpp>
+#include <gnuradio/uhd/usrp_block.h>
 
 // TODO In 3.8, UHD 3.4 will be required and we can remove all these ifdefs
 #ifndef INCLUDED_UHD_STREAM_HPP
@@ -54,7 +52,72 @@ namespace gr {
 
     class uhd_usrp_sink;
 
-    class GR_UHD_API usrp_sink : virtual public sync_block
+    /*! USRP Sink -- Radio Transmitter
+     * \ingroup uhd_blk
+     *
+     *
+     * The USRP sink block reads a stream and transmits the samples.
+     * The sink block also provides API calls for transmitter settings.
+     * See also gr::uhd::usrp_block for more public API calls.
+     *
+     * \section uhd_tx_tagging TX Stream tagging
+     *
+     * The following tag keys will be consumed by the work function:
+     *  - pmt::string_to_symbol("tx_sob")
+     *  - pmt::string_to_symbol("tx_eob")
+     *  - pmt::string_to_symbol("tx_time")
+     *  - pmt::string_to_symbol("tx_freq")
+     *  - pmt::string_to_symbol("tx_command")
+     *  - pmt::string_to_symbol(tsb_tag_name)
+     *
+     * Any other tag will be ignored.
+     *
+     * \section uhd_tx_burstys Bursty Transmission
+     *
+     * There are multiple ways to do bursty transmission without triggering
+     * underruns:
+     * - Using SOB/EOB tags
+     * - Using tagged streams (See \ref page_tagged_stream_blocks)
+     *
+     * The sob and eob (start and end of burst) tag values are pmt booleans.
+     * When present, burst tags should be set to true (pmt::PMT_T).
+     *
+     * If `tsb_tag_name` is not an empty string, all "tx_sob" and "tx_eob"
+     * tags will be ignored, and the input is assumed to a tagged stream.
+     *
+     * If sob/eob tags or length tags are used, this block understands that
+     * the data is bursty, and will configure the USRP to make sure there's
+     * no underruns after transmitting the final sample of a burst.
+     *
+     * \section uhd_tx_time Timestamps
+     *
+     * The timestamp tag value is a PMT tuple of the following:
+     * (uint64 seconds, double fractional seconds).
+     *
+     * The tx_freq tag has to be a double or a pair of form (channel, frequency),
+     * with frequency being a double and channel being an integer.
+     * This tag will trigger a tune command to the USRP
+     * to the given frequency, if possible. Note that oscillators need some time
+     * to stabilize after this! Don't expect clean data to be sent immediately after this command.
+     * If channel is omitted, and only a double is given, it will set this frequency to all
+     * channels.
+     *
+     * The command tag can carry a PMT command. See the following section.
+     *
+     * \section uhd_tx_commands Command interface
+     *
+     * There are two ways of passing commands to this block:
+     * 1. tx_command tag. The command is attached to a sample, and will executed
+     *    before the sample is transmitted, and after the previous sample.
+     * 2. The 'command' message port. The command is executed asynchronously,
+     *    as soon as possible.
+     *
+     * In both cases, the payload of the command is a PMT command, as described
+     * in Section \ref uhd_command_syntax.
+     *
+     * For a more general description of the gr-uhd components, see \ref page_uhd.
+     */
+    class GR_UHD_API usrp_sink : virtual public usrp_block
     {
     public:
       // gr::uhd::usrp_sink::sptr
@@ -68,64 +131,10 @@ namespace gr {
        * gr::uhd::usrp_sink::make(const ::uhd::device_addr_t, const ::uhd::stream_args_t, const std::string).
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
-		       const ::uhd::io_type_t &io_type,
-		       size_t num_channels);
+                       const ::uhd::io_type_t &io_type,
+                       size_t num_channels);
 
       /*!
-       * \brief Make a new USRP sink block (usually a radio transmitter).
-       *
-       * The USRP sink block reads a stream and transmits the samples.
-       * The sink block also provides API calls for transmitter settings.
-       *
-       * \section uhd_tx_tagging TX Stream tagging
-       *
-       * The following tag keys will be consumed by the work function:
-       *  - pmt::string_to_symbol("tx_sob")
-       *  - pmt::string_to_symbol("tx_eob")
-       *  - pmt::string_to_symbol("tx_time")
-       *  - pmt::string_to_symbol("tx_freq")
-       *  - pmt::string_to_symbol("tx_command")
-       *  - pmt::string_to_symbol(tsb_tag_name)
-       *
-       * Any other tag will be ignored.
-       *
-       * The sob and eob (start and end of burst) tag values are pmt booleans.
-       * When present, burst tags should be set to true (pmt::PMT_T).
-       *
-       * If `tsb_tag_name` is not an empty string, all "tx_sob" and "tx_eob"
-       * tags will be ignored, and the input is assumed to a tagged stream,
-       * as described in \ref page_tagged_stream_blocks.
-       *
-       * If sob/eob tags or length tags are used, this block understands that
-       * the data is bursty, and will configure the USRP to make sure there's
-       * no underruns after transmitting the final sample of a burst.
-       *
-       * The timestamp tag value is a PMT tuple of the following:
-       * (uint64 seconds, double fractional seconds).
-       *
-       * The tx_freq tag has to be a double or a pair of form (channel, frequency),
-       * with frequency being a double and channel being an integer.
-       * This tag will trigger a tune command to the USRP
-       * to the given frequency, if possible. Note that oscillators need some time
-       * to stabilize after this! Don't expect clean data to be sent immediately after this command.
-       * If channel is omitted, and only a double is given, it will set this frequency to all
-       * channels.
-       *
-       * The command tag can carry a PMT command. See the following section.
-       *
-       * \section uhd_tx_commands Command interface
-       *
-       * There are two ways of passing commands to this block:
-       * 1. tx_command tag. The command is attached to a sample, and will executed
-       *    before the sample is transmitted, and after the previous sample.
-       * 2. The 'command' message port. The command is executed asynchronously,
-       *    as soon as possible.
-       *
-       * In both cases, the payload of the command is a PMT command, as described
-       * in Section \ref uhd_command_syntax.
-       *
-       * For a more general description of the gr-uhd components, see \ref page_uhd.
-       *
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
        * \param tsb_tag_name the name of the tag identifying tagged stream length
@@ -158,174 +167,6 @@ namespace gr {
       virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 
       /*!
-       * Set the frontend specification.
-       * \param spec the subdev spec markup string
-       * \param mboard the motherboard index 0 to M-1
-       */
-      virtual void set_subdev_spec(const std::string &spec, size_t mboard = 0) = 0;
-
-      /*!
-       * Get the TX frontend specification.
-       * \param mboard the motherboard index 0 to M-1
-       * \return the frontend specification in use
-       */
-      virtual std::string get_subdev_spec (size_t mboard = 0) = 0;
-
-      /*!
-       * Set the sample rate for the usrp device.
-       * \param rate a new rate in Sps
-       */
-      virtual void set_samp_rate(double rate) = 0;
-
-      /*!
-       * Get the sample rate for the usrp device.
-       * This is the actual sample rate and may differ from the rate set.
-       * \return the actual rate in Sps
-       */
-      virtual double get_samp_rate(void) = 0;
-
-      /*!
-       * Get the possible sample rates for the usrp device.
-       * \return a range of rates in Sps
-       */
-      virtual ::uhd::meta_range_t get_samp_rates(void) = 0;
-
-      /*!
-       * Tune the usrp device to the desired center frequency.
-       * \param tune_request the tune request instructions
-       * \param chan the channel index 0 to N-1
-       * \return a tune result with the actual frequencies
-       */
-      virtual ::uhd::tune_result_t set_center_freq
-        (const ::uhd::tune_request_t tune_request, size_t chan = 0) = 0;
-
-      /*!
-       * Tune the usrp device to the desired center frequency.
-       * This is a wrapper around set center freq so that in this case,
-       * the user can pass a single frequency in the call through swig.
-       * \param freq the desired frequency in Hz
-       * \param chan the channel index 0 to N-1
-       * \return a tune result with the actual frequencies
-       */
-      ::uhd::tune_result_t set_center_freq(double freq, size_t chan = 0)
-      {
-        return set_center_freq(::uhd::tune_request_t(freq), chan);
-      }
-
-      /*!
-       * Get the center frequency.
-       * \param chan the channel index 0 to N-1
-       * \return the frequency in Hz
-       */
-      virtual double get_center_freq(size_t chan = 0) = 0;
-
-      /*!
-       * Get the tunable frequency range.
-       * \param chan the channel index 0 to N-1
-       * \return the frequency range in Hz
-       */
-      virtual ::uhd::freq_range_t get_freq_range(size_t chan = 0) = 0;
-
-      /*!
-       * Set the gain for the dboard.
-       * \param gain the gain in dB
-       * \param chan the channel index 0 to N-1
-       */
-      virtual void set_gain(double gain, size_t chan = 0) = 0;
-
-      /*!
-       * Set the named gain on the dboard.
-       * \param gain the gain in dB
-       * \param name the name of the gain stage
-       * \param chan the channel index 0 to N-1
-       */
-      virtual void set_gain(double gain,
-                            const std::string &name,
-                            size_t chan = 0) = 0;
-
-      /*!
-       * Get the actual dboard gain setting.
-       * \param chan the channel index 0 to N-1
-       * \return the actual gain in dB
-       */
-      virtual double get_gain(size_t chan = 0) = 0;
-
-      /*!
-       * Get the actual dboard gain setting of named stage.
-       * \param name the name of the gain stage
-       * \param chan the channel index 0 to N-1
-       * \return the actual gain in dB
-       */
-      virtual double get_gain(const std::string &name,
-                              size_t chan = 0) = 0;
-
-      /*!
-       * Get the actual dboard gain setting of named stage.
-       * \param chan the channel index 0 to N-1
-       * \return the actual gain in dB
-       */
-      virtual std::vector<std::string> get_gain_names(size_t chan = 0) = 0;
-
-      /*!
-       * Get the settable gain range.
-       * \param chan the channel index 0 to N-1
-       * \return the gain range in dB
-       */
-      virtual ::uhd::gain_range_t get_gain_range(size_t chan = 0) = 0;
-
-      /*!
-       * Get the settable gain range.
-       * \param name the name of the gain stage
-       * \param chan the channel index 0 to N-1
-       * \return the gain range in dB
-       */
-      virtual ::uhd::gain_range_t get_gain_range(const std::string &name,
-                                                 size_t chan = 0) = 0;
-
-      /*!
-       * Set the antenna to use.
-       * \param ant the antenna string
-       * \param chan the channel index 0 to N-1
-       */
-      virtual void set_antenna(const std::string &ant,
-                               size_t chan = 0) = 0;
-
-      /*!
-       * Get the antenna in use.
-       * \param chan the channel index 0 to N-1
-       * \return the antenna string
-       */
-      virtual std::string get_antenna(size_t chan = 0) = 0;
-
-      /*!
-       * Get a list of possible antennas.
-       * \param chan the channel index 0 to N-1
-       * \return a vector of antenna strings
-       */
-      virtual std::vector<std::string> get_antennas(size_t chan = 0) = 0;
-
-      /*!
-       * Set the bandpass filter on the RF frontend.
-       * \param bandwidth the filter bandwidth in Hz
-       * \param chan the channel index 0 to N-1
-       */
-      virtual void set_bandwidth(double bandwidth, size_t chan = 0) = 0;
-
-      /*!
-       * Get the bandpass filter setting on the RF frontend.
-       * \param chan the channel index 0 to N-1
-       * \return bandwidth of the filter in Hz
-       */
-      virtual double get_bandwidth(size_t chan = 0) = 0;
-
-      /*!
-       * Get the bandpass filter range of the RF frontend.
-       * \param chan the channel index 0 to N-1
-       * \return the range of the filter bandwidth in Hz
-       */
-      virtual ::uhd::freq_range_t get_bandwidth_range(size_t chan = 0) = 0;
-
-      /*!
        * Set a constant DC offset value.
        * The value is complex to control both I and Q.
        * \param offset the dc offset (1.0 is full-scale)
@@ -344,201 +185,6 @@ namespace gr {
       virtual void set_iq_balance(const std::complex<double> &correction,
                                   size_t chan = 0) = 0;
 
-      /*!
-       * Get an RF frontend sensor value.
-       * \param name the name of the sensor
-       * \param chan the channel index 0 to N-1
-       * \return a sensor value object
-       */
-      virtual ::uhd::sensor_value_t get_sensor(const std::string &name,
-                                               size_t chan = 0) = 0;
-
-      /*!
-       * Get a list of possible RF frontend sensor names.
-       * \param chan the channel index 0 to N-1
-       * \return a vector of sensor names
-       */
-      virtual std::vector<std::string> get_sensor_names(size_t chan = 0) = 0;
-
-      //! DEPRECATED use get_sensor
-      ::uhd::sensor_value_t get_dboard_sensor(const std::string &name,
-                                              size_t chan = 0)
-      {
-        return this->get_sensor(name, chan);
-      }
-
-      //! DEPRECATED use get_sensor_names
-      std::vector<std::string> get_dboard_sensor_names(size_t chan = 0)
-      {
-        return this->get_sensor_names(chan);
-      }
-
-      /*!
-       * Get a motherboard sensor value.
-       * \param name the name of the sensor
-       * \param mboard the motherboard index 0 to M-1
-       * \return a sensor value object
-       */
-      virtual ::uhd::sensor_value_t get_mboard_sensor(const std::string &name,
-                                                      size_t mboard = 0) = 0;
-
-      /*!
-       * Get a list of possible motherboard sensor names.
-       * \param mboard the motherboard index 0 to M-1
-       * \return a vector of sensor names
-       */
-      virtual std::vector<std::string> get_mboard_sensor_names(size_t mboard = 0) = 0;
-
-      /*!
-       * Set the clock configuration.
-       * DEPRECATED for set_time/clock_source.
-       * \param clock_config the new configuration
-       * \param mboard the motherboard index 0 to M-1
-       */
-      virtual void set_clock_config(const ::uhd::clock_config_t &clock_config,
-                                    size_t mboard = 0) = 0;
-
-      /*!
-       * Set the time source for the usrp device.
-       * This sets the method of time synchronization,
-       * typically a pulse per second or an encoded time.
-       * Typical options for source: external, MIMO.
-       * \param source a string representing the time source
-       * \param mboard which motherboard to set the config
-       */
-      virtual void set_time_source(const std::string &source,
-                                   const size_t mboard = 0) = 0;
-
-      /*!
-       * Get the currently set time source.
-       * \param mboard which motherboard to get the config
-       * \return the string representing the time source
-       */
-      virtual std::string get_time_source(const size_t mboard) = 0;
-
-      /*!
-       * Get a list of possible time sources.
-       * \param mboard which motherboard to get the list
-       * \return a vector of strings for possible settings
-       */
-      virtual std::vector<std::string> get_time_sources(const size_t mboard) = 0;
-
-      /*!
-       * Set the clock source for the usrp device.
-       * This sets the source for a 10 Mhz reference clock.
-       * Typical options for source: internal, external, MIMO.
-       * \param source a string representing the clock source
-       * \param mboard which motherboard to set the config
-       */
-      virtual void set_clock_source(const std::string &source,
-                                    const size_t mboard = 0) = 0;
-
-      /*!
-       * Get the currently set clock source.
-       * \param mboard which motherboard to get the config
-       * \return the string representing the clock source
-       */
-      virtual std::string get_clock_source(const size_t mboard) = 0;
-
-      /*!
-       * Get a list of possible clock sources.
-       * \param mboard which motherboard to get the list
-       * \return a vector of strings for possible settings
-       */
-      virtual std::vector<std::string> get_clock_sources(const size_t mboard) = 0;
-
-      /*!
-       * Get the master clock rate.
-       * \param mboard the motherboard index 0 to M-1
-       * \return the clock rate in Hz
-       */
-      virtual double get_clock_rate(size_t mboard = 0) = 0;
-
-      /*!
-       * Set the master clock rate.
-       * \param rate the new rate in Hz
-       * \param mboard the motherboard index 0 to M-1
-       */
-      virtual void set_clock_rate(double rate, size_t mboard = 0) = 0;
-
-      /*!
-       * Get the current time registers.
-       * \param mboard the motherboard index 0 to M-1
-       * \return the current usrp time
-       */
-      virtual ::uhd::time_spec_t get_time_now(size_t mboard = 0) = 0;
-
-      /*!
-       * Get the time when the last pps pulse occured.
-       * \param mboard the motherboard index 0 to M-1
-       * \return the current usrp time
-       */
-      virtual ::uhd::time_spec_t get_time_last_pps(size_t mboard = 0) = 0;
-
-      /*!
-       * Sets the time registers immediately.
-       * \param time_spec the new time
-       * \param mboard the motherboard index 0 to M-1
-       */
-      virtual void set_time_now(const ::uhd::time_spec_t &time_spec, size_t mboard = 0) = 0;
-
-      /*!
-       * Set the time registers at the next pps.
-       * \param time_spec the new time
-       */
-      virtual void set_time_next_pps(const ::uhd::time_spec_t &time_spec) = 0;
-
-      /*!
-       * Sync the time registers with an unknown pps edge.
-       * \param time_spec the new time
-       */
-      virtual void set_time_unknown_pps(const ::uhd::time_spec_t &time_spec) = 0;
-
-      /*!
-       * Set the time at which the control commands will take effect.
-       *
-       * A timed command will back-pressure all subsequent timed commands,
-       * assuming that the subsequent commands occur within the time-window.
-       * If the time spec is late, the command will be activated upon arrival.
-       *
-       * \param time_spec the time at which the next command will activate
-       * \param mboard which motherboard to set the config
-       */
-      virtual void set_command_time(const ::uhd::time_spec_t &time_spec,
-                                    size_t mboard = 0) = 0;
-
-      /*!
-       * Clear the command time so future commands are sent ASAP.
-       *
-       * \param mboard which motherboard to set the config
-       */
-      virtual void clear_command_time(size_t mboard = 0) = 0;
-
-      /*!
-       * Get access to the underlying uhd dboard iface object.
-       * \return the dboard_iface object
-       */
-      virtual ::uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan = 0) = 0;
-
-      /*!
-       * Get access to the underlying uhd device object.
-       *
-       * NOTE: This function is only available in C++.
-       * \return the multi usrp device object
-       */
-      virtual ::uhd::usrp::multi_usrp::sptr get_device(void) = 0;
-
-      /*!
-       * Perform write on the user configuration register bus. These
-       * only exist if the user has implemented custom setting
-       * registers in the device FPGA.
-       * \param addr 8-bit register address
-       * \param data 32-bit register value
-       * \param mboard which motherboard to set the user register
-       */
-      virtual void set_user_register(const uint8_t addr,
-                                     const uint32_t data,
-                                     size_t mboard = 0) = 0;
     };
 
   } /* namespace uhd */

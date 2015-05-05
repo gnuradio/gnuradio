@@ -263,6 +263,11 @@ TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
     tooltip='Automatically hide port labels',
     preference_name='auto_hide_port_labels'
 )
+TOGGLE_SHOW_BLOCK_COMMENTS = ToggleAction(
+    label='Show Block Comments',
+    tooltip="Show comment beneath each block",
+    preference_name='show_block_comments'
+)
 BLOCK_CREATE_HIER = Action(
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',

@@ -1,6 +1,6 @@
 /*! \page page_qtgui QT Graphical User Interface
 
-\section Introduction
+\section qtgui_introduction Introduction
 
 This is the gr-qtgui package. It contains various QT-based graphical
 user interface blocks that add graphical sinks to a GNU Radio
@@ -22,7 +22,7 @@ by using:
     help(qtgui)
 \endcode
 
-\subsection Blocks
+\subsection qtgui_blocks Blocks
 
 There are a number of available QTGUI blocks for different plotting
 purposes. These include:
@@ -123,7 +123,7 @@ accordingly offering more freedom. This should be a problem in a
 limited number of scenarios, but a log INFO level message is produced
 when asking for the delay outside of the available range.
 
-\section Dependencies
+\section qtgui_dependencies Dependencies
 
 The QT GUI blocks require the following dependencies.
 
@@ -132,9 +132,8 @@ The QT GUI blocks require the following dependencies.
 \li QtOpenGL (version >= 4.4)
 \li PyQt4 for Qt4 (version >= 4.4)
 \li Qwt (version >= 5.2)
-\li PyQwt5 for Qt4 (version >= 5.2)
 
-\section Usage
+\section qtgui_usage Usage
 
 To use the qtgui interface, a bit of boiler-plate lines must be
 included. First, the sink is defined, then it must be exposed from C++
@@ -181,7 +180,7 @@ style, markers, etc.), the ability to start and stop the display, the
 ability to save to a file, and other plot-specific controls (FFT size
 for the frequency and waterfall plots, etc.).
 
-\section Configuration
+\section qtgui_configuration Configuration
 
 There is currently a single configuration option in the preferences
 files to set the rendering engine of the QTGUI sinks. Located in

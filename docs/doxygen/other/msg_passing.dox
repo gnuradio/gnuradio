@@ -1,6 +1,6 @@
 /*! \page page_msg_passing Message Passing
 
-\section intro Introduction
+\section msg_passing_introduction Introduction
 
 GNU Radio was originally a streaming system with no other mechanism to
 pass data between blocks. Streams of data are a model that work well
@@ -30,7 +30,7 @@ The message passing interface heavily relies on Polymorphic Types
 (PMTs) in GNU Radio. For further information about these data
 structures, see the page \ref page_pmt.
 
-\section api Message Passing API
+\section msg_passing_api Message Passing API
 
 The message passing interface is designed into the gr::basic_block,
 which is the parent class for all blocks in GNU Radio. Each block has
@@ -69,7 +69,7 @@ have subscribed and uses the gr::basic_block::_post method to send the
 message to that block's message queue.
 
 
-\subsection msg_handler Message Handler Functions
+\subsection msg_passing_msg_handler Message Handler Functions
 
 A subscriber block must declare a message handler function to process
 the messages that are posted to it. After using the
@@ -98,7 +98,7 @@ is:
 We give an example of using this below.
 
 
-\subsection msg_fg_connect Connecting Messages through the Flowgraph
+\subsection msg_passing_fg_connect Connecting Messages through the Flowgraph
 
 From the flowgraph level, we have instrumented a gr::hier_block2::msg_connect
 method to make it easy to subscribe blocks to other blocks'
@@ -145,12 +145,12 @@ function. When a new message is pushed onto a port's message queue,
 it is this function that is used to process the message.
 
 
-\section python_msg_passing Message Passing in Python Blocks
+\section msg_passing_python Message Passing in Python Blocks
 
 ADD STUFF HERE
 
 
-\section examples Code Examples
+\section msg_passing_examples Code Examples
 
 The following is snippets of code from blocks current in GNU Radio
 that take advantage of message passing. We will be using
@@ -272,7 +272,7 @@ them. The data is then converted into an output stream of items and
 passed along. The next section describes how PDUs can be passed into a
 flowgraph using the gr::blocks::pdu_to_tagged_stream block.
 
-\section posting Posting from External Sources
+\section msg_passing_posting Posting from External Sources
 
 The last feature of the message passing architecture to discuss here
 is how it can be used to take in messages from an external source. We
@@ -310,5 +310,45 @@ file qa_pdu.py.
 
 There are some examples of using the message passing infrastructure
 through GRC in gr-blocks/examples/msg_passing.
+
+\section msg_passing_commands Using messages as commands
+
+Messages can be used to send commands to blocks. Examples for this include:
+
+- gr::qtgui::freq_sink_c: The scaling of the frequency axis can be changed by messages
+- gr::uhd::usrp_source and gr::uhd::usrp_sink: Many transceiver-related settings can
+  be manipulated through command messages, such as frequency, gain and LO offset
+- gr::digital::header_payload_demux, which receives an acknowledgement from a header parser
+  block on how many payload items there are to process
+
+There is no special PMT type to encode commands, however, it is strongly recommended
+to use one of the following formats:
+
+- pmt::cons(KEY, VALUE): This format is useful for commands that take a single value.
+  Think of KEY and VALUE as the argument name and value, respectively. For the case of
+  the QT GUI Frequency Sink, KEY would be "freq" and VALUE would be the new center frequency
+  in Hz.
+- pmt::dict((KEY1: VALUE1), (KEY2: VALUE2), ...): This is basically the same as the
+  previous format, but you can provide multiple key/value pairs. This is particularly
+  useful when a single command takes multiple arguments which can't be broken into
+  multiple command messages (e.g., the USRP blocks might have both a timestamp and a
+  center frequency in a command message, which are closely associated).
+
+In both cases, all KEYs should be pmt::symbols (i.e. strings). VALUEs can be
+whatever the block requires.
+
+It might be tempting to deviate from this format, e.g. the QT Frequency sink could
+simply take a float value as a command message, and it would still work fine.
+However, there are some very good reasons to stick to this format:
+
+- Interoperability: The more people use the standard format, the more likely it
+  is that blocks from different sources can work together
+- Inspectability: A message debug block will display more useful information about
+  a message if its containing both a value and a key
+- Intuition: This format is pretty versatile and unlikely to create situations
+  where it is not sufficient (especially considering that values are PMTs themselves).
+  As a counterexample, using positional arguments (something like "the first argument
+  is the frequency, the second the gain") is easily forgotten, or changed in one place
+  and not another, etc.
 
 */
