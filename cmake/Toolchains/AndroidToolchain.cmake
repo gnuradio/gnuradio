@@ -178,10 +178,11 @@ endif()
 
 # see if we have path to Android NDK
 __INIT_VARIABLE( ANDROID_NDK PATH ENV_ANDROID_NDK )
-if( NOT ANDROID_NDK )
- # see if we have path to Android standalone toolchain
+
+# see if we have path to Android standalone toolchain
  __INIT_VARIABLE( ANDROID_STANDALONE_TOOLCHAIN PATH ENV_ANDROID_STANDALONE_TOOLCHAIN OBSOLETE_ANDROID_NDK_TOOLCHAIN_ROOT OBSOLETE_ENV_ANDROID_NDK_TOOLCHAIN_ROOT )
 
+if( NOT ANDROID_NDK )
  if( NOT ANDROID_STANDALONE_TOOLCHAIN )
   #try to find Android NDK in one of the the default locations
   set( __ndkSearchPaths )
@@ -209,18 +210,7 @@ if( NOT ANDROID_NDK )
 endif( NOT ANDROID_NDK )
 
 # remember found paths
-if( ANDROID_NDK )
- get_filename_component( ANDROID_NDK "${ANDROID_NDK}" ABSOLUTE )
- set( ANDROID_NDK "${ANDROID_NDK}" CACHE INTERNAL "Path of the Android NDK" FORCE )
- set( BUILD_WITH_ANDROID_NDK True )
- if( EXISTS "${ANDROID_NDK}/RELEASE.TXT" )
-  file( STRINGS "${ANDROID_NDK}/RELEASE.TXT" ANDROID_NDK_RELEASE_FULL LIMIT_COUNT 1 REGEX r[0-9]+[a-z]? )
-  string( REGEX MATCH r[0-9]+[a-z]? ANDROID_NDK_RELEASE "${ANDROID_NDK_RELEASE_FULL}" )
- else()
-  set( ANDROID_NDK_RELEASE "r1x" )
-  set( ANDROID_NDK_RELEASE_FULL "unreleased" )
- endif()
-elseif( ANDROID_STANDALONE_TOOLCHAIN )
+if( ANDROID_STANDALONE_TOOLCHAIN )
  get_filename_component( ANDROID_STANDALONE_TOOLCHAIN "${ANDROID_STANDALONE_TOOLCHAIN}" ABSOLUTE )
  # try to detect change
  if( CMAKE_AR )
@@ -234,6 +224,17 @@ elseif( ANDROID_STANDALONE_TOOLCHAIN )
  endif()
  set( ANDROID_STANDALONE_TOOLCHAIN "${ANDROID_STANDALONE_TOOLCHAIN}" CACHE INTERNAL "Path of the Android standalone toolchain" FORCE )
  set( BUILD_WITH_STANDALONE_TOOLCHAIN True )
+elseif( ANDROID_NDK )
+ get_filename_component( ANDROID_NDK "${ANDROID_NDK}" ABSOLUTE )
+ set( ANDROID_NDK "${ANDROID_NDK}" CACHE INTERNAL "Path of the Android NDK" FORCE )
+ set( BUILD_WITH_ANDROID_NDK True )
+ if( EXISTS "${ANDROID_NDK}/RELEASE.TXT" )
+  file( STRINGS "${ANDROID_NDK}/RELEASE.TXT" ANDROID_NDK_RELEASE_FULL LIMIT_COUNT 1 REGEX r[0-9]+[a-z]? )
+  string( REGEX MATCH r[0-9]+[a-z]? ANDROID_NDK_RELEASE "${ANDROID_NDK_RELEASE_FULL}" )
+ else()
+  set( ANDROID_NDK_RELEASE "r1x" )
+  set( ANDROID_NDK_RELEASE_FULL "unreleased" )
+ endif()
 else()
  list(GET ANDROID_NDK_SEARCH_PATHS 0 ANDROID_NDK_SEARCH_PATH)
  message( FATAL_ERROR "Could not find neither Android NDK nor Android standalone toolchain.
