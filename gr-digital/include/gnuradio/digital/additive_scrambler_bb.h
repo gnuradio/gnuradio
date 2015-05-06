@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace digital {
-    
+
     /*!
      * \ingroup coding_blk
      *
