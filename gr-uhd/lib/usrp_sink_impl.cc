@@ -132,29 +132,12 @@ namespace gr {
     usrp_sink_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
                                     size_t chan)
     {
-      _curr_freq[chan] = tune_request.target_freq;
-      if (tune_request.rf_freq_policy == ::uhd::tune_request_t::POLICY_MANUAL) {
-        _curr_lo_offset[chan] = tune_request.rf_freq - tune_request.target_freq;
-      } else {
-        _curr_lo_offset[chan] = 0.0;
-      }
+      _curr_tune_req[chan] = tune_request;
       chan = _stream_args.channels[chan];
       return _dev->set_tx_freq(tune_request, chan);
     }
 
-    ::uhd::tune_result_t
-    usrp_sink_impl::_set_center_freq_from_internals(size_t chan)
-    {
-      _chans_to_tune[chan] = false;
-      if (_curr_lo_offset[chan] == 0.0) {
-        return _dev->set_tx_freq(_curr_freq[chan], _stream_args.channels[chan]);
-      } else {
-        return _dev->set_tx_freq(
-            ::uhd::tune_request_t(_curr_freq[chan], _curr_lo_offset[chan]),
-            _stream_args.channels[chan]
-            );
-      }
-    }
+    SET_CENTER_FREQ_FROM_INTERNALS(usrp_sink_impl, set_tx_freq);
 
     double
     usrp_sink_impl::get_center_freq(size_t chan)
@@ -173,7 +156,6 @@ namespace gr {
     void
     usrp_sink_impl::set_gain(double gain, size_t chan)
     {
-      _curr_gain[chan] = gain;
       chan = _stream_args.channels[chan];
       return _dev->set_tx_gain(gain, chan);
     }
@@ -183,7 +165,6 @@ namespace gr {
                              const std::string &name,
                              size_t chan)
     {
-      _curr_gain[chan] = gain;
       chan = _stream_args.channels[chan];
       return _dev->set_tx_gain(gain, name, chan);
     }
@@ -433,7 +414,7 @@ namespace gr {
       // Go through tag list until something indicates the end of a burst.
       bool found_time_tag = false;
       bool found_eob = false;
-      // For commands that are in the middle in the burst:
+      // For commands that are in the middle of the burst:
       std::vector<pmt::pmt_t> commands_in_burst; // Store the command
       uint64_t in_burst_cmd_offset = 0; // Store its position
       BOOST_FOREACH(const tag_t &my_tag, _tags) {
@@ -449,7 +430,7 @@ namespace gr {
          *
          * This includes:
          * - tx_time
-         * - tx_command
+         * - tx_command TODO should also work end-of-burst
          * - tx_sob
          * - length tags
          *
@@ -461,6 +442,7 @@ namespace gr {
             max_count = my_tag_count;
             break;
           }
+          // TODO set the command time from the sample time
           msg_handler_command(value);
         }
 
@@ -516,12 +498,16 @@ namespace gr {
         else if (pmt::equal(key, FREQ_KEY) && my_tag_count == samp0_count) {
           // If it's on the first sample, immediately do the tune:
           GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq on start of burst."));
-          msg_handler_command(pmt::cons(pmt::mp("freq"), value));
+          pmt::pmt_t freq_cmd = pmt::make_dict();
+          freq_cmd = pmt::dict_add(freq_cmd, pmt::mp("freq"), value);
+          msg_handler_command(freq_cmd);
         }
         else if(pmt::equal(key, FREQ_KEY)) {
           // If it's not on the first sample, queue this command and only tx until here:
           GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq mid-burst."));
-          commands_in_burst.push_back(pmt::cons(pmt::mp("freq"), value));
+          pmt::pmt_t freq_cmd = pmt::make_dict();
+          freq_cmd = pmt::dict_add(freq_cmd, pmt::mp("freq"), value);
+          commands_in_burst.push_back(freq_cmd);
           max_count = my_tag_count + 1;
           in_burst_cmd_offset = my_tag_count;
         }
@@ -552,7 +538,7 @@ namespace gr {
       //    until before the tag, so it will be on the first sample of the next run.
       if (not commands_in_burst.empty()) {
         if (not found_eob) {
-          // If it's in the middle of a burst, only send() until before the tag
+          // ...then it's in the middle of a burst, only send() until before the tag
           max_count = in_burst_cmd_offset;
         } else if (in_burst_cmd_offset < max_count) {
           BOOST_FOREACH(const pmt::pmt_t &cmd_pmt, commands_in_burst) {
