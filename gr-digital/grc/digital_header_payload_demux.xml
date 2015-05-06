@@ -112,6 +112,7 @@
   <sink>
     <name>trigger</name>
     <type>byte</type>
+    <optional>1</optional>
   </sink>
   <sink>
     <name>header_data</name>
