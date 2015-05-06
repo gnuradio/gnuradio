@@ -21,6 +21,7 @@ install(FILES
     trellis_encoder_xx.xml
     trellis_siso_combined_f.xml
     trellis_viterbi_x.xml
+    trellis_constellation_metrics_cf.xml
     trellis_metrics_x.xml
     trellis_siso_f.xml
     trellis_permutation.xml
