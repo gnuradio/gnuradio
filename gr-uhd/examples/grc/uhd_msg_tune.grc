@@ -30,7 +30,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(-1, -2)</value>
+      <value>(8, 3)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -74,14 +74,14 @@
     </param>
   </block>
   <block>
-    <key>variable_qtgui_entry</key>
+    <key>variable_qtgui_chooser</key>
     <param>
       <key>comment</key>
       <value></value>
     </param>
     <param>
       <key>value</key>
-      <value>pmt.to_pmt({'antenna': 'TX/RX', 'gain': 23.0, 'chan': 0})</value>
+      <value>TX/RX</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -89,7 +89,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(112, 347)</value>
+      <value>(8, 307)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -101,78 +101,75 @@
     </param>
     <param>
       <key>id</key>
-      <value>cmd_msg</value>
+      <value>ant_msg</value>
     </param>
     <param>
-      <key>label</key>
-      <value>Command Message</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>raw</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>comment</key>
+      <key>label0</key>
       <value></value>
     </param>
     <param>
-      <key>value</key>
-      <value>.8</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(103, 99)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
+      <key>label1</key>
       <value></value>
     </param>
     <param>
-      <key>_rotation</key>
-      <value>0</value>
+      <key>label2</key>
+      <value></value>
     </param>
     <param>
-      <key>id</key>
-      <value>gain</value>
+      <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>label4</key>
+      <value></value>
     </param>
     <param>
       <key>label</key>
-      <value>Gain</value>
+      <value>Antenna</value>
     </param>
     <param>
-      <key>min_len</key>
-      <value>200</value>
+      <key>labels</key>
+      <value>[]</value>
+    </param>
+    <param>
+      <key>num_opts</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>option0</key>
+      <value>TX/RX</value>
+    </param>
+    <param>
+      <key>option1</key>
+      <value>RX2</value>
+    </param>
+    <param>
+      <key>option2</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>option3</key>
+      <value>3</value>
+    </param>
+    <param>
+      <key>option4</key>
+      <value>4</value>
+    </param>
+    <param>
+      <key>options</key>
+      <value>[0, 1, 2]</value>
     </param>
     <param>
       <key>orient</key>
-      <value>Qt.Horizontal</value>
+      <value>Qt.QVBoxLayout</value>
     </param>
     <param>
-      <key>start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>.01</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>rangeType</key>
-      <value>float</value>
+      <key>type</key>
+      <value>string</value>
     </param>
     <param>
       <key>widget</key>
-      <value>counter_slider</value>
+      <value>combo_box</value>
     </param>
   </block>
   <block>
@@ -187,7 +184,139 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(-2, 172)</value>
+      <value>(232, 115)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>cmd_msg</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>pmt.to_pmt({'antenna': ant_msg, 'gain': gain_msg, 'chan': 0, 'freq': freq_msg, 'lo_offset': lo_msg})</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_entry</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>initial_fc</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(144, 227)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>0,1,1,1</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>freq_msg</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Frequency</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(104, 99)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.8</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_entry</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 227)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>0,0,1,1</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>gain_msg</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Gain</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 163)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -203,6 +332,45 @@
     </param>
   </block>
   <block>
+    <key>variable_qtgui_entry</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(144, 307)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>1,1,1,1</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>lo_msg</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>LO Offset</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+  </block>
+  <block>
     <key>variable</key>
     <param>
       <key>comment</key>
@@ -214,7 +382,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1, 102)</value>
+      <value>(8, 99)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -249,7 +417,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(96, 275)</value>
+      <value>(216, 43)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -320,7 +488,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(536, 251)</value>
+      <value>(472, 155)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -340,7 +508,7 @@
     </param>
     <param>
       <key>legend</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>alpha1</key>
@@ -512,7 +680,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>QT GUI Plot</value>
+      <value></value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1235,7 +1403,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(528, 123)</value>
+      <value>(488, 27)</value>
     </param>
     <param>
       <key>_rotation</key>
