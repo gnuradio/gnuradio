@@ -208,20 +208,23 @@ add_dependencies(gnuradio-runtime
 # STATIC LIB BUILD
 #######################################################
 if(ENABLE_STATIC_LIBS)
-  # Remove controlport-specific source files from staticlibs build
+  # Remove controlport-specific source files from staticlibs build if
+  # ICE is the backend since it does not build statically.
   if(ENABLE_GR_CTRLPORT)
-    list(REMOVE_ITEM gnuradio_runtime_sources
-      ${gnuradio_ctrlport_sources}
-      )
+    if(ICE_FOUND)
+      list(REMOVE_ITEM gnuradio_runtime_sources
+        ${gnuradio_ctrlport_sources}
+        )
 
-    # Remove GR_CTRLPORT set this target's definitions.
-    # Makes sure we don't try to use ControlPort stuff in source files
-    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+      # Remove GR_CTRLPORT set this target's definitions.
+      # Makes sure we don't try to use ControlPort stuff in source files
+      GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+      list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+      SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
 
-    # readd it to the target since we removed it from the directory-wide list.
-    SET_PROPERTY(TARGET gnuradio-runtime APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+      # readd it to the target since we removed it from the directory-wide list.
+      SET_PROPERTY(TARGET gnuradio-runtime APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+    endif(ICE_FOUND)
   endif(ENABLE_GR_CTRLPORT)
 
   add_library(gnuradio-runtime_static STATIC ${gnuradio_runtime_sources})
