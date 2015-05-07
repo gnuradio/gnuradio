@@ -46,6 +46,12 @@ install(FILES
     puncture_bb.h
     puncture_ff.h
     depuncture_bb.h
+    ldpc_R_U_mtrx.h
+    ldpc_bit_flip_decoder.h
+    ldpc_R_U_encoder.h
+    ldpc_HorG_mtrx.h
+    ldpc_gen_mtrx_encoder.h
+    fec_mtrx.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"
 )
