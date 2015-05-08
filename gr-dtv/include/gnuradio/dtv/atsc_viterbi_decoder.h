@@ -45,6 +45,12 @@ namespace gr {
        * \brief Make a new instance of gr::dtv::atsc_viterbi_decoder.
        */
       static sptr make();
+
+      /*!
+       * For each decoder, returns the current best state of the
+       * decoding metrics.
+       */
+      virtual std::vector<float> decoder_metrics() const = 0;
     };
 
   } /* namespace dtv */
