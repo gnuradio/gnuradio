@@ -36,14 +36,21 @@ namespace gr {
     class atsc_rs_decoder_impl : public atsc_rs_decoder
     {
     private:
-      int nerrors_corrrected_count;
-      int bad_packet_count;
-      int total_packets;
+      int d_nerrors_corrrected_count;
+      int d_bad_packet_count;
+      int d_total_packets;
+      int d_total_bits;
       void *d_rs;
 
     public:
       atsc_rs_decoder_impl();
       ~atsc_rs_decoder_impl();
+
+      void setup_rpc();
+
+      int num_errors_corrected() const;
+      int num_bad_packets() const;
+      int num_packets() const;
 
       /*!
        * Decode RS encoded packet.

@@ -42,6 +42,21 @@ namespace gr {
       typedef boost::shared_ptr<atsc_rs_decoder> sptr;
 
       /*!
+       * Returns the number of errors corrected by the decoder.
+       */
+      virtual int num_errors_corrected() const = 0;
+
+      /*!
+       * Returns the number of bad packets rejected by the decoder.
+       */
+      virtual int num_bad_packets() const = 0;
+
+      /*!
+       * Returns the total number of packets seen by the decoder.
+       */
+      virtual int num_packets() const = 0;
+
+      /*!
        * \brief Make a new instance of gr::dtv::atsc_rs_decoder.
        */
       static sptr make();
