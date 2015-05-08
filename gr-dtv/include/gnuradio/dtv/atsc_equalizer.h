@@ -47,6 +47,7 @@ namespace gr {
       static sptr make();
 
       virtual std::vector<float> taps() const = 0;
+      virtual std::vector<float> data() const = 0;
     };
 
   } /* namespace dtv */

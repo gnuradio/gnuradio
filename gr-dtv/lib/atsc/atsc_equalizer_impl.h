@@ -62,6 +62,7 @@ namespace gr {
       void setup_rpc();
 
       std::vector<float> taps() const;
+      std::vector<float> data() const;
 
       virtual int general_work(int noutput_items,
                                gr_vector_int &ninput_items,
