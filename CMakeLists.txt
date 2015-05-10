@@ -18,11 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    message(FATAL_ERROR "Prevented in-tree build. This is bad practice.")
-endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-
-########################################################################
 # Project setup
 ########################################################################
 cmake_minimum_required(VERSION 2.6)
