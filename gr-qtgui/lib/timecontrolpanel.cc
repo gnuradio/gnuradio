@@ -163,6 +163,8 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
 	  d_parent, SLOT(autoScaleShot(void)));
   connect(d_stop_button, SIGNAL(pressed(void)),
           d_parent, SLOT(setStop(void)));
+  connect(this, SIGNAL(signalToggleStopButton(void)),
+          d_stop_button, SLOT(toggle(void)));
 }
 
 TimeControlPanel::~TimeControlPanel()
@@ -199,4 +201,10 @@ void
 TimeControlPanel::toggleTriggerSlope(gr::qtgui::trigger_slope slope)
 {
   d_trigger_slope_combo->setCurrentIndex(static_cast<int>(slope));
+}
+
+void
+TimeControlPanel::toggleStopButton()
+{
+  emit signalToggleStopButton();
 }
