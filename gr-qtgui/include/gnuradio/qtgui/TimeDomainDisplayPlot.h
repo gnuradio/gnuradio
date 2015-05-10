@@ -37,6 +37,10 @@ class TimeDomainDisplayPlot: public DisplayPlot
 {
   Q_OBJECT
 
+  Q_PROPERTY ( QColor tag_text_color READ getTagTextColor WRITE setTagTextColor )
+  Q_PROPERTY ( QColor tag_background_color READ getTagBackgroundColor WRITE setTagBackgroundColor )
+  Q_PROPERTY ( Qt::BrushStyle tag_background_style READ getTagBackgroundStyle WRITE setTagBackgroundStyle )
+
 public:
   TimeDomainDisplayPlot(int nplots, QWidget*);
   virtual ~TimeDomainDisplayPlot();
@@ -51,6 +55,10 @@ public:
   void stemPlot(bool en);
 
   double sampleRate() const;
+
+  const QColor getTagTextColor();
+  const QColor getTagBackgroundColor();
+  const Qt::BrushStyle getTagBackgroundStyle();
 
 public slots:
   void setSampleRate(double sr, double units,
@@ -72,6 +80,10 @@ public slots:
   void attachTriggerLines(bool en);
   void setTriggerLines(double x, double y);
 
+  void setTagTextColor(QColor c);
+  void setTagBackgroundColor(QColor c);
+  void setTagBackgroundStyle(Qt::BrushStyle b);
+
 private:
   void _resetXAxisPoints();
   void _autoScale(double bottom, double top);
@@ -87,6 +99,10 @@ private:
 
   std::vector< std::vector<QwtPlotMarker*> > d_tag_markers;
   std::vector<bool> d_tag_markers_en;
+
+  QColor d_tag_text_color;
+  QColor d_tag_background_color;
+  Qt::BrushStyle d_tag_background_style;
 
   QwtPlotMarker *d_trigger_lines[2];
 };
