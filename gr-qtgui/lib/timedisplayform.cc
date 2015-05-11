@@ -196,6 +196,8 @@ TimeDisplayForm::setupControlPanel()
 	  d_controlpanel, SLOT(toggleTriggerSlope(gr::qtgui::trigger_slope)));
   connect(this, SIGNAL(signalTriggerSlope(gr::qtgui::trigger_slope)),
 	  d_controlpanel, SLOT(toggleTriggerSlope(gr::qtgui::trigger_slope)));
+  connect(d_stop_act, SIGNAL(triggered()),
+          d_controlpanel, SLOT(toggleStopButton()));
   d_layout->addLayout(d_controlpanel, 0, 1);
 
   d_controlpanel->toggleAutoScale(d_autoscale_act->isChecked());
