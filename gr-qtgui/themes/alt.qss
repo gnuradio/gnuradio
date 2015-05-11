@@ -27,6 +27,12 @@ DisplayPlot {
     qproperty-axes_label_font_size: 18;
 }
 
+TimeDomainDisplayPlot {
+    qproperty-tag_text_color: blue;
+    qproperty-tag_background_color: grey;
+    qproperty-tag_background_style: Dense4Pattern;
+}
+
 WaterfallDisplayPlot {
     qproperty-intensity_color_map_type1: 5;
     qproperty-low_intensity_color: black;

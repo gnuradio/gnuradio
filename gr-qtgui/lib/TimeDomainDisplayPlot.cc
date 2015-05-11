@@ -135,6 +135,10 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   d_xdata = new double[d_numPoints];
   memset(d_xdata, 0x0, d_numPoints*sizeof(double));
 
+  d_tag_text_color = Qt::black;
+  d_tag_background_color = Qt::white;
+  d_tag_background_style = Qt::NoBrush;
+
   d_zoomer = new TimeDomainDisplayZoomer(canvas(), 0);
 
 #if QWT_VERSION < 0x060000
@@ -381,7 +385,14 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
               QString orig = (*mitr)->label().text();
               s << std::endl;
               orig.prepend(s.str().c_str());
-              (*mitr)->setLabel(orig);
+
+              QwtText newtext(orig);
+              newtext.setColor(getTagTextColor());
+
+              QBrush brush(getTagBackgroundColor(), getTagBackgroundStyle());
+              newtext.setBackgroundBrush(brush);
+
+              (*mitr)->setLabel(newtext);
             }
           }
 
@@ -597,6 +608,43 @@ TimeDomainDisplayPlot::enableTagMarker(int which, bool en)
   else
     throw std::runtime_error("TimeDomainDisplayPlot: enabled tag marker does not exist.\n");
 }
+
+const QColor
+TimeDomainDisplayPlot::getTagTextColor()
+{
+  return d_tag_text_color;
+}
+
+const QColor
+TimeDomainDisplayPlot::getTagBackgroundColor()
+{
+  return d_tag_background_color;
+}
+
+const Qt::BrushStyle
+TimeDomainDisplayPlot::getTagBackgroundStyle()
+{
+  return d_tag_background_style;
+}
+
+void
+TimeDomainDisplayPlot::setTagTextColor(QColor c)
+{
+  d_tag_text_color = c;
+}
+
+void
+TimeDomainDisplayPlot::setTagBackgroundColor(QColor c)
+{
+  d_tag_background_color = c;
+}
+
+void
+TimeDomainDisplayPlot::setTagBackgroundStyle(Qt::BrushStyle b)
+{
+  d_tag_background_style = b;
+}
+
 
 void
 TimeDomainDisplayPlot::setYLabel(const std::string &label,
