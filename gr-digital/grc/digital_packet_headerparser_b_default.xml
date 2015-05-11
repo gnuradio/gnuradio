@@ -19,7 +19,7 @@
     <type>byte</type>
   </sink>
   <source>
-    <name>out</name>
+    <name>header_data</name>
     <type>message</type>
   </source>
 </block>
