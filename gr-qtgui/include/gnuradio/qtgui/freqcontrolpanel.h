@@ -53,9 +53,12 @@ public slots:
 
   void toggleTriggerMode(gr::qtgui::trigger_mode mode);
 
+  void toggleStopButton();
+
 signals:
   void signalAvgSlider(float val);
   void signalAvg(bool en);
+  void signalToggleStopButton();
 
 private:
   FreqDisplayForm *d_parent;
