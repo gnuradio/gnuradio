@@ -47,6 +47,10 @@ public slots:
   void toggleGrid(bool en);
   void toggleTriggerMode(gr::qtgui::trigger_mode mode);
   void toggleTriggerSlope(gr::qtgui::trigger_slope slope);
+  void toggleStopButton();
+
+signals:
+  void signalToggleStopButton();
 
 private:
   TimeDisplayForm *d_parent;
