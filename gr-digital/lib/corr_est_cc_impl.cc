@@ -266,7 +266,7 @@ namespace gr {
         // holds the +/- fraction of a sample index from the found
         // peak index to the estimated actual peak index.
         double center = 0.0;
-        if (i > 0 and i < (noutput_items - 1)) {
+        if (i > 0 && i < (noutput_items - 1)) {
           double nom = 0, den = 0;
           for(int s = 0; s < 3; s++) {
             nom += (s+1)*d_corr_mag[i+s-1];
