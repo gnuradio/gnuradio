@@ -157,7 +157,7 @@ namespace gr {
       d_main_gui->setVecSize(d_vlen);
       set_x_axis(x_start, x_step);
 
-      if(not name.empty())
+      if(! name.empty())
         set_title(name);
       set_x_axis_label(x_axis_label);
       set_y_axis_label(y_axis_label);
@@ -203,7 +203,7 @@ namespace gr {
     void
     vector_sink_f_impl::set_vec_average(const float avg)
     {
-      if (avg < 0 or avg > 1.0) {
+      if (avg < 0 || avg > 1.0) {
         GR_LOG_ALERT(d_logger, "Invalid average value received in set_vec_average(), must be within [0, 1].");
         return;
       }

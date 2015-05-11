@@ -183,7 +183,7 @@ out:
                 d_mu    += d_gain*err_out;
             }
             //output every other d_sps by default.
-            if(!(d_div % 2) or d_osps==2) {
+            if(!(d_div % 2) || d_osps==2) {
                 out[oidx] = in_interp;
                 if(output_items.size() >= 2) out2[oidx] = err_out;
                 if(output_items.size() >= 3) out3[oidx] = d_mu;
