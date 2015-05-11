@@ -517,8 +517,8 @@ void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t &tune_req, int
   if (chan == -1) {
     for (size_t i = 0; i < _nchan; i++) {
       _update_curr_tune_req(tune_req, int(i));
-      return;
     }
+    return;
   }
 
   if (tune_req.target_freq != _curr_tune_req[chan].target_freq ||
