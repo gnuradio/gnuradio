@@ -30,7 +30,7 @@ namespace gr {
   namespace dtv {
 
     dvbt2_p1insertion_cc::sptr
-    dvbt2_p1insertion_cc::make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip)
+    dvbt2_p1insertion_cc::make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip)
     {
       return gnuradio::get_initial_sptr
         (new dvbt2_p1insertion_cc_impl(carriermode, fftsize, guardinterval, numdatasyms, preamble, showlevels, vclip));
@@ -39,7 +39,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip)
+    dvbt2_p1insertion_cc_impl::dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip)
       : gr::block("dvbt2_p1insertion_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)))

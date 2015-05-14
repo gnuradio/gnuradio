@@ -75,5 +75,16 @@
       <block>dtv_dvbs2_modulator_bc</block>
       <block>dtv_dvbs2_physical_cc</block>
     </cat>
+    <cat>
+      <name>DVB-T</name>
+      <block>dtv_dvbt_energy_dispersal</block>
+      <block>dtv_dvbt_reed_solomon_enc</block>
+      <block>dtv_dvbt_convolutional_interleaver</block>
+      <block>dtv_dvbt_inner_coder</block>
+      <block>dtv_dvbt_bit_inner_interleaver</block>
+      <block>dtv_dvbt_symbol_inner_interleaver</block>
+      <block>dtv_dvbt_map</block>
+      <block>dtv_dvbt_reference_signals</block>
+    </cat>
   </cat>
 </cat>

@@ -44,6 +44,7 @@
 #include "gnuradio/dtv/atsc_trellis_encoder.h"
 #include "gnuradio/dtv/atsc_viterbi_decoder.h"
 #include "gnuradio/dtv/dvb_config.h"
+#include "gnuradio/dtv/dvbt_config.h"
 #include "gnuradio/dtv/dvbt2_config.h"
 #include "gnuradio/dtv/dvbs2_config.h"
 #include "gnuradio/dtv/dvb_bbheader_bb.h"
@@ -62,6 +63,14 @@
 #include "gnuradio/dtv/dvbs2_interleaver_bb.h"
 #include "gnuradio/dtv/dvbs2_modulator_bc.h"
 #include "gnuradio/dtv/dvbs2_physical_cc.h"
+#include "gnuradio/dtv/dvbt_energy_dispersal.h"
+#include "gnuradio/dtv/dvbt_reed_solomon_enc.h"
+#include "gnuradio/dtv/dvbt_convolutional_interleaver.h"
+#include "gnuradio/dtv/dvbt_inner_coder.h"
+#include "gnuradio/dtv/dvbt_bit_inner_interleaver.h"
+#include "gnuradio/dtv/dvbt_symbol_inner_interleaver.h"
+#include "gnuradio/dtv/dvbt_map.h"
+#include "gnuradio/dtv/dvbt_reference_signals.h"
 %}
 
 %include "gnuradio/dtv/atsc_deinterleaver.h"
@@ -80,6 +89,7 @@
 %include "gnuradio/dtv/atsc_trellis_encoder.h"
 %include "gnuradio/dtv/atsc_viterbi_decoder.h"
 %include "gnuradio/dtv/dvb_config.h"
+%include "gnuradio/dtv/dvbt_config.h"
 %include "gnuradio/dtv/dvbt2_config.h"
 %include "gnuradio/dtv/dvbs2_config.h"
 %include "gnuradio/dtv/dvb_bbheader_bb.h"
@@ -98,6 +108,14 @@
 %include "gnuradio/dtv/dvbs2_interleaver_bb.h"
 %include "gnuradio/dtv/dvbs2_modulator_bc.h"
 %include "gnuradio/dtv/dvbs2_physical_cc.h"
+%include "gnuradio/dtv/dvbt_energy_dispersal.h"
+%include "gnuradio/dtv/dvbt_reed_solomon_enc.h"
+%include "gnuradio/dtv/dvbt_convolutional_interleaver.h"
+%include "gnuradio/dtv/dvbt_inner_coder.h"
+%include "gnuradio/dtv/dvbt_bit_inner_interleaver.h"
+%include "gnuradio/dtv/dvbt_symbol_inner_interleaver.h"
+%include "gnuradio/dtv/dvbt_map.h"
+%include "gnuradio/dtv/dvbt_reference_signals.h"
 
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_deinterleaver);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_depad);
@@ -130,3 +148,11 @@ GR_SWIG_BLOCK_MAGIC2(dtv, dvbt2_miso_cc);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvbs2_interleaver_bb);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvbs2_modulator_bc);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvbs2_physical_cc);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_energy_dispersal);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_reed_solomon_enc);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_convolutional_interleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_inner_coder);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_bit_inner_interleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_symbol_inner_interleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_map);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_reference_signals);
