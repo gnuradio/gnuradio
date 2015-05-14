@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Map
+###################################################
+ -->
+<block>
+  <name>DVB-T Map</name>
+  <key>dtv_dvbt_map</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_map($transmission_mode.payload_length, $constellation.val, $hierarchy.val, $transmission_mode.val, $gain)</make>
+  <param>
+    <name>Constellation Type</name>
+    <key>constellation</key>
+    <type>enum</type>
+    <option>
+      <name>QPSK</name>
+      <key>qpsk</key>
+      <opt>val:dtv.MOD_QPSK</opt>
+    </option>
+    <option>
+      <name>16QAM</name>
+      <key>16qam</key>
+      <opt>val:dtv.MOD_16QAM</opt>
+    </option>
+    <option>
+      <name>64QAM</name>
+      <key>64qam</key>
+      <opt>val:dtv.MOD_64QAM</opt>
+    </option>
+  </param>
+  <param>
+    <name>Hierarchy Type</name>
+    <key>hierarchy</key>
+    <type>enum</type>
+    <option>
+      <name>Non Hierarchical</name>
+      <key>nh</key>
+      <opt>val:dtv.NH</opt>
+    </option>
+    <option>
+      <name>Alpha 1</name>
+      <key>alpha1</key>
+      <opt>val:dtv.ALPHA1</opt>
+    </option>
+    <option>
+      <name>Alpha 2</name>
+      <key>alpha2</key>
+      <opt>val:dtv.ALPHA2</opt>
+    </option>
+    <option>
+      <name>Alpha 4</name>
+      <key>alpha4</key>
+      <opt>val:dtv.ALPHA4</opt>
+    </option>
+  </param>
+  <param>
+    <name>Transmission Mode</name>
+    <key>transmission_mode</key>
+    <type>enum</type>
+    <option>
+      <name>2K</name>
+      <key>T2k</key>
+      <opt>val:dtv.T2k</opt>
+      <opt>payload_length:1512</opt>
+    </option>
+    <option>
+      <name>8K</name>
+      <key>T8k</key>
+      <opt>val:dtv.T8k</opt>
+      <opt>payload_length:6048</opt>
+    </option>
+  </param>
+  <param>
+    <name>Gain</name>
+    <key>gain</key>
+    <value>1</value>
+    <type>complex</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>$transmission_mode.payload_length</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <vlen>$transmission_mode.payload_length</vlen>
+  </source>
+</block>
