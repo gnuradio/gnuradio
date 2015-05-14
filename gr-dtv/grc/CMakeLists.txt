@@ -52,6 +52,14 @@ install(FILES
     dtv_dvbs2_interleaver_bb.xml
     dtv_dvbs2_modulator_bc.xml
     dtv_dvbs2_physical_cc.xml
+    dtv_dvbt_energy_dispersal.xml
+    dtv_dvbt_reed_solomon_enc.xml
+    dtv_dvbt_convolutional_interleaver.xml
+    dtv_dvbt_inner_coder.xml
+    dtv_dvbt_bit_inner_interleaver.xml
+    dtv_dvbt_symbol_inner_interleaver.xml
+    dtv_dvbt_map.xml
+    dtv_dvbt_reference_signals.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )

@@ -38,6 +38,7 @@ namespace gr {
       C3_4,
       C4_5,
       C5_6,
+      C7_8,
       C8_9,
       C9_10,
       C13_45,
@@ -97,6 +98,16 @@ namespace gr {
       MOD_OTHER,
     };
 
+    enum dvb_guardinterval_t {
+      GI_1_32 = 0,
+      GI_1_16,
+      GI_1_8,
+      GI_1_4,
+      GI_1_128,
+      GI_19_128,
+      GI_19_256,
+    };
+
   } // namespace dtv
 } // namespace gr
 
@@ -104,6 +115,7 @@ typedef gr::dtv::dvb_standard_t dvb_standard_t;
 typedef gr::dtv::dvb_code_rate_t dvb_code_rate_t;
 typedef gr::dtv::dvb_framesize_t dvb_framesize_t;
 typedef gr::dtv::dvb_constellation_t dvb_constellation_t;
+typedef gr::dtv::dvb_guardinterval_t dvb_guardinterval_t;
 
 #endif /* INCLUDED_DTV_DVB_CONFIG_H */
 

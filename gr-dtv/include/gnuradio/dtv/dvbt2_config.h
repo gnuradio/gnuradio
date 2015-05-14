@@ -64,16 +64,6 @@ namespace gr {
       FFTSIZE_16K_T2GI = 11,
     };
 
-    enum dvbt2_guardinterval_t {
-      GI_1_32 = 0,
-      GI_1_16,
-      GI_1_8,
-      GI_1_4,
-      GI_1_128,
-      GI_19_128,
-      GI_19_256,
-    };
-
     enum dvbt2_papr_t {
       PAPR_OFF = 0,
       PAPR_ACE,
@@ -153,7 +143,6 @@ typedef gr::dtv::dvbt2_inputmode_t dvbt2_inputmode_t;
 typedef gr::dtv::dvbt2_extended_carrier_t dvbt2_extended_carrier_t;
 typedef gr::dtv::dvbt2_preamble_t dvbt2_preamble_t;
 typedef gr::dtv::dvbt2_fftsize_t dvbt2_fftsize_t;
-typedef gr::dtv::dvbt2_guardinterval_t dvbt2_guardinterval_t;
 typedef gr::dtv::dvbt2_papr_t dvbt2_papr_t;
 typedef gr::dtv::dvbt2_l1constellation_t dvbt2_l1constellation_t;
 typedef gr::dtv::dvbt2_pilotpattern_t dvbt2_pilotpattern_t;
