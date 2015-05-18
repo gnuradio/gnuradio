@@ -120,11 +120,13 @@ namespace gr {
       d_filter->filter(noutput_items, in, corr);
 
       // Find the magnitude squared of the correlation
-      std::vector<float> corr_mag(noutput_items);
+      std::vector<float> corr_mag(noutput_items+1);
       volk_32fc_magnitude_squared_32f(&corr_mag[0], corr, noutput_items);
 
+      // Avoid buffer overflow from nested while, putting a stopper at the end
+      corr_mag[noutput_items]=0;	
       int i = d_sps;
-      while(i < noutput_items) {
+      while(i < (noutput_items-1)) {
         if((corr_mag[i] - corr_mag[i-d_sps]) > d_thresh) {
           while(corr_mag[i] < corr_mag[i+1])
             i++;
