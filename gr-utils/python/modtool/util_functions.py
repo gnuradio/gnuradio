@@ -71,10 +71,17 @@ def strip_default_values(string):
     return re.sub(' *=[^,)]*', '', string)
 
 def strip_arg_types(string):
-    """" Strip the argument types from a list of arguments
-    Example: "int arg1, double arg2" -> "arg1, arg2" """
+    """"
+    Strip the argument types from a list of arguments.
+    Example: "int arg1, double arg2" -> "arg1, arg2"
+    Note that some types have qualifiers, which also are part of
+    the type, e.g. "const std::string &name" -> "name", or
+    "const char *str" -> "str".
+    """
     string = strip_default_values(string)
-    return ", ".join([part.strip().split(' ')[-1] for part in string.split(',')]).replace('&', '')
+    return ", ".join(
+                [part.strip().split(' ')[-1] for part in string.split(',')]
+            ).translate(None, '*&')
 
 def strip_arg_types_grc(string):
     """" Strip the argument types from a list of arguments for GRC make tag.
