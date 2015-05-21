@@ -196,6 +196,8 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
 
   connect(d_stop_button, SIGNAL(pressed(void)),
           d_parent, SLOT(setStop(void)));
+  connect(this, SIGNAL(signalToggleStopButton(void)),
+          d_stop_button, SLOT(toggle(void)));
 }
 
 FreqControlPanel::~FreqControlPanel()
@@ -272,4 +274,10 @@ void
 FreqControlPanel::toggleTriggerMode(gr::qtgui::trigger_mode mode)
 {
   d_trigger_mode_combo->setCurrentIndex(static_cast<int>(mode));
+}
+
+void
+FreqControlPanel::toggleStopButton()
+{
+  emit signalToggleStopButton();
 }

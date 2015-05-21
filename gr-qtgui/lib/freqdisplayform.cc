@@ -193,6 +193,8 @@ FreqDisplayForm::setupControlPanel()
 	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
   connect(this, SIGNAL(signalTriggerMode(gr::qtgui::trigger_mode)),
 	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
+  connect(d_stop_act, SIGNAL(triggered()),
+          d_controlpanel, SLOT(toggleStopButton()));
 
   d_layout->addLayout(d_controlpanel, 0, 1);
 

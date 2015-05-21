@@ -28,7 +28,7 @@
 
 namespace gr {
   namespace digital {
-    
+
     class additive_scrambler_bb_impl
       : public additive_scrambler_bb
     {
