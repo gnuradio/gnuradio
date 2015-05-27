@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Energy Dispersal
+###################################################
+ -->
+<block>
+  <name>Energy Dispersal</name>
+  <key>dtv_dvbt_energy_dispersal</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_energy_dispersal($nsize)</make>
+  <param>
+    <name>Blocks(1504 Bytes)</name>
+    <key>nsize</key>
+    <value>8</value>
+    <type>int</type>
+  </param>
+  <check>$nsize &gt; 0</check>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>1</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>1504*$nsize</vlen>
+  </source>
+</block>

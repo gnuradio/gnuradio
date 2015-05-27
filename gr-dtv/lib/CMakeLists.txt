@@ -94,6 +94,16 @@ list(APPEND dtv_sources
   dvbs2/dvbs2_interleaver_bb_impl.cc
   dvbs2/dvbs2_modulator_bc_impl.cc
   dvbs2/dvbs2_physical_cc_impl.cc
+  dvbt/dvbt_energy_dispersal_impl.cc
+  dvbt/dvbt_reed_solomon.cc
+  dvbt/dvbt_reed_solomon_enc_impl.cc
+  dvbt/dvbt_convolutional_interleaver_impl.cc
+  dvbt/dvbt_configure.cc
+  dvbt/dvbt_inner_coder_impl.cc
+  dvbt/dvbt_bit_inner_interleaver_impl.cc
+  dvbt/dvbt_symbol_inner_interleaver_impl.cc
+  dvbt/dvbt_map_impl.cc
+  dvbt/dvbt_reference_signals_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)

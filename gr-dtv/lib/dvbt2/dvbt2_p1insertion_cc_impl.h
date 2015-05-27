@@ -67,7 +67,7 @@ namespace gr {
       const static unsigned char s2_modulation_patterns[16][32];
 
      public:
-      dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip);
+      dvbt2_p1insertion_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip);
       ~dvbt2_p1insertion_cc_impl();
 
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
