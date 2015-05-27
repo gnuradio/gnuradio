@@ -45,7 +45,11 @@ namespace gr {
 		    io_signature::make(0, 0, 0),
 		    io_signature::make(1, 1, sizeof(@TYPE@))),
       d_type(type),
+#if @IS_COMPLEX@	// complex?
+      d_ampl(ampl/sqrtf(2.0f)),
+#else
       d_ampl(ampl),
+#endif
       d_rng(seed)
     {
     }
@@ -65,7 +69,11 @@ namespace gr {
     @IMPL_NAME@::set_amplitude(float ampl)
     {
       gr::thread::scoped_lock l(d_setlock);
+#if @IS_COMPLEX@	// complex?
+      d_ampl = ampl/sqrtf(2.0f);
+#else
       d_ampl = ampl;
+#endif
     }
 
     int
@@ -129,4 +137,3 @@ namespace gr {
 
   } /* namespace analog */
 } /* namespace gr */
-
