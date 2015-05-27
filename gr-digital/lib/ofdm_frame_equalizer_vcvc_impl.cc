@@ -167,7 +167,7 @@ namespace gr {
       get_tags_in_window(tags, 0, 0, frame_len);
       for (size_t i = 0; i < tags.size(); i++) {
         if (tags[i].key != CHAN_TAPS_KEY
-            and tags[i].key != pmt::mp(d_length_tag_key_str)) {
+            && tags[i].key != pmt::mp(d_length_tag_key_str)) {
           add_item_tag(0, tags[i]);
         }
       }
