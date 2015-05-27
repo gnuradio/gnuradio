@@ -29,7 +29,7 @@ namespace gr {
   namespace dtv {
 
     dvbt2_miso_cc::sptr
-    dvbt2_miso_cc::make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode)
+    dvbt2_miso_cc::make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode)
     {
       return gnuradio::get_initial_sptr
         (new dvbt2_miso_cc_impl(carriermode, fftsize, pilotpattern, guardinterval, numdatasyms, paprmode));
@@ -38,7 +38,7 @@ namespace gr {
     /*
      * The private constructor
      */
-    dvbt2_miso_cc_impl::dvbt2_miso_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode)
+    dvbt2_miso_cc_impl::dvbt2_miso_cc_impl(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode)
       : gr::sync_block("dvbt2_miso_cc",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(2, 2, sizeof(gr_complex)))
