@@ -22,6 +22,7 @@
 #define INCLUDED_DTV_DVBT2_PAPRTR_CC_H
 
 #include <gnuradio/dtv/api.h>
+#include <gnuradio/dtv/dvb_config.h>
 #include <gnuradio/dtv/dvbt2_config.h>
 #include <gnuradio/sync_block.h>
 
@@ -54,7 +55,7 @@ namespace gr {
        * \param iterations PAPR algorithm number of iterations.
        * \param vlength input and output vector length.
        */
-      static sptr make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode, dvbt2_version_t version, float vclip, int iterations, int vlength);
+      static sptr make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_pilotpattern_t pilotpattern, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_papr_t paprmode, dvbt2_version_t version, float vclip, int iterations, int vlength);
     };
 
   } // namespace dtv

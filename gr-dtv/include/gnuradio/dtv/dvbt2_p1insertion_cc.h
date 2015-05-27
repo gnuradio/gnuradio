@@ -22,6 +22,7 @@
 #define INCLUDED_DTV_DVBT2_P1INSERTION_CC_H
 
 #include <gnuradio/dtv/api.h>
+#include <gnuradio/dtv/dvb_config.h>
 #include <gnuradio/dtv/dvbt2_config.h>
 #include <gnuradio/block.h>
 
@@ -51,7 +52,7 @@ namespace gr {
        * \param showlevels print peak IQ levels.
        * \param vclip set peak IQ level threshold.
        */
-      static sptr make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvbt2_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip);
+      static sptr make(dvbt2_extended_carrier_t carriermode, dvbt2_fftsize_t fftsize, dvb_guardinterval_t guardinterval, int numdatasyms, dvbt2_preamble_t preamble, dvbt2_showlevels_t showlevels, float vclip);
     };
 
   } // namespace dtv

@@ -39,6 +39,7 @@ install(FILES
     atsc_trellis_encoder.h
     atsc_field_sync_mux.h
     dvb_config.h
+    dvbt_config.h
     dvbs2_config.h
     dvbt2_config.h
     dvb_bbheader_bb.h
@@ -57,6 +58,14 @@ install(FILES
     dvbs2_interleaver_bb.h
     dvbs2_modulator_bc.h
     dvbs2_physical_cc.h
+    dvbt_energy_dispersal.h
+    dvbt_reed_solomon_enc.h
+    dvbt_convolutional_interleaver.h
+    dvbt_inner_coder.h
+    dvbt_bit_inner_interleaver.h
+    dvbt_symbol_inner_interleaver.h
+    dvbt_map.h
+    dvbt_reference_signals.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
     COMPONENT "dtv_devel"
 )
