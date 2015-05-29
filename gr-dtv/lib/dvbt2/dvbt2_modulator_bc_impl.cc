@@ -556,7 +556,7 @@ namespace gr {
         case MOD_64QAM:
           for (int i = 0; i < noutput_items; i += cell_size) {
             if (cyclic_delay == FALSE) {
-              for (int j = 0; j < noutput_items; j++) {
+              for (int j = 0; j < cell_size; j++) {
                 index = *in++;
                 *out++ = m_64qam[index & 0x3f];
               }
