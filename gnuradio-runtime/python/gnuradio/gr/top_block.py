@@ -63,11 +63,13 @@ class _top_block_waiter(_threading.Thread):
         top_block_wait_unlocked(self.tb)
         self.event.set()
 
-    def wait(self):
+    def wait(self, handle_sigint=True):
         try:
-            while not self.event.isSet():
-                self.event.wait(0.100)
+            while not self.event.wait(0.1):
+                pass
         except KeyboardInterrupt:
+            if not handle_sigint:
+                raise
             self.tb.stop()
             self.wait()
 
@@ -98,6 +100,7 @@ class top_block(hier_block2):
         """
         # not calling hier_block2.__init__, we set our own _impl
         self._impl = top_block_swig(name)
+        self.handle_sigint = True
 
     def start(self, max_noutput_items=10000000):
         """
@@ -128,7 +131,7 @@ class top_block(hier_block2):
         """
         Wait for the flowgraph to finish running
         """
-        _top_block_waiter(self._impl).wait()
+        _top_block_waiter(self._impl).wait(self.handle_sigint)
 
     def dot_graph(self):
         """
