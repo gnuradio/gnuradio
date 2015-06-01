@@ -68,7 +68,8 @@ namespace gr {
       : gr::block("dvbt_energy_dispersal",
           gr::io_signature::make(1, 1, sizeof(unsigned char)),
           gr::io_signature::make(1, 1, sizeof(unsigned char) * nblocks * d_npacks * d_psize)),
-      d_nblocks(nblocks)
+      d_nblocks(nblocks),
+      d_reg(0xa9)
     {
       set_relative_rate(1.0/(double) (d_nblocks * d_npacks * d_psize));
     }

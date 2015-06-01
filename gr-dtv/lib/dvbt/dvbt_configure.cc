@@ -101,6 +101,9 @@ namespace gr {
     {
       d_symbols_per_frame = 68;
       d_frames_per_superframe = 4;
+      d_symbol_index = 0;
+      d_frame_index = 0;
+      d_superframe_index = 0;
 
       switch (d_transmission_mode) {
         case T2k:

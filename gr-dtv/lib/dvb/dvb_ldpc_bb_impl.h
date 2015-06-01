@@ -42,7 +42,6 @@ namespace gr {
       unsigned int nbch;
       unsigned int code_rate;
       unsigned int q_val;
-      unsigned int table_length;
       unsigned int dvb_standard;
       void ldpc_lookup_generate(void);
       ldpc_encode_table ldpc_encode;

@@ -166,6 +166,10 @@ namespace gr {
         d_tps_carriers = d_tps_carriers_2k;
       }
 
+      d_freq_offset = 0;
+      d_carrier_freq_correction = 0.0;
+      d_sampling_freq_correction = 0.0;
+
       //allocate PRBS buffer
       d_wk = new char[d_Kmax - d_Kmin + 1];
       if (d_wk == NULL) {

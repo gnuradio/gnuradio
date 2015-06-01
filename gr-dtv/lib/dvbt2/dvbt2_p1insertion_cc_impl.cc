@@ -45,7 +45,6 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {
       int s1, s2, index = 0;
-      int fef_present = FALSE;    /* for testing only */
       const gr_complex *in = (const gr_complex *) p1_freq;
       gr_complex *out = (gr_complex *) p1_time;
       s1 = preamble;
@@ -103,9 +102,6 @@ namespace gr {
       }
       init_p1_randomizer();
       s2 = (fftsize & 0x7) << 1;
-      if (fef_present == TRUE) {
-        s2 |= 1;
-      }
       for (int i = 0; i < 8; i++) {
         for (int j = 7; j >= 0; j--) {
           modulation_sequence[index++] = (s1_modulation_patterns[s1][i] >> j) & 0x1;

@@ -500,6 +500,8 @@ namespace gr {
           dy = 16;
           break;
       }
+      shift = 0;
+      papr_map = p2_papr_map;
       fft_size = fftsize;
       pilot_pattern = pilotpattern;
       carrier_mode = carriermode;
