@@ -123,8 +123,9 @@ def to_file(nested_data, xml_file):
         xml_data += etree.tostring(etree.ProcessingInstruction(
             'grc', ' '.join(
                 "{0}='{1}'".format(*item) for item in instructions.iteritems())
-        ), xml_declaration=True, pretty_print=True)
-    xml_data += etree.tostring(_to_file(nested_data)[0], pretty_print=True)
+        ), xml_declaration=True, pretty_print=True, encoding='utf-8')
+    xml_data += etree.tostring(_to_file(nested_data)[0],
+                               pretty_print=True, encoding='utf-8')
     with open(xml_file, 'w') as fp:
         fp.write(xml_data)
 
@@ -147,7 +148,7 @@ def _to_file(nested_data):
         for value in values:
             node = etree.Element(key)
             if isinstance(value, (str, unicode)):
-                node.text = value
+                node.text = unicode(value)
             else:
                 node.extend(_to_file(value))
             nodes.append(node)
