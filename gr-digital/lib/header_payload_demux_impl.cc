@@ -221,7 +221,13 @@ namespace gr {
 	  in += d_itemsize;
 	  nread++;
 	  d_state = STATE_FIND_TRIGGER;
-	  // Fall through
+	  // The following break was added to this state as well as STATE_FIND_TRIGGER
+      // and STATE_HEADER. There appears to be a bug somewhere in this code without
+      // the breaks that can lead to failure of this block. With the breaks in the code
+      // testing has shown more stable performance with various block paramters.
+      // If an offset calculation bug is found and fixed, it should be possible to 
+      // remove these breaks for some performance increase.
+    break; 
 
 	case STATE_FIND_TRIGGER:
 	  trigger_offset = find_trigger_signal(nread, noutput_items, input_items);
@@ -234,7 +240,7 @@ namespace gr {
 	  consume_each (trigger_offset);
 	  in += trigger_offset * d_itemsize;
 	  d_state = STATE_HEADER;
-	  // Fall through
+    break;
 
 	case STATE_HEADER:
 	  if (check_items_available(d_header_len, ninput_items, noutput_items, nread)) {
@@ -262,7 +268,7 @@ namespace gr {
 	  consume_each (nread);
 	  in += nread * d_itemsize;
 	  d_state = STATE_PAYLOAD;
-	  // Fall through
+    break;
 
 	case STATE_PAYLOAD:
 	  if (check_items_available(d_curr_payload_len, ninput_items, noutput_items, nread)) {
@@ -274,7 +280,7 @@ namespace gr {
 	    set_min_noutput_items(d_output_symbols ? 1 : (d_items_per_symbol + d_gi));
 	    d_state = STATE_FIND_TRIGGER;
 	  }
-	  break;
+	break;
 
 	default:
 	  throw std::runtime_error("invalid state");
