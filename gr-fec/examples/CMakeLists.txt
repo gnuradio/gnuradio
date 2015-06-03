@@ -19,12 +19,19 @@
 
 include(GrPython)
 
+## Configure GRC example to point to the right alist_files directory
+set(ALIST_FILE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${GR_PKG_DATA_DIR}/fec/ldpc/")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/ber_curve_gen_ldpc.grc"
+    "${CMAKE_CURRENT_BINARY_DIR}/ber_curve_gen_ldpc.grc"
+)
+
 install(
     FILES
     271.127.3.112
     ber_test.grc
     ber_curve_gen.grc
-    ber_curve_gen_ldpc.grc
+    ${CMAKE_CURRENT_BINARY_DIR}/ber_curve_gen_ldpc.grc
     fecapi_decoders.grc
     fecapi_encoders.grc
     fecapi_async_decoders.grc

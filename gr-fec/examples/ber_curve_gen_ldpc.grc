@@ -6,7 +6,7 @@
     <key>options</key>
     <param>
       <key>id</key>
-      <value>ber_curve_gen</value>
+      <value>ber_curve_gen_ldpc</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -647,7 +647,7 @@
     </param>
     <param>
       <key>filename</key>
-      <value>n_1800_k_0902_gap_28.alist</value>
+      <value>"@ALIST_FILE_INSTALL_DIR@"+"n_1800_k_0902_gap_28.alist"</value>
     </param>
     <param>
       <key>gap</key>
@@ -1097,7 +1097,7 @@
     </param>
     <param>
       <key>filename</key>
-      <value>simple_g_matrix.alist</value>
+      <value>"@ALIST_FILE_INSTALL_DIR@"+"simple_g_matrix.alist"</value>
     </param>
     <param>
       <key>alias</key>
