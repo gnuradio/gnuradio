@@ -95,6 +95,7 @@ if(ENABLE_PYTHON)
 endif(ENABLE_PYTHON)
 add_subdirectory(examples)
 add_subdirectory(doc)
+add_subdirectory(ldpc_alist)
 
 ########################################################################
 # Create Pkg Config File
