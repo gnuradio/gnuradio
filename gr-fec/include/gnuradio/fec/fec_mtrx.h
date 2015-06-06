@@ -75,7 +75,7 @@ namespace gr {
          * \brief Read the matrix from a file in alist format
          * \param filename Name of an alist file to use. The alist
          *                 format is described at:
-         *                 http://www.inference.phy.cam.ac.uk/mackaycodes/alist.html
+         *                 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
          */
         gsl_matrix *read_matrix_from_file(const std::string filename);
 

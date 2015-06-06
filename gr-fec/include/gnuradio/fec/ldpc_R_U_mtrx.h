@@ -69,7 +69,7 @@ namespace gr {
          * \brief Constructor given alist file and gap
          * \param filename Name of an alist file to use. The alist
          *                 format is described at:
-         *                 http://www.inference.phy.cam.ac.uk/mackaycodes/alist.html
+         *                 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
          * \param gap A property of the matrix being used. For alist
          *            files distributed with GNU Radio, this value
          *            is specified in the alist filename. The gap is
