@@ -73,7 +73,7 @@ This block creates a LDPC Generator Matrix Encoder Definition variable.
 
 LDPC Matrix ID: Provide the ID of a LDPC Matrix variable block.
 
-This encoder generates a codeword from the simple matrix multiplication equation:
+This encoder generates a codeword via simple matrix multiplication:
 codeword = G_transpose*info_word
 
     </doc>

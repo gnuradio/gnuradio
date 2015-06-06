@@ -33,44 +33,82 @@
 namespace gr {
   namespace fec {
     namespace code {
+
+      /*!
+       * \brief Base class for FEC matrix objects.
+       *
+       *
+       * \ingroup error_coding_blk
+       *
+       * \details
+       *
+       * Base class of ldpc_HorG_mtrx and ldpc_R_U_mtrx classes.
+       * The child objects can be either generator matrices or
+       * parity check matrices. This base class can be provided to
+       * the decoder ldpc_bit_flip_decoder, whereas the encoder
+       * classes ldpc_gen_mtrx_encoder and ldpc_R_U_encoder will
+       * not accept this base class; they require one of the child
+       * classes.
+       */
       class FEC_API fec_mtrx
       {
       protected:
-        // Constructor
+        //! Constructor
         fec_mtrx();
-        // Codeword length n
+
+        //! Codeword length n
         unsigned int d_n;
-        // Information word length k
+
+        //! Information word length k
         unsigned int d_k;
-        // Number of rows in the matrix read in from alist file
+
+        //! Number of rows in the matrix read in from alist file
         unsigned int d_num_rows;
-        // Number of columns in the matrix read in from alist file
+
+        //! Number of columns in the matrix read in from alist file
         unsigned int d_num_cols;
-        // GSL matrix structure for the parity check matrix
+
+        //! GSL matrix structure for the parity check matrix
         gsl_matrix *d_H_ptr;
-        // Read the matrix from a file in alist format
+
+        /*!
+         * \brief Read the matrix from a file in alist format
+         * \param filename Name of an alist file to use. The alist
+         *                 format is described at:
+         *                 http://www.inference.phy.cam.ac.uk/mackaycodes/alist.html
+         */
         gsl_matrix *read_matrix_from_file(const std::string filename);
-        // Flag for whether or not the parity bits come first or last
+
+        //! Flag for whether or not the parity bits come first or last
         bool d_par_bits_last;
         
       public:
-        // Returns the parity check matrix H (needed by decoder)
+        //! Returns the parity check matrix H (needed by decoder)
         const gsl_matrix *H() const;
-        // Get the codeword length n
+
+        //!Get the codeword length n
         unsigned int n() const;
-        // Get the information word length k
+
+        //! Get the information word length k
         unsigned int k() const;
 
-        // Subtract matrices using mod2 operation
+        //! Subtract matrices using mod2 operations
         gsl_matrix *add_matrices_mod2(const gsl_matrix *,
                                       const gsl_matrix *) const;
-        // Perform matrix multiplication using mod 2 operations
+
+        //! Multiply matrices using mod2 operations
         gsl_matrix *mult_matrices_mod2(const gsl_matrix *,
                                        const gsl_matrix *) const;
-        // Find the inverse of a square matrix using modulo 2
-        // operations
+
+        //! Invert a square matrix using mod2 operations
         gsl_matrix *calc_inverse_mod2(const gsl_matrix *) const;
-        // The decoder will need to know this
+
+        /*!
+         * \brief Get Boolean for whether or not parity bits come first or last
+         * \details
+         * The decoder will need to know if the parity bits are
+         * coming first or last
+         */
         bool parity_bits_come_last() const;
 
         virtual ~fec_mtrx(); 

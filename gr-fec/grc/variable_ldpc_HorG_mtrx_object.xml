@@ -34,15 +34,15 @@ This variable can be used by:
   1) LDPC Generator Matrix Encoder Definition block
   2) LDPC Bit Flip Decoder Definition block
 
-A filename must be provided for a generator matrix in alist format. The format of alist files is described at: 
-http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
-
-The provided alist file can contain either:
+Provide an alist file, which may contain either:
 
 1) Generator matrix, G, in the standard format G = [I P], where I is an identity matrix and P is the parity submatrix.
 
 or
 
 2) Parity matrix, H, in the standard format H = [P' I], where P' is the transpose of the parity submatrix and I is an identity matrix.
+
+The format of alist files is described at:
+http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
     </doc>
 </block>
