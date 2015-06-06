@@ -30,29 +30,34 @@ namespace gr {
     namespace code {
 
       /*!
-       * \brief LDPC Generic Encoder (method by Richardson & Urbanke)
+       * \brief LDPC generator matrix encoder
        * \ingroup error_coding_blk
        *
        * \details
        * A standard encoder class. This method is discussed in many
-         textbooks. One is: Turbo Coding for Satellite and Wireless
-         Communications by Soleymani, Gao, and Vilaipornsawai.
-         The generator matrix G must be in systematic form, 
-         G = [I P], where I is an identity matrix and P is the
-         parity submatrix.
+       * textbooks; one is: Turbo Coding for Satellite and Wireless
+       * Communications by Soleymani, Gao, and Vilaipornsawai.
+       * Given a generator matrix in systematic form,
+       * \f$\mathbf{G}=\left[\mathbf{I}_{k}|\mathbf{P}\right]\f$,
+       * where \f$\mathbf{I}_{k}\f$ is the identity matrix and
+       * \f$\mathbf{P}\f$ is the parity submatrix, the information
+       * word \f$\bar{s}\f$ is encoded into a codeword
+       * \f$\overline{x}\f$ via:
+       * \f[\overline{x}=\mathbf{G}^{T}\bar{s}\f]
        */
       class FEC_API ldpc_gen_mtrx_encoder : virtual public generic_encoder
       {
       public:
         /*!
-         * Build an encoding FEC API object.
-         *
-         * \param G_obj The generator matrix object to use
-         *        for encoding.
-        */
+         * \brief Build an encoding FEC API object.
+         * \param M_obj The ldpc_HorG_mtrx object to use for
+         *              encoding.
+         */
         static generic_encoder::sptr make(const ldpc_HorG_mtrx *M_obj);
 
         /*!
+         * \brief  Sets the uncoded frame size to \p frame_size.
+         * \details
          * Sets the uncoded frame size to \p frame_size. If \p
          * frame_size is greater than the value given to the
          * constructor, the frame size will be capped by that initial
@@ -61,9 +66,7 @@ namespace gr {
          */
         virtual bool set_frame_size(unsigned int frame_size) = 0;
 
-        /*!
-         * Returns the coding rate of this encoder.
-         */
+        //! Returns the coding rate of this encoder.
         virtual double rate() = 0;
       };
     } /* namespace code */

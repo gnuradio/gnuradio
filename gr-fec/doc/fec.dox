@@ -365,7 +365,7 @@ going into an encoder and the number of bits coming out of a decoder.
 \section fec_examples FEC Examples
 
 \li ber_curve_gen.grc
-\li ber_curve_gen_ldpc
+\li ber_curve_gen_ldpc.grc
 \li ber_test.grc
 \li fecapi_decoders.grc
 \li fecapi_encoders.grc

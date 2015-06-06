@@ -30,27 +30,38 @@ namespace gr {
     namespace code {
 
       /*!
-       * \brief LDPC Generic Encoder (method by Richardson & Urbanke)
+       * \brief LDPC generic encoder (method by Richardson & Urbanke)
        * \ingroup error_coding_blk
        *
        * \details
        * A generic LDPC encoder class. This encoding method is
        * described by Richardson and Urbanke in Appendix A of their
        * book Modern Coding Theory (ISBN 978-0-521-85229-6).
+       *
+       * Summary of the steps:
+       * 1. Let \f$\overline{s}\f$ be the information word to be
+       *    encoded.
+       * 2. Define \f$\overline{p}_{1}^{T}=T\left[A\overline{p}_{2}^{T}+B\overline{s}^{T}\right]\f$
+       * 3. Define \f$\overline{p}_{2}^{T}=-\phi^{-1}\left[D-ET^{-1}B\right]\overline{s}^{T}\f$
+       * 4. Taking advantage of \f$T\f$ being square and upper
+       *    triangular, use back substitution to solve for
+       *    \f$\overline{p}_{1}\f$ and \f$\overline{p}_{2}\f$.
+       * 5. The codeword is given by: \f$\overline{x}=\left[\overline{p}_{1},\overline{p}_{2},\overline{s}\right]\f$
        */
       class FEC_API ldpc_R_U_encoder : virtual public generic_encoder
       {
       public:
         /*!
-         * Build an encoding FEC API object.
-         *
-         * \param H_obj The LDPC parity check matrix object to use
-         *        for encoding. This is the same matrix used for
-         *        decoding. 
+         * \brief Build an encoding FEC API object.
+         * \param H_obj The ldpc_R_U_mtrx object to use for
+         *              encoding. The decoder must be given this
+         *              same matrix object of course.
         */
         static generic_encoder::sptr make(const ldpc_R_U_mtrx *H_obj);
 
         /*!
+         * \brief  Sets the uncoded frame size to \p frame_size.
+         * \details
          * Sets the uncoded frame size to \p frame_size. If \p
          * frame_size is greater than the value given to the
          * constructor, the frame size will be capped by that initial
@@ -59,9 +70,7 @@ namespace gr {
          */
         virtual bool set_frame_size(unsigned int frame_size) = 0;
 
-        /*!
-         * Returns the coding rate of this encoder.
-         */
+        //! Returns the coding rate of this decoder.
         virtual double rate() = 0;
       };
     } /* namespace code */
