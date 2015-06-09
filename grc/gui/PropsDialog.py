@@ -145,7 +145,8 @@ class PropsDialog(gtk.Dialog):
         old_hash = self._hash
         # create a tuple of things from each param that affects the params box
         self._hash = hash(tuple([(
-            hash(param), param.get_type(), param.get_hide() == 'all',
+            hash(param), param.get_name(), param.get_type(),
+            param.get_hide() == 'all',
         ) for param in self._block.get_params()]))
         return self._hash != old_hash
 
