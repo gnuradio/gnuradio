@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-import signal
 from Constants import IMAGE_FILE_EXTENSION
 import Actions
 import pygtk
@@ -38,6 +37,7 @@ from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveRe
 from . Constants import DEFAULT_CANVAS_SIZE
 
 gobject.threads_init()
+
 
 class ActionHandler:
     """

@@ -19,10 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from collections import defaultdict
 
+from .. base.Constants import BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI
 from .. base.Block import Block as _Block
 from .. gui.Block import Block as _GUIBlock
 from . FlowGraph import _variable_matcher
 import extract_docs
+
 
 class Block(_Block, _GUIBlock):
 
@@ -99,12 +101,21 @@ class Block(_Block, _GUIBlock):
                 self.get_parent().evaluate(value)
             except Exception as err:
                 self.add_error_message('Value "%s" cannot be evaluated:\n%s' % (value, err))
+
         # check if this is a GUI block and matches the selected generate option
         current_generate_option = self.get_parent().get_option('generate_options')
-        for label, option in (('WX GUI', 'wx_gui'), ('QT GUI', 'qt_gui')):
-            if self.get_name().startswith(label) and current_generate_option != option:
+
+        def check_generate_mode(label, flag, valid_options):
+            block_requires_mode = (
+                flag in self.get_flags() or
+                self.get_name().upper().startswith(label)
+            )
+            if block_requires_mode and current_generate_option not in valid_options:
                 self.add_error_message("Can't generate this block in mode " +
                                        repr(current_generate_option))
+
+        check_generate_mode('WX GUI', BLOCK_FLAG_NEED_WX_GUI, ('wx_gui',))
+        check_generate_mode('QT GUI', BLOCK_FLAG_NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
 
     def rewrite(self):
         """

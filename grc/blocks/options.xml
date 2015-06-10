@@ -19,7 +19,7 @@ import wx
 from PyQt4 import Qt
 import sys
 #end if
-#if $generate_options() != 'hb'
+#if not $generate_options().startswith('hb')
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
 from gnuradio import eng_notation
@@ -76,13 +76,17 @@ else: self.stop(); self.wait()</callback>
 			<name>Hier Block</name>
 			<key>hb</key>
 		</option>
+		<option>
+			<name>QT GUI Hier Block</name>
+			<key>hb_qt_gui</key>
+		</option>
 	</param>
 	<param>
 		<name>Category</name>
 		<key>category</key>
 		<value>Custom</value>
 		<type>string</type>
-		<hide>#if $generate_options() == 'hb' then 'none' else 'all'#</hide>
+		<hide>#if $generate_options().startswith('hb') then 'none' else 'all'#</hide>
 	</param>
 	<param>
 		<name>Run Options</name>
@@ -129,7 +133,7 @@ else: self.stop(); self.wait()</callback>
 		<key>max_nouts</key>
 		<value>0</value>
 		<type>int</type>
-		<hide>#if $generate_options() == 'hb'
+		<hide>#if $generate_options().startswith('hb')
 all#slurp
 #elif $max_nouts()
 none#slurp
@@ -142,7 +146,7 @@ part#slurp
 		<key>realtime_scheduling</key>
 		<value></value>
 		<type>enum</type>
-		<hide>#if $generate_options() == 'hb'
+		<hide>#if $generate_options().startswith('hb')
 all#slurp
 #elif $realtime_scheduling()
 none#slurp
