@@ -29,7 +29,7 @@ import subprocess
 import Preferences
 from threading import Thread
 import Messages
-from .. base import ParseXML
+from .. base import ParseXML, Constants
 from MainWindow import MainWindow
 from PropsDialog import PropsDialog
 from ParserErrorsDialog import ParserErrorsDialog
@@ -168,6 +168,11 @@ class ActionHandler:
                 self.get_page().set_saved(False)
         elif action == Actions.BLOCK_DISABLE:
             if self.get_flow_graph().enable_selected(False):
+                self.get_flow_graph().update()
+                self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
+                self.get_page().set_saved(False)
+        elif action == Actions.BLOCK_BYPASS:
+            if self.get_flow_graph().bypass_selected():
                 self.get_flow_graph().update()
                 self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
                 self.get_page().set_saved(False)
@@ -553,23 +558,34 @@ class ActionHandler:
         ##################################################
         # Global Actions for all States
         ##################################################
+        selected_block = self.get_flow_graph().get_selected_block()
+        selected_blocks = self.get_flow_graph().get_selected_blocks()
+
         #update general buttons
         Actions.ERRORS_WINDOW_DISPLAY.set_sensitive(not self.get_flow_graph().is_valid())
         Actions.ELEMENT_DELETE.set_sensitive(bool(self.get_flow_graph().get_selected_elements()))
-        Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(self.get_flow_graph().get_selected_block()))
-        Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.BLOCK_ROTATE_CW.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+        Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(selected_block))
+        Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(selected_blocks))
+        Actions.BLOCK_ROTATE_CW.set_sensitive(bool(selected_blocks))
         #update cut/copy/paste
-        Actions.BLOCK_CUT.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.BLOCK_COPY.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+        Actions.BLOCK_CUT.set_sensitive(bool(selected_blocks))
+        Actions.BLOCK_COPY.set_sensitive(bool(selected_blocks))
         Actions.BLOCK_PASTE.set_sensitive(bool(self.clipboard))
-        #update enable/disable
-        Actions.BLOCK_ENABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.BLOCK_DISABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.BLOCK_CREATE_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.OPEN_HIER.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.BUSSIFY_SOURCES.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-        Actions.BUSSIFY_SINKS.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+        #update enable/disable/bypass
+        can_enable = any(block.get_state() != Constants.BLOCK_ENABLED
+                         for block in selected_blocks)
+        can_disable = any(block.get_state() != Constants.BLOCK_DISABLED
+                          for block in selected_blocks)
+        can_bypass_all = all(block.can_bypass() for block in selected_blocks) \
+                          and any (not block.get_bypassed() for block in selected_blocks)
+        Actions.BLOCK_ENABLE.set_sensitive(can_enable)
+        Actions.BLOCK_DISABLE.set_sensitive(can_disable)
+        Actions.BLOCK_BYPASS.set_sensitive(can_bypass_all)
+
+        Actions.BLOCK_CREATE_HIER.set_sensitive(bool(selected_blocks))
+        Actions.OPEN_HIER.set_sensitive(bool(selected_blocks))
+        Actions.BUSSIFY_SOURCES.set_sensitive(bool(selected_blocks))
+        Actions.BUSSIFY_SINKS.set_sensitive(bool(selected_blocks))
         Actions.RELOAD_BLOCKS.set_sensitive(True)
         Actions.FIND_BLOCKS.set_sensitive(True)
         #set the exec and stop buttons
