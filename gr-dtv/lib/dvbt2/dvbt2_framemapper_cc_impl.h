@@ -139,9 +139,6 @@ namespace gr {
       int t2_frames;
       int t2_frame_num;
       int l1_scrambled;
-      int fef_present;
-      int fef_length;
-      int fef_interval;
       int N_P2;
       int C_P2;
       int N_FC;
