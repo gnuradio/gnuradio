@@ -247,6 +247,12 @@ BLOCK_DISABLE = Action(
     stock_id=gtk.STOCK_DISCONNECT,
     keypresses=(gtk.keysyms.d, NO_MODS_MASK),
 )
+BLOCK_BYPASS = Action(
+    label='_Bypass',
+    tooltip='Bypass the selected block',
+    stock_id=gtk.STOCK_MEDIA_FORWARD,
+    keypresses=(gtk.keysyms.b, NO_MODS_MASK),
+)
 TOGGLE_SNAP_TO_GRID = ToggleAction(
     label='_Snap to grid',
     tooltip='Snap blocks to a grid for an easier connection alignment',

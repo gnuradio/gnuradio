@@ -23,7 +23,7 @@ MAIN_TMPL = """\
 <block>
 	<name>UHD: USRP $sourk.title()</name>
 	<key>uhd_usrp_$(sourk)</key>
-	<throttle>1</throttle>
+	<flags>throttle</flags>
 	<import>from gnuradio import uhd</import>
 	<import>import time</import>
 	<make>uhd.usrp_$(sourk)(

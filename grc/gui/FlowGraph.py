@@ -211,9 +211,21 @@ class FlowGraph(Element):
         """
         changed = False
         for selected_block in self.get_selected_blocks():
-            if selected_block.get_enabled() != enable:
-                selected_block.set_enabled(enable)
-                changed = True
+            if selected_block.set_enabled(enable): changed = True
+        return changed
+
+    def bypass_selected(self):
+        """
+        Bypass the selected blocks.
+
+        Args:
+            None
+        Returns:
+            true if changed
+        """
+        changed = False
+        for selected_block in self.get_selected_blocks():
+            if selected_block.set_bypassed(): changed = True
         return changed
 
     def move_selected(self, delta_coordinate):

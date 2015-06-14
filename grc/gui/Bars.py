@@ -49,6 +49,7 @@ TOOLBAR_LIST = (
     None,
     Actions.BLOCK_ENABLE,
     Actions.BLOCK_DISABLE,
+    Actions.BLOCK_BYPASS,
     Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
     None,
     Actions.FIND_BLOCKS,
@@ -85,6 +86,7 @@ MENU_BAR_LIST = (
         None,
         Actions.BLOCK_ENABLE,
         Actions.BLOCK_DISABLE,
+        Actions.BLOCK_BYPASS,
         None,
         Actions.BLOCK_PARAM_MODIFY,
     ]),
@@ -134,6 +136,7 @@ CONTEXT_MENU_LIST = [
     Actions.BLOCK_ROTATE_CW,
     Actions.BLOCK_ENABLE,
     Actions.BLOCK_DISABLE,
+    Actions.BLOCK_BYPASS,
     None,
     (gtk.Action('More', '_More', None, None), [
         Actions.BLOCK_CREATE_HIER,

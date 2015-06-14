@@ -145,7 +145,9 @@ class Block(Element):
         """Create the labels for the signal block."""
         Element.create_labels(self)
         self._bg_color = self.is_dummy_block() and Colors.MISSING_BLOCK_BACKGROUND_COLOR or \
+                         self.get_bypassed() and Colors.BLOCK_BYPASSED_COLOR or \
                          self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
+
         layouts = list()
         #create the main layout
         layout = gtk.DrawingArea().create_pango_layout('')
