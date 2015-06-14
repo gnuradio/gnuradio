@@ -66,9 +66,6 @@ namespace gr {
       else if (i == 1) {
         reg = 0;
       }
-      else if (reg == 2) {
-        reg = 1;
-      }
       else {
         reg = 1;
         for (int k = 3; k <= i; k++) {
