@@ -39,8 +39,38 @@ class CMakeFileEditor(object):
         return nsubs
 
     def remove_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
-        """Remove a value from an entry."""
-        regexp = '^\s*(%s\(\s*%s[^()]*?\s*)%s\s*([^()]*%s\s*\))' % (entry, to_ignore_start, value, to_ignore_end)
+        """
+        Remove a value from an entry.
+        Example: You want to remove file.cc from this list() entry:
+        list(SOURCES
+            file.cc
+            other_file.cc
+        )
+
+        Then run:
+        >>> C.remove_value('list', 'file.cc', 'SOURCES')
+
+        Returns the number of occurences of entry in the current file
+        that were removed.
+        """
+        # In the case of the example above, these are cases we need to catch:
+        # - list(file.cc ...
+        #   entry is right after the value parentheses, no whitespace. Can only happen
+        #   when to_ignore_start is empty.
+        # - list(... file.cc)
+        #   Other entries come first, then entry is preceded by whitespace.
+        # - list(SOURCES ... file.cc) # whitespace!
+        #   When to_ignore_start is not empty, entry must always be preceded by whitespace.
+        if len(to_ignore_start) == 0:
+            regexp = r'^\s*({entry}\((?:[^()]*?\s+|)){value}\s*([^()]*{to_ignore_end}\s*\)){to_ignore_start}'
+        else:
+            regexp = r'^\s*({entry}\(\s*{to_ignore_start}[^()]*?\s+){value}\s*([^()]*{to_ignore_end}\s*\))'
+        regexp = regexp.format(
+                entry=entry,
+                to_ignore_start=to_ignore_start,
+                value=value,
+                to_ignore_end=to_ignore_end,
+        )
         regexp = re.compile(regexp, re.MULTILINE)
         (self.cfile, nsubs) = re.subn(regexp, r'\1\2', self.cfile, count=1)
         return nsubs
