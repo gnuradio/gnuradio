@@ -129,7 +129,7 @@ class TopBlockGenerator(object):
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
-            cmds = [xterm_executable, '-e'] + cmds
+            cmds = [xterm_executable, '-e'] + ' '.join(cmds)
 
         p = subprocess.Popen(
             args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,

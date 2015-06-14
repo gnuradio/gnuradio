@@ -51,7 +51,7 @@ class Connection(Element):
         #ensure that this connection (source -> sink) is unique
         for connection in self.get_parent().get_connections():
             if connection.get_source() is source and connection.get_sink() is sink:
-                raise Exception('This connection between source and sink is not unique.')
+                raise LookupError('This connection between source and sink is not unique.')
         self._source = source
         self._sink = sink
         if source.get_type() == 'bus':

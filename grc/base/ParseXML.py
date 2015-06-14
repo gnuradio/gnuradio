@@ -41,9 +41,9 @@ def validate_dtd(xml_file, dtd_file=None):
         dtd_file: the optional dtd file
     @throws Exception validation fails
     """
-    #perform parsing, use dtd validation if dtd file is not specified
+    # perform parsing, use dtd validation if dtd file is not specified
+    parser = etree.XMLParser(dtd_validation=not dtd_file)
     try:
-        parser = etree.XMLParser(dtd_validation=not dtd_file)
         xml = etree.parse(xml_file, parser=parser)
     except etree.LxmlError:
         pass
@@ -101,9 +101,10 @@ def _from_file(xml):
         key, value = _from_file(elem).items()[0]
         if nested_data.has_key(key): nested_data[key].append(value)
         else: nested_data[key] = [value]
-    #delistify if the length of values is 1
+    # delistify if the length of values is 1
     for key, values in nested_data.iteritems():
-        if len(values) == 1: nested_data[key] = values[0]
+        if len(values) == 1:
+            nested_data[key] = values[0]
 
     return odict({tag: nested_data})
 
@@ -116,15 +117,17 @@ def to_file(nested_data, xml_file):
         nested_data: the nested data
         xml_file: the xml file path
     """
-    # Create the processing instruction from the array
     xml_data = ""
     instructions = nested_data.pop('_instructions', None)
-    if instructions:
+    if instructions:  # create the processing instruction from the array
         xml_data += etree.tostring(etree.ProcessingInstruction(
-            'grc', ' '.join("{0}='{1}'".format(*item) for item in instructions.iteritems())
-        ), xml_declaration=True, pretty_print=True)
-    xml_data += etree.tostring(_to_file(nested_data)[0], pretty_print=True)
-    open(xml_file, 'w').write(xml_data)
+            'grc', ' '.join(
+                "{0}='{1}'".format(*item) for item in instructions.iteritems())
+        ), xml_declaration=True, pretty_print=True, encoding='utf-8')
+    xml_data += etree.tostring(_to_file(nested_data)[0],
+                               pretty_print=True, encoding='utf-8')
+    with open(xml_file, 'w') as fp:
+        fp.write(xml_data)
 
 
 def _to_file(nested_data):
@@ -139,12 +142,14 @@ def _to_file(nested_data):
     """
     nodes = list()
     for key, values in nested_data.iteritems():
-        #listify the values if not a list
+        # listify the values if not a list
         if not isinstance(values, (list, set, tuple)):
             values = [values]
         for value in values:
             node = etree.Element(key)
-            if isinstance(value, (str, unicode)): node.text = value
-            else: node.extend(_to_file(value))
+            if isinstance(value, (str, unicode)):
+                node.text = unicode(value)
+            else:
+                node.extend(_to_file(value))
             nodes.append(node)
     return nodes
