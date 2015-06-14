@@ -327,6 +327,29 @@ usrp_block_impl::get_time_last_pps(size_t mboard)
   return _dev->get_time_last_pps(mboard);
 }
 
+std::vector<std::string>
+usrp_block_impl::get_gpio_banks(const size_t mboard)
+{
+#ifdef UHD_USRP_MULTI_USRP_GPIO_API
+  return _dev->get_gpio_banks(mboard);
+#else
+  throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+boost::uint32_t
+usrp_block_impl::get_gpio_attr(
+    const std::string &bank,
+    const std::string &attr,
+    const size_t mboard
+) {
+#ifdef UHD_USRP_MULTI_USRP_GPIO_API
+  return _dev->get_gpio_attr(bank, attr, mboard);
+#else
+  throw std::runtime_error("not implemented in this version");
+#endif
+}
+
 void
 usrp_block_impl::set_time_now(const ::uhd::time_spec_t &time_spec,
                              size_t mboard)
@@ -374,6 +397,21 @@ usrp_block_impl::set_user_register(const uint8_t addr,
 {
 #ifdef UHD_USRP_MULTI_USRP_USER_REGS_API
   _dev->set_user_register(addr, data, mboard);
+#else
+  throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+void
+usrp_block_impl::set_gpio_attr(
+    const std::string &bank,
+    const std::string &attr,
+    const boost::uint32_t value,
+    const boost::uint32_t mask,
+    const size_t mboard
+) {
+#ifdef UHD_USRP_MULTI_USRP_GPIO_API
+  return _dev->set_gpio_attr(bank, attr, value, mask, mboard);
 #else
   throw std::runtime_error("not implemented in this version");
 #endif
