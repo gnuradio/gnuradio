@@ -161,7 +161,9 @@ class PropsDialog(gtk.Dialog):
             for tab, label, vbox in self._params_boxes:
                 vbox.hide_all()
                 # empty the params box
-                vbox.forall(lambda c: vbox.remove(c) or c.destroy())
+                for child in vbox.get_children():
+                    vbox.remove(child)
+                    child.destroy()
                 # repopulate the params box
                 box_all_valid = True
                 for param in filter(lambda p: p.get_tab_label() == tab, self._block.get_params()):
@@ -202,7 +204,8 @@ class PropsDialog(gtk.Dialog):
     def _handle_response(self, widget, response):
         if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
             for tab, label, vbox in self._params_boxes:
-                vbox.forall(lambda c: c.apply_pending_changes())
+                for child in vbox.get_children():
+                    child.apply_pending_changes()
             self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
             return True
         return False

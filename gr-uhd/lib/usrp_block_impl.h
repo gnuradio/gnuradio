@@ -62,6 +62,12 @@ namespace gr {
       ::uhd::time_spec_t get_time_now(size_t mboard = 0);
       ::uhd::time_spec_t get_time_last_pps(size_t mboard);
       ::uhd::usrp::multi_usrp::sptr get_device(void);
+      std::vector<std::string> get_gpio_banks(const size_t mboard);
+      boost::uint32_t get_gpio_attr(
+          const std::string &bank,
+          const std::string &attr,
+          const size_t mboard = 0
+      );
 
       // Setters
       void set_clock_config(const ::uhd::clock_config_t &clock_config, size_t mboard);
@@ -74,6 +80,13 @@ namespace gr {
       void set_command_time(const ::uhd::time_spec_t &time_spec, size_t mboard);
       void set_user_register(const uint8_t addr, const uint32_t data, size_t mboard);
       void clear_command_time(size_t mboard);
+      void set_gpio_attr(
+          const std::string &bank,
+          const std::string &attr,
+          const boost::uint32_t value,
+          const boost::uint32_t mask,
+          const size_t mboard
+      );
 
       // RPC
       void setup_rpc();

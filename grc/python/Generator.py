@@ -86,7 +86,7 @@ class TopBlockGenerator(object):
     def write(self):
         """generate output and write it to files"""
         # do throttle warning
-        throttling_blocks = filter(lambda b: b.throttle(), self._flow_graph.get_enabled_blocks())
+        throttling_blocks = filter(lambda b: b.throtteling(), self._flow_graph.get_enabled_blocks())
         if not throttling_blocks and self._generate_options != 'hb':
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
@@ -129,7 +129,7 @@ class TopBlockGenerator(object):
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
-            cmds = [xterm_executable, '-e'] + cmds
+            cmds = [xterm_executable, '-e'] + ' '.join(cmds)
 
         p = subprocess.Popen(
             args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,

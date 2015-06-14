@@ -86,9 +86,6 @@ namespace gr {
             break;
         }
       }
-      fef_present = FALSE;    /* for testing only */
-      fef_length = 134144;    /*  "     "     "   */
-      fef_interval = 1;       /*  "     "     "   */
       l1preinit->type = STREAMTYPE_TS;
       l1preinit->bwt_ext = carriermode;
       fft_size = fftsize;
@@ -100,12 +97,7 @@ namespace gr {
       l1preinit->l1_mod = l1constellation;
       l1preinit->l1_cod = 0;
       l1preinit->l1_fec_type = 0;
-      if (fef_present == FALSE) {
-        l1preinit->l1_post_info_size = KSIG_POST - 32;
-      }
-      else {
-        l1preinit->l1_post_info_size = KSIG_POST + 34 - 32;
-      }
+      l1preinit->l1_post_info_size = KSIG_POST - 32;
       l1preinit->pilot_pattern = pilotpattern;
       l1preinit->tx_id_availability = 0;
       l1preinit->cell_id = 0;
@@ -144,12 +136,7 @@ namespace gr {
       l1postinit->ff_flag = 0;
       l1postinit->first_rf_idx = 0;
       l1postinit->first_frame_idx = 0;
-      if (fef_present == FALSE) {
-        l1postinit->plp_group_id = 1;
-      }
-      else {
-        l1postinit->plp_group_id = 0;
-      }
+      l1postinit->plp_group_id = 1;
       switch (rate) {
         case C1_3:
           l1postinit->plp_cod = 6;
@@ -205,14 +192,8 @@ namespace gr {
       else {
         l1postinit->plp_mode = inputmode + 1;
       }
-      if (fef_present == FALSE) {
-        l1postinit->static_flag = 0;
-        l1postinit->static_padding_flag = 0;
-      }
-      else {
-        l1postinit->static_flag = 1;
-        l1postinit->static_padding_flag = 1;
-      }
+      l1postinit->static_flag = 0;
+      l1postinit->static_padding_flag = 0;
       l1postinit->fef_length_msb = 0;
       if (reservedbiasbits == RESERVED_ON && version == VERSION_131) {
         l1postinit->reserved_2 = 0x3fffffff;
@@ -351,6 +332,11 @@ namespace gr {
           eta_mod = 6;
           break;
       }
+      N_P2 = 0;
+      C_P2 = 0;
+      N_FC = 0;
+      C_FC = 0;
+      C_DATA = 0;
       if ((preamble == PREAMBLE_T2_SISO) || (preamble == PREAMBLE_T2_LITE_SISO)) {
         switch (fft_size) {
           case FFTSIZE_1K:
@@ -904,14 +890,8 @@ namespace gr {
           C_FC = 0;
         }
       }
-      if (fef_present == FALSE) {
-        N_punc_temp = (6 * (KBCH_1_2 - KSIG_POST)) / 5;
-        N_post_temp = KSIG_POST + NBCH_PARITY + 9000 - N_punc_temp;
-      }
-      else {
-        N_punc_temp = (6 * (KBCH_1_2 - (KSIG_POST + 34))) / 5;
-        N_post_temp = (KSIG_POST + 34) + NBCH_PARITY + 9000 - N_punc_temp;
-      }
+      N_punc_temp = (6 * (KBCH_1_2 - KSIG_POST)) / 5;
+      N_post_temp = KSIG_POST + NBCH_PARITY + 9000 - N_punc_temp;
       if (N_P2 == 1) {
         N_post = ceil((float)N_post_temp / (2 * (float)eta_mod)) * 2 * eta_mod;
       }
@@ -1166,12 +1146,7 @@ namespace gr {
       for (int n = 2; n >= 0; n--) {
         l1pre[offset_bits++] = temp & (1 << n) ? 1 : 0;
       }
-      if (fef_present == FALSE) {
-        l1pre[offset_bits++] = 0;
-      }
-      else {
-        l1pre[offset_bits++] = 1;
-      }
+      l1pre[offset_bits++] = 0;
       l1pre[offset_bits++] = l1preinit->l1_repetition_flag;
       temp = l1preinit->guard_interval;
       for (int n = 2; n >= 0; n--) {
@@ -1355,20 +1330,6 @@ namespace gr {
       temp = l1postinit->frequency;
       for (int n = 31; n >= 0; n--) {
         l1post[offset_bits++] = temp & (1 << n) ? 1 : 0;
-      }
-      if (fef_present == TRUE) {
-        temp = 0;
-        for (int n = 3; n >= 0; n--) {
-          l1post[offset_bits++] = temp & (1 << n) ? 1 : 0;
-        }
-        temp = fef_length;
-        for (int n = 21; n >= 0; n--) {
-          l1post[offset_bits++] = temp & (1 << n) ? 1 : 0;
-        }
-        temp = fef_interval;
-        for (int n = 7; n >= 0; n--) {
-          l1post[offset_bits++] = temp & (1 << n) ? 1 : 0;
-        }
       }
       temp = l1postinit->plp_id;
       for (int n = 7; n >= 0; n--) {

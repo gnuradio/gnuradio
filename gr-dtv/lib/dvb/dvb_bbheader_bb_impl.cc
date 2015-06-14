@@ -406,29 +406,24 @@ namespace gr {
       m_frame[0] = 0;
       m_frame[1] = 1;
       m_frame_offset_bits = 2;
-      temp = 0;
       for (int n = 30; n >= 0; n--) {
-        m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
+        m_frame[m_frame_offset_bits++] = 0;
       }
-      temp = 0;
       for (int n = 21; n >= 0; n--) {
-        m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
+        m_frame[m_frame_offset_bits++] = 0;
       }
-      temp = 0;
       for (int n = 1; n >= 0; n--) {
-        m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
+        m_frame[m_frame_offset_bits++] = 0;
       }
-      temp = 0;
       for (int n = 9; n >= 0; n--) {
-        m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
+        m_frame[m_frame_offset_bits++] = 0;
       }
       temp = ts_rate;
       for (int n = 26; n >= 0; n--) {
         m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
       }
-      temp = 0;
       for (int n = 9; n >= 0; n--) {
-        m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
+        m_frame[m_frame_offset_bits++] = 0;
       }
     }
 

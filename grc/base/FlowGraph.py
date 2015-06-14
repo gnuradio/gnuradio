@@ -78,9 +78,6 @@ class FlowGraph(Element):
                         bus_structure = block.form_bus_structure('sink');
 
                     if 'bus' in map(lambda a: a.get_type(), get_p_gui()):
-
-
-
                         if len(get_p_gui()) > len(bus_structure):
                             times = range(len(bus_structure), len(get_p_gui()));
                             for i in times:
@@ -99,8 +96,6 @@ class FlowGraph(Element):
                                 n = odict(n);
                                 port = block.get_parent().get_parent().Port(block=block, n=n, dir=direc);
                                 get_p().append(port);
-
-
 
         for child in self.get_children(): child.rewrite()
         refactor_bus_structure();
@@ -159,6 +154,15 @@ class FlowGraph(Element):
         """
         return filter(lambda b: b.get_enabled(), self.get_blocks())
 
+    def get_bypassed_blocks(self):
+        """
+        Get a list of all blocks that are bypassed.
+
+        Returns:
+            a list of blocks
+        """
+        return filter(lambda b: b.get_bypassed(), self.get_blocks())
+
     def get_enabled_connections(self):
         """
         Get a list of all connections that are enabled.
@@ -166,7 +170,41 @@ class FlowGraph(Element):
         Returns:
             a list of connections
         """
-        return filter(lambda c: c.get_enabled(), self.get_connections())
+        # First get all the enabled connections, then get the bypassed blocks.
+        connections = filter(lambda c: c.get_enabled(), self.get_connections())
+        bypassed_blocks = self.get_bypassed_blocks()
+
+        # Bypassing blocks: Need to find all the enabled connections for the block using
+        # the *connections* object rather than get_connections(). Create new connections
+        # that bypass the selected block and remove the existing ones. This allows adjacent
+        # bypassed blocks to see the newly created connections to downstream blocks,
+        # allowing them to correctly construct bypass connections.
+
+        for block in bypassed_blocks:
+            # Get the upstream connection (off of the sink ports)
+            # Use *connections* not get_connections()
+            get_source_connection = lambda c: c.get_sink() == block.get_sinks()[0]
+            source_connection = filter(get_source_connection, connections)
+            # The source connection should never have more than one element.
+            assert (len(source_connection) == 1)
+
+            # Get the source of the connection.
+            source_port = source_connection[0].get_source()
+
+            # Loop through all the downstream connections
+            get_sink_connections = lambda c: c.get_source() == block.get_sources()[0]
+            for sink in filter(get_sink_connections, connections):
+                if not sink.get_enabled():
+                    # Ignore disabled connections
+                    continue
+                sink_port = sink.get_sink()
+                connection = self.get_parent().Connection(flow_graph=self, porta=source_port, portb=sink_port)
+                connections.append(connection)
+                # Remove this sink connection
+                connections.remove(sink)
+            # Remove the source connection
+            connections.remove(source_connection[0])
+        return connections
 
     def get_new_block(self, key):
         """
