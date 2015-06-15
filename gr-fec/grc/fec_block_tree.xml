@@ -24,6 +24,7 @@
       <block>variable_ldpc_encoder_def</block>
       <block>variable_tpc_encoder_def</block>
       <block>variable_dummy_encoder_def</block>
+      <block>variable_polar_encoder_def</block>
     </cat>
     <block>fec_extended_encoder</block>
     <block>fec_extended_async_encoder</block>

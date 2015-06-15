@@ -114,7 +114,9 @@ def channel_analysis():
     print(np.min(channel_counter), np.max(channel_counter))
     channel_counter[0] = np.min(channel_counter)
     good_indices = find_good_indices(channel_counter, channel_counter.size // 2)
-    frozen_bit_positions = np.where(good_indices > 0)
+    info_bit_positions = np.where(good_indices > 0)
+    print(info_bit_positions)
+    frozen_bit_positions = np.delete(np.arange(channel_counter.size), info_bit_positions)
     print(frozen_bit_positions)
     np.save('frozen_bit_positions_n256_k128_p0.11.npy', frozen_bit_positions)
     good_indices *= 2000
