@@ -5,16 +5,16 @@
 ###################################################
  -->
 <block>
-    <name>LDPC R. U. Encoder Definition</name>
-    <key>variable_ldpc_R_U_encoder_def</key>
+    <name>LDPC Encoder Definition (via Parity Check)</name>
+    <key>variable_ldpc_encoder_H_def</key>
     <import>from gnuradio import fec</import>
     <var_make>
 #if int($ndim())==0 #
-self.$(id) = $(id) = fec.ldpc_R_U_encoder_make($parity_check_matrix_object)
+self.$(id) = $(id) = fec.ldpc_encoder_make_H($H)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map((lambda a: fec.ldpc_R_U_encoder_make($parity_check_matrix_object)), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda a: fec.ldpc_encoder_make_H($H)), range(0,$dim1)) #slurp
 #else
-self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_R_U_encoder_make($parity_check_matrix_object)), range(0,$dim2))), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_encoder_make_H($H)), range(0,$dim2))), range(0,$dim1)) #slurp
 #end if</var_make>
     <make></make>
 
@@ -62,18 +62,10 @@ self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_R_U_encoder_make($pa
     </param>
 
     <param>
-        <name>R.U. Matrix ID</name>
-        <key>parity_check_matrix_object</key>
+        <name>Parity Check Matrix</name>
+        <key>H</key>
         <value></value>
         <type>raw</type>
     </param>
 
-    <doc>
-This block creates a LDPC R. U. Encoder Definition variable.
-
-R.U. Matrix ID: Provide the ID of a LDPC R. U. Parity Check Matrix
-                                 variable block.
-
-Richardson and Urbanke describe their encoding method in Appendix A of their book: Modern Coding Theory (ISBN 978-0-521-85229-6).
-    </doc>
 </block>

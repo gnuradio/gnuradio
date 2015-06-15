@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 3, or (at your 
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 3, or (at your
  * option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -23,12 +23,13 @@
 #define INCLUDED_FEC_LDPC_BIT_FLIP_DECODER_H
 
 #include <gnuradio/fec/api.h>
-#include <gnuradio/fec/generic_decoder.h>
 #include <gnuradio/fec/fec_mtrx.h>
+#include <gnuradio/fec/generic_decoder.h>
 
 namespace gr {
   namespace fec {
     namespace code {
+
       /*!
        * \brief LDPC bit flip decoding class
        * \ingroup error_coding_blk
@@ -57,8 +58,8 @@ namespace gr {
          * \brief Build a bit flip decoding FEC API object.
          * \param mtrx_obj The LDPC parity check matrix to use for
          *        decoding. This should be the same matrix used for
-         *        encoding. Provide either a ldpc_R_U_mtrx or
-         *        a ldpc_HorG_mtrx object.
+         *        encoding. Provide either a ldpc_H_matrix or
+         *        a ldpc_G_matrix object.
          * \param max_iter Maximum number of iterations to complete
          *        during the decoding algorithm. The default is 100
          *        because this seemed to be sufficient during

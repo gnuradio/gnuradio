@@ -1,27 +1,29 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 3, or (at your 
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 3, or (at your
  * option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ldpc_R_U_mtrx_H
-#define INCLUDED_ldpc_R_U_mtrx_H
+#ifndef INCLUDED_ldpc_H_matrix_H
+#define INCLUDED_ldpc_H_matrix_H
 
+#include <gnuradio/fec/api.h>
 #include <gnuradio/fec/fec_mtrx.h>
+#include <boost/shared_ptr.hpp>
 
 namespace gr {
   namespace fec {
@@ -32,7 +34,7 @@ namespace gr {
        *
        * \details
        * This class stores a matrix for use with the
-       * ldpc_R_U_encoder class. It must be of the specific format
+       * ldpc_encoder class. It must be of the specific format
        * described by Richardson and Urbanke in Appendix A of their
        * book: Modern Coding Theory (ISBN 978-0-521-85229-6). The
        * form is:
@@ -43,28 +45,11 @@ namespace gr {
        * python functions in:
        * /lib/python2.7/dist-packages/gnuradio/fec/LDPC/Generate_LDPC_matrix.py.
        */
-      class FEC_API ldpc_R_U_mtrx : public fec_mtrx
+      class FEC_API ldpc_H_matrix : virtual public fec_mtrx
       {
-      private:
-        // Gap (assumes matrix is in TABECD form)
-        unsigned int d_gap;
-
-        // Submatrices found during preprocessing, used for encoding
-        gsl_matrix_view d_A_view;
-        gsl_matrix_view d_B_view;
-        gsl_matrix_view d_D_view;
-        gsl_matrix_view d_E_view;
-        gsl_matrix_view d_T_view;
-        gsl_matrix *d_phi_inverse_ptr;
-
-        // Swig needs the scope resolution operator here (for some
-        // reason...?)
-        gr::fec::code::fec_mtrx *d_base_ptr;
-
-        //! Sets the submatrix variables needed for encoding
-        void set_parameters_for_encoding();
-        
       public:
+        typedef boost::shared_ptr<ldpc_H_matrix> sptr;
+
         /*!
          * \brief Constructor given alist file and gap
          * \param filename Name of an alist file to use. The alist
@@ -77,55 +62,39 @@ namespace gr {
          *            algorithm. It is equal to the number of rows in
          *            submatrices E, C and D.
          */
-        ldpc_R_U_mtrx(const std::string filename, unsigned int gap);
+        static sptr make(const std::string filename, unsigned int gap);
 
-        //! Default constructor, should not be used
-        ldpc_R_U_mtrx();
+        //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
+        virtual void encode(unsigned char *outbuffer,
+                            const unsigned char *inbuffer) const = 0;
 
-        //! Access the A submatrix, needed during encoding
-        const gsl_matrix *A() const;
+        //! Decode \p inbuffer with LDPC H matrix into \p outbuffer.
+        virtual void decode(unsigned char *outbuffer,
+                            const float *inbuffer,
+                            unsigned int frame_size,
+                            unsigned int max_iterations) const = 0;
 
-        //! Access the B submatrix, needed during encoding
-        const gsl_matrix *B() const;
+        //!Get the codeword length n
+        //  Handled in fec_mtrx parent class.
+        virtual unsigned int n() const = 0;
 
-        //! Access the D submatrix, needed during encoding
-        const gsl_matrix *D() const;
-
-        //! Access the E submatrix, needed during encoding
-        const gsl_matrix *E() const;
-
-        //! Access the T submatrix, needed during encoding
-        const gsl_matrix *T() const;
-
-        /*!
-         * \brief Access the \f$\phi^{-1}\f$ matrix
-         * \details
-         * Access the matrix \f$\phi^{-1}\f$, which is needed during
-         * encoding. \f$\phi\f$ is defined as:
-         * \f$\phi=C-ET^{-1}A\f$.
-         */
-        const gsl_matrix *phi_inverse() const;
+        //! Get the information word length k
+        //  Handled in fec_mtrx parent class.
+        virtual unsigned int k() const = 0;
 
         /*!
          * \brief A pointer to make SWIG work
+         *
          * \details
          * For some reason, SWIG isn't accepting a pointer to this
          * child class for the make function of the
-         * ldpc_bit_flip_decoder; it's expecting a pointer to the
-         * base class. So, this is just a workaround for SWIG and
-         * GRC.
+         * ldpc_bit_flip_decoder; it's expecting a pointer to the base
+         * class. So, this is just a workaround for SWIG and GRC.
          */
-        gr::fec::code::fec_mtrx *get_base_ptr();
-
-        /*!
-         * \brief Destructor
-         * \details
-         * Calls the gsl_matrix_free function to free memory
-         */
-        virtual ~ldpc_R_U_mtrx();
+        virtual gr::fec::code::fec_mtrx *get_base_ptr() = 0;
       };
     }
   }
 }
 
-#endif /* INCLUDED_ldpc_R_U_mtrx_H */
+#endif /* INCLUDED_ldpc_H_matrix_H */

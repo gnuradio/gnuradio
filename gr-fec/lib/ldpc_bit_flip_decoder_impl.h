@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 3, or (at your 
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 3, or (at your
  * option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -33,8 +33,11 @@ namespace gr {
         // Plug into the generic FEC API:
         int get_input_size();   // n, # of bits in the received block
         int get_output_size();  // k, # of bits in the info word
-        unsigned int d_frame_size;
-           
+        int d_input_size;
+        int d_output_size;
+
+        double d_rate;
+
         // FEC matrix object to use for decoding
         const fec_mtrx *d_mtrx;
 
@@ -48,7 +51,7 @@ namespace gr {
 
         void generic_work(void *inbuffer, void *outbuffer);
         bool set_frame_size(unsigned int frame_size);
-        double rate();        
+        double rate();
       };
     } /* namespace code */
   } /* namespace fec */

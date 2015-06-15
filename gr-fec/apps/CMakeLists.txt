@@ -17,26 +17,39 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-install(
-    FILES
-    271.127.3.112
-    n_0100_k_0023_gap_10.alist
-    n_0100_k_0027_gap_04.alist
-    n_0100_k_0042_gap_02.alist
-    n_0100_k_0058_gen_matrix.alist
-    n_0300_k_0103_gap_24.alist
-    n_0300_k_0122_gap_06.alist
-    n_0300_k_0152_gap_03.alist
-    n_0500_k_0127_gap_21.alist
-    n_0500_k_0202_gap_11.alist
-    n_0512_k_0130_gap_21.alist
-    n_0700_k_0282_gap_16.alist
-    n_1100_k_0442_gap_24.alist
-    n_1300_k_0522_gap_30.alist
-    n_1800_k_0902_gap_28.alist
-    n_2400_k_1198_gap_33.alist
-    n_2400_k_1198_gen_matrix.alist
-    PNB2_512_23C1.alist
-    simple_g_matrix.alist
-    DESTINATION ${GR_PKG_DATA_DIR}/fec/ldpc
+include_directories(
+  ${GR_FEC_INCLUDE_DIRS}
+  ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+  ${GSL_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+)
+
+list(APPEND libs
+  ${GSL_LIBRARIES}
+  ${Boost_LIBRARIES}
+  gnuradio-fec gnuradio-runtime
+)
+
+add_executable(ldpc_H_to_G ldpc_H_to_G.cc)
+target_link_libraries(ldpc_H_to_G ${libs})
+
+add_executable(ldpc_G_to_H ldpc_G_to_H.cc)
+target_link_libraries(ldpc_G_to_H ${libs})
+
+add_executable(ldpc_print_alist ldpc_print_alist.cc)
+target_link_libraries(ldpc_print_alist ${libs})
+
+INSTALL(TARGETS
+  ldpc_H_to_G
+  ldpc_G_to_H
+  ldpc_print_alist
+  DESTINATION ${GR_RUNTIME_DIR}
+  COMPONENT "fec_devel"
+)
+
+GR_PYTHON_INSTALL(
+    PROGRAMS
+    ldpc_H_to_upper_triangular_form
+    DESTINATION ${GR_RUNTIME_DIR}
+    COMPONENT "fec_devel"
 )

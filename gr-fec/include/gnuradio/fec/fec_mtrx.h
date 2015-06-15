@@ -22,99 +22,141 @@
 #define INCLUDED_fec_mtrx_H
 
 #include <gnuradio/fec/api.h>
-#include <string>
-
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_randist.h>
-#include <gsl/gsl_permutation.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_blas.h>
+#include <cstdlib>
+#include <boost/shared_ptr.hpp>
 
 namespace gr {
   namespace fec {
     namespace code {
 
+      typedef struct
+      {
+        size_t size;
+        double *data;
+      } block_data;
+
+      typedef struct
+      {
+        size_t size1;
+        size_t size2;
+        size_t tda;
+        double * data;
+        block_data * block;
+        int owner;
+      } matrix;
+
+      FEC_API void matrix_free(matrix *x);
+
+      typedef boost::shared_ptr<matrix> matrix_sptr;
+
+      /*!
+       * \brief Read in an alist file and produce the matrix object.
+       *
+       * \details
+       * Takes in a an alist file (the file name as a string) and creates
+       * the corresponding matrix. The format of alist files is described
+       * at: http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+       *
+       * The result is returned as a matrix shared pointer.
+       *
+       * \param filename Name of an alist file to use. The alist
+       *                 format is described at:
+       *                 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+       */
+      FEC_API matrix_sptr read_matrix_from_file(const std::string filename);
+      FEC_API void write_matrix_to_file(const std::string filename, matrix_sptr M);
+
+      /*!
+       * \brief Takes a parity check matrix (H) and returns the
+       * transpose of the generator matrix (G).
+       *
+       * The result is returned as a matrix shared pointer. The form
+       * of this matrix is [I_k | P]^T, where P is the parity check
+       * matrix. It is a n x k matrix where k is the information
+       * length and n is the codeword length.
+       *
+       * \param H_obj A parity check matrix; generally derived from
+       *              using read_matrix_from_file with a given alist
+       *              file format.
+       */
+      FEC_API matrix_sptr generate_G_transpose(matrix_sptr H_obj);
+
+      /*!
+       * \brief Takes a parity check matrix (H) and returns the
+       * generator matrix (G).
+       *
+       * The result is returned as a matrix shared pointer. The form
+       * of this matrix is [I_k | P], where P is the parity check
+       * matrix. It is a k x n matrix where k is the information
+       * length and n is the codeword length.
+       *
+       * \param H_obj A parity check matrix; generally derived from
+       *              using read_matrix_from_file with a given alist
+       *              file format.
+       */
+      FEC_API matrix_sptr generate_G(matrix_sptr H_obj);
+
+      /*!
+       * \brief Takes a generator matrix (G) and returns the
+       * parity check matrix (H).
+       *
+       * \param G_obj A parity check matrix; generally derived from
+       *              using read_matrix_from_file with a given alist
+       *              file format.
+       */
+      FEC_API matrix_sptr generate_H(matrix_sptr G_obj);
+
+      /*!
+       * \brief Takes a matrix and prints it to screen.
+       *
+       * \param M a matrix_sptr; generally a G or H matrix for LDPC codes.
+       * \param numpy will output in a format that can be
+       *        copy-and-pasted directly into a numpy.matrix(~) call
+       *        in Python.
+       */
+      FEC_API void print_matrix(const matrix_sptr M, bool numpy=false);
+
       /*!
        * \brief Base class for FEC matrix objects.
-       *
        *
        * \ingroup error_coding_blk
        *
        * \details
        *
-       * Base class of ldpc_HorG_mtrx and ldpc_R_U_mtrx classes.
-       * The child objects can be either generator matrices or
-       * parity check matrices. This base class can be provided to
-       * the decoder ldpc_bit_flip_decoder, whereas the encoder
-       * classes ldpc_gen_mtrx_encoder and ldpc_R_U_encoder will
-       * not accept this base class; they require one of the child
-       * classes.
+       * Base class of ldpc_H_matrix and ldpc_G_matrix classes. The
+       * child objects can be either generator matrices or parity
+       * check matrices. This base class can be provided to the
+       * decoder ldpc_bit_flip_decoder, whereas the encoder classes
+       * ldpc_gen_mtrx_encoder and ldpc_encoder will not accept this
+       * base class; they require one of the child classes.
        */
       class FEC_API fec_mtrx
       {
       protected:
-        //! Constructor
-        fec_mtrx();
-
-        //! Codeword length n
-        unsigned int d_n;
-
-        //! Information word length k
-        unsigned int d_k;
-
-        //! Number of rows in the matrix read in from alist file
-        unsigned int d_num_rows;
-
-        //! Number of columns in the matrix read in from alist file
-        unsigned int d_num_cols;
-
-        //! GSL matrix structure for the parity check matrix
-        gsl_matrix *d_H_ptr;
-
-        /*!
-         * \brief Read the matrix from a file in alist format
-         * \param filename Name of an alist file to use. The alist
-         *                 format is described at:
-         *                 http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
-         */
-        gsl_matrix *read_matrix_from_file(const std::string filename);
-
-        //! Flag for whether or not the parity bits come first or last
-        bool d_par_bits_last;
+        fec_mtrx(void) {} // allows pure virtual interface sub-classes
 
       public:
-        //! Returns the parity check matrix H (needed by decoder)
-        const gsl_matrix *H() const;
+        virtual ~fec_mtrx() {}
+
+        //! Encode \p inbuffer with LDPC H matrix into \p outbuffer.
+        virtual void encode(unsigned char *outbuffer,
+                            const unsigned char *inbuffer) const = 0;
+
+        //! Decode \p inbuffer with LDPC H matrix into \p outbuffer.
+        virtual void decode(unsigned char *outbuffer,
+                            const float *inbuffer,
+                            unsigned int frame_size,
+                            unsigned int max_iterations) const = 0;
 
         //!Get the codeword length n
-        unsigned int n() const;
+        virtual unsigned int n() const = 0;
 
         //! Get the information word length k
-        unsigned int k() const;
-
-        //! Subtract matrices using mod2 operations
-        gsl_matrix *add_matrices_mod2(const gsl_matrix *,
-                                      const gsl_matrix *) const;
-
-        //! Multiply matrices using mod2 operations
-        gsl_matrix *mult_matrices_mod2(const gsl_matrix *,
-                                       const gsl_matrix *) const;
-
-        //! Invert a square matrix using mod2 operations
-        gsl_matrix *calc_inverse_mod2(const gsl_matrix *) const;
-
-        /*!
-         * \brief Get Boolean for whether or not parity bits come first or last
-         * \details
-         * The decoder will need to know if the parity bits are
-         * coming first or last
-         */
-        bool parity_bits_come_last() const;
-
-        virtual ~fec_mtrx();
+        virtual unsigned int k() const = 0;
       };
-    }
-  }
-}
+
+    } /* namespace code */
+  } /* namespace fec */
+} /* namespace gr */
 
 #endif /* INCLUDED_fec_mtrx_H */

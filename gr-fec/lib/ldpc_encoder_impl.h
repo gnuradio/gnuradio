@@ -20,33 +20,45 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_LDPC_ENCODER_H
-#define INCLUDED_LDPC_ENCODER_H
+#ifndef INCLUDED_LDPC_ENCODER_IMPL_H
+#define INCLUDED_LDPC_ENCODER_IMPL_H
 
-#include <gnuradio/fec/encoder.h>
-#include <gnuradio/fec/ldpc_H_matrix.h>
-#include <gnuradio/fec/fec_mtrx.h>
-#include <string>
-#include <vector>
+#include <gnuradio/fec/ldpc_encoder.h>
+#include <gnuradio/fec/ldpc_G_matrix.h>
 
 namespace gr {
   namespace fec {
     namespace code {
 
-      class FEC_API ldpc_encoder : virtual public generic_encoder
+      class ldpc_encoder_impl : public ldpc_encoder
       {
+      private:
+        // plug into the generic fec api
+        void generic_work(void *inbuffer, void *outbuffer);
+
+        // Number of bits in the frame to be encoded
+        unsigned int d_frame_size;
+
+        // Number of output bits after coding
+        int d_output_size;
+
+        // Rate of the code, n/k
+        double d_rate;
+
+        // LDPC parity check matrix object
+        ldpc_H_matrix::sptr d_H;
+
       public:
-        static generic_encoder::sptr make(std::string alist_file, unsigned int gap=0);
-        static generic_encoder::sptr make_H(const ldpc_H_matrix::sptr H_obj);
+        ldpc_encoder_impl(const ldpc_H_matrix::sptr H_obj);
+        ~ldpc_encoder_impl();
 
-        virtual double rate() = 0;
-        virtual bool set_frame_size(unsigned int frame_size) = 0;
-        virtual int get_output_size() = 0;
-        virtual int get_input_size() = 0;
+        double rate();
+        bool set_frame_size(unsigned int frame_size);
+        int get_output_size();
+        int get_input_size();
       };
-
     }
   }
 }
 
-#endif /* INCLUDED_LDPC_ENCODER_H */
+#endif /* INCLUDED_LDPC_ENCODER_IMPL_H */

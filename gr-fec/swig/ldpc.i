@@ -20,33 +20,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_LDPC_ENCODER_H
-#define INCLUDED_LDPC_ENCODER_H
+%template(matrix_sptr) boost::shared_ptr<gr::fec::code::matrix>;
 
-#include <gnuradio/fec/encoder.h>
-#include <gnuradio/fec/ldpc_H_matrix.h>
-#include <gnuradio/fec/fec_mtrx.h>
-#include <string>
-#include <vector>
+%template(ldpc_H_matrix_sptr) boost::shared_ptr<gr::fec::code::ldpc_H_matrix>;
+%pythoncode %{
+  ldpc_H_matrix = ldpc_H_matrix.make;
+%}
 
-namespace gr {
-  namespace fec {
-    namespace code {
-
-      class FEC_API ldpc_encoder : virtual public generic_encoder
-      {
-      public:
-        static generic_encoder::sptr make(std::string alist_file, unsigned int gap=0);
-        static generic_encoder::sptr make_H(const ldpc_H_matrix::sptr H_obj);
-
-        virtual double rate() = 0;
-        virtual bool set_frame_size(unsigned int frame_size) = 0;
-        virtual int get_output_size() = 0;
-        virtual int get_input_size() = 0;
-      };
-
-    }
-  }
-}
-
-#endif /* INCLUDED_LDPC_ENCODER_H */
+%template(ldpc_G_matrix_sptr) boost::shared_ptr<gr::fec::code::ldpc_G_matrix>;
+%pythoncode %{
+  ldpc_G_matrix = ldpc_G_matrix.make;
+%}

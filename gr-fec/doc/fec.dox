@@ -237,7 +237,6 @@ Coders:
 \li gr::fec::code::polar_encoder
 \li gr::fec::ldpc_encoder
 \li gr::fec::code::ldpc_gen_mtrx_encoder
-\li gr::fec::code::ldpc_R_U_encoder
 
 Decoders:
 \li gr::fec::code::dummy_decoder
@@ -292,55 +291,6 @@ particular code implementation as the set CCSDS decoder, much like we
 have the gr::fec::code::ccsds_encoder class.
 
 
-\subsubsection fec_ldpc LDPC Encoders and Decoders
-
-There are a few different LDPC encoders and decoders available in
-gr-fec. The LDPC decoder used does not necessarily depend on the LDPC
-encoder used; different decoders can be used with a given
-encoder. Python scripts are included in gr-fec for constructing parity
-check matrices with specified properties.
-
-The simplest LDPC encoder is
-gr::fec::code::ldpc_gen_mtrx_encoder. From a generator matrix in
-systematic form G=[I P], the codeword x is generated from the
-information word s via simple matrix multiplication: x=G*s.  This
-encoder can be used if either a parity check matrix H or a generator
-matrix G is input. (If a H matrix is provided, the class
-gr::fec::code::ldpc_HorG_mtrx will convert it to the corresponding G
-matrix for use with this encoder.)
-
-The gr::fec::ldpc_encoder uses the same method to generate a codeword,
-x=G*s.  However, the provided matrix file must be for a parity check
-matrix.
-
-The gr::fec::code::ldpc_R_U_encoder uses a reduced complexity
-algorithm. Compared to the gr::fec::code::ldpc_gen_mtrx_encoder, this
-requires orders of magnitude fewer operations at each encoding
-step. This is accomplished by completing a significant amount of the
-complex matrix manipulation (including inverse, multiplication, and
-Gaussian elimination operations) during preprocessing. The
-disadvantage of this encoder is that it requires a specially formatted
-matrix. However, GNU Radio includes Python scripts to format a
-standard parity check matrix appropriately for this encoder, as well
-as a small library of encoding-ready matrices for use. More details
-for using this encoder are in the gr::fec::code::ldpc_R_U_mtrx class
-reference in the manual.
-
-The simplest LDPC decoder is probably the
-gr::fec::code::ldpc_bit_flip_decoder, a hard decision decoding
-scheme. The decoder seeks to find the codeword that was most likely
-sent, which must satisfy Hx'= 0.  If the received codeword does not
-satisfy this parity check, then the decoder computes the parity checks
-on all of the bits. The bit(s) associated with the most failed parity
-checks are flipped.  The process repeats until a valid codeword is
-found, or a maximum number of iterations is reached, whichever comes
-first.
-
-The gr::fec::ldpc_decoder is a soft-decision decoder that uses belief
-propagation (also known as message passing). Designed for a memoryless
-AWGN channel, it assumes a noise variance entered in as 'Sigma' in the
-block. This is a suboptimal, yet efficient method of decoding LDPC
-codes.
 
 
 
@@ -450,5 +400,158 @@ going into an encoder and the number of bits coming out of a decoder.
 \li fecapi_async_decoders.grc
 \li fecapi_async_encoders.grc
 \li fecapi_async_to_stream.grc
+
+
+
+\section fec_ldpc LDPC Codes
+
+GNU Radio supports a few different ways of handling LDPC codes. There
+are many types of encoders and decoders available, and defining the
+code can come in many different flavors. GNU Radio has two encoders
+and two decoders.
+
+\subsection fec_alist Describing the alist Files
+
+We use an alist file format for storing the matrices in files. The
+alist format looks like:
+
+\verbatim
+ncolumns nrows
+max_col_weight max_row_weigth
+list_col_weights
+list_row_weigths
+column_1_indices
+row_1_indices
+\endverbatim
+
+The ncolumns is the number of column in the matrix and nrows is the
+number of rows, so this would define a (nrows x ncolumns) matrix. The
+column and row weights are how many 1's are in each column or row,
+respectively. The alist format tracks the maximum weight for all
+columns and all rows as well as lists all of the weights for each
+column one one line and each row on another. Then, the alist format
+lists the indices of all 1's in the columns followed by a list of the
+indices of all 1's in the rows. The matrix can be constructed using
+either the column or row indices lists, and a check would be to make
+sure they create the same matrix. Because LDPC deals with sparse
+matrices, the weights should be small relative to the number of
+columns/rows. All of the indices are 1 based, not 0.
+
+And example is the simple_g_matrix.alist file that comes with GNU
+Radio as a sample generator matrix. The generator matrix is in the
+form [I | P] where I is the (k x k) identity matrix and P is a (k x
+(n-k)) matrix representing the parity information. Together, G is a
+(k x n) matrix. The alist file looks like:
+
+\verbatim
+8 4
+3 4
+1 1 1 1 3 3 3 3
+4 4 4 4
+1
+2
+3
+4
+2 3 4
+1 3 4
+1 2 4
+1 2 3
+1 6 7 8
+2 5 7 8
+3 5 6 8
+4 5 6 7
+\endverbatim
+
+So it has 8 columns and 4 rows. The maximum number of 1's in any
+column is 3 and the maximum number of 1's in any row is 4. The next
+two lines are the weigths for each column and each row. Then we have 8
+lines that are the indices of the 1's in the columns followed by
+4 lines that are the indices fo the 1's in the rows. Note that the
+number of items in any of these rows matches up with the numbers in
+the column and matrix weight lists. Let's use the either the column or
+rows to construct the matrix.
+
+\verbatim
+1 0 0 0 0 1 1 1
+0 1 0 0 1 0 1 1
+0 0 1 0 1 1 0 1
+0 0 0 1 1 1 1 0
+\endverbatim
+
+Now go back and do it with the other set of of indices to
+verify. We can also count up the 1's along the columns and rows to
+verify the top few lines for even more check.
+
+\subsection fec_ldpc_encoders LDPC Encoders
+
+The encoders are gr::fec::ldpc_encoder and
+gr::fec::code::ldpc_gen_mtrx_encoder. Both take in a matrix, but there
+are two different forms of the matrix that they work with. The
+gr::fec::ldpc_encoder takes a parity check matrix, H, which is in
+upper triangular form. There are two constructors for this block. The
+first one, 'make', takes in an alist file that represents the parity
+matrix in the alist format described above. The 'make_H' function
+makes an LDPC encoder using matrix that's already been read into a
+special gr::fec::code::ldpc_H_matrix object. When using the alist file,
+we also need to tell it the gap size in the matrix, which is not
+represented in the file itself, but it should be known or part of the
+file name itself.
+
+The format of the parity check matrix, H, in upper triangular form is
+described as:
+
+\verbatim
+[ T A B ]
+[ E C D ]
+
+T: (n - k - g) x (n - k - g)
+A: (n - k - g) x g
+B: (n - k - g) x k
+E: g x (n - k - g)
+C: g x g
+D: g x k
+\endverbatim
+
+Where n is the size of the codeword, k is the size of the information
+word, and g is the size of the gap. See "Open-source Forward Error
+Correction using GNU Radio" for more description about this matrix:
+
+http://arc.aiaa.org/doi/abs/10.2514/6.2015-4655
+
+
+The other encoder is gr::fec::code::ldpc_gen_mtrx_encoder. This takes
+a generator matrix in systematic form G=[I P] which is (k x n). The
+codeword x is generated from the information word s via simple matrix
+multiplication: x=G^T s.
+
+The gr::fec::code::ldpc_encoder uses a reduced complexity
+algorithm. Compared to the gr::fec::code::ldpc_gen_mtrx_encoder, this
+requires orders of magnitude fewer operations at each encoding
+step. This is accomplished by completing a significant amount of the
+complex matrix manipulation (including inverse, multiplication, and
+Gaussian elimination operations) during preprocessing. The
+disadvantage of this encoder is that it requires a specially formatted
+matrix. GNU Radio tools to format a standard parity check matrix
+appropriately for this encoder, as well as a small library of
+encoding-ready matrices for use.
+
+
+\subsection fec_ldpc_decoder LDPC Decoders
+
+The simplest LDPC decoder is probably the
+gr::fec::code::ldpc_bit_flip_decoder, a hard decision decoding
+scheme. The decoder seeks to find the codeword that was most likely
+sent, which must satisfy Hx'= 0.  If the received codeword does not
+satisfy this parity check, then the decoder computes the parity checks
+on all of the bits. The bit(s) associated with the most failed parity
+checks are flipped.  The process repeats until a valid codeword is
+found, or a maximum number of iterations is reached, whichever comes
+first.
+
+The gr::fec::ldpc_decoder is a soft-decision decoder that uses belief
+propagation (also known as message passing). Designed for a memoryless
+AWGN channel, it assumes a noise variance entered in as 'Sigma' in the
+block. This is a suboptimal, yet efficient method of decoding LDPC
+codes.
 
 */

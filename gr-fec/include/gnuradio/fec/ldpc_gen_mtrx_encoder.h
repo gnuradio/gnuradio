@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 3, or (at your 
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 3, or (at your
  * option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -23,7 +23,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
-#include <gnuradio/fec/ldpc_HorG_mtrx.h>
+#include <gnuradio/fec/ldpc_G_matrix.h>
 
 namespace gr {
   namespace fec {
@@ -50,10 +50,10 @@ namespace gr {
       public:
         /*!
          * \brief Build an encoding FEC API object.
-         * \param M_obj The ldpc_HorG_mtrx object to use for
+         * \param G_obj The ldpc_G_matrix object to use for
          *              encoding.
          */
-        static generic_encoder::sptr make(const ldpc_HorG_mtrx *M_obj);
+        static generic_encoder::sptr make(const code::ldpc_G_matrix::sptr G_obj);
 
         /*!
          * \brief  Sets the uncoded frame size to \p frame_size.

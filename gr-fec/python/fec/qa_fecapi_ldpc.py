@@ -27,6 +27,13 @@ from _qa_helper import _qa_helper
 from extended_encoder import extended_encoder
 from extended_decoder import extended_decoder
 
+import os
+
+# Get location of the alist files. If run in 'ctest' or 'make test',
+# the shell script sets srcdir. Otherwise, we assume we're running
+# from the current directory and know where to go.
+LDPC_ALIST_DIR = os.getenv('srcdir', '.') + "/../../ldpc_alist/"
+
 class test_fecapi_ldpc(gr_unittest.TestCase):
 
     def setUp(self):
@@ -36,199 +43,199 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         self.tb = None
 
     def test_parallelism0_00(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = fec.ldpc_R_U_encoder_make(LDPC_matrix_object)
+        enc = fec.ldpc_encoder_make(LDPC_matrix_object)
         dec = fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)
         threading = None
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism0_01(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = fec.ldpc_R_U_encoder_make(LDPC_matrix_object)
+        enc = fec.ldpc_encoder_make(LDPC_matrix_object)
         dec = fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)
         threading = 'ordinary'
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism0_02(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = fec.ldpc_R_U_encoder_make(LDPC_matrix_object)
+        enc = fec.ldpc_H_encoder_make(LDPC_matrix_object)
         dec = fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)
         threading = 'capillary'
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_00(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,1))
+        enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,1))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,1))
         threading = None
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_01(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,1))
+        enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,1))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,1))
         threading = 'ordinary'
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_02(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,1))
+        enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,1))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,1))
         threading = 'capillary'
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_03(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 10
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
+        enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,dims))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
         threading = 'ordinary'
         self.test = _qa_helper(dims*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_04(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 16
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
+        enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,dims))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
         threading = 'capillary'
         self.test = _qa_helper(dims*k, enc, dec, threading)
         self.tb.connect(self.test)
         self.tb.run()
-        
+
         data_in = self.test.snk_input.data()
         data_out =self.test.snk_output.data()
 
         self.assertEqual(data_in, data_out)
 
     def test_parallelism1_05(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
+        enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,dims))
         # dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
         threading = 'capillary'
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
 
     def test_parallelism1_06(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        # enc = map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims))
+        # enc = map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,dims))
         dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object)), range(0,dims))
         threading = 'capillary'
         self.assertRaises(AttributeError, lambda: extended_decoder(dec, threading=threading, puncpat="11"))
 
     def test_parallelism2_00(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
-        k = LDPC_matrix_object.k()        
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
+        k = LDPC_matrix_object.k()
         dims1 = 16
-        dims2 = 16        
-        enc = map((lambda b: map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims1))), range(0,dims2))
+        dims2 = 16
+        enc = map((lambda b: map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,dims1))), range(0,dims2))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
 
     def test_parallelism2_00(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
-        k = LDPC_matrix_object.k()        
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
+        k = LDPC_matrix_object.k()
         dims1 = 16
-        dims2 = 16        
-        enc = map((lambda b: map((lambda a: fec.ldpc_R_U_encoder_make(LDPC_matrix_object)), range(0,dims1))), range(0,dims2))
+        dims2 = 16
+        enc = map((lambda b: map((lambda a: fec.ldpc_encoder_make(LDPC_matrix_object)), range(0,dims1))), range(0,dims2))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
 
     def test_parallelism2_01(self):
-        filename = "LDPC/n_0100_k_0027_gap_04.alist"
+        filename = LDPC_ALIST_DIR + "n_0100_k_0027_gap_04.alist"
         gap = 4
         dims = 5
-        LDPC_matrix_object = fec.ldpc_R_U_mtrx(filename, gap)
-        k = LDPC_matrix_object.k()  
+        LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
+        k = LDPC_matrix_object.k()
         dims1 = 16
-        dims2 = 16        
+        dims2 = 16
         dec = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder_make(LDPC_matrix_object)), range(0,dims1))), range(0,dims2))
         threading = 'capillary'
 
