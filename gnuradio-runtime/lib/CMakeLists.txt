@@ -55,9 +55,14 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
 		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
 		    ${VOLK_INCLUDE_DIRS}
-		    ${THRIFT_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
 )
+
+if(ENABLE_CTRLPORT_THRIFT)
+    list(APPEND include_directories
+        ${THRIFT_INCLUDE_DIRS}
+    )
+endif(ENABLE_CTRLPORT_THRIFT)
 
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
