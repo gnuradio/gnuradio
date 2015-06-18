@@ -44,6 +44,7 @@ FIND_PACKAGE(Thrift)
 
 if(THRIFT_FOUND)
 
+include_directories(${THRIFT_INCLUDE_DIRS})
 MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
 
 # Indicate thrift as an installed backend in the cmake summary.
