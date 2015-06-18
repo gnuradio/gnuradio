@@ -67,6 +67,24 @@ def approx_value(la, lb):
     return np.sign(la) * np.sign(lb) * np.minimum(np.abs(la), np.abs(lb))
 
 
+def path_metric_exact(last_pm, llr, ui):
+    return last_pm + np.log(1 + np.exp(-1. * llr * (1 - 2 * ui)))
+
+
+def path_metric_approx(last_pm, llr, ui):
+    if ui == int(.5 * (1 - np.sign(llr))):
+        return last_pm
+    return last_pm + np.abs(llr)
+
+
+def calculate_path_metric_vector(metric, llrs, us):
+    res = np.zeros(llrs.size)
+    res[0] = metric(0, llrs[0], us[0])
+    for i in range(1, llrs.size):
+        res[i] = metric(res[i - 1], llrs[i], us[i])
+    return res
+
+
 def test_1024_rate_1_code():
     # effectively a Monte-Carlo simulation for channel polarization.
     ntests = 10000
@@ -135,11 +153,12 @@ def main():
     # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
     # print frozenbitposition
 
-    test_enc_dec_chain()
+    # test_enc_dec_chain()
 
     # test_1024_rate_1_code()
 
-    # channel_analysis()
+    channel_analysis()
+
 
 if __name__ == '__main__':
     main()

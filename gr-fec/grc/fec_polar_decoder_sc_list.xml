@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<block>
+  <name>POLAR Decoder SC List Definition</name>
+  <key>variable_polar_decoder_sc_list_def</key>
+  <import>from gnuradio import fec</import>
+  <var_make>
+self.$(id) = $(id) = fec.polar_decoder_sc_list.make($max_list_size, $block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values, $is_packed)
+  </var_make>
+  <var_value>fec.polar_decoder_sc_list.make($max_list_size, $block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values, $is_packed)</var_value>
+  <make></make>
+
+
+  <param>
+    <name>Packed Bits</name>
+    <key>is_packed</key>
+    <value>False</value>
+    <type>enum</type>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Maximum List Size (L)</name>
+    <key>max_list_size</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Block size (N)</name>
+    <key>block_size</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>#Info Bits (K)</name>
+    <key>num_info_bits</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Frozen Bit Positions</name>
+    <key>frozen_bit_positions</key>
+    <type>int_vector</type>
+  </param>
+
+  <param>
+    <name>Frozen Bit Values</name>
+    <key>frozen_bit_values</key>
+    <type>int_vector</type>
+  </param>
+</block>

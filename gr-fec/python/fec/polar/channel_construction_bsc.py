@@ -23,23 +23,6 @@ from helper_functions import *
 import matplotlib.pyplot as plt
 
 
-# def bit_reverse(value, n):
-#     # is this really missing in NumPy???
-#     bits = np.zeros(n, type(value))
-#     for index in range(n):
-#         mask = 1
-#         mask = np.left_shift(mask, index)
-#         bit = np.bitwise_and(value, mask)
-#         bit = np.right_shift(bit, index)
-#         bits[index] = bit
-#     bits = bits[::-1]
-#     result = 0
-#     for index, bit in enumerate(bits):
-#         bit = np.left_shift(bit, index)
-#         result += bit
-#     return result
-
-
 def get_Bn(n):
     # this is a bit reversal matrix.
     lw = int(np.log2(n))  # number of used bits

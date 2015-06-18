@@ -122,16 +122,27 @@ class PolarDecoder(PolarCommon):
             u = np.append(u, ui)
         return u
 
+    def _llr_retrieve_bit(self, llr, pos):
+        f_index = np.where(self.frozen_bit_position == pos)[0]
+        if not f_index.size == 0:
+            ui = self.frozenbits[f_index][0]
+        else:
+            ui = self._llr_bit_decision(llr)
+        return ui
+
     def _butterfly_decode_bits(self, pos, graph, u):
+        bit_num = u.size
         llr = graph[pos][0]
-        ui = self._llr_bit_decision(llr)
+        ui = self._llr_retrieve_bit(llr, bit_num)
+        # ui = self._llr_bit_decision(llr)
         u = np.append(u, ui)
         lower_right = pos + (self.N // 2)
         la = graph[pos][1]
         lb = graph[lower_right][1]
         graph[lower_right][0] = self._llr_even(la, lb, ui)
         llr = graph[lower_right][0]
-        ui = self._llr_bit_decision(llr)
+        # ui = self._llr_bit_decision(llr)
+        ui = self._llr_retrieve_bit(llr, u.size)
         u = np.append(u, ui)
         return graph, u
 

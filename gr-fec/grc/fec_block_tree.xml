@@ -15,6 +15,8 @@
       <block>variable_ldpc_decoder_def</block>
       <block>variable_tpc_decoder_def</block>
       <block>variable_dummy_decoder_def</block>
+      <block>variable_polar_decoder_sc_def</block>
+      <block>variable_polar_decoder_sc_list_def</block>
     </cat>
     <cat>
       <name>Encoders</name>

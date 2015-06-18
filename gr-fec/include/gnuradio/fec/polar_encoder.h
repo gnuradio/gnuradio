@@ -26,16 +26,7 @@
 
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/generic_encoder.h>
-
-// Forward declaration for those objects. SWIG doesn't like them to be #include'd.
-namespace gr {
-  namespace blocks {
-    namespace kernel {
-      class pack_k_bits;
-      class unpack_k_bits;
-    }
-  }
-}
+#include <gnuradio/fec/polar_common.h>
 
 namespace gr {
   namespace fec {
@@ -44,7 +35,7 @@ namespace gr {
      * \brief POLAR encoder
      *
      */
-    class FEC_API polar_encoder : public generic_encoder
+    class FEC_API polar_encoder : public generic_encoder, public polar_common
     {
     public:
       static generic_encoder::sptr make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed = false);
@@ -53,17 +44,14 @@ namespace gr {
       // FECAPI
       void generic_work(void *in_buffer, void *out_buffer);
       double rate(){return (1.0 * get_input_size() / get_output_size());};
-      int get_input_size(){return d_input_size;};
-      int get_output_size(){return d_output_size;};
+      int get_input_size(){return num_info_bits() / (is_packed() ? 8 : 1);};
+      int get_output_size(){return block_size() / (is_packed() ? 8 : 1);};
       bool set_frame_size(unsigned int frame_size){return false;};
+      const char* get_input_conversion(){return is_packed() ? "pack" : "none";};
+      const char* get_output_conversion(){return is_packed() ? "packed_bits" : "none";};
 
     private:
       polar_encoder(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed);
-      int d_block_size; // depending on paper called 'N' or 'm'
-      int d_block_power;
-      int d_input_size, d_output_size;
-      bool d_is_packed;
-      int d_num_info_bits; // mostly abbreviated by 'K'
       std::vector<int> d_frozen_bit_positions;
       std::vector<int> d_info_bit_positions;
       std::vector<char> d_frozen_bit_values;
@@ -89,13 +77,6 @@ namespace gr {
       void encode_vector_packed_subbyte(unsigned char* target) const;
       void encode_packed_byte(unsigned char* target) const;
       void encode_vector_packed_interbyte(unsigned char* target) const;
-
-      // helper functions
-      long bit_reverse(long value, int active_bits) const;
-      void print_packed_bit_array(const unsigned char* printed_array, const int num_bytes) const;
-
-      gr::blocks::kernel::pack_k_bits *d_packer;
-      gr::blocks::kernel::unpack_k_bits *d_unpacker;
 
     };
 

@@ -19,6 +19,7 @@
 #
 
 import numpy as np
+from channel_construction_bec import get_bec_frozen_indices
 
 
 def is_power_of_two(num):
@@ -72,7 +73,8 @@ def pack_byte(bits):
 
 def get_frozen_bit_positions(directory, n, k, p):
     import glob, os
-    os.chdir(directory)
+    if not os.getcwd().endswith(directory):
+        os.chdir(directory)
     prefix = 'frozen_bit_positions_'
     prefix_len = len(prefix)
     for file in glob.glob("*.npy"):
@@ -90,7 +92,7 @@ def get_frozen_bit_positions(directory, n, k, p):
         pstr = float(pstr[0][1:])
         if n == nstr and k == kstr:
             return np.load(filename)
-    return np.arange(k)
+    return get_bec_frozen_indices(n, k, p)
 
 
 def main():

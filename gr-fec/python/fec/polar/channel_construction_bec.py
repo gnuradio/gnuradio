@@ -87,6 +87,12 @@ def get_frozen_bit_indices_from_capacities(chan_caps, nfrozen):
     return np.sort(indexes)
 
 
+def get_bec_frozen_indices(nblock, kfrozen, eta):
+    bec_caps = calculate_bec_channel_capacities(eta, nblock)
+    positions = get_frozen_bit_indices_from_capacities(bec_caps, kfrozen)
+    return positions
+
+
 def bec_channel_contruction_tests():
     n = 2 ** 10
     k = n // 2
