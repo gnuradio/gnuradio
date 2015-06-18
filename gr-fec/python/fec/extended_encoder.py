@@ -60,6 +60,9 @@ class extended_encoder(gr.hier_block2):
                                            gr.sizeof_char,
                                            gr.sizeof_char))
 
+        if fec.get_encoder_output_conversion(encoder_obj_list[0]) == "packed_bits":
+            self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST))
+
         if self.puncpat != '11':
             self.blocks.append(fec.puncture_bb(len(puncpat), read_bitlist(puncpat), 0))
 
