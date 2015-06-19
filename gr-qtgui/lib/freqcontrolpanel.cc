@@ -21,6 +21,7 @@
  */
 
 #include <gnuradio/qtgui/freqcontrolpanel.h>
+#include <cmath>
 
 FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   : QVBoxLayout(),
@@ -245,7 +246,7 @@ FreqControlPanel::notifyAvgSlider(int val)
 void
 FreqControlPanel::toggleFFTSize(int val)
 {
-  int index = static_cast<int>(logf(static_cast<float>(val))/logf(2.0f)) - 5;
+  int index = static_cast<int>(round(logf(static_cast<float>(val))/logf(2.0f))) - 5;
   d_fft_size_combo->setCurrentIndex(index);
 }
 
