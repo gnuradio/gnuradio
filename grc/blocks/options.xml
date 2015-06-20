@@ -49,9 +49,9 @@ else: self.stop(); self.wait()</callback>
 		<hide>#if $description() then 'none' else 'part'#</hide>
 	</param>
 	<param>
-		<name>Window Size</name>
-		<key>window_size</key>
-		<value>1280, 1024</value>
+		<name>Window Size</name> 
+		<key>window_size</key><!--This is the flowgraph window size -->
+		<value>3840, 2160</value>
 		<type>int_vector</type>
 		<hide>part</hide>
 	</param>
