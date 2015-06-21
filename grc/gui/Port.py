@@ -104,31 +104,25 @@ class Port(Element):
         #the connector length
         self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
 
-    def modify_height(self, start_height):
-        type_dict = {'bus':(lambda a: a * 3)};
-
-        if self.get_type() in type_dict:
-            return type_dict[self.get_type()](start_height);
-        else:
-            return start_height;
-
     def create_labels(self):
         """Create the labels for the socket."""
         Element.create_labels(self)
         self._bg_color = Colors.get_color(self.get_color())
-        #create the layout
+        # create the layout
         layout = gtk.DrawingArea().create_pango_layout('')
         layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self, font=PORT_FONT))
         self.w, self.h = layout.get_pixel_size()
-        self.W, self.H = 2*PORT_LABEL_PADDING + self.w, 2*PORT_LABEL_PADDING+self.h
-        self.H = self.modify_height(self.H)
-        #create the pixmap
+        self.W = 2 * PORT_LABEL_PADDING + self.w
+        self.H = 2 * PORT_LABEL_PADDING + self.h * (
+            3 if self.get_type() == 'bus' else 1)
+        self.H += self.H % 2
+        # create the pixmap
         pixmap = self.get_parent().get_parent().new_pixmap(self.w, self.h)
         gc = pixmap.new_gc()
         gc.set_foreground(self._bg_color)
         pixmap.draw_rectangle(gc, True, 0, 0, self.w, self.h)
         pixmap.draw_layout(gc, 0, 0, layout)
-        #create vertical and horizontal pixmaps
+        # create vertical and horizontal pixmaps
         self.horizontal_label = pixmap
         if self.is_vertical():
             self.vertical_label = self.get_parent().get_parent().new_pixmap(self.h, self.w)

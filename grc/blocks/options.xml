@@ -49,9 +49,9 @@ else: self.stop(); self.wait()</callback>
 		<hide>#if $description() then 'none' else 'part'#</hide>
 	</param>
 	<param>
-		<name>Window Size</name>
+		<name>Canvas Size</name>
 		<key>window_size</key>
-		<value>1280, 1024</value>
+		<value></value>
 		<type>int_vector</type>
 		<hide>part</hide>
 	</param>
@@ -174,9 +174,9 @@ part#slurp
 		</option>
 		<tab>Advanced</tab>
 	</param>
-	<check>len($window_size) == 2</check>
-	<check>300 &lt;= $(window_size)[0] &lt;= 4096</check>
-	<check>300 &lt;= $(window_size)[1] &lt;= 4096</check>
+	<check>not $window_size or len($window_size) == 2</check>
+	<check>not $window_size or 300 &lt;= $(window_size)[0] &lt;= 4096</check>
+	<check>not $window_size or 300 &lt;= $(window_size)[1] &lt;= 4096</check>
 	<doc>
 The options block sets special parameters for the flow graph. \
 Only one option block is allowed per flow graph.
