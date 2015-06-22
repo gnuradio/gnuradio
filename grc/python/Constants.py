@@ -50,31 +50,55 @@ FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
+
+# Updating colors. Using the standard color pallette from:
+#  http://www.google.com/design/spec/style/color.html#color-color-palette
+# Most are based on the main, primary color standard. Some are within
+# that color's spectrum when it was deemed necessary.
+GRC_COLOR_BROWN = '#795548'
+GRC_COLOR_BLUE = '#2196F3'
+GRC_COLOR_LIGHT_GREEN = '#8BC34A'
+GRC_COLOR_GREEN = '#4CAF50'
+GRC_COLOR_AMBER = '#FFC107'
+GRC_COLOR_PURPLE = '#9C27B0'
+GRC_COLOR_CYAN = '#00BCD4'
+GRC_COLOR_GR_ORANGE = '#FF6905'
+GRC_COLOR_ORANGE = '#F57C00'
+GRC_COLOR_LIME = '#CDDC39'
+GRC_COLOR_TEAL = '#009688'
+GRC_COLOR_YELLOW = '#FFEB3B'
+GRC_COLOR_PINK = '#F50057'
+GRC_COLOR_LIGHT_PURPLE = '#E040FB'
+GRC_COLOR_DARK_GREY = '#72706F'
+GRC_COLOR_GREY = '#BDBDBD'
+GRC_COLOR_WHITE = '#FFFFFF'
+
+
 CORE_TYPES = ( #name, key, sizeof, color
-    ('Complex Float 64', 'fc64', 16, '#CC8C69'),
-    ('Complex Float 32', 'fc32', 8, '#3399FF'),
-    ('Complex Integer 64', 'sc64', 16, '#66CC00'),
-    ('Complex Integer 32', 'sc32', 8, '#33cc66'),
-    ('Complex Integer 16', 'sc16', 4, '#cccc00'),
-    ('Complex Integer 8', 'sc8', 2, '#cc00cc'),
-    ('Float 64', 'f64', 8, '#66CCCC'),
-    ('Float 32', 'f32', 4, '#FF8C69'),
-    ('Integer 64', 's64', 8, '#99FF33'),
-    ('Integer 32', 's32', 4, '#00FF99'),
-    ('Integer 16', 's16', 2, '#FFFF66'),
-    ('Integer 8', 's8', 1, '#FF66FF'),
-    ('Message Queue', 'msg', 0, '#777777'),
-    ('Async Message', 'message', 0, '#C0C0C0'),
-    ('Bus Connection', 'bus', 0, '#FFFFFF'),
-    ('Wildcard', '', 0, '#FFFFFF'),
+    ('Complex Float 64', 'fc64', 16, GRC_COLOR_BROWN),
+    ('Complex Float 32', 'fc32', 8, GRC_COLOR_BLUE),
+    ('Complex Integer 64', 'sc64', 16, GRC_COLOR_LIGHT_GREEN),
+    ('Complex Integer 32', 'sc32', 8, GRC_COLOR_GREEN),
+    ('Complex Integer 16', 'sc16', 4, GRC_COLOR_AMBER),
+    ('Complex Integer 8', 'sc8', 2, GRC_COLOR_PURPLE),
+    ('Float 64', 'f64', 8, GRC_COLOR_CYAN),
+    ('Float 32', 'f32', 4, GRC_COLOR_ORANGE),
+    ('Integer 64', 's64', 8, GRC_COLOR_LIME),
+    ('Integer 32', 's32', 4, GRC_COLOR_TEAL),
+    ('Integer 16', 's16', 2, GRC_COLOR_YELLOW),
+    ('Integer 8', 's8', 1, GRC_COLOR_LIGHT_PURPLE),
+    ('Message Queue', 'msg', 0, GRC_COLOR_DARK_GREY),
+    ('Async Message', 'message', 0, GRC_COLOR_GREY),
+    ('Bus Connection', 'bus', 0, GRC_COLOR_WHITE),
+    ('Wildcard', '', 0, GRC_COLOR_WHITE),
 )
 
 ALIAS_TYPES = {
-    'complex' : (8, '#3399FF'),
-    'float'   : (4, '#FF8C69'),
-    'int'     : (4, '#00FF99'),
-    'short'   : (2, '#FFFF66'),
-    'byte'    : (1, '#FF66FF'),
+    'complex' : (8, GRC_COLOR_BLUE),
+    'float'   : (4, GRC_COLOR_ORANGE),
+    'int'     : (4, GRC_COLOR_TEAL),
+    'short'   : (2, GRC_COLOR_YELLOW),
+    'byte'    : (1, GRC_COLOR_LIGHT_PURPLE),
 }
 
 TYPE_TO_COLOR = dict()
