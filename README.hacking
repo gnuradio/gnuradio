@@ -32,12 +32,11 @@ README.building-boost for instructions
 
 * C++ and Python
 
-GNU Radio is a hybrid system.  Some parts of the system are built
-in C++ and some of it in Python.  In general, prefer Python to C++ for
-its simplicity; for performance-critical and system-related
-functionality. Signal processing primitives are still built in C++ for
-performance; the Vector-Optimized Library of Kernels (VOLK) is directly
-accessible from C++.
+GNU Radio is a hybrid system.  Some parts of the system are built in C++ and
+some of it in Python.  In general, prefer Python to C++ for its simplicity; for
+performance-critical and system-related functionality use C++. Signal
+processing primitives are still built in C++ for performance; the
+Vector-Optimized Library of Kernels (VOLK) is directly accessible from C++.
 
 
 * C++ namespaces
