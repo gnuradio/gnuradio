@@ -103,7 +103,8 @@ class Block(_Block, _GUIBlock):
         current_generate_option = self.get_parent().get_option('generate_options')
         for label, option in (('WX GUI', 'wx_gui'), ('QT GUI', 'qt_gui')):
             if self.get_name().startswith(label) and current_generate_option != option:
-                self.add_error_message("Can't generate this block in mode " + repr(option))
+                self.add_error_message("Can't generate this block in mode " +
+                                       repr(current_generate_option))
 
     def rewrite(self):
         """
