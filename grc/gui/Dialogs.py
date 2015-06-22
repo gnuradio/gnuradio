@@ -23,7 +23,8 @@ import gtk
 import Utils
 import Actions
 
-class TextDisplay(gtk.TextView):
+
+class SimpleTextDisplay(gtk.TextView):
     """A non editable gtk text view."""
 
     def __init__(self, text=''):
@@ -41,10 +42,18 @@ class TextDisplay(gtk.TextView):
         self.set_cursor_visible(False)
         self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
 
-        # Added for scroll locking
-        self.scroll_lock = True
 
-        # Add a signal for populating the popup menu
+class TextDisplay(SimpleTextDisplay):
+
+    def __init__(self, text=''):
+        """
+        TextDisplay constructor.
+
+        Args:
+            text: the text to display (string)
+        """
+        SimpleTextDisplay.__init__(self, text)
+        self.scroll_lock = True
         self.connect("populate-popup", self.populate_popup)
 
     def insert(self, line):
@@ -115,6 +124,7 @@ class TextDisplay(gtk.TextView):
         clear.connect('activate', self.clear_cb, view)
         menu.show_all()
         return False
+
 
 def MessageDialogHelper(type, buttons, title=None, markup=None, default_response=None, extra_buttons=None):
     """
