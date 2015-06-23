@@ -534,7 +534,10 @@ class MForm(QtGui.QWidget):
             self.edge_weights = map(lambda x: 100.0*x[2]["weight"], self.G.edges(data=True));
 
             # draw graph updates
-            self.updateGraph();
+            if(self.do_update):
+                self.drawGraph()
+            else:
+                self.updateGraph()
 
             latency = td1 + td2;
             self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms"%\
@@ -777,6 +780,9 @@ class MForm(QtGui.QWidget):
         #self.pos = nx.shell_layout(self.G);
         #self.pos = nx.spring_layout(self.G);
 
+        # Indicate to self.update to initialize the graph
+        self.do_update = False
+
         # generate weights and plot
         self.update();
 
@@ -813,9 +819,8 @@ class MForm(QtGui.QWidget):
         if self._grabbed:
             x, y = event.xdata, event.ydata
             if(x is not None and y is not None):
-                #print "NEW POS: ", (x,y)
                 self.pos[self._current_block] = (x,y)
-                self.updateGraph();
+                self.updateGraph()
 
     def button_release(self, event):
         self._grabbed = False
@@ -827,19 +832,19 @@ class MForm(QtGui.QWidget):
         itemname = str(item.text(0))
         self.parent.propertiesMenu(itemname, self.radioclient, self.uid)
 
-    def updateGraph(self):
+    def drawGraph(self):
 
+        self.do_update = True
         self.canvas.updateGeometry()
-        self.sp.clear();
+        self.sp.clear()
         plt.figure(self.f.number)
-        plt.subplot(111);
+        plt.subplot(111)
         nx.draw(self.G, self.pos,
                 edge_color=self.edge_weights,
                 node_color='#A0CBE2',
                 width=map(lambda x: 3+math.log(x), self.edge_weights),
                 node_shape="s",
                 node_size=self.node_weights,
-                #edge_cmap=plt.cm.Blues,
                 edge_cmap=plt.cm.Reds,
                 ax=self.sp,
                 arrows=False
@@ -847,8 +852,30 @@ class MForm(QtGui.QWidget):
         nx.draw_networkx_labels(self.G, self.pos,
                                 font_size=12)
 
-        self.canvas.draw();
-        self.canvas.show();
+        self.canvas.draw()
+        self.canvas.show()
+
+    def updateGraph(self):
+
+        self.sp.clear()
+        nx.draw_networkx_nodes(self.G, self.pos,
+                               node_color='#A0CBE2',
+                               node_shape="s",
+                               node_size=self.node_weights,
+                               ax=self.sp,
+                               arrows=False)
+
+        nx.draw_networkx_edges(self.G, self.pos,
+                               edge_color=self.edge_weights,
+                               width=map(lambda x: 3+math.log(x), self.edge_weights),
+                               edge_cmap=plt.cm.Reds,
+                               ax=self.sp,
+                               arrows=False)
+
+        nx.draw_networkx_labels(self.G, self.pos,
+                                ax=self.sp, font_size=12)
+
+        self.canvas.draw()
 
 
 class MyApp(object):
