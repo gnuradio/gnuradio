@@ -21,11 +21,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import os
 import sys
 import optparse
+import warnings
 
 import pygtk
 pygtk.require('2.0')
-import gtk
 
+warnings.filterwarnings("error")
+try:
+    import gtk
+except:
+    sys.exit("Failed to import gtk. If you are running over ssh, did you enable X forwarding and start ssh with -X?")
+warnings.filterwarnings("always")
 
 GR_IMPORT_ERROR_MESSAGE = """\
 Cannot import gnuradio.
