@@ -34,6 +34,7 @@ include_directories(
     ${VOLK_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
+    ${GSL_INCLUDE_DIRS}
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -71,6 +72,12 @@ list(APPEND gnuradio_fec_sources
   puncture_bb_impl.cc
   puncture_ff_impl.cc
   depuncture_bb_impl.cc
+  ldpc_R_U_mtrx.cc
+  ldpc_bit_flip_decoder_impl.cc
+  ldpc_R_U_encoder_impl.cc
+  ldpc_HorG_mtrx.cc
+  ldpc_gen_mtrx_encoder_impl.cc
+  fec_mtrx.cc
   ldpc_encoder.cc
   ldpc_decoder.cc
   cldpc.cc
@@ -103,6 +110,7 @@ list(APPEND gnuradio_fec_libs
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
+    ${GSL_LIBRARIES}
 )
 
 add_library(gnuradio-fec SHARED ${gnuradio_fec_sources})

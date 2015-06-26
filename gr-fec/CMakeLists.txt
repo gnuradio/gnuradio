@@ -90,10 +90,12 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/fec)
+    add_subdirectory(python/fec/LDPC)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
 add_subdirectory(examples)
 add_subdirectory(doc)
+add_subdirectory(ldpc_alist)
 
 ########################################################################
 # Create Pkg Config File
