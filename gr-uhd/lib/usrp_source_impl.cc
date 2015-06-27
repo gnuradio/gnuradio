@@ -545,8 +545,8 @@ namespace gr {
         return work(noutput_items, input_items, output_items);
 
       default:
-        std::cout << boost::format("UHD source block got error code 0x%x")
-          % _metadata.error_code << std::endl;
+        //GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error: %d") % _metadata.strerror());
+        GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error code: %d") % _metadata.error_code);
         return num_samps;
       }
 
