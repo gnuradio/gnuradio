@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008,2009,2011,2012 Free Software Foundation, Inc.
+# Copyright 2008,2009,2011,2012,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,32 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
-from gnuradio.uhd import uhd_siggen_base as uhd_siggen
-import sys
+try:
+    import uhd_siggen_base as uhd_siggen
+except ImportError:
+    from gnuradio.uhd import uhd_siggen_base as uhd_siggen
 
-def main():
-    if gr.enable_realtime_scheduling() != gr.RT_OK:
-        print "Note: failed to enable realtime scheduling, continuing"
-
-    # Grab command line options and create top block
-    try:
-        (options, args) = uhd_siggen.get_options()
-        tb = uhd_siggen.top_block(options, args)
-
-    except RuntimeError, e:
-        print e
-        sys.exit(1)
-
-    tb.start()
-    raw_input('Press Enter to quit: ')
-    tb.stop()
-    tb.wait()
-
-# Make sure to create the top block (tb) within a function:
-# That code in main will allow tb to go out of scope on return,
-# which will call the decontructor on usrp and stop transmit.
-# Whats odd is that grc works fine with tb in the __main__,
-# perhaps its because the try/except clauses around tb.
 if __name__ == "__main__":
-    main()
+    uhd_siggen.main()
