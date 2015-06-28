@@ -146,49 +146,95 @@ namespace gr {
   public:
     friend GR_RUNTIME_API flowgraph_sptr make_flowgraph();
 
-    // Destruct an arbitrary flowgraph
+    /*!
+     * \brief Destruct an arbitrary flowgraph
+     */
     virtual ~flowgraph();
 
-    // Connect two endpoints
+    /*!
+     * \brief Connect two endpoints
+     * \details
+     * Checks the validity of both endpoints, and whether the
+     * destination is unused so far, then adds the edge to the internal list of
+     * edges.
+     */
     void connect(const endpoint &src, const endpoint &dst);
 
-    // Disconnect two endpoints
+    /*!
+     * \brief Disconnect two endpoints
+     */
     void disconnect(const endpoint &src, const endpoint &dst);
 
-    // Connect an output port to an input port (convenience)
+    /*!
+     * \brief convenience wrapper; used to connect two endpoints
+     */
     void connect(basic_block_sptr src_block, int src_port,
                  basic_block_sptr dst_block, int dst_port);
 
-    // Disconnect an input port from an output port (convenience)
+    /*!
+     * \brief convenience wrapper; used to disconnect two endpoints
+     */
     void disconnect(basic_block_sptr src_block, int src_port,
                     basic_block_sptr dst_block, int dst_port);
 
-    // Connect two msg endpoints
+    /*!
+     * \brief Connect two message endpoints
+     * \details
+     * Checks the validity of both endpoints, then adds the edge to the
+     * internal list of edges.
+     */
     void connect(const msg_endpoint &src, const msg_endpoint &dst);
 
-    // Disconnect two msg endpoints
+    /*!
+     * \brief Disconnect two message endpoints
+     */
     void disconnect(const msg_endpoint &src, const msg_endpoint &dst);
 
-    // Validate connectivity, raise exception if invalid
+    /*!
+     * \brief Validate flow graph
+     * \details
+     * Gathers all used blocks, checks the contiguity of all connected in- and
+     * outputs, and calls the check_topology method of each block.
+     */
     void validate();
 
-    // Clear existing flowgraph
+    /*!
+     * \brief Clear existing flowgraph
+     */
     void clear();
 
-    // Return vector of edges
+    /*!
+     * \brief Get vector of edges
+     */
     const edge_vector_t &edges() const { return d_edges; }
 
-    // Return vector of msg edges
+    /*!
+     * \brief Get vector of message edges
+     */
     const msg_edge_vector_t &msg_edges() const { return d_msg_edges; }
 
-    // Return vector of connected blocks
+    /*!
+     * \brief calculates all used blocks in a flow graph
+     * \details
+     * Iterates over all message edges and stream edges, noting both endpoints in a vector.
+     *
+     * \return a unique vector of used blocks
+     */
     basic_block_vector_t calc_used_blocks();
 
-    // Return toplogically sorted vector of blocks.  All the sources come first.
+    /*!
+     * \brief topologically sort blocks
+     * \details
+     * Uses depth-first search to return a sorted vector of blocks
+     *
+     * \return toplogically sorted vector of blocks.  All the sources come first.
+     */
     basic_block_vector_t topological_sort(basic_block_vector_t &blocks);
 
-    // Return vector of vectors of disjointly connected blocks,
-    // topologically sorted.
+    /*!
+     * \brief Calculate vector of disjoint graph partions
+     * \return vector of disjoint vectors of topologically sorted blocks
+     */
     std::vector<basic_block_vector_t> partition();
 
   protected:
