@@ -490,10 +490,18 @@ $(gui_hint()($win))</make>
     <name>in</name>
     <type>$type</type>
     <nports>$nconnections</nports>
+    <optional>1</optional>
   </sink>
 
   <sink>
     <name>freq</name>
+    <type>message</type>
+    <optional>1</optional>
+    <hide>$showports</hide>
+  </sink>
+
+  <sink>
+    <name>pdus</name>
     <type>message</type>
     <optional>1</optional>
     <hide>$showports</hide>

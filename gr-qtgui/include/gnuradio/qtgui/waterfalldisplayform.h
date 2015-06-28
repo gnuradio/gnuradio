@@ -65,7 +65,7 @@ class WaterfallDisplayForm : public DisplayForm
 
 public slots:
   void customEvent(QEvent *e);
-
+  void setTimeTitle(const std::string);
   void setSampleRate(const QString &samprate);
   void setFFTSize(const int);
   void setFFTAverage(const float);
