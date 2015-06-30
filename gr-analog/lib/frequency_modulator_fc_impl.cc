@@ -34,13 +34,13 @@ namespace gr {
   namespace analog {
 
     frequency_modulator_fc::sptr
-    frequency_modulator_fc::make(double sensitivity)
+    frequency_modulator_fc::make(float sensitivity)
     {
       return gnuradio::get_initial_sptr
 	(new frequency_modulator_fc_impl(sensitivity));
     }
 
-    frequency_modulator_fc_impl::frequency_modulator_fc_impl(double sensitivity)
+    frequency_modulator_fc_impl::frequency_modulator_fc_impl(float sensitivity)
       : sync_block("frequency_modulator_fc",
 		      io_signature::make(1, 1, sizeof(float)),
 		      io_signature::make(1, 1, sizeof(gr_complex))),
