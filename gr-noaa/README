@@ -15,15 +15,12 @@ HRPT minor frames into a file.  The file stores a series of 11090 word,
 16-bits per word corresponding to the HRPT minor frame format (only the
 lower 10-bits per word are significant.)
 
-The script file by default uses USRP side A, 1698 MHz, at decimation 16. The
-gnuradio configuration file ~/.gnuradio/config.conf, section 'usrp_rx_hrpt.cfg',
-will allow changing this, as well as implementing persistent storage of GUI
-entered parameters from invocation to invocation.
+The script file by default uses USRP side A, 1698 MHz, at a sampling rate of
+4MHz. The gnuradio configuration file ~/.gnuradio/config.conf, section
+'usrp_rx_hrpt.cfg', will allow changing this, as well as implementing
+persistent storage of GUI entered parameters from invocation to invocation.
 
-The present HRPT demodulator is only tested at decimation 16.  The only other
-valid decimation rates are 24 and 32, which may work but with more bit
-errors.  No other decimation rates will work.
-
+The present HRPT demodulator is only tested at 4MS/s.
 
 file_rx_hrpt.py
 ---------------
