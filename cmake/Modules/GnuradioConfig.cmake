@@ -133,6 +133,7 @@ GR_MODULE(UHD gnuradio-uhd gnuradio/uhd/api.h gnuradio-uhd)
 GR_MODULE(VOCODER gnuradio-vocoder gnuradio/vocoder/api.h gnuradio-vocoder)
 GR_MODULE(WAVELET gnuradio-wavelet gnuradio/wavelet/api.h gnuradio-wavelet)
 GR_MODULE(WXGUI gnuradio-wxgui gnuradio/wxgui/api.h gnuradio-wxgui)
+GR_MODULE(ZEROMQ gnuradio-zeromq gnuradio/zeromq/api.h gnuradio-zeromq)
 GR_MODULE(PMT gnuradio-runtime pmt/pmt.h gnuradio-pmt)
 GR_MODULE(VOLK volk volk/volk.h volk)
 
