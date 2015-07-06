@@ -170,7 +170,7 @@ class BlockTreeWindow(gtk.VBox):
     def _expand_category(self):
         treestore, iter = self.treeview.get_selection().get_selected()
         if iter and treestore.iter_has_child(iter):
-            path = self.treestore.get_path(iter)
+            path = treestore.get_path(iter)
             self.treeview.expand_to_path(path)
 
     ############################################################
