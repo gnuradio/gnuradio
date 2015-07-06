@@ -33,8 +33,8 @@ namespace gr {
 
     /*!
      * \brief Standard successive cancellation decoder for POLAR codes
-     * It expects float input with bits mapped 1 --> -1, 0 --> 1
-     * Or: f = 1.0 - 2.0 * bit
+     * It expects float input with bits mapped 1 --> 1, 0 --> -1
+     * Or: f = 2.0 * bit - 1.0
      *
      */
     class FEC_API polar_decoder_sc : public polar_decoder_common

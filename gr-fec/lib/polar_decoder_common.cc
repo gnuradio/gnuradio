@@ -39,7 +39,7 @@ namespace gr {
                                                std::vector<int> frozen_bit_positions,
                                                std::vector<char> frozen_bit_values, bool is_packed) :
         polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed),
-        D_LLR_FACTOR(2.19722458f),
+        D_LLR_FACTOR(-2.19722458f),
         d_frozen_bit_positions(frozen_bit_positions),
         d_frozen_bit_values(frozen_bit_values)
     {

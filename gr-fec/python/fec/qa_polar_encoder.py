@@ -26,7 +26,7 @@ import numpy as np
 
 from extended_encoder import extended_encoder
 from polar.encoder import PolarEncoder
-from polar.helper_functions import get_frozen_bit_positions
+import polar.channel_construction as cc
 
 
 class test_polar_encoder(gr_unittest.TestCase):
@@ -40,7 +40,7 @@ class test_polar_encoder(gr_unittest.TestCase):
     def test_001_setup(self):
         block_size = 16
         num_info_bits = 8
-        frozen_bit_positions = np.arange(block_size - num_info_bits)
+        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([],)
 
         polar_encoder = fec.polar_encoder.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
@@ -54,7 +54,7 @@ class test_polar_encoder(gr_unittest.TestCase):
         block_size = 256
         num_info_bits = 128
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = get_frozen_bit_positions('polar', block_size, num_frozen_bits, 0.11)
+        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
         python_encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
 
@@ -83,7 +83,7 @@ class test_polar_encoder(gr_unittest.TestCase):
         block_size = 256
         num_info_bits = 128
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = get_frozen_bit_positions('/home/johannes/src/gnuradio-polar/gr-fec/python/fec/polar', block_size, num_frozen_bits, 0.11)
+        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
         python_encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
 

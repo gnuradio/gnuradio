@@ -45,5 +45,6 @@
     <block>fec_depuncture_bb</block>
     <block>fec_ber_bf</block>
     <block>fec_bercurve_generator</block>
+    <block>variable_polar_code_configurator</block>
   </cat>
 </cat>

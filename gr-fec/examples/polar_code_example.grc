@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.8'?>
 <flow_graph>
-  <timestamp>Mon Jun 15 10:51:02 2015</timestamp>
+  <timestamp>Thu Jul 16 16:19:12 2015</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -18,17 +18,7 @@
     </param>
     <param>
       <key>comment</key>
-      <value># for rough throughput measurements.
-
-    tb = polar_encoder_decoder_chain()
-    start_time = time.time()
-    tb.start()
-    tb.wait()
-    stop_time = time.time()
-    samps = 2 ** 22
-    diff = stop_time - start_time
-    throughput = tb.head_samps / diff
-    print("exe time:", diff, ", with ", tb.head_samps, "samps, throughput: ", throughput)</value>
+      <value></value>
     </param>
     <param>
       <key>description</key>
@@ -52,7 +42,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>polar_encoder_decoder_chain</value>
+      <value>polar_code_example</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -64,7 +54,7 @@
     </param>
     <param>
       <key>run_options</key>
-      <value>run</value>
+      <value>prompt</value>
     </param>
     <param>
       <key>run</key>
@@ -76,11 +66,11 @@
     </param>
     <param>
       <key>title</key>
-      <value>POLAR Encoder and Decoder</value>
+      <value>POLAR code example flowgraph</value>
     </param>
     <param>
       <key>window_size</key>
-      <value>1920, 1080</value>
+      <value>1280, 1024</value>
     </param>
   </block>
   <block>
@@ -95,7 +85,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(360, 11)</value>
+      <value>(440, 11)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -103,22 +93,49 @@
     </param>
     <param>
       <key>id</key>
-      <value>head_samps</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>value</key>
-      <value>2 ** 22</value>
+      <value>1024</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(560, 11)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>n_info_bits</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>block_size / 2</value>
     </param>
   </block>
   <block>
     <key>variable_polar_code_configurator</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>channel</key>
@@ -134,7 +151,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 139)</value>
+      <value>(456, 75)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -146,22 +163,22 @@
     </param>
     <param>
       <key>design_snr</key>
-      <value>2.0</value>
+      <value>0.0</value>
     </param>
     <param>
       <key>mu</key>
-      <value>16</value>
+      <value>32</value>
     </param>
   </block>
   <block>
     <key>variable_polar_decoder_sc_def</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>comment</key>
@@ -173,7 +190,7 @@
     </param>
     <param>
       <key>dim2</key>
-      <value>4</value>
+      <value>1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -181,15 +198,15 @@
     </param>
     <param>
       <key>frozen_bit_positions</key>
-      <value>range(128)</value>
+      <value>polar_config['positions']</value>
     </param>
     <param>
       <key>frozen_bit_values</key>
-      <value>[0] * 128</value>
+      <value>polar_config['values']</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(864, 555)</value>
+      <value>(640, 203)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -212,11 +229,11 @@
     <key>variable_polar_encoder_def</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>comment</key>
@@ -228,62 +245,7 @@
     </param>
     <param>
       <key>dim2</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>frozen_bit_positions</key>
-      <value>range(128)</value>
-    </param>
-    <param>
-      <key>frozen_bit_values</key>
-      <value>[0] * 128</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(192, 451)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>polar_encoder</value>
-    </param>
-    <param>
-      <key>is_packed</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>ndim</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_polar_decoder_sc_list_def</key>
-    <param>
-      <key>num_info_bits</key>
-      <value>128</value>
-    </param>
-    <param>
-      <key>block_size</key>
-      <value>256</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>dim1</key>
       <value>1</value>
-    </param>
-    <param>
-      <key>dim2</key>
-      <value>4</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -299,7 +261,62 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 539)</value>
+      <value>(256, 203)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>polar_encoder</value>
+    </param>
+    <param>
+      <key>is_packed</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>ndim</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_polar_decoder_sc_list_def</key>
+    <param>
+      <key>num_info_bits</key>
+      <value>n_info_bits</value>
+    </param>
+    <param>
+      <key>block_size</key>
+      <value>block_size</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>dim1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>dim2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>frozen_bit_positions</key>
+      <value>polar_config['positions']</value>
+    </param>
+    <param>
+      <key>frozen_bit_values</key>
+      <value>polar_config['values']</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(424, 203)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -323,6 +340,33 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(8, 107)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>350e3</value>
+    </param>
+  </block>
+  <block>
     <key>analog_random_source_x</key>
     <param>
       <key>alias</key>
@@ -342,7 +386,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(0, 323)</value>
+      <value>(40, 467)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -370,7 +414,7 @@
     </param>
     <param>
       <key>num_samps</key>
-      <value>2 ** 10 </value>
+      <value>2 ** 10 +1</value>
     </param>
     <param>
       <key>type</key>
@@ -405,7 +449,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(752, 347)</value>
+      <value>(616, 491)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -448,11 +492,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 347)</value>
+      <value>(976, 491)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -499,7 +543,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(616, 347)</value>
+      <value>(480, 491)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -527,7 +571,15 @@
     </param>
   </block>
   <block>
-    <key>blocks_head</key>
+    <key>fec_ber_bf</key>
+    <param>
+      <key>berlimit</key>
+      <value>-7.0</value>
+    </param>
+    <param>
+      <key>berminerrors</key>
+      <value>100</value>
+    </param>
     <param>
       <key>alias</key>
       <value></value>
@@ -546,7 +598,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(944, 459)</value>
+      <value>(728, 360)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -554,7 +606,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>blocks_head_0</value>
+      <value>fec_ber_bf_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -565,63 +617,8 @@
       <value>0</value>
     </param>
     <param>
-      <key>num_items</key>
-      <value>head_samps</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_null_sink</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bus_conns</key>
-      <value>[[0,],]</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1160, 464)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_null_sink_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
+      <key>test_mode</key>
+      <value>False</value>
     </param>
   </block>
   <block>
@@ -652,7 +649,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 323)</value>
+      <value>(736, 467)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -699,7 +696,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>encoder_list</key>
@@ -707,7 +704,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 331)</value>
+      <value>(224, 475)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -735,7 +732,15 @@
     </param>
   </block>
   <block>
-    <key>import</key>
+    <key>qtgui_number_sink</key>
+    <param>
+      <key>autoscale</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>avg</key>
+      <value>0</value>
+    </param>
     <param>
       <key>alias</key>
       <value></value>
@@ -745,24 +750,216 @@
       <value></value>
     </param>
     <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 32)</value>
+      <value>(1008, 355)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value></value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
     <param>
-      <key>id</key>
-      <value>import_0</value>
+      <key>graph_type</key>
+      <value>qtgui.NUM_GRAPH_HORIZ</value>
     </param>
     <param>
-      <key>import</key>
-      <value>import time</value>
+      <key>id</key>
+      <value>qtgui_number_sink_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>color1</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor1</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit1</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color10</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor10</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label10</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit10</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color2</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor2</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit2</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color3</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor3</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit3</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color4</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor4</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit4</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color5</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor5</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit5</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color6</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor6</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit6</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color7</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor7</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit7</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color8</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor8</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit8</key>
+      <value></value>
+    </param>
+    <param>
+      <key>color9</key>
+      <value>("black", "black")</value>
+    </param>
+    <param>
+      <key>factor9</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>label9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>unit9</key>
+      <value></value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>-1</value>
+    </param>
+    <param>
+      <key>name</key>
+      <value>""</value>
+    </param>
+    <param>
+      <key>nconnections</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>update_time</key>
+      <value>0.10</value>
     </param>
   </block>
   <block>
@@ -793,11 +990,11 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1256, 331)</value>
+      <value>(1112, 475)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1126,7 +1323,7 @@
   </block>
   <connection>
     <source_block_id>analog_random_source_x_0</source_block_id>
-    <sink_block_id>blocks_char_to_float_0_0</sink_block_id>
+    <sink_block_id>fec_ber_bf_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1155,8 +1352,8 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_head_0</source_block_id>
-    <sink_block_id>blocks_null_sink_0</sink_block_id>
+    <source_block_id>fec_ber_bf_0</source_block_id>
+    <sink_block_id>qtgui_number_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -1168,9 +1365,9 @@
   </connection>
   <connection>
     <source_block_id>fec_extended_decoder_0</source_block_id>
-    <sink_block_id>blocks_head_0</sink_block_id>
+    <sink_block_id>fec_ber_bf_0</sink_block_id>
     <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>fec_extended_encoder_0</source_block_id>

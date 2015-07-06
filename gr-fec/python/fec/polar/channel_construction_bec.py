@@ -19,24 +19,7 @@
 #
 
 import numpy as np
-import matplotlib.pyplot as plt
-
-def bsc_channel(p):
-    '''
-    binary symmetric channel (BSC)
-    output alphabet Y = {0, 1} and
-    W(0|0) = W(1|1) and W(1|0) = W(0|1)
-
-    this function returns a prob's vector for a BSC
-    p denotes an erroneous transistion
-    '''
-    if not (p >= 0.0 and p <= 1.0):
-        print "given p is out of range!"
-        return np.array([], dtype=float)
-
-    # 0 -> 0, 0 -> 1, 1 -> 0, 1 -> 1
-    W = np.array([[1 - p, p], [p, 1 - p]], dtype=float)
-    return W
+import helper_functions as hf
 
 
 def bec_channel(eta):
@@ -50,7 +33,6 @@ def bec_channel(eta):
     # looks like BSC but should be interpreted differently.
     W = np.array((1 - eta, eta, 1 - eta), dtype=float)
     return W
-
 
 def odd_rec(iwn):
     return iwn ** 2
@@ -69,48 +51,64 @@ def calc_one_recursion(iw0):
     return iw1
 
 
-def calculate_bec_channel_capacities(eta, n):
+def calculate_bec_channel_capacities(eta, block_size):
+    # compare [0, Arikan] eq. 6
     iw = 1 - eta  # holds for BEC as stated in paper
     iw = np.array([iw, ], dtype=float)
-    lw = int(np.log2(n))
+    lw = int(np.log2(block_size))
     for i in range(lw):
         iw = calc_one_recursion(iw)
     return iw
 
 
-def get_frozen_bit_indices_from_capacities(chan_caps, nfrozen):
-    indexes = np.array([], dtype=int)
-    while indexes.size < nfrozen:
-        index = np.argmin(chan_caps)
-        indexes = np.append(indexes, index)
-        chan_caps[index] = 1.0
-    return np.sort(indexes)
+def calculate_z_parameters_one_recursion(z_params):
+    z_next = np.zeros(2 * z_params.size)
+    for i in range(z_params.size):
+        z_sq = z_params[i] ** 2
+        z_next[2 * i] = 2 * z_params[i] - z_sq
+        z_next[2 * i + 1] = z_sq
+    return z_next
 
 
-def get_bec_frozen_indices(nblock, kfrozen, eta):
-    bec_caps = calculate_bec_channel_capacities(eta, nblock)
-    positions = get_frozen_bit_indices_from_capacities(bec_caps, kfrozen)
-    return positions
+def calculate_bec_channel_z_parameters(eta, block_size):
+    # compare [0, Arikan] eq. 38
+    block_power = hf.power_of_2_int(block_size)
+    z_params = np.array([eta,], dtype=float)
+    for block_size in range(block_power):
+        z_params = calculate_z_parameters_one_recursion(z_params)
+    return z_params
 
 
-def bec_channel_contruction_tests():
-    n = 2 ** 10
-    k = n // 2
-    eta = 0.3
-    bec_capacities = calculate_bec_channel_capacities(eta, n)
-    print(bec_capacities)
+def design_snr_to_bec_eta(design_snr):
+    s = 10. ** (design_snr / 10.)
+    return np.exp(-s)
 
-    frozenbits_position = get_frozen_bit_indices_from_capacities(bec_capacities, k)
 
-    print('frozenbit_positions:')
-    print(frozenbits_position)
-    print('frozenbit_num:', frozenbits_position.size)
+def bhattacharyya_bounds(design_snr, block_size):
+    '''
+    Harish Vangala, Emanuele Viterbo, Yi Hong: 'A Comparative Study of Polar Code Constructions for the AWGN Channel', 2015
+    In this paper it is called Bhattacharyya bounds channel construction and is abbreviated PCC-0
+    Best design SNR for block_size = 2048, R = 0.5, is 0dB.
+    Compare with Arikan: 'Channel Polarization: A Method for Constructing Capacity-Achieving Codes for Symmetric Binary-Input Memoryless Channels.
+    Proposition 5. inequalities turn into equalities for BEC channel. Otherwise they represent an upper bound.
+    Also compare [0, Arikan] eq. 6 and 38
+    For BEC that translates to capacity(i) = 1 - bhattacharyya(i)
+    :return Z-parameters in natural bit-order. Choose according to desired rate.
+    '''
+    # minimum design snr = -1.5917 corresponds to BER = 0.5
+    s = 10 ** (design_snr / 10)  # 'initial z parameter'.
+    eta = np.exp(-s)
+    return calculate_bec_channel_z_parameters(eta, block_size)
 
 
 def main():
     print 'channel construction main'
-    bec_channel_contruction_tests()
-
+    n = 4
+    block_size = 2 ** n
+    design_snr = 1.0
+    eta = design_snr_to_bec_eta(design_snr)
+    print(calculate_bec_channel_z_parameters(eta, block_size))
+    print(calculate_bec_channel_capacities(eta, block_size))
 
 if __name__ == '__main__':
     main()

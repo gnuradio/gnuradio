@@ -31,7 +31,7 @@ from extended_encoder import extended_encoder
 from extended_decoder import extended_decoder
 from polar.encoder import PolarEncoder
 from polar.decoder import PolarDecoder
-from polar.helper_functions import get_frozen_bit_positions
+import polar.channel_construction as cc
 # from polar.helper_functions import bit_reverse_vector
 
 # print('PID:', os.getpid())
@@ -66,7 +66,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = get_frozen_bit_positions('polar', block_size, num_frozen_bits, 0.11)
+        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
         print frozen_bit_positions
 
@@ -77,7 +77,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
         data = encoder.encode(bits)
         # data = np.array([0, 1, 1, 0, 1, 0, 1, 0], dtype=int)
-        gr_data = -2.0 * data + 1.0
+        gr_data = 2.0 * data - 1.0
 
         polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
         src = blocks.vector_source_f(gr_data, False)
@@ -106,7 +106,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
         num_frozen_bits = block_size - num_info_bits
-        frozen_bit_positions = get_frozen_bit_positions('polar', block_size, num_frozen_bits, 0.11)
+        frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
         print frozen_bit_positions
 
@@ -124,7 +124,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         # bits = np.random.randint(2, size=num_info_bits)
         # data = encoder.encode(bits)
         # data = np.array([0, 1, 1, 0, 1, 0, 1, 0], dtype=int)
-        gr_data = -2.0 * data + 1.0
+        gr_data = 2.0 * data - 1.0
 
         polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
         src = blocks.vector_source_f(gr_data, False)

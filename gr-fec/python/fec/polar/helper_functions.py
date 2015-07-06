@@ -19,7 +19,11 @@
 #
 
 import numpy as np
-from channel_construction_bec import get_bec_frozen_indices
+import time, sys
+
+
+def power_of_2_int(num):
+    return int(np.log2(num))
 
 
 def is_power_of_two(num):
@@ -71,28 +75,43 @@ def pack_byte(bits):
     return res
 
 
-def get_frozen_bit_positions(directory, n, k, p):
-    import glob, os
-    if not os.getcwd().endswith(directory):
-        os.chdir(directory)
-    prefix = 'frozen_bit_positions_'
-    prefix_len = len(prefix)
-    for file in glob.glob("*.npy"):
-        if file.find(prefix) < 0:
-            continue
-        filename = file
-        file = file[file.find(prefix) + prefix_len:]
-        file = file[:-4]
-        file = file.split('_')
-        nstr = [x for x in file if x.startswith('n')]
-        kstr = [x for x in file if x.startswith('k')]
-        pstr = [x for x in file if x.startswith('p')]
-        nstr = int(nstr[0][1:])
-        kstr = int(kstr[0][1:])
-        pstr = float(pstr[0][1:])
-        if n == nstr and k == kstr:
-            return np.load(filename)
-    return get_bec_frozen_indices(n, k, p)
+def show_progress_bar(ndone, ntotal):
+    nchars = 50
+
+    fract = (1. * ndone / ntotal)
+    percentage = 100. * fract
+    ndone_chars = int(nchars * fract)
+    nundone_chars = nchars - ndone_chars
+    sys.stdout.write('\r[{0}{1}] {2:5.2f}% ({3} / {4})'.format('=' * ndone_chars, ' ' * nundone_chars, percentage, ndone, ntotal))
+
+
+
+def mutual_information(w):
+    '''
+    calculate mutual information I(W)
+    I(W) = sum over y e Y ( sum over x e X ( ... ) )
+    .5 W(y|x) log frac { W(y|x) }{ .5 W(y|0) + .5 W(y|1) }
+    '''
+    ydim, xdim = np.shape(w)
+    i = 0.0
+    for y in range(ydim):
+        for x in range(xdim):
+            v = w[y][x] * np.log2(w[y][x] / (0.5 * w[y][0] + 0.5 * w[y][1]))
+            i += v
+    i /= 2.0
+    return i
+
+
+def bhattacharyya_parameter(w):
+    '''bhattacharyya parameter is a measure of similarity between two prob. distributions'''
+    # sum over all y e Y for sqrt( W(y|0) * W(y|1) )
+    dim = np.shape(w)
+    ydim = dim[0]
+    z = 0.0
+    for y in range(ydim):
+        z += np.sqrt(w[0, y] * w[1, y])
+    # need all
+    return z
 
 
 def main():
@@ -109,6 +128,15 @@ def main():
 
     print(np.arange(16))
     print bit_reverse_vector(np.arange(16), 4)
+
+    ntotal = 99
+    for i in range(ntotal):
+        show_progress_bar(i, ntotal)
+        time.sleep(0.1)
+
+    # sys.stdout.write('Hello')
+    # time.sleep(1)
+    # sys.stdout.write('\rMomy   ')
 
 if __name__ == '__main__':
     main()
