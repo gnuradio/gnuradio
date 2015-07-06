@@ -26,6 +26,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/logger.h>
 #include <iostream>
 
 namespace gr {

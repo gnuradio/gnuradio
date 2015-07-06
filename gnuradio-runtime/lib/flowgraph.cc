@@ -87,6 +87,7 @@ namespace gr {
 
     std::stringstream msg;
     msg << "cannot disconnect edge " << edge(src, dst) << ", not found";
+    GR_LOG_WARN(LOG, msg.str());
     throw std::invalid_argument(msg.str());
   }
 
@@ -100,7 +101,11 @@ namespace gr {
       int ninputs, noutputs;
 
       if(FLOWGRAPH_DEBUG)
-        std::cout << "Validating block: " << (*p) << std::endl;
+      {
+        std::stringstream msg;
+        msg << "Validating block: " << (*p);
+        GR_LOG_DEBUG(LOG, msg.str());
+      }
 
       used_ports = calc_used_ports(*p, true); // inputs
       ninputs = used_ports.size();
@@ -115,6 +120,7 @@ namespace gr {
         msg << "check topology failed on " << (*p)
             << " using ninputs=" << ninputs
             << ", noutputs=" << noutputs;
+        GR_LOG_ERROR(LOG, msg.str());
         throw std::runtime_error(msg.str());
       }
     }
@@ -135,6 +141,7 @@ namespace gr {
 
     if(port < 0) {
       msg << "negative port number " << port << " is invalid";
+      GR_LOG_ERROR(LOG, msg.str());
       throw std::invalid_argument(msg.str());
     }
 
@@ -145,6 +152,7 @@ namespace gr {
         msg << "(none)";
       else
         msg << max-1;
+      GR_LOG_ERROR(LOG, msg.str());
       throw std::invalid_argument(msg.str());
     }
   }
@@ -153,15 +161,23 @@ namespace gr {
   flowgraph::check_valid_port(const msg_endpoint &e)
   {
     if(FLOWGRAPH_DEBUG)
-      std::cout << "check_valid_port( " << e.block() << ", " << e.port() << ")\n";
+    {
+      std::stringstream msg;
+      msg << "check_valid_port( " << e.block() << ", " << e.port() << ")";
+      GR_LOG_DEBUG(LOG, msg.str());
+    }
 
     if(!e.block()->has_msg_port(e.port())) {
+      std::stringstream msg;
       const gr::basic_block::msg_queue_map_t& msg_map = e.block()->get_msg_map();
-      std::cout << "Could not find port: " << e.port() << " in:" << std::endl;
+      msg << "Could not find port: " << e.port() << " in:";
       for (gr::basic_block::msg_queue_map_t::const_iterator it = msg_map.begin(); it != msg_map.end(); ++it)
-        std::cout << it->first << std::endl;
-      std::cout << std::endl;
-      throw std::invalid_argument("invalid msg port in connect() or disconnect()");
+        msg << it->first << std::endl;
+      GR_LOG_WARN(LOG, msg.str());
+      msg.str(std::string());
+      msg << "invalid msg port in connect() or disconnect()";
+      GR_LOG_ERROR(LOG, msg.str());
+      throw std::invalid_argument(msg.str());
     }
   }
 
@@ -173,6 +189,7 @@ namespace gr {
       if(p->dst() == dst) {
         std::stringstream msg;
         msg << "destination already in use by edge " << (*p);
+        GR_LOG_ERROR(LOG, msg.str());
         throw std::invalid_argument(msg.str());
       }
   }
@@ -187,6 +204,7 @@ namespace gr {
       std::stringstream msg;
       msg << "itemsize mismatch: " << src << " using " << src_size
           << ", " << dst << " using " << dst_size;
+      GR_LOG_ERROR(LOG, msg.str());
       throw std::invalid_argument(msg.str());
     }
   }
@@ -270,6 +288,7 @@ namespace gr {
       msg << block << ": insufficient connected "
           << (check_inputs ? "input ports " : "output ports ")
           << "(" << min_ports << " needed, " << nports << " connected)";
+      GR_LOG_ERROR(LOG, msg.str());
       throw std::runtime_error(msg.str());
     }
 
@@ -277,6 +296,7 @@ namespace gr {
       msg << block << ": too many connected "
           << (check_inputs ? "input ports " : "output ports ")
           << "(" << max_ports << " allowed, " << nports << " connected)";
+      GR_LOG_ERROR(LOG, msg.str());
       throw std::runtime_error(msg.str());
     }
 
@@ -286,6 +306,7 @@ namespace gr {
           msg << block << ": missing connection "
               << (check_inputs ? "to input port " : "from output port ")
               << i;
+          GR_LOG_ERROR(LOG, msg.str());
           throw std::runtime_error(msg.str());
         }
       }
@@ -476,19 +497,24 @@ namespace gr {
     basic_block_vector_t blocks(calc_downstream_blocks(block));
 
     for(basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
+      std::stringstream msg;
       switch((*p)->color()) {
       case basic_block::WHITE:
         topological_dfs_visit(*p, output);
         break;
 
       case basic_block::GREY:
-        throw std::runtime_error("flow graph has loops!");
+        msg << "flow graph has loops!";
+        GR_LOG_ERROR(LOG, msg.str());
+        throw std::runtime_error(msg.str());
 
       case basic_block::BLACK:
         continue;
 
       default:
-        throw std::runtime_error("invalid color on block!");
+        msg << "invalid color on block!";
+        GR_LOG_ERROR(LOG, msg.str());
+        throw std::runtime_error(msg.str());
       }
     }
 
@@ -503,7 +529,10 @@ namespace gr {
     check_valid_port(dst);
     for(msg_edge_viter_t p = d_msg_edges.begin(); p != d_msg_edges.end(); p++) {
       if(p->src() == src && p->dst() == dst){
-        throw std::runtime_error("connect called on already connected edge!");
+        std::stringstream msg;
+        msg << "connect called on already connected edge!";
+        GR_LOG_ERROR(LOG, msg.str());
+        throw std::runtime_error(msg.str());
       }
     }
     d_msg_edges.push_back(msg_edge(src,dst));
@@ -520,7 +549,10 @@ namespace gr {
         return;
       }
     }
-    throw std::runtime_error("disconnect called on non-connected edge!");
+    std::stringstream msg;
+    msg << "disconnect called on non-connected edge!";
+    GR_LOG_ERROR(LOG, msg.str());
+    throw std::runtime_error(msg.str());
   }
 
   std::string
