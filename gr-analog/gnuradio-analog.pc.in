@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: gnuradio-analog
 Description: GNU Radio blocks for analog communications
-Requires: gnuradio-runtime
+Requires: gnuradio-runtime volk
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-analog
 Cflags: -I${includedir}
