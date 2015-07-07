@@ -289,10 +289,12 @@ if(ENABLE_TESTING)
 
   include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS})
   link_directories(${CPPUNIT_LIBRARY_DIRS})
 
   list(APPEND test_gr_blocks_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_flowgraph.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
