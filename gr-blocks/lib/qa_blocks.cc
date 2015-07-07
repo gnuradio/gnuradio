@@ -30,6 +30,7 @@
 #include <qa_rotator.h>
 #include <qa_gr_block.h>
 #include <qa_gr_flowgraph.h>
+#include <qa_set_msg_handler.h>
 
 CppUnit::TestSuite *
 qa_blocks::suite()
@@ -40,5 +41,6 @@ qa_blocks::suite()
   s->addTest(qa_rotator::suite());
   s->addTest(qa_gr_block::suite());
   s->addTest(qa_gr_flowgraph::suite());
+  s->addTest(qa_set_msg_handler::suite());
   return s;
 }
