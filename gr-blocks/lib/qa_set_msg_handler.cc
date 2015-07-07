@@ -47,13 +47,15 @@ void qa_set_msg_handler::t0()
 {
   static const int NMSGS = 10;
 
-  if (VERBOSE) std::cout << "qa_set_msg_handler::t0()\n";
+  if (VERBOSE) {
+    std::cout << "qa_set_msg_handler::t0()\n";
+  }
 
-  top_block_sptr tb = make_top_block("top");
+  gr::top_block_sptr tb = gr::make_top_block("top");
 
-  block_sptr src = gr::blocks::null_source::make(sizeof(int));
+  gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
   gr::blocks::nop::sptr nop = gr::blocks::nop::make(sizeof(int));
-  block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
+  gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   tb->connect(src, 0, nop, 0);
   tb->connect(nop, 0, dst, 0);
