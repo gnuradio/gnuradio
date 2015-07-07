@@ -26,7 +26,6 @@
 
 #include <qa_gr_block.h>
 #include <gnuradio/block.h>
-#include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/null_sink.h>
 #include <gnuradio/blocks/null_source.h>
 
@@ -64,7 +63,7 @@ qa_gr_block::t1 ()
   CPPUNIT_ASSERT_EQUAL (1, dst1->input_signature()->min_streams ());
   CPPUNIT_ASSERT_EQUAL (-1, dst1->input_signature()->max_streams ());
   CPPUNIT_ASSERT_EQUAL ((int) sizeof (int),
-        		dst1->input_signature()->sizeof_stream_item (0));
+            dst1->input_signature()->sizeof_stream_item (0));
 
   CPPUNIT_ASSERT_EQUAL (0, dst1->output_signature()->max_streams ());
 
@@ -73,7 +72,7 @@ qa_gr_block::t1 ()
   CPPUNIT_ASSERT_EQUAL (1, dst2->input_signature()->min_streams ());
   CPPUNIT_ASSERT_EQUAL (-1, dst2->input_signature()->max_streams ());
   CPPUNIT_ASSERT_EQUAL ((int) sizeof (short),
-        		dst2->input_signature()->sizeof_stream_item (0));
+            dst2->input_signature()->sizeof_stream_item (0));
   CPPUNIT_ASSERT_EQUAL (0, dst2->output_signature()->max_streams ());
 }
 
