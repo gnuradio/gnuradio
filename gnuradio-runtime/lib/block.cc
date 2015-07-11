@@ -137,6 +137,18 @@ namespace gr {
       return true;
   }
 
+
+  buffer_sptr block::allocate_input_buffer(int port)
+  {
+    throw std::runtime_error("Block did not define allocate_input_buffer() function properly");
+  }
+
+
+  buffer_sptr block::allocate_output_buffer(int port)
+  {
+    throw std::runtime_error("Block did not define allocate_output_buffer() function properly");
+  }
+
   void
   block::set_output_multiple(int multiple)
   {

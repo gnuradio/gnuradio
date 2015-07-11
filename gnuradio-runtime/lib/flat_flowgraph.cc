@@ -64,7 +64,12 @@ namespace gr {
 
     // Assign block details to blocks
     for(basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-        cast_to_block_sptr(*p)->set_detail(allocate_block_detail(*p));
+      block_sptr block = cast_to_block_sptr(*p);
+      block->set_detail(allocate_block_detail(*p));
+      if(FLAT_FLOWGRAPH_DEBUG) {
+        std::cout << "Calling " << block << " init() function" << std::endl;
+      }
+      block->init();
     }
 
     // Connect inputs to outputs for each block
@@ -79,7 +84,7 @@ namespace gr {
     // Connect message ports
     for(msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
       if(FLAT_FLOWGRAPH_DEBUG) {
-          std::cout << boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
+        std::cout << boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
                   i->src().block() % i->src().port() %
                   i->dst().block() % i->dst().port();
       }
@@ -95,32 +100,41 @@ namespace gr {
     block_detail_sptr detail = make_block_detail(ninputs, noutputs);
 
     block_sptr grblock = cast_to_block_sptr(block);
-    if(!grblock)
+    if(!grblock) {
       throw std::runtime_error(
-        (boost::format("allocate_block_detail found non-gr::block (%s)")%
-        block->alias()).str());
+              (boost::format("allocate_block_detail found non-gr::block (%s)") %
+               block->alias()).str());
+    }
 
     if(FLAT_FLOWGRAPH_DEBUG) {
-        std::cout << "Creating block detail for " << block << std::endl;
+      std::cout << "Creating block detail for " << block << std::endl;
     }
 
     for(int i = 0; i < noutputs; i++) {
       grblock->expand_minmax_buffer(i);
-
-      buffer_sptr buffer = allocate_buffer(block, i);
-      if(FLAT_FLOWGRAPH_DEBUG) {
+      if (grblock->d_output_signature->stream_flags(i) == gr::io_signature::MEM_BLOCK_ALLOC) {
+        buffer_sptr buffer = grblock->allocate_output_buffer(i);
+        if (FLAT_FLOWGRAPH_DEBUG) {
+          std::cout << "Allocated custom buffer for " << block << ":" << i << std::endl;
+        }
+        detail->set_output(i, buffer);
+      } else {
+        buffer_sptr buffer = allocate_buffer(block, i);
+        if (FLAT_FLOWGRAPH_DEBUG) {
           std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
+        }
+        detail->set_output(i, buffer);
       }
-      detail->set_output(i, buffer);
-
+      buffer_sptr buffer = detail->output(i);
       // Update the block's max_output_buffer based on what was actually allocated.
-      if((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1))
-        GR_LOG_WARN(d_logger, boost::format("Block (%1%) max output buffer set to %2%"
-                                            " instead of requested %3%") \
+      if ((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1)) {
+        GR_LOG_WARN(d_logger,
+                    boost::format("Block (%1%) max output buffer set to %2%"
+                                                " instead of requested %3%") \
                     % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
-      grblock->set_max_output_buffer(i, buffer->bufsize());
+        grblock->set_max_output_buffer(i, buffer->bufsize());
+      }
     }
-
     return detail;
   }
 
@@ -151,8 +165,9 @@ namespace gr {
     if(grblock->max_output_buffer(port) > 0) {
       nitems = std::min((long)nitems, grblock->max_output_buffer(port));
       nitems -= nitems%grblock->output_multiple();
-      if(nitems < 1)
-        throw std::runtime_error("problems allocating a buffer with the given max output buffer constraint!");
+      if(nitems < 1) {
+          throw std::runtime_error("problems allocating a buffer with the given max output buffer constraint!");
+      }
     }
     else if(grblock->min_output_buffer(port) > 0) {
       nitems = std::max((long)nitems, grblock->min_output_buffer(port));
@@ -213,16 +228,32 @@ namespace gr {
       int src_port = e->src().port();
       basic_block_sptr src_block = e->src().block();
       block_sptr src_grblock = cast_to_block_sptr(src_block);
-      if(!src_grblock) {
-          throw std::runtime_error("connect_block_inputs found non-gr::block");
+      if (!src_grblock) {
+        throw std::runtime_error("connect_block_inputs found non-gr::block");
+      }
+      if ((grblock->input_signature()->stream_flags(dst_port) & gr::io_signature::MEM_BLOCK_ALLOC) ==
+          gr::io_signature::MEM_BLOCK_ALLOC) {
+        if ((src_grblock->output_signature()->stream_flags(src_port) & gr::io_signature::MEM_BLOCK_ALLOC) ==
+            gr::io_signature::MEM_BLOCK_ALLOC) {
+          throw std::runtime_error("Input and output ports of connected blocks cannot both be MEM_BLOCK_ALLOC");
+        }
+        if (FLAT_FLOWGRAPH_DEBUG) {
+          std::cout << "Input buffer is owned by block " << grblock << std::endl;
+          std::cout << "Setting output " << src_port << " from edge " << (*e) << std::endl;
+        }
+        buffer_sptr dst_buffer = grblock->allocate_input_buffer(src_port);
+        if (FLAT_FLOWGRAPH_DEBUG) {
+          std::cout << "Allocated custom input buffer for block " << block << std::endl;
+        }
+        src_grblock->detail()->set_output(src_port, dst_buffer);
       }
       buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
 
-      if(FLAT_FLOWGRAPH_DEBUG) {
-          std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
+      if (FLAT_FLOWGRAPH_DEBUG) {
+        std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
       }
 
-      detail->set_input(dst_port, buffer_add_reader(src_buffer, grblock->history()-1, grblock,
+      detail->set_input(dst_port, buffer_add_reader(src_buffer, grblock->history() - 1, grblock,
                                                     grblock->sample_delay(src_port)));
     }
   }
@@ -246,6 +277,9 @@ namespace gr {
         if (FLAT_FLOWGRAPH_DEBUG) {
           std::cout << "merge: reusing original detail for block " << (*p) << std::endl;
         }
+      }
+      if(FLAT_FLOWGRAPH_DEBUG) {
+        std::cout << "Calling " << block << " init() function" << std::endl;
       }
       block->init();
     }

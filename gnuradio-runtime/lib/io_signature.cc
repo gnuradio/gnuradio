@@ -33,17 +33,16 @@ namespace gr {
   gr::io_signature::sptr
   io_signature::makev(int min_streams, int max_streams,
                       const std::vector<int> &sizeof_stream_items,
-		      const std::vector<uint32_t> &stream_flags)
+                      const std::vector<uint32_t> &stream_flags)
   {
     return gr::io_signature::sptr
-      (new io_signature(min_streams, max_streams,
-                        sizeof_stream_items, stream_flags));
+      (new io_signature(min_streams, max_streams, sizeof_stream_items, stream_flags));
   }
 
   gr::io_signature::sptr
   io_signature::make(int min_streams, int max_streams,
                      int sizeof_stream_item,
-		     uint32_t flags)
+                     uint32_t flags)
   {
     std::vector<int> sizeof_items(1);
     std::vector<uint32_t> stream_flags(1);
@@ -56,8 +55,8 @@ namespace gr {
   io_signature::make2(int min_streams, int max_streams,
                       int sizeof_stream_item1,
                       int sizeof_stream_item2,
-		      uint32_t flags1,
-		      uint32_t flags2)
+                      uint32_t flags1,
+                      uint32_t flags2)
   {
     std::vector<int> sizeof_items(2);
     std::vector<uint32_t> stream_flags(2);
@@ -73,9 +72,9 @@ namespace gr {
                       int sizeof_stream_item1,
                       int sizeof_stream_item2,
                       int sizeof_stream_item3,
-		      uint32_t flags1,
-		      uint32_t flags2,
-		      uint32_t flags3)
+                      uint32_t flags1,
+                      uint32_t flags2,
+                      uint32_t flags3)
   {
     std::vector<int> sizeof_items(3);
     std::vector<uint32_t> stream_flags(3);
@@ -92,7 +91,7 @@ namespace gr {
 
   io_signature::io_signature(int min_streams, int max_streams,
                              const std::vector<int> &sizeof_stream_items,
-			     const std::vector<uint32_t> &stream_flags)
+                             const std::vector<uint32_t> &stream_flags)
   {
     if(min_streams < 0
        || (max_streams != IO_INFINITE && max_streams < min_streams))
