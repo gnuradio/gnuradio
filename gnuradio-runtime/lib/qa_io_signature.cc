@@ -63,3 +63,26 @@ qa_io_signature::t3()
   CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(3), 3);
   CPPUNIT_ASSERT_EQUAL(p->sizeof_stream_item(4), 3);
 }
+
+void
+qa_io_signature::t4_stream_flags() {
+    gr::io_signature::sptr default_flags_io = gr::io_signature::make(0, 5, 1, gr::io_signature::DEFAULT_FLAGS);
+    gr::io_signature::sptr block_mem_alloc = gr::io_signature::make(0, gr::io_signature::IO_INFINITE, 1,
+                                                                    gr::io_signature::MEM_BLOCK_ALLOC);
+    gr::io_signature::sptr mem_alloc_single = gr::io_signature::make(0, 5, 1, gr::io_signature::MEM_BLOCK_ALLOC |
+                                                                              gr::io_signature::MEM_BLOCK_SINGLE);
+    gr::io_signature::sptr mem_alloc_odd = gr::io_signature::make(0, 5, 1, gr::io_signature::MEM_BLOCK_ALLOC |
+                                                                           gr::io_signature::MEM_BLOCK_ODD);
+    int port = 0;
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint32_t>(gr::io_signature::DEFAULT_FLAGS), default_flags_io->stream_flags(port));
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint32_t>(gr::io_signature::MEM_BLOCK_ALLOC),
+                         block_mem_alloc->stream_flags(port) & gr::io_signature::MEM_BLOCK_ALLOC);
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint32_t>(gr::io_signature::MEM_BLOCK_SINGLE),
+                         mem_alloc_single->stream_flags(port) & gr::io_signature::MEM_BLOCK_SINGLE);
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint32_t>(gr::io_signature::MEM_BLOCK_ALLOC),
+                         mem_alloc_single->stream_flags(port) & gr::io_signature::MEM_BLOCK_ALLOC);
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint32_t>(gr::io_signature::MEM_BLOCK_ODD),
+                         mem_alloc_odd->stream_flags(port) & gr::io_signature::MEM_BLOCK_ODD);
+    CPPUNIT_ASSERT_EQUAL(static_cast<uint32_t>(gr::io_signature::MEM_BLOCK_ALLOC),
+                         mem_alloc_odd->stream_flags(port) & gr::io_signature::MEM_BLOCK_ALLOC);
+}
