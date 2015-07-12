@@ -27,8 +27,7 @@
 #include "frequency_modulator_fc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/fxpt.h>
-#include <math.h>
-#include <boost/math/special_functions/trunc.hpp>
+#include <cmath>
 
 namespace gr {
   namespace analog {
@@ -63,10 +62,9 @@ namespace gr {
       for(int i = 0; i < noutput_items; i++) {
 	d_phase = d_phase + d_sensitivity * in[i];
 
-	while(d_phase > (float)(M_PI))
-	  d_phase -= (float)(2.0 * M_PI);
-	while(d_phase < (float)(-M_PI))
-	  d_phase += (float)(2.0 * M_PI);
+	//place phase in [-pi, +pi[
+	#define F_PI ((float)(M_PI))
+	d_phase   = std::fmod(d_phase + F_PI, 2.0f * F_PI) - F_PI;
 
 	float oi, oq;
 
