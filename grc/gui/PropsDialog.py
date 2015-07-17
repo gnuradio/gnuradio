@@ -104,15 +104,18 @@ class PropsDialog(gtk.Dialog):
         notebook.append_page(self._docs_box, gtk.Label("Documentation"))
 
         # Generated code for the block
-        self._code_text_display = code_view = SimpleTextDisplay()
-        code_view.set_wrap_mode(gtk.WRAP_NONE)
-        code_view.get_buffer().create_tag('b', weight=pango.WEIGHT_BOLD)
-        code_view.modify_font(pango.FontDescription(
-            'monospace %d' % FONT_SIZE))
-        code_box = gtk.ScrolledWindow()
-        code_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        code_box.add_with_viewport(self._code_text_display)
-        notebook.append_page(code_box, gtk.Label("Generated Code"))
+        if Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB.get_active():
+            self._code_text_display = code_view = SimpleTextDisplay()
+            code_view.set_wrap_mode(gtk.WRAP_NONE)
+            code_view.get_buffer().create_tag('b', weight=pango.WEIGHT_BOLD)
+            code_view.modify_font(pango.FontDescription(
+                'monospace %d' % FONT_SIZE))
+            code_box = gtk.ScrolledWindow()
+            code_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+            code_box.add_with_viewport(self._code_text_display)
+            notebook.append_page(code_box, gtk.Label("Generated Code"))
+        else:
+            self._code_text_display = None
 
         # Error Messages for the block
         self._error_messages_text_display = SimpleTextDisplay()
@@ -201,6 +204,9 @@ class PropsDialog(gtk.Dialog):
         self._update_generated_code_page()
 
     def _update_generated_code_page(self):
+        if not self._code_text_display:
+            return  # user disabled code preview
+
         buffer = self._code_text_display.get_buffer()
         block = self._block
 
