@@ -51,7 +51,7 @@ namespace gr {
        * \param check Set to true if you want to check CRC, false to create CRC.
        * \param lengthtagname Length tag key
        */
-      static sptr make(bool check=false, const std::string& lengthtagname="packet_len");
+      static sptr make(bool check=false, const std::string& lengthtagname="packet_len", bool packed=true);
     };
 
   } // namespace digital
