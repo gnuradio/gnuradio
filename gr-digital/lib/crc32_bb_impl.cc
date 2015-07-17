@@ -31,42 +31,37 @@ namespace gr {
   namespace digital {
 
     crc32_bb::sptr
-    crc32_bb::make(bool check, const std::string& lengthtagname)
-    {
-      return gnuradio::get_initial_sptr (new crc32_bb_impl(check, lengthtagname));
+    crc32_bb::make(bool check, const std::string &lengthtagname) {
+      return gnuradio::get_initial_sptr(new crc32_bb_impl(check, lengthtagname));
     }
 
-    crc32_bb_impl::crc32_bb_impl(bool check, const std::string& lengthtagname)
-      : tagged_stream_block("crc32_bb",
-		   io_signature::make(1, 1, sizeof (char)),
-		   io_signature::make(1, 1, sizeof (char)),
-		   lengthtagname),
-	d_check(check),
-	d_npass(0), d_nfail(0)
-    {
+    crc32_bb_impl::crc32_bb_impl(bool check, const std::string &lengthtagname)
+        : tagged_stream_block("crc32_bb",
+                              io_signature::make(1, 1, sizeof(char)),
+                              io_signature::make(1, 1, sizeof(char)),
+                              lengthtagname),
+          d_check(check),
+          d_npass(0), d_nfail(0) {
       set_tag_propagation_policy(TPP_DONT);
     }
 
-    crc32_bb_impl::~crc32_bb_impl()
-    {
+    crc32_bb_impl::~crc32_bb_impl() {
     }
 
     int
-    crc32_bb_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
-    {
+    crc32_bb_impl::calculate_output_stream_length(const gr_vector_int &ninput_items) {
       if (d_check) {
-	return ninput_items[0] - 4;
+        return ninput_items[0] - 4;
       } else {
-	return ninput_items[0] + 4;
+        return ninput_items[0] + 4;
       }
     }
 
     int
-    crc32_bb_impl::work (int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
-    {
+    crc32_bb_impl::work(int noutput_items,
+                        gr_vector_int &ninput_items,
+                        gr_vector_const_void_star &input_items,
+                        gr_vector_void_star &output_items) {
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
       long packet_length = ninput_items[0];
@@ -75,32 +70,32 @@ namespace gr {
 
       if (d_check) {
         d_crc_impl.reset();
-        d_crc_impl.process_bytes(in, packet_length-4);
+        d_crc_impl.process_bytes(in, packet_length - 4);
         crc = d_crc_impl();
-	if (crc != *(unsigned int *)(in+packet_length-4)) { // Drop package
-	  d_nfail++;
-	  return 0;
-	}
-	d_npass++;
-	memcpy((void *) out, (const void *) in, packet_length-4);
+        if (crc != *(unsigned int *) (in + packet_length - 4)) { // Drop package
+          d_nfail++;
+          return 0;
+        }
+        d_npass++;
+        memcpy((void *) out, (const void *) in, packet_length - 4);
       } else {
         d_crc_impl.reset();
         d_crc_impl.process_bytes(in, packet_length);
         crc = d_crc_impl();
-	memcpy((void *) out, (const void *) in, packet_length);
-	memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
+        memcpy((void *) out, (const void *) in, packet_length);
+        memcpy((void *) (out + packet_length), &crc, 4); // FIXME big-endian/little-endian, this might be wrong
       }
 
-      std::vector<tag_t> tags;
-      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0)+packet_length);
+      std::vector <tag_t> tags;
+      get_tags_in_range(tags, 0, nitems_read(0), nitems_read(0) + packet_length);
       for (size_t i = 0; i < tags.size(); i++) {
-	tags[i].offset -= nitems_read(0);
-	if (d_check && tags[i].offset > (unsigned int)(packet_length+packet_size_diff)) {
-	  tags[i].offset = packet_length-5;
-	}
-	add_item_tag(0, nitems_written(0) + tags[i].offset,
-	    tags[i].key,
-	    tags[i].value);
+        tags[i].offset -= nitems_read(0);
+        if (d_check && tags[i].offset > (unsigned int) (packet_length + packet_size_diff)) {
+          tags[i].offset = packet_length - 5;
+        }
+        add_item_tag(0, nitems_written(0) + tags[i].offset,
+                     tags[i].key,
+                     tags[i].value);
       }
 
       return packet_length + packet_size_diff;
