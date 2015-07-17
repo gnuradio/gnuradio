@@ -18,10 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Element import Element
-from Constants import \
-    PORT_SEPARATION, CONNECTOR_EXTENSION_MINIMAL, \
-    CONNECTOR_EXTENSION_INCREMENT, \
+from Constants import (
+    PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
+    CONNECTOR_EXTENSION_INCREMENT, CANVAS_GRID_SIZE,
     PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
+)
 from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 import Utils
 import Actions
@@ -79,26 +80,31 @@ class Port(Element):
         #reverse the order of ports for these rotations
         if rotation in (180, 270):
             index = length-index-1
-        offset = (self.get_parent().H - (length-1)*PORT_SEPARATION - self.H)/2
+
+        port_separation = PORT_SEPARATION \
+            if self.get_parent().has_busses[self.is_source()] \
+            else max([port.H for port in ports]) + PORT_SPACING
+
+        offset = (self.get_parent().H - (length-1)*port_separation - self.H)/2
         #create areas and connector coordinates
         if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
-            x = -1*W
-            y = PORT_SEPARATION*index+offset
+            x = -W
+            y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x-1, y+self.H/2)
         elif (self.is_source() and rotation == 0) or (self.is_sink() and rotation == 180):
             x = self.get_parent().W
-            y = PORT_SEPARATION*index+offset
+            y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x+1+W, y+self.H/2)
         elif (self.is_source() and rotation == 90) or (self.is_sink() and rotation == 270):
-            y = -1*W
-            x = PORT_SEPARATION*index+offset
+            y = -W
+            x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y-1)
         elif (self.is_sink() and rotation == 90) or (self.is_source() and rotation == 270):
             y = self.get_parent().W
-            x = PORT_SEPARATION*index+offset
+            x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y+1+W)
         #the connector length
