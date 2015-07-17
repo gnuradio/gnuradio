@@ -106,7 +106,8 @@ class Action(gtk.Action, _ActionBase):
     Pass additional arguments such as keypresses.
     """
 
-    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
+    def __init__(self, keypresses=(), name=None, label=None, tooltip=None,
+                 stock_id=None):
         """
         Create a new Action instance.
 
@@ -129,7 +130,8 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
     Pass additional arguments such as keypresses.
     """
 
-    def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None, preference_name=None):
+    def __init__(self, keypresses=(), name=None, label=None, tooltip=None,
+                 stock_id=None, preference_name=None, default=True):
         """
         Create a new ToggleAction instance.
 
@@ -137,22 +139,24 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
             key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
             the: regular gtk.Action parameters (defaults to None)
         """
-        if name is None: name = label
+        if name is None:
+            name = label
         gtk.ToggleAction.__init__(self,
-            name=name, label=label,
-            tooltip=tooltip, stock_id=stock_id,
+            name=name, label=label, tooltip=tooltip, stock_id=stock_id,
         )
-        #register this action
         _ActionBase.__init__(self, label, keypresses)
         self.preference_name = preference_name
+        self.default = default
 
     def load_from_preferences(self):
         if self.preference_name is not None:
-            self.set_active(Preferences.bool_entry(self.preference_name))
+            self.set_active(Preferences.bool_entry(self.preference_name,
+                                                   default=self.default))
 
     def save_to_preferences(self):
         if self.preference_name is not None:
-            Preferences.bool_entry(self.preference_name, self.get_active())
+            Preferences.bool_entry(self.preference_name,
+                                   value=self.get_active())
 
 ########################################################################
 # Actions
