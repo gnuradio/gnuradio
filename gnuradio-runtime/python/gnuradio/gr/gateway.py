@@ -201,6 +201,13 @@ class gateway_block(object):
         # Save handler object in class so it's not garbage collected
         self.__msg_handlers[which_port] = handler
 
+    def in_sig(self):
+        return self.__in_sig
+
+    def out_sig(self):
+        return self.__out_sig
+
+
 ########################################################################
 # Wrappers for the user to inherit from
 ########################################################################
