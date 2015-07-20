@@ -325,6 +325,11 @@ WaterfallDisplayForm::checkClicked()
   }
 }
 
+void
+WaterfallDisplayForm::setTimeTitle(const std::string title) {
+    getPlot()->setAxisTitle(QwtPlot::yLeft, title.c_str());
+}
+
 float
 WaterfallDisplayForm::getClickedFreq() const
 {
