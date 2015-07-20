@@ -17,6 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import ast
+import re
+
+from gnuradio import gr
+
 from .. base.Param import Param as _Param
 from .. gui.Param import Param as _GUIParam
 
@@ -24,8 +29,6 @@ import Constants
 from Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
 
 from gnuradio import eng_notation
-import re
-from gnuradio import gr
 
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
 _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
@@ -62,7 +65,7 @@ class Param(_Param, _GUIParam):
         'complex', 'real', 'float', 'int',
         'complex_vector', 'real_vector', 'float_vector', 'int_vector',
         'hex', 'string', 'bool',
-        'file_open', 'file_save', '_multiline',
+        'file_open', 'file_save', '_multiline', '_multiline_python_external',
         'id', 'stream_id',
         'grid_pos', 'notebook', 'gui_hint',
         'import',
@@ -266,7 +269,7 @@ class Param(_Param, _GUIParam):
         #########################
         # String Types
         #########################
-        elif t in ('string', 'file_open', 'file_save', '_multiline'):
+        elif t in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
             #do not check if file/directory exists, that is a runtime issue
             try:
                 e = self.get_parent().get_parent().evaluate(v)
@@ -274,8 +277,10 @@ class Param(_Param, _GUIParam):
                     raise Exception()
             except:
                 self._stringify_flag = True
-                e = v
-            return str(e)
+                e = str(v)
+            if t == '_multiline_python_external':
+                ast.parse(e)  # raises SyntaxError
+            return e
         #########################
         # Unique ID Type
         #########################
@@ -405,7 +410,7 @@ class Param(_Param, _GUIParam):
         """
         v = self.get_value()
         t = self.get_type()
-        if t in ('string', 'file_open', 'file_save', '_multiline'):  # string types
+        if t in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):  # string types
             if not self._init: self.evaluate()
             if self._stringify_flag: return '"%s"'%v.replace('"', '\"')
             else: return v
