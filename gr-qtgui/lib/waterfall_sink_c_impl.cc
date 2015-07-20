@@ -78,10 +78,10 @@ namespace gr {
                       boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
 
 
-      // setup such samples pdu port
+      // setup PDU handling input port
       message_port_register_in(pmt::mp("pdus"));
       set_msg_handler(pmt::mp("pdus"),
-                      boost::bind(&waterfall_sink_c_impl::handle_such_samples, this, _1));
+                      boost::bind(&waterfall_sink_c_impl::handle_pdus, this, _1));
 
       d_main_gui = NULL;
 
@@ -553,7 +553,7 @@ namespace gr {
     }
 
     void
-    waterfall_sink_c_impl::handle_such_samples(pmt::pmt_t msg)
+    waterfall_sink_c_impl::handle_pdus(pmt::pmt_t msg)
     {
       int j = 0;
       size_t len = 0;
@@ -571,7 +571,14 @@ namespace gr {
 
         gr::high_res_timer_type ref_start = (uint64_t)start * (double)(1.0/d_bandwidth) * 1000000;
 
-        const gr_complex *in = (const gr_complex*) pmt::c32vector_elements(samples, len);
+        const gr_complex *in;
+        if(pmt::is_c32vector(samples)) {
+          in = (const gr_complex*)pmt::c32vector_elements(samples, len);
+        }
+        else {
+          throw std::runtime_error("waterfall sink: unknown data type of samples; must be complex.");
+        }
+
         int stride = (len - d_fftsize)/199;
 
         set_time_per_fft(1.0/d_bandwidth * stride);

@@ -75,8 +75,8 @@ namespace gr {
       // The message is a PMT pair (intern('freq'), double(frequency)).
       void handle_set_freq(pmt::pmt_t msg);
 
-      // Handles message input port for displaying such samples pdus.
-      void handle_such_samples(pmt::pmt_t msg);
+      // Handles message input port for displaying PDU samples.
+      void handle_pdus(pmt::pmt_t msg);
 
     public:
       waterfall_sink_c_impl(int size, int wintype,
