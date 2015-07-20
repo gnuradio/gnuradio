@@ -54,7 +54,7 @@ namespace gr {
       int d_index;
       std::vector<gr_complex*> d_residbufs;
       std::vector<double*> d_magbufs;
-      double* pdu_magbuf;
+      double* d_pdu_magbuf;
       float *d_fbuf;
 
       int d_argc;

@@ -29,6 +29,7 @@
 #include <gnuradio/prefs.h>
 #include <string.h>
 #include <volk/volk.h>
+#include <iostream>
 
 namespace gr {
   namespace qtgui {
@@ -53,7 +54,7 @@ namespace gr {
 						 int nconnections,
 						 QWidget *parent)
       : sync_block("waterfall_sink_f",
-                   io_signature::make(1, -1, sizeof(float)),
+                   io_signature::make(0, nconnections, sizeof(float)),
                    io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
@@ -75,6 +76,11 @@ namespace gr {
       set_msg_handler(pmt::mp("freq"),
                       boost::bind(&waterfall_sink_f_impl::handle_set_freq, this, _1));
 
+      // setup PDU handling input port
+      message_port_register_in(pmt::mp("pdus"));
+      set_msg_handler(pmt::mp("pdus"),
+                      boost::bind(&waterfall_sink_f_impl::handle_pdus, this, _1));
+
       d_main_gui = NULL;
 
       // Perform fftshift operation;
@@ -87,6 +93,7 @@ namespace gr {
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
       d_index = 0;
+      // save the last "connection" for the PDU memory
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((float*)volk_malloc(d_fftsize*sizeof(float),
                                                   volk_get_alignment()));
@@ -95,6 +102,14 @@ namespace gr {
 	memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
 	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
+
+      d_residbufs.push_back((float*)volk_malloc(d_fftsize*sizeof(float),
+                                                volk_get_alignment()));
+      d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200,
+                                          volk_get_alignment());
+      d_magbufs.push_back(d_pdu_magbuf);
+      memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+      memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(float));
 
       buildwindow();
 
@@ -106,7 +121,7 @@ namespace gr {
       if(!d_main_gui->isClosed())
         d_main_gui->close();
 
-      for(int i = 0; i < d_nconnections; i++) {
+      for(int i = 0; i < (int)d_residbufs.size(); i++) {
  	volk_free(d_residbufs[i]);
  	volk_free(d_magbufs[i]);
       }
@@ -152,7 +167,8 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      d_main_gui = new WaterfallDisplayForm(d_nconnections, d_parent);
+      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      d_main_gui = new WaterfallDisplayForm(numplots, d_parent);
       set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
@@ -264,6 +280,12 @@ namespace gr {
     waterfall_sink_f_impl::set_title(const std::string &title)
     {
       d_main_gui->setTitle(title.c_str());
+    }
+
+    void
+    waterfall_sink_f_impl::set_time_title(const std::string &title)
+    {
+        d_main_gui->setTimeTitle(title);
     }
 
     void
@@ -429,6 +451,13 @@ namespace gr {
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
 
+        d_residbufs.push_back((float*)volk_malloc(d_fftsize*sizeof(float),
+                                                  volk_get_alignment()));
+        d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
+        d_magbufs.push_back(d_pdu_magbuf);
+        memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+        memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
+
 	// Set new fft size and reset buffer index
 	// (throws away any currently held data, but who cares?)
 	d_fftsize = newfftsize;
@@ -533,6 +562,65 @@ namespace gr {
       }
 
       return j;
+    }
+
+    void
+    waterfall_sink_f_impl::handle_pdus(pmt::pmt_t msg)
+    {
+      int j = 0;
+      size_t len = 0;
+      size_t start = 0;
+      if(pmt::is_pair(msg)) {
+        pmt::pmt_t dict = pmt::car(msg);
+        pmt::pmt_t samples = pmt::cdr(msg);
+
+        len = pmt::length(samples);
+
+        pmt::pmt_t start_key = pmt::string_to_symbol("start");
+        if(pmt::dict_has_key(dict, start_key)) {
+          start = pmt::to_uint64(pmt::dict_ref(dict, start_key, pmt::PMT_NIL));
+        }
+
+        gr::high_res_timer_type ref_start = (uint64_t)start * (double)(1.0/d_bandwidth) * 1000000;
+
+        const float *in;
+        if(pmt::is_f32vector(samples)) {
+          in = (const float*)pmt::f32vector_elements(samples, len);
+        }
+        else {
+          throw std::runtime_error("waterfall sink: unknown data type of samples; must be float.");
+        }
+
+        int stride = (len - d_fftsize)/199;
+
+        set_time_per_fft(1.0/d_bandwidth * stride);
+        std::ostringstream title("");
+        title << "Time (+" << (uint64_t)ref_start << "us)";
+        set_time_title(title.str());
+        // Update the FFT size from the application
+        fftresize();
+        windowreset();
+        check_clicked();
+
+        for(size_t i=0; j < 200; i+=stride) {
+
+          memcpy(d_residbufs[d_nconnections], &in[j * stride], sizeof(gr_complex)*d_fftsize);
+
+          fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
+          for(int x = 0; x < d_fftsize; x++) {
+            d_pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
+          }
+          j++;
+
+        }
+
+        //update gui per-pdu
+        d_qApplication->postEvent(d_main_gui,
+                                  new WaterfallUpdateEvent(d_magbufs,
+                                                           d_fftsize*200,
+                                                           0));
+
+      }
     }
 
   } /* namespace qtgui */

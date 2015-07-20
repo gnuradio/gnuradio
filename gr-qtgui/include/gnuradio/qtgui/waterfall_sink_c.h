@@ -122,6 +122,7 @@ namespace gr {
 
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
+      virtual void set_time_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &line) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
       virtual void set_color_map(int which, const int color) = 0;

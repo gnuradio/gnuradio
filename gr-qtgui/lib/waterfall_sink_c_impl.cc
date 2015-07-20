@@ -77,7 +77,6 @@ namespace gr {
       set_msg_handler(pmt::mp("freq"),
                       boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
 
-
       // setup PDU handling input port
       message_port_register_in(pmt::mp("pdus"));
       set_msg_handler(pmt::mp("pdus"),
@@ -95,21 +94,24 @@ namespace gr {
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
       d_index = 0;
-      // save the last "connection" for such samples
+      // save the last "connection" for the PDU memory
       for(int i = 0; i < d_nconnections; i++) {
-          d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
-                                                         volk_get_alignment()));
-          d_magbufs.push_back((double*)volk_malloc(d_fftsize*sizeof(double),
-                                                   volk_get_alignment()));
-          memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
-          memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
+        d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
+                                                       volk_get_alignment()));
+        d_magbufs.push_back((double*)volk_malloc(d_fftsize*sizeof(double),
+                                                 volk_get_alignment()));
+        memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
+        memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
+
       d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                      volk_get_alignment()));
-      pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
-      d_magbufs.push_back(pdu_magbuf);
-      memset(pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+      d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200,
+                                          volk_get_alignment());
+      d_magbufs.push_back(d_pdu_magbuf);
+      memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
       memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
+
       buildwindow();
 
       initialize();
@@ -386,6 +388,7 @@ namespace gr {
 
       volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
                                                    size, 1.0, size);
+
       // Perform shift operation
       unsigned int len = (unsigned int)(floor(size/2.0));
       float *tmp = (float*)malloc(sizeof(float)*len);
@@ -440,12 +443,14 @@ namespace gr {
           memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
           memset(d_magbufs[i], 0, newfftsize*sizeof(double));
         }
+
         d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                        volk_get_alignment()));
-        pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
-        d_magbufs.push_back(pdu_magbuf);
-        memset(pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+        d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
+        d_magbufs.push_back(d_pdu_magbuf);
+        memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
         memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
+
         // Set new fft size and reset buffer index
         // (throws away any currently held data, but who cares?)
         d_fftsize = newfftsize;
@@ -460,7 +465,7 @@ namespace gr {
 
         volk_free(d_fbuf);
         d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
-                                         volk_get_alignment());
+                                     volk_get_alignment());
         memset(d_fbuf, 0, d_fftsize*sizeof(float));
       }
     }
@@ -596,7 +601,7 @@ namespace gr {
 
           fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
           for(int x = 0; x < d_fftsize; x++) {
-            pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
+            d_pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
           }
           j++;
 
