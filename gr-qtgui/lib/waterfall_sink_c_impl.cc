@@ -121,12 +121,12 @@ namespace gr {
         d_main_gui->close();
 
       for(int i = 0; i < (int)d_residbufs.size(); i++) {
-          volk_free(d_residbufs[i]);
-          volk_free(d_magbufs[i]);
+        volk_free(d_residbufs[i]);
+        volk_free(d_magbufs[i]);
       }
       delete d_fft;
       volk_free(d_fbuf);
-      
+
       delete d_argv;
     }
 
@@ -140,7 +140,7 @@ namespace gr {
     waterfall_sink_c_impl::forecast(int noutput_items, gr_vector_int &ninput_items_required)
     {
       unsigned int ninputs = ninput_items_required.size();
-      for (unsigned int i = 0; i < ninputs; i++) {
+      for(unsigned int i = 0; i < ninputs; i++) {
 	ninput_items_required[i] = std::min(d_fftsize, 8191);
       }
     }
@@ -165,7 +165,8 @@ namespace gr {
         QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
         d_qApplication->setStyleSheet(sstext);
       }
-	  int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+
+      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
       d_main_gui = new WaterfallDisplayForm(numplots, d_parent);
       set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
@@ -419,51 +420,51 @@ namespace gr {
     void
     waterfall_sink_c_impl::fftresize()
     {
-        gr::thread::scoped_lock lock(d_setlock);
-        
-        int newfftsize = d_main_gui->getFFTSize();
-        d_fftavg = d_main_gui->getFFTAverage();
-        
-        if(newfftsize != d_fftsize) {
-            
-            // Resize residbuf and replace data
-            for(int i = 0; i < d_nconnections; i++) {
-                volk_free(d_residbufs[i]);
-                volk_free(d_magbufs[i]);
-                
-                d_residbufs[i] = (gr_complex*)volk_malloc(newfftsize*sizeof(gr_complex),
-                                                          volk_get_alignment());
-                d_magbufs[i] = (double*)volk_malloc(newfftsize*sizeof(double),
+      gr::thread::scoped_lock lock(d_setlock);
+
+      int newfftsize = d_main_gui->getFFTSize();
+      d_fftavg = d_main_gui->getFFTAverage();
+
+      if(newfftsize != d_fftsize) {
+
+        // Resize residbuf and replace data
+        for(int i = 0; i < d_nconnections; i++) {
+          volk_free(d_residbufs[i]);
+          volk_free(d_magbufs[i]);
+
+          d_residbufs[i] = (gr_complex*)volk_malloc(newfftsize*sizeof(gr_complex),
                                                     volk_get_alignment());
-                
-                memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
-                memset(d_magbufs[i], 0, newfftsize*sizeof(double));
-            }
-            d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
-                                                           volk_get_alignment()));
-            pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
-            d_magbufs.push_back(pdu_magbuf);
-            memset(pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
-            memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
-            // Set new fft size and reset buffer index
-            // (throws away any currently held data, but who cares?)
-            d_fftsize = newfftsize;
-            d_index = 0;
-            
-            // Reset window to reflect new size
-            buildwindow();
-            
-            // Reset FFTW plan for new size
-            delete d_fft;
-            d_fft = new fft::fft_complex(d_fftsize, true);
-            
-            volk_free(d_fbuf);
-            d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
-                                         volk_get_alignment());
-            memset(d_fbuf, 0, d_fftsize*sizeof(float));
+          d_magbufs[i] = (double*)volk_malloc(newfftsize*sizeof(double),
+                                              volk_get_alignment());
+
+          memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
+          memset(d_magbufs[i], 0, newfftsize*sizeof(double));
         }
+        d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
+                                                       volk_get_alignment()));
+        pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
+        d_magbufs.push_back(pdu_magbuf);
+        memset(pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+        memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
+        // Set new fft size and reset buffer index
+        // (throws away any currently held data, but who cares?)
+        d_fftsize = newfftsize;
+        d_index = 0;
+
+        // Reset window to reflect new size
+        buildwindow();
+
+        // Reset FFTW plan for new size
+        delete d_fft;
+        d_fft = new fft::fft_complex(d_fftsize, true);
+
+        volk_free(d_fbuf);
+        d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
+                                         volk_get_alignment());
+        memset(d_fbuf, 0, d_fftsize*sizeof(float));
+      }
     }
-      
+
     void
     waterfall_sink_c_impl::check_clicked()
     {
@@ -551,62 +552,57 @@ namespace gr {
       return j;
     }
 
-      void
-      waterfall_sink_c_impl::handle_such_samples(pmt::pmt_t msg)
-      {
-          int j = 0;
-          size_t len = 0;
-          size_t start = 0;
-          if(pmt::is_pair(msg)) {
-              pmt::pmt_t dict = pmt::car(msg);
-              pmt::pmt_t samples = pmt::cdr(msg);   
-    
-              pmt::pmt_t len_key = pmt::string_to_symbol("len");
-              if(pmt::dict_has_key(dict, len_key)) {
-                  len = pmt::to_uint64(pmt::dict_ref(dict, len_key, pmt::PMT_NIL));
-              }
-              
-              pmt::pmt_t start_key = pmt::string_to_symbol("start");
-              if(pmt::dict_has_key(dict, start_key)) {
-                  start = pmt::to_uint64(pmt::dict_ref(dict, start_key, pmt::PMT_NIL));
-              }
-              
-        
-              gr::high_res_timer_type ref_start = (uint64_t)start * (double)(1.0/d_bandwidth) * 1000000;
-              
-              
-              const gr_complex *in = (const gr_complex*) pmt::c32vector_elements(samples, len);
-              int stride = (len - d_fftsize)/199;
-              
-              set_time_per_fft(1.0/d_bandwidth * stride);
-              std::ostringstream title("");
-              title << "Time (+" << (uint64_t)ref_start << "us)";
-              set_time_title(title.str());
-              // Update the FFT size from the application
-              fftresize();
-              windowreset();
-              check_clicked();
-              
-              for(size_t i=0; j < 200; i+=stride) {
+    void
+    waterfall_sink_c_impl::handle_such_samples(pmt::pmt_t msg)
+    {
+      int j = 0;
+      size_t len = 0;
+      size_t start = 0;
+      if(pmt::is_pair(msg)) {
+        pmt::pmt_t dict = pmt::car(msg);
+        pmt::pmt_t samples = pmt::cdr(msg);
 
-                  memcpy(d_residbufs[d_nconnections], &in[j * stride], sizeof(gr_complex)*d_fftsize);
-                  
-                  fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
-                  for(int x = 0; x < d_fftsize; x++) {
-                      pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
-                  }
-                  j++;
-                                            
-              }
-              
-              //update gui per-pdu
-              d_qApplication->postEvent(d_main_gui,
-                                        new WaterfallUpdateEvent(d_magbufs,
-                                                                 d_fftsize*200,
-                                                                 0));
-              
+        len = pmt::length(samples);
+
+        pmt::pmt_t start_key = pmt::string_to_symbol("start");
+        if(pmt::dict_has_key(dict, start_key)) {
+          start = pmt::to_uint64(pmt::dict_ref(dict, start_key, pmt::PMT_NIL));
+        }
+
+        gr::high_res_timer_type ref_start = (uint64_t)start * (double)(1.0/d_bandwidth) * 1000000;
+
+        const gr_complex *in = (const gr_complex*) pmt::c32vector_elements(samples, len);
+        int stride = (len - d_fftsize)/199;
+
+        set_time_per_fft(1.0/d_bandwidth * stride);
+        std::ostringstream title("");
+        title << "Time (+" << (uint64_t)ref_start << "us)";
+        set_time_title(title.str());
+        // Update the FFT size from the application
+        fftresize();
+        windowreset();
+        check_clicked();
+
+        for(size_t i=0; j < 200; i+=stride) {
+
+          memcpy(d_residbufs[d_nconnections], &in[j * stride], sizeof(gr_complex)*d_fftsize);
+
+          fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
+          for(int x = 0; x < d_fftsize; x++) {
+            pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
           }
+          j++;
+
+        }
+
+        //update gui per-pdu
+        d_qApplication->postEvent(d_main_gui,
+                                  new WaterfallUpdateEvent(d_magbufs,
+                                                           d_fftsize*200,
+                                                           0));
+
       }
-      
+    }
+
   } /* namespace qtgui */
 } /* namespace gr */
