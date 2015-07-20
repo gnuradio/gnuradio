@@ -48,6 +48,23 @@ namespace gr {
     {
     }
 
+    inline float
+    ber_bf_impl::calculate_log_ber() const
+    {
+      return log10(((double) d_total_errors) / (d_total * 8.0));
+    }
+
+    inline void
+    ber_bf_impl::update_counters(const int items, const unsigned char *inbuffer0, const unsigned char *inbuffer1)
+    {
+      uint32_t ret;
+      for(int i = 0; i < items; i++) {
+        volk_32u_popcnt(&ret, static_cast<uint32_t>(inbuffer0[i] ^ inbuffer1[i]));
+        d_total_errors += ret;
+      }
+      d_total += items;
+    }
+
     ber_bf_impl::~ber_bf_impl()
     {
     }
@@ -63,54 +80,41 @@ namespace gr {
 
       int items = ninput_items[0] <= ninput_items[1] ? ninput_items[0] : ninput_items[1];
 
-      if(d_test_mode) {
-        if(d_total_errors >= d_berminerrors) {
-          return -1;
+      if(d_test_mode){
+        if(d_total_errors >= d_berminerrors){
+          return WORK_DONE;
         }
-        else {
-          if(items > 0) {
-            uint32_t ret;
-            for(int i = 0; i < items; i++) {
-              volk_32u_popcnt(&ret, static_cast<uint32_t>(inbuffer0[i] ^ inbuffer1[i]));
-              d_total_errors += ret;
-            }
-            d_total += items;
+        else{
+          if(items > 0){
+            update_counters(items, inbuffer0, inbuffer1);
           }
           consume_each(items);
 
-          if(d_total_errors >= d_berminerrors) {
-            outbuffer[0] = log10(((double) d_total_errors) / (d_total * 8.0));
+          if(d_total_errors >= d_berminerrors){
+            outbuffer[0] = calculate_log_ber();
             GR_LOG_INFO(d_logger, boost::format("    %1% over %2% --> %3%")
                     % d_total_errors % (d_total * 8) % outbuffer[0]);
             return 1;
           }
-          else if(log10(((double) d_berminerrors) / (d_total * 8.0)) < d_ber_limit) {
+          else if(calculate_log_ber() < d_ber_limit){
             GR_LOG_INFO(d_logger, "    Min. BER limit reached");
             outbuffer[0] = d_ber_limit;
             d_total_errors = d_berminerrors + 1;
             return 1;
           }
-          else {
+          else{
             return 0;
           }
         }
       }
-      else { // streaming mode
-        if(items > 0) {
-          uint32_t ret;
-          for(int i = 0; i < items; i++) {
-            volk_32u_popcnt(&ret, static_cast<uint32_t>(inbuffer0[i] ^ inbuffer1[i]));
-            d_total_errors += ret;
-          }
-
-          d_total += items;
-          outbuffer[0] = log10(((double) d_total_errors) / (d_total * 8.0));
-
+      else{ // streaming mode
+        if(items > 0){
+          update_counters(items, inbuffer0, inbuffer1);
+          outbuffer[0] = calculate_log_ber();
           consume_each(items);
           return 1;
         }
-        else {
-          consume_each(0);
+        else{
           return 0;
         }
       }
