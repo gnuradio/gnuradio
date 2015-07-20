@@ -52,7 +52,7 @@ namespace gr {
          *        tagged stream style, this is the maximum allowable
          *        number of bits per frame.
          */
-        static generic_encoder::sptr make(int frame_size);
+        static generic_encoder::sptr make(int frame_size, bool pack = false, bool packed_bits = false);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p
