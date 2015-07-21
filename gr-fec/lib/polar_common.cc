@@ -77,15 +77,20 @@ namespace gr
     polar_common::initialize_info_bit_position_vector()
     {
       int num_frozen_bit = 0;
+      int frozen_pos = d_frozen_bit_positions.at(num_frozen_bit);
       for(int i = 0; i < block_size(); i++) {
-        int frozen_pos = d_frozen_bit_positions.at(num_frozen_bit);
         if(i != frozen_pos) {
           d_info_bit_positions.push_back((int) i);
         }
         else {
           num_frozen_bit++;
           num_frozen_bit = std::min(num_frozen_bit, (int) (d_frozen_bit_positions.size() - 1));
+          frozen_pos = d_frozen_bit_positions.at(num_frozen_bit);
         }
+      }
+
+      if((int) d_info_bit_positions.size() != num_info_bits()) {
+        throw std::runtime_error("polar_common: number of info bit positions MUST equal num_info_bits (K)!");
       }
     }
 

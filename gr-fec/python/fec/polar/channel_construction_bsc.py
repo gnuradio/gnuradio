@@ -315,7 +315,7 @@ def normalize_q(q, tpm):
 
 def main():
     print 'channel construction BSC main'
-    n = 8
+    n = 10
     m = 2 ** n
     k = m // 2
     design_snr = 0.5
@@ -323,6 +323,7 @@ def main():
 
 
     z_params = tal_vardy_tpm_algorithm(m, design_snr, mu)
+    print(z_params)
     plt.plot(z_params)
     plt.show()
 

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.8'?>
+<?grc format='1' created='3.7.8rc1'?>
 <flow_graph>
   <timestamp>Fri Jul 17 15:23:09 2015</timestamp>
   <block>
@@ -11,6 +11,10 @@
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>1920,1080</value>
     </param>
     <param>
       <key>category</key>
@@ -67,10 +71,6 @@
     <param>
       <key>title</key>
       <value>polar code BER curve generator</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1920,1080</value>
     </param>
   </block>
   <block>

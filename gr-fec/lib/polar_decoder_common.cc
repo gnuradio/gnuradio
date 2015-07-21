@@ -30,8 +30,6 @@
 
 #include <cstdio>
 
-#define INT_BIT_MASK 0x80000000
-
 namespace gr {
   namespace fec {
 
@@ -73,38 +71,58 @@ namespace gr {
     }
 
     void
-    polar_decoder_common::butterfly(float* llrs, const int stage, unsigned char* u, const int u_num)
+    polar_decoder_common::butterfly(float* llrs, unsigned char* u, const int stage, const int u_num,
+                                    const int row)
     {
-//      if(!(block_power() > stage)){
-//        return;
-//      }
+      butterfly_volk(llrs, u, stage, u_num, row);
+    }
+
+    void
+    polar_decoder_common::butterfly_generic(float* llrs, unsigned char* u, const int stage,
+                                            const int u_num, const int row)
+    {
       const int next_stage = stage + 1;
-      const int stage_half_block_size = block_size() >> next_stage;
+      const int half_stage_size = 0x01 << stage;
+      const int stage_size = half_stage_size << 1;
+      const bool is_upper_stage_half = row % stage_size < half_stage_size;
 
-//      // this is a natural bit order impl
-      float* next_llrs = llrs + block_size(); // LLRs are stored in an consecutive array.
-      float* call_row_llr = llrs + u_num;
-      const int upper_right = u_num >> 1; // floor divide by 2.
-      const float* upper_right_llr_ptr = next_llrs + upper_right;
-      const float* lower_right_llr_ptr = upper_right_llr_ptr + stage_half_block_size;
+      //      // this is a natural bit order impl
+      float* next_llrs = llrs + block_size(); // LLRs are stored in a consecutive array.
+      float* call_row_llr = llrs + row;
 
-      if(u_num % 2){
-        const unsigned char f = u[u_num - 1];
-//        const unsigned char f = fetch_bit_at_pos(u, u_num - 1);
+      const int section = row - (row % stage_size);
+      const int jump_size = ((row % half_stage_size) << 1) % stage_size;
+
+      const int next_upper_row = section + jump_size;
+      const int next_lower_row = next_upper_row + 1;
+
+      const float* upper_right_llr_ptr = next_llrs + next_upper_row;
+      const float* lower_right_llr_ptr = next_llrs + next_lower_row;
+
+      if(!is_upper_stage_half){
+        const int u_pos = u_num >> stage;
+        const unsigned char f = u[u_pos - 1];
         *call_row_llr = llr_even(*upper_right_llr_ptr, *lower_right_llr_ptr, f);
         return;
       }
 
-      if(block_power() > next_stage) {
+      if(block_power() > next_stage){
         unsigned char* u_half = u + block_size();
         odd_xor_even_values(u_half, u, u_num);
-        butterfly(next_llrs, next_stage, u_half, upper_right);
+        butterfly(next_llrs, u_half, next_stage, u_num, next_upper_row);
 
         even_u_values(u_half, u, u_num);
-        butterfly(next_llrs + stage_half_block_size, next_stage, u_half, upper_right);
+        butterfly(next_llrs, u_half, next_stage, u_num, next_lower_row);
       }
 
       *call_row_llr = llr_odd(*upper_right_llr_ptr, *lower_right_llr_ptr);
+    }
+
+    void
+    polar_decoder_common::butterfly_volk(float* llrs, unsigned char* u, const int stage,
+                                         const int u_num, const int row)
+    {
+      volk_32f_8u_polarbutterfly_32f(llrs, u, block_size(), block_power(), stage, u_num, row);
     }
 
 

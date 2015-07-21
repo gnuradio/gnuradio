@@ -60,7 +60,9 @@ namespace gr {
       // preparation for decoding
       void initialize_llr_vector(float* llrs, const float* input);
       // basic algorithm methods
-      void butterfly(float* llrs, const int stage, unsigned char* u, const int u_num);
+      void butterfly(float* llrs, unsigned char* u, const int stage, const int u_num, const int row);
+      void butterfly_volk(float* llrs, unsigned char* u, const int stage, const int u_num, const int row);
+      void butterfly_generic(float* llrs, unsigned char* u, const int stage, const int u_num, const int row);
       void even_u_values(unsigned char* u_even, const unsigned char* u, const int u_num);
       void odd_xor_even_values(unsigned char* u_xor, const unsigned char* u, const int u_num);
       void demortonize_values(unsigned char* u);

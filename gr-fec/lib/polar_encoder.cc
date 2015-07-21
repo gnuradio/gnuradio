@@ -48,8 +48,8 @@ namespace gr
     }
 
     polar_encoder::polar_encoder(int block_size, int num_info_bits,
-                                 std::vector<int> frozen_bit_positions,
-                                 std::vector<char> frozen_bit_values, bool is_packed) :
+                                 std::vector<int>& frozen_bit_positions,
+                                 std::vector<char>& frozen_bit_values, bool is_packed) :
         polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed),
             d_frozen_bit_positions(frozen_bit_positions),
             d_frozen_bit_values(frozen_bit_values)
@@ -61,6 +61,7 @@ namespace gr
       }
 
       setup_frozen_bit_inserter();
+      setup_volk_vectors();
     }
 
     void
@@ -84,7 +85,29 @@ namespace gr
       }
 
       if((int) d_info_bit_positions.size() != num_info_bits()) {
-        throw std::runtime_error("number of info bit positions MUST equal num_info_bits (K)!");
+        throw std::runtime_error("polar_encoder: number of info bit positions MUST equal num_info_bits (K)!");
+      }
+    }
+
+    void
+    polar_encoder::setup_volk_vectors()
+    {
+      int nfrozen = block_size() - num_info_bits();
+      d_temp = (unsigned char*) volk_malloc(sizeof(unsigned char) * block_size(), volk_get_alignment());
+      d_frozen_bit_mask = (unsigned char*) volk_malloc(sizeof(unsigned char) * block_size(), volk_get_alignment());
+      d_frozen_bits = (unsigned char*) volk_malloc(sizeof(unsigned char) * nfrozen, volk_get_alignment());
+      for(int i = 0; i < nfrozen; i++){
+        d_frozen_bits[i] = d_frozen_bit_values[i];
+      }
+
+      int nfbit = 0;
+      for(int i = 0; i < block_size(); i++){
+        unsigned char m = 0x00;
+        if(d_frozen_bit_positions[nfbit] == i){
+          m = 0xFF;
+          nfbit++;
+        }
+        d_frozen_bit_mask[i] = m;
       }
     }
 
@@ -92,6 +115,10 @@ namespace gr
     {
       volk_free(d_block_array);
       volk_free(d_frozen_bit_prototype);
+
+      volk_free(d_temp);
+      volk_free(d_frozen_bit_mask);
+      volk_free(d_frozen_bits);
     }
 
     void
@@ -105,14 +132,14 @@ namespace gr
         encode_vector_packed(out);
       }
       else {
-        insert_unpacked_frozen_bits_and_reverse(d_block_array, in);
-        encode_vector_packed(d_block_array);
-        unpacker()->unpack(out, d_block_array, block_size() >> 3);
+        volk_encode(out, in);
       }
+    }
 
-//      insert_frozen_bits(d_block_array, in);
-//      bit_reverse_vector(out, d_block_array);
-//      encode_vector(out);
+    void
+    polar_encoder::volk_encode(unsigned char* out_buf, const unsigned char* in_buf)
+    {
+      volk_8u_x3_encodepolar_8u_x2(out_buf, d_temp, d_frozen_bit_mask, d_frozen_bits, in_buf, block_size());
     }
 
     void
@@ -171,20 +198,6 @@ namespace gr
     }
 
     void
-    polar_encoder::insert_unpacked_frozen_bits_and_reverse(unsigned char* target,
-                                                           const unsigned char* input) const
-    {
-      memcpy(target, d_frozen_bit_prototype, block_size() >> 3);
-      const int* info_bit_positions_ptr = &d_info_bit_positions[0];
-      const unsigned char* end_input = input + num_info_bits();
-      int bit_pos = 7;
-      while(input < end_input) {
-        insert_packet_bit_into_packed_array_at_position(target, *input++, *info_bit_positions_ptr++,
-                                                        bit_pos);
-      }
-    }
-
-    void
     polar_encoder::insert_packed_frozen_bits_and_reverse(unsigned char* target,
                                                          const unsigned char* input) const
     {
@@ -223,48 +236,5 @@ namespace gr
       insert_unpacked_bit_into_packed_array_at_position(target, (bit >> (7 - bit_pos)) & 0x01,
                                                         target_pos);
     }
-
-    void
-    polar_encoder::insert_frozen_bits(unsigned char* target, const unsigned char* input)
-    {
-      int frozen_num = 0;
-      int num_frozen_bits = block_size() - num_info_bits();
-      int info_num = 0;
-      for(int i = 0; i < block_size(); i++) {
-        if(frozen_num < num_frozen_bits && d_frozen_bit_positions.at(frozen_num) == i) {
-          target[i] = d_frozen_bit_values.at(frozen_num);
-          frozen_num++;
-        }
-        else {
-          target[i] = input[info_num];
-          info_num++;
-        }
-      }
-    }
-
-    void
-    polar_encoder::bit_reverse_vector(unsigned char* target, const unsigned char* input)
-    {
-      for(int i = 0; i < block_size(); i++) {
-        target[bit_reverse(long(i), block_power())] = input[i];
-      }
-    }
-
-    void
-    polar_encoder::encode_vector(unsigned char* target)
-    {
-      for(int stage = 0; stage < block_power(); stage++) {
-        int n_branches = pow(2, stage);
-        int branch_elements = block_size() / (2 * n_branches);
-        for(int branch = 0; branch < n_branches; branch++) {
-          for(int e = 0; e < branch_elements; e++) {
-            int pos = branch * branch_elements * 2 + e;
-            target[pos] ^= target[pos + branch_elements];
-          }
-        }
-      }
-    }
-
   } /* namespace fec */
 } /* namespace gr */
-

@@ -32,7 +32,7 @@ from extended_decoder import extended_decoder
 from polar.encoder import PolarEncoder
 from polar.decoder import PolarDecoder
 import polar.channel_construction as cc
-# from polar.helper_functions import bit_reverse_vector
+from polar.helper_functions import bit_reverse_vector
 
 # print('PID:', os.getpid())
 # raw_input('tell me smth')
@@ -62,22 +62,14 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
     def test_002_one_vector(self):
         print "test_002_one_vector"
         is_packed = False
-        block_power = 8
+        block_power = 10
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
         num_frozen_bits = block_size - num_info_bits
         frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
-        print frozen_bit_positions
 
-        python_decoder = PolarDecoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
-
-        bits = np.ones(num_info_bits, dtype=int)
-        # bits = np.random.randint(2, size=num_info_bits)
-        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
-        data = encoder.encode(bits)
-        # data = np.array([0, 1, 1, 0, 1, 0, 1, 0], dtype=int)
-        gr_data = 2.0 * data - 1.0
+        bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, 1, True)
 
         polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
         src = blocks.vector_source_f(gr_data, False)
@@ -90,16 +82,14 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
         res = np.array(snk.data()).astype(dtype=int)
 
-        ref = python_decoder.decode(data)
-
-        print("input:", data)
+        print("input:", gr_data.astype(dtype=int))
+        print("ref  :", bits)
         print("res  :", res)
-        print("ref  :", ref)
 
-        self.assertTupleEqual(tuple(res), tuple(ref))
+        self.assertTupleEqual(tuple(res), tuple(bits))
 
     def test_003_stream(self):
-        print "test_002_stream"
+        print "test_003_stream"
         nframes = 3
         is_packed = False
         block_power = 8
@@ -108,23 +98,8 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         num_frozen_bits = block_size - num_info_bits
         frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
-        print frozen_bit_positions
 
-        python_decoder = PolarDecoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
-        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
-
-        bits = np.array([], dtype=int)
-        data = np.array([], dtype=int)
-        for n in range(nframes):
-            b = np.random.randint(2, size=num_info_bits)
-            d = encoder.encode(b)
-            bits = np.append(bits, b)
-            data = np.append(data, d)
-        # bits = np.ones(num_info_bits, dtype=int)
-        # bits = np.random.randint(2, size=num_info_bits)
-        # data = encoder.encode(bits)
-        # data = np.array([0, 1, 1, 0, 1, 0, 1, 0], dtype=int)
-        gr_data = 2.0 * data - 1.0
+        bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, False)
 
         polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
         src = blocks.vector_source_f(gr_data, False)
@@ -137,13 +112,26 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
         res = np.array(snk.data()).astype(dtype=int)
 
-        # ref = python_decoder.decode(data)
-
-        print("input:", data)
+        print("input:", gr_data.astype(dtype=int))
+        print("ref  :", bits)
         print("res  :", res)
-        # print("ref  :", ref)
 
         self.assertTupleEqual(tuple(res), tuple(bits))
+
+    def generate_test_data(self, block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, onlyones):
+        encoder = PolarEncoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+        bits = np.array([], dtype=int)
+        data = np.array([], dtype=int)
+        for n in range(nframes):
+            if onlyones:
+                b = np.ones(num_info_bits, dtype=int)
+            else:
+                b = np.random.randint(2, size=num_info_bits)
+            d = encoder.encode(b)
+            bits = np.append(bits, b)
+            data = np.append(data, d)
+        gr_data = 2.0 * data - 1.0
+        return bits, gr_data
 
 
 if __name__ == '__main__':

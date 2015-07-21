@@ -20,6 +20,7 @@
 
 import numpy as np
 import time, sys
+import copy
 
 
 def power_of_2_int(num):
@@ -119,24 +120,72 @@ def main():
 
     for i in range(8):
         print(i, 'is power of 2: ', is_power_of_two(i))
-    n = 2 ** 6
-    k = n // 2
+    n = 6
+    m = 2 ** n
+    k = m // 2
     eta = 0.3
 
-    # frozen_bit_positions = get_frozen_bit_positions('.', 256, 128, 0.11)
-    # print(frozen_bit_positions)
+    pos = np.arange(m)
+    rev_pos = bit_reverse_vector(pos, n)
+    print(pos)
+    print(rev_pos)
 
-    print(np.arange(16))
-    print bit_reverse_vector(np.arange(16), 4)
+    bound = 16
+    num_lanes = m // bound
 
-    ntotal = 99
-    for i in range(ntotal):
-        show_progress_bar(i, ntotal)
-        time.sleep(0.1)
 
-    # sys.stdout.write('Hello')
-    # time.sleep(1)
-    # sys.stdout.write('\rMomy   ')
+    lanes = np.zeros((num_lanes, bound), dtype=int)
+    for i in range(0, num_lanes):
+        p = i * bound
+        part = rev_pos[p: p + bound]
+        lanes[i] = part
+
+    print('reved lanes')
+    print(lanes)
+
+    # SHUFFLE!
+    shuffle_pos = bit_reverse_vector(np.arange(bound), 4)
+    for i in range(num_lanes):
+        lane = lanes[i]
+        lanes[i] = lanes[i, shuffle_pos]
+    print('\nshuffled lanes')
+    print(lanes)
+
+    # SORT HALVES
+    hb = bound // 2
+    for i in range(num_lanes // 2):
+        l0 = lanes[i]
+        l1 = lanes[i + (num_lanes // 2)]
+        l0p = copy.deepcopy(l0[hb:])
+        l0[hb:] = l1[0:hb]
+        l1[0:hb] = l0p
+        lanes[i] =l0
+        lanes[i + (num_lanes // 2)] = l1
+    print('\nsort halves')
+    print(lanes)
+
+    # 'MELT' SHUFFLE     INTERLEAVE!
+    melt_pos = np.arange(bound, dtype=int)
+    melt_pos = np.reshape(melt_pos, (2, -1)).T.flatten()
+    for i in range(num_lanes):
+        lanes[i] = lanes[i, melt_pos]
+    print('\nmelt lanes')
+    print(lanes)
+
+
+
+    for i in range(0, m, bound):
+        print("\nlook at this part")
+        part = pos[i: i + bound]
+        rev = bit_reverse_vector(part, n)
+        sorted_rev = np.sort(rev)
+        print(part)
+        print(rev)
+        print(sorted_rev)
+        sorted_part = rev[shuffle_pos]
+        print(sorted_part)
+
+
 
 if __name__ == '__main__':
     main()

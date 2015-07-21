@@ -51,15 +51,10 @@ namespace gr {
       const char* get_output_conversion(){return is_packed() ? "packed_bits" : "none";};
 
     private:
-      polar_encoder(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed);
+      polar_encoder(int block_size, int num_info_bits, std::vector<int>& frozen_bit_positions, std::vector<char>& frozen_bit_values, bool is_packed);
       std::vector<int> d_frozen_bit_positions;
       std::vector<int> d_info_bit_positions;
       std::vector<char> d_frozen_bit_values;
-
-      // for unpacked bits an 'easier-to-grasp' algorithm.
-      void insert_frozen_bits(unsigned char* target, const unsigned char* input);
-      void bit_reverse_vector(unsigned char* target, const unsigned char* input);
-      void encode_vector(unsigned char* target);
 
       // c'tor method for packed algorithm setup.
       void setup_frozen_bit_inserter();
@@ -67,7 +62,6 @@ namespace gr {
       // methods insert input bits and frozen bits into packed array for encoding
       unsigned char* d_block_array; // use for encoding
       unsigned char* d_frozen_bit_prototype; // packed frozen bits are written onto it and later copies are used.
-      void insert_unpacked_frozen_bits_and_reverse(unsigned char* target, const unsigned char* input) const;
       void insert_packed_frozen_bits_and_reverse(unsigned char* target, const unsigned char* input) const;
       void insert_unpacked_bit_into_packed_array_at_position(unsigned char* target, const unsigned char bit, const int pos) const;
       void insert_packet_bit_into_packed_array_at_position(unsigned char* target, const unsigned char bit, const int target_pos, const int bit_pos) const;
@@ -78,8 +72,13 @@ namespace gr {
       void encode_packed_byte(unsigned char* target) const;
       void encode_vector_packed_interbyte(unsigned char* target) const;
 
+      // VOLK methods
+      void setup_volk_vectors();
+      void volk_encode(unsigned char* out_buf, const unsigned char* in_buf);
+      unsigned char* d_temp;
+      unsigned char* d_frozen_bit_mask;
+      unsigned char* d_frozen_bits;
     };
-
   } // namespace fec
 } // namespace gr
 

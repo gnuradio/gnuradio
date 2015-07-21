@@ -153,11 +153,11 @@ def main():
     # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
     # print frozenbitposition
 
-    # test_enc_dec_chain()
+    test_enc_dec_chain()
 
     # test_1024_rate_1_code()
 
-    channel_analysis()
+    # channel_analysis()
 
 
 if __name__ == '__main__':

@@ -80,10 +80,8 @@ namespace gr
       d_frozen_bit_counter = 0;
       memset(u, 0, sizeof(unsigned char) * block_size() * block_power());
       for(int i = 0; i < block_size(); i++){
-        butterfly(llrs, 0, u, i);
+        butterfly(llrs, u, 0, i, i);
         u[i] = retrieve_bit_from_llr(llrs[i], i);
-//        const unsigned char bit = retrieve_bit_from_llr(llrs[i], i);
-//        insert_bit_at_pos(u, bit, i);
       }
     }
 

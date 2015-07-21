@@ -13,6 +13,10 @@
       <value></value>
     </param>
     <param>
+      <key>window_size</key>
+      <value>1920, 1080</value>
+    </param>
+    <param>
       <key>category</key>
       <value>Custom</value>
     </param>
@@ -25,10 +29,9 @@
     tb.start()
     tb.wait()
     stop_time = time.time()
-    samps = 2 ** 22
     diff = stop_time - start_time
     throughput = tb.head_samps / diff
-    print("exe time:", diff, ", with ", tb.head_samps, "samps, throughput: ", throughput)</value>
+    print("execution time: {0:.6f} for {1:e} samples with throughput: {2:,.2f} Sps".format(diff, tb.head_samps, throughput))</value>
     </param>
     <param>
       <key>description</key>
@@ -48,7 +51,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>qt_gui</value>
+      <value>no_gui</value>
     </param>
     <param>
       <key>id</key>
@@ -78,9 +81,32 @@
       <key>title</key>
       <value>POLAR Encoder and Decoder</value>
     </param>
+  </block>
+  <block>
+    <key>variable</key>
     <param>
-      <key>window_size</key>
-      <value>1920, 1080</value>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(704, 35)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>block_size</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>2 ** 11</value>
     </param>
   </block>
   <block>
@@ -107,18 +133,45 @@
     </param>
     <param>
       <key>value</key>
-      <value>2 ** 22</value>
+      <value>2 ** 32# encoder: 32, decoder: 23</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(792, 35)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>n_info_bits</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>block_size / 2</value>
     </param>
   </block>
   <block>
     <key>variable_polar_code_configurator</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>channel</key>
@@ -134,7 +187,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 139)</value>
+      <value>(704, 99)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -146,22 +199,22 @@
     </param>
     <param>
       <key>design_snr</key>
-      <value>2.0</value>
+      <value>-1.0</value>
     </param>
     <param>
       <key>mu</key>
-      <value>16</value>
+      <value>32</value>
     </param>
   </block>
   <block>
     <key>variable_polar_decoder_sc_def</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>comment</key>
@@ -181,11 +234,11 @@
     </param>
     <param>
       <key>frozen_bit_positions</key>
-      <value>range(128)</value>
+      <value>polar_config['positions']</value>
     </param>
     <param>
       <key>frozen_bit_values</key>
-      <value>[0] * 128</value>
+      <value>polar_config['values']</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -212,11 +265,11 @@
     <key>variable_polar_encoder_def</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>comment</key>
@@ -236,11 +289,11 @@
     </param>
     <param>
       <key>frozen_bit_positions</key>
-      <value>range(128)</value>
+      <value>polar_config['positions']</value>
     </param>
     <param>
       <key>frozen_bit_values</key>
-      <value>[0] * 128</value>
+      <value>polar_config['values']</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -256,7 +309,7 @@
     </param>
     <param>
       <key>is_packed</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>ndim</key>
@@ -267,11 +320,11 @@
     <key>variable_polar_decoder_sc_list_def</key>
     <param>
       <key>num_info_bits</key>
-      <value>128</value>
+      <value>n_info_bits</value>
     </param>
     <param>
       <key>block_size</key>
-      <value>256</value>
+      <value>block_size</value>
     </param>
     <param>
       <key>comment</key>
@@ -401,7 +454,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -495,7 +548,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -601,7 +654,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1160, 464)</value>
+      <value>(1152, 465)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -648,7 +701,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -699,7 +752,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>1</value>
     </param>
     <param>
       <key>encoder_list</key>
@@ -750,7 +803,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(968, 32)</value>
+      <value>(1208, 19)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1175,6 +1228,12 @@
   <connection>
     <source_block_id>fec_extended_encoder_0</source_block_id>
     <sink_block_id>blocks_char_to_float_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>fec_extended_encoder_0</source_block_id>
+    <sink_block_id>blocks_head_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
