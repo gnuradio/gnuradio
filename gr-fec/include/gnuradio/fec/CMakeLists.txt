@@ -30,6 +30,7 @@ install(FILES
     tagged_encoder.h
     async_decoder.h
     async_encoder.h
+    cc_common.h
     cc_decoder.h
     cc_encoder.h
     ccsds_encoder.h

@@ -37,6 +37,9 @@ namespace gr {
       int d_berminerrors;
       float d_ber_limit;
 
+      inline float calculate_log_ber() const;
+      inline void update_counters(const int items, const unsigned char *inbuffer0, const unsigned char *inbuffer1);
+
     public:
       ber_bf_impl(bool d_test_mode = false, int berminerrors=100, float ber_limit=-7.0);
       ~ber_bf_impl();

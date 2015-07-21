@@ -141,6 +141,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   d_numPoints = 0;
   d_half_freq = false;
   d_legend_enabled = true;
+  d_nrows = 200;
 
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
@@ -150,7 +151,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
 
   for(int i = 0; i < d_nplots; i++) {
     d_data.push_back(new WaterfallData(d_start_frequency, d_stop_frequency,
-				       d_numPoints, 200));
+				       d_numPoints, d_nrows));
 
 #if QWT_VERSION < 0x060000
     d_spectrogram.push_back(new PlotWaterfall(d_data[i], "Spectrogram"));
@@ -276,49 +277,72 @@ WaterfallDisplayPlot::getStopFrequency() const
 
 void
 WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
-				  const int64_t numDataPoints,
-				  const double timePerFFT,
-				  const gr::high_res_timer_type timestamp,
-				  const int droppedFrames)
+                                  const int64_t numDataPoints,
+                                  const double timePerFFT,
+                                  const gr::high_res_timer_type timestamp,
+                                  const int droppedFrames)
 {
-  int64_t _npoints_in = d_half_freq ? numDataPoints/2 : numDataPoints;
-  int64_t _in_index = d_half_freq ? _npoints_in : 0;
+    int64_t _npoints_in = d_half_freq ? numDataPoints/2 : numDataPoints;
+    int64_t _in_index = d_half_freq ? _npoints_in : 0;
 
-  if(!d_stop) {
-    if(numDataPoints > 0){
-      if(_npoints_in != d_numPoints) {
-        d_numPoints = _npoints_in;
+    if(!d_stop) {
+        if(numDataPoints > 0 && timestamp == 0){
+            d_numPoints = numDataPoints/d_nrows;
+            resetAxis();
 
-	resetAxis();
+            //you got an entire waterfall plot, just plot it
+            for(int i = 0; i < d_nplots; i++) {
+                d_data[i]->setSpectrumDataBuffer(dataPoints[i]);
+                d_data[i]->setNumLinesToUpdate(0);
+                d_spectrogram[i]->invalidateCache();
+                d_spectrogram[i]->itemChanged();
+            }
 
-	for(int i = 0; i < d_nplots; i++) {
-	  d_spectrogram[i]->invalidateCache();
-	  d_spectrogram[i]->itemChanged();
-	}
+            QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+            timeScale->setSecondsPerLine(timePerFFT);
+            timeScale->setZeroTime(timestamp);
+            timeScale->initiateUpdate();
 
-	if(isVisible()) {
-	  replot();
-	}
-      }
+            ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
+            ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
+            replot();
+        }
 
-      QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-      timeScale->setSecondsPerLine(timePerFFT);
-      timeScale->setZeroTime(timestamp);
 
-      ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
-      ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
 
-      for(int i = 0; i < d_nplots; i++) {
-	d_data[i]->addFFTData(&(dataPoints[i][_in_index]),
-                              _npoints_in, droppedFrames);
-	d_data[i]->incrementNumLinesToUpdate();
-	d_spectrogram[i]->invalidateCache();
-	d_spectrogram[i]->itemChanged();
-      }
+        else if(numDataPoints > 0) {
+            if(_npoints_in != d_numPoints) {
+                d_numPoints = _npoints_in;
+                resetAxis();
 
-      replot();
+                for(int i = 0; i < d_nplots; i++) {
+                    d_spectrogram[i]->invalidateCache();
+                    d_spectrogram[i]->itemChanged();
+                }
+
+                if(isVisible()) {
+                    replot();
+                }
+            }
+
+            QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+            timeScale->setSecondsPerLine(timePerFFT);
+            timeScale->setZeroTime(timestamp);
+
+            ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
+            ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
+
+            for(int i = 0; i < d_nplots; i++) {
+                d_data[i]->addFFTData(&(dataPoints[i][_in_index]),
+                                      _npoints_in, droppedFrames);
+                d_data[i]->incrementNumLinesToUpdate();
+                d_spectrogram[i]->invalidateCache();
+                d_spectrogram[i]->itemChanged();
+            }
+
+            replot();
+        }
     }
-  }
 }
 
 void
@@ -556,6 +580,12 @@ WaterfallDisplayPlot::setAlpha(int which, int alpha)
   d_spectrogram[which]->setAlpha(alpha);
 }
 
+int
+WaterfallDisplayPlot::getNumRows() const
+{
+  return d_nrows;
+}
+
 void
 WaterfallDisplayPlot::_updateIntensityRangeDisplay()
 {
@@ -627,6 +657,12 @@ WaterfallDisplayPlot::enableLegend(bool en)
 {
   d_legend_enabled = en;
   enableAxis(QwtPlot::yRight, en);
+}
+
+void
+WaterfallDisplayPlot::setNumRows(int nrows)
+{
+  d_nrows = nrows;
 }
 
 void

@@ -47,6 +47,7 @@ namespace gr {
       double d_bandwidth;
       std::string d_name;
       int d_nconnections;
+      int d_nrows;
 
       bool d_shift;
       fft::fft_complex *d_fft;
@@ -54,6 +55,7 @@ namespace gr {
       int d_index;
       std::vector<float*> d_residbufs;
       std::vector<double*> d_magbufs;
+      double *d_pdu_magbuf;
       float *d_fbuf;
 
       int d_argc;
@@ -73,6 +75,9 @@ namespace gr {
       // Handles message input port for setting new center frequency.
       // The message is a PMT pair (intern('freq'), double(frequency)).
       void handle_set_freq(pmt::pmt_t msg);
+
+      // Handles message input port for displaying PDU samples.
+      void handle_pdus(pmt::pmt_t msg);
 
     public:
       waterfall_sink_f_impl(int size, int wintype,
@@ -108,6 +113,7 @@ namespace gr {
       void set_update_time(double t);
       void set_time_per_fft(double t);
       void set_title(const std::string &title);
+      void set_time_title(const std::string &title);
       void set_line_label(int which, const std::string &label);
       void set_line_alpha(int which, double alpha);
       void set_color_map(int which, const int color);

@@ -90,6 +90,8 @@ public:
   int  getAlpha(int which);
   void setAlpha(int which, int alpha);
 
+  int getNumRows() const;
+
 public slots:
   void setIntensityColorMapType(const int, const int, const QColor, const QColor);
   void setIntensityColorMapType1(int);
@@ -99,6 +101,7 @@ public slots:
   void disableLegend();
   void enableLegend();
   void enableLegend(bool en);
+  void setNumRows(int nrows);
 
 signals:
   void updatedLowerIntensityLevel(const double);
@@ -113,6 +116,7 @@ private:
   int    d_xaxis_multiplier;
   bool   d_half_freq;
   bool   d_legend_enabled;
+  int    d_nrows;
 
   std::vector<WaterfallData*> d_data;
 
