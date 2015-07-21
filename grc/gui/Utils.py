@@ -90,6 +90,17 @@ def get_angle_from_coordinates((x1, y1), (x2, y2)):
         return 270 if y2 > y1 else 90
 
 
+def encode(value):
+    """Make sure that we pass only valid utf-8 strings into markup_escape_text.
+
+    Older versions of glib seg fault if the last byte starts a multi-byte
+    character.
+    """
+
+    valid_utf8 = value.decode('utf-8', errors='ignore').encode('utf-8')
+    return gobject.markup_escape_text(valid_utf8)
+
+
 def parse_template(tmpl_str, **kwargs):
     """
     Parse the template string with the given args.
@@ -101,13 +112,7 @@ def parse_template(tmpl_str, **kwargs):
     Returns:
         a string of the parsed template
     """
-    kwargs['encode'] = gobject.markup_escape_text
-    #try:
-    #   cat = str(Template(tmpl_str, kwargs))
-    #except TypeError:
-    #   print 'guppy'
-    #   print tmpl_str
-    #   print str(kwargs['param'].get_error_messages())
+    kwargs['encode'] = encode
     return str(Template(tmpl_str, kwargs))
 
 
