@@ -33,10 +33,13 @@ namespace gr {
     {
      private:
       bool d_check;
+      bool d_packed;
       boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true>    d_crc_impl;
+      int d_crc_length;
+      char *d_unpacked_crc;
 
      public:
-      crc32_bb_impl(bool check, const std::string& lengthtagname);
+      crc32_bb_impl(bool check, const std::string& lengthtagname, bool packed);
       ~crc32_bb_impl();
 
       int calculate_output_stream_length(const gr_vector_int &ninput_items);
