@@ -60,7 +60,7 @@ namespace gr {
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
-	d_nconnections(nconnections), d_parent(parent)
+	d_nconnections(nconnections), d_nrows(200), d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
@@ -69,18 +69,6 @@ namespace gr {
       d_argc = 1;
       d_argv = new char;
       d_argv[0] = '\0';
-
-      // setup output message port to post frequency when display is
-      // double-clicked
-      message_port_register_out(pmt::mp("freq"));
-      message_port_register_in(pmt::mp("freq"));
-      set_msg_handler(pmt::mp("freq"),
-                      boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
-
-      // setup PDU handling input port
-      message_port_register_in(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"),
-                      boost::bind(&waterfall_sink_c_impl::handle_pdus, this, _1));
 
       d_main_gui = NULL;
 
@@ -106,15 +94,27 @@ namespace gr {
 
       d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                      volk_get_alignment()));
-      d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200,
+      d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*d_nrows,
                                           volk_get_alignment());
       d_magbufs.push_back(d_pdu_magbuf);
-      memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+      memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*d_nrows);
       memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
 
       buildwindow();
 
       initialize();
+
+      // setup output message port to post frequency when display is
+      // double-clicked
+      message_port_register_out(pmt::mp("freq"));
+      message_port_register_in(pmt::mp("freq"));
+      set_msg_handler(pmt::mp("freq"),
+                      boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
+
+      // setup PDU handling input port
+      message_port_register_in(pmt::mp("pdus"));
+      set_msg_handler(pmt::mp("pdus"),
+                      boost::bind(&waterfall_sink_c_impl::handle_pdus, this, _1));
     }
 
     waterfall_sink_c_impl::~waterfall_sink_c_impl()
@@ -446,9 +446,9 @@ namespace gr {
 
         d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                        volk_get_alignment()));
-        d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*200, volk_get_alignment());
+        d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*d_nrows, volk_get_alignment());
         d_magbufs.push_back(d_pdu_magbuf);
-        memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*200);
+        memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*d_nrows);
         memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
 
         // Set new fft size and reset buffer index
@@ -584,7 +584,7 @@ namespace gr {
           throw std::runtime_error("waterfall sink: unknown data type of samples; must be complex.");
         }
 
-        int stride = (len - d_fftsize)/199;
+        int stride = (len - d_fftsize)/d_nrows;
 
         set_time_per_fft(1.0/d_bandwidth * stride);
         std::ostringstream title("");
@@ -595,9 +595,10 @@ namespace gr {
         windowreset();
         check_clicked();
 
-        for(size_t i=0; j < 200; i+=stride) {
+        for(size_t i=0; j < d_nrows; i+=stride) {
 
-          memcpy(d_residbufs[d_nconnections], &in[j * stride], sizeof(gr_complex)*d_fftsize);
+          memcpy(d_residbufs[d_nconnections], &in[j * stride],
+                 sizeof(gr_complex)*d_fftsize);
 
           fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
           for(int x = 0; x < d_fftsize; x++) {
@@ -610,7 +611,7 @@ namespace gr {
         //update gui per-pdu
         d_qApplication->postEvent(d_main_gui,
                                   new WaterfallUpdateEvent(d_magbufs,
-                                                           d_fftsize*200,
+                                                           d_fftsize*d_nrows,
                                                            0));
 
       }

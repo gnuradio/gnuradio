@@ -47,6 +47,7 @@ namespace gr {
       double d_bandwidth;
       std::string d_name;
       int d_nconnections;
+      int d_nrows;
 
       bool d_shift;
       fft::fft_complex *d_fft;
