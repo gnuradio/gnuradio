@@ -441,6 +441,10 @@ class ActionHandler:
                         # null action, that updates the main window
                         Actions.ELEMENT_SELECT()
                 dialog.destroy()
+        elif action == Actions.EXTERNAL_UPDATE:
+            self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
+            self.get_flow_graph().update()
+            self.get_page().set_saved(False)
         ##################################################
         # View Parser Errors
         ##################################################

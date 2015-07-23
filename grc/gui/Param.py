@@ -23,7 +23,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from . import Colors, Utils, Constants
+from . import Colors, Utils, Constants, Dialogs
 from . Element import Element
 
 
@@ -171,6 +171,66 @@ class MultiLineEntryParam(InputParam):
             self._view.set_tooltip_text(text)
         except AttributeError:
             pass  # no tooltips for old GTK
+
+
+# try:
+#     import gtksourceview
+#     lang_manager = gtksourceview.SourceLanguagesManager()
+#     py_lang = lang_manager.get_language_from_mime_type('text/x-python')
+#
+#     class PythonEditorParam(InputParam):
+#         expand = True
+#
+#         def __init__(self, *args, **kwargs):
+#             InputParam.__init__(self, *args, **kwargs)
+#
+#             buf = self._buffer = gtksourceview.SourceBuffer()
+#             buf.set_language(py_lang)
+#             buf.set_highlight(True)
+#             buf.set_text(self.param.get_value())
+#             buf.connect('changed', self._mark_changed)
+#
+#             view = self._view = gtksourceview.SourceView(self._buffer)
+#             view.connect('focus-out-event', self._apply_change)
+#             view.connect('key-press-event', self._handle_key_press)
+#             view.set_tabs_width(4)
+#             view.set_insert_spaces_instead_of_tabs(True)
+#             view.set_auto_indent(True)
+#             view.set_border_width(2)
+#
+#             scroll = gtk.ScrolledWindow()
+#             scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+#             scroll.add_with_viewport(view)
+#             self.pack_start(scroll, True)
+#
+#         def get_text(self):
+#             buf = self._buffer
+#             return buf.get_text(buf.get_start_iter(),
+#                                 buf.get_end_iter()).strip()
+#
+# except ImportError:
+#     print "Package 'gtksourceview' not found. No Syntax highlighting."
+#     PythonEditorParam = MultiLineEntryParam
+
+class PythonEditorParam(InputParam):
+
+    def __init__(self, *args, **kwargs):
+        InputParam.__init__(self, *args, **kwargs)
+        input = gtk.Button('Open in Editor')
+        input.connect('clicked', self.open_editor)
+        self.pack_start(input, True)
+
+    def open_editor(self, widget=None):
+        if not os.path.exists(Constants.EDITOR):
+            Dialogs.ChooseEditorDialog()
+        flowgraph = self.param.get_parent().get_parent()
+        flowgraph.install_external_editor(self.param)
+
+    def get_text(self):
+        pass  # we never update the value from here
+
+    def _apply_change(self, *args):
+        pass
 
 
 class EnumParam(InputParam):
@@ -341,8 +401,11 @@ class Param(Element):
         elif self.get_options():
             input_widget = EnumEntryParam(self, *args, **kwargs)
 
-        elif self.get_type() in ('_multiline', '_multiline_python_external'):
+        elif self.get_type() == '_multiline':
             input_widget = MultiLineEntryParam(self, *args, **kwargs)
+
+        elif self.get_type() == '_multiline_python_external':
+            input_widget = PythonEditorParam(self, *args, **kwargs)
 
         else:
             input_widget = EntryParam(self, *args, **kwargs)
