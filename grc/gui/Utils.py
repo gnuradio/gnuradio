@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011 Free Software Foundation, Inc.
+Copyright 2008-2011,2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,12 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
-from Cheetah.Template import Template
 import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+
+from Cheetah.Template import Template
+
+from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
+
 
 def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE):
     """
@@ -46,6 +49,7 @@ def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTE
     pixbuf = pixbuf.rotate_simple(angle)
     dst_pixmap.draw_pixbuf(gc, pixbuf, 0, 0, 0, 0)
 
+
 def get_rotated_coordinate(coor, rotation):
     """
     Rotate the coordinate by the given rotation.
@@ -57,21 +61,19 @@ def get_rotated_coordinate(coor, rotation):
     Returns:
         the rotated coordinates
     """
-    #handles negative angles
+    # handles negative angles
     rotation = (rotation + 360)%360
     if rotation not in POSSIBLE_ROTATIONS:
         raise ValueError('unusable rotation angle "%s"'%str(rotation))
-    #determine the number of degrees to rotate
+    # determine the number of degrees to rotate
     cos_r, sin_r = {
-        0: (1, 0),
-        90: (0, 1),
-        180: (-1, 0),
-        270: (0, -1),
+        0: (1, 0), 90: (0, 1), 180: (-1, 0), 270: (0, -1),
     }[rotation]
     x, y = coor
-    return (x*cos_r + y*sin_r, -x*sin_r + y*cos_r)
+    return x * cos_r + y * sin_r, -x * sin_r + y * cos_r
 
-def get_angle_from_coordinates((x1,y1), (x2,y2)):
+
+def get_angle_from_coordinates((x1, y1), (x2, y2)):
     """
     Given two points, calculate the vector direction from point1 to point2, directions are multiples of 90 degrees.
 
@@ -82,12 +84,22 @@ def get_angle_from_coordinates((x1,y1), (x2,y2)):
     Returns:
         the direction in degrees
     """
-    if y1 == y2:#0 or 180
-        if x2 > x1: return 0
-        else: return 180
-    else:#90 or 270
-        if y2 > y1: return 270
-        else: return 90
+    if y1 == y2:  # 0 or 180
+        return 0 if x2 > x1 else 180
+    else:  # 90 or 270
+        return 270 if y2 > y1 else 90
+
+
+def encode(value):
+    """Make sure that we pass only valid utf-8 strings into markup_escape_text.
+
+    Older versions of glib seg fault if the last byte starts a multi-byte
+    character.
+    """
+
+    valid_utf8 = value.decode('utf-8', errors='ignore').encode('utf-8')
+    return gobject.markup_escape_text(valid_utf8)
+
 
 def parse_template(tmpl_str, **kwargs):
     """
@@ -100,14 +112,9 @@ def parse_template(tmpl_str, **kwargs):
     Returns:
         a string of the parsed template
     """
-    kwargs['encode'] = gobject.markup_escape_text
-    #try:
-    #   cat = str(Template(tmpl_str, kwargs))
-    #except TypeError:
-    #   print 'guppy'
-    #   print tmpl_str
-    #   print str(kwargs['param'].get_error_messages())
+    kwargs['encode'] = encode
     return str(Template(tmpl_str, kwargs))
+
 
 def align_to_grid(coor):
     _align = lambda: int(round(x / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
