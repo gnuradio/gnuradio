@@ -41,6 +41,8 @@ DEFAULT_DOMAIN = GR_STREAM_DOMAIN
 
 BLOCK_FLAG_THROTTLE = 'throttle'
 BLOCK_FLAG_DISABLE_BYPASS = 'disable_bypass'
+BLOCK_FLAG_NEED_QT_GUI = 'need_qt_gui'
+BLOCK_FLAG_NEED_WX_GUI = 'need_ex_gui'
 
 # Block States
 BLOCK_DISABLED = 0

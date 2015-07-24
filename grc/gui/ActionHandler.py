@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-import signal
 from Constants import IMAGE_FILE_EXTENSION
 import Actions
 import pygtk
@@ -35,8 +34,10 @@ from PropsDialog import PropsDialog
 from ParserErrorsDialog import ParserErrorsDialog
 import Dialogs
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveReportsFileDialog, SaveImageFileDialog
+from . Constants import DEFAULT_CANVAS_SIZE
 
 gobject.threads_init()
+
 
 class ActionHandler:
     """
@@ -124,6 +125,7 @@ class ActionHandler:
                 Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
+                Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
             ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
@@ -146,6 +148,7 @@ class ActionHandler:
                 Actions.TOGGLE_SCROLL_LOCK,
                 Actions.TOGGLE_SNAP_TO_GRID,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
+                Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
             ): action.load_from_preferences()
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
@@ -410,6 +413,8 @@ class ActionHandler:
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SHOW_BLOCK_COMMENTS:
             action.save_to_preferences()
+        elif action == Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB:
+            action.save_to_preferences()
         ##################################################
         # Param Modifications
         ##################################################
@@ -594,7 +599,8 @@ class ActionHandler:
         Actions.FLOW_GRAPH_SAVE.set_sensitive(not self.get_page().get_saved())
         self.main_window.update()
         try: #set the size of the flow graph area (if changed)
-            new_size = self.get_flow_graph().get_option('window_size')
+            new_size = (self.get_flow_graph().get_option('window_size') or
+                        DEFAULT_CANVAS_SIZE)
             if self.get_flow_graph().get_size() != tuple(new_size):
                 self.get_flow_graph().set_size(*new_size)
         except: pass

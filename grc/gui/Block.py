@@ -22,10 +22,10 @@ import Utils
 import Colors
 from .. base import odict
 from Constants import BORDER_PROXIMITY_SENSITIVITY
-from Constants import \
-    BLOCK_LABEL_PADDING, \
-    PORT_SEPARATION, LABEL_SEPARATION, \
+from Constants import (
+    BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
     PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT
+)
 import Actions
 import pygtk
 pygtk.require('2.0')
@@ -72,6 +72,7 @@ class Block(Element):
         ))
         Element.__init__(self)
         self._comment_pixmap = None
+        self.has_busses = [False, False]  # source, sink
 
     def get_coordinate(self):
         """
@@ -190,13 +191,14 @@ class Block(Element):
             self.vertical_label = self.get_parent().new_pixmap(height, width)
             Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
         #calculate width and height needed
-        self.W = self.label_width + 2*BLOCK_LABEL_PADDING
+        self.W = self.label_width + 2 * BLOCK_LABEL_PADDING
+
         def get_min_height_for_ports():
             visible_ports = filter(lambda p: not p.get_hide(), ports)
             H = 2*PORT_BORDER_SEPARATION + len(visible_ports) * PORT_SEPARATION
             if visible_ports: H -= ports[0].H
             return H
-        self.H = max(*(
+        self.H = max(
             [  # labels
                 self.label_height + 2 * BLOCK_LABEL_PADDING
             ] +
@@ -204,11 +206,15 @@ class Block(Element):
                 get_min_height_for_ports() for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ] +
             [  # bus ports only
-                4 * PORT_BORDER_SEPARATION +
-                sum([port.H + PORT_SEPARATION for port in ports if port.get_type() == 'bus']) - PORT_SEPARATION
+                2 * PORT_BORDER_SEPARATION +
+                sum([port.H + PORT_SPACING for port in ports if port.get_type() == 'bus']) - PORT_SPACING
                 for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ]
-        ))
+        )
+        self.has_busses = [
+            any(port.get_type() == 'bus' for port in ports)
+            for ports in (self.get_sources_gui(), self.get_sinks_gui())
+        ]
         self.create_comment_label()
 
     def create_comment_label(self):

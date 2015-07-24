@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import expr_utils
 from .. base.FlowGraph import FlowGraph as _FlowGraph
 from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
-from .. base.odict import odict
 import re
 
 _variable_matcher = re.compile('^(variable\w*)$')
