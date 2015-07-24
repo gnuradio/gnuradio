@@ -133,7 +133,6 @@ rpcserver_thrift::setKnobs(const GNURadio::KnobMap& knobs)
                 (d_setcallbackmap, cur_priv));
 }
 
-
 void
 rpcserver_thrift::getKnobs(GNURadio::KnobMap& _return,
                            const GNURadio::KnobIDList& knobs)

@@ -21,6 +21,7 @@
 
 namespace cpp GNURadio
 namespace py GNURadio
+namespace java org.gnuradio.controlport
 
 struct complex {
   1: double re;
@@ -41,7 +42,7 @@ enum BaseTypes { BOOL, BYTE, SHORT, INT, LONG, DOUBLE, STRING, COMPLEX,
                  F32VECTOR, F64VECTOR, S64VECTOR, S32VECTOR, S16VECTOR,
                  S8VECTOR, C32VECTOR }
 
-union KnobBase {
+struct KnobBase {
   1: bool a_bool;
   2: byte a_byte;
   3: i16 a_short;
