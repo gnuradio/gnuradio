@@ -531,7 +531,7 @@ deserialize(std::streambuf &sb)
   uint32_t	u32;
   uint64_t	u64;
   double	f64;
-  static char   tmpbuf[1024];
+  char          tmpbuf[1024];
 
   if (!deserialize_untagged_u8(&tag, sb))
     return PMT_EOF;
