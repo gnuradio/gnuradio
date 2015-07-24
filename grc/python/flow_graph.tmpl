@@ -1,4 +1,4 @@
-#if $generate_options != 'hb'
+#if not $generate_options.startswith('hb')
 #!/usr/bin/env python2
 #end if
 ########################################################
@@ -61,7 +61,8 @@ sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnura
 
 #end if
 #for $imp in $imports
-$(imp.replace("  # grc-generated hier_block", ""))
+##$(imp.replace("  # grc-generated hier_block", ""))
+$imp
 #end for
 
 ########################################################
@@ -76,6 +77,7 @@ $(imp.replace("  # grc-generated hier_block", ""))
 #if $generate_options == 'wx_gui'
     #import gtk
     #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
+
 class $(class_name)(grc_wxgui.top_block_gui):
 
     def __init__($param_str):
@@ -85,7 +87,7 @@ class $(class_name)(grc_wxgui.top_block_gui):
         self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
     #end if
 #elif $generate_options == 'qt_gui'
-from distutils.version import StrictVersion
+
 class $(class_name)(gr.top_block, Qt.QWidget):
 
     def __init__($param_str):
@@ -110,16 +112,21 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
         self.restoreGeometry(self.settings.value("geometry").toByteArray())
-
 #elif $generate_options == 'no_gui'
+
 class $(class_name)(gr.top_block):
 
     def __init__($param_str):
         gr.top_block.__init__(self, "$title")
-#elif $generate_options == 'hb'
+#elif $generate_options.startswith('hb')
     #set $in_sigs = $flow_graph.get_hier_block_stream_io('in')
     #set $out_sigs = $flow_graph.get_hier_block_stream_io('out')
+
+#if $generate_options == 'hb_qt_gui'
+class $(class_name)(gr.hier_block2, Qt.QWidget):
+#else
 class $(class_name)(gr.hier_block2):
+#end if
 #def make_io_sig($io_sigs)
     #set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
     #if len($io_sigs) == 0
@@ -143,6 +150,14 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
     #for $pad in $flow_graph.get_hier_block_message_io('out')
         self.message_port_register_hier_in("$pad['label']")
     #end for
+    #if $generate_options == 'hb_qt_gui'
+
+        Qt.QWidget.__init__(self)
+        self.top_layout = Qt.QVBoxLayout()
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+        self.setLayout(self.top_layout)
+    #end if
 #end if
 #if $flow_graph.get_option('thread_safe_setters')
 
@@ -304,7 +319,7 @@ $param.get_make()#slurp
     #end if
 $short_id#slurp
 #end def
-#if $generate_options != 'hb'
+#if not $generate_options.startswith('hb')
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
@@ -334,7 +349,8 @@ if __name__ == '__main__':
     tb.Wait()
         #end if
     #elif $generate_options == 'qt_gui'
-    if(StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0")):
+    from distutils.version import StrictVersion
+    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
         Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui','style','raster'))
     qapp = Qt.QApplication(sys.argv)
     tb = $(class_name)($(', '.join($params_eq_list)))
@@ -346,6 +362,7 @@ if __name__ == '__main__':
         #end if
     #end if
     tb.show()
+
     def quitting():
         tb.stop()
         tb.wait()
@@ -358,7 +375,7 @@ if __name__ == '__main__':
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
         #end for
     qapp.exec_()
-    tb = None #to clean up Qt widgets
+    tb = None  # to clean up Qt widgets
     #elif $generate_options == 'no_gui'
     tb = $(class_name)($(', '.join($params_eq_list)))
         #set $run_options = $flow_graph.get_option('run_options')

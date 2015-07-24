@@ -17,22 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from collections import defaultdict
+import itertools
+import collections
 
+from .. base.Constants import BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI
 from .. base.Block import Block as _Block
 from .. gui.Block import Block as _GUIBlock
+
 from . FlowGraph import _variable_matcher
 import extract_docs
 
+
 class Block(_Block, _GUIBlock):
-
-    def is_virtual_sink(self): return self.get_key() == 'virtual_sink'
-    def is_virtual_source(self): return self.get_key() == 'virtual_source'
-
-    ##for make source to keep track of indexes
-    _source_count = 0
-    ##for make sink to keep track of indexes
-    _sink_count = 0
 
     def __init__(self, flow_graph, n):
         """
@@ -54,6 +50,7 @@ class Block(_Block, _GUIBlock):
         self._callbacks = n.findall('callback')
         self._bus_structure_source = n.find('bus_structure_source') or ''
         self._bus_structure_sink = n.find('bus_structure_sink') or ''
+        self.port_counters = [itertools.count(), itertools.count()]
         #build the block
         _Block.__init__(
             self,
@@ -99,12 +96,21 @@ class Block(_Block, _GUIBlock):
                 self.get_parent().evaluate(value)
             except Exception as err:
                 self.add_error_message('Value "%s" cannot be evaluated:\n%s' % (value, err))
+
         # check if this is a GUI block and matches the selected generate option
         current_generate_option = self.get_parent().get_option('generate_options')
-        for label, option in (('WX GUI', 'wx_gui'), ('QT GUI', 'qt_gui')):
-            if self.get_name().startswith(label) and current_generate_option != option:
+
+        def check_generate_mode(label, flag, valid_options):
+            block_requires_mode = (
+                flag in self.get_flags() or
+                self.get_name().upper().startswith(label)
+            )
+            if block_requires_mode and current_generate_option not in valid_options:
                 self.add_error_message("Can't generate this block in mode " +
                                        repr(current_generate_option))
+
+        check_generate_mode('WX GUI', BLOCK_FLAG_NEED_WX_GUI, ('wx_gui',))
+        check_generate_mode('QT GUI', BLOCK_FLAG_NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
 
     def rewrite(self):
         """
@@ -127,13 +133,13 @@ class Block(_Block, _GUIBlock):
                     master_port.remove_clone(port)
                     ports.remove(port)
                 # add more cloned ports
-                for i in range(num_ports, nports):
+                for j in range(num_ports, nports):
                     port = master_port.add_clone()
-                    ports.insert(ports.index(master_port) + i, port)
+                    ports.insert(ports.index(master_port) + j, port)
 
             self.back_ofthe_bus(ports)
             # renumber non-message/-msg ports
-            domain_specific_port_index = defaultdict(int)
+            domain_specific_port_index = collections.defaultdict(int)
             for port in filter(lambda p: p.get_key().isdigit(), ports):
                 domain = port.get_domain()
                 port._key = str(domain_specific_port_index[domain])
@@ -201,3 +207,9 @@ class Block(_Block, _GUIBlock):
             if 'self.' in callback: return callback
             return 'self.%s.%s'%(self.get_id(), callback)
         return map(make_callback, self._callbacks)
+
+    def is_virtual_sink(self):
+        return self.get_key() == 'virtual_sink'
+
+    def is_virtual_source(self):
+        return self.get_key() == 'virtual_source'

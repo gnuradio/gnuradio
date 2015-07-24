@@ -103,6 +103,8 @@ MENU_BAR_LIST = (
         Actions.TOGGLE_SNAP_TO_GRID,
         Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
         None,
+        Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
+        None,
         Actions.ERRORS_WINDOW_DISPLAY,
         Actions.FIND_BLOCKS,
     ]),

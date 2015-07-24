@@ -27,6 +27,7 @@ from Cheetah.Template import Template
 from .. gui import Messages
 from .. base import ParseXML
 from .. base import odict
+from .. base.Constants import BLOCK_FLAG_NEED_QT_GUI
 
 from . Constants import TOP_BLOCK_FILE_MODE, FLOW_GRAPH_TEMPLATE, \
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
@@ -47,9 +48,13 @@ class Generator(object):
         """
         self._generate_options = flow_graph.get_option('generate_options')
         if self._generate_options == 'hb':
-            self._generator = HierBlockGenerator(flow_graph, file_path)
+            generator_cls = HierBlockGenerator
+        elif self._generate_options == 'hb_qt_gui':
+            generator_cls = QtHierBlockGenerator
         else:
-            self._generator = TopBlockGenerator(flow_graph, file_path)
+            generator_cls = TopBlockGenerator
+
+        self._generator = generator_cls(flow_graph, file_path)
 
     def get_generate_options(self):
         return self._generate_options
@@ -87,7 +92,7 @@ class TopBlockGenerator(object):
         """generate output and write it to files"""
         # do throttle warning
         throttling_blocks = filter(lambda b: b.throtteling(), self._flow_graph.get_enabled_blocks())
-        if not throttling_blocks and self._generate_options != 'hb':
+        if not throttling_blocks and not self._generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
                                   "Add a Misc->Throttle block to your flow "
@@ -324,4 +329,30 @@ class HierBlockGenerator(TopBlockGenerator):
         block_n['grc_source'] = str(self._flow_graph.grc_file_path)
 
         n = {'block': block_n}
+        return n
+
+
+class QtHierBlockGenerator(HierBlockGenerator):
+
+    def _build_block_n_from_flow_graph_io(self):
+        n = HierBlockGenerator._build_block_n_from_flow_graph_io(self)
+        block_n = n['block']
+
+        if not block_n['name'].upper().startswith('QT GUI'):
+            block_n['name'] = 'QT GUI ' + block_n['name']
+
+        block_n.insert_after('category', 'flags', BLOCK_FLAG_NEED_QT_GUI)
+
+        gui_hint_param = odict()
+        gui_hint_param['name'] = 'GUI Hint'
+        gui_hint_param['key'] = 'gui_hint'
+        gui_hint_param['value'] = ''
+        gui_hint_param['type'] = 'gui_hint'
+        gui_hint_param['hide'] = 'part'
+        block_n['param'].append(gui_hint_param)
+
+        block_n['make'] += (
+            "\n#set $win = 'self.%s' % $id"
+            "\n${gui_hint()($win)}"
+        )
         return n
