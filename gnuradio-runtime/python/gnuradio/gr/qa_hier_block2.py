@@ -66,14 +66,12 @@ class test_hier_block2(gr_unittest.TestCase):
         self.assertEqual(expected, self.call_log)
 
     def test_005(self):
-        with self.assertRaises(ValueError) as c:
+        with self.assertRaises(ValueError):
             self.multi((self.Block(), 5))
-        self.assertIsInstance(c.exception, ValueError)
 
     def test_006(self):
-        with self.assertRaises(ValueError) as c:
-            self.multi(self.Block(), (self.Block(), 5, 5))
-        self.assertIsInstance(c.exception, ValueError)
+        with self.assertRaises(ValueError):
+            self.multi(self.Block(), (5, 5))
 
     def test_007(self):
         b1, b2 = self.Block(), self.Block()
@@ -84,6 +82,10 @@ class test_hier_block2(gr_unittest.TestCase):
         f, b1, b2 = self.multi, self.Block(), self.Block()
         self.opt((b1, "in"), (b2, "out"))
         self.assertEqual([(b1, "in", b2, "out")], self.call_log)
+
+    def test_009(self):
+        with self.assertRaises(ValueError):
+            self.multi(self.Block(), 5)
 
 
 if __name__ == '__main__':
