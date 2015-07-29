@@ -98,6 +98,7 @@ namespace gr {
                          gr_vector_void_star &output_items)
     {
       gr::thread::scoped_lock l(d_mutex);
+      bool toprint = false;
 
       std::stringstream sout;
       if(d_display) {
@@ -117,6 +118,10 @@ namespace gr {
         else
           get_tags_in_range(d_tags, i, abs_N, end_N, d_filter);
 
+        if(d_tags.size() > 0) {
+          toprint = true;
+        }
+
         if(d_display) {
           sout << "Input Stream: " << std::setw(2) << std::setfill('0')
                << i << std::setfill(' ') << std::endl;
@@ -135,8 +140,9 @@ namespace gr {
         sout << "----------------------------------------------------------------------";
         sout << std::endl;
 
-        if(d_tags.size() > 0)
+        if(toprint) {
           std::cout << sout.str();
+        }
       }
 
       return noutput_items;
