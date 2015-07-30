@@ -76,6 +76,9 @@ namespace gr {
      * directly as a string and uses the readbitlist inside to do
      * the conversion.
      *
+     * Note that due to the above concept, the default setting in the
+     * extended encoder of '11' translates into no puncturing.
+     *
      * The \p delay parameter delays the application of the puncture
      * pattern. This is equivalent to circularly rotating the \p
      * puncpat by \p delay. Note that because of the circular shift,
