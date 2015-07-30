@@ -29,8 +29,8 @@ pygtk.require('2.0')
 warnings.filterwarnings("error")
 try:
     import gtk
-except:
-    sys.exit("Failed to import gtk. If you are running over ssh, did you enable X forwarding and start ssh with -X?")
+except Exception:
+    pass
 warnings.filterwarnings("always")
 
 GR_IMPORT_ERROR_MESSAGE = """\
@@ -64,8 +64,8 @@ def show_gtk_error_dialog(title, message):
 def check_gtk_init():
     try:
         gtk.init_check()
-    except RuntimeError:
-        print 'GTK initialization failed - bailing'
+    except Exception:
+        print "Failed to initialize gtk. If you are running over ssh, did you enable X forwarding and start ssh with -X?"
         exit(-1)
 
 
@@ -101,6 +101,7 @@ def main():
         version=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
     options, args = parser.parse_args()
 
+    check_gtk_init()
     source_tree_root = get_source_tree_root()
     if not source_tree_root:
         # run the installed version
@@ -122,7 +123,6 @@ def main():
 
 
 if __name__ == '__main__':
-    check_gtk_init()
     check_gnuradio_import()
     ensure_blocks_path()
     main()
