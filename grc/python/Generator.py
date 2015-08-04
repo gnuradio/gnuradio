@@ -166,18 +166,65 @@ class TopBlockGenerator(object):
             except:
                 pass
             return code
+
         blocks = expr_utils.sort_objects(
             self._flow_graph.get_enabled_blocks(),
             lambda b: b.get_id(), _get_block_sort_text
         )
-        # list of regular blocks (all blocks minus the special ones)
+        # List of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
-        # list of connections where each endpoint is enabled (sorted by domains, block names)
-        connections = filter(lambda c: not (c.is_bus() or c.is_msg()), self._flow_graph.get_enabled_connections())
+
+        # Filter out virtual sink connections
+        cf = lambda c: not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
+        connections = filter(cf, self._flow_graph.get_enabled_connections())
+
+        # Get the virtual blocks and resolve their conenctions
+        virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
+        for connection in virtual:
+            source = connection.get_source().resolve_virtual_source()
+            sink = connection.get_sink()
+            resolved = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source, portb=sink)
+            connections.append(resolved)
+            # Remove the virtual connection
+            connections.remove(connection)
+
+        # Bypassing blocks: Need to find all the enabled connections for the block using
+        # the *connections* object rather than get_connections(). Create new connections
+        # that bypass the selected block and remove the existing ones. This allows adjacent
+        # bypassed blocks to see the newly created connections to downstream blocks,
+        # allowing them to correctly construct bypass connections.
+        bypassed_blocks = self._flow_graph.get_bypassed_blocks()
+        for block in bypassed_blocks:
+            # Get the upstream connection (off of the sink ports)
+            # Use *connections* not get_connections()
+            get_source_connection = lambda c: c.get_sink() == block.get_sinks()[0]
+            source_connection = filter(get_source_connection, connections)
+            # The source connection should never have more than one element.
+            assert (len(source_connection) == 1)
+
+            # Get the source of the connection.
+            source_port = source_connection[0].get_source()
+
+            # Loop through all the downstream connections
+            get_sink_connections = lambda c: c.get_source() == block.get_sources()[0]
+            for sink in filter(get_sink_connections, connections):
+                if not sink.get_enabled():
+                    # Ignore disabled connections
+                    continue
+                sink_port = sink.get_sink()
+                connection = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source_port, portb=sink_port)
+                connections.append(connection)
+                # Remove this sink connection
+                connections.remove(sink)
+            # Remove the source connection
+            connections.remove(source_connection[0])
+
+        # List of connections where each endpoint is enabled (sorted by domains, block names)
         connections.sort(key=lambda c: (
             c.get_source().get_domain(), c.get_sink().get_domain(),
             c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
         ))
+
         connection_templates = self._flow_graph.get_parent().get_connection_templates()
         msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
         # list of variable names

@@ -255,15 +255,8 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #for $con in $connections
     #set global $source = $con.get_source()
     #set global $sink = $con.get_sink()
-    ##resolve virtual sources to the actual sources
-    #if $source.get_parent().is_virtual_source()
-        #set global $source = $source.resolve_virtual_source()
-    #end if
-    ##do not generate connections with virtual sinks
-    #if not $sink.get_parent().is_virtual_sink()
-        #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
+    #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
 
-    #end if
 #end for
 
 ########################################################
