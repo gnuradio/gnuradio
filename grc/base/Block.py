@@ -27,8 +27,6 @@ from Cheetah.Template import Template
 from UserDict import UserDict
 from itertools import imap
 
-from .. gui import Messages
-
 
 class TemplateArg(UserDict):
     """
