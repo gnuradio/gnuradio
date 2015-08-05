@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.8'?>
+<?grc format='1' created='3.7.8rc1'?>
 <flow_graph>
   <timestamp>Sat Jul 12 16:12:28 2014</timestamp>
   <block>
@@ -11,6 +11,10 @@
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>1280, 1024</value>
     </param>
     <param>
       <key>category</key>
@@ -67,10 +71,6 @@
     <param>
       <key>title</key>
       <value>UHD FFT</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
     </param>
   </block>
   <block>
@@ -953,7 +953,7 @@
     </param>
     <param>
       <key>legend</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>alpha1</key>
@@ -1125,7 +1125,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>Spectrum</value>
+      <value></value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1208,7 +1208,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(333, 436)</value>
+      <value>(312, 427)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1228,7 +1228,7 @@
     </param>
     <param>
       <key>legend</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>alpha1</key>
@@ -1472,7 +1472,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>QT GUI Plot</value>
+      <value></value>
     </param>
     <param>
       <key>nconnections</key>
@@ -1567,7 +1567,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(325, 328)</value>
+      <value>(320, 315)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1727,7 +1727,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>Scope</value>
+      <value></value>
     </param>
     <param>
       <key>nconnections</key>

@@ -51,8 +51,21 @@ namespace gr {
          * \param frame_size Number of bits per frame. If using in the
          *        tagged stream style, this is the maximum allowable
          *        number of bits per frame.
+         * \param pack Determines how to handle the input data stream
+         *        as packed or unpacked bits. If set to True, the
+         *        encoder's get_input_conversion will be set to
+         *        'pack', meaning that the data must be packed before
+         *        being sent to this encoder. Generally handled
+         *        through an extended encoder interface.
+         * \param packed_bits Determines how the output data stream is
+         *        handled. If set to True, the encoder's
+         *        get_output_conversion returns 'packed_bits', meaning
+         *        that the output data of the encoder is packed and
+         *        should be unpacked. Generally handled throug an
+         *        extended encoder interface.
          */
-        static generic_encoder::sptr make(int frame_size, bool pack = false, bool packed_bits = false);
+        static generic_encoder::sptr make(int frame_size, bool pack = false,
+                                          bool packed_bits = false);
 
         /*!
          * Sets the uncoded frame size to \p frame_size. If \p

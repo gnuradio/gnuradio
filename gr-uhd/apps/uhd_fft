@@ -247,13 +247,12 @@ class uhd_fft(gr.top_block, Qt.QWidget):
             firdes.WIN_BLACKMAN_hARRIS, #wintype
             freq, #fc
             samp_rate, #bw
-            "Scope", #name
+            "", #name
             1 #number of inputs
         )
         self.qtgui_waterfall_sink_x_0.set_update_time(update_rate)
         self.qtgui_waterfall_sink_x_0.enable_grid(False)
-        if not True:
-          self.qtgui_waterfall_sink_x_0.disable_legend()
+        self.qtgui_waterfall_sink_x_0.disable_legend()
         if complex == type(float()):
           self.qtgui_waterfall_sink_x_0.set_plot_pos_half(not True)
         labels = ["", "", "", "", "", "", "", "", "", ""]
@@ -272,7 +271,7 @@ class uhd_fft(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
                 1024, #size
                 samp_rate, #samp_rate
-                "Scope", #name
+                "", #name
                 1 #number of inputs
         )
         self.qtgui_time_sink_x_0.set_update_time(update_rate)
@@ -283,8 +282,7 @@ class uhd_fft(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0.enable_autoscale(True)
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_control_panel(True)
-        if not True:
-          self.qtgui_time_sink_x_0.disable_legend()
+        self.qtgui_time_sink_x_0.disable_legend()
         labels = ["", "", "", "", "", "", "", "", "", ""]
         widths = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         colors = ["blue", "red", "green", "black", "cyan",
@@ -312,7 +310,7 @@ class uhd_fft(gr.top_block, Qt.QWidget):
                 firdes.WIN_BLACKMAN_hARRIS, #wintype
                 freq, #fc
                 samp_rate, #bw
-                "Spectrum", #name
+                "", #name
                 1 #number of inputs
         )
         self.qtgui_freq_sink_x_0.set_update_time(update_rate)
@@ -322,8 +320,7 @@ class uhd_fft(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_0.enable_grid(True)
         self.qtgui_freq_sink_x_0.set_fft_average(self.fft_average)
         self.qtgui_freq_sink_x_0.enable_control_panel(True)
-        if not True:
-          self.qtgui_freq_sink_x_0.disable_legend()
+        self.qtgui_freq_sink_x_0.disable_legend()
         if complex == type(float()):
           self.qtgui_freq_sink_x_0.set_plot_pos_half(not True)
         labels = ["", "", "", "", "", "", "", "", "", ""]

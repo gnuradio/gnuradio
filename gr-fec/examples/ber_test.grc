@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='ASCII'?>
-<?grc format='1' created='3.7.8'?>
+<?xml version='1.0' encoding='utf-8'?>
+<?grc format='1' created='3.7.8rc1'?>
 <flow_graph>
   <timestamp>Mon May 12 21:49:02 2014</timestamp>
   <block>
@@ -11,6 +11,10 @@
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>2000,2000</value>
     </param>
     <param>
       <key>category</key>
@@ -67,10 +71,6 @@
     <param>
       <key>title</key>
       <value>simple BER test</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>2000,2000</value>
     </param>
   </block>
   <block>
@@ -1310,7 +1310,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1384, 235)</value>
+      <value>(1368, 243)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1330,7 +1330,7 @@
     </param>
     <param>
       <key>legend</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>alpha1</key>
@@ -1574,7 +1574,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>QT GUI Plot</value>
+      <value></value>
     </param>
     <param>
       <key>nconnections</key>

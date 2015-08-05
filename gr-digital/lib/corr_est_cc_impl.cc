@@ -262,17 +262,18 @@ namespace gr {
         add_item_tag(0, nitems_written(0) + i, pmt::intern("corr_start"),
                      pmt::from_double(d_corr_mag[i]), d_src_id);
 
-        // Peak detector using a "center of mass" approach center
-        // holds the +/- fraction of a sample index from the found
-        // peak index to the estimated actual peak index.
+        // Use Parabolic interpolation to estimate a fractional
+        // sample delay. There are more accurate methods as 
+        // the sample delay estimate using this method is biased.
+        // But this method is simple and fast.
+        // center between [-0.5,0.5] units of samples
+        // Paper Reference: "Discrete Time Techniques for Time Delay
+        // Estimation" G. Jacovitti and G. Scarano
         double center = 0.0;
-        if (i > 0 && i < (noutput_items - 1)) {
-          double nom = 0, den = 0;
-          for(int s = 0; s < 3; s++) {
-            nom += (s+1)*d_corr_mag[i+s-1];
-            den += d_corr_mag[i+s-1];
-          }
-          center = nom / den - 2.0;
+        if( i > 0 && i < (noutput_items - 1 )){
+          double nom = d_corr_mag[i-1]-d_corr_mag[i+1];
+          double denom = 2*(d_corr_mag[i-1]-2*d_corr_mag[i]+d_corr_mag[i+1]);
+          center = nom/denom;
         }
 
         // Calculate the phase offset of the incoming signal.
