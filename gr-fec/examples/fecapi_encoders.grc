@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='ASCII'?>
-<?grc format='1' created='3.7.8'?>
+<?xml version='1.0' encoding='utf-8'?>
+<?grc format='1' created='3.7.8rc1'?>
 <flow_graph>
   <timestamp>Sat May 17 17:08:36 2014</timestamp>
   <block>
@@ -11,6 +11,10 @@
     <param>
       <key>alias</key>
       <value></value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>2000,2000</value>
     </param>
     <param>
       <key>category</key>
@@ -67,10 +71,6 @@
     <param>
       <key>title</key>
       <value></value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>2000,2000</value>
     </param>
   </block>
   <block>
@@ -1423,7 +1423,7 @@
     </param>
     <param>
       <key>label1</key>
-      <value></value>
+      <value>Rep (x3)</value>
     </param>
     <param>
       <key>marker1</key>
