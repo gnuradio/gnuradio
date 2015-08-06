@@ -130,13 +130,13 @@ class gui(QtGui.QMainWindow):
         self.plot_data(self.gui.qwtPlotClient, samples)
 
     def set_waveform(self, waveform_str):
-        self.rpc_mgr_server.request("set_waveform",str(waveform_str))
+        self.rpc_mgr_server.request("set_waveform",[str(waveform_str)])
 
     def set_gain(self, gain):
         self.rpc_set_gain(gain)
 
     def rpc_set_gain(self, gain):
-        self.rpc_mgr_server.request("set_k",gain)
+        self.rpc_mgr_server.request("set_k",[gain])
 
 ###############################################################################
 # Options Parser
