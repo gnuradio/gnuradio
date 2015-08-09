@@ -348,7 +348,8 @@ namespace gr {
     {
       _update_stream_args(stream_args);
 #ifdef GR_UHD_USE_STREAM_API
-      _rx_stream.reset();
+      if(_rx_stream)
+        _rx_stream.reset();
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
@@ -409,7 +410,12 @@ namespace gr {
       while(true) {
 #ifdef GR_UHD_USE_STREAM_API
         const size_t bpi = ::uhd::convert::get_bytes_per_item(_stream_args.cpu_format);
-        _rx_stream->recv(outputs, nbytes/bpi, _metadata, 0.0);
+        if(_rx_stream)
+          // get the remaining samples out of the buffers
+          _rx_stream->recv(outputs, nbytes/bpi, _metadata, 0.0);
+        else
+          // no rx streamer -- nothing to flush
+          break; 
 #else
         _dev->get_device()->recv
           (outputs, nbytes/_type->size, _metadata, *_type,
