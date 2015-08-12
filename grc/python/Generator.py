@@ -123,13 +123,17 @@ class TopBlockGenerator(object):
         # if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
         #   python_exe = 'pythonw'
 
+        def args_to_string(args):
+            """Accounts for spaces in args"""
+            return ' '.join(repr(arg) if ' ' in arg else arg for arg in args)
+
         # setup the command args to run
         cmds = [python_exe, '-u', self.get_file_path()]  # -u is unbuffered stdio
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
-            cmds = [xterm_executable, '-e'] + cmds
+            cmds = [xterm_executable, '-e', args_to_string(cmds)]
 
         p = subprocess.Popen(
             args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
