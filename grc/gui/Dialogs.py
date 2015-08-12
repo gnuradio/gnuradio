@@ -160,12 +160,15 @@ ERRORS_MARKUP_TMPL="""\
 $encode($err_msg.replace('\t', '  '))
 
 #end for"""
+
+
 def ErrorsDialog(flowgraph): MessageDialogHelper(
     type=gtk.MESSAGE_ERROR,
     buttons=gtk.BUTTONS_CLOSE,
     title='Flow Graph Errors',
     markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
 )
+
 
 class AboutDialog(gtk.AboutDialog):
     """A cute little about dialog."""
@@ -180,6 +183,7 @@ class AboutDialog(gtk.AboutDialog):
         self.set_website(platform.get_website())
         self.run()
         self.destroy()
+
 
 def HelpDialog(): MessageDialogHelper(
     type=gtk.MESSAGE_INFO,
@@ -208,8 +212,25 @@ COLORS_DIALOG_MARKUP_TMPL = """\
 #end if
 """
 
-def TypesDialog(platform): MessageDialogHelper(
-    type=gtk.MESSAGE_INFO,
-    buttons=gtk.BUTTONS_CLOSE,
-    title='Types',
-    markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL, colors=platform.get_colors()))
+
+def TypesDialog(platform):
+    MessageDialogHelper(
+        type=gtk.MESSAGE_INFO,
+        buttons=gtk.BUTTONS_CLOSE,
+        title='Types',
+        markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL,
+                                    colors=platform.get_colors())
+    )
+
+
+def MissingXTermDialog(xterm):
+    MessageDialogHelper(
+        type=gtk.MESSAGE_WARNING,
+        buttons=gtk.BUTTONS_OK,
+        title='Warning: missing xterm executable',
+        markup=("The xterm executable {0!r} is missing.\n\n"
+                "You can change this setting in your gnuradio.conf, in "
+                "section [grc], 'xterm_executable'.\n"
+                "\n"
+                "(This message is shown only once)").format(xterm)
+    )

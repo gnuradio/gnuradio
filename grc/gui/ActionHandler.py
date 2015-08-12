@@ -27,6 +27,7 @@ import gtk
 import gobject
 
 from .. base import ParseXML, Constants
+from .. python.Constants import XTERM_EXECUTABLE
 
 from . import Dialogs, Messages, Preferences, Actions
 from .ParserErrorsDialog import ParserErrorsDialog
@@ -511,6 +512,10 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not self.get_page().get_proc():
                 Actions.FLOW_GRAPH_GEN()
+                if Preferences.xterm_missing() != XTERM_EXECUTABLE:
+                    if not os.path.exists(XTERM_EXECUTABLE):
+                        Dialogs.MissingXTermDialog(XTERM_EXECUTABLE)
+                    Preferences.xterm_missing(XTERM_EXECUTABLE)
                 if self.get_page().get_saved() and self.get_page().get_file_path():
                     ExecFlowGraphThread(self)
         elif action == Actions.FLOW_GRAPH_KILL:

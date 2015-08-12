@@ -114,3 +114,6 @@ def reports_window_position(pos=None):
 def blocks_window_position(pos=None):
     return entry('blocks_window_position', pos, default=-1) or 1
 
+
+def xterm_missing(cmd=None):
+    return entry('xterm_missing', cmd, default='INVALID_XTERM_SETTING')
