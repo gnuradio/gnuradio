@@ -18,18 +18,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
+from os.path import expanduser
 import stat
 from gnuradio import gr
 
 _gr_prefs = gr.prefs()
 
-#setup paths
-PATH_SEP = {'/':':', '\\':';'}[os.path.sep]
-HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH',
-                                     os.path.expanduser('~/.grc_gnuradio'))
-PREFS_FILE = os.environ.get('GRC_PREFS_PATH',
-                            os.path.join(os.path.expanduser('~/.grc')))
-BLOCKS_DIRS = filter( #filter blank strings
+# setup paths
+PATH_SEP = {'/': ':', '\\': ';'}[os.path.sep]
+
+HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
+
+PREFS_FILE = os.environ.get('GRC_PREFS_PATH', expanduser('~/.gnuradio/grc.conf'))
+PREFS_FILE_OLD = os.environ.get('GRC_PREFS_PATH', expanduser('~/.grc'))
+
+BLOCKS_DIRS = filter(  # filter blank strings
     lambda x: x, PATH_SEP.join([
         os.environ.get('GRC_BLOCKS_PATH', ''),
         _gr_prefs.get_string('grc', 'local_blocks_path', ''),
@@ -37,14 +40,14 @@ BLOCKS_DIRS = filter( #filter blank strings
     ]).split(PATH_SEP),
 ) + [HIER_BLOCKS_LIB_DIR]
 
-#user settings
+# user settings
 XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
-#file creation modes
+# file creation modes
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
 
-#data files
+# data files
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
@@ -74,7 +77,7 @@ GRC_COLOR_GREY = '#BDBDBD'
 GRC_COLOR_WHITE = '#FFFFFF'
 
 
-CORE_TYPES = ( #name, key, sizeof, color
+CORE_TYPES = (  # name, key, sizeof, color
     ('Complex Float 64', 'fc64', 16, GRC_COLOR_BROWN),
     ('Complex Float 32', 'fc32', 8, GRC_COLOR_BLUE),
     ('Complex Integer 64', 'sc64', 16, GRC_COLOR_LIGHT_GREEN),
