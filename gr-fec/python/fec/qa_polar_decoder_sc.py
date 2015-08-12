@@ -19,23 +19,19 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-from Crypto.Cipher._AES import block_size
 
 from gnuradio import gr, gr_unittest, blocks
 import fec_swig as fec
-from _qa_helper import _qa_helper
-import numpy as np
-import os
 
-from extended_encoder import extended_encoder
+import numpy as np
 from extended_decoder import extended_decoder
 from polar.encoder import PolarEncoder
-from polar.decoder import PolarDecoder
 import polar.channel_construction as cc
-from polar.helper_functions import bit_reverse_vector
 
+# import os
 # print('PID:', os.getpid())
 # raw_input('tell me smth')
+
 
 class test_polar_decoder_sc(gr_unittest.TestCase):
 
@@ -46,13 +42,12 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         self.tb = None
 
     def test_001_setup(self):
-        is_packed = False
         block_size = 16
         num_info_bits = 8
         frozen_bit_positions = np.arange(block_size - num_info_bits)
         frozen_bit_values = np.array([],)
 
-        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
+        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
 
         self.assertEqual(num_info_bits, polar_decoder.get_output_size())
         self.assertEqual(block_size, polar_decoder.get_input_size())
@@ -60,8 +55,6 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         self.assertFalse(polar_decoder.set_frame_size(10))
 
     def test_002_one_vector(self):
-        print "test_002_one_vector"
-        is_packed = False
         block_power = 10
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
@@ -71,7 +64,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
         bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, 1, True)
 
-        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
+        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -81,17 +74,10 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         self.tb.run()
 
         res = np.array(snk.data()).astype(dtype=int)
-
-        print("input:", gr_data.astype(dtype=int))
-        print("ref  :", bits)
-        print("res  :", res)
-
         self.assertTupleEqual(tuple(res), tuple(bits))
 
     def test_003_stream(self):
-        print "test_003_stream"
         nframes = 3
-        is_packed = False
         block_power = 8
         block_size = 2 ** block_power
         num_info_bits = 2 ** (block_power - 1)
@@ -101,7 +87,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
         bits, gr_data = self.generate_test_data(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, False)
 
-        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
+        polar_decoder = fec.polar_decoder_sc.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
         src = blocks.vector_source_f(gr_data, False)
         dec_block = extended_decoder(polar_decoder, None)
         snk = blocks.vector_sink_b(1)
@@ -111,11 +97,6 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
         self.tb.run()
 
         res = np.array(snk.data()).astype(dtype=int)
-
-        print("input:", gr_data.astype(dtype=int))
-        print("ref  :", bits)
-        print("res  :", res)
-
         self.assertTupleEqual(tuple(res), tuple(bits))
 
     def generate_test_data(self, block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, nframes, onlyones):

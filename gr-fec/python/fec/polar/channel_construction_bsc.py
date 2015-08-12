@@ -53,56 +53,6 @@ def bsc_channel(p):
     return W
 
 
-def get_Bn(n):
-    # this is a bit reversal matrix.
-    lw = int(np.log2(n))  # number of used bits
-    indexes = [bit_reverse(i, lw) for i in range(n)]
-    Bn = np.zeros((n, n), type(n))
-    for i, index in enumerate(indexes):
-        Bn[i][index] = 1
-    return Bn
-
-
-def get_Fn(n):
-    # this matrix defines the actual channel combining.
-    if n == 1:
-        return np.array([1, ])
-    F2 = np.array([[1, 0], [1, 1]], np.int)
-    nump = int(np.log2(n)) - 1  # number of Kronecker products to calculate
-    Fn = F2
-    for i in range(nump):
-        Fn = np.kron(Fn, F2)
-    return Fn
-
-def get_Gn(n):
-    # this matrix is called generator matrix
-    if not is_power_of_two(n):
-        print "invalid input"
-        return None
-    if n == 1:
-        return np.array([1, ])
-    Bn = get_Bn(n)
-    Fn = get_Fn(n)
-    Gn = np.dot(Bn, Fn)
-    return Gn
-
-
-def mutual_information(w):
-    '''
-    calculate mutual information I(W)
-    I(W) = sum over y e Y ( sum over x e X ( ... ) )
-    .5 W(y|x) log frac { W(y|x) }{ .5 W(y|0) + .5 W(y|1) }
-    '''
-    ydim, xdim = np.shape(w)
-    i = 0.0
-    for y in range(ydim):
-        for x in range(xdim):
-            v = w[y][x] * np.log2(w[y][x] / (0.5 * w[y][0] + 0.5 * w[y][1]))
-            i += v
-    i /= 2.0
-    return i
-
-
 def solver_equation(val, s):
     cw_lambda = codeword_lambda_callable(s)
     ic_lambda = instantanious_capacity_callable()
@@ -315,26 +265,15 @@ def normalize_q(q, tpm):
 
 def main():
     print 'channel construction BSC main'
-    n = 10
+    n = 8
     m = 2 ** n
-    k = m // 2
-    design_snr = 0.5
-    mu = 32
-
+    design_snr = 0.0
+    mu = 16
 
     z_params = tal_vardy_tpm_algorithm(m, design_snr, mu)
     print(z_params)
     plt.plot(z_params)
     plt.show()
-
-    # q = discretize_awgn(mu, design_snr)
-
-
-    # print('discretized:', np.sum(q))
-    # qu = upper_convolve(q, mu)
-    # print('upper_convolve:', np.sum(qu))
-    # q0 = lower_convolve(q, mu)
-    # print('lower_convolve:', np.sum(q0))
 
 
 if __name__ == '__main__':

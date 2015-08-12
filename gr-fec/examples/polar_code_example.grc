@@ -13,6 +13,10 @@
       <value></value>
     </param>
     <param>
+      <key>window_size</key>
+      <value>1280, 1024</value>
+    </param>
+    <param>
       <key>category</key>
       <value>Custom</value>
     </param>
@@ -67,10 +71,6 @@
     <param>
       <key>title</key>
       <value>POLAR code example flowgraph</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
     </param>
   </block>
   <block>
@@ -217,10 +217,6 @@
       <value>polar_decoder</value>
     </param>
     <param>
-      <key>is_packed</key>
-      <value>False</value>
-    </param>
-    <param>
       <key>ndim</key>
       <value>0</value>
     </param>
@@ -329,10 +325,6 @@
     <param>
       <key>max_list_size</key>
       <value>8</value>
-    </param>
-    <param>
-      <key>is_packed</key>
-      <value>False</value>
     </param>
     <param>
       <key>ndim</key>
@@ -598,7 +590,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 360)</value>
+      <value>(728, 361)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -759,7 +751,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1008, 355)</value>
+      <value>(984, 355)</value>
     </param>
     <param>
       <key>gui_hint</key>

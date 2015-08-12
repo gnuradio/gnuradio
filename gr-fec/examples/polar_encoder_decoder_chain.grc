@@ -133,7 +133,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>2 ** 32# encoder: 32, decoder: 23</value>
+      <value>2 ** 23# encoder: 32, decoder: 23</value>
     </param>
   </block>
   <block>
@@ -253,10 +253,6 @@
       <value>polar_decoder</value>
     </param>
     <param>
-      <key>is_packed</key>
-      <value>False</value>
-    </param>
-    <param>
       <key>ndim</key>
       <value>0</value>
     </param>
@@ -367,10 +363,6 @@
       <value>8</value>
     </param>
     <param>
-      <key>is_packed</key>
-      <value>False</value>
-    </param>
-    <param>
       <key>ndim</key>
       <value>0</value>
     </param>
@@ -454,7 +446,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -548,7 +540,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -701,7 +693,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -752,7 +744,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>encoder_list</key>

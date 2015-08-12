@@ -30,7 +30,6 @@
 namespace gr {
   namespace blocks {
     namespace kernel {
-      class pack_k_bits;
       class unpack_k_bits;
     }
   }
@@ -42,38 +41,46 @@ namespace gr {
     /*!
      * \brief POLAR code common operations and attributes
      * Erdal Arikan "Channel Polarization: A Method for Contructing Capacity-Achieving Codes for Symmetric Binary-Input Memoryless Channels", 2009
+     * \ingroup error_coding_blk
+     *
+     * \details
+     * polar codes are based on this paper by Erdal Arikan
+     * "Channel Polarization: A Method for Contructing Capacity-Achieving Codes for Symmetric Binary-Input Memoryless Channels", 2009
+     *
+     * class holds common info. It is common to all encoders and decoders.
+     * block_size: MUST be a power of 2.
+     * num_info_bits: any integer <= block_size
+     * frozen_bit_positions: elements specify position of frozen bits in each frame. size MUST be equal to block_size - num_info_bits
+     * frozen_bit_values: desired frozen bit values. '0' appended if smaller than frozen_bit_positions.
      */
     class FEC_API polar_common
     {
     public:
-      polar_common(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed = false);
+      polar_common(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values);
       ~polar_common();
 
     protected:
       const int block_size()const {return d_block_size;};
       const int block_power()const {return d_block_power;};
       const int num_info_bits() const {return d_num_info_bits;};
-      const bool is_packed() const {return d_is_packed;};
 
       // helper functions
       long bit_reverse(long value, int active_bits) const;
       void print_packed_bit_array(const unsigned char* printed_array, const int num_bytes) const;
       void print_unpacked_bit_array(const unsigned char* bits, const unsigned int num_bytes) const;
-      const gr::blocks::kernel::unpack_k_bits* unpacker() const {return d_unpacker;};
-      std::vector<int> info_bit_position_vector();
+
+      std::vector<int> d_frozen_bit_positions;
+      std::vector<char> d_frozen_bit_values;
+      std::vector<int> d_info_bit_positions;
 
     private:
       int d_block_size; // depending on paper called 'N' or 'm'
       int d_block_power;
       int d_num_info_bits; // mostly abbreviated by 'K'
-      bool d_is_packed;
-      std::vector<int> d_frozen_bit_positions;
-      std::vector<int> d_info_bit_positions;
-      std::vector<char> d_frozen_bit_values;
+
       void initialize_info_bit_position_vector();
 
-      gr::blocks::kernel::pack_k_bits *d_packer;
-      gr::blocks::kernel::unpack_k_bits *d_unpacker;
+      gr::blocks::kernel::unpack_k_bits *d_unpacker; // convenience for 'print_packed_bit_array' function.
     };
 
   } // namespace fec

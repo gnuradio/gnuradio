@@ -42,35 +42,28 @@ namespace gr
 
     polar_common::polar_common(int block_size, int num_info_bits,
                                std::vector<int> frozen_bit_positions,
-                               std::vector<char> frozen_bit_values, bool is_packed) :
-        d_block_size(block_size), d_block_power((int) log2(float(block_size))), d_num_info_bits(num_info_bits), d_is_packed(is_packed),
-            d_frozen_bit_positions(frozen_bit_positions), d_frozen_bit_values(frozen_bit_values)
+                               std::vector<char> frozen_bit_values) :
+            d_frozen_bit_positions(frozen_bit_positions), d_frozen_bit_values(frozen_bit_values),
+            d_block_size(block_size), d_block_power((int) log2(float(block_size))),
+            d_num_info_bits(num_info_bits)
     {
-      if(pow(2, d_block_power) != d_block_size) {
+      if(pow(2, d_block_power) != d_block_size){
         throw std::runtime_error("block_size MUST be a power of 2!");
       }
 
       unsigned int num_frozen_bits = d_block_size - d_num_info_bits;
-      if(num_frozen_bits != d_frozen_bit_positions.size()) {
+      if(num_frozen_bits != d_frozen_bit_positions.size()){
         throw std::runtime_error(
             "number of frozen bit positions must equal block_size - num_info_bits");
       }
 
       // According to papers frozen bits default to '0'.
-      while(d_frozen_bit_values.size() < num_frozen_bits) {
+      while(d_frozen_bit_values.size() < num_frozen_bits){
         d_frozen_bit_values.push_back(0);
       }
       initialize_info_bit_position_vector();
 
-      d_packer = new gr::blocks::kernel::pack_k_bits(8);
       d_unpacker = new gr::blocks::kernel::unpack_k_bits(8);
-    }
-
-
-    std::vector<int>
-    polar_common::info_bit_position_vector()
-    {
-      return d_info_bit_positions;
     }
 
     void
@@ -78,7 +71,7 @@ namespace gr
     {
       int num_frozen_bit = 0;
       int frozen_pos = d_frozen_bit_positions.at(num_frozen_bit);
-      for(int i = 0; i < block_size(); i++) {
+      for(int i = 0; i < d_block_size; i++) {
         if(i != frozen_pos) {
           d_info_bit_positions.push_back((int) i);
         }
@@ -96,7 +89,6 @@ namespace gr
 
     polar_common::~polar_common()
     {
-      delete d_packer;
       delete d_unpacker;
     }
 
@@ -118,7 +110,7 @@ namespace gr
     {
       int num_bits = num_bytes << 3;
       unsigned char* temp = new unsigned char[num_bits];
-      unpacker()->unpack(temp, printed_array, num_bytes);
+      d_unpacker->unpack(temp, printed_array, num_bytes);
 
       std::cout << "[";
       for(int i = 0; i < num_bits; i++) {

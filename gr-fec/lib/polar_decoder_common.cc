@@ -35,11 +35,9 @@ namespace gr {
 
     polar_decoder_common::polar_decoder_common(int block_size, int num_info_bits,
                                                std::vector<int> frozen_bit_positions,
-                                               std::vector<char> frozen_bit_values, bool is_packed) :
-        polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed),
-        D_LLR_FACTOR(-2.19722458f),
-        d_frozen_bit_positions(frozen_bit_positions),
-        d_frozen_bit_values(frozen_bit_values)
+                                               std::vector<char> frozen_bit_values) :
+        polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
+        d_frozen_bit_counter(0)
     {
     }
 
@@ -48,9 +46,11 @@ namespace gr {
     }
 
     void
-    polar_decoder_common::initialize_llr_vector(float* llrs, const float* input)
+    polar_decoder_common::initialize_decoder(unsigned char* u, float* llrs, const float* input)
     {
       volk_32f_s32f_multiply_32f(llrs + block_size() * block_power(), input, D_LLR_FACTOR, block_size());
+      memset(u, 0, sizeof(unsigned char) * block_size() * block_power());
+      d_frozen_bit_counter = 0;
     }
 
     float
@@ -135,18 +135,6 @@ namespace gr {
         *u_even++ = *u;
         u += 2;
       }
-
-//      short* target = (short*) u_even;
-//      short* src = (short*) u;
-//
-//      const int iterations = std::max(1, u_num >> 3);
-//      for(int i = 0; i < iterations; i++){
-//        *target = *src << 1;
-//        demortonize_values((unsigned char*) target);
-//        u_even++;
-//        target = (short*) u_even;
-//        src++;
-//      }
     }
 
     void
@@ -157,18 +145,19 @@ namespace gr {
         *u_xor++ = *u ^ *(u + 1);
         u += 2;
       }
+    }
 
-//      short* target = (short*) u_xor;
-//      short* src = (short*) u;
-//
-//      const int iterations = std::max(1, u_num >> 3);
-//      for(int i = 0; i < iterations; i++){
-//        *target = *src ^ (*src << 1);
-//        demortonize_values((unsigned char*) target);
-//        u_xor++;
-//        target = (short*) u_xor;
-//        src++;
-//      }
+    const bool
+    polar_decoder_common::is_frozen_bit(const int u_num) const
+    {
+      return d_frozen_bit_counter < d_frozen_bit_positions.size() && u_num == d_frozen_bit_positions.at(d_frozen_bit_counter);
+    }
+
+
+    const unsigned char
+    polar_decoder_common::next_frozen_bit()
+    {
+      return d_frozen_bit_values[d_frozen_bit_counter++];
     }
 
     void
@@ -184,30 +173,6 @@ namespace gr {
         }
         input++;
       }
-
-//      unsigned int frozenbit_num = 0;
-//      for(int i = 0; i < block_size(); i++){
-//        if(frozenbit_num < d_frozen_bit_positions.size() && d_frozen_bit_positions.at(frozenbit_num) == i){
-//          frozenbit_num++;
-//        }
-//        else{
-//          *output++ = fetch_bit_at_pos(input, i); // *input;
-//        }
-//      }
-    }
-
-    void
-    polar_decoder_common::demortonize_values(unsigned char* u)
-    {
-      *u &= 0xaa;                   // b0d0f0h0
-      *u = (*u ^ (*u << 1)) & 0xcc; // bd00fh00
-      *u = (*u ^ (*u << 2)) & 0xf0; // bdfh0000
-
-      unsigned char* u2 = u + 1;
-      *u2 &= 0xaa;                   // b0d0f0h0
-      *u2 = (*u2 ^ (*u2 << 1)) & 0xcc; // bd00fh00
-      *u2 = (*u2 ^ (*u2 << 2)) & 0xf0; // bdfh0000
-      *u ^= (*u2 >> 4);
     }
 
     void
@@ -224,4 +189,3 @@ namespace gr {
 
   } /* namespace fec */
 } /* namespace gr */
-

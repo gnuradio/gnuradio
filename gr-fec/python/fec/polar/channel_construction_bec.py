@@ -29,10 +29,10 @@ def bec_channel(eta):
     W(y|0) * W(y|1) = 0 or W(y|0) = W(y|1)
     transistions are 1 -> 1 or 0 -> 0 or {0, 1} -> ? (erased symbol)
     '''
-
     # looks like BSC but should be interpreted differently.
-    W = np.array((1 - eta, eta, 1 - eta), dtype=float)
-    return W
+    w = np.array((1 - eta, eta, 1 - eta), dtype=float)
+    return w
+
 
 def odd_rec(iwn):
     return iwn ** 2
@@ -73,7 +73,7 @@ def calculate_z_parameters_one_recursion(z_params):
 def calculate_bec_channel_z_parameters(eta, block_size):
     # compare [0, Arikan] eq. 38
     block_power = hf.power_of_2_int(block_size)
-    z_params = np.array([eta,], dtype=float)
+    z_params = np.array([eta, ], dtype=float)
     for block_size in range(block_power):
         z_params = calculate_z_parameters_one_recursion(z_params)
     return z_params
@@ -109,6 +109,7 @@ def main():
     eta = design_snr_to_bec_eta(design_snr)
     print(calculate_bec_channel_z_parameters(eta, block_size))
     print(calculate_bec_channel_capacities(eta, block_size))
+
 
 if __name__ == '__main__':
     main()

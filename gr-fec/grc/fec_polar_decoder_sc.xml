@@ -4,29 +4,14 @@
   <key>variable_polar_decoder_sc_def</key>
   <import>from gnuradio import fec</import>
   <var_make>#if int($ndim())==0 #
-self.$(id) = $(id) = fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values, $is_packed) #slurp
+self.$(id) = $(id) = fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values) #slurp
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map((lambda a: fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values, $is_packed)), range(0, $dim1) ) #slurp
+self.$(id) = $(id) = map((lambda a: fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values)), range(0, $dim1) ) #slurp
 #else
-self.$(id) = $(id) = map((lambda b: map((lambda a: fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values, $is_packed)), range(0, $dim2))), range(0, $dim1)) #slurp
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values)), range(0, $dim2))), range(0, $dim1)) #slurp
 #end if</var_make>
-  <var_value>fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values, $is_packed)</var_value>
+  <var_value>fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values)</var_value>
   <make></make>
-
-  <param>
-    <name>Packed Bits</name>
-    <key>is_packed</key>
-    <value>False</value>
-    <type>enum</type>
-    <option>
-      <name>No</name>
-      <key>False</key>
-    </option>
-    <option>
-      <name>Yes</name>
-      <key>True</key>
-    </option>
-  </param>
 
   <param>
     <name>Parallelism</name>

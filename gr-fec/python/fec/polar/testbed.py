@@ -18,9 +18,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import numpy as np
+
 from encoder import PolarEncoder
 from decoder import PolarDecoder
+import channel_construction as cc
+from helper_functions import *
 
 import matplotlib.pyplot as plt
 
@@ -28,7 +30,9 @@ import matplotlib.pyplot as plt
 def get_frozen_bit_position():
     # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 16, 17, 18, 20, 24), dtype=int)
     # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
-    frozenbitposition = np.load('frozen_bit_positions_n256_k128_p0.11.npy').flatten()
+    m = 256
+    n_frozen = m // 2
+    frozenbitposition = cc.get_frozen_bit_indices_from_z_parameters(cc.bhattacharyya_bounds(0.0, m), n_frozen)
     print(frozenbitposition)
     return frozenbitposition
 
@@ -140,12 +144,185 @@ def channel_analysis():
     good_indices *= 2000
     good_indices += 4000
 
-
     plt.plot(channel_counter)
     plt.plot(good_indices)
     plt.show()
 
+
+def merge_first_stage(init_mask):
+    merged_frozen_mask = []
+    for e in range(0, len(init_mask), 2):
+        v = [init_mask[e]['value'][0], init_mask[e + 1]['value'][0]]
+        s = init_mask[e]['size'] * 2
+        if init_mask[e]['type'] == init_mask[e + 1]['type']:
+            t = init_mask[e]['type']
+            merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+        else:
+            t = 'RPT'
+            merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+    return merged_frozen_mask
+
+
+def merge_second_stage(init_mask):
+    merged_frozen_mask = []
+    for e in range(0, len(init_mask), 2):
+        if init_mask[e]['type'] == init_mask[e + 1]['type']:
+            t = init_mask[e]['type']
+            v = init_mask[e]['value']
+            v.extend(init_mask[e + 1]['value'])
+            s = init_mask[e]['size'] * 2
+            merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+        elif init_mask[e]['type'] == 'ZERO' and init_mask[e + 1]['type'] == 'RPT':
+            t = init_mask[e + 1]['type']
+            v = init_mask[e]['value']
+            v.extend(init_mask[e + 1]['value'])
+            s = init_mask[e]['size'] * 2
+            merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+        elif init_mask[e]['type'] == 'RPT' and init_mask[e + 1]['type'] == 'ONE':
+            t = 'SPC'
+            v = init_mask[e]['value']
+            v.extend(init_mask[e + 1]['value'])
+            s = init_mask[e]['size'] * 2
+            merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+        else:
+            merged_frozen_mask.append(init_mask[e])
+            merged_frozen_mask.append(init_mask[e + 1])
+    return merged_frozen_mask
+
+
+def merge_stage_n(init_mask):
+    merged_frozen_mask = []
+    n_elems = len(init_mask) - (len(init_mask) % 2)
+    for e in range(0, n_elems, 2):
+        if init_mask[e]['size'] == init_mask[e + 1]['size']:
+            if (init_mask[e]['type'] == 'ZERO' or init_mask[e]['type'] == 'ONE') and init_mask[e]['type'] == init_mask[e + 1]['type']:
+                t = init_mask[e]['type']
+                v = init_mask[e]['value']
+                v.extend(init_mask[e + 1]['value'])
+                s = init_mask[e]['size'] * 2
+                merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+            elif init_mask[e]['type'] == 'ZERO' and init_mask[e + 1]['type'] == 'RPT':
+                t = init_mask[e + 1]['type']
+                v = init_mask[e]['value']
+                v.extend(init_mask[e + 1]['value'])
+                s = init_mask[e]['size'] * 2
+                merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+            elif init_mask[e]['type'] == 'SPC' and init_mask[e + 1]['type'] == 'ONE':
+                t = init_mask[e]['type']
+                v = init_mask[e]['value']
+                v.extend(init_mask[e + 1]['value'])
+                s = init_mask[e]['size'] * 2
+                merged_frozen_mask.append({'value': v, 'type': t, 'size': s})
+            else:
+                merged_frozen_mask.append(init_mask[e])
+                merged_frozen_mask.append(init_mask[e + 1])
+        else:
+            merged_frozen_mask.append(init_mask[e])
+            merged_frozen_mask.append(init_mask[e + 1])
+    if n_elems < len(init_mask):
+        merged_frozen_mask.append(init_mask[-1])
+    return merged_frozen_mask
+
+
+def print_decode_subframes(subframes):
+    for e in subframes:
+        print(e)
+
+
+def find_decoder_subframes(frozen_mask):
+    stages = power_of_2_int(len(frozen_mask))
+    block_size = 2 ** stages
+
+    lock_mask = np.zeros(block_size, dtype=int)
+    sub_mask = []
+
+    for e in frozen_mask:
+        if e == 1:
+            sub_mask.append(0)
+        else:
+            sub_mask.append(1)
+    sub_mask = np.array(sub_mask, dtype=int)
+
+    for s in range(0, stages):
+        stage_size = 2 ** s
+        mask = np.reshape(sub_mask, (-1, stage_size))
+        lock = np.reshape(lock_mask, (-1, stage_size))
+        for p in range(0, (block_size // stage_size) - 1, 2):
+            l0 = lock[p]
+            l1 = lock[p + 1]
+            first = mask[p]
+            second = mask[p + 1]
+            print(l0, l1)
+            print(first, second)
+            if np.all(l0 == l1):
+                for eq in range(2):
+                    if np.all(first == eq) and np.all(second == eq):
+                        mask[p].fill(eq)
+                        mask[p + 1].fill(eq)
+                        lock[p].fill(s)
+                        lock[p + 1].fill(s)
+
+                if np.all(first == 0) and np.all(second == 2):
+                    mask[p].fill(2)
+                    mask[p + 1].fill(2)
+                    lock[p].fill(s)
+                    lock[p + 1].fill(s)
+
+                if np.all(first == 3) and np.all(second == 1):
+                    mask[p].fill(3)
+                    mask[p + 1].fill(3)
+                    lock[p].fill(s)
+                    lock[p + 1].fill(s)
+
+            if s == 0 and np.all(first == 0) and np.all(second == 1):
+                mask[p].fill(2)
+                mask[p + 1].fill(2)
+                lock[p].fill(s)
+                lock[p + 1].fill(s)
+
+            if s == 1 and np.all(first == 2) and np.all(second == 1):
+                mask[p].fill(3)
+                mask[p + 1].fill(3)
+                lock[p].fill(s)
+                lock[p + 1].fill(s)
+
+        sub_mask = mask.flatten()
+        lock_mask = lock.flatten()
+
+    words = {0: 'ZERO', 1: 'ONE', 2: 'RPT', 3: 'SPC'}
+    ll = lock_mask[0]
+    sub_t = sub_mask[0]
+    for i in range(len(frozen_mask)):
+        v = frozen_mask[i]
+        t = words[sub_mask[i]]
+        l = lock_mask[i]
+        # if i % 8 == 0:
+        #     print
+        if not l == ll or not sub_mask[i] == sub_t:
+            print('--------------------------')
+        ll = l
+        sub_t = sub_mask[i]
+        print('{0:4} lock {1:4} value: {2} in sub {3}'.format(i, 2 ** (l + 1), v, t))
+
+
+def load_file(filename):
+    z_params = []
+    with open(filename, 'r') as f:
+        for line in f:
+            if 'Bhattacharyya:' in line:
+                l = line.split(' ')
+                l = l[10:-2]
+                l = l[0][:-1]
+                l = float(l)
+                z_params.append(l)
+    return np.array(z_params)
+
+
 def main():
+    n = 8
+    m = 2 ** n
+    k = m // 2
+    n_frozen = n - k
     # n = 16
     # k = 8
     # frozenbits = np.zeros(n - k)
@@ -153,11 +330,30 @@ def main():
     # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
     # print frozenbitposition
 
-    test_enc_dec_chain()
-
+    # test_enc_dec_chain()
     # test_1024_rate_1_code()
-
     # channel_analysis()
+
+    frozen_indices = cc.get_bec_frozen_indices(m, n_frozen, 0.11)
+    frozen_mask = cc.get_frozen_bit_mask(frozen_indices, m)
+    find_decoder_subframes(frozen_mask)
+
+    frozen_mask = np.zeros(m, dtype=int)
+    frozen_mask[frozen_indices] = 1
+
+    # filename = 'channel_z-parameters.txt'
+    # ido = load_file(filename)
+    # ido_frozen = cc.get_frozen_bit_indices_from_z_parameters(ido, k)
+    # ido_mask = np.zeros(m, dtype=int)
+    # ido_mask[ido_frozen] = 1
+    #
+    #
+    # plt.plot(ido_mask)
+    # plt.plot(frozen_mask)
+    # for i in range(m):
+    #     if not ido_mask[i] == frozen_mask[i]:
+    #         plt.axvline(i, color='r')
+    # plt.show()
 
 
 if __name__ == '__main__':

@@ -55,8 +55,7 @@ namespace gr {
         void duplicate_path(path* target, const path* original);
         void branch_paths(path* target, path* original, const float llr);
         void steal_vector_ownership(path* target, path* original);
-
-        static void insert_bit_at_pos(unsigned char* u, const unsigned char ui, const unsigned int pos){u[pos >> 3] ^= ui << (7 - (pos % 8));};
+        void reset();
 
         // comparator for std::sort
         static bool path_compare(path* first, path* second){return first->path_metric < second->path_metric;};
@@ -73,7 +72,6 @@ namespace gr {
         void set_frozen_bit(const unsigned char frozen_bit, const int bit_pos);
         void set_info_bit(const int bit_pos);
         const path* optimal_path();
-        void reset();
       };
 
     } /* namespace polar */

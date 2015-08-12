@@ -56,6 +56,41 @@ def bit_reverse_vector(vec, n):
     return np.array([bit_reverse(e, n) for e in vec], dtype=vec.dtype)
 
 
+def get_Bn(n):
+    # this is a bit reversal matrix.
+    lw = power_of_2_int(n)  # number of used bits
+    indexes = [bit_reverse(i, lw) for i in range(n)]
+    Bn = np.zeros((n, n), type(n))
+    for i, index in enumerate(indexes):
+        Bn[i][index] = 1
+    return Bn
+
+
+def get_Fn(n):
+    # this matrix defines the actual channel combining.
+    if n == 1:
+        return np.array([1, ])
+    nump = power_of_2_int(n) - 1  # number of Kronecker products to calculate
+    F2 = np.array([[1, 0], [1, 1]], np.int)
+    Fn = F2
+    for i in range(nump):
+        Fn = np.kron(Fn, F2)
+    return Fn
+
+
+def get_Gn(n):
+    # this matrix is called generator matrix
+    if not is_power_of_two(n):
+        print "invalid input"
+        return None
+    if n == 1:
+        return np.array([1, ])
+    Bn = get_Bn(n)
+    Fn = get_Fn(n)
+    Gn = np.dot(Bn, Fn)
+    return Gn
+
+
 def unpack_byte(byte, nactive):
     if np.amin(byte) < 0 or np.amax(byte) > 255:
         return None
@@ -118,73 +153,16 @@ def bhattacharyya_parameter(w):
 def main():
     print 'helper functions'
 
-    for i in range(8):
+    for i in range(9):
         print(i, 'is power of 2: ', is_power_of_two(i))
     n = 6
     m = 2 ** n
-    k = m // 2
-    eta = 0.3
+
 
     pos = np.arange(m)
     rev_pos = bit_reverse_vector(pos, n)
     print(pos)
     print(rev_pos)
-
-    bound = 16
-    num_lanes = m // bound
-
-
-    lanes = np.zeros((num_lanes, bound), dtype=int)
-    for i in range(0, num_lanes):
-        p = i * bound
-        part = rev_pos[p: p + bound]
-        lanes[i] = part
-
-    print('reved lanes')
-    print(lanes)
-
-    # SHUFFLE!
-    shuffle_pos = bit_reverse_vector(np.arange(bound), 4)
-    for i in range(num_lanes):
-        lane = lanes[i]
-        lanes[i] = lanes[i, shuffle_pos]
-    print('\nshuffled lanes')
-    print(lanes)
-
-    # SORT HALVES
-    hb = bound // 2
-    for i in range(num_lanes // 2):
-        l0 = lanes[i]
-        l1 = lanes[i + (num_lanes // 2)]
-        l0p = copy.deepcopy(l0[hb:])
-        l0[hb:] = l1[0:hb]
-        l1[0:hb] = l0p
-        lanes[i] =l0
-        lanes[i + (num_lanes // 2)] = l1
-    print('\nsort halves')
-    print(lanes)
-
-    # 'MELT' SHUFFLE     INTERLEAVE!
-    melt_pos = np.arange(bound, dtype=int)
-    melt_pos = np.reshape(melt_pos, (2, -1)).T.flatten()
-    for i in range(num_lanes):
-        lanes[i] = lanes[i, melt_pos]
-    print('\nmelt lanes')
-    print(lanes)
-
-
-
-    for i in range(0, m, bound):
-        print("\nlook at this part")
-        part = pos[i: i + bound]
-        rev = bit_reverse_vector(part, n)
-        sorted_rev = np.sort(rev)
-        print(part)
-        print(rev)
-        print(sorted_rev)
-        sorted_part = rev[shuffle_pos]
-        print(sorted_part)
-
 
 
 if __name__ == '__main__':

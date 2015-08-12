@@ -50,16 +50,9 @@ namespace gr
     polar_encoder::polar_encoder(int block_size, int num_info_bits,
                                  std::vector<int>& frozen_bit_positions,
                                  std::vector<char>& frozen_bit_values, bool is_packed) :
-        polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed),
-            d_frozen_bit_positions(frozen_bit_positions),
-            d_frozen_bit_values(frozen_bit_values)
+        polar_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values),
+        d_is_packed(is_packed)
     {
-      unsigned int num_frozen_bits = block_size - num_info_bits;
-
-      while(d_frozen_bit_values.size() < num_frozen_bits) {
-        d_frozen_bit_values.push_back(0);
-      }
-
       setup_frozen_bit_inserter();
       setup_volk_vectors();
     }
@@ -67,7 +60,6 @@ namespace gr
     void
     polar_encoder::setup_frozen_bit_inserter()
     {
-      d_block_array = (unsigned char*) volk_malloc(block_size() >> 3, volk_get_alignment());
       d_frozen_bit_prototype = (unsigned char*) volk_malloc(block_size() >> 3,
                                                             volk_get_alignment());
       memset(d_frozen_bit_prototype, 0, block_size() >> 3);
@@ -79,12 +71,11 @@ namespace gr
                                                           rev_pos);
       }
 
-      std::vector<int> temp_vec = info_bit_position_vector();
-      for(unsigned int i = 0; i < temp_vec.size(); i++){
-        d_info_bit_positions.push_back((int) bit_reverse((long) temp_vec.at(i), block_power()));
+      for(unsigned int i = 0; i < d_info_bit_positions.size(); i++){
+        d_info_bit_reversed_positions.push_back((int) bit_reverse((long) d_info_bit_positions.at(i), block_power()));
       }
 
-      if((int) d_info_bit_positions.size() != num_info_bits()) {
+      if((int) d_info_bit_reversed_positions.size() != num_info_bits()) {
         throw std::runtime_error("polar_encoder: number of info bit positions MUST equal num_info_bits (K)!");
       }
     }
@@ -113,7 +104,6 @@ namespace gr
 
     polar_encoder::~polar_encoder()
     {
-      volk_free(d_block_array);
       volk_free(d_frozen_bit_prototype);
 
       volk_free(d_temp);
@@ -127,11 +117,11 @@ namespace gr
       const unsigned char *in = (const unsigned char*) in_buffer;
       unsigned char *out = (unsigned char*) out_buffer;
 
-      if(is_packed()) {
+      if(d_is_packed){
         insert_packed_frozen_bits_and_reverse(out, in);
         encode_vector_packed(out);
       }
-      else {
+      else{
         volk_encode(out, in);
       }
     }
@@ -163,7 +153,7 @@ namespace gr
     void
     polar_encoder::encode_packed_byte(unsigned char* target) const
     {
-      // this method only produces correct results if d_block_size > 4.
+      // this method only produces correct results if block_size > 4.
       // this is assumed to be the case.
       *target ^= 0xaa & (*target << 1);
       *target ^= 0xcc & (*target << 2);
@@ -202,12 +192,12 @@ namespace gr
                                                          const unsigned char* input) const
     {
       memcpy(target, d_frozen_bit_prototype, block_size() >> 3);
-      const int* info_bit_positions_ptr = &d_info_bit_positions[0];
+      const int* info_bit_reversed_positions_ptr = &d_info_bit_reversed_positions[0];
       int bit_num = 0;
       unsigned char byte = *input;
       int bit_pos;
       while(bit_num < num_info_bits()) {
-        bit_pos = *info_bit_positions_ptr++;
+        bit_pos = *info_bit_reversed_positions_ptr++;
         insert_packet_bit_into_packed_array_at_position(target, byte, bit_pos, bit_num % 8);
         ++bit_num;
         if(bit_num % 8 == 0) {

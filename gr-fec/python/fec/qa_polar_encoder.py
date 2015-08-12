@@ -101,12 +101,10 @@ class test_polar_encoder(gr_unittest.TestCase):
         self.tb.run()
 
         res = np.array(snk.data()).astype(dtype=int)
-
-        print(res)
-        print(ref)
         self.assertTupleEqual(tuple(res), tuple(ref))
 
     def get_test_data(self, block_size, num_info_bits, num_blocks, is_packed):
+        # helper function to set up test data and together with encoder object.
         num_frozen_bits = block_size - num_info_bits
         frozen_bit_positions = cc.frozen_bit_positions(block_size, num_info_bits, 0.0)
         frozen_bit_values = np.array([0] * num_frozen_bits,)
@@ -120,10 +118,6 @@ class test_polar_encoder(gr_unittest.TestCase):
             ref = np.append(ref, python_encoder.encode(d))
         polar_encoder = fec.polar_encoder.make(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values, is_packed)
         return data, ref, polar_encoder
-
-
-
-
 
 
 if __name__ == '__main__':

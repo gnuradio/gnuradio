@@ -20,30 +20,13 @@
 
 import numpy as np
 from common import PolarCommon
+import helper_functions as hf
 
 
 class PolarEncoder(PolarCommon):
     def __init__(self, n, k, frozen_bit_position, frozenbits=None):
         PolarCommon.__init__(self, n, k, frozen_bit_position, frozenbits)
-        self.G = self._gn(n)
-
-    def _gn(self, n):
-        # this matrix is called generator matrix
-        if n == 1:
-            return np.array([1, ])
-        f = self._fn(n)
-        return f
-
-    def _fn(self, n):
-        # this matrix defines the actual channel combining.
-        if n == 1:
-            return np.array([1, ])
-        f2 = np.array([[1, 0], [1, 1]], np.int)
-        nump = int(np.log2(n)) - 1  # number of Kronecker products to calculate
-        fn = f2
-        for i in range(nump):
-            fn = np.kron(fn, f2)
-        return fn
+        self.G = hf.get_Fn(n)
 
     def get_gn(self):
         return self.G
@@ -59,9 +42,9 @@ class PolarEncoder(PolarCommon):
         return data
 
     def _encode_efficient(self, vec):
-        nstages = int(np.log2(self.N))
+        n_stages = int(np.log2(self.N))
         pos = np.arange(self.N, dtype=int)
-        for i in range(nstages):
+        for i in range(n_stages):
             splitted = np.reshape(pos, (2 ** (i + 1), -1))
             upper_branch = splitted[0::2].flatten()
             lower_branch = splitted[1::2].flatten()
@@ -108,7 +91,7 @@ def test_pseudo_rate_1_encoder(encoder, ntests, k):
 
 
 def test_encoder_impls():
-    print('comparing encoder implementations, matrix vs. efficient')
+    print('Compare encoder implementations, matrix vs. efficient')
     ntests = 1000
     n = 16
     k = 8
@@ -120,15 +103,11 @@ def test_encoder_impls():
 
     print('Test rate-1 encoder/decoder chain results')
     r1_test = test_pseudo_rate_1_encoder(encoder, ntests, k)
-    print 'test rate-1 encoder/decoder:', r1_test
-
+    print 'Test rate-1 encoder/decoder:', r1_test
 
 
 def main():
-    print "main in encoder"
     test_encoder_impls()
-
-
 
 
 if __name__ == '__main__':

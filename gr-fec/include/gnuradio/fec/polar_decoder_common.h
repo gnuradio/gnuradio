@@ -38,18 +38,18 @@ namespace gr {
     class FEC_API polar_decoder_common : public generic_decoder, public polar_common
     {
     public:
-      polar_decoder_common(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed);
+      polar_decoder_common(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values);
       ~polar_decoder_common();
 
       // FECAPI
       double rate(){return (1.0 * get_input_size() / get_output_size());};
-      int get_input_size(){return block_size() / (is_packed() ? 8 : 1);};
-      int get_output_size(){return num_info_bits() / (is_packed() ? 8 : 1);};
+      int get_input_size(){return block_size();};
+      int get_output_size(){return num_info_bits();};
       bool set_frame_size(unsigned int frame_size){return false;};
-      const char* get_output_conversion() {return "none";};
 
     private:
-      const float D_LLR_FACTOR;
+      static const float D_LLR_FACTOR = -2.19722458f;
+      unsigned int d_frozen_bit_counter;
 
     protected:
       // calculate LLRs for stage
@@ -57,25 +57,20 @@ namespace gr {
       float llr_even(const float la, const float lb, const unsigned char f) const;
       unsigned char llr_bit_decision(const float llr) const {return (llr < 0.0f) ? 1 : 0;};
 
+      // control retrieval of frozen bits.
+      const bool is_frozen_bit(const int u_num) const;
+      const unsigned char next_frozen_bit();
+
       // preparation for decoding
-      void initialize_llr_vector(float* llrs, const float* input);
+      void initialize_decoder(unsigned char* u, float* llrs, const float* input);
+
       // basic algorithm methods
       void butterfly(float* llrs, unsigned char* u, const int stage, const int u_num, const int row);
       void butterfly_volk(float* llrs, unsigned char* u, const int stage, const int u_num, const int row);
       void butterfly_generic(float* llrs, unsigned char* u, const int stage, const int u_num, const int row);
       void even_u_values(unsigned char* u_even, const unsigned char* u, const int u_num);
       void odd_xor_even_values(unsigned char* u_xor, const unsigned char* u, const int u_num);
-      void demortonize_values(unsigned char* u);
-
       void extract_info_bits(unsigned char* output, const unsigned char* input) const;
-
-      static void insert_bit_at_pos(unsigned char* u, const unsigned char ui, const unsigned int pos){u[pos >> 3] ^= ui << (7 - (pos % 8));};
-      static unsigned char fetch_bit_at_pos(const unsigned char* u, const unsigned int pos){return (u[pos >> 3] >> (7 - (pos % 8))) & 0x01;};
-
-      // info shared among all implementations.
-      std::vector<int> d_frozen_bit_positions;
-      std::vector<int> d_info_bit_positions;
-      std::vector<char> d_frozen_bit_values;
 
       // helper functions.
       void print_pretty_llr_vector(const float* llr_vec) const;

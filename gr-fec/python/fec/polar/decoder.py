@@ -224,13 +224,9 @@ def compare_decoder_impls():
     n = 8
     k = 4
     frozenbits = np.zeros(n - k)
-    # frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
+    # frozenbitposition16 = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
     frozenbitposition = np.array((0, 1, 2, 4), dtype=int)
-    # bits = np.ones(k, dtype=int)
     bits = np.random.randint(2, size=k)
-    # bits = np.array([0, 1, 1, 1])
-    # bits = np.array([0, 1, 1, 0])
-    # bits = np.array([1, 0, 1, 0])
     print 'bits:', bits
     encoder = PolarEncoder(n, k, frozenbitposition, frozenbits)
     decoder = PolarDecoder(n, k, frozenbitposition, frozenbits)
@@ -241,7 +237,6 @@ def compare_decoder_impls():
     print 'standard :', rx_st
     print 'efficient:', rx_eff
     print (rx_st == rx_eff).all()
-
 
 
 def main():
@@ -257,32 +252,17 @@ def main():
     decoder = PolarDecoder(n, k, frozenbitposition, frozenbits)
 
     bits = np.ones(k, dtype=int)
-    # bits = np.array([1, 0, 1, 0], dtype=int)
     print "bits: ", bits
     evec = encoder.encode(bits)
     print "froz: ", encoder._insert_frozen_bits(bits)
     print "evec: ", evec
-    # dvec = decoder.decode(evec)
-    # print "dec:  ", dvec
 
-    # llr = decoder._llr(4, evec, np.array([0, 0, 0]))
-    # print "llr=", llr
     evec[1] = 0
     deced = decoder._lr_sc_decoder(evec)
     print 'SC decoded:', deced
 
-
-
-
-    # test_reverse_enc_dec()
+    test_reverse_enc_dec()
     compare_decoder_impls()
-
-    # graph_decode()
-
-
-
-
-
 
 
 if __name__ == '__main__':

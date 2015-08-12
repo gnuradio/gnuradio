@@ -32,7 +32,7 @@ namespace gr {
   namespace fec {
 
     /*!
-     * \brief Standard successive cancellation decoder for POLAR codes
+     * \brief Standard successive cancellation (SC) decoder for POLAR codes
      * It expects float input with bits mapped 1 --> 1, 0 --> -1
      * Or: f = 2.0 * bit - 1.0
      *
@@ -40,16 +40,14 @@ namespace gr {
     class FEC_API polar_decoder_sc : public polar_decoder_common
     {
     public:
-      static generic_decoder::sptr make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed = false);
+      static generic_decoder::sptr make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values);
       ~polar_decoder_sc();
 
       // FECAPI
       void generic_work(void *in_buffer, void *out_buffer);
 
     private:
-      polar_decoder_sc(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed);
-
-      unsigned int d_frozen_bit_counter;
+      polar_decoder_sc(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values);
 
       float* d_llr_vec;
       unsigned char* d_u_hat_vec;
