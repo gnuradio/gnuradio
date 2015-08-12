@@ -1,0 +1,22 @@
+<block>
+   <name>File Message Sink</name>
+   <key>blocks_file_message_sink</key>
+   <category>File Operators</category>
+   <import>from gnuradio import blocks</import>
+   <make>blocks.file_message_sink($filename, $the_keys)</make>
+   <callback>open($filename)</callback>
+   <param>
+      <name>Filename</name>
+      <key>filename</key>
+      <type>file_save</type>
+   </param>
+   <param>
+      <name>Keys</name>
+      <key>the_keys</key>
+      <type>string</type>
+   </param>
+   <sink>
+      <name>in</name>
+      <type>message</type>
+   </sink>
+</block>

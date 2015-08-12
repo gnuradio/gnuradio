@@ -203,6 +203,7 @@ list(APPEND gr_blocks_sources
     wavfile_sink_impl.cc
     wavfile_source_impl.cc
     multiply_matrix_ff_impl.cc
+    file_message_sink_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
