@@ -150,13 +150,12 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
 
     def load_from_preferences(self):
         if self.preference_name is not None:
-            self.set_active(Preferences.bool_entry(self.preference_name,
-                                                   default=self.default))
+            self.set_active(Preferences.entry(
+                self.preference_name, default=bool(self.default)))
 
     def save_to_preferences(self):
         if self.preference_name is not None:
-            Preferences.bool_entry(self.preference_name,
-                                   value=self.get_active())
+            Preferences.entry(self.preference_name, value=self.get_active())
 
 ########################################################################
 # Actions

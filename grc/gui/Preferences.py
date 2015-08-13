@@ -17,11 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import sys
 import ConfigParser
 
 
+HEADER = """\
+# This contains only GUI settings for GRC and is not meant for users to edit.
+#
+# GRC settings not accessible through the GUI are in gnuradio.conf under
+# section [grc].
+
+"""
+
 _platform = None
-_config_parser = ConfigParser.ConfigParser()
+_config_parser = ConfigParser.SafeConfigParser()
 
 
 def file_extension():
@@ -36,15 +45,34 @@ def load(platform):
     _config_parser.add_section('files_open')
     try:
         _config_parser.read(_platform.get_prefs_file())
-    except:
-        pass
+    except Exception as err:
+        print >> sys.stderr, err
 
 
 def save():
     try:
-        _config_parser.write(open(_platform.get_prefs_file(), 'w'))
-    except:
-        pass
+        with open(_platform.get_prefs_file(), 'w') as fp:
+            fp.write(HEADER)
+            _config_parser.write(fp)
+    except Exception as err:
+        print >> sys.stderr, err
+
+
+def entry(key, value=None, default=None):
+    if value is not None:
+        _config_parser.set('main', key, str(value))
+        result = value
+    else:
+        _type = type(default) if default is not None else str
+        getter = {
+            bool: _config_parser.getboolean,
+            int: _config_parser.getint,
+        }.get(_type, _config_parser.get)
+        try:
+            result = getter('main', key)
+        except ConfigParser.Error:
+            result = _type() if default is None else default
+    return result
 
 
 ###########################################################################
@@ -52,26 +80,15 @@ def save():
 ###########################################################################
 
 def main_window_size(size=None):
-    if size is not None:
-        _config_parser.set('main', 'main_window_width', size[0])
-        _config_parser.set('main', 'main_window_height', size[1])
-    else:
-        try:
-            w = _config_parser.getint('main', 'main_window_width')
-            h = _config_parser.getint('main', 'main_window_height')
-        except:
-            w, h = 1, 1
-        return w, h
+    if size is None:
+        size = [None, None]
+    w = entry('main_window_width', size[0], default=1)
+    h = entry('main_window_height', size[1], default=1)
+    return w, h
 
 
 def file_open(filename=None):
-    if filename is not None:
-        _config_parser.set('main', 'file_open', filename)
-    else:
-        try:
-            return _config_parser.get('main', 'file_open')
-        except:
-            return ''
+    return entry('file_open', filename, default='')
 
 
 def files_open(files=None):
@@ -85,36 +102,15 @@ def files_open(files=None):
         try:
             files = [value for name, value in _config_parser.items('files_open')
                      if name.startswith('file_open_')]
-        except:
+        except ConfigParser.Error:
             files = []
         return files
 
 
 def reports_window_position(pos=None):
-    if pos is not None:
-        _config_parser.set('main', 'reports_window_position', pos)
-    else:
-        try:
-            return _config_parser.getint('main', 'reports_window_position') or 1 #greater than 0
-        except:
-            return -1
+    return entry('reports_window_position', pos, default=-1) or 1
 
 
 def blocks_window_position(pos=None):
-    if pos is not None:
-        _config_parser.set('main', 'blocks_window_position', pos)
-    else:
-        try:
-            return _config_parser.getint('main', 'blocks_window_position') or 1 #greater than 0
-        except:
-            return -1
+    return entry('blocks_window_position', pos, default=-1) or 1
 
-
-def bool_entry(key, value=None, default=True):
-    if value is not None:
-        _config_parser.set('main', key, value)
-    else:
-        try:
-            return _config_parser.getboolean('main', key)
-        except:
-            return default
