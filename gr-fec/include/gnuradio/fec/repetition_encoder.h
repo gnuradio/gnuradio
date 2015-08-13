@@ -39,7 +39,8 @@ namespace gr {
        * \details
        * A repetition encoder class that repeats each input bit \p rep
        * times. To  decode, take  a majority vote  over the  number of
-       * repetitions.
+       * repetitions for hard decision, or coherently average over the
+       * repeated soft bits for soft decision.
        */
       class FEC_API repetition_encoder : virtual public generic_encoder
       {
