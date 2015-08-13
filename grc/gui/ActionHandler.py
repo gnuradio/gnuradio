@@ -18,23 +18,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-from Constants import IMAGE_FILE_EXTENSION
-import Actions
+import subprocess
+from threading import Thread
+
 import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
-import subprocess
-import Preferences
-from threading import Thread
-import Messages
+
 from .. base import ParseXML, Constants
-from MainWindow import MainWindow
-from PropsDialog import PropsDialog
-from ParserErrorsDialog import ParserErrorsDialog
-import Dialogs
-from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveReportsFileDialog, SaveImageFileDialog
-from . Constants import DEFAULT_CANVAS_SIZE
+
+from . import Dialogs, Messages, Preferences, Actions
+from .ParserErrorsDialog import ParserErrorsDialog
+from .MainWindow import MainWindow
+from .PropsDialog import PropsDialog
+from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
+                          SaveReportsFileDialog, SaveImageFileDialog)
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION
 
 gobject.threads_init()
 
