@@ -54,6 +54,7 @@ class ModToolMakeXML(ModTool):
     def run(self):
         """ Go, go, go! """
         print "Warning: This is an experimental feature. Don't expect any magic."
+        print "Blocks written in python are not supported so far."
         # 1) Go through lib/
         if not self._skip_subdirs['lib']:
             if self._info['version'] == '37':
