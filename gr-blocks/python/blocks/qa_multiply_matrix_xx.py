@@ -28,7 +28,20 @@ import pmt
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 
-class test_multiply_matrix_ff (gr_unittest.TestCase):
+BLOCK_LOOKUP = {
+    'float': {
+        'src':  blocks.vector_source_f,
+        'sink': blocks.vector_sink_f,
+        'mult': blocks.multiply_matrix_ff,
+    },
+    'complex': {
+        'src':  blocks.vector_source_c,
+        'sink': blocks.vector_sink_c,
+        'mult': blocks.multiply_matrix_cc,
+    },
+}
+
+class test_multiply_matrix_xx (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -38,7 +51,15 @@ class test_multiply_matrix_ff (gr_unittest.TestCase):
         self.tb = None
         self.multiplier = None
 
-    def run_once(self, X_in, A, tpp=gr.TPP_DONT, A2=None, tags=None, msg_A=None):
+    def run_once(self,
+            X_in,
+            A,
+            tpp=gr.TPP_DONT,
+            A2=None,
+            tags=None,
+            msg_A=None,
+            datatype='float',
+        ):
         """ Run the test for given input-, output- and matrix values.
         Every row from X_in is considered an input signal on a port. """
         X_in = numpy.matrix(X_in)
@@ -47,7 +68,7 @@ class test_multiply_matrix_ff (gr_unittest.TestCase):
         self.assertTrue(N == X_in.shape[0])
         # Calc expected
         Y_out_exp = numpy.matrix(numpy.zeros((M, X_in.shape[1])))
-        self.multiplier = blocks.multiply_matrix_ff(A, tpp)
+        self.multiplier = BLOCK_LOOKUP[datatype]['mult'](A, tpp)
         if A2 is not None:
             self.multiplier.set_A(A2)
             A = A2
@@ -57,10 +78,13 @@ class test_multiply_matrix_ff (gr_unittest.TestCase):
                 these_tags = ()
             else:
                 these_tags = (tags[i],)
-            self.tb.connect(blocks.vector_source_f(X_in[i].tolist()[0], tags=these_tags), (self.multiplier, i))
+            self.tb.connect(
+                    BLOCK_LOOKUP[datatype]['src'](X_in[i].tolist()[0], tags=these_tags),
+                    (self.multiplier, i)
+            )
         sinks = []
         for i in xrange(M):
-            sinks.append(blocks.vector_sink_f())
+            sinks.append(BLOCK_LOOKUP[datatype]['sink']())
             self.tb.connect((self.multiplier, i), sinks[i])
         # Run and check
         self.tb.run()
@@ -85,6 +109,18 @@ class test_multiply_matrix_ff (gr_unittest.TestCase):
             (0, 1),
         )
         self.run_once(X_in, A)
+
+    def test_001_t_complex (self):
+        """ Simplest possible check: N==M, unit matrix """
+        X_in = (
+            (1, 2, 3, 4),
+            (5, 6, 7, 8),
+        )
+        A = (
+            (1, 0),
+            (0, 1),
+        )
+        self.run_once(X_in, A, datatype='complex')
 
     def test_002_t (self):
         """ Switch check: N==M, flipped unit matrix """
@@ -168,5 +204,5 @@ class test_multiply_matrix_ff (gr_unittest.TestCase):
 
 if __name__ == '__main__':
     #gr_unittest.run(test_multiply_matrix_ff, "test_multiply_matrix_ff.xml")
-    gr_unittest.run(test_multiply_matrix_ff)
+    gr_unittest.run(test_multiply_matrix_xx)
 
