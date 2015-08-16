@@ -143,6 +143,8 @@ list(APPEND gr_blocks_sources
     multiply_const_vcc_impl.cc
     multiply_const_ff_impl.cc
     multiply_const_vff_impl.cc
+    multiply_matrix_cc_impl.cc
+    multiply_matrix_ff_impl.cc
     nlog10_ff_impl.cc
     nop_impl.cc
     null_sink_impl.cc
@@ -202,7 +204,6 @@ list(APPEND gr_blocks_sources
     vector_to_streams_impl.cc
     wavfile_sink_impl.cc
     wavfile_source_impl.cc
-    multiply_matrix_ff_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
