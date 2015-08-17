@@ -582,7 +582,7 @@ class MForm(QtGui.QWidget):
 
     def pauseFlowgraph(self):
         knobs = [self.radioclient.Knob(self.top_block + "::lock"),
-                self.radioclient.Knob(self.top_block + "::stop")]
+                 self.radioclient.Knob(self.top_block + "::stop")]
         k = self.radioclient.setKnobs(knobs)
 
     def unpauseFlowgraph(self):
