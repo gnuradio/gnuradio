@@ -127,6 +127,7 @@ class Platform(_Element):
         else:  # store the block
             self._blocks[key] = block
             self._blocks_n[key] = n
+        return block
 
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""

@@ -27,7 +27,7 @@ from .. base.Block import Block as _Block
 from .. gui.Block import Block as _GUIBlock
 
 from . FlowGraph import _variable_matcher
-from . import epy_block_io, extract_docs
+from . import epy_block_io
 
 
 class Block(_Block, _GUIBlock):
@@ -44,7 +44,7 @@ class Block(_Block, _GUIBlock):
             block a new block
         """
         #grab the data
-        self._doc = n.find('doc') or ''
+        self._doc = (n.find('doc') or '').strip('\n').replace('\\\n', '')
         self._imports = map(lambda i: i.strip(), n.findall('import'))
         self._make = n.find('make')
         self._var_make = n.find('var_make')
@@ -184,14 +184,14 @@ class Block(_Block, _GUIBlock):
         return changed
 
     def get_doc(self):
-        doc = self._doc.strip('\n').replace('\\\n', '')
-        #merge custom doc with doxygen docs
-        return '\n'.join([doc, extract_docs.extract(self.get_key())]).strip('\n')
+        platform = self.get_parent().get_parent()
+        extracted_docs = platform.block_docstrings.get(self._key, '')
+        return (self._doc + '\n\n' + extracted_docs).strip()
 
     def get_category(self):
         return _Block.get_category(self)
 
-    def get_imports(self):
+    def get_imports(self, raw=False):
         """
         Resolve all import statements.
         Split each import statement at newlines.
@@ -201,11 +201,20 @@ class Block(_Block, _GUIBlock):
         Returns:
             a list of import statements
         """
+        if raw:
+            return self._imports
         return filter(lambda i: i, sum(map(lambda i: self.resolve_dependencies(i).split('\n'), self._imports), []))
 
-    def get_make(self): return self.resolve_dependencies(self._make)
-    def get_var_make(self): return self.resolve_dependencies(self._var_make)
-    def get_var_value(self): return self.resolve_dependencies(self._var_value)
+    def get_make(self, raw=False):
+        if raw:
+            return self._make
+        return self.resolve_dependencies(self._make)
+
+    def get_var_make(self):
+        return self.resolve_dependencies(self._var_make)
+
+    def get_var_value(self):
+        return self.resolve_dependencies(self._var_value)
 
     def get_callbacks(self):
         """

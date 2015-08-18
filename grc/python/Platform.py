@@ -24,22 +24,24 @@ from gnuradio import gr
 
 from .. base.Platform import Platform as _Platform
 from .. gui.Platform import Platform as _GUIPlatform
-from FlowGraph import FlowGraph as _FlowGraph
-from Connection import Connection as _Connection
-from Block import Block as _Block
-from Port import Port as _Port
-from Param import Param as _Param
-from Generator import Generator
-from Constants import (
+
+from . import extract_docs
+from .FlowGraph import FlowGraph as _FlowGraph
+from .Connection import Connection as _Connection
+from .Block import Block as _Block
+from .Port import Port as _Port
+from .Param import Param as _Param
+from .Generator import Generator
+from .Constants import (
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, DEFAULT_FLOW_GRAPH, BLOCKS_DIRS,
     PREFS_FILE, PREFS_FILE_OLD, CORE_TYPES
 )
-
 
 COLORS = [(name, color) for name, key, sizeof, color in CORE_TYPES]
 
 
 class Platform(_Platform, _GUIPlatform):
+
     def __init__(self):
         """
         Make a platform for gnuradio.
@@ -49,6 +51,17 @@ class Platform(_Platform, _GUIPlatform):
             os.mkdir(HIER_BLOCKS_LIB_DIR)
         if not os.path.exists(os.path.dirname(PREFS_FILE)):
             os.mkdir(os.path.dirname(PREFS_FILE))
+
+        self.block_docstrings = block_docstrings = dict()
+
+        def setter(key, docs):
+            block_docstrings[key] = '\n\n'.join(
+                '--- {0} ---\n{1}\n'.format(b, d.replace('\n\n', '\n'))
+                for b, d in docs.iteritems() if d is not None
+            )
+
+        self._docstring_extractor = extract_docs.SubprocessLoader(setter)
+
         # init
         _Platform.__init__(
             self,
@@ -79,6 +92,17 @@ class Platform(_Platform, _GUIPlatform):
                 shutil.move(PREFS_FILE_OLD, PREFS_FILE)
             except Exception as e:
                 print >> sys.stderr, e
+
+    def load_blocks(self):
+        self._docstring_extractor.start()
+        _Platform.load_blocks(self)
+        self._docstring_extractor.finish()
+        self._docstring_extractor.wait()
+
+    def load_block_xml(self, xml_file):
+        block = _Platform.load_block_xml(self, xml_file)
+        self._docstring_extractor.query(block.get_key())
+        return block
 
     ##############################################
     # Constructors
