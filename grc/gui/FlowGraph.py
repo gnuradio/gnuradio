@@ -17,17 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
-import Actions
-import Colors
-import Utils
-from Element import Element
-import pygtk
-pygtk.require('2.0')
-import gtk
 import random
-import Messages
-import Bars
+from itertools import chain
+from operator import methodcaller
+
+from . import Actions, Colors, Utils, Messages, Bars
+from .Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
+from .Element import Element
+
 
 class FlowGraph(Element):
     """
@@ -294,7 +291,7 @@ class FlowGraph(Element):
         window.draw_rectangle(gc, True, 0, 0, W, H)
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
-            for block in self.get_blocks():
+            for block in self.iter_blocks():
                 if block.get_enabled():
                     block.draw_comment(gc, window)
         #draw multi select rectangle
@@ -312,7 +309,7 @@ class FlowGraph(Element):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
-        for element in self.get_connections() + self.get_blocks():
+        for element in chain(self.iter_connections(), self.iter_blocks()):
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)
