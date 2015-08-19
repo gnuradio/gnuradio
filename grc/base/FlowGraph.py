@@ -131,17 +131,8 @@ class FlowGraph(Element):
     def iter_blocks(self):
         return ifilter(methodcaller('is_block'), self.get_elements())
 
-    def get_blocks_unordered(self):
-        return list(self.iter_blocks())
-
     def get_blocks(self):
-        # refactored the slow, ugly version
-        # don't know why we need this here, using it for sorted export_data()
-        return sorted(self.iter_blocks(), key=lambda b: (
-            b.get_key() != 'options',  # options to the front
-            not b.get_key().startswith('variable'),  # then vars
-            str(b)
-        ))
+        return list(self.iter_blocks())
 
     def iter_connections(self):
         return ifilter(methodcaller('is_connection'), self.get_elements())
@@ -273,10 +264,17 @@ class FlowGraph(Element):
         Returns:
             a nested data odict
         """
+        # sort blocks and connections for nicer diffs
+        blocks = sorted(self.iter_blocks(), key=lambda b: (
+            b.get_key() != 'options',  # options to the front
+            not b.get_key().startswith('variable'),  # then vars
+            str(b)
+        ))
+        connections = sorted(self.get_connections(), key=str)
         n = odict()
         n['timestamp'] = self._timestamp
-        n['block'] = [b.export_data() for b in self.get_blocks()]  # already sorted
-        n['connection'] = [c.export_data() for c in sorted(self.get_connections(), key=str)]
+        n['block'] = [b.export_data() for b in blocks]
+        n['connection'] = [c.export_data() for c in connections]
         instructions = odict({
             'created': self.get_parent().get_version_short(),
             'format': FLOW_GRAPH_FILE_FORMAT_VERSION,

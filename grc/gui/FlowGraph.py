@@ -309,7 +309,8 @@ class FlowGraph(Element):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
-        for element in chain(self.iter_connections(), self.iter_blocks()):
+        blocks = sorted(self.iter_blocks(), key=methodcaller('get_enabled'))
+        for element in chain(self.iter_connections(), blocks):
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)
