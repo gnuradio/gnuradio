@@ -99,7 +99,7 @@ def send_fail_gen(error):
 
 ################# functions for executing flow graphs   ########################################
 def send_start_exec(file_path):
-    send('\nExecuting: "%s"'%file_path + '\n')
+    send('\nExecuting: ' + repr(file_path) + '\n')
 
 def send_verbose_exec(verbose):
     send(verbose)

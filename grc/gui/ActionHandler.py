@@ -639,7 +639,6 @@ class ExecFlowGraphThread(Thread):
         self.flow_graph = action_handler.get_flow_graph()
         #store page and dont use main window calls in run
         self.page = action_handler.get_page()
-        Messages.send_start_exec(self.page.get_generator().get_file_path())
         #get the popen
         try:
             self.p = self.page.get_generator().get_popen()
