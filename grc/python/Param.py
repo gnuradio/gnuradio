@@ -62,7 +62,7 @@ class Param(_Param, _GUIParam):
         'complex', 'real', 'float', 'int',
         'complex_vector', 'real_vector', 'float_vector', 'int_vector',
         'hex', 'string', 'bool',
-        'file_open', 'file_save', 'multiline',
+        'file_open', 'file_save', '_multiline',
         'id', 'stream_id',
         'grid_pos', 'notebook', 'gui_hint',
         'import',
@@ -266,7 +266,7 @@ class Param(_Param, _GUIParam):
         #########################
         # String Types
         #########################
-        elif t in ('string', 'file_open', 'file_save', 'multiline'):
+        elif t in ('string', 'file_open', 'file_save', '_multiline'):
             #do not check if file/directory exists, that is a runtime issue
             try:
                 e = self.get_parent().get_parent().evaluate(v)
@@ -405,7 +405,7 @@ class Param(_Param, _GUIParam):
         """
         v = self.get_value()
         t = self.get_type()
-        if t in ('string', 'file_open', 'file_save', 'multiline'): #string types
+        if t in ('string', 'file_open', 'file_save', '_multiline'):  # string types
             if not self._init: self.evaluate()
             if self._stringify_flag: return '"%s"'%v.replace('"', '\"')
             else: return v

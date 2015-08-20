@@ -320,7 +320,7 @@ class Param(Element):
         elif self.get_options():
             input_widget = EnumEntryParam(self, *args, **kwargs)
 
-        elif self.get_type() == 'multiline':
+        elif self.get_type() == '_multiline':
             input_widget = MultiLineEntryParam(self, *args, **kwargs)
 
         else:
