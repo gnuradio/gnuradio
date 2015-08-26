@@ -11,7 +11,9 @@
 	<import>import threading</import>
 	<make>SimpleXMLRPCServer.SimpleXMLRPCServer(($addr, $port), allow_none=True)
 self.$(id).register_instance(self)
-threading.Thread(target=self.$(id).serve_forever).start()</make>
+self.$(id)_thread = threading.Thread(target=self.$(id).serve_forever)
+self.$(id)_thread.daemon = True
+self.$(id)_thread.start()</make>
 	<param>
 		<name>Address</name>
 		<key>addr</key>
