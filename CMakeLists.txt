@@ -234,6 +234,10 @@ include(GrBoost)
 find_package(PythonLibs 2)
 find_package(SWIG)
 
+if(APPLE)
+    set(PYTHON_LIBRARY "-undefined dynamic_lookup")
+endif(APPLE)
+
 if(SWIG_FOUND)
     # Minimum SWIG version required is 1.3.31
     set(SWIG_VERSION_CHECK FALSE)
