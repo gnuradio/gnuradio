@@ -33,20 +33,19 @@ namespace gr {
 
     pfb_arb_resampler_fff::sptr
     pfb_arb_resampler_fff::make(float rate,
-				const std::vector<float> &taps,
-				unsigned int filter_size)
+                                const std::vector<float> &taps,
+                                unsigned int filter_size)
     {
-      return gnuradio::get_initial_sptr
-	(new pfb_arb_resampler_fff_impl(rate, taps, filter_size));
+      return gnuradio::get_initial_sptr(new pfb_arb_resampler_fff_impl(rate, taps, filter_size));
     }
 
 
     pfb_arb_resampler_fff_impl::pfb_arb_resampler_fff_impl(float rate,
-							   const std::vector<float> &taps,
-							   unsigned int filter_size)
-      : block("pfb_arb_resampler_fff",
-		 io_signature::make(1, 1, sizeof(float)),
-		 io_signature::make(1, 1, sizeof(float)))
+                                                           const std::vector<float> &taps,
+                                                           unsigned int filter_size)
+            : block("pfb_arb_resampler_fff",
+                    io_signature::make(1, 1, sizeof(float)),
+                    io_signature::make(1, 1, sizeof(float)))
     {
       d_updated = false;
 
@@ -68,7 +67,7 @@ namespace gr {
       unsigned ninputs = ninput_items_required.size();
       if(noutput_items / relative_rate() < 1) {
         for(unsigned i = 0; i < ninputs; i++)
-          ninput_items_required[i] = max_output_buffer(i)-1;
+          ninput_items_required[i] = relative_rate() + history() - 1;
       }
       else {
         for(unsigned i = 0; i < ninputs; i++)
@@ -158,9 +157,9 @@ namespace gr {
 
     int
     pfb_arb_resampler_fff_impl::general_work(int noutput_items,
-					     gr_vector_int &ninput_items,
-					     gr_vector_const_void_star &input_items,
-					     gr_vector_void_star &output_items)
+                                             gr_vector_int &ninput_items,
+                                             gr_vector_const_void_star &input_items,
+                                             gr_vector_void_star &output_items)
     {
       gr::thread::scoped_lock guard(d_mutex);
 
@@ -168,8 +167,8 @@ namespace gr {
       float *out = (float*)output_items[0];
 
       if(d_updated) {
-	d_updated = false;
-	return 0;		     // history requirements may have changed.
+        d_updated = false;
+        return 0;     // history requirements may have changed.
       }
 
       int nitems_read;
