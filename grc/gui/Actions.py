@@ -284,6 +284,12 @@ TOGGLE_SHOW_CODE_PREVIEW_TAB = ToggleAction(
     preference_name='show_generated_code_tab',
     default=False,
 )
+TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = ToggleAction(
+    label='Show Flowgraph Complexity',
+    tooltip="How many Balints is the flowgraph...",
+    preference_name='show_flowgraph_complexity',
+    default=False,
+)
 BLOCK_CREATE_HIER = Action(
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',

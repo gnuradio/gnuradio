@@ -285,10 +285,12 @@ class FlowGraph(Element):
         Draw all of the elements in this flow graph onto the pixmap.
         Draw the pixmap to the drawable window of this flow graph.
         """
+
         W,H = self.get_size()
         #draw the background
         gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
         window.draw_rectangle(gc, True, 0, 0, W, H)
+
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
             for block in self.iter_blocks():

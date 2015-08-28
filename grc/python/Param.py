@@ -19,8 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. base.Param import Param as _Param
 from .. gui.Param import Param as _GUIParam
+
 import Constants
-import numpy
+from Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
+
 from gnuradio import eng_notation
 import re
 from gnuradio import gr
@@ -33,16 +35,19 @@ _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
 import __builtin__
 ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + \
     filter(lambda x: not x.startswith('_'), dir(gr.top_block())) + dir(__builtin__)
-#define types, native python + numpy
-VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
-COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
-REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
-INT_TYPES = [int, long, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
-    numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
-#cast to tuple for isinstance, concat subtypes
-COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
-REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
-INT_TYPES = tuple(INT_TYPES)
+
+
+def num_to_str(num):
+    """ Display logic for numbers """
+    if isinstance(num, COMPLEX_TYPES):
+        num = complex(num) #cast to python complex
+        if num == 0: return '0' #value is zero
+        elif num.imag == 0: return '%s'%eng_notation.num_to_str(num.real) #value is real
+        elif num.real == 0: return '%sj'%eng_notation.num_to_str(num.imag) #value is imaginary
+        elif num.imag < 0: return '%s-%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(abs(num.imag)))
+        else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
+    else: return str(num)
+
 
 class Param(_Param, _GUIParam):
 
@@ -88,18 +93,7 @@ class Param(_Param, _GUIParam):
         ##################################################
         if not self.is_valid(): return _truncate(self.get_value())
         if self.get_value() in self.get_option_keys(): return self.get_option(self.get_value()).get_name()
-        ##################################################
-        # display logic for numbers
-        ##################################################
-        def num_to_str(num):
-            if isinstance(num, COMPLEX_TYPES):
-                num = complex(num) #cast to python complex
-                if num == 0: return '0' #value is zero
-                elif num.imag == 0: return '%s'%eng_notation.num_to_str(num.real) #value is real
-                elif num.real == 0: return '%sj'%eng_notation.num_to_str(num.imag) #value is imaginary
-                elif num.imag < 0: return '%s-%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(abs(num.imag)))
-                else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
-            else: return str(num)
+
         ##################################################
         # split up formatting by type
         ##################################################

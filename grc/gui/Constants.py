@@ -118,4 +118,3 @@ SCROLL_DISTANCE = 15
 
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
-

@@ -116,6 +116,8 @@ MENU_BAR_LIST = (
     (gtk.Action('Tools', '_Tools', None, None), [
         Actions.TOOLS_RUN_FDESIGN,
         None,
+        Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
+        None,
         Actions.TOOLS_MORE_TO_COME,
     ]),
     (gtk.Action('Help', '_Help', None, None), [
