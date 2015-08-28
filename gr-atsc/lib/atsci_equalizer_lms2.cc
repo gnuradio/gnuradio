@@ -90,6 +90,7 @@ atsci_equalizer_lms2::atsci_equalizer_lms2 ()
 
 atsci_equalizer_lms2::~atsci_equalizer_lms2 ()
 {
+  fclose(trainingfile);
 }
 
 void
