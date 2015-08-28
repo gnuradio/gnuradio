@@ -55,7 +55,7 @@ def calculate_bec_channel_capacities(eta, block_size):
     # compare [0, Arikan] eq. 6
     iw = 1 - eta  # holds for BEC as stated in paper
     iw = np.array([iw, ], dtype=float)
-    lw = int(np.log2(block_size))
+    lw = hf.power_of_2_int(block_size)
     for i in range(lw):
         iw = calc_one_recursion(iw)
     return iw
@@ -103,7 +103,7 @@ def bhattacharyya_bounds(design_snr, block_size):
 
 def main():
     print 'channel construction main'
-    n = 4
+    n = 10
     block_size = 2 ** n
     design_snr = 1.0
     eta = design_snr_to_bec_eta(design_snr)
