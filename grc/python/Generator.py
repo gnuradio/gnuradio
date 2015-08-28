@@ -140,6 +140,7 @@ class TopBlockGenerator(object):
         if self._generate_options == 'no_gui' and xterm_executable:
             cmds = [xterm_executable, '-e', args_to_string(cmds)]
 
+        Messages.send_start_exec(args_to_string(cmds))
         p = subprocess.Popen(
             args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True)
