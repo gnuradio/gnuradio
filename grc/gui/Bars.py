@@ -116,6 +116,7 @@ MENU_BAR_LIST = (
     ]),
     (gtk.Action('Tools', '_Tools', None, None), [
         Actions.TOOLS_RUN_FDESIGN,
+        Actions.FLOW_GRAPH_OPEN_QSS_THEME,
         None,
         Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
         None,

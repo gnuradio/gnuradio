@@ -26,7 +26,7 @@ import sys
 from gnuradio import gr
 
 _gr_prefs = gr.prefs()
-
+GR_PREFIX = gr.prefix()
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()

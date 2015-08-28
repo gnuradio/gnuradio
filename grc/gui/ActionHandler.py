@@ -34,8 +34,9 @@ from .ParserErrorsDialog import ParserErrorsDialog
 from .MainWindow import MainWindow
 from .PropsDialog import PropsDialog
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
-                          SaveReportsFileDialog, SaveImageFileDialog)
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION
+                          SaveReportsFileDialog, SaveImageFileDialog,
+                          OpenQSSFileDialog)
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
 
 gobject.threads_init()
 
@@ -143,6 +144,7 @@ class ActionHandler:
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
                 Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
+                Actions.FLOW_GRAPH_OPEN_QSS_THEME,
             ):
                 action.set_sensitive(True)
                 if hasattr(action, 'load_from_preferences'):
@@ -474,6 +476,15 @@ class ActionHandler:
             if file_paths: #open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     self.main_window.new_page(file_path, show=(i==0))
+        elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
+            file_paths = OpenQSSFileDialog(GR_PREFIX + '/share/gnuradio/themes/').run()
+            if file_paths:
+                try:
+                    from gnuradio import gr
+                    gr.prefs().set_string("qtgui", "qss", file_paths[0])
+                    gr.prefs().save()
+                except Exception as e:
+                    Messages.send("Failed to save QSS preference: " + str(e))
         elif action == Actions.FLOW_GRAPH_CLOSE:
             self.main_window.close_page()
         elif action == Actions.FLOW_GRAPH_SAVE:

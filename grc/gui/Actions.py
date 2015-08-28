@@ -439,6 +439,11 @@ XML_PARSER_ERRORS_DISPLAY = Action(
     tooltip='View errors that occured while parsing XML files',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
+FLOW_GRAPH_OPEN_QSS_THEME = Action(
+    label='Set Default QT GUI _Theme',
+    tooltip='Set a default QT Style Sheet file to use for QT GUI',
+    stock_id=gtk.STOCK_OPEN,
+)
 TOOLS_RUN_FDESIGN = Action(
     label='Filter Design Tool',
     tooltip='Execute gr_filter_design',
