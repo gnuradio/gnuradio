@@ -146,8 +146,23 @@ namespace gr {
       (buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
 
   protected:
-    char			       *d_base;		// base address of buffer
-    unsigned int			d_bufsize;	// in items
+    /*!
+     * \brief constructor is protected.  Use gr::make_buffer to create instances.
+     *
+     * Allocate a buffer that holds at least \p nitems of size \p sizeof_item.
+     *
+     * \param nitems is the minimum number of items the buffer will hold.
+     * \param sizeof_item is the size of an item in bytes.
+     * \param link is the block that writes to this buffer.
+     *
+     * The total size of the buffer will be rounded up to a system
+     * dependent boundary.  This is typically the system page size, but
+     * under MS windows is 64KB.
+     */
+    buffer(int nitems, size_t sizeof_item, block_sptr link);
+
+    char                              *d_base;     // base address of buffer
+    unsigned int                       d_bufsize;  // in items
 
     // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;
@@ -192,21 +207,6 @@ namespace gr {
     }
 
     virtual bool allocate_buffer(int nitems, size_t sizeof_item);
-
-    /*!
-     * \brief constructor is private.  Use gr_make_buffer to create instances.
-     *
-     * Allocate a buffer that holds at least \p nitems of size \p sizeof_item.
-     *
-     * \param nitems is the minimum number of items the buffer will hold.
-     * \param sizeof_item is the size of an item in bytes.
-     * \param link is the block that writes to this buffer.
-     *
-     * The total size of the buffer will be rounded up to a system
-     * dependent boundary.  This is typically the system page size, but
-     * under MS windows is 64KB.
-     */
-    buffer(int nitems, size_t sizeof_item, block_sptr link);
 
     /*!
      * \brief disassociate \p reader from this buffer
