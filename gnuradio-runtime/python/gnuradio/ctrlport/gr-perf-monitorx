@@ -20,18 +20,23 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import sys, time, re, pprint
 import random,math,operator
-import networkx as nx
-import matplotlib
-matplotlib.use("QT4Agg")
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-from matplotlib.figure import Figure
+try:
+    import networkx as nx
+    import matplotlib
+    matplotlib.use("QT4Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+    from matplotlib.figure import Figure
+except ImportError:
+    print sys.argv[0], "requires networkx and matplotlib.", \
+       "Please check that they are installed and try again."
+    sys.exit(1)
 
 from PyQt4 import QtCore,Qt,Qwt5
 import PyQt4.QtGui as QtGui
-import sys, time, re, pprint
 import itertools
 
 from gnuradio import gr, ctrlport
@@ -582,7 +587,7 @@ class MForm(QtGui.QWidget):
 
     def pauseFlowgraph(self):
         knobs = [self.radioclient.Knob(self.top_block + "::lock"),
-                self.radioclient.Knob(self.top_block + "::stop")]
+                 self.radioclient.Knob(self.top_block + "::stop")]
         k = self.radioclient.setKnobs(knobs)
 
     def unpauseFlowgraph(self):

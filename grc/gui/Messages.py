@@ -76,8 +76,11 @@ def send_xml_errors_if_any(xml_failures):
 def send_start_load(file_path):
     send('\nLoading: "%s"'%file_path + '\n')
 
+def send_error_msg_load(error):
+    send('>>> Error: %s\n' % error)
+
 def send_error_load(error):
-    send('>>> Error: %s\n'%error)
+    send_error_msg_load(error)
     traceback.print_exc()
 
 def send_end_load():

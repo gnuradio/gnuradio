@@ -400,6 +400,18 @@ WaterfallDisplayPlot::getMaxIntensity(int which) const
   return r.maxValue();
 }
 
+int
+WaterfallDisplayPlot::getColorMapTitleFontSize() const
+{
+  return d_color_bar_title_font_size;
+}
+
+void
+WaterfallDisplayPlot::setColorMapTitleFontSize(int tfs)
+{
+  d_color_bar_title_font_size = tfs;
+}
+
 void
 WaterfallDisplayPlot::replot()
 {
@@ -590,7 +602,9 @@ void
 WaterfallDisplayPlot::_updateIntensityRangeDisplay()
 {
   QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
-  rightAxis->setTitle("Intensity (dB)");
+  QwtText colorBarTitle("Intensity (dB)");
+  colorBarTitle.setFont(QFont("Arial",d_color_bar_title_font_size));
+  rightAxis->setTitle(colorBarTitle);
   rightAxis->setColorBarEnabled(true);
 
   for(int i = 0; i < d_nplots; i++) {
