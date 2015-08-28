@@ -101,8 +101,6 @@ FrequencyDisplayPlot {
     qproperty-marker_upper_intensity_visible: false;
     qproperty-marker_noise_floor_amplitude_color: red;
     qproperty-marker_noise_floor_amplitude_visible: false;
-    qproperty-marker_lower_intensity_width: 3;
-    qproperty-marker_upper_intensity_width: 3;
 }
 
 VectorDisplayPlot {
@@ -142,8 +140,6 @@ VectorDisplayPlot {
     qproperty-marker_upper_intensity_visible: false;
     qproperty-marker_ref_level_color: red;
     qproperty-marker_ref_level_visible: false;
-    qproperty-marker_lower_intensity_width: 3;
-    qproperty-marker_upper_intensity_width: 3;
 }
 
 ConstellationDisplayPlot {
