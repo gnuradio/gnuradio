@@ -48,6 +48,7 @@ class WaterfallDisplayPlot: public DisplayPlot
   Q_PROPERTY ( int intensity_color_map_type1 READ getIntensityColorMapType1 WRITE setIntensityColorMapType1 )
   Q_PROPERTY ( QColor low_intensity_color READ getUserDefinedLowIntensityColor WRITE setUserDefinedLowIntensityColor )
   Q_PROPERTY ( QColor high_intensity_color READ getUserDefinedHighIntensityColor WRITE setUserDefinedHighIntensityColor )
+  Q_PROPERTY(int color_map_title_font_size READ getColorMapTitleFontSize WRITE setColorMapTitleFontSize)
 
 
 public:
@@ -84,6 +85,7 @@ public:
 
   int getIntensityColorMapType(int) const;
   int getIntensityColorMapType1() const;
+  int getColorMapTitleFontSize() const;
   const QColor getUserDefinedLowIntensityColor() const;
   const QColor getUserDefinedHighIntensityColor() const;
 
@@ -95,6 +97,7 @@ public:
 public slots:
   void setIntensityColorMapType(const int, const int, const QColor, const QColor);
   void setIntensityColorMapType1(int);
+  void setColorMapTitleFontSize(int tfs);
   void setUserDefinedLowIntensityColor(QColor);
   void setUserDefinedHighIntensityColor(QColor);
   void setPlotPosHalf(bool half);
@@ -129,6 +132,7 @@ private:
   std::vector<int> d_intensity_color_map_type;
   QColor d_user_defined_low_intensity_color;
   QColor d_user_defined_high_intensity_color;
+  int d_color_bar_title_font_size;
 };
 
 #endif /* WATERFALL_DISPLAY_PLOT_H */
