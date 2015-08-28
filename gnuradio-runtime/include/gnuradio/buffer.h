@@ -168,21 +168,21 @@ namespace gr {
     unsigned d_max_reader_delay;
 
   private:
-    gr::vmcircbuf		       *d_vmcircbuf;
-    size_t	 			d_sizeof_item;	// in bytes
-    std::vector<buffer_reader *>	d_readers;
-    boost::weak_ptr<block>		d_link;		// block that writes to this buffer
+    gr::vmcircbuf                 *d_vmcircbuf;
+    size_t                        d_sizeof_item;  // in bytes
+    std::vector<buffer_reader *>  d_readers;
+    boost::weak_ptr<block>        d_link;         // block that writes to this buffer
 
     //
     // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags
     // and the d_read_index's and d_abs_read_offset's in the buffer readers.
     //
-    gr::thread::mutex			d_mutex;
-    unsigned int			d_write_index;	// in items [0,d_bufsize)
-    uint64_t                            d_abs_write_offset; // num items written since the start
-    bool				d_done;
-    std::multimap<uint64_t,tag_t>                   d_item_tags;
-    uint64_t                            d_last_min_items_read;
+    gr::thread::mutex               d_mutex;
+    unsigned int                    d_write_index;	// in items [0,d_bufsize)
+    uint64_t                        d_abs_write_offset; // num items written since the start
+    bool                            d_done;
+    std::multimap<uint64_t,tag_t>   d_item_tags;
+    uint64_t                        d_last_min_items_read;
 
     unsigned index_add(unsigned a, unsigned b)
     {
@@ -316,7 +316,7 @@ namespace gr {
     void get_tags_in_range(std::vector<tag_t> &v,
                            uint64_t abs_start,
                            uint64_t abs_end,
-			   long id);
+                           long id);
 
     // -------------------------------------------------------------------------
 
