@@ -178,6 +178,12 @@ part#slurp
 		</option>
 		<tab>Advanced</tab>
 	</param>
+	<param>
+		<name>Complexity</name>
+		<key>complexity</key>
+		<value>0</value>
+		<type>float</type>
+	</param>
 	<check>not $window_size or len($window_size) == 2</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[0] &lt;= 4096</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[1] &lt;= 4096</check>
