@@ -72,13 +72,16 @@ if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
     set(blocksdir ${blocksdir}:/usr/local/${GRC_BLOCKS_DIR})
 endif(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
 
-if (APPLE)
-    set(GRC_XTERM_EXE "xterm")
-elseif(CYGWIN)
-    set(GRC_XTERM_EXE "xterm")
-elseif(UNIX)
-    set(GRC_XTERM_EXE "x-terminal-emulator")
-else()
+if(UNIX)
+    find_program(GRC_XTERM_EXE
+        NAMES xterminal-emulator gnome-terminal konsole xterm
+        HINTS ENV PATH
+        DOC "graphical terminal emulator used in GRC's no-gui-mode"
+    )
+    if(NOT GRC_XTERM_EXE)
+        set(GRC_XTERM_EXE "")
+    endif()
+else()  # APPLE CYGWIN
     set(GRC_XTERM_EXE "xterm")
 endif()
 

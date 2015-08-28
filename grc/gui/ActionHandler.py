@@ -18,23 +18,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-from Constants import IMAGE_FILE_EXTENSION
-import Actions
+import subprocess
+from threading import Thread
+
 import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
-import subprocess
-import Preferences
-from threading import Thread
-import Messages
+
 from .. base import ParseXML, Constants
-from MainWindow import MainWindow
-from PropsDialog import PropsDialog
-from ParserErrorsDialog import ParserErrorsDialog
-import Dialogs
-from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveReportsFileDialog, SaveImageFileDialog
-from . Constants import DEFAULT_CANVAS_SIZE
+from .. python.Constants import XTERM_EXECUTABLE
+
+from . import Dialogs, Messages, Preferences, Actions
+from .ParserErrorsDialog import ParserErrorsDialog
+from .MainWindow import MainWindow
+from .PropsDialog import PropsDialog
+from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
+                          SaveReportsFileDialog, SaveImageFileDialog)
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION
 
 gobject.threads_init()
 
@@ -511,6 +512,10 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not self.get_page().get_proc():
                 Actions.FLOW_GRAPH_GEN()
+                if Preferences.xterm_missing() != XTERM_EXECUTABLE:
+                    if not os.path.exists(XTERM_EXECUTABLE):
+                        Dialogs.MissingXTermDialog(XTERM_EXECUTABLE)
+                    Preferences.xterm_missing(XTERM_EXECUTABLE)
                 if self.get_page().get_saved() and self.get_page().get_file_path():
                     ExecFlowGraphThread(self)
         elif action == Actions.FLOW_GRAPH_KILL:
@@ -634,7 +639,6 @@ class ExecFlowGraphThread(Thread):
         self.flow_graph = action_handler.get_flow_graph()
         #store page and dont use main window calls in run
         self.page = action_handler.get_page()
-        Messages.send_start_exec(self.page.get_generator().get_file_path())
         #get the popen
         try:
             self.p = self.page.get_generator().get_popen()
