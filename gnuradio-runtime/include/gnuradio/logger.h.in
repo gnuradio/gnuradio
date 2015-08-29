@@ -44,6 +44,8 @@
 
 #ifdef _MSC_VER
 typedef unsigned short mode_t;
+#else
+#include <sys/types.h>
 #endif
 
 #include <gnuradio/api.h>
