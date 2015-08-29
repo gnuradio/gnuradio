@@ -78,7 +78,7 @@ namespace gr {
       /*!
        * Make an LMS decision-directed equalizer
        *
-       * \param num_taps Numer of taps in the equalizer (channel size)
+       * \param num_taps Number of taps in the equalizer (channel size)
        * \param mu Gain of the update loop
        * \param sps Number of samples per symbol of the input signal
        * \param cnst A constellation derived from class

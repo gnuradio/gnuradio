@@ -94,6 +94,8 @@ namespace gr {
       for(int i=0;i<d_K;i++) {
 	d_DEINTER[d_INTER[i]]=i;
       }
+
+      fclose(interleaverfile);
     }
 
     //######################################################################
