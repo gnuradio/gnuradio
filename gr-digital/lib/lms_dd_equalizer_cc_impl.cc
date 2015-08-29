@@ -86,6 +86,12 @@ namespace gr {
     lms_dd_equalizer_cc_impl::error(const gr_complex &out)
     { 
       gr_complex decision, error;
+      // The `map_to_points` function will treat `decision` as an array pointer.
+      // This call is "safe" because `map_to_points` is limited by the
+      // dimensionality of the constellation. This class calls the
+      // `constellation` class default constructor, which initializes the
+      // dimensionality value to `1`. Thus, Only the single `gr_complex` value
+      // will be dereferenced.
       d_cnst->map_to_points(d_cnst->decision_maker(&out), &decision);
       error = decision - out;
       return error;
