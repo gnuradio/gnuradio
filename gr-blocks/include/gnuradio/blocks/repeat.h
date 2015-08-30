@@ -46,6 +46,20 @@ namespace gr {
        * \param repeat number of times to repeat the input
        */
       static sptr make(size_t itemsize, int repeat);
+
+      /*!
+       * \brief Return current interpolation
+       */
+      virtual int interpolation() const = 0;
+
+      /*!
+       * \brief sets the interpolation
+       *
+       * Call this method in a callback to adjust the interpolation at run time.
+       *
+       * \param interp interpolation to be set
+       */
+      virtual void set_interpolation(int interp) = 0;
     };
 
   } /* namespace blocks */

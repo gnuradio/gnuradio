@@ -45,6 +45,13 @@ namespace gr {
     {
     }
 
+    void
+    repeat_impl::set_interpolation(int interp)
+    {
+      d_interp = interp;
+      sync_interpolator::set_interpolation(d_interp);
+    }
+
     int
     repeat_impl::work(int noutput_items,
 		      gr_vector_const_void_star &input_items,
