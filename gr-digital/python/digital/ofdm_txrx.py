@@ -376,7 +376,7 @@ class ofdm_rx(gr.hier_block2):
                 occupied_carriers, 1,
                 packet_length_tag_key,
                 frame_length_tag_key,
-                packet_nu_tag_key,
+                packet_num_tag_key,
                 bps_header,
                 bps_payload,
                 scramble_header=scramble_bits
