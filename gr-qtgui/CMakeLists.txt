@@ -148,6 +148,7 @@ install(
     FILES
     themes/dark.qss
     themes/alt.qss
+    themes/projector.qss
     DESTINATION ${GR_THEMES_DIR}
     COMPONENT "qtgui"
 )

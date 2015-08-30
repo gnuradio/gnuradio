@@ -96,6 +96,12 @@ namespace gr {
 	    frame[i*d_fft_len+k] = d_pilot_symbols[d_pilot_carr_set][k];
 	  } else {
 	    sym_eq = frame[i*d_fft_len+k] / d_channel_state[k];
+            // The `map_to_points` function will treat `sym_est` as an array
+            // pointer.  This call is "safe" because `map_to_points` is limited
+            // by the dimensionality of the constellation. This class calls the
+            // `constellation` class default constructor, which initializes the
+            // dimensionality value to `1`. Thus, Only the single `gr_complex`
+            // value will be dereferenced.
 	    d_constellation->map_to_points(d_constellation->decision_maker(&sym_eq), &sym_est);
 	    d_channel_state[k] = d_alpha * d_channel_state[k]
                                + (1-d_alpha) * frame[i*d_fft_len + k] / sym_est;
