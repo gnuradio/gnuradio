@@ -120,7 +120,7 @@ namespace gr {
        * specified type
        */
       if (*dev)
-        strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+        strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
 
       /* try to create the device */
       if ((err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0) {

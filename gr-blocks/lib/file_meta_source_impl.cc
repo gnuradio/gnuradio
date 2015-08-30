@@ -159,7 +159,7 @@ namespace gr {
       hdr = pmt::deserialize_str(str);
       delete [] hdr_buffer;
 
-      uint64_t seg_start, extra_len;
+      uint64_t seg_start, extra_len = 0;
       pmt::pmt_t r, dump;
       if(pmt::dict_has_key(hdr, pmt::string_to_symbol("strt"))) {
 	r = pmt::dict_ref(hdr, pmt::string_to_symbol("strt"), dump);
