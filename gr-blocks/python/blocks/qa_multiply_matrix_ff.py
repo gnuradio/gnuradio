@@ -144,9 +144,9 @@ class test_multiply_matrix_ff (gr_unittest.TestCase):
         tag2.offset = 0
         tag2.key = pmt.intern("in2")
         tag2.value = pmt.PMT_T
-        self.run_once(X_in, A, tpp=999, tags=(tag1, tag2))
-        self.assertTrue(pmt.equal(tag1.key, self.the_tags[1][0].key))
-        self.assertTrue(pmt.equal(tag2.key, self.the_tags[0][0].key))
+        self.run_once(X_in, A, tpp=gr.TPP_ONE_TO_ONE, tags=(tag1, tag2))
+        self.assertTrue(pmt.equal(tag1.key, self.the_tags[0][0].key))
+        self.assertTrue(pmt.equal(tag2.key, self.the_tags[1][0].key))
 
     #def test_006_t (self):
         #""" Message passing """
