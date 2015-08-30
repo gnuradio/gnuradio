@@ -25,9 +25,6 @@
 #include <iostream>
 #include <algorithm>
 
-using std::cerr;
-using std::cout;
-
 void
 atsci_fake_single_viterbi::reset()
 {
