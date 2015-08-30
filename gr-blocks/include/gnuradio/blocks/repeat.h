@@ -32,6 +32,10 @@ namespace gr {
     /*!
      * \brief repeat each input \p repeat times
      * \ingroup stream_operators_blk
+     *
+     * Message Ports:
+     *   * interpolation (in):
+     *      Takes a pmt_pair(pmt::mp("interpolation"), pmt_long interp), setting the interpolation to interp.
      */
     class BLOCKS_API repeat : virtual public sync_interpolator
     {
