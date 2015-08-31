@@ -54,7 +54,6 @@ class ModToolMakeXML(ModTool):
     def run(self):
         """ Go, go, go! """
         print "Warning: This is an experimental feature. Don't expect any magic."
-        print "Blocks written in python are not supported so far."
         # 1) Go through lib/
         if not self._skip_subdirs['lib']:
             if self._info['version'] == '37':
@@ -68,6 +67,8 @@ class ModToolMakeXML(ModTool):
                 self._make_grc_xml_from_block_data(params, iosig, blockname)
         # 2) Go through python/
         # TODO
+        if not self._skip_subdirs['python']:
+            print "Blocks written in python are not supported so far."
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
