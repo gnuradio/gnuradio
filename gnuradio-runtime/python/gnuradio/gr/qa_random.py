@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest
 import numpy as np
 from scipy.stats import norm, laplace, rayleigh
+#from time import sleep
 
 class test_random(gr_unittest.TestCase):
 
@@ -110,24 +111,45 @@ class test_random(gr_unittest.TestCase):
         for k in range(len(hist[0])):
             print hist[1][k], hist[1][k+1], hist[0][k], float(rayleigh.cdf(hist[1][k+1])-rayleigh.cdf(hist[1][k]))*self.num_tests
 
-    # Check seeds (init with time and seed as fix number, no assert)
+    # Check seeds (init with time and seed as fix number)
     def test_6(self):
         print '# TEST 6'
-        rndm0 = gr.random(0); # init with time
-        rndm1 = gr.random(42); # init with fix seed
         num = 5
 
         print 'Some random numbers in [0,1), should change every run:'
+        rndm0 = gr.random(0); # init with time
+        # NOTE: the sleep increases the executiont time massively, remove assert for convenience
+        #sleep(1)
+        #rndm1 = gr.random(0); # init with fix seed
         for k in range(num):
-            print rndm0.ran1(),
+            x = rndm0.ran1();
+            print x,
+        #    y = rndm1.ran1();
+        #    print x, '!=', y
+        #    self.assertNotEqual(x,y)
         print ' '
 
-        print 'Some random numbers in [0,1), should be the same every run:'
+        print 'Some random numbers in [0,1) (seed two instances), should be the same every run:'
+        rndm0 = gr.random(42); # init with time
+        rndm1 = gr.random(42); # init with fix seed
         for k in range(num):
-            print rndm1.ran1(),
-        print '== '
-        print '0.374540120363 0.796543002129 0.950714290142 0.183434784412 0.731993913651'
+            x = rndm0.ran1();
+            y = rndm1.ran1();
+            print x, '=', y
+            self.assertEqual(x,y)
 
+        print 'Some random numbers in [0,1) (reseed one instance), should be the same every run:'
+        x = np.zeros(num)
+        y = np.zeros(num)
+        rndm0 = gr.random(42); # init with time
+        for k in range(num):
+            x[k] = rndm0.ran1();
+        rndm1.reseed(43); # init with fix seed
+        for k in range(num):
+            y[k] = rndm0.ran1();
+        for k in range(num):
+            print x[k], '!=', y[k]
+            self.assertNotEqual(x[k],y[k])
 
 if __name__ == '__main__':
     gr_unittest.run(test_random, "test_random.xml")

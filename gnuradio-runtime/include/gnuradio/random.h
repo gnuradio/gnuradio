@@ -36,6 +36,8 @@
 static const int RANDOM_MAX = 2147483647; // 2^31-1
 #endif /* RANDOM_MAX */
 
+// FIXME: RANDOM_MAX still necessary? Some test-cases (use grep, e.g. in gr-filter or gr-atsc) use this constant, but combine it with the random() function from the std namespace. That should not the way to use this.
+
 #include <stdlib.h>
 #include <boost/random.hpp>
 #include <ctime>
@@ -62,7 +64,7 @@ namespace gr {
     ~random();
 
     /*!
-     * \brief Change the seed for the initialized number generator
+     * \brief Change the seed for the initialized number generator. seed = 0 initializes the random number generator with the system time. Note that a fast initialization of various instances can result in the same seed.
      */
     void reseed(unsigned int seed);
 
