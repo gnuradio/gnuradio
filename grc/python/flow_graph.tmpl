@@ -53,6 +53,9 @@ if __name__ == '__main__':
 ########################################################
 ##Create Imports
 ########################################################
+#if $flow_graph.get_option('qt_qss_theme')
+#set imports = $sorted(set($imports + ["import os", "import sys"]))
+#end if
 #if any(imp.endswith("# grc-generated hier_block") for imp in $imports)
 import os
 import sys
@@ -267,6 +270,18 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
+
+    #if $flow_graph.get_option('qt_qss_theme')
+    def setStyleSheetFromFile(self, filename):
+        try:
+            if not os.path.exists(filename):
+                filename = os.path.join(
+                    gr.prefix(), "share", "gnuradio", "themes", filename)
+            with open(filename) as ss:
+                tb.setStyleSheet('1' + ss.read())
+        except Exception as e:
+            print >> sys.stderr, e
+    #end if
 #end if
 ########################################################
 ##Create Callbacks
@@ -366,6 +381,9 @@ def main(top_block_cls=$(class_name), options=None):
         #else
     tb.start()
         #end if
+    #end if
+    #if $flow_graph.get_option('qt_qss_theme')
+    tb.setStyleSheetFromFile($repr($flow_graph.get_option('qt_qss_theme')))
     #end if
     tb.show()
 

@@ -163,6 +163,23 @@ part#slurp
 		</option>
 	</param>
 	<param>
+		<name>QSS Theme</name>
+		<key>qt_qss_theme</key>
+		<value></value>
+		<type>file_open</type>
+		<hide>
+#if $generate_options() in ('qt_gui',)
+	#if $qt_qss_theme()
+		none
+	#else
+		part
+	#end if
+#else
+	all
+#end if
+</hide>
+	</param>
+	<param>
 		<name>Thread-safe setters</name>
 		<key>thread_safe_setters</key>
 		<value></value>
@@ -218,7 +235,5 @@ To put hier blocks into the root category, enter / for the category.
 The Max Number of Output is the maximum number of output items allowed for any block \
 in the flowgraph; to disable this set the max_nouts equal to 0.\
 Use this to adjust the maximum latency a flowgraph can exhibit.
-
-
 	</doc>
 </block>

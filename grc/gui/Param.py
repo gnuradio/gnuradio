@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import Utils
 from Element import Element
-from . Constants import PARAM_FONT
+from . Constants import PARAM_FONT, GR_PREFIX
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -233,7 +233,14 @@ class FileParam(EntryParam):
         #get the paths
         file_path = self.param.is_valid() and self.param.get_evaluated() or ''
         (dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
-        if not os.path.exists(dirname): dirname = os.getcwd() #fix bad paths
+        # check for qss theme default directory
+        if self.param.get_key() == 'qt_qss_theme':
+            dirname = os.path.dirname(dirname)  # trim filename
+            if not os.path.exists(dirname):
+               dirname = os.path.join(GR_PREFIX, '/share/gnuradio/themes')
+        if not os.path.exists(dirname):
+            dirname = os.getcwd()  # fix bad paths
+
         #build the dialog
         if self.param.get_type() == 'file_open':
             file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
