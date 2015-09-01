@@ -110,5 +110,24 @@ class test_random(gr_unittest.TestCase):
         for k in range(len(hist[0])):
             print hist[1][k], hist[1][k+1], hist[0][k], float(rayleigh.cdf(hist[1][k+1])-rayleigh.cdf(hist[1][k]))*self.num_tests
 
+    # Check seeds (init with time and seed as fix number, no assert)
+    def test_6(self):
+        print '# TEST 6'
+        rndm0 = gr.random(0); # init with time
+        rndm1 = gr.random(42); # init with fix seed
+        num = 5
+
+        print 'Some random numbers in [0,1), should change every run:'
+        for k in range(num):
+            print rndm0.ran1(),
+        print ' '
+
+        print 'Some random numbers in [0,1), should be the same every run:'
+        for k in range(num):
+            print rndm1.ran1(),
+        print '== '
+        print '0.374540120363 0.796543002129 0.950714290142 0.183434784412 0.731993913651'
+
+
 if __name__ == '__main__':
     gr_unittest.run(test_random, "test_random.xml")

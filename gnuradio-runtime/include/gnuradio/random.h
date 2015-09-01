@@ -37,6 +37,8 @@ static const int RANDOM_MAX = 2147483647; // 2^31-1
 #endif /* RANDOM_MAX */
 
 #include <stdlib.h>
+#include <boost/random.hpp>
+#include <ctime>
 
 namespace gr {
 
@@ -47,17 +49,22 @@ namespace gr {
   class GR_RUNTIME_API random
   {
   protected:
-    static const int NTAB = 32;
     long d_seed;
-    long d_iy;
-    long d_iv[NTAB];
-    int	d_iset;
-    float d_gset;
+    bool d_gauss_stored;
+    float d_gauss_value;
+
+    boost::mt19937 *d_rng; // mersenne twister as random number generator
+    boost::uniform_real<float> *d_uniform; // choose uniform distribution, default is [0,1)
+    boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > *d_generator;
 
   public:
-    random(long seed=3021);
+    random(unsigned int seed=0);
+    ~random();
 
-    void reseed(long seed);
+    /*!
+     * \brief Change the seed for the initialized number generator
+     */
+    void reseed(unsigned int seed);
 
     /*!
      * \brief Uniform random numbers in the range [0.0, 1.0)
