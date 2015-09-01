@@ -29,13 +29,186 @@
 #include <boost/dynamic_bitset.hpp>
 #include <boost/bind.hpp>
 
-#define SET_CENTER_FREQ_FROM_INTERNALS(usrp_class, tune_method) \
+// There's a whole bunch of public API calls that are nearly
+// identical between usrp_source and usrp_sink. So let's not
+// duplicate those. Usually, the only difference is that one
+// them has the string 'tx' and the other the string 'rx' in
+// the setter names.
+#define USRP_BLOCK_SYMMETRIC_METHODS_H() \
+      std::string get_subdev_spec(size_t mboard); \
+      void set_subdev_spec(const std::string &spec, size_t mboard); \
+      double get_samp_rate(void); \
+      double get_center_freq(size_t chan); \
+      ::uhd::freq_range_t get_freq_range(size_t chan); \
+      void set_gain(double gain, size_t chan); \
+      void set_gain(double gain, const std::string &name, size_t chan); \
+      double get_gain(size_t chan); \
+      double get_gain(const std::string &name, size_t chan); \
+      std::vector<std::string> get_gain_names(size_t chan); \
+      ::uhd::gain_range_t get_gain_range(size_t chan); \
+      ::uhd::gain_range_t get_gain_range(const std::string &name, size_t chan); \
+      void set_antenna(const std::string &ant, size_t chan); \
+      std::string get_antenna(size_t chan); \
+      std::vector<std::string> get_antennas(size_t chan); \
+      void set_bandwidth(double bandwidth, size_t chan); \
+      double get_bandwidth(size_t chan); \
+      ::uhd::freq_range_t get_bandwidth_range(size_t chan); \
+      ::uhd::sensor_value_t get_sensor(const std::string &name, size_t chan); \
+      std::vector<std::string> get_sensor_names(size_t chan); \
+      ::uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan);
+
+#define USRP_BLOCK_SYMMETRIC_METHODS(sourk, trx) \
+    void \
+    usrp_##sourk##_impl::set_subdev_spec(const std::string &spec, size_t mboard) \
+    { \
+      return _dev->set_##trx##_subdev_spec(spec, mboard); \
+    } \
+ \
+    std::string \
+    usrp_##sourk##_impl::get_subdev_spec(size_t mboard) \
+    { \
+      return _dev->get_##trx##_subdev_spec(mboard).to_string(); \
+    } \
+ \
+    double \
+    usrp_##sourk##_impl::get_samp_rate(void) \
+    { \
+      return _dev->get_##trx##_rate(_stream_args.channels[0]); \
+    } \
+ \
+    double \
+    usrp_##sourk##_impl::get_center_freq(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_freq(chan); \
+    } \
+ \
     ::uhd::tune_result_t \
-    usrp_class::_set_center_freq_from_internals(size_t chan) \
+    usrp_##sourk##_impl::_set_center_freq_from_internals(size_t chan) \
     { \
       _chans_to_tune.reset(chan); \
-      return _dev->tune_method(_curr_tune_req[chan], _stream_args.channels[chan]); \
+      return _dev->set_##trx##_freq(_curr_tune_req[chan], _stream_args.channels[chan]); \
+    } \
+ \
+    ::uhd::freq_range_t \
+    usrp_##sourk##_impl::get_freq_range(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_freq_range(chan); \
+    } \
+ \
+    void \
+    usrp_##sourk##_impl::set_gain(double gain, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->set_##trx##_gain(gain, chan); \
+    } \
+ \
+    void \
+    usrp_##sourk##_impl::set_gain(double gain, const std::string &name, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->set_##trx##_gain(gain, name, chan); \
+    } \
+ \
+    double \
+    usrp_##sourk##_impl::get_gain(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_gain(chan); \
+    } \
+ \
+    double \
+    usrp_##sourk##_impl::get_gain(const std::string &name, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_gain(name, chan); \
+    } \
+ \
+    std::vector<std::string> \
+    usrp_##sourk##_impl::get_gain_names(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_gain_names(chan); \
+    } \
+ \
+    ::uhd::gain_range_t \
+    usrp_##sourk##_impl::get_gain_range(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_gain_range(chan); \
+    } \
+ \
+    ::uhd::gain_range_t \
+    usrp_##sourk##_impl::get_gain_range(const std::string &name, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_gain_range(name, chan); \
+    } \
+ \
+    void \
+    usrp_##sourk##_impl::set_antenna(const std::string &ant, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->set_##trx##_antenna(ant, chan); \
+    } \
+ \
+    std::string \
+    usrp_##sourk##_impl::get_antenna(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_antenna(chan); \
+    } \
+ \
+    std::vector<std::string> \
+    usrp_##sourk##_impl::get_antennas(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_antennas(chan); \
+    } \
+ \
+    void \
+    usrp_##sourk##_impl::set_bandwidth(double bandwidth, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->set_##trx##_bandwidth(bandwidth, chan); \
+    } \
+ \
+    double \
+    usrp_##sourk##_impl::get_bandwidth(size_t chan) \
+    { \
+        chan = _stream_args.channels[chan]; \
+        return _dev->get_##trx##_bandwidth(chan); \
+    } \
+ \
+    ::uhd::freq_range_t \
+    usrp_##sourk##_impl::get_bandwidth_range(size_t chan) \
+    { \
+        chan = _stream_args.channels[chan]; \
+        return _dev->get_##trx##_bandwidth_range(chan); \
+    } \
+ \
+    ::uhd::sensor_value_t \
+    usrp_##sourk##_impl::get_sensor(const std::string &name, size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_sensor(name, chan); \
+    } \
+ \
+    std::vector<std::string> \
+    usrp_##sourk##_impl::get_sensor_names(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_sensor_names(chan); \
+    } \
+ \
+    ::uhd::usrp::dboard_iface::sptr \
+    usrp_##sourk##_impl::get_dboard_iface(size_t chan) \
+    { \
+      chan = _stream_args.channels[chan]; \
+      return _dev->get_##trx##_dboard_iface(chan); \
     }
+
 
 namespace gr {
   namespace uhd {
@@ -52,6 +225,7 @@ namespace gr {
        * Public API calls (see usrp_block.h for docs)
        **********************************************************************/
       // Getters
+      double get_normalized_gain(size_t chan);
       ::uhd::sensor_value_t get_mboard_sensor(const std::string &name, size_t mboard);
       std::vector<std::string> get_mboard_sensor_names(size_t mboard);
       std::string get_time_source(const size_t mboard);
@@ -70,6 +244,7 @@ namespace gr {
       );
 
       // Setters
+      void set_normalized_gain(double gain, size_t chan);
       void set_clock_config(const ::uhd::clock_config_t &clock_config, size_t mboard);
       void set_time_source(const std::string &source, const size_t mboard);
       void set_clock_source(const std::string &source, const size_t mboard);

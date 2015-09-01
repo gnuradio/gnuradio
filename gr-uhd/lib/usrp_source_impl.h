@@ -58,44 +58,25 @@ namespace gr {
                        const ::uhd::stream_args_t &stream_args);
       ~usrp_source_impl();
 
-      // Get Commands
-      ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
-      std::string get_subdev_spec(size_t mboard);
-      double get_samp_rate(void);
-      ::uhd::meta_range_t get_samp_rates(void);
-      double get_center_freq(size_t chan);
-      ::uhd::freq_range_t get_freq_range(size_t chan);
-      double get_gain(size_t chan);
-      double get_gain(const std::string &name, size_t chan);
-      double get_normalized_gain(size_t chan);
-      std::vector<std::string> get_gain_names(size_t chan);
-      ::uhd::gain_range_t get_gain_range(size_t chan);
-      ::uhd::gain_range_t get_gain_range(const std::string &name, size_t chan);
-      std::string get_antenna(size_t chan);
-      std::vector<std::string> get_antennas(size_t chan);
-      ::uhd::sensor_value_t get_sensor(const std::string &name, size_t chan);
-      std::vector<std::string> get_sensor_names(size_t chan);
-      ::uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan);
+      // Symmetric getters/setters (common between source and sink)
+      USRP_BLOCK_SYMMETRIC_METHODS_H();
 
-      // Set Commands
-      void set_subdev_spec(const std::string &spec, size_t mboard);
+      // Also symmetric, but can't be moved to usrp_block for now:
+      ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan);
+      ::uhd::meta_range_t get_samp_rates(void);
+      void set_dc_offset(const std::complex<double> &offset, size_t chan);
+      void set_iq_balance(const std::complex<double> &correction, size_t chan);
+      void set_stream_args(const ::uhd::stream_args_t &stream_args);
+
+      // Non-symmetric setters:
       void set_samp_rate(double rate);
       ::uhd::tune_result_t set_center_freq(const ::uhd::tune_request_t tune_request,
                                          size_t chan);
-      void set_gain(double gain, size_t chan);
-      void set_gain(double gain, const std::string &name, size_t chan);
-      void set_normalized_gain(double gain, size_t chan);
-      void set_antenna(const std::string &ant, size_t chan);
-      void set_bandwidth(double bandwidth, size_t chan);
-      double get_bandwidth(size_t chan);
-      ::uhd::freq_range_t get_bandwidth_range(size_t chan);
       void set_auto_dc_offset(const bool enable, size_t chan);
-      void set_dc_offset(const std::complex<double> &offset, size_t chan);
       void set_auto_iq_balance(const bool enable, size_t chan);
-      void set_iq_balance(const std::complex<double> &correction, size_t chan);
-      void set_stream_args(const ::uhd::stream_args_t &stream_args);
       void set_start_time(const ::uhd::time_spec_t &time);
 
+      // Stream-related commands
       void issue_stream_cmd(const ::uhd::stream_cmd_t &cmd);
       void flush(void);
       bool start(void);

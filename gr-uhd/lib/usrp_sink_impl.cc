@@ -78,6 +78,9 @@ namespace gr {
     {
     }
 
+    USRP_BLOCK_SYMMETRIC_METHODS(sink, tx)
+
+    // More symmetric methods, but with preprocessor macros
     ::uhd::dict<std::string, std::string>
     usrp_sink_impl::get_usrp_info(size_t chan)
     {
@@ -87,35 +90,6 @@ namespace gr {
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
-    }
-
-    void
-    usrp_sink_impl::set_subdev_spec(const std::string &spec,
-                                    size_t mboard)
-    {
-      return _dev->set_tx_subdev_spec(spec, mboard);
-    }
-
-    std::string
-    usrp_sink_impl::get_subdev_spec(size_t mboard)
-    {
-      return _dev->get_tx_subdev_spec(mboard).to_string();
-    }
-
-    void
-    usrp_sink_impl::set_samp_rate(double rate)
-    {
-        BOOST_FOREACH(const size_t chan, _stream_args.channels)
-        {
-            _dev->set_tx_rate(rate, chan);
-        }
-      _sample_rate = this->get_samp_rate();
-    }
-
-    double
-    usrp_sink_impl::get_samp_rate(void)
-    {
-      return _dev->get_tx_rate(_stream_args.channels[0]);
     }
 
     ::uhd::meta_range_t
@@ -128,152 +102,9 @@ namespace gr {
 #endif
     }
 
-    ::uhd::tune_result_t
-    usrp_sink_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
-                                    size_t chan)
-    {
-      _curr_tune_req[chan] = tune_request;
-      chan = _stream_args.channels[chan];
-      return _dev->set_tx_freq(tune_request, chan);
-    }
-
-    SET_CENTER_FREQ_FROM_INTERNALS(usrp_sink_impl, set_tx_freq);
-
-    double
-    usrp_sink_impl::get_center_freq(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_freq(chan);
-    }
-
-    ::uhd::freq_range_t
-    usrp_sink_impl::get_freq_range(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_freq_range(chan);
-    }
-
-    void
-    usrp_sink_impl::set_gain(double gain, size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->set_tx_gain(gain, chan);
-    }
-
-    void
-    usrp_sink_impl::set_gain(double gain,
-                             const std::string &name,
-                             size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->set_tx_gain(gain, name, chan);
-    }
-
-    void usrp_sink_impl::set_normalized_gain(double norm_gain, size_t chan)
-    {
-      if (norm_gain > 1.0 || norm_gain < 0.0) {
-        throw std::runtime_error("Normalized gain out of range, must be in [0, 1].");
-      }
-      ::uhd::gain_range_t gain_range = get_gain_range(chan);
-      double abs_gain = (norm_gain * (gain_range.stop() - gain_range.start())) + gain_range.start();
-      set_gain(abs_gain, chan);
-    }
-
-    double
-    usrp_sink_impl::get_gain(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_gain(chan);
-    }
-
-    double
-    usrp_sink_impl::get_gain(const std::string &name, size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_gain(name, chan);
-    }
-
-    double
-    usrp_sink_impl::get_normalized_gain(size_t chan)
-    {
-      ::uhd::gain_range_t gain_range = get_gain_range(chan);
-      double norm_gain =
-        (get_gain(chan) - gain_range.start()) /
-        (gain_range.stop() - gain_range.start());
-      // Avoid rounding errors:
-      if (norm_gain > 1.0) return 1.0;
-      if (norm_gain < 0.0) return 0.0;
-      return norm_gain;
-    }
-
-    std::vector<std::string>
-    usrp_sink_impl::get_gain_names(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_gain_names(chan);
-    }
-
-    ::uhd::gain_range_t
-    usrp_sink_impl::get_gain_range(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_gain_range(chan);
-    }
-
-    ::uhd::gain_range_t
-    usrp_sink_impl::get_gain_range(const std::string &name,
-                                   size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_gain_range(name, chan);
-    }
-
-    void
-    usrp_sink_impl::set_antenna(const std::string &ant,
-                                size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->set_tx_antenna(ant, chan);
-    }
-
-    std::string
-    usrp_sink_impl::get_antenna(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_antenna(chan);
-    }
-
-    std::vector<std::string>
-    usrp_sink_impl::get_antennas(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_antennas(chan);
-    }
-
-    void
-    usrp_sink_impl::set_bandwidth(double bandwidth, size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->set_tx_bandwidth(bandwidth, chan);
-    }
-
-    double
-    usrp_sink_impl::get_bandwidth(size_t chan)
-    {
-        chan = _stream_args.channels[chan];
-        return _dev->get_tx_bandwidth(chan);
-    }
-
-    ::uhd::freq_range_t
-    usrp_sink_impl::get_bandwidth_range(size_t chan)
-    {
-        chan = _stream_args.channels[chan];
-        return _dev->get_tx_bandwidth_range(chan);
-    }
-
     void
     usrp_sink_impl::set_dc_offset(const std::complex<double> &offset,
-                                  size_t chan)
+                                    size_t chan)
     {
       chan = _stream_args.channels[chan];
 #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
@@ -285,7 +116,7 @@ namespace gr {
 
     void
     usrp_sink_impl::set_iq_balance(const std::complex<double> &correction,
-                                   size_t chan)
+                                     size_t chan)
     {
       chan = _stream_args.channels[chan];
 #ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
@@ -293,27 +124,6 @@ namespace gr {
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
-    }
-
-    ::uhd::sensor_value_t
-    usrp_sink_impl::get_sensor(const std::string &name, size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_sensor(name, chan);
-    }
-
-    std::vector<std::string>
-    usrp_sink_impl::get_sensor_names(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_sensor_names(chan);
-    }
-
-    ::uhd::usrp::dboard_iface::sptr
-    usrp_sink_impl::get_dboard_iface(size_t chan)
-    {
-      chan = _stream_args.channels[chan];
-      return _dev->get_tx_dboard_iface(chan);
     }
 
     void
@@ -325,6 +135,27 @@ namespace gr {
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
+    }
+
+    // Non-symmetric public API calls:
+
+    void
+    usrp_sink_impl::set_samp_rate(double rate)
+    {
+        BOOST_FOREACH(const size_t chan, _stream_args.channels)
+        {
+            _dev->set_tx_rate(rate, chan);
+        }
+      _sample_rate = this->get_samp_rate();
+    }
+
+    ::uhd::tune_result_t
+    usrp_sink_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
+                                    size_t chan)
+    {
+      _curr_tune_req[chan] = tune_request;
+      chan = _stream_args.channels[chan];
+      return _dev->set_tx_freq(tune_request, chan);
     }
 
     /***********************************************************************
