@@ -60,18 +60,33 @@ namespace gr {
     void reseed(long seed);
 
     /*!
-     * \brief uniform random deviate in the range [0.0, 1.0)
+     * \brief Uniform random numbers in the range [0.0, 1.0)
      */
     float ran1();
 
     /*!
-     * \brief normally distributed deviate with zero mean and variance 1
+     * \brief Normally distributed random numbers (Gaussian distribution with zero mean and variance 1)
      */
     float gasdev();
 
+    /*!
+     * \brief Laplacian distributed random numbers with zero mean and variance 1
+     */
     float laplacian();
-    float impulse(float factor);
+
+    /*!
+     * \brief Rayleigh distributed random numbers (zero mean and variance 1 for the underlying Gaussian distributions)
+     */
     float rayleigh();
+
+    /*!
+     * \brief FIXME: add description
+     */
+    float impulse(float factor);
+
+    /*!
+     * \brief Normally distributed random numbers with zero mean and variance 1 on real and imaginary part. This results in a Rayleigh distribution for the amplitude and an uniform distribution for the phase.
+     */
     gr_complex rayleigh_complex();
   };
 
