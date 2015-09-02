@@ -38,6 +38,8 @@ static const int NN          =  200;
 
 static const int MAXDIBIT    = 3;
 
+static gr::random rndm;
+
 void
 qa_atsci_fake_single_viterbi::encode_block (unsigned char *out, unsigned char *in,
 				      unsigned int n)
@@ -61,7 +63,7 @@ float
 qa_atsci_fake_single_viterbi::noise ()
 {
 #if 1
-  return 2.0 * ((float) random () / RANDOM_MAX - 0.5);;
+  return 2.0 * (rndm.ran1() - 0.5);;
 #else
   return 0;
 #endif

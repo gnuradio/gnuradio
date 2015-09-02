@@ -26,18 +26,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/gr_complex.h>
 
-// While rand(3) specifies RAND_MAX, random(3) says that the output
-// ranges from 0 to 2^31-1 but does not specify a macro to denote
-// this.  We define RANDOM_MAX for cleanliness.  We must omit the
-// definition for systems that have made the same choice.  (Note that
-// random(3) is from 4.2BSD, and not specified by POSIX.)
-
-#ifndef RANDOM_MAX
-static const int RANDOM_MAX = 2147483647; // 2^31-1
-#endif /* RANDOM_MAX */
-
-// FIXME: RANDOM_MAX still necessary? Some test-cases (use grep, e.g. in gr-filter or gr-atsc) use this constant, but combine it with the random() function from the std namespace. That should not the way to use this.
-
 #include <stdlib.h>
 #include <boost/random.hpp>
 #include <ctime>
