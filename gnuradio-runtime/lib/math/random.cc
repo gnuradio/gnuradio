@@ -68,7 +68,7 @@ namespace gr {
   void
   random::reseed(unsigned int seed)
   {
-    if(seed==0) d_seed = static_cast<unsigned int>(std::time(0)); // FIXME: add seed method correctly
+    if(seed==0) d_seed = static_cast<unsigned int>(std::time(0));
     else d_seed = seed;
     d_rng->seed(d_seed);
   }
