@@ -142,6 +142,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   d_half_freq = false;
   d_legend_enabled = true;
   d_nrows = 200;
+  d_color_bar_title_font_size = 18;
 
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
