@@ -22,6 +22,7 @@
 from gnuradio import gr, blocks
 import socket
 import os
+import time
 
 def _get_sock_fd(addr, port, server):
     """
@@ -44,7 +45,16 @@ def _get_sock_fd(addr, port, server):
         clientsock, address = sock.accept()
         return os.dup(clientsock.fileno())
     else:
-        sock.connect((addr, port))
+        while True:
+	    try:
+		print "Try to connect server!"		
+        	sock.connect((addr, port))
+	    except:
+		 print "Connection failed,try again!"
+		 time.sleep(1)
+		 continue
+	    break
+	print "Connected to server!"		
         return os.dup(sock.fileno())
 
 class tcp_source(gr.hier_block2):
