@@ -7,6 +7,7 @@
 <block>
   <name>Tag Object</name>
   <key>variable_tag_object</key>
+  <import>import pmt</import>
   <var_make>self.$(id) = $(id) = gr.tag_utils.python_to_tag(($offset, $key, $value, $src))</var_make>
   <make></make>
 
