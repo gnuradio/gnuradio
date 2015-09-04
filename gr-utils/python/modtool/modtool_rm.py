@@ -157,7 +157,6 @@ class ModToolRemove(ModTool):
             print "Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path)
             for var in makefile_vars:
                 ed.remove_value(var, b)
-
             if cmakeedit_func is not None:
                 cmakeedit_func(b, ed)
         ed.write()
