@@ -173,7 +173,7 @@ class TopBlockGenerator(object):
             return code
 
         blocks = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.get_blocks()),
+            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.iter_blocks()),
             lambda b: b.get_id(), _get_block_sort_text
         )
         # List of regular blocks (all blocks minus the special ones)
