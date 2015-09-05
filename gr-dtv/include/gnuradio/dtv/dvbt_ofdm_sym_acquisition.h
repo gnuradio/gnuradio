@@ -18,48 +18,43 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_DVBT_MAP_H
-#define INCLUDED_DTV_DVBT_MAP_H
+#ifndef INCLUDED_DTV_DVBT_OFDM_SYM_ACQUISITION_H
+#define INCLUDED_DTV_DVBT_OFDM_SYM_ACQUISITION_H
 
 #include <gnuradio/dtv/api.h>
-#include <gnuradio/dtv/dvb_config.h>
-#include <gnuradio/dtv/dvbt_config.h>
 #include <gnuradio/block.h>
 
 namespace gr {
   namespace dtv {
 
     /*!
-     * \brief DVB-T mapper.
+     * \brief OFDM symbol acquisition.
      * \ingroup dtv
      *
-     * ETSI EN 300 744 Clause 4.3.5. \n
      * Data input format: \n
-     * 000000Y0Y1 - QPSK. \n
-     * 0000Y0Y1Y2Y3 - 16QAM. \n
-     * 00Y0Y1Y2Y3Y4Y5 - 64QAM. \n
+     * complex(real(float), imag(float)). \n
      * Data output format: \n
      * complex(real(float), imag(float)).
      */
-    class DTV_API dvbt_map : virtual public block
+    class DTV_API dvbt_ofdm_sym_acquisition : virtual public block
     {
      public:
-      typedef boost::shared_ptr<dvbt_map> sptr;
+      typedef boost::shared_ptr<dvbt_ofdm_sym_acquisition> sptr;
 
       /*!
-       * \brief Create a DVB-T mapper.
+       * \brief Create OFDM symbol acquisition.
        *
-       * \param nsize length of input stream. \n
-       * \param constellation constellation used. \n
-       * \param hierarchy hierarchy used. \n
-       * \param transmission transmission mode used. \n
-       * \param gain gain of complex output stream.
+       * \param blocks Always equal to 1.\n
+       * \param fft_length FFT size, 2048 or 8192. \n
+       * \param occupied_tones Active OFDM carriers, 1705 or 6817. \n
+       * \param cp_length Length of Cyclic Prefix (FFT size / 32, 16, 8 or 4). \n
+       * \param snr Initial Signal to Noise Ratio.
        */
-      static sptr make(int nsize, dvb_constellation_t constellation, dvbt_hierarchy_t hierarchy, dvbt_transmission_mode_t transmission, float gain);
+      static sptr make(int blocks, int fft_length, int occupied_tones, int cp_length, float snr);
     };
 
   } // namespace dtv
 } // namespace gr
 
-#endif /* INCLUDED_DTV_DVBT_MAP_H */
+#endif /* INCLUDED_DTV_DVBT_OFDM_SYM_ACQUISITION_H */
 

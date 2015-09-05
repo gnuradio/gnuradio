@@ -18,48 +18,52 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_DVBT_MAP_H
-#define INCLUDED_DTV_DVBT_MAP_H
+#ifndef INCLUDED_DTV_DVBT_VITERBI_DECODER_H
+#define INCLUDED_DTV_DVBT_VITERBI_DECODER_H
 
 #include <gnuradio/dtv/api.h>
+#include <gnuradio/block.h>
 #include <gnuradio/dtv/dvb_config.h>
 #include <gnuradio/dtv/dvbt_config.h>
-#include <gnuradio/block.h>
 
 namespace gr {
   namespace dtv {
 
     /*!
-     * \brief DVB-T mapper.
+     * \brief DVB-T Viterbi decoder.
      * \ingroup dtv
      *
-     * ETSI EN 300 744 Clause 4.3.5. \n
-     * Data input format: \n
-     * 000000Y0Y1 - QPSK. \n
-     * 0000Y0Y1Y2Y3 - 16QAM. \n
-     * 00Y0Y1Y2Y3Y4Y5 - 64QAM. \n
-     * Data output format: \n
-     * complex(real(float), imag(float)).
+     * ETSI EN 300 744 Clause 4.3.3 \n
+     * Mother convolutional code with rate 1/2. \n
+     * k=1, n=2, K=6. \n
+     * Generator polynomial G1=171(OCT), G2=133(OCT). \n
+     * Punctured to obtain rates of 2/3, 3/4, 5/6, 7/8. \n
+     * Data Input format: \n
+     * 000000X0X1 - QPSK. \n
+     * 0000X0X1X2X3 - 16QAM. \n
+     * 00X0X1X2X3X4X5 - 64QAM. \n
+     * Data Output format: Packed bytes (each bit is data). \n
+     * MSB - first, LSB last.
      */
-    class DTV_API dvbt_map : virtual public block
+    class DTV_API dvbt_viterbi_decoder : virtual public block
     {
      public:
-      typedef boost::shared_ptr<dvbt_map> sptr;
+      typedef boost::shared_ptr<dvbt_viterbi_decoder> sptr;
 
       /*!
-       * \brief Create a DVB-T mapper.
+       * \brief Create a DVB-T Viterbi decoder.
        *
-       * \param nsize length of input stream. \n
        * \param constellation constellation used. \n
        * \param hierarchy hierarchy used. \n
-       * \param transmission transmission mode used. \n
-       * \param gain gain of complex output stream.
+       * \param coderate coderate used. \n
+       * \param bsize block size.
        */
-      static sptr make(int nsize, dvb_constellation_t constellation, dvbt_hierarchy_t hierarchy, dvbt_transmission_mode_t transmission, float gain);
+      static sptr make(dvb_constellation_t constellation, \
+                  dvbt_hierarchy_t hierarchy, dvb_code_rate_t coderate, int bsize);
     };
 
   } // namespace dtv
 } // namespace gr
 
-#endif /* INCLUDED_DTV_DVBT_MAP_H */
+#endif /* INCLUDED_DTV_DVBT_VITERBI_DECODER_H */
 
