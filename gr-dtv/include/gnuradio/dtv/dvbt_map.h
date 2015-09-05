@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DVBT_DVBT_MAP_H
-#define INCLUDED_DVBT_DVBT_MAP_H
+#ifndef INCLUDED_DTV_DVBT_MAP_H
+#define INCLUDED_DTV_DVBT_MAP_H
 
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>

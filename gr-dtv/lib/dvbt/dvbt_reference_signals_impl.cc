@@ -182,7 +182,7 @@ namespace gr {
       // allocate buffer for scattered pilots
       d_spilot_carriers_val = new gr_complex[d_Kmax - d_Kmin + 1];
       if (d_spilot_carriers_val == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_carriers_val" << std::endl;
+        std::cout << "Cannot allocate memory for d_spilot_carriers_val" << std::endl;
         delete [] d_wk;
         exit(1);
       }
@@ -190,7 +190,7 @@ namespace gr {
       // allocate buffer for channel gains (for each useful carrier)
       d_channel_gain = new gr_complex[d_Kmax - d_Kmin + 1];
       if (d_channel_gain == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_carriers_val" << std::endl;
+        std::cout << "Cannot allocate memory for d_channel_gain" << std::endl;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
         exit(1);
@@ -199,7 +199,7 @@ namespace gr {
       // Allocate buffer for continual pilots phase diffs
       d_known_phase_diff = new float[d_cpilot_carriers_size - 1];
       if (d_known_phase_diff == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_carriers_val" << std::endl;
+        std::cout << "Cannot allocate memory for d_known_phase_diff" << std::endl;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
@@ -214,7 +214,7 @@ namespace gr {
 
       d_cpilot_phase_diff = new float[d_cpilot_carriers_size - 1];
       if (d_cpilot_phase_diff == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_carriers_val" << std::endl;
+        std::cout << "Cannot allocate memory for d_cpilot_phase_diff" << std::endl;
         delete [] d_known_phase_diff;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
@@ -263,7 +263,7 @@ namespace gr {
 
       d_prev_tps_symbol = new gr_complex[d_tps_carriers_size];
       if (d_prev_tps_symbol == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_data" << std::endl;
+        std::cout << "Cannot allocate memory for d_prev_tps_symbol" << std::endl;
         delete [] d_tps_data;
         delete [] d_tps_carriers_val;
         delete [] d_derot_in;
@@ -278,7 +278,7 @@ namespace gr {
 
       d_tps_symbol = new gr_complex[d_tps_carriers_size];
       if (d_tps_symbol == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_data" << std::endl;
+        std::cout << "Cannot allocate memory for d_tps_symbol" << std::endl;
         delete [] d_prev_tps_symbol;
         delete [] d_tps_data;
         delete [] d_tps_carriers_val;
@@ -306,7 +306,7 @@ namespace gr {
       // Allocate buffer for channel estimation carriers
       d_chanestim_carriers = new int[d_Kmax - d_Kmin + 1];
       if (d_chanestim_carriers == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_data" << std::endl;
+        std::cout << "Cannot allocate memory for d_chanestim_carriers" << std::endl;
         delete [] d_tps_symbol;
         delete [] d_prev_tps_symbol;
         delete [] d_tps_data;
@@ -323,7 +323,7 @@ namespace gr {
       // Allocate buffer for payload carriers
       d_payload_carriers = new int[d_Kmax - d_Kmin + 1];
       if (d_payload_carriers == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_data" << std::endl;
+        std::cout << "Cannot allocate memory for d_payload_carriers" << std::endl;
         delete [] d_chanestim_carriers;
         delete [] d_tps_symbol;
         delete [] d_prev_tps_symbol;
@@ -435,8 +435,9 @@ namespace gr {
       memset(&data_in[0], 0, 60);
       //fill in TPS data - start bit not included
       //memcpy(&data_in[60], &data[1], 53);
-      for (int i = 0; i < 53; i++)
+      for (int i = 0; i < 53; i++) {
         data_in[60 + i] = data[1 + i];
+      }
 
       //X^14+X^9+X^8+X^6+X^5+X^4+X^2+X+1
       for (int i = 0; i < 113; i++) {

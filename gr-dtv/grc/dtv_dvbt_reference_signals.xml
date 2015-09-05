@@ -199,7 +199,7 @@
       </option>
       <option>
         <name>No</name>
-        <key>cell_ide_no</key>
+        <key>cell_id_no</key>
         <opt>val:0</opt>
       </option>
   </param>

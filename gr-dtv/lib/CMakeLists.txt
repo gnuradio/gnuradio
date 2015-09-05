@@ -104,6 +104,14 @@ list(APPEND dtv_sources
   dvbt/dvbt_symbol_inner_interleaver_impl.cc
   dvbt/dvbt_map_impl.cc
   dvbt/dvbt_reference_signals_impl.cc
+  dvbt/dvbt_ofdm_sym_acquisition_impl.cc
+  dvbt/dvbt_demod_reference_signals_impl.cc
+  dvbt/dvbt_demap_impl.cc
+  dvbt/dvbt_bit_inner_deinterleaver_impl.cc
+  dvbt/dvbt_viterbi_decoder_impl.cc
+  dvbt/dvbt_convolutional_deinterleaver_impl.cc
+  dvbt/dvbt_reed_solomon_dec_impl.cc
+  dvbt/dvbt_energy_descramble_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -118,6 +126,8 @@ list(APPEND dtv_libs
     gnuradio-fec
     ${VOLK_LIBRARIES}
 )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
