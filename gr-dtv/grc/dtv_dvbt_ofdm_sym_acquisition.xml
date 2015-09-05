@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## OFDM Symbol Acquisition
+###################################################
+ -->
+<block>
+  <name>OFDM Symbol Acquisition</name>
+  <key>dtv_dvbt_ofdm_sym_acquisition</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_ofdm_sym_acquisition(1, $fft_length, $occupied_tones, $cp_length, $snr)</make>
+  <param>
+    <name>Output Type</name>
+    <key>type</key>
+    <value>float</value>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>fcn:c</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:f</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>fcn:i</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>fcn:s</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>fcn:b</opt>
+    </option>
+  </param>
+  <param>
+    <name>FFT Length</name>
+    <key>fft_length</key>
+    <value>2048</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Occupied Tones</name>
+    <key>occupied_tones</key>
+    <value>1705</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Cyclic Prefix Length</name>
+    <key>cp_length</key>
+    <value>64</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>SNR</name>
+    <key>snr</key>
+    <value>10</value>
+    <type>real</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>$type</type>
+    <vlen>$fft_length</vlen>
+  </source>
+</block>

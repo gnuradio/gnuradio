@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Energy Descramble
+###################################################
+ -->
+<block>
+  <name>Energy Descramble</name>
+  <key>dtv_dvbt_energy_descramble</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_energy_descramble($nsize)</make>
+  <param>
+    <name>Blocks(188 Bytes)</name>
+    <key>nsize</key>
+    <value>8</value>
+    <type>int</type>
+  </param>
+  <check>$nsize &gt; 0</check>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>188*8</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>1</vlen>
+  </source>
+</block>
