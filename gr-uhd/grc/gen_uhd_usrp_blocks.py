@@ -81,12 +81,6 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 	\#if \$bw$(n)()
 self.\$(id).set_bandwidth(\$bw$(n), $n)
 	\#end if
-	\#if \$dc_offs_enb$(n)()
-self.\$(id).set_rx_dc_offset(\$dc_offs_enb$(n), $n)
-	\#end if
-	\#if \$iq_imbal_enb$(n)()
-self.\$(id).set_rx_iq_balance(\$iq_imbal_enb$(n), $n)
-	\#end if
 \#end if
 #end for
 </make>
@@ -141,10 +135,6 @@ self.\$(id).set_gain(\$gain$(n), $n)
 		<option>
 			<name>Complex int16</name>
 			<key>sc16</key>
-		</option>
-		<option>
-			<name>Complex int12</name>
-			<key>sc12</key>
 		</option>
 		<option>
 			<name>Complex int8</name>
@@ -235,22 +225,6 @@ self.\$(id).set_gain(\$gain$(n), $n)
 		<option>
 			<name>Default</name>
 			<key>0.0</key>
-		</option>
-		<option>
-			<name>200 MHz</name>
-			<key>200e6</key>
-		</option>
-		<option>
-			<name>184.32 MHz</name>
-			<key>184.32e6</key>
-		</option>
-		<option>
-			<name>120 MHz</name>
-			<key>120e6</key>
-		</option>
-		<option>
-			<name>30.72 MHz</name>
-			<key>30.72e6</key>
 		</option>
 	</param>
 	<param>
@@ -353,8 +327,7 @@ self.\$(id).set_gain(\$gain$(n), $n)
 	<sink>
 		<name>command</name>
 		<type>message</type>
-		<optional>1</optional>
-		<hide>\$hide_cmd_port</hide>
+        <optional>1</optional>
 	</sink>
 	<$sourk>
 		<name>$direction</name>
@@ -447,15 +420,13 @@ PARAMS_TMPL = """
 		<value>0</value>
 		<type>real</type>
 		<hide>\#if \$nchan() > $n then 'none' else 'all'#</hide>
-		<tab>RF Options</tab>
 	</param>
 	<param>
-		<name>Ch$(n): Gain Value</name>
+                <name>Ch$(n): Gain Value</name>
 		<key>gain$(n)</key>
 		<value>0</value>
 		<type>float</type>
 		<hide>\#if \$nchan() > $n then 'none' else 'all'#</hide>
-		<tab>RF Options</tab>
 	</param>
 	<param>
 		<name>Ch$(n): Gain Type</name>
@@ -477,7 +448,6 @@ PARAMS_TMPL = """
 			<name>Normalized</name>
 			<key>True</key>
 		</option>
-		<tab>RF Options</tab>
 	</param>
 	<param>
 		<name>Ch$(n): Antenna</name>
@@ -493,17 +463,6 @@ PARAMS_TMPL = """
 				part
 			\#end if
 		</hide>
-#if $sourk == 'sink'
-		<option>
-			<name>TX/RX</name>
-			<key>TX/RX</key>
-		</option>
-#end if
-		<option>
-			<name>RX2</name>
-			<key>RX2</key>
-		</option>
-		<tab>RF Options</tab>
 	</param>
 	<param>
 		<name>Ch$(n): Bandwidth (Hz)</name>
@@ -519,68 +478,18 @@ PARAMS_TMPL = """
 				part
 			\#end if
 		</hide>
-		<tab>RF Options</tab>
-	</param>
-#if $sourk == 'source'
-	<param>
-		<name>Ch$(n): Enable DC Offset Correction</name>
-		<key>dc_offs_enb$(n)</key>
-		<value>""</value>
-		<type>raw</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#else
-				part
-			\#end if
-		</hide>
-		<tab>FE Corrections</tab>
-	</param>
-	<param>
-		<name>Ch$(n): Enable IQ Imbalance Correction</name>
-		<key>iq_imbal_enb$(n)</key>
-		<value>""</value>
-		<type>raw</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#else
-				part
-			\#end if
-		</hide>
-		<tab>FE Corrections</tab>
-	</param>
-#end if
-"""
-
-SHOW_CMD_PORT_PARAM = """
-	<param>
-		<name>Show Command Port</name>
-		<key>hide_cmd_port</key>
-		<value>False</value>
-		<type>enum</type>
-		<hide>part</hide>
-		<option>
-			<name>Yes</name>
-			<key>False</key>
-		</option>
-		<option>
-			<name>No</name>
-			<key>True</key>
-		</option>
-		<tab>Advanced</tab>
 	</param>
 """
 
-TSBTAG_PARAM = """	<param>
-		<name>TSB tag name</name>
+LENTAG_PARAM = """	<param>
+		<name>Length tag name</name>
 		<key>len_tag_name</key>
 		<value></value>
 		<type>string</type>
 		<hide>\#if len(str(\$len_tag_name())) then 'none' else 'part'#</hide>
 	</param>"""
 
-TSBTAG_ARG = """
+LENTAG_ARG = """
 	#if $len_tag_name()
 	$len_tag_name,
 	#end if"""
@@ -603,11 +512,10 @@ if __name__ == '__main__':
 			direction = 'in'
 		else: raise Exception, 'is %s a source or sink?'%file
 
-		params = ''.join([parse_tmpl(PARAMS_TMPL, n=n, sourk=sourk) for n in range(max_num_channels)])
-                params += SHOW_CMD_PORT_PARAM
+		params = ''.join([parse_tmpl(PARAMS_TMPL, n=n) for n in range(max_num_channels)])
 		if sourk == 'sink':
-			params += TSBTAG_PARAM
-			lentag_arg = TSBTAG_ARG
+			params += LENTAG_PARAM
+			lentag_arg = LENTAG_ARG
 		else: lentag_arg = ''
 		open(file, 'w').write(parse_tmpl(MAIN_TMPL,
 			lentag_arg=lentag_arg,
