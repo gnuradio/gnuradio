@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-## Reference Signals
+## Demod Reference Signals
 ###################################################
  -->
 <block>
-  <name>Reference Signals</name>
-  <key>dtv_dvbt_reference_signals</key>
+  <name>Demod Reference Signals</name>
+  <key>dtv_dvbt_demod_reference_signals</key>
   <import>from gnuradio import dtv</import>
-  <make>dtv.dvbt_reference_signals($type.size, $transmission_mode.payload_length, $transmission_mode.fft_length, $constellation.val, $hierarchy.val, $code_rate_hp.val, $code_rate_lp.val, $guard_interval.val, $transmission_mode.val, $include_cell_id.val, $cell_id)</make>
+  <make>dtv.dvbt_demod_reference_signals($type.size, $transmission_mode.fft_length, $transmission_mode.payload_length, $constellation.val, $hierarchy.val, $code_rate_hp.val, $code_rate_lp.val, $guard_interval.val, $transmission_mode.val, $include_cell_id.val, $cell_id)</make>
   <param>
     <name>IO Type</name>
     <key>type</key>
@@ -212,11 +212,11 @@
   <sink>
     <name>in</name>
     <type>complex</type>
-    <vlen>$transmission_mode.payload_length</vlen>
+    <vlen>$transmission_mode.fft_length</vlen>
   </sink>
   <source>
     <name>out</name>
     <type>complex</type>
-    <vlen>$transmission_mode.fft_length</vlen>
+    <vlen>$transmission_mode.payload_length</vlen>
   </source>
 </block>

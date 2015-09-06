@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Viterbi Decoder
+###################################################
+ -->
+<block>
+  <name>Viterbi Decoder</name>
+  <key>dtv_dvbt_viterbi_decoder</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_viterbi_decoder($constellation.val, $hierarchy.val, $code_rate.val, $block_size)</make>
+  <param>
+    <name>Constellation Type</name>
+    <key>constellation</key>
+    <type>enum</type>
+    <option>
+      <name>QPSK</name>
+      <key>qpsk</key>
+      <opt>val:dtv.MOD_QPSK</opt>
+    </option>
+    <option>
+      <name>16QAM</name>
+      <key>16qam</key>
+      <opt>val:dtv.MOD_16QAM</opt>
+    </option>
+    <option>
+      <name>64QAM</name>
+      <key>64qam</key>
+      <opt>val:dtv.MOD_64QAM</opt>
+    </option>
+  </param>
+  <param>
+    <name>Hierarchy Type</name>
+    <key>hierarchy</key>
+    <type>enum</type>
+    <option>
+      <name>Non Hierarchical</name>
+      <key>nh</key>
+      <opt>val:dtv.NH</opt>
+    </option>
+    <option>
+      <name>Alpha 1</name>
+      <key>alpha1</key>
+      <opt>val:dtv.ALPHA1</opt>
+    </option>
+    <option>
+      <name>Alpha 2</name>
+      <key>alpha2</key>
+      <opt>val:dtv.ALPHA2</opt>
+    </option>
+    <option>
+      <name>Alpha 4</name>
+      <key>alpha4</key>
+      <opt>val:dtv.ALPHA4</opt>
+    </option>
+  </param>
+  <param>
+    <name>Code rate</name>
+    <key>code_rate</key>
+    <type>enum</type>
+    <option>
+      <name>1/2</name>
+      <key>C1_2</key>
+      <opt>val:dtv.C1_2</opt>
+    </option>
+    <option>
+      <name>2/3</name>
+      <key>C2_3</key>
+      <opt>val:dtv.C2_3</opt>
+    </option>
+    <option>
+      <name>3/4</name>
+      <key>C3_4</key>
+      <opt>val:dtv.C3_4</opt>
+    </option>
+    <option>
+      <name>5/6</name>
+      <key>C5_6</key>
+      <opt>val:dtv.C5_6</opt>
+    </option>
+    <option>
+      <name>7/8</name>
+      <key>C7_8</key>
+      <opt>val:dtv.C7_8</opt>
+    </option>
+  </param>
+  <param>
+    <name>Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Int</name>
+      <key>i</key>
+      <opt>io:int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>s</key>
+      <opt>io:short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>b</key>
+      <opt>io:byte</opt>
+    </option>
+  </param>
+  <param>
+    <name>Block Size</name>
+    <key>block_size</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>$type.io</type>
+  </source>
+</block>

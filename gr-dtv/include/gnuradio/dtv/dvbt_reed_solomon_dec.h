@@ -18,48 +18,44 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_DVBT_MAP_H
-#define INCLUDED_DTV_DVBT_MAP_H
+#ifndef INCLUDED_DTV_DVBT_REED_SOLOMON_DEC_H
+#define INCLUDED_DTV_DVBT_REED_SOLOMON_DEC_H
 
 #include <gnuradio/dtv/api.h>
-#include <gnuradio/dtv/dvb_config.h>
-#include <gnuradio/dtv/dvbt_config.h>
 #include <gnuradio/block.h>
 
 namespace gr {
   namespace dtv {
 
     /*!
-     * \brief DVB-T mapper.
+     * \brief Reed Solomon decoder.
      * \ingroup dtv
      *
-     * ETSI EN 300 744 Clause 4.3.5. \n
-     * Data input format: \n
-     * 000000Y0Y1 - QPSK. \n
-     * 0000Y0Y1Y2Y3 - 16QAM. \n
-     * 00Y0Y1Y2Y3Y4Y5 - 64QAM. \n
-     * Data output format: \n
-     * complex(real(float), imag(float)).
+     * ETSI EN 300 744 Clause 4.3.2 \n
+     * RS(N=204,K=239,T=8).
      */
-    class DTV_API dvbt_map : virtual public block
+    class DTV_API dvbt_reed_solomon_dec : virtual public block
     {
      public:
-      typedef boost::shared_ptr<dvbt_map> sptr;
+      typedef boost::shared_ptr<dvbt_reed_solomon_dec> sptr;
 
       /*!
-       * \brief Create a DVB-T mapper.
+       * \brief Create a Reed Solomon decoder.
        *
-       * \param nsize length of input stream. \n
-       * \param constellation constellation used. \n
-       * \param hierarchy hierarchy used. \n
-       * \param transmission transmission mode used. \n
-       * \param gain gain of complex output stream.
+       * \param p characteristic of GF(p^m).
+       * \param m we use GF(p^m).
+       * \param gfpoly Generator Polynomial.
+       * \param n length of codeword of RS coder.
+       * \param k length of information sequence of RS decoder.
+       * \param t number of corrected errors.
+       * \param s shortened length.
+       * \param blocks number of blocks to process at once.
        */
-      static sptr make(int nsize, dvb_constellation_t constellation, dvbt_hierarchy_t hierarchy, dvbt_transmission_mode_t transmission, float gain);
+      static sptr make(int p, int m, int gfpoly, int n, int k, int t, int s, int blocks);
     };
 
   } // namespace dtv
 } // namespace gr
 
-#endif /* INCLUDED_DTV_DVBT_MAP_H */
+#endif /* INCLUDED_DTV_DVBT_REED_SOLOMON_DEC_H */
 
