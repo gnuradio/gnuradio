@@ -81,12 +81,14 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 	\#if \$bw$(n)()
 self.\$(id).set_bandwidth(\$bw$(n), $n)
 	\#end if
+#if $sourk == 'source'
 	\#if \$dc_offs_enb$(n)()
 self.\$(id).set_rx_dc_offset(\$dc_offs_enb$(n), $n)
 	\#end if
 	\#if \$iq_imbal_enb$(n)()
 self.\$(id).set_rx_iq_balance(\$iq_imbal_enb$(n), $n)
 	\#end if
+#end if
 \#end if
 #end for
 </make>
@@ -98,7 +100,7 @@ self.\$(id).set_normalized_gain(\$gain$(n), $n)
 \#else
 self.\$(id).set_gain(\$gain$(n), $n)
 \#end if
-</callback>
+	</callback>
 	<callback>set_antenna(\$ant$(n), $n)</callback>
 	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
@@ -440,8 +442,7 @@ http://code.ettus.com/redmine/ettus/projects/uhd/wiki
 </block>
 """
 
-PARAMS_TMPL = """
-	<param>
+PARAMS_TMPL = """	<param>
 		<name>Ch$(n): Center Freq (Hz)</name>
 		<key>center_freq$(n)</key>
 		<value>0</value>
