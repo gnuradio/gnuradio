@@ -58,9 +58,10 @@ class ActionHandler:
             platform: platform module
         """
         self.clipboard = None
+        self.dialog = None
         for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
         #setup the main window
-        self.platform = platform;
+        self.platform = platform
         self.main_window = MainWindow(platform, self._handle_action)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
@@ -425,10 +426,10 @@ class ActionHandler:
         elif action == Actions.BLOCK_PARAM_MODIFY:
             selected_block = self.get_flow_graph().get_selected_block()
             if selected_block:
-                dialog = PropsDialog(selected_block)
+                self.dialog = PropsDialog(selected_block)
                 response = gtk.RESPONSE_APPLY
                 while response == gtk.RESPONSE_APPLY:  # rerun the dialog if Apply was hit
-                    response = dialog.run()
+                    response = self.dialog.run()
                     if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
                         self.get_flow_graph().update()
                         self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
@@ -440,10 +441,13 @@ class ActionHandler:
                     if response == gtk.RESPONSE_APPLY:
                         # null action, that updates the main window
                         Actions.ELEMENT_SELECT()
-                dialog.destroy()
+                self.dialog.destroy()
+                self.dialog = None
         elif action == Actions.EXTERNAL_UPDATE:
             self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
             self.get_flow_graph().update()
+            if self.dialog is not None:
+                self.dialog.update_gui(force=True)
             self.get_page().set_saved(False)
         ##################################################
         # View Parser Errors

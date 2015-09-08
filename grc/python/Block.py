@@ -117,7 +117,7 @@ class Block(_Block, _GUIBlock):
         check_generate_mode('WX GUI', BLOCK_FLAG_NEED_WX_GUI, ('wx_gui',))
         check_generate_mode('QT GUI', BLOCK_FLAG_NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
         if self._epy_reload_error:
-            self.add_error_message(str(self._epy_reload_error))
+            self.get_param('_source_code').add_error_message(str(self._epy_reload_error))
 
     def rewrite(self):
         """
@@ -245,7 +245,7 @@ class Block(_Block, _GUIBlock):
             blk_io = epy_block_io.extract(src)
 
         except Exception as e:
-            self._epy_reload_error = ValueError('Source code eval:\n' + str(e))
+            self._epy_reload_error = ValueError(str(e))
             try:  # load last working block io
                 blk_io = epy_block_io.BlockIO(*eval(param_blk.get_value()))
             except:

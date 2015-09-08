@@ -216,9 +216,9 @@ class PythonEditorParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        input = gtk.Button('Open in Editor')
-        input.connect('clicked', self.open_editor)
-        self.pack_start(input, True)
+        button = self._button = gtk.Button('Open in Editor')
+        button.connect('clicked', self.open_editor)
+        self.pack_start(button, True)
 
     def open_editor(self, widget=None):
         if not os.path.exists(Constants.EDITOR):
@@ -228,6 +228,10 @@ class PythonEditorParam(InputParam):
 
     def get_text(self):
         pass  # we never update the value from here
+
+    def set_color(self, color):
+        # self._button.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+        self._button.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
     def _apply_change(self, *args):
         pass
