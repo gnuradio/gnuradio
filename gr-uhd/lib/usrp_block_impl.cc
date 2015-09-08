@@ -423,6 +423,12 @@ usrp_block_impl::get_device(void)
   return _dev;
 }
 
+size_t
+usrp_block_impl::get_num_mboards()
+{
+  return _dev->get_num_mboards();
+}
+
 /**********************************************************************
  * External Interfaces
  *********************************************************************/
