@@ -91,14 +91,8 @@ namespace gr
     void
     polar_decoder_sc_list::decode_bit(const int u_num)
     {
-      if(u_num % 2 && is_frozen_bit(u_num)){ // LLR value is obsolete. save some time.
-        const unsigned char frozen_bit = next_frozen_bit();
-        d_scl->set_frozen_bit(frozen_bit, u_num);
-      }
-      else{
-        calculate_llrs_for_list(u_num);
-        set_bit_in_list(u_num);
-      }
+      calculate_llrs_for_list(u_num);
+      set_bit_in_list(u_num);
     }
 
     void
