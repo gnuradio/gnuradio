@@ -54,7 +54,7 @@ class rpc_manager():
             self.interfaces[id_str] = callback_func
             print "[RPC] added reply interface:", id_str
         else:
-            print "ERROR: duplicate id_str"
+            print "[RPC] ERROR: duplicate id_str:", id_str
 
     def watcher(self):
         self.keep_running = True
@@ -97,5 +97,5 @@ class rpc_manager():
             else:
                 return(callback_func())
         else:
-            print "[RPC] ERROR: id_str not found"
+            print "[RPC] ERROR: id_str not found:", id_str
             return None
