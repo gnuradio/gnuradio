@@ -59,7 +59,7 @@ ENDIF()
 # Environment setup
 ########################################################################
 IF(NOT DEFINED BOOST_ROOT)
-    SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
+    SET(BOOST_ROOT "${CMAKE_INSTALL_PREFIX}")
 ENDIF()
 
 ########################################################################
@@ -162,7 +162,7 @@ set(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTG
 # Set location of config/prefs files in /etc
 # Special exception if prefix is /usr so we don't make a /usr/etc.
 set(GR_CONF_DIR etc CACHE PATH "Path to install config files")
-string(COMPARE EQUAL ${CMAKE_INSTALL_PREFIX} "/usr" isusr)
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
 if(isusr)
   set(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 else(isusr)

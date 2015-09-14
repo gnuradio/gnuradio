@@ -320,7 +320,7 @@ namespace gr {
     const int alignment = volk_get_alignment();
     for(int i = 0; i < block->detail()->ninputs(); i++) {
       void *r = (void*)block->detail()->input(i)->read_pointer();
-      unsigned long int ri = (unsigned long int)r % alignment;
+      uintptr_t ri = (uintptr_t)r % alignment;
       //std::cerr << "reader: " << r << "  alignment: " << ri << std::endl;
       if(ri != 0) {
         size_t itemsize = block->detail()->input(i)->get_sizeof_item();
@@ -332,7 +332,7 @@ namespace gr {
 
     for(int i = 0; i < block->detail()->noutputs(); i++) {
       void *w = (void*)block->detail()->output(i)->write_pointer();
-      unsigned long int wi = (unsigned long int)w % alignment;
+      uintptr_t wi = (uintptr_t)w % alignment;
       //std::cerr << "writer: " << w << "  alignment: " << wi << std::endl;
       if(wi != 0) {
         size_t itemsize = block->detail()->output(i)->get_sizeof_item();
