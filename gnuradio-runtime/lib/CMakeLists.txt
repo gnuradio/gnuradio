@@ -149,7 +149,7 @@ CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
 IF(HAVE_WINDOWS_H)
     ADD_DEFINITIONS(-DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
     MESSAGE(STATUS "Adding windows libs to gnuradio runtime libs...")
-    LIST(APPEND gnuradio_runtime_libs WS2_32.lib WSock32.lib)
+    LIST(APPEND gnuradio_runtime_libs ws2_32 wsock32)
 ENDIF(HAVE_WINDOWS_H)
 
 #need to link with librt on ubuntu 11.10 for shm_*
