@@ -31,7 +31,6 @@ set(BOOST_REQUIRED_COMPONENTS
     program_options
     filesystem
     system
-    thread
     regex
 )
 
