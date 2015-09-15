@@ -44,6 +44,7 @@ def run_test(seed,blocksize):
 
         # CPFSK signals
         #p = numpy.ones(L*Q)
+        #p = p/sum(p)*Q/2.0;
         #q = numpy.cumsum(p)
         #q = q/q[-1]/2.0;
 
@@ -54,7 +55,7 @@ def run_test(seed,blocksize):
         p=(0.5*scipy.special.erfc(2*math.pi*BT*(tt-0.5)/math.sqrt(math.log(2.0))/math.sqrt(2.0))-0.5*scipy.special.erfc(2*math.pi*BT*(tt+0.5)/math.sqrt(math.log(2.0))/math.sqrt(2.0)))/2.0;
         p=p/sum(p)*Q/2.0;
         #print p
-        q=numpy.cumsum(p)/Q;
+        q=numpy.cumsum(p);
         q=q/q[-1]/2.0;
         #print q
 
