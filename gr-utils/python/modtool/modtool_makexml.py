@@ -39,6 +39,15 @@ class ModToolMakeXML(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
+    def setup_parser(self):
+        """ Initialise the option parser for 'gr_modtool makexml' """
+        parser = ModTool.setup_parser(self)
+        parser.usage = """%prog info [options]. \n Call %prog without any options to run it interactively.
+
+        Note: This does not work on Python blocks!
+        """
+        return parser
+
     def setup(self, options, args):
         ModTool.setup(self, options, args)
 
