@@ -25,9 +25,9 @@
 #endif
 
 #include "fft_vcc_fftw.h"
-#include <gnuradio/io_signature.h>
 #include <math.h>
 #include <string.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace fft {
@@ -103,14 +103,11 @@ namespace gr {
         if(!d_forward && d_shift) {
           unsigned int offset = (!d_forward && d_shift)?(d_fft_size/2):0;
           int fft_m_offset = d_fft_size - offset;
-          for(unsigned int i = 0; i < offset; i++)          // apply window
-            dst[i+fft_m_offset] = in[i] * d_window[i];
-          for(unsigned int i = offset; i < d_fft_size; i++) // apply window
-            dst[i-offset] = in[i] * d_window[i];
+          volk_32fc_32f_multiply_32fc(&dst[fft_m_offset], in, &d_window[0], offset);
+          volk_32fc_32f_multiply_32fc(&dst[0], in, &d_window[0], d_fft_size);
         }
         else {
-          for(unsigned int i = 0; i < d_fft_size; i++)      // apply window
-            dst[i] = in[i] * d_window[i];
+          volk_32fc_32f_multiply_32fc(&dst[0], in, &d_window[0], d_fft_size);
         }
       }
       else {
