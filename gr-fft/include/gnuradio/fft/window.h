@@ -35,13 +35,13 @@ namespace gr {
     public:
 
       enum win_type {
- 	WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
- 	WIN_HANN = 1,            //!< Hann window; max attenuation 44 dB
- 	WIN_BLACKMAN = 2,        //!< Blackman window; max attenuation 74 dB
-	WIN_RECTANGULAR = 3,     //!< Basic rectangular window; max attenuation 21 dB
-	WIN_KAISER = 4,          //!< Kaiser window; max attenuation see window::max_attenuation
-	WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window; max attenuation 92 dB
- 	WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
+        WIN_HAMMING = 0,         //!< Hamming window; max attenuation 53 dB
+        WIN_HANN = 1,            //!< Hann window; max attenuation 44 dB
+        WIN_BLACKMAN = 2,        //!< Blackman window; max attenuation 74 dB
+        WIN_RECTANGULAR = 3,     //!< Basic rectangular window; max attenuation 21 dB
+        WIN_KAISER = 4,          //!< Kaiser window; max attenuation see window::max_attenuation
+        WIN_BLACKMAN_hARRIS = 5, //!< Blackman-harris window; max attenuation 92 dB
+        WIN_BLACKMAN_HARRIS = 5, //!< alias to WIN_BLACKMAN_hARRIS for capitalization consistency
         WIN_BARTLETT = 6,        //!< Barlett (triangular) window; max attenuation 26 dB
         WIN_FLATTOP = 7,         //!< flat top window; useful in FFTs; max attenuation 93 dB
       };

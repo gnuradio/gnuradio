@@ -33,10 +33,10 @@ primes = (2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,
 class test_fft(gr_unittest.TestCase):
 
     def setUp(self):
-	pass
+        pass
 
     def tearDown(self):
-	pass
+        pass
 
     def assert_fft_ok2(self, expected_result, result_data):
         expected_result = expected_result[:len(result_data)]
@@ -49,7 +49,7 @@ class test_fft(gr_unittest.TestCase):
                                             abs_eps, rel_eps)
 
     def test_001(self):
-	tb = gr.top_block()
+        tb = gr.top_block()
         fft_size = 32
         src_data = tuple([complex(primes[2*i], primes[2*i+1]) for i in range(fft_size)])
 
@@ -100,7 +100,7 @@ class test_fft(gr_unittest.TestCase):
         self.assert_fft_ok2(expected_result, result_data)
 
     def test_002(self):
-	tb = gr.top_block()
+        tb = gr.top_block()
         fft_size = 32
 
         tmp_data = ((4377+4516j),
@@ -156,7 +156,7 @@ class test_fft(gr_unittest.TestCase):
     def test_003(self):
         # Same test as above, only use 2 threads
 
-	tb = gr.top_block()
+        tb = gr.top_block()
         fft_size = 32
 
         tmp_data = ((4377+4516j),
