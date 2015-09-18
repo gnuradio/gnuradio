@@ -26,6 +26,9 @@ from channel_construction_bec import bhattacharyya_bounds
 from helper_functions import is_power_of_two
 
 
+CHANNEL_TYPE_BSC = 'BSC'
+CHANNEL_TYPE_BEC = 'BEC'
+
 def get_z_params(is_prototype, channel, block_size, design_snr, mu):
     print('POLAR code channel construction called with parameters channel={0}, blocksize={1}, design SNR={2}, mu={3}'.format(channel, block_size, design_snr, mu))
     if not (channel == 'BSC' or channel == 'BEC'):

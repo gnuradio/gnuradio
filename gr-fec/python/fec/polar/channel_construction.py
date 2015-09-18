@@ -49,7 +49,7 @@ def get_frozen_bit_indices_from_z_parameters(z_params, nfrozen):
     while indexes.size < nfrozen:
         index = np.argmax(z_params)
         indexes = np.append(indexes, index)
-        z_params[index] = 0.0
+        z_params[index] = -1.0
     return np.sort(indexes)
 
 

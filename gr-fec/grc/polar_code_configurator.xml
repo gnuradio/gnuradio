@@ -3,25 +3,22 @@
   <name>POLAR code Configurator</name>
   <key>variable_polar_code_configurator</key>
   <import>from gnuradio.fec import polar</import>
-  <var_make>self.$(id) = $(id) = polar.load_frozen_bits_info(False, $channel.c, $block_size, $num_info_bits, $design_snr, $mu)</var_make>
-  <var_value>polar.load_frozen_bits_info(True, $channel.c, $block_size, $num_info_bits, $design_snr, $mu)</var_value>
+  <var_make>self.$(id) = $(id) = polar.load_frozen_bits_info(False, $channel, $block_size, $num_info_bits, $design_snr, $mu)</var_make>
+  <var_value>polar.load_frozen_bits_info(True, $channel, $block_size, $num_info_bits, $design_snr, $mu)</var_value>
   <make></make>
 
   <param>
     <name>Channel</name>
     <key>channel</key>
-    <type>enum</type>
+    <value>polar.CHANNEL_TYPE_BEC</value>
+    <type>string</type>
       <option>
         <name>BEC</name>
-        <key>bec</key>
-        <opt>c:'BEC'</opt>
-        <opt>h:True</opt>
+        <key>polar.CHANNEL_TYPE_BEC</key>
       </option>
       <option>
         <name>BSC</name>
-        <key>bsc</key>
-        <opt>c:'BSC'</opt>
-        <opt>h:False</opt>
+        <key>polar.CHANNEL_TYPE_BSC</key>
       </option>
   </param>
 
@@ -49,6 +46,6 @@
     <key>mu</key>
     <value>16</value>
     <type>int</type>
-    <hide>#if str($channel.h) == 'True' then 'all' else 'none'#</hide>
+    <hide>#if 'BEC' in $getVar('channel') then 'all' else 'none' #</hide>
   </param>
 </block>
