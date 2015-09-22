@@ -34,6 +34,13 @@ namespace gr {
     /*!
      * \brief Class holds common methods and attributes for different decoder implementations
      *
+     * \param block_size codeword size. MUST be a power of 2.
+     * \param num_info_bits represents the number of information bits in a block. Also called frame_size. <= block_size
+     * \param frozen_bit_positions is an integer vector which defines the position of all frozen bits in a block.
+     * Its size MUST be equal to block_size - num_info_bits.
+     * Also it must be sorted and every position must only occur once.
+     * \param frozen_bit_values holds an unpacked byte for every frozen bit position.
+     * It defines if a frozen bit is fixed to '0' or '1'. Defaults to all ZERO.
      */
     class FEC_API polar_decoder_common : public generic_decoder, public polar_common
     {
@@ -42,7 +49,7 @@ namespace gr {
       ~polar_decoder_common();
 
       // FECAPI
-      double rate(){return (1.0 * get_input_size() / get_output_size());};
+      double rate(){return (1.0 * get_output_size() / get_input_size());};
       int get_input_size(){return block_size();};
       int get_output_size(){return num_info_bits();};
       bool set_frame_size(unsigned int frame_size){return false;};
