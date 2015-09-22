@@ -37,14 +37,24 @@ namespace gr {
      * \ingroup error_coding_blk
      *
      * \details
-     * Additional parameters
-     * is_packed: choose 1 active bit/byte or 8 active bit/byte.
-     *            if false, VOLK polar encoder is used.
-     *
+     * expects values with MSB first. It needs a full information word and encodes it in one pass.
+     * Output is a codeword of block_size.
      */
     class FEC_API polar_encoder : public generic_encoder, public polar_common
     {
     public:
+      /*!
+       * Factory for a polar code encoder object.
+       *
+       * \param block_size defines the codeword size. It MUST be a power of 2.
+       * \param num_info_bits represents the number of information bits in a block. Also called frame_size.
+       * \param frozen_bit_positions is an integer vector which defines the position of all frozen bits in a block.
+       * Its size MUST be equal to block_size - num_info_bits.
+       * Also it must be sorted and every position must only occur once.
+       * \param frozen_bit_values holds an unpacked byte for every frozen bit position.
+       * It defines if a frozen bit is fixed to '0' or '1'. Defaults to all ZERO.
+       * \param is_packed, choose 1 active bit/byte or 8 active bit/byte. if false, VOLK polar encoder is used.
+       */
       static generic_encoder::sptr make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions, std::vector<char> frozen_bit_values, bool is_packed = false);
       ~polar_encoder();
 

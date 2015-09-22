@@ -51,7 +51,7 @@ class test_polar_decoder_sc(gr_unittest.TestCase):
 
         self.assertEqual(num_info_bits, polar_decoder.get_output_size())
         self.assertEqual(block_size, polar_decoder.get_input_size())
-        self.assertFloatTuplesAlmostEqual((float(block_size) / num_info_bits, ), (polar_decoder.rate(), ))
+        self.assertFloatTuplesAlmostEqual((float(num_info_bits) / block_size, ), (polar_decoder.rate(), ))
         self.assertFalse(polar_decoder.set_frame_size(10))
 
     def test_002_one_vector(self):

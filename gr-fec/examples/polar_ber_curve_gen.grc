@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.8'?>
+<?grc format='1' created='3.7.9'?>
 <flow_graph>
   <timestamp>Fri Jul 17 15:23:09 2015</timestamp>
   <block>
@@ -381,7 +381,7 @@
     </param>
     <param>
       <key>channel</key>
-      <value>bsc</value>
+      <value>polar.CHANNEL_TYPE_BEC</value>
     </param>
     <param>
       <key>comment</key>

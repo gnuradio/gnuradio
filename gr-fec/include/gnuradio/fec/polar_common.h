@@ -46,12 +46,16 @@ namespace gr {
      * \details
      * polar codes are based on this paper by Erdal Arikan
      * "Channel Polarization: A Method for Contructing Capacity-Achieving Codes for Symmetric Binary-Input Memoryless Channels", 2009
+     * block holds common information for encoders and decoders. All polar encoder/decoders inherit from polar_common.
      *
      * class holds common info. It is common to all encoders and decoders.
-     * block_size: MUST be a power of 2.
-     * num_info_bits: any integer <= block_size
-     * frozen_bit_positions: elements specify position of frozen bits in each frame. size MUST be equal to block_size - num_info_bits
-     * frozen_bit_values: desired frozen bit values. '0' appended if smaller than frozen_bit_positions.
+     * \param block_size codeword size. MUST be a power of 2.
+     * \param num_info_bits represents the number of information bits in a block. Also called frame_size. <= block_size
+     * \param frozen_bit_positions is an integer vector which defines the position of all frozen bits in a block.
+     * Its size MUST be equal to block_size - num_info_bits.
+     * Also it must be sorted and every position must only occur once.
+     * \param frozen_bit_values holds an unpacked byte for every frozen bit position.
+     * It defines if a frozen bit is fixed to '0' or '1'. Defaults to all ZERO.
      */
     class FEC_API polar_common
     {
