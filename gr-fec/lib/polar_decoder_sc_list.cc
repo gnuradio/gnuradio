@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,10 +32,9 @@
 #include <cmath>
 #include <algorithm>
 
-namespace gr
-{
-  namespace fec
-  {
+namespace gr {
+  namespace fec {
+    namespace code {
 
     generic_decoder::sptr
     polar_decoder_sc_list::make(int max_list_size, int block_size, int num_info_bits,
@@ -43,7 +42,8 @@ namespace gr
                                 std::vector<char> frozen_bit_values)
     {
       return generic_decoder::sptr(
-          new polar_decoder_sc_list(max_list_size, block_size, num_info_bits, frozen_bit_positions,
+          new polar_decoder_sc_list(max_list_size, block_size, num_info_bits,
+                                    frozen_bit_positions,
                                     frozen_bit_values));
     }
 
@@ -51,7 +51,7 @@ namespace gr
                                                  int num_info_bits,
                                                  std::vector<int> frozen_bit_positions,
                                                  std::vector<char> frozen_bit_values) :
-            polar_decoder_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
+      polar_decoder_common(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values)
     {
       d_scl = new polar::scl_list(max_list_size, block_size, block_power());
     }
@@ -117,7 +117,7 @@ namespace gr
         d_scl->set_info_bit(u_num);
       }
     }
+
+    } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */
-
-

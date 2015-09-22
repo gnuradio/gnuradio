@@ -27,6 +27,8 @@
 
 namespace gr {
   namespace fec {
+    namespace code {
+
     namespace polar {
       struct path {
         path();
@@ -58,10 +60,13 @@ namespace gr {
         void reset();
 
         // comparator for std::sort
-        static bool path_compare(path* first, path* second){return first->path_metric < second->path_metric;};
+        static bool path_compare(path* first, path* second) {
+          return first->path_metric < second->path_metric;
+        };
 
       public:
-        scl_list(const unsigned int list_size, const unsigned int block_size, const unsigned int block_power);
+        scl_list(const unsigned int list_size, const unsigned int block_size,
+                 const unsigned int block_power);
         virtual
         ~scl_list();
         const unsigned int size() const {return d_list_size;};
@@ -75,6 +80,7 @@ namespace gr {
       };
 
     } /* namespace polar */
+    } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */
 

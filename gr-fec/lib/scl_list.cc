@@ -28,10 +28,14 @@
 
 namespace gr {
   namespace fec {
-    namespace polar {
+    namespace code {
+      namespace polar {
 
-      scl_list::scl_list(const unsigned int size, const unsigned int block_size, const unsigned int block_power):
-          d_list_size(size), d_block_size(block_size), d_block_power(block_power), d_num_buff_elements(block_size * (block_power + 1))
+      scl_list::scl_list(const unsigned int size,
+                         const unsigned int block_size,
+                         const unsigned int block_power):
+          d_list_size(size), d_block_size(block_size), d_block_power(block_power),
+          d_num_buff_elements(block_size * (block_power + 1))
       {
         for(unsigned int i = 0; i < 2 * size; i++){
           d_path_list.push_back(new path());
@@ -164,7 +168,9 @@ namespace gr {
       {
         for(unsigned int i = 0; i < d_active_path_counter; i++){
           d_path_list[i]->u_vec[bit_pos] = frozen_bit;
-          d_path_list[i]->path_metric = update_path_metric(d_path_list[i]->path_metric, d_path_list[i]->llr_vec[bit_pos], frozen_bit);
+          d_path_list[i]->path_metric = update_path_metric(d_path_list[i]->path_metric,
+                                                           d_path_list[i]->llr_vec[bit_pos],
+                                                           frozen_bit);
         }
         d_active_pos = 0;
       }
@@ -182,5 +188,6 @@ namespace gr {
       }
 
     } /* namespace polar */
+    } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */

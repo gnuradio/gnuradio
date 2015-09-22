@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -33,18 +33,20 @@
 #include <gnuradio/blocks/pack_k_bits.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
 
-namespace gr
-{
-  namespace fec
-  {
+namespace gr {
+  namespace fec {
+    namespace code {
 
     generic_encoder::sptr
-    polar_encoder::make(int block_size, int num_info_bits, std::vector<int> frozen_bit_positions,
+    polar_encoder::make(int block_size, int num_info_bits,
+                        std::vector<int> frozen_bit_positions,
                         std::vector<char> frozen_bit_values, bool is_packed)
     {
-      return generic_encoder::sptr(
-          new polar_encoder(block_size, num_info_bits, frozen_bit_positions, frozen_bit_values,
-                            is_packed));
+      return generic_encoder::sptr
+        (new polar_encoder(block_size, num_info_bits,
+                           frozen_bit_positions,
+                           frozen_bit_values,
+                           is_packed));
     }
 
     polar_encoder::polar_encoder(int block_size, int num_info_bits,
@@ -226,5 +228,7 @@ namespace gr
       insert_unpacked_bit_into_packed_array_at_position(target, (bit >> (7 - bit_pos)) & 0x01,
                                                         target_pos);
     }
+
+    } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */
