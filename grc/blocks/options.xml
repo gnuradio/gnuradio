@@ -178,6 +178,18 @@ part#slurp
 		</option>
 		<tab>Advanced</tab>
 	</param>
+	<param>
+		<name>Run Command</name>
+		<key>run_command</key>
+		<value>{python} -u {filename}</value>
+		<type>string</type>
+		<hide>#if $generate_options().startswith('hb')
+all#slurp
+#else
+part#slurp
+#end if</hide>
+		<tab>Advanced</tab>
+	</param>
 	<check>not $window_size or len($window_size) == 2</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[0] &lt;= 4096</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[1] &lt;= 4096</check>
@@ -206,5 +218,7 @@ To put hier blocks into the root category, enter / for the category.
 The Max Number of Output is the maximum number of output items allowed for any block \
 in the flowgraph; to disable this set the max_nouts equal to 0.\
 Use this to adjust the maximum latency a flowgraph can exhibit.
+
+
 	</doc>
 </block>
