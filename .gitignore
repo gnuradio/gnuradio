@@ -2,3 +2,6 @@
 *.pyc
 *.pyo
 build/
+.idea/
+*.npy
+*.lprof

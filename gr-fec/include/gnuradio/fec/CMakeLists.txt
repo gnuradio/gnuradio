@@ -47,6 +47,10 @@ install(FILES
     puncture_bb.h
     puncture_ff.h
     depuncture_bb.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
+    polar_encoder.h
+    polar_decoder_sc.h
+    polar_common.h
+    polar_decoder_sc_list.h
+    polar_decoder_common.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"
 )
