@@ -77,6 +77,38 @@ def docstring_guess_from_key(key):
     return doc_strings
 
 
+def docstring_from_make(key, imports, make):
+    """Extract the documentation from the python __doc__ strings
+
+    By importing it and checking a truncated make
+
+    Args:
+        key: the block key
+        imports: a list of import statements (string) to execute
+        make: block constructor template
+
+    Returns:
+        a list of tuples (block_name, doc string)
+    """
+
+    try:
+        blk_cls = make.partition('(')[0].strip()
+        if '$' in blk_cls:
+            raise ValueError('Not an identifier')
+
+        ns = dict()
+        for _import in imports:
+            exec(_import.strip(), ns)
+        blk = eval(blk_cls, ns)
+
+        doc_strings = {key: blk.__doc__}
+
+    except (ImportError, AttributeError, SyntaxError, ValueError):
+        doc_strings = docstring_guess_from_key(key)
+
+    return doc_strings
+
+
 ###############################################################################
 # Manage docstring extraction in separate process
 ###############################################################################
@@ -178,11 +210,14 @@ class SubprocessLoader(object):
         else:
             print >> sys.stderr, "Unknown response:", cmd, args
 
-    def query(self, key):
+    def query(self, key, imports=None, make=None):
         """request docstring extraction for a certain key"""
         if self._thread is None:
             self.start()
-        self._queue.put(('query', (key,)))
+        if imports and make:
+            self._queue.put(('query', (key, imports, make)))
+        else:
+            self._queue.put(('query_key_only', (key,)))
 
     def finish(self):
         """signal end of requests"""
@@ -222,6 +257,9 @@ def worker_main():
         code, cmd, args = json.loads(line, encoding='utf-8')
         try:
             if cmd == 'query':
+                key, imports, make = args
+                send('result', (key, docstring_from_make(key, imports, make)))
+            elif cmd == 'query_key_only':
                 key, = args
                 send('result', (key, docstring_guess_from_key(key)))
             elif cmd == 'exit':
@@ -248,6 +286,7 @@ elif __name__ == '__main__':
     # r.query('uhd_source')
     r.query('expr_utils_graph')
     r.query('blocks_add_cc')
+    r.query('blocks_add_cc', ['import gnuradio.blocks'], 'gnuradio.blocks.add_cc(')
     # r.query('analog_feedforward_agc_cc')
     # r.query('uhd_source')
     # r.query('uhd_source')

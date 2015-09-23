@@ -104,7 +104,11 @@ class Platform(_Platform, _GUIPlatform):
 
     def load_block_xml(self, xml_file):
         block = _Platform.load_block_xml(self, xml_file)
-        self._docstring_extractor.query(block.get_key())
+        self._docstring_extractor.query(
+            block.get_key(),
+            block.get_imports(raw=True),
+            block.get_make(raw=True)
+        )
         return block
 
     ##############################################
