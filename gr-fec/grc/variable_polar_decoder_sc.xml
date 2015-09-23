@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<block>
+  <name>POLAR Decoder SC Definition</name>
+  <key>variable_polar_decoder_sc_def</key>
+  <import>from gnuradio import fec</import>
+  <var_make>#if int($ndim())==0 #
+self.$(id) = $(id) = fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values) #slurp
+#else if int($ndim())==1 #
+self.$(id) = $(id) = map((lambda a: fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values)), range(0, $dim1) ) #slurp
+#else
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values)), range(0, $dim2))), range(0, $dim1)) #slurp
+#end if</var_make>
+  <var_value>fec.polar_decoder_sc.make($block_size, $num_info_bits, $frozen_bit_positions, $frozen_bit_values)</var_value>
+  <make></make>
+
+  <param>
+    <name>Parallelism</name>
+    <key>ndim</key>
+    <value>0</value>
+    <type>enum</type>
+    <option>
+      <name>0</name>
+      <key>0</key>
+    </option>
+    <option>
+      <name>1</name>
+      <key>1</key>
+    </option>
+    <option>
+      <name>2</name>
+      <key>2</key>
+      </option>
+  </param>
+
+  <param>
+    <name>Dimension 1</name>
+    <key>dim1</key>
+    <value>1</value>
+    <type>int</type>
+    <hide>#if (int($ndim()) >= 1) then 'none' else 'all' #</hide>
+  </param>
+
+  <param>
+    <name>Dimension 2</name>
+    <key>dim2</key>
+    <value>4</value>
+    <type>int</type>
+    <hide>#if (int($ndim()) >= 2) then 'none' else 'all' #</hide>
+  </param>
+
+  <param>
+    <name>Block size (N)</name>
+    <key>block_size</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>#Info Bits (K)</name>
+    <key>num_info_bits</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Frozen Bit Positions</name>
+    <key>frozen_bit_positions</key>
+    <type>int_vector</type>
+  </param>
+
+  <param>
+    <name>Frozen Bit Values</name>
+    <key>frozen_bit_values</key>
+    <type>int_vector</type>
+  </param>
+</block>
