@@ -233,11 +233,14 @@ Coders:
 \li gr::fec::code::repetition_encoder
 \li gr::fec::code::cc_encoder
 \li gr::fec::code::ccsds_encoder
+\li gr::fec::code::polar_encoder
 
 Decoders:
 \li gr::fec::code::dummy_decoder
 \li gr::fec::code::repetition_decoder
 \li gr::fec::code::cc_decoder
+\li gr::fec::code::polar_decoder_sc
+\li gr::fec::code::polar_decoder_sc_list
 
 
 When building a new FECAPI encoder or decoder variable, the dummy
