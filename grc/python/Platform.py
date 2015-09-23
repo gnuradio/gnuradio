@@ -41,7 +41,6 @@ COLORS = [(name, color) for name, key, sizeof, color in CORE_TYPES]
 
 
 class Platform(_Platform, _GUIPlatform):
-
     def __init__(self):
         """
         Make a platform for gnuradio.
@@ -53,6 +52,7 @@ class Platform(_Platform, _GUIPlatform):
             os.mkdir(os.path.dirname(PREFS_FILE))
 
         self.block_docstrings = block_docstrings = dict()
+        self.block_docstrings_loaded_callback = lambda: None
 
         def setter(key, docs):
             block_docstrings[key] = '\n\n'.join(
@@ -60,7 +60,10 @@ class Platform(_Platform, _GUIPlatform):
                 for b, d in docs.iteritems() if d is not None
             )
 
-        self._docstring_extractor = extract_docs.SubprocessLoader(setter)
+        self._docstring_extractor = extract_docs.SubprocessLoader(
+            callback_query_result=setter,
+            callback_finished=lambda: self.block_docstrings_loaded_callback()
+        )
 
         # init
         _Platform.__init__(
@@ -97,7 +100,7 @@ class Platform(_Platform, _GUIPlatform):
         self._docstring_extractor.start()
         _Platform.load_blocks(self)
         self._docstring_extractor.finish()
-        self._docstring_extractor.wait()
+        # self._docstring_extractor.wait()
 
     def load_block_xml(self, xml_file):
         block = _Platform.load_block_xml(self, xml_file)
