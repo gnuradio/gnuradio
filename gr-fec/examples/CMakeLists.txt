@@ -32,6 +32,12 @@ install(
     fecapi_async_packed_decoders.grc
     fecapi_tagged_decoders.grc
     fecapi_tagged_encoders.grc
+    fecapi_cc_decoders.grc
+    fecapi_polar_async_packed_decoders.grc
+    fecapi_polar_decoders.grc
+    fecapi_polar_encoders.grc
+    polar_ber_curve_gen.grc
+    polar_code_example.grc
     tpc_ber_curve_gen.grc
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
     COMPONENT "fec_python"
