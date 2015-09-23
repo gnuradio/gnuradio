@@ -139,13 +139,21 @@ def mutual_information(w):
 
 
 def bhattacharyya_parameter(w):
-    '''bhattacharyya parameter is a measure of similarity between two prob. distributions'''
-    # sum over all y e Y for sqrt( W(y|0) * W(y|1) )
+    '''
+    bhattacharyya parameter is a measure of similarity between two prob. distributions
+    THEORY: sum over all y e Y for sqrt( W(y|0) * W(y|1) )
+    Implementation:
+    Numpy vector of dimension (2, mu//2)
+    holds probabilities P(x|0), first vector for even, second for odd.
+    '''
     dim = np.shape(w)
-    ydim = dim[0]
-    z = 0.0
-    for y in range(ydim):
-        z += np.sqrt(w[0, y] * w[1, y])
+    if len(dim) != 2:
+        raise ValueError
+
+    if dim[0] > dim[1]:
+        raise ValueError
+
+    z = np.sum(np.sqrt(w[0] * w[1]))
     # need all
     return z
 
@@ -163,6 +171,17 @@ def main():
     rev_pos = bit_reverse_vector(pos, n)
     print(pos)
     print(rev_pos)
+
+    f = np.linspace(.01, .29, 10)
+    e = np.linspace(.03, .31, 10)
+
+    b = np.array([e, f])
+    zp = bhattacharyya_parameter(b)
+    print(zp)
+
+    a = np.sum(np.sqrt(e * f))
+    print(a)
+
 
 
 if __name__ == '__main__':

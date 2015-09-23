@@ -91,11 +91,11 @@ def default_dir():
     return path
 
 
-def save_z_parameters(z_params, block_size, design_snr, mu):
+def save_z_parameters(z_params, block_size, design_snr, mu, alt_construction_method='Tal-Vardy algorithm'):
     path = default_dir()
     filename = generate_filename(block_size, design_snr, mu)
     header = Z_PARAM_FIRST_HEADER_LINE + "\n"
-    header += "Channel construction method: Tal-Vardy algorithm\n"
+    header += "Channel construction method: " + alt_construction_method + "\n"
     header += "Parameters:\n"
     header += "block_size=" + str(block_size) + "\n"
     header += "design_snr=" + str(design_snr) + "\n"

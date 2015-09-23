@@ -108,6 +108,10 @@ def discretize_awgn(mu, design_snr):
     for j in range(mu):
         tpm[0][j] = q_function(factor + a[j]) - q_function(factor + a[j + 1])
         tpm[1][j] = q_function(-1. * factor + a[j]) - q_function(-1. * factor + a[j + 1])
+
+    tpm = tpm[::-1]
+    tpm[0] = tpm[0][::-1]
+    tpm[1] = tpm[1][::-1]
     return tpm
 
 
@@ -152,12 +156,13 @@ def upper_bound_z_params(z, block_size, design_snr):
 
 
 def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
+    mu = mu // 2  # make sure algorithm uses only as many bins as specified.
     block_power = power_of_2_int(block_size)
     channels = np.zeros((block_size, 2, mu))
     channels[0] = discretize_awgn(mu, design_snr) * 2
 
     print('Constructing polar code with Tal-Vardy algorithm')
-    print('(block_size = {0}, design SNR = {1}, mu = {2}'.format(block_size, design_snr, mu))
+    print('(block_size = {0}, design SNR = {1}, mu = {2}'.format(block_size, design_snr, 2 * mu))
     show_progress_bar(0, block_size)
     for j in range(0, block_power):
         u = 2 ** j
@@ -171,7 +176,6 @@ def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
 
     z = np.zeros(block_size)
     for i in range(block_size):
-        # z[i] = np.sum(channels[i][1])
         z[i] = bhattacharyya_parameter(channels[i])
 
     z = z[bit_reverse_vector(np.arange(block_size), block_power)]
