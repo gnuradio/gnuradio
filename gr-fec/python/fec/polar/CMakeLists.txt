@@ -1,4 +1,4 @@
-# Copyright 2014 Free Software Foundation, Inc.
+# Copyright 2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,28 +17,25 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+########################################################################
 include(GrPython)
 
-install(
+GR_PYTHON_INSTALL(
     FILES
-    271.127.3.112
-    ber_test.grc
-    ber_curve_gen.grc
-    fecapi_decoders.grc
-    fecapi_encoders.grc
-    fecapi_async_decoders.grc
-    fecapi_async_encoders.grc
-    fecapi_async_to_stream.grc
-    fecapi_async_packed_decoders.grc
-    fecapi_tagged_decoders.grc
-    fecapi_tagged_encoders.grc
-    fecapi_cc_decoders.grc
-    fecapi_polar_async_packed_decoders.grc
-    fecapi_polar_decoders.grc
-    fecapi_polar_encoders.grc
-    polar_ber_curve_gen.grc
-    polar_code_example.grc
-    tpc_ber_curve_gen.grc
-    DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
+    __init__.py
+    channel_construction.py
+    channel_construction_bsc.py
+    channel_construction_bec.py
+    helper_functions.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/polar
     COMPONENT "fec_python"
 )
+
+GR_PYTHON_INSTALL(
+    PROGRAMS
+    polar_channel_construction
+    DESTINATION ${GR_RUNTIME_DIR}
+    COMPONENT "fec_python"
+)
+
+

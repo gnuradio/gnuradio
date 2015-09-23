@@ -23,15 +23,6 @@ import sys
 import optparse
 import warnings
 
-import pygtk
-pygtk.require('2.0')
-
-warnings.filterwarnings("error")
-try:
-    import gtk
-except:
-    sys.exit("Failed to import gtk. If you are running over ssh, did you enable X forwarding and start ssh with -X?")
-warnings.filterwarnings("always")
 
 GR_IMPORT_ERROR_MESSAGE = """\
 Cannot import gnuradio.
@@ -54,36 +45,46 @@ This is free software, and you are welcome to redistribute it.
 """
 
 
-def show_gtk_error_dialog(title, message):
-    d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE,
-                          message_format=message)
-    d.set_title(title)
-    d.run()
-
-
-def check_gtk_init():
+def die(error, message):
+    msg = "{0}\n\n({1})".format(message, error)
     try:
+        import gtk
+        d = gtk.MessageDialog(
+            type=gtk.MESSAGE_ERROR,
+            buttons=gtk.BUTTONS_CLOSE,
+            message_format=msg,
+        )
+        d.set_title(type(error).__name__)
+        d.run()
+        exit(1)
+    except ImportError:
+        exit(type(error).__name__ + '\n\n' + msg)
+
+
+def check_gtk():
+    try:
+        warnings.filterwarnings("error")
+        import pygtk
+        pygtk.require('2.0')
+        import gtk
         gtk.init_check()
-    except RuntimeError:
-        print 'GTK initialization failed - bailing'
-        exit(-1)
+        warnings.filterwarnings("always")
+    except Exception as err:
+        die(err, "Failed to initialize GTK. If you are running over ssh, "
+                 "did you enable X forwarding and start ssh with -X?")
 
 
 def check_gnuradio_import():
     try:
         from gnuradio import gr
-    except ImportError as e:
-        show_gtk_error_dialog(str(e), GR_IMPORT_ERROR_MESSAGE)
-        exit(-1)
+    except ImportError as err:
+        die(err, GR_IMPORT_ERROR_MESSAGE)
 
 
-def ensure_blocks_path():
+def check_blocks_path():
     if 'GR_DONT_LOAD_PREFS' in os.environ and not os.environ.get('GRC_BLOCKS_PATH', ''):
-        show_gtk_error_dialog(
-            title="No block definitions available.",
-            message="Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH."
-        )
-        exit(-1)
+        die(EnvironmentError("No block definitions available"),
+            "Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH.")
 
 
 def get_source_tree_root():
@@ -94,13 +95,16 @@ def get_source_tree_root():
 
 
 def main():
-    from gnuradio import gr
+    check_gnuradio_import()
 
+    from gnuradio import gr
     parser = optparse.OptionParser(
         usage='usage: %prog [options] [saved flow graphs]',
         version=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
     options, args = parser.parse_args()
 
+    check_gtk()
+    check_blocks_path()
     source_tree_root = get_source_tree_root()
     if not source_tree_root:
         # run the installed version
@@ -114,6 +118,7 @@ def main():
         from grc.gui.ActionHandler import ActionHandler
 
     try:
+        import gtk
         gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
     except:
         pass
@@ -122,7 +127,4 @@ def main():
 
 
 if __name__ == '__main__':
-    check_gtk_init()
-    check_gnuradio_import()
-    ensure_blocks_path()
     main()
