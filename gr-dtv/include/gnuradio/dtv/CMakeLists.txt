@@ -66,6 +66,15 @@ install(FILES
     dvbt_symbol_inner_interleaver.h
     dvbt_map.h
     dvbt_reference_signals.h
+    dvbt_ofdm_sym_acquisition.h
+    dvbt_demod_reference_signals.h
+    dvbt_demap.h
+    dvbt_bit_inner_deinterleaver.h
+    dvbt_viterbi_decoder.h
+    dvbt_convolutional_deinterleaver.h
+    dvbt_reed_solomon_dec.h
+    dvbt_energy_descramble.h
+
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
     COMPONENT "dtv_devel"
 )
