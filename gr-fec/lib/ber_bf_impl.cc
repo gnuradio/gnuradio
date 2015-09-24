@@ -96,7 +96,8 @@ namespace gr {
                     % d_total_errors % (d_total * 8) % outbuffer[0]);
             return 1;
           }
-          else if(calculate_log_ber() < d_ber_limit){
+          // check for total_errors to prevent early shutdown at high SNR simulations
+          else if(calculate_log_ber() < d_ber_limit && d_total_errors > 0){
             GR_LOG_INFO(d_logger, "    Min. BER limit reached");
             outbuffer[0] = d_ber_limit;
             d_total_errors = d_berminerrors + 1;

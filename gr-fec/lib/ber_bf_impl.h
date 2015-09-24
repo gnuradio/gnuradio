@@ -31,8 +31,8 @@ namespace gr {
     class FEC_API ber_bf_impl : public ber_bf
     {
     private:
-      int d_total_errors;
-      int d_total;
+      long d_total_errors;
+      long d_total;
       bool d_test_mode;
       int d_berminerrors;
       float d_ber_limit;
@@ -48,6 +48,8 @@ namespace gr {
                        gr_vector_int& ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items);
+
+      long total_errors() {return d_total_errors;};
     };
 
   } /* namespace fec */
