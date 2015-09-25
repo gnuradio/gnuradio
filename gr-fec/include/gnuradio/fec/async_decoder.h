@@ -87,9 +87,13 @@ namespace gr {
        * \param my_decoder An FECAPI decoder object child of the generic_decoder class.
        * \param packed Sets output to packed bytes if true; otherwise, 1 bit per byte.
        * \param rev_pack If packing bits, should they be reversed?
+       * \param mtu The Maxium Transmission Unit (MTU) of the output
+       *            frame that the block will be able to
+       *            process. Specified in bytes and defaults to 1500.
        */
       static sptr make(generic_decoder::sptr my_decoder,
-                       bool packed=false, bool rev_pack=true);
+                       bool packed=false, bool rev_pack=true,
+                       int mtu=1500);
 
       virtual int general_work(int noutput_items,
                                gr_vector_int& ninput_items,

@@ -35,26 +35,30 @@ namespace gr {
     tagged_encoder::make(generic_encoder::sptr my_encoder,
                          size_t input_item_size,
                          size_t output_item_size,
-                         const std::string& lengthtagname)
+                         const std::string& lengthtagname,
+                         int mtu)
     {
       return gnuradio::get_initial_sptr
         (new tagged_encoder_impl(my_encoder, input_item_size,
                                  output_item_size,
-                                 lengthtagname));
+                                 lengthtagname, mtu));
     }
 
     tagged_encoder_impl::tagged_encoder_impl(generic_encoder::sptr my_encoder,
                                              size_t input_item_size,
                                              size_t output_item_size,
-                                             const std::string& lengthtagname)
+                                             const std::string& lengthtagname,
+                                             int mtu)
       : tagged_stream_block("fec_tagged_encoder",
                             io_signature::make(1, 1, input_item_size),
                             io_signature::make(1, 1, output_item_size),
                             lengthtagname),
-        d_input_item_size(input_item_size), d_output_item_size(output_item_size)
+      d_input_item_size(input_item_size), d_output_item_size(output_item_size),
+      d_mtu(mtu)
     {
       d_encoder = my_encoder;
 
+      d_encoder->set_frame_size(d_mtu*8);
       set_relative_rate(d_encoder->rate());
     }
 
@@ -65,6 +69,10 @@ namespace gr {
     int
     tagged_encoder_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
     {
+      if(ninput_items[0] > (d_mtu*8)) {
+        throw std::runtime_error("tagged_encoder: received frame is larger than MTU.");
+      }
+      d_encoder->set_frame_size(ninput_items[0]);
       return d_encoder->get_output_size();
     }
 
@@ -76,10 +84,6 @@ namespace gr {
     {
       char *inbuffer  = (char*)input_items[0];
       char *outbuffer = (char*)output_items[0];
-
-      d_encoder->set_frame_size(ninput_items[0]);
-      if(noutput_items < d_encoder->get_output_size())
-        return 0;
 
       GR_LOG_DEBUG(d_debug_logger, boost::format("nout: %1%   nin: %2%   ret: %3%") \
                    % noutput_items % ninput_items[0] % d_encoder->get_output_size());

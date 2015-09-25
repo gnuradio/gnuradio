@@ -79,7 +79,8 @@ class extended_tagged_decoder(gr.hier_block2):
     }
 
     def __init__(self, decoder_obj_list, ann=None, puncpat='11',
-                 integration_period=10000, flush=None, rotator=None, lentagname=None):
+                 integration_period=10000, flush=None, rotator=None, lentagname=None,
+                 mtu=1500):
         gr.hier_block2.__init__(self, "extended_decoder",
                                 gr.io_signature(1, 1, gr.sizeof_float),
                                 gr.io_signature(1, 1, gr.sizeof_char))
@@ -163,7 +164,7 @@ class extended_tagged_decoder(gr.hier_block2):
                 self.blocks.append(fec.tagged_decoder(decoder_obj,
                                                       fec.get_decoder_input_item_size(decoder_obj),
                                                       fec.get_decoder_output_item_size(decoder_obj),
-                                                      lentagname))
+                                                      lentagname, mtu))
 
         if fec.get_decoder_output_conversion(decoder_obj) == "unpack":
             self.blocks.append(blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST));
