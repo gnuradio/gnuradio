@@ -241,14 +241,17 @@ class Block(Element):
                                                complexity=complexity,
                                                font=BLOCK_FONT))
 
-        # Setup the pixel map. Make sure that layout is valid
+        # Setup the pixel map. Make sure that layout not empty
         width, height = layout.get_pixel_size()
-        if layout and width > 0 and height > 0:
-            pixmap = self.get_parent().new_pixmap(width, height)
+        if width and height:
+            padding = BLOCK_LABEL_PADDING
+            pixmap = self.get_parent().new_pixmap(width + 2 * padding,
+                                                  height + 2 * padding)
             gc = pixmap.new_gc()
             gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)
-            pixmap.draw_rectangle(gc, True, 0, 0, width, height)
-            pixmap.draw_layout(gc, 0, 0, layout)
+            pixmap.draw_rectangle(
+                gc, True, 0, 0, width + 2 * padding, height + 2 * padding)
+            pixmap.draw_layout(gc, padding, padding, layout)
             self._comment_pixmap = pixmap
         else:
             self._comment_pixmap = None
