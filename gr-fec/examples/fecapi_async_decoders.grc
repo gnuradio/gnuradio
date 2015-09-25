@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.8rc1'?>
+<?grc format='1' created='3.7.9'?>
 <flow_graph>
   <timestamp>Tue May 20 15:23:14 2014</timestamp>
   <block>
@@ -105,7 +105,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -164,7 +164,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -207,7 +207,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -266,7 +266,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -321,7 +321,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -368,7 +368,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -407,7 +407,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>MTU*8</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -566,6 +566,49 @@
     </param>
   </block>
   <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(568, 11)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>MTU</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>MTU</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>intx</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1500</value>
+    </param>
+  </block>
+  <block>
     <key>analog_random_source_x</key>
     <param>
       <key>alias</key>
@@ -644,7 +687,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(865, 308)</value>
+      <value>(872, 307)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -816,7 +859,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(411, 239)</value>
+      <value>(368, 235)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -863,7 +906,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(860, 224)</value>
+      <value>(872, 235)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1024,7 +1067,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(364, 143)</value>
+      <value>(344, 147)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1279,7 +1322,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(852, 142)</value>
+      <value>(864, 139)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1288,6 +1331,10 @@
     <param>
       <key>id</key>
       <value>fec_async_decoder_0</value>
+    </param>
+    <param>
+      <key>mtu</key>
+      <value>MTU</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1330,7 +1377,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(600, 143)</value>
+      <value>(552, 139)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1339,6 +1386,10 @@
     <param>
       <key>id</key>
       <value>fec_async_encoder_0</value>
+    </param>
+    <param>
+      <key>mtu</key>
+      <value>MTU</value>
     </param>
     <param>
       <key>maxoutbuf</key>

@@ -34,14 +34,16 @@ namespace gr {
 
     async_encoder::sptr
     async_encoder::make(generic_encoder::sptr my_encoder,
-                        bool packed, bool rev_unpack, bool rev_pack)
+                        bool packed, bool rev_unpack, bool rev_pack,
+                        int mtu)
     {
       return gnuradio::get_initial_sptr
-        (new async_encoder_impl(my_encoder, packed, rev_unpack, rev_pack));
+        (new async_encoder_impl(my_encoder, packed, rev_unpack, rev_pack, mtu));
     }
 
     async_encoder_impl::async_encoder_impl(generic_encoder::sptr my_encoder,
-                                           bool packed, bool rev_unpack, bool rev_pack)
+                                           bool packed, bool rev_unpack, bool rev_pack,
+                                           int mtu)
       : block("async_encoder",
               io_signature::make(0,0,0),
               io_signature::make(0,0,0)),
@@ -55,6 +57,7 @@ namespace gr {
       d_packed = packed;
       d_rev_unpack = rev_unpack;
       d_rev_pack = rev_pack;
+      d_mtu = mtu;
 
       message_port_register_in(d_in_port);
       message_port_register_out(d_out_port);
@@ -64,7 +67,7 @@ namespace gr {
 
         d_unpack = new blocks::kernel::unpack_k_bits(8);
 
-        int max_bits_out = d_encoder->get_output_size();
+        int max_bits_out = d_encoder->rate() * d_mtu * 8;
         d_bits_out = (uint8_t*)volk_malloc(max_bits_out*sizeof(uint8_t),
                                            volk_get_alignment());
 
@@ -80,7 +83,7 @@ namespace gr {
 
         // encode_unpacked: Holds packed bits in when input conversion is packed
         // encode_packed: holds the output bits of the encoder to be packed
-        int max_bits_in = d_encoder->get_input_size();
+        int max_bits_in = d_mtu*8;
         d_bits_in = (uint8_t*)volk_malloc(max_bits_in*sizeof(uint8_t),
                                           volk_get_alignment());
       }
@@ -108,6 +111,10 @@ namespace gr {
 
       size_t o0 = 0;
       int nbits_in = pmt::length(bits);
+      if(nbits_in > (d_mtu*8)) {
+        throw std::runtime_error("async_encoder: received message larger than the MTU.");
+      }
+
       const uint8_t* bits_in = pmt::u8vector_elements(bits, o0);
 
       bool variable_framesize = d_encoder->set_frame_size(nbits_in);
@@ -153,6 +160,10 @@ namespace gr {
 
       size_t o0 = 0;
       int nbytes_in = pmt::length(bytes);
+      if(nbytes_in > d_mtu) {
+        throw std::runtime_error("async_encoder: received message larger than the MTU.");
+      }
+
       int nbits_in = 8*nbytes_in;
       const uint8_t* bytes_in = pmt::u8vector_elements(bytes, o0);
 

@@ -34,12 +34,14 @@ namespace gr {
       generic_encoder::sptr d_encoder;
       size_t d_input_item_size;
       size_t d_output_item_size;
+      int d_mtu;
 
     public:
       tagged_encoder_impl(generic_encoder::sptr my_encoder,
                           size_t input_item_size,
                           size_t output_item_size,
-                          const std::string &lengthtagname="packet_len");
+                          const std::string &lengthtagname="packet_len",
+                          int mtu=1500);
       ~tagged_encoder_impl();
 
       int work(int noutput_items,
