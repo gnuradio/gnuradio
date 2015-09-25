@@ -148,14 +148,6 @@ namespace gr {
         volk_32f_s32f_multiply_32f(d_tmp_f32, f32in, 48.0f, nbits_in);
       }
       else {
-
-        // grow d_tmp_f32 if needed
-        if(nbits_in > d_max_bits_in){
-          d_max_bits_in = nbits_in;
-          volk_free(d_tmp_f32);
-          d_tmp_f32 = (float*)volk_malloc(d_max_bits_in*sizeof(float),
-                                          volk_get_alignment());
-        }
         memcpy(d_tmp_f32, f32in, nbits_in*sizeof(float));
       }
 
@@ -172,7 +164,7 @@ namespace gr {
         d_decoder->generic_work((void*)d_tmp_u8, (void*)u8out);
       }
       else {
-        for(size_t i=0; i<nblocks; i++){
+        for(size_t i = 0; i < nblocks; i++){
           d_decoder->generic_work((void*)&d_tmp_f32[i*d_decoder->get_input_size()],
                                   (void*)&u8out[i*d_decoder->get_output_size()]);
         }
