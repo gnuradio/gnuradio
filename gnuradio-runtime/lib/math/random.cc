@@ -44,7 +44,7 @@
 
 namespace gr {
 
-  random::random(unsigned int seed)
+  random::random(unsigned int seed, int min_integer, int max_integer)
   {
     d_gauss_stored = false; // set gasdev (gauss distributed numbers) on calculation state
 
@@ -52,14 +52,18 @@ namespace gr {
     d_rng = new boost::mt19937;
     reseed(seed); // set seed for random number generator
     d_uniform = new boost::uniform_real<float>;
+    d_integer_dis = new boost::random::uniform_int_distribution<>(min_integer, max_integer - 1);
     d_generator = new boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > (*d_rng,*d_uniform); // create number generator in [0,1) from boost.random
+    d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
   }
 
   random::~random()
   {
       delete d_rng;
       delete d_uniform;
+      delete d_integer_dis;
       delete d_generator;
+      delete d_integer_generator;
   }
 
   /*
@@ -68,9 +72,24 @@ namespace gr {
   void
   random::reseed(unsigned int seed)
   {
+    //FIXME: method without effect after c'tor.
     if(seed==0) d_seed = static_cast<unsigned int>(std::time(0));
     else d_seed = seed;
     d_rng->seed(d_seed);
+  }
+
+  void
+  random::set_integer_limits(const int minimum, const int maximum){
+    // boost expects integer limits defined as [minimum, maximum] which is unintuitive.
+    boost::random::uniform_int_distribution<>::param_type dis_params(minimum, maximum - 1);
+    d_integer_dis->param(dis_params);
+    delete d_integer_generator;
+    d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
+  }
+
+  int
+  random::ran_int(){
+    return (*d_integer_generator)();
   }
 
   /*

@@ -46,6 +46,7 @@ include(GrMiscUtils)
 GR_EXPAND_X_CC_H(analog noise_source_X_impl     s i f c)
 GR_EXPAND_X_CC_H(analog fastnoise_source_X_impl s i f c)
 GR_EXPAND_X_CC_H(analog sig_source_X_impl     s i f c)
+GR_EXPAND_X_CC_H(analog random_uniform_source_X_impl b s i)
 
 ########################################################################
 # Setup library

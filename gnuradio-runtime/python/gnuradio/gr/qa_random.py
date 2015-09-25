@@ -23,8 +23,8 @@
 from gnuradio import gr, gr_unittest
 import numpy as np
 
-class test_random(gr_unittest.TestCase):
 
+class test_random(gr_unittest.TestCase):
     # NOTE: For tests on the output distribution of the random numbers, see gnuradio-runtime/apps/evaluation_random_numbers.py.
 
     # Check for range [0,1) of uniform distributed random numbers
@@ -42,23 +42,38 @@ class test_random(gr_unittest.TestCase):
     def test_2(self):
         num = 5
 
-        rndm0 = gr.random(42); # init with time
-        rndm1 = gr.random(42); # init with fix seed
+        rndm0 = gr.random(42)  # init with time
+        rndm1 = gr.random(42)  # init with fix seed
         for k in range(num):
-            x = rndm0.ran1();
-            y = rndm1.ran1();
-            self.assertEqual(x,y)
+            x = rndm0.ran1()
+            y = rndm1.ran1()
+            self.assertEqual(x, y)
 
         x = np.zeros(num)
         y = np.zeros(num)
-        rndm0 = gr.random(42); # init with fix seed 1
+        rndm0 = gr.random(42)  # init with fix seed 1
         for k in range(num):
-            x[k] = rndm0.ran1();
-        rndm1.reseed(43); # init with fix seed 2
+            x[k] = rndm0.ran1()
+        rndm1.reseed(43)  # init with fix seed 2
         for k in range(num):
-            y[k] = rndm0.ran1();
+            y[k] = rndm0.ran1()
         for k in range(num):
-            self.assertNotEqual(x[k],y[k])
+            self.assertNotEqual(x[k], y[k])
+
+    def test_003_integer(self):
+        nitems = 100000
+        minimum = 2
+        maximum = 42
+
+        rng = gr.random(1, minimum, maximum)
+
+        rnd_vals = np.zeros(nitems, dtype=int)
+        for i in range(nitems):
+            rnd_vals[i] = rng.ran_int()
+
+        self.assertGreaterEqual(minimum, np.min(rnd_vals))
+        self.assertLess(np.max(rnd_vals), maximum)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_random, "test_random.xml")
