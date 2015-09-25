@@ -115,7 +115,7 @@ namespace gr {
       if (grblock->d_output_signature->stream_flags(i) == gr::io_signature::MEM_BLOCK_ALLOC) {
         buffer_sptr buffer = grblock->allocate_output_buffer(i);
         if (FLAT_FLOWGRAPH_DEBUG) {
-          std::cout << "Allocated custom buffer for " << block << ":" << i << std::endl;
+          std::cout << "Allocated custom buffer for output " << block << ":" << i << std::endl;
         }
         detail->set_output(i, buffer);
       } else {
@@ -189,14 +189,14 @@ namespace gr {
       nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
     }
 
+    buffer_sptr b;
+    b = make_buffer(nitems, item_size, grblock);
     // We're going to let this fail once and retry. If that fails,
     // throw and exit.
-    buffer_sptr b;
-    try {
-      b = make_buffer(nitems, item_size, grblock);
-    }
-    catch(std::bad_alloc&) {
-      b = make_buffer(nitems, item_size, grblock);
+    if (!b->allocate_buffer()) {
+      if (!b->allocate_buffer()) {
+        throw std::bad_alloc();
+      }
     }
     return b;
   }

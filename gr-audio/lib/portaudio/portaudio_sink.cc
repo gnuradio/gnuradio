@@ -75,6 +75,7 @@ namespace gr {
 
       // FYI, the buffer indicies are in units of samples.
       d_writer = gr::make_buffer(N_BUFFERS * bufsize_samples, sizeof(sample_t));
+      d_writer->allocate_buffer();
       d_reader = gr::buffer_add_reader(d_writer, 0);
     }
 
