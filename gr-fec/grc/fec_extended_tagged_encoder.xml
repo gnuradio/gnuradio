@@ -3,13 +3,20 @@
   <name>FEC Extended Tagged Encoder</name>
   <key>fec_extended_tagged_encoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.extended_tagged_encoder(encoder_obj_list=$encoder_list, puncpat=$puncpat, lentagname=$lentagname)</make>
+  <make>fec.extended_tagged_encoder(encoder_obj_list=$encoder_list, puncpat=$puncpat, lentagname=$lentagname, mtu=$mtu)</make>
 
   <param>
     <name>Encoder Objects</name>
     <key>encoder_list</key>
     <value>encoder_variable</value>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>MTU (bytes)</name>
+    <key>mtu</key>
+    <value>1500</value>
+    <type>int</type>
   </param>
 
   <param>

@@ -3,7 +3,7 @@
   <name>FEC Extended Tagged Decoder</name>
   <key>fec_extended_tagged_decoder</key>
   <import>from gnuradio import fec</import>
-  <make>self.$(id) = $(id) = fec.extended_tagged_decoder(decoder_obj_list=$decoder_list, ann=$ann, puncpat=$puncpat, integration_period=10000, lentagname=$lentagname)</make>
+  <make>self.$(id) = $(id) = fec.extended_tagged_decoder(decoder_obj_list=$decoder_list, ann=$ann, puncpat=$puncpat, integration_period=10000, lentagname=$lentagname, mtu=$mtu)</make>
 
   <param>
     <name>fake val</name>
@@ -18,6 +18,13 @@
     <key>decoder_list</key>
     <value>decoder_variable</value>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>MTU (bytes)</name>
+    <key>mtu</key>
+    <value>1500</value>
+    <type>int</type>
   </param>
 
   <param>

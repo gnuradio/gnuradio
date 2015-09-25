@@ -26,7 +26,7 @@ import fec_swig as fec
 from bitflip import read_bitlist
 
 class extended_tagged_encoder(gr.hier_block2):
-    def __init__(self, encoder_obj_list, puncpat=None, lentagname=None):
+    def __init__(self, encoder_obj_list, puncpat=None, lentagname=None, mtu=1500):
         gr.hier_block2.__init__(self, "extended_tagged_encoder",
                                 gr.io_signature(1, 1, gr.sizeof_char),
                                 gr.io_signature(1, 1, gr.sizeof_char))
@@ -66,7 +66,7 @@ class extended_tagged_encoder(gr.hier_block2):
             self.blocks.append(fec.tagged_encoder(encoder_obj,
                                                   gr.sizeof_char,
                                                   gr.sizeof_char,
-                                                  lentagname))
+                                                  lentagname, mtu))
 
         if self.puncpat != '11':
             self.blocks.append(fec.puncture_bb(len(puncpat), read_bitlist(puncpat), 0))

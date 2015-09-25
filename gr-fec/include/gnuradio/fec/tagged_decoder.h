@@ -76,11 +76,15 @@ namespace gr {
        * \param input_item_size The size of the input items (often the my_decoder object can tell us this).
        * \param output_item_size The size of the output items (often the my_decoder object can tell us this).
        * \param lengthtagname Key name of the tagged stream frame size.
+       * \param mtu The Maxium Transmission Unit (MTU) of the output
+       *            frame that the block will be able to
+       *            process. Specified in bytes and defaults to 1500.
        */
       static sptr make(generic_decoder::sptr my_decoder,
                        size_t input_item_size,
                        size_t output_item_size,
-                       const std::string &lengthtagname="packet_len");
+                       const std::string &lengthtagname="packet_len",
+                       int mtu=1500);
 
       virtual int work(int noutput_items,
                        gr_vector_int& ninput_items,
