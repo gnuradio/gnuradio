@@ -137,7 +137,7 @@ namespace gr {
     std::multimap<uint64_t,tag_t>::iterator get_tags_lower_bound(uint64_t x) { return d_item_tags.lower_bound(x); }
     std::multimap<uint64_t,tag_t>::iterator get_tags_upper_bound(uint64_t x) { return d_item_tags.upper_bound(x); }
 
-    // -------------------------------------------------------------------------
+    virtual bool allocate_buffer();
 
   private:
     friend class buffer_reader;
@@ -159,17 +159,17 @@ namespace gr {
      * dependent boundary.  This is typically the system page size, but
      * under MS windows is 64KB.
      */
-    buffer(int nitems, size_t sizeof_item, block_sptr link);
+    buffer(unsigned int nitems, size_t sizeof_item, block_sptr link);
 
     char                              *d_base;     // base address of buffer
     unsigned int                       d_bufsize;  // in items
+    size_t                             d_sizeof_item;  // in bytes
 
     // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;
 
   private:
-    gr::vmcircbuf                 *d_vmcircbuf;
-    size_t                        d_sizeof_item;  // in bytes
+    gr::vmcircbuf                *d_vmcircbuf;
     std::vector<buffer_reader *>  d_readers;
     boost::weak_ptr<block>        d_link;         // block that writes to this buffer
 
@@ -205,8 +205,6 @@ namespace gr {
       assert((unsigned) s < d_bufsize);
       return s;
     }
-
-    virtual bool allocate_buffer(int nitems, size_t sizeof_item);
 
     /*!
      * \brief disassociate \p reader from this buffer

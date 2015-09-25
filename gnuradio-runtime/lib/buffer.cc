@@ -79,15 +79,12 @@ namespace gr {
   }
 
 
-  buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
-    : d_base(0), d_bufsize(0), d_max_reader_delay(0), d_vmcircbuf(0),
+  buffer::buffer(unsigned int nitems, size_t sizeof_item, block_sptr link)
+    : d_base(0), d_bufsize(nitems), d_max_reader_delay(0), d_vmcircbuf(0),
       d_sizeof_item(sizeof_item), d_link(link),
       d_write_index(0), d_abs_write_offset(0), d_done(false),
       d_last_min_items_read(0)
   {
-    if(!allocate_buffer (nitems, sizeof_item))
-      throw std::bad_alloc ();
-
     s_buffer_count++;
   }
 
@@ -109,25 +106,27 @@ namespace gr {
    * returns true iff successful.
    */
   bool
-  buffer::allocate_buffer(int nitems, size_t sizeof_item)
+  buffer::allocate_buffer()
   {
-    int orig_nitems = nitems;
+    unsigned int nitems = d_bufsize;
+    int orig_nitems = d_bufsize;
 
     // Any buffersize we come up with must be a multiple of min_nitems.
     int granularity = gr::vmcircbuf_sysconfig::granularity();
-    int min_nitems =  minimum_buffer_items(sizeof_item, granularity);
+    int min_nitems =  minimum_buffer_items(d_sizeof_item, granularity);
 
     // Round-up nitems to a multiple of min_nitems.
-    if(nitems % min_nitems != 0)
+    if(nitems % min_nitems != 0) {
       nitems = ((nitems / min_nitems) + 1) * min_nitems;
+    }
 
     // If we rounded-up a whole bunch, give the user a heads up.
     // This only happens if sizeof_item is not a power of two.
 
-    if(nitems > 2 * orig_nitems && nitems * (int) sizeof_item > granularity){
+    if(nitems > 2 * orig_nitems && nitems * static_cast<int>(d_sizeof_item) > granularity){
       std::cerr << "gr::buffer::allocate_buffer: warning: tried to allocate\n"
                 << "   " << orig_nitems << " items of size "
-                << sizeof_item << ". Due to alignment requirements\n"
+                << d_sizeof_item << ". Due to alignment requirements\n"
                 << "   " << nitems << " were allocated.  If this isn't OK, consider padding\n"
                 << "   your structure to a power-of-two bytes.\n"
                 << "   On this platform, our allocation granularity is " << granularity << " bytes.\n";

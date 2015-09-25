@@ -80,6 +80,7 @@ namespace gr {
       // Here be dragons...
       block_sptr block_ptr = cast_to_block_sptr(shared_from_this()); // shared_from_this() to make sure we don't delete ourselves
       buffer_sptr buffer = make_buffer(nitems, item_size, block_ptr);
+      buffer->allocate_buffer();
       return buffer;
     }
     class test_custom_buffers_sink : virtual public sync_block {
@@ -125,6 +126,7 @@ namespace gr {
       // Here be dragons...
       block_sptr block_ptr = cast_to_block_sptr(shared_from_this()); // shared_from_this() to make sure we don't delete ourselves
       buffer_sptr my_buffer = make_buffer(nitems, item_size, block_ptr);
+      my_buffer->allocate_buffer();
       return my_buffer;
     }
   }
