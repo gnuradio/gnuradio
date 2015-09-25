@@ -114,9 +114,9 @@ namespace gr {
       int diff = d_decoder->rate()*d_decoder->get_input_size() - d_decoder->get_output_size();
 
       size_t nbits_in = pmt::length(bits);
-      size_t nbits_out = 0;        
+      size_t nbits_out = 0;
       size_t nblocks = 1;
-      bool variable_frame_size = d_decoder->set_frame_size(nbits_out);
+      bool variable_frame_size = d_decoder->set_frame_size(nbits_in*d_decoder->rate());
 
       // Check here if the frame size is larger than what we've
       // allocated for in the constructor.
@@ -145,7 +145,6 @@ namespace gr {
         volk_32f_s32f_multiply_32f(d_tmp_f32, f32in, 48.0f, nbits_in);
       }
       else {
-
         // grow d_tmp_f32 if needed
         if(nbits_in > d_max_bits_in){
             d_max_bits_in = nbits_in;
@@ -169,9 +168,10 @@ namespace gr {
         d_decoder->generic_work((void*)d_tmp_u8, (void*)u8out);
       }
       else {
-        for(size_t i=0; i<nblocks; i++){
-          d_decoder->generic_work((void*)&d_tmp_f32[i*d_decoder->get_input_size()], (void*)&u8out[i*d_decoder->get_output_size()]);
-          }
+        for(size_t i = 0; i < nblocks; i++){
+          d_decoder->generic_work((void*)&d_tmp_f32[i*d_decoder->get_input_size()],
+                                  (void*)&u8out[i*d_decoder->get_output_size()]);
+        }
       }
 
       meta = pmt::dict_add(meta, pmt::mp("iterations"), pmt::mp(d_decoder->get_iterations()) );
