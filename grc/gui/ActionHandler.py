@@ -60,7 +60,7 @@ class ActionHandler:
         for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
         #setup the main window
         self.platform = platform;
-        self.main_window = MainWindow(platform)
+        self.main_window = MainWindow(platform, self._handle_action)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
         self.get_page = self.main_window.get_page
@@ -107,7 +107,7 @@ class ActionHandler:
         Actions.APPLICATION_QUIT()
         return True
 
-    def _handle_action(self, action):
+    def _handle_action(self, action, *args):
         #print action
         ##################################################
         # Initialize/Quit
@@ -466,6 +466,9 @@ class ActionHandler:
         ##################################################
         elif action == Actions.FLOW_GRAPH_NEW:
             self.main_window.new_page()
+            if args:
+                self.get_flow_graph()._options_block.get_param('generate_options').set_value(args[0])
+                self.get_flow_graph().update()
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = OpenFlowGraphFileDialog(self.get_page().get_file_path()).run()
             if file_paths: #open a new page for each file, show only the first

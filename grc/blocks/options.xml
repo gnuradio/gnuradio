@@ -77,7 +77,7 @@ else: self.stop(); self.wait()</callback>
 			<key>hb</key>
 		</option>
 		<option>
-			<name>QT GUI Hier Block</name>
+			<name>Hier Block (QT GUI)</name>
 			<key>hb_qt_gui</key>
 		</option>
 	</param>
