@@ -38,6 +38,8 @@ namespace gr {
     public:
       multiply_const_ff_impl(float k, size_t vlen);
 
+      void setup_rpc();
+
       float k() const { return d_k; }
       void set_k(float k) { d_k = k; }
 
