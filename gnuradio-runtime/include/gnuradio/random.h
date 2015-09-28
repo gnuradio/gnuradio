@@ -66,7 +66,7 @@ namespace gr {
     void set_integer_limits(const int minimum, const int maximum);
 
     /*!
-     * Uniform random integers in the range set by 'set_integer_limits'.
+     * Uniform random integers in the range set by 'set_integer_limits' [min, max).
      */
     int ran_int();
 

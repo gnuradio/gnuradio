@@ -48,13 +48,14 @@ namespace gr {
   {
     d_gauss_stored = false; // set gasdev (gauss distributed numbers) on calculation state
 
-    // Setup random number generator
-    d_rng = new boost::mt19937;
+    // Setup random number generators
+    d_rng = new boost::mt19937; // random numbers are generated here.
+    d_uniform = new boost::uniform_real<float>; // map random number to distribution
+    d_integer_dis = new boost::random::uniform_int_distribution<>(0, 1); // another "mapper"
+    d_generator = NULL; // MUST be reinstantiated on every call to reseed.
+    d_integer_generator = NULL; // MUST be reinstantiated on everytime d_rng or d_integer_dis is changed.
     reseed(seed); // set seed for random number generator
-    d_uniform = new boost::uniform_real<float>;
-    d_integer_dis = new boost::random::uniform_int_distribution<>(min_integer, max_integer - 1);
-    d_generator = new boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > (*d_rng,*d_uniform); // create number generator in [0,1) from boost.random
-    d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
+    set_integer_limits(min_integer, max_integer);
   }
 
   random::~random()
@@ -72,10 +73,14 @@ namespace gr {
   void
   random::reseed(unsigned int seed)
   {
-    //FIXME: method without effect after c'tor.
     if(seed==0) d_seed = static_cast<unsigned int>(std::time(0));
     else d_seed = seed;
     d_rng->seed(d_seed);
+    // reinstantiate generators. Otherwise reseed doesn't take effect.
+    delete d_generator;
+    d_generator = new boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > (*d_rng,*d_uniform); // create number generator in [0,1) from boost.random
+    delete d_integer_generator;
+    d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
   }
 
   void
@@ -87,6 +92,9 @@ namespace gr {
     d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
   }
 
+  /*!
+   * Uniform random integers in the range set by 'set_integer_limits' [min, max).
+   */
   int
   random::ran_int(){
     return (*d_integer_generator)();

@@ -52,7 +52,7 @@ namespace gr {
     }
 
     int
-    @IMPL_NAME@::random_int()
+    @IMPL_NAME@::random_value()
     {
       return d_rng->ran_int();
     }
@@ -65,7 +65,7 @@ namespace gr {
       @TYPE@ *out = (@TYPE@*)output_items[0];
 
       for(int i = 0; i < noutput_items; i++){
-        *out++ = (@TYPE@) random_int();
+        *out++ = (@TYPE@) random_value();
       }
 
       // Tell runtime system how many output items we produced.
