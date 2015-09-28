@@ -141,7 +141,7 @@ namespace gr {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong type).");
           return;
       }
-      if (!pmt::length(A) == d_A.size()) {
+      if (pmt::length(A) != d_A.size()) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong size).");
           return;
       }
