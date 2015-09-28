@@ -196,7 +196,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
-    (rpcextractor_base<T,short>::_source->*rpcextractor_base<T,char>::_func)
+    (rpcextractor_base<T,short>::_source->*rpcextractor_base<T,short>::_func)
       (static_cast<short>(pmt::to_long(msg)));
   }
 };
