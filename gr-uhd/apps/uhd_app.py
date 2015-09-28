@@ -149,6 +149,9 @@ class UHDApp(object):
         self.antenna = self.normalize_antenna_sel(args)
         if self.antenna is not None:
             for i, chan in enumerate(self.channels):
+                if not self.antenna[i] in self.usrp.get_antennas(chan):
+                    self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(ant))
+                    exit(1)
                 self.usrp.set_antenna(self.antenna[i], chan)
                 self.vprint("[{prefix}] Channel {chan}: Using antenna {ant}.".format(
                     prefix=self.prefix, chan=chan, ant=self.usrp.get_antenna(chan)
@@ -156,11 +159,13 @@ class UHDApp(object):
         self.antenna = self.usrp.get_antenna(self.channels[0])
         # Set receive daughterboard gain:
         self.set_gain(args.gain)
+        self.gain_range = self.usrp.get_gain_range(self.channels[0])
         # Set frequency (tune request takes lo_offset):
         if hasattr(args, 'lo_offset') and args.lo_offset is not None:
             treq = uhd.tune_request(args.freq, args.lo_offset)
         else:
             treq = uhd.tune_request(args.freq)
+        self.has_lo_sensor = 'lo_locked' in self.usrp.get_sensor_names()
         # Make sure tuning is synched:
         if len(self.channels) > 1:
             if args.sync == 'pps':
@@ -178,7 +183,7 @@ class UHDApp(object):
         if len(self.channels) > 1:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
                 self.usrp.clear_command_time(mb_idx)
-            print("[{prefix}] Syncing channels...".format(prefix=self.prefix))
+            self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
         self.freq = self.usrp.get_center_freq(self.channels[0])
         if args.show_async_msg:
@@ -214,9 +219,9 @@ class UHDApp(object):
         self.vprint("Tuning all channels to {freq} MHz.".format(freq=freq/1e6))
         # Set frequency (tune request takes lo_offset):
         if hasattr(self.args, 'lo_offset') and self.args.lo_offset is not None:
-            treq = uhd.tune_request(self.args.freq, self.args.lo_offset)
+            treq = uhd.tune_request(self.freq, self.args.lo_offset)
         else:
-            treq = uhd.tune_request(self.args.freq)
+            treq = uhd.tune_request(self.freq)
         # Make sure tuning is synched:
         if len(self.channels) > 1 and not skip_sync:
             cmd_time = self.usrp.get_time_now() + uhd.time_spec(COMMAND_DELAY)
@@ -234,6 +239,9 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
+        print('pre', self.freq)
+        self.freq = self.usrp.get_center_freq(self.channels[0])
+        print('post', self.freq)
 
     @staticmethod
     def setup_argparser(
