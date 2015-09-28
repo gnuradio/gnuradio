@@ -312,11 +312,11 @@ $param.get_make()#slurp
 $short_id#slurp
 #end def
 #if not $generate_options.startswith('hb')
+#set $params_eq_list = list()
+#if $parameters
 
 
-def main(top_block_cls=$(class_name)):
-    #set $params_eq_list = list()
-    #if $parameters
+def argument_parser():
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
@@ -327,12 +327,20 @@ def main(top_block_cls=$(class_name)):
         help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
         #end if
     #end for
-    (options, args) = parser.parse_args()
+    return parser
+#end if
+
+
+def main(top_block_cls=$(class_name), options=None):
+    #if $parameters
+    if options is None:
+        options, _ = argument_parser().parse_args()
     #end if
     #if $flow_graph.get_option('realtime_scheduling')
     if gr.enable_realtime_scheduling() != gr.RT_OK:
         print "Error: failed to enable real-time scheduling."
     #end if
+
     #if $generate_options == 'wx_gui'
     tb = top_block_cls($(', '.join($params_eq_list)))
         #if $flow_graph.get_option('max_nouts')
@@ -347,8 +355,10 @@ def main(top_block_cls=$(class_name)):
     #elif $generate_options == 'qt_gui'
     from distutils.version import StrictVersion
     if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui', 'style', 'raster'))
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
+
     tb = top_block_cls($(', '.join($params_eq_list)))
     #if $flow_graph.get_option('run')
         #if $flow_graph.get_option('max_nouts')
