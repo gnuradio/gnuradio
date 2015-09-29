@@ -44,8 +44,8 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
     ${qtgui_mod_includedir}/VectorDisplayPlot.h
 )
-QT4_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
-QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
+QT5_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
+QT5_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
 
 #FIXME the sources expect <foo>.ui.h, but the macros generate ui_foo.h
 #avoid changing the sources by generating the header with the include
@@ -125,7 +125,7 @@ include_directories(
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
     ${QWT_INCLUDE_DIRS}
-    ${QT_INCLUDE_DIRS}
+    ${Qt5Widgets_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
     ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -154,7 +154,7 @@ list(APPEND qtgui_libs
     gnuradio-filter
     ${VOLK_LIBRARIES}
     ${QWT_LIBRARIES}
-    ${QT_LIBRARIES}
+    ${Qt5Widgets_LIBRARIES}
     ${FFTW3F_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
