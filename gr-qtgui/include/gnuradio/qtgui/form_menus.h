@@ -28,6 +28,7 @@
 #include <QtGui/QtGui>
 #include <QtGui/QIntValidator>
 #include <QtGui/QDoubleValidator>
+#include <QtWidgets/QtWidgets>
 #include <qwt_symbol.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
