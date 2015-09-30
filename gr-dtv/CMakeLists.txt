@@ -27,7 +27,11 @@ include(GrBoost)
 ########################################################################
 include(GrComponent)
 
+include (CheckCCompilerFlag)
+CHECK_C_COMPILER_FLAG ("-msse2" SSE2_SUPPORTED)
+
 GR_REGISTER_COMPONENT("gr-dtv" ENABLE_GR_DTV
+    SSE2_SUPPORTED
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_ANALOG
