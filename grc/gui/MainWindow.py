@@ -65,12 +65,17 @@ PAGE_TITLE_MARKUP_TMPL = """\
 class MainWindow(gtk.Window):
     """The topmost window with menus, the tool bar, and other major windows."""
 
-    def __init__(self, platform):
+    def __init__(self, platform, action_handler_callback):
         """
         MainWindow contructor
         Setup the menu, toolbar, flowgraph editor notebook, block selection window...
         """
         self._platform = platform
+        gen_opts = platform.get_block('options').get_param('generate_options')
+        generate_mode_default = gen_opts.get_value()
+        generate_modes = [
+            (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
+            for o in gen_opts.get_options()]
         #setup window
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         vbox = gtk.VBox()
@@ -78,7 +83,8 @@ class MainWindow(gtk.Window):
         self.add(vbox)
         #create the menu bar and toolbar
         self.add_accel_group(Actions.get_accel_group())
-        vbox.pack_start(Bars.MenuBar(), False)
+        menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
+        vbox.pack_start(menu_bar, False)
         vbox.pack_start(Bars.Toolbar(), False)
         vbox.pack_start(self.hpaned)
         #create the notebook
@@ -177,7 +183,7 @@ class MainWindow(gtk.Window):
         try: #try to load from file
             if file_path: Messages.send_start_load(file_path)
             flow_graph = self._platform.get_new_flow_graph()
-            flow_graph.grc_file_path = file_path;
+            flow_graph.grc_file_path = file_path
             #print flow_graph
             page = NotebookPage(
                 self,

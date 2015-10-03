@@ -34,8 +34,9 @@ from .ParserErrorsDialog import ParserErrorsDialog
 from .MainWindow import MainWindow
 from .PropsDialog import PropsDialog
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
-                          SaveReportsFileDialog, SaveImageFileDialog)
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION
+                          SaveReportsFileDialog, SaveImageFileDialog,
+                          OpenQSSFileDialog)
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
 
 gobject.threads_init()
 
@@ -60,7 +61,7 @@ class ActionHandler:
         for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
         #setup the main window
         self.platform = platform;
-        self.main_window = MainWindow(platform)
+        self.main_window = MainWindow(platform, self._handle_action)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
         self.get_page = self.main_window.get_page
@@ -107,27 +108,12 @@ class ActionHandler:
         Actions.APPLICATION_QUIT()
         return True
 
-    def _handle_action(self, action):
+    def _handle_action(self, action, *args):
         #print action
         ##################################################
         # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
-            for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
-            #enable a select few actions
-            for action in (
-                Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
-                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
-                Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
-                Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-                Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
-                Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
-                Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
-                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID,
-                Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
-                Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
-            ): action.set_sensitive(True)
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
                 Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
@@ -142,15 +128,28 @@ class ActionHandler:
             if not self.get_page(): self.main_window.new_page() #ensure that at least a blank page exists
 
             self.main_window.btwin.search_entry.hide()
+
+            # Disable all actions, then re-enable a few
+            for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
             for action in (
-                Actions.TOGGLE_REPORTS_WINDOW,
-                Actions.TOGGLE_BLOCKS_WINDOW,
-                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
-                Actions.TOGGLE_SCROLL_LOCK,
-                Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
+                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
+                Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
+                Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
+                Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
+                Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
+                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
+                Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
-            ): action.load_from_preferences()
+                Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
+                Actions.FLOW_GRAPH_OPEN_QSS_THEME,
+            ):
+                action.set_sensitive(True)
+                if hasattr(action, 'load_from_preferences'):
+                    action.load_from_preferences()
+
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
                 gtk.main_quit()
@@ -416,6 +415,10 @@ class ActionHandler:
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB:
             action.save_to_preferences()
+        elif action == Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY:
+            action.save_to_preferences()
+            for page in self.main_window.get_pages():
+                page.get_flow_graph().update()
         ##################################################
         # Param Modifications
         ##################################################
@@ -465,11 +468,23 @@ class ActionHandler:
         ##################################################
         elif action == Actions.FLOW_GRAPH_NEW:
             self.main_window.new_page()
+            if args:
+                self.get_flow_graph()._options_block.get_param('generate_options').set_value(args[0])
+                self.get_flow_graph().update()
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = OpenFlowGraphFileDialog(self.get_page().get_file_path()).run()
             if file_paths: #open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     self.main_window.new_page(file_path, show=(i==0))
+        elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
+            file_paths = OpenQSSFileDialog(GR_PREFIX + '/share/gnuradio/themes/').run()
+            if file_paths:
+                try:
+                    from gnuradio import gr
+                    gr.prefs().set_string("qtgui", "qss", file_paths[0])
+                    gr.prefs().save()
+                except Exception as e:
+                    Messages.send("Failed to save QSS preference: " + str(e))
         elif action == Actions.FLOW_GRAPH_CLOSE:
             self.main_window.close_page()
         elif action == Actions.FLOW_GRAPH_SAVE:

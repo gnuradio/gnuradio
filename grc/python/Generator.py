@@ -21,6 +21,7 @@ import os
 import sys
 import subprocess
 import tempfile
+import shlex
 from distutils.spawn import find_executable
 from Cheetah.Template import Template
 
@@ -120,20 +121,13 @@ class TopBlockGenerator(object):
         Returns:
             a popen object
         """
-        # extract the path to the python executable
-        python_exe = sys.executable
-
-        # when using wx gui on mac os, execute with pythonw
-        # using pythonw is not necessary anymore, disabled below
-        # if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
-        #   python_exe = 'pythonw'
-
         def args_to_string(args):
             """Accounts for spaces in args"""
             return ' '.join(repr(arg) if ' ' in arg else arg for arg in args)
 
-        # setup the command args to run
-        cmds = [python_exe, '-u', self.get_file_path()]  # -u is unbuffered stdio
+        run_command = self._flow_graph.get_option('run_command')
+        cmds = shlex.split(run_command.format(python=sys.executable,
+                                              filename=self.get_file_path()))
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)

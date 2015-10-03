@@ -21,6 +21,7 @@ from Element import Element
 import Utils
 import Colors
 from .. base import odict
+from .. python.Param import num_to_str
 from Constants import BORDER_PROXIMITY_SENSITIVITY
 from Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
@@ -35,9 +36,17 @@ import pango
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
 <span foreground="$foreground" font_desc="$font"><b>$encode($block.get_name())</b></span>"""
-COMMENT_MARKUP_TMPL="""\
+
+# Includes the additional complexity markup if enabled
+COMMENT_COMPLEXITY_MARKUP_TMPL="""\
 #set $foreground = $block.get_enabled() and '#444' or '#888'
-<span foreground="$foreground" font_desc="$font">$encode($block.get_comment())</span>"""
+#if $complexity
+<span foreground="#444" size="medium" font_desc="$font"><b>$encode($complexity)</b></span>
+#end if
+#if $comment
+<span foreground="$foreground" font_desc="$font">$encode($comment)</span>#slurp
+#end if"""
+
 
 class Block(Element):
     """The graphical signal block."""
@@ -218,16 +227,31 @@ class Block(Element):
         self.create_comment_label()
 
     def create_comment_label(self):
-        comment = self.get_comment()
-        if comment:
-            layout = gtk.DrawingArea().create_pango_layout('')
-            layout.set_markup(Utils.parse_template(COMMENT_MARKUP_TMPL, block=self, font=BLOCK_FONT))
-            width, height = layout.get_pixel_size()
-            pixmap = self.get_parent().new_pixmap(width, height)
+        comment = self.get_comment()    # Returns None if there are no comments
+        complexity = None
+
+        # Show the flowgraph complexity on the top block if enabled
+        if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
+            complexity = "Complexity: {}bal".format(num_to_str(self.get_parent().get_complexity()))
+
+        layout = gtk.DrawingArea().create_pango_layout('')
+        layout.set_markup(Utils.parse_template(COMMENT_COMPLEXITY_MARKUP_TMPL,
+                                               block=self,
+                                               comment=comment,
+                                               complexity=complexity,
+                                               font=BLOCK_FONT))
+
+        # Setup the pixel map. Make sure that layout not empty
+        width, height = layout.get_pixel_size()
+        if width and height:
+            padding = BLOCK_LABEL_PADDING
+            pixmap = self.get_parent().new_pixmap(width + 2 * padding,
+                                                  height + 2 * padding)
             gc = pixmap.new_gc()
             gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)
-            pixmap.draw_rectangle(gc, True, 0, 0, width, height)
-            pixmap.draw_layout(gc, 0, 0, layout)
+            pixmap.draw_rectangle(
+                gc, True, 0, 0, width + 2 * padding, height + 2 * padding)
+            pixmap.draw_layout(gc, padding, padding, layout)
             self._comment_pixmap = pixmap
         else:
             self._comment_pixmap = None

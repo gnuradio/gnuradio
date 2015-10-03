@@ -26,7 +26,7 @@ import sys
 from gnuradio import gr
 
 _gr_prefs = gr.prefs()
-
+GR_PREFIX = gr.prefix()
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()
@@ -118,4 +118,3 @@ SCROLL_DISTANCE = 15
 
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
-
