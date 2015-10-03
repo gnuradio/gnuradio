@@ -31,6 +31,8 @@ NO_MODS_MASK = 0
 _actions_keypress_dict = dict()
 _keymap = gtk.gdk.keymap_get_default()
 _used_mods_mask = NO_MODS_MASK
+
+
 def handle_key_press(event):
     """
     Call the action associated with the key press event.
@@ -43,21 +45,30 @@ def handle_key_press(event):
         true if handled
     """
     _used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for keyval, mod_mask in _actions_keypress_dict], NO_MODS_MASK)
-    #extract the key value and the consumed modifiers
+    # extract the key value and the consumed modifiers
     keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
         event.hardware_keycode, event.state, event.group)
-    #get the modifier mask and ignore irrelevant modifiers
+    # get the modifier mask and ignore irrelevant modifiers
     mod_mask = event.state & ~consumed & _used_mods_mask
-    #look up the keypress and call the action
-    try: _actions_keypress_dict[(keyval, mod_mask)]()
-    except KeyError: return False #not handled
-    return True #handled here
+    # look up the keypress and call the action
+    try:
+        _actions_keypress_dict[(keyval, mod_mask)]()
+    except KeyError:
+        return False  # not handled
+    else:
+        return True  # handled here
 
 _all_actions_list = list()
-def get_all_actions(): return _all_actions_list
+
+
+def get_all_actions():
+    return _all_actions_list
 
 _accel_group = gtk.AccelGroup()
-def get_accel_group(): return _accel_group
+
+
+def get_accel_group():
+    return _accel_group
 
 
 class _ActionBase(object):
@@ -69,14 +80,15 @@ class _ActionBase(object):
         _all_actions_list.append(self)
         for i in range(len(keypresses)/2):
             keyval, mod_mask = keypresses[i*2:(i+1)*2]
-            #register this keypress
+            # register this keypress
             if _actions_keypress_dict.has_key((keyval, mod_mask)):
-                raise KeyError('keyval/mod_mask pair already registered "%s"'%str((keyval, mod_mask)))
+                raise KeyError('keyval/mod_mask pair already registered "%s"' % str((keyval, mod_mask)))
             _actions_keypress_dict[(keyval, mod_mask)] = self
-            #set the accelerator group, and accelerator path
-            #register the key name and mod mask with the accelerator path
-            if label is None: continue #dont register accel
-            accel_path = '<main>/'+self.get_name()
+            # set the accelerator group, and accelerator path
+            # register the key name and mod mask with the accelerator path
+            if label is None:
+                continue  # dont register accel
+            accel_path = '<main>/' + self.get_name()
             self.set_accel_group(get_accel_group())
             self.set_accel_path(accel_path)
             gtk.accel_map_add_entry(accel_path, keyval, mod_mask)
@@ -86,10 +98,10 @@ class _ActionBase(object):
         The string representation should be the name of the action id.
         Try to find the action id for this action by searching this module.
         """
-        try:
-            import Actions
-            return filter(lambda attr: getattr(Actions, attr) == self, dir(Actions))[0]
-        except: return self.get_name()
+        for name, value in globals():
+            if value == self:
+                return value
+        return self.get_name()
 
     def __repr__(self): return str(self)
 
@@ -115,12 +127,10 @@ class Action(gtk.Action, _ActionBase):
             key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
             the: regular gtk.Action parameters (defaults to None)
         """
-        if name is None: name = label
-        gtk.Action.__init__(self,
-            name=name, label=label,
-            tooltip=tooltip, stock_id=stock_id,
-        )
-        #register this action
+        if name is None:
+            name = label
+        gtk.Action.__init__(self, name=name, label=label, tooltip=tooltip,
+                            stock_id=stock_id)
         _ActionBase.__init__(self, label, keypresses)
 
 
@@ -141,9 +151,8 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
         """
         if name is None:
             name = label
-        gtk.ToggleAction.__init__(self,
-            name=name, label=label, tooltip=tooltip, stock_id=stock_id,
-        )
+        gtk.ToggleAction.__init__(self, name=name, label=label,
+                                  tooltip=tooltip, stock_id=stock_id)
         _ActionBase.__init__(self, label, keypresses)
         self.preference_name = preference_name
         self.default = default
@@ -282,6 +291,12 @@ TOGGLE_SHOW_CODE_PREVIEW_TAB = ToggleAction(
     tooltip="Show a preview of the code generated for each Block in its "
             "Properties Dialog",
     preference_name='show_generated_code_tab',
+    default=False,
+)
+TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = ToggleAction(
+    label='Show Flowgraph Complexity',
+    tooltip="How many Balints is the flowgraph...",
+    preference_name='show_flowgraph_complexity',
     default=False,
 )
 BLOCK_CREATE_HIER = Action(
@@ -423,6 +438,11 @@ XML_PARSER_ERRORS_DISPLAY = Action(
     label='_Parser Errors',
     tooltip='View errors that occured while parsing XML files',
     stock_id=gtk.STOCK_DIALOG_ERROR,
+)
+FLOW_GRAPH_OPEN_QSS_THEME = Action(
+    label='Set Default QT GUI _Theme',
+    tooltip='Set a default QT Style Sheet file to use for QT GUI',
+    stock_id=gtk.STOCK_OPEN,
 )
 TOOLS_RUN_FDESIGN = Action(
     label='Filter Design Tool',

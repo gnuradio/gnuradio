@@ -7,7 +7,7 @@
 ##@param imports the import statements
 ##@param flow_graph the flow_graph
 ##@param variables the variable blocks
-##@param parameters the paramater blocks
+##@param parameters the parameter blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
 ##@param msgs the msg type connections
@@ -53,6 +53,9 @@ if __name__ == '__main__':
 ########################################################
 ##Create Imports
 ########################################################
+#if $flow_graph.get_option('qt_qss_theme')
+#set imports = $sorted(set($imports + ["import os", "import sys"]))
+#end if
 #if any(imp.endswith("# grc-generated hier_block") for imp in $imports)
 import os
 import sys
@@ -95,9 +98,9 @@ class $(class_name)(gr.top_block, Qt.QWidget):
         Qt.QWidget.__init__(self)
         self.setWindowTitle("$title")
         try:
-             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
-             pass
+            pass
         self.top_scroll_layout = Qt.QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = Qt.QScrollArea()
@@ -258,22 +261,34 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
     #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
 
 #end for
-
 ########################################################
 ## QT sink close method reimplementation
 ########################################################
 #if $generate_options == 'qt_gui'
+
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
-#end if
 
+    #if $flow_graph.get_option('qt_qss_theme')
+    def setStyleSheetFromFile(self, filename):
+        try:
+            if not os.path.exists(filename):
+                filename = os.path.join(
+                    gr.prefix(), "share", "gnuradio", "themes", filename)
+            with open(filename) as ss:
+                tb.setStyleSheet('1' + ss.read())
+        except Exception as e:
+            print >> sys.stderr, e
+    #end if
+#end if
 ########################################################
 ##Create Callbacks
 ##  Write a set method for this variable that calls the callbacks
 ########################################################
 #for $var in $parameters + $variables
+
     #set $id = $var.get_id()
     def get_$(id)(self):
         return self.$id
@@ -291,7 +306,6 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $indent($callback)
         #end for
     #end if
-
 #end for
 ########################################################
 ##Create Main
@@ -313,25 +327,37 @@ $param.get_make()#slurp
 $short_id#slurp
 #end def
 #if not $generate_options.startswith('hb')
+#set $params_eq_list = list()
+#if $parameters
 
-if __name__ == '__main__':
+
+def argument_parser():
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    #set $params_eq_list = list()
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
         #if $type
             #silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-    parser.add_option("$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
+    parser.add_option(
+        "$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
         help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
         #end if
     #end for
-    (options, args) = parser.parse_args()
+    return parser
+#end if
+
+
+def main(top_block_cls=$(class_name), options=None):
+    #if $parameters
+    if options is None:
+        options, _ = argument_parser().parse_args()
+    #end if
     #if $flow_graph.get_option('realtime_scheduling')
     if gr.enable_realtime_scheduling() != gr.RT_OK:
-        print "Error: failed to enable realtime scheduling."
+        print "Error: failed to enable real-time scheduling."
     #end if
+
     #if $generate_options == 'wx_gui'
-    tb = $(class_name)($(', '.join($params_eq_list)))
+    tb = top_block_cls($(', '.join($params_eq_list)))
         #if $flow_graph.get_option('max_nouts')
     tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
         #else
@@ -344,15 +370,20 @@ if __name__ == '__main__':
     #elif $generate_options == 'qt_gui'
     from distutils.version import StrictVersion
     if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui','style','raster'))
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
-    tb = $(class_name)($(', '.join($params_eq_list)))
+
+    tb = top_block_cls($(', '.join($params_eq_list)))
     #if $flow_graph.get_option('run')
         #if $flow_graph.get_option('max_nouts')
     tb.start($flow_graph.get_option('max_nouts'))
         #else
     tb.start()
         #end if
+    #end if
+    #if $flow_graph.get_option('qt_qss_theme')
+    tb.setStyleSheetFromFile($repr($flow_graph.get_option('qt_qss_theme')))
     #end if
     tb.show()
 
@@ -368,9 +399,8 @@ if __name__ == '__main__':
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
         #end for
     qapp.exec_()
-    tb = None  # to clean up Qt widgets
     #elif $generate_options == 'no_gui'
-    tb = $(class_name)($(', '.join($params_eq_list)))
+    tb = top_block_cls($(', '.join($params_eq_list)))
         #set $run_options = $flow_graph.get_option('run_options')
         #if $run_options == 'prompt'
             #if $flow_graph.get_option('max_nouts')
@@ -398,4 +428,8 @@ if __name__ == '__main__':
         #end for
     tb.wait()
     #end if
+
+
+if __name__ == '__main__':
+    main()
 #end if

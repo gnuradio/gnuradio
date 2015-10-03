@@ -35,6 +35,7 @@ OPEN_FLOW_GRAPH = 'open flow graph'
 SAVE_FLOW_GRAPH = 'save flow graph'
 SAVE_REPORTS = 'save reports'
 SAVE_IMAGE = 'save image'
+OPEN_QSS_THEME = 'open qss theme'
 
 FILE_OVERWRITE_MARKUP_TMPL="""\
 File <b>$encode($filename)</b> Exists!\nWould you like to overwrite the existing file?"""
@@ -70,6 +71,13 @@ def get_all_files_filter():
     filter = gtk.FileFilter()
     filter.set_name('All Files')
     filter.add_pattern('*')
+    return filter
+
+##the filter for qss files
+def get_qss_themes_filter():
+    filter = gtk.FileFilter()
+    filter.set_name('QSS Themes')
+    filter.add_pattern('*.qss')
     return filter
 
 ##################################################
@@ -126,6 +134,10 @@ class FileDialog(FileDialogHelper):
             self.add_and_set_filter(get_image_files_filter())
             current_file_path = current_file_path + IMAGE_FILE_EXTENSION
             self.set_current_name(path.basename(current_file_path)) #show the current filename
+        elif self.type == OPEN_QSS_THEME:
+            FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_OPEN, 'Open a QSS theme...')
+            self.add_and_set_filter(get_qss_themes_filter())
+            self.set_select_multiple(False)
         self.set_current_folder(path.dirname(current_file_path)) #current directory
 
     def add_and_set_filter(self, filter):
@@ -171,7 +183,7 @@ class FileDialog(FileDialogHelper):
         #############################################
         # Handle Open Dialogs
         #############################################
-        elif self.type in (OPEN_FLOW_GRAPH,):
+        elif self.type in (OPEN_FLOW_GRAPH, OPEN_QSS_THEME):
             filenames = self.get_filenames()
             for filename in filenames:
                 if not path.exists(filename): #show a warning and re-run
@@ -195,5 +207,6 @@ class FileDialog(FileDialogHelper):
 
 class OpenFlowGraphFileDialog(FileDialog): type = OPEN_FLOW_GRAPH
 class SaveFlowGraphFileDialog(FileDialog): type = SAVE_FLOW_GRAPH
+class OpenQSSFileDialog(FileDialog): type = OPEN_QSS_THEME
 class SaveReportsFileDialog(FileDialog): type = SAVE_REPORTS
 class SaveImageFileDialog(FileDialog): type = SAVE_IMAGE
