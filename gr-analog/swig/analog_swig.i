@@ -74,6 +74,9 @@
 #include "gnuradio/analog/simple_squelch_cc.h"
 #include "gnuradio/analog/squelch_base_cc.h"
 #include "gnuradio/analog/squelch_base_ff.h"
+#include "gnuradio/analog/random_uniform_source_b.h"
+#include "gnuradio/analog/random_uniform_source_s.h"
+#include "gnuradio/analog/random_uniform_source_i.h"
 %}
 
 %include "gnuradio/analog/cpm.h"
@@ -116,6 +119,9 @@
 %include "gnuradio/analog/simple_squelch_cc.h"
 %include "gnuradio/analog/squelch_base_cc.h"
 %include "gnuradio/analog/squelch_base_ff.h"
+%include "gnuradio/analog/random_uniform_source_b.h"
+%include "gnuradio/analog/random_uniform_source_s.h"
+%include "gnuradio/analog/random_uniform_source_i.h"
 
 GR_SWIG_BLOCK_MAGIC2(analog, agc_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, agc_ff);
@@ -152,3 +158,6 @@ GR_SWIG_BLOCK_MAGIC2(analog, sig_source_i);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_f);
 GR_SWIG_BLOCK_MAGIC2(analog, sig_source_c);
 GR_SWIG_BLOCK_MAGIC2(analog, simple_squelch_cc);
+GR_SWIG_BLOCK_MAGIC2(analog, random_uniform_source_b);
+GR_SWIG_BLOCK_MAGIC2(analog, random_uniform_source_s);
+GR_SWIG_BLOCK_MAGIC2(analog, random_uniform_source_i);
