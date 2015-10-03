@@ -278,7 +278,7 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
                 filename = os.path.join(
                     gr.prefix(), "share", "gnuradio", "themes", filename)
             with open(filename) as ss:
-                tb.setStyleSheet('1' + ss.read())
+                self.setStyleSheet(ss.read())
         except Exception as e:
             print >> sys.stderr, e
     #end if
