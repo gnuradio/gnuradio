@@ -41,11 +41,16 @@ BLOCK_MARKUP_TMPL="""\
 COMMENT_COMPLEXITY_MARKUP_TMPL="""\
 #set $foreground = $block.get_enabled() and '#444' or '#888'
 #if $complexity
-<span foreground="#444" size="medium" font_desc="$font"><b>$encode($complexity)</b></span>
+<span foreground="#444" size="medium" font_desc="$font"><b>$encode($complexity)</b></span>#slurp
+#end if
+#if $complexity and $comment
+<span></span>
 #end if
 #if $comment
 <span foreground="$foreground" font_desc="$font">$encode($comment)</span>#slurp
-#end if"""
+#end if
+"""
+
 
 
 class Block(Element):
