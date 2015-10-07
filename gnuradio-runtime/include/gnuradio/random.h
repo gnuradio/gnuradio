@@ -45,16 +45,30 @@ namespace gr {
 
     boost::mt19937 *d_rng; // mersenne twister as random number generator
     boost::uniform_real<float> *d_uniform; // choose uniform distribution, default is [0,1)
+    boost::random::uniform_int_distribution<> *d_integer_dis;
     boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > *d_generator;
+    boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> > *d_integer_generator;
 
   public:
-    random(unsigned int seed=0);
+    random(unsigned int seed=0, int min_integer = 0, int max_integer = 2);
     ~random();
 
     /*!
      * \brief Change the seed for the initialized number generator. seed = 0 initializes the random number generator with the system time. Note that a fast initialization of various instances can result in the same seed.
      */
     void reseed(unsigned int seed);
+
+    /*!
+     * set minimum and maximum for integer random number generator.
+     * Limits are [minimum, maximum)
+     * Default: [0, std::numeric_limits< IntType >::max)]
+     */
+    void set_integer_limits(const int minimum, const int maximum);
+
+    /*!
+     * Uniform random integers in the range set by 'set_integer_limits' [min, max).
+     */
+    int ran_int();
 
     /*!
      * \brief Uniform random numbers in the range [0.0, 1.0)

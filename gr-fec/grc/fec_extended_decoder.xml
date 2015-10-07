@@ -3,7 +3,7 @@
   <name>FEC Extended Decoder</name>
   <key>fec_extended_decoder</key>
   <import>from gnuradio import fec</import>
-  <make>self.$(id) = $(id) = fec.extended_decoder(decoder_obj_list=$decoder_list, threading=$threadtype.arg, ann=$ann, puncpat=$puncpat, integration_period=10000)</make>
+  <make>fec.extended_decoder(decoder_obj_list=$decoder_list, threading=$threadtype.arg, ann=$ann, puncpat=$puncpat, integration_period=10000)</make>
 
   <param>
     <name>fake val</name>
