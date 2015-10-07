@@ -40,6 +40,9 @@ public:
   void registerQueryCallback(const std::string &id, const queryCallback_t callback);
   void unregisterQueryCallback(const std::string &id);
 
+  void registerHandlerCallback(const std::string &id, const handlerCallback_t callback);
+  void unregisterHandlerCallback(const std::string &id);
+
   void registerServer(rpcmanager_base::rpcserver_booter_base_sptr server);
 
   const std::string& type();
@@ -90,6 +93,32 @@ private:
     void operator()(T& x) { x->i()->unregisterQueryCallback(id); }
     const std::string& id;
   };
+
+
+
+  template<class T, typename Tcallback>
+  struct registerHandlerCallback_f: public std::unary_function<T,void>
+  {
+    registerHandlerCallback_f(const std::string &_id,  const Tcallback _callback)
+      : id(_id), callback(_callback)
+    {;}
+
+    void operator()(T& x) { x->i()->registerHandlerCallback(id, callback); }
+    const std::string& id;  const Tcallback& callback;
+  };
+
+  template<class T, typename Tcallback>
+  struct unregisterHandlerCallback_f: public std::unary_function<T,void>
+  {
+    unregisterHandlerCallback_f(const std::string &_id)
+      : id(_id)
+    {;}
+
+    void operator()(T& x) { x->i()->unregisterHandlerCallback(id); }
+    const std::string& id;
+  };
+
+
 
   const std::string d_type;
   typedef std::vector<rpcmanager_base::rpcserver_booter_base_sptr> rpcServerMap_t;

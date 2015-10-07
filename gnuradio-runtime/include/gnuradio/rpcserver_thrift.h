@@ -38,7 +38,9 @@
 #define S_(x) S(x)
 #define S__LINE__ S_(__LINE__)
 
-class rpcserver_thrift : public virtual rpcserver_base, public GNURadio::ControlPortIf
+class rpcserver_thrift
+  : public virtual rpcserver_base,
+    public GNURadio::ControlPortIf
 {
 public:
   rpcserver_thrift();
@@ -52,6 +54,10 @@ public:
                              const queryCallback_t callback);
   void unregisterQueryCallback(const std::string &id);
 
+  void registerHandlerCallback(const std::string &id,
+                               const handlerCallback_t callback);
+  void unregisterHandlerCallback(const std::string &id);
+
   void setKnobs(const GNURadio::KnobMap&);
   void getKnobs(GNURadio::KnobMap&,
                 const GNURadio::KnobIDList&);
@@ -59,6 +65,35 @@ public:
              const GNURadio::KnobIDList&);
   void properties(GNURadio::KnobPropMap&,
                   const GNURadio::KnobIDList& knobs);
+
+  /*!
+   *  \brief Call this to post a message to the \p port for the block
+   *  identified by \p alias.
+   *
+   *  The message, \p msg, is passed as a serialized PMT that is then
+   *  passed to the message handler function identified by \p port to
+   *  the block identified by \p alias. The \p alias and \p port
+   *  values are passed as serialized PMT symbols (see
+   *  pmt::intern). The message is whatever PMT format is appropriate
+   *  for the message handler function.
+   *
+   *  To use this function, the message handler function must have
+   *  been registered (most likely in setup_rpc) in the block during
+   *  construction using rpcbasic_register_handler.
+   *
+   *  \param alias The alias of the block, which is used to map to the
+   *         real block through the global_block_registry. Passed in
+   *         as a serialized PMT symbol.
+   *  \param port The name of the message port. Passed in as a
+   *         serialized PMT symbol.
+   *  \param msg The actual message to pass to \p port. This is a
+   *         serialized PMT where the PMT is whatever form appropriate
+   *         for the message handler function.
+   */
+  void postMessage(const std::string& alias,
+                   const std::string& port,
+                   const std::string& msg);
+
   virtual void shutdown();
 
  private:
@@ -69,6 +104,28 @@ public:
 
   typedef std::map<std::string, queryCallback_t> QueryCallbackMap_t;
   QueryCallbackMap_t d_getcallbackmap;
+
+  typedef std::map<std::string, handlerCallback_t> HandlerCallbackMap_t;
+  HandlerCallbackMap_t d_handlercallbackmap;
+
+  /*!
+   * \brief Manages calling the callback function for a message handler posting.
+   */
+  void
+  set_h(const handlerCallback_t &_handlerCallback,
+        const priv_lvl_t &_cur_priv,
+        pmt::pmt_t port, pmt::pmt_t msg)
+  {
+    if(cur_priv <= _handlerCallback.priv) {
+      _handlerCallback.callback->post(port, msg);
+    }
+    else {
+      std::cerr << "Message " << _handlerCallback.description << " requires PRIVLVL <= "
+                << _handlerCallback.priv << " to set, currently at: "
+                << cur_priv << std::endl;
+    }
+  }
+
 
   template<typename T, typename TMap> struct set_f
     : public std::unary_function<T,void>
@@ -87,7 +144,7 @@ public:
           (*iter->second.callback).post(pmt::PMT_NIL, rpcpmtconverter::To_PMT::instance(p.second));
         }
         else {
-          std::cout << "Key " << p.first << " requires PRIVLVL <= "
+          std::cerr << "Key " << p.first << " requires PRIVLVL <= "
                     << iter->second.priv << " to set, currently at: "
                     << cur_priv << std::endl;
         }
@@ -116,7 +173,7 @@ public:
           outknobs[p] = rpcpmtconverter::from_pmt((*iter->second.callback).retrieve());
         }
         else {
-          std::cout << "Key " << iter->first << " requires PRIVLVL: <= "
+          std::cerr << "Key " << iter->first << " requires PRIVLVL: <= "
                     << iter->second.priv << " to get, currently at: "
                     << cur_priv << std::endl;
         }
@@ -124,7 +181,7 @@ public:
       else {
         std::stringstream ss;
         ss << "Ctrlport Key called with unregistered key (" << p << ")\n";
-        std::cout << ss.str();
+        std::cerr << ss.str();
         throw apache::thrift::TApplicationException(__FILE__ " " S__LINE__);
       }
     }
@@ -147,7 +204,7 @@ public:
         outknobs[p.first] = rpcpmtconverter::from_pmt(p.second.callback->retrieve());
       }
       else {
-        std::cout << "Key " << p.first << " requires PRIVLVL <= "
+        std::cerr << "Key " << p.first << " requires PRIVLVL <= "
                   << p.second.priv << " to get, currently at: "
                   << cur_priv << std::endl;
       }
@@ -182,7 +239,7 @@ public:
         outknobs[p.first] = prop;
       }
       else {
-        std::cout << "Key " << p.first << " requires PRIVLVL <= "
+        std::cerr << "Key " << p.first << " requires PRIVLVL <= "
                   << p.second.priv << " to get, currently at: "
                   << cur_priv << std::endl;
       }
@@ -215,7 +272,7 @@ public:
           outknobs[p] = prop;
         }
         else {
-          std::cout << "Key " << iter->first << " requires PRIVLVL: <= "
+          std::cerr << "Key " << iter->first << " requires PRIVLVL: <= "
                     << iter->second.priv << " to get, currently at: " << cur_priv << std::endl;
         }
       }
