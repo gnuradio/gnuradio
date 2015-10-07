@@ -67,6 +67,11 @@ namespace gr {
       typedef boost::shared_ptr<ber_bf> sptr;
 
       /*!
+       * Get total number of errors counter value.
+       */
+      virtual long total_errors() = 0;
+
+      /*!
        * Calculate the BER between two streams of data.
        *
        * \param test_mode false for normal streaming mode (default);
