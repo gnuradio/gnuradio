@@ -24,6 +24,7 @@ include(GrMiscUtils)
 GR_EXPAND_X_H(analog noise_source_X     s i f c)
 GR_EXPAND_X_H(analog fastnoise_source_X s i f c)
 GR_EXPAND_X_H(analog sig_source_X       s i f c)
+GR_EXPAND_X_H(analog random_uniform_source_X b s i)
 
 add_custom_target(analog_generated_includes DEPENDS
     ${generated_includes}
