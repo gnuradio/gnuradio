@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import sys
-import optparse
+import argparse
 import warnings
 
 
@@ -98,10 +98,10 @@ def main():
     check_gnuradio_import()
 
     from gnuradio import gr
-    parser = optparse.OptionParser(
-        usage='usage: %prog [options] [saved flow graphs]',
-        version=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
-    options, args = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
+    parser.add_argument('flow_graphs')
+    args = parser.parse_args()
 
     check_gtk()
     check_blocks_path()
@@ -123,7 +123,7 @@ def main():
     except:
         pass
 
-    ActionHandler(args, Platform())
+    ActionHandler(args.flow_graphs, Platform())
 
 
 if __name__ == '__main__':
