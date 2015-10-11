@@ -96,6 +96,7 @@ list(APPEND gr_blocks_sources
     char_to_float_impl.cc
     char_to_short_impl.cc
     check_lfsr_32k_s_impl.cc
+    complex_to_interleaved_char_impl.cc
     complex_to_interleaved_short_impl.cc
     complex_to_float_impl.cc
     complex_to_real_impl.cc
