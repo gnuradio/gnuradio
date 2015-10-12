@@ -368,7 +368,7 @@ class FlowGraph(Element):
                 block = self.get_new_block('dummy_block')
                 # Ugly ugly ugly
                 _initialize_dummy_block(block, block_n)
-                Messages.send_error_msg_load('Block key "%s" not found in %s' % (key, self.get_parent()))
+                Messages.send_error_msg_load('Block key "%s" not found' % key)
 
             block.import_data(block_n)
         #build the connections
