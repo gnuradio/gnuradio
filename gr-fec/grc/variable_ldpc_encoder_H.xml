@@ -10,11 +10,11 @@
     <import>from gnuradio import fec</import>
     <var_make>
 #if int($ndim())==0 #
-self.$(id) = $(id) = fec.ldpc_encoder_make_H($H)
+self.$(id) = $(id) = fec.ldpc_par_mtrx_encoder_make_H($H)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map((lambda a: fec.ldpc_encoder_make_H($H)), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda a: fec.ldpc_par_mtrx_encoder_make_H($H)), range(0,$dim1)) #slurp
 #else
-self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_encoder_make_H($H)), range(0,$dim2))), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_par_mtrx_encoder_make_H($H)), range(0,$dim2))), range(0,$dim1)) #slurp
 #end if</var_make>
     <make></make>
 

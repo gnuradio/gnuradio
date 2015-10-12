@@ -64,6 +64,7 @@ if(GSL_FOUND)
     ldpc_H_matrix.h
     ldpc_G_matrix.h
     ldpc_bit_flip_decoder.h
+    ldpc_par_mtrx_encoder.h
     ldpc_gen_mtrx_encoder.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"

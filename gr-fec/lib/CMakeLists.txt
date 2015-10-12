@@ -119,6 +119,7 @@ if(GSL_FOUND)
 
   list(APPEND gnuradio_fec_sources
     ldpc_bit_flip_decoder_impl.cc
+    ldpc_par_mtrx_encoder_impl.cc
     ldpc_gen_mtrx_encoder_impl.cc
     ldpc_H_matrix_impl.cc
     ldpc_G_matrix_impl.cc

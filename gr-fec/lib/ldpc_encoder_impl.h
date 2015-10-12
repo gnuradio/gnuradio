@@ -24,6 +24,11 @@
 #define INCLUDED_LDPC_ENCODER_IMPL_H
 
 #include <gnuradio/fec/ldpc_encoder.h>
+#include <gnuradio/fec/cldpc.h>
+#include <gnuradio/fec/alist.h>
+#include <map>
+#include <string>
+#include <vector>
 
 namespace gr {
   namespace fec {
@@ -31,30 +36,25 @@ namespace gr {
     class ldpc_encoder_impl : public ldpc_encoder
     {
     private:
-      // plug into the generic fec api
-      void generic_work(void *inbuffer, void *outbuffer);
+      //plug into the generic fec api
+      void generic_work(void *inBuffer, void *outbuffer);
 
-      // Number of bits in the frame to be encoded
-      unsigned int d_frame_size;
-
-      // Number of output bits after coding
-      int d_output_size;
-
-      // Rate of the code, n/k
-      double d_rate;
-
-      // LDPC parity check matrix object
-      code::ldpc_H_matrix::sptr d_H;
+      // memory allocated for processing
+      int outputSize;
+      int inputSize;
+      alist d_list;
+      cldpc d_code;
 
     public:
-      ldpc_encoder_impl(const code::ldpc_H_matrix::sptr H_obj);
+      ldpc_encoder_impl(std::string alist_file);
       ~ldpc_encoder_impl();
 
-      double rate();
-      bool set_frame_size(unsigned int frame_size);
+      double rate() { return (1.0*get_input_size() / get_output_size()); }
+      bool set_frame_size(unsigned int frame_size) { return false; }
       int get_output_size();
       int get_input_size();
     };
+
   }
 }
 

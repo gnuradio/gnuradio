@@ -252,10 +252,10 @@ namespace gr {
             gsl_matrix_set(x, i, 0, 1);
           else if (x_i==1 && U_i_i==0)
             std::cout << "Error in "
-                      << " ldpc_encoder_impl::back_solve_mod2,"
+                      << " ldpc_H_matrix_impl::back_solve_mod2,"
                       << " division not defined.\n";
           else
-            std::cout << "Error in ldpc_encoder_impl::back_solve_mod2\n";
+            std::cout << "Error in ldpc_H_matrix::back_solve_mod2\n";
         }
       }
 
