@@ -24,6 +24,7 @@ from gnuradio import gr
 
 from .. base.Platform import Platform as _Platform
 from .. gui.Platform import Platform as _GUIPlatform
+from .. gui import Messages
 
 from . import extract_docs
 from .FlowGraph import FlowGraph as _FlowGraph
@@ -84,6 +85,7 @@ class Platform(_Platform, _GUIPlatform):
             self,
             prefs_file=PREFS_FILE
         )
+        self._auto_hier_block_generate_chain = set()
 
     @staticmethod
     def _move_old_pref_file():
@@ -110,6 +112,57 @@ class Platform(_Platform, _GUIPlatform):
             block.get_make(raw=True)
         )
         return block
+
+    @staticmethod
+    def find_file_in_paths(filename, paths, cwd):
+        """Checks the provided paths relative to cwd for a certain filename"""
+        if not os.path.isdir(cwd):
+            cwd = os.path.dirname(cwd)
+        if isinstance(paths, str):
+            paths = (p for p in paths.split(':') if p)
+
+        for path in paths:
+            path = os.path.expanduser(path)
+            if not os.path.isabs(path):
+                path = os.path.normpath(os.path.join(cwd, path))
+            file_path = os.path.join(path, filename)
+            if os.path.exists(os.path.normpath(file_path)):
+                return file_path
+
+    def load_and_generate_flow_graph(self, file_path):
+        """Loads a flowgraph from file and generates it"""
+        Messages.set_indent(len(self._auto_hier_block_generate_chain))
+        Messages.send('>>> Loading: %r\n' % file_path)
+        if file_path in self._auto_hier_block_generate_chain:
+            Messages.send('    >>> Warning: cyclic hier_block dependency\n')
+            return False
+        self._auto_hier_block_generate_chain.add(file_path)
+        try:
+            flow_graph = self.get_new_flow_graph()
+            flow_graph.grc_file_path = file_path
+            # other, nested higiter_blocks might be auto-loaded here
+            flow_graph.import_data(self.parse_flow_graph(file_path))
+            flow_graph.rewrite()
+            flow_graph.validate()
+            if not flow_graph.is_valid():
+                raise Exception('Flowgraph invalid')
+        except Exception as e:
+            Messages.send('>>> Load Error: %r: %s\n' % (file_path, str(e)))
+            return False
+        finally:
+            self._auto_hier_block_generate_chain.discard(file_path)
+            Messages.set_indent(len(self._auto_hier_block_generate_chain))
+
+        try:
+            Messages.send('>>> Generating: %r\n' % file_path)
+            generator = self.get_generator()(flow_graph, file_path)
+            generator.write()
+        except Exception as e:
+            Messages.send('>>> Generate Error: %r: %s\n' % (file_path, str(e)))
+            return False
+
+        self.load_block_xml(generator.get_file_path_xml())
+        return True
 
     ##############################################
     # Constructors
