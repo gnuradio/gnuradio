@@ -31,21 +31,19 @@
 
 namespace gr {
   namespace fec {
-    namespace code {
 
-      class FEC_API ldpc_encoder : virtual public generic_encoder
-      {
-      public:
-        static generic_encoder::sptr make(std::string alist_file, unsigned int gap=0);
-        static generic_encoder::sptr make_H(const ldpc_H_matrix::sptr H_obj);
+    class FEC_API ldpc_encoder : virtual public generic_encoder
+    {
+    public:
+      static generic_encoder::sptr make(std::string alist_file, unsigned int gap=0);
+      static generic_encoder::sptr make_H(const code::ldpc_H_matrix::sptr H_obj);
 
-        virtual double rate() = 0;
-        virtual bool set_frame_size(unsigned int frame_size) = 0;
-        virtual int get_output_size() = 0;
-        virtual int get_input_size() = 0;
-      };
+      virtual double rate() = 0;
+      virtual bool set_frame_size(unsigned int frame_size) = 0;
+      virtual int get_output_size() = 0;
+      virtual int get_input_size() = 0;
+    };
 
-    }
   }
 }
 
