@@ -417,9 +417,9 @@ alist format looks like:
 
 \verbatim
 ncolumns nrows
-max_col_weight max_row_weigth
+max_col_weight max_row_weight
 list_col_weights
-list_row_weigths
+list_row_weights
 column_1_indices
 row_1_indices
 \endverbatim
@@ -464,9 +464,9 @@ form [I | P] where I is the (k x k) identity matrix and P is a (k x
 
 So it has 8 columns and 4 rows. The maximum number of 1's in any
 column is 3 and the maximum number of 1's in any row is 4. The next
-two lines are the weigths for each column and each row. Then we have 8
+two lines are the weights for each column and each row. Then we have 8
 lines that are the indices of the 1's in the columns followed by
-4 lines that are the indices fo the 1's in the rows. Note that the
+4 lines that are the indices of the 1's in the rows. Note that the
 number of items in any of these rows matches up with the numbers in
 the column and matrix weight lists. Let's use the either the column or
 rows to construct the matrix.
@@ -482,20 +482,33 @@ Now go back and do it with the other set of of indices to
 verify. We can also count up the 1's along the columns and rows to
 verify the top few lines for even more check.
 
+Some info on the alist files online can be found here:
+
+\li http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+\li http://www.inference.phy.cam.ac.uk/mackay/codes/
+
+
+
+
 \subsection fec_ldpc_encoders LDPC Encoders
 
-The encoders are gr::fec::ldpc_encoder and
-gr::fec::code::ldpc_gen_mtrx_encoder. Both take in a matrix, but there
-are two different forms of the matrix that they work with. The
-gr::fec::ldpc_encoder takes a parity check matrix, H, which is in
-upper triangular form. There are two constructors for this block. The
-first one, 'make', takes in an alist file that represents the parity
-matrix in the alist format described above. The 'make_H' function
-makes an LDPC encoder using matrix that's already been read into a
-special gr::fec::code::ldpc_H_matrix object. When using the alist file,
-we also need to tell it the gap size in the matrix, which is not
-represented in the file itself, but it should be known or part of the
-file name itself.
+There are two LDPC encoder variables but a few ways to set them up. They are:
+
+\li gr::fec::ldpc_encoder
+\li gr::fec::code::ldpc_gen_mtrx_encoder
+
+Both encoders take in a matrix, but there are two different forms of
+the matrix that they work with. The gr::fec::ldpc_encoder takes a
+parity check matrix, H, which is in upper triangular form. The
+gr::fec::code::ldpc_gen_mtrx_encoder takes in a generator matrix, G.
+
+There are two constructors for gr::fec::ldpc_encoder. The first one,
+'make', takes in an alist file that represents the parity matrix in
+the alist format described above. The 'make_H' function makes an LDPC
+encoder using a prebuilt gr::fec::code::ldpc_H_matrix object. When
+using the alist file, we also need to tell it the gap size in the
+matrix, which is not represented in the alist file format, but it
+should be known or part of the file name itself.
 
 The format of the parity check matrix, H, in upper triangular form is
 described as:
@@ -516,13 +529,32 @@ Where n is the size of the codeword, k is the size of the information
 word, and g is the size of the gap. See "Open-source Forward Error
 Correction using GNU Radio" for more description about this matrix:
 
-http://arc.aiaa.org/doi/abs/10.2514/6.2015-4655
+\li http://arc.aiaa.org/doi/abs/10.2514/6.2015-4655
 
 
 The other encoder is gr::fec::code::ldpc_gen_mtrx_encoder. This takes
 a generator matrix in systematic form G=[I P] which is (k x n). The
 codeword x is generated from the information word s via simple matrix
-multiplication: x=G^T s.
+multiplication: \f$ x=G^T s \f$.
+
+Unlike the encoder using the H matrix, the
+gr::fec::code::ldpc_gen_mtrx_encoder only has a single make function
+that takes in a prebuilt generator matrix object from the class
+gr::fec::code::ldpc_G_matrix.
+
+In GRC, we have a handful of blocks for manipulating the LDPC encoders
+and matrices:
+
+\li LDPC Encoder Definition: creates a gr::fec::code::ldpc_encoder FEC
+variable using a provided alist file and specified matrix gap.
+\li LDPC Encoder Definition (via Parity Check): receives a prebuilt H
+matrix from the "LDPC Parity Check Matrix".
+\li LDPC Encoder Definition (via Generator): receives a prebuilt G
+matrix from the "LDPC Generator Matrix".
+\li LDPC Parity Check Matrix: constructs a parity check matrix, H,
+from a given alist file and matrix gap.
+\li LDPC Generator Matrix: constructs a generator matrix, G, from a
+given alist file.
 
 The gr::fec::code::ldpc_encoder uses a reduced complexity
 algorithm. Compared to the gr::fec::code::ldpc_gen_mtrx_encoder, this
@@ -531,9 +563,24 @@ step. This is accomplished by completing a significant amount of the
 complex matrix manipulation (including inverse, multiplication, and
 Gaussian elimination operations) during preprocessing. The
 disadvantage of this encoder is that it requires a specially formatted
-matrix. GNU Radio tools to format a standard parity check matrix
-appropriately for this encoder, as well as a small library of
-encoding-ready matrices for use.
+matrix. There are some Python tools available from GNU Radio to format
+a standard parity check matrix appropriately for this encoder, as well
+as a small library of encoding-ready matrices for use.
+
+NOTE: we need to document these tools better.
+
+For uses of these codes, see the FEC examples:
+
+\li fecapi_ldpc_encoders.grc
+\li fecapi_tagged_ldpc_encoders.grc
+\li fecapi_async_ldpc_encoders.grc
+
+Prebuilt alist files are also distributed and installed with GNU
+Radio. They can be found in $prefix/share/gnuradio/fec/ldpc. The files
+generally represent the H matrix and are specified with the number of
+rows and columns (n and k) and gap of the matrix. The files named
+"gen_matrix" or similar are the generator, G, matrices.
+
 
 
 \subsection fec_ldpc_decoder LDPC Decoders
@@ -544,7 +591,7 @@ scheme. The decoder seeks to find the codeword that was most likely
 sent, which must satisfy Hx'= 0.  If the received codeword does not
 satisfy this parity check, then the decoder computes the parity checks
 on all of the bits. The bit(s) associated with the most failed parity
-checks are flipped.  The process repeats until a valid codeword is
+checks are flipped. The process repeats until a valid codeword is
 found, or a maximum number of iterations is reached, whichever comes
 first.
 
@@ -553,5 +600,21 @@ propagation (also known as message passing). Designed for a memoryless
 AWGN channel, it assumes a noise variance entered in as 'Sigma' in the
 block. This is a suboptimal, yet efficient method of decoding LDPC
 codes.
+
+In GRC, we have the following blocks for doing LDPC decoding:
+
+\li LDPC Decoder Definition: constructs a gr::fec::ldpc_decoder
+variable given the alist file name of the H matrix.
+\li LDPC Bit Flip Decoder Definition: constructs a
+gr::fec::code::ldpc_bit_flip_decoder. This does not take in an alist file
+name but instead a predefined matrix object. This decoder is useful in
+that it can take either an H or a G matrix constructed by either the
+"LDPC Parity Check Matrix" or "LDPC Generator Matrix," respectively.
+
+For uses of these codes, see the FEC examples:
+
+\li fecapi_ldpc_decoders.grc
+\li fecapi_tagged_ldpc_decoders.grc
+\li fecapi_async_ldpc_decoders.grc
 
 */
