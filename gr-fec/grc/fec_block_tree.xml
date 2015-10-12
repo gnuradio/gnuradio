@@ -29,7 +29,8 @@
       <block>variable_ldpc_encoder_G_def</block>
       <block>variable_ldpc_encoder_H_def</block>
       <block>variable_polar_encoder_def</block>
-      <block>variable_dummy_encoder_def</block>
+      <block>variable_polar_encoder_systematic_def</block>
+	  <block>variable_dummy_encoder_def</block>
     </cat>
     <block>fec_extended_encoder</block>
     <block>fec_extended_async_encoder</block>

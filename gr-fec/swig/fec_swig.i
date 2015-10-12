@@ -97,6 +97,7 @@
 %include "gnuradio/fec/polar_common.h"
 %include "gnuradio/fec/polar_decoder_sc_list.h"
 %include "gnuradio/fec/polar_decoder_common.h"
+%include "gnuradio/fec/polar_encoder_systematic.h"
 %include "gnuradio/fec/ldpc_encoder.h"
 
 

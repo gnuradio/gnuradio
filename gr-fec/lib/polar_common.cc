@@ -26,6 +26,7 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/fec/polar_common.h>
+#include <volk/volk.h>
 
 #include <gnuradio/blocks/pack_k_bits.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
@@ -61,6 +62,8 @@ namespace gr {
           d_frozen_bit_values.push_back(0);
         }
         initialize_info_bit_position_vector();
+        setup_volk_vectors();
+        setup_info_bit_positions_reversed();
 
         d_unpacker = new gr::blocks::kernel::unpack_k_bits(8);
       }
@@ -86,9 +89,59 @@ namespace gr {
         }
       }
 
+      void
+      polar_common::setup_info_bit_positions_reversed()
+      {
+        for(unsigned int i = 0; i < d_info_bit_positions.size(); i++){
+          d_info_bit_positions_reversed.push_back((int) bit_reverse((long) d_info_bit_positions.at(i), block_power()));
+        }
+
+        if((int) d_info_bit_positions_reversed.size() != num_info_bits()) {
+          throw std::runtime_error("polar_encoder: number of info bit positions MUST equal num_info_bits (K)!");
+        }
+      }
+
+      void
+      polar_common::setup_volk_vectors()
+      {
+        int nfrozen = block_size() - num_info_bits();
+        d_volk_temp = (unsigned char*) volk_malloc(sizeof(unsigned char) * block_size(), volk_get_alignment());
+        d_volk_frozen_bit_mask = (unsigned char*) volk_malloc(sizeof(unsigned char) * block_size(), volk_get_alignment());
+        d_volk_frozen_bits = (unsigned char*) volk_malloc(sizeof(unsigned char) * nfrozen, volk_get_alignment());
+        for(int i = 0; i < nfrozen; i++){
+          d_volk_frozen_bits[i] = d_frozen_bit_values[i];
+        }
+
+        int nfbit = 0;
+        for(int i = 0; i < block_size(); i++){
+          unsigned char m = 0x00;
+          if(d_frozen_bit_positions[nfbit] == i){
+            m = 0xFF;
+            nfbit++;
+          }
+          d_volk_frozen_bit_mask[i] = m;
+        }
+      }
+
+      void
+      polar_common::volk_encode(unsigned char* out_buf, const unsigned char* in_buf)
+      {
+        volk_8u_x3_encodepolar_8u_x2(out_buf, d_volk_temp, d_volk_frozen_bit_mask, d_volk_frozen_bits, in_buf, block_size());
+      }
+
+      void
+      polar_common::volk_encode_block(unsigned char* out_buf, unsigned char* in_buf)
+      {
+        volk_8u_x2_encodeframepolar_8u(out_buf, in_buf, block_size());
+      }
+
       polar_common::~polar_common()
       {
         delete d_unpacker;
+
+        volk_free(d_volk_temp);
+        volk_free(d_volk_frozen_bit_mask);
+        volk_free(d_volk_frozen_bits);
       }
 
       long
