@@ -17,39 +17,26 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include_directories(
-  ${GR_FEC_INCLUDE_DIRS}
-  ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-  ${GSL_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
-)
-
-list(APPEND libs
-  ${GSL_LIBRARIES}
-  ${Boost_LIBRARIES}
-  gnuradio-fec gnuradio-runtime
-)
-
-add_executable(ldpc_H_to_G ldpc_H_to_G.cc)
-target_link_libraries(ldpc_H_to_G ${libs})
-
-add_executable(ldpc_G_to_H ldpc_G_to_H.cc)
-target_link_libraries(ldpc_G_to_H ${libs})
-
-add_executable(ldpc_print_alist ldpc_print_alist.cc)
-target_link_libraries(ldpc_print_alist ${libs})
-
-INSTALL(TARGETS
-  ldpc_H_to_G
-  ldpc_G_to_H
-  ldpc_print_alist
-  DESTINATION ${GR_RUNTIME_DIR}
-  COMPONENT "fec_devel"
-)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    ldpc_H_to_upper_triangular_form
-    DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "fec_devel"
-)
+#include_directories(
+#  ${GR_FEC_INCLUDE_DIRS}
+#  ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+#  ${GSL_INCLUDE_DIRS}
+#  ${Boost_INCLUDE_DIRS}
+#)
+#
+#list(APPEND libs
+#  ${GSL_LIBRARIES}
+#  ${Boost_LIBRARIES}
+#  gnuradio-fec gnuradio-runtime
+#)
+#
+#INSTALL(TARGETS
+#  DESTINATION ${GR_RUNTIME_DIR}
+#  COMPONENT "fec_devel"
+#)
+#
+#GR_PYTHON_INSTALL(
+#    PROGRAMS
+#    DESTINATION ${GR_RUNTIME_DIR}
+#    COMPONENT "fec_devel"
+#)
