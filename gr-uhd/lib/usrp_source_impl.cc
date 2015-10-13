@@ -62,9 +62,9 @@ namespace gr {
 
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
                                        const ::uhd::stream_args_t &stream_args):
-      usrp_block("gr uhd usrp source",
-                    io_signature::make(0, 0, 0),
-                    args_to_io_sig(stream_args)),
+      usrp_block("usrp_source",
+                 io_signature::make(0, 0, 0),
+                 args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
       _tag_now(false)
     {
