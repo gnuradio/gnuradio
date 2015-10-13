@@ -40,6 +40,12 @@ namespace gr {
        * \details
        * expects values with MSB first. It needs a full information word and encodes it in one pass.
        * Output is a codeword of block_size.
+       *
+       * Systematic encoding indicates that the info bit values are present in the codeword.
+       * 'info_bit_positions' may be obtained by ordering all non frozen_bit_positions in increasing order.
+       * One may extract them at their positions after a bit reversal operation.
+       * encoder -> decoder chain would need additional bit-reversal after encoding + before decoding.
+       * This is unnecessary.
        */
       class FEC_API polar_encoder_systematic: public generic_encoder, public polar_common
       {
