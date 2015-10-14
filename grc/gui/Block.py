@@ -304,7 +304,7 @@ class Block(Element):
     def draw_comment(self, gc, window):
         if not self._comment_pixmap:
             return
-
         x, y = self.get_coordinate()
+        y += self.H if self.is_horizontal() else self.W
         window.draw_drawable(gc, self._comment_pixmap, 0, 0, x,
-                             y + self.H + BLOCK_LABEL_PADDING, -1, -1)
+                             y + BLOCK_LABEL_PADDING, -1, -1)
