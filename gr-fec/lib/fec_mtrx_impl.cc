@@ -487,6 +487,7 @@ namespace gr {
 
         return matrix_inverse;
       }
+
       bool
       fec_mtrx_impl::parity_bits_come_last() const
       {

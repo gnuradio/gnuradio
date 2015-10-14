@@ -134,8 +134,6 @@ namespace gr {
         // Free memory
         gsl_matrix_free(P);
         gsl_matrix_free(P_transpose);
-
-        d_base_ptr = reinterpret_cast<fec_mtrx*>(this);
       }
 
 
@@ -278,11 +276,10 @@ namespace gr {
         gsl_matrix_free(x);
       }
 
-
-      gr::fec::code::fec_mtrx*
-      ldpc_G_matrix_impl::get_base_ptr()
+      gr::fec::code::fec_mtrx_sptr
+      ldpc_G_matrix_impl::get_base_sptr()
       {
-        return d_base_ptr;
+        return shared_from_this();
       }
 
       ldpc_G_matrix_impl::~ldpc_G_matrix_impl()

@@ -62,9 +62,6 @@ namespace gr {
 
         set_parameters_for_encoding();
 
-        // For info about this see get_base_ptr() function
-        //d_base_ptr = this;
-
         // The parity bits come first in this particular matrix
         // format (specifically required for the Richardson Urbanke
         // encoder)
@@ -80,8 +77,6 @@ namespace gr {
         d_p2 = gsl_matrix_alloc(phi_inverse()->size1, d_temp5->size2);
         d_temp6 = gsl_matrix_alloc(A()->size1, d_p2->size2);
         d_temp7 = gsl_matrix_alloc(d_temp6->size1, d_temp1->size2);
-
-        d_base_ptr = reinterpret_cast<fec_mtrx*>(this);
       } // Constructor
 
       const gsl_matrix*
@@ -410,10 +405,10 @@ namespace gr {
         gsl_matrix_free(x);
       }
 
-      gr::fec::code::fec_mtrx*
-      ldpc_H_matrix_impl::get_base_ptr()
+      gr::fec::code::fec_mtrx_sptr
+      ldpc_H_matrix_impl::get_base_sptr()
       {
-        return d_base_ptr;
+        return shared_from_this();
       }
 
       ldpc_H_matrix_impl::~ldpc_H_matrix_impl()

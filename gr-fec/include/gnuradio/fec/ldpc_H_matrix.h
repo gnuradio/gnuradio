@@ -24,6 +24,7 @@
 #include <gnuradio/fec/api.h>
 #include <gnuradio/fec/fec_mtrx.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace gr {
   namespace fec {
@@ -45,7 +46,8 @@ namespace gr {
        * python functions in:
        * /lib/python2.7/dist-packages/gnuradio/fec/LDPC/Generate_LDPC_matrix.py.
        */
-      class FEC_API ldpc_H_matrix : virtual public fec_mtrx
+      class FEC_API ldpc_H_matrix : virtual public fec_mtrx,
+                                    public boost::enable_shared_from_this<ldpc_H_matrix>
       {
       public:
         typedef boost::shared_ptr<ldpc_H_matrix> sptr;
@@ -86,13 +88,14 @@ namespace gr {
          * \brief A pointer to make SWIG work
          *
          * \details
-         * For some reason, SWIG isn't accepting a pointer to this
+         * SWIG doesn't understand the parent class pointer to this
          * child class for the make function of the
          * ldpc_bit_flip_decoder; it's expecting a pointer to the base
-         * class. So, this is just a workaround for SWIG and GRC.
+         * class. This returns a shared_from_this instance.
          */
-        virtual gr::fec::code::fec_mtrx *get_base_ptr() = 0;
+        virtual gr::fec::code::fec_mtrx_sptr get_base_sptr() = 0;
       };
+
     }
   }
 }

@@ -21,6 +21,7 @@
  */
 
 %template(matrix_sptr) boost::shared_ptr<gr::fec::code::matrix>;
+%template(fec_mtrx_sptr) boost::shared_ptr<gr::fec::code::fec_mtrx>;
 
 %template(ldpc_H_matrix_sptr) boost::shared_ptr<gr::fec::code::ldpc_H_matrix>;
 %pythoncode %{

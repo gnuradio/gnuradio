@@ -71,8 +71,6 @@ namespace gr {
         gr::logger_ptr d_logger;
         gr::logger_ptr d_debug_logger;
 
-        gr::fec::code::fec_mtrx *d_base_ptr;
-
       public:
         ldpc_G_matrix_impl(const std::string filename);
 
@@ -90,7 +88,7 @@ namespace gr {
 
         gsl_matrix* generate_H();
 
-        gr::fec::code::fec_mtrx* get_base_ptr();
+        gr::fec::code::fec_mtrx_sptr get_base_sptr();
 
         /*!
          * \brief Destructor
@@ -99,6 +97,7 @@ namespace gr {
          */
         virtual ~ldpc_G_matrix_impl();
       };
+
     }
   }
 }

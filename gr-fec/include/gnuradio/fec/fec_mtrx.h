@@ -49,6 +49,9 @@ namespace gr {
 
       typedef boost::shared_ptr<matrix> matrix_sptr;
 
+      class fec_mtrx;
+      typedef boost::shared_ptr<fec_mtrx> fec_mtrx_sptr;
+
       /*!
        * \brief Read in an alist file and produce the matrix object.
        *

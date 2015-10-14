@@ -23,7 +23,6 @@
 
 #include "fec_mtrx_impl.h"
 #include <gnuradio/fec/ldpc_H_matrix.h>
-#include <gnuradio/fec/ldpc_G_matrix.h>
 
 namespace gr {
   namespace fec {
@@ -79,8 +78,6 @@ namespace gr {
          */
         const gsl_matrix *phi_inverse() const;
 
-        gr::fec::code::fec_mtrx *d_base_ptr;
-
       public:
         /*!
          * \brief Constructor given alist file and gap
@@ -112,15 +109,16 @@ namespace gr {
         //! Redefine these here as part of the public interface
         unsigned int k() const { return fec_mtrx_impl::k(); };
 
+        gr::fec::code::fec_mtrx_sptr get_base_sptr();
+
         /*!
          * \brief Destructor
          * \details
          * Calls the gsl_matrix_free function to free memory
          */
         virtual ~ldpc_H_matrix_impl();
-
-        gr::fec::code::fec_mtrx *get_base_ptr();
       };
+
     }
   }
 }

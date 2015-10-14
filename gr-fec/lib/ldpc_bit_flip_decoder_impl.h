@@ -39,13 +39,13 @@ namespace gr {
         double d_rate;
 
         // FEC matrix object to use for decoding
-        const fec_mtrx *d_mtrx;
+        fec_mtrx_sptr d_mtrx;
 
         // Maximum number of iterations to do in decoding algorithm
         unsigned int d_max_iterations;
 
       public:
-        ldpc_bit_flip_decoder_impl(const fec_mtrx *mtrx_obj,
+        ldpc_bit_flip_decoder_impl(const fec_mtrx_sptr mtrx_obj,
                                    unsigned int max_iter=100);
         ~ldpc_bit_flip_decoder_impl();
 
@@ -53,6 +53,7 @@ namespace gr {
         bool set_frame_size(unsigned int frame_size);
         double rate();
       };
+
     } /* namespace code */
   } /* namespace fec */
 } /* namespace gr */
