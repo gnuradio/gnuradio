@@ -23,7 +23,10 @@
 
 #include <gnuradio/dtv/dvbt_viterbi_decoder.h>
 #include "dvbt_configure.h"
+
+#ifdef DTV_SSE2
 #include <xmmintrin.h>
+#endif
 
 /* The two generator polynomials for the NASA Standard K=7 code.
  * Since these polynomials are known to be optimal for this constraint
@@ -35,10 +38,16 @@
 // Maximum number of traceback bytes
 #define TRACEBACK_MAX 24
 
+#ifdef DTV_SSE2
 union branchtab27 {
   unsigned char c[32];
   __m128i v[2];
 };
+#else
+struct branchtab27 {
+  unsigned char c[32];
+};
+#endif
 
 namespace gr {
   namespace dtv {
@@ -56,12 +65,23 @@ namespace gr {
       static const unsigned char d_puncture_7_8[];
       static const unsigned char d_Partab[];
 
+#ifdef DTV_SSE2
       static __m128i d_metric0[4];
       static __m128i d_metric1[4];
       static __m128i d_path0[4];
       static __m128i d_path1[4];
+#else
+      static unsigned char d_metric0_generic[64];
+      static unsigned char d_metric1_generic[64];
+      static unsigned char d_path0_generic[64];
+      static unsigned char d_path1_generic[64];
+#endif
 
+#ifdef DTV_SSE2
       static branchtab27 Branchtab27_sse2[2];
+#else
+      static branchtab27 Branchtab27_generic[2];
+#endif
 
       // Metrics for each state
       static unsigned char mmresult[64];
@@ -101,9 +121,15 @@ namespace gr {
       // Position in circular buffer where the current decoded byte is stored
       int store_pos;
 
+#ifdef DTV_SSE2
       void dvbt_viterbi_chunks_init_sse2(__m128i *mm0, __m128i *pp0);
       void dvbt_viterbi_butterfly2_sse2(unsigned char *symbols, __m128i m0[], __m128i m1[], __m128i p0[], __m128i p1[]);
       unsigned char dvbt_viterbi_get_output_sse2(__m128i *mm0, __m128i *pp0, int ntraceback, unsigned char *outbuf);
+#else
+      void dvbt_viterbi_chunks_init_generic(unsigned char *mm0, unsigned char *pp0);
+      void dvbt_viterbi_butterfly2_generic(unsigned char *symbols, unsigned char m0[], unsigned char m1[], unsigned char p0[], unsigned char p1[]);
+      unsigned char dvbt_viterbi_get_output_generic(unsigned char *mm0, unsigned char *pp0, int ntraceback, unsigned char *outbuf);
+#endif
 
      public:
       dvbt_viterbi_decoder_impl(dvb_constellation_t constellation, \
