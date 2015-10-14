@@ -127,7 +127,13 @@ list(APPEND dtv_libs
     ${VOLK_LIBRARIES}
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+include (CheckCCompilerFlag)
+CHECK_C_COMPILER_FLAG ("-msse2" SSE2_SUPPORTED)
+
+if(SSE2_SUPPORTED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+    ADD_DEFINITIONS(-DDTV_SSE2)
+endif(SSE2_SUPPORTED)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
