@@ -21,9 +21,9 @@ include(GrPython)
 
 install(
     FILES
-    271.127.3.112
     ber_test.grc
     ber_curve_gen.grc
+    ber_curve_gen_ldpc.grc
     fecapi_decoders.grc
     fecapi_encoders.grc
     fecapi_async_decoders.grc

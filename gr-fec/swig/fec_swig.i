@@ -58,8 +58,6 @@
 #include "gnuradio/fec/puncture_bb.h"
 #include "gnuradio/fec/puncture_ff.h"
 #include "gnuradio/fec/depuncture_bb.h"
-#include "gnuradio/fec/ldpc_encoder.h"
-#include "gnuradio/fec/ldpc_decoder.h"
 #include "gnuradio/fec/tpc_encoder.h"
 #include "gnuradio/fec/tpc_decoder.h"
 #include "gnuradio/fec/polar_encoder.h"
@@ -67,6 +65,7 @@
 #include "gnuradio/fec/polar_common.h"
 #include "gnuradio/fec/polar_decoder_sc_list.h"
 #include "gnuradio/fec/polar_decoder_common.h"
+#include "gnuradio/fec/ldpc_encoder.h"
 %}
 
 %include "gnuradio/fec/generic_decoder.h"
@@ -91,10 +90,37 @@
 %include "gnuradio/fec/puncture_bb.h"
 %include "gnuradio/fec/puncture_ff.h"
 %include "gnuradio/fec/depuncture_bb.h"
-%include "gnuradio/fec/ldpc_encoder.h"
-%include "gnuradio/fec/ldpc_decoder.h"
 %include "gnuradio/fec/tpc_encoder.h"
 %include "gnuradio/fec/tpc_decoder.h"
+%include "gnuradio/fec/polar_encoder.h"
+%include "gnuradio/fec/polar_decoder_sc.h"
+%include "gnuradio/fec/polar_common.h"
+%include "gnuradio/fec/polar_decoder_sc_list.h"
+%include "gnuradio/fec/polar_decoder_common.h"
+%include "gnuradio/fec/ldpc_encoder.h"
+
+
+#ifdef GSL_FOUND
+%{
+#include "gnuradio/fec/fec_mtrx.h"
+#include "gnuradio/fec/ldpc_H_matrix.h"
+#include "gnuradio/fec/ldpc_G_matrix.h"
+#include "gnuradio/fec/ldpc_gen_mtrx_encoder.h"
+#include "gnuradio/fec/ldpc_par_mtrx_encoder.h"
+#include "gnuradio/fec/ldpc_bit_flip_decoder.h"
+#include "gnuradio/fec/ldpc_decoder.h"
+%}
+
+%include "gnuradio/fec/fec_mtrx.h"
+%include "gnuradio/fec/ldpc_H_matrix.h"
+%include "gnuradio/fec/ldpc_G_matrix.h"
+%include "gnuradio/fec/ldpc_gen_mtrx_encoder.h"
+%include "gnuradio/fec/ldpc_par_mtrx_encoder.h"
+%include "gnuradio/fec/ldpc_bit_flip_decoder.h"
+%include "gnuradio/fec/ldpc_decoder.h"
+
+%include "ldpc.i"
+#endif /* GSL_FOUND */
 
 GR_SWIG_BLOCK_MAGIC2(fec, decoder);
 GR_SWIG_BLOCK_MAGIC2(fec, encoder);
@@ -109,8 +135,3 @@ GR_SWIG_BLOCK_MAGIC2(fec, conv_bit_corr_bb);
 GR_SWIG_BLOCK_MAGIC2(fec, puncture_bb);
 GR_SWIG_BLOCK_MAGIC2(fec, puncture_ff);
 GR_SWIG_BLOCK_MAGIC2(fec, depuncture_bb);
-%include "gnuradio/fec/polar_encoder.h"
-%include "gnuradio/fec/polar_decoder_sc.h"
-%include "gnuradio/fec/polar_common.h"
-%include "gnuradio/fec/polar_decoder_sc_list.h"
-%include "gnuradio/fec/polar_decoder_common.h"
