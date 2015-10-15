@@ -90,7 +90,7 @@ namespace gr {
       for(size_t i = 0; i < esnos.size(); i++) {
         double e = pow(10.0, esnos[i]/10.0);
         d_esno_buffers[curves][i] = esnos[i];
-        d_ber_buffers[curves][i] = log10(boost::math::erfc(sqrt(e)));
+        d_ber_buffers[curves][i] = log10(0.5*boost::math::erfc(sqrt(e)));
       }
 
 

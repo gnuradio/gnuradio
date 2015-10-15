@@ -89,44 +89,57 @@ bool cldpc::is_codeword(const std::vector<char> in) {
     return is_code;
 }
 
-std::vector<char> cldpc::encode(std::vector<char> dataword) {
-    if (dataword.size() == K) {
-        GF2Vec x(N);
-        GF2Vec data(K);
-        data.set_vec(dataword);
-        for ( int i = rank_H; i < N; i++ ) {
-            x[i] = dataword[i - rank_H];
-        }
-        for ( int i = 0; i < rank_H; i++ ) {
-            x[i] = G[i].sub_vector(N-K, N)*data;
-        }
-        GF2Vec y(N);
-        for ( int i = 0; i < N; i++ ) {
-            y[permute[i]] = x[i];
-        }
-        return y.get_vec();
-    } else {
-        throw std::runtime_error("bad vector length!");
-        return std::vector<char>();
+std::vector<char>
+cldpc::encode(std::vector<char> dataword)
+{
+  if(dataword.size() == K) {
+    GF2Vec x(N);
+    GF2Vec data(K);
+    data.set_vec(dataword);
+    for(int i = rank_H; i < N; i++) {
+      x[i] = dataword[i - rank_H];
     }
+    for(int i = 0; i < rank_H; i++) {
+      x[i] = G[i].sub_vector(N-K, N)*data;
+    }
+    GF2Vec y(N);
+    for(int i = 0; i < N; i++) {
+      y[permute[i]] = x[i];
+    }
+    return y.get_vec();
+  }
+  else {
+    throw std::runtime_error("bad vector length!");
+    return std::vector<char>();
+  }
 }
 
-int cldpc::dimension() {
-    return K;
+int
+cldpc::dimension()
+{
+  return K;
 }
 
-int cldpc::get_M() {
-    return M;
+int
+cldpc::get_M()
+{
+  return M;
 }
 
-int cldpc::get_N() {
-    return N;
+int
+cldpc::get_N()
+{
+  return N;
 }
 
-GF2Mat cldpc::get_H() {
-    return H;
+GF2Mat
+cldpc::get_H()
+{
+  return H;
 }
 
-GF2Mat cldpc::get_G() {
-    return G;
+GF2Mat
+cldpc::get_G()
+{
+  return G;
 }

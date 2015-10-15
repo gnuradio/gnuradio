@@ -36,70 +36,123 @@
 namespace gr {
  namespace fec {
 
-generic_decoder::sptr
-ldpc_decoder::make(std::string alist_file, float sigma, int max_iterations)
-{
-    return generic_decoder::sptr(new ldpc_decoder(alist_file, sigma, max_iterations));
-}
+   generic_decoder::sptr
+   ldpc_decoder::make(std::string alist_file, float sigma,
+                      int max_iterations)
+   {
+     return generic_decoder::sptr
+       (new ldpc_decoder(alist_file, sigma, max_iterations));
+   }
 
-ldpc_decoder::ldpc_decoder (std::string alist_file, float sigma, int max_iterations)
-    : generic_decoder("ldpc_decoder")
-{
-        if(!boost::filesystem::exists( alist_file ))
-            throw std::runtime_error("Bad AList file name!");
-        d_list.read(alist_file.c_str());
-        d_code.set_alist(d_list);
-        d_spa.set_alist_sigma(d_list, sigma);
-        inputSize = d_code.get_N();
-        outputSize = d_code.dimension();
-        d_spa.set_K(outputSize);
-        d_spa.set_max_iterations(max_iterations);
-}
+   ldpc_decoder::ldpc_decoder(std::string alist_file, float sigma,
+                              int max_iterations)
+     : generic_decoder("ldpc_decoder")
+   {
+     if(!boost::filesystem::exists( alist_file ))
+       throw std::runtime_error("Bad AList file name!");
 
-int ldpc_decoder::get_output_size() {
-    return outputSize;
-}
+     d_list.read(alist_file.c_str());
+     d_code.set_alist(d_list);
+     d_spa.set_alist_sigma(d_list, sigma);
 
-int ldpc_decoder::get_input_size() {
-    return inputSize;
-}
+     d_rate = static_cast<double>(d_code.dimension())/static_cast<double>(d_code.get_N());
+     set_frame_size(d_code.dimension());
 
-void ldpc_decoder::generic_work(void *inBuffer, void *outBuffer) {
-    const float *inPtr = (const float *) inBuffer;
-    unsigned char *out = (unsigned char *) outBuffer;
- 
-    std::vector<float> rx(inputSize);
-    for(int i=0; i<inputSize; i++){ rx[i] = inPtr[i] * (-1); }
-    //memcpy(&rx[0], inPtr, inputSize*sizeof(float));
-    int n_iterations = 0;
-    std::vector<char> estimate( d_spa.decode(rx, &n_iterations) );   
-    std::vector<char> data( d_code.get_systematic_bits(estimate) );
-    memcpy(out, &data[0], outputSize);
-    d_iterations = n_iterations;
-}
+     d_spa.set_K(d_output_size);
+     d_spa.set_max_iterations(max_iterations);
+   }
 
-int ldpc_decoder::get_input_item_size() {
-    return sizeof(INPUT_DATATYPE);
-}
+   int
+   ldpc_decoder::get_output_size()
+   {
+     return d_output_size;
+   }
 
-int ldpc_decoder::get_output_item_size() {
-    return sizeof(OUTPUT_DATATYPE);
-}
+   int
+   ldpc_decoder::get_input_size()
+   {
+     return d_input_size;
+   }
 
-int ldpc_decoder::get_history() {
-    return 0;
-}
+   double
+   ldpc_decoder::rate()
+   {
+     return d_rate;
+   }
 
-float ldpc_decoder::get_shift() {
-    return 0.0;
-}
+   bool
+   ldpc_decoder::set_frame_size(unsigned int frame_size)
+   {
+     if(frame_size % d_code.dimension() != 0) {
+       GR_LOG_ERROR(d_logger, boost::format("Frame size (%1% bits) must be a "
+                                            "multiple of the information word "
+                                            "size of the LDPC matrix, %2%") \
+                    % frame_size % (d_code.dimension()));
+       throw std::runtime_error("ldpc_decoder: cannot use frame size.");
+     }
 
-const char* ldpc_decoder::get_conversion() {
-    return "none";
-}
+     d_output_size = frame_size;
+     d_input_size = static_cast<int>(round(frame_size / d_rate));
 
-ldpc_decoder::~ldpc_decoder() {
-}
+     return true;
+   }
 
-}
-}
+   void
+   ldpc_decoder::generic_work(void *inBuffer, void *outBuffer)
+   {
+     const float *in = (const float *) inBuffer;
+     unsigned char *out = (unsigned char *) outBuffer;
+
+     int j = 0;
+     std::vector<float> rx(d_code.get_N());
+     for(int i = 0; i < d_input_size; i+=d_code.get_N()) {
+       for(int k = 0; k < d_code.get_N(); k++) {
+         rx[k] = in[i+k] * (-1);
+       }
+
+       int n_iterations = 0;
+       std::vector<char> estimate( d_spa.decode(rx, &n_iterations) );
+       std::vector<char> data( d_code.get_systematic_bits(estimate) );
+       memcpy(&out[j], &data[0], d_code.dimension());
+       d_iterations = n_iterations;
+
+       j += d_code.dimension();
+     }
+   }
+
+   int
+   ldpc_decoder::get_input_item_size()
+   {
+     return sizeof(INPUT_DATATYPE);
+   }
+
+   int
+   ldpc_decoder::get_output_item_size()
+   {
+     return sizeof(OUTPUT_DATATYPE);
+   }
+
+   int
+   ldpc_decoder::get_history()
+   {
+     return 0;
+   }
+
+   float
+   ldpc_decoder::get_shift()
+   {
+     return 0.0;
+   }
+
+   const char*
+   ldpc_decoder::get_conversion()
+   {
+     return "none";
+   }
+
+   ldpc_decoder::~ldpc_decoder()
+   {
+   }
+
+ } // namespace gr
+} // namespace fec
