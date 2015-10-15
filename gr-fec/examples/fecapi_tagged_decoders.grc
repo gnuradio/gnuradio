@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.9'?>
+<?grc format='1' created='3.7.8'?>
 <flow_graph>
   <timestamp>Tue May 20 15:45:42 2014</timestamp>
   <block>
@@ -316,9 +317,12 @@
       <value>1</value>
     </param>
     <param>
-      <key>_enabled</key>
-      <value>True</value>
+      <key>ndim</key>
+      <value>1</value>
     </param>
+  </block>
+  <block>
+    <key>variable_repetition_encoder_def</key>
     <param>
       <key>framebits</key>
       <value>MTU*8</value>
@@ -667,7 +671,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 371)</value>
+      <value>(811, 363)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1194,6 +1198,9 @@
       <key>alias</key>
       <value></value>
     </param>
+  </block>
+  <block>
+    <key>digital_map_bb</key>
     <param>
       <key>comment</key>
       <value></value>
@@ -1249,6 +1256,9 @@
       <key>_enabled</key>
       <value>True</value>
     </param>
+  </block>
+  <block>
+    <key>digital_map_bb</key>
     <param>
       <key>_coordinate</key>
       <value>(672, 467)</value>
@@ -1410,6 +1420,9 @@
       <key>_coordinate</key>
       <value>(992, 339)</value>
     </param>
+  </block>
+  <block>
+    <key>fec_extended_tagged_decoder</key>
     <param>
       <key>_rotation</key>
       <value>0</value>
@@ -1667,8 +1680,8 @@
       <value>0</value>
     </param>
     <param>
-      <key>puncpat</key>
-      <value>puncpat</value>
+      <key>minoutbuf</key>
+      <value>0</value>
     </param>
   </block>
   <block>

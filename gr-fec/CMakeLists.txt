@@ -27,6 +27,8 @@ include(GrBoost)
 ########################################################################
 include(GrComponent)
 
+find_package(GSL)
+
 GR_REGISTER_COMPONENT("gr-fec" ENABLE_GR_FEC
     ENABLE_VOLK
     Boost_FOUND
@@ -90,10 +92,13 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/fec)
+    add_subdirectory(python/fec/LDPC)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
 add_subdirectory(examples)
 add_subdirectory(doc)
+add_subdirectory(ldpc_alist)
+add_subdirectory(apps)
 
 ########################################################################
 # Create Pkg Config File
