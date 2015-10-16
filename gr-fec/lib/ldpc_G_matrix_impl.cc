@@ -77,13 +77,16 @@ namespace gr {
         }
 
         // Check if the identity matrix exists in the right spot.
-        int test_if_equal = gsl_matrix_equal(identity, I_test);
+        //int test_if_equal = gsl_matrix_equal(identity, I_test);
+        gsl_matrix_sub(identity, I_test); // should be null set if equal
+        double test_if_not_equal = gsl_matrix_max(identity);
 
         // Free memory
         gsl_matrix_free(identity);
         gsl_matrix_free(I_test);
 
-        if(!test_if_equal) {
+        //if(!test_if_equal) {
+        if(test_if_not_equal > 0) {
           GR_LOG_ERROR(d_logger,
                        "Error in ldpc_G_matrix_impl constructor. It appears "
                        "that the given alist file did not contain either a "
