@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef ADD_CONST_II
+#define ADD_CONST_II
 
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
@@ -35,31 +33,31 @@ namespace gr {
      * \brief output = input + constant
      * \ingroup math_operators_blk
      */
-    class BLOCKS_API @NAME@ : virtual public sync_block
+    class BLOCKS_API add_const_ii : virtual public sync_block
     {
     public:
 
-      // gr::blocks::@NAME@::sptr
-      typedef boost::shared_ptr<@NAME@> sptr;
+      // gr::blocks::add_const_ii::sptr
+      typedef boost::shared_ptr<add_const_ii> sptr;
 
       /*!
-       * \brief Create an instance of @NAME@
+       * \brief Create an instance of add_const_ii
        * \param k additive constant
        */
-      static sptr make(@O_TYPE@ k);
+      static sptr make(int k);
 
       /*!
        * \brief Return additive constant
        */
-      virtual @O_TYPE@ k() const = 0;
+      virtual int k() const = 0;
 
       /*!
        * \brief Set additive constant
        */
-      virtual void set_k(@O_TYPE@ k) = 0;
+      virtual void set_k(int k) = 0;
     };
 
   }
 }
 
-#endif /* @GUARD_NAME@ */
+#endif /* ADD_CONST_II */

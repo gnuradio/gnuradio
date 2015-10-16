@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,44 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef ADD_CONST_BB
+#define ADD_CONST_BB
 
-#ifndef INCLUDED_MULTIPLY_CONST_FF_IMPL_H
-#define INCLUDED_MULTIPLY_CONST_FF_IMPL_H
-
-#include <gnuradio/blocks/multiply_const_ff.h>
+#include <gnuradio/blocks/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API multiply_const_ff_impl : public multiply_const_ff
+    /*!
+     * \brief output = input + constant
+     * \ingroup math_operators_blk
+     */
+    class BLOCKS_API add_const_bb : virtual public sync_block
     {
-      float d_k;
-      size_t d_vlen;
-
     public:
-      multiply_const_ff_impl(float k, size_t vlen);
 
-      void setup_rpc();
+      // gr::blocks::add_const_bb::sptr
+      typedef boost::shared_ptr<add_const_bb> sptr;
 
-      float k() const { return d_k; }
-      void set_k(float k) { d_k = k; }
+      /*!
+       * \brief Create an instance of add_const_bb
+       * \param k additive constant
+       */
+      static sptr make(char k);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      /*!
+       * \brief Return additive constant
+       */
+      virtual char k() const = 0;
+
+      /*!
+       * \brief Set additive constant
+       */
+      virtual void set_k(char k) = 0;
     };
 
-  } /* namespace blocks */
-} /* namespace gr */
+  }
+}
 
-#endif /* INCLUDED_MULTIPLY_CONST_FF_IMPL_H */
+#endif /* ADD_CONST_BB */

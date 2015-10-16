@@ -36,6 +36,8 @@ namespace gr {
     public:
       multiply_const_vff_impl(std::vector<float> k);
 
+      void setup_rpc();
+
       std::vector<float> k() const { return d_k; }
       void set_k(std::vector<float> k) { d_k = k; }
 

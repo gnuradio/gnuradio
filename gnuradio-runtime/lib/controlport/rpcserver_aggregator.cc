@@ -74,6 +74,25 @@ rpcserver_aggregator::unregisterQueryCallback(const std::string &id)
 		unregisterQueryCallback_f<rpcmanager_base::rpcserver_booter_base_sptr, queryCallback_t>(id));
 }
 
+
+
+void
+rpcserver_aggregator::registerHandlerCallback(const std::string &id,
+                                              const handlerCallback_t callback)
+{
+  std::for_each(d_serverlist.begin(), d_serverlist.end(),
+		registerHandlerCallback_f<rpcmanager_base::rpcserver_booter_base_sptr, handlerCallback_t>(id, callback));
+}
+
+void
+rpcserver_aggregator::unregisterHandlerCallback(const std::string &id)
+{
+  std::for_each(d_serverlist.begin(), d_serverlist.end(),
+		unregisterHandlerCallback_f<rpcmanager_base::rpcserver_booter_base_sptr, handlerCallback_t>(id));
+}
+
+
+
 void
 rpcserver_aggregator::registerServer(rpcmanager_base::rpcserver_booter_base_sptr server)
 {

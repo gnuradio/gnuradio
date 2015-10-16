@@ -43,6 +43,8 @@ namespace gr {
 
       void handle_enable(pmt::pmt_t msg);
 
+      void setup_rpc();
+
       void set_enabled(bool enable) { d_enabled = enable; }
       bool enabled() const { return d_enabled;}
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,32 +20,44 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef ADD_CONST_CC
+#define ADD_CONST_CC
 
-#ifndef @GUARD_NAME_IMPL@
-#define @GUARD_NAME_IMPL@
-
-#include <gnuradio/blocks/@NAME@.h>
+#include <gnuradio/blocks/api.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API @NAME_IMPL@ : public @NAME@
+    /*!
+     * \brief output = input + constant
+     * \ingroup math_operators_blk
+     */
+    class BLOCKS_API add_const_cc : virtual public sync_block
     {
-      @O_TYPE@ d_k;
-
     public:
-      @NAME_IMPL@(@O_TYPE@ k);
 
-      @O_TYPE@ k() const { return d_k; }
-      void set_k(@O_TYPE@ k) { d_k = k; }
+      // gr::blocks::add_const_cc::sptr
+      typedef boost::shared_ptr<add_const_cc> sptr;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      /*!
+       * \brief Create an instance of add_const_cc
+       * \param k additive constant
+       */
+      static sptr make(gr_complex k);
+
+      /*!
+       * \brief Return additive constant
+       */
+      virtual gr_complex k() const = 0;
+
+      /*!
+       * \brief Set additive constant
+       */
+      virtual void set_k(gr_complex k) = 0;
     };
 
-  } /* namespace blocks */
-} /* namespace gr */
+  }
+}
 
-#endif /* @GUARD_NAME_IMPL@ */
+#endif /* ADD_CONST_CC */
