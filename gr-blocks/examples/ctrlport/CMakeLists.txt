@@ -19,7 +19,19 @@
 
 include(GrPython)
 
+install(
+  FILES
+  comparing_resamplers.grc
+  pfb_sync_test.grc
+  simple_copy.grc
+  usrp_source_control.grc
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
+  COMPONENT "runtime_python"
+)
+
 GR_PYTHON_INSTALL(PROGRAMS
-    DESTINATION ${GR_PKG_CTRLPORT_EXAMPLES_DIR}
-    COMPONENT "runtime_python"
+  simple_copy_controller.py
+  usrp_source_controller.py
+  DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
+  COMPONENT "runtime_python"
 )
