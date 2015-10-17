@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -69,8 +69,8 @@ namespace gr {
         rpcbasic_sptr(new rpcbasic_register_get<multiply_const_cc, gr_complex>(
 	  alias(), "Constant",
 	  &multiply_const_cc::k,
-	  pmt::from_complex(-1000.0f, 0.0f),
-          pmt::from_complex(1000.0f, 0.0f),
+	  pmt::from_complex(-1024.0f, 0.0f),
+          pmt::from_complex(1024.0f, 0.0f),
           pmt::from_complex(0.0f, 0.0f),
 	  "", "Constant to multiply", RPC_PRIVLVL_MIN,
           DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
@@ -79,8 +79,8 @@ namespace gr {
         rpcbasic_sptr(new rpcbasic_register_set<multiply_const_cc, gr_complex>(
 	  alias(), "Constant",
 	  &multiply_const_cc::set_k,
-	  pmt::from_complex(-1000.0f, 0.0f),
-          pmt::from_complex(1000.0f, 0.0f),
+	  pmt::from_complex(-1024.0f, 0.0f),
+          pmt::from_complex(1024.0f, 0.0f),
           pmt::from_complex(0.0f, 0.0f),
 	  "", "Constant to multiply",
 	  RPC_PRIVLVL_MIN, DISPNULL)));

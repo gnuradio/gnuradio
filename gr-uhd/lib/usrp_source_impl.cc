@@ -553,5 +553,17 @@ namespace gr {
       return num_samps;
     }
 
+    void
+    usrp_source_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_handler<usrp_block>(
+          alias(), "command",
+          "", "UHD Commands",
+          RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
+    }
+
   } /* namespace uhd */
 } /* namespace gr */

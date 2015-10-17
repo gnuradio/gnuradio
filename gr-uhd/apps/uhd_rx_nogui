@@ -163,8 +163,7 @@ class app_top_block(gr.top_block):
 
 	AGC = analog.agc_cc(1.0/channel_rate,  # Time constant
                             1.0,     	       # Reference power
-                            1.0,               # Initial gain
-                            1.0)	       # Maximum gain
+                            1.0)	       # Gain
 
 	DEMOD = demod(channel_rate, audio_decim)
 

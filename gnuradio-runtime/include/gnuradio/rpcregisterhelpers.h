@@ -143,6 +143,49 @@ public:
 };
 
 
+
+/*********************************************************************
+ *   RPC Handler Base Classes
+ ********************************************************************/
+
+/*!
+ *\brief Base class for registering a ControlPort Handler. Acts as
+ *       a message acceptor.
+ */
+template<typename T>
+class rpchandler_base
+  : public virtual gr::messages::msg_accepter
+{
+public:
+  rpchandler_base(T* source, const char* handler) :
+    _source(source), _handler(handler) {;}
+  ~rpchandler_base() {;}
+
+  void post(pmt::pmt_t which_port, pmt::pmt_t msg) {
+    _source->post(which_port, msg);
+  }
+
+protected:
+  T* _source;
+  const char* _handler;
+};
+
+
+/*!
+ * \brief Templated parent class for registering a ControlPort Extractor.
+ */
+template<typename T>
+class rpcbasic_handler : public virtual rpchandler_base<T>
+{
+public:
+  rpcbasic_handler(T* source, const char* handler) :
+    rpchandler_base<T>(source, handler)
+  {;}
+};
+
+
+
+
 /*********************************************************************
  *   RPC Specialized Extractors
  ********************************************************************/
@@ -196,7 +239,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
-    (rpcextractor_base<T,short>::_source->*rpcextractor_base<T,char>::_func)
+    (rpcextractor_base<T,short>::_source->*rpcextractor_base<T,short>::_func)
       (static_cast<short>(pmt::to_long(msg)));
   }
 };
@@ -1354,6 +1397,81 @@ public:
   }
 };
 
+
+/*!
+ * \brief Registers a message handler function to post a message to a
+ * block's handler.
+ */
+template<typename T>
+class rpcbasic_register_handler : public rpcbasic_base
+{
+public:
+
+  /*!
+   * \brief Adds the ability to pass a message over ControlPort.
+   *
+   * \details
+   * This makes any message handler function avialable over
+   * ControlPort. Since message handlers always take in a single PMT
+   * message input, this interface provides a very generic way of
+   * setting values in a block in a flowgraph.
+   *
+   * \param block_alias  Alias of the block
+   * \param handler      The name of the message port in the block
+   * \param units_       A string to describe what units to represent the variable with
+   * \param desc_        A string to describing the variable.
+   * \param minpriv_     The required minimum privilege level
+   * \param display_     The display mask
+   */
+  rpcbasic_register_handler(const std::string& block_alias,
+                            const char* handler,
+                            const char* units_ = "",
+                            const char* desc_ = "",
+                            priv_lvl_t minpriv_ = RPC_PRIVLVL_MIN,
+                            DisplayType display_ = DISPNULL)
+  {
+    d_units = units_;
+    d_desc = desc_;
+    d_minpriv = minpriv_;
+    d_display = display_;
+    d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
+#ifdef GR_RPCSERVER_ENABLED
+    callbackregister_base::handlerCallback_t
+      inserter(new rpcbasic_handler<T>(d_object, handler),
+	       minpriv_, std::string(units_), display_, std::string(desc_),
+               0, 0, 0);
+    std::ostringstream oss(std::ostringstream::out);
+    oss << block_alias << "::" << handler;
+    d_id = oss.str();
+    //std::cerr << "REGISTERING GET: " << d_id << "  " << desc_ << std::endl;
+    rpcmanager::get()->i()->registerHandlerCallback(d_id, inserter);
+#endif
+  }
+
+  ~rpcbasic_register_handler()
+  {
+#ifdef GR_RPCSERVER_ENABLED
+    rpcmanager::get()->i()->unregisterHandlerCallback(d_id);
+#endif
+  }
+
+  std::string units() const { return d_units; }
+  std::string description() const { return d_desc; }
+  priv_lvl_t privilege_level() const { return d_minpriv; }
+  DisplayType default_display() const { return d_display; }
+
+  void units(std::string u) { d_units = u; }
+  void description(std::string d) { d_desc = d; }
+  void privilege_level(priv_lvl_t p) { d_minpriv = p; }
+  void default_display(DisplayType d) { d_display = d; }
+
+private:
+  std::string d_id;
+  std::string d_units, d_desc;
+  priv_lvl_t d_minpriv;
+  DisplayType d_display;
+  T *d_object;
+};
 
 
 
