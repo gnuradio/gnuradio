@@ -27,6 +27,7 @@ from thrift.protocol import TBinaryProtocol
 from gnuradio.ctrlport.GNURadio import ControlPort
 from gnuradio.ctrlport import RPCConnection
 from gnuradio import gr
+import pmt
 import sys
 
 class ThriftRadioClient:
@@ -195,6 +196,22 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
 
     def shutdown(self):
         self.thriftclient.radio.shutdown()
+
+    def postMessage(self, blk_alias, port, msg):
+        '''
+        blk_alias: the alias of the block we are posting the message
+                   to; must have an open message port named 'port'.
+                   Provide as a string.
+        port: The name of the message port we are sending the message to.
+              Provide as a string.
+        msg: The actual message. Provide this as a PMT of the form
+             right for the message port.
+        The alias and port names are converted to PMT symbols and
+        serialized. The msg is already a PMT and so just serialized.
+        '''
+        self.thriftclient.radio.postMessage(pmt.serialize_str(pmt.intern(blk_alias)),
+                                            pmt.serialize_str(pmt.intern(port)),
+                                            pmt.serialize_str(msg));
 
     def printProperties(self, props):
         info = ""

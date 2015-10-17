@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2009,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2009,2010,2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -61,6 +61,28 @@ namespace gr {
       volk_32f_s32f_multiply_32f(out, in, d_k, noi);
 
       return noutput_items;
+    }
+
+    void
+    multiply_const_ff_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<multiply_const_ff, float>(
+	  alias(), "coefficient",
+	  &multiply_const_ff::k,
+	  pmt::mp(-1024.0f), pmt::mp(1024.0f), pmt::mp(0.0f),
+	  "", "Coefficient", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<multiply_const_ff, float>(
+	  alias(), "coefficient",
+	  &multiply_const_ff::set_k,
+	  pmt::mp(-1024.0f), pmt::mp(1024.0f), pmt::mp(0.0f),
+	  "", "Coefficient",
+	  RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace blocks */

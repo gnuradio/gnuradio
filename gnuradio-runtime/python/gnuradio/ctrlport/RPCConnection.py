@@ -105,6 +105,9 @@ class RPCConnection(object):
     def getRe(self,*args):
         raise exceptions.NotImplementedError()
 
+    def postMessage(self,*args):
+        raise exceptions.NotImplementedError()
+
     def setKnobs(self,*args):
         raise exceptions.NotImplementedError()
 

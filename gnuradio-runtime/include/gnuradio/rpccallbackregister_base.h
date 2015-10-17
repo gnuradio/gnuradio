@@ -99,6 +99,7 @@ struct callbackregister_base
 
   typedef callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr> configureCallback_t;
   typedef callback_t<gr::messages::msg_producer, gr::messages::msg_producer_sptr> queryCallback_t;
+  typedef callback_t<gr::messages::msg_accepter, gr::messages::msg_accepter_sptr> handlerCallback_t;
 
   callbackregister_base() {;}
   virtual ~callbackregister_base() {;}
@@ -107,6 +108,8 @@ struct callbackregister_base
   virtual void unregisterConfigureCallback(const std::string &id) = 0;
   virtual void registerQueryCallback(const std::string &id, const queryCallback_t callback) = 0;
   virtual void unregisterQueryCallback(const std::string &id) = 0;
+  virtual void registerHandlerCallback(const std::string &id, const handlerCallback_t callback) = 0;
+  virtual void unregisterHandlerCallback(const std::string &id) = 0;
 };
 
 #endif /* RPCCALLBACKREGISTER_BASE_H */

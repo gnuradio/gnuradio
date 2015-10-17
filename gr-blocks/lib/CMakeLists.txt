@@ -28,7 +28,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 include(GrMiscUtils)
 GR_EXPAND_X_CC_H_IMPL(blocks abs_XX             ss ii ff)
 GR_EXPAND_X_CC_H_IMPL(blocks add_XX             ss ii cc)
-GR_EXPAND_X_CC_H_IMPL(blocks add_const_XX       bb ss ii ff cc)
 GR_EXPAND_X_CC_H_IMPL(blocks add_const_vXX      bb ss ii ff cc)
 GR_EXPAND_X_CC_H_IMPL(blocks and_XX             bb ss ii)
 GR_EXPAND_X_CC_H_IMPL(blocks and_const_XX       bb ss ii)
@@ -88,6 +87,11 @@ list(APPEND gr_blocks_sources
     unpack_k_bits.cc
     wavfile.cc
     add_ff_impl.cc
+    add_const_bb_impl.cc
+    add_const_ss_impl.cc
+    add_const_ii_impl.cc
+    add_const_ff_impl.cc
+    add_const_cc_impl.cc
     annotator_1to1_impl.cc
     annotator_alltoall_impl.cc
     annotator_raw_impl.cc

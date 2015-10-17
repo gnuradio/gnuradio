@@ -36,6 +36,8 @@ namespace gr {
     public:
       multiply_const_vcc_impl(std::vector<gr_complex> k);
 
+      void setup_rpc();
+
       std::vector<gr_complex> k() const { return d_k; }
       void set_k(std::vector<gr_complex> k) { d_k = k; }
 
