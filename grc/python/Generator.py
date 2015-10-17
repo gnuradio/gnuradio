@@ -22,6 +22,7 @@ import sys
 import subprocess
 import tempfile
 import shlex
+import codecs
 from distutils.spawn import find_executable
 from Cheetah.Template import Template
 
@@ -107,7 +108,7 @@ class TopBlockGenerator(object):
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
         # generate
-        with open(self.get_file_path(), 'w') as fp:
+        with codecs.open(self.get_file_path(), 'w', encoding = 'utf-8') as fp:
             fp.write(self._build_python_code_from_template())
         try:
             os.chmod(self.get_file_path(), self._mode)
