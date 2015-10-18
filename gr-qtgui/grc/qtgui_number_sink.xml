@@ -12,10 +12,10 @@
   <import>import sip</import>
   <make>#set $win = 'self._%s_win'%$id
 qtgui.number_sink(
-        $type.size,
-        $avg,
-        $graph_type,
-	$nconnections
+    $type.size,
+    $avg,
+    $graph_type,
+    $nconnections
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_title($name)
@@ -23,7 +23,7 @@ self.$(id).set_title($name)
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
 units = [$unit1, $unit2, $unit3, $unit4, $unit5,
-          $unit6, $unit7, $unit8, $unit9, $unit10]
+         $unit6, $unit7, $unit8, $unit9, $unit10]
 colors = [$color1, $color2, $color3, $color4, $color5,
           $color6, $color7, $color8, $color9, $color10]
 factor = [$factor1, $factor2, $factor3, $factor4, $factor5,
