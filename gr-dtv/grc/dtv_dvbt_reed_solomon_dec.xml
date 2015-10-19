@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Reed Solomon Decoder
+###################################################
+ -->
+<block>
+  <name>Reed-Solomon Decoder</name>
+  <key>dtv_dvbt_reed_solomon_dec</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_reed_solomon_dec($p, $m, $gfpoly, $n, $k, $t, $s, $blocks)</make>
+  <param>
+    <name>p</name>
+    <key>p</key>
+    <value>2</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>m</name>
+    <key>m</key>
+    <value>8</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>GF polynomial</name>
+    <key>gfpoly</key>
+    <value>0x11d</value>
+    <type>raw</type>
+  </param>
+  <param>
+    <name>N</name>
+    <key>n</key>
+    <value>255</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>K</name>
+    <key>k</key>
+    <value>239</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>t</name>
+    <key>t</key>
+    <value>8</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Shortening size</name>
+    <key>s</key>
+    <value>51</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Blocks</name>
+    <key>blocks</key>
+    <value>8</value>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>$blocks*($n-$s)</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>$blocks*($k-$s)</vlen>
+  </source>
+</block>

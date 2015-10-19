@@ -21,6 +21,7 @@ import os
 import sys
 import subprocess
 import tempfile
+import shlex
 from distutils.spawn import find_executable
 from Cheetah.Template import Template
 
@@ -120,26 +121,20 @@ class TopBlockGenerator(object):
         Returns:
             a popen object
         """
-        # extract the path to the python executable
-        python_exe = sys.executable
-
-        # when using wx gui on mac os, execute with pythonw
-        # using pythonw is not necessary anymore, disabled below
-        # if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
-        #   python_exe = 'pythonw'
-
         def args_to_string(args):
             """Accounts for spaces in args"""
             return ' '.join(repr(arg) if ' ' in arg else arg for arg in args)
 
-        # setup the command args to run
-        cmds = [python_exe, '-u', self.get_file_path()]  # -u is unbuffered stdio
+        run_command = self._flow_graph.get_option('run_command')
+        cmds = shlex.split(run_command.format(python=sys.executable,
+                                              filename=self.get_file_path()))
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
             cmds = [xterm_executable, '-e', args_to_string(cmds)]
 
+        Messages.send_start_exec(args_to_string(cmds))
         p = subprocess.Popen(
             args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True)
@@ -172,7 +167,7 @@ class TopBlockGenerator(object):
             return code
 
         blocks = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.get_blocks()),
+            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.iter_blocks()),
             lambda b: b.get_id(), _get_block_sort_text
         )
         # List of regular blocks (all blocks minus the special ones)

@@ -71,6 +71,14 @@
 #include "gnuradio/dtv/dvbt_symbol_inner_interleaver.h"
 #include "gnuradio/dtv/dvbt_map.h"
 #include "gnuradio/dtv/dvbt_reference_signals.h"
+#include "gnuradio/dtv/dvbt_ofdm_sym_acquisition.h"
+#include "gnuradio/dtv/dvbt_demod_reference_signals.h"
+#include "gnuradio/dtv/dvbt_demap.h"
+#include "gnuradio/dtv/dvbt_bit_inner_deinterleaver.h"
+#include "gnuradio/dtv/dvbt_viterbi_decoder.h"
+#include "gnuradio/dtv/dvbt_convolutional_deinterleaver.h"
+#include "gnuradio/dtv/dvbt_reed_solomon_dec.h"
+#include "gnuradio/dtv/dvbt_energy_descramble.h"
 %}
 
 %include "gnuradio/dtv/atsc_deinterleaver.h"
@@ -116,6 +124,14 @@
 %include "gnuradio/dtv/dvbt_symbol_inner_interleaver.h"
 %include "gnuradio/dtv/dvbt_map.h"
 %include "gnuradio/dtv/dvbt_reference_signals.h"
+%include "gnuradio/dtv/dvbt_ofdm_sym_acquisition.h"
+%include "gnuradio/dtv/dvbt_demod_reference_signals.h"
+%include "gnuradio/dtv/dvbt_demap.h"
+%include "gnuradio/dtv/dvbt_bit_inner_deinterleaver.h"
+%include "gnuradio/dtv/dvbt_viterbi_decoder.h"
+%include "gnuradio/dtv/dvbt_convolutional_deinterleaver.h"
+%include "gnuradio/dtv/dvbt_reed_solomon_dec.h"
+%include "gnuradio/dtv/dvbt_energy_descramble.h"
 
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_deinterleaver);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_depad);
@@ -156,3 +172,11 @@ GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_bit_inner_interleaver);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_symbol_inner_interleaver);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_map);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_reference_signals);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_ofdm_sym_acquisition);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_demod_reference_signals);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_demap);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_bit_inner_deinterleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_viterbi_decoder);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_convolutional_deinterleaver);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_reed_solomon_dec);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvbt_energy_descramble);

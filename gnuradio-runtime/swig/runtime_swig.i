@@ -60,6 +60,7 @@
 #include <gnuradio/top_block.h>
 #include <gnuradio/logger.h>
 #include <gnuradio/math.h>
+#include <gnuradio/random.h>
 %}
 
 %constant int sizeof_char 	= sizeof(char);
@@ -95,3 +96,4 @@
 %include "gr_ctrlport.i"
 
 %include "gnuradio/math.h"
+%include "gnuradio/random.h"

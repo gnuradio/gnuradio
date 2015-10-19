@@ -3,12 +3,19 @@
   <name>FEC Async Encoder</name>
   <key>fec_async_encoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.async_encoder($encoder, $packed, $rev_unpack, $rev_pack)</make>
+  <make>fec.async_encoder($encoder, $packed, $rev_unpack, $rev_pack, $mtu)</make>
 
   <param>
     <name>Encoder Obj.</name>
     <key>encoder</key>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>MTU (bytes)</name>
+    <key>mtu</key>
+    <value>1500</value>
+    <type>int</type>
   </param>
 
   <param>

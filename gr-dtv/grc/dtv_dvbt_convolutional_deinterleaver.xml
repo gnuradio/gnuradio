@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Convolutional Deinterleaver
+###################################################
+ -->
+<block>
+  <name>Convolutional Deinterleaver</name>
+  <key>dtv_dvbt_convolutional_deinterleaver</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_convolutional_deinterleaver($blocks, $I, $M)</make>
+  <param>
+    <name>Blocks (12 Bytes)</name>
+    <key>blocks</key>
+    <value>136</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Number of Shift registers</name>
+    <key>I</key>
+    <value>12</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Depth of shift registers</name>
+    <key>M</key>
+    <value>17</value>
+    <type>int</type>
+  </param>
+  <check>$blocks &gt; 0</check>
+  <check>$I &gt; 0</check>
+  <check>$M &gt; 0</check>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>1</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>$blocks*$I</vlen>
+  </source>
+</block>

@@ -319,7 +319,7 @@ namespace gr {
        * \brief Returns the current error of the control loop.
        */
       virtual float error() const = 0;
-  
+
       /*!
        * \brief Returns the current rate of the control loop.
        */

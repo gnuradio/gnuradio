@@ -60,6 +60,14 @@ install(FILES
     dtv_dvbt_symbol_inner_interleaver.xml
     dtv_dvbt_map.xml
     dtv_dvbt_reference_signals.xml
+    dtv_dvbt_ofdm_sym_acquisition.xml
+    dtv_dvbt_demod_reference_signals.xml
+    dtv_dvbt_demap.xml
+    dtv_dvbt_bit_inner_deinterleaver.xml
+    dtv_dvbt_viterbi_decoder.xml
+    dtv_dvbt_convolutional_deinterleaver.xml
+    dtv_dvbt_reed_solomon_dec.xml
+    dtv_dvbt_energy_descramble.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )

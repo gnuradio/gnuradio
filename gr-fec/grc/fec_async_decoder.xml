@@ -3,12 +3,19 @@
   <name>FEC Async Decoder</name>
   <key>fec_async_decoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.async_decoder($decoder, $packed, $rev_pack)</make>
+  <make>fec.async_decoder($decoder, $packed, $rev_pack, $mtu)</make>
 
   <param>
     <name>Decoder Obj.</name>
     <key>decoder</key>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>MTU (bytes)</name>
+    <key>mtu</key>
+    <value>1500</value>
+    <type>int</type>
   </param>
 
   <param>

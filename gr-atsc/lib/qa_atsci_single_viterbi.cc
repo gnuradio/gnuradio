@@ -39,6 +39,8 @@ static const int NN          =  200;
 
 static const int MAXDIBIT    = 3;
 
+static gr::random rndm;
+
 void
 qa_atsci_single_viterbi::encode_block (unsigned char *out, unsigned char *in,
 				      unsigned int n)
@@ -61,7 +63,7 @@ qa_atsci_single_viterbi::decode_block (unsigned char *out, unsigned char *in,
 float
 qa_atsci_single_viterbi::noise ()
 {
-  return 2.0 * ((float) random () / RANDOM_MAX - 0.5);	// uniformly (-1, 1)
+  return 2.0 * (rndm.ran1() - 0.5);	// uniformly (-1, 1)
 }
 
 void

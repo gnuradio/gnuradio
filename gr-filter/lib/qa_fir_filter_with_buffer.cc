@@ -40,10 +40,12 @@ namespace gr {
 #define MAX_DATA        (16383)
 #define	ERR_DELTA	(1e-5)
 
+    static gr::random rndm;
+
     static float
     uniform()
     {
-      return 2.0 * ((float)(::random()) / RANDOM_MAX - 0.5); // uniformly (-1, 1)
+      return 2.0 * (rndm.ran1() - 0.5); // uniformly (-1, 1)
     }
 
     static void

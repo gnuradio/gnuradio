@@ -18,18 +18,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
+from os.path import expanduser
+import numpy
 import stat
 from gnuradio import gr
 
 _gr_prefs = gr.prefs()
 
-#setup paths
-PATH_SEP = {'/':':', '\\':';'}[os.path.sep]
-HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH',
-                                     os.path.expanduser('~/.grc_gnuradio'))
-PREFS_FILE = os.environ.get('GRC_PREFS_PATH',
-                            os.path.join(os.path.expanduser('~/.grc')))
-BLOCKS_DIRS = filter( #filter blank strings
+# setup paths
+PATH_SEP = {'/': ':', '\\': ';'}[os.path.sep]
+
+HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
+
+PREFS_FILE = os.environ.get('GRC_PREFS_PATH', expanduser('~/.gnuradio/grc.conf'))
+PREFS_FILE_OLD = os.environ.get('GRC_PREFS_PATH', expanduser('~/.grc'))
+
+BLOCKS_DIRS = filter(  # filter blank strings
     lambda x: x, PATH_SEP.join([
         os.environ.get('GRC_BLOCKS_PATH', ''),
         _gr_prefs.get_string('grc', 'local_blocks_path', ''),
@@ -37,19 +41,29 @@ BLOCKS_DIRS = filter( #filter blank strings
     ]).split(PATH_SEP),
 ) + [HIER_BLOCKS_LIB_DIR]
 
-#user settings
+# user settings
 XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
-#file creation modes
+# file creation modes
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
 
-#data files
+# data files
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
+#define types, native python + numpy
+VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
+COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
+REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
+INT_TYPES = [int, long, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
+    numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
+#cast to tuple for isinstance, concat subtypes
+COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
+REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
+INT_TYPES = tuple(INT_TYPES)
 
 # Updating colors. Using the standard color pallette from:
 #  http://www.google.com/design/spec/style/color.html#color-color-palette
@@ -74,7 +88,7 @@ GRC_COLOR_GREY = '#BDBDBD'
 GRC_COLOR_WHITE = '#FFFFFF'
 
 
-CORE_TYPES = ( #name, key, sizeof, color
+CORE_TYPES = (  # name, key, sizeof, color
     ('Complex Float 64', 'fc64', 16, GRC_COLOR_BROWN),
     ('Complex Float 32', 'fc32', 8, GRC_COLOR_BLUE),
     ('Complex Integer 64', 'sc64', 16, GRC_COLOR_LIGHT_GREEN),

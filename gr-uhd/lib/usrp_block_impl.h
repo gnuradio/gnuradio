@@ -68,6 +68,7 @@ namespace gr {
           const std::string &attr,
           const size_t mboard = 0
       );
+      size_t get_num_mboards();
 
       // Setters
       void set_clock_config(const ::uhd::clock_config_t &clock_config, size_t mboard);

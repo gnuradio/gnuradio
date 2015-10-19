@@ -58,6 +58,7 @@ $(gui_hint()($win))</make>
   <callback>set_title($which, $title)</callback>
   <callback>set_color($which, $color)</callback>
   <callback>set_y_axis($ymin, $ymax)</callback>
+  <callback>self.$(id).set_trigger_mode($tr_mode, $tr_level, $tr_chan, $tr_tag)</callback>
 
   <param_tab_order>
     <tab>General</tab>

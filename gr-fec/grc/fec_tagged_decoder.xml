@@ -3,13 +3,20 @@
   <name>FEC Tagged Decoder</name>
   <key>fec_tagged_decoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.tagged_decoder($decoder, $itype.size, $otype.size, $lentagname)</make>
+  <make>fec.tagged_decoder($decoder, $itype.size, $otype.size,  $lentagname, $mtu)</make>
 
   <param>
     <name>Constituent Decoder</name>
     <key>decoder</key>
     <value>decoder_variable</value>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>MTU (bytes)</name>
+    <key>mtu</key>
+    <value>1500</value>
+    <type>int</type>
   </param>
 
   <param>
