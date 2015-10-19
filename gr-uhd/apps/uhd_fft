@@ -288,17 +288,12 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
             self._lo_locked_probe_label = Qt.QLabel("")
         self._lo_locked_probe_tool_bar.addWidget(self._lo_locked_probe_label)
         self.top_grid_layout.addWidget(self._lo_locked_probe_tool_bar, 4,0,1,2)
-
         def _current_freq_probe():
             while True:
-                val = self.usrp.get_center_freq(0)
+                val = self.usrp.get_center_freq(self.channels[0])
                 try:
                     if val != self.freq:
-                        print 'need to retuuuuuuune'
-                        Qt.QMetaObject.invokeMethod(
-                                self._freq_line_edit, "setText",
-                                Qt.Q_ARG("QString", eng_notation.num_to_str(self.freq))
-                        )
+                        self.set_freq_qt(val, tune_source='freqsink_msg')
                 except AttributeError:
                     pass
                 time.sleep(1.0 / (10))
@@ -342,18 +337,23 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
     def set_fft_size(self, fft_size):
         self.fft_size = fft_size
 
-    def set_freq_qt(self, freq):
+    def set_freq_qt(self, freq, tune_source='textbox'):
         if freq == self.freq:
             return
-        self.freq = freq
+        if tune_source == 'textbox':
+            # This sets self.freq:
+            self.set_freq(freq, skip_sync=False)
+        elif tune_source == 'freqsink_msg':
+            self.freq = freq
+        else:
+            raise RuntimeError("Invalid tune source: {src}".format(tune_source))
         Qt.QMetaObject.invokeMethod(
                 self._freq_line_edit, "setText",
                 Qt.Q_ARG("QString", eng_notation.num_to_str(self.freq))
         )
-        print 'set_freq_qt', self.freq
-        self.qtgui_freq_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
-        self.set_freq(self.freq, skip_sync=False)
+        if tune_source != 'freqsink_msg':
+            self.qtgui_freq_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
 
     def set_update_rate(self, update_rate):
         self.update_rate = update_rate
@@ -410,13 +410,13 @@ def setup_argparser():
     )
     group = parser.add_argument_group('UHD FFT Arguments')
     group.add_argument("--fft-size", type=eng_arg.intx, default=1024,
-        help="Set Set number of FFT bins [default=%default]")
+        help="Set number of FFT bins")
     group.add_argument("--fft-average", default='medium', choices=('off', 'low', 'medium', 'high'),
-        help="Set FFT averaging [default=%default]")
+        help="Set FFT averaging")
     group.add_argument("--avg-alpha", type=float, default=None,
         help="Specify FFT average alpha (overrides --fft-average)")
     group.add_argument("--update-rate", dest="update_rate", type=eng_arg.eng_float, default=eng_notation.num_to_str(.1),
-        help="Set Set GUI widget update rate [default=%default]")
+        help="Set GUI widget update rate")
     return parser
 
 
