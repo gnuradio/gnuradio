@@ -29,7 +29,6 @@ from channel_construction_bec import design_snr_to_bec_eta
 from channel_construction_bec import bhattacharyya_bounds
 from channel_construction_bsc import tal_vardy_tpm_algorithm
 from helper_functions import *
-import matplotlib.pyplot as plt
 
 
 Z_PARAM_FIRST_HEADER_LINE = "Bhattacharyya parameters (Z-parameters) for a polar code"
@@ -128,12 +127,13 @@ def main():
     z_params = load_z_parameters(m, design_snr, mu)
     z_bounds = bhattacharyya_bounds(design_snr, m)
     print(z_params[-10:])
-    plt.plot(z_params)
-    plt.plot(z_bounds)
-    plt.show()
+
+    if 0:
+        import matplotlib.pyplot as plt
+        plt.plot(z_params)
+        plt.plot(z_bounds)
+        plt.show()
 
 
 if __name__ == '__main__':
     main()
-
-

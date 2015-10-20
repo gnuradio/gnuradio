@@ -31,7 +31,6 @@ for an overview of different approaches
 from scipy.optimize import fsolve
 from scipy.special import erfc
 from helper_functions import *
-import matplotlib.pyplot as plt
 from channel_construction_bec import bhattacharyya_bounds
 
 
@@ -272,8 +271,11 @@ def main():
 
     z_params = tal_vardy_tpm_algorithm(m, design_snr, mu)
     print(z_params)
-    plt.plot(z_params)
-    plt.show()
+
+    if 0:
+        import matplotlib.pyplot as plt
+        plt.plot(z_params)
+        plt.show()
 
 
 if __name__ == '__main__':
