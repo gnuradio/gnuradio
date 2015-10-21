@@ -219,9 +219,9 @@ class UHDApp(object):
         self.vprint("Tuning all channels to {freq} MHz.".format(freq=freq/1e6))
         # Set frequency (tune request takes lo_offset):
         if hasattr(self.args, 'lo_offset') and self.args.lo_offset is not None:
-            treq = uhd.tune_request(self.freq, self.args.lo_offset)
+            treq = uhd.tune_request(freq, self.args.lo_offset)
         else:
-            treq = uhd.tune_request(self.freq)
+            treq = uhd.tune_request(freq)
         # Make sure tuning is synched:
         if len(self.channels) > 1 and not skip_sync:
             cmd_time = self.usrp.get_time_now() + uhd.time_spec(COMMAND_DELAY)
@@ -239,9 +239,8 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
-        print('pre', self.freq)
-        self.freq = self.usrp.get_center_freq(self.channels[0])
-        print('post', self.freq)
+        self.freq = self.usrp.get_center_freq(self.channels[1])
+        self.vprint("First channel has freq: {freq} MHz.".format(freq=self.freq/1e6))
 
     @staticmethod
     def setup_argparser(
