@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -76,12 +76,17 @@ namespace gr {
       /*!
        * \brief Build a complex PSD sink.
        *
-       * \param fftsize size of the FFT to compute and display
+       * \param fftsize size of the FFT to compute and display. If using
+       *        the PDU message port to plot samples, the length of
+       *        each PDU must be a multiple of the FFT size.
        * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
-       * \param nconnections number of signals connected to sink
+       * \param nconnections number of signals to be connected to the
+       *        sink. The PDU message port is always available for a
+       *        connection, and this value must be set to 0 if only
+       *        the PDU message port is being used.
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int fftsize, int wintype,

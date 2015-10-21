@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -54,7 +54,7 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("freq_sink_c",
-                   io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+                   io_signature::make(0, nconnections, sizeof(gr_complex)),
                    io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
@@ -76,6 +76,11 @@ namespace gr {
       set_msg_handler(pmt::mp("freq"),
                       boost::bind(&freq_sink_c_impl::handle_set_freq, this, _1));
 
+      // setup PDU handling input port
+      message_port_register_in(pmt::mp("pdus"));
+      set_msg_handler(pmt::mp("pdus"),
+                      boost::bind(&freq_sink_c_impl::handle_pdus, this, _1));
+
       d_main_gui = NULL;
 
       // Perform fftshift operation;
@@ -93,6 +98,7 @@ namespace gr {
 
 
       d_index = 0;
+      // save the last "connection" for the PDU memory
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
                                                        volk_get_alignment()));
@@ -102,6 +108,14 @@ namespace gr {
 	memset(d_residbufs[i], 0, d_fftsize*sizeof(gr_complex));
 	memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
+
+      d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
+                                                     volk_get_alignment()));
+      d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double),
+                                          volk_get_alignment());
+      d_magbufs.push_back(d_pdu_magbuf);
+      memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
+      memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double));
 
       buildwindow();
 
@@ -115,7 +129,8 @@ namespace gr {
       if(!d_main_gui->isClosed())
         d_main_gui->close();
 
-      for(int i = 0; i < d_nconnections; i++) {
+      // +1 to handle PDU buffers; will also take care of d_pdu_magbuf
+      for(int i = 0; i < d_nconnections+1; i++) {
 	volk_free(d_residbufs[i]);
 	volk_free(d_magbufs[i]);
       }
@@ -153,7 +168,8 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      d_main_gui = new FreqDisplayForm(d_nconnections, d_parent);
+      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      d_main_gui = new FreqDisplayForm(numplots, d_parent);
       set_fft_window(d_wintype);
       set_fft_size(d_fftsize);
       set_frequency_range(d_center_freq, d_bandwidth);
@@ -507,7 +523,8 @@ namespace gr {
 
       if(newfftsize != d_fftsize) {
 	// Resize residbuf and replace data
-	for(int i = 0; i < d_nconnections; i++) {
+        // +1 to handle PDU buffers
+	for(int i = 0; i < d_nconnections+1; i++) {
 	  volk_free(d_residbufs[i]);
 	  volk_free(d_magbufs[i]);
 
@@ -519,6 +536,9 @@ namespace gr {
 	  memset(d_residbufs[i], 0, newfftsize*sizeof(gr_complex));
 	  memset(d_magbufs[i], 0, newfftsize*sizeof(double));
 	}
+
+        // Update the pointer to the newly allocated memory
+        d_pdu_magbuf = d_magbufs[d_nconnections];
 
 	// Set new fft size and reset buffer index
 	// (throws away any currently held data, but who cares?)
@@ -690,6 +710,89 @@ namespace gr {
       }
 
       return noutput_items;
+    }
+
+
+    void
+    freq_sink_c_impl::handle_pdus(pmt::pmt_t msg)
+    {
+      size_t len;
+      pmt::pmt_t dict, samples;
+
+      // Test to make sure this is either a PDU or a uniform vector of
+      // samples. Get the samples PMT and the dictionary if it's a PDU.
+      // If not, we throw an error and exit.
+      if(pmt::is_pair(msg)) {
+        dict = pmt::car(msg);
+        samples = pmt::cdr(msg);
+      }
+      else if(pmt::is_uniform_vector(msg)) {
+        samples = msg;
+      }
+      else {
+        throw std::runtime_error("time_sink_c: message must be either "
+                                 "a PDU or a uniform vector of samples.");
+      }
+
+      len = pmt::length(samples);
+
+      const gr_complex *in;
+      if(pmt::is_c32vector(samples)) {
+        in = (const gr_complex*)pmt::c32vector_elements(samples, len);
+      }
+      else {
+        throw std::runtime_error("freq_sink_c: unknown data type "
+                                 "of samples; must be complex.");
+      }
+
+      // Plot if we're past the last update time
+      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+        d_last_time = gr::high_res_timer_now();
+
+        // Update the FFT size from the application
+        fftresize();
+        windowreset();
+        check_clicked();
+
+        int winoverlap = 4;
+        int fftoverlap = d_fftsize / winoverlap;
+        float num = static_cast<float>(winoverlap * len) / static_cast<float>(d_fftsize);
+        int nffts = static_cast<int>(ceilf(num));
+
+        // Clear this as we will be accumulating in the for loop over nffts
+        memset(d_pdu_magbuf, 0, sizeof(double)*d_fftsize);
+
+        size_t min = 0;
+        size_t max = std::min(d_fftsize, static_cast<int>(len));
+        for(int n = 0; n < nffts; n++) {
+          // Clear in case (max-min) < d_fftsize
+          memset(d_residbufs[d_nconnections], 0x00, sizeof(gr_complex)*d_fftsize);
+
+          // Copy in as much of the input samples as we can
+          memcpy(d_residbufs[d_nconnections], &in[min], sizeof(gr_complex)*(max-min));
+
+          // Apply the window and FFT; copy data into the PDU
+          // magnitude buffer.
+          fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
+          for(int x = 0; x < d_fftsize; x++) {
+            d_pdu_magbuf[x] += (double)d_fbuf[x];
+          }
+
+          // Increment our indices; set max up to the number of
+          // samples in the input PDU.
+          min += fftoverlap;
+          max = std::min(max + fftoverlap, len);
+        }
+
+        // Perform the averaging
+        for(int x = 0; x < d_fftsize; x++) {
+          d_pdu_magbuf[x] /= static_cast<double>(nffts);
+        }
+
+        //update gui per-pdu
+        d_qApplication->postEvent(d_main_gui,
+                                  new FreqUpdateEvent(d_magbufs, d_fftsize));
+      }
     }
 
   } /* namespace qtgui */
