@@ -585,7 +585,8 @@ namespace gr {
           in = (const gr_complex*)pmt::c32vector_elements(samples, len);
         }
         else {
-          throw std::runtime_error("waterfall sink: unknown data type of samples; must be complex.");
+          throw std::runtime_error("waterfall_sink_c: unknown data type "
+                                   "of samples; must be complex.");
         }
 
         int stride = (len - d_fftsize)/d_nrows;
