@@ -55,13 +55,20 @@ namespace gr {
      *
      * Message Ports:
      *
+     * - pdus (input):
+     *        Receives and plots a PDU. Each PDU must have a length
+     *        that is an integer multiple of the FFT size. The PDU
+     *        must be formatted as a PDU with complex samples. The
+     *        block will throw a runtime error if either of these
+     *        conditions is not met.
+     *
      * - freq (input):
-     *        Receives a PMT pair: (intern("freq"), double(frequency).
+     *        Receives a PMT pair: (intern("freq"), double(frequency)).
      *        This is used to retune the center frequency of the
      *        display's x-axis.
      *
      * - freq (output):
-     *        Produces a PMT pair with (intern("freq"), double(frequency).
+     *        Produces a PMT pair with (intern("freq"), double(frequency)).
      *        When a user double-clicks on the display, the block
      *        produces and emits a message containing the frequency of
      *        where on the x-axis the user clicked. This value can be
@@ -78,16 +85,20 @@ namespace gr {
       // gr::qtgui::waterfall_sink_c::sptr
       typedef boost::shared_ptr<waterfall_sink_c> sptr;
 
-
       /*!
        * \brief Build a complex waterfall sink.
        *
-       * \param size size of the FFT to compute and display
+       * \param size size of the FFT to compute and display. If using
+       *        the PDU message port to plot samples, the length of
+       *        each PDU must be a multiple of the FFT size.
        * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
-       * \param nconnections number of signals to be connected to the sink
+       * \param nconnections number of signals to be connected to the
+       *        sink. The PDU message port is always available for a
+       *        connection, and this value must be set to 0 if only
+       *        the PDU message port is being used.
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int size, int wintype,
