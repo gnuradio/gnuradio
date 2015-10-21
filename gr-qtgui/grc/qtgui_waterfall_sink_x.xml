@@ -494,14 +494,13 @@ $(gui_hint()($win))</make>
   </sink>
 
   <sink>
-    <name>freq</name>
+    <name>pdus</name>
     <type>message</type>
     <optional>1</optional>
-    <hide>$showports</hide>
   </sink>
 
   <sink>
-    <name>pdus</name>
+    <name>freq</name>
     <type>message</type>
     <optional>1</optional>
     <hide>$showports</hide>

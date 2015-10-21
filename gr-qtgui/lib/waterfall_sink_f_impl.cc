@@ -577,6 +577,10 @@ namespace gr {
         pmt::pmt_t samples = pmt::cdr(msg);
 
         len = pmt::length(samples);
+        if(len % d_fftsize != 0) {
+          throw std::runtime_error("waterfall_sink_f::handle_pdus: PDU must be "
+                                   "a multiple of the FFT size.");
+        }
 
         pmt::pmt_t start_key = pmt::string_to_symbol("start");
         if(pmt::dict_has_key(dict, start_key)) {
