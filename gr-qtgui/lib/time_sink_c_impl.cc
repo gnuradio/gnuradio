@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011-2013 Free Software Foundation, Inc.
+ * Copyright 2011-2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -50,7 +50,7 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("time_sink_c",
-                   io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+                   io_signature::make(0, nconnections, sizeof(gr_complex)),
                    io_signature::make(0, 0, 0)),
 	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(2*nconnections), d_parent(parent)
@@ -65,12 +65,19 @@ namespace gr {
 
       d_main_gui = NULL;
 
-      for(int n = 0; n < d_nconnections; n++) {
+      // setup PDU handling input port
+      message_port_register_in(pmt::mp("pdus"));
+      set_msg_handler(pmt::mp("pdus"),
+                      boost::bind(&time_sink_c_impl::handle_pdus, this, _1));
+
+      // +2 for the PDU message buffers
+      for(int n = 0; n < d_nconnections+2; n++) {
 	d_buffers.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
 						 volk_get_alignment()));
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
       }
 
+      // We don't use cbuffers with the PDU message handling capabilities.
       for(int n = 0; n < d_nconnections/2; n++) {
 	d_cbuffers.push_back((gr_complex*)volk_malloc(d_buffer_size*sizeof(gr_complex),
                                                       volk_get_alignment()));
@@ -99,7 +106,7 @@ namespace gr {
         d_main_gui->close();
 
       // d_main_gui is a qwidget destroyed with its parent
-      for(int n = 0; n < d_nconnections; n++) {
+      for(int n = 0; n < d_nconnections+2; n++) {
 	volk_free(d_buffers[n]);
       }
       for(int n = 0; n < d_nconnections/2; n++) {
@@ -136,7 +143,8 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
+      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      d_main_gui = new TimeDisplayForm(numplots, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
 
@@ -335,7 +343,7 @@ namespace gr {
         d_buffer_size = 2*d_size;
 
 	// Resize buffers and replace data
-	for(int n = 0; n < d_nconnections; n++) {
+	for(int n = 0; n < d_nconnections+2; n++) {
 	  volk_free(d_buffers[n]);
 	  d_buffers[n] = (double*)volk_malloc(d_buffer_size*sizeof(double),
                                               volk_get_alignment());
@@ -677,6 +685,54 @@ namespace gr {
       }
 
       return nitems;
+    }
+
+    void
+    time_sink_c_impl::handle_pdus(pmt::pmt_t msg)
+    {
+      size_t len;
+      pmt::pmt_t dict, samples;
+
+      // Test to make sure this is either a PDU or a uniform vector of
+      // samples. Get the samples PMT and the dictionary if it's a PDU.
+      // If not, we throw an error and exit.
+      if(pmt::is_pair(msg)) {
+        dict = pmt::car(msg);
+        samples = pmt::cdr(msg);
+      }
+      else if(pmt::is_uniform_vector(msg)) {
+        samples = msg;
+      }
+      else {
+        throw std::runtime_error("time_sink_c: message must be either "
+                                 "a PDU or a uniform vector of samples.");
+      }
+
+      len = pmt::length(samples);
+
+      const gr_complex *in;
+      if(pmt::is_c32vector(samples)) {
+        in = (const gr_complex*)pmt::c32vector_elements(samples, len);
+      }
+      else {
+        throw std::runtime_error("time_sink_c: unknown data type "
+                                 "of samples; must be complex.");
+      }
+
+      // Plot if we're past the last update time
+      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+        d_last_time = gr::high_res_timer_now();
+
+        set_nsamps(len);
+
+        volk_32fc_deinterleave_64f_x2(d_buffers[2*d_nconnections+0],
+                                      d_buffers[2*d_nconnections+1],
+                                      in, len);
+
+        std::vector< std::vector<gr::tag_t> > t;
+        d_qApplication->postEvent(d_main_gui,
+                                  new TimeUpdateEvent(d_buffers, len, t));
+      }
     }
 
   } /* namespace qtgui */

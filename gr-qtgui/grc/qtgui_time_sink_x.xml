@@ -889,14 +889,19 @@ $(gui_hint()($win))</make>
     <hide>#if (int($nconnections()) >= 10 or ($type() == "complex" and int($nconnections()) >= 5)) then 'part' else 'all'#</hide>
   </param>
 
-
-  <check>$tr_chan &lt; 2*$nconnections</check>
-
   <sink>
     <name>in</name>
     <type>$type</type>
     <nports>$nconnections</nports>
+    <optional>1</optional>
   </sink>
+
+  <sink>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
   <doc>
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
