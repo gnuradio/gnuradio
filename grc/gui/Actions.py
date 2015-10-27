@@ -183,6 +183,11 @@ FLOW_GRAPH_OPEN = Action(
     stock_id=gtk.STOCK_OPEN,
     keypresses=(gtk.keysyms.o, gtk.gdk.CONTROL_MASK),
 )
+FLOW_GRAPH_OPEN_RECENT = Action(
+    label='Open _Recent',
+    tooltip='Open a recently used flow graph',
+    stock_id=gtk.STOCK_OPEN,
+)
 FLOW_GRAPH_SAVE = Action(
     label='_Save',
     tooltip='Save the current flow graph',
