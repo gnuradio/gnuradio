@@ -106,6 +106,7 @@ signals:
   void signalTriggerLevel(float level);
   void signalTriggerDelay(float delay);
   void signalReplot();
+  void signalNPoints(const int npts);
 
 private:
   QIntValidator* d_int_validator;
