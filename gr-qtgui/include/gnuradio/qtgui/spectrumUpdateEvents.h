@@ -281,6 +281,25 @@ private:
 };
 
 
+class TimeRasterSetSize: public QEvent
+{
+public:
+  TimeRasterSetSize(const double nrows,
+                    const double ncols);
+  ~TimeRasterSetSize();
+
+  double nRows() const;
+  double nCols() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType+1); }
+
+private:
+  double _nrows;
+  double _ncols;
+};
+
+
 /********************************************************************/
 
 
