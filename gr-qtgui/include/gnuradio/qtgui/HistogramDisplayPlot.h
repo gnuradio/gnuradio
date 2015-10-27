@@ -59,6 +59,8 @@ public slots:
   void setNumBins(int bins);
   void setXaxis(double min, double max);
 
+  void clear();
+
 private:
   void _resetXAxisPoints(double left, double right);
   void _autoScaleY(double bottom, double top);

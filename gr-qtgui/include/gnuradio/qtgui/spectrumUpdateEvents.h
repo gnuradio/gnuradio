@@ -328,6 +328,35 @@ private:
 };
 
 
+class HistogramSetAccumulator: public QEvent
+{
+public:
+  HistogramSetAccumulator(const bool en);
+  ~HistogramSetAccumulator();
+
+  bool getAccumulator() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType+1); }
+
+private:
+  bool _en;
+};
+
+class HistogramClearEvent: public QEvent
+{
+public:
+  HistogramClearEvent()
+    : QEvent(QEvent::Type(SpectrumUpdateEventType+2))
+  {}
+
+  ~HistogramClearEvent() {}
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType+2); }
+};
+
+
 /********************************************************************/
 
 

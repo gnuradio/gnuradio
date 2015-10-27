@@ -542,6 +542,23 @@ HistogramUpdateEvent::getNumDataPoints() const
 }
 
 
+HistogramSetAccumulator::HistogramSetAccumulator(const bool en)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType+1)),
+    _en(en)
+{
+}
+
+HistogramSetAccumulator::~HistogramSetAccumulator()
+{
+}
+
+bool
+HistogramSetAccumulator::getAccumulator() const
+{
+  return _en;
+}
+
+
 
 /***************************************************************************/
 
