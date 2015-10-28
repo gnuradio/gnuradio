@@ -118,11 +118,14 @@ class Block(_Block, _GUIBlock):
         """
         _Block.rewrite(self)
 
-        # adjust nports
+        # adjust nports, disconnect hidden ports
         for ports in (self.get_sources(), self.get_sinks()):
             for i, master_port in enumerate(ports):
                 nports = master_port.get_nports() or 1
                 num_ports = 1 + len(master_port.get_clones())
+                if master_port.get_hide():
+                    for connection in master_port.get_connections():
+                        self.get_parent().remove_element(connection)
                 if not nports and num_ports == 1:  # not a master port and no left-over clones
                     continue
                 # remove excess cloned ports
