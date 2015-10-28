@@ -239,7 +239,7 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
-        self.freq = self.usrp.get_center_freq(self.channels[1])
+        self.freq = self.usrp.get_center_freq(self.channels[0])
         self.vprint("First channel has freq: {freq} MHz.".format(freq=self.freq/1e6))
 
     @staticmethod
