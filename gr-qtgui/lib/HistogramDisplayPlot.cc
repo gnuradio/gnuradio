@@ -384,6 +384,12 @@ HistogramDisplayPlot::setAccumulate(bool state)
   d_accum = state;
 }
 
+bool
+HistogramDisplayPlot::getAccumulate() const
+{
+  return d_accum;
+}
+
 void
 HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
 {

@@ -18,7 +18,7 @@ qtgui.$(type.fcn)(
 	$fc, \#fc
 	$bw, \#bw
 	$name, \#name
-        $nconnections \#number of inputs
+        #if $type.t == 'message' then 0 else $nconnections# \#number of inputs
 )
 self.$(id).set_update_time($update_time)
 self.$(id).enable_grid($grid)
@@ -26,7 +26,7 @@ self.$(id).enable_grid($grid)
 if not $legend:
   self.$(id).disable_legend()
 
-if $type == type(float()):
+if "$type" == "float" or "$type" == "msg_float":
   self.$(id).set_plot_pos_half(not $freqhalf)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
@@ -35,7 +35,7 @@ colors = [$color1, $color2, $color3, $color4, $color5,
           $color6, $color7, $color8, $color9, $color10]
 alphas = [$alpha1, $alpha2, $alpha3, $alpha4, $alpha5,
           $alpha6, $alpha7, $alpha8, $alpha9, $alpha10]
-for i in xrange($nconnections):
+for i in xrange(#if $type.t == 'message' then 1 else $nconnections#):
     if len(labels[i]) == 0:
         self.$(id).set_line_label(i, "Data {0}".format(i))
     else:
@@ -63,8 +63,30 @@ $(gui_hint()($win))</make>
     <key>type</key>
     <value>complex</value>
     <type>enum</type>
-    <option><name>Complex</name><key>complex</key><opt>fcn:waterfall_sink_c</opt></option>
-    <option><name>Float</name><key>float</key><opt>fcn:waterfall_sink_f</opt></option>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>fcn:waterfall_sink_c</opt>
+      <opt>t:complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:waterfall_sink_f</opt>
+      <opt>t:float</opt>
+    </option>
+    <option>
+      <name>Complex Message</name>
+      <key>msg_complex</key>
+      <opt>fcn:waterfall_sink_c</opt>
+      <opt>t:message</opt>
+    </option>
+    <option>
+      <name>Float Message</name>
+      <key>msg_float</key>
+      <opt>fcn:waterfall_sink_f</opt>
+      <opt>t:message</opt>
+    </option>
   </param>
 
   <param>
@@ -80,6 +102,7 @@ $(gui_hint()($win))</make>
     <key>fftsize</key>
     <value>1024</value>
     <type>int</type>
+    <hide>#if $type.t == 'message' then 'all' else 'none'#</hide>
   </param>
 
   <param>
@@ -87,7 +110,7 @@ $(gui_hint()($win))</make>
     <key>freqhalf</key>
     <value>True</value>
     <type>enum</type>
-    <hide>#if $type() == "float" then 'part' else 'all'#</hide>
+    <hide>#if $type() == "float" or $type() == "msg_float" then 'part' else 'all'#</hide>
     <option>
       <name>Full</name>
       <key>True</key>
@@ -185,7 +208,7 @@ $(gui_hint()($win))</make>
     <key>nconnections</key>
     <value>1</value>
     <type>int</type>
-    <hide>part</hide>
+    <hide>#if $type.t == 'message' then 'all' else 'part'#</hide>
   </param>
 
   <param>
@@ -195,6 +218,7 @@ $(gui_hint()($win))</make>
     <type>real</type>
     <hide>part</hide>
   </param>
+
   <param>
     <name>GUI Hint</name>
     <key>gui_hint</key>
@@ -488,14 +512,8 @@ $(gui_hint()($win))</make>
 
   <sink>
     <name>in</name>
-    <type>$type</type>
-    <nports>$nconnections</nports>
-    <optional>1</optional>
-  </sink>
-
-  <sink>
-    <name>pdus</name>
-    <type>message</type>
+    <type>$type.t</type>
+    <nports>#if $type.t == 'message' then '0' else '$nconnections'#</nports>
     <optional>1</optional>
   </sink>
 

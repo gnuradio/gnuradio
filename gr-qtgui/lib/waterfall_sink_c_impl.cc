@@ -112,8 +112,8 @@ namespace gr {
                       boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
 
       // setup PDU handling input port
-      message_port_register_in(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"),
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler(pmt::mp("in"),
                       boost::bind(&waterfall_sink_c_impl::handle_pdus, this, _1));
     }
 

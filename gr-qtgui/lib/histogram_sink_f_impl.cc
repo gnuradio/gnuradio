@@ -70,8 +70,8 @@ namespace gr {
       d_index = 0;
 
       // setup PDU handling input port
-      message_port_register_in(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"),
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler(pmt::mp("in"),
                       boost::bind(&histogram_sink_f_impl::handle_pdus, this, _1));
 
       // +1 for the PDU buffer
@@ -477,10 +477,12 @@ namespace gr {
         npoints_resize();
 
         // Clear the histogram
-        d_qApplication->postEvent(d_main_gui, new HistogramClearEvent());
+        if(!d_main_gui->getAccumulate()) {
+          d_qApplication->postEvent(d_main_gui, new HistogramClearEvent());
 
-        // Set to accumulate over length of the current PDU
-        d_qApplication->postEvent(d_main_gui, new HistogramSetAccumulator(true));
+          // Set to accumulate over length of the current PDU
+          d_qApplication->postEvent(d_main_gui, new HistogramSetAccumulator(true));
+        }
 
         float nplots_f = static_cast<float>(len) / static_cast<float>(d_size);
         int nplots = static_cast<int>(ceilf(nplots_f));
@@ -495,8 +497,10 @@ namespace gr {
           idx += size;
         }
 
-        // Turn accumulation off
-        d_qApplication->postEvent(d_main_gui, new HistogramSetAccumulator(false));
+        if(!d_main_gui->getAccumulate()) {
+          // Turn accumulation off
+          d_qApplication->postEvent(d_main_gui, new HistogramSetAccumulator(false));
+        }
       }
     }
 

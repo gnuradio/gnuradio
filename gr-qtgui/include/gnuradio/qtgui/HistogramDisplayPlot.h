@@ -51,6 +51,7 @@ public slots:
   void setSemilogx(bool en);
   void setSemilogy(bool en);
   void setAccumulate(bool en);
+  bool getAccumulate() const;
 
   void setMarkerAlpha(int which, int alpha);
   int getMarkerAlpha(int which) const;

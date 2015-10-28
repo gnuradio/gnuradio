@@ -80,8 +80,8 @@ namespace gr {
       d_index = 0;
 
       // setup PDU handling input port
-      message_port_register_in(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"),
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler(pmt::mp("in"),
                       boost::bind(&time_raster_sink_f_impl::handle_pdus, this, _1));
 
       d_icols = static_cast<int>(ceil(d_cols));

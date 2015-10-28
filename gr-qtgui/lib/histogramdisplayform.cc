@@ -210,3 +210,9 @@ HistogramDisplayForm::setAccumulate(bool en)
   getPlot()->setAccumulate(en);
   getPlot()->replot();
 }
+
+bool
+HistogramDisplayForm::getAccumulate()
+{
+  return getPlot()->getAccumulate();
+}
