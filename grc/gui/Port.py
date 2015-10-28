@@ -62,10 +62,9 @@ class Port(Element):
         #get current rotation
         rotation = self.get_rotation()
         #get all sibling ports
-        if self.is_source():
-            ports = self.get_parent().get_sources_gui()
-        elif self.is_sink():
-            ports = self.get_parent().get_sinks_gui()
+        ports = self.get_parent().get_sources_gui() \
+            if self.is_source() else self.get_parent().get_sinks_gui()
+        ports = filter(lambda p: not p.get_hide(), ports)
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
         W = self.W if not self._label_hidden() else PORT_LABEL_HIDDEN_WIDTH
