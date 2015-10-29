@@ -62,6 +62,7 @@
 #include "gnuradio/blocks/char_to_float.h"
 #include "gnuradio/blocks/char_to_short.h"
 #include "gnuradio/blocks/check_lfsr_32k_s.h"
+#include "gnuradio/blocks/complex_to_interleaved_char.h"
 #include "gnuradio/blocks/complex_to_interleaved_short.h"
 #include "gnuradio/blocks/complex_to_float.h"
 #include "gnuradio/blocks/complex_to_real.h"
@@ -108,6 +109,7 @@
 %include "gnuradio/blocks/burst_tagger.h"
 %include "gnuradio/blocks/char_to_short.h"
 %include "gnuradio/blocks/check_lfsr_32k_s.h"
+%include "gnuradio/blocks/complex_to_interleaved_char.h"
 %include "gnuradio/blocks/complex_to_interleaved_short.h"
 %include "gnuradio/blocks/complex_to_float.h"
 %include "gnuradio/blocks/complex_to_real.h"
@@ -153,6 +155,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, burst_tagger);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, char_to_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, check_lfsr_32k_s);
+GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_interleaved_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_real);
