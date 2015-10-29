@@ -221,7 +221,7 @@ namespace gr {
   logger_get_level(logger_ptr logger, std::string &level)
   {
     log4cpp::Priority::Value levelPtr = logger->getPriority();
-    if(levelPtr == log4cpp::Priority::NOTSET) level = "noset";
+    if(levelPtr == log4cpp::Priority::NOTSET) level = "notset";
     if(levelPtr == log4cpp::Priority::DEBUG) level = "debug";
     if(levelPtr == log4cpp::Priority::INFO) level = "info";
     if(levelPtr == log4cpp::Priority::NOTICE) level = "notice";
