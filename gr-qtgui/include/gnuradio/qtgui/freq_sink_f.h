@@ -48,14 +48,18 @@ namespace gr {
      * functions can be used to change the lable and color for a given
      * input number.
      *
-     * Message Ports:
+     * The sink supports plotting streaming float data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Float Message" type that removes the streaming
+     * port(s).
      *
-     * - pdus (input):
-     *        Receives and plots a PDU. Each PDU must have a length
-     *        that is an integer multiple of the FFT size. The PDU
-     *        must be formatted as a PDU with float/double
-     *        samples. The block will throw a runtime error if either
-     *        of these conditions is not met.
+     * This sink can plot messages that contain either uniform vectors
+     * of float 32 values (pmt::is_f32vector) or PDUs where the data
+     * is a uniform vector of float 32 values.
+     *
+     * Message Ports:
      *
      * - freq (input):
      *        Receives a PMT pair: (intern("freq"), double(frequency).

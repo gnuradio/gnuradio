@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -53,14 +53,18 @@ namespace gr {
      * here, it's probably best to sum the signals together and
      * connect that here.
      *
-     * Message Ports:
+     * The sink supports plotting streaming complex data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Complex Message" type that removes the streaming
+     * port(s).
      *
-     * - pdus (input):
-     *        Receives and plots a PDU. Each PDU must have a length
-     *        that is an integer multiple of the FFT size. The PDU
-     *        must be formatted as a PDU with complex samples. The
-     *        block will throw a runtime error if either of these
-     *        conditions is not met.
+     * This sink can plot messages that contain either uniform vectors
+     * of complex 32 values (pmt::is_c32vector) or PDUs where the data
+     * is a uniform vector of complex 32 values.
+     *
+     * Message Ports:
      *
      * - freq (input):
      *        Receives a PMT pair: (intern("freq"), double(frequency)).

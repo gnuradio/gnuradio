@@ -48,6 +48,17 @@ namespace gr {
      * functions can be used to change the lable and color for a given
      * input number.
      *
+     * The sink supports plotting streaming complex data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Complex Message" type that removes the streaming
+     * port(s).
+     *
+     * This sink can plot messages that contain either uniform vectors
+     * of complex 32 values (pmt::is_c32vector) or PDUs where the data
+     * is a uniform vector of complex 32 values.
+     *
      * Message Ports:
      *
      * - freq (input):
