@@ -40,7 +40,8 @@ public:
   virtual void reset();
   virtual void copy(const WaterfallData*);
 
-  virtual void resizeData(const double, const double, const uint64_t);
+  virtual void resizeData(const double, const double,
+                          const uint64_t, const int history=0);
 
   virtual QwtRasterData *copy() const;
 

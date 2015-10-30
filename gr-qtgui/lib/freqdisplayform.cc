@@ -107,24 +107,24 @@ FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)
 
   setTriggerMode(gr::qtgui::TRIG_MODE_FREE);
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
-	  this, SLOT(setTriggerMode(gr::qtgui::trigger_mode)));
+          this, SLOT(setTriggerMode(gr::qtgui::trigger_mode)));
   // updates trigger state by calling set level or set tag key.
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
-	  this, SLOT(updateTrigger(gr::qtgui::trigger_mode)));
+          this, SLOT(updateTrigger(gr::qtgui::trigger_mode)));
 
   setTriggerLevel(0);
   connect(d_tr_level_act, SIGNAL(whichTrigger(QString)),
-	  this, SLOT(setTriggerLevel(QString)));
+          this, SLOT(setTriggerLevel(QString)));
   connect(this, SIGNAL(signalTriggerLevel(float)),
-	  this, SLOT(setTriggerLevel(float)));
+          this, SLOT(setTriggerLevel(float)));
 
   setTriggerChannel(0);
   connect(d_tr_channel_menu, SIGNAL(whichTrigger(int)),
-	  this, SLOT(setTriggerChannel(int)));
+          this, SLOT(setTriggerChannel(int)));
 
   setTriggerTagKey(std::string(""));
   connect(d_tr_tag_key_act, SIGNAL(whichTrigger(QString)),
-	  this, SLOT(setTriggerTagKey(QString)));
+          this, SLOT(setTriggerTagKey(QString)));
 
   connect(this, SIGNAL(signalClearMaxData()),
           getPlot(), SLOT(clearMaxData()));

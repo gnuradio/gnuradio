@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011-2013 Free Software Foundation, Inc.
+ * Copyright 2011-2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,7 +52,7 @@ namespace gr {
 				       int nconnections,
 				       QWidget *parent)
       : sync_block("time_sink_f",
-                   io_signature::make(nconnections, nconnections, sizeof(float)),
+                   io_signature::make(0, nconnections, sizeof(float)),
                    io_signature::make(0, 0, 0)),
 	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
@@ -67,7 +67,13 @@ namespace gr {
 
       d_main_gui = NULL;
 
-      for(int n = 0; n < d_nconnections; n++) {
+      // setup PDU handling input port
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler(pmt::mp("in"),
+                      boost::bind(&time_sink_f_impl::handle_pdus, this, _1));
+
+      // +1 for the PDU buffer
+      for(int n = 0; n < d_nconnections+1; n++) {
 	d_buffers.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
                                                  volk_get_alignment()));
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
@@ -99,7 +105,7 @@ namespace gr {
         d_main_gui->close();
 
       // d_main_gui is a qwidget destroyed with its parent
-      for(int n = 0; n < d_nconnections; n++) {
+      for(int n = 0; n < d_nconnections+1; n++) {
 	volk_free(d_buffers[n]);
 	volk_free(d_fbuffers[n]);
       }
@@ -134,7 +140,8 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      d_main_gui = new TimeDisplayForm(d_nconnections, d_parent);
+      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      d_main_gui = new TimeDisplayForm(numplots, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
 
@@ -333,7 +340,7 @@ namespace gr {
         d_buffer_size = 2*d_size;
 
 	// Resize buffers and replace data
-	for(int n = 0; n < d_nconnections; n++) {
+	for(int n = 0; n < d_nconnections+1; n++) {
 	  volk_free(d_buffers[n]);
 	  d_buffers[n] = (double*)volk_malloc(d_buffer_size*sizeof(double),
                                               volk_get_alignment());
@@ -670,6 +677,52 @@ namespace gr {
       }
 
       return nitems;
+    }
+
+    void
+    time_sink_f_impl::handle_pdus(pmt::pmt_t msg)
+    {
+      size_t len;
+      pmt::pmt_t dict, samples;
+
+      // Test to make sure this is either a PDU or a uniform vector of
+      // samples. Get the samples PMT and the dictionary if it's a PDU.
+      // If not, we throw an error and exit.
+      if(pmt::is_pair(msg)) {
+        dict = pmt::car(msg);
+        samples = pmt::cdr(msg);
+      }
+      else if(pmt::is_uniform_vector(msg)) {
+        samples = msg;
+      }
+      else {
+        throw std::runtime_error("time_sink_c: message must be either "
+                                 "a PDU or a uniform vector of samples.");
+      }
+
+      len = pmt::length(samples);
+
+      const float *in;
+      if(pmt::is_f32vector(samples)) {
+        in = (const float*)pmt::f32vector_elements(samples, len);
+      }
+      else {
+        throw std::runtime_error("time_sink_f: unknown data type "
+                                   "of samples; must be float.");
+      }
+
+      // Plot if we're past the last update time
+      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+        d_last_time = gr::high_res_timer_now();
+
+        set_nsamps(len);
+
+        volk_32f_convert_64f(d_buffers[d_nconnections], in, len);
+
+        std::vector< std::vector<gr::tag_t> > t;
+        d_qApplication->postEvent(d_main_gui,
+                                  new TimeUpdateEvent(d_buffers, len, t));
+      }
     }
 
   } /* namespace qtgui */

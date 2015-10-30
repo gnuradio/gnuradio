@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2013 Free Software Foundation, Inc.
+ * Copyright 2012,2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -48,6 +48,17 @@ namespace gr {
      * Input stream: This expects a bit stream (0, 1 in the LSB of a
      * byte). It will display packed bytes but the display will have
      * to be autoscaled.
+     *
+     * The sink supports plotting streaming byte/char data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Float Message" type that removes the streaming
+     * port(s).
+     *
+     * This sink can plot messages that contain either uniform vectors
+     * of byte/char values (pmt::is_{u,s}32vector) or PDUs where the
+     * data is a uniform vector of byte/char values.
      */
     class QTGUI_API time_raster_sink_b : virtual public sync_block
     {

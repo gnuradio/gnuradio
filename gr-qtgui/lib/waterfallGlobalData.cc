@@ -99,8 +99,13 @@ void WaterfallData::copy(const WaterfallData* rhs)
 
 void WaterfallData::resizeData(const double startFreq,
 			       const double stopFreq,
-			       const uint64_t fftPoints)
+			       const uint64_t fftPoints,
+                               const int history)
 {
+  if(history > 0) {
+    _historyLength = history;
+  }
+
 #if QWT_VERSION < 0x060000
   if((fftPoints != getNumFFTPoints()) ||
      (boundingRect().width() != (stopFreq - startFreq)) ||
@@ -108,7 +113,7 @@ void WaterfallData::resizeData(const double startFreq,
 
     setBoundingRect(QwtDoubleRect(startFreq, 0,
 				  stopFreq-startFreq,
-				  boundingRect().height()));
+				  static_cast<double>(_historyLength)));
     _fftPoints = fftPoints;
     delete[] _spectrumData;
     _spectrumData = new double[_fftPoints * _historyLength];
@@ -120,6 +125,7 @@ void WaterfallData::resizeData(const double startFreq,
      (interval(Qt::XAxis).minValue() != startFreq)){
 
     setInterval(Qt::XAxis, QwtInterval(startFreq, stopFreq));
+    setInterval(Qt::YAxis, QwtInterval(0, _historyLength));
 
     _fftPoints = fftPoints;
     delete[] _spectrumData;

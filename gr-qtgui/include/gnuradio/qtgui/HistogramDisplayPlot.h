@@ -51,6 +51,7 @@ public slots:
   void setSemilogx(bool en);
   void setSemilogy(bool en);
   void setAccumulate(bool en);
+  bool getAccumulate() const;
 
   void setMarkerAlpha(int which, int alpha);
   int getMarkerAlpha(int which) const;
@@ -58,6 +59,8 @@ public slots:
 
   void setNumBins(int bins);
   void setXaxis(double min, double max);
+
+  void clear();
 
 private:
   void _resetXAxisPoints(double left, double right);
