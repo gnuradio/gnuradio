@@ -210,7 +210,8 @@ void
 WaterfallDisplayPlot::resetAxis()
 {
   for(int i = 0; i < d_nplots; i++) {
-    d_data[i]->resizeData(d_start_frequency, d_stop_frequency, d_numPoints);
+    d_data[i]->resizeData(d_start_frequency, d_stop_frequency,
+                          d_numPoints, d_nrows);
     d_data[i]->reset();
   }
 
@@ -283,67 +284,83 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
                                   const gr::high_res_timer_type timestamp,
                                   const int droppedFrames)
 {
-    int64_t _npoints_in = d_half_freq ? numDataPoints/2 : numDataPoints;
-    int64_t _in_index = d_half_freq ? _npoints_in : 0;
+  int64_t _npoints_in = d_half_freq ? numDataPoints/2 : numDataPoints;
+  int64_t _in_index = d_half_freq ? _npoints_in : 0;
 
-    if(!d_stop) {
-        if(numDataPoints > 0 && timestamp == 0){
-            d_numPoints = numDataPoints/d_nrows;
-            resetAxis();
+  if(!d_stop) {
+    if(_npoints_in > 0 && timestamp == 0){
+      d_numPoints = _npoints_in/d_nrows;
+      resetAxis();
 
-            //you got an entire waterfall plot, just plot it
-            for(int i = 0; i < d_nplots; i++) {
-                d_data[i]->setSpectrumDataBuffer(dataPoints[i]);
-                d_data[i]->setNumLinesToUpdate(0);
-                d_spectrogram[i]->invalidateCache();
-                d_spectrogram[i]->itemChanged();
-            }
-
-            QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-            timeScale->setSecondsPerLine(timePerFFT);
-            timeScale->setZeroTime(timestamp);
-            timeScale->initiateUpdate();
-
-            ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
-            ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
-            replot();
+      // If not displaying just the positive half of the spectrum,
+      // plot the full thing now.
+      if(!d_half_freq) {
+        for(int i = 0; i < d_nplots; i++) {
+          d_data[i]->setSpectrumDataBuffer(dataPoints[i]);
+          d_data[i]->setNumLinesToUpdate(0);
+          d_spectrogram[i]->invalidateCache();
+          d_spectrogram[i]->itemChanged();
         }
+      }
 
-
-
-        else if(numDataPoints > 0) {
-            if(_npoints_in != d_numPoints) {
-                d_numPoints = _npoints_in;
-                resetAxis();
-
-                for(int i = 0; i < d_nplots; i++) {
-                    d_spectrogram[i]->invalidateCache();
-                    d_spectrogram[i]->itemChanged();
-                }
-
-                if(isVisible()) {
-                    replot();
-                }
-            }
-
-            QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-            timeScale->setSecondsPerLine(timePerFFT);
-            timeScale->setZeroTime(timestamp);
-
-            ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
-            ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
-
-            for(int i = 0; i < d_nplots; i++) {
-                d_data[i]->addFFTData(&(dataPoints[i][_in_index]),
-                                      _npoints_in, droppedFrames);
-                d_data[i]->incrementNumLinesToUpdate();
-                d_spectrogram[i]->invalidateCache();
-                d_spectrogram[i]->itemChanged();
-            }
-
-            replot();
+      // Otherwise, loop through our input data vector and only plot
+      // the second half of each row.
+      else {
+        for(int i = 0; i < d_nplots; i++) {
+          d_data[i]->setSpectrumDataBuffer(&(dataPoints[i][d_numPoints]));
+          for(int n = 1; n < d_nrows; n++) {
+            d_data[i]->addFFTData(&(dataPoints[i][d_numPoints + 2*n*d_numPoints]),
+                                  d_numPoints, 0);
+            d_data[i]->incrementNumLinesToUpdate();
+          }
+          d_spectrogram[i]->invalidateCache();
+          d_spectrogram[i]->itemChanged();
         }
+      }
+
+      QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+      timeScale->setSecondsPerLine(timePerFFT);
+      timeScale->setZeroTime(timestamp);
+      timeScale->initiateUpdate();
+
+      ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
+      ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
+      replot();
     }
+
+    else if(_npoints_in > 0) {
+      if(_npoints_in != d_numPoints) {
+        d_numPoints = _npoints_in;
+        resetAxis();
+
+        for(int i = 0; i < d_nplots; i++) {
+          d_spectrogram[i]->invalidateCache();
+          d_spectrogram[i]->itemChanged();
+        }
+
+        if(isVisible()) {
+          replot();
+        }
+      }
+
+      QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+      timeScale->setSecondsPerLine(timePerFFT);
+      timeScale->setZeroTime(timestamp);
+
+      ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
+      ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
+
+      for(int i = 0; i < d_nplots; i++) {
+        d_data[i]->addFFTData(&(dataPoints[i][_in_index]),
+                              _npoints_in, droppedFrames);
+        d_data[i]->incrementNumLinesToUpdate();
+        d_spectrogram[i]->invalidateCache();
+        d_spectrogram[i]->itemChanged();
+      }
+
+      replot();
+    }
+  }
 }
 
 void

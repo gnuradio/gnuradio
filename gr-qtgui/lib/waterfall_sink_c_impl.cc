@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -88,7 +88,7 @@ namespace gr {
                                                        volk_get_alignment()));
         d_magbufs.push_back((double*)volk_malloc(d_fftsize*sizeof(double),
                                                  volk_get_alignment()));
-        memset(d_residbufs[i], 0, d_fftsize*sizeof(float));
+        memset(d_residbufs[i], 0, d_fftsize*sizeof(gr_complex));
         memset(d_magbufs[i], 0, d_fftsize*sizeof(double));
       }
 
@@ -112,8 +112,8 @@ namespace gr {
                       boost::bind(&waterfall_sink_c_impl::handle_set_freq, this, _1));
 
       // setup PDU handling input port
-      message_port_register_in(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"),
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler(pmt::mp("in"),
                       boost::bind(&waterfall_sink_c_impl::handle_pdus, this, _1));
     }
 
@@ -444,12 +444,18 @@ namespace gr {
           memset(d_magbufs[i], 0, newfftsize*sizeof(double));
         }
 
-        d_residbufs.push_back((gr_complex*)volk_malloc(d_fftsize*sizeof(gr_complex),
-                                                       volk_get_alignment()));
-        d_pdu_magbuf = (double*)volk_malloc(d_fftsize*sizeof(double)*d_nrows, volk_get_alignment());
-        d_magbufs.push_back(d_pdu_magbuf);
-        memset(d_pdu_magbuf, 0, d_fftsize*sizeof(double)*d_nrows);
-        memset(d_residbufs[d_nconnections], 0, d_fftsize*sizeof(gr_complex));
+        // Handle the PDU buffers separately because of the different
+        // size requirement of the pdu_magbuf.
+        volk_free(d_residbufs[d_nconnections]);
+        volk_free(d_pdu_magbuf);
+
+        d_residbufs[d_nconnections] = (gr_complex*)volk_malloc(newfftsize*sizeof(gr_complex),
+                                                               volk_get_alignment());
+        d_pdu_magbuf = (double*)volk_malloc(newfftsize*sizeof(double)*d_nrows,
+                                            volk_get_alignment());
+        d_magbufs[d_nconnections] = d_pdu_magbuf;
+        memset(d_residbufs[d_nconnections], 0, newfftsize*sizeof(gr_complex));
+        memset(d_pdu_magbuf, 0, newfftsize*sizeof(double)*d_nrows);
 
         // Set new fft size and reset buffer index
         // (throws away any currently held data, but who cares?)
@@ -467,6 +473,8 @@ namespace gr {
         d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                      volk_get_alignment());
         memset(d_fbuf, 0, d_fftsize*sizeof(float));
+
+        d_last_time = 0;
       }
     }
 
@@ -560,52 +568,81 @@ namespace gr {
     void
     waterfall_sink_c_impl::handle_pdus(pmt::pmt_t msg)
     {
-      int j = 0;
-      size_t len = 0;
+      size_t len;
       size_t start = 0;
-      if(pmt::is_pair(msg)) {
-        pmt::pmt_t dict = pmt::car(msg);
-        pmt::pmt_t samples = pmt::cdr(msg);
+      pmt::pmt_t dict, samples;
 
-        len = pmt::length(samples);
+      // Test to make sure this is either a PDU or a uniform vector of
+      // samples. Get the samples PMT and the dictionary if it's a PDU.
+      // If not, we throw an error and exit.
+      if(pmt::is_pair(msg)) {
+        dict = pmt::car(msg);
+        samples = pmt::cdr(msg);
 
         pmt::pmt_t start_key = pmt::string_to_symbol("start");
         if(pmt::dict_has_key(dict, start_key)) {
           start = pmt::to_uint64(pmt::dict_ref(dict, start_key, pmt::PMT_NIL));
         }
+      }
+      else if(pmt::is_uniform_vector(msg)) {
+        samples = msg;
+      }
+      else {
+        throw std::runtime_error("time_sink_c: message must be either "
+                                 "a PDU or a uniform vector of samples.");
+      }
 
-        gr::high_res_timer_type ref_start = (uint64_t)start * (double)(1.0/d_bandwidth) * 1000000;
+      len = pmt::length(samples);
 
-        const gr_complex *in;
-        if(pmt::is_c32vector(samples)) {
-          in = (const gr_complex*)pmt::c32vector_elements(samples, len);
-        }
-        else {
-          throw std::runtime_error("waterfall sink: unknown data type of samples; must be complex.");
-        }
+      const gr_complex *in;
+      if(pmt::is_c32vector(samples)) {
+        in = (const gr_complex*)pmt::c32vector_elements(samples, len);
+      }
+      else {
+        throw std::runtime_error("waterfall_sink_c: unknown data type "
+                                 "of samples; must be complex.");
+      }
 
-        int stride = (len - d_fftsize)/d_nrows;
+      // Plot if we're past the last update time
+      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+        d_last_time = gr::high_res_timer_now();
 
-        set_time_per_fft(1.0/d_bandwidth * stride);
-        std::ostringstream title("");
-        title << "Time (+" << (uint64_t)ref_start << "us)";
-        set_time_title(title.str());
         // Update the FFT size from the application
         fftresize();
         windowreset();
         check_clicked();
 
+        gr::high_res_timer_type ref_start = (uint64_t)start * (double)(1.0/d_bandwidth) * 1000000;
+
+        int stride = std::max(0, (int)(len - d_fftsize)/(int)(d_nrows));
+
+        set_time_per_fft(1.0/d_bandwidth * stride);
+        std::ostringstream title("");
+        title << "Time (+" << (uint64_t)ref_start << "us)";
+        set_time_title(title.str());
+
+        int j = 0;
+        size_t min = 0;
+        size_t max = std::min(d_fftsize, static_cast<int>(len));
         for(size_t i=0; j < d_nrows; i+=stride) {
+          // Clear residbufs if len < d_fftsize
+          memset(d_residbufs[d_nconnections], 0x00, sizeof(gr_complex)*d_fftsize);
 
-          memcpy(d_residbufs[d_nconnections], &in[j * stride],
-                 sizeof(gr_complex)*d_fftsize);
+          // Copy in as much of the input samples as we can
+          memcpy(d_residbufs[d_nconnections], &in[min], sizeof(gr_complex)*(max-min));
 
+          // Apply the window and FFT; copy data into the PDU
+          // magnitude buffer.
           fft(d_fbuf, d_residbufs[d_nconnections], d_fftsize);
           for(int x = 0; x < d_fftsize; x++) {
             d_pdu_magbuf[j * d_fftsize + x] = (double)d_fbuf[x];
           }
-          j++;
 
+          // Increment our indices; set max up to the number of
+          // samples in the input PDU.
+          min += stride;
+          max = std::min(max + stride, len);
+          j++;
         }
 
         //update gui per-pdu
@@ -613,7 +650,6 @@ namespace gr {
                                   new WaterfallUpdateEvent(d_magbufs,
                                                            d_fftsize*d_nrows,
                                                            0));
-
       }
     }
 

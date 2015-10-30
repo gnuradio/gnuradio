@@ -228,16 +228,17 @@ HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       // If autoscalex has been clicked, clear the data for the new
       // bin widths and reset the x-axis.
       if(d_autoscalex_state) {
-        for(int n = 0; n < d_nplots; n++)
-          memset(d_ydata[n], 0, d_bins*sizeof(double));
+        clear();
         _resetXAxisPoints(d_xmin, d_xmax);
         d_autoscalex_state = false;
       }
 
+      if(!d_accum) {
+        clear();
+      }
+
       int index;
       for(int n = 0; n < d_nplots; n++) {
-        if(!d_accum)
-          memset(d_ydata[n], 0, d_bins*sizeof(double));
         for(int64_t point = 0; point < numDataPoints; point++) {
           index = boost::math::iround(1e-20 + (dataPoints[n][point] - d_left)/d_width);
           if((index >= 0) && (index < d_bins))
@@ -383,6 +384,12 @@ HistogramDisplayPlot::setAccumulate(bool state)
   d_accum = state;
 }
 
+bool
+HistogramDisplayPlot::getAccumulate() const
+{
+  return d_accum;
+}
+
 void
 HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
 {
@@ -478,6 +485,17 @@ HistogramDisplayPlot::setNumBins(int bins)
 #else
     d_plot_curve[i]->setRawSamples(d_xdata, d_ydata[i], d_bins);
 #endif
+  }
+}
+
+
+void
+HistogramDisplayPlot::clear()
+{
+  if(!d_stop) {
+    for(int n = 0; n < d_nplots; n++) {
+      memset(d_ydata[n], 0, d_bins*sizeof(double));
+    }
   }
 }
 

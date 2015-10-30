@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,7 +49,7 @@ namespace gr {
 					 int nconnections,
 					 QWidget *parent)
       : sync_block("const_sink_c",
-		   io_signature::make(nconnections, nconnections, sizeof(gr_complex)),
+		   io_signature::make(0, nconnections, sizeof(gr_complex)),
 		   io_signature::make(0, 0, 0)),
 	d_size(size), d_buffer_size(2*size), d_name(name),
 	d_nconnections(nconnections), d_parent(parent)
@@ -66,6 +66,11 @@ namespace gr {
 
       d_index = 0;
 
+      // setup PDU handling input port
+      message_port_register_in(pmt::mp("in"));
+      set_msg_handler(pmt::mp("in"),
+                      boost::bind(&const_sink_c_impl::handle_pdus, this, _1));
+
       for(int i = 0; i < d_nconnections; i++) {
 	d_residbufs_real.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
                                                         volk_get_alignment()));
@@ -74,6 +79,14 @@ namespace gr {
 	memset(d_residbufs_real[i], 0, d_buffer_size*sizeof(double));
 	memset(d_residbufs_imag[i], 0, d_buffer_size*sizeof(double));
       }
+
+      // Used for PDU message input
+      d_residbufs_real.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
+                                                      volk_get_alignment()));
+      d_residbufs_imag.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
+                                                      volk_get_alignment()));
+      memset(d_residbufs_real[d_nconnections], 0, d_buffer_size*sizeof(double));
+      memset(d_residbufs_imag[d_nconnections], 0, d_buffer_size*sizeof(double));
 
       // Set alignment properties for VOLK
       const int alignment_multiple =
@@ -94,7 +107,7 @@ namespace gr {
         d_main_gui->close();
 
       // d_main_gui is a qwidget destroyed with its parent
-      for(int i = 0; i < d_nconnections; i++) {
+      for(int i = 0; i < d_nconnections+1; i++) {
 	volk_free(d_residbufs_real[i]);
 	volk_free(d_residbufs_imag[i]);
       }
@@ -129,7 +142,8 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      d_main_gui = new ConstellationDisplayForm(d_nconnections, d_parent);
+      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      d_main_gui = new ConstellationDisplayForm(numplots, d_parent);
       d_main_gui->setNPoints(d_size);
 
       if(d_name.size() > 0)
@@ -318,7 +332,8 @@ namespace gr {
 	d_index = 0;
 
 	// Resize residbuf and replace data
-	for(int i = 0; i < d_nconnections; i++) {
+        // +1 to handle PDU message input buffers
+	for(int i = 0; i < d_nconnections+1; i++) {
 	  volk_free(d_residbufs_real[i]);
 	  volk_free(d_residbufs_imag[i]);
 	  d_residbufs_real[i] = (double*)volk_malloc(d_buffer_size*sizeof(double),
@@ -531,6 +546,56 @@ namespace gr {
       }
 
       return nitems;
+    }
+
+    void
+    const_sink_c_impl::handle_pdus(pmt::pmt_t msg)
+    {
+      size_t len = 0;
+      pmt::pmt_t dict, samples;
+
+      // Test to make sure this is either a PDU or a uniform vector of
+      // samples. Get the samples PMT and the dictionary if it's a PDU.
+      // If not, we throw an error and exit.
+      if(pmt::is_pair(msg)) {
+        dict = pmt::car(msg);
+        samples = pmt::cdr(msg);
+      }
+      else if(pmt::is_uniform_vector(msg)) {
+        samples = msg;
+      }
+      else {
+        throw std::runtime_error("const_sink_c: message must be either "
+                                 "a PDU or a uniform vector of samples.");
+      }
+
+      len = pmt::length(samples);
+
+      const gr_complex *in;
+      if(pmt::is_c32vector(samples)) {
+        in = (const gr_complex*)pmt::c32vector_elements(samples, len);
+      }
+      else {
+        throw std::runtime_error("const_sink_c: unknown data type "
+                                 "of samples; must be complex.");
+      }
+
+      set_nsamps(len);
+
+      // Plot if we're past the last update time
+      if(gr::high_res_timer_now() - d_last_time > d_update_time) {
+        d_last_time = gr::high_res_timer_now();
+
+        // Copy data into the buffers.
+        volk_32fc_deinterleave_64f_x2(d_residbufs_real[d_nconnections],
+                                      d_residbufs_imag[d_nconnections],
+                                      in, len);
+
+        d_qApplication->postEvent(d_main_gui,
+                                  new ConstUpdateEvent(d_residbufs_real,
+                                                       d_residbufs_imag,
+                                                       len));
+      }
     }
 
   } /* namespace qtgui */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -44,6 +44,17 @@ namespace gr {
      * \details
      * This is a QT-based graphical sink the takes set of a complex
      * streams and plots them on an IQ constellation plot.
+     *
+     * The sink supports plotting streaming complex data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Complex Message" type that removes the streaming
+     * port(s).
+     *
+     * This sink can plot messages that contain either uniform vectors
+     * of complex 32 values (pmt::is_c32vector) or PDUs where the data
+     * is a uniform vector of complex 32 values.
      */
     class QTGUI_API const_sink_c : virtual public sync_block
     {

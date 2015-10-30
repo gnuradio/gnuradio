@@ -62,6 +62,8 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   d_menu->addAction(d_nptsmenu);
   connect(d_nptsmenu, SIGNAL(whichTrigger(int)),
 	  this, SLOT(setNPoints(const int)));
+  connect(this, SIGNAL(signalNPoints(const int)),
+	  d_nptsmenu, SLOT(setDiagText(const int)));
 
   d_stemmenu = new QAction("Stem Plot", this);
   d_stemmenu->setCheckable(true);
@@ -295,7 +297,7 @@ void
 TimeDisplayForm::setNPoints(const int npoints)
 {
   d_npoints = npoints;
-  d_nptsmenu->setDiagText(d_npoints);
+  emit signalNPoints(npoints);
 }
 
 void

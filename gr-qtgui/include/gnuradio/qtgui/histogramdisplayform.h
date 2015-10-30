@@ -58,6 +58,7 @@ public slots:
 
   void setNumBins(const int);
   void setAccumulate(bool en);
+  bool getAccumulate();
   void autoScaleX();
 
 private slots:
