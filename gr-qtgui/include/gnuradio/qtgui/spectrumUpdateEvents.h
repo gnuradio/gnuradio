@@ -281,6 +281,25 @@ private:
 };
 
 
+class TimeRasterSetSize: public QEvent
+{
+public:
+  TimeRasterSetSize(const double nrows,
+                    const double ncols);
+  ~TimeRasterSetSize();
+
+  double nRows() const;
+  double nCols() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType+1); }
+
+private:
+  double _nrows;
+  double _ncols;
+};
+
+
 /********************************************************************/
 
 
@@ -306,6 +325,35 @@ private:
   size_t _nplots;
   std::vector<double*> _points;
   uint64_t _npoints;
+};
+
+
+class HistogramSetAccumulator: public QEvent
+{
+public:
+  HistogramSetAccumulator(const bool en);
+  ~HistogramSetAccumulator();
+
+  bool getAccumulator() const;
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType+1); }
+
+private:
+  bool _en;
+};
+
+class HistogramClearEvent: public QEvent
+{
+public:
+  HistogramClearEvent()
+    : QEvent(QEvent::Type(SpectrumUpdateEventType+2))
+  {}
+
+  ~HistogramClearEvent() {}
+
+  static QEvent::Type Type()
+  { return QEvent::Type(SpectrumUpdateEventType+2); }
 };
 
 

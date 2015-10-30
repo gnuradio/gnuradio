@@ -473,6 +473,32 @@ TimeRasterUpdateEvent::getNumDataPoints() const
   return _numDataPoints;
 }
 
+
+
+
+TimeRasterSetSize::TimeRasterSetSize(const double nrows,
+                                     const double ncols)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType+1)),
+    _nrows(nrows), _ncols(ncols)
+{
+}
+
+TimeRasterSetSize::~TimeRasterSetSize()
+{
+}
+
+double
+TimeRasterSetSize::nRows() const
+{
+  return _nrows;
+}
+
+double
+TimeRasterSetSize::nCols() const
+{
+  return _ncols;
+}
+
 /***************************************************************************/
 
 
@@ -513,6 +539,23 @@ uint64_t
 HistogramUpdateEvent::getNumDataPoints() const
 {
   return _npoints;
+}
+
+
+HistogramSetAccumulator::HistogramSetAccumulator(const bool en)
+  : QEvent(QEvent::Type(SpectrumUpdateEventType+1)),
+    _en(en)
+{
+}
+
+HistogramSetAccumulator::~HistogramSetAccumulator()
+{
+}
+
+bool
+HistogramSetAccumulator::getAccumulator() const
+{
+  return _en;
 }
 
 

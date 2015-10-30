@@ -180,6 +180,58 @@ style, markers, etc.), the ability to start and stop the display, the
 ability to save to a file, and other plot-specific controls (FFT size
 for the frequency and waterfall plots, etc.).
 
+
+\section qtgui_messages Message Input Support
+
+All QTGUI sinks can accept and plot messages over their "in" message
+port. The message types must either be uniform vectors or PDUs. The
+data type held within the uniform vector or PDU must match the data
+type of the block itself. For example, a qtgui.time_sink_c will only
+handle vectors that pass the pmt::is_c32vector test while a
+qtgui.time_sink_f will only handle vectors that pass the
+pmt::is_f32vector test.
+
+The sinks must only be used with one type of input model: streaming or
+messages. You cannot use them both together or unknown behavior will
+occur.
+
+In the GNU Radio Companion, the QTGUI sink blocks can be set to
+message mode by changing the Type field. Most of the QTGUI sinks
+support multiple data types, even for messages, but GRC only displays
+the message type as the single gray color. Within the block's property
+box, you can set the type to handle the correct message data type
+(e.g., 'Complex Message' or 'Float Message'). When using a message
+type interface, GRC will hide certain parameters that are not usable
+or settable anymore. For example, when plotting a message in the time
+sink, the number of points shown in the time sink is determined by the
+length of the vector in the message. Presetting this in the GUI would
+have no effect.
+
+The behavior in GRC is for convenience and to try and reduce confusion
+about properties and settings in the message mode. However, all of the
+API hooks are still there, so it is possible to set all of this
+programmatically. The results would be harmless, however.
+
+Here is an example of setting up and using a message passing complex
+time sink block:
+
+\code
+from gnuradio import gr, qtgui
+
+tsnk = qtgui.time_sink_c(1024, samp_rate, "", 0)
+tsnk.set_update_time(0.05)
+tsnk.set_y_axis(-1.25, 1.25)
+tsnk.set_y_label("Amp (V)", "")
+tsnk.enable_autoscale(False)
+tsnk.enable_grid(False)
+tsnk.enable_control_panel(False)
+
+tb = gr.top_block()
+msg_block = ? # some PDU/message generating block
+tb.msg_connect((msg_block, 'msg'), (tsnk, 'in'))
+\endcode
+
+
 \section qtgui_configuration Configuration
 
 There is currently a single configuration option in the preferences

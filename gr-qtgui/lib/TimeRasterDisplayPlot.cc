@@ -457,7 +457,9 @@ TimeRasterDisplayPlot::replot()
     ((TimeRasterZoomer*)d_zoomer)->updateTrackerText();
   }
 
-  QwtPlot::replot();
+  if(!d_stop) {
+    QwtPlot::replot();
+  }
 }
 
 int

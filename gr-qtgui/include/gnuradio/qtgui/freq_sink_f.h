@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2014 Free Software Foundation, Inc.
+ * Copyright 2012,2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -48,6 +48,17 @@ namespace gr {
      * functions can be used to change the lable and color for a given
      * input number.
      *
+     * The sink supports plotting streaming float data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Float Message" type that removes the streaming
+     * port(s).
+     *
+     * This sink can plot messages that contain either uniform vectors
+     * of float 32 values (pmt::is_f32vector) or PDUs where the data
+     * is a uniform vector of float 32 values.
+     *
      * Message Ports:
      *
      * - freq (input):
@@ -76,12 +87,17 @@ namespace gr {
       /*!
        * \brief Build a floating point PSD sink.
        *
-       * \param fftsize size of the FFT to compute and display
+       * \param fftsize size of the FFT to compute and display. If using
+       *        the PDU message port to plot samples, the length of
+       *        each PDU must be a multiple of the FFT size.
        * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
-       * \param nconnections number of signals connected to sink
+       * \param nconnections number of signals to be connected to the
+       *        sink. The PDU message port is always available for a
+       *        connection, and this value must be set to 0 if only
+       *        the PDU message port is being used.
        * \param parent a QWidget parent object, if any
        */
       static sptr make(int fftsize, int wintype,

@@ -123,6 +123,13 @@ HistogramDisplayForm::customEvent(QEvent * e)
   if(e->type() == HistogramUpdateEvent::Type()) {
     newData(e);
   }
+  else if(e->type() == HistogramSetAccumulator::Type()) {
+    bool en = ((HistogramSetAccumulator*)e)->getAccumulator();
+    setAccumulate(en);
+  }
+  else if(e->type() == HistogramClearEvent::Type()) {
+    getPlot()->clear();
+  }
 }
 
 void
@@ -202,4 +209,10 @@ HistogramDisplayForm::setAccumulate(bool en)
   d_accum_act->setChecked(en);
   getPlot()->setAccumulate(en);
   getPlot()->replot();
+}
+
+bool
+HistogramDisplayForm::getAccumulate()
+{
+  return getPlot()->getAccumulate();
 }
