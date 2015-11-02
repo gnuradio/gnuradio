@@ -174,9 +174,9 @@ function num_threads(){
 
 function build_and_debify(){
     local version="$1"
-    #cmake ..
-    #make -j $(num_threads)
-    #sudo make install DESTDIR=deb
+    cmake ..
+    make -j $(num_threads)
+    sudo make install DESTDIR=deb
     sudo chmod -R a+rX deb
     dpkg-deb -b deb gnuradio-$version.deb
 }
