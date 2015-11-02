@@ -49,9 +49,16 @@ function check_uhd(){
 
 function init_build_dir(){
     local build_dir="$1"
+    local base_dir="$2"
+    local deb_dir="${build_dir}/deb/DEBIAN"
     mkdir -p "${build_dir}"
-    cp -r "${build_dir}/../deb" "${build_dir}/"
-    sed -i "s/__version__/${version}/" "${build_dir}/deb/DEBIAN/control"
+    cp -r "${base_dir}/deb" "${build_dir}/"
+
+    local ctrl_name="control.new"
+    lsb_release -a | grep -q 12.04 && mv "${deb_dir}/control.1204" "${deb_dir}/control"
+    rm -f ${deb_dir}/control.*
+
+    sed -i "s/__version__/${version}/" "${deb_dir}/control"
 }
 
 function check_dirty(){
