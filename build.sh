@@ -107,12 +107,14 @@ function install_packages(){
 libboost1.48-all-dev
 libqwt-dev
 python-qt4
+libzeroc-ice34-dev
 "
 
     local pkgs_new="
 libboost-all-dev
 libqwt-dev
 python-qt4
+libzeroc-ice35-dev
 "
 
     local base_pkgs="
@@ -156,7 +158,6 @@ libxrender-dev
 sphinx-common
 python-gtk2
 python-lxml
-libzeroc-ice35-dev
 libzmq-dev
 "
 
