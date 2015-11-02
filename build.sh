@@ -103,7 +103,19 @@ function calculate_version(){
 }
 
 function install_packages(){
-base_pkgs="
+    local pkgs_1204="
+libboost1.48-all-dev
+libqwt-dev
+python-qt4
+"
+
+    local pkgs_new="
+libboost-all-dev
+libqwt-dev
+python-qt4
+"
+
+    local base_pkgs="
 build-essential
 git
 cmake
@@ -144,14 +156,14 @@ libxrender-dev
 sphinx-common
 python-gtk2
 python-lxml
+libzeroc-ice35-dev
 libzmq-dev
-libboost-all-dev
 "
-qt_pkgs="
-libqwt-dev
-python-qt4
-"
-sudo apt-get install ${base_pkgs} ${qt_pkgs}
+
+    local rel_pkgs="${pkgs_new}"
+    lsb_release -a | grep -q 12.04 && rel_pkgs="${pkgs_1204}"
+
+sudo apt-get install ${base_pkgs} ${rel_pkgs}
 }
 
 function num_threads(){
@@ -161,9 +173,9 @@ function num_threads(){
 
 function build_and_debify(){
     local version="$1"
-    cmake ..
-    make -j $(num_threads)
-    sudo make install DESTDIR=deb
+    #cmake ..
+    #make -j $(num_threads)
+    #sudo make install DESTDIR=deb
     sudo chmod -R a+rX deb
     dpkg-deb -b deb gnuradio-$version.deb
 }
