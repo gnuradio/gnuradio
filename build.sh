@@ -144,7 +144,6 @@ libxrender-dev
 sphinx-common
 python-gtk2
 python-lxml
-libzeroc-ice35-dev
 libzmq-dev
 libboost-all-dev
 "
