@@ -513,7 +513,7 @@ $(gui_hint()($win))</make>
   <sink>
     <name>in</name>
     <type>$type.t</type>
-    <nports>#if $type.t == 'message' then '0' else '$nconnections'#</nports>
+    <nports>#if $type.t == 'message' then 0 else $nconnections#</nports>
     <optional>1</optional>
   </sink>
 
