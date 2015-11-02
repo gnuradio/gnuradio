@@ -85,12 +85,8 @@ function calculate_version(){
     local dirty=$(git status --porcelain)
 
     if [[ ! -z $dirty ]]; then
-        # If repo is dirty, we use wall clock for timestamp instead of
-        # last commit time to make this a newer version of the package
-        timestamp=$(date +%s%3N)
         suffix="+dirty"
     else
-        timestamp=$(git log -n1 --format="%at")
         suffix=""
     fi
 
@@ -98,15 +94,14 @@ function calculate_version(){
     local tag=$(git describe --abbrev=0 --tags | cut -b 2-) # ignore the leading 'v'
     local sha=$(git rev-parse HEAD | cut -b 1-8)
 
-    if [ -z $tag -o -z $sha -o -z $timestamp ]; then 
+    if [ -z $tag -o -z $sha ]; then 
         echo "ERROR: Unable to retrieve required git identifiers to set version.  Quitting."
         popd
         exit 1
     fi
-    # version format has semantic meaning.  We prioritize on
-    # timestamp.  Read debian docs before modifying.
-    # https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version
-    echo "$tag-spire.$timestamp.$sha$suffix"
+
+    local platform="$(lsb_release -a 2>&1 | grep Release | fmt -1 | tail -n 1)"
+    echo "$tag-spire-${platform}.${sha}${suffix}"
 }
 
 function install_packages(){
