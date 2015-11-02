@@ -89,15 +89,16 @@ class my_top_block(gr.top_block):
 
         self.source = uhd_receiver(options.args,
                                    options.bandwidth,
-                                   options.rx_freq, options.rx_gain,
+                                   options.rx_freq,
+                                   options.lo_offset, options.rx_gain,
                                    options.spec, options.antenna,
-                                   options.verbose)
+                                   options.clock_source, options.verbose)
 
         self.sink = uhd_transmitter(options.args,
-                                    options.bandwidth,
-                                    options.tx_freq, options.tx_gain,
+                                    options.bandwidth, options.tx_freq,
+                                    options.lo_offset, options.tx_gain,
                                     options.spec, options.antenna,
-                                    options.verbose)
+                                    options.clock_source, options.verbose)
 
         self.txpath = transmit_path(options)
         self.rxpath = receive_path(callback, options)

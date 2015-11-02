@@ -1,6 +1,7 @@
 /*! \page page_blocks Standard GNU Radio Blocks
 
-\section Introduction
+\section blocks_introduction Introduction
+
 This is the gr-blocks package. It contains many of the generic,
 standard, or simple blocks used for many aspects of building GNU Radio
 flowgraphs. To use these blocks, the Python module is

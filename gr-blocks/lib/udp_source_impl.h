@@ -44,6 +44,8 @@ namespace gr {
       ssize_t d_sent;         // track how much of d_residbuf we've outputted
       size_t  d_offset;       // point to residbuf location offset
 
+      static const int BUF_SIZE_PAYLOADS; //!< The d_residbuf size in multiples of d_payload_size
+
       std::string d_host;
       unsigned short d_port;
 

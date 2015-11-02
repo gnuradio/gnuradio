@@ -1,6 +1,6 @@
 /*! \page page_channels Channel Model Blocks
 
-\section Introduction
+\section channels_introduction Introduction
 
 This is the gr-channels package. It contains signal processing blocks to
 simulate channel models.
@@ -33,16 +33,16 @@ multipath environment.
 
 The parameters include:
 
-\li noise_voltage: The AWGN noise level as a voltage (to be calculated
+\li <b>noise_voltage</b> The AWGN noise level as a voltage (to be calculated
     externally to meet, say, a desired SNR).
-\li frequency_offset The normalized frequency offset. 0 is no offset;
+\li <b>frequency_offset</b> The normalized frequency offset. 0 is no offset;
     0.25 would be, for a digital modem, one quarter of the symbol
     rate.
-\li epsilon The sample timing offset to emulate the different rates
+\li <b>epsilon</b> The sample timing offset to emulate the different rates
     between the sample clocks of the transmitter and receiver. 1.0 is
     no difference.
-\li taps Taps of a FIR filter to emulate a multipath delay profile.
-\li noise_seed A random number generator seed for the noise source.
+\li <b>taps</b> Taps of a FIR filter to emulate a multipath delay profile.
+\li <b>noise_seed</b> A random number generator seed for the noise source.
 
 
 \subsection channels_fading Fading Channel Model
@@ -55,11 +55,11 @@ in the Doppler frequency shift as a normalized value, a line-of-sight
 a random seed to the noise generators. These parameters are provided
 in the documentation as:
 
-\li N The number of sinusiods to use in simulating the channel 8 is a good value
-\li fDTs    normalized maximum Doppler frequency, fD * Ts
-\li LOS     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
-\li K       Rician factor (ratio of the specular power to the scattered power)
-\li seed    a random number to seed the noise generators
+\li <b>N</b>       the number of sinusoids to use in simulating the channel; 8 is a good value
+\li <b>fDTs</b>    normalized maximum Doppler frequency, fD * Ts
+\li <b>LOS</b>     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
+\li <b>K</b>       Rician factor (ratio of the specular power to the scattered power)
+\li <b>seed</b>    a random number to seed the noise generators
 
 
 \subsection channels_selective_fading Frequency-Selective Fading Model
@@ -73,14 +73,14 @@ and another vector of the corresponding magnitudes of the PDP. We also
 specify the number of taps in the filter to simulate this. These
 parameters are provided in the documentation as:
 
-\li N The number of sinusiods to use in simulating the channel 8 is a good value
-\li fDTs    normalized maximum Doppler frequency, fD * Ts
-\li LOS     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
-\li K       Rician factor (ratio of the specular power to the scattered power)
-\li seed    a random number to seed the noise generators
-\li delays  A vector of values the specify the time delay of each impulse
-\li mags    A vector of values that specifies the magnitude of each impulse
-\li ntaps   The number of filter taps.
+\li <b>N</b>       the number of sinusoids to use in simulating the channel; 8 is a good value
+\li <b>fDTs</b>    normalized maximum Doppler frequency, fD * Ts
+\li <b>LOS</b>     include Line-of-Site path? selects between Rayleigh (NLOS) and Rician (LOS) models
+\li <b>K</b>       Rician factor (ratio of the specular power to the scattered power)
+\li <b>seed</b>    a random number to seed the noise generators
+\li <b>delays</b>  a vector of values that specify the time delay of each impulse
+\li <b>mags</b>    a vector of values that specify the magnitude of each impulse
+\li <b>ntaps</b>   the number of filter taps.
 
 
 \subsection channels_hw_impairments Hardware Impairments Model

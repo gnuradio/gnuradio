@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#if not $generate_options.startswith('hb')
+#!/usr/bin/env python2
+#end if
 ########################################################
 ##Cheetah template - gnuradio_python
 ##
@@ -19,7 +21,7 @@ $code#slurp
 #import time
 #set $DIVIDER = '#'*50
 $DIVIDER
-# Gnuradio Python Flow Graph
+# GNU Radio Python Flow Graph
 # Title: $title
 #if $flow_graph.get_option('author')
 # Author: $flow_graph.get_option('author')
@@ -29,24 +31,37 @@ $DIVIDER
 #end if
 # Generated: $time.ctime()
 $DIVIDER
-
-# Call XInitThreads as the _very_ first thing.
-# After some Qt import, it's too late
-#if $generate_options in ('wx_gui', 'qt_gui')
-import ctypes
-import sys
-if sys.platform.startswith('linux'):
-    try:
-        x11 = ctypes.cdll.LoadLibrary('libX11.so')
-        x11.XInitThreads()
-    except:
-        print "Warning: failed to XInitThreads()"
+#if $flow_graph.get_option('thread_safe_setters')
+import threading
 #end if
 
+## Call XInitThreads as the _very_ first thing.
+## After some Qt import, it's too late
+#if $generate_options in ('wx_gui', 'qt_gui')
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+
+#end if
+#
 ########################################################
 ##Create Imports
 ########################################################
+#if any(imp.endswith("# grc-generated hier_block") for imp in $imports)
+import os
+import sys
+#set imports = $filter(lambda i: i not in ("import os", "import sys"), $imports)
+sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio')))
+
+#end if
 #for $imp in $imports
+##$(imp.replace("  # grc-generated hier_block", ""))
 $imp
 #end for
 
@@ -62,6 +77,7 @@ $imp
 #if $generate_options == 'wx_gui'
     #import gtk
     #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
+
 class $(class_name)(grc_wxgui.top_block_gui):
 
     def __init__($param_str):
@@ -71,7 +87,7 @@ class $(class_name)(grc_wxgui.top_block_gui):
         self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
     #end if
 #elif $generate_options == 'qt_gui'
-from distutils.version import StrictVersion
+
 class $(class_name)(gr.top_block, Qt.QWidget):
 
     def __init__($param_str):
@@ -96,16 +112,21 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
         self.restoreGeometry(self.settings.value("geometry").toByteArray())
-
 #elif $generate_options == 'no_gui'
+
 class $(class_name)(gr.top_block):
 
     def __init__($param_str):
         gr.top_block.__init__(self, "$title")
-#elif $generate_options == 'hb'
+#elif $generate_options.startswith('hb')
     #set $in_sigs = $flow_graph.get_hier_block_stream_io('in')
     #set $out_sigs = $flow_graph.get_hier_block_stream_io('out')
+
+#if $generate_options == 'hb_qt_gui'
+class $(class_name)(gr.hier_block2, Qt.QWidget):
+#else
 class $(class_name)(gr.hier_block2):
+#end if
 #def make_io_sig($io_sigs)
     #set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
     #if len($io_sigs) == 0
@@ -129,6 +150,18 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
     #for $pad in $flow_graph.get_hier_block_message_io('out')
         self.message_port_register_hier_in("$pad['label']")
     #end for
+    #if $generate_options == 'hb_qt_gui'
+
+        Qt.QWidget.__init__(self)
+        self.top_layout = Qt.QVBoxLayout()
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+        self.setLayout(self.top_layout)
+    #end if
+#end if
+#if $flow_graph.get_option('thread_safe_setters')
+
+        self._lock = threading.RLock()
 #end if
 ########################################################
 ##Create Parameters
@@ -222,15 +255,8 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #for $con in $connections
     #set global $source = $con.get_source()
     #set global $sink = $con.get_sink()
-    ##resolve virtual sources to the actual sources
-    #if $source.get_parent().is_virtual_source()
-        #set global $source = $source.resolve_virtual_source()
-    #end if
-    ##do not generate connections with virtual sinks
-    #if not $sink.get_parent().is_virtual_sink()
-        #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
+    #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
 
-    #end if
 #end for
 
 ########################################################
@@ -253,10 +279,18 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         return self.$id
 
     def set_$(id)(self, $id):
+    #if $flow_graph.get_option('thread_safe_setters')
+        with self._lock:
+            self.$id = $id
+        #for $callback in $var_id2cbs[$id]
+            $indent($callback)
+        #end for
+    #else
         self.$id = $id
-    #for $callback in $var_id2cbs[$id]
+        #for $callback in $var_id2cbs[$id]
         $indent($callback)
-    #end for
+        #end for
+    #end if
 
 #end for
 ########################################################
@@ -278,7 +312,8 @@ $param.get_make()#slurp
     #end if
 $short_id#slurp
 #end def
-#if $generate_options != 'hb'
+#if not $generate_options.startswith('hb')
+
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
     #set $params_eq_list = list()
@@ -307,7 +342,8 @@ if __name__ == '__main__':
     tb.Wait()
         #end if
     #elif $generate_options == 'qt_gui'
-    if(StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0")):
+    from distutils.version import StrictVersion
+    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
         Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui','style','raster'))
     qapp = Qt.QApplication(sys.argv)
     tb = $(class_name)($(', '.join($params_eq_list)))
@@ -319,6 +355,7 @@ if __name__ == '__main__':
         #end if
     #end if
     tb.show()
+
     def quitting():
         tb.stop()
         tb.wait()
@@ -331,7 +368,7 @@ if __name__ == '__main__':
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
         #end for
     qapp.exec_()
-    tb = None #to clean up Qt widgets
+    tb = None  # to clean up Qt widgets
     #elif $generate_options == 'no_gui'
     tb = $(class_name)($(', '.join($params_eq_list)))
         #set $run_options = $flow_graph.get_option('run_options')

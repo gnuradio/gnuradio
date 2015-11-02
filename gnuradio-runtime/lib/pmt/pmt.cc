@@ -34,11 +34,16 @@
 
 namespace pmt {
 
-static const int CACHE_LINE_SIZE = 64;		// good guess
-
 # if (PMT_LOCAL_ALLOCATOR)
 
-static pmt_pool global_pmt_pool(sizeof(pmt_pair), CACHE_LINE_SIZE);
+static const int
+get_cache_line_size()
+{
+  static const int CACHE_LINE_SIZE = 64;		// good guess
+  return CACHE_LINE_SIZE;
+}
+
+static pmt_pool global_pmt_pool(sizeof(pmt_pair), get_cache_line_size());
 
 void *
 pmt_base::operator new(size_t size)
@@ -46,7 +51,7 @@ pmt_base::operator new(size_t size)
   void *p = global_pmt_pool.malloc();
 
   // fprintf(stderr, "pmt_base::new p = %p\n", p);
-  assert((reinterpret_cast<intptr_t>(p) & (CACHE_LINE_SIZE - 1)) == 0);
+  assert((reinterpret_cast<intptr_t>(p) & (get_cache_line_size() - 1)) == 0);
   return p;
 }
 
@@ -158,14 +163,28 @@ _any(pmt_t x)
 //                           Globals
 ////////////////////////////////////////////////////////////////////////////
 
-const pmt_t PMT_T = pmt_t(new pmt_bool());	// singleton
-const pmt_t PMT_F = pmt_t(new pmt_bool());	// singleton
-const pmt_t PMT_EOF = cons(PMT_NIL, PMT_NIL);           // singleton
-
 pmt_t get_PMT_NIL()
 {
-  static pmt_t NIL = pmt_t(new pmt_null());
-  return NIL;
+  static pmt_t _NIL = pmt_t(new pmt_null());
+  return _NIL;
+}
+
+pmt_t get_PMT_T()
+{
+  static const pmt_t _T = pmt_t(new pmt_bool());
+  return _T;
+}
+
+pmt_t get_PMT_F()
+{
+  static const pmt_t _F = pmt_t(new pmt_bool());
+  return _F;
+}
+
+pmt_t get_PMT_EOF()
+{
+  static const pmt_t _EOF = cons(get_PMT_NIL(), get_PMT_NIL());
+  return _EOF;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -212,8 +231,19 @@ to_bool(pmt_t val)
 //                             Symbols
 ////////////////////////////////////////////////////////////////////////////
 
-static const unsigned int SYMBOL_HASH_TABLE_SIZE = 701;
-static std::vector<pmt_t> s_symbol_hash_table(SYMBOL_HASH_TABLE_SIZE);
+static const unsigned int
+get_symbol_hash_table_size()
+{
+  static const unsigned int SYMBOL_HASH_TABLE_SIZE = 701;
+  return SYMBOL_HASH_TABLE_SIZE;
+}
+
+static std::vector<pmt_t>*
+get_symbol_hash_table()
+{
+  static std::vector<pmt_t> s_symbol_hash_table(get_symbol_hash_table_size());
+  return &s_symbol_hash_table;
+}
 
 pmt_symbol::pmt_symbol(const std::string &name) : d_name(name){}
 
@@ -244,18 +274,18 @@ is_symbol(const pmt_t& obj)
 pmt_t
 string_to_symbol(const std::string &name)
 {
-  unsigned hash = hash_string(name) % SYMBOL_HASH_TABLE_SIZE;
+  unsigned hash = hash_string(name) % get_symbol_hash_table_size();
 
   // Does a symbol with this name already exist?
-  for (pmt_t sym = s_symbol_hash_table[hash]; sym; sym = _symbol(sym)->next()){
+  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()){
     if (name == _symbol(sym)->name())
       return sym;		// Yes.  Return it
   }
 
   // Nope.  Make a new one.
   pmt_t sym = pmt_t(new pmt_symbol(name));
-  _symbol(sym)->set_next(s_symbol_hash_table[hash]);
-  s_symbol_hash_table[hash] = sym;
+  _symbol(sym)->set_next((*get_symbol_hash_table())[hash]);
+  (*get_symbol_hash_table())[hash] = sym;
   return sym;
 }
 

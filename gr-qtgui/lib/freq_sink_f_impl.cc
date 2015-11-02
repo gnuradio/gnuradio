@@ -197,7 +197,10 @@ namespace gr {
     void
     freq_sink_f_impl::set_fft_size(const int fftsize)
     {
-      d_main_gui->setFFTSize(fftsize);
+      if((fftsize > 16) && (fftsize < 16384))
+        d_main_gui->setFFTSize(fftsize);
+      else
+        throw std::runtime_error("freq_sink: FFT size must be > 16 and < 16384.");
     }
 
     int
@@ -393,6 +396,27 @@ namespace gr {
     }
 
     void
+    freq_sink_f_impl::enable_control_panel(bool en)
+    {
+      if(en)
+        d_main_gui->setupControlPanel();
+      else
+        d_main_gui->teardownControlPanel();
+    }
+
+    void
+    freq_sink_f_impl::enable_max_hold(bool en)
+    {
+      d_main_gui->notifyMaxHold(en);
+    }
+
+    void
+    freq_sink_f_impl::enable_min_hold(bool en)
+    {
+      d_main_gui->notifyMinHold(en);
+    }
+
+    void
     freq_sink_f_impl::clear_max_hold()
     {
       d_main_gui->clearMaxHold();
@@ -402,6 +426,12 @@ namespace gr {
     freq_sink_f_impl::clear_min_hold()
     {
       d_main_gui->clearMinHold();
+    }
+
+    void
+    freq_sink_f_impl::disable_legend()
+    {
+      d_main_gui->disableLegend();
     }
 
     void
@@ -646,7 +676,7 @@ namespace gr {
             for(int x = 0; x < d_fftsize; x++) {
               d_magbufs[n][x] = (double)((1.0-d_fftavg)*d_magbufs[n][x] + (d_fftavg)*d_fbuf[x]);
             }
-            //volk_32f_convert_64f_a(d_magbufs[n], d_fbuf, d_fftsize);
+            //volk_32f_convert_64f(d_magbufs[n], d_fbuf, d_fftsize);
           }
 
           // Test trigger off signal power in d_magbufs

@@ -27,6 +27,7 @@ from Cheetah.Template import Template
 from .. gui import Messages
 from .. base import ParseXML
 from .. base import odict
+from .. base.Constants import BLOCK_FLAG_NEED_QT_GUI
 
 from . Constants import TOP_BLOCK_FILE_MODE, FLOW_GRAPH_TEMPLATE, \
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
@@ -47,9 +48,13 @@ class Generator(object):
         """
         self._generate_options = flow_graph.get_option('generate_options')
         if self._generate_options == 'hb':
-            self._generator = HierBlockGenerator(flow_graph, file_path)
+            generator_cls = HierBlockGenerator
+        elif self._generate_options == 'hb_qt_gui':
+            generator_cls = QtHierBlockGenerator
         else:
-            self._generator = TopBlockGenerator(flow_graph, file_path)
+            generator_cls = TopBlockGenerator
+
+        self._generator = generator_cls(flow_graph, file_path)
 
     def get_generate_options(self):
         return self._generate_options
@@ -86,8 +91,8 @@ class TopBlockGenerator(object):
     def write(self):
         """generate output and write it to files"""
         # do throttle warning
-        throttling_blocks = filter(lambda b: b.throttle(), self._flow_graph.get_enabled_blocks())
-        if not throttling_blocks and self._generate_options != 'hb':
+        throttling_blocks = filter(lambda b: b.throtteling(), self._flow_graph.get_enabled_blocks())
+        if not throttling_blocks and not self._generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
                                   "Add a Misc->Throttle block to your flow "
@@ -101,9 +106,12 @@ class TopBlockGenerator(object):
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
         # generate
-        open(self.get_file_path(), 'w').write(
-            self._build_python_code_from_template()
-        )
+        with open(self.get_file_path(), 'w') as fp:
+            fp.write(self._build_python_code_from_template())
+        try:
+            os.chmod(self.get_file_path(), self._mode)
+        except:
+            pass
 
     def get_popen(self):
         """
@@ -158,18 +166,65 @@ class TopBlockGenerator(object):
             except:
                 pass
             return code
+
         blocks = expr_utils.sort_objects(
-            self._flow_graph.get_enabled_blocks(),
+            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.get_blocks()),
             lambda b: b.get_id(), _get_block_sort_text
         )
-        # list of regular blocks (all blocks minus the special ones)
+        # List of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
-        # list of connections where each endpoint is enabled (sorted by domains, block names)
-        connections = filter(lambda c: not (c.is_bus() or c.is_msg()), self._flow_graph.get_enabled_connections())
+
+        # Filter out virtual sink connections
+        cf = lambda c: not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
+        connections = filter(cf, self._flow_graph.get_enabled_connections())
+
+        # Get the virtual blocks and resolve their conenctions
+        virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
+        for connection in virtual:
+            source = connection.get_source().resolve_virtual_source()
+            sink = connection.get_sink()
+            resolved = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source, portb=sink)
+            connections.append(resolved)
+            # Remove the virtual connection
+            connections.remove(connection)
+
+        # Bypassing blocks: Need to find all the enabled connections for the block using
+        # the *connections* object rather than get_connections(). Create new connections
+        # that bypass the selected block and remove the existing ones. This allows adjacent
+        # bypassed blocks to see the newly created connections to downstream blocks,
+        # allowing them to correctly construct bypass connections.
+        bypassed_blocks = self._flow_graph.get_bypassed_blocks()
+        for block in bypassed_blocks:
+            # Get the upstream connection (off of the sink ports)
+            # Use *connections* not get_connections()
+            get_source_connection = lambda c: c.get_sink() == block.get_sinks()[0]
+            source_connection = filter(get_source_connection, connections)
+            # The source connection should never have more than one element.
+            assert (len(source_connection) == 1)
+
+            # Get the source of the connection.
+            source_port = source_connection[0].get_source()
+
+            # Loop through all the downstream connections
+            get_sink_connections = lambda c: c.get_source() == block.get_sources()[0]
+            for sink in filter(get_sink_connections, connections):
+                if not sink.get_enabled():
+                    # Ignore disabled connections
+                    continue
+                sink_port = sink.get_sink()
+                connection = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source_port, portb=sink_port)
+                connections.append(connection)
+                # Remove this sink connection
+                connections.remove(sink)
+            # Remove the source connection
+            connections.remove(source_connection[0])
+
+        # List of connections where each endpoint is enabled (sorted by domains, block names)
         connections.sort(key=lambda c: (
             c.get_source().get_domain(), c.get_sink().get_domain(),
             c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
         ))
+
         connection_templates = self._flow_graph.get_parent().get_connection_templates()
         msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
         # list of variable names
@@ -231,6 +286,10 @@ class HierBlockGenerator(TopBlockGenerator):
         TopBlockGenerator.write(self)
         ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.get_file_path_xml())
         ParseXML.validate_dtd(self.get_file_path_xml(), BLOCK_DTD)
+        try:
+            os.chmod(self.get_file_path_xml(), self._mode)
+        except:
+            pass
 
     def _build_block_n_from_flow_graph_io(self):
         """
@@ -254,7 +313,8 @@ class HierBlockGenerator(TopBlockGenerator):
             self._flow_graph.get_option('id').replace('_', ' ').title()
         block_n['key'] = block_key
         block_n['category'] = self._flow_graph.get_option('category')
-        block_n['import'] = 'execfile("{0}")'.format(self.get_file_path())
+        block_n['import'] = "from {0} import {0}  # grc-generated hier_block".format(
+            self._flow_graph.get_option('id'))
         # make data
         if parameters:
             block_n['make'] = '{cls}(\n    {kwargs},\n)'.format(
@@ -316,4 +376,30 @@ class HierBlockGenerator(TopBlockGenerator):
         block_n['grc_source'] = str(self._flow_graph.grc_file_path)
 
         n = {'block': block_n}
+        return n
+
+
+class QtHierBlockGenerator(HierBlockGenerator):
+
+    def _build_block_n_from_flow_graph_io(self):
+        n = HierBlockGenerator._build_block_n_from_flow_graph_io(self)
+        block_n = n['block']
+
+        if not block_n['name'].upper().startswith('QT GUI'):
+            block_n['name'] = 'QT GUI ' + block_n['name']
+
+        block_n.insert_after('category', 'flags', BLOCK_FLAG_NEED_QT_GUI)
+
+        gui_hint_param = odict()
+        gui_hint_param['name'] = 'GUI Hint'
+        gui_hint_param['key'] = 'gui_hint'
+        gui_hint_param['value'] = ''
+        gui_hint_param['type'] = 'gui_hint'
+        gui_hint_param['hide'] = 'part'
+        block_n['param'].append(gui_hint_param)
+
+        block_n['make'] += (
+            "\n#set $win = 'self.%s' % $id"
+            "\n${gui_hint()($win)}"
+        )
         return n

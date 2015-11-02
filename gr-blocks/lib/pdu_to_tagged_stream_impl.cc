@@ -39,12 +39,12 @@ namespace gr {
 
     pdu_to_tagged_stream_impl::pdu_to_tagged_stream_impl(pdu::vector_type type, const std::string& tsb_tag_key)
       : tagged_stream_block("pdu_to_tagged_stream",
-          io_signature::make(0, 0, 0),
-          io_signature::make(1, 1, pdu::itemsize(type)),
-          tsb_tag_key),
-      d_itemsize(pdu::itemsize(type)),
-      d_type(type),
-      d_curr_len(0)
+                            io_signature::make(0, 0, 0),
+                            io_signature::make(1, 1, pdu::itemsize(type)),
+                            tsb_tag_key),
+        d_itemsize(pdu::itemsize(type)),
+        d_type(type),
+        d_curr_len(0)
     {
       message_port_register_in(PDU_PORT_ID);
     }
@@ -73,9 +73,9 @@ namespace gr {
 
     int
     pdu_to_tagged_stream_impl::work (int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
+                                     gr_vector_int &ninput_items,
+                                     gr_vector_const_void_star &input_items,
+                                     gr_vector_void_star &output_items)
     {
       uint8_t *out = (uint8_t*) output_items[0];
 
@@ -90,7 +90,7 @@ namespace gr {
       // Copy vector output
       size_t nout = d_curr_len;
       size_t io(0);
-      const uint8_t* ptr = (uint8_t*) uniform_vector_elements(d_curr_vect, io);
+      const uint8_t* ptr = (const uint8_t*) uniform_vector_elements(d_curr_vect, io);
       memcpy(out, ptr, d_curr_len*d_itemsize);
 
       // Copy tags
@@ -99,7 +99,7 @@ namespace gr {
         for (size_t i = 0; i < pmt::length(klist); i++) {
           pmt::pmt_t k(pmt::nth(i, klist));
           pmt::pmt_t v(pmt::dict_ref(d_curr_meta, k, pmt::PMT_NIL));
-          add_item_tag(0, nitems_written(0), k, v, pmt::mp(alias()));
+          add_item_tag(0, nitems_written(0), k, v, alias_pmt());
         }
       }
 

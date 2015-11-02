@@ -70,9 +70,6 @@ public:
 		   const double noiseFloorAmplitude, const double peakFrequency,
 		   const double peakAmplitude, const double timeInterval);
 
-  void clearMaxData();
-  void clearMinData();
-
   void replot();
 
   void setYaxis(double min, double max);
@@ -117,8 +114,15 @@ public slots:
   void onPickerPointSelected6(const QPointF & p);
 
   void setAutoScale(bool state);
+  void setAutoScaleShot();
 
   void setPlotPosHalf(bool half);
+
+  void clearMaxData();
+  void clearMinData();
+
+  void attachTriggerLine(bool en);
+  void setTriggerLine(double value);
 
 private:
   void _resetXAxisPoints();
@@ -143,6 +147,7 @@ private:
 
   double d_start_frequency;
   double d_stop_frequency;
+  double d_center_frequency;
   double d_ymax;
   double d_ymin;
   bool   d_half_freq;
@@ -164,6 +169,10 @@ private:
   double d_peak_amplitude;
 
   double d_noise_floor_amplitude;
+
+  bool d_autoscale_shot;
+
+  QwtPlotMarker *d_trigger_line;
 };
 
 #endif /* FREQUENCY_DISPLAY_PLOT_HPP */

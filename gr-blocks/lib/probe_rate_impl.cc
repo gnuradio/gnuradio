@@ -48,6 +48,7 @@ namespace gr {
         d_lastthru(0),
         d_itemsize(itemsize)
         {
+            message_port_register_out(pmt::mp("rate"));
         }
 
     probe_rate_impl::~probe_rate_impl(){}
@@ -68,6 +69,10 @@ namespace gr {
             } else {
                 d_avg = rate_this_update*d_alpha + d_avg*d_beta;
             }
+            pmt::pmt_t d = pmt::make_dict();
+            d = pmt::dict_add(d, pmt::mp("rate_avg"), pmt::mp(d_avg));
+            d = pmt::dict_add(d, pmt::mp("rate_now"), pmt::mp(rate_this_update));
+            message_port_pub(pmt::mp("rate"), pmt::cons(d, pmt::PMT_NIL));
         }
         return noutput_items;
       }

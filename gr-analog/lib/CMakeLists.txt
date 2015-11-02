@@ -96,10 +96,10 @@ IF(MSVC)
 ENDIF(MSVC)
 
 list(APPEND analog_libs
-    volk
     gnuradio-runtime
     gnuradio-blocks
     gnuradio-filter
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
 )
 
@@ -137,7 +137,7 @@ if(ENABLE_STATIC_LIBS)
 endif(ENABLE_STATIC_LIBS)
 
 ########################################################################
-# QA C++ Code for gr-filter
+# QA C++ Code for gr-analog
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)

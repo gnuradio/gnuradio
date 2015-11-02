@@ -1,4 +1,4 @@
-# Copyright 2010-2012,2014 Free Software Foundation, Inc.
+# Copyright 2010-2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -46,8 +46,8 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 7)
-set(VERSION_INFO_MAINT_VERSION git)
+set(VERSION_INFO_MINOR_VERSION 8)
+set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Append -O2 optimization flag for Debug builds
@@ -143,28 +143,30 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 # Install directories
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
-set(GR_RUNTIME_DIR      bin)
-set(GR_LIBRARY_DIR      lib${LIB_SUFFIX})
-set(GR_INCLUDE_DIR      include)
-set(GR_DATA_DIR         share)
-set(GR_PKG_DATA_DIR     ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME})
-set(GR_DOC_DIR          ${GR_DATA_DIR}/doc)
-set(GR_PKG_DOC_DIR      ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME}-${DOCVER})
-set(GR_CONF_DIR         etc)
-set(GR_PKG_CONF_DIR     ${GR_CONF_DIR}/${CMAKE_PROJECT_NAME}/conf.d)
-set(GR_LIBEXEC_DIR      libexec)
-set(GR_PKG_LIBEXEC_DIR  ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME})
-set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
+set(GR_RUNTIME_DIR     bin CACHE PATH "Path to install all binaries")
+set(GR_LIBRARY_DIR     lib${LIB_SUFFIX} CACHE PATH "Path to install libraries")
+set(GR_INCLUDE_DIR     include CACHE PATH "Path to install header files")
+set(GR_DATA_DIR        share CACHE PATH "Base location for data")
+set(GR_PKG_DATA_DIR    ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package data")
+set(GR_DOC_DIR         ${GR_DATA_DIR}/doc CACHE PATH "Path to install documentation")
+set(GR_PKG_DOC_DIR     ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME}-${DOCVER} CACHE PATH "Path to install package docs")
+set(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
+set(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
+set(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
+set(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTGUI themes")
 
+# Set location of config/prefs files in /etc
 # Special exception if prefix is /usr so we don't make a /usr/etc.
+set(GR_CONF_DIR etc CACHE PATH "Path to install config files")
 string(COMPARE EQUAL ${CMAKE_INSTALL_PREFIX} "/usr" isusr)
 if(isusr)
-  set(SYSCONFDIR          "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
+  set(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 else(isusr)
-  set(SYSCONFDIR          "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory" FORCE)
+  set(SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory" FORCE)
 endif(isusr)
 
-set(GR_PREFSDIR         ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d)
+set(GR_PKG_CONF_DIR ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install package configs")
+set(GR_PREFSDIR     ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install preference files")
 
 OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
@@ -233,7 +235,7 @@ find_package(PythonLibs 2)
 find_package(SWIG)
 
 if(SWIG_FOUND)
-    message(STATUS "Minimum SWIG version required is 1.3.31")
+    # Minimum SWIG version required is 1.3.31
     set(SWIG_VERSION_CHECK FALSE)
     if("${SWIG_VERSION}" VERSION_GREATER "1.3.30")
         set(SWIG_VERSION_CHECK TRUE)
@@ -276,34 +278,75 @@ endif()
 ########################################################################
 # Setup volk as a subproject
 ########################################################################
-include(GrComponent)
-GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
+message(STATUS "")
+message(STATUS "Configuring VOLK support...")
 
-set(VOLK_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
-    ${CMAKE_CURRENT_BINARY_DIR}/volk/include
-)
+OPTION(ENABLE_INTERNAL_VOLK "Enable internal VOLK only" ON)
+unset(VOLK_FOUND)
+if(NOT ENABLE_INTERNAL_VOLK)
+    find_package(Volk)
+    if(NOT VOLK_FOUND)
+        message(STATUS "  External VOLK not found; checking internal.")
+    endif()
+endif()
+if(NOT VOLK_FOUND)
+    find_file(INTREE_VOLK_FOUND
+        volk/volk_common.h
+        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+        NO_DEFAULT_PATH
+        NO_CMAKE_FIND_ROOT_PATH
+    )
 
-if(ENABLE_VOLK)
+    if(NOT INTREE_VOLK_FOUND)
+        message(STATUS "  VOLK submodule is not checked out.")
+        message(STATUS "  To check out the VOLK submodule, use:")
+        message(STATUS "    git pull --recurse-submodules=on")
+        message(STATUS "    git submodule update")
+        if(ENABLE_INTERNAL_VOLK)
+            message(STATUS "  External VOLK disabled.")
+        endif()
+        message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
+        message(STATUS "")
+        message(FATAL_ERROR "VOLK required but not found.")
+    endif()
 
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
+    add_subdirectory(volk)
+    # if the above command returns, then VOLK is enabled
 
-CPACK_COMPONENT("volk_runtime"
-    GROUP        "Volk"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-)
+    include(GrComponent)
+    GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
 
-CPACK_COMPONENT("volk_devel"
-    GROUP        "Volk"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-)
+    set(VOLK_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
+        ${CMAKE_CURRENT_BINARY_DIR}/volk/include
+    )
 
+    set(VOLK_LIBRARIES volk)
 
-add_subdirectory(volk)
-endif(ENABLE_VOLK)
+    if(ENABLE_VOLK)
+
+        include(GrPackage)
+        CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
+
+        CPACK_COMPONENT("volk_runtime"
+            GROUP        "Volk"
+            DISPLAY_NAME "Runtime"
+            DESCRIPTION  "Dynamic link libraries"
+        )
+
+        CPACK_COMPONENT("volk_devel"
+            GROUP        "Volk"
+            DISPLAY_NAME "Development"
+            DESCRIPTION  "C++ headers, package config, import libraries"
+        )
+
+    endif(ENABLE_VOLK)
+else()
+    message(STATUS "  An external VOLK has been found and will be used for build.")
+    set(ENABLE_VOLK TRUE)
+endif(NOT VOLK_FOUND)
+
+message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 
 # Handle gr_log enable/disable
 GR_LOGGING()
@@ -367,6 +410,14 @@ add_subdirectory(gr-zeromq)
 if(ENABLE_GR_CTRLPORT)
   set(GR_CTRLPORT True)
   add_definitions(-DGR_CTRLPORT)
+
+  if(CTRLPORT_BACKENDS GREATER 0)
+    set(GR_RPCSERVER_ENABLED True)
+
+    if(THRIFT_FOUND)
+      set(GR_RPCSERVER_THRIFT True)
+    endif(THRIFT_FOUND)
+  endif(CTRLPORT_BACKENDS GREATER 0)
 endif(ENABLE_GR_CTRLPORT)
 
 # Install our Cmake modules into $prefix/lib/cmake/gnuradio

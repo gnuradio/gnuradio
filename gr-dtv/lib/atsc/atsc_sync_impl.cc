@@ -31,6 +31,13 @@
 namespace gr {
   namespace dtv {
 
+    static const double LOOP_FILTER_TAP = 0.0005;	// 0.0005 works
+    static const double ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
+    static const int	SYMBOL_INDEX_OFFSET = 3;
+    static const int	MIN_SEG_LOCK_CORRELATION_VALUE = 5;
+    static const int	SSI_MIN = -16;
+    static const int	SSI_MAX =  15;
+
     atsc_sync::sptr
     atsc_sync::make(float rate)
     {

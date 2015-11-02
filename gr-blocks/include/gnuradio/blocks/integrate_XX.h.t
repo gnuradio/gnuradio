@@ -42,7 +42,7 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
-      static sptr make(int decim);
+      static sptr make(int decim, int vlen = 1);
     };
 
   } /* namespace blocks */

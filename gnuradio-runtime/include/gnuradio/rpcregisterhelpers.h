@@ -672,7 +672,7 @@ struct rpcbasic_register_set : public rpcbasic_base
     d_minpriv = minpriv_;
     d_display = display_;
     d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
       extractor(new rpcbasic_extractor<T,Tto>(d_object, function),
 		minpriv_, std::string(units_),
@@ -726,7 +726,7 @@ struct rpcbasic_register_set : public rpcbasic_base
     d_minpriv = minpriv_;
     d_display = display_;
     d_object = obj;
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
       extractor(new rpcbasic_extractor<T,Tto>(d_object, function),
 		minpriv_, std::string(units_),
@@ -741,7 +741,7 @@ struct rpcbasic_register_set : public rpcbasic_base
 
   ~rpcbasic_register_set()
   {
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     rpcmanager::get()->i()->unregisterConfigureCallback(d_id);
 #endif
   }
@@ -830,7 +830,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
       extractor(new rpcbasic_extractor<T,void>(d_object, function),
 		minpriv_, std::string(desc_));
@@ -870,7 +870,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base
     d_desc = desc_;
     d_minpriv = minpriv_;
     d_object = obj;
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::configureCallback_t
       extractor(new rpcbasic_extractor<T,void>(d_object, function),
 		minpriv_, std::string(desc_));
@@ -884,7 +884,7 @@ struct rpcbasic_register_trigger : public rpcbasic_base
 
   ~rpcbasic_register_trigger()
   {
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     rpcmanager::get()->i()->unregisterConfigureCallback(d_id);
 #endif
   }
@@ -988,7 +988,7 @@ public:
     d_minpriv = minpriv_;
     d_display = display_;
     d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
       inserter(new rpcbasic_inserter<T,Tfrom>(d_object, function),
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
@@ -1022,7 +1022,7 @@ public:
     d_minpriv = minpriv_;
     d_display = display_;
     d_object = dynamic_cast<T*>(global_block_registry.block_lookup(pmt::intern(block_alias)).get());
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
       inserter(new rpcbasic_inserter<T,Tfrom>(d_object, (Tfrom (T::*)())function),
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
@@ -1076,7 +1076,7 @@ public:
     d_minpriv = minpriv_;
     d_display = display_;
     d_object = obj;
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
       inserter(new rpcbasic_inserter<T,Tfrom>(d_object, function),
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
@@ -1111,7 +1111,7 @@ public:
     d_minpriv = minpriv_;
     d_display = display_;
     d_object = obj;
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     callbackregister_base::queryCallback_t
       inserter(new rpcbasic_inserter<T,Tfrom>(d_object, (Tfrom (T::*)())function),
 	       minpriv_, std::string(units_), display_, std::string(desc_), min, max, def);
@@ -1125,7 +1125,7 @@ public:
 
   ~rpcbasic_register_get()
   {
-#ifdef RPCSERVER_ENABLED
+#ifdef GR_RPCSERVER_ENABLED
     rpcmanager::get()->i()->unregisterQueryCallback(d_id);
 #endif
   }

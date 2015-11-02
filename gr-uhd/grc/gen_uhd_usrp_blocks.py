@@ -23,7 +23,7 @@ MAIN_TMPL = """\
 <block>
 	<name>UHD: USRP $sourk.title()</name>
 	<key>uhd_usrp_$(sourk)</key>
-	<throttle>1</throttle>
+	<flags>throttle</flags>
 	<import>from gnuradio import uhd</import>
 	<import>import time</import>
 	<make>uhd.usrp_$(sourk)(
@@ -70,7 +70,11 @@ self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
 self.\$(id).set_center_freq(\$center_freq$(n), $n)
+\#if \$norm_gain${n}()
+self.\$(id).set_normalized_gain(\$gain$(n), $n)
+\#else
 self.\$(id).set_gain(\$gain$(n), $n)
+\#end if
 	\#if \$ant$(n)()
 self.\$(id).set_antenna(\$ant$(n), $n)
 	\#end if
@@ -83,7 +87,12 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<callback>set_samp_rate(\$samp_rate)</callback>
 	#for $n in range($max_nchan)
 	<callback>set_center_freq(\$center_freq$(n), $n)</callback>
-	<callback>set_gain(\$gain$(n), $n)</callback>
+	<callback>\#if \$norm_gain${n}()
+self.\$(id).set_normalized_gain(\$gain$(n), $n)
+\#else
+self.\$(id).set_gain(\$gain$(n), $n)
+\#end if
+</callback>
 	<callback>set_antenna(\$ant$(n), $n)</callback>
 	<callback>set_bandwidth(\$bw$(n), $n)</callback>
 	#end for
@@ -312,6 +321,9 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	<check>\$num_mboards > 0</check>
 	<check>\$nchan >= \$num_mboards</check>
 	<check>(not \$stream_chans()) or (\$nchan == len(\$stream_chans))</check>
+	#for $n in range($max_nchan)
+	<check>(\$norm_gain${n} and \$gain${n} &gt;= 0 and \$gain${n} &lt;= 1) or not \$norm_gain${n}</check>
+	#end for
 	<sink>
 		<name>command</name>
 		<type>message</type>
@@ -410,11 +422,32 @@ PARAMS_TMPL = """
 		<hide>\#if \$nchan() > $n then 'none' else 'all'#</hide>
 	</param>
 	<param>
-		<name>Ch$(n): Gain (dB)</name>
+                <name>Ch$(n): Gain Value</name>
 		<key>gain$(n)</key>
 		<value>0</value>
-		<type>real</type>
+		<type>float</type>
 		<hide>\#if \$nchan() > $n then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Ch$(n): Gain Type</name>
+		<key>norm_gain$(n)</key>
+		<value>False</value>
+		<type>bool</type>
+                <hide>\#if \$nchan() &lt;= $n
+                all
+                \#elif bool(\$norm_gain${n}())
+                none
+                \#else
+                part
+                \#end if</hide>
+		<option>
+			<name>Absolute (dB)</name>
+			<key>False</key>
+		</option>
+		<option>
+			<name>Normalized</name>
+			<key>True</key>
+		</option>
 	</param>
 	<param>
 		<name>Ch$(n): Antenna</name>
@@ -453,6 +486,7 @@ LENTAG_PARAM = """	<param>
 		<key>len_tag_name</key>
 		<value></value>
 		<type>string</type>
+		<hide>\#if len(str(\$len_tag_name())) then 'none' else 'part'#</hide>
 	</param>"""
 
 LENTAG_ARG = """

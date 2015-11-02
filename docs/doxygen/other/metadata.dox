@@ -1,6 +1,6 @@
 /*! \page page_metadata Metadata Information
 
-\section Introduction
+\section metadata_introduction Introduction
 
 Metadata files have extra information in the form of headers that
 carry metadata about the samples in the file. Raw, binary files carry
@@ -54,7 +54,7 @@ it sees a stream tag, so the dictionary will contain and key:value
 pairs out of tags from the flowgraph.
 
 
-\subsection types Types of Metadata Files
+\subsection metadata_types Types of Metadata Files
 
 GNU Radio currently supports two types of metadata files:
 
@@ -67,7 +67,7 @@ header file. The dat file, then, is the standard raw binary format
 with no interruptions in the data.
 
 
-\subsection updating Updating Headers
+\subsection metadata_updating Updating Headers
 
 While there is always a header that starts a metadata file, they are
 updated throughout as well. There are two events that trigger a new
@@ -99,7 +99,7 @@ segment loss is observed, it will generate a new timestamp as a tag of
 keep the sample times exact.
 
 
-\subsection implementation Implementation
+\subsection metadata_implementation Implementation
 
 Metadata files are created using gr::blocks::file_meta_sink. The
 default behavior is to create a single file with inline headers as
@@ -114,7 +114,7 @@ extra header are converted into tags and added to the stream tags
 interface.
 
 
-\section structure Structure
+\section metadata_structure Structure
 
 The file metadata consists of a static mandatory header and a dynamic
 optional extras header. Each header is a separate PMT
@@ -193,7 +193,7 @@ read this many bytes from the file. We can then deserialize and parse
 this header just like the first.
 
 
-\subsection header Header Information
+\subsection metadata_header Header Information
 
 The header is a PMT dictionary with a known structure. This structure
 may change, but we version the headers, so all headers of version X
@@ -225,7 +225,7 @@ enum gr_file_types {
 };
 \endcode
 
-\subsection extras Extras Information
+\subsection metadata_extras Extras Information
 
 The extras section is an optional segment of the header. If 'strt' ==
 METADATA_HEADER_SIZE, then there is no extras. Otherwise, it is simply
@@ -256,7 +256,7 @@ screen. Before converting from a PMT to it's natural data type, it is
 necessary to know the data type.
 
 
-\section Utilities
+\section metadata_utilities Utilities
 
 GNU Radio comes with a couple of utilities to help in debugging and
 manipulating metadata files. There is a general parser in Python that
@@ -293,7 +293,7 @@ files where the file of headers is expected to be the file name of the
 data with '.hdr' appended to it.
 
 
-\section Examples
+\section metadata_examples Examples
 
 Examples are located in:
 

@@ -21,9 +21,11 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from Dialogs import TextDisplay
-from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
+import Actions
+from Dialogs import SimpleTextDisplay
+from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, FONT_SIZE
 import Utils
+import pango
 
 TAB_LABEL_MARKUP_TMPL="""\
 #set $foreground = $valid and 'black' or 'red'
@@ -65,10 +67,13 @@ class PropsDialog(gtk.Dialog):
         gtk.Dialog.__init__(
             self,
             title='Properties: %s' % block.get_name(),
-            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT),
+            buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
+                     gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
+                     gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
         )
-        self._block = block
+        self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
         self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
+        self._block = block
 
         vpaned = gtk.VPaned()
         self.vbox.pack_start(vpaned)
@@ -92,14 +97,28 @@ class PropsDialog(gtk.Dialog):
             self._params_boxes.append((tab, label, vbox))
 
         # Docs for the block
-        self._docs_text_display = TextDisplay()
+        self._docs_text_display = SimpleTextDisplay()
         self._docs_box = gtk.ScrolledWindow()
         self._docs_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self._docs_box.add_with_viewport(self._docs_text_display)
         notebook.append_page(self._docs_box, gtk.Label("Documentation"))
 
+        # Generated code for the block
+        if Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB.get_active():
+            self._code_text_display = code_view = SimpleTextDisplay()
+            code_view.set_wrap_mode(gtk.WRAP_NONE)
+            code_view.get_buffer().create_tag('b', weight=pango.WEIGHT_BOLD)
+            code_view.modify_font(pango.FontDescription(
+                'monospace %d' % FONT_SIZE))
+            code_box = gtk.ScrolledWindow()
+            code_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+            code_box.add_with_viewport(self._code_text_display)
+            notebook.append_page(code_box, gtk.Label("Generated Code"))
+        else:
+            self._code_text_display = None
+
         # Error Messages for the block
-        self._error_messages_text_display = TextDisplay()
+        self._error_messages_text_display = SimpleTextDisplay()
         self._error_box = gtk.ScrolledWindow()
         self._error_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self._error_box.add_with_viewport(self._error_messages_text_display)
@@ -109,6 +128,7 @@ class PropsDialog(gtk.Dialog):
         # Connect events
         self.connect('key-press-event', self._handle_key_press)
         self.connect('show', self._update_gui)
+        self.connect('response', self._handle_response)
         self.show_all()  # show all (performs initial gui update)
 
     def _params_changed(self):
@@ -123,9 +143,10 @@ class PropsDialog(gtk.Dialog):
             true if changed
         """
         old_hash = self._hash
-        #create a tuple of things from each param that affects the params box
+        # create a tuple of things from each param that affects the params box
         self._hash = hash(tuple([(
-            hash(param), param.get_type(), param.get_hide() == 'all',
+            hash(param), param.get_name(), param.get_type(),
+            param.get_hide() == 'all',
         ) for param in self._block.get_params()]))
         return self._hash != old_hash
 
@@ -134,10 +155,13 @@ class PropsDialog(gtk.Dialog):
         A change occurred within a param:
         Rewrite/validate the block and update the gui.
         """
-        #update for the block
+        # update for the block
         self._block.rewrite()
         self._block.validate()
         self._update_gui()
+
+    def _activate_apply(self, *args):
+        self.set_response_sensitive(gtk.RESPONSE_APPLY, True)
 
     def _update_gui(self, *args):
         """
@@ -148,32 +172,56 @@ class PropsDialog(gtk.Dialog):
         Update the documentation block.
         Hide the box if there are no docs.
         """
-        #update the params box
+        # update the params box
         if self._params_changed():
-            #hide params box before changing
+            # hide params box before changing
             for tab, label, vbox in self._params_boxes:
                 vbox.hide_all()
                 # empty the params box
-                vbox.forall(lambda c: vbox.remove(c) or c.destroy())
+                for child in vbox.get_children():
+                    vbox.remove(child)
+                    child.destroy()
                 # repopulate the params box
                 box_all_valid = True
                 for param in filter(lambda p: p.get_tab_label() == tab, self._block.get_params()):
                     if param.get_hide() == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
-                    vbox.pack_start(param.get_input(self._handle_changed), False)
+                    input_widget = param.get_input(self._handle_changed, self._activate_apply)
+                    vbox.pack_start(input_widget, input_widget.expand)
                 label.set_markup(Utils.parse_template(TAB_LABEL_MARKUP_TMPL, valid=box_all_valid, tab=tab))
-                #show params box with new params
+                # show params box with new params
                 vbox.show_all()
-        #update the errors box
+        # update the errors box
         if self._block.is_valid():
             self._error_box.hide()
         else:
             self._error_box.show()
         messages = '\n\n'.join(self._block.get_error_messages())
         self._error_messages_text_display.set_text(messages)
-        #update the docs box
+        # update the docs box
         self._docs_text_display.set_text(self._block.get_doc())
+        # update the generated code
+        self._update_generated_code_page()
+
+    def _update_generated_code_page(self):
+        if not self._code_text_display:
+            return  # user disabled code preview
+
+        buffer = self._code_text_display.get_buffer()
+        block = self._block
+
+        def insert(header, text):
+            if not text:
+                return
+            buffer.insert_with_tags_by_name(buffer.get_end_iter(), header, 'b')
+            buffer.insert(buffer.get_end_iter(), text)
+
+        buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
+        insert('# Imports\n', '\n'.join(block.get_imports()))
+        if block.get_key().startswith('variable'):
+            insert('\n\n# Variables\n', block.get_var_make())
+        insert('\n\n# Blocks\n', block.get_make())
 
     def _handle_key_press(self, widget, event):
         """
@@ -183,18 +231,21 @@ class PropsDialog(gtk.Dialog):
         Returns:
             false to forward the keypress
         """
-        if event.keyval == gtk.keysyms.Return:
+        if (event.keyval == gtk.keysyms.Return and
+            event.state & gtk.gdk.CONTROL_MASK == 0 and
+            not isinstance(widget.get_focus(), gtk.TextView)
+        ):
             self.response(gtk.RESPONSE_ACCEPT)
             return True  # handled here
         return False  # forward the keypress
 
-    def run(self):
-        """
-        Run the dialog and get its response.
+    def _handle_response(self, widget, response):
+        if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
+            for tab, label, vbox in self._params_boxes:
+                for child in vbox.get_children():
+                    child.apply_pending_changes()
+            self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
+            return True
+        return False
 
-        Returns:
-            true if the response was accept
-        """
-        response = gtk.Dialog.run(self)
-        self.destroy()
-        return response == gtk.RESPONSE_ACCEPT
+

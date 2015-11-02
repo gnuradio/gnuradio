@@ -33,6 +33,7 @@ import math
 import struct
 import threading
 from datetime import datetime
+import time
 
 sys.stderr.write("Warning: this may have issues on some machines+Python version combinations to seg fault due to the callback in bin_statitics.\n\n")
 
@@ -271,6 +272,8 @@ def main_loop(tb):
     bin_start = int(tb.fft_size * ((1 - 0.75) / 2))
     bin_stop = int(tb.fft_size - bin_start)
 
+    timestamp = 0
+    centerfreq = 0
     while 1:
 
         # Get the next message sent from the C++ code (blocking call).
@@ -281,6 +284,15 @@ def main_loop(tb):
         # m.data are the mag_squared of the fft output
         # m.raw_data is a string that contains the binary floats.
         # You could write this as binary to a file.
+
+        # Scanning rate
+        if timestamp == 0:
+            timestamp = time.time()
+            centerfreq = m.center_freq
+        if m.center_freq < centerfreq:
+            sys.stderr.write("scanned %.1fMHz in %.1fs\n" % ((centerfreq - m.center_freq)/1.0e6, time.time() - timestamp))
+            timestamp = time.time()
+        centerfreq = m.center_freq
 
         for i_bin in range(bin_start, bin_stop):
 

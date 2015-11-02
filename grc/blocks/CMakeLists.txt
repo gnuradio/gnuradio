@@ -18,6 +18,26 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
+include(GrPython)
+
 file(GLOB xml_files "*.xml")
 
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "grc")
+macro(GEN_BLOCK_XML _generator _xml_block)
+    set(generator ${CMAKE_CURRENT_SOURCE_DIR}/${_generator})
+    set(xml_block ${CMAKE_CURRENT_BINARY_DIR}/${_xml_block})
+    list(APPEND generated_xml_files ${xml_block})
+    add_custom_command(
+        DEPENDS ${generator} OUTPUT ${xml_block}
+        COMMAND ${PYTHON_EXECUTABLE} ${generator} ${xml_block}
+    )
+endmacro(GEN_BLOCK_XML)
+
+GEN_BLOCK_XML(variable_struct.xml.py    variable_struct.xml)
+
+add_custom_target(grc_generated_xml ALL DEPENDS ${generated_xml_files})
+
+install(
+    FILES ${xml_files} ${generated_xml_files}
+    DESTINATION ${GRC_BLOCKS_DIR}
+    COMPONENT "grc"
+)

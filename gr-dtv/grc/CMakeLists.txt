@@ -36,6 +36,30 @@ install(FILES
     dtv_atsc_interleaver.xml
     dtv_atsc_trellis_encoder.xml
     dtv_atsc_field_sync_mux.xml
+    dtv_dvb_bbheader_bb.xml
+    dtv_dvb_bbscrambler_bb.xml
+    dtv_dvb_bch_bb.xml
+    dtv_dvb_ldpc_bb.xml
+    dtv_dvbt2_interleaver_bb.xml
+    dtv_dvbt2_modulator_bc.xml
+    dtv_dvbt2_cellinterleaver_cc.xml
+    dtv_dvbt2_framemapper_cc.xml
+    dtv_dvbt2_freqinterleaver_cc.xml
+    dtv_dvbt2_pilotgenerator_cc.xml
+    dtv_dvbt2_paprtr_cc.xml
+    dtv_dvbt2_p1insertion_cc.xml
+    dtv_dvbt2_miso_cc.xml
+    dtv_dvbs2_interleaver_bb.xml
+    dtv_dvbs2_modulator_bc.xml
+    dtv_dvbs2_physical_cc.xml
+    dtv_dvbt_energy_dispersal.xml
+    dtv_dvbt_reed_solomon_enc.xml
+    dtv_dvbt_convolutional_interleaver.xml
+    dtv_dvbt_inner_coder.xml
+    dtv_dvbt_bit_inner_interleaver.xml
+    dtv_dvbt_symbol_inner_interleaver.xml
+    dtv_dvbt_map.xml
+    dtv_dvbt_reference_signals.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )

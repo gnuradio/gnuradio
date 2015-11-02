@@ -31,16 +31,20 @@ namespace gr {
   namespace blocks {
 
     tagged_stream_mux::sptr
-    tagged_stream_mux::make(size_t itemsize, const std::string &lengthtagname, unsigned int tag_preserve_head_pos)
+    tagged_stream_mux::make(size_t itemsize, const std::string &lengthtagname,
+                            unsigned int tag_preserve_head_pos)
     {
-      return gnuradio::get_initial_sptr (new tagged_stream_mux_impl(itemsize, lengthtagname, tag_preserve_head_pos));
+      return gnuradio::get_initial_sptr
+        (new tagged_stream_mux_impl(itemsize, lengthtagname,
+                                    tag_preserve_head_pos));
     }
 
-    tagged_stream_mux_impl::tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname, unsigned int tag_preserve_head_pos)
+    tagged_stream_mux_impl::tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname,
+                                                   unsigned int tag_preserve_head_pos)
       : tagged_stream_block("tagged_stream_mux",
-                 io_signature::make(1, -1, itemsize),
-                 io_signature::make(1,  1, itemsize),
-		 lengthtagname),
+                            io_signature::make(1, -1, itemsize),
+                            io_signature::make(1,  1, itemsize),
+                            lengthtagname),
         d_itemsize(itemsize),
 	d_tag_preserve_head_pos(tag_preserve_head_pos)
     {
@@ -62,10 +66,10 @@ namespace gr {
     }
 
     int
-    tagged_stream_mux_impl::work (int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
+    tagged_stream_mux_impl::work(int noutput_items,
+                                 gr_vector_int &ninput_items,
+                                 gr_vector_const_void_star &input_items,
+                                 gr_vector_void_star &output_items)
     {
       unsigned char *out = (unsigned char *) output_items[0];
       int n_produced = 0;
@@ -94,4 +98,3 @@ namespace gr {
 
   } /* namespace blocks */
 } /* namespace gr */
-

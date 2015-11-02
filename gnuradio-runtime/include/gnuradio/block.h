@@ -221,7 +221,7 @@ namespace gr {
 
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p
-     * which_input were consumed. 
+     * which_input were consumed.
      * This function should be called at the end of work() or general_work(), after all processing is finished.
      */
     void consume(int which_input, int how_many_items);
@@ -367,12 +367,39 @@ namespace gr {
     long max_output_buffer(size_t i);
 
     /*!
-     * \brief Sets max buffer size on all output ports.
+     * \brief Request limit on max buffer size on all output ports.
+     *
+     * \details
+     * This is an advanced feature. Calling this can affect some
+     * fundamental assumptions about the system behavior and
+     * performance.
+     *
+     * The actual buffer size is determined by a number of other
+     * factors from the block and system. This function only provides
+     * a requested maximum. The buffers will always be a multiple of
+     * the system page size, which may be larger than the value asked
+     * for here.
+     *
+     * \param max_output_buffer the requested maximum output size in items.
      */
     void set_max_output_buffer(long max_output_buffer);
 
     /*!
-     * \brief Sets max buffer size on output port \p port.
+     * \brief Request limit on max buffer size on output port \p port.
+     *
+     * \details
+     * This is an advanced feature. Calling this can affect some
+     * fundamental assumptions about the system behavior and
+     * performance.
+     *
+     * The actual buffer size is determined by a number of other
+     * factors from the block and system. This function only provides
+     * a requested maximum. The buffers will always be a multiple of
+     * the system page size, which may be larger than the value asked
+     * for here.
+     *
+     * \param port the output port the request applies to.
+     * \param max_output_buffer the requested maximum output size in items.
      */
     void set_max_output_buffer(int port, long max_output_buffer);
 
@@ -382,12 +409,40 @@ namespace gr {
     long min_output_buffer(size_t i);
 
     /*!
-     * \brief Sets min buffer size on all output ports.
+     * \brief Request limit on the mininum buffer size on all output
+     * ports.
+     *
+     * \details
+     * This is an advanced feature. Calling this can affect some
+     * fundamental assumptions about the system behavior and
+     * performance.
+     *
+     * The actual buffer size is determined by a number of other
+     * factors from the block and system. This function only provides
+     * a requested minimum. The buffers will always be a multiple of
+     * the system page size, which may be larger than the value asked
+     * for here.
+     *
+     * \param min_output_buffer the requested minimum output size in items.
      */
     void set_min_output_buffer(long min_output_buffer);
 
     /*!
-     * \brief Sets min buffer size on output port \p port.
+     * \brief Request limit on min buffer size on output port \p port.
+     *
+     * \details
+     * This is an advanced feature. Calling this can affect some
+     * fundamental assumptions about the system behavior and
+     * performance.
+     *
+     * The actual buffer size is determined by a number of other
+     * factors from the block and system. This function only provides
+     * a requested minimum. The buffers will always be a multiple of
+     * the system page size, which may be larger than the value asked
+     * for here.
+     *
+     * \param port the output port the request applies to.
+     * \param min_output_buffer the requested minimum output size in items.
      */
     void set_min_output_buffer(int port, long min_output_buffer);
 

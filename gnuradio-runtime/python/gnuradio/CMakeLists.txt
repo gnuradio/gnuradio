@@ -31,6 +31,7 @@ GR_PYTHON_INSTALL(FILES
     __init__.py
     eng_notation.py
     eng_option.py
+    eng_arg.py
     gr_unittest.py
     gr_xmlrunner.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio

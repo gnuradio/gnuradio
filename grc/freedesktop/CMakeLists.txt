@@ -26,6 +26,8 @@ install(FILES
     grc-icon-64.png
     grc-icon-48.png
     grc-icon-32.png
+    grc-icon-24.png
+    grc-icon-16.png
     gnuradio-grc.xml
     gnuradio-grc.desktop
     DESTINATION ${grc_freedesktop_path}

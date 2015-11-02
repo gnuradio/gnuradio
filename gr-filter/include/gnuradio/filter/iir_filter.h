@@ -33,10 +33,53 @@ namespace gr {
     namespace kernel {
 
       /*!
-       * \brief base class template for Infinite Impulse Response filter (IIR)
+       * \brief Base class template for Infinite Impulse Response filter (IIR)
+       *
+       * \details
+       *
+       * This class provides a templated kernel for IIR filters. These
+       * iir_filters can be instantiated with a set of feed-forward
+       * and feed-back taps in the constructor. We then call the
+       * iir_filter::filter function to add a new sample to the
+       * filter, or iir_filter::filter_n to add a vector of samples to
+       * be filtered.
+       *
+       * Instantiating a filter means defining the templates for the
+       * data types being processed by the filter. There are four templates:
+       *
+       * \li i_type the data type of the input data (i.e., float).
+       * \li o_type the data type of the output data (i.e., float).
+       * \li tap_type the data type of the filter taps (i.e., double).
+       * \li acc_type the data type of the internal accumulator (i.e., double).
+       *
+       * The acc_type is specified to control how data is handled
+       * internally in the filter. This should always be the highest
+       * precision data type of any of the first three. Often, IIR
+       * filters require double-precision values in the taps for
+       * stability, and so the internal accumulator should also be
+       * double precision.
+       *
+       * Example:
+       *
+       * \code
+       * gr::filter::kernel::iir_filter<float,float,double,double> iir_filt(fftaps, fbtaps);
+       * ...
+       * float y = iir_filt.filter(x);
+       *
+       * <or>
+       *
+       * iir_filt.filter(y, x, N); // y and x are float arrays
+       * \endcode
+       *
+       * Another example for handling complex samples with
+       * double-precision taps (see filter::iir_filter_ccz):
+       *
+       * \code
+       * gr:;filter::kernel::iir_filter<gr_complex, gr_complex, gr_complexd, gr_complexd> iir_filt(fftaps, fbtaps);
+       * \endcode
        */
-      template<class i_type, class o_type, class tap_type>
-      class iir_filter
+      template<class i_type, class o_type, class tap_type, class acc_type>
+      class FILTER_API iir_filter
       {
       public:
 	/*!
@@ -135,18 +178,18 @@ namespace gr {
 	std::vector<tap_type>	d_fbtaps;
 	int 			d_latest_n;
 	int 			d_latest_m;
-	std::vector<o_type>	d_prev_output;
+	std::vector<acc_type>	d_prev_output;
 	std::vector<i_type>	d_prev_input;
       };
 
       //
       // general case.  We may want to specialize this
       //
-      template<class i_type, class o_type, class tap_type>
+      template<class i_type, class o_type, class tap_type, class acc_type>
       o_type
-      iir_filter<i_type, o_type, tap_type>::filter(const i_type input)
+      iir_filter<i_type, o_type, tap_type, acc_type>::filter(const i_type input)
       {
-	o_type acc;
+	acc_type acc;
 	unsigned i = 0;
 	unsigned n = ntaps_ff();
 	unsigned m = ntaps_fb();
@@ -181,9 +224,9 @@ namespace gr {
 	return (o_type)acc;
       }
 
-      template<class i_type, class o_type, class tap_type>
+      template<class i_type, class o_type, class tap_type, class acc_type>
       void
-      iir_filter<i_type, o_type, tap_type>::filter_n(o_type output[],
+      iir_filter<i_type, o_type, tap_type, acc_type>::filter_n(o_type output[],
 						     const i_type input[],
 						     long n)
       {
@@ -193,19 +236,18 @@ namespace gr {
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, float>::filter(const gr_complex input);
+      iir_filter<gr_complex, gr_complex, float, gr_complex>::filter(const gr_complex input);
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, double>::filter(const gr_complex input);
+      iir_filter<gr_complex, gr_complex, double, gr_complexd>::filter(const gr_complex input);
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, gr_complexd>::filter(const gr_complex input);
+      iir_filter<gr_complex, gr_complex, gr_complexd, gr_complexd>::filter(const gr_complex input);
 
     } /* namespace kernel */
   } /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_IIR_FILTER_H */
-

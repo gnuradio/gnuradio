@@ -24,7 +24,6 @@
 TXs a waveform (either from a file, or a sinusoid) in a frequency-hopping manner.
 """
 
-import time
 import numpy
 import argparse
 import pmt
@@ -35,7 +34,7 @@ from gnuradio import uhd
 def setup_parser():
     """ Setup the parser for the frequency hopper. """
     parser = argparse.ArgumentParser(
-            description="Transmit a signal in a frequency-hopping manner, using tx_freq tags."
+        description="Transmit a signal in a frequency-hopping manner, using tx_freq tags."
     )
     parser.add_argument('-i', '--input-file', type=file, default=None,
             help="File with samples to transmit. If left out, will transmit a sinusoid.")
@@ -54,7 +53,9 @@ def setup_parser():
     parser.add_argument("-t", "--hop-time", type=float, default=1000,
             help="Time between hops in milliseconds. This must be larger than or equal to the burst duration as set by --samp-per-burst")
     parser.add_argument("-f", "--freq", type=float, default=2.45e9,
-            help="Base frequency. This is the lowest frequency at which the USRP will Tx.")
+            help="Base frequency. This is the middle channel frequency at which the USRP will Tx.")
+    parser.add_argument("--dsp", action='store_true',
+            help="DSP tuning only.")
     parser.add_argument("-d", "--freq-delta", type=float, default=1e6,
             help="Channel spacing.")
     parser.add_argument("-c", "--num-channels", type=int, default=5,
@@ -64,7 +65,7 @@ def setup_parser():
     parser.add_argument("-p", "--post-tuning", action='count',
             help="Tune after transmitting. Default is to tune immediately before transmitting.")
     parser.add_argument("-v", "--verbose", action='count',
-            help="Print more information.")
+            help="Print more information. The morer the printier.")
     return parser
 
 
@@ -73,7 +74,7 @@ class FrequencyHopperSrc(gr.hier_block2):
     def __init__(
             self,
             n_bursts, n_channels,
-            freq_delta, base_freq,
+            freq_delta, base_freq, dsp_tuning,
             burst_length, base_time, hop_time,
             post_tuning=False,
             tx_gain=0,
@@ -85,8 +86,10 @@ class FrequencyHopperSrc(gr.hier_block2):
             gr.io_signature(1, 1, gr.sizeof_gr_complex),
         )
         n_samples_total = n_bursts * burst_length
-        self.hop_sequence = numpy.arange(base_freq, base_freq + n_channels * freq_delta, freq_delta)
+        lowest_frequency = base_freq - numpy.floor(n_channels/2) * freq_delta
+        self.hop_sequence = [lowest_frequency + n * freq_delta for n in xrange(n_channels)]
         numpy.random.shuffle(self.hop_sequence)
+        # Repeat that:
         self.hop_sequence = [self.hop_sequence[x % n_channels] for x in xrange(n_bursts)]
         if verbose:
             print "Hop Frequencies  | Hop Pattern"
@@ -103,20 +106,19 @@ class FrequencyHopperSrc(gr.hier_block2):
         gain_tag = gr.tag_t()
         gain_tag.offset = 0
         gain_tag.key = pmt.string_to_symbol('tx_command')
-        gain_tag.value = pmt.cons(
-                pmt.intern("gain"),
-                # These are both valid:
-                #pmt.from_double(tx_gain)
-                pmt.cons(pmt.to_pmt(0), pmt.to_pmt(tx_gain))
-        )
+        gain_tag.value = pmt.to_pmt({'gain': tx_gain})
         tag_list = [gain_tag,]
-        for i in xrange(n_bursts):
+        for i in xrange(len(self.hop_sequence)):
             tune_tag = gr.tag_t()
             tune_tag.offset = i * burst_length
-            if i > 0 and post_tuning:
+            if i > 0 and post_tuning and not dsp_tuning: # TODO dsp_tuning should also be able to do post_tuning
                 tune_tag.offset -= 1 # Move it to last sample of previous burst
-            tune_tag.key = pmt.string_to_symbol('tx_freq')
-            tune_tag.value = pmt.to_pmt(self.hop_sequence[i])
+            if dsp_tuning:
+                tune_tag.key = pmt.string_to_symbol('tx_command')
+                tune_tag.value = pmt.to_pmt({'lo_freq': base_freq, 'dsp_freq': base_freq - self.hop_sequence[i]})
+            else:
+                tune_tag.key = pmt.string_to_symbol('tx_freq')
+                tune_tag.value = pmt.to_pmt(self.hop_sequence[i])
             tag_list.append(tune_tag)
             length_tag = gr.tag_t()
             length_tag.offset = i * burst_length
@@ -164,7 +166,7 @@ class FlowGraph(gr.top_block):
             raise SystemExit, 1
         hopper_block = FrequencyHopperSrc(
                 options.num_bursts, options.num_channels,
-                options.freq_delta, options.freq,
+                options.freq_delta, options.freq, options.dsp,
                 options.samp_per_burst, 1.0, options.hop_time / 1000.,
                 options.post_tuning,
                 options.gain,
@@ -202,7 +204,7 @@ def main():
     args = setup_parser().parse_args()
     if (1.0 * args.samp_per_burst / args.rate) > args.hop_time * 1e-3:
         print "Burst duration must be smaller than hop time."
-        raise SystemExit, 1
+        exit(1)
     if args.verbose:
         print_hopper_stats(args)
     top_block = FlowGraph(args)

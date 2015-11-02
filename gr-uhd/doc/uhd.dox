@@ -1,6 +1,7 @@
 /*! \page page_uhd UHD Interface
 
-\section Introduction
+\section uhd_introduction Introduction
+
 This is the GNU Radio UHD package. It is the interface to the UHD
 library to connect to and send and receive data between the Ettus
 Research, LLC product line. To use the UHD blocks, the Python
@@ -11,15 +12,10 @@ as:
     from gnuradio import uhd
 \endcode
 
-The relevant blocks are listed in the \ref uhd_blk group.
-
-A quick listing of the details can be found in Python after importing
-by using:
-
-\code
-    help(uhd)
-\endcode
-
+The relevant blocks are listed in the \ref uhd_blk group. The most important
+components are the gr::uhd::usrp_source and gr::uhd::usrp_sink blocks, which
+act as receivers/transmitters. Both are derived from gr::uhd::usrp_block, which
+defines many of the shared functions between those blocks.
 
 \section uhd_external_docs External Documentation
 
@@ -35,50 +31,94 @@ http://files.ettus.com/manual/annotated.html
 \section uhd_command_syntax Command Syntax
 
 The UHD sink and source can be controlled by a message port. These message ports
-take commands, which are PMTs formatted as such:
+take commands, which are PMTs formatted as described in \ref msg_passing_commands.
+
+There is a legacy format, which will be deprecated in the future, where commands may
+be tuples, formatted as:
 
     (command, value, [channel])
 
-A command PMT is either a pair or a tuple. If it's a tuple, it must have either 2 or 3 elements.
-Any other type of PMT will throw an error.
+See older versions of this manual for documentation on this deprecated command format.
 
-The `command` part is a string, which defines the command. `value` is a PMT whose format depends
-on the command issued. Finally, `channel` is an integer PMT value that specifies which channel
-this command shall be specified on. If this value is omitted, then it either applies this command
-to all channels or channel zero, depending on which command is used.
+In general, every command consists of one or more key/value pairs (either stored as a
+PMT pair, or a dictionary). A full list of keys is listed below.
 
 Example:
 \code{.cpp}
-pmt::pmt_t command = pmt::cons( // We make a pair, but pmt::make_tuple() is also valid!
-    pmt::mp("freq"), // Use the 'freq' command, which sets the frequency
+pmt::pmt_t command = pmt::cons( // Make a pair
+    pmt::mp("freq"), // Key is 'freq' => sets the frequency
     pmt::mp(1.1e9) // Set the frequency to 1.1 GHz
 );
+// Now pass 'command' into the USRP block's command port
 \endcode
 
 This PMT would set the frequency to 1.1 GHz on all channels. We make use of the pmt::mp() function
 which automatically sets the PMT types. Assume we only want to set the frequency on channel 1
-(i.e. the second channel). In this case, we must construct a tuple:
+(i.e. the second channel). In this case, we must construct a dictionary:
 \code{.cpp}
-pmt::pmt_t command = pmt::make_tuple(
-    pmt::mp("freq"), // Use the 'freq' command, which sets the frequency
-    pmt::mp(1.1e9) // Set the frequency to 1.1 GHz
-    pmt::mp(1) // Select channel 1
-);
+pmt::pmt_t command = pmt::make_dict();
+pmt::dict_add(command, pmt::mp("freq"), pmt::mp(1.1e9)); // Specify frequency
+pmt::dict_add(command, pmt::mp("chan"), pmt::mp(1)); // Specify channel
+// Now pass 'command' into the USRP block's command port
 \endcode
 
+This command structure becomes more intuitive when thinking of sending the command PMT
+as a function call, where the key/value pairs are argument names and values, respectively.
+In the above example, the behaviour is the same as if calling
+\code{.python}
+usrp_source.set_center_freq(freq=1.1e9, chan=1)
+\endcode
+The main difference is that we can add more properties to the same
+command PMT, e.g. as such:
+\code{.cpp}
+// 'command' is the same PMT as in the previous example
+pmt::dict_add(command, pmt::mp("gain"), pmt::mp(23.0)); // Specify gain
+pmt::dict_add(command, pmt::mp("antenna"), pmt::mp("TX/RX")); // Switch antenna
+// Now pass 'command' into the USRP block's command port
+\endcode
+When the USRP block interprets this command PMT, all properties will be
+set.
 
-\subsection uhd_command_syntax_cmds Common commands
 
-The following commands are understood by both UHD Source and Sink:
+\subsection uhd_command_syntax_cmds Common command keys
 
-Command name | Value Type | Description
--------------|------------|-------------------------------------------------------------
-`freq`       | double     | Sets the Tx or Rx frequency. Defaults to all channels.
-`lo_offset`  | double     | Sets an LO offset. Defaults to all channels.
-`gain`       | double     | Sets the Tx or Rx gain (in dB). Defaults to all channels.
+The following command keys are understood by both UHD Source and Sink:
 
+Command name | Value Type   | Description
+-------------|--------------|-------------------------------------------------------------
+`chan`       | int          | Specifies a channel. If this is not given, either all channels are chosen, or channel 0, depending on the action. A value of -1 forces 'all channels', where possible.
+`gain`       | double       | Sets the Tx or Rx gain (in dB). Defaults to all channels.
+`freq`       | double       | Sets the Tx or Rx frequency. Defaults to all channels. If specified without `lo_offset`, it will set the LO offset to zero.
+`lo_offset`  | double       | Sets an LO offset. Defaults to all channels. Note this does not affect the effective center frequency.
+`tune`       | tune_request | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.
+`lo_freq`    | double       | For fully manual tuning: Set the LO frequency (RF frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`dsp_freq`   | double       | For fully manual tuning: Set the DSP frequency (CORDIC frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`rate`       | double       | See usrp_block::set_samp_rate(). *Always* affects all channels.
+`bandwidth`  | double       | See usrp_block::set_bandwidth(). Defaults to all channels.
+`time`       | timestamp    | Sets a command time. See usrp_block::set_command_time(). A value of PMT_NIL will clear the command time.
+`mboard`     | int          | Specify mboard index, where applicable.
+`antenna`    | string       | See usrp_block::set_antenna(). Defaults to all channels.
 
-\section Configuring a UHD object
+Special types:
+
+- tune_request: Like a uhd::tune_request_t, but always uses POLICY_AUTO. This is a pair, composed of (target_frequency, lo_offset)
+- timestamp: A pair composed of (long full_secs, double frac_secs). Similar to uhd::time_spec_t
+
+\b Note: Not all commands are affected by `time`. See the UHD manual for details on timed commands.
+
+\subsection uhd_command_syntax_multi_vs_single Dictionaries vs pairs
+
+Given the choices, it may be unclear if it's preferable to send multiple commands
+to the USRP block with a single key/value pair each, or send a single dict with
+all the values.
+
+In general, the dictionary should be preferred. It has some distinct advantages:
+- If it carries a timestamp, this timestamp is valid for all key/value pairs it
+  may be applied to.
+- All settings will be applied at once. With multiple messages, other blocks might
+  be sending interfering messages while the messages are being processed.
+
+\section uhd_configuring Configuring a UHD object
 
 A typical option parser setup for a UHD device looks like
 

@@ -65,11 +65,9 @@ namespace gr {
       fs::create_directory(path);
   }
 
-  const char *
-  vmcircbuf_prefs::get(const char *key)
+  int
+  vmcircbuf_prefs::get(const char *key, char *value, int value_size)
   {
-    static char buf[1024];
-
     gr::thread::scoped_lock guard(s_vm_mutex);
 
     FILE *fp = fopen(pathname (key), "r");
@@ -78,17 +76,17 @@ namespace gr {
       return 0;
     }
 
-    memset(buf, 0, sizeof (buf));
-    size_t ret = fread(buf, 1, sizeof(buf) - 1, fp);
-    if(ret == 0) {
+    const size_t ret = fread(value, 1, value_size - 1, fp);
+    value[ret] = '\0';
+    if(ret == 0 && !feof(fp)) {
       if(ferror(fp) != 0) {
         perror(pathname (key));
         fclose(fp);
-        return 0;
+        return -1;
       }
     }
     fclose(fp);
-    return buf;
+    return ret;
   }
 
   void

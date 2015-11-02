@@ -35,7 +35,7 @@ namespace gr {
       float d_phase;
 
     public:
-      frequency_modulator_fc_impl(double sensitivity);
+      frequency_modulator_fc_impl(float sensitivity);
       ~frequency_modulator_fc_impl();
 
       void set_sensitivity(float sens) { d_sensitivity = sens; }

@@ -22,7 +22,7 @@
 from runtime_swig import top_block_swig, \
     top_block_wait_unlocked, top_block_run_unlocked, \
     top_block_start_unlocked, top_block_stop_unlocked, \
-    dot_graph_tb
+    top_block_unlock_unlocked, dot_graph_tb
 
 #import gnuradio.gr.gr_threading as _threading
 import gr_threading as _threading
@@ -63,11 +63,13 @@ class _top_block_waiter(_threading.Thread):
         top_block_wait_unlocked(self.tb)
         self.event.set()
 
-    def wait(self):
+    def wait(self, handle_sigint=True):
         try:
-            while not self.event.isSet():
-                self.event.wait(0.100)
+            while not self.event.wait(0.1):
+                pass
         except KeyboardInterrupt:
+            if not handle_sigint:
+                raise
             self.tb.stop()
             self.wait()
 
@@ -98,6 +100,7 @@ class top_block(hier_block2):
         """
         # not calling hier_block2.__init__, we set our own _impl
         self._impl = top_block_swig(name)
+        self.handle_sigint = True
 
     def start(self, max_noutput_items=10000000):
         """
@@ -118,11 +121,17 @@ class top_block(hier_block2):
         self.start(max_noutput_items)
         self.wait()
 
+    def unlock(self):
+        """
+        Release lock and continue execution of flow-graph.
+        """
+        top_block_unlock_unlocked(self._impl)
+
     def wait(self):
         """
         Wait for the flowgraph to finish running
         """
-        _top_block_waiter(self._impl).wait()
+        _top_block_waiter(self._impl).wait(self.handle_sigint)
 
     def dot_graph(self):
         """

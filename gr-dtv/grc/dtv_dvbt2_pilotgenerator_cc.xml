@@ -1,0 +1,386 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T2 Pilot Generator
+###################################################
+ -->
+<block>
+  <name>Pilot Generator and IFFT</name>
+  <key>dtv_dvbt2_pilotgenerator_cc</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt2_pilotgenerator_cc($carriermode.val, $fftsize.val, $pilotpattern.val, $guardinterval.val, $numdatasyms, #slurp
+#if str($version) == 'VERSION_111'
+$paprmode1.val, #slurp
+#else
+$paprmode2.val, #slurp
+#end if
+$version.val, #slurp
+#if str($version) == 'VERSION_111'
+$preamble1.val, #slurp
+#else
+$preamble2.val, #slurp
+#end if
+$misogroup.val, $equalization.val, $bandwidth.val, $fftsize.vlength)</make>
+  <param>
+    <name>Extended Carrier Mode</name>
+    <key>carriermode</key>
+    <type>enum</type>
+    <option>
+      <name>Normal</name>
+      <key>CARRIERS_NORMAL</key>
+      <opt>val:dtv.CARRIERS_NORMAL</opt>
+    </option>
+    <option>
+      <name>Extended</name>
+      <key>CARRIERS_EXTENDED</key>
+      <opt>val:dtv.CARRIERS_EXTENDED</opt>
+    </option>
+  </param>
+  <param>
+    <name>FFT Size</name>
+    <key>fftsize</key>
+    <type>enum</type>
+    <option>
+      <name>1K</name>
+      <key>FFTSIZE_1K</key>
+      <opt>val:dtv.FFTSIZE_1K</opt>
+      <opt>vlength:1024</opt>
+    </option>
+    <option>
+      <name>2K</name>
+      <key>FFTSIZE_2K</key>
+      <opt>val:dtv.FFTSIZE_2K</opt>
+      <opt>vlength:2048</opt>
+    </option>
+    <option>
+      <name>4K</name>
+      <key>FFTSIZE_4K</key>
+      <opt>val:dtv.FFTSIZE_4K</opt>
+      <opt>vlength:4096</opt>
+    </option>
+    <option>
+      <name>8K</name>
+      <key>FFTSIZE_8K</key>
+      <opt>val:dtv.FFTSIZE_8K</opt>
+      <opt>vlength:8192</opt>
+    </option>
+    <option>
+      <name>8K DVB-T2 GI</name>
+      <key>FFTSIZE_8K_T2GI</key>
+      <opt>val:dtv.FFTSIZE_8K_T2GI</opt>
+      <opt>vlength:8192</opt>
+    </option>
+    <option>
+      <name>16K</name>
+      <key>FFTSIZE_16K</key>
+      <opt>val:dtv.FFTSIZE_16K</opt>
+      <opt>vlength:16384</opt>
+    </option>
+    <option>
+      <name>16K DVB-T2 GI</name>
+      <key>FFTSIZE_16K_T2GI</key>
+      <opt>val:dtv.FFTSIZE_16K_T2GI</opt>
+      <opt>vlength:16384</opt>
+    </option>
+    <option>
+      <name>32K</name>
+      <key>FFTSIZE_32K</key>
+      <opt>val:dtv.FFTSIZE_32K</opt>
+      <opt>vlength:32768</opt>
+    </option>
+    <option>
+      <name>32K DVB-T2 GI</name>
+      <key>FFTSIZE_32K_T2GI</key>
+      <opt>val:dtv.FFTSIZE_32K_T2GI</opt>
+      <opt>vlength:32768</opt>
+    </option>
+  </param>
+  <param>
+    <name>Pilot Pattern</name>
+    <key>pilotpattern</key>
+    <type>enum</type>
+    <option>
+      <name>PP1</name>
+      <key>PILOT_PP1</key>
+      <opt>val:dtv.PILOT_PP1</opt>
+    </option>
+    <option>
+      <name>PP2</name>
+      <key>PILOT_PP2</key>
+      <opt>val:dtv.PILOT_PP2</opt>
+    </option>
+    <option>
+      <name>PP3</name>
+      <key>PILOT_PP3</key>
+      <opt>val:dtv.PILOT_PP3</opt>
+    </option>
+    <option>
+      <name>PP4</name>
+      <key>PILOT_PP4</key>
+      <opt>val:dtv.PILOT_PP4</opt>
+    </option>
+    <option>
+      <name>PP5</name>
+      <key>PILOT_PP5</key>
+      <opt>val:dtv.PILOT_PP5</opt>
+    </option>
+    <option>
+      <name>PP6</name>
+      <key>PILOT_PP6</key>
+      <opt>val:dtv.PILOT_PP6</opt>
+    </option>
+    <option>
+      <name>PP7</name>
+      <key>PILOT_PP7</key>
+      <opt>val:dtv.PILOT_PP7</opt>
+    </option>
+    <option>
+      <name>PP8</name>
+      <key>PILOT_PP8</key>
+      <opt>val:dtv.PILOT_PP8</opt>
+    </option>
+  </param>
+  <param>
+    <name>Guard Interval</name>
+    <key>guardinterval</key>
+    <type>enum</type>
+    <option>
+      <name>1/32</name>
+      <key>GI_1_32</key>
+      <opt>val:dtv.GI_1_32</opt>
+    </option>
+    <option>
+      <name>1/16</name>
+      <key>GI_1_16</key>
+      <opt>val:dtv.GI_1_16</opt>
+    </option>
+    <option>
+      <name>1/8</name>
+      <key>GI_1_8</key>
+      <opt>val:dtv.GI_1_8</opt>
+    </option>
+    <option>
+      <name>1/4</name>
+      <key>GI_1_4</key>
+      <opt>val:dtv.GI_1_4</opt>
+    </option>
+    <option>
+      <name>1/128</name>
+      <key>GI_1_128</key>
+      <opt>val:dtv.GI_1_128</opt>
+    </option>
+    <option>
+      <name>19/128</name>
+      <key>GI_19_128</key>
+      <opt>val:dtv.GI_19_128</opt>
+    </option>
+    <option>
+      <name>19/256</name>
+      <key>GI_19_256</key>
+      <opt>val:dtv.GI_19_256</opt>
+    </option>
+  </param>
+  <param>
+    <name>Number of Data Symbols</name>
+    <key>numdatasyms</key>
+    <value>100</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>PAPR Mode</name>
+    <key>paprmode1</key>
+    <type>enum</type>
+    <hide>$version.hide_111</hide>
+    <option>
+      <name>Off</name>
+      <key>PAPR_OFF</key>
+      <opt>val:dtv.PAPR_OFF</opt>
+    </option>
+    <option>
+      <name>Active Constellation Extension</name>
+      <key>PAPR_ACE</key>
+      <opt>val:dtv.PAPR_ACE</opt>
+    </option>
+    <option>
+      <name>Tone Reservation</name>
+      <key>PAPR_TR</key>
+      <opt>val:dtv.PAPR_TR</opt>
+    </option>
+    <option>
+      <name>Both ACE and TR</name>
+      <key>PAPR_BOTH</key>
+      <opt>val:dtv.PAPR_BOTH</opt>
+    </option>
+  </param>
+  <param>
+    <name>PAPR Mode</name>
+    <key>paprmode2</key>
+    <type>enum</type>
+    <hide>$version.hide_131</hide>
+    <option>
+      <name>P2 Only</name>
+      <key>PAPR_OFF</key>
+      <opt>val:dtv.PAPR_OFF</opt>
+    </option>
+    <option>
+      <name>Active Constellation Extension</name>
+      <key>PAPR_ACE</key>
+      <opt>val:dtv.PAPR_ACE</opt>
+    </option>
+    <option>
+      <name>Tone Reservation</name>
+      <key>PAPR_TR</key>
+      <opt>val:dtv.PAPR_TR</opt>
+    </option>
+    <option>
+      <name>Both ACE and TR</name>
+      <key>PAPR_BOTH</key>
+      <opt>val:dtv.PAPR_BOTH</opt>
+    </option>
+  </param>
+  <param>
+    <name>Specification Version</name>
+    <key>version</key>
+    <type>enum</type>
+    <option>
+      <name>1.1.1</name>
+      <key>VERSION_111</key>
+      <opt>val:dtv.VERSION_111</opt>
+      <opt>hide_111:</opt>
+      <opt>hide_131:all</opt>
+    </option>
+    <option>
+      <name>1.3.1</name>
+      <key>VERSION_131</key>
+      <opt>val:dtv.VERSION_131</opt>
+      <opt>hide_111:all</opt>
+      <opt>hide_131:</opt>
+    </option>
+  </param>
+  <param>
+    <name>Preamble</name>
+    <key>preamble1</key>
+    <type>enum</type>
+    <hide>$version.hide_111</hide>
+    <option>
+      <name>T2 SISO</name>
+      <key>PREAMBLE_T2_SISO</key>
+      <opt>val:dtv.PREAMBLE_T2_SISO</opt>
+      <opt>hide_miso:all</opt>
+    </option>
+    <option>
+      <name>T2 MISO</name>
+      <key>PREAMBLE_T2_MISO</key>
+      <opt>val:dtv.PREAMBLE_T2_MISO</opt>
+      <opt>hide_miso:</opt>
+    </option>
+  </param>
+  <param>
+    <name>Preamble</name>
+    <key>preamble2</key>
+    <type>enum</type>
+    <hide>$version.hide_131</hide>
+    <option>
+      <name>T2 SISO</name>
+      <key>PREAMBLE_T2_SISO</key>
+      <opt>val:dtv.PREAMBLE_T2_SISO</opt>
+      <opt>hide_miso:all</opt>
+    </option>
+    <option>
+      <name>T2 MISO</name>
+      <key>PREAMBLE_T2_MISO</key>
+      <opt>val:dtv.PREAMBLE_T2_MISO</opt>
+      <opt>hide_miso:</opt>
+    </option>
+    <option>
+      <name>T2-Lite SISO</name>
+      <key>PREAMBLE_T2_LITE_SISO</key>
+      <opt>val:dtv.PREAMBLE_T2_LITE_SISO</opt>
+      <opt>hide_miso:all</opt>
+    </option>
+    <option>
+      <name>T2-Lite MISO</name>
+      <key>PREAMBLE_T2_LITE_MISO</key>
+      <opt>val:dtv.PREAMBLE_T2_LITE_MISO</opt>
+      <opt>hide_miso:</opt>
+    </option>
+  </param>
+  <param>
+    <name>MISO Group</name>
+    <key>misogroup</key>
+    <type>enum</type>
+    <hide>#if str($version) == 'VERSION_111' then $preamble1.hide_miso else $preamble2.hide_miso</hide>
+    <option>
+      <name>TX1</name>
+      <key>MISO_TX1</key>
+      <opt>val:dtv.MISO_TX1</opt>
+    </option>
+    <option>
+      <name>TX2</name>
+      <key>MISO_TX2</key>
+      <opt>val:dtv.MISO_TX2</opt>
+    </option>
+  </param>
+  <param>
+    <name>Sin(x)/x Equalization</name>
+    <key>equalization</key>
+    <type>enum</type>
+    <option>
+      <name>Off</name>
+      <key>EQUALIZATION_OFF</key>
+      <opt>val:dtv.EQUALIZATION_OFF</opt>
+      <opt>hide_bandwidth:all</opt>
+    </option>
+    <option>
+      <name>On</name>
+      <key>EQUALIZATION_ON</key>
+      <opt>val:dtv.EQUALIZATION_ON</opt>
+      <opt>hide_bandwidth:</opt>
+    </option>
+  </param>
+  <param>
+    <name>Bandwidth</name>
+    <key>bandwidth</key>
+    <type>enum</type>
+    <hide>$equalization.hide_bandwidth</hide>
+    <option>
+      <name>1.7 MHz</name>
+      <key>BANDWIDTH_1_7_MHZ</key>
+      <opt>val:dtv.BANDWIDTH_1_7_MHZ</opt>
+    </option>
+    <option>
+      <name>5 MHz</name>
+      <key>BANDWIDTH_5_0_MHZ</key>
+      <opt>val:dtv.BANDWIDTH_5_0_MHZ</opt>
+    </option>
+    <option>
+      <name>6 MHz</name>
+      <key>BANDWIDTH_6_0_MHZ</key>
+      <opt>val:dtv.BANDWIDTH_6_0_MHZ</opt>
+    </option>
+    <option>
+      <name>7 MHz</name>
+      <key>BANDWIDTH_7_0_MHZ</key>
+      <opt>val:dtv.BANDWIDTH_7_0_MHZ</opt>
+    </option>
+    <option>
+      <name>8 MHz</name>
+      <key>BANDWIDTH_8_0_MHZ</key>
+      <opt>val:dtv.BANDWIDTH_8_0_MHZ</opt>
+    </option>
+    <option>
+      <name>10 MHz</name>
+      <key>BANDWIDTH_10_0_MHZ</key>
+      <opt>val:dtv.BANDWIDTH_10_0_MHZ</opt>
+    </option>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <vlen>$fftsize.vlength</vlen>
+  </source>
+</block>

@@ -1,6 +1,6 @@
 /*! \page page_fcd FunCube Dongle Source
 
-\section Introduction
+\section fcd_introduction Introduction
 
 This is the gr-fcd package. It contains a source block for the
 FunCube Dongle hardware.
@@ -20,7 +20,7 @@ after importing by using:
     help(fcd)
 \endcode
 
-\section Dependencies
+\section fcd_dependencies Dependencies
 
 The FCD blocks require the following dependencies.
 

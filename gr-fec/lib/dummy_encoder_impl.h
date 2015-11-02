@@ -38,12 +38,16 @@ namespace gr {
         void generic_work(void *inbuffer, void *outbuffer);
         int get_output_size();
         int get_input_size();
+        const char* get_input_conversion();
+        const char* get_output_conversion();
+        bool d_pack_input;
+        bool d_packed_bits_output;
 
         unsigned int d_max_frame_size;
         unsigned int d_frame_size;
 
       public:
-        dummy_encoder_impl(int frame_size);
+        dummy_encoder_impl(int frame_size, bool pack = false, bool packed_bits = false);
         ~dummy_encoder_impl();
 
         bool set_frame_size(unsigned int frame_size);

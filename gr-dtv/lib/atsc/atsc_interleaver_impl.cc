@@ -24,6 +24,7 @@
 
 #include "atsc_interleaver_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
+#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -57,8 +58,6 @@ namespace gr {
       memset(registers, 0, sizeof(unsigned char) * I * ((I - 1) * J));
       memset(pointers, 0, sizeof(int) * I);
 
-      this->I = I;
-      this->J = J;
       commutator = 0;
     }
 

@@ -336,7 +336,7 @@ gr_logger_reset_config(void)
 
 // Remaining capability provided by gr::logger class in gnuradio/logger.h
 
-#else /* ENABLE_GR_LOGGER */
+#else /* ENABLE_GR_LOG */
 
 /****** Start Methods to provide Python the capabilities of the macros ********/
 void
@@ -357,7 +357,7 @@ gr_logger_reset_config(void)
   //NOP
 }
 
-#endif /* ENABLE_GR_LOGGER */
+#endif /* ENABLE_GR_LOG */
 
 
 namespace gr {

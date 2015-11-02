@@ -140,7 +140,7 @@ class Param(Element):
     def get_color(self): return '#FFFFFF'
     def __str__(self): return 'Param - %s(%s)'%(self.get_name(), self.get_key())
     def is_param(self): return True
-    def get_name(self): return self._name
+    def get_name(self): return self.get_parent().resolve_dependencies(self._name).strip()
     def get_key(self): return self._key
     def get_hide(self): return self.get_parent().resolve_dependencies(self._hide).strip()
 

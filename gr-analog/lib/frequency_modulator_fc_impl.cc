@@ -27,20 +27,19 @@
 #include "frequency_modulator_fc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/fxpt.h>
-#include <math.h>
-#include <boost/math/special_functions/trunc.hpp>
+#include <cmath>
 
 namespace gr {
   namespace analog {
 
     frequency_modulator_fc::sptr
-    frequency_modulator_fc::make(double sensitivity)
+    frequency_modulator_fc::make(float sensitivity)
     {
       return gnuradio::get_initial_sptr
 	(new frequency_modulator_fc_impl(sensitivity));
     }
 
-    frequency_modulator_fc_impl::frequency_modulator_fc_impl(double sensitivity)
+    frequency_modulator_fc_impl::frequency_modulator_fc_impl(float sensitivity)
       : sync_block("frequency_modulator_fc",
 		      io_signature::make(1, 1, sizeof(float)),
 		      io_signature::make(1, 1, sizeof(gr_complex))),
@@ -63,14 +62,13 @@ namespace gr {
       for(int i = 0; i < noutput_items; i++) {
 	d_phase = d_phase + d_sensitivity * in[i];
 
-	while(d_phase > (float)(M_PI))
-	  d_phase -= (float)(2.0 * M_PI);
-	while(d_phase < (float)(-M_PI))
-	  d_phase += (float)(2.0 * M_PI);
+	//place phase in [-pi, +pi[
+	#define F_PI ((float)(M_PI))
+	d_phase   = std::fmod(d_phase + F_PI, 2.0f * F_PI) - F_PI;
 
 	float oi, oq;
 
-	gr_int32 angle = gr::fxpt::float_to_fixed (d_phase);
+	int32_t angle = gr::fxpt::float_to_fixed (d_phase);
 	gr::fxpt::sincos(angle, &oq, &oi);
 	out[i] = gr_complex(oi, oq);
       }

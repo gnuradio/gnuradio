@@ -43,7 +43,8 @@ namespace gr {
       : sync_decimator("pn_correlator_cc",
 			  io_signature::make(1, 1, sizeof(gr_complex)),
 			  io_signature::make(1, 1, sizeof(gr_complex)),
-			  (unsigned int)((1ULL << degree)-1)) // PN code length
+			  (unsigned int)((1ULL << degree)-1)), // PN code length
+      d_pn(0.0f)
     {
       d_len = (unsigned int)((1ULL << degree)-1);
       if(mask == 0)

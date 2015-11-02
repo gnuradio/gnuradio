@@ -29,7 +29,7 @@
 
 namespace gr {
   namespace digital {
-    
+
     additive_scrambler_bb::sptr
     additive_scrambler_bb::make (int mask, int seed,
 				 int len, int count,
@@ -67,8 +67,8 @@ namespace gr {
     }
 
     int
-    additive_scrambler_bb_impl::mask() const 
-    { 
+    additive_scrambler_bb_impl::mask() const
+    {
       return d_lfsr.mask();
     }
 

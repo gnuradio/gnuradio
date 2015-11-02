@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2013 Free Software Foundation, Inc.
+ * Copyright 2007,2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -40,14 +40,16 @@ namespace gr {
       float d_avg;
       bool d_found;
 
+      void invalidate();
+
     public:
       peak_detector2_fb_impl(float threshold_factor_rise,
                              int look_ahead, float alpha);
       ~peak_detector2_fb_impl();
 
-      void set_threshold_factor_rise(float thr) { d_threshold_factor_rise = thr; }
-      void set_look_ahead(int look) { d_look_ahead = look; }
-      void set_alpha(int alpha) { d_alpha = alpha; }
+      void set_threshold_factor_rise(float thr);
+      void set_look_ahead(int look);
+      void set_alpha(float alpha);
 
       float threshold_factor_rise() { return d_threshold_factor_rise; }
       int look_ahead() { return d_look_ahead; }

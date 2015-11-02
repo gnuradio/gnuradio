@@ -32,6 +32,7 @@
 	<import>from gnuradio import analog</import>
 	<make>analog.ctcss_squelch_ff($rate, $freq, $level, $len, $ramp, $gate)</make>
 	<callback>set_level($level)</callback>
+	<callback>set_frequency($freq)</callback>
 	<param>
 		<name>Sampling Rate (Hz)</name>
 		<key>rate</key>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## DVB-T Symbol Inner Interleaver
+###################################################
+ -->
+<block>
+  <name>Symbol Inner Interleaver</name>
+  <key>dtv_dvbt_symbol_inner_interleaver</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_symbol_inner_interleaver($transmission_mode.payload_length, $transmission_mode.val, $direction.val)</make>
+  <param>
+    <name>Transmission Mode</name>
+    <key>transmission_mode</key>
+    <type>enum</type>
+    <option>
+      <name>2K</name>
+      <key>T2k</key>
+      <opt>val:dtv.T2k</opt>
+      <opt>fft_length:2048</opt>
+      <opt>payload_length:1512</opt>
+    </option>
+    <option>
+      <name>8K</name>
+      <key>T8k</key>
+      <opt>val:dtv.T8k</opt>
+      <opt>fft_length:8192</opt>
+      <opt>payload_length:6048</opt>
+    </option>
+  </param>
+  <param>
+    <name>Direction</name>
+    <key>direction</key>
+    <type>enum</type>
+    <option>
+      <name>Interleave</name>
+      <key>Interleave</key>
+      <opt>val:1</opt>
+    </option>
+    <option>
+      <name>Deinterleave</name>
+      <key>Deinterleave</key>
+      <opt>val:0</opt>
+    </option>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>$transmission_mode.payload_length</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>$transmission_mode.payload_length</vlen>
+  </source>
+</block>

@@ -1,6 +1,6 @@
 /*! \page page_vocoder Voice Coders and Decoders (Vocoders)
 
-\section Introduction
+\section vocoder_introduction Introduction
 
 This is the gr-vocoder package. It contains all available vocoders in
 GNU Radio. The Python namespaces is in gnuradio.vocoder, which would be
@@ -20,7 +20,7 @@ by using:
     help(vocoder)
 \endcode
 
-\section using_vocoders Using the vocoders
+\section vocoders_using Using the vocoders
 
 Note that most vocoders use short inputs instead of floats. This means you
 must convert audio signals from float to short by using a type conversion

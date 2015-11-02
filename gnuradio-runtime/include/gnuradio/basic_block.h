@@ -61,7 +61,6 @@ namespace gr {
     typedef boost::function<void(pmt::pmt_t)> msg_handler_t;
 
   private:
-    //msg_handler_t d_msg_handler;
     typedef std::map<pmt::pmt_t , msg_handler_t, pmt::comparator> d_msg_handlers_t;
     d_msg_handlers_t d_msg_handlers;
 
@@ -254,7 +253,8 @@ namespace gr {
     pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
 
     /*!
-     * \param[in] millisec Optional timeout value (0=no timeout)
+     * \param[in] which_port The message port from which to get the message.
+     * \param[in] millisec Optional timeout value (0=no timeout).
      * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
      */
     pmt::pmt_t delete_head_blocking(pmt::pmt_t which_port, unsigned int millisec = 0);

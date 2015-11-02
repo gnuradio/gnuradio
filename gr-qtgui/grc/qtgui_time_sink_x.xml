@@ -27,6 +27,10 @@ self.$(id).enable_tags(-1, $entags)
 self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_delay, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
+self.$(id).enable_control_panel($ctrlpanel)
+
+if not $legend:
+  self.$(id).disable_legend()
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -167,6 +171,7 @@ $(gui_hint()($win))</make>
     <type>float</type>
     <hide>part</hide>
   </param>
+
   <param>
     <name>Y max</name>
     <key>ymax</key>
@@ -174,6 +179,7 @@ $(gui_hint()($win))</make>
     <type>float</type>
     <hide>part</hide>
   </param>
+
   <param>
     <name>Number of Inputs</name>
     <key>nconnections</key>
@@ -181,6 +187,7 @@ $(gui_hint()($win))</make>
     <type>int</type>
     <hide>part</hide>
   </param>
+
   <param>
     <name>Update Period</name>
     <key>update_time</key>
@@ -188,6 +195,7 @@ $(gui_hint()($win))</make>
     <type>float</type>
     <hide>part</hide>
   </param>
+
   <param>
     <name>Disp. Tags</name>
     <key>entags</key>
@@ -203,6 +211,7 @@ $(gui_hint()($win))</make>
       <key>False</key>
     </option>
   </param>
+
   <param>
     <name>GUI Hint</name>
     <key>gui_hint</key>
@@ -291,6 +300,42 @@ $(gui_hint()($win))</make>
   </param>
 
 
+
+  <!-- Begin Config Tab items -->
+
+  <param>
+    <name>Control Panel</name>
+    <key>ctrlpanel</key>
+    <value>False</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Legend</name>
+    <key>legend</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <tab>Config</tab>
+  </param>
 
   <param>
     <name>Line 1 Label</name>

@@ -19,15 +19,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from functools import wraps
-from itertools import imap
+import functools
 
 from runtime_swig import hier_block2_swig, dot_graph
 import pmt
 
 
 def _multiple_endpoints(func):
-    @wraps(func)
+    @functools.wraps(func)
     def wrapped(self, *points):
         if not points:
             raise ValueError("At least one block required for " + func.__name__)
@@ -39,24 +38,24 @@ def _multiple_endpoints(func):
             func(self, block)
         else:
             try:
-                endp = [(p, 0) if hasattr(p, 'to_basic_block') else p for p in points]
-                endp_pairs = imap(lambda i: endp[i:i+2], range(len(endp)-1))
-                for (src, src_port), (dst, dst_port) in endp_pairs:
-                    func(self, src.to_basic_block(), src_port,
-                         dst.to_basic_block(), dst_port)
-            except (ValueError, TypeError):
-                raise ValueError("Unable to coerce endpoint")
+                endp = [(p.to_basic_block(), 0) if hasattr(p, 'to_basic_block')
+                        else (p[0].to_basic_block(), p[1]) for p in points]
+            except (ValueError, TypeError, AttributeError) as err:
+                raise ValueError("Unable to coerce endpoints: " + str(err))
+
+            for (src, src_port), (dst, dst_port) in zip(endp, endp[1:]):
+                func(self, src, src_port, dst, dst_port)
     return wrapped
 
 
 def _optional_endpoints(func):
-    @wraps(func)
+    @functools.wraps(func)
     def wrapped(self, src, srcport, dst=None, dstport=None):
         if dst is None and dstport is None:
             try:
                 (src, srcport), (dst, dstport) = src, srcport
-            except (ValueError, TypeError):
-                raise ValueError("Unable to coerce endpoint")
+            except (ValueError, TypeError) as err:
+                raise ValueError("Unable to coerce endpoints: " + str(err))
         func(self, src.to_basic_block(), srcport, dst.to_basic_block(), dstport)
     return wrapped
 

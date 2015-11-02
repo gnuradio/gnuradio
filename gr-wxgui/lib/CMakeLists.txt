@@ -62,7 +62,7 @@ ENDIF(MSVC)
 
 list(APPEND wxgui_libs
     gnuradio-runtime
-    volk
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
     ${LOG4CPP_LIBRARIES}

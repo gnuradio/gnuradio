@@ -51,6 +51,8 @@
    </cat>
    <cat>
       <name>Control Port</name>
+      <block>blocks_ctrlport_monitor</block>
+      <block>blocks_ctrlport_monitor_performance</block>
       <block>blocks_ctrlport_probe2_x</block>
       <block>blocks_ctrlport_probe2_c</block>
       <block>blocks_ctrlport_probe_c</block>
@@ -190,6 +192,7 @@
       <block>blocks_tag_gate</block>
       <block>blocks_tagged_file_sink</block>
       <block>blocks_tagged_stream_mux</block>
+      <block>blocks_tagged_stream_align</block>
       <block>blocks_stream_to_tagged_stream</block>
    </cat>
    <cat>
@@ -219,5 +222,9 @@
       <name>Waveform Generators</name>
       <block>blocks_vco_f</block>
       <block>blocks_vco_c</block>
+   </cat>
+   <cat>
+      <name>Variables</name>
+      <block>variable_tag_object</block>
    </cat>
 </cat>

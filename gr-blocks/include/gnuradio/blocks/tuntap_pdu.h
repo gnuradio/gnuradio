@@ -43,8 +43,9 @@ namespace gr {
        * \brief Construct a TUNTAP PDU interface
        * \param dev Device name to create
        * \param MTU Maximum Transmission Unit size
+	   * \param istunflag Flag to indicate TUN or Tap
        */
-      static sptr make(std::string dev, int MTU=10000);
+      static sptr make(std::string dev, int MTU=10000, bool istunflag=false);
     };
 
   } /* namespace blocks */

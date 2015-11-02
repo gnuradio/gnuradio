@@ -34,9 +34,11 @@ try:
     ENTRYENUM_CUSTOM_COLOR = get_color('#EEEEEE')
     #flow graph color constants
     FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFF9FF')
+    COMMENT_BACKGROUND_COLOR = get_color('#F3F3F3')
     #block color constants
     BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
     BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
+    BLOCK_BYPASSED_COLOR = get_color('#FFFFE6')
     #connection color constants
     CONNECTION_ENABLED_COLOR = get_color('black')
     CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')

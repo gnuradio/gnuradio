@@ -34,14 +34,16 @@ namespace gr {
     namespace code {
 
       generic_encoder::sptr
-      dummy_encoder::make(int frame_size)
+      dummy_encoder::make(int frame_size, bool pack, bool packed_bits)
       {
         return generic_encoder::sptr
-          (new dummy_encoder_impl(frame_size));
+          (new dummy_encoder_impl(frame_size, pack, packed_bits));
       }
 
-      dummy_encoder_impl::dummy_encoder_impl(int frame_size)
-        : generic_encoder("dummy_encoder")
+      dummy_encoder_impl::dummy_encoder_impl(int frame_size, bool pack, bool packed_bits)
+        : generic_encoder("dummy_encoder"),
+          d_pack_input(pack),
+          d_packed_bits_output(packed_bits)
       {
         d_max_frame_size = frame_size;
         set_frame_size(frame_size);
@@ -61,6 +63,18 @@ namespace gr {
       dummy_encoder_impl::get_input_size()
       {
         return d_frame_size;
+      }
+
+      const char*
+      dummy_encoder_impl::get_input_conversion()
+      {
+        return d_pack_input ? "pack" : "none";
+      }
+
+      const char*
+      dummy_encoder_impl::get_output_conversion()
+      {
+        return d_packed_bits_output ? "packed_bits" : "none";
       }
 
       bool

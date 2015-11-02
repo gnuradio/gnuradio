@@ -32,7 +32,6 @@ namespace gr {
     class pack_k_bits_bb_impl : public pack_k_bits_bb
     {
     private:
-      unsigned d_k;    // number of relevent bits to pack from k input bytes
       kernel::pack_k_bits *d_pack;
 
     public:

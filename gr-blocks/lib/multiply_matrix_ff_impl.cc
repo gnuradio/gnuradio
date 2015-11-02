@@ -31,6 +31,9 @@
 namespace gr {
   namespace blocks {
 
+    const int multiply_matrix_ff::TPP_SELECT_BY_MATRIX = 999;
+    const std::string multiply_matrix_ff::MSG_PORT_NAME_SET_A = "set_A";
+
     multiply_matrix_ff::sptr
     multiply_matrix_ff::make(std::vector<std::vector<float> > A, gr::block::tag_propagation_policy_t tag_propagation_policy)
     {
@@ -138,7 +141,7 @@ namespace gr {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong type).");
           return;
       }
-      if (!pmt::length(A) == d_A.size()) {
+      if (pmt::length(A) != d_A.size()) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong size).");
           return;
       }
@@ -178,7 +181,7 @@ namespace gr {
     void
     multiply_matrix_ff_impl::set_tag_propagation_policy(gr::block::tag_propagation_policy_t tpp)
     {
-      if (tpp == TPP_SELECT_BY_MATRIX) {
+      if (((int) tpp) == TPP_SELECT_BY_MATRIX) {
         set_tag_propagation_policy(TPP_DONT);
         d_tag_prop_select = true;
       } else {

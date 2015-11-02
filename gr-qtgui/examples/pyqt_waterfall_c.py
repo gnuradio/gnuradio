@@ -153,7 +153,7 @@ class my_top_block(gr.top_block):
         taps = filter.firdes.complex_band_pass_2(1, Rs, 1500, 2500, 100, 60)
 
         self.qapp = QtGui.QApplication(sys.argv)
-        ss = open('dark.qss')
+        ss = open(gr.prefix() + '/share/gnuradio/themes/dark.qss')
         sstext = ss.read()
         ss.close()
         self.qapp.setStyleSheet(sstext)
@@ -193,4 +193,3 @@ if __name__ == "__main__":
     tb.start()
     tb.qapp.exec_()
     tb.stop()
-

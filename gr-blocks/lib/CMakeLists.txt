@@ -188,6 +188,7 @@ list(APPEND gr_blocks_sources
     tcp_connection.cc
     tuntap_pdu_impl.cc
     tag_gate_impl.cc
+    tagged_stream_align_impl.cc
     tagged_stream_mux_impl.cc
     uchar_array_to_float.cc
     uchar_to_float_impl.cc
@@ -235,7 +236,7 @@ ENDIF(MSVC)
 
 list(APPEND blocks_libs
     gnuradio-runtime
-    volk
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${BLOCKS_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
@@ -250,18 +251,20 @@ GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONEN
 if(ENABLE_STATIC_LIBS)
   # Remove controlport-specific source files from staticlibs build
   if(ENABLE_GR_CTRLPORT)
-    list(REMOVE_ITEM gr_blocks_sources
-      ${blocks_ctrlport_sources}
-      )
+    if(ICE_FOUND)
+      list(REMOVE_ITEM gr_blocks_sources
+        ${blocks_ctrlport_sources}
+        )
 
-    # Remove GR_CTRLPORT set this target's definitions.
-    # Makes sure we don't try to use ControlPort stuff in source files
-    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
+      # Remove GR_CTRLPORT set this target's definitions.
+      # Makes sure we don't try to use ControlPort stuff in source files
+      GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
+      list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
+      SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
 
-    # readd it to the target since we removed it from the directory-wide list.
-    SET_PROPERTY(TARGET gnuradio-blocks APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+      # readd it to the target since we removed it from the directory-wide list.
+      SET_PROPERTY(TARGET gnuradio-blocks APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
+    endif(ICE_FOUND)
   endif(ENABLE_GR_CTRLPORT)
 
   add_library(gnuradio-blocks_static STATIC ${gr_blocks_sources})
@@ -286,11 +289,14 @@ if(ENABLE_TESTING)
 
   include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS})
   link_directories(${CPPUNIT_LIBRARY_DIRS})
 
   list(APPEND test_gr_blocks_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_flowgraph.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_set_msg_handler.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc

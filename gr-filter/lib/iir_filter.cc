@@ -28,7 +28,7 @@ namespace gr {
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, float>::filter(const gr_complex input)
+      iir_filter<gr_complex, gr_complex, float, gr_complex>::filter(const gr_complex input)
       {
 	gr_complex acc;
 	unsigned i = 0;
@@ -67,7 +67,7 @@ namespace gr {
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, double>::filter(const gr_complex input)
+      iir_filter<gr_complex, gr_complex, double, gr_complexd>::filter(const gr_complex input)
       {
 	gr_complexd acc;
 	unsigned i = 0;
@@ -106,7 +106,7 @@ namespace gr {
 
       template<>
       gr_complex
-      iir_filter<gr_complex, gr_complex, gr_complexd>::filter(const gr_complex input)
+      iir_filter<gr_complex, gr_complex, gr_complexd, gr_complexd>::filter(const gr_complex input)
       {
 	gr_complexd acc;
 	unsigned i = 0;

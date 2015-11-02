@@ -26,19 +26,22 @@ import gtk
 import Colors
 import os
 
+
 class InputParam(gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
+    expand = False
 
-    def __init__(self, param, callback=None):
+    def __init__(self, param, changed_callback=None, editing_callback=None):
         gtk.HBox.__init__(self)
         self.param = param
-        self._callback = callback
+        self._changed_callback = changed_callback
+        self._editing_callback = editing_callback
         self.label = gtk.Label() #no label, markup is added by set_markup
         self.label.set_size_request(150, -1)
         self.pack_start(self.label, False)
         self.set_markup = lambda m: self.label.set_markup(m)
         self.tp = None
-        self._changed_but_unchecked = False
+        self._have_pending_changes = False
         #connect events
         self.connect('show', self._update_gui)
     def set_color(self, color): pass
@@ -54,7 +57,7 @@ class InputParam(gtk.HBox):
             filter(lambda c: self.param.get_key() in c, self.param.get_parent()._callbacks)
         self.set_markup(Utils.parse_template(PARAM_LABEL_MARKUP_TMPL,
             param=self.param, has_cb=has_cb,
-            modified=self._changed_but_unchecked))
+            modified=self._have_pending_changes))
         #set the color
         self.set_color(self.param.get_color())
         #set the tooltip
@@ -69,8 +72,10 @@ class InputParam(gtk.HBox):
         """
         Mark this param as modified on change, but validate only on focus-lost
         """
-        self._changed_but_unchecked = True
+        self._have_pending_changes = True
         self._update_gui()
+        if self._editing_callback:
+            self._editing_callback()
 
     def _apply_change(self, *args):
         """
@@ -80,11 +85,24 @@ class InputParam(gtk.HBox):
         #set the new value
         self.param.set_value(self.get_text())
         #call the callback
-        if self._callback: self._callback(*args)
-        else: self.param.validate()
+        if self._changed_callback:
+            self._changed_callback(*args)
+        else:
+            self.param.validate()
         #gui update
-        self._changed_but_unchecked = False
+        self._have_pending_changes = False
         self._update_gui()
+
+    def _handle_key_press(self, widget, event):
+        if event.keyval == gtk.keysyms.Return and event.state & gtk.gdk.CONTROL_MASK:
+            self._apply_change(widget, event)
+            return True
+        return False
+
+    def apply_pending_changes(self):
+        if self._have_pending_changes:
+            self._apply_change()
+
 
 class EntryParam(InputParam):
     """Provide an entry box for strings and numbers."""
@@ -95,6 +113,7 @@ class EntryParam(InputParam):
         self._input.set_text(self.param.get_value())
         self._input.connect('changed', self._mark_changed)
         self._input.connect('focus-out-event', self._apply_change)
+        self._input.connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, True)
     def get_text(self): return self._input.get_text()
     def set_color(self, color):
@@ -106,6 +125,42 @@ class EntryParam(InputParam):
         except AttributeError:
             pass  # no tooltips for old GTK
 
+
+class MultiLineEntryParam(InputParam):
+    """Provide an multi-line box for strings."""
+    expand = True
+
+    def __init__(self, *args, **kwargs):
+        InputParam.__init__(self, *args, **kwargs)
+        self._buffer = gtk.TextBuffer()
+        self._buffer.set_text(self.param.get_value())
+        self._buffer.connect('changed', self._mark_changed)
+
+        self._view = gtk.TextView(self._buffer)
+        self._view.connect('focus-out-event', self._apply_change)
+        self._view.connect('key-press-event', self._handle_key_press)
+
+        self._sw = gtk.ScrolledWindow()
+        self._sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self._sw.add_with_viewport(self._view)
+
+        self.pack_start(self._sw, True)
+
+    def get_text(self):
+        return self._buffer.get_text(self._buffer.get_start_iter(),
+                                     self._buffer.get_end_iter()).strip()
+
+    def set_color(self, color):
+        self._view.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+        self._view.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+
+    def set_tooltip_text(self, text):
+        try:
+            self._view.set_tooltip_text(text)
+        except AttributeError:
+            pass  # no tooltips for old GTK
+
+
 class EnumParam(InputParam):
     """Provide an entry box for Enum types with a drop down menu."""
 
@@ -114,6 +169,7 @@ class EnumParam(InputParam):
         self._input = gtk.combo_box_new_text()
         for option in self.param.get_options(): self._input.append_text(option.get_name())
         self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
+        self._input.connect('changed', self._editing_callback)
         self._input.connect('changed', self._apply_change)
         self.pack_start(self._input, False)
     def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
@@ -122,6 +178,7 @@ class EnumParam(InputParam):
             self._input.set_tooltip_text(text)
         except AttributeError:
             pass  # no tooltips for old GTK
+
 
 class EnumEntryParam(InputParam):
     """Provide an entry box and drop down menu for Raw Enum types."""
@@ -137,6 +194,7 @@ class EnumEntryParam(InputParam):
         self._input.connect('changed', self._apply_change)
         self._input.get_child().connect('changed', self._mark_changed)
         self._input.get_child().connect('focus-out-event', self._apply_change)
+        self._input.get_child().connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, False)
     def get_text(self):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
@@ -191,6 +249,7 @@ class FileParam(EntryParam):
         if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
             file_path = file_dialog.get_filename() #get the file path
             self._input.set_text(file_path)
+            self._editing_callback()
             self._apply_change()
         file_dialog.destroy() #destroy the dialog
 
@@ -229,6 +288,7 @@ Error:
     #end for
 #end if"""
 
+
 class Param(Element):
     """The graphical parameter."""
 
@@ -245,15 +305,21 @@ class Param(Element):
             gtk input class
         """
         if self.get_type() in ('file_open', 'file_save'):
-            return FileParam(self, *args, **kwargs)
+            input_widget = FileParam(self, *args, **kwargs)
 
         elif self.is_enum():
-            return EnumParam(self, *args, **kwargs)
+            input_widget = EnumParam(self, *args, **kwargs)
 
         elif self.get_options():
-            return EnumEntryParam(self, *args, **kwargs)
+            input_widget = EnumEntryParam(self, *args, **kwargs)
 
-        return EntryParam(self, *args, **kwargs)
+        elif self.get_type() == 'multiline':
+            input_widget = MultiLineEntryParam(self, *args, **kwargs)
+
+        else:
+            input_widget = EntryParam(self, *args, **kwargs)
+
+        return input_widget
 
     def get_markup(self):
         """

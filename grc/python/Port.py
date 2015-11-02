@@ -100,14 +100,11 @@ class Port(_Port, _GUIPort):
         elif n['domain'] == GR_MESSAGE_DOMAIN:
             n['key'] = n['name']
             n['type'] = 'message'  # for port color
-        if n['type'] == 'msg': n['key'] = 'msg'
-        if dir == 'source' and not n.find('key'):
-            n['key'] = str(block._source_count)
-            block._source_count += 1
-        if dir == 'sink' and not n.find('key'):
-            n['key'] = str(block._sink_count)
-            block._sink_count += 1
-        #build the port
+        if n['type'] == 'msg':
+            n['key'] = 'msg'
+        if not n.find('key'):
+            n['key'] = str(next(block.port_counters[dir == 'source']))
+        # build the port
         _Port.__init__(
             self,
             block=block,

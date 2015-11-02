@@ -121,6 +121,7 @@ namespace gr {
 
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
+      virtual void set_time_title(const std::string &title) = 0;
       virtual void set_line_label(int which, const std::string &line) = 0;
       virtual void set_line_alpha(int which, double alpha) = 0;
       virtual void set_color_map(int which, const int color) = 0;
@@ -145,6 +146,7 @@ namespace gr {
 
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_grid(bool en=true) = 0;
+      virtual void disable_legend() = 0;
 
       QApplication *d_qApplication;
     };

@@ -248,12 +248,37 @@ namespace gr {
        locks the mutex itself.
 
        If this function is used elsewhere, remember to lock the
-       buffer's mutex al la the scoped_lock line below.
-    */
-    std::multimap<uint64_t, tag_t>::iterator end_itr = d_item_tags.lower_bound(max_time);
-    std::multimap<uint64_t, tag_t>::iterator begin_itr = d_item_tags.begin();
-    d_item_tags.erase(begin_itr, end_itr);
-  }
+       buffer's mutex al la the scoped_lock:
+           gr::thread::scoped_lock guard(*mutex());
+     */
+
+    /*
+      http://www.cplusplus.com/reference/map/multimap/erase/
+      "Iterators, pointers and references referring to elements removed
+      by the function are invalidated. All other iterators, pointers
+      and references keep their validity."
+
+      Store the iterator to be deleted in tmp; increment itr to the
+      next valid iterator, then erase tmp, which now becomes invalid.
+     */
+
+    uint64_t item_time;
+   std::multimap<uint64_t,tag_t>::iterator itr(d_item_tags.begin()), tmp;
+    while(itr != d_item_tags.end()) {
+      item_time = (*itr).second.offset;
+      if(item_time+d_max_reader_delay + bufsize() < max_time) {
+        tmp = itr;
+       itr++;
+        d_item_tags.erase(tmp);
+      }
+      else {
+        // d_item_tags is a map sorted by offset, so when the if
+        // condition above fails, all future tags in the map must also
+        // fail. So just break here.
+        break;
+      }
+    }
+   }
 
   long
   buffer_ncurrently_allocated()

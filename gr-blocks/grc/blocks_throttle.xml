@@ -7,7 +7,7 @@
 <block>
 	<name>Throttle</name>
 	<key>blocks_throttle</key>
-	<throttle>1</throttle>
+	<flags>throttle</flags>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.throttle($type.size*$vlen, $samples_per_second,$ignoretag)</make>
         <callback>set_sample_rate($samples_per_second)</callback>

@@ -35,7 +35,10 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
 
   // Set up a grid that can be turned on/off
   d_grid = new QwtPlotGrid();
-  d_grid->setPen(QPen(QColor(Qt::gray)));
+  QPen *gridpen = new QPen(Qt::DashLine);
+  gridpen->setWidthF(0.25);
+  gridpen->setColor(Qt::gray);
+  d_grid->setPen(*gridpen);
 
   // Create a set of actions for the menu
   d_stop_act = new QAction("Stop", this);
@@ -135,8 +138,8 @@ DisplayForm::~DisplayForm()
 void
 DisplayForm::resizeEvent( QResizeEvent *e )
 {
-  QSize s = size();
-  emit d_display_plot->resizeSlot(&s);
+  //QSize s = size();
+  //emit d_display_plot->resizeSlot(&s);
 }
 
 void
@@ -331,6 +334,7 @@ DisplayForm::setGrid(bool on)
     d_grid->detach();
     d_grid_state = false;
   }
+  d_grid_act->setChecked(on);
   d_display_plot->replot();
 }
 
@@ -369,4 +373,10 @@ DisplayForm::saveFigure()
   }
 
   delete filebox;
+}
+
+void
+DisplayForm::disableLegend()
+{
+  d_display_plot->disableLegend();
 }

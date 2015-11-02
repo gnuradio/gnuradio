@@ -50,5 +50,41 @@
       <block>dtv_atsc_trellis_encoder</block>
       <block>dtv_atsc_field_sync_mux</block>
     </cat>
+    <cat>
+      <name>DVB</name>
+      <block>dtv_dvb_bbheader_bb</block>
+      <block>dtv_dvb_bbscrambler_bb</block>
+      <block>dtv_dvb_bch_bb</block>
+      <block>dtv_dvb_ldpc_bb</block>
+    </cat>
+    <cat>
+      <name>DVB-T2</name>
+      <block>dtv_dvbt2_interleaver_bb</block>
+      <block>dtv_dvbt2_modulator_bc</block>
+      <block>dtv_dvbt2_cellinterleaver_cc</block>
+      <block>dtv_dvbt2_framemapper_cc</block>
+      <block>dtv_dvbt2_freqinterleaver_cc</block>
+      <block>dtv_dvbt2_pilotgenerator_cc</block>
+      <block>dtv_dvbt2_paprtr_cc</block>
+      <block>dtv_dvbt2_p1insertion_cc</block>
+      <block>dtv_dvbt2_miso_cc</block>
+    </cat>
+    <cat>
+      <name>DVB-S2</name>
+      <block>dtv_dvbs2_interleaver_bb</block>
+      <block>dtv_dvbs2_modulator_bc</block>
+      <block>dtv_dvbs2_physical_cc</block>
+    </cat>
+    <cat>
+      <name>DVB-T</name>
+      <block>dtv_dvbt_energy_dispersal</block>
+      <block>dtv_dvbt_reed_solomon_enc</block>
+      <block>dtv_dvbt_convolutional_interleaver</block>
+      <block>dtv_dvbt_inner_coder</block>
+      <block>dtv_dvbt_bit_inner_interleaver</block>
+      <block>dtv_dvbt_symbol_inner_interleaver</block>
+      <block>dtv_dvbt_map</block>
+      <block>dtv_dvbt_reference_signals</block>
+    </cat>
   </cat>
 </cat>

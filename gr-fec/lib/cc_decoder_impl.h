@@ -85,7 +85,6 @@ namespace gr {
         int parity(int x);
         int parityb(unsigned char x);
         void partab_init(void);
-        std::map<std::string, conv_kernel> yp_kernel;
 
       public:
         cc_decoder_impl(int frame_size, int k,

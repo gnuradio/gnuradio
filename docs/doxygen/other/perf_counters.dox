@@ -1,6 +1,6 @@
 /*! \page page_perf_counters Performance Counters
 
-\section Introduction
+\section pc_introduction Introduction
 
 Each block can have a set of Performance Counters that the schedule
 keeps track of. These counters measure and store information about
@@ -84,5 +84,15 @@ The options for the [PerfCounters] section are:
 \li export: Allow counters to be exported over ControlPort.
 \li clock: sets the type of clock used when calculating work_time
 ('thread' or 'monotonic').
+
+
+\section pc_perfmonitor Performance Monitor
+
+See \ref perfmonitor for some details of using a ControlPort-based
+monitor application, gr-perf-monitorx, for visualizing the
+counters. This application is particularly useful in learning which
+blocks are the computationally complex blocks that could use extra
+optimization or work to improve their performance. It can also be used
+to understand the current 'health' of the application.
 
 */

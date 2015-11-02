@@ -188,6 +188,10 @@ namespace gr {
             // write out field sync...
             atsc_data_segment field_sync;
 
+            field_sync.pli._flags = 0;
+            field_sync.pli._segno = 0;
+            memset(field_sync._pad_, 0, atsc_data_segment::NPAD);
+
             if (in[index].pli.in_field1_p()) {
               init_field_sync_1(&field_sync, d_saved_symbols);
             }
