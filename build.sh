@@ -48,8 +48,9 @@ function check_uhd(){
 }
 
 function init_build_dir(){
-    local build_dir="$1"
-    local base_dir="$2"
+    local base_dir="$1"
+    local build_dir="$2"
+    local version="$3"
     local deb_dir="${build_dir}/deb/DEBIAN"
     mkdir -p "${build_dir}"
     cp -r "${base_dir}/deb" "${build_dir}/"
@@ -198,7 +199,7 @@ function main(){
     check_dirty
     local version="$(calculate_version)"
 
-    init_build_dir "${build_dir}" "${version}"
+    init_build_dir "${base_dir}" "${build_dir}" "${version}"
 
     popd
 
