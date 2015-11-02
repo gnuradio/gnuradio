@@ -1,0 +1,196 @@
+#!/bin/bash -e
+
+function canon_path {
+    if [ -d "$1" ] ; then
+        canon_dirname "$@"
+    else
+        echo $(canon_dirname "$@")/$(basename "$@")
+    fi
+}
+
+function canon_dirname {
+    # dirname isn't smart enough to check if the argument is already a
+    # directory, it just gives you one up (unless you give it /, of
+    # course)
+    local dir=$(dirname "$1")
+
+    # initially, we assume that the argument is a file path, not a
+    # directory path.  We therefore assume that we will have to change
+    # to the dirname from above to discover the canonical directory
+    # path
+    local tgt="${dir}"
+
+    # if we are proven wrong, and have been passed a directory, then
+    # the target is adjusted accordingly
+    if [ -d "${1}" ] ; then
+        tgt="$1"
+    fi
+
+    # now that we know where to go, we go there, echo the canonical
+    # path, and go back
+    pushd "${tgt}" > /dev/null 2>&1
+    pwd
+    popd > /dev/null 2>&1
+}
+
+function base_dir(){
+    canon_dirname "$(dirname $0)"
+}
+
+function check_uhd(){
+    if ! dpkg -s uhd > /dev/null ; then
+        if apt-cache policy uhd > /dev/null 1>&2; then
+            echo "uhd is not installed and isn't available in apt.  See https://github.com/nsat/uhd"
+            exit 
+        fi
+        sudo apt-get install uhd
+    fi
+}
+
+function init_build_dir(){
+    local build_dir="$1"
+    mkdir -p "${build_dir}"
+    cp -r "${build_dir}/../deb" "${build_dir}/"
+    sed -i "s/__version__/${version}/" "${build_dir}/deb/DEBIAN/control"
+}
+
+function check_dirty(){
+    local dirty=$(git status --porcelain)
+    if [[ ! -z $dirty ]]; then
+        cat << MSG
+
+    WARNING: Git repo is dirty (see git status --porcelain).  We'll
+             still build a debian file and it'll supercede previous
+             versions, but it shouldn't be used in production.
+
+MSG
+
+        read -p "Continue (Y/n): " continue
+        if [ "$continue" == "n" -o "$continue" == "N" ]; then
+            popd
+            exit 0
+        fi
+    fi
+}
+
+function calculate_version(){
+
+    local dirty=$(git status --porcelain)
+
+    if [[ ! -z $dirty ]]; then
+        # If repo is dirty, we use wall clock for timestamp instead of
+        # last commit time to make this a newer version of the package
+        timestamp=$(date +%s%3N)
+        suffix="+dirty"
+    else
+        timestamp=$(git log -n1 --format="%at")
+        suffix=""
+    fi
+
+    # setup version identifier
+    local tag=$(git describe --abbrev=0 --tags | cut -b 2-) # ignore the leading 'v'
+    local sha=$(git rev-parse HEAD | cut -b 1-8)
+
+    if [ -z $tag -o -z $sha -o -z $timestamp ]; then 
+        echo "ERROR: Unable to retrieve required git identifiers to set version.  Quitting."
+        popd
+        exit 1
+    fi
+    # version format has semantic meaning.  We prioritize on
+    # timestamp.  Read debian docs before modifying.
+    # https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version
+    echo "$tag-spire.$timestamp.$sha$suffix"
+}
+
+function install_packages(){
+base_pkgs="
+build-essential
+git
+cmake
+git-core
+autoconf
+automake
+g++
+libfftw3-dev
+libcppunit-dev
+python-cheetah
+sdcc
+guile-2.0
+ccache
+libgsl0-dev
+libusb-dev
+alsa-base
+libasound2
+libasound2-dev
+python-scipy
+libtool
+python-dev
+swig
+pkg-config
+libfftw3-dev
+libcppunit-dev
+libgsl0-dev
+libusb-dev
+sdcc
+libsdl1.2-dev
+python-wxgtk2.8
+python-numpy
+python-cheetah
+python-lxml
+doxygen
+libxi-dev
+libfontconfig1-dev
+libxrender-dev
+sphinx-common
+python-gtk2
+python-lxml
+libzeroc-ice35-dev
+libzmq-dev
+libboost-all-dev
+"
+qt_pkgs="
+libqwt-dev
+python-qt4
+"
+sudo apt-get install ${base_pkgs} ${qt_pkgs}
+}
+
+function num_threads(){
+    local n="$(( $(cat /proc/cpuinfo  | grep processor | wc -l) * 3))"
+    [ ${n} -lt 3 ] && echo 3 || echo ${n}
+}
+
+function build_and_debify(){
+    local version="$1"
+    #cmake ..
+    #make -j $(num_threads)
+    #sudo make install DESTDIR=deb
+    sudo chmod -R a+rX deb
+    dpkg-deb -b deb gnuradio-$version.deb
+}
+
+function main(){
+
+    install_packages
+
+    local base_dir="$(base_dir)"
+    local build_dir="${base_dir}/build"
+    
+    # this is now a controlled environment, so we don't need this anymore
+    # check_uhd
+
+    pushd "${base_dir}"
+
+    check_dirty
+    local version="$(calculate_version)"
+
+    init_build_dir "${build_dir}" "${version}"
+
+    popd
+
+    pushd "${build_dir}"
+    build_and_debify "${version}"
+    popd
+}
+
+main "$@"

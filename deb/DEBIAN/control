@@ -1,0 +1,27 @@
+Package: gnuradio
+Version: __version__
+Section: devel
+Priority: optional
+Architecture: amd64
+Depends: uhd,
+         python,
+         python-numpy,
+         python-gtk2,
+         python-lxml,
+         python-cheetah,
+         libpulse0,
+         alsa-base,
+         libqtcore4,
+         libqwt-dev,
+         python-qt4,
+         libsdl1.2debian,
+         libgsl0ldbl,
+         libboost-all-dev,
+         libcppunit-dev,
+         pkg-config,
+         libfftw3-dev,
+         python-serial,
+         swig
+Installed-Size: 264662
+Maintainer: jint@spire.com
+Description: Customized build of GNU Radio with necessary dependencies for gs-link
