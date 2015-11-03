@@ -159,7 +159,7 @@ namespace gr {
           d_cr_k = 3; d_cr_n = 4; d_cr_p = 3;
           break;
         case C5_6:
-          d_cr_k = 5; d_cr_k = 6; d_cr_p = 5;
+          d_cr_k = 5; d_cr_n = 6; d_cr_p = 5;
           break;
         case C7_8:
           d_cr_k = 7; d_cr_n = 8; d_cr_p = 7;
