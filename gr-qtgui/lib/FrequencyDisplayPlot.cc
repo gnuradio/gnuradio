@@ -179,14 +179,14 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 
   d_marker_noise_floor_amplitude = new QwtPlotMarker();
   d_marker_noise_floor_amplitude->setLineStyle(QwtPlotMarker::HLine);
-  QColor d_default_marker_noise_floor_amplitude_color = Qt::darkRed;
-  setMarkerNoiseFloorAmplitudeColor(d_default_marker_noise_floor_amplitude_color);
+  QColor default_marker_noise_floor_amplitude_color = Qt::darkRed;
+  setMarkerNoiseFloorAmplitudeColor(default_marker_noise_floor_amplitude_color);
   d_marker_noise_floor_amplitude->attach(this);
 
   d_marker_cf= new QwtPlotMarker();
   d_marker_cf->setLineStyle(QwtPlotMarker::VLine);
-  QColor d_default_marker_cf_color = Qt::lightGray;
-  setMarkerCFColor(d_default_marker_cf_color);
+  QColor default_marker_cf_color = Qt::lightGray;
+  setMarkerCFColor(default_marker_cf_color);
   d_marker_cf->attach(this);
   d_marker_cf->hide();
 
