@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2013 Free Software Foundation, Inc.
+ * Copyright 2014,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,10 +33,10 @@ namespace gr {
     class @NAME_IMPL@ : public @NAME@
     {
     private:
-      size_t d_vlen;
+      size_t d_vlen, d_vlen_out;
 
     public:
-      @NAME_IMPL@(size_t vlen);
+      @NAME_IMPL@(size_t vlen, size_t vlen_out);
       ~@NAME_IMPL@();
 
       int work(int noutput_items,
