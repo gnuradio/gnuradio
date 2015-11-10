@@ -64,7 +64,7 @@ namespace gr {
       if(d_vlen_out == 1)
 	for(int i = 0; i < noutput_items; i++) {
 	  @I_TYPE@ max = ((@I_TYPE@ *)input_items[0])[i*d_vlen];
-	  
+
 	  for(int j = 0; j < (int)d_vlen; j++ ) {
 	    for(int k = 0; k < ninputs; k++) {
 	      if(((@I_TYPE@ *)input_items[k])[i*d_vlen + j] > max) {
@@ -72,23 +72,23 @@ namespace gr {
 	      }
 	    }
 	  }
-	  
+
 	  *optr++ = (@O_TYPE@)max;
 	}
 
       else // vector mode output
-	for(int i = 0; i < noutput_items * d_vlen_out; i++) {
+	for(size_t i = 0; i < (size_t)noutput_items * d_vlen_out; i++) {
 	  @I_TYPE@ max = ((@I_TYPE@ *)input_items[0])[i];
-	  
+
 	  for(int k = 1; k < ninputs; k++) {
 	    if(((@I_TYPE@ *)input_items[k])[i] > max) {
 	      max = ((@I_TYPE@*)input_items[k])[i];
 	    }
 	  }
-	  
+
 	  *optr++ = (@O_TYPE@)max;
 	}
-      
+
       return noutput_items;
     }
 
