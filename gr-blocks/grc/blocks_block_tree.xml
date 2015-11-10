@@ -202,6 +202,7 @@
       <block>blocks_complex_to_interleaved_char</block>
       <block>blocks_complex_to_interleaved_short</block>
       <block>blocks_complex_to_float</block>
+      <block>blocks_complex_to_magphase</block>
       <block>blocks_complex_to_imag</block>
       <block>blocks_complex_to_real</block>
       <block>blocks_complex_to_mag</block>
@@ -209,6 +210,7 @@
       <block>blocks_complex_to_arg</block>
       <block>blocks_float_to_char</block>
       <block>blocks_float_to_complex</block>
+      <block>blocks_magphase_to_complex</block>
       <block>blocks_float_to_int</block>
       <block>blocks_float_to_short</block>
       <block>blocks_float_to_uchar</block>

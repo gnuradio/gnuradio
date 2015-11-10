@@ -88,6 +88,7 @@ install(FILES
     check_lfsr_32k_s.h
     complex_to_interleaved_short.h
     complex_to_float.h
+    complex_to_magphase.h
     complex_to_imag.h
     complex_to_real.h
     complex_to_mag.h
@@ -106,6 +107,7 @@ install(FILES
     file_meta_source.h
     float_to_char.h
     float_to_complex.h
+    magphase_to_complex.h
     float_to_int.h
     float_to_short.h
     float_to_uchar.h

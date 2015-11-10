@@ -103,6 +103,7 @@ list(APPEND gr_blocks_sources
     complex_to_interleaved_char_impl.cc
     complex_to_interleaved_short_impl.cc
     complex_to_float_impl.cc
+    complex_to_magphase_impl.cc
     complex_to_real_impl.cc
     complex_to_imag_impl.cc
     complex_to_mag_impl.cc
@@ -121,6 +122,7 @@ list(APPEND gr_blocks_sources
     file_meta_source_impl.cc
     float_to_char_impl.cc
     float_to_complex_impl.cc
+    magphase_to_complex_impl.cc
     float_array_to_int.cc
     float_to_int_impl.cc
     float_to_short_impl.cc
