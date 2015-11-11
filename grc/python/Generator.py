@@ -24,6 +24,7 @@ import tempfile
 import shlex
 import codecs
 from distutils.spawn import find_executable
+
 from Cheetah.Template import Template
 
 from .. gui import Messages
@@ -152,11 +153,12 @@ class TopBlockGenerator(object):
         """
         output = list()
 
-        title = self._flow_graph.get_option('title') or self._flow_graph.get_option('id').replace('_', ' ').title()
-        imports = self._flow_graph.get_imports()
-        variables = self._flow_graph.get_variables()
-        parameters = self._flow_graph.get_parameters()
-        monitors = self._flow_graph.get_monitors()
+        fg = self._flow_graph
+        title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
+        imports = fg.get_imports()
+        variables = fg.get_variables()
+        parameters = fg.get_parameters()
+        monitors = fg.get_monitors()
 
         # list of blocks not including variables and imports and parameters and disabled
         def _get_block_sort_text(block):
@@ -172,7 +174,7 @@ class TopBlockGenerator(object):
             return code
 
         blocks = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.iter_blocks()),
+            filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.iter_blocks()),
             lambda b: b.get_id(), _get_block_sort_text
         )
         # List of regular blocks (all blocks minus the special ones)
@@ -186,14 +188,14 @@ class TopBlockGenerator(object):
 
         # Filter out virtual sink connections
         cf = lambda c: not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
-        connections = filter(cf, self._flow_graph.get_enabled_connections())
+        connections = filter(cf, fg.get_enabled_connections())
 
-        # Get the virtual blocks and resolve their conenctions
+        # Get the virtual blocks and resolve their connections
         virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
         for connection in virtual:
             source = connection.get_source().resolve_virtual_source()
             sink = connection.get_sink()
-            resolved = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source, portb=sink)
+            resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
             connections.append(resolved)
             # Remove the virtual connection
             connections.remove(connection)
@@ -203,7 +205,7 @@ class TopBlockGenerator(object):
         # that bypass the selected block and remove the existing ones. This allows adjacent
         # bypassed blocks to see the newly created connections to downstream blocks,
         # allowing them to correctly construct bypass connections.
-        bypassed_blocks = self._flow_graph.get_bypassed_blocks()
+        bypassed_blocks = fg.get_bypassed_blocks()
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
@@ -222,7 +224,7 @@ class TopBlockGenerator(object):
                     # Ignore disabled connections
                     continue
                 sink_port = sink.get_sink()
-                connection = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source_port, portb=sink_port)
+                connection = fg.get_parent().Connection(flow_graph=fg, porta=source_port, portb=sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)
@@ -235,8 +237,8 @@ class TopBlockGenerator(object):
             c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
         ))
 
-        connection_templates = self._flow_graph.get_parent().get_connection_templates()
-        msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
+        connection_templates = fg.get_parent().get_connection_templates()
+        msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
         # list of variable names
         var_ids = [var.get_id() for var in parameters + variables]
         # prepend self.
@@ -244,7 +246,7 @@ class TopBlockGenerator(object):
         # list of callbacks
         callbacks = [
             expr_utils.expr_replace(cb, replace_dict)
-            for cb in sum([block.get_callbacks() for block in self._flow_graph.get_enabled_blocks()], [])
+            for cb in sum([block.get_callbacks() for block in fg.get_enabled_blocks()], [])
         ]
         # map var id to callbacks
         var_id2cbs = dict([
@@ -255,7 +257,7 @@ class TopBlockGenerator(object):
         namespace = {
             'title': title,
             'imports': imports,
-            'flow_graph': self._flow_graph,
+            'flow_graph': fg,
             'variables': variables,
             'parameters': parameters,
             'monitors': monitors,

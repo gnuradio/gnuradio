@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
+import re
+from operator import methodcaller
 
-import expr_utils
+from . import expr_utils
 from .. base.FlowGraph import FlowGraph as _FlowGraph
 from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
-import re
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
@@ -181,8 +182,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.get_enabled_blocks())
-        return expr_utils.sort_objects(variables, lambda v: v.get_id(), lambda v: v.get_var_make())
+        variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.iter_enabled_blocks())
+        return expr_utils.sort_objects(variables, methodcaller('get_id'), methodcaller('get_var_make'))
 
     def get_parameters(self):
         """
@@ -191,16 +192,16 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         Returns:
             a list of paramterized variables
         """
-        parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.get_enabled_blocks())
+        parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.iter_enabled_blocks())
         return parameters
 
     def get_monitors(self):
         """
         Get a list of all ControlPort monitors
         """
-        monitors = filter(lambda b: _monitors_searcher.search(b.get_key()), self.get_enabled_blocks())
+        monitors = filter(lambda b: _monitors_searcher.search(b.get_key()),
+                          self.iter_enabled_blocks())
         return monitors
-
 
     def get_bussink(self):
         bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
