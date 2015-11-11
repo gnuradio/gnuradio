@@ -125,7 +125,7 @@ class BlockTreeWindow(gtk.VBox):
         if treestore is None: treestore = self.treestore
         if categories is None: categories = self._categories
 
-        if isinstance(category, str): category = category.split('/')
+        if isinstance(category, (str, unicode)): category = category.split('/')
         category = tuple(filter(lambda x: x, category)) #tuple is hashable
         #add category and all sub categories
         for i, cat_name in enumerate(category):

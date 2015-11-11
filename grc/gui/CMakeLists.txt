@@ -19,6 +19,7 @@
 
 ########################################################################
 GR_PYTHON_INSTALL(FILES
+    external_editor.py
     Block.py
     Colors.py
     Constants.py
