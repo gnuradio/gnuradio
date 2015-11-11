@@ -79,7 +79,7 @@ class TopBlockGenerator(object):
         self._flow_graph = flow_graph
         self._generate_options = self._flow_graph.get_option('generate_options')
         self._mode = TOP_BLOCK_FILE_MODE
-        dirname = os.path.dirname(file_path)
+        dirname = self._dirname = os.path.dirname(file_path)
         # handle the case where the directory is read-only
         # in this case, use the system's temp directory
         if not os.access(dirname, os.W_OK):
@@ -108,12 +108,14 @@ class TopBlockGenerator(object):
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
         # generate
-        with codecs.open(self.get_file_path(), 'w', encoding = 'utf-8') as fp:
-            fp.write(self._build_python_code_from_template())
-        try:
-            os.chmod(self.get_file_path(), self._mode)
-        except:
-            pass
+        for filename, data in self._build_python_code_from_template():
+            with codecs.open(filename, 'w', encoding='utf-8') as fp:
+                fp.write(data)
+            if filename == self.get_file_path():
+                try:
+                    os.chmod(filename, self._mode)
+                except:
+                    pass
 
     def get_popen(self):
         """
@@ -148,6 +150,8 @@ class TopBlockGenerator(object):
         Returns:
             a string of python code
         """
+        output = list()
+
         title = self._flow_graph.get_option('title') or self._flow_graph.get_option('id').replace('_', ' ').title()
         imports = self._flow_graph.get_imports()
         variables = self._flow_graph.get_variables()
@@ -173,6 +177,12 @@ class TopBlockGenerator(object):
         )
         # List of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
+
+        for block in blocks:
+            if block.get_key() == 'epy_block':
+                file_path = os.path.join(self._dirname, block.get_id() + '.py')
+                src = block.get_param('_source_code').get_value()
+                output.append((file_path, src))
 
         # Filter out virtual sink connections
         cf = lambda c: not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
@@ -258,7 +268,8 @@ class TopBlockGenerator(object):
         }
         # build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
-        return str(t)
+        output.append((self.get_file_path(), str(t)))
+        return output
 
 
 class HierBlockGenerator(TopBlockGenerator):

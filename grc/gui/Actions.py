@@ -170,6 +170,7 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
 # Actions
 ########################################################################
 PAGE_CHANGE = Action()
+EXTERNAL_UPDATE = Action()
 FLOW_GRAPH_NEW = Action(
     label='_New',
     tooltip='Create a new flow graph',

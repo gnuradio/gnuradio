@@ -18,12 +18,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import random
+import functools
 from itertools import chain
 from operator import methodcaller
 
+import gobject
+
 from . import Actions, Colors, Utils, Messages, Bars
-from .Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
-from .Element import Element
+from . Element import Element
+from . Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
+from . external_editor import ExternalEditor
 
 
 class FlowGraph(Element):
@@ -54,6 +58,35 @@ class FlowGraph(Element):
         #context menu
         self._context_menu = Bars.ContextMenu()
         self.get_context_menu = lambda: self._context_menu
+
+        self._external_updaters = {}
+
+    def install_external_editor(self, param):
+        target = (param.get_parent().get_id(), param.get_key())
+
+        if target in self._external_updaters:
+            editor = self._external_updaters[target]
+        else:
+            updater = functools.partial(
+                self.handle_external_editor_change, target=target)
+            editor = self._external_updaters[target] = ExternalEditor(
+                name=target[0], value=param.get_value(),
+                callback=functools.partial(gobject.idle_add, updater)
+            )
+            editor.start()
+        editor.open_editor()
+
+    def handle_external_editor_change(self, new_value, target):
+        try:
+            block_id, param_key = target
+            self.get_block(block_id).get_param(param_key).set_value(new_value)
+
+        except (IndexError, ValueError):  # block no longer exists
+            self._external_updaters[target].stop()
+            del self._external_updaters[target]
+            return
+        Actions.EXTERNAL_UPDATE()
+
 
     ###########################################################################
     # Access Drawing Area

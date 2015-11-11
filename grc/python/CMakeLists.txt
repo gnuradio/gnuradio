@@ -21,6 +21,7 @@
 GR_PYTHON_INSTALL(FILES
     expr_utils.py
     extract_docs.py
+    epy_block_io.py
     Block.py
     Connection.py
     Constants.py

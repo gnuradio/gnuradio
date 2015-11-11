@@ -20,8 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import pygtk
 pygtk.require('2.0')
 import gtk
-import Utils
-import Actions
+
+from . import Utils, Actions, Constants
 
 
 class SimpleTextDisplay(gtk.TextView):
@@ -234,3 +234,22 @@ def MissingXTermDialog(xterm):
                 "\n"
                 "(This message is shown only once)").format(xterm)
     )
+
+
+def ChooseEditorDialog():
+    file_dialog = gtk.FileChooserDialog(
+        'Open a Data File...', None,
+        gtk.FILE_CHOOSER_ACTION_OPEN,
+        ('gtk-cancel', gtk.RESPONSE_CANCEL, 'gtk-open', gtk.RESPONSE_OK)
+    )
+    file_dialog.set_select_multiple(False)
+    file_dialog.set_local_only(True)
+    file_dialog.set_current_folder('/usr/bin')
+    response = file_dialog.run()
+
+    if response == gtk.RESPONSE_OK:
+        file_path = file_dialog.get_filename()
+        Constants.prefs.set_string('grc', 'editor', file_path)
+        Constants.prefs.save()
+        Constants.EDITOR = file_path
+    file_dialog.destroy()
