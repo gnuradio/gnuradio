@@ -109,7 +109,7 @@ class TopBlockGenerator(object):
                                       "removing the throttle block.")
         # generate
         for filename, data in self._build_python_code_from_template():
-            with open(filename, 'w', encoding='utf-8') as fp:
+            with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
             if filename == self.get_file_path():
                 try:
