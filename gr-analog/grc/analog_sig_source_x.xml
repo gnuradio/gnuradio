@@ -97,6 +97,11 @@
 		<value>0</value>
 		<type>$type.offset_type</type>
 	</param>
+	<sink>
+		<name>freq</name>
+		<type>message</type>
+		<optional>1</optional>
+	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>

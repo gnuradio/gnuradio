@@ -21,7 +21,7 @@
 #
 
 import math
-
+import pmt
 from gnuradio import gr, gr_unittest, analog, blocks
 
 class test_sig_source(gr_unittest.TestCase):
@@ -155,6 +155,20 @@ class test_sig_source(gr_unittest.TestCase):
         tb.run()
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
+
+    def test_freq_msg(self):
+        src = analog.sig_source_c(8, analog.GR_SIN_WAVE, 1.0, 1.0)
+        op = blocks.head(gr.sizeof_gr_complex, 9)
+        snk = blocks.vector_sink_c()
+        self.tb.connect(src, op, snk)
+        self.assertAlmostEqual(src.frequency(), 1.0)
+
+        frequency = 3.0
+        src._post(pmt.to_pmt('freq'), pmt.from_double(frequency))
+        self.tb.run()
+
+        self.assertAlmostEqual(src.frequency(), frequency)
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_sig_source, "test_sig_source.xml")
