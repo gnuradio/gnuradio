@@ -221,8 +221,6 @@ class PythonEditorParam(InputParam):
         self.pack_start(button, True)
 
     def open_editor(self, widget=None):
-        if not os.path.exists(Constants.EDITOR):
-            Dialogs.ChooseEditorDialog()
         flowgraph = self.param.get_parent().get_parent()
         flowgraph.install_external_editor(self.param)
 
