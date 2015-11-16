@@ -241,7 +241,8 @@ namespace gr {
       d_blocks(blocks), d_fft_length(fft_length), d_cp_length(cp_length), d_snr(snr),
       d_index(0), d_phase(0.0), d_phaseinc(0.0), d_cp_found(0), d_count(0), d_nextphaseinc(0), d_nextpos(0), \
         d_sym_acq_count(0),d_sym_acq_timeout(100), d_initial_acquisition(0), \
-        d_freq_correction_count(0), d_freq_correction_timeout(0)
+        d_freq_correction_count(0), d_freq_correction_timeout(0), d_cp_start(0), \
+        d_to_consume(0), d_to_out(0)
     {
       set_relative_rate(1.0 / (double) (d_cp_length + d_fft_length));
 
