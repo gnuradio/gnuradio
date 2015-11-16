@@ -332,7 +332,7 @@ namespace gr {
           eta_mod = 6;
           break;
       }
-      N_P2 = 0;
+      N_P2 = 1;
       C_P2 = 0;
       N_FC = 0;
       C_FC = 0;

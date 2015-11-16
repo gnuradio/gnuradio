@@ -629,9 +629,7 @@ namespace gr {
       y = 0x3FFFF;
 
       for (int n = 0; n < gold_code; n++) {
-        xa = parity_chk(x, 0x8050);
         xb = parity_chk(x, 0x0081);
-        xc = x & 1;
 
         x >>= 1;
         if (xb) {
