@@ -81,7 +81,7 @@ class Port(Element):
             index = length-index-1
 
         port_separation = PORT_SEPARATION \
-            if self.get_parent().has_busses[self.is_source()] \
+            if not self.get_parent().has_busses[self.is_source()] \
             else max([port.H for port in ports]) + PORT_SPACING
 
         offset = (self.get_parent().H - (length-1)*port_separation - self.H)/2
