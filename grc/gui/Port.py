@@ -27,9 +27,9 @@ from .Constants import (
     CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
 )
 from .Element import Element
-from ..python.base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
+from ..model.base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 
-from ..python.Port import Port as _Port
+from ..model.Port import Port as _Port
 
 PORT_MARKUP_TMPL="""\
 <span foreground="black" font_desc="$font">$encode($port.get_name())</span>"""

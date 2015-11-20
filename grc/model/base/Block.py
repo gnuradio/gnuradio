@@ -33,7 +33,7 @@ class TemplateArg(UserDict):
     A cheetah template argument created from a param.
     The str of this class evaluates to the param's to code method.
     The use of this class as a dictionary (enum only) will reveal the enum opts.
-    The __call__ or () method can return the param evaluated to a raw python data type.
+    The __call__ or () method can return the param evaluated to a raw model data type.
     """
 
     def __init__(self, param):

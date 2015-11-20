@@ -23,3 +23,5 @@ GR_PYTHON_INSTALL(
     DESTINATION ${GR_RUNTIME_DIR}
     COMPONENT "grc"
 )
+
+add_subdirectory(freedesktop)

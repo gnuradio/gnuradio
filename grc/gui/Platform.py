@@ -22,8 +22,8 @@ import sys
 
 from .Element import Element
 
-from ..python.Platform import Platform as _Platform
-from ..python.Constants import PREFS_FILE, PREFS_FILE_OLD
+from ..model.Platform import Platform as _Platform
+from ..model.Constants import PREFS_FILE, PREFS_FILE_OLD
 
 from .Block import Block as _Block
 from .FlowGraph import FlowGraph as _FlowGraph

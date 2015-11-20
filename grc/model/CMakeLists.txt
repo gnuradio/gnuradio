@@ -42,3 +42,5 @@ install(FILES
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/python
     COMPONENT "grc"
 )
+
+add_subdirectory(base)

@@ -27,13 +27,16 @@ import re  # for shlex_quote
 from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
-from .base import odict
+
+from .base import odict, ParseXML
 from .base.Constants import BLOCK_FLAG_NEED_QT_GUI
 
-from .base import ParseXML
 from . import expr_utils
-from . Constants import TOP_BLOCK_FILE_MODE, FLOW_GRAPH_TEMPLATE, \
+from . Constants import (
+    TOP_BLOCK_FILE_MODE, FLOW_GRAPH_TEMPLATE,
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
+)
+
 from .. gui import Messages
 
 

@@ -21,7 +21,7 @@ import time
 from operator import methodcaller
 from itertools import ifilter
 
-from grc.gui import Messages
+# from ..FlowGraph import Messages
 
 from . import odict
 from .Element import Element
@@ -371,7 +371,7 @@ class FlowGraph(Element):
                 block = self.get_new_block('dummy_block')
                 # Ugly ugly ugly
                 _initialize_dummy_block(block, block_n)
-                Messages.send_error_msg_load('Block key "%s" not found' % key)
+                print('Block key "%s" not found' % key)
 
             block.import_data(block_n)
 

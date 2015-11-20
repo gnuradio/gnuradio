@@ -133,9 +133,7 @@ endif(WIN32)
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(base)
 add_subdirectory(blocks)
-add_subdirectory(freedesktop)
 add_subdirectory(grc_gnuradio)
 add_subdirectory(gui)
 add_subdirectory(python)

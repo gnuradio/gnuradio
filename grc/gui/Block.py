@@ -18,24 +18,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import pygtk
-
-import Actions
-import Colors
-import Utils
-from Constants import (
-    BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT
-)
-from Constants import BORDER_PROXIMITY_SENSITIVITY
-from Element import Element
-from grc.python.base import odict
-from .. python.Param import num_to_str
-
 pygtk.require('2.0')
 import gtk
 import pango
 
-from ..python.Block import Block as _Block
+from . import Actions, Colors, Utils
+
+from .Constants import (
+    BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
+    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT,
+    BORDER_PROXIMITY_SENSITIVITY
+)
+from . Element import Element
+from ..model.base import odict
+from ..model.Param import num_to_str
+
+from ..model.Block import Block as _Block
 
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'

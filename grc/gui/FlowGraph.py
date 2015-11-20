@@ -30,7 +30,7 @@ from . Element import Element
 from . Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
 from . external_editor import ExternalEditor
 
-from ..python.FlowGraph import FlowGraph as _Flowgraph
+from ..model.FlowGraph import FlowGraph as _Flowgraph
 
 
 class FlowGraph(Element, _Flowgraph):

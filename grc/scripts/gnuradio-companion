@@ -27,7 +27,7 @@ import warnings
 GR_IMPORT_ERROR_MESSAGE = """\
 Cannot import gnuradio.
 
-Is the python path environment variable set correctly?
+Is the model path environment variable set correctly?
     All OS: PYTHONPATH
 
 Is the library path environment variable set correctly?
