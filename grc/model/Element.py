@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -33,7 +33,8 @@ class Element(object):
         Call this base method before adding error messages in the subclass.
         """
         del self._error_messages[:]
-        for child in self.get_children(): child.validate()
+        for child in self.get_children():
+            child.validate()
 
     def is_valid(self):
         """
@@ -73,26 +74,48 @@ class Element(object):
         Rewrite this element and call rewrite on all children.
         Call this base method before rewriting the element.
         """
-        for child in self.get_children(): child.rewrite()
+        for child in self.get_children():
+            child.rewrite()
 
-    def get_enabled(self): return True
+    def get_enabled(self):
+        return True
 
     ##############################################
     ## Tree-like API
     ##############################################
-    def get_parent(self): return self._parent
-    def get_children(self): return list()
+    def get_parent(self):
+        return self._parent
+    def get_children(self):
+        return list()
 
     ##############################################
     ## Type testing methods
     ##############################################
-    def is_element(self): return True
-    def is_platform(self): return False
-    def is_flow_graph(self): return False
-    def is_connection(self): return False
-    def is_block(self): return False
-    def is_dummy_block(self): return False
-    def is_source(self): return False
-    def is_sink(self): return False
-    def is_port(self): return False
-    def is_param(self): return False
+    def is_element(self):
+        return True
+
+    def is_platform(self):
+        return False
+
+    def is_flow_graph(self):
+        return False
+
+    def is_connection(self):
+        return False
+
+    def is_block(self):
+        return False
+    def is_dummy_block(self):
+        return False
+
+    def is_source(self):
+        return False
+
+    def is_sink(self):
+        return False
+
+    def is_port(self):
+        return False
+
+    def is_param(self):
+        return False

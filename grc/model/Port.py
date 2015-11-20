@@ -1,5 +1,5 @@
 """
-Copyright 2008-2012 Free Software Foundation, Inc.
+Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from .base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
-from .base.Port import Port as _Port
+from .Constants import DEFAULT_DOMAIN, GR_STREAM_DOMAIN, GR_MESSAGE_DOMAIN
+from .Element import Element
 
 from . import Constants
 
@@ -85,7 +85,7 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
     except: raise Exception, 'Could not resolve source for virtual sink port %s'%vsp
 
 
-class Port(_Port):
+class Port(Element):
 
     def __init__(self, block, n, dir):
         """
@@ -108,24 +108,41 @@ class Port(_Port):
             n['key'] = 'msg'
         if not n.find('key'):
             n['key'] = str(next(block.port_counters[dir == 'source']))
-        # build the port
-        _Port.__init__(
-            self,
-            block=block,
-            n=n,
-            dir=dir,
-        )
+
+        #build the port
+        Element.__init__(self, block)
+        #grab the data
+        self._name = n['name']
+        self._key = n['key']
+        self._type = n['type']
+        self._domain = n['domain']
+        self._hide = n.find('hide') or ''
+        self._dir = dir
+        self._hide_evaluated = False  # updated on rewrite()
+
         self._nports = n.find('nports') or ''
         self._vlen = n.find('vlen') or ''
         self._optional = bool(n.find('optional'))
         self._clones = []  # references to cloned ports (for nports > 1)
+
+    def __str__(self):
+        if self.is_source():
+            return 'Source - %s(%s)'%(self.get_name(), self.get_key())
+        if self.is_sink():
+            return 'Sink - %s(%s)'%(self.get_name(), self.get_key())
+
 
     def get_types(self): return Constants.TYPE_TO_SIZEOF.keys()
 
     def is_type_empty(self): return not self._n['type']
 
     def validate(self):
-        _Port.validate(self)
+        Element.validate(self)
+        if self.get_type() not in self.get_types():
+            self.add_error_message('Type "%s" is not a possible type.' % self.get_type())
+        platform = self.get_parent().get_parent().get_parent()
+        if self.get_domain() not in platform.get_domains():
+            self.add_error_message('Domain key "%s" is not registered.' % self.get_domain())
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')
         #message port logic
@@ -147,7 +164,17 @@ class Port(_Port):
             except: #reset type and vlen
                 self._type = ''
                 self._vlen = ''
-        _Port.rewrite(self)
+        Element.rewrite(self)
+        hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
+        self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
+        # update domain if was deduced from (dynamic) port type
+        type_ = self.get_type()
+        if self._domain == GR_STREAM_DOMAIN and type_ == "message":
+            self._domain = GR_MESSAGE_DOMAIN
+            self._key = self._name
+        if self._domain == GR_MESSAGE_DOMAIN and type_ != "message":
+            self._domain = GR_STREAM_DOMAIN
+            self._key = '0'  # is rectified in rewrite()
 
     def resolve_virtual_source(self):
         if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
@@ -221,7 +248,8 @@ class Port(_Port):
             g = max(g-dark, 0)
             b = max(b-dark, 0)
             return '#%.2x%.2x%.2x'%(r, g, b)
-        except: return _Port.get_color(self)
+        except:
+            return '#FFFFFF'
 
     def get_clones(self):
         """
@@ -269,3 +297,56 @@ class Port(_Port):
             self._name = self._n['name']
             if not self._key.isdigit():  # also update key for none stream ports
                 self._key = self._name
+
+    def get_name(self):
+        number = ''
+        if self.get_type() == 'bus':
+            busses = filter(lambda a: a._dir == self._dir, self.get_parent().get_ports_gui())
+            number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
+        return self._name + number
+
+    def get_key(self): return self._key
+    def is_sink(self): return self._dir == 'sink'
+    def is_source(self): return self._dir == 'source'
+    def is_port(self): return True
+    def get_type(self): return self.get_parent().resolve_dependencies(self._type)
+    def get_domain(self): return self._domain
+    def get_hide(self): return self._hide_evaluated
+
+    def get_connections(self):
+        """
+        Get all connections that use this port.
+
+        Returns:
+            a list of connection objects
+        """
+        connections = self.get_parent().get_parent().get_connections()
+        connections = filter(lambda c: c.get_source() is self or c.get_sink() is self, connections)
+        return connections
+
+    def get_enabled_connections(self):
+        """
+        Get all enabled connections that use this port.
+
+        Returns:
+            a list of connection objects
+        """
+        return filter(lambda c: c.get_enabled(), self.get_connections())
+
+    def get_associated_ports(self):
+        if not self.get_type() == 'bus':
+            return [self]
+        else:
+            if self.is_source():
+                get_ports = self.get_parent().get_sources
+                bus_structure = self.get_parent().current_bus_structure['source']
+            else:
+                get_ports = self.get_parent().get_sinks
+                bus_structure = self.get_parent().current_bus_structure['sink']
+
+            ports = [i for i in get_ports() if not i.get_type() == 'bus']
+            if bus_structure:
+                busses = [i for i in get_ports() if i.get_type() == 'bus']
+                bus_index = busses.index(self)
+                ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports)
+            return ports

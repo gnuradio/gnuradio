@@ -27,7 +27,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from ..model.base import Constants, ParseXML
+
+from ..model import Constants, ParseXML
 from .. model.Constants import XTERM_EXECUTABLE
 
 from . import Dialogs, Messages, Preferences, Actions

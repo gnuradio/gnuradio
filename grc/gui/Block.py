@@ -30,7 +30,7 @@ from .Constants import (
     BORDER_PROXIMITY_SENSITIVITY
 )
 from . Element import Element
-from ..model.base import odict
+from ..model.odict import odict
 from ..model.Param import num_to_str
 
 from ..model.Block import Block as _Block

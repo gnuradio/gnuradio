@@ -27,7 +27,7 @@ from .Constants import (
     CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
 )
 from .Element import Element
-from ..model.base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
+from ..model.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 
 from ..model.Port import Port as _Port
 

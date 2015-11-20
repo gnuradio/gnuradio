@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from lxml import etree
-from . import odict
+from .odict import odict
 
 xml_failures = {}
 

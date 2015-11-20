@@ -28,8 +28,9 @@ from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
 
-from .base import odict, ParseXML
-from .base.Constants import BLOCK_FLAG_NEED_QT_GUI
+from . import ParseXML
+from .odict import odict
+from .Constants import BLOCK_FLAG_NEED_QT_GUI
 
 from . import expr_utils
 from . Constants import (

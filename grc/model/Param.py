@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011 Free Software Foundation, Inc.
+Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -25,17 +25,23 @@ from gnuradio import gr
 
 import Constants
 from Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
-from .base.Param import Param as _Param
+
 
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
 _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook|epy_module)$')
 
+from .odict import odict
+from .Element import Element
 
 #blacklist certain ids, its not complete, but should help
 import __builtin__
 ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + \
     filter(lambda x: not x.startswith('_'), dir(gr.top_block())) + dir(__builtin__)
 
+def _get_keys(lst): return [elem.get_key() for elem in lst]
+def _get_elem(lst, key):
+    try: return lst[_get_keys(lst).index(key)]
+    except ValueError: raise ValueError, 'Key "%s" not found in %s.'%(key, _get_keys(lst))
 
 def num_to_str(num):
     """ Display logic for numbers """
@@ -48,24 +54,110 @@ def num_to_str(num):
         else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
     else: return str(num)
 
+class Option(Element):
 
-class Param(_Param):
+    def __init__(self, param, n):
+        Element.__init__(self, param)
+        self._name = n.find('name')
+        self._key = n.find('key')
+        self._opts = dict()
+        opts = n.findall('opt')
+        #test against opts when non enum
+        if not self.get_parent().is_enum() and opts:
+            raise Exception, 'Options for non-enum types cannot have sub-options'
+        #extract opts
+        for opt in opts:
+            #separate the key:value
+            try: key, value = opt.split(':')
+            except: raise Exception, 'Error separating "%s" into key:value'%opt
+            #test against repeated keys
+            if self._opts.has_key(key):
+                raise Exception, 'Key "%s" already exists in option'%key
+            #store the option
+            self._opts[key] = value
 
-    def __init__(self, **kwargs):
-        _Param.__init__(self, **kwargs)
+    def __str__(self): return 'Option %s(%s)'%(self.get_name(), self.get_key())
+    def get_name(self): return self._name
+    def get_key(self): return self._key
+
+    ##############################################
+    # Access Opts
+    ##############################################
+    def get_opt_keys(self): return self._opts.keys()
+    def get_opt(self, key): return self._opts[key]
+    def get_opts(self): return self._opts.values()
+
+
+class Param(Element):
+
+    def __init__(self, block, n):
+        """
+        Make a new param from nested data.
+
+        Args:
+            block: the parent element
+            n: the nested odict
+        """
+        # if the base key is a valid param key, copy its data and overlay this params data
+        base_key = n.find('base_key')
+        if base_key and base_key in block.get_param_keys():
+            n_expanded = block.get_param(base_key)._n.copy()
+            n_expanded.update(n)
+            n = n_expanded
+        # save odict in case this param will be base for another
+        self._n = n
+        # parse the data
+        self._name = n.find('name')
+        self._key = n.find('key')
+        value = n.find('value') or ''
+        self._type = n.find('type') or 'raw'
+        self._hide = n.find('hide') or ''
+        self._tab_label = n.find('tab') or block.get_param_tab_labels()[0]
+        if not self._tab_label in block.get_param_tab_labels():
+            block.get_param_tab_labels().append(self._tab_label)
+        #build the param
+        Element.__init__(self, block)
+        #create the Option objects from the n data
+        self._options = list()
+        self._evaluated = None
+        for option in map(lambda o: Option(param=self, n=o), n.findall('option')):
+            key = option.get_key()
+            #test against repeated keys
+            if key in self.get_option_keys():
+                raise Exception, 'Key "%s" already exists in options'%key
+            #store the option
+            self.get_options().append(option)
+        #test the enum options
+        if self.is_enum():
+            #test against options with identical keys
+            if len(set(self.get_option_keys())) != len(self.get_options()):
+                raise Exception, 'Options keys "%s" are not unique.'%self.get_option_keys()
+            #test against inconsistent keys in options
+            opt_keys = self.get_options()[0].get_opt_keys()
+            for option in self.get_options():
+                if set(opt_keys) != set(option.get_opt_keys()):
+                    raise Exception, 'Opt keys "%s" are not identical across all options.'%opt_keys
+            #if a value is specified, it must be in the options keys
+            self._value = value if value or value in self.get_option_keys() else self.get_option_keys()[0]
+            if self.get_value() not in self.get_option_keys():
+                raise Exception, 'The value "%s" is not in the possible values of "%s".'%(self.get_value(), self.get_option_keys())
+        else:
+            self._value = value or ''
+        self._default = value
         self._init = False
         self._hostage_cells = list()
 
-    def get_types(self): return (
-        'raw', 'enum',
-        'complex', 'real', 'float', 'int',
-        'complex_vector', 'real_vector', 'float_vector', 'int_vector',
-        'hex', 'string', 'bool',
-        'file_open', 'file_save', '_multiline', '_multiline_python_external',
-        'id', 'stream_id',
-        'grid_pos', 'notebook', 'gui_hint',
-        'import',
-    )
+    def get_types(self):
+        return (
+            'raw', 'enum',
+            'complex', 'real', 'float', 'int',
+            'complex_vector', 'real_vector', 'float_vector', 'int_vector',
+            'hex', 'string', 'bool',
+            'file_open', 'file_save', '_multiline', '_multiline_python_external',
+            'id', 'stream_id',
+            'grid_pos', 'notebook', 'gui_hint',
+            'import',
+        )
 
     def __repr__(self):
         """
@@ -115,6 +207,19 @@ class Param(_Param):
         ##################################################
         return _truncate(dt_str, truncate)
 
+    def __repr2__(self):
+        """
+        Get the repr (nice string format) for this param.
+
+        Returns:
+            the string representation
+        """
+        if self.is_enum():
+            return self.get_option(self.get_value()).get_name()
+        return self.get_value()
+
+    def __str__(self): return 'Param - %s(%s)'%(self.get_name(), self.get_key())
+
     def get_color(self):
         """
         Get the color that represents this param's type.
@@ -144,7 +249,8 @@ class Param(_Param):
                 'notebook': Constants.INT_VECTOR_COLOR_SPEC,
                 'raw': Constants.WILDCARD_COLOR_SPEC,
             }[self.get_type()]
-        except: return _Param.get_color(self)
+        except:
+            return '#FFFFFF'
 
     def get_hide(self):
         """
@@ -157,7 +263,7 @@ class Param(_Param):
         Returns:
             hide the hide property string
         """
-        hide = _Param.get_hide(self)
+        hide = self.get_parent().resolve_dependencies(self._hide).strip()
         if hide: return hide
         #hide ID in non variable blocks
         if self.get_key() == 'id' and not _show_id_matcher.match(self.get_parent().get_key()): return 'part'
@@ -179,9 +285,12 @@ class Param(_Param):
     def validate(self):
         """
         Validate the param.
-        A test evaluation is performed
+        The value must be evaluated and type must a possible type.
         """
-        _Param.validate(self) #checks type
+        Element.validate(self)
+        if self.get_type() not in self.get_types():
+            self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
+
         self._evaluated = None
         try: self._evaluated = self.evaluate()
         except Exception, e: self.add_error_message(str(e))
@@ -427,3 +536,53 @@ class Param(_Param):
             a list of params
         """
         return sum([filter(lambda p: p.get_type() == type, block.get_params()) for block in self.get_parent().get_parent().get_enabled_blocks()], [])
+
+    def is_enum(self): return self._type == 'enum'
+
+    def get_value(self):
+        value = self._value
+        if self.is_enum() and value not in self.get_option_keys():
+            value = self.get_option_keys()[0]
+            self.set_value(value)
+        return value
+
+    def set_value(self, value): self._value = str(value) #must be a string
+
+    def value_is_default(self):
+        return self._default == self._value
+
+    def get_type(self): return self.get_parent().resolve_dependencies(self._type)
+    def get_tab_label(self): return self._tab_label
+
+    def is_param(self): return True
+    def get_name(self): return self.get_parent().resolve_dependencies(self._name).strip()
+    def get_key(self): return self._key
+
+    ##############################################
+    # Access Options
+    ##############################################
+    def get_option_keys(self): return _get_keys(self.get_options())
+    def get_option(self, key): return _get_elem(self.get_options(), key)
+    def get_options(self): return self._options
+
+    ##############################################
+    # Access Opts
+    ##############################################
+    def get_opt_keys(self): return self.get_option(self.get_value()).get_opt_keys()
+    def get_opt(self, key): return self.get_option(self.get_value()).get_opt(key)
+    def get_opts(self): return self.get_option(self.get_value()).get_opts()
+
+    ##############################################
+    ## Import/Export Methods
+    ##############################################
+    def export_data(self):
+        """
+        Export this param's key/value.
+
+        Returns:
+            a nested data odict
+        """
+        n = odict()
+        n['key'] = self.get_key()
+        n['value'] = self.get_value()
+        return n
