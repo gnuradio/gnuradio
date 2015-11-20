@@ -17,12 +17,47 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Element import Element
+import os
+import sys
 
-class Platform(Element):
-    def __init__(self, prefs_file):
+from .Element import Element
+
+from ..python.Platform import Platform as _Platform
+from ..python.Constants import PREFS_FILE, PREFS_FILE_OLD
+
+from .Block import Block as _Block
+from .FlowGraph import FlowGraph as _FlowGraph
+from .Param import Param as _Param
+from .Port import Port as _Port
+from .Connection import Connection as _Connection
+
+
+class Platform(Element, _Platform):
+
+    def __init__(self):
         Element.__init__(self)
-
-        self._prefs_file = prefs_file
+        _Platform.__init__(self)
+        self._move_old_pref_file()
+        self._prefs_file = PREFS_FILE
 
     def get_prefs_file(self): return self._prefs_file
+
+    @staticmethod
+    def _move_old_pref_file():
+        if PREFS_FILE == PREFS_FILE_OLD:
+            return  # prefs file overridden with env var
+        if os.path.exists(PREFS_FILE_OLD) and not os.path.exists(PREFS_FILE):
+            try:
+                import shutil
+                shutil.move(PREFS_FILE_OLD, PREFS_FILE)
+            except Exception as e:
+                print >> sys.stderr, e
+
+    ##############################################
+    # Constructors
+    ##############################################
+    FlowGraph = _FlowGraph
+    Connection = _Connection
+    Block = _Block
+    Port = _Port
+    Param = _Param

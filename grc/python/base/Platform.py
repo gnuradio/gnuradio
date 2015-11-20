@@ -17,16 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import os
 import sys
-from .. base import ParseXML, odict
-from Element import Element as _Element
-from FlowGraph import FlowGraph as _FlowGraph
-from Connection import Connection as _Connection
-from Block import Block as _Block
-from Port import Port as _Port
-from Param import Param as _Param
-from Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD
+
+import os
+
+from .Block import Block as _Block
+from .Connection import Connection as _Connection
+from .Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD
+from .Element import Element as _Element
+from .FlowGraph import FlowGraph as _FlowGraph
+from .Param import Param as _Param
+from .Port import Port as _Port
+from . import ParseXML, odict
 
 
 class Platform(_Element):
@@ -100,7 +102,7 @@ class Platform(_Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
-                print >> sys.stderr, 'Warning: XML parsing failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
+                print >> sys.stderr, 'Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file)
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
@@ -242,7 +244,8 @@ class Platform(_Element):
     def get_block_keys(self): return self._blocks.keys()
     def get_block(self, key): return self._blocks[key]
     def get_blocks(self): return self._blocks.values()
-    def get_new_block(self, flow_graph, key): return self.Block(flow_graph, n=self._blocks_n[key])
+    def get_new_block(self, flow_graph, key):
+        return self.Block(flow_graph, n=self._blocks_n[key])
 
     def get_domains(self): return self._domains
     def get_domain(self, key): return self._domains.get(key)

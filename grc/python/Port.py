@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from .. base.Port import Port as _Port
-from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
-from .. gui.Port import Port as _GUIPort
-import Constants
+from .base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
+from .base.Port import Port as _Port
+
+from . import Constants
 
 
 def _get_source_from_virtual_sink_port(vsp):
@@ -31,6 +31,7 @@ def _get_source_from_virtual_sink_port(vsp):
     try: return _get_source_from_virtual_source_port(
         vsp.get_enabled_connections()[0].get_source())
     except: raise Exception, 'Could not resolve source for virtual sink port %s'%vsp
+
 
 def _get_source_from_virtual_source_port(vsp, traversed=[]):
     """
@@ -52,6 +53,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
     )
     except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
 
+
 def _get_sink_from_virtual_source_port(vsp):
     """
     Resolve the sink port that is connected to the given virtual source port.
@@ -60,6 +62,7 @@ def _get_sink_from_virtual_source_port(vsp):
     try: return _get_sink_from_virtual_sink_port(
         vsp.get_enabled_connections()[0].get_sink())    # Could have many connections, but use first
     except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
+
 
 def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
     """
@@ -81,7 +84,8 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
     )
     except: raise Exception, 'Could not resolve source for virtual sink port %s'%vsp
 
-class Port(_Port, _GUIPort):
+
+class Port(_Port):
 
     def __init__(self, block, n, dir):
         """
@@ -111,7 +115,6 @@ class Port(_Port, _GUIPort):
             n=n,
             dir=dir,
         )
-        _GUIPort.__init__(self)
         self._nports = n.find('nports') or ''
         self._vlen = n.find('vlen') or ''
         self._optional = bool(n.find('optional'))

@@ -17,21 +17,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Element import Element
-import Utils
+import pygtk
+
+import Actions
 import Colors
-from .. base import odict
-from .. python.Param import num_to_str
-from Constants import BORDER_PROXIMITY_SENSITIVITY
+import Utils
 from Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
     PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT
 )
-import Actions
-import pygtk
+from Constants import BORDER_PROXIMITY_SENSITIVITY
+from Element import Element
+from grc.python.base import odict
+from .. python.Param import num_to_str
+
 pygtk.require('2.0')
 import gtk
 import pango
+
+from ..python.Block import Block as _Block
 
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
@@ -52,15 +56,16 @@ COMMENT_COMPLEXITY_MARKUP_TMPL="""\
 """
 
 
-
-class Block(Element):
+class Block(Element, _Block):
     """The graphical signal block."""
 
-    def __init__(self):
+    def __init__(self, flow_graph, n):
         """
         Block contructor.
         Add graphics related params to the block.
         """
+        _Block.__init__(self, flow_graph, n)
+
         self.W = 0
         self.H = 0
         #add the position param

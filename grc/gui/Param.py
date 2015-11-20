@@ -24,7 +24,9 @@ pygtk.require('2.0')
 import gtk
 
 from . import Colors, Utils, Constants, Dialogs
-from . Element import Element
+from .Element import Element
+
+from ..python.Param import Param as _Param
 
 
 class InputParam(gtk.HBox):
@@ -378,11 +380,12 @@ Error:
 #end if"""
 
 
-class Param(Element):
+class Param(Element, _Param):
     """The graphical parameter."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         Element.__init__(self)
+        _Param.__init__(self, **kwargs)
 
     def get_input(self, *args, **kwargs):
         """

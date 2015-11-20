@@ -17,32 +17,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Element import Element
-from Constants import (
-    PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
-    CONNECTOR_EXTENSION_INCREMENT, CANVAS_GRID_SIZE,
-    PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
-)
-from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
-import Utils
-import Actions
-import Colors
 import pygtk
 pygtk.require('2.0')
 import gtk
+
+from . import Actions, Colors, Utils
+from .Constants import (
+    PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
+    CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
+)
+from .Element import Element
+from ..python.base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
+
+from ..python.Port import Port as _Port
 
 PORT_MARKUP_TMPL="""\
 <span foreground="black" font_desc="$font">$encode($port.get_name())</span>"""
 
 
-class Port(Element):
+class Port(_Port, Element):
     """The graphical port."""
 
-    def __init__(self):
+    def __init__(self, block, n, dir):
         """
         Port contructor.
         Create list of connector coordinates.
         """
+        _Port.__init__(self, block, n, dir)
         Element.__init__(self)
         self.W = self.H = self.w = self.h = 0
         self._connector_coordinate = (0, 0)

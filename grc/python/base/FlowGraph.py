@@ -21,7 +21,7 @@ import time
 from operator import methodcaller
 from itertools import ifilter
 
-from .. gui import Messages
+from grc.gui import Messages
 
 from . import odict
 from .Element import Element

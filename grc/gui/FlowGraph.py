@@ -30,20 +30,23 @@ from . Element import Element
 from . Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
 from . external_editor import ExternalEditor
 
+from ..python.FlowGraph import FlowGraph as _Flowgraph
 
-class FlowGraph(Element):
+
+class FlowGraph(Element, _Flowgraph):
     """
     FlowGraph is the data structure to store graphical signal blocks,
     graphical inputs and outputs,
     and the connections between inputs and outputs.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """
         FlowGraph constructor.
         Create a list for signal blocks and connections. Connect mouse handlers.
         """
         Element.__init__(self)
+        _Flowgraph.__init__(self, **kwargs)
         #when is the flow graph selected? (used by keyboard event handler)
         self.is_selected = lambda: bool(self.get_selected_elements())
         #important vars dealing with mouse event tracking

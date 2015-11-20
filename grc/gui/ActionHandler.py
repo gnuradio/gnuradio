@@ -17,16 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import os
 import subprocess
 from threading import Thread
 
+import os
 import pygtk
+
 pygtk.require('2.0')
 import gtk
 import gobject
 
-from .. base import ParseXML, Constants
+from grc.python.base import Constants
+from grc.python.base import ParseXML
 from .. python.Constants import XTERM_EXECUTABLE
 
 from . import Dialogs, Messages, Preferences, Actions
@@ -560,7 +562,8 @@ class ActionHandler:
             self.platform.load_blocks()
             self.main_window.btwin.clear()
             self.platform.load_block_tree(self.main_window.btwin)
-            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
+            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(
+                ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
             # Force a redraw of the graph, by getting the current state and re-importing it
             self.main_window.update_pages()

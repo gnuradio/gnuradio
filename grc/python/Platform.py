@@ -19,27 +19,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import sys
-
 from gnuradio import gr
 
-from .. base.Platform import Platform as _Platform
-from .. gui.Platform import Platform as _GUIPlatform
-from .. gui import Messages
+from .base.Platform import Platform as _Platform
 
 from . import extract_docs
-from .FlowGraph import FlowGraph as _FlowGraph
-from .Connection import Connection as _Connection
-from .Block import Block as _Block
-from .Port import Port as _Port
-from .Param import Param as _Param
-from .Generator import Generator
 from .Constants import (
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, DEFAULT_FLOW_GRAPH, BLOCKS_DIRS,
-    PREFS_FILE, PREFS_FILE_OLD, CORE_TYPES
+    PREFS_FILE, CORE_TYPES, PREFS_FILE_OLD,
 )
+from .Generator import Generator
+from .. gui import Messages
 
 
-class Platform(_Platform, _GUIPlatform):
+class Platform(_Platform):
     def __init__(self):
         """
         Make a platform for gnuradio.
@@ -72,11 +65,7 @@ class Platform(_Platform, _GUIPlatform):
             generator=Generator,
             colors=[(name, color) for name, key, sizeof, color in CORE_TYPES],
         )
-        self._move_old_pref_file()
-        _GUIPlatform.__init__(
-            self,
-            prefs_file=PREFS_FILE
-        )
+
         self._auto_hier_block_generate_chain = set()
 
     def _save_docstring_extraction_result(self, key, docstrings):
@@ -164,12 +153,3 @@ class Platform(_Platform, _GUIPlatform):
 
         self.load_block_xml(generator.get_file_path_xml())
         return True
-
-    ##############################################
-    # Constructors
-    ##############################################
-    FlowGraph = _FlowGraph
-    Connection = _Connection
-    Block = _Block
-    Port = _Port
-    Param = _Param

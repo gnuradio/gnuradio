@@ -21,8 +21,7 @@ import imp
 from operator import methodcaller
 
 from . import expr_utils
-from .. base.FlowGraph import FlowGraph as _FlowGraph
-from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
+from .base.FlowGraph import FlowGraph as _FlowGraph
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
@@ -33,12 +32,11 @@ _bus_struct_sink_searcher = re.compile('^(bus_structure_sink)$')
 _bus_struct_src_searcher = re.compile('^(bus_structure_source)$')
 
 
-class FlowGraph(_FlowGraph, _GUIFlowGraph):
+class FlowGraph(_FlowGraph):
 
     def __init__(self, **kwargs):
         self.grc_file_path = ''
         _FlowGraph.__init__(self, **kwargs)
-        _GUIFlowGraph.__init__(self)
         self.n = {}
         self.n_hash = -1
         self._renew_eval_ns = True

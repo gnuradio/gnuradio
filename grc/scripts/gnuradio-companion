@@ -108,13 +108,13 @@ def main():
     source_tree_root = get_source_tree_root()
     if not source_tree_root:
         # run the installed version
-        from gnuradio.grc.python.Platform import Platform
+        from gnuradio.grc.gui.Platform import Platform
         from gnuradio.grc.gui.ActionHandler import ActionHandler
 
     else:
         print("Running from source tree")
         sys.path.insert(1, source_tree_root)
-        from grc.python.Platform import Platform
+        from grc.gui.Platform import Platform
         from grc.gui.ActionHandler import ActionHandler
 
     try:

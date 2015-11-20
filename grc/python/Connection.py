@@ -17,15 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import Constants
-from .. base.Connection import Connection as _Connection
-from .. gui.Connection import Connection as _GUIConnection
+from . import Constants
 
-class Connection(_Connection, _GUIConnection):
+from .base.Connection import Connection as _Connection
 
-    def __init__(self, **kwargs):
-        _Connection.__init__(self, **kwargs)
-        _GUIConnection.__init__(self)
+
+class Connection(_Connection):
+
+    def __init__(self, flow_graph, porta, portb):
+        _Connection.__init__(self, flow_graph, porta, portb)
 
     def is_msg(self):
         return self.get_source().get_type() == self.get_sink().get_type() == 'msg'

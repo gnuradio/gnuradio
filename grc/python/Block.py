@@ -17,20 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import itertools
 import collections
+import itertools
 
-from .. base.Constants import BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI
-from .. base.odict import odict
+from .base.Constants import BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI
+from .base.odict import odict
+from .base.Block import Block as _Block
 
-from .. base.Block import Block as _Block
-from .. gui.Block import Block as _GUIBlock
-
-from . FlowGraph import _variable_matcher
 from . import epy_block_io
+from .FlowGraph import _variable_matcher
 
 
-class Block(_Block, _GUIBlock):
+class Block(_Block):
 
     def __init__(self, flow_graph, n):
         """
@@ -59,7 +57,6 @@ class Block(_Block, _GUIBlock):
             flow_graph=flow_graph,
             n=n,
         )
-        _GUIBlock.__init__(self)
 
         self._epy_source_hash = -1  # for epy blocks
         self._epy_reload_error = None
