@@ -280,6 +280,9 @@ class FlowGraph(Element):
             delta_coordinate: the change in coordinates
         """
         for selected_block in self.get_selected_blocks():
+            delta_coordinate = selected_block.bound_move_delta(delta_coordinate)
+ 
+        for selected_block in self.get_selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True
 

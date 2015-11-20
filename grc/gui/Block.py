@@ -127,6 +127,40 @@ class Block(Element):
             )
         self.get_param('_coordinate').set_value(str(coor))
 
+    def bound_move_delta(self, delta_coor):
+        """
+        Limit potential moves from exceeding the bounds of the canvas
+
+        Args:
+            delta_coor: requested delta coordinate (dX, dY) to move
+
+        Returns:
+            The delta coordinate possible to move while keeping the block on the canvas 
+            or the input (dX, dY) on failure
+        """
+        dX, dY = delta_coor 
+
+        try:
+            fgW, fgH = self.get_parent().get_size()
+            x, y = map(int, eval(self.get_param("_coordinate").get_value()))
+            if self.is_horizontal():
+               sW, sH = self.W, self.H
+            else:
+               sW, sH = self.H, self.W
+        
+            if x + dX < 0:
+                dX = -x
+            elif dX + x + sW >= fgW:
+                dX = fgW - x - sW
+            if y + dY < 0:
+                dY = -y
+            elif dY + y + sH >= fgH:
+               dY = fgH - y - sH
+        except:
+            pass
+
+        return ( dX, dY ) 
+
     def get_rotation(self):
         """
         Get the rotation from the position param.
