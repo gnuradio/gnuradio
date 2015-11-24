@@ -98,9 +98,9 @@ class _ActionBase(object):
         The string representation should be the name of the action id.
         Try to find the action id for this action by searching this module.
         """
-        for name, value in globals():
+        for name, value in globals().iteritems():
             if value == self:
-                return value
+                return name
         return self.get_name()
 
     def __repr__(self): return str(self)
