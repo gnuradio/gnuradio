@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011 Free Software Foundation, Inc.
+Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -85,8 +85,8 @@ class TopBlockGenerator(object):
         self._generate_options = self._flow_graph.get_option('generate_options')
         self._mode = TOP_BLOCK_FILE_MODE
         dirname = self._dirname = os.path.dirname(file_path)
-        # handle the case where the directory is read-only
-        # in this case, use the system's temp directory
+        # Handle the case where the directory is read-only
+        # In this case, use the system's temp directory
         if not os.access(dirname, os.W_OK):
             dirname = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
@@ -97,7 +97,7 @@ class TopBlockGenerator(object):
 
     def write(self):
         """generate output and write it to files"""
-        # do throttle warning
+        # Do throttle warning
         throttling_blocks = filter(lambda b: b.throtteling(), self._flow_graph.get_enabled_blocks())
         if not throttling_blocks and not self._generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
@@ -112,7 +112,7 @@ class TopBlockGenerator(object):
                                       "e.g. a hardware source or sink. "
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
-        # generate
+        # Generate
         for filename, data in self._build_python_code_from_template():
             with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
@@ -138,7 +138,7 @@ class TopBlockGenerator(object):
         except Exception as e:
             raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
 
-        # when in no gui mode on linux, use a graphical terminal (looks nice)
+        # When in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
             run_command_args = [xterm_executable, '-e', run_command]
@@ -170,15 +170,15 @@ class TopBlockGenerator(object):
         parameters = fg.get_parameters()
         monitors = fg.get_monitors()
 
-        # list of blocks not including variables and imports and parameters and disabled
+        # List of blocks not including variables and imports and parameters and disabled
         def _get_block_sort_text(block):
             code = block.get_make().replace(block.get_id(), ' ')
             try:
-                code += block.get_param('notebook').get_value() # older gui markup w/ wxgui
+                code += block.get_param('notebook').get_value()  # Older gui markup w/ wxgui
             except:
                 pass
             try:
-                code += block.get_param('gui_hint').get_value() # newer gui markup w/ qtgui
+                code += block.get_param('gui_hint').get_value()  # Newer gui markup w/ qtgui
             except:
                 pass
             return code
@@ -201,7 +201,8 @@ class TopBlockGenerator(object):
                 output.append((file_path, src))
 
         # Filter out virtual sink connections
-        cf = lambda c: not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
+        def cf(c):
+            return not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
         connections = filter(cf, fg.get_enabled_connections())
 
         # Get the virtual blocks and resolve their connections
@@ -223,8 +224,7 @@ class TopBlockGenerator(object):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            get_source_connection = lambda c: c.get_sink() == block.get_sinks()[0]
-            source_connection = filter(get_source_connection, connections)
+            source_connection = filter(lambda c: c.get_sink() == block.get_sinks()[0], connections)
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
@@ -232,8 +232,7 @@ class TopBlockGenerator(object):
             source_port = source_connection[0].get_source()
 
             # Loop through all the downstream connections
-            get_sink_connections = lambda c: c.get_source() == block.get_sources()[0]
-            for sink in filter(get_sink_connections, connections):
+            for sink in filter(lambda c: c.get_source() == block.get_sources()[0], connections):
                 if not sink.get_enabled():
                     # Ignore disabled connections
                     continue
@@ -253,21 +252,21 @@ class TopBlockGenerator(object):
 
         connection_templates = fg.get_parent().get_connection_templates()
         msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
-        # list of variable names
+        # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
-        # prepend self.
+        # Prepend self.
         replace_dict = dict([(var_id, 'self.%s' % var_id) for var_id in var_ids])
-        # list of callbacks
+        # List of callbacks
         callbacks = [
             expr_utils.expr_replace(cb, replace_dict)
             for cb in sum([block.get_callbacks() for block in fg.get_enabled_blocks()], [])
         ]
-        # map var id to callbacks
+        # Map var id to callbacks
         var_id2cbs = dict([
             (var_id, filter(lambda c: expr_utils.get_variable_dependencies(c, [var_id]), callbacks))
             for var_id in var_ids
         ])
-        # load the namespace
+        # Load the namespace
         namespace = {
             'title': title,
             'imports': imports,
@@ -282,7 +281,7 @@ class TopBlockGenerator(object):
             'generate_options': self._generate_options,
             'var_id2cbs': var_id2cbs,
         }
-        # build the template
+        # Build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
         output.append((self.get_file_path(), str(t)))
         return output
@@ -325,7 +324,7 @@ class HierBlockGenerator(TopBlockGenerator):
         Returns:
             a xml node tree
         """
-        # extract info from the flow graph
+        # Extract info from the flow graph
         block_key = self._flow_graph.get_option('id')
         parameters = self._flow_graph.get_parameters()
 
@@ -334,7 +333,7 @@ class HierBlockGenerator(TopBlockGenerator):
                 return "$"+name
             return name
 
-        # build the nested data
+        # Build the nested data
         block_n = odict()
         block_n['name'] = self._flow_graph.get_option('title') or \
             self._flow_graph.get_option('id').replace('_', ' ').title()
@@ -342,7 +341,7 @@ class HierBlockGenerator(TopBlockGenerator):
         block_n['category'] = self._flow_graph.get_option('category')
         block_n['import'] = "from {0} import {0}  # grc-generated hier_block".format(
             self._flow_graph.get_option('id'))
-        # make data
+        # Make data
         if parameters:
             block_n['make'] = '{cls}(\n    {kwargs},\n)'.format(
                 cls=block_key,
@@ -352,7 +351,7 @@ class HierBlockGenerator(TopBlockGenerator):
             )
         else:
             block_n['make'] = '{cls}()'.format(cls=block_key)
-        # callback data
+        # Callback data
         block_n['callback'] = [
             'set_{key}(${key})'.format(key=param.get_id()) for param in parameters
         ]
@@ -367,13 +366,13 @@ class HierBlockGenerator(TopBlockGenerator):
             param_n['type'] = 'raw'
             block_n['param'].append(param_n)
 
-        # bus stuff
+        # Bus stuff
         if self._flow_graph.get_bussink():
             block_n['bus_sink'] = '1'
         if self._flow_graph.get_bussrc():
             block_n['bus_source'] = '1'
 
-        # sink/source ports
+        # Sink/source ports
         for direction in ('sink', 'source'):
             block_n[direction] = list()
             for port in self._flow_graph.get_hier_block_io(direction):
@@ -386,7 +385,7 @@ class HierBlockGenerator(TopBlockGenerator):
                     port_n['optional'] = '1'
                 block_n[direction].append(port_n)
 
-        # more bus stuff
+        # More bus stuff
         bus_struct_sink = self._flow_graph.get_bus_structure_sink()
         if bus_struct_sink:
             block_n['bus_structure_sink'] = bus_struct_sink[0].get_param('struct').get_value()
@@ -394,7 +393,7 @@ class HierBlockGenerator(TopBlockGenerator):
         if bus_struct_src:
             block_n['bus_structure_source'] = bus_struct_src[0].get_param('struct').get_value()
 
-        # documentation
+        # Documentation
         block_n['doc'] = "\n".join(field for field in (
             self._flow_graph.get_option('author'),
             self._flow_graph.get_option('description'),

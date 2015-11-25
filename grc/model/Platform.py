@@ -55,7 +55,7 @@ class Platform(Element):
             website: the website url for this platform
         """
 
-        # ensure hier and conf directories
+        # Ensure hier and conf directories
         if not os.path.exists(HIER_BLOCKS_LIB_DIR):
             os.mkdir(HIER_BLOCKS_LIB_DIR)
         if not os.path.exists(os.path.dirname(PREFS_FILE)):
@@ -87,7 +87,7 @@ class Platform(Element):
         self._default_flow_graph = DEFAULT_FLOW_GRAPH
         self._generator = Generator
         self._colors = [(name, color) for name, key, sizeof, color in CORE_TYPES]
-        #create a dummy flow graph for the blocks
+        # Create a dummy flow graph for the blocks
         self._flow_graph = Element(self)
 
         self._blocks = None
@@ -161,41 +161,40 @@ class Platform(Element):
         try:
             flow_graph = self.get_new_flow_graph()
             flow_graph.grc_file_path = file_path
-            # other, nested higiter_blocks might be auto-loaded here
+            # Other, nested higiter_blocks might be auto-loaded here
             flow_graph.import_data(self.parse_flow_graph(file_path))
             flow_graph.rewrite()
             flow_graph.validate()
             if not flow_graph.is_valid():
                 raise Exception('Flowgraph invalid')
         except Exception as e:
-            Messages.send('>>> Load Error: %r: %s\n' % (file_path, str(e)))
+            Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
             return False
         finally:
             self._auto_hier_block_generate_chain.discard(file_path)
             Messages.set_indent(len(self._auto_hier_block_generate_chain))
 
         try:
-            Messages.send('>>> Generating: %r\n' % file_path)
+            Messages.send('>>> Generating: {}\n'.format(file_path))
             generator = self.get_generator()(flow_graph, file_path)
             generator.write()
         except Exception as e:
-            Messages.send('>>> Generate Error: %r: %s\n' % (file_path, str(e)))
+            Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
             return False
 
         self.load_block_xml(generator.get_file_path_xml())
         return True
 
-
     def _load_blocks(self):
         """load the blocks and block tree from the search paths"""
-        # reset
+        # Reset
         self._blocks = odict()
         self._blocks_n = odict()
         self._category_trees_n = list()
         self._domains.clear()
         self._connection_templates.clear()
         ParseXML.xml_failures.clear()
-        # try to parse and load blocks
+        # Try to parse and load blocks
         for xml_file in self.iter_xml_files():
             try:
                 if xml_file.endswith("block_tree.xml"):
@@ -212,8 +211,7 @@ class Platform(Element):
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
-        get_path = lambda x: os.path.abspath(os.path.expanduser(x))
-        for block_path in map(get_path, self._block_paths):
+        for block_path in map(lambda x: os.path.abspath(os.path.expanduser(x)), self._block_paths):
             if os.path.isfile(block_path):
                 yield block_path
             elif os.path.isdir(block_path):
@@ -223,16 +221,16 @@ class Platform(Element):
 
     def _load_block_xml(self, xml_file):
         """Load block description from xml file"""
-        # validate and import
+        # Validate and import
         ParseXML.validate_dtd(xml_file, self._block_dtd)
         n = ParseXML.from_file(xml_file).find('block')
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
-        # get block instance and add it to the list of blocks
+        # Get block instance and add it to the list of blocks
         block = self.Block(self._flow_graph, n)
         key = block.get_key()
         if key in self._blocks:
-            print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s' % (key, xml_file)
-        else:  # store the block
+            print >> sys.stderr, 'Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
+        else:  # Store the block
             self._blocks[key] = block
             self._blocks_n[key] = n
         return block
@@ -250,14 +248,17 @@ class Platform(Element):
 
         key = n.find('key')
         if not key:
-            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: %s' % xml_file
+            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {}'.foramt(xml_file)
             return
         if key in self.get_domains():  # test against repeated keys
-            print >> sys.stderr, 'Warning: Domain with key "%s" already exists.\n\tIgnoring: %s' % (key, xml_file)
+            print >> sys.stderr, 'Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
             return
 
-        to_bool = lambda s, d: d if s is None else \
-            s.lower() not in ('false', 'off', '0', '')
+        #to_bool = lambda s, d: d if s is None else s.lower() not in ('false', 'off', '0', '')
+        def to_bool(s, d):
+            if s is not None:
+                return s.lower() not in ('false', 'off', '0', '')
+            return d
 
         color = n.find('color') or ''
         try:
@@ -265,7 +266,7 @@ class Platform(Element):
             gtk.gdk.color_parse(color)
         except (ValueError, ImportError):
             if color:  # no color is okay, default set in GUI
-                print >> sys.stderr, 'Warning: Can\'t parse color code "%s" for domain "%s" ' % (color, key)
+                print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)
                 color = None
 
         self._domains[key] = dict(
@@ -277,9 +278,9 @@ class Platform(Element):
         for connection_n in n.findall('connection'):
             key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
             if not all(key):
-                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t%s' % xml_file
+                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file)
             elif key in self._connection_templates:
-                print >> sys.stderr, 'Warning: Connection template "%s" already exists.\n\t%s' % (key, xml_file)
+                print >> sys.stderr, 'Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file)
             else:
                 self._connection_templates[key] = connection_n.find('make') or ''
 
@@ -296,7 +297,7 @@ class Platform(Element):
         @throws exception if the validation fails
         """
         flow_graph_file = flow_graph_file or self._default_flow_graph
-        open(flow_graph_file, 'r')  # test open
+        open(flow_graph_file, 'r')  # Test open
         ParseXML.validate_dtd(flow_graph_file, FLOW_GRAPH_DTD)
         return ParseXML.from_file(flow_graph_file)
 
@@ -309,63 +310,99 @@ class Platform(Element):
         Args:
             block_tree: the block tree object
         """
-        #recursive function to load categories and blocks
+        # Recursive function to load categories and blocks
         def load_category(cat_n, parent=None):
-            #add this category
+            # Add this category
             parent = (parent or []) + [cat_n.find('name')]
             block_tree.add_block(parent)
-            #recursive call to load sub categories
+            # Recursive call to load sub categories
             map(lambda c: load_category(c, parent), cat_n.findall('cat'))
-            #add blocks in this category
+            # Add blocks in this category
             for block_key in cat_n.findall('block'):
                 if block_key not in self.get_block_keys():
-                    print >> sys.stderr, 'Warning: Block key "%s" not found when loading category tree.' % (block_key)
+                    print >> sys.stderr, 'Warning: Block key "{}" not found when loading category tree.'.format(block_key)
                     continue
                 block = self.get_block(block_key)
-                #if it exists, the block's category shall not be overridden by the xml tree
+                # If it exists, the block's category shall not be overridden by the xml tree
                 if not block.get_category():
                     block.set_category(parent)
 
-        # recursively load the category trees and update the categories for each block
+        # Recursively load the category trees and update the categories for each block
         for category_tree_n in self._category_trees_n:
             load_category(category_tree_n)
 
-        #add blocks to block tree
+        # Add blocks to block tree
         for block in self.get_blocks():
-            #blocks with empty categories are hidden
-            if not block.get_category(): continue
+            # Blocks with empty categories are hidden
+            if not block.get_category():
+                continue
             block_tree.add_block(block.get_category(), block)
 
-    def __str__(self): return 'Platform - %s(%s)'%(self.get_key(), self.get_name())
+    def __str__(self):
+        return 'Platform - {}({})'.format(self.get_key(), self.get_name())
 
-    def is_platform(self): return True
+    def is_platform(self):
+        return True
 
-    def get_new_flow_graph(self): return self.FlowGraph(platform=self)
+    def get_new_flow_graph(self):
+        return self.FlowGraph(platform=self)
 
-    def get_generator(self): return self._generator
+    def get_generator(self):
+        return self._generator
 
     ##############################################
     # Access Blocks
     ##############################################
-    def get_block_keys(self): return self._blocks.keys()
-    def get_block(self, key): return self._blocks[key]
-    def get_blocks(self): return self._blocks.values()
+    def get_block_keys(self):
+        return self._blocks.keys()
+
+    def get_block(self, key):
+        return self._blocks[key]
+
+    def get_blocks(self):
+        return self._blocks.values()
+
     def get_new_block(self, flow_graph, key):
         return self.Block(flow_graph, n=self._blocks_n[key])
 
-    def get_domains(self): return self._domains
-    def get_domain(self, key): return self._domains.get(key)
-    def get_connection_templates(self): return self._connection_templates
+    def get_domains(self):
+        return self._domains
 
-    def get_name(self): return self._name
-    def get_version(self): return self._version
-    def get_version_major(self): return self._version_major
-    def get_version_api(self): return self._version_api
-    def get_version_minor(self): return self._version_minor
-    def get_version_short(self): return self._version_short
+    def get_domain(self, key):
+        return self._domains.get(key)
 
-    def get_key(self): return self._key
-    def get_license(self): return self._license
-    def get_website(self): return self._website
-    def get_colors(self): return self._colors
-    def get_block_paths(self): return self._block_paths
+    def get_connection_templates(self):
+        return self._connection_templates
+
+    def get_name(self):
+        return self._name
+
+    def get_version(self):
+        return self._version
+
+    def get_version_major(self):
+        return self._version_major
+
+    def get_version_api(self):
+        return self._version_api
+
+    def get_version_minor(self):
+        return self._version_minor
+
+    def get_version_short(self):
+        return self._version_short
+
+    def get_key(self):
+        return self._key
+
+    def get_license(self):
+        return self._license
+
+    def get_website(self):
+        return self._website
+
+    def get_colors(self):
+        return self._colors
+
+    def get_block_paths(self):
+        return self._block_paths

@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011 Free Software Foundation, Inc.
+Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -32,8 +32,8 @@ import itertools
 ###############################################################################
 
 def docstring_guess_from_key(key):
-    """Extract the documentation from the python __doc__ strings
-
+    """
+    Extract the documentation from the python __doc__ strings
     By guessing module and constructor names from key
 
     Args:
@@ -65,9 +65,7 @@ def docstring_guess_from_key(key):
     else:
         return doc_strings
 
-    pattern = re.compile(
-        '^' + init_name.replace('_', '_*').replace('x', r'\w') + r'\w*$'
-    )
+    pattern = re.compile('^' + init_name.replace('_', '_*').replace('x', r'\w') + r'\w*$')
     for match in filter(pattern.match, dir(module)):
         try:
             doc_strings[match] = getattr(module, match).__doc__
@@ -78,8 +76,8 @@ def docstring_guess_from_key(key):
 
 
 def docstring_from_make(key, imports, make):
-    """Extract the documentation from the python __doc__ strings
-
+    """
+    Extract the documentation from the python __doc__ strings
     By importing it and checking a truncated make
 
     Args:
@@ -95,12 +93,10 @@ def docstring_from_make(key, imports, make):
         blk_cls = make.partition('(')[0].strip()
         if '$' in blk_cls:
             raise ValueError('Not an identifier')
-
         ns = dict()
         for _import in imports:
             exec(_import.strip(), ns)
         blk = eval(blk_cls, ns)
-
         doc_strings = {key: blk.__doc__}
 
     except (ImportError, AttributeError, SyntaxError, ValueError):
@@ -114,10 +110,11 @@ def docstring_from_make(key, imports, make):
 ###############################################################################
 
 class SubprocessLoader(object):
-    """Start and manage docstring extraction process
-
+    """
+    Start and manage docstring extraction process
     Manages subprocess and handles RPC.
     """
+
     BOOTSTRAP = "import runpy; runpy.run_path({!r}, run_name='__worker__')"
     AUTH_CODE = random.random()  # sort out unwanted output of worker process
     RESTART = 5  # number of worker restarts before giving up
@@ -134,7 +131,7 @@ class SubprocessLoader(object):
         self._last_cmd = None
 
     def start(self):
-        """Start the worker process handler thread"""
+        """ Start the worker process handler thread """
         if self._thread is not None:
             return
         self._shutdown.clear()
@@ -143,7 +140,7 @@ class SubprocessLoader(object):
         thread.start()
 
     def run_worker(self):
-        """Read docstring back from worker stdout and execute callback."""
+        """ Read docstring back from worker stdout and execute callback. """
         for _ in range(self.RESTART):
             if self._shutdown.is_set():
                 break
@@ -173,7 +170,7 @@ class SubprocessLoader(object):
         self.callback_finished()
 
     def _handle_worker(self):
-        """Send commands and responses back from worker."""
+        """ Send commands and responses back from worker. """
         assert '1' == self._worker.stdout.read(1)
         for cmd, args in iter(self._queue.get, self.DONE):
             self._last_cmd = cmd, args
@@ -182,13 +179,13 @@ class SubprocessLoader(object):
             self._handle_response(cmd, args)
 
     def _send(self, cmd, args):
-        """send a command to worker's stdin"""
+        """ Send a command to worker's stdin """
         fd = self._worker.stdin
         json.dump((self.AUTH_CODE, cmd, args), fd)
         fd.write('\n'.encode())
 
     def _receive(self):
-        """receive response from worker's stdout"""
+        """ Receive response from worker's stdout """
         for line in iter(self._worker.stdout.readline, ''):
             try:
                 key, cmd, args = json.loads(line, encoding='utf-8')
@@ -201,7 +198,7 @@ class SubprocessLoader(object):
             raise IOError("Can't read worker response")
 
     def _handle_response(self, cmd, args):
-        """Handle response from worker, call the callback"""
+        """ Handle response from worker, call the callback """
         if cmd == 'result':
             key, docs = args
             self.callback_query_result(key, docs)
@@ -211,7 +208,7 @@ class SubprocessLoader(object):
             print >> sys.stderr, "Unknown response:", cmd, args
 
     def query(self, key, imports=None, make=None):
-        """request docstring extraction for a certain key"""
+        """ Request docstring extraction for a certain key """
         if self._thread is None:
             self.start()
         if imports and make:
@@ -220,16 +217,16 @@ class SubprocessLoader(object):
             self._queue.put(('query_key_only', (key,)))
 
     def finish(self):
-        """signal end of requests"""
+        """ Signal end of requests """
         self._queue.put(self.DONE)
 
     def wait(self):
-        """Wait for the handler thread to die"""
+        """ Wait for the handler thread to die """
         if self._thread:
             self._thread.join()
 
     def terminate(self):
-        """Terminate the worker and wait"""
+        """ Terminate the worker and wait """
         self._shutdown.set()
         try:
             self._worker.terminate()
@@ -243,8 +240,8 @@ class SubprocessLoader(object):
 ###############################################################################
 
 def worker_main():
-    """Main entry point for the docstring extraction process.
-
+    """
+    Main entry point for the docstring extraction process.
     Manages RPC with main process through.
     Runs a docstring extraction for each key it read on stdin.
     """

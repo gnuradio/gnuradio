@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011 Free Software Foundation, Inc.
+Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from UserDict import DictMixin
+
 
 class odict(DictMixin):
 
@@ -57,7 +58,8 @@ class odict(DictMixin):
             val: the value for the new entry
         """
         index = (pos_key is None) and len(self._keys) or self._keys.index(pos_key)
-        if key in self._keys: raise KeyError('Cannot insert, key "%s" already exists'%str(key))
+        if key in self._keys:
+            raise KeyError('Cannot insert, key "{}" already exists'.format(str(key)))
         self._keys.insert(index+1, key)
         self._data[key] = val
 
@@ -72,7 +74,8 @@ class odict(DictMixin):
             val: the value for the new entry
         """
         index = (pos_key is not None) and self._keys.index(pos_key) or 0
-        if key in self._keys: raise KeyError('Cannot insert, key "%s" already exists'%str(key))
+        if key in self._keys:
+            raise KeyError('Cannot insert, key "{}" already exists'.format(str(key)))
         self._keys.insert(index, key)
         self._data[key] = val
 
@@ -86,7 +89,8 @@ class odict(DictMixin):
         Returns:
             the value or None
         """
-        if self.has_key(key): return self[key]
+        if key in self:
+            return self[key]
         return None
 
     def findall(self, key):
@@ -100,6 +104,8 @@ class odict(DictMixin):
             a list of values or empty list
         """
         obj = self.find(key)
-        if obj is None: obj = list()
-        if isinstance(obj, list): return obj
+        if obj is None:
+            obj = list()
+        if isinstance(obj, list):
+            return obj
         return [obj]

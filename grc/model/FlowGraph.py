@@ -39,10 +39,11 @@ _bus_struct_src_searcher = re.compile('^(bus_structure_source)$')
 
 
 def _initialize_dummy_block(block, block_n):
-    """This is so ugly... dummy-fy a block
-
+    """
+    This is so ugly... dummy-fy a block
     Modify block object to get the behaviour for a missing block
     """
+
     block._key = block_n.find('key')
     block.is_dummy_block = lambda: True
     block.is_valid = lambda: False
@@ -50,11 +51,12 @@ def _initialize_dummy_block(block, block_n):
     for param_n in block_n.findall('param'):
         if param_n['key'] not in block.get_param_keys():
             new_param_n = odict({'key': param_n['key'], 'name': param_n['key'], 'type': 'string'})
-            block.get_params().append(block.get_parent().get_parent().Param(block=block, n=new_param_n))
+            params = block.get_parent().get_parent().Param(block=block, n=new_param_n)
+            block.get_params().append(params)
 
 
 def _dummy_block_add_port(block, key, dir):
-    """This is so ugly... Add a port to a dummy-field block"""
+    """ This is so ugly... Add a port to a dummy-field block """
     port_n = odict({'name': '?', 'key': key, 'type': ''})
     port = block.get_parent().get_parent().Port(block=block, n=port_n, dir=dir)
     if port.is_source():
@@ -67,7 +69,6 @@ def _dummy_block_add_port(block, key, dir):
 class FlowGraph(Element):
 
     def __init__(self, platform):
-        self.grc_file_path = ''
         """
         Make a flow graph from the arguments.
 
@@ -77,11 +78,12 @@ class FlowGraph(Element):
         Returns:
             the flow graph object
         """
-        #initialize
+        self.grc_file_path = ''
+        # Initialize
         Element.__init__(self, platform)
         self._elements = []
         self._timestamp = time.ctime()
-        #inital blank import
+        # Inital blank import
         self.import_data()
 
         self.n = {}
@@ -101,18 +103,16 @@ class FlowGraph(Element):
         """
         index = 0
         while True:
-            id = '%s_%d' % (base_id, index)
+            id = '{}_{}'.format(base_id, index)
             index += 1
-            #make sure that the id is not used by another block
+            # Make sure that the id is not used by another block
             if not filter(lambda b: b.get_id() == id, self.get_blocks()): return id
 
     def __str__(self):
-        return 'FlowGraph - %s(%s)' % (self.get_option('title'), self.get_option('id'))
+        return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
 
     def get_complexity(self):
-        """
-        Determines the complexity of a flowgraph
-        """
+        """ Determines the complexity of a flowgraph """
         dbal = 0
         block_list = self.get_blocks()
         for block in block_list:
@@ -173,12 +173,14 @@ class FlowGraph(Element):
         Returns:
             the resultant object
         """
-        if not code: raise Exception, 'Cannot evaluate empty statement.'
+        if not code:
+            raise Exception('Cannot evaluate empty statement.')
         my_hash = hash(code) ^ namespace_hash
-        #cache if does not exist
-        if not self._eval_cache.has_key(my_hash):
+
+        # Cache if does not exist
+        if my_hash not in self._eval_cache:
             self._eval_cache[my_hash] = eval(code, namespace, namespace)
-        #return from cache
+        # Return from cache
         return self._eval_cache[my_hash]
 
     def get_hier_block_stream_io(self, direction):
@@ -336,8 +338,7 @@ class FlowGraph(Element):
         for i in bussink:
             for j in i.get_params():
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
-                    return True;
-
+                    return True
         return False
 
     def get_bussrc(self):
@@ -346,18 +347,15 @@ class FlowGraph(Element):
         for i in bussrc:
             for j in i.get_params():
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
-                    return True;
-
+                    return True
         return False
 
     def get_bus_structure_sink(self):
         bussink = filter(lambda b: _bus_struct_sink_searcher.search(b.get_key()), self.get_enabled_blocks())
-
         return bussink
 
     def get_bus_structure_src(self):
         bussrc = filter(lambda b: _bus_struct_src_searcher.search(b.get_key()), self.get_enabled_blocks())
-
         return bussrc
 
     def iter_enabled_blocks(self):
@@ -404,14 +402,15 @@ class FlowGraph(Element):
         Returns:
             the new block or None if not found
         """
-        if key not in self.get_parent().get_block_keys(): return None
+        if key not in self.get_parent().get_block_keys():
+                return None
         block = self.get_parent().get_new_block(self, key)
-        self.get_elements().append(block);
+        self.get_elements().append(block)
         if block._bussify_sink:
-            block.bussify({'name':'bus','type':'bus'}, 'sink')
+            block.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
         if block._bussify_source:
-            block.bussify({'name':'bus','type':'bus'}, 'source')
-        return block;
+            block.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+        return block
 
     def connect(self, porta, portb):
         """
@@ -436,11 +435,12 @@ class FlowGraph(Element):
         If the element is a block, remove its connections.
         If the element is a connection, just remove the connection.
         """
-        if element not in self.get_elements(): return
-        #found a port, set to parent signal block
+        if element not in self.get_elements():
+            return
+        # Found a port, set to parent signal block
         if element.is_port():
             element = element.get_parent()
-        #remove block, remove all involved connections
+        # Remove block, remove all involved connections
         if element.is_block():
             for port in element.get_ports():
                 map(self.remove_element, port.get_connections())
@@ -448,8 +448,8 @@ class FlowGraph(Element):
             if element.is_bus():
                 cons_list = []
                 for i in map(lambda a: a.get_connections(), element.get_source().get_associated_ports()):
-                    cons_list.extend(i);
-                map(self.remove_element, cons_list);
+                    cons_list.extend(i)
+                map(self.remove_element, cons_list)
         self.get_elements().remove(element)
 
     def get_option(self, key):
@@ -465,10 +465,11 @@ class FlowGraph(Element):
         """
         return self._options_block.get_param(key).get_evaluated()
 
-    def is_flow_graph(self): return True
+    def is_flow_graph(self):
+        return True
 
     ##############################################
-    ## Access Elements
+    # Access Elements
     ##############################################
     def get_block(self, id):
         for block in self.iter_blocks():
@@ -505,7 +506,7 @@ class FlowGraph(Element):
 
     get_children = get_elements
 
-    ### TODO >>> THIS SUCKS ###
+    # TODO >>> THIS SUCKS #
     def rewrite(self):
         """
         Flag the namespace to be renewed.
@@ -514,21 +515,17 @@ class FlowGraph(Element):
             for block in self.get_blocks():
 
                 if 'bus' in map(lambda a: a.get_type(), block.get_sources_gui()):
-
-
                     for i in range(len(block.get_sources_gui())):
                         if len(block.get_sources_gui()[i].get_connections()) > 0:
                             source = block.get_sources_gui()[i]
                             sink = []
 
                             for j in range(len(source.get_connections())):
-                                sink.append(source.get_connections()[j].get_sink());
-
-
+                                sink.append(source.get_connections()[j].get_sink())
                             for elt in source.get_connections():
-                                self.remove_element(elt);
+                                self.remove_element(elt)
                             for j in sink:
-                                self.connect(source, j);
+                                self.connect(source, j)
         self._renew_eval_ns = True
 
         def refactor_bus_structure():
@@ -536,38 +533,39 @@ class FlowGraph(Element):
             for block in self.get_blocks():
                 for direc in ['source', 'sink']:
                     if direc == 'source':
-                        get_p = block.get_sources;
-                        get_p_gui = block.get_sources_gui;
-                        bus_structure = block.form_bus_structure('source');
+                        get_p = block.get_sources
+                        get_p_gui = block.get_sources_gui
+                        bus_structure = block.form_bus_structure('source')
                     else:
-                        get_p = block.get_sinks;
+                        get_p = block.get_sinks
                         get_p_gui = block.get_sinks_gui
-                        bus_structure = block.form_bus_structure('sink');
+                        bus_structure = block.form_bus_structure('sink')
 
                     if 'bus' in map(lambda a: a.get_type(), get_p_gui()):
                         if len(get_p_gui()) > len(bus_structure):
-                            times = range(len(bus_structure), len(get_p_gui()));
+                            times = range(len(bus_structure), len(get_p_gui()))
                             for i in times:
                                 for connect in get_p_gui()[-1].get_connections():
-                                    block.get_parent().remove_element(connect);
-                                get_p().remove(get_p_gui()[-1]);
+                                    block.get_parent().remove_element(connect)
+                                get_p().remove(get_p_gui()[-1])
                         elif len(get_p_gui()) < len(bus_structure):
-                            n = {'name':'bus','type':'bus'};
+                            n = {'name': 'bus', 'type': 'bus'}
                             if True in map(lambda a: isinstance(a.get_nports(), int), get_p()):
-                                n['nports'] = str(1);
+                                n['nports'] = str(1)
 
-                            times = range(len(get_p_gui()), len(bus_structure));
+                            times = range(len(get_p_gui()), len(bus_structure))
 
                             for i in times:
-                                n['key'] = str(len(get_p()));
-                                n = odict(n);
-                                port = block.get_parent().get_parent().Port(block=block, n=n, dir=direc);
-                                get_p().append(port);
+                                n['key'] = str(len(get_p()))
+                                n = odict(n)
+                                port = block.get_parent().get_parent().Port(block=block, n=n, dir=direc)
+                                get_p().append(port)
 
-        for child in self.get_children(): child.rewrite()
+        for child in self.get_children():
+            child.rewrite()
 
         refactor_bus_structure()
-        reconnect_bus_blocks();
+        reconnect_bus_blocks()
 
     def evaluate(self, expr):
         """
@@ -582,12 +580,14 @@ class FlowGraph(Element):
         """
         if self._renew_eval_ns:
             self._renew_eval_ns = False
-            #reload namespace
+            # Reload namespace
             n = dict()
-            #load imports
+            # Load imports
             for code in self.get_imports():
-                try: exec code in n
-                except: pass
+                try:
+                    exec code in n
+                except:
+                    pass
 
             for id, code in self.get_python_modules():
                 try:
@@ -597,24 +597,26 @@ class FlowGraph(Element):
                 except:
                     pass
 
-            #load parameters
+            # Load parameters
             np = dict()
             for parameter in self.get_parameters():
                 try:
                     e = eval(parameter.get_param('value').to_code(), n, n)
                     np[parameter.get_id()] = e
-                except: pass
-            n.update(np) #merge param namespace
-            #load variables
+                except:
+                    pass
+            n.update(np)  # Merge param namespace
+            # Load variables
             for variable in self.get_variables():
                 try:
                     e = eval(variable.get_var_value(), n, n)
                     n[variable.get_id()] = e
-                except: pass
-            #make namespace public
+                except:
+                    pass
+            # Make namespace public
             self.n = n
             self.n_hash = hash(str(n))
-        #evaluate
+        # Evaluate
         e = self._eval(expr, self.n, self.n_hash)
         return e
 
@@ -637,7 +639,7 @@ class FlowGraph(Element):
         return block
 
     ##############################################
-    ## Import/Export Methods
+    # Import/Export Methods
     ##############################################
     def export_data(self):
         """
@@ -736,7 +738,7 @@ class FlowGraph(Element):
                 self.connect(source_port, sink_port)
             except LookupError as e:
                 Messages.send_error_load(
-                    'Connection between %s(%s) and %s(%s) could not be made.\n\t%s' % (
+                    'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
                         source_block_id, source_key, sink_block_id, sink_key, e))
                 errors = True
 
@@ -745,7 +747,8 @@ class FlowGraph(Element):
 
     @staticmethod
     def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):
-        """Backward compatibility for message port keys
+        """
+        Backward compatibility for message port keys
 
         Message ports use their names as key (like in the 'connect' method).
         Flowgraph files from former versions still have numeric keys stored for
@@ -768,7 +771,7 @@ class FlowGraph(Element):
 
     @staticmethod
     def _guess_file_format_1(n):
-        """Try to guess the file format for flow-graph files without version tag"""
+        """ Try to guess the file format for flow-graph files without version tag """
         try:
             has_non_numeric_message_keys = any(not (
                 connection_n.find('source_key').isdigit() and

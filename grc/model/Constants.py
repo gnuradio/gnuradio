@@ -25,7 +25,7 @@ from gnuradio import gr
 
 _gr_prefs = gr.prefs()
 
-# setup paths
+# Setup paths
 PATH_SEP = {'/': ':', '\\': ';'}[os.path.sep]
 
 HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
@@ -41,13 +41,12 @@ BLOCKS_DIRS = filter(  # filter blank strings
     ]).split(PATH_SEP),
 ) + [HIER_BLOCKS_LIB_DIR]
 
-
-#data files
+# Data files
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
 BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')
 
-# file format versions:
+# File format versions:
 #  0: undefined / legacy
 #  1: non-numeric message port keys (label is used instead)
 FLOW_GRAPH_FILE_FORMAT_VERSION = 1
@@ -72,27 +71,27 @@ BLOCK_DISABLED = 0
 BLOCK_ENABLED = 1
 BLOCK_BYPASSED = 2
 
-
-# user settings
+# User settings
 XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
-# file creation modes
-TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
+# File creation modes
+TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | \
+                      stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
 
-# data files
+# Data files
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
-#define types, native python + numpy
+# Define types, native python + numpy
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
 COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
 REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
 INT_TYPES = [int, long, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
-    numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
-#cast to tuple for isinstance, concat subtypes
+             numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
+# Cast to tuple for isinstance, concat subtypes
 COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
 REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
 INT_TYPES = tuple(INT_TYPES)
@@ -119,7 +118,6 @@ GRC_COLOR_DARK_GREY = '#72706F'
 GRC_COLOR_GREY = '#BDBDBD'
 GRC_COLOR_WHITE = '#FFFFFF'
 
-
 CORE_TYPES = (  # name, key, sizeof, color
     ('Complex Float 64', 'fc64', 16, GRC_COLOR_BROWN),
     ('Complex Float 32', 'fc32', 8, GRC_COLOR_BLUE),
@@ -140,23 +138,25 @@ CORE_TYPES = (  # name, key, sizeof, color
 )
 
 ALIAS_TYPES = {
-    'complex' : (8, GRC_COLOR_BLUE),
-    'float'   : (4, GRC_COLOR_ORANGE),
-    'int'     : (4, GRC_COLOR_TEAL),
-    'short'   : (2, GRC_COLOR_YELLOW),
-    'byte'    : (1, GRC_COLOR_LIGHT_PURPLE),
+    'complex': (8, GRC_COLOR_BLUE),
+    'float': (4, GRC_COLOR_ORANGE),
+    'int': (4, GRC_COLOR_TEAL),
+    'short': (2, GRC_COLOR_YELLOW),
+    'byte': (1, GRC_COLOR_LIGHT_PURPLE),
 }
 
 TYPE_TO_COLOR = dict()
 TYPE_TO_SIZEOF = dict()
+
 for name, key, sizeof, color in CORE_TYPES:
     TYPE_TO_COLOR[key] = color
     TYPE_TO_SIZEOF[key] = sizeof
+
 for key, (sizeof, color) in ALIAS_TYPES.iteritems():
     TYPE_TO_COLOR[key] = color
     TYPE_TO_SIZEOF[key] = sizeof
 
-#coloring
+# Coloring
 COMPLEX_COLOR_SPEC = '#3399FF'
 FLOAT_COLOR_SPEC = '#FF8C69'
 INT_COLOR_SPEC = '#00FF99'

@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ def validate_dtd(xml_file, dtd_file=None):
         dtd_file: the optional dtd file
     @throws Exception validation fails
     """
-    # perform parsing, use dtd validation if dtd file is not specified
+    # Perform parsing, use dtd validation if dtd file is not specified
     parser = etree.XMLParser(dtd_validation=not dtd_file)
     try:
         xml = etree.parse(xml_file, parser=parser)
@@ -50,7 +50,7 @@ def validate_dtd(xml_file, dtd_file=None):
     if parser.error_log:
         raise XMLSyntaxError(parser.error_log)
 
-    # perform dtd validation if the dtd file is specified
+    # Perform dtd validation if the dtd file is specified
     if not dtd_file:
         return
     try:
@@ -99,9 +99,11 @@ def _from_file(xml):
     nested_data = odict()
     for elem in xml:
         key, value = _from_file(elem).items()[0]
-        if nested_data.has_key(key): nested_data[key].append(value)
-        else: nested_data[key] = [value]
-    # delistify if the length of values is 1
+        if key in nested_data:
+            nested_data[key].append(value)
+        else:
+            nested_data[key] = [value]
+    # Delistify if the length of values is 1
     for key, values in nested_data.iteritems():
         if len(values) == 1:
             nested_data[key] = values[0]
@@ -119,7 +121,8 @@ def to_file(nested_data, xml_file):
     """
     xml_data = ""
     instructions = nested_data.pop('_instructions', None)
-    if instructions:  # create the processing instruction from the array
+    # Create the processing instruction from the array
+    if instructions:
         xml_data += etree.tostring(etree.ProcessingInstruction(
             'grc', ' '.join(
                 "{0}='{1}'".format(*item) for item in instructions.iteritems())
@@ -142,7 +145,7 @@ def _to_file(nested_data):
     """
     nodes = list()
     for key, values in nested_data.iteritems():
-        # listify the values if not a list
+        # Listify the values if not a list
         if not isinstance(values, (list, set, tuple)):
             values = [values]
         for value in values:

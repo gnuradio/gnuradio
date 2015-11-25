@@ -63,10 +63,10 @@ class Element(object):
         Returns:
             a list of error message strings
         """
-        error_messages = list(self._error_messages) #make a copy
+        error_messages = list(self._error_messages)  # Make a copy
         for child in filter(lambda c: c.get_enabled(), self.get_children()):
             for msg in child.get_error_messages():
-                error_messages.append("%s:\n\t%s"%(child, msg.replace("\n", "\n\t")))
+                error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
         return error_messages
 
     def rewrite(self):
@@ -81,15 +81,16 @@ class Element(object):
         return True
 
     ##############################################
-    ## Tree-like API
+    # Tree-like API
     ##############################################
     def get_parent(self):
         return self._parent
+
     def get_children(self):
         return list()
 
     ##############################################
-    ## Type testing methods
+    # Type testing methods
     ##############################################
     def is_element(self):
         return True
@@ -105,6 +106,7 @@ class Element(object):
 
     def is_block(self):
         return False
+
     def is_dummy_block(self):
         return False
 

@@ -22,6 +22,7 @@ from . import Constants
 from .Element import Element
 from .odict import odict
 
+
 class Connection(Element):
 
     def __init__(self, flow_graph, porta, portb):
@@ -39,18 +40,23 @@ class Connection(Element):
         """
         Element.__init__(self, flow_graph)
         source = sink = None
-        #separate the source and sink
+        # Separate the source and sink
         for port in (porta, portb):
-            if port.is_source(): source = port
-            if port.is_sink(): sink = port
-        if not source: raise ValueError('Connection could not isolate source')
-        if not sink: raise ValueError('Connection could not isolate sink')
-        busses = len(filter(lambda a: a.get_type() == 'bus', [source, sink]))%2
-        if not busses == 0: raise ValueError('busses must get with busses')
+            if port.is_source():
+                source = port
+            if port.is_sink():
+                sink = port
+        if not source:
+            raise ValueError('Connection could not isolate source')
+        if not sink:
+            raise ValueError('Connection could not isolate sink')
+        busses = len(filter(lambda a: a.get_type() == 'bus', [source, sink])) % 2
+        if not busses == 0:
+            raise ValueError('busses must get with busses')
 
         if not len(source.get_associated_ports()) == len(sink.get_associated_ports()):
-            raise ValueError('port connections must have same cardinality');
-        #ensure that this connection (source -> sink) is unique
+            raise ValueError('port connections must have same cardinality')
+        # Ensure that this connection (source -> sink) is unique
         for connection in self.get_parent().get_connections():
             if connection.get_source() is source and connection.get_sink() is sink:
                 raise LookupError('This connection between source and sink is not unique.')
@@ -58,18 +64,17 @@ class Connection(Element):
         self._sink = sink
         if source.get_type() == 'bus':
 
-            sources = source.get_associated_ports();
-            sinks = sink.get_associated_ports();
+            sources = source.get_associated_ports()
+            sinks = sink.get_associated_ports()
 
             for i in range(len(sources)):
                 try:
-                    flow_graph.connect(sources[i], sinks[i]);
+                    flow_graph.connect(sources[i], sinks[i])
                 except:
                     pass
 
-
     def __str__(self):
-        return 'Connection (\n\t%s\n\t\t%s\n\t%s\n\t\t%s\n)'%(
+        return 'Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)'.format(
             self.get_source().get_parent(),
             self.get_source(),
             self.get_sink().get_parent(),
@@ -98,8 +103,8 @@ class Connection(Element):
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
         if (source_domain, sink_domain) not in platform.get_connection_templates():
-            self.add_error_message('No connection known for domains "%s", "%s"'
-                                   % (source_domain, sink_domain))
+            self.add_error_message('No connection known for domains "{}", "{}"'.format(
+                    source_domain, sink_domain))
         too_many_other_sinks = (
             source_domain in platform.get_domains() and
             not platform.get_domain(key=source_domain)['multiple_sinks'] and
@@ -112,16 +117,15 @@ class Connection(Element):
         )
         if too_many_other_sinks:
             self.add_error_message(
-                'Domain "%s" can have only one downstream block' % source_domain)
+                'Domain "{}" can have only one downstream block'.format(source_domain))
         if too_many_other_sources:
             self.add_error_message(
-                'Domain "%s" can have only one upstream block' % sink_domain)
+                'Domain "{}" can have only one upstream block'.format(sink_domain))
 
         source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
         sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
         if source_size != sink_size:
-            self.add_error_message('Source IO size "%s" does not match sink IO size "%s".'%(source_size, sink_size))
-
+            self.add_error_message('Source IO size "{}" does not match sink IO size "{}".'.format(source_size, sink_size))
 
     def get_enabled(self):
         """
@@ -136,11 +140,14 @@ class Connection(Element):
     #############################
     # Access Ports
     #############################
-    def get_sink(self): return self._sink
-    def get_source(self): return self._source
+    def get_sink(self):
+        return self._sink
+
+    def get_source(self):
+        return self._source
 
     ##############################################
-    ## Import/Export Methods
+    # Import/Export Methods
     ##############################################
     def export_data(self):
         """

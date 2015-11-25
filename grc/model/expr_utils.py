@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import string
 VAR_CHARS = string.letters + string.digits + '_'
 
+
 class graph(object):
     """
     Simple graph structure held in a dictionary.
@@ -30,13 +31,16 @@ class graph(object):
     def __str__(self): return str(self._graph)
 
     def add_node(self, node_key):
-        if self._graph.has_key(node_key): return
+        if node_key in self._graph:
+            return
         self._graph[node_key] = set()
 
     def remove_node(self, node_key):
-        if not self._graph.has_key(node_key): return
+        if node_key not in self._graph:
+            return
         for edges in self._graph.values():
-            if node_key in edges: edges.remove(node_key)
+            if node_key in edges:
+                edges.remove(node_key)
         self._graph.pop(node_key)
 
     def add_edge(self, src_node_key, dest_node_key):
@@ -45,9 +49,12 @@ class graph(object):
     def remove_edge(self, src_node_key, dest_node_key):
         self._graph[src_node_key].remove(dest_node_key)
 
-    def get_nodes(self): return self._graph.keys()
+    def get_nodes(self):
+        return self._graph.keys()
 
-    def get_edges(self, node_key): return self._graph[node_key]
+    def get_edges(self, node_key):
+        return self._graph[node_key]
+
 
 def expr_split(expr):
     """
@@ -66,7 +73,8 @@ def expr_split(expr):
     quote = ''
     for char in expr:
         if quote or char in VAR_CHARS:
-            if char == quote: quote = ''
+            if char == quote:
+                quote = ''
             tok += char
         elif char in ("'", '"'):
             toks.append(tok)
@@ -78,6 +86,7 @@ def expr_split(expr):
             tok = ''
     toks.append(tok)
     return filter(lambda t: t, toks)
+
 
 def expr_replace(expr, replace_dict):
     """
@@ -96,6 +105,7 @@ def expr_replace(expr, replace_dict):
             expr_splits[i] = replace_dict[es]
     return ''.join(expr_splits)
 
+
 def get_variable_dependencies(expr, vars):
     """
     Return a set of variables used in this expression.
@@ -110,6 +120,7 @@ def get_variable_dependencies(expr, vars):
     expr_toks = expr_split(expr)
     return set(filter(lambda v: v in expr_toks, vars))
 
+
 def get_graph(exprs):
     """
     Get a graph representing the variable dependencies
@@ -121,13 +132,16 @@ def get_graph(exprs):
         a graph of variable deps
     """
     vars = exprs.keys()
-    #get dependencies for each expression, load into graph
+    # Get dependencies for each expression, load into graph
     var_graph = graph()
-    for var in vars: var_graph.add_node(var)
+    for var in vars:
+        var_graph.add_node(var)
     for var, expr in exprs.iteritems():
         for dep in get_variable_dependencies(expr, vars):
-            if dep != var: var_graph.add_edge(dep, var)
+            if dep != var:
+                var_graph.add_edge(dep, var)
     return var_graph
+
 
 def sort_variables(exprs):
     """
@@ -142,16 +156,19 @@ def sort_variables(exprs):
     """
     var_graph = get_graph(exprs)
     sorted_vars = list()
-    #determine dependency order
+    # Determine dependency order
     while var_graph.get_nodes():
-        #get a list of nodes with no edges
+        # Get a list of nodes with no edges
         indep_vars = filter(lambda var: not var_graph.get_edges(var), var_graph.get_nodes())
-        if not indep_vars: raise Exception('circular dependency caught in sort_variables')
-        #add the indep vars to the end of the list
+        if not indep_vars:
+            raise Exception('circular dependency caught in sort_variables')
+        # Add the indep vars to the end of the list
         sorted_vars.extend(sorted(indep_vars))
-        #remove each edge-less node from the graph
-        for var in indep_vars: var_graph.remove_node(var)
+        # Remove each edge-less node from the graph
+        for var in indep_vars:
+            var_graph.remove_node(var)
     return reversed(sorted_vars)
+
 
 def sort_objects(objects, get_id, get_expr):
     """
@@ -166,12 +183,14 @@ def sort_objects(objects, get_id, get_expr):
         a list of sorted objects
     """
     id2obj = dict([(get_id(obj), obj) for obj in objects])
-    #map obj id to expression code
+    # Map obj id to expression code
     id2expr = dict([(get_id(obj), get_expr(obj)) for obj in objects])
-    #sort according to dependency
+    # Sort according to dependency
     sorted_ids = sort_variables(id2expr)
-    #return list of sorted objects
+    # Return list of sorted objects
     return [id2obj[id] for id in sorted_ids]
 
+
 if __name__ == '__main__':
-    for i in sort_variables({'x':'1', 'y':'x+1', 'a':'x+y', 'b':'y+1', 'c':'a+b+x+y'}): print i
+    for i in sort_variables({'x': '1', 'y': 'x+1', 'a': 'x+y', 'b': 'y+1', 'c': 'a+b+x+y'}):
+        print i
