@@ -207,6 +207,14 @@ part#slurp
 #end if</hide>
 		<tab>Advanced</tab>
 	</param>
+	<param>
+		<name>Hier Block Source Path</name>
+		<key>hier_block_src_path</key>
+		<value>.:</value>
+		<type>string</type>
+		<hide>part</hide>
+		<tab>Advanced</tab>
+	</param>
 	<check>not $window_size or len($window_size) == 2</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[0] &lt;= 4096</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[1] &lt;= 4096</check>

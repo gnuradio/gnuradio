@@ -480,10 +480,14 @@ class ActionHandler:
                 self.get_flow_graph()._options_block.get_param('generate_options').set_value(args[0])
                 self.get_flow_graph().update()
         elif action == Actions.FLOW_GRAPH_OPEN:
-            file_paths = OpenFlowGraphFileDialog(self.get_page().get_file_path()).run()
+            file_paths = args if args else OpenFlowGraphFileDialog(self.get_page().get_file_path()).run()
             if file_paths: #open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     self.main_window.new_page(file_path, show=(i==0))
+                    Preferences.files_recent_add(file_path)
+                    self.main_window.tool_bar.refresh_submenus()
+                    self.main_window.menu_bar.refresh_submenus()
+
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
             file_paths = OpenQSSFileDialog(GR_PREFIX + '/share/gnuradio/themes/').run()
             if file_paths:
@@ -513,6 +517,9 @@ class ActionHandler:
             if file_path is not None:
                 self.get_page().set_file_path(file_path)
                 Actions.FLOW_GRAPH_SAVE()
+                Preferences.files_recent_add(file_path)
+                self.main_window.tool_bar.refresh_submenus()
+                self.main_window.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
             if file_path is not None:

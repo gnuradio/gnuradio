@@ -122,11 +122,12 @@ class Platform(_Element):
         # get block instance and add it to the list of blocks
         block = self.Block(self._flow_graph, n)
         key = block.get_key()
-        if key in self.get_block_keys():  # test against repeated keys
+        if key in self._blocks:
             print >> sys.stderr, 'Warning: Block with key "%s" already exists.\n\tIgnoring: %s' % (key, xml_file)
         else:  # store the block
             self._blocks[key] = block
             self._blocks_n[key] = n
+        return block
 
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""

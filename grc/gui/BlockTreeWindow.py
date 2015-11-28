@@ -17,26 +17,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
-import Actions
-import Utils
 import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
 
+from . import Actions, Utils
+from .Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
+
 NAME_INDEX = 0
 KEY_INDEX = 1
 DOC_INDEX = 2
 
-DOC_MARKUP_TMPL="""\
+DOC_MARKUP_TMPL = """\
 #if $doc
 $encode($doc)#slurp
 #else
 undocumented#slurp
 #end if"""
 
-CAT_MARKUP_TMPL="""Category: $cat"""
+CAT_MARKUP_TMPL = """Category: $cat"""
+
 
 class BlockTreeWindow(gtk.VBox):
     """The block selection panel."""
@@ -69,13 +70,13 @@ class BlockTreeWindow(gtk.VBox):
         self.search_entry.connect('key-press-event', self._handle_search_key_press)
         self.pack_start(self.search_entry, False)
 
-        #make the tree model for holding blocks and a temporary one for search results
+        # make the tree model for holding blocks and a temporary one for search results
         self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
         self.treestore_search = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
 
         self.treeview = gtk.TreeView(self.treestore)
-        self.treeview.set_enable_search(False) #disable pop up search box
-        self.treeview.set_search_column(-1) # really disable search
+        self.treeview.set_enable_search(False)  # disable pop up search box
+        self.treeview.set_search_column(-1)  # really disable search
         self.treeview.set_headers_visible(False)
         self.treeview.add_events(gtk.gdk.BUTTON_PRESS_MASK)
         self.treeview.connect('button-press-event', self._handle_mouse_button_press)
@@ -85,26 +86,29 @@ class BlockTreeWindow(gtk.VBox):
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn('Blocks', renderer, text=NAME_INDEX)
         self.treeview.append_column(column)
-        #try to enable the tooltips (available in pygtk 2.12 and above)
-        try: self.treeview.set_tooltip_column(DOC_INDEX)
-        except: pass
-        #setup sort order
+        # try to enable the tooltips (available in pygtk 2.12 and above)
+        try:
+            self.treeview.set_tooltip_column(DOC_INDEX)
+        except:
+            pass
+        # setup sort order
         column.set_sort_column_id(0)
         self.treestore.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        #setup drag and drop
+        # setup drag and drop
         self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, DND_TARGETS, gtk.gdk.ACTION_COPY)
         self.treeview.connect('drag-data-get', self._handle_drag_get_data)
-        #make the scrolled window to hold the tree view
+        # make the scrolled window to hold the tree view
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_with_viewport(self.treeview)
         scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window)
-        #map categories to iters, automatic mapping for root
+        # map categories to iters, automatic mapping for root
         self._categories = {tuple(): None}
         self._categories_search = {tuple(): None}
-        #add blocks and categories
+        # add blocks and categories
         self.platform.load_block_tree(self)
+        self.platform.block_docstrings_loaded_callback = self.update_docs
 
     def clear(self):
         self.treestore.clear();
@@ -126,8 +130,8 @@ class BlockTreeWindow(gtk.VBox):
         if categories is None: categories = self._categories
 
         if isinstance(category, (str, unicode)): category = category.split('/')
-        category = tuple(filter(lambda x: x, category)) #tuple is hashable
-        #add category and all sub categories
+        category = tuple(filter(lambda x: x, category))  # tuple is hashable
+        # add category and all sub categories
         for i, cat_name in enumerate(category):
             sub_category = category[:i+1]
             if sub_category not in categories:
@@ -136,12 +140,29 @@ class BlockTreeWindow(gtk.VBox):
                 treestore.set_value(iter, KEY_INDEX, '')
                 treestore.set_value(iter, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
                 categories[sub_category] = iter
-        #add block
+        # add block
         if block is None: return
         iter = treestore.insert_before(categories[category], None)
         treestore.set_value(iter, NAME_INDEX, block.get_name())
         treestore.set_value(iter, KEY_INDEX, block.get_key())
         treestore.set_value(iter, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
+
+    def update_docs(self):
+        """Update the documentation column of every block"""
+        def update(node):
+            for i in range(treestore.iter_n_children(node) or 0):
+                update(treestore.iter_nth_child(node, i))
+
+            if not treestore.iter_has_child(node):
+                key = treestore.get_value(node, KEY_INDEX)
+                block = self.platform.get_block(key)
+                doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
+                treestore.set_value(node, DOC_INDEX, doc)
+
+        for treestore in self.treestore, self.treestore_search:
+            root = treestore.get_iter_root()
+            if root:
+                update(root)
 
     ############################################################
     ## Helper Methods
