@@ -102,7 +102,8 @@ namespace gr {
       const gr_complex *in = (const gr_complex *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
 
-      int symbol_index, frame_index;
+      int symbol_index = 0;
+      int frame_index = 0;
       int to_out = 0;
 
       for (int i = 0; i < noutput_items; i++) {

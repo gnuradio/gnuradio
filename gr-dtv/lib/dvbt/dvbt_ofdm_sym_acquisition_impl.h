@@ -39,14 +39,11 @@ namespace gr {
 
       int d_index;
 
-      int d_search_max;
-
       gr_complex * d_conj;
       float * d_norm;
       gr_complex * d_corr;
       gr_complex * d_gamma;
       float * d_lambda;
-      float * d_arg;
 
       // For peak detector
       float d_threshold_factor_rise;
