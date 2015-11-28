@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -49,7 +49,8 @@ namespace gr {
 
       /*!
        * \param check Set to true if you want to check CRC, false to create CRC.
-       * \param lengthtagname Length tag key
+       * \param lengthtagname Length tag key for the tagged stream.
+       * \param packed If the data is packed or unpacked bits (default=true).
        */
       static sptr make(bool check=false, const std::string& lengthtagname="packet_len", bool packed=true);
     };
@@ -58,4 +59,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_CRC32_BB_H */
-
