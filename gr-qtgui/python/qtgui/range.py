@@ -21,7 +21,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from PyQt4 import Qt, QtCore, QtGui
+from PyQt5 import Qt, QtCore, QtWidgets
 
 
 class Range(object):
@@ -63,10 +63,10 @@ class Range(object):
         return (val*self.step+self.min)
 
 
-class RangeWidget(QtGui.QWidget):
+class RangeWidget(QtWidgets.QWidget):
     def __init__(self, ranges, slot, label, style, rangeType=float):
         """ Creates the QT Range widget """
-        QtGui.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self)
 
         self.range = ranges
         self.style = style
@@ -97,10 +97,10 @@ class RangeWidget(QtGui.QWidget):
         layout.addWidget(self.d_widget)
         self.setLayout(layout)
 
-    class Dial(QtGui.QDial):
+    class Dial(QtWidgets.QDial):
         """ Creates the range using a dial """
         def __init__(self, parent, ranges, slot, rangeType=float):
-            QtGui.QDial.__init__(self, parent)
+            QtWidgets.QDial.__init__(self, parent)
 
             self.rangeType = rangeType
 
@@ -123,10 +123,10 @@ class RangeWidget(QtGui.QWidget):
             val = self.range.map_range(value)
             self.notifyChanged(self.rangeType(val))
 
-    class Slider(QtGui.QSlider):
+    class Slider(QtWidgets.QSlider):
         """ Creates the range using a slider """
         def __init__(self, parent, ranges, slot, rangeType=float):
-            QtGui.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
+            QtWidgets.QSlider.__init__(self, QtCore.Qt.Horizontal, parent)
 
             self.rangeType = rangeType
 
@@ -165,18 +165,18 @@ class RangeWidget(QtGui.QWidget):
                 event.accept()
             # Use repaint rather than calling the super mousePressEvent.
             # Calling super causes issue where slider jumps to wrong value.
-            QtGui.QSlider.repaint(self)
+            QtWidgets.QSlider.repaint(self)
 
         def mouseMoveEvent(self, event):
             new = self.minimum() + ((self.maximum()-self.minimum()) * event.x()) / self.width()
             self.setValue(new)
             event.accept()
-            QtGui.QSlider.repaint(self)
+            QtWidgets.QSlider.repaint(self)
 
-    class Counter(QtGui.QDoubleSpinBox):
+    class Counter(QtWidgets.QDoubleSpinBox):
         """ Creates the range using a counter """
         def __init__(self, parent, ranges, slot, rangeType=float):
-            QtGui.QDoubleSpinBox.__init__(self, parent)
+            QtWidgets.QDoubleSpinBox.__init__(self, parent)
 
             self.rangeType = rangeType
 
@@ -195,10 +195,10 @@ class RangeWidget(QtGui.QWidget):
             """ Handle the valueChanged signal by converting to the right type """
             self.notifyChanged(self.rangeType(value))
 
-    class CounterSlider(QtGui.QWidget):
+    class CounterSlider(QtWidgets.QWidget):
         """ Creates the range using a counter and slider """
         def __init__(self, parent, ranges, slot, rangeType=float):
-            QtGui.QWidget.__init__(self, parent)
+            QtWidgets.QWidget.__init__(self, parent)
 
             self.rangeType = rangeType
 
