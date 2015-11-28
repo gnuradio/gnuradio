@@ -22,14 +22,14 @@
 ########################################################################
 include(GrBoost)
 
-find_package(Qt4 4.2.0 COMPONENTS QtCore QtGui)
+find_package(Qt5Widgets)
 
 find_package(Qwt)
 
 find_package(PythonLibs 2)
 
 include(GrPython)
-GR_PYTHON_CHECK_MODULE("PyQt4" PyQt4 True PYQT4_FOUND)
+GR_PYTHON_CHECK_MODULE("PyQt5" PyQt5 True PYQT5_FOUND)
 
 ########################################################################
 # Register component
@@ -37,13 +37,13 @@ GR_PYTHON_CHECK_MODULE("PyQt4" PyQt4 True PYQT4_FOUND)
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(qt_gui_python_deps
-        PYQT4_FOUND
+        PYQT5_FOUND
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
-    QT4_FOUND
+    Qt5Widgets_FOUND
     QWT_FOUND
     ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME
@@ -65,9 +65,6 @@ SET(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_QTGUI)
-
-# populate the environment with QT variables
-include(GrSetupQt4)
 
 ########################################################################
 # Setup CPack components
