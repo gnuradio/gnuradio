@@ -840,6 +840,13 @@ namespace gr {
         DISPTIME | DISPOPTSTRIP)));
 
     d_rpc_vars.push_back(
+      rpcbasic_sptr(new rpcbasic_register_get<block, float>(
+        alias(), "avg throughput", &block::pc_throughput_avg,
+        pmt::mp(0), pmt::mp(1e9), pmt::mp(0),
+        "items/s", "Average items throughput in call to work", RPC_PRIVLVL_MIN,
+        DISPTIME | DISPOPTSTRIP)));
+
+    d_rpc_vars.push_back(
       rpcbasic_sptr(new rpcbasic_register_get<block, std::vector<float> >(
         alias(), "input \% full", &block::pc_input_buffers_full,
         pmt::make_f32vector(0,0), pmt::make_f32vector(0,1), pmt::make_f32vector(0,0),
