@@ -41,8 +41,11 @@ def load(platform):
     global _platform
     _platform = platform
     # create sections
-    _config_parser.add_section('main')
-    _config_parser.add_section('files_open')
+    for section in ['main', 'files_open', 'files_recent']:
+        try:
+            _config_parser.add_section(section)
+        except Exception, e:
+             print e
     try:
         _config_parser.read(_platform.get_prefs_file())
     except Exception as err:
@@ -91,20 +94,36 @@ def file_open(filename=None):
     return entry('file_open', filename, default='')
 
 
-def files_open(files=None):
+def files_lists(key, files=None):
     if files is not None:
-        _config_parser.remove_section('files_open')  # clear section
-        _config_parser.add_section('files_open')
+        _config_parser.remove_section(key)  # clear section
+        _config_parser.add_section(key)
         for i, filename in enumerate(files):
-            _config_parser.set('files_open', 'file_open_%d' % i, filename)
+            _config_parser.set(key, '%s_%d' % (key, i), filename)
 
     else:
         try:
-            files = [value for name, value in _config_parser.items('files_open')
-                     if name.startswith('file_open_')]
+            files = [value for name, value in _config_parser.items(key)
+                     if name.startswith('%s_' % key)]
         except ConfigParser.Error:
             files = []
         return files
+
+def files_open(files=None):
+    return files_lists('files_open', files)
+
+def files_recent(files=None):
+    return files_lists('files_recent', files)
+
+def files_recent_add(file_name):
+    import os
+    # double check file_name
+    if os.path.exists(file_name):
+        recent_files = files_recent()
+        if file_name in recent_files:
+            recent_files.remove(file_name) # attempt removal
+        recent_files.insert(0, file_name) # insert at start
+        files_recent(recent_files[:10]) # keep up to 10 files
 
 
 def reports_window_position(pos=None):

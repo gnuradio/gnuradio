@@ -24,16 +24,15 @@ import threading
 import tempfile
 import subprocess
 
-import Constants
-
 
 class ExternalEditor(threading.Thread):
 
-    def __init__(self, name, value, callback):
+    def __init__(self, editor, name, value, callback):
         threading.Thread.__init__(self)
         self.daemon = True
         self._stop_event = threading.Event()
 
+        self.editor = editor
         self.callback = callback
         self.tempfile = self._create_tempfile(name, value)
 
@@ -49,9 +48,7 @@ class ExternalEditor(threading.Thread):
         return self.tempfile.name
 
     def open_editor(self):
-        proc = subprocess.Popen(
-            args=(Constants.EDITOR, self.filename)
-        )
+        proc = subprocess.Popen(args=(self.editor, self.filename))
         proc.poll()
         return proc
 
@@ -84,10 +81,9 @@ if __name__ == '__main__':
     def p(data):
         print data
 
-    Constants.EDITOR = '/usr/bin/gedit'
-    editor = ExternalEditor("test", "content", p)
-    editor.open_editor()
-    editor.start()
+    e = ExternalEditor('/usr/bin/gedit', "test", "content", p)
+    e.open_editor()
+    e.start()
     time.sleep(15)
-    editor.stop()
-    editor.join()
+    e.stop()
+    e.join()

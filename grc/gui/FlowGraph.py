@@ -21,10 +21,11 @@ import random
 import functools
 from itertools import chain
 from operator import methodcaller
+from distutils.spawn import find_executable
 
 import gobject
 
-from . import Actions, Colors, Utils, Messages, Bars
+from . import Actions, Colors, Constants, Utils, Messages, Bars, Dialogs
 from . Element import Element
 from . Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
 from . external_editor import ExternalEditor
@@ -67,14 +68,27 @@ class FlowGraph(Element):
         if target in self._external_updaters:
             editor = self._external_updaters[target]
         else:
+            editor = (find_executable(Constants.EDITOR) or
+                      Dialogs.ChooseEditorDialog())
+            if not editor:
+                return
             updater = functools.partial(
                 self.handle_external_editor_change, target=target)
             editor = self._external_updaters[target] = ExternalEditor(
+                editor=editor,
                 name=target[0], value=param.get_value(),
                 callback=functools.partial(gobject.idle_add, updater)
             )
             editor.start()
-        editor.open_editor()
+        try:
+            editor.open_editor()
+        except Exception as e:
+            # Problem launching the editor. Need to select a new editor.
+            Messages.send('>>> Error opening an external editor. Please select a different editor.\n')
+            # Reset the editor to force the user to select a new one.
+            Constants.prefs.set_string('grc', 'editor', '')
+            Constants.prefs.save()
+            Constants.EDITOR = ""
 
     def handle_external_editor_change(self, new_value, target):
         try:
@@ -265,6 +279,9 @@ class FlowGraph(Element):
         Args:
             delta_coordinate: the change in coordinates
         """
+        for selected_block in self.get_selected_blocks():
+            delta_coordinate = selected_block.bound_move_delta(delta_coordinate)
+ 
         for selected_block in self.get_selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True

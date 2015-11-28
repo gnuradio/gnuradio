@@ -59,8 +59,8 @@ class gmsk_mod(gr.hier_block2):
     Hierarchical block for Gaussian Minimum Shift Key (GMSK)
     modulation.
     
-    The input is a byte stream (unsigned char) and the
-    output is the complex modulated signal at baseband.
+    The input is a byte stream (unsigned char with packed bits)
+    and the output is the complex modulated signal at baseband.
     
     Args:
         samples_per_symbol: samples per baud >= 2 (integer)

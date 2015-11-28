@@ -30,9 +30,11 @@ _bussrc_searcher = re.compile('^(bus_source)$')
 _bus_struct_sink_searcher = re.compile('^(bus_structure_sink)$')
 _bus_struct_src_searcher = re.compile('^(bus_structure_source)$')
 
+
 class FlowGraph(_FlowGraph, _GUIFlowGraph):
 
     def __init__(self, **kwargs):
+        self.grc_file_path = ''
         _FlowGraph.__init__(self, **kwargs)
         _GUIFlowGraph.__init__(self)
         self._eval_cache = dict()
@@ -232,7 +234,6 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 
         return bussrc
 
-
     def rewrite(self):
         """
         Flag the namespace to be renewed.
@@ -299,3 +300,21 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         #evaluate
         e = self._eval(expr, self.n, self.n_hash)
         return e
+
+    def get_new_block(self, key):
+        """Try to auto-generate the block from file if missing"""
+        block = _FlowGraph.get_new_block(self, key)
+        if not block:
+            platform = self.get_parent()
+            # we're before the initial fg rewrite(), so no evaluated values!
+            # --> use raw value instead
+            path_param = self._options_block.get_param('hier_block_src_path')
+            file_path = platform.find_file_in_paths(
+                filename=key + '.' + platform.get_key(),
+                paths=path_param.get_value(),
+                cwd=self.grc_file_path
+            )
+            if file_path:  # grc file found. load and get block
+                platform.load_and_generate_flow_graph(file_path)
+                block = _FlowGraph.get_new_block(self, key)  # can be None
+        return block
