@@ -17,8 +17,8 @@
         <key>polar.CHANNEL_TYPE_BEC</key>
       </option>
       <option>
-        <name>BSC</name>
-        <key>polar.CHANNEL_TYPE_BSC</key>
+        <name>AWGN</name>
+        <key>polar.CHANNEL_TYPE_AWGN</key>
       </option>
   </param>
 

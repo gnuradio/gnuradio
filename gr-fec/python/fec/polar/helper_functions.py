@@ -23,6 +23,24 @@ import time, sys
 import copy
 
 
+def bsc_channel(p):
+    '''
+    binary symmetric channel (BSC)
+    output alphabet Y = {0, 1} and
+    W(0|0) = W(1|1) and W(1|0) = W(0|1)
+
+    this function returns a prob's vector for a BSC
+    p denotes an erroneous transistion
+    '''
+    if not (p >= 0.0 and p <= 1.0):
+        print "given p is out of range!"
+        return np.array([], dtype=float)
+
+    # 0 -> 0, 0 -> 1, 1 -> 0, 1 -> 1
+    W = np.array([[1 - p, p], [p, 1 - p]], dtype=float)
+    return W
+
+
 def power_of_2_int(num):
     return int(np.log2(num))
 

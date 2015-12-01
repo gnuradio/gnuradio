@@ -34,24 +34,6 @@ from helper_functions import *
 from channel_construction_bec import bhattacharyya_bounds
 
 
-def bsc_channel(p):
-    '''
-    binary symmetric channel (BSC)
-    output alphabet Y = {0, 1} and
-    W(0|0) = W(1|1) and W(1|0) = W(0|1)
-
-    this function returns a prob's vector for a BSC
-    p denotes an erroneous transistion
-    '''
-    if not (p >= 0.0 and p <= 1.0):
-        print "given p is out of range!"
-        return np.array([], dtype=float)
-
-    # 0 -> 0, 0 -> 1, 1 -> 0, 1 -> 1
-    W = np.array([[1 - p, p], [p, 1 - p]], dtype=float)
-    return W
-
-
 def solver_equation(val, s):
     cw_lambda = codeword_lambda_callable(s)
     ic_lambda = instantanious_capacity_callable()
@@ -267,7 +249,7 @@ def normalize_q(q, tpm):
 
 
 def main():
-    print 'channel construction BSC main'
+    print 'channel construction AWGN main'
     n = 8
     m = 2 ** n
     design_snr = 0.0

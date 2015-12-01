@@ -31,11 +31,11 @@ class PolarDecoder(PolarCommon):
         PolarCommon.__init__(self, n, k, frozen_bit_position, frozenbits)
 
         self.error_probability = 0.1  # this is kind of a dummy value. usually chosen individually.
-        self.bsc_lr = ((1 - self.error_probability) / self.error_probability, self.error_probability / (1 - self.error_probability))
-        self.bsc_llrs = np.log(self.bsc_lr)
+        self.lrs = ((1 - self.error_probability) / self.error_probability, self.error_probability / (1 - self.error_probability))
+        self.llrs = np.log(self.lrs)
 
     def _llr_bit(self, bit):
-        return self.bsc_llrs[bit]
+        return self.llrs[bit]
 
     def _llr_odd(self, la, lb):
         # this functions uses the min-sum approximation
@@ -63,7 +63,7 @@ class PolarDecoder(PolarCommon):
         return ui
 
     def _lr_bit(self, bit):
-        return self.bsc_lr[bit]
+        return self.lrs[bit]
 
     def _lr_odd(self, la, lb):
         # la is upper branch and lb is lower branch

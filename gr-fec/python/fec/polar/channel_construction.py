@@ -27,7 +27,7 @@ foundational paper for polar codes.
 from channel_construction_bec import calculate_bec_channel_capacities
 from channel_construction_bec import design_snr_to_bec_eta
 from channel_construction_bec import bhattacharyya_bounds
-from channel_construction_bsc import tal_vardy_tpm_algorithm
+from channel_construction_awgn import tal_vardy_tpm_algorithm
 from helper_functions import *
 
 
