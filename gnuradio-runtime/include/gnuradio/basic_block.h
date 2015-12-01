@@ -187,9 +187,9 @@ namespace gr {
     void message_port_sub(pmt::pmt_t port_id, pmt::pmt_t target);
     void message_port_unsub(pmt::pmt_t port_id, pmt::pmt_t target);
 
-    virtual bool message_port_is_hier(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier\n"; return false; }
-    virtual bool message_port_is_hier_in(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier_in\n"; return false; }
-    virtual bool message_port_is_hier_out(pmt::pmt_t port_id) { (void) port_id; std::cout << "is_hier_out\n"; return false; }
+    virtual bool message_port_is_hier(pmt::pmt_t port_id) { (void) port_id; return false; }
+    virtual bool message_port_is_hier_in(pmt::pmt_t port_id) { (void) port_id; return false; }
+    virtual bool message_port_is_hier_out(pmt::pmt_t port_id) { (void) port_id; return false; }
 
     /*!
      * \brief Get input message port names.

@@ -94,7 +94,9 @@ namespace gr {
 
     block_sptr grblock = cast_to_block_sptr(block);
     if(!grblock)
-      throw std::runtime_error("allocate_block_detail found non-gr::block");
+      throw std::runtime_error(
+        (boost::format("allocate_block_detail found non-gr::block (%s)")%
+        block->alias()).str());
 
     if(FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Creating block detail for " << block << std::endl;
