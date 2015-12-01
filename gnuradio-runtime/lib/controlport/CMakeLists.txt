@@ -79,6 +79,9 @@ list(APPEND gnuradio_runtime_libs
   ${THRIFT_LIBRARIES}
 )
 
+# Add include flags here
+include_directories( ${THRIFT_INCLUDE_DIRS} )
+
 # Add install rule to move example Thrift configuration file into
 # $prefix/etc/gnuradio
 install(
