@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2013 Free Software Foundation, Inc.
+ * Copyright 2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -427,7 +427,7 @@ namespace gr {
         if(d_msg_edges[i].src() == e) {
           if(FLAT_FLOWGRAPH_DEBUG)
             std::cout << boost::format("flat_flowgraph::replace_endpoint() flattening to ( %s, %s )\n") \
-              % r.block()% d_msg_edges[i].dst().block();
+              % r% d_msg_edges[i].dst();
           d_msg_edges.push_back( msg_edge(r, d_msg_edges[i].dst() ) );
           n_replr++;
         }
@@ -436,7 +436,7 @@ namespace gr {
         if(d_msg_edges[i].dst() == e) {
           if(FLAT_FLOWGRAPH_DEBUG)
             std::cout << boost::format("flat_flowgraph::replace_endpoint() flattening to ( %s, %s )\n") \
-              % r.block()% d_msg_edges[i].dst().block();
+              % r% d_msg_edges[i].src();
           d_msg_edges.push_back( msg_edge(d_msg_edges[i].src(), r ) );
           n_replr++;
         }

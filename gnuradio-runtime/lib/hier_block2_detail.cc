@@ -56,7 +56,7 @@ namespace gr {
 
     d_inputs = std::vector<endpoint_vector_t>(max_inputs);
     d_outputs = endpoint_vector_t(max_outputs);
-    
+
     d_max_output_buffer = std::vector<size_t>(std::max(max_outputs,1), 0);
     d_min_output_buffer = std::vector<size_t>(std::max(max_outputs,1), 0);
   }
@@ -167,9 +167,9 @@ namespace gr {
 
     bool hier_in=false, hier_out=false;
     if(d_owner == src.get()){
-        hier_in = src->message_port_is_hier_in(srcport);
+        hier_out = src->message_port_is_hier_in(srcport);
     } else if (d_owner == dst.get()){
-        hier_out = dst->message_port_is_hier_out(dstport);;
+        hier_in = dst->message_port_is_hier_out(dstport);;
     } else {
         hier_out = src->message_port_is_hier_out(srcport);
         hier_in = dst->message_port_is_hier_in(dstport);
@@ -208,9 +208,9 @@ namespace gr {
     // remove edge for this message connection
     bool hier_in=false, hier_out=false;
     if(d_owner == src.get()){
-        hier_in = src->message_port_is_hier_in(srcport);
+        hier_out = src->message_port_is_hier_in(srcport);
     } else if (d_owner == dst.get()){
-        hier_out = dst->message_port_is_hier_out(dstport);;
+        hier_in = dst->message_port_is_hier_out(dstport);;
     } else {
         hier_out = src->message_port_is_hier_out(srcport);
         hier_in = dst->message_port_is_hier_in(dstport);
@@ -517,7 +517,8 @@ namespace gr {
   hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
   {
     if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << " ** Flattening " << d_owner->name() << std::endl;
+      std::cout << " ** Flattening " << d_owner->name() << " parent: " << d_parent_detail << std::endl;
+    //bool is_top_block = (d_parent_detail == NULL);
 
     // Add my edges to the flow graph, resolving references to actual endpoints
     edge_vector_t edges = d_fg->edges();
@@ -708,29 +709,24 @@ namespace gr {
           q->src().block() % q->src().port() % q->src().is_hier() % q->dst().block() % \
           q->dst().port() % q->dst().is_hier();
 
-      bool normal_connection = true;
 
-      // resolve existing connections to hier ports
-      if(q->dst().is_hier()) {
+      if(q->src().is_hier() && q->src().block().get() == d_owner){
+        // connection into this block ..
         if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << boost::format("  resolve hier output (%s, %s)") % \
-            q->dst().block() % q->dst().port() << std::endl;
-        sfg->replace_endpoint( q->dst(), q->src(), true );
-        resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->dst(),true));
-        normal_connection = false;
-      }
-
-      if(q->src().is_hier()) {
+          std::cout << "hier incoming port: " << q->src() << std::endl;
+        sfg->replace_endpoint(q->src(), q->dst(), false);
+        resolved_endpoints.push_back( std::pair<msg_endpoint,bool>( q->src(), false));
+      } else
+      if(q->dst().is_hier() && q->dst().block().get() == d_owner){
+        // connection out of this block
         if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << boost::format("  resolve hier input (%s, %s)") % \
-            q->src().block() % q->src().port() << std::endl;
-        sfg->replace_endpoint( q->src(), q->dst(), false );
-        resolved_endpoints.push_back(std::pair<msg_endpoint, bool>(q->src(),false));
-        normal_connection = false;
-      }
-
-      // propogate non hier connections through
-      if(normal_connection){
+          std::cout << "hier outgoing port: " << q->dst() << std::endl;
+        sfg->replace_endpoint(q->dst(), q->src(), true);
+        resolved_endpoints.push_back( std::pair<msg_endpoint,bool>(q->dst(), true));
+      } else {
+        // internal connection only
+        if(HIER_BLOCK2_DETAIL_DEBUG)
+          std::cout << "internal msg connection: " << q->src() << "-->" << q->dst() << std::endl;
         sfg->connect( q->src(), q->dst() );
       }
     }
