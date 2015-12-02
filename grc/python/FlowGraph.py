@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 import re
+import imp
 from operator import methodcaller
 
 from . import expr_utils
@@ -203,6 +204,12 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
                           self.iter_enabled_blocks())
         return monitors
 
+    def get_python_modules(self):
+        """Iterate over custom code block ID and Source"""
+        for block in self.iter_enabled_blocks():
+            if block.get_key() == 'epy_module':
+                yield block.get_id(), block.get_param('source_code').get_value()
+
     def get_bussink(self):
         bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
 
@@ -212,8 +219,6 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
                     return True;
 
         return False
-
-
 
     def get_bussrc(self):
         bussrc = filter(lambda b: _bussrc_searcher.search(b.get_key()), self.get_enabled_blocks())
@@ -278,9 +283,18 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
             #reload namespace
             n = dict()
             #load imports
-            for imp in self.get_imports():
-                try: exec imp in n
+            for code in self.get_imports():
+                try: exec code in n
                 except: pass
+
+            for id, code in self.get_python_modules():
+                try:
+                    module = imp.new_module(id)
+                    exec code in module.__dict__
+                    n[id] = module
+                except:
+                    pass
+
             #load parameters
             np = dict()
             for parameter in self.get_parameters():
