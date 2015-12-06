@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -119,13 +119,9 @@ namespace gr {
       volk_32fc_magnitude_squared_32f(&d_norm[low], &in[low], size);
 
       // Calculate gamma on each point
-#ifdef SEGFAULT_FIX
       low = lookup_stop - d_cp_length + 1;
-      size = lookup_start - (lookup_stop - d_cp_length + 1) + 1;
-#else
-      low = lookup_stop - d_cp_length - 1;
-      size = lookup_start - (lookup_stop - d_cp_length - 1) + 1;
-#endif
+      size = lookup_start - low + 1;
+
       volk_32fc_x2_multiply_conjugate_32fc(&d_corr[low - d_fft_length], &in[low], &in[low - d_fft_length], size);
 
       // Calculate time delay and frequency correction
@@ -349,10 +345,6 @@ namespace gr {
           d_initial_acquisition = ml_sync(in, 2 * d_fft_length + d_cp_length - 1, d_fft_length + d_cp_length - 1, \
               &d_cp_start, &d_derot[0], &d_to_consume, &d_to_out);
 
-#ifdef SEGFAULT_FIX
-          d_cp_start_initial = d_cp_start;
-          d_cp_start_slip = 0;
-#endif
           // Send sync_start downstream
           send_sync_start();
         }
@@ -360,32 +352,11 @@ namespace gr {
         // This is fractional frequency correction (pre FFT)
         // It is also called coarse frequency correction
         if (d_initial_acquisition) {
-#ifdef SEGFAULT_FIX
           d_cp_found = ml_sync(in, d_cp_start + 16, d_cp_start, \
               &d_cp_start, &d_derot[0], &d_to_consume, &d_to_out);
-#else
-          d_cp_found = ml_sync(in, d_cp_start + 8, d_cp_start - 8, \
-              &d_cp_start, &d_derot[0], &d_to_consume, &d_to_out);
-#endif
 
           if (d_cp_found) {
             d_freq_correction_count = 0;
-
-#ifdef SEGFAULT_FIX
-            // detect and ignore false peaks
-            if (d_cp_start != d_cp_start_initial) {
-              d_cp_start_slip++;
-              if (d_cp_start_slip == 2) {
-                d_cp_start_slip = 0;
-              }
-              else {
-                d_cp_start = d_cp_start_initial;
-              }
-            }
-            else {
-              d_cp_start_slip = 0;
-            }
-#endif
 
             // Derotate the signal and out
             low = d_cp_start - d_fft_length + 1;
@@ -415,4 +386,3 @@ namespace gr {
     }
   } /* namespace dtv */
 } /* namespace gr */
-
