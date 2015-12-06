@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -22,8 +22,6 @@
 #define INCLUDED_DTV_DVBT_OFDM_SYM_ACQUISITION_IMPL_H
 
 #include <gnuradio/dtv/dvbt_ofdm_sym_acquisition.h>
-
-#undef SEGFAULT_FIX
 
 namespace gr {
   namespace dtv {
@@ -67,11 +65,6 @@ namespace gr {
 
       int d_cp_start;
 
-#ifdef SEGFAULT_FIX
-      int d_cp_start_initial;
-      int d_cp_start_slip;
-#endif
-
       gr_complex * d_derot;
       int d_to_consume;
       int d_to_out;
@@ -99,4 +92,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_DTV_DVBT_OFDM_SYM_ACQUISITION_IMPL_H */
-
