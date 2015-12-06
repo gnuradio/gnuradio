@@ -10,7 +10,7 @@ parser.add_option("-H", "--host", type="string", default="localhost",
                   help="Hostname to connect to (default=%default)")
 parser.add_option("-p", "--port", type="int", default=9090,
                   help="Port of Controlport instance on host (default=%default)")
-parser.add_option("-a", "--alias", type="string", default="gr uhd usrp source0",
+parser.add_option("-a", "--alias", type="string", default="gr uhd usrp sink0",
                   help="The UHD block's alias to control (default=%default)")
 options, args = parser.parse_args()
 
@@ -30,7 +30,7 @@ if(cmd == "tune" or cmd == "time"):
     sys.stderr.write("This application currently does not support the 'tune' or 'time' UHD "
                      "message commands.\n\n")
     sys.exit(1)
-if(cmd == "antenna"):
+elif(cmd == "antenna"):
     val = pmt.intern(val)
 else:
     val = pmt.from_double(float(val))
