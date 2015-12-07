@@ -422,7 +422,7 @@ BUSSIFY_SINKS = Action(
 )
 XML_PARSER_ERRORS_DISPLAY = Action(
     label='_Parser Errors',
-    tooltip='View errors that occured while parsing XML files',
+    tooltip='View errors that occurred while parsing XML files',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
 TOOLS_RUN_FDESIGN = Action(
