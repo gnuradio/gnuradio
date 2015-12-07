@@ -120,7 +120,7 @@ class ActionHandler:
                 Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
 
             if not self.init_file_paths:
-                self.init_file_paths = filter(os.path.exists, Preferences.files_open())
+                self.init_file_paths = filter(os.path.exists, Preferences.get_open_files())
             if not self.init_file_paths: self.init_file_paths = ['']
             for file_path in self.init_file_paths:
                 if file_path: self.main_window.new_page(file_path) #load pages from file paths
@@ -484,7 +484,7 @@ class ActionHandler:
             if file_paths: #open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     self.main_window.new_page(file_path, show=(i==0))
-                    Preferences.files_recent_add(file_path)
+                    Preferences.add_recent_file(file_path)
                     self.main_window.tool_bar.refresh_submenus()
                     self.main_window.menu_bar.refresh_submenus()
 
@@ -517,7 +517,7 @@ class ActionHandler:
             if file_path is not None:
                 self.get_page().set_file_path(file_path)
                 Actions.FLOW_GRAPH_SAVE()
-                Preferences.files_recent_add(file_path)
+                Preferences.add_recent_file(file_path)
                 self.main_window.tool_bar.refresh_submenus()
                 self.main_window.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
