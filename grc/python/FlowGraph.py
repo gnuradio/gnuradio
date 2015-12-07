@@ -16,11 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
+import re
+import imp
+from operator import methodcaller
 
-import expr_utils
+from . import expr_utils
 from .. base.FlowGraph import FlowGraph as _FlowGraph
 from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
-import re
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
@@ -181,8 +183,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.get_enabled_blocks())
-        return expr_utils.sort_objects(variables, lambda v: v.get_id(), lambda v: v.get_var_make())
+        variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.iter_enabled_blocks())
+        return expr_utils.sort_objects(variables, methodcaller('get_id'), methodcaller('get_var_make'))
 
     def get_parameters(self):
         """
@@ -191,16 +193,22 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         Returns:
             a list of paramterized variables
         """
-        parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.get_enabled_blocks())
+        parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.iter_enabled_blocks())
         return parameters
 
     def get_monitors(self):
         """
         Get a list of all ControlPort monitors
         """
-        monitors = filter(lambda b: _monitors_searcher.search(b.get_key()), self.get_enabled_blocks())
+        monitors = filter(lambda b: _monitors_searcher.search(b.get_key()),
+                          self.iter_enabled_blocks())
         return monitors
 
+    def get_python_modules(self):
+        """Iterate over custom code block ID and Source"""
+        for block in self.iter_enabled_blocks():
+            if block.get_key() == 'epy_module':
+                yield block.get_id(), block.get_param('source_code').get_value()
 
     def get_bussink(self):
         bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
@@ -211,8 +219,6 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
                     return True;
 
         return False
-
-
 
     def get_bussrc(self):
         bussrc = filter(lambda b: _bussrc_searcher.search(b.get_key()), self.get_enabled_blocks())
@@ -277,9 +283,18 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
             #reload namespace
             n = dict()
             #load imports
-            for imp in self.get_imports():
-                try: exec imp in n
+            for code in self.get_imports():
+                try: exec code in n
                 except: pass
+
+            for id, code in self.get_python_modules():
+                try:
+                    module = imp.new_module(id)
+                    exec code in module.__dict__
+                    n[id] = module
+                except:
+                    pass
+
             #load parameters
             np = dict()
             for parameter in self.get_parameters():
