@@ -38,15 +38,15 @@ namespace gr {
       uint8_t  header_version = GR_HEADER_VERSION;
 
       std::stringstream ss;
-      size_t ntags = tags.size();
+      uint32_t ntags = tags.size();
       ss.write( reinterpret_cast< const char* >( &header_magic ), sizeof(uint16_t) );
       ss.write( reinterpret_cast< const char* >( &header_version ), sizeof(uint8_t) );
     
       ss.write( reinterpret_cast< const char* >( &offset ), sizeof(uint64_t) );  // offset
-      ss.write( reinterpret_cast< const char* >( &ntags ), sizeof(size_t) );      // num tags
+      ss.write( reinterpret_cast< const char* >( &ntags ), sizeof(uint32_t) );   // num tags
       std::stringbuf sb("");
       //std::cout << "TX TAGS: (offset="<<offset<<" ntags="<<ntags<<")\n";
-      for(size_t i=0; i<tags.size(); i++){
+      for(uint32_t i=0; i<tags.size(); i++){
         //std::cout << "TX TAG: (" << tags[i].offset << ", " << tags[i].key << ", " << tags[i].value << ", " << tags[i].srcid << ")\n";
         ss.write( reinterpret_cast< const char* >( &tags[i].offset ), sizeof(uint64_t) );   // offset
         sb.str("");
@@ -63,7 +63,7 @@ namespace gr {
     parse_tag_header(std::string &buf_in, uint64_t &offset_out, std::vector<gr::tag_t> &tags_out) {
 
       std::istringstream iss( buf_in );
-      size_t   rcv_ntags;
+      uint32_t rcv_ntags = 0;
 
       uint16_t header_magic;
       uint8_t header_version;
@@ -77,13 +77,13 @@ namespace gr {
         throw std::runtime_error("gr header version too high!");
         }
 
-      iss.read( (char*)&offset_out, sizeof(uint64_t ) );
-      iss.read( (char*)&rcv_ntags,  sizeof(size_t   ) );
+      iss.read( (char*)&offset_out, sizeof(uint64_t) );
+      iss.read( (char*)&rcv_ntags,  sizeof(uint32_t) );
       //std::cout << "RX TAGS: (offset="<<offset_out<<" ntags="<<rcv_ntags<<")\n";
-      int rd_offset = sizeof(uint16_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(size_t);
+      int rd_offset = sizeof(uint16_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint32_t);
       std::stringbuf sb( iss.str().substr(rd_offset) );
 
-      for(size_t i=0; i<rcv_ntags; i++){
+      for(uint32_t i=0; i<rcv_ntags; i++){
         gr::tag_t newtag;       
         sb.sgetn( (char*) &(newtag.offset), sizeof(uint64_t) );
         newtag.key   = pmt::deserialize( sb );
