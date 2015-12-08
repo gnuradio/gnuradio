@@ -34,7 +34,7 @@ def setup_parser():
     parser.add_option("-h", "--help", action="help", help="Displays this help message.")
 
     parser.add_option("-c", "--channel", action="store", type="string", dest="channel",
-                      help="specify channel, currently BEC or BSC (default='BEC')", default='BEC')
+                      help="specify channel, currently BEC or AWGN (default='BEC')", default='BEC')
     parser.add_option("-b", "--blocksize", action="store", type="int", dest="block_size",
                       help="specify block size of polar code (default=16)", default=16)
     parser.add_option("-s", "--desgin-snr", action="store", type="float", dest="design_snr",
