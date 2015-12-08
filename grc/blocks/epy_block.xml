@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-    <name>Embedded Python Block</name>
+    <name>Python Block</name>
     <key>epy_block</key>
     <category>Misc</category>
     <import></import>
