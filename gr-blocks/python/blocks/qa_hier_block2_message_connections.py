@@ -53,9 +53,9 @@ class hier_block_with_message_output(gr.hier_block2):
             "hier_block_with_message_output",
             gr.io_signature(0, 0, 0),  # Input signature
             gr.io_signature(0, 0, 0))  # Output signature
-        self.message_port_register_hier_in("test")
+        self.message_port_register_hier_out("test")
         self.block = block_with_message_output()
-        self.msg_connect(self.block, "test", weakref.proxy(self), "test")
+        self.msg_connect(self.block, "test", self, "test")
 
 
 class hier_block_with_message_input(gr.hier_block2):
@@ -65,9 +65,9 @@ class hier_block_with_message_input(gr.hier_block2):
             "hier_block_with_message_output",
             gr.io_signature(0, 0, 0),  # Input signature
             gr.io_signature(0, 0, 0))  # Output signature
-        self.message_port_register_hier_out("test")
+        self.message_port_register_hier_in("test")
         self.block = block_with_message_input()
-        self.msg_connect(weakref.proxy(self), "test", self.block, "test")
+        self.msg_connect(self, "test", self.block, "test")
 
 
 class hier_block_with_message_inout(gr.hier_block2):
@@ -77,10 +77,10 @@ class hier_block_with_message_inout(gr.hier_block2):
             "hier_block_with_message_inout",
             gr.io_signature(0, 0, 0),  # Input signature
             gr.io_signature(0, 0, 0))  # Output signature
-        self.message_port_register_hier_out("test")
         self.message_port_register_hier_in("test")
+        self.message_port_register_hier_out("test")
         self.input = block_with_message_input()
-        self.msg_connect(weakref.proxy(self), "test", self.input, "test")
+        self.msg_connect(self, "test", self.input, "test")
         self.output = block_with_message_output()
         self.msg_connect(self.output, "test", weakref.proxy(self), "test")
 
