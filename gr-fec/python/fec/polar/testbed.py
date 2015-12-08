@@ -305,17 +305,19 @@ def find_decoder_subframes(frozen_mask):
         print('{0:4} lock {1:4} value: {2} in sub {3}'.format(i, 2 ** (l + 1), v, t))
 
 
-def load_file(filename):
-    z_params = []
-    with open(filename, 'r') as f:
-        for line in f:
-            if 'Bhattacharyya:' in line:
-                l = line.split(' ')
-                l = l[10:-2]
-                l = l[0][:-1]
-                l = float(l)
-                z_params.append(l)
-    return np.array(z_params)
+def systematic_encoder_decoder_chain_test():
+    print('systematic encoder decoder chain test')
+    block_size = int(2 ** 8)
+    info_bit_size = block_size // 2
+    ntests = 100
+    frozenbitposition = cc.get_frozen_bit_indices_from_z_parameters(cc.bhattacharyya_bounds(0.0, block_size), block_size - info_bit_size)
+    encoder = PolarEncoder(block_size, info_bit_size, frozenbitposition)
+    decoder = PolarDecoder(block_size, info_bit_size, frozenbitposition)
+    for i in range(ntests):
+        bits = np.random.randint(2, size=info_bit_size)
+        y = encoder.encode_systematic(bits)
+        u_hat = decoder.decode_systematic(y)
+        assert (bits == u_hat).all()
 
 
 def main():
@@ -334,26 +336,11 @@ def main():
     # test_1024_rate_1_code()
     # channel_analysis()
 
-    frozen_indices = cc.get_bec_frozen_indices(m, n_frozen, 0.11)
-    frozen_mask = cc.get_frozen_bit_mask(frozen_indices, m)
-    find_decoder_subframes(frozen_mask)
+    # frozen_indices = cc.get_bec_frozen_indices(m, n_frozen, 0.11)
+    # frozen_mask = cc.get_frozen_bit_mask(frozen_indices, m)
+    # find_decoder_subframes(frozen_mask)
 
-    frozen_mask = np.zeros(m, dtype=int)
-    frozen_mask[frozen_indices] = 1
-
-    # filename = 'channel_z-parameters.txt'
-    # ido = load_file(filename)
-    # ido_frozen = cc.get_frozen_bit_indices_from_z_parameters(ido, k)
-    # ido_mask = np.zeros(m, dtype=int)
-    # ido_mask[ido_frozen] = 1
-    #
-    #
-    # plt.plot(ido_mask)
-    # plt.plot(frozen_mask)
-    # for i in range(m):
-    #     if not ido_mask[i] == frozen_mask[i]:
-    #         plt.axvline(i, color='r')
-    # plt.show()
+    systematic_encoder_decoder_chain_test()
 
 
 if __name__ == '__main__':

@@ -24,7 +24,7 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     channel_construction.py
-    channel_construction_bsc.py
+    channel_construction_awgn.py
     channel_construction_bec.py
     helper_functions.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/polar
