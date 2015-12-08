@@ -197,7 +197,7 @@ namespace gr {
      * This allows a block to allocate the buffer, but only if the block
      * indicated it wants to allocate buffers in it's io_signature.
      */
-    virtual buffer_sptr allocate_input_buffer(int port);
+    virtual buffer_sptr allocate_upstream_output_buffer(int port);
 
     /*!
      * \brief Called to perform buffer allocation for a specific input port.

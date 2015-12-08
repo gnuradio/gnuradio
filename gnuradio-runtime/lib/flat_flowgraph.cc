@@ -241,7 +241,7 @@ namespace gr {
           std::cout << "Input buffer is owned by block " << grblock << std::endl;
           std::cout << "Setting output " << src_port << " from edge " << (*e) << std::endl;
         }
-        buffer_sptr dst_buffer = grblock->allocate_input_buffer(src_port);
+        buffer_sptr dst_buffer = grblock->allocate_upstream_output_buffer(src_port);
         if (FLAT_FLOWGRAPH_DEBUG) {
           std::cout << "Allocated custom input buffer for block " << block << std::endl;
         }

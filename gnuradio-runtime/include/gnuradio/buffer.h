@@ -28,6 +28,7 @@
 #include <gnuradio/tags.h>
 #include <boost/weak_ptr.hpp>
 #include <gnuradio/thread/thread.h>
+#include <gnuradio/logger.h>
 #include <map>
 
 namespace gr {
@@ -144,6 +145,8 @@ namespace gr {
     friend GR_RUNTIME_API buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link);
     friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader
       (buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
   protected:
     /*!

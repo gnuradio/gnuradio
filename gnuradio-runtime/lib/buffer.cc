@@ -80,11 +80,11 @@ namespace gr {
 
 
   buffer::buffer(unsigned int nitems, size_t sizeof_item, block_sptr link)
-    : d_base(0), d_bufsize(nitems), d_max_reader_delay(0), d_vmcircbuf(0),
-      d_sizeof_item(sizeof_item), d_link(link),
-      d_write_index(0), d_abs_write_offset(0), d_done(false),
+    : d_base(0), d_bufsize(nitems), d_sizeof_item(sizeof_item),  d_max_reader_delay(0),
+      d_vmcircbuf(0), d_link(link), d_write_index(0), d_abs_write_offset(0), d_done(false),
       d_last_min_items_read(0)
   {
+    configure_default_loggers(d_logger, d_debug_logger, "buffer");
     s_buffer_count++;
   }
 
@@ -124,19 +124,21 @@ namespace gr {
     // This only happens if sizeof_item is not a power of two.
 
     if(nitems > 2 * orig_nitems && nitems * static_cast<int>(d_sizeof_item) > granularity){
-      std::cerr << "gr::buffer::allocate_buffer: warning: tried to allocate\n"
-                << "   " << orig_nitems << " items of size "
-                << d_sizeof_item << ". Due to alignment requirements\n"
-                << "   " << nitems << " were allocated.  If this isn't OK, consider padding\n"
-                << "   your structure to a power-of-two bytes.\n"
-                << "   On this platform, our allocation granularity is " << granularity << " bytes.\n";
+      GR_LOG_DEBUG(d_debug_logger,
+                   boost::format("gr::buffer::allocate_buffer: warning: tried to allocate\n"
+                    "   %i items of size %i. Due to alignment requirements\n"
+                    "   %i were allocated.  If this isn't OK, consider padding\n"
+                    "   your structure to a power-of-two bytes.\n"
+                    "   On this platform, our allocation granularity is %i bytes.\n"
+                   ) % orig_nitems % d_sizeof_item % nitems % granularity);
+
     }
 
     d_bufsize = nitems;
     d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
     if(d_vmcircbuf == 0){
-      std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
-                << d_bufsize * d_sizeof_item / 1024 << " KB\n";
+      GR_LOG_DEBUG(d_debug_logger, boost::format("gr::buffer::allocate_buffer: failed to allocate buffer of size %i KB")
+                                   % (d_bufsize * d_sizeof_item / 1024));
       return false;
     }
 
