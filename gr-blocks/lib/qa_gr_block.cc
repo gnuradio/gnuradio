@@ -110,7 +110,7 @@ namespace gr {
         return noutput_items;
       }
 
-      virtual buffer_sptr allocate_input_buffer(int port);
+      virtual buffer_sptr allocate_upstream_output_buffer(int port);
     };
 
     test_custom_buffers_sink::sptr test_custom_buffers_sink::make(size_t sizeof_stream_item)
@@ -118,7 +118,7 @@ namespace gr {
       return gnuradio::get_initial_sptr(new test_custom_buffers_sink_impl(sizeof_stream_item));
     }
 
-    buffer_sptr test_custom_buffers_sink_impl::allocate_input_buffer(int port)
+    buffer_sptr test_custom_buffers_sink_impl::allocate_upstream_output_buffer(int port)
     {
       // make output buffer
       int item_size = this->input_signature()->sizeof_stream_item(port);

@@ -138,9 +138,9 @@ namespace gr {
   }
 
 
-  buffer_sptr block::allocate_input_buffer(int port)
+  buffer_sptr block::allocate_upstream_output_buffer(int port)
   {
-    throw std::runtime_error("Block did not define allocate_input_buffer() function properly");
+    throw std::runtime_error("Block did not define allocate_upstream_output_buffer() function properly");
   }
 
 

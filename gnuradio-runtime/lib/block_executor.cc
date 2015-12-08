@@ -475,7 +475,17 @@ namespace gr {
 
       if(d->d_produce_or > 0)   // block produced something
         return READY;
-
+      // We didn't produce any output even though we called general_work.
+      // We have (most likely) consumed some input.
+      /*
+      // If this is a source, it's broken.
+      if(d->source_p()) {
+        std::cerr << "block_executor: source " << m
+                  << " produced no output.  We're marking it DONE.\n";
+        // FIXME maybe we ought to raise an exception...
+        goto were_done;
+      }
+      */
       // Have the caller try again...
       return READY_NO_OUTPUT;
     }
