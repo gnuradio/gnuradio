@@ -66,8 +66,20 @@ namespace gr {
      */
     static block_vector_t make_block_vector(basic_block_vector_t &blocks);
 
+    /*!
+     * replace hierarchical message connections with internal primitive ones
+     */
     void replace_endpoint(const msg_endpoint &e, const msg_endpoint &r, bool is_src);
+
+    /*!
+     * remove a specific hier message connection after replacement
+     */
     void clear_endpoint(const msg_endpoint &e, bool is_src);
+
+    /*!
+     * remove remainin hier message connections (non primitive)
+     */
+    void clear_hier();
 
     /*!
      * Enables export of perf. counters to ControlPort on all blocks in

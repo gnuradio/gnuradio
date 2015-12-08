@@ -19,8 +19,32 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr_unittest
+import pmt, time
+from gnuradio import gr_unittest, blocks, gr, analog
 from gnuradio.gr.hier_block2 import _multiple_endpoints, _optional_endpoints
+
+class test_hblk(gr.hier_block2):
+    def __init__(self, io_sig=1*[gr.sizeof_gr_complex], ndebug=2):
+        # parent constructor
+        gr.hier_block2.__init__(self,
+            "test_hblk",
+            gr.io_signature(len(io_sig), len(io_sig), io_sig[0]),
+            gr.io_signature(0,0,0))
+
+        self.message_port_register_hier_in("msg_in");
+
+        # Internal Stream Blocks
+        self.vsnk = blocks.vector_sink_c()
+
+        # Internal Msg Blocks
+        self.blks = [];
+        for i in range(0, ndebug):
+            self.blks.append( blocks.message_debug() )
+
+        # Set up internal connections
+        self.connect( self, self.vsnk )
+        for blk in self.blks:
+            self.msg_connect( self, "msg_in", blk, "print" )
 
 
 class test_hier_block2(gr_unittest.TestCase):
@@ -87,6 +111,31 @@ class test_hier_block2(gr_unittest.TestCase):
         with self.assertRaises(ValueError):
             self.multi(self.Block(), 5)
 
+    def test_010(self):
+        s, h, k = analog.sig_source_c(44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.head(gr.sizeof_gr_complex, 1000), test_hblk([gr.sizeof_gr_complex], 0)
+        tb = gr.top_block()
+        tb.connect(s,h,k)
+        tb.run()
+
+    def test_011(self):
+        s, st, h, k = analog.sig_source_c(44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.message_strobe(pmt.PMT_NIL, 100), blocks.head(gr.sizeof_gr_complex, 1000), test_hblk([gr.sizeof_gr_complex], 1)
+        tb = gr.top_block()
+        tb.connect(s,h,k)
+        tb.msg_connect(st,"strobe",k,"msg_in")
+        tb.start()
+        time.sleep(1)
+        tb.stop()
+        tb.wait()
+    
+    def test_012(self):
+        s, st, h, k = analog.sig_source_c(44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.message_strobe(pmt.PMT_NIL, 100), blocks.head(gr.sizeof_gr_complex, 1000), test_hblk([gr.sizeof_gr_complex], 16)
+        tb = gr.top_block()
+        tb.connect(s,h,k)
+        tb.msg_connect(st,"strobe",k,"msg_in")
+        tb.start()
+        time.sleep(1)
+        tb.stop()
+        tb.wait()
 
 if __name__ == '__main__':
     gr_unittest.run(test_hier_block2, "test_hier_block2.xml")
