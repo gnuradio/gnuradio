@@ -58,6 +58,8 @@
 #include "gnuradio/fec/puncture_bb.h"
 #include "gnuradio/fec/puncture_ff.h"
 #include "gnuradio/fec/depuncture_bb.h"
+#include "gnuradio/fec/ldpc_encoder.h"
+#include "gnuradio/fec/ldpc_decoder.h"
 #include "gnuradio/fec/tpc_encoder.h"
 #include "gnuradio/fec/tpc_decoder.h"
 #include "gnuradio/fec/polar_encoder.h"
@@ -65,7 +67,8 @@
 #include "gnuradio/fec/polar_common.h"
 #include "gnuradio/fec/polar_decoder_sc_list.h"
 #include "gnuradio/fec/polar_decoder_common.h"
-#include "gnuradio/fec/ldpc_encoder.h"
+#include "gnuradio/fec/polar_encoder_systematic.h"
+#include "gnuradio/fec/polar_decoder_sc_systematic.h"
 %}
 
 %include "gnuradio/fec/generic_decoder.h"
@@ -97,6 +100,8 @@
 %include "gnuradio/fec/polar_common.h"
 %include "gnuradio/fec/polar_decoder_sc_list.h"
 %include "gnuradio/fec/polar_decoder_common.h"
+%include "gnuradio/fec/polar_encoder_systematic.h"
+%include "gnuradio/fec/polar_decoder_sc_systematic.h"
 %include "gnuradio/fec/ldpc_encoder.h"
 
 

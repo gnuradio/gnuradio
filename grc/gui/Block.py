@@ -206,7 +206,7 @@ class Block(Element):
         #display the params
         if self.is_dummy_block():
             markups = [
-                '<span foreground="black" font_desc="$font"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
+                '<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
             ]
         else:
             markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
@@ -215,7 +215,7 @@ class Block(Element):
             layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
             layout.set_markup('\n'.join(markups))
             layouts.append(layout)
-            w,h = layout.get_pixel_size()
+            w, h = layout.get_pixel_size()
             self.label_width = max(w, self.label_width)
             self.label_height += h + LABEL_SEPARATION
         width = self.label_width

@@ -31,11 +31,11 @@ class PolarDecoder(PolarCommon):
         PolarCommon.__init__(self, n, k, frozen_bit_position, frozenbits)
 
         self.error_probability = 0.1  # this is kind of a dummy value. usually chosen individually.
-        self.bsc_lr = ((1 - self.error_probability) / self.error_probability, self.error_probability / (1 - self.error_probability))
-        self.bsc_llrs = np.log(self.bsc_lr)
+        self.lrs = ((1 - self.error_probability) / self.error_probability, self.error_probability / (1 - self.error_probability))
+        self.llrs = np.log(self.lrs)
 
     def _llr_bit(self, bit):
-        return self.bsc_llrs[bit]
+        return self.llrs[bit]
 
     def _llr_odd(self, la, lb):
         # this functions uses the min-sum approximation
@@ -63,7 +63,7 @@ class PolarDecoder(PolarCommon):
         return ui
 
     def _lr_bit(self, bit):
-        return self.bsc_lr[bit]
+        return self.lrs[bit]
 
     def _lr_odd(self, la, lb):
         # la is upper branch and lb is lower branch
@@ -202,6 +202,33 @@ class PolarDecoder(PolarCommon):
             data = np.packbits(data)
         return data
 
+    def _extract_info_bits_reversed(self, y):
+        info_bit_positions_reversed = self._vector_bit_reversed(self.info_bit_position, self.power)
+        return y[info_bit_positions_reversed]
+
+    def decode_systematic(self, data):
+        if not len(data) == self.N:
+            raise ValueError("len(data)={0} is not equal to n={1}!".format(len(data), self.N))
+        # data = self._reverse_bits(data)
+        data = self._lr_sc_decoder_efficient(data)
+        data = self._encode_natural_order(data)
+        data = self._extract_info_bits_reversed(data)
+        return data
+
+
+def test_systematic_decoder():
+    ntests = 1000
+    n = 16
+    k = 8
+    frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
+    encoder = PolarEncoder(n, k, frozenbitposition)
+    decoder = PolarDecoder(n, k, frozenbitposition)
+    for i in range(ntests):
+        bits = np.random.randint(2, size=k)
+        y = encoder.encode_systematic(bits)
+        u_hat = decoder.decode_systematic(y)
+        assert (bits == u_hat).all()
+
 
 def test_reverse_enc_dec():
     n = 16
@@ -240,29 +267,31 @@ def compare_decoder_impls():
 
 
 def main():
-    power = 3
-    n = 2 ** power
-    k = 4
-    frozenbits = np.zeros(n - k, dtype=int)
-    frozenbitposition = np.array((0, 1, 2, 4), dtype=int)
-    frozenbitposition4 = np.array((0, 1), dtype=int)
+    # power = 3
+    # n = 2 ** power
+    # k = 4
+    # frozenbits = np.zeros(n - k, dtype=int)
+    # frozenbitposition = np.array((0, 1, 2, 4), dtype=int)
+    # frozenbitposition4 = np.array((0, 1), dtype=int)
+    #
+    #
+    # encoder = PolarEncoder(n, k, frozenbitposition, frozenbits)
+    # decoder = PolarDecoder(n, k, frozenbitposition, frozenbits)
+    #
+    # bits = np.ones(k, dtype=int)
+    # print "bits: ", bits
+    # evec = encoder.encode(bits)
+    # print "froz: ", encoder._insert_frozen_bits(bits)
+    # print "evec: ", evec
+    #
+    # evec[1] = 0
+    # deced = decoder._lr_sc_decoder(evec)
+    # print 'SC decoded:', deced
+    #
+    # test_reverse_enc_dec()
+    # compare_decoder_impls()
 
-
-    encoder = PolarEncoder(n, k, frozenbitposition, frozenbits)
-    decoder = PolarDecoder(n, k, frozenbitposition, frozenbits)
-
-    bits = np.ones(k, dtype=int)
-    print "bits: ", bits
-    evec = encoder.encode(bits)
-    print "froz: ", encoder._insert_frozen_bits(bits)
-    print "evec: ", evec
-
-    evec[1] = 0
-    deced = decoder._lr_sc_decoder(evec)
-    print 'SC decoded:', deced
-
-    test_reverse_enc_dec()
-    compare_decoder_impls()
+    test_systematic_decoder()
 
 
 if __name__ == '__main__':

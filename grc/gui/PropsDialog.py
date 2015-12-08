@@ -210,6 +210,14 @@ class PropsDialog(gtk.Dialog):
 
         buffer = self._code_text_display.get_buffer()
         block = self._block
+        key = block.get_key()
+
+        if key == 'epy_block':
+            src = block.get_param('_source_code').get_value()
+        elif key == 'epy_module':
+            src = block.get_param('source_code').get_value()
+        else:
+            src = ''
 
         def insert(header, text):
             if not text:
@@ -219,9 +227,11 @@ class PropsDialog(gtk.Dialog):
 
         buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
         insert('# Imports\n', '\n'.join(block.get_imports()))
-        if block.get_key().startswith('variable'):
+        if key.startswith('variable'):
             insert('\n\n# Variables\n', block.get_var_make())
         insert('\n\n# Blocks\n', block.get_make())
+        if src:
+            insert('\n\n# External Code ({}.py)\n'.format(block.get_id()), src)
 
     def _handle_key_press(self, widget, event):
         """

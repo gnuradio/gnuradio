@@ -56,7 +56,6 @@ namespace gr {
         d_is_packed(is_packed)
       {
         setup_frozen_bit_inserter();
-        setup_volk_vectors();
       }
 
       void
@@ -72,45 +71,11 @@ namespace gr {
           insert_unpacked_bit_into_packed_array_at_position(d_frozen_bit_prototype, frozen_bit,
                                                             rev_pos);
         }
-
-        for(unsigned int i = 0; i < d_info_bit_positions.size(); i++){
-          d_info_bit_reversed_positions.push_back((int) bit_reverse((long) d_info_bit_positions.at(i), block_power()));
-        }
-
-        if((int) d_info_bit_reversed_positions.size() != num_info_bits()) {
-          throw std::runtime_error("polar_encoder: number of info bit positions MUST equal num_info_bits (K)!");
-        }
-      }
-
-      void
-      polar_encoder::setup_volk_vectors()
-      {
-        int nfrozen = block_size() - num_info_bits();
-        d_temp = (unsigned char*) volk_malloc(sizeof(unsigned char) * block_size(), volk_get_alignment());
-        d_frozen_bit_mask = (unsigned char*) volk_malloc(sizeof(unsigned char) * block_size(), volk_get_alignment());
-        d_frozen_bits = (unsigned char*) volk_malloc(sizeof(unsigned char) * nfrozen, volk_get_alignment());
-        for(int i = 0; i < nfrozen; i++){
-          d_frozen_bits[i] = d_frozen_bit_values[i];
-        }
-
-        int nfbit = 0;
-        for(int i = 0; i < block_size(); i++){
-          unsigned char m = 0x00;
-          if(d_frozen_bit_positions[nfbit] == i){
-            m = 0xFF;
-            nfbit++;
-          }
-          d_frozen_bit_mask[i] = m;
-        }
       }
 
       polar_encoder::~polar_encoder()
       {
         volk_free(d_frozen_bit_prototype);
-
-        volk_free(d_temp);
-        volk_free(d_frozen_bit_mask);
-        volk_free(d_frozen_bits);
       }
 
       void
@@ -126,12 +91,6 @@ namespace gr {
         else{
           volk_encode(out, in);
         }
-      }
-
-      void
-      polar_encoder::volk_encode(unsigned char* out_buf, const unsigned char* in_buf)
-      {
-        volk_8u_x3_encodepolar_8u_x2(out_buf, d_temp, d_frozen_bit_mask, d_frozen_bits, in_buf, block_size());
       }
 
       void
@@ -194,7 +153,7 @@ namespace gr {
                                                            const unsigned char* input) const
       {
         memcpy(target, d_frozen_bit_prototype, block_size() >> 3);
-        const int* info_bit_reversed_positions_ptr = &d_info_bit_reversed_positions[0];
+        const int* info_bit_reversed_positions_ptr = &d_info_bit_positions_reversed[0];
         int bit_num = 0;
         unsigned char byte = *input;
         int bit_pos;

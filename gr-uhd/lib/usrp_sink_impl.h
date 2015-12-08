@@ -103,6 +103,8 @@ namespace gr {
 
       inline void tag_work(int &ninput_items);
 
+      void setup_rpc();
+
     private:
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);

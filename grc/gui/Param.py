@@ -345,7 +345,7 @@ class FileParam(EntryParam):
 
 PARAM_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param))</span>"""
+<span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param).replace('\\n',' '))</span>"""
 
 PARAM_LABEL_MARKUP_TMPL="""\
 #set $foreground = $modified and 'blue' or $param.is_valid() and 'black' or 'red'

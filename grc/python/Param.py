@@ -31,7 +31,7 @@ from Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
 from gnuradio import eng_notation
 
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
-_show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
+_show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook|epy_module)$')
 
 
 #blacklist certain ids, its not complete, but should help

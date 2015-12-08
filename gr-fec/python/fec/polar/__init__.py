@@ -26,20 +26,20 @@ from channel_construction_bec import bhattacharyya_bounds
 from helper_functions import is_power_of_two
 
 
-CHANNEL_TYPE_BSC = 'BSC'
+CHANNEL_TYPE_AWGN = 'AWGN'
 CHANNEL_TYPE_BEC = 'BEC'
 
 def get_z_params(is_prototype, channel, block_size, design_snr, mu):
     print('POLAR code channel construction called with parameters channel={0}, blocksize={1}, design SNR={2}, mu={3}'.format(channel, block_size, design_snr, mu))
-    if not (channel == 'BSC' or channel == 'BEC'):
-        raise ValueError("channel is {0}, but only BEC and BSC are supported!".format(channel))
+    if not (channel == 'AWGN' or channel == 'BEC'):
+        raise ValueError("channel is {0}, but only BEC and AWGN are supported!".format(channel))
     if not is_power_of_two(block_size):
         raise ValueError("block size={0} is not a power of 2!".format(block_size))
     if design_snr < -1.5917:
         raise ValueError("design SNR={0} < -1.5917. MUST be greater!".format(design_snr))
     if not mu > 0:
         raise ValueError("mu={0} < 1. MUST be > 1!".format(mu))
-    if not is_prototype and channel == 'BSC':
+    if not is_prototype and channel == 'AWGN':
         z_params = cc.load_z_parameters(block_size, design_snr, mu)
         print('Read Z-parameter file: {0}'.format(cc.default_dir() + cc.generate_filename(block_size, design_snr, mu)))
         return z_params

@@ -68,7 +68,6 @@ sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnura
 ##$(imp.replace("  # grc-generated hier_block", ""))
 $imp
 #end for
-
 ########################################################
 ##Create Class
 ##  Write the class declaration for a top or hier block.
@@ -82,6 +81,7 @@ $imp
     #import gtk
     #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
 
+
 class $(class_name)(grc_wxgui.top_block_gui):
 
     def __init__($param_str):
@@ -91,6 +91,7 @@ class $(class_name)(grc_wxgui.top_block_gui):
         self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
     #end if
 #elif $generate_options == 'qt_gui'
+
 
 class $(class_name)(gr.top_block, Qt.QWidget):
 
@@ -118,6 +119,7 @@ class $(class_name)(gr.top_block, Qt.QWidget):
         self.restoreGeometry(self.settings.value("geometry"))
 #elif $generate_options == 'no_gui'
 
+
 class $(class_name)(gr.top_block):
 
     def __init__($param_str):
@@ -125,6 +127,7 @@ class $(class_name)(gr.top_block):
 #elif $generate_options.startswith('hb')
     #set $in_sigs = $flow_graph.get_hier_block_stream_io('in')
     #set $out_sigs = $flow_graph.get_hier_block_stream_io('out')
+
 
 #if $generate_options == 'hb_qt_gui'
 class $(class_name)(gr.hier_block2, Qt.QWidget):

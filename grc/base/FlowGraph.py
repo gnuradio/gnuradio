@@ -209,6 +209,12 @@ class FlowGraph(Element):
 
     get_children = get_elements
 
+    def iter_enabled_blocks(self):
+        """
+        Get an iterator of all blocks that are enabled and not bypassed.
+        """
+        return ifilter(methodcaller('get_enabled'), self.iter_blocks())
+
     def get_enabled_blocks(self):
         """
         Get a list of all blocks that are enabled and not bypassed.
@@ -216,7 +222,7 @@ class FlowGraph(Element):
         Returns:
             a list of blocks
         """
-        return filter(methodcaller('get_enabled'), self.iter_blocks())
+        return list(self.iter_enabled_blocks())
 
     def get_bypassed_blocks(self):
         """
