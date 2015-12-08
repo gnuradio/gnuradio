@@ -81,7 +81,6 @@ namespace gr {
         polar_encoder(int block_size, int num_info_bits,
                       std::vector<int>& frozen_bit_positions,
                       std::vector<char>& frozen_bit_values, bool is_packed);
-        std::vector<int> d_info_bit_reversed_positions;
         bool d_is_packed;
 
         // c'tor method for packed algorithm setup.
@@ -104,13 +103,6 @@ namespace gr {
         void encode_vector_packed_subbyte(unsigned char* target) const;
         void encode_packed_byte(unsigned char* target) const;
         void encode_vector_packed_interbyte(unsigned char* target) const;
-
-        // VOLK methods
-        void setup_volk_vectors();
-        void volk_encode(unsigned char* out_buf, const unsigned char* in_buf);
-        unsigned char* d_temp;
-        unsigned char* d_frozen_bit_mask;
-        unsigned char* d_frozen_bits;
       };
 
     } // namespace code

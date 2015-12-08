@@ -65,5 +65,20 @@ class PolarCommon:
     def _vector_bit_reversed(self, vec, n):
         return bit_reverse_vector(vec, n)
 
+    def _encode_efficient(self, vec):
+        n_stages = self.power
+        pos = np.arange(self.N, dtype=int)
+        for i in range(n_stages):
+            splitted = np.reshape(pos, (2 ** (i + 1), -1))
+            upper_branch = splitted[0::2].flatten()
+            lower_branch = splitted[1::2].flatten()
+            vec[upper_branch] = (vec[upper_branch] + vec[lower_branch]) % 2
+        return vec
+
+    def _encode_natural_order(self, vec):
+        # use this function. It reflects the encoding process implemented in VOLK.
+        vec = vec[self.bit_reverse_positions]
+        return self._encode_efficient(vec)
+
     def info_print(self):
         print "POLAR code ({0}, {1})".format(self.N, self.K)

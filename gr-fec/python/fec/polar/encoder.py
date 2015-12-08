@@ -41,16 +41,6 @@ class PolarEncoder(PolarCommon):
         data = data.astype(dtype=int)
         return data
 
-    def _encode_efficient(self, vec):
-        n_stages = int(np.log2(self.N))
-        pos = np.arange(self.N, dtype=int)
-        for i in range(n_stages):
-            splitted = np.reshape(pos, (2 ** (i + 1), -1))
-            upper_branch = splitted[0::2].flatten()
-            lower_branch = splitted[1::2].flatten()
-            vec[upper_branch] = (vec[upper_branch] + vec[lower_branch]) % 2
-        return vec
-
     def encode(self, data, is_packed=False):
         if not len(data) == self.K:
             raise ValueError("len(data)={0} is not equal to k={1}!".format(len(data), self.K))
@@ -63,6 +53,31 @@ class PolarEncoder(PolarCommon):
         if is_packed:
             data = np.packbits(data)
         return data
+
+    def encode_systematic(self, data):
+        if not len(data) == self.K:
+            raise ValueError("len(data)={0} is not equal to k={1}!".format(len(data), self.K))
+        if np.max(data) > 1 or np.min(data) < 0:
+            raise ValueError("can only encode bits!")
+
+        d = self._insert_frozen_bits(data)
+        d = self._encode_natural_order(d)
+        d = self._reverse_bits(d)
+        d[self.frozen_bit_position] = 0
+        d = self._encode_natural_order(d)
+        # d = self._reverse_bits(d) # for more accuracy, do another bit-reversal. or don't for computational simplicity.
+        return d
+
+
+def test_systematic_encoder(encoder, ntests, k):
+    for n in range(ntests):
+        bits = np.random.randint(2, size=k)
+        x = encoder.encode_systematic(bits)
+        x = encoder._reverse_bits(x)
+        u_hat = encoder._extract_info_bits(x)
+
+        assert (bits == u_hat).all()
+        # print((bits == u_hat).all())
 
 
 def compare_results(encoder, ntests, k):
@@ -95,15 +110,16 @@ def test_encoder_impls():
     ntests = 1000
     n = 16
     k = 8
-    frozenbits = np.zeros(n - k)
+    # frozenbits = np.zeros(n - k)
     # frozenbitposition8 = np.array((0, 1, 2, 4), dtype=int)  # keep it!
     frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
-    encoder = PolarEncoder(n, k, frozenbitposition, frozenbits)
+    encoder = PolarEncoder(n, k, frozenbitposition)  #, frozenbits)
     print 'result:', compare_results(encoder, ntests, k)
 
     print('Test rate-1 encoder/decoder chain results')
     r1_test = test_pseudo_rate_1_encoder(encoder, ntests, k)
     print 'Test rate-1 encoder/decoder:', r1_test
+    test_systematic_encoder(encoder, ntests, k)
 
 
 def main():

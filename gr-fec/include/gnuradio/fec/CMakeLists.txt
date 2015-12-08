@@ -54,7 +54,8 @@ install(FILES
     polar_common.h
     polar_decoder_sc_list.h
     polar_decoder_common.h
-    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
+    polar_encoder_systematic.h
+    polar_decoder_sc_systematic.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
     COMPONENT "fec_devel"
 )
 

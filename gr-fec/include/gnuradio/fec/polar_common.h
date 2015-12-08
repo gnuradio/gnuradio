@@ -88,6 +88,18 @@ namespace gr {
         std::vector<int> d_frozen_bit_positions;
         std::vector<char> d_frozen_bit_values;
         std::vector<int> d_info_bit_positions;
+        std::vector<int> d_info_bit_positions_reversed;
+        void setup_info_bit_positions_reversed();
+//        std::vector<int> d_info_bit_positions_reversed;
+
+
+        // VOLK methods
+        void setup_volk_vectors();
+        void volk_encode(unsigned char* out_buf, const unsigned char* in_buf);
+        void volk_encode_block(unsigned char* out_buf, unsigned char* in_buf);
+        unsigned char* d_volk_temp;
+        unsigned char* d_volk_frozen_bit_mask;
+        unsigned char* d_volk_frozen_bits;
 
       private:
         int d_block_size; // depending on paper called 'N' or 'm'
