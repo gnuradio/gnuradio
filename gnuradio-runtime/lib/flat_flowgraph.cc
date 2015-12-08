@@ -417,6 +417,23 @@ namespace gr {
   }
 
   void
+  flat_flowgraph::clear_hier()
+  {
+    if(FLAT_FLOWGRAPH_DEBUG)
+      std::cout << "Clear_hier()" << std::endl;
+    for(size_t i=0; i<d_msg_edges.size(); i++) {
+      if(FLAT_FLOWGRAPH_DEBUG)
+        std::cout << "edge: " << d_msg_edges[i].src() << "-->" << d_msg_edges[i].dst() << std::endl;
+      if(d_msg_edges[i].src().is_hier() || d_msg_edges[i].dst().is_hier()){
+        if(FLAT_FLOWGRAPH_DEBUG)
+          std::cout << "is hier" << std::endl;
+        d_msg_edges.erase(d_msg_edges.begin() + i);
+        i--;
+      }
+    }
+  }
+
+  void
   flat_flowgraph::replace_endpoint(const msg_endpoint &e, const msg_endpoint &r, bool is_src)
   {
     size_t n_replr(0);

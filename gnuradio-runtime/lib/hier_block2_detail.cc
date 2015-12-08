@@ -518,7 +518,7 @@ namespace gr {
   {
     if(HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << " ** Flattening " << d_owner->name() << " parent: " << d_parent_detail << std::endl;
-    //bool is_top_block = (d_parent_detail == NULL);
+    bool is_top_block = (d_parent_detail == NULL);
 
     // Add my edges to the flow graph, resolving references to actual endpoints
     edge_vector_t edges = d_fg->edges();
@@ -733,6 +733,8 @@ namespace gr {
 
     for(std::vector<std::pair<msg_endpoint, bool> >::iterator it = resolved_endpoints.begin();
         it != resolved_endpoints.end(); it++) {
+      if(HIER_BLOCK2_DETAIL_DEBUG)
+        std::cout << "sfg->clear_endpoint(" << (*it).first << ", " << (*it).second << ") " << std::endl;
       sfg->clear_endpoint((*it).first, (*it).second);
     }
 
@@ -849,6 +851,19 @@ namespace gr {
                     << hier_block2->alias() << std::endl;
         hier_block2->d_detail->flatten_aux(sfg);
       }
+    }
+
+    // prune any remaining hier connections
+    //   if they were not replaced with hier internal connections while in sub-calls
+    //   they must remain unconnected and can be deleted...
+    if(is_top_block){
+      sfg->clear_hier();
+    }
+
+    // print all primitive connections at exit
+    if(HIER_BLOCK2_DETAIL_DEBUG && is_top_block){
+      std::cout << "flatten_aux finished in top_block" << std::endl;
+      sfg->dump();
     }
   }
 
