@@ -140,6 +140,9 @@ else (NOT DEFINED GR_USE_SYSTEM_LIBCODEC2)
  else (GR_USE_SYSTEM_LIBCODEC2)
     set(GR_USE_LOCAL_LIBCODEC2 TRUE)
     message(STATUS "Using gnuradio local copy of libcodec2.")
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+    set(EMBEDDED_CODEC2_INCLUDE "-I\${includedir}/gnuradio/vocoder" PARENT_SCOPE)
+    set(EMBEDDED_CODEC2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/gr-vocoder/lib PARENT_SCOPE)
  endif (GR_USE_SYSTEM_LIBCODEC2)
 endif (NOT DEFINED GR_USE_SYSTEM_LIBCODEC2)
 
@@ -151,6 +154,7 @@ mark_as_advanced(LIBCODEC2_INCLUDE_DIR LIBCODEC2_LIBRARIES)
 ########################################################################
 include_directories(
     ${GR_VOCODER_INCLUDE_DIRS}
+    ${EMBEDDED_CODEC2_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
@@ -210,6 +214,9 @@ GR_INCLUDE_SUBDIRECTORY(g7xx)
 
 if(GR_USE_LOCAL_LIBCODEC2)
  GR_INCLUDE_SUBDIRECTORY(codec2)
+ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/codec2/codec2.h
+   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder/codec2/
+   COMPONENT "vocoder_devel")
 endif(GR_USE_LOCAL_LIBCODEC2)
 
 if(GR_USE_LOCAL_LIBGSM)

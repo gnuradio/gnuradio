@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import os
 import sys
 import ConfigParser
 
@@ -94,36 +95,49 @@ def file_open(filename=None):
     return entry('file_open', filename, default='')
 
 
-def files_lists(key, files=None):
-    if files is not None:
-        _config_parser.remove_section(key)  # clear section
-        _config_parser.add_section(key)
-        for i, filename in enumerate(files):
-            _config_parser.set(key, '%s_%d' % (key, i), filename)
+def set_file_list(key, files):
+    _config_parser.remove_section(key)  # clear section
+    _config_parser.add_section(key)
+    for i, filename in enumerate(files):
+        _config_parser.set(key, '%s_%d' % (key, i), filename)
 
-    else:
-        try:
-            files = [value for name, value in _config_parser.items(key)
-                     if name.startswith('%s_' % key)]
-        except ConfigParser.Error:
-            files = []
-        return files
 
-def files_open(files=None):
-    return files_lists('files_open', files)
+def get_file_list(key):
+    try:
+        files = [value for name, value in _config_parser.items(key)
+                 if name.startswith('%s_' % key)]
+    except ConfigParser.Error:
+        files = []
+    return files
 
-def files_recent(files=None):
-    return files_lists('files_recent', files)
 
-def files_recent_add(file_name):
-    import os
+def get_open_files():
+    return get_file_list('files_open')
+
+
+def set_open_files(files):
+    return set_file_list('files_open', files)
+
+
+def get_recent_files():
+    """ Gets recent files, removes any that do not exist and re-saves it """
+    files = filter(os.path.exists, get_file_list('files_recent'))
+    set_recent_files(files)
+    return files
+
+
+def set_recent_files(files):
+    return set_file_list('files_recent', files)
+
+
+def add_recent_file(file_name):
     # double check file_name
     if os.path.exists(file_name):
-        recent_files = files_recent()
+        recent_files = get_recent_files()
         if file_name in recent_files:
-            recent_files.remove(file_name) # attempt removal
-        recent_files.insert(0, file_name) # insert at start
-        files_recent(recent_files[:10]) # keep up to 10 files
+            recent_files.remove(file_name)  # Attempt removal
+        recent_files.insert(0, file_name)  # Insert at start
+        set_recent_files(recent_files[:10])  # Keep up to 10 files
 
 
 def reports_window_position(pos=None):
