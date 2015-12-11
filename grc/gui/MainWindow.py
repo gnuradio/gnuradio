@@ -224,7 +224,7 @@ class MainWindow(gtk.Window):
                 break
         if self.notebook.get_n_pages(): return False
         #save state before closing
-        Preferences.files_open(open_files)
+        Preferences.set_open_files(open_files)
         Preferences.file_open(open_file)
         Preferences.main_window_size(self.get_size())
         Preferences.reports_window_position(self.flow_graph_vpaned.get_position())
