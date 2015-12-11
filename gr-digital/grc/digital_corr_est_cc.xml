@@ -5,7 +5,7 @@
   <import>from gnuradio import digital</import>
   <make>digital.corr_est_cc($symbols, $sps, $mark_delay, $threshold)</make>
   <callback>set_mark_delay($mark_delay)</callback>
-  <callback>set_theshold($threshold)</callback>
+  <callback>set_threshold($threshold)</callback>
 
   <param>
     <name>Symbols</name>
