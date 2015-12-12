@@ -8,4 +8,4 @@ Description: GNU Radio blocks implementing voice codecs
 Requires: gnuradio-runtime
 Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-vocoder
-Cflags: -I${includedir} @EMBEDDED_CODEC2_INCLUDE@
+Cflags: -I${includedir}
