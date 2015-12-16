@@ -55,7 +55,8 @@ namespace gr {
     {
     public:
       usrp_source_impl(const ::uhd::device_addr_t &device_addr,
-                       const ::uhd::stream_args_t &stream_args);
+                       const ::uhd::stream_args_t &stream_args,
+                       const bool issue_stream_cmd_on_start = true);
       ~usrp_source_impl();
 
       // Get Commands
@@ -119,6 +120,7 @@ namespace gr {
       bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
       pmt::pmt_t _id;
+      bool _issue_stream_cmd_on_start;
 
       //tag shadows
       double _samp_rate;
