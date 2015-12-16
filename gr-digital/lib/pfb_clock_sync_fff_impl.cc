@@ -68,8 +68,11 @@ namespace gr {
       if(taps.size() == 0)
         throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
 
-      // Let scheduler adjust our relative_rate.
-      enable_update_rate(true);
+      // We need to manage the tag placement ourselves because the
+      // relative rates can change within work, so don't let the
+      // scheduler handle tags and we do it ourselves in the work
+      // function.
+      set_tag_propagation_policy(TPP_DONT);
 
       d_nfilters = filter_size;
       d_sps = floor(sps);
@@ -104,6 +107,11 @@ namespace gr {
       create_diff_taps(taps, dtaps);
       set_taps(taps, d_taps, d_filters);
       set_taps(dtaps, d_dtaps, d_diff_filters);
+
+      // Book keepers for managing tags
+      d_old_in = 0;
+      d_new_in = 0;
+      d_last_out = 0;
 
       set_relative_rate((float)d_osps/(float)d_sps);
     }
@@ -420,7 +428,19 @@ namespace gr {
 
 	  out[i+d_out_idx] = d_filters[d_filtnum]->filter(&in[count+d_out_idx]);
 	  d_k = d_k + d_rate_i + d_rate_f; // update phase
-	  d_out_idx++;
+
+          // Manage Tags
+          std::vector<tag_t> xtags;
+          std::vector<tag_t>::iterator itags;
+          d_new_in = nitems_read(0) + count + d_out_idx;
+          get_tags_in_range(xtags, 0, d_old_in, d_new_in);
+          for(itags = xtags.begin(); itags != xtags.end(); itags++) {
+            tag_t new_tag = *itags;
+            new_tag.offset = d_last_out + d_taps_per_filter/(2*d_sps) + 2;
+            add_item_tag(0, new_tag);
+          }
+          d_old_in = d_new_in;
+          d_last_out = nitems_written(0) + i + d_out_idx;
 
 	  if(output_items.size() == 4) {
 	    err[i] = d_error;
@@ -433,7 +453,9 @@ namespace gr {
 	    consume_each(count);
 	    return i;
 	  }
-	}
+
+          d_out_idx++;
+        }
 
 	// reset here; if we didn't complete a full osps samples last time,
 	// the early return would take care of it.
