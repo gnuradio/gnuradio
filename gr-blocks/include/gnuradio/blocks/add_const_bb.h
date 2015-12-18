@@ -44,17 +44,17 @@ namespace gr {
        * \brief Create an instance of add_const_bb
        * \param k additive constant
        */
-      static sptr make(char k);
+      static sptr make(unsigned char k);
 
       /*!
        * \brief Return additive constant
        */
-      virtual char k() const = 0;
+      virtual unsigned char k() const = 0;
 
       /*!
        * \brief Set additive constant
        */
-      virtual void set_k(char k) = 0;
+      virtual void set_k(unsigned char k) = 0;
     };
 
   }
