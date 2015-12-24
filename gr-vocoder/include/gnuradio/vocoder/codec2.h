@@ -26,7 +26,7 @@
 #include <gnuradio/vocoder/api.h>
 
 extern "C" {
-#include <codec2/codec2.h>
+#include "../lib/codec2/codec2.h"
 }
 
 namespace gr {
