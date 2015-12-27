@@ -3,7 +3,7 @@
   <name>Depuncture</name>
   <key>fec_depuncture_bb</key>
   <import>from gnuradio import fec</import>
-  <make>fec.depucture_bb($delay, $puncpat, $puncholes, $puncsize, $sym)</make>
+  <make>fec.depuncture_bb($puncsize, $puncpat, $delay, $sym)</make>
 
   <param>
     <name>Puncture Size</name>
@@ -34,12 +34,12 @@
 
   <sink>
     <name>in</name>
-    <type>float</type>
+    <type>byte</type>
   </sink>
 
   <source>
     <name>out</name>
-    <type>float</type>
+    <type>byte</type>
   </source>
 
 </block>

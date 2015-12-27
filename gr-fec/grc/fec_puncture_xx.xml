@@ -3,7 +3,7 @@
   <name>Puncture</name>
   <key>fec_puncture_xx</key>
   <import>from gnuradio import fec</import>
-  <make>fec.puncture_$(type.fcn)($puncsize, $puncpat, $puncholes, $delay)</make>
+  <make>fec.puncture_$(type.fcn)($puncsize, $puncpat, $delay)</make>
 
   <param>
     <name>Type</name>
