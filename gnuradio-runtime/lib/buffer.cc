@@ -347,8 +347,8 @@ namespace gr {
     gr::thread::scoped_lock guard(*mutex());
 
     v.resize(0);
-    std::multimap<uint64_t,tag_t>::iterator itr = d_buffer->get_tags_lower_bound(abs_start);
-    std::multimap<uint64_t,tag_t>::iterator itr_end   = d_buffer->get_tags_upper_bound(abs_end);
+    std::multimap<uint64_t,tag_t>::iterator itr = d_buffer->get_tags_lower_bound(std::min(abs_start, abs_start - d_attr_delay));
+    std::multimap<uint64_t,tag_t>::iterator itr_end = d_buffer->get_tags_upper_bound(std::min(abs_end, abs_end - d_attr_delay));
 
     uint64_t item_time;
     while(itr != itr_end) {
