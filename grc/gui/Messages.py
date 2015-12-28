@@ -122,7 +122,7 @@ def send_fail_gen(error):
 
 
 def send_start_exec(file_path):
-    send('\nExecuting: %r\n' % file_path)
+    send('\nExecuting: %s\n' % file_path)
 
 
 def send_verbose_exec(verbose):
