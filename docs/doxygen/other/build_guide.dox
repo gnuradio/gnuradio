@@ -29,6 +29,7 @@ first. Most recent systems have these packages available.
 \li boost       (>= 1.35)    http://www.boost.org/users/download/
 \li cppunit     (>= 1.9.14)  http://freedesktop.org/wiki/Software/cppunit/
 \li fftw3f      (>= 3.0.1)   http://www.fftw.org/download.html
+\li mako        (>= 0.4.2)   http://www.makotemplates.org/download.html
 
 \subsection dep_python Python Wrappers
 \li python      (>= 2.5)     http://www.python.org/download/
