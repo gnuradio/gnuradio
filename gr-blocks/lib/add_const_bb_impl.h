@@ -31,16 +31,16 @@ namespace gr {
     class BLOCKS_API add_const_bb_impl : public add_const_bb
     {
     private:
-      char d_k;
+      unsigned char d_k;
 
     public:
-      add_const_bb_impl(char k);
+      add_const_bb_impl(unsigned char k);
       ~add_const_bb_impl();
 
       void setup_rpc();
 
-      char k() const { return d_k; }
-      void set_k(char k) { d_k = k; }
+      unsigned char k() const { return d_k; }
+      void set_k(unsigned char k) { d_k = k; }
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
