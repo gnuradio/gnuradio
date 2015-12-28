@@ -30,16 +30,16 @@
 namespace gr {
   namespace blocks {
 
-    add_const_bb::sptr add_const_bb::make(char k)
+    add_const_bb::sptr add_const_bb::make(unsigned char k)
     {
       return gnuradio::get_initial_sptr
         (new add_const_bb_impl(k));
     }
 
-    add_const_bb_impl::add_const_bb_impl(char k)
+    add_const_bb_impl::add_const_bb_impl(unsigned char k)
       : sync_block("add_const_bb",
-                   io_signature::make (1, 1, sizeof(char)),
-                   io_signature::make (1, 1, sizeof(char))),
+                   io_signature::make (1, 1, sizeof(unsigned char)),
+                   io_signature::make (1, 1, sizeof(unsigned char))),
         d_k(k)
     {
     }
@@ -53,8 +53,8 @@ namespace gr {
                             gr_vector_const_void_star &input_items,
                             gr_vector_void_star &output_items)
     {
-      const char *iptr = (const char *) input_items[0];
-      char *optr = (char *) output_items[0];
+      const unsigned char *iptr = (const unsigned char *) input_items[0];
+      unsigned char *optr = (unsigned char *) output_items[0];
 
       int size = noutput_items;
 
@@ -82,7 +82,7 @@ namespace gr {
     {
 #ifdef GR_CTRLPORT
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_get<add_const_bb, char>(
+        rpcbasic_sptr(new rpcbasic_register_get<add_const_bb, unsigned char>(
 	  alias(), "Constant",
 	  &add_const_bb::k,
 	  pmt::from_long(-128),
@@ -92,7 +92,7 @@ namespace gr {
           DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
 
       add_rpc_variable(
-        rpcbasic_sptr(new rpcbasic_register_set<add_const_bb, char>(
+        rpcbasic_sptr(new rpcbasic_register_set<add_const_bb, unsigned char>(
 	  alias(), "Constant",
 	  &add_const_bb::set_k,
 	  pmt::from_long(-128),
