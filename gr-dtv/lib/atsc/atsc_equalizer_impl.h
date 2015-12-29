@@ -46,7 +46,7 @@ namespace gr {
       void adaptN(const float *input_samples, const float *training_pattern,
                   float *output_samples, int nsamples);
 
-      float d_taps[NTAPS];
+      std::vector<float> d_taps;
 
       float data_mem[ATSC_DATA_SEGMENT_LENGTH + NTAPS]; // Buffer for previous data packet
       float data_mem2[ATSC_DATA_SEGMENT_LENGTH];
@@ -58,6 +58,11 @@ namespace gr {
     public:
       atsc_equalizer_impl();
       ~atsc_equalizer_impl();
+
+      void setup_rpc();
+
+      std::vector<float> taps() const;
+      std::vector<float> data() const;
 
       virtual int general_work(int noutput_items,
                                gr_vector_int &ninput_items,
