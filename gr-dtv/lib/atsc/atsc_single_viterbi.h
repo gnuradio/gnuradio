@@ -44,14 +44,17 @@ namespace gr {
       //! internal delay of decoder
       static int delay () { return TB_LEN - 1; }
 
-    protected:
-      static const int transition_table[4][4];
-      static const int was_sent[4][4];
+      float best_state_metric() const;
 
-      float path_metrics [2][4];
-      unsigned long long traceback [2][4];
-      unsigned char phase;
-      int post_coder_state;
+    protected:
+      static const int d_transition_table[4][4];
+      static const int d_was_sent[4][4];
+
+      float d_path_metrics [2][4];
+      unsigned long long d_traceback [2][4];
+      unsigned char d_phase;
+      int d_post_coder_state;
+      float d_best_state_metric;
     };
 
   } /* namespace dtv */
