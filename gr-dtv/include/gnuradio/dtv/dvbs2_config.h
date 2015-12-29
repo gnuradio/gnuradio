@@ -38,11 +38,17 @@ namespace gr {
       PILOTS_ON,
     };
 
+    enum dvbs2_interpolation_t {
+      INTERPOLATION_OFF = 0,
+      INTERPOLATION_ON,
+    };
+
   } // namespace dtv
 } // namespace gr
 
 typedef gr::dtv::dvbs2_rolloff_factor_t dvbs2_rolloff_factor_t;
 typedef gr::dtv::dvbs2_pilots_t dvbs2_pilots_t;
+typedef gr::dtv::dvbs2_interpolation_t dvbs2_interpolation_t;
 
 #endif /* INCLUDED_DTV_DVBS2_CONFIG_H */
 

@@ -29,15 +29,15 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX TRUE)
 endif()
 
-if(LINUX AND EXISTS "/etc/debian_version")
+if(NOT CMAKE_CROSSCOMPILING AND LINUX AND EXISTS "/etc/debian_version")
     set(DEBIAN TRUE)
 endif()
 
-if(LINUX AND EXISTS "/etc/redhat-release")
+if(NOT CMAKE_CROSSCOMPILING AND LINUX AND EXISTS "/etc/redhat-release")
     set(REDHAT TRUE)
 endif()
 
-if(LINUX AND EXISTS "/etc/slackware-version")
+if(NOT CMAKE_CROSSCOMPILING AND LINUX AND EXISTS "/etc/slackware-version")
     set(SLACKWARE TRUE)
 endif()
 
