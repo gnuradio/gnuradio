@@ -63,7 +63,11 @@ namespace gr {
       atsc_viterbi_decoder_impl();
       ~atsc_viterbi_decoder_impl();
 
+      void setup_rpc();
+
       void reset();
+
+      std::vector<float> decoder_metrics() const;
 
       virtual int work(int noutput_items,
                        gr_vector_const_void_star &input_items,

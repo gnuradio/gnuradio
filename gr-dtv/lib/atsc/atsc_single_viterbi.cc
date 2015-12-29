@@ -28,7 +28,7 @@ namespace gr {
 
     /* was_sent is a table of what symbol we get given what bit pair
        was sent and what state we where in [state][pair] */
-    const int atsc_single_viterbi::was_sent[4][4] = {
+    const int atsc_single_viterbi::d_was_sent[4][4] = {
       {0,2,4,6},
       {0,2,4,6},
       {1,3,5,7},
@@ -37,7 +37,7 @@ namespace gr {
 
     /* transition_table is a table of what state we were in
        given current state and bit pair sent [state][pair] */
-    const int atsc_single_viterbi::transition_table[4][4] = {
+    const int atsc_single_viterbi::d_transition_table[4][4] = {
       {0,2,0,2},
       {2,0,2,0},
       {1,3,1,3},
@@ -49,11 +49,12 @@ namespace gr {
     {
       for (unsigned int i = 0; i<2; i++)
         for (unsigned int j = 0; j<4; j++) {
-          path_metrics[i][j] = 0;
-          traceback[i][j] = 0;
+          d_path_metrics[i][j] = 0;
+          d_traceback[i][j] = 0;
         }
-      post_coder_state = 0;
-      phase = 0;
+      d_post_coder_state = 0;
+      d_phase = 0;
+      d_best_state_metric = 100000;
     }
 
     atsc_single_viterbi::atsc_single_viterbi()
@@ -61,17 +62,24 @@ namespace gr {
       reset();
     }
 
+    float
+    atsc_single_viterbi::best_state_metric() const
+    {
+      return d_best_state_metric;
+    }
+
     char
     atsc_single_viterbi::decode(float input)
     {
       unsigned int best_state = 0;
-      float best_state_metric = 100000;
+      //float best_state_metric = 100000;
+      d_best_state_metric = 100000;
 
       /* Precompute distances from input to each possible symbol */
-      float distances[8] = { (float)fabs( input + 7 ), (float)fabs( input + 5 ),
-                             (float)fabs( input + 3 ), (float)fabs( input + 1 ),
-                             (float)fabs( input - 1 ), (float)fabs( input - 3 ),
-                             (float)fabs( input - 5 ), (float)fabs( input - 7 ) };
+      float distances[8] = { fabsf( input + 7 ), fabsf( input + 5 ),
+                             fabsf( input + 3 ), fabsf( input + 1 ),
+                             fabsf( input - 1 ), fabsf( input - 3 ),
+                             fabsf( input - 5 ), fabsf( input - 7 ) };
 
       /* We start by iterating over all possible states */
       for (unsigned int state = 0; state < 4; state++) {
@@ -79,15 +87,20 @@ namespace gr {
            states to the state we are testing, we only need to look at
            the 4 paths that can be taken given the 2-bit input */
         int min_metric_symb = 0;
-        float min_metric = distances[was_sent[state][0]] + path_metrics[phase][transition_table[state][0]];
+        float min_metric = distances[d_was_sent[state][0]] +
+          d_path_metrics[d_phase][d_transition_table[state][0]];
+
         for (unsigned int symbol_sent = 1; symbol_sent < 4; symbol_sent++)
-          if( (distances[was_sent[state][symbol_sent]] + path_metrics[phase][transition_table[state][symbol_sent]]) < min_metric) {
-            min_metric = distances[was_sent[state][symbol_sent]] + path_metrics[phase][transition_table[state][symbol_sent]];
+          if( (distances[d_was_sent[state][symbol_sent]] +
+               d_path_metrics[d_phase][d_transition_table[state][symbol_sent]]) < min_metric) {
+            min_metric = distances[d_was_sent[state][symbol_sent]] +
+              d_path_metrics[d_phase][d_transition_table[state][symbol_sent]];
             min_metric_symb = symbol_sent;
           }
 
-        path_metrics[phase^1][state] = min_metric;
-        traceback[phase^1][state] = (((unsigned long long)min_metric_symb) << 62) | (traceback[phase][transition_table[state][min_metric_symb]] >> 2);
+        d_path_metrics[d_phase^1][state] = min_metric;
+        d_traceback[d_phase^1][state] = (((unsigned long long)min_metric_symb) << 62) |
+          (d_traceback[d_phase][d_transition_table[state][min_metric_symb]] >> 2);
 
         /* If this is the most probable state so far remember it, this
            only needs to be checked when we are about to output a path
@@ -98,26 +111,24 @@ namespace gr {
            head state path will tend towards the optimal path with a
            probability approaching 1 in just 8 or so transitions
         */
-        if(min_metric <= best_state_metric) {
-          best_state_metric = min_metric;
+        if(min_metric <= d_best_state_metric) {
+          d_best_state_metric = min_metric;
           best_state = state;
         }
       }
 
-      if(best_state_metric > 10000) {
+      if(d_best_state_metric > 10000) {
         for(unsigned int state = 0; state < 4; state++)
-          path_metrics[phase^1][state] -= best_state_metric;
+          d_path_metrics[d_phase^1][state] -= d_best_state_metric;
       }
-      phase ^= 1;
+      d_phase ^= 1;
 
-      int y2 = (0x2 & traceback[phase][best_state]) >> 1;
-      int x2 = y2 ^ post_coder_state;
-      post_coder_state = y2;
+      int y2 = (0x2 & d_traceback[d_phase][best_state]) >> 1;
+      int x2 = y2 ^ d_post_coder_state;
+      d_post_coder_state = y2;
 
-      return ( x2 << 1 ) | (0x1 & traceback[phase][best_state]);
+      return ( x2 << 1 ) | (0x1 & d_traceback[d_phase][best_state]);
     }
 
   } /* namespace dtv */
 } /* namespace gr */
-
-

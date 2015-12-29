@@ -45,6 +45,9 @@ namespace gr {
        * \brief Make a new instance of gr::dtv::atsc_equalizer.
        */
       static sptr make();
+
+      virtual std::vector<float> taps() const = 0;
+      virtual std::vector<float> data() const = 0;
     };
 
   } /* namespace dtv */

@@ -53,20 +53,23 @@ namespace gr {
 
     usrp_source::sptr
     usrp_source::make(const ::uhd::device_addr_t &device_addr,
-                      const ::uhd::stream_args_t &stream_args)
+                      const ::uhd::stream_args_t &stream_args,
+                      const bool issue_stream_cmd_on_start)
     {
       check_abi();
       return usrp_source::sptr
-        (new usrp_source_impl(device_addr, stream_args_ensure(stream_args)));
+        (new usrp_source_impl(device_addr, stream_args_ensure(stream_args), issue_stream_cmd_on_start));
     }
 
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
-                                       const ::uhd::stream_args_t &stream_args):
+                                       const ::uhd::stream_args_t &stream_args,
+                                       const bool issue_stream_cmd_on_start):
       usrp_block("usrp_source",
                  io_signature::make(0, 0, 0),
                  args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
-      _tag_now(false)
+      _tag_now(false),
+      _issue_stream_cmd_on_start(issue_stream_cmd_on_start)
     {
       std::stringstream str;
       str << name() << unique_id();
@@ -348,7 +351,8 @@ namespace gr {
     {
       _update_stream_args(stream_args);
 #ifdef GR_UHD_USE_STREAM_API
-      _rx_stream.reset();
+      if(_rx_stream)
+        _rx_stream.reset();
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
@@ -381,18 +385,20 @@ namespace gr {
         _samps_per_packet = _rx_stream->get_max_num_samps();
       }
 #endif
-      //setup a stream command that starts streaming slightly in the future
-      static const double reasonable_delay = 0.1; //order of magnitude over RTT
-      ::uhd::stream_cmd_t stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
-      stream_cmd.stream_now = _stream_now;
-      if(_start_time_set) {
-        _start_time_set = false; //cleared for next run
-        stream_cmd.time_spec = _start_time;
+      if(_issue_stream_cmd_on_start){
+        //setup a stream command that starts streaming slightly in the future
+        static const double reasonable_delay = 0.1; //order of magnitude over RTT
+        ::uhd::stream_cmd_t stream_cmd(::uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
+        stream_cmd.stream_now = _stream_now;
+        if(_start_time_set) {
+          _start_time_set = false; //cleared for next run
+          stream_cmd.time_spec = _start_time;
+        }
+        else {
+          stream_cmd.time_spec = get_time_now() + ::uhd::time_spec_t(reasonable_delay);
+        }
+        this->issue_stream_cmd(stream_cmd);
       }
-      else {
-        stream_cmd.time_spec = get_time_now() + ::uhd::time_spec_t(reasonable_delay);
-      }
-      this->issue_stream_cmd(stream_cmd);
       _tag_now = true;
       return true;
     }
@@ -409,7 +415,12 @@ namespace gr {
       while(true) {
 #ifdef GR_UHD_USE_STREAM_API
         const size_t bpi = ::uhd::convert::get_bytes_per_item(_stream_args.cpu_format);
-        _rx_stream->recv(outputs, nbytes/bpi, _metadata, 0.0);
+        if(_rx_stream)
+          // get the remaining samples out of the buffers
+          _rx_stream->recv(outputs, nbytes/bpi, _metadata, 0.0);
+        else
+          // no rx streamer -- nothing to flush
+          break; 
 #else
         _dev->get_device()->recv
           (outputs, nbytes/_type->size, _metadata, *_type,
