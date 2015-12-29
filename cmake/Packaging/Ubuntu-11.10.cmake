@@ -1,4 +1,5 @@
 SET(PACKAGE_DEPENDS_CORE_RUNTIME "libfftw3-3")
+SET(PACKAGE_DEPENDS_UTILS "python-mako")
 SET(PACKAGE_DEPENDS_QTGUI_RUNTIME "libqtcore4" "libqwt6")
 SET(PACKAGE_DEPENDS_QTGUI_PYTHON "python-qt4" "python-qwt5-qt4")
 SET(PACKAGE_DEPENDS_GRC "python" "python-numpy" "python-gtk2" "python-lxml" "python-cheetah")
