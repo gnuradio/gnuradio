@@ -29,16 +29,16 @@ namespace gr {
   namespace dtv {
 
     dvbs2_modulator_bc::sptr
-    dvbs2_modulator_bc::make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation)
+    dvbs2_modulator_bc::make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation, dvbs2_interpolation_t interpolation)
     {
       return gnuradio::get_initial_sptr
-        (new dvbs2_modulator_bc_impl(framesize, rate, constellation));
+        (new dvbs2_modulator_bc_impl(framesize, rate, constellation, interpolation));
     }
 
     /*
      * The private constructor
      */
-    dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation)
+    dvbs2_modulator_bc_impl::dvbs2_modulator_bc_impl(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation, dvbs2_interpolation_t interpolation)
       : gr::block("dvbs2_modulator_bc",
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)))
@@ -1668,6 +1668,7 @@ namespace gr {
           break;
       }
       signal_constellation = constellation;
+      signal_interpolation = interpolation;
       set_output_multiple(2);
     }
 
@@ -1681,7 +1682,12 @@ namespace gr {
     void
     dvbs2_modulator_bc_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-      ninput_items_required[0] = noutput_items;
+      if (signal_interpolation == INTERPOLATION_OFF) {
+        ninput_items_required[0] = noutput_items;
+      }
+      else {
+        ninput_items_required[0] = noutput_items / 2;
+      }
     }
 
     int
@@ -1693,67 +1699,143 @@ namespace gr {
       const unsigned char *in = (const unsigned char *) input_items[0];
       gr_complex *out = (gr_complex *) output_items[0];
       int index;
+      gr_complex zero;
 
-      switch (signal_constellation) {
-        case MOD_QPSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_qpsk[index & 0x3];
-          }
-          break;
-        case MOD_8PSK:
-        case MOD_8APSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_8psk[index & 0x7];
-          }
-          break;
-        case MOD_16APSK:
-        case MOD_8_8APSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_16apsk[index & 0xf];
-          }
-          break;
-        case MOD_32APSK:
-        case MOD_4_12_16APSK:
-        case MOD_4_8_4_16APSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_32apsk[index & 0x1f];
-          }
-          break;
-        case MOD_64APSK:
-        case MOD_8_16_20_20APSK:
-        case MOD_4_12_20_28APSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_64apsk[index & 0x3f];
-          }
-          break;
-        case MOD_128APSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_128apsk[index & 0x7f];
-          }
-          break;
-        case MOD_256APSK:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_256apsk[index & 0xff];
-          }
-          break;
-        default:
-          for (int i = 0; i < noutput_items; i++) {
-            index = *in++;
-            *out++ = m_qpsk[index & 0x3];
-          }
-          break;
+      zero = gr_complex(0.0, 0.0);
+
+      if (signal_interpolation == INTERPOLATION_OFF) {
+        switch (signal_constellation) {
+          case MOD_QPSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_qpsk[index & 0x3];
+            }
+            break;
+          case MOD_8PSK:
+          case MOD_8APSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_8psk[index & 0x7];
+            }
+            break;
+          case MOD_16APSK:
+          case MOD_8_8APSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_16apsk[index & 0xf];
+            }
+            break;
+          case MOD_32APSK:
+          case MOD_4_12_16APSK:
+          case MOD_4_8_4_16APSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_32apsk[index & 0x1f];
+            }
+            break;
+          case MOD_64APSK:
+          case MOD_8_16_20_20APSK:
+          case MOD_4_12_20_28APSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_64apsk[index & 0x3f];
+            }
+            break;
+          case MOD_128APSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_128apsk[index & 0x7f];
+            }
+            break;
+          case MOD_256APSK:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_256apsk[index & 0xff];
+            }
+            break;
+          default:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_qpsk[index & 0x3];
+            }
+            break;
+        }
+      }
+      else {
+        switch (signal_constellation) {
+          case MOD_QPSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_qpsk[index & 0x3];
+              *out++ = zero;
+            }
+            break;
+          case MOD_8PSK:
+          case MOD_8APSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_8psk[index & 0x7];
+              *out++ = zero;
+            }
+            break;
+          case MOD_16APSK:
+          case MOD_8_8APSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_16apsk[index & 0xf];
+              *out++ = zero;
+            }
+            break;
+          case MOD_32APSK:
+          case MOD_4_12_16APSK:
+          case MOD_4_8_4_16APSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_32apsk[index & 0x1f];
+              *out++ = zero;
+            }
+            break;
+          case MOD_64APSK:
+          case MOD_8_16_20_20APSK:
+          case MOD_4_12_20_28APSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_64apsk[index & 0x3f];
+              *out++ = zero;
+            }
+            break;
+          case MOD_128APSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_128apsk[index & 0x7f];
+              *out++ = zero;
+            }
+            break;
+          case MOD_256APSK:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_256apsk[index & 0xff];
+              *out++ = zero;
+            }
+            break;
+          default:
+            for (int i = 0; i < noutput_items / 2; i++) {
+              index = *in++;
+              *out++ = m_qpsk[index & 0x3];
+              *out++ = zero;
+            }
+            break;
+        }
       }
 
       // Tell runtime system how many input items we consumed on
       // each input stream.
-      consume_each (noutput_items);
+      if (signal_interpolation == INTERPOLATION_OFF) {
+        consume_each (noutput_items);
+      }
+      else {
+        consume_each (noutput_items / 2);
+      }
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
