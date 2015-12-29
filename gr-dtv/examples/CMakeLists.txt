@@ -21,6 +21,7 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
+    atsc_ctrlport_monitor.py
     DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
     COMPONENT "dtv_python"
 )

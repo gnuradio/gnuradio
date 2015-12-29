@@ -41,6 +41,8 @@ GR_SET_GLOBAL(GR_DTV_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/lib
 )
 
+SET(GR_PKG_DTV_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/dtv)
+
 ########################################################################
 # Begin conditional configuration
 ########################################################################
