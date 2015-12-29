@@ -786,7 +786,7 @@
     </param>
     <param>
       <key>bw0</key>
-      <value>6000000</value>
+      <value>10000000</value>
     </param>
     <param>
       <key>corr0</key>

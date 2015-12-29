@@ -20,3 +20,7 @@ This stream can also be used at:
 9.333333 MSyms/s 3/4 code rate
 8.4 Msyms/s 5/6 code rate
 
+The equation for calculating the correct Transport Stream bit-rate is:
+
+TS bit-rate = symbol rate * 2 * code rate * (188 / 204)
+
