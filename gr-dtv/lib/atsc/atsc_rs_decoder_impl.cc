@@ -131,14 +131,9 @@ namespace gr {
 	d_total_packets++;
         #if 0
         if (d_total_packets > 1000) {
-          // FIXME: convert to logger
-          GR_LOG_DEBUG(d_logger, boost::format("Error rate: %1%\tPacket error rate: %2%") \
+          GR_LOG_INFO(d_logger, boost::format("Error rate: %1%\tPacket error rate: %2%") \
                        % ((float)d_nerrors_corrrected_count/(ATSC_MPEG_DATA_LENGTH*d_total_packets))
                        % ((float)d_bad_packet_count/d_total_packets));
-
-          //d_nerrors_corrrected_count = 0;
-          //d_bad_packet_count = 0;
-          //d_total_packets = 0;
         }
         #endif
       }
