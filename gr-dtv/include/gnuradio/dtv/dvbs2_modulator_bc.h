@@ -23,6 +23,7 @@
 
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>
+#include <gnuradio/dtv/dvbs2_config.h>
 #include <gnuradio/block.h>
 
 namespace gr {
@@ -47,7 +48,7 @@ namespace gr {
        * \param rate FEC code rate.
        * \param constellation DVB-S2 constellation.
        */
-      static sptr make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation);
+      static sptr make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation, dvbs2_interpolation_t interpolation);
     };
 
   } // namespace dtv

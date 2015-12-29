@@ -8,7 +8,7 @@
   <name>DVB-S2X Modulator</name>
   <key>dtv_dvbs2_modulator_bc</key>
   <import>from gnuradio import dtv</import>
-  <make>dtv.dvbs2_modulator_bc($framesize.val, $rate.val, $constellation.val)</make>
+  <make>dtv.dvbs2_modulator_bc($framesize.val, $rate.val, $constellation.val, $interpolation.val)</make>
   <param>
     <name>FECFRAME size</name>
     <key>framesize</key>
@@ -252,6 +252,21 @@
       <name>256APSK</name>
       <key>MOD_256APSK</key>
       <opt>val:dtv.MOD_256APSK</opt>
+    </option>
+  </param>
+  <param>
+    <name>2X Interpolation</name>
+    <key>interpolation</key>
+    <type>enum</type>
+    <option>
+      <name>Off</name>
+      <key>INTERPOLATION_OFF</key>
+      <opt>val:dtv.INTERPOLATION_OFF</opt>
+    </option>
+    <option>
+      <name>On</name>
+      <key>INTERPOLATION_ON</key>
+      <opt>val:dtv.INTERPOLATION_ON</opt>
     </option>
   </param>
   <sink>
