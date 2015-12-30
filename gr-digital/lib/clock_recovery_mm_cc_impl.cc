@@ -67,6 +67,17 @@ namespace gr {
       set_omega(omega);			// also sets min and max omega
       set_relative_rate(1.0 / omega);
       set_history(3);			// ensure 2 extra input samples are available
+
+      // Book keepers for managing tags
+      d_old_in = 0;
+      d_new_in = 0;
+      d_last_out = 0;
+
+      // We need to manage the tag placement ourselves because the
+      // relative rates can change within work, so don't let the
+      // scheduler handle tags and we do it ourselves in the work
+      // function.
+      set_tag_propagation_policy(TPP_DONT);
     }
 
     clock_recovery_mm_cc_impl::~clock_recovery_mm_cc_impl()
@@ -154,6 +165,21 @@ namespace gr {
 	  mm_val = u.real();
 	  out[oo++] = d_p_0T;
 
+          // Manage Tags
+          std::vector<tag_t> xtags;
+          std::vector<tag_t>::iterator itags;
+          d_new_in = nitems_read(0) + ii;
+          get_tags_in_range(xtags, 0, d_old_in, d_new_in);
+          if(xtags.size() > 0) {
+            for(itags = xtags.begin(); itags != xtags.end(); itags++) {
+              tag_t new_tag = *itags;
+              new_tag.offset = d_last_out - history() + 1;// + 3 + 1;
+              add_item_tag(0, new_tag);
+            }
+            d_old_in = d_new_in;
+            d_last_out = nitems_written(0) + oo;
+          }
+
 	  // limit mm_val
 	  mm_val = gr::branchless_clip(mm_val,1.0);
 	  d_omega = d_omega + d_gain_omega * mm_val;
@@ -186,6 +212,19 @@ namespace gr {
 	  u = y - x;
 	  mm_val = u.real();
 	  out[oo++] = d_p_0T;
+
+          // Manage Tags
+          std::vector<tag_t> xtags;
+          std::vector<tag_t>::iterator itags;
+          d_new_in = nitems_read(0) + ii;
+          get_tags_in_range(xtags, 0, d_old_in, d_new_in);
+          for(itags = xtags.begin(); itags != xtags.end(); itags++) {
+            tag_t new_tag = *itags;
+            new_tag.offset = d_last_out - history() + 1;
+            add_item_tag(0, new_tag);
+          }
+          d_old_in = d_new_in;
+          d_last_out = nitems_written(0) + oo;
 
 	  // limit mm_val
 	  mm_val = gr::branchless_clip(mm_val,1.0);
