@@ -30,7 +30,7 @@ except ImportError:
 try:
     from pylab import *
 except ImportError:
-    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
+    print "Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and Python TkInter https://wiki.python.org/moin/TkInter to run this script"
     raise SystemExit, 1
 
 from optparse import OptionParser
