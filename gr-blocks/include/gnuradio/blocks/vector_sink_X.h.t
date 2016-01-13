@@ -43,6 +43,7 @@ namespace gr {
 
       static sptr make(int vlen = 1);
 
+      //! Clear the data and tags containers.
       virtual void reset() = 0;
       virtual std::vector<@TYPE@> data() const = 0;
       virtual std::vector<tag_t> tags() const = 0;
