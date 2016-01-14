@@ -437,7 +437,7 @@ When a nonempty string is given, the USRP sink will look for length tags \\
 to determine transmit burst lengths.
 
 See the UHD manual for more detailed documentation:
-http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+http://uhd.ettus.com
 	</doc>
 </block>
 """
