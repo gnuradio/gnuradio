@@ -101,7 +101,7 @@ def polyval(p,x):
         y = 0
     else:
         x = asarray(x)
-        y = numpy.zeros(x.shape,x.typecode())
+        y = numpy.zeros(x.shape,x.dtype)
     for i in range(len(p)):
         y = x * y + p[i]
     return y
