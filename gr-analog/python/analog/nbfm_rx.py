@@ -57,8 +57,8 @@ class nbfm_rx(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
 
         # FIXME audio_rate and quad_rate ought to be exact rationals
-        audio_rate = int(audio_rate)
-        quad_rate = int(quad_rate)
+        self._audio_rate = audio_rate = int(audio_rate)
+        self._quad_rate = quad_rate = int(quad_rate)
 
         if quad_rate % audio_rate != 0:
             raise ValueError, "quad_rate is not an integer multiple of audio_rate"
@@ -88,3 +88,7 @@ class nbfm_rx(gr.hier_block2):
         self.audio_filter = filter.fir_filter_fff(audio_decim, audio_taps)
 
         self.connect(self, self.quad_demod, self.deemph, self.audio_filter, self)
+
+    def set_max_deviation(self, max_dev):
+        k = self._quad_rate/(2*math.pi*max_dev)
+        self.quad_demod.set_gain(k)

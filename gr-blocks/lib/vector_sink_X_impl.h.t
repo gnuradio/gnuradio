@@ -41,7 +41,7 @@ namespace gr {
       @NAME_IMPL@(int vlen);
       ~@NAME_IMPL@();
 
-      void reset() { d_data.clear(); }
+      void reset() { d_data.clear(); d_tags.clear(); }
       std::vector<@TYPE@> data() const;
       std::vector<tag_t> tags() const;
 

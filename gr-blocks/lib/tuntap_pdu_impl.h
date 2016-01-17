@@ -40,6 +40,7 @@ namespace gr {
       std::string d_dev;
       bool d_istunflag;
       int tun_alloc(char *dev, int flags);
+      int set_mtu(const char *dev, int MTU);
 
     public:
       tuntap_pdu_impl(std::string dev, int MTU, bool istunflag);
