@@ -50,8 +50,8 @@ class nbfm_tx(gr.hier_block2):
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         # FIXME audio_rate and quad_rate ought to be exact rationals
-        audio_rate = int(audio_rate)
-        quad_rate = int(quad_rate)
+        self._audio_rate = audio_rate = int(audio_rate)
+        self._quad_rate = quad_rate = int(quad_rate)
 
         if quad_rate % audio_rate != 0:
             raise ValueError, "quad_rate is not an integer multiple of audio_rate"
@@ -80,6 +80,11 @@ class nbfm_tx(gr.hier_block2):
             self.connect(self, self.interpolator, self.preemph, self.modulator, self)
         else:
             self.connect(self, self.preemph, self.modulator, self)
+
+    def set_max_deviation(self, max_dev):
+        k = 2 * math.pi * max_dev / self._quad_rate
+        self.modulator.set_sensitivity(k)
+
 
 
 class ctcss_gen_f(gr.hier_block2):

@@ -115,10 +115,6 @@ class ActionHandler:
         # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
-            if ParseXML.xml_failures:
-                Messages.send_xml_errors_if_any(ParseXML.xml_failures)
-                Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
-
             if not self.init_file_paths:
                 self.init_file_paths = filter(os.path.exists, Preferences.get_open_files())
             if not self.init_file_paths: self.init_file_paths = ['']
@@ -131,7 +127,8 @@ class ActionHandler:
             self.main_window.btwin.search_entry.hide()
 
             # Disable all actions, then re-enable a few
-            for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
+            for action in Actions.get_all_actions():
+                action.set_sensitive(False)  # set all actions disabled
             for action in (
                 Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
@@ -150,6 +147,9 @@ class ActionHandler:
                 action.set_sensitive(True)
                 if hasattr(action, 'load_from_preferences'):
                     action.load_from_preferences()
+            if ParseXML.xml_failures:
+                Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+                Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
 
         elif action == Actions.APPLICATION_QUIT:
             if self.main_window.close_pages():
