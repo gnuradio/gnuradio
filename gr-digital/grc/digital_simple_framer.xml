@@ -22,4 +22,11 @@
 		<name>out</name>
 		<type>byte</type>
 	</source>
+    <doc>
+Outputs 'payload_bytesize' amount of input prefixed with 8 bytes of
+synchronization and one byte sequence number. The sequence number increases by
+1 after every frame.
+
+The synchronization fragment is a constant m-sequence 0xACDDA4E2F28C20FC.
+    </doc>
 </block>

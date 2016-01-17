@@ -17,4 +17,10 @@
 		<name>out</name>
 		<type>byte</type>
 	</source>
+    <doc>
+Converts each sample from a float to a 1/0 byte output.
+
+For input &gt;=0 outputs 1.
+For input &lt;0 outputs 0.
+    </doc>
 </block>

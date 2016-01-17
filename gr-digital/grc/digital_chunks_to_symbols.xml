@@ -75,4 +75,12 @@
 		<type>$out_type</type>
 		<nports>$num_ports</nports>
 	</source>
+    <doc>
+Converts the input stream numbers to values from the provided symbol table.
+
+All symbols must be predefined and provided. Values which do not map to a valid
+symbol cause failure.
+
+out[n D + k] = symbol_table[in[n] D + k], k=0,1,...,D-1
+    </doc>
 </block>
