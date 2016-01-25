@@ -73,6 +73,26 @@ namespace gr {
       else {
         set_history(d_taps_per_filter);
       }
+
+      d_tmp = NULL;
+    }
+
+    bool pfb_decimator_ccf_impl::start()
+    {
+      if(d_use_fft_filters) {
+        d_tmp = fft::malloc_complex(max_noutput_items()*d_rate);
+      }
+
+      return block::start();
+    }
+
+    bool pfb_decimator_ccf_impl::stop()
+    {
+      if((d_use_fft_filters) && (d_tmp)) {
+        fft::free(d_tmp);
+      }
+
+      return block::stop();
     }
 
     pfb_decimator_ccf_impl::~pfb_decimator_ccf_impl()
@@ -198,14 +218,13 @@ namespace gr {
       gr_complex *out = (gr_complex *)output_items[0];
 
       int i;
-      gr_complex *tmp = fft::malloc_complex(noutput_items*d_rate);
 
       // Filter each input stream by the FFT filters; do all
       // noutput_items at once to avoid repeated calls to the FFT
       // setup and operation.
       for(unsigned int j = 0; j < d_rate; j++) {
         in = (gr_complex*)input_items[d_rate-j-1];
-        d_fft_filters[j]->filter(noutput_items, in, &(tmp[j*noutput_items]));
+        d_fft_filters[j]->filter(noutput_items, in, &(d_tmp[j*noutput_items]));
       }
 
       // Rotate and add filter outputs (k=channel number; M=number of
@@ -214,11 +233,10 @@ namespace gr {
       for(i = 0; i < noutput_items; i++) {
         out[i] = 0;
         for(unsigned int j = 0; j < d_rate; j++) {
-          out[i] += tmp[j*noutput_items+i]*d_rotator[j];
+          out[i] += d_tmp[j*noutput_items+i]*d_rotator[j];
         }
       }
 
-      fft::free(tmp);
       return noutput_items;
     }
 
@@ -231,18 +249,17 @@ namespace gr {
       gr_complex *out = (gr_complex *)output_items[0];
 
       int i;
-      gr_complex *tmp = fft::malloc_complex(noutput_items*d_rate);
 
       for(unsigned int j = 0; j < d_rate; j++) {
         in = (gr_complex*)input_items[d_rate-j-1];
-        d_fft_filters[j]->filter(noutput_items, in, &tmp[j*noutput_items]);
+        d_fft_filters[j]->filter(noutput_items, in, &d_tmp[j*noutput_items]);
       }
 
       // Performs the rotate and add operations by implementing it as
       // an FFT.
       for(i = 0; i < noutput_items; i++) {
         for(unsigned int j = 0; j < d_rate; j++) {
-          d_fft->get_inbuf()[j] = tmp[j*noutput_items + i];
+          d_fft->get_inbuf()[j] = d_tmp[j*noutput_items + i];
         }
 
         // Perform the FFT to do the complex multiply despinning for all channels
@@ -252,7 +269,6 @@ namespace gr {
         out[i] = d_fft->get_outbuf()[d_chan];
       }
 
-      fft::free(tmp);
       return noutput_items;
     }
 
