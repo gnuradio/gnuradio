@@ -218,6 +218,7 @@ namespace gr {
         }
       }
 
+      fft::free(tmp);
       return noutput_items;
     }
 
