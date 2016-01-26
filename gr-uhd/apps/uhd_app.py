@@ -142,7 +142,8 @@ class UHDApp(object):
             for mb_idx in xrange(self.usrp.get_num_mboards()):
                 self.usrp.set_subdev_spec(args.spec, mb_idx)
         # Set the clock source:
-        self.usrp.set_clock_source(args.clock_source)
+        if args.clock_source and not args.clock_source == "default":
+            self.usrp.set_clock_source(args.clock_source)
         # Sampling rate:
         self.usrp.set_samp_rate(args.samp_rate)
         self.samp_rate = self.usrp.get_samp_rate()
@@ -297,7 +298,7 @@ class UHDApp(object):
                             help="Show asynchronous message notifications from UHD")
         group.add_argument("--sync", choices=('default', 'pps', 'auto'),
                           default='auto', help="Set to 'pps' to sync devices to PPS")
-        group.add_argument("--clock-source",
-                          default='internal', help="Set the clock source")
+        group.add_argument("--clock-source",choices=('internal', 'external', 'gpsdo', 'default'),
+                           help="Set the clock source")
         return parser
 
