@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Transport Framing Encoder
+###################################################
+ -->
+<block>
+  <name>Transport Framing Encoder</name>
+  <key>dtv_catv_transport_framing_enc_bb</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.catv_transport_framing_enc_bb()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>

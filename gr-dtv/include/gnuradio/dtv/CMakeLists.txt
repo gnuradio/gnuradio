@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -74,6 +74,11 @@ install(FILES
     dvbt_convolutional_deinterleaver.h
     dvbt_reed_solomon_dec.h
     dvbt_energy_descramble.h
+    catv_transport_framing_enc_bb.h
+    catv_reed_solomon_enc_bb.h
+    catv_randomizer_bb.h
+    catv_frame_sync_enc_bb.h
+    catv_trellis_enc_bb.h
 
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
     COMPONENT "dtv_devel"
