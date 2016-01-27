@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,13 +33,13 @@ install(FILES
     dtv_atsc_pad.xml
     dtv_atsc_randomizer.xml
     dtv_atsc_rs_encoder.xml
-    dtv_atsc_interleaver.xml
     dtv_atsc_trellis_encoder.xml
     dtv_atsc_field_sync_mux.xml
     dtv_dvb_bbheader_bb.xml
     dtv_dvb_bbscrambler_bb.xml
     dtv_dvb_bch_bb.xml
     dtv_dvb_ldpc_bb.xml
+    dtv_dvb_interleaver_bb.xml
     dtv_dvbt2_interleaver_bb.xml
     dtv_dvbt2_modulator_bc.xml
     dtv_dvbt2_cellinterleaver_cc.xml
@@ -68,6 +68,11 @@ install(FILES
     dtv_dvbt_convolutional_deinterleaver.xml
     dtv_dvbt_reed_solomon_dec.xml
     dtv_dvbt_energy_descramble.xml
+    dtv_catv_transport_framing_enc_bb.xml
+    dtv_catv_reed_solomon_enc_bb.xml
+    dtv_catv_randomizer_bb.xml
+    dtv_catv_frame_sync_enc_bb.xml
+    dtv_catv_trellis_enc_bb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )

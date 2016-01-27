@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1660,6 +1660,72 @@ namespace gr {
             m_256apsk[255] = gr_complex((r6 * cos(43 * M_PI / 32.0)), (r6 * sin(43 * M_PI / 32.0)));
           }
           break;
+        case MOD_64QAM:
+          m_64apsk[0] = gr_complex(  1.0,  1.0);
+          m_64apsk[1] = gr_complex(  1.0, -1.0);
+          m_64apsk[2] = gr_complex(  1.0, -3.0);
+          m_64apsk[3] = gr_complex( -3.0, -1.0);
+          m_64apsk[4] = gr_complex( -3.0,  1.0);
+          m_64apsk[5] = gr_complex(  1.0,  3.0);
+          m_64apsk[6] = gr_complex( -3.0, -3.0);
+          m_64apsk[7] = gr_complex( -3.0,  3.0);
+          m_64apsk[8] = gr_complex( -1.0,  1.0);
+          m_64apsk[9] = gr_complex( -1.0, -1.0);
+          m_64apsk[10] = gr_complex( 3.0,  1.0);
+          m_64apsk[11] = gr_complex(-1.0,  3.0);
+          m_64apsk[12] = gr_complex(-1.0, -3.0);
+          m_64apsk[13] = gr_complex( 3.0, -1.0);
+          m_64apsk[14] = gr_complex( 3.0, -3.0);
+          m_64apsk[15] = gr_complex( 3.0,  3.0);
+          m_64apsk[16] = gr_complex( 5.0,  1.0);
+          m_64apsk[17] = gr_complex( 1.0, -5.0);
+          m_64apsk[18] = gr_complex( 1.0, -7.0);
+          m_64apsk[19] = gr_complex(-7.0, -1.0);
+          m_64apsk[20] = gr_complex(-3.0,  5.0);
+          m_64apsk[21] = gr_complex( 5.0,  3.0);
+          m_64apsk[22] = gr_complex(-7.0, -3.0);
+          m_64apsk[23] = gr_complex(-3.0,  7.0);
+          m_64apsk[24] = gr_complex(-1.0,  5.0);
+          m_64apsk[25] = gr_complex(-5.0, -1.0);
+          m_64apsk[26] = gr_complex( 7.0,  1.0);
+          m_64apsk[27] = gr_complex(-1.0,  7.0);
+          m_64apsk[28] = gr_complex(-5.0, -3.0);
+          m_64apsk[29] = gr_complex( 3.0, -5.0);
+          m_64apsk[30] = gr_complex( 3.0, -7.0);
+          m_64apsk[31] = gr_complex( 7.0,  3.0);
+          m_64apsk[32] = gr_complex( 1.0,  5.0);
+          m_64apsk[33] = gr_complex( 5.0, -1.0);
+          m_64apsk[34] = gr_complex( 5.0, -3.0);
+          m_64apsk[35] = gr_complex(-3.0, -5.0);
+          m_64apsk[36] = gr_complex(-7.0,  1.0);
+          m_64apsk[37] = gr_complex( 1.0,  7.0);
+          m_64apsk[38] = gr_complex(-3.0, -7.0);
+          m_64apsk[39] = gr_complex(-7.0,  3.0);
+          m_64apsk[40] = gr_complex(-5.0,  1.0);
+          m_64apsk[41] = gr_complex(-1.0, -5.0);
+          m_64apsk[42] = gr_complex( 3.0,  5.0);
+          m_64apsk[43] = gr_complex(-5.0,  3.0);
+          m_64apsk[44] = gr_complex(-1.0, -7.0);
+          m_64apsk[45] = gr_complex( 7.0, -1.0);
+          m_64apsk[46] = gr_complex( 7.0, -3.0);
+          m_64apsk[47] = gr_complex( 3.0,  7.0);
+          m_64apsk[48] = gr_complex( 5.0,  5.0);
+          m_64apsk[49] = gr_complex( 5.0, -5.0);
+          m_64apsk[50] = gr_complex( 5.0, -7.0);
+          m_64apsk[51] = gr_complex(-7.0, -5.0);
+          m_64apsk[52] = gr_complex(-7.0,  5.0);
+          m_64apsk[53] = gr_complex( 5.0,  7.0);
+          m_64apsk[54] = gr_complex(-7.0, -7.0);
+          m_64apsk[55] = gr_complex(-7.0,  7.0);
+          m_64apsk[56] = gr_complex(-5.0,  5.0);
+          m_64apsk[57] = gr_complex(-5.0, -5.0);
+          m_64apsk[58] = gr_complex( 7.0,  5.0);
+          m_64apsk[59] = gr_complex(-5.0,  7.0);
+          m_64apsk[60] = gr_complex(-5.0, -7.0);
+          m_64apsk[61] = gr_complex( 7.0, -5.0);
+          m_64apsk[62] = gr_complex( 7.0, -7.0);
+          m_64apsk[63] = gr_complex( 7.0,  7.0);
+          break;
         default:
           m_qpsk[0] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
           m_qpsk[1] = gr_complex((r1 * cos(7 * M_PI / 4.0)), (r1 * sin(7 * M_PI / 4.0)));
@@ -1734,6 +1800,7 @@ namespace gr {
             }
             break;
           case MOD_64APSK:
+          case MOD_64QAM:
           case MOD_8_16_20_20APSK:
           case MOD_4_12_20_28APSK:
             for (int i = 0; i < noutput_items; i++) {
@@ -1796,6 +1863,7 @@ namespace gr {
             }
             break;
           case MOD_64APSK:
+          case MOD_64QAM:
           case MOD_8_16_20_20APSK:
           case MOD_4_12_20_28APSK:
             for (int i = 0; i < noutput_items / 2; i++) {
