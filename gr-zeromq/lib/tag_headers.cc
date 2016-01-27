@@ -24,78 +24,88 @@
 #include <gnuradio/block.h>
 #include <sstream>
 #include <cstring>
+#include <zmq.hpp>
 
-#define GR_HEADER_MAGIC 0x5FF0
+#define GR_HEADER_MAGIC   0x5FF0
 #define GR_HEADER_VERSION 0x01
 
 namespace gr {
   namespace zeromq {
 
+    struct membuf: std::streambuf
+    {
+      membuf(void *b, size_t len)
+      {
+        char *bc = static_cast<char*>(b);
+        this->setg(bc, bc, bc+len);
+      }
+    };
+
     std::string 
-    gen_tag_header(uint64_t &offset, std::vector<gr::tag_t> &tags) {
+    gen_tag_header(uint64_t offset, std::vector<gr::tag_t> &tags)
+    {
+      std::stringbuf sb("");
+      std::ostream ss(&sb);
 
       uint16_t header_magic = GR_HEADER_MAGIC;
       uint8_t  header_version = GR_HEADER_VERSION;
+      uint64_t ntags = (uint64_t)tags.size();
 
-      std::stringstream ss;
-      size_t ntags = tags.size();
-      ss.write( reinterpret_cast< const char* >( &header_magic ), sizeof(uint16_t) );
-      ss.write( reinterpret_cast< const char* >( &header_version ), sizeof(uint8_t) );
-    
-      ss.write( reinterpret_cast< const char* >( &offset ), sizeof(uint64_t) );  // offset
-      ss.write( reinterpret_cast< const char* >( &ntags ), sizeof(size_t) );      // num tags
-      std::stringbuf sb("");
-      //std::cout << "TX TAGS: (offset="<<offset<<" ntags="<<ntags<<")\n";
-      for(size_t i=0; i<tags.size(); i++){
-        //std::cout << "TX TAG: (" << tags[i].offset << ", " << tags[i].key << ", " << tags[i].value << ", " << tags[i].srcid << ")\n";
-        ss.write( reinterpret_cast< const char* >( &tags[i].offset ), sizeof(uint64_t) );   // offset
-        sb.str("");
-        pmt::serialize( tags[i].key, sb );                                           // key
-        pmt::serialize( tags[i].value, sb );                                         // value
-        pmt::serialize( tags[i].srcid, sb );                                         // srcid
-        ss.write( sb.str().c_str() , sb.str().length() );
+      ss.write( (const char*)&header_magic,   sizeof(uint16_t) );
+      ss.write( (const char*)&header_version, sizeof(uint8_t) );
+      ss.write( (const char*)&offset,         sizeof(uint64_t) );
+      ss.write( (const char*)&ntags,          sizeof(uint64_t) );
+
+      for(size_t i=0; i<tags.size(); i++)
+      {
+        ss.write( (const char *)&tags[i].offset, sizeof(uint64_t) );
+        pmt::serialize( tags[i].key, sb );
+        pmt::serialize( tags[i].value, sb );
+        pmt::serialize( tags[i].srcid, sb );
       }
 
-      return ss.str();
+      return sb.str();
     }
 
-    std::string
-    parse_tag_header(std::string &buf_in, uint64_t &offset_out, std::vector<gr::tag_t> &tags_out) {
+    size_t
+    parse_tag_header(zmq::message_t &msg, uint64_t &offset_out, std::vector<gr::tag_t> &tags_out)
+    {
+      membuf sb(msg.data(), msg.size());
+      std::istream iss(&sb);
 
-      std::istringstream iss( buf_in );
-      size_t   rcv_ntags;
+      size_t min_len = sizeof(uint16_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(uint64_t);
+      if (msg.size() < min_len)
+        throw std::runtime_error("incoming zmq msg too small to hold gr tag header!");
 
       uint16_t header_magic;
-      uint8_t header_version;
+      uint8_t  header_version;
+      uint64_t rcv_ntags;
 
-      iss.read( (char*)&header_magic, sizeof(uint16_t ) );
-      iss.read( (char*)&header_version, sizeof(uint8_t ) );
-      if(header_magic != GR_HEADER_MAGIC){
+      iss.read( (char*)&header_magic,   sizeof(uint16_t) );
+      iss.read( (char*)&header_version, sizeof(uint8_t) );
+
+      if(header_magic != GR_HEADER_MAGIC)
         throw std::runtime_error("gr header magic does not match!");
-        }
-      if(header_version != 1){
+
+      if(header_version != 1)
         throw std::runtime_error("gr header version too high!");
-        }
 
-      iss.read( (char*)&offset_out, sizeof(uint64_t ) );
-      iss.read( (char*)&rcv_ntags,  sizeof(size_t   ) );
-      //std::cout << "RX TAGS: (offset="<<offset_out<<" ntags="<<rcv_ntags<<")\n";
-      int rd_offset = sizeof(uint16_t) + sizeof(uint8_t) + sizeof(uint64_t) + sizeof(size_t);
-      std::stringbuf sb( iss.str().substr(rd_offset) );
+      iss.read( (char*)&offset_out, sizeof(uint64_t) );
+      iss.read( (char*)&rcv_ntags,  sizeof(uint64_t) );
 
-      for(size_t i=0; i<rcv_ntags; i++){
-        gr::tag_t newtag;       
-        sb.sgetn( (char*) &(newtag.offset), sizeof(uint64_t) );
+      for(size_t i=0; i<rcv_ntags; i++)
+      {
+        gr::tag_t newtag;
+        sb.sgetn( (char*)&(newtag.offset), sizeof(uint64_t) );
         newtag.key   = pmt::deserialize( sb );
         newtag.value = pmt::deserialize( sb );
         newtag.srcid = pmt::deserialize( sb );
-        //std::cout << "RX TAG: (" << newtag.offset << ", " << newtag.key << ", " << newtag.value << ", " << newtag.srcid << ")\n";
         tags_out.push_back(newtag);
-        iss.str(sb.str());
       }
 
-      int ndata = sb.in_avail();
-      return iss.str().substr(iss.str().size() - ndata);
+      return msg.size() - sb.in_avail();
     }
   } /* namespace zeromq */
 } /* namespace gr */
+
+// vim: ts=2 sw=2 expandtab
