@@ -26,22 +26,15 @@
 #include <gnuradio/zeromq/push_sink.h>
 #include <zmq.hpp>
 
+#include "base_impl.h"
+
 namespace gr {
   namespace zeromq {
 
-    class push_sink_impl : public push_sink
+    class push_sink_impl : public push_sink, public base_sink_impl
     {
-    private:
-      size_t          d_itemsize;
-      size_t          d_vlen;
-      float           d_timeout;
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      bool            d_pass_tags;
-
     public:
-      push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
-      ~push_sink_impl();
+      push_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
