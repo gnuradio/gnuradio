@@ -37,6 +37,7 @@ endif(ENABLE_GR_CTRLPORT)
 # Setup library
 ########################################################################
 list(APPEND zeromq_sources
+  base_impl.cc
   pub_sink_impl.cc
   pub_msg_sink_impl.cc
   sub_source_impl.cc
