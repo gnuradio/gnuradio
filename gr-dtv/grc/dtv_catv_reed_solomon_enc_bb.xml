@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Reed Solomon Encoder
+###################################################
+ -->
+<block>
+  <name>Reed-Solomon Encoder</name>
+  <key>dtv_catv_reed_solomon_enc_bb</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.catv_reed_solomon_enc_bb()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>
