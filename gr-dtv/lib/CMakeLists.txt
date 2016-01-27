@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -74,7 +74,6 @@ list(APPEND dtv_sources
   atsc/atsc_pad_impl.cc
   atsc/atsc_randomizer_impl.cc
   atsc/atsc_rs_encoder_impl.cc
-  atsc/atsc_interleaver_impl.cc
   atsc/atsc_basic_trellis_encoder.cc
   atsc/atsc_trellis_encoder_impl.cc
   atsc/atsc_field_sync_mux_impl.cc
@@ -82,6 +81,7 @@ list(APPEND dtv_sources
   dvb/dvb_bbscrambler_bb_impl.cc
   dvb/dvb_bch_bb_impl.cc
   dvb/dvb_ldpc_bb_impl.cc
+  dvb/dvb_interleaver_bb_impl.cc
   dvbt2/dvbt2_interleaver_bb_impl.cc
   dvbt2/dvbt2_modulator_bc_impl.cc
   dvbt2/dvbt2_cellinterleaver_cc_impl.cc
@@ -112,6 +112,11 @@ list(APPEND dtv_sources
   dvbt/dvbt_convolutional_deinterleaver_impl.cc
   dvbt/dvbt_reed_solomon_dec_impl.cc
   dvbt/dvbt_energy_descramble_impl.cc
+  catv/catv_transport_framing_enc_bb_impl.cc
+  catv/catv_reed_solomon_enc_bb_impl.cc
+  catv/catv_randomizer_bb_impl.cc
+  catv/catv_frame_sync_enc_bb_impl.cc
+  catv/catv_trellis_enc_bb_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)

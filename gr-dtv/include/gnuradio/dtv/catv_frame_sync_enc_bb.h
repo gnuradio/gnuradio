@@ -1,49 +1,54 @@
 /* -*- c++ -*- */
-/*
- * Copyright 2015 Free Software Foundation, Inc.
- *
+/* 
+ * Copyright 2016 Free Software Foundation, Inc.
+ * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- *
+ * 
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_ATSC_INTERLEAVER_H
-#define INCLUDED_DTV_ATSC_INTERLEAVER_H
+#ifndef INCLUDED_DTV_CATV_FRAME_SYNC_ENC_BB_H
+#define INCLUDED_DTV_CATV_FRAME_SYNC_ENC_BB_H
 
 #include <gnuradio/dtv/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace dtv {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Frame Sync Encoder. Adds a 42-bit frame sync pattern with control word.
      * \ingroup dtv
      *
+     * Input: Scrambled FEC Frame packets of 60 * 128 7-bit symbols.\n
+     * Output: Scrambled FEC Frame packets of 60 * 128 7-bit symbols with 42-bit FSYNC word.
      */
-    class DTV_API atsc_interleaver : virtual public gr::sync_block
+    class DTV_API catv_frame_sync_enc_bb : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<atsc_interleaver> sptr;
+      typedef boost::shared_ptr<catv_frame_sync_enc_bb> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of dtv::atsc_interleaver.
+       * \brief Create an ITU-T J.83B Frame Sync Encoder.
+       *
+       * \param ctrlword convolutional interleaver control word.
        */
-      static sptr make();
+      static sptr make(int ctrlword);
     };
 
   } // namespace dtv
 } // namespace gr
 
-#endif /* INCLUDED_DTV_ATSC_INTERLEAVER_H */
+#endif /* INCLUDED_DTV_CATV_FRAME_SYNC_ENC_BB_H */
+

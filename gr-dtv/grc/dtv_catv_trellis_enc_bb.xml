@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Trellis Encoder
+###################################################
+ -->
+<block>
+  <name>Trellis Encoder</name>
+  <key>dtv_catv_trellis_enc_bb</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.catv_trellis_enc_bb()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>

@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -35,7 +35,6 @@ install(FILES
     atsc_pad.h
     atsc_randomizer.h
     atsc_rs_encoder.h
-    atsc_interleaver.h
     atsc_trellis_encoder.h
     atsc_field_sync_mux.h
     dvb_config.h
@@ -46,6 +45,7 @@ install(FILES
     dvb_bbscrambler_bb.h
     dvb_bch_bb.h
     dvb_ldpc_bb.h
+    dvb_interleaver_bb.h
     dvbt2_interleaver_bb.h
     dvbt2_modulator_bc.h
     dvbt2_cellinterleaver_cc.h
@@ -74,6 +74,11 @@ install(FILES
     dvbt_convolutional_deinterleaver.h
     dvbt_reed_solomon_dec.h
     dvbt_energy_descramble.h
+    catv_transport_framing_enc_bb.h
+    catv_reed_solomon_enc_bb.h
+    catv_randomizer_bb.h
+    catv_frame_sync_enc_bb.h
+    catv_trellis_enc_bb.h
 
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
     COMPONENT "dtv_devel"

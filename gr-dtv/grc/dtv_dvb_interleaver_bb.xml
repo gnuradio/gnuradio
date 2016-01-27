@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Convolutional Interleaver
+###################################################
+ -->
+<block>
+  <name>Convolutional Interleaver</name>
+  <key>dtv_dvb_interleaver_bb</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvb_interleaver_bb($standard.val, $I, $J, $standard.vlength)</make>
+  <param>
+    <name>Standard</name>
+    <key>standard</key>
+    <type>enum</type>
+    <option>
+      <name>ATSC</name>
+      <key>STANDARD_ATSC</key>
+      <opt>val:dtv.STANDARD_ATSC</opt>
+      <opt>vlength:256</opt>
+      <opt>hide_params:all</opt>
+    </option>
+    <option>
+      <name>Generic</name>
+      <key>STANDARD_OTHER</key>
+      <opt>val:dtv.STANDARD_OTHER</opt>
+      <opt>vlength:1</opt>
+      <opt>hide_params:</opt>
+    </option>
+  </param>
+  <param>
+    <name>I (# of taps)</name>
+    <key>I</key>
+    <value>128</value>
+    <type>int</type>
+    <hide>$standard.hide_params</hide>
+  </param>
+  <param>
+    <name>J (increment)</name>
+    <key>J</key>
+    <value>4</value>
+    <type>int</type>
+    <hide>$standard.hide_params</hide>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>$standard.vlength</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>$standard.vlength</vlen>
+  </source>
+</block>
