@@ -277,7 +277,7 @@ namespace gr {
       // Setters
       add_rpc_variable(
           rpcbasic_sptr(new rpcbasic_register_set<control_loop, float>(
-	      alias(), "loop bw",
+	      alias(), "loop_bw",
 	      &control_loop::set_loop_bandwidth,
 	      pmt::mp(0.0f), pmt::mp(1.0f), pmt::mp(0.0f),
 	      "", "Loop bandwidth",
