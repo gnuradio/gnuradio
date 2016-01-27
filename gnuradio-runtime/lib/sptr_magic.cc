@@ -36,12 +36,45 @@ namespace gnuradio {
   typedef std::map<gr::basic_block*, gr::basic_block_sptr> sptr_map;
   static sptr_map s_map;
 
+  struct disarmable_deleter
+  {
+    bool armed;
+
+    disarmable_deleter()
+    {
+      armed = true;
+    }
+
+    void operator()(void *p) const
+    {
+      if (armed)
+        delete static_cast<gr::basic_block *>(p);
+    }
+
+    void disarm()
+    {
+      armed = false;
+    }
+  };
+
   void
   detail::sptr_magic::create_and_stash_initial_sptr(gr::hier_block2 *p)
   {
-    gr::basic_block_sptr sptr(p);
+    gr::basic_block_sptr sptr(p, disarmable_deleter());
     gr::thread::scoped_lock guard(s_mutex);
     s_map.insert(sptr_map::value_type(static_cast<gr::basic_block *>(p), sptr));
+  }
+
+  void
+  detail::sptr_magic::cancel_initial_sptr(gr::hier_block2 *p)
+  {
+    gr::thread::scoped_lock guard(s_mutex);
+    sptr_map::iterator pos = s_map.find(static_cast<gr::basic_block *>(p));
+    if(pos == s_map.end())
+      return; /* Not in the map, nothing to do */
+    gr::basic_block_sptr sptr = pos->second;
+    s_map.erase(pos);
+    boost::get_deleter<disarmable_deleter, gr::basic_block>(sptr)->disarm();
   }
 
   gr::basic_block_sptr
