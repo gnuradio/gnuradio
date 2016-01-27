@@ -26,22 +26,15 @@
 #include <gnuradio/zeromq/pull_source.h>
 #include <zmq.hpp>
 
+#include "base_impl.h"
+
 namespace gr {
   namespace zeromq {
 
-    class pull_source_impl : public pull_source
+    class pull_source_impl : public pull_source, public base_source_impl
     {
-    private:
-      size_t          d_itemsize;
-      size_t          d_vlen;
-      int             d_timeout; // microseconds, -1 is blocking
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      bool            d_pass_tags;
-
     public:
-      pull_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags);
-      ~pull_source_impl();
+      pull_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
