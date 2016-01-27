@@ -57,6 +57,8 @@ namespace gr {
 
   hier_block2::~hier_block2()
   {
+    disconnect_all();
+    gnuradio::detail::sptr_magic::cancel_initial_sptr(this);
     delete d_detail;
   }
 
