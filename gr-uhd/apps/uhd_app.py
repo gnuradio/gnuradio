@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015 Free Software Foundation, Inc.
+# Copyright 2015-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -141,6 +141,9 @@ class UHDApp(object):
         if args.spec:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
                 self.usrp.set_subdev_spec(args.spec, mb_idx)
+        # Set the clock source:
+        if args.clock_source is not None:
+            self.usrp.set_clock_source(args.clock_source)
         # Sampling rate:
         self.usrp.set_samp_rate(args.samp_rate)
         self.samp_rate = self.usrp.get_samp_rate()
@@ -295,5 +298,7 @@ class UHDApp(object):
                             help="Show asynchronous message notifications from UHD")
         group.add_argument("--sync", choices=('default', 'pps', 'auto'),
                           default='auto', help="Set to 'pps' to sync devices to PPS")
+        group.add_argument("--clock-source",
+                          help="Set the clock source; typically 'internal', 'external' or 'gpsdo'")
         return parser
 

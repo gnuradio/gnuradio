@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -68,6 +68,11 @@ install(FILES
     dtv_dvbt_convolutional_deinterleaver.xml
     dtv_dvbt_reed_solomon_dec.xml
     dtv_dvbt_energy_descramble.xml
+    dtv_catv_transport_framing_enc_bb.xml
+    dtv_catv_reed_solomon_enc_bb.xml
+    dtv_catv_randomizer_bb.xml
+    dtv_catv_frame_sync_enc_bb.xml
+    dtv_catv_trellis_enc_bb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "dtv_python"
 )
