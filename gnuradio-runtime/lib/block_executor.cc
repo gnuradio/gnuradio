@@ -370,11 +370,24 @@ namespace gr {
       // ask the block how much input they need to produce noutput_items
       m->forecast (noutput_items, d_ninput_items_required);
 
-      // See if we've got sufficient input available
+      // See if we've got sufficient input available and make sure we
+      // didn't overflow on the input.
       int i;
-      for(i = 0; i < d->ninputs (); i++)
+      for(i = 0; i < d->ninputs (); i++) {
         if(d_ninput_items_required[i] > d_ninput_items[i])	// not enough
           break;
+
+        if(d_ninput_items_required[i] < 0) {
+          std::cerr << "\nsched: <block " << m->name()
+                    << " (" << m->unique_id() << ")>"
+                    << " thinks its ninput_items required is "
+                    << d_ninput_items_required[i]
+                    << " and cannot be negative.\n"
+                    << "Some parameterization is wrong. "
+                    << "Too large a decimation value?\n\n";
+          goto were_done;
+        }
+      }
 
       if(i < d->ninputs()) {			// not enough input on input[i]
         // if we can, try reducing the size of our output request
