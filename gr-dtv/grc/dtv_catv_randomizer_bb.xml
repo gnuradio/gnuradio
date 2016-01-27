@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Randomizer
+###################################################
+ -->
+<block>
+  <name>Randomizer</name>
+  <key>dtv_catv_randomizer_bb</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.catv_randomizer_bb()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+</block>
