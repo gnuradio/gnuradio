@@ -25,6 +25,7 @@
 
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/constellation.h>
+#include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/block.h>
 
 namespace gr {
@@ -55,7 +56,8 @@ namespace gr {
      *    current phase of the receiver.
      */
     class DIGITAL_API constellation_receiver_cb
-      : virtual public block
+      : virtual public block,
+        virtual public blocks::control_loop
     {
     public:
       // gr::digital::constellation_receiver_cb::sptr
