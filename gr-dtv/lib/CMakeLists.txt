@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -112,6 +112,11 @@ list(APPEND dtv_sources
   dvbt/dvbt_convolutional_deinterleaver_impl.cc
   dvbt/dvbt_reed_solomon_dec_impl.cc
   dvbt/dvbt_energy_descramble_impl.cc
+  catv/catv_transport_framing_enc_bb_impl.cc
+  catv/catv_reed_solomon_enc_bb_impl.cc
+  catv/catv_randomizer_bb_impl.cc
+  catv/catv_frame_sync_enc_bb_impl.cc
+  catv/catv_trellis_enc_bb_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)

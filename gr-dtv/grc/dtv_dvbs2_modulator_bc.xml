@@ -253,6 +253,11 @@
       <key>MOD_256APSK</key>
       <opt>val:dtv.MOD_256APSK</opt>
     </option>
+    <option>
+      <name>64QAM</name>
+      <key>MOD_64QAM</key>
+      <opt>val:dtv.MOD_64QAM</opt>
+    </option>
   </param>
   <param>
     <name>2X Interpolation</name>
