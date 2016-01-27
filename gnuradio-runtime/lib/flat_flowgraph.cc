@@ -324,7 +324,7 @@ namespace gr {
       //std::cerr << "reader: " << r << "  alignment: " << ri << std::endl;
       if(ri != 0) {
         size_t itemsize = block->detail()->input(i)->get_sizeof_item();
-        block->detail()->input(i)->update_read_pointer(alignment-ri/itemsize);
+        block->detail()->input(i)->update_read_pointer((alignment-ri)/itemsize);
       }
       block->set_unaligned(0);
       block->set_is_unaligned(false);
@@ -336,7 +336,7 @@ namespace gr {
       //std::cerr << "writer: " << w << "  alignment: " << wi << std::endl;
       if(wi != 0) {
         size_t itemsize = block->detail()->output(i)->get_sizeof_item();
-        block->detail()->output(i)->update_write_pointer(alignment-wi/itemsize);
+        block->detail()->output(i)->update_write_pointer((alignment-wi)/itemsize);
       }
       block->set_unaligned(0);
       block->set_is_unaligned(false);

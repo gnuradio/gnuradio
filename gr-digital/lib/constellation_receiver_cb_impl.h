@@ -26,13 +26,12 @@
 #include <gnuradio/digital/constellation_receiver_cb.h>
 #include <gnuradio/attributes.h>
 #include <gnuradio/gr_complex.h>
-#include <gnuradio/blocks/control_loop.h>
 
 namespace gr {
   namespace digital {
 
     class constellation_receiver_cb_impl
-      : public constellation_receiver_cb, blocks::control_loop
+      : public constellation_receiver_cb
     {
     public:
       constellation_receiver_cb_impl(constellation_sptr constell,
