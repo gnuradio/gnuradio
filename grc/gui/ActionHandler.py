@@ -523,7 +523,7 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
             if file_path is not None:
-                pixbuf = self.get_flow_graph().get_drawing_area().get_pixbuf()
+                pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot()
                 pixbuf.save(file_path, IMAGE_FILE_EXTENSION[1:])
         ##################################################
         # Gen/Exec/Stop

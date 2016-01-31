@@ -386,7 +386,7 @@ FLOW_GRAPH_KILL = Action(
     keypresses=(gtk.keysyms.F7, NO_MODS_MASK),
 )
 FLOW_GRAPH_SCREEN_CAPTURE = Action(
-    label='Sc_reen Capture',
+    label='Screen Ca_pture',
     tooltip='Create a screen capture of the flow graph',
     stock_id=gtk.STOCK_PRINT,
     keypresses=(gtk.keysyms.Print, NO_MODS_MASK),
