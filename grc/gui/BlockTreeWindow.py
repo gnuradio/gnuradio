@@ -136,7 +136,7 @@ class BlockTreeWindow(gtk.VBox):
             sub_category = category[:i+1]
             if sub_category not in categories:
                 iter = treestore.insert_before(categories[sub_category[:-1]], None)
-                treestore.set_value(iter, NAME_INDEX, '[ %s ]'%cat_name)
+                treestore.set_value(iter, NAME_INDEX, cat_name)
                 treestore.set_value(iter, KEY_INDEX, '')
                 treestore.set_value(iter, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
                 categories[sub_category] = iter
