@@ -29,6 +29,7 @@ from gnuradio import gr
 prefs = gr.prefs()
 GR_PREFIX = gr.prefix()
 EDITOR = prefs.get_string('grc', 'editor', '')
+SCREENSHOTS_TRANSPARENT_BG = prefs.get_bool('grc', 'screenshots_transparent_bg', False)
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()

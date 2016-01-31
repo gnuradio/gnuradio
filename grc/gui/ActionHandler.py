@@ -36,7 +36,7 @@ from .PropsDialog import PropsDialog
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveReportsFileDialog, SaveImageFileDialog,
                           OpenQSSFileDialog)
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX, SCREENSHOTS_TRANSPARENT_BG
 
 gobject.threads_init()
 
@@ -523,7 +523,7 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
             if file_path is not None:
-                pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot()
+                pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot(SCREENSHOTS_TRANSPARENT_BG)
                 pixbuf.save(file_path, IMAGE_FILE_EXTENSION[1:])
         ##################################################
         # Gen/Exec/Stop

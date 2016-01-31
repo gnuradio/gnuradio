@@ -74,12 +74,15 @@ class DrawingArea(gtk.DrawingArea):
     def new_pixmap(self, width, height):
         return gtk.gdk.Pixmap(self.window, width, height, -1)
 
-    def get_screenshot(self):
+    def get_screenshot(self, transparent_bg=False):
         pixmap = self._pixmap
         W, H = pixmap.get_size()
         pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, W, H)
         pixbuf.fill(0xFF + Colors.FLOWGRAPH_BACKGROUND_COLOR.pixel << 8)
         pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, W-1, H-1)
+        if transparent_bg:
+            bgc = Colors.FLOWGRAPH_BACKGROUND_COLOR
+            pixbuf = pixbuf.add_alpha(True, bgc.red, bgc.green, bgc.blue)
         return pixbuf
 
 
