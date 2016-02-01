@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -38,9 +38,13 @@ namespace gr {
      *
      * \details
      * Data is passed in as a vector of length \p vlen from multiple
-     * input sources. It will look through these streams of \p vlen
+     * input sources.  If vlen_out == 1 then 
+     * It will look through these streams of \p vlen
      * data items and the output stream will contain the minimum value
      * in the vector.
+     * If vlen_out == vlen and not equal to 1 then
+     * output will be a vector with individual items selected from
+     * the minimum corresponding input vector items.
      */
     class BLOCKS_API @NAME@ : virtual public sync_block
     {
@@ -48,7 +52,7 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
-      static sptr make(size_t vlen);
+      static sptr make(size_t vlen, size_t vlen_out = 1);
     };
 
   } /* namespace blocks */

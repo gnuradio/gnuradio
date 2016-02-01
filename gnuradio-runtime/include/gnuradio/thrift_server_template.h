@@ -25,7 +25,6 @@
 
 #include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
-#include <gnuradio/rpcserver_thrift.h>
 #include <gnuradio/thrift_application_base.h>
 #include <iostream>
 

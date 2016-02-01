@@ -28,7 +28,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 include(GrMiscUtils)
 GR_EXPAND_X_CC_H_IMPL(blocks abs_XX             ss ii ff)
 GR_EXPAND_X_CC_H_IMPL(blocks add_XX             ss ii cc)
-GR_EXPAND_X_CC_H_IMPL(blocks add_const_XX       bb ss ii ff cc)
 GR_EXPAND_X_CC_H_IMPL(blocks add_const_vXX      bb ss ii ff cc)
 GR_EXPAND_X_CC_H_IMPL(blocks and_XX             bb ss ii)
 GR_EXPAND_X_CC_H_IMPL(blocks and_const_XX       bb ss ii)
@@ -88,6 +87,11 @@ list(APPEND gr_blocks_sources
     unpack_k_bits.cc
     wavfile.cc
     add_ff_impl.cc
+    add_const_bb_impl.cc
+    add_const_ss_impl.cc
+    add_const_ii_impl.cc
+    add_const_ff_impl.cc
+    add_const_cc_impl.cc
     annotator_1to1_impl.cc
     annotator_alltoall_impl.cc
     annotator_raw_impl.cc
@@ -96,8 +100,10 @@ list(APPEND gr_blocks_sources
     char_to_float_impl.cc
     char_to_short_impl.cc
     check_lfsr_32k_s_impl.cc
+    complex_to_interleaved_char_impl.cc
     complex_to_interleaved_short_impl.cc
     complex_to_float_impl.cc
+    complex_to_magphase_impl.cc
     complex_to_real_impl.cc
     complex_to_imag_impl.cc
     complex_to_mag_impl.cc
@@ -116,6 +122,7 @@ list(APPEND gr_blocks_sources
     file_meta_source_impl.cc
     float_to_char_impl.cc
     float_to_complex_impl.cc
+    magphase_to_complex_impl.cc
     float_array_to_int.cc
     float_to_int_impl.cc
     float_to_short_impl.cc
@@ -143,6 +150,8 @@ list(APPEND gr_blocks_sources
     multiply_const_vcc_impl.cc
     multiply_const_ff_impl.cc
     multiply_const_vff_impl.cc
+    multiply_matrix_cc_impl.cc
+    multiply_matrix_ff_impl.cc
     nlog10_ff_impl.cc
     nop_impl.cc
     null_sink_impl.cc
@@ -202,7 +211,6 @@ list(APPEND gr_blocks_sources
     vector_to_streams_impl.cc
     wavfile_sink_impl.cc
     wavfile_source_impl.cc
-    multiply_matrix_ff_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)

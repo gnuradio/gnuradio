@@ -21,7 +21,10 @@ import os
 import sys
 import subprocess
 import tempfile
+import shlex
+import codecs
 from distutils.spawn import find_executable
+
 from Cheetah.Template import Template
 
 from .. gui import Messages
@@ -77,7 +80,7 @@ class TopBlockGenerator(object):
         self._flow_graph = flow_graph
         self._generate_options = self._flow_graph.get_option('generate_options')
         self._mode = TOP_BLOCK_FILE_MODE
-        dirname = os.path.dirname(file_path)
+        dirname = self._dirname = os.path.dirname(file_path)
         # handle the case where the directory is read-only
         # in this case, use the system's temp directory
         if not os.access(dirname, os.W_OK):
@@ -106,12 +109,14 @@ class TopBlockGenerator(object):
                                       "This is usually undesired. Consider "
                                       "removing the throttle block.")
         # generate
-        with open(self.get_file_path(), 'w') as fp:
-            fp.write(self._build_python_code_from_template())
-        try:
-            os.chmod(self.get_file_path(), self._mode)
-        except:
-            pass
+        for filename, data in self._build_python_code_from_template():
+            with codecs.open(filename, 'w', encoding='utf-8') as fp:
+                fp.write(data)
+            if filename == self.get_file_path():
+                try:
+                    os.chmod(filename, self._mode)
+                except:
+                    pass
 
     def get_popen(self):
         """
@@ -120,22 +125,20 @@ class TopBlockGenerator(object):
         Returns:
             a popen object
         """
-        # extract the path to the python executable
-        python_exe = sys.executable
+        def args_to_string(args):
+            """Accounts for spaces in args"""
+            return ' '.join(repr(arg) if ' ' in arg else arg for arg in args)
 
-        # when using wx gui on mac os, execute with pythonw
-        # using pythonw is not necessary anymore, disabled below
-        # if self._generate_options == 'wx_gui' and 'darwin' in sys.platform.lower():
-        #   python_exe = 'pythonw'
-
-        # setup the command args to run
-        cmds = [python_exe, '-u', self.get_file_path()]  # -u is unbuffered stdio
+        run_command = self._flow_graph.get_option('run_command')
+        cmds = shlex.split(run_command.format(python=sys.executable,
+                                              filename=self.get_file_path()))
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
-            cmds = [xterm_executable, '-e'] + cmds
+            cmds = [xterm_executable, '-e', args_to_string(cmds)]
 
+        Messages.send_start_exec(args_to_string(cmds))
         p = subprocess.Popen(
             args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             shell=False, universal_newlines=True)
@@ -148,11 +151,14 @@ class TopBlockGenerator(object):
         Returns:
             a string of python code
         """
-        title = self._flow_graph.get_option('title') or self._flow_graph.get_option('id').replace('_', ' ').title()
-        imports = self._flow_graph.get_imports()
-        variables = self._flow_graph.get_variables()
-        parameters = self._flow_graph.get_parameters()
-        monitors = self._flow_graph.get_monitors()
+        output = list()
+
+        fg = self._flow_graph
+        title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
+        imports = fg.get_imports()
+        variables = fg.get_variables()
+        parameters = fg.get_parameters()
+        monitors = fg.get_monitors()
 
         # list of blocks not including variables and imports and parameters and disabled
         def _get_block_sort_text(block):
@@ -168,22 +174,32 @@ class TopBlockGenerator(object):
             return code
 
         blocks = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), self._flow_graph.get_blocks()),
+            filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.iter_blocks()),
             lambda b: b.get_id(), _get_block_sort_text
         )
         # List of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks)
 
+        for block in blocks:
+            key = block.get_key()
+            file_path = os.path.join(self._dirname, block.get_id() + '.py')
+            if key == 'epy_block':
+                src = block.get_param('_source_code').get_value()
+                output.append((file_path, src))
+            elif key == 'epy_module':
+                src = block.get_param('source_code').get_value()
+                output.append((file_path, src))
+
         # Filter out virtual sink connections
         cf = lambda c: not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
-        connections = filter(cf, self._flow_graph.get_enabled_connections())
+        connections = filter(cf, fg.get_enabled_connections())
 
-        # Get the virtual blocks and resolve their conenctions
+        # Get the virtual blocks and resolve their connections
         virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
         for connection in virtual:
             source = connection.get_source().resolve_virtual_source()
             sink = connection.get_sink()
-            resolved = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source, portb=sink)
+            resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
             connections.append(resolved)
             # Remove the virtual connection
             connections.remove(connection)
@@ -193,7 +209,7 @@ class TopBlockGenerator(object):
         # that bypass the selected block and remove the existing ones. This allows adjacent
         # bypassed blocks to see the newly created connections to downstream blocks,
         # allowing them to correctly construct bypass connections.
-        bypassed_blocks = self._flow_graph.get_bypassed_blocks()
+        bypassed_blocks = fg.get_bypassed_blocks()
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
@@ -212,7 +228,7 @@ class TopBlockGenerator(object):
                     # Ignore disabled connections
                     continue
                 sink_port = sink.get_sink()
-                connection = self._flow_graph.get_parent().Connection(flow_graph=self._flow_graph, porta=source_port, portb=sink_port)
+                connection = fg.get_parent().Connection(flow_graph=fg, porta=source_port, portb=sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)
@@ -225,8 +241,8 @@ class TopBlockGenerator(object):
             c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
         ))
 
-        connection_templates = self._flow_graph.get_parent().get_connection_templates()
-        msgs = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
+        connection_templates = fg.get_parent().get_connection_templates()
+        msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
         # list of variable names
         var_ids = [var.get_id() for var in parameters + variables]
         # prepend self.
@@ -234,7 +250,7 @@ class TopBlockGenerator(object):
         # list of callbacks
         callbacks = [
             expr_utils.expr_replace(cb, replace_dict)
-            for cb in sum([block.get_callbacks() for block in self._flow_graph.get_enabled_blocks()], [])
+            for cb in sum([block.get_callbacks() for block in fg.get_enabled_blocks()], [])
         ]
         # map var id to callbacks
         var_id2cbs = dict([
@@ -245,7 +261,7 @@ class TopBlockGenerator(object):
         namespace = {
             'title': title,
             'imports': imports,
-            'flow_graph': self._flow_graph,
+            'flow_graph': fg,
             'variables': variables,
             'parameters': parameters,
             'monitors': monitors,
@@ -258,7 +274,8 @@ class TopBlockGenerator(object):
         }
         # build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
-        return str(t)
+        output.append((self.get_file_path(), str(t)))
+        return output
 
 
 class HierBlockGenerator(TopBlockGenerator):

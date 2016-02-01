@@ -41,39 +41,43 @@ namespace gr {
 
 #define MAXLOG 1e7
 
-class FEC_API ldpc_decoder : public generic_decoder {
-    //private constructor
-    ldpc_decoder (std::string alist_file, float sigma, int max_iterations);
+   class FEC_API ldpc_decoder : public generic_decoder
+   {
+   private:
+     //private constructor
+     ldpc_decoder(std::string alist_file, float sigma, int max_iterations);
 
-    //plug into the generic fec api
-    int get_history();
-	float get_shift();
-	const char* get_conversion();
-    void generic_work(void *inBuffer, void *outbuffer);
-    float d_iterations;
-    int inputSize, outputSize;
+     //plug into the generic fec api
+     int get_history();
+     float get_shift();
+     const char* get_conversion();
+     void generic_work(void *inBuffer, void *outbuffer);
+     float d_iterations;
+     int d_input_size, d_output_size;
+     double d_rate;
 
-      alist d_list;
-      cldpc d_code;
-      awgn_bp d_spa;
+     alist d_list;
+     cldpc d_code;
+     awgn_bp d_spa;
 
- public:
-    ~ldpc_decoder ();
+   public:
+     ~ldpc_decoder ();
 
-    double rate() { return (1.0*get_output_size() / get_input_size()); }
-    bool set_frame_size(unsigned int frame_size) { return false; }
+     double rate();
+     bool set_frame_size(unsigned int frame_size);
 
-    static generic_decoder::sptr
-        make (std::string alist_file, float sigma=0.5, int max_iterations=50);
-    int get_output_size();
-    int get_input_size();
-	int get_input_item_size();
-	int get_output_item_size();
-    float get_iterations(){ return d_iterations; }
+     static generic_decoder::sptr make(std::string alist_file,
+                                       float sigma=0.5,
+                                       int max_iterations=50);
 
-};
+     int get_output_size();
+     int get_input_size();
+     int get_input_item_size();
+     int get_output_item_size();
+     float get_iterations(){ return d_iterations; }
+   };
 
-}
-}
+ } // namespace fec
+} // namespace gr
 
 #endif /* INCLUDED_LDPC_DECODER_H */

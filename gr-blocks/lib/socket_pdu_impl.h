@@ -30,12 +30,15 @@
 namespace gr {
   namespace blocks {
 
-    class socket_pdu_impl : public socket_pdu, public stream_pdu_base
+    class socket_pdu_impl : public socket_pdu
     {
     private:
       boost::asio::io_service d_io_service;
       std::vector<char> d_rxbuf;
       void run_io_service() { d_io_service.run(); }
+      gr::thread::thread d_thread;
+      bool d_started;
+      bool d_finished;
 
       // TCP specific
       boost::asio::ip::tcp::endpoint d_tcp_endpoint;
@@ -62,6 +65,8 @@ namespace gr {
 
     public:
       socket_pdu_impl(std::string type, std::string addr, std::string port, int MTU = 10000, bool tcp_no_delay = false);
+      ~socket_pdu_impl();
+      bool stop();
     };
 
   } /* namespace blocks */

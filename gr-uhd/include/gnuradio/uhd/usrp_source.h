@@ -96,10 +96,13 @@ namespace gr {
       /*!
        * \param device_addr the address to identify the hardware
        * \param stream_args the IO format and channel specification
+       * \param issue_stream_cmd_on_start enable or disable continuous streaming when flowgraph
+       *   starts (default true)
        * \return a new USRP source block object
        */
       static sptr make(const ::uhd::device_addr_t &device_addr,
-                       const ::uhd::stream_args_t &stream_args);
+                       const ::uhd::stream_args_t &stream_args,
+                       const bool issue_stream_cmd_on_start = true);
 
       /*!
        * Set the start time for incoming samples.

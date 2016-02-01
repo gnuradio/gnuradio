@@ -124,6 +124,51 @@ rpcserver_thrift::unregisterQueryCallback(const std::string &id)
   d_getcallbackmap.erase(iter);
 }
 
+
+
+void
+rpcserver_thrift::registerHandlerCallback(const std::string &id,
+                                          const handlerCallback_t callback)
+{
+  boost::mutex::scoped_lock lock(d_callback_map_lock);
+  {
+    HandlerCallbackMap_t::const_iterator iter(d_handlercallbackmap.find(id));
+    if(iter != d_handlercallbackmap.end()) {
+      std::stringstream s;
+      s << "rpcserver_thrift:: rpcserver_thrift ERROR registering handler, already registered: "
+        << id << std::endl;
+      throw std::runtime_error(s.str().c_str());
+    }
+  }
+
+  if(DEBUG) {
+    std::cerr << "rpcserver_thrift registering handler: " << id << std::endl;
+  }
+  d_handlercallbackmap.insert(HandlerCallbackMap_t::value_type(id, callback));
+}
+
+void
+rpcserver_thrift::unregisterHandlerCallback(const std::string &id)
+{
+  boost::mutex::scoped_lock lock(d_callback_map_lock);
+  HandlerCallbackMap_t::iterator iter(d_handlercallbackmap.find(id));
+  if(iter == d_handlercallbackmap.end()) {
+    std::stringstream s;
+    s << "rpcserver_thrift:: rpcserver_thrift ERROR unregistering handler, registered: "
+      << id << std::endl;
+    throw std::runtime_error(s.str().c_str());
+  }
+
+  if(DEBUG) {
+    std::cerr << "rpcserver_thrift unregistering handler: " << id << std::endl;
+  }
+
+  d_handlercallbackmap.erase(iter);
+}
+
+
+
+
 void
 rpcserver_thrift::setKnobs(const GNURadio::KnobMap& knobs)
 {
@@ -190,6 +235,35 @@ rpcserver_thrift::properties(GNURadio::KnobPropMap& _return,
                   properties_f<GNURadio::KnobIDList::value_type,
                   QueryCallbackMap_t, GNURadio::KnobPropMap>(d_getcallbackmap,
                                                              cur_priv, _return));
+  }
+}
+
+
+void
+rpcserver_thrift::postMessage(const std::string& alias,
+                              const std::string& port,
+                              const std::string& msg)
+{
+  // alias and port are received as serialized PMT strings and need to
+  // be deserialized into PMTs and then the actual info from there.
+  // The actual message (msg) is also received as a serialized PMT. We
+  // just need to get the PMT itself out of this to pass to the set_h
+  // function for handling the message post.
+
+  boost::mutex::scoped_lock lock(d_callback_map_lock);
+
+  pmt::pmt_t alias_pmt = pmt::deserialize_str(alias);
+  pmt::pmt_t port_pmt  = pmt::deserialize_str(port);
+  pmt::pmt_t msg_pmt  = pmt::deserialize_str(msg);
+  std::string alias_str = pmt::symbol_to_string(alias_pmt);
+  std::string port_str  = pmt::symbol_to_string(port_pmt);
+  std::string iface = alias_str + "::" + port_str;
+
+  HandlerCallbackMap_t::iterator itr = d_handlercallbackmap.begin();
+  for(; itr != d_handlercallbackmap.end(); itr++) {
+    if(iface == (*itr).first) {
+      set_h((*itr).second, cur_priv, port_pmt, msg_pmt);
+    }
   }
 }
 

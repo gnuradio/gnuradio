@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014-2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -66,6 +66,30 @@ namespace gr {
       }
 
       return noutput_items;
+    }
+
+    void
+    multiply_const_vff_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_get<multiply_const_vff,
+                      std::vector<float> >(
+	  alias(), "coefficient",
+	  &multiply_const_vff::k,
+	  pmt::mp(-1024.0f), pmt::mp(1024.0f), pmt::mp(0.0f),
+	  "", "Coefficient", RPC_PRIVLVL_MIN,
+          DISPTIME | DISPOPTSTRIP)));
+
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_set<multiply_const_vff,
+                      std::vector<float> >(
+	  alias(), "coefficient",
+	  &multiply_const_vff::set_k,
+	  pmt::mp(-1024.0f), pmt::mp(1024.0f), pmt::mp(0.0f),
+	  "", "Coefficient",
+	  RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace blocks */

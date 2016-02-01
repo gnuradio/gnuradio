@@ -30,6 +30,7 @@
 %{
 #include "gnuradio/blocks/float_to_char.h"
 #include "gnuradio/blocks/float_to_complex.h"
+#include "gnuradio/blocks/magphase_to_complex.h"
 #include "gnuradio/blocks/float_to_int.h"
 #include "gnuradio/blocks/float_to_short.h"
 #include "gnuradio/blocks/float_to_uchar.h"
@@ -67,6 +68,7 @@
 #include "gnuradio/blocks/multiply_const_vii.h"
 #include "gnuradio/blocks/multiply_const_vff.h"
 #include "gnuradio/blocks/multiply_const_vcc.h"
+#include "gnuradio/blocks/multiply_matrix_cc.h"
 #include "gnuradio/blocks/multiply_matrix_ff.h"
 #include "gnuradio/blocks/mute_ss.h"
 #include "gnuradio/blocks/mute_ii.h"
@@ -76,6 +78,7 @@
 
 %include "gnuradio/blocks/float_to_char.h"
 %include "gnuradio/blocks/float_to_complex.h"
+%include "gnuradio/blocks/magphase_to_complex.h"
 %include "gnuradio/blocks/float_to_int.h"
 %include "gnuradio/blocks/float_to_short.h"
 %include "gnuradio/blocks/float_to_uchar.h"
@@ -113,6 +116,7 @@
 %include "gnuradio/blocks/multiply_const_vii.h"
 %include "gnuradio/blocks/multiply_const_vff.h"
 %include "gnuradio/blocks/multiply_const_vcc.h"
+%include "gnuradio/blocks/multiply_matrix_cc.h"
 %include "gnuradio/blocks/multiply_matrix_ff.h"
 %include "gnuradio/blocks/mute_ss.h"
 %include "gnuradio/blocks/mute_ii.h"
@@ -121,6 +125,7 @@
 
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_complex);
+GR_SWIG_BLOCK_MAGIC2(blocks, magphase_to_complex);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_int);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_short);
 GR_SWIG_BLOCK_MAGIC2(blocks, float_to_uchar);
@@ -158,6 +163,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vss);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vii);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vcc);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_matrix_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_matrix_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_ii);

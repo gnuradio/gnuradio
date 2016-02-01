@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -53,6 +53,7 @@ namespace gr {
       int d_index;
       std::vector<gr_complex*> d_residbufs;
       std::vector<double*> d_magbufs;
+      double* d_pdu_magbuf;
       float *d_fbuf;
       float *d_tmpbuf;
 
@@ -73,6 +74,9 @@ namespace gr {
       // Handles message input port for setting new center frequency.
       // The message is a PMT pair (intern('freq'), double(frequency)).
       void handle_set_freq(pmt::pmt_t msg);
+
+      // Handles message input port for displaying PDU samples.
+      void handle_pdus(pmt::pmt_t msg);
 
       // Members used for triggering scope
       trigger_mode d_trigger_mode;

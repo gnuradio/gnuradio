@@ -36,11 +36,12 @@
 #include <assert.h>
 #include <gnuradio/random.h>
 
+static gr::random rndm;
 
 static float
 uniform ()
 {
-  return 2.0 * ((float) random () / RANDOM_MAX - 0.5);	// uniformly (-1, 1)
+  return 2.0 * (rndm.ran1() - 0.5);	// uniformly (-1, 1)
 }
 
 

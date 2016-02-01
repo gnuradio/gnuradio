@@ -23,7 +23,6 @@
 include(GrMiscUtils)
 GR_EXPAND_X_H(blocks abs_XX             ss ii ff)
 GR_EXPAND_X_H(blocks add_XX             ss ii cc)
-GR_EXPAND_X_H(blocks add_const_XX       bb ss ii ff cc)
 GR_EXPAND_X_H(blocks add_const_vXX      bb ss ii ff cc)
 GR_EXPAND_X_H(blocks and_XX             bb ss ii)
 GR_EXPAND_X_H(blocks and_const_XX       bb ss ii)
@@ -74,6 +73,11 @@ install(FILES
     unpack_k_bits.h
     wavfile.h
     add_ff.h
+    add_const_bb.h
+    add_const_ss.h
+    add_const_ii.h
+    add_const_ff.h
+    add_const_cc.h
     annotator_1to1.h
     annotator_alltoall.h
     annotator_raw.h
@@ -84,6 +88,7 @@ install(FILES
     check_lfsr_32k_s.h
     complex_to_interleaved_short.h
     complex_to_float.h
+    complex_to_magphase.h
     complex_to_imag.h
     complex_to_real.h
     complex_to_mag.h
@@ -102,6 +107,7 @@ install(FILES
     file_meta_source.h
     float_to_char.h
     float_to_complex.h
+    magphase_to_complex.h
     float_to_int.h
     float_to_short.h
     float_to_uchar.h

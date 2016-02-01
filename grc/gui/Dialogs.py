@@ -20,8 +20,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import pygtk
 pygtk.require('2.0')
 import gtk
-import Utils
-import Actions
+
+import sys
+from distutils.spawn import find_executable
+
+
+from . import Utils, Actions, Constants, Messages
 
 
 class SimpleTextDisplay(gtk.TextView):
@@ -160,12 +164,15 @@ ERRORS_MARKUP_TMPL="""\
 $encode($err_msg.replace('\t', '  '))
 
 #end for"""
+
+
 def ErrorsDialog(flowgraph): MessageDialogHelper(
     type=gtk.MESSAGE_ERROR,
     buttons=gtk.BUTTONS_CLOSE,
     title='Flow Graph Errors',
     markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
 )
+
 
 class AboutDialog(gtk.AboutDialog):
     """A cute little about dialog."""
@@ -180,6 +187,7 @@ class AboutDialog(gtk.AboutDialog):
         self.set_website(platform.get_website())
         self.run()
         self.destroy()
+
 
 def HelpDialog(): MessageDialogHelper(
     type=gtk.MESSAGE_INFO,
@@ -208,8 +216,88 @@ COLORS_DIALOG_MARKUP_TMPL = """\
 #end if
 """
 
-def TypesDialog(platform): MessageDialogHelper(
-    type=gtk.MESSAGE_INFO,
-    buttons=gtk.BUTTONS_CLOSE,
-    title='Types',
-    markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL, colors=platform.get_colors()))
+
+def TypesDialog(platform):
+    MessageDialogHelper(
+        type=gtk.MESSAGE_INFO,
+        buttons=gtk.BUTTONS_CLOSE,
+        title='Types',
+        markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL,
+                                    colors=platform.get_colors())
+    )
+
+
+def MissingXTermDialog(xterm):
+    MessageDialogHelper(
+        type=gtk.MESSAGE_WARNING,
+        buttons=gtk.BUTTONS_OK,
+        title='Warning: missing xterm executable',
+        markup=("The xterm executable {0!r} is missing.\n\n"
+                "You can change this setting in your gnuradio.conf, in "
+                "section [grc], 'xterm_executable'.\n"
+                "\n"
+                "(This message is shown only once)").format(xterm)
+    )
+
+
+def ChooseEditorDialog():
+    # Give the option to either choose an editor or use the default
+    # Always return true/false so the caller knows it was successful
+    buttons = (
+        'Choose Editor', gtk.RESPONSE_YES,
+        'Use Default', gtk.RESPONSE_NO,
+        gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL
+    )
+    response = MessageDialogHelper(
+        gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Choose Editor',
+        'Would you like to choose the editor to use?', gtk.RESPONSE_YES, buttons
+    )
+
+    # Handle the inital default/choose/cancel response
+    # User wants to choose the editor to use
+    if response == gtk.RESPONSE_YES:
+        file_dialog = gtk.FileChooserDialog(
+            'Select an Editor...', None,
+            gtk.FILE_CHOOSER_ACTION_OPEN,
+            ('gtk-cancel', gtk.RESPONSE_CANCEL, 'gtk-open', gtk.RESPONSE_OK)
+        )
+        file_dialog.set_select_multiple(False)
+        file_dialog.set_local_only(True)
+        file_dialog.set_current_folder('/usr/bin')
+        try:
+            if file_dialog.run() == gtk.RESPONSE_OK:
+                file_path = file_dialog.get_filename()
+                Constants.prefs.set_string('grc', 'editor', file_path)
+                Constants.prefs.save()
+                Constants.EDITOR = file_path
+                file_dialog.destroy()
+                return file_path
+        finally:
+            file_dialog.destroy()
+
+    # Go with the default editor
+    elif response == gtk.RESPONSE_NO:
+        # Determine the platform
+        try:
+            process = None
+            if sys.platform.startswith('linux'):
+                process = find_executable('xdg-open')
+            elif sys.platform.startswith('darwin'):
+                process = find_executable('open')
+            if process is None:
+                raise ValueError("Can't find default editor executable")
+            # Save
+            Constants.prefs.set_string('grc', 'editor', process)
+            Constants.prefs.save()
+            Constants.EDITOR = process
+            return process
+        except Exception:
+            Messages.send('>>> Unable to load the default editor. Please choose an editor.\n')
+            # Just reset of the constant and force the user to select an editor the next time
+            Constants.prefs.set_string('grc', 'editor', '')
+            Constants.prefs.save()
+            Constants.EDITOR = ""
+            return
+
+    Messages.send('>>> No editor selected.\n')
+    return

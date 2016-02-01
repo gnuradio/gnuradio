@@ -154,19 +154,21 @@ namespace gr {
       }
 
       unsigned int ctr = d_ctr;
+      int count = 0;
 
       int i = 0;
-      while(i < noutput_items) {
+      while((i < noutput_items) && (count < ninput_items[0])) {
 	out[i++] = d_firs[ctr]->filter(in);
 	ctr += decimation();
 	while(ctr >= interpolation()) {
 	  ctr -= interpolation();
 	  in++;
+          count++;
 	}
       }
 
       d_ctr = ctr;
-      consume_each(in - (@I_TYPE@*)input_items[0]);
+      consume_each(count);
       return i;
     }
 

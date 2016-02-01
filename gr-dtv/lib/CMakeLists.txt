@@ -1,4 +1,4 @@
-# Copyright 2014,2015 Free Software Foundation, Inc.
+# Copyright 2014,2015,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -104,6 +104,19 @@ list(APPEND dtv_sources
   dvbt/dvbt_symbol_inner_interleaver_impl.cc
   dvbt/dvbt_map_impl.cc
   dvbt/dvbt_reference_signals_impl.cc
+  dvbt/dvbt_ofdm_sym_acquisition_impl.cc
+  dvbt/dvbt_demod_reference_signals_impl.cc
+  dvbt/dvbt_demap_impl.cc
+  dvbt/dvbt_bit_inner_deinterleaver_impl.cc
+  dvbt/dvbt_viterbi_decoder_impl.cc
+  dvbt/dvbt_convolutional_deinterleaver_impl.cc
+  dvbt/dvbt_reed_solomon_dec_impl.cc
+  dvbt/dvbt_energy_descramble_impl.cc
+  catv/catv_transport_framing_enc_bb_impl.cc
+  catv/catv_reed_solomon_enc_bb_impl.cc
+  catv/catv_randomizer_bb_impl.cc
+  catv/catv_frame_sync_enc_bb_impl.cc
+  catv/catv_trellis_enc_bb_impl.cc
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -118,6 +131,14 @@ list(APPEND dtv_libs
     gnuradio-fec
     ${VOLK_LIBRARIES}
 )
+
+include (CheckCCompilerFlag)
+CHECK_C_COMPILER_FLAG ("-msse2" SSE2_SUPPORTED)
+
+if(SSE2_SUPPORTED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+    ADD_DEFINITIONS(-DDTV_SSE2)
+endif(SSE2_SUPPORTED)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)

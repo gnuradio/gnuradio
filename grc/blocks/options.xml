@@ -77,7 +77,7 @@ else: self.stop(); self.wait()</callback>
 			<key>hb</key>
 		</option>
 		<option>
-			<name>QT GUI Hier Block</name>
+			<name>Hier Block (QT GUI)</name>
 			<key>hb_qt_gui</key>
 		</option>
 	</param>
@@ -163,6 +163,23 @@ part#slurp
 		</option>
 	</param>
 	<param>
+		<name>QSS Theme</name>
+		<key>qt_qss_theme</key>
+		<value></value>
+		<type>file_open</type>
+		<hide>
+#if $generate_options() in ('qt_gui',)
+	#if $qt_qss_theme()
+		none
+	#else
+		part
+	#end if
+#else
+	all
+#end if
+</hide>
+	</param>
+	<param>
 		<name>Thread-safe setters</name>
 		<key>thread_safe_setters</key>
 		<value></value>
@@ -176,6 +193,26 @@ part#slurp
 			<name>On</name>
 			<key>1</key>
 		</option>
+		<tab>Advanced</tab>
+	</param>
+	<param>
+		<name>Run Command</name>
+		<key>run_command</key>
+		<value>{python} -u {filename}</value>
+		<type>string</type>
+		<hide>#if $generate_options().startswith('hb')
+all#slurp
+#else
+part#slurp
+#end if</hide>
+		<tab>Advanced</tab>
+	</param>
+	<param>
+		<name>Hier Block Source Path</name>
+		<key>hier_block_src_path</key>
+		<value>.:</value>
+		<type>string</type>
+		<hide>part</hide>
 		<tab>Advanced</tab>
 	</param>
 	<check>not $window_size or len($window_size) == 2</check>

@@ -7,37 +7,34 @@
 <block>
   <name>Tag Object</name>
   <key>variable_tag_object</key>
+  <import>import pmt</import>
   <var_make>self.$(id) = $(id) = gr.tag_utils.python_to_tag(($offset, $key, $value, $src))</var_make>
   <make></make>
-
+  <callback>self.set_$(id)(gr.tag_utils.python_to_tag(($offset, $key, $value, $src)))</callback>
   <param>
     <name>Offset</name>
     <key>offset</key>
     <value>0</value>
     <type>int</type>
   </param>
-
   <param>
     <name>Key</name>
     <key>key</key>
     <value>pmt.intern("key")</value>
     <type>raw</type>
   </param>
-
   <param>
     <name>Value</name>
     <key>value</key>
     <value>pmt.intern("value")</value>
     <type>raw</type>
   </param>
-
   <param>
     <name>Source ID</name>
     <key>src</key>
     <value>pmt.intern("src")</value>
     <type>raw</type>
   </param>
-
   <doc>
     This block creates a tag object. While tags are based on an
     absolute offset, this is based on a relative offset that must be

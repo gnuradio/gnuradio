@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>
+#include <gnuradio/dtv/dvbs2_config.h>
 #include <gnuradio/block.h>
 
 namespace gr {
@@ -46,8 +47,9 @@ namespace gr {
        * \param framesize FEC frame size (normal or short).
        * \param rate FEC code rate.
        * \param constellation DVB-S2 constellation.
+       * \param interpolation 2X zero stuffing interpolation (on/off).
        */
-      static sptr make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation);
+      static sptr make(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation, dvbs2_interpolation_t interpolation);
     };
 
   } // namespace dtv

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002, 2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -44,104 +44,102 @@
 
 namespace gr {
 
-#define IA 16807
-#define IM 2147483647
-#define AM (1.0/IM)
-#define IQ 127773
-#define IR 2836
-#define NDIV (1+(IM-1)/NTAB)
-#define EPS 1.2e-7
-#define RNMX (1.0-EPS)
-
-  random::random(long seed)
+  random::random(unsigned int seed, int min_integer, int max_integer)
   {
-    reseed(seed);
+    d_gauss_stored = false; // set gasdev (gauss distributed numbers) on calculation state
+
+    // Setup random number generators
+    d_rng = new boost::mt19937; // random numbers are generated here.
+    d_uniform = new boost::uniform_real<float>; // map random number to distribution
+    d_integer_dis = new boost::random::uniform_int_distribution<>(0, 1); // another "mapper"
+    d_generator = NULL; // MUST be reinstantiated on every call to reseed.
+    d_integer_generator = NULL; // MUST be reinstantiated on everytime d_rng or d_integer_dis is changed.
+    reseed(seed); // set seed for random number generator
+    set_integer_limits(min_integer, max_integer);
   }
 
-  void
-  random::reseed(long seed)
+  random::~random()
   {
-    d_seed = seed;
-    d_iy = 0;
-    for(int i = 0; i < NTAB; i++)
-      d_iv[i] = 0;
-    d_iset = 0;
-    d_gset = 0;
+      delete d_rng;
+      delete d_uniform;
+      delete d_integer_dis;
+      delete d_generator;
+      delete d_integer_generator;
   }
 
   /*
-   * This looks like it returns a uniform random deviate between 0.0 and 1.0
-   * It looks similar to code from "Numerical Recipes in C".
+   * Seed is initialized with time if the given seed is 0. Otherwise the seed is taken directly. Sets the seed for the random number generator.
+   */
+  void
+  random::reseed(unsigned int seed)
+  {
+    if(seed==0) d_seed = static_cast<unsigned int>(std::time(0));
+    else d_seed = seed;
+    d_rng->seed(d_seed);
+    // reinstantiate generators. Otherwise reseed doesn't take effect.
+    delete d_generator;
+    d_generator = new boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > (*d_rng,*d_uniform); // create number generator in [0,1) from boost.random
+    delete d_integer_generator;
+    d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
+  }
+
+  void
+  random::set_integer_limits(const int minimum, const int maximum){
+    // boost expects integer limits defined as [minimum, maximum] which is unintuitive.
+    boost::random::uniform_int_distribution<>::param_type dis_params(minimum, maximum - 1);
+    d_integer_dis->param(dis_params);
+    delete d_integer_generator;
+    d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> >(*d_rng, *d_integer_dis);
+  }
+
+  /*!
+   * Uniform random integers in the range set by 'set_integer_limits' [min, max).
+   */
+  int
+  random::ran_int(){
+    return (*d_integer_generator)();
+  }
+
+  /*
+   * Returns uniformly distributed numbers in [0,1) taken from boost.random using a Mersenne twister
    */
   float
   random::ran1()
   {
-    int j;
-    long k;
-    float temp;
-
-    if(d_seed <= 0 || !d_iy)  {
-      if(-d_seed < 1)
-        d_seed=1;
-      else
-        d_seed = -d_seed;
-      for(j=NTAB+7;j>=0;j--) {
-        k=d_seed/IQ;
-        d_seed=IA*(d_seed-k*IQ)-IR*k;
-        if(d_seed < 0)
-          d_seed += IM;
-        if(j < NTAB)
-          d_iv[j] = d_seed;
-      }
-      d_iy=d_iv[0];
-    }
-    k=(d_seed)/IQ;
-    d_seed=IA*(d_seed-k*IQ)-IR*k;
-    if(d_seed < 0)
-      d_seed += IM;
-    j=d_iy/NDIV;
-    d_iy=d_iv[j];
-    d_iv[j] = d_seed;
-    temp=AM * d_iy;
-    if(temp > RNMX)
-      temp = RNMX;
-    return temp;
+    return (*d_generator)();
   }
 
   /*
    * Returns a normally distributed deviate with zero mean and variance 1.
-   * Also looks like it's from "Numerical Recipes in C".
+   * Used is the Marsaglia polar method.
+   * Every second call a number is stored because the transformation works only in pairs. Otherwise half calculation is thrown away.
    */
   float
   random::gasdev()
   {
-    float fac,rsq,v1,v2;
-    d_iset = 1 - d_iset;
-    if(d_iset) {
-      do {
-        v1=2.0*ran1()-1.0;
-        v2=2.0*ran1()-1.0;
-        rsq=v1*v1+v2*v2;
-      } while(rsq >= 1.0 || rsq == 0.0);
-      fac= sqrt(-2.0*log(rsq)/rsq);
-      d_gset=v1*fac;
-      return v2*fac;
-    }
-    return d_gset;
+      if(d_gauss_stored){ // just return the stored value if available
+          d_gauss_stored = false;
+          return d_gauss_value;
+      }
+      else{ // generate a pair of gaussian distributed numbers
+          float x,y,s;
+          do{
+              x = 2.0*ran1()-1.0;
+              y = 2.0*ran1()-1.0;
+              s = x*x+y*y;
+          }while(not(s<1.0));
+          d_gauss_stored = true;
+          d_gauss_value = x*sqrt(-2.0*log(s)/s);
+          return y*sqrt(-2.0*log(s)/s);
+      }
   }
 
-  /*
-   * Copied from The KC7WW / OH2BNS Channel Simulator
-   * FIXME Need to check how good this is at some point
-   */
   float
   random::laplacian()
   {
-    float z = ran1();
-    if(z < 0.5)
-      return log(2.0 * z) / M_SQRT2;
-    else
-      return -log(2.0 * (1.0 - z)) / M_SQRT2;
+    float z = ran1()-0.5;
+    if(z>0) return -log(1-2*z);
+    else return log(1+2*z);
   }
 
   /*
@@ -159,25 +157,11 @@ namespace gr {
       return z;
   }
 
-  /*
-   * Complex rayleigh is really gaussian I and gaussian Q
-   * It can also be generated by real rayleigh magnitude and
-   * uniform random angle
-   * Adapted from The KC7WW / OH2BNS Channel Simulator
-   * FIXME Need to check how good this is at some point
-   */
   gr_complex
   random::rayleigh_complex()
   {
     return gr_complex(gasdev(),gasdev());
   }
-
-  /*   Other option
-       mag = rayleigh();
-       ang = 2.0 * M_PI * RNG();
-       *Rx = rxx * cos(z);
-       *Iy = rxx * sin(z);
-       */
 
   float
   random::rayleigh()

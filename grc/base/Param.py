@@ -111,6 +111,7 @@ class Param(Element):
             if self.get_value() not in self.get_option_keys():
                 raise Exception, 'The value "%s" is not in the possible values of "%s".'%(self.get_value(), self.get_option_keys())
         else: self._value = value or ''
+        self._default = value
 
     def validate(self):
         """
@@ -152,6 +153,9 @@ class Param(Element):
         return value
 
     def set_value(self, value): self._value = str(value) #must be a string
+
+    def value_is_default(self):
+        return self._default == self._value
 
     def get_type(self): return self.get_parent().resolve_dependencies(self._type)
     def get_tab_label(self): return self._tab_label

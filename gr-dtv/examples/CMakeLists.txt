@@ -1,4 +1,4 @@
-# Copyright 2014 Free Software Foundation, Inc.
+# Copyright 2014-2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,6 +21,31 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(
     PROGRAMS
+    atsc_ctrlport_monitor.py
+    DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
+    COMPONENT "dtv_python"
+)
+
+install(
+    FILES
+    README.dvbs
+    README.dvbs2
+    README.dvbt
+    README.dvbt2
+    README.catv
+    dvbs2_tx.grc
+    dvbs_tx.grc
+    dvbt_rx_8k.grc
+    dvbt_tx_2k.grc
+    dvbt_tx_8k.grc
+    file_atsc_rx.grc
+    file_atsc_tx.grc
+    uhd_atsc_capture.grc
+    uhd_rx_atsc.grc
+    vv003-cr23.grc
+    vv009-4kfft.grc
+    vv018-miso.grc
+    catv_tx_64qam.grc
     DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
     COMPONENT "dtv_python"
 )

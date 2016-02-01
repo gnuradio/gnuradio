@@ -76,6 +76,14 @@ namespace gr {
       if (d_fd <= 0)
         throw std::runtime_error("gr::tuntap_pdu::make: tun_alloc failed (are you running as root?)");
 
+      int err = set_mtu(dev_cstr, MTU);
+      if(err < 0)
+        std::cerr << boost::format(
+          "gr::tuntap_pdu: failed to set MTU to %d.\n"
+          "You should use ifconfig to set the MTU. E.g.,\n"
+          "  $ sudo ifconfig %s mtu %d\n"
+          ) % MTU % dev % MTU << std::endl;
+
       std::cout << boost::format(
 	"Allocated virtual ethernet interface: %s\n"
         "You must now use ifconfig to set its IP address. E.g.,\n"
@@ -120,7 +128,7 @@ namespace gr {
        * specified type
        */
       if (*dev)
-        strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+        strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
 
       /* try to create the device */
       if ((err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0) {
@@ -139,6 +147,31 @@ namespace gr {
        * with the virtual interface
        */
       return fd;
+    }
+
+    int
+    tuntap_pdu_impl::set_mtu(const char *dev, int MTU)
+    {
+      struct ifreq ifr;
+      int sfd, err;
+
+      /* MTU must be set by passing a socket fd to ioctl;
+       * create an arbitrary socket for this purpose
+       */
+      if ((sfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+          return sfd;
+
+      /* preparation of the struct ifr, of type "struct ifreq" */
+      memset(&ifr, 0, sizeof(ifr));
+      strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+      ifr.ifr_addr.sa_family = AF_INET; /* address family */
+      ifr.ifr_mtu = MTU;
+
+      /* try to set MTU */
+      if ((err = ioctl(sfd, SIOCSIFMTU, (void *) &ifr)) < 0)
+        return err;
+
+      return MTU;
     }
 #endif
 

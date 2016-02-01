@@ -3,13 +3,20 @@
   <name>FEC Tagged Encoder</name>
   <key>fec_tagged_encoder</key>
   <import>from gnuradio import fec</import>
-  <make>fec.tagged_encoder($encoder, $itype.size, $otype.size, $lentagname)</make>
+  <make>fec.tagged_encoder($encoder, $itype.size, $otype.size, $lentagname, $mtu)</make>
 
   <param>
     <name>Constituent Encoder</name>
     <key>encoder</key>
     <value>encoder_variable</value>
     <type>raw</type>
+  </param>
+
+  <param>
+    <name>MTU (bytes)</name>
+    <key>mtu</key>
+    <value>1500</value>
+    <type>int</type>
   </param>
 
   <param>

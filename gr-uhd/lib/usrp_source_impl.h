@@ -55,7 +55,8 @@ namespace gr {
     {
     public:
       usrp_source_impl(const ::uhd::device_addr_t &device_addr,
-                       const ::uhd::stream_args_t &stream_args);
+                       const ::uhd::stream_args_t &stream_args,
+                       const bool issue_stream_cmd_on_start = true);
       ~usrp_source_impl();
 
       // Get Commands
@@ -106,6 +107,8 @@ namespace gr {
                gr_vector_const_void_star &input_items,
                gr_vector_void_star &output_items);
 
+      void setup_rpc();
+
     private:
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
@@ -117,6 +120,7 @@ namespace gr {
       bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
       pmt::pmt_t _id;
+      bool _issue_stream_cmd_on_start;
 
       //tag shadows
       double _samp_rate;

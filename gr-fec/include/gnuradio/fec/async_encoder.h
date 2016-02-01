@@ -82,10 +82,14 @@ namespace gr {
        * \param packed True if working on packed bytes (like PDUs).
        * \param rev_unpack Reverse the unpacking order from input bytes to bits.
        * \param rev_pack Reverse the packing order from bits to output bytes.
+       * \param mtu The Maxium Transmission Unit (MTU) of the input
+       *            frame that the block will be able to
+       *            process. Specified in bytes and defaults to 1500.
        */
       static sptr make(generic_encoder::sptr my_encoder,
                        bool packed=false,
-                       bool rev_unpack=true, bool rev_pack=true);
+                       bool rev_unpack=true, bool rev_pack=true,
+                       int mtu=1500);
 
       virtual int general_work(int noutput_items,
                                gr_vector_int& ninput_items,

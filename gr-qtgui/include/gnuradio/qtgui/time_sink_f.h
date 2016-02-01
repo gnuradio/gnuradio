@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011-2013 Free Software Foundation, Inc.
+ * Copyright 2011-2013,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -45,6 +45,17 @@ namespace gr {
      * and plots them in the time domain. Each signal is plotted with a
      * different color, and the \a set_title and \a set_color functions
      * can be used to change the lable and color for a given input number.
+     *
+     * The sink supports plotting streaming float data or
+     * messages. The message port is named "in". The two modes cannot
+     * be used simultaneously, and \p nconnections should be set to 0
+     * when using the message mode. GRC handles this issue by
+     * providing the "Float Message" type that removes the streaming
+     * port(s).
+     *
+     * This sink can plot messages that contain either uniform vectors
+     * of float 32 values (pmt::is_f32vector) or PDUs where the data
+     * is a uniform vector of float 32 values.
      */
     class QTGUI_API time_sink_f : virtual public sync_block
     {

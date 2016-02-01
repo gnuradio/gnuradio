@@ -1,23 +1,23 @@
 #
 # Copyright 2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 """
 OFDM Transmitter / Receiver hier blocks.
 
@@ -116,7 +116,7 @@ def _get_constellation(bps):
         exit(1)
 
 class ofdm_tx(gr.hier_block2):
-    """ Hierarchical block for OFDM modulation.
+    """Hierarchical block for OFDM modulation.
 
     The input is a byte stream (unsigned char) and the
     output is the complex modulated signal at baseband.
@@ -130,13 +130,16 @@ class ofdm_tx(gr.hier_block2):
     pilot_symbols: The pilot symbols.
     bps_header: Bits per symbol (header).
     bps_payload: Bits per symbol (payload).
-    sync_word1: The first sync preamble symbol. This has to be with zeros on alternating carriers.
-                Used for fine and coarse frequency offset and timing estimation.
-    sync_word2: The second sync preamble symbol. This has to be filled entirely. Also used for
-                coarse frequency offset and channel estimation.
+    sync_word1: The first sync preamble symbol. This has to be with
+    |           zeros on alternating carriers. Used for fine and
+    |           coarse frequency offset and timing estimation.
+    sync_word2: The second sync preamble symbol. This has to be filled
+    |           entirely. Also used for coarse frequency offset and
+    |           channel estimation.
     rolloff: The rolloff length in samples. Must be smaller than the CP.
     debug_log: Write output into log files (Warning: creates lots of data!)
     scramble_bits: Activates the scramblers (set this to True unless debugging)
+
     """
     def __init__(self, fft_len=_def_fft_len, cp_len=_def_cp_len,
                  packet_length_tag_key=_def_packet_length_tag_key,
@@ -259,7 +262,7 @@ class ofdm_tx(gr.hier_block2):
 
 
 class ofdm_rx(gr.hier_block2):
-    """ Hierarchical block for OFDM demodulation.
+    """Hierarchical block for OFDM demodulation.
 
     The input is a complex baseband signal (e.g. from a UHD source).
     The detected packets are output as a stream of packed bits on the output.
@@ -274,10 +277,12 @@ class ofdm_rx(gr.hier_block2):
     pilot_symbols: The pilot symbols.
     bps_header: Bits per symbol (header).
     bps_payload: Bits per symbol (payload).
-    sync_word1: The first sync preamble symbol. This has to be with zeros on alternating carriers.
-                Used for fine and coarse frequency offset and timing estimation.
-    sync_word2: The second sync preamble symbol. This has to be filled entirely. Also used for
-                coarse frequency offset and channel estimation.
+    sync_word1: The first sync preamble symbol. This has to be with
+    |           zeros on alternating carriers. Used for fine and
+    |           coarse frequency offset and timing estimation.
+    sync_word2: The second sync preamble symbol. This has to be filled
+    |           entirely. Also used for coarse frequency offset and
+    |           channel estimation.
     """
     def __init__(self, fft_len=_def_fft_len, cp_len=_def_cp_len,
                  frame_length_tag_key=_def_frame_length_tag_key,
@@ -447,5 +452,3 @@ class ofdm_rx(gr.hier_block2):
             self.connect(payload_demod,      blocks.file_sink(1,                            'post-payload-demod.dat'))
             self.connect(payload_pack,       blocks.file_sink(1,                            'post-payload-pack.dat'))
             self.connect(crc,                blocks.file_sink(1,                            'post-payload-crc.dat'))
-
-

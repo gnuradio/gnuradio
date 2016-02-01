@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2014,2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,18 +33,19 @@ namespace gr {
   namespace blocks {
 
     @NAME@::sptr
-    @NAME@::make(size_t vlen)
+    @NAME@::make(size_t vlen, size_t vlen_out)
     {
       return gnuradio::get_initial_sptr
-        (new @NAME_IMPL@(vlen));
+        (new @NAME_IMPL@(vlen,vlen_out));
     }
 
-    @NAME_IMPL@::@NAME_IMPL@(size_t vlen)
+    @NAME_IMPL@::@NAME_IMPL@(size_t vlen, size_t vlen_out)
     : sync_block("@BASE_NAME@",
-                    io_signature::make(1, -1, vlen*sizeof(@I_TYPE@)),
-                    io_signature::make(1, 1, sizeof(@O_TYPE@))),
-      d_vlen(vlen)
+                 io_signature::make(1, -1, vlen*sizeof(@I_TYPE@)),
+                 io_signature::make(1, 1, vlen_out*sizeof(@O_TYPE@))),
+      d_vlen(vlen), d_vlen_out(vlen_out)
     {
+      assert((vlen_out == vlen) || (vlen_out == 1));
     }
 
     @NAME_IMPL@::~@NAME_IMPL@()
@@ -60,22 +61,36 @@ namespace gr {
 
       int ninputs = input_items.size();
 
-      for(int i = 0; i < noutput_items; i++) {
-        @I_TYPE@ max = ((@I_TYPE@ *)input_items[0])[i*d_vlen];
+      if(d_vlen_out == 1)
+	for(int i = 0; i < noutput_items; i++) {
+	  @I_TYPE@ max = ((@I_TYPE@ *)input_items[0])[i*d_vlen];
 
-        for(int j = 0; j < (int)d_vlen; j++ ) {
-          for(int k = 0; k < ninputs; k++) {
-            if(((@I_TYPE@ *)input_items[k])[i*d_vlen + j] > max) {
-              max = ((@I_TYPE@*)input_items[k])[i*d_vlen + j];
-            }
-          }
-        }
+	  for(int j = 0; j < (int)d_vlen; j++ ) {
+	    for(int k = 0; k < ninputs; k++) {
+	      if(((@I_TYPE@ *)input_items[k])[i*d_vlen + j] > max) {
+		max = ((@I_TYPE@*)input_items[k])[i*d_vlen + j];
+	      }
+	    }
+	  }
 
-        *optr++ = (@O_TYPE@)max;
-      }
+	  *optr++ = (@O_TYPE@)max;
+	}
+
+      else // vector mode output
+	for(size_t i = 0; i < (size_t)noutput_items * d_vlen_out; i++) {
+	  @I_TYPE@ max = ((@I_TYPE@ *)input_items[0])[i];
+
+	  for(int k = 1; k < ninputs; k++) {
+	    if(((@I_TYPE@ *)input_items[k])[i] > max) {
+	      max = ((@I_TYPE@*)input_items[k])[i];
+	    }
+	  }
+
+	  *optr++ = (@O_TYPE@)max;
+	}
+
       return noutput_items;
     }
 
   } /* namespace blocks */
 } /* namespace gr */
-

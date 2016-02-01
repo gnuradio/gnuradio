@@ -405,14 +405,14 @@ class channelizer_hier_ccf(gr.hier_block2):
     Make a Polyphase Filter channelizer (complex in, complex out, floating-point taps)
 
     Args:
-        n_chans - The number of channels to split into.
-        n_filterbanks - The number of filterbank blocks to use (default=2).
-        taps: The taps to use.  If this is `None` then taps are generated using optfir.low_pass.
-        outchans - Which channels to output streams for (a list of integers) (default is all channels).
-        atten: Stop band attenuation.
-        bw: The fraction of the channel you want to keep.
-        tb: Transition band with as fraction of channel width.
-        ripple: Pass band ripple in dB.
+    n_chans: The number of channels to split into.
+    n_filterbanks: The number of filterbank blocks to use (default=2).
+    taps: The taps to use.  If this is `None` then taps are generated using optfir.low_pass.
+    outchans: Which channels to output streams for (a list of integers) (default is all channels).
+    atten: Stop band attenuation.
+    bw: The fraction of the channel you want to keep.
+    tb: Transition band with as fraction of channel width.
+    ripple: Pass band ripple in dB.
     """
 
     def __init__(self, n_chans, n_filterbanks=1, taps=None, outchans=None,

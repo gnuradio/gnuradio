@@ -16,7 +16,7 @@ qtgui.$(type.fcn)(
 	$size, \#size
 	$srate, \#samp_rate
 	$name, \#name
-	$nconnections \#number of inputs
+	#if $type.t == 'message' then 0 else $nconnections# \#number of inputs
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
@@ -60,7 +60,7 @@ for i in xrange(2*$nconnections):
     self.$(id).set_line_marker(i, markers[i])
     self.$(id).set_line_alpha(i, alphas[i])
 #else
-for i in xrange($nconnections):
+for i in xrange(#if $type.t == 'message' then 1 else $nconnections#):
     if len(labels[i]) == 0:
         self.$(id).set_line_label(i, "Data {0}".format(i))
     else:
@@ -80,6 +80,7 @@ $(gui_hint()($win))</make>
   <callback>set_color($which, $color)</callback>
   <callback>set_y_axis($ymin, $ymax)</callback>
   <callback>set_samp_rate($srate)</callback>
+  <callback>self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_delay, $tr_chan, $tr_tag)</callback>
 
   <param_tab_order>
     <tab>General</tab>
@@ -92,8 +93,30 @@ $(gui_hint()($win))</make>
     <key>type</key>
     <value>complex</value>
     <type>enum</type>
-    <option><name>Complex</name><key>complex</key><opt>fcn:time_sink_c</opt></option>
-    <option><name>Float</name><key>float</key><opt>fcn:time_sink_f</opt></option>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>fcn:time_sink_c</opt>
+      <opt>t:complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:time_sink_f</opt>
+      <opt>t:float</opt>
+    </option>
+    <option>
+      <name>Complex Message</name>
+      <key>msg_complex</key>
+      <opt>fcn:time_sink_c</opt>
+      <opt>t:message</opt>
+    </option>
+    <option>
+      <name>Float Message</name>
+      <key>msg_float</key>
+      <opt>fcn:time_sink_f</opt>
+      <opt>t:message</opt>
+    </option>
   </param>
 
   <param>
@@ -125,7 +148,9 @@ $(gui_hint()($win))</make>
     <key>size</key>
     <value>1024</value>
     <type>int</type>
+    <hide>#if $type.t == 'message' then 'all' else 'none'#</hide>
   </param>
+
   <param>
     <name>Sample Rate</name>
     <key>srate</key>
@@ -185,7 +210,7 @@ $(gui_hint()($win))</make>
     <key>nconnections</key>
     <value>1</value>
     <type>int</type>
-    <hide>part</hide>
+    <hide>#if $type.t == 'message' then 'all' else 'part'#</hide>
   </param>
 
   <param>
@@ -201,7 +226,7 @@ $(gui_hint()($win))</make>
     <key>entags</key>
     <value>True</value>
     <type>enum</type>
-    <hide>part</hide>
+    <hide>#if $type.t == 'message' then 'all' else 'part'#</hide>
     <option>
       <name>Yes</name>
       <key>True</key>
@@ -888,14 +913,13 @@ $(gui_hint()($win))</make>
     <hide>#if (int($nconnections()) >= 10 or ($type() == "complex" and int($nconnections()) >= 5)) then 'part' else 'all'#</hide>
   </param>
 
-
-  <check>$tr_chan &lt; 2*$nconnections</check>
-
   <sink>
     <name>in</name>
-    <type>$type</type>
-    <nports>$nconnections</nports>
+    <type>$type.t</type>
+    <nports>#if $type.t == 'message' then 0 else $nconnections#</nports>
+    <optional>1</optional>
   </sink>
+
   <doc>
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \

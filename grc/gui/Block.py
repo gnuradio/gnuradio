@@ -21,6 +21,7 @@ from Element import Element
 import Utils
 import Colors
 from .. base import odict
+from .. python.Param import num_to_str
 from Constants import BORDER_PROXIMITY_SENSITIVITY
 from Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
@@ -35,9 +36,22 @@ import pango
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
 <span foreground="$foreground" font_desc="$font"><b>$encode($block.get_name())</b></span>"""
-COMMENT_MARKUP_TMPL="""\
+
+# Includes the additional complexity markup if enabled
+COMMENT_COMPLEXITY_MARKUP_TMPL="""\
 #set $foreground = $block.get_enabled() and '#444' or '#888'
-<span foreground="$foreground" font_desc="$font">$encode($block.get_comment())</span>"""
+#if $complexity
+<span foreground="#444" size="medium" font_desc="$font"><b>$encode($complexity)</b></span>#slurp
+#end if
+#if $complexity and $comment
+<span></span>
+#end if
+#if $comment
+<span foreground="$foreground" font_desc="$font">$encode($comment)</span>#slurp
+#end if
+"""
+
+
 
 class Block(Element):
     """The graphical signal block."""
@@ -113,6 +127,40 @@ class Block(Element):
             )
         self.get_param('_coordinate').set_value(str(coor))
 
+    def bound_move_delta(self, delta_coor):
+        """
+        Limit potential moves from exceeding the bounds of the canvas
+
+        Args:
+            delta_coor: requested delta coordinate (dX, dY) to move
+
+        Returns:
+            The delta coordinate possible to move while keeping the block on the canvas 
+            or the input (dX, dY) on failure
+        """
+        dX, dY = delta_coor 
+
+        try:
+            fgW, fgH = self.get_parent().get_size()
+            x, y = map(int, eval(self.get_param("_coordinate").get_value()))
+            if self.is_horizontal():
+               sW, sH = self.W, self.H
+            else:
+               sW, sH = self.H, self.W
+        
+            if x + dX < 0:
+                dX = -x
+            elif dX + x + sW >= fgW:
+                dX = fgW - x - sW
+            if y + dY < 0:
+                dY = -y
+            elif dY + y + sH >= fgH:
+               dY = fgH - y - sH
+        except:
+            pass
+
+        return ( dX, dY ) 
+
     def get_rotation(self):
         """
         Get the rotation from the position param.
@@ -158,7 +206,7 @@ class Block(Element):
         #display the params
         if self.is_dummy_block():
             markups = [
-                '<span foreground="black" font_desc="$font"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
+                '<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
             ]
         else:
             markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
@@ -167,7 +215,7 @@ class Block(Element):
             layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
             layout.set_markup('\n'.join(markups))
             layouts.append(layout)
-            w,h = layout.get_pixel_size()
+            w, h = layout.get_pixel_size()
             self.label_width = max(w, self.label_width)
             self.label_height += h + LABEL_SEPARATION
         width = self.label_width
@@ -218,16 +266,31 @@ class Block(Element):
         self.create_comment_label()
 
     def create_comment_label(self):
-        comment = self.get_comment()
-        if comment:
-            layout = gtk.DrawingArea().create_pango_layout('')
-            layout.set_markup(Utils.parse_template(COMMENT_MARKUP_TMPL, block=self, font=BLOCK_FONT))
-            width, height = layout.get_pixel_size()
-            pixmap = self.get_parent().new_pixmap(width, height)
+        comment = self.get_comment()    # Returns None if there are no comments
+        complexity = None
+
+        # Show the flowgraph complexity on the top block if enabled
+        if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
+            complexity = "Complexity: {}bal".format(num_to_str(self.get_parent().get_complexity()))
+
+        layout = gtk.DrawingArea().create_pango_layout('')
+        layout.set_markup(Utils.parse_template(COMMENT_COMPLEXITY_MARKUP_TMPL,
+                                               block=self,
+                                               comment=comment,
+                                               complexity=complexity,
+                                               font=BLOCK_FONT))
+
+        # Setup the pixel map. Make sure that layout not empty
+        width, height = layout.get_pixel_size()
+        if width and height:
+            padding = BLOCK_LABEL_PADDING
+            pixmap = self.get_parent().new_pixmap(width + 2 * padding,
+                                                  height + 2 * padding)
             gc = pixmap.new_gc()
             gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)
-            pixmap.draw_rectangle(gc, True, 0, 0, width, height)
-            pixmap.draw_layout(gc, 0, 0, layout)
+            pixmap.draw_rectangle(
+                gc, True, 0, 0, width + 2 * padding, height + 2 * padding)
+            pixmap.draw_layout(gc, padding, padding, layout)
             self._comment_pixmap = pixmap
         else:
             self._comment_pixmap = None
@@ -275,7 +338,7 @@ class Block(Element):
     def draw_comment(self, gc, window):
         if not self._comment_pixmap:
             return
-
         x, y = self.get_coordinate()
+        y += self.H if self.is_horizontal() else self.W
         window.draw_drawable(gc, self._comment_pixmap, 0, 0, x,
-                             y + self.H + BLOCK_LABEL_PADDING, -1, -1)
+                             y + BLOCK_LABEL_PADDING, -1, -1)

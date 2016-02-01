@@ -321,7 +321,8 @@ namespace gr {
     {
       _update_stream_args(stream_args);
 #ifdef GR_UHD_USE_STREAM_API
-      _tx_stream.reset();
+      if(_tx_stream)
+        _tx_stream.reset();
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
@@ -609,13 +610,27 @@ namespace gr {
       _nitems_to_send = 0;
 
 #ifdef GR_UHD_USE_STREAM_API
-      _tx_stream->send(gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
+      if(_tx_stream)
+        _tx_stream->send(gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
 #else
       _dev->get_device()->send
         (gr_vector_const_void_star(_nchan), 0, _metadata,
          *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
 #endif
       return true;
+    }
+
+
+    void
+    usrp_sink_impl::setup_rpc()
+    {
+#ifdef GR_CTRLPORT
+      add_rpc_variable(
+        rpcbasic_sptr(new rpcbasic_register_handler<usrp_block>(
+          alias(), "command",
+          "", "UHD Commands",
+          RPC_PRIVLVL_MIN, DISPNULL)));
+#endif /* GR_CTRLPORT */
     }
 
   } /* namespace uhd */

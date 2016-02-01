@@ -4,7 +4,7 @@
   <key>zeromq_rep_sink</key>
   <category>ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
-  <make>zeromq.rep_sink($type.itemsize, $vlen, $address, $timeout, $pass_tags)</make>
+  <make>zeromq.rep_sink($type.itemsize, $vlen, $address, $timeout, $pass_tags, $hwm)</make>
 
   <param>
     <name>IO Type</name>
@@ -61,7 +61,23 @@
     <name>Pass Tags</name>
     <key>pass_tags</key>
     <value>False</value>
-    <type>bool</type>
+    <type>enum</type>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>High Watermark</name>
+    <key>hwm</key>
+    <value>-1</value>
+    <type>int</type>
+    <hide>#if $hwm() == -1 then 'part' else 'none'#</hide>
   </param>
 
   <sink>

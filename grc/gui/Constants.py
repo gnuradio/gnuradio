@@ -17,16 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-
-pygtk.require('2.0')
-import gtk
 import os
 import sys
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
 from gnuradio import gr
 
-_gr_prefs = gr.prefs()
-
+prefs = gr.prefs()
+GR_PREFIX = gr.prefix()
+EDITOR = prefs.get_string('grc', 'editor', '')
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()
@@ -49,7 +51,7 @@ DEFAULT_BLOCKS_WINDOW_WIDTH = 100
 DEFAULT_REPORTS_WINDOW_WIDTH = 100
 
 try:  # ugly, but matches current code style
-    raw = _gr_prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
+    raw = prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
     DEFAULT_CANVAS_SIZE = tuple(int(x.strip('() ')) for x in raw.split(','))
     if len(DEFAULT_CANVAS_SIZE) != 2 or not all(300 < x < 4096 for x in DEFAULT_CANVAS_SIZE):
         raise Exception()
@@ -59,7 +61,7 @@ except:
 
 #  flow-graph canvas fonts
 try:  # ugly, but matches current code style
-    FONT_SIZE = _gr_prefs.get_long('grc', 'canvas_font_size', 8)
+    FONT_SIZE = prefs.get_long('grc', 'canvas_font_size', 8)
     if FONT_SIZE <= 0:
         raise Exception()
 except:
@@ -118,4 +120,3 @@ SCROLL_DISTANCE = 15
 
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
-

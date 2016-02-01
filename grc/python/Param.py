@@ -17,32 +17,40 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from .. base.Param import Param as _Param
-from .. gui.Param import Param as _GUIParam
-import Constants
-import numpy
-from gnuradio import eng_notation
+import ast
 import re
+
 from gnuradio import gr
 
+from .. base.Param import Param as _Param
+from .. gui.Param import Param as _GUIParam
+
+import Constants
+from Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
+
+from gnuradio import eng_notation
+
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
-_show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
+_show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook|epy_module)$')
 
 
 #blacklist certain ids, its not complete, but should help
 import __builtin__
 ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + \
     filter(lambda x: not x.startswith('_'), dir(gr.top_block())) + dir(__builtin__)
-#define types, native python + numpy
-VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
-COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
-REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
-INT_TYPES = [int, long, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
-    numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
-#cast to tuple for isinstance, concat subtypes
-COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
-REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
-INT_TYPES = tuple(INT_TYPES)
+
+
+def num_to_str(num):
+    """ Display logic for numbers """
+    if isinstance(num, COMPLEX_TYPES):
+        num = complex(num) #cast to python complex
+        if num == 0: return '0' #value is zero
+        elif num.imag == 0: return '%s'%eng_notation.num_to_str(num.real) #value is real
+        elif num.real == 0: return '%sj'%eng_notation.num_to_str(num.imag) #value is imaginary
+        elif num.imag < 0: return '%s-%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(abs(num.imag)))
+        else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
+    else: return str(num)
+
 
 class Param(_Param, _GUIParam):
 
@@ -57,7 +65,7 @@ class Param(_Param, _GUIParam):
         'complex', 'real', 'float', 'int',
         'complex_vector', 'real_vector', 'float_vector', 'int_vector',
         'hex', 'string', 'bool',
-        'file_open', 'file_save', 'multiline',
+        'file_open', 'file_save', '_multiline', '_multiline_python_external',
         'id', 'stream_id',
         'grid_pos', 'notebook', 'gui_hint',
         'import',
@@ -88,18 +96,7 @@ class Param(_Param, _GUIParam):
         ##################################################
         if not self.is_valid(): return _truncate(self.get_value())
         if self.get_value() in self.get_option_keys(): return self.get_option(self.get_value()).get_name()
-        ##################################################
-        # display logic for numbers
-        ##################################################
-        def num_to_str(num):
-            if isinstance(num, COMPLEX_TYPES):
-                num = complex(num) #cast to python complex
-                if num == 0: return '0' #value is zero
-                elif num.imag == 0: return '%s'%eng_notation.num_to_str(num.real) #value is real
-                elif num.real == 0: return '%sj'%eng_notation.num_to_str(num.imag) #value is imaginary
-                elif num.imag < 0: return '%s-%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(abs(num.imag)))
-                else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
-            else: return str(num)
+
         ##################################################
         # split up formatting by type
         ##################################################
@@ -272,7 +269,7 @@ class Param(_Param, _GUIParam):
         #########################
         # String Types
         #########################
-        elif t in ('string', 'file_open', 'file_save', 'multiline'):
+        elif t in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
             #do not check if file/directory exists, that is a runtime issue
             try:
                 e = self.get_parent().get_parent().evaluate(v)
@@ -280,8 +277,10 @@ class Param(_Param, _GUIParam):
                     raise Exception()
             except:
                 self._stringify_flag = True
-                e = v
-            return str(e)
+                e = str(v)
+            if t == '_multiline_python_external':
+                ast.parse(e)  # raises SyntaxError
+            return e
         #########################
         # Unique ID Type
         #########################
@@ -411,7 +410,7 @@ class Param(_Param, _GUIParam):
         """
         v = self.get_value()
         t = self.get_type()
-        if t in ('string', 'file_open', 'file_save', 'multiline'): #string types
+        if t in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):  # string types
             if not self._init: self.evaluate()
             if self._stringify_flag: return '"%s"'%v.replace('"', '\"')
             else: return v

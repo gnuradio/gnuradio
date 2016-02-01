@@ -127,7 +127,7 @@ class PropsDialog(gtk.Dialog):
 
         # Connect events
         self.connect('key-press-event', self._handle_key_press)
-        self.connect('show', self._update_gui)
+        self.connect('show', self.update_gui)
         self.connect('response', self._handle_response)
         self.show_all()  # show all (performs initial gui update)
 
@@ -158,12 +158,12 @@ class PropsDialog(gtk.Dialog):
         # update for the block
         self._block.rewrite()
         self._block.validate()
-        self._update_gui()
+        self.update_gui()
 
     def _activate_apply(self, *args):
         self.set_response_sensitive(gtk.RESPONSE_APPLY, True)
 
-    def _update_gui(self, *args):
+    def update_gui(self, widget=None, force=False):
         """
         Repopulate the parameters boxes (if changed).
         Update all the input parameters.
@@ -173,7 +173,7 @@ class PropsDialog(gtk.Dialog):
         Hide the box if there are no docs.
         """
         # update the params box
-        if self._params_changed():
+        if force or self._params_changed():
             # hide params box before changing
             for tab, label, vbox in self._params_boxes:
                 vbox.hide_all()
@@ -210,6 +210,14 @@ class PropsDialog(gtk.Dialog):
 
         buffer = self._code_text_display.get_buffer()
         block = self._block
+        key = block.get_key()
+
+        if key == 'epy_block':
+            src = block.get_param('_source_code').get_value()
+        elif key == 'epy_module':
+            src = block.get_param('source_code').get_value()
+        else:
+            src = ''
 
         def insert(header, text):
             if not text:
@@ -219,9 +227,11 @@ class PropsDialog(gtk.Dialog):
 
         buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
         insert('# Imports\n', '\n'.join(block.get_imports()))
-        if block.get_key().startswith('variable'):
+        if key.startswith('variable'):
             insert('\n\n# Variables\n', block.get_var_make())
         insert('\n\n# Blocks\n', block.get_make())
+        if src:
+            insert('\n\n# External Code ({}.py)\n'.format(block.get_id()), src)
 
     def _handle_key_press(self, widget, event):
         """

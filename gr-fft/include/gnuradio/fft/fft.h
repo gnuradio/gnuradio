@@ -69,11 +69,11 @@ namespace gr {
      * \ingroup misc
      */
     class FFT_API fft_complex {
-      int	      d_fft_size;
+      int         d_fft_size;
       int         d_nthreads;
       gr_complex *d_inbuf;
       gr_complex *d_outbuf;
-      void	     *d_plan;
+      void       *d_plan;
 
     public:
       fft_complex(int fft_size, bool forward = true, int nthreads=1);
@@ -112,11 +112,11 @@ namespace gr {
      * \ingroup misc
      */
     class FFT_API fft_real_fwd {
-      int	  d_fft_size;
+      int     d_fft_size;
       int         d_nthreads;
-      float	 *d_inbuf;
+      float  *d_inbuf;
       gr_complex *d_outbuf;
-      void	 *d_plan;
+      void   *d_plan;
 
     public:
       fft_real_fwd (int fft_size, int nthreads=1);
@@ -155,11 +155,11 @@ namespace gr {
      * \ingroup misc
      */
     class FFT_API fft_real_rev {
-      int	      d_fft_size;
+      int         d_fft_size;
       int         d_nthreads;
       gr_complex *d_inbuf;
-      float	     *d_outbuf;
-      void	     *d_plan;
+      float      *d_outbuf;
+      void       *d_plan;
 
     public:
       fft_real_rev(int fft_size, int nthreads=1);

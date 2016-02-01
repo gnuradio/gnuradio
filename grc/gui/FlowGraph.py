@@ -17,17 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
-import Actions
-import Colors
-import Utils
-from Element import Element
-import pygtk
-pygtk.require('2.0')
-import gtk
 import random
-import Messages
-import Bars
+import functools
+from itertools import chain
+from operator import methodcaller
+from distutils.spawn import find_executable
+
+import gobject
+
+from . import Actions, Colors, Constants, Utils, Messages, Bars, Dialogs
+from . Element import Element
+from . Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
+from . external_editor import ExternalEditor
+
 
 class FlowGraph(Element):
     """
@@ -57,6 +59,48 @@ class FlowGraph(Element):
         #context menu
         self._context_menu = Bars.ContextMenu()
         self.get_context_menu = lambda: self._context_menu
+
+        self._external_updaters = {}
+
+    def install_external_editor(self, param):
+        target = (param.get_parent().get_id(), param.get_key())
+
+        if target in self._external_updaters:
+            editor = self._external_updaters[target]
+        else:
+            editor = (find_executable(Constants.EDITOR) or
+                      Dialogs.ChooseEditorDialog())
+            if not editor:
+                return
+            updater = functools.partial(
+                self.handle_external_editor_change, target=target)
+            editor = self._external_updaters[target] = ExternalEditor(
+                editor=editor,
+                name=target[0], value=param.get_value(),
+                callback=functools.partial(gobject.idle_add, updater)
+            )
+            editor.start()
+        try:
+            editor.open_editor()
+        except Exception as e:
+            # Problem launching the editor. Need to select a new editor.
+            Messages.send('>>> Error opening an external editor. Please select a different editor.\n')
+            # Reset the editor to force the user to select a new one.
+            Constants.prefs.set_string('grc', 'editor', '')
+            Constants.prefs.save()
+            Constants.EDITOR = ""
+
+    def handle_external_editor_change(self, new_value, target):
+        try:
+            block_id, param_key = target
+            self.get_block(block_id).get_param(param_key).set_value(new_value)
+
+        except (IndexError, ValueError):  # block no longer exists
+            self._external_updaters[target].stop()
+            del self._external_updaters[target]
+            return
+        Actions.EXTERNAL_UPDATE()
+
 
     ###########################################################################
     # Access Drawing Area
@@ -236,6 +280,9 @@ class FlowGraph(Element):
             delta_coordinate: the change in coordinates
         """
         for selected_block in self.get_selected_blocks():
+            delta_coordinate = selected_block.bound_move_delta(delta_coordinate)
+ 
+        for selected_block in self.get_selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True
 
@@ -288,13 +335,15 @@ class FlowGraph(Element):
         Draw all of the elements in this flow graph onto the pixmap.
         Draw the pixmap to the drawable window of this flow graph.
         """
+
         W,H = self.get_size()
         #draw the background
         gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
         window.draw_rectangle(gc, True, 0, 0, W, H)
+
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
-            for block in self.get_blocks():
+            for block in self.iter_blocks():
                 if block.get_enabled():
                     block.draw_comment(gc, window)
         #draw multi select rectangle
@@ -312,7 +361,8 @@ class FlowGraph(Element):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
-        for element in self.get_connections() + self.get_blocks():
+        blocks = sorted(self.iter_blocks(), key=methodcaller('get_enabled'))
+        for element in chain(self.iter_connections(), blocks):
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)

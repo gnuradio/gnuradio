@@ -105,5 +105,6 @@ service ControlPort {
         KnobMap getKnobs(1:KnobIDList knobs);
         KnobMap getRe(1:KnobIDList knobs);
         KnobPropMap properties(1:KnobIDList knobs);
+        void postMessage(1:string blk_alias, 2:string port, 3:binary msg);
         void shutdown();
 }

@@ -65,12 +65,19 @@ PAGE_TITLE_MARKUP_TMPL = """\
 class MainWindow(gtk.Window):
     """The topmost window with menus, the tool bar, and other major windows."""
 
-    def __init__(self, platform):
+    def __init__(self, platform, action_handler_callback):
         """
         MainWindow contructor
         Setup the menu, toolbar, flowgraph editor notebook, block selection window...
         """
         self._platform = platform
+        gen_opts = platform.get_block('options').get_param('generate_options')
+        generate_mode_default = gen_opts.get_value()
+        generate_modes = [
+            (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
+            for o in gen_opts.get_options()]
+        # load preferences
+        Preferences.load(platform)
         #setup window
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         vbox = gtk.VBox()
@@ -78,8 +85,10 @@ class MainWindow(gtk.Window):
         self.add(vbox)
         #create the menu bar and toolbar
         self.add_accel_group(Actions.get_accel_group())
-        vbox.pack_start(Bars.MenuBar(), False)
-        vbox.pack_start(Bars.Toolbar(), False)
+        self.menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
+        vbox.pack_start(self.menu_bar, False)
+        self.tool_bar = Bars.Toolbar(generate_modes, action_handler_callback )
+        vbox.pack_start(self.tool_bar, False)
         vbox.pack_start(self.hpaned)
         #create the notebook
         self.notebook = gtk.Notebook()
@@ -104,7 +113,6 @@ class MainWindow(gtk.Window):
         self.reports_scrolled_window.set_size_request(-1, DEFAULT_REPORTS_WINDOW_WIDTH)
         self.flow_graph_vpaned.pack2(self.reports_scrolled_window, False) #dont allow resize
         #load preferences and show the main window
-        Preferences.load(platform)
         self.resize(*Preferences.main_window_size())
         self.flow_graph_vpaned.set_position(Preferences.reports_window_position())
         self.hpaned.set_position(Preferences.blocks_window_position())
@@ -177,7 +185,7 @@ class MainWindow(gtk.Window):
         try: #try to load from file
             if file_path: Messages.send_start_load(file_path)
             flow_graph = self._platform.get_new_flow_graph()
-            flow_graph.grc_file_path = file_path;
+            flow_graph.grc_file_path = file_path
             #print flow_graph
             page = NotebookPage(
                 self,
@@ -216,7 +224,7 @@ class MainWindow(gtk.Window):
                 break
         if self.notebook.get_n_pages(): return False
         #save state before closing
-        Preferences.files_open(open_files)
+        Preferences.set_open_files(open_files)
         Preferences.file_open(open_file)
         Preferences.main_window_size(self.get_size())
         Preferences.reports_window_position(self.flow_graph_vpaned.get_position())

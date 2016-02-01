@@ -51,6 +51,7 @@ namespace gr {
       d_offset(offset),
       d_periodicity(periodicity)
     {
+      set_tag_propagation_policy(TPP_DONT); // handle tags manually
       //printf("INITIAL: periodicity = %d, offset = %d\n", periodicity, offset);
       // some sanity checks
       assert(offset < periodicity);
@@ -79,6 +80,13 @@ namespace gr {
         if(d_offset >= ((int)d_data.size())) { // if we are in the copy region
           int max_copy = std::min(std::min(noutput_items - oo, ninput_items[0] - ii),
                                   d_periodicity - d_offset);
+          std::vector<tag_t> tags;
+          get_tags_in_range(tags, 0, nitems_read(0) + ii, nitems_read(0) + max_copy + ii);
+          for(unsigned i = 0; i < tags.size(); i++)
+          {
+            //printf("copy tag from in@%d to out@%d\n", int(tags[i].offset), int(nitems_written(0) + oo + (tags[i].offset-nitems_read(0)-ii)));
+            add_item_tag(0, nitems_written(0) + oo + (tags[i].offset-nitems_read(0)-ii), tags[i].key, tags[i].value, tags[i].srcid);
+          }
           //printf("copy %d from input\n", max_copy);
           memcpy( &out[oo], &in[ii], sizeof(@TYPE@)*max_copy );
           //printf(" * memcpy returned.\n");

@@ -35,24 +35,29 @@ namespace gr {
     tagged_decoder::make(generic_decoder::sptr my_decoder,
                          size_t input_item_size,
                          size_t output_item_size,
-                         const std::string &lengthtagname)
+                         const std::string &lengthtagname,
+                         int mtu)
     {
       return gnuradio::get_initial_sptr
         ( new tagged_decoder_impl(my_decoder, input_item_size,
-                                  output_item_size, lengthtagname));
+                                  output_item_size, lengthtagname,
+                                  mtu));
     }
 
     tagged_decoder_impl::tagged_decoder_impl(generic_decoder::sptr my_decoder,
                                              size_t input_item_size,
                                              size_t output_item_size,
-                                             const std::string &lengthtagname)
+                                             const std::string &lengthtagname,
+                                             int mtu)
       : tagged_stream_block("fec_tagged_decoder",
                             io_signature::make(1, 1, input_item_size),
                             io_signature::make(1, 1, output_item_size),
                             lengthtagname),
-        d_input_item_size(input_item_size), d_output_item_size(output_item_size)
+      d_input_item_size(input_item_size), d_output_item_size(output_item_size),
+      d_mtu(mtu)
     {
       d_decoder = my_decoder;
+      d_decoder->set_frame_size(d_mtu*8);
 
       set_relative_rate(d_decoder->rate());
     }
@@ -60,6 +65,10 @@ namespace gr {
     int
     tagged_decoder_impl::calculate_output_stream_length(const gr_vector_int &ninput_items)
     {
+      if((ninput_items[0]*d_decoder->rate()) > (d_mtu*8)) {
+        throw std::runtime_error("tagged_encoder: received frame is larger than MTU.");
+      }
+      d_decoder->set_frame_size(round(ninput_items[0]*d_decoder->rate()));
       return d_decoder->get_output_size();
     }
 
@@ -75,10 +84,6 @@ namespace gr {
     {
       const unsigned char *in = (unsigned char*)input_items[0];
       unsigned char *out = (unsigned char *)output_items[0];
-
-      d_decoder->set_frame_size(ninput_items[0]*d_decoder->rate());
-      if(noutput_items < d_decoder->get_output_size())
-        return 0;
 
       GR_LOG_DEBUG(d_debug_logger, boost::format("%1%, %2%, %3%")      \
                    % noutput_items % ninput_items[0] % d_decoder->get_output_size());

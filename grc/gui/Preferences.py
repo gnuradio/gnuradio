@@ -17,11 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import os
+import sys
 import ConfigParser
 
 
+HEADER = """\
+# This contains only GUI settings for GRC and is not meant for users to edit.
+#
+# GRC settings not accessible through the GUI are in gnuradio.conf under
+# section [grc].
+
+"""
+
 _platform = None
-_config_parser = ConfigParser.ConfigParser()
+_config_parser = ConfigParser.SafeConfigParser()
 
 
 def file_extension():
@@ -32,19 +42,41 @@ def load(platform):
     global _platform
     _platform = platform
     # create sections
-    _config_parser.add_section('main')
-    _config_parser.add_section('files_open')
+    for section in ['main', 'files_open', 'files_recent']:
+        try:
+            _config_parser.add_section(section)
+        except Exception, e:
+             print e
     try:
         _config_parser.read(_platform.get_prefs_file())
-    except:
-        pass
+    except Exception as err:
+        print >> sys.stderr, err
 
 
 def save():
     try:
-        _config_parser.write(open(_platform.get_prefs_file(), 'w'))
-    except:
-        pass
+        with open(_platform.get_prefs_file(), 'w') as fp:
+            fp.write(HEADER)
+            _config_parser.write(fp)
+    except Exception as err:
+        print >> sys.stderr, err
+
+
+def entry(key, value=None, default=None):
+    if value is not None:
+        _config_parser.set('main', key, str(value))
+        result = value
+    else:
+        _type = type(default) if default is not None else str
+        getter = {
+            bool: _config_parser.getboolean,
+            int: _config_parser.getint,
+        }.get(_type, _config_parser.get)
+        try:
+            result = getter('main', key)
+        except ConfigParser.Error:
+            result = _type() if default is None else default
+    return result
 
 
 ###########################################################################
@@ -52,69 +84,69 @@ def save():
 ###########################################################################
 
 def main_window_size(size=None):
-    if size is not None:
-        _config_parser.set('main', 'main_window_width', size[0])
-        _config_parser.set('main', 'main_window_height', size[1])
-    else:
-        try:
-            w = _config_parser.getint('main', 'main_window_width')
-            h = _config_parser.getint('main', 'main_window_height')
-        except:
-            w, h = 1, 1
-        return w, h
+    if size is None:
+        size = [None, None]
+    w = entry('main_window_width', size[0], default=1)
+    h = entry('main_window_height', size[1], default=1)
+    return w, h
 
 
 def file_open(filename=None):
-    if filename is not None:
-        _config_parser.set('main', 'file_open', filename)
-    else:
-        try:
-            return _config_parser.get('main', 'file_open')
-        except:
-            return ''
+    return entry('file_open', filename, default='')
 
 
-def files_open(files=None):
-    if files is not None:
-        _config_parser.remove_section('files_open')  # clear section
-        _config_parser.add_section('files_open')
-        for i, filename in enumerate(files):
-            _config_parser.set('files_open', 'file_open_%d' % i, filename)
+def set_file_list(key, files):
+    _config_parser.remove_section(key)  # clear section
+    _config_parser.add_section(key)
+    for i, filename in enumerate(files):
+        _config_parser.set(key, '%s_%d' % (key, i), filename)
 
-    else:
-        try:
-            files = [value for name, value in _config_parser.items('files_open')
-                     if name.startswith('file_open_')]
-        except:
-            files = []
-        return files
+
+def get_file_list(key):
+    try:
+        files = [value for name, value in _config_parser.items(key)
+                 if name.startswith('%s_' % key)]
+    except ConfigParser.Error:
+        files = []
+    return files
+
+
+def get_open_files():
+    return get_file_list('files_open')
+
+
+def set_open_files(files):
+    return set_file_list('files_open', files)
+
+
+def get_recent_files():
+    """ Gets recent files, removes any that do not exist and re-saves it """
+    files = filter(os.path.exists, get_file_list('files_recent'))
+    set_recent_files(files)
+    return files
+
+
+def set_recent_files(files):
+    return set_file_list('files_recent', files)
+
+
+def add_recent_file(file_name):
+    # double check file_name
+    if os.path.exists(file_name):
+        recent_files = get_recent_files()
+        if file_name in recent_files:
+            recent_files.remove(file_name)  # Attempt removal
+        recent_files.insert(0, file_name)  # Insert at start
+        set_recent_files(recent_files[:10])  # Keep up to 10 files
 
 
 def reports_window_position(pos=None):
-    if pos is not None:
-        _config_parser.set('main', 'reports_window_position', pos)
-    else:
-        try:
-            return _config_parser.getint('main', 'reports_window_position') or 1 #greater than 0
-        except:
-            return -1
+    return entry('reports_window_position', pos, default=-1) or 1
 
 
 def blocks_window_position(pos=None):
-    if pos is not None:
-        _config_parser.set('main', 'blocks_window_position', pos)
-    else:
-        try:
-            return _config_parser.getint('main', 'blocks_window_position') or 1 #greater than 0
-        except:
-            return -1
+    return entry('blocks_window_position', pos, default=-1) or 1
 
 
-def bool_entry(key, value=None, default=True):
-    if value is not None:
-        _config_parser.set('main', key, value)
-    else:
-        try:
-            return _config_parser.getboolean('main', key)
-        except:
-            return default
+def xterm_missing(cmd=None):
+    return entry('xterm_missing', cmd, default='INVALID_XTERM_SETTING')

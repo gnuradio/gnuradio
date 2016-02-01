@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.8rc1'?>
+<?grc format='1' created='3.7.9'?>
 <flow_graph>
   <timestamp>Mon May 19 16:19:57 2014</timestamp>
   <block>
@@ -168,7 +168,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(378, 490)</value>
+      <value>(376, 547)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -262,7 +262,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(575, 490)</value>
+      <value>(576, 547)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -344,7 +344,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(575, 570)</value>
+      <value>(576, 627)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -550,7 +550,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1034, 297)</value>
+      <value>(1024, 291)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -597,7 +597,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(950, 400)</value>
+      <value>(936, 403)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -675,7 +675,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(577, 297)</value>
+      <value>(584, 291)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -734,7 +734,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(804, 273)</value>
+      <value>(808, 283)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -793,7 +793,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(331, 376)</value>
+      <value>(328, 395)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1060,7 +1060,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(349, 296)</value>
+      <value>(344, 283)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1069,6 +1069,10 @@
     <param>
       <key>id</key>
       <value>fec_async_encoder_0</value>
+    </param>
+    <param>
+      <key>mtu</key>
+      <value>1500</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1080,7 +1084,7 @@
     </param>
     <param>
       <key>packed</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>rev_pack</key>
@@ -1115,7 +1119,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(553, 384)</value>
+      <value>(560, 387)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1292,7 +1296,7 @@
     </param>
     <param>
       <key>label1</key>
-      <value></value>
+      <value>Async Encoder</value>
     </param>
     <param>
       <key>marker1</key>
@@ -1340,7 +1344,7 @@
     </param>
     <param>
       <key>label2</key>
-      <value></value>
+      <value>Tagged Encoder</value>
     </param>
     <param>
       <key>marker2</key>

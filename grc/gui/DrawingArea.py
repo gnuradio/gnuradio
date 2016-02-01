@@ -47,6 +47,7 @@ class DrawingArea(gtk.DrawingArea):
         self.connect('motion-notify-event', self._handle_mouse_motion)
         self.connect('button-press-event', self._handle_mouse_button_press)
         self.connect('button-release-event', self._handle_mouse_button_release)
+        self.connect('scroll-event', self._handle_mouse_scroll)
         self.add_events(
             gtk.gdk.BUTTON_PRESS_MASK | \
             gtk.gdk.POINTER_MOTION_MASK | \
@@ -82,6 +83,13 @@ class DrawingArea(gtk.DrawingArea):
         Handle a drag and drop by adding a block at the given coordinate.
         """
         self._flow_graph.add_new_block(selection_data.data, (x, y))
+
+    def _handle_mouse_scroll(self, widget, event):
+        if event.state & gtk.gdk.SHIFT_MASK:
+           if event.direction == gtk.gdk.SCROLL_UP:
+               event.direction = gtk.gdk.SCROLL_LEFT
+           else:
+               event.direction = gtk.gdk.SCROLL_RIGHT
 
     def _handle_mouse_button_press(self, widget, event):
         """

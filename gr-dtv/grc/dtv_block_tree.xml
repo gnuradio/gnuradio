@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
- Copyright 2014,2015 Free Software Foundation, Inc.
+ Copyright 2014,2015,2016 Free Software Foundation, Inc.
 
  This file is part of GNU Radio
 
@@ -85,6 +85,22 @@
       <block>dtv_dvbt_symbol_inner_interleaver</block>
       <block>dtv_dvbt_map</block>
       <block>dtv_dvbt_reference_signals</block>
+      <block>dtv_dvbt_ofdm_sym_acquisition</block>
+      <block>dtv_dvbt_demod_reference_signals</block>
+      <block>dtv_dvbt_demap</block>
+      <block>dtv_dvbt_bit_inner_deinterleaver</block>
+      <block>dtv_dvbt_viterbi_decoder</block>
+      <block>dtv_dvbt_convolutional_deinterleaver</block>
+      <block>dtv_dvbt_reed_solomon_dec</block>
+      <block>dtv_dvbt_energy_descramble</block>
+    </cat>
+    <cat>
+      <name>ITU-T J.83B</name>
+      <block>dtv_catv_transport_framing_enc_bb</block>
+      <block>dtv_catv_reed_solomon_enc_bb</block>
+      <block>dtv_catv_randomizer_bb</block>
+      <block>dtv_catv_frame_sync_enc_bb</block>
+      <block>dtv_catv_trellis_enc_bb</block>
     </cat>
   </cat>
 </cat>

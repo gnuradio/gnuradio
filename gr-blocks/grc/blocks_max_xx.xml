@@ -9,7 +9,7 @@
 	<name>Max</name>
 	<key>blocks_max_xx</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.max_$(type.fcn)($vlen)</make>
+	<make>blocks.max_$(type.fcn)($vlen,$vlen_out)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
@@ -37,8 +37,14 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>Vec Length</name>
+		<name>Input Vec Length</name>
 		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Output Vec Length</name>
+		<key>vlen_out</key>
 		<value>1</value>
 		<type>int</type>
 	</param>
@@ -53,6 +59,6 @@
 	<source>
 		<name>out</name>
 		<type>$type</type>
-		<vlen>1</vlen>
+		<vlen>$vlen_out</vlen>
 	</source>
 </block>

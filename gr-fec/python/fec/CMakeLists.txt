@@ -39,6 +39,8 @@ GR_PYTHON_INSTALL(
     COMPONENT "fec_python"
 )
 
+add_subdirectory(polar)
+
 ########################################################################
 # Handle the unit tests
 ########################################################################
@@ -55,8 +57,18 @@ list(APPEND GR_TEST_TARGET_DEPS gnuradio-fec)
 
 include(GrTest)
 file(GLOB py_qa_test_files "qa_*.py")
+
+# Without GSL, we don't build some of the LDPC work, so we can't test
+# it here.
+if(NOT GSL_FOUND)
+  list(REMOVE_ITEM py_qa_test_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fecapi_ldpc.py
+    )
+endif(NOT GSL_FOUND)
+
 foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
     GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
 endforeach(py_qa_test_file)
+
 endif(ENABLE_TESTING)

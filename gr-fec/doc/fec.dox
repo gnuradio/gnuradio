@@ -1,6 +1,6 @@
 /*! \page page_fec Forward Error Correction
 
-\section fec_introductionIntroduction
+\section fec_introduction Introduction
 
 This is the gr-fec package. It contains all of the forward error
 correction (FEC) blocks, utilities, and examples. To use the FEC
@@ -227,41 +227,71 @@ fec/fecapi_async_encoders.grc and fec/fecapi_async_decoders.grc.
 
 GNU Radio currently has a minor subset of coders available:
 
+
 Coders:
 
 \li gr::fec::code::dummy_encoder
 \li gr::fec::code::repetition_encoder
 \li gr::fec::code::cc_encoder
 \li gr::fec::code::ccsds_encoder
+\li gr::fec::code::polar_encoder
+\li gr::fec::code::ldpc_par_mtrx_encoder
+\li gr::fec::code::ldpc_gen_mtrx_encoder
 
 Decoders:
 \li gr::fec::code::dummy_decoder
 \li gr::fec::code::repetition_decoder
 \li gr::fec::code::cc_decoder
+\li gr::fec::code::polar_decoder_sc
+\li gr::fec::code::polar_decoder_sc_list
+\li gr::fec::ldpc_decoder
+\li gr::fec::code::ldpc_bit_flip_decoder
 
 
-When building a new FECAPI encoder or decoder variable, the dummy
-encoder/decoder block would be a good place to start. This coding set
-does no processing on the data. For the encoder, each bit is simply
-passed through directly. For the dummy decoder, the input data are
-floats, so -1's become 0 and 1's stay as 1, but nothing else is done
-to the data. Mainly, these blocks are used for references and to make
-it easy to compare implementations with and without codes by easily
-dropping in these objects instead of restructuring the entire
-flowgraph. The ber_curve_gen.grc example file uses the dummy codes to
-show the curve to compare against the actual codes.
+\subsubsection fec_dummy Dummy Encoder/Decoder
+
+When building a new FECAPI encoder or decoder variable, the
+gr::fec::code::dummy_encoder / gr::fec::code::dummy_decoder blocks are a good
+place to start. This coding set does no processing on the data. For
+the encoder, each bit is simply passed through directly. For the dummy
+decoder, the input data are floats, so -1's become 0 and 1's stay as
+1, but nothing else is done to the data. Mainly, these blocks are used
+for references and to make it easy to compare implementations with and
+without codes by easily dropping in these objects instead of
+restructuring the entire flowgraph. The ber_curve_gen.grc example file
+uses the dummy codes to show the curve to compare against the actual
+codes.
+
+
+\subsubsection fec_repetition Repetition Encoder/Decoder
+
+The simplest example of FEC is the repetition code in
+gr::fec::code::repetition_encoder and
+gr::fec::code::repetition_decoder. The basic idea is to repeat the
+information several times so that even if parts of the received
+message are corrupted, the majority of the data is received correctly
+and the original message can be discerned. The repetition decoder is
+not particularly sophisticated and other coders offer better
+performance, but it is useful for comparison.
+
+
+\subsubsection fec_cc Convolutional Encoder/Decoder
 
 Although mentioned in the convolutional coder and decoder classes, it
-is worth another mention. The cc_encoder is a generic convolutional
-encoder that can take any value of K, rate, and polynomials to encode
-a data stream. However, the cc_decoder is not as general, even though
-it is technically parameterized as such. The cc_decoder block
+is worth another mention. The gr::fec::code::cc_encoder is a generic
+convolutional encoder that can take any value of K, rate, and
+polynomials to encode a data stream. However, the
+gr::fec::code::cc_decoder is not as general, even though it is
+technically parameterized as such. The gr::fec::code::cc_decoder block
 currently <i>only</i> uses K=7, rate=2, and two polynomials (because
 the rate is two). We can, in fact, alter the polynomials, but a
 default of [109, 79] is typically. Eventually, we will make this block
 more generic for different rates and constraint lengths and take this
 particular code implementation as the set CCSDS decoder, much like we
-have the ccsds_encoder class.
+have the gr::fec::code::ccsds_encoder class.
+
+
+
 
 
 \subsection fec_parallelism Parallelism
@@ -319,6 +349,7 @@ parallelism discussed above with the <b>None</b>, <b>Ordinary</b>, and
 <b>Capillary</b> models of threading.
 
 
+
 \section fec_api The API of the FECAPI
 
 The FECAPI defined by the parent generic_encoder and generic_decoder
@@ -360,6 +391,7 @@ going into an encoder and the number of bits coming out of a decoder.
 \section fec_examples FEC Examples
 
 \li ber_curve_gen.grc
+\li ber_curve_gen_ldpc.grc
 \li ber_test.grc
 \li fecapi_decoders.grc
 \li fecapi_encoders.grc
@@ -368,5 +400,228 @@ going into an encoder and the number of bits coming out of a decoder.
 \li fecapi_async_decoders.grc
 \li fecapi_async_encoders.grc
 \li fecapi_async_to_stream.grc
+
+
+
+\section fec_ldpc LDPC Codes
+
+GNU Radio supports a few different ways of handling LDPC codes. There
+are many types of encoders and decoders available, and defining the
+code can come in many different flavors. GNU Radio has two encoders
+and two decoders.
+
+\subsection fec_alist Describing the alist Files
+
+We use an alist file format for storing the matrices in files. The
+alist format looks like:
+
+\verbatim
+ncolumns nrows
+max_col_weight max_row_weight
+list_col_weights
+list_row_weights
+column_1_indices
+row_1_indices
+\endverbatim
+
+The ncolumns is the number of column in the matrix and nrows is the
+number of rows, so this would define a (nrows x ncolumns) matrix. The
+column and row weights are how many 1's are in each column or row,
+respectively. The alist format tracks the maximum weight for all
+columns and all rows as well as lists all of the weights for each
+column one one line and each row on another. Then, the alist format
+lists the indices of all 1's in the columns followed by a list of the
+indices of all 1's in the rows. The matrix can be constructed using
+either the column or row indices lists, and a check would be to make
+sure they create the same matrix. Because LDPC deals with sparse
+matrices, the weights should be small relative to the number of
+columns/rows. All of the indices are 1 based, not 0.
+
+And example is the simple_g_matrix.alist file that comes with GNU
+Radio as a sample generator matrix. The generator matrix is in the
+form [I | P] where I is the (k x k) identity matrix and P is a (k x
+(n-k)) matrix representing the parity information. Together, G is a
+(k x n) matrix. The alist file looks like:
+
+\verbatim
+8 4
+3 4
+1 1 1 1 3 3 3 3
+4 4 4 4
+1
+2
+3
+4
+2 3 4
+1 3 4
+1 2 4
+1 2 3
+1 6 7 8
+2 5 7 8
+3 5 6 8
+4 5 6 7
+\endverbatim
+
+So it has 8 columns and 4 rows. The maximum number of 1's in any
+column is 3 and the maximum number of 1's in any row is 4. The next
+two lines are the weights for each column and each row. Then we have 8
+lines that are the indices of the 1's in the columns followed by
+4 lines that are the indices of the 1's in the rows. Note that the
+number of items in any of these rows matches up with the numbers in
+the column and matrix weight lists. Let's use the either the column or
+rows to construct the matrix.
+
+\verbatim
+1 0 0 0 0 1 1 1
+0 1 0 0 1 0 1 1
+0 0 1 0 1 1 0 1
+0 0 0 1 1 1 1 0
+\endverbatim
+
+Now go back and do it with the other set of of indices to
+verify. We can also count up the 1's along the columns and rows to
+verify the top few lines for even more check.
+
+Some info on the alist files online can be found here:
+
+\li http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+\li http://www.inference.phy.cam.ac.uk/mackay/codes/
+
+
+
+
+\subsection fec_ldpc_encoders LDPC Encoders
+
+There are two LDPC encoder variables but a few ways to set them up. They are:
+
+\li gr::fec::code::ldpc_par_mtrx_encoder
+\li gr::fec::code::ldpc_gen_mtrx_encoder
+
+Both encoders take in a matrix, but there are two different forms of
+the matrix that they work with. The gr::fec::code::ldpc_par_mtrx_encoder takes a
+parity check matrix, H, which is in upper triangular form. The
+gr::fec::code::ldpc_gen_mtrx_encoder takes in a generator matrix, G.
+
+A third coder exsits, gr::fec::ldpc_encoder, but this is deprecated
+and should not be used. It's functionally equivalent to
+gr::fec::code::ldpc_par_mtrx_encoder and still exists for
+compatibility reasons.
+
+There are two constructors for
+gr::fec::code::ldpc_par_mtrx_encoder. The first one, 'make', takes in
+an alist file that represents the parity matrix in the alist format
+described above. The 'make_H' function makes an LDPC encoder using a
+prebuilt gr::fec::code::ldpc_H_matrix object. When using the alist
+file, we also need to tell it the gap size in the matrix, which is not
+represented in the alist file format, but it should be known or part
+of the file name itself.
+
+The format of the parity check matrix, H, in upper triangular form is
+described as:
+
+\verbatim
+[ T A B ]
+[ E C D ]
+
+T: (n - k - g) x (n - k - g)
+A: (n - k - g) x g
+B: (n - k - g) x k
+E: g x (n - k - g)
+C: g x g
+D: g x k
+\endverbatim
+
+Where n is the size of the codeword, k is the size of the information
+word, and g is the size of the gap. See "Open-source Forward Error
+Correction using GNU Radio" for more description about this matrix:
+
+\li http://arc.aiaa.org/doi/abs/10.2514/6.2015-4655
+
+
+The other encoder is gr::fec::code::ldpc_gen_mtrx_encoder. This takes
+a generator matrix in systematic form G=[I P] which is (k x n). The
+codeword x is generated from the information word s via simple matrix
+multiplication: \f$ x=G^T s \f$.
+
+Unlike the encoder using the H matrix, the
+gr::fec::code::ldpc_gen_mtrx_encoder only has a single make function
+that takes in a prebuilt generator matrix object from the class
+gr::fec::code::ldpc_G_matrix.
+
+In GRC, we have a handful of blocks for manipulating the LDPC encoders
+and matrices:
+
+\li LDPC Encoder Definition: creates a
+gr::fec::code::ldpc_par_mtrx_encoder FEC variable using a provided
+alist file and specified matrix gap.
+\li LDPC Encoder Definition (via Parity Check): receives a prebuilt H
+matrix from the "LDPC Parity Check Matrix".
+\li LDPC Encoder Definition (via Generator): receives a prebuilt G
+matrix from the "LDPC Generator Matrix".
+\li LDPC Parity Check Matrix: constructs a parity check matrix, H,
+from a given alist file and matrix gap.
+\li LDPC Generator Matrix: constructs a generator matrix, G, from a
+given alist file.
+
+The gr::fec::code::ldpc_par_mtrx_encoder uses a reduced complexity
+algorithm. Compared to the gr::fec::code::ldpc_gen_mtrx_encoder, this
+requires orders of magnitude fewer operations at each encoding
+step. This is accomplished by completing a significant amount of the
+complex matrix manipulation (including inverse, multiplication, and
+Gaussian elimination operations) during preprocessing. The
+disadvantage of this encoder is that it requires a specially formatted
+matrix. There are some Python tools available from GNU Radio to format
+a standard parity check matrix appropriately for this encoder, as well
+as a small library of encoding-ready matrices for use.
+
+NOTE: we need to document these tools better.
+
+For uses of these codes, see the FEC examples:
+
+\li fecapi_ldpc_encoders.grc
+\li fecapi_tagged_ldpc_encoders.grc
+\li fecapi_async_ldpc_encoders.grc
+
+Prebuilt alist files are also distributed and installed with GNU
+Radio. They can be found in $prefix/share/gnuradio/fec/ldpc. The files
+generally represent the H matrix and are specified with the number of
+rows and columns (n and k) and gap of the matrix. The files named
+"gen_matrix" or similar are the generator, G, matrices.
+
+
+
+\subsection fec_ldpc_decoder LDPC Decoders
+
+The simplest LDPC decoder is probably the
+gr::fec::code::ldpc_bit_flip_decoder, a hard decision decoding
+scheme. The decoder seeks to find the codeword that was most likely
+sent, which must satisfy Hx'= 0.  If the received codeword does not
+satisfy this parity check, then the decoder computes the parity checks
+on all of the bits. The bit(s) associated with the most failed parity
+checks are flipped. The process repeats until a valid codeword is
+found, or a maximum number of iterations is reached, whichever comes
+first.
+
+The gr::fec::ldpc_decoder is a soft-decision decoder that uses belief
+propagation (also known as message passing). Designed for a memoryless
+AWGN channel, it assumes a noise variance entered in as 'Sigma' in the
+block. This is a suboptimal, yet efficient method of decoding LDPC
+codes.
+
+In GRC, we have the following blocks for doing LDPC decoding:
+
+\li LDPC Decoder Definition: constructs a gr::fec::ldpc_decoder
+variable given the alist file name of the H matrix.
+\li LDPC Bit Flip Decoder Definition: constructs a
+gr::fec::code::ldpc_bit_flip_decoder. This does not take in an alist file
+name but instead a predefined matrix object. This decoder is useful in
+that it can take either an H or a G matrix constructed by either the
+"LDPC Parity Check Matrix" or "LDPC Generator Matrix," respectively.
+
+For uses of these codes, see the FEC examples:
+
+\li fecapi_ldpc_decoders.grc
+\li fecapi_tagged_ldpc_decoders.grc
+\li fecapi_async_ldpc_decoders.grc
 
 */

@@ -183,6 +183,13 @@ TimeRasterDisplayForm::customEvent( QEvent * e)
   if(e->type() == TimeRasterUpdateEvent::Type()) {
     newData(e);
   }
+  else if(e->type() == TimeRasterSetSize::Type()) {
+    double r = ((TimeRasterSetSize*)e)->nRows();
+    double c = ((TimeRasterSetSize*)e)->nCols();
+    getPlot()->setNumRows(r);
+    getPlot()->setNumCols(c);
+    getPlot()->replot();
+  }
 }
 
 void

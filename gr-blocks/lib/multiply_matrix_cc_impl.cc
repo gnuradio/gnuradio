@@ -106,7 +106,7 @@ namespace gr {
         );
 
         for (size_t out_idx = 0; out_idx < noutput_ports; out_idx++) {
-          if (d_A[out_idx][in_idx] == 0) {
+          if (d_A[out_idx][in_idx] == std::complex<float>(0, 0)) {
             continue;
           }
           for (size_t i = 0; i < tags.size(); i++) {
@@ -141,7 +141,7 @@ namespace gr {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong type).");
           return;
       }
-      if (!pmt::length(A) == d_A.size()) {
+      if (pmt::length(A) != d_A.size()) {
           GR_LOG_ALERT(d_logger, "Invalid message to set A (wrong size).");
           return;
       }

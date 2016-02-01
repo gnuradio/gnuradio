@@ -52,7 +52,10 @@ namespace gr {
       d_sampling_freq(sampling_freq), d_waveform(waveform),
       d_frequency(frequency), d_ampl(ampl), d_offset(offset)
     {
-      d_nco.set_freq(2 * M_PI * d_frequency / d_sampling_freq);
+      set_frequency(frequency);
+      
+      message_port_register_in(pmt::mp("freq"));
+      set_msg_handler(pmt::mp("freq"), boost::bind(&@IMPL_NAME@::set_frequency_msg, this, _1));
     }
 
     @IMPL_NAME@::~@IMPL_NAME@()

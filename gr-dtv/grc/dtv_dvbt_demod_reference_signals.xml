@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Demod Reference Signals
+###################################################
+ -->
+<block>
+  <name>Demod Reference Signals</name>
+  <key>dtv_dvbt_demod_reference_signals</key>
+  <import>from gnuradio import dtv</import>
+  <make>dtv.dvbt_demod_reference_signals($type.size, $transmission_mode.fft_length, $transmission_mode.payload_length, $constellation.val, $hierarchy.val, $code_rate_hp.val, $code_rate_lp.val, $guard_interval.val, $transmission_mode.val, $include_cell_id.val, $cell_id)</make>
+  <param>
+    <name>IO Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>size:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>size:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>size:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+  </param>
+  <param>
+    <name>Constellation Type</name>
+    <key>constellation</key>
+    <type>enum</type>
+    <option>
+      <name>QPSK</name>
+      <key>qpsk</key>
+      <opt>val:dtv.MOD_QPSK</opt>
+    </option>
+    <option>
+      <name>16QAM</name>
+      <key>16qam</key>
+      <opt>val:dtv.MOD_16QAM</opt>
+    </option>
+    <option>
+      <name>64QAM</name>
+      <key>64qam</key>
+      <opt>val:dtv.MOD_64QAM</opt>
+    </option>
+  </param>
+  <param>
+    <name>Hierarchy Type</name>
+    <key>hierarchy</key>
+    <type>enum</type>
+    <option>
+      <name>Non Hierarchical</name>
+      <key>nh</key>
+      <opt>val:dtv.NH</opt>
+    </option>
+    <option>
+      <name>Alpha 1</name>
+      <key>alpha1</key>
+      <opt>val:dtv.ALPHA1</opt>
+    </option>
+    <option>
+      <name>Alpha 2</name>
+      <key>alpha2</key>
+      <opt>val:dtv.ALPHA2</opt>
+    </option>
+    <option>
+      <name>Alpha 4</name>
+      <key>alpha4</key>
+      <opt>val:dtv.ALPHA4</opt>
+    </option>
+  </param>
+  <param>
+    <name>Code rate HP</name>
+    <key>code_rate_hp</key>
+    <type>enum</type>
+    <option>
+      <name>1/2</name>
+      <key>C1_2</key>
+      <opt>val:dtv.C1_2</opt>
+    </option>
+    <option>
+      <name>2/3</name>
+      <key>C2_3</key>
+      <opt>val:dtv.C2_3</opt>
+    </option>
+    <option>
+      <name>3/4</name>
+      <key>C3_4</key>
+      <opt>val:dtv.C3_4</opt>
+    </option>
+    <option>
+      <name>5/6</name>
+      <key>C5_6</key>
+      <opt>val:dtv.C5_6</opt>
+    </option>
+    <option>
+      <name>7/8</name>
+      <key>C7_8</key>
+      <opt>val:dtv.C7_8</opt>
+    </option>
+  </param>
+  <param>
+    <name>Code rate LP</name>
+    <key>code_rate_lp</key>
+    <type>enum</type>
+    <option>
+      <name>1/2</name>
+      <key>C1_2</key>
+      <opt>val:dtv.C1_2</opt>
+    </option>
+    <option>
+      <name>2/3</name>
+      <key>C2_3</key>
+      <opt>val:dtv.C2_3</opt>
+    </option>
+    <option>
+      <name>3/4</name>
+      <key>C3_4</key>
+      <opt>val:dtv.C3_4</opt>
+    </option>
+    <option>
+      <name>5/6</name>
+      <key>C5_6</key>
+      <opt>val:dtv.C5_6</opt>
+    </option>
+    <option>
+      <name>7/8</name>
+      <key>C7_8</key>
+      <opt>val:dtv.C7_8</opt>
+    </option>
+  </param>
+  <param>
+    <name>Guard Interval</name>
+    <key>guard_interval</key>
+    <type>enum</type>
+    <option>
+      <name>1/32</name>
+      <key>GI_1_32</key>
+      <opt>val:dtv.GI_1_32</opt>
+    </option>
+    <option>
+      <name>1/16</name>
+      <key>GI_1_16</key>
+      <opt>val:dtv.GI_1_16</opt>
+    </option>
+    <option>
+      <name>1/8</name>
+      <key>GI_1_8</key>
+      <opt>val:dtv.GI_1_8</opt>
+    </option>
+    <option>
+      <name>1/4</name>
+      <key>GI_1_4</key>
+      <opt>val:dtv.GI_1_4</opt>
+    </option>
+  </param>
+  <param>
+    <name>Transmission Mode</name>
+    <key>transmission_mode</key>
+    <type>enum</type>
+    <option>
+      <name>2K</name>
+      <key>T2k</key>
+      <opt>val:dtv.T2k</opt>
+      <opt>fft_length:2048</opt>
+      <opt>payload_length:1512</opt>
+    </option>
+    <option>
+      <name>8K</name>
+      <key>T8k</key>
+      <opt>val:dtv.T8k</opt>
+      <opt>fft_length:8192</opt>
+      <opt>payload_length:6048</opt>
+    </option>
+  </param>
+  <param>
+    <name>Include Cell ID</name>
+    <key>include_cell_id</key>
+    <type>enum</type>
+      <option>
+        <name>Yes</name>
+        <key>call_id_yes</key>
+        <opt>val:1</opt>
+      </option>
+      <option>
+        <name>No</name>
+        <key>cell_id_no</key>
+        <opt>val:0</opt>
+      </option>
+  </param>
+  <param>
+    <name>Cell Id</name>
+    <key>cell_id</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+    <vlen>$transmission_mode.fft_length</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <vlen>$transmission_mode.payload_length</vlen>
+  </source>
+</block>

@@ -149,17 +149,15 @@ class Block(Element):
         # indistinguishable from normal GR blocks. Make explicit
         # checks for them here since they have no work function or
         # buffers to manage.
-        is_not_virtual_or_pad = ((self._key != "virtual_source") \
-                                     and (self._key != "virtual_sink") \
-                                     and (self._key != "pad_source") \
-                                     and (self._key != "pad_sink"))
+        is_virtual_or_pad = self._key in (
+            "virtual_source", "virtual_sink", "pad_source", "pad_sink")
         is_variable = self._key.startswith('variable')
 
         # Disable blocks that are virtual/pads or variables
-        if not is_not_virtual_or_pad or is_variable:
+        if is_virtual_or_pad or is_variable:
             self._flags += BLOCK_FLAG_DISABLE_BYPASS
 
-        if is_not_virtual_or_pad and not is_variable:
+        if not (is_virtual_or_pad or is_variable or self._key == 'options'):
             self.get_params().append(self.get_parent().get_parent().Param(
                 block=self,
                 n=odict({'name': 'Block Alias',
@@ -170,7 +168,7 @@ class Block(Element):
                      })
             ))
 
-        if (len(sources) or len(sinks)) and is_not_virtual_or_pad:
+        if (len(sources) or len(sinks)) and not is_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
                     n=odict({'name': 'Core Affinity',
@@ -180,7 +178,7 @@ class Block(Element):
                              'tab': ADVANCED_PARAM_TAB
                              })
                     ))
-        if len(sources) and is_not_virtual_or_pad:
+        if len(sources) and not is_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
                     n=odict({'name': 'Min Output Buffer',
@@ -206,7 +204,7 @@ class Block(Element):
                 block=self,
                 n=odict({'name': 'Comment',
                          'key': 'comment',
-                         'type': 'multiline',
+                         'type': '_multiline',
                          'hide': 'part',
                          'value': '',
                          'tab': ADVANCED_PARAM_TAB

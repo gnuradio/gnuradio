@@ -17,14 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import Utils
-from Element import Element
-from . Constants import PARAM_FONT
+import os
+
 import pygtk
 pygtk.require('2.0')
 import gtk
-import Colors
-import os
+
+from . import Colors, Utils, Constants, Dialogs
+from . Element import Element
 
 
 class InputParam(gtk.HBox):
@@ -44,8 +44,15 @@ class InputParam(gtk.HBox):
         self._have_pending_changes = False
         #connect events
         self.connect('show', self._update_gui)
-    def set_color(self, color): pass
-    def set_tooltip_text(self, text): pass
+
+    def set_color(self, color):
+        pass
+
+    def set_tooltip_text(self, text):
+        pass
+
+    def get_text(self):
+        raise NotImplementedError()
 
     def _update_gui(self, *args):
         """
@@ -115,10 +122,14 @@ class EntryParam(InputParam):
         self._input.connect('focus-out-event', self._apply_change)
         self._input.connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, True)
-    def get_text(self): return self._input.get_text()
+
+    def get_text(self):
+        return self._input.get_text()
+
     def set_color(self, color):
         self._input.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
         self._input.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+
     def set_tooltip_text(self, text):
         try:
             self._input.set_tooltip_text(text)
@@ -147,8 +158,9 @@ class MultiLineEntryParam(InputParam):
         self.pack_start(self._sw, True)
 
     def get_text(self):
-        return self._buffer.get_text(self._buffer.get_start_iter(),
-                                     self._buffer.get_end_iter()).strip()
+        buf = self._buffer
+        return buf.get_text(buf.get_start_iter(),
+                            buf.get_end_iter()).strip()
 
     def set_color(self, color):
         self._view.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
@@ -159,6 +171,68 @@ class MultiLineEntryParam(InputParam):
             self._view.set_tooltip_text(text)
         except AttributeError:
             pass  # no tooltips for old GTK
+
+
+# try:
+#     import gtksourceview
+#     lang_manager = gtksourceview.SourceLanguagesManager()
+#     py_lang = lang_manager.get_language_from_mime_type('text/x-python')
+#
+#     class PythonEditorParam(InputParam):
+#         expand = True
+#
+#         def __init__(self, *args, **kwargs):
+#             InputParam.__init__(self, *args, **kwargs)
+#
+#             buf = self._buffer = gtksourceview.SourceBuffer()
+#             buf.set_language(py_lang)
+#             buf.set_highlight(True)
+#             buf.set_text(self.param.get_value())
+#             buf.connect('changed', self._mark_changed)
+#
+#             view = self._view = gtksourceview.SourceView(self._buffer)
+#             view.connect('focus-out-event', self._apply_change)
+#             view.connect('key-press-event', self._handle_key_press)
+#             view.set_tabs_width(4)
+#             view.set_insert_spaces_instead_of_tabs(True)
+#             view.set_auto_indent(True)
+#             view.set_border_width(2)
+#
+#             scroll = gtk.ScrolledWindow()
+#             scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+#             scroll.add_with_viewport(view)
+#             self.pack_start(scroll, True)
+#
+#         def get_text(self):
+#             buf = self._buffer
+#             return buf.get_text(buf.get_start_iter(),
+#                                 buf.get_end_iter()).strip()
+#
+# except ImportError:
+#     print "Package 'gtksourceview' not found. No Syntax highlighting."
+#     PythonEditorParam = MultiLineEntryParam
+
+class PythonEditorParam(InputParam):
+
+    def __init__(self, *args, **kwargs):
+        InputParam.__init__(self, *args, **kwargs)
+        button = self._button = gtk.Button('Open in Editor')
+        button.connect('clicked', self.open_editor)
+        self.pack_start(button, True)
+
+    def open_editor(self, widget=None):
+        flowgraph = self.param.get_parent().get_parent()
+        flowgraph.install_external_editor(self.param)
+
+    def get_text(self):
+        pass  # we never update the value from here
+
+    def set_color(self, color):
+        # self._button.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+        self._button.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+
+    def _apply_change(self, *args):
+        pass
 
 
 class EnumParam(InputParam):
@@ -172,7 +246,10 @@ class EnumParam(InputParam):
         self._input.connect('changed', self._editing_callback)
         self._input.connect('changed', self._apply_change)
         self.pack_start(self._input, False)
-    def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
+
+    def get_text(self):
+        return self.param.get_option_keys()[self._input.get_active()]
+
     def set_tooltip_text(self, text):
         try:
             self._input.set_tooltip_text(text)
@@ -196,9 +273,11 @@ class EnumEntryParam(InputParam):
         self._input.get_child().connect('focus-out-event', self._apply_change)
         self._input.get_child().connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, False)
+
     def get_text(self):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
         return self.param.get_option_keys()[self._input.get_active()]
+
     def set_tooltip_text(self, text):
         try:
             if self._input.get_active() == -1: #custom entry
@@ -207,6 +286,7 @@ class EnumEntryParam(InputParam):
                 self._input.set_tooltip_text(text)
         except AttributeError:
             pass  # no tooltips for old GTK
+
     def set_color(self, color):
         if self._input.get_active() == -1: #custom entry, use color
             self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
@@ -233,7 +313,14 @@ class FileParam(EntryParam):
         #get the paths
         file_path = self.param.is_valid() and self.param.get_evaluated() or ''
         (dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
-        if not os.path.exists(dirname): dirname = os.getcwd() #fix bad paths
+        # check for qss theme default directory
+        if self.param.get_key() == 'qt_qss_theme':
+            dirname = os.path.dirname(dirname)  # trim filename
+            if not os.path.exists(dirname):
+               dirname = os.path.join(Constants.GR_PREFIX, '/share/gnuradio/themes')
+        if not os.path.exists(dirname):
+            dirname = os.getcwd()  # fix bad paths
+
         #build the dialog
         if self.param.get_type() == 'file_open':
             file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
@@ -243,6 +330,8 @@ class FileParam(EntryParam):
                 gtk.FILE_CHOOSER_ACTION_SAVE, ('gtk-cancel',gtk.RESPONSE_CANCEL, 'gtk-save',gtk.RESPONSE_OK))
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename) #show the current filename
+        else:
+            raise ValueError("Can't open file chooser dialog for type " + repr(self.param.get_type()))
         file_dialog.set_current_folder(dirname) #current directory
         file_dialog.set_select_multiple(False)
         file_dialog.set_local_only(True)
@@ -256,7 +345,7 @@ class FileParam(EntryParam):
 
 PARAM_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param))</span>"""
+<span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param).replace('\\n',' '))</span>"""
 
 PARAM_LABEL_MARKUP_TMPL="""\
 #set $foreground = $modified and 'blue' or $param.is_valid() and 'black' or 'red'
@@ -292,7 +381,8 @@ Error:
 class Param(Element):
     """The graphical parameter."""
 
-    def __init__(self): Element.__init__(self)
+    def __init__(self):
+        Element.__init__(self)
 
     def get_input(self, *args, **kwargs):
         """
@@ -313,8 +403,11 @@ class Param(Element):
         elif self.get_options():
             input_widget = EnumEntryParam(self, *args, **kwargs)
 
-        elif self.get_type() == 'multiline':
+        elif self.get_type() == '_multiline':
             input_widget = MultiLineEntryParam(self, *args, **kwargs)
+
+        elif self.get_type() == '_multiline_python_external':
+            input_widget = PythonEditorParam(self, *args, **kwargs)
 
         else:
             input_widget = EntryParam(self, *args, **kwargs)
@@ -328,4 +421,5 @@ class Param(Element):
         Returns:
             a pango markup string
         """
-        return Utils.parse_template(PARAM_MARKUP_TMPL, param=self, font=PARAM_FONT)
+        return Utils.parse_template(PARAM_MARKUP_TMPL,
+                                    param=self, font=Constants.PARAM_FONT)

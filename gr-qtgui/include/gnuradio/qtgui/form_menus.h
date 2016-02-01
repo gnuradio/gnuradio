@@ -1000,15 +1000,15 @@ public:
   ~NPointsMenu()
   {}
 
+signals:
+  void whichTrigger(const int npts);
+
+public slots:
   void setDiagText(const int npts)
   {
     d_text->setText(QString().setNum(npts));
   }
 
-signals:
-  void whichTrigger(const int npts);
-
-public slots:
   void getTextDiag()
   {
     d_diag->show();

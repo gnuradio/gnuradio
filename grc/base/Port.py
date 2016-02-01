@@ -63,8 +63,10 @@ class Port(Element):
         type_ = self.get_type()
         if self._domain == GR_STREAM_DOMAIN and type_ == "message":
             self._domain = GR_MESSAGE_DOMAIN
+            self._key = self._name
         if self._domain == GR_MESSAGE_DOMAIN and type_ != "message":
             self._domain = GR_STREAM_DOMAIN
+            self._key = '0'  # is rectified in rewrite()
 
     def __str__(self):
         if self.is_source():

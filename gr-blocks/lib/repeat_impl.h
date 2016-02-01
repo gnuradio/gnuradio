@@ -36,9 +36,15 @@ namespace gr {
     public:
       repeat_impl(size_t itemsize, int d_interp);
 
+      int interpolation() const { return d_interp; }
+      void set_interpolation(int interp);
+
+
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
+    private:
+      void msg_set_interpolation(pmt::pmt_t msg);
     };
 
   } /* namespace blocks */

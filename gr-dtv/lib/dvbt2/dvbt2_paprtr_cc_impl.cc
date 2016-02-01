@@ -675,7 +675,7 @@ namespace gr {
       const gr_complex zero (0.0, 0.0);
       const float normalization = 1.0 / N_TR;
       const int L_FC = (N_FC != 0);
-      const float center = (C_PS - 1) / 2;
+      const int center = (C_PS - 1) / 2;
       const float aMax = 5.0 * N_TR * std::sqrt(10.0 / (27.0 * C_PS));
       gr_complex *dst;
       int m = 0, index, valid;

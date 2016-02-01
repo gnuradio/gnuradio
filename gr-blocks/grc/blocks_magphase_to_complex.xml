@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Magnitue and Phase to Complex:
+##	Two input streams
+###################################################
+ -->
+<block>
+	<name>Magnitude and Phase To Complex</name>
+	<key>blocks_magphase_to_complex</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.magphase_to_complex($vlen)</make>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>mag</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<sink>
+		<name>phase</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+		<optional>1</optional>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

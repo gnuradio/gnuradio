@@ -205,6 +205,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(int nplots,
   d_cols = cols;
   d_rows = rows;
   d_numPoints = d_cols;
+  d_color_bar_title_font_size = 18;
 
   setAxisScaleDraw(QwtPlot::xBottom, new QwtXScaleDraw());
   setAxisScaleDraw(QwtPlot::yLeft, new QwtYScaleDraw());
@@ -456,7 +457,9 @@ TimeRasterDisplayPlot::replot()
     ((TimeRasterZoomer*)d_zoomer)->updateTrackerText();
   }
 
-  QwtPlot::replot();
+  if(!d_stop) {
+    QwtPlot::replot();
+  }
 }
 
 int
@@ -472,6 +475,18 @@ int
 TimeRasterDisplayPlot::getIntensityColorMapType1() const
 {
   return getIntensityColorMapType(0);
+}
+
+int
+TimeRasterDisplayPlot::getColorMapTitleFontSize() const
+{
+  return d_color_bar_title_font_size;
+}
+
+void
+TimeRasterDisplayPlot::setColorMapTitleFontSize(int tfs)
+{
+  d_color_bar_title_font_size = tfs;
 }
 
 void
@@ -556,7 +571,9 @@ void
 TimeRasterDisplayPlot::_updateIntensityRangeDisplay()
 {
   QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
-  rightAxis->setTitle("Intensity");
+  QwtText colorBarTitle("Intensity");
+  colorBarTitle.setFont(QFont("Arial",d_color_bar_title_font_size));
+  rightAxis->setTitle(colorBarTitle);
   rightAxis->setColorBarEnabled(true);
 
   for(int i = 0; i < d_nplots; i++) {

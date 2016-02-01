@@ -128,7 +128,13 @@ namespace gr {
     void
     @IMPL_NAME@::handle_set_center_freq(pmt::pmt_t msg)
     {
-      if(pmt::is_pair(msg)) {
+      if(pmt::is_dict(msg) && pmt::dict_has_key(msg, pmt::intern("freq")) ) {
+        pmt::pmt_t x = pmt::dict_ref(msg, pmt::intern("freq"), pmt::PMT_NIL );
+        if(pmt::is_real(x)) {
+          double freq = pmt::to_double(x);
+          set_center_freq(freq);
+        }
+      } else if(pmt::is_pair(msg)) {
         pmt::pmt_t x = pmt::cdr(msg);
         if(pmt::is_real(x)) {
           double freq = pmt::to_double(x);

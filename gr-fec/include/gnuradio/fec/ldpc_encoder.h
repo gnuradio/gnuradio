@@ -24,38 +24,24 @@
 #define INCLUDED_LDPC_ENCODER_H
 
 #include <gnuradio/fec/encoder.h>
-#include <gnuradio/fec/cldpc.h>
-#include <gnuradio/fec/alist.h>
-#include <map>
 #include <string>
 #include <vector>
 
 namespace gr {
- namespace fec {
+  namespace fec {
 
-  class FEC_API ldpc_encoder : public generic_encoder {
-      //private constructor
-      ldpc_encoder (std::string alist_file);
-  
-      //plug into the generic fec api
-      void generic_work(void *inBuffer, void *outbuffer);
-  
-      // memory allocated for processing
-      int outputSize;
-      int inputSize;
-      alist d_list;
-      cldpc d_code;   
-
-   public:
-      ~ldpc_encoder ();
+    class FEC_API ldpc_encoder : virtual public generic_encoder
+    {
+    public:
       static generic_encoder::sptr make (std::string alist_file);
-      double rate() { return (1.0*get_input_size() / get_output_size()); }
-      bool set_frame_size(unsigned int frame_size) { return false; }
-      int get_output_size();
-      int get_input_size();
-  };
 
- }
+      virtual double rate() = 0;
+      virtual bool set_frame_size(unsigned int frame_size) = 0;
+      virtual int get_output_size() = 0;
+      virtual int get_input_size() = 0;
+    };
+
+  }
 }
 
 #endif /* INCLUDED_LDPC_ENCODER_H */

@@ -287,6 +287,9 @@ namespace gr {
       // Normalize the taps
       for(unsigned int i = 0; i < difftaps.size(); i++) {
         difftaps[i] *= d_nfilters/pwr;
+        if(difftaps[i] != difftaps[i]) {
+          throw std::runtime_error("pfb_clock_sync_fff::create_diff_taps produced NaN.");
+        }
       }
     }
 
