@@ -32,8 +32,9 @@ static inline float rintf(float x){return (x > 0.0f)? floorf(x + 0.5f) : ceilf(x
 ////////////////////////////////////////////////////////////////////////
 // math constants
 ////////////////////////////////////////////////////////////////////////
-#define INFINITY HUGE_VAL
-
+#if (!_MSC_VER >= 1900)
+# define INFINITY   HUGE_VAL
+#endif 
 # define M_E		2.7182818284590452354	/* e */
 # define M_LOG2E	1.4426950408889634074	/* log_2 e */
 # define M_LOG10E	0.43429448190325182765	/* log_10 e */

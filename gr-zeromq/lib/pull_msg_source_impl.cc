@@ -24,6 +24,10 @@
 #include "config.h"
 #endif
 
+#if (_MSC_VER >= 1900)
+#include <boost/thread/thread.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#endif
 #include <gnuradio/io_signature.h>
 #include "pull_msg_source_impl.h"
 #include "tag_headers.h"
@@ -102,7 +106,11 @@ namespace gr {
           message_port_pub(pmt::mp("out"), m);
 
         } else {
-          usleep(100);
+#if (_MSC_VER >= 1900)
+			boost::this_thread::sleep(boost::posix_time::microseconds(100));
+#else
+			usleep(100);
+#endif
         }
       }
     }
