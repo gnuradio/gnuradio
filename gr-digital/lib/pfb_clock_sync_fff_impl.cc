@@ -131,6 +131,13 @@ namespace gr {
         ninput_items_required[i] = (noutput_items + history()) * (d_sps/d_osps);
     }
 
+    void
+    pfb_clock_sync_fff_impl::update_taps(const std::vector<float> &taps)
+    {
+      d_updated_taps = taps;
+      d_updated = true;
+    }
+
     /*******************************************************************
      SET FUNCTIONS
     *******************************************************************/
@@ -258,8 +265,6 @@ namespace gr {
 
       // Make sure there is enough output space for d_osps outputs/input.
       set_output_multiple(d_osps);
-
-      d_updated = true;
     }
 
     void
@@ -376,16 +381,20 @@ namespace gr {
       float *in = (float *) input_items[0];
       float *out = (float *) output_items[0];
 
+      if(d_updated) {
+        std::vector<float> dtaps;
+        create_diff_taps(d_updated_taps, dtaps);
+        set_taps(d_updated_taps, d_taps, d_filters);
+        set_taps(dtaps, d_dtaps, d_diff_filters);
+	d_updated = false;
+	return 0;		     // history requirements may have changed.
+      }
+
       float *err = NULL, *outrate = NULL, *outk = NULL;
       if(output_items.size() == 4) {
 	err = (float *) output_items[1];
 	outrate = (float*)output_items[2];
 	outk = (float*)output_items[3];
-      }
-
-      if(d_updated) {
-	d_updated = false;
-	return 0;		     // history requirements may have changed.
       }
 
       int i = 0, count = 0;
