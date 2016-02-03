@@ -328,10 +328,44 @@ namespace gr {
   }
 
   void
+  hier_block2_detail::refresh_io_signature()
+  {
+    int min_inputs  = d_owner->input_signature()->min_streams();
+    int max_inputs  = d_owner->input_signature()->max_streams();
+    int min_outputs = d_owner->output_signature()->min_streams();
+    int max_outputs = d_owner->output_signature()->max_streams();
+
+    if(max_inputs == io_signature::IO_INFINITE ||
+       max_outputs == io_signature::IO_INFINITE ||
+       (min_inputs != max_inputs) ||(min_outputs != max_outputs) ) {
+      std::stringstream msg;
+      msg << "Hierarchical blocks do not yet support arbitrary or"
+        << " variable numbers of inputs or outputs (" << d_owner->name() << ")";
+      throw std::runtime_error(msg.str());
+    }
+
+    // Check for # input change
+    if ((signed)d_inputs.size() != max_inputs)
+    {
+      d_inputs.resize(max_inputs);
+    }
+
+    // Check for # output change
+    if ((signed)d_outputs.size() != max_outputs)
+    {
+      d_outputs.resize(max_outputs);
+      d_min_output_buffer.resize(max_outputs, 0);
+      d_max_output_buffer.resize(max_outputs, 0);
+    }
+  }
+
+  void
   hier_block2_detail::connect_input(int my_port, int port,
                                     basic_block_sptr block)
   {
     std::stringstream msg;
+
+    refresh_io_signature();
 
     if(my_port < 0 || my_port >= (signed)d_inputs.size()) {
       msg << "input port " << my_port << " out of range for " << block;
@@ -356,6 +390,8 @@ namespace gr {
   {
     std::stringstream msg;
 
+    refresh_io_signature();
+
     if(my_port < 0 || my_port >= (signed)d_outputs.size()) {
       msg << "output port " << my_port << " out of range for " << block;
       throw std::invalid_argument(msg.str());
@@ -375,6 +411,8 @@ namespace gr {
                                        basic_block_sptr block)
   {
     std::stringstream msg;
+
+    refresh_io_signature();
 
     if(my_port < 0 || my_port >= (signed)d_inputs.size()) {
       msg << "input port number " << my_port << " out of range for " << block;
@@ -398,6 +436,8 @@ namespace gr {
                                         basic_block_sptr block)
   {
     std::stringstream msg;
+
+    refresh_io_signature();
 
     if(my_port < 0 || my_port >= (signed)d_outputs.size()) {
       msg << "output port number " << my_port << " out of range for " << block;

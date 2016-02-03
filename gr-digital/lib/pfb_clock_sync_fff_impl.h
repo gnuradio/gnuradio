@@ -47,6 +47,7 @@ namespace gr {
       std::vector<kernel::fir_filter_fff*> d_diff_filters;
       std::vector< std::vector<float> >    d_taps;
       std::vector< std::vector<float> >    d_dtaps;
+      std::vector<float>                   d_updated_taps;
 
       float d_k;
       float d_rate;
@@ -73,6 +74,8 @@ namespace gr {
       void update_gains();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+
+      void update_taps(const std::vector<float> &taps);
 
       void set_taps(const std::vector<float> &taps,
 		    std::vector< std::vector<float> > &ourtaps,
