@@ -110,7 +110,7 @@ $(gui_hint()($win))</make>
     <key>fftsize</key>
     <value>1024</value>
     <type>int</type>
-    <hide>#if $type.t == 'message' then 'all' else 'all'#</hide>
+    <hide>#if $type.t == 'message' then 'all' else 'none'#</hide>
   </param>
 
   <param>

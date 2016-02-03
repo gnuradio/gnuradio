@@ -23,6 +23,7 @@ import subprocess
 import tempfile
 import shlex
 import codecs
+import re  # for shlex_quote
 from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
@@ -125,24 +126,30 @@ class TopBlockGenerator(object):
         Returns:
             a popen object
         """
-        def args_to_string(args):
-            """Accounts for spaces in args"""
-            return ' '.join(repr(arg) if ' ' in arg else arg for arg in args)
-
         run_command = self._flow_graph.get_option('run_command')
-        cmds = shlex.split(run_command.format(python=sys.executable,
-                                              filename=self.get_file_path()))
+        try:
+            run_command = run_command.format(
+                python=shlex_quote(sys.executable),
+                filename=shlex_quote(self.get_file_path()))
+            run_command_args = shlex.split(run_command)
+        except Exception as e:
+            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
         if self._generate_options == 'no_gui' and xterm_executable:
-            cmds = [xterm_executable, '-e', args_to_string(cmds)]
+            run_command_args = [xterm_executable, '-e', run_command]
 
-        Messages.send_start_exec(args_to_string(cmds))
-        p = subprocess.Popen(
-            args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=False, universal_newlines=True)
-        return p
+        # this does not reproduce a shell executable command string, if a graphical
+        # terminal is used. Passing run_command though shlex_quote would do it but
+        # it looks really ugly and confusing in the console panel.
+        Messages.send_start_exec(' '.join(run_command_args))
+
+        return subprocess.Popen(
+            args=run_command_args,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            shell=False, universal_newlines=True
+        )
 
     def _build_python_code_from_template(self):
         """
@@ -420,3 +427,21 @@ class QtHierBlockGenerator(HierBlockGenerator):
             "\n${gui_hint()($win)}"
         )
         return n
+
+
+###########################################################
+# back-port from python3
+###########################################################
+_find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
+
+
+def shlex_quote(s):
+    """Return a shell-escaped version of the string *s*."""
+    if not s:
+        return "''"
+    if _find_unsafe(s) is None:
+        return s
+
+    # use single quotes, and put single quotes into double quotes
+    # the string $'b is then quoted as '$'"'"'b'
+    return "'" + s.replace("'", "'\"'\"'") + "'"
