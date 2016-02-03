@@ -272,7 +272,7 @@ class Block(_Block, _GUIBlock):
         self._make = '{}({})'.format(blk_io.cls, ', '.join(
             '{0}=${0}'.format(key) for key, _ in blk_io.params))
 
-        params = dict()
+        params = {}
         for param in list(self._params):
             if hasattr(param, '__epy_param__'):
                 params[param.get_key()] = param
@@ -293,7 +293,7 @@ class Block(_Block, _GUIBlock):
         def update_ports(label, ports, port_specs, direction):
             ports_to_remove = list(ports)
             iter_ports = iter(ports)
-            ports_new = list()
+            ports_new = []
             port_current = next(iter_ports, None)
             for key, port_type in port_specs:
                 reuse_port = (
@@ -306,6 +306,9 @@ class Block(_Block, _GUIBlock):
                     port, port_current = port_current, next(iter_ports, None)
                 else:
                     n = odict(dict(name=label + str(key), type=port_type, key=key))
+                    if port_type == 'message':
+                        n['name'] = key
+                        n['optional'] = '1'
                     port = platform.Port(block=self, n=n, dir=direction)
                 ports_new.append(port)
             # replace old port list with new one

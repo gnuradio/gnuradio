@@ -39,10 +39,8 @@ def _blk_class(source_code):
         raise ValueError("Can't interpret source code: " + str(e))
     for var in ns.itervalues():
         if inspect.isclass(var)and issubclass(var, gr.gateway.gateway_block):
-            break
-    else:
-        raise ValueError('No python block class found in code')
-    return var
+            return var
+    raise ValueError('No python block class found in code')
 
 
 def extract(cls):
@@ -55,7 +53,7 @@ def extract(cls):
     cls_name = cls.__name__
 
     if len(defaults) + 1 != len(spec.args):
-        raise ValueError("Need all default values")
+        raise ValueError("Need all __init__ arguments to have default values")
 
     try:
         instance = cls()
@@ -66,9 +64,9 @@ def extract(cls):
     params = list(zip(spec.args[1:], defaults))
 
     sinks = _ports(instance.in_sig(),
-                      pmt.to_python(instance.message_ports_in()))
+                   pmt.to_python(instance.message_ports_in()))
     sources = _ports(instance.out_sig(),
-                        pmt.to_python(instance.message_ports_out()))
+                     pmt.to_python(instance.message_ports_out()))
 
     return BlockIO(name, cls_name, params, sinks, sources, doc)
 

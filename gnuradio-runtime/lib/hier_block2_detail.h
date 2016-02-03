@@ -71,6 +71,7 @@ namespace gr {
     endpoint_vector_t d_outputs;             // Single internal endpoint per external output
     basic_block_vector_t d_blocks;
 
+    void refresh_io_signature();
     void connect_input(int my_port, int port, basic_block_sptr block);
     void connect_output(int my_port, int port, basic_block_sptr block);
     void disconnect_input(int my_port, int port, basic_block_sptr block);
