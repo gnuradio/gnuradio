@@ -28,8 +28,8 @@ import gtk
 import gobject
 
 
-from ..model import Constants, ParseXML
-from .. model.Constants import XTERM_EXECUTABLE
+from ..core import Constants, ParseXML
+from .. core.Constants import XTERM_EXECUTABLE
 
 from . import Dialogs, Messages, Preferences, Actions
 from .ParserErrorsDialog import ParserErrorsDialog

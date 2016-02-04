@@ -31,7 +31,7 @@ from Cheetah.Template import Template
 from .. import ParseXML, expr_utils
 from ..odict import odict
 
-from grc.model.Constants import (
+from ..Constants import (
     TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
 )

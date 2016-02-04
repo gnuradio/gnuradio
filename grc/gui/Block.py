@@ -30,10 +30,10 @@ from .Constants import (
     BORDER_PROXIMITY_SENSITIVITY
 )
 from . Element import Element
-from ..model.odict import odict
-from ..model.Param import num_to_str
-from ..model.utils.complexity import calculate_flowgraph_complexity
-from ..model.Block import Block as _Block
+from ..core.odict import odict
+from ..core.Param import num_to_str
+from ..core.utils.complexity import calculate_flowgraph_complexity
+from ..core.Block import Block as _Block
 
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'

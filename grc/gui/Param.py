@@ -26,7 +26,7 @@ import gtk
 from . import Colors, Utils, Constants, Dialogs
 from .Element import Element
 
-from ..model.Param import Param as _Param
+from ..core.Param import Param as _Param
 
 
 class InputParam(gtk.HBox):

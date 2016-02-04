@@ -24,8 +24,8 @@ import Utils
 from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 from Element import Element
 
-from ..model.Constants import GR_MESSAGE_DOMAIN
-from ..model.Connection import Connection as _Connection
+from ..core.Constants import GR_MESSAGE_DOMAIN
+from ..core.Connection import Connection as _Connection
 
 
 class Connection(Element, _Connection):
