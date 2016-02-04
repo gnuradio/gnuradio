@@ -34,9 +34,9 @@ from .ParserErrorsDialog import ParserErrorsDialog
 from .MainWindow import MainWindow
 from .PropsDialog import PropsDialog
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
-                          SaveReportsFileDialog, SaveImageFileDialog,
+                          SaveReportsFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX, SCREENSHOTS_TRANSPARENT_BG
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
 
 gobject.threads_init()
 
@@ -521,9 +521,9 @@ class ActionHandler:
                 self.main_window.tool_bar.refresh_submenus()
                 self.main_window.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
-            file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
+            file_path, background_transparent = SaveScreenShotDialog(self.get_page().get_file_path()).run()
             if file_path is not None:
-                pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot(SCREENSHOTS_TRANSPARENT_BG)
+                pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot(background_transparent)
                 pixbuf.save(file_path, IMAGE_FILE_EXTENSION[1:])
         ##################################################
         # Gen/Exec/Stop
