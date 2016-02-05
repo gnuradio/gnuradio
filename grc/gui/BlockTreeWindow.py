@@ -31,6 +31,9 @@ DOC_INDEX = 2
 
 DOC_MARKUP_TMPL = """\
 #if $doc
+#if len($doc) > 1000
+#set $doc = $doc[:1000] + '...'
+#end if
 $encode($doc)#slurp
 #else
 undocumented#slurp
