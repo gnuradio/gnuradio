@@ -494,16 +494,16 @@ PARAMS_TMPL = """	<param>
 				part
 			\#end if
 		</hide>
-#if $sourk == 'sink'
 		<option>
 			<name>TX/RX</name>
 			<key>TX/RX</key>
 		</option>
-#end if
+#if $sourk == 'source'
 		<option>
 			<name>RX2</name>
 			<key>RX2</key>
 		</option>
+#end if
 		<tab>RF Options</tab>
 	</param>
 	<param>
