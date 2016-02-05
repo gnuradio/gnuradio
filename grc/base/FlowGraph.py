@@ -349,23 +349,20 @@ class FlowGraph(Element):
             n: the nested data odict
         """
         errors = False
-        #remove previous elements
-        self._elements = list()
+        self._elements = list()  # remove previous elements
         # set file format
         try:
             instructions = n.find('_instructions') or {}
-            file_format = int(instructions.get('format', '0')) or self._guess_file_format_1(n)
+            file_format = int(instructions.get('format', '0')) or _guess_file_format_1(n)
         except:
             file_format = 0
-        #use blank data if none provided
-        fg_n = n and n.find('flow_graph') or odict()
+
+        fg_n = n and n.find('flow_graph') or odict()  # use blank data if none provided
         self._timestamp = fg_n.find('timestamp') or time.ctime()
-        blocks_n = fg_n.findall('block')
-        connections_n = fg_n.findall('connection')
-        #create option block
+
+        # build the blocks
         self._options_block = self.get_parent().get_new_block(self, 'options')
-        #build the blocks
-        for block_n in blocks_n:
+        for block_n in fg_n.findall('block'):
             key = block_n.find('key')
             block = self._options_block if key == 'options' else self.get_new_block(key)
 
@@ -377,91 +374,86 @@ class FlowGraph(Element):
                 Messages.send_error_msg_load('Block key "%s" not found' % key)
 
             block.import_data(block_n)
-        #build the connections
-        block_ids = map(methodcaller('get_id'), self.iter_blocks())
-        for connection_n in connections_n:
-            try:  # to make the connection
-                #get the block ids
-                source_block_id = connection_n.find('source_block_id')
-                sink_block_id = connection_n.find('sink_block_id')
-                #get the port keys
-                source_key = connection_n.find('source_key')
-                sink_key = connection_n.find('sink_key')
-                #verify the blocks
-                if source_block_id not in block_ids:
-                    raise LookupError('source block id "%s" not in block ids'%source_block_id)
-                if sink_block_id not in block_ids:
-                    raise LookupError('sink block id "%s" not in block ids'%sink_block_id)
-                #get the blocks
+
+        # build the connections
+        def verify_and_get_port(key, block, dir):
+            ports = block.get_sinks() if dir == 'sink' else block.get_sources()
+            for port in ports:
+                if key == port.get_key():
+                    break
+                if not key.isdigit() and port.get_type() == '' and key == port.get_name():
+                    break
+            else:
+                if block.is_dummy_block():
+                    port = _dummy_block_add_port(block, key, dir)
+                else:
+                    raise LookupError('%s key %r not in %s block keys' % (dir, key, dir))
+            return port
+
+        for connection_n in fg_n.findall('connection'):
+            # get the block ids and port keys
+            source_block_id = connection_n.find('source_block_id')
+            sink_block_id = connection_n.find('sink_block_id')
+            source_key = connection_n.find('source_key')
+            sink_key = connection_n.find('sink_key')
+            try:
                 source_block = self.get_block(source_block_id)
                 sink_block = self.get_block(sink_block_id)
+
                 # fix old, numeric message ports keys
                 if file_format < 1:
-                    source_key, sink_key = self._update_old_message_port_keys(
-                        source_key, sink_key, source_block, sink_block
-                    )
-                #verify the ports
-                if source_key not in source_block.get_source_keys():
-                    # dummy blocks learn their ports here
-                    if source_block.is_dummy_block():
-                        _dummy_block_add_port(source_block, source_key, dir='source')
-                    else:
-                        raise LookupError('source key "%s" not in source block keys' % source_key)
-                if sink_key not in sink_block.get_sink_keys():
-                    # dummy blocks learn their ports here
-                    if sink_block.is_dummy_block():
-                        _dummy_block_add_port(sink_block, sink_key, dir='sink')
-                    else:
-                        raise LookupError('sink key "%s" not in sink block keys' % sink_key)
-                #get the ports
-                source = source_block.get_source(source_key)
-                sink = sink_block.get_sink(sink_key)
-                #build the connection
-                self.connect(source, sink)
-            except LookupError, e:
+                    source_key, sink_key = _update_old_message_port_keys(
+                        source_key, sink_key, source_block, sink_block)
+
+                # build the connection
+                source_port = verify_and_get_port(source_key, source_block, 'source')
+                sink_port = verify_and_get_port(sink_key, sink_block, 'sink')
+                self.connect(source_port, sink_port)
+            except LookupError as e:
                 Messages.send_error_load(
-                    'Connection between %s(%s) and %s(%s) could not be made.\n\t%s'%(
-                    source_block_id, source_key, sink_block_id, sink_key, e))
+                    'Connection between %s(%s) and %s(%s) could not be made.\n\t%s' % (
+                        source_block_id, source_key, sink_block_id, sink_key, e))
                 errors = True
-        self.rewrite() #global rewrite
+
+        self.rewrite()  # global rewrite
         return errors
 
-    @staticmethod
-    def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):
-        """Backward compatibility for message port keys
 
-        Message ports use their names as key (like in the 'connect' method).
-        Flowgraph files from former versions still have numeric keys stored for
-        message connections. These have to be replaced by the name of the
-        respective port. The correct message port is deduced from the integer
-        value of the key (assuming the order has not changed).
+def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):
+    """Backward compatibility for message port keys
 
-        The connection ends are updated only if both ends translate into a
-        message port.
-        """
-        try:
-            # get ports using the "old way" (assuming liner indexed keys)
-            source_port = source_block.get_sources()[int(source_key)]
-            sink_port = sink_block.get_sinks()[int(sink_key)]
-            if source_port.get_type() == "message" and sink_port.get_type() == "message":
-                source_key, sink_key = source_port.get_key(), sink_port.get_key()
-        except (ValueError, IndexError):
-            pass
-        return source_key, sink_key  # do nothing
+    Message ports use their names as key (like in the 'connect' method).
+    Flowgraph files from former versions still have numeric keys stored for
+    message connections. These have to be replaced by the name of the
+    respective port. The correct message port is deduced from the integer
+    value of the key (assuming the order has not changed).
 
-    @staticmethod
-    def _guess_file_format_1(n):
-        """Try to guess the file format for flow-graph files without version tag"""
-        try:
-            has_non_numeric_message_keys = any(not (
-                connection_n.find('source_key').isdigit() and
-                connection_n.find('sink_key').isdigit()
-            ) for connection_n in n.find('flow_graph').findall('connection'))
-            if has_non_numeric_message_keys:
-                return 1
-        except:
-            pass
-        return 0
+    The connection ends are updated only if both ends translate into a
+    message port.
+    """
+    try:
+        # get ports using the "old way" (assuming liner indexed keys)
+        source_port = source_block.get_sources()[int(source_key)]
+        sink_port = sink_block.get_sinks()[int(sink_key)]
+        if source_port.get_type() == "message" and sink_port.get_type() == "message":
+            source_key, sink_key = source_port.get_key(), sink_port.get_key()
+    except (ValueError, IndexError):
+        pass
+    return source_key, sink_key  # do nothing
+
+
+def _guess_file_format_1(n):
+    """Try to guess the file format for flow-graph files without version tag"""
+    try:
+        has_non_numeric_message_keys = any(not (
+            connection_n.find('source_key').isdigit() and
+            connection_n.find('sink_key').isdigit()
+        ) for connection_n in n.find('flow_graph').findall('connection'))
+        if has_non_numeric_message_keys:
+            return 1
+    except:
+        pass
+    return 0
 
 
 def _initialize_dummy_block(block, block_n):
@@ -487,3 +479,4 @@ def _dummy_block_add_port(block, key, dir):
         block.get_sources().append(port)
     else:
         block.get_sinks().append(port)
+    return port
