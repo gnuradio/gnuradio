@@ -67,7 +67,7 @@ namespace gr {
       }
 
       // Grab data, throw into vector
-      d_pdu_vector = pdu::make_pdu_vector(d_type, in, ninput_items[0]);
+      d_pdu_vector = pdu::make_pdu_vector(d_type, in, ninput_items[0]*pdu::itemsize(d_type));
 
       // Send msg
       pmt::pmt_t msg = pmt::cons(d_pdu_meta, d_pdu_vector);

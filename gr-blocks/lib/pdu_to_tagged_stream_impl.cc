@@ -65,7 +65,7 @@ namespace gr {
 
         d_curr_meta = pmt::car(msg);
         d_curr_vect = pmt::cdr(msg);
-        d_curr_len = pmt::length(d_curr_vect);
+        d_curr_len = pmt::length(d_curr_vect) / pdu::itemsize(d_type);
       }
 
       return d_curr_len;
