@@ -15,18 +15,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-import re
 import imp
 import time
-from operator import methodcaller
 from itertools import ifilter, chain
+from operator import methodcaller
 
-from ..gui import Messages
+import re
 
-from . import expr_utils
-from .odict import odict
-from .Element import Element
+from .utils import odict, expr_utils
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
+from .Element import Element
+from ..gui import Messages
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')

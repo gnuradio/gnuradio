@@ -18,9 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from . import Constants
-
 from .Element import Element
-from .odict import odict
+from .utils import odict
 
 
 class Connection(Element):

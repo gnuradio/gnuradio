@@ -28,9 +28,8 @@ from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
 
-from .. import ParseXML, expr_utils
-from ..odict import odict
-
+from .. import ParseXML
+from ..utils import expr_utils, odict
 from ..Constants import (
     TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
@@ -262,7 +261,7 @@ class TopBlockGenerator(object):
         callbacks = [
             expr_utils.expr_replace(cb, replace_dict)
             for cb in sum([block.get_callbacks() for block in fg.get_enabled_blocks()], [])
-        ]
+            ]
         # Map var id to callbacks
         var_id2cbs = dict([
             (var_id, filter(lambda c: expr_utils.get_variable_dependencies(c, [var_id]), callbacks))

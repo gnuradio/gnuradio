@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,30 +19,11 @@
 
 ########################################################################
 GR_PYTHON_INSTALL(FILES
-    Block.py
-    Connection.py
-    Constants.py
-    Element.py
-    FlowGraph.py
+    complexity.py
+    epy_block_io.py
+    expr_utils.py
+    extract_docs.py
     __init__.py
-    odict.py
-    Param.py
-    ParseXML.py
-    Platform.py
-    Port.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/utils
     COMPONENT "grc"
 )
-
-install(FILES
-    block.dtd
-    block_tree.dtd
-    default_flow_graph.grc
-    domain.dtd
-    flow_graph.dtd
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
-    COMPONENT "grc"
-)
-
-add_subdirectory(generator)
-add_subdirectory(utils)

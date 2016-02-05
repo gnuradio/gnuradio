@@ -23,17 +23,15 @@ import itertools
 from Cheetah.Template import Template
 from UserDict import UserDict
 
+from .utils import epy_block_io, odict
 from . Constants import (
     BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI,
     ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB,
     BLOCK_FLAG_THROTTLE, BLOCK_FLAG_DISABLE_BYPASS,
     BLOCK_ENABLED, BLOCK_BYPASSED, BLOCK_DISABLED
 )
-
-from . import epy_block_io
-from . odict import odict
-from . FlowGraph import _variable_matcher
 from . Element import Element
+from . FlowGraph import _variable_matcher
 
 
 class TemplateArg(UserDict):

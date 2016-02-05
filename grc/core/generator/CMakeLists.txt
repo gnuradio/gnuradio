@@ -19,30 +19,16 @@
 
 ########################################################################
 GR_PYTHON_INSTALL(FILES
-    Block.py
-    Connection.py
-    Constants.py
-    Element.py
-    FlowGraph.py
     __init__.py
-    odict.py
-    Param.py
-    ParseXML.py
-    Platform.py
-    Port.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
+    Generator.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/generator
     COMPONENT "grc"
 )
 
 install(FILES
-    block.dtd
-    block_tree.dtd
-    default_flow_graph.grc
-    domain.dtd
-    flow_graph.dtd
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
+    flow_graph.tmpl
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/generator
     COMPONENT "grc"
 )
 
-add_subdirectory(generator)
 add_subdirectory(utils)

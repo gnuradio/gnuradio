@@ -20,14 +20,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import ast
 
 import re
-from gnuradio import eng_notation
-from gnuradio import gr
+from gnuradio import eng_notation, gr
 
-import Constants
-from Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
-
-from .odict import odict
+from . import Constants
+from .Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
 from .Element import Element
+from .utils import odict
 
 # Blacklist certain ids, its not complete, but should help
 import __builtin__

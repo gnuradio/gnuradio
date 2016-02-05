@@ -30,8 +30,8 @@ from .Constants import (
     BORDER_PROXIMITY_SENSITIVITY
 )
 from . Element import Element
-from ..core.odict import odict
 from ..core.Param import num_to_str
+from ..core.utils import odict
 from ..core.utils.complexity import calculate_flowgraph_complexity
 from ..core.Block import Block as _Block
 

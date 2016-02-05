@@ -21,14 +21,14 @@ import os
 import sys
 from gnuradio import gr
 
-from . import ParseXML, extract_docs
+from . import ParseXML
 from .Constants import (
     BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD,
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, DEFAULT_FLOW_GRAPH, BLOCKS_DIRS,
     PREFS_FILE, CORE_TYPES, PREFS_FILE_OLD,
 )
 from .Element import Element
-from .odict import odict
+from .utils import odict, extract_docs
 from ..gui import Messages
 from .generator import Generator
 
@@ -70,7 +70,7 @@ class Platform(Element):
 
         Element.__init__(self)
         self._name = 'GNU Radio Companion'
-        # Save the verion string to the first
+        # Save the version string to the first
         version = (gr.version(), gr.major_version(), gr.api_version(), gr.minor_version())
         self._version = version[0]
         self._version_major = version[1]
@@ -88,6 +88,7 @@ class Platform(Element):
         self._colors = [(name, color) for name, key, sizeof, color in CORE_TYPES]
         # Create a dummy flow graph for the blocks
         self._flow_graph = Element(self)
+        self._flow_graph.connections = []
 
         self._blocks = None
         self._blocks_n = None
@@ -206,6 +207,7 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
+                raise
                 print >> sys.stderr, 'Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file)
 
     def iter_xml_files(self):
