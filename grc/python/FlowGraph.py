@@ -39,7 +39,10 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
         self.grc_file_path = ''
         _FlowGraph.__init__(self, **kwargs)
         _GUIFlowGraph.__init__(self)
-        self._eval_cache = dict()
+        self.n = {}
+        self.n_hash = -1
+        self._renew_eval_ns = True
+        self._eval_cache = {}
 
     def _eval(self, code, namespace, namespace_hash):
         """
