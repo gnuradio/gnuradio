@@ -152,20 +152,17 @@ class BlockTreeWindow(gtk.VBox):
 
     def update_docs(self):
         """Update the documentation column of every block"""
-        def update(node):
-            for i in range(treestore.iter_n_children(node) or 0):
-                update(treestore.iter_nth_child(node, i))
 
-            if not treestore.iter_has_child(node):
-                key = treestore.get_value(node, KEY_INDEX)
-                block = self.platform.get_block(key)
-                doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
-                treestore.set_value(node, DOC_INDEX, doc)
+        def update_doc(model, _, iter_):
+            if model.iter_has_child(iter_):
+                return  # category node, no doc string
+            key = model.get_value(iter_, KEY_INDEX)
+            block = self.platform.get_block(key)
+            doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
+            model.set_value(iter_, DOC_INDEX, doc)
 
-        for treestore in self.treestore, self.treestore_search:
-            root = treestore.get_iter_root()
-            if root:
-                update(root)
+        self.treestore.foreach(update_doc)
+        self.treestore_search.foreach(update_doc)
 
     ############################################################
     ## Helper Methods
