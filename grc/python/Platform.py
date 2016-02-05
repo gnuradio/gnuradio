@@ -38,8 +38,6 @@ from .Constants import (
     PREFS_FILE, PREFS_FILE_OLD, CORE_TYPES
 )
 
-COLORS = [(name, color) for name, key, sizeof, color in CORE_TYPES]
-
 
 class Platform(_Platform, _GUIPlatform):
     def __init__(self):
@@ -52,17 +50,11 @@ class Platform(_Platform, _GUIPlatform):
         if not os.path.exists(os.path.dirname(PREFS_FILE)):
             os.mkdir(os.path.dirname(PREFS_FILE))
 
-        self.block_docstrings = block_docstrings = dict()
-        self.block_docstrings_loaded_callback = lambda: None
-
-        def setter(key, docs):
-            block_docstrings[key] = '\n\n'.join(
-                '--- {0} ---\n{1}\n'.format(b, d.replace('\n\n', '\n'))
-                for b, d in docs.iteritems() if d is not None
-            )
+        self.block_docstrings = {}
+        self.block_docstrings_loaded_callback = lambda: None  # dummy to be replaced by BlockTreeWindow
 
         self._docstring_extractor = extract_docs.SubprocessLoader(
-            callback_query_result=setter,
+            callback_query_result=self._save_docstring_extraction_result,
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
@@ -78,7 +70,7 @@ class Platform(_Platform, _GUIPlatform):
             block_dtd=BLOCK_DTD,
             default_flow_graph=DEFAULT_FLOW_GRAPH,
             generator=Generator,
-            colors=COLORS,
+            colors=[(name, color) for name, key, sizeof, color in CORE_TYPES],
         )
         self._move_old_pref_file()
         _GUIPlatform.__init__(
@@ -86,6 +78,15 @@ class Platform(_Platform, _GUIPlatform):
             prefs_file=PREFS_FILE
         )
         self._auto_hier_block_generate_chain = set()
+
+    def _save_docstring_extraction_result(self, key, docstrings):
+        docs = {}
+        for match, docstring in docstrings.iteritems():
+            if not docstring or match.endswith('_sptr'):
+                continue
+            docstring = docstring.replace('\n\n', '\n').strip()
+            docs[match] = docstring
+        self.block_docstrings[key] = docs
 
     @staticmethod
     def _move_old_pref_file():

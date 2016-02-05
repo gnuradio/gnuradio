@@ -30,12 +30,27 @@ KEY_INDEX = 1
 DOC_INDEX = 2
 
 DOC_MARKUP_TMPL = """\
-#if $doc
-#if len($doc) > 1000
-#set $doc = $doc[:1000] + '...'
+#set $docs = []
+#if $doc.get('')
+    #set $docs += $doc.pop('').splitlines() + ['']
 #end if
-$encode($doc)#slurp
-#else
+#for b, d in $doc.iteritems()
+    #set $docs += ['--- {0} ---'.format(b)] + d.splitlines() + ['']
+#end for
+#set $len_out = 0
+#for $n, $line in $enumerate($docs[:-1])
+#if $n
+
+#end if
+$encode($line)#slurp
+#set $len_out += $len($line)
+#if $n > 10 or $len_out > 500
+
+...#slurp
+#break
+#end if
+#end for
+#if $len_out == 0
 undocumented#slurp
 #end if"""
 
@@ -129,8 +144,10 @@ class BlockTreeWindow(gtk.VBox):
             category: the category list or path string
             block: the block object or None
         """
-        if treestore is None: treestore = self.treestore
-        if categories is None: categories = self._categories
+        if treestore is None:
+            treestore = self.treestore
+        if categories is None:
+            categories = self._categories
 
         if isinstance(category, (str, unicode)): category = category.split('/')
         category = tuple(filter(lambda x: x, category))  # tuple is hashable
@@ -138,17 +155,18 @@ class BlockTreeWindow(gtk.VBox):
         for i, cat_name in enumerate(category):
             sub_category = category[:i+1]
             if sub_category not in categories:
-                iter = treestore.insert_before(categories[sub_category[:-1]], None)
-                treestore.set_value(iter, NAME_INDEX, cat_name)
-                treestore.set_value(iter, KEY_INDEX, '')
-                treestore.set_value(iter, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
-                categories[sub_category] = iter
+                iter_ = treestore.insert_before(categories[sub_category[:-1]], None)
+                treestore.set_value(iter_, NAME_INDEX, cat_name)
+                treestore.set_value(iter_, KEY_INDEX, '')
+                treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
+                categories[sub_category] = iter_
         # add block
-        if block is None: return
-        iter = treestore.insert_before(categories[category], None)
-        treestore.set_value(iter, NAME_INDEX, block.get_name())
-        treestore.set_value(iter, KEY_INDEX, block.get_key())
-        treestore.set_value(iter, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
+        if block is None:
+            return
+        iter_ = treestore.insert_before(categories[category], None)
+        treestore.set_value(iter_, NAME_INDEX, block.get_name())
+        treestore.set_value(iter_, KEY_INDEX, block.get_key())
+        treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
 
     def update_docs(self):
         """Update the documentation column of every block"""
