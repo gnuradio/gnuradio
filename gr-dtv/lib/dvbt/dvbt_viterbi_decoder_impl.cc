@@ -71,10 +71,17 @@ namespace gr {
     };
 
 #ifdef DTV_SSE2
+#if defined (_MSC_VER)
+	_declspec(align(16)) __m128i dvbt_viterbi_decoder_impl::d_metric0[4];
+	_declspec(align(16)) __m128i dvbt_viterbi_decoder_impl::d_metric1[4];
+	_declspec(align(16)) __m128i dvbt_viterbi_decoder_impl::d_path0[4];
+	_declspec(align(16)) __m128i dvbt_viterbi_decoder_impl::d_path1[4];
+#else
     __m128i dvbt_viterbi_decoder_impl::d_metric0[4] __attribute__ ((aligned(16)));
     __m128i dvbt_viterbi_decoder_impl::d_metric1[4] __attribute__ ((aligned(16)));
     __m128i dvbt_viterbi_decoder_impl::d_path0[4] __attribute__ ((aligned(16)));
     __m128i dvbt_viterbi_decoder_impl::d_path1[4] __attribute__ ((aligned(16)));
+#endif
 #else
     unsigned char dvbt_viterbi_decoder_impl::d_metric0_generic[64] __attribute__ ((aligned(16)));
     unsigned char dvbt_viterbi_decoder_impl::d_metric1_generic[64] __attribute__ ((aligned(16)));
@@ -83,13 +90,22 @@ namespace gr {
 #endif
 
 #ifdef DTV_SSE2
+#if defined (_MSC_VER)
+	_declspec(align(16)) branchtab27 dvbt_viterbi_decoder_impl::Branchtab27_sse2[2];
+#else
     branchtab27 dvbt_viterbi_decoder_impl::Branchtab27_sse2[2] __attribute__ ((aligned(16)));
+#endif
 #else
     branchtab27 dvbt_viterbi_decoder_impl::Branchtab27_generic[2] __attribute__ ((aligned(16)));
 #endif
 
+#if defined(_MSC_VER)
+	_declspec(align(16)) unsigned char dvbt_viterbi_decoder_impl::mmresult[64];
+	_declspec(align(16)) unsigned char dvbt_viterbi_decoder_impl::ppresult[TRACEBACK_MAX][64];
+#else
     unsigned char dvbt_viterbi_decoder_impl::mmresult[64] __attribute__((aligned(16)));
     unsigned char dvbt_viterbi_decoder_impl::ppresult[TRACEBACK_MAX][64] __attribute__((aligned(16)));
+#endif
 
 #ifdef DTV_SSE2
     void
