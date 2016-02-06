@@ -128,10 +128,25 @@ list(APPEND dtv_libs
 )
 
 include (CheckCCompilerFlag)
-CHECK_C_COMPILER_FLAG ("-msse2" SSE2_SUPPORTED)
+if (MSVC)
+	# 64-bit MSVC always supports SSE2 
+	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+		set(SSE2_SUPPORTED true)
+	else ()
+		CHECK_C_COMPILER_FLAG ("/arch:SSE2" SSE2_SUPPORTED)
+	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+else ()
+	CHECK_C_COMPILER_FLAG ("-msse2" SSE2_SUPPORTED)
+endif(MSVC)
 
 if(SSE2_SUPPORTED)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+	if (NOT MSVC)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+	else ()
+		if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
+		endif ()
+	endif ()
     ADD_DEFINITIONS(-DDTV_SSE2)
 endif(SSE2_SUPPORTED)
 
