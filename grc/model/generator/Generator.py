@@ -28,17 +28,19 @@ from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
 
-from . import ParseXML
-from .odict import odict
-from .Constants import BLOCK_FLAG_NEED_QT_GUI
+from .. import ParseXML, expr_utils
+from ..odict import odict
 
-from . import expr_utils
-from . Constants import (
-    TOP_BLOCK_FILE_MODE, FLOW_GRAPH_TEMPLATE,
+from grc.model.Constants import (
+    TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
 )
 
-from .. gui import Messages
+from grc.gui import Messages
+
+
+DATA_DIR = os.path.dirname(__file__)
+FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
 
 
 class Generator(object):
@@ -184,7 +186,7 @@ class TopBlockGenerator(object):
             return code
 
         blocks = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.iter_blocks()),
+            filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
             lambda b: b.get_id(), _get_block_sort_text
         )
         # List of regular blocks (all blocks minus the special ones)

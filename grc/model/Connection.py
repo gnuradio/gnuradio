@@ -25,6 +25,8 @@ from .odict import odict
 
 class Connection(Element):
 
+    is_connection = True
+
     def __init__(self, flow_graph, porta, portb):
         """
         Make a new connection given the parent and 2 ports.
@@ -42,9 +44,9 @@ class Connection(Element):
         source = sink = None
         # Separate the source and sink
         for port in (porta, portb):
-            if port.is_source():
+            if port.is_source:
                 source = port
-            if port.is_sink():
+            else:
                 sink = port
         if not source:
             raise ValueError('Connection could not isolate source')
@@ -57,7 +59,7 @@ class Connection(Element):
         if not len(source.get_associated_ports()) == len(sink.get_associated_ports()):
             raise ValueError('port connections must have same cardinality')
         # Ensure that this connection (source -> sink) is unique
-        for connection in self.get_parent().get_connections():
+        for connection in flow_graph.connections:
             if connection.get_source() is source and connection.get_sink() is sink:
                 raise LookupError('This connection between source and sink is not unique.')
         self._source = source
@@ -80,8 +82,6 @@ class Connection(Element):
             self.get_sink().get_parent(),
             self.get_sink(),
         )
-
-    def is_connection(self): return True
 
     def is_msg(self):
         return self.get_source().get_type() == self.get_sink().get_type() == 'msg'

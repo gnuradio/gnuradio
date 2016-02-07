@@ -121,6 +121,8 @@ class Option(Element):
 
 class Param(Element):
 
+    is_param = True
+
     def __init__(self, block, n):
         """
         Make a new param from nested data.
@@ -665,9 +667,6 @@ class Param(Element):
 
     def get_tab_label(self):
         return self._tab_label
-
-    def is_param(self):
-        return True
 
     def get_name(self):
         return self.get_parent().resolve_dependencies(self._name).strip()

@@ -19,25 +19,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import sys
-
 from gnuradio import gr
 
-from .Constants import BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD
-from .Element import Element
-
-from . import ParseXML
-from .odict import odict
-
-from . import extract_docs
+from . import ParseXML, extract_docs
 from .Constants import (
+    BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD,
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, DEFAULT_FLOW_GRAPH, BLOCKS_DIRS,
     PREFS_FILE, CORE_TYPES, PREFS_FILE_OLD,
 )
-from .Generator import Generator
-from .. gui import Messages
+from .Element import Element
+from .odict import odict
+from ..gui import Messages
+from .generator import Generator
 
 
 class Platform(Element):
+
+    is_platform = True
+
     def __init__(self):
         """
         Make a platform for gnuradio.
@@ -340,9 +339,6 @@ class Platform(Element):
 
     def __str__(self):
         return 'Platform - {}({})'.format(self.get_key(), self.get_name())
-
-    def is_platform(self):
-        return True
 
     def get_new_flow_graph(self):
         return self.FlowGraph(platform=self)

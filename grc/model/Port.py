@@ -100,6 +100,8 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
 
 class Port(Element):
 
+    is_port = True
+
     def __init__(self, block, n, dir):
         """
         Make a new port from nested data.
@@ -139,9 +141,9 @@ class Port(Element):
         self._clones = []  # References to cloned ports (for nports > 1)
 
     def __str__(self):
-        if self.is_source():
+        if self.is_source:
             return 'Source - {}({})'.format(self.get_name(), self.get_key())
-        if self.is_sink():
+        if self.is_sink:
             return 'Sink - {}({})'.format(self.get_name(), self.get_key())
 
     def get_types(self):
@@ -180,9 +182,11 @@ class Port(Element):
                 # Reset type and vlen
                 self._type = ''
                 self._vlen = ''
+
         Element.rewrite(self)
         hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
+
         # Update domain if was deduced from (dynamic) port type
         type_ = self.get_type()
         if self._domain == GR_STREAM_DOMAIN and type_ == "message":
@@ -199,7 +203,7 @@ class Port(Element):
             return _get_source_from_virtual_source_port(self)
 
     def resolve_empty_type(self):
-        if self.is_sink():
+        if self.is_sink:
             try:
                 src = _get_source_from_virtual_sink_port(self)
                 if not src.is_type_empty():
@@ -209,7 +213,7 @@ class Port(Element):
             sink = _get_sink_from_virtual_sink_port(self)
             if not sink.is_type_empty():
                 return sink
-        if self.is_source():
+        if self.is_source:
             try:
                 src = _get_source_from_virtual_source_port(self)
                 if not src.is_type_empty():
@@ -344,14 +348,13 @@ class Port(Element):
     def get_key(self):
         return self._key
 
+    @property
     def is_sink(self):
         return self._dir == 'sink'
 
+    @property
     def is_source(self):
         return self._dir == 'source'
-
-    def is_port(self):
-        return True
 
     def get_type(self):
         return self.get_parent().resolve_dependencies(self._type)
@@ -369,7 +372,7 @@ class Port(Element):
         Returns:
             a list of connection objects
         """
-        connections = self.get_parent().get_parent().get_connections()
+        connections = self.get_parent().get_parent().connections
         connections = filter(lambda c: c.get_source() is self or c.get_sink() is self, connections)
         return connections
 
@@ -386,7 +389,7 @@ class Port(Element):
         if not self.get_type() == 'bus':
             return [self]
         else:
-            if self.is_source():
+            if self.is_source:
                 get_ports = self.get_parent().get_sources
                 bus_structure = self.get_parent().current_bus_structure['source']
             else:

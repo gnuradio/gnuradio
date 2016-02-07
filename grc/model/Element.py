@@ -90,34 +90,17 @@ class Element(object):
         return list()
 
     ##############################################
-    # Type testing methods
+    # Type testing
     ##############################################
-    def is_element(self):
-        return True
+    is_platform = False
 
-    def is_platform(self):
-        return False
+    is_flow_graph = False
 
-    def is_flow_graph(self):
-        return False
+    is_block = False
+    is_dummy_block = False
 
-    def is_connection(self):
-        return False
+    is_connection = False
 
-    def is_block(self):
-        return False
+    is_port = False
 
-    def is_dummy_block(self):
-        return False
-
-    def is_source(self):
-        return False
-
-    def is_sink(self):
-        return False
-
-    def is_port(self):
-        return False
-
-    def is_param(self):
-        return False
+    is_param = False

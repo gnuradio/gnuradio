@@ -45,6 +45,8 @@ BLOCKS_DIRS = filter(  # filter blank strings
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
 BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')
+BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
+DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
 # File format versions:
 #  0: undefined / legacy
@@ -78,12 +80,6 @@ XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | \
                       stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
-
-# Data files
-DATA_DIR = os.path.dirname(__file__)
-FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
-BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
-DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 
 # Define types, native python + numpy
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)

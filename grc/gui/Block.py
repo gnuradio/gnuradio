@@ -32,7 +32,7 @@ from .Constants import (
 from . Element import Element
 from ..model.odict import odict
 from ..model.Param import num_to_str
-
+from ..model.utils.complexity import calculate_flowgraph_complexity
 from ..model.Block import Block as _Block
 
 BLOCK_MARKUP_TMPL="""\
@@ -138,10 +138,10 @@ class Block(Element, _Block):
             delta_coor: requested delta coordinate (dX, dY) to move
 
         Returns:
-            The delta coordinate possible to move while keeping the block on the canvas 
+            The delta coordinate possible to move while keeping the block on the canvas
             or the input (dX, dY) on failure
         """
-        dX, dY = delta_coor 
+        dX, dY = delta_coor
 
         try:
             fgW, fgH = self.get_parent().get_size()
@@ -150,7 +150,7 @@ class Block(Element, _Block):
                sW, sH = self.W, self.H
             else:
                sW, sH = self.H, self.W
-        
+
             if x + dX < 0:
                 dX = -x
             elif dX + x + sW >= fgW:
@@ -162,7 +162,7 @@ class Block(Element, _Block):
         except:
             pass
 
-        return ( dX, dY ) 
+        return ( dX, dY )
 
     def get_rotation(self):
         """
@@ -196,7 +196,7 @@ class Block(Element, _Block):
     def create_labels(self):
         """Create the labels for the signal block."""
         Element.create_labels(self)
-        self._bg_color = self.is_dummy_block() and Colors.MISSING_BLOCK_BACKGROUND_COLOR or \
+        self._bg_color = self.is_dummy_block and Colors.MISSING_BLOCK_BACKGROUND_COLOR or \
                          self.get_bypassed() and Colors.BLOCK_BYPASSED_COLOR or \
                          self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
 
@@ -207,7 +207,7 @@ class Block(Element, _Block):
         layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=BLOCK_FONT))
         self.label_width, self.label_height = layout.get_pixel_size()
         #display the params
-        if self.is_dummy_block():
+        if self.is_dummy_block:
             markups = [
                 '<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
             ]
@@ -274,7 +274,8 @@ class Block(Element, _Block):
 
         # Show the flowgraph complexity on the top block if enabled
         if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
-            complexity = "Complexity: {}bal".format(num_to_str(self.get_parent().get_complexity()))
+            complexity = calculate_flowgraph_complexity(self.get_parent())
+            complexity = "Complexity: {}bal".format(num_to_str(complexity))
 
         layout = gtk.DrawingArea().create_pango_layout('')
         layout.set_markup(Utils.parse_template(COMMENT_COMPLEXITY_MARKUP_TMPL,
@@ -314,7 +315,7 @@ class Block(Element, _Block):
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
-                         self.is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
+                         self.is_dummy_block and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
         )
         #draw label image
         if self.is_horizontal():

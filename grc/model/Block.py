@@ -71,6 +71,8 @@ def _get_elem(lst, key):
 
 class Block(Element):
 
+    is_block = True
+
     def __init__(self, flow_graph, n):
         """
         Make a new block from nested data.
@@ -237,6 +239,11 @@ class Block(Element):
         self._epy_source_hash = -1  # for epy blocks
         self._epy_reload_error = None
 
+        if self._bussify_sink:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+        if self._bussify_source:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+
     def get_bus_structure(self, direction):
         if direction == 'source':
             bus_structure = self._bus_structure_source
@@ -300,6 +307,7 @@ class Block(Element):
         """
         Add and remove ports to adjust for the nports.
         """
+        Element.rewrite(self)
         # Check and run any custom rewrite function for this block
         getattr(self, 'rewrite_' + self._key, lambda: None)()
 
@@ -600,9 +608,6 @@ class Block(Element):
 
     def get_id(self):
         return self.get_param('id').get_value()
-
-    def is_block(self):
-        return True
 
     def get_name(self):
         return self._name

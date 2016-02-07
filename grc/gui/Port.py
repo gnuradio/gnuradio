@@ -64,7 +64,7 @@ class Port(_Port, Element):
         rotation = self.get_rotation()
         #get all sibling ports
         ports = self.get_parent().get_sources_gui() \
-            if self.is_source() else self.get_parent().get_sinks_gui()
+            if self.is_source else self.get_parent().get_sinks_gui()
         ports = filter(lambda p: not p.get_hide(), ports)
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
@@ -82,27 +82,27 @@ class Port(_Port, Element):
             index = length-index-1
 
         port_separation = PORT_SEPARATION \
-            if not self.get_parent().has_busses[self.is_source()] \
+            if not self.get_parent().has_busses[self.is_source] \
             else max([port.H for port in ports]) + PORT_SPACING
 
         offset = (self.get_parent().H - (length-1)*port_separation - self.H)/2
         #create areas and connector coordinates
-        if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
+        if (self.is_sink and rotation == 0) or (self.is_source and rotation == 180):
             x = -W
             y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x-1, y+self.H/2)
-        elif (self.is_source() and rotation == 0) or (self.is_sink() and rotation == 180):
+        elif (self.is_source and rotation == 0) or (self.is_sink and rotation == 180):
             x = self.get_parent().W
             y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x+1+W, y+self.H/2)
-        elif (self.is_source() and rotation == 90) or (self.is_sink() and rotation == 270):
+        elif (self.is_source and rotation == 90) or (self.is_sink and rotation == 270):
             y = -W
             x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y-1)
-        elif (self.is_sink() and rotation == 90) or (self.is_source() and rotation == 270):
+        elif (self.is_sink and rotation == 90) or (self.is_source and rotation == 270):
             y = self.get_parent().W
             x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
@@ -145,7 +145,7 @@ class Port(_Port, Element):
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
-                         self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or
+                         self.get_parent().is_dummy_block and Colors.MISSING_BLOCK_BORDER_COLOR or
                          Colors.BORDER_COLOR,
         )
         if not self._areas_list or self._label_hidden():
@@ -177,8 +177,8 @@ class Port(_Port, Element):
         Returns:
             the direction in degrees
         """
-        if self.is_source(): return self.get_rotation()
-        elif self.is_sink(): return (self.get_rotation() + 180)%360
+        if self.is_source: return self.get_rotation()
+        elif self.is_sink: return (self.get_rotation() + 180)%360
 
     def get_connector_length(self):
         """

@@ -232,7 +232,7 @@ class ActionHandler:
                             if y < y_min:
                                 y_min = y
 
-                            for connection in block.get_connections():
+                            for connection in block.connections:
 
                                 # Get id of connected blocks
                                 source_id = connection.get_source().get_parent().get_id()

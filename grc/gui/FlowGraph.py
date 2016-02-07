@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import random
 import functools
-from itertools import chain
+from itertools import chain, count
 from operator import methodcaller
 from distutils.spawn import find_executable
 
@@ -64,6 +64,22 @@ class FlowGraph(Element, _Flowgraph):
         self.get_context_menu = lambda: self._context_menu
 
         self._external_updaters = {}
+
+    def _get_unique_id(self, base_id=''):
+        """
+        Get a unique id starting with the base id.
+
+        Args:
+            base_id: the id starts with this and appends a count
+
+        Returns:
+            a unique id
+        """
+        for index in count():
+            block_id = '{}_{}'.format(base_id, index)
+            if block_id not in (b.get_id() for b in self.blocks):
+                break
+        return block_id
 
     def install_external_editor(self, param):
         target = (param.get_parent().get_id(), param.get_key())
@@ -163,7 +179,7 @@ class FlowGraph(Element, _Flowgraph):
         #get connections between selected blocks
         connections = filter(
             lambda c: c.get_source().get_parent() in blocks and c.get_sink().get_parent() in blocks,
-            self.get_connections(),
+            self.connections,
         )
         clipboard = (
             (x_min, y_min),
@@ -202,7 +218,7 @@ class FlowGraph(Element, _Flowgraph):
                 if param_key == 'id':
                     old_id2block[param_value] = block
                     #if the block id is not unique, get a new block id
-                    if param_value in [bluck.get_id() for bluck in self.get_blocks()]:
+                    if param_value in (blk.get_id() for blk in self.blocks):
                         param_value = self._get_unique_id(param_value)
                 #set value to key
                 block.get_param(param_key).set_value(param_value)
@@ -284,7 +300,7 @@ class FlowGraph(Element, _Flowgraph):
         """
         for selected_block in self.get_selected_blocks():
             delta_coordinate = selected_block.bound_move_delta(delta_coordinate)
- 
+
         for selected_block in self.get_selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True
@@ -346,7 +362,7 @@ class FlowGraph(Element, _Flowgraph):
 
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
-            for block in self.iter_blocks():
+            for block in self.blocks:
                 if block.get_enabled():
                     block.draw_comment(gc, window)
         #draw multi select rectangle
@@ -364,8 +380,8 @@ class FlowGraph(Element, _Flowgraph):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
-        blocks = sorted(self.iter_blocks(), key=methodcaller('get_enabled'))
-        for element in chain(self.iter_connections(), blocks):
+        blocks = sorted(self.blocks, key=methodcaller('get_enabled'))
+        for element in chain(self.connections, blocks):
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)
@@ -452,13 +468,13 @@ class FlowGraph(Element, _Flowgraph):
             if not selected_element: continue
             # hidden disabled connections, blocks and their ports can not be selected
             if Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active() and (
-                selected_element.is_block() and not selected_element.get_enabled() or
-                selected_element.is_connection() and not selected_element.get_enabled() or
-                selected_element.is_port() and not selected_element.get_parent().get_enabled()
+                selected_element.is_block and not selected_element.get_enabled() or
+                selected_element.is_connection and not selected_element.get_enabled() or
+                selected_element.is_port and not selected_element.get_parent().get_enabled()
             ):
                 continue
             #update the selected port information
-            if selected_element.is_port():
+            if selected_element.is_port:
                 if not coor_m: selected_port = selected_element
                 selected_element = selected_element.get_parent()
             selected.add(selected_element)
@@ -482,7 +498,8 @@ class FlowGraph(Element, _Flowgraph):
         """
         selected = set()
         for selected_element in self.get_selected_elements():
-            if selected_element.is_connection(): selected.add(selected_element)
+            if selected_element.is_connection:
+                selected.add(selected_element)
         return list(selected)
 
     def get_selected_blocks(self):
@@ -494,7 +511,8 @@ class FlowGraph(Element, _Flowgraph):
         """
         selected = set()
         for selected_element in self.get_selected_elements():
-            if selected_element.is_block(): selected.add(selected_element)
+            if selected_element.is_block:
+                selected.add(selected_element)
         return list(selected)
 
     def get_selected_block(self):
@@ -669,7 +687,7 @@ class FlowGraph(Element, _Flowgraph):
                     adj.set_value(adj_val-SCROLL_DISTANCE)
                     adj.emit('changed')
             #remove the connection if selected in drag event
-            if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
+            if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection:
                 Actions.ELEMENT_DELETE()
             #move the selected elements and record the new coordinate
             if not self.get_ctrl_mask():
