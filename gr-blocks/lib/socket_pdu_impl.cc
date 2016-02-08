@@ -196,7 +196,7 @@ namespace gr {
     socket_pdu_impl::tcp_client_send(pmt::pmt_t msg)
     {
       pmt::pmt_t vector = pmt::cdr(msg);
-      size_t len = pmt::length(vector);
+      size_t len = pmt::blob_length(vector);
       size_t offset = 0;
       std::vector<char> txbuf(std::min(len, d_rxbuf.size()));
       while (offset < len) {
@@ -214,7 +214,7 @@ namespace gr {
         return;
 
       pmt::pmt_t vector = pmt::cdr(msg);
-      size_t len = pmt::length(vector);
+      size_t len = pmt::blob_length(vector);
       size_t offset = 0;
       std::vector<char> txbuf(std::min(len, d_rxbuf.size()));
       while (offset < len) {
