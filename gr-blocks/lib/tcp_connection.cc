@@ -53,7 +53,7 @@ namespace gr {
     void
     tcp_connection::send(pmt::pmt_t vector)
     {
-      size_t len = pmt::length(vector);
+      size_t len = pmt::blob_length(vector);
       size_t offset = 0;
       std::vector<char> txbuf(std::min(len, d_buf.size()));
       while (offset < len) {
