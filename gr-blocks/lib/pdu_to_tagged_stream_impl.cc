@@ -65,7 +65,8 @@ namespace gr {
 
         d_curr_meta = pmt::car(msg);
         d_curr_vect = pmt::cdr(msg);
-        d_curr_len = pmt::length(d_curr_vect);
+        // do not assume the length of  PMT is in items (e.g.: from socket_pdu)
+        d_curr_len = pmt::blob_length(d_curr_vect)/d_itemsize;
       }
 
       return d_curr_len;
