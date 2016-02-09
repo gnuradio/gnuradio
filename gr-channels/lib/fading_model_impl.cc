@@ -22,17 +22,6 @@
 
 #include "fading_model_impl.h"
 #include <gnuradio/io_signature.h>
-#include <iostream>
-
-#include <boost/format.hpp>
-#include <boost/random.hpp>
-
-#include <gnuradio/fxpt.h>
-#include <sincostable.h>
-
-
-// FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
-#define FASTSINCOS  2
 
 
 namespace gr {
