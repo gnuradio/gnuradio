@@ -80,7 +80,9 @@ namespace gr {
      * History is the number of x_i's that are examined to produce one y_i.
      * This comes in handy for FIR filters, where we use history to
      * ensure that our input contains the appropriate "history" for the
-     * filter. History should be equal to the number of filter taps.
+     * filter. History should be equal to the number of filter taps. First
+     * history samples (when there are no previous samples) are
+     * initialized with zeroes.
      */
     unsigned history() const;
     void  set_history(unsigned history);
