@@ -330,6 +330,12 @@ WaterfallDisplayForm::setTimeTitle(const std::string title) {
     getPlot()->setAxisTitle(QwtPlot::yLeft, title.c_str());
 }
 
+void
+WaterfallDisplayForm::setAxisLabels(bool en)
+{
+
+}
+
 float
 WaterfallDisplayForm::getClickedFreq() const
 {

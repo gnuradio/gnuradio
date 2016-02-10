@@ -76,6 +76,7 @@ private:
   QVBoxLayout *d_axes_layout;
 
   QCheckBox *d_grid_check;
+  QCheckBox *d_axislabels_check;
   QHBoxLayout *d_yrange_layout;
   QLabel *d_yrange_label;
   QPushButton *d_yrange_plus;

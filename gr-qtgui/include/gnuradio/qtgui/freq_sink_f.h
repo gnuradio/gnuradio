@@ -188,6 +188,7 @@ namespace gr {
       virtual void clear_min_hold() = 0;
       virtual void disable_legend() = 0;
       virtual void reset() = 0;
+      virtual void enable_axis_labels(bool en=true) = 0;
 
       QApplication *d_qApplication;
     };

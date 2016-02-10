@@ -24,6 +24,7 @@ qtgui.$(type.fcn)(
 self.$(id).set_update_time($update_time)
 self.$(id).set_intensity_range($zmin, $zmax)
 self.$(id).enable_grid($grid)
+self.$(id).enable_axis_labels($axislabels)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -185,6 +186,21 @@ $(gui_hint()($win))</make>
     <hide>part</hide>
   </param>
 
+  <param>
+    <name>Axis Labels</name>
+    <key>axislabels</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+  </param>
 
   <param>
     <name>Line 1 Label</name>

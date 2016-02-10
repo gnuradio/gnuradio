@@ -441,10 +441,16 @@ namespace gr {
         d_main_gui->setTagMenu(which, en);
     }
 
+    void 
+    time_sink_c_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
     void
     time_sink_c_impl::disable_legend()
     {
-      d_main_gui->disableLegend();
+        d_main_gui->disableLegend();
     }
 
     void
