@@ -488,10 +488,8 @@ namespace gr {
 
       if(d->d_produce_or > 0)   // block produced something
         return READY;
-
       // We didn't produce any output even though we called general_work.
       // We have (most likely) consumed some input.
-
       /*
       // If this is a source, it's broken.
       if(d->source_p()) {
@@ -501,7 +499,6 @@ namespace gr {
         goto were_done;
       }
       */
-
       // Have the caller try again...
       return READY_NO_OUTPUT;
     }

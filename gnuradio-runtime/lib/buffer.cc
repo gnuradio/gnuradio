@@ -35,11 +35,11 @@
 
 namespace gr {
 
-  static long s_buffer_count = 0;		// counts for debugging storage mgmt
+  static long s_buffer_count = 0;   // counts for debugging storage mgmt
   static long s_buffer_reader_count = 0;
 
   /* ----------------------------------------------------------------------------
-  			Notes on storage management
+            Notes on storage management
 
    Pretty much all the fundamental classes are now using the
    shared_ptr stuff for automatic reference counting. To ensure that
@@ -79,15 +79,12 @@ namespace gr {
   }
 
 
-  buffer::buffer(int nitems, size_t sizeof_item, block_sptr link)
-    : d_base(0), d_bufsize(0), d_max_reader_delay(0), d_vmcircbuf(0),
-      d_sizeof_item(sizeof_item), d_link(link),
-      d_write_index(0), d_abs_write_offset(0), d_done(false),
+  buffer::buffer(unsigned int nitems, size_t sizeof_item, block_sptr link)
+    : d_base(0), d_bufsize(nitems), d_sizeof_item(sizeof_item),  d_max_reader_delay(0),
+      d_vmcircbuf(0), d_link(link), d_write_index(0), d_abs_write_offset(0), d_done(false),
       d_last_min_items_read(0)
   {
-    if(!allocate_buffer (nitems, sizeof_item))
-      throw std::bad_alloc ();
-
+    configure_default_loggers(d_logger, d_debug_logger, "buffer");
     s_buffer_count++;
   }
 
@@ -109,35 +106,39 @@ namespace gr {
    * returns true iff successful.
    */
   bool
-  buffer::allocate_buffer(int nitems, size_t sizeof_item)
+  buffer::allocate_buffer()
   {
-    int orig_nitems = nitems;
+    unsigned int nitems = d_bufsize;
+    int orig_nitems = d_bufsize;
 
     // Any buffersize we come up with must be a multiple of min_nitems.
     int granularity = gr::vmcircbuf_sysconfig::granularity();
-    int min_nitems =  minimum_buffer_items(sizeof_item, granularity);
+    int min_nitems =  minimum_buffer_items(d_sizeof_item, granularity);
 
     // Round-up nitems to a multiple of min_nitems.
-    if(nitems % min_nitems != 0)
+    if(nitems % min_nitems != 0) {
       nitems = ((nitems / min_nitems) + 1) * min_nitems;
+    }
 
     // If we rounded-up a whole bunch, give the user a heads up.
     // This only happens if sizeof_item is not a power of two.
 
-    if(nitems > 2 * orig_nitems && nitems * (int) sizeof_item > granularity){
-      std::cerr << "gr::buffer::allocate_buffer: warning: tried to allocate\n"
-                << "   " << orig_nitems << " items of size "
-                << sizeof_item << ". Due to alignment requirements\n"
-                << "   " << nitems << " were allocated.  If this isn't OK, consider padding\n"
-                << "   your structure to a power-of-two bytes.\n"
-                << "   On this platform, our allocation granularity is " << granularity << " bytes.\n";
+    if(nitems > 2 * orig_nitems && nitems * static_cast<int>(d_sizeof_item) > granularity){
+      GR_LOG_DEBUG(d_debug_logger,
+                   boost::format("gr::buffer::allocate_buffer: warning: tried to allocate\n"
+                    "   %i items of size %i. Due to alignment requirements\n"
+                    "   %i were allocated.  If this isn't OK, consider padding\n"
+                    "   your structure to a power-of-two bytes.\n"
+                    "   On this platform, our allocation granularity is %i bytes.\n"
+                   ) % orig_nitems % d_sizeof_item % nitems % granularity);
+
     }
 
     d_bufsize = nitems;
     d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
     if(d_vmcircbuf == 0){
-      std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
-                << d_bufsize * d_sizeof_item / 1024 << " KB\n";
+      GR_LOG_DEBUG(d_debug_logger, boost::format("gr::buffer::allocate_buffer: failed to allocate buffer of size %i KB")
+                                   % (d_bufsize * d_sizeof_item / 1024));
       return false;
     }
 
@@ -149,7 +150,7 @@ namespace gr {
   buffer::space_available()
   {
     if(d_readers.empty())
-      return d_bufsize - 1;	// See comment below
+      return d_bufsize - 1; // See comment below
 
     else {
       // Find out the maximum amount of data available to our readers
@@ -201,7 +202,7 @@ namespace gr {
 
     buffer_reader_sptr r(new buffer_reader(buf,
                                            buf->index_sub(buf->d_write_index,
-                                                          nzero_preload),
+                                           nzero_preload),
                                            link));
     r->declare_sample_delay(delay);
     buf->d_readers.push_back(r.get ());
