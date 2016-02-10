@@ -20,7 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import pygtk
 pygtk.require('2.0')
 import gtk
+
 from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, DND_TARGETS
+import Colors
+
 
 class DrawingArea(gtk.DrawingArea):
     """
@@ -68,12 +71,20 @@ class DrawingArea(gtk.DrawingArea):
         self.set_flags(gtk.CAN_FOCUS)  # self.set_can_focus(True)
         self.connect('focus-out-event', self._handle_focus_lost_event)
 
-    def new_pixmap(self, width, height): return gtk.gdk.Pixmap(self.window, width, height, -1)
-    def get_pixbuf(self):
-        width, height = self._pixmap.get_size()
-        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, width, height)
-        pixbuf.get_from_drawable(self._pixmap, self._pixmap.get_colormap(), 0, 0, 0, 0, width, height)
+    def new_pixmap(self, width, height):
+        return gtk.gdk.Pixmap(self.window, width, height, -1)
+
+    def get_screenshot(self, transparent_bg=False):
+        pixmap = self._pixmap
+        W, H = pixmap.get_size()
+        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, W, H)
+        pixbuf.fill(0xFF + Colors.FLOWGRAPH_BACKGROUND_COLOR.pixel << 8)
+        pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, W-1, H-1)
+        if transparent_bg:
+            bgc = Colors.FLOWGRAPH_BACKGROUND_COLOR
+            pixbuf = pixbuf.add_alpha(True, bgc.red, bgc.green, bgc.blue)
         return pixbuf
+
 
     ##########################################################################
     ## Handlers
@@ -149,6 +160,12 @@ class DrawingArea(gtk.DrawingArea):
         gc = self.window.new_gc()
         self._flow_graph.draw(gc, self._pixmap)
         self.window.draw_drawable(gc, self._pixmap, 0, 0, 0, 0, -1, -1)
+        # draw a light grey line on the bottom and right end of the canvas.
+        # this is useful when the theme uses the same panel bg color as the canvas
+        W, H = self._pixmap.get_size()
+        gc.set_foreground(Colors.FLOWGRAPH_EDGE_COLOR)
+        self.window.draw_line(gc, 0, H-1, W, H-1)
+        self.window.draw_line(gc, W-1, 0, W-1, H)
 
     def _handle_focus_lost_event(self, widget, event):
         # don't clear selection while context menu is active

@@ -185,8 +185,11 @@ class Block(_Block, _GUIBlock):
 
     def get_doc(self):
         platform = self.get_parent().get_parent()
-        extracted_docs = platform.block_docstrings.get(self._key, '')
-        return (self._doc + '\n\n' + extracted_docs).strip()
+        documentation = platform.block_docstrings.get(self._key, {})
+        from_xml = self._doc.strip()
+        if from_xml:
+            documentation[''] = from_xml
+        return documentation
 
     def get_category(self):
         return _Block.get_category(self)
