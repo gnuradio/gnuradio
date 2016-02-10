@@ -22,10 +22,10 @@ from operator import methodcaller
 
 import re
 
-from .utils import odict, expr_utils
+from . import Messages
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .Element import Element
-from ..gui import Messages
+from .utils import odict, expr_utils
 
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')

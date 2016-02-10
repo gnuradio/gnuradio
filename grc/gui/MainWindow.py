@@ -17,20 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import \
-    NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
-import Actions
-import pygtk
-pygtk.require('2.0')
-import gtk
-import Bars
-from BlockTreeWindow import BlockTreeWindow
-from Dialogs import TextDisplay, MessageDialogHelper
-from NotebookPage import NotebookPage
-import Preferences
-import Messages
-import Utils
 import os
+
+import gtk
+
+from . import Bars, Actions, Preferences, Utils
+from .BlockTreeWindow import BlockTreeWindow
+from .Constants import \
+    NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
+from .Dialogs import TextDisplay, MessageDialogHelper
+from .NotebookPage import NotebookPage
+
+from ..core import Messages
 
 MAIN_WINDOW_TITLE_TMPL = """\
 #if not $saved

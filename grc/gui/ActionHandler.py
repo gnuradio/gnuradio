@@ -17,28 +17,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import os
 import subprocess
 from threading import Thread
 
-import os
-import pygtk
-
-pygtk.require('2.0')
 import gtk
 import gobject
 
-
-from ..core import Constants, ParseXML
-from .. core.Constants import XTERM_EXECUTABLE
-
-from . import Dialogs, Messages, Preferences, Actions
-from .ParserErrorsDialog import ParserErrorsDialog
-from .MainWindow import MainWindow
-from .PropsDialog import PropsDialog
+from . import Dialogs, Preferences, Actions
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveReportsFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
+from .MainWindow import MainWindow
+from .ParserErrorsDialog import ParserErrorsDialog
+from .PropsDialog import PropsDialog
+
+from ..core import Constants, ParseXML
+from ..core.Constants import XTERM_EXECUTABLE
+from ..core import Messages
 
 gobject.threads_init()
 

@@ -17,15 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
 import gtk
 
 import sys
 from distutils.spawn import find_executable
 
-
-from . import Utils, Actions, Constants, Messages
+from . import Utils, Actions, Constants
+from ..core import Messages
 
 
 class SimpleTextDisplay(gtk.TextView):

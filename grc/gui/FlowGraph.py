@@ -17,20 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import random
 import functools
+import random
+from distutils.spawn import find_executable
 from itertools import chain, count
 from operator import methodcaller
-from distutils.spawn import find_executable
 
 import gobject
 
-from . import Actions, Colors, Constants, Utils, Messages, Bars, Dialogs
-from . Element import Element
-from . Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
-from . external_editor import ExternalEditor
+from . import Actions, Colors, Constants, Utils, Bars, Dialogs
+from .Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
+from .Element import Element
+from .external_editor import ExternalEditor
 
 from ..core.FlowGraph import FlowGraph as _Flowgraph
+from ..core import Messages
 
 
 class FlowGraph(Element, _Flowgraph):

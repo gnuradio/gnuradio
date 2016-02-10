@@ -17,27 +17,24 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import os
-import sys
-import subprocess
-import tempfile
 import shlex
-import codecs
-import re  # for shlex_quote
+import subprocess
+import sys
+import tempfile
 from distutils.spawn import find_executable
 
+import codecs
+import os
+import re  # for shlex_quote
 from Cheetah.Template import Template
 
 from .FlowGraphProxy import FlowGraphProxy
-from .. import ParseXML
-from ..utils import expr_utils, odict
+from .. import ParseXML, Messages
 from ..Constants import (
     TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
     XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
 )
-
-from grc.gui import Messages
-
+from ..utils import expr_utils, odict
 
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')

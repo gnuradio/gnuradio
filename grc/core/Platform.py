@@ -21,16 +21,15 @@ import os
 import sys
 from gnuradio import gr
 
-from . import ParseXML
+from . import ParseXML, Messages
 from .Constants import (
     BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD,
     HIER_BLOCKS_LIB_DIR, BLOCK_DTD, DEFAULT_FLOW_GRAPH, BLOCKS_DIRS,
     PREFS_FILE, CORE_TYPES, PREFS_FILE_OLD,
 )
 from .Element import Element
-from .utils import odict, extract_docs
-from ..gui import Messages
 from .generator import Generator
+from .utils import odict, extract_docs
 
 
 class Platform(Element):
