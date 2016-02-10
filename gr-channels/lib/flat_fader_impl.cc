@@ -63,18 +63,18 @@ namespace gr {
     gr_complex flat_fader_impl::next_sample(){
         gr_complex H(0,0);
 
-        for(int n=1; n<d_N; n++){
-	  float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
+        for(int n=1; n<=d_N; n++){
+            float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
 #if FASTSINCOS == 1
-            float s_i = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(alpha_n))+d_psi[n+1]));
-            float s_q = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::sin(gr::fxpt::float_to_fixed(alpha_n))+d_phi[n+1]));
+            float s_i = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::cos(gr::fxpt::float_to_fixed(alpha_n))+d_psi[n]));
+            float s_q = scale_sin*gr::fxpt::cos(gr::fxpt::float_to_fixed(2*M_PI*d_fDTs*d_m*gr::fxpt::sin(gr::fxpt::float_to_fixed(alpha_n))+d_phi[n]));
 #elif FASTSINCOS == 2
-            float s_i = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(alpha_n)+d_psi[n+1]);
-            float s_q = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.sin(alpha_n)+d_phi[n+1]);
+            float s_i = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.cos(alpha_n)+d_psi[n]);
+            float s_q = scale_sin*d_table.cos(2*M_PI*d_fDTs*d_m*d_table.sin(alpha_n)+d_phi[n]);
 
 #else
-            float s_i = scale_sin*cos(2*M_PI*d_fDTs*d_m*cos(alpha_n)+d_psi[n+1]);
-            float s_q = scale_sin*cos(2*M_PI*d_fDTs*d_m*sin(alpha_n)+d_phi[n+1]);
+            float s_i = scale_sin*cos(2*M_PI*d_fDTs*d_m*cos(alpha_n)+d_psi[n]);
+            float s_q = scale_sin*cos(2*M_PI*d_fDTs*d_m*sin(alpha_n)+d_phi[n]);
 #endif
 
             H += gr_complex(s_i, s_q);
