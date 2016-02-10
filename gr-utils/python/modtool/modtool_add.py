@@ -53,6 +53,8 @@ class ModToolAdd(ModTool):
                 choices=self._block_types, default=None, help="One of %s." % ', '.join(self._block_types))
         ogroup.add_option("--license-file", type="string", default=None,
                 help="File containing the license header for every source code file.")
+        ogroup.add_option("--copyright", type="string", default=None,
+                help="Name of the copyright holder (you or your company) MUST be a quoted string.")
         ogroup.add_option("--argument-list", type="string", default=None,
                 help="The argument list for the constructor and make functions.")
         ogroup.add_option("--add-python-qa", action="store_true", default=None,
@@ -77,7 +79,6 @@ class ModToolAdd(ModTool):
                 self._info['blocktype'] = raw_input("Enter block type: ")
                 if self._info['blocktype'] not in self._block_types:
                     print 'Must be one of ' + str(self._block_types)
-
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
@@ -102,8 +103,12 @@ class ModToolAdd(ModTool):
             raise ModToolException('Invalid block name.')
         print "Block/code identifier: " + self._info['blockname']
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
+        self._info['copyrightholder'] = options.copyright
+        if self._info['copyrightholder'] is None:
+            self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+        elif self._info['is_component']:
+            print "For GNUradio components the FSF is added as copyright holder"
         self._info['license'] = self.setup_choose_license()
-
         if options.argument_list is not None:
             self._info['arglist'] = options.argument_list
         else:
@@ -140,7 +145,7 @@ class ModToolAdd(ModTool):
         elif self._info['is_component']:
             return Templates['grlicense']
         else:
-            return Templates['defaultlicense']
+            return get_template('defaultlicense', **self._info)
 
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
