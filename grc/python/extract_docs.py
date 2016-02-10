@@ -70,7 +70,7 @@ def docstring_guess_from_key(key):
     )
     for match in filter(pattern.match, dir(module)):
         try:
-            doc_strings[match] = getattr(module, match).__doc__.strip()
+            doc_strings[match] = getattr(module, match).__doc__
         except AttributeError:
             continue
 

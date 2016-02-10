@@ -210,3 +210,18 @@ class SaveFlowGraphFileDialog(FileDialog): type = SAVE_FLOW_GRAPH
 class OpenQSSFileDialog(FileDialog): type = OPEN_QSS_THEME
 class SaveReportsFileDialog(FileDialog): type = SAVE_REPORTS
 class SaveImageFileDialog(FileDialog): type = SAVE_IMAGE
+
+
+class SaveScreenShotDialog(SaveImageFileDialog):
+
+    def __init__(self, current_file_path=''):
+        SaveImageFileDialog.__init__(self, current_file_path)
+        self._button = button = gtk.CheckButton('_Background transparent')
+        self._button.set_active(Preferences.screen_shot_background_transparent())
+        self.set_extra_widget(button)
+
+    def run(self):
+        filename = SaveImageFileDialog.run(self)
+        bg_transparent = self._button.get_active()
+        Preferences.screen_shot_background_transparent(bg_transparent)
+        return filename, bg_transparent

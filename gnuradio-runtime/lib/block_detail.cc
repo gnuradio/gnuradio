@@ -162,6 +162,26 @@ namespace gr {
   }
 
   void
+  block_detail::reset_nitem_counters()
+  {
+    for(unsigned int i = 0; i < d_ninputs; i++) {
+      d_input[i]->reset_nitem_counter();
+    }
+    for(unsigned int o = 0; o < d_noutputs; o++) {
+      d_output[o]->reset_nitem_counter();
+    }
+  }
+
+  void
+  block_detail::clear_tags()
+  {
+    for(unsigned int i = 0; i < d_ninputs; i++) {
+      uint64_t max_time = 0xFFFFFFFFFFFFFFFF; // from now to the end of time
+      d_input[i]->buffer()->prune_tags(max_time);
+    }
+  }
+
+  void
   block_detail::add_item_tag(unsigned int which_output, const tag_t &tag)
   {
     if(!pmt::is_symbol(tag.key)) {

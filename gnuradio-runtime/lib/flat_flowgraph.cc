@@ -177,6 +177,13 @@ namespace gr {
     catch(std::bad_alloc&) {
       b = make_buffer(nitems, item_size, grblock);
     }
+
+    // Set the max noutput items size here to make sure it's always
+    // set in the block and available in the start() method.
+    // But don't overwrite if the user has set this externally.
+    if(!grblock->is_set_max_noutput_items())
+      grblock->set_max_noutput_items(nitems);
+
     return b;
   }
 
@@ -225,9 +232,10 @@ namespace gr {
           std::cout << "merge: allocating new detail for block " << (*p) << std::endl;
         block->set_detail(allocate_block_detail(block));
       }
-      else
+      else {
         if(FLAT_FLOWGRAPH_DEBUG)
           std::cout << "merge: reusing original detail for block " << (*p) << std::endl;
+      }
     }
 
     // Calculate the old edges that will be going away, and clear the
@@ -311,6 +319,9 @@ namespace gr {
       // Now deal with the fact that the block details might have
       // changed numbers of inputs and outputs vs. in the old
       // flowgraph.
+
+      block->detail()->reset_nitem_counters();
+      block->detail()->clear_tags();
     }
   }
 
