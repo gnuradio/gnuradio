@@ -48,7 +48,7 @@ namespace gr {
 
         d_table(8*1024),
 
-        scale_sin(sqrtf(2.0/d_N)),
+        scale_sin(sqrtf(1.0/d_N)),
         scale_los(sqrtf(d_K)/sqrtf(d_K+1)),
         scale_nlos(1/sqrtf(d_K+1))
     {
