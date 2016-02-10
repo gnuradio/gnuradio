@@ -100,6 +100,13 @@ namespace gr {
     // Return the number of items written on output stream which_output
     uint64_t nitems_written(unsigned int which_output);
 
+    // sets nitems_read and nitems_written to 0 for all input/output
+    // buffers.
+    void reset_nitem_counters();
+
+    // Clears all tags from the input buffers.
+    void clear_tags();
+
     /*!
      * \brief  Adds a new tag to the given output stream.
      *

@@ -100,6 +100,8 @@ namespace gr {
 
     uint64_t nitems_written() { return d_abs_write_offset; }
 
+    void reset_nitem_counter() { d_abs_write_offset = 0; }
+
     size_t get_sizeof_item() { return d_sizeof_item; }
 
     /*!
@@ -287,6 +289,8 @@ namespace gr {
     gr::thread::mutex *mutex() { return d_buffer->mutex(); }
 
     uint64_t nitems_read() { return d_abs_read_offset; }
+
+    void reset_nitem_counter() { d_abs_read_offset = 0; }
 
     size_t get_sizeof_item() { return d_buffer->get_sizeof_item(); }
 
