@@ -28,6 +28,7 @@ from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
 
+from .FlowGraphProxy import FlowGraphProxy
 from .. import ParseXML
 from ..utils import expr_utils, odict
 from ..Constants import (
@@ -82,7 +83,7 @@ class TopBlockGenerator(object):
             flow_graph: the flow graph object
             file_path: the path to write the file to
         """
-        self._flow_graph = flow_graph
+        self._flow_graph = FlowGraphProxy(flow_graph)
         self._generate_options = self._flow_graph.get_option('generate_options')
         self._mode = TOP_BLOCK_FILE_MODE
         dirname = self._dirname = os.path.dirname(file_path)

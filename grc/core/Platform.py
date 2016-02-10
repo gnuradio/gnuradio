@@ -38,21 +38,8 @@ class Platform(Element):
     is_platform = True
 
     def __init__(self):
-        """
-        Make a platform for gnuradio.
-
-        Args:
-            name: the platform name
-            version: the version string
-            key: the unique platform key
-            block_paths: the file paths to blocks in this platform
-            block_dtd: the dtd validator for xml block wrappers
-            default_flow_graph: the default flow graph file path
-            generator: the generator class for this platform
-            colors: a list of title, color_spec tuples
-            license: a multi-line license (first line is copyright)
-            website: the website url for this platform
-        """
+        """ Make a platform for gnuradio """
+        Element.__init__(self)
 
         # Ensure hier and conf directories
         if not os.path.exists(HIER_BLOCKS_LIB_DIR):
@@ -68,7 +55,6 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
-        Element.__init__(self)
         self._name = 'GNU Radio Companion'
         # Save the version string to the first
         version = (gr.version(), gr.major_version(), gr.api_version(), gr.minor_version())
@@ -97,42 +83,8 @@ class Platform(Element):
         self._connection_templates = dict()
         self.load_blocks()
 
+        _move_old_pref_file()
         self._auto_hier_block_generate_chain = set()
-
-    def _save_docstring_extraction_result(self, key, docstrings):
-        docs = {}
-        for match, docstring in docstrings.iteritems():
-            if not docstring or match.endswith('_sptr'):
-                continue
-            docstring = docstring.replace('\n\n', '\n').strip()
-            docs[match] = docstring
-        self.block_docstrings[key] = docs
-
-    @staticmethod
-    def _move_old_pref_file():
-        if PREFS_FILE == PREFS_FILE_OLD:
-            return  # prefs file overridden with env var
-        if os.path.exists(PREFS_FILE_OLD) and not os.path.exists(PREFS_FILE):
-            try:
-                import shutil
-                shutil.move(PREFS_FILE_OLD, PREFS_FILE)
-            except Exception as e:
-                print >> sys.stderr, e
-
-    def load_blocks(self):
-        self._docstring_extractor.start()
-        self._load_blocks()
-        self._docstring_extractor.finish()
-        # self._docstring_extractor.wait()
-
-    def load_block_xml(self, xml_file):
-        block = self._load_block_xml(self, xml_file)
-        self._docstring_extractor.query(
-            block.get_key(),
-            block.get_imports(raw=True),
-            block.get_make(raw=True)
-        )
-        return block
 
     @staticmethod
     def find_file_in_paths(filename, paths, cwd):
@@ -185,8 +137,9 @@ class Platform(Element):
         self.load_block_xml(generator.get_file_path_xml())
         return True
 
-    def _load_blocks(self):
+    def load_blocks(self):
         """load the blocks and block tree from the search paths"""
+        self._docstring_extractor.start()
         # Reset
         self._blocks = odict()
         self._blocks_n = odict()
@@ -202,13 +155,16 @@ class Platform(Element):
                 elif xml_file.endswith('domain.xml'):
                     self.load_domain_xml(xml_file)
                 else:
-                    self._load_block_xml(xml_file)
+                    self.load_block_xml(xml_file)
             except ParseXML.XMLSyntaxError as e:
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
                 raise
                 print >> sys.stderr, 'Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file)
+
+        self._docstring_extractor.finish()
+        # self._docstring_extractor.wait()
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
@@ -220,7 +176,7 @@ class Platform(Element):
                     for filename in sorted(filter(lambda f: f.endswith('.xml'), filenames)):
                         yield os.path.join(dirpath, filename)
 
-    def _load_block_xml(self, xml_file):
+    def load_block_xml(self, xml_file):
         """Load block description from xml file"""
         # Validate and import
         ParseXML.validate_dtd(xml_file, self._block_dtd)
@@ -234,7 +190,21 @@ class Platform(Element):
         else:  # Store the block
             self._blocks[key] = block
             self._blocks_n[key] = n
-        return block
+
+        self._docstring_extractor.query(
+            block.get_key(),
+            block.get_imports(raw=True),
+            block.get_make(raw=True)
+        )
+
+    def _save_docstring_extraction_result(self, key, docstrings):
+        docs = {}
+        for match, docstring in docstrings.iteritems():
+            if not docstring or match.endswith('_sptr'):
+                continue
+            docstring = docstring.replace('\n\n', '\n').strip()
+            docs[match] = docstring
+        self.block_docstrings[key] = docs
 
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""
@@ -404,3 +374,14 @@ class Platform(Element):
 
     def get_block_paths(self):
         return self._block_paths
+
+
+def _move_old_pref_file():
+    if PREFS_FILE == PREFS_FILE_OLD:
+        return  # prefs file overridden with env var
+    if os.path.exists(PREFS_FILE_OLD) and not os.path.exists(PREFS_FILE):
+        try:
+            import shutil
+            shutil.move(PREFS_FILE_OLD, PREFS_FILE)
+        except Exception as e:
+            print >> sys.stderr, e
