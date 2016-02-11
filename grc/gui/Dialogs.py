@@ -175,14 +175,14 @@ def ErrorsDialog(flowgraph): MessageDialogHelper(
 class AboutDialog(gtk.AboutDialog):
     """A cute little about dialog."""
 
-    def __init__(self, platform):
+    def __init__(self, config):
         """AboutDialog constructor."""
         gtk.AboutDialog.__init__(self)
-        self.set_name(platform.get_name())
-        self.set_version(platform.get_version())
-        self.set_license(platform.get_license())
-        self.set_copyright(platform.get_license().splitlines()[0])
-        self.set_website(platform.get_website())
+        self.set_name(config.name)
+        self.set_version(config.version)
+        self.set_license(config.license)
+        self.set_copyright(config.license.splitlines()[0])
+        self.set_website(config.website)
         self.run()
         self.destroy()
 

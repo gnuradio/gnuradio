@@ -370,7 +370,7 @@ class FlowGraph(Element):
         n['block'] = [b.export_data() for b in blocks]
         n['connection'] = [c.export_data() for c in connections]
         instructions = odict({
-            'created': self.get_parent().get_version_short(),
+            'created': '.'.join(self.get_parent().config.version2),
             'format': FLOW_GRAPH_FILE_FORMAT_VERSION,
         })
         return odict({'flow_graph': n, '_instructions': instructions})

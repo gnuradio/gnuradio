@@ -372,7 +372,8 @@ class ActionHandler:
         # Window stuff
         ##################################################
         elif action == Actions.ABOUT_WINDOW_DISPLAY:
-            Dialogs.AboutDialog(self.get_flow_graph().get_parent())
+            platform = self.get_flow_graph().get_parent()
+            Dialogs.AboutDialog(platform.config)
         elif action == Actions.HELP_WINDOW_DISPLAY:
             Dialogs.HelpDialog()
         elif action == Actions.TYPES_WINDOW_DISPLAY:

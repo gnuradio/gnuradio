@@ -64,7 +64,7 @@ def send_init(platform):
         return os.path.abspath(os.path.expanduser(x)), x
 
     send('\n'.join([
-        "<<< Welcome to %s %s >>>" % (p.get_name(), p.get_version()),
+        "<<< Welcome to %s %s >>>" % (p.config.name, p.config.version),
         "",
         "Preferences file: " + p.get_prefs_file(),
         "Block paths:"

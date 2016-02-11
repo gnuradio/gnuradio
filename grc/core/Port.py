@@ -157,7 +157,7 @@ class Port(Element):
         if self.get_type() not in self.get_types():
             self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
         platform = self.get_parent().get_parent().get_parent()
-        if self.get_domain() not in platform.get_domains():
+        if self.get_domain() not in platform.domains:
             self.add_error_message('Domain key "{}" is not registered.'.format(self.get_domain()))
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')

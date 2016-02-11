@@ -69,11 +69,13 @@ class MainWindow(gtk.Window):
         Setup the menu, toolbar, flowgraph editor notebook, block selection window...
         """
         self._platform = platform
-        gen_opts = platform.get_block('options').get_param('generate_options')
+
+        gen_opts = platform.blocks['options'].get_param('generate_options')
         generate_mode_default = gen_opts.get_value()
         generate_modes = [
             (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
             for o in gen_opts.get_options()]
+
         # load preferences
         Preferences.load(platform)
         #setup window
@@ -281,7 +283,7 @@ class MainWindow(gtk.Window):
                 new_flowgraph_title=NEW_FLOGRAPH_TITLE,
                 read_only=self.get_page().get_read_only(),
                 saved=self.get_page().get_saved(),
-                platform_name=self._platform.get_name(),
+                platform_name=self._platform.config.name,
             )
         )
         #set tab titles

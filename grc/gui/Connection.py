@@ -92,7 +92,7 @@ class Connection(Element, _Connection):
             if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
             else gtk.gdk.LINE_ON_OFF_DASH
         get_domain_color = lambda d: Colors.get_color((
-            self.get_parent().get_parent().get_domain(d) or {}
+            self.get_parent().get_parent().domains.get(d, {})
         ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
         self._color = get_domain_color(source_domain)
         self._bg_color = get_domain_color(sink_domain)

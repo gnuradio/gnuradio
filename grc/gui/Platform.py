@@ -40,7 +40,8 @@ class Platform(Element, _Platform):
         self._move_old_pref_file()
         self._prefs_file = PREFS_FILE
 
-    def get_prefs_file(self): return self._prefs_file
+    def get_prefs_file(self):
+        return self._prefs_file
 
     @staticmethod
     def _move_old_pref_file():

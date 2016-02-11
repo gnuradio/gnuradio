@@ -175,7 +175,7 @@ class BlockTreeWindow(gtk.VBox):
             if model.iter_has_child(iter_):
                 return  # category node, no doc string
             key = model.get_value(iter_, KEY_INDEX)
-            block = self.platform.get_block(key)
+            block = self.platform.blocks[key]
             doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
             model.set_value(iter_, DOC_INDEX, doc)
 
@@ -228,8 +228,8 @@ class BlockTreeWindow(gtk.VBox):
             self.treeview.set_model(self.treestore)
             self.treeview.collapse_all()
         else:
-            blocks = self.get_flow_graph().get_parent().get_blocks()
-            matching_blocks = filter(lambda b: key in b.get_key().lower() or key in b.get_name().lower(), blocks)
+            matching_blocks = filter(lambda b: key in b.get_key().lower() or key in b.get_name().lower(),
+                                     self.platform.blocks.values())
 
             self.treestore_search.clear()
             self._categories_search = {tuple(): None}

@@ -1,5 +1,5 @@
 """
-Copyright 2008-2015 Free Software Foundation, Inc.
+Copyright 2008-2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -21,30 +21,89 @@ import os
 import sys
 from gnuradio import gr
 
-from . import ParseXML, Messages
-from .Constants import (
-    BLOCK_TREE_DTD, FLOW_GRAPH_DTD, DOMAIN_DTD,
-    HIER_BLOCKS_LIB_DIR, BLOCK_DTD, DEFAULT_FLOW_GRAPH, BLOCKS_DIRS,
-    PREFS_FILE, CORE_TYPES, PREFS_FILE_OLD,
-)
+from . import ParseXML, Messages, Constants
+
 from .Element import Element
 from .generator import Generator
+from .FlowGraph import FlowGraph
+from .Connection import Connection
+from .Block import Block
+from .Port import Port
+from .Param import Param
+
 from .utils import odict, extract_docs
+
+
+from os.path import expanduser, normpath, expandvars, dirname, exists
+
+
+class Config(object):
+
+    key = 'grc'
+    name = 'GNU Radio Companion'
+    license = __doc__.strip()
+    website = 'http://gnuradio.org'
+    version = gr.version()
+    version2 = (gr.major_version(), gr.api_version(), gr.minor_version())
+
+    hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
+
+    def __init__(self):
+        self.prefs = self._get_prefs()
+
+        # Ensure hier and conf directories
+        if not exists(self.hier_block_lib_dir):
+            os.mkdir(self.hier_block_lib_dir)
+        if not exists(dirname(Constants.PREFS_FILE)):
+            os.mkdir(dirname(Constants.PREFS_FILE))
+
+    @staticmethod
+    def _get_prefs():
+        try:
+            from gnuradio import gr
+            prefs = gr.prefs()
+        except ImportError:
+            import ConfigParser
+            prefs = ConfigParser.ConfigParser()
+
+        return prefs
+
+    @property
+    def block_paths(self):
+        path_list_sep = {'/': ':', '\\': ';'}[os.path.sep]
+
+        paths_sources = (
+            self.hier_block_lib_dir,
+            os.environ.get('GRC_BLOCKS_PATH', ''),
+            self.prefs.get_string('grc', 'local_blocks_path', ''),
+            self.prefs.get_string('grc', 'global_blocks_path', ''),
+        )
+
+        collected_paths = sum((paths.split(path_list_sep)
+                               for paths in paths_sources), [])
+
+        valid_paths = [normpath(expanduser(expandvars(path)))
+                       for path in collected_paths if exists(path)]
+
+        return valid_paths
 
 
 class Platform(Element):
 
+    Generator = Generator
+    FlowGraph = FlowGraph
+    Connection = Connection
+    Block = Block
+    Port = Port
+    Param = Param
+
     is_platform = True
 
     def __init__(self):
-        """ Make a platform for gnuradio """
+        """ Make a platform for GNU Radio """
         Element.__init__(self)
 
-        # Ensure hier and conf directories
-        if not os.path.exists(HIER_BLOCKS_LIB_DIR):
-            os.mkdir(HIER_BLOCKS_LIB_DIR)
-        if not os.path.exists(os.path.dirname(PREFS_FILE)):
-            os.mkdir(os.path.dirname(PREFS_FILE))
+        self.config = Config()
 
         self.block_docstrings = {}
         self.block_docstrings_loaded_callback = lambda: None  # dummy to be replaced by BlockTreeWindow
@@ -54,36 +113,26 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
-        self._name = 'GNU Radio Companion'
-        # Save the version string to the first
-        version = (gr.version(), gr.major_version(), gr.api_version(), gr.minor_version())
-        self._version = version[0]
-        self._version_major = version[1]
-        self._version_api = version[2]
-        self._version_minor = version[3]
-        self._version_short = version[1] + "." + version[2] + "." + version[3]
+        self._block_paths = list(set(Constants.BLOCKS_DIRS))
+        self._block_dtd = Constants.BLOCK_DTD
+        self._default_flow_graph = Constants.DEFAULT_FLOW_GRAPH
 
-        self._key = 'grc'
-        self._license = __doc__.strip()
-        self._website = 'http://gnuradio.org'
-        self._block_paths = list(set(BLOCKS_DIRS))
-        self._block_dtd = BLOCK_DTD
-        self._default_flow_graph = DEFAULT_FLOW_GRAPH
-        self._generator = Generator
-        self._colors = [(name, color) for name, key, sizeof, color in CORE_TYPES]
         # Create a dummy flow graph for the blocks
         self._flow_graph = Element(self)
         self._flow_graph.connections = []
 
-        self._blocks = None
+        self.blocks = None
         self._blocks_n = None
         self._category_trees_n = None
-        self._domains = dict()
-        self._connection_templates = dict()
+        self.domains = dict()
+        self.connection_templates = dict()
+
+        self._auto_hier_block_generate_chain = set()
+
         self.load_blocks()
 
-        _move_old_pref_file()
-        self._auto_hier_block_generate_chain = set()
+    def __str__(self):
+        return 'Platform - {}({})'.format(self.config.key, self.config.name)
 
     @staticmethod
     def find_file_in_paths(filename, paths, cwd):
@@ -102,7 +151,7 @@ class Platform(Element):
                 return file_path
 
     def load_and_generate_flow_graph(self, file_path):
-        """Loads a flowgraph from file and generates it"""
+        """Loads a flow graph from file and generates it"""
         Messages.set_indent(len(self._auto_hier_block_generate_chain))
         Messages.send('>>> Loading: %r\n' % file_path)
         if file_path in self._auto_hier_block_generate_chain:
@@ -127,7 +176,7 @@ class Platform(Element):
 
         try:
             Messages.send('>>> Generating: {}\n'.format(file_path))
-            generator = self.get_generator()(flow_graph, file_path)
+            generator = self.Generator(flow_graph, file_path)
             generator.write()
         except Exception as e:
             Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
@@ -140,11 +189,11 @@ class Platform(Element):
         """load the blocks and block tree from the search paths"""
         self._docstring_extractor.start()
         # Reset
-        self._blocks = odict()
+        self.blocks = odict()
         self._blocks_n = odict()
         self._category_trees_n = list()
-        self._domains.clear()
-        self._connection_templates.clear()
+        self.domains.clear()
+        self.connection_templates.clear()
         ParseXML.xml_failures.clear()
         # Try to parse and load blocks
         for xml_file in self.iter_xml_files():
@@ -159,7 +208,6 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
-                raise
                 print >> sys.stderr, 'Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file)
 
         self._docstring_extractor.finish()
@@ -184,10 +232,10 @@ class Platform(Element):
         # Get block instance and add it to the list of blocks
         block = self.Block(self._flow_graph, n)
         key = block.get_key()
-        if key in self._blocks:
+        if key in self.blocks:
             print >> sys.stderr, 'Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
         else:  # Store the block
-            self._blocks[key] = block
+            self.blocks[key] = block
             self._blocks_n[key] = n
 
         self._docstring_extractor.query(
@@ -196,31 +244,22 @@ class Platform(Element):
             block.get_make(raw=True)
         )
 
-    def _save_docstring_extraction_result(self, key, docstrings):
-        docs = {}
-        for match, docstring in docstrings.iteritems():
-            if not docstring or match.endswith('_sptr'):
-                continue
-            docstring = docstring.replace('\n\n', '\n').strip()
-            docs[match] = docstring
-        self.block_docstrings[key] = docs
-
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""
-        ParseXML.validate_dtd(xml_file, BLOCK_TREE_DTD)
+        ParseXML.validate_dtd(xml_file, Constants.BLOCK_TREE_DTD)
         n = ParseXML.from_file(xml_file).find('cat')
         self._category_trees_n.append(n)
 
     def load_domain_xml(self, xml_file):
         """Load a domain properties and connection templates from XML"""
-        ParseXML.validate_dtd(xml_file, DOMAIN_DTD)
+        ParseXML.validate_dtd(xml_file, Constants.DOMAIN_DTD)
         n = ParseXML.from_file(xml_file).find('domain')
 
         key = n.find('key')
         if not key:
-            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {}'.foramt(xml_file)
+            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file)
             return
-        if key in self.get_domains():  # test against repeated keys
+        if key in self.domains:  # test against repeated keys
             print >> sys.stderr, 'Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
             return
 
@@ -239,7 +278,7 @@ class Platform(Element):
                 print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)
                 color = None
 
-        self._domains[key] = dict(
+        self.domains[key] = dict(
             name=n.find('name') or key,
             multiple_sinks=to_bool(n.find('multiple_sinks'), True),
             multiple_sources=to_bool(n.find('multiple_sources'), False),
@@ -249,27 +288,10 @@ class Platform(Element):
             key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
             if not all(key):
                 print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file)
-            elif key in self._connection_templates:
+            elif key in self.connection_templates:
                 print >> sys.stderr, 'Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file)
             else:
-                self._connection_templates[key] = connection_n.find('make') or ''
-
-    def parse_flow_graph(self, flow_graph_file):
-        """
-        Parse a saved flow graph file.
-        Ensure that the file exists, and passes the dtd check.
-
-        Args:
-            flow_graph_file: the flow graph file
-
-        Returns:
-            nested data
-        @throws exception if the validation fails
-        """
-        flow_graph_file = flow_graph_file or self._default_flow_graph
-        open(flow_graph_file, 'r')  # Test open
-        ParseXML.validate_dtd(flow_graph_file, FLOW_GRAPH_DTD)
-        return ParseXML.from_file(flow_graph_file)
+                self.connection_templates[key] = connection_n.find('make') or ''
 
     def load_block_tree(self, block_tree):
         """
@@ -289,10 +311,10 @@ class Platform(Element):
             map(lambda c: load_category(c, parent), cat_n.findall('cat'))
             # Add blocks in this category
             for block_key in cat_n.findall('block'):
-                if block_key not in self.get_block_keys():
+                if block_key not in self.blocks:
                     print >> sys.stderr, 'Warning: Block key "{}" not found when loading category tree.'.format(block_key)
                     continue
-                block = self.get_block(block_key)
+                block = self.blocks[block_key]
                 # If it exists, the block's category shall not be overridden by the xml tree
                 if not block.get_category():
                     block.set_category(parent)
@@ -302,85 +324,53 @@ class Platform(Element):
             load_category(category_tree_n)
 
         # Add blocks to block tree
-        for block in self.get_blocks():
+        for block in self.blocks.itervalues():
             # Blocks with empty categories are hidden
             if not block.get_category():
                 continue
             block_tree.add_block(block.get_category(), block)
 
-    def __str__(self):
-        return 'Platform - {}({})'.format(self.get_key(), self.get_name())
+    def _save_docstring_extraction_result(self, key, docstrings):
+        docs = {}
+        for match, docstring in docstrings.iteritems():
+            if not docstring or match.endswith('_sptr'):
+                continue
+            docstring = docstring.replace('\n\n', '\n').strip()
+            docs[match] = docstring
+        self.block_docstrings[key] = docs
+
+    ##############################################
+    # Access
+    ##############################################
+
+    def parse_flow_graph(self, flow_graph_file):
+        """
+        Parse a saved flow graph file.
+        Ensure that the file exists, and passes the dtd check.
+
+        Args:
+            flow_graph_file: the flow graph file
+
+        Returns:
+            nested data
+        @throws exception if the validation fails
+        """
+        flow_graph_file = flow_graph_file or self._default_flow_graph
+        open(flow_graph_file, 'r')  # Test open
+        ParseXML.validate_dtd(flow_graph_file, Constants.FLOW_GRAPH_DTD)
+        return ParseXML.from_file(flow_graph_file)
 
     def get_new_flow_graph(self):
         return self.FlowGraph(platform=self)
 
-    def get_generator(self):
-        return self._generator
-
-    ##############################################
-    # Access Blocks
-    ##############################################
-    def get_block_keys(self):
-        return self._blocks.keys()
-
-    def get_block(self, key):
-        return self._blocks[key]
-
     def get_blocks(self):
-        return self._blocks.values()
+        return self.blocks.values()
 
     def get_new_block(self, flow_graph, key):
         return self.Block(flow_graph, n=self._blocks_n[key])
 
-    def get_domains(self):
-        return self._domains
-
-    def get_domain(self, key):
-        return self._domains.get(key)
-
-    def get_connection_templates(self):
-        return self._connection_templates
-
-    def get_name(self):
-        return self._name
-
-    def get_version(self):
-        return self._version
-
-    def get_version_major(self):
-        return self._version_major
-
-    def get_version_api(self):
-        return self._version_api
-
-    def get_version_minor(self):
-        return self._version_minor
-
-    def get_version_short(self):
-        return self._version_short
-
-    def get_key(self):
-        return self._key
-
-    def get_license(self):
-        return self._license
-
-    def get_website(self):
-        return self._website
-
     def get_colors(self):
-        return self._colors
+        return [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
 
     def get_block_paths(self):
         return self._block_paths
-
-
-def _move_old_pref_file():
-    if PREFS_FILE == PREFS_FILE_OLD:
-        return  # prefs file overridden with env var
-    if os.path.exists(PREFS_FILE_OLD) and not os.path.exists(PREFS_FILE):
-        try:
-            import shutil
-            shutil.move(PREFS_FILE_OLD, PREFS_FILE)
-        except Exception as e:
-            print >> sys.stderr, e

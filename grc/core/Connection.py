@@ -101,17 +101,15 @@ class Connection(Element):
         platform = self.get_parent().get_parent()
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
-        if (source_domain, sink_domain) not in platform.get_connection_templates():
+        if (source_domain, sink_domain) not in platform.connection_templates:
             self.add_error_message('No connection known for domains "{}", "{}"'.format(
                     source_domain, sink_domain))
         too_many_other_sinks = (
-            source_domain in platform.get_domains() and
-            not platform.get_domain(key=source_domain)['multiple_sinks'] and
+            not platform.domains.get(source_domain, []).get('multiple_sinks', False) and
             len(self.get_source().get_enabled_connections()) > 1
         )
         too_many_other_sources = (
-            sink_domain in platform.get_domains() and
-            not platform.get_domain(key=sink_domain)['multiple_sources'] and
+            not platform.domains.get(sink_domain, []).get('multiple_sources', False) and
             len(self.get_sink().get_enabled_connections()) > 1
         )
         if too_many_other_sinks:
