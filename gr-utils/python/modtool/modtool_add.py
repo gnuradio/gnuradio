@@ -103,11 +103,13 @@ class ModToolAdd(ModTool):
             raise ModToolException('Invalid block name.')
         print "Block/code identifier: " + self._info['blockname']
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
-        self._info['copyrightholder'] = options.copyright
-        if self._info['copyrightholder'] is None:
-            self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
-        elif self._info['is_component']:
-            print "For GNUradio components the FSF is added as copyright holder"
+        if not options.license_file:
+            self._info['copyrightholder'] = options.copyright
+            if self._info['copyrightholder'] is None:
+                self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+            elif self._info['is_component']:
+                print "For GNU Radio components the FSF is added as copyright holder"
+        self._license_file = options.license_file
         self._info['license'] = self.setup_choose_license()
         if options.argument_list is not None:
             self._info['arglist'] = options.argument_list
@@ -127,7 +129,6 @@ class ModToolAdd(ModTool):
             print "Warning: Autotools modules are not supported. ",
             print "Files will be created, but Makefiles will not be edited."
             self._skip_cmakefiles = True
-        self._license_file = options.license_file
 
     def setup_choose_license(self):
         """ Select a license by the following rules, in this order:
