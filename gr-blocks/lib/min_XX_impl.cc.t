@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014,2015 Free Software Foundation, Inc.
+ * Copyright 2014,2015,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -77,7 +77,7 @@ namespace gr {
 	}
 
       else // vector mode output
-	for(int i = 0; i < noutput_items * d_vlen_out; i++) {
+	for(size_t i = 0; i < noutput_items * d_vlen_out; i++) {
 	  @I_TYPE@ min = ((@I_TYPE@ *)input_items[0])[i];
 	  
 	  for(int k = 1; k < ninputs; k++) {
