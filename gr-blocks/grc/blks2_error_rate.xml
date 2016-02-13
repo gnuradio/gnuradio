@@ -8,6 +8,7 @@
 <block>
 	<name>Error Rate</name>
 	<key>blks2_error_rate</key>
+	<category>Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.error_rate(
 	type=$type,

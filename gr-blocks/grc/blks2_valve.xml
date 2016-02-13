@@ -8,6 +8,7 @@
 <block>
 	<name>Valve</name>
 	<key>blks2_valve</key>
+	<category>Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.valve(item_size=$type.size*$vlen, open=bool($open))</make>
 	<callback>set_open(bool($open))</callback>
