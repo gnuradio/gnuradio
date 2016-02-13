@@ -21,22 +21,8 @@
       <block>note</block>
       <block>import</block>
 
-      <block>blks2_selector</block>
-      <block>blks2_valve</block>
-      <block>blks2_error_rate</block>
-
       <block>xmlrpc_server</block>
       <block>xmlrpc_client</block>
-   </cat>
-   <cat>
-      <name>Networking Tools</name>
-      <block>blks2_tcp_source</block>
-      <block>blks2_tcp_sink</block>
-   </cat>
-   <cat>
-      <name>Packet Operators</name>
-      <block>blks2_packet_decoder</block>
-      <block>blks2_packet_encoder</block>
    </cat>
    <cat>
       <name>Variables</name>
