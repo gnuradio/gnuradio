@@ -118,6 +118,9 @@ public slots:
 
   void setPlotPosHalf(bool half);
 
+  void setYLabel(const std::string &label,
+                 const std::string &unit);
+
   void clearMaxData();
   void clearMinData();
 
