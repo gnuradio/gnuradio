@@ -28,6 +28,10 @@
 #include <gnuradio/fec/generic_decoder.h>
 #include <gnuradio/fec/polar_common.h>
 
+#ifndef BOOST_CONSTEXPR_OR_CONST
+#define BOOST_CONSTEXPR_OR_CONST const
+#endif
+
 namespace gr {
   namespace fec {
     namespace code {
@@ -64,7 +68,7 @@ namespace gr {
         bool set_frame_size(unsigned int frame_size){return false;};
 
       private:
-        static const float D_LLR_FACTOR = -2.19722458f;
+        static BOOST_CONSTEXPR_OR_CONST float D_LLR_FACTOR = -2.19722458f;
         unsigned int d_frozen_bit_counter;
 
       protected:
