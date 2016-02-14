@@ -118,6 +118,7 @@ namespace gr {
       void enable_menu(bool en);
       void enable_autoscale(bool en);
       void enable_grid(bool en);
+      void enable_axis_labels(bool en);
       void disable_legend();
       void reset();
 

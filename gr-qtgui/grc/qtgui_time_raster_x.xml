@@ -200,6 +200,7 @@ $(gui_hint()($win))</make>
       <name>No</name>
       <key>False</key>
     </option>
+    <tab>Config</tab>
   </param>
 
   <param>

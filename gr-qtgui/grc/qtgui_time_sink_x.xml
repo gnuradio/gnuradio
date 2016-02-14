@@ -176,22 +176,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <name>Axis Labels</name>
-    <key>axislabels</key>
-    <value>True</value>
-    <type>enum</type>
-    <hide>part</hide>
-    <option>
-      <name>Yes</name>
-      <key>True</key>
-    </option>
-    <option>
-      <name>No</name>
-      <key>False</key>
-    </option>
-  </param>
-
-  <param>
     <name>Autoscale</name>
     <key>autoscale</key>
     <value>False</value>
@@ -365,6 +349,23 @@ $(gui_hint()($win))</make>
   <param>
     <name>Legend</name>
     <key>legend</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Axis Labels</name>
+    <key>axislabels</key>
     <value>True</value>
     <type>enum</type>
     <hide>part</hide>

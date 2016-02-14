@@ -90,7 +90,6 @@ public slots:
   void setPlotPosHalf(bool half);
   void setTimePerFFT(double t);
   void setUpdateTime(double t);
-  void setAxisLabels(bool en);
 
 private slots:
   void newData(const QEvent *updateEvent);

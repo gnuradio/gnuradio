@@ -32,6 +32,7 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
   d_autoscale_check = new QCheckBox("Autoscale");
   d_grid_check = new QCheckBox("Grid");
   d_axislabels_check = new QCheckBox("Axis Labels");
+  d_axislabels_check->setChecked(true);
 
   d_yoff_layout = new QHBoxLayout;
   d_yoff_label = new QLabel("Y Offset:");
