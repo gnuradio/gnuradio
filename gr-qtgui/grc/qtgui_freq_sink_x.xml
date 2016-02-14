@@ -22,6 +22,7 @@ qtgui.$(type.fcn)(
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
+self.$(id).set_y_label($label, $units)
 self.$(id).set_trigger_mode($tr_mode, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
@@ -248,6 +249,22 @@ $(gui_hint()($win))</make>
     <key>ymax</key>
     <value>10</value>
     <type>real</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Y label</name>
+    <key>label</key>
+    <value>Relative Gain</value>
+    <type>string</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Y units</name>
+    <key>units</key>
+    <value>dB</value>
+    <type>string</type>
     <hide>part</hide>
   </param>
 
