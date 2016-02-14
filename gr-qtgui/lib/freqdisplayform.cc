@@ -323,6 +323,12 @@ FreqDisplayForm::setYaxis(double min, double max)
   getPlot()->setYaxis(min, max);
 }
 
+void FreqDisplayForm::setYLabel(const std::string &label,
+                                const std::string &unit)
+{
+  getPlot()->setYLabel(label, unit);
+}
+
 void
 FreqDisplayForm::setYMax(const QString &m)
 {
