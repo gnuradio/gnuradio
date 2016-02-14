@@ -191,7 +191,7 @@ class rx_cfile_block(gr.top_block):
             if options.nsamples is None:
                 print("[UHD_RX] Receiving samples until Ctrl-C")
             else:
-                print("[UHD_RX] Receiving {n} samples.".format(n2s(options.nsamples)))
+                print("[UHD_RX] Receiving {n} samples.".format(n=n2s(options.nsamples)))
             if options.output_shorts:
                 print("[UHD_RX] Writing 16-bit complex shorts")
             else:
