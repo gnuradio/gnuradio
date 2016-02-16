@@ -20,9 +20,6 @@
 
       <block>note</block>
       <block>import</block>
-
-      <block>xmlrpc_server</block>
-      <block>xmlrpc_client</block>
    </cat>
    <cat>
       <name>Variables</name>
