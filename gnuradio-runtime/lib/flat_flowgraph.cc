@@ -112,28 +112,28 @@ namespace gr {
 
     for(int i = 0; i < noutputs; i++) {
       grblock->expand_minmax_buffer(i);
+      buffer_sptr buffer;
       if (grblock->d_output_signature->stream_flags(i) == gr::io_signature::MEM_BLOCK_ALLOC) {
-        buffer_sptr buffer = grblock->allocate_output_buffer(i);
+        buffer = grblock->allocate_output_buffer(i);
         if (FLAT_FLOWGRAPH_DEBUG) {
           std::cout << "Allocated custom buffer for " << block << ":" << i << std::endl;
         }
-        detail->set_output(i, buffer);
       } else {
-        buffer_sptr buffer = allocate_buffer(block, i);
+        buffer = allocate_buffer(block, i);
         if (FLAT_FLOWGRAPH_DEBUG) {
           std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
         }
-        detail->set_output(i, buffer);
       }
-      buffer_sptr buffer = detail->output(i);
+      detail->set_output(i, buffer);
+
       // Update the block's max_output_buffer based on what was actually allocated.
       if ((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1)) {
         GR_LOG_WARN(d_logger,
                     boost::format("Block (%1%) max output buffer set to %2%"
                                                 " instead of requested %3%") \
                     % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
-        grblock->set_max_output_buffer(i, buffer->bufsize());
       }
+      grblock->set_max_output_buffer(i, buffer->bufsize());
     }
     return detail;
   }
