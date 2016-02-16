@@ -226,6 +226,12 @@ FLOW_GRAPH_REDO = Action(
     keypresses=(gtk.keysyms.y, gtk.gdk.CONTROL_MASK),
 )
 NOTHING_SELECT = Action()
+SELECT_ALL = Action(
+    label='Select _All',
+    tooltip='Select all blocks and connections in the flow graph',
+    stock_id=gtk.STOCK_SELECT_ALL,
+    keypresses=(gtk.keysyms.a, gtk.gdk.CONTROL_MASK),
+)
 ELEMENT_SELECT = Action()
 ELEMENT_CREATE = Action()
 ELEMENT_DELETE = Action(

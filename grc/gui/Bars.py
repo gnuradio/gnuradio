@@ -82,6 +82,7 @@ MENU_BAR_LIST = (
         Actions.BLOCK_COPY,
         Actions.BLOCK_PASTE,
         Actions.ELEMENT_DELETE,
+        Actions.SELECT_ALL,
         None,
         Actions.BLOCK_ROTATE_CCW,
         Actions.BLOCK_ROTATE_CW,
