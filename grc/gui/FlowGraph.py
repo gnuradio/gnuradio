@@ -191,6 +191,8 @@ class FlowGraph(Element):
             block_key = block_n.find('key')
             if block_key == 'options': continue
             block = self.get_new_block(block_key)
+            if not block:
+                continue  # unknown block was pasted (e.g. dummy block)
             selected.add(block)
             #set params
             params_n = block_n.findall('param')
