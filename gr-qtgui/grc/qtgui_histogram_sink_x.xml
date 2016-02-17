@@ -24,6 +24,7 @@ self.$(id).set_update_time($update_time)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_accumulate($accum)
 self.$(id).enable_grid($grid)
+self.$(id).enable_axis_labels($axislabels)
 
 if not $legend:
   self.$(id).disable_legend()

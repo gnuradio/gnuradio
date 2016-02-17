@@ -22,6 +22,7 @@ self.$(id).set_x_axis($xmin, $xmax)
 self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
+self.$(id).enable_axis_labels($axislabels)
 
 if not $legend:
   self.$(id).disable_legend()
