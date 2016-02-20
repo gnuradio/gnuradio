@@ -44,6 +44,7 @@ namespace gr {
         d_lengthtag(pmt::mp(lengthtagname)),
         d_have_sync(false)
     {
+      set_tag_propagation_policy(TPP_DONT);
     }
 
     tagged_stream_align_impl::~tagged_stream_align_impl()
