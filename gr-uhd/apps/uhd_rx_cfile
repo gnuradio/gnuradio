@@ -82,20 +82,21 @@ class rx_cfile_block(gr.top_block):
             for mb_idx in xrange(self._u.get_num_mboards()):
                 self._u.set_subdev_spec(options.spec, mb_idx)
         # Set the antenna:
-        self.antenna = [x.strip() for x in options.antenna.split(",")]
-        if len(self.antenna) != 1 and len(self.antenna) != len(self.channels):
-            sys.stderr.write("[UHD_RX] [ERROR] Invalid antenna setting for {} channels: {}".format(
-                len(self.channels), options.antenna
-            ))
-            exit(1)
-        if len(self.antenna) == 1 and len(self.channels) > 1:
-            self.antenna = [self.antenna[0],] * len(self.channels)
-        for i, chan in enumerate(self.channels):
-            self._u.set_antenna(self.antenna[i], chan)
-            if options.verbose:
-                print("[UHD_RX] Channel {chan}: Using antenna {ant}.".format(
-                    chan=chan, ant=self._u.get_antenna(chan)
+        if options.antenna is not None:
+            self.antenna = [x.strip() for x in options.antenna.split(",")]
+            if len(self.antenna) != 1 and len(self.antenna) != len(self.channels):
+                sys.stderr.write("[UHD_RX] [ERROR] Invalid antenna setting for {} channels: {}".format(
+                    len(self.channels), options.antenna
                 ))
+                exit(1)
+            if len(self.antenna) == 1 and len(self.channels) > 1:
+                self.antenna = [self.antenna[0],] * len(self.channels)
+            for i, chan in enumerate(self.channels):
+                self._u.set_antenna(self.antenna[i], chan)
+                if options.verbose:
+                    print("[UHD_RX] Channel {chan}: Using antenna {ant}.".format(
+                        chan=chan, ant=self._u.get_antenna(chan)
+                    ))
         # Set receiver sample rate:
         self._u.set_samp_rate(options.samp_rate)
         samp_rate = self._u.get_samp_rate()
