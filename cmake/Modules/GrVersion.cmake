@@ -41,7 +41,13 @@ if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 else()
-    set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}.x-xxx-xunknown")
+    if(NOT GR_GIT_COUNT)
+        set(GR_GIT_COUNT "compat-xxx")
+    endif()
+    if(NOT GR_GIT_HASH)
+        set(GR_GIT_HASH "xunknown")
+    endif()
+    set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}-${GR_GIT_COUNT}-${GR_GIT_HASH}")
 endif()
 
 ########################################################################

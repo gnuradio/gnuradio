@@ -130,6 +130,7 @@ namespace gr {
       void enable_semilogy(bool en);
       void enable_control_panel(bool en);
       void enable_tags(int which, bool en);
+      void enable_axis_labels(bool en);
       void disable_legend();
 
       void reset();

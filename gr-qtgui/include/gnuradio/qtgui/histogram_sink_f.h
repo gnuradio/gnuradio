@@ -121,6 +121,7 @@ namespace gr {
       virtual void enable_semilogx(bool en=true) = 0;
       virtual void enable_semilogy(bool en=true) = 0;
       virtual void enable_accumulate(bool en=true) = 0;
+      virtual void enable_axis_labels(bool en=true) = 0;
       virtual void autoscalex() = 0;
       virtual int nsamps() const = 0;
       virtual int bins() const = 0;

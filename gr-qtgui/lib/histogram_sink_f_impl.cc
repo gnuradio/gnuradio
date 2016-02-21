@@ -346,6 +346,12 @@ namespace gr {
     }
 
     void
+    histogram_sink_f_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
+    void
     histogram_sink_f_impl::enable_autoscale(bool en)
     {
       d_main_gui->autoScale(en);

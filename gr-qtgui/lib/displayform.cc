@@ -29,6 +29,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
   : QWidget(parent), d_nplots(nplots), d_system_specified_flag(false)
 {
   d_isclosed = false;
+  d_axislabels = true;
 
   // Set the initial plot size
   resize(QSize(800, 600));
@@ -53,11 +54,18 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
           this, SLOT(setGrid(bool)));
   d_grid_state = false;
 
+  d_axislabelsmenu = new QAction("Axis Labels", this);
+  d_axislabelsmenu->setCheckable(true);
+  d_axislabelsmenu->setStatusTip(tr("Toggle Axis Labels on/off"));
+  connect(d_axislabelsmenu, SIGNAL(triggered(bool)),
+      this, SLOT(setAxisLabels(bool)));
+
   // Create a pop-up menu for manipulating the figure
   d_menu_on = true;
   d_menu = new QMenu(this);
   d_menu->addAction(d_stop_act);
   d_menu->addAction(d_grid_act);
+  d_menu->addAction(d_axislabelsmenu);
 
   for(int i = 0; i < d_nplots; i++) {
     d_line_title_act.push_back(new LineTitleAction(i, this));
@@ -336,6 +344,14 @@ DisplayForm::setGrid(bool on)
   }
   d_grid_act->setChecked(on);
   d_display_plot->replot();
+}
+
+void
+DisplayForm::setAxisLabels(bool en)
+{
+  d_axislabels = en;
+  d_axislabelsmenu->setChecked(en);
+  getPlot()->setAxisLabels(d_axislabels);
 }
 
 void
