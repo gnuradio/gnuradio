@@ -26,7 +26,7 @@ Templates = {}
 
 # Default licence
 Templates['defaultlicense'] = '''
-Copyright %d <+YOU OR YOUR COMPANY+>.
+Copyright %d ${copyrightholder}.
 
 This is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
