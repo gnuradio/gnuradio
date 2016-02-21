@@ -34,7 +34,11 @@ FIND_LIBRARY(THRIFT_LIBRARIES
   )
 
 # Get the thrift binary to build our files during cmake
-FIND_PROGRAM(THRIFT_BIN thrift)
+if (CMAKE_CROSSCOMPILING)
+  FIND_PROGRAM(THRIFT_BIN thrift NO_CMAKE_FIND_ROOT_PATH)
+else (CMAKE_CROSSCOMPILING)
+  FIND_PROGRAM(THRIFT_BIN thrift)
+endif(CMAKE_CROSSCOMPILING)
 
 # Use binary to get version string and test against THRIFT_REQ_VERSION
 EXECUTE_PROCESS(
