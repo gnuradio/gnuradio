@@ -190,6 +190,7 @@ public:
 
 public slots:
   virtual void disableLegend();
+  virtual void setAxisLabels(bool en);
   virtual void setYaxis(double min, double max);
   virtual void setXaxis(double min, double max);
   virtual void setLineLabel(int which, QString label);

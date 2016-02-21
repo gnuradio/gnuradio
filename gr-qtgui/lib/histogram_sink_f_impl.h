@@ -88,6 +88,7 @@ namespace gr {
       void set_line_alpha(int which, double alpha);
       void set_nsamps(const int newsize);
       void set_bins(const int bins);
+      void enable_axis_labels(bool en);
 
       std::string title();
       std::string line_label(int which);

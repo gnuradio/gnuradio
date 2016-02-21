@@ -368,6 +368,12 @@ namespace gr {
     }
 
     void
+    waterfall_sink_c_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
+    void
     waterfall_sink_c_impl::disable_legend()
     {
       d_main_gui->disableLegend();

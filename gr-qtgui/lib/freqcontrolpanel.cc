@@ -50,6 +50,7 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   d_axes_layout = new QVBoxLayout;
 
   d_grid_check = new QCheckBox("Grid");
+  d_axislabels_check = new QCheckBox("Axis Labels");
   d_yrange_layout = new QHBoxLayout;
   d_yrange_label = new QLabel("Y Range:");
   d_yrange_plus = new QPushButton("+");
@@ -133,6 +134,7 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
   d_trace_box->setLayout(d_trace_layout);
 
   d_axes_layout->addWidget(d_grid_check);
+  d_axes_layout->addWidget(d_axislabels_check);
   d_axes_layout->addLayout(d_yrange_layout);
   d_axes_layout->addLayout(d_ymin_layout);
   d_axes_layout->addWidget(d_autoscale_button);
@@ -170,6 +172,9 @@ FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)
 
   connect(d_grid_check, SIGNAL(clicked(bool)),
 	  d_parent, SLOT(setGrid(bool)));
+
+  connect(d_axislabels_check, SIGNAL(clicked(bool)),
+	  d_parent, SLOT(setAxisLabels(bool)));
 
   connect(d_ymin_plus, SIGNAL(pressed(void)),
 	  d_parent, SLOT(notifyYAxisPlus(void)));

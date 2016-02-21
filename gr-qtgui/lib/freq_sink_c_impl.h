@@ -154,6 +154,7 @@ namespace gr {
       void clear_min_hold();
       void disable_legend();
       void reset();
+      void enable_axis_labels(bool en);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

@@ -31,6 +31,8 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
   d_axes_layout = new QVBoxLayout;
   d_autoscale_check = new QCheckBox("Autoscale");
   d_grid_check = new QCheckBox("Grid");
+  d_axislabels_check = new QCheckBox("Axis Labels");
+  d_axislabels_check->setChecked(true);
 
   d_yoff_layout = new QHBoxLayout;
   d_yoff_label = new QLabel("Y Offset:");
@@ -106,6 +108,7 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
   // Set up the boxes into the layout
   d_axes_layout->addWidget(d_autoscale_check);
   d_axes_layout->addWidget(d_grid_check);
+  d_axes_layout->addWidget(d_axislabels_check);
   d_axes_layout->addLayout(d_yoff_layout);
   d_axes_layout->addLayout(d_yrange_layout);
   d_axes_layout->addLayout(d_xmax_layout);
@@ -132,6 +135,8 @@ TimeControlPanel::TimeControlPanel(TimeDisplayForm *form)
 	  d_parent, SLOT(autoScale(bool)));
   connect(d_grid_check, SIGNAL(clicked(bool)),
 	  d_parent, SLOT(setGrid(bool)));
+  connect(d_axislabels_check, SIGNAL(clicked(bool)),
+	  d_parent, SLOT(setAxisLabels(bool)));
   connect(d_yoff_plus, SIGNAL(pressed(void)),
 	  d_parent, SLOT(notifyYAxisPlus(void)));
   connect(d_yoff_minus, SIGNAL(pressed(void)),
