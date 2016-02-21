@@ -26,7 +26,7 @@ Templates = {}
 
 # Default licence
 Templates['defaultlicense'] = '''
-Copyright {0} <+YOU OR YOUR COMPANY+>.
+Copyright %d ${copyrightholder}.
 
 This is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -770,4 +770,3 @@ class ${modname.upper()}_API ${modname}_${blockname} : public gr_${grblocktype}
 #endif /* INCLUDED_${modname.upper()}_${blockname.upper()}_H */
 
 '''
-

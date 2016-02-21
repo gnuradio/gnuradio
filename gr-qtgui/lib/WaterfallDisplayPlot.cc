@@ -657,8 +657,6 @@ WaterfallDisplayPlot::_updateIntensityRangeDisplay()
     setAxisScale(QwtPlot::yRight, intv.minValue(), intv.maxValue());
 #endif
 
-    enableAxis(d_legend_enabled);
-
     plotLayout()->setAlignCanvasToScales(true);
 
     // Tell the display to redraw everything

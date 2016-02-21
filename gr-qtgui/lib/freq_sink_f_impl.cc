@@ -415,6 +415,12 @@ namespace gr {
     }
 
     void
+    freq_sink_f_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
+    void
     freq_sink_f_impl::enable_control_panel(bool en)
     {
       if(en)

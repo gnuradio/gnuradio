@@ -110,7 +110,6 @@ public slots:
   void notifyTriggerLevelPlus();
   void notifyTriggerLevelMinus();
 
-
 signals:
   void signalFFTSize(int size);
   void signalFFTWindow(gr::filter::firdes::win_type win);

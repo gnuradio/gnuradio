@@ -83,6 +83,7 @@ public slots:
   void setStop();
 
   void setGrid(bool on);
+  void setAxisLabels(bool en);
 
   void saveFigure();
 
@@ -117,6 +118,8 @@ protected:
   bool d_stop_state;
   QAction *d_grid_act;
   bool d_grid_state;
+  QAction *d_axislabelsmenu;
+  bool d_axislabels;
 
   QAction *d_autoscale_act;
   bool d_autoscale_state;

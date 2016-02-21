@@ -22,6 +22,7 @@ qtgui.$(type.fcn)(
 )
 self.$(id).set_update_time($update_time)
 self.$(id).enable_grid($grid)
+self.$(id).enable_axis_labels($axislabels)
 
 if not $legend:
   self.$(id).disable_legend()
@@ -267,6 +268,23 @@ $(gui_hint()($win))</make>
     <key>label1</key>
     <type>string</type>
     <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Axis Labels</name>
+    <key>axislabels</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
     <tab>Config</tab>
   </param>
 
