@@ -38,7 +38,7 @@ def _blk_class(source_code):
     except Exception as e:
         raise ValueError("Can't interpret source code: " + str(e))
     for var in ns.itervalues():
-        if inspect.isclass(var)and issubclass(var, gr.gateway.gateway_block):
+        if inspect.isclass(var) and issubclass(var, gr.gateway.gateway_block):
             return var
     raise ValueError('No python block class found in code')
 

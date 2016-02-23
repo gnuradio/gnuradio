@@ -15,22 +15,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-import shlex
-import subprocess
-import sys
-import tempfile
-from distutils.spawn import find_executable
 
 import codecs
 import os
-import re  # for shlex_quote
+import tempfile
+
 from Cheetah.Template import Template
 
 from .FlowGraphProxy import FlowGraphProxy
 from .. import ParseXML, Messages
 from ..Constants import (
     TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
-    XTERM_EXECUTABLE, HIER_BLOCK_FILE_MODE, HIER_BLOCKS_LIB_DIR, BLOCK_DTD
+    HIER_BLOCK_FILE_MODE, BLOCK_DTD
 )
 from ..utils import expr_utils, odict
 
@@ -50,18 +46,15 @@ class Generator(object):
             flow_graph: the flow graph object
             file_path: the path to the grc file
         """
-        self._generate_options = flow_graph.get_option('generate_options')
-        if self._generate_options == 'hb':
+        self.generate_options = flow_graph.get_option('generate_options')
+        if self.generate_options == 'hb':
             generator_cls = HierBlockGenerator
-        elif self._generate_options == 'hb_qt_gui':
+        elif self.generate_options == 'hb_qt_gui':
             generator_cls = QtHierBlockGenerator
         else:
             generator_cls = TopBlockGenerator
 
         self._generator = generator_cls(flow_graph, file_path)
-
-    def get_generate_options(self):
-        return self._generate_options
 
     def __getattr__(self, item):
         """get all other attrib from actual generator object"""
@@ -87,10 +80,10 @@ class TopBlockGenerator(object):
         if not os.access(dirname, os.W_OK):
             dirname = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
-        self._file_path = os.path.join(dirname, filename)
+        self.file_path = os.path.join(dirname, filename)
 
     def get_file_path(self):
-        return self._file_path
+        return self.file_path
 
     def write(self):
         """generate output and write it to files"""
@@ -113,43 +106,11 @@ class TopBlockGenerator(object):
         for filename, data in self._build_python_code_from_template():
             with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
-            if filename == self.get_file_path():
+            if filename == self.file_path:
                 try:
                     os.chmod(filename, self._mode)
                 except:
                     pass
-
-    def get_popen(self):
-        """
-        Execute this python flow graph.
-
-        Returns:
-            a popen object
-        """
-        run_command = self._flow_graph.get_option('run_command')
-        try:
-            run_command = run_command.format(
-                python=shlex_quote(sys.executable),
-                filename=shlex_quote(self.get_file_path()))
-            run_command_args = shlex.split(run_command)
-        except Exception as e:
-            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
-
-        # When in no gui mode on linux, use a graphical terminal (looks nice)
-        xterm_executable = find_executable(XTERM_EXECUTABLE)
-        if self._generate_options == 'no_gui' and xterm_executable:
-            run_command_args = [xterm_executable, '-e', run_command]
-
-        # this does not reproduce a shell executable command string, if a graphical
-        # terminal is used. Passing run_command though shlex_quote would do it but
-        # it looks really ugly and confusing in the console panel.
-        Messages.send_start_exec(' '.join(run_command_args))
-
-        return subprocess.Popen(
-            args=run_command_args,
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=False, universal_newlines=True
-        )
 
     def _build_python_code_from_template(self):
         """
@@ -280,7 +241,7 @@ class TopBlockGenerator(object):
         }
         # Build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
-        output.append((self.get_file_path(), str(t)))
+        output.append((self.file_path, str(t)))
         return output
 
 
@@ -296,10 +257,12 @@ class HierBlockGenerator(TopBlockGenerator):
             file_path: where to write the py file (the xml goes into HIER_BLOCK_LIB_DIR)
         """
         TopBlockGenerator.__init__(self, flow_graph, file_path)
+        platform = flow_graph.get_parent()
+
         self._mode = HIER_BLOCK_FILE_MODE
-        self._file_path = os.path.join(HIER_BLOCKS_LIB_DIR,
-                                       self._flow_graph.get_option('id') + '.py')
-        self._file_path_xml = self._file_path + '.xml'
+        self.file_path = os.path.join(platform.config.hier_block_lib_dir,
+                                      self._flow_graph.get_option('id') + '.py')
+        self._file_path_xml = self.file_path + '.xml'
 
     def get_file_path_xml(self):
         return self._file_path_xml
@@ -394,7 +357,7 @@ class HierBlockGenerator(TopBlockGenerator):
         block_n['doc'] = "\n".join(field for field in (
             self._flow_graph.get_option('author'),
             self._flow_graph.get_option('description'),
-            self.get_file_path()
+            self.file_path
         ) if field)
         block_n['grc_source'] = str(self._flow_graph.grc_file_path)
 
@@ -426,21 +389,3 @@ class QtHierBlockGenerator(HierBlockGenerator):
             "\n${gui_hint()($win)}"
         )
         return n
-
-
-###########################################################
-# back-port from python3
-###########################################################
-_find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
-
-
-def shlex_quote(s):
-    """Return a shell-escaped version of the string *s*."""
-    if not s:
-        return "''"
-    if _find_unsafe(s) is None:
-        return s
-
-    # use single quotes, and put single quotes into double quotes
-    # the string $'b is then quoted as '$'"'"'b'
-    return "'" + s.replace("'", "'\"'\"'") + "'"

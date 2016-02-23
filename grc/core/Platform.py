@@ -51,11 +51,8 @@ class Config(object):
     def __init__(self):
         self.prefs = self._get_prefs()
 
-        # Ensure hier and conf directories
         if not exists(self.hier_block_lib_dir):
             os.mkdir(self.hier_block_lib_dir)
-        if not exists(dirname(Constants.PREFS_FILE)):
-            os.mkdir(dirname(Constants.PREFS_FILE))
 
     @staticmethod
     def _get_prefs():
@@ -113,7 +110,6 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
-        self._block_paths = list(set(Constants.BLOCKS_DIRS))
         self._block_dtd = Constants.BLOCK_DTD
         self._default_flow_graph = Constants.DEFAULT_FLOW_GRAPH
 
@@ -124,8 +120,8 @@ class Platform(Element):
         self.blocks = None
         self._blocks_n = None
         self._category_trees_n = None
-        self.domains = dict()
-        self.connection_templates = dict()
+        self.domains = {}
+        self.connection_templates = {}
 
         self._auto_hier_block_generate_chain = set()
 
@@ -215,7 +211,7 @@ class Platform(Element):
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
-        for block_path in map(lambda x: os.path.abspath(os.path.expanduser(x)), self._block_paths):
+        for block_path in self.config.block_paths:
             if os.path.isfile(block_path):
                 yield block_path
             elif os.path.isdir(block_path):
@@ -371,6 +367,3 @@ class Platform(Element):
 
     def get_colors(self):
         return [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
-
-    def get_block_paths(self):
-        return self._block_paths

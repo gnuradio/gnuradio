@@ -20,16 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import os
 import sys
 
-from .Element import Element
-
 from ..core.Platform import Platform as _Platform
-from ..core.Constants import PREFS_FILE, PREFS_FILE_OLD
 
 from .Block import Block as _Block
+from .Connection import Connection as _Connection
+from .Constants import PREFS_FILE, PREFS_FILE_OLD
+from .Element import Element
 from .FlowGraph import FlowGraph as _FlowGraph
 from .Param import Param as _Param
 from .Port import Port as _Port
-from .Connection import Connection as _Connection
 
 
 class Platform(Element, _Platform):
@@ -37,6 +36,11 @@ class Platform(Element, _Platform):
     def __init__(self):
         Element.__init__(self)
         _Platform.__init__(self)
+
+        # Ensure conf directories
+        if not os.path.exists(os.path.dirname(PREFS_FILE)):
+            os.mkdir(os.path.dirname(PREFS_FILE))
+
         self._move_old_pref_file()
         self._prefs_file = PREFS_FILE
 

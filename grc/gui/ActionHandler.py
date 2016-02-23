@@ -17,15 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+
+import gobject
+import gtk
 import os
 import subprocess
-from threading import Thread
 
-import gtk
-import gobject
-
-from . import Dialogs, Preferences, Actions
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
+from . import Dialogs, Preferences, Actions, Executor
+from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX, XTERM_EXECUTABLE
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveReportsFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
@@ -34,7 +33,6 @@ from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
 
 from ..core import Constants, ParseXML
-from ..core.Constants import XTERM_EXECUTABLE
 from ..core import Messages
 
 gobject.threads_init()
@@ -547,7 +545,7 @@ class ActionHandler:
                         Dialogs.MissingXTermDialog(XTERM_EXECUTABLE)
                     Preferences.xterm_missing(XTERM_EXECUTABLE)
                 if self.get_page().get_saved() and self.get_page().get_file_path():
-                    ExecFlowGraphThread(self)
+                    Executor.ExecFlowGraphThread(self)
         elif action == Actions.FLOW_GRAPH_KILL:
             if self.get_page().get_proc():
                 try:
@@ -654,48 +652,3 @@ class ActionHandler:
         Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() is not None)
-
-class ExecFlowGraphThread(Thread):
-    """Execute the flow graph as a new process and wait on it to finish."""
-
-    def __init__ (self, action_handler):
-        """
-        ExecFlowGraphThread constructor.
-
-        Args:
-            action_handler: an instance of an ActionHandler
-        """
-        Thread.__init__(self)
-        self.update_exec_stop = action_handler.update_exec_stop
-        self.flow_graph = action_handler.get_flow_graph()
-        #store page and dont use main window calls in run
-        self.page = action_handler.get_page()
-        #get the popen
-        try:
-            self.p = self.page.get_generator().get_popen()
-            self.page.set_proc(self.p)
-            #update
-            self.update_exec_stop()
-            self.start()
-        except Exception, e:
-            Messages.send_verbose_exec(str(e))
-            Messages.send_end_exec()
-
-    def run(self):
-        """
-        Wait on the executing process by reading from its stdout.
-        Use gobject.idle_add when calling functions that modify gtk objects.
-        """
-        #handle completion
-        r = "\n"
-        while r:
-            gobject.idle_add(Messages.send_verbose_exec, r)
-            r = os.read(self.p.stdout.fileno(), 1024)
-        self.p.poll()
-        gobject.idle_add(self.done)
-
-    def done(self):
-        """Perform end of execution tasks."""
-        Messages.send_end_exec(self.p.returncode)
-        self.page.set_proc(None)
-        self.update_exec_stop()

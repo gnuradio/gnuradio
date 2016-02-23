@@ -18,28 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-from os.path import expanduser
 import numpy
 import stat
-from gnuradio import gr
-
-_gr_prefs = gr.prefs()
-
-# Setup paths
-PATH_SEP = {'/': ':', '\\': ';'}[os.path.sep]
-
-HIER_BLOCKS_LIB_DIR = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
-
-PREFS_FILE = os.environ.get('GRC_PREFS_PATH', expanduser('~/.gnuradio/grc.conf'))
-PREFS_FILE_OLD = os.environ.get('GRC_PREFS_PATH', expanduser('~/.grc'))
-
-BLOCKS_DIRS = filter(  # filter blank strings
-    lambda x: x, PATH_SEP.join([
-        os.environ.get('GRC_BLOCKS_PATH', ''),
-        _gr_prefs.get_string('grc', 'local_blocks_path', ''),
-        _gr_prefs.get_string('grc', 'global_blocks_path', ''),
-    ]).split(PATH_SEP),
-) + [HIER_BLOCKS_LIB_DIR]
 
 # Data files
 DATA_DIR = os.path.dirname(__file__)
@@ -47,6 +27,7 @@ FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
 BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
+DOMAIN_DTD = os.path.join(DATA_DIR, 'domain.dtd')
 
 # File format versions:
 #  0: undefined / legacy
@@ -58,7 +39,6 @@ DEFAULT_PARAM_TAB = "General"
 ADVANCED_PARAM_TAB = "Advanced"
 
 # Port domains
-DOMAIN_DTD = os.path.join(DATA_DIR, 'domain.dtd')
 GR_STREAM_DOMAIN = "gr_stream"
 GR_MESSAGE_DOMAIN = "gr_message"
 DEFAULT_DOMAIN = GR_STREAM_DOMAIN
@@ -72,9 +52,6 @@ BLOCK_FLAG_NEED_WX_GUI = 'need_wx_gui'
 BLOCK_DISABLED = 0
 BLOCK_ENABLED = 1
 BLOCK_BYPASSED = 2
-
-# User settings
-XTERM_EXECUTABLE = _gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
 # File creation modes
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | \

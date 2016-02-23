@@ -29,6 +29,16 @@ from gnuradio import gr
 prefs = gr.prefs()
 GR_PREFIX = gr.prefix()
 EDITOR = prefs.get_string('grc', 'editor', '')
+XTERM_EXECUTABLE = prefs.get_string('grc', 'xterm_executable', 'xterm')
+
+PREFS_FILE = os.environ.get(
+        'GRC_PREFS_PATH',
+        os.path.expanduser('~/.gnuradio/grc.conf')
+)
+PREFS_FILE_OLD = os.environ.get(
+        'GRC_PREFS_PATH',
+        os.path.expanduser('~/.grc')
+)
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()

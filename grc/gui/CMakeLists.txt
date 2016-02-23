@@ -25,6 +25,7 @@ GR_PYTHON_INSTALL(FILES
     Constants.py
     Connection.py
     Element.py
+    Executor.py
     FlowGraph.py
     Param.py
     Platform.py
