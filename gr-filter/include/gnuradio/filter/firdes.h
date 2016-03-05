@@ -89,7 +89,7 @@ namespace gr {
        *
        * \param gain                overall gain of filter (typically 1.0)
        * \param sampling_freq       sampling freq (Hz)
-       * \param cutoff_freq         center of transition band (Hz)
+       * \param cutoff_freq         beginning of transition band (Hz)
        * \param transition_width    width of transition band (Hz)
        * \param attenuation_dB      required stopband attenuation
        * \param window              one of firdes::win_type
