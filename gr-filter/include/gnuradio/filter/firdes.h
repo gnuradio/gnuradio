@@ -348,9 +348,10 @@ namespace gr {
       /*!
        * \brief design a Gaussian filter
        *
-       * \p gain:		overall gain of filter (typically 1.0)
-       * \p symbols per bit:	symbol rate, must be a factor of sample rate
-       * \p ntaps:		number of taps
+       * \p gain:           overall gain of filter (typically 1.0)
+       * \p symbols/bit:    symbol rate, must be a factor of sample rate
+       * \p bt:             bandwidth to bitrate ratio
+       * \p ntaps:          number of taps
        */
       static std::vector<float>
 	gaussian(double gain,
