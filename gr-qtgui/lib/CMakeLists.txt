@@ -158,6 +158,11 @@ list(APPEND qtgui_libs
     ${FFTW3F_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
+if (WIN32)
+  list(APPEND qtgui_libs
+    dwrite
+  )
+endif(WIN32)
 
 include(GrPython)
 if(ENABLE_PYTHON)
