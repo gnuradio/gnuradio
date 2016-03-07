@@ -23,6 +23,7 @@ import subprocess
 import tempfile
 import shlex
 import codecs
+import platform
 from distutils.spawn import find_executable
 
 from Cheetah.Template import Template
@@ -130,8 +131,10 @@ class TopBlockGenerator(object):
             return ' '.join(repr(arg) if ' ' in arg else arg for arg in args)
 
         run_command = self._flow_graph.get_option('run_command')
+        if platform.system() == 'Windows' : usePosix = False 
+        else: usePosix = True 
         cmds = shlex.split(run_command.format(python=sys.executable,
-                                              filename=self.get_file_path()))
+                                              filename=self.get_file_path()), posix=usePosix)
 
         # when in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(XTERM_EXECUTABLE)
