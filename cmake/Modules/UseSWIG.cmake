@@ -224,9 +224,9 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
   foreach(swig_gen_file ${${outfiles}})
     add_custom_command(
       OUTPUT ${swig_gen_file}
-      COMMAND ""
+      COMMAND
       DEPENDS ${_target}
-      COMMENT ""
+      COMMENT
     )
   endforeach()
 
