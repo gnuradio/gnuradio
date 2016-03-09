@@ -28,7 +28,18 @@ try:
     matplotlib.use("QT4Agg")
     import matplotlib.pyplot as plt
     from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-    from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+
+    # Manage different matplotlib versions
+    try:
+        from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+    except ImportError:
+        try:
+            from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+        except ImportError:
+            print sys.argv[0], "could not load QTAgg backend."
+            sys.exit(1)
+
+
     from matplotlib.figure import Figure
 except ImportError:
     print sys.argv[0], "requires networkx and matplotlib.", \
@@ -41,6 +52,11 @@ import itertools
 
 from gnuradio import gr, ctrlport
 from gnuradio.ctrlport.GrDataPlotter import *
+
+if float(nx.__version__) >= 1.11:
+    from networkx.drawing.nx_agraph import graphviz_layout
+else:
+    graphviz_layout = nx.graphviz_layout
 
 class MAINWindow(QtGui.QMainWindow):
     def minimumSizeHint(self):
@@ -778,8 +794,8 @@ class MForm(QtGui.QWidget):
         self.canvas = FigureCanvas(self.f)
         self.layout.addWidget(self.canvas);
 
-        self.pos = nx.graphviz_layout(self.G);
-        #self.pos = nx.pygraphviz_layout(self.G);
+        self.pos = graphviz_layout(self.G);
+        #self.pos = pygraphviz_layout(self.G);
         #self.pos = nx.spectral_layout(self.G);
         #self.pos = nx.circular_layout(self.G);
         #self.pos = nx.shell_layout(self.G);
