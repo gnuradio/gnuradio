@@ -860,7 +860,7 @@ class MForm(QtGui.QWidget):
         nx.draw(self.G, self.pos,
                 edge_color=self.edge_weights,
                 node_color='#A0CBE2',
-                width=map(lambda x: 3+math.log(x), self.edge_weights),
+                width=map(lambda x: 3+math.log(x+1e-20), self.edge_weights),
                 node_shape="s",
                 node_size=self.node_weights,
                 edge_cmap=plt.cm.Reds,
@@ -884,7 +884,7 @@ class MForm(QtGui.QWidget):
 
         nx.draw_networkx_edges(self.G, self.pos,
                                edge_color=self.edge_weights,
-                               width=map(lambda x: 3+math.log(x), self.edge_weights),
+                               width=map(lambda x: 3+math.log(x+1e-20), self.edge_weights),
                                edge_cmap=plt.cm.Reds,
                                ax=self.sp,
                                arrows=False)
