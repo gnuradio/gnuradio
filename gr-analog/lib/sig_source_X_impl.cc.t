@@ -53,13 +53,43 @@ namespace gr {
       d_frequency(frequency), d_ampl(ampl), d_offset(offset)
     {
       set_frequency(frequency);
-      
+
       message_port_register_in(pmt::mp("freq"));
       set_msg_handler(pmt::mp("freq"), boost::bind(&@IMPL_NAME@::set_frequency_msg, this, _1));
     }
 
     @IMPL_NAME@::~@IMPL_NAME@()
     {
+    }
+
+    void
+    @IMPL_NAME@::set_frequency_msg(pmt::pmt_t msg)
+    {
+      // Accepts either a number that is assumed to be the new
+      // frequency or a key:value pair message where the key must be
+      // "freq" and the value is the new frequency.
+
+      if(pmt::is_number(msg)) {
+        set_frequency(pmt::to_double(msg));
+      }
+      else if(pmt::is_pair(msg)) {
+        pmt::pmt_t key = pmt::car(msg);
+        pmt::pmt_t val = pmt::cdr(msg);
+        if(pmt::eq(key, pmt::intern("freq"))) {
+          if(pmt::is_number(val)) {
+              set_frequency(pmt::to_double(val));
+          }
+        }
+        else {
+          GR_LOG_WARN(d_logger, boost::format("Set Frequency Message must have "
+                                              "the key = 'freq'; got '%1%'.") \
+                      % pmt::write_string(key));
+        }
+      }
+      else {
+        GR_LOG_WARN(d_logger, "Set Frequency Message must be either a number or a "
+                    "key:value pair where the key is 'freq'.");
+      }
     }
 
     int

@@ -57,6 +57,7 @@ endif(ENABLE_GR_CTRLPORT)
 
 list(APPEND fft_libs
     gnuradio-runtime
+    ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${FFTW3F_LIBRARIES}
 )

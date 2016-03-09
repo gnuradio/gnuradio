@@ -590,13 +590,13 @@ namespace gr {
       double t0 = -0.5 * ntaps;
       double ts;
       for(int i=0;i<ntaps;i++) {
-	t0++;
-	ts = s*dt*t0;
-	taps[i] = exp(-0.5*ts*ts);
-	scale += taps[i];
+        t0++;
+        ts = s*dt*t0;
+        taps[i] = exp(-0.5*ts*ts);
+        scale += taps[i];
       }
       for(int i=0;i<ntaps;i++)
-	taps[i] = taps[i] / scale * gain;
+        taps[i] = taps[i] / scale * gain;
 
       return taps;
     }
