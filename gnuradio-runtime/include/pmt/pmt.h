@@ -279,7 +279,7 @@ PMT_API std::complex<double> to_complex(pmt_t z);
 //! Return true if \p x is the empty list, otherwise return false.
 PMT_API bool is_null(const pmt_t& x);
 
-//! Return true if \p obj is a pair, else false.
+//! Return true if \p obj is a pair, else false (warning: also returns true for a dict)
 PMT_API bool is_pair(const pmt_t& obj);
 
 //! Return a newly allocated pair whose car is \p x and whose cdr is \p y.
@@ -575,7 +575,7 @@ PMT_API std::complex<double> *c64vector_writable_elements(pmt_t v, size_t &len);
  * ------------------------------------------------------------------------
  */
 
-//! Return true if \p obj is a dictionary
+//! Return true if \p obj is a dictionary (warning: also returns true for a pair)
 PMT_API bool is_dict(const pmt_t &obj);
 
 //! Make an empty dictionary
