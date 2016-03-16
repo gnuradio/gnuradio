@@ -19,10 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import sys
-from gnuradio import gr
 
 from . import ParseXML, Messages, Constants
 
+from .Config import Config
 from .Element import Element
 from .generator import Generator
 from .FlowGraph import FlowGraph
@@ -34,59 +34,9 @@ from .Param import Param
 from .utils import odict, extract_docs
 
 
-from os.path import expanduser, normpath, expandvars, dirname, exists
-
-
-class Config(object):
-
-    key = 'grc'
-    name = 'GNU Radio Companion'
-    license = __doc__.strip()
-    website = 'http://gnuradio.org'
-    version = gr.version()
-    version2 = (gr.major_version(), gr.api_version(), gr.minor_version())
-
-    hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
-
-    def __init__(self):
-        self.prefs = self._get_prefs()
-
-        if not exists(self.hier_block_lib_dir):
-            os.mkdir(self.hier_block_lib_dir)
-
-    @staticmethod
-    def _get_prefs():
-        try:
-            from gnuradio import gr
-            prefs = gr.prefs()
-        except ImportError:
-            import ConfigParser
-            prefs = ConfigParser.ConfigParser()
-
-        return prefs
-
-    @property
-    def block_paths(self):
-        path_list_sep = {'/': ':', '\\': ';'}[os.path.sep]
-
-        paths_sources = (
-            self.hier_block_lib_dir,
-            os.environ.get('GRC_BLOCKS_PATH', ''),
-            self.prefs.get_string('grc', 'local_blocks_path', ''),
-            self.prefs.get_string('grc', 'global_blocks_path', ''),
-        )
-
-        collected_paths = sum((paths.split(path_list_sep)
-                               for paths in paths_sources), [])
-
-        valid_paths = [normpath(expanduser(expandvars(path)))
-                       for path in collected_paths if exists(path)]
-
-        return valid_paths
-
-
 class Platform(Element):
 
+    Config = Config
     Generator = Generator
     FlowGraph = FlowGraph
     Connection = Connection
@@ -96,11 +46,11 @@ class Platform(Element):
 
     is_platform = True
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """ Make a platform for GNU Radio """
         Element.__init__(self)
 
-        self.config = Config()
+        self.config = self.Config(*args, **kwargs)
 
         self.block_docstrings = {}
         self.block_docstrings_loaded_callback = lambda: None  # dummy to be replaced by BlockTreeWindow

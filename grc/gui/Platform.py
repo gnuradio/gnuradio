@@ -22,9 +22,9 @@ import sys
 
 from ..core.Platform import Platform as _Platform
 
+from .Config import Config as _Config
 from .Block import Block as _Block
 from .Connection import Connection as _Connection
-from .Constants import PREFS_FILE, PREFS_FILE_OLD
 from .Element import Element
 from .FlowGraph import FlowGraph as _FlowGraph
 from .Param import Param as _Param
@@ -33,28 +33,30 @@ from .Port import Port as _Port
 
 class Platform(Element, _Platform):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         Element.__init__(self)
-        _Platform.__init__(self)
+        _Platform.__init__(self, *args, **kwargs)
 
         # Ensure conf directories
-        if not os.path.exists(os.path.dirname(PREFS_FILE)):
-            os.mkdir(os.path.dirname(PREFS_FILE))
+        gui_prefs_file = self.config.gui_prefs_file
+        if not os.path.exists(os.path.dirname(gui_prefs_file)):
+            os.mkdir(os.path.dirname(gui_prefs_file))
 
         self._move_old_pref_file()
-        self._prefs_file = PREFS_FILE
 
     def get_prefs_file(self):
-        return self._prefs_file
+        return self.config.gui_prefs_file
 
-    @staticmethod
-    def _move_old_pref_file():
-        if PREFS_FILE == PREFS_FILE_OLD:
+    def _move_old_pref_file(self):
+        gui_prefs_file = self.config.gui_prefs_file
+        old_gui_prefs_file = os.environ.get(
+            'GRC_PREFS_PATH', os.path.expanduser('~/.grc'))
+        if gui_prefs_file == old_gui_prefs_file:
             return  # prefs file overridden with env var
-        if os.path.exists(PREFS_FILE_OLD) and not os.path.exists(PREFS_FILE):
+        if os.path.exists(old_gui_prefs_file) and not os.path.exists(gui_prefs_file):
             try:
                 import shutil
-                shutil.move(PREFS_FILE_OLD, PREFS_FILE)
+                shutil.move(old_gui_prefs_file, gui_prefs_file)
             except Exception as e:
                 print >> sys.stderr, e
 
@@ -66,3 +68,4 @@ class Platform(Element, _Platform):
     Block = _Block
     Port = _Port
     Param = _Param
+    Config = _Config

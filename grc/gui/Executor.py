@@ -25,7 +25,6 @@ import re
 from distutils.spawn import find_executable
 
 from ..core import Messages
-from .Constants import XTERM_EXECUTABLE
 
 
 class ExecFlowGraphThread(threading.Thread):
@@ -41,6 +40,7 @@ class ExecFlowGraphThread(threading.Thread):
         threading.Thread.__init__(self)
         self.update_exec_stop = action_handler.update_exec_stop
         self.flow_graph = action_handler.get_flow_graph()
+        self.xterm_executable = action_handler.platform.config.xterm_executable
         #store page and dont use main window calls in run
         self.page = action_handler.get_page()
         #get the popen
@@ -70,7 +70,7 @@ class ExecFlowGraphThread(threading.Thread):
             raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
 
         # When in no gui mode on linux, use a graphical terminal (looks nice)
-        xterm_executable = find_executable(XTERM_EXECUTABLE)
+        xterm_executable = find_executable(self.xterm_executable)
         if generator.generate_options == 'no_gui' and xterm_executable:
             run_command_args = [xterm_executable, '-e', run_command]
 

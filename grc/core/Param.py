@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import ast
 
 import re
-from gnuradio import eng_notation, gr
 
 from . import Constants
 from .Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
@@ -31,8 +30,12 @@ from .utils import odict
 import __builtin__
 
 
-ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + \
-    filter(lambda x: not x.startswith('_'), dir(gr.top_block())) + dir(__builtin__)
+ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(__builtin__)
+try:
+    from gnuradio import gr
+    ID_BLACKLIST.extend(attr for attr in dir(gr.top_block()) if not attr.startswith('_'))
+except ImportError:
+    pass
 
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
 _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
@@ -51,22 +54,23 @@ def _get_elem(lst, key):
 
 def num_to_str(num):
     """ Display logic for numbers """
+    def eng_notation(value, fmt='g'):
+        """Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n"""
+        template = '{:' + fmt + '}{}'
+        magnitude = abs(value)
+        for exp, symbol in zip(range(9, -15-1, -3), 'GMk munpf'):
+            factor = 10 ** exp
+            if magnitude >= factor:
+                return template.format(value / factor, symbol.strip())
+        return template.format(value, '')
+
     if isinstance(num, COMPLEX_TYPES):
         num = complex(num)  # Cast to python complex
         if num == 0:
             return '0'
-        elif num.imag == 0:
-            # Value is real
-            return '{}'.format(eng_notation.num_to_str(num.real))
-        elif num.real == 0:
-            # Value is imaginary
-            return '{}j'.format(eng_notation.num_to_str(num.imag))
-        elif num.imag < 0:
-            return '{}-{}j'.format(eng_notation.num_to_str(num.real),
-                                   eng_notation.num_to_str(abs(num.imag)))
-        else:
-            return '{}+{}j'.format(eng_notation.num_to_str(num.real),
-                                   eng_notation.num_to_str(num.imag))
+        output = eng_notation(num.real) if num.real else ''
+        output += eng_notation(num.imag, '+g' if output else 'g') + 'j' if num.imag else ''
+        return output
     else:
         return str(num)
 

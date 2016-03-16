@@ -88,8 +88,9 @@ class FlowGraph(Element, _Flowgraph):
         if target in self._external_updaters:
             editor = self._external_updaters[target]
         else:
-            editor = (find_executable(Constants.EDITOR) or
-                      Dialogs.ChooseEditorDialog())
+            config = self.get_parent().config
+            editor = (find_executable(config.editor) or
+                      Dialogs.ChooseEditorDialog(config))
             if not editor:
                 return
             updater = functools.partial(
@@ -106,9 +107,7 @@ class FlowGraph(Element, _Flowgraph):
             # Problem launching the editor. Need to select a new editor.
             Messages.send('>>> Error opening an external editor. Please select a different editor.\n')
             # Reset the editor to force the user to select a new one.
-            Constants.prefs.set_string('grc', 'editor', '')
-            Constants.prefs.save()
-            Constants.EDITOR = ""
+            self.get_parent().config.editor = ''
 
     def handle_external_editor_change(self, new_value, target):
         try:

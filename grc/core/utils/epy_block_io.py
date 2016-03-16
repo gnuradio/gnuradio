@@ -2,9 +2,6 @@
 import inspect
 import collections
 
-from gnuradio import gr
-import pmt
-
 
 TYPE_MAP = {
     'complex64': 'complex', 'complex': 'complex',
@@ -31,21 +28,27 @@ def _ports(sigs, msgs):
     return ports
 
 
-def _blk_class(source_code):
+def _find_block_class(source_code, cls):
     ns = {}
     try:
         exec source_code in ns
     except Exception as e:
         raise ValueError("Can't interpret source code: " + str(e))
     for var in ns.itervalues():
-        if inspect.isclass(var) and issubclass(var, gr.gateway.gateway_block):
+        if inspect.isclass(var) and issubclass(var, cls):
             return var
     raise ValueError('No python block class found in code')
 
 
 def extract(cls):
+    try:
+        from gnuradio import gr
+        import pmt
+    except ImportError:
+        raise EnvironmentError("Can't import GNU Radio")
+
     if not inspect.isclass(cls):
-        cls = _blk_class(cls)
+        cls = _find_block_class(cls, gr.gateway.gateway_block)
 
     spec = inspect.getargspec(cls.__init__)
     defaults = map(repr, spec.defaults or ())

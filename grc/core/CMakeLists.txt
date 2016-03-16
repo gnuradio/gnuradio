@@ -20,6 +20,7 @@
 ########################################################################
 GR_PYTHON_INSTALL(FILES
     Block.py
+    Config.py
     Connection.py
     Constants.py
     Element.py

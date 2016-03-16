@@ -22,7 +22,7 @@ import gtk
 import sys
 from distutils.spawn import find_executable
 
-from . import Utils, Actions, Constants
+from . import Utils, Actions
 from ..core import Messages
 
 
@@ -238,7 +238,7 @@ def MissingXTermDialog(xterm):
     )
 
 
-def ChooseEditorDialog():
+def ChooseEditorDialog(config):
     # Give the option to either choose an editor or use the default
     # Always return true/false so the caller knows it was successful
     buttons = (
@@ -264,10 +264,7 @@ def ChooseEditorDialog():
         file_dialog.set_current_folder('/usr/bin')
         try:
             if file_dialog.run() == gtk.RESPONSE_OK:
-                file_path = file_dialog.get_filename()
-                Constants.prefs.set_string('grc', 'editor', file_path)
-                Constants.prefs.save()
-                Constants.EDITOR = file_path
+                config.editor = file_path = file_dialog.get_filename()
                 file_dialog.destroy()
                 return file_path
         finally:
@@ -285,16 +282,12 @@ def ChooseEditorDialog():
             if process is None:
                 raise ValueError("Can't find default editor executable")
             # Save
-            Constants.prefs.set_string('grc', 'editor', process)
-            Constants.prefs.save()
-            Constants.EDITOR = process
+            config.editor = process
             return process
         except Exception:
             Messages.send('>>> Unable to load the default editor. Please choose an editor.\n')
             # Just reset of the constant and force the user to select an editor the next time
-            Constants.prefs.set_string('grc', 'editor', '')
-            Constants.prefs.save()
-            Constants.EDITOR = ""
+            config.editor = ''
             return
 
     Messages.send('>>> No editor selected.\n')

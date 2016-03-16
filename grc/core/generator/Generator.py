@@ -259,9 +259,12 @@ class HierBlockGenerator(TopBlockGenerator):
         TopBlockGenerator.__init__(self, flow_graph, file_path)
         platform = flow_graph.get_parent()
 
+        hier_block_lib_dir = platform.config.hier_block_lib_dir
+        if not os.path.exists(hier_block_lib_dir):
+            os.mkdir(hier_block_lib_dir)
+
         self._mode = HIER_BLOCK_FILE_MODE
-        self.file_path = os.path.join(platform.config.hier_block_lib_dir,
-                                      self._flow_graph.get_option('id') + '.py')
+        self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id') + '.py')
         self._file_path_xml = self.file_path + '.xml'
 
     def get_file_path_xml(self):

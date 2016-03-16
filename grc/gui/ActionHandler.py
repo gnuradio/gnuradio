@@ -23,8 +23,7 @@ import gtk
 import os
 import subprocess
 
-from . import Dialogs, Preferences, Actions, Executor
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX, XTERM_EXECUTABLE
+from . import Dialogs, Preferences, Actions, Executor, Constants
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveReportsFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
@@ -32,8 +31,7 @@ from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
 
-from ..core import Constants, ParseXML
-from ..core import Messages
+from ..core import ParseXML, Messages
 
 gobject.threads_init()
 
@@ -487,12 +485,13 @@ class ActionHandler:
                     self.main_window.menu_bar.refresh_submenus()
 
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
-            file_paths = OpenQSSFileDialog(GR_PREFIX + '/share/gnuradio/themes/').run()
+            file_paths = OpenQSSFileDialog(self.platform.config.install_prefix +
+                                           '/share/gnuradio/themes/').run()
             if file_paths:
                 try:
-                    from gnuradio import gr
-                    gr.prefs().set_string("qtgui", "qss", file_paths[0])
-                    gr.prefs().save()
+                    prefs = self.platform.config.prefs
+                    prefs.set_string("qtgui", "qss", file_paths[0])
+                    prefs.save()
                 except Exception as e:
                     Messages.send("Failed to save QSS preference: " + str(e))
         elif action == Actions.FLOW_GRAPH_CLOSE:
@@ -522,7 +521,7 @@ class ActionHandler:
             file_path, background_transparent = SaveScreenShotDialog(self.get_page().get_file_path()).run()
             if file_path is not None:
                 pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot(background_transparent)
-                pixbuf.save(file_path, IMAGE_FILE_EXTENSION[1:])
+                pixbuf.save(file_path, Constants.IMAGE_FILE_EXTENSION[1:])
         ##################################################
         # Gen/Exec/Stop
         ##################################################
@@ -540,10 +539,11 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not self.get_page().get_proc():
                 Actions.FLOW_GRAPH_GEN()
-                if Preferences.xterm_missing() != XTERM_EXECUTABLE:
-                    if not os.path.exists(XTERM_EXECUTABLE):
-                        Dialogs.MissingXTermDialog(XTERM_EXECUTABLE)
-                    Preferences.xterm_missing(XTERM_EXECUTABLE)
+                xterm = self.platform.config.xterm_executable
+                if Preferences.xterm_missing() != xterm:
+                    if not os.path.exists(xterm):
+                        Dialogs.MissingXTermDialog(xterm)
+                    Preferences.xterm_missing(xterm)
                 if self.get_page().get_saved() and self.get_page().get_file_path():
                     Executor.ExecFlowGraphThread(self)
         elif action == Actions.FLOW_GRAPH_KILL:
@@ -634,7 +634,7 @@ class ActionHandler:
         self.main_window.update()
         try: #set the size of the flow graph area (if changed)
             new_size = (self.get_flow_graph().get_option('window_size') or
-                        DEFAULT_CANVAS_SIZE)
+                        self.platform.config.default_canvas_size)
             if self.get_flow_graph().get_size() != tuple(new_size):
                 self.get_flow_graph().set_size(*new_size)
         except: pass

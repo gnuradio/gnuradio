@@ -22,6 +22,7 @@ GR_PYTHON_INSTALL(FILES
     external_editor.py
     Block.py
     Colors.py
+    Config.py
     Constants.py
     Connection.py
     Element.py

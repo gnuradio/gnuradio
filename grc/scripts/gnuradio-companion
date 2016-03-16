@@ -123,7 +123,12 @@ def main():
     except:
         pass
 
-    ActionHandler(args, Platform())
+    ActionHandler(args, Platform(
+        prefs_file=gr.prefs(),
+        version=gr.version(),
+        version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
+        install_prefix=gr.prefix()
+    ))
 
 
 if __name__ == '__main__':
