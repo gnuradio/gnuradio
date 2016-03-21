@@ -32,7 +32,7 @@
 This block creates a LDPC Generator Matrix variable.
 
 This variable can be used by:
-  1) LDPC Generator Matrix Encoder Definition block
+  1) LDPC Encoder Definition (via Generator) block
   2) LDPC Bit Flip Decoder Definition block
 
 Provide an alist file, which contains a Generator matrix, G, in the standard format G = [I P], where I is an identity matrix and P is the parity submatrix.
