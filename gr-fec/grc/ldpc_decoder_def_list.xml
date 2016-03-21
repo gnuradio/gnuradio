@@ -78,6 +78,10 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.ldpc_decoder.make($fil
     </param>
 
     <doc>
-        This block does some kind of ldpc
+This is a soft-decision decoder that uses belief propagation (also known as message passing) that is described at:
+
+www.cs.toronto.edu/~radford/ftp/LDPC-2012-02-11/decoding.html
+
+Designed for a memoryless AWGN channel, it assumes a noise variance of the value specified for sigma.
     </doc>
 </block>
