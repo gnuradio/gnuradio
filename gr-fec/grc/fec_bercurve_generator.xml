@@ -91,5 +91,14 @@
   </source>
 
   <doc>
+    Note that this block tries to launch many parallel codes to run simultaneously. Thus, it requires that the definitions for each encoder and decoder (specified in the "Encoder list" and "Decoder list") be configured with a parallelism > 0. If the parallelism for one of the encoder or decoder definition blocks is configured to 0, you will likely see an error like:
+
+    generic_decoder=decoder_list[i],
+    TypeError: 'generic_decoder_sptr' object does not support indexing
+
+    or
+
+    generic_encoder=encoder_list[i],
+    TypeError: 'generic_encoder_sptr' object does not support indexing
   </doc>
 </block>
