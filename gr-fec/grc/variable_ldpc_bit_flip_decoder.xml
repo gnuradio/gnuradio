@@ -10,11 +10,11 @@
     <import>from gnuradio import fec</import>
     <var_make>
 #if int($ndim())==0 #
-self.$(id) = $(id) = fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_ptr(), $max_iterations)
+self.$(id) = $(id) = fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), $max_iterations)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map((lambda a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_ptr(), $max_iterations)), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), $max_iterations)), range(0,$dim1)) #slurp
 #else
-self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_ptr(), $max_iterations)), range(0,$dim2))), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), $max_iterations)), range(0,$dim2))), range(0,$dim1)) #slurp
 #end if</var_make>
     <make></make>
 
@@ -78,10 +78,8 @@ self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder.mak
 This block creates a LDPC Bit Flip Decoder Definition variable.
 
 The decoder requires knowledge of the matrix used to create (encode) the codewords. In the LDPC FEC Matrix ID field, input the ID of either a:
-  1) LDPC Matrix variable, or
-  2) LDPC R. U. Parity Check Matrix variable
-
-Be sure to specify the same matrix ID as the matrix that was used for encoding.
+  1) LDPC Generator Matrix variable, or
+  2) LDPC Parity Check Matrix variable
 
 Max iterations may be increased from 100 for possibly better performance, but significantly higher number of iterations may slow things down.
     </doc>

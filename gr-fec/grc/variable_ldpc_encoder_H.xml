@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-# FEC LDPC RICHARDSON URBANKE ENCODER
+# FEC LDPC ENCODER DEFINITION (PARITY CHECK)
 ###################################################
  -->
 <block>
@@ -67,5 +67,9 @@ self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_par_mtrx_encoder_mak
         <value></value>
         <type>raw</type>
     </param>
+  <doc>
+This block creates a LDPC Encoder Definition variable.
 
+This encoder performs a reduced complexity algorithm described by Richardson and Urbanke in Appendix A of their book: Modern Coding Theory. Compared to the block "LDPC Encoder Definition (via Generator)," this encoder requires orders of magnitude fewer operations to create each codeword. This is accomplished by completing a significant amount of the complex matrix manipulation (including inverse, multiplication, and Gaussian elimination operations) during preprocessing. The disadvantage of this encoder is that it requires a specially formatted matrix. However, GNU Radio includes python scripts to format a standard parity check matrix appropriately for this encoder, as well as a small library of encoding-ready matrices for use.
+  </doc>
 </block>
