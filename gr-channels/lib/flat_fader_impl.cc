@@ -70,26 +70,36 @@ namespace gr {
 #define _GRFASTCOS(x)   cos(x)
 #endif
 
+    void flat_fader_impl::next_samples(std::vector<gr_complex> &Hvec, int n_samples){
+        Hvec.resize(n_samples);
+        for(int i = 0; i < n_samples; i++){
+            gr_complex H(0,0);
+            for(int n=1; n<d_N; n++){
+                float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
+                d_psi[n+1] = fmod(d_psi[n+1] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
+                d_phi[n+1] = fmod(d_phi[n+1] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
+                float s_i = scale_sin*_GRFASTCOS(d_psi[n+1]);
+                float s_q = scale_sin*_GRFASTSIN(d_phi[n+1]);
+                H += gr_complex(s_i, s_q);
+                }
+    
+            if(d_LOS){
+                d_psi[0] = fmod(d_psi[0] + 2*M_PI*d_fDTs*_GRFASTCOS(d_theta_los), 2*M_PI);
+                float los_i = scale_los*_GRFASTCOS(d_psi[0]);
+                float los_q = scale_los*_GRFASTSIN(d_psi[0]);
+                H = H*scale_nlos + gr_complex(los_i,los_q);
+                }
+    
+            update_theta();
+            Hvec[i] = H;
+        }
+        
+    }
+
     gr_complex flat_fader_impl::next_sample(){
-        gr_complex H(0,0);
-        for(int n=1; n<d_N; n++){
-            float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
-            d_psi[n+1] = fmod(d_psi[n+1] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
-            d_phi[n+1] = fmod(d_phi[n+1] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
-            float s_i = scale_sin*_GRFASTCOS(d_psi[n+1]);
-            float s_q = scale_sin*_GRFASTSIN(d_phi[n+1]);
-            H += gr_complex(s_i, s_q);
-            }
-
-        if(d_LOS){
-            d_psi[0] = fmod(d_psi[0] + 2*M_PI*d_fDTs*_GRFASTCOS(d_theta_los), 2*M_PI);
-            float los_i = scale_los*_GRFASTCOS(d_psi[0]);
-            float los_q = scale_los*_GRFASTSIN(d_psi[0]);
-            H = H*scale_nlos + gr_complex(los_i,los_q);
-            }
-
-        update_theta();
-        return H;
+        std::vector<gr_complex> v(1);
+        next_samples(v,1);
+        return v[0];
     }
 
     void flat_fader_impl::update_theta()

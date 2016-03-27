@@ -82,6 +82,13 @@ namespace gr {
         const gr_complex* in = (const gr_complex*) input_items[0];
         gr_complex* out = (gr_complex*) output_items[0];
 
+        // pregenerate fading components
+        std::vector<std::vector<gr_complex> > fading_taps;
+        for(size_t j=0; j<d_faders.size(); j++){
+            fading_taps.push_back( std::vector<gr_complex>() );
+            d_faders[j]->next_samples(fading_taps[j], noutput_items);
+            }
+
         // loop over each output sample
         for(int i=0; i<noutput_items; i++){
 
@@ -92,7 +99,8 @@ namespace gr {
 
             // add each flat fading component to the taps
             for(size_t j=0; j<d_faders.size(); j++){
-                gr_complex ff_H(d_faders[j]->next_sample());
+                gr_complex ff_H(fading_taps[j][i]);
+                //gr_complex ff_H(d_faders[j]->next_sample());
                 for(size_t k=0; k<d_taps.size(); k++){
                     float dist = k-d_delays[j];
                     float interpmag = d_sintable.sinc(2*M_PI*dist);
