@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -79,16 +79,15 @@ namespace gr {
             float s_i = scale_sin*_GRFASTCOS(d_psi[n+1]);
             float s_q = scale_sin*_GRFASTSIN(d_phi[n+1]);
             H += gr_complex(s_i, s_q);
-        }
-
-        if(d_LOS){
-            float los_i = _GRFASTCOS(2*M_PI*d_fDTs*d_m*_GRFASTCOS(d_theta_los) + d_psi[0]);
-            float los_q = _GRFASTSIN(2*M_PI*d_fDTs*d_m*_GRFASTCOS(d_theta_los) + d_psi[0]);
-            H = H*scale_nlos + gr_complex(los_i,los_q)*scale_los;
             }
 
-        //out[i] = in[i]*H;
-        d_m++;
+        if(d_LOS){
+            d_psi[0] = fmod(d_psi[0] + 2*M_PI*d_fDTs*_GRFASTCOS(d_theta_los), 2*M_PI);
+            float los_i = scale_los*_GRFASTCOS(d_psi[0]);
+            float los_q = scale_los*_GRFASTSIN(d_psi[0]);
+            H = H*scale_nlos + gr_complex(los_i,los_q);
+            }
+
         update_theta();
         return H;
     }
