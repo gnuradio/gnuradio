@@ -48,7 +48,7 @@ namespace gr {
 
         // random walk variate
         boost::mt19937 seed_2;
-        boost::uniform_real<> dist_2; // U(-pi,pi)
+        boost::uniform_real<> dist_2; // U(0,1)
         boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rv_2;
 
       public:
