@@ -9,7 +9,13 @@
   <key>variable_constellation</key>
   <category>Modulators</category>
   <import>from gnuradio import digital</import>
-  <var_make>self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()
+  <var_make>
+#if str($type) == "calcdist"
+self.$(id) = $(id) = digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims).base()
+#else
+self.$(id) = $(id) = digital.constellation_$(type)().base()
+#end if
+
 #if str($soft_dec_lut).lower() == '"auto"' or str($soft_dec_lut).lower() == "'auto'"
 self.$(id).gen_soft_dec_lut($precision)
 #else if str($soft_dec_lut) != 'None'
@@ -17,16 +23,53 @@ self.$(id).set_soft_dec_lut($soft_dec_lut, $precision)
 #end if
 </var_make>
 
-  <var_value>digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims)</var_value>
+<var_value>
+#if str($type) == "calcdist"
+digital.constellation_calcdist($const_points, $sym_map, $rot_sym, $dims)
+#else
+digital.constellation_$(type)()
+#end if
+</var_value>
 
   <make></make>
   <!--<callback></callback>-->
 
   <param>
+	  <name>Constellation Type</name>
+	  <key>type</key>
+	  <type>enum</type>
+	  <option>
+		  <name>Variable Constellation</name>
+		  <key>calcdist</key>
+	  </option>
+	  <option>
+		  <name>BPSK</name>
+		  <key>bpsk</key>
+	  </option>
+	  <option>
+		  <name>QPSK</name>
+		  <key>qpsk</key>
+	  </option>
+	  <option>
+		  <name>DQPSK</name>
+		  <key>dqpsk</key>
+	  </option>
+	  <option>
+		  <name>8PSK</name>
+		  <key>8psk</key>
+	  </option>
+	  <option>
+		  <name>16QAM</name>
+		  <key>16qam</key>
+	  </option>
+
+  </param>
+  <param>
     <name>Symbol Map</name>
     <key>sym_map</key>
     <value>[0, 1, 3, 2]</value>
     <type>int_vector</type>
+    <hide> #if str($type) == "calcdist" then  'none' else 'all' #</hide>
   </param>
 
   <param>
@@ -34,6 +77,7 @@ self.$(id).set_soft_dec_lut($soft_dec_lut, $precision)
     <key>const_points</key>
     <value>[-1-1j, -1+1j, 1+1j, 1-1j]</value>
     <type>complex_vector</type>
+    <hide> #if str($type) == "calcdist" then  'none' else 'all' #</hide>
   </param>
 
   <param>
@@ -41,6 +85,7 @@ self.$(id).set_soft_dec_lut($soft_dec_lut, $precision)
     <key>rot_sym</key>
     <value>4</value>
     <type>int</type>
+    <hide> #if str($type) == "calcdist" then  'none' else 'all' #</hide>
   </param>
 
   <param>
@@ -48,8 +93,8 @@ self.$(id).set_soft_dec_lut($soft_dec_lut, $precision)
     <key>dims</key>
     <value>1</value>
     <type>int</type>
+    <hide> #if str($type) == "calcdist" then  'none' else 'all' #</hide>
   </param>
-
   <param>
     <name>Soft Decisions Precision</name>
     <key>precision</key>
