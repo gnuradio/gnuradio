@@ -38,7 +38,7 @@
 This block creates a FEC LDPC Parity Check Matrix variable.
 
 This variable can be used by:
-  1) LDPC Encoder Definition block
+  1) LDPC Encoder Definition (via Parity Check) block
   2) LDPC Bit Flip Decoder Definition block
 
 The format of alist files is described at:

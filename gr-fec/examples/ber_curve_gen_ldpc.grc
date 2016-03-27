@@ -249,7 +249,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 547)</value>
+      <value>(700, 547)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -367,11 +367,7 @@
     </param>
   </block>
   <block>
-    <key>variable_ldpc_encoder_def</key>
-    <param>
-      <key>file</key>
-      <value></value>
-    </param>
+    <key>variable_ldpc_encoder_H_def</key>
     <param>
       <key>comment</key>
       <value></value>
@@ -397,12 +393,12 @@
       <value>0</value>
     </param>
     <param>
-      <key>gap</key>
-      <value>0</value>
-    </param>
-    <param>
       <key>id</key>
       <value>enc_ldpc</value>
+    </param>
+    <param>
+      <key>H</key>
+      <value>H</value>
     </param>
     <param>
       <key>value</key>
@@ -414,7 +410,7 @@
     </param>
   </block>
   <block>
-    <key>variable_ldpc_gen_mtrx_encoder_def</key>
+    <key>variable_ldpc_encoder_G_def</key>
     <param>
       <key>comment</key>
       <value></value>
@@ -433,7 +429,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(624, 427)</value>
+      <value>(700, 427)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1003,7 +999,7 @@
     </param>
     <param>
       <key>label3</key>
-      <value>LDPC (R.U. matrix)</value>
+      <value>LDPC (H matrix)</value>
     </param>
     <param>
       <key>marker3</key>

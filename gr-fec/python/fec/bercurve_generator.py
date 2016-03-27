@@ -44,6 +44,12 @@ class bercurve_generator(gr.hier_block2):
         self.deinterleave = blocks.deinterleave(gr.sizeof_char*1)
         self.connect(self.random_gen_b_0, self.deinterleave)
         self.ber_generators = []
+
+        # FIXME It would be good to check that the encoder_list and
+        # decoder_list have parallelism set to > 0. If parallelism
+        # is set to 0, a map isn't passed and an indexing error is
+        # thrown on line 53 or 54 below.
+
         for i in range(0, len(esno)):
             ber_generator_temp = fec_test(
                 generic_encoder=encoder_list[i],
