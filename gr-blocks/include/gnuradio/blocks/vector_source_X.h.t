@@ -76,6 +76,7 @@ namespace gr {
       virtual void rewind() = 0;
       virtual void set_data(const std::vector<@TYPE@> &data,
                             const std::vector<tag_t> &tags=std::vector<tag_t>()) = 0;
+      virtual void set_repeat(bool repeat) = 0;
     };
 
   } /* namespace blocks */
