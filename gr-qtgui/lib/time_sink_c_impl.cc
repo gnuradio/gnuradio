@@ -143,7 +143,7 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      int numplots = (d_nconnections > 0) ? d_nconnections : 2;
       d_main_gui = new TimeDisplayForm(numplots, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
