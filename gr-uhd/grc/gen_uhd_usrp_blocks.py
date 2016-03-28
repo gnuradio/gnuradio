@@ -83,10 +83,10 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	\#end if
 #if $sourk == 'source'
 	\#if \$dc_offs_enb$(n)()
-self.\$(id).set_rx_dc_offset(\$dc_offs_enb$(n), $n)
+self.\$(id).set_auto_dc_offset(\$dc_offs_enb$(n), $n)
 	\#end if
 	\#if \$iq_imbal_enb$(n)()
-self.\$(id).set_rx_iq_balance(\$iq_imbal_enb$(n), $n)
+self.\$(id).set_auto_iq_balance(\$iq_imbal_enb$(n), $n)
 	\#end if
 #end if
 \#end if
