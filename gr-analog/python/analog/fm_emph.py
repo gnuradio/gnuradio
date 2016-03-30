@@ -137,7 +137,7 @@ class fm_deemph(gr.hier_block2):
             global plot1
             plot1 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
-        deemph = filter.iir_filter_ffd(btaps, ataps)
+        deemph = filter.iir_filter_ffd(btaps, ataps, False)
         self.connect(self, deemph, self)
 
 #
@@ -321,5 +321,5 @@ class fm_preemph(gr.hier_block2):
             global plot2
             plot2 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
-        preemph = filter.iir_filter_ffd(btaps, ataps)
+        preemph = filter.iir_filter_ffd(btaps, ataps, False)
         self.connect(self, preemph, self)
