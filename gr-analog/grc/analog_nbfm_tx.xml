@@ -46,7 +46,7 @@
   <param>
     <name>Preemphasis High Corner Freq</name>
     <key>fh</key>
-    <value>0.0</value>
+    <value>0.925*float(quad_rate)/2.0</value>
     <type>real</type>
   </param>
 

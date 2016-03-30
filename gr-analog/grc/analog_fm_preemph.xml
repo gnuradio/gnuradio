@@ -23,7 +23,7 @@
 	<param>
 		<name>High Corner Freq</name>
 		<key>fh</key>
-		<value>0.0</value>
+		<value>0.925*samp_rate/2.0</value>
 		<type>real</type>
 	</param>
 	<sink>

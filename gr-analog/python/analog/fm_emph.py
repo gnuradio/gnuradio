@@ -251,69 +251,52 @@ class fm_preemph(gr.hier_block2):
     """
     FM Preemphasis IIR filter.
     """
-    def __init__(self, fs, tau=75e-6, fh=0.0):
+    def __init__(self, fs, tau=75e-6, fh=-1.0):
         """
 
         Args:
             fs: sampling frequency in Hz (float)
             tau: Time constant in seconds (75us in US, 50us in EUR) (float)
-            fh: High frequency at which to flatten out; 0.0 means none (float)
+            fh: High frequency at which to flatten out (< 0 means default of 0.925*fs/2.0) (float)
         """
         gr.hier_block2.__init__(self, "fm_preemph",
                                 gr.io_signature(1, 1, gr.sizeof_float),  # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_float))  # Output signature
 
-	if fh > 0.0 and fh < (fs / 2.0):
-		# Digital corner frequencies
-		w_cl = 1.0 / tau
-		w_ch = 2.0 * math.pi * fh
+	# Set fh to something sensible, if needed.
+	# N.B. fh == fs/2.0 or fh == 0.0 results in a pole on the unit circle
+	# at z = -1.0 or z = 1.0 respectively.  That makes the filter unstable
+	# and useless.
+	if fh <= 0.0 or fh >= fs/2.0:
+		fh = 0.925 * fs/2.0
 
-		# Prewarped analog corner frequencies
-		w_cla = 2.0 * fs * math.tan(w_cl / (2.0 * fs))
-		w_cha = 2.0 * fs * math.tan(w_ch / (2.0 * fs))
+	# Digital corner frequencies
+	w_cl = 1.0 / tau
+	w_ch = 2.0 * math.pi * fh
 
-		# Resulting digital pole, zero, and gain term from the bilinear
-		# transformation of H(s) = (s + w_cla) / (s + w_cha) to
-		# H(z) = b0 (1 - z1 z^-1)/(1 - p1 z^-1)
-		kl = -w_cla / (2.0 * fs)
-		kh = -w_cha / (2.0 * fs)
-		z1 = (1.0 + kl) / (1.0 - kl)
-		p1 = (1.0 + kh) / (1.0 - kh)
-		b0 = (1.0 - kl) / (1.0 - kh)
+	# Prewarped analog corner frequencies
+	w_cla = 2.0 * fs * math.tan(w_cl / (2.0 * fs))
+	w_cha = 2.0 * fs * math.tan(w_ch / (2.0 * fs))
 
-		# Since H(s = infinity) = 1.0, then H(z = -1) = 1.0 and
-		# this filter  has 0 dB gain at fs/2.0.
-		# That isn't what users are going to expect, so adjust with a
-		# gain, g, so that H(z = 1) = 1.0 for 0 dB gain at DC.
-		w_0dB = 2.0 * math.pi * 0.0
-		g =        abs(1.0 - p1 * cmath.rect(1.0, -w_0dB))  \
-		   / (b0 * abs(1.0 - z1 * cmath.rect(1.0, -w_0dB)))
+	# Resulting digital pole, zero, and gain term from the bilinear
+	# transformation of H(s) = (s + w_cla) / (s + w_cha) to
+	# H(z) = b0 (1 - z1 z^-1)/(1 - p1 z^-1)
+	kl = -w_cla / (2.0 * fs)
+	kh = -w_cha / (2.0 * fs)
+	z1 = (1.0 + kl) / (1.0 - kl)
+	p1 = (1.0 + kh) / (1.0 - kh)
+	b0 = (1.0 - kl) / (1.0 - kh)
 
-		btaps = [ g * b0 * 1.0, g * b0 * -z1 ]
-		ataps = [          1.0,          -p1 ]
+	# Since H(s = infinity) = 1.0, then H(z = -1) = 1.0 and
+	# this filter  has 0 dB gain at fs/2.0.
+	# That isn't what users are going to expect, so adjust with a
+	# gain, g, so that H(z = 1) = 1.0 for 0 dB gain at DC.
+	w_0dB = 2.0 * math.pi * 0.0
+	g =        abs(1.0 - p1 * cmath.rect(1.0, -w_0dB))  \
+	   / (b0 * abs(1.0 - z1 * cmath.rect(1.0, -w_0dB)))
 
-	else:
-		# Just use H(s) = (s + 1/RC)/(1/RC) as the transfer function
-
-		# Digital corner frequencies
-		w_cl = 1.0 / tau
-
-		# Prewarped analog corner frequencies
-		w_cla = 2.0 * fs * math.tan(w_cl / (2.0 * fs))
-
-		# Resulting digital pole, zero, and gain term from the bilinear
-		# transformation of H(s) = (s + w_cl)/w_cl to
-		# H(z) = b0 (1 - z1 z^-1)/(1 - p1 z^-1)
-		kl = -w_cla / (2.0 * fs)
-		z1 = (1.0 + kl) / (1.0 - kl)
-		p1 = -1.0
-		b0 = (1.0 - kl) / -kl
-
-		# Since H(s = 0) = 1.0, then H(z = 1) = 1.0 and
-		# has 0 dB gain at DC
-
-		btaps = [ b0 * 1.0, b0 * -z1 ]
-		ataps = [      1.0,      -p1 ]
+	btaps = [ g * b0 * 1.0, g * b0 * -z1 ]
+	ataps = [          1.0,          -p1 ]
 
         if 0:
             print "btaps =", btaps
