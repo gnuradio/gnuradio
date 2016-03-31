@@ -84,8 +84,8 @@ namespace gr {
       if(d_len > 64)
         return false;
 
-      // set len top bits to 1.
-      d_mask = ((~0ULL) >> (64 - d_len)) << (64 - d_len);
+      // set len least significant bits to 1.
+      d_mask = ((~0ULL) >> (64 - d_len));
 
       d_access_code = 0;
       for(unsigned i=0; i < d_len; i++){
