@@ -792,6 +792,10 @@
       <value>75e3</value>
     </param>
     <param>
+      <key>fh</key>
+      <value>0.925 * tx_rate/2.0</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>

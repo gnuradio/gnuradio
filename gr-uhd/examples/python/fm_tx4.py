@@ -63,7 +63,8 @@ class pipeline(gr.hier_block2):
             sys.exit(1)
 
         print audio_rate, if_rate
-        fmtx = analog.nbfm_tx(audio_rate, if_rate, max_dev=5e3, tau=75e-6)
+        fmtx = analog.nbfm_tx(audio_rate, if_rate, max_dev=5e3,
+	                      tau=75e-6, fh=0.925*if_rate/2.0)
 
         # Local oscillator
         lo = analog.sig_source_c(if_rate,            # sample rate

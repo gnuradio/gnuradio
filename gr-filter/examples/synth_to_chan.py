@@ -54,7 +54,7 @@ def main():
     fmtx = list()
     for fi in freqs:
         s = analog.sig_source_f(fs, analog.GR_SIN_WAVE, fi, 1)
-        fm = analog.nbfm_tx(fs, 4*fs, max_dev=10000, tau=75e-6)
+        fm = analog.nbfm_tx(fs, 4*fs, max_dev=10000, tau=75e-6, fh=0.925*(4*fs)/2.0)
         sigs.append(s)
         fmtx.append(fm)
 
