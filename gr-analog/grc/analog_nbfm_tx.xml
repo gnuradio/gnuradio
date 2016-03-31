@@ -13,6 +13,7 @@
 	quad_rate=$quad_rate,
 	tau=$tau,
 	max_dev=$max_dev,
+	fh=$fh,
         )</make>
   <callback>set_max_deviation($max_dev)</callback>
 
@@ -39,6 +40,13 @@
     <name>Max Deviation</name>
     <key>max_dev</key>
     <value>5e3</value>
+    <type>real</type>
+  </param>
+
+  <param>
+    <name>Preemphasis High Corner Freq</name>
+    <key>fh</key>
+    <value>-1.0</value>
     <type>real</type>
   </param>
 
