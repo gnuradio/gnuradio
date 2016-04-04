@@ -436,7 +436,7 @@ displayed as a table or bar graph.
 To launch the Performance Monitor, run:
 
 <pre>
-gr-perf-monitorx \<ip-addr\> -p \<port\>
+gr-perf-monitorx \<ip-addr\> \<port\>
 </pre>
 
 */
