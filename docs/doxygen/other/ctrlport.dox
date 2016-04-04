@@ -416,7 +416,7 @@ To launch the ControlPort monitor application, know the IP address and
 port of the ControlPort endpoint established by the flowgraph and run:
 
 <pre>
-gr-ctrlport-monitor \<ip-addr\> -p \<port\>
+gr-ctrlport-monitor \<ip-addr\> \<port\>
 </pre>
 
 
