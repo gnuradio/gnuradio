@@ -154,8 +154,10 @@ class Param(Element):
 
     def set_value(self, value): self._value = str(value) #must be a string
 
-    def value_is_default(self):
-        return self._default == self._value
+    def set_default(self, value):
+        if self._default == self._value:
+            self.set_value(value)
+        self._default = str(value)
 
     def get_type(self): return self.get_parent().resolve_dependencies(self._type)
     def get_tab_label(self): return self._tab_label
