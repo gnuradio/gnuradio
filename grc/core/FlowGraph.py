@@ -436,7 +436,7 @@ class FlowGraph(Element):
                 if not key.isdigit() and port.get_type() == '' and key == port.get_name():
                     break
             else:
-                if block.is_dummy_block():
+                if block.is_dummy_block:
                     port = _dummy_block_add_port(block, key, dir)
                 else:
                     raise LookupError('%s key %r not in %s block keys' % (dir, key, dir))
