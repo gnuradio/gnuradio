@@ -613,7 +613,7 @@ def get_best_matrix(H, numIterations=100, verbose=False):
         print 'greedy_upper_triangulation error: ', e
     else:
       if ret:
-        [betterH, gap, t]
+        [betterH, gap, t] = ret
       else:
         continue
 
