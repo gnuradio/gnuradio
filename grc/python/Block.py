@@ -279,11 +279,10 @@ class Block(_Block, _GUIBlock):
                 self._params.remove(param)
 
         for key, value in blk_io.params:
-            if key in params:
+            try:
                 param = params[key]
-                if not param.value_is_default():
-                    param.set_value(value)
-            else:
+                param.set_default(value)
+            except KeyError:  # need to make a new param
                 name = key.replace('_', ' ').title()
                 n = odict(dict(name=name, key=key, type='raw', value=value))
                 param = platform.Param(block=self, n=n)

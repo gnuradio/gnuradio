@@ -26,9 +26,6 @@ from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from DrawingArea import DrawingArea
 import os
 
-############################################################
-## Notebook Page
-############################################################
 
 class NotebookPage(gtk.HBox):
     """A page in the notebook."""
@@ -79,6 +76,7 @@ class NotebookPage(gtk.HBox):
         self.scrolled_window = gtk.ScrolledWindow()
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
         self.drawing_area = DrawingArea(self.get_flow_graph())
         self.scrolled_window.add_with_viewport(self.get_drawing_area())
         self.pack_start(self.scrolled_window)
@@ -87,6 +85,15 @@ class NotebookPage(gtk.HBox):
         self.show_all()
 
     def get_drawing_area(self): return self.drawing_area
+
+    def _handle_scroll_window_key_press(self, widget, event):
+        """forward Ctrl-PgUp/Down to NotebookPage (switch fg instead of horiz. scroll"""
+        is_ctrl_pg = (
+            event.state & gtk.gdk.CONTROL_MASK and
+            event.keyval in (gtk.keysyms.Page_Up, gtk.keysyms.Page_Down)
+        )
+        if is_ctrl_pg:
+            return self.get_parent().event(event)
 
     def get_generator(self):
         """
