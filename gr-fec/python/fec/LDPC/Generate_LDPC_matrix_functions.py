@@ -432,7 +432,7 @@ def greedy_upper_triangulation(H, verbose=0):
   if verbose:
     print '--- Error: nonsingular phi matrix not found.'
 
-def inv_mod2(squareMatrix):
+def inv_mod2(squareMatrix, verbose=0):
   """
   Calculates the mod 2 inverse of a matrix.
   """
