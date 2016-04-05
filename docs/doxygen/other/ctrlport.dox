@@ -416,7 +416,7 @@ To launch the ControlPort monitor application, know the IP address and
 port of the ControlPort endpoint established by the flowgraph and run:
 
 <pre>
-gr-ctrlport-monitor \<ip-addr\> -p \<port\>
+gr-ctrlport-monitor \<ip-addr\> \<port\>
 </pre>
 
 
@@ -436,7 +436,7 @@ displayed as a table or bar graph.
 To launch the Performance Monitor, run:
 
 <pre>
-gr-perf-monitorx \<ip-addr\> -p \<port\>
+gr-perf-monitorx \<ip-addr\> \<port\>
 </pre>
 
 */
