@@ -124,33 +124,42 @@ class BlockTreeWindow(gtk.VBox):
         # map categories to iters, automatic mapping for root
         self._categories = {tuple(): None}
         self._categories_search = {tuple(): None}
-        # add blocks and categories
-        self.platform.load_block_tree(self)
         self.platform.block_docstrings_loaded_callback = self.update_docs
+        self.repopulate()
 
     def clear(self):
-        self.treestore.clear();
-        self._categories = {tuple(): None}
+        self.treestore.clear()
+        self._categories = {(): None}
+
+    def repopulate(self):
+        self.clear()
+        for block in self.platform.blocks.itervalues():
+            if block.category:
+                self.add_block(block)
+        self.expand_module_in_tree()
+
+    def expand_module_in_tree(self, module_name='Core'):
+        self.treeview.collapse_all()
+        core_module_iter = self._categories.get((module_name,))
+        if core_module_iter:
+            self.treeview.expand_row(self.treestore.get_path(core_module_iter), False)
 
     ############################################################
     ## Block Tree Methods
     ############################################################
-    def add_block(self, category, block=None, treestore=None, categories=None):
+    def add_block(self, block, treestore=None, categories=None):
         """
         Add a block with category to this selection window.
         Add only the category when block is None.
 
         Args:
-            category: the category list or path string
             block: the block object or None
         """
-        if treestore is None:
-            treestore = self.treestore
-        if categories is None:
-            categories = self._categories
+        treestore = treestore or self.treestore
+        categories = categories or self._categories
 
-        if isinstance(category, (str, unicode)): category = category.split('/')
-        category = tuple(filter(lambda x: x, category))  # tuple is hashable
+        category = tuple(filter(str, block.category))  # tuple is hashable, remove empty cats
+
         # add category and all sub categories
         for i, cat_name in enumerate(category):
             sub_category = category[:i+1]
@@ -160,9 +169,8 @@ class BlockTreeWindow(gtk.VBox):
                 treestore.set_value(iter_, KEY_INDEX, '')
                 treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
                 categories[sub_category] = iter_
+
         # add block
-        if block is None:
-            return
         iter_ = treestore.insert_before(categories[category], None)
         treestore.set_value(iter_, NAME_INDEX, block.get_name())
         treestore.set_value(iter_, KEY_INDEX, block.get_key())
@@ -226,7 +234,7 @@ class BlockTreeWindow(gtk.VBox):
         key = widget.get_text().lower()
         if not key:
             self.treeview.set_model(self.treestore)
-            self.treeview.collapse_all()
+            self.expand_module_in_tree()
         else:
             matching_blocks = filter(lambda b: key in b.get_key().lower() or key in b.get_name().lower(),
                                      self.platform.blocks.values())
@@ -234,8 +242,7 @@ class BlockTreeWindow(gtk.VBox):
             self.treestore_search.clear()
             self._categories_search = {tuple(): None}
             for block in matching_blocks:
-                self.add_block(block.get_category() or 'None', block,
-                               self.treestore_search, self._categories_search)
+                self.add_block(block, self.treestore_search, self._categories_search)
             self.treeview.set_model(self.treestore_search)
             self.treeview.expand_all()
 
