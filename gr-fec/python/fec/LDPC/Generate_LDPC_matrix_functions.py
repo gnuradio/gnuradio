@@ -636,14 +636,18 @@ def get_best_matrix(H, numIterations=100, verbose=False):
       print 'for encoding.'
     return
 
-def getSystematicGmatrix(H):
+def getSystematicGmatrix(GenMatrix):
   """
   This function finds the systematic form of the generator
-  matrix G. The form is G = [I P] where I is an identity matrix
-  and P is the parity submatrix. If the H matrix provided
-  is not full rank, then dependent rows will be deleted.
+  matrix GenMatrix. This form is G = [I P] where I is an identity
+  matrix and P is the parity submatrix. If the GenMatrix matrix
+  provided is not full rank, then dependent rows will be deleted.
+
+  This function does not convert parity check (H) matrices to the 
+  generator matrix format. Use the function getSystematicGmatrixFromH
+  for that purpose.
   """
-  tempArray = H.copy()
+  tempArray = GenMatrix.copy()
   numRows = tempArray.shape[0]
   numColumns = tempArray.shape[1]
   limit = numRows
