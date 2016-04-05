@@ -8,7 +8,7 @@
 <block>
 	<name>Selector</name>
 	<key>blks2_selector</key>
-	<category>Deprecated</category>
+	<category>[Core]/Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.selector(
 	item_size=$type.size*$vlen,

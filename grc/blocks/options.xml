@@ -84,7 +84,7 @@ else: self.stop(); self.wait()</callback>
 	<param>
 		<name>Category</name>
 		<key>category</key>
-		<value>Custom</value>
+		<value>[GRC Hier Blocks]</value>
 		<type>string</type>
 		<hide>#if $generate_options().startswith('hb') then 'none' else 'all'#</hide>
 	</param>

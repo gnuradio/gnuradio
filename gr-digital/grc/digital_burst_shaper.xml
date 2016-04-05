@@ -2,7 +2,7 @@
 <block>
     <name>Burst Shaper</name>
     <key>digital_burst_shaper_xx</key>
-    <category>Packet Operators</category>
+    <category>[Core]/Packet Operators</category>
     <import>from gnuradio import digital</import>
     <make>digital.burst_shaper_$(type.fcn)($window, $pre_padding, $post_padding, $insert_phasing, $length_tag_name)</make>
     <param>

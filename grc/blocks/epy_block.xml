@@ -2,7 +2,6 @@
 <block>
     <name>Python Block</name>
     <key>epy_block</key>
-    <category>Misc</category>
     <import></import>
     <make></make>
     <param><!-- Cache the last working block IO to keep FG sane -->

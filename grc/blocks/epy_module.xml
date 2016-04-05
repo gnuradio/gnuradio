@@ -2,7 +2,6 @@
 <block>
 	<name>Python Module</name>
 	<key>epy_module</key>
-	<category>Misc</category>
 	<import>import $id  # embedded python module</import>
 	<make></make>
 	<param>

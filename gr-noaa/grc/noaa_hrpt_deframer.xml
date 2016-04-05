@@ -2,7 +2,7 @@
 <block>
   <name>HRPT Deframer</name>
   <key>noaa_hrpt_deframer</key>
-  <category>NOAA</category>
+  <category>[Core]/NOAA</category>
   <import>from gnuradio import noaa</import>
   <make>noaa.hrpt_deframer()</make>
   <sink>
