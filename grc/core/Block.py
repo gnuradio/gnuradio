@@ -34,28 +34,6 @@ from . Element import Element
 from . FlowGraph import _variable_matcher
 
 
-class TemplateArg(UserDict):
-    """
-    A cheetah template argument created from a param.
-    The str of this class evaluates to the param's to code method.
-    The use of this class as a dictionary (enum only) will reveal the enum opts.
-    The __call__ or () method can return the param evaluated to a raw model data type.
-    """
-
-    def __init__(self, param):
-        UserDict.__init__(self)
-        self._param = param
-        if param.is_enum():
-            for key in param.get_opt_keys():
-                self[key] = str(param.get_opt(key))
-
-    def __str__(self):
-        return str(self._param.to_code())
-
-    def __call__(self):
-        return self._param.get_evaluated()
-
-
 def _get_keys(lst):
     return [elem.get_key() for elem in lst]
 
@@ -714,7 +692,8 @@ class Block(Element):
         tmpl = str(tmpl)
         if '$' not in tmpl:
             return tmpl
-        n = dict((p.get_key(), TemplateArg(p)) for p in self.get_params())
+        n = dict((param.get_key(), param.template_arg)
+                 for param in self.get_params())  # TODO: cache that
         try:
             return str(Template(tmpl, n))
         except Exception as err:

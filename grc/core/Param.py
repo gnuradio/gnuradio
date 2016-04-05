@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import ast
-
+import weakref
 import re
 
 from . import Constants
@@ -121,6 +121,27 @@ class Option(Element):
         return self._opts.values()
 
 
+class TemplateArg(object):
+    """
+    A cheetah template argument created from a param.
+    The str of this class evaluates to the param's to code method.
+    The use of this class as a dictionary (enum only) will reveal the enum opts.
+    The __call__ or () method can return the param evaluated to a raw python data type.
+    """
+
+    def __init__(self, param):
+        self._param = weakref.proxy(param)
+
+    def __getitem__(self, item):
+        return str(self._param.get_opt(item)) if self._param.is_enum() else NotImplemented
+
+    def __str__(self):
+        return str(self._param.to_code())
+
+    def __call__(self):
+        return self._param.get_evaluated()
+
+
 class Param(Element):
 
     is_param = True
@@ -184,6 +205,7 @@ class Param(Element):
         self._default = value
         self._init = False
         self._hostage_cells = list()
+        self.template_arg = TemplateArg(self)
 
     def get_types(self):
         return (
