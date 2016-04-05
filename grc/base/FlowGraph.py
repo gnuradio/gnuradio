@@ -375,6 +375,8 @@ class FlowGraph(Element):
 
             block.import_data(block_n)
 
+        self.rewrite()  # evaluate stuff like nports before adding connections
+
         # build the connections
         def verify_and_get_port(key, block, dir):
             ports = block.get_sinks() if dir == 'sink' else block.get_sources()
