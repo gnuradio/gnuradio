@@ -35,7 +35,7 @@ import Cheetah.Template
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
     name = 'rename'
-    aliases = ('rn',)
+    aliases = ('mv',)
 
     def __init__(self):
         ModTool.__init__(self)
