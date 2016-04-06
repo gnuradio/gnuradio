@@ -168,6 +168,7 @@ namespace gr {
         }
 
         // Free memory
+        gsl_matrix_free(s);
         gsl_matrix_free(codeword);
       }
 
