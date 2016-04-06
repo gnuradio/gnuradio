@@ -51,8 +51,8 @@ namespace gr {
 
         // Make an actual copy so we guarantee that we're not sharing
         // memory with another class that reads the same alist file.
-        gsl_matrix *temp_mtrx = gsl_matrix_alloc(d_num_rows, d_num_cols);
-        gsl_matrix_memcpy(temp_mtrx, (gsl_matrix*)(x.get()));
+        gsl_matrix *G = gsl_matrix_alloc(d_num_rows, d_num_cols);
+        gsl_matrix_memcpy(G, (gsl_matrix*)(x.get()));
 
         unsigned int row_index, col_index;
 
@@ -71,7 +71,7 @@ namespace gr {
 
         for(row_index = 0; row_index < d_k; row_index++) {
           for(col_index = 0; col_index < d_k; col_index++) {
-            int value = gsl_matrix_get(temp_mtrx, row_index, col_index);
+            int value = gsl_matrix_get(G, row_index, col_index);
             gsl_matrix_set(I_test, row_index, col_index, value);
           }
         }
@@ -97,13 +97,12 @@ namespace gr {
 
         // Our G matrix is verified as correct, now convert it to the
         // parity check matrix.
-        d_G_ptr = temp_mtrx;
 
         // Grab P matrix
         gsl_matrix *P = gsl_matrix_alloc(d_k, d_n-d_k);
         for(row_index = 0; row_index < d_k; row_index++) {
           for(col_index = 0; col_index < d_n-d_k; col_index++) {
-            int value = gsl_matrix_get(d_G_ptr, row_index, col_index + d_k);
+            int value = gsl_matrix_get(G, row_index, col_index + d_k);
             gsl_matrix_set(P, row_index, col_index, value);
           }
         }
@@ -130,13 +129,14 @@ namespace gr {
 
         // Calculate G transpose (used for encoding)
         d_G_transp_ptr = gsl_matrix_alloc(d_n, d_k);
-        gsl_matrix_transpose_memcpy(d_G_transp_ptr, d_G_ptr);
+        gsl_matrix_transpose_memcpy(d_G_transp_ptr, G);
 
         d_H_sptr = matrix_sptr((matrix*)H_ptr);
 
         // Free memory
         gsl_matrix_free(P);
         gsl_matrix_free(P_transpose);
+        gsl_matrix_free(G);
       }
 
 
@@ -288,7 +288,6 @@ namespace gr {
       ldpc_G_matrix_impl::~ldpc_G_matrix_impl()
       {
         // Call the gsl_matrix_free function to free memory.
-        gsl_matrix_free(d_G_ptr);
         gsl_matrix_free(d_G_transp_ptr);
       }
     } /* namespace code */

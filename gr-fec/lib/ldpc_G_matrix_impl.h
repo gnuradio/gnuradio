@@ -62,7 +62,6 @@ namespace gr {
         // GSL matrix structure for transpose of G
         gsl_matrix *d_G_transp_ptr;
 
-        gsl_matrix *d_G_ptr;
         gsl_matrix *d_H_obj;
 
         //! Get the generator matrix (used during encoding)
