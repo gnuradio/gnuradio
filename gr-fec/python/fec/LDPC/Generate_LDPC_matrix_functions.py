@@ -679,7 +679,7 @@ def getSystematicGmatrix(GenMatrix):
     if found == False:
       # push the row of 0s to the bottom, and move the bottom
       # rows up (sort of a rotation thing)
-      tempArray = moveRowToBottom(i,tempArray)
+      tempArray = move_row_to_bottom(i,tempArray)
       # decrease limit since we just found a row of 0s
       limit -= 1
   # the rows below i are the dependent rows, which we discard
