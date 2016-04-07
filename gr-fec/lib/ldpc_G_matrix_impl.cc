@@ -151,6 +151,7 @@ namespace gr {
       ldpc_G_matrix_impl::encode(unsigned char *outbuffer,
                                   const unsigned char *inbuffer) const
       {
+
         unsigned int index, k = d_k, n = d_n;
         gsl_matrix *s = gsl_matrix_alloc(k, 1);
         for(index = 0; index < k; index++) {
@@ -290,6 +291,7 @@ namespace gr {
       {
         // Call the gsl_matrix_free function to free memory.
         gsl_matrix_free(d_G_transp_ptr);
+        gsl_matrix_free(d_H_obj);
       }
     } /* namespace code */
   } /* namespace fec */
