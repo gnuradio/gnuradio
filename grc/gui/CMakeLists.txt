@@ -17,36 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-GR_PYTHON_INSTALL(FILES
-    external_editor.py
-    Block.py
-    Colors.py
-    Config.py
-    Constants.py
-    Connection.py
-    Element.py
-    Executor.py
-    FlowGraph.py
-    Param.py
-    Platform.py
-    Port.py
-    Utils.py
-    ActionHandler.py
-    Actions.py
-    Bars.py
-    BlockTreeWindow.py
-    Dialogs.py
-    DrawingArea.py
-    FileDialogs.py
-    MainWindow.py
-    Messages.py
-    NotebookPage.py
-    ParserErrorsDialog.py
-    PropsDialog.py
-    Preferences.py
-    StateCache.py
-    __init__.py
+file(GLOB py_files "*.py")
+
+GR_PYTHON_INSTALL(
+    FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/gui
     COMPONENT "grc"
 )

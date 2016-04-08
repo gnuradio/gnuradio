@@ -17,13 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-GR_PYTHON_INSTALL(FILES
-    complexity.py
-    epy_block_io.py
-    expr_utils.py
-    extract_docs.py
-    __init__.py
+file(GLOB py_files "*.py")
+
+GR_PYTHON_INSTALL(
+    FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/utils
     COMPONENT "grc"
 )

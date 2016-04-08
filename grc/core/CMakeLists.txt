@@ -17,30 +17,18 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-GR_PYTHON_INSTALL(FILES
-    Block.py
-    Config.py
-    Connection.py
-    Constants.py
-    Element.py
-    FlowGraph.py
-    __init__.py
-    odict.py
-    Param.py
-    ParseXML.py
-    Platform.py
-    Port.py
+file(GLOB py_files "*.py")
+
+GR_PYTHON_INSTALL(
+    FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
     COMPONENT "grc"
 )
 
-install(FILES
-    block.dtd
-    block_tree.dtd
-    default_flow_graph.grc
-    domain.dtd
-    flow_graph.dtd
+file(GLOB dtd_files "*.dtd")
+
+install(
+    FILES ${dtd_files} default_flow_graph.grc
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
     COMPONENT "grc"
 )

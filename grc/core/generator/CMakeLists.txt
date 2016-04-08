@@ -17,10 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-GR_PYTHON_INSTALL(FILES
-    __init__.py
-    Generator.py
+file(GLOB py_files "*.py")
+
+GR_PYTHON_INSTALL(
+    FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/generator
     COMPONENT "grc"
 )
@@ -30,5 +30,3 @@ install(FILES
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/generator
     COMPONENT "grc"
 )
-
-add_subdirectory(utils)

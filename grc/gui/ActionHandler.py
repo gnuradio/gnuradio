@@ -69,8 +69,6 @@ class ActionHandler:
         #initialize
         self.init_file_paths = file_paths
         Actions.APPLICATION_INITIALIZE()
-        #enter the mainloop
-        gtk.main()
 
     def _handle_key_press(self, widget, event):
         """
