@@ -150,7 +150,7 @@ class FlowGraph(Element, _Flowgraph):
             int(random.uniform(.25, .75)*v_adj.page_size + v_adj.get_value()),
         )
         #get the new block
-        block = self.get_new_block(key)
+        block = self.new_block(key)
         block.set_coordinate(coor)
         block.set_rotation(0)
         block.get_param('id').set_value(id)
@@ -207,7 +207,7 @@ class FlowGraph(Element, _Flowgraph):
         for block_n in blocks_n:
             block_key = block_n.find('key')
             if block_key == 'options': continue
-            block = self.get_new_block(block_key)
+            block = self.new_block(block_key)
             selected.add(block)
             #set params
             params_n = block_n.findall('param')

@@ -62,8 +62,7 @@ class FlowGraph(Element):
         self.namespace = {}
 
         self.grc_file_path = ''
-
-        self.import_data()
+        self._options_block = self.new_block('options')
 
     def __str__(self):
         return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
@@ -286,7 +285,7 @@ class FlowGraph(Element):
     # Add/remove stuff
     ##############################################
 
-    def get_new_block(self, key):
+    def new_block(self, key):
         """
         Get a new block of the specified key.
         Add the block to the list of elements.
@@ -375,7 +374,7 @@ class FlowGraph(Element):
         })
         return odict({'flow_graph': n, '_instructions': instructions})
 
-    def import_data(self, n=None):
+    def import_data(self, n):
         """
         Import blocks and connections into this flow graph.
         Clear this flowgraph of all previous blocks and connections.
@@ -384,7 +383,6 @@ class FlowGraph(Element):
         Args:
             n: the nested data odict
         """
-        errors = False
         # Remove previous elements
         del self.blocks[:]
         del self.connections[:]
@@ -399,33 +397,34 @@ class FlowGraph(Element):
         self._timestamp = fg_n.find('timestamp') or time.ctime()
 
         # build the blocks
-        self._options_block = self.get_parent().get_new_block(self, 'options')
+        self._options_block = self.new_block('options')
         for block_n in fg_n.findall('block'):
             key = block_n.find('key')
-            block = self._options_block if key == 'options' else self.get_new_block(key)
+            block = self._options_block if key == 'options' else self.new_block(key)
 
             if not block:
-                platform = self.get_parent()
-                # we're before the initial fg rewrite(), so no evaluated values!
+                # we're before the initial fg update(), so no evaluated values!
                 # --> use raw value instead
                 path_param = self._options_block.get_param('hier_block_src_path')
-                file_path = platform.find_file_in_paths(
-                    filename=key + '.' + platform.get_key(),
+                file_path = self.platform.find_file_in_paths(
+                    filename=key + '.grc',
                     paths=path_param.get_value(),
                     cwd=self.grc_file_path
                 )
                 if file_path:  # grc file found. load and get block
-                    platform.load_and_generate_flow_graph(file_path)
-                    block = self.get_new_block(key)  # can be None
+                    self.platform.load_and_generate_flow_graph(file_path)
+                    block = self.new_block(key)  # can be None
 
             if not block:  # looks like this block key cannot be found
                 # create a dummy block instead
-                block = self.get_new_block('dummy_block')
+                block = self.new_block('dummy_block')
                 # Ugly ugly ugly
                 _initialize_dummy_block(block, block_n)
                 print('Block key "%s" not found' % key)
 
             block.import_data(block_n)
+
+        self.rewrite()
 
         # build the connections
         def verify_and_get_port(key, block, dir):
@@ -442,6 +441,7 @@ class FlowGraph(Element):
                     raise LookupError('%s key %r not in %s block keys' % (dir, key, dir))
             return port
 
+        errors = False
         for connection_n in fg_n.findall('connection'):
             # get the block ids and port keys
             source_block_id = connection_n.find('source_block_id')
@@ -454,7 +454,7 @@ class FlowGraph(Element):
 
                 # fix old, numeric message ports keys
                 if file_format < 1:
-                    source_key, sink_key = self._update_old_message_port_keys(
+                    source_key, sink_key = _update_old_message_port_keys(
                         source_key, sink_key, source_block, sink_block)
 
                 # build the connection
