@@ -30,9 +30,9 @@ from modtool_base import ModTool, ModToolException
 from templates import Templates
 
 class ModToolRename(ModTool):
-    """ Add block to the out-of-tree module. """
+    """ Rename a block in the out-of-tree module. """
     name = 'rename'
-    aliases = ('insert',)
+    aliases = ('mv',)
 
     def __init__(self):
         ModTool.__init__(self)
