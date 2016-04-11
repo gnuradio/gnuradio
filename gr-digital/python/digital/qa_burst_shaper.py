@@ -52,10 +52,14 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.tb = None
 
     def test_ff (self):
+        '''
+        test_ff: test with float values, even length window, zero padding,
+            and no phasing
+        '''
         prepad = 10
         postpad = 10
         length = 20
-        data = np.ones(length + 10) # need 10 more to push things through
+        data = np.ones(length)
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
         tags = (make_length_tag(0, length),)
         expected = np.concatenate((np.zeros(prepad), window[0:5],
@@ -76,11 +80,14 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.assertTrue(compare_tags(sink.tags()[0], etag))
 
     def test_cc (self):
+        '''
+        test_cc: test with complex values, even length window, zero padding,
+            and no phasing
+        '''
         prepad = 10
         postpad = 10
         length = 20
-        data = np.ones(length + 10,
-                       dtype=complex) # need 10 more to push things through
+        data = np.ones(length, dtype=complex)
         window = np.concatenate((-2.0*np.ones(5, dtype=complex),
                                  -4.0*np.ones(5, dtype=complex)))
         tags = (make_length_tag(0, length),)
@@ -103,10 +110,14 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.assertTrue(compare_tags(sink.tags()[0], etag))
 
     def test_ff_with_phasing (self):
+        '''
+        test_ff_with_phasing: test with float values, even length window, zero
+            padding, and phasing
+        '''
         prepad = 10
         postpad = 10
         length = 20
-        data = np.ones(length + 10) # need 10 more to push things through
+        data = np.ones(length)
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
         tags = (make_length_tag(0, length),)
         phasing = np.zeros(5)
@@ -131,11 +142,14 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.assertTrue(compare_tags(sink.tags()[0], etag))
 
     def test_cc_with_phasing (self):
+        '''
+        test_cc_with_phasing: test with complex values, even length window, zero
+            padding, and phasing
+        '''
         prepad = 10
         postpad = 10
         length = 20
-        data = np.ones(length + 10,
-                       dtype=complex) # need 10 more to push things through
+        data = np.ones(length, dtype=complex)
         window = np.concatenate((-2.0*np.ones(5, dtype=complex),
                                  -4.0*np.ones(5, dtype=complex)))
         tags = (make_length_tag(0, length),)
@@ -163,10 +177,14 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.assertTrue(compare_tags(sink.tags()[0], etag))
 
     def test_odd_window (self):
+        '''
+        test_odd_window: test with odd length window; center sample should be
+            applied at end of up flank and beginning of down flank
+        '''
         prepad = 10
         postpad = 10
         length = 20
-        data = np.ones(length + 10) # need 10 more to push things through
+        data = np.ones(length)
         window = np.concatenate((-2.0*np.ones(5), -3.0*np.ones(1),
                                  -4.0*np.ones(5)))
         tags = (make_length_tag(0, length),)
@@ -188,12 +206,15 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.assertTrue(compare_tags(sink.tags()[0], etag))
 
     def test_short_burst (self):
+        '''
+        test_short_burst: test with burst length shorter than window length;
+            clips the window up and down flanks to FLOOR(length/2) samples
+        '''
         prepad = 10
         postpad = 10
         length = 9
-        data = np.ones(length + 10) # need 10 more to push things through
-        window = np.concatenate((-2.0*np.ones(5), -3.0*np.ones(1),
-                                 -4.0*np.ones(5)))
+        data = np.ones(length)
+        window = np.arange(length + 2, dtype=float)
         tags = (make_length_tag(0, length),)
         expected = np.concatenate((np.zeros(prepad), window[0:4],
                                    np.ones(1), window[5:9],
@@ -213,12 +234,15 @@ class qa_burst_shaper (gr_unittest.TestCase):
         self.assertTrue(compare_tags(sink.tags()[0], etag))
 
     def test_consecutive_bursts (self):
+        '''
+        test_consecutive_bursts: test with consecutive bursts of different
+            lengths
+        '''
         prepad = 10
         postpad = 10
         length1 = 15
         length2 = 25
-        data = np.concatenate((np.ones(length1), -1.0*np.ones(length2),
-                               np.zeros(10))) # need 10 more to push things through
+        data = np.concatenate((np.ones(length1), -1.0*np.ones(length2)))
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
         tags = (make_length_tag(0, length1), make_length_tag(length1, length2))
         expected = np.concatenate((np.zeros(prepad), window[0:5],
@@ -244,12 +268,15 @@ class qa_burst_shaper (gr_unittest.TestCase):
             self.assertTrue(compare_tags(sink.tags()[i], etags[i]))
 
     def test_tag_gap (self):
+        '''
+        test_tag_gap: test with gap between tags; should drop samples that are
+            between proper tagged streams
+        '''
         prepad = 10
         postpad = 10
         length = 20
         gap_len = 5
-        data = np.arange(2*length + 10,
-                         dtype=float)   # need 10 more to push things through
+        data = np.arange(2*length + gap_len, dtype=float)
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
         ewindow = window * np.array([1,-1,1,-1,1,1,-1,1,-1,1],dtype=float)
         tags = (make_length_tag(0, length),
@@ -280,6 +307,9 @@ class qa_burst_shaper (gr_unittest.TestCase):
             self.assertTrue(compare_tags(sink.tags()[i], etags[i]))
 
     def test_tag_propagation (self):
+        '''
+        test_tag_propagation: test that non length tags are handled correctly
+        '''
         prepad = 10
         postpad = 10
         length1 = 15
@@ -294,7 +324,7 @@ class qa_burst_shaper (gr_unittest.TestCase):
         tag5_offset = length1 + gap_len + 7 # in copy state
 
         data = np.concatenate((np.ones(length1), np.zeros(gap_len),
-                               -1.0*np.ones(length2), np.zeros(10)))
+                               -1.0*np.ones(length2)))
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
         tags = (make_length_tag(lentag1_offset, length1),
                 make_length_tag(lentag2_offset, length2),
