@@ -1,4 +1,4 @@
-ChangeLog v3.7.9.1
+ChangeLog v3.7.9.2
 ==================
 
 Contributors
@@ -45,10 +45,11 @@ Pasting blocks will now
 
 XML comments are now ignored rather than parsed as part of the block wrapper.
 
-(nw) not sure what this is: rewrite block before adding connections during flowgraph import
-(nw) not sure what this is: E.g.: Not all connections to a block with nports controlled via a parameter block could be restored from file.
-(nw) not sure what this is:
-(nw) not sure what this is:  stop overwritting modified param values in epy blocks
+Rewrite block before adding connections during flowgraph import E.g.: Not all
+connections to a block with nports controlled via a parameter block could be
+restored from file.
+
+Stop overwritting modified param values in epy blocks
 
 Flowgraphs now run even if a bypassed block has errors.
 
