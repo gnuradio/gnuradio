@@ -66,6 +66,9 @@ set for the internal mask. This matches a fix fo the
 correlate_access_code_tag_bb block from v3.7.5.2. Look for similar fixes and
 consistency changes to the correlate_access_code blocks in the future.
 
+Added test descriptions for the burst shaper QA and removed unnecessary
+padding.
+
 ### gr-fec
 
 FEC documentation continues to improve with every release. Fixes to improve
@@ -112,6 +115,9 @@ Fix gr_modtool rename command for GRC XML files to include the module name.
 Fix template expansion code for out of tree modules by adding build_utils.py to
 PYTHONPATH. New modules will also have a CMAKE_MODULES_PATH with the module
 `cmake/Modules` directory first over the installed GNU Radio modules.
+
+The gr_modtool alias and description for renaming blocks match the
+functionality. The new alias is `mv`.
 
 ### Builds
 
