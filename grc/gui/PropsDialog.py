@@ -17,15 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
 import Actions
 from Dialogs import SimpleTextDisplay
 from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, FONT_SIZE
 import Utils
-import pango
+from gi.repository import Pango
 
 TAB_LABEL_MARKUP_TMPL="""\
 #set $foreground = $valid and 'black' or 'red'
@@ -43,14 +45,14 @@ def get_title_label(title):
     Returns:
         a gtk object
     """
-    label = gtk.Label()
+    label = Gtk.Label()
     label.set_markup('\n<b><span underline="low">%s</span>:</b>\n'%title)
-    hbox = gtk.HBox()
+    hbox = Gtk.HBox()
     hbox.pack_start(label, False, False, padding=11)
     return hbox
 
 
-class PropsDialog(gtk.Dialog):
+class PropsDialog(Gtk.Dialog):
     """
     A dialog to set block parameters, view errors, and view documentation.
     """
@@ -64,64 +66,64 @@ class PropsDialog(gtk.Dialog):
         """
         self._hash = 0
 
-        gtk.Dialog.__init__(
+        GObject.GObject.__init__(
             self,
             title='Properties: %s' % block.get_name(),
-            buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
-                     gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
-                     gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
+            buttons=(Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT,
+                     Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+                     Gtk.STOCK_APPLY, Gtk.ResponseType.APPLY)
         )
-        self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
+        self.set_response_sensitive(Gtk.ResponseType.APPLY, False)
         self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
         self._block = block
 
-        vpaned = gtk.VPaned()
-        self.vbox.pack_start(vpaned)
+        vpaned = Gtk.VPaned()
+        self.vbox.pack_start(vpaned, True, True, 0)
 
         # Notebook to hold param boxes
-        notebook = gtk.Notebook()
+        notebook = Gtk.Notebook()
         notebook.set_show_border(False)
         notebook.set_scrollable(True)  # scroll arrows for page tabs
-        notebook.set_tab_pos(gtk.POS_TOP)
+        notebook.set_tab_pos(Gtk.PositionType.TOP)
         vpaned.pack1(notebook, True)
 
         # Params boxes for block parameters
         self._params_boxes = list()
         for tab in block.get_param_tab_labels():
-            label = gtk.Label()
-            vbox = gtk.VBox()
-            scroll_box = gtk.ScrolledWindow()
-            scroll_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+            label = Gtk.Label()
+            vbox = Gtk.VBox()
+            scroll_box = Gtk.ScrolledWindow()
+            scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             scroll_box.add_with_viewport(vbox)
             notebook.append_page(scroll_box, label)
             self._params_boxes.append((tab, label, vbox))
 
         # Docs for the block
         self._docs_text_display = doc_view = SimpleTextDisplay()
-        doc_view.get_buffer().create_tag('b', weight=pango.WEIGHT_BOLD)
-        self._docs_box = gtk.ScrolledWindow()
-        self._docs_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        doc_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
+        self._docs_box = Gtk.ScrolledWindow()
+        self._docs_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._docs_box.add_with_viewport(self._docs_text_display)
-        notebook.append_page(self._docs_box, gtk.Label("Documentation"))
+        notebook.append_page(self._docs_box, Gtk.Label(label="Documentation"))
 
         # Generated code for the block
         if Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB.get_active():
             self._code_text_display = code_view = SimpleTextDisplay()
-            code_view.set_wrap_mode(gtk.WRAP_NONE)
-            code_view.get_buffer().create_tag('b', weight=pango.WEIGHT_BOLD)
-            code_view.modify_font(pango.FontDescription(
+            code_view.set_wrap_mode(Gtk.WrapMode.NONE)
+            code_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
+            code_view.modify_font(Pango.FontDescription(
                 'monospace %d' % FONT_SIZE))
-            code_box = gtk.ScrolledWindow()
-            code_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+            code_box = Gtk.ScrolledWindow()
+            code_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             code_box.add_with_viewport(self._code_text_display)
-            notebook.append_page(code_box, gtk.Label("Generated Code"))
+            notebook.append_page(code_box, Gtk.Label(label="Generated Code"))
         else:
             self._code_text_display = None
 
         # Error Messages for the block
         self._error_messages_text_display = SimpleTextDisplay()
-        self._error_box = gtk.ScrolledWindow()
-        self._error_box.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self._error_box = Gtk.ScrolledWindow()
+        self._error_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._error_box.add_with_viewport(self._error_messages_text_display)
         vpaned.pack2(self._error_box)
         vpaned.set_position(int(0.65 * MIN_DIALOG_HEIGHT))
@@ -162,7 +164,7 @@ class PropsDialog(gtk.Dialog):
         self.update_gui()
 
     def _activate_apply(self, *args):
-        self.set_response_sensitive(gtk.RESPONSE_APPLY, True)
+        self.set_response_sensitive(Gtk.ResponseType.APPLY, True)
 
     def update_gui(self, widget=None, force=False):
         """
@@ -275,21 +277,19 @@ class PropsDialog(gtk.Dialog):
         Returns:
             false to forward the keypress
         """
-        if (event.keyval == gtk.keysyms.Return and
-            event.state & gtk.gdk.CONTROL_MASK == 0 and
-            not isinstance(widget.get_focus(), gtk.TextView)
+        if (event.keyval == Gdk.KEY_Return and
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK == 0 and
+            not isinstance(widget.get_focus(), Gtk.TextView)
         ):
-            self.response(gtk.RESPONSE_ACCEPT)
+            self.response(Gtk.ResponseType.ACCEPT)
             return True  # handled here
         return False  # forward the keypress
 
     def _handle_response(self, widget, response):
-        if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
+        if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
             for tab, label, vbox in self._params_boxes:
                 for child in vbox.get_children():
                     child.apply_pending_changes()
-            self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
+            self.set_response_sensitive(Gtk.ResponseType.APPLY, False)
             return True
         return False
-
-

@@ -18,10 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 
-import gobject
-import gtk
 import os
 import subprocess
+
+from gi.repository import Gtk
+from gi.repository import GObject
 
 from . import Dialogs, Preferences, Actions, Executor, Constants
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
@@ -32,8 +33,6 @@ from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
 
 from ..core import ParseXML, Messages
-
-gobject.threads_init()
 
 
 class ActionHandler:
@@ -85,7 +84,7 @@ class ActionHandler:
         # prevent key event stealing while the search box is active
         # .has_focus() only in newer versions 2.17+?
         # .is_focus() seems to work, but exactly the same
-        if self.main_window.btwin.search_entry.flags() & gtk.HAS_FOCUS:
+        if self.main_window.btwin.search_entry.flags() & Gtk.HAS_FOCUS:
             return False
         if not self.get_focus_flag(): return False
         return Actions.handle_key_press(event)
@@ -159,7 +158,7 @@ class ActionHandler:
             self.init = True
         elif action == Actions.APPLICATION_QUIT:
             if main.close_pages():
-                gtk.main_quit()
+                Gtk.main_quit()
                 exit(0)
         ##################################################
         # Selections
@@ -464,10 +463,10 @@ class ActionHandler:
                 selected_block = flow_graph.get_selected_block()
             if selected_block:
                 self.dialog = PropsDialog(selected_block)
-                response = gtk.RESPONSE_APPLY
-                while response == gtk.RESPONSE_APPLY:  # rerun the dialog if Apply was hit
+                response = Gtk.ResponseType.APPLY
+                while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
                     response = self.dialog.run()
-                    if response in (gtk.RESPONSE_APPLY, gtk.RESPONSE_ACCEPT):
+                    if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
                         flow_graph_update()
                         page.get_state_cache().save_new_state(flow_graph.export_data())
                         page.set_saved(False)
@@ -475,7 +474,7 @@ class ActionHandler:
                         n = page.get_state_cache().get_current_state()
                         flow_graph.import_data(n)
                         flow_graph_update()
-                    if response == gtk.RESPONSE_APPLY:
+                    if response == Gtk.ResponseType.APPLY:
                         # null action, that updates the main window
                         Actions.ELEMENT_SELECT()
                 self.dialog.destroy()
@@ -521,15 +520,18 @@ class ActionHandler:
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
                 flow_graph_update()
         elif action == Actions.FLOW_GRAPH_OPEN:
+            # TODO: Disable opening the flowgraph
+            pass
+            '''
             file_paths = args if args else OpenFlowGraphFileDialog(page.get_file_path()).run()
-            if file_paths: #open a new page for each file, show only the first
+            if file_paths: # Open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i==0))
                     Preferences.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
                     main.menu_bar.refresh_submenus()
                     main.vars.update_gui()
-
+            '''
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
             file_paths = OpenQSSFileDialog(self.platform.config.install_prefix +
                                            '/share/gnuradio/themes/').run()

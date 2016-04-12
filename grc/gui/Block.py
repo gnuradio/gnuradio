@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import pango
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Pango
 
 from . import Actions, Colors, Utils
 
@@ -202,7 +202,7 @@ class Block(Element, _Block):
 
         layouts = list()
         #create the main layout
-        layout = gtk.DrawingArea().create_pango_layout('')
+        layout = Gtk.DrawingArea().create_pango_layout('')
         layouts.append(layout)
         layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=BLOCK_FONT))
         self.label_width, self.label_height = layout.get_pixel_size()
@@ -214,8 +214,8 @@ class Block(Element, _Block):
         else:
             markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
-            layout = gtk.DrawingArea().create_pango_layout('')
-            layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
+            layout = Gtk.DrawingArea().create_pango_layout('')
+            layout.set_spacing(LABEL_SEPARATION*Pango.SCALE)
             layout.set_markup('\n'.join(markups))
             layouts.append(layout)
             w, h = layout.get_pixel_size()
@@ -279,7 +279,7 @@ class Block(Element, _Block):
             complexity = calculate_flowgraph_complexity(self.get_parent())
             complexity = "Complexity: {}bal".format(num_to_str(complexity))
 
-        layout = gtk.DrawingArea().create_pango_layout('')
+        layout = Gtk.DrawingArea().create_pango_layout('')
         layout.set_markup(Utils.parse_template(COMMENT_COMPLEXITY_MARKUP_TMPL,
                                                block=self,
                                                comment=comment,

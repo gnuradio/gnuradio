@@ -19,7 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+
 
 from . import Bars, Actions, Preferences, Utils
 from .BlockTreeWindow import BlockTreeWindow
@@ -62,7 +67,7 @@ PAGE_TITLE_MARKUP_TMPL = """\
 # Main window
 ############################################################
 
-class MainWindow(gtk.Window):
+class MainWindow(Gtk.Window):
     """The topmost window with menus, the tool bar, and other major windows."""
 
     # Constants the action handler can use to indicate which panel visibility to change.
@@ -87,23 +92,23 @@ class MainWindow(gtk.Window):
         Preferences.load(platform)
 
         # Setup window
-        gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-        vbox = gtk.VBox()
+        GObject.GObject.__init__(self)
+        vbox = Gtk.VBox()
         self.add(vbox)
 
         # Create the menu bar and toolbar
         self.add_accel_group(Actions.get_accel_group())
         self.menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
-        vbox.pack_start(self.menu_bar, False)
+        vbox.pack_start(self.menu_bar, False, False, 0)
         self.tool_bar = Bars.Toolbar(generate_modes, action_handler_callback)
-        vbox.pack_start(self.tool_bar, False)
+        vbox.pack_start(self.tool_bar, False, False, 0)
 
         # Main parent container for the different panels
-        self.container = gtk.HPaned()
+        self.container = Gtk.HPaned()
         vbox.pack_start(self.container)
 
         # Create the notebook
-        self.notebook = gtk.Notebook()
+        self.notebook = Gtk.Notebook()
         self.page_to_be_closed = None
         self.current_page = None
         self.notebook.set_show_border(False)
@@ -112,8 +117,8 @@ class MainWindow(gtk.Window):
 
         # Create the console window
         self.text_display = TextDisplay()
-        self.console_window = gtk.ScrolledWindow()
-        self.console_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.console_window = Gtk.ScrolledWindow()
+        self.console_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.console_window.add(self.text_display)
         self.console_window.set_size_request(-1, DEFAULT_CONSOLE_WINDOW_WIDTH)
 
@@ -122,9 +127,9 @@ class MainWindow(gtk.Window):
         self.vars = VariableEditor(platform, self.get_flow_graph)
 
         # Figure out which place to put the variable editor
-        self.left = gtk.VPaned()
-        self.right = gtk.VPaned()
-        self.left_subpanel = gtk.HPaned()
+        self.left = Gtk.VPaned()
+        self.right = Gtk.VPaned()
+        self.left_subpanel = Gtk.HPaned()
 
         self.variable_panel_sidebar = Preferences.variable_editor_sidebar()
         if self.variable_panel_sidebar:
@@ -145,7 +150,7 @@ class MainWindow(gtk.Window):
         self.container.pack1(self.left)
         self.container.pack2(self.right, False)
 
-        # load preferences and show the main window
+        # Load preferences and show the main window
         self.resize(*Preferences.main_window_size())
         self.container.set_position(Preferences.blocks_window_position())
         self.left.set_position(Preferences.console_window_position())
@@ -273,7 +278,7 @@ class MainWindow(gtk.Window):
         self.notebook.append_page(page, page.get_tab())
         try: self.notebook.set_tab_reorderable(page, True)
         except: pass #gtk too old
-        self.notebook.set_tab_label_packing(page, False, False, gtk.PACK_START)
+        self.notebook.set_tab_label_packing(page, False, False, Gtk.PACK_START)
         #only show if blank or manual
         if not file_path or show: self._set_page(page)
 
@@ -322,12 +327,12 @@ class MainWindow(gtk.Window):
         #unsaved? ask the user
         if not self.page_to_be_closed.get_saved():
             response = self._save_changes() # return value is either OK, CLOSE, or CANCEL
-            if response == gtk.RESPONSE_OK:
+            if response == Gtk.ResponseType.OK:
                 Actions.FLOW_GRAPH_SAVE() #try to save
                 if not self.page_to_be_closed.get_saved(): #still unsaved?
                     self.page_to_be_closed = None #set the page to be closed back to None
                     return False
-            elif response == gtk.RESPONSE_CANCEL:
+            elif response == Gtk.ResponseType.CANCEL:
                 self.page_to_be_closed = None
                 return False
         #stop the flow graph if executing
@@ -351,7 +356,7 @@ class MainWindow(gtk.Window):
         Args:
             title: the window title
         """
-        gtk.Window.set_title(self, Utils.parse_template(MAIN_WINDOW_TITLE_TMPL,
+        Gtk.Window.set_title(self, Utils.parse_template(MAIN_WINDOW_TITLE_TMPL,
                 basename=os.path.basename(self.get_page().get_file_path()),
                 dirname=os.path.dirname(self.get_page().get_file_path()),
                 new_flowgraph_title=NEW_FLOGRAPH_TITLE,
@@ -400,7 +405,9 @@ class MainWindow(gtk.Window):
         Returns:
             the selected flow graph
         """
-        return self.get_page().get_flow_graph()
+        return None
+        # TODO: Issues with flowgraphs
+        #return self.get_page().get_flow_graph()
 
     def get_focus_flag(self):
         """
@@ -433,13 +440,13 @@ class MainWindow(gtk.Window):
             the response_id (see buttons variable below)
         """
         buttons = (
-            'Close without saving', gtk.RESPONSE_CLOSE,
-            gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-            gtk.STOCK_SAVE, gtk.RESPONSE_OK
+            'Close without saving', Gtk.ResponseType.CLOSE,
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_SAVE, Gtk.ResponseType.OK
         )
         return MessageDialogHelper(
-            gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Unsaved Changes!',
-            'Would you like to save changes before closing?', gtk.RESPONSE_OK, buttons
+            Gtk.MessageType.QUESTION, Gtk.ButtonsType.NONE, 'Unsaved Changes!',
+            'Would you like to save changes before closing?', Gtk.ResponseType.OK, buttons
         )
 
     def _get_files(self):

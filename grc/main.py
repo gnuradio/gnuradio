@@ -17,7 +17,10 @@
 
 import optparse
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
 from gnuradio import gr
 
 from .gui.Platform import Platform
@@ -40,7 +43,7 @@ def main():
     options, args = parser.parse_args()
 
     try:
-        gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+        Gtk.window_set_default_icon(Gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
     except:
         pass
 
@@ -51,5 +54,5 @@ def main():
         install_prefix=gr.prefix()
     )
     ActionHandler(args, platform)
-    gtk.main()
+    Gtk.main()
 

@@ -15,7 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-import gobject
 import os
 import threading
 import shlex
@@ -23,6 +22,8 @@ import subprocess
 import sys
 import re
 from distutils.spawn import find_executable
+
+from gi.repository import GObject
 
 from ..core import Messages
 
@@ -86,15 +87,15 @@ class ExecFlowGraphThread(threading.Thread):
     def run(self):
         """
         Wait on the executing process by reading from its stdout.
-        Use gobject.idle_add when calling functions that modify gtk objects.
+        Use GObject.idle_add when calling functions that modify gtk objects.
         """
         # handle completion
         r = "\n"
         while r:
-            gobject.idle_add(Messages.send_verbose_exec, r)
+            GObject.idle_add(Messages.send_verbose_exec, r)
             r = os.read(self.process.stdout.fileno(), 1024)
         self.process.poll()
-        gobject.idle_add(self.done)
+        GObject.idle_add(self.done)
 
     def done(self):
         """Perform end of execution tasks."""

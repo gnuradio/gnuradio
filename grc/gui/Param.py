@@ -19,9 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+
 
 from . import Colors, Utils, Constants
 from .Element import Element
@@ -29,16 +32,16 @@ from .Element import Element
 from ..core.Param import Param as _Param
 
 
-class InputParam(gtk.HBox):
+class InputParam(Gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
     expand = False
 
     def __init__(self, param, changed_callback=None, editing_callback=None):
-        gtk.HBox.__init__(self)
+        GObject.GObject.__init__(self)
         self.param = param
         self._changed_callback = changed_callback
         self._editing_callback = editing_callback
-        self.label = gtk.Label() #no label, markup is added by set_markup
+        self.label = Gtk.Label() #no label, markup is added by set_markup
         self.label.set_size_request(150, -1)
         self.pack_start(self.label, False)
         self.set_markup = lambda m: self.label.set_markup(m)
@@ -103,7 +106,7 @@ class InputParam(gtk.HBox):
         self._update_gui()
 
     def _handle_key_press(self, widget, event):
-        if event.keyval == gtk.keysyms.Return and event.state & gtk.gdk.CONTROL_MASK:
+        if event.keyval == Gdk.KEY_Return and event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             self._apply_change(widget, event)
             return True
         return False
@@ -118,7 +121,7 @@ class EntryParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        self._input = gtk.Entry()
+        self._input = Gtk.Entry()
         self._input.set_text(self.param.get_value())
         self._input.connect('changed', self._mark_changed)
         self._input.connect('focus-out-event', self._apply_change)
@@ -140,8 +143,8 @@ class EntryParam(InputParam):
             if need_status_color and not self.param.get_parent().get_enabled()
             else gtk.gdk.color_parse(color)
         )
-        self._input.modify_base(gtk.STATE_NORMAL, base_color)
-        self._input.modify_text(gtk.STATE_NORMAL, text_color)
+        self._input.modify_base(Gtk.StateType.NORMAL, base_color)
+        self._input.modify_text(Gtk.StateType.NORMAL, text_color)
 
     def set_tooltip_text(self, text):
         try:
@@ -156,16 +159,16 @@ class MultiLineEntryParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        self._buffer = gtk.TextBuffer()
+        self._buffer = Gtk.TextBuffer()
         self._buffer.set_text(self.param.get_value())
         self._buffer.connect('changed', self._mark_changed)
 
-        self._view = gtk.TextView(self._buffer)
+        self._view = Gtk.TextView(self._buffer)
         self._view.connect('focus-out-event', self._apply_change)
         self._view.connect('key-press-event', self._handle_key_press)
 
-        self._sw = gtk.ScrolledWindow()
-        self._sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self._sw = Gtk.ScrolledWindow()
+        self._sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._sw.add_with_viewport(self._view)
 
         self.pack_start(self._sw, True)
@@ -176,8 +179,8 @@ class MultiLineEntryParam(InputParam):
                             buf.get_end_iter()).strip()
 
     def set_color(self, color):
-        self._view.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-        self._view.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+        self._view.modify_base(Gtk.StateType.NORMAL, Gdk.color_parse(color))
+        self._view.modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
     def set_tooltip_text(self, text):
         try:
@@ -211,8 +214,8 @@ class MultiLineEntryParam(InputParam):
 #             view.set_auto_indent(True)
 #             view.set_border_width(2)
 #
-#             scroll = gtk.ScrolledWindow()
-#             scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+#             scroll = Gtk.ScrolledWindow()
+#             scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 #             scroll.add_with_viewport(view)
 #             self.pack_start(scroll, True)
 #
@@ -229,7 +232,7 @@ class PythonEditorParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        button = self._button = gtk.Button('Open in Editor')
+        button = self._button = Gtk.Button('Open in Editor')
         button.connect('clicked', self.open_editor)
         self.pack_start(button, True)
 
@@ -241,8 +244,8 @@ class PythonEditorParam(InputParam):
         pass  # we never update the value from here
 
     def set_color(self, color):
-        # self._button.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-        self._button.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+        # self._button.modify_base(Gtk.StateType.NORMAL, Gdk.color_parse(color))
+        self._button.modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
     def _apply_change(self, *args):
         pass
@@ -253,7 +256,7 @@ class EnumParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        self._input = gtk.combo_box_new_text()
+        self._input = Gtk.ComboBoxText()
         for option in self.param.get_options(): self._input.append_text(option.get_name())
         self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
         self._input.connect('changed', self._editing_callback)
@@ -275,7 +278,7 @@ class EnumEntryParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        self._input = gtk.combo_box_entry_new_text()
+        self._input = Gtk.combo_box_entry_new_text()
         for option in self.param.get_options(): self._input.append_text(option.get_name())
         try: self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
         except:
@@ -302,11 +305,11 @@ class EnumEntryParam(InputParam):
 
     def set_color(self, color):
         if self._input.get_active() == -1: #custom entry, use color
-            self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-            self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+            self._input.get_child().modify_base(Gtk.StateType.NORMAL, Gdk.color_parse(color))
+            self._input.get_child().modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
         else: #from enum, make pale background
-            self._input.get_child().modify_base(gtk.STATE_NORMAL, Colors.ENTRYENUM_CUSTOM_COLOR)
-            self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+            self._input.get_child().modify_base(Gtk.StateType.NORMAL, Colors.ENTRYENUM_CUSTOM_COLOR)
+            self._input.get_child().modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
 
 class FileParam(EntryParam):
@@ -314,7 +317,7 @@ class FileParam(EntryParam):
 
     def __init__(self, *args, **kwargs):
         EntryParam.__init__(self, *args, **kwargs)
-        input = gtk.Button('...')
+        input = Gtk.Button('...')
         input.connect('clicked', self._handle_clicked)
         self.pack_start(input, False)
 
@@ -338,11 +341,11 @@ class FileParam(EntryParam):
 
         #build the dialog
         if self.param.get_type() == 'file_open':
-            file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
-                gtk.FILE_CHOOSER_ACTION_OPEN, ('gtk-cancel',gtk.RESPONSE_CANCEL,'gtk-open',gtk.RESPONSE_OK))
+            file_dialog = Gtk.FileChooserDialog('Open a Data File...', None,
+                Gtk.FileChooserAction.OPEN, ('gtk-cancel',Gtk.ResponseType.CANCEL,'gtk-open',Gtk.ResponseType.OK))
         elif self.param.get_type() == 'file_save':
-            file_dialog = gtk.FileChooserDialog('Save a Data File...', None,
-                gtk.FILE_CHOOSER_ACTION_SAVE, ('gtk-cancel',gtk.RESPONSE_CANCEL, 'gtk-save',gtk.RESPONSE_OK))
+            file_dialog = Gtk.FileChooserDialog('Save a Data File...', None,
+                Gtk.FileChooserAction.SAVE, ('gtk-cancel',Gtk.ResponseType.CANCEL, 'gtk-save',Gtk.ResponseType.OK))
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename) #show the current filename
         else:
@@ -350,7 +353,7 @@ class FileParam(EntryParam):
         file_dialog.set_current_folder(dirname) #current directory
         file_dialog.set_select_multiple(False)
         file_dialog.set_local_only(True)
-        if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
+        if Gtk.ResponseType.OK == file_dialog.run(): #run the dialog
             file_path = file_dialog.get_filename() #get the file path
             self._input.set_text(file_path)
             self._editing_callback()

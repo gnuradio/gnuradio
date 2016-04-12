@@ -17,7 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+
 
 import Colors
 import Utils
@@ -88,9 +92,9 @@ class Connection(Element, _Connection):
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
         self.line_attributes[0] = 2 if source_domain != sink_domain else 0
-        self.line_attributes[1] = gtk.gdk.LINE_DOUBLE_DASH \
+        self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
             if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
-            else gtk.gdk.LINE_ON_OFF_DASH
+            else Gdk.LINE_ON_OFF_DASH
         get_domain_color = lambda d: Colors.get_color((
             self.get_parent().get_parent().domains.get(d, {})
         ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
@@ -175,7 +179,7 @@ class Connection(Element, _Connection):
         # draw arrow on sink port
         try:
             gc.set_foreground(mod_color(self._arrow_color))
-            gc.set_line_attributes(0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER)
+            gc.set_line_attributes(0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER)
             window.draw_polygon(gc, True, self._arrow)
         except:
             pass

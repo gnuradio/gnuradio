@@ -20,7 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from Constants import LINE_SELECT_SENSITIVITY
 from Constants import POSSIBLE_ROTATIONS
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
 
 
 class Element(object):
@@ -38,9 +41,11 @@ class Element(object):
         self.set_coordinate((0, 0))
         self.clear()
         self.set_highlighted(False)
-        self.line_attributes = [
-            0, gtk.gdk.LINE_SOLID, gtk.gdk.CAP_BUTT, gtk.gdk.JOIN_MITER
-        ]
+        self.line_attributes = []
+        """ # No idea where this is in pygobject
+           0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER
+        ]"""
+
 
     def is_horizontal(self, rotation=None):
         """

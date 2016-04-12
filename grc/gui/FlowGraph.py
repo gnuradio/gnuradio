@@ -23,7 +23,7 @@ from distutils.spawn import find_executable
 from itertools import chain, count
 from operator import methodcaller
 
-import gobject
+from gi.repository import GObject
 
 from . import Actions, Colors, Constants, Utils, Bars, Dialogs
 from .Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
@@ -98,7 +98,7 @@ class FlowGraph(Element, _Flowgraph):
             editor = self._external_updaters[target] = ExternalEditor(
                 editor=editor,
                 name=target[0], value=param.get_value(),
-                callback=functools.partial(gobject.idle_add, updater)
+                callback=functools.partial(GObject.idle_add, updater)
             )
             editor.start()
         try:
@@ -706,7 +706,7 @@ class FlowGraph(Element, _Flowgraph):
         Auto-scroll the scroll bars at the boundaries.
         """
         #to perform a movement, the mouse must be pressed
-        # (no longer checking pending events via gtk.events_pending() - always true in Windows)
+        # (no longer checking pending events via Gtk.events_pending() - always true in Windows)
         if not self.mouse_pressed:
             # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
             if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active(): return

@@ -17,7 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 from ..core.Constants import *
 
@@ -53,7 +55,7 @@ PARAM_FONT = "Sans 7.5"
 STATE_CACHE_SIZE = 42
 
 # Shared targets for drag and drop of blocks
-DND_TARGETS = [('STRING', gtk.TARGET_SAME_APP, 0)]
+DND_TARGETS = [('STRING', Gtk.TargetFlags.SAME_APP, 0)]
 
 # label constraint dimensions
 LABEL_SEPARATION = 3

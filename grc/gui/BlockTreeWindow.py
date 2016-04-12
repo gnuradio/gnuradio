@@ -17,10 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
 from . import Actions, Utils
 from .Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
@@ -57,7 +58,7 @@ undocumented#slurp
 CAT_MARKUP_TMPL = """Category: $cat"""
 
 
-class BlockTreeWindow(gtk.VBox):
+class BlockTreeWindow(Gtk.VBox):
     """The block selection panel."""
 
     def __init__(self, platform, get_flow_graph):
@@ -71,38 +72,38 @@ class BlockTreeWindow(gtk.VBox):
             platform: the particular platform will all block prototypes
             get_flow_graph: get the selected flow graph
         """
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         self.platform = platform
         self.get_flow_graph = get_flow_graph
 
         # search entry
-        self.search_entry = gtk.Entry()
+        self.search_entry = Gtk.Entry()
         try:
-            self.search_entry.set_icon_from_stock(gtk.ENTRY_ICON_PRIMARY, gtk.STOCK_FIND)
-            self.search_entry.set_icon_activatable(gtk.ENTRY_ICON_PRIMARY, False)
-            self.search_entry.set_icon_from_stock(gtk.ENTRY_ICON_SECONDARY, gtk.STOCK_CLOSE)
+            self.search_entry.set_icon_from_stock(Gtk.EntryIconPosition.PRIMARY, Gtk.STOCK_FIND)
+            self.search_entry.set_icon_activatable(Gtk.EntryIconPosition.PRIMARY, False)
+            self.search_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_CLOSE)
             self.search_entry.connect('icon-release', self._handle_icon_event)
         except AttributeError:
             pass  # no icon for old pygtk
         self.search_entry.connect('changed', self._update_search_tree)
         self.search_entry.connect('key-press-event', self._handle_search_key_press)
-        self.pack_start(self.search_entry, False)
+        self.pack_start(self.search_entry, False, False, 0)
 
         # make the tree model for holding blocks and a temporary one for search results
-        self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.treestore_search = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self.treestore = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self.treestore_search = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
 
-        self.treeview = gtk.TreeView(self.treestore)
+        self.treeview = Gtk.TreeView(self.treestore)
         self.treeview.set_enable_search(False)  # disable pop up search box
         self.treeview.set_search_column(-1)  # really disable search
         self.treeview.set_headers_visible(False)
-        self.treeview.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+        self.treeview.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.treeview.connect('button-press-event', self._handle_mouse_button_press)
         self.treeview.connect('key-press-event', self._handle_search_key_press)
 
-        self.treeview.get_selection().set_mode('single')
-        renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn('Blocks', renderer, text=NAME_INDEX)
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
+        renderer = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('Blocks', renderer, text=NAME_INDEX)
         self.treeview.append_column(column)
         # try to enable the tooltips (available in pygtk 2.12 and above)
         try:
@@ -111,16 +112,16 @@ class BlockTreeWindow(gtk.VBox):
             pass
         # setup sort order
         column.set_sort_column_id(0)
-        self.treestore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.treestore.set_sort_column_id(0, Gtk.SortType.ASCENDING)
         # setup drag and drop
-        self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, DND_TARGETS, gtk.gdk.ACTION_COPY)
+        self.treeview.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK, DND_TARGETS, Gdk.DragAction.COPY)
         self.treeview.connect('drag-data-get', self._handle_drag_get_data)
         # make the scrolled window to hold the tree view
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.add_with_viewport(self.treeview)
         scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
-        self.pack_start(scrolled_window)
+        self.pack_start(scrolled_window, True, True, 0)
         # map categories to iters, automatic mapping for root
         self._categories = {tuple(): None}
         self._categories_search = {tuple(): None}
@@ -216,9 +217,9 @@ class BlockTreeWindow(gtk.VBox):
     ## Event Handlers
     ############################################################
     def _handle_icon_event(self, widget, icon, event):
-        if icon == gtk.ENTRY_ICON_PRIMARY:
+        if icon == Gtk.EntryIconPosition.PRIMARY:
             pass
-        elif icon == gtk.ENTRY_ICON_SECONDARY:
+        elif icon == Gtk.EntryIconPosition.SECONDARY:
             widget.set_text('')
             self.search_entry.hide()
 
@@ -241,7 +242,7 @@ class BlockTreeWindow(gtk.VBox):
 
     def _handle_search_key_press(self, widget, event):
         """Handle Return and Escape key events in search entry and treeview"""
-        if event.keyval == gtk.keysyms.Return:
+        if event.keyval == Gdk.KEY_Return:
             # add block on enter
 
             if widget == self.search_entry:
@@ -257,18 +258,18 @@ class BlockTreeWindow(gtk.VBox):
             else:
                 return False  # propagate event
 
-        elif event.keyval == gtk.keysyms.Escape:
+        elif event.keyval == Gdk.KEY_Escape:
             # reset the search
             self.search_entry.set_text('')
             self.search_entry.hide()
 
-        elif (event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.f) \
-             or event.keyval == gtk.keysyms.slash:
+        elif (event.get_state() & Gdk.ModifierType.CONTROL_MASK and event.keyval == Gdk.KEY_f) \
+             or event.keyval == Gdk.KEY_slash:
             # propagation doesn't work although treeview search is disabled =(
             # manually trigger action...
             Actions.FIND_BLOCKS.activate()
 
-        elif event.state & gtk.gdk.CONTROL_MASK and event.keyval == gtk.keysyms.b:
+        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK and event.keyval == Gdk.KEY_b:
             # ugly...
             Actions.TOGGLE_BLOCKS_WINDOW.activate()
 
@@ -291,5 +292,5 @@ class BlockTreeWindow(gtk.VBox):
         Handle the mouse button press.
         If a left double click is detected, call add selected block.
         """
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
             self._add_selected_block()

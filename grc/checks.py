@@ -51,10 +51,10 @@ def die(error, message):
 def check_gtk():
     try:
         warnings.filterwarnings("error")
-        import pygtk
-        pygtk.require('2.0')
-        import gtk
-        gtk.init_check()
+        import gi
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gtk
+        Gtk.init_check()
         warnings.filterwarnings("always")
     except Exception as err:
         die(err, "Failed to initialize GTK. If you are running over ssh, "

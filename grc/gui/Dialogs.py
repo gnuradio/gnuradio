@@ -17,7 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
 import sys
 from distutils.spawn import find_executable
@@ -26,7 +30,7 @@ from . import Utils, Actions
 from ..core import Messages
 
 
-class SimpleTextDisplay(gtk.TextView):
+class SimpleTextDisplay(Gtk.TextView):
     """A non editable gtk text view."""
 
     def __init__(self, text=''):
@@ -36,13 +40,13 @@ class SimpleTextDisplay(gtk.TextView):
         Args:
             text: the text to display (string)
         """
-        text_buffer = gtk.TextBuffer()
+        text_buffer = Gtk.TextBuffer()
         text_buffer.set_text(text)
         self.set_text = text_buffer.set_text
-        gtk.TextView.__init__(self, text_buffer)
+        GObject.GObject.__init__(self)
         self.set_editable(False)
         self.set_cursor_visible(False)
-        self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
+        self.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
 
 
 class TextDisplay(SimpleTextDisplay):
@@ -85,7 +89,8 @@ class TextDisplay(SimpleTextDisplay):
         if self.scroll_lock:
             buffer = self.get_buffer()
             buffer.move_mark(buffer.get_insert(), buffer.get_end_iter())
-            self.scroll_to_mark(buffer.get_insert(), 0.0)
+            # TODO: Fix later
+            #self.scroll_to_mark(buffer.get_insert(), 0.0)
 
     def clear(self):
         buffer = self.get_buffer()
@@ -110,18 +115,18 @@ class TextDisplay(SimpleTextDisplay):
 
     def populate_popup(self, view, menu):
         """Create a popup menu for the scroll lock and clear functions"""
-        menu.append(gtk.SeparatorMenuItem())
+        menu.append(Gtk.SeparatorMenuItem())
 
-        lock = gtk.CheckMenuItem("Scroll Lock")
+        lock = Gtk.CheckMenuItem("Scroll Lock")
         menu.append(lock)
         lock.set_active(self.scroll_lock)
         lock.connect('activate', self.scroll_back_cb, view)
 
-        save = gtk.ImageMenuItem(gtk.STOCK_SAVE)
+        save = Gtk.ImageMenuItem(Gtk.STOCK_SAVE)
         menu.append(save)
         save.connect('activate', self.save_cb, view)
 
-        clear = gtk.ImageMenuItem(gtk.STOCK_CLEAR)
+        clear = Gtk.ImageMenuItem(Gtk.STOCK_CLEAR)
         menu.append(clear)
         clear.connect('activate', self.clear_cb, view)
         menu.show_all()
@@ -133,9 +138,9 @@ def MessageDialogHelper(type, buttons, title=None, markup=None, default_response
     Create a modal message dialog and run it.
 
     Args:
-        type: the type of message: gtk.MESSAGE_INFO, gtk.MESSAGE_WARNING, gtk.MESSAGE_QUESTION or gtk.MESSAGE_ERROR
+        type: the type of message: Gtk.MessageType.INFO, Gtk.MessageType.WARNING, Gtk.MessageType.QUESTION or Gtk.MessageType.ERROR
         buttons: the predefined set of buttons to use:
-        gtk.BUTTONS_NONE, gtk.BUTTONS_OK, gtk.BUTTONS_CLOSE, gtk.BUTTONS_CANCEL, gtk.BUTTONS_YES_NO, gtk.BUTTONS_OK_CANCEL
+        Gtk.ButtonsType.NONE, Gtk.ButtonsType.OK, Gtk.ButtonsType.CLOSE, Gtk.ButtonsType.CANCEL, Gtk.ButtonsType.YES_NO, Gtk.ButtonsType.OK_CANCEL
 
     Args:
         title: the title of the window (string)
@@ -146,7 +151,7 @@ def MessageDialogHelper(type, buttons, title=None, markup=None, default_response
     Returns:
         the gtk response from run()
     """
-    message_dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, type, buttons)
+    message_dialog = Gtk.MessageDialog(None, Gtk.DialogFlags.MODAL, type, buttons)
     if title: message_dialog.set_title(title)
     if markup: message_dialog.set_markup(markup)
     if extra_buttons: message_dialog.add_buttons(*extra_buttons)
@@ -165,19 +170,19 @@ $encode($err_msg.replace('\t', '  '))
 
 
 def ErrorsDialog(flowgraph): MessageDialogHelper(
-    type=gtk.MESSAGE_ERROR,
-    buttons=gtk.BUTTONS_CLOSE,
+    type=Gtk.MessageType.ERROR,
+    buttons=Gtk.ButtonsType.CLOSE,
     title='Flow Graph Errors',
     markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
 )
 
 
-class AboutDialog(gtk.AboutDialog):
+class AboutDialog(Gtk.AboutDialog):
     """A cute little about dialog."""
 
     def __init__(self, config):
         """AboutDialog constructor."""
-        gtk.AboutDialog.__init__(self)
+        GObject.GObject.__init__(self)
         self.set_name(config.name)
         self.set_version(config.version)
         self.set_license(config.license)
@@ -188,8 +193,8 @@ class AboutDialog(gtk.AboutDialog):
 
 
 def HelpDialog(): MessageDialogHelper(
-    type=gtk.MESSAGE_INFO,
-    buttons=gtk.BUTTONS_CLOSE,
+    type=Gtk.MessageType.INFO,
+    buttons=Gtk.ButtonsType.CLOSE,
     title='Help',
     markup="""\
 <b>Usage Tips</b>
@@ -217,8 +222,8 @@ COLORS_DIALOG_MARKUP_TMPL = """\
 
 def TypesDialog(platform):
     MessageDialogHelper(
-        type=gtk.MESSAGE_INFO,
-        buttons=gtk.BUTTONS_CLOSE,
+        type=Gtk.MessageType.INFO,
+        buttons=Gtk.ButtonsType.CLOSE,
         title='Types',
         markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL,
                                     colors=platform.get_colors())
@@ -227,8 +232,8 @@ def TypesDialog(platform):
 
 def MissingXTermDialog(xterm):
     MessageDialogHelper(
-        type=gtk.MESSAGE_WARNING,
-        buttons=gtk.BUTTONS_OK,
+        type=Gtk.MessageType.WARNING,
+        buttons=Gtk.ButtonsType.OK,
         title='Warning: missing xterm executable',
         markup=("The xterm executable {0!r} is missing.\n\n"
                 "You can change this setting in your gnuradio.conf, in "
@@ -242,28 +247,28 @@ def ChooseEditorDialog(config):
     # Give the option to either choose an editor or use the default
     # Always return true/false so the caller knows it was successful
     buttons = (
-        'Choose Editor', gtk.RESPONSE_YES,
-        'Use Default', gtk.RESPONSE_NO,
-        gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL
+        'Choose Editor', Gtk.ResponseType.YES,
+        'Use Default', Gtk.ResponseType.NO,
+        Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL
     )
     response = MessageDialogHelper(
-        gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Choose Editor',
-        'Would you like to choose the editor to use?', gtk.RESPONSE_YES, buttons
+        Gtk.MessageType.QUESTION, Gtk.ButtonsType.NONE, 'Choose Editor',
+        'Would you like to choose the editor to use?', Gtk.ResponseType.YES, buttons
     )
 
     # Handle the inital default/choose/cancel response
     # User wants to choose the editor to use
-    if response == gtk.RESPONSE_YES:
-        file_dialog = gtk.FileChooserDialog(
+    if response == Gtk.ResponseType.YES:
+        file_dialog = Gtk.FileChooserDialog(
             'Select an Editor...', None,
-            gtk.FILE_CHOOSER_ACTION_OPEN,
-            ('gtk-cancel', gtk.RESPONSE_CANCEL, 'gtk-open', gtk.RESPONSE_OK)
+            Gtk.FileChooserAction.OPEN,
+            ('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK)
         )
         file_dialog.set_select_multiple(False)
         file_dialog.set_local_only(True)
         file_dialog.set_current_folder('/usr/bin')
         try:
-            if file_dialog.run() == gtk.RESPONSE_OK:
+            if file_dialog.run() == Gtk.ResponseType.OK:
                 config.editor = file_path = file_dialog.get_filename()
                 file_dialog.destroy()
                 return file_path
@@ -271,7 +276,7 @@ def ChooseEditorDialog(config):
             file_dialog.destroy()
 
     # Go with the default editor
-    elif response == gtk.RESPONSE_NO:
+    elif response == Gtk.ResponseType.NO:
         # Determine the platform
         try:
             process = None

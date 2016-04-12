@@ -17,34 +17,44 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 try:
-    import pygtk
-    pygtk.require('2.0')
-    import gtk
+    import gi
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gtk
+    from gi.repository import Gdk
 
-    _COLORMAP = gtk.gdk.colormap_get_system() #create all of the colors
-    def get_color(color_code): return _COLORMAP.alloc_color(color_code, True, True)
+    def get_color(color_code):
+        color = Gdk.RGBA()
+        color.parse(color_code)
+        return color
 
     HIGHLIGHT_COLOR = get_color('#00FFFF')
     BORDER_COLOR = get_color('#444444')
-    # missing blocks stuff
+
+    # Missing blocks stuff
     MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
     MISSING_BLOCK_BORDER_COLOR = get_color('red')
-    #param entry boxes
+
+    # Param entry boxes
     PARAM_ENTRY_TEXT_COLOR = get_color('black')
     ENTRYENUM_CUSTOM_COLOR = get_color('#EEEEEE')
-    #flow graph color constants
+
+    # Flow graph color constants
     FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
     COMMENT_BACKGROUND_COLOR = get_color('#F3F3F3')
     FLOWGRAPH_EDGE_COLOR = COMMENT_BACKGROUND_COLOR
-    #block color constants
+
+    # Block color constants
     BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
     BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
     BLOCK_BYPASSED_COLOR = get_color('#F4FF81')
-    #connection color constants
+
+    # Connection color constants
     CONNECTION_ENABLED_COLOR = get_color('black')
     CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
     CONNECTION_ERROR_COLOR = get_color('red')
-except:
+
+except Exception as e:
     print 'Unable to import Colors'
+
 
 DEFAULT_DOMAIN_COLOR_CODE = '#777777'

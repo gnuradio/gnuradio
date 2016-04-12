@@ -219,8 +219,9 @@ class Platform(Element):
 
         color = n.find('color') or ''
         try:
-            import gtk  # ugly but handy
-            gtk.gdk.color_parse(color)
+            import gi # ugly but handy
+            from gi.repository import Gdk
+            Gdk.color_parse(color)
         except (ValueError, ImportError):
             if color:  # no color is okay, default set in GUI
                 print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)

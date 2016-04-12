@@ -17,9 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import GObject
+
 import Actions
 from StateCache import StateCache
 from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
@@ -27,7 +29,7 @@ from DrawingArea import DrawingArea
 import os
 
 
-class NotebookPage(gtk.HBox):
+class NotebookPage(Gtk.HBox):
     """A page in the notebook."""
 
     def __init__(self, main_window, flow_graph, file_path=''):
@@ -49,39 +51,39 @@ class NotebookPage(gtk.HBox):
         #import the data to the flow graph
         self.get_flow_graph().import_data(initial_state)
         #initialize page gui
-        gtk.HBox.__init__(self, False, 0)
+        GObject.GObject.__init__(self)
         self.show()
         #tab box to hold label and close button
-        self.tab = gtk.HBox(False, 0)
+        self.tab = Gtk.HBox(False, 0)
         #setup tab label
-        self.label = gtk.Label()
-        self.tab.pack_start(self.label, False)
+        self.label = Gtk.Label()
+        self.tab.pack_start(self.label, False, False, 0)
         #setup button image
-        image = gtk.Image()
-        image.set_from_stock('gtk-close', gtk.ICON_SIZE_MENU)
+        image = Gtk.Image()
+        image.set_from_stock('gtk-close', Gtk.IconSize.MENU)
         #setup image box
-        image_box = gtk.HBox(False, 0)
+        image_box = Gtk.HBox(False, 0)
         image_box.pack_start(image, True, False, 0)
         #setup the button
-        button = gtk.Button()
+        button = Gtk.Button()
         button.connect("clicked", self._handle_button)
-        button.set_relief(gtk.RELIEF_NONE)
+        button.set_relief(Gtk.ReliefStyle.NONE)
         button.add(image_box)
         #button size
-        w, h = gtk.icon_size_lookup_for_settings(button.get_settings(), gtk.ICON_SIZE_MENU)
-        button.set_size_request(w+6, h+6)
-        self.tab.pack_start(button, False)
+        #w, h = Gtk.icon_size_lookup_for_settings(button.get_settings(), Gtk.IconSize.MENU)
+        #button.set_size_request(w+6, h+6)
+        self.tab.pack_start(button, False, False, 0)
         self.tab.show_all()
         #setup scroll window and drawing area
-        self.scrolled_window = gtk.ScrolledWindow()
+        self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
-        self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
-        self.drawing_area = DrawingArea(self.get_flow_graph())
-        self.scrolled_window.add_with_viewport(self.get_drawing_area())
-        self.pack_start(self.scrolled_window)
+        #self.drawing_area = DrawingArea(self.get_flow_graph())
+        #self.scrolled_window.add_with_viewport(self.get_drawing_area())
+        self.pack_start(self.scrolled_window, True, True, 0)
         #inject drawing area into flow graph
-        self.get_flow_graph().drawing_area = self.get_drawing_area()
+        #self.get_flow_graph().drawing_area = self.get_drawing_area()
         self.show_all()
 
     def get_drawing_area(self): return self.drawing_area

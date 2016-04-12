@@ -17,17 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+from gi.repository import GObject
+from gi.repository import GLib
 
 from Cheetah.Template import Template
 
 from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
 
 
-def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE):
+def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE):
     """
     Load the destination pixmap with a rotated version of the source pixmap.
     The source pixmap will be loaded into a pixbuf, rotated, and drawn to the destination pixmap.
@@ -40,8 +43,8 @@ def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTE
         angle: the angle to rotate by
     """
     width, height = src_pixmap.get_size()
-    pixbuf = gtk.gdk.Pixbuf(
-        colorspace=gtk.gdk.COLORSPACE_RGB,
+    pixbuf = GdkPixbuf.Pixbuf(
+        colorspace=GdkPixbuf.Colorspace.RGB,
         has_alpha=False, bits_per_sample=8,
         width=width, height=height,
     )
@@ -98,7 +101,7 @@ def encode(value):
     """
 
     valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
-    return gobject.markup_escape_text(valid_utf8)
+    return GLib.markup_escape_text(valid_utf8)
 
 
 class TemplateParser(object):

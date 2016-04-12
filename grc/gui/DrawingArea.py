@@ -17,15 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+
 
 from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, DND_TARGETS
 import Colors
 
 
-class DrawingArea(gtk.DrawingArea):
+class DrawingArea(Gtk.DrawingArea):
     """
     DrawingArea is the gtk pixel map that graphical elements may draw themselves on.
     The drawing area also responds to mouse and key events.
@@ -42,7 +45,7 @@ class DrawingArea(gtk.DrawingArea):
         self.ctrl_mask = False
         self.mod1_mask = False
         self._flow_graph = flow_graph
-        gtk.DrawingArea.__init__(self)
+        GObject.GObject.__init__(self)
         self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.connect('realize', self._handle_window_realize)
         self.connect('configure-event', self._handle_window_configure)
@@ -52,15 +55,15 @@ class DrawingArea(gtk.DrawingArea):
         self.connect('button-release-event', self._handle_mouse_button_release)
         self.connect('scroll-event', self._handle_mouse_scroll)
         self.add_events(
-            gtk.gdk.BUTTON_PRESS_MASK | \
-            gtk.gdk.POINTER_MOTION_MASK | \
-            gtk.gdk.BUTTON_RELEASE_MASK | \
-            gtk.gdk.LEAVE_NOTIFY_MASK | \
-            gtk.gdk.ENTER_NOTIFY_MASK | \
-            gtk.gdk.FOCUS_CHANGE_MASK
+            Gdk.EventMask.BUTTON_PRESS_MASK | \
+            Gdk.EventMask.POINTER_MOTION_MASK | \
+            Gdk.EventMask.BUTTON_RELEASE_MASK | \
+            Gdk.EventMask.LEAVE_NOTIFY_MASK | \
+            Gdk.EventMask.ENTER_NOTIFY_MASK | \
+            Gdk.EventMask.FOCUS_CHANGE_MASK
         )
         #setup drag and drop
-        self.drag_dest_set(gtk.DEST_DEFAULT_ALL, DND_TARGETS, gtk.gdk.ACTION_COPY)
+        self.drag_dest_set(Gtk.DestDefaults.ALL, DND_TARGETS, Gdk.DragAction.COPY)
         self.connect('drag-data-received', self._handle_drag_data_received)
         #setup the focus flag
         self._focus_flag = False
@@ -68,16 +71,16 @@ class DrawingArea(gtk.DrawingArea):
         def _handle_notify_event(widget, event, focus_flag): self._focus_flag = focus_flag
         self.connect('leave-notify-event', _handle_notify_event, False)
         self.connect('enter-notify-event', _handle_notify_event, True)
-        self.set_flags(gtk.CAN_FOCUS)  # self.set_can_focus(True)
+        self.set_flags(Gtk.CAN_FOCUS)  # self.set_can_focus(True)
         self.connect('focus-out-event', self._handle_focus_lost_event)
 
     def new_pixmap(self, width, height):
-        return gtk.gdk.Pixmap(self.window, width, height, -1)
+        return Gdk.Pixmap(self.window, width, height, -1)
 
     def get_screenshot(self, transparent_bg=False):
         pixmap = self._pixmap
         W, H = pixmap.get_size()
-        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, W, H)
+        pixbuf = GdkPixbuf.Pixbuf(GdkPixbuf.Colorspace.RGB, 0, 8, W, H)
         pixbuf.fill(0xFF + Colors.FLOWGRAPH_BACKGROUND_COLOR.pixel << 8)
         pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, W-1, H-1)
         if transparent_bg:
@@ -96,21 +99,21 @@ class DrawingArea(gtk.DrawingArea):
         self._flow_graph.add_new_block(selection_data.data, (x, y))
 
     def _handle_mouse_scroll(self, widget, event):
-        if event.state & gtk.gdk.SHIFT_MASK:
-           if event.direction == gtk.gdk.SCROLL_UP:
-               event.direction = gtk.gdk.SCROLL_LEFT
+        if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+           if event.direction == Gdk.ScrollDirection.UP:
+               event.direction = Gdk.ScrollDirection.LEFT
            else:
-               event.direction = gtk.gdk.SCROLL_RIGHT
+               event.direction = Gdk.ScrollDirection.RIGHT
 
     def _handle_mouse_button_press(self, widget, event):
         """
         Forward button click information to the flow graph.
         """
         self.grab_focus()
-        self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
+        self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
+        self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
         if event.button == 1: self._flow_graph.handle_mouse_selector_press(
-            double_click=(event.type == gtk.gdk._2BUTTON_PRESS),
+            double_click=(event.type == Gdk._2BUTTON_PRESS),
             coordinate=(event.x, event.y),
         )
         if event.button == 3: self._flow_graph.handle_mouse_context_press(
@@ -122,8 +125,8 @@ class DrawingArea(gtk.DrawingArea):
         """
         Forward button release information to the flow graph.
         """
-        self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
+        self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
+        self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
         if event.button == 1: self._flow_graph.handle_mouse_selector_release(
             coordinate=(event.x, event.y),
         )
@@ -132,8 +135,8 @@ class DrawingArea(gtk.DrawingArea):
         """
         Forward mouse motion information to the flow graph.
         """
-        self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
+        self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
+        self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
         self._flow_graph.handle_mouse_motion(
             coordinate=(event.x, event.y),
         )
@@ -169,7 +172,7 @@ class DrawingArea(gtk.DrawingArea):
 
     def _handle_focus_lost_event(self, widget, event):
         # don't clear selection while context menu is active
-        if not self._flow_graph.get_context_menu().flags() & gtk.VISIBLE:
+        if not self._flow_graph.get_context_menu().flags() & Gtk.VISIBLE:
             self._flow_graph.unselect()
             self._flow_graph.update_selected()
             self._flow_graph.queue_draw()

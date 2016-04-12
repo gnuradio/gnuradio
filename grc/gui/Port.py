@@ -17,9 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 from . import Actions, Colors, Utils
 from .Constants import (
@@ -115,7 +115,7 @@ class Port(_Port, Element):
         Element.create_labels(self)
         self._bg_color = Colors.get_color(self.get_color())
         # create the layout
-        layout = gtk.DrawingArea().create_pango_layout('')
+        layout = Gtk.DrawingArea().create_pango_layout('')
         layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self, font=PORT_FONT))
         self.w, self.h = layout.get_pixel_size()
         self.W = 2 * PORT_LABEL_PADDING + self.w
