@@ -336,7 +336,11 @@ $short_id#slurp
 
 
 def argument_parser():
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+    description = None
+#if $flow_graph.get_option('description')
+    description = '''$flow_graph.get_option('description')'''
+#end if
+    parser = OptionParser(option_class=eng_option, usage="%prog: [options]", description=description)
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
         #if $type
