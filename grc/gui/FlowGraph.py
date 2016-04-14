@@ -49,7 +49,7 @@ class FlowGraph(Element):
         #important vars dealing with mouse event tracking
         self.element_moved = False
         self.mouse_pressed = False
-        self.unselect()
+        self._selected_elements = []
         self.press_coor = (0, 0)
         #selected ports
         self._old_selected_port = None
@@ -428,6 +428,10 @@ class FlowGraph(Element):
         Set selected elements to an empty set.
         """
         self._selected_elements = []
+
+    def select_all(self):
+        """Select all blocks in the flow graph"""
+        self._selected_elements = list(self.get_elements())
 
     def what_is_selected(self, coor, coor_m=None):
         """

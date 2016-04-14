@@ -1,4 +1,4 @@
-# Copyright 2008-2011 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,11 +16,22 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-from selector import selector, valve
-from packet import options, packet_encoder, packet_decoder, \
-    packet_mod_b, packet_mod_s, packet_mod_i, packet_mod_f, packet_mod_c, \
-    packet_demod_b, packet_demod_s, packet_demod_i, packet_demod_f, packet_demod_c
-from error_rate import error_rate
-from tcp import tcp_source, tcp_sink
+########################################################################
+
+include(GrPython)
+
+GR_PYTHON_INSTALL(
+    FILES __init__.py
+    DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio
+    COMPONENT "blocks_python"
+)
+
+GR_PYTHON_INSTALL(FILES
+    blks2/__init__.py
+    blks2/error_rate.py
+    blks2/selector.py
+    blks2/tcp.py
+    DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio/blks2
+    COMPONENT "blocks_python"
+)
