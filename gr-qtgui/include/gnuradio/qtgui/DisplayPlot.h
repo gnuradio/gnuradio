@@ -183,6 +183,7 @@ public:
   int getYaxisLabelFontSize() const;
   int getXaxisLabelFontSize() const;
   int getAxesLabelFontSize() const;
+  std::vector<std::vector<double> > getPlotData() const;
 
   // Make sure to create your won PlotNewData method in the derived
   // class:

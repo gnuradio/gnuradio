@@ -266,6 +266,27 @@ DisplayPlot::getAxesLabelFontSize() const {
   return fs;
 }
 
+/* Return y data for all plots */
+std::vector<std::vector<double> >
+DisplayPlot::getPlotData() const {
+  std::vector<std::vector<double> > ydata;
+  for (size_t plot = 0; plot < d_plot_curve.size(); plot++) {
+    std::vector<double> plot_ydata;
+    QwtPlotCurve *plot_curve = d_plot_curve[plot];
+#if QWT_VERSION < 0x060000
+    for (int i = 0; i < plot_curve->dataSize(); i++) {
+      plot_ydata.push_back(plot_curve->y(i));
+    }
+#else
+    for (size_t i = 0; i < plot_curve->dataSize(); i++) {
+      plot_ydata.push_back(plot_curve->sample(i).y());
+    }
+#endif
+    ydata.push_back(plot_ydata);
+  }
+  return ydata;
+}
+
 void
 DisplayPlot::setLineWidth(int which, int width)
 {
