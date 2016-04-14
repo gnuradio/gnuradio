@@ -432,7 +432,7 @@ def greedy_upper_triangulation(H, verbose=0):
   if verbose:
     print '--- Error: nonsingular phi matrix not found.'
 
-def inv_mod2(squareMatrix):
+def inv_mod2(squareMatrix, verbose=0):
   """
   Calculates the mod 2 inverse of a matrix.
   """
@@ -613,7 +613,7 @@ def get_best_matrix(H, numIterations=100, verbose=False):
         print 'greedy_upper_triangulation error: ', e
     else:
       if ret:
-        [betterH, gap, t]
+        [betterH, gap, t] = ret
       else:
         continue
 
@@ -636,14 +636,18 @@ def get_best_matrix(H, numIterations=100, verbose=False):
       print 'for encoding.'
     return
 
-def getSystematicGmatrix(H):
+def getSystematicGmatrix(GenMatrix):
   """
   This function finds the systematic form of the generator
-  matrix G. The form is G = [I P] where I is an identity matrix
-  and P is the parity submatrix. If the H matrix provided
-  is not full rank, then dependent rows will be deleted.
+  matrix GenMatrix. This form is G = [I P] where I is an identity
+  matrix and P is the parity submatrix. If the GenMatrix matrix
+  provided is not full rank, then dependent rows will be deleted.
+
+  This function does not convert parity check (H) matrices to the 
+  generator matrix format. Use the function getSystematicGmatrixFromH
+  for that purpose.
   """
-  tempArray = H.copy()
+  tempArray = GenMatrix.copy()
   numRows = tempArray.shape[0]
   numColumns = tempArray.shape[1]
   limit = numRows
@@ -675,9 +679,42 @@ def getSystematicGmatrix(H):
     if found == False:
       # push the row of 0s to the bottom, and move the bottom
       # rows up (sort of a rotation thing)
-      tempArray = moveRowToBottom(i,tempArray)
+      tempArray = move_row_to_bottom(i,tempArray)
       # decrease limit since we just found a row of 0s
       limit -= 1
   # the rows below i are the dependent rows, which we discard
   G = tempArray[0:i,:]
+  return G
+
+def getSystematicGmatrixFromH(H, verbose=False):
+  """
+  If given a parity check matrix H, this function returns a
+  generator matrix G in the systematic form: G = [I P]
+    where:  I is an identity matrix, size k x k
+            P is the parity submatrix, size k x (n-k)
+  If the H matrix provided is not full rank, then dependent rows
+  will be deleted first.
+  """
+  if verbose:
+    print 'received H with size: ', H.shape
+
+  # First, put the H matrix into the form H = [I|m] where:
+  #   I is (n-k) x (n-k) identity matrix
+  #   m is (n-k) x k
+  # This part is just copying the algorithm from getSystematicGmatrix
+  tempArray = getSystematicGmatrix(H)
+
+  # Next, swap I and m columns so the matrix takes the forms [m|I].
+  n      = H.shape[1]
+  k      = n - H.shape[0]
+  I_temp = tempArray[:,0:(n-k)]
+  m      = tempArray[:,(n-k):n]
+  newH   = concatenate((m,I_temp),axis=1)
+
+  # Now the submatrix m is the transpose of the parity submatrix,
+  # i.e. H is in the form H = [P'|I]. So G is just [I|P]
+  k = m.shape[1]
+  G = concatenate((identity(k),m.T),axis=1)
+  if verbose:
+    print 'returning G with size: ', G.shape
   return G
