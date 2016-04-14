@@ -75,5 +75,5 @@ print "\tgap  : %i" % g
 
 # Save the matrix to an alist file for future use:
 alist_filename = "n_%04i_k_%04i_gap_%02i.alist" % (n,k,g)
-parity_check_matrix.write_alist_file(alist_filename,bestH)
+write_alist_file(alist_filename,bestH)
 print '\nMatrix saved to alist file:', alist_filename, "\n"

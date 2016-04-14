@@ -465,22 +465,13 @@ namespace gr {
         // product of original_matrix and the inverse, which should
         // equal the identity matrix.
         gsl_matrix *test = gsl_matrix_alloc(n,n);
-        gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0,
-                        original_matrix, matrix_inverse, 0.0, test);
-
-        // Have to take care of % 2 manually
-         for (row_index = 0; row_index < n; row_index++) {
-          for (col_index = 0; col_index < n; col_index++) {
-            int value = gsl_matrix_get(test, row_index, col_index);
-            int temp_value = value % 2;
-            gsl_matrix_set(test, row_index, col_index, temp_value);
-          }
-        }
+        mult_matrices_mod2(test, original_matrix, matrix_inverse);
 
         gsl_matrix *identity = gsl_matrix_alloc(n,n);
         gsl_matrix_set_identity(identity);
         //int test_if_equal = gsl_matrix_equal(identity,test);
         gsl_matrix_sub(identity, test); // should be null set if equal
+
         double test_if_not_equal = gsl_matrix_max(identity);
 
         if(test_if_not_equal > 0) {

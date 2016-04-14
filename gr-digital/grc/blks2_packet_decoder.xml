@@ -7,6 +7,7 @@
 <block>
 	<name>Packet Decoder</name>
 	<key>blks2_packet_decoder</key>
+	<category>Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.packet_demod_$(type.fcn)(grc_blks2.packet_decoder(
 		access_code=$access_code,

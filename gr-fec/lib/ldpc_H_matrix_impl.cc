@@ -67,16 +67,6 @@ namespace gr {
         // encoder)
         d_par_bits_last = false;
 
-        d_s = gsl_matrix_alloc(d_k, 1);
-        d_temp1 = gsl_matrix_alloc(B()->size1, d_s->size2);
-        d_temp2 = gsl_matrix_alloc(T()->size1, 1);
-        d_temp3 = gsl_matrix_alloc(E()->size1, d_temp2->size2);
-        d_temp4 = gsl_matrix_alloc(D()->size1, d_s->size2);
-        d_temp5 = gsl_matrix_alloc(d_temp4->size1, d_temp3->size2);
-        d_p1 = gsl_matrix_alloc(T()->size1, 1);
-        d_p2 = gsl_matrix_alloc(phi_inverse()->size1, d_temp5->size2);
-        d_temp6 = gsl_matrix_alloc(A()->size1, d_p2->size2);
-        d_temp7 = gsl_matrix_alloc(d_temp6->size1, d_temp1->size2);
       } // Constructor
 
       const gsl_matrix*
@@ -259,42 +249,75 @@ namespace gr {
       ldpc_H_matrix_impl::encode(unsigned char *outbuffer,
                                  const unsigned char *inbuffer) const
       {
+
+        // Temporary matrix for storing stages of encoding.
+        gsl_matrix *s, *p1, *p2;
+        gsl_matrix *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7;
+
         unsigned int index, k = d_k;
+        s = gsl_matrix_alloc(k, 1);
         for (index = 0; index < k; index++) {
           double value = static_cast<double>(inbuffer[index]);
-          gsl_matrix_set(d_s, index, 0, value);
+          gsl_matrix_set(s, index, 0, value);
         }
 
         // Solve for p2 (parity part). By using back substitution,
         // the overall complexity of determining p2 is O(n + g^2).
-        mult_matrices_mod2(d_temp1, B(), d_s);
-        back_solve_mod2(d_temp2, T(), d_temp1);
-        mult_matrices_mod2(d_temp3, E(), d_temp2);
-        mult_matrices_mod2(d_temp4, D(), d_s);
-        add_matrices_mod2(d_temp5, d_temp4, d_temp3);
-        mult_matrices_mod2(d_p2, phi_inverse(), d_temp5);
+        temp1 = gsl_matrix_alloc(B()->size1, s->size2);
+        mult_matrices_mod2(temp1, B(), s);
+
+        temp2 = gsl_matrix_alloc(T()->size1, 1);
+        back_solve_mod2(temp2, T(), temp1);
+
+        temp3 = gsl_matrix_alloc(E()->size1, temp2->size2);
+        mult_matrices_mod2(temp3, E(), temp2);
+
+        temp4 = gsl_matrix_alloc(D()->size1, s->size2);
+        mult_matrices_mod2(temp4, D(), s);
+
+        temp5 = gsl_matrix_alloc(temp4->size1, temp3->size2);
+        add_matrices_mod2(temp5, temp4, temp3);
+
+        p2 = gsl_matrix_alloc(phi_inverse()->size1, temp5->size2);
+        mult_matrices_mod2(p2, phi_inverse(), temp5);
 
         // Solve for p1 (parity part). By using back substitution,
         // the overall complexity of determining p1 is O(n).
-        mult_matrices_mod2(d_temp6, A(), d_p2);
-        add_matrices_mod2(d_temp7, d_temp6, d_temp1);
-        back_solve_mod2(d_p1, T(), d_temp7);
+        temp6 = gsl_matrix_alloc(A()->size1, p2->size2);
+        mult_matrices_mod2(temp6, A(), p2);
+
+        temp7 = gsl_matrix_alloc(temp6->size1, temp1->size2);
+        add_matrices_mod2(temp7, temp6, temp1);
+
+        p1 = gsl_matrix_alloc(T()->size1, 1);
+        back_solve_mod2(p1, T(), temp7);
 
         // Populate the codeword to be output
-        unsigned int p1_length = (*d_p1).size1;
-        unsigned int p2_length = (*d_p2).size1;
+        unsigned int p1_length = (*p1).size1;
+        unsigned int p2_length = (*p2).size1;
         for (index = 0; index < p1_length; index++) {
-          int value = gsl_matrix_get(d_p1, index, 0);
+          int value = gsl_matrix_get(p1, index, 0);
           outbuffer[index] = value;
         }
         for (index = 0; index < p2_length; index++) {
-          int value = gsl_matrix_get(d_p2, index, 0);
+          int value = gsl_matrix_get(p2, index, 0);
           outbuffer[p1_length+index] = value;
         }
         for (index = 0; index < k; index++) {
-          int value = gsl_matrix_get(d_s, index, 0);
+          int value = gsl_matrix_get(s, index, 0);
           outbuffer[p1_length+p2_length+index] = value;
         }
+
+        // Free temporary matrices
+        gsl_matrix_free(temp1);
+        gsl_matrix_free(temp2);
+        gsl_matrix_free(temp3);
+        gsl_matrix_free(temp4);
+        gsl_matrix_free(temp5);
+        gsl_matrix_free(temp6);
+        gsl_matrix_free(temp7);
+        gsl_matrix_free(p1);
+        gsl_matrix_free(p2);
       }
 
 
@@ -413,16 +436,6 @@ namespace gr {
 
       ldpc_H_matrix_impl::~ldpc_H_matrix_impl()
       {
-        // Free temporary matrices
-        gsl_matrix_free(d_temp1);
-        gsl_matrix_free(d_temp2);
-        gsl_matrix_free(d_temp3);
-        gsl_matrix_free(d_temp4);
-        gsl_matrix_free(d_temp5);
-        gsl_matrix_free(d_temp6);
-        gsl_matrix_free(d_temp7);
-        gsl_matrix_free(d_p1);
-        gsl_matrix_free(d_p2);
 
         // Call the gsl_matrix_free function to free memory.
         gsl_matrix_free (d_phi_inverse_ptr);
