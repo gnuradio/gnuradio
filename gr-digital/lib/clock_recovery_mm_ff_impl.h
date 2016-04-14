@@ -67,6 +67,8 @@ namespace gr {
       filter::mmse_fir_interpolator_ff *d_interp;
 
       bool d_verbose;
+
+      uint64_t d_old_in, d_new_in, d_last_out;
     };
 
   } /* namespace digital */

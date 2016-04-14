@@ -59,7 +59,19 @@ namespace gr {
 	throw std::out_of_range("Gains must be non-negative");
 
       set_omega(omega);			// also sets min and max omega
-      set_relative_rate (1.0 / omega);
+      set_relative_rate(1.0 / omega);
+      set_history(3);			// ensure 2 extra input samples are available
+
+      // Book keepers for managing tags
+      d_old_in = 0;
+      d_new_in = 0;
+      d_last_out = 0;
+
+      // We need to manage the tag placement ourselves because the
+      // relative rates can change within work, so don't let the
+      // scheduler handle tags and we do it ourselves in the work
+      // function.
+      set_tag_propagation_policy(TPP_DONT);
     }
 
     clock_recovery_mm_ff_impl::~clock_recovery_mm_ff_impl()
@@ -110,6 +122,19 @@ namespace gr {
 	out[oo] = d_interp->interpolate(&in[ii], d_mu);
 	mm_val = slice(d_last_sample) * out[oo] - slice(out[oo]) * d_last_sample;
 	d_last_sample = out[oo];
+
+        // Manage Tags
+        std::vector<tag_t> xtags;
+        std::vector<tag_t>::iterator itags;
+        d_new_in = nitems_read(0) + ii;
+        get_tags_in_range(xtags, 0, d_old_in, d_new_in);
+        for(itags = xtags.begin(); itags != xtags.end(); itags++) {
+          tag_t new_tag = *itags;
+          new_tag.offset = d_last_out - history() + 2;
+          add_item_tag(0, new_tag);
+        }
+        d_old_in = d_new_in;
+        d_last_out = nitems_written(0) + oo;
 
 	d_omega = d_omega + d_gain_omega * mm_val;
 	d_omega = d_omega_mid + gr::branchless_clip(d_omega-d_omega_mid, d_omega_lim);

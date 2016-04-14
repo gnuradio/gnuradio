@@ -73,6 +73,9 @@ namespace gr {
 
       gr_complex slicer_0deg(gr_complex sample);
       gr_complex slicer_45deg(gr_complex sample);
+
+
+      uint64_t d_old_in, d_new_in, d_last_out;
     };
 
   } /* namespace digital */
