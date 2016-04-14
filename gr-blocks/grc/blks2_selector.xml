@@ -1,16 +1,24 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Valve:
+##Selector:
 ##	Custom blks2 block
 ###################################################
  -->
 <block>
-	<name>Valve</name>
-	<key>blks2_valve</key>
+	<name>Selector</name>
+	<key>blks2_selector</key>
+	<category>Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
-	<make>grc_blks2.valve(item_size=$type.size*$vlen, open=bool($open))</make>
-	<callback>set_open(bool($open))</callback>
+	<make>grc_blks2.selector(
+	item_size=$type.size*$vlen,
+	num_inputs=$num_inputs,
+	num_outputs=$num_outputs,
+	input_index=$input_index,
+	output_index=$output_index,
+)</make>
+	<callback>set_input_index(int($input_index))</callback>
+	<callback>set_output_index(int($output_index))</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -42,10 +50,28 @@
 		</option>
 	</param>
 	<param>
-		<name>Open</name>
-		<key>open</key>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Num Outputs</name>
+		<key>num_outputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Input Index</name>
+		<key>input_index</key>
 		<value>0</value>
-		<type>raw</type>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Output Index</name>
+		<key>output_index</key>
+		<value>0</value>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Vec Length</name>
@@ -67,6 +93,6 @@
 		<nports>$num_outputs</nports>
 	</source>
 	<doc>
-Connect output to input when valve is closed (not open).
+Connect the sink at input index to the source at output index. Leave all other ports disconnected.
 	</doc>
 </block>
