@@ -418,6 +418,12 @@ namespace gr {
     }
 
     void
+    time_raster_sink_b_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
+    void
     time_raster_sink_b_impl::enable_autoscale(bool en)
     {
       d_main_gui->autoScale(en);

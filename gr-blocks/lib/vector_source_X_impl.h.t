@@ -50,6 +50,7 @@ namespace gr {
       void rewind() { d_offset=0; }
       void set_data(const std::vector<@TYPE@> &data,
                     const std::vector<tag_t> &tags);
+      void set_repeat(bool repeat) { d_repeat=repeat; };
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

@@ -33,9 +33,9 @@ import Cheetah.Template
 
 
 class ModToolRename(ModTool):
-    """ Add block to the out-of-tree module. """
+    """ Rename a block in the out-of-tree module. """
     name = 'rename'
-    aliases = ('insert',)
+    aliases = ('mv',)
 
     def __init__(self):
         ModTool.__init__(self)
@@ -168,7 +168,7 @@ class ModToolRename(ModTool):
         grcfile = './grc/' + module + '_' + old + '.xml'
         self._run_file_replace(grcfile, old, new)
         self._run_cmakelists('./grc/', old, new)
-        self._run_file_rename('./grc/', old, new)
+        self._run_file_rename('./grc/', module + '_' + old, module + '_' + new)
 
     def _run_cmakelists(self, path, first, second):
         filename = path + 'CMakeLists.txt'

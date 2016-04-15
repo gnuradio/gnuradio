@@ -424,7 +424,7 @@ class FlowGraph(Element):
 
             block.import_data(block_n)
 
-        self.rewrite()
+        self.rewrite()  # evaluate stuff like nports before adding connections
 
         # build the connections
         def verify_and_get_port(key, block, dir):

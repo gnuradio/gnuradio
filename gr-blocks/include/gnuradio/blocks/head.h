@@ -47,7 +47,7 @@ namespace gr {
                        uint64_t nitems);
 
       virtual void reset() = 0;
-      virtual void set_length(int nitems) = 0;
+      virtual void set_length(uint64_t nitems) = 0;
     };
 
   } /* namespace blocks */

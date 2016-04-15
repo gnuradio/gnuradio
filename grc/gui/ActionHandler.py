@@ -138,6 +138,7 @@ class ActionHandler:
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
                 Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
                 Actions.FLOW_GRAPH_OPEN_QSS_THEME,
+                Actions.SELECT_ALL,
             ):
                 action.set_sensitive(True)
                 if hasattr(action, 'load_from_preferences'):
@@ -157,6 +158,8 @@ class ActionHandler:
             pass #do nothing, update routines below
         elif action == Actions.NOTHING_SELECT:
             self.get_flow_graph().unselect()
+        elif action == Actions.SELECT_ALL:
+            self.get_flow_graph().select_all()
         ##################################################
         # Enable/Disable
         ##################################################

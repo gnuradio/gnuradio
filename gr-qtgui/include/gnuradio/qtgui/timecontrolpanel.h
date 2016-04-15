@@ -75,6 +75,8 @@ private:
 
   QCheckBox *d_autoscale_check;
   QCheckBox *d_grid_check;
+  QCheckBox *d_axislabels_check;
+
   QPushButton *d_yoff_plus, *d_yoff_minus;
   QPushButton *d_yrange_plus, *d_yrange_minus;
   QPushButton *d_xmax_plus, *d_xmax_minus;

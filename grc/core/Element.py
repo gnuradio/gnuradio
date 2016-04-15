@@ -41,9 +41,9 @@ class Element(object):
         Is this element valid?
 
         Returns:
-            true when the element is enabled and has no error messages
+            true when the element is enabled and has no error messages or is bypassed
         """
-        return not self.get_error_messages() or not self.get_enabled()
+        return (not self.get_error_messages() or not self.get_enabled()) or self.get_bypassed()
 
     def add_error_message(self, msg):
         """
@@ -57,14 +57,14 @@ class Element(object):
     def get_error_messages(self):
         """
         Get the list of error messages from this element and all of its children.
-        Do not include the error messages from disabled children.
+        Do not include the error messages from disabled or bypassed children.
         Cleverly indent the children error messages for printing purposes.
 
         Returns:
             a list of error message strings
         """
         error_messages = list(self._error_messages)  # Make a copy
-        for child in filter(lambda c: c.get_enabled(), self.get_children()):
+        for child in filter(lambda c: c.get_enabled() and not c.get_bypassed(), self.get_children()):
             for msg in child.get_error_messages():
                 error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
         return error_messages
@@ -79,6 +79,9 @@ class Element(object):
 
     def get_enabled(self):
         return True
+
+    def get_bypassed(self):
+        return False
 
     ##############################################
     # Tree-like API

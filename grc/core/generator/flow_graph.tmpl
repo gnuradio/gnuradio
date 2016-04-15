@@ -274,8 +274,8 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
-
     #if $flow_graph.get_option('qt_qss_theme')
+
     def setStyleSheetFromFile(self, filename):
         try:
             if not os.path.exists(filename):
@@ -336,7 +336,12 @@ $short_id#slurp
 
 
 def argument_parser():
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+    #set $desc_args = 'usage="%prog: [options]", option_class=eng_option'
+    #if $flow_graph.get_option('description')
+        #set $desc_args += ', description=description'
+    description = $repr($flow_graph.get_option('description'))
+    #end if
+    parser = OptionParser($desc_args)
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
         #if $type

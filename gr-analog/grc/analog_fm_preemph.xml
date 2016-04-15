@@ -8,7 +8,7 @@
 	<name>FM Preemphasis</name>
 	<key>analog_fm_preemph</key>
 	<import>from gnuradio import analog</import>
-	<make>analog.fm_preemph(fs=$samp_rate, tau=$tau)</make>
+	<make>analog.fm_preemph(fs=$samp_rate, tau=$tau, fh=$fh)</make>
 	<param>
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
@@ -18,6 +18,12 @@
 		<name>Tau</name>
 		<key>tau</key>
 		<value>75e-6</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>High Corner Freq</name>
+		<key>fh</key>
+		<value>-1.0</value>
 		<type>real</type>
 	</param>
 	<sink>

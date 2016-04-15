@@ -29,7 +29,7 @@ except ImportError:
     import analog_swig as analog
 
 class nbfm_tx(gr.hier_block2):
-    def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3):
+    def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3, fh=-1.0):
         """
         Narrow Band FM Transmitter.
 
@@ -41,6 +41,7 @@ class nbfm_tx(gr.hier_block2):
             quad_rate: sample rate of output stream (integer)
             tau: preemphasis time constant (default 75e-6) (float)
             max_dev: maximum deviation in Hz (default 5e3) (float)
+            fh: high frequency at which to flatten preemphasis; < 0 means default of 0.925*quad_rate/2.0 (float)
 
         quad_rate must be an integer multiple of audio_rate.
         """
@@ -71,7 +72,7 @@ class nbfm_tx(gr.hier_block2):
             #print "len(interp_taps) =", len(interp_taps)
             self.interpolator = filter.interp_fir_filter_fff (interp_factor, interp_taps)
 
-        self.preemph = fm_preemph(quad_rate, tau=tau)
+        self.preemph = fm_preemph(quad_rate, tau=tau, fh=fh)
 
         k = 2 * math.pi * max_dev / quad_rate
         self.modulator = analog.frequency_modulator_fc(k)

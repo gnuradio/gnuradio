@@ -683,8 +683,10 @@ class Param(Element):
         # Must be a string
         self._value = str(value)
 
-    def value_is_default(self):
-        return self._default == self._value
+    def set_default(self, value):
+        if self._default == self._value:
+            self.set_value(value)
+        self._default = str(value)
 
     def get_type(self):
         return self.get_parent().resolve_dependencies(self._type)

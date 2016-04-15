@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-# FEC LDPC GENERATOR MATRIX ENCODER
+# FEC LDPC ENCODER DEFINITION (VIA GENERATOR)
 ###################################################
  -->
 
@@ -13,9 +13,9 @@
 #if int($ndim())==0 #
 self.$(id) = $(id) = fec.ldpc_gen_mtrx_encoder_make($G)
 #else if int($ndim())==1 #
-self.$(id) = $(id) = map((lambda a: fec.ldpc_encoder_make($G)), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda a: fec.ldpc_gen_mtrx_encoder_make($G)), range(0,$dim1)) #slurp
 #else
-self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_encoder_make($G)), range(0,$dim2))), range(0,$dim1)) #slurp
+self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_gen_mtrx_encoder_make($G)), range(0,$dim2))), range(0,$dim1)) #slurp
 #end if</var_make>
   <make></make>
 
@@ -69,4 +69,9 @@ self.$(id) = $(id) = map((lambda b: map((lambda a: fec.ldpc_encoder_make($G)), r
     <type>raw</type>
   </param>
 
+  <doc>
+Given a generator matrix in systematic form, G = [I|P], where I is the identity matrix and P is the parity submatrix, the information word s is encoded into a codeword x via:
+
+x = G'*s
+  </doc>
 </block>

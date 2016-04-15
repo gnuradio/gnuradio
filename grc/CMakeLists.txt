@@ -134,7 +134,6 @@ endif(WIN32)
 # Add subdirectories
 ########################################################################
 add_subdirectory(blocks)
-add_subdirectory(grc_gnuradio)
 add_subdirectory(gui)
 add_subdirectory(python)
 add_subdirectory(scripts)

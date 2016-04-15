@@ -443,3 +443,12 @@ DisplayPlot::onPickerPointSelected6(const QPointF & p)
   //fprintf(stderr,"onPickerPointSelected %f %f\n", point.x(), point.y());
   emit plotPointSelected(point);
 }
+
+void
+DisplayPlot::setAxisLabels(bool en)
+{
+  enableAxis(0,en);
+  enableAxis(2,en);
+}
+
+

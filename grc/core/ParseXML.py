@@ -22,6 +22,7 @@ from lxml import etree
 from .utils import odict
 
 xml_failures = {}
+etree.set_default_parser(etree.XMLParser(remove_comments=True))
 
 
 class XMLSyntaxError(Exception):

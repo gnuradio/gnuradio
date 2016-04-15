@@ -129,7 +129,7 @@ class Port(Element):
         # Grab the data
         self._name = n['name']
         self._key = n['key']
-        self._type = n['type']
+        self._type = n['type'] or ''
         self._domain = n['domain']
         self._hide = n.find('hide') or ''
         self._dir = dir
