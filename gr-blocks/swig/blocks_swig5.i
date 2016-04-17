@@ -42,6 +42,7 @@
 #include "gnuradio/blocks/sample_and_hold_ss.h"
 #include "gnuradio/blocks/sample_and_hold_ii.h"
 #include "gnuradio/blocks/sample_and_hold_ff.h"
+#include "gnuradio/blocks/sample_and_hold_cc.h"
 #include "gnuradio/blocks/short_to_char.h"
 #include "gnuradio/blocks/short_to_float.h"
 #include "gnuradio/blocks/socket_pdu.h"
@@ -85,6 +86,7 @@
 %include "gnuradio/blocks/sample_and_hold_ss.h"
 %include "gnuradio/blocks/sample_and_hold_ii.h"
 %include "gnuradio/blocks/sample_and_hold_ff.h"
+%include "gnuradio/blocks/sample_and_hold_cc.h"
 %include "gnuradio/blocks/short_to_char.h"
 %include "gnuradio/blocks/short_to_float.h"
 %include "gnuradio/blocks/socket_pdu.h"
@@ -127,6 +129,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, sample_and_hold_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_char);
 GR_SWIG_BLOCK_MAGIC2(blocks, short_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, socket_pdu);
