@@ -88,8 +88,6 @@ namespace gr {
 	 * This filter uses the Direct Form I implementation, where
 	 * \p fftaps contains the feed-forward taps, and \p fbtaps the feedback ones.
 	 *
-	 * \p fftaps and \p fbtaps must have equal numbers of taps
-	 *
 	 * \p oldstyle: The old style of the IIR filter uses feedback
 	 * taps that are negative of what most definitions use (scipy
 	 * and Matlab among them). This parameter keeps using the old
@@ -97,17 +95,27 @@ namespace gr {
 	 * generated from scipy, Matlab, or gr_filter_design, use the
 	 * new style by setting this to FALSE.
 	 *
-	 * The input and output satisfy a difference equation of the form
+	 * When \p oldstyle is set FALSE, the input and output satisfy a
+	 * difference equation of the form
 
 	 \f[
-	 y[n] \pm \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
+	 y[n] + \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
 	 \f]
 
 	 * with the corresponding rational system function
 
 	 \f[
-	 H(z) = \frac{\sum_{k=0}^{N} b_k z^{-k}}{1 \pm \sum_{k=1}^{M} a_k z^{-k}}
+	 H(z) = \frac{\sum_{k=0}^{N} b_k z^{-k}}{1 + \sum_{k=1}^{M} a_k z^{-k}}
 	 \f]
+	 * where:
+	 * \f$x\f$ - input signal,
+	 * \f$y\f$ - output signal,
+	 * \f$a_k\f$ - k-th feedback tap,
+	 * \f$b_k\f$ - k-th feed-forward tap,
+	 * \f$M\f$ - \p len(fbtaps)-1,
+	 * \f$N\f$ - \p len(fftaps)-1.
+
+	 *  \f$a_0\f$, that is \p fbtaps[0], is ignored.
 	 */
 	iir_filter(const std::vector<tap_type>& fftaps,
 		   const std::vector<tap_type>& fbtaps,
