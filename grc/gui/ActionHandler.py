@@ -84,9 +84,8 @@ class ActionHandler:
         # prevent key event stealing while the search box is active
         # .has_focus() only in newer versions 2.17+?
         # .is_focus() seems to work, but exactly the same
-        if self.main_window.btwin.search_entry.flags() & Gtk.HAS_FOCUS:
+        if self.main_window.btwin.search_entry.has_focus():
             return False
-        if not self.get_focus_flag(): return False
         return Actions.handle_key_press(event)
 
     def _quit(self, window, event):
@@ -447,9 +446,9 @@ class ActionHandler:
             action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR:
             if self.init:
-                md = gtk.MessageDialog(main,
-                    gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO,
-                    gtk.BUTTONS_CLOSE, "Moving the variable editor requires a restart of GRC.")
+                md = Gtk.MessageDialog(main,
+                    Gtk.DIALOG_DESTROY_WITH_PARENT, Gtk.MESSAGE_INFO,
+                    Gtk.BUTTONS_CLOSE, "Moving the variable editor requires a restart of GRC.")
                 md.run()
                 md.destroy()
                 action.save_to_preferences()

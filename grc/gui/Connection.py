@@ -91,10 +91,10 @@ class Connection(Element, _Connection):
         ]
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
-        self.line_attributes[0] = 2 if source_domain != sink_domain else 0
-        self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
-            if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
-            else Gdk.LINE_ON_OFF_DASH
+        # self.line_attributes[0] = 2 if source_domain != sink_domain else 0
+        # self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
+        #     if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
+        #     else Gdk.LINE_ON_OFF_DASH
         get_domain_color = lambda d: Colors.get_color((
             self.get_parent().get_parent().domains.get(d, {})
         ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
@@ -147,13 +147,9 @@ class Connection(Element, _Connection):
             self.add_line((x1, y1), points[0])
             self.add_line((x2, y2), points[0])
 
-    def draw(self, gc, window):
+    def draw(self, widget, cr):
         """
         Draw the connection.
-
-        Args:
-            gc: the graphics context
-            window: the gtk window to draw on
         """
         sink = self.get_sink()
         source = self.get_source()
@@ -175,11 +171,12 @@ class Connection(Element, _Connection):
             Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
             color
         )
-        Element.draw(self, gc, window, mod_color(self._color), mod_color(self._bg_color))
+        Element.draw(self, widget, cr, mod_color(self._color), mod_color(self._bg_color))
         # draw arrow on sink port
-        try:
-            gc.set_foreground(mod_color(self._arrow_color))
-            gc.set_line_attributes(0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER)
-            window.draw_polygon(gc, True, self._arrow)
-        except:
-            pass
+        cr.set_source_rgb(*self._arrow_color)
+        # TODO: gc.set_line_attributes(0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER)
+        cr.move_to(*self._arrow[0])
+        cr.line_to(*self._arrow[1])
+        cr.line_to(*self._arrow[2])
+        cr.close_path()
+        cr.fill()

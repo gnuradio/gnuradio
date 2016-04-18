@@ -17,10 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import math
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Pango
+gi.require_version('PangoCairo', '1.0')
+from gi.repository import Gtk, Pango, PangoCairo
 
 from . import Actions, Colors, Utils
 
@@ -89,7 +90,9 @@ class Block(Element, _Block):
         ))
         Element.__init__(self)
         self._comment_pixmap = None
+        self._bg_color = Colors.BLOCK_ENABLED_COLOR
         self.has_busses = [False, False]  # source, sink
+        self.layouts = []
 
     def get_coordinate(self):
         """
@@ -196,14 +199,14 @@ class Block(Element, _Block):
     def create_labels(self):
         """Create the labels for the signal block."""
         Element.create_labels(self)
-        self._bg_color = self.is_dummy_block and Colors.MISSING_BLOCK_BACKGROUND_COLOR or \
-                         self.get_bypassed() and Colors.BLOCK_BYPASSED_COLOR or \
-                         self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
-
-        layouts = list()
+        self._bg_color = Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else \
+                         Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else \
+                         Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else \
+                         Colors.BLOCK_DISABLED_COLOR
+        del self.layouts[:]
         #create the main layout
         layout = Gtk.DrawingArea().create_pango_layout('')
-        layouts.append(layout)
+        self.layouts.append(layout)
         layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=BLOCK_FONT))
         self.label_width, self.label_height = layout.get_pixel_size()
         #display the params
@@ -217,30 +220,11 @@ class Block(Element, _Block):
             layout = Gtk.DrawingArea().create_pango_layout('')
             layout.set_spacing(LABEL_SEPARATION*Pango.SCALE)
             layout.set_markup('\n'.join(markups))
-            layouts.append(layout)
+            self.layouts.append(layout)
             w, h = layout.get_pixel_size()
             self.label_width = max(w, self.label_width)
             self.label_height += h + LABEL_SEPARATION
-        width = self.label_width
-        height = self.label_height
-        #setup the pixmap
-        pixmap = self.get_parent().new_pixmap(width, height)
-        gc = pixmap.new_gc()
-        gc.set_foreground(self._bg_color)
-        pixmap.draw_rectangle(gc, True, 0, 0, width, height)
-        #draw the layouts
-        h_off = 0
-        for i,layout in enumerate(layouts):
-            w,h = layout.get_pixel_size()
-            if i == 0: w_off = (width-w)/2
-            else: w_off = 0
-            pixmap.draw_layout(gc, w_off, h_off, layout)
-            h_off = h + h_off + LABEL_SEPARATION
-        #create vertical and horizontal pixmaps
-        self.horizontal_label = pixmap
-        if self.is_vertical():
-            self.vertical_label = self.get_parent().new_pixmap(height, width)
-            Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
+
         #calculate width and height needed
         W = self.label_width + 2 * BLOCK_LABEL_PADDING
 
@@ -301,29 +285,50 @@ class Block(Element, _Block):
         else:
             self._comment_pixmap = None
 
-    def draw(self, gc, window):
+    def draw(self, widget, cr):
         """
         Draw the signal block with label and inputs/outputs.
-
-        Args:
-            gc: the graphics context
-            window: the gtk window to draw on
         """
         # draw ports
         for port in self.get_ports_gui():
-            port.draw(gc, window)
+            port.draw(widget, cr)
         # draw main block
-        x, y = self.get_coordinate()
-        Element.draw(
-            self, gc, window, bg_color=self._bg_color,
-            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
-                         self.is_dummy_block and Colors.MISSING_BLOCK_BORDER_COLOR or Colors.BORDER_COLOR,
+        border_color = (
+            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
+            Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
+            Colors.BORDER_COLOR
         )
-        #draw label image
+        Element.draw(self, widget, cr, border_color, self._bg_color)
+        x, y = self.get_coordinate()
+        # create the image surface
+        width = self.label_width
+        height = self.label_height
+        cr.set_source_rgb(*self._bg_color)
+        cr.save()
         if self.is_horizontal():
-            window.draw_drawable(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
+            cr.translate(x + BLOCK_LABEL_PADDING, y + (self.H - self.label_height) / 2)
         elif self.is_vertical():
-            window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
+            cr.translate(x + (self.H - self.label_height) / 2, y + BLOCK_LABEL_PADDING)
+            cr.rotate(-90 * math.pi / 180.)
+            cr.translate(-width, 0)
+
+        # cr.rectangle(0, 0, width, height)
+        # cr.fill()
+
+        # draw the layouts
+        h_off = 0
+        for i, layout in enumerate(self.layouts):
+            w, h = layout.get_pixel_size()
+            if i == 0:
+                w_off = (width - w) / 2
+            else:
+                w_off = 0
+            cr.translate(w_off, h_off)
+            PangoCairo.update_layout(cr, layout)
+            PangoCairo.show_layout(cr, layout)
+            cr.translate(-w_off, -h_off)
+            h_off = h + h_off + LABEL_SEPARATION
+        cr.restore()
 
     def what_is_selected(self, coor, coor_m=None):
         """

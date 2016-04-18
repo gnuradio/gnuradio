@@ -397,23 +397,21 @@ class FlowGraph(Element, _Flowgraph):
             changed = True
         return changed
 
-    def draw(self, gc, window):
+    def draw(self, widget, cr):
         """
         Draw the background and grid if enabled.
-        Draw all of the elements in this flow graph onto the pixmap.
-        Draw the pixmap to the drawable window of this flow graph.
         """
 
-        W,H = self.get_size()
-        #draw the background
-        gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
-        window.draw_rectangle(gc, True, 0, 0, W, H)
+        cr.set_source_rgb(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
+        cr.rectangle(0, 0, *self.get_size())
+        cr.fill()
 
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
             for block in self.blocks:
                 if block.get_enabled():
-                    block.draw_comment(gc, window)
+                    # block.draw_comment(widget, cr)
+                    pass
         #draw multi select rectangle
         if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
             #coordinates
@@ -423,10 +421,13 @@ class FlowGraph(Element, _Flowgraph):
             x, y = int(min(x1, x2)), int(min(y1, y2))
             w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
             #draw
-            gc.set_foreground(Colors.HIGHLIGHT_COLOR)
-            window.draw_rectangle(gc, True, x, y, w, h)
-            gc.set_foreground(Colors.BORDER_COLOR)
-            window.draw_rectangle(gc, False, x, y, w, h)
+            cr.set_source_rgb(*Colors.HIGHLIGHT_COLOR)
+            cr.rectangle(x, y, w, h)
+            cr.fill()
+            cr.set_source_rgb(*Colors.BORDER_COLOR)
+            cr.rectangle(x, y, w, h)
+            cr.stroke()
+
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
@@ -437,10 +438,10 @@ class FlowGraph(Element, _Flowgraph):
                 continue  # skip hidden disabled blocks and connections
             if hide_variables and (element.is_variable or element.is_import):
                 continue  # skip hidden disabled blocks and connections
-            element.draw(gc, window)
+            element.draw(widget, cr)
         #draw selected blocks on top of selected connections
         for selected_element in self.get_selected_connections() + self.get_selected_blocks():
-            selected_element.draw(gc, window)
+            selected_element.draw(widget, cr)
 
     def update_selected(self):
         """

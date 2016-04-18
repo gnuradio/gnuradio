@@ -219,10 +219,9 @@ class Platform(Element):
 
         color = n.find('color') or ''
         try:
-            import gi # ugly but handy
-            from gi.repository import Gdk
-            Gdk.color_parse(color)
-        except (ValueError, ImportError):
+            chars_per_color = 2 if len(color) > 4 else 1
+            tuple(int(color[o:o + 2], 16) / 255.0 for o in range(1, 3 * chars_per_color, chars_per_color))
+        except ValueError:
             if color:  # no color is okay, default set in GUI
                 print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)
                 color = None

@@ -17,9 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import math
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, PangoCairo
 
 from . import Actions, Colors, Utils
 from .Constants import (
@@ -45,15 +46,19 @@ class Port(_Port, Element):
         """
         _Port.__init__(self, block, n, dir)
         Element.__init__(self)
-        self.W = self.H = self.w = self.h = 0
+        self.W = self.w = self.h = 0
+        self.H = 20  # todo: fix
         self._connector_coordinate = (0, 0)
         self._connector_length = 0
         self._hovering = True
         self._force_label_unhidden = False
+        self.layout = Gtk.DrawingArea().create_pango_layout('')
+        self._bg_color = Colors.get_color(self.get_color())
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
         Element.create_shapes(self)
+        self._bg_color = Colors.get_color(self.get_color())
         if self.get_hide():
             return  # this port is hidden, no need to create shapes
         if self.get_domain() == GR_MESSAGE_DOMAIN:
@@ -112,50 +117,34 @@ class Port(_Port, Element):
 
     def create_labels(self):
         """Create the labels for the socket."""
-        Element.create_labels(self)
-        self._bg_color = Colors.get_color(self.get_color())
-        # create the layout
-        layout = Gtk.DrawingArea().create_pango_layout('')
-        layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self, font=PORT_FONT))
-        self.w, self.h = layout.get_pixel_size()
-        self.W = 2 * PORT_LABEL_PADDING + self.w
-        self.H = 2 * PORT_LABEL_PADDING + self.h * (
-            3 if self.get_type() == 'bus' else 1)
-        self.H += self.H % 2
-        # create the pixmap
-        pixmap = self.get_parent().get_parent().new_pixmap(self.w, self.h)
-        gc = pixmap.new_gc()
-        gc.set_foreground(self._bg_color)
-        pixmap.draw_rectangle(gc, True, 0, 0, self.w, self.h)
-        pixmap.draw_layout(gc, 0, 0, layout)
-        # create vertical and horizontal pixmaps
-        self.horizontal_label = pixmap
-        if self.is_vertical():
-            self.vertical_label = self.get_parent().get_parent().new_pixmap(self.h, self.w)
-            Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
+        self.layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self, font=PORT_FONT))
 
-    def draw(self, gc, window):
+    def draw(self, widget, cr):
         """
         Draw the socket with a label.
-
-        Args:
-            gc: the graphics context
-            window: the gtk window to draw on
         """
-        Element.draw(
-            self, gc, window, bg_color=self._bg_color,
-            border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
-                         self.get_parent().is_dummy_block and Colors.MISSING_BLOCK_BORDER_COLOR or
-                         Colors.BORDER_COLOR,
+        border_color = (
+            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
+            Colors.MISSING_BLOCK_BORDER_COLOR if self.get_parent().is_dummy_block else
+            Colors.BORDER_COLOR
         )
+        Element.draw(self, widget, cr, border_color, self._bg_color)
+
         if not self._areas_list or self._label_hidden():
             return  # this port is either hidden (no areas) or folded (no label)
         X, Y = self.get_coordinate()
-        (x, y), (w, h) = self._areas_list[0]  # use the first area's sizes to place the labels
+        (x, y), _ = self._areas_list[0]
+        cr.set_source_rgb(*self._bg_color)
+        cr.save()
         if self.is_horizontal():
-            window.draw_drawable(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
+            cr.translate(x + X + (self.W - self.w) / 2, y + Y + (self.H - self.h) / 2)
         elif self.is_vertical():
-            window.draw_drawable(gc, self.vertical_label, 0, 0, x+X+(self.H-self.h)/2, y+Y+(self.W-self.w)/2, -1, -1)
+            cr.translate(x + X + (self.H - self.h) / 2, y + Y + (self.W - self.w) / 2)
+            cr.rotate(-90 * math.pi / 180.)
+            cr.translate(-self.w, 0)
+        PangoCairo.update_layout(cr, self.layout)
+        PangoCairo.show_layout(cr, self.layout)
+        cr.restore()
 
     def get_connector_coordinate(self):
         """

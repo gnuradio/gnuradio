@@ -90,29 +90,33 @@ class Element(object):
         self.clear()
         for child in self.get_children(): child.create_shapes()
 
-    def draw(self, gc, window, border_color, bg_color):
+    def draw(self, widget, cr, border_color, bg_color):
         """
         Draw in the given window.
 
         Args:
-            gc: the graphics context
-            window: the gtk window to draw on
+            widget:
+            cr:
             border_color: the color for lines and rectangle borders
             bg_color: the color for the inside of the rectangle
         """
         X, Y = self.get_coordinate()
-        gc.set_line_attributes(*self.line_attributes)
+        # TODO: gc.set_line_attributes(*self.line_attributes)
         for (rX, rY), (W, H) in self._areas_list:
             aX = X + rX
             aY = Y + rY
-            gc.set_foreground(bg_color)
-            window.draw_rectangle(gc, True, aX, aY, W, H)
-            gc.set_foreground(border_color)
-            window.draw_rectangle(gc, False, aX, aY, W, H)
+            cr.set_source_rgb(*bg_color)
+            cr.rectangle(aX, aY, W, H)
+            cr.fill()
+            cr.set_source_rgb(*border_color)
+            cr.rectangle(aX, aY, W, H)
+            cr.stroke()
+
         for (x1, y1), (x2, y2) in self._lines_list:
-            gc.set_foreground(border_color)
-            gc.set_background(bg_color)
-            window.draw_line(gc, X+x1, Y+y1, X+x2, Y+y2)
+            cr.set_source_rgb(*border_color)
+            cr.move_to(X + x1, Y + y1)
+            cr.line_to(X + x2, Y + y2)
+            cr.stroke()
 
     def rotate(self, rotation):
         """

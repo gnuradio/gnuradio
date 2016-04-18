@@ -36,6 +36,7 @@ from .NotebookPage import NotebookPage
 
 from ..core import Messages
 
+
 MAIN_WINDOW_TITLE_TMPL = """\
 #if not $saved
 *#slurp
@@ -104,8 +105,8 @@ class MainWindow(Gtk.Window):
         vbox.pack_start(self.tool_bar, False, False, 0)
 
         # Main parent container for the different panels
-        self.container = Gtk.HPaned()
-        vbox.pack_start(self.container)
+        self.main = Gtk.HPaned() #(orientation=Gtk.Orientation.HORIZONTAL)
+        vbox.pack_start(self.main, True, True, 0)
 
         # Create the notebook
         self.notebook = Gtk.Notebook()
@@ -127,9 +128,9 @@ class MainWindow(Gtk.Window):
         self.vars = VariableEditor(platform, self.get_flow_graph)
 
         # Figure out which place to put the variable editor
-        self.left = Gtk.VPaned()
-        self.right = Gtk.VPaned()
-        self.left_subpanel = Gtk.HPaned()
+        self.left = Gtk.VPaned() #orientation=Gtk.Orientation.VERTICAL)
+        self.right = Gtk.VPaned() #orientation=Gtk.Orientation.VERTICAL)
+        self.left_subpanel = Gtk.HPaned() #orientation=Gtk.Orientation.HORIZONTAL)
 
         self.variable_panel_sidebar = Preferences.variable_editor_sidebar()
         if self.variable_panel_sidebar:
@@ -147,12 +148,12 @@ class MainWindow(Gtk.Window):
             # Create the right panel
             self.right.pack1(self.btwin)
 
-        self.container.pack1(self.left)
-        self.container.pack2(self.right, False)
+        self.main.pack1(self.left)
+        self.main.pack2(self.right, False)
 
         # Load preferences and show the main window
         self.resize(*Preferences.main_window_size())
-        self.container.set_position(Preferences.blocks_window_position())
+        self.main.set_position(Preferences.blocks_window_position())
         self.left.set_position(Preferences.console_window_position())
         if self.variable_panel_sidebar:
             self.right.set_position(Preferences.variable_editor_position(sidebar=True))
@@ -276,9 +277,7 @@ class MainWindow(Gtk.Window):
             return
         #add this page to the notebook
         self.notebook.append_page(page, page.get_tab())
-        try: self.notebook.set_tab_reorderable(page, True)
-        except: pass #gtk too old
-        self.notebook.set_tab_label_packing(page, False, False, Gtk.PACK_START)
+        self.notebook.set_tab_reorderable(page, True)
         #only show if blank or manual
         if not file_path or show: self._set_page(page)
 
@@ -303,7 +302,7 @@ class MainWindow(Gtk.Window):
         Preferences.file_open(open_file)
         Preferences.main_window_size(self.get_size())
         Preferences.console_window_position(self.left.get_position())
-        Preferences.blocks_window_position(self.container.get_position())
+        Preferences.blocks_window_position(self.main.get_position())
         if self.variable_panel_sidebar:
             Preferences.variable_editor_position(self.right.get_position(), sidebar=True)
         else:
@@ -405,14 +404,11 @@ class MainWindow(Gtk.Window):
         Returns:
             the selected flow graph
         """
-        return None
-        # TODO: Issues with flowgraphs
-        #return self.get_page().get_flow_graph()
+        return self.get_page().get_flow_graph()
 
     def get_focus_flag(self):
         """
         Get the focus flag from the current page.
-
         Returns:
             the focus flag
         """

@@ -16,26 +16,30 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
+
 try:
     import gi
     gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk
     from gi.repository import Gdk
 
+    # Not gtk3?
+    #COLORMAP = Gdk.colormap_get_system() #create all of the colors
+    #def get_color(color_code): return _COLORMAP.alloc_color(color_code, True, True)
+
     def get_color(color_code):
-        color = Gdk.RGBA()
-        color.parse(color_code)
-        return color
+        chars_per_color = 2 if len(color_code) > 4 else 1
+        offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
+        return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
 
     HIGHLIGHT_COLOR = get_color('#00FFFF')
     BORDER_COLOR = get_color('#444444')
 
     # Missing blocks stuff
     MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
-    MISSING_BLOCK_BORDER_COLOR = get_color('red')
+    MISSING_BLOCK_BORDER_COLOR = get_color('#FF0000')
 
     # Param entry boxes
-    PARAM_ENTRY_TEXT_COLOR = get_color('black')
+    PARAM_ENTRY_TEXT_COLOR = get_color('#000000')
     ENTRYENUM_CUSTOM_COLOR = get_color('#EEEEEE')
 
     # Flow graph color constants
@@ -49,12 +53,9 @@ try:
     BLOCK_BYPASSED_COLOR = get_color('#F4FF81')
 
     # Connection color constants
-    CONNECTION_ENABLED_COLOR = get_color('black')
+    CONNECTION_ENABLED_COLOR = get_color('#000000')
     CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
-    CONNECTION_ERROR_COLOR = get_color('red')
+    CONNECTION_ERROR_COLOR = get_color('#FF0000')
 
 except Exception as e:
-    print 'Unable to import Colors'
-
-
-DEFAULT_DOMAIN_COLOR_CODE = '#777777'
+    print 'Unable to import Colors', e

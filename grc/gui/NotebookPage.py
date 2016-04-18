@@ -54,7 +54,7 @@ class NotebookPage(Gtk.HBox):
         GObject.GObject.__init__(self)
         self.show()
         #tab box to hold label and close button
-        self.tab = Gtk.HBox(False, 0)
+        self.tab = Gtk.HBox(homogeneous=False, spacing=0)
         #setup tab label
         self.label = Gtk.Label()
         self.tab.pack_start(self.label, False, False, 0)
@@ -62,7 +62,7 @@ class NotebookPage(Gtk.HBox):
         image = Gtk.Image()
         image.set_from_stock('gtk-close', Gtk.IconSize.MENU)
         #setup image box
-        image_box = Gtk.HBox(False, 0)
+        image_box = Gtk.HBox(homogeneous=False, spacing=0)
         image_box.pack_start(image, True, False, 0)
         #setup the button
         button = Gtk.Button()
@@ -79,20 +79,18 @@ class NotebookPage(Gtk.HBox):
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
-        #self.drawing_area = DrawingArea(self.get_flow_graph())
-        #self.scrolled_window.add_with_viewport(self.get_drawing_area())
+        self.drawing_area = DrawingArea(self.get_flow_graph())
+        self.scrolled_window.add_with_viewport(self.drawing_area)
         self.pack_start(self.scrolled_window, True, True, 0)
         #inject drawing area into flow graph
-        #self.get_flow_graph().drawing_area = self.get_drawing_area()
+        self.get_flow_graph().drawing_area = self.drawing_area
         self.show_all()
-
-    def get_drawing_area(self): return self.drawing_area
 
     def _handle_scroll_window_key_press(self, widget, event):
         """forward Ctrl-PgUp/Down to NotebookPage (switch fg instead of horiz. scroll"""
         is_ctrl_pg = (
-            event.state & gtk.gdk.CONTROL_MASK and
-            event.keyval in (gtk.keysyms.Page_Up, gtk.keysyms.Page_Down)
+            event.state & Gdk.ModifierType.CONTROL_MASK and
+            event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
         )
         if is_ctrl_pg:
             return self.get_parent().event(event)

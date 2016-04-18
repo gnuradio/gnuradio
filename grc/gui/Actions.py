@@ -27,6 +27,7 @@ import Preferences
 
 NO_MODS_MASK = 0
 
+
 ########################################################################
 # Actions API
 ########################################################################
@@ -48,7 +49,7 @@ def handle_key_press(event):
     """
     _used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for keyval, mod_mask in _actions_keypress_dict], NO_MODS_MASK)
     # extract the key value and the consumed modifiers
-    keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
+    _unused, keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
         event.hardware_keycode, event.get_state(), event.group)
     # get the modifier mask and ignore irrelevant modifiers
     mod_mask = event.get_state() & ~consumed & _used_mods_mask
@@ -261,32 +262,32 @@ BLOCK_ROTATE_CW = Action(
 BLOCK_VALIGN_TOP = Action(
     label='Vertical Align Top',
     tooltip='Align tops of selected blocks',
-    keypresses=(gtk.keysyms.t, gtk.gdk.SHIFT_MASK),
+    keypresses=(Gdk.KEY_t, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_VALIGN_MIDDLE = Action(
     label='Vertical Align Middle',
     tooltip='Align centers of selected blocks vertically',
-    keypresses=(gtk.keysyms.m, gtk.gdk.SHIFT_MASK),
+    keypresses=(Gdk.KEY_m, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_VALIGN_BOTTOM = Action(
     label='Vertical Align Bottom',
     tooltip='Align bottoms of selected blocks',
-    keypresses=(gtk.keysyms.b, gtk.gdk.SHIFT_MASK),
+    keypresses=(Gdk.KEY_b, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_HALIGN_LEFT = Action(
     label='Horizontal Align Left',
     tooltip='Align left edges of blocks selected blocks',
-    keypresses=(gtk.keysyms.l, gtk.gdk.SHIFT_MASK),
+    keypresses=(Gdk.KEY_l, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_HALIGN_CENTER = Action(
     label='Horizontal Align Center',
     tooltip='Align centers of selected blocks horizontally',
-    keypresses=(gtk.keysyms.c, gtk.gdk.SHIFT_MASK),
+    keypresses=(Gdk.KEY_c, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_HALIGN_RIGHT = Action(
     label='Horizontal Align Right',
     tooltip='Align right edges of selected blocks',
-    keypresses=(gtk.keysyms.r, gtk.gdk.SHIFT_MASK),
+    keypresses=(Gdk.KEY_r, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_ALIGNMENTS = [
     BLOCK_VALIGN_TOP,
@@ -341,9 +342,9 @@ TOGGLE_HIDE_VARIABLES = ToggleAction(
 TOGGLE_FLOW_GRAPH_VAR_EDITOR = ToggleAction(
     label='Show _Variable Editor',
     tooltip='Show the variable editor. Modify variables and imports in this flow graph',
-    stock_id=gtk.STOCK_EDIT,
+    stock_id=Gtk.STOCK_EDIT,
     default=True,
-    keypresses=(gtk.keysyms.e, gtk.gdk.CONTROL_MASK),
+    keypresses=(Gdk.KEY_e, Gdk.ModifierType.CONTROL_MASK),
     preference_name='variable_editor_visable',
 )
 TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = ToggleAction(
@@ -407,7 +408,7 @@ ERRORS_WINDOW_DISPLAY = Action(
 TOGGLE_CONSOLE_WINDOW = ToggleAction(
     label='Show _Console Panel',
     tooltip='Toggle visibility of the console',
-    keypresses=(Gdk.KEY_c, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=(Gdk.KEY_r, Gdk.ModifierType.CONTROL_MASK),
     preference_name='console_window_visible'
 )
 TOGGLE_BLOCKS_WINDOW = ToggleAction(

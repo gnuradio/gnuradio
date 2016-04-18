@@ -1,5 +1,5 @@
 """
-Copyright 2015 Free Software Foundation, Inc.
+Copyright 2015, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -19,10 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from operator import attrgetter
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
 from . import Actions
 from . import Preferences
@@ -32,34 +33,34 @@ BLOCK_INDEX = 0
 ID_INDEX = 1
 
 
-class VariableEditorContextMenu(gtk.Menu):
+class VariableEditorContextMenu(Gtk.Menu):
     """ A simple context menu for our variable editor """
     def __init__(self, var_edit):
-        gtk.Menu.__init__(self)
+        Gtk.Menu.__init__(self)
 
-        self.imports = gtk.MenuItem("Add _Import")
+        self.imports = Gtk.MenuItem("Add _Import")
         self.imports.connect('activate', var_edit.handle_action, var_edit.ADD_IMPORT)
         self.add(self.imports)
 
-        self.variables = gtk.MenuItem("Add _Variable")
+        self.variables = Gtk.MenuItem("Add _Variable")
         self.variables.connect('activate', var_edit.handle_action, var_edit.ADD_VARIABLE)
         self.add(self.variables)
-        self.add(gtk.SeparatorMenuItem())
+        self.add(Gtk.SeparatorMenuItem())
 
-        self.enable = gtk.MenuItem("_Enable")
+        self.enable = Gtk.MenuItem("_Enable")
         self.enable.connect('activate', var_edit.handle_action, var_edit.ENABLE_BLOCK)
-        self.disable = gtk.MenuItem("_Disable")
+        self.disable = Gtk.MenuItem("_Disable")
         self.disable.connect('activate', var_edit.handle_action, var_edit.DISABLE_BLOCK)
         self.add(self.enable)
         self.add(self.disable)
-        self.add(gtk.SeparatorMenuItem())
+        self.add(Gtk.SeparatorMenuItem())
 
-        self.delete = gtk.MenuItem("_Delete")
+        self.delete = Gtk.MenuItem("_Delete")
         self.delete.connect('activate', var_edit.handle_action, var_edit.DELETE_BLOCK)
         self.add(self.delete)
-        self.add(gtk.SeparatorMenuItem())
+        self.add(Gtk.SeparatorMenuItem())
 
-        self.properties = gtk.MenuItem("_Properties...")
+        self.properties = Gtk.MenuItem("_Properties...")
         self.properties.connect('activate', var_edit.handle_action, var_edit.OPEN_PROPERTIES)
         self.add(self.properties)
         self.show_all()
@@ -71,7 +72,7 @@ class VariableEditorContextMenu(gtk.Menu):
         self.disable.set_sensitive(selected and enabled)
 
 
-class VariableEditor(gtk.VBox):
+class VariableEditor(Gtk.VBox):
 
     # Actions that are handled by the editor
     ADD_IMPORT = 0
@@ -83,7 +84,7 @@ class VariableEditor(gtk.VBox):
     DISABLE_BLOCK = 6
 
     def __init__(self, platform, get_flow_graph):
-        gtk.VBox.__init__(self)
+        Gtk.VBox.__init__(self)
         self.platform = platform
         self.get_flow_graph = get_flow_graph
         self._block = None
@@ -91,14 +92,14 @@ class VariableEditor(gtk.VBox):
 
         # Only use the model to store the block reference and name.
         # Generate everything else dynamically
-        self.treestore = gtk.TreeStore(gobject.TYPE_PYOBJECT,  # Block reference
-                                       gobject.TYPE_STRING)    # Category and block name
-        self.treeview = gtk.TreeView(self.treestore)
+        self.treestore = Gtk.TreeStore(GObject.TYPE_PYOBJECT,  # Block reference
+                                       GObject.TYPE_STRING)    # Category and block name
+        self.treeview = Gtk.TreeView(self.treestore)
         self.treeview.set_enable_search(False)
         self.treeview.set_search_column(-1)
         #self.treeview.set_enable_search(True)
         #self.treeview.set_search_column(ID_INDEX)
-        self.treeview.get_selection().set_mode('single')
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE)
         self.treeview.set_headers_visible(True)
         self.treeview.connect('button-press-event', self._handle_mouse_button_press)
         self.treeview.connect('button-release-event', self._handle_mouse_button_release)
@@ -106,67 +107,67 @@ class VariableEditor(gtk.VBox):
         self.treeview.connect('key-press-event', self._handle_key_button_press)
 
         # Block Name or Category
-        self.id_cell = gtk.CellRendererText()
+        self.id_cell = Gtk.CellRendererText()
         self.id_cell.connect('edited', self._handle_name_edited_cb)
-        id_column = gtk.TreeViewColumn("Id", self.id_cell, text=ID_INDEX)
+        id_column = Gtk.TreeViewColumn("Id", self.id_cell, text=ID_INDEX)
         id_column.set_name("id")
         id_column.set_resizable(True)
         id_column.set_max_width(300)
         id_column.set_min_width(80)
         id_column.set_fixed_width(100)
-        id_column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+        id_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         id_column.set_cell_data_func(self.id_cell, self.set_properties)
         self.id_column = id_column
         self.treeview.append_column(id_column)
-        self.treestore.set_sort_column_id(ID_INDEX, gtk.SORT_ASCENDING)
+        self.treestore.set_sort_column_id(ID_INDEX, Gtk.SortType.ASCENDING)
         # For forcing resize
         self._col_width = 0
 
         # Block Value
-        self.value_cell = gtk.CellRendererText()
+        self.value_cell = Gtk.CellRendererText()
         self.value_cell.connect('edited', self._handle_value_edited_cb)
-        value_column = gtk.TreeViewColumn("Value", self.value_cell)
+        value_column = Gtk.TreeViewColumn("Value", self.value_cell)
         value_column.set_name("value")
         value_column.set_resizable(False)
         value_column.set_expand(True)
         value_column.set_min_width(100)
-        value_column.set_sizing(gtk.TREE_VIEW_COLUMN_AUTOSIZE)
+        value_column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
         value_column.set_cell_data_func(self.value_cell, self.set_value)
         self.value_column = value_column
         self.treeview.append_column(value_column)
 
         # Block Actions (Add, Remove)
-        self.action_cell = gtk.CellRendererPixbuf()
+        self.action_cell = Gtk.CellRendererPixbuf()
         value_column.pack_start(self.action_cell, False)
         value_column.set_cell_data_func(self.action_cell, self.set_icon)
 
         # Make the scrolled window to hold the tree view
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.add_with_viewport(self.treeview)
         scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
-        self.pack_start(scrolled_window)
+        self.pack_start(scrolled_window, True, True, 0)
 
         # Context menus
         self._context_menu = VariableEditorContextMenu(self)
         self._confirm_delete = Preferences.variable_editor_confirm_delete()
 
     # Sets cell contents
-    def set_icon(self, col, cell, model, iter):
+    def set_icon(self, col, cell, model, iter, data):
         block = model.get_value(iter, BLOCK_INDEX)
         if block:
-            pb = self.treeview.render_icon(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU, None)
+            pb = self.treeview.render_icon(Gtk.STOCK_CLOSE, 16, None)
         else:
-            pb = self.treeview.render_icon(gtk.STOCK_ADD, gtk.ICON_SIZE_MENU, None)
+            pb = self.treeview.render_icon(Gtk.STOCK_ADD, 16, None)
         cell.set_property('pixbuf', pb)
 
-    def set_value(self, col, cell, model, iter):
+    def set_value(self, col, cell, model, iter, data):
         sp = cell.set_property
         block = model.get_value(iter, BLOCK_INDEX)
 
         # Set the default properties for this column first.
         # Some set in set_properties() may be overridden (editable for advanced variable blocks)
-        self.set_properties(col, cell, model, iter)
+        self.set_properties(col, cell, model, iter, data)
 
         # Set defaults
         value = None
@@ -198,7 +199,7 @@ class VariableEditor(gtk.VBox):
         # Always set the text value.
         sp('text', value)
 
-    def set_properties(self, col, cell, model, iter):
+    def set_properties(self, col, cell, model, iter, data):
         sp = cell.set_property
         block = model.get_value(iter, BLOCK_INDEX)
         # Set defaults
@@ -268,13 +269,13 @@ class VariableEditor(gtk.VBox):
         elif key == self.DELETE_CONFIRM:
             if self._confirm_delete:
                 # Create a context menu to confirm the delete operation
-                confirmation_menu = gtk.Menu()
+                confirmation_menu = Gtk.Menu()
                 block_id = self._block.get_param('id').get_value().replace("_", "__")
-                confirm = gtk.MenuItem("Delete {}".format(block_id))
+                confirm = Gtk.MenuItem("Delete {}".format(block_id))
                 confirm.connect('activate', self.handle_action, self.DELETE_BLOCK)
                 confirmation_menu.add(confirm)
                 confirmation_menu.show_all()
-                confirmation_menu.popup(None, None, None, event.button, event.time)
+                confirmation_menu.popup(None, None, None, None, event.button, event.time)
             else:
                 self.handle_action(None, self.DELETE_BLOCK, None)
         elif key == self.ENABLE_BLOCK:
@@ -302,12 +303,12 @@ class VariableEditor(gtk.VBox):
 
             if event.button == 1 and col.get_name() == "value":
                 # Make sure this has a block (not the import/variable rows)
-                if self._block and event.type == gtk.gdk._2BUTTON_PRESS:
+                if self._block and event.type == Gdk.EventType._2BUTTON_PRESS:
                     # Open the advanced dialog if it is a gui variable
                     if self._block.get_key() not in ("variable", "import"):
                         self.handle_action(None, self.OPEN_PROPERTIES, event=event)
                         return True
-                if event.type == gtk.gdk.BUTTON_PRESS:
+                if event.type == Gdk.EventType.BUTTON_PRESS:
                     # User is adding/removing blocks
                     # Make sure this is the action cell (Add/Remove Icons)
                     if path[2] > col.cell_get_position(self.action_cell)[0]:
@@ -320,15 +321,15 @@ class VariableEditor(gtk.VBox):
                         else:
                             self.handle_action(None, self.DELETE_CONFIRM, event=event)
                         return True
-            elif event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS:
+            elif event.button == 3 and event.type == Gdk.EventType.BUTTON_PRESS:
                 if self._block:
                     self._context_menu.update_sensitive(True, enabled=self._block.get_enabled())
                 else:
                     self._context_menu.update_sensitive(False)
-                self._context_menu.popup(None, None, None, event.button, event.time)
+                self._context_menu.popup(None, None, None, None, event.button, event.time)
 
             # Null handler. Stops the treeview from handling double click events.
-            if event.type == gtk.gdk._2BUTTON_PRESS:
+            if event.type == Gdk.EventType._2BUTTON_PRESS:
                 return True
         return False
 

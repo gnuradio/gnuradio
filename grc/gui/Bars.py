@@ -61,6 +61,7 @@ TOOLBAR_LIST = (
     Actions.OPEN_HIER,
 )
 
+
 # The list of actions and categories for the menu bar.
 MENU_BAR_LIST = (
     (Gtk.Action(name='File', label='_File'), [
@@ -88,7 +89,7 @@ MENU_BAR_LIST = (
         None,
         Actions.BLOCK_ROTATE_CCW,
         Actions.BLOCK_ROTATE_CW,
-        (gtk.Action('Align', '_Align', None, None), Actions.BLOCK_ALIGNMENTS),
+        (Gtk.Action('Align', '_Align', None, None), Actions.BLOCK_ALIGNMENTS),
         None,
         Actions.BLOCK_ENABLE,
         Actions.BLOCK_DISABLE,
@@ -139,6 +140,7 @@ MENU_BAR_LIST = (
         Actions.ABOUT_WINDOW_DISPLAY,
     ]),
 )
+
 
 # The list of actions for the context menu.
 CONTEXT_MENU_LIST = [
