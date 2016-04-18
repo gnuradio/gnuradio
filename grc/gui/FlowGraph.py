@@ -195,6 +195,8 @@ class FlowGraph(Element):
                 continue  # unknown block was pasted (e.g. dummy block)
             selected.add(block)
             #set params
+            if block_key == 'epy_block':
+                block.rewrite()
             params_n = block_n.findall('param')
             for param_n in params_n:
                 param_key = param_n.find('key')
@@ -203,7 +205,7 @@ class FlowGraph(Element):
                 if param_key == 'id':
                     old_id2block[param_value] = block
                     #if the block id is not unique, get a new block id
-                    if param_value in [bluck.get_id() for bluck in self.get_blocks()]:
+                    if param_value in [blk.get_id() for blk in self.get_blocks()]:
                         param_value = self._get_unique_id(param_value)
                 #set value to key
                 block.get_param(param_key).set_value(param_value)
@@ -285,7 +287,7 @@ class FlowGraph(Element):
         """
         for selected_block in self.get_selected_blocks():
             delta_coordinate = selected_block.bound_move_delta(delta_coordinate)
- 
+
         for selected_block in self.get_selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True
