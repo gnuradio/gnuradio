@@ -99,7 +99,7 @@ namespace gr {
       gr::thread::scoped_lock guard(d_mutex);  // protect d_socket from work()
 
       // Send a few zero-length packets to signal receiver we are done
-      boost::array<char, 1> send_buf = {{ 0 }};
+      boost::array<char, 0> send_buf;
       if(d_eof) {
         int i;
         for(i = 0; i < 3; i++)
