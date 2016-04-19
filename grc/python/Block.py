@@ -244,6 +244,7 @@ class Block(_Block, _GUIBlock):
         platform = flowgraph.get_parent()
         param_blk = self.get_param('_io_cache')
         param_src = self.get_param('_source_code')
+        doc_end_tag = 'Block Documentation:'
 
         src = param_src.get_value()
         src_hash = hash(src)
@@ -267,7 +268,7 @@ class Block(_Block, _GUIBlock):
 
         self._epy_source_hash = src_hash
         self._name = blk_io.name or blk_io.cls
-        self._doc = blk_io.doc
+        self._doc = self._doc.split(doc_end_tag)[0] + doc_end_tag + '\n' + blk_io.doc
         self._imports[0] = 'from {} import {}'.format(self.get_id(), blk_io.cls)
         self._make = '{}({})'.format(blk_io.cls, ', '.join(
             '{0}=${0}'.format(key) for key, _ in blk_io.params))
