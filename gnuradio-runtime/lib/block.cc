@@ -707,7 +707,7 @@ namespace gr {
     //std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, pmt::mp("done"))){
-        d_finished = pmt::to_long(pmt::cdr(msg));
+        d_finished = pmt::to_bool(pmt::cdr(msg));
     } else {
         std::cout << "WARNING: bad message op on system port!\n";
         pmt::print(msg);
@@ -736,7 +736,7 @@ namespace gr {
 
         currlist = pmt::cdr(currlist);
         basic_block_sptr blk = global_block_registry.block_lookup(block);
-        blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
+        blk->post(port, pmt::cons(pmt::mp("done"), pmt::PMT_T));
 
         //std::cout << "notify finished --> ";
         //pmt::print(pmt::cons(block,port));
