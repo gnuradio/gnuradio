@@ -195,12 +195,13 @@ class FlowGraph(Element):
                 continue  # unknown block was pasted (e.g. dummy block)
             selected.add(block)
             #set params
+            params = dict((n.find('key'), n.find('value'))
+                          for n in block_n.findall('param'))
             if block_key == 'epy_block':
-                block.rewrite()
-            params_n = block_n.findall('param')
-            for param_n in params_n:
-                param_key = param_n.find('key')
-                param_value = param_n.find('value')
+                block.get_param('_io_cache').set_value(params.pop('_io_cache'))
+                block.get_param('_source_code').set_value(params.pop('_source_code'))
+                block.rewrite()  # this creates the other params
+            for param_key, param_value in params.iteritems():
                 #setup id parameter
                 if param_key == 'id':
                     old_id2block[param_value] = block
