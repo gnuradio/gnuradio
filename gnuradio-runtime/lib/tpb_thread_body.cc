@@ -123,11 +123,16 @@ namespace gr {
       }
       else {
         s = block_executor::BLKD_IN;
+        // a msg port only block wants to shutdown
+        if(block->finished()) {
+          s = block_executor::DONE;
+        }
       }
 
-      // if msg ports think we are done, we are done
-      if(block->finished())
+      if(block->finished() && s == block_executor::READY_NO_OUTPUT) {
         s = block_executor::DONE;
+        d->set_done(true);
+      }
 
       switch(s){
       case block_executor::READY:		// Tell neighbors we made progress.
