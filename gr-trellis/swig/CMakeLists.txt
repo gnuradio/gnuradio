@@ -37,26 +37,53 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 # Setup swig docs to depend on includes and pull in from build directory
-set(GR_SWIG_TARGET_DEPS trellis_generated_includes)
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i)
-set(GR_SWIG_DOC_DIRS
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/trellis_swig.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig.py
+@ONLY)
+# We split up the swig files into multiple sections to minimize the
+# memory overhead. If a .i file grows too large, create a new file
+# named 'trellis_swigN.i' and add it to this list.
+#
+# Also add the line "from swig_digitalN import *" line to
+# blocks_swig.py.in.
+set(GR_SWIG_TRELLIS_IFILES
+  trellis_swig0
+  trellis_swig1
+)
+
+foreach(swigfile ${GR_SWIG_TRELLIS_IFILES})
+  # Setup swig docs to depend on includes and pull in from build directory
+  set(GR_SWIG_TARGET_DEPS trellis_generated_includes)
+  set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
+  set(GR_SWIG_DOC_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/trellis
     ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/trellis
-)
-set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-
-GR_SWIG_MAKE(trellis_swig trellis_swig.i)
-
-GR_SWIG_INSTALL(
-    TARGETS trellis_swig
+  )
+  set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
+	
+  GR_SWIG_MAKE(${swigfile} ${swigfile}.i)
+	
+  GR_SWIG_INSTALL(
+    TARGETS ${swigfile}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/trellis
     COMPONENT "trellis_python"
-)
+  )
+
+  list(APPEND SWIGFILES ${swigfile}.i)
+  list(APPEND SWIGDOCFILES ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
+endforeach(swigfile)
 
 install(
     FILES
-    trellis_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i
+    ${SWIGFILES}
+    ${SWIGDOCFILES}
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
     COMPONENT "trellis_swig"
+)
+
+GR_PYTHON_INSTALL(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/trellis
+    COMPONENT "trellis_python"
 )
