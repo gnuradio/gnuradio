@@ -174,9 +174,6 @@ namespace gr {
               }
             }
           }
-	  if (d->done()) {
-	    return;
-	  }
         }
       }
       break;
