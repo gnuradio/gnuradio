@@ -135,20 +135,20 @@ namespace gr {
       }
 
       switch(s){
-      case block_executor::READY:		// Tell neighbors we made progress.
+      case block_executor::READY:              // Tell neighbors we made progress.
         d->d_tpb.notify_neighbors(d);
         break;
 
-      case block_executor::READY_NO_OUTPUT:	// Notify upstream only
+      case block_executor::READY_NO_OUTPUT:    // Notify upstream only
         d->d_tpb.notify_upstream(d);
         break;
 
-      case block_executor::DONE:		// Game over.
+      case block_executor::DONE:               // Game over.
         block->notify_msg_neighbors();
         d->d_tpb.notify_neighbors(d);
         return;
 
-      case block_executor::BLKD_IN:		// Wait for input.
+      case block_executor::BLKD_IN:            // Wait for input.
       {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
         while(!d->d_tpb.input_changed) {
@@ -183,15 +183,15 @@ namespace gr {
       }
       break;
 
-      case block_executor::BLKD_OUT:	// Wait for output buffer space.
+      case block_executor::BLKD_OUT:           // Wait for output buffer space.
       {
-	gr::thread::scoped_lock guard(d->d_tpb.mutex);
-	while(!d->d_tpb.output_changed) {
-	  // wait for output room or message
-	  while(!d->d_tpb.output_changed && block->empty_handled_p())
-	    d->d_tpb.output_cond.wait(guard);
+        gr::thread::scoped_lock guard(d->d_tpb.mutex);
+        while(!d->d_tpb.output_changed) {
+          // wait for output room or message
+          while(!d->d_tpb.output_changed && block->empty_handled_p())
+            d->d_tpb.output_cond.wait(guard);
 
-	  // handle all pending messages
+          // handle all pending messages
           BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
             if(block->has_msg_handler(i.first)) {
                 while((msg = block->delete_head_nowait(i.first))) {
