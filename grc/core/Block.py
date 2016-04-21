@@ -408,7 +408,7 @@ class Block(Element):
         param_src = self.get_param('_source_code')
 
         src = param_src.get_value()
-        src_hash = hash(src)
+        src_hash = hash((self.get_id(), src))
         if src_hash == self._epy_source_hash:
             return
 
@@ -430,8 +430,8 @@ class Block(Element):
         self._epy_source_hash = src_hash
         self._name = blk_io.name or blk_io.cls
         self._doc = blk_io.doc
-        self._imports[0] = 'from {} import {}'.format(self.get_id(), blk_io.cls)
-        self._make = '{}({})'.format(blk_io.cls, ', '.join(
+        self._imports[0] = 'import ' + self.get_id()
+        self._make = '{0}.{1}({2})'.format(self.get_id(), blk_io.cls, ', '.join(
             '{0}=${0}'.format(key) for key, _ in blk_io.params))
 
         params = {}
