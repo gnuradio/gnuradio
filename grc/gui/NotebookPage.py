@@ -102,10 +102,8 @@ class NotebookPage(gtk.HBox):
         Returns:
             generator
         """
-        return self.get_flow_graph().get_parent().get_generator()(
-            self.get_flow_graph(),
-            self.get_file_path(),
-        )
+        platform = self.get_flow_graph().get_parent()
+        return platform.Generator(self.get_flow_graph(), self.get_file_path())
 
     def _handle_button(self, button):
         """

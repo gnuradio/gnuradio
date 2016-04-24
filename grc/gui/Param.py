@@ -23,8 +23,10 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from . import Colors, Utils, Constants, Dialogs
-from . Element import Element
+from . import Colors, Utils, Constants
+from .Element import Element
+
+from ..core.Param import Param as _Param
 
 
 class InputParam(gtk.HBox):
@@ -317,7 +319,9 @@ class FileParam(EntryParam):
         if self.param.get_key() == 'qt_qss_theme':
             dirname = os.path.dirname(dirname)  # trim filename
             if not os.path.exists(dirname):
-               dirname = os.path.join(Constants.GR_PREFIX, '/share/gnuradio/themes')
+               platform = self.param.get_parent().get_parent().get_parent()
+               dirname = os.path.join(platform.config.install_prefix,
+                                      '/share/gnuradio/themes')
         if not os.path.exists(dirname):
             dirname = os.getcwd()  # fix bad paths
 
@@ -378,11 +382,12 @@ Error:
 #end if"""
 
 
-class Param(Element):
+class Param(Element, _Param):
     """The graphical parameter."""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         Element.__init__(self)
+        _Param.__init__(self, **kwargs)
 
     def get_input(self, *args, **kwargs):
         """

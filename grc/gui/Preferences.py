@@ -35,7 +35,7 @@ _config_parser = ConfigParser.SafeConfigParser()
 
 
 def file_extension():
-    return '.'+_platform.get_key()
+    return '.grc'
 
 
 def load(platform):

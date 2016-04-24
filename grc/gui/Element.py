@@ -132,14 +132,14 @@ class Element(object):
         """
         self.coor = coor
 
-    def get_parent(self):
-        """
-        Get the parent of this element.
-
-        Returns:
-            the parent
-        """
-        return self.parent
+    # def get_parent(self):
+    #     """
+    #     Get the parent of this element.
+    #
+    #     Returns:
+    #         the parent
+    #     """
+    #     return self.parent
 
     def set_highlighted(self, highlighted):
         """
