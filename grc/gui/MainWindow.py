@@ -17,20 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import \
-    NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
-import Actions
-import pygtk
-pygtk.require('2.0')
-import gtk
-import Bars
-from BlockTreeWindow import BlockTreeWindow
-from Dialogs import TextDisplay, MessageDialogHelper
-from NotebookPage import NotebookPage
-import Preferences
-import Messages
-import Utils
 import os
+
+import gtk
+
+from . import Bars, Actions, Preferences, Utils
+from .BlockTreeWindow import BlockTreeWindow
+from .Constants import \
+    NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
+from .Dialogs import TextDisplay, MessageDialogHelper
+from .NotebookPage import NotebookPage
+
+from ..core import Messages
 
 MAIN_WINDOW_TITLE_TMPL = """\
 #if not $saved
@@ -71,11 +69,13 @@ class MainWindow(gtk.Window):
         Setup the menu, toolbar, flowgraph editor notebook, block selection window...
         """
         self._platform = platform
-        gen_opts = platform.get_block('options').get_param('generate_options')
+
+        gen_opts = platform.blocks['options'].get_param('generate_options')
         generate_mode_default = gen_opts.get_value()
         generate_modes = [
             (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
             for o in gen_opts.get_options()]
+
         # load preferences
         Preferences.load(platform)
         #setup window
@@ -283,7 +283,7 @@ class MainWindow(gtk.Window):
                 new_flowgraph_title=NEW_FLOGRAPH_TITLE,
                 read_only=self.get_page().get_read_only(),
                 saved=self.get_page().get_saved(),
-                platform_name=self._platform.get_name(),
+                platform_name=self._platform.config.name,
             )
         )
         #set tab titles

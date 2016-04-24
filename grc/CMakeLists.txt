@@ -96,8 +96,10 @@ install(
     COMPONENT "grc"
 )
 
+file(GLOB py_files "*.py")
+
 GR_PYTHON_INSTALL(
-    FILES __init__.py
+    FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc
     COMPONENT "grc"
 )
@@ -133,12 +135,9 @@ endif(WIN32)
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(base)
 add_subdirectory(blocks)
-add_subdirectory(freedesktop)
 add_subdirectory(gui)
-add_subdirectory(python)
+add_subdirectory(core)
 add_subdirectory(scripts)
-add_subdirectory(examples)
 
 endif(ENABLE_GRC)

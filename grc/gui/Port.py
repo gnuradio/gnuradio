@@ -17,32 +17,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Element import Element
-from Constants import (
-    PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
-    CONNECTOR_EXTENSION_INCREMENT, CANVAS_GRID_SIZE,
-    PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
-)
-from .. base.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
-import Utils
-import Actions
-import Colors
 import pygtk
 pygtk.require('2.0')
 import gtk
+
+from . import Actions, Colors, Utils
+from .Constants import (
+    PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
+    CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
+)
+from .Element import Element
+from ..core.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
+
+from ..core.Port import Port as _Port
 
 PORT_MARKUP_TMPL="""\
 <span foreground="black" font_desc="$font">$encode($port.get_name())</span>"""
 
 
-class Port(Element):
+class Port(_Port, Element):
     """The graphical port."""
 
-    def __init__(self):
+    def __init__(self, block, n, dir):
         """
         Port contructor.
         Create list of connector coordinates.
         """
+        _Port.__init__(self, block, n, dir)
         Element.__init__(self)
         self.W = self.H = self.w = self.h = 0
         self._connector_coordinate = (0, 0)
@@ -63,7 +64,7 @@ class Port(Element):
         rotation = self.get_rotation()
         #get all sibling ports
         ports = self.get_parent().get_sources_gui() \
-            if self.is_source() else self.get_parent().get_sinks_gui()
+            if self.is_source else self.get_parent().get_sinks_gui()
         ports = filter(lambda p: not p.get_hide(), ports)
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
@@ -81,27 +82,27 @@ class Port(Element):
             index = length-index-1
 
         port_separation = PORT_SEPARATION \
-            if not self.get_parent().has_busses[self.is_source()] \
+            if not self.get_parent().has_busses[self.is_source] \
             else max([port.H for port in ports]) + PORT_SPACING
 
         offset = (self.get_parent().H - (length-1)*port_separation - self.H)/2
         #create areas and connector coordinates
-        if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
+        if (self.is_sink and rotation == 0) or (self.is_source and rotation == 180):
             x = -W
             y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x-1, y+self.H/2)
-        elif (self.is_source() and rotation == 0) or (self.is_sink() and rotation == 180):
+        elif (self.is_source and rotation == 0) or (self.is_sink and rotation == 180):
             x = self.get_parent().W
             y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x+1+W, y+self.H/2)
-        elif (self.is_source() and rotation == 90) or (self.is_sink() and rotation == 270):
+        elif (self.is_source and rotation == 90) or (self.is_sink and rotation == 270):
             y = -W
             x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y-1)
-        elif (self.is_sink() and rotation == 90) or (self.is_source() and rotation == 270):
+        elif (self.is_sink and rotation == 90) or (self.is_source and rotation == 270):
             y = self.get_parent().W
             x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
@@ -144,7 +145,7 @@ class Port(Element):
         Element.draw(
             self, gc, window, bg_color=self._bg_color,
             border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or
-                         self.get_parent().is_dummy_block() and Colors.MISSING_BLOCK_BORDER_COLOR or
+                         self.get_parent().is_dummy_block and Colors.MISSING_BLOCK_BORDER_COLOR or
                          Colors.BORDER_COLOR,
         )
         if not self._areas_list or self._label_hidden():
@@ -176,8 +177,8 @@ class Port(Element):
         Returns:
             the direction in degrees
         """
-        if self.is_source(): return self.get_rotation()
-        elif self.is_sink(): return (self.get_rotation() + 180)%360
+        if self.is_source: return self.get_rotation()
+        elif self.is_sink: return (self.get_rotation() + 180)%360
 
     def get_connector_length(self):
         """

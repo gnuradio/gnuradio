@@ -17,11 +17,21 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
+file(GLOB py_files "*.py")
+
 GR_PYTHON_INSTALL(
-    PROGRAMS gnuradio-companion
-    DESTINATION ${GR_RUNTIME_DIR}
+    FILES ${py_files}
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
     COMPONENT "grc"
 )
 
-add_subdirectory(freedesktop)
+file(GLOB dtd_files "*.dtd")
+
+install(
+    FILES ${dtd_files} default_flow_graph.grc
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
+    COMPONENT "grc"
+)
+
+add_subdirectory(generator)
+add_subdirectory(utils)

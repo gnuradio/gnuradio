@@ -17,12 +17,55 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Element import Element
+import os
+import sys
 
-class Platform(Element):
-    def __init__(self, prefs_file):
+from ..core.Platform import Platform as _Platform
+
+from .Config import Config as _Config
+from .Block import Block as _Block
+from .Connection import Connection as _Connection
+from .Element import Element
+from .FlowGraph import FlowGraph as _FlowGraph
+from .Param import Param as _Param
+from .Port import Port as _Port
+
+
+class Platform(Element, _Platform):
+
+    def __init__(self, *args, **kwargs):
         Element.__init__(self)
+        _Platform.__init__(self, *args, **kwargs)
 
-        self._prefs_file = prefs_file
+        # Ensure conf directories
+        gui_prefs_file = self.config.gui_prefs_file
+        if not os.path.exists(os.path.dirname(gui_prefs_file)):
+            os.mkdir(os.path.dirname(gui_prefs_file))
 
-    def get_prefs_file(self): return self._prefs_file
+        self._move_old_pref_file()
+
+    def get_prefs_file(self):
+        return self.config.gui_prefs_file
+
+    def _move_old_pref_file(self):
+        gui_prefs_file = self.config.gui_prefs_file
+        old_gui_prefs_file = os.environ.get(
+            'GRC_PREFS_PATH', os.path.expanduser('~/.grc'))
+        if gui_prefs_file == old_gui_prefs_file:
+            return  # prefs file overridden with env var
+        if os.path.exists(old_gui_prefs_file) and not os.path.exists(gui_prefs_file):
+            try:
+                import shutil
+                shutil.move(old_gui_prefs_file, gui_prefs_file)
+            except Exception as e:
+                print >> sys.stderr, e
+
+    ##############################################
+    # Constructors
+    ##############################################
+    FlowGraph = _FlowGraph
+    Connection = _Connection
+    Block = _Block
+    Port = _Port
+    Param = _Param
+    Config = _Config

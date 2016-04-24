@@ -17,26 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+
+import gobject
+import gtk
 import os
 import subprocess
-from threading import Thread
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
-
-from .. base import ParseXML, Constants
-from .. python.Constants import XTERM_EXECUTABLE
-
-from . import Dialogs, Messages, Preferences, Actions
-from .ParserErrorsDialog import ParserErrorsDialog
-from .MainWindow import MainWindow
-from .PropsDialog import PropsDialog
+from . import Dialogs, Preferences, Actions, Executor, Constants
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveReportsFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
-from .Constants import DEFAULT_CANVAS_SIZE, IMAGE_FILE_EXTENSION, GR_PREFIX
+from .MainWindow import MainWindow
+from .ParserErrorsDialog import ParserErrorsDialog
+from .PropsDialog import PropsDialog
+
+from ..core import ParseXML, Messages
 
 gobject.threads_init()
 
@@ -74,8 +69,6 @@ class ActionHandler:
         #initialize
         self.init_file_paths = file_paths
         Actions.APPLICATION_INITIALIZE()
-        #enter the mainloop
-        gtk.main()
 
     def _handle_key_press(self, widget, event):
         """
@@ -233,7 +226,7 @@ class ActionHandler:
                             if y < y_min:
                                 y_min = y
 
-                            for connection in block.get_connections():
+                            for connection in block.connections:
 
                                 # Get id of connected blocks
                                 source_id = connection.get_source().get_parent().get_id()
@@ -376,7 +369,8 @@ class ActionHandler:
         # Window stuff
         ##################################################
         elif action == Actions.ABOUT_WINDOW_DISPLAY:
-            Dialogs.AboutDialog(self.get_flow_graph().get_parent())
+            platform = self.get_flow_graph().get_parent()
+            Dialogs.AboutDialog(platform.config)
         elif action == Actions.HELP_WINDOW_DISPLAY:
             Dialogs.HelpDialog()
         elif action == Actions.TYPES_WINDOW_DISPLAY:
@@ -492,12 +486,13 @@ class ActionHandler:
                     self.main_window.menu_bar.refresh_submenus()
 
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
-            file_paths = OpenQSSFileDialog(GR_PREFIX + '/share/gnuradio/themes/').run()
+            file_paths = OpenQSSFileDialog(self.platform.config.install_prefix +
+                                           '/share/gnuradio/themes/').run()
             if file_paths:
                 try:
-                    from gnuradio import gr
-                    gr.prefs().set_string("qtgui", "qss", file_paths[0])
-                    gr.prefs().save()
+                    prefs = self.platform.config.prefs
+                    prefs.set_string("qtgui", "qss", file_paths[0])
+                    prefs.save()
                 except Exception as e:
                     Messages.send("Failed to save QSS preference: " + str(e))
         elif action == Actions.FLOW_GRAPH_CLOSE:
@@ -527,7 +522,7 @@ class ActionHandler:
             file_path, background_transparent = SaveScreenShotDialog(self.get_page().get_file_path()).run()
             if file_path is not None:
                 pixbuf = self.get_flow_graph().get_drawing_area().get_screenshot(background_transparent)
-                pixbuf.save(file_path, IMAGE_FILE_EXTENSION[1:])
+                pixbuf.save(file_path, Constants.IMAGE_FILE_EXTENSION[1:])
         ##################################################
         # Gen/Exec/Stop
         ##################################################
@@ -545,12 +540,13 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not self.get_page().get_proc():
                 Actions.FLOW_GRAPH_GEN()
-                if Preferences.xterm_missing() != XTERM_EXECUTABLE:
-                    if not os.path.exists(XTERM_EXECUTABLE):
-                        Dialogs.MissingXTermDialog(XTERM_EXECUTABLE)
-                    Preferences.xterm_missing(XTERM_EXECUTABLE)
+                xterm = self.platform.config.xterm_executable
+                if Preferences.xterm_missing() != xterm:
+                    if not os.path.exists(xterm):
+                        Dialogs.MissingXTermDialog(xterm)
+                    Preferences.xterm_missing(xterm)
                 if self.get_page().get_saved() and self.get_page().get_file_path():
-                    ExecFlowGraphThread(self)
+                    Executor.ExecFlowGraphThread(self)
         elif action == Actions.FLOW_GRAPH_KILL:
             if self.get_page().get_proc():
                 try:
@@ -563,7 +559,8 @@ class ActionHandler:
             self.platform.load_blocks()
             self.main_window.btwin.clear()
             self.platform.load_block_tree(self.main_window.btwin)
-            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(ParseXML.xml_failures))
+            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(
+                ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
             # Force a redraw of the graph, by getting the current state and re-importing it
             self.main_window.update_pages()
@@ -638,7 +635,7 @@ class ActionHandler:
         self.main_window.update()
         try: #set the size of the flow graph area (if changed)
             new_size = (self.get_flow_graph().get_option('window_size') or
-                        DEFAULT_CANVAS_SIZE)
+                        self.platform.config.default_canvas_size)
             if self.get_flow_graph().get_size() != tuple(new_size):
                 self.get_flow_graph().set_size(*new_size)
         except: pass
@@ -656,48 +653,3 @@ class ActionHandler:
         Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() is not None)
-
-class ExecFlowGraphThread(Thread):
-    """Execute the flow graph as a new process and wait on it to finish."""
-
-    def __init__ (self, action_handler):
-        """
-        ExecFlowGraphThread constructor.
-
-        Args:
-            action_handler: an instance of an ActionHandler
-        """
-        Thread.__init__(self)
-        self.update_exec_stop = action_handler.update_exec_stop
-        self.flow_graph = action_handler.get_flow_graph()
-        #store page and dont use main window calls in run
-        self.page = action_handler.get_page()
-        #get the popen
-        try:
-            self.p = self.page.get_generator().get_popen()
-            self.page.set_proc(self.p)
-            #update
-            self.update_exec_stop()
-            self.start()
-        except Exception, e:
-            Messages.send_verbose_exec(str(e))
-            Messages.send_end_exec()
-
-    def run(self):
-        """
-        Wait on the executing process by reading from its stdout.
-        Use gobject.idle_add when calling functions that modify gtk objects.
-        """
-        #handle completion
-        r = "\n"
-        while r:
-            gobject.idle_add(Messages.send_verbose_exec, r)
-            r = os.read(self.p.stdout.fileno(), 1024)
-        self.p.poll()
-        gobject.idle_add(self.done)
-
-    def done(self):
-        """Perform end of execution tasks."""
-        Messages.send_end_exec(self.p.returncode)
-        self.page.set_proc(None)
-        self.update_exec_stop()
