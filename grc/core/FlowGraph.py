@@ -587,7 +587,7 @@ def _dummy_block_add_port(block, key, dir):
     """ This is so ugly... Add a port to a dummy-field block """
     port_n = odict({'name': '?', 'key': key, 'type': ''})
     port = block.get_parent().get_parent().Port(block=block, n=port_n, dir=dir)
-    if port.is_source():
+    if port.is_source:
         block.get_sources().append(port)
     else:
         block.get_sinks().append(port)
