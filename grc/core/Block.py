@@ -27,6 +27,7 @@ from . Constants import (
     BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI,
     ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB,
     BLOCK_FLAG_THROTTLE, BLOCK_FLAG_DISABLE_BYPASS,
+    BLOCK_FLAG_DEPRECATED,
     BLOCK_ENABLED, BLOCK_BYPASSED, BLOCK_DISABLED
 )
 from . Element import Element
@@ -625,6 +626,10 @@ class Block(Element):
 
     def bypass_disabled(self):
         return BLOCK_FLAG_DISABLE_BYPASS in self._flags
+
+    @property
+    def is_deprecated(self):
+        return BLOCK_FLAG_DEPRECATED in self._flags
 
     ##############################################
     # Access Params

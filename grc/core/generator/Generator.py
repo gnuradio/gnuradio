@@ -145,6 +145,10 @@ class TopBlockGenerator(object):
             filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
             lambda b: b.get_id(), _get_block_sort_text
         )
+        deprecated_block_keys = set(block.get_name() for block in blocks if block.is_deprecated)
+        for key in deprecated_block_keys:
+            Messages.send_warning("The block {!r} is deprecated.".format(key))
+
         # List of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks_all)
 
