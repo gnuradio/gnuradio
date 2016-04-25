@@ -61,12 +61,12 @@ self.\$(id).set_subdev_spec(\$sd_spec$(m), $m)
 \#end if
 ########################################################################
 #end for
+self.\$(id).set_samp_rate(\$samp_rate)
 \#if \$sync() == 'sync'
 self.\$(id).set_time_unknown_pps(uhd.time_spec())
 \#elif \$sync() == 'pc_clock'
 self.\$(id).set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
 \#end if
-self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
 self.\$(id).set_center_freq(\$center_freq$(n), $n)

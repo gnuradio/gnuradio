@@ -149,7 +149,7 @@ namespace gr {
       if(!error) {
         {
           boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
-          if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
+          if(d_eof && (bytes_transferred == 0)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
             d_residual = WORK_DONE;
