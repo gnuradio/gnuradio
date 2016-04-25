@@ -64,31 +64,13 @@ class Block(Element, _Block):
         Add graphics related params to the block.
         """
         _Block.__init__(self, flow_graph, n)
+        self.W = self.H = 0
+        self._add_param(key='_coordinate', name='GUI Coordinate', value='(0, 0)',
+                        hide='all')
+        self._add_param(key='_rotation', name='GUI Rotation', value='0',
+                        hide='all')
 
-        self.W = 0
-        self.H = 0
-        #add the position param
-        self.get_params().append(self.get_parent().get_parent().Param(
-            block=self,
-            n=odict({
-                'name': 'GUI Coordinate',
-                'key': '_coordinate',
-                'type': 'raw',
-                'value': '(0, 0)',
-                'hide': 'all',
-            })
-        ))
-        self.get_params().append(self.get_parent().get_parent().Param(
-            block=self,
-            n=odict({
-                'name': 'GUI Rotation',
-                'key': '_rotation',
-                'type': 'raw',
-                'value': '0',
-                'hide': 'all',
-            })
-        ))
-        Element.__init__(self)
+        Element.__init__(self)  # needs the params
         self._comment_pixmap = None
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
         self.has_busses = [False, False]  # source, sink

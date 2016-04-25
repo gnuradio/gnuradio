@@ -59,183 +59,121 @@ class Block(Element):
         Returns:
             block a new block
         """
-        # Grab the data
-        self._doc = (n.find('doc') or '').strip('\n').replace('\\\n', '')
-        self._imports = map(lambda i: i.strip(), n.findall('import'))
-        self._make = n.find('make')
-        self._var_make = n.find('var_make')
-        self._checks = n.findall('check')
-        self._callbacks = n.findall('callback')
-        self._bus_structure_source = n.find('bus_structure_source') or ''
-        self._bus_structure_sink = n.find('bus_structure_sink') or ''
-        self.port_counters = [itertools.count(), itertools.count()]
-
-        # Build the block
         Element.__init__(self, flow_graph)
-
-        # Grab the data
-        params = n.findall('param')
-        sources = n.findall('source')
-        sinks = n.findall('sink')
         self._name = n.find('name')
         self._key = n.find('key')
         self._category = n.find('category') or ''
         self._flags = n.find('flags') or ''
+
         # Backwards compatibility
         if n.find('throttle') and BLOCK_FLAG_THROTTLE not in self._flags:
             self._flags += BLOCK_FLAG_THROTTLE
+
+        self._doc = (n.find('doc') or '').strip('\n').replace('\\\n', '')
+        self._imports = map(lambda i: i.strip(), n.findall('import'))
+        self._make = n.find('make')
+        self._var_make = n.find('var_make')
+        self._var_value = n.find('var_value') or '$value'
+        self._checks = n.findall('check')
+        self._callbacks = n.findall('callback')
+
         self._grc_source = n.find('grc_source') or ''
         self._block_wrapper_path = n.find('block_wrapper_path')
-        self._bussify_sink = n.find('bus_sink')
-        self._bussify_source = n.find('bus_source')
-        self._var_value = n.find('var_value') or '$value'
+
+        params_n = n.findall('param')
+        sources_n = n.findall('source')
+        sinks_n = n.findall('sink')
 
         # Get list of param tabs
         n_tabs = n.find('param_tab_order') or None
         self._param_tab_labels = n_tabs.findall('tab') if n_tabs is not None else [DEFAULT_PARAM_TAB]
+        self._params = []
+        self._init_params(
+            params_n=params_n,
+            has_sinks=len(sinks_n),
+            has_sources=len(sources_n)
+        )
 
-        # Create the param objects
-        self._params = list()
+        self.port_counters = [itertools.count(), itertools.count()]
+        self._sources = self._init_ports(sources_n, direction='source')
+        self._sinks = self._init_ports(sinks_n, direction='sink')
 
-        # Add the id param
-        self.get_params().append(self.get_parent().get_parent().Param(
-            block=self,
-            n=odict({
-                'name': 'ID',
-                'key': 'id',
-                'type': 'id',
-            })
-        ))
-        self.get_params().append(self.get_parent().get_parent().Param(
-            block=self,
-            n=odict({
-                'name': 'Enabled',
-                'key': '_enabled',
-                'type': 'raw',
-                'value': 'True',
-                'hide': 'all',
-            })
-        ))
-        for param in itertools.imap(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
-            key = param.get_key()
-            # Test against repeated keys
-            if key in self.get_param_keys():
-                raise Exception('Key "{}" already exists in params'.format(key))
-            # Store the param
-            self.get_params().append(param)
-        # Create the source objects
-        self._sources = list()
-        for source in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='source'), sources):
-            key = source.get_key()
-            # Test against repeated keys
-            if key in self.get_source_keys():
-                raise Exception('Key "{}" already exists in sources'.format(key))
-            # Store the port
-            self.get_sources().append(source)
-        self.back_ofthe_bus(self.get_sources())
-        # Create the sink objects
-        self._sinks = list()
-        for sink in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='sink'), sinks):
-            key = sink.get_key()
-            # Test against repeated keys
-            if key in self.get_sink_keys():
-                raise Exception('Key "{}" already exists in sinks'.format(key))
-            # Store the port
-            self.get_sinks().append(sink)
-        self.back_ofthe_bus(self.get_sinks())
+        self._epy_source_hash = -1  # for epy blocks
+        self._epy_reload_error = None
+
+        self.back_ofthe_bus(self._sources)
+        self.back_ofthe_bus(self._sinks)
         self.current_bus_structure = {'source': '', 'sink': ''}
+        self._bus_structure_source = n.find('bus_structure_source') or ''
+        self._bus_structure_sink = n.find('bus_structure_sink') or ''
+        self._bussify_sink = n.find('bus_sink')
+        self._bussify_source = n.find('bus_source')
+        if self._bussify_sink:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+        if self._bussify_source:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+
+    def _add_param(self, key, name, value='', type='raw', **kwargs):
+        n = odict({'key': key, 'name': name, 'value': value, 'type': type})
+        n.update(kwargs)
+        param = self.get_parent().get_parent().Param(block=self, n=n)
+        self._params.append(param)
+
+    def _init_params(self, params_n, has_sources, has_sinks):
+        self._add_param(key='id', name='ID', type='id')
+        self._add_param(key='_enabled', name='Enabled', value='True', type='raw', hide='all')
 
         # Virtual source/sink and pad source/sink blocks are
         # indistinguishable from normal GR blocks. Make explicit
         # checks for them here since they have no work function or
         # buffers to manage.
-        self.is_virtual_or_pad = self._key in (
+        self.is_virtual_or_pad = is_virtual_or_pad = self._key in (
             "virtual_source", "virtual_sink", "pad_source", "pad_sink")
-        self.is_variable = self._key.startswith('variable')
+        self.is_variable = is_variable = self._key.startswith('variable')
         self.is_import = (self._key == 'import')
 
         # Disable blocks that are virtual/pads or variables
         if self.is_virtual_or_pad or self.is_variable:
             self._flags += BLOCK_FLAG_DISABLE_BYPASS
 
-        if not (self.is_virtual_or_pad or self.is_variable or self._key == 'options'):
-            self.get_params().append(self.get_parent().get_parent().Param(
-                block=self,
-                n=odict({'name': 'Block Alias',
-                         'key': 'alias',
-                         'type': 'string',
-                         'hide': 'part',
-                         'tab': ADVANCED_PARAM_TAB
-                         })
-            ))
+        if not (is_virtual_or_pad or is_variable or self._key == 'options'):
+            self._add_param(key='alias', name='Block Alias', type='string',
+                            hide='part', tab=ADVANCED_PARAM_TAB)
 
-        if (len(sources) or len(sinks)) and not self.is_virtual_or_pad:
-            self.get_params().append(self.get_parent().get_parent().Param(
-                    block=self,
-                    n=odict({'name': 'Core Affinity',
-                             'key': 'affinity',
-                             'type': 'int_vector',
-                             'hide': 'part',
-                             'tab': ADVANCED_PARAM_TAB
-                             })
-                    ))
-        if len(sources) and not self.is_virtual_or_pad:
-            self.get_params().append(self.get_parent().get_parent().Param(
-                    block=self,
-                    n=odict({'name': 'Min Output Buffer',
-                             'key': 'minoutbuf',
-                             'type': 'int',
-                             'hide': 'part',
-                             'value': '0',
-                             'tab': ADVANCED_PARAM_TAB
-                             })
-                    ))
-            self.get_params().append(self.get_parent().get_parent().Param(
-                    block=self,
-                    n=odict({'name': 'Max Output Buffer',
-                             'key': 'maxoutbuf',
-                             'type': 'int',
-                             'hide': 'part',
-                             'value': '0',
-                             'tab': ADVANCED_PARAM_TAB
-                             })
-                    ))
+        if not is_virtual_or_pad and (has_sources or has_sinks):
+            self._add_param(key='affinity', name='Core Affinity', type='int_vector',
+                            hide='part', tab=ADVANCED_PARAM_TAB)
 
-        self.get_params().append(self.get_parent().get_parent().Param(
-                block=self,
-                n=odict({'name': 'Comment',
-                         'key': 'comment',
-                         'type': '_multiline',
-                         'hide': 'part',
-                         'value': '',
-                         'tab': ADVANCED_PARAM_TAB
-                         })
-                ))
+        if not is_virtual_or_pad and has_sources:
+            self._add_param(key='minoutbuf', name='Min Output Buffer', type='int',
+                            hide='part', value='0', tab=ADVANCED_PARAM_TAB)
+            self._add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
+                            hide='part', value='0', tab=ADVANCED_PARAM_TAB)
 
-        self._epy_source_hash = -1  # for epy blocks
-        self._epy_reload_error = None
+        param_keys = set(param.get_key() for param in self._params)
+        for param_n in params_n:
+            param = self.get_parent().get_parent().Param(block=self, n=param_n)
+            key = param.get_key()
+            if key in param_keys:
+                raise Exception('Key "{}" already exists in params'.format(key))
+            param_keys.add(key)
+            self.get_params().append(param)
 
-        if self._bussify_sink:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        if self._bussify_source:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+        self._add_param(key='comment', name='Comment', type='_multiline', hide='part',
+                        value='', tab=ADVANCED_PARAM_TAB)
 
-    def get_bus_structure(self, direction):
-        if direction == 'source':
-            bus_structure = self._bus_structure_source
-        else:
-            bus_structure = self._bus_structure_sink
-
-        bus_structure = self.resolve_dependencies(bus_structure)
-
-        if not bus_structure:
-            return ''  # TODO: Don't like empty strings. should change this to None eventually
-
-        try:
-            clean_bus_structure = self.get_parent().evaluate(bus_structure)
-            return clean_bus_structure
-        except:
-            return ''
+    def _init_ports(self, ports_n, direction):
+        port_cls = self.get_parent().get_parent().Port
+        ports = []
+        port_keys = set()
+        for port_n in ports_n:
+            port = port_cls(block=self, n=port_n, dir=direction)
+            key = port.get_key()
+            if key in port_keys:
+                raise Exception('Key "{}" already exists in {}'.format(key, direction))
+            port_keys.add(key)
+            ports.append(port)
+        return ports
 
     def validate(self):
         """
@@ -316,34 +254,6 @@ class Block(Element):
                 domain = port.get_domain()
                 port._key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
-
-    def port_controller_modify(self, direction):
-        """
-        Change the port controller.
-
-        Args:
-            direction: +1 or -1
-
-        Returns:
-            true for change
-        """
-        changed = False
-        # Concat the nports string from the private nports settings of all ports
-        nports_str = ' '.join([port._nports for port in self.get_ports()])
-        # Modify all params whose keys appear in the nports string
-        for param in self.get_params():
-            if param.is_enum() or param.get_key() not in nports_str:
-                continue
-            # Try to increment the port controller by direction
-            try:
-                value = param.get_evaluated()
-                value = value + direction
-                if 0 < value:
-                    param.set_value(value)
-                    changed = True
-            except:
-                pass
-        return changed
 
     def get_doc(self):
         platform = self.get_parent().get_parent()
@@ -488,13 +398,6 @@ class Block(Element):
         update_ports('in', self.get_sinks(), blk_io.sinks, 'sink')
         update_ports('out', self.get_sources(), blk_io.sources, 'source')
         self.rewrite()
-
-    def back_ofthe_bus(self, portlist):
-        portlist.sort(key=lambda p: p._type == 'bus')
-
-    def filter_bus_port(self, ports):
-        buslist = [p for p in ports if p._type == 'bus']
-        return buslist or ports
 
     # Main functions to get and set the block state
     # Also kept get_enabled and set_enabled to keep compatibility
@@ -656,9 +559,6 @@ class Block(Element):
     ##############################################
     # Access Sinks
     ##############################################
-    def get_sink_keys(self):
-        return _get_keys(self._sinks)
-
     def get_sink(self, key):
         return _get_elem(self._sinks, key)
 
@@ -671,9 +571,6 @@ class Block(Element):
     ##############################################
     # Access Sources
     ##############################################
-    def get_source_keys(self):
-        return _get_keys(self._sources)
-
     def get_source(self, key):
         return _get_elem(self._sources, key)
 
@@ -685,6 +582,10 @@ class Block(Element):
 
     def get_connections(self):
         return sum([port.get_connections() for port in self.get_ports()], [])
+
+    ##############################################
+    # Resolve
+    ##############################################
 
     def resolve_dependencies(self, tmpl):
         """
@@ -740,6 +641,128 @@ class Block(Element):
                 pass
         return changed
 
+    def port_controller_modify(self, direction):
+        """
+        Change the port controller.
+
+        Args:
+            direction: +1 or -1
+
+        Returns:
+            true for change
+        """
+        changed = False
+        # Concat the nports string from the private nports settings of all ports
+        nports_str = ' '.join([port._nports for port in self.get_ports()])
+        # Modify all params whose keys appear in the nports string
+        for param in self.get_params():
+            if param.is_enum() or param.get_key() not in nports_str:
+                continue
+            # Try to increment the port controller by direction
+            try:
+                value = param.get_evaluated()
+                value = value + direction
+                if 0 < value:
+                    param.set_value(value)
+                    changed = True
+            except:
+                pass
+        return changed
+
+    ##############################################
+    # Import/Export Methods
+    ##############################################
+    def export_data(self):
+        """
+        Export this block's params to nested data.
+
+        Returns:
+            a nested data odict
+        """
+        n = odict()
+        n['key'] = self.get_key()
+        n['param'] = map(lambda p: p.export_data(), sorted(self.get_params(), key=str))
+        if 'bus' in map(lambda a: a.get_type(), self.get_sinks()):
+            n['bus_sink'] = str(1)
+        if 'bus' in map(lambda a: a.get_type(), self.get_sources()):
+            n['bus_source'] = str(1)
+        return n
+
+    def import_data(self, n):
+        """
+        Import this block's params from nested data.
+        Any param keys that do not exist will be ignored.
+        Since params can be dynamically created based another param,
+        call rewrite, and repeat the load until the params stick.
+        This call to rewrite will also create any dynamic ports
+        that are needed for the connections creation phase.
+
+        Args:
+            n: the nested data odict
+        """
+        params_n = n.findall('param')
+        params = dict((param.get_key(), param) for param in self._params)
+
+        def get_hash():
+            return hash(tuple(map(hash, self._params)))
+
+        my_hash = 0
+        while get_hash() != my_hash:
+            for param_n in params_n:
+                key = param_n.find('key')
+                value = param_n.find('value')
+                try:
+                    params[key].set_value(value)
+                except KeyError:
+                    continue
+            # Store hash and call rewrite
+            my_hash = get_hash()
+            self.rewrite()
+
+        self._import_bus_stuff(n)
+
+    ##############################################
+    # Bus ports stuff
+    ##############################################
+
+    def get_bus_structure(self, direction):
+        if direction == 'source':
+            bus_structure = self._bus_structure_source
+        else:
+            bus_structure = self._bus_structure_sink
+
+        bus_structure = self.resolve_dependencies(bus_structure)
+
+        if not bus_structure:
+            return ''  # TODO: Don't like empty strings. should change this to None eventually
+
+        try:
+            clean_bus_structure = self.get_parent().evaluate(bus_structure)
+            return clean_bus_structure
+        except:
+            return ''
+
+    def back_ofthe_bus(self, portlist):
+        portlist.sort(key=lambda p: p._type == 'bus')
+
+    def filter_bus_port(self, ports):
+        buslist = [p for p in ports if p._type == 'bus']
+        return buslist or ports
+
+    def _import_bus_stuff(self, n):
+        bussinks = n.findall('bus_sink')
+        if len(bussinks) > 0 and not self._bussify_sink:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+        elif len(bussinks) > 0:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+        bussrcs = n.findall('bus_source')
+        if len(bussrcs) > 0 and not self._bussify_source:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+        elif len(bussrcs) > 0:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+
     def form_bus_structure(self, direc):
         if direc == 'source':
             get_p = self.get_sources
@@ -794,62 +817,3 @@ class Block(Element):
             for elt in get_p_gui():
                 get_p().remove(elt)
             self.current_bus_structure[direc] = ''
-
-    ##############################################
-    # Import/Export Methods
-    ##############################################
-    def export_data(self):
-        """
-        Export this block's params to nested data.
-
-        Returns:
-            a nested data odict
-        """
-        n = odict()
-        n['key'] = self.get_key()
-        n['param'] = map(lambda p: p.export_data(), sorted(self.get_params(), key=str))
-        if 'bus' in map(lambda a: a.get_type(), self.get_sinks()):
-            n['bus_sink'] = str(1)
-        if 'bus' in map(lambda a: a.get_type(), self.get_sources()):
-            n['bus_source'] = str(1)
-        return n
-
-    def get_hash(self):
-        return hash(tuple(map(hash, self.get_params())))
-
-    def import_data(self, n):
-        """
-        Import this block's params from nested data.
-        Any param keys that do not exist will be ignored.
-        Since params can be dynamically created based another param,
-        call rewrite, and repeat the load until the params stick.
-        This call to rewrite will also create any dynamic ports
-        that are needed for the connections creation phase.
-
-        Args:
-            n: the nested data odict
-        """
-        my_hash = 0
-        while self.get_hash() != my_hash:
-            params_n = n.findall('param')
-            for param_n in params_n:
-                key = param_n.find('key')
-                value = param_n.find('value')
-                # The key must exist in this block's params
-                if key in self.get_param_keys():
-                    self.get_param(key).set_value(value)
-            # Store hash and call rewrite
-            my_hash = self.get_hash()
-            self.rewrite()
-        bussinks = n.findall('bus_sink')
-        if len(bussinks) > 0 and not self._bussify_sink:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        elif len(bussinks) > 0:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        bussrcs = n.findall('bus_source')
-        if len(bussrcs) > 0 and not self._bussify_source:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
-        elif len(bussrcs) > 0:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
