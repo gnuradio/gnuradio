@@ -633,6 +633,8 @@ namespace gr {
      */
     void system_handler(pmt::pmt_t msg);
 
+    void set_log_level(std::string level);
+
 	/*!
      * \brief returns true when execution has completed due to a message connection
     */

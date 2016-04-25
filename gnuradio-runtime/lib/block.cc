@@ -715,6 +715,12 @@ namespace gr {
   }
 
   void
+  block::set_log_level(std::string level)
+  {
+    logger_set_level(d_logger, level);
+  }
+
+  void
   block::notify_msg_neighbors()
   {
     size_t len = pmt::length(d_message_subscribers);
