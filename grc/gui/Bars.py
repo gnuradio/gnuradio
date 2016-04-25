@@ -189,7 +189,7 @@ class SubMenuCreator(object):
                 item = Actions.FLOW_GRAPH_NEW.create_menu_item()
                 item.set_label(name)
             else:
-                item = gtk.MenuItem(name)
+                item = gtk.MenuItem(name, use_underline=False)
                 item.connect('activate', self.callback_adaptor, (action, key))
             menu.append(item)
         menu.show_all()
@@ -202,7 +202,7 @@ class SubMenuCreator(object):
         recent_files = Preferences.get_recent_files()
         if len(recent_files) > 0:
             for i, file_name in enumerate(recent_files):
-                item = gtk.MenuItem("%d. %s" % (i+1, file_name))
+                item = gtk.MenuItem("%d. %s" % (i+1, file_name), use_underline=False)
                 item.connect('activate', self.callback_adaptor,
                              (action, file_name))
                 menu.append(item)
