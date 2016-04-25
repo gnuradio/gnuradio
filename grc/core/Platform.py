@@ -113,6 +113,8 @@ class Platform(Element):
             flow_graph.validate()
             if not flow_graph.is_valid():
                 raise Exception('Flowgraph invalid')
+            if not flow_graph.get_option('generate_options').startswith('hb'):
+                raise Exception('Not a hier block')
         except Exception as e:
             Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
             return False
