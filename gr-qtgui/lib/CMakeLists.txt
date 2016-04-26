@@ -43,6 +43,7 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/ConstellationDisplayPlot.h
     ${qtgui_mod_includedir}/HistogramDisplayPlot.h
     ${qtgui_mod_includedir}/VectorDisplayPlot.h
+    edit_box_msg_impl.h
 )
 QT4_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
 QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
@@ -99,6 +100,7 @@ set(qtgui_sources
     ber_sink_b_impl.cc
     vectordisplayform.cc
     vector_sink_f_impl.cc
+    edit_box_msg_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
