@@ -25,15 +25,13 @@ from gi.repository import Gtk, PangoCairo
 from . import Actions, Colors, Utils
 from .Constants import (
     PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
-    CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH, PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
+    CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH,
+    PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
 )
 from .Element import Element
 from ..core.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 
 from ..core.Port import Port as _Port
-
-PORT_MARKUP_TMPL="""\
-<span foreground="black" font_desc="$font">$encode($port.get_name())</span>"""
 
 
 class Port(_Port, Element):
@@ -117,7 +115,9 @@ class Port(_Port, Element):
 
     def create_labels(self):
         """Create the labels for the socket."""
-        self.layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self, font=PORT_FONT))
+        self.layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
+            name=Utils.encode(self.get_name()), font=PORT_FONT
+        ))
 
     def draw(self, widget, cr):
         """

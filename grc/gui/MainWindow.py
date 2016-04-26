@@ -36,34 +36,6 @@ from .NotebookPage import NotebookPage
 
 from ..core import Messages
 
-
-MAIN_WINDOW_TITLE_TMPL = """\
-#if not $saved
-*#slurp
-#end if
-#if $basename
-$basename#slurp
-#else
-$new_flowgraph_title#slurp
-#end if
-#if $read_only
- (read only)#slurp
-#end if
-#if $dirname
- - $dirname#slurp
-#end if
- - $platform_name#slurp
-"""
-
-PAGE_TITLE_MARKUP_TMPL = """\
-#set $foreground = $saved and 'black' or 'red'
-<span foreground="$foreground">$encode($title or $new_flowgraph_title)</span>#slurp
-#if $read_only
- (ro)#slurp
-#end if
-"""
-
-
 ############################################################
 # Main window
 ############################################################
@@ -351,32 +323,27 @@ class MainWindow(Gtk.Window):
         Set the title of the main window.
         Set the titles on the page tabs.
         Show/hide the console window.
-
-        Args:
-            title: the window title
         """
-        Gtk.Window.set_title(self, Utils.parse_template(MAIN_WINDOW_TITLE_TMPL,
-                basename=os.path.basename(self.get_page().get_file_path()),
-                dirname=os.path.dirname(self.get_page().get_file_path()),
-                new_flowgraph_title=NEW_FLOGRAPH_TITLE,
-                read_only=self.get_page().get_read_only(),
-                saved=self.get_page().get_saved(),
-                platform_name=self._platform.config.name,
-            )
-        )
-        #set tab titles
-        for page in self.get_pages(): page.set_markup(
-            Utils.parse_template(PAGE_TITLE_MARKUP_TMPL,
-                #get filename and strip out file extension
-                title=os.path.splitext(os.path.basename(page.get_file_path()))[0],
-                read_only=page.get_read_only(), saved=page.get_saved(),
-                new_flowgraph_title=NEW_FLOGRAPH_TITLE,
-            )
-        )
-        #show/hide notebook tabs
+        page = self.get_page()
+
+        basename = os.path.basename(page.get_file_path())
+        dirname = os.path.dirname(page.get_file_path())
+        Gtk.Window.set_title(self, ''.join((
+            '*' if not page.get_saved() else '', basename if basename else NEW_FLOGRAPH_TITLE,
+            '(read only)' if page.get_read_only() else '', ' - ',
+            dirname if dirname else self._platform.config.name,
+        )))
+        # set tab titles
+        for page in self.get_pages():
+            file_name = os.path.splitext(os.path.basename(page.get_file_path()))[0]
+            page.set_markup('<span foreground="{foreground}">{title}{ro}</span>'.format(
+                foreground='black' if page.get_saved() else 'red', ro=' (ro)' if page.get_read_only() else '',
+                title=Utils.encode(file_name or NEW_FLOGRAPH_TITLE),
+            ))
+        # show/hide notebook tabs
         self.notebook.set_show_tabs(len(self.get_pages()) > 1)
 
-         # Need to update the variable window when changing
+        # Need to update the variable window when changing
         self.vars.update_gui()
 
     def update_pages(self):

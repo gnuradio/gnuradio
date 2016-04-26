@@ -63,22 +63,39 @@ class InputParam(Gtk.HBox):
         """
         Set the markup, color, tooltip, show/hide.
         """
-        #set the markup
-        has_cb = \
-            hasattr(self.param.get_parent(), 'get_callbacks') and \
-            filter(lambda c: self.param.get_key() in c, self.param.get_parent()._callbacks)
-        self.set_markup(Utils.parse_template(PARAM_LABEL_MARKUP_TMPL,
-            param=self.param, has_cb=has_cb,
-            modified=self._have_pending_changes))
-        #set the color
+        param = self.param
+
+        has_callback = \
+            hasattr(param.get_parent(), 'get_callbacks') and \
+            any(param.get_key() in callback for callback in param.get_parent()._callbacks)
+
+        self.set_markup('<span underline="{line}" foreground="{color}" font_desc="Sans 9">{label}</span>'.format(
+            line='low' if has_callback else 'none',
+            color='blue' if self._have_pending_changes else
+                  'black' if param.is_valid() else
+                  'red',
+            label=Utils.encode(self.param.get_name())
+        ))
         self.set_color(self.param.get_color())
-        #set the tooltip
-        self.set_tooltip_text(
-            Utils.parse_template(TIP_MARKUP_TMPL, param=self.param).strip(),
-        )
-        #show/hide
-        if self.param.get_hide() == 'all': self.hide_all()
-        else: self.show_all()
+
+        errors = param.get_error_messages()
+        tooltip_lines = ['Key: ' + param.get_key(), 'Type: ' + param.get_type()]
+        if param.is_valid():
+            value = str(param.get_evaluated())
+            if len(value) > 100:
+                value = '{}...{}'.format(value[:50], value[-50:])
+            tooltip_lines.append('Value: ' + value)
+        elif len(errors) == 1:
+            tooltip_lines.append('Error: ' + errors[0])
+        elif len(errors) > 1:
+            tooltip_lines.append('Error:')
+            tooltip_lines.extend(' * ' + msg for msg in errors)
+        self.set_tooltip_text('\n'.join(tooltip_lines))
+
+        if self.param.get_hide() == 'all':
+            self.hide_all()
+        else:
+            self.show_all()
 
     def _mark_changed(self, *args):
         """
@@ -135,13 +152,13 @@ class EntryParam(InputParam):
         need_status_color = self.label not in self.get_children()
         text_color = (
             Colors.PARAM_ENTRY_TEXT_COLOR if not need_status_color else
-            gtk.gdk.color_parse('blue') if self._have_pending_changes else
-            gtk.gdk.color_parse('red') if not self.param.is_valid() else
+            Gtk.gdk.color_parse('blue') if self._have_pending_changes else
+            Gtk.gdk.color_parse('red') if not self.param.is_valid() else
             Colors.PARAM_ENTRY_TEXT_COLOR)
         base_color = (
             Colors.BLOCK_DISABLED_COLOR
             if need_status_color and not self.param.get_parent().get_enabled()
-            else gtk.gdk.color_parse(color)
+            else Gtk.gdk.color_parse(color)
         )
         self._input.modify_base(Gtk.StateType.NORMAL, base_color)
         self._input.modify_text(Gtk.StateType.NORMAL, text_color)
@@ -361,15 +378,6 @@ class FileParam(EntryParam):
         file_dialog.destroy() #destroy the dialog
 
 
-PARAM_MARKUP_TMPL="""\
-#set $foreground = $param.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param).replace('\\n',' '))</span>"""
-
-PARAM_LABEL_MARKUP_TMPL="""\
-#set $foreground = $modified and 'blue' or $param.is_valid() and 'black' or 'red'
-#set $underline = $has_cb and 'low' or 'none'
-<span underline="$underline" foreground="$foreground" font_desc="Sans 9">$encode($param.get_name())</span>"""
-
 TIP_MARKUP_TMPL="""\
 ########################################
 #def truncate(string)
@@ -440,5 +448,7 @@ class Param(Element, _Param):
         Returns:
             a pango markup string
         """
-        return Utils.parse_template(PARAM_MARKUP_TMPL,
-                                    param=self, font=Constants.PARAM_FONT)
+        return '<span foreground="{color}" font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
+            color='black' if self.is_valid() else 'red', font=Constants.PARAM_FONT,
+            label=Utils.encode(self.get_name()), value=Utils.encode(repr(self).replace('\n', ' '))
+        )

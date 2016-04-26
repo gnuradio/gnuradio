@@ -29,10 +29,6 @@ from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, FONT_SIZE
 import Utils
 from gi.repository import Pango
 
-TAB_LABEL_MARKUP_TMPL="""\
-#set $foreground = $valid and 'black' or 'red'
-<span foreground="$foreground">$encode($tab)</span>"""
-
 
 def get_title_label(title):
     """
@@ -46,7 +42,7 @@ def get_title_label(title):
         a gtk object
     """
     label = Gtk.Label()
-    label.set_markup('\n<b><span underline="low">%s</span>:</b>\n'%title)
+    label.set_markup('\n<b><span underline="low">{title}</span>:</b>\n'.format(title))
     hbox = Gtk.HBox()
     hbox.pack_start(label, False, False, padding=11)
     return hbox
@@ -192,7 +188,11 @@ class PropsDialog(Gtk.Dialog):
                     box_all_valid = box_all_valid and param.is_valid()
                     input_widget = param.get_input(self._handle_changed, self._activate_apply)
                     vbox.pack_start(input_widget, input_widget.expand)
-                label.set_markup(Utils.parse_template(TAB_LABEL_MARKUP_TMPL, valid=box_all_valid, tab=tab))
+                label.set_markup(
+                    '<span foreground="{color}">{name}</span>'.format(
+                        color='black' if box_all_valid else 'red', name=Utils.encode(tab)
+                    )
+                )
                 # show params box with new params
                 vbox.show_all()
         # update the errors box

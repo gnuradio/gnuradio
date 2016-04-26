@@ -26,36 +26,26 @@ from gi.repository import GObject
 from . import Actions, Utils
 from .Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
 
-NAME_INDEX = 0
-KEY_INDEX = 1
-DOC_INDEX = 2
+NAME_INDEX, KEY_INDEX, DOC_INDEX = range(3)
 
-DOC_MARKUP_TMPL = """\
-#set $docs = []
-#if $doc.get('')
-    #set $docs += $doc.pop('').splitlines() + ['']
-#end if
-#for b, d in $doc.iteritems()
-    #set $docs += ['--- {0} ---'.format(b)] + d.splitlines() + ['']
-#end for
-#set $len_out = 0
-#for $n, $line in $enumerate($docs[:-1])
-#if $n
 
-#end if
-$encode($line)#slurp
-#set $len_out += $len($line)
-#if $n > 10 or $len_out > 500
-
-...#slurp
-#break
-#end if
-#end for
-#if $len_out == 0
-undocumented#slurp
-#end if"""
-
-CAT_MARKUP_TMPL = """Category: $cat"""
+def _format_doc(doc):
+    docs = []
+    if doc.get(''):
+        docs += doc.pop('').splitlines() + ['']
+    for block_name, docstring in doc.iteritems():
+        docs.append('--- {0} ---'.format(block_name))
+        docs += docstring.splitlines()
+        docs.append('')
+    out = ''
+    for n, line in enumerate(docs[:-1]):
+        if n:
+            out += '\n'
+        out += Utils.encode(line)
+        if n > 10 or len(out) > 500:
+            out += '\n...'
+            break
+    return out or 'undocumented'
 
 
 class BlockTreeWindow(Gtk.VBox):
@@ -159,7 +149,7 @@ class BlockTreeWindow(Gtk.VBox):
                 iter_ = treestore.insert_before(categories[sub_category[:-1]], None)
                 treestore.set_value(iter_, NAME_INDEX, cat_name)
                 treestore.set_value(iter_, KEY_INDEX, '')
-                treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
+                treestore.set_value(iter_, DOC_INDEX, 'Category: ' + Utils.encode(cat_name))
                 categories[sub_category] = iter_
         # add block
         if block is None:
@@ -167,7 +157,7 @@ class BlockTreeWindow(Gtk.VBox):
         iter_ = treestore.insert_before(categories[category], None)
         treestore.set_value(iter_, NAME_INDEX, block.get_name())
         treestore.set_value(iter_, KEY_INDEX, block.get_key())
-        treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
+        treestore.set_value(iter_, DOC_INDEX, _format_doc(block.get_doc()))
 
     def update_docs(self):
         """Update the documentation column of every block"""
@@ -177,8 +167,7 @@ class BlockTreeWindow(Gtk.VBox):
                 return  # category node, no doc string
             key = model.get_value(iter_, KEY_INDEX)
             block = self.platform.blocks[key]
-            doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
-            model.set_value(iter_, DOC_INDEX, doc)
+            model.set_value(iter_, DOC_INDEX, _format_doc(block.get_doc()))
 
         self.treestore.foreach(update_doc)
         self.treestore_search.foreach(update_doc)

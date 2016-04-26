@@ -39,13 +39,6 @@ SAVE_CONSOLE = 'save console'
 SAVE_IMAGE = 'save image'
 OPEN_QSS_THEME = 'open qss theme'
 
-FILE_OVERWRITE_MARKUP_TMPL="""\
-File <b>$encode($filename)</b> Exists!\nWould you like to overwrite the existing file?"""
-
-FILE_DNE_MARKUP_TMPL="""\
-File <b>$encode($filename)</b> Does not Exist!"""
-
-
 
 # File Filters
 def get_flow_graph_files_filter():
@@ -179,7 +172,8 @@ class FileDialog(FileDialogHelper):
             if path.exists(filename): #ask the user to confirm overwrite
                 if MessageDialogHelper(
                     Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, 'Confirm Overwrite!',
-                    Utils.parse_template(FILE_OVERWRITE_MARKUP_TMPL, filename=filename),
+                    'File <b>{filename}</b> Exists!\nWould you like to overwrite the existing file?'
+                    ''.format(filename=Utils.encode(filename)),
                 ) == Gtk.ResponseType.NO: return self.get_rectified_filename()
             return filename
         #############################################
@@ -191,7 +185,7 @@ class FileDialog(FileDialogHelper):
                 if not path.exists(filename): #show a warning and re-run
                     MessageDialogHelper(
                         Gtk.MessageType.WARNING, Gtk.ButtonsType.CLOSE, 'Cannot Open!',
-                        Utils.parse_template(FILE_DNE_MARKUP_TMPL, filename=filename),
+                        'File <b>{filename}</b> Does not Exist!'.format(filename=Utils.encode(filename)),
                     )
                     return self.get_rectified_filename()
             return filenames

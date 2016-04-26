@@ -161,20 +161,16 @@ def MessageDialogHelper(type, buttons, title=None, markup=None, default_response
     return response
 
 
-ERRORS_MARKUP_TMPL="""\
-#for $i, $err_msg in enumerate($errors)
-<b>Error $i:</b>
-$encode($err_msg.replace('\t', '  '))
-
-#end for"""
-
-
-def ErrorsDialog(flowgraph): MessageDialogHelper(
-    type=Gtk.MessageType.ERROR,
-    buttons=Gtk.ButtonsType.CLOSE,
-    title='Flow Graph Errors',
-    markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
-)
+def ErrorsDialog(flowgraph):
+    MessageDialogHelper(
+        type=Gtk.MessageType.ERROR,
+        buttons=Gtk.ButtonsType.CLOSE,
+        title='Flow Graph Errors',
+        markup='\n\n'.join(
+            '<b>Error {num}:</b>\n{msg}'.format(num=i, msg=Utils.encode(msg.replace('\t', '  ')))
+            for i, msg in enumerate(flowgraph.get_error_messages())
+        ),
+    )
 
 
 class AboutDialog(Gtk.AboutDialog):
@@ -208,25 +204,21 @@ def HelpDialog(): MessageDialogHelper(
 
 * See the menu for other keyboard shortcuts.""")
 
-COLORS_DIALOG_MARKUP_TMPL = """\
-<b>Color Mapping</b>
-
-#if $colors
-    #set $max_len = max([len(color[0]) for color in $colors]) + 10
-    #for $title, $color_spec in $colors
-<span background="$color_spec"><tt>$($encode($title).center($max_len))</tt></span>
-    #end for
-#end if
-"""
-
 
 def TypesDialog(platform):
+    colors = platform.get_colors()
+    max_len = 10 + max(len(name) for name, code in colors)
+
+    message = '\n'.join(
+        '<span background="{color}"><tt>{name}</tt></span>'
+        ''.format(color=color, name=Utils.encode(name).center(max_len))
+        for name, color in colors
+    )
     MessageDialogHelper(
         type=Gtk.MessageType.INFO,
         buttons=Gtk.ButtonsType.CLOSE,
-        title='Types',
-        markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL,
-                                    colors=platform.get_colors())
+        title='Types - Color Mapping',
+        markup=message
     )
 
 

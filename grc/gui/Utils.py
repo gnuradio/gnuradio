@@ -25,8 +25,6 @@ from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import GLib
 
-from Cheetah.Template import Template
-
 from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
 
 
@@ -102,28 +100,6 @@ def encode(value):
 
     valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
     return GLib.markup_escape_text(valid_utf8)
-
-
-class TemplateParser(object):
-    def __init__(self):
-        self.cache = {}
-
-    def __call__(self, tmpl_str, **kwargs):
-        """
-        Parse the template string with the given args.
-        Pass in the xml encode method for pango escape chars.
-
-        Args:
-            tmpl_str: the template as a string
-
-        Returns:
-            a string of the parsed template
-        """
-        kwargs['encode'] = encode
-        template = self.cache.setdefault(tmpl_str, Template.compile(tmpl_str))
-        return str(template(namespaces=kwargs))
-
-parse_template = TemplateParser()
 
 
 def align_to_grid(coor, mode=round):

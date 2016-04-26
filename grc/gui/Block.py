@@ -32,27 +32,8 @@ from .Constants import (
 )
 from . Element import Element
 from ..core.Param import num_to_str
-from ..core.utils import odict
 from ..core.utils.complexity import calculate_flowgraph_complexity
 from ..core.Block import Block as _Block
-
-BLOCK_MARKUP_TMPL="""\
-#set $foreground = $block.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="$font"><b>$encode($block.get_name())</b></span>"""
-
-# Includes the additional complexity markup if enabled
-COMMENT_COMPLEXITY_MARKUP_TMPL="""\
-#set $foreground = $block.get_enabled() and '#444' or '#888'
-#if $complexity
-<span foreground="#444" size="medium" font_desc="$font"><b>$encode($complexity)</b></span>#slurp
-#end if
-#if $complexity and $comment
-<span></span>
-#end if
-#if $comment
-<span foreground="$foreground" font_desc="$font">$encode($comment)</span>#slurp
-#end if
-"""
 
 
 class Block(Element, _Block):
@@ -188,14 +169,16 @@ class Block(Element, _Block):
         del self.layouts[:]
         #create the main layout
         layout = Gtk.DrawingArea().create_pango_layout('')
-        self.layouts.append(layout)
-        layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=BLOCK_FONT))
+        layout.set_markup('<span foreground="{foreground}" font_desc="{font}"><b>{name}</b></span>'.format(
+            foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT, name=Utils.encode(self.get_name())
+        ))
         self.label_width, self.label_height = layout.get_pixel_size()
+        self.layouts.append(layout)
         #display the params
         if self.is_dummy_block:
-            markups = [
-                '<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
-            ]
+            markups = ['<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(
+                font=PARAM_FONT, key=self._key
+            )]
         else:
             markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
@@ -237,20 +220,25 @@ class Block(Element, _Block):
         self.create_comment_label()
 
     def create_comment_label(self):
-        comment = self.get_comment()    # Returns None if there are no comments
-        complexity = None
+        markups = []
 
-        # Show the flowgraph complexity on the top block if enabled
+        # Show the flow graph complexity on the top block if enabled
         if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
             complexity = calculate_flowgraph_complexity(self.get_parent())
-            complexity = "Complexity: {}bal".format(num_to_str(complexity))
+            markups.append(
+                '<span foreground="#444" size="medium" font_desc="{font}">'
+                '<b>Complexity: {num}bal</b></span>'.format(num=num_to_str(complexity), font=BLOCK_FONT)
+            )
+        comment = self.get_comment()  # Returns None if there are no comments
+        if comment:
+            if markups:
+                markups.append('<span></span>')
 
+            markups.append('<span foreground="{foreground}" font_desc="{font}">{comment}</span>'.format(
+                foreground='#444' if self.get_enabled() else '#888', font=BLOCK_FONT, comment=Utils.encode(comment)
+            ))
         layout = Gtk.DrawingArea().create_pango_layout('')
-        layout.set_markup(Utils.parse_template(COMMENT_COMPLEXITY_MARKUP_TMPL,
-                                               block=self,
-                                               comment=comment,
-                                               complexity=complexity,
-                                               font=BLOCK_FONT))
+        layout.set_markup(''.join(markups))
 
         # Setup the pixel map. Make sure that layout not empty
         width, height = layout.get_pixel_size()
