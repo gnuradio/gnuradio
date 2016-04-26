@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,24 @@
 #include <qwt_color_map.h>
 #include <qwt_scale_draw.h>
 #include <gnuradio/high_res_timer.h>
+
+namespace gr {
+  namespace qtgui {
+
+    enum data_type_t {
+      INT = 0,
+      FLOAT,
+      DOUBLE,
+      COMPLEX,
+      STRING,
+      INT_VEC,
+      FLOAT_VEC,
+      DOUBLE_VEC,
+      COMPLEX_VEC,
+    };
+
+  } /* namespace qtgui */
+} /* namespace gr */
 
 class FreqOffsetAndPrecisionClass
 {

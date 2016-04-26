@@ -38,6 +38,7 @@ install(FILES
   histogram_sink_f.h
   histogramdisplayform.h
   HistogramDisplayPlot.h
+  edit_box_msg.h
   number_sink.h
   numberdisplayform.h
   plot_raster.h
