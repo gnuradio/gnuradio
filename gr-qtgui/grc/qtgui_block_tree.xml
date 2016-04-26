@@ -55,6 +55,7 @@
       <block>variable_qtgui_push_button</block>
       <block>variable_qtgui_entry</block>
       <block>variable_qtgui_label</block>
+      <block>qtgui_edit_box_msg</block>
     </cat>
   </cat>
 </cat>

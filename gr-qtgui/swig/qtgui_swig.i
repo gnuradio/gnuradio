@@ -37,6 +37,18 @@ namespace gr {
       NUM_GRAPH_VERT,
     };
 
+    enum data_type_t {
+      INT = 0,
+      FLOAT,
+      DOUBLE,
+      COMPLEX,
+      STRING,
+      INT_VEC,
+      FLOAT_VEC,
+      DOUBLE_VEC,
+      COMPLEX_VEC,
+    };
+
   } /* namespace qtgui */
 } /* namespace gr */
 
@@ -75,6 +87,7 @@ enum{
 #include "gnuradio/qtgui/number_sink.h"
 #include "gnuradio/qtgui/ber_sink_b.h"
 #include "gnuradio/qtgui/vector_sink_f.h"
+#include "gnuradio/qtgui/edit_box_msg.h"
 %}
 
 %include "gnuradio/qtgui/sink_c.h"
@@ -92,6 +105,7 @@ enum{
 %include "gnuradio/qtgui/number_sink.h"
 %include "gnuradio/qtgui/ber_sink_b.h"
 %include "gnuradio/qtgui/vector_sink_f.h"
+%include "gnuradio/qtgui/edit_box_msg.h"
 
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_c);
 GR_SWIG_BLOCK_MAGIC2(qtgui, sink_f);
@@ -108,3 +122,4 @@ GR_SWIG_BLOCK_MAGIC2(qtgui, histogram_sink_f);
 GR_SWIG_BLOCK_MAGIC2(qtgui, number_sink);
 GR_SWIG_BLOCK_MAGIC2(qtgui, ber_sink_b);
 GR_SWIG_BLOCK_MAGIC2(qtgui, vector_sink_f);
+GR_SWIG_BLOCK_MAGIC2(qtgui, edit_box_msg);
