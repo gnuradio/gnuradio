@@ -82,12 +82,6 @@ self.\$(id).set_antenna(\$ant$(n), $n)
 self.\$(id).set_bandwidth(\$bw$(n), $n)
 	\#end if
 #if $sourk == 'source'
-	\#if \$lo_export$(n)() and not \$hide_lo_controls()
-self.\$(id).set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
-	\#end if
-    \#if \$lo_source$(n)() and not \$hide_lo_controls()
-self.\$(id).set_lo_source(\$lo_source$(n), uhd.ALL_LOS, $n)
-	\#end if
 	\#if \$dc_offs_enb$(n)()
 self.\$(id).set_auto_dc_offset(\$dc_offs_enb$(n), $n)
 	\#end if
@@ -105,14 +99,6 @@ self.\$(id).set_auto_iq_balance(\$iq_imbal_enb$(n), $n)
 self.\$(id).set_normalized_gain(\$gain$(n), $n)
 \#else
 self.\$(id).set_gain(\$gain$(n), $n)
-\#end if
-	</callback>
-	<callback>\#if not \$hide_lo_controls()
-set_lo_source(\$lo_source$(n), uhd.ALL_LOS, $n)
-\#end if
-	</callback>
-    <callback>\#if not \$hide_lo_controls()
-set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
 \#end if
 	</callback>
 	<callback>set_antenna(\$ant$(n), $n)</callback>
@@ -538,62 +524,6 @@ PARAMS_TMPL = """	<param>
 	</param>
 #if $sourk == 'source'
 	<param>
-		<name>Ch$(n): LO Source</name>
-		<key>lo_source$(n)</key>
-		<value>internal</value>
-		<type>string</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#elif \$hide_lo_controls()
-				all
-			\#else
-				none
-			\#end if
-		</hide>
-		<option>
-			<name>Internal</name>
-			<key>internal</key>
-		</option>
-		<option>
-			<name>External</name>
-			<key>external</key>
-		</option>
-		<option>
-			<name>Companion</name>
-			<key>companion</key>
-		</option>
-		<tab>RF Options</tab>
-	</param>
-#end if
-#if $sourk == 'source'
-	<param>
-		<name>Ch$(n): LO Export</name>
-		<key>lo_export$(n)</key>
-		<value>False</value>
-		<type>bool</type>
-		<hide>
-			\#if not \$nchan() > $n
-				all
-			\#elif \$hide_lo_controls()
-				all
-			\#else
-				none
-			\#end if
-		</hide>
-		<option>
-			<name>True</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>False</name>
-			<key>False</key>
-		</option>
-		<tab>RF Options</tab>
-	</param>
-#end if
-#if $sourk == 'source'
-	<param>
 		<name>Ch$(n): Enable DC Offset Correction</name>
 		<key>dc_offs_enb$(n)</key>
 		<value>""</value>
@@ -643,25 +573,6 @@ SHOW_CMD_PORT_PARAM = """
 	</param>
 """
 
-SHOW_LO_CONTROLS_PARAM = """
-	<param>
-		<name>Show LO Controls</name>
-		<key>hide_lo_controls</key>
-		<value>True</value>
-		<type>bool</type>
-		<hide>part</hide>
-		<option>
-			<name>Yes</name>
-			<key>False</key>
-		</option>
-		<option>
-			<name>No</name>
-			<key>True</key>
-		</option>
-		<tab>Advanced</tab>
-	</param>
-"""
-
 TSBTAG_PARAM = """	<param>
 		<name>TSB tag name</name>
 		<key>len_tag_name</key>
@@ -694,8 +605,7 @@ if __name__ == '__main__':
 		else: raise Exception, 'is %s a source or sink?'%file
 
 		params = ''.join([parse_tmpl(PARAMS_TMPL, n=n, sourk=sourk) for n in range(max_num_channels)])
-		params += SHOW_CMD_PORT_PARAM
-		params += SHOW_LO_CONTROLS_PARAM
+                params += SHOW_CMD_PORT_PARAM
 		if sourk == 'sink':
 			params += TSBTAG_PARAM
 			lentag_arg = TSBTAG_ARG
