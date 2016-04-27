@@ -53,6 +53,7 @@ namespace gr {
         }
       }
       d_residual = d_lengths[d_stream];
+      set_tag_propagation_policy(TPP_DONT);
     }
 
     void
@@ -76,6 +77,7 @@ namespace gr {
       const char *in;
       int out_index = 0; // Items written
       gr_vector_int input_index(d_lengths.size(), 0); // Items read
+      std::vector<gr::tag_t> stream_t; 
 
       while (out_index < noutput_items) {
         if (ninput_items[d_stream] <= input_index[d_stream]) {
@@ -91,6 +93,12 @@ namespace gr {
         );
         in = (const char *) input_items[d_stream] + input_index[d_stream]*d_itemsize;
         memcpy(&out[out_index*d_itemsize], in, items_to_copy*d_itemsize);
+        get_tags_in_window(stream_t, d_stream,input_index[d_stream],input_index[d_stream] + items_to_copy);
+        BOOST_FOREACH(gr::tag_t t, stream_t){
+          t.offset = t.offset - nitems_read(d_stream) - input_index[d_stream] + nitems_written(0) + out_index;
+          add_item_tag(0, t);
+        }
+        
         out_index += items_to_copy;
         input_index[d_stream] += items_to_copy;
         d_residual -= items_to_copy;
