@@ -25,7 +25,6 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    bpsk.py
     constellation_map_generator.py
     cpm.py
     crc.py
@@ -48,7 +47,6 @@ GR_PYTHON_INSTALL(
     qam.py
     qamlike.py
     qam_constellations.py
-    qpsk.py
     soft_dec_lut_gen.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
     COMPONENT "digital_python"
