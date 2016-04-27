@@ -178,6 +178,12 @@ namespace gr {
     return d_detail->processor_affinity();
   }
 
+  void
+  hier_block2::set_log_level(std::string level)
+  {
+    d_detail->set_log_level(level);
+  }
+
   std::string
   dot_graph(hier_block2_sptr hierblock2)
   {

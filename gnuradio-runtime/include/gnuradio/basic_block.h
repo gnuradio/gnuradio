@@ -377,6 +377,9 @@ namespace gr {
 
     virtual std::vector<int> processor_affinity()
     { throw std::runtime_error("processor_affinity not overloaded in child class."); }
+
+    virtual void set_log_level(std::string level)
+    { throw std::runtime_error("set_log_level not overloaded in child class."); }
   };
 
   inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)
