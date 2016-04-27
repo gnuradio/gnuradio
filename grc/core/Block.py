@@ -418,8 +418,11 @@ class Block(Element):
         except Exception as e:
             self._epy_reload_error = ValueError(str(e))
             try:  # Load last working block io
-                blk_io = epy_block_io.BlockIO(*eval(param_blk.get_value()))
-            except:
+                blk_io_args = eval(param_blk.get_value())
+                if len(blk_io_args) == 6:
+                    blk_io_args += ([],)  # add empty callbacks
+                blk_io = epy_block_io.BlockIO(*blk_io_args)
+            except Exception:
                 return
         else:
             self._epy_reload_error = None  # Clear previous errors
@@ -432,7 +435,8 @@ class Block(Element):
         self._doc = blk_io.doc
         self._imports[0] = 'import ' + self.get_id()
         self._make = '{0}.{1}({2})'.format(self.get_id(), blk_io.cls, ', '.join(
-            '{0}=${0}'.format(key) for key, _ in blk_io.params))
+            '{0}=${{ {0} }}'.format(key) for key, _ in blk_io.params))
+        self._callbacks = ['{0} = ${{ {0} }}'.format(attr) for attr in blk_io.callbacks]
 
         params = {}
         for param in list(self._params):
