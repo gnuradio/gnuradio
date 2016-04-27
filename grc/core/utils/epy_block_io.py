@@ -11,7 +11,7 @@ TYPE_MAP = {
     'int8': 'byte', 'uint8': 'byte',
 }
 
-BlockIO = collections.namedtuple('BlockIO', 'name cls params sinks sources doc')
+BlockIO = collections.namedtuple('BlockIO', 'name cls params sinks sources doc callbacks')
 
 
 def _ports(sigs, msgs):
@@ -51,6 +51,7 @@ def extract(cls):
         cls = _find_block_class(cls, gr.gateway.gateway_block)
 
     spec = inspect.getargspec(cls.__init__)
+    init_args = spec.args[1:]
     defaults = map(repr, spec.defaults or ())
     doc = cls.__doc__ or cls.__init__.__doc__ or ''
     cls_name = cls.__name__
@@ -64,14 +65,23 @@ def extract(cls):
         raise RuntimeError("Can't create an instance of your block: " + str(e))
 
     name = instance.name()
-    params = list(zip(spec.args[1:], defaults))
+
+    params = list(zip(init_args, defaults))
+
+    def settable(attr):
+        try:
+            return callable(getattr(cls, attr).fset)  # check for a property with setter
+        except AttributeError:
+            return attr in instance.__dict__  # not dir() - only the instance attribs
+
+    callbacks = [attr for attr in dir(instance) if attr in init_args and settable(attr)]
 
     sinks = _ports(instance.in_sig(),
                    pmt.to_python(instance.message_ports_in()))
     sources = _ports(instance.out_sig(),
                      pmt.to_python(instance.message_ports_out()))
 
-    return BlockIO(name, cls_name, params, sinks, sources, doc)
+    return BlockIO(name, cls_name, params, sinks, sources, doc, callbacks)
 
 
 if __name__ == '__main__':
@@ -81,7 +91,7 @@ from gnuradio import gr
 import pmt
 
 class blk(gr.sync_block):
-    def __init__(self, param1=None, param2=None):
+    def __init__(self, param1=None, param2=None, param3=None):
         "Test Docu"
         gr.sync_block.__init__(
             self,
@@ -91,8 +101,25 @@ class blk(gr.sync_block):
         )
         self.message_port_register_in(pmt.intern('msg_in'))
         self.message_port_register_out(pmt.intern('msg_out'))
+        self.param1 = param1
+        self._param2 = param2
+        self._param3 = param3
+
+    @property
+    def param2(self):
+        return self._param2
+
+    @property
+    def param3(self):
+        return self._param3
+
+    @param3.setter
+    def param3(self, value):
+        self._param3 = value
 
     def work(self, inputs_items, output_items):
         return 10
     """
-    print extract(blk_code)
+    from pprint import pprint
+    pprint(dict(extract(blk_code)._asdict()))
+
