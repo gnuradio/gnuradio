@@ -252,13 +252,6 @@ namespace gr {
      */
     pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
 
-    /*!
-     * \param[in] which_port The message port from which to get the message.
-     * \param[in] millisec Optional timeout value (0=no timeout).
-     * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
-     */
-    pmt::pmt_t delete_head_blocking(pmt::pmt_t which_port, unsigned int millisec = 0);
-
     msg_queue_t::iterator get_iterator(pmt::pmt_t which_port) {
       return msg_queue[which_port].begin();
     }
