@@ -297,7 +297,7 @@ serialize(pmt_t obj, std::streambuf &sb)
     }
 
     if(is_real(obj)) {
-      float i = to_double(obj);
+      double i = to_double(obj);
       ok = serialize_untagged_u8(PST_DOUBLE, sb);
       ok &= serialize_untagged_f64(i, sb);
       return ok;
