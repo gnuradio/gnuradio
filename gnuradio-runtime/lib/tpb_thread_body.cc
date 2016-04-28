@@ -134,6 +134,10 @@ namespace gr {
         d->set_done(true);
       }
 
+      if(!d->ninputs() && s == block_executor::READY_NO_OUTPUT) {
+        s = block_executor::BLKD_IN;
+      }
+
       switch(s){
       case block_executor::READY:              // Tell neighbors we made progress.
         d->d_tpb.notify_neighbors(d);
