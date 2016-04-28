@@ -130,7 +130,7 @@ namespace gr {
 	if(d_idx >= ntaps())
 	  d_idx = 0;
 
-	const float *ar = (float*)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	const float *ar = (float*)((size_t)(&d_buffer[d_idx]) & ~(d_align-1));
 	unsigned al = (&d_buffer[d_idx]) - ar;
 
 	volk_32f_x2_dot_prod_32f_a(d_output, ar,
@@ -153,7 +153,7 @@ namespace gr {
 	    d_idx = 0;
 	}
 
-	const float *ar = (float*)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	const float *ar = (float*)((size_t)(&d_buffer[d_idx]) & ~(d_align-1));
 	unsigned al = (&d_buffer[d_idx]) - ar;
 
 	volk_32f_x2_dot_prod_32f_a(d_output, ar,
@@ -283,7 +283,7 @@ namespace gr {
 	if(d_idx >= ntaps())
 	  d_idx = 0;
 
-	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	const gr_complex *ar = (gr_complex *)((size_t)(&d_buffer[d_idx]) & ~(d_align-1));
 	unsigned al = (&d_buffer[d_idx]) - ar;
 
 	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
@@ -306,7 +306,7 @@ namespace gr {
 	    d_idx = 0;
 	}
 
-	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	const gr_complex *ar = (gr_complex *)((size_t)(&d_buffer[d_idx]) & ~(d_align-1));
 	unsigned al = (&d_buffer[d_idx]) - ar;
 
 	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
@@ -436,7 +436,7 @@ namespace gr {
 	if(d_idx >= ntaps())
 	  d_idx = 0;
 
-	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	const gr_complex *ar = (gr_complex *)((size_t)(&d_buffer[d_idx]) & ~(d_align-1));
 	unsigned al = (&d_buffer[d_idx]) - ar;
 
 	volk_32fc_32f_dot_prod_32fc_a(d_output, ar,
@@ -459,7 +459,7 @@ namespace gr {
 	    d_idx = 0;
 	}
 
-	const gr_complex *ar = (gr_complex *)((unsigned long)(&d_buffer[d_idx]) & ~(d_align-1));
+	const gr_complex *ar = (gr_complex *)((size_t)(&d_buffer[d_idx]) & ~(d_align-1));
 	unsigned al = (&d_buffer[d_idx]) - ar;
 
 	volk_32fc_32f_dot_prod_32fc_a(d_output, ar,
