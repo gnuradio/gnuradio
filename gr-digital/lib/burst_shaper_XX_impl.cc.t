@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -96,7 +96,23 @@ namespace gr {
     @IMPL_NAME@::forecast(int noutput_items,
                           gr_vector_int &ninput_items_required)
     {
+      switch(d_state) {
+      case(STATE_RAMPDOWN):
+        // If inserting phasing; we don't need any input
+        if(d_insert_phasing) {
+          ninput_items_required[0] = 0;
+        }
+        else {
+          ninput_items_required[0] = noutput_items;
+        }
+        break;
+      case(STATE_POSTPAD):
+        // Padding 0's requires no input
+        ninput_items_required[0] = 0;
+        break;
+      default:
         ninput_items_required[0] = noutput_items;
+      }
     }
 
     int
@@ -118,7 +134,17 @@ namespace gr {
         get_tags_in_window(length_tags, 0, 0, ninput_items[0], d_length_tag_key);
         std::sort(length_tags.rbegin(), length_tags.rend(), tag_t::offset_compare);
 
-        while((nwritten < noutput_items) && (nread < ninput_items[0])) {
+        while(nwritten < noutput_items) {
+            // Only check the nread condition if we are actually reading
+            // from the input stream.
+            if(((d_state != STATE_RAMPDOWN) && (d_state != STATE_POSTPAD)) ||
+               ((d_state == STATE_RAMPDOWN) && !d_insert_phasing))
+              {
+                if(nread >= ninput_items[0]) {
+                    break;
+                }
+            }
+
             if(d_finished) {
                 d_finished = false;
                 break;

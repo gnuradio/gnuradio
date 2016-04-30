@@ -35,7 +35,7 @@ _config_parser = ConfigParser.SafeConfigParser()
 
 
 def file_extension():
-    return '.'+_platform.get_key()
+    return '.grc'
 
 
 def load(platform):
@@ -150,3 +150,7 @@ def blocks_window_position(pos=None):
 
 def xterm_missing(cmd=None):
     return entry('xterm_missing', cmd, default='INVALID_XTERM_SETTING')
+
+
+def screen_shot_background_transparent(transparent=None):
+    return entry('screen_shot_background_transparent', transparent, default=False)

@@ -143,7 +143,7 @@ namespace gr {
         d_qApplication->setStyleSheet(sstext);
       }
 
-      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      int numplots = (d_nconnections > 0) ? d_nconnections : 2;
       d_main_gui = new TimeDisplayForm(numplots, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
@@ -441,10 +441,16 @@ namespace gr {
         d_main_gui->setTagMenu(which, en);
     }
 
+    void 
+    time_sink_c_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
     void
     time_sink_c_impl::disable_legend()
     {
-      d_main_gui->disableLegend();
+        d_main_gui->disableLegend();
     }
 
     void
@@ -652,7 +658,7 @@ namespace gr {
 
         uint64_t nr = nitems_read(n);
         std::vector<gr::tag_t> tags;
-        get_tags_in_range(tags, n, nr, nr + nitems + 1);
+        get_tags_in_range(tags, n, nr, nr + nitems);
         for(size_t t = 0; t < tags.size(); t++) {
           tags[t].offset = tags[t].offset - nr + (d_index-d_start-1);
         }

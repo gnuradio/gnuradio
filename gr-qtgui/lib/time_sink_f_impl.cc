@@ -437,6 +437,12 @@ namespace gr {
     }
 
     void
+    time_sink_f_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
+    }
+
+    void
     time_sink_f_impl::disable_legend()
     {
       d_main_gui->disableLegend();
@@ -643,7 +649,7 @@ namespace gr {
 
         uint64_t nr = nitems_read(idx);
         std::vector<gr::tag_t> tags;
-        get_tags_in_range(tags, idx, nr, nr + nitems + 1);
+        get_tags_in_range(tags, idx, nr, nr + nitems);
         for(size_t t = 0; t < tags.size(); t++) {
           tags[t].offset = tags[t].offset - nr + (d_index-d_start-1);
         }

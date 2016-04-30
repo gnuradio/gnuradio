@@ -43,10 +43,6 @@ namespace gr {
         gsl_matrix_view d_T_view;
         gsl_matrix *d_phi_inverse_ptr;
 
-        // Temporary matrix for storing stages of encoding.
-        gsl_matrix *d_s, *d_p1, *d_p2;
-        gsl_matrix *d_temp1, *d_temp2, *d_temp3, *d_temp4, *d_temp5, *d_temp6, *d_temp7;
-
         //! Sets the submatrix variables needed for encoding
         void set_parameters_for_encoding();
 

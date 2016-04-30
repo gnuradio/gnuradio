@@ -61,12 +61,12 @@ self.\$(id).set_subdev_spec(\$sd_spec$(m), $m)
 \#end if
 ########################################################################
 #end for
+self.\$(id).set_samp_rate(\$samp_rate)
 \#if \$sync() == 'sync'
 self.\$(id).set_time_unknown_pps(uhd.time_spec())
 \#elif \$sync() == 'pc_clock'
 self.\$(id).set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
 \#end if
-self.\$(id).set_samp_rate(\$samp_rate)
 #for $n in range($max_nchan)
 \#if \$nchan() > $n
 self.\$(id).set_center_freq(\$center_freq$(n), $n)
@@ -83,10 +83,10 @@ self.\$(id).set_bandwidth(\$bw$(n), $n)
 	\#end if
 #if $sourk == 'source'
 	\#if \$dc_offs_enb$(n)()
-self.\$(id).set_rx_dc_offset(\$dc_offs_enb$(n), $n)
+self.\$(id).set_auto_dc_offset(\$dc_offs_enb$(n), $n)
 	\#end if
 	\#if \$iq_imbal_enb$(n)()
-self.\$(id).set_rx_iq_balance(\$iq_imbal_enb$(n), $n)
+self.\$(id).set_auto_iq_balance(\$iq_imbal_enb$(n), $n)
 	\#end if
 #end if
 \#end if
@@ -494,16 +494,16 @@ PARAMS_TMPL = """	<param>
 				part
 			\#end if
 		</hide>
-#if $sourk == 'sink'
 		<option>
 			<name>TX/RX</name>
 			<key>TX/RX</key>
 		</option>
-#end if
+#if $sourk == 'source'
 		<option>
 			<name>RX2</name>
 			<key>RX2</key>
 		</option>
+#end if
 		<tab>RF Options</tab>
 	</param>
 	<param>

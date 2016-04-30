@@ -232,6 +232,54 @@ tb.msg_connect((msg_block, 'msg'), (tsnk, 'in'))
 \endcode
 
 
+\section qtgui_widgets QTGUI Widgets
+
+The QTGUI component also includes a number of widgets that can be used
+to perform live updates of variables through standard QT input
+widgets. Most of the widgets are implemented directly in Python
+through PyQT. However, GNU Radio is introducing more widgets, written
+and therefore available in C++ that also produce messsages. The
+Python-based widgets only act as variables and so as they are changed,
+any block using those widgets to set paramters has the callback (i.e.,
+set_value()) function's called.
+
+\subsection qtgui_widgets_python Python widgets:
+
+\li Range: creates a slider and/or combo box to change to set/change
+the value of a parameter. This widget can set either float of int
+values.
+\li Entry: An edit box that allows a user to directly set a
+new value for the parameter.
+\li Chooser: Creates a drop-down menu of pre-set values.
+\li Check Box: Creates a check box. The user sets what the value of
+the check means when enabled or disabled.
+\li Push Button: Adds a button that changes state when pushed versus
+released (no sticky). The user sets up what the value is when pressed
+versus when released.
+\li Label: Adds a Label widget to annotate the GUI. Generally not used
+as a variable.
+\li Tab Widget: Adds a tab widget that can house other GUI widgets to
+format the interface. Use the GUI hint of the other QT widgets and
+instruments to specify if and where they exist in the tab widget using
+the format "tag widget name@index: row, col, row span, col
+span". Simply using "tab widget name@index" will put that widget into
+the specific index (starting at 0) of the tab widget while adding the
+"row, col, row span, col span" will allow the user to place them in
+the tab grid.
+\li
+
+
+\subsection qtgui_widgets_cpp C++ and Message-Passing Widgets
+
+\li \ref gr::qtgui::edit_box_msg "Message Edit Box": A QT edit box
+that emits a message when editing is done (e.g., user presses enter,
+tabs out of the widget, or mouse-clicks out of the widget). The
+message type is settable as are the contents. Messages can be sent as
+key:value pairs when Pair Mode is enabled. When Static Mode is
+enabled, the data type and the pair key (if in Pair Mode) are set at
+the start and cannot be changed at runtime.
+
+
 \section qtgui_configuration Configuration
 
 There is currently a single configuration option in the preferences

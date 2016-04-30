@@ -96,7 +96,7 @@ namespace gr {
        * \param size size of the FFT to compute and display. If using
        *        the PDU message port to plot samples, the length of
        *        each PDU must be a multiple of the FFT size.
-       * \param wintype type of window to apply (see gnuradio/filter/firdes.h)
+       * \param wintype type of window to apply (see gr::fft::window::win_type)
        * \param fc center frequency of signal (use for x-axis labels)
        * \param bw bandwidth of signal (used to set x-axis labels)
        * \param name title for the plot
@@ -164,6 +164,7 @@ namespace gr {
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_grid(bool en=true) = 0;
       virtual void disable_legend() = 0;
+      virtual void enable_axis_labels(bool en=true) = 0;
 
       QApplication *d_qApplication;
     };

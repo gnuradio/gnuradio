@@ -30,9 +30,27 @@ KEY_INDEX = 1
 DOC_INDEX = 2
 
 DOC_MARKUP_TMPL = """\
-#if $doc
-$encode($doc)#slurp
-#else
+#set $docs = []
+#if $doc.get('')
+    #set $docs += $doc.pop('').splitlines() + ['']
+#end if
+#for b, d in $doc.iteritems()
+    #set $docs += ['--- {0} ---'.format(b)] + d.splitlines() + ['']
+#end for
+#set $len_out = 0
+#for $n, $line in $enumerate($docs[:-1])
+#if $n
+
+#end if
+$encode($line)#slurp
+#set $len_out += $len($line)
+#if $n > 10 or $len_out > 500
+
+...#slurp
+#break
+#end if
+#end for
+#if $len_out == 0
 undocumented#slurp
 #end if"""
 
@@ -126,8 +144,10 @@ class BlockTreeWindow(gtk.VBox):
             category: the category list or path string
             block: the block object or None
         """
-        if treestore is None: treestore = self.treestore
-        if categories is None: categories = self._categories
+        if treestore is None:
+            treestore = self.treestore
+        if categories is None:
+            categories = self._categories
 
         if isinstance(category, (str, unicode)): category = category.split('/')
         category = tuple(filter(lambda x: x, category))  # tuple is hashable
@@ -135,34 +155,32 @@ class BlockTreeWindow(gtk.VBox):
         for i, cat_name in enumerate(category):
             sub_category = category[:i+1]
             if sub_category not in categories:
-                iter = treestore.insert_before(categories[sub_category[:-1]], None)
-                treestore.set_value(iter, NAME_INDEX, '[ %s ]'%cat_name)
-                treestore.set_value(iter, KEY_INDEX, '')
-                treestore.set_value(iter, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
-                categories[sub_category] = iter
+                iter_ = treestore.insert_before(categories[sub_category[:-1]], None)
+                treestore.set_value(iter_, NAME_INDEX, cat_name)
+                treestore.set_value(iter_, KEY_INDEX, '')
+                treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
+                categories[sub_category] = iter_
         # add block
-        if block is None: return
-        iter = treestore.insert_before(categories[category], None)
-        treestore.set_value(iter, NAME_INDEX, block.get_name())
-        treestore.set_value(iter, KEY_INDEX, block.get_key())
-        treestore.set_value(iter, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
+        if block is None:
+            return
+        iter_ = treestore.insert_before(categories[category], None)
+        treestore.set_value(iter_, NAME_INDEX, block.get_name())
+        treestore.set_value(iter_, KEY_INDEX, block.get_key())
+        treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
 
     def update_docs(self):
         """Update the documentation column of every block"""
-        def update(node):
-            for i in range(treestore.iter_n_children(node) or 0):
-                update(treestore.iter_nth_child(node, i))
 
-            if not treestore.iter_has_child(node):
-                key = treestore.get_value(node, KEY_INDEX)
-                block = self.platform.get_block(key)
-                doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
-                treestore.set_value(node, DOC_INDEX, doc)
+        def update_doc(model, _, iter_):
+            if model.iter_has_child(iter_):
+                return  # category node, no doc string
+            key = model.get_value(iter_, KEY_INDEX)
+            block = self.platform.blocks[key]
+            doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
+            model.set_value(iter_, DOC_INDEX, doc)
 
-        for treestore in self.treestore, self.treestore_search:
-            root = treestore.get_iter_root()
-            if root:
-                update(root)
+        self.treestore.foreach(update_doc)
+        self.treestore_search.foreach(update_doc)
 
     ############################################################
     ## Helper Methods
@@ -210,8 +228,8 @@ class BlockTreeWindow(gtk.VBox):
             self.treeview.set_model(self.treestore)
             self.treeview.collapse_all()
         else:
-            blocks = self.get_flow_graph().get_parent().get_blocks()
-            matching_blocks = filter(lambda b: key in b.get_key().lower() or key in b.get_name().lower(), blocks)
+            matching_blocks = filter(lambda b: key in b.get_key().lower() or key in b.get_name().lower(),
+                                     self.platform.blocks.values())
 
             self.treestore_search.clear()
             self._categories_search = {tuple(): None}

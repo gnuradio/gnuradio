@@ -123,6 +123,7 @@ namespace gr {
       void set_update_time(double t);
 
       void set_title(const std::string &title);
+      void set_y_label(const std::string &label, const std::string &unit);
       void set_line_label(int which, const std::string &label);
       void set_line_color(int which, const std::string &color);
       void set_line_width(int which, int width);
@@ -153,6 +154,7 @@ namespace gr {
       void clear_min_hold();
       void disable_legend();
       void reset();
+      void enable_axis_labels(bool en);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

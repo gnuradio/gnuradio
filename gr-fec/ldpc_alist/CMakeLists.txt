@@ -34,8 +34,6 @@ install(
     n_1100_k_0442_gap_24.alist
     n_1300_k_0522_gap_30.alist
     n_1800_k_0902_gap_28.alist
-    n_2400_k_1198_gap_33.alist
-    n_2400_k_1198_gen_matrix.alist
     PNB2_512_23C1.alist
     simple_g_matrix.alist
     DESTINATION ${GR_PKG_DATA_DIR}/fec/ldpc

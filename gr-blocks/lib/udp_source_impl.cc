@@ -27,6 +27,7 @@
 #include "udp_source_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <gnuradio/prefs.h>
 #include <stdexcept>
 #include <errno.h>
 #include <stdio.h>
@@ -35,7 +36,8 @@
 namespace gr {
   namespace blocks {
 
-    const int udp_source_impl::BUF_SIZE_PAYLOADS = 50;
+    const int udp_source_impl::BUF_SIZE_PAYLOADS =
+        gr::prefs::singleton()->get_long("udp_blocks", "buf_size_payloads", 50);
 
     udp_source::sptr
     udp_source::make(size_t itemsize,
@@ -149,7 +151,7 @@ namespace gr {
       if(!error) {
         {
           boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
-          if(d_eof && (bytes_transferred == 1) && (d_rxbuf[0] == 0x00)) {
+          if(d_eof && (bytes_transferred == 0)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
             d_residual = WORK_DONE;

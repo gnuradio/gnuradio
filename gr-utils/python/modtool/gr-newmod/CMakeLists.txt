@@ -24,6 +24,12 @@ cmake_minimum_required(VERSION 2.6)
 project(gr-howto CXX C)
 enable_testing()
 
+#install to PyBOMBS target prefix if defined
+if(DEFINED ENV{PYBOMBS_PREFIX})
+    set(CMAKE_INSTALL_PREFIX $ENV{PYBOMBS_PREFIX})
+    message(STATUS "PyBOMBS installed GNU Radio. Setting CMAKE_INSTALL_PREFIX to $ENV{PYBOMBS_PREFIX}")
+endif()
+
 #select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
@@ -112,6 +118,7 @@ find_package(Doxygen)
 # API compatible version required.
 set(GR_REQUIRED_COMPONENTS RUNTIME)
 find_package(Gnuradio "3.7.2" REQUIRED)
+list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 if(NOT CPPUNIT_FOUND)
     message(FATAL_ERROR "CppUnit required to compile howto")

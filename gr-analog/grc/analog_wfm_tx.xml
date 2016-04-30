@@ -13,6 +13,7 @@
 	quad_rate=$quad_rate,
 	tau=$tau,
 	max_dev=$max_dev,
+	fh=$fh,
 )</make>
 	<param>
 		<name>Audio Rate</name>
@@ -34,6 +35,12 @@
 		<name>Max Deviation</name>
 		<key>max_dev</key>
 		<value>75e3</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Preemphasis High Corner Freq</name>
+		<key>fh</key>
+		<value>-1.0</value>
 		<type>real</type>
 	</param>
 	<check>($quad_rate)%($audio_rate) == 0</check>

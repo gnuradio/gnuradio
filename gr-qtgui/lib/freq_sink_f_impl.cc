@@ -265,6 +265,13 @@ namespace gr {
     }
 
     void
+    freq_sink_f_impl::set_y_label(const std::string &label,
+                                  const std::string &unit)
+    {
+        d_main_gui->setYLabel(label, unit);
+    }
+
+    void
     freq_sink_f_impl::set_update_time(double t)
     {
       //convert update time to ticks
@@ -409,6 +416,12 @@ namespace gr {
     freq_sink_f_impl::enable_autoscale(bool en)
     {
       d_main_gui->autoScale(en);
+    }
+
+    void
+    freq_sink_f_impl::enable_axis_labels(bool en)
+    {
+        d_main_gui->setAxisLabels(en);
     }
 
     void

@@ -17,18 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import os
-import sys
-
-import pygtk
-pygtk.require('2.0')
 import gtk
 
-from gnuradio import gr
+from ..core.Constants import *
 
-prefs = gr.prefs()
-GR_PREFIX = gr.prefix()
-EDITOR = prefs.get_string('grc', 'editor', '')
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()
@@ -50,28 +42,12 @@ MIN_DIALOG_HEIGHT = 500
 DEFAULT_BLOCKS_WINDOW_WIDTH = 100
 DEFAULT_REPORTS_WINDOW_WIDTH = 100
 
-try:  # ugly, but matches current code style
-    raw = prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
-    DEFAULT_CANVAS_SIZE = tuple(int(x.strip('() ')) for x in raw.split(','))
-    if len(DEFAULT_CANVAS_SIZE) != 2 or not all(300 < x < 4096 for x in DEFAULT_CANVAS_SIZE):
-        raise Exception()
-except:
-    DEFAULT_CANVAS_SIZE = 1280, 1024
-    print >> sys.stderr, "Error: invalid 'canvas_default_size' setting."
+DEFAULT_CANVAS_SIZE_DEFAULT = 1280, 1024
 
-#  flow-graph canvas fonts
-try:  # ugly, but matches current code style
-    FONT_SIZE = prefs.get_long('grc', 'canvas_font_size', 8)
-    if FONT_SIZE <= 0:
-        raise Exception()
-except:
-    FONT_SIZE = 8
-    print >> sys.stderr, "Error: invalid 'canvas_font_size' setting."
+FONT_SIZE = DEFAULT_FONT_SIZE = 8
 FONT_FAMILY = "Sans"
-BLOCK_FONT = "%s %f" % (FONT_FAMILY, FONT_SIZE)
-PORT_FONT = BLOCK_FONT
-PARAM_FONT = "%s %f" % (FONT_FAMILY, FONT_SIZE - 0.5)
-
+BLOCK_FONT = PORT_FONT = "Sans 8"
+PARAM_FONT = "Sans 7.5"
 
 # size of the state saving cache in the flow graph (undo/redo functionality)
 STATE_CACHE_SIZE = 42
@@ -90,8 +66,7 @@ CANVAS_GRID_SIZE = 8
 # port constraint dimensions
 PORT_BORDER_SEPARATION = 8
 PORT_SPACING = 2 * PORT_BORDER_SEPARATION
-PORT_SEPARATION = PORT_SPACING + 2 * PORT_LABEL_PADDING + int(1.5 * FONT_SIZE)
-PORT_SEPARATION += -PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
+PORT_SEPARATION = 32
 
 PORT_MIN_WIDTH = 20
 PORT_LABEL_HIDDEN_WIDTH = 10
@@ -120,3 +95,17 @@ SCROLL_DISTANCE = 15
 
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
+
+
+def update_font_size(font_size):
+    global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
+
+    FONT_SIZE = font_size
+    BLOCK_FONT = "%s %f" % (FONT_FAMILY, font_size)
+    PORT_FONT = BLOCK_FONT
+    PARAM_FONT = "%s %f" % (FONT_FAMILY, font_size - 0.5)
+
+    PORT_SEPARATION = PORT_SPACING + 2 * PORT_LABEL_PADDING + int(1.5 * font_size)
+    PORT_SEPARATION += -PORT_SEPARATION % (2 * CANVAS_GRID_SIZE)  # even multiple
+
+update_font_size(DEFAULT_FONT_SIZE)

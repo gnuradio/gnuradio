@@ -97,7 +97,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
   d_ymax = 10;
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   setAxisScale(QwtPlot::yLeft, d_ymin, d_ymax);
-  setAxisTitle(QwtPlot::yLeft, "Power (dB)");
+  setAxisTitle(QwtPlot::yLeft, "Relative Gain (dB)");
 
   QList<QColor> default_colors;
   default_colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
@@ -597,6 +597,17 @@ FrequencyDisplayPlot::onPickerPointSelected6(const QPointF & p)
   //fprintf(stderr,"onPickerPointSelected %f %f %d\n", point.x(), point.y(), d_xdata_multiplier);
   point.setX(point.x() * d_xdata_multiplier);
   emit plotPointSelected(point);
+}
+
+void
+FrequencyDisplayPlot::setYLabel(const std::string &label,
+                                const std::string &unit)
+{
+  std::string l = label;
+  if(unit.length() > 0)
+    l += " (" + unit + ")";
+  setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
+  ((FreqDisplayZoomer*)d_zoomer)->setUnitType(unit);
 }
 
 void

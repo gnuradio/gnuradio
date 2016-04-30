@@ -61,7 +61,7 @@ namespace gr {
       pmt::pmt_t vector = pmt::cdr(pdu);
       std::cout << "* MESSAGE DEBUG PRINT PDU VERBOSE *\n";
       pmt::print(meta);
-      size_t len = pmt::length(vector);
+      size_t len = pmt::blob_length(vector);
       std::cout << "pdu_length = " << len << std::endl;
       std::cout << "contents = " << std::endl;
       size_t offset(0);

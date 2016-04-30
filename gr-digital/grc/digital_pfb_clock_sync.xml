@@ -9,7 +9,7 @@
 	<key>digital_pfb_clock_sync_xxx</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.pfb_clock_sync_$(type)($sps, $loop_bw, $taps, $filter_size, $init_phase, $max_dev, $osps)</make>
-	<callback>set_taps($taps)</callback>
+	<callback>update_taps($taps)</callback>
 	<callback>set_loop_bandwidth($loop_bw)</callback>
 
 	<param>

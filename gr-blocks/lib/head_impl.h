@@ -39,7 +39,7 @@ namespace gr {
       ~head_impl();
 
       void reset() { d_ncopied_items = 0; }
-      void set_length(int nitems) { d_nitems = nitems; }
+      void set_length(uint64_t nitems) { d_nitems = nitems; }
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

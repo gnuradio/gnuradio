@@ -75,6 +75,8 @@ public slots:
   void setFrequencyRange(const double centerfreq,
 			 const double bandwidth);
   void setYaxis(double min, double max);
+  void setYLabel(const std::string &label,
+                 const std::string &unit="");
   void setYMax(const QString &m);
   void setYMin(const QString &m);
   void autoScale(bool en);
@@ -107,7 +109,6 @@ public slots:
   void notifyTriggerMode(const QString &mode);
   void notifyTriggerLevelPlus();
   void notifyTriggerLevelMinus();
-
 
 signals:
   void signalFFTSize(int size);

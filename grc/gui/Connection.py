@@ -17,15 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import Utils
-from Element import Element
-import Colors
-from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 import gtk
 
-from .. base.Constants import GR_MESSAGE_DOMAIN
+import Colors
+import Utils
+from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
+from Element import Element
 
-class Connection(Element):
+from ..core.Constants import GR_MESSAGE_DOMAIN
+from ..core.Connection import Connection as _Connection
+
+
+class Connection(Element, _Connection):
     """
     A graphical connection for ports.
     The connection has 2 parts, the arrow and the wire.
@@ -35,8 +38,9 @@ class Connection(Element):
     The arrow coloring exposes the enabled and valid states.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         Element.__init__(self)
+        _Connection.__init__(self, **kwargs)
         # can't use Colors.CONNECTION_ENABLED_COLOR here, might not be defined (grcc)
         self._bg_color = self._arrow_color = self._color = None
 
@@ -88,7 +92,7 @@ class Connection(Element):
             if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
             else gtk.gdk.LINE_ON_OFF_DASH
         get_domain_color = lambda d: Colors.get_color((
-            self.get_parent().get_parent().get_domain(d) or {}
+            self.get_parent().get_parent().domains.get(d, {})
         ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
         self._color = get_domain_color(source_domain)
         self._bg_color = get_domain_color(sink_domain)
