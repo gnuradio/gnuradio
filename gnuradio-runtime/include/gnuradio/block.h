@@ -59,6 +59,15 @@ namespace gr {
    */
   class GR_RUNTIME_API block : public basic_block
   {
+
+#if (_MSC_VER >= 1900)
+	  // Replacing C++11 implicitly defined copy/move operators
+	  // Otherwise will not compile on VS2015
+  protected:
+	  block(const block&) {};
+	  block& operator=(const block&) { return block(); };
+#endif
+
   public:
 
     //! Magic return values from general_work

@@ -103,8 +103,13 @@ namespace gr {
       int low, size;
 
       // Array to store peak positions
+#ifndef _MSC_VER
       int peak_pos[d_fft_length];
       float d_phi[d_fft_length];
+#else 
+	  int * peak_pos = (int *)alloca(sizeof(int) * d_fft_length);
+	  float * d_phi = (float *)alloca(sizeof(float) * d_fft_length);
+#endif
 
       // Calculate norm
       low = lookup_stop - (d_cp_length + d_fft_length - 1);

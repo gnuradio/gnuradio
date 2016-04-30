@@ -19,6 +19,7 @@
 import codecs
 import os
 import tempfile
+import platform
 
 from Cheetah.Template import Template
 
@@ -111,6 +112,7 @@ class TopBlockGenerator(object):
                     os.chmod(filename, self._mode)
                 except:
                     pass
+
 
     def _build_python_code_from_template(self):
         """

@@ -1,0 +1,22 @@
+# This Cache file is used with the windows binary build to assist CMake in finding all the necessary dependencies
+# To use, place this is the build/cmake directory and reload the cache in CMake, then re-configure
+# This is only useful if you are using the native windows build template built by gnieboer
+
+# Basic parameters to define the root for the native windows build 
+CMAKE_PREFIX_PATH:PATH=C:\gr-build
+CMAKE_INSTALL_PREFIX:PATH=C:\gr-build\src-stage3\staged_install
+ENABLE_MSVC_AVX2_ONLY_MODE:BOOL=OFF
+
+# Where the swig utility is 
+SWIG_DIR:PATH=C:\gr-build\bin
+
+# Ensure we are using this specific VS2015 build of python not a system build 
+PYTHON_EXECUTABLE:FILEPATH=C:\gr-build\src-stage2-python\Python27\python.exe
+QA_PYTHON_EXECUTABLE:FILEPATH=C:\gr-build\src-stage2-python\Python27\python.exe
+PYTHON_LIBRARY:FILEPATH=C:\gr-build\src-stage2-python\Python27\libs\python27.lib
+PYTHON_INCLUDE_DIR:PATH=C:\gr-build\src-stage2-python\Python27\include 
+
+# Qt destination as CMAKE will find a generic system install by default 
+QT_QMAKE_EXECUTABLE:FILEPATH=C:\gr-build\src-stage1-dependencies\Qt4\bin\qmake.exe
+
+SPHINX_EXECUTABLE:FILEPATH=C:/gr-build/src-stage2-Python/Python27/Scripts/sphinx-build.exe

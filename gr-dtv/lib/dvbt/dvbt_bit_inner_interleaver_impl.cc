@@ -136,7 +136,11 @@ namespace gr {
 
       // First index of d_b is Bit interleaver number
       // Second index of d_b is the position inside the Bit interleaver
-      unsigned char d_b[d_v][d_bsize];
+#ifdef _MSC_VER
+	  unsigned char ** d_b = (unsigned char**)alloca(sizeof(char) * (d_v * d_bsize));
+#else
+	  unsigned char d_b[d_v][d_bsize];
+#endif
 
       for (int bcount = 0; bcount < bmax; bcount++) {
         for (int i = 0; i < d_bsize; i++) {

@@ -63,6 +63,12 @@ namespace gr {
     hier_block2(const std::string &name,
                 gr::io_signature::sptr input_signature,
                 gr::io_signature::sptr output_signature);
+#if (_MSC_VER >= 1900)
+	// Replacing C++11 implicitly defined copy/move operators
+	// Otherwise will not compile on VS2015
+	hier_block2(const hier_block2&) {};
+	hier_block2& operator=(const hier_block2&) { return hier_block2(); };
+#endif 
 
   public:
     virtual ~hier_block2();

@@ -245,13 +245,23 @@ namespace gr {
     int
     dvbt_reed_solomon::rs_decode(unsigned char *data, unsigned char *eras, const int no_eras)
     {
-      unsigned char sigma[2 * d_t + 1];
-      unsigned char b[2 * d_t + 1];
-      unsigned char T[2 * d_t + 1];
-      unsigned char reg[2 * d_t + 1];
-      unsigned char root[2 * d_t + 1];
-      unsigned char loc[2 * d_t + 1];
-      unsigned char omega[2 * d_t];
+#ifndef _MSC_VER
+		unsigned char sigma[2 * d_t + 1];
+		unsigned char b[2 * d_t + 1];
+		unsigned char T[2 * d_t + 1];
+		unsigned char reg[2 * d_t + 1];
+		unsigned char root[2 * d_t + 1];
+		unsigned char loc[2 * d_t + 1];
+		unsigned char omega[2 * d_t];
+#else 
+		unsigned char * sigma = (unsigned char*)alloca(sizeof(char) * (2 * d_t + 1));
+		unsigned char * b = (unsigned char*)alloca(sizeof(char) * (2 * d_t + 1));
+		unsigned char * T = (unsigned char*)alloca(sizeof(char) * (2 * d_t + 1));
+		unsigned char * reg = (unsigned char*)alloca(sizeof(char) * (2 * d_t + 1));
+		unsigned char * root = (unsigned char*)alloca(sizeof(char) * (2 * d_t + 1));
+		unsigned char * loc = (unsigned char*)alloca(sizeof(char) * (2 * d_t + 1));
+		unsigned char * omega = (unsigned char*)alloca(sizeof(char) * (2 * d_t));
+#endif
 
       // Compute erasure locator polynomial
       memset(sigma, 0, 2 * d_t + 1);
