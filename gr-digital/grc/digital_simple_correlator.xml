@@ -7,6 +7,7 @@
 <block>
 	<name>Simple Correlator</name>
 	<key>digital_simple_correlator</key>
+	<category>Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.simple_correlator($payload_bytesize)</make>
 	<param>

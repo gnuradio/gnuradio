@@ -1,6 +1,7 @@
 <block>
   <name>Packet Header Parser</name>
   <key>digital_packet_headerparser_b</key>
+  <category>Deprecated</category>
   <import>from gnuradio import digital</import>
   <make>digital.packet_headerparser_b($header_formatter)</make>
   <param>

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006,2007,2011,2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -29,11 +29,12 @@
 
 namespace gr {
   namespace digital {
-    
+
     /*!
      * \brief take a vector of complex constellation points in from an
      * FFT and performs a correlation and equalization.
      * \ingroup ofdm_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * This block takes the output of an FFT of a received OFDM symbol
@@ -55,7 +56,7 @@ namespace gr {
       // gr::digital::ofdm_frame_acquisition::sptr
       typedef boost::shared_ptr<ofdm_frame_acquisition> sptr;
 
-      /*! 
+      /*!
        * Make an OFDM correlator and equalizer.
        *
        * \param occupied_carriers   The number of subcarriers with data in the received symbol
@@ -67,9 +68,9 @@ namespace gr {
        */
       static sptr make(unsigned int occupied_carriers, unsigned int fft_length,
 		       unsigned int cplen,
-		       const std::vector<gr_complex> &known_symbol, 
+		       const std::vector<gr_complex> &known_symbol,
 		       unsigned int max_fft_shift_len=4);
-  
+
       /*!
        * \brief Return an estimate of the SNR of the channel
        */
