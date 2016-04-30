@@ -74,14 +74,9 @@ namespace gr {
 	  bits_per_header_sym),
       d_frame_len_tag_key(pmt::string_to_symbol(frame_len_tag_key)),
       d_occupied_carriers(occupied_carriers),
-      d_syms_per_set(0),
       d_bits_per_payload_sym(bits_per_payload_sym),
       d_scramble_mask(d_header_len, 0)
     {
-      for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
-	d_syms_per_set += d_occupied_carriers[i].size();
-      }
-
       // Init scrambler mask
       if (scramble_header) {
 	// These are just random values which already have OK PAPR:
@@ -108,36 +103,40 @@ namespace gr {
     }
 
     bool packet_header_ofdm::header_parser(
-	const unsigned char *in,
-	std::vector<tag_t> &tags)
-    {
+        const unsigned char *in,
+        std::vector<tag_t> &tags
+    ) {
       std::vector<unsigned char> in_descrambled(d_header_len, 0);
       for (int i = 0; i < d_header_len; i++) {
-      	in_descrambled[i] = in[i] ^ d_scramble_mask[i];
+        in_descrambled[i] = in[i] ^ d_scramble_mask[i];
       }
       if (!packet_header_default::header_parser(&in_descrambled[0], tags)) {
-	return false;
+        return false;
       }
-      int packet_len = 0; // # of bytes in this frame
-      for (unsigned i = 0; i < tags.size(); i++) {
-	if (pmt::equal(tags[i].key, d_len_tag_key)) {
-	  // Convert bytes to complex symbols:
-	  packet_len = pmt::to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
-	  if (pmt::to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
-	    packet_len++;
-	  }
-	  tags[i].value = pmt::from_long(packet_len);
-	  break;
-	}
+      int packet_len = 0; // # of complex symbols in this frame
+      for (size_t i = 0; i < tags.size(); i++) {
+        if (pmt::equal(tags[i].key, d_len_tag_key)) {
+          // Convert bytes to complex symbols:
+          packet_len = pmt::to_long(tags[i].value) * 8 / d_bits_per_payload_sym;
+          if (pmt::to_long(tags[i].value) * 8 % d_bits_per_payload_sym) {
+            packet_len++;
+          }
+          tags[i].value = pmt::from_long(packet_len);
+          break;
+        }
       }
 
-      // frame_len == # of OFDM symbols in this frame
-      int frame_len = packet_len / d_syms_per_set;
-      int k = 0;
-      int i = frame_len * d_syms_per_set;
-      while (i < packet_len) {
-	frame_len++;
-	i += d_occupied_carriers[k].size();
+      // To figure out how many payload OFDM symbols there are in this frame,
+      // we need to go through the carrier allocation and count the number of
+      // allocated carriers per OFDM symbol.
+      // frame_len == # of payload OFDM symbols in this frame
+      int frame_len = 0;
+      size_t k = 0; // position in the carrier allocation map
+      int symbols_accounted_for = 0;
+      while (symbols_accounted_for < packet_len) {
+        frame_len++;
+        symbols_accounted_for += d_occupied_carriers[k].size();
+        k = (k + 1) % d_occupied_carriers.size();
       }
       tag_t tag;
       tag.key = d_frame_len_tag_key;
