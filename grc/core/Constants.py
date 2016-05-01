@@ -1,5 +1,5 @@
 """
-Copyright 2008-2015 Free Software Foundation, Inc.
+Copyright 2008-2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -86,7 +86,8 @@ GRC_COLOR_LIME = '#CDDC39'
 GRC_COLOR_TEAL = '#009688'
 GRC_COLOR_YELLOW = '#FFEB3B'
 GRC_COLOR_PINK = '#F50057'
-GRC_COLOR_LIGHT_PURPLE = '#E040FB'
+GRC_COLOR_PURPLE_A100 = '#EA80FC'
+GRC_COLOR_PURPLE_A400 = '#D500F9'
 GRC_COLOR_DARK_GREY = '#72706F'
 GRC_COLOR_GREY = '#BDBDBD'
 GRC_COLOR_WHITE = '#FFFFFF'
@@ -103,7 +104,8 @@ CORE_TYPES = (  # name, key, sizeof, color
     ('Integer 64', 's64', 8, GRC_COLOR_LIME),
     ('Integer 32', 's32', 4, GRC_COLOR_TEAL),
     ('Integer 16', 's16', 2, GRC_COLOR_YELLOW),
-    ('Integer 8', 's8', 1, GRC_COLOR_LIGHT_PURPLE),
+    ('Integer 8', 's8', 1, GRC_COLOR_PURPLE_A400),
+    ('Bits (unpacked byte)', 'bit', 1, GRC_COLOR_PURPLE_A100),
     ('Message Queue', 'msg', 0, GRC_COLOR_DARK_GREY),
     ('Async Message', 'message', 0, GRC_COLOR_GREY),
     ('Bus Connection', 'bus', 0, GRC_COLOR_WHITE),
@@ -115,7 +117,8 @@ ALIAS_TYPES = {
     'float': (4, GRC_COLOR_ORANGE),
     'int': (4, GRC_COLOR_TEAL),
     'short': (2, GRC_COLOR_YELLOW),
-    'byte': (1, GRC_COLOR_LIGHT_PURPLE),
+    'byte': (1, GRC_COLOR_PURPLE_A400),
+    'bits': (1, GRC_COLOR_PURPLE_A100),
 }
 
 TYPE_TO_COLOR = dict()
