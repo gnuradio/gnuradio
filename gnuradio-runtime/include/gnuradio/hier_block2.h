@@ -287,6 +287,11 @@ namespace gr {
     void set_log_level(std::string level);
 
     /*!
+     * \brief Get the logger's output level
+     */
+    std::string log_level();
+
+    /*!
      * \brief Get if all block min buffers should be set.
      *
      * \details this returns whether all the block min output buffers

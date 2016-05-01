@@ -59,6 +59,7 @@ namespace gr {
     std::vector<int> processor_affinity();
 
     void set_log_level(std::string level);
+    std::string log_level();
     
     // Track output buffer min/max settings
     std::vector<size_t> d_max_output_buffer;

@@ -652,6 +652,11 @@ namespace gr {
      */
     void set_log_level(std::string level);
 
+    /*!
+     * \brief Get the logger's output level
+     */
+    std::string log_level();
+
 	/*!
      * \brief returns true when execution has completed due to a message connection
     */

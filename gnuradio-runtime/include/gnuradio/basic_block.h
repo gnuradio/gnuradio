@@ -380,6 +380,9 @@ namespace gr {
 
     virtual void set_log_level(std::string level)
     { throw std::runtime_error("set_log_level not overloaded in child class."); }
+
+    virtual std::string log_level()
+    { throw std::runtime_error("log_level not overloaded in child class."); }
   };
 
   inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)

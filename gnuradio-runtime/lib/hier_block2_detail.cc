@@ -965,5 +965,13 @@ namespace gr {
     }
   }
 
+  std::string
+  hier_block2_detail::log_level()
+  {
+    // Assume that log_level was set for all hier_block2 blocks
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    return tmp[0]->log_level();
+  }
+
 
 } /* namespace gr */

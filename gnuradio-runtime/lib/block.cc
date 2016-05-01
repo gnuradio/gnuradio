@@ -720,6 +720,14 @@ namespace gr {
     logger_set_level(d_logger, level);
   }
 
+  std::string
+  block::log_level()
+  {
+    std::string level;
+    logger_get_level(d_logger, level);
+    return level;
+  }
+
   void
   block::notify_msg_neighbors()
   {

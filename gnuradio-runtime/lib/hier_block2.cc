@@ -185,6 +185,12 @@ namespace gr {
   }
 
   std::string
+  hier_block2::log_level()
+  {
+    return d_detail->log_level();
+  }
+
+  std::string
   dot_graph(hier_block2_sptr hierblock2)
   {
     return dot_graph_fg(hierblock2->flatten());
