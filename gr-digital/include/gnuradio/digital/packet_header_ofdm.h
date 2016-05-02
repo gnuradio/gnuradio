@@ -109,7 +109,6 @@ namespace gr {
      protected:
       pmt::pmt_t d_frame_len_tag_key; //!< Tag key of the additional frame length tag
       const std::vector<std::vector<int> > d_occupied_carriers; //!< Which carriers/symbols carry data
-      int d_syms_per_set; //!< Helper variable: Total number of elements in d_occupied_carriers
       int d_bits_per_payload_sym;
       std::vector<unsigned char> d_scramble_mask; //!< Bits are xor'd with this before tx'ing
     };

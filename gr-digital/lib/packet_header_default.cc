@@ -62,12 +62,10 @@ namespace gr {
     }
 
     bool packet_header_default::header_formatter(
-	long packet_len,
+        long packet_len,
         unsigned char *out,
-
-	const std::vector<tag_t> &tags
-    )
-    {
+        const std::vector<tag_t> &tags
+    ) {
       packet_len &= 0x0FFF;
       d_crc_impl.reset();
       d_crc_impl.process_bytes((void const *) &packet_len, 2);

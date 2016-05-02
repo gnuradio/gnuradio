@@ -161,14 +161,13 @@ namespace gr {
       // We output one byte for a symbol of m bits
       // The out/in rate in bytes is: 8n/km (Bytes)
 
-      assert(d_ninput % 1);
-      assert(d_noutput % 1512);
+      assert(d_noutput % 1512 == 0);
 
       // Set output items multiple of 4
       set_output_multiple(4);
 
       // Set relative rate out/in
-      assert((d_noutput * d_k * d_m) % (d_ninput * 8 * d_n));
+      assert((d_noutput * d_k * d_m) % (d_ninput * 8 * d_n) == 0);
       set_relative_rate((float)(d_ninput * 8 * d_n) / (float)d_noutput * d_k * d_m);
 
       // calculate in and out block sizes
