@@ -13,10 +13,17 @@
 	  $timing_tag_key,
           $samp_rate,
           $special_tags,
+          $header_padding,
     )</make>
   <param>
     <name>Header Length (Symbols)</name>
     <key>header_len</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Header Padding (Uncertainty / Symbols)</name>
+    <key>header_padding</key>
+    <value>0</value>
     <type>int</type>
   </param>
   <param>

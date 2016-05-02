@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* Copyright 2012 Free Software Foundation, Inc.
+/* Copyright 2012-2016 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,7 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief Header/Payload demuxer.
+     * \brief Header/Payload demuxer (HPD).
      * \ingroup packet_operators_blk
      *
      * \details
@@ -58,6 +58,9 @@ namespace gr {
      * and taken as the payload length. The payload, together with the header data
      * as tags, is then copied to output 1.
      *
+     * If the header demodulation fails, the header must send a PMT with value
+     * pmt::PMT_F. The state gets reset and the header is ignored.
+     *
      * \section hpd_item_sizes Symbols, Items and Item Sizes
      *
      * To generically and transparently handle different kinds of modulations,
@@ -68,20 +71,66 @@ namespace gr {
      * grouping items. In OFDM, we usually don't care about individual samples, but
      * we do care about full OFDM symbols, so we set \p items_per_symbol to the
      * IFFT / FFT length of the OFDM modulator / demodulator.
-     * For most single-carrier modulations, this value can be set to 1 (the default
-     * value).
+     * For single-carrier modulations, this value can be set to the number of
+     * samples per symbol, to handle data in number of symbols, or to 1 to
+     * handle data in number of samples.
      * If specified, \p guard_interval items are discarded before every symbol.
      * This is useful for demuxing bursts of OFDM signals.
      *
      * On the output, we can deal with symbols directly by setting \p output_symbols
      * to true. In that case, the output item size is the <em>symbol size</em>.
      *
-     * \b Example: OFDM with 48 sub-carriers, using a length-64 IFFT on the modulator,
-     * and a cyclic-prefix length of 16 samples. In this case, the itemsize is
-     * `sizeof(gr_complex)`, because we're receiving complex samples. One OFDM symbol
-     * has 64 samples, hence \p items_per_symbol is set to 64, and \p guard_interval to
-     * 16. The header length is specified in number of OFDM symbols. Because we want to
-     * deal with full OFDM symbols, we set \p output_symbols to true.
+     * \b Example: OFDM with 48 sub-carriers, using a length-64 IFFT on the
+     * modulator, and a cyclic-prefix length of 16 samples. In this case,
+     * \p itemsize is `sizeof(gr_complex)`, because we're receiving complex
+     * samples. One OFDM symbol has 64 samples, hence \p items_per_symbol is
+     * set to 64, and \p guard_interval to 16. The header length is specified
+     * in number of OFDM symbols. Because we want to deal with full OFDM
+     * symbols, we set \p output_symbols to true.
+     *
+     * \b Example: PSK-modulated signals, with 4 samples per symbol. Again,
+     * \p itemsize is `sizeof(gr_complex)` because we're still dealing with
+     * complex samples. \p items_per_symbol is 4, because one item is one
+     * sample. \p guard_interval must be set to 0. The header length is
+     * given in number of PSK symbols.
+     *
+     * \section hpd_uncertainty Handling timing uncertainty on the trigger
+     *
+     * By default, the assumption is made that the trigger arrives on *exactly*
+     * the sample that the header starts. These triggers typically come from
+     * timing synchronization algorithms which may be suboptimal, and have a
+     * known timing uncertainty (e.g., we know the trigger might be a sample
+     * too early or too late).
+     *
+     * The demuxer has an option for this case, the \p header_padding. If this
+     * value is non-zero, it specifies the number of items that are prepended
+     * and appended to the header before copying it to the header output.
+     *
+     * Example: Say our synchronization algorithm can be off by up to two
+     * samples, and the header length is 20 samples. So we set \p header_len
+     * to 20, and \p header_padding to 2.
+     * Now assume a trigger arrives on sample index 100. We copy a total of
+     * 24 samples to the header port, starting at sample index 98.
+     *
+     * The payload is *not* padded. Let's say the header demod reports a
+     * payload length of 100. In the previous examples, we would copy 100
+     * samples to the payload port, starting at sample index 120 (this means
+     * the padded samples appended to the header are copied to both ports!).
+     * However, the header demodulator has the option to specify a payload
+     * offset, which cannot exceed the padding value. To do this, include
+     * a key `payload_offset` in the message sent back to the HPD. A negative
+     * value means the payload starts earlier than otherwise.
+     * (If you wanted to always pad the payload, you could set `payload_offset`
+     * to `-header_padding` and increase the reported length of the payload).
+     *
+     * Because the padding is specified in number of items, and not symbols,
+     * this value can only be multiples of the number of items per symbol *if*
+     * either \p output_symbols is true, or a guard interval is specified (or
+     * both). Note that in practice, it is rare that both a guard interval is
+     * specified *and* a padding value is required. The difference between the
+     * padding value and a guard interval is that a guard interval is part of
+     * the signal, and comes with *every* symbol, whereas the header padding
+     * is added to only the header, and is not by design.
      *
      * \section hpd_tag_handling Tag Handling
      *
@@ -95,12 +144,14 @@ namespace gr {
      * it belongs to this packet or the following. In this case, it is possible that the
      * tag might be propagated twice.
      *
-     * Tags outside of packets are generally discarded. If this information is important,
-     * there are two additional mechanisms to preserve the tags:
+     * Tags outside of packets are generally discarded. If there are tags that
+     * carry important information that must not be list, there are two
+     * additional mechanisms to preserve the tags:
      * - Timing tags might be relevant to know \b when a packet was received. By
      *   specifying the name of a timestamp tag and the sample rate at this block, it
      *   keeps track of the time and will add the time to the first item of every packet.
-     *   The name of the timestamp tag is usually 'rx_time' (see gr::uhd::usrp_source::make()).
+     *   The name of the timestamp tag is usually 'rx_time' (see, e.g.,
+     *   gr::uhd::usrp_source::make()).
      *   The time value must be specified in the UHD time format.
      * - Other tags are simply stored and updated. As an example, the user might want to know the
      *   rx frequency, which UHD stores in the rx_freq tag. In this case, add the tag name 'rx_freq'
@@ -124,18 +175,20 @@ namespace gr {
        * \param timing_tag_key The name of the tag with timing information, usually 'rx_time' or empty (this means timing info is discarded)
        * \param samp_rate Sampling rate at the input. Necessary to calculate the rx time of packets.
        * \param special_tags A vector of strings denoting tags which shall be preserved (see \ref hpd_tag_handling)
+       * \param header_padding A number of items that is appended and prepended to the header.
        */
       static sptr make(
-          int header_len,
-          int items_per_symbol=1,
-          int guard_interval=0,
+          const int header_len,
+          const int items_per_symbol=1,
+          const int guard_interval=0,
           const std::string &length_tag_key="frame_len",
           const std::string &trigger_tag_key="",
-          bool output_symbols=false,
-          size_t itemsize=sizeof(gr_complex),
+          const bool output_symbols=false,
+          const size_t itemsize=sizeof(gr_complex),
           const std::string &timing_tag_key="",
           const double samp_rate=1.0,
-          const std::vector<std::string> &special_tags=std::vector<std::string>()
+          const std::vector<std::string> &special_tags=std::vector<std::string>(),
+          const size_t header_padding=0
       );
     };
 
