@@ -93,7 +93,6 @@ namespace gr {
     block->clear_finished();
 
     while(1) {
-      tpb_loop_top:
       boost::this_thread::interruption_point();
 
       // handle any queued up messages
@@ -156,32 +155,9 @@ namespace gr {
       {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
         while(!d->d_tpb.input_changed) {
-
           // wait for input or message
-          while(!d->d_tpb.input_changed && block->empty_handled_p()){
-            boost::system_time const timeout=boost::get_system_time()+ boost::posix_time::milliseconds(250);
-            if(!d->d_tpb.input_cond.timed_wait(guard, timeout)){
-              goto tpb_loop_top; // timeout occurred (perform sanity checks up top)
-            }
-          }
-
-          // handle all pending messages
-          BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
-            if(block->has_msg_handler(i.first)) {
-              while((msg = block->delete_head_nowait(i.first))) {
-                guard.unlock();			// release lock while processing msg
-                block->dispatch_msg(i.first, msg);
-                guard.lock();
-              }
-            }
-            else {
-              // leave msg in queue if no handler is defined
-              // start dropping if we have too many
-              if(block->nmsgs(i.first) > max_nmsgs){
-                GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
-                msg = block->delete_head_nowait(i.first);
-              }
-            }
+          if(!d->d_tpb.input_changed && block->empty_handled_p()) {
+            d->d_tpb.input_cond.wait(guard);
           }
         }
       }
