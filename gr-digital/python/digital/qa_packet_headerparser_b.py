@@ -97,6 +97,9 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         """ Header 1: 193 bytes
         Header 2: 8 bytes
         2 bits per complex symbol, 32 carriers => 64 bits = 8 bytes per OFDM symbol
+                                    4 carriers =>  8 bits = 1 byte  per OFDM symbol
+                                    8 carriers => 16 bits = 2 bytes per OFDM symbol
+        Means we need 52 carriers to store the 193 bytes.
         """
         encoded_headers = (
             #   | Number of bytes                    | Packet number                      | CRC
@@ -107,7 +110,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         frame_len_tagname = "frame_len"
         src = blocks.vector_source_b(encoded_headers)
         header_formatter = digital.packet_header_ofdm(
-                (range(32),), # 32 carriers are occupied (which doesn't matter here)
+                (range(32),range(4),range(8)), # 32/4/8 carriers are occupied (which doesn't matter here)
                 1,         # 1 OFDM symbol per header (= 32 bits)
                 packet_len_tagname,
                 frame_len_tagname,
@@ -127,7 +130,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         msg1 = pmt.to_python(sink.get_message(0))
         msg2 = pmt.to_python(sink.get_message(1))
         # Multiply with 4 because unpacked bytes have only two bits
-        self.assertEqual(msg1, {'packet_len': 193*4, 'frame_len': 25, 'packet_num': 0})
+        self.assertEqual(msg1, {'packet_len': 193*4, 'frame_len': 52, 'packet_num': 0})
         self.assertEqual(msg2, {'packet_len': 8*4, 'frame_len': 1, 'packet_num': 1})
 
     def test_004_ofdm_scramble(self):
