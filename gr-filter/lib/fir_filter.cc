@@ -110,7 +110,7 @@ namespace gr {
       float
       fir_filter_fff::filter(const float input[])
       {
-	const float *ar = (float *)((unsigned long) input & ~(d_align-1));
+	const float *ar = (float *)((size_t) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_32f_x2_dot_prod_32f_a(d_output, ar,
@@ -224,7 +224,7 @@ namespace gr {
       gr_complex
       fir_filter_ccf::filter(const gr_complex input[])
       {
-	const gr_complex *ar = (gr_complex *)((unsigned long) input & ~(d_align-1));
+	const gr_complex *ar = (gr_complex *)((size_t) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_32fc_32f_dot_prod_32fc_a(d_output, ar,
@@ -341,7 +341,7 @@ namespace gr {
       gr_complex
       fir_filter_fcc::filter(const float input[])
       {
-	const float *ar = (float *)((unsigned long) input & ~(d_align-1));
+	const float *ar = (float *)((size_t) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_32fc_32f_dot_prod_32fc_a(d_output,
@@ -456,7 +456,7 @@ namespace gr {
       gr_complex
       fir_filter_ccc::filter(const gr_complex input[])
       {
-	const gr_complex *ar = (gr_complex *)((unsigned long) input & ~(d_align-1));
+	const gr_complex *ar = (gr_complex *)((size_t) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_32fc_x2_dot_prod_32fc_a(d_output, ar,
@@ -570,7 +570,7 @@ namespace gr {
       gr_complex
       fir_filter_scc::filter(const short input[])
       {
-	const short *ar = (short *)((unsigned long) input & ~(d_align-1));
+	const short *ar = (short *)((size_t) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_16i_32fc_dot_prod_32fc_a(d_output, ar,
@@ -685,7 +685,7 @@ namespace gr {
       short
       fir_filter_fsf::filter(const float input[])
       {
-	const float *ar = (float *)((unsigned long) input & ~(d_align-1));
+	const float *ar = (float *)((size_t) input & ~(d_align-1));
 	unsigned al = input - ar;
 
 	volk_32f_x2_dot_prod_16i_a(d_output, ar,
