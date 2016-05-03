@@ -32,7 +32,7 @@ from ..Constants import (
     PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
 )
 from ...core import utils
-from ...core.Block import Block as CoreBlock
+from ...core.blocks import Block as CoreBlock
 
 
 class Block(CoreBlock, Drawable):
@@ -45,7 +45,7 @@ class Block(CoreBlock, Drawable):
         """
         super(self.__class__, self).__init__(parent, **n)
 
-        self.states.update(_coordinate=(0, 0), _rotation=0)
+        self.states.update(coordinate=(0, 0), rotation=0)
         self.width = self.height = 0
         Drawable.__init__(self)  # needs the states and initial sizes
 
@@ -68,7 +68,7 @@ class Block(CoreBlock, Drawable):
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
-        return Utils.scale(self.states['_coordinate'])
+        return Utils.scale(self.states['coordinate'])
 
     @coordinate.setter
     def coordinate(self, coor):
@@ -85,7 +85,7 @@ class Block(CoreBlock, Drawable):
                 Utils.align_to_grid(coor[0] + offset_x) - offset_x,
                 Utils.align_to_grid(coor[1] + offset_y) - offset_y
             )
-        self.states['_coordinate'] = coor
+        self.states['coordinate'] = coor
 
     @property
     def rotation(self):
@@ -95,7 +95,7 @@ class Block(CoreBlock, Drawable):
         Returns:
             the rotation in degrees or 0 if failure
         """
-        return self.states['_rotation']
+        return self.states['rotation']
 
     @rotation.setter
     def rotation(self, rot):
@@ -105,7 +105,7 @@ class Block(CoreBlock, Drawable):
         Args:
             rot: the rotation in degrees
         """
-        self.states['_rotation'] = rot
+        self.states['rotation'] = rot
 
     def _update_colors(self):
         self._bg_color = (
@@ -128,7 +128,8 @@ class Block(CoreBlock, Drawable):
             self._area = (0, 0, self.height, self.width)
         self.bounds_from_area(self._area)
 
-        bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
+        # bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
+        bussified = False, False
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
             if not ports:
                 continue
@@ -160,9 +161,9 @@ class Block(CoreBlock, Drawable):
             PangoCairo.update_layout(cr, params_layout)
 
         title_layout.set_markup(
-            '<span {foreground} font_desc="{font}"><b>{name}</b></span>'.format(
+            '<span {foreground} font_desc="{font}"><b>{label}</b></span>'.format(
                 foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
-                name=Utils.encode(self.name)
+                label=Utils.encode(self.label)
             )
         )
         title_width, title_height = title_layout.get_size()
@@ -170,7 +171,7 @@ class Block(CoreBlock, Drawable):
         # update the params layout
         if not self.is_dummy_block:
             markups = [param.format_block_surface_markup()
-                       for param in self.params.values() if param.get_hide() not in ('all', 'part')]
+                       for param in self.params.values() if param.hide not in ('all', 'part')]
         else:
             markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self.key)]
 
@@ -200,15 +201,15 @@ class Block(CoreBlock, Drawable):
                      get_min_height_for_ports(self.active_sinks),
                      get_min_height_for_ports(self.active_sources))
 
-        def get_min_height_for_bus_ports(ports):
-            return 2 * PORT_BORDER_SEPARATION + sum(
-                port.height + PORT_SPACING for port in ports if port.get_type() == 'bus'
-            ) - PORT_SPACING
-
-        if self.current_bus_structure['sink']:
-            height = max(height, get_min_height_for_bus_ports(self.active_sinks))
-        if self.current_bus_structure['source']:
-            height = max(height, get_min_height_for_bus_ports(self.active_sources))
+        # def get_min_height_for_bus_ports(ports):
+        #     return 2 * PORT_BORDER_SEPARATION + sum(
+        #         port.height + PORT_SPACING for port in ports if port.dtype == 'bus'
+        #     ) - PORT_SPACING
+        #
+        # if self.current_bus_structure['sink']:
+        #     height = max(height, get_min_height_for_bus_ports(self.active_sinks))
+        # if self.current_bus_structure['source']:
+        #     height = max(height, get_min_height_for_bus_ports(self.active_sources))
 
         self.width, self.height = width, height = Utils.align_to_grid((width, height))
 
@@ -237,7 +238,7 @@ class Block(CoreBlock, Drawable):
 
         # Show the flow graph complexity on the top block if enabled
         if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.key == "options":
-            complexity = utils.calculate_flowgraph_complexity(self.parent)
+            complexity = utils.flow_graph_complexity.calculate(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'
                 '<b>Complexity: {num}bal</b></span>'.format(num=Utils.num_to_str(complexity), font=BLOCK_FONT)
@@ -344,7 +345,8 @@ class Block(CoreBlock, Drawable):
         Returns:
             true for change
         """
-        type_templates = ' '.join(p._type for p in self.get_children())
+        type_templates = ' '.join(p._type for p in self.params.values())
+        type_templates += ' '.join(p.get_raw('dtype') for p in (self.sinks + self.sources))
         type_param = None
         for key, param in six.iteritems(self.params):
             if not param.is_enum():
@@ -361,10 +363,10 @@ class Block(CoreBlock, Drawable):
 
         # Try to increment the enum by direction
         try:
-            keys = list(type_param.options)
-            old_index = keys.index(type_param.get_value())
-            new_index = (old_index + direction + len(keys)) % len(keys)
-            type_param.set_value(keys[new_index])
+            values = list(type_param.options)
+            old_index = values.index(type_param.get_value())
+            new_index = (old_index + direction + len(values)) % len(values)
+            type_param.set_value(values[new_index])
             return True
         except:
             return False
@@ -381,7 +383,7 @@ class Block(CoreBlock, Drawable):
         """
         changed = False
         # Concat the nports string from the private nports settings of all ports
-        nports_str = ' '.join(port._nports for port in self.get_ports())
+        nports_str = ' '.join(str(port.get_raw('multiplicity')) for port in self.ports())
         # Modify all params whose keys appear in the nports string
         for key, param in six.iteritems(self.params):
             if param.is_enum() or param.key not in nports_str:

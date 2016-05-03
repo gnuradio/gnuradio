@@ -7,11 +7,11 @@
 <block>
 	<name>Import</name>
 	<key>import</key>
-	<import>$import</import>
+	<import>$imports</import>
 	<make></make>
 	<param>
 		<name>Import</name>
-		<key>import</key>
+		<key>imports</key>
 		<value></value>
 		<type>import</type>
 	</param>

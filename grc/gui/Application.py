@@ -20,18 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import, print_function
 
+import logging
 import os
 import subprocess
-import logging
 
 from gi.repository import Gtk, Gio, GLib, GObject
 
-from . import Dialogs, Actions, Executor, FileDialogs, Utils, Bars
+from . import Constants, Dialogs, Actions, Executor, FileDialogs, Utils, Bars
+
 from .MainWindow import MainWindow
-from .ParserErrorsDialog import ParserErrorsDialog
+# from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
 
-from ..core import ParseXML, Messages
+from ..core import Messages
 
 
 log = logging.getLogger(__name__)
@@ -212,9 +213,9 @@ class Application(Gtk.Application):
             main.update_panel_visibility(main.CONSOLE, Actions.TOGGLE_CONSOLE_WINDOW.get_active())
             main.update_panel_visibility(main.VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.get_active())
 
-            if ParseXML.xml_failures:
-                Messages.send_xml_errors_if_any(ParseXML.xml_failures)
-                Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(True)
+            #if ParseXML.xml_failures:
+            #    Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+            #    Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(True)
 
             # Force an update on the current page to match loaded preferences.
             # In the future, change the __init__ order to load preferences first
@@ -284,11 +285,11 @@ class Application(Gtk.Application):
                             for param in block.params.values():
                                 for variable in flow_graph.get_variables():
                                     # If a block parameter exists that is a variable, create a parameter for it
-                                    if param.get_value() == variable.get_id():
+                                    if param.get_value() == variable.name:
                                         params.append(param.get_value())
                                 for flow_param in flow_graph.get_parameters():
                                     # If a block parameter exists that is a parameter, create a parameter for it
-                                    if param.get_value() == flow_param.get_id():
+                                    if param.get_value() == flow_param.name:
                                         params.append(param.get_value())
 
 
@@ -302,15 +303,15 @@ class Application(Gtk.Application):
                             for connection in block.connections:
 
                                 # Get id of connected blocks
-                                source_id = connection.source_block.get_id()
-                                sink_id = connection.sink_block.get_id()
+                                source_id = connection.source_block.name
+                                sink_id = connection.sink_block.name
 
                                 # If connected block is not in the list of selected blocks create a pad for it
                                 if flow_graph.get_block(source_id) not in flow_graph.selected_blocks():
-                                    pads.append({'key': connection.sink_port.key, 'coord': connection.source_port.coordinate, 'block_id' : block.get_id(), 'direction': 'source'})
+                                    pads.append({'key': connection.sink_port.key, 'coord': connection.source_port.coordinate, 'block_id' : block.name, 'direction': 'source'})
 
                                 if flow_graph.get_block(sink_id) not in flow_graph.selected_blocks():
-                                    pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.coordinate, 'block_id' : block.get_id(), 'direction': 'sink'})
+                                    pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.coordinate, 'block_id' : block.name, 'direction': 'sink'})
 
 
                         # Copy the selected blocks and paste them into a new page
@@ -324,10 +325,10 @@ class Application(Gtk.Application):
 
                         # Set flow graph to heir block type
                         top_block  = flow_graph.get_block("top_block")
-                        top_block.get_param('generate_options').set_value('hb')
+                        top_block.params['generate_options'].set_value('hb')
 
                         # this needs to be a unique name
-                        top_block.get_param('id').set_value('new_heir')
+                        top_block.params['id'].set_value('new_heir')
 
                         # Remove the default samp_rate variable block that is created
                         remove_me  = flow_graph.get_block("samp_rate")
@@ -339,7 +340,7 @@ class Application(Gtk.Application):
                         for param in params:
                             param_id = flow_graph.add_new_block('parameter',(x_pos,10))
                             param_block = flow_graph.get_block(param_id)
-                            param_block.get_param('id').set_value(param)
+                            param_block.params['id'].set_value(param)
                             x_pos = x_pos + 100
 
                         for pad in pads:
@@ -357,10 +358,10 @@ class Application(Gtk.Application):
                                 source = source_block.get_source(pad['key'])
 
                                 # Ensure the port types match
-                                while pad_sink.get_type() != source.get_type():
+                                while pad_sink.dtype != source.dtype:
 
                                     # Special case for some blocks that have non-standard type names, e.g. uhd
-                                    if pad_sink.get_type() == 'complex' and source.get_type() == 'fc32':
+                                    if pad_sink.dtype == 'complex' and source.dtype == 'fc32':
                                         break;
                                     pad_block.type_controller_modify(1)
 
@@ -378,9 +379,9 @@ class Application(Gtk.Application):
                                 sink = sink_block.get_sink(pad['key'])
 
                                 # Ensure the port types match
-                                while sink.get_type() != pad_source.get_type():
+                                while sink.dtype != pad_source.dtype:
                                     # Special case for some blocks that have non-standard type names, e.g. uhd
-                                    if pad_source.get_type() == 'complex' and sink.get_type() == 'fc32':
+                                    if pad_source.dtype == 'complex' and sink.dtype == 'fc32':
                                         break;
                                     pad_block.type_controller_modify(1)
 
@@ -567,7 +568,8 @@ class Application(Gtk.Application):
         # View Parser Errors
         ##################################################
         elif action == Actions.XML_PARSER_ERRORS_DISPLAY:
-            ParserErrorsDialog(ParseXML.xml_failures).run()
+            # ParserErrorsDialog(ParseXML.xml_failures).run()
+            pass
         ##################################################
         # Undo/Redo
         ##################################################
@@ -616,7 +618,7 @@ class Application(Gtk.Application):
             #otherwise try to save
             else:
                 try:
-                    ParseXML.to_file(flow_graph.export_data(), page.file_path)
+                    self.platform.save_flow_graph(page.file_path, flow_graph)
                     flow_graph.grc_file_path = page.file_path
                     page.saved = True
                 except IOError:
@@ -639,14 +641,14 @@ class Application(Gtk.Application):
                 else:
                     dup_file_path = page.file_path
                     dup_file_name = '.'.join(dup_file_path.split('.')[:-1]) + "_copy" # Assuming .grc extension at the end of file_path
-                    dup_file_path_temp = dup_file_name+'.grc'
+                    dup_file_path_temp = dup_file_name + Constants.FILE_EXTENSION
                     count = 1
                     while os.path.exists(dup_file_path_temp):
-                        dup_file_path_temp = dup_file_name+'('+str(count)+').grc'
+                        dup_file_path_temp = '{}({}){}'.format(dup_file_name, count, Constants.FILE_EXTENSION)
                         count += 1
                     dup_file_path_user = FileDialogs.SaveFlowGraph(main, dup_file_path_temp).run()
                     if dup_file_path_user is not None:
-                        ParseXML.to_file(flow_graph.export_data(), dup_file_path_user)
+                        self.platform.save_flow_graph(dup_file_path_user, flow_graph)
                         Messages.send('Saved Copy to: "' + dup_file_path_user + '"\n')
             except IOError:
                 Messages.send_fail_save("Can not create a copy of the flowgraph\n")
@@ -707,11 +709,13 @@ class Application(Gtk.Application):
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
-            self.platform.build_block_library()
+            self.platform.build_library()
             main.btwin.repopulate()
-            Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(bool(
-                ParseXML.xml_failures))
-            Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+
+            #todo: implement parser error dialog for YAML
+            #Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(bool(ParseXML.xml_failures))
+            #Messages.send_xml_errors_if_any(ParseXML.xml_failures)
+
             # Force a redraw of the graph, by getting the current state and re-importing it
             main.update_pages()
 
@@ -721,8 +725,9 @@ class Application(Gtk.Application):
             main.btwin.search_entry.grab_focus()
         elif action == Actions.OPEN_HIER:
             for b in flow_graph.selected_blocks():
-                if b._grc_source:
-                    main.new_page(b._grc_source, show=True)
+                grc_source = b.extra_data.get('grc_source', '')
+                if grc_source:
+                    main.new_page(b.grc_source, show=True)
         elif action == Actions.BUSSIFY_SOURCES:
             for b in flow_graph.selected_blocks():
                 b.bussify('source')
@@ -781,8 +786,8 @@ class Application(Gtk.Application):
 
         Actions.BLOCK_CREATE_HIER.set_enabled(bool(selected_blocks))
         Actions.OPEN_HIER.set_enabled(bool(selected_blocks))
-        Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
-        Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
+        #Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
+        #Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
         Actions.RELOAD_BLOCKS.enable()
         Actions.FIND_BLOCKS.enable()
 

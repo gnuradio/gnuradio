@@ -1,4 +1,4 @@
-# Copyright 2008-2015 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 # This file is part of GNU Radio
 #
 # GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,8 +17,4 @@
 
 from __future__ import absolute_import
 
-from . import expr_utils
-from . import epy_block_io
-from . import extract_docs
-
-from ._complexity import calculate_flowgraph_complexity
+from . import epy_block_io, expr_utils, extract_docs, flow_graph_complexity

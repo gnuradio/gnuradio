@@ -1,5 +1,5 @@
 
-def calculate_flowgraph_complexity(flowgraph):
+def calculate(flowgraph):
     """ Determines the complexity of a flowgraph """
     dbal = 0
     for block in flowgraph.blocks:
@@ -8,8 +8,8 @@ def calculate_flowgraph_complexity(flowgraph):
             continue
 
         # Don't worry about optional sinks?
-        sink_list = [c for c in block.sinks if not c.get_optional()]
-        source_list = [c for c in block.sources if not c.get_optional()]
+        sink_list = [c for c in block.sinks if not c.optional]
+        source_list = [c for c in block.sources if not c.optional]
         sinks = float(len(sink_list))
         sources = float(len(source_list))
         base = max(min(sinks, sources), 1)
@@ -22,8 +22,8 @@ def calculate_flowgraph_complexity(flowgraph):
             multi = 1
 
         # Connection ratio multiplier
-        sink_multi = max(float(sum(len(c.get_connections()) for c in sink_list) / max(sinks, 1.0)), 1.0)
-        source_multi = max(float(sum(len(c.get_connections()) for c in source_list) / max(sources, 1.0)), 1.0)
+        sink_multi = max(float(sum(len(c.connections()) for c in sink_list) / max(sinks, 1.0)), 1.0)
+        source_multi = max(float(sum(len(c.connections()) for c in source_list) / max(sources, 1.0)), 1.0)
         dbal += base * multi * sink_multi * source_multi
 
     blocks = float(len(flowgraph.blocks))

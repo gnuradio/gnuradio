@@ -32,7 +32,7 @@ from ..Constants import (
     LINE_SELECT_SENSITIVITY,
 )
 from ...core.Connection import Connection as CoreConnection
-from ...core.Element import nop_write
+from ...core.utils.descriptors import nop_write
 
 
 class Connection(CoreConnection, Drawable):
@@ -93,10 +93,9 @@ class Connection(CoreConnection, Drawable):
         ]
         self._current_coordinates = None  # triggers _make_path()
 
-        def get_domain_color(domain_name):
-            domain = self.parent_platform.domains.get(domain_name, {})
-            color_spec = domain.get('color')
-            return colors.get_color(color_spec) if color_spec else colors.DEFAULT_DOMAIN_COLOR
+        def get_domain_color(domain_id):
+            domain = self.parent_platform.domains.get(domain_id, None)
+            return colors.get_color(domain.color) if domain else colors.DEFAULT_DOMAIN_COLOR
 
         if source.domain == GR_MESSAGE_DOMAIN:
             self._line_width_factor = 1.0

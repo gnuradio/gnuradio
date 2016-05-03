@@ -16,28 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import weakref
-import functools
 
-
-class lazy_property(object):
-
-    def __init__(self, func):
-        self.func = func
-        functools.update_wrapper(self, func)
-
-    def __get__(self, instance, cls):
-        if instance is None:
-            return self
-        value = self.func(instance)
-        setattr(instance, self.func.__name__, value)
-        return value
-
-
-def nop_write(prop):
-    """Make this a property with a nop setter"""
-    def nop(self, value):
-        pass
-    return prop.setter(nop)
+from .utils.descriptors import lazy_property
 
 
 class Element(object):
@@ -56,7 +36,7 @@ class Element(object):
         """
         del self._error_messages[:]
 
-        for child in self.get_children():
+        for child in self.children():
             child.validate()
 
     def is_valid(self):
@@ -97,7 +77,7 @@ class Element(object):
         """
         for msg in self._error_messages:
             yield self, msg
-        for child in self.get_children():
+        for child in self.children():
             if not child.enabled or child.get_bypassed():
                 continue
             for element_msg in child.iter_error_messages():
@@ -108,7 +88,7 @@ class Element(object):
         Rewrite this element and call rewrite on all children.
         Call this base method before rewriting the element.
         """
-        for child in self.get_children():
+        for child in self.children():
             child.rewrite()
 
     @property
@@ -136,7 +116,7 @@ class Element(object):
 
     @lazy_property
     def parent_platform(self):
-        from .Platform import Platform
+        from .platform import Platform
         return self.get_parent_by_type(Platform)
 
     @lazy_property
@@ -146,7 +126,7 @@ class Element(object):
 
     @lazy_property
     def parent_block(self):
-        from .Block import Block
+        from .blocks import Block
         return self.get_parent_by_type(Block)
 
     def reset_parents_by_type(self):
@@ -155,26 +135,30 @@ class Element(object):
             if isinstance(obj, lazy_property):
                 delattr(self, name)
 
-    def get_children(self):
-        return list()
+    def children(self):
+        return
+        yield  # empty generator
 
     ##############################################
     # Type testing
     ##############################################
-    is_platform = False
-
     is_flow_graph = False
-
     is_block = False
-
     is_dummy_block = False
-
     is_connection = False
-
     is_port = False
-
     is_param = False
-
     is_variable = False
-
     is_import = False
+
+    def get_raw(self, name):
+        descriptor = getattr(self.__class__, name, None)
+        if not descriptor:
+            raise ValueError("No evaluated property '{}' found".format(name))
+        return getattr(self, descriptor.name_raw, None) or getattr(self, descriptor.name, None)
+
+    def set_evaluated(self, name, value):
+        descriptor = getattr(self.__class__, name, None)
+        if not descriptor:
+            raise ValueError("No evaluated property '{}' found".format(name))
+        self.__dict__[descriptor.name] = value

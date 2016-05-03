@@ -100,7 +100,7 @@ else: self.stop(); self.wait()</callback>
 		<key>run</key>
 		<value>True</value>
 		<type>bool</type>
-		<hide>#if $generate_options() == 'qt_gui' then ('part' if $run() else 'none') else 'all'#</hide>
+		<hide>#if $generate_options() != 'qt_gui' then 'all' else ('part' if $run() else 'none')#</hide>
 		<option>
 			<name>Autostart</name>
 			<key>True</key>
@@ -137,7 +137,7 @@ else: self.stop(); self.wait()</callback>
 		<key>qt_qss_theme</key>
 		<value></value>
 		<type>file_open</type>
-		<hide>#if $generate_options() == 'qt_gui' then ('none' if $qt_qss_theme() else 'part') else 'all'#</hide>
+		<hide>#if $generate_options() != 'qt_gui' then 'all' else ('none' if $qt_qss_theme() else 'part')#</hide>
 	</param>
 	<param>
 		<name>Thread-safe setters</name>

@@ -174,13 +174,13 @@ class VariableEditor(Gtk.VBox):
         # Block specific values
         if block:
             if block.key == 'import':
-                value = block.get_param('import').get_value()
+                value = block.params['import'].get_value()
             elif block.key != "variable":
                 value = "<Open Properties>"
                 sp('editable', False)
                 sp('foreground', '#0D47A1')
             else:
-                value = block.get_param('value').get_value()
+                value = block.params['value'].get_value()
 
             # Check if there are errors in the blocks.
             # Show the block error as a tooltip
@@ -192,7 +192,7 @@ class VariableEditor(Gtk.VBox):
             else:
                 # Evaluate and show the value (if it is a variable)
                 if block.key == "variable":
-                    evaluated = str(block.get_param('value').evaluate())
+                    evaluated = str(block.params['value'].evaluate())
                     self.set_tooltip_text(evaluated)
         # Always set the text value.
         sp('text', value)
@@ -227,21 +227,21 @@ class VariableEditor(Gtk.VBox):
         imports = self.treestore.append(None, [None, 'Imports'])
         variables = self.treestore.append(None, [None, 'Variables'])
         for block in self._imports:
-            self.treestore.append(imports, [block, block.get_param('id').get_value()])
-        for block in sorted(self._variables, key=lambda v: v.get_id()):
-            self.treestore.append(variables, [block, block.get_param('id').get_value()])
+            self.treestore.append(imports, [block, block.params['id'].get_value()])
+        for block in sorted(self._variables, key=lambda v: v.name):
+            self.treestore.append(variables, [block, block.params['id'].get_value()])
 
     def _handle_name_edited_cb(self, cell, path, new_text):
         block = self.treestore[path][BLOCK_INDEX]
-        block.get_param('id').set_value(new_text)
+        block.params['id'].set_value(new_text)
         Actions.VARIABLE_EDITOR_UPDATE()
 
     def _handle_value_edited_cb(self, cell, path, new_text):
         block = self.treestore[path][BLOCK_INDEX]
         if block.is_import:
-            block.get_param('import').set_value(new_text)
+            block.params['import'].set_value(new_text)
         else:
-            block.get_param('value').set_value(new_text)
+            block.params['value'].set_value(new_text)
         Actions.VARIABLE_EDITOR_UPDATE()
 
     def handle_action(self, item, key, event=None):
@@ -258,12 +258,12 @@ class VariableEditor(Gtk.VBox):
             #Actions.BLOCK_PARAM_MODIFY()
             pass
         elif key == self.DELETE_BLOCK:
-            self.emit('remove_block', self._block.get_id())
+            self.emit('remove_block', self._block.name)
         elif key == self.DELETE_CONFIRM:
             if self._confirm_delete:
                 # Create a context menu to confirm the delete operation
                 confirmation_menu = Gtk.Menu()
-                block_id = self._block.get_param('id').get_value().replace("_", "__")
+                block_id = self._block.params['id'].get_value().replace("_", "__")
                 confirm = Gtk.MenuItem(label="Delete {}".format(block_id))
                 confirm.connect('activate', self.handle_action, self.DELETE_BLOCK)
                 confirmation_menu.add(confirm)

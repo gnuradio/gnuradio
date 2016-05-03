@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+Copyright 2014 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+-->
+<!--
+###################################################
+## And Const Block:
+##	all types, 1 output, 1 input & const
+###################################################
+ -->
+<block>
+	<name>And Const</name>
+	<key>blocks_and_const_xx</key>
+	<category>test</category>
+	<throttle>1</throttle>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.and_const_$(type.fcn)($const)</make>
+	<callback>set_k($const)</callback>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:bb</opt>
+		</option>
+	</param>
+	<param>
+		<name>Constant</name>
+		<key>const</key>
+		<value>0</value>
+		<type>${type}</type>
+        <hide>#if $log then 'none' else 'part'#</hide>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$(type.fcn)</type>
+	</source>
+	<doc>
+This block creates a variable check box. \
+Leave the label blank to use the variable id as the label.
+
+A check box selects between two values of similar type. \
+Te values do not necessarily need to be of boolean type.
+
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
+	</doc>
+</block>

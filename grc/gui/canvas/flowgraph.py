@@ -81,7 +81,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         Returns:
             a unique id
         """
-        block_ids = set(b.get_id() for b in self.blocks)
+        block_ids = set(b.name for b in self.blocks)
         for index in count():
             block_id = '{}_{}'.format(base_id, index)
             if block_id not in block_ids:
@@ -89,7 +89,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         return block_id
 
     def install_external_editor(self, param):
-        target = (param.parent_block.get_id(), param.key)
+        target = (param.parent_block.name, param.key)
 
         if target in self._external_updaters:
             editor = self._external_updaters[target]
@@ -118,7 +118,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
     def handle_external_editor_change(self, new_value, target):
         try:
             block_id, param_key = target
-            self.get_block(block_id).get_param(param_key).set_value(new_value)
+            self.get_block(block_id).params[param_key].set_value(new_value)
 
         except (IndexError, ValueError):  # block no longer exists
             self._external_updaters[target].stop()
@@ -146,7 +146,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         # get the new block
         block = self.new_block(key)
         block.coordinate = coor
-        block.get_param('id').set_value(id)
+        block.params['id'].set_value(id)
         Actions.ELEMENT_CREATE()
         return id
 
@@ -262,18 +262,18 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 except (KeyError, SyntaxError, ValueError):
                     pass
             if block_key == 'epy_block':
-                block.get_param('_io_cache').set_value(param_data.pop('_io_cache'))
-                block.get_param('_source_code').set_value(param_data.pop('_source_code'))
+                block.params['_io_cache'].set_value(param_data.pop('_io_cache'))
+                block.params['_source_code'].set_value(param_data.pop('_source_code'))
                 block.rewrite()  # this creates the other params
             for param_key, param_value in six.iteritems(param_data):
                 #setup id parameter
                 if param_key == 'id':
                     old_id2block[param_value] = block
                     #if the block id is not unique, get a new block id
-                    if param_value in (blk.get_id() for blk in self.blocks):
+                    if param_value in (blk.name for blk in self.blocks):
                         param_value = self._get_unique_id(param_value)
                 #set value to key
-                block.get_param(param_key).set_value(param_value)
+                block.params[param_key].set_value(param_value)
             #move block to offset coordinate
             block.move((x_off, y_off))
         #update before creating connections
@@ -282,11 +282,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
         for connection_n in connections_n:
             source = old_id2block[connection_n.get('source_block_id')].get_source(connection_n.get('source_key'))
             sink = old_id2block[connection_n.get('sink_block_id')].get_sink(connection_n.get('sink_key'))
-            self.connect(source, sink)
-        #set all pasted elements selected
-        for block in selected:
-            selected = selected.union(set(block.get_connections()))
-        self.selected_elements = set(selected)
+            connection = self.connect(source, sink)
+            selected.add(connection)
+        self.selected_elements = selected
 
     ###########################################################################
     # Modify Selected

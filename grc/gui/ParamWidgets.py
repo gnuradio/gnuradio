@@ -88,11 +88,11 @@ class InputParam(Gtk.HBox):
         Set the markup, color, tooltip, show/hide.
         """
         self.label.set_markup(self.param.format_label_markup(self._have_pending_changes))
-        self.set_color('dtype_' + self.param.get_type())
+        self.set_color('dtype_' + self.param.dtype)
 
         self.set_tooltip_text(self.param.format_tooltip_text())
 
-        if self.param.get_hide() == 'all':
+        if self.param.hide == 'all':
             self.hide()
         else:
             self.show_all()
@@ -214,19 +214,17 @@ class EnumParam(InputParam):
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
         self._input = Gtk.ComboBoxText()
-        for option_name in self.param.options_names:
+        for option_name in self.param.options.values():
             self._input.append_text(option_name)
 
-        value = self.param.get_value()
-        active_index = self.param.options.index(value)
-        self._input.set_active(active_index)
-
+        self.param_values = list(self.param.options)
+        self._input.set_active(self.param_values.index(self.param.get_value()))
         self._input.connect('changed', self._editing_callback)
         self._input.connect('changed', self._apply_change)
         self.pack_start(self._input, False, False, 0)
 
     def get_text(self):
-        return self.param.options[self._input.get_active()]
+        return self.param_values[self._input.get_active()]
 
     def set_tooltip_text(self, text):
         self._input.set_tooltip_text(text)
@@ -238,13 +236,13 @@ class EnumEntryParam(InputParam):
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
         self._input = Gtk.ComboBoxText.new_with_entry()
-        for option_name in self.param.options_names:
+        for option_name in self.param.options.values():
             self._input.append_text(option_name)
 
+        self.param_values = list(self.param.options)
         value = self.param.get_value()
         try:
-            active_index = self.param.options.index(value)
-            self._input.set_active(active_index)
+            self._input.set_active(self.param_values.index(value))
         except ValueError:
             self._input.set_active(-1)
             self._input.get_child().set_text(value)
@@ -263,7 +261,7 @@ class EnumEntryParam(InputParam):
         if self.has_custom_value:
             return self._input.get_child().get_text()
         else:
-            return self.param.options[self._input.get_active()]
+            return self.param_values[self._input.get_active()]
 
     def set_tooltip_text(self, text):
         if self.has_custom_value:  # custom entry
@@ -304,16 +302,16 @@ class FileParam(EntryParam):
             dirname = os.getcwd()  # fix bad paths
 
         #build the dialog
-        if self.param.get_type() == 'file_open':
+        if self.param.dtype == 'file_open':
             file_dialog = Gtk.FileChooserDialog('Open a Data File...', None,
                 Gtk.FileChooserAction.OPEN, ('gtk-cancel',Gtk.ResponseType.CANCEL,'gtk-open',Gtk.ResponseType.OK))
-        elif self.param.get_type() == 'file_save':
+        elif self.param.dtype == 'file_save':
             file_dialog = Gtk.FileChooserDialog('Save a Data File...', None,
                 Gtk.FileChooserAction.SAVE, ('gtk-cancel',Gtk.ResponseType.CANCEL, 'gtk-save',Gtk.ResponseType.OK))
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename) #show the current filename
         else:
-            raise ValueError("Can't open file chooser dialog for type " + repr(self.param.get_type()))
+            raise ValueError("Can't open file chooser dialog for type " + repr(self.param.dtype))
         file_dialog.set_current_folder(dirname) #current directory
         file_dialog.set_select_multiple(False)
         file_dialog.set_local_only(True)

@@ -249,7 +249,7 @@ class MainWindow(Gtk.ApplicationWindow):
             return
         try: #try to load from file
             if file_path: Messages.send_start_load(file_path)
-            flow_graph = self._platform.get_new_flow_graph()
+            flow_graph = self._platform.make_flow_graph()
             flow_graph.grc_file_path = file_path
             #print flow_graph
             page = Page(

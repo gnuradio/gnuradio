@@ -172,7 +172,7 @@ class BlockTreeWindow(Gtk.VBox):
         # add block
         iter_ = treestore.insert_before(categories[category], None)
         treestore.set_value(iter_, KEY_INDEX, block.key)
-        treestore.set_value(iter_, NAME_INDEX, block.name)
+        treestore.set_value(iter_, NAME_INDEX, block.label)
         treestore.set_value(iter_, DOC_INDEX, _format_doc(block.documentation))
 
     def update_docs(self):
@@ -225,7 +225,7 @@ class BlockTreeWindow(Gtk.VBox):
             self.expand_module_in_tree()
         else:
             matching_blocks = [b for b in list(self.platform.blocks.values())
-                               if key in b.key.lower() or key in b.name.lower()]
+                               if key in b.key.lower() or key in b.label.lower()]
 
             self.treestore_search.clear()
             self._categories_search = {tuple(): None}

@@ -23,17 +23,15 @@ import os
 import stat
 
 import numpy
-import six
+
 
 # Data files
 DATA_DIR = os.path.dirname(__file__)
-FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
-BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')
 BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 DEFAULT_HIER_BLOCK_LIB_DIR = os.path.expanduser('~/.grc_gnuradio')
-DOMAIN_DTD = os.path.join(DATA_DIR, 'domain.dtd')
 
+BLOCK_DESCRIPTION_FILE_FORMAT_VERSION = 1
 # File format versions:
 #  0: undefined / legacy
 #  1: non-numeric message port keys (label is used instead)
@@ -45,14 +43,9 @@ ADVANCED_PARAM_TAB = "Advanced"
 DEFAULT_BLOCK_MODULE_NAME = '(no module specified)'
 
 # Port domains
-GR_STREAM_DOMAIN = "gr_stream"
-GR_MESSAGE_DOMAIN = "gr_message"
+GR_STREAM_DOMAIN = "stream"
+GR_MESSAGE_DOMAIN = "message"
 DEFAULT_DOMAIN = GR_STREAM_DOMAIN
-
-BLOCK_FLAG_THROTTLE = 'throttle'
-BLOCK_FLAG_DISABLE_BYPASS = 'disable_bypass'
-BLOCK_FLAG_NEED_QT_GUI = 'need_qt_gui'
-BLOCK_FLAG_DEPRECATED = 'deprecated'
 
 # File creation modes
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | \

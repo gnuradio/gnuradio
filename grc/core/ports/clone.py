@@ -15,27 +15,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-from typing import Union
-
-from . import Platform, FlowGraph, Block
-
-lazy_property = property  # fixme: descriptors don't seems to be supported
+from .port import Port, Element
 
 
-class Element(object):
+class PortClone(Port):
 
-    def __init__(self, parent: Union[None, 'Element'] = None): ...
+    def __init__(self, parent, direction, master, name, key):
+        Element.__init__(self, parent)
+        self.master_port = master
 
-    @lazy_property
-    def parent(self) -> 'Element': ...
+        self.name = name
+        self.key = key
+        self.multiplicity = 1
 
-    def get_parent_by_type(self, cls) -> Union[None, 'Element']: ...
+    def __getattr__(self, item):
+        return getattr(self.master_port, item)
 
-    @lazy_property
-    def parent_platform(self) -> Platform.Platform: ...
+    def add_clone(self):
+        raise NotImplementedError()
 
-    @lazy_property
-    def parent_flowgraph(self) -> FlowGraph.FlowGraph: ...
-
-    @lazy_property
-    def parent_block(self) -> Block.Block: ...
+    def remove_clone(self, port):
+        raise NotImplementedError()

@@ -1,5 +1,5 @@
-<!--
-Copyright 2014 Free Software Foundation, Inc.
+"""
+Copyright 2008-2015 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -15,21 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
--->
-<!ELEMENT domain (name, key, color?, multiple_sinks?, multiple_sources?, connection*)>
-<!--
-    Sub level elements.
- -->
-<!ELEMENT connection (source_domain, sink_domain, make)>
-<!--
-    Bottom level elements.
-    Character data only.
- -->
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT key (#PCDATA)>
-<!ELEMENT multiple_sinks (#PCDATA)>
-<!ELEMENT multiple_sources (#PCDATA)>
-<!ELEMENT color (#PCDATA)>
-<!ELEMENT make (#PCDATA)>
-<!ELEMENT source_domain (#PCDATA)>
-<!ELEMENT sink_domain (#PCDATA)>
+"""
+
+from __future__ import absolute_import
+
+from .port import Port
+from .clone import PortClone

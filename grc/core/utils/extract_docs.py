@@ -98,8 +98,7 @@ def docstring_from_make(key, imports, make):
         if '$' in blk_cls:
             raise ValueError('Not an identifier')
         ns = dict()
-        for _import in imports:
-            exec(_import.strip(), ns)
+        exec(imports.strip(), ns)
         blk = eval(blk_cls, ns)
         doc_strings = {key: blk.__doc__}
 
@@ -166,7 +165,8 @@ class SubprocessLoader(object):
             else:
                 break  # normal termination, return
             finally:
-                self._worker.terminate()
+                if self._worker:
+                    self._worker.terminate()
         else:
             print("Warning: docstring loader crashed too often", file=sys.stderr)
         self._thread = None
@@ -277,7 +277,7 @@ elif __name__ == '__main__':
         print(key)
         for match, doc in six.iteritems(docs):
             print('-->', match)
-            print(doc.strip())
+            print(str(doc).strip())
             print()
         print()
 

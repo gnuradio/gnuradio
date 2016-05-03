@@ -33,12 +33,6 @@ GR_PYTHON_CHECK_MODULE_RAW(
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "Cheetah >= 2.0.0"
-    "import Cheetah; assert Cheetah.Version >= '2.0.0'"
-    CHEETAH_FOUND
-)
-
-GR_PYTHON_CHECK_MODULE_RAW(
     "PyYAML >= 3.10"
     "import yaml; assert yaml.__version__ >= '3.11'"
     PYYAML_FOUND
@@ -94,7 +88,8 @@ include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(grc_python_deps
         PYTHON_MIN_VER_FOUND
-        CHEETAH_FOUND
+        PYYAML_FOUND
+        MAKO_FOUND
         LXML_FOUND
         PYGI_FOUND
         GTK_GI_FOUND

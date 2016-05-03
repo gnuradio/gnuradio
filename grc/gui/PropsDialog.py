@@ -40,7 +40,7 @@ class PropsDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(
             self,
-            title='Properties: ' + block.name,
+            title='Properties: ' + block.label,
             transient_for=parent,
             modal=True,
             destroy_with_parent=True,
@@ -70,7 +70,7 @@ class PropsDialog(Gtk.Dialog):
 
         # Params boxes for block parameters
         self._params_boxes = []
-        self._build_param_tab_boxes(block.params)
+        self._build_param_tab_boxes()
 
         # Docs for the block
         self._docs_text_display = doc_view = SimpleTextDisplay()
@@ -109,26 +109,26 @@ class PropsDialog(Gtk.Dialog):
         self.connect('response', self._handle_response)
         self.show_all()  # show all (performs initial gui update)
 
-    def _build_param_tab_boxes(self, params):
-        tab_labels = (p.tab_label for p in self._block.params.values())
+    def _build_param_tab_boxes(self):
+        categories = (p.category for p in self._block.params.values())
 
-        def unique_tab_labels():
+        def unique_categories():
             seen = {Constants.DEFAULT_PARAM_TAB}
             yield Constants.DEFAULT_PARAM_TAB
-            for tab_label in tab_labels:
-                if tab_label in seen:
+            for cat in categories:
+                if cat in seen:
                     continue
-                yield tab_label
-                seen.add(tab_label)
+                yield cat
+                seen.add(cat)
 
-        for tab in unique_tab_labels():
+        for category in unique_categories():
             label = Gtk.Label()
             vbox = Gtk.VBox()
             scroll_box = Gtk.ScrolledWindow()
             scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             scroll_box.add(vbox)
             self.notebook.append_page(scroll_box, label)
-            self._params_boxes.append((tab, label, vbox))
+            self._params_boxes.append((category, label, vbox))
 
     def _params_changed(self):
         """
@@ -143,7 +143,7 @@ class PropsDialog(Gtk.Dialog):
         """
         old_hash = self._hash
         new_hash = self._hash = hash(tuple(
-            (hash(param), param.name, param.get_type(), param.get_hide() == 'all',)
+            (hash(param), param.name, param.dtype, param.hide == 'all',)
             for param in self._block.params.values()
         ))
         return new_hash != old_hash
@@ -171,7 +171,7 @@ class PropsDialog(Gtk.Dialog):
         """
         if force or self._params_changed():
             # hide params box before changing
-            for tab, label, vbox in self._params_boxes:
+            for category, label, vbox in self._params_boxes:
                 vbox.hide()
                 # empty the params box
                 for child in vbox.get_children():
@@ -181,7 +181,7 @@ class PropsDialog(Gtk.Dialog):
                 box_all_valid = True
                 for param in self._block.params.values():
                     # todo: why do we even rebuild instead of really hiding params?
-                    if param.get_tab_label() != tab or param.get_hide() == 'all':
+                    if param.category != category or param.hide == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
 
@@ -190,7 +190,7 @@ class PropsDialog(Gtk.Dialog):
                     vbox.pack_start(input_widget, input_widget.expand, True, 1)
 
                 label.set_markup('<span foreground="{color}">{name}</span>'.format(
-                    color='black' if box_all_valid else 'red', name=Utils.encode(tab)
+                    color='black' if box_all_valid else 'red', name=Utils.encode(category)
                 ))
                 vbox.show()  # show params box with new params
 
@@ -225,7 +225,7 @@ class PropsDialog(Gtk.Dialog):
             buf.insert(pos, '\n')
 
         # if given the current parameters an exact match can be made
-        block_constructor = self._block.get_make().rsplit('.', 2)[-1]
+        block_constructor = self._block.templates.render('make').rsplit('.', 2)[-1]
         block_class = block_constructor.partition('(')[0].strip()
         if block_class in docstrings:
             docstrings = {block_class: docstrings[block_class]}
@@ -246,9 +246,9 @@ class PropsDialog(Gtk.Dialog):
         key = block.key
 
         if key == 'epy_block':
-            src = block.get_param('_source_code').get_value()
+            src = block.params['_source_code'].get_value()
         elif key == 'epy_module':
-            src = block.get_param('source_code').get_value()
+            src = block.params['source_code'].get_value()
         else:
             src = ''
 
@@ -259,12 +259,12 @@ class PropsDialog(Gtk.Dialog):
             buf.insert(buf.get_end_iter(), text)
 
         buf.delete(buf.get_start_iter(), buf.get_end_iter())
-        insert('# Imports\n', '\n'.join(block.get_imports()))
+        insert('# Imports\n', block.templates.render('imports').strip('\n'))
         if block.is_variable:
-            insert('\n\n# Variables\n', block.get_var_make())
-        insert('\n\n# Blocks\n', block.get_make())
+            insert('\n\n# Variables\n', block.templates.render('var_make'))
+        insert('\n\n# Blocks\n', block.templates.render('make'))
         if src:
-            insert('\n\n# External Code ({}.py)\n'.format(block.get_id()), src)
+            insert('\n\n# External Code ({}.py)\n'.format(block.name), src)
 
     def _handle_key_press(self, widget, event):
         close_dialog = (

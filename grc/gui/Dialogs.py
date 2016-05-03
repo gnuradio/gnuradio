@@ -241,15 +241,15 @@ class ErrorsDialog(Gtk.Dialog):
         self.store.clear()
         for element, message in flowgraph.iter_error_messages():
             if element.is_block:
-                src, aspect = element.get_id(), ''
+                src, aspect = element.name, ''
             elif element.is_connection:
-                src = element.source_block.get_id()
-                aspect = "Connection to '{}'".format(element.sink_block.get_id())
+                src = element.source_block.name
+                aspect = "Connection to '{}'".format(element.sink_block.name)
             elif element.is_port:
-                src = element.parent_block.get_id()
+                src = element.parent_block.name
                 aspect = "{} '{}'".format('Sink' if element.is_sink else 'Source', element.name)
             elif element.is_param:
-                src = element.parent_block.get_id()
+                src = element.parent_block.name
                 aspect = "Param '{}'".format(element.name)
             else:
                 src = aspect = ''
