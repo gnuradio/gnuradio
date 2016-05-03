@@ -95,7 +95,7 @@ namespace gr {
     /*! \ingroup snr_blk
      *
      *  A very simple SNR estimator that just uses mean and variance
-     *  estimates of an M-PSK constellation. This esimator is quick
+     *  estimates of an M-PSK constellation. This estimator is quick
      *  and cheap and accurate for high SNR (above 7 dB or so) but
      *  quickly starts to overestimate the SNR at low SNR.
      */
@@ -162,9 +162,9 @@ namespace gr {
      *
      *  An SNR estimator for M-PSK signals that uses 2nd (M2) and 4th
      *  (M4) order moments. This estimator uses knowledge of the
-     *  kurtosis of the signal (k_a) and noise (k_w) to make its
+     *  kurtosis of the signal (\f$k_a)\f$ and noise (\f$k_w\f$) to make its
      *  estimation. We use Beaulieu's approximations here to M-PSK
-     *  signals and AWGN channels such that k_a=1 and k_w=2. These
+     *  signals and AWGN channels such that \f$k_a=1\f$ and \f$k_w=2\f$. These
      *  approximations significantly reduce the complexity of the
      *  calculations (and computations) required.
      *
@@ -257,7 +257,7 @@ namespace gr {
      *  This estimator actually comes from an SNR estimator for M-PSK
      *  signals in fading channels, but this implementation is
      *  specifically for AWGN channels. The math was simplified to
-     *  assume a signal and noise kurtosis (k_a and k_w) for M-PSK
+     *  assume a signal and noise kurtosis (\f$k_a\f$ and \f$k_w\f$) for M-PSK
      *  signals in AWGN. These approximations significantly reduce the
      *  complexity of the calculations (and computations) required.
      *
