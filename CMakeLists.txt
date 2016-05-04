@@ -50,10 +50,11 @@ set(VERSION_INFO_MINOR_VERSION 9)
 set(VERSION_INFO_MAINT_VERSION 2)
 include(GrVersion) #setup version info
 
-# Append -O2 optimization flag for Debug builds
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
-
+# Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
+IF (NOT MSVC)
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
+    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+ENDIF()
 ########################################################################
 # Environment setup
 ########################################################################
