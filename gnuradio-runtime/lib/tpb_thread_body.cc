@@ -155,10 +155,7 @@ namespace gr {
       {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
         while(!d->d_tpb.input_changed) {
-          // wait for input or message
-          if(!d->d_tpb.input_changed && block->empty_handled_p()) {
-            d->d_tpb.input_cond.wait(guard);
-          }
+          d->d_tpb.input_cond.wait(guard);
         }
       }
       break;
@@ -168,7 +165,7 @@ namespace gr {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
         while(!d->d_tpb.output_changed) {
           // wait for output room or message
-          while(!d->d_tpb.output_changed && block->empty_handled_p())
+          while(!d->d_tpb.output_changed)
             d->d_tpb.output_cond.wait(guard);
 
           // handle all pending messages
