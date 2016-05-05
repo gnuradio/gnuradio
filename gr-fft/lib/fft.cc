@@ -83,12 +83,15 @@ namespace gr {
       return s_planning_mutex;
     }
 
+    char wisdom_paht_buffer[256];
     static const char *
     wisdom_filename()
     {
       static fs::path path;
       path = fs::path(gr::appdata_path()) / ".gr_fftw_wisdom";
-      return path.string().c_str();
+      // return path.string().c_str(); // DANGEROUS !!  return invalid pointer in Windows XP,7
+      strcpy(wisdom_paht_buffer,path.string().c_str());
+	    return wisdom_paht_buffer;
     }
 
     static void
