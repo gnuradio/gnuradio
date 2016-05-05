@@ -25,7 +25,7 @@ from . import Bars, Actions, Preferences, Utils
 from .BlockTreeWindow import BlockTreeWindow
 from .VariableEditor import VariableEditor
 from .Constants import \
-    NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
+    NEW_FLOGRAPH_TITLE, DEFAULT_CONSOLE_WINDOW_WIDTH
 from .Dialogs import TextDisplay, MessageDialogHelper
 from .NotebookPage import NotebookPage
 
@@ -67,13 +67,13 @@ class MainWindow(gtk.Window):
 
     # Constants the action handler can use to indicate which panel visibility to change.
     BLOCKS = 0
-    REPORTS = 1
+    CONSOLE = 1
     VARIABLES = 2
 
     def __init__(self, platform, action_handler_callback):
         """
-        MainWindow contructor
-        Setup the menu, toolbar, flowgraph editor notebook, block selection window...
+        MainWindow constructor
+        Setup the menu, toolbar, flow graph editor notebook, block selection window...
         """
         self._platform = platform
 
@@ -107,15 +107,15 @@ class MainWindow(gtk.Window):
         self.page_to_be_closed = None
         self.current_page = None
         self.notebook.set_show_border(False)
-        self.notebook.set_scrollable(True) #scroll arrows for page tabs
+        self.notebook.set_scrollable(True)  # scroll arrows for page tabs
         self.notebook.connect('switch-page', self._handle_page_change)
 
         # Create the console window
         self.text_display = TextDisplay()
-        self.reports_scrolled_window = gtk.ScrolledWindow()
-        self.reports_scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.reports_scrolled_window.add(self.text_display)
-        self.reports_scrolled_window.set_size_request(-1, DEFAULT_REPORTS_WINDOW_WIDTH)
+        self.console_window = gtk.ScrolledWindow()
+        self.console_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.console_window.add(self.text_display)
+        self.console_window.set_size_request(-1, DEFAULT_CONSOLE_WINDOW_WIDTH)
 
         # Create the block tree and variable panels
         self.btwin = BlockTreeWindow(platform, self.get_flow_graph)
@@ -129,13 +129,13 @@ class MainWindow(gtk.Window):
         self.variable_panel_sidebar = Preferences.variable_editor_sidebar()
         if self.variable_panel_sidebar:
             self.left.pack1(self.notebook)
-            self.left.pack2(self.reports_scrolled_window, False)
+            self.left.pack2(self.console_window, False)
             self.right.pack1(self.btwin)
             self.right.pack2(self.vars, False)
         else:
-            # Put the variable editor in a panel with the reports
+            # Put the variable editor in a panel with the console
             self.left.pack1(self.notebook)
-            self.left_subpanel.pack1(self.reports_scrolled_window, shrink=False)
+            self.left_subpanel.pack1(self.console_window, shrink=False)
             self.left_subpanel.pack2(self.vars, resize=False, shrink=True)
             self.left.pack2(self.left_subpanel, False)
 
@@ -145,17 +145,17 @@ class MainWindow(gtk.Window):
         self.container.pack1(self.left)
         self.container.pack2(self.right, False)
 
-        #load preferences and show the main window
+        # load preferences and show the main window
         self.resize(*Preferences.main_window_size())
         self.container.set_position(Preferences.blocks_window_position())
-        self.left.set_position(Preferences.reports_window_position())
+        self.left.set_position(Preferences.console_window_position())
         if self.variable_panel_sidebar:
             self.right.set_position(Preferences.variable_editor_position(sidebar=True))
         else:
             self.left_subpanel.set_position(Preferences.variable_editor_position())
 
         self.show_all()
-        self.reports_scrolled_window.hide()
+        self.console_window.hide()
         self.vars.hide()
         self.btwin.hide()
 
@@ -198,8 +198,8 @@ class MainWindow(gtk.Window):
 
         if panel == self.BLOCKS:
             self.btwin.set_visible(visibility)
-        elif panel == self.REPORTS:
-            self.reports_scrolled_window.set_visible(visibility)
+        elif panel == self.CONSOLE:
+            self.console_window.set_visible(visibility)
         elif panel == self.VARIABLES:
             self.vars.set_visible(visibility)
         else:
@@ -216,16 +216,16 @@ class MainWindow(gtk.Window):
                 self.right.hide()
             else:
                 self.right.show()
-            if not self.vars.get_visible() and not self.reports_scrolled_window.get_visible():
+            if not self.vars.get_visible() and not self.console_window.get_visible():
                 self.left_subpanel.hide()
             else:
                 self.left_subpanel.show()
 
     ############################################################
-    # Report Window
+    # Console Window
     ############################################################
 
-    def add_report_line(self, line):
+    def add_console_line(self, line):
         """
         Place line at the end of the text buffer, then scroll its window all the way down.
 
@@ -297,7 +297,7 @@ class MainWindow(gtk.Window):
         Preferences.set_open_files(open_files)
         Preferences.file_open(open_file)
         Preferences.main_window_size(self.get_size())
-        Preferences.reports_window_position(self.left.get_position())
+        Preferences.console_window_position(self.left.get_position())
         Preferences.blocks_window_position(self.container.get_position())
         if self.variable_panel_sidebar:
             Preferences.variable_editor_position(self.right.get_position(), sidebar=True)
@@ -346,7 +346,7 @@ class MainWindow(gtk.Window):
         """
         Set the title of the main window.
         Set the titles on the page tabs.
-        Show/hide the reports window.
+        Show/hide the console window.
 
         Args:
             title: the window title

@@ -25,7 +25,7 @@ import subprocess
 
 from . import Dialogs, Preferences, Actions, Executor, Constants
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
-                          SaveReportsFileDialog, SaveScreenShotDialog,
+                          SaveConsoleFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
@@ -63,7 +63,7 @@ class ActionHandler:
         self.get_page = self.main_window.get_page
         self.get_focus_flag = self.main_window.get_focus_flag
         #setup the messages
-        Messages.register_messenger(self.main_window.add_report_line)
+        Messages.register_messenger(self.main_window.add_console_line)
         Messages.send_init(platform)
         #initialize
         self.init_file_paths = file_paths
@@ -108,7 +108,6 @@ class ActionHandler:
         page = main.get_page()
         flow_graph = page.get_flow_graph() if page else None
 
-
         def flow_graph_update(fg=flow_graph):
             main.vars.update_gui()
             fg.update()
@@ -138,9 +137,9 @@ class ActionHandler:
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
-                Actions.TOGGLE_REPORTS_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
+                Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
                 Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
-                Actions.CLEAR_REPORTS, Actions.SAVE_REPORTS,
+                Actions.CLEAR_CONSOLE, Actions.SAVE_CONSOLE,
                 Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
@@ -394,17 +393,11 @@ class ActionHandler:
             Dialogs.TypesDialog(flow_graph.get_parent())
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(flow_graph)
-        elif action == Actions.TOGGLE_REPORTS_WINDOW:
-            if action.get_active():
-                main.update_panel_visibility(main.REPORTS, True)
-            else:
-                main.update_panel_visibility(main.REPORTS, False)
+        elif action == Actions.TOGGLE_CONSOLE_WINDOW:
+            main.update_panel_visibility(main.CONSOLE, action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_BLOCKS_WINDOW:
-            if action.get_active():
-                main.update_panel_visibility(main.BLOCKS, True)
-            else:
-                main.update_panel_visibility(main.BLOCKS, False)
+            main.update_panel_visibility(main.BLOCKS, action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SCROLL_LOCK:
             active = action.get_active()
@@ -412,10 +405,10 @@ class ActionHandler:
             if active:
                 main.text_display.scroll_to_end()
             action.save_to_preferences()
-        elif action == Actions.CLEAR_REPORTS:
+        elif action == Actions.CLEAR_CONSOLE:
             main.text_display.clear()
-        elif action == Actions.SAVE_REPORTS:
-            file_path = SaveReportsFileDialog(page.get_file_path()).run()
+        elif action == Actions.SAVE_CONSOLE:
+            file_path = SaveConsoleFileDialog(page.get_file_path()).run()
             if file_path is not None:
                 main.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
@@ -445,15 +438,12 @@ class ActionHandler:
                 action.set_active(True)
                 action.set_sensitive(False)
             else:
-                if not action.get_sensitive():
-                    # This is occurring after variables are un-hidden
+                if action.get_sensitive():
+                    main.update_panel_visibility(main.VARIABLES, action.get_active())
+                else:  # This is occurring after variables are un-hidden
                     # Leave it enabled
                     action.set_sensitive(True)
                     action.set_active(True)
-                elif action.get_active():
-                    main.update_panel_visibility(main.VARIABLES, True)
-                else:
-                    main.update_panel_visibility(main.VARIABLES, False)
             #Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_sensitive(action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR:
@@ -711,7 +701,7 @@ class ActionHandler:
         Update the exec and stop buttons.
         Lock and unlock the mutex for race conditions with exec flow graph threads.
         """
-        sensitive =  self.main_window.get_flow_graph().is_valid() and not self.get_page().get_proc()
+        sensitive = self.main_window.get_flow_graph().is_valid() and not self.get_page().get_proc()
         Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() is not None)

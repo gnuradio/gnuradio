@@ -140,8 +140,8 @@ def add_recent_file(file_name):
         set_recent_files(recent_files[:10])  # Keep up to 10 files
 
 
-def reports_window_position(pos=None):
-    return entry('reports_window_position', pos, default=-1) or 1
+def console_window_position(pos=None):
+    return entry('console_window_position', pos, default=-1) or 1
 
 
 def blocks_window_position(pos=None):

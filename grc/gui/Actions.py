@@ -402,11 +402,11 @@ ERRORS_WINDOW_DISPLAY = Action(
     tooltip='View flow graph errors',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
-TOGGLE_REPORTS_WINDOW = ToggleAction(
-    label='Show _Reports Panel',
-    tooltip='Toggle visibility of the Report widget',
+TOGGLE_CONSOLE_WINDOW = ToggleAction(
+    label='Show _Console Panel',
+    tooltip='Toggle visibility of the console',
     keypresses=(gtk.keysyms.r, gtk.gdk.CONTROL_MASK),
-    preference_name='reports_window_visible'
+    preference_name='console_window_visible'
 )
 TOGGLE_BLOCKS_WINDOW = ToggleAction(
     label='Show _Block Tree Panel',
@@ -415,8 +415,8 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     preference_name='blocks_window_visible'
 )
 TOGGLE_SCROLL_LOCK = ToggleAction(
-    label='Reports Scroll _Lock',
-    tooltip='Toggle scroll lock for the report window',
+    label='Console Scroll _Lock',
+    tooltip='Toggle scroll lock for the console window',
     preference_name='scroll_lock'
 )
 ABOUT_WINDOW_DISPLAY = Action(
@@ -483,14 +483,14 @@ FIND_BLOCKS = Action(
     keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
                 gtk.keysyms.slash, NO_MODS_MASK),
 )
-CLEAR_REPORTS = Action(
-    label='_Clear Reports',
-    tooltip='Clear Reports',
+CLEAR_CONSOLE = Action(
+    label='_Clear Console',
+    tooltip='Clear Console',
     stock_id=gtk.STOCK_CLEAR,
 )
-SAVE_REPORTS = Action(
-    label='_Save Reports',
-    tooltip='Save Reports',
+SAVE_CONSOLE = Action(
+    label='_Save Console',
+    tooltip='Save Console',
     stock_id=gtk.STOCK_SAVE,
 )
 OPEN_HIER = Action(

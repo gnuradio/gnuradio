@@ -98,10 +98,10 @@ MENU_BAR_LIST = (
     (gtk.Action('View', '_View', None, None), [
         Actions.TOGGLE_BLOCKS_WINDOW,
         None,
-        Actions.TOGGLE_REPORTS_WINDOW,
+        Actions.TOGGLE_CONSOLE_WINDOW,
         Actions.TOGGLE_SCROLL_LOCK,
-        Actions.SAVE_REPORTS,
-        Actions.CLEAR_REPORTS,
+        Actions.SAVE_CONSOLE,
+        Actions.CLEAR_CONSOLE,
         None,
         Actions.TOGGLE_HIDE_VARIABLES,
         Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
