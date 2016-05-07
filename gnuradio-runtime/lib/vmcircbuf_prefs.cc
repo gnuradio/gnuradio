@@ -46,7 +46,7 @@ namespace gr {
    *  the key is the filename; the value is the file contents.
    */
 
-  static string
+  static std::string
   pathname(const char *key)
   {
     static fs::path path;

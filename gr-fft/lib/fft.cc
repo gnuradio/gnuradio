@@ -83,7 +83,7 @@ namespace gr {
       return s_planning_mutex;
     }
 
-    static string
+    static std::string
     wisdom_filename()
     {
       static fs::path path;
@@ -95,13 +95,13 @@ namespace gr {
     static void
     import_wisdom()
     {
-      const string filename = wisdom_filename ();
+      const std::string filename = wisdom_filename ();
       FILE *fp = fopen (filename.c_str(), "r");
       if (fp != 0){
         int r = fftwf_import_wisdom_from_file (fp);
         fclose (fp);
         if (!r){
-          fprintf (stderr, "gr::fft: can't import wisdom from %s\n", filename);
+          fprintf (stderr, "gr::fft: can't import wisdom from %s\n", filename.c_str());
         }
       }
     }
@@ -125,7 +125,7 @@ namespace gr {
     static void
     export_wisdom()
     {
-      const string filename = wisdom_filename ();
+      const std::string filename = wisdom_filename ();
       FILE *fp = fopen (filename.c_str(), "w");
       if (fp != 0){
         fftwf_export_wisdom_to_file (fp);
@@ -133,7 +133,7 @@ namespace gr {
       }
       else {
         fprintf (stderr, "fft_impl_fftw: ");
-        perror (filename);
+        perror (filename.c_str());
       }
     }
 
