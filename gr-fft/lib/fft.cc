@@ -83,22 +83,20 @@ namespace gr {
       return s_planning_mutex;
     }
 
-    char wisdom_path_buffer[256];
-    static const char *
+    static string
     wisdom_filename()
     {
       static fs::path path;
       path = fs::path(gr::appdata_path()) / ".gr_fftw_wisdom";
-      // return path.string().c_str(); // DANGEROUS !!  return invalid pointer in Windows XP,7
-      strcpy(wisdom_path_buffer,path.string().c_str());
-      return wisdom_path_buffer;
+      // return path.string().c_str(); // DANGEROUS!! return invalid pointer in Windows XP/7...
+      return path.string();
     }
 
     static void
     import_wisdom()
     {
-      const char *filename = wisdom_filename ();
-      FILE *fp = fopen (filename, "r");
+      const string filename = wisdom_filename ();
+      FILE *fp = fopen (filename.c_str(), "r");
       if (fp != 0){
         int r = fftwf_import_wisdom_from_file (fp);
         fclose (fp);
@@ -127,8 +125,8 @@ namespace gr {
     static void
     export_wisdom()
     {
-      const char *filename = wisdom_filename ();
-      FILE *fp = fopen (filename, "w");
+      const string filename = wisdom_filename ();
+      FILE *fp = fopen (filename.c_str(), "w");
       if (fp != 0){
         fftwf_export_wisdom_to_file (fp);
         fclose (fp);
