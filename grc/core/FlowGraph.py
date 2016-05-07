@@ -18,7 +18,7 @@
 import imp
 import time
 from itertools import ifilter, chain
-from operator import methodcaller
+from operator import methodcaller, attrgetter
 
 import re
 
@@ -27,7 +27,6 @@ from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .Element import Element
 from .utils import odict, expr_utils
 
-_variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
 _monitors_searcher = re.compile('(ctrlport_monitor)')
 _bussink_searcher = re.compile('^(bus_sink)$')
@@ -72,32 +71,31 @@ class FlowGraph(Element):
     ##############################################
     def get_imports(self):
         """
-        Get a set of all import statments in this flow graph namespace.
+        Get a set of all import statements in this flow graph namespace.
 
         Returns:
             a set of import statements
         """
-        imports = sum([block.get_imports() for block in self.get_enabled_blocks()], [])
-        imports = sorted(set(imports))
-        return imports
+        imports = sum([block.get_imports() for block in self.iter_enabled_blocks()], [])
+        return sorted(set(imports))
 
     def get_variables(self):
         """
         Get a list of all variables in this flow graph namespace.
-        Exclude paramterized variables.
+        Exclude parameterized variables.
 
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.iter_enabled_blocks())
+        variables = filter(attrgetter('is_variable'), self.iter_enabled_blocks())
         return expr_utils.sort_objects(variables, methodcaller('get_id'), methodcaller('get_var_make'))
 
     def get_parameters(self):
         """
-        Get a list of all paramterized variables in this flow graph namespace.
+        Get a list of all parameterized variables in this flow graph namespace.
 
         Returns:
-            a list of paramterized variables
+            a list of parameterized variables
         """
         parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.iter_enabled_blocks())
         return parameters

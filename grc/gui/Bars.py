@@ -102,6 +102,7 @@ MENU_BAR_LIST = (
         Actions.SAVE_REPORTS,
         Actions.CLEAR_REPORTS,
         None,
+        Actions.TOGGLE_HIDE_VARIABLES,
         Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
         Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
         Actions.TOGGLE_SNAP_TO_GRID,

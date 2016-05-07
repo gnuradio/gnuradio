@@ -329,6 +329,12 @@ TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
     stock_id=gtk.STOCK_MISSING_IMAGE,
     keypresses=(gtk.keysyms.d, gtk.gdk.CONTROL_MASK),
 )
+TOGGLE_HIDE_VARIABLES = ToggleAction(
+    label='Hide Variables',
+    tooltip='Hide all variable blocks',
+    preference_name='hide_variables',
+    default=False,
+)
 TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
     label='Auto-Hide _Port Labels',
     tooltip='Automatically hide port labels',

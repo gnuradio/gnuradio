@@ -363,7 +363,8 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true if changed, otherwise false.
         """
-        if not self.get_selected_blocks(): return False
+        if not self.get_selected_blocks():
+            return False
         #initialize min and max coordinates
         min_x, min_y = self.get_selected_block().get_coordinate()
         max_x, max_y = self.get_selected_block().get_coordinate()
@@ -428,9 +429,13 @@ class FlowGraph(Element, _Flowgraph):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
+        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
         blocks = sorted(self.blocks, key=methodcaller('get_enabled'))
+
         for element in chain(self.connections, blocks):
             if hide_disabled_blocks and not element.get_enabled():
+                continue  # skip hidden disabled blocks and connections
+            if hide_variables and (element.is_variable or element.is_import):
                 continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)
         #draw selected blocks on top of selected connections
@@ -515,9 +520,16 @@ class FlowGraph(Element, _Flowgraph):
         selected_port = None
         selected = set()
         #check the elements
+        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
+        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
         for element in reversed(self.get_elements()):
+            if hide_disabled_blocks and not element.get_enabled():
+                continue  # skip hidden disabled blocks and connections
+            if hide_variables and (element.is_variable or element.is_import):
+                continue  # skip hidden disabled blocks and connections
             selected_element = element.what_is_selected(coor, coor_m)
-            if not selected_element: continue
+            if not selected_element:
+                continue
             # hidden disabled connections, blocks and their ports can not be selected
             if Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active() and (
                 selected_element.is_block and not selected_element.get_enabled() or

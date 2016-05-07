@@ -136,6 +136,7 @@ class ActionHandler:
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
                 Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
                 Actions.FLOW_GRAPH_OPEN_QSS_THEME,
+                Actions.TOGGLE_HIDE_VARIABLES,
                 Actions.SELECT_ALL,
             ):
                 action.set_sensitive(True)
@@ -413,16 +414,17 @@ class ActionHandler:
             action.save_to_preferences()
             for page in self.main_window.get_pages():
                 page.get_flow_graph().create_shapes()
-        elif action == Actions.TOGGLE_SNAP_TO_GRID:
-            action.save_to_preferences()
-        elif action == Actions.TOGGLE_SHOW_BLOCK_COMMENTS:
-            action.save_to_preferences()
-        elif action == Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB:
+        elif action in (Actions.TOGGLE_SNAP_TO_GRID,
+                        Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
+                        Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB):
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY:
             action.save_to_preferences()
             for page in self.main_window.get_pages():
                 page.get_flow_graph().update()
+        elif action == Actions.TOGGLE_HIDE_VARIABLES:
+            Actions.NOTHING_SELECT()
+            action.save_to_preferences()
         ##################################################
         # Param Modifications
         ##################################################

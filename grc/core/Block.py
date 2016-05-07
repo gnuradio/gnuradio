@@ -30,7 +30,6 @@ from . Constants import (
     BLOCK_ENABLED, BLOCK_BYPASSED, BLOCK_DISABLED
 )
 from . Element import Element
-from . FlowGraph import _variable_matcher
 
 
 def _get_keys(lst):
@@ -149,15 +148,16 @@ class Block(Element):
         # indistinguishable from normal GR blocks. Make explicit
         # checks for them here since they have no work function or
         # buffers to manage.
-        is_virtual_or_pad = self._key in (
+        self.is_virtual_or_pad = self._key in (
             "virtual_source", "virtual_sink", "pad_source", "pad_sink")
-        is_variable = self._key.startswith('variable')
+        self.is_variable = self._key.startswith('variable')
+        self.is_import = (self._key == 'import')
 
         # Disable blocks that are virtual/pads or variables
-        if is_virtual_or_pad or is_variable:
+        if self.is_virtual_or_pad or self.is_variable:
             self._flags += BLOCK_FLAG_DISABLE_BYPASS
 
-        if not (is_virtual_or_pad or is_variable or self._key == 'options'):
+        if not (self.is_virtual_or_pad or self.is_variable or self._key == 'options'):
             self.get_params().append(self.get_parent().get_parent().Param(
                 block=self,
                 n=odict({'name': 'Block Alias',
@@ -168,7 +168,7 @@ class Block(Element):
                          })
             ))
 
-        if (len(sources) or len(sinks)) and not is_virtual_or_pad:
+        if (len(sources) or len(sinks)) and not self.is_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
                     n=odict({'name': 'Core Affinity',
@@ -178,7 +178,7 @@ class Block(Element):
                              'tab': ADVANCED_PARAM_TAB
                              })
                     ))
-        if len(sources) and not is_virtual_or_pad:
+        if len(sources) and not self.is_virtual_or_pad:
             self.get_params().append(self.get_parent().get_parent().Param(
                     block=self,
                     n=odict({'name': 'Min Output Buffer',
@@ -253,7 +253,7 @@ class Block(Element):
                 self.add_error_message('Check "{}" did not evaluate.'.format(check))
 
         # For variables check the value (only if var_value is used
-        if _variable_matcher.match(self.get_key()) and self._var_value != '$value':
+        if self.is_variable and self._var_value != '$value':
             value = self._var_value
             try:
                 value = self.get_var_value()
