@@ -45,12 +45,15 @@ namespace gr {
    * The simplest thing that could possibly work:
    *  the key is the filename; the value is the file contents.
    */
+  char prefs_path_buffer[128];
   static const char *
   pathname(const char *key)
   {
     static fs::path path;
     path = fs::path(gr::appdata_path()) / ".gnuradio" / "prefs" / key;
-    return path.string().c_str();
+    strcpy(prefs_path_buffer,path.string().c_str());
+    //return path.string().c_str();  //  DANGEROUS !!  return dangling pointer (invalid pointer) in Windows
+    return prefs_path_buffer;
   }
 
   static void
