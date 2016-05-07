@@ -356,7 +356,7 @@ class Block(Element):
         """
         Resolve all import statements.
         Split each import statement at newlines.
-        Combine all import statments into a list.
+        Combine all import statements into a list.
         Filter empty imports.
 
         Returns:

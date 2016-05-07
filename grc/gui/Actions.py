@@ -92,6 +92,7 @@ class _ActionBase(object):
             self.set_accel_group(get_accel_group())
             self.set_accel_path(accel_path)
             gtk.accel_map_add_entry(accel_path, keyval, mod_mask)
+        self.args = None
 
     def __str__(self):
         """
@@ -105,10 +106,11 @@ class _ActionBase(object):
 
     def __repr__(self): return str(self)
 
-    def __call__(self):
+    def __call__(self, *args):
         """
         Emit the activate signal when called with ().
         """
+        self.args = args
         self.emit('activate')
 
 
