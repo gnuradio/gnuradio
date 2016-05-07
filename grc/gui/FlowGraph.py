@@ -586,7 +586,8 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             a block or None
         """
-        return self.get_selected_blocks() and self.get_selected_blocks()[0] or None
+        selected_blocks = self.get_selected_blocks()
+        return selected_blocks[0] if selected_blocks else None
 
     def get_selected_elements(self):
         """
@@ -604,7 +605,8 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             a block, port, or connection or None
         """
-        return self.get_selected_elements() and self.get_selected_elements()[0] or None
+        selected_elements = self.get_selected_elements()
+        return selected_elements[0] if selected_elements else None
 
     def update_selected_elements(self):
         """
