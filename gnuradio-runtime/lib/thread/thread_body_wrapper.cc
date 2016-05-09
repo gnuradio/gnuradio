@@ -34,7 +34,7 @@
 namespace gr {
   namespace thread {
 
-#if defined(HAVE_PTHREAD_SIGMASK) && defined(HAVE_SIGNAL_H)
+#if defined(HAVE_PTHREAD_SIGMASK) && defined(HAVE_SIGNAL_H) && !defined(__MINGW32__)
 
     void mask_signals()
     {
