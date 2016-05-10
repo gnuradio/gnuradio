@@ -173,6 +173,7 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
 ########################################################################
 PAGE_CHANGE = Action()
 EXTERNAL_UPDATE = Action()
+VARIABLE_EDITOR_UPDATE = Action()
 FLOW_GRAPH_NEW = Action(
     label='_New',
     tooltip='Create a new flow graph',
@@ -334,6 +335,20 @@ TOGGLE_HIDE_VARIABLES = ToggleAction(
     tooltip='Hide all variable blocks',
     preference_name='hide_variables',
     default=False,
+)
+TOGGLE_FLOW_GRAPH_VAR_EDITOR = ToggleAction(
+    label='Show _Variable Editor',
+    tooltip='Show the variable editor. Modify variables and imports in this flow graph',
+    stock_id=gtk.STOCK_EDIT,
+    default=True,
+    keypresses=(gtk.keysyms.e, gtk.gdk.CONTROL_MASK),
+    preference_name='variable_editor_visable',
+)
+TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = ToggleAction(
+    label='Move Variable Editor to the Sidebar',
+    tooltip='Move the variable editor to the sidebar',
+    default=False,
+    preference_name='variable_editor_sidebar',
 )
 TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
     label='Auto-Hide _Port Labels',
