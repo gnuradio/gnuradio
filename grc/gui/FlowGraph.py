@@ -530,13 +530,6 @@ class FlowGraph(Element, _Flowgraph):
             selected_element = element.what_is_selected(coor, coor_m)
             if not selected_element:
                 continue
-            # hidden disabled connections, blocks and their ports can not be selected
-            if Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active() and (
-                selected_element.is_block and not selected_element.get_enabled() or
-                selected_element.is_connection and not selected_element.get_enabled() or
-                selected_element.is_port and not selected_element.get_parent().get_enabled()
-            ):
-                continue
             #update the selected port information
             if selected_element.is_port:
                 if not coor_m: selected_port = selected_element
