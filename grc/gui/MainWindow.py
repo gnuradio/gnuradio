@@ -148,7 +148,6 @@ class MainWindow(gtk.Window):
             page_num: new page number
         """
         self.current_page = self.notebook.get_nth_page(page_num)
-        Messages.send_page_switch(self.current_page.get_file_path())
         Actions.PAGE_CHANGE()
 
     ############################################################
