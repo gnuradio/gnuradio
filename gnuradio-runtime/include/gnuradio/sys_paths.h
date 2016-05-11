@@ -32,6 +32,9 @@ namespace gr {
   //! directory to store application data
   GR_RUNTIME_API const char *appdata_path();
 
+  //! directory to store user configuration
+  GR_RUNTIME_API const char *userconf_path();
+
 } /* namespace gr */
 
 #endif /* GR_SYS_PATHS_H */

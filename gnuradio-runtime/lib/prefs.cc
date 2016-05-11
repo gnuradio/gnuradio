@@ -77,10 +77,9 @@ namespace gr {
     // Find if there is a ~/.gnuradio/config.conf file and add this to
     // the end of the file list to override any preferences in the
     // installed path config files.
-    fs::path homedir = fs::path(gr::appdata_path());
-    homedir = homedir/".gnuradio/config.conf";
-    if(fs::exists(homedir)) {
-      fnames.push_back(homedir.string());
+    fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    if(fs::exists(userconf)) {
+      fnames.push_back(userconf.string());
     }
 
     return fnames;
@@ -222,10 +221,8 @@ namespace gr {
   prefs::save()
   {
     std::string conf = to_string();
-
-    fs::path homedir = fs::path(gr::appdata_path());
-    homedir = homedir/".gnuradio/config.conf";
-    fs::ofstream fout(homedir);
+    fs::path userconf = fs::path(gr::userconf_path()) / "config.conf";
+    fs::ofstream fout(userconf);
     fout << conf;
     fout.close();
   }
