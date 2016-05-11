@@ -31,6 +31,8 @@
 namespace gr {
   namespace uhd {
 
+    const pmt::pmt_t CMD_TAG_KEY = pmt::mp("tag");
+
     usrp_source::sptr
     usrp_source::make(const ::uhd::device_addr_t &device_addr,
                       const ::uhd::io_type_t &io_type,
@@ -80,6 +82,7 @@ namespace gr {
 #ifdef GR_UHD_USE_STREAM_API
       _samps_per_packet = 1;
 #endif
+      register_msg_cmd_handler(CMD_TAG_KEY, boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
     }
 
     usrp_source_impl::~usrp_source_impl()
@@ -356,6 +359,12 @@ namespace gr {
 #else
       throw std::runtime_error("not implemented in this version");
 #endif
+    }
+
+    void
+    usrp_source_impl::_cmd_handler_tag(const pmt::pmt_t &tag)
+    {
+      _tag_now = true;
     }
 
     void

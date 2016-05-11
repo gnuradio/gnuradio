@@ -336,18 +336,18 @@ $short_id#slurp
 
 
 def argument_parser():
-    #set $desc_args = 'usage="%prog: [options]", option_class=eng_option'
+    #set $arg_parser_args = ''
     #if $flow_graph.get_option('description')
-        #set $desc_args += ', description=description'
+        #set $arg_parser_args = 'description=description'
     description = $repr($flow_graph.get_option('description'))
     #end if
-    parser = OptionParser($desc_args)
+    parser = ArgumentParser($arg_parser_args)
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
         #if $type
             #silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-    parser.add_option(
-        "$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
+    parser.add_argument(
+        "$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type=$type, default=$make_default($type, $param),
         help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
         #end if
     #end for
@@ -358,7 +358,7 @@ def argument_parser():
 def main(top_block_cls=$(class_name), options=None):
     #if $parameters
     if options is None:
-        options, _ = argument_parser().parse_args()
+        options = argument_parser().parse_args()
     #end if
     #if $flow_graph.get_option('realtime_scheduling')
     if gr.enable_realtime_scheduling() != gr.RT_OK:
