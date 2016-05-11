@@ -25,6 +25,8 @@
 #endif
 
 #include <gnuradio/constants.h>
+#include <gnuradio/sys_paths.h>
+#include <gnuradio/prefs.h>
 #include <boost/program_options.hpp>
 #include <boost/format.hpp>
 #include <iostream>
@@ -43,6 +45,8 @@ main(int argc, char **argv)
     ("prefix", "print GNU Radio installation prefix")
     ("sysconfdir", "print GNU Radio system configuration directory")
     ("prefsdir", "print GNU Radio preferences directory")
+    ("userprefsdir", "print GNU Radio user preferences directory")
+    ("prefs", "print GNU Radio preferences")
     ("builddate", "print GNU Radio build date (RFC2822 format)")
     ("enabled-components", "print GNU Radio build time enabled components")
     ("cc", "print GNU Radio C compiler version")
@@ -74,6 +78,12 @@ main(int argc, char **argv)
 
   if(vm.count("prefsdir"))
     std::cout << gr::prefsdir() << std::endl;
+
+  if(vm.count("userprefsdir"))
+    std::cout << gr::userconf_path() << std::endl;
+
+  if(vm.count("prefs"))
+    std::cout << gr::prefs::singleton()->to_string() << std::endl;
 
   if(vm.count("builddate"))
     std::cout << gr::build_date() << std::endl;

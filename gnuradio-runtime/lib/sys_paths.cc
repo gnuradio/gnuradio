@@ -23,6 +23,8 @@
 #include <cstdlib> //getenv
 #include <cstdio>  //P_tmpdir (maybe)
 
+#include <boost/filesystem/path.hpp>
+
 namespace gr {
 
   const char *tmp_path()
@@ -60,6 +62,13 @@ namespace gr {
 
     //fall-through case, nothing worked
     return tmp_path();
+  }
+
+  const char *userconf_path()
+  {
+    boost::filesystem::path p(appdata_path());
+    p = p / ".gnuradio";
+    return p.c_str();
   }
 
 }  /* namespace gr */
