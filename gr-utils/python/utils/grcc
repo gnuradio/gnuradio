@@ -22,7 +22,7 @@
 
 import os
 import sys
-from optparse import OptionParser
+from argparse import ArgumentParser
 import warnings
 warnings.simplefilter('ignore')
 
@@ -57,28 +57,25 @@ class GRCC:
 
 
 def main():
-    usage="%prog: [options] filename"
     description = "Compiles a GRC file (.grc) into a GNU Radio Python program. The program is stored in ~/.grc_gnuradio by default, but this location can be changed with the -d option."
 
-    parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
-    parser.add_option("-d", "--directory", type="string", default='{0}/.grc_gnuradio/'.format(os.environ["HOME"]),
-                      help="Specify the directory to output the compile program [default=%default]")
-    parser.add_option("-e", "--execute", action="store_true", default=False,
-                      help="Run the program after compiling [default=%default]")
-    (options, args) = parser.parse_args ()
-
-    if len(args) != 1:
-        sys.stderr.write("Please specify a GRC file name to compile.\n")
-        sys.exit(1)
+    parser = ArgumentParser(description=description)
+    parser.add_argument("-d", "--directory",
+            default='{0}/.grc_gnuradio/'.format(os.environ["HOME"]),
+            help="Specify the directory to output the compile program [default=%(default)s]")
+    parser.add_argument("-e", "--execute", action="store_true", default=False,
+            help="Run the program after compiling [default=%(default)s]")
+    parser.add_argument('grc_file', metavar="GRC_FILE", help=".grc file to compile")
+    args = parser.parse_args()
 
     try:
-        g = GRCC(args[0], options.directory + "/")
+        g = GRCC(args.grc_file, args.directory + "/")
     except Exception as e:
         sys.stderr.write(str(e) + "\n")
         sys.stderr.write("Error during file compilation.\n")
         sys.exit(1)
 
-    if options.execute:
+    if args.execute:
         g.exec_program()
 
 
