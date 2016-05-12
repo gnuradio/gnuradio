@@ -165,8 +165,7 @@ namespace gr {
 
   protected:
     virtual std::vector<std::string> _sys_prefs_filenames();
-    virtual std::string _read_files(const std::vector<std::string> &filenames);
-    virtual void _convert_to_map(const std::string &conf);
+    virtual void _read_files(const std::vector<std::string> &filenames);
     virtual char * option_to_env(std::string section, std::string option);
 
   private:
