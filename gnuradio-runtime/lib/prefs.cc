@@ -27,12 +27,18 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/sys_paths.h>
 #include <gnuradio/constants.h>
+
 #include <algorithm>
+#include <fstream>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/program_options.hpp>
+#include <boost/foreach.hpp>
 namespace fs = boost::filesystem;
+namespace po = boost::program_options;
+typedef std::ifstream::char_type char_t;
 
 namespace gr {
 
@@ -46,10 +52,7 @@ namespace gr {
 
   prefs::prefs()
   {
-    std::string config = _read_files(_sys_prefs_filenames());
-
-    // Convert the string into a map
-    _convert_to_map(config);
+    _read_files(_sys_prefs_filenames());
   }
 
   prefs::~prefs()
@@ -85,106 +88,39 @@ namespace gr {
     return fnames;
   }
 
-  std::string
+  void
   prefs::_read_files(const std::vector<std::string> &filenames)
   {
-    std::string config;
-
-    std::vector<std::string>::const_iterator sitr;
-    char tmp[1024];
-    for(sitr = filenames.begin(); sitr != filenames.end(); sitr++) {
-      fs::ifstream fin(*sitr);
-      while(!fin.eof()) {
-        fin.getline(tmp, 1024);
-        std::string t(tmp);
-        // ignore empty lines or lines of just comments
-        if((t.size() > 0) && (t[0] != '#')) {
-          // remove any comments in the line
-          size_t hash = t.find("#");
-
-          // Remove any white space unless it's between quotes
-          // Search if the string has any quotes in it
-          size_t quote1 = t.find("\"");
-          if(quote1 != std::string::npos) {
-            // If yes, find where the start and end quotes are.
-            // Note that this isn't robust if there are multiple
-            // quoted strings in the line; this will just take the
-            // first and last, and if there is only a single quote,
-            // this will treat the entire line after the quote as the
-            // quoted text.
-            // the inq variable is strips the quotes as well.
-            size_t quote2 = t.find_last_of("\"");
-            std::string sol = t.substr(0, quote1);
-            std::string inq = t.substr(quote1+1, quote2-quote1-1);
-            std::string eol = t.substr(quote2+1, t.size()-quote2-1);
-
-            // Remove all white space of the text before the first quote
-            sol.erase(std::remove_if(sol.begin(), sol.end(),
-                                     ::isspace), sol.end());
-
-            // Remove all white space of the text after the end quote
-            eol.erase(std::remove_if(eol.begin(), eol.end(),
-                                     ::isspace), eol.end());
-
-            // Pack the stripped start and end of lines with the part
-            // of the string in quotes (but without the quotes).
-            t = sol + inq + eol;
+    BOOST_FOREACH( std::string fname, filenames) {
+      std::ifstream infile(fname.c_str());
+      if(infile.good()) {
+        try {
+          po::basic_parsed_options<char_t> parsed = po::parse_config_file(infile, po::options_description(), true);
+          BOOST_FOREACH(po::basic_option<char_t> o, (parsed.options) ){
+            std::string okey = o.string_key;
+            size_t pos = okey.find(".");
+            std::string section, key;
+            if(pos != std::string::npos) {
+              section = okey.substr(0,pos);
+              key = okey.substr(pos+1);
+            } else {
+              section = "default";
+              key = okey;
+            }
+            std::transform(section.begin(), section.end(), section.begin(), ::tolower);
+            std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+            // value of a basic_option is always a std::vector<string>; we only allow single values, so:
+            std::string value = o.value[0];
+            d_config_map[section][key] = value;
           }
-          else {
-            // No quotes, just strip all white space
-            t.erase(std::remove_if(t.begin(), t.end(),
-                                   ::isspace), t.end());
-          }
-
-          // Use hash marks at the end of each segment as a delimiter
-          config += t.substr(0, hash) + '#';
+        } catch(const boost::program_options::invalid_config_file_syntax & e) {
+          std::cerr << "WARNING: Config file '" << fname << "' failed to parse:" << std::endl;
+          std::cerr << e.what() << std::endl;
+          std::cerr << "Skipping it" << std::endl;
         }
+      } else { // infile.good();
+        std::cerr << "WARNING: Config file '" << fname << "' could not be opened for reading." << std::endl;
       }
-      fin.close();
-    }
-
-    return config;
-  }
-
-  void
-  prefs::_convert_to_map(const std::string &conf)
-  {
-    // Convert the string into an map of maps
-    // Map is structured as {section name: map of options}
-    // And options map is simply: {option name: option value}
-    std::string sub = conf;
-    size_t sec_start = sub.find("[");
-    while(sec_start != std::string::npos) {
-      sub = sub.substr(sec_start);
-
-      size_t sec_end = sub.find("]");
-      if(sec_end == std::string::npos)
-        throw std::runtime_error("Config file error: Mismatched section label.\n");
-
-      std::string sec = sub.substr(1, sec_end-1);
-      size_t next_sec_start = sub.find("[", sec_end);
-      std::string subsec = sub.substr(sec_end+1, next_sec_start-sec_end-2);
-
-      std::transform(sec.begin(), sec.end(), sec.begin(), ::tolower);
-
-      std::map<std::string, std::string> options_map = d_config_map[sec];
-      size_t next_opt = 0;
-      size_t next_val = 0;
-      next_opt = subsec.find("#");
-      while(next_opt < subsec.size()-1) {
-        next_val = subsec.find("=", next_opt);
-        std::string option = subsec.substr(next_opt+1, next_val-next_opt-1);
-
-        next_opt = subsec.find("#", next_val);
-        std::string value = subsec.substr(next_val+1, next_opt-next_val-1);
-
-        std::transform(option.begin(), option.end(), option.begin(), ::tolower);
-        options_map[option] = value;
-      }
-
-      d_config_map[sec] = options_map;
-
-      sec_start = sub.find("[", sec_end);
     }
   }
 
@@ -194,8 +130,7 @@ namespace gr {
     std::vector<std::string> filenames;
     filenames.push_back(configfile);
 
-    std::string config = _read_files(filenames);
-    _convert_to_map(config);
+    _read_files(filenames);
   }
 
 
