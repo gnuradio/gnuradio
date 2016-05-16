@@ -32,6 +32,7 @@ set(BOOST_REQUIRED_COMPONENTS
     filesystem
     system
     thread
+    regex
 )
 
 if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
