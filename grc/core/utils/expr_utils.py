@@ -99,7 +99,7 @@ def expr_replace(expr, replace_dict):
     Returns:
         a new expression with the prepend
     """
-    expr_splits = expr_split(expr)
+    expr_splits = expr_split(expr, var_chars=VAR_CHARS + '.')
     for i, es in enumerate(expr_splits):
         if es in replace_dict.keys():
             expr_splits[i] = replace_dict[es]

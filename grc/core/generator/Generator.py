@@ -145,7 +145,7 @@ class TopBlockGenerator(object):
             filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
             lambda b: b.get_id(), _get_block_sort_text
         )
-        deprecated_block_keys = set(block.get_name() for block in blocks if block.is_deprecated)
+        deprecated_block_keys = set(block.get_name() for block in blocks_all if block.is_deprecated)
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
@@ -224,7 +224,8 @@ class TopBlockGenerator(object):
 
         # Map var id to callbacks
         def uses_var_id():
-            return expr_utils.get_variable_dependencies(callback, [var_id])
+            used = expr_utils.get_variable_dependencies(callback, [var_id])
+            return used and 'self.' + var_id in callback  # callback might contain var_id itself
 
         callbacks = {}
         for var_id in var_ids:
