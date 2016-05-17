@@ -56,7 +56,7 @@ class graph(object):
         return self._graph[node_key]
 
 
-def expr_split(expr):
+def expr_split(expr, var_chars=VAR_CHARS):
     """
     Split up an expression by non alphanumeric characters, including underscore.
     Leave strings in-tact.
@@ -72,7 +72,7 @@ def expr_split(expr):
     tok = ''
     quote = ''
     for char in expr:
-        if quote or char in VAR_CHARS:
+        if quote or char in var_chars:
             if char == quote:
                 quote = ''
             tok += char
@@ -118,7 +118,7 @@ def get_variable_dependencies(expr, vars):
         a subset of vars used in the expression
     """
     expr_toks = expr_split(expr)
-    return set(filter(lambda v: v in expr_toks, vars))
+    return set(var for var in vars if var in expr_toks)
 
 
 def get_graph(exprs):
@@ -189,8 +189,3 @@ def sort_objects(objects, get_id, get_expr):
     sorted_ids = sort_variables(id2expr)
     # Return list of sorted objects
     return [id2obj[id] for id in sorted_ids]
-
-
-if __name__ == '__main__':
-    for i in sort_variables({'x': '1', 'y': 'x+1', 'a': 'x+y', 'b': 'y+1', 'c': 'a+b+x+y'}):
-        print i
