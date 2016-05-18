@@ -73,6 +73,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
         PATHS /usr/local/include
               /usr/include
               "@CMAKE_INSTALL_PREFIX@/include"
+              "@VOLK_INSTALL_INCLUDE_DIR@"
     )
 
     # look for libs
@@ -89,6 +90,7 @@ function(GR_MODULE EXTVAR PCNAME INCFILE LIBFILE)
                   /usr/lib
                   /usr/lib64
                   "@CMAKE_INSTALL_PREFIX@/lib"
+                  "@VOLK_INSTALL_LIBRARY_DIR@"
         )
 	list(APPEND ${LIBVAR_NAME} ${${LIBVAR_NAME}_${libname}})
     endforeach(libname)
