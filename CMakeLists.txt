@@ -54,6 +54,31 @@ include(GrVersion) #setup version info
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
 
+# Set C/C++ standard for all targets
+# NOTE: Starting with cmake v3.1 this should be used:
+# set(CMAKE_C_STANDARD 90)
+# set(CMAKE_CXX_STANDARD 98)
+
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSE()
+    message(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
+IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+ELSE()
+    message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
 ########################################################################
 # Environment setup
 ########################################################################
