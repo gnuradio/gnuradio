@@ -33,6 +33,45 @@ BLOCK_INDEX = 0
 ID_INDEX = 1
 
 
+class VariableEditorContextMenu(gtk.Menu):
+    """ A simple context menu for our variable editor """
+    def __init__(self, var_edit):
+        gtk.Menu.__init__(self)
+
+        self.imports = gtk.MenuItem("Add _Import")
+        self.imports.connect('activate', var_edit._handle_action, var_edit.ADD_IMPORT)
+        self.add(self.imports)
+
+        self.variables = gtk.MenuItem("Add _Variable")
+        self.variables.connect('activate', var_edit._handle_action, var_edit.ADD_VARIABLE)
+        self.add(self.variables)
+        self.add(gtk.SeparatorMenuItem())
+
+        self.enable = gtk.MenuItem("_Enable")
+        self.enable.connect('activate', var_edit._handle_action, var_edit.ENABLE_BLOCK)
+        self.disable = gtk.MenuItem("_Disable")
+        self.disable.connect('activate', var_edit._handle_action, var_edit.DISABLE_BLOCK)
+        self.add(self.enable)
+        self.add(self.disable)
+        self.add(gtk.SeparatorMenuItem())
+
+        self.delete = gtk.MenuItem("_Delete")
+        self.delete.connect('activate', var_edit._handle_action, var_edit.DELETE_BLOCK)
+        self.add(self.delete)
+        self.add(gtk.SeparatorMenuItem())
+
+        self.properties = gtk.MenuItem("_Properties...")
+        self.properties.connect('activate', var_edit._handle_action, var_edit.OPEN_PROPERTIES)
+        self.add(self.properties)
+        self.show_all()
+
+    def update_sensitive(self, selected, enabled=False):
+        self.delete.set_sensitive(selected)
+        self.properties.set_sensitive(selected)
+        self.enable.set_sensitive(selected and not enabled)
+        self.disable.set_sensitive(selected and enabled)
+
+
 class VariableEditor(gtk.VBox):
 
     # Actions that are handled by the editor
@@ -101,6 +140,7 @@ class VariableEditor(gtk.VBox):
         self.pack_start(scrolled_window)
 
         # Context menus
+        self._context_menu = VariableEditorContextMenu(self)
         self._confirm_delete = Preferences.variable_editor_confirm_delete()
 
     # Sets cell contents
@@ -269,6 +309,12 @@ class VariableEditor(gtk.VBox):
                         else:
                             self._handle_action(None, self.DELETE_CONFIRM, event=event)
                         return True
+            elif event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS:
+                if self._block:
+                    self._context_menu.update_sensitive(True, enabled=self._block.get_enabled())
+                else:
+                    self._context_menu.update_sensitive(False)
+                self._context_menu.popup(None, None, None, event.button, event.time)
         return False
 
     def _handle_key_button_press(self, widget, event):
