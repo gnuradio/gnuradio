@@ -253,6 +253,45 @@ BLOCK_ROTATE_CW = Action(
     stock_id=gtk.STOCK_GO_FORWARD,
     keypresses=(gtk.keysyms.Right, NO_MODS_MASK),
 )
+BLOCK_VALIGN_TOP = Action(
+    label='Vertical Align Top',
+    tooltip='Align tops of selected blocks',
+    keypresses=(gtk.keysyms.t, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_VALIGN_MIDDLE = Action(
+    label='Vertical Align Middle',
+    tooltip='Align centers of selected blocks vertically',
+    keypresses=(gtk.keysyms.m, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_VALIGN_BOTTOM = Action(
+    label='Vertical Align Bottom',
+    tooltip='Align bottoms of selected blocks',
+    keypresses=(gtk.keysyms.b, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_HALIGN_LEFT = Action(
+    label='Horizontal Align Left',
+    tooltip='Align left edges of blocks selected blocks',
+    keypresses=(gtk.keysyms.l, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_HALIGN_CENTER = Action(
+    label='Horizontal Align Center',
+    tooltip='Align centers of selected blocks horizontally',
+    keypresses=(gtk.keysyms.c, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_HALIGN_RIGHT = Action(
+    label='Horizontal Align Right',
+    tooltip='Align right edges of selected blocks',
+    keypresses=(gtk.keysyms.r, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_ALIGNMENTS = [
+    BLOCK_VALIGN_TOP,
+    BLOCK_VALIGN_MIDDLE,
+    BLOCK_VALIGN_BOTTOM,
+    None,
+    BLOCK_HALIGN_LEFT,
+    BLOCK_HALIGN_CENTER,
+    BLOCK_HALIGN_RIGHT,
+]
 BLOCK_PARAM_MODIFY = Action(
     label='_Properties',
     tooltip='Modify params for the selected block',

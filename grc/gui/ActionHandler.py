@@ -324,6 +324,12 @@ class ActionHandler:
         elif action == Actions.BLOCK_MOVE:
             self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
             self.get_page().set_saved(False)
+
+        elif action in Actions.BLOCK_ALIGNMENTS:
+            if self.get_flow_graph().align_selected(action):
+                self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
+                self.get_page().set_saved(False)
+
         elif action == Actions.BLOCK_ROTATE_CCW:
             if self.get_flow_graph().rotate_selected(90):
                 self.get_flow_graph().update()
@@ -607,6 +613,10 @@ class ActionHandler:
         Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(selected_block))
         Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_sensitive(bool(selected_blocks))
+        #update alignment options
+        for act in Actions.BLOCK_ALIGNMENTS:
+            if act:
+                act.set_sensitive(len(selected_blocks) > 1)
         #update cut/copy/paste
         Actions.BLOCK_CUT.set_sensitive(bool(selected_blocks))
         Actions.BLOCK_COPY.set_sensitive(bool(selected_blocks))

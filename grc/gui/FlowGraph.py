@@ -312,6 +312,47 @@ class FlowGraph(Element, _Flowgraph):
             selected_block.move(delta_coordinate)
             self.element_moved = True
 
+    def align_selected(self, calling_action=None):
+        """
+        Align the selected blocks.
+
+        Args:
+            calling_action: the action initiating the alignment
+
+        Returns:
+            True if changed, otherwise False
+        """
+        blocks = self.get_selected_blocks()
+        if calling_action is None or not blocks:
+            return False
+
+        # compute common boundary of selected objects
+        min_x, min_y = max_x, max_y = blocks[0].get_coordinate()
+        for selected_block in blocks:
+            x, y = selected_block.get_coordinate()
+            min_x, min_y = min(min_x, x), min(min_y, y)
+            x += selected_block.W
+            y += selected_block.H
+            max_x, max_y = max(max_x, x), max(max_y, y)
+        ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
+
+        # align the blocks as requested
+        transform = {
+                Actions.BLOCK_VALIGN_TOP: lambda x, y, w, h: (x, min_y),
+                Actions.BLOCK_VALIGN_MIDDLE: lambda x, y, w, h: (x, ctr_y - h/2),
+                Actions.BLOCK_VALIGN_BOTTOM: lambda x, y, w, h: (x, max_y - h),
+                Actions.BLOCK_HALIGN_LEFT: lambda x, y, w, h: (min_x, y),
+                Actions.BLOCK_HALIGN_CENTER: lambda x, y, w, h: (ctr_x-w/2, y),
+                Actions.BLOCK_HALIGN_RIGHT: lambda x, y, w, h: (max_x - w, y),
+        }.get(calling_action, lambda *args: args)
+
+        for selected_block in blocks:
+            x, y = selected_block.get_coordinate()
+            w, h = selected_block.W, selected_block.H
+            selected_block.set_coordinate(transform(x, y, w, h))
+
+        return True
+
     def rotate_selected(self, rotation):
         """
         Rotate the selected blocks by multiples of 90 degrees.
