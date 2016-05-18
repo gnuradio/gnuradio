@@ -425,12 +425,17 @@ endif(ENABLE_GR_CTRLPORT)
 #    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
 
 configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
+@ONLY)
+
+configure_file(
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
 SET(cmake_configs
-  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 
