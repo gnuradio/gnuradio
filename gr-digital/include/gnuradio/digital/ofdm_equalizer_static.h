@@ -29,7 +29,8 @@
 namespace gr {
   namespace digital {
 
-    /* \brief Very simple static equalizer for OFDM.
+    /*!
+     * \brief Very simple static equalizer for OFDM.
      * \ingroup ofdm_blk
      * \ingroup equalizers_blk
      *
