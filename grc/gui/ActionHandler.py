@@ -454,7 +454,7 @@ class ActionHandler:
                     main.update_panel_visibility(main.VARIABLES, True)
                 else:
                     main.update_panel_visibility(main.VARIABLES, False)
-            Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_sensitive(action.get_active())
+            #Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_sensitive(action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR:
             if self.init:

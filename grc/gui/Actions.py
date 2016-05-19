@@ -345,7 +345,7 @@ TOGGLE_FLOW_GRAPH_VAR_EDITOR = ToggleAction(
     preference_name='variable_editor_visable',
 )
 TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = ToggleAction(
-    label='Move Variable Editor to the Sidebar',
+    label='Move the Variable Editor to the Sidebar',
     tooltip='Move the variable editor to the sidebar',
     default=False,
     preference_name='variable_editor_sidebar',
