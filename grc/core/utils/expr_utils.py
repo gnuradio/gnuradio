@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import string
-VAR_CHARS = string.letters + string.digits + '_.'
+VAR_CHARS = string.letters + string.digits + '_'
 
 
 class graph(object):
@@ -118,7 +118,7 @@ def get_variable_dependencies(expr, vars):
         a subset of vars used in the expression
     """
     expr_toks = expr_split(expr)
-    return set(var for var in vars if var in expr_toks)
+    return set(filter(lambda v: v in expr_toks, vars))
 
 
 def get_graph(exprs):

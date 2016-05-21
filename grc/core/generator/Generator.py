@@ -141,7 +141,7 @@ class TopBlockGenerator(object):
                 pass
             return code
 
-        blocks_all = expr_utils.sort_objects(
+        blocks = expr_utils.sort_objects(
             filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
             lambda b: b.get_id(), _get_block_sort_text
         )
@@ -150,7 +150,7 @@ class TopBlockGenerator(object):
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
         # List of regular blocks (all blocks minus the special ones)
-        blocks = filter(lambda b: b not in (imports + parameters), blocks_all)
+        blocks = filter(lambda b: b not in (imports + parameters), blocks)
 
         for block in blocks:
             key = block.get_key()
@@ -216,15 +216,18 @@ class TopBlockGenerator(object):
         msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
-        replace_dict = dict((var_id, 'self.' + var_id) for var_id in var_ids)
-        callbacks_all = []
-        for block in blocks_all:
-            callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_callbacks())
+        # Prepend self.
+        replace_dict = dict([(var_id, 'self.%s' % var_id) for var_id in var_ids])
+        # List of callbacks
+        callbacks = [
+            expr_utils.expr_replace(cb, replace_dict)
+            for cb in sum([block.get_callbacks() for block in fg.get_enabled_blocks()], [])
+            ]
         # Map var id to callbacks
-        callbacks = {}
-        for var_id in var_ids:
-            callbacks[var_id] = [callback for callback in callbacks_all
-                                 if expr_utils.get_variable_dependencies(callback, ['self.' + var_id])]
+        var_id2cbs = dict([
+            (var_id, filter(lambda c: expr_utils.get_variable_dependencies(c, [var_id]), callbacks))
+            for var_id in var_ids
+        ])
         # Load the namespace
         namespace = {
             'title': title,
@@ -238,7 +241,7 @@ class TopBlockGenerator(object):
             'connection_templates': connection_templates,
             'msgs': msgs,
             'generate_options': self._generate_options,
-            'callbacks': callbacks,
+            'var_id2cbs': var_id2cbs,
         }
         # Build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)

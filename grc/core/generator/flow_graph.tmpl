@@ -13,7 +13,7 @@
 ##@param connections the connections
 ##@param msgs the msg type connections
 ##@param generate_options the type of flow graph
-##@param callbacks variable id map to callback strings
+##@param var_id2cbs variable id map to callback strings
 ########################################################
 #def indent($code)
 #set $code = '\n        '.join(str($code).splitlines())
@@ -301,12 +301,12 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
     #if $flow_graph.get_option('thread_safe_setters')
         with self._lock:
             self.$id = $id
-        #for $callback in $callbacks[$id]
+        #for $callback in $var_id2cbs[$id]
             $indent($callback)
         #end for
     #else
         self.$id = $id
-        #for $callback in $callbacks[$id]
+        #for $callback in $var_id2cbs[$id]
         $indent($callback)
         #end for
     #end if
