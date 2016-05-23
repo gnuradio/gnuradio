@@ -93,9 +93,6 @@ namespace gr {
         d_socket = new boost::asio::ip::udp::socket(d_io_service);
         d_socket->open(d_endpoint.protocol());
 
-        boost::asio::socket_base::linger loption(true, 0);
-        d_socket->set_option(loption);
-
         boost::asio::socket_base::reuse_address roption(true);
         d_socket->set_option(roption);
 
