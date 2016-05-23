@@ -580,8 +580,10 @@ class ActionHandler:
                     try:
                         Messages.send_start_gen(generator.get_file_path())
                         generator.write()
-                    except Exception,e: Messages.send_fail_gen(e)
-                else: self.generator = None
+                    except Exception as e:
+                        Messages.send_fail_gen(e)
+                else:
+                    self.generator = None
         elif action == Actions.FLOW_GRAPH_EXEC:
             if not page.get_proc():
                 Actions.FLOW_GRAPH_GEN()
@@ -591,7 +593,11 @@ class ActionHandler:
                         Dialogs.MissingXTermDialog(xterm)
                     Preferences.xterm_missing(xterm)
                 if page.get_saved() and page.get_file_path():
-                    Executor.ExecFlowGraphThread(self)
+                    Executor.ExecFlowGraphThread(
+                        flow_graph_page=page,
+                        xterm_executable=xterm,
+                        callback=self.update_exec_stop
+                    )
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.get_proc():
                 try:
