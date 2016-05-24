@@ -22,13 +22,8 @@ pygtk.require('2.0')
 import gtk
 import pango
 
-from . import Actions, Colors, Utils
+from . import Actions, Colors, Utils, Constants
 
-from .Constants import (
-    BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT,
-    BORDER_PROXIMITY_SENSITIVITY
-)
 from . Element import Element
 from ..core.Param import num_to_str
 from ..core.utils import odict
@@ -98,18 +93,19 @@ class Block(Element, _Block):
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
+        proximity = Constants.BORDER_PROXIMITY_SENSITIVITY
         try: #should evaluate to tuple
             coor = eval(self.get_param('_coordinate').get_value())
             x, y = map(int, coor)
             fgW,fgH = self.get_parent().get_size()
             if x <= 0:
                 x = 0
-            elif x >= fgW - BORDER_PROXIMITY_SENSITIVITY:
-                x = fgW - BORDER_PROXIMITY_SENSITIVITY
+            elif x >= fgW - proximity:
+                x = fgW - proximity
             if y <= 0:
                 y = 0
-            elif y >= fgH - BORDER_PROXIMITY_SENSITIVITY:
-                y = fgH - BORDER_PROXIMITY_SENSITIVITY
+            elif y >= fgH - proximity:
+                y = fgH - proximity
             return (x, y)
         except:
             self.set_coordinate((0, 0))
@@ -175,8 +171,8 @@ class Block(Element, _Block):
             rotation = eval(self.get_param('_rotation').get_value())
             return int(rotation)
         except:
-            self.set_rotation(POSSIBLE_ROTATIONS[0])
-            return POSSIBLE_ROTATIONS[0]
+            self.set_rotation(Constants.POSSIBLE_ROTATIONS[0])
+            return Constants.POSSIBLE_ROTATIONS[0]
 
     def set_rotation(self, rot):
         """
@@ -204,23 +200,24 @@ class Block(Element, _Block):
         #create the main layout
         layout = gtk.DrawingArea().create_pango_layout('')
         layouts.append(layout)
-        layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=BLOCK_FONT))
+        layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self, font=Constants.BLOCK_FONT))
         self.label_width, self.label_height = layout.get_pixel_size()
         #display the params
         if self.is_dummy_block:
             markups = [
-                '<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self._key)
+                '<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'
+                ''.format(font=Constants.PARAM_FONT, key=self._key)
             ]
         else:
             markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
             layout = gtk.DrawingArea().create_pango_layout('')
-            layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
+            layout.set_spacing(Constants.LABEL_SEPARATION * pango.SCALE)
             layout.set_markup('\n'.join(markups))
             layouts.append(layout)
             w, h = layout.get_pixel_size()
             self.label_width = max(w, self.label_width)
-            self.label_height += h + LABEL_SEPARATION
+            self.label_height += h + Constants.LABEL_SEPARATION
         width = self.label_width
         height = self.label_height
         #setup the pixmap
@@ -235,31 +232,31 @@ class Block(Element, _Block):
             if i == 0: w_off = (width-w)/2
             else: w_off = 0
             pixmap.draw_layout(gc, w_off, h_off, layout)
-            h_off = h + h_off + LABEL_SEPARATION
+            h_off = h + h_off + Constants.LABEL_SEPARATION
         #create vertical and horizontal pixmaps
         self.horizontal_label = pixmap
         if self.is_vertical():
             self.vertical_label = self.get_parent().new_pixmap(height, width)
             Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
         #calculate width and height needed
-        W = self.label_width + 2 * BLOCK_LABEL_PADDING
+        W = self.label_width + 2 * Constants.BLOCK_LABEL_PADDING
 
         def get_min_height_for_ports():
             visible_ports = filter(lambda p: not p.get_hide(), ports)
-            min_height = 2*PORT_BORDER_SEPARATION + len(visible_ports) * PORT_SEPARATION
+            min_height = 2*Constants.PORT_BORDER_SEPARATION + len(visible_ports) * Constants.PORT_SEPARATION
             if visible_ports:
                 min_height -= ports[0].H
             return min_height
         H = max(
             [  # labels
-                self.label_height + 2 * BLOCK_LABEL_PADDING
+                self.label_height + 2 * Constants.BLOCK_LABEL_PADDING
             ] +
             [  # ports
                 get_min_height_for_ports() for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ] +
             [  # bus ports only
-                2 * PORT_BORDER_SEPARATION +
-                sum([port.H + PORT_SPACING for port in ports if port.get_type() == 'bus']) - PORT_SPACING
+                2 * Constants.PORT_BORDER_SEPARATION +
+                sum([port.H + Constants.PORT_SPACING for port in ports if port.get_type() == 'bus']) - Constants.PORT_SPACING
                 for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ]
         )
@@ -284,12 +281,12 @@ class Block(Element, _Block):
                                                block=self,
                                                comment=comment,
                                                complexity=complexity,
-                                               font=BLOCK_FONT))
+                                               font=Constants.BLOCK_FONT))
 
         # Setup the pixel map. Make sure that layout not empty
         width, height = layout.get_pixel_size()
         if width and height:
-            padding = BLOCK_LABEL_PADDING
+            padding = Constants.BLOCK_LABEL_PADDING
             pixmap = self.get_parent().new_pixmap(width + 2 * padding,
                                                   height + 2 * padding)
             gc = pixmap.new_gc()
@@ -321,9 +318,9 @@ class Block(Element, _Block):
         )
         #draw label image
         if self.is_horizontal():
-            window.draw_drawable(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
+            window.draw_drawable(gc, self.horizontal_label, 0, 0, x+Constants.BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
         elif self.is_vertical():
-            window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
+            window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+Constants.BLOCK_LABEL_PADDING, -1, -1)
 
     def what_is_selected(self, coor, coor_m=None):
         """
@@ -347,8 +344,8 @@ class Block(Element, _Block):
         x, y = self.get_coordinate()
 
         if self.is_horizontal():
-            y += self.H + BLOCK_LABEL_PADDING
+            y += self.H + Constants.BLOCK_LABEL_PADDING
         else:
-            x += self.H + BLOCK_LABEL_PADDING
+            x += self.H + Constants.BLOCK_LABEL_PADDING
 
         window.draw_drawable(gc, self._comment_pixmap, 0, 0, x, y, -1, -1)
