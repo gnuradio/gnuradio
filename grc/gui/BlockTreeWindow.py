@@ -23,7 +23,8 @@ import gtk
 import gobject
 
 from . import Actions, Utils
-from .Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
+from . import Constants
+
 
 NAME_INDEX = 0
 KEY_INDEX = 1
@@ -54,7 +55,27 @@ $encode($line)#slurp
 undocumented#slurp
 #end if"""
 
-CAT_MARKUP_TMPL = """Category: $cat"""
+CAT_MARKUP_TMPL = """
+#set $name = $cat[-1]
+#if len($cat) > 1
+Category: $cat[-1]
+##
+#elif $name == 'Core'
+Module: Core
+
+This subtree is meant for blocks included with GNU Radio (in-tree).
+##
+#elif $name == $default_module
+This subtree holds all blocks (from OOT modules) that specify no module name. \
+The module name is the root category enclosed in square brackets.
+
+Please consider contacting OOT module maintainer for any block in here \
+and kindly ask to update their GRC Block Descriptions or Block Tree to include a module name.
+#else
+Module: $name
+##
+#end if
+""".strip()
 
 
 class BlockTreeWindow(gtk.VBox):
@@ -113,13 +134,13 @@ class BlockTreeWindow(gtk.VBox):
         column.set_sort_column_id(0)
         self.treestore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         # setup drag and drop
-        self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, DND_TARGETS, gtk.gdk.ACTION_COPY)
+        self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, Constants.DND_TARGETS, gtk.gdk.ACTION_COPY)
         self.treeview.connect('drag-data-get', self._handle_drag_get_data)
         # make the scrolled window to hold the tree view
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_with_viewport(self.treeview)
-        scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
+        scrolled_window.set_size_request(Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window)
         # map categories to iters, automatic mapping for root
         self._categories = {tuple(): None}
@@ -161,14 +182,15 @@ class BlockTreeWindow(gtk.VBox):
         category = tuple(filter(str, block.category))  # tuple is hashable, remove empty cats
 
         # add category and all sub categories
-        for i, cat_name in enumerate(category):
-            sub_category = category[:i+1]
-            if sub_category not in categories:
-                iter_ = treestore.insert_before(categories[sub_category[:-1]], None)
-                treestore.set_value(iter_, NAME_INDEX, cat_name)
+        for level, parent_cat_name in enumerate(category, 1):
+            parent_category = category[:level]
+            if parent_category not in categories:
+                iter_ = treestore.insert_before(categories[parent_category[:-1]], None)
+                treestore.set_value(iter_, NAME_INDEX, parent_cat_name)
                 treestore.set_value(iter_, KEY_INDEX, '')
-                treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
-                categories[sub_category] = iter_
+                treestore.set_value(iter_, DOC_INDEX, Utils.parse_template(
+                    CAT_MARKUP_TMPL, cat=parent_category, default_module=Constants.DEFAULT_BLOCK_MODULE_NAME))
+                categories[parent_category] = iter_
 
         # add block
         iter_ = treestore.insert_before(categories[category], None)
