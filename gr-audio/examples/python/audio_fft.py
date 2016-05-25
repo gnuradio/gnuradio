@@ -46,9 +46,9 @@ class app_top_block(stdgui2.std_top_block):
                           help="set sample rate to RATE (48000)")
 
         (options, args) = parser.parse_args()
-	sample_rate = int(options.sample_rate)
+        sample_rate = int(options.sample_rate)
 
-	if len(args) != 0:
+        if len(args) != 0:
             parser.print_help()
             sys.exit(1)
 
@@ -62,9 +62,9 @@ class app_top_block(stdgui2.std_top_block):
             self.scope = scopesink2.scope_sink_f(panel, sample_rate=sample_rate)
         else:
             self.scope = fftsink2.fft_sink_f (panel, fft_size=1024, sample_rate=sample_rate, fft_rate=30,
-					      ref_scale=1.0, ref_level=0, y_divs=12)
+                                              ref_scale=1.0, ref_level=0, y_divs=12)
 
-	self.src = audio.source (sample_rate, options.audio_input)
+        self.src = audio.source (sample_rate, options.audio_input)
 
         self.connect(self.src, self.scope)
 
@@ -82,7 +82,7 @@ class app_top_block(stdgui2.std_top_block):
 
         vbox.Add(self.scope.win, 10, wx.EXPAND)
 
-	#self._build_subpanel(vbox)
+        #self._build_subpanel(vbox)
 
     def _build_subpanel(self, vbox_arg):
         # build a secondary information panel (sometimes hidden)
