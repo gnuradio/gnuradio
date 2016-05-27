@@ -84,7 +84,7 @@ class InputParam(gtk.HBox):
         self._have_pending_changes = True
         self._update_gui()
         if self._editing_callback:
-            self._editing_callback()
+            self._editing_callback(self, None)
 
     def _apply_change(self, *args):
         """
@@ -95,7 +95,7 @@ class InputParam(gtk.HBox):
         self.param.set_value(self.get_text())
         #call the callback
         if self._changed_callback:
-            self._changed_callback(*args)
+            self._changed_callback(self, None)
         else:
             self.param.validate()
         #gui update
@@ -129,8 +129,19 @@ class EntryParam(InputParam):
         return self._input.get_text()
 
     def set_color(self, color):
-        self._input.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-        self._input.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+        need_status_color = self.label not in self.get_children()
+        text_color = (
+            Colors.PARAM_ENTRY_TEXT_COLOR if not need_status_color else
+            gtk.gdk.color_parse('blue') if self._have_pending_changes else
+            gtk.gdk.color_parse('red') if not self.param.is_valid() else
+            Colors.PARAM_ENTRY_TEXT_COLOR)
+        base_color = (
+            Colors.BLOCK_DISABLED_COLOR
+            if need_status_color and not self.param.get_parent().get_enabled()
+            else gtk.gdk.color_parse(color)
+        )
+        self._input.modify_base(gtk.STATE_NORMAL, base_color)
+        self._input.modify_text(gtk.STATE_NORMAL, text_color)
 
     def set_tooltip_text(self, text):
         try:

@@ -145,6 +145,10 @@ class TopBlockGenerator(object):
             filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
             lambda b: b.get_id(), _get_block_sort_text
         )
+        deprecated_block_keys = set(block.get_name() for block in blocks_all if block.is_deprecated)
+        for key in deprecated_block_keys:
+            Messages.send_warning("The block {!r} is deprecated.".format(key))
+
         # List of regular blocks (all blocks minus the special ones)
         blocks = filter(lambda b: b not in (imports + parameters), blocks_all)
 
@@ -210,17 +214,23 @@ class TopBlockGenerator(object):
 
         connection_templates = fg.get_parent().connection_templates
         msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
+
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
         replace_dict = dict((var_id, 'self.' + var_id) for var_id in var_ids)
         callbacks_all = []
         for block in blocks_all:
             callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_callbacks())
+
         # Map var id to callbacks
+        def uses_var_id():
+            used = expr_utils.get_variable_dependencies(callback, [var_id])
+            return used and 'self.' + var_id in callback  # callback might contain var_id itself
+
         callbacks = {}
         for var_id in var_ids:
-            callbacks[var_id] = [callback for callback in callbacks_all
-                                 if expr_utils.get_variable_dependencies(callback, ['self.' + var_id])]
+            callbacks[var_id] = [callback for callback in callbacks_all if uses_var_id()]
+
         # Load the namespace
         namespace = {
             'title': title,

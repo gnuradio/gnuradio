@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011,2012,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -47,11 +47,8 @@ endif(APPLE)
 ########################################################################
 # Install built library files
 ########################################################################
-install(TARGETS gnuradio-howto
-    LIBRARY DESTINATION lib${LIB_SUFFIX} # .so/.dylib file
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    RUNTIME DESTINATION bin              # .dll file
-)
+include(GrMiscUtils)
+GR_LIBRARY_FOO(gnuradio-howto RUNTIME_COMPONENT "howto_runtime" DEVEL_COMPONENT "howto_devel")
 
 ########################################################################
 # Build and register unit test
@@ -76,3 +73,10 @@ target_link_libraries(
 )
 
 GR_ADD_TEST(test_howto test-howto)
+
+########################################################################
+# Print summary
+########################################################################
+message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
+
