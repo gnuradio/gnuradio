@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import string
-VAR_CHARS = string.letters + string.digits + '_.'
+VAR_CHARS = string.letters + string.digits + '_'
 
 
 class graph(object):
@@ -56,7 +56,7 @@ class graph(object):
         return self._graph[node_key]
 
 
-def expr_split(expr):
+def expr_split(expr, var_chars=VAR_CHARS):
     """
     Split up an expression by non alphanumeric characters, including underscore.
     Leave strings in-tact.
@@ -72,7 +72,7 @@ def expr_split(expr):
     tok = ''
     quote = ''
     for char in expr:
-        if quote or char in VAR_CHARS:
+        if quote or char in var_chars:
             if char == quote:
                 quote = ''
             tok += char
@@ -99,7 +99,7 @@ def expr_replace(expr, replace_dict):
     Returns:
         a new expression with the prepend
     """
-    expr_splits = expr_split(expr)
+    expr_splits = expr_split(expr, var_chars=VAR_CHARS + '.')
     for i, es in enumerate(expr_splits):
         if es in replace_dict.keys():
             expr_splits[i] = replace_dict[es]
@@ -189,8 +189,3 @@ def sort_objects(objects, get_id, get_expr):
     sorted_ids = sort_variables(id2expr)
     # Return list of sorted objects
     return [id2obj[id] for id in sorted_ids]
-
-
-if __name__ == '__main__':
-    for i in sort_variables({'x': '1', 'y': 'x+1', 'a': 'x+y', 'b': 'y+1', 'c': 'a+b+x+y'}):
-        print i

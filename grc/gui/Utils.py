@@ -123,10 +123,11 @@ class TemplateParser(object):
 parse_template = TemplateParser()
 
 
-def align_to_grid(coor):
-    _align = lambda: int(round(x / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
+def align_to_grid(coor, mode=round):
+    def align(value):
+        return int(mode(value / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
     try:
-        return [_align() for x in coor]
+        return map(align, coor)
     except TypeError:
         x = coor
-        return _align()
+        return align(coor)

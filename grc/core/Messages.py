@@ -66,10 +66,6 @@ def send_init(platform):
     )
 
 
-def send_page_switch(file_path):
-    send('\nShowing: "%s"\n' % file_path)
-
-
 def send_xml_errors_if_any(xml_failures):
     if xml_failures:
         send('\nXML parser: Found {0} erroneous XML file{1} while loading the '

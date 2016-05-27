@@ -92,21 +92,21 @@ class TextDisplay(SimpleTextDisplay):
         buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
 
     def save(self, file_path):
-        report_file = open(file_path, 'w')
+        console_file = open(file_path, 'w')
         buffer = self.get_buffer()
-        report_file.write(buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True))
-        report_file.close()
+        console_file.write(buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True))
+        console_file.close()
 
     # Callback functions to handle the scrolling lock and clear context menus options
     # Action functions are set by the ActionHandler's init function
     def clear_cb(self, menu_item, web_view):
-        Actions.CLEAR_REPORTS()
+        Actions.CLEAR_CONSOLE()
 
     def scroll_back_cb(self, menu_item, web_view):
         Actions.TOGGLE_SCROLL_LOCK()
 
     def save_cb(self, menu_item, web_view):
-        Actions.SAVE_REPORTS()
+        Actions.SAVE_CONSOLE()
 
     def populate_popup(self, view, menu):
         """Create a popup menu for the scroll lock and clear functions"""
