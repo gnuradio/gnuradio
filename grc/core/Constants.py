@@ -70,8 +70,8 @@ COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
 REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
 INT_TYPES = tuple(INT_TYPES)
 
-# Updating colors. Using the standard color pallette from:
-#  http://www.google.com/design/spec/style/color.html#color-color-palette
+# Updating colors. Using the standard color palette from:
+#   http://www.google.com/design/spec/style/color.html#color-color-palette
 # Most are based on the main, primary color standard. Some are within
 # that color's spectrum when it was deemed necessary.
 GRC_COLOR_BROWN = '#795548'
@@ -132,18 +132,3 @@ for name, key, sizeof, color in CORE_TYPES:
 for key, (sizeof, color) in ALIAS_TYPES.iteritems():
     TYPE_TO_COLOR[key] = color
     TYPE_TO_SIZEOF[key] = sizeof
-
-# Coloring
-COMPLEX_COLOR_SPEC = '#3399FF'
-FLOAT_COLOR_SPEC = '#FF8C69'
-INT_COLOR_SPEC = '#00FF99'
-SHORT_COLOR_SPEC = '#FFFF66'
-BYTE_COLOR_SPEC = '#FF66FF'
-COMPLEX_VECTOR_COLOR_SPEC = '#3399AA'
-FLOAT_VECTOR_COLOR_SPEC = '#CC8C69'
-INT_VECTOR_COLOR_SPEC = '#00CC99'
-SHORT_VECTOR_COLOR_SPEC = '#CCCC33'
-BYTE_VECTOR_COLOR_SPEC = '#CC66CC'
-ID_COLOR_SPEC = '#DDDDDD'
-WILDCARD_COLOR_SPEC = '#FFFFFF'
-MSG_COLOR_SPEC = '#777777'

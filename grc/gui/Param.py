@@ -76,7 +76,10 @@ class InputParam(Gtk.HBox):
                   'red',
             label=Utils.encode(self.param.get_name())
         ))
-        self.set_color(self.param.get_color())
+
+        self.set_color(Colors.PARAM_ENTRY_COLORS.get(
+            self.param.get_type(), Colors.PARAM_ENTRY_DEFAULT_COLOR)
+        )
 
         errors = param.get_error_messages()
         tooltip_lines = ['Key: ' + param.get_key(), 'Type: ' + param.get_type()]
@@ -149,19 +152,7 @@ class EntryParam(InputParam):
         return self._input.get_text()
 
     def set_color(self, color):
-        need_status_color = self.label not in self.get_children()
-        text_color = (
-            Colors.PARAM_ENTRY_TEXT_COLOR if not need_status_color else
-            Gtk.gdk.color_parse('blue') if self._have_pending_changes else
-            Gtk.gdk.color_parse('red') if not self.param.is_valid() else
-            Colors.PARAM_ENTRY_TEXT_COLOR)
-        base_color = (
-            Colors.BLOCK_DISABLED_COLOR
-            if need_status_color and not self.param.get_parent().get_enabled()
-            else Gtk.gdk.color_parse(color)
-        )
-        self._input.modify_base(Gtk.StateType.NORMAL, base_color)
-        self._input.modify_text(Gtk.StateType.NORMAL, text_color)
+        self._input.override_background_color(Gtk.StateType.NORMAL, color)
 
     def set_tooltip_text(self, text):
         try:
@@ -196,8 +187,7 @@ class MultiLineEntryParam(InputParam):
                             buf.get_end_iter()).strip()
 
     def set_color(self, color):
-        self._view.modify_base(Gtk.StateType.NORMAL, Gdk.color_parse(color))
-        self._view.modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+        self._view.override_background_color(Gtk.StateType.NORMAL, color)
 
     def set_tooltip_text(self, text):
         try:
@@ -260,10 +250,6 @@ class PythonEditorParam(InputParam):
     def get_text(self):
         pass  # we never update the value from here
 
-    def set_color(self, color):
-        # self._button.modify_base(Gtk.StateType.NORMAL, Gdk.color_parse(color))
-        self._button.modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
-
     def _apply_change(self, *args):
         pass
 
@@ -307,6 +293,10 @@ class EnumEntryParam(InputParam):
         self._input.get_child().connect('key-press-event', self._handle_key_press)
         self.pack_start(self._input, False)
 
+    @property
+    def has_custom_value(self):
+        return self._input.get_active() == -1
+
     def get_text(self):
         if self._input.get_active() == -1: return self._input.get_child().get_text()
         return self.param.get_option_keys()[self._input.get_active()]
@@ -321,12 +311,10 @@ class EnumEntryParam(InputParam):
             pass  # no tooltips for old GTK
 
     def set_color(self, color):
-        if self._input.get_active() == -1: #custom entry, use color
-            self._input.get_child().modify_base(Gtk.StateType.NORMAL, Gdk.color_parse(color))
-            self._input.get_child().modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
-        else: #from enum, make pale background
-            self._input.get_child().modify_base(Gtk.StateType.NORMAL, Colors.ENTRYENUM_CUSTOM_COLOR)
-            self._input.get_child().modify_text(Gtk.StateType.NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+        self._input.get_child().modify_base(
+            Gtk.StateType.NORMAL,
+            color if not self.has_custom_value else Colors.PARAM_ENTRY_ENUM_CUSTOM_COLOR
+        )
 
 
 class FileParam(EntryParam):
@@ -375,33 +363,7 @@ class FileParam(EntryParam):
             self._input.set_text(file_path)
             self._editing_callback()
             self._apply_change()
-        file_dialog.destroy() #destroy the dialog
-
-
-TIP_MARKUP_TMPL="""\
-########################################
-#def truncate(string)
-    #set $max_len = 100
-    #set $string = str($string)
-    #if len($string) > $max_len
-$('%s...%s'%($string[:$max_len/2], $string[-$max_len/2:]))#slurp
-    #else
-$string#slurp
-    #end if
-#end def
-########################################
-Key: $param.get_key()
-Type: $param.get_type()
-#if $param.is_valid()
-Value: $truncate($param.get_evaluated())
-#elif len($param.get_error_messages()) == 1
-Error: $(param.get_error_messages()[0])
-#else
-Error:
-    #for $error_msg in $param.get_error_messages()
- * $error_msg
-    #end for
-#end if"""
+        file_dialog.destroy()  # destroy the dialog
 
 
 class Param(Element, _Param):

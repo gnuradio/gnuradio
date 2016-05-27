@@ -292,38 +292,6 @@ class Param(Element):
     def __str__(self):
         return 'Param - {}({})'.format(self.get_name(), self.get_key())
 
-    def get_color(self):
-        """
-        Get the color that represents this param's type.
-
-        Returns:
-            a hex color code.
-        """
-        try:
-            return {
-                # Number types
-                'complex': Constants.COMPLEX_COLOR_SPEC,
-                'real': Constants.FLOAT_COLOR_SPEC,
-                'float': Constants.FLOAT_COLOR_SPEC,
-                'int': Constants.INT_COLOR_SPEC,
-                # Vector types
-                'complex_vector': Constants.COMPLEX_VECTOR_COLOR_SPEC,
-                'real_vector': Constants.FLOAT_VECTOR_COLOR_SPEC,
-                'float_vector': Constants.FLOAT_VECTOR_COLOR_SPEC,
-                'int_vector': Constants.INT_VECTOR_COLOR_SPEC,
-                # Special
-                'bool': Constants.INT_COLOR_SPEC,
-                'hex': Constants.INT_COLOR_SPEC,
-                'string': Constants.BYTE_VECTOR_COLOR_SPEC,
-                'id': Constants.ID_COLOR_SPEC,
-                'stream_id': Constants.ID_COLOR_SPEC,
-                'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
-                'notebook': Constants.INT_VECTOR_COLOR_SPEC,
-                'raw': Constants.WILDCARD_COLOR_SPEC,
-            }[self.get_type()]
-        except:
-            return '#FFFFFF'
-
     def get_hide(self):
         """
         Get the hide value from the base class.

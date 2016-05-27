@@ -17,45 +17,86 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-try:
-    import gi
-    gi.require_version('Gtk', '3.0')
-    from gi.repository import Gdk
 
-    # Not gtk3?
-    #COLORMAP = Gdk.colormap_get_system() #create all of the colors
-    #def get_color(color_code): return _COLORMAP.alloc_color(color_code, True, True)
 
-    def get_color(color_code):
-        chars_per_color = 2 if len(color_code) > 4 else 1
-        offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
-        return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
+def get_color(color_code):
+    chars_per_color = 2 if len(color_code) > 4 else 1
+    offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
+    return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
 
-    HIGHLIGHT_COLOR = get_color('#00FFFF')
-    BORDER_COLOR = get_color('#444444')
+HIGHLIGHT_COLOR = get_color('#00FFFF')
+BORDER_COLOR = get_color('#444444')
 
-    # Missing blocks stuff
-    MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
-    MISSING_BLOCK_BORDER_COLOR = get_color('#FF0000')
+# Missing blocks stuff
+MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
+MISSING_BLOCK_BORDER_COLOR = get_color('#FF0000')
 
-    # Param entry boxes
-    PARAM_ENTRY_TEXT_COLOR = get_color('#000000')
-    ENTRYENUM_CUSTOM_COLOR = get_color('#EEEEEE')
+# Flow graph color constants
+FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
+COMMENT_BACKGROUND_COLOR = get_color('#F3F3F3')
+FLOWGRAPH_EDGE_COLOR = COMMENT_BACKGROUND_COLOR
 
-    # Flow graph color constants
-    FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFFFFF')
-    COMMENT_BACKGROUND_COLOR = get_color('#F3F3F3')
-    FLOWGRAPH_EDGE_COLOR = COMMENT_BACKGROUND_COLOR
+# Block color constants
+BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
+BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
+BLOCK_BYPASSED_COLOR = get_color('#F4FF81')
 
-    # Block color constants
-    BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
-    BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
-    BLOCK_BYPASSED_COLOR = get_color('#F4FF81')
+# Connection color constants
+CONNECTION_ENABLED_COLOR = get_color('#000000')
+CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
+CONNECTION_ERROR_COLOR = get_color('#FF0000')
 
-    # Connection color constants
-    CONNECTION_ENABLED_COLOR = get_color('#000000')
-    CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
-    CONNECTION_ERROR_COLOR = get_color('#FF0000')
+#################################################################################
+# param box colors
+#################################################################################
 
-except Exception as e:
-    print 'Unable to import Colors', e
+from gi.repository import Gdk
+
+
+def _color_parse(color_code):
+    color = Gdk.RGBA()
+    color.parse(color_code)
+    return color
+
+COMPLEX_COLOR_SPEC = _color_parse('#3399FF')
+FLOAT_COLOR_SPEC = _color_parse('#FF8C69')
+INT_COLOR_SPEC = _color_parse('#00FF99')
+SHORT_COLOR_SPEC = _color_parse('#FFFF66')
+BYTE_COLOR_SPEC = _color_parse('#FF66FF')
+
+ID_COLOR_SPEC = _color_parse('#DDDDDD')
+WILDCARD_COLOR_SPEC = _color_parse('#FFFFFF')
+
+COMPLEX_VECTOR_COLOR_SPEC = _color_parse('#3399AA')
+FLOAT_VECTOR_COLOR_SPEC = _color_parse('#CC8C69')
+INT_VECTOR_COLOR_SPEC = _color_parse('#00CC99')
+SHORT_VECTOR_COLOR_SPEC = _color_parse('#CCCC33')
+BYTE_VECTOR_COLOR_SPEC = _color_parse('#CC66CC')
+
+PARAM_ENTRY_COLORS = {
+
+    # Number types
+    'complex': COMPLEX_COLOR_SPEC,
+    'real': FLOAT_COLOR_SPEC,
+    'float': FLOAT_COLOR_SPEC,
+    'int': INT_COLOR_SPEC,
+
+    # Vector types
+    'complex_vector': COMPLEX_VECTOR_COLOR_SPEC,
+    'real_vector': FLOAT_VECTOR_COLOR_SPEC,
+    'float_vector': FLOAT_VECTOR_COLOR_SPEC,
+    'int_vector': INT_VECTOR_COLOR_SPEC,
+
+    # Special
+    'bool': INT_COLOR_SPEC,
+    'hex': INT_COLOR_SPEC,
+    'string': BYTE_VECTOR_COLOR_SPEC,
+    'id': ID_COLOR_SPEC,
+    'stream_id': ID_COLOR_SPEC,
+    'grid_pos': INT_VECTOR_COLOR_SPEC,
+    'notebook': INT_VECTOR_COLOR_SPEC,
+    'raw': WILDCARD_COLOR_SPEC,
+}
+
+PARAM_ENTRY_DEFAULT_COLOR = _color_parse('#FFFFFF')
+PARAM_ENTRY_ENUM_CUSTOM_COLOR = _color_parse('#EEEEEE')
