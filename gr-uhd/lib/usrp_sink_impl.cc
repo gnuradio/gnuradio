@@ -29,8 +29,6 @@
 namespace gr {
   namespace uhd {
 
-    static const size_t ALL_CHANS = ::uhd::usrp::multi_usrp::ALL_CHANS;
-
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
 		    const ::uhd::io_type_t &io_type,
