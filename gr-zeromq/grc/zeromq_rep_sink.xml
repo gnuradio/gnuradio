@@ -2,7 +2,7 @@
 <block>
   <name>ZMQ REP Sink</name>
   <key>zeromq_rep_sink</key>
-  <category>ZeroMQ Interfaces</category>
+  <category>[Core]/ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
   <make>zeromq.rep_sink($type.itemsize, $vlen, $address, $timeout, $pass_tags, $hwm)</make>
 

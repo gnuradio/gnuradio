@@ -2,7 +2,7 @@
 <block>
   <name>ZMQ REQ Source</name>
   <key>zeromq_req_source</key>
-  <category>ZeroMQ Interfaces</category>
+  <category>[Core]/ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
   <make>zeromq.req_source($type.itemsize, $vlen, $address, $timeout, $pass_tags, $hwm)</make>
 

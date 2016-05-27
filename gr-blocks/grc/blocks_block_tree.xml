@@ -27,7 +27,7 @@
 ###################################################
  -->
 <cat>
-   <name></name> <!-- Blank for Root Name -->
+   <name>[Core]</name>
    <cat>
       <name>Audio</name>
       <block>blocks_wavfile_source</block>
@@ -144,6 +144,8 @@
       <block>blocks_null_sink</block>
       <block>blocks_copy</block>
       <block>blocks_nop</block>
+      <block>xmlrpc_server</block>
+      <block>xmlrpc_client</block>
    </cat>
    <cat>
       <name>Modulators</name>
@@ -229,10 +231,5 @@
    <cat>
       <name>Variables</name>
       <block>variable_tag_object</block>
-   </cat>
-   <cat>
-      <name>Misc</name>
-      <block>xmlrpc_server</block>
-      <block>xmlrpc_client</block>
    </cat>
 </cat>

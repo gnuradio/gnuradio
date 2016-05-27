@@ -2,7 +2,7 @@
 <block>
   <name>ZMQ PUSH Message Sink</name>
   <key>zeromq_push_msg_sink</key>
-  <category>ZeroMQ Interfaces</category>
+  <category>[Core]/ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
   <make>zeromq.push_msg_sink($address, $timeout)</make>
 

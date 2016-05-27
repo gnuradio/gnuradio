@@ -7,7 +7,7 @@
 <block>
 	<name>Packet Encoder</name>
 	<key>blks2_packet_encoder</key>
-	<category>Deprecated</category>
+	<category>[Core]/Deprecated</category>
 	<flags>deprecated</flags>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.packet_mod_$(type.fcn)(grc_blks2.packet_encoder(

@@ -1,11 +1,6 @@
 <?xml version="1.0"?>
-<!--
-###################################################
-##Block Tree for platform gnuradio python.
-###################################################
- -->
 <cat>
-   <name></name> <!-- Blank for Root Name -->
+   <name>[Core]</name>
    <cat>
       <name>Misc</name>
       <block>pad_source</block>
@@ -18,12 +13,16 @@
       <block>bus_structure_sink</block>
       <block>bus_structure_source</block>
 
+      <block>epy_block</block>
+      <block>epy_module</block>
+
       <block>note</block>
       <block>import</block>
    </cat>
    <cat>
       <name>Variables</name>
       <block>variable</block>
+      <block>variable_struct</block>
       <block>variable_config</block>
       <block>variable_function_probe</block>
       <block>parameter</block>

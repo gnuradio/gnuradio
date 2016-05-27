@@ -109,3 +109,7 @@ class odict(DictMixin):
         if isinstance(obj, list):
             return obj
         return [obj]
+
+    def clear(self):
+        self._data.clear()
+        del self._keys[:]

@@ -6,7 +6,6 @@ HEADER = """\
 <block>
   <name>Struct Variable</name>
   <key>variable_struct</key>
-  <category>Variables</category>
   <import>def struct(data): return type('Struct', (object,), data)()</import>
   <var_make>self.$id = $id = struct({{#slurp
 #for $i in range({0}):

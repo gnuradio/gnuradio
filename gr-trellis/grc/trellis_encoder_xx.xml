@@ -8,7 +8,7 @@
 <block>
   <name>Trellis Encoder</name>
   <key>trellis_encoder_xx</key>
-  <category>Trellis Coding</category>
+  <category>[Core]/Trellis Coding</category>
   <import>from gnuradio import trellis</import>
   <make> trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state, $blocklength) if $blockwise else trellis.encoder_$(type)(trellis.fsm($fsm_args), $init_state) </make>
   <callback>set_FSM(trellis.fsm($fsm_args))</callback>

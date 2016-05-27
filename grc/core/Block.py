@@ -79,7 +79,8 @@ class Block(Element):
         sinks = n.findall('sink')
         self._name = n.find('name')
         self._key = n.find('key')
-        self._category = n.find('category') or ''
+        category = (n.find('category') or '').split('/')
+        self.category = [cat.strip() for cat in category if cat.strip()]
         self._flags = n.find('flags') or ''
         # Backwards compatibility
         if n.find('throttle') and BLOCK_FLAG_THROTTLE not in self._flags:
@@ -593,12 +594,6 @@ class Block(Element):
 
     def get_key(self):
         return self._key
-
-    def get_category(self):
-        return self._category
-
-    def set_category(self, cat):
-        self._category = cat
 
     def get_ports(self):
         return self.get_sources() + self.get_sinks()
