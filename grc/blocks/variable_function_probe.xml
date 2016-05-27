@@ -10,7 +10,7 @@
 	<import>import time</import>
 	<import>import threading</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>#slurp
+	<make>
 def _$(id)_probe():
     while True:
         #set $obj = 'self' + ('.' + $block_id() if $block_id() else '')
@@ -22,14 +22,9 @@ def _$(id)_probe():
         time.sleep(1.0 / ($poll_rate))
 _$(id)_thread = threading.Thread(target=_$(id)_probe)
 _$(id)_thread.daemon = True
-_$(id)_thread.start()</make>
+_$(id)_thread.start()
+    </make>
 	<callback>self.set_$(id)($value)</callback>
-	<param>
-		<name>Value</name>
-		<key>value</key>
-		<value>0</value>
-		<type>raw</type>
-	</param>
 	<param>
 		<name>Block ID</name>
 		<key>block_id</key>
@@ -54,6 +49,13 @@ _$(id)_thread.start()</make>
 		<key>poll_rate</key>
 		<value>10</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Initial Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>raw</type>
+        <hide>part</hide>
 	</param>
 	<doc>
 Periodically probe a function and set its value to this variable.

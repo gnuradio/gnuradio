@@ -92,6 +92,7 @@ class _ActionBase(object):
             self.set_accel_group(get_accel_group())
             self.set_accel_path(accel_path)
             gtk.accel_map_add_entry(accel_path, keyval, mod_mask)
+        self.args = None
 
     def __str__(self):
         """
@@ -105,10 +106,11 @@ class _ActionBase(object):
 
     def __repr__(self): return str(self)
 
-    def __call__(self):
+    def __call__(self, *args):
         """
         Emit the activate signal when called with ().
         """
+        self.args = args
         self.emit('activate')
 
 
@@ -171,6 +173,7 @@ class ToggleAction(gtk.ToggleAction, _ActionBase):
 ########################################################################
 PAGE_CHANGE = Action()
 EXTERNAL_UPDATE = Action()
+VARIABLE_EDITOR_UPDATE = Action()
 FLOW_GRAPH_NEW = Action(
     label='_New',
     tooltip='Create a new flow graph',
@@ -253,6 +256,45 @@ BLOCK_ROTATE_CW = Action(
     stock_id=gtk.STOCK_GO_FORWARD,
     keypresses=(gtk.keysyms.Right, NO_MODS_MASK),
 )
+BLOCK_VALIGN_TOP = Action(
+    label='Vertical Align Top',
+    tooltip='Align tops of selected blocks',
+    keypresses=(gtk.keysyms.t, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_VALIGN_MIDDLE = Action(
+    label='Vertical Align Middle',
+    tooltip='Align centers of selected blocks vertically',
+    keypresses=(gtk.keysyms.m, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_VALIGN_BOTTOM = Action(
+    label='Vertical Align Bottom',
+    tooltip='Align bottoms of selected blocks',
+    keypresses=(gtk.keysyms.b, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_HALIGN_LEFT = Action(
+    label='Horizontal Align Left',
+    tooltip='Align left edges of blocks selected blocks',
+    keypresses=(gtk.keysyms.l, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_HALIGN_CENTER = Action(
+    label='Horizontal Align Center',
+    tooltip='Align centers of selected blocks horizontally',
+    keypresses=(gtk.keysyms.c, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_HALIGN_RIGHT = Action(
+    label='Horizontal Align Right',
+    tooltip='Align right edges of selected blocks',
+    keypresses=(gtk.keysyms.r, gtk.gdk.SHIFT_MASK),
+)
+BLOCK_ALIGNMENTS = [
+    BLOCK_VALIGN_TOP,
+    BLOCK_VALIGN_MIDDLE,
+    BLOCK_VALIGN_BOTTOM,
+    None,
+    BLOCK_HALIGN_LEFT,
+    BLOCK_HALIGN_CENTER,
+    BLOCK_HALIGN_RIGHT,
+]
 BLOCK_PARAM_MODIFY = Action(
     label='_Properties',
     tooltip='Modify params for the selected block',
@@ -287,6 +329,26 @@ TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
     tooltip='Toggle visibility of disabled blocks and connections',
     stock_id=gtk.STOCK_MISSING_IMAGE,
     keypresses=(gtk.keysyms.d, gtk.gdk.CONTROL_MASK),
+)
+TOGGLE_HIDE_VARIABLES = ToggleAction(
+    label='Hide Variables',
+    tooltip='Hide all variable blocks',
+    preference_name='hide_variables',
+    default=False,
+)
+TOGGLE_FLOW_GRAPH_VAR_EDITOR = ToggleAction(
+    label='Show _Variable Editor',
+    tooltip='Show the variable editor. Modify variables and imports in this flow graph',
+    stock_id=gtk.STOCK_EDIT,
+    default=True,
+    keypresses=(gtk.keysyms.e, gtk.gdk.CONTROL_MASK),
+    preference_name='variable_editor_visable',
+)
+TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = ToggleAction(
+    label='Move the Variable Editor to the Sidebar',
+    tooltip='Move the variable editor to the sidebar',
+    default=False,
+    preference_name='variable_editor_sidebar',
 )
 TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
     label='Auto-Hide _Port Labels',
@@ -340,11 +402,11 @@ ERRORS_WINDOW_DISPLAY = Action(
     tooltip='View flow graph errors',
     stock_id=gtk.STOCK_DIALOG_ERROR,
 )
-TOGGLE_REPORTS_WINDOW = ToggleAction(
-    label='Show _Reports Panel',
-    tooltip='Toggle visibility of the Report widget',
+TOGGLE_CONSOLE_WINDOW = ToggleAction(
+    label='Show _Console Panel',
+    tooltip='Toggle visibility of the console',
     keypresses=(gtk.keysyms.r, gtk.gdk.CONTROL_MASK),
-    preference_name='reports_window_visible'
+    preference_name='console_window_visible'
 )
 TOGGLE_BLOCKS_WINDOW = ToggleAction(
     label='Show _Block Tree Panel',
@@ -353,8 +415,8 @@ TOGGLE_BLOCKS_WINDOW = ToggleAction(
     preference_name='blocks_window_visible'
 )
 TOGGLE_SCROLL_LOCK = ToggleAction(
-    label='Reports Scroll _Lock',
-    tooltip='Toggle scroll lock for the report window',
+    label='Console Scroll _Lock',
+    tooltip='Toggle scroll lock for the console window',
     preference_name='scroll_lock'
 )
 ABOUT_WINDOW_DISPLAY = Action(
@@ -421,14 +483,14 @@ FIND_BLOCKS = Action(
     keypresses=(gtk.keysyms.f, gtk.gdk.CONTROL_MASK,
                 gtk.keysyms.slash, NO_MODS_MASK),
 )
-CLEAR_REPORTS = Action(
-    label='_Clear Reports',
-    tooltip='Clear Reports',
+CLEAR_CONSOLE = Action(
+    label='_Clear Console',
+    tooltip='Clear Console',
     stock_id=gtk.STOCK_CLEAR,
 )
-SAVE_REPORTS = Action(
-    label='_Save Reports',
-    tooltip='Save Reports',
+SAVE_CONSOLE = Action(
+    label='_Save Console',
+    tooltip='Save Console',
     stock_id=gtk.STOCK_SAVE,
 )
 OPEN_HIER = Action(

@@ -23,8 +23,9 @@ import gtk
 
 from . import Bars, Actions, Preferences, Utils
 from .BlockTreeWindow import BlockTreeWindow
+from .VariableEditor import VariableEditor
 from .Constants import \
-    NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
+    NEW_FLOGRAPH_TITLE, DEFAULT_CONSOLE_WINDOW_WIDTH
 from .Dialogs import TextDisplay, MessageDialogHelper
 from .NotebookPage import NotebookPage
 
@@ -56,6 +57,7 @@ PAGE_TITLE_MARKUP_TMPL = """\
 #end if
 """
 
+
 ############################################################
 # Main window
 ############################################################
@@ -63,10 +65,15 @@ PAGE_TITLE_MARKUP_TMPL = """\
 class MainWindow(gtk.Window):
     """The topmost window with menus, the tool bar, and other major windows."""
 
+    # Constants the action handler can use to indicate which panel visibility to change.
+    BLOCKS = 0
+    CONSOLE = 1
+    VARIABLES = 2
+
     def __init__(self, platform, action_handler_callback):
         """
-        MainWindow contructor
-        Setup the menu, toolbar, flowgraph editor notebook, block selection window...
+        MainWindow constructor
+        Setup the menu, toolbar, flow graph editor notebook, block selection window...
         """
         self._platform = platform
 
@@ -76,48 +83,80 @@ class MainWindow(gtk.Window):
             (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
             for o in gen_opts.get_options()]
 
-        # load preferences
+        # Load preferences
         Preferences.load(platform)
-        #setup window
+
+        # Setup window
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         vbox = gtk.VBox()
-        self.hpaned = gtk.HPaned()
         self.add(vbox)
-        #create the menu bar and toolbar
+
+        # Create the menu bar and toolbar
         self.add_accel_group(Actions.get_accel_group())
         self.menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
         vbox.pack_start(self.menu_bar, False)
-        self.tool_bar = Bars.Toolbar(generate_modes, action_handler_callback )
+        self.tool_bar = Bars.Toolbar(generate_modes, action_handler_callback)
         vbox.pack_start(self.tool_bar, False)
-        vbox.pack_start(self.hpaned)
-        #create the notebook
+
+        # Main parent container for the different panels
+        self.container = gtk.HPaned()
+        vbox.pack_start(self.container)
+
+        # Create the notebook
         self.notebook = gtk.Notebook()
         self.page_to_be_closed = None
         self.current_page = None
         self.notebook.set_show_border(False)
-        self.notebook.set_scrollable(True) #scroll arrows for page tabs
+        self.notebook.set_scrollable(True)  # scroll arrows for page tabs
         self.notebook.connect('switch-page', self._handle_page_change)
-        #setup containers
-        self.flow_graph_vpaned = gtk.VPaned()
-        #flow_graph_box.pack_start(self.scrolled_window)
-        self.flow_graph_vpaned.pack1(self.notebook)
-        self.hpaned.pack1(self.flow_graph_vpaned)
-        self.btwin = BlockTreeWindow(platform, self.get_flow_graph);
-        self.hpaned.pack2(self.btwin, False) #dont allow resize
-        #create the reports window
+
+        # Create the console window
         self.text_display = TextDisplay()
-        #house the reports in a scrolled window
-        self.reports_scrolled_window = gtk.ScrolledWindow()
-        self.reports_scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.reports_scrolled_window.add(self.text_display)
-        self.reports_scrolled_window.set_size_request(-1, DEFAULT_REPORTS_WINDOW_WIDTH)
-        self.flow_graph_vpaned.pack2(self.reports_scrolled_window, False) #dont allow resize
-        #load preferences and show the main window
+        self.console_window = gtk.ScrolledWindow()
+        self.console_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.console_window.add(self.text_display)
+        self.console_window.set_size_request(-1, DEFAULT_CONSOLE_WINDOW_WIDTH)
+
+        # Create the block tree and variable panels
+        self.btwin = BlockTreeWindow(platform, self.get_flow_graph)
+        self.vars = VariableEditor(platform, self.get_flow_graph)
+
+        # Figure out which place to put the variable editor
+        self.left = gtk.VPaned()
+        self.right = gtk.VPaned()
+        self.left_subpanel = gtk.HPaned()
+
+        self.variable_panel_sidebar = Preferences.variable_editor_sidebar()
+        if self.variable_panel_sidebar:
+            self.left.pack1(self.notebook)
+            self.left.pack2(self.console_window, False)
+            self.right.pack1(self.btwin)
+            self.right.pack2(self.vars, False)
+        else:
+            # Put the variable editor in a panel with the console
+            self.left.pack1(self.notebook)
+            self.left_subpanel.pack1(self.console_window, shrink=False)
+            self.left_subpanel.pack2(self.vars, resize=False, shrink=True)
+            self.left.pack2(self.left_subpanel, False)
+
+            # Create the right panel
+            self.right.pack1(self.btwin)
+
+        self.container.pack1(self.left)
+        self.container.pack2(self.right, False)
+
+        # load preferences and show the main window
         self.resize(*Preferences.main_window_size())
-        self.flow_graph_vpaned.set_position(Preferences.reports_window_position())
-        self.hpaned.set_position(Preferences.blocks_window_position())
+        self.container.set_position(Preferences.blocks_window_position())
+        self.left.set_position(Preferences.console_window_position())
+        if self.variable_panel_sidebar:
+            self.right.set_position(Preferences.variable_editor_position(sidebar=True))
+        else:
+            self.left_subpanel.set_position(Preferences.variable_editor_position())
+
         self.show_all()
-        self.reports_scrolled_window.hide()
+        self.console_window.hide()
+        self.vars.hide()
         self.btwin.hide()
 
     ############################################################
@@ -148,14 +187,45 @@ class MainWindow(gtk.Window):
             page_num: new page number
         """
         self.current_page = self.notebook.get_nth_page(page_num)
-        Messages.send_page_switch(self.current_page.get_file_path())
         Actions.PAGE_CHANGE()
 
+    def update_panel_visibility(self, panel, visibility=True):
+        """
+        Handles changing visibility of panels.
+        """
+        # Set the visibility for the requested panel, then update the containers if they need
+        #  to be hidden as well.
+
+        if panel == self.BLOCKS:
+            self.btwin.set_visible(visibility)
+        elif panel == self.CONSOLE:
+            self.console_window.set_visible(visibility)
+        elif panel == self.VARIABLES:
+            self.vars.set_visible(visibility)
+        else:
+            return
+
+        if self.variable_panel_sidebar:
+            # If both the variable editor and block panels are hidden, hide the right container
+            if not self.btwin.get_visible() and not self.vars.get_visible():
+                self.right.hide()
+            else:
+                self.right.show()
+        else:
+            if not self.btwin.get_visible():
+                self.right.hide()
+            else:
+                self.right.show()
+            if not self.vars.get_visible() and not self.console_window.get_visible():
+                self.left_subpanel.hide()
+            else:
+                self.left_subpanel.show()
+
     ############################################################
-    # Report Window
+    # Console Window
     ############################################################
 
-    def add_report_line(self, line):
+    def add_console_line(self, line):
         """
         Place line at the end of the text buffer, then scroll its window all the way down.
 
@@ -227,8 +297,12 @@ class MainWindow(gtk.Window):
         Preferences.set_open_files(open_files)
         Preferences.file_open(open_file)
         Preferences.main_window_size(self.get_size())
-        Preferences.reports_window_position(self.flow_graph_vpaned.get_position())
-        Preferences.blocks_window_position(self.hpaned.get_position())
+        Preferences.console_window_position(self.left.get_position())
+        Preferences.blocks_window_position(self.container.get_position())
+        if self.variable_panel_sidebar:
+            Preferences.variable_editor_position(self.right.get_position(), sidebar=True)
+        else:
+            Preferences.variable_editor_position(self.left_subpanel.get_position())
         Preferences.save()
         return True
 
@@ -272,7 +346,7 @@ class MainWindow(gtk.Window):
         """
         Set the title of the main window.
         Set the titles on the page tabs.
-        Show/hide the reports window.
+        Show/hide the console window.
 
         Args:
             title: the window title
@@ -297,6 +371,9 @@ class MainWindow(gtk.Window):
         )
         #show/hide notebook tabs
         self.notebook.set_show_tabs(len(self.get_pages()) > 1)
+
+         # Need to update the variable window when changing
+        self.vars.update_gui()
 
     def update_pages(self):
         """

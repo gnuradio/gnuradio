@@ -33,7 +33,7 @@ import Utils
 ##################################################
 OPEN_FLOW_GRAPH = 'open flow graph'
 SAVE_FLOW_GRAPH = 'save flow graph'
-SAVE_REPORTS = 'save reports'
+SAVE_CONSOLE = 'save console'
 SAVE_IMAGE = 'save image'
 OPEN_QSS_THEME = 'open qss theme'
 
@@ -43,15 +43,15 @@ File <b>$encode($filename)</b> Exists!\nWould you like to overwrite the existing
 FILE_DNE_MARKUP_TMPL="""\
 File <b>$encode($filename)</b> Does not Exist!"""
 
-##################################################
+
+
 # File Filters
-##################################################
-##the filter for flow graph files
 def get_flow_graph_files_filter():
     filter = gtk.FileFilter()
     filter.set_name('Flow Graph Files')
     filter.add_pattern('*'+Preferences.file_extension())
     return filter
+
 
 def get_text_files_filter():
     filter = gtk.FileFilter()
@@ -59,30 +59,29 @@ def get_text_files_filter():
     filter.add_pattern('*'+TEXT_FILE_EXTENSION)
     return filter
 
-##the filter for image files
+
 def get_image_files_filter():
     filter = gtk.FileFilter()
     filter.set_name('Image Files')
     filter.add_pattern('*'+IMAGE_FILE_EXTENSION)
     return filter
 
-##the filter for all files
+
 def get_all_files_filter():
     filter = gtk.FileFilter()
     filter.set_name('All Files')
     filter.add_pattern('*')
     return filter
 
-##the filter for qss files
+
 def get_qss_themes_filter():
     filter = gtk.FileFilter()
     filter.set_name('QSS Themes')
     filter.add_pattern('*.qss')
     return filter
 
-##################################################
+
 # File Dialogs
-##################################################
 class FileDialogHelper(gtk.FileChooserDialog):
     """
     A wrapper class for the gtk file chooser dialog.
@@ -105,6 +104,7 @@ class FileDialogHelper(gtk.FileChooserDialog):
         self.set_local_only(True)
         self.add_filter(get_all_files_filter())
 
+
 class FileDialog(FileDialogHelper):
     """A dialog box to save or open flow graph files. This is a base class, do not use."""
 
@@ -124,8 +124,8 @@ class FileDialog(FileDialogHelper):
             FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_SAVE, 'Save a Flow Graph to a File...')
             self.add_and_set_filter(get_flow_graph_files_filter())
             self.set_current_name(path.basename(current_file_path))
-        elif self.type == SAVE_REPORTS:
-            FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_SAVE, 'Save Reports to a File...')
+        elif self.type == SAVE_CONSOLE:
+            FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_SAVE, 'Save Console to a File...')
             self.add_and_set_filter(get_text_files_filter())
             file_path = path.splitext(path.basename(current_file_path))[0]
             self.set_current_name(file_path) #show the current filename
@@ -164,11 +164,11 @@ class FileDialog(FileDialogHelper):
         #############################################
         # Handle Save Dialogs
         #############################################
-        if self.type in (SAVE_FLOW_GRAPH, SAVE_REPORTS, SAVE_IMAGE):
+        if self.type in (SAVE_FLOW_GRAPH, SAVE_CONSOLE, SAVE_IMAGE):
             filename = self.get_filename()
             extension = {
                 SAVE_FLOW_GRAPH: Preferences.file_extension(),
-                SAVE_REPORTS: TEXT_FILE_EXTENSION,
+                SAVE_CONSOLE: TEXT_FILE_EXTENSION,
                 SAVE_IMAGE: IMAGE_FILE_EXTENSION,
             }[self.type]
             #append the missing file extension if the filter matches
@@ -205,11 +205,25 @@ class FileDialog(FileDialogHelper):
         self.destroy()
         return filename
 
-class OpenFlowGraphFileDialog(FileDialog): type = OPEN_FLOW_GRAPH
-class SaveFlowGraphFileDialog(FileDialog): type = SAVE_FLOW_GRAPH
-class OpenQSSFileDialog(FileDialog): type = OPEN_QSS_THEME
-class SaveReportsFileDialog(FileDialog): type = SAVE_REPORTS
-class SaveImageFileDialog(FileDialog): type = SAVE_IMAGE
+
+class OpenFlowGraphFileDialog(FileDialog):
+    type = OPEN_FLOW_GRAPH
+
+
+class SaveFlowGraphFileDialog(FileDialog):
+    type = SAVE_FLOW_GRAPH
+
+
+class OpenQSSFileDialog(FileDialog):
+    type = OPEN_QSS_THEME
+
+
+class SaveConsoleFileDialog(FileDialog):
+    type = SAVE_CONSOLE
+
+
+class SaveImageFileDialog(FileDialog):
+    type = SAVE_IMAGE
 
 
 class SaveScreenShotDialog(SaveImageFileDialog):

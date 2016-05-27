@@ -39,13 +39,13 @@ class NotebookPage(gtk.HBox):
             file_path: path to a flow graph file
         """
         self._flow_graph = flow_graph
-        self.set_proc(None)
+        self.process = None
         #import the file
         self.main_window = main_window
-        self.set_file_path(file_path)
+        self.file_path = file_path
         initial_state = flow_graph.get_parent().parse_flow_graph(file_path)
         self.state_cache = StateCache(initial_state)
-        self.set_saved(True)
+        self.saved = True
         #import the data to the flow graph
         self.get_flow_graph().import_data(initial_state)
         #initialize page gui
@@ -189,8 +189,7 @@ class NotebookPage(gtk.HBox):
         Args:
             file_path: file path string
         """
-        if file_path: self.file_path = os.path.abspath(file_path)
-        else: self.file_path = ''
+        self.file_path = os.path.abspath(file_path) if file_path else ''
 
     def get_saved(self):
         """

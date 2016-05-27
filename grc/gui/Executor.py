@@ -30,7 +30,7 @@ from ..core import Messages
 class ExecFlowGraphThread(threading.Thread):
     """Execute the flow graph as a new process and wait on it to finish."""
 
-    def __init__(self, action_handler):
+    def __init__(self, flow_graph_page, xterm_executable, callback):
         """
         ExecFlowGraphThread constructor.
 
@@ -38,19 +38,17 @@ class ExecFlowGraphThread(threading.Thread):
             action_handler: an instance of an ActionHandler
         """
         threading.Thread.__init__(self)
-        self.update_exec_stop = action_handler.update_exec_stop
-        self.flow_graph = action_handler.get_flow_graph()
-        self.xterm_executable = action_handler.platform.config.xterm_executable
-        #store page and dont use main window calls in run
-        self.page = action_handler.get_page()
-        #get the popen
+
+        self.page = flow_graph_page  # store page and dont use main window calls in run
+        self.xterm_executable = xterm_executable
+        self.update_callback = callback
+
         try:
-            self.p = self._popen()
-            self.page.set_proc(self.p)
-            #update
-            self.update_exec_stop()
+            self.process = self._popen()
+            self.page.set_proc(self.process)
+            self.update_callback()
             self.start()
-        except Exception, e:
+        except Exception as e:
             Messages.send_verbose_exec(str(e))
             Messages.send_end_exec()
 
@@ -58,7 +56,7 @@ class ExecFlowGraphThread(threading.Thread):
         """
         Execute this python flow graph.
         """
-        run_command = self.flow_graph.get_option('run_command')
+        run_command = self.page.get_flow_graph().get_option('run_command')
         generator = self.page.get_generator()
 
         try:
@@ -90,19 +88,19 @@ class ExecFlowGraphThread(threading.Thread):
         Wait on the executing process by reading from its stdout.
         Use gobject.idle_add when calling functions that modify gtk objects.
         """
-        #handle completion
+        # handle completion
         r = "\n"
         while r:
             gobject.idle_add(Messages.send_verbose_exec, r)
-            r = os.read(self.p.stdout.fileno(), 1024)
-        self.p.poll()
+            r = os.read(self.process.stdout.fileno(), 1024)
+        self.process.poll()
         gobject.idle_add(self.done)
 
     def done(self):
         """Perform end of execution tasks."""
-        Messages.send_end_exec(self.p.returncode)
+        Messages.send_end_exec(self.process.returncode)
         self.page.set_proc(None)
-        self.update_exec_stop()
+        self.update_callback()
 
 
 ###########################################################

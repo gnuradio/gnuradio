@@ -312,6 +312,47 @@ class FlowGraph(Element, _Flowgraph):
             selected_block.move(delta_coordinate)
             self.element_moved = True
 
+    def align_selected(self, calling_action=None):
+        """
+        Align the selected blocks.
+
+        Args:
+            calling_action: the action initiating the alignment
+
+        Returns:
+            True if changed, otherwise False
+        """
+        blocks = self.get_selected_blocks()
+        if calling_action is None or not blocks:
+            return False
+
+        # compute common boundary of selected objects
+        min_x, min_y = max_x, max_y = blocks[0].get_coordinate()
+        for selected_block in blocks:
+            x, y = selected_block.get_coordinate()
+            min_x, min_y = min(min_x, x), min(min_y, y)
+            x += selected_block.W
+            y += selected_block.H
+            max_x, max_y = max(max_x, x), max(max_y, y)
+        ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
+
+        # align the blocks as requested
+        transform = {
+                Actions.BLOCK_VALIGN_TOP: lambda x, y, w, h: (x, min_y),
+                Actions.BLOCK_VALIGN_MIDDLE: lambda x, y, w, h: (x, ctr_y - h/2),
+                Actions.BLOCK_VALIGN_BOTTOM: lambda x, y, w, h: (x, max_y - h),
+                Actions.BLOCK_HALIGN_LEFT: lambda x, y, w, h: (min_x, y),
+                Actions.BLOCK_HALIGN_CENTER: lambda x, y, w, h: (ctr_x-w/2, y),
+                Actions.BLOCK_HALIGN_RIGHT: lambda x, y, w, h: (max_x - w, y),
+        }.get(calling_action, lambda *args: args)
+
+        for selected_block in blocks:
+            x, y = selected_block.get_coordinate()
+            w, h = selected_block.W, selected_block.H
+            selected_block.set_coordinate(transform(x, y, w, h))
+
+        return True
+
     def rotate_selected(self, rotation):
         """
         Rotate the selected blocks by multiples of 90 degrees.
@@ -322,7 +363,8 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true if changed, otherwise false.
         """
-        if not self.get_selected_blocks(): return False
+        if not self.get_selected_blocks():
+            return False
         #initialize min and max coordinates
         min_x, min_y = self.get_selected_block().get_coordinate()
         max_x, max_y = self.get_selected_block().get_coordinate()
@@ -387,9 +429,13 @@ class FlowGraph(Element, _Flowgraph):
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
+        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
         blocks = sorted(self.blocks, key=methodcaller('get_enabled'))
+
         for element in chain(self.connections, blocks):
             if hide_disabled_blocks and not element.get_enabled():
+                continue  # skip hidden disabled blocks and connections
+            if hide_variables and (element.is_variable or element.is_import):
                 continue  # skip hidden disabled blocks and connections
             element.draw(gc, window)
         #draw selected blocks on top of selected connections
@@ -474,15 +520,15 @@ class FlowGraph(Element, _Flowgraph):
         selected_port = None
         selected = set()
         #check the elements
+        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
+        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
         for element in reversed(self.get_elements()):
+            if hide_disabled_blocks and not element.get_enabled():
+                continue  # skip hidden disabled blocks and connections
+            if hide_variables and (element.is_variable or element.is_import):
+                continue  # skip hidden disabled blocks and connections
             selected_element = element.what_is_selected(coor, coor_m)
-            if not selected_element: continue
-            # hidden disabled connections, blocks and their ports can not be selected
-            if Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active() and (
-                selected_element.is_block and not selected_element.get_enabled() or
-                selected_element.is_connection and not selected_element.get_enabled() or
-                selected_element.is_port and not selected_element.get_parent().get_enabled()
-            ):
+            if not selected_element:
                 continue
             #update the selected port information
             if selected_element.is_port:
@@ -533,7 +579,8 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             a block or None
         """
-        return self.get_selected_blocks() and self.get_selected_blocks()[0] or None
+        selected_blocks = self.get_selected_blocks()
+        return selected_blocks[0] if selected_blocks else None
 
     def get_selected_elements(self):
         """
@@ -551,7 +598,8 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             a block, port, or connection or None
         """
-        return self.get_selected_elements() and self.get_selected_elements()[0] or None
+        selected_elements = self.get_selected_elements()
+        return selected_elements[0] if selected_elements else None
 
     def update_selected_elements(self):
         """
