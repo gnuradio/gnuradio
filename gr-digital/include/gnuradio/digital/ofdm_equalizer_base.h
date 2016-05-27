@@ -30,7 +30,8 @@
 namespace gr {
   namespace digital {
 
-    /* \brief Base class for implementation details of frequency-domain OFDM equalizers.
+    /*!
+     * \brief Base class for implementation details of frequency-domain OFDM equalizers.
      * \ingroup ofdm_blk
      * \ingroup equalizers_blk
      */

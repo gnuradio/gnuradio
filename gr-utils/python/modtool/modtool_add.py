@@ -84,9 +84,8 @@ class ModToolAdd(ModTool):
         if self._info['lang'] is None:
             while self._info['lang'] not in ['cpp', 'python']:
                 self._info['lang'] = raw_input("Language (python/cpp): ")
-
-                if self._info['lang'] == 'c++':
-                    self._info['lang'] = 'cpp'
+        if self._info['lang'] == 'c++':
+            self._info['lang'] = 'cpp'
 
         print "Language: %s" % {'cpp': 'C++', 'python': 'Python'}[self._info['lang']]
 
