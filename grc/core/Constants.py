@@ -37,6 +37,7 @@ FLOW_GRAPH_FILE_FORMAT_VERSION = 1
 # Param tabs
 DEFAULT_PARAM_TAB = "General"
 ADVANCED_PARAM_TAB = "Advanced"
+DEFAULT_BLOCK_MODULE_NAME = '(no module specified)'
 
 # Port domains
 GR_STREAM_DOMAIN = "gr_stream"

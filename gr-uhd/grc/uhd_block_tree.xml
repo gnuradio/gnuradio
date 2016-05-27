@@ -5,7 +5,7 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
+	<name>[Core]</name> <!-- Blank for Root Name -->
 	<cat>
 		<name>UHD</name>
 		<block>uhd_usrp_source</block>

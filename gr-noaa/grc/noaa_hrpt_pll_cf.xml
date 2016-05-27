@@ -2,7 +2,7 @@
 <block>
   <name>HRPT PLL</name>
   <key>noaa_hrpt_pll_cf</key>
-  <category>NOAA</category>
+  <category>[Core]/NOAA</category>
   <import>from gnuradio import noaa</import>
   <make>noaa.hrpt_pll_cf($alpha, $beta, $max_offset)</make>
   <callback>set_alpha($alpha)</callback>

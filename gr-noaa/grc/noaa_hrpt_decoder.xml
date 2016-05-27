@@ -2,7 +2,7 @@
 <block>
   <name>HRPT Decoder</name>
   <key>noaa_hrpt_decoder</key>
-  <category>NOAA</category>
+  <category>[Core]/NOAA</category>
   <import>from gnuradio import noaa</import>
   <make>noaa.hrpt_decoder($verbose,$output)</make>
 

@@ -2,7 +2,7 @@
 <block>
   <name>ZMQ PUB Sink</name>
   <key>zeromq_pub_sink</key>
-  <category>ZeroMQ Interfaces</category>
+  <category>[Core]/ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
   <make>zeromq.pub_sink($type.itemsize, $vlen, $address, $timeout, $pass_tags, $hwm)</make>
 

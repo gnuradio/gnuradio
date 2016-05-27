@@ -26,7 +26,7 @@
 ###################################################
  -->
 <cat>
-  <name></name> <!-- Blank for Root Name -->
+  <name>[Core]</name>
   <cat>
     <name>Coding</name>
     <block>digital_additive_scrambler_bb</block>

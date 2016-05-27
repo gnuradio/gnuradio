@@ -2,7 +2,7 @@
 <block>
   <name>ZMQ SUB Source</name>
   <key>zeromq_sub_source</key>
-  <category>ZeroMQ Interfaces</category>
+  <category>[Core]/ZeroMQ Interfaces</category>
   <import>from gnuradio import zeromq</import>
   <make>zeromq.sub_source($type.itemsize, $vlen, $address, $timeout, $pass_tags, $hwm)</make>
 

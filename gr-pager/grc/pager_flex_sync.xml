@@ -7,7 +7,7 @@
 <block>
 	<name>FLEX Synchronizer</name>
 	<key>pager_flex_sync</key>
-	<category>Pager</category>
+	<category>[Core]/Pager</category>
 	<import>from gnuradio import pager</import>
 	<make>pager.flex_sync()</make>
 

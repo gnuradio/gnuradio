@@ -27,7 +27,7 @@
 ###################################################
  -->
 <cat>
-	<name></name> <!-- Blank for Root Name -->
+	<name>[Core]</name>
 	<cat>
 		<name>Audio</name>
 		<block>vocoder_alaw_decode_bs</block>

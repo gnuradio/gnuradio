@@ -9,7 +9,7 @@
 <block>
 	<name>Trellis Permutation</name>
 	<key>trellis_permutation</key>
-	<category>Trellis Coding</category>
+	<category>[Core]/Trellis Coding</category>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.permutation($interleaver_size, $table, $syms_per_block, $type.size*$vlen)</make>
         <callback>set_K($interleaver_size)</callback>
