@@ -180,7 +180,7 @@ class Block(Element, _Block):
                 font=PARAM_FONT, key=self._key
             )]
         else:
-            markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
+            markups = [param.format_block_surface_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
         if markups:
             layout = Gtk.DrawingArea().create_pango_layout('')
             layout.set_spacing(LABEL_SEPARATION*Pango.SCALE)

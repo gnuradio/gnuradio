@@ -461,7 +461,7 @@ class ActionHandler:
             else:
                 selected_block = flow_graph.get_selected_block()
             if selected_block:
-                self.dialog = PropsDialog(selected_block)
+                self.dialog = PropsDialog(self.main_window, selected_block)
                 response = Gtk.ResponseType.APPLY
                 while response == Gtk.ResponseType.APPLY:  # rerun the dialog if Apply was hit
                     response = self.dialog.run()

@@ -19,33 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GObject
-
-import Actions
-from Dialogs import SimpleTextDisplay
-from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, FONT_SIZE
-import Utils
+from gi.repository import Gtk, Gdk, GObject
 from gi.repository import Pango
 
-
-def get_title_label(title):
-    """
-    Get a title label for the params window.
-    The title will be bold, underlined, and left justified.
-
-    Args:
-        title: the text of the title
-
-    Returns:
-        a gtk object
-    """
-    label = Gtk.Label()
-    label.set_markup('\n<b><span underline="low">{title}</span>:</b>\n'.format(title))
-    hbox = Gtk.HBox()
-    hbox.pack_start(label, False, False, padding=11)
-    return hbox
+from . import Actions, Utils, Constants
+from .Dialogs import SimpleTextDisplay
 
 
 class PropsDialog(Gtk.Dialog):
@@ -53,25 +31,30 @@ class PropsDialog(Gtk.Dialog):
     A dialog to set block parameters, view errors, and view documentation.
     """
 
-    def __init__(self, block):
+    def __init__(self, parent, block):
         """
         Properties dialog constructor.
 
-        Args:
+        Args:%
             block: a block instance
         """
-        self._hash = 0
 
-        GObject.GObject.__init__(
+        Gtk.Dialog.__init__(
             self,
-            title='Properties: %s' % block.get_name(),
-            buttons=(Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT,
-                     Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
-                     Gtk.STOCK_APPLY, Gtk.ResponseType.APPLY)
+            title='Properties: ' + block.get_name(),
+            transient_for=parent,
+            modal=True,
+        )
+        self.add_buttons(
+            Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT,
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+            Gtk.STOCK_APPLY, Gtk.ResponseType.APPLY,
         )
         self.set_response_sensitive(Gtk.ResponseType.APPLY, False)
-        self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
+        self.set_size_request(Constants.MIN_DIALOG_WIDTH, Constants.MIN_DIALOG_HEIGHT)
+
         self._block = block
+        self._hash = 0
 
         vpaned = Gtk.VPaned()
         self.vbox.pack_start(vpaned, True, True, 0)
@@ -107,8 +90,7 @@ class PropsDialog(Gtk.Dialog):
             self._code_text_display = code_view = SimpleTextDisplay()
             code_view.set_wrap_mode(Gtk.WrapMode.NONE)
             code_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
-            code_view.modify_font(Pango.FontDescription(
-                'monospace %d' % FONT_SIZE))
+            code_view.override_font(Pango.FontDescription('monospace %d' % Constants.FONT_SIZE))
             code_box = Gtk.ScrolledWindow()
             code_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             code_box.add_with_viewport(self._code_text_display)
@@ -122,7 +104,7 @@ class PropsDialog(Gtk.Dialog):
         self._error_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self._error_box.add_with_viewport(self._error_messages_text_display)
         vpaned.pack2(self._error_box)
-        vpaned.set_position(int(0.65 * MIN_DIALOG_HEIGHT))
+        vpaned.set_position(int(0.65 * Constants.MIN_DIALOG_HEIGHT))
 
         # Connect events
         self.connect('key-press-event', self._handle_key_press)
@@ -142,19 +124,17 @@ class PropsDialog(Gtk.Dialog):
             true if changed
         """
         old_hash = self._hash
-        # create a tuple of things from each param that affects the params box
-        self._hash = hash(tuple([(
-            hash(param), param.get_name(), param.get_type(),
-            param.get_hide() == 'all',
-        ) for param in self._block.get_params()]))
-        return self._hash != old_hash
+        new_hash = self._hash = hash(tuple(
+            (hash(param), param.get_name(), param.get_type(), param.get_hide() == 'all',)
+            for param in self._block.get_params()
+        ))
+        return new_hash != old_hash
 
     def _handle_changed(self, *args):
         """
         A change occurred within a param:
         Rewrite/validate the block and update the gui.
         """
-        # update for the block
         self._block.rewrite()
         self._block.validate()
         self.update_gui()
@@ -171,47 +151,46 @@ class PropsDialog(Gtk.Dialog):
         Update the documentation block.
         Hide the box if there are no docs.
         """
-        # update the params box
         if force or self._params_changed():
             # hide params box before changing
             for tab, label, vbox in self._params_boxes:
-                vbox.hide_all()
+                vbox.hide()
                 # empty the params box
                 for child in vbox.get_children():
                     vbox.remove(child)
-                    child.destroy()
+                    # child.destroy()   # disabled because it throw errors...
                 # repopulate the params box
                 box_all_valid = True
                 for param in filter(lambda p: p.get_tab_label() == tab, self._block.get_params()):
+                    # fixme: why do we even rebuild instead of really hiding params?
                     if param.get_hide() == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
+
                     input_widget = param.get_input(self._handle_changed, self._activate_apply)
-                    vbox.pack_start(input_widget, input_widget.expand)
-                label.set_markup(
-                    '<span foreground="{color}">{name}</span>'.format(
-                        color='black' if box_all_valid else 'red', name=Utils.encode(tab)
-                    )
-                )
-                # show params box with new params
-                vbox.show_all()
-        # update the errors box
+                    input_widget.show_all()
+                    vbox.pack_start(input_widget, input_widget.expand, True, 1)
+
+                label.set_markup('<span foreground="{color}">{name}</span>'.format(
+                    color='black' if box_all_valid else 'red', name=Utils.encode(tab)
+                ))
+                vbox.show()  # show params box with new params
+
         if self._block.is_valid():
             self._error_box.hide()
         else:
             self._error_box.show()
         messages = '\n\n'.join(self._block.get_error_messages())
         self._error_messages_text_display.set_text(messages)
-        # update the docs box
+
         self._update_docs_page()
-        # update the generated code
         self._update_generated_code_page()
 
     def _update_docs_page(self):
         """Show documentation from XML and try to display best matching docstring"""
-        buffer = self._docs_text_display.get_buffer()
-        buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
-        pos = buffer.get_end_iter()
+        buf = self._docs_text_display.get_buffer()
+        buf.delete(buf.get_start_iter(), buf.get_end_iter())
+        pos = buf.get_end_iter()
 
         docstrings = self._block.get_doc()
         if not docstrings:
@@ -221,11 +200,11 @@ class PropsDialog(Gtk.Dialog):
         from_xml = docstrings.pop('', '')
         for line in from_xml.splitlines():
             if line.lstrip() == line and line.endswith(':'):
-                buffer.insert_with_tags_by_name(pos, line + '\n', 'b')
+                buf.insert_with_tags_by_name(pos, line + '\n', 'b')
             else:
-                buffer.insert(pos, line + '\n')
+                buf.insert(pos, line + '\n')
         if from_xml:
-            buffer.insert(pos, '\n')
+            buf.insert(pos, '\n')
 
         # if given the current parameters an exact match can be made
         block_constructor = self._block.get_make().rsplit('.', 2)[-1]
@@ -235,16 +214,16 @@ class PropsDialog(Gtk.Dialog):
 
         # show docstring(s) extracted from python sources
         for cls_name, docstring in docstrings.iteritems():
-            buffer.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
-            buffer.insert(pos, docstring + '\n\n')
+            buf.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
+            buf.insert(pos, docstring + '\n\n')
         pos.backward_chars(2)
-        buffer.delete(pos, buffer.get_end_iter())
+        buf.delete(pos, buf.get_end_iter())
 
     def _update_generated_code_page(self):
         if not self._code_text_display:
             return  # user disabled code preview
 
-        buffer = self._code_text_display.get_buffer()
+        buf = self._code_text_display.get_buffer()
         block = self._block
         key = block.get_key()
 
@@ -258,31 +237,27 @@ class PropsDialog(Gtk.Dialog):
         def insert(header, text):
             if not text:
                 return
-            buffer.insert_with_tags_by_name(buffer.get_end_iter(), header, 'b')
-            buffer.insert(buffer.get_end_iter(), text)
+            buf.insert_with_tags_by_name(buf.get_end_iter(), header, 'b')
+            buf.insert(buf.get_end_iter(), text)
 
-        buffer.delete(buffer.get_start_iter(), buffer.get_end_iter())
+        buf.delete(buf.get_start_iter(), buf.get_end_iter())
         insert('# Imports\n', '\n'.join(block.get_imports()))
-        if key.startswith('variable'):
+        if block.is_variable:
             insert('\n\n# Variables\n', block.get_var_make())
         insert('\n\n# Blocks\n', block.get_make())
         if src:
             insert('\n\n# External Code ({}.py)\n'.format(block.get_id()), src)
 
     def _handle_key_press(self, widget, event):
-        """
-        Handle key presses from the keyboard.
-        Call the ok response when enter is pressed.
-
-        Returns:
-            false to forward the keypress
-        """
-        if (event.keyval == Gdk.KEY_Return and
+        close_dialog = (
+            event.keyval == Gdk.KEY_Return and
             event.get_state() & Gdk.ModifierType.CONTROL_MASK == 0 and
             not isinstance(widget.get_focus(), Gtk.TextView)
-        ):
+        )
+        if close_dialog:
             self.response(Gtk.ResponseType.ACCEPT)
             return True  # handled here
+
         return False  # forward the keypress
 
     def _handle_response(self, widget, response):
