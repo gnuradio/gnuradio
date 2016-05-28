@@ -34,6 +34,7 @@ class qa_io_signature : public CppUnit::TestCase
   CPPUNIT_TEST_EXCEPTION(t1, std::invalid_argument);
   CPPUNIT_TEST(t2);
   CPPUNIT_TEST(t3);
+  CPPUNIT_TEST(t4_stream_flags);
   CPPUNIT_TEST_SUITE_END();
 
  private:
@@ -41,6 +42,7 @@ class qa_io_signature : public CppUnit::TestCase
   void t1();
   void t2();
   void t3();
+  void t4_stream_flags();
 };
 
 #endif /* INCLUDED_QA_GR_IO_SIGNATURE_H */

@@ -28,6 +28,7 @@
 #include <gnuradio/tags.h>
 #include <boost/weak_ptr.hpp>
 #include <gnuradio/thread/thread.h>
+#include <gnuradio/logger.h>
 #include <map>
 
 namespace gr {
@@ -137,37 +138,54 @@ namespace gr {
     std::multimap<uint64_t,tag_t>::iterator get_tags_lower_bound(uint64_t x) { return d_item_tags.lower_bound(x); }
     std::multimap<uint64_t,tag_t>::iterator get_tags_upper_bound(uint64_t x) { return d_item_tags.upper_bound(x); }
 
-    // -------------------------------------------------------------------------
+    virtual bool allocate_buffer();
 
   private:
     friend class buffer_reader;
     friend GR_RUNTIME_API buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link);
     friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader
       (buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
   protected:
-    char			       *d_base;		// base address of buffer
-    unsigned int			d_bufsize;	// in items
+    /*!
+     * \brief constructor is protected.  Use gr::make_buffer to create instances.
+     *
+     * Allocate a buffer that holds at least \p nitems of size \p sizeof_item.
+     *
+     * \param nitems is the minimum number of items the buffer will hold.
+     * \param sizeof_item is the size of an item in bytes.
+     * \param link is the block that writes to this buffer.
+     *
+     * The total size of the buffer will be rounded up to a system
+     * dependent boundary.  This is typically the system page size, but
+     * under MS windows is 64KB.
+     */
+    buffer(unsigned int nitems, size_t sizeof_item, block_sptr link);
+
+    char                              *d_base;     // base address of buffer
+    unsigned int                       d_bufsize;  // in items
+    size_t                             d_sizeof_item;  // in bytes
 
     // Keep track of maximum sample delay of any reader; Only prune tags past this.
     unsigned d_max_reader_delay;
 
   private:
-    gr::vmcircbuf		       *d_vmcircbuf;
-    size_t	 			d_sizeof_item;	// in bytes
-    std::vector<buffer_reader *>	d_readers;
-    boost::weak_ptr<block>		d_link;		// block that writes to this buffer
+    gr::vmcircbuf                *d_vmcircbuf;
+    std::vector<buffer_reader *>  d_readers;
+    boost::weak_ptr<block>        d_link;         // block that writes to this buffer
 
     //
     // The mutex protects d_write_index, d_abs_write_offset, d_done, d_item_tags
     // and the d_read_index's and d_abs_read_offset's in the buffer readers.
     //
-    gr::thread::mutex			d_mutex;
-    unsigned int			d_write_index;	// in items [0,d_bufsize)
-    uint64_t                            d_abs_write_offset; // num items written since the start
-    bool				d_done;
-    std::multimap<uint64_t,tag_t>                   d_item_tags;
-    uint64_t                            d_last_min_items_read;
+    gr::thread::mutex               d_mutex;
+    unsigned int                    d_write_index;	// in items [0,d_bufsize)
+    uint64_t                        d_abs_write_offset; // num items written since the start
+    bool                            d_done;
+    std::multimap<uint64_t,tag_t>   d_item_tags;
+    uint64_t                        d_last_min_items_read;
 
     unsigned index_add(unsigned a, unsigned b)
     {
@@ -190,23 +208,6 @@ namespace gr {
       assert((unsigned) s < d_bufsize);
       return s;
     }
-
-    virtual bool allocate_buffer(int nitems, size_t sizeof_item);
-
-    /*!
-     * \brief constructor is private.  Use gr_make_buffer to create instances.
-     *
-     * Allocate a buffer that holds at least \p nitems of size \p sizeof_item.
-     *
-     * \param nitems is the minimum number of items the buffer will hold.
-     * \param sizeof_item is the size of an item in bytes.
-     * \param link is the block that writes to this buffer.
-     *
-     * The total size of the buffer will be rounded up to a system
-     * dependent boundary.  This is typically the system page size, but
-     * under MS windows is 64KB.
-     */
-    buffer(int nitems, size_t sizeof_item, block_sptr link);
 
     /*!
      * \brief disassociate \p reader from this buffer
@@ -316,7 +317,7 @@ namespace gr {
     void get_tags_in_range(std::vector<tag_t> &v,
                            uint64_t abs_start,
                            uint64_t abs_end,
-			   long id);
+                           long id);
 
     // -------------------------------------------------------------------------
 

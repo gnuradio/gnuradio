@@ -42,11 +42,11 @@ namespace gr {
 
     // These are allocated here so we don't have to on each iteration
 
-    gr_vector_int		d_ninput_items_required;
-    gr_vector_int		d_ninput_items;
-    gr_vector_const_void_star	d_input_items;
-    std::vector<bool>		d_input_done;
-    gr_vector_void_star		d_output_items;
+    gr_vector_int               d_ninput_items_required;
+    gr_vector_int               d_ninput_items;
+    gr_vector_const_void_star   d_input_items;
+    std::vector<bool>           d_input_done;
+    gr_vector_void_star         d_output_items;
     std::vector<uint64_t>       d_start_nitems_read; //stores where tag counts are before work
     std::vector<tag_t>          d_returned_tags;
     int                         d_max_noutput_items;
@@ -60,11 +60,11 @@ namespace gr {
     ~block_executor();
 
     enum state {
-      READY,	        // We made progress; everything's cool.
+      READY,            // We made progress; everything's cool.
       READY_NO_OUTPUT,  // We consumed some input, but produced no output.
-      BLKD_IN,	        // no progress; we're blocked waiting for input data.
-      BLKD_OUT,	        // no progress; we're blocked waiting for output buffer space.
-      DONE,	        // we're done; don't call me again.
+      BLKD_IN,          // no progress; we're blocked waiting for input data.
+      BLKD_OUT,         // no progress; we're blocked waiting for output buffer space.
+      DONE,             // we're done; don't call me again.
     };
 
     /*

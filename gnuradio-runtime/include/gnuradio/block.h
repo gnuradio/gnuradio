@@ -132,7 +132,7 @@ namespace gr {
     bool fixed_rate() const { return d_fixed_rate; }
 
     // ----------------------------------------------------------------
-    //		override these to define your behavior
+    //  override these to define your behavior
     // ----------------------------------------------------------------
 
     /*!
@@ -181,6 +181,31 @@ namespace gr {
      * \brief Called to disable drivers, etc for i/o devices.
      */
     virtual bool stop();
+
+    /*!
+     * \brief Called to perform any post-constructor initialization.
+     *
+     * This allows a block to perform any setup that may need to happen
+     * which cannot be performed in the constructor. This will be called
+     * during flat_flowgraph::setup_connections()
+     */
+    virtual bool init();
+
+    /*!
+     * \brief Called to perform buffer allocation for a specific input port.
+     *
+     * This allows a block to allocate the buffer, but only if the block
+     * indicated it wants to allocate buffers in it's io_signature.
+     */
+    virtual buffer_sptr allocate_upstream_output_buffer(int port);
+
+    /*!
+     * \brief Called to perform buffer allocation for a specific input port.
+     *
+     * This allows a block to allocate the buffer, but only if the block
+     * indicated it wants to allocate buffers in it's io_signature.
+     */
+    virtual buffer_sptr allocate_output_buffer(int port);
 
     // ----------------------------------------------------------------
 
@@ -628,12 +653,12 @@ namespace gr {
 
     // ----------------------------------------------------------------------------
 
-	/*!
-	 * \brief the system message handler
+    /*!
+     * \brief the system message handler
      */
     void system_handler(pmt::pmt_t msg);
 
-	/*!
+    /*!
      * \brief returns true when execution has completed due to a message connection
     */
     bool finished();
@@ -840,11 +865,11 @@ namespace gr {
     void set_detail(block_detail_sptr detail) { d_detail = detail; }
 
    /*! \brief Tell msg neighbors we are finished
-	*/
+    */
    void notify_msg_neighbors();
 
    /*! \brief Make sure we dont think we are finished
-	*/
+    */
    void clear_finished(){ d_finished = false; }
 
   };
