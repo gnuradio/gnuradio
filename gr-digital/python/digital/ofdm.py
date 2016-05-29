@@ -146,21 +146,6 @@ class ofdm_mod(gr.hier_block2):
             msg = gr.message_from_string(pkt)
         self._pkt_input.msgq().insert_tail(msg)
 
-    def add_options(normal, expert):
-        """
-        Adds OFDM-specific options to the Options Parser
-        """
-        normal.add_option("-m", "--modulation", type="string", default="bpsk",
-                          help="set modulation type (bpsk, qpsk, 8psk, qam{16,64}) [default=%default]")
-        expert.add_option("", "--fft-length", type="intx", default=512,
-                          help="set the number of FFT bins [default=%default]")
-        expert.add_option("", "--occupied-tones", type="intx", default=200,
-                          help="set the number of occupied FFT bins [default=%default]")
-        expert.add_option("", "--cp-length", type="intx", default=128,
-                          help="set the number of bits in the cyclic prefix [default=%default]")
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
-
     def _print_verbage(self):
         """
         Prints information about the OFDM modulator
@@ -266,23 +251,6 @@ class ofdm_demod(gr.hier_block2):
             self._print_verbage()
             
         self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
-
-    def add_options(normal, expert):
-        """
-        Adds OFDM-specific options to the Options Parser
-        """
-        normal.add_option("-m", "--modulation", type="string", default="bpsk",
-                          help="set modulation type (bpsk or qpsk) [default=%default]")
-        expert.add_option("", "--fft-length", type="intx", default=512,
-                          help="set the number of FFT bins [default=%default]")
-        expert.add_option("", "--occupied-tones", type="intx", default=200,
-                          help="set the number of occupied FFT bins [default=%default]")
-        expert.add_option("", "--cp-length", type="intx", default=128,
-                          help="set the number of bits in the cyclic prefix [default=%default]")
-        expert.add_option("", "--snr", type="float", default=30.0,
-                          help="SNR estimate [default=%default]")
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
 
     def _print_verbage(self):
         """

@@ -46,7 +46,7 @@ try:
 except ImportError:
     import analog_swig as analog
 
-# default values (used in __init__ and add_options)
+# default values (used in __init__)
 _def_samples_per_symbol = 2
 _def_excess_bw = 0.35
 _def_verbose = False
@@ -174,13 +174,6 @@ class generic_mod(gr.hier_block2):
 
     def bits_per_symbol(self):   # static method that's also callable on an instance
         return self._constellation.bits_per_symbol()
-
-    def add_options(parser):
-        """
-        Adds generic modulation options to the standard parser
-        """
-        add_common_options(parser)
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(cls, options):
         """
@@ -371,21 +364,6 @@ class generic_demod(gr.hier_block2):
                          blocks.file_sink(gr.sizeof_char, "rx_symbol_mapper.8b"))
         self.connect(self.unpack,
                      blocks.file_sink(gr.sizeof_char, "rx_unpack.8b"))
-
-    def add_options(parser):
-        """
-        Adds generic demodulation options to the standard parser
-        """
-        # Add options shared with modulator.
-        add_common_options(parser)
-        # Add options specific to demodulator.
-        parser.add_option("", "--freq-bw", type="float", default=_def_freq_bw,
-                          help="set frequency lock loop lock-in bandwidth [default=%default]")
-        parser.add_option("", "--phase-bw", type="float", default=_def_phase_bw,
-                          help="set phase tracking loop lock-in bandwidth [default=%default]")
-        parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
-                          help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(cls, options):
         """
