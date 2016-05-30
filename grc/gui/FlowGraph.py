@@ -405,6 +405,9 @@ class FlowGraph(Element, _Flowgraph):
         """
 
         W,H = self.get_size()
+        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
+        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
+
         #draw the background
         gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
         window.draw_rectangle(gc, True, 0, 0, W, H)
@@ -412,6 +415,8 @@ class FlowGraph(Element, _Flowgraph):
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
             for block in self.blocks:
+                if hide_variables and (block.is_variable or block.is_import):
+                    continue  # skip hidden disabled blocks and connections
                 if block.get_enabled():
                     block.draw_comment(gc, window)
         #draw multi select rectangle
@@ -428,10 +433,7 @@ class FlowGraph(Element, _Flowgraph):
             gc.set_foreground(Colors.BORDER_COLOR)
             window.draw_rectangle(gc, False, x, y, w, h)
         #draw blocks on top of connections
-        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
-        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
         blocks = sorted(self.blocks, key=methodcaller('get_enabled'))
-
         for element in chain(self.connections, blocks):
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
