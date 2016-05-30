@@ -348,6 +348,9 @@ if(NOT VOLK_FOUND)
 
     set(VOLK_LIBRARIES volk)
 
+    set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+    set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+
     if(ENABLE_VOLK)
 
         include(GrPackage)
@@ -369,6 +372,9 @@ if(NOT VOLK_FOUND)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
+
+    get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
+    set(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
 endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
@@ -450,12 +456,17 @@ endif(ENABLE_GR_CTRLPORT)
 #    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
 
 configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
+@ONLY)
+
+configure_file(
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
 SET(cmake_configs
-  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 
