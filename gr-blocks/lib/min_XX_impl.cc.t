@@ -77,7 +77,7 @@ namespace gr {
 	}
 
       else // vector mode output
-	for(int i = 0; i < noutput_items * d_vlen_out; i++) {
+	for(size_t i = 0; i < noutput_items * d_vlen_out; i++) {
 	  @I_TYPE@ min = ((@I_TYPE@ *)input_items[0])[i];
 	  
 	  for(int k = 1; k < ninputs; k++) {
