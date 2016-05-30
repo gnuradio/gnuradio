@@ -25,6 +25,8 @@
 #endif
 
 #include <gnuradio/io_signature.h>
+#include <boost/thread/thread.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include "req_msg_source_impl.h"
 #include "tag_headers.h"
 
@@ -114,7 +116,7 @@ namespace gr {
           message_port_pub(pmt::mp("out"), m);
 
         } else {
-          usleep(100);
+          boost::this_thread::sleep(boost::posix_time::microseconds(100));
         }
       }
     }

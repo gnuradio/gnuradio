@@ -245,13 +245,13 @@ namespace gr {
     int
     dvbt_reed_solomon::rs_decode(unsigned char *data, unsigned char *eras, const int no_eras)
     {
-      unsigned char sigma[2 * d_t + 1];
-      unsigned char b[2 * d_t + 1];
-      unsigned char T[2 * d_t + 1];
-      unsigned char reg[2 * d_t + 1];
-      unsigned char root[2 * d_t + 1];
-      unsigned char loc[2 * d_t + 1];
-      unsigned char omega[2 * d_t];
+      __GR_VLA(unsigned char, sigma, 2 * d_t + 1);
+      __GR_VLA(unsigned char, b, 2 * d_t + 1);
+      __GR_VLA(unsigned char, T, 2 * d_t + 1);
+      __GR_VLA(unsigned char, reg, 2 * d_t + 1);
+      __GR_VLA(unsigned char, root, 2 * d_t + 1);
+      __GR_VLA(unsigned char, loc, 2 * d_t + 1);
+      __GR_VLA(unsigned char, omega, 2 * d_t);
 
       // Compute erasure locator polynomial
       memset(sigma, 0, 2 * d_t + 1);
