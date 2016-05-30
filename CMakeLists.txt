@@ -50,9 +50,11 @@ set(VERSION_INFO_MINOR_VERSION 10)
 set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
-# Append -O2 optimization flag for Debug builds
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+# Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
+IF (NOT MSVC)
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
+    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+ENDIF()
 
 # Set C/C++ standard for all targets
 # NOTE: Starting with cmake v3.1 this should be used:
@@ -83,7 +85,7 @@ ENDIF()
 # Environment setup
 ########################################################################
 IF(NOT DEFINED BOOST_ROOT)
-    SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
+    SET(BOOST_ROOT "${CMAKE_INSTALL_PREFIX}")
 ENDIF()
 
 ########################################################################
@@ -145,6 +147,9 @@ IF(MSVC)
     ELSE(MSVC12) #Visual Studio 12
         SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 12.0")
+    ELSE(MSVC14) #Visual Studio 14
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 14.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 14.0")
     ENDIF()
 ELSE()
     execute_process(COMMAND ${CMAKE_C_COMPILER} --version
@@ -183,7 +188,7 @@ set(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTG
 # Set location of config/prefs files in /etc
 # Special exception if prefix is /usr so we don't make a /usr/etc.
 set(GR_CONF_DIR etc CACHE PATH "Path to install config files")
-string(COMPARE EQUAL ${CMAKE_INSTALL_PREFIX} "/usr" isusr)
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
 if(isusr)
   set(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 else(isusr)

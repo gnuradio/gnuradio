@@ -25,7 +25,7 @@
   along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && (_MSC_VER < 1800) // round() not available before VS 2013
 #define round(number) number < 0.0 ? ceil(number - 0.5) : floor(number + 0.5)
 #endif
 

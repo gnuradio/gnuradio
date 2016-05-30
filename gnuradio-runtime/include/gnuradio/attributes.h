@@ -78,4 +78,15 @@
 #  pragma warning(disable: 4290) // C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
 #endif
 
+////////////////////////////////////////////////////////////////////////
+// implement cross-compiler VLA macros
+////////////////////////////////////////////////////////////////////////
+#ifdef C99
+#  define __GR_VLA(TYPE, buf, size) TYPE buf[size]
+#  define __GR_VLA2D(TYPE, buf, size, size2) TYPE buf[size][size2]
+#else
+#  define __GR_VLA(TYPE, buf, size) TYPE * buf = (TYPE *) alloca(sizeof(TYPE) * (size))
+#  define __GR_VLA2D(TYPE, buf, size, size2) TYPE ** buf = (TYPE **) alloca(sizeof(TYPE) * (size) * (size2))
+#endif
+
 #endif /* INCLUDED_GNURADIO_ATTRIBUTES_H */

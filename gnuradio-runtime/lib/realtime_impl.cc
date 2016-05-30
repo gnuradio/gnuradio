@@ -65,7 +65,41 @@ namespace gr {
 #endif
 
 
-#if defined(HAVE_PTHREAD_SETSCHEDPARAM)
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+
+#include <windows.h>
+
+namespace gr {
+  namespace impl {
+
+    rt_status_t enable_realtime_scheduling(rt_sched_param p)
+    {
+      //set the priority class on the process
+      int pri_class = (true)? REALTIME_PRIORITY_CLASS : NORMAL_PRIORITY_CLASS;
+      if(SetPriorityClass(GetCurrentProcess(), pri_class) == 0)
+        return RT_OTHER_ERROR;
+
+      //scale the priority value to the constants
+      int priorities[] = {
+        THREAD_PRIORITY_IDLE, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL,
+        THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_TIME_CRITICAL
+      };
+      const double priority = double(p.priority)/(rt_priority_max() - rt_priority_min());
+      size_t pri_index = size_t((priority+1.0)*6/2.0); // -1 -> 0, +1 -> 6
+      pri_index %= sizeof(priorities)/sizeof(*priorities); //range check
+
+      //set the thread priority on the thread
+      if(SetThreadPriority(GetCurrentThread(), priorities[pri_index]) == 0)
+        return RT_OTHER_ERROR;
+
+      //printf("SetPriorityClass + SetThreadPriority\n");
+      return RT_OK;
+    }
+
+  } // namespace impl
+} // namespace gr
+
+#elif defined(HAVE_PTHREAD_SETSCHEDPARAM)
 
 namespace gr {
   namespace impl {
@@ -135,40 +169,6 @@ namespace gr {
       }
 
       //printf("SCHED_FIFO enabled with priority = %d\n", pri);
-      return RT_OK;
-    }
-
-  } // namespace impl
-} // namespace gr
-
-#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-
-#include <windows.h>
-
-namespace gr {
-  namespace impl {
-
-    rt_status_t enable_realtime_scheduling(rt_sched_param p)
-    {
-      //set the priority class on the process
-      int pri_class = (true)? REALTIME_PRIORITY_CLASS : NORMAL_PRIORITY_CLASS;
-      if(SetPriorityClass(GetCurrentProcess(), pri_class) == 0)
-        return RT_OTHER_ERROR;
-
-      //scale the priority value to the constants
-      int priorities[] = {
-        THREAD_PRIORITY_IDLE, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL,
-        THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_TIME_CRITICAL
-      };
-      const double priority = double(p.priority)/(rt_priority_max() - rt_priority_min());
-      size_t pri_index = size_t((priority+1.0)*6/2.0); // -1 -> 0, +1 -> 6
-      pri_index %= sizeof(priorities)/sizeof(*priorities); //range check
-
-      //set the thread priority on the thread
-      if(SetThreadPriority(GetCurrentThread(), priorities[pri_index]) == 0)
-        return RT_OTHER_ERROR;
-
-      //printf("SetPriorityClass + SetThreadPriority\n");
       return RT_OK;
     }
 

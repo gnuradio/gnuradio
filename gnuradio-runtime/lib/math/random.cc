@@ -127,7 +127,7 @@ namespace gr {
               x = 2.0*ran1()-1.0;
               y = 2.0*ran1()-1.0;
               s = x*x+y*y;
-          }while(not(s<1.0));
+          }while(s >= 1.0f || s == 0.0f);
           d_gauss_stored = true;
           d_gauss_value = x*sqrt(-2.0*log(s)/s);
           return y*sqrt(-2.0*log(s)/s);

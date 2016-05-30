@@ -21,19 +21,25 @@ typedef ptrdiff_t ssize_t;
 ////////////////////////////////////////////////////////////////////////
 // rint functions
 ////////////////////////////////////////////////////////////////////////
+#define _USE_MATH_DEFINES
 #include <math.h>
+#if _MSC_VER < 1800
 static inline long lrint(double x){return (long)(x > 0.0 ? x + 0.5 : x - 0.5);}
 static inline long lrintf(float x){return (long)(x > 0.0f ? x + 0.5f : x - 0.5f);}
 static inline long long llrint(double x){return (long long)(x > 0.0 ? x + 0.5 : x - 0.5);}
 static inline long long llrintf(float x){return (long long)(x > 0.0f ? x + 0.5f : x - 0.5f);}
 static inline double rint(double x){return (x > 0.0)? floor(x + 0.5) : ceil(x - 0.5);}
 static inline float rintf(float x){return (x > 0.0f)? floorf(x + 0.5f) : ceilf(x - 0.5f);}
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 // math constants
 ////////////////////////////////////////////////////////////////////////
+#ifndef INFINITY
 #define INFINITY HUGE_VAL
+#endif
 
+#ifndef _MATH_DEFINES_DEFINED
 # define M_E		2.7182818284590452354	/* e */
 # define M_LOG2E	1.4426950408889634074	/* log_2 e */
 # define M_LOG10E	0.43429448190325182765	/* log_10 e */
@@ -47,6 +53,7 @@ static inline float rintf(float x){return (x > 0.0f)? floorf(x + 0.5f) : ceilf(x
 # define M_2_SQRTPI	1.12837916709551257390	/* 2/sqrt(pi) */
 # define M_SQRT2	1.41421356237309504880	/* sqrt(2) */
 # define M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
+#endif
 
 ////////////////////////////////////////////////////////////////////////
 // random and srandom
