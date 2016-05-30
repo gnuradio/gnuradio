@@ -47,7 +47,7 @@ namespace gr {
     int
     dvbt_ofdm_sym_acquisition_impl::peak_detect_process(const float * datain, const int datain_length, int * peak_pos, int * peak_max)
     {
-      unsigned int peak_index = 0;
+      uint16_t peak_index = 0;
       int peak_pos_length = 0;
 
       volk_32f_index_max_16u(&peak_index, &datain[0], datain_length); 

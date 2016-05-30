@@ -54,6 +54,31 @@ include(GrVersion) #setup version info
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
 
+# Set C/C++ standard for all targets
+# NOTE: Starting with cmake v3.1 this should be used:
+# set(CMAKE_C_STANDARD 90)
+# set(CMAKE_CXX_STANDARD 98)
+
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSE()
+    message(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
+IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+ELSE()
+    message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
 ########################################################################
 # Environment setup
 ########################################################################
@@ -323,6 +348,9 @@ if(NOT VOLK_FOUND)
 
     set(VOLK_LIBRARIES volk)
 
+    set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+    set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+
     if(ENABLE_VOLK)
 
         include(GrPackage)
@@ -344,6 +372,9 @@ if(NOT VOLK_FOUND)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
+
+    get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
+    set(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
 endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
@@ -424,12 +455,17 @@ endif(ENABLE_GR_CTRLPORT)
 #    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
 
 configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
+@ONLY)
+
+configure_file(
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
 SET(cmake_configs
-  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 
