@@ -371,11 +371,39 @@ namespace gr {
       //send all ninput_items with metadata
       const size_t num_sent = _tx_stream->send
         (input_items, ninput_items, _metadata, 1.0);
+
+      //receive asynchronous messages
+      ::uhd::async_metadata_t async_md;
+      //don't ever block processing to wait for async data
+      if (_tx_stream->recv_async_msg(async_md, 0.0)) {
+        int code = async_md.event_code;
+        if(code) {
+          pmt::pmt_t dic = pmt::make_dict();
+          dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(code));
+          dic = pmt::dict_add(dic, pmt::mp("channel"), pmt::from_long(async_md.channel));
+          dic = pmt::dict_add(dic, pmt::mp("user_payload"),pmt::init_u32vector(4,async_md.user_payload));
+          if(async_md.has_time_spec) {
+            const pmt::pmt_t timespec = pmt::make_tuple
+              (pmt::from_uint64(async_md.time_spec.get_full_secs()),
+               pmt::from_double(async_md.time_spec.get_frac_secs()));
+            dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
+          }
+          message_port_pub(ASYNC_MSG_PORT, dic);
+        }
+      } else {
+        // handle the case that no async_msg was available; usually, this should be ignored for being OK.
+        /* 
+          pmt::pmt_t dic = pmt::make_dict();
+          dic = pmt::dict_add(dic, pmt::mp("timeout"), pmt::from_bool(true));
+          message_port_pub(ASYNC_MSG_PORT, dic);
+        */
+      }
 #else
       const size_t num_sent = _dev->get_device()->send
         (input_items, ninput_items, _metadata,
          *_type, ::uhd::device::SEND_MODE_FULL_BUFF, 1.0);
 #endif
+
 
       //if using length_tags, decrement items left to send by the number of samples sent
       if(not pmt::is_null(_length_tag_key) && _nitems_to_send > 0) {

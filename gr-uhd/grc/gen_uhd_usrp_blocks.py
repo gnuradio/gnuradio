@@ -377,6 +377,12 @@ set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
 		<type>\$type.type</type>
 		<nports>\$nchan</nports>
 	</$sourk>
+	<source>
+		<name>async_messages</name>
+		<type>message</type>
+		<optional>1</optional>
+		<hide>\$hide_cmd_port</hide>
+	</source>
 	<doc>
 The UHD USRP $sourk.title() Block:
 
