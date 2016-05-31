@@ -281,5 +281,5 @@ class BlockTreeWindow(Gtk.VBox):
         Handle the mouse button press.
         If a left double click is detected, call add selected block.
         """
-        if event.button == 1 and event.type == Gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self._add_selected_block()

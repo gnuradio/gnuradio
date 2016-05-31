@@ -27,8 +27,7 @@ from . import Actions, Colors, Utils
 
 from .Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT,
-    BORDER_PROXIMITY_SENSITIVITY
+    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT
 )
 from . Element import Element
 from ..core.Param import num_to_str
@@ -64,22 +63,13 @@ class Block(Element, _Block):
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
-        try: #should evaluate to tuple
-            coor = eval(self.get_param('_coordinate').get_value())
-            x, y = map(int, coor)
-            fgW,fgH = self.get_parent().get_size()
-            if x <= 0:
-                x = 0
-            elif x >= fgW - BORDER_PROXIMITY_SENSITIVITY:
-                x = fgW - BORDER_PROXIMITY_SENSITIVITY
-            if y <= 0:
-                y = 0
-            elif y >= fgH - BORDER_PROXIMITY_SENSITIVITY:
-                y = fgH - BORDER_PROXIMITY_SENSITIVITY
-            return (x, y)
+        try:
+            coor = self.get_param('_coordinate').get_value()  # should evaluate to tuple
+            coor = tuple(int(x) for x in coor[1:-1].split(','))
         except:
-            self.set_coordinate((0, 0))
-            return (0, 0)
+            coor = 0, 0
+            self.set_coordinate(coor)
+        return coor
 
     def set_coordinate(self, coor):
         """
@@ -94,41 +84,7 @@ class Block(Element, _Block):
                 Utils.align_to_grid(coor[0] + offset_x) - offset_x,
                 Utils.align_to_grid(coor[1] + offset_y) - offset_y
             )
-        self.get_param('_coordinate').set_value(str(coor))
-
-    def bound_move_delta(self, delta_coor):
-        """
-        Limit potential moves from exceeding the bounds of the canvas
-
-        Args:
-            delta_coor: requested delta coordinate (dX, dY) to move
-
-        Returns:
-            The delta coordinate possible to move while keeping the block on the canvas
-            or the input (dX, dY) on failure
-        """
-        dX, dY = delta_coor
-
-        try:
-            fgW, fgH = self.get_parent().get_size()
-            x, y = map(int, eval(self.get_param("_coordinate").get_value()))
-            if self.is_horizontal():
-               sW, sH = self.W, self.H
-            else:
-               sW, sH = self.H, self.W
-
-            if x + dX < 0:
-                dX = -x
-            elif dX + x + sW >= fgW:
-                dX = fgW - x - sW
-            if y + dY < 0:
-                dY = -y
-            elif dY + y + sH >= fgH:
-               dY = fgH - y - sH
-        except:
-            pass
-
-        return ( dX, dY )
+        self.get_param('_coordinate').set_value(repr(coor))
 
     def get_rotation(self):
         """
@@ -138,11 +94,11 @@ class Block(Element, _Block):
             the rotation in degrees or 0 if failure
         """
         try: #should evaluate to dict
-            rotation = eval(self.get_param('_rotation').get_value())
-            return int(rotation)
+            rotation = int(self.get_param('_rotation').get_value())
         except:
-            self.set_rotation(POSSIBLE_ROTATIONS[0])
-            return POSSIBLE_ROTATIONS[0]
+            rotation = POSSIBLE_ROTATIONS[0]
+            self.set_rotation(rotation)
+        return rotation
 
     def set_rotation(self, rot):
         """
@@ -151,7 +107,7 @@ class Block(Element, _Block):
         Args:
             rot: the rotation in degrees
         """
-        self.get_param('_rotation').set_value(str(rot))
+        self.get_param('_rotation').set_value(repr(int(rot)))
 
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""

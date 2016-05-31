@@ -676,7 +676,7 @@ class ActionHandler:
         can_disable = any(block.get_state() != Constants.BLOCK_DISABLED
                           for block in selected_blocks)
         can_bypass_all = all(block.can_bypass() for block in selected_blocks) \
-                          and any (not block.get_bypassed() for block in selected_blocks)
+                         and any(not block.get_bypassed() for block in selected_blocks)
         Actions.BLOCK_ENABLE.set_sensitive(can_enable)
         Actions.BLOCK_DISABLE.set_sensitive(can_disable)
         Actions.BLOCK_BYPASS.set_sensitive(can_bypass_all)
@@ -687,21 +687,16 @@ class ActionHandler:
         Actions.BUSSIFY_SINKS.set_sensitive(bool(selected_blocks))
         Actions.RELOAD_BLOCKS.set_sensitive(True)
         Actions.FIND_BLOCKS.set_sensitive(True)
-        #set the exec and stop buttons
+
         self.update_exec_stop()
-        #saved status
+
         Actions.FLOW_GRAPH_SAVE.set_sensitive(not page.get_saved())
         main.update()
-        try: #set the size of the flow graph area (if changed)
-            new_size = (flow_graph.get_option('window_size') or
-                        self.platform.config.default_canvas_size)
-            if flow_graph.get_size() != tuple(new_size):
-                flow_graph.set_size(*new_size)
-        except: pass
-        #draw the flow graph
+
         flow_graph.update_selected()
         flow_graph.queue_draw()
-        return True #action was handled
+
+        return True  # action was handled
 
     def update_exec_stop(self):
         """

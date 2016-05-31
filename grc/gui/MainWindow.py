@@ -241,14 +241,14 @@ class MainWindow(Gtk.Window):
                 file_path=file_path,
             )
             if file_path: Messages.send_end_load()
-        except Exception, e: #return on failure
+        except Exception as e: #return on failure
             Messages.send_fail_load(e)
             if isinstance(e, KeyError) and str(e) == "'options'":
                 # This error is unrecoverable, so crash gracefully
                 exit(-1)
             return
         #add this page to the notebook
-        self.notebook.append_page(page, page.get_tab())
+        self.notebook.append_page(page, page.tab)
         self.notebook.set_tab_reorderable(page, True)
         #only show if blank or manual
         if not file_path or show: self._set_page(page)

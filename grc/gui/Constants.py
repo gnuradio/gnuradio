@@ -86,11 +86,8 @@ CONNECTOR_ARROW_HEIGHT = 17
 # possible rotations in degrees
 POSSIBLE_ROTATIONS = (0, 90, 180, 270)
 
-# How close can the mouse get to the window border before mouse events are ignored.
-BORDER_PROXIMITY_SENSITIVITY = 50
-
 # How close the mouse can get to the edge of the visible window before scrolling is invoked.
-SCROLL_PROXIMITY_SENSITIVITY = 30
+SCROLL_PROXIMITY_SENSITIVITY = 50
 
 # When the window has to be scrolled, move it this distance in the required direction.
 SCROLL_DISTANCE = 15

@@ -87,7 +87,9 @@ class PropsDialog(Gtk.Dialog):
             self._code_text_display = code_view = SimpleTextDisplay()
             code_view.set_wrap_mode(Gtk.WrapMode.NONE)
             code_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
-            code_view.override_font(Pango.FontDescription('monospace %d' % Constants.FONT_SIZE))
+            code_view.set_monospace(True)
+            # todo: set font size in non-deprecated way
+            # code_view.override_font(Pango.FontDescription('monospace %d' % Constants.FONT_SIZE))
             code_box = Gtk.ScrolledWindow()
             code_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
             code_box.add_with_viewport(self._code_text_display)

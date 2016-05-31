@@ -19,36 +19,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GdkPixbuf
-from gi.repository import GObject
 from gi.repository import GLib
 
-from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
-
-
-def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE):
-    """
-    Load the destination pixmap with a rotated version of the source pixmap.
-    The source pixmap will be loaded into a pixbuf, rotated, and drawn to the destination pixmap.
-    The pixbuf is a client-side drawable, where a pixmap is a server-side drawable.
-
-    Args:
-        gc: the graphics context
-        src_pixmap: the source pixmap
-        dst_pixmap: the destination pixmap
-        angle: the angle to rotate by
-    """
-    width, height = src_pixmap.get_size()
-    pixbuf = GdkPixbuf.Pixbuf(
-        colorspace=GdkPixbuf.Colorspace.RGB,
-        has_alpha=False, bits_per_sample=8,
-        width=width, height=height,
-    )
-    pixbuf.get_from_drawable(src_pixmap, src_pixmap.get_colormap(), 0, 0, 0, 0, -1, -1)
-    pixbuf = pixbuf.rotate_simple(angle)
-    dst_pixmap.draw_pixbuf(gc, pixbuf, 0, 0, 0, 0)
+from .Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
 
 
 def get_rotated_coordinate(coor, rotation):
@@ -97,7 +70,6 @@ def encode(value):
     Older versions of glib seg fault if the last byte starts a multi-byte
     character.
     """
-
     valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
     return GLib.markup_escape_text(valid_utf8)
 

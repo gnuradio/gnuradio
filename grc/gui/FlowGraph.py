@@ -76,9 +76,10 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             a unique id
         """
+        block_ids = set(b.get_id() for b in self.blocks)
         for index in count():
             block_id = '{}_{}'.format(base_id, index)
-            if block_id not in (b.get_id() for b in self.blocks):
+            if block_id not in block_ids:
                 break
         return block_id
 
@@ -128,7 +129,7 @@ class FlowGraph(Element, _Flowgraph):
     def queue_draw(self): self.get_drawing_area().queue_draw()
     def get_size(self): return self.get_drawing_area().get_size_request()
     def set_size(self, *args): self.get_drawing_area().set_size_request(*args)
-    def get_scroll_pane(self): return self.drawing_area.get_parent()
+    def get_scroll_pane(self): return self.drawing_area.get_parent().get_parent()
     def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
     def get_mod1_mask(self): return self.drawing_area.mod1_mask
     def new_pixmap(self, *args): return self.get_drawing_area().new_pixmap(*args)
@@ -146,8 +147,8 @@ class FlowGraph(Element, _Flowgraph):
         h_adj = self.get_scroll_pane().get_hadjustment()
         v_adj = self.get_scroll_pane().get_vadjustment()
         if coor is None: coor = (
-            int(random.uniform(.25, .75)*h_adj.page_size + h_adj.get_value()),
-            int(random.uniform(.25, .75)*v_adj.page_size + v_adj.get_value()),
+            int(random.uniform(.25, .75)*h_adj.get_page_size() + h_adj.get_value()),
+            int(random.uniform(.25, .75)*v_adj.get_page_size() + v_adj.get_value()),
         )
         #get the new block
         block = self.new_block(key)
@@ -169,7 +170,8 @@ class FlowGraph(Element, _Flowgraph):
         """
         #get selected blocks
         blocks = self.get_selected_blocks()
-        if not blocks: return None
+        if not blocks:
+            return None
         #calc x and y min
         x_min, y_min = blocks[0].get_coordinate()
         for block in blocks:
@@ -281,7 +283,8 @@ class FlowGraph(Element, _Flowgraph):
         """
         changed = False
         for selected_block in self.get_selected_blocks():
-            if selected_block.set_enabled(enable): changed = True
+            if selected_block.set_enabled(enable):
+                changed = True
         return changed
 
     def bypass_selected(self):
@@ -295,7 +298,8 @@ class FlowGraph(Element, _Flowgraph):
         """
         changed = False
         for selected_block in self.get_selected_blocks():
-            if selected_block.set_bypassed(): changed = True
+            if selected_block.set_bypassed():
+                changed = True
         return changed
 
     def move_selected(self, delta_coordinate):
@@ -305,9 +309,6 @@ class FlowGraph(Element, _Flowgraph):
         Args:
             delta_coordinate: the change in coordinates
         """
-        for selected_block in self.get_selected_blocks():
-            delta_coordinate = selected_block.bound_move_delta(delta_coordinate)
-
         for selected_block in self.get_selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True
@@ -401,26 +402,18 @@ class FlowGraph(Element, _Flowgraph):
         """
         Draw the background and grid if enabled.
         """
-
-        cr.set_source_rgb(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
-        cr.rectangle(0, 0, *self.get_size())
-        cr.fill()
-
         # draw comments first
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
             for block in self.blocks:
                 if block.get_enabled():
                     # block.draw_comment(widget, cr)
                     pass
-        #draw multi select rectangle
+        # draw multi select rectangle
         if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
-            #coordinates
             x1, y1 = self.press_coor
             x2, y2 = self.get_coordinate()
-            #calculate top-left coordinate and width/height
             x, y = int(min(x1, x2)), int(min(y1, y2))
             w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
-            #draw
             cr.set_source_rgb(*Colors.HIGHLIGHT_COLOR)
             cr.rectangle(x, y, w, h)
             cr.fill()
@@ -428,7 +421,7 @@ class FlowGraph(Element, _Flowgraph):
             cr.rectangle(x, y, w, h)
             cr.stroke()
 
-        #draw blocks on top of connections
+        # draw blocks on top of connections
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
         blocks = sorted(self.blocks, key=methodcaller('get_enabled'))
@@ -439,7 +432,8 @@ class FlowGraph(Element, _Flowgraph):
             if hide_variables and (element.is_variable or element.is_import):
                 continue  # skip hidden disabled blocks and connections
             element.draw(widget, cr)
-        #draw selected blocks on top of selected connections
+
+        # draw selected blocks on top of selected connections
         for selected_element in self.get_selected_connections() + self.get_selected_blocks():
             selected_element.draw(widget, cr)
 
@@ -666,7 +660,7 @@ class FlowGraph(Element, _Flowgraph):
             self.mouse_pressed = True
             self.update_selected_elements()
             self.mouse_pressed = False
-        self._context_menu.popup(None, None, None, event.button, event.time)
+        self._context_menu.popup(None, None, None, None, event.button, event.time)
 
     def handle_mouse_selector_press(self, double_click, coordinate):
         """
@@ -677,11 +671,12 @@ class FlowGraph(Element, _Flowgraph):
         """
         self.press_coor = coordinate
         self.set_coordinate(coordinate)
-        self.time = 0
         self.mouse_pressed = True
-        if double_click: self.unselect()
+
+        if double_click:
+            self.unselect()
         self.update_selected_elements()
-        #double click detected, bring up params dialog if possible
+
         if double_click and self.get_selected_block():
             self.mouse_pressed = False
             Actions.BLOCK_PARAM_MODIFY()
@@ -693,69 +688,70 @@ class FlowGraph(Element, _Flowgraph):
         And update the selected flowgraph elements.
         """
         self.set_coordinate(coordinate)
-        self.time = 0
         self.mouse_pressed = False
         if self.element_moved:
             Actions.BLOCK_MOVE()
             self.element_moved = False
         self.update_selected_elements()
 
-    def handle_mouse_motion(self, coordinate):
+    def handle_mouse_motion(self, coordinate, button1_pressed):
         """
         The mouse has moved, respond to mouse dragging or notify elements
         Move a selected element to the new coordinate.
         Auto-scroll the scroll bars at the boundaries.
         """
-        #to perform a movement, the mouse must be pressed
+        # to perform a movement, the mouse must be pressed
         # (no longer checking pending events via Gtk.events_pending() - always true in Windows)
-        if not self.mouse_pressed:
-            # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
-            if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active(): return
-            redraw = False
-            for element in reversed(self.get_elements()):
-                over_element = element.what_is_selected(coordinate)
-                if not over_element: continue
-                if over_element != self.element_under_mouse:  # over sth new
-                    if self.element_under_mouse:
-                        redraw |= self.element_under_mouse.mouse_out() or False
-                    self.element_under_mouse = over_element
-                    redraw |= over_element.mouse_over() or False
-                break
-            else:
+        if not button1_pressed:
+            self._handle_mouse_motion_move(coordinate)
+        else:
+            self._handle_mouse_motion_drag(coordinate)
+
+    def _handle_mouse_motion_move(self, coordinate):
+        # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
+        if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active():
+            return
+        redraw = False
+        for element in reversed(self.get_elements()):
+            over_element = element.what_is_selected(coordinate)
+            if not over_element:
+                continue
+            if over_element != self.element_under_mouse:  # over sth new
                 if self.element_under_mouse:
                     redraw |= self.element_under_mouse.mouse_out() or False
-                    self.element_under_mouse = None
-            if redraw:
-                #self.create_labels()
-                self.create_shapes()
-                self.queue_draw()
+                self.element_under_mouse = over_element
+                redraw |= over_element.mouse_over() or False
+            break
         else:
-            #perform auto-scrolling
-            width, height = self.get_size()
-            x, y = coordinate
-            h_adj = self.get_scroll_pane().get_hadjustment()
-            v_adj = self.get_scroll_pane().get_vadjustment()
-            for pos, length, adj, adj_val, adj_len in (
-                (x, width, h_adj, h_adj.get_value(), h_adj.page_size),
-                (y, height, v_adj, v_adj.get_value(), v_adj.page_size),
-            ):
-                #scroll if we moved near the border
-                if pos-adj_val > adj_len-SCROLL_PROXIMITY_SENSITIVITY and adj_val+SCROLL_DISTANCE < length-adj_len:
-                    adj.set_value(adj_val+SCROLL_DISTANCE)
-                    adj.emit('changed')
-                elif pos-adj_val < SCROLL_PROXIMITY_SENSITIVITY:
-                    adj.set_value(adj_val-SCROLL_DISTANCE)
-                    adj.emit('changed')
-            #remove the connection if selected in drag event
-            if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection:
-                Actions.ELEMENT_DELETE()
-            #move the selected elements and record the new coordinate
-            if not self.get_ctrl_mask():
-                X, Y = self.get_coordinate()
-                dX, dY = int(x - X), int(y - Y)
-                active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.get_mod1_mask()
-                if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
-                    self.move_selected((dX, dY))
-                    self.set_coordinate((x, y))
-            #queue draw for animation
+            if self.element_under_mouse:
+                redraw |= self.element_under_mouse.mouse_out() or False
+                self.element_under_mouse = None
+        if redraw:
+            # self.create_labels()
+            self.create_shapes()
             self.queue_draw()
+
+    def _handle_mouse_motion_drag(self, coordinate):
+        # remove the connection if selected in drag event
+        if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection:
+            Actions.ELEMENT_DELETE()
+
+        # move the selected elements and record the new coordinate
+        x, y = coordinate
+        if not self.get_ctrl_mask():
+            X, Y = self.get_coordinate()
+            dX, dY = int(x - X), int(y - Y)
+            active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.get_mod1_mask()
+            if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
+                self.move_selected((dX, dY))
+                self.set_coordinate((x, y))
+        # queue draw for animation
+        self.queue_draw()
+
+    def get_max_coords(self, initial=(0, 0)):
+        w, h = initial
+        for block in self.blocks:
+            x, y = block.get_coordinate()
+            w = max(w, x + block.W)
+            h = max(h, y + block.H)
+        return w, h
