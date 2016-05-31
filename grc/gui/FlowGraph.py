@@ -124,11 +124,14 @@ class FlowGraph(Element):
         """
         id = self._get_unique_id(key)
         #calculate the position coordinate
+        W, H = self.get_size()
         h_adj = self.get_scroll_pane().get_hadjustment()
         v_adj = self.get_scroll_pane().get_vadjustment()
         if coor is None: coor = (
-            int(random.uniform(.25, .75)*h_adj.page_size + h_adj.get_value()),
-            int(random.uniform(.25, .75)*v_adj.page_size + v_adj.get_value()),
+            int(random.uniform(.25, .75) * min(h_adj.page_size, W) +
+                h_adj.get_value()),
+            int(random.uniform(.25, .75) * min(v_adj.page_size, H) +
+                v_adj.get_value()),
         )
         #get the new block
         block = self.get_new_block(key)
