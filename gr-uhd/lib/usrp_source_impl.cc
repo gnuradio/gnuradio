@@ -659,12 +659,41 @@ namespace gr {
 
       case ::uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
         _tag_now = true;
+
+        //publish message
+        {
+          pmt::pmt_t dic = pmt::make_dict();
+          dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(_metadata.error_code));
+          if(_metadata.has_time_spec) {
+            const pmt::pmt_t timespec = pmt::make_tuple
+              (pmt::from_uint64(_metadata.time_spec.get_full_secs()),
+               pmt::from_double(_metadata.time_spec.get_frac_secs()));
+            dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
+          }
+          message_port_pub(ASYNC_MSG_PORT, dic);
+        }
         //ignore overflows and try work again
+
         return work(noutput_items, input_items, output_items);
 
       default:
         //GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error: %d") % _metadata.strerror());
         GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error code: %d") % _metadata.error_code);
+
+        //publish message
+        {
+          pmt::pmt_t dic = pmt::make_dict();
+          dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(_metadata.error_code));
+          if(_metadata.out_of_sequence)
+            dic = pmt::dict_add(dic, pmt::mp("out of sequence"), pmt::from_bool(true));
+          if(_metadata.has_time_spec) {
+            const pmt::pmt_t timespec = pmt::make_tuple
+              (pmt::from_uint64(_metadata.time_spec.get_full_secs()),
+               pmt::from_double(_metadata.time_spec.get_frac_secs()));
+            dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
+          }
+          message_port_pub(ASYNC_MSG_PORT, dic);
+        }
         return num_samps;
       }
 
