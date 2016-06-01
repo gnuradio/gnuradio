@@ -372,32 +372,6 @@ namespace gr {
       const size_t num_sent = _tx_stream->send
         (input_items, ninput_items, _metadata, 1.0);
 
-      //receive asynchronous messages
-      ::uhd::async_metadata_t async_md;
-      //don't ever block processing to wait for async data
-      if (_tx_stream->recv_async_msg(async_md, 0.0)) {
-        int code = async_md.event_code;
-        if(code) {
-          pmt::pmt_t dic = pmt::make_dict();
-          dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(code));
-          dic = pmt::dict_add(dic, pmt::mp("channel"), pmt::from_long(async_md.channel));
-          dic = pmt::dict_add(dic, pmt::mp("user_payload"),pmt::init_u32vector(4,async_md.user_payload));
-          if(async_md.has_time_spec) {
-            const pmt::pmt_t timespec = pmt::make_tuple
-              (pmt::from_uint64(async_md.time_spec.get_full_secs()),
-               pmt::from_double(async_md.time_spec.get_frac_secs()));
-            dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
-          }
-          message_port_pub(ASYNC_MSG_PORT, dic);
-        }
-      } else {
-        // handle the case that no async_msg was available; usually, this should be ignored for being OK.
-        /* 
-          pmt::pmt_t dic = pmt::make_dict();
-          dic = pmt::dict_add(dic, pmt::mp("timeout"), pmt::from_bool(true));
-          message_port_pub(ASYNC_MSG_PORT, dic);
-        */
-      }
 #else
       const size_t num_sent = _dev->get_device()->send
         (input_items, ninput_items, _metadata,
@@ -585,6 +559,43 @@ namespace gr {
     } // end tag_work()
 
     void
+    usrp_sink_impl::_async_loop()
+    {
+      ::uhd::async_metadata_t async_md;
+      pmt::pmt_t dic = pmt::make_dict();
+      // poll the async message queue at a liberal interval – no use wasting CPU
+      while(true)
+      {
+        //have a way to stop this thread
+        boost::this_thread::interruption_point();
+        //receive asynchronous messages
+        if (_tx_stream->recv_async_msg(async_md, 0.25)) {
+          int code = async_md.event_code;
+          if(code) {
+            dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(code));
+            dic = pmt::dict_add(dic, pmt::mp("channel"), pmt::from_long(async_md.channel));
+            dic = pmt::dict_add(dic, pmt::mp("user_payload"),pmt::init_u32vector(4,async_md.user_payload));
+            if(async_md.has_time_spec) {
+              const pmt::pmt_t timespec = pmt::make_tuple
+                (pmt::from_uint64(async_md.time_spec.get_full_secs()),
+                 pmt::from_double(async_md.time_spec.get_frac_secs()));
+              dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
+            }
+            message_port_pub(ASYNC_MSG_PORT, dic);
+          }
+        } else {
+          // handle the case that no async_msg was available; usually, this should be ignored for being OK.
+          // One might consider doing that if the timeout above is large enough that there *should* be something happening.
+          /* 
+             pmt::pmt_t dic = pmt::make_dict();
+             dic = pmt::dict_add(dic, pmt::mp("timeout"), pmt::from_bool(true));
+             message_port_pub(ASYNC_MSG_PORT, dic);
+             */
+        }
+      }
+    }
+
+    void
     usrp_sink_impl::set_start_time(const ::uhd::time_spec_t &time)
     {
       _start_time = time;
@@ -599,6 +610,8 @@ namespace gr {
     {
 #ifdef GR_UHD_USE_STREAM_API
       _tx_stream = _dev->get_tx_stream(_stream_args);
+      _async_thread =
+        gr::thread::thread(boost::bind(&usrp_sink_impl::_async_loop, this));
 #endif
 
       _metadata.start_of_burst = true;
@@ -638,6 +651,7 @@ namespace gr {
 #ifdef GR_UHD_USE_STREAM_API
       if(_tx_stream)
         _tx_stream->send(gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
+      _async_thread.interrupt();
 #else
       _dev->get_device()->send
         (gr_vector_const_void_star(_nchan), 0, _metadata,

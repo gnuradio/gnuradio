@@ -111,6 +111,8 @@ namespace gr {
 
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::tx_streamer::sptr _tx_stream;
+      void _async_loop();
+      gr::thread::thread _async_thread;
 #endif
       ::uhd::tx_metadata_t _metadata;
       double _sample_rate;
