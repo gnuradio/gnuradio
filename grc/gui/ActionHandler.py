@@ -59,7 +59,6 @@ class ActionHandler:
         self.main_window = MainWindow(platform, self._handle_action)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
-        self.get_page = self.main_window.get_page
         self.get_focus_flag = self.main_window.get_focus_flag
         #setup the messages
         Messages.register_messenger(self.main_window.add_console_line)
@@ -103,11 +102,11 @@ class ActionHandler:
     def _handle_action(self, action, *args):
         #print action
         main = self.main_window
-        page = main.get_page()
-        flow_graph = page.get_flow_graph() if page else None
+        page = main.current_page
+        flow_graph = page.flow_graph if page else None
 
         def flow_graph_update(fg=flow_graph):
-            main.vars.update_gui()
+            main.vars.update_gui(fg.blocks)
             fg.update()
 
         ##################################################
@@ -121,7 +120,7 @@ class ActionHandler:
                 if file_path: main.new_page(file_path) #load pages from file paths
             if Preferences.file_open() in self.init_file_paths:
                 main.new_page(Preferences.file_open(), show=True)
-            if not self.get_page():
+            if not self.main_window.current_page:
                 main.new_page()  # ensure that at least a blank page exists
 
             main.btwin.search_entry.hide()
@@ -174,18 +173,18 @@ class ActionHandler:
         elif action == Actions.BLOCK_ENABLE:
             if flow_graph.enable_selected(True):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.BLOCK_DISABLE:
             if flow_graph.enable_selected(False):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.BLOCK_BYPASS:
             if flow_graph.bypass_selected():
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         ##################################################
         # Cut/Copy/Paste
         ##################################################
@@ -198,8 +197,8 @@ class ActionHandler:
             if self.clipboard:
                 flow_graph.paste_from_clipboard(self.clipboard)
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
                 ##################################################
                 # Create heir block
                 ##################################################
@@ -332,53 +331,53 @@ class ActionHandler:
         # Move/Rotate/Delete/Create
         ##################################################
         elif action == Actions.BLOCK_MOVE:
-            page.get_state_cache().save_new_state(flow_graph.export_data())
-            page.set_saved(False)
+            page.state_cache.save_new_state(flow_graph.export_data())
+            page.saved = False
         elif action in Actions.BLOCK_ALIGNMENTS:
             if flow_graph.align_selected(action):
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.BLOCK_ROTATE_CCW:
             if flow_graph.rotate_selected(90):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.BLOCK_ROTATE_CW:
             if flow_graph.rotate_selected(-90):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.ELEMENT_DELETE:
             if flow_graph.remove_selected():
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
+                page.state_cache.save_new_state(flow_graph.export_data())
                 Actions.NOTHING_SELECT()
-                page.set_saved(False)
+                page.saved = False
         elif action == Actions.ELEMENT_CREATE:
             flow_graph_update()
-            page.get_state_cache().save_new_state(flow_graph.export_data())
+            page.state_cache.save_new_state(flow_graph.export_data())
             Actions.NOTHING_SELECT()
-            page.set_saved(False)
+            page.saved = False
         elif action == Actions.BLOCK_INC_TYPE:
             if flow_graph.type_controller_modify_selected(1):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.BLOCK_DEC_TYPE:
             if flow_graph.type_controller_modify_selected(-1):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.PORT_CONTROLLER_INC:
             if flow_graph.port_controller_modify_selected(1):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         elif action == Actions.PORT_CONTROLLER_DEC:
             if flow_graph.port_controller_modify_selected(-1):
                 flow_graph_update()
-                page.get_state_cache().save_new_state(flow_graph.export_data())
-                page.set_saved(False)
+                page.state_cache.save_new_state(flow_graph.export_data())
+                page.saved = False
         ##################################################
         # Window stuff
         ##################################################
@@ -406,7 +405,7 @@ class ActionHandler:
         elif action == Actions.CLEAR_CONSOLE:
             main.text_display.clear()
         elif action == Actions.SAVE_CONSOLE:
-            file_path = SaveConsoleFileDialog(page.get_file_path()).run()
+            file_path = SaveConsoleFileDialog(page.file_path).run()
             if file_path is not None:
                 main.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
@@ -414,7 +413,7 @@ class ActionHandler:
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
             action.save_to_preferences()
             for page in main.get_pages():
-                page.get_flow_graph().create_shapes()
+                page.flow_graph.create_shapes()
         elif action in (Actions.TOGGLE_SNAP_TO_GRID,
                         Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                         Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB):
@@ -422,7 +421,7 @@ class ActionHandler:
         elif action == Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY:
             action.save_to_preferences()
             for page in main.get_pages():
-                flow_graph_update(page.get_flow_graph())
+                flow_graph_update(page.flow_graph)
         elif action == Actions.TOGGLE_HIDE_VARIABLES:
             # Call the variable editor TOGGLE in case it needs to be showing
             Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR()
@@ -467,10 +466,10 @@ class ActionHandler:
                     response = self.dialog.run()
                     if response in (Gtk.ResponseType.APPLY, Gtk.ResponseType.ACCEPT):
                         flow_graph_update()
-                        page.get_state_cache().save_new_state(flow_graph.export_data())
-                        page.set_saved(False)
+                        page.state_cache.save_new_state(flow_graph.export_data())
+                        page.saved = False
                     else:  # restore the current state
-                        n = page.get_state_cache().get_current_state()
+                        n = page.state_cache.get_current_state()
                         flow_graph.import_data(n)
                         flow_graph_update()
                     if response == Gtk.ResponseType.APPLY:
@@ -479,15 +478,15 @@ class ActionHandler:
                 self.dialog.destroy()
                 self.dialog = None
         elif action == Actions.EXTERNAL_UPDATE:
-            page.get_state_cache().save_new_state(flow_graph.export_data())
+            page.state_cache.save_new_state(flow_graph.export_data())
             flow_graph_update()
             if self.dialog is not None:
                 self.dialog.update_gui(force=True)
-            page.set_saved(False)
+            page.saved = False
         elif action == Actions.VARIABLE_EDITOR_UPDATE:
-            page.get_state_cache().save_new_state(flow_graph.export_data())
+            page.state_cache.save_new_state(flow_graph.export_data())
             flow_graph_update()
-            page.set_saved(False)
+            page.saved = False
         ##################################################
         # View Parser Errors
         ##################################################
@@ -497,19 +496,19 @@ class ActionHandler:
         # Undo/Redo
         ##################################################
         elif action == Actions.FLOW_GRAPH_UNDO:
-            n = page.get_state_cache().get_prev_state()
+            n = page.state_cache.get_prev_state()
             if n:
                 flow_graph.unselect()
                 flow_graph.import_data(n)
                 flow_graph_update()
-                page.set_saved(False)
+                page.saved = False
         elif action == Actions.FLOW_GRAPH_REDO:
-            n = page.get_state_cache().get_next_state()
+            n = page.state_cache.get_next_state()
             if n:
                 flow_graph.unselect()
                 flow_graph.import_data(n)
                 flow_graph_update()
-                page.set_saved(False)
+                page.saved = False
         ##################################################
         # New/Open/Save/Close
         ##################################################
@@ -522,7 +521,7 @@ class ActionHandler:
             # TODO: Disable opening the flowgraph
             pass
             '''
-            file_paths = args if args else OpenFlowGraphFileDialog(page.get_file_path()).run()
+            file_paths = args if args else OpenFlowGraphFileDialog(page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i==0))
@@ -545,27 +544,27 @@ class ActionHandler:
             main.close_page()
         elif action == Actions.FLOW_GRAPH_SAVE:
             #read-only or undefined file path, do save-as
-            if page.get_read_only() or not page.get_file_path():
+            if page.get_read_only() or not page.file_path:
                 Actions.FLOW_GRAPH_SAVE_AS()
             #otherwise try to save
             else:
                 try:
-                    ParseXML.to_file(flow_graph.export_data(), page.get_file_path())
-                    flow_graph.grc_file_path = page.get_file_path()
-                    page.set_saved(True)
+                    ParseXML.to_file(flow_graph.export_data(), page.file_path)
+                    flow_graph.grc_file_path = page.file_path
+                    page.saved = True
                 except IOError:
-                    Messages.send_fail_save(page.get_file_path())
-                    page.set_saved(False)
+                    Messages.send_fail_save(page.file_path)
+                    page.saved = False
         elif action == Actions.FLOW_GRAPH_SAVE_AS:
-            file_path = SaveFlowGraphFileDialog(page.get_file_path()).run()
+            file_path = SaveFlowGraphFileDialog(page.file_path).run()
             if file_path is not None:
-                page.set_file_path(file_path)
+                page.file_path = os.path.abspath(file_path)
                 Actions.FLOW_GRAPH_SAVE()
                 Preferences.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
                 main.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
-            file_path, background_transparent = SaveScreenShotDialog(page.get_file_path()).run()
+            file_path, background_transparent = SaveScreenShotDialog(page.file_path).run()
             if file_path is not None:
                 pixbuf = flow_graph.get_drawing_area().get_screenshot(background_transparent)
                 pixbuf.save(file_path, Constants.IMAGE_FILE_EXTENSION[1:])
@@ -573,38 +572,38 @@ class ActionHandler:
         # Gen/Exec/Stop
         ##################################################
         elif action == Actions.FLOW_GRAPH_GEN:
-            if not page.get_proc():
-                if not page.get_saved() or not page.get_file_path():
-                    Actions.FLOW_GRAPH_SAVE() #only save if file path missing or not saved
-                if page.get_saved() and page.get_file_path():
+            if not page.process:
+                if not page.saved or not page.file_path:
+                    Actions.FLOW_GRAPH_SAVE()  # only save if file path missing or not saved
+                if page.saved and page.file_path:
                     generator = page.get_generator()
                     try:
-                        Messages.send_start_gen(generator.get_file_path())
+                        Messages.send_start_gen(generator.file_path)
                         generator.write()
                     except Exception as e:
                         Messages.send_fail_gen(e)
                 else:
                     self.generator = None
         elif action == Actions.FLOW_GRAPH_EXEC:
-            if not page.get_proc():
+            if not page.process:
                 Actions.FLOW_GRAPH_GEN()
                 xterm = self.platform.config.xterm_executable
                 if Preferences.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
                         Dialogs.MissingXTermDialog(xterm)
                     Preferences.xterm_missing(xterm)
-                if page.get_saved() and page.get_file_path():
+                if page.saved and page.file_path:
                     Executor.ExecFlowGraphThread(
                         flow_graph_page=page,
                         xterm_executable=xterm,
                         callback=self.update_exec_stop
                     )
         elif action == Actions.FLOW_GRAPH_KILL:
-            if page.get_proc():
+            if page.process:
                 try:
-                    page.get_proc().kill()
+                    page.process.kill()
                 except:
-                    print "could not kill process: %d" % page.get_proc().pid
+                    print "could not kill process: %d" % page.process.pid
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
@@ -650,8 +649,8 @@ class ActionHandler:
         ##################################################
         # Global Actions for all States
         ##################################################
-        page = main.get_page()  # page and flowgraph might have changed
-        flow_graph = page.get_flow_graph() if page else None
+        page = main.current_page  # page and flow graph might have changed
+        flow_graph = page.flow_graph if page else None
 
         selected_blocks = flow_graph.get_selected_blocks()
         selected_block = selected_blocks[0] if selected_blocks else None
@@ -690,7 +689,7 @@ class ActionHandler:
 
         self.update_exec_stop()
 
-        Actions.FLOW_GRAPH_SAVE.set_sensitive(not page.get_saved())
+        Actions.FLOW_GRAPH_SAVE.set_sensitive(not page.saved)
         main.update()
 
         flow_graph.update_selected()
@@ -703,7 +702,8 @@ class ActionHandler:
         Update the exec and stop buttons.
         Lock and unlock the mutex for race conditions with exec flow graph threads.
         """
-        sensitive = self.main_window.get_flow_graph().is_valid() and not self.get_page().get_proc()
+        page = self.main_window.current_page
+        sensitive = page.flow_graph.is_valid() and not page.process
         Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
         Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
-        Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_proc() is not None)
+        Actions.FLOW_GRAPH_KILL.set_sensitive(page.process is not None)

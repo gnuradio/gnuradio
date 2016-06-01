@@ -130,7 +130,7 @@ class Platform(Element):
             Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
             return False
 
-        self.load_block_xml(generator.get_file_path_xml())
+        self.load_block_xml(generator.file_path_xml)
         return True
 
     def load_blocks(self):

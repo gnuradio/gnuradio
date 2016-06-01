@@ -82,9 +82,6 @@ class TopBlockGenerator(object):
         filename = self._flow_graph.get_option('id') + '.py'
         self.file_path = os.path.join(dirname, filename)
 
-    def get_file_path(self):
-        return self.file_path
-
     def write(self):
         """generate output and write it to files"""
         # Do throttle warning
@@ -269,18 +266,15 @@ class HierBlockGenerator(TopBlockGenerator):
 
         self._mode = HIER_BLOCK_FILE_MODE
         self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id') + '.py')
-        self._file_path_xml = self.file_path + '.xml'
-
-    def get_file_path_xml(self):
-        return self._file_path_xml
+        self.file_path_xml = self.file_path + '.xml'
 
     def write(self):
         """generate output and write it to files"""
         TopBlockGenerator.write(self)
-        ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.get_file_path_xml())
-        ParseXML.validate_dtd(self.get_file_path_xml(), BLOCK_DTD)
+        ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.file_path_xml)
+        ParseXML.validate_dtd(self.file_path_xml, BLOCK_DTD)
         try:
-            os.chmod(self.get_file_path_xml(), self._mode)
+            os.chmod(self.file_path_xml, self._mode)
         except:
             pass
 

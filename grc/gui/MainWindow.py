@@ -96,8 +96,11 @@ class MainWindow(Gtk.Window):
         self.console_window.set_size_request(-1, DEFAULT_CONSOLE_WINDOW_WIDTH)
 
         # Create the block tree and variable panels
-        self.btwin = BlockTreeWindow(platform, self.get_flow_graph)
-        self.vars = VariableEditor(platform, self.get_flow_graph)
+        self.btwin = BlockTreeWindow(platform)
+        self.btwin.connect('create_new_block', self._add_block_to_current_flow_graph)
+        self.vars = VariableEditor()
+        self.vars.connect('create_new_block', self._add_block_to_current_flow_graph)
+        self.vars.connect('remove_block', self._remove_block_from_current_flow_graph)
 
         # Figure out which place to put the variable editor
         self.left = Gtk.VPaned() #orientation=Gtk.Orientation.VERTICAL)
@@ -140,6 +143,13 @@ class MainWindow(Gtk.Window):
     ############################################################
     # Event Handlers
     ############################################################
+
+    def _add_block_to_current_flow_graph(self, widget, key):
+        self.current_flow_graph.add_new_block(key)
+
+    def _remove_block_from_current_flow_graph(self, widget, key):
+        block = self.current_flow_graph.get_block(key)
+        self.current_flow_graph.remove_element(block)
 
     def _quit(self, window, event):
         """
@@ -261,9 +271,9 @@ class MainWindow(Gtk.Window):
             true if all closed
         """
         open_files = filter(lambda file: file, self._get_files()) #filter blank files
-        open_file = self.get_page().get_file_path()
+        open_file = self.current_page.file_path
         #close each page
-        for page in sorted(self.get_pages(), key=lambda p: p.get_saved()):
+        for page in sorted(self.get_pages(), key=lambda p: p.saved):
             self.page_to_be_closed = page
             closed = self.close_page(False)
             if not closed:
@@ -291,23 +301,24 @@ class MainWindow(Gtk.Window):
         Args:
             ensure: boolean
         """
-        if not self.page_to_be_closed: self.page_to_be_closed = self.get_page()
+        if not self.page_to_be_closed: self.page_to_be_closed = self.current_page
         #show the page if it has an executing flow graph or is unsaved
-        if self.page_to_be_closed.get_proc() or not self.page_to_be_closed.get_saved():
+        if self.page_to_be_closed.process or not self.page_to_be_closed.saved:
             self._set_page(self.page_to_be_closed)
         #unsaved? ask the user
-        if not self.page_to_be_closed.get_saved():
+        if not self.page_to_be_closed.saved:
             response = self._save_changes() # return value is either OK, CLOSE, or CANCEL
             if response == Gtk.ResponseType.OK:
                 Actions.FLOW_GRAPH_SAVE() #try to save
-                if not self.page_to_be_closed.get_saved(): #still unsaved?
+                if not self.page_to_be_closed.saved: #still unsaved?
                     self.page_to_be_closed = None #set the page to be closed back to None
                     return False
             elif response == Gtk.ResponseType.CANCEL:
                 self.page_to_be_closed = None
                 return False
         #stop the flow graph if executing
-        if self.page_to_be_closed.get_proc(): Actions.FLOW_GRAPH_KILL()
+        if self.page_to_be_closed.process:
+            Actions.FLOW_GRAPH_KILL()
         #remove the page
         self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
         if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
@@ -324,54 +335,40 @@ class MainWindow(Gtk.Window):
         Set the titles on the page tabs.
         Show/hide the console window.
         """
-        page = self.get_page()
+        page = self.current_page
 
-        basename = os.path.basename(page.get_file_path())
-        dirname = os.path.dirname(page.get_file_path())
+        basename = os.path.basename(page.file_path)
+        dirname = os.path.dirname(page.file_path)
         Gtk.Window.set_title(self, ''.join((
-            '*' if not page.get_saved() else '', basename if basename else NEW_FLOGRAPH_TITLE,
+            '*' if not page.saved else '', basename if basename else NEW_FLOGRAPH_TITLE,
             '(read only)' if page.get_read_only() else '', ' - ',
             dirname if dirname else self._platform.config.name,
         )))
         # set tab titles
         for page in self.get_pages():
-            file_name = os.path.splitext(os.path.basename(page.get_file_path()))[0]
+            file_name = os.path.splitext(os.path.basename(page.file_path))[0]
             page.set_markup('<span foreground="{foreground}">{title}{ro}</span>'.format(
-                foreground='black' if page.get_saved() else 'red', ro=' (ro)' if page.get_read_only() else '',
+                foreground='black' if page.saved else 'red', ro=' (ro)' if page.get_read_only() else '',
                 title=Utils.encode(file_name or NEW_FLOGRAPH_TITLE),
             ))
         # show/hide notebook tabs
         self.notebook.set_show_tabs(len(self.get_pages()) > 1)
 
         # Need to update the variable window when changing
-        self.vars.update_gui()
+        self.vars.update_gui(self.current_flow_graph.blocks)
 
     def update_pages(self):
         """
         Forces a reload of all the pages in this notebook.
         """
         for page in self.get_pages():
-            success = page.get_flow_graph().reload()
+            success = page.flow_graph.reload()
             if success:  # Only set saved if errors occurred during import
-                page.set_saved(False)
+                page.saved = False
 
-    def get_page(self):
-        """
-        Get the selected page.
-
-        Returns:
-            the selected page
-        """
-        return self.current_page
-
-    def get_flow_graph(self):
-        """
-        Get the selected flow graph.
-
-        Returns:
-            the selected flow graph
-        """
-        return self.get_page().get_flow_graph()
+    @property
+    def current_flow_graph(self):
+        return self.current_page.flow_graph
 
     def get_focus_flag(self):
         """
@@ -379,7 +376,7 @@ class MainWindow(Gtk.Window):
         Returns:
             the focus flag
         """
-        return self.get_page().get_drawing_area().get_focus_flag()
+        return self.current_page.get_drawing_area().get_focus_flag()
 
     ############################################################
     # Helpers
@@ -419,7 +416,7 @@ class MainWindow(Gtk.Window):
         Returns:
             list of file paths
         """
-        return map(lambda page: page.get_file_path(), self.get_pages())
+        return map(lambda page: page.file_path, self.get_pages())
 
     def get_pages(self):
         """
@@ -428,4 +425,5 @@ class MainWindow(Gtk.Window):
         Returns:
             list of pages
         """
-        return [self.notebook.get_nth_page(page_num) for page_num in range(self.notebook.get_n_pages())]
+        return [self.notebook.get_nth_page(page_num)
+                for page_num in range(self.notebook.get_n_pages())]

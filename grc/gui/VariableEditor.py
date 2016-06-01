@@ -35,6 +35,7 @@ ID_INDEX = 1
 
 class VariableEditorContextMenu(Gtk.Menu):
     """ A simple context menu for our variable editor """
+
     def __init__(self, var_edit):
         Gtk.Menu.__init__(self)
 
@@ -83,12 +84,17 @@ class VariableEditor(Gtk.VBox):
     ENABLE_BLOCK = 5
     DISABLE_BLOCK = 6
 
-    def __init__(self, platform, get_flow_graph):
+    __gsignals__ = {
+        'create_new_block': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
+        'remove_block': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+    }
+
+    def __init__(self):
         Gtk.VBox.__init__(self)
-        self.platform = platform
-        self.get_flow_graph = get_flow_graph
         self._block = None
         self._mouse_button_pressed = False
+        self._imports = []
+        self._variables = []
 
         # Only use the model to store the block reference and name.
         # Generate everything else dynamically
@@ -218,18 +224,11 @@ class VariableEditor(Gtk.VBox):
             if block.get_error_messages():
                 sp('foreground', 'red')
 
-    def update_gui(self):
-        if not self.get_flow_graph():
-            return
-        self._update_blocks()
+    def update_gui(self, blocks):
+        self._imports = filter(attrgetter('is_import'), blocks)
+        self._variables = filter(attrgetter('is_variable'), blocks)
         self._rebuild()
         self.treeview.expand_all()
-
-    def _update_blocks(self):
-        self._imports = filter(attrgetter('is_import'),
-                               self.get_flow_graph().blocks)
-        self._variables = filter(attrgetter('is_variable'),
-                                 self.get_flow_graph().blocks)
 
     def _rebuild(self, *args):
         self.treestore.clear()
@@ -259,13 +258,13 @@ class VariableEditor(Gtk.VBox):
         key presses or mouse clicks. Also triggers an update of the flow graph and editor.
         """
         if key == self.ADD_IMPORT:
-            self.get_flow_graph().add_new_block('import')
+            self.emit('create_new_block', 'import')
         elif key == self.ADD_VARIABLE:
-            self.get_flow_graph().add_new_block('variable')
+            self.emit('create_new_block', 'variable')
         elif key == self.OPEN_PROPERTIES:
             Actions.BLOCK_PARAM_MODIFY(self._block)
         elif key == self.DELETE_BLOCK:
-            self.get_flow_graph().remove_element(self._block)
+            self.emit('remove_block', self._block.get_id())
         elif key == self.DELETE_CONFIRM:
             if self._confirm_delete:
                 # Create a context menu to confirm the delete operation

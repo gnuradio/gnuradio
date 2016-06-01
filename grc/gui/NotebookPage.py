@@ -41,15 +41,16 @@ class NotebookPage(Gtk.HBox):
         Gtk.HBox.__init__(self)
 
         self.main_window = main_window
-        self._flow_graph = flow_graph
+        self.flow_graph = flow_graph
+        self.file_path = file_path
+
         self.process = None
+        self.saved = True
 
         # import the file
-        self.file_path = file_path
         initial_state = flow_graph.get_parent().parse_flow_graph(file_path)
-        self.get_flow_graph().import_data(initial_state)
+        flow_graph.import_data(initial_state)
         self.state_cache = StateCache(initial_state)
-        self.saved = True
 
         # tab box to hold label and close button
         self.label = Gtk.Label()
@@ -68,7 +69,8 @@ class NotebookPage(Gtk.HBox):
         tab.show_all()
 
         # setup scroll window and drawing area
-        self.drawing_area = DrawingArea(self.get_flow_graph())
+        self.drawing_area = DrawingArea(flow_graph)
+        flow_graph.drawing_area = self.drawing_area
 
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
@@ -77,8 +79,6 @@ class NotebookPage(Gtk.HBox):
         self.scrolled_window.add_with_viewport(self.drawing_area)
         self.pack_start(self.scrolled_window, True, True, 0)
 
-        # inject drawing area into flow graph
-        self.get_flow_graph().drawing_area = self.drawing_area
         self.show_all()
 
     def _handle_scroll_window_key_press(self, widget, event):
@@ -97,8 +97,8 @@ class NotebookPage(Gtk.HBox):
         Returns:
             generator
         """
-        platform = self.get_flow_graph().get_parent()
-        return platform.Generator(self.get_flow_graph(), self.get_file_path())
+        platform = self.flow_graph.get_parent()
+        return platform.Generator(self.flow_graph, self.file_path)
 
     def _handle_button(self, button):
         """
@@ -120,33 +120,6 @@ class NotebookPage(Gtk.HBox):
         """
         self.label.set_markup(markup)
 
-    def get_proc(self):
-        """
-        Get the subprocess for the flow graph.
-
-        Returns:
-            the subprocess object
-        """
-        return self.process
-
-    def set_proc(self, process):
-        """
-        Set the subprocess object.
-
-        Args:
-            process: the new subprocess
-        """
-        self.process = process
-
-    def get_flow_graph(self):
-        """
-        Get the flow graph.
-
-        Returns:
-            the flow graph
-        """
-        return self._flow_graph
-
     def get_read_only(self):
         """
         Get the read-only state of the file.
@@ -155,51 +128,7 @@ class NotebookPage(Gtk.HBox):
         Returns:
             true for read-only
         """
-        if not self.get_file_path(): return False
-        return os.path.exists(self.get_file_path()) and \
-        not os.access(self.get_file_path(), os.W_OK)
-
-    def get_file_path(self):
-        """
-        Get the file path for the flow graph.
-
-        Returns:
-            the file path or ''
-        """
-        return self.file_path
-
-    def set_file_path(self, file_path=''):
-        """
-        Set the file path, '' for no file path.
-
-        Args:
-            file_path: file path string
-        """
-        self.file_path = os.path.abspath(file_path) if file_path else ''
-
-    def get_saved(self):
-        """
-        Get the saved status for the flow graph.
-
-        Returns:
-            true if saved
-        """
-        return self.saved
-
-    def set_saved(self, saved=True):
-        """
-        Set the saved status.
-
-        Args:
-            saved: boolean status
-        """
-        self.saved = saved
-
-    def get_state_cache(self):
-        """
-        Get the state cache for the flow graph.
-
-        Returns:
-            the state cache
-        """
-        return self.state_cache
+        if not self.file_path:
+            return False
+        return (os.path.exists(self.file_path) and
+                not os.access(self.file_path, os.W_OK))

@@ -51,7 +51,11 @@ def _format_doc(doc):
 class BlockTreeWindow(Gtk.VBox):
     """The block selection panel."""
 
-    def __init__(self, platform, get_flow_graph):
+    __gsignals__ = {
+        'create_new_block': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+    }
+
+    def __init__(self, platform):
         """
         BlockTreeWindow constructor.
         Create a tree view of the possible blocks in the platform.
@@ -60,11 +64,9 @@ class BlockTreeWindow(Gtk.VBox):
 
         Args:
             platform: the particular platform will all block prototypes
-            get_flow_graph: get the selected flow graph
         """
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
         self.platform = platform
-        self.get_flow_graph = get_flow_graph
 
         # search entry
         self.search_entry = Gtk.Entry()
@@ -186,16 +188,6 @@ class BlockTreeWindow(Gtk.VBox):
         treestore, iter = selection.get_selected()
         return iter and treestore.get_value(iter, KEY_INDEX) or ''
 
-    def _add_selected_block(self):
-        """
-        Add the selected block with the given key to the flow graph.
-        """
-        key = self._get_selected_block_key()
-        if key:
-            self.get_flow_graph().add_new_block(key)
-            return True
-        return False
-
     def _expand_category(self):
         treestore, iter = self.treeview.get_selection().get_selected()
         if iter and treestore.iter_has_child(iter):
@@ -241,9 +233,13 @@ class BlockTreeWindow(Gtk.VBox):
                     selected = self.treestore_search.iter_children(selected)
                 if selected is not None:
                     key = self.treestore_search.get_value(selected, KEY_INDEX)
-                    if key: self.get_flow_graph().add_new_block(key)
+                    if key: self.emit('create_new_block', key)
             elif widget == self.treeview:
-                self._add_selected_block() or self._expand_category()
+                key = self._get_selected_block_key()
+                if key:
+                    self.emit('create_new_block', key)
+                else:
+                    self._expand_category()
             else:
                 return False  # propagate event
 
@@ -282,4 +278,6 @@ class BlockTreeWindow(Gtk.VBox):
         If a left double click is detected, call add selected block.
         """
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self._add_selected_block()
+            key = self._get_selected_block_key()
+            if key:
+                self.emit('create_new_block', key)

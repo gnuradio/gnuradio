@@ -45,8 +45,7 @@ class ExecFlowGraphThread(threading.Thread):
         self.update_callback = callback
 
         try:
-            self.process = self._popen()
-            self.page.set_proc(self.process)
+            self.process = self.page.process = self._popen()
             self.update_callback()
             self.start()
         except Exception as e:
@@ -57,7 +56,7 @@ class ExecFlowGraphThread(threading.Thread):
         """
         Execute this python flow graph.
         """
-        run_command = self.page.get_flow_graph().get_option('run_command')
+        run_command = self.page.flow_graph.get_option('run_command')
         generator = self.page.get_generator()
 
         try:
@@ -100,7 +99,7 @@ class ExecFlowGraphThread(threading.Thread):
     def done(self):
         """Perform end of execution tasks."""
         Messages.send_end_exec(self.process.returncode)
-        self.page.set_proc(None)
+        self.page.process = None
         self.update_callback()
 
 
