@@ -23,7 +23,7 @@ import sys
 import re
 from distutils.spawn import find_executable
 
-from gi.repository import GObject
+from gi.repository import GLib
 
 from ..core import Messages
 
@@ -91,10 +91,10 @@ class ExecFlowGraphThread(threading.Thread):
         # handle completion
         r = "\n"
         while r:
-            GObject.idle_add(Messages.send_verbose_exec, r)
+            GLib.idle_add(Messages.send_verbose_exec, r)
             r = os.read(self.process.stdout.fileno(), 1024)
         self.process.poll()
-        GObject.idle_add(self.done)
+        GLib.idle_add(self.done)
 
     def done(self):
         """Perform end of execution tasks."""

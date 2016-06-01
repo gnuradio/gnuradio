@@ -54,8 +54,7 @@ class NotebookPage(Gtk.HBox):
 
         # tab box to hold label and close button
         self.label = Gtk.Label()
-        image = Gtk.Image()
-        image.set_from_stock('gtk-close', Gtk.IconSize.MENU)
+        image = Gtk.Image.new_from_icon_name('window-close', Gtk.IconSize.MENU)
         image_box = Gtk.HBox(homogeneous=False, spacing=0)
         image_box.pack_start(image, True, False, 0)
         button = Gtk.Button()

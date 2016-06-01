@@ -161,11 +161,7 @@ class VariableEditor(Gtk.VBox):
     # Sets cell contents
     def set_icon(self, col, cell, model, iter, data):
         block = model.get_value(iter, BLOCK_INDEX)
-        if block:
-            pb = self.treeview.render_icon(Gtk.STOCK_CLOSE, 16, None)
-        else:
-            pb = self.treeview.render_icon(Gtk.STOCK_ADD, 16, None)
-        cell.set_property('pixbuf', pb)
+        cell.set_property('icon-name', 'window-close' if block else 'list-add')
 
     def set_value(self, col, cell, model, iter, data):
         sp = cell.set_property
@@ -270,7 +266,7 @@ class VariableEditor(Gtk.VBox):
                 # Create a context menu to confirm the delete operation
                 confirmation_menu = Gtk.Menu()
                 block_id = self._block.get_param('id').get_value().replace("_", "__")
-                confirm = Gtk.MenuItem("Delete {}".format(block_id))
+                confirm = Gtk.MenuItem(label="Delete {}".format(block_id))
                 confirm.connect('activate', self.handle_action, self.DELETE_BLOCK)
                 confirmation_menu.add(confirm)
                 confirmation_menu.show_all()
