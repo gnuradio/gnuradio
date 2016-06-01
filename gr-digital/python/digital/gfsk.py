@@ -39,7 +39,7 @@ try:
 except ImportError:
     import filter_swig as filter
 
-# default values (used in __init__ and add_options)
+# default values (used in __init__)
 _def_samples_per_symbol = 2
 _def_sensitivity = 1
 _def_bt = 0.35
@@ -151,15 +151,6 @@ class gfsk_mod(gr.hier_block2):
                      blocks.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
         self.connect(self.fmmod,
                      blocks.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
-
-
-    def add_options(parser):
-        """
-        Adds GFSK modulation-specific options to the standard parser
-        """
-        parser.add_option("", "--bt", type="float", default=_def_bt,
-                          help="set bandwidth-time product [default=%default] (GFSK)")
-    add_options=staticmethod(add_options)
 
 
     def extract_kwargs_from_options(options):
@@ -277,20 +268,6 @@ class gfsk_demod(gr.hier_block2):
                     blocks.file_sink(gr.sizeof_float, "clock_recovery.dat"))
         self.connect(self.slicer,
                     blocks.file_sink(gr.sizeof_char, "slicer.dat"))
-
-    def add_options(parser):
-        """
-        Adds GFSK demodulation-specific options to the standard parser
-        """
-        parser.add_option("", "--gain-mu", type="float", default=_def_gain_mu,
-                          help="M&M clock recovery gain mu [default=%default] (GFSK/PSK)")
-        parser.add_option("", "--mu", type="float", default=_def_mu,
-                          help="M&M clock recovery mu [default=%default] (GFSK/PSK)")
-        parser.add_option("", "--omega-relative-limit", type="float", default=_def_omega_relative_limit,
-                          help="M&M clock recovery omega relative limit [default=%default] (GFSK/PSK)")
-        parser.add_option("", "--freq-error", type="float", default=_def_freq_error,
-                          help="M&M clock recovery frequency error [default=%default] (GFSK)")
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(options):
         """

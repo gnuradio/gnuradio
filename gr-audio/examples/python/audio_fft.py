@@ -21,10 +21,9 @@
 #
 
 from gnuradio import gr, gru, audio
-from gnuradio import eng_notation
-from gnuradio.eng_option import eng_option
+from gnuradio.eng_arg import eng_float
 from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2, scopesink2, form, slider
-from optparse import OptionParser
+from argparse import ArgumentParser
 import wx
 import sys
 
@@ -35,36 +34,32 @@ class app_top_block(stdgui2.std_top_block):
         self.frame = frame
         self.panel = panel
 
-        parser = OptionParser(option_class=eng_option)
+        parser = ArgumentParser()
         parser.add_option("-W", "--waterfall", action="store_true", default=False,
                           help="Enable waterfall display")
         parser.add_option("-S", "--oscilloscope", action="store_true", default=False,
                           help="Enable oscilloscope display")
-        parser.add_option("-I", "--audio-input", type="string", default="",
+        parser.add_option("-I", "--audio-input", default="",
                           help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
-        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
-                          help="set sample rate to RATE (48000)")
+        parser.add_option("-r", "--sample-rate", type=eng_float, default=48000,
+                          help="set sample rate to RATE (%(default)s)")
 
-        (options, args) = parser.parse_args()
-	sample_rate = int(options.sample_rate)
-
-	if len(args) != 0:
-            parser.print_help()
-            sys.exit(1)
+        args = parser.parse_args()
+        sample_rate = int(args.sample_rate)
 
         self.show_debug_info = True
 
         # build the graph
-        if options.waterfall:
+        if args.waterfall:
             self.scope = \
               waterfallsink2.waterfall_sink_f (panel, fft_size=1024, sample_rate=sample_rate)
-        elif options.oscilloscope:
+        elif args.oscilloscope:
             self.scope = scopesink2.scope_sink_f(panel, sample_rate=sample_rate)
         else:
             self.scope = fftsink2.fft_sink_f (panel, fft_size=1024, sample_rate=sample_rate, fft_rate=30,
-					      ref_scale=1.0, ref_level=0, y_divs=12)
+                                              ref_scale=1.0, ref_level=0, y_divs=12)
 
-	self.src = audio.source (sample_rate, options.audio_input)
+        self.src = audio.source (sample_rate, args.audio_input)
 
         self.connect(self.src, self.scope)
 
@@ -82,7 +77,7 @@ class app_top_block(stdgui2.std_top_block):
 
         vbox.Add(self.scope.win, 10, wx.EXPAND)
 
-	#self._build_subpanel(vbox)
+        #self._build_subpanel(vbox)
 
     def _build_subpanel(self, vbox_arg):
         # build a secondary information panel (sometimes hidden)
