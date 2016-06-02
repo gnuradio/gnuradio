@@ -521,7 +521,7 @@ Templates['grc_xml'] = '''<?xml version="1.0"?>
 <block>
   <name>$blockname</name>
   <key>${modname}_$blockname</key>
-  <category>$modname</category>
+  <category>[$modname]</category>
   <import>import $modname</import>
   <make>${modname}.${blockname}(${strip_arg_types_grc($arglist)})</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
