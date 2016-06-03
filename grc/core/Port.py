@@ -33,7 +33,7 @@ def _get_source_from_virtual_sink_port(vsp):
     """
     try:
         return _get_source_from_virtual_source_port(
-            vsp.get_enabled_connections()[0].get_source())
+            vsp.get_enabled_connections()[0].source_port)
     except:
         raise Exception('Could not resolve source for virtual sink port {}'.format(vsp))
 
@@ -71,7 +71,7 @@ def _get_sink_from_virtual_source_port(vsp):
     try:
         # Could have many connections, but use first
         return _get_sink_from_virtual_sink_port(
-            vsp.get_enabled_connections()[0].get_sink())
+            vsp.get_enabled_connections()[0].sink_port)
     except:
         raise Exception('Could not resolve source for virtual source port {}'.format(vsp))
 
@@ -377,7 +377,7 @@ class Port(Element):
             a list of connection objects
         """
         connections = self.get_parent().get_parent().connections
-        connections = [c for c in connections if c.get_source() is self or c.get_sink() is self]
+        connections = [c for c in connections if c.source_port is self or c.sink_port is self]
         return connections
 
     def get_enabled_connections(self):

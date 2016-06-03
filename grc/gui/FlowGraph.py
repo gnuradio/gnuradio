@@ -184,7 +184,7 @@ class FlowGraph(Element, _Flowgraph):
             y_min = min(y, y_min)
         #get connections between selected blocks
         connections = list(filter(
-            lambda c: c.get_source().get_parent() in blocks and c.get_sink().get_parent() in blocks,
+            lambda c: c.source_block in blocks and c.sink_block in blocks,
             self.connections,
         ))
         clipboard = (

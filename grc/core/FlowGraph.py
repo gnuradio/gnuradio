@@ -342,7 +342,7 @@ class FlowGraph(Element):
 
         elif element in self.connections:
             if element.is_bus():
-                for port in element.get_source().get_associated_ports():
+                for port in element.source_port.get_associated_ports():
                     for connection in port.get_connections():
                         self.remove_element(connection)
             self.connections.remove(element)
@@ -516,7 +516,7 @@ class FlowGraph(Element):
 
                             for j in range(len(source.get_connections())):
                                 sink.append(
-                                    source.get_connections()[j].get_sink())
+                                    source.get_connections()[j].sink_port)
                             for elt in source.get_connections():
                                 self.remove_element(elt)
                             for j in sink:

@@ -75,20 +75,20 @@ class Connection(Element, _Connection):
         self._source_coor = None
         #get the source coordinate
         try:
-            connector_length = self.get_source().get_connector_length()
+            connector_length = self.source_port.get_connector_length()
         except:
             return
-        self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.get_source().get_rotation())
+        self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.source_port.get_rotation())
         #get the sink coordinate
-        connector_length = self.get_sink().get_connector_length() + CONNECTOR_ARROW_HEIGHT
-        self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.get_sink().get_rotation())
+        connector_length = self.sink_port.get_connector_length() + CONNECTOR_ARROW_HEIGHT
+        self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.sink_port.get_rotation())
         #build the arrow
         self.arrow = [(0, 0),
-            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
-            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
+            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.sink_port.get_rotation()),
+            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.sink_port.get_rotation()),
         ]
-        source_domain = self.get_source().get_domain()
-        sink_domain = self.get_sink().get_domain()
+        source_domain = self.source_port.get_domain()
+        sink_domain = self.sink_port.get_domain()
         # self.line_attributes[0] = 2 if source_domain != sink_domain else 0
         # self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
         #     if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
@@ -105,12 +105,12 @@ class Connection(Element, _Connection):
         """Calculate coordinates."""
         self.clear() #FIXME do i want this here?
         #source connector
-        source = self.get_source()
+        source = self.source_port
         X, Y = source.get_connector_coordinate()
         x1, y1 = self.x1 + X, self.y1 + Y
         self.add_line((x1, y1), (X, Y))
         #sink connector
-        sink = self.get_sink()
+        sink = self.sink_port
         X, Y = sink.get_connector_coordinate()
         x2, y2 = self.x2 + X, self.y2 + Y
         self.add_line((x2, y2), (X, Y))
@@ -149,8 +149,8 @@ class Connection(Element, _Connection):
         """
         Draw the connection.
         """
-        sink = self.get_sink()
-        source = self.get_source()
+        sink = self.sink_port
+        source = self.source_port
         #check for changes
         if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.create_shapes()
         elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate():

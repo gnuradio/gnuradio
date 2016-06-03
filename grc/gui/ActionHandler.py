@@ -240,15 +240,15 @@ class ActionHandler:
                             for connection in block.connections:
 
                                 # Get id of connected blocks
-                                source_id = connection.get_source().get_parent().get_id()
-                                sink_id = connection.get_sink().get_parent().get_id()
+                                source_id = connection.source_block.get_id()
+                                sink_id = connection.sink_block.get_id()
 
                                 # If connected block is not in the list of selected blocks create a pad for it
                                 if flow_graph.get_block(source_id) not in flow_graph.get_selected_blocks():
-                                    pads.append({'key': connection.get_sink().get_key(), 'coord': connection.get_source().get_coordinate(), 'block_id' : block.get_id(), 'direction': 'source'})
+                                    pads.append({'key': connection.sink_port.get_key(), 'coord': connection.source_port.get_coordinate(), 'block_id' : block.get_id(), 'direction': 'source'})
 
                                 if flow_graph.get_block(sink_id) not in flow_graph.get_selected_blocks():
-                                    pads.append({'key': connection.get_source().get_key(), 'coord': connection.get_sink().get_coordinate(), 'block_id' : block.get_id(), 'direction': 'sink'})
+                                    pads.append({'key': connection.source_port.get_key(), 'coord': connection.sink_port.get_coordinate(), 'block_id' : block.get_id(), 'direction': 'sink'})
 
 
                         # Copy the selected blocks and paste them into a new page

@@ -167,14 +167,14 @@ class TopBlockGenerator(object):
 
         # Filter out virtual sink connections
         def cf(c):
-            return not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
+            return not (c.is_bus() or c.is_msg() or c.sink_block.is_virtual_sink())
         connections = [con for con in fg.get_enabled_connections() if cf(con)]
 
         # Get the virtual blocks and resolve their connections
-        virtual = [c for c in connections if c.get_source().get_parent().is_virtual_source()]
+        virtual = [c for c in connections if c.source_block.is_virtual_source()]
         for connection in virtual:
-            source = connection.get_source().resolve_virtual_source()
-            sink = connection.get_sink()
+            source = connection.source.resolve_virtual_source()
+            sink = connection.sink_port
             resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
             connections.append(resolved)
             # Remove the virtual connection
@@ -189,19 +189,19 @@ class TopBlockGenerator(object):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            source_connection = [c for c in connections if c.get_sink() == block.get_sinks()[0]]
+            source_connection = [c for c in connections if c.sink_port == block.get_sinks()[0]]
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
             # Get the source of the connection.
-            source_port = source_connection[0].get_source()
+            source_port = source_connection[0].source_port
 
             # Loop through all the downstream connections
-            for sink in (c for c in connections if c.get_source() == block.get_sources()[0]):
+            for sink in (c for c in connections if c.source_port == block.get_sources()[0]):
                 if not sink.get_enabled():
                     # Ignore disabled connections
                     continue
-                sink_port = sink.get_sink()
+                sink_port = sink.sink_port
                 connection = fg.get_parent().Connection(flow_graph=fg, porta=source_port, portb=sink_port)
                 connections.append(connection)
                 # Remove this sink connection
@@ -211,8 +211,8 @@ class TopBlockGenerator(object):
 
         # List of connections where each endpoint is enabled (sorted by domains, block names)
         connections.sort(key=lambda c: (
-            c.get_source().get_domain(), c.get_sink().get_domain(),
-            c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
+            c.source_port.get_domain(), c.sink_port.get_domain(),
+            c.source_block.get_id(), c.sink_block.get_id()
         ))
 
         connection_templates = fg.get_parent().connection_templates
