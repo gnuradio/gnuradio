@@ -22,13 +22,14 @@ import time
 import re
 from itertools import chain
 from operator import methodcaller, attrgetter
+import collections
 
 from six.moves import filter
 
 from . import Messages
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .Element import Element
-from .utils import odict, expr_utils
+from .utils import expr_utils
 
 _parameter_matcher = re.compile('^(parameter)$')
 _monitors_searcher = re.compile('(ctrlport_monitor)')
@@ -364,20 +365,19 @@ class FlowGraph(Element):
             str(b)
         ))
         connections = sorted(self.connections, key=str)
-        n = odict()
+        n = collections.OrderedDict()
         n['timestamp'] = self._timestamp
         n['block'] = [b.export_data() for b in blocks]
         n['connection'] = [c.export_data() for c in connections]
-        instructions = odict({
-            'created': '.'.join(self.get_parent().config.version_parts),
-            'format': FLOW_GRAPH_FILE_FORMAT_VERSION,
-        })
-        return odict({'flow_graph': n, '_instructions': instructions})
+        instructions = collections.OrderedDict()
+        instructions['created'] = '.'.join(self.get_parent().config.version_parts)
+        instructions['format'] = FLOW_GRAPH_FILE_FORMAT_VERSION
+        return {'flow_graph': n, '_instructions': instructions}
 
     def import_data(self, n):
         """
         Import blocks and connections into this flow graph.
-        Clear this flowgraph of all previous blocks and connections.
+        Clear this flow graph of all previous blocks and connections.
         Any blocks or connections in error will be ignored.
 
         Args:
@@ -388,18 +388,18 @@ class FlowGraph(Element):
         del self.connections[:]
         # set file format
         try:
-            instructions = n.find('_instructions') or {}
+            instructions = n.get('_instructions', {})
             file_format = int(instructions.get('format', '0')) or _guess_file_format_1(n)
         except:
             file_format = 0
 
-        fg_n = n and n.find('flow_graph') or odict()  # use blank data if none provided
-        self._timestamp = fg_n.find('timestamp') or time.ctime()
+        fg_n = n and n.get('flow_graph', {})  # use blank data if none provided
+        self._timestamp = fg_n.get('timestamp', time.ctime())
 
         # build the blocks
         self._options_block = self.new_block('options')
-        for block_n in fg_n.findall('block'):
-            key = block_n.find('key')
+        for block_n in fg_n.get('block', []):
+            key = block_n['key']
             block = self._options_block if key == 'options' else self.new_block(key)
 
             if not block:
@@ -442,12 +442,12 @@ class FlowGraph(Element):
             return port
 
         errors = False
-        for connection_n in fg_n.findall('connection'):
+        for connection_n in fg_n.get('connection', []):
             # get the block ids and port keys
-            source_block_id = connection_n.find('source_block_id')
-            sink_block_id = connection_n.find('sink_block_id')
-            source_key = connection_n.find('source_key')
-            sink_key = connection_n.find('sink_key')
+            source_block_id = connection_n.get('source_block_id')
+            sink_block_id = connection_n.get('sink_block_id')
+            source_key = connection_n.get('source_key')
+            sink_key = connection_n.get('sink_key')
             try:
                 source_block = self.get_block(source_block_id)
                 sink_block = self.get_block(sink_block_id)
@@ -502,7 +502,7 @@ class FlowGraph(Element):
 
                         for i in times:
                             n['key'] = str(len(get_p()))
-                            n = odict(n)
+                            n = dict(n)
                             port = block.get_parent().get_parent().Port(
                                 block=block, n=n, dir=direc)
                             get_p().append(port)
@@ -553,9 +553,9 @@ def _guess_file_format_1(n):
     """
     try:
         has_non_numeric_message_keys = any(not (
-            connection_n.find('source_key').isdigit() and
-            connection_n.find('sink_key').isdigit()
-        ) for connection_n in n.find('flow_graph').findall('connection'))
+            connection_n.get('source_key', '').isdigit() and
+            connection_n.get('sink_key', '').isdigit()
+        ) for connection_n in n.get('flow_graph', []).get('connection', []))
         if has_non_numeric_message_keys:
             return 1
     except:
@@ -569,20 +569,20 @@ def _initialize_dummy_block(block, block_n):
     Modify block object to get the behaviour for a missing block
     """
 
-    block._key = block_n.find('key')
+    block._key = block_n.get('key')
     block.is_dummy_block = lambda: True
     block.is_valid = lambda: False
     block.get_enabled = lambda: False
-    for param_n in block_n.findall('param'):
+    for param_n in block_n.get('param', []):
         if param_n['key'] not in block.get_param_keys():
-            new_param_n = odict({'key': param_n['key'], 'name': param_n['key'], 'type': 'string'})
+            new_param_n = {'key': param_n['key'], 'name': param_n['key'], 'type': 'string'}
             params = block.get_parent().get_parent().Param(block=block, n=new_param_n)
             block.get_params().append(params)
 
 
 def _dummy_block_add_port(block, key, dir):
     """ This is so ugly... Add a port to a dummy-field block """
-    port_n = odict({'name': '?', 'key': key, 'type': ''})
+    port_n = {'name': '?', 'key': key, 'type': ''}
     port = block.get_parent().get_parent().Port(block=block, n=port_n, dir=dir)
     if port.is_source:
         block.get_sources().append(port)

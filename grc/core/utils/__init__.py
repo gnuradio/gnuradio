@@ -21,4 +21,3 @@ from . import expr_utils
 from . import epy_block_io
 from . import extract_docs
 
-from .odict import odict

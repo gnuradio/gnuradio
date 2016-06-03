@@ -26,7 +26,7 @@ from six.moves import map, range
 
 from Cheetah.Template import Template
 
-from .utils import epy_block_io, odict
+from .utils import epy_block_io
 from . Constants import (
     BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI,
     ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB,
@@ -64,33 +64,34 @@ class Block(Element):
             block a new block
         """
         Element.__init__(self, flow_graph)
-        self._name = n.find('name')
-        self._key = n.find('key')
-        self._category = n.find('category') or ''
-        self._flags = n.find('flags') or ''
+
+        self._name = n['name']
+        self._key = n['key']
+        self._category = n.get('category', '')
+        self._flags = n.get('flags', '')
 
         # Backwards compatibility
-        if n.find('throttle') and BLOCK_FLAG_THROTTLE not in self._flags:
+        if n.get('throttle') and BLOCK_FLAG_THROTTLE not in self._flags:
             self._flags += BLOCK_FLAG_THROTTLE
 
-        self._doc = (n.find('doc') or '').strip('\n').replace('\\\n', '')
-        self._imports = [i.strip() for i in n.findall('import')]
-        self._make = n.find('make')
-        self._var_make = n.find('var_make')
-        self._var_value = n.find('var_value') or '$value'
-        self._checks = n.findall('check')
-        self._callbacks = n.findall('callback')
+        self._doc = n.get('doc', '').strip('\n').replace('\\\n', '')
+        self._imports = [i.strip() for i in n.get('import', [])]
+        self._make = n.get('make')
+        self._var_make = n.get('var_make')
+        self._var_value = n.get('var_value', '$value')
+        self._checks = n.get('check', [])
+        self._callbacks = n.get('callback', [])
 
-        self._grc_source = n.find('grc_source') or ''
-        self._block_wrapper_path = n.find('block_wrapper_path')
+        self._grc_source = n.get('grc_source', '')
+        self._block_wrapper_path = n.get('block_wrapper_path')
 
-        params_n = n.findall('param')
-        sources_n = n.findall('source')
-        sinks_n = n.findall('sink')
+        params_n = n.get('param', [])
+        sources_n = n.get('source', [])
+        sinks_n = n.get('sink', [])
 
         # Get list of param tabs
-        n_tabs = n.find('param_tab_order') or None
-        self._param_tab_labels = n_tabs.findall('tab') if n_tabs is not None else [DEFAULT_PARAM_TAB]
+        n_tabs = n.get('param_tab_order', {})
+        self._param_tab_labels = n.get('param_tab_order', {}).get('tab') or [DEFAULT_PARAM_TAB]
         self._params = []
         self._init_params(
             params_n=params_n,
@@ -108,17 +109,17 @@ class Block(Element):
         self.back_ofthe_bus(self._sources)
         self.back_ofthe_bus(self._sinks)
         self.current_bus_structure = {'source': '', 'sink': ''}
-        self._bus_structure_source = n.find('bus_structure_source') or ''
-        self._bus_structure_sink = n.find('bus_structure_sink') or ''
-        self._bussify_sink = n.find('bus_sink')
-        self._bussify_source = n.find('bus_source')
+        self._bus_structure_source = n.get('bus_structure_source', '')
+        self._bus_structure_sink = n.get('bus_structure_sink', '')
+        self._bussify_sink = n.get('bus_sink')
+        self._bussify_source = n.get('bus_source')
         if self._bussify_sink:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
         if self._bussify_source:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
 
     def _add_param(self, key, name, value='', type='raw', **kwargs):
-        n = odict({'key': key, 'name': name, 'value': value, 'type': type})
+        n = {'key': key, 'name': name, 'value': value, 'type': type}
         n.update(kwargs)
         param = self.get_parent().get_parent().Param(block=self, n=n)
         self._params.append(param)
@@ -366,7 +367,7 @@ class Block(Element):
                 param.set_default(value)
             except KeyError:  # need to make a new param
                 name = key.replace('_', ' ').title()
-                n = odict(dict(name=name, key=key, type='raw', value=value))
+                n = dict(name=name, key=key, type='raw', value=value)
                 param = platform.Param(block=self, n=n)
                 setattr(param, '__epy_param__', True)
             self._params.append(param)
@@ -386,7 +387,7 @@ class Block(Element):
                     ports_to_remove.remove(port_current)
                     port, port_current = port_current, next(iter_ports, None)
                 else:
-                    n = odict(dict(name=label + str(key), type=port_type, key=key))
+                    n = dict(name=label + str(key), type=port_type, key=key)
                     if port_type == 'message':
                         n['name'] = key
                         n['optional'] = '1'
@@ -684,7 +685,7 @@ class Block(Element):
         Returns:
             a nested data odict
         """
-        n = odict()
+        n = collections.OrderedDict()
         n['key'] = self.get_key()
         n['param'] = [p.export_data() for p in sorted(self.get_params(), key=str)]
         if 'bus' in [a.get_type() for a in self.get_sinks()]:
@@ -705,7 +706,7 @@ class Block(Element):
         Args:
             n: the nested data odict
         """
-        params_n = n.findall('param')
+        params_n = n.get('param', [])
         params = dict((param.get_key(), param) for param in self._params)
 
         def get_hash():
@@ -714,8 +715,8 @@ class Block(Element):
         my_hash = 0
         while get_hash() != my_hash:
             for param_n in params_n:
-                key = param_n.find('key')
-                value = param_n.find('value')
+                key = param_n['key']
+                value = param_n['value']
                 try:
                     params[key].set_value(value)
                 except KeyError:
@@ -755,13 +756,13 @@ class Block(Element):
         return buslist or ports
 
     def _import_bus_stuff(self, n):
-        bussinks = n.findall('bus_sink')
+        bussinks = n.get('bus_sink', [])
         if len(bussinks) > 0 and not self._bussify_sink:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
         elif len(bussinks) > 0:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        bussrcs = n.findall('bus_source')
+        bussrcs = n.get('bus_source', [])
         if len(bussrcs) > 0 and not self._bussify_source:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
         elif len(bussrcs) > 0:
@@ -815,7 +816,7 @@ class Block(Element):
 
             for i in range(len(struct)):
                 n['key'] = str(len(get_p()))
-                n = odict(n)
+                n = dict(n)
                 port = self.get_parent().get_parent().Port(block=self, n=n, dir=direc)
                 get_p().append(port)
         elif 'bus' in [a.get_type() for a in get_p()]:

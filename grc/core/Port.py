@@ -124,23 +124,24 @@ class Port(Element):
             n['type'] = 'message'  # For port color
         if n['type'] == 'msg':
             n['key'] = 'msg'
-        if not n.find('key'):
-            n['key'] = str(next(block.port_counters[dir == 'source']))
+
+        n.setdefault('key', str(next(block.port_counters[dir == 'source'])))
 
         # Build the port
         Element.__init__(self, block)
         # Grab the data
         self._name = n['name']
         self._key = n['key']
-        self._type = n['type'] or ''
-        self._domain = n['domain']
-        self._hide = n.find('hide') or ''
+        self._type = n.get('type', '')
+        self._domain = n.get('domain')
+        self._hide = n.get('hide', '')
         self._dir = dir
         self._hide_evaluated = False  # Updated on rewrite()
 
-        self._nports = n.find('nports') or ''
-        self._vlen = n.find('vlen') or ''
-        self._optional = bool(n.find('optional'))
+        self._nports = n.get('nports', '')
+        self._vlen = n.get('vlen', '')
+        self._optional = bool(n.get('optional'))
+        self.di_optional = bool(n.get('optional'))
         self._clones = []  # References to cloned ports (for nports > 1)
 
     def __str__(self):

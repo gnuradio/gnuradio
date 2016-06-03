@@ -17,12 +17,15 @@
 
 
 from __future__ import absolute_import
+
 import codecs
 import os
 import tempfile
 import operator
+import collections
 
 from Cheetah.Template import Template
+import six
 
 from .FlowGraphProxy import FlowGraphProxy
 from .. import ParseXML, Messages
@@ -30,7 +33,7 @@ from ..Constants import (
     TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
     HIER_BLOCK_FILE_MODE, BLOCK_DTD
 )
-from ..utils import expr_utils, odict
+from ..utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
@@ -299,7 +302,7 @@ class HierBlockGenerator(TopBlockGenerator):
             return name
 
         # Build the nested data
-        block_n = odict()
+        block_n = collections.OrderedDict()
         block_n['name'] = self._flow_graph.get_option('title') or \
             self._flow_graph.get_option('id').replace('_', ' ').title()
         block_n['key'] = block_key
@@ -324,7 +327,7 @@ class HierBlockGenerator(TopBlockGenerator):
         # Parameters
         block_n['param'] = list()
         for param in parameters:
-            param_n = odict()
+            param_n = collections.OrderedDict()
             param_n['name'] = param.get_param('label').get_value() or param.get_id()
             param_n['key'] = param.get_id()
             param_n['value'] = param.get_param('value').get_value()
@@ -341,7 +344,7 @@ class HierBlockGenerator(TopBlockGenerator):
         for direction in ('sink', 'source'):
             block_n[direction] = list()
             for port in self._flow_graph.get_hier_block_io(direction):
-                port_n = odict()
+                port_n = collections.OrderedDict()
                 port_n['name'] = port['label']
                 port_n['type'] = port['type']
                 if port['type'] != "message":
@@ -374,14 +377,18 @@ class QtHierBlockGenerator(HierBlockGenerator):
 
     def _build_block_n_from_flow_graph_io(self):
         n = HierBlockGenerator._build_block_n_from_flow_graph_io(self)
-        block_n = n['block']
+        block_n = collections.OrderedDict()
+
+        # insert flags after category
+        for key, value in six.iteritems(n['block']):
+            block_n[key] = value
+            if key == 'category':
+                block_n['flags'] = BLOCK_FLAG_NEED_QT_GUI
 
         if not block_n['name'].upper().startswith('QT GUI'):
             block_n['name'] = 'QT GUI ' + block_n['name']
 
-        block_n.insert_after('category', 'flags', BLOCK_FLAG_NEED_QT_GUI)
-
-        gui_hint_param = odict()
+        gui_hint_param = collections.OrderedDict()
         gui_hint_param['name'] = 'GUI Hint'
         gui_hint_param['key'] = 'gui_hint'
         gui_hint_param['value'] = ''
@@ -393,4 +400,5 @@ class QtHierBlockGenerator(HierBlockGenerator):
             "\n#set $win = 'self.%s' % $id"
             "\n${gui_hint()($win)}"
         )
-        return n
+
+        return {'block': block_n}

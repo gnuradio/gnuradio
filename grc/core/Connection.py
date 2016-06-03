@@ -19,11 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
+import collections
+
 from six.moves import range
 
 from . import Constants
 from .Element import Element
-from .utils import odict
 
 
 class Connection(Element):
@@ -157,7 +158,7 @@ class Connection(Element):
         Returns:
             a nested data odict
         """
-        n = odict()
+        n = collections.OrderedDict()
         n['source_block_id'] = self.get_source().get_parent().get_id()
         n['sink_block_id'] = self.get_sink().get_parent().get_id()
         n['source_key'] = self.get_source().get_key()

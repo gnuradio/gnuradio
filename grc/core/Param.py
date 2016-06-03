@@ -22,12 +22,12 @@ from __future__ import absolute_import
 import ast
 import weakref
 import re
+import collections
 
 from six.moves import builtins, filter, map, range, zip
 
 from . import Constants
 from .Element import Element
-from .utils import odict
 
 # Blacklist certain ids, its not complete, but should help
 ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(builtins)
@@ -79,10 +79,10 @@ class Option(Element):
 
     def __init__(self, param, n):
         Element.__init__(self, param)
-        self._name = n.find('name')
-        self._key = n.find('key')
+        self._name = n.get('name')
+        self._key = n.get('key')
         self._opts = dict()
-        opts = n.findall('opt')
+        opts = n.get('opt', [])
         # Test against opts when non enum
         if not self.get_parent().is_enum() and opts:
             raise Exception('Options for non-enum types cannot have sub-options')
@@ -155,7 +155,7 @@ class Param(Element):
             n: the nested odict
         """
         # If the base key is a valid param key, copy its data and overlay this params data
-        base_key = n.find('base_key')
+        base_key = n.get('base_key')
         if base_key and base_key in block.get_param_keys():
             n_expanded = block.get_param(base_key)._n.copy()
             n_expanded.update(n)
@@ -163,12 +163,12 @@ class Param(Element):
         # Save odict in case this param will be base for another
         self._n = n
         # Parse the data
-        self._name = n.find('name')
-        self._key = n.find('key')
-        value = n.find('value') or ''
-        self._type = n.find('type') or 'raw'
-        self._hide = n.find('hide') or ''
-        self._tab_label = n.find('tab') or block.get_param_tab_labels()[0]
+        self._name = n['name']
+        self._key = n['key']
+        value = n.get('value', '')
+        self._type = n.get('type', 'raw')
+        self._hide = n.get('hide', '')
+        self._tab_label = n.get('tab', block.get_param_tab_labels()[0])
         if self._tab_label not in block.get_param_tab_labels():
             block.get_param_tab_labels().append(self._tab_label)
         # Build the param
@@ -176,7 +176,7 @@ class Param(Element):
         # Create the Option objects from the n data
         self._options = list()
         self._evaluated = None
-        for o_n in n.findall('option'):
+        for o_n in n.get('option', []):
             option = Option(param=self, n=o_n)
             key = option.get_key()
             # Test against repeated keys
@@ -703,7 +703,7 @@ class Param(Element):
         Returns:
             a nested data odict
         """
-        n = odict()
+        n = collections.OrderedDict()
         n['key'] = self.get_key()
         n['value'] = self.get_value()
         return n

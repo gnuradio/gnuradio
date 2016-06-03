@@ -213,15 +213,15 @@ class FlowGraph(Element, _Flowgraph):
             x_off, y_off = 0, 0
         #create blocks
         for block_n in blocks_n:
-            block_key = block_n.find('key')
-            if block_key == 'options': continue
+            block_key = block_n.get('key')
+            if block_key == 'options':
+                continue
             block = self.new_block(block_key)
             if not block:
                 continue  # unknown block was pasted (e.g. dummy block)
             selected.add(block)
             #set params
-            params = dict((n.find('key'), n.find('value'))
-                          for n in block_n.findall('param'))
+            params = {n['key']: n['value'] for n in block_n.get('param', [])}
             if block_key == 'epy_block':
                 block.get_param('_io_cache').set_value(params.pop('_io_cache'))
                 block.get_param('_source_code').set_value(params.pop('_source_code'))
@@ -241,8 +241,8 @@ class FlowGraph(Element, _Flowgraph):
         self.update()
         #create connections
         for connection_n in connections_n:
-            source = old_id2block[connection_n.find('source_block_id')].get_source(connection_n.find('source_key'))
-            sink = old_id2block[connection_n.find('sink_block_id')].get_sink(connection_n.find('sink_key'))
+            source = old_id2block[connection_n.get('source_block_id')].get_source(connection_n.get('source_key'))
+            sink = old_id2block[connection_n.get('sink_block_id')].get_sink(connection_n.get('sink_key'))
             self.connect(source, sink)
         #set all pasted elements selected
         for block in selected: selected = selected.union(set(block.get_connections()))

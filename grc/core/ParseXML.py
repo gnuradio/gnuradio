@@ -24,7 +24,6 @@ from lxml import etree
 import six
 from six.moves import map
 
-from .utils import odict
 
 xml_failures = {}
 etree.set_default_parser(etree.XMLParser(remove_comments=True))
@@ -80,19 +79,35 @@ def from_file(xml_file):
         the nested data with grc version information
     """
     xml = etree.parse(xml_file)
-    nested_data = _from_file(xml.getroot())
+
+    tag, nested_data = _from_file(xml.getroot())
+    nested_data = {tag: nested_data, '_instructions': {}}
 
     # Get the embedded instructions and build a dictionary item
-    nested_data['_instructions'] = {}
     xml_instructions = xml.xpath('/processing-instruction()')
     for inst in xml_instructions:
         if inst.target != 'grc':
             continue
-        nested_data['_instructions'] = odict(inst.attrib)
+        nested_data['_instructions'] = dict(inst.attrib)
     return nested_data
 
 
-def _from_file(xml):
+WANT_A_LIST = {
+    '/block': 'import callback param check sink source'.split(),
+    '/block/param_tab_order': 'tab'.split(),
+    '/block/param': 'option'.split(),
+    '/block/param/option': 'opt'.split(),
+    '/flow_graph': 'block connection'.split(),
+    '/flow_graph/block': 'param'.split(),
+    '/cat': 'cat block'.split(),
+    '/cat/cat': 'cat block'.split(),
+    '/cat/cat/cat': 'cat block'.split(),
+    '/cat/cat/cat/cat': 'cat block'.split(),
+    '/domain': 'connection'.split(),
+}
+
+
+def _from_file(xml, parent_tag=''):
     """
     Recursively parse the xml tree into nested data format.
 
@@ -103,21 +118,24 @@ def _from_file(xml):
         the nested data
     """
     tag = xml.tag
-    if not len(xml):
-        return odict({tag: xml.text or ''})  # store empty tags (text is None) as empty string
-    nested_data = odict()
-    for elem in xml:
-        key, value = list(_from_file(elem).items())[0]
-        if key in nested_data:
-            nested_data[key].append(value)
-        else:
-            nested_data[key] = [value]
-    # Delistify if the length of values is 1
-    for key, values in six.iteritems(nested_data):
-        if len(values) == 1:
-            nested_data[key] = values[0]
+    tag_path = parent_tag + '/' + tag
 
-    return odict({tag: nested_data})
+    if not len(xml):
+        return tag, xml.text or ''  # store empty tags (text is None) as empty string
+
+    nested_data = {}
+    for elem in xml:
+        key, value = _from_file(elem, tag_path)
+
+        if key in WANT_A_LIST.get(tag_path, []):
+            try:
+                nested_data[key].append(value)
+            except KeyError:
+                nested_data[key] = [value]
+        else:
+            nested_data[key] = value
+
+    return tag, nested_data
 
 
 def to_file(nested_data, xml_file):

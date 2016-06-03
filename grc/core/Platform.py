@@ -17,10 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
+
 import os
 import sys
+
+import six
+from six.moves import range
 
 from . import ParseXML, Messages, Constants
 
@@ -33,10 +36,7 @@ from .Block import Block
 from .Port import Port
 from .Param import Param
 
-from .utils import odict, extract_docs
-import six
-from six.moves import map
-from six.moves import range
+from .utils import extract_docs
 
 
 class Platform(Element):
@@ -72,9 +72,9 @@ class Platform(Element):
         self._flow_graph = Element(self)
         self._flow_graph.connections = []
 
-        self.blocks = None
-        self._blocks_n = None
-        self._category_trees_n = None
+        self.blocks = {}
+        self._blocks_n = {}
+        self._category_trees_n = []
         self.domains = {}
         self.connection_templates = {}
 
@@ -141,13 +141,15 @@ class Platform(Element):
     def load_blocks(self):
         """load the blocks and block tree from the search paths"""
         self._docstring_extractor.start()
+
         # Reset
-        self.blocks = odict()
-        self._blocks_n = odict()
-        self._category_trees_n = list()
+        self.blocks.clear()
+        self._blocks_n.clear()
+        del self._category_trees_n[:]
         self.domains.clear()
         self.connection_templates.clear()
         ParseXML.xml_failures.clear()
+
         # Try to parse and load blocks
         for xml_file in self.iter_xml_files():
             try:
@@ -161,6 +163,7 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
+                raise
                 print('Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file), file=sys.stderr)
 
         self._docstring_extractor.finish()
@@ -180,7 +183,7 @@ class Platform(Element):
         """Load block description from xml file"""
         # Validate and import
         ParseXML.validate_dtd(xml_file, self._block_dtd)
-        n = ParseXML.from_file(xml_file).find('block')
+        n = ParseXML.from_file(xml_file).get('block', {})
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
         # Get block instance and add it to the list of blocks
         block = self.Block(self._flow_graph, n)
@@ -200,15 +203,15 @@ class Platform(Element):
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""
         ParseXML.validate_dtd(xml_file, Constants.BLOCK_TREE_DTD)
-        n = ParseXML.from_file(xml_file).find('cat')
+        n = ParseXML.from_file(xml_file).get('cat', {})
         self._category_trees_n.append(n)
 
     def load_domain_xml(self, xml_file):
         """Load a domain properties and connection templates from XML"""
         ParseXML.validate_dtd(xml_file, Constants.DOMAIN_DTD)
-        n = ParseXML.from_file(xml_file).find('domain')
+        n = ParseXML.from_file(xml_file).get('domain')
 
-        key = n.find('key')
+        key = n.get('key')
         if not key:
             print('Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file), file=sys.stderr)
             return
@@ -222,7 +225,7 @@ class Platform(Element):
                 return s.lower() not in ('false', 'off', '0', '')
             return d
 
-        color = n.find('color') or ''
+        color = n.get('color') or ''
         try:
             chars_per_color = 2 if len(color) > 4 else 1
             tuple(int(color[o:o + 2], 16) / 255.0 for o in range(1, 3 * chars_per_color, chars_per_color))
@@ -232,19 +235,19 @@ class Platform(Element):
                 color = None
 
         self.domains[key] = dict(
-            name=n.find('name') or key,
-            multiple_sinks=to_bool(n.find('multiple_sinks'), True),
-            multiple_sources=to_bool(n.find('multiple_sources'), False),
+            name=n.get('name') or key,
+            multiple_sinks=to_bool(n.get('multiple_sinks'), True),
+            multiple_sources=to_bool(n.get('multiple_sources'), False),
             color=color
         )
-        for connection_n in n.findall('connection'):
-            key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
+        for connection_n in n.get('connection', []):
+            key = (connection_n.get('source_domain'), connection_n.get('sink_domain'))
             if not all(key):
                 print('Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file), file=sys.stderr)
             elif key in self.connection_templates:
                 print('Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file), file=sys.stderr)
             else:
-                self.connection_templates[key] = connection_n.find('make') or ''
+                self.connection_templates[key] = connection_n.get('make') or ''
 
     def load_block_tree(self, block_tree):
         """
@@ -258,13 +261,13 @@ class Platform(Element):
         # Recursive function to load categories and blocks
         def load_category(cat_n, parent=None):
             # Add this category
-            parent = (parent or []) + [cat_n.find('name')]
+            parent = (parent or []) + [cat_n.get('name')]
             block_tree.add_block(parent)
             # Recursive call to load sub categories
-            for cat in cat_n.findall('cat'):
+            for cat in cat_n.get('cat', []):
                 load_category(cat, parent)
             # Add blocks in this category
-            for block_key in cat_n.findall('block'):
+            for block_key in cat_n.get('block', []):
                 if block_key not in self.blocks:
                     print('Warning: Block key "{}" not found when loading category tree.'.format(block_key), file=sys.stderr)
                     continue
