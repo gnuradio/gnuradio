@@ -17,20 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import ast
 import weakref
 import re
 
+from six.moves import builtins, filter, map, range, zip
+
 from . import Constants
-from .Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
 from .Element import Element
 from .utils import odict
 
 # Blacklist certain ids, its not complete, but should help
-import __builtin__
-
-
-ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(__builtin__)
+ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(builtins)
 try:
     from gnuradio import gr
     ID_BLACKLIST.extend(attr for attr in dir(gr.top_block()) if not attr.startswith('_'))
@@ -64,7 +64,7 @@ def num_to_str(num):
                 return template.format(value / factor, symbol.strip())
         return template.format(value, '')
 
-    if isinstance(num, COMPLEX_TYPES):
+    if isinstance(num, Constants.COMPLEX_TYPES):
         num = complex(num)  # Cast to python complex
         if num == 0:
             return '0'
@@ -112,13 +112,13 @@ class Option(Element):
     # Access Opts
     ##############################################
     def get_opt_keys(self):
-        return self._opts.keys()
+        return list(self._opts.keys())
 
     def get_opt(self, key):
         return self._opts[key]
 
     def get_opts(self):
-        return self._opts.values()
+        return list(self._opts.values())
 
 
 class TemplateArg(object):
@@ -176,7 +176,8 @@ class Param(Element):
         # Create the Option objects from the n data
         self._options = list()
         self._evaluated = None
-        for option in map(lambda o: Option(param=self, n=o), n.findall('option')):
+        for o_n in n.findall('option'):
+            option = Option(param=self, n=o_n)
             key = option.get_key()
             # Test against repeated keys
             if key in self.get_option_keys():
@@ -257,9 +258,9 @@ class Param(Element):
         t = self.get_type()
         if isinstance(e, bool):
             return str(e)
-        elif isinstance(e, COMPLEX_TYPES):
+        elif isinstance(e, Constants.COMPLEX_TYPES):
             dt_str = num_to_str(e)
-        elif isinstance(e, VECTOR_TYPES):
+        elif isinstance(e, Constants.VECTOR_TYPES):
             # Vector types
             if len(e) > 8:
                 # Large vectors use code
@@ -310,13 +311,10 @@ class Param(Element):
         if self.get_key() == 'id' and not _show_id_matcher.match(self.get_parent().get_key()):
             return 'part'
         # Hide port controllers for type and nports
-        if self.get_key() in ' '.join(map(lambda p: ' '.join([p._type, p._nports]),
-                                          self.get_parent().get_ports())):
+        if self.get_key() in ' '.join([' '.join([p._type, p._nports]) for p in self.get_parent().get_ports()]):
             return 'part'
         # Hide port controllers for vlen, when == 1
-        if self.get_key() in ' '.join(map(
-            lambda p: p._vlen, self.get_parent().get_ports())
-        ):
+        if self.get_key() in ' '.join(p._vlen for p in self.get_parent().get_ports()):
             try:
                 if int(self.get_evaluated()) == 1:
                     return 'part'
@@ -339,7 +337,7 @@ class Param(Element):
         self._evaluated = None
         try:
             self._evaluated = self.evaluate()
-        except Exception, e:
+        except Exception as e:
             self.add_error_message(str(e))
 
     def get_evaluated(self):
@@ -372,21 +370,21 @@ class Param(Element):
             # Raise exception if python cannot evaluate this value
             try:
                 e = self.get_parent().get_parent().evaluate(v)
-            except Exception, e:
+            except Exception as e:
                 raise Exception('Value "{}" cannot be evaluated:\n{}'.format(v, e))
             # Raise an exception if the data is invalid
             if t == 'raw':
                 return e
             elif t == 'complex':
-                if not isinstance(e, COMPLEX_TYPES):
+                if not isinstance(e, Constants.COMPLEX_TYPES):
                     raise Exception('Expression "{}" is invalid for type complex.'.format(str(e)))
                 return e
             elif t == 'real' or t == 'float':
-                if not isinstance(e, REAL_TYPES):
+                if not isinstance(e, Constants.REAL_TYPES):
                     raise Exception('Expression "{}" is invalid for type float.'.format(str(e)))
                 return e
             elif t == 'int':
-                if not isinstance(e, INT_TYPES):
+                if not isinstance(e, Constants.INT_TYPES):
                     raise Exception('Expression "{}" is invalid for type integer.'.format(str(e)))
                 return e
             elif t == 'hex':
@@ -407,28 +405,28 @@ class Param(Element):
             # Raise exception if python cannot evaluate this value
             try:
                 e = self.get_parent().get_parent().evaluate(v)
-            except Exception, e:
+            except Exception as e:
                 raise Exception('Value "{}" cannot be evaluated:\n{}'.format(v, e))
             # Raise an exception if the data is invalid
             if t == 'complex_vector':
-                if not isinstance(e, VECTOR_TYPES):
+                if not isinstance(e, Constants.VECTOR_TYPES):
                     self._lisitify_flag = True
                     e = [e]
-                if not all([isinstance(ei, COMPLEX_TYPES) for ei in e]):
+                if not all([isinstance(ei, Constants.COMPLEX_TYPES) for ei in e]):
                     raise Exception('Expression "{}" is invalid for type complex vector.'.format(str(e)))
                 return e
             elif t == 'real_vector' or t == 'float_vector':
-                if not isinstance(e, VECTOR_TYPES):
+                if not isinstance(e, Constants.VECTOR_TYPES):
                     self._lisitify_flag = True
                     e = [e]
-                if not all([isinstance(ei, REAL_TYPES) for ei in e]):
+                if not all([isinstance(ei, Constants.REAL_TYPES) for ei in e]):
                     raise Exception('Expression "{}" is invalid for type float vector.'.format(str(e)))
                 return e
             elif t == 'int_vector':
-                if not isinstance(e, VECTOR_TYPES):
+                if not isinstance(e, Constants.VECTOR_TYPES):
                     self._lisitify_flag = True
                     e = [e]
-                if not all([isinstance(ei, INT_TYPES) for ei in e]):
+                if not all([isinstance(ei, Constants.INT_TYPES) for ei in e]):
                     raise Exception('Expression "{}" is invalid for type integer vector.'.format(str(e)))
                 return e
         #########################
@@ -545,7 +543,7 @@ class Param(Element):
                 for c in range(col_span):
                     self._hostage_cells.append((my_parent, (row+r, col+c)))
             # Avoid collisions
-            params = filter(lambda p: p is not self, self.get_all_params('grid_pos'))
+            params = [p for p in self.get_all_params('grid_pos') if p is not self]
             for param in params:
                 for parent, cell in param._hostage_cells:
                     if (parent, cell) in self._hostage_cells:
@@ -560,7 +558,7 @@ class Param(Element):
                 return ''
 
             # Get a list of all notebooks
-            notebook_blocks = filter(lambda b: b.get_key() == 'notebook', self.get_parent().get_parent().get_enabled_blocks())
+            notebook_blocks = [b for b in self.get_parent().get_parent().get_enabled_blocks() if b.get_key() == 'notebook']
             # Check for notebook param syntax
             try:
                 notebook_id, page_index = map(str.strip, v.split(','))
@@ -568,7 +566,7 @@ class Param(Element):
                 raise Exception('Bad notebook page format.')
             # Check that the notebook id is valid
             try:
-                notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
+                notebook_block = [b for b in notebook_blocks if b.get_id() == notebook_id][0]
             except:
                 raise Exception('Notebook id "{}" is not an existing notebook id.'.format(notebook_id))
 
@@ -584,12 +582,12 @@ class Param(Element):
             # New namespace
             n = dict()
             try:
-                exec v in n
+                exec(v, n)
             except ImportError:
                 raise Exception('Import "{}" failed.'.format(v))
             except Exception:
                 raise Exception('Bad import syntax: "{}".'.format(v))
-            return filter(lambda k: str(k) != '__builtins__', n.keys())
+            return [k for k in list(n.keys()) if str(k) != '__builtins__']
 
         #########################
         else:
@@ -635,7 +633,10 @@ class Param(Element):
         Returns:
             a list of params
         """
-        return sum([filter(lambda p: p.get_type() == type, block.get_params()) for block in self.get_parent().get_parent().get_enabled_blocks()], [])
+        params = []
+        for block in self.get_parent().get_parent().get_enabled_blocks():
+            params.extend(p for p in block.get_params() if p.get_type() == type)
+        return params
 
     def is_enum(self):
         return self._type == 'enum'

@@ -16,9 +16,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 
+from __future__ import absolute_import
+
 import traceback
 import sys
-import os
 
 #  A list of functions that can receive a message.
 MESSENGERS_LIST = list()

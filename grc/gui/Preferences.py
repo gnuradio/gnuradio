@@ -17,9 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import, print_function
+
 import os
 import sys
-import ConfigParser
+
+from six.moves import configparser
 
 
 HEADER = """\
@@ -31,7 +34,7 @@ HEADER = """\
 """
 
 _platform = None
-_config_parser = ConfigParser.SafeConfigParser()
+_config_parser = configparser.SafeConfigParser()
 
 
 def file_extension():
@@ -45,12 +48,12 @@ def load(platform):
     for section in ['main', 'files_open', 'files_recent']:
         try:
             _config_parser.add_section(section)
-        except Exception, e:
-             print e
+        except Exception as e:
+            print(e)
     try:
         _config_parser.read(_platform.get_prefs_file())
     except Exception as err:
-        print >> sys.stderr, err
+        print(err, file=sys.stderr)
 
 
 def save():
@@ -59,7 +62,7 @@ def save():
             fp.write(HEADER)
             _config_parser.write(fp)
     except Exception as err:
-        print >> sys.stderr, err
+        print(err, file=sys.stderr)
 
 
 def entry(key, value=None, default=None):
@@ -74,7 +77,7 @@ def entry(key, value=None, default=None):
         }.get(_type, _config_parser.get)
         try:
             result = getter('main', key)
-        except ConfigParser.Error:
+        except configparser.Error:
             result = _type() if default is None else default
     return result
 
@@ -106,7 +109,7 @@ def get_file_list(key):
     try:
         files = [value for name, value in _config_parser.items(key)
                  if name.startswith('%s_' % key)]
-    except ConfigParser.Error:
+    except configparser.Error:
         files = []
     return files
 
@@ -121,7 +124,7 @@ def set_open_files(files):
 
 def get_recent_files():
     """ Gets recent files, removes any that do not exist and re-saves it """
-    files = filter(os.path.exists, get_file_list('files_recent'))
+    files = list(filter(os.path.exists, get_file_list('files_recent')))
     set_recent_files(files)
     return files
 

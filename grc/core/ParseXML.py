@@ -17,7 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 from lxml import etree
+
+import six
+from six.moves import map
 
 from .utils import odict
 
@@ -80,7 +85,9 @@ def from_file(xml_file):
     # Get the embedded instructions and build a dictionary item
     nested_data['_instructions'] = {}
     xml_instructions = xml.xpath('/processing-instruction()')
-    for inst in filter(lambda i: i.target == 'grc', xml_instructions):
+    for inst in xml_instructions:
+        if inst.target != 'grc':
+            continue
         nested_data['_instructions'] = odict(inst.attrib)
     return nested_data
 
@@ -100,13 +107,13 @@ def _from_file(xml):
         return odict({tag: xml.text or ''})  # store empty tags (text is None) as empty string
     nested_data = odict()
     for elem in xml:
-        key, value = _from_file(elem).items()[0]
+        key, value = list(_from_file(elem).items())[0]
         if key in nested_data:
             nested_data[key].append(value)
         else:
             nested_data[key] = [value]
     # Delistify if the length of values is 1
-    for key, values in nested_data.iteritems():
+    for key, values in six.iteritems(nested_data):
         if len(values) == 1:
             nested_data[key] = values[0]
 
@@ -127,7 +134,7 @@ def to_file(nested_data, xml_file):
     if instructions:
         xml_data += etree.tostring(etree.ProcessingInstruction(
             'grc', ' '.join(
-                "{0}='{1}'".format(*item) for item in instructions.iteritems())
+                "{0}='{1}'".format(*item) for item in six.iteritems(instructions))
         ), xml_declaration=True, pretty_print=True, encoding='utf-8')
     xml_data += etree.tostring(_to_file(nested_data)[0],
                                pretty_print=True, encoding='utf-8')
@@ -146,14 +153,14 @@ def _to_file(nested_data):
         the xml tree filled with child nodes
     """
     nodes = list()
-    for key, values in nested_data.iteritems():
+    for key, values in six.iteritems(nested_data):
         # Listify the values if not a list
         if not isinstance(values, (list, set, tuple)):
             values = [values]
         for value in values:
             node = etree.Element(key)
-            if isinstance(value, (str, unicode)):
-                node.text = unicode(value)
+            if isinstance(value, (str, six.text_type)):
+                node.text = six.text_type(value)
             else:
                 node.extend(_to_file(value))
             nodes.append(node)

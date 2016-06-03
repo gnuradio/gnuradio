@@ -17,16 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gdk
+from __future__ import absolute_import
 
+from six.moves import map
 
-import Colors
-import Utils
-from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
-from Element import Element
+from . import Colors
+from . import Utils
+from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
+from .Element import Element
 
 from ..core.Constants import GR_MESSAGE_DOMAIN
 from ..core.Connection import Connection as _Connection
@@ -130,7 +128,7 @@ class Connection(Element, _Connection):
             #points[0][0] -> source connector should not be in the direction of source
             if Utils.get_angle_from_coordinates(points[0][0], (x1, y1)) == source.get_connector_direction(): points.reverse()
             #create 3-line connector
-            p1, p2 = map(int, points[0][0]), map(int, points[0][1])
+            p1, p2 = list(map(int, points[0][0])), list(map(int, points[0][1]))
             self.add_line((x1, y1), p1)
             self.add_line(p1, p2)
             self.add_line((x2, y2), p2)

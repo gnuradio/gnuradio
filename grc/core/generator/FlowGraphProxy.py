@@ -16,6 +16,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 
+from __future__ import absolute_import
+from six.moves import range
+
+
 class FlowGraphProxy(object):
 
     def __init__(self, fg):
@@ -34,7 +38,7 @@ class FlowGraphProxy(object):
         Returns:
             a list of dicts with: type, label, vlen, size, optional
         """
-        return filter(lambda p: p['type'] != "message", self.get_hier_block_io(direction))
+        return [p for p in self.get_hier_block_io(direction) if p['type'] != "message"]
 
     def get_hier_block_message_io(self, direction):
         """
@@ -46,7 +50,7 @@ class FlowGraphProxy(object):
         Returns:
             a list of dicts with: type, label, vlen, size, optional
         """
-        return filter(lambda p: p['type'] == "message", self.get_hier_block_io(direction))
+        return [p for p in self.get_hier_block_io(direction) if p['type'] == "message"]
 
     def get_hier_block_io(self, direction):
         """
@@ -71,7 +75,7 @@ class FlowGraphProxy(object):
             }
             num_ports = pad.get_param('num_streams').get_evaluated()
             if num_ports > 1:
-                for i in xrange(num_ports):
+                for i in range(num_ports):
                     clone = master.copy()
                     clone['label'] += str(i)
                     ports.append(clone)
@@ -86,7 +90,7 @@ class FlowGraphProxy(object):
         Returns:
             a list of pad source blocks in this flow graph
         """
-        pads = filter(lambda b: b.get_key() == 'pad_source', self.get_enabled_blocks())
+        pads = [b for b in self.get_enabled_blocks() if b.get_key() == 'pad_source']
         return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
     def get_pad_sinks(self):
@@ -96,7 +100,7 @@ class FlowGraphProxy(object):
         Returns:
             a list of pad sink blocks in this flow graph
         """
-        pads = filter(lambda b: b.get_key() == 'pad_sink', self.get_enabled_blocks())
+        pads = [b for b in self.get_enabled_blocks() if b.get_key() == 'pad_sink']
         return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
     def get_pad_port_global_key(self, port):

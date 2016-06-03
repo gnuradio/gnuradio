@@ -17,7 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from .Constants import DEFAULT_DOMAIN, GR_STREAM_DOMAIN, GR_MESSAGE_DOMAIN
+from __future__ import absolute_import
+
+from six.moves import filter
+
 from .Element import Element
 
 from . import Constants
@@ -47,13 +50,13 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
     try:
         return _get_source_from_virtual_source_port(
             _get_source_from_virtual_sink_port(
-                filter(  # Get all virtual sinks with a matching stream id
+                list(filter(  # Get all virtual sinks with a matching stream id
                     lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
-                    filter(  # Get all enabled blocks that are also virtual sinks
+                    list(filter(  # Get all enabled blocks that are also virtual sinks
                         lambda b: b.is_virtual_sink(),
                         vsp.get_parent().get_parent().get_enabled_blocks(),
-                    ),
-                )[0].get_sinks()[0]
+                    )),
+                ))[0].get_sinks()[0]
             ), traversed + [vsp],
         )
     except:
@@ -87,10 +90,10 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
             _get_sink_from_virtual_source_port(
                 filter(  # Get all virtual source with a matching stream id
                     lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
-                    filter(  # Get all enabled blocks that are also virtual sinks
+                    list(filter(  # Get all enabled blocks that are also virtual sinks
                         lambda b: b.is_virtual_source(),
                         vsp.get_parent().get_parent().get_enabled_blocks(),
-                    ),
+                    )),
                 )[0].get_sources()[0]
             ), traversed + [vsp],
         )
@@ -113,10 +116,10 @@ class Port(Element):
         """
         self._n = n
         if n['type'] == 'message':
-            n['domain'] = GR_MESSAGE_DOMAIN
+            n['domain'] = Constants.GR_MESSAGE_DOMAIN
         if 'domain' not in n:
-            n['domain'] = DEFAULT_DOMAIN
-        elif n['domain'] == GR_MESSAGE_DOMAIN:
+            n['domain'] = Constants.DEFAULT_DOMAIN
+        elif n['domain'] == Constants.GR_MESSAGE_DOMAIN:
             n['key'] = n['name']
             n['type'] = 'message'  # For port color
         if n['type'] == 'msg':
@@ -147,7 +150,7 @@ class Port(Element):
             return 'Sink - {}({})'.format(self.get_name(), self.get_key())
 
     def get_types(self):
-        return Constants.TYPE_TO_SIZEOF.keys()
+        return list(Constants.TYPE_TO_SIZEOF.keys())
 
     def is_type_empty(self):
         return not self._n['type']
@@ -189,11 +192,11 @@ class Port(Element):
 
         # Update domain if was deduced from (dynamic) port type
         type_ = self.get_type()
-        if self._domain == GR_STREAM_DOMAIN and type_ == "message":
-            self._domain = GR_MESSAGE_DOMAIN
+        if self._domain == Constants.GR_STREAM_DOMAIN and type_ == "message":
+            self._domain = Constants.GR_MESSAGE_DOMAIN
             self._key = self._name
-        if self._domain == GR_MESSAGE_DOMAIN and type_ != "message":
-            self._domain = GR_STREAM_DOMAIN
+        if self._domain == Constants.GR_MESSAGE_DOMAIN and type_ != "message":
+            self._domain = Constants.GR_STREAM_DOMAIN
             self._key = '0'  # Is rectified in rewrite()
 
     def resolve_virtual_source(self):
@@ -341,7 +344,7 @@ class Port(Element):
     def get_name(self):
         number = ''
         if self.get_type() == 'bus':
-            busses = filter(lambda a: a._dir == self._dir, self.get_parent().get_ports_gui())
+            busses = [a for a in self.get_parent().get_ports_gui() if a._dir == self._dir]
             number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
         return self._name + number
 
@@ -373,7 +376,7 @@ class Port(Element):
             a list of connection objects
         """
         connections = self.get_parent().get_parent().connections
-        connections = filter(lambda c: c.get_source() is self or c.get_sink() is self, connections)
+        connections = [c for c in connections if c.get_source() is self or c.get_sink() is self]
         return connections
 
     def get_enabled_connections(self):
@@ -383,7 +386,7 @@ class Port(Element):
         Returns:
             a list of connection objects
         """
-        return filter(lambda c: c.get_enabled(), self.get_connections())
+        return [c for c in self.get_connections() if c.get_enabled()]
 
     def get_associated_ports(self):
         if not self.get_type() == 'bus':
@@ -400,5 +403,5 @@ class Port(Element):
             if bus_structure:
                 busses = [i for i in get_ports() if i.get_type() == 'bus']
                 bus_index = busses.index(self)
-                ports = filter(lambda a: ports.index(a) in bus_structure[bus_index], ports)
+                ports = [a for a in ports if ports.index(a) in bus_structure[bus_index]]
             return ports

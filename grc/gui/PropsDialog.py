@@ -17,10 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
 from gi.repository import Gtk, Gdk, GObject, Pango
 
 from . import Actions, Utils, Constants
 from .Dialogs import SimpleTextDisplay
+import six
 
 
 class PropsDialog(Gtk.Dialog):
@@ -160,7 +162,7 @@ class PropsDialog(Gtk.Dialog):
                     # child.destroy()   # disabled because it throw errors...
                 # repopulate the params box
                 box_all_valid = True
-                for param in filter(lambda p: p.get_tab_label() == tab, self._block.get_params()):
+                for param in [p for p in self._block.get_params() if p.get_tab_label() == tab]:
                     # fixme: why do we even rebuild instead of really hiding params?
                     if param.get_hide() == 'all':
                         continue
@@ -212,7 +214,7 @@ class PropsDialog(Gtk.Dialog):
             docstrings = {block_class: docstrings[block_class]}
 
         # show docstring(s) extracted from python sources
-        for cls_name, docstring in docstrings.iteritems():
+        for cls_name, docstring in six.iteritems(docstrings):
             buf.insert_with_tags_by_name(pos, cls_name + '\n', 'b')
             buf.insert(pos, docstring + '\n\n')
         pos.backward_chars(2)

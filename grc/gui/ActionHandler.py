@@ -18,6 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 
+from __future__ import absolute_import, print_function
+
 import os
 import subprocess
 
@@ -114,7 +116,7 @@ class ActionHandler:
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
             if not self.init_file_paths:
-                self.init_file_paths = filter(os.path.exists, Preferences.get_open_files())
+                self.init_file_paths = list(filter(os.path.exists, Preferences.get_open_files()))
             if not self.init_file_paths: self.init_file_paths = ['']
             for file_path in self.init_file_paths:
                 if file_path: main.new_page(file_path) #load pages from file paths
@@ -603,7 +605,7 @@ class ActionHandler:
                 try:
                     page.process.kill()
                 except:
-                    print "could not kill process: %d" % page.process.pid
+                    print("could not kill process: %d" % page.process.pid)
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
@@ -645,7 +647,7 @@ class ActionHandler:
                              shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         else:
-            print '!!! Action "%s" not handled !!!' % action
+            print('!!! Action "%s" not handled !!!' % action)
         ##################################################
         # Global Actions for all States
         ##################################################

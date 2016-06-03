@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import os
 
 import gi
@@ -270,7 +272,7 @@ class MainWindow(Gtk.Window):
         Returns:
             true if all closed
         """
-        open_files = filter(lambda file: file, self._get_files()) #filter blank files
+        open_files = [file for file in self._get_files() if file] #filter blank files
         open_file = self.current_page.file_path
         #close each page
         for page in sorted(self.get_pages(), key=lambda p: p.saved):
@@ -416,7 +418,7 @@ class MainWindow(Gtk.Window):
         Returns:
             list of file paths
         """
-        return map(lambda page: page.file_path, self.get_pages())
+        return [page.file_path for page in self.get_pages()]
 
     def get_pages(self):
         """

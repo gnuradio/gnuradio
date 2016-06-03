@@ -15,12 +15,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+from __future__ import absolute_import, print_function
+
 import imp
 import time
-from itertools import ifilter, chain
+import re
+from itertools import chain
 from operator import methodcaller, attrgetter
 
-import re
+from six.moves import filter
 
 from . import Messages
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
@@ -87,7 +90,7 @@ class FlowGraph(Element):
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = filter(attrgetter('is_variable'), self.iter_enabled_blocks())
+        variables = list(filter(attrgetter('is_variable'), self.iter_enabled_blocks()))
         return expr_utils.sort_objects(variables, methodcaller('get_id'), methodcaller('get_var_make'))
 
     def get_parameters(self):
@@ -97,15 +100,14 @@ class FlowGraph(Element):
         Returns:
             a list of parameterized variables
         """
-        parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.iter_enabled_blocks())
+        parameters = [b for b in self.iter_enabled_blocks() if _parameter_matcher.match(b.get_key())]
         return parameters
 
     def get_monitors(self):
         """
         Get a list of all ControlPort monitors
         """
-        monitors = filter(lambda b: _monitors_searcher.search(b.get_key()),
-                          self.iter_enabled_blocks())
+        monitors = [b for b in self.iter_enabled_blocks() if _monitors_searcher.search(b.get_key())]
         return monitors
 
     def get_python_modules(self):
@@ -115,7 +117,7 @@ class FlowGraph(Element):
                 yield block.get_id(), block.get_param('source_code').get_value()
 
     def get_bussink(self):
-        bussink = filter(lambda b: _bussink_searcher.search(b.get_key()), self.get_enabled_blocks())
+        bussink = [b for b in self.get_enabled_blocks() if _bussink_searcher.search(b.get_key())]
 
         for i in bussink:
             for j in i.get_params():
@@ -124,7 +126,7 @@ class FlowGraph(Element):
         return False
 
     def get_bussrc(self):
-        bussrc = filter(lambda b: _bussrc_searcher.search(b.get_key()), self.get_enabled_blocks())
+        bussrc = [b for b in self.get_enabled_blocks() if _bussrc_searcher.search(b.get_key())]
 
         for i in bussrc:
             for j in i.get_params():
@@ -133,18 +135,18 @@ class FlowGraph(Element):
         return False
 
     def get_bus_structure_sink(self):
-        bussink = filter(lambda b: _bus_struct_sink_searcher.search(b.get_key()), self.get_enabled_blocks())
+        bussink = [b for b in self.get_enabled_blocks() if _bus_struct_sink_searcher.search(b.get_key())]
         return bussink
 
     def get_bus_structure_src(self):
-        bussrc = filter(lambda b: _bus_struct_src_searcher.search(b.get_key()), self.get_enabled_blocks())
+        bussrc = [b for b in self.get_enabled_blocks() if _bus_struct_src_searcher.search(b.get_key())]
         return bussrc
 
     def iter_enabled_blocks(self):
         """
         Get an iterator of all blocks that are enabled and not bypassed.
         """
-        return ifilter(methodcaller('get_enabled'), self.blocks)
+        return filter(methodcaller('get_enabled'), self.blocks)
 
     def get_enabled_blocks(self):
         """
@@ -162,7 +164,7 @@ class FlowGraph(Element):
         Returns:
             a list of blocks
         """
-        return filter(methodcaller('get_bypassed'), self.blocks)
+        return list(filter(methodcaller('get_bypassed'), self.blocks))
 
     def get_enabled_connections(self):
         """
@@ -171,7 +173,7 @@ class FlowGraph(Element):
         Returns:
             a list of connections
         """
-        return filter(methodcaller('get_enabled'), self.connections)
+        return list(filter(methodcaller('get_enabled'), self.connections))
 
     def get_option(self, key):
         """
@@ -206,7 +208,7 @@ class FlowGraph(Element):
         options_block_count = self.blocks.count(self._options_block)
         if not options_block_count:
             self.blocks.append(self._options_block)
-        for i in range(options_block_count-1):
+        for _ in range(options_block_count-1):
             self.blocks.remove(self._options_block)
 
         return self.blocks + self.connections
@@ -229,14 +231,14 @@ class FlowGraph(Element):
         # Load imports
         for expr in self.get_imports():
             try:
-                exec expr in namespace
+                exec(expr, namespace)
             except:
                 pass
 
         for id, expr in self.get_python_modules():
             try:
                 module = imp.new_module(id)
-                exec expr in module.__dict__
+                exec(expr, module.__dict__)
                 namespace[id] = module
             except:
                 pass
@@ -333,15 +335,15 @@ class FlowGraph(Element):
         if element in self.blocks:
             # Remove block, remove all involved connections
             for port in element.get_ports():
-                map(self.remove_element, port.get_connections())
+                for connection in port.get_connections():
+                    self.remove_element(connection)
             self.blocks.remove(element)
 
         elif element in self.connections:
             if element.is_bus():
-                cons_list = []
-                for i in map(lambda a: a.get_connections(), element.get_source().get_associated_ports()):
-                    cons_list.extend(i)
-                map(self.remove_element, cons_list)
+                for port in element.get_source().get_associated_ports():
+                    for connection in port.get_connections():
+                        self.remove_element(connection)
             self.connections.remove(element)
 
     ##############################################
@@ -484,21 +486,19 @@ class FlowGraph(Element):
                     get_p_gui = block.get_sinks_gui
                     bus_structure = block.form_bus_structure('sink')
 
-                if 'bus' in map(lambda a: a.get_type(), get_p_gui()):
+                if 'bus' in [a.get_type() for a in get_p_gui()]:
                     if len(get_p_gui()) > len(bus_structure):
-                        times = range(len(bus_structure), len(get_p_gui()))
+                        times = list(range(len(bus_structure), len(get_p_gui())))
                         for i in times:
                             for connect in get_p_gui()[-1].get_connections():
                                 block.get_parent().remove_element(connect)
                             get_p().remove(get_p_gui()[-1])
                     elif len(get_p_gui()) < len(bus_structure):
                         n = {'name': 'bus', 'type': 'bus'}
-                        if True in map(
-                                lambda a: isinstance(a.get_nports(), int),
-                                get_p()):
+                        if any(isinstance(a.get_nports(), int) for a in get_p()):
                             n['nports'] = str(1)
 
-                        times = range(len(get_p_gui()), len(bus_structure))
+                        times = list(range(len(get_p_gui()), len(bus_structure)))
 
                         for i in times:
                             n['key'] = str(len(get_p()))
@@ -507,8 +507,7 @@ class FlowGraph(Element):
                                 block=block, n=n, dir=direc)
                             get_p().append(port)
 
-                if 'bus' in map(lambda a: a.get_type(),
-                                block.get_sources_gui()):
+                if 'bus' in [a.get_type() for a in block.get_sources_gui()]:
                     for i in range(len(block.get_sources_gui())):
                         if len(block.get_sources_gui()[
                                    i].get_connections()) > 0:

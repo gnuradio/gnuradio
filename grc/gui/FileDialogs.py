@@ -17,18 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from Dialogs import MessageDialogHelper
-from Constants import \
+from .Dialogs import MessageDialogHelper
+from .Constants import \
     DEFAULT_FILE_PATH, IMAGE_FILE_EXTENSION, TEXT_FILE_EXTENSION, \
     NEW_FLOGRAPH_TITLE
-import Preferences
+from . import Preferences
 from os import path
-import Utils
+from . import Utils
 
 ##################################################
 # Constants

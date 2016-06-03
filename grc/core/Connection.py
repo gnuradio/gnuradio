@@ -17,6 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
+from six.moves import range
+
 from . import Constants
 from .Element import Element
 from .utils import odict
@@ -51,8 +55,8 @@ class Connection(Element):
             raise ValueError('Connection could not isolate source')
         if not sink:
             raise ValueError('Connection could not isolate sink')
-        busses = len(filter(lambda a: a.get_type() == 'bus', [source, sink])) % 2
-        if not busses == 0:
+
+        if (source.get_type() == 'bus') != (sink.get_type() == 'bus'):
             raise ValueError('busses must get with busses')
 
         if not len(source.get_associated_ports()) == len(sink.get_associated_ports()):

@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib
@@ -47,7 +49,7 @@ def get_rotated_coordinate(coor, rotation):
     return x * cos_r + y * sin_r, -x * sin_r + y * cos_r
 
 
-def get_angle_from_coordinates((x1, y1), (x2, y2)):
+def get_angle_from_coordinates(p1, p2):
     """
     Given two points, calculate the vector direction from point1 to point2, directions are multiples of 90 degrees.
 
@@ -58,6 +60,8 @@ def get_angle_from_coordinates((x1, y1), (x2, y2)):
     Returns:
         the direction in degrees
     """
+    (x1, y1) = p1
+    (x2, y2) = p2
     if y1 == y2:  # 0 or 180
         return 0 if x2 > x1 else 180
     else:  # 90 or 270
@@ -78,7 +82,7 @@ def align_to_grid(coor, mode=round):
     def align(value):
         return int(mode(value / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
     try:
-        return map(align, coor)
+        return [align(c) for c in coor]
     except TypeError:
         x = coor
         return align(coor)

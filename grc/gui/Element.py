@@ -17,10 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import LINE_SELECT_SENSITIVITY
-from Constants import POSSIBLE_ROTATIONS
+from __future__ import absolute_import
+from .Constants import LINE_SELECT_SENSITIVITY
+from .Constants import POSSIBLE_ROTATIONS
 
 import gi
+from six.moves import zip
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Gdk

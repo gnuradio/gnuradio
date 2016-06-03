@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from operator import attrgetter
+from __future__ import absolute_import
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -221,8 +221,8 @@ class VariableEditor(Gtk.VBox):
                 sp('foreground', 'red')
 
     def update_gui(self, blocks):
-        self._imports = filter(attrgetter('is_import'), blocks)
-        self._variables = filter(attrgetter('is_variable'), blocks)
+        self._imports = [block for block in blocks if block.is_import]
+        self._variables = [block for block in blocks if block.is_variable]
         self._rebuild()
         self.treeview.expand_all()
 

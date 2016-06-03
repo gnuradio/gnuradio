@@ -8,8 +8,8 @@ def calculate_flowgraph_complexity(flowgraph):
             continue
 
         # Don't worry about optional sinks?
-        sink_list = filter(lambda c: not c.get_optional(), block.get_sinks())
-        source_list = filter(lambda c: not c.get_optional(), block.get_sources())
+        sink_list = [c for c in block.get_sinks() if not c.get_optional()]
+        source_list = [c for c in block.get_sources() if not c.get_optional()]
         sinks = float(len(sink_list))
         sources = float(len(source_list))
         base = max(min(sinks, sources), 1)
@@ -22,14 +22,15 @@ def calculate_flowgraph_complexity(flowgraph):
             multi = 1
 
         # Connection ratio multiplier
-        sink_multi = max(float(sum(map(lambda c: len(c.get_connections()), sink_list)) / max(sinks, 1.0)), 1.0)
-        source_multi = max(float(sum(map(lambda c: len(c.get_connections()), source_list)) / max(sources, 1.0)), 1.0)
-        dbal = dbal + (base * multi * sink_multi * source_multi)
+        sink_multi = max(float(sum(len(c.get_connections()) for c in sink_list) / max(sinks, 1.0)), 1.0)
+        source_multi = max(float(sum(len(c.get_connections()) for c in source_list) / max(sources, 1.0)), 1.0)
+        dbal += base * multi * sink_multi * source_multi
 
     blocks = float(len(flowgraph.blocks))
     connections = float(len(flowgraph.connections))
     elements = blocks + connections
-    disabled_connections = len(filter(lambda c: not c.get_enabled(), flowgraph.connections))
+    disabled_connections = sum(not c.get_enabled() for c in flowgraph.connections)
+
     variables = elements - blocks - connections
     enabled = float(len(flowgraph.get_enabled_blocks()))
 

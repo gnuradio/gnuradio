@@ -17,13 +17,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
+import six
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
-import Preferences
+from . import Preferences
 
 NO_MODS_MASK = 0
 
@@ -47,7 +51,6 @@ def handle_key_press(event):
     Returns:
         true if handled
     """
-    _used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for keyval, mod_mask in _actions_keypress_dict], NO_MODS_MASK)
     # extract the key value and the consumed modifiers
     _unused, keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
         event.hardware_keycode, event.get_state(), event.group)
@@ -80,13 +83,16 @@ class _ActionBase(object):
     Register actions and keypresses with this module.
     """
     def __init__(self, label, keypresses):
+        global _used_mods_mask
+
         _all_actions_list.append(self)
         for i in range(len(keypresses)/2):
             keyval, mod_mask = keypresses[i*2:(i+1)*2]
             # register this keypress
-            if _actions_keypress_dict.has_key((keyval, mod_mask)):
+            if (keyval, mod_mask) in _actions_keypress_dict:
                 raise KeyError('keyval/mod_mask pair already registered "%s"' % str((keyval, mod_mask)))
             _actions_keypress_dict[(keyval, mod_mask)] = self
+            _used_mods_mask |= mod_mask
             # set the accelerator group, and accelerator path
             # register the key name and mod mask with the accelerator path
             if label is None:
@@ -102,7 +108,7 @@ class _ActionBase(object):
         The string representation should be the name of the action id.
         Try to find the action id for this action by searching this module.
         """
-        for name, value in globals().iteritems():
+        for name, value in six.iteritems(globals()):
             if value == self:
                 return name
         return self.get_name()

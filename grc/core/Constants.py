@@ -17,9 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import os
-import numpy
 import stat
+
+import numpy
+import six
 
 # Data files
 DATA_DIR = os.path.dirname(__file__)
@@ -63,7 +67,7 @@ HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
 COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
 REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
-INT_TYPES = [int, long, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
+INT_TYPES = [int, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
              numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
 # Cast to tuple for isinstance, concat subtypes
 COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
@@ -129,6 +133,6 @@ for name, key, sizeof, color in CORE_TYPES:
     TYPE_TO_COLOR[key] = color
     TYPE_TO_SIZEOF[key] = sizeof
 
-for key, (sizeof, color) in ALIAS_TYPES.iteritems():
+for key, (sizeof, color) in six.iteritems(ALIAS_TYPES):
     TYPE_TO_COLOR[key] = color
     TYPE_TO_SIZEOF[key] = sizeof

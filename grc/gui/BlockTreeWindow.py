@@ -17,6 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+import six
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -33,7 +36,7 @@ def _format_doc(doc):
     docs = []
     if doc.get(''):
         docs += doc.pop('').splitlines() + ['']
-    for block_name, docstring in doc.iteritems():
+    for block_name, docstring in six.iteritems(doc):
         docs.append('--- {0} ---'.format(block_name))
         docs += docstring.splitlines()
         docs.append('')
@@ -142,8 +145,9 @@ class BlockTreeWindow(Gtk.VBox):
         if categories is None:
             categories = self._categories
 
-        if isinstance(category, (str, unicode)): category = category.split('/')
-        category = tuple(filter(lambda x: x, category))  # tuple is hashable
+        if isinstance(category, (str, six.text_type)):
+            category = category.split('/')
+        category = tuple(x for x in category if x)  # tuple is hashable
         # add category and all sub categories
         for i, cat_name in enumerate(category):
             sub_category = category[:i+1]
@@ -210,8 +214,8 @@ class BlockTreeWindow(Gtk.VBox):
             self.treeview.set_model(self.treestore)
             self.treeview.collapse_all()
         else:
-            matching_blocks = filter(lambda b: key in b.get_key().lower() or key in b.get_name().lower(),
-                                     self.platform.blocks.values())
+            matching_blocks = [b for b in list(self.platform.blocks.values())
+                               if key in b.get_key().lower() or key in b.get_name().lower()]
 
             self.treestore_search.clear()
             self._categories_search = {tuple(): None}

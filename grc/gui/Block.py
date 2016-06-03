@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
 import math
 import gi
 gi.require_version('Gtk', '3.0')
@@ -150,7 +151,7 @@ class Block(Element, _Block):
         W = self.label_width + 2 * BLOCK_LABEL_PADDING
 
         def get_min_height_for_ports():
-            visible_ports = filter(lambda p: not p.get_hide(), ports)
+            visible_ports = [p for p in ports if not p.get_hide()]
             min_height = 2*PORT_BORDER_SEPARATION + len(visible_ports) * PORT_SEPARATION
             if visible_ports:
                 min_height -= ports[0].H

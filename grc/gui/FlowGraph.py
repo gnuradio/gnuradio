@@ -17,16 +17,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import functools
 import random
 from distutils.spawn import find_executable
 from itertools import chain, count
 from operator import methodcaller
 
+import six
+from six.moves import filter
+
 from gi.repository import GObject
 
-from . import Actions, Colors, Constants, Utils, Bars, Dialogs
-from .Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
+from . import Actions, Colors, Utils, Bars, Dialogs
 from .Element import Element
 from .external_editor import ExternalEditor
 
@@ -179,10 +183,10 @@ class FlowGraph(Element, _Flowgraph):
             x_min = min(x, x_min)
             y_min = min(y, y_min)
         #get connections between selected blocks
-        connections = filter(
+        connections = list(filter(
             lambda c: c.get_source().get_parent() in blocks and c.get_sink().get_parent() in blocks,
             self.connections,
-        )
+        ))
         clipboard = (
             (x_min, y_min),
             [block.export_data() for block in blocks],
@@ -222,7 +226,7 @@ class FlowGraph(Element, _Flowgraph):
                 block.get_param('_io_cache').set_value(params.pop('_io_cache'))
                 block.get_param('_source_code').set_value(params.pop('_source_code'))
                 block.rewrite()  # this creates the other params
-            for param_key, param_value in params.iteritems():
+            for param_key, param_value in six.iteritems(params):
                 #setup id parameter
                 if param_key == 'id':
                     old_id2block[param_value] = block

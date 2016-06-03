@@ -17,12 +17,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
+import six
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
+from .Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
 
 
 class ParserErrorsDialog(Gtk.Dialog):
@@ -72,7 +76,7 @@ class ParserErrorsDialog(Gtk.Dialog):
         """set up data model"""
         self.tree_store.clear()
         self._error_logs = error_logs
-        for filename, errors in error_logs.iteritems():
+        for filename, errors in six.iteritems(error_logs):
             parent = self.tree_store.append(None, [str(filename)])
             try:
                 with open(filename, 'r') as fp:

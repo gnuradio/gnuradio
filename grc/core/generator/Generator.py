@@ -16,9 +16,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 
+from __future__ import absolute_import
 import codecs
 import os
 import tempfile
+import operator
 
 from Cheetah.Template import Template
 
@@ -85,14 +87,15 @@ class TopBlockGenerator(object):
     def write(self):
         """generate output and write it to files"""
         # Do throttle warning
-        throttling_blocks = filter(lambda b: b.throtteling(), self._flow_graph.get_enabled_blocks())
+        throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
+                             if b.throtteling()]
         if not throttling_blocks and not self._generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
                                   "Add a Misc->Throttle block to your flow "
                                   "graph to avoid CPU congestion.")
         if len(throttling_blocks) > 1:
-            keys = set(map(lambda b: b.get_key(), throttling_blocks))
+            keys = set([b.get_key() for b in throttling_blocks])
             if len(keys) > 1 and 'blocks_throttle' in keys:
                 Messages.send_warning("This flow graph contains a throttle "
                                       "block and another rate limiting block, "
@@ -139,15 +142,15 @@ class TopBlockGenerator(object):
             return code
 
         blocks = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
-            lambda b: b.get_id(), _get_block_sort_text
+            [b for b in fg.blocks if b.get_enabled() and not b.get_bypassed()],
+            operator.methodcaller('get_id'), _get_block_sort_text
         )
         deprecated_block_keys = set(block.get_name() for block in blocks if block.is_deprecated)
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
         # List of regular blocks (all blocks minus the special ones)
-        blocks = filter(lambda b: b not in (imports + parameters), blocks)
+        blocks = [b for b in blocks if b not in imports and b not in parameters]
 
         for block in blocks:
             key = block.get_key()
@@ -162,10 +165,10 @@ class TopBlockGenerator(object):
         # Filter out virtual sink connections
         def cf(c):
             return not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
-        connections = filter(cf, fg.get_enabled_connections())
+        connections = [con for con in fg.get_enabled_connections() if cf(con)]
 
         # Get the virtual blocks and resolve their connections
-        virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
+        virtual = [c for c in connections if c.get_source().get_parent().is_virtual_source()]
         for connection in virtual:
             source = connection.get_source().resolve_virtual_source()
             sink = connection.get_sink()
@@ -183,7 +186,7 @@ class TopBlockGenerator(object):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            source_connection = filter(lambda c: c.get_sink() == block.get_sinks()[0], connections)
+            source_connection = [c for c in connections if c.get_sink() == block.get_sinks()[0]]
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
@@ -191,7 +194,7 @@ class TopBlockGenerator(object):
             source_port = source_connection[0].get_source()
 
             # Loop through all the downstream connections
-            for sink in filter(lambda c: c.get_source() == block.get_sources()[0], connections):
+            for sink in (c for c in connections if c.get_source() == block.get_sources()[0]):
                 if not sink.get_enabled():
                     # Ignore disabled connections
                     continue
@@ -210,7 +213,8 @@ class TopBlockGenerator(object):
         ))
 
         connection_templates = fg.get_parent().connection_templates
-        msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
+        msgs = [c for c in fg.get_enabled_connections() if c.is_msg()]
+
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
         # Prepend self.
@@ -222,7 +226,7 @@ class TopBlockGenerator(object):
             ]
         # Map var id to callbacks
         var_id2cbs = dict([
-            (var_id, filter(lambda c: expr_utils.get_variable_dependencies(c, [var_id]), callbacks))
+            (var_id, [c for c in callbacks if expr_utils.get_variable_dependencies(c, [var_id])])
             for var_id in var_ids
         ])
         # Load the namespace
@@ -290,8 +294,8 @@ class HierBlockGenerator(TopBlockGenerator):
         parameters = self._flow_graph.get_parameters()
 
         def var_or_value(name):
-            if name in map(lambda p: p.get_id(), parameters):
-                return "$"+name
+            if name in (p.get_id() for p in parameters):
+                return "$" + name
             return name
 
         # Build the nested data

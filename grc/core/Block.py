@@ -17,8 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import collections
 import itertools
+
+from six.moves import map, range
 
 from Cheetah.Template import Template
 
@@ -70,7 +74,7 @@ class Block(Element):
             self._flags += BLOCK_FLAG_THROTTLE
 
         self._doc = (n.find('doc') or '').strip('\n').replace('\\\n', '')
-        self._imports = map(lambda i: i.strip(), n.findall('import'))
+        self._imports = [i.strip() for i in n.findall('import')]
         self._make = n.find('make')
         self._var_make = n.find('var_make')
         self._var_value = n.find('var_value') or '$value'
@@ -250,7 +254,7 @@ class Block(Element):
             self.back_ofthe_bus(ports)
             # Renumber non-message/message ports
             domain_specific_port_index = collections.defaultdict(int)
-            for port in filter(lambda p: p.get_key().isdigit(), ports):
+            for port in [p for p in ports if p.get_key().isdigit()]:
                 domain = port.get_domain()
                 port._key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
@@ -275,7 +279,8 @@ class Block(Element):
         """
         if raw:
             return self._imports
-        return filter(lambda i: i, sum(map(lambda i: self.resolve_dependencies(i).split('\n'), self._imports), []))
+        return [i for i in sum([self.resolve_dependencies(i).split('\n')
+                                for i in self._imports], []) if i]
 
     def get_make(self, raw=False):
         if raw:
@@ -300,7 +305,7 @@ class Block(Element):
             if 'self.' in callback:
                 return callback
             return 'self.{}.{}'.format(self.get_id(), callback)
-        return map(make_callback, self._callbacks)
+        return [make_callback(c) for c in self._callbacks]
 
     def is_virtual_sink(self):
         return self.get_key() == 'virtual_sink'
@@ -622,10 +627,10 @@ class Block(Element):
         """
         changed = False
         type_param = None
-        for param in filter(lambda p: p.is_enum(), self.get_params()):
+        for param in [p for p in self.get_params() if p.is_enum()]:
             children = self.get_ports() + self.get_params()
             # Priority to the type controller
-            if param.get_key() in ' '.join(map(lambda p: p._type, children)): type_param = param
+            if param.get_key() in ' '.join([p._type for p in children]): type_param = param
             # Use param if type param is unset
             if not type_param:
                 type_param = param
@@ -681,10 +686,10 @@ class Block(Element):
         """
         n = odict()
         n['key'] = self.get_key()
-        n['param'] = map(lambda p: p.export_data(), sorted(self.get_params(), key=str))
-        if 'bus' in map(lambda a: a.get_type(), self.get_sinks()):
+        n['param'] = [p.export_data() for p in sorted(self.get_params(), key=str)]
+        if 'bus' in [a.get_type() for a in self.get_sinks()]:
             n['bus_sink'] = str(1)
-        if 'bus' in map(lambda a: a.get_type(), self.get_sources()):
+        if 'bus' in [a.get_type() for a in self.get_sources()]:
             n['bus_source'] = str(1)
         return n
 
@@ -773,12 +778,12 @@ class Block(Element):
             get_p_gui = self.get_sinks_gui
             bus_structure = self.get_bus_structure('sink')
 
-        struct = [range(len(get_p()))]
-        if True in map(lambda a: isinstance(a.get_nports(), int), get_p()):
+        struct = [list(range(len(get_p())))]
+        if True in [isinstance(a.get_nports(), int) for a in get_p()]:
             structlet = []
             last = 0
             for j in [i.get_nports() for i in get_p() if isinstance(i.get_nports(), int)]:
-                structlet.extend(map(lambda a: a+last, range(j)))
+                structlet.extend([a+last for a in range(j)])
                 last = structlet[-1] + 1
                 struct = [structlet]
         if bus_structure:
@@ -802,7 +807,7 @@ class Block(Element):
             for connect in elt.get_connections():
                 self.get_parent().remove_element(connect)
 
-        if ('bus' not in map(lambda a: a.get_type(), get_p())) and len(get_p()) > 0:
+        if ('bus' not in [a.get_type() for a in get_p()]) and len(get_p()) > 0:
             struct = self.form_bus_structure(direc)
             self.current_bus_structure[direc] = struct
             if get_p()[0].get_nports():
@@ -813,7 +818,7 @@ class Block(Element):
                 n = odict(n)
                 port = self.get_parent().get_parent().Port(block=self, n=n, dir=direc)
                 get_p().append(port)
-        elif 'bus' in map(lambda a: a.get_type(), get_p()):
+        elif 'bus' in [a.get_type() for a in get_p()]:
             for elt in get_p_gui():
                 get_p().remove(elt)
             self.current_bus_structure[direc] = ''

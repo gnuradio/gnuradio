@@ -17,6 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
 import math
 import gi
 gi.require_version('Gtk', '3.0')
@@ -68,7 +69,7 @@ class Port(_Port, Element):
         #get all sibling ports
         ports = self.get_parent().get_sources_gui() \
             if self.is_source else self.get_parent().get_sinks_gui()
-        ports = filter(lambda p: not p.get_hide(), ports)
+        ports = [p for p in ports if not p.get_hide()]
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
         W = self.W if not self._label_hidden() else PORT_LABEL_HIDDEN_WIDTH
@@ -79,16 +80,15 @@ class Port(_Port, Element):
             if hasattr(self, '_connector_length'):
                 del self._connector_length
             return
-        length = len(filter(lambda p: not p.get_hide(), ports))
         #reverse the order of ports for these rotations
         if rotation in (180, 270):
-            index = length-index-1
+            index = len(ports)-index-1
 
         port_separation = PORT_SEPARATION \
             if not self.get_parent().has_busses[self.is_source] \
             else max([port.H for port in ports]) + PORT_SPACING
 
-        offset = (self.get_parent().H - (length-1)*port_separation - self.H)/2
+        offset = (self.get_parent().H - (len(ports)-1)*port_separation - self.H)/2
         #create areas and connector coordinates
         if (self.is_sink and rotation == 0) or (self.is_source and rotation == 180):
             x = -W

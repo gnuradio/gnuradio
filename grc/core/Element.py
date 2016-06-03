@@ -22,7 +22,7 @@ class Element(object):
 
     def __init__(self, parent=None):
         self._parent = parent
-        self._error_messages = list()
+        self._error_messages = []
 
     ##################################################
     # Element Validation API
@@ -64,7 +64,9 @@ class Element(object):
             a list of error message strings
         """
         error_messages = list(self._error_messages)  # Make a copy
-        for child in filter(lambda c: c.get_enabled() and not c.get_bypassed(), self.get_children()):
+        for child in self.get_children():
+            if not child.get_enabled() or child.get_bypassed():
+                continue
             for msg in child.get_error_messages():
                 error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
         return error_messages

@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 
@@ -32,6 +34,9 @@ from .Port import Port
 from .Param import Param
 
 from .utils import odict, extract_docs
+import six
+from six.moves import map
+from six.moves import range
 
 
 class Platform(Element):
@@ -156,7 +161,7 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
-                print >> sys.stderr, 'Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file)
+                print('Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file), file=sys.stderr)
 
         self._docstring_extractor.finish()
         # self._docstring_extractor.wait()
@@ -168,7 +173,7 @@ class Platform(Element):
                 yield block_path
             elif os.path.isdir(block_path):
                 for dirpath, dirnames, filenames in os.walk(block_path):
-                    for filename in sorted(filter(lambda f: f.endswith('.xml'), filenames)):
+                    for filename in sorted(f for f in filenames if f.endswith('.xml')):
                         yield os.path.join(dirpath, filename)
 
     def load_block_xml(self, xml_file):
@@ -181,7 +186,7 @@ class Platform(Element):
         block = self.Block(self._flow_graph, n)
         key = block.get_key()
         if key in self.blocks:
-            print >> sys.stderr, 'Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
+            print('Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
         else:  # Store the block
             self.blocks[key] = block
             self._blocks_n[key] = n
@@ -205,13 +210,13 @@ class Platform(Element):
 
         key = n.find('key')
         if not key:
-            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file)
+            print('Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file), file=sys.stderr)
             return
         if key in self.domains:  # test against repeated keys
-            print >> sys.stderr, 'Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
+            print('Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
             return
 
-        #to_bool = lambda s, d: d if s is None else s.lower() not in ('false', 'off', '0', '')
+        # to_bool = lambda s, d: d if s is None else s.lower() not in ('false', 'off', '0', '')
         def to_bool(s, d):
             if s is not None:
                 return s.lower() not in ('false', 'off', '0', '')
@@ -223,7 +228,7 @@ class Platform(Element):
             tuple(int(color[o:o + 2], 16) / 255.0 for o in range(1, 3 * chars_per_color, chars_per_color))
         except ValueError:
             if color:  # no color is okay, default set in GUI
-                print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)
+                print('Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key), file=sys.stderr)
                 color = None
 
         self.domains[key] = dict(
@@ -235,9 +240,9 @@ class Platform(Element):
         for connection_n in n.findall('connection'):
             key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
             if not all(key):
-                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file)
+                print('Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file), file=sys.stderr)
             elif key in self.connection_templates:
-                print >> sys.stderr, 'Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file)
+                print('Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file), file=sys.stderr)
             else:
                 self.connection_templates[key] = connection_n.find('make') or ''
 
@@ -256,11 +261,12 @@ class Platform(Element):
             parent = (parent or []) + [cat_n.find('name')]
             block_tree.add_block(parent)
             # Recursive call to load sub categories
-            map(lambda c: load_category(c, parent), cat_n.findall('cat'))
+            for cat in cat_n.findall('cat'):
+                load_category(cat, parent)
             # Add blocks in this category
             for block_key in cat_n.findall('block'):
                 if block_key not in self.blocks:
-                    print >> sys.stderr, 'Warning: Block key "{}" not found when loading category tree.'.format(block_key)
+                    print('Warning: Block key "{}" not found when loading category tree.'.format(block_key), file=sys.stderr)
                     continue
                 block = self.blocks[block_key]
                 # If it exists, the block's category shall not be overridden by the xml tree
@@ -272,7 +278,7 @@ class Platform(Element):
             load_category(category_tree_n)
 
         # Add blocks to block tree
-        for block in self.blocks.itervalues():
+        for block in six.itervalues(self.blocks):
             # Blocks with empty categories are hidden
             if not block.get_category():
                 continue
@@ -280,7 +286,7 @@ class Platform(Element):
 
     def _save_docstring_extraction_result(self, key, docstrings):
         docs = {}
-        for match, docstring in docstrings.iteritems():
+        for match, docstring in six.iteritems(docstrings):
             if not docstring or match.endswith('_sptr'):
                 continue
             docstring = docstring.replace('\n\n', '\n').strip()
@@ -312,7 +318,7 @@ class Platform(Element):
         return self.FlowGraph(platform=self)
 
     def get_blocks(self):
-        return self.blocks.values()
+        return list(self.blocks.values())
 
     def get_new_block(self, flow_graph, key):
         return self.Block(flow_graph, n=self._blocks_n[key])
