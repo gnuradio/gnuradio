@@ -20,14 +20,24 @@
 ########################################################################
 # Setup dependencies
 ########################################################################
+include(GrPython)
+
+GR_PYTHON_CHECK_MODULE("Mako >= 0.4.2" mako "mako.__version__ >= '0.4.2'" MAKO_FOUND)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
+if(NOT CMAKE_CROSSCOMPILING)
+    set(utils_python_deps
+        MAKO_FOUND
+    )
+endif(NOT CMAKE_CROSSCOMPILING)
+
 GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
     ENABLE_GNURADIO_RUNTIME
     ENABLE_PYTHON
+    ${utils_python_deps}
 )
 
 ########################################################################

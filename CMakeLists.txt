@@ -1,4 +1,4 @@
-# Copyright 2010-2015 Free Software Foundation, Inc.
+# Copyright 2010-2012,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -45,9 +45,9 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
-set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 10)
-set(VERSION_INFO_MAINT_VERSION git)
+set(VERSION_INFO_API_COMPAT    8)
+set(VERSION_INFO_MINOR_VERSION git)
+set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
@@ -425,7 +425,6 @@ add_subdirectory(gr-filter)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-dtv)
-add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-channels)
