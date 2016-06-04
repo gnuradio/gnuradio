@@ -77,6 +77,9 @@ namespace gr {
         if(ntaps < 1){ throw std::runtime_error("ntaps must be >= 1"); }
         set_history(1+ntaps);
         d_taps.resize(ntaps, gr_complex(0,0));
+
+        // set up message port
+        message_port_register_out(pmt::mp("taps"));
     }
 
     selective_fading_model2_impl::~selective_fading_model2_impl()
@@ -134,6 +137,12 @@ namespace gr {
 
             // assign output
             out[i] = sum;
+
+        }
+
+        if(pmt::length(message_subscribers(pmt::mp("taps"))) > 0){
+            pmt::pmt_t pdu( pmt::cons( pmt::PMT_NIL, pmt::init_c32vector(d_taps.size(), d_taps) ));
+            message_port_pub(pmt::mp("taps"), pdu);
         }
 
         // return all outputs

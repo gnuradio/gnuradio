@@ -89,6 +89,11 @@
 		<name>out</name>
 		<type>complex</type>
 	</source>
+	<source>
+		<name>taps</name>
+		<type>message</type>
+        <optional>1</optional>
+	</source>
     <doc>
     int d_N=8;          // number of sinusoids used to simulate gain on each ray
     float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate)
