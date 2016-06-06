@@ -45,7 +45,7 @@ namespace gr {
     /*!
      * \brief Construct a scheduler and begin evaluating the graph.
      *
-     * The scheduler will continue running until all blocks until they
+     * The scheduler will continue running until all blocks
      * report that they are done or the stop method is called.
      */
     scheduler(flat_flowgraph_sptr ffg, int max_noutput_items);
