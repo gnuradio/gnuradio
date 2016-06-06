@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2015 Free Software Foundation, Inc.
+ * Copyright 2010-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -661,7 +661,8 @@ namespace gr {
       case ::uhd::rx_metadata_t::ERROR_CODE_OVERFLOW:
         _tag_now = true;
 
-        //publish message
+        //publish message, only if someone's listening
+        if(! pmt::is_null(d_message_subscribers) )
         {
           pmt::pmt_t dic = pmt::make_dict();
           dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(_metadata.error_code));
@@ -681,7 +682,8 @@ namespace gr {
         //GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error: %d") % _metadata.strerror());
         GR_LOG_WARN(d_logger, boost::format("USRP Source Block caught rx error code: %d") % _metadata.error_code);
 
-        //publish message
+        //publish message, only if someone's listening
+        if(! pmt::is_null(d_message_subscribers) )
         {
           pmt::pmt_t dic = pmt::make_dict();
           dic = pmt::dict_add(dic, pmt::mp("code"), pmt::from_long(_metadata.error_code));
