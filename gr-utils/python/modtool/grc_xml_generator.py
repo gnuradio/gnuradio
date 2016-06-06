@@ -35,7 +35,7 @@ class GRCXMLGenerator(object):
         # Can't make a dict 'cause order matters
         self._header = (('name', blockname.replace('_', ' ').capitalize()),
                         ('key', '%s_%s' % (modname, blockname)),
-                        ('category', modname.upper()),
+                        ('category', '[%s]' % modname.upper()),
                         ('import', 'import %s' % modname),
                         ('make', '%s.%s(%s)' % (modname, blockname, ', '.join(params_list)))
                        )
