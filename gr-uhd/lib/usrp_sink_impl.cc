@@ -70,6 +70,9 @@ namespace gr {
         _nitems_to_send(0)
     {
       _sample_rate = get_samp_rate();
+#ifdef GR_UHD_USE_STREAM_API
+      message_port_register_out(TX_ASYNC_MSG_PORT);
+#endif
     }
 
     usrp_sink_impl::~usrp_sink_impl()
@@ -544,8 +547,8 @@ namespace gr {
         } else if (in_burst_cmd_offset < max_count) {
           BOOST_FOREACH(const pmt::pmt_t &cmd_pmt, commands_in_burst) {
             _pending_cmds.push_back(cmd_pmt);
-          }
         }
+      }
       }
 
       if (found_time_tag) {
@@ -581,7 +584,7 @@ namespace gr {
                  pmt::from_double(async_md.time_spec.get_frac_secs()));
               dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
             }
-            message_port_pub(ASYNC_MSG_PORT, dic);
+            message_port_pub(TX_ASYNC_MSG_PORT, dic);
           }
         } else {
           // handle the case that no async_msg was available; usually, this should be ignored for being OK.
@@ -589,7 +592,7 @@ namespace gr {
           /* 
              pmt::pmt_t dic = pmt::make_dict();
              dic = pmt::dict_add(dic, pmt::mp("timeout"), pmt::from_bool(true));
-             message_port_pub(ASYNC_MSG_PORT, dic);
+             message_port_pub(TX_ASYNC_MSG_PORT, dic);
              */
         }
       }

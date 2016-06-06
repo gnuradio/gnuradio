@@ -377,12 +377,21 @@ set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
 		<type>\$type.type</type>
 		<nports>\$nchan</nports>
 	</$sourk>
+#if $sourk == 'source'
 	<source>
-		<name>async_messages</name>
+		<name>rx_metad</name>
 		<type>message</type>
 		<optional>1</optional>
 		<hide>\$hide_cmd_port</hide>
 	</source>
+#else
+	<source>
+		<name>tx_async</name>
+		<type>message</type>
+		<optional>1</optional>
+		<hide>\$hide_cmd_port</hide>
+	</source>
+#end if
 	<doc>
 The UHD USRP $sourk.title() Block:
 

@@ -81,6 +81,7 @@ namespace gr {
       _center_freq = this->get_center_freq(0);
 #ifdef GR_UHD_USE_STREAM_API
       _samps_per_packet = 1;
+      message_port_register_out(RX_METADATA_MSG_PORT);
 #endif
       register_msg_cmd_handler(CMD_TAG_KEY, boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
     }
@@ -670,7 +671,7 @@ namespace gr {
                pmt::from_double(_metadata.time_spec.get_frac_secs()));
             dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
           }
-          message_port_pub(ASYNC_MSG_PORT, dic);
+          message_port_pub(RX_METADATA_MSG_PORT, dic);
         }
         //ignore overflows and try work again
 
@@ -692,7 +693,7 @@ namespace gr {
                pmt::from_double(_metadata.time_spec.get_frac_secs()));
             dic = pmt::dict_add(dic, pmt::mp("time"), timespec);
           }
-          message_port_pub(ASYNC_MSG_PORT, dic);
+          message_port_pub(RX_METADATA_MSG_PORT, dic);
         }
         return num_samps;
       }

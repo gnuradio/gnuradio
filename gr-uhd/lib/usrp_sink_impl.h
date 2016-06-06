@@ -29,6 +29,7 @@ static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("tx_time");
 static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("tx_freq");
 static const pmt::pmt_t COMMAND_KEY = pmt::string_to_symbol("tx_command");
+static const pmt::pmt_t TX_ASYNC_MSG_PORT = pmt::string_to_symbol("tx_async");
 
 namespace gr {
   namespace uhd {

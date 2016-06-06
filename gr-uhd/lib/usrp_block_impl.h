@@ -121,7 +121,6 @@ namespace gr {
        * Canonical Message Port Names
        **********************************************************************/
       static const pmt::pmt_t COMMAND_PORT;
-      static const pmt::pmt_t ASYNC_MSG_PORT;
 
       /**********************************************************************
        * Command Interface
