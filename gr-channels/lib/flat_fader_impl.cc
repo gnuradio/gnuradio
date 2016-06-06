@@ -48,7 +48,7 @@ namespace gr {
 
         d_table(8*1024),
 
-        scale_sin(sqrtf(2.0/d_N)),
+        scale_sin(sqrtf(1.0/d_N)),
         scale_los(sqrtf(d_K)/sqrtf(d_K+1)),
         scale_nlos(1/sqrtf(d_K+1))
     {
@@ -74,12 +74,12 @@ namespace gr {
         Hvec.resize(n_samples);
         for(int i = 0; i < n_samples; i++){
             gr_complex H(0,0);
-            for(int n=1; n<d_N; n++){
+            for(int n=1; n<d_N+1; n++){
                 float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
-                d_psi[n+1] = fmod(d_psi[n+1] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
-                d_phi[n+1] = fmod(d_phi[n+1] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
-                float s_i = scale_sin*_GRFASTCOS(d_psi[n+1]);
-                float s_q = scale_sin*_GRFASTSIN(d_phi[n+1]);
+                d_psi[n] = fmod(d_psi[n] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
+                d_phi[n] = fmod(d_phi[n] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
+                float s_i = scale_sin*_GRFASTCOS(d_psi[n]);
+                float s_q = scale_sin*_GRFASTSIN(d_phi[n]);
                 H += gr_complex(s_i, s_q);
                 }
     
