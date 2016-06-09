@@ -55,7 +55,7 @@
 		</option>
 		<option>
 			<name>String</name>
-			<key>string</key>
+			<key>str</key>
 			<opt>type:string</opt>
         </option>
         <!-- Do not forget to add option value type handler import into
