@@ -53,7 +53,7 @@ class FlowGraph(Element):
         Returns:
             the flow graph object
         """
-        Element.__init__(self, platform)
+        Element.__init__(self, parent=platform)
         self._timestamp = time.ctime()
         self._options_block = self.parent_platform.get_new_block(self, 'options')
 

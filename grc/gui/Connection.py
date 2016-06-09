@@ -26,7 +26,6 @@ from . import Utils
 from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 from .Element import Element
 
-from ..core.Constants import GR_MESSAGE_DOMAIN
 from ..core.Connection import Connection as _Connection
 
 
@@ -93,9 +92,13 @@ class Connection(Element, _Connection):
         # self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
         #     if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
         #     else Gdk.LINE_ON_OFF_DASH
-        get_domain_color = lambda d: Colors.get_color((
-            self.get_parent().get_parent().domains.get(d, {})
-        ).get('color') or Colors.DEFAULT_DOMAIN_COLOR_CODE)
+
+        def get_domain_color(domain_name):
+            domain = self.parent_platform.domains.get(domain_name, {})
+            color_spec = domain.get('color')
+            return Colors.get_color(color_spec) if color_spec else \
+                Colors.DEFAULT_DOMAIN_COLOR
+
         self._color = get_domain_color(source_domain)
         self._bg_color = get_domain_color(sink_domain)
         self._arrow_color = self._bg_color if self.is_valid() else Colors.CONNECTION_ERROR_COLOR

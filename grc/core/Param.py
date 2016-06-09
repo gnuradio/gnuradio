@@ -172,7 +172,7 @@ class Param(Element):
         if self._tab_label not in block.get_param_tab_labels():
             block.get_param_tab_labels().append(self._tab_label)
         # Build the param
-        Element.__init__(self, block)
+        Element.__init__(self, parent=block)
         # Create the Option objects from the n data
         self._options = list()
         self._evaluated = None

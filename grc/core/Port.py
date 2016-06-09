@@ -128,7 +128,7 @@ class Port(Element):
         n.setdefault('key', str(next(block.port_counters[dir == 'source'])))
 
         # Build the port
-        Element.__init__(self, block)
+        Element.__init__(self, parent=block)
         # Grab the data
         self._name = n['name']
         self._key = n['key']

@@ -1,36 +1,37 @@
-"""
-Copyright 2008, 2009, 2015 Free Software Foundation, Inc.
-This file is part of GNU Radio
-
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-"""
+# Copyright 2008, 2009, 2015, 2016 Free Software Foundation, Inc.
+# This file is part of GNU Radio
+#
+# GNU Radio Companion is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# GNU Radio Companion is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import weakref
+import functools
 
 
-class lazyproperty(object):
+class lazy_property(object):
+
     def __init__(self, func):
         self.func = func
+        functools.update_wrapper(self, func)
 
     def __get__(self, instance, cls):
         if instance is None:
             return self
-        else:
-            value = self.func(instance)
-            setattr(instance, self.func.__name__, value)
-            return value
+        value = self.func(instance)
+        weak_value = weakref.proxy(value) if not weakref.ProxyType else value
+        setattr(instance, self.func.__name__, weak_value)
+        return weak_value
 
 
 class Element(object):
@@ -108,35 +109,34 @@ class Element(object):
     def parent(self):
         return self._parent()
 
-    def get_parent_of_type(self, cls):
+    def get_parent_by_type(self, cls):
         parent = self.parent
         if parent is None:
             return None
         elif isinstance(parent, cls):
             return parent
         else:
-            return parent.get_parent_of_type(cls)
+            return parent.get_parent_by_type(cls)
 
-    @lazyproperty
+    @lazy_property
     def parent_platform(self):
         from .Platform import Platform
-        return self.get_parent_of_type(Platform)
+        return self.get_parent_by_type(Platform)
 
-    @lazyproperty
+    @lazy_property
     def parent_flowgraph(self):
         from .FlowGraph import FlowGraph
-        return self.get_parent_of_type(FlowGraph)
+        return self.get_parent_by_type(FlowGraph)
 
-    @lazyproperty
+    @lazy_property
     def parent_block(self):
         from .Block import Block
-        return self.get_parent_of_type(Block)
+        return self.get_parent_by_type(Block)
 
-    def reset_parents(self):
+    def reset_parents_by_type(self):
         """Reset all lazy properties"""
-        # todo: use case?
         for name, obj in vars(Element):
-            if isinstance(obj, lazyproperty):
+            if isinstance(obj, lazy_property):
                 delattr(self, name)
 
     def get_children(self):

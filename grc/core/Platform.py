@@ -53,10 +53,9 @@ class Platform(Element):
 
     def __init__(self, *args, **kwargs):
         """ Make a platform for GNU Radio """
-        Element.__init__(self)
+        Element.__init__(self, parent=None)
 
         self.config = self.Config(*args, **kwargs)
-
         self.block_docstrings = {}
         self.block_docstrings_loaded_callback = lambda: None  # dummy to be replaced by BlockTreeWindow
 

@@ -131,8 +131,6 @@ class FlowGraph(Element, _Flowgraph):
     ###########################################################################
     def get_drawing_area(self): return self.drawing_area
     def queue_draw(self): self.get_drawing_area().queue_draw()
-    def get_size(self): return self.get_drawing_area().get_size_request()
-    def set_size(self, *args): self.get_drawing_area().set_size_request(*args)
     def get_scroll_pane(self): return self.drawing_area.get_parent().get_parent()
     def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
     def get_mod1_mask(self): return self.drawing_area.mod1_mask
@@ -207,8 +205,8 @@ class FlowGraph(Element, _Flowgraph):
         #recalc the position
         h_adj = self.get_scroll_pane().get_hadjustment()
         v_adj = self.get_scroll_pane().get_vadjustment()
-        x_off = h_adj.get_value() - x_min + h_adj.page_size/4
-        y_off = v_adj.get_value() - y_min + v_adj.page_size/4
+        x_off = h_adj.get_value() - x_min + h_adj.get_page_size() / 4
+        y_off = v_adj.get_value() - y_min + v_adj.get_page_size() / 4
         if len(self.get_elements()) <= 1:
             x_off, y_off = 0, 0
         #create blocks

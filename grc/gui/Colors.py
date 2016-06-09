@@ -47,6 +47,8 @@ CONNECTION_ENABLED_COLOR = get_color('#000000')
 CONNECTION_DISABLED_COLOR = get_color('#BBBBBB')
 CONNECTION_ERROR_COLOR = get_color('#FF0000')
 
+DEFAULT_DOMAIN_COLOR = get_color('#777777')
+
 #################################################################################
 # param box colors
 #################################################################################

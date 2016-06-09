@@ -24,7 +24,7 @@ import collections
 from six.moves import range
 
 from . import Constants
-from .Element import Element, lazyproperty
+from .Element import Element, lazy_property
 
 
 class Connection(Element):
@@ -131,11 +131,11 @@ class Connection(Element):
         """
         return self.source_block.get_enabled() and self.sink_block.get_enabled()
 
-    @lazyproperty
+    @lazy_property
     def source_block(self):
         return self.source_port.parent_block
 
-    @lazyproperty
+    @lazy_property
     def sink_block(self):
         return self.sink_port.parent_block
 
