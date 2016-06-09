@@ -63,18 +63,18 @@ class Block(Element):
         Returns:
             block a new block
         """
-        Element.__init__(self, flow_graph)
+        Element.__init__(self, parent=flow_graph)
 
         self._name = n['name']
         self._key = n['key']
         self._category = n.get('category', '')
         self._flags = n.get('flags', '')
+        self._doc = n.get('doc', '').strip('\n').replace('\\\n', '')
 
         # Backwards compatibility
         if n.get('throttle') and BLOCK_FLAG_THROTTLE not in self._flags:
             self._flags += BLOCK_FLAG_THROTTLE
 
-        self._doc = n.get('doc', '').strip('\n').replace('\\\n', '')
         self._imports = [i.strip() for i in n.get('import', [])]
         self._make = n.get('make')
         self._var_make = n.get('var_make')
@@ -90,7 +90,6 @@ class Block(Element):
         sinks_n = n.get('sink', [])
 
         # Get list of param tabs
-        n_tabs = n.get('param_tab_order', {})
         self._param_tab_labels = n.get('param_tab_order', {}).get('tab') or [DEFAULT_PARAM_TAB]
         self._params = []
         self._init_params(
@@ -106,22 +105,12 @@ class Block(Element):
         self._epy_source_hash = -1  # for epy blocks
         self._epy_reload_error = None
 
-        self.back_ofthe_bus(self._sources)
-        self.back_ofthe_bus(self._sinks)
-        self.current_bus_structure = {'source': '', 'sink': ''}
-        self._bus_structure_source = n.get('bus_structure_source', '')
-        self._bus_structure_sink = n.get('bus_structure_sink', '')
-        self._bussify_sink = n.get('bus_sink')
-        self._bussify_source = n.get('bus_source')
-        if self._bussify_sink:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        if self._bussify_source:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+        self._init_bus_ports(n)
 
     def _add_param(self, key, name, value='', type='raw', **kwargs):
         n = {'key': key, 'name': name, 'value': value, 'type': type}
         n.update(kwargs)
-        param = self.get_parent().get_parent().Param(block=self, n=n)
+        param = self.parent_platform.Param(block=self, n=n)
         self._params.append(param)
 
     def _init_params(self, params_n, has_sources, has_sinks):
@@ -157,7 +146,7 @@ class Block(Element):
 
         param_keys = set(param.get_key() for param in self._params)
         for param_n in params_n:
-            param = self.get_parent().get_parent().Param(block=self, n=param_n)
+            param = self.parent_platform.Param(block=self, n=param_n)
             key = param.get_key()
             if key in param_keys:
                 raise Exception('Key "{}" already exists in params'.format(key))
@@ -168,7 +157,7 @@ class Block(Element):
                         value='', tab=ADVANCED_PARAM_TAB)
 
     def _init_ports(self, ports_n, direction):
-        port_cls = self.get_parent().get_parent().Port
+        port_cls = self.parent_platform.Port
         ports = []
         port_keys = set()
         for port_n in ports_n:
@@ -191,7 +180,7 @@ class Block(Element):
         for check in self._checks:
             check_res = self.resolve_dependencies(check)
             try:
-                if not self.get_parent().evaluate(check_res):
+                if not self.parent.evaluate(check_res):
                     self.add_error_message('Check "{}" failed.'.format(check))
             except:
                 self.add_error_message('Check "{}" did not evaluate.'.format(check))
@@ -201,12 +190,12 @@ class Block(Element):
             value = self._var_value
             try:
                 value = self.get_var_value()
-                self.get_parent().evaluate(value)
+                self.parent.evaluate(value)
             except Exception as err:
                 self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(value, err))
 
         # check if this is a GUI block and matches the selected generate option
-        current_generate_option = self.get_parent().get_option('generate_options')
+        current_generate_option = self.parent.get_option('generate_options')
 
         def check_generate_mode(label, flag, valid_options):
             block_requires_mode = (
@@ -237,14 +226,14 @@ class Block(Element):
                 num_ports = 1 + len(master_port.get_clones())
                 if master_port.get_hide():
                     for connection in master_port.get_connections():
-                        self.get_parent().remove_element(connection)
+                        self.parent.remove_element(connection)
                 if not nports and num_ports == 1:  # Not a master port and no left-over clones
                     continue
                 # Remove excess cloned ports
                 for port in master_port.get_clones()[nports-1:]:
                     # Remove excess connections
                     for connection in port.get_connections():
-                        self.get_parent().remove_element(connection)
+                        self.parent.remove_element(connection)
                     master_port.remove_clone(port)
                     ports.remove(port)
                 # Add more cloned ports
@@ -261,8 +250,7 @@ class Block(Element):
                 domain_specific_port_index[domain] += 1
 
     def get_doc(self):
-        platform = self.get_parent().get_parent()
-        documentation = platform.block_docstrings.get(self._key, {})
+        documentation = self.parent_platform.block_docstrings.get(self._key, {})
         from_xml = self._doc.strip()
         if from_xml:
             documentation[''] = from_xml
@@ -280,8 +268,8 @@ class Block(Element):
         """
         if raw:
             return self._imports
-        return [i for i in sum([self.resolve_dependencies(i).split('\n')
-                                for i in self._imports], []) if i]
+        return [i for i in sum((self.resolve_dependencies(i).split('\n')
+                                for i in self._imports), []) if i]
 
     def get_make(self, raw=False):
         if raw:
@@ -319,8 +307,8 @@ class Block(Element):
     ###########################################################################
 
     def rewrite_epy_block(self):
-        flowgraph = self.get_parent()
-        platform = flowgraph.get_parent()
+        flowgraph = self.parent_flowgraph
+        platform = self.parent_block
         param_blk = self.get_param('_io_cache')
         param_src = self.get_param('_source_code')
 
@@ -743,7 +731,7 @@ class Block(Element):
             return ''  # TODO: Don't like empty strings. should change this to None eventually
 
         try:
-            clean_bus_structure = self.get_parent().evaluate(bus_structure)
+            clean_bus_structure = self.parent.evaluate(bus_structure)
             return clean_bus_structure
         except:
             return ''
@@ -798,15 +786,13 @@ class Block(Element):
         if direc == 'source':
             get_p = self.get_sources
             get_p_gui = self.get_sources_gui
-            bus_structure = self.get_bus_structure('source')
         else:
             get_p = self.get_sinks
             get_p_gui = self.get_sinks_gui
-            bus_structure = self.get_bus_structure('sink')
 
         for elt in get_p():
             for connect in elt.get_connections():
-                self.get_parent().remove_element(connect)
+                self.parent.remove_element(connect)
 
         if ('bus' not in [a.get_type() for a in get_p()]) and len(get_p()) > 0:
             struct = self.form_bus_structure(direc)
@@ -817,9 +803,22 @@ class Block(Element):
             for i in range(len(struct)):
                 n['key'] = str(len(get_p()))
                 n = dict(n)
-                port = self.get_parent().get_parent().Port(block=self, n=n, dir=direc)
+                port = self.parent.parent.Port(block=self, n=n, dir=direc)
                 get_p().append(port)
         elif 'bus' in [a.get_type() for a in get_p()]:
             for elt in get_p_gui():
                 get_p().remove(elt)
             self.current_bus_structure[direc] = ''
+
+    def _init_bus_ports(self, n):
+        self.back_ofthe_bus(self._sources)
+        self.back_ofthe_bus(self._sinks)
+        self.current_bus_structure = {'source': '', 'sink': ''}
+        self._bus_structure_source = n.get('bus_structure_source', '')
+        self._bus_structure_sink = n.get('bus_structure_sink', '')
+        self._bussify_sink = n.get('bus_sink')
+        self._bussify_source = n.get('bus_source')
+        if self._bussify_sink:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+        if self._bussify_source:
+            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')

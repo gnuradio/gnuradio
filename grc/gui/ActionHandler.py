@@ -384,12 +384,11 @@ class ActionHandler:
         # Window stuff
         ##################################################
         elif action == Actions.ABOUT_WINDOW_DISPLAY:
-            platform = flow_graph.get_parent()
-            Dialogs.AboutDialog(platform.config)
+            Dialogs.AboutDialog(self.platform.config)
         elif action == Actions.HELP_WINDOW_DISPLAY:
             Dialogs.HelpDialog()
         elif action == Actions.TYPES_WINDOW_DISPLAY:
-            Dialogs.TypesDialog(flow_graph.get_parent())
+            Dialogs.TypesDialog(self.platform)
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(flow_graph)
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:

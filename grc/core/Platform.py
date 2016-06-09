@@ -68,10 +68,6 @@ class Platform(Element):
         self._block_dtd = Constants.BLOCK_DTD
         self._default_flow_graph = Constants.DEFAULT_FLOW_GRAPH
 
-        # Create a dummy flow graph for the blocks
-        self._flow_graph = Element(self)
-        self._flow_graph.connections = []
-
         self.blocks = {}
         self._blocks_n = {}
         self._category_trees_n = []
@@ -80,6 +76,10 @@ class Platform(Element):
 
         self._auto_hier_block_generate_chain = set()
 
+        # Create a dummy flow graph for the blocks
+        self._flow_graph = Element.__new__(FlowGraph)
+        Element.__init__(self._flow_graph, self)
+        self._flow_graph.connections = []
         self.load_blocks()
 
     def __str__(self):

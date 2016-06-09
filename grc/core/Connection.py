@@ -24,7 +24,7 @@ import collections
 from six.moves import range
 
 from . import Constants
-from .Element import Element
+from .Element import Element, lazyproperty
 
 
 class Connection(Element):
@@ -94,7 +94,7 @@ class Connection(Element):
         The ports must match in type.
         """
         Element.validate(self)
-        platform = self.get_parent().get_parent()
+        platform = self.parent_platform
 
         source_domain = self.source_port.get_domain()
         sink_domain = self.sink_port.get_domain()
@@ -131,13 +131,13 @@ class Connection(Element):
         """
         return self.source_block.get_enabled() and self.sink_block.get_enabled()
 
-    @property
+    @lazyproperty
     def source_block(self):
-        return self.source_port.get_parent()
+        return self.source_port.parent_block
 
-    @property
+    @lazyproperty
     def sink_block(self):
-        return self.sink_port.get_parent()
+        return self.sink_port.parent_block
 
     ##############################################
     # Import/Export Methods
@@ -171,6 +171,6 @@ class Connection(Element):
 
             for i in range(len(sources)):
                 try:
-                    self.get_parent().connect(sources[i], sinks[i])
+                    self.parent_flowgraph.connect(sources[i], sinks[i])
                 except:
                     pass

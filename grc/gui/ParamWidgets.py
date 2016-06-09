@@ -173,8 +173,7 @@ class PythonEditorParam(InputParam):
         self.pack_start(button, True)
 
     def open_editor(self, widget=None):
-        flowgraph = self.param.get_parent().get_parent()
-        flowgraph.install_external_editor(self.param)
+        self.param.parent_flowgraph.install_external_editor(self.param)
 
     def get_text(self):
         pass  # we never update the value from here
@@ -274,9 +273,8 @@ class FileParam(EntryParam):
         if self.param.get_key() == 'qt_qss_theme':
             dirname = os.path.dirname(dirname)  # trim filename
             if not os.path.exists(dirname):
-               platform = self.param.get_parent().get_parent().get_parent()
-               dirname = os.path.join(platform.config.install_prefix,
-                                      '/share/gnuradio/themes')
+               config = self.param.parent_platform.config
+               dirname = os.path.join(config.install_prefix, '/share/gnuradio/themes')
         if not os.path.exists(dirname):
             dirname = os.getcwd()  # fix bad paths
 

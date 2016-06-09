@@ -181,7 +181,7 @@ class Block(Element, _Block):
 
         # Show the flow graph complexity on the top block if enabled
         if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
-            complexity = calculate_flowgraph_complexity(self.get_parent())
+            complexity = calculate_flowgraph_complexity(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'
                 '<b>Complexity: {num}bal</b></span>'.format(num=num_to_str(complexity), font=BLOCK_FONT)
@@ -201,7 +201,7 @@ class Block(Element, _Block):
         width, height = layout.get_pixel_size()
         if width and height:
             padding = BLOCK_LABEL_PADDING
-            pixmap = self.get_parent().new_pixmap(width + 2 * padding,
+            pixmap = self.parent.new_pixmap(width + 2 * padding,
                                                   height + 2 * padding)
             gc = pixmap.new_gc()
             gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)

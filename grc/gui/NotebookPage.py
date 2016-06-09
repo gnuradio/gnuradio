@@ -49,7 +49,7 @@ class NotebookPage(Gtk.HBox):
         self.saved = True
 
         # import the file
-        initial_state = flow_graph.get_parent().parse_flow_graph(file_path)
+        initial_state = flow_graph.parent_platform.parse_flow_graph(file_path)
         flow_graph.import_data(initial_state)
         self.state_cache = StateCache(initial_state)
 
@@ -97,7 +97,7 @@ class NotebookPage(Gtk.HBox):
         Returns:
             generator
         """
-        platform = self.flow_graph.get_parent()
+        platform = self.flow_graph.parent_platform
         return platform.Generator(self.flow_graph, self.file_path)
 
     def _handle_button(self, button):

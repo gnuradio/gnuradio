@@ -67,8 +67,8 @@ class Port(_Port, Element):
         #get current rotation
         rotation = self.get_rotation()
         #get all sibling ports
-        ports = self.get_parent().get_sources_gui() \
-            if self.is_source else self.get_parent().get_sinks_gui()
+        ports = self.parent.get_sources_gui() \
+            if self.is_source else self.parent.get_sinks_gui()
         ports = [p for p in ports if not p.get_hide()]
         #get the max width
         self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
@@ -85,10 +85,10 @@ class Port(_Port, Element):
             index = len(ports)-index-1
 
         port_separation = PORT_SEPARATION \
-            if not self.get_parent().has_busses[self.is_source] \
+            if not self.parent.has_busses[self.is_source] \
             else max([port.H for port in ports]) + PORT_SPACING
 
-        offset = (self.get_parent().H - (len(ports)-1)*port_separation - self.H)/2
+        offset = (self.parent.H - (len(ports)-1)*port_separation - self.H)/2
         #create areas and connector coordinates
         if (self.is_sink and rotation == 0) or (self.is_source and rotation == 180):
             x = -W
@@ -96,7 +96,7 @@ class Port(_Port, Element):
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x-1, y+self.H/2)
         elif (self.is_source and rotation == 0) or (self.is_sink and rotation == 180):
-            x = self.get_parent().W
+            x = self.parent.W
             y = port_separation*index+offset
             self.add_area((x, y), (W, self.H))
             self._connector_coordinate = (x+1+W, y+self.H/2)
@@ -106,7 +106,7 @@ class Port(_Port, Element):
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y-1)
         elif (self.is_sink and rotation == 90) or (self.is_source and rotation == 270):
-            y = self.get_parent().W
+            y = self.parent.W
             x = port_separation*index+offset
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y+1+W)
@@ -125,7 +125,7 @@ class Port(_Port, Element):
         """
         border_color = (
             Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
-            Colors.MISSING_BLOCK_BORDER_COLOR if self.get_parent().is_dummy_block else
+            Colors.MISSING_BLOCK_BORDER_COLOR if self.parent.is_dummy_block else
             Colors.BORDER_COLOR
         )
         Element.draw(self, widget, cr, border_color, self._bg_color)
@@ -186,7 +186,7 @@ class Port(_Port, Element):
         Returns:
             the parent's rotation
         """
-        return self.get_parent().get_rotation()
+        return self.parent.get_rotation()
 
     def move(self, delta_coor):
         """
@@ -195,7 +195,7 @@ class Port(_Port, Element):
         Args:
             delta_corr: the (delta_x, delta_y) tuple
         """
-        self.get_parent().move(delta_coor)
+        self.parent.move(delta_coor)
 
     def rotate(self, direction):
         """
@@ -204,7 +204,7 @@ class Port(_Port, Element):
         Args:
             direction: degrees to rotate
         """
-        self.get_parent().rotate(direction)
+        self.parent.rotate(direction)
 
     def get_coordinate(self):
         """
@@ -213,7 +213,7 @@ class Port(_Port, Element):
         Returns:
             the parents coordinate
         """
-        return self.get_parent().get_coordinate()
+        return self.parent.get_coordinate()
 
     def set_highlighted(self, highlight):
         """
@@ -222,7 +222,7 @@ class Port(_Port, Element):
         Args:
             highlight: true to enable highlighting
         """
-        self.get_parent().set_highlighted(highlight)
+        self.parent.set_highlighted(highlight)
 
     def is_highlighted(self):
         """
@@ -231,7 +231,7 @@ class Port(_Port, Element):
         Returns:
             the parent's highlighting status
         """
-        return self.get_parent().is_highlighted()
+        return self.parent.is_highlighted()
 
     def _label_hidden(self):
         """

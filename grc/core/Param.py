@@ -84,7 +84,7 @@ class Option(Element):
         self._opts = dict()
         opts = n.get('opt', [])
         # Test against opts when non enum
-        if not self.get_parent().is_enum() and opts:
+        if not self.parent.is_enum() and opts:
             raise Exception('Options for non-enum types cannot have sub-options')
         # Extract opts
         for opt in opts:
@@ -304,17 +304,17 @@ class Param(Element):
         Returns:
             hide the hide property string
         """
-        hide = self.get_parent().resolve_dependencies(self._hide).strip()
+        hide = self.parent.resolve_dependencies(self._hide).strip()
         if hide:
             return hide
         # Hide ID in non variable blocks
-        if self.get_key() == 'id' and not _show_id_matcher.match(self.get_parent().get_key()):
+        if self.get_key() == 'id' and not _show_id_matcher.match(self.parent.get_key()):
             return 'part'
         # Hide port controllers for type and nports
-        if self.get_key() in ' '.join([' '.join([p._type, p._nports]) for p in self.get_parent().get_ports()]):
+        if self.get_key() in ' '.join([' '.join([p._type, p._nports]) for p in self.parent.get_ports()]):
             return 'part'
         # Hide port controllers for vlen, when == 1
-        if self.get_key() in ' '.join(p._vlen for p in self.get_parent().get_ports()):
+        if self.get_key() in ' '.join(p._vlen for p in self.parent.get_ports()):
             try:
                 if int(self.get_evaluated()) == 1:
                     return 'part'
@@ -369,7 +369,7 @@ class Param(Element):
         elif t in ('raw', 'complex', 'real', 'float', 'int', 'hex', 'bool'):
             # Raise exception if python cannot evaluate this value
             try:
-                e = self.get_parent().get_parent().evaluate(v)
+                e = self.parent_flowgraph.evaluate(v)
             except Exception as e:
                 raise Exception('Value "{}" cannot be evaluated:\n{}'.format(v, e))
             # Raise an exception if the data is invalid
@@ -404,7 +404,7 @@ class Param(Element):
                 v = '()'
             # Raise exception if python cannot evaluate this value
             try:
-                e = self.get_parent().get_parent().evaluate(v)
+                e = self.parent.parent.evaluate(v)
             except Exception as e:
                 raise Exception('Value "{}" cannot be evaluated:\n{}'.format(v, e))
             # Raise an exception if the data is invalid
@@ -435,7 +435,7 @@ class Param(Element):
         elif t in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
             # Do not check if file/directory exists, that is a runtime issue
             try:
-                e = self.get_parent().get_parent().evaluate(v)
+                e = self.parent.parent.evaluate(v)
                 if not isinstance(e, str):
                     raise Exception()
             except:
@@ -466,16 +466,16 @@ class Param(Element):
         elif t == 'stream_id':
             # Get a list of all stream ids used in the virtual sinks
             ids = [param.get_value() for param in filter(
-                lambda p: p.get_parent().is_virtual_sink(),
+                lambda p: p.parent.is_virtual_sink(),
                 self.get_all_params(t),
             )]
             # Check that the virtual sink's stream id is unique
-            if self.get_parent().is_virtual_sink():
+            if self.parent.is_virtual_sink():
                 # Id should only appear once, or zero times if block is disabled
                 if ids.count(v) > 1:
                     raise Exception('Stream ID "{}" is not unique.'.format(v))
             # Check that the virtual source's steam id is found
-            if self.get_parent().is_virtual_source():
+            if self.parent.is_virtual_source():
                 if v not in ids:
                     raise Exception('Stream ID "{}" is not found.'.format(v))
             return v
@@ -523,7 +523,7 @@ class Param(Element):
             if not v:
                 # Allow for empty grid pos
                 return ''
-            e = self.get_parent().get_parent().evaluate(v)
+            e = self.parent_flowgraph.evaluate(v)
             if not isinstance(e, (list, tuple)) or len(e) != 4 or not all([isinstance(ei, int) for ei in e]):
                 raise Exception('A grid position must be a list of 4 integers.')
             row, col, row_span, col_span = e
@@ -535,7 +535,7 @@ class Param(Element):
                 raise Exception('Row and column span must be greater than zero.')
             # Get hostage cell parent
             try:
-                my_parent = self.get_parent().get_param('notebook').evaluate()
+                my_parent = self.parent.get_param('notebook').evaluate()
             except:
                 my_parent = ''
             # Calculate hostage cells
@@ -558,7 +558,7 @@ class Param(Element):
                 return ''
 
             # Get a list of all notebooks
-            notebook_blocks = [b for b in self.get_parent().get_parent().get_enabled_blocks() if b.get_key() == 'notebook']
+            notebook_blocks = [b for b in self.parent_flowgraph.get_enabled_blocks() if b.get_key() == 'notebook']
             # Check for notebook param syntax
             try:
                 notebook_id, page_index = map(str.strip, v.split(','))
@@ -634,7 +634,7 @@ class Param(Element):
             a list of params
         """
         params = []
-        for block in self.get_parent().get_parent().get_enabled_blocks():
+        for block in self.parent_flowgraph.get_enabled_blocks():
             params.extend(p for p in block.get_params() if p.get_type() == type)
         return params
 
@@ -658,13 +658,13 @@ class Param(Element):
         self._default = str(value)
 
     def get_type(self):
-        return self.get_parent().resolve_dependencies(self._type)
+        return self.parent.resolve_dependencies(self._type)
 
     def get_tab_label(self):
         return self._tab_label
 
     def get_name(self):
-        return self.get_parent().resolve_dependencies(self._name).strip()
+        return self.parent.resolve_dependencies(self._name).strip()
 
     def get_key(self):
         return self._key

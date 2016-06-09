@@ -117,7 +117,7 @@ class FlowGraphProxy(object):
             # using the block param 'type' instead of the port domain here
             # to emphasize that hier block generation is domain agnostic
             is_message_pad = pad.get_param('type').get_evaluated() == "message"
-            if port.get_parent() == pad:
+            if port.parent == pad:
                 if is_message_pad:
                     key = pad.get_param('label').get_value()
                 else:

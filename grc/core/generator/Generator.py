@@ -175,7 +175,7 @@ class TopBlockGenerator(object):
         for connection in virtual:
             source = connection.source.resolve_virtual_source()
             sink = connection.sink_port
-            resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
+            resolved = fg.parent.Connection(flow_graph=fg, porta=source, portb=sink)
             connections.append(resolved)
             # Remove the virtual connection
             connections.remove(connection)
@@ -202,7 +202,7 @@ class TopBlockGenerator(object):
                     # Ignore disabled connections
                     continue
                 sink_port = sink.sink_port
-                connection = fg.get_parent().Connection(flow_graph=fg, porta=source_port, portb=sink_port)
+                connection = fg.parent.Connection(flow_graph=fg, porta=source_port, portb=sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)
@@ -215,7 +215,7 @@ class TopBlockGenerator(object):
             c.source_block.get_id(), c.sink_block.get_id()
         ))
 
-        connection_templates = fg.get_parent().connection_templates
+        connection_templates = fg.parent.connection_templates
         msgs = [c for c in fg.get_enabled_connections() if c.is_msg()]
 
         # List of variable names
@@ -265,9 +265,8 @@ class HierBlockGenerator(TopBlockGenerator):
             file_path: where to write the py file (the xml goes into HIER_BLOCK_LIB_DIR)
         """
         TopBlockGenerator.__init__(self, flow_graph, file_path)
-        platform = flow_graph.get_parent()
 
-        hier_block_lib_dir = platform.config.hier_block_lib_dir
+        hier_block_lib_dir = flow_graph.parent_platform.config.hier_block_lib_dir
         if not os.path.exists(hier_block_lib_dir):
             os.mkdir(hier_block_lib_dir)
 

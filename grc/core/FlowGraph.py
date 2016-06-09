@@ -54,25 +54,20 @@ class FlowGraph(Element):
             the flow graph object
         """
         Element.__init__(self, platform)
-        self._elements = []
         self._timestamp = time.ctime()
+        self._options_block = self.parent_platform.get_new_block(self, 'options')
 
-        self.platform = platform  # todo: make this a lazy prop
-        self.blocks = []
+        self.blocks = [self._options_block]
         self.connections = []
 
         self._eval_cache = {}
         self.namespace = {}
 
         self.grc_file_path = ''
-        self._options_block = self.new_block('options')
 
     def __str__(self):
         return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
 
-    ##############################################
-    # TODO: Move these to new generator package
-    ##############################################
     def get_imports(self):
         """
         Get a set of all import statements in this flow graph namespace.
@@ -199,19 +194,6 @@ class FlowGraph(Element):
         raise KeyError('No block with ID {!r}'.format(id))
 
     def get_elements(self):
-        """
-        Get a list of all the elements.
-        Always ensure that the options block is in the list (only once).
-
-        Returns:
-            the element list
-        """
-        options_block_count = self.blocks.count(self._options_block)
-        if not options_block_count:
-            self.blocks.append(self._options_block)
-        for _ in range(options_block_count-1):
-            self.blocks.remove(self._options_block)
-
         return self.blocks + self.connections
 
     get_children = get_elements
@@ -220,7 +202,6 @@ class FlowGraph(Element):
         """
         Flag the namespace to be renewed.
         """
-
         self.renew_namespace()
         for child in chain(self.blocks, self.connections):
             child.rewrite()
@@ -297,8 +278,10 @@ class FlowGraph(Element):
         Returns:
             the new block or None if not found
         """
+        if key == 'options':
+            return self._options_block
         try:
-            block = self.platform.get_new_block(self, key)
+            block = self.parent_platform.get_new_block(self, key)
             self.blocks.append(block)
         except KeyError:
             block = None
@@ -317,7 +300,7 @@ class FlowGraph(Element):
             the new connection
         """
 
-        connection = self.platform.Connection(
+        connection = self.parent_platform.Connection(
             flow_graph=self, porta=porta, portb=portb)
         self.connections.append(connection)
         return connection
@@ -329,9 +312,12 @@ class FlowGraph(Element):
         If the element is a block, remove its connections.
         If the element is a connection, just remove the connection.
         """
+        if element is self._options_block:
+            return
+
         if element.is_port:
             # Found a port, set to parent signal block
-            element = element.get_parent()
+            element = element.parent
 
         if element in self.blocks:
             # Remove block, remove all involved connections
@@ -370,7 +356,7 @@ class FlowGraph(Element):
         n['block'] = [b.export_data() for b in blocks]
         n['connection'] = [c.export_data() for c in connections]
         instructions = collections.OrderedDict()
-        instructions['created'] = '.'.join(self.get_parent().config.version_parts)
+        instructions['created'] = '.'.join(self.parent.config.version_parts)
         instructions['format'] = FLOW_GRAPH_FILE_FORMAT_VERSION
         return {'flow_graph': n, '_instructions': instructions}
 
@@ -397,22 +383,22 @@ class FlowGraph(Element):
         self._timestamp = fg_n.get('timestamp', time.ctime())
 
         # build the blocks
-        self._options_block = self.new_block('options')
+        self.blocks.append(self._options_block)
         for block_n in fg_n.get('block', []):
             key = block_n['key']
-            block = self._options_block if key == 'options' else self.new_block(key)
+            block = self.new_block(key)
 
             if not block:
                 # we're before the initial fg update(), so no evaluated values!
                 # --> use raw value instead
                 path_param = self._options_block.get_param('hier_block_src_path')
-                file_path = self.platform.find_file_in_paths(
+                file_path = self.parent_platform.find_file_in_paths(
                     filename=key + '.grc',
                     paths=path_param.get_value(),
                     cwd=self.grc_file_path
                 )
                 if file_path:  # grc file found. load and get block
-                    self.platform.load_and_generate_flow_graph(file_path)
+                    self.parent_platform.load_and_generate_flow_graph(file_path)
                     block = self.new_block(key)  # can be None
 
             if not block:  # looks like this block key cannot be found
@@ -488,22 +474,22 @@ class FlowGraph(Element):
 
                 if 'bus' in [a.get_type() for a in get_p_gui()]:
                     if len(get_p_gui()) > len(bus_structure):
-                        times = list(range(len(bus_structure), len(get_p_gui())))
+                        times = range(len(bus_structure), len(get_p_gui()))
                         for i in times:
                             for connect in get_p_gui()[-1].get_connections():
-                                block.get_parent().remove_element(connect)
+                                block.parent.remove_element(connect)
                             get_p().remove(get_p_gui()[-1])
                     elif len(get_p_gui()) < len(bus_structure):
                         n = {'name': 'bus', 'type': 'bus'}
                         if any(isinstance(a.get_nports(), int) for a in get_p()):
                             n['nports'] = str(1)
 
-                        times = list(range(len(get_p_gui()), len(bus_structure)))
+                        times = range(len(get_p_gui()), len(bus_structure))
 
                         for i in times:
                             n['key'] = str(len(get_p()))
                             n = dict(n)
-                            port = block.get_parent().get_parent().Port(
+                            port = block.parent.parent.Port(
                                 block=block, n=n, dir=direc)
                             get_p().append(port)
 
@@ -576,14 +562,14 @@ def _initialize_dummy_block(block, block_n):
     for param_n in block_n.get('param', []):
         if param_n['key'] not in block.get_param_keys():
             new_param_n = {'key': param_n['key'], 'name': param_n['key'], 'type': 'string'}
-            params = block.get_parent().get_parent().Param(block=block, n=new_param_n)
+            params = block.parent_platform.Param(block=block, n=new_param_n)
             block.get_params().append(params)
 
 
 def _dummy_block_add_port(block, key, dir):
     """ This is so ugly... Add a port to a dummy-field block """
     port_n = {'name': '?', 'key': key, 'type': ''}
-    port = block.get_parent().get_parent().Port(block=block, n=port_n, dir=dir)
+    port = block.parent_platform.Port(block=block, n=port_n, dir=dir)
     if port.is_source:
         block.get_sources().append(port)
     else:

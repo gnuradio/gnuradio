@@ -17,11 +17,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import weakref
+
+
+class lazyproperty(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, cls):
+        if instance is None:
+            return self
+        else:
+            value = self.func(instance)
+            setattr(instance, self.func.__name__, value)
+            return value
+
 
 class Element(object):
 
     def __init__(self, parent=None):
-        self._parent = parent
+        self._parent = weakref.ref(parent) if parent else lambda: None
         self._error_messages = []
 
     ##################################################
@@ -33,6 +48,7 @@ class Element(object):
         Call this base method before adding error messages in the subclass.
         """
         del self._error_messages[:]
+
         for child in self.get_children():
             child.validate()
 
@@ -88,8 +104,40 @@ class Element(object):
     ##############################################
     # Tree-like API
     ##############################################
-    def get_parent(self):
-        return self._parent
+    @property
+    def parent(self):
+        return self._parent()
+
+    def get_parent_of_type(self, cls):
+        parent = self.parent
+        if parent is None:
+            return None
+        elif isinstance(parent, cls):
+            return parent
+        else:
+            return parent.get_parent_of_type(cls)
+
+    @lazyproperty
+    def parent_platform(self):
+        from .Platform import Platform
+        return self.get_parent_of_type(Platform)
+
+    @lazyproperty
+    def parent_flowgraph(self):
+        from .FlowGraph import FlowGraph
+        return self.get_parent_of_type(FlowGraph)
+
+    @lazyproperty
+    def parent_block(self):
+        from .Block import Block
+        return self.get_parent_of_type(Block)
+
+    def reset_parents(self):
+        """Reset all lazy properties"""
+        # todo: use case?
+        for name, obj in vars(Element):
+            if isinstance(obj, lazyproperty):
+                delattr(self, name)
 
     def get_children(self):
         return list()

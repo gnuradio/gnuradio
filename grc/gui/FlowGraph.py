@@ -88,12 +88,12 @@ class FlowGraph(Element, _Flowgraph):
         return block_id
 
     def install_external_editor(self, param):
-        target = (param.get_parent().get_id(), param.get_key())
+        target = (param.parent_block.get_id(), param.get_key())
 
         if target in self._external_updaters:
             editor = self._external_updaters[target]
         else:
-            config = self.get_parent().config
+            config = self.parent_platform.config
             editor = (find_executable(config.editor) or
                       Dialogs.ChooseEditorDialog(config))
             if not editor:
@@ -112,7 +112,7 @@ class FlowGraph(Element, _Flowgraph):
             # Problem launching the editor. Need to select a new editor.
             Messages.send('>>> Error opening an external editor. Please select a different editor.\n')
             # Reset the editor to force the user to select a new one.
-            self.get_parent().config.editor = ''
+            self.parent_platform.config.editor = ''
 
     def handle_external_editor_change(self, new_value, target):
         try:
@@ -452,9 +452,9 @@ class FlowGraph(Element, _Flowgraph):
         for selected in selected_elements:
             if selected in elements: continue
             selected_elements.remove(selected)
-        if self._old_selected_port and self._old_selected_port.get_parent() not in elements:
+        if self._old_selected_port and self._old_selected_port.parent not in elements:
             self._old_selected_port = None
-        if self._new_selected_port and self._new_selected_port.get_parent() not in elements:
+        if self._new_selected_port and self._new_selected_port.parent not in elements:
             self._new_selected_port = None
         #update highlighting
         for element in elements:
@@ -532,7 +532,7 @@ class FlowGraph(Element, _Flowgraph):
             #update the selected port information
             if selected_element.is_port:
                 if not coor_m: selected_port = selected_element
-                selected_element = selected_element.get_parent()
+                selected_element = selected_element.parent_block
             selected.add(selected_element)
             #place at the end of the list
             self.get_elements().remove(element)

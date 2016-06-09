@@ -62,7 +62,7 @@ class Param(Element, _Param):
         return input_widget_cls(self, *args, **kwargs)
 
     def format_label_markup(self, have_pending_changes=False):
-        block = self.get_parent()
+        block = self.parent
         # fixme: using non-public attribute here
         has_callback = \
             hasattr(block, 'get_callbacks') and \

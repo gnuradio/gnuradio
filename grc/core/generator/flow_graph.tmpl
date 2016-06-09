@@ -241,11 +241,11 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 ##  However, port names for IO pads should be self.
 ########################################################
 #def make_port_sig($port)
-    #if $port.get_parent().get_key() in ('pad_source', 'pad_sink')
+    #if $port.parent.get_key() in ('pad_source', 'pad_sink')
         #set block = 'self'
         #set key = $flow_graph.get_pad_port_global_key($port)
     #else
-        #set block = 'self.' + $port.get_parent().get_id()
+        #set block = 'self.' + $port.parent.get_id()
         #set key = $port.get_key()
     #end if
     #if not $key.isdigit()

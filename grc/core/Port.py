@@ -43,7 +43,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
     Recursively resolve source ports over the virtual connections.
     Keep track of traversed sources to avoid recursive loops.
     """
-    if not vsp.get_parent().is_virtual_source():
+    if not vsp.parent.is_virtual_source():
         return vsp
     if vsp in traversed:
         raise Exception('Loop found when resolving virtual source {}'.format(vsp))
@@ -51,10 +51,10 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
         return _get_source_from_virtual_source_port(
             _get_source_from_virtual_sink_port(
                 list(filter(  # Get all virtual sinks with a matching stream id
-                    lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
+                    lambda vs: vs.get_param('stream_id').get_value() == vsp.parent.get_param('stream_id').get_value(),
                     list(filter(  # Get all enabled blocks that are also virtual sinks
                         lambda b: b.is_virtual_sink(),
-                        vsp.get_parent().get_parent().get_enabled_blocks(),
+                        vsp.parent.parent.get_enabled_blocks(),
                     )),
                 ))[0].get_sinks()[0]
             ), traversed + [vsp],
@@ -81,7 +81,7 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
     Recursively resolve sink ports over the virtual connections.
     Keep track of traversed sinks to avoid recursive loops.
     """
-    if not vsp.get_parent().is_virtual_sink():
+    if not vsp.parent.is_virtual_sink():
         return vsp
     if vsp in traversed:
         raise Exception('Loop found when resolving virtual sink {}'.format(vsp))
@@ -89,10 +89,10 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
         return _get_sink_from_virtual_sink_port(
             _get_sink_from_virtual_source_port(
                 filter(  # Get all virtual source with a matching stream id
-                    lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
+                    lambda vs: vs.get_param('stream_id').get_value() == vsp.parent.get_param('stream_id').get_value(),
                     list(filter(  # Get all enabled blocks that are also virtual sinks
                         lambda b: b.is_virtual_source(),
-                        vsp.get_parent().get_parent().get_enabled_blocks(),
+                        vsp.parent.parent.get_enabled_blocks(),
                     )),
                 )[0].get_sources()[0]
             ), traversed + [vsp],
@@ -160,7 +160,7 @@ class Port(Element):
         Element.validate(self)
         if self.get_type() not in self.get_types():
             self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
-        platform = self.get_parent().get_parent().get_parent()
+        platform = self.parent.parent.parent
         if self.get_domain() not in platform.domains:
             self.add_error_message('Domain key "{}" is not registered.'.format(self.get_domain()))
         if not self.get_enabled_connections() and not self.get_optional():
@@ -188,7 +188,7 @@ class Port(Element):
                 self._vlen = ''
 
         Element.rewrite(self)
-        hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
+        hide = self.parent.resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
 
         # Update domain if was deduced from (dynamic) port type
@@ -201,9 +201,9 @@ class Port(Element):
             self._key = '0'  # Is rectified in rewrite()
 
     def resolve_virtual_source(self):
-        if self.get_parent().is_virtual_sink():
+        if self.parent.is_virtual_sink():
             return _get_source_from_virtual_sink_port(self)
-        if self.get_parent().is_virtual_source():
+        if self.parent.is_virtual_source():
             return _get_source_from_virtual_source_port(self)
 
     def resolve_empty_type(self):
@@ -236,9 +236,9 @@ class Port(Element):
         Returns:
             the vector length or 1
         """
-        vlen = self.get_parent().resolve_dependencies(self._vlen)
+        vlen = self.parent.resolve_dependencies(self._vlen)
         try:
-            return int(self.get_parent().get_parent().evaluate(vlen))
+            return int(self.parent.parent.evaluate(vlen))
         except:
             return 1
 
@@ -254,9 +254,9 @@ class Port(Element):
         if self._nports == '':
             return ''
 
-        nports = self.get_parent().resolve_dependencies(self._nports)
+        nports = self.parent.resolve_dependencies(self._nports)
         try:
-            return max(1, int(self.get_parent().get_parent().evaluate(nports)))
+            return max(1, int(self.parent.parent.evaluate(nports)))
         except:
             return 1
 
@@ -325,7 +325,7 @@ class Port(Element):
         n['key'] = '99999' if self._key.isdigit() else n['name']
 
         # Clone
-        port = self.__class__(self.get_parent(), n, self._dir)
+        port = self.__class__(self.parent, n, self._dir)
         self._clones.append(port)
         return port
 
@@ -345,7 +345,7 @@ class Port(Element):
     def get_name(self):
         number = ''
         if self.get_type() == 'bus':
-            busses = [a for a in self.get_parent().get_ports_gui() if a._dir == self._dir]
+            busses = [a for a in self.parent.get_ports_gui() if a._dir == self._dir]
             number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
         return self._name + number
 
@@ -361,7 +361,7 @@ class Port(Element):
         return self._dir == 'source'
 
     def get_type(self):
-        return self.get_parent().resolve_dependencies(self._type)
+        return self.parent_block.resolve_dependencies(self._type)
 
     def get_domain(self):
         return self._domain
@@ -376,7 +376,7 @@ class Port(Element):
         Returns:
             a list of connection objects
         """
-        connections = self.get_parent().get_parent().connections
+        connections = self.parent_flowgraph.connections
         connections = [c for c in connections if c.source_port is self or c.sink_port is self]
         return connections
 
@@ -393,12 +393,13 @@ class Port(Element):
         if not self.get_type() == 'bus':
             return [self]
         else:
+            flowgraph = self.parent_flowgraph
             if self.is_source:
-                get_ports = self.get_parent().get_sources
-                bus_structure = self.get_parent().current_bus_structure['source']
+                get_ports = flowgraph.get_sources
+                bus_structure = flowgraph.current_bus_structure['source']
             else:
-                get_ports = self.get_parent().get_sinks
-                bus_structure = self.get_parent().current_bus_structure['sink']
+                get_ports = flowgraph.get_sinks
+                bus_structure = flowgraph.current_bus_structure['sink']
 
             ports = [i for i in get_ports() if not i.get_type() == 'bus']
             if bus_structure:
