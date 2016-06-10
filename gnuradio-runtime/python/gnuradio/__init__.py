@@ -38,7 +38,6 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-audio', 'python'))
     __path__.append(os.path.join(build_path, 'gr-qtgui', 'python'))
     __path__.append(os.path.join(build_path, 'gr-wxgui', 'python'))
-    __path__.append(os.path.join(build_path, 'gr-pager', 'python'))
     __path__.append(os.path.join(build_path, 'gr-video-sdl', 'python'))
     __path__.append(os.path.join(build_path, 'gr-vocoder', 'python'))
     __path__.append(os.path.join(build_path, 'gr-comedi', 'python'))
