@@ -105,8 +105,11 @@ namespace gr {
     {
         const gr_complex* in = (const gr_complex*) input_items[0];
         gr_complex* out = (gr_complex*) output_items[0];
+        std::vector<gr_complex> ftaps;
+        d_fader.next_samples(ftaps, noutput_items);
         for(int i=0; i<noutput_items; i++){
-            out[i] = in[i] * d_fader.next_sample();
+            out[i] = in[i] * ftaps[i];
+            //out[i] = in[i] * d_fader.next_sample();
         }
         return noutput_items;
     }

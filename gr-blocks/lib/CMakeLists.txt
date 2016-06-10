@@ -32,7 +32,7 @@ GR_EXPAND_X_CC_H_IMPL(blocks add_const_vXX      bb ss ii ff cc)
 GR_EXPAND_X_CC_H_IMPL(blocks and_XX             bb ss ii)
 GR_EXPAND_X_CC_H_IMPL(blocks and_const_XX       bb ss ii)
 GR_EXPAND_X_CC_H_IMPL(blocks argmax_XX          fs is ss)
-GR_EXPAND_X_CC_H_IMPL(blocks divide_XX          ss ii ff cc)
+GR_EXPAND_X_CC_H_IMPL(blocks divide_XX          ss ii)
 GR_EXPAND_X_CC_H_IMPL(blocks integrate_XX       ss ii ff cc)
 GR_EXPAND_X_CC_H_IMPL(blocks max_XX             ss ii ff)
 GR_EXPAND_X_CC_H_IMPL(blocks min_XX             ss ii ff)
@@ -112,6 +112,8 @@ list(APPEND gr_blocks_sources
     conjugate_cc_impl.cc
     copy_impl.cc
     deinterleave_impl.cc
+    divide_cc_impl.cc
+    divide_ff_impl.cc
     delay_impl.cc
     endian_swap_impl.cc
     file_descriptor_sink_impl.cc
