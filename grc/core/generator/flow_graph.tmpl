@@ -351,7 +351,7 @@ def argument_parser():
         "$make_short_id($param)", #slurp
         #end if
         "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type=$type, default=$make_default($type, $param),
-        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
+        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%(default)r]")
         #end if
     #end for
     return parser
