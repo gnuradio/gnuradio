@@ -29,8 +29,6 @@
 namespace gr {
   namespace uhd {
 
-    static const size_t ALL_CHANS = ::uhd::usrp::multi_usrp::ALL_CHANS;
-
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
 		    const ::uhd::io_type_t &io_type,
@@ -64,9 +62,9 @@ namespace gr {
     usrp_sink_impl::usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
                                    const ::uhd::stream_args_t &stream_args,
                                    const std::string &length_tag_name)
-      : usrp_block("gr uhd usrp sink",
-                      args_to_io_sig(stream_args),
-                      io_signature::make(0, 0, 0)),
+      : usrp_block("usrp_sink",
+                   args_to_io_sig(stream_args),
+                   io_signature::make(0, 0, 0)),
         usrp_block_impl(device_addr, stream_args, length_tag_name),
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
         _nitems_to_send(0)

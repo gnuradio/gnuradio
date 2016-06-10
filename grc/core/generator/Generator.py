@@ -144,16 +144,16 @@ class TopBlockGenerator(object):
                 pass
             return code
 
-        blocks = expr_utils.sort_objects(
+        blocks_all = expr_utils.sort_objects(
             [b for b in fg.blocks if b.get_enabled() and not b.get_bypassed()],
             operator.methodcaller('get_id'), _get_block_sort_text
         )
-        deprecated_block_keys = set(block.get_name() for block in blocks if block.is_deprecated)
+        deprecated_block_keys = set(b.get_name() for b in blocks_all if b.is_deprecated)
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
         # List of regular blocks (all blocks minus the special ones)
-        blocks = [b for b in blocks if b not in imports and b not in parameters]
+        blocks = [b for b in blocks_all if b not in imports and b not in parameters]
 
         for block in blocks:
             key = block.get_key()
@@ -220,18 +220,20 @@ class TopBlockGenerator(object):
 
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
-        # Prepend self.
-        replace_dict = dict([(var_id, 'self.%s' % var_id) for var_id in var_ids])
-        # List of callbacks
-        callbacks = [
-            expr_utils.expr_replace(cb, replace_dict)
-            for cb in sum([block.get_callbacks() for block in fg.get_enabled_blocks()], [])
-            ]
+        replace_dict = dict((var_id, 'self.' + var_id) for var_id in var_ids)
+        callbacks_all = []
+        for block in blocks_all:
+            callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_callbacks())
+
         # Map var id to callbacks
-        var_id2cbs = dict([
-            (var_id, [c for c in callbacks if expr_utils.get_variable_dependencies(c, [var_id])])
-            for var_id in var_ids
-        ])
+        def uses_var_id():
+            used = expr_utils.get_variable_dependencies(callback, [var_id])
+            return used and 'self.' + var_id in callback  # callback might contain var_id itself
+
+        callbacks = {}
+        for var_id in var_ids:
+            callbacks[var_id] = [callback for callback in callbacks_all if uses_var_id()]
+
         # Load the namespace
         namespace = {
             'title': title,
@@ -245,7 +247,7 @@ class TopBlockGenerator(object):
             'connection_templates': connection_templates,
             'msgs': msgs,
             'generate_options': self._generate_options,
-            'var_id2cbs': var_id2cbs,
+            'callbacks': callbacks,
         }
         # Build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
@@ -265,8 +267,9 @@ class HierBlockGenerator(TopBlockGenerator):
             file_path: where to write the py file (the xml goes into HIER_BLOCK_LIB_DIR)
         """
         TopBlockGenerator.__init__(self, flow_graph, file_path)
+        platform = flow_graph.parent
 
-        hier_block_lib_dir = flow_graph.parent_platform.config.hier_block_lib_dir
+        hier_block_lib_dir = platform.config.hier_block_lib_dir
         if not os.path.exists(hier_block_lib_dir):
             os.mkdir(hier_block_lib_dir)
 

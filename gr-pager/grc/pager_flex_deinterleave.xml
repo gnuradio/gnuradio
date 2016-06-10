@@ -7,7 +7,7 @@
 <block>
 	<name>FLEX Deinterleave</name>
 	<key>pager_flex_deinterleave</key>
-	<category>Pager</category>
+	<category>[Core]/Pager</category>
 	<import>from gnuradio import pager</import>
 	<make>pager.flex_deinterleave()</make>
 

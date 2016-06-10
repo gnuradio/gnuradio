@@ -1,4 +1,4 @@
-# Copyright 2010-2015 Free Software Foundation, Inc.
+# Copyright 2010-2012,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -45,20 +45,47 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
-set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 10)
-set(VERSION_INFO_MAINT_VERSION git)
+set(VERSION_INFO_API_COMPAT    8)
+set(VERSION_INFO_MINOR_VERSION git)
+set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
-# Append -O2 optimization flag for Debug builds
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+# Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
+IF (NOT MSVC)
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
+    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+ENDIF()
+
+# Set C/C++ standard for all targets
+# NOTE: Starting with cmake v3.1 this should be used:
+# set(CMAKE_C_STANDARD 90)
+# set(CMAKE_CXX_STANDARD 98)
+
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ELSE()
+    message(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
+IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+ELSE()
+    message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
 
 ########################################################################
 # Environment setup
 ########################################################################
 IF(NOT DEFINED BOOST_ROOT)
-    SET(BOOST_ROOT ${CMAKE_INSTALL_PREFIX})
+    SET(BOOST_ROOT "${CMAKE_INSTALL_PREFIX}")
 ENDIF()
 
 ########################################################################
@@ -120,6 +147,9 @@ IF(MSVC)
     ELSE(MSVC12) #Visual Studio 12
         SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 12.0")
+    ELSE(MSVC14) #Visual Studio 14
+        SET(cmake_c_compiler_version "Microsoft Visual Studio 14.0")
+        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 14.0")
     ENDIF()
 ELSE()
     execute_process(COMMAND ${CMAKE_C_COMPILER} --version
@@ -158,7 +188,7 @@ set(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTG
 # Set location of config/prefs files in /etc
 # Special exception if prefix is /usr so we don't make a /usr/etc.
 set(GR_CONF_DIR etc CACHE PATH "Path to install config files")
-string(COMPARE EQUAL ${CMAKE_INSTALL_PREFIX} "/usr" isusr)
+string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
 if(isusr)
   set(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 else(isusr)
@@ -323,6 +353,9 @@ if(NOT VOLK_FOUND)
 
     set(VOLK_LIBRARIES volk)
 
+    set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+    set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+
     if(ENABLE_VOLK)
 
         include(GrPackage)
@@ -344,6 +377,9 @@ if(NOT VOLK_FOUND)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
+
+    get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
+    set(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
 endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
@@ -389,11 +425,9 @@ add_subdirectory(gr-filter)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-dtv)
-add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-channels)
-add_subdirectory(gr-noaa)
 add_subdirectory(gr-pager)
 add_subdirectory(gr-qtgui)
 add_subdirectory(gr-trellis)
@@ -401,7 +435,6 @@ add_subdirectory(gr-uhd)
 add_subdirectory(gr-utils)
 add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
-add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 add_subdirectory(gr-zeromq)
@@ -425,12 +458,17 @@ endif(ENABLE_GR_CTRLPORT)
 #    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
 
 configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
+@ONLY)
+
+configure_file(
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 @ONLY)
 
 SET(cmake_configs
-  ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake
+  ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 

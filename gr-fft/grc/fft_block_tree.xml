@@ -27,7 +27,7 @@
 ###################################################
  -->
 <cat>
-   <name></name> <!-- Blank for Root Name -->
+   <name>[Core]</name> <!-- Blank for Root Name -->
    <cat>
       <name>Fourier Analysis</name>
       <block>fft_vxx</block>

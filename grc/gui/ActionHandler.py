@@ -608,9 +608,8 @@ class ActionHandler:
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
-            self.platform.load_blocks()
-            main.btwin.clear()
-            self.platform.load_block_tree(main.btwin)
+            self.platform.build_block_library()
+            main.btwin.repopulate()
             Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(
                 ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)

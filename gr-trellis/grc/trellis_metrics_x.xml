@@ -9,7 +9,7 @@
 <block>
 	<name>Trellis Metrics</name>
 	<key>trellis_metrics_x</key>
-	<category>Trellis Coding</category>
+	<category>[Core]/Trellis Coding</category>
 	<import>from gnuradio import trellis, digital</import>
 	<make>trellis.metrics_$(type)($card, $dim, $table, $metric_type)</make>
 	<callback>set_O($card)</callback>

@@ -107,7 +107,7 @@ namespace gr {
 
 ////////////////////////////////////////////////////////////////////////
 #ifdef GNURADIO_HRT_USE_QUERY_PERFORMANCE_COUNTER
-    #include <Windows.h>
+    #include <windows.h>
 
     inline gr::high_res_timer_type gr::high_res_timer_now(void){
         LARGE_INTEGER counts;

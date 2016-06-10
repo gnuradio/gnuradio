@@ -13,7 +13,7 @@
 ##@param connections the connections
 ##@param msgs the msg type connections
 ##@param generate_options the type of flow graph
-##@param var_id2cbs variable id map to callback strings
+##@param callbacks variable id map to callback strings
 ########################################################
 #def indent($code)
 #set $code = '\n        '.join(str($code).splitlines())
@@ -301,12 +301,12 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
     #if $flow_graph.get_option('thread_safe_setters')
         with self._lock:
             self.$id = $id
-        #for $callback in $var_id2cbs[$id]
+        #for $callback in $callbacks[$id]
             $indent($callback)
         #end for
     #else
         self.$id = $id
-        #for $callback in $var_id2cbs[$id]
+        #for $callback in $callbacks[$id]
         $indent($callback)
         #end for
     #end if
@@ -336,19 +336,22 @@ $short_id#slurp
 
 
 def argument_parser():
-    #set $desc_args = 'usage="%prog: [options]", option_class=eng_option'
+    #set $arg_parser_args = ''
     #if $flow_graph.get_option('description')
-        #set $desc_args += ', description=description'
+        #set $arg_parser_args = 'description=description'
     description = $repr($flow_graph.get_option('description'))
     #end if
-    parser = OptionParser($desc_args)
+    parser = ArgumentParser($arg_parser_args)
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
         #if $type
             #silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-    parser.add_option(
-        "$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
-        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
+    parser.add_argument(
+        #if $make_short_id($param)
+        "$make_short_id($param)", #slurp
+        #end if
+        "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type=$type, default=$make_default($type, $param),
+        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%(default)r]")
         #end if
     #end for
     return parser
@@ -358,7 +361,7 @@ def argument_parser():
 def main(top_block_cls=$(class_name), options=None):
     #if $parameters
     if options is None:
-        options, _ = argument_parser().parse_args()
+        options = argument_parser().parse_args()
     #end if
     #if $flow_graph.get_option('realtime_scheduling')
     if gr.enable_realtime_scheduling() != gr.RT_OK:

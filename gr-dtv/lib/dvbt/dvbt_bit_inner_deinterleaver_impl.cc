@@ -135,8 +135,9 @@ namespace gr {
 
       // First index of d_b is Bit interleaver number
       // Second index of d_b is the position inside Bit interleaver
-      unsigned char d_b[d_v][d_bsize];
-
+      // Linux: unsigned char d_b[d_v][d_bsize];
+      __GR_VLA2D(unsigned char, d_b, d_v, d_bsize);
+			
       for (int bcount = 0; bcount < bmax; bcount++) {
         for (int w = 0; w < d_bsize; w++) {
           int c = in[(bcount * d_bsize) + w];

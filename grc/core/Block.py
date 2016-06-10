@@ -67,7 +67,7 @@ class Block(Element):
 
         self._name = n['name']
         self._key = n['key']
-        self._category = n.get('category', '')
+        self.category = [cat.strip() for cat in n.get('category', '').split('/') if cat.strip()]
         self._flags = n.get('flags', '')
         self._doc = n.get('doc', '').strip('\n').replace('\\\n', '')
 
@@ -490,12 +490,6 @@ class Block(Element):
 
     def get_key(self):
         return self._key
-
-    def get_category(self):
-        return self._category
-
-    def set_category(self, cat):
-        self._category = cat
 
     def get_ports(self):
         return self.get_sources() + self.get_sinks()

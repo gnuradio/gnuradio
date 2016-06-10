@@ -28,9 +28,6 @@ from util_functions import append_re_line_sequence, ask_yes_no
 from cmakefile_editor import CMakeFileEditor
 from modtool_base import ModTool, ModToolException
 from templates import Templates
-from code_generator import get_template
-import Cheetah.Template
-
 
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """

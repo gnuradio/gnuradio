@@ -29,7 +29,8 @@
 namespace gr {
   namespace digital {
 
-    /* \brief Simple decision feedback equalizer for OFDM.
+    /*!
+     * \brief Simple decision feedback equalizer for OFDM.
      * \ingroup ofdm_blk
      * \ingroup equalizers_blk
      *

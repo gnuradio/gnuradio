@@ -44,7 +44,7 @@ if( WIN32 AND NOT CYGWIN AND NOT MSYS )
 
 		# look for gsl cblas library
     find_library( GSL_CBLAS_LIBRARY
-        NAMES gslcblas
+        NAMES gslcblas cblas
       )
     if( GSL_CBLAS_LIBRARY )
       set( GSL_CBLAS_FOUND ON )

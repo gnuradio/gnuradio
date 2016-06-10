@@ -27,7 +27,7 @@
 ###################################################
  -->
 <cat>
-   <name></name> <!-- Blank for Root Name -->
+   <name>[Core]</name>
    <cat>
       <name>Filters</name>
       <!-- FIR filter tap generators -->

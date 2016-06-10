@@ -27,7 +27,7 @@
 ###################################################
  -->
 <cat>
-  <name></name> <!-- Blank for Root Name -->
+  <name>[Core]</name>
   <cat>
     <name>Channel Models</name>
     <block>channels_channel_model</block>

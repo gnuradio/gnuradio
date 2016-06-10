@@ -96,6 +96,13 @@ SCROLL_DISTANCE = 15
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
 
+DEFAULT_BLOCK_MODULE_TOOLTIP = """\
+This subtree holds all blocks (from OOT modules) that specify no module name. \
+The module name is the root category enclosed in square brackets.
+
+Please consider contacting OOT module maintainer for any block in here \
+and kindly ask to update their GRC Block Descriptions or Block Tree to include a module name."""
+
 
 def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE

@@ -15,8 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-from __future__ import absolute_import
-import optparse
+import argparse
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -38,10 +37,10 @@ This is free software, and you are welcome to redistribute it.
 
 
 def main():
-    parser = optparse.OptionParser(
-        usage='usage: %prog [options] [saved flow graphs]',
-        version=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
-    options, args = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
+    parser.add_argument('flow_graphs', nargs='*')
+    args = parser.parse_args()
 
     try:
         Gtk.window_set_default_icon(Gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
@@ -54,6 +53,6 @@ def main():
         version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
         install_prefix=gr.prefix()
     )
-    ActionHandler(args, platform)
+    ActionHandler(args.flow_graphs, platform)
     Gtk.main()
 

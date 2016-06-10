@@ -69,7 +69,7 @@ class Platform(Element):
 
         self.blocks = {}
         self._blocks_n = {}
-        self._category_trees_n = []
+        self._block_categories = {}
         self.domains = {}
         self.connection_templates = {}
 
@@ -79,7 +79,8 @@ class Platform(Element):
         self._flow_graph = Element.__new__(FlowGraph)
         Element.__init__(self._flow_graph, self)
         self._flow_graph.connections = []
-        self.load_blocks()
+
+        self.build_block_library()
 
     def __str__(self):
         return 'Platform - {}({})'.format(self.config.key, self.config.name)
@@ -137,14 +138,14 @@ class Platform(Element):
         self.load_block_xml(generator.file_path_xml)
         return True
 
-    def load_blocks(self):
+    def build_block_library(self):
         """load the blocks and block tree from the search paths"""
         self._docstring_extractor.start()
 
         # Reset
         self.blocks.clear()
         self._blocks_n.clear()
-        del self._category_trees_n[:]
+        self._block_categories.clear()
         self.domains.clear()
         self.connection_templates.clear()
         ParseXML.xml_failures.clear()
@@ -162,8 +163,20 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
-                raise
                 print('Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file), file=sys.stderr)
+
+        # Add blocks to block tree
+        for key, block in six.iteritems(self.blocks):
+            category = self._block_categories.get(key, block.category)
+            # Blocks with empty categories are hidden
+            if not category:
+                continue
+            root = category[0]
+            if root.startswith('[') and root.endswith(']'):
+                category[0] = root[1:-1]
+            else:
+                category.insert(0, Constants.DEFAULT_BLOCK_MODULE_NAME)
+            block.category = category
 
         self._docstring_extractor.finish()
         # self._docstring_extractor.wait()
@@ -202,8 +215,19 @@ class Platform(Element):
     def load_category_tree_xml(self, xml_file):
         """Validate and parse category tree file and add it to list"""
         ParseXML.validate_dtd(xml_file, Constants.BLOCK_TREE_DTD)
-        n = ParseXML.from_file(xml_file).get('cat', {})
-        self._category_trees_n.append(n)
+        xml = ParseXML.from_file(xml_file)
+        path = []
+
+        def load_category(cat_n):
+            path.append(cat_n.get('name').strip())
+            for block_key in cat_n.get('block', []):
+                if block_key not in self._block_categories:
+                    self._block_categories[block_key] = list(path)
+            for sub_cat_n in cat_n.get('cat', []):
+                load_category(sub_cat_n)
+            path.pop()
+
+        load_category(xml.get('cat', {}))
 
     def load_domain_xml(self, xml_file):
         """Load a domain properties and connection templates from XML"""
@@ -247,44 +271,6 @@ class Platform(Element):
                 print('Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file), file=sys.stderr)
             else:
                 self.connection_templates[key] = connection_n.get('make') or ''
-
-    def load_block_tree(self, block_tree):
-        """
-        Load a block tree with categories and blocks.
-        Step 1: Load all blocks from the xml specification.
-        Step 2: Load blocks with builtin category specifications.
-
-        Args:
-            block_tree: the block tree object
-        """
-        # Recursive function to load categories and blocks
-        def load_category(cat_n, parent=None):
-            # Add this category
-            parent = (parent or []) + [cat_n.get('name')]
-            block_tree.add_block(parent)
-            # Recursive call to load sub categories
-            for cat in cat_n.get('cat', []):
-                load_category(cat, parent)
-            # Add blocks in this category
-            for block_key in cat_n.get('block', []):
-                if block_key not in self.blocks:
-                    print('Warning: Block key "{}" not found when loading category tree.'.format(block_key), file=sys.stderr)
-                    continue
-                block = self.blocks[block_key]
-                # If it exists, the block's category shall not be overridden by the xml tree
-                if not block.get_category():
-                    block.set_category(parent)
-
-        # Recursively load the category trees and update the categories for each block
-        for category_tree_n in self._category_trees_n:
-            load_category(category_tree_n)
-
-        # Add blocks to block tree
-        for block in six.itervalues(self.blocks):
-            # Blocks with empty categories are hidden
-            if not block.get_category():
-                continue
-            block_tree.add_block(block.get_category(), block)
 
     def _save_docstring_extraction_result(self, key, docstrings):
         docs = {}

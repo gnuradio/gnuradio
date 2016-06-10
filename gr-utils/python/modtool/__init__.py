@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,7 +20,6 @@
 #
 
 from cmakefile_editor import CMakeFileEditor
-from code_generator import GRMTemplate
 from grc_xml_generator import GRCXMLGenerator
 from modtool_base import ModTool, ModToolException, get_class_dict
 from modtool_add import ModToolAdd

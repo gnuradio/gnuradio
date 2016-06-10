@@ -9,6 +9,7 @@ find_path(QWT_INCLUDE_DIRS
   NAMES qwt_global.h
   HINTS
   ${CMAKE_INSTALL_PREFIX}/include/qwt
+  ${CMAKE_PREFIX_PATH}/include/qwt
   PATHS
   /usr/local/include/qwt-qt4
   /usr/local/include/qwt
@@ -22,10 +23,11 @@ find_path(QWT_INCLUDE_DIRS
 )
 
 find_library (QWT_LIBRARIES
-  NAMES qwt6 qwt6-qt4 qwt qwt-qt4
+  NAMES qwt6 qwt6-qt4 qwt qwt-qt4 qwt5 qwtd5
   HINTS
   ${CMAKE_INSTALL_PREFIX}/lib
   ${CMAKE_INSTALL_PREFIX}/lib64
+  ${CMAKE_PREFIX_PATH}/lib 
   PATHS
   /usr/local/lib
   /usr/lib

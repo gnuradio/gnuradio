@@ -66,9 +66,9 @@ namespace gr {
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
                                        const ::uhd::stream_args_t &stream_args,
                                        const bool issue_stream_cmd_on_start):
-      usrp_block("gr uhd usrp source",
-                    io_signature::make(0, 0, 0),
-                    args_to_io_sig(stream_args)),
+      usrp_block("usrp_source",
+                 io_signature::make(0, 0, 0),
+                 args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
       _tag_now(false),
       _issue_stream_cmd_on_start(issue_stream_cmd_on_start)
@@ -279,6 +279,104 @@ namespace gr {
     {
         chan = _stream_args.channels[chan];
         return _dev->get_rx_bandwidth_range(chan);
+    }
+
+    std::vector<std::string>
+    usrp_source_impl::get_lo_names(size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_rx_lo_names(chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    const std::string
+    usrp_source_impl::get_lo_source(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_rx_lo_source(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    std::vector<std::string>
+    usrp_source_impl::get_lo_sources(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_rx_lo_sources(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    void
+    usrp_source_impl::set_lo_source(const std::string &src, const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->set_rx_lo_source(src, name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    bool
+    usrp_source_impl::get_lo_export_enabled(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_rx_lo_export_enabled(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    void
+    usrp_source_impl::set_lo_export_enabled(bool enabled, const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->set_rx_lo_export_enabled(enabled, name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    ::uhd::freq_range_t
+    usrp_source_impl::get_lo_freq_range(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_rx_lo_freq_range(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    double
+    usrp_source_impl::get_lo_freq(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_rx_lo_freq(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    double
+    usrp_source_impl::set_lo_freq(double freq, const std::string &name, size_t chan) {
+#ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->set_rx_lo_freq(freq, name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
     }
 
     void
