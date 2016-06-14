@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<block>
+  <name>Protocol Parser</name>
+  <key>digital_protocol_parser_b</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.protocol_parser_b($format)</make>
+
+  <param>
+    <name>Format Obj.</name>
+    <key>format</key>
+    <type>raw</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+
+  <source>
+    <name>info</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+</block>

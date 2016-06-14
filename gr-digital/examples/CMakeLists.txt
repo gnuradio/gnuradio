@@ -95,3 +95,11 @@ install(
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )
+
+
+# PACKET
+install(
+    FILES
+    DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/packet
+    COMPONENT "digital_python"
+)
