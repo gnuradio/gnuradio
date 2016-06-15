@@ -292,7 +292,7 @@ namespace gr {
         // Estimated scaling factor for the input stream to normalize
         // the output to +/-1.
         uint32_t maxi;
-        volk_32fc_index_max_16u(&maxi, (gr_complex*)in, noutput_items);
+        volk_32fc_index_max_32u_manual(&maxi, (gr_complex*)in, noutput_items, "generic");
         d_scale = 1 / std::abs(in[maxi]);
 
         // Calculate the phase offset of the incoming signal.
