@@ -60,7 +60,7 @@ class Block(Element):
         Make a new block from nested data.
 
         Args:
-            flow: graph the parent element
+            flow_graph: the parent element
             n: the nested odict
 
         Returns:
@@ -172,14 +172,8 @@ class Block(Element):
             ports.append(port)
         return ports
 
-    def validate(self):
-        """
-        Validate this block.
-        Call the base class validate.
-        Evaluate the checks: each check must evaluate to True.
-        """
-        Element.validate(self)
-        # Evaluate the checks
+    def _run_checks(self):
+        """Evaluate the checks"""
         for check in self._checks:
             check_res = self.resolve_dependencies(check)
             try:
@@ -188,16 +182,8 @@ class Block(Element):
             except:
                 self.add_error_message('Check "{}" did not evaluate.'.format(check))
 
-        # For variables check the value (only if var_value is used
-        if self.is_variable and self._var_value != '$value':
-            value = self._var_value
-            try:
-                value = self.get_var_value()
-                self.parent.evaluate(value)
-            except Exception as err:
-                self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(value, err))
-
-        # check if this is a GUI block and matches the selected generate option
+    def _validate_generate_mode_compat(self):
+        """check if this is a GUI block and matches the selected generate option"""
         current_generate_option = self.parent.get_option('generate_options')
 
         def check_generate_mode(label, flag, valid_options):
@@ -211,6 +197,27 @@ class Block(Element):
 
         check_generate_mode('WX GUI', BLOCK_FLAG_NEED_WX_GUI, ('wx_gui',))
         check_generate_mode('QT GUI', BLOCK_FLAG_NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
+
+    def _validate_var_value(self):
+        """or variables check the value (only if var_value is used)"""
+        if self.is_variable and self._var_value != '$value':
+            value = self._var_value
+            try:
+                value = self.get_var_value()
+                self.parent.evaluate(value)
+            except Exception as err:
+                self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(value, err))
+
+    def validate(self):
+        """
+        Validate this block.
+        Call the base class validate.
+        Evaluate the checks: each check must evaluate to True.
+        """
+        Element.validate(self)
+        self._run_checks()
+        self._validate_generate_mode_compat()
+        self._validate_var_value()
         if self._epy_reload_error:
             self.get_param('_source_code').add_error_message(str(self._epy_reload_error))
 
@@ -251,13 +258,6 @@ class Block(Element):
                 domain = port.get_domain()
                 port._key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
-
-    def get_doc(self):
-        documentation = self.parent_platform.block_docstrings.get(self._key, {})
-        from_xml = self._doc.strip()
-        if from_xml:
-            documentation[''] = from_xml
-        return documentation
 
     def get_imports(self, raw=False):
         """
@@ -395,6 +395,14 @@ class Block(Element):
         update_ports('in', self.get_sinks(), blk_io.sinks, 'sink')
         update_ports('out', self.get_sources(), blk_io.sources, 'source')
         self.rewrite()
+
+    @property
+    def documentation(self):
+        documentation = self.parent_platform.block_docstrings.get(self.get_key(), {})
+        from_xml = self._doc.strip()
+        if from_xml:
+            documentation[''] = from_xml
+        return documentation
 
     # Main functions to get and set the block state
     # Also kept get_enabled and set_enabled to keep compatibility

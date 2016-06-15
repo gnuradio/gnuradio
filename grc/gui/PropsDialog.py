@@ -193,7 +193,7 @@ class PropsDialog(Gtk.Dialog):
         buf.delete(buf.get_start_iter(), buf.get_end_iter())
         pos = buf.get_end_iter()
 
-        docstrings = self._block.get_doc()
+        docstrings = self._block.documentation
         if not docstrings:
             return
 

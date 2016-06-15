@@ -178,7 +178,7 @@ class BlockTreeWindow(Gtk.VBox):
         iter_ = treestore.insert_before(categories[category], None)
         treestore.set_value(iter_, NAME_INDEX, block.get_name())
         treestore.set_value(iter_, KEY_INDEX, block.get_key())
-        treestore.set_value(iter_, DOC_INDEX, _format_doc(block.get_doc()))
+        treestore.set_value(iter_, DOC_INDEX, _format_doc(block.documentation))
 
     def update_docs(self):
         """Update the documentation column of every block"""
@@ -188,7 +188,7 @@ class BlockTreeWindow(Gtk.VBox):
                 return  # category node, no doc string
             key = model.get_value(iter_, KEY_INDEX)
             block = self.platform.blocks[key]
-            model.set_value(iter_, DOC_INDEX, _format_doc(block.get_doc()))
+            model.set_value(iter_, DOC_INDEX, _format_doc(block.documentation))
 
         self.treestore.foreach(update_doc)
         self.treestore_search.foreach(update_doc)
