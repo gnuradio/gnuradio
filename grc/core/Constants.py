@@ -54,11 +54,6 @@ BLOCK_FLAG_NEED_QT_GUI = 'need_qt_gui'
 BLOCK_FLAG_NEED_WX_GUI = 'need_wx_gui'
 BLOCK_FLAG_DEPRECATED = 'deprecated'
 
-# Block States
-BLOCK_DISABLED = 0
-BLOCK_ENABLED = 1
-BLOCK_BYPASSED = 2
-
 # File creation modes
 TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | \
                       stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH

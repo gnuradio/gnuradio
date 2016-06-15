@@ -26,13 +26,13 @@ from six.moves import map, range
 
 from Cheetah.Template import Template
 
-from .utils import epy_block_io
+from . import utils
+
 from . Constants import (
     BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI,
     ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB,
     BLOCK_FLAG_THROTTLE, BLOCK_FLAG_DISABLE_BYPASS,
     BLOCK_FLAG_DEPRECATED,
-    BLOCK_ENABLED, BLOCK_BYPASSED, BLOCK_DISABLED
 )
 from . Element import Element
 
@@ -51,6 +51,9 @@ def _get_elem(lst, key):
 class Block(Element):
 
     is_block = True
+
+    # block states
+    DISABLED, ENABLED, BYPASSED = range(3)
 
     def __init__(self, flow_graph, n):
         """
@@ -318,7 +321,7 @@ class Block(Element):
             return
 
         try:
-            blk_io = epy_block_io.extract(src)
+            blk_io = utils.epy_block_io.extract(src)
 
         except Exception as e:
             self._epy_reload_error = ValueError(str(e))
@@ -326,7 +329,7 @@ class Block(Element):
                 blk_io_args = eval(param_blk.get_value())
                 if len(blk_io_args) == 6:
                     blk_io_args += ([],)  # add empty callbacks
-                blk_io = epy_block_io.BlockIO(*blk_io_args)
+                blk_io = utils.epy_block_io.BlockIO(*blk_io_args)
             except Exception:
                 return
         else:
@@ -395,7 +398,8 @@ class Block(Element):
 
     # Main functions to get and set the block state
     # Also kept get_enabled and set_enabled to keep compatibility
-    def get_state(self):
+    @property
+    def state(self):
         """
         Gets the block's current state.
 
@@ -405,11 +409,12 @@ class Block(Element):
             DISABLED - 2
         """
         try:
-            return int(eval(self.get_param('_enabled').get_value()))
-        except:
-            return BLOCK_ENABLED
+            return int(self.get_param('_enabled').get_value())
+        except ValueError:
+            return self.ENABLED
 
-    def set_state(self, state):
+    @state.setter
+    def state(self, value):
         """
         Sets the state for the block.
 
@@ -418,10 +423,9 @@ class Block(Element):
             BYPASSED - 1
             DISABLED - 2
         """
-        if state in [BLOCK_ENABLED, BLOCK_BYPASSED, BLOCK_DISABLED]:
-            self.get_param('_enabled').set_value(str(state))
-        else:
-            self.get_param('_enabled').set_value(str(BLOCK_ENABLED))
+        if value not in [self.ENABLED, self.BYPASSED, self.DISABLED]:
+            value = self.ENABLED
+        self.get_param('_enabled').set_value(str(value))
 
     # Enable/Disable Aliases
     def get_enabled(self):
@@ -431,7 +435,7 @@ class Block(Element):
         Returns:
             true for enabled
         """
-        return not (self.get_state() == BLOCK_DISABLED)
+        return self.state != self.DISABLED
 
     def set_enabled(self, enabled):
         """
@@ -443,9 +447,9 @@ class Block(Element):
         Returns:
             True if block changed state
         """
-        old_state = self.get_state()
-        new_state = BLOCK_ENABLED if enabled else BLOCK_DISABLED
-        self.set_state(new_state)
+        old_state = self.state
+        new_state = self.ENABLED if enabled else self.DISABLED
+        self.state = new_state
         return old_state != new_state
 
     # Block bypassing
@@ -453,7 +457,7 @@ class Block(Element):
         """
         Check if the block is bypassed
         """
-        return self.get_state() == BLOCK_BYPASSED
+        return self.state == self.BYPASSED
 
     def set_bypassed(self):
         """
@@ -462,8 +466,8 @@ class Block(Element):
         Returns:
             True if block chagnes state
         """
-        if self.get_state() != BLOCK_BYPASSED and self.can_bypass():
-            self.set_state(BLOCK_BYPASSED)
+        if self.state != self.BYPASSED and self.can_bypass():
+            self.state = self.BYPASSED
             return True
         return False
 

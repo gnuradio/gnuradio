@@ -48,7 +48,6 @@ class Element(object):
            0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER
         ]"""
 
-
     def is_horizontal(self, rotation=None):
         """
         Is this element horizontal?

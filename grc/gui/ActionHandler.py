@@ -670,12 +670,14 @@ class ActionHandler:
         Actions.BLOCK_COPY.set_sensitive(bool(selected_blocks))
         Actions.BLOCK_PASTE.set_sensitive(bool(self.clipboard))
         #update enable/disable/bypass
-        can_enable = any(block.get_state() != Constants.BLOCK_ENABLED
+        can_enable = any(block.state != block.ENABLED
                          for block in selected_blocks)
-        can_disable = any(block.get_state() != Constants.BLOCK_DISABLED
+        can_disable = any(block.state != block.DISABLED
                           for block in selected_blocks)
-        can_bypass_all = all(block.can_bypass() for block in selected_blocks) \
-                         and any(not block.get_bypassed() for block in selected_blocks)
+        can_bypass_all = (
+            all(block.can_bypass() for block in selected_blocks) and
+            any(not block.get_bypassed() for block in selected_blocks)
+        )
         Actions.BLOCK_ENABLE.set_sensitive(can_enable)
         Actions.BLOCK_DISABLE.set_sensitive(can_disable)
         Actions.BLOCK_BYPASS.set_sensitive(can_bypass_all)
