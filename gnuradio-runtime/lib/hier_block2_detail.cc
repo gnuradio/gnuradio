@@ -956,6 +956,7 @@ namespace gr {
     return tmp[0]->processor_affinity();
   }
 
+#ifdef ENABLE_GR_LOG
   void
   hier_block2_detail::set_log_level(std::string level)
   {
@@ -972,6 +973,7 @@ namespace gr {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     return tmp[0]->log_level();
   }
+#endif
 
 
 } /* namespace gr */

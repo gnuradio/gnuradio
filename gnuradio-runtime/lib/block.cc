@@ -714,6 +714,7 @@ namespace gr {
     }
   }
 
+#ifdef ENABLE_GR_LOG
   void
   block::set_log_level(std::string level)
   {
@@ -727,6 +728,7 @@ namespace gr {
     logger_get_level(d_logger, level);
     return level;
   }
+#endif
 
   void
   block::notify_msg_neighbors()

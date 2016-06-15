@@ -178,6 +178,7 @@ namespace gr {
     return d_detail->processor_affinity();
   }
 
+#ifdef ENABLE_GR_LOG
   void
   hier_block2::set_log_level(std::string level)
   {
@@ -189,6 +190,7 @@ namespace gr {
   {
     return d_detail->log_level();
   }
+#endif
 
   std::string
   dot_graph(hier_block2_sptr hierblock2)

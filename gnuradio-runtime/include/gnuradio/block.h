@@ -633,6 +633,7 @@ namespace gr {
      */
     void system_handler(pmt::pmt_t msg);
 
+#ifdef ENABLE_GR_LOG
     /*!
      * \brief Set the logger's output level.
      *
@@ -656,6 +657,7 @@ namespace gr {
      * \brief Get the logger's output level
      */
     std::string log_level();
+#endif
 
 	/*!
      * \brief returns true when execution has completed due to a message connection

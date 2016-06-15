@@ -266,6 +266,7 @@ namespace gr {
      */
     std::vector<int> processor_affinity();
 
+#ifdef ENABLE_GR_LOG
     /*!
     * \brief Set the logger's output level.
     *
@@ -290,6 +291,7 @@ namespace gr {
      * \brief Get the logger's output level
      */
     std::string log_level();
+#endif
 
     /*!
      * \brief Get if all block min buffers should be set.
