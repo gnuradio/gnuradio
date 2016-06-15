@@ -27,7 +27,7 @@ from gi.repository import GObject
 import sys
 from distutils.spawn import find_executable
 
-from . import Utils, Actions
+from . import Utils, Actions, Constants
 from ..core import Messages
 
 
@@ -207,7 +207,7 @@ def HelpDialog(): MessageDialogHelper(
 
 
 def TypesDialog(platform):
-    colors = platform.get_colors()
+    colors = [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
     max_len = 10 + max(len(name) for name, code in colors)
 
     message = '\n'.join(

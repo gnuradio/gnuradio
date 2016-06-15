@@ -263,32 +263,6 @@ class Port(Element):
     def get_optional(self):
         return bool(self._optional)
 
-    def get_color(self):
-        """
-        Get the color that represents this port's type.
-        Codes differ for ports where the vec length is 1 or greater than 1.
-
-        Returns:
-            a hex color code.
-        """
-        try:
-            color = Constants.TYPE_TO_COLOR[self.get_type()]
-            vlen = self.get_vlen()
-            if vlen == 1:
-                return color
-            color_val = int(color[1:], 16)
-            r = (color_val >> 16) & 0xff
-            g = (color_val >> 8) & 0xff
-            b = (color_val >> 0) & 0xff
-            dark = (0, 0, 30, 50, 70)[min(4, vlen)]
-            r = max(r-dark, 0)
-            g = max(g-dark, 0)
-            b = max(b-dark, 0)
-            # TODO: Change this to .format()
-            return '#%.2x%.2x%.2x' % (r, g, b)
-        except:
-            return '#FFFFFF'
-
     def get_clones(self):
         """
         Get the clones of this master port (nports > 1)

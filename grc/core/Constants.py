@@ -99,41 +99,33 @@ GRC_COLOR_GREY = '#BDBDBD'
 GRC_COLOR_WHITE = '#FFFFFF'
 
 CORE_TYPES = (  # name, key, sizeof, color
-    ('Complex Float 64', 'fc64', 16, GRC_COLOR_BROWN),
-    ('Complex Float 32', 'fc32', 8, GRC_COLOR_BLUE),
-    ('Complex Integer 64', 'sc64', 16, GRC_COLOR_LIGHT_GREEN),
-    ('Complex Integer 32', 'sc32', 8, GRC_COLOR_GREEN),
-    ('Complex Integer 16', 'sc16', 4, GRC_COLOR_AMBER),
-    ('Complex Integer 8', 'sc8', 2, GRC_COLOR_PURPLE),
-    ('Float 64', 'f64', 8, GRC_COLOR_CYAN),
-    ('Float 32', 'f32', 4, GRC_COLOR_ORANGE),
-    ('Integer 64', 's64', 8, GRC_COLOR_LIME),
-    ('Integer 32', 's32', 4, GRC_COLOR_TEAL),
-    ('Integer 16', 's16', 2, GRC_COLOR_YELLOW),
-    ('Integer 8', 's8', 1, GRC_COLOR_PURPLE_A400),
-    ('Bits (unpacked byte)', 'bit', 1, GRC_COLOR_PURPLE_A100),
-    ('Message Queue', 'msg', 0, GRC_COLOR_DARK_GREY),
-    ('Async Message', 'message', 0, GRC_COLOR_GREY),
-    ('Bus Connection', 'bus', 0, GRC_COLOR_WHITE),
-    ('Wildcard', '', 0, GRC_COLOR_WHITE),
+    ('Complex Float 64',    'fc64', 16, GRC_COLOR_BROWN),
+    ('Complex Float 32',    'fc32',  8, GRC_COLOR_BLUE),
+    ('Complex Integer 64',  'sc64', 16, GRC_COLOR_LIGHT_GREEN),
+    ('Complex Integer 32',  'sc32',  8, GRC_COLOR_GREEN),
+    ('Complex Integer 16',  'sc16',  4, GRC_COLOR_AMBER),
+    ('Complex Integer 8',    'sc8',  2, GRC_COLOR_PURPLE),
+    ('Float 64',             'f64',  8, GRC_COLOR_CYAN),
+    ('Float 32',             'f32',  4, GRC_COLOR_ORANGE),
+    ('Integer 64',           's64',  8, GRC_COLOR_LIME),
+    ('Integer 32',           's32',  4, GRC_COLOR_TEAL),
+    ('Integer 16',           's16',  2, GRC_COLOR_YELLOW),
+    ('Integer 8',             's8',  1, GRC_COLOR_PURPLE_A400),
+    ('Bits (unpacked byte)', 'bit',  1, GRC_COLOR_PURPLE_A100),
+    ('Message Queue',        'msg',  0, GRC_COLOR_DARK_GREY),
+    ('Async Message',    'message',  0, GRC_COLOR_GREY),
+    ('Bus Connection',       'bus',  0, GRC_COLOR_WHITE),
+    ('Wildcard',                '',  0, GRC_COLOR_WHITE),
 )
 
 ALIAS_TYPES = {
     'complex': (8, GRC_COLOR_BLUE),
-    'float': (4, GRC_COLOR_ORANGE),
-    'int': (4, GRC_COLOR_TEAL),
-    'short': (2, GRC_COLOR_YELLOW),
-    'byte': (1, GRC_COLOR_PURPLE_A400),
-    'bits': (1, GRC_COLOR_PURPLE_A100),
+    'float':   (4, GRC_COLOR_ORANGE),
+    'int':     (4, GRC_COLOR_TEAL),
+    'short':   (2, GRC_COLOR_YELLOW),
+    'byte':    (1, GRC_COLOR_PURPLE_A400),
+    'bits':    (1, GRC_COLOR_PURPLE_A100),
 }
 
-TYPE_TO_COLOR = dict()
-TYPE_TO_SIZEOF = dict()
-
-for name, key, sizeof, color in CORE_TYPES:
-    TYPE_TO_COLOR[key] = color
-    TYPE_TO_SIZEOF[key] = sizeof
-
-for key, (sizeof, color) in six.iteritems(ALIAS_TYPES):
-    TYPE_TO_COLOR[key] = color
-    TYPE_TO_SIZEOF[key] = sizeof
+TYPE_TO_SIZEOF = {key: sizeof for name, key, sizeof, color in CORE_TYPES}
+TYPE_TO_SIZEOF.update((key, sizeof) for key, (sizeof, _) in ALIAS_TYPES.items())

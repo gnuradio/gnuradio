@@ -310,6 +310,3 @@ class Platform(Element):
 
     def get_new_block(self, flow_graph, key):
         return self.Block(flow_graph, n=self._blocks_n[key])
-
-    def get_colors(self):
-        return [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]

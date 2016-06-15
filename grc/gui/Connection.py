@@ -45,6 +45,9 @@ class Connection(Element, _Connection):
         # can't use Colors.CONNECTION_ENABLED_COLOR here, might not be defined (grcc)
         self._bg_color = self._arrow_color = self._color = None
 
+        self._sink_rot = self._source_rot = None
+        self._sink_coor = self._source_coor = None
+
     def get_coordinate(self):
         """
         Get the 0,0 coordinate.
@@ -74,12 +77,12 @@ class Connection(Element, _Connection):
         self._source_coor = None
         #get the source coordinate
         try:
-            connector_length = self.source_port.get_connector_length()
+            connector_length = self.source_port.connector_length
         except:
-            return
+            return  # todo: why?
         self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.source_port.get_rotation())
         #get the sink coordinate
-        connector_length = self.sink_port.get_connector_length() + CONNECTOR_ARROW_HEIGHT
+        connector_length = self.sink_port.connector_length + CONNECTOR_ARROW_HEIGHT
         self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.sink_port.get_rotation())
         #build the arrow
         self.arrow = [(0, 0),
@@ -106,7 +109,7 @@ class Connection(Element, _Connection):
 
     def _update_after_move(self):
         """Calculate coordinates."""
-        self.clear() #FIXME do i want this here?
+        self.clear()
         #source connector
         source = self.source_port
         X, Y = source.get_connector_coordinate()
@@ -118,11 +121,11 @@ class Connection(Element, _Connection):
         x2, y2 = self.x2 + X, self.y2 + Y
         self.add_line((x2, y2), (X, Y))
         #adjust arrow
-        self._arrow = [(x+X, y+Y) for x,y in self.arrow]
+        self._arrow = [(x+X, y+Y) for x, y in self.arrow]
         #add the horizontal and vertical lines in this connection
         if abs(source.get_connector_direction() - sink.get_connector_direction()) == 180:
             #2 possible point sets to create a 3-line connector
-            mid_x, mid_y = (x1 + x2)/2.0, (y1 + y2)/2.0
+            mid_x, mid_y = (x1 + x2) / 2.0, (y1 + y2) / 2.0
             points = [((mid_x, y1), (mid_x, y2)), ((x1, mid_y), (x2, mid_y))]
             #source connector -> points[0][0] should be in the direction of source (if possible)
             if Utils.get_angle_from_coordinates((x1, y1), points[0][0]) != source.get_connector_direction(): points.reverse()
@@ -155,12 +158,13 @@ class Connection(Element, _Connection):
         sink = self.sink_port
         source = self.source_port
         #check for changes
-        if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.create_shapes()
+        if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation():
+            self.create_shapes()
         elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate():
             try:
                 self._update_after_move()
             except:
-                return
+                return  # todo: why?
         #cache values
         self._sink_rot = sink.get_rotation()
         self._source_rot = source.get_rotation()

@@ -23,15 +23,10 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, PangoCairo
 
-from . import Actions, Colors, Utils
-from .Constants import (
-    PORT_SEPARATION, PORT_SPACING, CONNECTOR_EXTENSION_MINIMAL,
-    CONNECTOR_EXTENSION_INCREMENT, PORT_LABEL_PADDING, PORT_MIN_WIDTH,
-    PORT_LABEL_HIDDEN_WIDTH, PORT_FONT
-)
+from . import Actions, Colors, Utils, Constants
 from .Element import Element
-from ..core.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 
+from ..core.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 from ..core.Port import Port as _Port
 
 
@@ -45,24 +40,42 @@ class Port(_Port, Element):
         """
         _Port.__init__(self, block, n, dir)
         Element.__init__(self)
-        self.W = self.w = self.h = 0
-        self.H = 20  # todo: fix
         self._connector_coordinate = (0, 0)
-        self._connector_length = 0
         self._hovering = True
         self._force_label_unhidden = False
+        self._bg_color = (0, 0, 0)
+
+        self.W = self.w = self.h = 0
+        self.H = 20  # todo: fix
+        self.connector_length = 0
+
         self.layout = Gtk.DrawingArea().create_pango_layout('')
-        self._bg_color = Colors.get_color(self.get_color())
+
+    def _get_color(self):
+        """
+        Get the color that represents this port's type.
+        Codes differ for ports where the vec length is 1 or greater than 1.
+
+        Returns:
+            a hex color code.
+        """
+        color = Colors.PORT_TYPE_TO_COLOR[self.get_type()]
+        vlen = self.get_vlen()
+        if vlen > 1:
+            dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, vlen)]
+            color = tuple(max(c - dark, 0) for c in color)
+        return color
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
         Element.create_shapes(self)
-        self._bg_color = Colors.get_color(self.get_color())
+        self._bg_color = self._get_color()
+
         if self.get_hide():
             return  # this port is hidden, no need to create shapes
-        if self.get_domain() == GR_MESSAGE_DOMAIN:
+        if self.get_domain() == Constants.GR_MESSAGE_DOMAIN:
             pass
-        elif self.get_domain() != DEFAULT_DOMAIN:
+        elif self.get_domain() != Constants.DEFAULT_DOMAIN:
             self.line_attributes[0] = 2
         #get current rotation
         rotation = self.get_rotation()
@@ -71,22 +84,22 @@ class Port(_Port, Element):
             if self.is_source else self.parent.get_sinks_gui()
         ports = [p for p in ports if not p.get_hide()]
         #get the max width
-        self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
-        W = self.W if not self._label_hidden() else PORT_LABEL_HIDDEN_WIDTH
+        self.W = max([port.W for port in ports] + [Constants.PORT_MIN_WIDTH])
+        W = self.W if not self._label_hidden() else Constants.PORT_LABEL_HIDDEN_WIDTH
         #get a numeric index for this port relative to its sibling ports
         try:
             index = ports.index(self)
         except:
             if hasattr(self, '_connector_length'):
-                del self._connector_length
+                del self.connector_length
             return
         #reverse the order of ports for these rotations
         if rotation in (180, 270):
             index = len(ports)-index-1
 
-        port_separation = PORT_SEPARATION \
+        port_separation = Constants.PORT_SEPARATION \
             if not self.parent.has_busses[self.is_source] \
-            else max([port.H for port in ports]) + PORT_SPACING
+            else max([port.H for port in ports]) + Constants.PORT_SPACING
 
         offset = (self.parent.H - (len(ports)-1)*port_separation - self.H)/2
         #create areas and connector coordinates
@@ -111,12 +124,12 @@ class Port(_Port, Element):
             self.add_area((x, y), (self.H, W))
             self._connector_coordinate = (x+self.H/2, y+1+W)
         #the connector length
-        self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
+        self.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + Constants.CONNECTOR_EXTENSION_INCREMENT * index
 
     def create_labels(self):
         """Create the labels for the socket."""
         self.layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
-            name=Utils.encode(self.get_name()), font=PORT_FONT
+            name=Utils.encode(self.get_name()), font=Constants.PORT_FONT
         ))
 
     def draw(self, widget, cr):
@@ -168,16 +181,6 @@ class Port(_Port, Element):
         """
         if self.is_source: return self.get_rotation()
         elif self.is_sink: return (self.get_rotation() + 180)%360
-
-    def get_connector_length(self):
-        """
-        Get the length of the connector.
-        The connector length increases as the port index changes.
-
-        Returns:
-            the length in pixels
-        """
-        return self._connector_length
 
     def get_rotation(self):
         """
