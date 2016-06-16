@@ -60,7 +60,7 @@ class MainWindow(Gtk.Window):
         gen_opts = platform.blocks['options'].get_param('generate_options')
         generate_mode_default = gen_opts.get_value()
         generate_modes = [
-            (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
+            (o.key, o.get_name(), o.key == generate_mode_default)
             for o in gen_opts.get_options()]
 
         # Load preferences

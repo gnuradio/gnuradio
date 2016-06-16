@@ -98,7 +98,7 @@ class TopBlockGenerator(object):
                                   "Add a Misc->Throttle block to your flow "
                                   "graph to avoid CPU congestion.")
         if len(throttling_blocks) > 1:
-            keys = set([b.get_key() for b in throttling_blocks])
+            keys = set([b.key for b in throttling_blocks])
             if len(keys) > 1 and 'blocks_throttle' in keys:
                 Messages.send_warning("This flow graph contains a throttle "
                                       "block and another rate limiting block, "
@@ -156,7 +156,7 @@ class TopBlockGenerator(object):
         blocks = [b for b in blocks_all if b not in imports and b not in parameters]
 
         for block in blocks:
-            key = block.get_key()
+            key = block.key
             file_path = os.path.join(self._dirname, block.get_id() + '.py')
             if key == 'epy_block':
                 src = block.get_param('_source_code').get_value()

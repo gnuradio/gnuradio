@@ -131,7 +131,7 @@ class Port(Element):
         Element.__init__(self, parent=block)
         # Grab the data
         self._name = n['name']
-        self._key = n['key']
+        self.key = n['key']
         self._type = n.get('type', '')
         self._domain = n.get('domain')
         self._hide = n.get('hide', '')
@@ -146,9 +146,9 @@ class Port(Element):
 
     def __str__(self):
         if self.is_source:
-            return 'Source - {}({})'.format(self.get_name(), self.get_key())
+            return 'Source - {}({})'.format(self.get_name(), self.key)
         if self.is_sink:
-            return 'Sink - {}({})'.format(self.get_name(), self.get_key())
+            return 'Sink - {}({})'.format(self.get_name(), self.key)
 
     def get_types(self):
         return list(Constants.TYPE_TO_SIZEOF.keys())
@@ -195,10 +195,10 @@ class Port(Element):
         type_ = self.get_type()
         if self._domain == Constants.GR_STREAM_DOMAIN and type_ == "message":
             self._domain = Constants.GR_MESSAGE_DOMAIN
-            self._key = self._name
+            self.key = self._name
         if self._domain == Constants.GR_MESSAGE_DOMAIN and type_ != "message":
             self._domain = Constants.GR_STREAM_DOMAIN
-            self._key = '0'  # Is rectified in rewrite()
+            self.key = '0'  # Is rectified in rewrite()
 
     def resolve_virtual_source(self):
         if self.parent.is_virtual_sink():
@@ -286,8 +286,8 @@ class Port(Element):
         if not self._clones:
             self._name = self._n['name'] + '0'
             # Also update key for none stream ports
-            if not self._key.isdigit():
-                self._key = self._name
+            if not self.key.isdigit():
+                self.key = self._name
 
         # Prepare a copy of the odict for the clone
         n = self._n.copy()
@@ -296,7 +296,7 @@ class Port(Element):
             n.pop('nports')
         n['name'] = self._n['name'] + str(len(self._clones) + 1)
         # Dummy value 99999 will be fixed later
-        n['key'] = '99999' if self._key.isdigit() else n['name']
+        n['key'] = '99999' if self.key.isdigit() else n['name']
 
         # Clone
         port = self.__class__(self.parent, n, self._dir)
@@ -313,8 +313,8 @@ class Port(Element):
         if not self._clones:
             self._name = self._n['name']
             # Also update key for none stream ports
-            if not self._key.isdigit():
-                self._key = self._name
+            if not self.key.isdigit():
+                self.key = self._name
 
     def get_name(self):
         number = ''
@@ -322,9 +322,6 @@ class Port(Element):
             busses = [a for a in self.parent.get_ports_gui() if a._dir == self._dir]
             number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
         return self._name + number
-
-    def get_key(self):
-        return self._key
 
     @property
     def is_sink(self):

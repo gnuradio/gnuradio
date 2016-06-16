@@ -88,7 +88,7 @@ class FlowGraph(Element, _Flowgraph):
         return block_id
 
     def install_external_editor(self, param):
-        target = (param.parent_block.get_id(), param.get_key())
+        target = (param.parent_block.get_id(), param.key)
 
         if target in self._external_updaters:
             editor = self._external_updaters[target]

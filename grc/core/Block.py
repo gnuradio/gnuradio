@@ -38,7 +38,7 @@ from . Element import Element
 
 
 def _get_keys(lst):
-    return [elem.get_key() for elem in lst]
+    return [elem.key for elem in lst]
 
 
 def _get_elem(lst, key):
@@ -69,7 +69,7 @@ class Block(Element):
         Element.__init__(self, parent=flow_graph)
 
         self.name = n['name']
-        self._key = n['key']
+        self.key = n['key']
         self.category = [cat.strip() for cat in n.get('category', '').split('/') if cat.strip()]
         self._flags = n.get('flags', '')
         self._doc = n.get('doc', '').strip('\n').replace('\\\n', '')
@@ -124,16 +124,16 @@ class Block(Element):
         # indistinguishable from normal GR blocks. Make explicit
         # checks for them here since they have no work function or
         # buffers to manage.
-        self.is_virtual_or_pad = is_virtual_or_pad = self._key in (
+        self.is_virtual_or_pad = is_virtual_or_pad = self.key in (
             "virtual_source", "virtual_sink", "pad_source", "pad_sink")
-        self.is_variable = is_variable = self._key.startswith('variable')
-        self.is_import = (self._key == 'import')
+        self.is_variable = is_variable = self.key.startswith('variable')
+        self.is_import = (self.key == 'import')
 
         # Disable blocks that are virtual/pads or variables
         if self.is_virtual_or_pad or self.is_variable:
             self._flags += BLOCK_FLAG_DISABLE_BYPASS
 
-        if not (is_virtual_or_pad or is_variable or self._key == 'options'):
+        if not (is_virtual_or_pad or is_variable or self.key == 'options'):
             self._add_param(key='alias', name='Block Alias', type='string',
                             hide='part', tab=ADVANCED_PARAM_TAB)
 
@@ -147,10 +147,10 @@ class Block(Element):
             self._add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
                             hide='part', value='0', tab=ADVANCED_PARAM_TAB)
 
-        param_keys = set(param.get_key() for param in self._params)
+        param_keys = set(param.key for param in self._params)
         for param_n in params_n:
             param = self.parent_platform.Param(block=self, n=param_n)
-            key = param.get_key()
+            key = param.key
             if key in param_keys:
                 raise Exception('Key "{}" already exists in params'.format(key))
             param_keys.add(key)
@@ -165,7 +165,7 @@ class Block(Element):
         port_keys = set()
         for port_n in ports_n:
             port = port_cls(block=self, n=port_n, dir=direction)
-            key = port.get_key()
+            key = port.key
             if key in port_keys:
                 raise Exception('Key "{}" already exists in {}'.format(key, direction))
             port_keys.add(key)
@@ -227,7 +227,7 @@ class Block(Element):
         """
         Element.rewrite(self)
         # Check and run any custom rewrite function for this block
-        getattr(self, 'rewrite_' + self._key, lambda: None)()
+        getattr(self, 'rewrite_' + self.key, lambda: None)()
 
         # Adjust nports, disconnect hidden ports
         for ports in (self.get_sources(), self.get_sinks()):
@@ -254,9 +254,9 @@ class Block(Element):
             self.back_ofthe_bus(ports)
             # Renumber non-message/message ports
             domain_specific_port_index = collections.defaultdict(int)
-            for port in [p for p in ports if p.get_key().isdigit()]:
+            for port in [p for p in ports if p.key.isdigit()]:
                 domain = port.get_domain()
-                port._key = str(domain_specific_port_index[domain])
+                port.key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
 
     def get_imports(self, raw=False):
@@ -300,10 +300,10 @@ class Block(Element):
         return [make_callback(c) for c in self._callbacks]
 
     def is_virtual_sink(self):
-        return self.get_key() == 'virtual_sink'
+        return self.key == 'virtual_sink'
 
     def is_virtual_source(self):
-        return self.get_key() == 'virtual_source'
+        return self.key == 'virtual_source'
 
     ###########################################################################
     # Custom rewrite functions
@@ -349,7 +349,7 @@ class Block(Element):
         params = {}
         for param in list(self._params):
             if hasattr(param, '__epy_param__'):
-                params[param.get_key()] = param
+                params[param.key] = param
                 self._params.remove(param)
 
         for key, value in blk_io.params:
@@ -372,7 +372,7 @@ class Block(Element):
                 reuse_port = (
                     port_current is not None and
                     port_current.get_type() == port_type and
-                    (key.isdigit() or port_current.get_key() == key)
+                    (key.isdigit() or port_current.key == key)
                 )
                 if reuse_port:
                     ports_to_remove.remove(port_current)
@@ -398,7 +398,7 @@ class Block(Element):
 
     @property
     def documentation(self):
-        documentation = self.parent_platform.block_docstrings.get(self.get_key(), {})
+        documentation = self.parent_platform.block_docstrings.get(self.key, {})
         from_xml = self._doc.strip()
         if from_xml:
             documentation[''] = from_xml
@@ -492,13 +492,10 @@ class Block(Element):
         return True
 
     def __str__(self):
-        return 'Block - {} - {}({})'.format(self.get_id(), self.name, self.get_key())
+        return 'Block - {} - {}({})'.format(self.get_id(), self.name, self.key)
 
     def get_id(self):
         return self.get_param('id').get_value()
-
-    def get_key(self):
-        return self._key
 
     def get_ports(self):
         return self.get_sources() + self.get_sinks()
@@ -597,7 +594,7 @@ class Block(Element):
         tmpl = str(tmpl)
         if '$' not in tmpl:
             return tmpl
-        n = dict((param.get_key(), param.template_arg)
+        n = dict((param.key, param.template_arg)
                  for param in self.get_params())  # TODO: cache that
         try:
             return str(Template(tmpl, n))
@@ -622,7 +619,7 @@ class Block(Element):
         for param in [p for p in self.get_params() if p.is_enum()]:
             children = self.get_ports() + self.get_params()
             # Priority to the type controller
-            if param.get_key() in ' '.join([p._type for p in children]): type_param = param
+            if param.key in ' '.join([p._type for p in children]): type_param = param
             # Use param if type param is unset
             if not type_param:
                 type_param = param
@@ -653,7 +650,7 @@ class Block(Element):
         nports_str = ' '.join([port._nports for port in self.get_ports()])
         # Modify all params whose keys appear in the nports string
         for param in self.get_params():
-            if param.is_enum() or param.get_key() not in nports_str:
+            if param.is_enum() or param.key not in nports_str:
                 continue
             # Try to increment the port controller by direction
             try:
@@ -677,7 +674,7 @@ class Block(Element):
             a nested data odict
         """
         n = collections.OrderedDict()
-        n['key'] = self.get_key()
+        n['key'] = self.key
         n['param'] = [p.export_data() for p in sorted(self.get_params(), key=str)]
         if 'bus' in [a.get_type() for a in self.get_sinks()]:
             n['bus_sink'] = str(1)
@@ -698,7 +695,7 @@ class Block(Element):
             n: the nested data odict
         """
         params_n = n.get('param', [])
-        params = dict((param.get_key(), param) for param in self._params)
+        params = dict((param.key, param) for param in self._params)
 
         def get_hash():
             return hash(tuple(map(hash, self._params)))

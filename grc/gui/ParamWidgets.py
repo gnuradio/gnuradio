@@ -270,7 +270,7 @@ class FileParam(EntryParam):
         file_path = self.param.is_valid() and self.param.get_evaluated() or ''
         (dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
         # check for qss theme default directory
-        if self.param.get_key() == 'qt_qss_theme':
+        if self.param.key == 'qt_qss_theme':
             dirname = os.path.dirname(dirname)  # trim filename
             if not os.path.exists(dirname):
                config = self.param.parent_platform.config

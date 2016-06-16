@@ -226,7 +226,7 @@ class PropsDialog(Gtk.Dialog):
 
         buf = self._code_text_display.get_buffer()
         block = self._block
-        key = block.get_key()
+        key = block.key
 
         if key == 'epy_block':
             src = block.get_param('_source_code').get_value()

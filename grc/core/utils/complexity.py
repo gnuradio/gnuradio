@@ -4,7 +4,7 @@ def calculate_flowgraph_complexity(flowgraph):
     dbal = 0
     for block in flowgraph.blocks:
         # Skip options block
-        if block.get_key() == 'options':
+        if block.key == 'options':
             continue
 
         # Don't worry about optional sinks?

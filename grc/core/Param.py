@@ -41,17 +41,6 @@ _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
 _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
 
 
-def _get_keys(lst):
-    return [elem.get_key() for elem in lst]
-
-
-def _get_elem(lst, key):
-    try:
-        return lst[_get_keys(lst).index(key)]
-    except ValueError:
-        raise ValueError('Key "{}" not found in {}.'.format(key, _get_keys(lst)))
-
-
 def num_to_str(num):
     """ Display logic for numbers """
     def eng_notation(value, fmt='g'):
@@ -80,7 +69,7 @@ class Option(Element):
     def __init__(self, param, n):
         Element.__init__(self, param)
         self._name = n.get('name')
-        self._key = n.get('key')
+        self.key = n.get('key')
         self._opts = dict()
         opts = n.get('opt', [])
         # Test against opts when non enum
@@ -100,13 +89,13 @@ class Option(Element):
             self._opts[key] = value
 
     def __str__(self):
-        return 'Option {}({})'.format(self.get_name(), self.get_key())
+        return 'Option {}({})'.format(self.get_name(), self.key)
 
     def get_name(self):
         return self._name
 
     def get_key(self):
-        return self._key
+        return self.key
 
     ##############################################
     # Access Opts
@@ -164,7 +153,7 @@ class Param(Element):
         self._n = n
         # Parse the data
         self._name = n['name']
-        self._key = n['key']
+        self.key = n['key']
         value = n.get('value', '')
         self._type = n.get('type', 'raw')
         self._hide = n.get('hide', '')
@@ -178,7 +167,7 @@ class Param(Element):
         self._evaluated = None
         for o_n in n.get('option', []):
             option = Option(param=self, n=o_n)
-            key = option.get_key()
+            key = option.key
             # Test against repeated keys
             if key in self.get_option_keys():
                 raise Exception('Key "{}" already exists in options'.format(key))
@@ -291,7 +280,7 @@ class Param(Element):
         return self.get_value()
 
     def __str__(self):
-        return 'Param - {}({})'.format(self.get_name(), self.get_key())
+        return 'Param - {}({})'.format(self.get_name(), self.key)
 
     def get_hide(self):
         """
@@ -308,20 +297,20 @@ class Param(Element):
         if hide:
             return hide
         # Hide ID in non variable blocks
-        if self.get_key() == 'id' and not _show_id_matcher.match(self.parent.get_key()):
+        if self.key == 'id' and not _show_id_matcher.match(self.parent.key):
             return 'part'
         # Hide port controllers for type and nports
-        if self.get_key() in ' '.join([' '.join([p._type, p._nports]) for p in self.parent.get_ports()]):
+        if self.key in ' '.join([' '.join([p._type, p._nports]) for p in self.parent.get_ports()]):
             return 'part'
         # Hide port controllers for vlen, when == 1
-        if self.get_key() in ' '.join(p._vlen for p in self.parent.get_ports()):
+        if self.key in ' '.join(p._vlen for p in self.parent.get_ports()):
             try:
                 if int(self.get_evaluated()) == 1:
                     return 'part'
             except:
                 pass
         # Hide empty grid positions
-        if self.get_key() in ('grid_pos', 'notebook') and not self.get_value():
+        if self.key in ('grid_pos', 'notebook') and not self.get_value():
             return 'part'
         return hide
 
@@ -558,7 +547,7 @@ class Param(Element):
                 return ''
 
             # Get a list of all notebooks
-            notebook_blocks = [b for b in self.parent_flowgraph.get_enabled_blocks() if b.get_key() == 'notebook']
+            notebook_blocks = [b for b in self.parent_flowgraph.get_enabled_blocks() if b.key == 'notebook']
             # Check for notebook param syntax
             try:
                 notebook_id, page_index = map(str.strip, v.split(','))
@@ -666,17 +655,17 @@ class Param(Element):
     def get_name(self):
         return self.parent.resolve_dependencies(self._name).strip()
 
-    def get_key(self):
-        return self._key
-
     ##############################################
     # Access Options
     ##############################################
     def get_option_keys(self):
-        return _get_keys(self.get_options())
+        return [elem.key for elem in self._options]
 
     def get_option(self, key):
-        return _get_elem(self.get_options(), key)
+        for option in self._options:
+            if option.key == key:
+                return option
+        return ValueError('Key "{}" not found in {}.'.format(key, self.get_option_keys()))
 
     def get_options(self):
         return self._options
@@ -704,6 +693,6 @@ class Param(Element):
             a nested data odict
         """
         n = collections.OrderedDict()
-        n['key'] = self.get_key()
+        n['key'] = self.key
         n['value'] = self.get_value()
         return n

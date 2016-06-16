@@ -177,9 +177,9 @@ class VariableEditor(Gtk.VBox):
 
         # Block specific values
         if block:
-            if block.get_key() == 'import':
+            if block.key == 'import':
                 value = block.get_param('import').get_value()
-            elif block.get_key() != "variable":
+            elif block.key != "variable":
                 value = "<Open Properties>"
                 sp('editable', False)
                 sp('foreground', '#0D47A1')
@@ -195,7 +195,7 @@ class VariableEditor(Gtk.VBox):
                 self.set_tooltip_text(error_message[-1])
             else:
                 # Evaluate and show the value (if it is a variable)
-                if block.get_key() == "variable":
+                if block.key == "variable":
                     evaluated = str(block.get_param('value').evaluate())
                     self.set_tooltip_text(evaluated)
         # Always set the text value.
@@ -300,7 +300,7 @@ class VariableEditor(Gtk.VBox):
                 # Make sure this has a block (not the import/variable rows)
                 if self._block and event.type == Gdk.EventType._2BUTTON_PRESS:
                     # Open the advanced dialog if it is a gui variable
-                    if self._block.get_key() not in ("variable", "import"):
+                    if self._block.key not in ("variable", "import"):
                         self.handle_action(None, self.OPEN_PROPERTIES, event=event)
                         return True
                 if event.type == Gdk.EventType.BUTTON_PRESS:

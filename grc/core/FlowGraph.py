@@ -96,24 +96,24 @@ class FlowGraph(Element):
         Returns:
             a list of parameterized variables
         """
-        parameters = [b for b in self.iter_enabled_blocks() if _parameter_matcher.match(b.get_key())]
+        parameters = [b for b in self.iter_enabled_blocks() if _parameter_matcher.match(b.key)]
         return parameters
 
     def get_monitors(self):
         """
         Get a list of all ControlPort monitors
         """
-        monitors = [b for b in self.iter_enabled_blocks() if _monitors_searcher.search(b.get_key())]
+        monitors = [b for b in self.iter_enabled_blocks() if _monitors_searcher.search(b.key)]
         return monitors
 
     def get_python_modules(self):
         """Iterate over custom code block ID and Source"""
         for block in self.iter_enabled_blocks():
-            if block.get_key() == 'epy_module':
+            if block.key == 'epy_module':
                 yield block.get_id(), block.get_param('source_code').get_value()
 
     def get_bussink(self):
-        bussink = [b for b in self.get_enabled_blocks() if _bussink_searcher.search(b.get_key())]
+        bussink = [b for b in self.get_enabled_blocks() if _bussink_searcher.search(b.key)]
 
         for i in bussink:
             for j in i.get_params():
@@ -122,7 +122,7 @@ class FlowGraph(Element):
         return False
 
     def get_bussrc(self):
-        bussrc = [b for b in self.get_enabled_blocks() if _bussrc_searcher.search(b.get_key())]
+        bussrc = [b for b in self.get_enabled_blocks() if _bussrc_searcher.search(b.key)]
 
         for i in bussrc:
             for j in i.get_params():
@@ -131,11 +131,11 @@ class FlowGraph(Element):
         return False
 
     def get_bus_structure_sink(self):
-        bussink = [b for b in self.get_enabled_blocks() if _bus_struct_sink_searcher.search(b.get_key())]
+        bussink = [b for b in self.get_enabled_blocks() if _bus_struct_sink_searcher.search(b.key)]
         return bussink
 
     def get_bus_structure_src(self):
-        bussrc = [b for b in self.get_enabled_blocks() if _bus_struct_src_searcher.search(b.get_key())]
+        bussrc = [b for b in self.get_enabled_blocks() if _bus_struct_src_searcher.search(b.key)]
         return bussrc
 
     def iter_enabled_blocks(self):
@@ -346,8 +346,8 @@ class FlowGraph(Element):
         """
         # sort blocks and connections for nicer diffs
         blocks = sorted(self.blocks, key=lambda b: (
-            b.get_key() != 'options',  # options to the front
-            not b.get_key().startswith('variable'),  # then vars
+            b.key != 'options',  # options to the front
+            not b.key.startswith('variable'),  # then vars
             str(b)
         ))
         connections = sorted(self.connections, key=str)
@@ -416,7 +416,7 @@ class FlowGraph(Element):
         def verify_and_get_port(key, block, dir):
             ports = block.get_sinks() if dir == 'sink' else block.get_sources()
             for port in ports:
-                if key == port.get_key():
+                if key == port.key:
                     break
                 if not key.isdigit() and port.get_type() == '' and key == port.get_name():
                     break
@@ -527,7 +527,7 @@ def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block
         source_port = source_block.get_sources()[int(source_key)]
         sink_port = sink_block.get_sinks()[int(sink_key)]
         if source_port.get_type() == "message" and sink_port.get_type() == "message":
-            source_key, sink_key = source_port.get_key(), sink_port.get_key()
+            source_key, sink_key = source_port.key, sink_port.key
     except (ValueError, IndexError):
         pass
     return source_key, sink_key  # do nothing
@@ -555,7 +555,7 @@ def _initialize_dummy_block(block, block_n):
     Modify block object to get the behaviour for a missing block
     """
 
-    block._key = block_n.get('key')
+    block.key = block_n.get('key')
     block.is_dummy_block = lambda: True
     block.is_valid = lambda: False
     block.get_enabled = lambda: False

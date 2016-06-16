@@ -90,7 +90,7 @@ class FlowGraphProxy(object):
         Returns:
             a list of pad source blocks in this flow graph
         """
-        pads = [b for b in self.get_enabled_blocks() if b.get_key() == 'pad_source']
+        pads = [b for b in self.get_enabled_blocks() if b.key == 'pad_source']
         return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
     def get_pad_sinks(self):
@@ -100,7 +100,7 @@ class FlowGraphProxy(object):
         Returns:
             a list of pad sink blocks in this flow graph
         """
-        pads = [b for b in self.get_enabled_blocks() if b.get_key() == 'pad_sink']
+        pads = [b for b in self.get_enabled_blocks() if b.key == 'pad_sink']
         return sorted(pads, lambda x, y: cmp(x.get_id(), y.get_id()))
 
     def get_pad_port_global_key(self, port):
@@ -121,7 +121,7 @@ class FlowGraphProxy(object):
                 if is_message_pad:
                     key = pad.get_param('label').get_value()
                 else:
-                    key = str(key_offset + int(port.get_key()))
+                    key = str(key_offset + int(port.key))
                 return key
             else:
                 # assuming we have either only sources or sinks

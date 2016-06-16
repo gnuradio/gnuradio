@@ -134,7 +134,7 @@ class Block(Element, _Block):
         #display the params
         if self.is_dummy_block:
             markups = ['<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(
-                font=PARAM_FONT, key=self._key
+                font=PARAM_FONT, key=self.key
             )]
         else:
             markups = [param.format_block_surface_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
@@ -180,7 +180,7 @@ class Block(Element, _Block):
         markups = []
 
         # Show the flow graph complexity on the top block if enabled
-        if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
+        if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.key == "options":
             complexity = calculate_flowgraph_complexity(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'

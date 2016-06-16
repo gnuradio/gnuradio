@@ -199,7 +199,7 @@ class Platform(Element):
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
         # Get block instance and add it to the list of blocks
         block = self.Block(self._flow_graph, n)
-        key = block.get_key()
+        key = block.key
         if key in self.blocks:
             print('Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
         else:  # Store the block
@@ -207,7 +207,7 @@ class Platform(Element):
             self._blocks_n[key] = n
 
         self._docstring_extractor.query(
-            block.get_key(),
+            block.key,
             block.get_imports(raw=True),
             block.get_make(raw=True)
         )

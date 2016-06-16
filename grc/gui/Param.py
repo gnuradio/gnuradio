@@ -66,7 +66,7 @@ class Param(Element, _Param):
         # fixme: using non-public attribute here
         has_callback = \
             hasattr(block, 'get_callbacks') and \
-            any(self.get_key() in callback for callback in block._callbacks)
+            any(self.key in callback for callback in block._callbacks)
 
         return '<span underline="{line}" foreground="{color}" font_desc="Sans 9">{label}</span>'.format(
             line='low' if has_callback else 'none',
@@ -78,7 +78,7 @@ class Param(Element, _Param):
 
     def format_tooltip_text(self):
         errors = self.get_error_messages()
-        tooltip_lines = ['Key: ' + self.get_key(), 'Type: ' + self.get_type()]
+        tooltip_lines = ['Key: ' + self.key, 'Type: ' + self.get_type()]
         if self.is_valid():
             value = str(self.get_evaluated())
             if len(value) > 100:

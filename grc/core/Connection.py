@@ -152,8 +152,8 @@ class Connection(Element):
         n = collections.OrderedDict()
         n['source_block_id'] = self.source_block.get_id()
         n['sink_block_id'] = self.sink_block.get_id()
-        n['source_key'] = self.source_port.get_key()
-        n['sink_key'] = self.sink_port.get_key()
+        n['source_key'] = self.source_port.key
+        n['sink_key'] = self.sink_port.key
         return n
 
     def _make_bus_connect(self):
