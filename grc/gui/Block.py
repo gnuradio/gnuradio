@@ -127,7 +127,7 @@ class Block(Element, _Block):
         #create the main layout
         layout = Gtk.DrawingArea().create_pango_layout('')
         layout.set_markup('<span foreground="{foreground}" font_desc="{font}"><b>{name}</b></span>'.format(
-            foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT, name=Utils.encode(self.get_name())
+            foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT, name=Utils.encode(self.name)
         ))
         self.label_width, self.label_height = layout.get_pixel_size()
         self.layouts.append(layout)

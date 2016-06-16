@@ -68,7 +68,7 @@ class Block(Element):
         """
         Element.__init__(self, parent=flow_graph)
 
-        self._name = n['name']
+        self.name = n['name']
         self._key = n['key']
         self.category = [cat.strip() for cat in n.get('category', '').split('/') if cat.strip()]
         self._flags = n.get('flags', '')
@@ -189,7 +189,7 @@ class Block(Element):
         def check_generate_mode(label, flag, valid_options):
             block_requires_mode = (
                 flag in self.get_flags() or
-                self.get_name().upper().startswith(label)
+                self.name.upper().startswith(label)
             )
             if block_requires_mode and current_generate_option not in valid_options:
                 self.add_error_message("Can't generate this block in mode: {} ".format(
@@ -339,7 +339,7 @@ class Block(Element):
         # print "Rewriting embedded python block {!r}".format(self.get_id())
 
         self._epy_source_hash = src_hash
-        self._name = blk_io.name or blk_io.cls
+        self.name = blk_io.name or blk_io.cls
         self._doc = blk_io.doc
         self._imports[0] = 'import ' + self.get_id()
         self._make = '{0}.{1}({2})'.format(self.get_id(), blk_io.cls, ', '.join(
@@ -492,13 +492,10 @@ class Block(Element):
         return True
 
     def __str__(self):
-        return 'Block - {} - {}({})'.format(self.get_id(), self.get_name(), self.get_key())
+        return 'Block - {} - {}({})'.format(self.get_id(), self.name, self.get_key())
 
     def get_id(self):
         return self.get_param('id').get_value()
-
-    def get_name(self):
-        return self._name
 
     def get_key(self):
         return self._key

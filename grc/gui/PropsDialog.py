@@ -40,7 +40,7 @@ class PropsDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(
             self,
-            title='Properties: ' + block.get_name(),
+            title='Properties: ' + block.name,
             transient_for=parent,
             modal=True,
         )
