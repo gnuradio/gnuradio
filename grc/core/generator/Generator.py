@@ -91,7 +91,7 @@ class TopBlockGenerator(object):
         """generate output and write it to files"""
         # Do throttle warning
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
-                             if b.throtteling()]
+                             if b.is_throtteling]
         if not throttling_blocks and not self._generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
@@ -189,7 +189,7 @@ class TopBlockGenerator(object):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            source_connection = [c for c in connections if c.sink_port == block.get_sinks()[0]]
+            source_connection = [c for c in connections if c.sink_port == block.sinks[0]]
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
@@ -197,7 +197,7 @@ class TopBlockGenerator(object):
             source_port = source_connection[0].source_port
 
             # Loop through all the downstream connections
-            for sink in (c for c in connections if c.source_port == block.get_sources()[0]):
+            for sink in (c for c in connections if c.source_port == block.sources[0]):
                 if not sink.get_enabled():
                     # Ignore disabled connections
                     continue

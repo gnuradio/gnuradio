@@ -56,7 +56,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
                         lambda b: b.is_virtual_sink(),
                         vsp.parent.parent.get_enabled_blocks(),
                     )),
-                ))[0].get_sinks()[0]
+                ))[0].sinks[0]
             ), traversed + [vsp],
         )
     except:
@@ -94,7 +94,7 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
                         lambda b: b.is_virtual_source(),
                         vsp.parent.parent.get_enabled_blocks(),
                     )),
-                )[0].get_sources()[0]
+                )[0].sources[0]
             ), traversed + [vsp],
         )
     except:

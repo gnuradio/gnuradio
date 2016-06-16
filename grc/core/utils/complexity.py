@@ -8,8 +8,8 @@ def calculate_flowgraph_complexity(flowgraph):
             continue
 
         # Don't worry about optional sinks?
-        sink_list = [c for c in block.get_sinks() if not c.get_optional()]
-        source_list = [c for c in block.get_sources() if not c.get_optional()]
+        sink_list = [c for c in block.sinks if not c.get_optional()]
+        source_list = [c for c in block.sources if not c.get_optional()]
         sinks = float(len(sink_list))
         sources = float(len(source_list))
         base = max(min(sinks, sources), 1)

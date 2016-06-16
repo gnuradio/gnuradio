@@ -219,7 +219,7 @@ class ActionHandler:
                         for block in flow_graph.get_selected_blocks():
 
                             # Check for string variables within the blocks
-                            for param in block.get_params():
+                            for param in block.params:
                                 for variable in flow_graph.get_variables():
                                     # If a block parameter exists that is a variable, create a parameter for it
                                     if param.get_value() == variable.get_id():
@@ -289,7 +289,7 @@ class ActionHandler:
 
                                 # setup the references to the sink and source
                                 pad_block = flow_graph.get_block(pad_id)
-                                pad_sink = pad_block.get_sinks()[0]
+                                pad_sink = pad_block.sinks[0]
 
                                 source_block = flow_graph.get_block(pad['block_id'])
                                 source = source_block.get_source(pad['key'])
@@ -310,7 +310,7 @@ class ActionHandler:
 
                                 # setup the references to the sink and source
                                 pad_block = flow_graph.get_block(pad_id)
-                                pad_source = pad_block.get_sources()[0]
+                                pad_source = pad_block.sources[0]
 
                                 sink_block = flow_graph.get_block(pad['block_id'])
                                 sink = sink_block.get_sink(pad['key'])

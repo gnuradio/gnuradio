@@ -127,7 +127,7 @@ class PropsDialog(Gtk.Dialog):
         old_hash = self._hash
         new_hash = self._hash = hash(tuple(
             (hash(param), param.get_name(), param.get_type(), param.get_hide() == 'all',)
-            for param in self._block.get_params()
+            for param in self._block.params
         ))
         return new_hash != old_hash
 
@@ -159,10 +159,10 @@ class PropsDialog(Gtk.Dialog):
                 # empty the params box
                 for child in vbox.get_children():
                     vbox.remove(child)
-                    # child.destroy()   # disabled because it throw errors...
+                    # child.destroy()   # disabled because it throws errors...
                 # repopulate the params box
                 box_all_valid = True
-                for param in [p for p in self._block.get_params() if p.get_tab_label() == tab]:
+                for param in (p for p in self._block.params if p.get_tab_label() == tab):
                     # fixme: why do we even rebuild instead of really hiding params?
                     if param.get_hide() == 'all':
                         continue

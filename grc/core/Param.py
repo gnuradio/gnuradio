@@ -624,7 +624,7 @@ class Param(Element):
         """
         params = []
         for block in self.parent_flowgraph.get_enabled_blocks():
-            params.extend(p for p in block.get_params() if p.get_type() == type)
+            params.extend(p for p in block.params if p.get_type() == type)
         return params
 
     def is_enum(self):

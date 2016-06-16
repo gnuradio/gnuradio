@@ -116,7 +116,7 @@ class FlowGraph(Element):
         bussink = [b for b in self.get_enabled_blocks() if _bussink_searcher.search(b.key)]
 
         for i in bussink:
-            for j in i.get_params():
+            for j in i.params:
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
                     return True
         return False
@@ -125,7 +125,7 @@ class FlowGraph(Element):
         bussrc = [b for b in self.get_enabled_blocks() if _bussrc_searcher.search(b.key)]
 
         for i in bussrc:
-            for j in i.get_params():
+            for j in i.params:
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
                     return True
         return False
@@ -414,7 +414,7 @@ class FlowGraph(Element):
 
         # build the connections
         def verify_and_get_port(key, block, dir):
-            ports = block.get_sinks() if dir == 'sink' else block.get_sources()
+            ports = block.sinks if dir == 'sink' else block.sources
             for port in ports:
                 if key == port.key:
                     break
@@ -524,8 +524,8 @@ def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block
     """
     try:
         # get ports using the "old way" (assuming liner indexed keys)
-        source_port = source_block.get_sources()[int(source_key)]
-        sink_port = sink_block.get_sinks()[int(sink_key)]
+        source_port = source_block.sources[int(source_key)]
+        sink_port = sink_block.sinks[int(sink_key)]
         if source_port.get_type() == "message" and sink_port.get_type() == "message":
             source_key, sink_key = source_port.key, sink_port.key
     except (ValueError, IndexError):
@@ -562,8 +562,8 @@ def _initialize_dummy_block(block, block_n):
     for param_n in block_n.get('param', []):
         if param_n['key'] not in block.get_param_keys():
             new_param_n = {'key': param_n['key'], 'name': param_n['key'], 'type': 'string'}
-            params = block.parent_platform.Param(block=block, n=new_param_n)
-            block.get_params().append(params)
+            param = block.parent_platform.Param(block=block, n=new_param_n)
+            block.param.append(param)
 
 
 def _dummy_block_add_port(block, key, dir):
@@ -571,7 +571,7 @@ def _dummy_block_add_port(block, key, dir):
     port_n = {'name': '?', 'key': key, 'type': ''}
     port = block.parent_platform.Port(block=block, n=port_n, dir=dir)
     if port.is_source:
-        block.get_sources().append(port)
+        block.sources.append(port)
     else:
-        block.get_sinks().append(port)
+        block.sinks.append(port)
     return port
