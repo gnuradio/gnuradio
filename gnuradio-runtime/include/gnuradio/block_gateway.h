@@ -143,6 +143,14 @@ namespace gr {
       return gr::block::set_output_multiple(multiple);
     }
 
+    void block__set_min_output_buffer(int port, long size) {
+      return gr::block::set_min_output_buffer(port, size);
+    }
+
+    void block__set_min_output_buffer(long size) {
+      return gr::block::set_min_output_buffer(size);
+    }
+
     int block__output_multiple(void) const {
       return gr::block::output_multiple();
     }
