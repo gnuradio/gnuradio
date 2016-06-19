@@ -578,26 +578,30 @@ class Block(Element):
         Returns:
             true for change
         """
-        changed = False
+        type_templates = ' '.join(p._type for p in self.get_children())
         type_param = None
         for key, param in six.iteritems(self.params):
-            children = self.get_children()
+            if not param.is_enum():
+                continue
             # Priority to the type controller
-            if param.key in ' '.join([p._type for p in children]): type_param = param
+            if param.key in type_templates:
+                type_param = param
+                break
             # Use param if type param is unset
             if not type_param:
                 type_param = param
-        if type_param:
-            # Try to increment the enum by direction
-            try:
-                keys = type_param.get_option_keys()
-                old_index = keys.index(type_param.get_value())
-                new_index = (old_index + direction + len(keys)) % len(keys)
-                type_param.set_value(keys[new_index])
-                changed = True
-            except:
-                pass
-        return changed
+        if not type_param:
+            return False
+
+        # Try to increment the enum by direction
+        try:
+            keys = type_param.get_option_keys()
+            old_index = keys.index(type_param.get_value())
+            new_index = (old_index + direction + len(keys)) % len(keys)
+            type_param.set_value(keys[new_index])
+            return True
+        except:
+            return False
 
     def port_controller_modify(self, direction):
         """
@@ -611,7 +615,7 @@ class Block(Element):
         """
         changed = False
         # Concat the nports string from the private nports settings of all ports
-        nports_str = ' '.join([port._nports for port in self.get_ports()])
+        nports_str = ' '.join(port._nports for port in self.get_ports())
         # Modify all params whose keys appear in the nports string
         for key, param in six.iteritems(self.params):
             if param.is_enum() or param.key not in nports_str:
@@ -682,12 +686,9 @@ class Block(Element):
     ##############################################
 
     def get_bus_structure(self, direction):
-        if direction == 'source':
-            bus_structure = self._bus_structure_source
-        else:
-            bus_structure = self._bus_structure_sink
-
-        bus_structure = self.resolve_dependencies(bus_structure)
+        bus_structure = self.resolve_dependencies(
+            self._bus_structure_source if direction == 'source' else
+            self._bus_structure_sink)
 
         if not bus_structure:
             return ''  # TODO: Don't like empty strings. should change this to None eventually
@@ -706,70 +707,66 @@ class Block(Element):
         return buslist or ports
 
     def _import_bus_stuff(self, n):
-        bussinks = n.get('bus_sink', [])
-        if len(bussinks) > 0 and not self._bussify_sink:
+        bus_sinks = n.get('bus_sink', [])
+        if len(bus_sinks) > 0 and not self._bussify_sink:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        elif len(bussinks) > 0:
+        elif len(bus_sinks) > 0:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-        bussrcs = n.get('bus_source', [])
-        if len(bussrcs) > 0 and not self._bussify_source:
+        bus_sources = n.get('bus_source', [])
+        if len(bus_sources) > 0 and not self._bussify_source:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
-        elif len(bussrcs) > 0:
+        elif len(bus_sources) > 0:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
             self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
 
     def form_bus_structure(self, direc):
-        if direc == 'source':
-            get_p = self.get_sources
-            get_p_gui = self.get_sources_gui
-            bus_structure = self.get_bus_structure('source')
-        else:
-            get_p = self.get_sinks
-            get_p_gui = self.get_sinks_gui
-            bus_structure = self.get_bus_structure('sink')
+        ports = self.sources if direc == 'source' else self.sinks
+        struct = self.get_bus_structure(direc)
 
-        struct = [list(range(len(get_p())))]
-        if True in [isinstance(a.get_nports(), int) for a in get_p()]:
-            structlet = []
+        if not struct:
+            struct = [list(range(len(ports)))]
+
+        elif any(isinstance(p.get_nports(), int) for p in ports):
             last = 0
-            for j in [i.get_nports() for i in get_p() if isinstance(i.get_nports(), int)]:
-                structlet.extend([a+last for a in range(j)])
-                last = structlet[-1] + 1
-                struct = [structlet]
-        if bus_structure:
-
-            struct = bus_structure
+            structlet = []
+            for port in ports:
+                nports = port.get_nports()
+                if not isinstance(nports, int):
+                    continue
+                structlet.extend(a + last for a in range(nports))
+                last += nports
+            struct = [structlet]
 
         self.current_bus_structure[direc] = struct
         return struct
 
     def bussify(self, n, direc):
         if direc == 'source':
-            get_p = self.get_sources
             get_p_gui = self.get_sources_gui
         else:
-            get_p = self.get_sinks
             get_p_gui = self.get_sinks_gui
 
-        for elt in get_p():
+        ports = self.sources if direc == 'source' else self.sinks
+
+        for elt in ports:
             for connect in elt.get_connections():
                 self.parent.remove_element(connect)
 
-        if ('bus' not in [a.get_type() for a in get_p()]) and len(get_p()) > 0:
+        if ports and all('bus' != p.get_type() for p in ports):
             struct = self.form_bus_structure(direc)
             self.current_bus_structure[direc] = struct
-            if get_p()[0].get_nports():
-                n['nports'] = str(1)
+            if ports[0].get_nports():
+                n['nports'] = '1'
 
             for i in range(len(struct)):
-                n['key'] = str(len(get_p()))
+                n['key'] = str(len(ports))
                 n = dict(n)
                 port = self.parent.parent.Port(block=self, n=n, dir=direc)
-                get_p().append(port)
-        elif 'bus' in [a.get_type() for a in get_p()]:
+                ports.append(port)
+        elif any('bus' == p.get_type() for p in ports):
             for elt in get_p_gui():
-                get_p().remove(elt)
+                ports.remove(elt)
             self.current_bus_structure[direc] = ''
 
     def _init_bus_ports(self, n):

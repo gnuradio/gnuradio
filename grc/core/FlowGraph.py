@@ -461,52 +461,41 @@ class FlowGraph(Element):
     ##############################################
     def bus_ports_rewrite(self):
         # todo: move to block.rewrite()
-        for block in self.blocks:
-            for direc in ['source', 'sink']:
-                if direc == 'source':
-                    get_p = block.get_sources
-                    get_p_gui = block.get_sources_gui
-                    bus_structure = block.form_bus_structure('source')
-                else:
-                    get_p = block.get_sinks
-                    get_p_gui = block.get_sinks_gui
-                    bus_structure = block.form_bus_structure('sink')
+        def doit(block, ports, ports_gui, direc):
+            bus_structure = block.form_bus_structure(direc)
 
-                if 'bus' in [a.get_type() for a in get_p_gui()]:
-                    if len(get_p_gui()) > len(bus_structure):
-                        times = range(len(bus_structure), len(get_p_gui()))
-                        for i in times:
-                            for connect in get_p_gui()[-1].get_connections():
-                                block.parent.remove_element(connect)
-                            get_p().remove(get_p_gui()[-1])
-                    elif len(get_p_gui()) < len(bus_structure):
-                        n = {'name': 'bus', 'type': 'bus'}
-                        if any(isinstance(a.get_nports(), int) for a in get_p()):
-                            n['nports'] = str(1)
+            if any('bus' == a.get_type() for a in ports_gui):
+                if len(ports_gui) > len(bus_structure):
+                    for _ in range(len(bus_structure), len(ports_gui)):
+                        for connect in ports_gui[-1].get_connections():
+                            block.parent.remove_element(connect)
+                        ports.remove(ports_gui[-1])
+                elif len(ports_gui) < len(bus_structure):
+                    n = {'name': 'bus', 'type': 'bus'}
+                    if any(isinstance(a.get_nports(), int) for a in ports):
+                        n['nports'] = str(1)
+                    for _ in range(len(ports_gui), len(bus_structure)):
+                        n['key'] = str(len(ports))
+                        port = block.parent.parent.Port(block=block, n=dict(n), dir=direc)
+                        ports.append(port)
 
-                        times = range(len(get_p_gui()), len(bus_structure))
+            if 'bus' in [a.get_type() for a in block.get_sources_gui()]:
+                for i in range(len(block.get_sources_gui())):
+                    if not block.get_sources_gui()[i].get_connections():
+                        continue
+                    source = block.get_sources_gui()[i]
+                    sink = []
 
-                        for i in times:
-                            n['key'] = str(len(get_p()))
-                            n = dict(n)
-                            port = block.parent.parent.Port(
-                                block=block, n=n, dir=direc)
-                            get_p().append(port)
+                    for j in range(len(source.get_connections())):
+                        sink.append(source.get_connections()[j].sink_port)
+                    for elt in source.get_connections():
+                        self.remove_element(elt)
+                    for j in sink:
+                        self.connect(source, j)
 
-                if 'bus' in [a.get_type() for a in block.get_sources_gui()]:
-                    for i in range(len(block.get_sources_gui())):
-                        if len(block.get_sources_gui()[
-                                   i].get_connections()) > 0:
-                            source = block.get_sources_gui()[i]
-                            sink = []
-
-                            for j in range(len(source.get_connections())):
-                                sink.append(
-                                    source.get_connections()[j].sink_port)
-                            for elt in source.get_connections():
-                                self.remove_element(elt)
-                            for j in sink:
-                                self.connect(source, j)
+        for blk in self.blocks:
+            doit(blk, blk.sources, blk.get_sources_gui(), 'source')
+            doit(blk, blk.sinks, blk.get_sinks_gui(), 'sinks')
 
 
 def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):

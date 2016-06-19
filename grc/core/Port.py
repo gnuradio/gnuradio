@@ -363,18 +363,17 @@ class Port(Element):
     def get_associated_ports(self):
         if not self.get_type() == 'bus':
             return [self]
-        else:
-            flowgraph = self.parent_flowgraph
-            if self.is_source:
-                get_ports = flowgraph.get_sources
-                bus_structure = flowgraph.current_bus_structure['source']
-            else:
-                get_ports = flowgraph.get_sinks
-                bus_structure = flowgraph.current_bus_structure['sink']
 
-            ports = [i for i in get_ports() if not i.get_type() == 'bus']
-            if bus_structure:
-                busses = [i for i in get_ports() if i.get_type() == 'bus']
-                bus_index = busses.index(self)
-                ports = [a for a in ports if ports.index(a) in bus_structure[bus_index]]
-            return ports
+        block = self.parent_block
+        if self.is_source:
+            block_ports = block.sources
+            bus_structure = block.current_bus_structure['source']
+        else:
+            block_ports = block.sinks
+            bus_structure = block.current_bus_structure['sink']
+
+        ports = [i for i in block_ports if not i.get_type() == 'bus']
+        if bus_structure:
+            bus_index = [i for i in block_ports if i.get_type() == 'bus'].index(self)
+            ports = [p for i, p in enumerate(ports) if i in bus_structure[bus_index]]
+        return ports

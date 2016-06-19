@@ -259,7 +259,7 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true for change
         """
-        return any([sb.type_controller_modify(direction) for sb in self.get_selected_blocks()])
+        return any(sb.type_controller_modify(direction) for sb in self.get_selected_blocks())
 
     def port_controller_modify_selected(self, direction):
         """
@@ -271,7 +271,7 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true for changed
         """
-        return any([sb.port_controller_modify(direction) for sb in self.get_selected_blocks()])
+        return any(sb.port_controller_modify(direction) for sb in self.get_selected_blocks())
 
     def enable_selected(self, enable):
         """
