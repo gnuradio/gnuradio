@@ -221,17 +221,17 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
         $indent($blk.get_make())
     #else
         self.$blk.get_id() = $indent($blk.get_make())
-        #if $blk.has_param('alias') and $blk.get_param('alias').get_evaluated()
-        (self.$blk.get_id()).set_block_alias("$blk.get_param('alias').get_evaluated()")
+        #if 'alias' in $blk.params and $blk.params['alias'].get_evaluated()
+        (self.$blk.get_id()).set_block_alias("$blk.params['alias'].get_evaluated()")
         #end if
-        #if $blk.has_param('affinity') and $blk.get_param('affinity').get_evaluated()
-        (self.$blk.get_id()).set_processor_affinity($blk.get_param('affinity').get_evaluated())
+        #if 'affinity' in $blk.params and $blk.params['affinity'].get_evaluated()
+        (self.$blk.get_id()).set_processor_affinity($blk.params['affinity'].get_evaluated())
         #end if
-        #if (len($blk.sources)>0) and $blk.has_param('minoutbuf') and (int($blk.get_param('minoutbuf').get_evaluated()) > 0)
-        (self.$blk.get_id()).set_min_output_buffer($blk.get_param('minoutbuf').get_evaluated())
+        #if len($blk.sources) > 0 and 'minoutbuf' in $blk.params and int($blk.params['minoutbuf'].get_evaluated()) > 0
+        (self.$blk.get_id()).set_min_output_buffer($blk.params['minoutbuf'].get_evaluated())
         #end if
-        #if (len($blk.sources)>0) and $blk.has_param('maxoutbuf') and (int($blk.get_param('maxoutbuf').get_evaluated()) > 0)
-        (self.$blk.get_id()).set_max_output_buffer($blk.get_param('maxoutbuf').get_evaluated())
+        #if len($blk.sources) > 0 and 'maxoutbuf' in $blk.params and int($blk.params['maxoutbuf'].get_evaluated()) > 0
+        (self.$blk.get_id()).set_max_output_buffer($blk.params['maxoutbuf'].get_evaluated())
         #end if
     #end if
 #end for
@@ -404,8 +404,8 @@ def main(top_block_cls=$(class_name), options=None):
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
         #for $m in $monitors
-    if $m.has_param('en'):
-        if $m.get_param('en').get_value():
+    if 'en' in $m.params:
+        if $m.params['en'].get_value():
             (tb.$m.get_id()).start()
     else:
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))

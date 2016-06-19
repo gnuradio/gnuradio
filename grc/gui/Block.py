@@ -65,7 +65,7 @@ class Block(Element, _Block):
             the coordinate tuple (x, y) or (0, 0) if failure
         """
         try:
-            coor = self.get_param('_coordinate').get_value()  # should evaluate to tuple
+            coor = self.params['_coordinate'].get_value()  # should evaluate to tuple
             coor = tuple(int(x) for x in coor[1:-1].split(','))
         except:
             coor = 0, 0
@@ -137,7 +137,8 @@ class Block(Element, _Block):
                 font=PARAM_FONT, key=self.key
             )]
         else:
-            markups = [param.format_block_surface_markup() for param in self.params if param.get_hide() not in ('all', 'part')]
+            markups = [param.format_block_surface_markup()
+                       for param in self.params.values() if param.get_hide() not in ('all', 'part')]
         if markups:
             layout = Gtk.DrawingArea().create_pango_layout('')
             layout.set_spacing(LABEL_SEPARATION*Pango.SCALE)

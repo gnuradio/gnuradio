@@ -116,7 +116,7 @@ class FlowGraph(Element):
         bussink = [b for b in self.get_enabled_blocks() if _bussink_searcher.search(b.key)]
 
         for i in bussink:
-            for j in i.params:
+            for j in i.params.values():
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
                     return True
         return False
@@ -125,7 +125,7 @@ class FlowGraph(Element):
         bussrc = [b for b in self.get_enabled_blocks() if _bussrc_searcher.search(b.key)]
 
         for i in bussrc:
-            for j in i.params:
+            for j in i.params.values():
                 if j.get_name() == 'On/Off' and j.get_value() == 'on':
                     return True
         return False
@@ -560,10 +560,10 @@ def _initialize_dummy_block(block, block_n):
     block.is_valid = lambda: False
     block.get_enabled = lambda: False
     for param_n in block_n.get('param', []):
-        if param_n['key'] not in block.get_param_keys():
+        if param_n['key'] not in block.params:
             new_param_n = {'key': param_n['key'], 'name': param_n['key'], 'type': 'string'}
             param = block.parent_platform.Param(block=block, n=new_param_n)
-            block.param.append(param)
+            block.params.append(param)
 
 
 def _dummy_block_add_port(block, key, dir):

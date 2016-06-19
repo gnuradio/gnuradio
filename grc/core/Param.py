@@ -145,8 +145,8 @@ class Param(Element):
         """
         # If the base key is a valid param key, copy its data and overlay this params data
         base_key = n.get('base_key')
-        if base_key and base_key in block.get_param_keys():
-            n_expanded = block.get_param(base_key)._n.copy()
+        if base_key and base_key in block.params:
+            n_expanded = block.params[base_key]._n.copy()
             n_expanded.update(n)
             n = n_expanded
         # Save odict in case this param will be base for another
@@ -157,9 +157,7 @@ class Param(Element):
         value = n.get('value', '')
         self._type = n.get('type', 'raw')
         self._hide = n.get('hide', '')
-        self._tab_label = n.get('tab', block.get_param_tab_labels()[0])
-        if self._tab_label not in block.get_param_tab_labels():
-            block.get_param_tab_labels().append(self._tab_label)
+        self.tab_label = n.get('tab', Constants.DEFAULT_PARAM_TAB)
         # Build the param
         Element.__init__(self, parent=block)
         # Create the Option objects from the n data
@@ -624,7 +622,7 @@ class Param(Element):
         """
         params = []
         for block in self.parent_flowgraph.get_enabled_blocks():
-            params.extend(p for p in block.params if p.get_type() == type)
+            params.extend(p for p in block.params.values() if p.get_type() == type)
         return params
 
     def is_enum(self):
@@ -650,7 +648,7 @@ class Param(Element):
         return self.parent.resolve_dependencies(self._type)
 
     def get_tab_label(self):
-        return self._tab_label
+        return self.tab_label
 
     def get_name(self):
         return self.parent.resolve_dependencies(self._name).strip()

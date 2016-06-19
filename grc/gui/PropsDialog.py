@@ -59,22 +59,15 @@ class PropsDialog(Gtk.Dialog):
         self.vbox.pack_start(vpaned, True, True, 0)
 
         # Notebook to hold param boxes
-        notebook = Gtk.Notebook()
+        notebook = self.notebook = Gtk.Notebook()
         notebook.set_show_border(False)
         notebook.set_scrollable(True)  # scroll arrows for page tabs
         notebook.set_tab_pos(Gtk.PositionType.TOP)
         vpaned.pack1(notebook, True)
 
         # Params boxes for block parameters
-        self._params_boxes = list()
-        for tab in block.get_param_tab_labels():
-            label = Gtk.Label()
-            vbox = Gtk.VBox()
-            scroll_box = Gtk.ScrolledWindow()
-            scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-            scroll_box.add_with_viewport(vbox)
-            notebook.append_page(scroll_box, label)
-            self._params_boxes.append((tab, label, vbox))
+        self._params_boxes = []
+        self._build_param_tab_boxes(block.params)
 
         # Docs for the block
         self._docs_text_display = doc_view = SimpleTextDisplay()
@@ -113,6 +106,27 @@ class PropsDialog(Gtk.Dialog):
         self.connect('response', self._handle_response)
         self.show_all()  # show all (performs initial gui update)
 
+    def _build_param_tab_boxes(self, params):
+        tab_labels = (p.tab_label for p in self._block.params.values())
+
+        def unique_tab_labels():
+            seen = {Constants.DEFAULT_PARAM_TAB}
+            yield Constants.DEFAULT_PARAM_TAB
+            for tab_label in tab_labels:
+                if tab_label in seen:
+                    continue
+                yield tab_label
+                seen.add(tab_label)
+
+        for tab in unique_tab_labels():
+            label = Gtk.Label()
+            vbox = Gtk.VBox()
+            scroll_box = Gtk.ScrolledWindow()
+            scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+            scroll_box.add_with_viewport(vbox)
+            self.notebook.append_page(scroll_box, label)
+            self._params_boxes.append((tab, label, vbox))
+
     def _params_changed(self):
         """
         Have the params in this dialog changed?
@@ -127,7 +141,7 @@ class PropsDialog(Gtk.Dialog):
         old_hash = self._hash
         new_hash = self._hash = hash(tuple(
             (hash(param), param.get_name(), param.get_type(), param.get_hide() == 'all',)
-            for param in self._block.params
+            for param in self._block.params.values()
         ))
         return new_hash != old_hash
 
@@ -162,9 +176,9 @@ class PropsDialog(Gtk.Dialog):
                     # child.destroy()   # disabled because it throws errors...
                 # repopulate the params box
                 box_all_valid = True
-                for param in (p for p in self._block.params if p.get_tab_label() == tab):
+                for param in self._block.params.values():
                     # fixme: why do we even rebuild instead of really hiding params?
-                    if param.get_hide() == 'all':
+                    if param.get_tab_label() != tab or param.get_hide() == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
 

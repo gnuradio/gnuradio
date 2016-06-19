@@ -219,7 +219,7 @@ class ActionHandler:
                         for block in flow_graph.get_selected_blocks():
 
                             # Check for string variables within the blocks
-                            for param in block.params:
+                            for param in block.params.values():
                                 for variable in flow_graph.get_variables():
                                     # If a block parameter exists that is a variable, create a parameter for it
                                     if param.get_value() == variable.get_id():

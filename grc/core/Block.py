@@ -22,6 +22,7 @@ from __future__ import absolute_import
 import collections
 import itertools
 
+import six
 from six.moves import map, range
 
 from Cheetah.Template import Template
@@ -90,8 +91,7 @@ class Block(Element):
         sinks_n = n.get('sink', [])
 
         # Get list of param tabs
-        self._param_tab_labels = n.get('param_tab_order', {}).get('tab') or [DEFAULT_PARAM_TAB]
-        self.params = []
+        self.params = collections.OrderedDict()
         self._init_params(
             params_n=params_n,
             has_sinks=len(sinks_n),
@@ -110,8 +110,7 @@ class Block(Element):
     def _add_param(self, key, name, value='', type='raw', **kwargs):
         n = {'key': key, 'name': name, 'value': value, 'type': type}
         n.update(kwargs)
-        param = self.parent_platform.Param(block=self, n=n)
-        self.params.append(param)
+        self.params[key] = self.parent_platform.Param(block=self, n=n)
 
     def _init_params(self, params_n, has_sources, has_sinks):
         self._add_param(key='id', name='ID', type='id')
@@ -144,14 +143,12 @@ class Block(Element):
             self._add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
                             hide='part', value='0', tab=ADVANCED_PARAM_TAB)
 
-        param_keys = set(param.key for param in self.params)
         for param_n in params_n:
             param = self.parent_platform.Param(block=self, n=param_n)
             key = param.key
-            if key in param_keys:
+            if key in self.params:
                 raise Exception('Key "{}" already exists in params'.format(key))
-            param_keys.add(key)
-            self.params.append(param)
+            self.params[key] = param
 
         self._add_param(key='comment', name='Comment', type='_multiline', hide='part',
                         value='', tab=ADVANCED_PARAM_TAB)
@@ -215,7 +212,7 @@ class Block(Element):
         self._validate_generate_mode_compat()
         self._validate_var_value()
         if self._epy_reload_error:
-            self.get_param('_source_code').add_error_message(str(self._epy_reload_error))
+            self.params['_source_code'].add_error_message(str(self._epy_reload_error))
 
     def rewrite(self):
         """
@@ -308,8 +305,8 @@ class Block(Element):
     def rewrite_epy_block(self):
         flowgraph = self.parent_flowgraph
         platform = self.parent_block
-        param_blk = self.get_param('_io_cache')
-        param_src = self.get_param('_source_code')
+        param_blk = self.params['_io_cache']
+        param_src = self.params['_source_code']
 
         src = param_src.get_value()
         src_hash = hash((self.get_id(), src))
@@ -346,7 +343,7 @@ class Block(Element):
         for param in list(self.params):
             if hasattr(param, '__epy_param__'):
                 params[param.key] = param
-                self.params.remove(param)
+                del self.params[param.key]
 
         for key, value in blk_io.params:
             try:
@@ -357,7 +354,7 @@ class Block(Element):
                 n = dict(name=name, key=key, type='raw', value=value)
                 param = platform.Param(block=self, n=n)
                 setattr(param, '__epy_param__', True)
-            self.params.append(param)
+            self.params[key] = param
 
         def update_ports(label, ports, port_specs, direction):
             ports_to_remove = list(ports)
@@ -413,7 +410,7 @@ class Block(Element):
             DISABLED - 2
         """
         try:
-            return int(self.get_param('_enabled').get_value())
+            return int(self.params['_enabled'].get_value())
         except ValueError:
             return self.ENABLED
 
@@ -429,7 +426,7 @@ class Block(Element):
         """
         if value not in [self.ENABLED, self.BYPASSED, self.DISABLED]:
             value = self.ENABLED
-        self.get_param('_enabled').set_value(str(value))
+        self.params['_enabled'].set_value(str(value))
 
     # Enable/Disable Aliases
     def get_enabled(self):
@@ -491,7 +488,7 @@ class Block(Element):
         return 'Block - {} - {}({})'.format(self.get_id(), self.name, self.key)
 
     def get_id(self):
-        return self.get_param('id').get_value()
+        return self.params['id'].get_value()
 
     def get_ports(self):
         return self.sources + self.sinks
@@ -500,13 +497,13 @@ class Block(Element):
         return self.filter_bus_port(self.sources) + self.filter_bus_port(self.sinks)
 
     def get_children(self):
-        return self.get_ports() + self.params
+        return self.get_ports() + self.params.values()
 
     def get_children_gui(self):
-        return self.get_ports_gui() + self.params
+        return self.get_ports_gui() + self.params.values()
 
     def get_comment(self):
-        return self.get_param('comment').get_value()
+        return self.params['comment'].get_value()
 
     @property
     def is_throtteling(self):
@@ -519,30 +516,15 @@ class Block(Element):
     ##############################################
     # Access Params
     ##############################################
-    def get_param_tab_labels(self):
-        return self._param_tab_labels
-
-    def get_param_keys(self):
-        return [p.key for p in self.params]
 
     def get_param(self, key):
-        return _get_elem(self.params, key)
-
-    def has_param(self, key):
-        try:
-            _get_elem(self.params, key)
-            return True
-        except:
-            return False
+        return self.params[key]
 
     ##############################################
     # Access Sinks
     ##############################################
     def get_sink(self, key):
         return _get_elem(self.sinks, key)
-
-    def get_sinks(self):
-        return self.sinks
 
     def get_sinks_gui(self):
         return self.filter_bus_port(self.sinks)
@@ -552,9 +534,6 @@ class Block(Element):
     ##############################################
     def get_source(self, key):
         return _get_elem(self.sources, key)
-
-    def get_sources(self):
-        return self.sources
 
     def get_sources_gui(self):
         return self.filter_bus_port(self.sources)
@@ -580,7 +559,7 @@ class Block(Element):
         if '$' not in tmpl:
             return tmpl
         # TODO: cache that
-        n = {param.key: param.template_arg for param in self.params}
+        n = {key: param.template_arg for key, param in six.iteritems(self.params)}
         try:
             return str(Template(tmpl, n))
         except Exception as err:
@@ -601,7 +580,7 @@ class Block(Element):
         """
         changed = False
         type_param = None
-        for param in [p for p in self.params if p.is_enum()]:
+        for key, param in six.iteritems(self.params):
             children = self.get_children()
             # Priority to the type controller
             if param.key in ' '.join([p._type for p in children]): type_param = param
@@ -634,14 +613,13 @@ class Block(Element):
         # Concat the nports string from the private nports settings of all ports
         nports_str = ' '.join([port._nports for port in self.get_ports()])
         # Modify all params whose keys appear in the nports string
-        for param in self.params:
+        for key, param in six.iteritems(self.params):
             if param.is_enum() or param.key not in nports_str:
                 continue
             # Try to increment the port controller by direction
             try:
-                value = param.get_evaluated()
-                value = value + direction
-                if 0 < value:
+                value = param.get_evaluated() + direction
+                if value > 0:
                     param.set_value(value)
                     changed = True
             except:
@@ -660,7 +638,7 @@ class Block(Element):
         """
         n = collections.OrderedDict()
         n['key'] = self.key
-        n['param'] = [p.export_data() for p in sorted(self.params, key=str)]
+        n['param'] = [param.export_data() for _, param in sorted(six.iteritems(self.params))]
         if 'bus' in [a.get_type() for a in self.sinks]:
             n['bus_sink'] = str(1)
         if 'bus' in [a.get_type() for a in self.sources]:
@@ -680,10 +658,9 @@ class Block(Element):
             n: the nested data odict
         """
         params_n = n.get('param', [])
-        params = dict((param.key, param) for param in self.params)
 
         def get_hash():
-            return hash(tuple(map(hash, self.params)))
+            return hash(tuple(map(hash, self.params.values())))
 
         my_hash = 0
         while get_hash() != my_hash:
@@ -691,7 +668,7 @@ class Block(Element):
                 key = param_n['key']
                 value = param_n['value']
                 try:
-                    params[key].set_value(value)
+                    self.params[key].set_value(value)
                 except KeyError:
                     continue
             # Store hash and call rewrite
