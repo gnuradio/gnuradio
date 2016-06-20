@@ -82,7 +82,7 @@ qa_atsci_fake_single_viterbi::t0 ()
 
   // printf ("  Delay is %d.\n", delay);
 
-  srandom (27);		// reproducable sequence of "random" values
+  srandom (27);		// reproducible sequence of "random" values
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
@@ -143,4 +143,3 @@ qa_atsci_fake_single_viterbi::t0 ()
 
   CPPUNIT_ASSERT (decoder_errors == 0);
 }
-

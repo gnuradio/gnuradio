@@ -199,7 +199,7 @@ class FileDialog(FileDialogHelper):
         Get the filename and destroy the dialog.
 
         Returns:
-            the filename or None if a close/cancel occured.
+            the filename or None if a close/cancel occurred.
         """
         filename = self.get_rectified_filename()
         self.destroy()

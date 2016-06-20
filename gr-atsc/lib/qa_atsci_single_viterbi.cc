@@ -79,7 +79,7 @@ qa_atsci_single_viterbi::t0 ()
 
   // printf ("  Delay is %d.\n", delay);
 
-  srandom (27);		// reproducable sequence of "random" values
+  srandom (27);		// reproducible sequence of "random" values
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
@@ -157,7 +157,7 @@ qa_atsci_single_viterbi::t1 ()
 
   // printf ("  Delay is %d.\n", delay);
 
-  srandom (1);		// reproducable sequence of "random" values
+  srandom (1);		// reproducible sequence of "random" values
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
