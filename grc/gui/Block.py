@@ -45,13 +45,11 @@ class Block(Element, _Block):
         Add graphics related params to the block.
         """
         _Block.__init__(self, flow_graph, n)
-        self.W = self.H = 0
-        self._add_param(key='_coordinate', name='GUI Coordinate', value='(0, 0)',
-                        hide='all')
-        self._add_param(key='_rotation', name='GUI Rotation', value='0',
-                        hide='all')
 
-        Element.__init__(self)  # needs the params
+        self.states.update(_coordinate=(0, 0), _rotation=0)
+        Element.__init__(self)  # needs the states
+
+        self.W = self.H = 0
         self._param_layouts = []
         self._comment_layout = None
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
@@ -64,13 +62,7 @@ class Block(Element, _Block):
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
-        try:
-            coor = self.params['_coordinate'].get_value()  # should evaluate to tuple
-            coor = tuple(int(x) for x in coor[1:-1].split(','))
-        except:
-            coor = 0, 0
-            self.set_coordinate(coor)
-        return coor
+        return self.states['_coordinate']
 
     def set_coordinate(self, coor):
         """
@@ -85,7 +77,7 @@ class Block(Element, _Block):
                 Utils.align_to_grid(coor[0] + offset_x) - offset_x,
                 Utils.align_to_grid(coor[1] + offset_y) - offset_y
             )
-        self.get_param('_coordinate').set_value(repr(coor))
+        self.states['_coordinate'] = coor
 
     def get_rotation(self):
         """
@@ -94,21 +86,16 @@ class Block(Element, _Block):
         Returns:
             the rotation in degrees or 0 if failure
         """
-        try: #should evaluate to dict
-            rotation = int(self.get_param('_rotation').get_value())
-        except:
-            rotation = POSSIBLE_ROTATIONS[0]
-            self.set_rotation(rotation)
-        return rotation
+        return self.states['_rotation']
 
     def set_rotation(self, rot):
         """
         Set the rotation into the position param.
-
+q
         Args:
             rot: the rotation in degrees
         """
-        self.get_param('_rotation').set_value(repr(int(rot)))
+        self.states['_rotation'] = rot
 
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""

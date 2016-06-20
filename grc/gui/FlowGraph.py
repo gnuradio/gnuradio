@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 import functools
+import ast
 import random
 from distutils.spawn import find_executable
 from itertools import count
@@ -219,12 +220,17 @@ class FlowGraph(Element, _Flowgraph):
                 continue  # unknown block was pasted (e.g. dummy block)
             selected.add(block)
             #set params
-            params = {n['key']: n['value'] for n in block_n.get('param', [])}
+            param_data = {n['key']: n['value'] for n in block_n.get('param', [])}
+            for key in block.states:
+                try:
+                    block.states[key] = ast.literal_eval(param_data.pop(key))
+                except (KeyError, SyntaxError, ValueError):
+                    pass
             if block_key == 'epy_block':
-                block.get_param('_io_cache').set_value(params.pop('_io_cache'))
-                block.get_param('_source_code').set_value(params.pop('_source_code'))
+                block.get_param('_io_cache').set_value(param_data.pop('_io_cache'))
+                block.get_param('_source_code').set_value(param_data.pop('_source_code'))
                 block.rewrite()  # this creates the other params
-            for param_key, param_value in six.iteritems(params):
+            for param_key, param_value in six.iteritems(param_data):
                 #setup id parameter
                 if param_key == 'id':
                     old_id2block[param_value] = block

@@ -21,6 +21,7 @@ from __future__ import absolute_import
 
 import collections
 import itertools
+import ast
 
 import six
 from six.moves import map, range
@@ -31,7 +32,7 @@ from . import utils
 
 from . Constants import (
     BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI,
-    ADVANCED_PARAM_TAB, DEFAULT_PARAM_TAB,
+    ADVANCED_PARAM_TAB,
     BLOCK_FLAG_THROTTLE, BLOCK_FLAG_DISABLE_BYPASS,
     BLOCK_FLAG_DEPRECATED,
 )
@@ -101,6 +102,8 @@ class Block(Element):
         self.sources = self._init_ports(sources_n, direction='source')
         self.sinks = self._init_ports(sinks_n, direction='sink')
 
+        self.states = {'_enabled': True}
+
         self._epy_source_hash = -1  # for epy blocks
         self._epy_reload_error = None
 
@@ -113,7 +116,6 @@ class Block(Element):
 
     def _init_params(self, params_n, has_sources, has_sinks):
         self._add_param(key='id', name='ID', type='id')
-        self._add_param(key='_enabled', name='Enabled', value='True', type='raw', hide='all')
 
         # Virtual source/sink and pad source/sink blocks are
         # indistinguishable from normal GR blocks. Make explicit
@@ -409,7 +411,7 @@ class Block(Element):
             DISABLED - 2
         """
         try:
-            return self.STATE_LABELS[int(self.params['_enabled'].get_value())]
+            return self.STATE_LABELS[int(self.states['_enabled'])]
         except ValueError:
             return 'enabled'
 
@@ -424,10 +426,10 @@ class Block(Element):
             DISABLED - 2
         """
         try:
-            encoded = str(self.STATE_LABELS.index(value))
+            encoded = self.STATE_LABELS.index(value)
         except ValueError:
-            encoded = str(self.STATE_LABELS.index('enabled'))
-        self.params['_enabled'].set_value(encoded)
+            encoded = 1
+        self.states['_enabled'] = encoded
 
     # Enable/Disable Aliases
     def get_enabled(self):
@@ -643,11 +645,16 @@ class Block(Element):
         """
         n = collections.OrderedDict()
         n['key'] = self.key
-        n['param'] = [param.export_data() for _, param in sorted(six.iteritems(self.params))]
-        if 'bus' in [a.get_type() for a in self.sinks]:
-            n['bus_sink'] = str(1)
-        if 'bus' in [a.get_type() for a in self.sources]:
-            n['bus_source'] = str(1)
+
+        params = (param.export_data() for param in six.itervalues(self.params))
+        states = (collections.OrderedDict([('key', key), ('value', repr(value))])
+                  for key, value in six.iteritems(self.states))
+        n['param'] = sorted(itertools.chain(states, params), key=lambda p: p['key'])
+
+        if any('bus' in a.get_type() for a in self.sinks):
+            n['bus_sink'] = '1'
+        if any('bus' in a.get_type() for a in self.sources):
+            n['bus_source'] = '1'
         return n
 
     def import_data(self, n):
@@ -662,22 +669,26 @@ class Block(Element):
         Args:
             n: the nested data odict
         """
-        params_n = n.get('param', [])
+        param_data = {p['key']: p['value'] for p in n.get('param', [])}
+
+        for key in self.states:
+            try:
+                self.states[key] = ast.literal_eval(param_data.pop(key))
+            except (KeyError, SyntaxError, ValueError):
+                pass
 
         def get_hash():
-            return hash(tuple(map(hash, self.params.values())))
+            return hash(tuple(hash(v) for v in self.params.values()))
 
-        my_hash = 0
-        while get_hash() != my_hash:
-            for param_n in params_n:
-                key = param_n['key']
-                value = param_n['value']
+        pre_rewrite_hash = -1
+        while pre_rewrite_hash != get_hash():
+            for key, value in six.iteritems(param_data):
                 try:
                     self.params[key].set_value(value)
                 except KeyError:
                     continue
             # Store hash and call rewrite
-            my_hash = get_hash()
+            pre_rewrite_hash = get_hash()
             self.rewrite()
 
         self._import_bus_stuff(n)
