@@ -56,7 +56,7 @@ namespace gr {
        * \param threshold_factor_fall The threshold factor determins
        *        when a peak has ended. An average of the signal is
        *        calculated and when the value of the signal goes
-       *        bellow threshold_factor_fall*average, we stop looking
+       *        below threshold_factor_fall*average, we stop looking
        *        for a peak.
        * \param look_ahead The look-ahead value is used when the
        *        threshold is found to look if there another peak

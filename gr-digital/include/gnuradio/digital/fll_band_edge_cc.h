@@ -107,7 +107,7 @@ namespace gr {
        * \brief Set the number of samples per symbol
        *
        * Set's the number of samples per symbol the system should
-       * use. This value is uesd to calculate the filter taps and will
+       * use. This value is used to calculate the filter taps and will
        * force a recalculation.
        *
        * \param sps    (float) new samples per symbol

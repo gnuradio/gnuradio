@@ -50,7 +50,7 @@ namespace gr {
       typedef boost::shared_ptr<pfb_arb_resampler_ccc> sptr;
 
       /*!
-       * Build the polyphase filterbank arbitray resampler.
+       * Build the polyphase filterbank arbitrary resampler.
        * \param rate  (float) Specifies the resampling rate to use
        * \param taps  (vector/list of complex) The prototype filter to populate the filterbank. The taps
        *              should be generated at the filter_size sampling rate.

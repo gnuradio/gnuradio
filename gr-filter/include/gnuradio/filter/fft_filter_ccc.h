@@ -36,7 +36,7 @@ namespace gr {
      * \details
      * This block implements a complex decimating filter using the
      * fast convolution method via an FFT. The decimation factor is an
-     * interger that is greater than or equal to 1.
+     * integer that is greater than or equal to 1.
      *
      * The filter takes a set of complex (or real) taps to use in the
      * filtering operation. These taps can be defined as anything that

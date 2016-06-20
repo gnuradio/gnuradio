@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
+     * \brief Converts a byte with k relevant bits to k output bytes with 1 bit in the LSB.
      *
      * This block picks the K least significant bits from a byte, and expands
      * them into K bytes of 0 or 1.

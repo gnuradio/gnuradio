@@ -53,7 +53,7 @@ namespace gr {
      * berminerrors are observed and then produces a BER
      * calculation. The parameter \p ber_limit helps make sure that
      * the simulation is controlled. If the BER calculation drops
-     * bellow the \p ber_limit setting, the block will exit and simply
+     * below the \p ber_limit setting, the block will exit and simply
      * return the set limit; the real BER is therefore some amount
      * lower than this.
      *

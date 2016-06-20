@@ -152,7 +152,7 @@ namespace gr {
           while(!d->d_tpb.input_changed && block->empty_handled_p()){
             boost::system_time const timeout=boost::get_system_time()+ boost::posix_time::milliseconds(250);
             if(!d->d_tpb.input_cond.timed_wait(guard, timeout)){
-              goto tpb_loop_top; // timeout occured (perform sanity checks up top)
+              goto tpb_loop_top; // timeout occurred (perform sanity checks up top)
             }
           }
 

@@ -171,7 +171,7 @@ namespace gr {
      * \brief Called to enable drivers, etc for i/o devices.
      *
      * This allows a block to enable an associated driver to begin
-     * transfering data just before we start to execute the scheduler.
+     * transferring data just before we start to execute the scheduler.
      * The end result is that this reduces latency in the pipeline
      * when dealing with audio devices, usrps, etc.
      */
@@ -343,7 +343,7 @@ namespace gr {
      *
      * Use this value to clear the 'is_set' flag so the scheduler will
      * ignore this. Use the set_max_noutput_items(m) call to both set
-     * a new value for max_noutput_items and to reenable its use in
+     * a new value for max_noutput_items and to re-enable its use in
      * the scheduler.
      */
     void unset_max_noutput_items();
@@ -411,7 +411,7 @@ namespace gr {
     long min_output_buffer(size_t i);
 
     /*!
-     * \brief Request limit on the mininum buffer size on all output
+     * \brief Request limit on the minimum buffer size on all output
      * ports.
      *
      * \details

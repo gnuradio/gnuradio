@@ -31,7 +31,7 @@ namespace gr {
 
     /*!
      * \brief Converts a stream of bytes with 1 bit in the LSB to a
-     * byte with k relevent bits.
+     * byte with k relevant bits.
      *
      * This block takes in K bytes at a time, and uses the least significant
      * bit to form a new byte.

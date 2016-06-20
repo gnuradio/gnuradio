@@ -55,7 +55,7 @@ namespace gr {
        * number of taps.
        *
        * Each filter operates using the gr::filter::fir_filter_XXX
-       * classs of GNU Radio, which takes the input stream at
+       * class of GNU Radio, which takes the input stream at
        * <EM>i</EM> and performs the inner product calculation to
        * <EM>i+(n-1)</EM> where <EM>n</EM> is the number of filter
        * taps. To efficiently handle this in the GNU Radio structure,

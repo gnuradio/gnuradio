@@ -36,7 +36,7 @@ namespace gr {
      * \ingroup channelizers_blk
      *
      * \details
-     * This block takes in a signal stream and performs interger down-
+     * This block takes in a signal stream and performs integer down-
      * sampling (decimation) with a polyphase filterbank. The first
      * input is the integer specifying how much to decimate by. The
      * second input is a vector (Python list) of floating-point taps

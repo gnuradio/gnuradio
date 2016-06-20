@@ -37,7 +37,7 @@ namespace gr {
      * output = complex(cos(in*sensitivity), sin(in*sensitivity))
      *
      * Input stream 0: floats
-     * Ouput stream 0: complex
+     * Output stream 0: complex
      */
     class ANALOG_API phase_modulator_fc : virtual public sync_block
     {

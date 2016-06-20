@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,11 +38,17 @@ namespace gr {
      private:
       unsigned int frame_size;
       unsigned int frame_size_real;
+      unsigned int frame_size_type;
       unsigned int signal_constellation;
       unsigned int nbch;
       unsigned int code_rate;
       unsigned int q_val;
       unsigned int dvb_standard;
+      int Xs;
+      int P;
+      int Xp;
+      unsigned char puncturing_buffer[FRAME_SIZE_NORMAL];
+      unsigned char shortening_buffer[FRAME_SIZE_NORMAL];
       void ldpc_lookup_generate(void);
       ldpc_encode_table ldpc_encode;
 
@@ -71,6 +77,7 @@ namespace gr {
       const static int ldpc_tab_5_6S[37][14];
       const static int ldpc_tab_8_9S[40][5];
 
+      const static int ldpc_tab_2_9N[40][12];
       const static int ldpc_tab_13_45N[52][13];
       const static int ldpc_tab_9_20N[81][13];
       const static int ldpc_tab_11_20N[99][14];
@@ -102,6 +109,10 @@ namespace gr {
       const static int ldpc_tab_8_15S[24][22];
       const static int ldpc_tab_26_45S[26][14];
       const static int ldpc_tab_32_45S[32][13];
+
+      const static int ldpc_tab_1_5M[18][14];
+      const static int ldpc_tab_11_45M[22][11];
+      const static int ldpc_tab_1_3M[30][13];
 
      public:
       dvb_ldpc_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation);

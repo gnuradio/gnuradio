@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,6 +99,11 @@ namespace gr {
             kbch = 58192;
             nbch = 58320;
             bch_code = BCH_CODE_N8;
+            break;
+          case C2_9_VLSNR:
+            kbch = 14208;
+            nbch = 14400;
+            bch_code = BCH_CODE_N12;
             break;
           case C13_45:
             kbch = 18528;
@@ -222,7 +227,7 @@ namespace gr {
             break;
         }
       }
-      else {
+      else if (framesize == FECFRAME_SHORT) {
         switch (rate) {
           case C1_4:
             kbch = 3072;
@@ -308,6 +313,55 @@ namespace gr {
             kbch = 11352;
             nbch = 11520;
             bch_code = BCH_CODE_S12;
+            break;
+          case C1_5_VLSNR_SF2:
+            kbch = 2512;
+            nbch = 2680;
+            bch_code = BCH_CODE_S12;
+            break;
+          case C11_45_VLSNR_SF2:
+            kbch = 3792;
+            nbch = 3960;
+            bch_code = BCH_CODE_S12;
+            break;
+          case C1_5_VLSNR:
+            kbch = 3072;
+            nbch = 3240;
+            bch_code = BCH_CODE_S12;
+            break;
+          case C4_15_VLSNR:
+            kbch = 4152;
+            nbch = 4320;
+            bch_code = BCH_CODE_S12;
+            break;
+          case C1_3_VLSNR:
+            kbch = 5232;
+            nbch = 5400;
+            bch_code = BCH_CODE_S12;
+            break;
+          default:
+            kbch = 0;
+            nbch = 0;
+            bch_code = 0;
+            break;
+        }
+      }
+      else {
+        switch (rate) {
+          case C1_5_MEDIUM:
+            kbch = 5660;
+            nbch = 5840;
+            bch_code = BCH_CODE_M12;
+            break;
+          case C11_45_MEDIUM:
+            kbch = 7740;
+            nbch = 7920;
+            bch_code = BCH_CODE_M12;
+            break;
+          case C1_3_MEDIUM:
+            kbch = 10620;
+            nbch = 10800;
+            bch_code = BCH_CODE_M12;
             break;
           default:
             kbch = 0;
@@ -453,6 +507,20 @@ namespace gr {
       const int polyn11[]={1,0,1,1,0,1,0,0,0,1,0,1,1,1,0,0,1};
       const int polyn12[]={1,1,0,0,0,1,1,1,0,1,0,1,1,0,0,0,1};
 
+      // Medium polynomials
+      const int polym01[]={1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,1};
+      const int polym02[]={1,1,0,0,1,0,0,1,0,0,1,1,0,0,0,1};
+      const int polym03[]={1,0,1,0,1,0,1,0,1,0,1,0,1,1,0,1};
+      const int polym04[]={1,0,1,1,0,1,1,0,1,0,1,1,0,0,0,1};
+      const int polym05[]={1,1,1,0,1,0,1,1,0,0,1,0,1,0,0,1};
+      const int polym06[]={1,0,0,0,1,0,1,1,0,0,0,0,1,1,0,1};
+      const int polym07[]={1,0,1,0,1,1,0,1,0,0,0,1,1,0,1,1};
+      const int polym08[]={1,0,1,0,1,0,1,0,1,1,0,1,0,0,1,1};
+      const int polym09[]={1,1,1,0,1,1,0,1,0,1,0,1,1,1,0,1};
+      const int polym10[]={1,1,1,1,1,0,0,1,0,0,1,1,1,1,0,1};
+      const int polym11[]={1,1,1,0,1,0,0,0,0,1,0,1,0,0,0,1};
+      const int polym12[]={1,0,1,0,1,0,0,0,1,0,1,1,0,1,1,1};
+
       // Short polynomials
       const int polys01[]={1,1,0,1,0,1,0,0,0,0,0,0,0,0,1};
       const int polys02[]={1,0,0,0,0,0,1,0,1,0,0,1,0,0,1};
@@ -499,6 +567,19 @@ namespace gr {
       len = poly_mult(polys11, 15, polyout[0], len, polyout[1]);
       len = poly_mult(polys12, 15, polyout[1], len, polyout[0]);
       poly_pack(polyout[0], m_poly_s_12, 168);
+
+      len = poly_mult(polym01, 16, polym02,    16,  polyout[0]);
+      len = poly_mult(polym03, 16, polyout[0], len, polyout[1]);
+      len = poly_mult(polym04, 16, polyout[1], len, polyout[0]);
+      len = poly_mult(polym05, 16, polyout[0], len, polyout[1]);
+      len = poly_mult(polym06, 16, polyout[1], len, polyout[0]);
+      len = poly_mult(polym07, 16, polyout[0], len, polyout[1]);
+      len = poly_mult(polym08, 16, polyout[1], len, polyout[0]);
+      len = poly_mult(polym09, 16, polyout[0], len, polyout[1]);
+      len = poly_mult(polym10, 16, polyout[1], len, polyout[0]);
+      len = poly_mult(polym11, 16, polyout[0], len, polyout[1]);
+      len = poly_mult(polym12, 16, polyout[1], len, polyout[0]);
+      poly_pack(polyout[0], m_poly_m_12, 180);
     }
 
     int
@@ -615,6 +696,33 @@ namespace gr {
             // Now add the parity bits to the output
             for (int n = 0; n < 168; n++) {
               *out++ = (shift[5] & 0x01000000) ? 1 : 0;
+              reg_6_shift(shift);
+            }
+          }
+          break;
+        case BCH_CODE_M12:
+          for (int i = 0; i < noutput_items; i += nbch) {
+            //Zero the shift register
+            memset(shift, 0, sizeof(unsigned int) * 6);
+            // MSB of the codeword first
+            for (int j = 0; j < (int)kbch; j++) {
+              temp = *in++;
+              *out++ = temp;
+              consumed++;
+              b = (temp ^ ((shift[5] & 0x00001000) ? 1 : 0));
+              reg_6_shift(shift);
+              if (b) {
+                shift[0] ^= m_poly_m_12[0];
+                shift[1] ^= m_poly_m_12[1];
+                shift[2] ^= m_poly_m_12[2];
+                shift[3] ^= m_poly_m_12[3];
+                shift[4] ^= m_poly_m_12[4];
+                shift[5] ^= m_poly_m_12[5];
+              }
+            }
+            // Now add the parity bits to the output
+            for (int n = 0; n < 180; n++) {
+              *out++ = (shift[5] & 0x00001000) ? 1 : 0;
               reg_6_shift(shift);
             }
           }
