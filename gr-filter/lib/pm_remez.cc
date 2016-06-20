@@ -575,7 +575,7 @@ namespace gr {
      *=======
      * Calculates the optimal (in the Chebyshev/minimax sense)
      * FIR filter impulse response given a set of band edges,
-     * the desired reponse on those bands, and the weight given to
+     * the desired response on those bands, and the weight given to
      * the error in those bands.
      *
      * INPUT:

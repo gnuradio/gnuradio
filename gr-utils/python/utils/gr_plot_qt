@@ -26,7 +26,7 @@ except ImportError:
     raise SystemExit, 1
 
 try:
-    # FIXME: reenable this before committing
+    # FIXME: re-enable this before committing
     #from gnuradio.pyqt_plot import Ui_MainWindow
     from gnuradio.pyqt_plot import Ui_MainWindow
 except ImportError:

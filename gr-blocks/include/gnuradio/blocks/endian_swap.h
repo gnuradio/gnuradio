@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Convert stream of items into thier byte swapped version
+     * \brief Convert stream of items into their byte swapped version
      * \ingroup stream_operators_blk
      */
     class BLOCKS_API endian_swap : virtual public sync_block

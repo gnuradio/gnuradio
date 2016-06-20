@@ -31,7 +31,7 @@ namespace gr {
     namespace kernel {
 
       /*!
-       * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
+       * \brief Converts a byte with k relevant bits to k output bytes with 1 bit in the LSB.
        *
        * This is the algorithm kernel for the gr::blocks::unpack_k_bits_bb block.
        *

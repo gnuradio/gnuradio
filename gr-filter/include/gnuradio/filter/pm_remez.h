@@ -36,8 +36,8 @@ namespace gr {
      *
      * \details
      * Calculates the optimal (in the Chebyshev/minimax sense) FIR
-     * filter inpulse reponse given a set of band edges, the desired
-     * reponse on those bands, and the weight given to the error in
+     * filter inpulse response given a set of band edges, the desired
+     * response on those bands, and the weight given to the error in
      * those bands.
      *
      * \param order         filter order (number of taps in the returned filter - 1)
