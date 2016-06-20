@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,15 +53,18 @@ namespace gr {
       unsigned char crc;
       unsigned int input_mode;
       unsigned int extra;
+      unsigned int frame_size;
+      unsigned char bsave;
       int inband_type_b;
       int fec_blocks;
       int fec_block;
       int ts_rate;
       bool dvbs2x;
       bool alternate;
+      bool nibble;
       FrameFormat m_format[1];
       unsigned char crc_tab[256];
-      void add_bbheader(unsigned char *, int, int);
+      void add_bbheader(unsigned char *, int, int, bool);
       void build_crc8_table(void);
       int add_crc8_bits(unsigned char *, int);
       void add_inband_type_b(unsigned char *, int);
