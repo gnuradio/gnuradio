@@ -137,7 +137,7 @@ namespace gr {
 		double tfrac = pmt::to_double(pmt::tuple_ref(time, 1));
 
 		// Get new time from last time tag + difference in time to when
-		// burst tag occured based on the sample rate
+		// burst tag occurred based on the sample rate
 		double delta = (double)(N - time_nitems) / d_sample_rate;
 		d_timeval = (double)tsecs + tfrac + delta;
 

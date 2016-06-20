@@ -37,7 +37,7 @@ namespace gr {
      *
      * \details
      *
-     * The PFB sythesis filterbank combines multiple baseband signals
+     * The PFB synthesis filterbank combines multiple baseband signals
      * into a single channelized signal. Each input stream is,
      * essentially, modulated onto an output channel according the the
      * channel mapping (see set_channel_map for details).

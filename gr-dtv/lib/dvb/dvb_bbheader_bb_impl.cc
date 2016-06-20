@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,8 @@ namespace gr {
       crc = 0x0;
       dvbs2x = FALSE;
       alternate = TRUE;
+      nibble = TRUE;
+      frame_size = framesize;
       BBHeader *f = &m_format[0].bb_header;
       if (framesize == FECFRAME_NORMAL) {
         switch (rate) {
@@ -83,6 +85,9 @@ namespace gr {
             break;
           case C9_10:
             kbch = 58192;
+            break;
+          case C2_9_VLSNR:
+            kbch = 14208;
             break;
           case C13_45:
             kbch = 18528;
@@ -158,7 +163,7 @@ namespace gr {
             break;
         }
       }
-      else {
+      else if (framesize == FECFRAME_SHORT) {
         switch (rate) {
           case C1_4:
             kbch = 3072;
@@ -211,6 +216,37 @@ namespace gr {
           case C32_45:
             kbch = 11352;
             break;
+          case C1_5_VLSNR_SF2:
+            kbch = 2512;
+            break;
+          case C11_45_VLSNR_SF2:
+            kbch = 3792;
+            break;
+          case C1_5_VLSNR:
+            kbch = 3072;
+            break;
+          case C4_15_VLSNR:
+            kbch = 4152;
+            break;
+          case C1_3_VLSNR:
+            kbch = 5232;
+            break;
+          default:
+            kbch = 0;
+            break;
+        }
+      }
+      else {
+        switch (rate) {
+          case C1_5_MEDIUM:
+            kbch = 5660;
+            break;
+          case C11_45_MEDIUM:
+            kbch = 7740;
+            break;
+          case C1_3_MEDIUM:
+            kbch = 10620;
+            break;
           default:
             kbch = 0;
             break;
@@ -253,7 +289,12 @@ namespace gr {
       fec_block = 0;
       ts_rate = tsrate;
       extra = (((kbch - 80) / 8) / 187) + 1;
-      set_output_multiple(kbch);
+      if (framesize != FECFRAME_MEDIUM) {
+        set_output_multiple(kbch);
+      }
+      else {
+        set_output_multiple(kbch * 2);
+      }
     }
 
     /*
@@ -267,7 +308,12 @@ namespace gr {
     dvb_bbheader_bb_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       if (input_mode == INPUTMODE_NORMAL) {
-        ninput_items_required[0] = ((noutput_items - 80) / 8);
+        if (frame_size != FECFRAME_MEDIUM) {
+          ninput_items_required[0] = ((noutput_items - 80) / 8);
+        }
+        else {
+          ninput_items_required[0] = ((noutput_items - 160) / 8);
+        }
       }
       else {
         ninput_items_required[0] = ((noutput_items - 80) / 8) + extra;
@@ -329,7 +375,7 @@ namespace gr {
     }
 
     void
-    dvb_bbheader_bb_impl::add_bbheader(unsigned char *out, int count, int padding)
+    dvb_bbheader_bb_impl::add_bbheader(unsigned char *out, int count, int padding, bool nibble)
     {
       int temp, m_frame_offset_bits;
       unsigned char *m_frame = out;
@@ -389,6 +435,9 @@ namespace gr {
       else {
         temp = (188 - count) * 8;
       }
+      if (nibble == FALSE) {
+        temp += 4;
+      }
       for (int n = 15; n >= 0; n--) {
         m_frame[m_frame_offset_bits++] = temp & (1 << n) ? 1 : 0;
       }
@@ -441,65 +490,101 @@ namespace gr {
       unsigned char b;
 
       for (int i = 0; i < noutput_items; i += kbch) {
-        if (fec_block == 0 && inband_type_b == TRUE) {
-          padding = 104;
-        }
-        else {
-          padding = 0;
-        }
-        add_bbheader(&out[offset], count, padding);
-        offset = offset + 80;
+        if (frame_size != FECFRAME_MEDIUM) {
+          if (fec_block == 0 && inband_type_b == TRUE) {
+            padding = 104;
+          }
+          else {
+            padding = 0;
+          }
+          add_bbheader(&out[offset], count, padding, TRUE);
+          offset = offset + 80;
 
-        if (input_mode == INPUTMODE_HIEFF) {
-          for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
-            if (count == 0) {
-              if (*in != 0x47) {
-                printf("Transport Stream sync error!\n");
+          if (input_mode == INPUTMODE_HIEFF) {
+            for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
+              if (count == 0) {
+                if (*in != 0x47) {
+                  printf("Transport Stream sync error!\n");
+                }
+                j--;
+                in++;
               }
-              j--;
-              in++;
+              else {
+                b = *in++;
+                for (int n = 7; n >= 0; n--) {
+                  out[offset++] = b & (1 << n) ? 1 : 0;
+                }
+              }
+              count = (count + 1) % 188;
+              consumed++;
             }
-            else {
-              b = *in++;
+            if (fec_block == 0 && inband_type_b == TRUE) {
+              add_inband_type_b(&out[offset], ts_rate);
+              offset = offset + 104;
+            }
+          }
+          else {
+            for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
+              if (count == 0) {
+                if (*in != 0x47) {
+                  printf("Transport Stream sync error!\n");
+                }
+                in++;
+                b = crc;
+                crc = 0;
+              }
+              else {
+                b = *in++;
+                crc = crc_tab[b ^ crc];
+              }
+              count = (count + 1) % 188;
+              consumed++;
               for (int n = 7; n >= 0; n--) {
                 out[offset++] = b & (1 << n) ? 1 : 0;
               }
             }
-            count = (count + 1) % 188;
-            consumed++;
+            if (fec_block == 0 && inband_type_b == TRUE) {
+              add_inband_type_b(&out[offset], ts_rate);
+              offset = offset + 104;
+            }
           }
-          if (fec_block == 0 && inband_type_b == TRUE) {
-            add_inband_type_b(&out[offset], ts_rate);
-            offset = offset + 104;
+          if (inband_type_b == TRUE) {
+            fec_block = (fec_block + 1) % fec_blocks;
           }
         }
         else {
-          for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
-            if (count == 0) {
-              if (*in != 0x47) {
-                printf("Transport Stream sync error!\n");
+          padding = 0;
+          add_bbheader(&out[offset], count, padding, nibble);
+          offset = offset + 80;
+          for (int j = 0; j < (int)((kbch - 80) / 4); j++) {
+            if (nibble == TRUE) {
+              if (count == 0) {
+                if (*in != 0x47) {
+                  printf("Transport Stream sync error!\n");
+                }
+                in++;
+                b = crc;
+                crc = 0;
               }
-              in++;
-              b = crc;
-              crc = 0;
+              else {
+                b = *in++;
+                crc = crc_tab[b ^ crc];
+              }
+              bsave = b;
+              count = (count + 1) % 188;
+              consumed++;
+              for (int n = 7; n >= 4; n--) {
+                out[offset++] = b & (1 << n) ? 1 : 0;
+              }
+              nibble = FALSE;
             }
             else {
-              b = *in++;
-              crc = crc_tab[b ^ crc];
-            }
-            count = (count + 1) % 188;
-            consumed++;
-            for (int n = 7; n >= 0; n--) {
-              out[offset++] = b & (1 << n) ? 1 : 0;
+              for (int n = 3; n >= 0; n--) {
+                out[offset++] = bsave & (1 << n) ? 1 : 0;
+              }
+              nibble = TRUE;
             }
           }
-          if (fec_block == 0 && inband_type_b == TRUE) {
-            add_inband_type_b(&out[offset], ts_rate);
-            offset = offset + 104;
-          }
-        }
-        if (inband_type_b == TRUE) {
-          fec_block = (fec_block + 1) % fec_blocks;
         }
       }
 

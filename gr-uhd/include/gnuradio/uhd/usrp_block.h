@@ -393,7 +393,7 @@ namespace gr {
       virtual ::uhd::time_spec_t get_time_now(size_t mboard = 0) = 0;
 
       /*!
-       * Get the time when the last pps pulse occured.
+       * Get the time when the last pps pulse occurred.
        * \param mboard the motherboard index 0 to M-1
        * \return the current usrp time
        */

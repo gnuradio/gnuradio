@@ -56,7 +56,7 @@ namespace gr {
        * \param input_item_size size of a block of data for the encoder.
        * \param output_item_size size of a block of data the encoder will produce.
        * \param lengthtagname Key name of the tagged stream frame size.
-       * \param mtu The Maxium Transmission Unit (MTU) of the input
+       * \param mtu The Maximum Transmission Unit (MTU) of the input
        *            frame that the block will be able to
        *            process. Specified in bytes and defaults to 1500.
        */
