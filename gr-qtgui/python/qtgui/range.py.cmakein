@@ -21,8 +21,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from PyQt5 import Qt, QtCore, QtWidgets
-
+@PY_QT_IMPORT@
 
 class Range(object):
     def __init__(self, minv, maxv, step, default, min_length):
