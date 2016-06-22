@@ -22,14 +22,27 @@
 ########################################################################
 include(GrBoost)
 
-find_package(Qt5Widgets)
-
-find_package(Qwt)
-
 find_package(PythonLibs 2)
 
 include(GrPython)
-GR_PYTHON_CHECK_MODULE("PyQt5" PyQt5 True PYQT5_FOUND)
+
+set(DESIRED_QT_VERSION 5 CACHE STRING "The Qt version to use (4 or 5)")
+set_property(CACHE DESIRED_QT_VERSION PROPERTY STRINGS 4 5)
+
+if (DESIRED_QT_VERSION MATCHES 4)
+    find_package(Qt4 COMPONENTS QtCore QtGui)
+    set(QT_FOUND ${Qt4_FOUND})
+    include(GrSetupQt4)
+else()
+    find_package(Qt5Widgets)
+    set(QT_FOUND ${Qt5Widgets_FOUND})
+    set(QT_LIBRARIES ${Qt5Widgets_LIBRARIES})
+    set(QT_INCLUDE_DIRS ${Qt5Widgets_INCLUDE_DIRS})
+endif()
+
+GR_PYTHON_CHECK_MODULE("PyQt${DESIRED_QT_VERSION}" PyQt${DESIRED_QT_VERSION} True PYQT${DESIRED_QT_VERSION}_FOUND)
+
+find_package(Qwt)
 
 ########################################################################
 # Register component
@@ -37,13 +50,13 @@ GR_PYTHON_CHECK_MODULE("PyQt5" PyQt5 True PYQT5_FOUND)
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(qt_gui_python_deps
-        PYQT5_FOUND
+        PYQT${DESIRED_QT_VERSION}_FOUND
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 
 GR_REGISTER_COMPONENT("gr-qtgui" ENABLE_GR_QTGUI
     Boost_FOUND
-    Qt5Widgets_FOUND
+    QT_FOUND
     QWT_FOUND
     ENABLE_VOLK
     ENABLE_GNURADIO_RUNTIME

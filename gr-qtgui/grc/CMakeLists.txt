@@ -18,5 +18,12 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-file(GLOB xml_files "*.xml")
+file(GLOB xml_cmakein_files "*.xml.cmakein")
+
+foreach(xml_cmakein_file IN ITEMS ${xml_cmakein_files})
+	get_filename_component(FILE_NAME ${xml_cmakein_file} NAME_WE)
+	configure_file(${xml_cmakein_file} "${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME}.xml" @ONLY)
+	set(xml_files ${xml_files} "${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME}.xml")
+endforeach(xml_cmakein_file)
+
 install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "qtgui_python")

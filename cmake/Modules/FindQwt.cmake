@@ -5,16 +5,22 @@
 # qwt_global.h holds a string with the QWT version;
 #   test to make sure it's at least 5.2
 
+if (${DESIRED_QT_VERSION} MATCHES 5)
+  set(QWT_QT_VERSION qt5)
+else()
+  set(QWT_QT_VERSION qt4)
+endif()
+
 find_path(QWT_INCLUDE_DIRS
   NAMES qwt_global.h
   HINTS
   ${CMAKE_INSTALL_PREFIX}/include/qwt
   ${CMAKE_PREFIX_PATH}/include/qwt
   PATHS
-  /usr/local/include/qwt-qt5
+  /usr/local/include/qwt-${QWT_QT_VERSION}
   /usr/local/include/qwt
   /usr/include/qwt6
-  /usr/include/qwt-qt5
+  /usr/include/qwt-${QWT_QT_VERSION}
   /usr/include/qwt
   /usr/include/qwt5
   /opt/local/include/qwt
@@ -23,7 +29,7 @@ find_path(QWT_INCLUDE_DIRS
 )
 
 find_library (QWT_LIBRARIES
-  NAMES qwt6 qwt6-qt4 qwt qwt-qt4 qwt5 qwtd5
+  NAMES qwt6 qwt6-${QWT_QT_VERSION} qwt qwt-${QWT_QT_VERSION} qwt5 qwtd5
   HINTS
   ${CMAKE_INSTALL_PREFIX}/lib
   ${CMAKE_INSTALL_PREFIX}/lib64

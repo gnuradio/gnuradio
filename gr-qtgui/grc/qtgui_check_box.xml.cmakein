@@ -1,25 +1,28 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Push Button:
-##	a gui push button form
+##Variable Check Box:
+##	a gui check box form
 ###################################################
  -->
 <block>
-	<name>QT GUI Push Button</name>
-	<key>variable_qtgui_push_button</key>
-	<import>from PyQt5 import Qt</import>
+	<name>QT GUI Check Box</name>
+	<key>variable_qtgui_check_box</key>
+	<import>from PyQt@DESIRED_QT_VERSION@ import Qt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>#set $win = '_%s_push_button'%$id
+	<make>#set $win = '_%s_check_box'%$id
 #if not $label()
 	#set $label = '"%s"'%$id
 #end if
-$win = Qt.QPushButton($label)
-self._$(id)_choices = {'Pressed': $pressed, 'Released': $released}
-$(win).pressed.connect(lambda: self.set_$(id)(self._$(id)_choices['Pressed']))
-$(win).released.connect(lambda: self.set_$(id)(self._$(id)_choices['Released']))
+$win = Qt.QCheckBox($label)
+self._$(id)_choices = {True: $true, False: $false}
+self._$(id)_choices_inv = dict((v,k) for k,v in self._$(id)_choices.iteritems())
+self._$(id)_callback = lambda i: Qt.QMetaObject.invokeMethod($(win), "setChecked", Qt.Q_ARG("bool", self._$(id)_choices_inv[i]))
+self._$(id)_callback(self.$id)
+$(win).stateChanged.connect(lambda i: self.set_$(id)(self._$(id)_choices[bool(i)]))
 $(gui_hint()($win))</make>
 	<callback>self.set_$(id)($value)</callback>
+	<callback>self._$(id)_callback($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
@@ -42,19 +45,19 @@ $(gui_hint()($win))</make>
 	<param>
 		<name>Default Value</name>
 		<key>value</key>
-		<value>0</value>
+		<value>True</value>
 		<type>$type</type>
 	</param>
 	<param>
-		<name>Pressed</name>
-		<key>pressed</key>
-		<value>1</value>
+		<name>True</name>
+		<key>true</key>
+		<value>True</value>
 		<type>$type</type>
 	</param>
 	<param>
-		<name>Released</name>
-		<key>released</key>
-		<value>0</value>
+		<name>False</name>
+		<key>false</key>
+		<value>False</value>
 		<type>$type</type>
 	</param>
 	<param>
@@ -64,13 +67,13 @@ $(gui_hint()($win))</make>
 		<type>gui_hint</type>
 		<hide>part</hide>
 	</param>
+	<check>$value in ($true, $false)</check>
 	<doc>
-This block creates a variable push button. \
+This block creates a variable check box. \
 Leave the label blank to use the variable id as the label.
 
-A push button selects between two values of similar type. \
-The variable will take on one value or the other depending \
-on whether the button is pressed or released.
+A check box selects between two values of similar type. \
+Te values do not necessarily need to be of boolean type.
 
 The GUI hint can be used to position the widget within the application. \
 The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \

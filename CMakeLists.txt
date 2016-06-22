@@ -435,7 +435,6 @@ list(APPEND GR_TEST_PYTHON_DIRS
 add_subdirectory(docs)
 add_subdirectory(gnuradio-runtime)
 add_subdirectory(gr-blocks)
-add_subdirectory(grc)
 add_subdirectory(gr-fec)
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
@@ -454,6 +453,7 @@ add_subdirectory(gr-vocoder)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 add_subdirectory(gr-zeromq)
+add_subdirectory(grc)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
