@@ -121,10 +121,13 @@ class $(class_name)(gr.top_block, Qt.QWidget):
 
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
 
-        if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-            self.restoreGeometry(self.settings.value("geometry").toByteArray())
-        else:
-            self.restoreGeometry(self.settings.value("geometry"))
+        try:
+            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+                self.restoreGeometry(self.settings.value("geometry").toByteArray())
+            else:
+                self.restoreGeometry(self.settings.value("geometry"))
+        except:
+            pass
 #elif $generate_options == 'no_gui'
 
 
