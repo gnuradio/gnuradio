@@ -24,9 +24,6 @@ install(FILES
     api.h
     alaw_decode_bs.h
     alaw_encode_sb.h
-    codec2.h
-    codec2_decode_ps.h
-    codec2_encode_sp.h
     cvsd_decode_bs.h
     cvsd_encode_sb.h
     g721_decode_bs.h

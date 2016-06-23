@@ -47,6 +47,11 @@ install(FILES
     puncture_bb.h
     puncture_ff.h
     depuncture_bb.h
+    cldpc.h
+    alist.h
+    gf2mat.h
+    gf2vec.h
+    awgn_bp.h
     ldpc_encoder.h
     ldpc_decoder.h
     polar_encoder.h

@@ -24,7 +24,6 @@ install(FILES
     api.h
     basic_trellis_encoder_impl.h
     bit_timing_loop.h
-    CMakeLists.txt
     consts.h
     convolutional_interleaver.h
     create_atsci_equalizer.h
@@ -41,7 +40,6 @@ install(FILES
     equalizer_lms2_impl.h
     equalizer_lms_impl.h
     equalizer_nop_impl.h
-    exp2_lp_impl.h
     fake_single_viterbi_impl.h
     field_sync_demux.h
     field_sync_mux.h
@@ -51,29 +49,7 @@ install(FILES
     fs_checker_naive_impl.h
     fs_correlator_impl.h
     fs_correlator_naive_impl.h
-    GrAtscBitTimingLoop2.h
-    GrAtscBitTimingLoop3.h
-    GrAtscBitTimingLoop.h
-    GrAtscConvert2xTo20.h
-    GrAtscDataSegToSoftDataSeg.h
-    GrAtscDeinterleaver.h
-    GrAtscDerandomizer.h
-    GrAtscEqualizer.h
-    GrAtscFieldSyncChecker.h
-    GrAtscFieldSyncCorrelator.h
-    GrAtscFieldSyncDemux.h
-    GrAtscFieldSyncMux.h
-    GrAtscFPLL.h
-    GrAtscInterleaver.h
-    GrAtscRandomizer.h
-    GrAtscRSDecoder.h
-    GrAtscRSEncoder.h
-    GrAtscSegSymSync.h
     GrAtscSegSymSyncImpl_export.h
-    GrAtscSegSymSyncImpl.h
-    GrAtscSymbolMapper.h
-    GrAtscTrellisEncoder.h
-    GrAtscViterbiDecoder.h
     interleaver_fifo.h
     interleaver.h
     pad.h
@@ -81,8 +57,6 @@ install(FILES
     randomizer.h
     randomizer_impl.h
     reed_solomon_impl.h
-    root_raised_cosine_bandpass_impl.h
-    root_raised_cosine_impl.h
     rs_decoder.h
     rs_encoder.h
     single_viterbi_impl.h
@@ -96,7 +70,6 @@ install(FILES
     types.h
     viterbi_decoder.h
     viterbi_decoder_impl.h
-    vsbtx_lp_impl.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/atsc
     COMPONENT "atsc_devel"
 )
