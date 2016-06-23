@@ -717,11 +717,10 @@ namespace gr {
 
       // add tag info if it is present in metadata
       if(pmt::is_dict(dict)){
-        if(pmt::dict_has_key(dict, pmt::mp("tags")) && pmt::dict_has_key(dict,pmt::mp("start"))){
+        if(pmt::dict_has_key(dict, pmt::mp("tags"))){
             d_tags.clear();
             pmt::pmt_t tags = pmt::dict_ref(dict, pmt::mp("tags"), pmt::PMT_NIL);
             int len = pmt::length(tags);
-            pmt::print(tags);
             for(int i=0; i<len; i++){
                 // get tag info from list
                 pmt::pmt_t tup = pmt::vector_ref(tags, i);
