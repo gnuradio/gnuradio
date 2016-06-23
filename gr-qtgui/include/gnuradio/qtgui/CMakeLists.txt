@@ -46,8 +46,6 @@ install(FILES
   qtgui_types.h
   sink_c.h
   sink_f.h
-  spectrumdisplayform.h
-  SpectrumGUIClass.h
   spectrumUpdateEvents.h
   timedisplayform.h
   timecontrolpanel.h
