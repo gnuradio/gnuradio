@@ -98,10 +98,10 @@ namespace gr {
           case C2_9_VLSNR:
             nbch = 14400;
             q_val = 140;
-            frame_size -= 3240;
-            frame_size_real -= 3240;
+            frame_size -= NORMAL_PUNCTURING;
+            frame_size_real -= NORMAL_PUNCTURING;
             P = 15;
-            Xp = 3240;
+            Xp = NORMAL_PUNCTURING;
             break;
           case C13_45:
             nbch = 18720;
@@ -276,8 +276,8 @@ namespace gr {
           case C1_5_VLSNR_SF2:
             nbch = 2680;
             q_val = 135;
-            frame_size -= 810;
-            frame_size_real -= 810;
+            frame_size -= SHORT_PUNCTURING_SET1;
+            frame_size_real -= SHORT_PUNCTURING_SET1;
             Xs = 560;
             P = 30;
             Xp = 250;
@@ -285,34 +285,34 @@ namespace gr {
           case C11_45_VLSNR_SF2:
             nbch = 3960;
             q_val = 34;
-            frame_size -= 810;
-            frame_size_real -= 810;
+            frame_size -= SHORT_PUNCTURING_SET1;
+            frame_size_real -= SHORT_PUNCTURING_SET1;
             P = 15;
-            Xp = 810;
+            Xp = SHORT_PUNCTURING_SET1;
             break;
           case C1_5_VLSNR:
             nbch = 3240;
             q_val = 135;
-            frame_size -= 1224;
-            frame_size_real -= 1224;
+            frame_size -= SHORT_PUNCTURING_SET2;
+            frame_size_real -= SHORT_PUNCTURING_SET2;
             P = 10;
-            Xp = 1224;
+            Xp = SHORT_PUNCTURING_SET2;
             break;
           case C4_15_VLSNR:
             nbch = 4320;
             q_val = 33;
-            frame_size -= 1224;
-            frame_size_real -= 1224;
+            frame_size -= SHORT_PUNCTURING_SET2;
+            frame_size_real -= SHORT_PUNCTURING_SET2;
             P = 8;
-            Xp = 1224;
+            Xp = SHORT_PUNCTURING_SET2;
             break;
           case C1_3_VLSNR:
             nbch = 5400;
             q_val = 120;
-            frame_size -= 1224;
-            frame_size_real -= 1224;
+            frame_size -= SHORT_PUNCTURING_SET2;
+            frame_size_real -= SHORT_PUNCTURING_SET2;
             P = 8;
-            Xp = 1224;
+            Xp = SHORT_PUNCTURING_SET2;
             break;
           default:
             nbch = 0;
@@ -321,8 +321,8 @@ namespace gr {
         }
       }
       else {
-        frame_size = FRAME_SIZE_MEDIUM - 1620;
-        frame_size_real = FRAME_SIZE_MEDIUM - 1620;
+        frame_size = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING;
+        frame_size_real = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING;
         switch (rate) {
           case C1_5_MEDIUM:
             nbch = 5840;
@@ -335,13 +335,13 @@ namespace gr {
             nbch = 7920;
             q_val = 68;
             P = 15;
-            Xp = 1620;
+            Xp = MEDIUM_PUNCTURING;
             break;
           case C1_3_MEDIUM:
             nbch = 10800;
             q_val = 60;
             P = 13;
-            Xp = 1620;
+            Xp = MEDIUM_PUNCTURING;
             break;
           default:
             nbch = 0;

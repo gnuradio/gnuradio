@@ -8,7 +8,15 @@
   <name>Physical Layer Framer</name>
   <key>dtv_dvbs2_physical_cc</key>
   <import>from gnuradio import dtv</import>
-  <make>dtv.dvbs2_physical_cc($framesize.val, $rate.val, $constellation.val, $pilots.val, $goldcode)</make>
+  <make>dtv.dvbs2_physical_cc($framesize.val, #slurp
+#if str($framesize) == 'FECFRAME_NORMAL'
+$rate1.val, #slurp
+#else if str($framesize) == 'FECFRAME_MEDIUM'
+$rate2.val, #slurp
+#else
+$rate3.val, #slurp
+#end if
+$constellation.val, $pilots.val, $goldcode)</make>
   <param>
     <name>FECFRAME size</name>
     <key>framesize</key>
@@ -17,17 +25,32 @@
       <name>Normal</name>
       <key>FECFRAME_NORMAL</key>
       <opt>val:dtv.FECFRAME_NORMAL</opt>
+      <opt>hide_normal:</opt>
+      <opt>hide_medium:all</opt>
+      <opt>hide_short:all</opt>
+    </option>
+    <option>
+      <name>Medium</name>
+      <key>FECFRAME_MEDIUM</key>
+      <opt>val:dtv.FECFRAME_MEDIUM</opt>
+      <opt>hide_normal:all</opt>
+      <opt>hide_medium:</opt>
+      <opt>hide_short:all</opt>
     </option>
     <option>
       <name>Short</name>
       <key>FECFRAME_SHORT</key>
       <opt>val:dtv.FECFRAME_SHORT</opt>
+      <opt>hide_normal:all</opt>
+      <opt>hide_medium:all</opt>
+      <opt>hide_short:</opt>
     </option>
   </param>
   <param>
     <name>Code rate</name>
-    <key>rate</key>
+    <key>rate1</key>
     <type>enum</type>
+    <hide>$framesize.hide_normal</hide>
     <option>
       <name>1/4</name>
       <key>C1_4</key>
@@ -82,6 +105,11 @@
       <name>9/10</name>
       <key>C9_10</key>
       <opt>val:dtv.C9_10</opt>
+    </option>
+    <option>
+      <name>2/9 VL-SNR</name>
+      <key>C2_9_VLSNR</key>
+      <opt>val:dtv.C2_9_VLSNR</opt>
     </option>
     <option>
       <name>13/45</name>
@@ -198,6 +226,83 @@
       <key>C154_180</key>
       <opt>val:dtv.C154_180</opt>
     </option>
+  </param>
+  <param>
+    <name>Code rate</name>
+    <key>rate2</key>
+    <type>enum</type>
+    <hide>$framesize.hide_medium</hide>
+    <option>
+      <name>1/5</name>
+      <key>C1_5_MEDIUM</key>
+      <opt>val:dtv.C1_5_MEDIUM</opt>
+    </option>
+    <option>
+      <name>11/45</name>
+      <key>C11_45_MEDIUM</key>
+      <opt>val:dtv.C11_45_MEDIUM</opt>
+    </option>
+    <option>
+      <name>1/3</name>
+      <key>C1_3_MEDIUM</key>
+      <opt>val:dtv.C1_3_MEDIUM</opt>
+    </option>
+  </param>
+  <param>
+    <name>Code rate</name>
+    <key>rate3</key>
+    <type>enum</type>
+    <hide>$framesize.hide_short</hide>
+    <option>
+      <name>1/4</name>
+      <key>C1_4</key>
+      <opt>val:dtv.C1_4</opt>
+    </option>
+    <option>
+      <name>1/3</name>
+      <key>C1_3</key>
+      <opt>val:dtv.C1_3</opt>
+    </option>
+    <option>
+      <name>2/5</name>
+      <key>C2_5</key>
+      <opt>val:dtv.C2_5</opt>
+    </option>
+    <option>
+      <name>1/2</name>
+      <key>C1_2</key>
+      <opt>val:dtv.C1_2</opt>
+    </option>
+    <option>
+      <name>3/5</name>
+      <key>C3_5</key>
+      <opt>val:dtv.C3_5</opt>
+    </option>
+    <option>
+      <name>2/3</name>
+      <key>C2_3</key>
+      <opt>val:dtv.C2_3</opt>
+    </option>
+    <option>
+      <name>3/4</name>
+      <key>C3_4</key>
+      <opt>val:dtv.C3_4</opt>
+    </option>
+    <option>
+      <name>4/5</name>
+      <key>C4_5</key>
+      <opt>val:dtv.C4_5</opt>
+    </option>
+    <option>
+      <name>5/6</name>
+      <key>C5_6</key>
+      <opt>val:dtv.C5_6</opt>
+    </option>
+    <option>
+      <name>8/9</name>
+      <key>C8_9</key>
+      <opt>val:dtv.C8_9</opt>
+    </option>
     <option>
       <name>11/45</name>
       <key>C11_45</key>
@@ -224,9 +329,39 @@
       <opt>val:dtv.C8_15</opt>
     </option>
     <option>
+      <name>26/45</name>
+      <key>C26_45</key>
+      <opt>val:dtv.C26_45</opt>
+    </option>
+    <option>
       <name>32/45</name>
       <key>C32_45</key>
       <opt>val:dtv.C32_45</opt>
+    </option>
+    <option>
+      <name>1/5 VL-SNR SF2</name>
+      <key>C1_5_VLSNR_SF2</key>
+      <opt>val:dtv.C1_5_VLSNR_SF2</opt>
+    </option>
+    <option>
+      <name>11/45 VL-SNR SF2</name>
+      <key>C11_45_VLSNR_SF2</key>
+      <opt>val:dtv.C11_45_VLSNR_SF2</opt>
+    </option>
+    <option>
+      <name>1/5 VL-SNR</name>
+      <key>C1_5_VLSNR</key>
+      <opt>val:dtv.C1_5_VLSNR</opt>
+    </option>
+    <option>
+      <name>4/15 VL-SNR</name>
+      <key>C4_15_VLSNR</key>
+      <opt>val:dtv.C4_15_VLSNR</opt>
+    </option>
+    <option>
+      <name>1/3 VL-SNR</name>
+      <key>C1_3_VLSNR</key>
+      <opt>val:dtv.C1_3_VLSNR</opt>
     </option>
   </param>
   <param>
@@ -279,7 +414,7 @@
       <opt>val:dtv.MOD_64APSK</opt>
     </option>
     <option>
-      <name>8+6+20+20APSK</name>
+      <name>8+16+20+20APSK</name>
       <key>MOD_8_16_20_20APSK</key>
       <opt>val:dtv.MOD_8_16_20_20APSK</opt>
     </option>
@@ -297,6 +432,16 @@
       <name>256APSK</name>
       <key>MOD_256APSK</key>
       <opt>val:dtv.MOD_256APSK</opt>
+    </option>
+    <option>
+      <name>PI/2 BPSK</name>
+      <key>MOD_BPSK</key>
+      <opt>val:dtv.MOD_BPSK</opt>
+    </option>
+    <option>
+      <name>PI/2 BPSK-SF2</name>
+      <key>MOD_BPSK_SF2</key>
+      <opt>val:dtv.MOD_BPSK_SF2</opt>
     </option>
   </param>
   <param>

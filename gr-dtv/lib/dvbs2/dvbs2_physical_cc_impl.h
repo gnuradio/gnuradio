@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 #include <gnuradio/dtv/dvbs2_physical_cc.h>
 #include "dvb/dvb_defines.h"
 
+#define VLSNR_HEADER_LENGTH 900
+
 namespace gr {
   namespace dtv {
 
@@ -31,12 +33,17 @@ namespace gr {
     {
      private:
       int frame_size;
+      int signal_constellation;
       int slots;
       int pilot_mode;
       int pilot_symbols;
       int gold_code;
+      int vlsnr_header;
+      int vlsnr_set;
+      int b[VLSNR_HEADER_LENGTH];
       gr_complex m_bpsk[4][2];
       gr_complex m_pl[90];
+      gr_complex m_vlsnr_header[VLSNR_HEADER_LENGTH];
       gr_complex m_zero;
       int m_cscram[FRAME_SIZE_NORMAL];
       void b_64_8_code(unsigned char, int *);
@@ -47,7 +54,7 @@ namespace gr {
       const static unsigned long g[7];
       const static int ph_scram_tab[64];
       const static int ph_sync_seq[26];
-      const static int ph_vlsnr_seq[896];
+      const static int ph_vlsnr_seq[16][VLSNR_HEADER_LENGTH - 4];
 
      public:
       dvbs2_physical_cc_impl(dvb_framesize_t framesize, dvb_code_rate_t rate, dvb_constellation_t constellation, dvbs2_pilots_t pilots, int goldcode);
