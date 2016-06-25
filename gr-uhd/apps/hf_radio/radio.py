@@ -31,7 +31,7 @@ import wx
 import wx.lib.evtmgr as em
 import time
 
-from gnuradio import gr, gru, eng_notation, optfir
+from gnuradio import gr, gru, eng_notation
 from gnuradio import audio
 from gnuradio import blocks
 from gnuradio import uhd
