@@ -154,6 +154,7 @@ list(APPEND gr_blocks_sources
     multiply_const_vff_impl.cc
     multiply_matrix_cc_impl.cc
     multiply_matrix_ff_impl.cc
+    multiply_by_tag_value_cc_impl.cc
     nlog10_ff_impl.cc
     nop_impl.cc
     null_sink_impl.cc
@@ -193,6 +194,7 @@ list(APPEND gr_blocks_sources
     tagged_stream_to_pdu_impl.cc
     tagged_stream_multiply_length_impl.cc
     tags_strobe_impl.cc
+    test_tag_variable_rate_ff_impl.cc
     threshold_ff_impl.cc
     throttle_impl.cc
     transcendental_impl.cc

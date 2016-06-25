@@ -66,6 +66,7 @@
       <block>blocks_message_strobe</block>
       <block>blocks_message_strobe_random</block>
       <block>blocks_tags_strobe</block>
+      <block>blocks_test_tag_variable_rate_ff</block>
    </cat>
    <cat>
       <name>File Operators</name>
@@ -96,6 +97,7 @@
       <block>blocks_multiply_const_vxx</block>
       <block>blocks_multiply_conjugate_cc</block>
       <block>blocks_multiply_matrix_xx</block>
+      <block>blocks_multiply_by_tag_value_cc</block>
       <block>blocks_sub_xx</block>
       <block>blocks_conjugate_cc</block>
       <block>blocks_integrate_xx</block>
@@ -196,6 +198,7 @@
       <block>blocks_tagged_stream_mux</block>
       <block>blocks_tagged_stream_align</block>
       <block>blocks_stream_to_tagged_stream</block>
+      <block>blocks_test_tag_variable_rate_ff</block>
    </cat>
    <cat>
       <name>Type Converters</name>

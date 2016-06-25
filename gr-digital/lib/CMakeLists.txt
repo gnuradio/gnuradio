@@ -1,4 +1,4 @@
-# Copyright 2011-2014 Free Software Foundation, Inc.
+# Copyright 2011-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -83,6 +83,7 @@ list(APPEND digital_sources
     glfsr_source_f_impl.cc
     hdlc_deframer_bp_impl.cc
     hdlc_framer_pb_impl.cc
+    header_buffer.cc
     header_payload_demux_impl.cc
     kurtotic_equalizer_cc_impl.cc
     lms_dd_equalizer_cc_impl.cc
@@ -106,6 +107,14 @@ list(APPEND digital_sources
     ofdm_sampler_impl.cc
     ofdm_serializer_vcc_impl.cc
     ofdm_sync_sc_cfb_impl.cc
+    header_format_base.cc
+    header_format_default.cc
+    header_format_counter.cc
+    header_format_crc.cc
+    header_format_ofdm.cc
+    protocol_formatter_async_impl.cc
+    protocol_formatter_bb_impl.cc
+    protocol_parser_b_impl.cc
     packet_header_default.cc
     packet_header_ofdm.cc
     packet_headergenerator_bb_impl.cc
@@ -189,3 +198,38 @@ if(ENABLE_STATIC_LIBS)
     ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "digital_devel"   # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
+
+
+########################################################################
+# QA C++ Code for gr-blocks
+########################################################################
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(
+    ${GR_DIGITAL_INCLUDE_DIRS}
+    ${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_digital_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_digital.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_digital.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_header_format.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_header_buffer.cc
+    )
+
+  add_executable(test-gr-digital ${test_gr_digital_sources})
+
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-digital gnuradio-digital)
+
+  target_link_libraries(
+    test-gr-digital
+    gnuradio-runtime
+    gnuradio-digital
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+    ${LOG4CPP_LIBRARIES}
+  )
+
+  GR_ADD_TEST(test_gr_digital test-gr-digital)
+endif(ENABLE_TESTING)

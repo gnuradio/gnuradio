@@ -110,14 +110,22 @@ namespace gr {
   void
   block_detail::consume(int which_input, int how_many_items)
   {
+    d_consumed = how_many_items;
     if(how_many_items > 0) {
       input(which_input)->update_read_pointer(how_many_items);
     }
   }
 
+  int
+  block_detail::consumed() const
+  {
+    return d_consumed;
+  }
+
   void
   block_detail::consume_each(int how_many_items)
   {
+    d_consumed = how_many_items;
     if(how_many_items > 0) {
       for(int i = 0; i < ninputs (); i++) {
         d_input[i]->update_read_pointer(how_many_items);

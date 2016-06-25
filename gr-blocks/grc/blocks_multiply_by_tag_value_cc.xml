@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<block>
+  <name>Multiply by Tag Value</name>
+  <key>blocks_multiply_by_tag_value_cc</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.multiply_by_tag_value_cc($tagname, $vlen)</make>
+
+  <param>
+    <name>Tag Name</name>
+    <key>tagname</key>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Vec Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+
+</block>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<block>
+  <name>Protocol Formatter</name>
+  <key>digital_protocol_formatter_bb</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.protocol_formatter_bb($format, $len_tag_key)</make>
+
+  <param>
+    <name>Format Obj.</name>
+    <key>format</key>
+    <type>raw</type>
+  </param>
+
+  <param>
+    <name>Length Tag Name</name>
+    <key>len_tag_key</key>
+    <value>"packet_len"</value>
+    <type>string</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>byte</type>
+  </source>
+
+</block>

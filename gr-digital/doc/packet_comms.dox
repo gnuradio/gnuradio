@@ -1,0 +1,653 @@
+/*! \page page_packet_comms Packet Communications
+
+\section packet_introduction Introduction
+
+This page describes...
+
+The point of these examples and the work is to provide a canonical
+tool for exploring burst digital communications. Providing the entire
+PHY chain in GRC is to help us more easily explore and extract
+portions of the transmit and receive chains to better understand,
+tweak, and optimize the system.
+
+
+\section packet_tx Understanding the Transmitter
+
+The transmitter PHY layer defines the following properties of the
+transmitted frame:
+
+- Data integrity check, generally a \ref gr::digital::crc32_async_bb
+  "CRC". Standard practice would be to calculate a CRC32 of the
+  payload and append this to the end of the frame.
+
+- \ref page_fec "Forward Error Correction (FEC)". For correcting bit
+  errors during reception, we use FEC codes, which have different
+  properties for complexity, correcting capabilities, and amounts of
+  added redundancy. See our \ref page_fec "FEC-API page" in the manual
+  for more on how to use these and what types of codes are already
+  available.
+
+- Frame formatting. We expect the data to have been delivered to the
+  transmitter from some higher layer (MAC/Network), which we treat as
+  the payload. The PHY layer then puts on a bit of its own framing in
+  order to properly transmit it for other radios to receive
+  correctly. This often involves some information about the payload
+  format, such as the length, the type of FEC code used, and the type
+  of modulation or modulation parameters. The PHY layer frame will
+  also often add a known word to the front to help with
+  synchronization and identification. We use the Packet Header
+  Formatter block for this, which is completely defined by a packet
+  formatter object. See the gr::digital::header_format_base class
+  to understand more about how these formatters are created and used.
+
+  The \ref gr::digital::protocol_formatter_async "Protocol Formatter"
+  has two output paths, both emitted as PDUs from message ports. The
+  first message port is "header" that emits the header created for the
+  payload based on the formatter object. The second message port is
+  "payload" which is just the input payload PDU re-emitted. This
+  creates two paths, which allows us to separately modulate the header
+  and payload differently as well as encode the header with a
+  different FEC code. We often want to do this to provide a much
+  simpler and more robust modulation and FEC structure to the header
+  to ensure that it is correctly received and then use a different
+  modulation and code for the payload to maximize throughput.
+
+  NOTE: If the header formatter adds the known word / access code
+  here, and then we apply an FEC code to the header, then we have the
+  problem that the known word is also encoded. The receiver must be
+  made aware of this and correctly look for the encoded known
+  word. The packet_tx hier block example is a case where this
+  happens. If we use a repetition encoder, the access code is now
+  three bits out for every bit in. The packet_rx receiver example has
+  to account for this in the Correlation Estimator block that is
+  correlating against the known word.
+
+- Modulators. We create a modulator path for both the header and
+  payload. We define the operations of these two paths completely
+  using a \ref gr::digital::constellation "Constellation Object" (see
+  the \ref digital_constellations "Digital Modulation" manual page for
+  more information). The constellation objects define the mapping from
+  bits to complex symbols. You can use these objects in various ways,
+  but the packet_tx.grc example provides one way. After moving from
+  the PDU to tagged stream mode, the \ref gr::blocks::repack_bits_bb
+  "Repack Bits block" takes the packed 8-bits/byte data and converts
+  this into "chunks" of the number of bits per symbol of the
+  modulation (using the \ref
+  gr::digital::constellation::bits_per_symbol() "bits_per_symbol()"
+  property of the constellation object). We then map these chunks into
+  some known mapping function, most often a form of Gray Coding, using
+  the \ref gr::digital::map_bb "Map block" and the constellation object's \ref
+  gr::digital::constellation::pre_diff_code() "pre_diff_code()"
+  function. We then move these remapped chunks to complex symbols,
+  again as defined by the constellation object through the \ref
+  gr::digital::constellation::points() "points()" function in the
+  \ref gr::digital::chunks_to_symbols_bc "Chunks to Symbols block".
+
+- Combine the header and payload. We need to take both the header and
+  payload paths back together into a single stream. In packet_tx.grc,
+  we are working with tagged streams, so both paths keep track of the
+  size of their segments. Using the Tagged Stream Mux block, we
+  recombine these two paths into one.
+
+- Burst Shaping and Filtering. The next stage shapes the packet for
+  burst transmission. We apply two blocks to shape the burst
+  appropriately.
+
+  First, the \ref gr::digital::burst_shaper_cc "Burst Shaping block"
+  handles the structure of the burst by applying two different forms
+  of padding. First, there is a window that is applied to the time
+  domain of the burst. This involves a ramping up stage from 0 and a
+  ramping down stage back to 0. We define a window as a vector, and
+  the \ref gr::fft::window "fft.window" set of window functions is
+  useful here, such as using a Hann or Kaiser window. The size of the
+  window is split in half to apply the left half of the window for the
+  ramp-up and the right half of the window for the ramp-down. The
+  window has two different modes: to insert or not insert phasing
+  symbols. When inserting phasing symbols, a sequence of 1's and -1's
+  is inserted for the duration of the ramp-up and ramp-down
+  periods. So a window size of 20 will produce 10 alternative 1's and
+  -1's on the front of the burst and another 10 alternating symbols on
+  the rear of the burst. The window is then applied to these phasing
+  symbols and does not affect the burst symbols directly. If we are
+  not using the phasing symbols, the the window is applied to the
+  front and back of the burst directly.
+
+  The Burst Shaper can also add padded 0's to the front or back of the
+  burst. This allows us to provide some extra control over the
+  structure of the burst. In particular, it can be useful to add
+  post-padding 0's that is the length of the delay of the pulse
+  shaping filter that will come next. This makes sure that the full
+  burst of samples is pushed through the filter and transmitted
+  completely.
+
+
+\verbatim
+                      ____________________
+                     /                    \
+                    /                      \
+                   /                        \
+            ______/                          \____
+            |  E  | D |        C         | B | A |
+
+  A: Pre-padding 0's
+  B: Ramp-up window
+  C: Frame
+  D: Ramp-down window
+  E: Post-padding 0's
+\endverbatim
+
+
+  When using phasing symbols, C is the entire frame and sections B
+  and D are filled with alternative 1's and -1's.
+
+  When not using phase symbols, the frame extends B through C to D.
+
+  After creating this burst shape, we then put the burst through a
+  pulse shaping filter. This filter both shapes the complex samples
+  into appropriate symbols for transmission based on a spectral mask
+  as well as up-samples the burst to the specified number of samples
+  per symbol. In packet_tx, we are using a Polyphase Arbitrary
+  Resampler to perform this task for us, which means that we can
+  specify and real value for the number of samples/symbol, as long as
+  it is greater than or equal to 2.0.
+
+  Typical pulse shape filters are \ref
+  gr::filter::firdes::root_raised_cosine "Root Raised Cosine (RRC)"
+  filters and \ref gr::filter::firdes::gaussian "Gaussian" filters.
+
+  Because the pulse shape filter up-samples, in packet_tx, we use a
+  \ref gr::blocks::tagged_stream_multiply_length "Tagged Stream Multiply Length Tag block".
+  The resampler block knows nothing about
+  tagged streams, so when it up-samples, the \ref
+  page_tagged_stream_blocks "tagged stream block (TSB)" tag value does
+  not change. We need to change this tag's value, too, and so we use
+  the multiply length tag block for this purpose. This is helpful when
+  working with UHD devices, like in uhd_packet_tx.grc, because we can
+  explicitly tell the UHD USRP Sink block to expect a tagged stream to
+  manage the transmission of the burst.
+
+\subsection packet_tx_params Parameters of the packet_tx Example
+
+The canonical example for handling narrowband M-PSK or M-QAM is the
+packet_tx.grc hierarchical block.
+
+- Header FEC Code (hdr_enc)
+- Payload FEC Code (pld_enc)
+- Header Constellation Object (hdr_const)
+- Payload Constellation Object (pld_const)
+- Protocol Formatter Object (formatter)
+- Samples per symbol (sps as a float)
+- Pulse shaping filter (psf_taps, designed for the polyphase arbitrary
+  resampler)
+
+We can see all of these objects and settings in the
+packet_loopback_hier.grc example and uhd_packet_tx.grc if using a
+UHD-compatibly radio front end.
+
+\subsection packet_tx_examples Examples
+
+The following examples exist to showcase how to control each stage of
+the transmit processing.
+
+- tx_stage0.grc: simple creation of PDUs to input into the
+  transmitter. By default, this generates \ref gr::blocks::random_pdu
+  "random PDUs" for testing. However, we can switch in the \ref
+  gr::blocks::tuntap_pdu "TUNTAP PDU" block to create a tun or tap
+  device as the input of samples from some OS application. Note that
+  you will need root privileges to create a tun/tap device and
+  configure it.
+
+
+- tx_stage1.grc: Adding a CRC to the frame. The Message Debug prints
+  the before and after adding the \ref gr::digital::crc32_async_bb
+  "CRC32", so we can see the original PDU and then the PDU with the
+  added 4 bytes of check.
+
+
+- tx_stage2.grc: Adding \ref page_fec "forward error correction". This
+  adds an \ref gr::fec::async_encoder "FEC Async Encoder" block to
+  compare pre- and post-encoding. Three different FEC encoders are
+  available immediately in this example with the repetition encoder
+  enabled by default. This encoder just repeats every bit 3 times, so
+  it is easy to see the behavior before and after encoding. Simply
+  disable this FEC code and enabling one of the others will change the
+  encoding behavior.
+
+
+- tx_stage3.grc: takes the payload with the CRC32 check and creates
+  the packet structure. Both the header and payload are printed out,
+  where the payload is the input payload+CRC and the header is defined
+  by the 'formatter' object. The default formatter just applies an
+  access code (using the default 64-bit
+  digital.packet_utils.default_access_code code) and then it
+  calculates the payload length (in bytes) as a 16-bit value. This
+  16-bit length field is duplicated, so in the receiver it can check
+  both 16-bit fields to make sure they agree. This formatter also
+  takes a threshold value. The transmitter does not use this
+  threshold. That parameter is used in the receiver to know how many
+  bits can be wrong in the access code and still pass.
+
+  Disabling the \ref gr::digital::header_format_default
+  "default header definition" and enabling the other 'formatter' to
+  change the protocol. This other protocol definition is the \ref
+  gr::digital::header_format_counter "counter header". It adds the
+  access code and payload length fields as the header like the default
+  formatter. This formatter includes two other fields as well: the
+  number of bits/symbol used in the payload modulator (as a 16-bit
+  field) and a 16-bit counter. Each packet transmitted increments this
+  counter by 1, which means we can keep track of how many packets we
+  have sent and/or received.
+
+- tx_stage4.grc: Here we add the modulation to both the header and
+  payload paths, defined by the hdr_const and pld_const objects,
+  respectively. Both are defined as BPSK constellations by
+  default. The output is shown in two \ref page_qtgui "QTGUI display"
+  graphs. We see the samples in time first, and this is triggering off
+  the TSB tag "packet_len". When the time display updates, we can see
+  the same pattern right after the tag, which is the header, and then
+  the changing samples are the random values in the payload.
+
+  When we look at this Freq tab of this example, we just see a mostly
+  flat frequency response over the entire frequency range. This
+  response is due to the samples just being +1's and -1's with no
+  transition between them and sampled at 1 sampler per symbol. This is
+  not something that we can just transmit as a burst. The square
+  pulses we use provide horrible out-of-band (OOB) emissions if we put
+  this over the air directly, and each burst would go from 0 to +/-1
+  within the coarse of a single sample, which again provides large OOB
+  emissions. We need to shape the bursts properly from here.
+
+- tx_stage5.grc: Adds the \ref gr::digital::burst_shaper_cc "Burst Shaper"
+  block. The default parameters are to use a Hann window of 50 symbols
+  and to add 10 0's as pre- and post-padding. We can adjust any of
+  these values to explore what the output burst looks like. We can
+  stop the time sink from updating and turn on the markers for the
+  Re{Data 0} channel to easily count the samples and observe the
+  effect of the window.
+
+  As an aside, the window of 50 produces 25 phasing samples on either
+  side. This is a lot, but we did this to help show off the way the
+  window looks a bit more clearly.
+
+- tx_stage6.grc: We then need to up-sample the signal by the number of
+  samples/symbol (sps) and apply our pulse-shaping filter. Again, we
+  are using some larger numbers than we really would in an actual
+  scenario to make it visually clear what is happening. The psf_taps
+  filter creates an RRC filter designed for the 32-arm (set by nfilts)
+  polyphase filterbank resampler. In this RRC Filter Taps object, we
+  set the number of taps to be 15*sps*nfilts. The sps and nfilts are
+  properties of the sample stream and upsampling factor. The value 15
+  is the number of symbols to represent in this filter; basically that
+  we are going to look over the history effects of 15 samples to
+  manage the inter-symbol interference (ISI). That is a long RRC filter
+  but done so to make the simulation look better. Five or seven is a
+  more realistic value. Similarly, we set sps=4 here to make the time
+  and frequency plots look better. Normally, we would want this closer
+  to 2.
+
+  Now looking at the time domain plot, we see the filtered samples,
+  which are not as pretty as before. They have over- and under-shoots,
+  and if we turned on the line markers, we would not see the original
+  bits easily through this. That is the effect of the RRC filter,
+  which introduces ISI into the transmitted stream. However, when we
+  look at the frequency domain, we see a much better shape, which we
+  can transmit as part of our channel assignment.
+
+- tx_stage6a.grc: An aside here to study the RRC filters more. This
+  example adds a second RRC filter (without any resampling) that
+  matches the transmitter's RRC filter. The matched filter means that
+  the samples are filtered by two RRC filters, which together make a
+  raised cosine (RC) filter. This RC filter is what is known as a
+  Nyquist filter and has the properties of 0 (or very close to 0)
+  ISI. Though we introduced ISI in the transmit RRC filter, the second
+  stage at the receiver undoes that ISI making for a clean, filtered
+  signal. Turning on marker in the time domain shows two clean lines
+  at +1 and -1. The receiver just needs to know which of the sps
+  samples to grad to get the original symbol that was transmitted. But
+  that is the job of the receiver.
+
+At this point, we have an encoded, modulated, and shaped burst ready
+to be transmitted out of a radio. The uhd_packet_tx.grc example puts
+all this together, where we have packaged up most of the transmitter
+behavior into packet_tx.grc. We then generate random PDU's, put them
+through the packet_tx block, and then through a Multiply Const block
+and into a USRP sink. The Multiply Const block is used for digital
+scaling of the signal to allow us power control on top of the
+transmitter gain inside the USRP radio itself.
+
+
+\section packet_rx Understanding the Receiver
+
+The receiver is far more complicated. The work involved here is
+largely in the detection and synchronization of the received
+frames. We must assume that frames are coming in as bursts with
+potentially random time intervals.
+
+It is important to understand that it is very difficult to make a
+simple protocol work in all scenarios. We have to assume that some
+packets will be lost through either a missed detection at the start or
+poor synchronization statistics during processing of the burst.
+
+The generic receiver example can be found in packet_rx.grc. This hier
+block provides the main detection, synchronization, header/payload
+management, demodulation, and decoding of the PHY frames. The input to
+this hier block should be not be too far off in frequency. The GNU
+Radio block \ref gr::digital::fll_band_edge_cc "FLL Band-Edge" tends
+to work well enough, though this is unnecessary if the radio are
+synchronized in frequency some other way (e.g., with a GPSDO such as
+is available on USRPs).
+
+The main flow of samples here is to detect a frame by discovering its
+known word, which also provides initial estimates on timing and phase
+offsets of the received frame. We then go through a clock sync block
+to perform matched filtering and sample time correction to produce
+resampled symbols at 1 sample/symbol. Now we have samples that are
+split between the header and payload. We might have information inside
+of the header that helps the receiver understand the payload. For
+instance, the length of the payload is generally encoded in the
+header. So we have to demux the header and payload.
+
+We assume that we know the length of the header in symbols, which we
+pass on to the header demodulator chain. Knowing the header
+modulation, we synchronize the phase and frequency, demodulate the
+symbols into soft bits, decode those soft bits based on the known
+header's FEC code, and then parse the header information. The header
+parser extracts information about the payload, such as the number of
+symbols in the payload and possibly the number of bits/symbol used in
+the payload modulation.
+
+The \ref gr::digital::header_payload_demux "Header/Payload Demux"
+block sends the appropriate number of samples to the payload demod
+chain. This chain does its own phase/freq synchronization for the
+appropriate constellation used in the payload, decodes the samples to
+soft bits, performs the FEC decoding, and then does the CRC32
+check. If this passes, the payload is sent out of the hier block as a
+PDU with the PHY layer framing stripped.
+
+When looking at the packet_rx.grc example, notice that we have
+instrumented a number of debug ports along the way. These ports are
+designed to make it possible for us to externally hook up graphing and
+debug blocks in whatever way we are comfortable with to see the signal
+along the path and more easily debug.
+
+
+\subsection packet_rx_correst Correlation Estimator
+
+The first stage of the receiver searches for the known word prepended
+to every burst from the transmitter. The known word has gone through
+two stages of processing: encoding with the header's FEC (optional)
+and modulated by the header's modulator. The correlation of the known
+word is done at the input sample stage, so we have to recreate the
+modulated and possible encoded known word at the receiver.
+
+To simplify dealing with the encoding process, in packet_rx.grc, we
+assume one of two types of codes: dummy code (or not coded) and a 3x
+repetition code. We then just simply calculated the preamble's bits
+for both cases. Depending on the header decoder (hdr_dec) used, the
+hier block knows which preamble to use.
+
+Next, we need to take the known, encoded word and modulate it with the
+header's modulator and pulse shaping filter. We create a simple
+modulator in the variable 'rxmod' that takes the header \ref
+gr::digital::constellation "constellation object" (hdr_const), the
+number of samples per symbol, and the pulse shape filter's bandwidth
+parameter (eb). The \ref gr::digital::modulate_vector_bc "Modulate Vector"
+block than combines this 'rxmod' modulator with the 'preamble'
+known word into a vector of complex symbols, here called
+'modulated_sync_word'. This variable is then passed to the \ref
+gr::digital::corr_est_cc "Correlation Estimator" block.
+
+One tricky thing about burst communications and network setups is the
+power of the received samples is unknown and time varying. It is
+preferential to try to auto-detect the burst and scale the signal to
++/-1 before coming in to packet_rx. There is still a lot of work to be
+done for AGC loops in the hardware and automatic scaling in
+software. The Correlation Estimator tries to deal with this. We use a
+threshold as an approximate probability of detection. This value
+should be set very high; the default here is 99.9%. The correlation
+tends to scale well as the amplitudes change and for relatively low
+SNR conditions. Still, it is always possible to miss a detection event
+or have a false positive.
+
+Another thing that the Correlation Estimator can do for us is provide
+information for digital scaling the samples. When received over
+hardware, the signals tend to be very small, but most of our follow-on
+processing assumes they are about +/-1. The Correlation Estimator
+finds the amplitude of the sample where the correlation peak was
+found, inverts it, and sends it as a tag with the key 'amp_est'. We
+can use this down stream to adjust the amplitude by rescaling the
+samples from this value. For our packet_rx example, we use the \ref
+gr::blocks::multiply_by_tag_value_cc "Multiply by Tag Value" block,
+which updates its multiplicitive factor based on the tag. Much of this
+could be handled by a good AGC routine in the hardware.
+
+Finally, the main purpose of the Correlation Estimator block is to
+provide the down-stream synchronization blocks with initial estimates
+of the timing and phase offset. The peak of the magnitude of the
+correlation event corresponds to the sampling timing of the data
+stream.
+
+\verbatim
+    1.   /\      2.   _
+        /  \         / \
+     __/    \__   __/   \__
+\endverbatim
+
+The above two drawings show two different correlation scenarios. In
+scenario 1, the timing is exact and the sample at the peak of that
+curve is the proper sample time of the last symbol of the known
+word. In scenario 2, there is a timing offset where the correct timing
+offset is half-way between two samples. This would be a timing offset
+of 0.5 (or -0.5). Knowing where that estimated offset is helps our
+timing recover blocks start near the correct sample offset and then
+track from there.
+
+The magnitude of the correlation helps us discover the timing
+offset. The correlation itself is a complex vector. So where the peak
+of the magnitude happens, we can look to the complex value of the
+correlation at the same point and the phase difference between the
+real and imaginary parts is the phase offset of the signal.
+
+The Correlation Estimator block calculates the time and phase offsets
+and creates stream tags for "time_est" and "phase_est". It also
+creates two other tags: "corr_start" and "corr_est," both of which
+contain the value of the peak of the magnitude of the
+correlation. Because there is a delay in the correlation algorithm
+that is affected by the size of the correlation, we need to adjust
+where the correlation event occurs to where the tags are actually
+placed on the output stream. The block places the "corr_start" tag on
+the sample where the correlation actually occurred. It then places the
+other three tags offset by some "Tag marking delay," which is a
+user-calculated value to place the tags at the correct spot in the
+data stream for the actual start of the known word's first symbol.
+
+In packet_rx, we empirically discovered the tag marking delay for
+different values of the samples/symbol ('sps') variable and made a
+list 'mark_delays' that is index by 'sps' to properly set 'mark_delay'
+for the start of the known word. Getting is correct has a huge effect
+on the timing recover loop, which can take a while to converge if it
+starts offset in time by a sample.
+
+See the example example_corr_est.grc to explore the Correlation
+Estimator blocks more.
+
+
+\subsection packet_rx_timing Timing Recovery
+
+After detecting the frame and estimating the time and phase estimates,
+we have to actually perform the timing synchronization step. The
+packet_rx example uses the
+\ref gr::digital::pfb_clock_sync_ccf "Polyphase Clock Sync" block to
+do this. This PFB clock sync (PCS) block typically performs blind
+timing recovery on a series of samples. It is composed of 'nfilt'
+filters in a filterbank where each filter represents a different phase
+from [0, 2pi) in steps of 2pi/nfilts. The algorithm finds the correct
+arm of the filterbank that corresponds to the time shift of the
+samples. It also knows to look for a "time_est" stream tag and use
+that information to set its phase arm estimate. If we have a time
+estimate like scenario 1 above, we have perfect timing and so would
+select the 0th arm of the filterbank. In scenario 2, we are off by
+half a sample, so we select arm nfilts/2. The PCS is a tracking loop,
+so it will start with the initial estimate and then keep track of the
+timing as well as hone-in on actual timing information of the symbol
+stream.
+
+The PCS block uses a filterbank concept to perform its tracking
+operation. The filters within the filterbank operate best when they
+are phase offsets of the matched filter. So not only does the
+block recover the timing, it also performs the matched filtering and
+produces the optimal 1 sample/symbol output. These are then optimally
+sampled symbols in the complex constellation space. They need to be
+mapped back to bits and decoded. But first, we need to parse the
+header in order to discover information about the payload.
+
+See the example example_corr_est_and_clock_sync.grc to play with the
+parameters of time synchronization.
+
+
+\subsection packet_rx_hpd Header/Payload Demux
+
+Because the header and payload can be modulated differently, the rest
+of the symbol processing has to be split into two chains. We do this
+using the \ref gr::digital::header_payload_demux "Header/Payload Demux"
+block (HPD). We assume that we know the protocol, and so the format,
+coding, and modulation of the header. Generally speaking, these are
+all controlled through three different objects:
+
+- formatter: An object that described the header structure, derived
+  from gr::digital::header_format_base.
+
+- hdr_const: An object that describes the bit and symbol mapping,
+  derived from gr::digital::constellation.
+
+- hdr_dec: An object that describes the FEC code, derived from
+  gr::fec::generic_decoder.
+
+Through these, we can ask for any parameter to set up the following
+stages of processing.
+
+The HPD block is fairly complicated and we will only use it in one
+kind of configuration here. See the manual page for the \ref
+gr::digital::header_payload_demux "HPD" block itself for more
+details. In our use of the HPD block, it receives the data stream and
+looks for a Trigger Tag Key. We will use 'time_est', one of the tags
+produced by the Correlation Estimator to indicate the sample that
+starts the header. When the HPD block sees this trigger key, it passes
+along a known number of symbols out of the 'header' stream port. We
+know the number of symbols based on the formatter, constellation, and
+FEC decoder objects. The formatter objects knows the number of bits in
+the header via the header_nbits() function, the constellation knows
+how many bits per symbol (via bits_per_symbol()), and the FEC decoder
+knows the encoding rate (via 1/rate()). The number of symbols in the
+header is therefore:
+
+    (header_nbits() * 1/rate()) / bits_per_symbol()
+
+The HPD then sends this many symbols on to be processed. It holds up
+any more processing until triggered to do so with information through
+the 'header_data' input message port. The header processing chain will
+end with the Packet Parser producing the message here.
+
+When the 'header_data' input message port receives valid information,
+it releases the payload out of the 'payload' stream port. The main
+thing that the 'header_data' input message port receives is
+information about the length of the payload. The HPD parameter 'Length
+tag key' is matched to the message received in 'header_data', which is
+then used to gate the output of samples as the payload. In our case,
+we specify the length as the number of symbols through the message key
+'payload symbols'. This tag then becomes the tagged stream key for the
+payload chain.
+
+
+\subsection packet_rx_hdr_chain Header Processing Chain
+
+The header processing chain is kicked off when the HPD block receives
+the trigger stream tag (i.e., 'time_est'). We must first correct the
+phase and fine frequency offset of the received samples. The
+Correlation Estimator block will help us with this through the
+'phase_est' tag. The \ref gr::digital::costas_loop_cc "Costas Loop"
+looks for this tag, and, when found, it will take this estimate and
+reset its own internal phase value, which greatly speed up
+acquisition. The Costas loop will then track the phase and frequency
+over the course of the header.
+
+With the constellation locked in time, phase, and frequency, we can
+not decode the complex symbols. We use a \ref
+gr::digital::constellation_soft_decoder_cf "Constellation Soft Decoder"
+block for this, which uses the 'hdr_const' object to know the mappings
+from complex space to bits. Specifically, it performs a soft decoding,
+so the outputs are soft decision bits, which is useful for FEC
+decoding that is performed next.
+
+The \ref gr::fec::decoder "FEC decoder" operates on the soft decisions
+based on the hdr_dec object. Because of the bounded nature of the
+header, we would expect simple block codes used here as well as a
+fairly robust and easy to process code. In the current examples, we
+only provide no code (via the \ref gr::fec::code::dummy_encoder
+"Dummy Encoder" / \ref gr::fec::code::dummy_decoder "Dummy Decoder"
+classes) or a repetition code (via the
+\ref gr::fec::code::repetition_encoder "Repetition Encoder" / \ref
+gr::fec::code::repetition_decoder "Repetition Decoder" classes). The
+output of the FEC decoder block is a bit stream where each item is
+either a 1 or a 0.
+
+The last step in the header processing stage is to parse that bit
+stream back into the header. The \ref gr::digital::protocol_parser_b
+"Packet Parser" block does this by receiving a bit stream, passing it
+to the \ref gr::digital::header_format_base::parse "parse" function of
+the packet formatter object, and emitting a message with the
+information about the parsed data.
+
+The packet parsing is explained in detail in the \ref
+gr::digital::header_format_base "Packet Formatter Base" class. The
+parse function packs together the received bits into the different
+header fields, checks that the header is correct, and the constructs a
+PMT dictionary of the header information, such as the payload length
+and other possible information like the type of constellation or FEC
+coding used on the payload bits. This is the message that gets passed
+back to the HPD block to guide the payload processing.
+
+If the packet formatter parsing operation fails by not getting enough
+data or if the data is corrupted, it will return false. When the
+Packet Parser sees this, it emits a message that just contains a \ref
+page_pmt "PMT" False (pmt::PMT_F), which resets the HPD block to start
+looking for another header trigger event.
+
+If the header parsing completes successfully, the HPD block gets a
+message with information about the payload. Most importantly, it gets
+information about how many symbols make up the payload. It then sends
+a tagged stream to the payload processing chain with this many
+symbols.
+
+
+\subsection packet_rx_pld_chain Payload Processing Chain
+
+The payload processing chain behaves very similarly to the header
+processing chain for the first few blocks. It starts by locking the
+phase and frequency in another \ref gr::digital::costas_loop_cc
+"Costas loop", and then perform \ref
+gr::digital::constellation_soft_decoder_cf "soft decoding" on the
+symbols using the 'pld_const' object. Because we come in as symbols
+and out as soft decisions, the constellation soft decoder will produce
+\ref gr::digital::constellation::bits_per_symbol() "bits_per_symbol()"
+times as many outputs as inputs, but the soft decoder will not change
+the tag stream information. To compensate for this, we use a \ref
+gr::blocks::tagged_stream_multiply_length
+"Tagged Stream Multiply Length" block to update the tagged stream tag
+"payload symbols". We then move from the tagged stream mode into PDU
+mode and perform the FEC decoding through the \ref
+gr::fec::async_decoder "asynchronous FEC decoder". This decoder is
+nice in that it comes in with soft bits and produces packed
+bytes. These packed bytes are now the full payload with the CRC32
+appended. The \ref gr::digital::crc32_async_bb "Async CRC32" block in
+"Check CRC" mode will take this PDU of packed bytes, calculate the CRC
+and check it against the final four bytes of the payload. If they
+match, the PDU is stripped of the CRC bytes and the frame is passed
+out of the hier block. This PDU frame is now ready for use in higher
+layers of processing.
+
+This takes us through the entire processing chain on the
+receiver. From here, it is a matter of tweaking parameters and playing
+with options and other setups to improve behavior.
+
+*/
