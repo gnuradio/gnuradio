@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,11 +48,35 @@ namespace gr {
       code_rate = rate;
       if (framesize == FECFRAME_NORMAL) {
         frame_size = FRAME_SIZE_NORMAL;
+        if (rate == C2_9_VLSNR) {
+          frame_size = FRAME_SIZE_NORMAL - NORMAL_PUNCTURING;
+        }
+      }
+      else if (framesize == FECFRAME_SHORT) {
+        frame_size = FRAME_SIZE_SHORT;
+        if (rate == C1_5_VLSNR_SF2 || rate == C11_45_VLSNR_SF2) {
+          frame_size = FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET1;
+        }
+        if (rate == C1_5_VLSNR || rate == C4_15_VLSNR || rate == C1_3_VLSNR) {
+          frame_size = FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET2;
+        }
       }
       else {
-        frame_size = FRAME_SIZE_SHORT;
+        frame_size = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING;
       }
       switch (constellation) {
+        case MOD_BPSK:
+          mod = 1;
+          rows = frame_size / mod;
+          set_output_multiple(rows);
+          packed_items = rows;
+          break;
+        case MOD_BPSK_SF2:
+          mod = 1;
+          rows = frame_size / mod;
+          set_output_multiple(rows * 2);
+          packed_items = rows * 2;
+          break;
         case MOD_QPSK:
           mod = 2;
           rows = frame_size / mod;
@@ -69,7 +93,7 @@ namespace gr {
             rowaddr2 = 0;
           }
           /* 102 */
-          else if (rate == C25_36 || rate == C13_18 || rate == C7_15 || rate == C8_15) {
+          else if (rate == C25_36 || rate == C13_18 || rate == C7_15 || rate == C8_15 || rate == C26_45) {
             rowaddr0 = rows;
             rowaddr1 = 0;
             rowaddr2 = rows * 2;
@@ -155,6 +179,20 @@ namespace gr {
             rowaddr1 = rows;
             rowaddr2 = 0;
             rowaddr3 = rows * 3;
+          }
+          /* 3210 */
+          else if (rate == C140_180) {
+            rowaddr0 = rows * 3;
+            rowaddr1 = rows * 2;
+            rowaddr2 = rows;
+            rowaddr3 = 0;
+          }
+          /* 0321 */
+          else if (rate == C154_180) {
+            rowaddr0 = 0;
+            rowaddr1 = rows * 3;
+            rowaddr2 = rows * 2;
+            rowaddr3 = rows;
           }
           /* 0123 */
           else {
@@ -434,6 +472,9 @@ namespace gr {
       if (signal_constellation == MOD_128APSK) {
         ninput_items_required[0] = ((noutput_items / 9270) * 9258) * mod;
       }
+      else if (signal_constellation == MOD_BPSK_SF2) {
+        ninput_items_required[0] = (noutput_items * mod) / 2;
+      }
       else {
         ninput_items_required[0] = noutput_items * mod;
       }
@@ -452,6 +493,23 @@ namespace gr {
       int rows;
 
       switch (signal_constellation) {
+        case MOD_BPSK:
+          for (int i = 0; i < noutput_items; i += packed_items) {
+            rows = frame_size;
+            for (int j = 0; j < rows; j++) {
+              out[produced++] = in[consumed++];
+            }
+          }
+          break;
+        case MOD_BPSK_SF2:
+          for (int i = 0; i < noutput_items; i += packed_items) {
+            rows = frame_size;
+            for (int j = 0; j < rows; j++) {
+              out[produced++] = in[consumed];
+              out[produced++] = in[consumed++];
+            }
+          }
+          break;
         case MOD_QPSK:
           for (int i = 0; i < noutput_items; i += packed_items) {
             rows = frame_size / 2;
