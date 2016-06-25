@@ -82,6 +82,7 @@ namespace gr {
     gr::thread::mutex d_mutex;    // protects d_state and d_lock_count
     tb_state d_state;
     int d_lock_count;
+    bool d_retry_wait;
     boost::condition_variable d_lock_cond;
     int d_max_noutput_items;
 
