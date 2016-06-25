@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -100,6 +100,29 @@ install(
 # PACKET
 install(
     FILES
+    packet/burst_tagger.grc
+    packet/example_corr_est_and_clock_sync.grc
+    packet/example_corr_est_and_phase_sync.grc
+    packet/example_corr_est.grc
+    packet/formatter_crc.grc
+    packet/formatter_ofdm.grc
+    packet/packet_loopback_hier.grc
+    packet/packet_rx.grc
+    packet/packet_tx.grc
+    packet/simple_bpsk_tx.grc
+    packet/transmitter_sim_hier.grc
+    packet/tx_stage0.grc
+    packet/tx_stage1.grc
+    packet/tx_stage2.grc
+    packet/tx_stage3.grc
+    packet/tx_stage4.grc
+    packet/tx_stage5.grc
+    packet/tx_stage6a.grc
+    packet/tx_stage6.grc
+    packet/uhd_packet_rx.grc
+    packet/uhd_packet_rx_tun.grc
+    packet/uhd_packet_tx.grc
+    packet/uhd_packet_tx_tun.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/packet
     COMPONENT "digital_python"
 )
