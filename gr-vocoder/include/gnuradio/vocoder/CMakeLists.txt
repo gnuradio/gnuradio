@@ -1,4 +1,4 @@
-# Copyright 2012,2013 Free Software Foundation, Inc.
+# Copyright 2012,2013,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,14 +32,11 @@ install(FILES
     g723_24_encode_sb.h
     g723_40_decode_bs.h
     g723_40_encode_sb.h
-    gsm_fr_decode_ps.h
-    gsm_fr_encode_sp.h
     ulaw_decode_bs.h
     ulaw_encode_sb.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
     COMPONENT "vocoder_devel"
 )
-
 if(LIBCODEC2_FOUND)
 install(FILES
     codec2.h
@@ -49,3 +46,11 @@ install(FILES
     COMPONENT "vocoder_devel"
 )
 endif(LIBCODEC2_FOUND)
+if(LIBGSM_FOUND)
+install(FILES
+    gsm_fr_decode_ps.h
+    gsm_fr_encode_sp.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
+    COMPONENT "vocoder_devel"
+)
+endif(LIBGSM_FOUND)

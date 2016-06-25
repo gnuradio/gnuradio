@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -36,6 +36,10 @@ endif(ENABLE_GR_CTRLPORT)
 if(LIBCODEC2_FOUND)
   list(APPEND GR_SWIG_FLAGS "-DLIBCODEC2_FOUND")
 endif(LIBCODEC2_FOUND)
+
+if(LIBGSM_FOUND)
+  list(APPEND GR_SWIG_FLAGS "-DLIBGSM_FOUND")
+endif(LIBGSM_FOUND)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/vocoder)

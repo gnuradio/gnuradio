@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -38,8 +38,6 @@
 #include "gnuradio/vocoder/g723_24_encode_sb.h"
 #include "gnuradio/vocoder/g723_40_decode_bs.h"
 #include "gnuradio/vocoder/g723_40_encode_sb.h"
-#include "gnuradio/vocoder/gsm_fr_decode_ps.h"
-#include "gnuradio/vocoder/gsm_fr_encode_sp.h"
 #include "gnuradio/vocoder/ulaw_decode_bs.h"
 #include "gnuradio/vocoder/ulaw_encode_sb.h"
 %}
@@ -54,8 +52,6 @@
 %include "gnuradio/vocoder/g723_24_encode_sb.h"
 %include "gnuradio/vocoder/g723_40_decode_bs.h"
 %include "gnuradio/vocoder/g723_40_encode_sb.h"
-%include "gnuradio/vocoder/gsm_fr_decode_ps.h"
-%include "gnuradio/vocoder/gsm_fr_encode_sp.h"
 %include "gnuradio/vocoder/ulaw_decode_bs.h"
 %include "gnuradio/vocoder/ulaw_encode_sb.h"
 
@@ -69,8 +65,6 @@ GR_SWIG_BLOCK_MAGIC2(vocoder, g723_24_decode_bs);
 GR_SWIG_BLOCK_MAGIC2(vocoder, g723_24_encode_sb);
 GR_SWIG_BLOCK_MAGIC2(vocoder, g723_40_decode_bs);
 GR_SWIG_BLOCK_MAGIC2(vocoder, g723_40_encode_sb);
-GR_SWIG_BLOCK_MAGIC2(vocoder, gsm_fr_decode_ps);
-GR_SWIG_BLOCK_MAGIC2(vocoder, gsm_fr_encode_sp);
 GR_SWIG_BLOCK_MAGIC2(vocoder, ulaw_decode_bs);
 GR_SWIG_BLOCK_MAGIC2(vocoder, ulaw_encode_sb);
 
@@ -89,4 +83,17 @@ GR_SWIG_BLOCK_MAGIC2(vocoder, ulaw_encode_sb);
 
 GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_decode_ps);
 GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_encode_sp);
+#endif
+
+#ifdef LIBGSM_FOUND
+%{
+#include "gnuradio/vocoder/gsm_fr_decode_ps.h"
+#include "gnuradio/vocoder/gsm_fr_encode_sp.h"
+%}
+
+%include "gnuradio/vocoder/gsm_fr_decode_ps.h"
+%include "gnuradio/vocoder/gsm_fr_encode_sp.h"
+
+GR_SWIG_BLOCK_MAGIC2(vocoder, gsm_fr_decode_ps);
+GR_SWIG_BLOCK_MAGIC2(vocoder, gsm_fr_encode_sp);
 #endif

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -102,6 +102,14 @@ if(LIBCODEC2_FOUND)
     #message(STATUS "libcodec2 had FreeDV api modes: ${FREEDV_MODES}")
   endif()
 endif(LIBCODEC2_FOUND)
+
+########################################################################
+## GSM Support
+########################################################################
+find_package(GSM)
+if(LIBGSM_FOUND)
+  GR_APPEND_SUBCOMPONENT("gsm")
+endif(LIBGSM_FOUND)
 
 ########################################################################
 # Add subdirectories

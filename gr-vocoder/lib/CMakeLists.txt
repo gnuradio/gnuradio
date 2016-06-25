@@ -1,4 +1,4 @@
-# Copyright 2011,2013 Free Software Foundation, Inc.
+# Copyright 2011,2013,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,70 +16,6 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
-########################################################################
-# Check for system libgsm via CMake variable GR_USE_SYSTEM_LIBGSM ....
-#  if undefined, try to find system libgsm library,
-#    but if there is no system library use a local copy.
-#  if defined True, use system libgsm if found, otherwise do not
-#     use a local copy.
-#  if defined False, use the local copy
-########################################################################
-if (NOT DEFINED GR_USE_SYSTEM_LIBGSM)
-   find_path(LIBGSM_INCLUDE_DIR NAMES gsm.h
-    PATHS
-    ${LIBGSM_PKG_INCLUDE_DIRS}
-    /usr/include/gsm
-    /usr/include
-  )
-
-  find_library(LIBGSM_LIBRARIES NAMES gsm
-    PATHS
-    ${LIBGSM_PKG_LIBRARY_DIRS}
-    /usr/lib
-  )
-
- if(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-   set(GR_USE_SYSTEM_LIBGSM TRUE CACHE INTERNAL "System libgsm found")
-   message(STATUS "Found libgsm: ${LIBGSM_INCLUDE_DIR}, ${LIBGSM_LIBRARIES}")
-   set(GR_USE_LOCAL_LIBGSM FALSE)
-   set(GR_USE_SYSTEM_LIBGSM TRUE)
- else(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-   set(GR_USE_SYSTEM_LIBGSM FALSE CACHE INTERNAL "System libgsm found")
-   message(STATUS "System libgsm not found.")
-   set(GR_USE_LOCAL_LIBGSM TRUE)
- endif(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-else (NOT DEFINED GR_USE_SYSTEM_LIBGSM)
- if (GR_USE_SYSTEM_LIBGSM)
-    find_path(LIBGSM_INCLUDE_DIR NAMES gsm.h
-    PATHS
-    ${LIBGSM_PKG_INCLUDE_DIRS}
-    /usr/include/gsm
-    /usr/include
-  )
-
-  find_library(LIBGSM_LIBRARIES NAMES gsm
-    PATHS
-    ${LIBGSM_PKG_LIBRARY_DIRS}
-    /usr/lib
-  )
-
-  if(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-    set(GR_USE_SYSTEM_LIBGSM TRUE CACHE INTERNAL "System libgsm found")
-    message(STATUS "Found libgsm: ${LIBGSM_INCLUDE_DIR}, ${LIBGSM_LIBRARIES}")
-    set(GR_USE_LOCAL_LIBGSM FALSE)
-  else(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
-    set(GR_USE_SYSTEM_LIBGSM FALSE CACHE INTERNAL "System libgsm found")
-    message(STATUS "System libgsm not found.")
-    set(GR_USE_LOCAL_LIBGSM FALSE)
-   endif(LIBGSM_INCLUDE_DIR AND LIBGSM_LIBRARIES)
- else (GR_USE_SYSTEM_LIBGSM)
-    set(GR_USE_LOCAL_LIBGSM TRUE)
-    message(STATUS "Using gnuradio local copy of libgsm.")
- endif (GR_USE_SYSTEM_LIBGSM)
-endif (NOT DEFINED GR_USE_SYSTEM_LIBGSM)
-
-mark_as_advanced(LIBGSM_INCLUDE_DIR LIBGSM_LIBRARIES)
 
 ########################################################################
 # Setup the include and linker paths
@@ -115,8 +51,6 @@ list(APPEND gr_vocoder_sources
     g723_24_encode_sb_impl.cc
     g723_40_decode_bs_impl.cc
     g723_40_encode_sb_impl.cc
-    gsm_fr_decode_ps_impl.cc
-    gsm_fr_encode_sp_impl.cc
     ulaw_decode_bs_impl.cc
     ulaw_encode_sb_impl.cc
 )
@@ -127,6 +61,12 @@ if(LIBCODEC2_FOUND)
     codec2_encode_sp_impl.cc
     )
 endif(LIBCODEC2_FOUND)
+if(LIBGSM_FOUND)
+  list(APPEND gr_vocoder_sources
+    gsm_fr_decode_ps_impl.cc
+    gsm_fr_encode_sp_impl.cc
+    )
+endif(LIBGSM_FOUND)
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
@@ -147,10 +87,6 @@ endif(MSVC)
 ########################################################################
 GR_INCLUDE_SUBDIRECTORY(g7xx)
 
-if(GR_USE_LOCAL_LIBGSM)
- GR_INCLUDE_SUBDIRECTORY(gsm)
-endif(GR_USE_LOCAL_LIBGSM)
-
 list(APPEND vocoder_libs
     gnuradio-runtime
     ${Boost_LIBRARIES}
@@ -161,9 +97,9 @@ if(LIBCODEC2_LIBRARIES)
   list(APPEND vocoder_libs ${LIBCODEC2_LIBRARIES})
 endif(LIBCODEC2_LIBRARIES)
 
-if(GR_USE_SYSTEM_LIBGSM)
+if(LIBGSM_LIBRARIES)
   list(APPEND vocoder_libs ${LIBGSM_LIBRARIES})
-endif(GR_USE_SYSTEM_LIBGSM)
+endif(LIBGSM_LIBRARIES)
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})
 target_link_libraries(gnuradio-vocoder ${vocoder_libs})

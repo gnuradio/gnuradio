@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -48,12 +48,16 @@ if(ENABLE_TESTING)
     qa_g721_vocoder.py
     qa_g723_24_vocoder.py
     qa_g723_40_vocoder.py
-    qa_gsm_full_rate.py
     qa_ulaw_vocoder.py
     )
   if(LIBCODEC2_FOUND)
     list(APPEND py_qa_test_files
       qa_codec2_vocoder.py
+      )
+  endif()
+  if(LIBGSM_FOUND)
+    list(APPEND py_qa_test_files
+      qa_gsm_full_rate.py
       )
   endif()
   foreach(py_qa_test_file ${py_qa_test_files})

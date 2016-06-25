@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -31,8 +31,6 @@ install(FILES
     vocoder_g723_24_encode_sb.xml
     vocoder_g723_40_decode_bs.xml
     vocoder_g723_40_encode_sb.xml
-    vocoder_gsm_fr_decode_ps.xml
-    vocoder_gsm_fr_encode_sp.xml
     vocoder_ulaw_decode_bs.xml
     vocoder_ulaw_encode_sb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
@@ -47,3 +45,12 @@ if(LIBCODEC2_FOUND)
     COMPONENT "vocoder_python"
     )
 endif(LIBCODEC2_FOUND)
+
+if(LIBGSM_FOUND)
+  install(FILES
+    vocoder_gsm_fr_decode_ps.xml
+    vocoder_gsm_fr_encode_sp.xml
+    DESTINATION ${GRC_BLOCKS_DIR}
+    COMPONENT "vocoder_python"
+    )
+endif(LIBGSM_FOUND)
