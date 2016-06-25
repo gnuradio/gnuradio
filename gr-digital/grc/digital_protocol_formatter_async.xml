@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<block>
+  <name>Protocol Formatter (Async)</name>
+  <key>digital_protocol_formatter_async</key>
+  <import>from gnuradio import digital</import>
+  <make>digital.protocol_formatter_async($format)</make>
+
+  <param>
+    <name>Format Obj.</name>
+    <key>format</key>
+    <type>raw</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <source>
+    <name>header</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>payload</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+</block>

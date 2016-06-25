@@ -464,16 +464,6 @@ namespace gr {
         m->set_is_unaligned(m->unaligned() != 0);
       }
 
-      // For some blocks that can change their produce/consume ratio
-      // (the relative_rate), we might want to automatically update
-      // based on the amount of items written/read.
-      // In the block constructor, use enable_update_rate(true).
-      if(m->update_rate()) {
-        rrate = ((double)(m->nitems_written(0)+n)) / ((double)m->nitems_read(0));
-        if(rrate > 0)
-          m->set_relative_rate(rrate);
-      }
-
       // Now propagate the tags based on the new relative rate
       if(!propagate_tags(m->tag_propagation_policy(), d,
                          d_start_nitems_read, m->relative_rate(),
@@ -485,6 +475,17 @@ namespace gr {
 
       if(n != block::WORK_CALLED_PRODUCE)
         d->produce_each(n);     // advance write pointers
+
+      // For some blocks that can change their produce/consume ratio
+      // (the relative_rate), we might want to automatically update
+      // based on the amount of items written/read.
+      // In the block constructor, use enable_update_rate(true).
+      if(m->update_rate()) {
+        //rrate = ((double)(m->nitems_written(0))) / ((double)m->nitems_read(0));
+        rrate = (double)n / (double)d->consumed();
+        if(rrate > 0)
+          m->set_relative_rate(rrate);
+      }
 
       if(d->d_produce_or > 0)   // block produced something
         return READY;
