@@ -21,8 +21,6 @@ install(FILES
     vocoder_alaw_decode_bs.xml
     vocoder_alaw_encode_sb.xml
     vocoder_block_tree.xml
-    vocoder_codec2_decode_ps.xml
-    vocoder_codec2_encode_sp.xml
     vocoder_cvsd_decode_bs.xml
     vocoder_cvsd_decode.xml
     vocoder_cvsd_encode_sb.xml
@@ -40,3 +38,12 @@ install(FILES
     DESTINATION ${GRC_BLOCKS_DIR}
     COMPONENT "vocoder_python"
 )
+
+if(LIBCODEC2_FOUND)
+  install(FILES
+    vocoder_codec2_decode_ps.xml
+    vocoder_codec2_encode_sp.xml
+    DESTINATION ${GRC_BLOCKS_DIR}
+    COMPONENT "vocoder_python"
+    )
+endif(LIBCODEC2_FOUND)

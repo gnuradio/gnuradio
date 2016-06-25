@@ -89,6 +89,21 @@ CPACK_COMPONENT("vocoder_swig"
 )
 
 ########################################################################
+## CODEC2 Support
+########################################################################
+find_package(Codec2)
+if(LIBCODEC2_FOUND)
+  GR_APPEND_SUBCOMPONENT("codec2")
+  #message(STATUS "libcodec2 modes: ${CODEC2_MODES}")
+  if(LIBCODEC2_HAS_CODEC2_MODE_700)
+    #message(STATUS "libcodec2 has 700bps mode")
+  endif()
+  if (LIBCODEC2_HAS_FREEDV_API)
+    #message(STATUS "libcodec2 had FreeDV api modes: ${FREEDV_MODES}")
+  endif()
+endif(LIBCODEC2_FOUND)
+
+########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/vocoder)

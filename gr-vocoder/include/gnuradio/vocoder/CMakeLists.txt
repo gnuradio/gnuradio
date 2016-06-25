@@ -39,3 +39,13 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
     COMPONENT "vocoder_devel"
 )
+
+if(LIBCODEC2_FOUND)
+install(FILES
+    codec2.h
+    codec2_decode_ps.h
+    codec2_encode_sp.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
+    COMPONENT "vocoder_devel"
+)
+endif(LIBCODEC2_FOUND)

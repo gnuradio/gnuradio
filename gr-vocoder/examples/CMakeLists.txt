@@ -25,7 +25,6 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     PROGRAMS
     alaw_audio_loopback.py
-    codec2_audio_loopback.py
     cvsd_audio_loopback.py
     g721_audio_loopback.py
     g723_24_audio_loopback.py
@@ -35,3 +34,11 @@ GR_PYTHON_INSTALL(
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
     COMPONENT "vocoder_examples"
 )
+if(LIBCODEC2_FOUND)
+  GR_PYTHON_INSTALL(
+    PROGRAMS
+    codec2_audio_loopback.py
+    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
+    COMPONENT "vocoder_examples"
+    )
+endif(LIBCODEC2_FOUND)
