@@ -189,11 +189,6 @@ $rate5.val, #slurp
     <type>enum</type>
     <hide>#if str($standard) == 'STANDARD_DVBS2' then $framesize2.hide_normal else 'all'</hide>
     <option>
-      <name>2/9 VL-SNR</name>
-      <key>C2_9_VLSNR</key>
-      <opt>val:dtv.C2_9_VLSNR</opt>
-    </option>
-    <option>
       <name>1/4</name>
       <key>C1_4</key>
       <opt>val:dtv.C1_4</opt>
@@ -247,6 +242,11 @@ $rate5.val, #slurp
       <name>9/10</name>
       <key>C9_10</key>
       <opt>val:dtv.C9_10</opt>
+    </option>
+    <option>
+      <name>2/9 VL-SNR</name>
+      <key>C2_9_VLSNR</key>
+      <opt>val:dtv.C2_9_VLSNR</opt>
     </option>
     <option>
       <name>13/45</name>

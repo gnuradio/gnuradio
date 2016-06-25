@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Test tag variable rate
+###################################################
+-->
+
+<block>
+  <name>Test Tag Variable Rate</name>
+  <key>blocks_test_tag_variable_rate_ff</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.test_tag_variable_rate_ff($once, $step)</make>
+
+  <param>
+    <name>Update Once</name>
+    <key>once</key>
+    <value>False</value>
+    <type>enum</type>
+    <option>
+      <name>True</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Update Step</name>
+    <key>step</key>
+    <value>0.001</value>
+    <type>float</type>
+  </param>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+    <nports>1</nports>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+    <nports>1</nports>
+  </source>
+</block>

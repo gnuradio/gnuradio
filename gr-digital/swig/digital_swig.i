@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2015 Free Software Foundation, Inc.
+ * Copyright 2011-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -100,6 +100,14 @@
 #include "gnuradio/digital/ofdm_sampler.h"
 #include "gnuradio/digital/ofdm_serializer_vcc.h"
 #include "gnuradio/digital/ofdm_sync_sc_cfb.h"
+#include "gnuradio/digital/header_format_base.h"
+#include "gnuradio/digital/header_format_default.h"
+#include "gnuradio/digital/header_format_counter.h"
+#include "gnuradio/digital/header_format_crc.h"
+#include "gnuradio/digital/header_format_ofdm.h"
+#include "gnuradio/digital/protocol_formatter_async.h"
+#include "gnuradio/digital/protocol_formatter_bb.h"
+#include "gnuradio/digital/protocol_parser_b.h"
 #include "gnuradio/digital/packet_header_default.h"
 #include "gnuradio/digital/packet_header_ofdm.h"
 #include "gnuradio/digital/packet_headergenerator_bb.h"
@@ -181,6 +189,14 @@
 %include "gnuradio/digital/ofdm_sampler.h"
 %include "gnuradio/digital/ofdm_serializer_vcc.h"
 %include "gnuradio/digital/ofdm_sync_sc_cfb.h"
+%include "gnuradio/digital/header_format_base.h"
+%include "gnuradio/digital/header_format_default.h"
+%include "gnuradio/digital/header_format_counter.h"
+%include "gnuradio/digital/header_format_crc.h"
+%include "gnuradio/digital/header_format_ofdm.h"
+%include "gnuradio/digital/protocol_formatter_async.h"
+%include "gnuradio/digital/protocol_formatter_bb.h"
+%include "gnuradio/digital/protocol_parser_b.h"
 %include "gnuradio/digital/packet_header_default.h"
 %include "gnuradio/digital/packet_header_ofdm.h"
 %include "gnuradio/digital/packet_headergenerator_bb.h"
@@ -249,6 +265,9 @@ GR_SWIG_BLOCK_MAGIC2(digital, ofdm_mapper_bcv);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sampler);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_serializer_vcc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sync_sc_cfb);
+GR_SWIG_BLOCK_MAGIC2(digital, protocol_formatter_async);
+GR_SWIG_BLOCK_MAGIC2(digital, protocol_formatter_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, protocol_parser_b);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_headergenerator_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_headerparser_b);
 GR_SWIG_BLOCK_MAGIC2(digital, packet_sink);

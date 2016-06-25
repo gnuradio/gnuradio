@@ -105,6 +105,8 @@ namespace gr {
       MOD_4_12_20_28APSK,
       MOD_128APSK,
       MOD_256APSK,
+      MOD_BPSK,
+      MOD_BPSK_SF2,
       MOD_OTHER,
     };
 

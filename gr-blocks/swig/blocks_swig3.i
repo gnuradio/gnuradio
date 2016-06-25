@@ -70,6 +70,7 @@
 #include "gnuradio/blocks/multiply_const_vcc.h"
 #include "gnuradio/blocks/multiply_matrix_cc.h"
 #include "gnuradio/blocks/multiply_matrix_ff.h"
+#include "gnuradio/blocks/multiply_by_tag_value_cc.h"
 #include "gnuradio/blocks/mute_ss.h"
 #include "gnuradio/blocks/mute_ii.h"
 #include "gnuradio/blocks/mute_ff.h"
@@ -118,6 +119,7 @@
 %include "gnuradio/blocks/multiply_const_vcc.h"
 %include "gnuradio/blocks/multiply_matrix_cc.h"
 %include "gnuradio/blocks/multiply_matrix_ff.h"
+%include "gnuradio/blocks/multiply_by_tag_value_cc.h"
 %include "gnuradio/blocks/mute_ss.h"
 %include "gnuradio/blocks/mute_ii.h"
 %include "gnuradio/blocks/mute_ff.h"
@@ -165,6 +167,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vff);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_const_vcc);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_matrix_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, multiply_matrix_ff);
+GR_SWIG_BLOCK_MAGIC2(blocks, multiply_by_tag_value_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, mute_ff);

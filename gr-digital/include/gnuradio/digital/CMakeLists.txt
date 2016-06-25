@@ -1,4 +1,4 @@
-# Copyright 2011-2015 Free Software Foundation, Inc.
+# Copyright 2011-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -65,6 +65,7 @@ install(FILES
     glfsr_source_f.h
     hdlc_deframer_bp.h
     hdlc_framer_pb.h
+    header_buffer.h
     header_payload_demux.h
     kurtotic_equalizer_cc.h
     lfsr.h
@@ -90,6 +91,14 @@ install(FILES
     ofdm_sampler.h
     ofdm_serializer_vcc.h
     ofdm_sync_sc_cfb.h
+    header_format_base.h
+    header_format_default.h
+    header_format_counter.h
+    header_format_crc.h
+    header_format_ofdm.h
+    protocol_formatter_async.h
+    protocol_formatter_bb.h
+    protocol_parser_b.h
     packet_header_default.h
     packet_header_ofdm.h
     packet_headergenerator_bb.h

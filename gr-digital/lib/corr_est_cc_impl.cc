@@ -55,6 +55,17 @@ namespace gr {
     {
       d_sps = sps;
 
+      // In order to easily support the optional second output,
+      // don't deal with an unbounded max number of output items.
+      // For the common case of not using the optional second output,
+      // this ensures we optimally call the volk routines.
+      const size_t nitems = 24*1024;
+      set_max_noutput_items(nitems);
+      d_corr = (gr_complex *)
+               volk_malloc(sizeof(gr_complex)*nitems, volk_get_alignment());
+      d_corr_mag = (float *)
+                   volk_malloc(sizeof(float)*nitems, volk_get_alignment());
+
       // Create time-reversed conjugate of symbols
       d_symbols = symbols;
       for(size_t i=0; i < d_symbols.size(); i++) {
@@ -96,16 +107,7 @@ namespace gr {
       //  volk_get_alignment() / sizeof(gr_complex);
       //set_alignment(std::max(1,alignment_multiple));
 
-      // In order to easily support the optional second output,
-      // don't deal with an unbounded max number of output items.
-      // For the common case of not using the optional second output,
-      // this ensures we optimally call the volk routines.
-      const size_t nitems = 24*1024;
-      set_max_noutput_items(nitems);
-      d_corr = (gr_complex *)
-               volk_malloc(sizeof(gr_complex)*nitems, volk_get_alignment());
-      d_corr_mag = (float *)
-                   volk_malloc(sizeof(float)*nitems, volk_get_alignment());
+      d_scale = 1.0f;
     }
 
     corr_est_cc_impl::~corr_est_cc_impl()
@@ -193,14 +195,7 @@ namespace gr {
     corr_est_cc_impl::_set_threshold(float threshold)
     {
       d_stashed_threshold = threshold;
-
-      // Compute a correlation threshold.
-      // Compute the value of the discrete autocorrelation of the matched
-      // filter with offset 0 (aka the autocorrelation peak).
-      float corr = 0;
-      for(size_t i = 0; i < d_symbols.size(); i++)
-        corr += abs(d_symbols[i]*conj(d_symbols[i]));
-      d_thresh = threshold*corr*corr;
+      d_pfa = -logf(1.0f-threshold);
     }
 
     void
@@ -228,10 +223,6 @@ namespace gr {
       // Our correlation filter length
       unsigned int hist_len = history() - 1;
 
-      // Delay the output by our correlation filter length so we can
-      // tag backwards in time
-      memcpy(out, &in[0], sizeof(gr_complex)*noutput_items);
-
       // Calculate the correlation of the non-delayed input with the
       // known symbols.
       d_filter->filter(noutput_items, &in[hist_len], corr);
@@ -239,19 +230,31 @@ namespace gr {
       // Find the magnitude squared of the correlation
       volk_32fc_magnitude_squared_32f(&d_corr_mag[0], corr, noutput_items);
 
+      float detection = 0;
+      for(int i = 0; i < noutput_items; i++) {
+        detection += d_corr_mag[i];
+      }
+      detection /= static_cast<float>(noutput_items);
+      detection *= d_pfa;
+
       int isps = (int)(d_sps + 0.5f);
       int i = 0;
       while(i < noutput_items) {
-        // Look for the correlator output to cross the threshold
-        if (d_corr_mag[i] <= d_thresh) {
+        // Look for the correlator output to cross the threshold.
+        // Sum power over two consecutive symbols in case we're offset
+        // in time. If off by 1/2 a symbol, the peak of any one point
+        // is much lower.
+        float corr_mag = d_corr_mag[i] + d_corr_mag[i+1];
+        if(corr_mag <= 4*detection) {
           i++;
           continue;
         }
+
         // Go to (just past) the current correlator output peak
         while ((i < (noutput_items-1)) &&
-               (d_corr_mag[i] < d_corr_mag[i+1]))
+               (d_corr_mag[i] < d_corr_mag[i+1])) {
           i++;
-
+        }
         // Delaying the primary signal output by the matched filter
         // length using history(), means that the the peak output of
         // the matched filter aligns with the start of the desired
@@ -262,8 +265,9 @@ namespace gr {
         add_item_tag(0, nitems_written(0) + i, pmt::intern("corr_start"),
                      pmt::from_double(d_corr_mag[i]), d_src_id);
 
+#if 0
         // Use Parabolic interpolation to estimate a fractional
-        // sample delay. There are more accurate methods as 
+        // sample delay. There are more accurate methods as
         // the sample delay estimate using this method is biased.
         // But this method is simple and fast.
         // center between [-0.5,0.5] units of samples
@@ -275,6 +279,21 @@ namespace gr {
           double denom = 2*(d_corr_mag[i-1]-2*d_corr_mag[i]+d_corr_mag[i+1]);
           center = nom/denom;
         }
+#else
+        // Calculates the center of mass between the three points around the peak.
+        // Estimate is linear.
+        double nom = 0, den = 0;
+        nom = d_corr_mag[i-1] + 2*d_corr_mag[i] + 3*d_corr_mag[i+1];
+        den = d_corr_mag[i-1] + d_corr_mag[i] + d_corr_mag[i+1];
+        double center = nom / den;
+        center = (center - 2.0); // adjust for bias in center of mass calculation
+#endif
+
+        // Estimated scaling factor for the input stream to normalize
+        // the output to +/-1.
+        uint32_t maxi;
+        volk_32fc_index_max_32u_manual(&maxi, (gr_complex*)in, noutput_items, "generic");
+        d_scale = 1 / std::abs(in[maxi]);
 
         // Calculate the phase offset of the incoming signal.
         //
@@ -304,6 +323,8 @@ namespace gr {
         // N.B. the appropriate d_corr_mag[] index is "i", not "index".
         add_item_tag(0, nitems_written(0) + index, pmt::intern("corr_est"),
                      pmt::from_double(d_corr_mag[i]), d_src_id);
+        add_item_tag(0, nitems_written(0) + index, pmt::intern("amp_est"),
+                     pmt::from_double(d_scale), d_src_id);
 
         if (output_items.size() > 1) {
           // N.B. these debug tags are not offset to avoid walking off out buf
@@ -313,6 +334,8 @@ namespace gr {
                        pmt::from_double(center), d_src_id);
           add_item_tag(1, nitems_written(0) + i, pmt::intern("corr_est"),
                        pmt::from_double(d_corr_mag[i]), d_src_id);
+          add_item_tag(1, nitems_written(0) + i, pmt::intern("amp_est"),
+                       pmt::from_double(d_scale), d_src_id);
         }
 
         // Skip ahead to the next potential symbol peak
@@ -324,6 +347,10 @@ namespace gr {
       //  add_item_tag(1, nitems_written(0) + noutput_items - 1,
       //               pmt::intern("ce_eow"), pmt::from_uint64(noutput_items),
       //               d_src_id);
+
+      // Delay the output by our correlation filter length so we can
+      // tag backwards in time
+      memcpy(out, &in[0], sizeof(gr_complex)*noutput_items);
 
       return noutput_items;
     }
