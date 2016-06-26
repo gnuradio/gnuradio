@@ -21,8 +21,8 @@
 #
 
 from gnuradio import gr, blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import os, sys
 
 try:
@@ -161,23 +161,22 @@ class plot_base(gr.top_block):
             self._auto_scale = False
 
 def setup_options(desc):
-    parser = OptionParser(option_class=eng_option, description=desc,
-                          conflict_handler="resolve")
-    parser.add_option("-N", "--nsamples", type="int", default=1000000,
-                      help="Set the number of samples to display [default=%default]")
-    parser.add_option("-S", "--start", type="int", default=0,
-                      help="Starting sample number [default=%default]")
-    parser.add_option("-C", "--ncols", type="int", default=100,
-                      help="Number of columns [default=%default]")
-    parser.add_option("-R", "--nrows", type="int", default=100,
-                      help="Number of rows [default=%default]")
-    parser.add_option("-r", "--sample-rate", type="eng_float", default=1.0,
-                      help="Set the sample rate of the signal [default=%default]")
-    parser.add_option("", "--no-auto-scale", action="store_true", default=False,
-                      help="Do not auto-scale the plot [default=%default]")
-    (options,args) = parser.parse_args()
-    if(len(args) < 1):
-        parser.print_help()
-        sys.exit(0)
-    return (options,args)
+    parser = ArgumentParser(description=desc, conflict_handler="resolve")
+    parser.add_argument("-N", "--nsamples", type=int, default=1000000,
+                      help="Set the number of samples to display [default=%(default)r]")
+    parser.add_argument("-S", "--start", type=int, default=0,
+                      help="Starting sample number [default=%(default)r]")
+    parser.add_argument("-C", "--ncols", type=int, default=100,
+                      help="Number of columns [default=%(default)r]")
+    parser.add_argument("-R", "--nrows", type=int, default=100,
+                      help="Number of rows [default=%(default)r]")
+    parser.add_argument("-r", "--sample-rate", type=eng_float, default=1.0,
+                      help="Set the sample rate of the signal [default=%(default)r]")
+    parser.add_argument("--no-auto-scale", action="store_true",
+                      help="Do not auto-scale the plot [default=%(default)r]")
+    parser.add_argument("files", nargs="+", metavar="FILE",
+                      help="Input files with complex samples")
+    args = parser.parse_args()
+
+    return args
 
