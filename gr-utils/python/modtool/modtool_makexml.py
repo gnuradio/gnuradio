@@ -34,35 +34,34 @@ from util_functions import ask_yes_no
 class ModToolMakeXML(ModTool):
     """ Make XML file for GRC block bindings """
     name = 'makexml'
-    aliases = ('mx',)
+    description = 'Generate XML files for GRC block bindings.'
 
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup_parser(self):
+    @staticmethod
+    def setup_parser(parser):
         """ Initialise the option parser for 'gr_modtool makexml' """
-        parser = ModTool.setup_parser(self)
-        parser.usage = """%prog info [options]. \n Call %prog without any options to run it interactively.
+        parser.usage = """%s
 
         Note: This does not work on Python blocks!
-        """
-        return parser
+        """ % parser.usage
+        ModTool.setup_parser_block(parser)
 
-    def setup(self, options, args):
-        ModTool.setup(self, options, args)
+    def setup(self, options):
+        ModTool.setup(self, options)
 
-        if options.block_name is not None:
-            self._info['pattern'] = options.block_name
-        elif len(args) >= 2:
-            self._info['pattern'] = args[1]
+        if options.blockname is not None:
+            self._info['pattern'] = options.blockname
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to parse? (Regex): ')
         if len(self._info['pattern']) == 0:
             self._info['pattern'] = '.'
 
-    def run(self):
+    def run(self, options):
         """ Go, go, go! """
         print "Warning: This is an experimental feature. Don't expect any magic."
+        self.setup(options)
         # 1) Go through lib/
         if not self._skip_subdirs['lib']:
             if self._info['version'] == '37':
