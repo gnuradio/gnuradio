@@ -159,7 +159,7 @@ namespace gr {
     base_source_impl::load_message(bool wait)
     {
       /* Poll for input */
-      zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
+      zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
       zmq::poll(&items[0], 1, wait ? d_timeout : 0);
 
       if (!(items[0].revents & ZMQ_POLLIN))
