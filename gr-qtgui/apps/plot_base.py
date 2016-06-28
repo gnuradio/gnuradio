@@ -21,8 +21,6 @@
 #
 
 from gnuradio import gr, blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
 import os, sys
 
 os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
