@@ -124,8 +124,8 @@ class receive_path(gr.hier_block2):
             threshold_in_db: set detection threshold (float (dB))
         """
         self.probe.set_threshold(threshold_in_db)
-    
-        
+
+    @staticmethod
     def add_options(normal, expert):
         """
         Adds receiver-specific options to the Options Parser
@@ -140,10 +140,6 @@ class receive_path(gr.hier_block2):
                           help="Log all parts of flow graph to files (CAUTION: lots of data)")
         expert.add_option("", "--chbw-factor", type="float", default=1.0,
                           help="Channel bandwidth = chbw_factor x signal bandwidth [defaut=%default]")
-
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
-
 
     def _print_verbage(self):
         """
