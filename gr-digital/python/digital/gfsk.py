@@ -133,10 +133,9 @@ class gfsk_mod(gr.hier_block2):
     def samples_per_symbol(self):
         return self._samples_per_symbol
 
+    @staticmethod
     def bits_per_symbol(self=None):     # staticmethod that's also callable on an instance
         return 1
-    bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.
-
 
     def _print_verbage(self):
         print "bits per symbol = %d" % self.bits_per_symbol()
@@ -152,24 +151,21 @@ class gfsk_mod(gr.hier_block2):
         self.connect(self.fmmod,
                      blocks.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
 
-
+    @staticmethod
     def add_options(parser):
         """
         Adds GFSK modulation-specific options to the standard parser
         """
         parser.add_option("", "--bt", type="float", default=_def_bt,
                           help="set bandwidth-time product [default=%default] (GFSK)")
-    add_options=staticmethod(add_options)
 
-
+    @staticmethod
     def extract_kwargs_from_options(options):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(gfsk_mod.__init__,
                                                             ('self',), options)
-    extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
-
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -255,10 +251,9 @@ class gfsk_demod(gr.hier_block2):
     def samples_per_symbol(self):
         return self._samples_per_symbol
 
+    @staticmethod
     def bits_per_symbol(self=None):   # staticmethod that's also callable on an instance
         return 1
-    bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.
-
 
     def _print_verbage(self):
         print "bits per symbol = %d" % self.bits_per_symbol()
@@ -278,6 +273,7 @@ class gfsk_demod(gr.hier_block2):
         self.connect(self.slicer,
                     blocks.file_sink(gr.sizeof_char, "slicer.dat"))
 
+    @staticmethod
     def add_options(parser):
         """
         Adds GFSK demodulation-specific options to the standard parser
@@ -290,15 +286,14 @@ class gfsk_demod(gr.hier_block2):
                           help="M&M clock recovery omega relative limit [default=%default] (GFSK/PSK)")
         parser.add_option("", "--freq-error", type="float", default=_def_freq_error,
                           help="M&M clock recovery frequency error [default=%default] (GFSK)")
-    add_options=staticmethod(add_options)
 
+    @staticmethod
     def extract_kwargs_from_options(options):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(gfsk_demod.__init__,
                                                             ('self',), options)
-    extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
 
 #
