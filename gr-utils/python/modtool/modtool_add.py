@@ -143,7 +143,7 @@ class ModToolAdd(ModTool):
         elif self._info['is_component']:
             return Templates['grlicense']
         else:
-            return get_template('defaultlicense', **self._info)
+            return Templates['defaultlicense'].format(**self._info)
 
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
