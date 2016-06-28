@@ -90,7 +90,7 @@ namespace gr {
         while(!empty_p(pmt::mp("in"))) {
 
           // wait for query...
-          zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
+          zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
           zmq::poll (&items[0], 1, d_timeout);
 
           //  If we got a reply, process
