@@ -145,7 +145,8 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
 
         if(verbose):
             self._print_verbage()
-            
+
+    @staticmethod
     def add_options(parser):
         add_freq_option(parser)
         parser.add_option("-a", "--args", type="string", default="",
@@ -164,9 +165,6 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         parser.add_option("-C", "--clock-source", type="string", default=None,
                           help="select clock source (e.g. 'external') [default=%default]") 
         parser.add_option("-v", "--verbose", action="store_true", default=False)
-
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
 
     def _print_verbage(self):
         """
@@ -203,6 +201,7 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         if(verbose):
             self._print_verbage()
 
+    @staticmethod
     def add_options(parser):
         add_freq_option(parser)
         parser.add_option("-a", "--args", type="string", default="",
@@ -222,9 +221,6 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
                           help="select clock source (e.g. 'external') [default=%default]") 
         if not parser.has_option("--verbose"):
             parser.add_option("-v", "--verbose", action="store_true", default=False)
-
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
 
     def _print_verbage(self):
         """

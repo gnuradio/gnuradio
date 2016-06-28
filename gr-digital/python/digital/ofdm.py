@@ -146,6 +146,7 @@ class ofdm_mod(gr.hier_block2):
             msg = gr.message_from_string(pkt)
         self._pkt_input.msgq().insert_tail(msg)
 
+    @staticmethod
     def add_options(normal, expert):
         """
         Adds OFDM-specific options to the Options Parser
@@ -158,8 +159,6 @@ class ofdm_mod(gr.hier_block2):
                           help="set the number of occupied FFT bins [default=%default]")
         expert.add_option("", "--cp-length", type="intx", default=128,
                           help="set the number of bits in the cyclic prefix [default=%default]")
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
 
     def _print_verbage(self):
         """
@@ -267,6 +266,7 @@ class ofdm_demod(gr.hier_block2):
             
         self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
 
+    @staticmethod
     def add_options(normal, expert):
         """
         Adds OFDM-specific options to the Options Parser
@@ -281,8 +281,6 @@ class ofdm_demod(gr.hier_block2):
                           help="set the number of bits in the cyclic prefix [default=%default]")
         expert.add_option("", "--snr", type="float", default=30.0,
                           help="SNR estimate [default=%default]")
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
 
     def _print_verbage(self):
         """

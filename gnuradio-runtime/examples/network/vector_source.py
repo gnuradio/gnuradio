@@ -35,7 +35,7 @@ class vector_source(gr.top_block):
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option)
-    parser.add_option("", "--host", type="string", default="localhost",
+    parser.add_option("", "--host", type="string", default="127.0.0.1",
                       help="Remote host name (domain name or IP address")
     parser.add_option("", "--port", type="int", default=65500,
                       help="port number to connect to")

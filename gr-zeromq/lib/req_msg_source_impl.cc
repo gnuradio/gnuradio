@@ -89,7 +89,7 @@ namespace gr {
       while(!d_finished){
         //std::cout << "readloop\n";
 
-        zmq::pollitem_t itemsout[] = { { *d_socket, 0, ZMQ_POLLOUT, 0 } };
+        zmq::pollitem_t itemsout[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLOUT, 0 } };
         zmq::poll(&itemsout[0], 1, d_timeout);
 
         //  If we got a reply, process
@@ -101,7 +101,7 @@ namespace gr {
           d_socket->send(request);
         }
 
-        zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
+        zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
         zmq::poll (&items[0], 1, d_timeout);
 
         //  If we got a reply, process

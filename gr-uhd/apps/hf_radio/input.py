@@ -65,6 +65,7 @@ class uhd_input(gr.hier_block2):
         self.gain = gain
         self.src.set_gain(gain, 0)
 
+    @staticmethod
     def add_options(parser):
         parser.add_option("-a", "--address", type="string",
                           default="addr=192.168.10.2",
@@ -75,4 +76,3 @@ class uhd_input(gr.hier_block2):
                           help="set frequency to FREQ", metavar="FREQ")
         parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
-    add_options = staticmethod(add_options)

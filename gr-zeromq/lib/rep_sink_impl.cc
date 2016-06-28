@@ -62,7 +62,7 @@ namespace gr {
         /* Wait for a small time (FIXME: scheduler can't wait for us) */
           /* We only wait if its the first iteration, for the others we'll
            * let the scheduler retry */
-        zmq::pollitem_t items[] = { { *d_socket, 0, ZMQ_POLLIN, 0 } };
+        zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
         zmq::poll(&items[0], 1, first ? d_timeout : 0);
 
           /* If we dont have anything, we're done */

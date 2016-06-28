@@ -175,12 +175,12 @@ class generic_mod(gr.hier_block2):
     def bits_per_symbol(self):   # static method that's also callable on an instance
         return self._constellation.bits_per_symbol()
 
+    @staticmethod
     def add_options(parser):
         """
         Adds generic modulation options to the standard parser
         """
         add_common_options(parser)
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(cls, options):
         """
@@ -324,7 +324,7 @@ class generic_demod(gr.hier_block2):
     def samples_per_symbol(self):
         return self._samples_per_symbol
 
-    def bits_per_symbol(self):   # staticmethod that's also callable on an instance
+    def bits_per_symbol(self):
         return self._constellation.bits_per_symbol()
 
     def _print_verbage(self):
@@ -372,6 +372,7 @@ class generic_demod(gr.hier_block2):
         self.connect(self.unpack,
                      blocks.file_sink(gr.sizeof_char, "rx_unpack.8b"))
 
+    @staticmethod
     def add_options(parser):
         """
         Adds generic demodulation options to the standard parser
@@ -385,7 +386,6 @@ class generic_demod(gr.hier_block2):
                           help="set phase tracking loop lock-in bandwidth [default=%default]")
         parser.add_option("", "--timing-bw", type="float", default=_def_timing_bw,
                           help="set timing symbol sync loop gain lock-in bandwidth [default=%default]")
-    add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(cls, options):
         """

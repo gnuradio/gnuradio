@@ -94,6 +94,7 @@ class transmit_path(gr.hier_block2):
     def differential(self):
         return self.modulator._differential
 
+    @staticmethod
     def add_options(normal, expert):
         """
         Adds transmitter-specific options to the Options Parser
@@ -114,9 +115,6 @@ class transmit_path(gr.hier_block2):
         expert.add_option("", "--log", action="store_true",
                           default=False,
                           help="Log all parts of flow graph to file (CAUTION: lots of data)")
-
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
 
     def _print_verbage(self):
         """
