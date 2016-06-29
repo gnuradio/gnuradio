@@ -95,6 +95,8 @@ namespace gr {
     while(1) {
       boost::this_thread::interruption_point();
 
+      d->d_tpb.clear_changed();
+
       // handle any queued up messages
       BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
         // Check if we have a message handler attached before getting
@@ -115,7 +117,6 @@ namespace gr {
         }
       }
 
-      d->d_tpb.clear_changed();
       // run one iteration if we are a connected stream block
       if(d->noutputs() >0 || d->ninputs()>0){
         s = d_exec.run_one_iteration();
