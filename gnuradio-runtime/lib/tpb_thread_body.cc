@@ -165,8 +165,6 @@ namespace gr {
       {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
         while(!d->d_tpb.output_changed) {
-          // wait for output room or message
-          while(!d->d_tpb.output_changed)
             d->d_tpb.output_cond.wait(guard);
         }
       }
