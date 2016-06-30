@@ -155,8 +155,10 @@ namespace gr {
       case block_executor::BLKD_IN:            // Wait for input.
       {
         gr::thread::scoped_lock guard(d->d_tpb.mutex);
-        while(!d->d_tpb.input_changed) {
-          d->d_tpb.input_cond.wait(guard);
+
+        if(!d->d_tpb.input_changed) {
+          boost::system_time const timeout=boost::get_system_time()+ boost::posix_time::milliseconds(250);
+          d->d_tpb.input_cond.timed_wait(guard, timeout);
         }
       }
       break;
