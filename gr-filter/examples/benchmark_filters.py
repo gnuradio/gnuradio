@@ -22,10 +22,10 @@
 
 import time
 import random
-from optparse import OptionParser
+from argparse import ArgumentParser
 from gnuradio import gr
 from gnuradio import blocks, filter
-from gnuradio.eng_option import eng_option
+from gnuradio.eng_arg import eng_float, intx
 
 def make_random_complex_tuple(L):
     result = []
@@ -52,20 +52,16 @@ def benchmark(name, creator, dec, ntaps, total_test_size, block_size):
         name, ntaps, total_test_size, delta, ntaps*total_test_size/delta)
 
 def main():
-    parser = OptionParser(option_class=eng_option)
-    parser.add_option("-n", "--ntaps", type="int", default=256)
-    parser.add_option("-t", "--total-input-size", type="eng_float", default=40e6)
-    parser.add_option("-b", "--block-size", type="intx", default=50000)
-    parser.add_option("-d", "--decimation", type="int", default=1)
-    (options, args) = parser.parse_args()
-    if len(args) != 0:
-        parser.print_help()
-        sys.exit(1)
-
-    ntaps = options.ntaps
-    total_input_size = options.total_input_size
-    block_size = options.block_size
-    dec = options.decimation
+    parser = ArgumentParser()
+    parser.add_argument("-n", "--ntaps", type=int, default=256)
+    parser.add_argument("-t", "--total-input-size", type=eng_float, default=40e6)
+    parser.add_argument("-b", "--block-size", type=intx, default=50000)
+    parser.add_argument("-d", "--decimation", type=int, default=1)
+    args = parser.parse_args()
+    ntaps = args.ntaps
+    total_input_size = args.total_input_size
+    block_size = args.block_size
+    dec = args.decimation
 
     benchmark("filter.fir_filter_ccc", filter.fir_filter_ccc,
               dec, ntaps, total_input_size, block_size)
