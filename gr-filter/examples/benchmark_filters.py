@@ -24,7 +24,7 @@ import time
 import random
 from optparse import OptionParser
 from gnuradio import gr
-from gnuradio import blocks
+from gnuradio import blocks, filter
 from gnuradio.eng_option import eng_option
 
 def make_random_complex_tuple(L):
