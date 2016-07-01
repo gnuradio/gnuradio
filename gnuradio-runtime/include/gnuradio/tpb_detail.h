@@ -58,7 +58,10 @@ namespace gr {
 
     //! Called by pmt msg posters
     void notify_msg() {
+      gr::thread::scoped_lock guard(mutex);
+      input_changed = true;
       input_cond.notify_one();
+      output_changed = true;
       output_cond.notify_one();
     }
 
