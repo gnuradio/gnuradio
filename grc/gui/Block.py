@@ -52,10 +52,10 @@ class Block(Element, _Block):
                         hide='all')
 
         Element.__init__(self)  # needs the params
-        self._comment_pixmap = None
+        self._param_layouts = []
+        self._comment_layout = None
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
         self.has_busses = [False, False]  # source, sink
-        self.layouts = []
 
     def get_coordinate(self):
         """
@@ -123,14 +123,14 @@ class Block(Element, _Block):
                          Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else \
                          Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else \
                          Colors.BLOCK_DISABLED_COLOR
-        del self.layouts[:]
+        del self._param_layouts[:]
         #create the main layout
         layout = Gtk.DrawingArea().create_pango_layout('')
         layout.set_markup('<span foreground="{foreground}" font_desc="{font}"><b>{name}</b></span>'.format(
             foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT, name=Utils.encode(self.name)
         ))
         self.label_width, self.label_height = layout.get_pixel_size()
-        self.layouts.append(layout)
+        self._param_layouts.append(layout)
         #display the params
         if self.is_dummy_block:
             markups = ['<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(
@@ -143,7 +143,7 @@ class Block(Element, _Block):
             layout = Gtk.DrawingArea().create_pango_layout('')
             layout.set_spacing(LABEL_SEPARATION*Pango.SCALE)
             layout.set_markup('\n'.join(markups))
-            self.layouts.append(layout)
+            self._param_layouts.append(layout)
             w, h = layout.get_pixel_size()
             self.label_width = max(w, self.label_width)
             self.label_height += h + LABEL_SEPARATION
@@ -175,9 +175,9 @@ class Block(Element, _Block):
             any(port.get_type() == 'bus' for port in ports)
             for ports in (self.get_sources_gui(), self.get_sinks_gui())
         ]
-        self.create_comment_label()
+        self.create_comment_layout()
 
-    def create_comment_label(self):
+    def create_comment_layout(self):
         markups = []
 
         # Show the flow graph complexity on the top block if enabled
@@ -195,23 +195,11 @@ class Block(Element, _Block):
             markups.append('<span foreground="{foreground}" font_desc="{font}">{comment}</span>'.format(
                 foreground='#444' if self.get_enabled() else '#888', font=BLOCK_FONT, comment=Utils.encode(comment)
             ))
-        layout = Gtk.DrawingArea().create_pango_layout('')
-        layout.set_markup(''.join(markups))
-
-        # Setup the pixel map. Make sure that layout not empty
-        width, height = layout.get_pixel_size()
-        if width and height:
-            padding = BLOCK_LABEL_PADDING
-            pixmap = self.parent.new_pixmap(width + 2 * padding,
-                                                  height + 2 * padding)
-            gc = pixmap.new_gc()
-            gc.set_foreground(Colors.COMMENT_BACKGROUND_COLOR)
-            pixmap.draw_rectangle(
-                gc, True, 0, 0, width + 2 * padding, height + 2 * padding)
-            pixmap.draw_layout(gc, padding, padding, layout)
-            self._comment_pixmap = pixmap
+        if markups:
+            layout = self._comment_layout = Gtk.DrawingArea().create_pango_layout('')
+            layout.set_markup(''.join(markups))
         else:
-            self._comment_pixmap = None
+            self._comment_layout = None
 
     def draw(self, widget, cr):
         """
@@ -230,7 +218,6 @@ class Block(Element, _Block):
         x, y = self.get_coordinate()
         # create the image surface
         width = self.label_width
-        height = self.label_height
         cr.set_source_rgb(*self._bg_color)
         cr.save()
         if self.is_horizontal():
@@ -245,7 +232,7 @@ class Block(Element, _Block):
 
         # draw the layouts
         h_off = 0
-        for i, layout in enumerate(self.layouts):
+        for i, layout in enumerate(self._param_layouts):
             w, h = layout.get_pixel_size()
             if i == 0:
                 w_off = (width - w) / 2
@@ -255,7 +242,7 @@ class Block(Element, _Block):
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)
             cr.translate(-w_off, -h_off)
-            h_off = h + h_off + LABEL_SEPARATION
+            h_off += h + LABEL_SEPARATION
         cr.restore()
 
     def what_is_selected(self, coor, coor_m=None):
@@ -274,8 +261,8 @@ class Block(Element, _Block):
             if port_selected: return port_selected
         return Element.what_is_selected(self, coor, coor_m)
 
-    def draw_comment(self, gc, window):
-        if not self._comment_pixmap:
+    def draw_comment(self, widget, cr):
+        if not self._comment_layout:
             return
         x, y = self.get_coordinate()
 
@@ -284,4 +271,8 @@ class Block(Element, _Block):
         else:
             x += self.H + BLOCK_LABEL_PADDING
 
-        window.draw_drawable(gc, self._comment_pixmap, 0, 0, x, y, -1, -1)
+        cr.save()
+        cr.translate(x, y)
+        PangoCairo.update_layout(cr, self._comment_layout)
+        PangoCairo.show_layout(cr, self._comment_layout)
+        cr.restore()

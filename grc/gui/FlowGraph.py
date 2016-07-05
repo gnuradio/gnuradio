@@ -408,8 +408,7 @@ class FlowGraph(Element, _Flowgraph):
         if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
             for block in self.blocks:
                 if block.get_enabled():
-                    # block.draw_comment(widget, cr)
-                    pass
+                    block.draw_comment(widget, cr)
         # draw multi select rectangle
         if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
             x1, y1 = self.press_coor
