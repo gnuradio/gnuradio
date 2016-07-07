@@ -22,13 +22,10 @@ from __future__ import absolute_import
 import functools
 import random
 from distutils.spawn import find_executable
-from itertools import chain, count
-from operator import methodcaller
+from itertools import count
 
 import six
 from six.moves import filter
-
-from gi.repository import GObject
 
 from . import Actions, Colors, Utils, Bars, Dialogs
 from .Element import Element
@@ -67,7 +64,9 @@ class FlowGraph(Element, _Flowgraph):
         #context menu
         self._context_menu = Bars.ContextMenu()
         self.get_context_menu = lambda: self._context_menu
+        self._elements_to_draw = []
 
+        self._elements_to_draw = []
         self._external_updaters = {}
 
     def _get_unique_id(self, base_id=''):
@@ -199,6 +198,7 @@ class FlowGraph(Element, _Flowgraph):
         Args:
             clipboard: the nested data of blocks, connections
         """
+        # todo: rewrite this...
         selected = set()
         (x_min, y_min), blocks_n, connections_n = clipboard
         old_id2block = dict()
@@ -400,43 +400,57 @@ class FlowGraph(Element, _Flowgraph):
             changed = True
         return changed
 
-    def draw(self, widget, cr):
-        """
-        Draw the background and grid if enabled.
-        """
-        # draw comments first
-        if Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active():
-            for block in self.blocks:
-                if block.get_enabled():
-                    block.draw_comment(widget, cr)
-        # draw multi select rectangle
-        if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
-            x1, y1 = self.press_coor
-            x2, y2 = self.get_coordinate()
-            x, y = int(min(x1, x2)), int(min(y1, y2))
-            w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
-            cr.set_source_rgb(*Colors.HIGHLIGHT_COLOR)
-            cr.rectangle(x, y, w, h)
-            cr.fill()
-            cr.set_source_rgb(*Colors.BORDER_COLOR)
-            cr.rectangle(x, y, w, h)
-            cr.stroke()
-
-        # draw blocks on top of connections
+    def update_elements_to_draw(self):
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
-        blocks = sorted(self.blocks, key=methodcaller('get_enabled'))
 
-        for element in chain(self.connections, blocks):
+        def draw_order(elem):
+            return elem.highlighted, elem.is_block, elem.get_enabled()
+
+        elements = sorted(self.get_elements(), key=draw_order)
+        del self._elements_to_draw[:]
+
+        for element in elements:
             if hide_disabled_blocks and not element.get_enabled():
                 continue  # skip hidden disabled blocks and connections
             if hide_variables and (element.is_variable or element.is_import):
                 continue  # skip hidden disabled blocks and connections
-            element.draw(widget, cr)
+            self._elements_to_draw.append(element)
 
-        # draw selected blocks on top of selected connections
-        for selected_element in self.get_selected_connections() + self.get_selected_blocks():
-            selected_element.draw(widget, cr)
+    def _drawables(self):
+        show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
+        for element in self._elements_to_draw:
+            if element.is_block and show_comments and element.get_enabled():
+                yield element.draw_comment
+        for element in self._elements_to_draw:
+            yield element.draw
+
+    def draw(self, widget, cr):
+        """Draw blocks connections comment and select rectangle"""
+        # todo: only update if required, duplicate logic in
+        self.update_elements_to_draw()
+
+        for draw_element in self._drawables():
+            cr.save()
+            draw_element(widget, cr)
+            cr.restore()
+
+        # draw multi select rectangle
+        if self.mouse_pressed and (not self.selected_elements or self.get_ctrl_mask()):
+            x1, y1 = self.press_coor
+            x2, y2 = self.get_coordinate()
+            x, y = int(min(x1, x2)), int(min(y1, y2))
+            w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
+            cr.set_source_rgba(
+                Colors.HIGHLIGHT_COLOR[0],
+                Colors.HIGHLIGHT_COLOR[1],
+                Colors.HIGHLIGHT_COLOR[2],
+                0.5,
+            )
+            cr.rectangle(x, y, w, h)
+            cr.fill()
+            cr.rectangle(x, y, w, h)
+            cr.stroke()
 
     def update_selected(self):
         """

@@ -106,22 +106,22 @@ class Port(_Port, Element):
         if (self.is_sink and rotation == 0) or (self.is_source and rotation == 180):
             x = -W
             y = port_separation*index+offset
-            self.add_area((x, y), (W, self.H))
+            self.add_area(x, y, W, self.H)
             self._connector_coordinate = (x-1, y+self.H/2)
         elif (self.is_source and rotation == 0) or (self.is_sink and rotation == 180):
             x = self.parent.W
             y = port_separation*index+offset
-            self.add_area((x, y), (W, self.H))
+            self.add_area(x, y, W, self.H)
             self._connector_coordinate = (x+1+W, y+self.H/2)
         elif (self.is_source and rotation == 90) or (self.is_sink and rotation == 270):
             y = -W
             x = port_separation*index+offset
-            self.add_area((x, y), (self.H, W))
+            self.add_area(x, y, self.H, W)
             self._connector_coordinate = (x+self.H/2, y-1)
         elif (self.is_sink and rotation == 90) or (self.is_source and rotation == 270):
             y = self.parent.W
             x = port_separation*index+offset
-            self.add_area((x, y), (self.H, W))
+            self.add_area(x, y, self.H, W)
             self._connector_coordinate = (x+self.H/2, y+1+W)
         #the connector length
         self.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + Constants.CONNECTOR_EXTENSION_INCREMENT * index
@@ -132,32 +132,26 @@ class Port(_Port, Element):
             name=Utils.encode(self.get_name()), font=Constants.PORT_FONT
         ))
 
-    def draw(self, widget, cr):
+    def draw(self, widget, cr, border_color, bg_color):
         """
         Draw the socket with a label.
         """
-        border_color = (
-            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
-            Colors.MISSING_BLOCK_BORDER_COLOR if self.parent.is_dummy_block else
-            Colors.BORDER_COLOR
-        )
         Element.draw(self, widget, cr, border_color, self._bg_color)
 
         if not self._areas_list or self._label_hidden():
             return  # this port is either hidden (no areas) or folded (no label)
-        X, Y = self.get_coordinate()
-        (x, y), _ = self._areas_list[0]
+
+        x, y, _, __ = self._areas_list[0]
+
         cr.set_source_rgb(*self._bg_color)
-        cr.save()
         if self.is_horizontal():
-            cr.translate(x + X + (self.W - self.w) / 2, y + Y + (self.H - self.h) / 2)
+            cr.translate(x + (self.W - self.w) / 2, y + (self.H - self.h) / 2)
         elif self.is_vertical():
-            cr.translate(x + X + (self.H - self.h) / 2, y + Y + (self.W - self.w) / 2)
+            cr.translate(x + (self.H - self.h) / 2, y + (self.W - self.w) / 2)
             cr.rotate(-90 * math.pi / 180.)
             cr.translate(-self.w, 0)
         PangoCairo.update_layout(cr, self.layout)
         PangoCairo.show_layout(cr, self.layout)
-        cr.restore()
 
     def get_connector_coordinate(self):
         """

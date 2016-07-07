@@ -41,7 +41,7 @@ class Block(Element, _Block):
 
     def __init__(self, flow_graph, n):
         """
-        Block contructor.
+        Block constructor.
         Add graphics related params to the block.
         """
         _Block.__init__(self, flow_graph, n)
@@ -113,8 +113,10 @@ class Block(Element, _Block):
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
         Element.create_shapes(self)
-        if self.is_horizontal(): self.add_area((0, 0), (self.W, self.H))
-        elif self.is_vertical(): self.add_area((0, 0), (self.H, self.W))
+        if self.is_horizontal():
+            self.add_area(0, 0, self.W, self.H)
+        elif self.is_vertical():
+            self.add_area(0, 0, self.H, self.W)
 
     def create_labels(self):
         """Create the labels for the signal block."""
@@ -205,30 +207,29 @@ class Block(Element, _Block):
         """
         Draw the signal block with label and inputs/outputs.
         """
-        # draw ports
-        for port in self.get_ports_gui():
-            port.draw(widget, cr)
         # draw main block
+        bg_color = self._bg_color
         border_color = (
             Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
             Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
             Colors.BORDER_COLOR
         )
-        Element.draw(self, widget, cr, border_color, self._bg_color)
-        x, y = self.get_coordinate()
-        # create the image surface
+
+        for port in self.get_ports_gui():
+            cr.save()
+            port.draw(widget, cr, border_color, bg_color)
+            cr.restore()
+        Element.draw(self, widget, cr, border_color, bg_color)
+
+        # create the param label
         width = self.label_width
         cr.set_source_rgb(*self._bg_color)
-        cr.save()
         if self.is_horizontal():
-            cr.translate(x + BLOCK_LABEL_PADDING, y + (self.H - self.label_height) / 2)
+            cr.translate(BLOCK_LABEL_PADDING, (self.H - self.label_height) / 2)
         elif self.is_vertical():
-            cr.translate(x + (self.H - self.label_height) / 2, y + BLOCK_LABEL_PADDING)
+            cr.translate((self.H - self.label_height) / 2, BLOCK_LABEL_PADDING)
             cr.rotate(-90 * math.pi / 180.)
             cr.translate(-width, 0)
-
-        # cr.rectangle(0, 0, width, height)
-        # cr.fill()
 
         # draw the layouts
         h_off = 0
@@ -243,7 +244,6 @@ class Block(Element, _Block):
             PangoCairo.show_layout(cr, layout)
             cr.translate(-w_off, -h_off)
             h_off += h + LABEL_SEPARATION
-        cr.restore()
 
     def what_is_selected(self, coor, coor_m=None):
         """

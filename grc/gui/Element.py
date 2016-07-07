@@ -42,7 +42,7 @@ class Element(object):
         self.set_rotation(POSSIBLE_ROTATIONS[0])
         self.set_coordinate((0, 0))
         self.clear()
-        self.set_highlighted(False)
+        self.highlighted = False
         self.line_attributes = []
         """ # No idea where this is in pygobject
            0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER
@@ -102,21 +102,22 @@ class Element(object):
             bg_color: the color for the inside of the rectangle
         """
         X, Y = self.get_coordinate()
-        # TODO: gc.set_line_attributes(*self.line_attributes)
-        for (rX, rY), (W, H) in self._areas_list:
-            aX = X + rX
-            aY = Y + rY
+        cr.translate(X, Y)
+        for area in self._areas_list:
+            # aX = X + rX
+            # aY = Y + rY
             cr.set_source_rgb(*bg_color)
-            cr.rectangle(aX, aY, W, H)
+            cr.rectangle(*area)
             cr.fill()
             cr.set_source_rgb(*border_color)
-            cr.rectangle(aX, aY, W, H)
+            cr.rectangle(*area)
             cr.stroke()
 
-        for (x1, y1), (x2, y2) in self._lines_list:
-            cr.set_source_rgb(*border_color)
-            cr.move_to(X + x1, Y + y1)
-            cr.line_to(X + x2, Y + y2)
+        cr.set_source_rgb(*border_color)
+        for line in self._lines_list:
+            cr.move_to(*line[0])
+            for point in line[1:]:
+                cr.line_to(*point)
             cr.stroke()
 
     def rotate(self, rotation):
@@ -141,15 +142,6 @@ class Element(object):
             coor: the coordinate tuple (x,y)
         """
         self.coor = coor
-
-    # def get_parent(self):
-    #     """
-    #     Get the parent of this element.
-    #
-    #     Returns:
-    #         the parent
-    #     """
-    #     return self.parent
 
     def set_highlighted(self, highlighted):
         """
@@ -188,7 +180,7 @@ class Element(object):
         X, Y = self.get_coordinate()
         self.set_coordinate((X+deltaX, Y+deltaY))
 
-    def add_area(self, rel_coor, area):
+    def add_area(self, x, y, w, h):
         """
         Add an area to the area list.
         An area is actually a coordinate relative to the main coordinate
@@ -196,25 +188,17 @@ class Element(object):
         A positive width is to the right of the coordinate.
         A positive height is above the coordinate.
         The area is associated with a rotation.
-
-        Args:
-            rel_coor: (x,y) offset from this element's coordinate
-            area: (width,height) tuple
         """
-        self._areas_list.append((rel_coor, area))
+        self._areas_list.append([x, y, w, h])
 
-    def add_line(self, rel_coor1, rel_coor2):
+    def add_line(self, *points):
         """
         Add a line to the line list.
-        A line is defined by 2 relative coordinates.
+        A line is defined by 2 or more relative coordinates.
         Lines must be horizontal or vertical.
         The line is associated with a rotation.
-
-        Args:
-            rel_coor1: relative (x1,y1) tuple
-            rel_coor2: relative (x2,y2) tuple
         """
-        self._lines_list.append((rel_coor1, rel_coor2))
+        self._lines_list.append(points)
 
     def what_is_selected(self, coor, coor_m=None):
         """
@@ -239,27 +223,33 @@ class Element(object):
         if coor_m:
             x_m, y_m = [a-b for a,b in zip(coor_m, self.get_coordinate())]
             #handle rectangular areas
-            for (x1,y1), (w,h) in self._areas_list:
+            for x1, y1, w, h in self._areas_list:
                 if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
                     in_between(x1+w, x, x_m) and in_between(y1, y, y_m) or \
                     in_between(x1, x, x_m) and in_between(y1+h, y, y_m) or \
                     in_between(x1+w, x, x_m) and in_between(y1+h, y, y_m):
                     return self
             #handle horizontal or vertical lines
-            for (x1, y1), (x2, y2) in self._lines_list:
-                if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
-                    in_between(x2, x, x_m) and in_between(y2, y, y_m):
-                    return self
+            for line in self._lines_list:
+                last_point = line[0]
+                for x2, y2 in line[1:]:
+                    (x1, y1), last_point = last_point, (x2, y2)
+                    if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
+                        in_between(x2, x, x_m) and in_between(y2, y, y_m):
+                        return self
             return None
         else:
             #handle rectangular areas
-            for (x1,y1), (w,h) in self._areas_list:
+            for x1, y1, w, h in self._areas_list:
                 if in_between(x, x1, x1+w) and in_between(y, y1, y1+h): return self
             #handle horizontal or vertical lines
-            for (x1, y1), (x2, y2) in self._lines_list:
-                if x1 == x2: x1, x2 = x1-LINE_SELECT_SENSITIVITY, x2+LINE_SELECT_SENSITIVITY
-                if y1 == y2: y1, y2 = y1-LINE_SELECT_SENSITIVITY, y2+LINE_SELECT_SENSITIVITY
-                if in_between(x, x1, x2) and in_between(y, y1, y2): return self
+            for line in self._lines_list:
+                last_point = line[0]
+                for x2, y2 in line[1:]:
+                    (x1, y1), last_point = last_point, (x2, y2)
+                    if x1 == x2: x1, x2 = x1-LINE_SELECT_SENSITIVITY, x2+LINE_SELECT_SENSITIVITY
+                    if y1 == y2: y1, y2 = y1-LINE_SELECT_SENSITIVITY, y2+LINE_SELECT_SENSITIVITY
+                    if in_between(x, x1, x2) and in_between(y, y1, y2): return self
             return None
 
     def get_rotation(self):

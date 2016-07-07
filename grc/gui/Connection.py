@@ -42,7 +42,6 @@ class Connection(Element, _Connection):
     def __init__(self, **kwargs):
         Element.__init__(self)
         _Connection.__init__(self, **kwargs)
-        # can't use Colors.CONNECTION_ENABLED_COLOR here, might not be defined (grcc)
         self._bg_color = self._arrow_color = self._color = None
 
         self._sink_rot = self._source_rot = None
@@ -112,16 +111,14 @@ class Connection(Element, _Connection):
         self.clear()
         #source connector
         source = self.source_port
-        X, Y = source.get_connector_coordinate()
-        x1, y1 = self.x1 + X, self.y1 + Y
-        self.add_line((x1, y1), (X, Y))
+        x0, y0 = p0 = source.get_connector_coordinate()
+        x1, y1 = p1 = self.x1 + x0, self.y1 + y0
         #sink connector
         sink = self.sink_port
-        X, Y = sink.get_connector_coordinate()
-        x2, y2 = self.x2 + X, self.y2 + Y
-        self.add_line((x2, y2), (X, Y))
+        x3, y3 = p3 = sink.get_connector_coordinate()
+        x2, y2 = p2 = self.x2 + x3, self.y2 + y3
         #adjust arrow
-        self._arrow = [(x+X, y+Y) for x, y in self.arrow]
+        self._arrow = [(x + x3, y + y3) for x, y in self.arrow]
         #add the horizontal and vertical lines in this connection
         if abs(source.get_connector_direction() - sink.get_connector_direction()) == 180:
             #2 possible point sets to create a 3-line connector
@@ -133,11 +130,9 @@ class Connection(Element, _Connection):
             if Utils.get_angle_from_coordinates(points[0][0], (x2, y2)) == sink.get_connector_direction(): points.reverse()
             #points[0][0] -> source connector should not be in the direction of source
             if Utils.get_angle_from_coordinates(points[0][0], (x1, y1)) == source.get_connector_direction(): points.reverse()
-            #create 3-line connector
-            p1, p2 = list(map(int, points[0][0])), list(map(int, points[0][1]))
-            self.add_line((x1, y1), p1)
-            self.add_line(p1, p2)
-            self.add_line((x2, y2), p2)
+            # create 3-line connector
+            i1, i2 = list(map(int, points[0][0])), list(map(int, points[0][1]))
+            self.add_line(p0, p1, i1, i2, p2, p3)
         else:
             #2 possible points to create a right-angled connector
             points = [(x1, y2), (x2, y1)]
@@ -148,8 +143,8 @@ class Connection(Element, _Connection):
             #points[0] -> source connector should not be in the direction of source
             if Utils.get_angle_from_coordinates(points[0], (x1, y1)) == source.get_connector_direction(): points.reverse()
             #create right-angled connector
-            self.add_line((x1, y1), points[0])
-            self.add_line((x2, y2), points[0])
+            i1 = points[0]
+            self.add_line(p0, p1, i1, p2, p3)
 
     def draw(self, widget, cr):
         """
@@ -176,6 +171,7 @@ class Connection(Element, _Connection):
             Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
             color
         )
+        cr.set_dash([5, 5], 0.0)
         Element.draw(self, widget, cr, mod_color(self._color), mod_color(self._bg_color))
         # draw arrow on sink port
         cr.set_source_rgb(*self._arrow_color)
