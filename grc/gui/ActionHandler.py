@@ -202,7 +202,7 @@ class ActionHandler:
         elif action == Actions.BLOCK_CREATE_HIER:
 
                         # keeping track of coordinates for pasting later
-                        coords = flow_graph.get_selected_blocks()[0].get_coordinate()
+                        coords = flow_graph.selected_blocks()[0].get_coordinate()
                         x,y = coords
                         x_min = x
                         y_min = y
@@ -211,7 +211,7 @@ class ActionHandler:
                         params = [];
 
                         # Save the state of the leaf blocks
-                        for block in flow_graph.get_selected_blocks():
+                        for block in flow_graph.selected_blocks():
 
                             # Check for string variables within the blocks
                             for param in block.params.values():
@@ -239,10 +239,10 @@ class ActionHandler:
                                 sink_id = connection.sink_block.get_id()
 
                                 # If connected block is not in the list of selected blocks create a pad for it
-                                if flow_graph.get_block(source_id) not in flow_graph.get_selected_blocks():
+                                if flow_graph.get_block(source_id) not in flow_graph.selected_blocks():
                                     pads.append({'key': connection.sink_port.key, 'coord': connection.source_port.get_coordinate(), 'block_id' : block.get_id(), 'direction': 'source'})
 
-                                if flow_graph.get_block(sink_id) not in flow_graph.get_selected_blocks():
+                                if flow_graph.get_block(sink_id) not in flow_graph.selected_blocks():
                                     pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.get_coordinate(), 'block_id' : block.get_id(), 'direction': 'sink'})
 
 
@@ -451,10 +451,7 @@ class ActionHandler:
         # Param Modifications
         ##################################################
         elif action == Actions.BLOCK_PARAM_MODIFY:
-            if action.args:
-                selected_block = action.args[0]
-            else:
-                selected_block = flow_graph.get_selected_block()
+            selected_block = action.args[0] if action.args else flow_graph.selected_block
             if selected_block:
                 self.dialog = PropsDialog(self.main_window, selected_block)
                 response = Gtk.ResponseType.APPLY
@@ -616,12 +613,12 @@ class ActionHandler:
             main.btwin.search_entry.show()
             main.btwin.search_entry.grab_focus()
         elif action == Actions.OPEN_HIER:
-            for b in flow_graph.get_selected_blocks():
+            for b in flow_graph.selected_blocks():
                 if b._grc_source:
                     main.new_page(b._grc_source, show=True)
         elif action == Actions.BUSSIFY_SOURCES:
             n = {'name':'bus', 'type':'bus'}
-            for b in flow_graph.get_selected_blocks():
+            for b in flow_graph.selected_blocks():
                 b.bussify(n, 'source')
             flow_graph._old_selected_port = None
             flow_graph._new_selected_port = None
@@ -629,7 +626,7 @@ class ActionHandler:
 
         elif action == Actions.BUSSIFY_SINKS:
             n = {'name':'bus', 'type':'bus'}
-            for b in flow_graph.get_selected_blocks():
+            for b in flow_graph.selected_blocks():
                 b.bussify(n, 'sink')
             flow_graph._old_selected_port = None
             flow_graph._new_selected_port = None
@@ -647,12 +644,12 @@ class ActionHandler:
         page = main.current_page  # page and flow graph might have changed
         flow_graph = page.flow_graph if page else None
 
-        selected_blocks = flow_graph.get_selected_blocks()
+        selected_blocks = list(flow_graph.selected_blocks())
         selected_block = selected_blocks[0] if selected_blocks else None
 
         #update general buttons
         Actions.ERRORS_WINDOW_DISPLAY.set_sensitive(not flow_graph.is_valid())
-        Actions.ELEMENT_DELETE.set_sensitive(bool(flow_graph.get_selected_elements()))
+        Actions.ELEMENT_DELETE.set_sensitive(bool(flow_graph.selected_elements))
         Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(selected_block))
         Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(selected_blocks))
         Actions.BLOCK_ROTATE_CW.set_sensitive(bool(selected_blocks))

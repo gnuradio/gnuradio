@@ -50,22 +50,19 @@ class FlowGraph(Element, _Flowgraph):
         """
         Element.__init__(self)
         _Flowgraph.__init__(self, **kwargs)
-        #when is the flow graph selected? (used by keyboard event handler)
-        self.is_selected = lambda: bool(self.get_selected_elements())
-        #important vars dealing with mouse event tracking
+        # important vars dealing with mouse event tracking
         self.element_moved = False
         self.mouse_pressed = False
-        self._selected_elements = []
         self.press_coor = (0, 0)
-        #selected ports
+        # selected
+        self.selected_elements = set()
         self._old_selected_port = None
         self._new_selected_port = None
         # current mouse hover element
         self.element_under_mouse = None
-        #context menu
+        # context menu
         self._context_menu = Bars.ContextMenu()
         self.get_context_menu = lambda: self._context_menu
-        self._elements_to_draw = []
 
         self._elements_to_draw = []
         self._external_updaters = {}
@@ -125,17 +122,6 @@ class FlowGraph(Element, _Flowgraph):
             return
         Actions.EXTERNAL_UPDATE()
 
-
-    ###########################################################################
-    # Access Drawing Area
-    ###########################################################################
-    def get_drawing_area(self): return self.drawing_area
-    def queue_draw(self): self.get_drawing_area().queue_draw()
-    def get_scroll_pane(self): return self.drawing_area.get_parent().get_parent()
-    def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
-    def get_mod1_mask(self): return self.drawing_area.mod1_mask
-    def new_pixmap(self, *args): return self.get_drawing_area().new_pixmap(*args)
-
     def add_new_block(self, key, coor=None):
         """
         Add a block of the given key to this flow graph.
@@ -160,6 +146,55 @@ class FlowGraph(Element, _Flowgraph):
         Actions.ELEMENT_CREATE()
         return id
 
+    def make_connection(self):
+        """this selection and the last were ports, try to connect them"""
+        if self._old_selected_port and self._new_selected_port:
+            try:
+                self.connect(self._old_selected_port, self._new_selected_port)
+                Actions.ELEMENT_CREATE()
+            except:
+                Messages.send_fail_connection()
+            self._old_selected_port = None
+            self._new_selected_port = None
+            return True
+        return False
+
+    def update(self):
+        """
+        Call the top level rewrite and validate.
+        Call the top level create labels and shapes.
+        """
+        self.rewrite()
+        self.validate()
+        self.create_labels()
+        self.create_shapes()
+
+    def reload(self):
+        """
+        Reload flow-graph (with updated blocks)
+
+        Args:
+            page: the page to reload (None means current)
+        Returns:
+            False if some error occurred during import
+        """
+        success = False
+        data = self.export_data()
+        if data:
+            self.unselect()
+            success = self.import_data(data)
+            self.update()
+        return success
+
+    ###########################################################################
+    # Access Drawing Area
+    ###########################################################################
+    def get_drawing_area(self): return self.drawing_area
+    def queue_draw(self): self.get_drawing_area().queue_draw()
+    def get_scroll_pane(self): return self.drawing_area.get_parent().get_parent()
+    def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
+    def get_mod1_mask(self): return self.drawing_area.mod1_mask
+
     ###########################################################################
     # Copy Paste
     ###########################################################################
@@ -171,7 +206,7 @@ class FlowGraph(Element, _Flowgraph):
             the clipboard
         """
         #get selected blocks
-        blocks = self.get_selected_blocks()
+        blocks = list(self.selected_blocks())
         if not blocks:
             return None
         #calc x and y min
@@ -249,8 +284,9 @@ class FlowGraph(Element, _Flowgraph):
             sink = old_id2block[connection_n.get('sink_block_id')].get_sink(connection_n.get('sink_key'))
             self.connect(source, sink)
         #set all pasted elements selected
-        for block in selected: selected = selected.union(set(block.get_connections()))
-        self._selected_elements = list(selected)
+        for block in selected:
+            selected = selected.union(set(block.get_connections()))
+        self.selected_elements = set(selected)
 
     ###########################################################################
     # Modify Selected
@@ -265,7 +301,7 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true for change
         """
-        return any(sb.type_controller_modify(direction) for sb in self.get_selected_blocks())
+        return any(sb.type_controller_modify(direction) for sb in self.selected_blocks())
 
     def port_controller_modify_selected(self, direction):
         """
@@ -277,7 +313,7 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true for changed
         """
-        return any(sb.port_controller_modify(direction) for sb in self.get_selected_blocks())
+        return any(sb.port_controller_modify(direction) for sb in self.selected_blocks())
 
     def change_state_selected(self, new_state):
         """
@@ -302,7 +338,7 @@ class FlowGraph(Element, _Flowgraph):
         Args:
             delta_coordinate: the change in coordinates
         """
-        for selected_block in self.get_selected_blocks():
+        for selected_block in self.selected_blocks():
             selected_block.move(delta_coordinate)
             self.element_moved = True
 
@@ -316,7 +352,7 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             True if changed, otherwise False
         """
-        blocks = self.get_selected_blocks()
+        blocks = list(self.selected_blocks())
         if calling_action is None or not blocks:
             return False
 
@@ -357,13 +393,13 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             true if changed, otherwise false.
         """
-        if not self.get_selected_blocks():
+        if not any(self.selected_blocks()):
             return False
         #initialize min and max coordinates
-        min_x, min_y = self.get_selected_block().get_coordinate()
-        max_x, max_y = self.get_selected_block().get_coordinate()
+        min_x, min_y = self.selected_block.get_coordinate()
+        max_x, max_y = self.selected_block.get_coordinate()
         #rotate each selected block, and find min/max coordinate
-        for selected_block in self.get_selected_blocks():
+        for selected_block in self.selected_blocks():
             selected_block.rotate(rotation)
             #update the min/max coordinate
             x, y = selected_block.get_coordinate()
@@ -372,7 +408,7 @@ class FlowGraph(Element, _Flowgraph):
         #calculate center point of slected blocks
         ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
         #rotate the blocks around the center point
-        for selected_block in self.get_selected_blocks():
+        for selected_block in self.selected_blocks():
             x, y = selected_block.get_coordinate()
             x, y = Utils.get_rotated_coordinate((x - ctr_x, y - ctr_y), rotation)
             selected_block.set_coordinate((x + ctr_x, y + ctr_y))
@@ -386,10 +422,34 @@ class FlowGraph(Element, _Flowgraph):
             true if changed.
         """
         changed = False
-        for selected_element in self.get_selected_elements():
+        for selected_element in self.selected_elements:
             self.remove_element(selected_element)
             changed = True
         return changed
+
+    def update_selected(self):
+        """
+        Remove deleted elements from the selected elements list.
+        Update highlighting so only the selected are highlighted.
+        """
+        selected_elements = self.selected_elements
+        elements = self.get_elements()
+        # remove deleted elements
+        for selected in selected_elements:
+            if selected in elements:
+                continue
+            selected_elements.remove(selected)
+        if self._old_selected_port and self._old_selected_port.parent not in elements:
+            self._old_selected_port = None
+        if self._new_selected_port and self._new_selected_port.parent not in elements:
+            self._new_selected_port = None
+        # update highlighting
+        for element in elements:
+            element.highlighted = element in selected_elements
+
+    ###########################################################################
+    # Draw stuff
+    ###########################################################################
 
     def update_elements_to_draw(self):
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
@@ -443,64 +503,54 @@ class FlowGraph(Element, _Flowgraph):
             cr.rectangle(x, y, w, h)
             cr.stroke()
 
-    def update_selected(self):
-        """
-        Remove deleted elements from the selected elements list.
-        Update highlighting so only the selected are highlighted.
-        """
-        selected_elements = self.get_selected_elements()
-        elements = self.get_elements()
-        #remove deleted elements
-        for selected in selected_elements:
-            if selected in elements: continue
-            selected_elements.remove(selected)
-        if self._old_selected_port and self._old_selected_port.parent not in elements:
-            self._old_selected_port = None
-        if self._new_selected_port and self._new_selected_port.parent not in elements:
-            self._new_selected_port = None
-        #update highlighting
-        for element in elements:
-            element.set_highlighted(element in selected_elements)
-
-    def update(self):
-        """
-        Call the top level rewrite and validate.
-        Call the top level create labels and shapes.
-        """
-        self.rewrite()
-        self.validate()
-        self.create_labels()
-        self.create_shapes()
-
-    def reload(self):
-        """
-        Reload flow-graph (with updated blocks)
-
-        Args:
-            page: the page to reload (None means current)
-        Returns:
-            False if some error occurred during import
-        """
-        success = False
-        data = self.export_data()
-        if data:
-            self.unselect()
-            success = self.import_data(data)
-            self.update()
-        return success
-
     ##########################################################################
-    ## Get Selected
+    # selection handling
     ##########################################################################
-    def unselect(self):
+    def update_selected_elements(self):
         """
-        Set selected elements to an empty set.
+        Update the selected elements.
+        The update behavior depends on the state of the mouse button.
+        When the mouse button pressed the selection will change when
+        the control mask is set or the new selection is not in the current group.
+        When the mouse button is released the selection will change when
+        the mouse has moved and the control mask is set or the current group is empty.
+        Attempt to make a new connection if the old and ports are filled.
+        If the control mask is set, merge with the current elements.
         """
-        self._selected_elements = []
+        selected_elements = None
+        if self.mouse_pressed:
+            new_selections = self.what_is_selected(self.get_coordinate())
+            # update the selections if the new selection is not in the current selections
+            # allows us to move entire selected groups of elements
+            if self.get_ctrl_mask() or new_selections not in self.selected_elements:
+                selected_elements = new_selections
 
-    def select_all(self):
-        """Select all blocks in the flow graph"""
-        self._selected_elements = list(self.get_elements())
+            if self._old_selected_port:
+                self._old_selected_port.force_label_unhidden(False)
+                self.create_shapes()
+                self.queue_draw()
+            elif self._new_selected_port:
+                self._new_selected_port.force_label_unhidden()
+
+        else:  # called from a mouse release
+            if not self.element_moved and (not self.selected_elements or self.get_ctrl_mask()):
+                selected_elements = self.what_is_selected(self.get_coordinate(), self.press_coor)
+
+        # this selection and the last were ports, try to connect them
+        if self.make_connection():
+            return
+
+        # update selected elements
+        if selected_elements is None:
+            return
+
+        # if ctrl, set the selected elements to the union - intersection of old and new
+        if self.get_ctrl_mask():
+            self.selected_elements ^= selected_elements
+        else:
+            self.selected_elements.clear()
+            self.selected_elements.update(selected_elements)
+        Actions.ELEMENT_SELECT()
 
     def what_is_selected(self, coor, coor_m=None):
         """
@@ -520,68 +570,55 @@ class FlowGraph(Element, _Flowgraph):
         """
         selected_port = None
         selected = set()
-        #check the elements
-        hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
-        hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
-        for element in reversed(self.get_elements()):
-            if hide_disabled_blocks and not element.get_enabled():
-                continue  # skip hidden disabled blocks and connections
-            if hide_variables and (element.is_variable or element.is_import):
-                continue  # skip hidden disabled blocks and connections
+        # check the elements
+        for element in reversed(self._elements_to_draw):
             selected_element = element.what_is_selected(coor, coor_m)
             if not selected_element:
                 continue
-            #update the selected port information
+            # update the selected port information
             if selected_element.is_port:
-                if not coor_m: selected_port = selected_element
+                if not coor_m:
+                    selected_port = selected_element
                 selected_element = selected_element.parent_block
+
             selected.add(selected_element)
-            #place at the end of the list
-            self.get_elements().remove(element)
-            self.get_elements().append(element)
-            #single select mode, break
-            if not coor_m: break
-        #update selected ports
+            if not coor_m:
+                break
+        # update selected ports
         if selected_port is not self._new_selected_port:
             self._old_selected_port = self._new_selected_port
             self._new_selected_port = selected_port
-        return list(selected)
+        return selected
 
-    def get_selected_connections(self):
+    def unselect(self):
         """
-        Get a group of selected connections.
-
-        Returns:
-            sub set of connections in this flow graph
+        Set selected elements to an empty set.
         """
-        selected = set()
-        for selected_element in self.get_selected_elements():
-            if selected_element.is_connection:
-                selected.add(selected_element)
-        return list(selected)
+        self.selected_elements.clear()
 
-    def get_selected_blocks(self):
+    def select_all(self):
+        """Select all blocks in the flow graph"""
+        self.selected_elements.clear()
+        self.selected_elements.update(self._elements_to_draw)
+
+    def selected_blocks(self):
         """
         Get a group of selected blocks.
 
         Returns:
             sub set of blocks in this flow graph
         """
-        selected = set()
-        for selected_element in self.get_selected_elements():
-            if selected_element.is_block:
-                selected.add(selected_element)
-        return list(selected)
+        return (e for e in self.selected_elements if e.is_block)
 
-    def get_selected_block(self):
+    @property
+    def selected_block(self):
         """
         Get the selected block when a block or port is selected.
 
         Returns:
             a block or None
         """
-        selected_blocks = self.get_selected_blocks()
-        return selected_blocks[0] if selected_blocks else None
+        return next(self.selected_blocks(), None)
 
     def get_selected_elements(self):
         """
@@ -590,7 +627,7 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             sub set of elements in this flow graph
         """
-        return self._selected_elements
+        return self.selected_elements
 
     def get_selected_element(self):
         """
@@ -599,60 +636,10 @@ class FlowGraph(Element, _Flowgraph):
         Returns:
             a block, port, or connection or None
         """
-        selected_elements = self.get_selected_elements()
-        return selected_elements[0] if selected_elements else None
-
-    def update_selected_elements(self):
-        """
-        Update the selected elements.
-        The update behavior depends on the state of the mouse button.
-        When the mouse button pressed the selection will change when
-        the control mask is set or the new selection is not in the current group.
-        When the mouse button is released the selection will change when
-        the mouse has moved and the control mask is set or the current group is empty.
-        Attempt to make a new connection if the old and ports are filled.
-        If the control mask is set, merge with the current elements.
-        """
-        selected_elements = None
-        if self.mouse_pressed:
-            new_selections = self.what_is_selected(self.get_coordinate())
-            #update the selections if the new selection is not in the current selections
-            #allows us to move entire selected groups of elements
-            if self.get_ctrl_mask() or not (
-                new_selections and new_selections[0] in self.get_selected_elements()
-            ): selected_elements = new_selections
-            if self._old_selected_port:
-                self._old_selected_port.force_label_unhidden(False)
-                self.create_shapes()
-                self.queue_draw()
-            elif self._new_selected_port:
-                self._new_selected_port.force_label_unhidden()
-        else:  # called from a mouse release
-            if not self.element_moved and (not self.get_selected_elements() or self.get_ctrl_mask()):
-                selected_elements = self.what_is_selected(self.get_coordinate(), self.press_coor)
-        #this selection and the last were ports, try to connect them
-        if self._old_selected_port and self._new_selected_port:
-            try:
-                self.connect(self._old_selected_port, self._new_selected_port)
-                Actions.ELEMENT_CREATE()
-            except: Messages.send_fail_connection()
-            self._old_selected_port = None
-            self._new_selected_port = None
-            return
-        #update selected elements
-        if selected_elements is None: return
-        old_elements = set(self.get_selected_elements())
-        self._selected_elements = list(set(selected_elements))
-        new_elements = set(self.get_selected_elements())
-        #if ctrl, set the selected elements to the union - intersection of old and new
-        if self.get_ctrl_mask():
-            self._selected_elements = list(
-                set.union(old_elements, new_elements) - set.intersection(old_elements, new_elements)
-            )
-        Actions.ELEMENT_SELECT()
+        return next(iter(self.selected_elements), None)
 
     ##########################################################################
-    ## Event Handlers
+    # Event Handlers
     ##########################################################################
     def handle_mouse_context_press(self, coordinate, event):
         """
@@ -661,7 +648,7 @@ class FlowGraph(Element, _Flowgraph):
         Then, show the context menu at the mouse click location.
         """
         selections = self.what_is_selected(coordinate)
-        if not set(selections).intersection(self.get_selected_elements()):
+        if not selections.intersection(self.selected_elements):
             self.set_coordinate(coordinate)
             self.mouse_pressed = True
             self.update_selected_elements()
@@ -683,7 +670,7 @@ class FlowGraph(Element, _Flowgraph):
             self.unselect()
         self.update_selected_elements()
 
-        if double_click and self.get_selected_block():
+        if double_click and self.selected_block:
             self.mouse_pressed = False
             Actions.BLOCK_PARAM_MODIFY()
 
@@ -739,7 +726,7 @@ class FlowGraph(Element, _Flowgraph):
 
     def _handle_mouse_motion_drag(self, coordinate):
         # remove the connection if selected in drag event
-        if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection:
+        if len(self.selected_elements) == 1 and self.get_selected_element().is_connection:
             Actions.ELEMENT_DELETE()
 
         # move the selected elements and record the new coordinate
