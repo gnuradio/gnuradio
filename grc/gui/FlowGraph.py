@@ -273,35 +273,20 @@ class FlowGraph(Element, _Flowgraph):
         """
         return any(sb.port_controller_modify(direction) for sb in self.get_selected_blocks())
 
-    def enable_selected(self, enable):
+    def change_state_selected(self, new_state):
         """
         Enable/disable the selected blocks.
 
         Args:
-            enable: true to enable
+            new_state: a block state
 
         Returns:
             true if changed
         """
         changed = False
-        for selected_block in self.get_selected_blocks():
-            if selected_block.set_enabled(enable):
-                changed = True
-        return changed
-
-    def bypass_selected(self):
-        """
-        Bypass the selected blocks.
-
-        Args:
-            None
-        Returns:
-            true if changed
-        """
-        changed = False
-        for selected_block in self.get_selected_blocks():
-            if selected_block.set_bypassed():
-                changed = True
+        for block in self.selected_blocks():
+            changed |= block.state != new_state
+            block.state = new_state
         return changed
 
     def move_selected(self, delta_coordinate):

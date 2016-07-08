@@ -172,18 +172,13 @@ class ActionHandler:
         ##################################################
         # Enable/Disable
         ##################################################
-        elif action == Actions.BLOCK_ENABLE:
-            if flow_graph.enable_selected(True):
-                flow_graph_update()
-                page.state_cache.save_new_state(flow_graph.export_data())
-                page.saved = False
-        elif action == Actions.BLOCK_DISABLE:
-            if flow_graph.enable_selected(False):
-                flow_graph_update()
-                page.state_cache.save_new_state(flow_graph.export_data())
-                page.saved = False
-        elif action == Actions.BLOCK_BYPASS:
-            if flow_graph.bypass_selected():
+        elif action in (Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS):
+            changed = flow_graph.change_state_selected(new_state={
+                Actions.BLOCK_ENABLE: 'enabled',
+                Actions.BLOCK_DISABLE: 'disabled',
+                Actions.BLOCK_BYPASS: 'bypassed',
+            }[action])
+            if changed:
                 flow_graph_update()
                 page.state_cache.save_new_state(flow_graph.export_data())
                 page.saved = False
@@ -670,9 +665,9 @@ class ActionHandler:
         Actions.BLOCK_COPY.set_sensitive(bool(selected_blocks))
         Actions.BLOCK_PASTE.set_sensitive(bool(self.clipboard))
         #update enable/disable/bypass
-        can_enable = any(block.state != block.ENABLED
+        can_enable = any(block.state != 'enabled'
                          for block in selected_blocks)
-        can_disable = any(block.state != block.DISABLED
+        can_disable = any(block.state != 'disabled'
                           for block in selected_blocks)
         can_bypass_all = (
             all(block.can_bypass() for block in selected_blocks) and

@@ -50,8 +50,7 @@ class Block(Element):
 
     is_block = True
 
-    # block states
-    DISABLED, ENABLED, BYPASSED = range(3)
+    STATE_LABELS = ['disabled', 'enabled', 'bypassed']
 
     def __init__(self, flow_graph, n):
         """
@@ -410,9 +409,9 @@ class Block(Element):
             DISABLED - 2
         """
         try:
-            return int(self.params['_enabled'].get_value())
+            return self.STATE_LABELS[int(self.params['_enabled'].get_value())]
         except ValueError:
-            return self.ENABLED
+            return 'enabled'
 
     @state.setter
     def state(self, value):
@@ -424,9 +423,11 @@ class Block(Element):
             BYPASSED - 1
             DISABLED - 2
         """
-        if value not in [self.ENABLED, self.BYPASSED, self.DISABLED]:
-            value = self.ENABLED
-        self.params['_enabled'].set_value(str(value))
+        try:
+            encoded = str(self.STATE_LABELS.index(value))
+        except ValueError:
+            encoded = str(self.STATE_LABELS.index('enabled'))
+        self.params['_enabled'].set_value(encoded)
 
     # Enable/Disable Aliases
     def get_enabled(self):
@@ -436,7 +437,7 @@ class Block(Element):
         Returns:
             true for enabled
         """
-        return self.state != self.DISABLED
+        return self.state != 'disabled'
 
     def set_enabled(self, enabled):
         """
@@ -449,7 +450,7 @@ class Block(Element):
             True if block changed state
         """
         old_state = self.state
-        new_state = self.ENABLED if enabled else self.DISABLED
+        new_state = 'enabled' if enabled else 'disabled'
         self.state = new_state
         return old_state != new_state
 
@@ -458,7 +459,7 @@ class Block(Element):
         """
         Check if the block is bypassed
         """
-        return self.state == self.BYPASSED
+        return self.state == 'bypassed'
 
     def set_bypassed(self):
         """
@@ -467,8 +468,8 @@ class Block(Element):
         Returns:
             True if block chagnes state
         """
-        if self.state != self.BYPASSED and self.can_bypass():
-            self.state = self.BYPASSED
+        if self.state != 'bypassed' and self.can_bypass():
+            self.state = 'bypassed'
             return True
         return False
 
