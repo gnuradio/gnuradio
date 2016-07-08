@@ -161,8 +161,8 @@ class Port(_Port, Element):
             the connector coordinate (x, y) tuple
         """
         x, y = self._connector_coordinate
-        X, Y = self.get_coordinate()
-        return (x + X, y + Y)
+        x_pos, y_pos = self.get_coordinate()
+        return x + x_pos, y + y_pos
 
     def get_connector_direction(self):
         """
@@ -173,8 +173,10 @@ class Port(_Port, Element):
         Returns:
             the direction in degrees
         """
-        if self.is_source: return self.get_rotation()
-        elif self.is_sink: return (self.get_rotation() + 180)%360
+        if self.is_source:
+            return self.get_rotation()
+        elif self.is_sink:
+            return (self.get_rotation() + 180) % 360
 
     def get_rotation(self):
         """

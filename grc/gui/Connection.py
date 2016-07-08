@@ -42,20 +42,13 @@ class Connection(Element, _Connection):
     def __init__(self, **kwargs):
         Element.__init__(self)
         _Connection.__init__(self, **kwargs)
-        self._bg_color = self._arrow_color = self._color = None
+        self._color2 = self._arrow_color = self._color = None
 
         self._sink_rot = self._source_rot = None
         self._sink_coor = self._source_coor = None
 
     def get_coordinate(self):
-        """
-        Get the 0,0 coordinate.
-        Coordinates are irrelevant in connection.
-
-        Returns:
-            0, 0
-        """
-        return 0, 0
+        return self.source_port.get_connector_coordinate()
 
     def get_rotation(self):
         """
@@ -102,49 +95,59 @@ class Connection(Element, _Connection):
                 Colors.DEFAULT_DOMAIN_COLOR
 
         self._color = get_domain_color(source_domain)
-        self._bg_color = get_domain_color(sink_domain)
-        self._arrow_color = self._bg_color if self.is_valid() else Colors.CONNECTION_ERROR_COLOR
+        self._color2 = get_domain_color(sink_domain)
+        self._arrow_color = self._color2 if self.is_valid() else Colors.CONNECTION_ERROR_COLOR
         self._update_after_move()
 
     def _update_after_move(self):
         """Calculate coordinates."""
         self.clear()
-        #source connector
         source = self.source_port
-        x0, y0 = p0 = source.get_connector_coordinate()
-        x1, y1 = p1 = self.x1 + x0, self.y1 + y0
-        #sink connector
         sink = self.sink_port
-        x3, y3 = p3 = sink.get_connector_coordinate()
-        x2, y2 = p2 = self.x2 + x3, self.y2 + y3
-        #adjust arrow
+        source_dir = source.get_connector_direction()
+        sink_dir = sink.get_connector_direction()
+
+        x_pos, y_pos = self.get_coordinate()
+        x_start, y_start = source.get_connector_coordinate()
+        x_end, y_end = sink.get_connector_coordinate()
+
+        p3 = x3, y3 = x_end - x_pos, y_end - y_pos
+        p2 = x2, y2 = self.x2 + x3, self.y2 + y3
+        p1 = x1, y1 = self.x1, self.y1
+        p0 = x_start - x_pos, y_start - y_pos
         self._arrow = [(x + x3, y + y3) for x, y in self.arrow]
-        #add the horizontal and vertical lines in this connection
-        if abs(source.get_connector_direction() - sink.get_connector_direction()) == 180:
-            #2 possible point sets to create a 3-line connector
+
+        if abs(source_dir - sink.get_connector_direction()) == 180:
+            # 2 possible point sets to create a 3-line connector
             mid_x, mid_y = (x1 + x2) / 2.0, (y1 + y2) / 2.0
-            points = [((mid_x, y1), (mid_x, y2)), ((x1, mid_y), (x2, mid_y))]
-            #source connector -> points[0][0] should be in the direction of source (if possible)
-            if Utils.get_angle_from_coordinates((x1, y1), points[0][0]) != source.get_connector_direction(): points.reverse()
-            #points[0][0] -> sink connector should not be in the direction of sink
-            if Utils.get_angle_from_coordinates(points[0][0], (x2, y2)) == sink.get_connector_direction(): points.reverse()
-            #points[0][0] -> source connector should not be in the direction of source
-            if Utils.get_angle_from_coordinates(points[0][0], (x1, y1)) == source.get_connector_direction(): points.reverse()
+            points = ((mid_x, y1), (mid_x, y2))
+            alt = ((x1, mid_y), (x2, mid_y))
+            # source connector -> points[0][0] should be in the direction of source (if possible)
+            if Utils.get_angle_from_coordinates(p1, points[0]) != source_dir:
+                points, alt = alt, points
+            # points[0] -> sink connector should not be in the direction of sink
+            if Utils.get_angle_from_coordinates(points[0], p2) == sink_dir:
+                points, alt = alt, points
+            # points[0] -> source connector should not be in the direction of source
+            if Utils.get_angle_from_coordinates(points[0], p1) == source_dir:
+                points, alt = alt, points
             # create 3-line connector
-            i1, i2 = list(map(int, points[0][0])), list(map(int, points[0][1]))
+            i1, i2 = points
             self.add_line(p0, p1, i1, i2, p2, p3)
         else:
-            #2 possible points to create a right-angled connector
-            points = [(x1, y2), (x2, y1)]
-            #source connector -> points[0] should be in the direction of source (if possible)
-            if Utils.get_angle_from_coordinates((x1, y1), points[0]) != source.get_connector_direction(): points.reverse()
-            #points[0] -> sink connector should not be in the direction of sink
-            if Utils.get_angle_from_coordinates(points[0], (x2, y2)) == sink.get_connector_direction(): points.reverse()
-            #points[0] -> source connector should not be in the direction of source
-            if Utils.get_angle_from_coordinates(points[0], (x1, y1)) == source.get_connector_direction(): points.reverse()
-            #create right-angled connector
-            i1 = points[0]
-            self.add_line(p0, p1, i1, p2, p3)
+            # 2 possible points to create a right-angled connector
+            point, alt = [(x1, y2), (x2, y1)]
+            # source connector -> points[0] should be in the direction of source (if possible)
+            if Utils.get_angle_from_coordinates(p1, point) != source_dir:
+                point, alt = alt, point
+            # point -> sink connector should not be in the direction of sink
+            if Utils.get_angle_from_coordinates(point, p2) == sink_dir:
+                point, alt = alt, point
+            # point -> source connector should not be in the direction of source
+            if Utils.get_angle_from_coordinates(point, p1) == source_dir:
+                point, alt = alt, point
+            # create right-angled connector
+            self.add_line(p0, p1, point, p2, p3)
 
     def draw(self, widget, cr):
         """
@@ -165,17 +168,23 @@ class Connection(Element, _Connection):
         self._source_rot = source.get_rotation()
         self._sink_coor = sink.get_coordinate()
         self._source_coor = source.get_coordinate()
-        #draw
-        mod_color = lambda color: (
+        # draw
+        color1, color2 = (
             Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
             Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
-            color
-        )
-        cr.set_dash([5, 5], 0.0)
-        Element.draw(self, widget, cr, mod_color(self._color), mod_color(self._bg_color))
+            color for color in (self._color, self._color2))
+
+        Element.draw(self, widget, cr, color1, Colors.FLOWGRAPH_BACKGROUND_COLOR)
+
+        if color1 != color2:
+            cr.save()
+            x_pos, y_pos = self.get_coordinate()
+            cr.translate(-x_pos, -y_pos)
+            cr.set_dash([5.0, 5.0], 5.0)
+            Element.draw(self, widget, cr, color2, Colors.FLOWGRAPH_BACKGROUND_COLOR)
+            cr.restore()
         # draw arrow on sink port
         cr.set_source_rgb(*self._arrow_color)
-        # TODO: gc.set_line_attributes(0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER)
         cr.move_to(*self._arrow[0])
         cr.line_to(*self._arrow[1])
         cr.line_to(*self._arrow[2])
