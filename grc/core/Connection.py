@@ -96,8 +96,8 @@ class Connection(Element):
         Element.validate(self)
         platform = self.parent_platform
 
-        source_domain = self.source_port.get_domain()
-        sink_domain = self.sink_port.get_domain()
+        source_domain = self.source_port.domain
+        sink_domain = self.sink_port.domain
 
         if (source_domain, sink_domain) not in platform.connection_templates:
             self.add_error_message('No connection known for domains "{}", "{}"'.format(

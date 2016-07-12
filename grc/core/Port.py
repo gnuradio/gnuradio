@@ -133,7 +133,7 @@ class Port(Element):
         self._name = n['name']
         self.key = n['key']
         self._type = n.get('type', '')
-        self._domain = n.get('domain')
+        self.domain = n.get('domain')
         self._hide = n.get('hide', '')
         self._dir = dir
         self._hide_evaluated = False  # Updated on rewrite()
@@ -161,8 +161,8 @@ class Port(Element):
         if self.get_type() not in self.get_types():
             self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
         platform = self.parent.parent.parent
-        if self.get_domain() not in platform.domains:
-            self.add_error_message('Domain key "{}" is not registered.'.format(self.get_domain()))
+        if self.domain not in platform.domains:
+            self.add_error_message('Domain key "{}" is not registered.'.format(self.domain))
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')
         # Message port logic
@@ -193,11 +193,11 @@ class Port(Element):
 
         # Update domain if was deduced from (dynamic) port type
         type_ = self.get_type()
-        if self._domain == Constants.GR_STREAM_DOMAIN and type_ == "message":
-            self._domain = Constants.GR_MESSAGE_DOMAIN
+        if self.domain == Constants.GR_STREAM_DOMAIN and type_ == "message":
+            self.domain = Constants.GR_MESSAGE_DOMAIN
             self.key = self._name
-        if self._domain == Constants.GR_MESSAGE_DOMAIN and type_ != "message":
-            self._domain = Constants.GR_STREAM_DOMAIN
+        if self.domain == Constants.GR_MESSAGE_DOMAIN and type_ != "message":
+            self.domain = Constants.GR_STREAM_DOMAIN
             self.key = '0'  # Is rectified in rewrite()
 
     def resolve_virtual_source(self):
@@ -333,9 +333,6 @@ class Port(Element):
 
     def get_type(self):
         return self.parent_block.resolve_dependencies(self._type)
-
-    def get_domain(self):
-        return self._domain
 
     def get_hide(self):
         return self._hide_evaluated

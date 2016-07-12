@@ -81,8 +81,8 @@ class Connection(Element, _Connection):
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.sink_port.get_rotation()),
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.sink_port.get_rotation()),
         ]
-        source_domain = self.source_port.get_domain()
-        sink_domain = self.sink_port.get_domain()
+        source_domain = self.source_port.domain
+        sink_domain = self.sink_port.domain
         # self.line_attributes[0] = 2 if source_domain != sink_domain else 0
         # self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
         #     if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \

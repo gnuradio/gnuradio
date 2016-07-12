@@ -262,7 +262,7 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #for $con in $connections
     #set global $source = $con.source_port
     #set global $sink = $con.sink_port
-    #include source=$connection_templates[($source.get_domain(), $sink.get_domain())]
+    #include source=$connection_templates[($source.domain, $sink.domain)]
 
 #end for
 ########################################################

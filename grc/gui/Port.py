@@ -26,7 +26,6 @@ from gi.repository import Gtk, PangoCairo
 from . import Actions, Colors, Utils, Constants
 from .Element import Element
 
-from ..core.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 from ..core.Port import Port as _Port
 
 
@@ -44,8 +43,9 @@ class Port(_Port, Element):
         self._hovering = True
         self._force_label_unhidden = False
         self._bg_color = (0, 0, 0)
+        self._line_width_factor = 1.0
 
-        self.W = self.w = self.h = 0
+        self.W = 0
         self.H = 20  # todo: fix
         self.connector_length = 0
 
@@ -73,10 +73,10 @@ class Port(_Port, Element):
 
         if self.get_hide():
             return  # this port is hidden, no need to create shapes
-        if self.get_domain() == Constants.GR_MESSAGE_DOMAIN:
-            pass
-        elif self.get_domain() != Constants.DEFAULT_DOMAIN:
-            self.line_attributes[0] = 2
+        if self.domain in (Constants.GR_MESSAGE_DOMAIN, Constants.DEFAULT_DOMAIN):
+            self._line_width_factor = 1.0
+        else:
+            self._line_width_factor = 2.0
         #get current rotation
         rotation = self.get_rotation()
         #get all sibling ports
@@ -90,7 +90,7 @@ class Port(_Port, Element):
         try:
             index = ports.index(self)
         except:
-            if hasattr(self, '_connector_length'):
+            if hasattr(self, 'connector_length'):
                 del self.connector_length
             return
         #reverse the order of ports for these rotations
@@ -136,6 +136,8 @@ class Port(_Port, Element):
         """
         Draw the socket with a label.
         """
+
+        cr.set_line_width(self._line_width_factor * cr.get_line_width())
         Element.draw(self, widget, cr, border_color, self._bg_color)
 
         if not self._areas_list or self._label_hidden():

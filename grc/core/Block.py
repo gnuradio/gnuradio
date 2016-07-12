@@ -249,7 +249,7 @@ class Block(Element):
             # Renumber non-message/message ports
             domain_specific_port_index = collections.defaultdict(int)
             for port in [p for p in ports if p.key.isdigit()]:
-                domain = port.get_domain()
+                domain = port.domain
                 port.key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
 

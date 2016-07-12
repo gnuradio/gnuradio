@@ -211,7 +211,7 @@ class TopBlockGenerator(object):
 
         # List of connections where each endpoint is enabled (sorted by domains, block names)
         connections.sort(key=lambda c: (
-            c.source_port.get_domain(), c.sink_port.get_domain(),
+            c.source_port.domain, c.sink_port.domain,
             c.source_block.get_id(), c.sink_block.get_id()
         ))
 
