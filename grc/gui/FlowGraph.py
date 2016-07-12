@@ -28,6 +28,8 @@ from itertools import count
 import six
 from six.moves import filter
 
+from gi.repository import GObject
+
 from . import Actions, Colors, Utils, Bars, Dialogs
 from .Element import Element
 from .external_editor import ExternalEditor
@@ -435,7 +437,7 @@ class FlowGraph(Element, _Flowgraph):
         selected_elements = self.selected_elements
         elements = self.get_elements()
         # remove deleted elements
-        for selected in selected_elements:
+        for selected in list(selected_elements):
             if selected in elements:
                 continue
             selected_elements.remove(selected)

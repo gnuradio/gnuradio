@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 from six.moves import filter
 
-from .Element import Element
+from .Element import Element, lazy_property
 
 from . import Constants
 
@@ -323,11 +323,11 @@ class Port(Element):
             number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
         return self._name + number
 
-    @property
+    @lazy_property
     def is_sink(self):
         return self._dir == 'sink'
 
-    @property
+    @lazy_property
     def is_source(self):
         return self._dir == 'source'
 

@@ -173,7 +173,7 @@ class TopBlockGenerator(object):
         # Get the virtual blocks and resolve their connections
         virtual = [c for c in connections if c.source_block.is_virtual_source()]
         for connection in virtual:
-            source = connection.source.resolve_virtual_source()
+            source = connection.source_port.resolve_virtual_source()
             sink = connection.sink_port
             resolved = fg.parent.Connection(flow_graph=fg, porta=source, portb=sink)
             connections.append(resolved)
