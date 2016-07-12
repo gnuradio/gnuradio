@@ -21,11 +21,7 @@ from __future__ import absolute_import
 from .Constants import LINE_SELECT_SENSITIVITY
 from .Constants import POSSIBLE_ROTATIONS
 
-import gi
 from six.moves import zip
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gdk
 
 
 class Element(object):
@@ -41,12 +37,10 @@ class Element(object):
         """
         self.set_rotation(POSSIBLE_ROTATIONS[0])
         self.set_coordinate((0, 0))
-        self.clear()
         self.highlighted = False
-        self.line_attributes = []
-        """ # No idea where this is in pygobject
-           0, Gdk.LINE_SOLID, Gdk.CAP_BUTT, Gdk.JOIN_MITER
-        ]"""
+
+        self._areas_list = []
+        self._lines_list = []
 
     def is_horizontal(self, rotation=None):
         """
@@ -81,7 +75,8 @@ class Element(object):
         Create labels (if applicable) and call on all children.
         Call this base method before creating labels in the element.
         """
-        for child in self.get_children():child.create_labels()
+        for child in self.get_children():
+            child.create_labels()
 
     def create_shapes(self):
         """
@@ -89,7 +84,8 @@ class Element(object):
         Call this base method before creating shapes in the element.
         """
         self.clear()
-        for child in self.get_children(): child.create_shapes()
+        for child in self.get_children():
+            child.create_shapes()
 
     def draw(self, widget, cr, border_color, bg_color):
         """
@@ -131,8 +127,8 @@ class Element(object):
 
     def clear(self):
         """Empty the lines and areas."""
-        self._areas_list = list()
-        self._lines_list = list()
+        del self._areas_list[:]
+        del self._lines_list[:]
 
     def set_coordinate(self, coor):
         """

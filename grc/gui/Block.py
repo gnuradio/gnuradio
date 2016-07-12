@@ -28,7 +28,7 @@ from . import Actions, Colors, Utils
 
 from .Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
-    PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS, BLOCK_FONT, PARAM_FONT
+    PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
 )
 from . Element import Element
 from ..core.Param import num_to_str
@@ -36,7 +36,7 @@ from ..core.utils.complexity import calculate_flowgraph_complexity
 from ..core.Block import Block as _Block
 
 
-class Block(Element, _Block):
+class Block(_Block, Element):
     """The graphical signal block."""
 
     def __init__(self, flow_graph, n):
@@ -47,11 +47,16 @@ class Block(Element, _Block):
         _Block.__init__(self, flow_graph, n)
 
         self.states.update(_coordinate=(0, 0), _rotation=0)
-        Element.__init__(self)  # needs the states
-
         self.W = self.H = 0
-        self._param_layouts = []
+        Element.__init__(self)  # needs the states and initial sizes
+
+        self._surface_layouts = [
+            Gtk.DrawingArea().create_pango_layout(''),  # title
+            Gtk.DrawingArea().create_pango_layout(''),  # params
+        ]
+        self._surface_layout_offsets = 0, 0
         self._comment_layout = None
+
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
         self.has_busses = [False, False]  # source, sink
 
@@ -91,7 +96,7 @@ class Block(Element, _Block):
     def set_rotation(self, rot):
         """
         Set the rotation into the position param.
-q
+
         Args:
             rot: the rotation in degrees
         """
@@ -112,33 +117,40 @@ q
                          Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else \
                          Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else \
                          Colors.BLOCK_DISABLED_COLOR
-        del self._param_layouts[:]
-        #create the main layout
-        layout = Gtk.DrawingArea().create_pango_layout('')
-        layout.set_markup('<span foreground="{foreground}" font_desc="{font}"><b>{name}</b></span>'.format(
-            foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT, name=Utils.encode(self.name)
-        ))
-        self.label_width, self.label_height = layout.get_pixel_size()
-        self._param_layouts.append(layout)
-        #display the params
-        if self.is_dummy_block:
+
+        # update the title layout
+        title_layout, params_layout = self._surface_layouts
+
+        title_layout.set_markup(
+            '<span foreground="{foreground}" font_desc="{font}"><b>{name}</b></span>'.format(
+                foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT,
+                name=Utils.encode(self.name)
+            )
+        )
+        title_width, title_height = title_layout.get_pixel_size()
+
+        # update the params layout
+        if not self.is_dummy_block:
+            markups = [param.format_block_surface_markup()
+                       for param in self.params.values() if param.get_hide() not in ('all', 'part')]
+        else:
             markups = ['<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(
                 font=PARAM_FONT, key=self.key
             )]
-        else:
-            markups = [param.format_block_surface_markup()
-                       for param in self.params.values() if param.get_hide() not in ('all', 'part')]
-        if markups:
-            layout = Gtk.DrawingArea().create_pango_layout('')
-            layout.set_spacing(LABEL_SEPARATION*Pango.SCALE)
-            layout.set_markup('\n'.join(markups))
-            self._param_layouts.append(layout)
-            w, h = layout.get_pixel_size()
-            self.label_width = max(w, self.label_width)
-            self.label_height += h + LABEL_SEPARATION
 
-        #calculate width and height needed
-        W = self.label_width + 2 * BLOCK_LABEL_PADDING
+        params_layout.set_spacing(LABEL_SEPARATION * Pango.SCALE)
+        params_layout.set_markup('\n'.join(markups))
+        params_width, params_height = params_layout.get_pixel_size() if markups else (0, 0)
+
+        label_width = max(title_width, params_width)
+        label_height = title_height + LABEL_SEPARATION + params_height
+
+        title_layout.set_width(label_width * Pango.SCALE)
+        title_layout.set_alignment(Pango.Alignment.CENTER)
+
+        # calculate width and height needed
+        width = label_width + 2 * BLOCK_LABEL_PADDING
+        height = label_height + 2 * BLOCK_LABEL_PADDING
 
         def get_min_height_for_ports():
             visible_ports = [p for p in ports if not p.get_hide()]
@@ -146,9 +158,9 @@ q
             if visible_ports:
                 min_height -= ports[0].H
             return min_height
-        H = max(
+        height = max(
             [  # labels
-                self.label_height + 2 * BLOCK_LABEL_PADDING
+                height
             ] +
             [  # ports
                 get_min_height_for_ports() for ports in (self.get_sources_gui(), self.get_sinks_gui())
@@ -159,7 +171,13 @@ q
                 for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ]
         )
-        self.W, self.H = Utils.align_to_grid((W, H))
+        self.W, self.H = width, height = Utils.align_to_grid((width, height))
+
+        self._surface_layout_offsets = [
+            (width - label_width) / 2.0,
+            (height - label_height) / 2.0
+        ]
+
         self.has_busses = [
             any(port.get_type() == 'bus' for port in ports)
             for ports in (self.get_sources_gui(), self.get_sinks_gui())
@@ -194,7 +212,6 @@ q
         """
         Draw the signal block with label and inputs/outputs.
         """
-        # draw main block
         bg_color = self._bg_color
         border_color = (
             Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
@@ -206,31 +223,21 @@ q
             cr.save()
             port.draw(widget, cr, border_color, bg_color)
             cr.restore()
+
+        # draw main block
         Element.draw(self, widget, cr, border_color, bg_color)
 
-        # create the param label
-        width = self.label_width
-        cr.set_source_rgb(*self._bg_color)
-        if self.is_horizontal():
-            cr.translate(BLOCK_LABEL_PADDING, (self.H - self.label_height) / 2)
-        elif self.is_vertical():
-            cr.translate((self.H - self.label_height) / 2, BLOCK_LABEL_PADDING)
+        # title and params label
+        if self.is_vertical():
             cr.rotate(-90 * math.pi / 180.)
-            cr.translate(-width, 0)
+            cr.translate(-self.W, 0)
+        cr.translate(*self._surface_layout_offsets)
 
-        # draw the layouts
-        h_off = 0
-        for i, layout in enumerate(self._param_layouts):
-            w, h = layout.get_pixel_size()
-            if i == 0:
-                w_off = (width - w) / 2
-            else:
-                w_off = 0
-            cr.translate(w_off, h_off)
+        for layout in self._surface_layouts:
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)
-            cr.translate(-w_off, -h_off)
-            h_off += h + LABEL_SEPARATION
+            _, h = layout.get_pixel_size()
+            cr.translate(0, h + LABEL_SEPARATION)
 
     def what_is_selected(self, coor, coor_m=None):
         """
