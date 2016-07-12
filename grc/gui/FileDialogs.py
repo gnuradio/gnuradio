@@ -95,7 +95,7 @@ class FileDialogHelper(Gtk.FileChooserDialog):
             title: the title of the dialog (string)
         """
         ok_stock = {Gtk.FileChooserAction.OPEN : 'gtk-open', Gtk.FileChooserAction.SAVE : 'gtk-save'}[action]
-        GObject.GObject.__init__(self, title, None, action, ('gtk-cancel', Gtk.ResponseType.CANCEL, ok_stock, Gtk.ResponseType.OK))
+        Gtk.FileChooserDialog.__init__(self, title, None, action, ('gtk-cancel', Gtk.ResponseType.CANCEL, ok_stock, Gtk.ResponseType.OK))
         self.set_select_multiple(False)
         self.set_local_only(True)
         self.add_filter(get_all_files_filter())

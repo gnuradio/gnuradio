@@ -511,9 +511,6 @@ class ActionHandler:
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
                 flow_graph_update()
         elif action == Actions.FLOW_GRAPH_OPEN:
-            # TODO: Disable opening the flowgraph
-            pass
-            '''
             file_paths = args if args else OpenFlowGraphFileDialog(page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
@@ -521,8 +518,6 @@ class ActionHandler:
                     Preferences.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
                     main.menu_bar.refresh_submenus()
-                    main.vars.update_gui()
-            '''
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
             file_paths = OpenQSSFileDialog(self.platform.config.install_prefix +
                                            '/share/gnuradio/themes/').run()
