@@ -101,6 +101,8 @@ class Block(Element):
         self.port_counters = [itertools.count(), itertools.count()]
         self.sources = self._init_ports(sources_n, direction='source')
         self.sinks = self._init_ports(sinks_n, direction='sink')
+        self.active_sources = []  # on rewrite
+        self.active_sinks = []  # on rewrite
 
         self.states = {'_enabled': True}
 
@@ -252,6 +254,9 @@ class Block(Element):
                 domain = port.domain
                 port.key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
+
+        self.active_sources = [p for p in self.get_sources_gui() if not p.get_hide()]
+        self.active_sinks = [p for p in self.get_sinks_gui() if not p.get_hide()]
 
     def get_imports(self, raw=False):
         """
@@ -497,7 +502,10 @@ class Block(Element):
         return self.sources + self.sinks
 
     def get_ports_gui(self):
-        return self.filter_bus_port(self.sources) + self.filter_bus_port(self.sinks)
+        return self.get_sources_gui() + self.get_sinks_gui()
+
+    def active_ports(self):
+        return itertools.chain(self.active_sources, self.active_sinks)
 
     def get_children(self):
         return self.get_ports() + self.params.values()
@@ -711,10 +719,12 @@ class Block(Element):
         except:
             return ''
 
-    def back_ofthe_bus(self, portlist):
+    @staticmethod
+    def back_ofthe_bus(portlist):
         portlist.sort(key=lambda p: p._type == 'bus')
 
-    def filter_bus_port(self, ports):
+    @staticmethod
+    def filter_bus_port(ports):
         buslist = [p for p in ports if p._type == 'bus']
         return buslist or ports
 
