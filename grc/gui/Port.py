@@ -19,9 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 import math
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, PangoCairo
+
+from gi.repository import Gtk, PangoCairo, Pango
 
 from . import Actions, Colors, Utils, Constants
 from .Element import Element
@@ -34,7 +33,7 @@ class Port(_Port, Element):
 
     def __init__(self, block, n, dir):
         """
-        Port contructor.
+        Port constructor.
         Create list of connector coordinates.
         """
         _Port.__init__(self, block, n, dir)
@@ -45,11 +44,20 @@ class Port(_Port, Element):
         self._bg_color = (0, 0, 0)
         self._line_width_factor = 1.0
 
-        self.W = 0
-        self.H = 20  # todo: fix
+        self._W = self.H = 0
         self.connector_length = 0
 
-        self.layout = Gtk.DrawingArea().create_pango_layout('')
+        self.label_layout = Gtk.DrawingArea().create_pango_layout('')
+        self.label_layout.set_alignment(Pango.Alignment.CENTER)
+
+    @property
+    def W(self):
+        return self._W if not self._label_hidden() else Constants.PORT_LABEL_HIDDEN_WIDTH
+
+    @W.setter
+    def W(self, value):
+        self._W = value
+        self.label_layout.set_width(value * Pango.SCALE)
 
     def _get_color(self):
         """
@@ -68,92 +76,59 @@ class Port(_Port, Element):
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
-        Element.create_shapes(self)
-        self._bg_color = self._get_color()
+        self.clear()
 
-        if self.get_hide():
-            return  # this port is hidden, no need to create shapes
+        if self.is_horizontal():
+            self.add_area(0, 0, self.W, self.H)
+        elif self.is_vertical():
+            self.add_area(0, 0, self.H, self.W)
+
+        self._connector_coordinate = {
+            0:   (self.W, self.H / 2),
+            90:  (self.H / 2, 0),
+            180: (0, self.H / 2),
+            270: (self.H / 2, self.W)
+        }[self.get_connector_direction()]
+
+    def create_labels(self):
+        """Create the labels for the socket."""
+
         if self.domain in (Constants.GR_MESSAGE_DOMAIN, Constants.DEFAULT_DOMAIN):
             self._line_width_factor = 1.0
         else:
             self._line_width_factor = 2.0
-        #get current rotation
-        rotation = self.get_rotation()
-        #get all sibling ports
-        ports = self.parent.get_sources_gui() \
-            if self.is_source else self.parent.get_sinks_gui()
-        ports = [p for p in ports if not p.get_hide()]
-        #get the max width
-        self.W = max([port.W for port in ports] + [Constants.PORT_MIN_WIDTH])
-        W = self.W if not self._label_hidden() else Constants.PORT_LABEL_HIDDEN_WIDTH
-        #get a numeric index for this port relative to its sibling ports
-        try:
-            index = ports.index(self)
-        except:
-            if hasattr(self, 'connector_length'):
-                del self.connector_length
-            return
-        #reverse the order of ports for these rotations
-        if rotation in (180, 270):
-            index = len(ports)-index-1
 
-        port_separation = Constants.PORT_SEPARATION \
-            if not self.parent.has_busses[self.is_source] \
-            else max([port.H for port in ports]) + Constants.PORT_SPACING
+        self._bg_color = self._get_color()
 
-        offset = (self.parent.H - (len(ports)-1)*port_separation - self.H)/2
-        #create areas and connector coordinates
-        if (self.is_sink and rotation == 0) or (self.is_source and rotation == 180):
-            x = -W
-            y = port_separation*index+offset
-            self.add_area(x, y, W, self.H)
-            self._connector_coordinate = (x-1, y+self.H/2)
-        elif (self.is_source and rotation == 0) or (self.is_sink and rotation == 180):
-            x = self.parent.W
-            y = port_separation*index+offset
-            self.add_area(x, y, W, self.H)
-            self._connector_coordinate = (x+1+W, y+self.H/2)
-        elif (self.is_source and rotation == 90) or (self.is_sink and rotation == 270):
-            y = -W
-            x = port_separation*index+offset
-            self.add_area(x, y, self.H, W)
-            self._connector_coordinate = (x+self.H/2, y-1)
-        elif (self.is_sink and rotation == 90) or (self.is_source and rotation == 270):
-            y = self.parent.W
-            x = port_separation*index+offset
-            self.add_area(x, y, self.H, W)
-            self._connector_coordinate = (x+self.H/2, y+1+W)
-        #the connector length
-        self.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + Constants.CONNECTOR_EXTENSION_INCREMENT * index
-
-    def create_labels(self):
-        """Create the labels for the socket."""
-        self.layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
+        layout = self.label_layout
+        layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
             name=Utils.encode(self.get_name()), font=Constants.PORT_FONT
         ))
+        label_width, label_height = self.label_layout.get_pixel_size()
+
+        self.W = 2 * Constants.PORT_LABEL_PADDING + label_width
+        self.H = 2 * Constants.PORT_LABEL_PADDING + label_height
+        if self.get_type() == 'bus':
+            self.H += 2 * label_height
+        self.H += self.H % 2  # uneven height
 
     def draw(self, widget, cr, border_color, bg_color):
         """
         Draw the socket with a label.
         """
-
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
         Element.draw(self, widget, cr, border_color, self._bg_color)
 
-        if not self._areas_list or self._label_hidden():
-            return  # this port is either hidden (no areas) or folded (no label)
+        if self._label_hidden():
+            return  # this port is folded (no label)
 
-        x, y, _, __ = self._areas_list[0]
+        if self.is_vertical():
+            cr.rotate(-math.pi / 2)
+            cr.translate(-self.W, 0)
+        cr.translate(0, Constants.PORT_LABEL_PADDING)
 
-        cr.set_source_rgb(*self._bg_color)
-        if self.is_horizontal():
-            cr.translate(x + (self.W - self.w) / 2, y + (self.H - self.h) / 2)
-        elif self.is_vertical():
-            cr.translate(x + (self.H - self.h) / 2, y + (self.W - self.w) / 2)
-            cr.rotate(-90 * math.pi / 180.)
-            cr.translate(-self.w, 0)
-        PangoCairo.update_layout(cr, self.layout)
-        PangoCairo.show_layout(cr, self.layout)
+        PangoCairo.update_layout(cr, self.label_layout)
+        PangoCairo.show_layout(cr, self.label_layout)
 
     def get_connector_coordinate(self):
         """
@@ -162,9 +137,8 @@ class Port(_Port, Element):
         Returns:
             the connector coordinate (x, y) tuple
         """
-        x, y = self._connector_coordinate
-        x_pos, y_pos = self.get_coordinate()
-        return x + x_pos, y + y_pos
+        return [sum(c) for c in zip(self._connector_coordinate, self.get_coordinate(),
+                                    self.parent_block.get_coordinate())]
 
     def get_connector_direction(self):
         """
@@ -206,15 +180,6 @@ class Port(_Port, Element):
             direction: degrees to rotate
         """
         self.parent.rotate(direction)
-
-    def get_coordinate(self):
-        """
-        Get the parent's coordinate rather than self.
-
-        Returns:
-            the parents coordinate
-        """
-        return self.parent.get_coordinate()
 
     def set_highlighted(self, highlight):
         """

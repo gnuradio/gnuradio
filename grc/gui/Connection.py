@@ -158,16 +158,13 @@ class Connection(Element, _Connection):
         #check for changes
         if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation():
             self.create_shapes()
-        elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate():
-            try:
-                self._update_after_move()
-            except:
-                return  # todo: why?
-        #cache values
-        self._sink_rot = sink.get_rotation()
-        self._source_rot = source.get_rotation()
-        self._sink_coor = sink.get_coordinate()
-        self._source_coor = source.get_coordinate()
+            self._sink_rot = sink.get_rotation()
+            self._source_rot = source.get_rotation()
+
+        elif self._sink_coor != sink.parent_block.get_coordinate() or self._source_coor != source.parent_block.get_coordinate():
+            self._update_after_move()
+            self._sink_coor = sink.parent_block.get_coordinate()
+            self._source_coor = source.parent_block.get_coordinate()
         # draw
         color1, color2 = (
             Colors.HIGHLIGHT_COLOR if self.is_highlighted() else

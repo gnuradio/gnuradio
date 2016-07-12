@@ -24,7 +24,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk, Pango, PangoCairo
 
-from . import Actions, Colors, Utils
+from . import Actions, Colors, Utils, Constants
 
 from .Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
@@ -104,15 +104,34 @@ class Block(_Block, Element):
 
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
-        Element.create_shapes(self)
+        self.clear()
+
         if self.is_horizontal():
             self.add_area(0, 0, self.W, self.H)
         elif self.is_vertical():
             self.add_area(0, 0, self.H, self.W)
 
+        for ports, has_busses in zip((self.active_sources, self.active_sinks), self.has_busses):
+            if not ports:
+                continue
+            port_separation = PORT_SEPARATION if not has_busses else ports[0].H + PORT_SPACING
+            offset = (self.H - (len(ports) - 1) * port_separation - ports[0].H) / 2
+            for index, port in enumerate(ports):
+                port.create_shapes()
+
+                port.set_coordinate({
+                    0: (+self.W, offset),
+                    90: (offset, -port.W),
+                    180: (-port.W, offset),
+                    270: (offset, +self.W),
+                }[port.get_connector_direction()])
+                offset += PORT_SEPARATION if not has_busses else port.H + PORT_SPACING
+
+                port.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + \
+                                        Constants.CONNECTOR_EXTENSION_INCREMENT * index
+
     def create_labels(self):
         """Create the labels for the signal block."""
-        Element.create_labels(self)
         self._bg_color = Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else \
                          Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else \
                          Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else \
@@ -152,18 +171,19 @@ class Block(_Block, Element):
         width = label_width + 2 * BLOCK_LABEL_PADDING
         height = label_height + 2 * BLOCK_LABEL_PADDING
 
+        self.create_port_labels()
+
         def get_min_height_for_ports():
-            visible_ports = [p for p in ports if not p.get_hide()]
-            min_height = 2*PORT_BORDER_SEPARATION + len(visible_ports) * PORT_SEPARATION
-            if visible_ports:
-                min_height -= ports[0].H
+            min_height = 2 * PORT_BORDER_SEPARATION + len(ports) * PORT_SEPARATION
+            if ports:
+                min_height -= ports[-1].H
             return min_height
         height = max(
             [  # labels
                 height
             ] +
             [  # ports
-                get_min_height_for_ports() for ports in (self.get_sources_gui(), self.get_sinks_gui())
+                get_min_height_for_ports() for ports in (self.active_sources, self.active_sinks)
             ] +
             [  # bus ports only
                 2 * PORT_BORDER_SEPARATION +
@@ -183,6 +203,15 @@ class Block(_Block, Element):
             for ports in (self.get_sources_gui(), self.get_sinks_gui())
         ]
         self.create_comment_layout()
+
+    def create_port_labels(self):
+        for ports in (self.active_sinks, self.active_sources):
+            max_width = 0
+            for port in ports:
+                port.create_labels()
+                max_width = max(max_width, port.W)
+            for port in ports:
+                port.W = max_width
 
     def create_comment_layout(self):
         markups = []
@@ -218,18 +247,16 @@ class Block(_Block, Element):
             Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
             Colors.BORDER_COLOR
         )
-
-        for port in self.get_ports_gui():
+        # draw main block
+        Element.draw(self, widget, cr, border_color, bg_color)
+        for port in self.active_ports():
             cr.save()
             port.draw(widget, cr, border_color, bg_color)
             cr.restore()
 
-        # draw main block
-        Element.draw(self, widget, cr, border_color, bg_color)
-
         # title and params label
         if self.is_vertical():
-            cr.rotate(-90 * math.pi / 180.)
+            cr.rotate(-math.pi / 2)
             cr.translate(-self.W, 0)
         cr.translate(*self._surface_layout_offsets)
 
@@ -250,9 +277,13 @@ class Block(_Block, Element):
         Returns:
             this block, a port, or None
         """
-        for port in self.get_ports_gui():
-            port_selected = port.what_is_selected(coor, coor_m)
-            if port_selected: return port_selected
+        for port in self.active_ports():
+            port_selected = port.what_is_selected(
+                coor=[a - b for a, b in zip(coor, self.get_coordinate())],
+                coor_m=[a - b for a, b in zip(coor, self.get_coordinate())] if coor_m is not None else None
+            )
+            if port_selected:
+                return port_selected
         return Element.what_is_selected(self, coor, coor_m)
 
     def draw_comment(self, widget, cr):
