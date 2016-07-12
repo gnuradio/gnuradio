@@ -305,7 +305,7 @@ class Block(Element):
 
     def rewrite_epy_block(self):
         flowgraph = self.parent_flowgraph
-        platform = self.parent_block
+        platform = self.parent_platform
         param_blk = self.params['_io_cache']
         param_src = self.params['_source_code']
 
