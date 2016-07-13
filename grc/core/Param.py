@@ -642,10 +642,8 @@ class Param(Element):
         if t in ('string', 'file_open', 'file_save', '_multiline', '_multiline_python_external'):
             if not self._init:
                 self.evaluate()
-            if self._stringify_flag:
-                return '"%s"' % v.replace('"', '\"')
-            else:
-                return v
+            return repr(v) if self._stringify_flag else v
+
         # Vector types
         elif t in ('complex_vector', 'real_vector', 'float_vector', 'int_vector'):
             if not self._init:
