@@ -170,7 +170,7 @@ class PythonEditorParam(InputParam):
         InputParam.__init__(self, *args, **kwargs)
         button = self._button = Gtk.Button('Open in Editor')
         button.connect('clicked', self.open_editor)
-        self.pack_start(button, True)
+        self.pack_start(button, True, True, True)
 
     def open_editor(self, widget=None):
         self.param.parent_flowgraph.install_external_editor(self.param)
