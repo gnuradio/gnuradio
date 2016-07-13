@@ -60,7 +60,8 @@ class Block(_Block, Element):
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
         self.has_busses = [False, False]  # source, sink
 
-    def get_coordinate(self):
+    @property
+    def coordinate(self):
         """
         Get the coordinate from the position param.
 
@@ -69,7 +70,8 @@ class Block(_Block, Element):
         """
         return self.states['_coordinate']
 
-    def set_coordinate(self, coor):
+    @coordinate.setter
+    def coordinate(self, coor):
         """
         Set the coordinate into the position param.
 
@@ -121,12 +123,12 @@ class Block(_Block, Element):
             for index, port in enumerate(ports):
                 port.create_shapes()
 
-                port.set_coordinate({
+                port.coordinate = {
                     0: (+self.width, offset),
                     90: (offset, -port.width),
                     180: (-port.width, offset),
                     270: (offset, +self.width),
-                }[port.get_connector_direction()])
+                }[port.get_connector_direction()]
                 offset += PORT_SEPARATION if not has_busses else port.height + PORT_SPACING
 
                 port.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + \
@@ -281,8 +283,8 @@ class Block(_Block, Element):
         """
         for port in self.active_ports():
             port_selected = port.what_is_selected(
-                coor=[a - b for a, b in zip(coor, self.get_coordinate())],
-                coor_m=[a - b for a, b in zip(coor, self.get_coordinate())] if coor_m is not None else None
+                coor=[a - b for a, b in zip(coor, self.coordinate)],
+                coor_m=[a - b for a, b in zip(coor, self.coordinate)] if coor_m is not None else None
             )
             if port_selected:
                 return port_selected
@@ -291,7 +293,7 @@ class Block(_Block, Element):
     def draw_comment(self, widget, cr):
         if not self._comment_layout:
             return
-        x, y = self.get_coordinate()
+        x, y = self.coordinate
 
         if self.is_horizontal():
             y += self.height + BLOCK_LABEL_PADDING

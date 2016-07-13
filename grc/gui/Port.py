@@ -138,8 +138,8 @@ class Port(_Port, Element):
         Returns:
             the connector coordinate (x, y) tuple
         """
-        return [sum(c) for c in zip(self._connector_coordinate, self.get_coordinate(),
-                                    self.parent_block.get_coordinate())]
+        return [sum(c) for c in zip(self._connector_coordinate, self.coordinate,
+                                    self.parent_block.coordinate)]
 
     def get_connector_direction(self):
         """

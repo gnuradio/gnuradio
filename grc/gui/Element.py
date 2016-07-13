@@ -34,9 +34,9 @@ class Element(object):
         """
         Make a new list of rectangular areas and lines, and set the coordinate and the rotation.
         """
-        self.set_coordinate((0, 0))
-        self.highlighted = False
+        self.coordinate = (0, 0)
         self.rotation = 0
+        self.highlighted = False
 
         self.areas = []
         self.lines = []
@@ -101,11 +101,8 @@ class Element(object):
             border_color: the color for lines and rectangle borders
             bg_color: the color for the inside of the rectangle
         """
-        X, Y = self.get_coordinate()
-        cr.translate(X, Y)
+        cr.translate(*self.coordinate)
         for area in self.areas:
-            # aX = X + rX
-            # aY = Y + rY
             cr.set_source_rgb(*bg_color)
             cr.rectangle(*area)
             cr.fill()
@@ -129,23 +126,6 @@ class Element(object):
         """
         self.rotation = (self.rotation + rotation) % 360
 
-    def set_coordinate(self, coor):
-        """
-        Set the reference coordinate.
-
-        Args:
-            coor: the coordinate tuple (x,y)
-        """
-        self.coor = coor
-
-    def get_coordinate(self):
-        """Get the coordinate.
-
-        Returns:
-            the coordinate tuple (x,y)
-        """
-        return self.coor
-
     def move(self, delta_coor):
         """
         Move the element by adding the delta_coor to the current coordinate.
@@ -153,9 +133,9 @@ class Element(object):
         Args:
             delta_coor: (delta_x,delta_y) tuple
         """
-        deltaX, deltaY = delta_coor
-        X, Y = self.get_coordinate()
-        self.set_coordinate((X + deltaX, Y + deltaY))
+        x, y = self.coordinate
+        dx, dy = delta_coor
+        self.coordinate = (x + dx, y + dy)
 
     def what_is_selected(self, coor, coor_m=None):
         """
@@ -173,40 +153,50 @@ class Element(object):
         Returns:
             self if one of the areas/lines encompasses coor, else None.
         """
-        #function to test if p is between a and b (inclusive)
-        in_between = lambda p, a, b: p >= min(a, b) and p <= max(a, b)
-        #relative coordinate
-        x, y = [a-b for a,b in zip(coor, self.get_coordinate())]
+        # function to test if p is between a and b (inclusive)
+        def in_between(p, a, b):
+            # return min(a, b) <= p <= max(a, b)
+            return a <= p <= b or b <= p <= a
+        # relative coordinate
+        x, y = [a - b for a, b in zip(coor, self.coordinate)]
         if coor_m:
-            x_m, y_m = [a-b for a,b in zip(coor_m, self.get_coordinate())]
-            #handle rectangular areas
+            x_m, y_m = [a - b for a, b in zip(coor_m, self.coordinate)]
+            # handle rectangular areas
             for x1, y1, w, h in self.areas:
-                if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
-                    in_between(x1+w, x, x_m) and in_between(y1, y, y_m) or \
-                    in_between(x1, x, x_m) and in_between(y1+h, y, y_m) or \
-                    in_between(x1+w, x, x_m) and in_between(y1+h, y, y_m):
+                if (
+                    in_between(x1,     x, x_m) and in_between(y1,     y, y_m) or
+                    in_between(x1 + w, x, x_m) and in_between(y1,     y, y_m) or
+                    in_between(x1,     x, x_m) and in_between(y1 + h, y, y_m) or
+                    in_between(x1 + w, x, x_m) and in_between(y1 + h, y, y_m)
+                ):
                     return self
-            #handle horizontal or vertical lines
+            # handle horizontal or vertical lines
             for line in self.lines:
                 last_point = line[0]
                 for x2, y2 in line[1:]:
                     (x1, y1), last_point = last_point, (x2, y2)
-                    if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
-                        in_between(x2, x, x_m) and in_between(y2, y, y_m):
+                    if (
+                        in_between(x1, x, x_m) and in_between(y1, y, y_m) or
+                        in_between(x2, x, x_m) and in_between(y2, y, y_m)
+                    ):
                         return self
             return None
         else:
-            #handle rectangular areas
+            # handle rectangular areas
             for x1, y1, w, h in self.areas:
-                if in_between(x, x1, x1+w) and in_between(y, y1, y1+h): return self
-            #handle horizontal or vertical lines
+                if in_between(x, x1, x1+w) and in_between(y, y1, y1+h):
+                    return self
+            # handle horizontal or vertical lines
             for line in self.lines:
                 last_point = line[0]
                 for x2, y2 in line[1:]:
                     (x1, y1), last_point = last_point, (x2, y2)
-                    if x1 == x2: x1, x2 = x1-LINE_SELECT_SENSITIVITY, x2+LINE_SELECT_SENSITIVITY
-                    if y1 == y2: y1, y2 = y1-LINE_SELECT_SENSITIVITY, y2+LINE_SELECT_SENSITIVITY
-                    if in_between(x, x1, x2) and in_between(y, y1, y2): return self
+                    if x1 == x2:
+                        x1, x2 = x1 - LINE_SELECT_SENSITIVITY, x2 + LINE_SELECT_SENSITIVITY
+                    if y1 == y2:
+                        y1, y2 = y1 - LINE_SELECT_SENSITIVITY, y2 + LINE_SELECT_SENSITIVITY
+                    if in_between(x, x1, x2) and in_between(y, y1, y2):
+                        return self
             return None
 
     def mouse_over(self):

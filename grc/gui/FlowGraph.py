@@ -142,7 +142,7 @@ class FlowGraph(Element, _Flowgraph):
         )
         #get the new block
         block = self.new_block(key)
-        block.set_coordinate(coor)
+        block.coordinate = coor
         block.get_param('id').set_value(id)
         Actions.ELEMENT_CREATE()
         return id
@@ -211,9 +211,9 @@ class FlowGraph(Element, _Flowgraph):
         if not blocks:
             return None
         #calc x and y min
-        x_min, y_min = blocks[0].get_coordinate()
+        x_min, y_min = blocks[0].coordinate
         for block in blocks:
-            x, y = block.get_coordinate()
+            x, y = block.coordinate
             x_min = min(x, x_min)
             y_min = min(y, y_min)
         #get connections between selected blocks
@@ -358,9 +358,9 @@ class FlowGraph(Element, _Flowgraph):
             return False
 
         # compute common boundary of selected objects
-        min_x, min_y = max_x, max_y = blocks[0].get_coordinate()
+        min_x, min_y = max_x, max_y = blocks[0].coordinate
         for selected_block in blocks:
-            x, y = selected_block.get_coordinate()
+            x, y = selected_block.coordinate
             min_x, min_y = min(min_x, x), min(min_y, y)
             x += selected_block.width
             y += selected_block.height
@@ -378,9 +378,9 @@ class FlowGraph(Element, _Flowgraph):
         }.get(calling_action, lambda *args: args)
 
         for selected_block in blocks:
-            x, y = selected_block.get_coordinate()
+            x, y = selected_block.coordinate
             w, h = selected_block.width, selected_block.height
-            selected_block.set_coordinate(transform(x, y, w, h))
+            selected_block.coordinate = transform(x, y, w, h)
 
         return True
 
@@ -397,22 +397,21 @@ class FlowGraph(Element, _Flowgraph):
         if not any(self.selected_blocks()):
             return False
         #initialize min and max coordinates
-        min_x, min_y = self.selected_block.get_coordinate()
-        max_x, max_y = self.selected_block.get_coordinate()
-        #rotate each selected block, and find min/max coordinate
+        min_x, min_y = max_x, max_y = self.selected_block.coordinate
+        # rotate each selected block, and find min/max coordinate
         for selected_block in self.selected_blocks():
             selected_block.rotate(rotation)
             #update the min/max coordinate
-            x, y = selected_block.get_coordinate()
+            x, y = selected_block.coordinate
             min_x, min_y = min(min_x, x), min(min_y, y)
             max_x, max_y = max(max_x, x), max(max_y, y)
         #calculate center point of slected blocks
         ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
         #rotate the blocks around the center point
         for selected_block in self.selected_blocks():
-            x, y = selected_block.get_coordinate()
+            x, y = selected_block.coordinate
             x, y = Utils.get_rotated_coordinate((x - ctr_x, y - ctr_y), rotation)
-            selected_block.set_coordinate((x + ctr_x, y + ctr_y))
+            selected_block.coordinate = (x + ctr_x, y + ctr_y)
         return True
 
     def remove_selected(self):
@@ -490,7 +489,7 @@ class FlowGraph(Element, _Flowgraph):
         # draw multi select rectangle
         if self.mouse_pressed and (not self.selected_elements or self.get_ctrl_mask()):
             x1, y1 = self.press_coor
-            x2, y2 = self.get_coordinate()
+            x2, y2 = self.coordinate
             x, y = int(min(x1, x2)), int(min(y1, y2))
             w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
             cr.set_source_rgba(
@@ -520,7 +519,7 @@ class FlowGraph(Element, _Flowgraph):
         """
         selected_elements = None
         if self.mouse_pressed:
-            new_selections = self.what_is_selected(self.get_coordinate())
+            new_selections = self.what_is_selected(self.coordinate)
             # update the selections if the new selection is not in the current selections
             # allows us to move entire selected groups of elements
             if self.get_ctrl_mask() or new_selections not in self.selected_elements:
@@ -535,7 +534,7 @@ class FlowGraph(Element, _Flowgraph):
 
         else:  # called from a mouse release
             if not self.element_moved and (not self.selected_elements or self.get_ctrl_mask()):
-                selected_elements = self.what_is_selected(self.get_coordinate(), self.press_coor)
+                selected_elements = self.what_is_selected(self.coordinate, self.press_coor)
 
         # this selection and the last were ports, try to connect them
         if self.make_connection():
@@ -650,7 +649,7 @@ class FlowGraph(Element, _Flowgraph):
         """
         selections = self.what_is_selected(coordinate)
         if not selections.intersection(self.selected_elements):
-            self.set_coordinate(coordinate)
+            self.coordinate = coordinate
             self.mouse_pressed = True
             self.update_selected_elements()
             self.mouse_pressed = False
@@ -664,7 +663,7 @@ class FlowGraph(Element, _Flowgraph):
         Update the selection state of the flow graph.
         """
         self.press_coor = coordinate
-        self.set_coordinate(coordinate)
+        self.coordinate = coordinate
         self.mouse_pressed = True
 
         if double_click:
@@ -681,7 +680,7 @@ class FlowGraph(Element, _Flowgraph):
         Update the state, handle motion (dragging).
         And update the selected flowgraph elements.
         """
-        self.set_coordinate(coordinate)
+        self.coordinate = coordinate
         self.mouse_pressed = False
         if self.element_moved:
             Actions.BLOCK_MOVE()
@@ -733,19 +732,19 @@ class FlowGraph(Element, _Flowgraph):
         # move the selected elements and record the new coordinate
         x, y = coordinate
         if not self.get_ctrl_mask():
-            X, Y = self.get_coordinate()
+            X, Y = self.coordinate
             dX, dY = int(x - X), int(y - Y)
             active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.get_mod1_mask()
             if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
                 self.move_selected((dX, dY))
-                self.set_coordinate((x, y))
+                self.coordinate = (x, y)
         # queue draw for animation
         self.queue_draw()
 
     def get_max_coords(self, initial=(0, 0)):
         w, h = initial
         for block in self.blocks:
-            x, y = block.get_coordinate()
+            x, y = block.coordinate
             w = max(w, x + block.width)
             h = max(h, y + block.height)
         return w, h

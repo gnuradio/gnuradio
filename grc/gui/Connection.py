@@ -46,7 +46,8 @@ class Connection(Element, _Connection):
         self._sink_rot = self._source_rot = None
         self._sink_coor = self._source_coor = None
 
-    def get_coordinate(self):
+    @property_nop_write
+    def coordinate(self):
         return self.source_port.get_connector_coordinate()
 
     @property_nop_write
@@ -107,7 +108,7 @@ class Connection(Element, _Connection):
         source_dir = source.get_connector_direction()
         sink_dir = sink.get_connector_direction()
 
-        x_pos, y_pos = self.get_coordinate()
+        x_pos, y_pos = self.coordinate
         x_start, y_start = source.get_connector_coordinate()
         x_end, y_end = sink.get_connector_coordinate()
 
@@ -161,10 +162,10 @@ class Connection(Element, _Connection):
             self._sink_rot = sink.rotation
             self._source_rot = source.rotation
 
-        elif self._sink_coor != sink.parent_block.get_coordinate() or self._source_coor != source.parent_block.get_coordinate():
+        elif self._sink_coor != sink.parent_block.coordinate or self._source_coor != source.parent_block.coordinate:
             self._update_after_move()
-            self._sink_coor = sink.parent_block.get_coordinate()
-            self._source_coor = source.parent_block.get_coordinate()
+            self._sink_coor = sink.parent_block.coordinate
+            self._source_coor = source.parent_block.coordinate
         # draw
         color1, color2 = (
             Colors.HIGHLIGHT_COLOR if self.highlighted else
@@ -175,7 +176,7 @@ class Connection(Element, _Connection):
 
         if color1 != color2:
             cr.save()
-            x_pos, y_pos = self.get_coordinate()
+            x_pos, y_pos = self.coordinate
             cr.translate(-x_pos, -y_pos)
             cr.set_dash([5.0, 5.0], 5.0)
             Element.draw(self, widget, cr, color2, Colors.FLOWGRAPH_BACKGROUND_COLOR)

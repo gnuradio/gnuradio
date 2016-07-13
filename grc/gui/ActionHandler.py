@@ -202,7 +202,7 @@ class ActionHandler:
         elif action == Actions.BLOCK_CREATE_HIER:
 
                         # keeping track of coordinates for pasting later
-                        coords = flow_graph.selected_blocks()[0].get_coordinate()
+                        coords = flow_graph.selected_blocks()[0].coordinate
                         x,y = coords
                         x_min = x
                         y_min = y
@@ -226,7 +226,7 @@ class ActionHandler:
 
 
                             # keep track of x,y mins for pasting later
-                            (x,y) = block.get_coordinate()
+                            (x,y) = block.coordinate
                             if x < x_min:
                                 x_min = x
                             if y < y_min:
@@ -240,10 +240,10 @@ class ActionHandler:
 
                                 # If connected block is not in the list of selected blocks create a pad for it
                                 if flow_graph.get_block(source_id) not in flow_graph.selected_blocks():
-                                    pads.append({'key': connection.sink_port.key, 'coord': connection.source_port.get_coordinate(), 'block_id' : block.get_id(), 'direction': 'source'})
+                                    pads.append({'key': connection.sink_port.key, 'coord': connection.source_port.coordinate, 'block_id' : block.get_id(), 'direction': 'source'})
 
                                 if flow_graph.get_block(sink_id) not in flow_graph.selected_blocks():
-                                    pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.get_coordinate(), 'block_id' : block.get_id(), 'direction': 'sink'})
+                                    pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.coordinate, 'block_id' : block.get_id(), 'direction': 'sink'})
 
 
                         # Copy the selected blocks and paste them into a new page
