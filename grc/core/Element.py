@@ -34,6 +34,13 @@ class lazy_property(object):
         return weak_value
 
 
+def property_nop_write(func):
+    """Make this a property with a nop setter"""
+    def nop(self, value):
+        pass
+    return property(fget=func, fset=nop)
+
+
 class Element(object):
 
     def __init__(self, parent=None):

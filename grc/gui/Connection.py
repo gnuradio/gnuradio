@@ -19,13 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-from six.moves import map
-
-from . import Colors
-from . import Utils
+from . import Colors, Utils
 from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 from .Element import Element
 
+from ..core.Element import property_nop_write
 from ..core.Connection import Connection as _Connection
 
 
@@ -42,7 +40,8 @@ class Connection(Element, _Connection):
     def __init__(self, **kwargs):
         Element.__init__(self)
         _Connection.__init__(self, **kwargs)
-        self._color2 = self._arrow_color = self._color = None
+
+        self._color =self._color2 = self._arrow_color =  None
 
         self._sink_rot = self._source_rot = None
         self._sink_coor = self._source_coor = None
@@ -50,7 +49,8 @@ class Connection(Element, _Connection):
     def get_coordinate(self):
         return self.source_port.get_connector_coordinate()
 
-    def get_rotation(self):
+    @property_nop_write
+    def rotation(self):
         """
         Get the 0 degree rotation.
         Rotations are irrelevant in connection.
@@ -72,14 +72,14 @@ class Connection(Element, _Connection):
             connector_length = self.source_port.connector_length
         except:
             return  # todo: why?
-        self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.source_port.get_rotation())
+        self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.source_port.rotation)
         #get the sink coordinate
         connector_length = self.sink_port.connector_length + CONNECTOR_ARROW_HEIGHT
-        self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.sink_port.get_rotation())
+        self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.sink_port.rotation)
         #build the arrow
         self.arrow = [(0, 0),
-            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.sink_port.get_rotation()),
-            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.sink_port.get_rotation()),
+            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.sink_port.rotation),
+            Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.sink_port.rotation),
         ]
         source_domain = self.source_port.domain
         sink_domain = self.sink_port.domain
@@ -133,7 +133,7 @@ class Connection(Element, _Connection):
                 points, alt = alt, points
             # create 3-line connector
             i1, i2 = points
-            self.add_line(p0, p1, i1, i2, p2, p3)
+            self.lines.append([p0, p1, i1, i2, p2, p3])
         else:
             # 2 possible points to create a right-angled connector
             point, alt = [(x1, y2), (x2, y1)]
@@ -147,7 +147,7 @@ class Connection(Element, _Connection):
             if Utils.get_angle_from_coordinates(point, p1) == source_dir:
                 point, alt = alt, point
             # create right-angled connector
-            self.add_line(p0, p1, point, p2, p3)
+            self.lines.append([p0, p1, point, p2, p3])
 
     def draw(self, widget, cr):
         """
@@ -156,10 +156,10 @@ class Connection(Element, _Connection):
         sink = self.sink_port
         source = self.source_port
         #check for changes
-        if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation():
+        if self._sink_rot != sink.rotation or self._source_rot != source.rotation:
             self.create_shapes()
-            self._sink_rot = sink.get_rotation()
-            self._source_rot = source.get_rotation()
+            self._sink_rot = sink.rotation
+            self._source_rot = source.rotation
 
         elif self._sink_coor != sink.parent_block.get_coordinate() or self._source_coor != source.parent_block.get_coordinate():
             self._update_after_move()
@@ -167,7 +167,7 @@ class Connection(Element, _Connection):
             self._source_coor = source.parent_block.get_coordinate()
         # draw
         color1, color2 = (
-            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
+            Colors.HIGHLIGHT_COLOR if self.highlighted else
             Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
             color for color in (self._color, self._color2))
 

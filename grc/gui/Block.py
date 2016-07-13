@@ -47,7 +47,7 @@ class Block(_Block, Element):
         _Block.__init__(self, flow_graph, n)
 
         self.states.update(_coordinate=(0, 0), _rotation=0)
-        self.W = self.H = 0
+        self.width = self.height = 0
         Element.__init__(self)  # needs the states and initial sizes
 
         self._surface_layouts = [
@@ -77,14 +77,15 @@ class Block(_Block, Element):
             coor: the coordinate tuple (x, y)
         """
         if Actions.TOGGLE_SNAP_TO_GRID.get_active():
-            offset_x, offset_y = (0, self.H/2) if self.is_horizontal() else (self.H/2, 0)
+            offset_x, offset_y = (0, self.height / 2) if self.is_horizontal() else (self.height / 2, 0)
             coor = (
                 Utils.align_to_grid(coor[0] + offset_x) - offset_x,
                 Utils.align_to_grid(coor[1] + offset_y) - offset_y
             )
         self.states['_coordinate'] = coor
 
-    def get_rotation(self):
+    @property
+    def rotation(self):
         """
         Get the rotation from the position param.
 
@@ -93,7 +94,8 @@ class Block(_Block, Element):
         """
         return self.states['_rotation']
 
-    def set_rotation(self, rot):
+    @rotation.setter
+    def rotation(self, rot):
         """
         Set the rotation into the position param.
 
@@ -107,25 +109,25 @@ class Block(_Block, Element):
         self.clear()
 
         if self.is_horizontal():
-            self.add_area(0, 0, self.W, self.H)
+            self.areas.append([0, 0, self.width, self.height])
         elif self.is_vertical():
-            self.add_area(0, 0, self.H, self.W)
+            self.areas.append([0, 0, self.height, self.width])
 
         for ports, has_busses in zip((self.active_sources, self.active_sinks), self.has_busses):
             if not ports:
                 continue
-            port_separation = PORT_SEPARATION if not has_busses else ports[0].H + PORT_SPACING
-            offset = (self.H - (len(ports) - 1) * port_separation - ports[0].H) / 2
+            port_separation = PORT_SEPARATION if not has_busses else ports[0].height + PORT_SPACING
+            offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
             for index, port in enumerate(ports):
                 port.create_shapes()
 
                 port.set_coordinate({
-                    0: (+self.W, offset),
-                    90: (offset, -port.W),
-                    180: (-port.W, offset),
-                    270: (offset, +self.W),
+                    0: (+self.width, offset),
+                    90: (offset, -port.width),
+                    180: (-port.width, offset),
+                    270: (offset, +self.width),
                 }[port.get_connector_direction()])
-                offset += PORT_SEPARATION if not has_busses else port.H + PORT_SPACING
+                offset += PORT_SEPARATION if not has_busses else port.height + PORT_SPACING
 
                 port.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + \
                                         Constants.CONNECTOR_EXTENSION_INCREMENT * index
@@ -176,7 +178,7 @@ class Block(_Block, Element):
         def get_min_height_for_ports():
             min_height = 2 * PORT_BORDER_SEPARATION + len(ports) * PORT_SEPARATION
             if ports:
-                min_height -= ports[-1].H
+                min_height -= ports[-1].height
             return min_height
         height = max(
             [  # labels
@@ -187,11 +189,11 @@ class Block(_Block, Element):
             ] +
             [  # bus ports only
                 2 * PORT_BORDER_SEPARATION +
-                sum([port.H + PORT_SPACING for port in ports if port.get_type() == 'bus']) - PORT_SPACING
+                sum([port.height + PORT_SPACING for port in ports if port.get_type() == 'bus']) - PORT_SPACING
                 for ports in (self.get_sources_gui(), self.get_sinks_gui())
             ]
         )
-        self.W, self.H = width, height = Utils.align_to_grid((width, height))
+        self.width, self.height = width, height = Utils.align_to_grid((width, height))
 
         self._surface_layout_offsets = [
             (width - label_width) / 2.0,
@@ -209,9 +211,9 @@ class Block(_Block, Element):
             max_width = 0
             for port in ports:
                 port.create_labels()
-                max_width = max(max_width, port.W)
+                max_width = max(max_width, port.width)
             for port in ports:
-                port.W = max_width
+                port.width = max_width
 
     def create_comment_layout(self):
         markups = []
@@ -243,7 +245,7 @@ class Block(_Block, Element):
         """
         bg_color = self._bg_color
         border_color = (
-            Colors.HIGHLIGHT_COLOR if self.is_highlighted() else
+            Colors.HIGHLIGHT_COLOR if self.highlighted else
             Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
             Colors.BORDER_COLOR
         )
@@ -257,7 +259,7 @@ class Block(_Block, Element):
         # title and params label
         if self.is_vertical():
             cr.rotate(-math.pi / 2)
-            cr.translate(-self.W, 0)
+            cr.translate(-self.width, 0)
         cr.translate(*self._surface_layout_offsets)
 
         for layout in self._surface_layouts:
@@ -292,9 +294,9 @@ class Block(_Block, Element):
         x, y = self.get_coordinate()
 
         if self.is_horizontal():
-            y += self.H + BLOCK_LABEL_PADDING
+            y += self.height + BLOCK_LABEL_PADDING
         else:
-            x += self.H + BLOCK_LABEL_PADDING
+            x += self.height + BLOCK_LABEL_PADDING
 
         cr.save()
         cr.translate(x, y)

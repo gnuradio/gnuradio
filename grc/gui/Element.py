@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 from .Constants import LINE_SELECT_SENSITIVITY
-from .Constants import POSSIBLE_ROTATIONS
 
 from six.moves import zip
 
@@ -35,12 +34,17 @@ class Element(object):
         """
         Make a new list of rectangular areas and lines, and set the coordinate and the rotation.
         """
-        self.set_rotation(POSSIBLE_ROTATIONS[0])
         self.set_coordinate((0, 0))
         self.highlighted = False
+        self.rotation = 0
 
-        self._areas_list = []
-        self._lines_list = []
+        self.areas = []
+        self.lines = []
+
+    def clear(self):
+        """Empty the lines and areas."""
+        del self.areas[:]
+        del self.lines[:]
 
     def is_horizontal(self, rotation=None):
         """
@@ -53,7 +57,7 @@ class Element(object):
         Returns:
             true if rotation is horizontal
         """
-        rotation = rotation or self.get_rotation()
+        rotation = rotation or self.rotation
         return rotation in (0, 180)
 
     def is_vertical(self, rotation=None):
@@ -67,7 +71,7 @@ class Element(object):
         Returns:
             true if rotation is vertical
         """
-        rotation = rotation or self.get_rotation()
+        rotation = rotation or self.rotation
         return rotation in (90, 270)
 
     def create_labels(self):
@@ -99,7 +103,7 @@ class Element(object):
         """
         X, Y = self.get_coordinate()
         cr.translate(X, Y)
-        for area in self._areas_list:
+        for area in self.areas:
             # aX = X + rX
             # aY = Y + rY
             cr.set_source_rgb(*bg_color)
@@ -110,7 +114,7 @@ class Element(object):
             cr.stroke()
 
         cr.set_source_rgb(*border_color)
-        for line in self._lines_list:
+        for line in self.lines:
             cr.move_to(*line[0])
             for point in line[1:]:
                 cr.line_to(*point)
@@ -123,12 +127,7 @@ class Element(object):
         Args:
             rotation: multiple of 90 degrees
         """
-        self.set_rotation((self.get_rotation() + rotation)%360)
-
-    def clear(self):
-        """Empty the lines and areas."""
-        del self._areas_list[:]
-        del self._lines_list[:]
+        self.rotation = (self.rotation + rotation) % 360
 
     def set_coordinate(self, coor):
         """
@@ -138,24 +137,6 @@ class Element(object):
             coor: the coordinate tuple (x,y)
         """
         self.coor = coor
-
-    def set_highlighted(self, highlighted):
-        """
-        Set the highlight status.
-
-        Args:
-            highlighted: true to enable highlighting
-        """
-        self.highlighted = highlighted
-
-    def is_highlighted(self):
-        """
-        Get the highlight status.
-
-        Returns:
-            true if highlighted
-        """
-        return self.highlighted
 
     def get_coordinate(self):
         """Get the coordinate.
@@ -174,27 +155,7 @@ class Element(object):
         """
         deltaX, deltaY = delta_coor
         X, Y = self.get_coordinate()
-        self.set_coordinate((X+deltaX, Y+deltaY))
-
-    def add_area(self, x, y, w, h):
-        """
-        Add an area to the area list.
-        An area is actually a coordinate relative to the main coordinate
-        with a width/height pair relative to the area coordinate.
-        A positive width is to the right of the coordinate.
-        A positive height is above the coordinate.
-        The area is associated with a rotation.
-        """
-        self._areas_list.append([x, y, w, h])
-
-    def add_line(self, *points):
-        """
-        Add a line to the line list.
-        A line is defined by 2 or more relative coordinates.
-        Lines must be horizontal or vertical.
-        The line is associated with a rotation.
-        """
-        self._lines_list.append(points)
+        self.set_coordinate((X + deltaX, Y + deltaY))
 
     def what_is_selected(self, coor, coor_m=None):
         """
@@ -219,14 +180,14 @@ class Element(object):
         if coor_m:
             x_m, y_m = [a-b for a,b in zip(coor_m, self.get_coordinate())]
             #handle rectangular areas
-            for x1, y1, w, h in self._areas_list:
+            for x1, y1, w, h in self.areas:
                 if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
                     in_between(x1+w, x, x_m) and in_between(y1, y, y_m) or \
                     in_between(x1, x, x_m) and in_between(y1+h, y, y_m) or \
                     in_between(x1+w, x, x_m) and in_between(y1+h, y, y_m):
                     return self
             #handle horizontal or vertical lines
-            for line in self._lines_list:
+            for line in self.lines:
                 last_point = line[0]
                 for x2, y2 in line[1:]:
                     (x1, y1), last_point = last_point, (x2, y2)
@@ -236,10 +197,10 @@ class Element(object):
             return None
         else:
             #handle rectangular areas
-            for x1, y1, w, h in self._areas_list:
+            for x1, y1, w, h in self.areas:
                 if in_between(x, x1, x1+w) and in_between(y, y1, y1+h): return self
             #handle horizontal or vertical lines
-            for line in self._lines_list:
+            for line in self.lines:
                 last_point = line[0]
                 for x2, y2 in line[1:]:
                     (x1, y1), last_point = last_point, (x2, y2)
@@ -247,25 +208,6 @@ class Element(object):
                     if y1 == y2: y1, y2 = y1-LINE_SELECT_SENSITIVITY, y2+LINE_SELECT_SENSITIVITY
                     if in_between(x, x1, x2) and in_between(y, y1, y2): return self
             return None
-
-    def get_rotation(self):
-        """
-        Get the rotation in degrees.
-
-        Returns:
-            the rotation
-        """
-        return self.rotation
-
-    def set_rotation(self, rotation):
-        """
-        Set the rotation in degrees.
-
-        Args:
-            rotation: the rotation"""
-        if rotation not in POSSIBLE_ROTATIONS:
-            raise Exception('"%s" is not one of the possible rotations: (%s)'%(rotation, POSSIBLE_ROTATIONS))
-        self.rotation = rotation
 
     def mouse_over(self):
         pass

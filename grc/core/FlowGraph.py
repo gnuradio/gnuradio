@@ -549,10 +549,11 @@ def _initialize_dummy_block(block, block_n):
     block.is_valid = lambda: False
     block.get_enabled = lambda: False
     for param_n in block_n.get('param', []):
-        if param_n['key'] not in block.params:
-            new_param_n = {'key': param_n['key'], 'name': param_n['key'], 'type': 'string'}
+        key = param_n['key']
+        if key not in block.params:
+            new_param_n = {'key': key, 'name': key, 'type': 'string'}
             param = block.parent_platform.Param(block=block, n=new_param_n)
-            block.params.append(param)
+            block.params[key] = param
 
 
 def _dummy_block_add_port(block, key, dir):

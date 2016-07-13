@@ -25,6 +25,7 @@ from gi.repository import Gtk, PangoCairo, Pango
 from . import Actions, Colors, Utils, Constants
 from .Element import Element
 
+from ..core.Element import property_nop_write
 from ..core.Port import Port as _Port
 
 
@@ -44,19 +45,19 @@ class Port(_Port, Element):
         self._bg_color = (0, 0, 0)
         self._line_width_factor = 1.0
 
-        self._W = self.H = 0
+        self._width = self.height = 0
         self.connector_length = 0
 
         self.label_layout = Gtk.DrawingArea().create_pango_layout('')
         self.label_layout.set_alignment(Pango.Alignment.CENTER)
 
     @property
-    def W(self):
-        return self._W if not self._label_hidden() else Constants.PORT_LABEL_HIDDEN_WIDTH
+    def width(self):
+        return self._width if not self._label_hidden() else Constants.PORT_LABEL_HIDDEN_WIDTH
 
-    @W.setter
-    def W(self, value):
-        self._W = value
+    @width.setter
+    def width(self, value):
+        self._width = value
         self.label_layout.set_width(value * Pango.SCALE)
 
     def _get_color(self):
@@ -79,15 +80,15 @@ class Port(_Port, Element):
         self.clear()
 
         if self.is_horizontal():
-            self.add_area(0, 0, self.W, self.H)
+            self.areas.append([0, 0, self.width, self.height])
         elif self.is_vertical():
-            self.add_area(0, 0, self.H, self.W)
+            self.areas.append([0, 0, self.height, self.width])
 
         self._connector_coordinate = {
-            0:   (self.W, self.H / 2),
-            90:  (self.H / 2, 0),
-            180: (0, self.H / 2),
-            270: (self.H / 2, self.W)
+            0:   (self.width, self.height / 2),
+            90:  (self.height / 2, 0),
+            180: (0, self.height / 2),
+            270: (self.height / 2, self.width)
         }[self.get_connector_direction()]
 
     def create_labels(self):
@@ -106,11 +107,11 @@ class Port(_Port, Element):
         ))
         label_width, label_height = self.label_layout.get_pixel_size()
 
-        self.W = 2 * Constants.PORT_LABEL_PADDING + label_width
-        self.H = 2 * Constants.PORT_LABEL_PADDING + label_height
+        self.width = 2 * Constants.PORT_LABEL_PADDING + label_width
+        self.height = 2 * Constants.PORT_LABEL_PADDING + label_height
         if self.get_type() == 'bus':
-            self.H += 2 * label_height
-        self.H += self.H % 2  # uneven height
+            self.height += 2 * label_height
+        self.height += self.height % 2  # uneven height
 
     def draw(self, widget, cr, border_color, bg_color):
         """
@@ -124,7 +125,7 @@ class Port(_Port, Element):
 
         if self.is_vertical():
             cr.rotate(-math.pi / 2)
-            cr.translate(-self.W, 0)
+            cr.translate(-self.width, 0)
         cr.translate(0, Constants.PORT_LABEL_PADDING)
 
         PangoCairo.update_layout(cr, self.label_layout)
@@ -150,27 +151,13 @@ class Port(_Port, Element):
             the direction in degrees
         """
         if self.is_source:
-            return self.get_rotation()
+            return self.rotation
         elif self.is_sink:
-            return (self.get_rotation() + 180) % 360
+            return (self.rotation + 180) % 360
 
-    def get_rotation(self):
-        """
-        Get the parent's rotation rather than self.
-
-        Returns:
-            the parent's rotation
-        """
-        return self.parent.get_rotation()
-
-    def move(self, delta_coor):
-        """
-        Move the parent rather than self.
-
-        Args:
-            delta_corr: the (delta_x, delta_y) tuple
-        """
-        self.parent.move(delta_coor)
+    @property_nop_write
+    def rotation(self):
+        return self.parent_block.rotation
 
     def rotate(self, direction):
         """
@@ -181,23 +168,22 @@ class Port(_Port, Element):
         """
         self.parent.rotate(direction)
 
-    def set_highlighted(self, highlight):
+    def move(self, delta_coor):
         """
-        Set the parent highlight rather than self.
+        Move the parent rather than self.
 
         Args:
-            highlight: true to enable highlighting
+            delta_corr: the (delta_x, delta_y) tuple
         """
-        self.parent.set_highlighted(highlight)
+        self.parent.move(delta_coor)
 
-    def is_highlighted(self):
-        """
-        Get the parent's is highlight rather than self.
+    @property
+    def highlighted(self):
+        return self.parent_block.highlighted
 
-        Returns:
-            the parent's highlighting status
-        """
-        return self.parent.is_highlighted()
+    @highlighted.setter
+    def highlighted(self, value):
+        self.parent_block.highlighted = value
 
     def _label_hidden(self):
         """

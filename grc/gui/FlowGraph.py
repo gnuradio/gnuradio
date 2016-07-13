@@ -143,7 +143,6 @@ class FlowGraph(Element, _Flowgraph):
         #get the new block
         block = self.new_block(key)
         block.set_coordinate(coor)
-        block.set_rotation(0)
         block.get_param('id').set_value(id)
         Actions.ELEMENT_CREATE()
         return id
@@ -363,8 +362,8 @@ class FlowGraph(Element, _Flowgraph):
         for selected_block in blocks:
             x, y = selected_block.get_coordinate()
             min_x, min_y = min(min_x, x), min(min_y, y)
-            x += selected_block.W
-            y += selected_block.H
+            x += selected_block.width
+            y += selected_block.height
             max_x, max_y = max(max_x, x), max(max_y, y)
         ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
 
@@ -380,7 +379,7 @@ class FlowGraph(Element, _Flowgraph):
 
         for selected_block in blocks:
             x, y = selected_block.get_coordinate()
-            w, h = selected_block.W, selected_block.H
+            w, h = selected_block.width, selected_block.height
             selected_block.set_coordinate(transform(x, y, w, h))
 
         return True
@@ -747,6 +746,6 @@ class FlowGraph(Element, _Flowgraph):
         w, h = initial
         for block in self.blocks:
             x, y = block.get_coordinate()
-            w = max(w, x + block.W)
-            h = max(h, y + block.H)
+            w = max(w, x + block.width)
+            h = max(h, y + block.height)
         return w, h
