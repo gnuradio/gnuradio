@@ -26,13 +26,16 @@ source_tree_subpath = "/grc/scripts"
 
 if not script_path.endswith(source_tree_subpath):
     # run the installed version
-    from gnuradio.grc.main import main
     from gnuradio.grc import checks
+    checks.do_all()
+    from gnuradio.grc.main import main
+    exit(main())
+
 else:
     print("Running from source tree")
     sys.path.insert(1, script_path[:-len(source_tree_subpath)])
-    from grc.main import main
     from grc import checks
+    checks.do_all()
+    from grc.main import main
+    exit(main())
 
-checks.do_all()
-exit(main())

@@ -19,9 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 import math
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('PangoCairo', '1.0')
+
 from gi.repository import Gtk, Pango, PangoCairo
 
 from . import Actions, Colors, Utils, Constants

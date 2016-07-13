@@ -36,11 +36,11 @@ Is the library path environment variable set correctly?
 def die(error, message):
     msg = "{0}\n\n({1})".format(message, error)
     try:
-        import gtk
-        d = gtk.MessageDialog(
-            type=gtk.MESSAGE_ERROR,
-            buttons=gtk.BUTTONS_CLOSE,
-            message_format=msg,
+        from gi.repository import Gtk
+        d = Gtk.MessageDialog(
+            message_type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.CLOSE,
+            text=msg,
         )
         d.set_title(type(error).__name__)
         d.run()
