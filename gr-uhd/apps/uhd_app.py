@@ -42,12 +42,25 @@ LONG_TPL = """{prefix}  Motherboard: {mb_id} ({mb_serial})
 """
 
 class UHDApp(object):
+    " Base class for simple UHD-based applications "
     def __init__(self, prefix=None, args=None):
         self.prefix = prefix
         self.args = args
         self.verbose = args.verbose or 0
         if self.args.sync == 'auto' and len(self.args.channels) > 1:
             self.args.sync = 'pps'
+        self.antenna = None
+        self.gain_range = None
+        self.samp_rate = None
+        self.has_lo_sensor = None
+        self.async_msgq = None
+        self.async_src = None
+        self.async_rcv = None
+        self.tr = None
+        self.gain = None
+        self.freq = None
+        self.channels = None
+        self.cpu_format = None
 
     def vprint(self, *args):
         """
@@ -78,7 +91,7 @@ class UHDApp(object):
             if info_pp['mb_serial'] == "":
                 info_pp['mb_serial'] = "no serial"
             info_pp['db_subdev'] = usrp_info["{xx}_subdev_name".format(xx=tx_or_rx)]
-            info_pp['db_serial'] =  ", " + usrp_info["{xx}_serial".format(xx=tx_or_rx)]
+            info_pp['db_serial'] = ", " + usrp_info["{xx}_serial".format(xx=tx_or_rx)]
             if info_pp['db_serial'] == "":
                 info_pp['db_serial'] = "no serial"
             info_pp['subdev'] = self.usrp.get_subdev_spec(mboard)
@@ -112,12 +125,12 @@ class UHDApp(object):
         """
         Call this when USRP async metadata needs printing.
         """
-        md = self.async_src.msg_to_async_metadata_t(msg)
+        metadata = self.async_src.msg_to_async_metadata_t(msg)
         print("[{prefix}] Channel: {chan} Time: {t} Event: {e}".format(
             prefix=self.prefix,
-            chan=md.channel,
-            t=md.time_spec.get_real_secs(),
-            e=md.event_code,
+            chan=metadata.channel,
+            t=metadata.time_spec.get_real_secs(),
+            e=metadata.event_code,
         ))
 
     def setup_usrp(self, ctor, args, cpu_format='fc32'):
@@ -141,9 +154,13 @@ class UHDApp(object):
         if args.spec:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
                 self.usrp.set_subdev_spec(args.spec, mb_idx)
-        # Set the clock source:
+        # Set the clock and/or time source:
         if args.clock_source is not None:
-            self.usrp.set_clock_source(args.clock_source)
+            for mb_idx in xrange(self.usrp.get_num_mboards()):
+                self.usrp.set_clock_source(args.clock_source, mb_idx)
+        if args.time_source is not None:
+            for mb_idx in xrange(self.usrp.get_num_mboards()):
+                self.usrp.set_time_source(args.time_source, mb_idx)
         # Sampling rate:
         self.usrp.set_samp_rate(args.samp_rate)
         self.samp_rate = self.usrp.get_samp_rate()
@@ -153,7 +170,7 @@ class UHDApp(object):
         if self.antenna is not None:
             for i, chan in enumerate(self.channels):
                 if not self.antenna[i] in self.usrp.get_antennas(chan):
-                    self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(ant))
+                    self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
                     exit(1)
                 self.usrp.set_antenna(self.antenna[i], chan)
                 self.vprint("[{prefix}] Channel {chan}: Using antenna {ant}.".format(
@@ -310,5 +327,7 @@ class UHDApp(object):
                           default='auto', help="Set to 'pps' to sync devices to PPS")
         group.add_argument("--clock-source",
                           help="Set the clock source; typically 'internal', 'external' or 'gpsdo'")
+        group.add_argument("--time-source",
+                          help="Set the time source")
         return parser
 
