@@ -436,7 +436,7 @@ namespace gr {
 	 kAudioUnitScope_Output, 1,
 	 &d_asbd_client, prop_size);
       check_error_and_throw
-	(err, "Set Device Ouput Stream Format failed",
+	(err, "Set Device Output Stream Format failed",
 	 "audio_osx_source::setup");
 
       // Get the Stream Format (client side), again

@@ -204,23 +204,21 @@ class cpm_mod(gr.hier_block2):
         self.connect(self.fmmod,
                      blocks.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
 
-
+    @staticmethod
     def add_options(parser):
         """
         Adds CPM modulation-specific options to the standard parser
         """
         parser.add_option("", "--bt", type="float", default=_def_bt,
                           help="set bandwidth-time product [default=%default] (GMSK)")
-    add_options=staticmethod(add_options)
 
-
+    @staticmethod
     def extract_kwargs_from_options(options):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(cpm_mod.__init__,
                                                              ('self',), options)
-    extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
 
 

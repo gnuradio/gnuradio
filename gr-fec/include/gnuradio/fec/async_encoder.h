@@ -82,7 +82,7 @@ namespace gr {
        * \param packed True if working on packed bytes (like PDUs).
        * \param rev_unpack Reverse the unpacking order from input bytes to bits.
        * \param rev_pack Reverse the packing order from bits to output bytes.
-       * \param mtu The Maxium Transmission Unit (MTU) of the input
+       * \param mtu The Maximum Transmission Unit (MTU) of the input
        *            frame that the block will be able to
        *            process. Specified in bytes and defaults to 1500.
        */

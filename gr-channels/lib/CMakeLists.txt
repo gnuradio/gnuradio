@@ -46,6 +46,7 @@ list(APPEND channels_sources
   dynamic_channel_model_impl.cc
   fading_model_impl.cc
   selective_fading_model_impl.cc
+  selective_fading_model2_impl.cc
   flat_fader_impl.cc
   cfo_model_impl.cc
   sro_model_impl.cc

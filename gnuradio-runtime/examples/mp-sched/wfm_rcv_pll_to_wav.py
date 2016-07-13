@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gru, eng_notation, optfir
+from gnuradio import gr, gru, eng_notation, filter
 from gnuradio import audio
 from gnuradio import analog
 from gnuradio import blocks
@@ -61,7 +61,7 @@ class wfm_rx_block (gr.top_block):
         audio_rate = demod_rate / audio_decimation  # 32 kHz
 
 
-        chan_filt_coeffs = optfir.low_pass (1,           # gain
+        chan_filt_coeffs = filter.optfir.low_pass (1,    # gain
                                             usrp_rate,   # sampling rate
                                             80e3,        # passband cutoff
                                             115e3,       # stopband cutoff

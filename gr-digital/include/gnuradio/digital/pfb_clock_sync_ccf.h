@@ -196,7 +196,7 @@ namespace gr {
        * differential filterbank.
        *
        * WARNING: this should not be used externally and will be moved
-       * to a private funtion in the next API.
+       * to a private function in the next API.
        */
       virtual void set_taps(const std::vector<float> &taps,
 			    std::vector< std::vector<float> > &ourtaps,

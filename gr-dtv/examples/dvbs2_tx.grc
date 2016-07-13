@@ -244,7 +244,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 547)</value>
+      <value>(776, 548)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -291,7 +291,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 43)</value>
+      <value>(176, 36)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -326,7 +326,7 @@
     <key>dtv_dvb_bbheader_bb</key>
     <param>
       <key>mode</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>INPUTMODE_NORMAL</value>
     </param>
     <param>
       <key>alias</key>
@@ -346,6 +346,10 @@
     </param>
     <param>
       <key>rate4</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate5</key>
       <value>C1_4</value>
     </param>
     <param>
@@ -365,12 +369,16 @@
       <value>168</value>
     </param>
     <param>
-      <key>framesize</key>
+      <key>framesize1</key>
+      <value>FECFRAME_NORMAL</value>
+    </param>
+    <param>
+      <key>framesize2</key>
       <value>FECFRAME_NORMAL</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 27)</value>
+      <value>(408, 24)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -425,6 +433,10 @@
     </param>
     <param>
       <key>rate4</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate5</key>
       <value>C1_4</value>
     </param>
     <param>
@@ -440,12 +452,16 @@
       <value>True</value>
     </param>
     <param>
-      <key>framesize</key>
+      <key>framesize1</key>
+      <value>FECFRAME_NORMAL</value>
+    </param>
+    <param>
+      <key>framesize2</key>
       <value>FECFRAME_NORMAL</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 35)</value>
+      <value>(624, 28)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -488,6 +504,10 @@
     </param>
     <param>
       <key>rate4</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate5</key>
       <value>C1_4</value>
     </param>
     <param>
@@ -503,12 +523,16 @@
       <value>True</value>
     </param>
     <param>
-      <key>framesize</key>
+      <key>framesize1</key>
+      <value>FECFRAME_NORMAL</value>
+    </param>
+    <param>
+      <key>framesize2</key>
       <value>FECFRAME_NORMAL</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 35)</value>
+      <value>(848, 28)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -551,6 +575,10 @@
     </param>
     <param>
       <key>rate4</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate5</key>
       <value>C1_4</value>
     </param>
     <param>
@@ -570,12 +598,16 @@
       <value>True</value>
     </param>
     <param>
-      <key>framesize</key>
+      <key>framesize1</key>
+      <value>FECFRAME_NORMAL</value>
+    </param>
+    <param>
+      <key>framesize2</key>
       <value>FECFRAME_NORMAL</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1048, 27)</value>
+      <value>(1064, 24)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -605,8 +637,16 @@
       <value></value>
     </param>
     <param>
-      <key>rate</key>
-      <value>C_OTHER</value>
+      <key>rate1</key>
+      <value>C9_10</value>
+    </param>
+    <param>
+      <key>rate2</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate3</key>
+      <value>C1_4</value>
     </param>
     <param>
       <key>comment</key>
@@ -630,7 +670,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 235)</value>
+      <value>(184, 220)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -660,8 +700,16 @@
       <value></value>
     </param>
     <param>
-      <key>rate</key>
+      <key>rate1</key>
       <value>C9_10</value>
+    </param>
+    <param>
+      <key>rate2</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate3</key>
+      <value>C1_4</value>
     </param>
     <param>
       <key>comment</key>
@@ -685,7 +733,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 227)</value>
+      <value>(448, 216)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -711,8 +759,16 @@
       <value></value>
     </param>
     <param>
-      <key>rate</key>
+      <key>rate1</key>
       <value>C9_10</value>
+    </param>
+    <param>
+      <key>rate2</key>
+      <value>C1_5_MEDIUM</value>
+    </param>
+    <param>
+      <key>rate3</key>
+      <value>C1_4</value>
     </param>
     <param>
       <key>comment</key>
@@ -736,7 +792,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(192, 443)</value>
+      <value>(184, 432)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -787,7 +843,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 459)</value>
+      <value>(464, 444)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1742,7 +1798,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1040, 243)</value>
+      <value>(1040, 228)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2509,7 +2565,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1040, 427)</value>
+      <value>(1048, 416)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2636,6 +2692,10 @@
       <value>False</value>
     </param>
     <param>
+      <key>hide_lo_controls</key>
+      <value>True</value>
+    </param>
+    <param>
       <key>stream_args</key>
       <value></value>
     </param>
@@ -2696,7 +2756,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(784, 203)</value>
+      <value>(776, 196)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2720,7 +2780,7 @@
     </param>
     <param>
       <key>ref_level</key>
-      <value>0</value>
+      <value>-20</value>
     </param>
     <param>
       <key>ref_scale</key>
@@ -2744,7 +2804,7 @@
     </param>
     <param>
       <key>win_size</key>
-      <value></value>
+      <value>800,600</value>
     </param>
     <param>
       <key>win</key>

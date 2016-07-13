@@ -132,6 +132,7 @@ install(FILES
     multiply_const_vcc.h
     multiply_const_ff.h
     multiply_const_vff.h
+    multiply_by_tag_value_cc.h
     nlog10_ff.h
     nop.h
     null_sink.h
@@ -173,6 +174,7 @@ install(FILES
     tagged_stream_multiply_length.h
     tagged_stream_to_pdu.h
     tags_strobe.h
+    test_tag_variable_rate_ff.h
     threshold_ff.h
     throttle.h
     transcendental.h

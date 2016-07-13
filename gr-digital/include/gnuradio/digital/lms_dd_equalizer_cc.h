@@ -45,7 +45,7 @@ namespace gr {
      * e[n] = d[n] - y[n]
      * w[n+1] = w[n] + mu u[n] conj(e[n])
      *
-     * Where mu is a gain value (between 0 and 1 and usualy small,
+     * Where mu is a gain value (between 0 and 1 and usually small,
      * around 0.001 - 0.01.
      *
      * This block uses the digital_constellation object for making the

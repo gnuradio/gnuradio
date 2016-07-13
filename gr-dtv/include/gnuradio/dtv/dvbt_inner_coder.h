@@ -54,7 +54,7 @@ namespace gr {
        * \brief Create an Inner coder with Puncturing.
        *
        * \param ninput length of input. \n
-       * \param noutput lenght of output. \n
+       * \param noutput length of output. \n
        * \param constellation type of constellation. \n
        * \param hierarchy type of hierarchy used. \n
        * \param coderate coderate used.

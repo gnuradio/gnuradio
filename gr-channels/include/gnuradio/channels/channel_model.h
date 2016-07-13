@@ -42,7 +42,7 @@ namespace gr {
      * This model allows the user to set the voltage of an AWGN noise
      * source (\p noise_voltage), a (normalized) frequency offset (\p
      * frequency_offset), a sample timing offset (\p epsilon), and a
-     * seed (\p noise_seed) to randomize or make reproducable the AWGN
+     * seed (\p noise_seed) to randomize or make reproducible the AWGN
      * noise source.
      *
      * Multipath can be approximated in this model by using a FIR

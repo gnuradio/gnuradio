@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- Copyright 2011-2015 Free Software Foundation, Inc.
+ Copyright 2011-2016 Free Software Foundation, Inc.
 
  This file is part of GNU Radio
 
@@ -72,6 +72,10 @@
     <block>digital_crc32_bb</block>
     <block>digital_crc32_async_bb</block>
     <block>digital_framer_sink_1</block>
+    <block>variable_header_format_default</block>
+    <block>digital_protocol_formatter_async</block>
+    <block>digital_protocol_formatter_bb</block>
+    <block>digital_protocol_parser_b</block>
     <block>digital_header_payload_demux</block>
     <block>digital_packet_headergenerator_bb</block>
     <block>digital_packet_headergenerator_bb_default</block>

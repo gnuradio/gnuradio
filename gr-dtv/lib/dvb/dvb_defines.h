@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@
 #define NPD_NOT_ACTIVE 0
 
 #define FRAME_SIZE_NORMAL 64800
+#define FRAME_SIZE_MEDIUM 32400
 #define FRAME_SIZE_SHORT  16200
 
 // BCH Code
@@ -52,8 +53,21 @@
 #define BCH_CODE_N10 1
 #define BCH_CODE_N12 2
 #define BCH_CODE_S12 3
+#define BCH_CODE_M12 4
 
 #define LDPC_ENCODE_TABLE_LENGTH (FRAME_SIZE_NORMAL * 10)
+
+#define NORMAL_PUNCTURING 3240
+#define MEDIUM_PUNCTURING 1620
+#define SHORT_PUNCTURING_SET1 810
+#define SHORT_PUNCTURING_SET2 1224
+
+#define VLSNR_OFF 0
+#define VLSNR_SET1 1
+#define VLSNR_SET2 2
+
+#define EXTRA_PILOT_SYMBOLS_SET1 ((18 * 34) + (3 * 36))
+#define EXTRA_PILOT_SYMBOLS_SET2 ((9 * 32) + 36)
 
 #endif /* INCLUDED_DTV_DVB_DEFINES_H */
 

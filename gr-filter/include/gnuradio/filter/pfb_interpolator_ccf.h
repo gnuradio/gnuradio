@@ -36,7 +36,7 @@ namespace gr {
      * \ingroup channelizers_blk
      *
      * \details
-     * This block takes in a signal stream and performs interger up-
+     * This block takes in a signal stream and performs integer up-
      * sampling (interpolation) with a polyphase filterbank. The first
      * input is the integer specifying how much to interpolate by. The
      * second input is a vector (Python list) of floating-point taps

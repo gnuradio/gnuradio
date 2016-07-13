@@ -81,6 +81,23 @@ ELSE()
     message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
 
+# Set cmake policies.
+# This will suppress developer warnings during the cmake process that can occur
+# if a newer cmake version than the minimum is used.
+
+if(POLICY CMP0026)
+    cmake_policy(SET CMP0026 OLD)
+endif()
+if(POLICY CMP0043)
+    cmake_policy(SET CMP0043 OLD)
+endif()
+if(POLICY CMP0045)
+    cmake_policy(SET CMP0045 OLD)
+endif()
+if(POLICY CMP0046)
+    cmake_policy(SET CMP0046 OLD)
+endif()
+
 ########################################################################
 # Environment setup
 ########################################################################
@@ -428,7 +445,6 @@ add_subdirectory(gr-dtv)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-channels)
-add_subdirectory(gr-pager)
 add_subdirectory(gr-qtgui)
 add_subdirectory(gr-trellis)
 add_subdirectory(gr-uhd)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,12 +70,22 @@ namespace gr {
       C7_15,
       C8_15,
       C32_45,
+      C2_9_VLSNR,
+      C1_5_MEDIUM,
+      C11_45_MEDIUM,
+      C1_3_MEDIUM,
+      C1_5_VLSNR_SF2,
+      C11_45_VLSNR_SF2,
+      C1_5_VLSNR,
+      C4_15_VLSNR,
+      C1_3_VLSNR,
       C_OTHER,
     };
 
     enum dvb_framesize_t {
       FECFRAME_SHORT = 0,
       FECFRAME_NORMAL,
+      FECFRAME_MEDIUM,
     };
 
     enum dvb_constellation_t {
@@ -95,6 +105,8 @@ namespace gr {
       MOD_4_12_20_28APSK,
       MOD_128APSK,
       MOD_256APSK,
+      MOD_BPSK,
+      MOD_BPSK_SF2,
       MOD_OTHER,
     };
 

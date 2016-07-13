@@ -44,6 +44,9 @@ namespace gr {
       gr_complex *d_corr;
       float *d_corr_mag;
 
+      float d_scale;
+      float d_pfa; // probability of false alarm
+
       void _set_mark_delay(unsigned int mark_delay);
       void _set_threshold(float threshold);
 

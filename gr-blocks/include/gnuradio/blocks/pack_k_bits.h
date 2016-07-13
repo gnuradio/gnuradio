@@ -32,7 +32,7 @@ namespace gr {
 
       /*!
        * \brief Converts a vector of bytes with 1 bit in the LSB to a
-       * byte with k relevent bits.
+       * byte with k relevant bits.
        *
        * Example:
        * k = 4

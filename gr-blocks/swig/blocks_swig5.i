@@ -56,6 +56,7 @@
 #include "gnuradio/blocks/tagged_stream_multiply_length.h"
 #include "gnuradio/blocks/tagged_stream_to_pdu.h"
 #include "gnuradio/blocks/tags_strobe.h"
+#include "gnuradio/blocks/test_tag_variable_rate_ff.h"
 #include "gnuradio/blocks/threshold_ff.h"
 #include "gnuradio/blocks/transcendental.h"
 #include "gnuradio/blocks/tuntap_pdu.h"
@@ -99,6 +100,7 @@
 %include "gnuradio/blocks/tagged_stream_multiply_length.h"
 %include "gnuradio/blocks/tagged_stream_to_pdu.h"
 %include "gnuradio/blocks/tags_strobe.h"
+%include "gnuradio/blocks/test_tag_variable_rate_ff.h"
 %include "gnuradio/blocks/threshold_ff.h"
 %include "gnuradio/blocks/transcendental.h"
 %include "gnuradio/blocks/tuntap_pdu.h"
@@ -141,6 +143,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_multiply_length);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_to_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, tags_strobe);
+GR_SWIG_BLOCK_MAGIC2(blocks, test_tag_variable_rate_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, threshold_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, transcendental);
 GR_SWIG_BLOCK_MAGIC2(blocks, tuntap_pdu);

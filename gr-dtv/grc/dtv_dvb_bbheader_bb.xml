@@ -8,18 +8,25 @@
   <name>BBheader</name>
   <key>dtv_dvb_bbheader_bb</key>
   <import>from gnuradio import dtv</import>
-  <make>dtv.dvb_bbheader_bb($standard.val, $framesize.val, #slurp
+  <make>dtv.dvb_bbheader_bb($standard.val, #slurp
 #if str($standard) == 'STANDARD_DVBT2'
-#if str($framesize) == 'FECFRAME_NORMAL'
+$framesize1.val, #slurp
+#else
+$framesize2.val, #slurp
+#end if
+#if str($standard) == 'STANDARD_DVBT2'
+#if str($framesize1) == 'FECFRAME_NORMAL'
 $rate1.val, #slurp
 #else
 $rate2.val, #slurp
 #end if
 #else
-#if str($framesize) == 'FECFRAME_NORMAL'
+#if str($framesize2) == 'FECFRAME_NORMAL'
 $rate3.val, #slurp
-#else
+#else if str($framesize2) == 'FECFRAME_MEDIUM'
 $rate4.val, #slurp
+#else
+$rate5.val, #slurp
 #end if
 #end if
 $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
@@ -44,13 +51,15 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
   </param>
   <param>
     <name>FECFRAME size</name>
-    <key>framesize</key>
+    <key>framesize1</key>
     <type>enum</type>
+    <hide>$standard.hide_dvbt2</hide>
     <option>
       <name>Normal</name>
       <key>FECFRAME_NORMAL</key>
       <opt>val:dtv.FECFRAME_NORMAL</opt>
       <opt>hide_normal:</opt>
+      <opt>hide_medium:all</opt>
       <opt>hide_short:all</opt>
     </option>
     <option>
@@ -58,6 +67,37 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
       <key>FECFRAME_SHORT</key>
       <opt>val:dtv.FECFRAME_SHORT</opt>
       <opt>hide_normal:all</opt>
+      <opt>hide_medium:all</opt>
+      <opt>hide_short:</opt>
+    </option>
+  </param>
+  <param>
+    <name>FECFRAME size</name>
+    <key>framesize2</key>
+    <type>enum</type>
+    <hide>$standard.hide_dvbs2</hide>
+    <option>
+      <name>Normal</name>
+      <key>FECFRAME_NORMAL</key>
+      <opt>val:dtv.FECFRAME_NORMAL</opt>
+      <opt>hide_normal:</opt>
+      <opt>hide_medium:all</opt>
+      <opt>hide_short:all</opt>
+    </option>
+    <option>
+      <name>Medium</name>
+      <key>FECFRAME_MEDIUM</key>
+      <opt>val:dtv.FECFRAME_MEDIUM</opt>
+      <opt>hide_normal:all</opt>
+      <opt>hide_medium:</opt>
+      <opt>hide_short:all</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>FECFRAME_SHORT</key>
+      <opt>val:dtv.FECFRAME_SHORT</opt>
+      <opt>hide_normal:all</opt>
+      <opt>hide_medium:all</opt>
       <opt>hide_short:</opt>
     </option>
   </param>
@@ -65,7 +105,7 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
     <name>Code rate</name>
     <key>rate1</key>
     <type>enum</type>
-    <hide>#if str($standard) == 'STANDARD_DVBT2' then $framesize.hide_normal else 'all'</hide>
+    <hide>#if str($standard) == 'STANDARD_DVBT2' then $framesize1.hide_normal else 'all'</hide>
     <option>
       <name>1/2</name>
       <key>C1_2</key>
@@ -101,7 +141,7 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
     <name>Code rate</name>
     <key>rate2</key>
     <type>enum</type>
-    <hide>#if str($standard) == 'STANDARD_DVBT2' then $framesize.hide_short else 'all'</hide>
+    <hide>#if str($standard) == 'STANDARD_DVBT2' then $framesize1.hide_short else 'all'</hide>
     <option>
       <name>1/3</name>
       <key>C1_3</key>
@@ -147,7 +187,7 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
     <name>Code rate</name>
     <key>rate3</key>
     <type>enum</type>
-    <hide>#if str($standard) == 'STANDARD_DVBS2' then $framesize.hide_normal else 'all'</hide>
+    <hide>#if str($standard) == 'STANDARD_DVBS2' then $framesize2.hide_normal else 'all'</hide>
     <option>
       <name>1/4</name>
       <key>C1_4</key>
@@ -202,6 +242,11 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
       <name>9/10</name>
       <key>C9_10</key>
       <opt>val:dtv.C9_10</opt>
+    </option>
+    <option>
+      <name>2/9 VL-SNR</name>
+      <key>C2_9_VLSNR</key>
+      <opt>val:dtv.C2_9_VLSNR</opt>
     </option>
     <option>
       <name>13/45</name>
@@ -323,7 +368,28 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
     <name>Code rate</name>
     <key>rate4</key>
     <type>enum</type>
-    <hide>#if str($standard) == 'STANDARD_DVBS2' then $framesize.hide_short else 'all'</hide>
+    <hide>#if str($standard) == 'STANDARD_DVBS2' then $framesize2.hide_medium else 'all'</hide>
+    <option>
+      <name>1/5</name>
+      <key>C1_5_MEDIUM</key>
+      <opt>val:dtv.C1_5_MEDIUM</opt>
+    </option>
+    <option>
+      <name>11/45</name>
+      <key>C11_45_MEDIUM</key>
+      <opt>val:dtv.C11_45_MEDIUM</opt>
+    </option>
+    <option>
+      <name>1/3</name>
+      <key>C1_3_MEDIUM</key>
+      <opt>val:dtv.C1_3_MEDIUM</opt>
+    </option>
+  </param>
+  <param>
+    <name>Code rate</name>
+    <key>rate5</key>
+    <type>enum</type>
+    <hide>#if str($standard) == 'STANDARD_DVBS2' then $framesize2.hide_short else 'all'</hide>
     <option>
       <name>1/4</name>
       <key>C1_4</key>
@@ -409,6 +475,31 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
       <key>C32_45</key>
       <opt>val:dtv.C32_45</opt>
     </option>
+    <option>
+      <name>1/5 VL-SNR SF2</name>
+      <key>C1_5_VLSNR_SF2</key>
+      <opt>val:dtv.C1_5_VLSNR_SF2</opt>
+    </option>
+    <option>
+      <name>11/45 VL-SNR SF2</name>
+      <key>C11_45_VLSNR_SF2</key>
+      <opt>val:dtv.C11_45_VLSNR_SF2</opt>
+    </option>
+    <option>
+      <name>1/5 VL-SNR</name>
+      <key>C1_5_VLSNR</key>
+      <opt>val:dtv.C1_5_VLSNR</opt>
+    </option>
+    <option>
+      <name>4/15 VL-SNR</name>
+      <key>C4_15_VLSNR</key>
+      <opt>val:dtv.C4_15_VLSNR</opt>
+    </option>
+    <option>
+      <name>1/3 VL-SNR</name>
+      <key>C1_3_VLSNR</key>
+      <opt>val:dtv.C1_3_VLSNR</opt>
+    </option>
   </param>
   <param>
     <name>Rolloff factor</name>
@@ -453,12 +544,12 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
     <hide>$standard.hide_dvbt2</hide>
     <option>
       <name>Normal</name>
-      <key>FECFRAME_NORMAL</key>
+      <key>INPUTMODE_NORMAL</key>
       <opt>val:dtv.INPUTMODE_NORMAL</opt>
     </option>
     <option>
       <name>High Efficiency</name>
-      <key>FECFRAME_SHORT</key>
+      <key>INPUTMODE_HIEFF</key>
       <opt>val:dtv.INPUTMODE_HIEFF</opt>
     </option>
   </param>

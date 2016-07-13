@@ -47,6 +47,12 @@ namespace gr {
       double m = 1.0;
       r1 = m;
       switch (constellation) {
+        case MOD_BPSK:
+        case MOD_BPSK_SF2:
+          m_bpsk[0][0] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
+          m_bpsk[0][1] = gr_complex((r1 * cos(5.0 * M_PI / 4.0)), (r1 * sin(5.0 * M_PI / 4.0)));
+          m_bpsk[1][0] = gr_complex((r1 * cos(5.0 * M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
+          m_bpsk[1][1] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(5.0 * M_PI /4.0)));
         case MOD_QPSK:
           m_qpsk[0] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
           m_qpsk[1] = gr_complex((r1 * cos(7 * M_PI / 4.0)), (r1 * sin(7 * M_PI / 4.0)));
@@ -1771,6 +1777,13 @@ namespace gr {
 
       if (signal_interpolation == INTERPOLATION_OFF) {
         switch (signal_constellation) {
+          case MOD_BPSK:
+          case MOD_BPSK_SF2:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_bpsk[i & 1][index & 0x1];
+            }
+            break;
           case MOD_QPSK:
             for (int i = 0; i < noutput_items; i++) {
               index = *in++;
@@ -1830,6 +1843,14 @@ namespace gr {
       }
       else {
         switch (signal_constellation) {
+          case MOD_BPSK:
+          case MOD_BPSK_SF2:
+            for (int i = 0; i < noutput_items; i++) {
+              index = *in++;
+              *out++ = m_bpsk[i & 1][index & 0x1];
+              *out++ = zero;
+            }
+            break;
           case MOD_QPSK:
             for (int i = 0; i < noutput_items / 2; i++) {
               index = *in++;
