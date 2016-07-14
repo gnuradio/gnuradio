@@ -112,8 +112,7 @@ class Element(object):
 
         cr.set_source_rgb(*border_color)
         for line in self.lines:
-            cr.move_to(*line[0])
-            for point in line[1:]:
+            for point in line:
                 cr.line_to(*point)
             cr.stroke()
 

@@ -26,7 +26,7 @@ import collections
 
 from six.moves import builtins, filter, map, range, zip
 
-from . import Constants
+from . import Constants, utils
 from .Element import Element
 
 # Blacklist certain ids, its not complete, but should help
@@ -39,29 +39,6 @@ except ImportError:
 
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
 _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
-
-
-def num_to_str(num):
-    """ Display logic for numbers """
-    def eng_notation(value, fmt='g'):
-        """Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n"""
-        template = '{:' + fmt + '}{}'
-        magnitude = abs(value)
-        for exp, symbol in zip(range(9, -15-1, -3), 'GMk munpf'):
-            factor = 10 ** exp
-            if magnitude >= factor:
-                return template.format(value / factor, symbol.strip())
-        return template.format(value, '')
-
-    if isinstance(num, Constants.COMPLEX_TYPES):
-        num = complex(num)  # Cast to python complex
-        if num == 0:
-            return '0'
-        output = eng_notation(num.real) if num.real else ''
-        output += eng_notation(num.imag, '+g' if output else 'g') + 'j' if num.imag else ''
-        return output
-    else:
-        return str(num)
 
 
 class Option(Element):
@@ -246,7 +223,7 @@ class Param(Element):
         if isinstance(e, bool):
             return str(e)
         elif isinstance(e, Constants.COMPLEX_TYPES):
-            dt_str = num_to_str(e)
+            dt_str = utils.num_to_str(e)
         elif isinstance(e, Constants.VECTOR_TYPES):
             # Vector types
             if len(e) > 8:
@@ -255,7 +232,7 @@ class Param(Element):
                 truncate = 1
             else:
                 # Small vectors use eval
-                dt_str = ', '.join(map(num_to_str, e))
+                dt_str = ', '.join(map(utils.num_to_str, e))
         elif t in ('file_open', 'file_save'):
             dt_str = self.get_value()
             truncate = -1

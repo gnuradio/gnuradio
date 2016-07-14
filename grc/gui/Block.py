@@ -29,12 +29,11 @@ from .Constants import (
     PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
 )
 from . Element import Element
-from ..core.Param import num_to_str
-from ..core.utils.complexity import calculate_flowgraph_complexity
-from ..core.Block import Block as _Block
+from ..core import utils
+from ..core.Block import Block as CoreBlock
 
 
-class Block(_Block, Element):
+class Block(CoreBlock, Element):
     """The graphical signal block."""
 
     def __init__(self, flow_graph, n):
@@ -134,10 +133,12 @@ class Block(_Block, Element):
 
     def create_labels(self):
         """Create the labels for the signal block."""
-        self._bg_color = Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else \
-                         Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else \
-                         Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else \
-                         Colors.BLOCK_DISABLED_COLOR
+        self._bg_color = (
+            Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
+            Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else
+            Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else
+            Colors.BLOCK_DISABLED_COLOR
+        )
 
         # update the title layout
         title_layout, params_layout = self._surface_layouts
@@ -180,6 +181,7 @@ class Block(_Block, Element):
             if ports:
                 min_height -= ports[-1].height
             return min_height
+
         height = max(
             [  # labels
                 height
@@ -220,10 +222,10 @@ class Block(_Block, Element):
 
         # Show the flow graph complexity on the top block if enabled
         if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.key == "options":
-            complexity = calculate_flowgraph_complexity(self.parent)
+            complexity = utils.calculate_flowgraph_complexity(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'
-                '<b>Complexity: {num}bal</b></span>'.format(num=num_to_str(complexity), font=BLOCK_FONT)
+                '<b>Complexity: {num}bal</b></span>'.format(num=utils.num_to_str(complexity), font=BLOCK_FONT)
             )
         comment = self.get_comment()  # Returns None if there are no comments
         if comment:

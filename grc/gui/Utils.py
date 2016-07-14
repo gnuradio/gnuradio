@@ -36,7 +36,7 @@ def get_rotated_coordinate(coor, rotation):
         the rotated coordinates
     """
     # handles negative angles
-    rotation = (rotation + 360)%360
+    rotation = (rotation + 360) % 360
     if rotation not in POSSIBLE_ROTATIONS:
         raise ValueError('unusable rotation angle "%s"'%str(rotation))
     # determine the number of degrees to rotate

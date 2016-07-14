@@ -22,22 +22,20 @@ from __future__ import absolute_import, print_function
 import os
 import sys
 
-from ..core.Platform import Platform as _Platform
+from ..core.Platform import Platform as CorePlatform
 
-from .Config import Config as _Config
-from .Block import Block as _Block
-from .Connection import Connection as _Connection
-from .Element import Element
-from .FlowGraph import FlowGraph as _FlowGraph
-from .Param import Param as _Param
-from .Port import Port as _Port
+from .Config import Config
+from .Block import Block
+from .Connection import Connection
+from .FlowGraph import FlowGraph
+from .Param import Param
+from .Port import Port
 
 
-class Platform(Element, _Platform):
+class Platform(CorePlatform):
 
     def __init__(self, *args, **kwargs):
-        Element.__init__(self)
-        _Platform.__init__(self, *args, **kwargs)
+        CorePlatform.__init__(self, *args, **kwargs)
 
         # Ensure conf directories
         gui_prefs_file = self.config.gui_prefs_file
@@ -65,9 +63,9 @@ class Platform(Element, _Platform):
     ##############################################
     # Constructors
     ##############################################
-    FlowGraph = _FlowGraph
-    Connection = _Connection
-    Block = _Block
-    Port = _Port
-    Param = _Param
-    Config = _Config
+    Config = Config
+    FlowGraph = FlowGraph
+    Connection = Connection
+    Block = Block
+    Port = Port
+    Param = Param

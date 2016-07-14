@@ -41,7 +41,7 @@ class Connection(Element, _Connection):
         Element.__init__(self)
         _Connection.__init__(self, **kwargs)
 
-        self._color =self._color2 = self._arrow_color =  None
+        self._color = self._color2 = self._arrow_color = None
 
         self._sink_rot = self._source_rot = None
         self._sink_coor = self._source_coor = None
@@ -138,7 +138,7 @@ class Connection(Element, _Connection):
         else:
             # 2 possible points to create a right-angled connector
             point, alt = [(x1, y2), (x2, y1)]
-            # source connector -> points[0] should be in the direction of source (if possible)
+            # source connector -> point should be in the direction of source (if possible)
             if Utils.get_angle_from_coordinates(p1, point) != source_dir:
                 point, alt = alt, point
             # point -> sink connector should not be in the direction of sink
@@ -156,7 +156,7 @@ class Connection(Element, _Connection):
         """
         sink = self.sink_port
         source = self.source_port
-        #check for changes
+        # check for changes
         if self._sink_rot != sink.rotation or self._source_rot != source.rotation:
             self.create_shapes()
             self._sink_rot = sink.rotation
@@ -183,8 +183,7 @@ class Connection(Element, _Connection):
             cr.restore()
         # draw arrow on sink port
         cr.set_source_rgb(*self._arrow_color)
-        cr.move_to(*self._arrow[0])
-        cr.line_to(*self._arrow[1])
-        cr.line_to(*self._arrow[2])
+        for p in self._arrow:
+            cr.move_to(*p)
         cr.close_path()
         cr.fill()

@@ -19,17 +19,12 @@ from __future__ import absolute_import
 from . import Utils, Constants
 
 from . import ParamWidgets
-from .Element import Element
 
 from ..core.Param import Param as _Param
 
 
-class Param(Element, _Param):
+class Param(_Param):
     """The graphical parameter."""
-
-    def __init__(self, **kwargs):
-        Element.__init__(self)
-        _Param.__init__(self, **kwargs)
 
     def get_input(self, *args, **kwargs):
         """
