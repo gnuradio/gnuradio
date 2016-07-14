@@ -106,7 +106,7 @@ namespace gr {
       while(size-- > 0) {
 	S0 = *iptr++;
 
-	Sdot = d_scl * (-S0+d_8*S1-d_8*S1+S4);
+	Sdot = d_scl * (-S0+d_8*S1-d_8*S2+S4);
 
 	d_freq = (S2.real()*Sdot.imag()-S2.imag()*Sdot.real()) /
 	  (S2.real()*S2.real()+S2.imag()*S2.imag());
