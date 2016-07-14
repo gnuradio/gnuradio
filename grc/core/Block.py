@@ -304,97 +304,6 @@ class Block(Element):
     def is_virtual_source(self):
         return self.key == 'virtual_source'
 
-    ###########################################################################
-    # Custom rewrite functions
-    ###########################################################################
-
-    def rewrite_epy_block(self):
-        flowgraph = self.parent_flowgraph
-        platform = self.parent_platform
-        param_blk = self.params['_io_cache']
-        param_src = self.params['_source_code']
-
-        src = param_src.get_value()
-        src_hash = hash((self.get_id(), src))
-        if src_hash == self._epy_source_hash:
-            return
-
-        try:
-            blk_io = utils.epy_block_io.extract(src)
-
-        except Exception as e:
-            self._epy_reload_error = ValueError(str(e))
-            try:  # Load last working block io
-                blk_io_args = eval(param_blk.get_value())
-                if len(blk_io_args) == 6:
-                    blk_io_args += ([],)  # add empty callbacks
-                blk_io = utils.epy_block_io.BlockIO(*blk_io_args)
-            except Exception:
-                return
-        else:
-            self._epy_reload_error = None  # Clear previous errors
-            param_blk.set_value(repr(tuple(blk_io)))
-
-        # print "Rewriting embedded python block {!r}".format(self.get_id())
-
-        self._epy_source_hash = src_hash
-        self.name = blk_io.name or blk_io.cls
-        self._doc = blk_io.doc
-        self._imports[0] = 'import ' + self.get_id()
-        self._make = '{0}.{1}({2})'.format(self.get_id(), blk_io.cls, ', '.join(
-            '{0}=${{ {0} }}'.format(key) for key, _ in blk_io.params))
-        self._callbacks = ['{0} = ${{ {0} }}'.format(attr) for attr in blk_io.callbacks]
-
-        params = {}
-        for param in list(self.params):
-            if hasattr(param, '__epy_param__'):
-                params[param.key] = param
-                del self.params[param.key]
-
-        for key, value in blk_io.params:
-            try:
-                param = params[key]
-                param.set_default(value)
-            except KeyError:  # need to make a new param
-                name = key.replace('_', ' ').title()
-                n = dict(name=name, key=key, type='raw', value=value)
-                param = platform.Param(block=self, n=n)
-                setattr(param, '__epy_param__', True)
-            self.params[key] = param
-
-        def update_ports(label, ports, port_specs, direction):
-            ports_to_remove = list(ports)
-            iter_ports = iter(ports)
-            ports_new = []
-            port_current = next(iter_ports, None)
-            for key, port_type in port_specs:
-                reuse_port = (
-                    port_current is not None and
-                    port_current.get_type() == port_type and
-                    (key.isdigit() or port_current.key == key)
-                )
-                if reuse_port:
-                    ports_to_remove.remove(port_current)
-                    port, port_current = port_current, next(iter_ports, None)
-                else:
-                    n = dict(name=label + str(key), type=port_type, key=key)
-                    if port_type == 'message':
-                        n['name'] = key
-                        n['optional'] = '1'
-                    port = platform.Port(block=self, n=n, dir=direction)
-                ports_new.append(port)
-            # replace old port list with new one
-            del ports[:]
-            ports.extend(ports_new)
-            # remove excess port connections
-            for port in ports_to_remove:
-                for connection in port.get_connections():
-                    flowgraph.remove_element(connection)
-
-        update_ports('in', self.sinks, blk_io.sinks, 'sink')
-        update_ports('out', self.sources, blk_io.sources, 'source')
-        self.rewrite()
-
     @property
     def documentation(self):
         documentation = self.parent_platform.block_docstrings.get(self.key, {})
@@ -803,3 +712,99 @@ class Block(Element):
             self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
         if self._bussify_source:
             self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+
+
+class EPyBlock(Block):
+
+    def __init__(self, flow_graph, n):
+        super(EPyBlock, self).__init__(flow_graph, n)
+        self._epy_source_hash = -1  # for epy blocks
+        self._epy_reload_error = None
+
+
+    def rewrite_epy_block(self):
+        flowgraph = self.parent_flowgraph
+        platform = self.parent_platform
+        param_blk = self.params['_io_cache']
+        param_src = self.params['_source_code']
+
+        src = param_src.get_value()
+        src_hash = hash((self.get_id(), src))
+        if src_hash == self._epy_source_hash:
+            return
+
+        try:
+            blk_io = utils.epy_block_io.extract(src)
+
+        except Exception as e:
+            self._epy_reload_error = ValueError(str(e))
+            try:  # Load last working block io
+                blk_io_args = eval(param_blk.get_value())
+                if len(blk_io_args) == 6:
+                    blk_io_args += ([],)  # add empty callbacks
+                blk_io = utils.epy_block_io.BlockIO(*blk_io_args)
+            except Exception:
+                return
+        else:
+            self._epy_reload_error = None  # Clear previous errors
+            param_blk.set_value(repr(tuple(blk_io)))
+
+        # print "Rewriting embedded python block {!r}".format(self.get_id())
+
+        self._epy_source_hash = src_hash
+        self.name = blk_io.name or blk_io.cls
+        self._doc = blk_io.doc
+        self._imports[0] = 'import ' + self.get_id()
+        self._make = '{0}.{1}({2})'.format(self.get_id(), blk_io.cls, ', '.join(
+            '{0}=${{ {0} }}'.format(key) for key, _ in blk_io.params))
+        self._callbacks = ['{0} = ${{ {0} }}'.format(attr) for attr in blk_io.callbacks]
+
+        params = {}
+        for param in list(self.params):
+            if hasattr(param, '__epy_param__'):
+                params[param.key] = param
+                del self.params[param.key]
+
+        for key, value in blk_io.params:
+            try:
+                param = params[key]
+                param.set_default(value)
+            except KeyError:  # need to make a new param
+                name = key.replace('_', ' ').title()
+                n = dict(name=name, key=key, type='raw', value=value)
+                param = platform.Param(block=self, n=n)
+                setattr(param, '__epy_param__', True)
+            self.params[key] = param
+
+        def update_ports(label, ports, port_specs, direction):
+            ports_to_remove = list(ports)
+            iter_ports = iter(ports)
+            ports_new = []
+            port_current = next(iter_ports, None)
+            for key, port_type in port_specs:
+                reuse_port = (
+                    port_current is not None and
+                    port_current.get_type() == port_type and
+                    (key.isdigit() or port_current.key == key)
+                )
+                if reuse_port:
+                    ports_to_remove.remove(port_current)
+                    port, port_current = port_current, next(iter_ports, None)
+                else:
+                    n = dict(name=label + str(key), type=port_type, key=key)
+                    if port_type == 'message':
+                        n['name'] = key
+                        n['optional'] = '1'
+                    port = platform.Port(block=self, n=n, dir=direction)
+                ports_new.append(port)
+            # replace old port list with new one
+            del ports[:]
+            ports.extend(ports_new)
+            # remove excess port connections
+            for port in ports_to_remove:
+                for connection in port.get_connections():
+                    flowgraph.remove_element(connection)
+
+        update_ports('in', self.sinks, blk_io.sinks, 'sink')
+        update_ports('out', self.sources, blk_io.sources, 'source')
+        self.rewrite()

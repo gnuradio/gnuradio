@@ -32,7 +32,7 @@ from .Element import Element
 from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
-from .Block import Block
+from .Block import Block, EPyBlock
 from .Port import Port
 from .Param import Param
 
@@ -45,7 +45,10 @@ class Platform(Element):
     Generator = Generator
     FlowGraph = FlowGraph
     Connection = Connection
-    Block = Block
+    block_classes = {
+        None: Block,  # default
+        'epy_block': EPyBlock,
+    }
     Port = Port
     Param = Param
 
@@ -198,7 +201,7 @@ class Platform(Element):
         n = ParseXML.from_file(xml_file).get('block', {})
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
         # Get block instance and add it to the list of blocks
-        block = self.Block(self._flow_graph, n)
+        block = self.block_classes[None](self._flow_graph, n)
         key = block.key
         if key in self.blocks:
             print('Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
@@ -309,4 +312,5 @@ class Platform(Element):
         return list(self.blocks.values())
 
     def get_new_block(self, flow_graph, key):
-        return self.Block(flow_graph, n=self._blocks_n[key])
+        cls = self.block_classes.get(key, self.block_classes[None])
+        return cls(flow_graph, n=self._blocks_n[key])

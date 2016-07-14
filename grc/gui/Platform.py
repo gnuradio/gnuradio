@@ -66,6 +66,7 @@ class Platform(CorePlatform):
     Config = Config
     FlowGraph = FlowGraph
     Connection = Connection
-    Block = Block
+    block_classes = {key: Block.make_cls_with_base(cls)
+                     for key, cls in CorePlatform.block_classes.items()}
     Port = Port
     Param = Param

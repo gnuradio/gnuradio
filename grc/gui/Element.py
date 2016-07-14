@@ -30,6 +30,13 @@ class Element(object):
     and methods to detect selection of those areas.
     """
 
+    @classmethod
+    def make_cls_with_base(cls, super_cls):
+        name = super_cls.__name__
+        bases = (super_cls,) + cls.__bases__[1:]
+        namespace = cls.__dict__.copy()
+        return type(name, bases, namespace)
+
     def __init__(self):
         """
         Make a new list of rectangular areas and lines, and set the coordinate and the rotation.

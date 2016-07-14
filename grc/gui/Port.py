@@ -37,7 +37,7 @@ class Port(_Port, Element):
         Port constructor.
         Create list of connector coordinates.
         """
-        _Port.__init__(self, block, n, dir)
+        super(Port, self).__init__(block, n, dir)
         Element.__init__(self)
         self._connector_coordinate = (0, 0)
         self._hovering = True
