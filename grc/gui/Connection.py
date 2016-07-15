@@ -183,7 +183,8 @@ class Connection(Element, _Connection):
             cr.restore()
         # draw arrow on sink port
         cr.set_source_rgb(*self._arrow_color)
-        for p in self._arrow:
-            cr.move_to(*p)
+        cr.move_to(*self._arrow[0])
+        cr.line_to(*self._arrow[1])
+        cr.line_to(*self._arrow[2])
         cr.close_path()
         cr.fill()
