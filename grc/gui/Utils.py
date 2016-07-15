@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 from gi.repository import GLib
 
-from .Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
+from .Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE, COMPLEX_TYPES
 
 
 def get_rotated_coordinate(coor, rotation):
@@ -66,16 +66,6 @@ def get_angle_from_coordinates(p1, p2):
         return 270 if y2 > y1 else 90
 
 
-def encode(value):
-    """Make sure that we pass only valid utf-8 strings into markup_escape_text.
-
-    Older versions of glib seg fault if the last byte starts a multi-byte
-    character.
-    """
-    valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
-    return GLib.markup_escape_text(valid_utf8)
-
-
 def align_to_grid(coor, mode=round):
     def align(value):
         return int(mode(value / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
@@ -84,3 +74,36 @@ def align_to_grid(coor, mode=round):
     except TypeError:
         x = coor
         return align(coor)
+
+
+def num_to_str(num):
+    """ Display logic for numbers """
+    def eng_notation(value, fmt='g'):
+        """Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n"""
+        template = '{:' + fmt + '}{}'
+        magnitude = abs(value)
+        for exp, symbol in zip(range(9, -15-1, -3), 'GMk munpf'):
+            factor = 10 ** exp
+            if magnitude >= factor:
+                return template.format(value / factor, symbol.strip())
+        return template.format(value, '')
+
+    if isinstance(num, COMPLEX_TYPES):
+        num = complex(num)  # Cast to python complex
+        if num == 0:
+            return '0'
+        output = eng_notation(num.real) if num.real else ''
+        output += eng_notation(num.imag, '+g' if output else 'g') + 'j' if num.imag else ''
+        return output
+    else:
+        return str(num)
+
+
+def encode(value):
+    """Make sure that we pass only valid utf-8 strings into markup_escape_text.
+
+    Older versions of glib seg fault if the last byte starts a multi-byte
+    character.
+    """
+    valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
+    return GLib.markup_escape_text(valid_utf8)

@@ -19,12 +19,15 @@ from __future__ import absolute_import
 from . import Utils, Constants
 
 from . import ParamWidgets
+from .Element import Element
 
 from ..core.Param import Param as _Param
 
 
 class Param(_Param):
     """The graphical parameter."""
+
+    make_cls_with_base = classmethod(Element.make_cls_with_base.__func__)
 
     def get_input(self, *args, **kwargs):
         """
@@ -36,19 +39,20 @@ class Param(_Param):
         Returns:
             gtk input class
         """
-        if self.get_type() in ('file_open', 'file_save'):
+        type_ = self.get_type()
+        if type_ in ('file_open', 'file_save'):
             input_widget_cls = ParamWidgets.FileParam
 
         elif self.is_enum():
             input_widget_cls = ParamWidgets.EnumParam
 
-        elif self.get_options():
+        elif self.options:
             input_widget_cls = ParamWidgets.EnumEntryParam
 
-        elif self.get_type() == '_multiline':
+        elif type_ == '_multiline':
             input_widget_cls = ParamWidgets.MultiLineEntryParam
 
-        elif self.get_type() == '_multiline_python_external':
+        elif type_ == '_multiline_python_external':
             input_widget_cls = ParamWidgets.PythonEditorParam
 
         else:
@@ -66,8 +70,8 @@ class Param(_Param):
         return '<span underline="{line}" foreground="{color}" font_desc="Sans 9">{label}</span>'.format(
             line='low' if has_callback else 'none',
             color='blue' if have_pending_changes else
-            'black' if self.is_valid() else
-            'red',
+                  'black' if self.is_valid() else
+                  'red',
             label=Utils.encode(self.get_name())
         )
 
@@ -86,6 +90,66 @@ class Param(_Param):
             tooltip_lines.extend(' * ' + msg for msg in errors)
         return '\n'.join(tooltip_lines)
 
+    def pretty_print(self):
+        """
+        Get the repr (nice string format) for this param.
+
+        Returns:
+            the string representation
+        """
+        ##################################################
+        # Truncate helper method
+        ##################################################
+        def _truncate(string, style=0):
+            max_len = max(27 - len(self.get_name()), 3)
+            if len(string) > max_len:
+                if style < 0:  # Front truncate
+                    string = '...' + string[3-max_len:]
+                elif style == 0:  # Center truncate
+                    string = string[:max_len/2 - 3] + '...' + string[-max_len/2:]
+                elif style > 0:  # Rear truncate
+                    string = string[:max_len-3] + '...'
+            return string
+
+        ##################################################
+        # Simple conditions
+        ##################################################
+        value = self.get_value()
+        if not self.is_valid():
+            return _truncate(value)
+        if value in self.options:
+            return self.options_names[self.options.index(value)]
+
+        ##################################################
+        # Split up formatting by type
+        ##################################################
+        # Default center truncate
+        truncate = 0
+        e = self.get_evaluated()
+        t = self.get_type()
+        if isinstance(e, bool):
+            return str(e)
+        elif isinstance(e, Constants.COMPLEX_TYPES):
+            dt_str = Utils.num_to_str(e)
+        elif isinstance(e, Constants.VECTOR_TYPES):
+            # Vector types
+            if len(e) > 8:
+                # Large vectors use code
+                dt_str = self.get_value()
+                truncate = 1
+            else:
+                # Small vectors use eval
+                dt_str = ', '.join(map(Utils.num_to_str, e))
+        elif t in ('file_open', 'file_save'):
+            dt_str = self.get_value()
+            truncate = -1
+        else:
+            # Other types
+            dt_str = str(e)
+
+        # Done
+        return _truncate(dt_str, truncate)
+
     def format_block_surface_markup(self):
         """
         Get the markup for this param.
@@ -95,5 +159,6 @@ class Param(_Param):
         """
         return '<span foreground="{color}" font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
             color='black' if self.is_valid() else 'red', font=Constants.PARAM_FONT,
-            label=Utils.encode(self.get_name()), value=Utils.encode(repr(self).replace('\n', ' '))
+            label=Utils.encode(self.get_name()),
+            value=Utils.encode(self.pretty_print().replace('\n', ' '))
         )

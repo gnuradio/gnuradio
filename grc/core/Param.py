@@ -20,13 +20,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 import ast
-import weakref
 import re
 import collections
 
 from six.moves import builtins, filter, map, range, zip
 
-from . import Constants, utils
+from . import Constants
 from .Element import Element
 
 # Blacklist certain ids, its not complete, but should help
@@ -41,52 +40,6 @@ _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
 _show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
 
 
-class Option(Element):
-
-    def __init__(self, param, n):
-        Element.__init__(self, param)
-        self._name = n.get('name')
-        self.key = n.get('key')
-        self._opts = dict()
-        opts = n.get('opt', [])
-        # Test against opts when non enum
-        if not self.parent.is_enum() and opts:
-            raise Exception('Options for non-enum types cannot have sub-options')
-        # Extract opts
-        for opt in opts:
-            # Separate the key:value
-            try:
-                key, value = opt.split(':')
-            except:
-                raise Exception('Error separating "{}" into key:value'.format(opt))
-            # Test against repeated keys
-            if key in self._opts:
-                raise Exception('Key "{}" already exists in option'.format(key))
-            # Store the option
-            self._opts[key] = value
-
-    def __str__(self):
-        return 'Option {}({})'.format(self.get_name(), self.key)
-
-    def get_name(self):
-        return self._name
-
-    def get_key(self):
-        return self.key
-
-    ##############################################
-    # Access Opts
-    ##############################################
-    def get_opt_keys(self):
-        return list(self._opts.keys())
-
-    def get_opt(self, key):
-        return self._opts[key]
-
-    def get_opts(self):
-        return list(self._opts.values())
-
-
 class TemplateArg(object):
     """
     A cheetah template argument created from a param.
@@ -96,10 +49,12 @@ class TemplateArg(object):
     """
 
     def __init__(self, param):
-        self._param = weakref.proxy(param)
+        self._param = param
 
     def __getitem__(self, item):
-        return str(self._param.get_opt(item)) if self._param.is_enum() else NotImplemented
+        param = self._param
+        opts = param.options_opts[param.get_value()]
+        return str(opts[item]) if param.is_enum() else NotImplemented
 
     def __str__(self):
         return str(self._param.to_code())
@@ -112,147 +67,63 @@ class Param(Element):
 
     is_param = True
 
-    def __init__(self, block, n):
-        """
-        Make a new param from nested data.
+    def __init__(self, parent, key, name, type='raw', value='', **n):
+        """Make a new param from nested data"""
+        super(Param, self).__init__(parent)
+        self.key = key
+        self._name = name
+        self.value = self.default = value
+        self._type = type
 
-        Args:
-            block: the parent element
-            n: the nested odict
-        """
-        # If the base key is a valid param key, copy its data and overlay this params data
-        base_key = n.get('base_key')
-        if base_key and base_key in block.params:
-            n_expanded = block.params[base_key]._n.copy()
-            n_expanded.update(n)
-            n = n_expanded
-        # Save odict in case this param will be base for another
-        self._n = n
-        # Parse the data
-        self._name = n['name']
-        self.key = n['key']
-        value = n.get('value', '')
-        self._type = n.get('type', 'raw')
         self._hide = n.get('hide', '')
         self.tab_label = n.get('tab', Constants.DEFAULT_PARAM_TAB)
-        # Build the param
-        Element.__init__(self, parent=block)
-        # Create the Option objects from the n data
-        self._options = list()
         self._evaluated = None
-        for o_n in n.get('option', []):
-            option = Option(param=self, n=o_n)
-            key = option.key
-            # Test against repeated keys
-            if key in self.get_option_keys():
-                raise Exception('Key "{}" already exists in options'.format(key))
-            # Store the option
-            self.get_options().append(option)
-        # Test the enum options
-        if self.is_enum():
-            # Test against options with identical keys
-            if len(set(self.get_option_keys())) != len(self.get_options()):
-                raise Exception('Options keys "{}" are not unique.'.format(self.get_option_keys()))
-            # Test against inconsistent keys in options
-            opt_keys = self.get_options()[0].get_opt_keys()
-            for option in self.get_options():
-                if set(opt_keys) != set(option.get_opt_keys()):
-                    raise Exception('Opt keys "{}" are not identical across all options.'.format(opt_keys))
-            # If a value is specified, it must be in the options keys
-            if value or value in self.get_option_keys():
-                self._value = value
-            else:
-                self._value = self.get_option_keys()[0]
-            if self.get_value() not in self.get_option_keys():
-                raise Exception('The value "{}" is not in the possible values of "{}".'.format(self.get_value(), self.get_option_keys()))
-        else:
-            self._value = value or ''
-        self._default = value
+
+        self.options = []
+        self.options_names = []
+        self.options_opts = {}
+        self._init_options(options_n=n.get('option', []))
+
         self._init = False
         self._hostage_cells = list()
         self.template_arg = TemplateArg(self)
 
-    def get_types(self):
-        return (
-            'raw', 'enum',
-            'complex', 'real', 'float', 'int',
-            'complex_vector', 'real_vector', 'float_vector', 'int_vector',
-            'hex', 'string', 'bool',
-            'file_open', 'file_save', '_multiline', '_multiline_python_external',
-            'id', 'stream_id',
-            'grid_pos', 'notebook', 'gui_hint',
-            'import',
-        )
+    def _init_options(self, options_n):
+        """Create the Option objects from the n data"""
+        option_keys = set()
+        for option_n in options_n:
+            key, name = option_n['key'], option_n['name']
+            # Test against repeated keys
+            if key in option_keys:
+                raise KeyError('Key "{}" already exists in options'.format(key))
+            option_keys.add(key)
+            # Store the option
+            self.options.append(key)
+            self.options_names.append(name)
 
-    def __repr__(self):
-        """
-        Get the repr (nice string format) for this param.
-
-        Returns:
-            the string representation
-        """
-        ##################################################
-        # Truncate helper method
-        ##################################################
-        def _truncate(string, style=0):
-            max_len = max(27 - len(self.get_name()), 3)
-            if len(string) > max_len:
-                if style < 0:  # Front truncate
-                    string = '...' + string[3-max_len:]
-                elif style == 0:  # Center truncate
-                    string = string[:max_len/2 - 3] + '...' + string[-max_len/2:]
-                elif style > 0:  # Rear truncate
-                    string = string[:max_len-3] + '...'
-            return string
-
-        ##################################################
-        # Simple conditions
-        ##################################################
-        if not self.is_valid():
-            return _truncate(self.get_value())
-        if self.get_value() in self.get_option_keys():
-            return self.get_option(self.get_value()).get_name()
-
-        ##################################################
-        # Split up formatting by type
-        ##################################################
-        # Default center truncate
-        truncate = 0
-        e = self.get_evaluated()
-        t = self.get_type()
-        if isinstance(e, bool):
-            return str(e)
-        elif isinstance(e, Constants.COMPLEX_TYPES):
-            dt_str = utils.num_to_str(e)
-        elif isinstance(e, Constants.VECTOR_TYPES):
-            # Vector types
-            if len(e) > 8:
-                # Large vectors use code
-                dt_str = self.get_value()
-                truncate = 1
-            else:
-                # Small vectors use eval
-                dt_str = ', '.join(map(utils.num_to_str, e))
-        elif t in ('file_open', 'file_save'):
-            dt_str = self.get_value()
-            truncate = -1
-        else:
-            # Other types
-            dt_str = str(e)
-
-        # Done
-        return _truncate(dt_str, truncate)
-
-    def __repr2__(self):
-        """
-        Get the repr (nice string format) for this param.
-
-        Returns:
-            the string representation
-        """
         if self.is_enum():
-            return self.get_option(self.get_value()).get_name()
-        return self.get_value()
+            self._init_enum(options_n)
+
+    def _init_enum(self, options_n):
+        opt_ref = None
+        for option_n in options_n:
+            key, opts_raw = option_n['key'], option_n.get('opt', [])
+            try:
+                self.options_opts[key] = opts = dict(opt.split(':') for opt in opts_raw)
+            except TypeError:
+                raise ValueError('Error separating opts into key:value')
+
+            if opt_ref is None:
+                opt_ref = set(opts.keys())
+            elif opt_ref != set(opts):
+                raise ValueError('Opt keys ({}) are not identical across all options.'
+                                 ''.format(', '.join(opt_ref)))
+        if not self.value:
+            self.value = self.default = self.options[0]
+        elif self.value not in self.options:
+            self.value = self.default = self.options[0]  # TODO: warn
+            # raise ValueError('The value {!r} is not in the possible values of {}.'
+            #                  ''.format(self.get_value(), ', '.join(self.options)))
 
     def __str__(self):
         return 'Param - {}({})'.format(self.get_name(), self.key)
@@ -295,7 +166,7 @@ class Param(Element):
         The value must be evaluated and type must a possible type.
         """
         Element.validate(self)
-        if self.get_type() not in self.get_types():
+        if self.get_type() not in Constants.PARAM_TYPE_NAMES:
             self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
 
         self._evaluated = None
@@ -606,20 +477,20 @@ class Param(Element):
         return self._type == 'enum'
 
     def get_value(self):
-        value = self._value
-        if self.is_enum() and value not in self.get_option_keys():
-            value = self.get_option_keys()[0]
+        value = self.value
+        if self.is_enum() and value not in self.options:
+            value = self.options[0]
             self.set_value(value)
         return value
 
     def set_value(self, value):
         # Must be a string
-        self._value = str(value)
+        self.value = str(value)
 
     def set_default(self, value):
-        if self._default == self._value:
+        if self.default == self.value:
             self.set_value(value)
-        self._default = str(value)
+        self.default = str(value)
 
     def get_type(self):
         return self.parent.resolve_dependencies(self._type)
@@ -633,29 +504,8 @@ class Param(Element):
     ##############################################
     # Access Options
     ##############################################
-    def get_option_keys(self):
-        return [elem.key for elem in self._options]
-
-    def get_option(self, key):
-        for option in self._options:
-            if option.key == key:
-                return option
-        return ValueError('Key "{}" not found in {}.'.format(key, self.get_option_keys()))
-
-    def get_options(self):
-        return self._options
-
-    ##############################################
-    # Access Opts
-    ##############################################
-    def get_opt_keys(self):
-        return self.get_option(self.get_value()).get_opt_keys()
-
-    def get_opt(self, key):
-        return self.get_option(self.get_value()).get_opt(key)
-
-    def get_opts(self):
-        return self.get_option(self.get_value()).get_opts()
+    def opt_value(self, key):
+        return self.options_opts[self.get_value()][key]
 
     ##############################################
     # Import/Export Methods

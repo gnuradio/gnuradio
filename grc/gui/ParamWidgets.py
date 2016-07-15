@@ -188,11 +188,11 @@ class EnumParam(InputParam):
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
         self._input = Gtk.ComboBoxText()
-        for option in self.param.get_options():
-            self._input.append_text(option.get_name())
+        for option_name in self.param.options_names:
+            self._input.append_text(option_name)
 
         value = self.param.get_value()
-        active_index = self.param.get_option_keys().index(value)
+        active_index = self.param.options.index(value)
         self._input.set_active(active_index)
 
         self._input.connect('changed', self._editing_callback)
@@ -200,7 +200,7 @@ class EnumParam(InputParam):
         self.pack_start(self._input, False, False, 0)
 
     def get_text(self):
-        return self.param.get_option_keys()[self._input.get_active()]
+        return self.param.options[self._input.get_active()]
 
     def set_tooltip_text(self, text):
         self._input.set_tooltip_text(text)
@@ -212,12 +212,12 @@ class EnumEntryParam(InputParam):
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
         self._input = Gtk.ComboBoxText.new_with_entry()
-        for option in self.param.get_options():
-            self._input.append_text(option.get_name())
+        for option_name in self.param.options_names:
+            self._input.append_text(option_name)
 
         value = self.param.get_value()
         try:
-            active_index = self.param.get_option_keys().index(value)
+            active_index = self.param.options.index(value)
             self._input.set_active(active_index)
         except ValueError:
             self._input.set_active(-1)
@@ -237,7 +237,7 @@ class EnumEntryParam(InputParam):
         if self.has_custom_value:
             return self._input.get_child().get_text()
         else:
-            return self.param.get_option_keys()[self._input.get_active()]
+            return self.param.options[self._input.get_active()]
 
     def set_tooltip_text(self, text):
         if self.has_custom_value:  # custom entry

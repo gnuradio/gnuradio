@@ -36,12 +36,12 @@ from ..core.Block import Block as CoreBlock
 class Block(CoreBlock, Element):
     """The graphical signal block."""
 
-    def __init__(self, flow_graph, n):
+    def __init__(self, parent, **n):
         """
         Block constructor.
         Add graphics related params to the block.
         """
-        super(self.__class__, self).__init__(flow_graph, n)
+        super(self.__class__, self).__init__(parent, **n)
 
         self.states.update(_coordinate=(0, 0), _rotation=0)
         self.width = self.height = 0

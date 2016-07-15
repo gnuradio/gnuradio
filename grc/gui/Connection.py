@@ -23,7 +23,7 @@ from . import Colors, Utils
 from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 from .Element import Element
 
-from ..core.Element import property_nop_write
+from ..core.Element import nop_write
 from ..core.Connection import Connection as _Connection
 
 
@@ -46,11 +46,13 @@ class Connection(Element, _Connection):
         self._sink_rot = self._source_rot = None
         self._sink_coor = self._source_coor = None
 
-    @property_nop_write
+    @nop_write
+    @property
     def coordinate(self):
         return self.source_port.get_connector_coordinate()
 
-    @property_nop_write
+    @nop_write
+    @property
     def rotation(self):
         """
         Get the 0 degree rotation.

@@ -41,17 +41,6 @@ from .utils import extract_docs
 
 class Platform(Element):
 
-    Config = Config
-    Generator = Generator
-    FlowGraph = FlowGraph
-    Connection = Connection
-    block_classes = {
-        None: Block,  # default
-        'epy_block': EPyBlock,
-    }
-    Port = Port
-    Param = Param
-
     is_platform = True
 
     def __init__(self, *args, **kwargs):
@@ -166,6 +155,7 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
+                raise
                 print('Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file), file=sys.stderr)
 
         # Add blocks to block tree
@@ -200,17 +190,18 @@ class Platform(Element):
         ParseXML.validate_dtd(xml_file, self._block_dtd)
         n = ParseXML.from_file(xml_file).get('block', {})
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
-        # Get block instance and add it to the list of blocks
-        block = self.block_classes[None](self._flow_graph, n)
-        key = block.key
-        if key in self.blocks:
-            print('Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
-        else:  # Store the block
-            self.blocks[key] = block
-            self._blocks_n[key] = n
+        key = n.pop('key')
 
+        if key in self.blocks:
+            print('Warning: Block with key "{}" already exists.\n'
+                  '\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
+            return
+
+        # Store the block
+        self.blocks[key] = block = self.get_new_block(self._flow_graph, key, **n)
+        self._blocks_n[key] = n
         self._docstring_extractor.query(
-            block.key,
+            key,
             block.get_imports(raw=True),
             block.get_make(raw=True)
         )
@@ -305,12 +296,46 @@ class Platform(Element):
         ParseXML.validate_dtd(flow_graph_file, Constants.FLOW_GRAPH_DTD)
         return ParseXML.from_file(flow_graph_file)
 
-    def get_new_flow_graph(self):
-        return self.FlowGraph(platform=self)
-
     def get_blocks(self):
         return list(self.blocks.values())
 
-    def get_new_block(self, flow_graph, key):
+    def get_generate_options(self):
+        gen_opts = self.blocks['options'].get_param('generate_options')
+        generate_mode_default = gen_opts.get_value()
+        return [(key, name, key == generate_mode_default)
+                for key, name in zip(gen_opts.options, gen_opts.options_names)]
+
+    ##############################################
+    # Factories
+    ##############################################
+    Config = Config
+    Generator = Generator
+    FlowGraph = FlowGraph
+    Connection = Connection
+    block_classes = {
+        None: Block,  # default
+        'epy_block': EPyBlock,
+    }
+    port_classes = {
+        None: Port,  # default
+    }
+    param_classes = {
+        None: Param,  # default
+    }
+
+    def get_new_flow_graph(self):
+        return self.FlowGraph(platform=self)
+
+    def get_new_block(self, parent, key, **kwargs):
         cls = self.block_classes.get(key, self.block_classes[None])
-        return cls(flow_graph, n=self._blocks_n[key])
+        if not kwargs:
+            kwargs = self._blocks_n[key]
+        return cls(parent, key=key, **kwargs)
+
+    def get_new_param(self, parent, **kwargs):
+        cls = self.param_classes[None]
+        return cls(parent, **kwargs)
+
+    def get_new_port(self, parent, **kwargs):
+        cls = self.port_classes[None]
+        return cls(parent, **kwargs)

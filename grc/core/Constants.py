@@ -59,6 +59,17 @@ TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP 
                       stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
 
+PARAM_TYPE_NAMES = (
+    'raw', 'enum',
+    'complex', 'real', 'float', 'int',
+    'complex_vector', 'real_vector', 'float_vector', 'int_vector',
+    'hex', 'string', 'bool',
+    'file_open', 'file_save', '_multiline', '_multiline_python_external',
+    'id', 'stream_id',
+    'grid_pos', 'notebook', 'gui_hint',
+    'import',
+)
+
 # Define types, native python + numpy
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
 COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]

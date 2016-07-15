@@ -25,19 +25,19 @@ from gi.repository import Gtk, PangoCairo, Pango
 from . import Actions, Colors, Utils, Constants
 from .Element import Element
 
-from ..core.Element import property_nop_write
+from ..core.Element import nop_write
 from ..core.Port import Port as _Port
 
 
 class Port(_Port, Element):
     """The graphical port."""
 
-    def __init__(self, block, n, dir):
+    def __init__(self, parent, direction, **n):
         """
         Port constructor.
         Create list of connector coordinates.
         """
-        super(Port, self).__init__(block, n, dir)
+        super(self.__class__, self).__init__(parent, direction, **n)
         Element.__init__(self)
         self._connector_coordinate = (0, 0)
         self._hovering = True
@@ -155,7 +155,8 @@ class Port(_Port, Element):
         elif self.is_sink:
             return (self.rotation + 180) % 360
 
-    @property_nop_write
+    @nop_write
+    @property
     def rotation(self):
         return self.parent_block.rotation
 

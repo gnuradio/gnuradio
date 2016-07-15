@@ -105,7 +105,7 @@ class Port(Element):
 
     is_port = True
 
-    def __init__(self, block, n, dir):
+    def __init__(self, block, direction, **n):
         """
         Make a new port from nested data.
 
@@ -117,6 +117,7 @@ class Port(Element):
         self._n = n
         if n['type'] == 'message':
             n['domain'] = Constants.GR_MESSAGE_DOMAIN
+
         if 'domain' not in n:
             n['domain'] = Constants.DEFAULT_DOMAIN
         elif n['domain'] == Constants.GR_MESSAGE_DOMAIN:
@@ -124,8 +125,6 @@ class Port(Element):
             n['type'] = 'message'  # For port color
         if n['type'] == 'msg':
             n['key'] = 'msg'
-
-        n.setdefault('key', str(next(block.port_counters[dir == 'source'])))
 
         # Build the port
         Element.__init__(self, parent=block)
@@ -135,13 +134,12 @@ class Port(Element):
         self._type = n.get('type', '')
         self.domain = n.get('domain')
         self._hide = n.get('hide', '')
-        self._dir = dir
+        self._dir = direction
         self._hide_evaluated = False  # Updated on rewrite()
 
         self._nports = n.get('nports', '')
         self._vlen = n.get('vlen', '')
         self._optional = bool(n.get('optional'))
-        self.di_optional = bool(n.get('optional'))
         self._clones = []  # References to cloned ports (for nports > 1)
 
     def __str__(self):
@@ -150,15 +148,12 @@ class Port(Element):
         if self.is_sink:
             return 'Sink - {}({})'.format(self.get_name(), self.key)
 
-    def get_types(self):
-        return list(Constants.TYPE_TO_SIZEOF.keys())
-
     def is_type_empty(self):
         return not self._n['type']
 
     def validate(self):
         Element.validate(self)
-        if self.get_type() not in self.get_types():
+        if self.get_type() not in Constants.TYPE_TO_SIZEOF.keys():
             self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
         platform = self.parent.parent.parent
         if self.domain not in platform.domains:

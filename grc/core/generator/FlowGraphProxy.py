@@ -70,7 +70,7 @@ class FlowGraphProxy(object):
                 'label': str(pad.get_param('label').get_evaluated()),
                 'type': str(pad.get_param('type').get_evaluated()),
                 'vlen': str(pad.get_param('vlen').get_value()),
-                'size': pad.get_param('type').get_opt('size'),
+                'size': pad.get_param('type').opt_value('size'),
                 'optional': bool(pad.get_param('optional').get_evaluated()),
             }
             num_ports = pad.get_param('num_streams').get_evaluated()

@@ -29,16 +29,15 @@ class lazy_property(object):
         if instance is None:
             return self
         value = self.func(instance)
-        weak_value = weakref.proxy(value) if not weakref.ProxyType else value
-        setattr(instance, self.func.__name__, weak_value)
-        return weak_value
+        setattr(instance, self.func.__name__, value)
+        return value
 
 
-def property_nop_write(func):
+def nop_write(prop):
     """Make this a property with a nop setter"""
     def nop(self, value):
         pass
-    return property(fget=func, fset=nop)
+    return prop.setter(nop)
 
 
 class Element(object):

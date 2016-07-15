@@ -61,12 +61,14 @@ class Platform(CorePlatform):
                 print(e, file=sys.stderr)
 
     ##############################################
-    # Constructors
+    # Factories
     ##############################################
     Config = Config
     FlowGraph = FlowGraph
     Connection = Connection
     block_classes = {key: Block.make_cls_with_base(cls)
                      for key, cls in CorePlatform.block_classes.items()}
-    Port = Port
-    Param = Param
+    port_classes = {key: Port.make_cls_with_base(cls)
+                    for key, cls in CorePlatform.port_classes.items()}
+    param_classes = {key: Param.make_cls_with_base(cls)
+                     for key, cls in CorePlatform.param_classes.items()}

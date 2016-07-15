@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2015, 2016 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 # This file is part of GNU Radio
 #
 # GNU Radio Companion is free software; you can redistribute it and/or
@@ -27,17 +27,11 @@ class Element(object):
         ...
 
     @property
-    def parent(self):
+    def parent(self): -> 'Element'
         ...
 
-    def get_parent_by_type(self, cls):
-        parent = self.parent
-        if parent is None:
-            return None
-        elif isinstance(parent, cls):
-            return parent
-        else:
-            return parent.get_parent_by_type(cls)
+    def get_parent_by_type(self, cls): -> 'Element'
+        ...
 
     @lazy_property
     def parent_platform(self): -> Platform.Platform
@@ -50,5 +44,3 @@ class Element(object):
     @lazy_property
     def parent_block(self): -> Block.Block
         ...
-
-

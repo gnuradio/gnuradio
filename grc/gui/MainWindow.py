@@ -41,7 +41,6 @@ from ..core import Messages
 ############################################################
 # Main window
 ############################################################
-
 class MainWindow(Gtk.Window):
     """The topmost window with menus, the tool bar, and other major windows."""
 
@@ -56,14 +55,6 @@ class MainWindow(Gtk.Window):
         Setup the menu, toolbar, flow graph editor notebook, block selection window...
         """
         self._platform = platform
-
-        gen_opts = platform.blocks['options'].get_param('generate_options')
-        generate_mode_default = gen_opts.get_value()
-        generate_modes = [
-            (o.key, o.get_name(), o.key == generate_mode_default)
-            for o in gen_opts.get_options()]
-
-        # Load preferences
         Preferences.load(platform)
 
         # Setup window
@@ -72,6 +63,7 @@ class MainWindow(Gtk.Window):
         self.add(vbox)
 
         # Create the menu bar and toolbar
+        generate_modes = platform.get_generate_options()
         self.add_accel_group(Actions.get_accel_group())
         self.menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
         vbox.pack_start(self.menu_bar, False, False, 0)

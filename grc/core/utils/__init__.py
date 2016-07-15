@@ -22,4 +22,3 @@ from . import epy_block_io
 from . import extract_docs
 
 from ._complexity import calculate_flowgraph_complexity
-from ._num_to_str import num_to_str

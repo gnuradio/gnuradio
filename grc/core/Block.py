@@ -36,7 +36,7 @@ from . Constants import (
     BLOCK_FLAG_THROTTLE, BLOCK_FLAG_DISABLE_BYPASS,
     BLOCK_FLAG_DEPRECATED,
 )
-from . Element import Element
+from . Element import Element, lazy_property
 
 
 def _get_elem(iterable, key):
@@ -53,21 +53,12 @@ class Block(Element):
 
     STATE_LABELS = ['disabled', 'enabled', 'bypassed']
 
-    def __init__(self, flow_graph, n):
-        """
-        Make a new block from nested data.
+    def __init__(self, parent, key, name, **n):
+        """Make a new block from nested data."""
+        super(Block, self).__init__(parent)
 
-        Args:
-            flow_graph: the parent element
-            n: the nested odict
-
-        Returns:
-            block a new block
-        """
-        Element.__init__(self, parent=flow_graph)
-
-        self.name = n['name']
-        self.key = n['key']
+        self.key = key
+        self.name = name
         self.category = [cat.strip() for cat in n.get('category', '').split('/') if cat.strip()]
         self.flags = n.get('flags', '')
         self._doc = n.get('doc', '').strip('\n').replace('\\\n', '')
@@ -98,7 +89,6 @@ class Block(Element):
             has_sources=len(sources_n)
         )
 
-        self.port_counters = [itertools.count(), itertools.count()]
         self.sources = self._init_ports(sources_n, direction='source')
         self.sinks = self._init_ports(sinks_n, direction='sink')
         self.active_sources = []  # on rewrite
@@ -106,18 +96,15 @@ class Block(Element):
 
         self.states = {'_enabled': True}
 
-        self._epy_source_hash = -1  # for epy blocks
-        self._epy_reload_error = None
-
         self._init_bus_ports(n)
 
-    def _add_param(self, key, name, value='', type='raw', **kwargs):
-        n = {'key': key, 'name': name, 'value': value, 'type': type}
-        n.update(kwargs)
-        self.params[key] = self.parent_platform.Param(block=self, n=n)
-
     def _init_params(self, params_n, has_sources, has_sinks):
-        self._add_param(key='id', name='ID', type='id')
+        param_factory = self.parent_platform.get_new_param
+
+        def add_param(key, **kwargs):
+            self.params[key] = param_factory(self, key=key, **kwargs)
+
+        add_param(key='id', name='ID', type='id')
 
         # Virtual source/sink and pad source/sink blocks are
         # indistinguishable from normal GR blocks. Make explicit
@@ -133,41 +120,99 @@ class Block(Element):
             self.flags += BLOCK_FLAG_DISABLE_BYPASS
 
         if not (is_virtual_or_pad or is_variable or self.key == 'options'):
-            self._add_param(key='alias', name='Block Alias', type='string',
-                            hide='part', tab=ADVANCED_PARAM_TAB)
+            add_param(key='alias', name='Block Alias', type='string',
+                      hide='part', tab=ADVANCED_PARAM_TAB)
 
         if not is_virtual_or_pad and (has_sources or has_sinks):
-            self._add_param(key='affinity', name='Core Affinity', type='int_vector',
-                            hide='part', tab=ADVANCED_PARAM_TAB)
+            add_param(key='affinity', name='Core Affinity', type='int_vector',
+                      hide='part', tab=ADVANCED_PARAM_TAB)
 
         if not is_virtual_or_pad and has_sources:
-            self._add_param(key='minoutbuf', name='Min Output Buffer', type='int',
-                            hide='part', value='0', tab=ADVANCED_PARAM_TAB)
-            self._add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
-                            hide='part', value='0', tab=ADVANCED_PARAM_TAB)
+            add_param(key='minoutbuf', name='Min Output Buffer', type='int',
+                      hide='part', value='0', tab=ADVANCED_PARAM_TAB)
+            add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
+                      hide='part', value='0', tab=ADVANCED_PARAM_TAB)
 
+        base_params_n = {n['key']: n for n in params_n}
         for param_n in params_n:
-            param = self.parent_platform.Param(block=self, n=param_n)
-            key = param.key
+            key = param_n['key']
             if key in self.params:
                 raise Exception('Key "{}" already exists in params'.format(key))
-            self.params[key] = param
 
-        self._add_param(key='comment', name='Comment', type='_multiline', hide='part',
-                        value='', tab=ADVANCED_PARAM_TAB)
+            extended_param_n = base_params_n.get(param_n.pop('base_key', None), {})
+            extended_param_n.update(param_n)
+            self.params[key] = param_factory(self, **extended_param_n)
+
+        add_param(key='comment', name='Comment', type='_multiline', hide='part',
+                  value='', tab=ADVANCED_PARAM_TAB)
 
     def _init_ports(self, ports_n, direction):
-        port_cls = self.parent_platform.Port
+        port_factory = self.parent_platform.get_new_port
         ports = []
         port_keys = set()
-        for port_n in ports_n:
-            port = port_cls(block=self, n=port_n, dir=direction)
+        stream_port_keys = itertools.count()
+        for i, port_n in enumerate(ports_n):
+            port_n.setdefault('key', str(next(stream_port_keys)))
+            port = port_factory(parent=self, direction=direction, **port_n)
             key = port.key
             if key in port_keys:
                 raise Exception('Key "{}" already exists in {}'.format(key, direction))
             port_keys.add(key)
             ports.append(port)
         return ports
+
+    ##############################################
+    # validation and rewrite
+    ##############################################
+    def rewrite(self):
+        """
+        Add and remove ports to adjust for the nports.
+        """
+        Element.rewrite(self)
+
+        # Adjust nports, disconnect hidden ports
+        for ports in (self.sources, self.sinks):
+            for i, master_port in enumerate(ports):
+                nports = master_port.get_nports() or 1
+                num_ports = 1 + len(master_port.get_clones())
+                if master_port.get_hide():
+                    for connection in master_port.get_connections():
+                        self.parent.remove_element(connection)
+                if not nports and num_ports == 1:  # Not a master port and no left-over clones
+                    continue
+                # Remove excess cloned ports
+                for port in master_port.get_clones()[nports-1:]:
+                    # Remove excess connections
+                    for connection in port.get_connections():
+                        self.parent.remove_element(connection)
+                    master_port.remove_clone(port)
+                    ports.remove(port)
+                # Add more cloned ports
+                for j in range(num_ports, nports):
+                    port = master_port.add_clone()
+                    ports.insert(ports.index(master_port) + j, port)
+
+            self.back_ofthe_bus(ports)
+            # Renumber non-message/message ports
+            domain_specific_port_index = collections.defaultdict(int)
+            for port in [p for p in ports if p.key.isdigit()]:
+                domain = port.domain
+                port.key = str(domain_specific_port_index[domain])
+                domain_specific_port_index[domain] += 1
+
+        self.active_sources = [p for p in self.get_sources_gui() if not p.get_hide()]
+        self.active_sinks = [p for p in self.get_sinks_gui() if not p.get_hide()]
+
+    def validate(self):
+        """
+        Validate this block.
+        Call the base class validate.
+        Evaluate the checks: each check must evaluate to True.
+        """
+        Element.validate(self)
+        self._run_checks()
+        self._validate_generate_mode_compat()
+        self._validate_var_value()
 
     def _run_checks(self):
         """Evaluate the checks"""
@@ -204,60 +249,9 @@ class Block(Element):
             except Exception as err:
                 self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(value, err))
 
-    def validate(self):
-        """
-        Validate this block.
-        Call the base class validate.
-        Evaluate the checks: each check must evaluate to True.
-        """
-        Element.validate(self)
-        self._run_checks()
-        self._validate_generate_mode_compat()
-        self._validate_var_value()
-        if self._epy_reload_error:
-            self.params['_source_code'].add_error_message(str(self._epy_reload_error))
-
-    def rewrite(self):
-        """
-        Add and remove ports to adjust for the nports.
-        """
-        Element.rewrite(self)
-        # Check and run any custom rewrite function for this block
-        getattr(self, 'rewrite_' + self.key, lambda: None)()
-
-        # Adjust nports, disconnect hidden ports
-        for ports in (self.sources, self.sinks):
-            for i, master_port in enumerate(ports):
-                nports = master_port.get_nports() or 1
-                num_ports = 1 + len(master_port.get_clones())
-                if master_port.get_hide():
-                    for connection in master_port.get_connections():
-                        self.parent.remove_element(connection)
-                if not nports and num_ports == 1:  # Not a master port and no left-over clones
-                    continue
-                # Remove excess cloned ports
-                for port in master_port.get_clones()[nports-1:]:
-                    # Remove excess connections
-                    for connection in port.get_connections():
-                        self.parent.remove_element(connection)
-                    master_port.remove_clone(port)
-                    ports.remove(port)
-                # Add more cloned ports
-                for j in range(num_ports, nports):
-                    port = master_port.add_clone()
-                    ports.insert(ports.index(master_port) + j, port)
-
-            self.back_ofthe_bus(ports)
-            # Renumber non-message/message ports
-            domain_specific_port_index = collections.defaultdict(int)
-            for port in [p for p in ports if p.key.isdigit()]:
-                domain = port.domain
-                port.key = str(domain_specific_port_index[domain])
-                domain_specific_port_index[domain] += 1
-
-        self.active_sources = [p for p in self.get_sources_gui() if not p.get_hide()]
-        self.active_sinks = [p for p in self.get_sinks_gui() if not p.get_hide()]
-
+    ##############################################
+    # Getters
+    ##############################################
     def get_imports(self, raw=False):
         """
         Resolve all import statements.
@@ -316,14 +310,7 @@ class Block(Element):
     # Also kept get_enabled and set_enabled to keep compatibility
     @property
     def state(self):
-        """
-        Gets the block's current state.
-
-        Returns:
-            ENABLED - 0
-            BYPASSED - 1
-            DISABLED - 2
-        """
+        """Gets the block's current state."""
         try:
             return self.STATE_LABELS[int(self.states['_enabled'])]
         except ValueError:
@@ -331,14 +318,7 @@ class Block(Element):
 
     @state.setter
     def state(self, value):
-        """
-        Sets the state for the block.
-
-        Args:
-            ENABLED - 0
-            BYPASSED - 1
-            DISABLED - 2
-        """
+        """Sets the state for the block."""
         try:
             encoded = self.STATE_LABELS.index(value)
         except ValueError:
@@ -425,11 +405,11 @@ class Block(Element):
     def get_comment(self):
         return self.params['comment'].get_value()
 
-    @property
+    @lazy_property
     def is_throtteling(self):
         return BLOCK_FLAG_THROTTLE in self.flags
 
-    @property
+    @lazy_property
     def is_deprecated(self):
         return BLOCK_FLAG_DEPRECATED in self.flags
 
@@ -459,12 +439,11 @@ class Block(Element):
         return self.filter_bus_port(self.sources)
 
     def get_connections(self):
-        return sum([port.get_connections() for port in self.get_ports()], [])
+        return sum((port.get_connections() for port in self.get_ports()), [])
 
     ##############################################
     # Resolve
     ##############################################
-
     def resolve_dependencies(self, tmpl):
         """
         Resolve a paramater dependency with cheetah templates.
@@ -515,7 +494,7 @@ class Block(Element):
 
         # Try to increment the enum by direction
         try:
-            keys = type_param.get_option_keys()
+            keys = list(type_param.options.keys())
             old_index = keys.index(type_param.get_value())
             new_index = (old_index + direction + len(keys)) % len(keys)
             type_param.set_value(keys[new_index])
@@ -693,7 +672,7 @@ class Block(Element):
             for i in range(len(struct)):
                 n['key'] = str(len(ports))
                 n = dict(n)
-                port = self.parent.parent.Port(block=self, n=n, dir=direc)
+                port = self.parent_platform.get_new_port(self, direction=direc, **n)
                 ports.append(port)
         elif any('bus' == p.get_type() for p in ports):
             for elt in get_p_gui():
@@ -716,15 +695,14 @@ class Block(Element):
 
 class EPyBlock(Block):
 
-    def __init__(self, flow_graph, n):
-        super(EPyBlock, self).__init__(flow_graph, n)
+    def __init__(self, flow_graph, **n):
+        super(EPyBlock, self).__init__(flow_graph, **n)
         self._epy_source_hash = -1  # for epy blocks
         self._epy_reload_error = None
 
+    def rewrite(self):
+        Element.rewrite(self)
 
-    def rewrite_epy_block(self):
-        flowgraph = self.parent_flowgraph
-        platform = self.parent_platform
         param_blk = self.params['_io_cache']
         param_src = self.params['_source_code']
 
@@ -758,53 +736,65 @@ class EPyBlock(Block):
         self._make = '{0}.{1}({2})'.format(self.get_id(), blk_io.cls, ', '.join(
             '{0}=${{ {0} }}'.format(key) for key, _ in blk_io.params))
         self._callbacks = ['{0} = ${{ {0} }}'.format(attr) for attr in blk_io.callbacks]
+        self._update_params(blk_io.params)
+        self._update_ports('in', self.sinks, blk_io.sinks, 'sink')
+        self._update_ports('out', self.sources, blk_io.sources, 'source')
 
+        super(EPyBlock, self).rewrite()
+
+    def _update_params(self, params_in_src):
+        param_factory = self.parent_platform.get_new_param
         params = {}
         for param in list(self.params):
             if hasattr(param, '__epy_param__'):
                 params[param.key] = param
                 del self.params[param.key]
 
-        for key, value in blk_io.params:
+        for key, value in params_in_src:
             try:
                 param = params[key]
-                param.set_default(value)
+                if param.default == param.value:
+                    param.set_value(value)
+                param.default = str(value)
             except KeyError:  # need to make a new param
-                name = key.replace('_', ' ').title()
-                n = dict(name=name, key=key, type='raw', value=value)
-                param = platform.Param(block=self, n=n)
+                param = param_factory(
+                    parent=self,  key=key, type='raw', value=value,
+                    name=key.replace('_', ' ').title(),
+                )
                 setattr(param, '__epy_param__', True)
             self.params[key] = param
 
-        def update_ports(label, ports, port_specs, direction):
-            ports_to_remove = list(ports)
-            iter_ports = iter(ports)
-            ports_new = []
-            port_current = next(iter_ports, None)
-            for key, port_type in port_specs:
-                reuse_port = (
-                    port_current is not None and
-                    port_current.get_type() == port_type and
-                    (key.isdigit() or port_current.key == key)
-                )
-                if reuse_port:
-                    ports_to_remove.remove(port_current)
-                    port, port_current = port_current, next(iter_ports, None)
-                else:
-                    n = dict(name=label + str(key), type=port_type, key=key)
-                    if port_type == 'message':
-                        n['name'] = key
-                        n['optional'] = '1'
-                    port = platform.Port(block=self, n=n, dir=direction)
-                ports_new.append(port)
-            # replace old port list with new one
-            del ports[:]
-            ports.extend(ports_new)
-            # remove excess port connections
-            for port in ports_to_remove:
-                for connection in port.get_connections():
-                    flowgraph.remove_element(connection)
+    def _update_ports(self, label, ports, port_specs, direction):
+        port_factory = self.parent_platform.get_new_port
+        ports_to_remove = list(ports)
+        iter_ports = iter(ports)
+        ports_new = []
+        port_current = next(iter_ports, None)
+        for key, port_type in port_specs:
+            reuse_port = (
+                port_current is not None and
+                port_current.get_type() == port_type and
+                (key.isdigit() or port_current.key == key)
+            )
+            if reuse_port:
+                ports_to_remove.remove(port_current)
+                port, port_current = port_current, next(iter_ports, None)
+            else:
+                n = dict(name=label + str(key), type=port_type, key=key)
+                if port_type == 'message':
+                    n['name'] = key
+                    n['optional'] = '1'
+                port = port_factory(self, direction=direction, **n)
+            ports_new.append(port)
+        # replace old port list with new one
+        del ports[:]
+        ports.extend(ports_new)
+        # remove excess port connections
+        for port in ports_to_remove:
+            for connection in port.get_connections():
+                self.parent_flowgraph.remove_element(connection)
 
-        update_ports('in', self.sinks, blk_io.sinks, 'sink')
-        update_ports('out', self.sources, blk_io.sources, 'source')
-        self.rewrite()
+    def validate(self):
+        super(EPyBlock, self).validate()
+        if self._epy_reload_error:
+            self.params['_source_code'].add_error_message(str(self._epy_reload_error))
