@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -38,10 +38,10 @@ SAVE_IMAGE = 'save image'
 OPEN_QSS_THEME = 'open qss theme'
 
 FILE_OVERWRITE_MARKUP_TMPL="""\
-File <b>$encode($filename)</b> Exists!\nWould you like to overwrite the existing file?"""
+File <b>${encode(filename)}</b> Exists!\nWould you like to overwrite the existing file?"""
 
 FILE_DNE_MARKUP_TMPL="""\
-File <b>$encode($filename)</b> Does not Exist!"""
+File <b>${encode(filename)}</b> Does not Exist!"""
 
 
 

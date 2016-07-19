@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -31,21 +31,21 @@ from ..core.utils.complexity import calculate_flowgraph_complexity
 from ..core.Block import Block as _Block
 
 BLOCK_MARKUP_TMPL="""\
-#set $foreground = $block.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="$font"><b>$encode($block.get_name())</b></span>"""
+<% foreground = block.is_valid() and 'black' or 'red' %>\
+<span foreground="${foreground}" font_desc="${font}"><b>${encode(block.get_name())}</b></span>"""
 
 # Includes the additional complexity markup if enabled
 COMMENT_COMPLEXITY_MARKUP_TMPL="""\
-#set $foreground = $block.get_enabled() and '#444' or '#888'
-#if $complexity
-<span foreground="#444" size="medium" font_desc="$font"><b>$encode($complexity)</b></span>#slurp
-#end if
-#if $complexity and $comment
+<% foreground = block.get_enabled() and '#444' or '#888' %>
+%if complexity:
+<span foreground="#444" size="medium" font_desc="${font}"><b>${encode(complexity)}</b></span>
+%endif
+%if complexity and comment:
 <span></span>
-#end if
-#if $comment
-<span foreground="$foreground" font_desc="$font">$encode($comment)</span>#slurp
-#end if
+%endif
+%if comment:
+<span foreground="${foreground}" font_desc="${font}">${encode(comment)}</span>
+%endif
 """
 
 

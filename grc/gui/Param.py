@@ -1,5 +1,5 @@
 """
-Copyright 2007-2011 Free Software Foundation, Inc.
+Copyright 2007-2011, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -357,41 +357,36 @@ class FileParam(EntryParam):
             self._apply_change()
         file_dialog.destroy() #destroy the dialog
 
-
 PARAM_MARKUP_TMPL="""\
-#set $foreground = $param.is_valid() and 'black' or 'red'
-<span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param).replace('\\n',' '))</span>"""
+<% foreground = param.is_valid() and 'black' or 'red' %>\
+<span foreground="${foreground}" font_desc="${font}"><b>${encode(param.get_name())}: </b>${encode(repr(param).replace('\\n',' '))}</span>"""
 
 PARAM_LABEL_MARKUP_TMPL="""\
-#set $foreground = $modified and 'blue' or $param.is_valid() and 'black' or 'red'
-#set $underline = $has_cb and 'low' or 'none'
-<span underline="$underline" foreground="$foreground" font_desc="Sans 9">$encode($param.get_name())</span>"""
+<% foreground = modified and 'blue' or param.is_valid() and 'black' or 'red' %>\
+<% underline = has_cb and 'low' or 'none' %>\
+<span underline="${underline}" foreground="${foreground}" font_desc="Sans 9">${encode(param.get_name())}</span>"""
 
 TIP_MARKUP_TMPL="""\
-########################################
-#def truncate(string)
-    #set $max_len = 100
-    #set $string = str($string)
-    #if len($string) > $max_len
-$('%s...%s'%($string[:$max_len/2], $string[-$max_len/2:]))#slurp
-    #else
-$string#slurp
-    #end if
-#end def
-########################################
-Key: $param.get_key()
-Type: $param.get_type()
-#if $param.is_valid()
-Value: $truncate($param.get_evaluated())
-#elif len($param.get_error_messages()) == 1
-Error: $(param.get_error_messages()[0])
-#else
+Key: ${param.get_key()}
+Type: ${param.get_type()}
+%if param.is_valid():
+<%
+    max_len = 100
+    string = str(param.get_evaluated())
+    if len(string) > max_len:
+        truncated_str = '%s...%s'%(string[:max_len/2], string[-max_len/2:])
+    else:
+        truncated_str = string
+%>\
+Value: ${truncated_str}
+%elif len(param.get_error_messages()) == 1:
+Error: ${(param.get_error_messages()[0])}
+%else:
 Error:
-    #for $error_msg in $param.get_error_messages()
- * $error_msg
-    #end for
-#end if"""
-
+%for error_msg in param.get_error_messages():
+ * ${error_msg}
+%endfor
+%endif"""
 
 class Param(Element, _Param):
     """The graphical parameter."""

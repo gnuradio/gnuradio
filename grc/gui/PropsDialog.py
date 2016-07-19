@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -28,9 +28,8 @@ import Utils
 import pango
 
 TAB_LABEL_MARKUP_TMPL="""\
-#set $foreground = $valid and 'black' or 'red'
-<span foreground="$foreground">$encode($tab)</span>"""
-
+<% foreground = valid and 'black' or 'red' %>\
+<span foreground="${foreground}">${encode(tab)}</span>"""
 
 def get_title_label(title):
     """

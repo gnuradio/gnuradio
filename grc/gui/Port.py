@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ from ..core.Constants import DEFAULT_DOMAIN, GR_MESSAGE_DOMAIN
 from ..core.Port import Port as _Port
 
 PORT_MARKUP_TMPL="""\
-<span foreground="black" font_desc="$font">$encode($port.get_name())</span>"""
+<span foreground="black" font_desc="${font}">${encode(port.get_name())}</span>"""
 
 
 class Port(_Port, Element):

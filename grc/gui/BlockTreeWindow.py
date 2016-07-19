@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -31,50 +31,46 @@ KEY_INDEX = 1
 DOC_INDEX = 2
 
 DOC_MARKUP_TMPL = """\
-#set $docs = []
-#if $doc.get('')
-    #set $docs += $doc.pop('').splitlines() + ['']
-#end if
-#for b, d in $doc.iteritems()
-    #set $docs += ['--- {0} ---'.format(b)] + d.splitlines() + ['']
-#end for
-#set $len_out = 0
-#for $n, $line in $enumerate($docs[:-1])
-#if $n
+<%
+docs = []
+if doc.get(''):
+    docs += doc.pop('').splitlines() + ['']
+for b, d in doc.iteritems():
+    docs += ['--- {0} ---'.format(b)] + d.splitlines() + ['']
+len_out = 0
+%>
+%for n, line in enumerate(docs[:-1]):
+${encode(line)}<% len_out += len(line) %>
+%if n > 10 or len_out > 500:
 
-#end if
-$encode($line)#slurp
-#set $len_out += $len($line)
-#if $n > 10 or $len_out > 500
-
-...#slurp
-#break
-#end if
-#end for
-#if $len_out == 0
-undocumented#slurp
-#end if"""
+...
+<% break %>
+%endif
+%endfor
+%if len_out == 0:
+undocumented
+%endif"""
 
 CAT_MARKUP_TMPL = """
-#set $name = $cat[-1]
-#if len($cat) > 1
-Category: $cat[-1]
+<% name = cat[-1] %>
+%if len(cat) > 1:
+Category: ${cat[-1]}
 ##
-#elif $name == 'Core'
+%elif name == 'Core':
 Module: Core
 
 This subtree is meant for blocks included with GNU Radio (in-tree).
 ##
-#elif $name == $default_module
+%elif name == default_module:
 This subtree holds all blocks (from OOT modules) that specify no module name. \
 The module name is the root category enclosed in square brackets.
 
 Please consider contacting OOT module maintainer for any block in here \
 and kindly ask to update their GRC Block Descriptions or Block Tree to include a module name.
-#else
+%else:
 Module: $name
 ##
-#end if
+%endif
 """.strip()
 
 

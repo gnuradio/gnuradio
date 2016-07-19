@@ -1,5 +1,5 @@
 """
-Copyright 2008-2011,2015 Free Software Foundation, Inc.
+Copyright 2008-2011, 2015, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from Cheetah.Template import Template
+from mako.template import Template
 
 from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
 
@@ -117,8 +117,8 @@ class TemplateParser(object):
             a string of the parsed template
         """
         kwargs['encode'] = encode
-        template = self.cache.setdefault(tmpl_str, Template.compile(tmpl_str))
-        return str(template(namespaces=kwargs))
+        template = self.cache.setdefault(tmpl_str, Template(tmpl_str))
+        return str(template.render(**kwargs))
 
 parse_template = TemplateParser()
 
