@@ -41,7 +41,7 @@ class Block(CoreBlock, Element):
         Block constructor.
         Add graphics related params to the block.
         """
-        _Block.__init__(self, flow_graph, n)
+        CoreBlock.__init__(self, flow_graph, n)
 
         self.states.update(_coordinate=(0, 0), _rotation=0)
         self.width = self.height = 0
