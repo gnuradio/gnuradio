@@ -612,17 +612,15 @@ class ActionHandler:
                 if b._grc_source:
                     main.new_page(b._grc_source, show=True)
         elif action == Actions.BUSSIFY_SOURCES:
-            n = {'name':'bus', 'type':'bus'}
             for b in flow_graph.selected_blocks():
-                b.bussify(n, 'source')
+                b.bussify('source')
             flow_graph._old_selected_port = None
             flow_graph._new_selected_port = None
             Actions.ELEMENT_CREATE()
 
         elif action == Actions.BUSSIFY_SINKS:
-            n = {'name':'bus', 'type':'bus'}
             for b in flow_graph.selected_blocks():
-                b.bussify(n, 'sink')
+                b.bussify('sink')
             flow_graph._old_selected_port = None
             flow_graph._new_selected_port = None
             Actions.ELEMENT_CREATE()

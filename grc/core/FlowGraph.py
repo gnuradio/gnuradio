@@ -495,7 +495,7 @@ class FlowGraph(Element):
 
         for blk in self.blocks:
             doit(blk, blk.sources, blk.get_sources_gui(), 'source')
-            doit(blk, blk.sinks, blk.get_sinks_gui(), 'sinks')
+            doit(blk, blk.sinks, blk.get_sinks_gui(), 'sink')
 
 
 def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):

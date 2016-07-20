@@ -600,18 +600,13 @@ class Block(Element):
     ##############################################
 
     def get_bus_structure(self, direction):
-        bus_structure = self.resolve_dependencies(
-            self._bus_structure_source if direction == 'source' else
-            self._bus_structure_sink)
-
+        bus_structure = self.resolve_dependencies(self._bus_structure[direction])
         if not bus_structure:
-            return ''  # TODO: Don't like empty strings. should change this to None eventually
-
+            return
         try:
-            clean_bus_structure = self.parent.evaluate(bus_structure)
-            return clean_bus_structure
+            return self.parent_flowgraph.evaluate(bus_structure)
         except:
-            return ''
+            return
 
     @staticmethod
     def back_ofthe_bus(portlist):
@@ -625,16 +620,16 @@ class Block(Element):
     def _import_bus_stuff(self, n):
         bus_sinks = n.get('bus_sink', [])
         if len(bus_sinks) > 0 and not self._bussify_sink:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+            self.bussify('sink')
         elif len(bus_sinks) > 0:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+            self.bussify('sink')
+            self.bussify('sink')
         bus_sources = n.get('bus_source', [])
         if len(bus_sources) > 0 and not self._bussify_source:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+            self.bussify('source')
         elif len(bus_sources) > 0:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+            self.bussify('source')
+            self.bussify('source')
 
     def form_bus_structure(self, direc):
         ports = self.sources if direc == 'source' else self.sinks
@@ -657,12 +652,7 @@ class Block(Element):
         self.current_bus_structure[direc] = struct
         return struct
 
-    def bussify(self, n, direc):
-        if direc == 'source':
-            get_p_gui = self.get_sources_gui
-        else:
-            get_p_gui = self.get_sinks_gui
-
+    def bussify(self, direc):
         ports = self.sources if direc == 'source' else self.sinks
 
         for elt in ports:
@@ -670,33 +660,32 @@ class Block(Element):
                 self.parent.remove_element(connect)
 
         if ports and all('bus' != p.get_type() for p in ports):
-            struct = self.form_bus_structure(direc)
-            self.current_bus_structure[direc] = struct
+            struct = self.current_bus_structure[direc] = self.form_bus_structure(direc)
+            n = {'type': 'bus'}
             if ports[0].get_nports():
                 n['nports'] = '1'
 
-            for i in range(len(struct)):
-                n['key'] = str(len(ports))
-                n = dict(n)
-                port = self.parent_platform.get_new_port(self, direction=direc, **n)
+            for i, structlet in enumerate(struct):
+                name = 'bus{}#{}'.format(i, len(structlet))
+                port = self.parent_platform.get_new_port(
+                    self, direction=direc, key=str(len(ports)), name=name, **n)
                 ports.append(port)
         elif any('bus' == p.get_type() for p in ports):
+            get_p_gui = self.get_sources_gui if direc == 'source' else self.get_sinks_gui
             for elt in get_p_gui():
                 ports.remove(elt)
             self.current_bus_structure[direc] = ''
 
     def _init_bus_ports(self, n):
-        self.back_ofthe_bus(self.sources)
-        self.back_ofthe_bus(self.sinks)
         self.current_bus_structure = {'source': '', 'sink': ''}
-        self._bus_structure_source = n.get('bus_structure_source', '')
-        self._bus_structure_sink = n.get('bus_structure_sink', '')
+        self._bus_structure = {'source': n.get('bus_structure_source', ''),
+                               'sink': n.get('bus_structure_sink', '')}
         self._bussify_sink = n.get('bus_sink')
         self._bussify_source = n.get('bus_source')
         if self._bussify_sink:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'sink')
+            self.bussify('sink')
         if self._bussify_source:
-            self.bussify({'name': 'bus', 'type': 'bus'}, 'source')
+            self.bussify('source')
 
 
 class EPyBlock(Block):

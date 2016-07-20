@@ -303,11 +303,7 @@ class Port(Element):
                 self.key = self._name
 
     def get_name(self):
-        number = ''
-        if self.get_type() == 'bus':
-            busses = [a for a in self.parent.get_ports_gui() if a._dir == self._dir]
-            number = str(busses.index(self)) + '#' + str(len(self.get_associated_ports()))
-        return self._name + number
+        return self._name
 
     @lazy_property
     def is_sink(self):

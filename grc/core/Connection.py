@@ -56,7 +56,10 @@ class Connection(Element):
             if connection.source_port is source and connection.sink_port is sink:
                 raise LookupError('This connection between source and sink is not unique.')
 
-        self._make_bus_connect()
+        if self.is_bus():
+            self._make_bus_connect()
+        else:
+            self.parent_flowgraph.connect(source, sink)
 
     @staticmethod
     def _get_sink_source(porta, portb):
@@ -82,7 +85,7 @@ class Connection(Element):
         return self.source_port.get_type() == self.sink_port.get_type() == 'msg'
 
     def is_bus(self):
-        return self.source_port.get_type() == self.sink_port.get_type() == 'bus'
+        return self.source_port.get_type() == 'bus'
 
     def validate(self):
         """
@@ -159,18 +162,13 @@ class Connection(Element):
     def _make_bus_connect(self):
         source, sink = self.source_port, self.sink_port
 
-        if (source.get_type() == 'bus') != (sink.get_type() == 'bus'):
+        if source.get_type() == sink.get_type() == 'bus':
             raise ValueError('busses must get with busses')
 
-        if not len(source.get_associated_ports()) == len(sink.get_associated_ports()):
+        sources = source.get_associated_ports()
+        sinks = sink.get_associated_ports()
+        if len(sources) != len(sinks):
             raise ValueError('port connections must have same cardinality')
 
-        if source.get_type() == 'bus':
-            sources = source.get_associated_ports()
-            sinks = sink.get_associated_ports()
-
-            for i in range(len(sources)):
-                try:
-                    self.parent_flowgraph.connect(sources[i], sinks[i])
-                except:
-                    pass
+        for ports in zip(sources, sinks):
+            self.parent_flowgraph.connect(*ports)
