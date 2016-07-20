@@ -40,12 +40,12 @@ class Port(_Port, Element):
         super(self.__class__, self).__init__(parent, direction, **n)
         Element.__init__(self)
         self._connector_coordinate = (0, 0)
-        self._hovering = True
-        self._force_label_unhidden = False
+        self._hovering = False
+        self.force_show_label = False
         self._bg_color = (0, 0, 0)
         self._line_width_factor = 1.0
 
-        self._width = self.height = 0
+        self.width_with_label = self.height = 0
         self.connector_length = 0
 
         self.label_layout = Gtk.DrawingArea().create_pango_layout('')
@@ -53,11 +53,11 @@ class Port(_Port, Element):
 
     @property
     def width(self):
-        return self._width if not self._label_hidden() else Constants.PORT_LABEL_HIDDEN_WIDTH
+        return self.width_with_label if self._show_label else Constants.PORT_LABEL_HIDDEN_WIDTH
 
     @width.setter
     def width(self, value):
-        self._width = value
+        self.width_with_label = value
         self.label_layout.set_width(value * Pango.SCALE)
 
     def _get_color(self):
@@ -120,7 +120,7 @@ class Port(_Port, Element):
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
         Element.draw(self, widget, cr, border_color, self._bg_color)
 
-        if self._label_hidden():
+        if not self._show_label:
             return  # this port is folded (no label)
 
         if self.is_vertical():
@@ -186,34 +186,28 @@ class Port(_Port, Element):
     def highlighted(self, value):
         self.parent_block.highlighted = value
 
-    def _label_hidden(self):
+    @property
+    def _show_label(self):
         """
         Figure out if the label should be hidden
 
         Returns:
             true if the label should not be shown
         """
-        return self._hovering and not self._force_label_unhidden and Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()
-
-    def force_label_unhidden(self, enable=True):
-        """
-        Disable showing the label on mouse-over for this port
-
-        Args:
-            enable: true to override the mouse-over behaviour
-        """
-        self._force_label_unhidden = enable
+        return self._hovering or self.force_show_label or not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()
 
     def mouse_over(self):
         """
         Called from flow graph on mouse-over
         """
-        self._hovering = False
-        return Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()  # only redraw if necessary
+        changed = not self._show_label
+        self._hovering = True
+        return changed
 
     def mouse_out(self):
         """
         Called from flow graph on mouse-out
         """
-        self._hovering = True
-        return Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active()  # only redraw if necessary
+        label_was_shown = self._show_label
+        self._hovering = False
+        return label_was_shown != self._show_label

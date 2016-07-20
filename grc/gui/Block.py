@@ -214,7 +214,7 @@ class Block(CoreBlock, Element):
             max_width = 0
             for port in ports:
                 port.create_labels()
-                max_width = max(max_width, port.width)
+                max_width = max(max_width, port.width_with_label)
             for port in ports:
                 port.width = max_width
 

@@ -526,11 +526,11 @@ class FlowGraph(Element, _Flowgraph):
                 selected_elements = new_selections
 
             if self._old_selected_port:
-                self._old_selected_port.force_label_unhidden(False)
+                self._old_selected_port.force_show_label = False
                 self.create_shapes()
                 self.queue_draw()
             elif self._new_selected_port:
-                self._new_selected_port.force_label_unhidden()
+                self._new_selected_port.force_show_label = True
 
         else:  # called from a mouse release
             if not self.element_moved and (not self.selected_elements or self.get_ctrl_mask()):
@@ -705,7 +705,7 @@ class FlowGraph(Element, _Flowgraph):
         if not Actions.TOGGLE_AUTO_HIDE_PORT_LABELS.get_active():
             return
         redraw = False
-        for element in reversed(self.get_elements()):
+        for element in self._elements_to_draw:
             over_element = element.what_is_selected(coordinate)
             if not over_element:
                 continue
