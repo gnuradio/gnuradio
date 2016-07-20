@@ -103,7 +103,7 @@ class Port(_Port, Element):
 
         layout = self.label_layout
         layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
-            name=Utils.encode(self.get_name()), font=Constants.PORT_FONT
+            name=Utils.encode(self.name), font=Constants.PORT_FONT
         ))
         label_width, label_height = self.label_layout.get_pixel_size()
 

@@ -140,7 +140,7 @@ class PropsDialog(Gtk.Dialog):
         """
         old_hash = self._hash
         new_hash = self._hash = hash(tuple(
-            (hash(param), param.get_name(), param.get_type(), param.get_hide() == 'all',)
+            (hash(param), param.name, param.get_type(), param.get_hide() == 'all',)
             for param in self._block.params.values()
         ))
         return new_hash != old_hash

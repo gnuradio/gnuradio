@@ -117,7 +117,7 @@ class FlowGraph(Element):
 
         for i in bussink:
             for j in i.params.values():
-                if j.get_name() == 'On/Off' and j.get_value() == 'on':
+                if j.name == 'On/Off' and j.get_value() == 'on':
                     return True
         return False
 
@@ -126,7 +126,7 @@ class FlowGraph(Element):
 
         for i in bussrc:
             for j in i.params.values():
-                if j.get_name() == 'On/Off' and j.get_value() == 'on':
+                if j.name == 'On/Off' and j.get_value() == 'on':
                     return True
         return False
 
@@ -418,7 +418,7 @@ class FlowGraph(Element):
             for port in ports:
                 if key == port.key:
                     break
-                if not key.isdigit() and port.get_type() == '' and key == port.get_name():
+                if not key.isdigit() and port.get_type() == '' and key == port.name:
                     break
             else:
                 if block.is_dummy_block:

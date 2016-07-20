@@ -26,7 +26,7 @@ import collections
 from six.moves import builtins, filter, map, range, zip
 
 from . import Constants
-from .Element import Element
+from .Element import Element, nop_write
 
 # Blacklist certain ids, its not complete, but should help
 ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(builtins)
@@ -126,7 +126,7 @@ class Param(Element):
             #                  ''.format(self.get_value(), ', '.join(self.options)))
 
     def __str__(self):
-        return 'Param - {}({})'.format(self.get_name(), self.key)
+        return 'Param - {}({})'.format(self.name, self.key)
 
     def get_hide(self):
         """
@@ -498,7 +498,9 @@ class Param(Element):
     def get_tab_label(self):
         return self.tab_label
 
-    def get_name(self):
+    @nop_write
+    @property
+    def name(self):
         return self.parent.resolve_dependencies(self._name).strip()
 
     ##############################################

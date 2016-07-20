@@ -72,7 +72,7 @@ class Param(_Param):
             color='blue' if have_pending_changes else
                   'black' if self.is_valid() else
                   'red',
-            label=Utils.encode(self.get_name())
+            label=Utils.encode(self.name)
         )
 
     def format_tooltip_text(self):
@@ -101,7 +101,7 @@ class Param(_Param):
         # Truncate helper method
         ##################################################
         def _truncate(string, style=0):
-            max_len = max(27 - len(self.get_name()), 3)
+            max_len = max(27 - len(self.name), 3)
             if len(string) > max_len:
                 if style < 0:  # Front truncate
                     string = '...' + string[3-max_len:]
@@ -159,6 +159,6 @@ class Param(_Param):
         """
         return '<span foreground="{color}" font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
             color='black' if self.is_valid() else 'red', font=Constants.PARAM_FONT,
-            label=Utils.encode(self.get_name()),
+            label=Utils.encode(self.name),
             value=Utils.encode(self.pretty_print().replace('\n', ' '))
         )

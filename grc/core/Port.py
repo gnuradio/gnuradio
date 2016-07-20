@@ -130,10 +130,11 @@ class Port(Element):
         # Build the port
         Element.__init__(self, parent)
         # Grab the data
-        self._name = n['name']
+        self.name = n['name']
         self.key = n['key']
         self.domain = n.get('domain')
         self._type = n.get('type', '')
+        self.inherit_type = not self._type
         self._hide = n.get('hide', '')
         self._dir = direction
         self._hide_evaluated = False  # Updated on rewrite()
@@ -145,12 +146,9 @@ class Port(Element):
 
     def __str__(self):
         if self.is_source:
-            return 'Source - {}({})'.format(self.get_name(), self.key)
+            return 'Source - {}({})'.format(self.name, self.key)
         if self.is_sink:
-            return 'Sink - {}({})'.format(self.get_name(), self.key)
-
-    def is_type_empty(self):
-        return not self._n['type']
+            return 'Sink - {}({})'.format(self.name, self.key)
 
     def validate(self):
         Element.validate(self)
@@ -172,7 +170,7 @@ class Port(Element):
         """
         Handle the port cloning for virtual blocks.
         """
-        if self.is_type_empty():
+        if self.inherit_type:
             try:
                 # Clone type and vlen
                 source = self.resolve_empty_type()
@@ -191,7 +189,7 @@ class Port(Element):
         type_ = self.get_type()
         if self.domain == Constants.GR_STREAM_DOMAIN and type_ == "message":
             self.domain = Constants.GR_MESSAGE_DOMAIN
-            self.key = self._name
+            self.key = self.name
         if self.domain == Constants.GR_MESSAGE_DOMAIN and type_ != "message":
             self.domain = Constants.GR_STREAM_DOMAIN
             self.key = '0'  # Is rectified in rewrite()
@@ -206,22 +204,22 @@ class Port(Element):
         if self.is_sink:
             try:
                 src = _get_source_from_virtual_sink_port(self)
-                if not src.is_type_empty():
+                if not src.inherit_type:
                     return src
             except:
                 pass
             sink = _get_sink_from_virtual_sink_port(self)
-            if not sink.is_type_empty():
+            if not sink.inherit_type:
                 return sink
         if self.is_source:
             try:
                 src = _get_source_from_virtual_source_port(self)
-                if not src.is_type_empty():
+                if not src.inherit_type:
                     return src
             except:
                 pass
             sink = _get_sink_from_virtual_source_port(self)
-            if not sink.is_type_empty():
+            if not sink.inherit_type:
                 return sink
 
     def get_vlen(self):
@@ -271,10 +269,10 @@ class Port(Element):
         """
         # Add index to master port name if there are no clones yet
         if not self.clones:
-            self._name = self._n['name'] + '0'
+            self.name = self._n['name'] + '0'
             # Also update key for none stream ports
             if not self.key.isdigit():
-                self.key = self._name
+                self.key = self.name
 
         name = self._n['name'] + str(len(self.clones) + 1)
         # Dummy value 99999 will be fixed later
@@ -297,13 +295,10 @@ class Port(Element):
         self.clones.remove(port)
         # Remove index from master port name if there are no more clones
         if not self.clones:
-            self._name = self._n['name']
+            self.name = self._n['name']
             # Also update key for none stream ports
             if not self.key.isdigit():
-                self.key = self._name
-
-    def get_name(self):
-        return self._name
+                self.key = self.name
 
     @lazy_property
     def is_sink(self):
@@ -373,7 +368,7 @@ class PortClone(Port):
         """
         Element.__init__(self, parent)
         self.master = master
-        self._name = name
+        self.name = name
         self._key = key
         self._nports = '1'
 

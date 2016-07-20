@@ -148,7 +148,7 @@ class TopBlockGenerator(object):
             [b for b in fg.blocks if b.get_enabled() and not b.get_bypassed()],
             operator.methodcaller('get_id'), _get_block_sort_text
         )
-        deprecated_block_keys = set(b.get_name() for b in blocks_all if b.is_deprecated)
+        deprecated_block_keys = set(b.name for b in blocks_all if b.is_deprecated)
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
