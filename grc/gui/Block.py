@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 import math
 
+import six
 from gi.repository import Gtk, Pango, PangoCairo
 
 from . import Actions, Colors, Utils, Constants
@@ -305,3 +306,68 @@ class Block(CoreBlock, Element):
         PangoCairo.update_layout(cr, self._comment_layout)
         PangoCairo.show_layout(cr, self._comment_layout)
         cr.restore()
+
+    ##############################################
+    # Controller Modify
+    ##############################################
+    def type_controller_modify(self, direction):
+        """
+        Change the type controller.
+
+        Args:
+            direction: +1 or -1
+
+        Returns:
+            true for change
+        """
+        type_templates = ' '.join(p._type for p in self.get_children())
+        type_param = None
+        for key, param in six.iteritems(self.params):
+            if not param.is_enum():
+                continue
+            # Priority to the type controller
+            if param.key in type_templates:
+                type_param = param
+                break
+            # Use param if type param is unset
+            if not type_param:
+                type_param = param
+        if not type_param:
+            return False
+
+        # Try to increment the enum by direction
+        try:
+            keys = list(type_param.options)
+            old_index = keys.index(type_param.get_value())
+            new_index = (old_index + direction + len(keys)) % len(keys)
+            type_param.set_value(keys[new_index])
+            return True
+        except:
+            return False
+
+    def port_controller_modify(self, direction):
+        """
+        Change the port controller.
+
+        Args:
+            direction: +1 or -1
+
+        Returns:
+            true for change
+        """
+        changed = False
+        # Concat the nports string from the private nports settings of all ports
+        nports_str = ' '.join(port._nports for port in self.get_ports())
+        # Modify all params whose keys appear in the nports string
+        for key, param in six.iteritems(self.params):
+            if param.is_enum() or param.key not in nports_str:
+                continue
+            # Try to increment the port controller by direction
+            try:
+                value = param.get_evaluated() + direction
+                if value > 0:
+                    param.set_value(value)
+                    changed = True
+            except:
+                pass
+        return changed

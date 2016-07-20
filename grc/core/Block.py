@@ -420,24 +420,18 @@ class Block(Element):
         return BLOCK_FLAG_DEPRECATED in self.flags
 
     ##############################################
-    # Access Params
+    # Access
     ##############################################
 
     def get_param(self, key):
         return self.params[key]
 
-    ##############################################
-    # Access Sinks
-    ##############################################
     def get_sink(self, key):
         return _get_elem(self.sinks, key)
 
     def get_sinks_gui(self):
         return self.filter_bus_port(self.sinks)
 
-    ##############################################
-    # Access Sources
-    ##############################################
     def get_source(self, key):
         return _get_elem(self.sources, key)
 
@@ -469,71 +463,6 @@ class Block(Element):
             return str(Template(tmpl, n))
         except Exception as err:
             return "Template error: {}\n    {}".format(tmpl, err)
-
-    ##############################################
-    # Controller Modify
-    ##############################################
-    def type_controller_modify(self, direction):
-        """
-        Change the type controller.
-
-        Args:
-            direction: +1 or -1
-
-        Returns:
-            true for change
-        """
-        type_templates = ' '.join(p._type for p in self.get_children())
-        type_param = None
-        for key, param in six.iteritems(self.params):
-            if not param.is_enum():
-                continue
-            # Priority to the type controller
-            if param.key in type_templates:
-                type_param = param
-                break
-            # Use param if type param is unset
-            if not type_param:
-                type_param = param
-        if not type_param:
-            return False
-
-        # Try to increment the enum by direction
-        try:
-            keys = list(type_param.options.keys())
-            old_index = keys.index(type_param.get_value())
-            new_index = (old_index + direction + len(keys)) % len(keys)
-            type_param.set_value(keys[new_index])
-            return True
-        except:
-            return False
-
-    def port_controller_modify(self, direction):
-        """
-        Change the port controller.
-
-        Args:
-            direction: +1 or -1
-
-        Returns:
-            true for change
-        """
-        changed = False
-        # Concat the nports string from the private nports settings of all ports
-        nports_str = ' '.join(port._nports for port in self.get_ports())
-        # Modify all params whose keys appear in the nports string
-        for key, param in six.iteritems(self.params):
-            if param.is_enum() or param.key not in nports_str:
-                continue
-            # Try to increment the port controller by direction
-            try:
-                value = param.get_evaluated() + direction
-                if value > 0:
-                    param.set_value(value)
-                    changed = True
-            except:
-                pass
-        return changed
 
     ##############################################
     # Import/Export Methods
