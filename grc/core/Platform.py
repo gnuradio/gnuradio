@@ -33,7 +33,7 @@ from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
 from .Block import Block, EPyBlock
-from .Port import Port
+from .Port import Port, PortClone
 from .Param import Param
 
 from .utils import extract_docs
@@ -318,6 +318,7 @@ class Platform(Element):
     }
     port_classes = {
         None: Port,  # default
+        'clone': PortClone,  # default
     }
     param_classes = {
         None: Param,  # default
@@ -333,9 +334,9 @@ class Platform(Element):
         return cls(parent, key=key, **kwargs)
 
     def get_new_param(self, parent, **kwargs):
-        cls = self.param_classes[None]
+        cls = self.param_classes[kwargs.pop('cls_key', None)]
         return cls(parent, **kwargs)
 
     def get_new_port(self, parent, **kwargs):
-        cls = self.port_classes[None]
+        cls = self.port_classes[kwargs.pop('cls_key', None)]
         return cls(parent, **kwargs)

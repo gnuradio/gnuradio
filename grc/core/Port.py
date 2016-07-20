@@ -104,8 +104,9 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
 class Port(Element):
 
     is_port = True
+    is_clone = False
 
-    def __init__(self, block, direction, **n):
+    def __init__(self, parent, direction, **n):
         """
         Make a new port from nested data.
 
@@ -127,12 +128,12 @@ class Port(Element):
             n['key'] = 'msg'
 
         # Build the port
-        Element.__init__(self, parent=block)
+        Element.__init__(self, parent)
         # Grab the data
         self._name = n['name']
         self.key = n['key']
-        self._type = n.get('type', '')
         self.domain = n.get('domain')
+        self._type = n.get('type', '')
         self._hide = n.get('hide', '')
         self._dir = direction
         self._hide_evaluated = False  # Updated on rewrite()
@@ -140,7 +141,7 @@ class Port(Element):
         self._nports = n.get('nports', '')
         self._vlen = n.get('vlen', '')
         self._optional = bool(n.get('optional'))
-        self._clones = []  # References to cloned ports (for nports > 1)
+        self.clones = []  # References to cloned ports (for nports > 1)
 
     def __str__(self):
         if self.is_source:
@@ -155,7 +156,7 @@ class Port(Element):
         Element.validate(self)
         if self.get_type() not in Constants.TYPE_TO_SIZEOF.keys():
             self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
-        platform = self.parent.parent.parent
+        platform = self.parent_platform
         if self.domain not in platform.domains:
             self.add_error_message('Domain key "{}" is not registered.'.format(self.domain))
         if not self.get_enabled_connections() and not self.get_optional():
@@ -233,7 +234,7 @@ class Port(Element):
         """
         vlen = self.parent.resolve_dependencies(self._vlen)
         try:
-            return int(self.parent.parent.evaluate(vlen))
+            return max(1, int(self.parent_flowgraph.evaluate(vlen)))
         except:
             return 1
 
@@ -247,25 +248,16 @@ class Port(Element):
             the number of ports or 1
         """
         if self._nports == '':
-            return ''
+            return 1
 
         nports = self.parent.resolve_dependencies(self._nports)
         try:
-            return max(1, int(self.parent.parent.evaluate(nports)))
+            return max(1, int(self.parent_flowgraph.evaluate(nports)))
         except:
             return 1
 
     def get_optional(self):
         return bool(self._optional)
-
-    def get_clones(self):
-        """
-        Get the clones of this master port (nports > 1)
-
-        Returns:
-            a list of ports
-        """
-        return self._clones
 
     def add_clone(self):
         """
@@ -278,24 +270,23 @@ class Port(Element):
             the cloned port
         """
         # Add index to master port name if there are no clones yet
-        if not self._clones:
+        if not self.clones:
             self._name = self._n['name'] + '0'
             # Also update key for none stream ports
             if not self.key.isdigit():
                 self.key = self._name
 
-        # Prepare a copy of the odict for the clone
-        n = self._n.copy()
-        # Remove nports from the key so the copy cannot be a duplicator
-        if 'nports' in n:
-            n.pop('nports')
-        n['name'] = self._n['name'] + str(len(self._clones) + 1)
+        name = self._n['name'] + str(len(self.clones) + 1)
         # Dummy value 99999 will be fixed later
-        n['key'] = '99999' if self.key.isdigit() else n['name']
+        key = '99999' if self.key.isdigit() else name
 
         # Clone
-        port = self.__class__(self.parent, n, self._dir)
-        self._clones.append(port)
+        port_factory = self.parent_platform.get_new_port
+        port = port_factory(self.parent, direction=self._dir,
+                            name=name, key=key,
+                            master=self, cls_key='clone')
+
+        self.clones.append(port)
         return port
 
     def remove_clone(self, port):
@@ -303,9 +294,9 @@ class Port(Element):
         Remove a cloned port (from the list of clones only)
         Remove the index 0 of the master port name (and key9 if there are no more clones left
         """
-        self._clones.remove(port)
+        self.clones.remove(port)
         # Remove index from master port name if there are no more clones
-        if not self._clones:
+        if not self.clones:
             self._name = self._n['name']
             # Also update key for none stream ports
             if not self.key.isdigit():
@@ -369,3 +360,33 @@ class Port(Element):
             bus_index = [i for i in block_ports if i.get_type() == 'bus'].index(self)
             ports = [p for i, p in enumerate(ports) if i in bus_structure[bus_index]]
         return ports
+
+
+class PortClone(Port):
+
+    is_clone = True
+
+    def __init__(self, parent, direction, master, name, key):
+        """
+        Make a new port from nested data.
+
+        Args:
+            block: the parent element
+            n: the nested odict
+            dir: the direction
+        """
+        Element.__init__(self, parent)
+        self.master = master
+        self._name = name
+        self._key = key
+        self._nports = '1'
+
+    def __getattr__(self, item):
+        return getattr(self.master, item)
+
+    def add_clone(self):
+        raise NotImplementedError()
+
+    def remove_clone(self, port):
+        raise NotImplementedError()
+

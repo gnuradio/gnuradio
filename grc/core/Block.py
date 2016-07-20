@@ -170,38 +170,44 @@ class Block(Element):
         """
         Element.rewrite(self)
 
-        # Adjust nports, disconnect hidden ports
-        for ports in (self.sources, self.sinks):
-            for i, master_port in enumerate(ports):
-                nports = master_port.get_nports() or 1
-                num_ports = 1 + len(master_port.get_clones())
-                if master_port.get_hide():
-                    for connection in master_port.get_connections():
-                        self.parent.remove_element(connection)
-                if not nports and num_ports == 1:  # Not a master port and no left-over clones
-                    continue
-                # Remove excess cloned ports
-                for port in master_port.get_clones()[nports-1:]:
-                    # Remove excess connections
-                    for connection in port.get_connections():
-                        self.parent.remove_element(connection)
-                    master_port.remove_clone(port)
-                    ports.remove(port)
-                # Add more cloned ports
-                for j in range(num_ports, nports):
-                    port = master_port.add_clone()
-                    ports.insert(ports.index(master_port) + j, port)
-
-            self.back_ofthe_bus(ports)
-            # Renumber non-message/message ports
+        def rekey(ports):
+            """Renumber non-message/message ports"""
             domain_specific_port_index = collections.defaultdict(int)
             for port in [p for p in ports if p.key.isdigit()]:
                 domain = port.domain
                 port.key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
 
+        # Adjust nports, disconnect hidden ports
+        for ports in (self.sources, self.sinks):
+            self._rewrite_nports(ports)
+            self.back_ofthe_bus(ports)
+            rekey(ports)
+
+        # disconnect hidden ports
+        for port in itertools.chain(self.sources, self.sinks):
+            if port.get_hide():
+                for connection in port.get_connections():
+                    self.parent.remove_element(connection)
+
         self.active_sources = [p for p in self.get_sources_gui() if not p.get_hide()]
         self.active_sinks = [p for p in self.get_sinks_gui() if not p.get_hide()]
+
+    def _rewrite_nports(self, ports):
+        for port in ports:
+            if port.is_clone:  # Not a master port and no left-over clones
+                continue
+            nports = port.get_nports() or 1
+            for clone in port.clones[nports-1:]:
+                # Remove excess connections
+                for connection in clone.get_connections():
+                    self.parent.remove_element(connection)
+                port.remove_clone(clone)
+                ports.remove(clone)
+            # Add more cloned ports
+            for j in range(1 + len(port.clones), nports):
+                clone = port.add_clone()
+                ports.insert(ports.index(port) + j, clone)
 
     def validate(self):
         """
