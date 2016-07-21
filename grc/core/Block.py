@@ -77,6 +77,19 @@ class Block(Element):
         self._grc_source = n.get('grc_source', '')
         self.block_wrapper_path = n.get('block_wrapper_path')
 
+        # Virtual source/sink and pad source/sink blocks are
+        # indistinguishable from normal GR blocks. Make explicit
+        # checks for them here since they have no work function or
+        # buffers to manage.
+        self.is_virtual_or_pad = self.key in (
+            "virtual_source", "virtual_sink", "pad_source", "pad_sink")
+        self.is_variable = self.key.startswith('variable')
+        self.is_import = (self.key == 'import')
+
+        # Disable blocks that are virtual/pads or variables
+        if self.is_virtual_or_pad or self.is_variable:
+            self.flags += BLOCK_FLAG_DISABLE_BYPASS
+
         params_n = n.get('param', [])
         sources_n = n.get('source', [])
         sinks_n = n.get('sink', [])
@@ -106,28 +119,15 @@ class Block(Element):
 
         add_param(key='id', name='ID', type='id')
 
-        # Virtual source/sink and pad source/sink blocks are
-        # indistinguishable from normal GR blocks. Make explicit
-        # checks for them here since they have no work function or
-        # buffers to manage.
-        self.is_virtual_or_pad = is_virtual_or_pad = self.key in (
-            "virtual_source", "virtual_sink", "pad_source", "pad_sink")
-        self.is_variable = is_variable = self.key.startswith('variable')
-        self.is_import = (self.key == 'import')
-
-        # Disable blocks that are virtual/pads or variables
-        if self.is_virtual_or_pad or self.is_variable:
-            self.flags += BLOCK_FLAG_DISABLE_BYPASS
-
-        if not (is_virtual_or_pad or is_variable or self.key == 'options'):
+        if not (self.is_virtual_or_pad or self.is_variable or self.key == 'options'):
             add_param(key='alias', name='Block Alias', type='string',
                       hide='part', tab=ADVANCED_PARAM_TAB)
 
-        if not is_virtual_or_pad and (has_sources or has_sinks):
+        if not self.is_virtual_or_pad and (has_sources or has_sinks):
             add_param(key='affinity', name='Core Affinity', type='int_vector',
                       hide='part', tab=ADVANCED_PARAM_TAB)
 
-        if not is_virtual_or_pad and has_sources:
+        if not self.is_virtual_or_pad and has_sources:
             add_param(key='minoutbuf', name='Min Output Buffer', type='int',
                       hide='part', value='0', tab=ADVANCED_PARAM_TAB)
             add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
@@ -722,3 +722,32 @@ class EPyBlock(Block):
         super(EPyBlock, self).validate()
         if self._epy_reload_error:
             self.params['_source_code'].add_error_message(str(self._epy_reload_error))
+
+
+class DummyBlock(Block):
+
+    is_dummy_block = True
+    build_in_param_keys = 'id alias affinity minoutbuf maxoutbuf comment'
+
+    def __init__(self, parent, key, missing_key, params_n):
+        params = [{'key': p['key'], 'name': p['key'], 'type': 'string'}
+                  for p in params_n if p['key'] not in self.build_in_param_keys]
+        super(DummyBlock, self).__init__(
+            parent=parent, key=missing_key, name='Missing Block', param=params,
+        )
+
+    def is_valid(self):
+        return False
+
+    def get_enabled(self):
+        return False
+
+    def add_missing_port(self, key, dir):
+        port = self.parent_platform.get_new_port(
+            parent=self, direction=dir, key=key, name='?', type='',
+        )
+        if port.is_source:
+            self.sources.append(port)
+        else:
+            self.sinks.append(port)
+        return port

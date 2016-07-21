@@ -32,7 +32,7 @@ from .Element import Element
 from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
-from .Block import Block, EPyBlock
+from . import Block
 from .Port import Port, PortClone
 from .Param import Param
 
@@ -313,8 +313,9 @@ class Platform(Element):
     FlowGraph = FlowGraph
     Connection = Connection
     block_classes = {
-        None: Block,  # default
-        'epy_block': EPyBlock,
+        None: Block.Block,  # default
+        'epy_block': Block.EPyBlock,
+        '_dummy': Block.DummyBlock,
     }
     port_classes = {
         None: Port,  # default

@@ -267,7 +267,7 @@ class FlowGraph(Element):
     # Add/remove stuff
     ##############################################
 
-    def new_block(self, key):
+    def new_block(self, key, **kwargs):
         """
         Get a new block of the specified key.
         Add the block to the list of elements.
@@ -281,7 +281,7 @@ class FlowGraph(Element):
         if key == 'options':
             return self._options_block
         try:
-            block = self.parent_platform.get_new_block(self, key)
+            block = self.parent_platform.get_new_block(self, key, **kwargs)
             self.blocks.append(block)
         except KeyError:
             block = None
@@ -403,9 +403,8 @@ class FlowGraph(Element):
 
             if not block:  # looks like this block key cannot be found
                 # create a dummy block instead
-                block = self.new_block('dummy_block')
-                # Ugly ugly ugly
-                _initialize_dummy_block(block, block_n)
+                block = self.new_block('_dummy', missing_key=key,
+                                       params_n=block_n.get('param', []))
                 print('Block key "%s" not found' % key)
 
             block.import_data(block_n)
@@ -422,7 +421,7 @@ class FlowGraph(Element):
                     break
             else:
                 if block.is_dummy_block:
-                    port = _dummy_block_add_port(block, key, dir)
+                    port = block.add_missing_port(key, dir)
                 else:
                     raise LookupError('%s key %r not in %s block keys' % (dir, key, dir))
             return port
@@ -536,32 +535,3 @@ def _guess_file_format_1(n):
     except:
         pass
     return 0
-
-
-def _initialize_dummy_block(block, block_n):
-    """
-    This is so ugly... dummy-fy a block
-    Modify block object to get the behaviour for a missing block
-    """
-
-    block.key = block_n.get('key')
-    block.is_dummy_block = lambda: True
-    block.is_valid = lambda: False
-    block.get_enabled = lambda: False
-    for param_n in block_n.get('param', []):
-        key = param_n['key']
-        if key not in block.params:
-            new_param_n = {'key': key, 'name': key, 'type': 'string'}
-            param = block.parent_platform.Param(block=block, n=new_param_n)
-            block.params[key] = param
-
-
-def _dummy_block_add_port(block, key, dir):
-    """ This is so ugly... Add a port to a dummy-field block """
-    port_n = {'name': '?', 'key': key, 'type': ''}
-    port = block.parent_platform.Port(block=block, n=port_n, dir=dir)
-    if port.is_source:
-        block.sources.append(port)
-    else:
-        block.sinks.append(port)
-    return port
