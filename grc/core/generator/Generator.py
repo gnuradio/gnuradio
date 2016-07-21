@@ -145,7 +145,7 @@ class TopBlockGenerator(object):
             return code
 
         blocks_all = expr_utils.sort_objects(
-            [b for b in fg.blocks if b.get_enabled() and not b.get_bypassed()],
+            [b for b in fg.blocks if b.enabled and not b.get_bypassed()],
             operator.methodcaller('get_id'), _get_block_sort_text
         )
         deprecated_block_keys = set(b.name for b in blocks_all if b.is_deprecated)
@@ -198,7 +198,7 @@ class TopBlockGenerator(object):
 
             # Loop through all the downstream connections
             for sink in (c for c in connections if c.source_port == block.sources[0]):
-                if not sink.get_enabled():
+                if not sink.enabled:
                     # Ignore disabled connections
                     continue
                 sink_port = sink.sink_port

@@ -29,7 +29,7 @@ def calculate_flowgraph_complexity(flowgraph):
     blocks = float(len(flowgraph.blocks))
     connections = float(len(flowgraph.connections))
     elements = blocks + connections
-    disabled_connections = sum(not c.get_enabled() for c in flowgraph.connections)
+    disabled_connections = sum(not c.enabled for c in flowgraph.connections)
 
     variables = elements - blocks - connections
     enabled = float(len(flowgraph.get_enabled_blocks()))

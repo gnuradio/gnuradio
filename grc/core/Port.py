@@ -332,7 +332,7 @@ class Port(Element):
         Returns:
             a list of connection objects
         """
-        return [c for c in self.get_connections() if c.get_enabled()]
+        return [c for c in self.get_connections() if c.enabled]
 
     def get_associated_ports(self):
         if not self.get_type() == 'bus':

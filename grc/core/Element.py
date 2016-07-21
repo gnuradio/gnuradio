@@ -66,7 +66,7 @@ class Element(object):
         Returns:
             true when the element is enabled and has no error messages or is bypassed
         """
-        return (not self.get_error_messages() or not self.get_enabled()) or self.get_bypassed()
+        return (not self.get_error_messages() or not self.enabled) or self.get_bypassed()
 
     def add_error_message(self, msg):
         """
@@ -88,7 +88,7 @@ class Element(object):
         """
         error_messages = list(self._error_messages)  # Make a copy
         for child in self.get_children():
-            if not child.get_enabled() or child.get_bypassed():
+            if not child.enabled or child.get_bypassed():
                 continue
             for msg in child.get_error_messages():
                 error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
@@ -102,7 +102,8 @@ class Element(object):
         for child in self.get_children():
             child.rewrite()
 
-    def get_enabled(self):
+    @property
+    def enabled(self):
         return True
 
     def get_bypassed(self):
@@ -141,7 +142,7 @@ class Element(object):
 
     def reset_parents_by_type(self):
         """Reset all lazy properties"""
-        for name, obj in vars(Element):
+        for name, obj in vars(Element):  # explicitly only in Element, not subclasses
             if isinstance(obj, lazy_property):
                 delattr(self, name)
 

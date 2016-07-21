@@ -137,7 +137,7 @@ class Block(CoreBlock, Element):
         self._bg_color = (
             Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
             Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else
-            Colors.BLOCK_ENABLED_COLOR if self.get_enabled() else
+            Colors.BLOCK_ENABLED_COLOR if self.enabled else
             Colors.BLOCK_DISABLED_COLOR
         )
 
@@ -234,7 +234,7 @@ class Block(CoreBlock, Element):
                 markups.append('<span></span>')
 
             markups.append('<span foreground="{foreground}" font_desc="{font}">{comment}</span>'.format(
-                foreground='#444' if self.get_enabled() else '#888', font=BLOCK_FONT, comment=Utils.encode(comment)
+                foreground='#444' if self.enabled else '#888', font=BLOCK_FONT, comment=Utils.encode(comment)
             ))
         if markups:
             layout = self._comment_layout = Gtk.DrawingArea().create_pango_layout('')

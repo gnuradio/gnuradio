@@ -211,7 +211,7 @@ class VariableEditor(Gtk.VBox):
 
         # Block specific changes
         if block:
-            if not block.get_enabled():
+            if not block.enabled:
                 # Disabled block. But, this should still be editable
                 sp('editable', True)
                 sp('foreground', 'gray')
@@ -274,9 +274,9 @@ class VariableEditor(Gtk.VBox):
             else:
                 self.handle_action(None, self.DELETE_BLOCK, None)
         elif key == self.ENABLE_BLOCK:
-            self._block.set_enabled(True)
+            self._block.state = 'enabled'
         elif key == self.DISABLE_BLOCK:
-            self._block.set_enabled(False)
+            self._block.state = 'disabled'
         Actions.VARIABLE_EDITOR_UPDATE()
 
     def _handle_mouse_button_press(self, widget, event):
@@ -318,7 +318,7 @@ class VariableEditor(Gtk.VBox):
                         return True
             elif event.button == 3 and event.type == Gdk.EventType.BUTTON_PRESS:
                 if self._block:
-                    self._context_menu.update_sensitive(True, enabled=self._block.get_enabled())
+                    self._context_menu.update_sensitive(True, enabled=self._block.enabled)
                 else:
                     self._context_menu.update_sensitive(False)
                 self._context_menu.popup(None, None, None, None, event.button, event.time)
@@ -341,10 +341,10 @@ class VariableEditor(Gtk.VBox):
     def _handle_key_button_press(self, widget, event):
         model, path = self.treeview.get_selection().get_selected_rows()
         if path and self._block:
-            if self._block.get_enabled() and event.string == "d":
+            if self._block.enabled and event.string == "d":
                 self.handle_action(None, self.DISABLE_BLOCK, None)
                 return True
-            elif not self._block.get_enabled() and event.string == "e":
+            elif not self._block.enabled and event.string == "e":
                 self.handle_action(None, self.ENABLE_BLOCK, None)
                 return True
         return False

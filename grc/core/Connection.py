@@ -76,6 +76,24 @@ class Connection(Element):
             raise ValueError('Connection could not isolate sink')
         return source, sink
 
+    @lazy_property
+    def source_block(self):
+        return self.source_port.parent_block
+
+    @lazy_property
+    def sink_block(self):
+        return self.sink_port.parent_block
+
+    @property
+    def enabled(self):
+        """
+        Get the enabled state of this connection.
+
+        Returns:
+            true if source and sink blocks are enabled
+        """
+        return self.source_block.enabled and self.sink_block.enabled
+
     def __str__(self):
         return 'Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)'.format(
             self.source_block, self.source_port, self.sink_block, self.sink_port,
@@ -124,23 +142,6 @@ class Connection(Element):
         sink_size = Constants.TYPE_TO_SIZEOF[self.sink_port.get_type()] * self.sink_port.get_vlen()
         if source_size != sink_size:
             self.add_error_message('Source IO size "{}" does not match sink IO size "{}".'.format(source_size, sink_size))
-
-    def get_enabled(self):
-        """
-        Get the enabled state of this connection.
-
-        Returns:
-            true if source and sink blocks are enabled
-        """
-        return self.source_block.get_enabled() and self.sink_block.get_enabled()
-
-    @lazy_property
-    def source_block(self):
-        return self.source_port.parent_block
-
-    @lazy_property
-    def sink_block(self):
-        return self.sink_port.parent_block
 
     ##############################################
     # Import/Export Methods

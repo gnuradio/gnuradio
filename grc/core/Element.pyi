@@ -15,32 +15,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+from typing import Union
+
 from . import Platform, FlowGraph, Block
 
-def lazy_property(func):
-    return func
+lazy_property = property  # fixme: descriptors don't seems to be supported
 
 
 class Element(object):
 
-    def __init__(self, parent=None):
-        ...
-
-    @property
-    def parent(self): -> 'Element'
-        ...
-
-    def get_parent_by_type(self, cls): -> 'Element'
-        ...
+    def __init__(self, parent: Union[None, 'Element'] = None): ...
 
     @lazy_property
-    def parent_platform(self): -> Platform.Platform
-        ...
+    def parent(self) -> 'Element': ...
+
+    def get_parent_by_type(self, cls) -> Union[None, 'Element']: ...
 
     @lazy_property
-    def parent_flowgraph(self): -> FlowGraph.FlowGraph
-        ...
+    def parent_platform(self) -> Platform.Platform: ...
 
     @lazy_property
-    def parent_block(self): -> Block.Block
-        ...
+    def parent_flowgraph(self) -> FlowGraph.FlowGraph: ...
+
+    @lazy_property
+    def parent_block(self) -> Block.Block: ...

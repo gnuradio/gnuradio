@@ -21,10 +21,8 @@ import imp
 import time
 import re
 from itertools import chain
-from operator import methodcaller, attrgetter
+from operator import methodcaller
 import collections
-
-from six.moves import filter
 
 from . import Messages
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
@@ -86,7 +84,7 @@ class FlowGraph(Element):
         Returns:
             a sorted list of variable blocks in order of dependency (indep -> dep)
         """
-        variables = list(filter(attrgetter('is_variable'), self.iter_enabled_blocks()))
+        variables = [block for block in self.iter_enabled_blocks() if block.is_variable]
         return expr_utils.sort_objects(variables, methodcaller('get_id'), methodcaller('get_var_make'))
 
     def get_parameters(self):
@@ -142,7 +140,7 @@ class FlowGraph(Element):
         """
         Get an iterator of all blocks that are enabled and not bypassed.
         """
-        return filter(methodcaller('get_enabled'), self.blocks)
+        return (block for block in self.blocks if block.enabled)
 
     def get_enabled_blocks(self):
         """
@@ -160,7 +158,7 @@ class FlowGraph(Element):
         Returns:
             a list of blocks
         """
-        return list(filter(methodcaller('get_bypassed'), self.blocks))
+        return [block for block in self.blocks if block.get_bypassed()]
 
     def get_enabled_connections(self):
         """
@@ -169,7 +167,7 @@ class FlowGraph(Element):
         Returns:
             a list of connections
         """
-        return list(filter(methodcaller('get_enabled'), self.connections))
+        return [connection for connection in self.connections if connection.enabled]
 
     def get_option(self, key):
         """

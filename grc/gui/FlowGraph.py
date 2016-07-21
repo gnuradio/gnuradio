@@ -456,13 +456,13 @@ class FlowGraph(Element, _Flowgraph):
         hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
 
         def draw_order(elem):
-            return elem.highlighted, elem.is_block, elem.get_enabled()
+            return elem.highlighted, elem.is_block, elem.enabled
 
         elements = sorted(self.get_elements(), key=draw_order)
         del self._elements_to_draw[:]
 
         for element in elements:
-            if hide_disabled_blocks and not element.get_enabled():
+            if hide_disabled_blocks and not element.enabled:
                 continue  # skip hidden disabled blocks and connections
             if hide_variables and (element.is_variable or element.is_import):
                 continue  # skip hidden disabled blocks and connections
@@ -471,7 +471,7 @@ class FlowGraph(Element, _Flowgraph):
     def _drawables(self):
         show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
         for element in self._elements_to_draw:
-            if element.is_block and show_comments and element.get_enabled():
+            if element.is_block and show_comments and element.enabled:
                 yield element.draw_comment
         for element in self._elements_to_draw:
             yield element.draw

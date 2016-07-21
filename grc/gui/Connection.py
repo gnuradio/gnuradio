@@ -171,7 +171,7 @@ class Connection(Element, _Connection):
         # draw
         color1, color2 = (
             Colors.HIGHLIGHT_COLOR if self.highlighted else
-            Colors.CONNECTION_DISABLED_COLOR if not self.get_enabled() else
+            Colors.CONNECTION_DISABLED_COLOR if not self.enabled else
             color for color in (self._color, self._color2))
 
         Element.draw(self, widget, cr, color1, Colors.FLOWGRAPH_BACKGROUND_COLOR)

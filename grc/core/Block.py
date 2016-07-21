@@ -332,29 +332,10 @@ class Block(Element):
         self.states['_enabled'] = encoded
 
     # Enable/Disable Aliases
-    def get_enabled(self):
-        """
-        Get the enabled state of the block.
-
-        Returns:
-            true for enabled
-        """
+    @property
+    def enabled(self):
+        """Get the enabled state of the block"""
         return self.state != 'disabled'
-
-    def set_enabled(self, enabled):
-        """
-        Set the enabled state of the block.
-
-        Args:
-            enabled: true for enabled
-
-        Returns:
-            True if block changed state
-        """
-        old_state = self.state
-        new_state = 'enabled' if enabled else 'disabled'
-        self.state = new_state
-        return old_state != new_state
 
     # Block bypassing
     def get_bypassed(self):
@@ -739,7 +720,8 @@ class DummyBlock(Block):
     def is_valid(self):
         return False
 
-    def get_enabled(self):
+    @property
+    def enabled(self):
         return False
 
     def add_missing_port(self, key, dir):
