@@ -153,8 +153,8 @@ class FlowGraph(Element, _Flowgraph):
             try:
                 self.connect(self._old_selected_port, self._new_selected_port)
                 Actions.ELEMENT_CREATE()
-            except:
-                Messages.send_fail_connection()
+            except Exception as e:
+                Messages.send_fail_connection(e)
             self._old_selected_port = None
             self._new_selected_port = None
             return True

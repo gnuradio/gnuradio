@@ -178,17 +178,20 @@ class Block(Element):
                 port.key = str(domain_specific_port_index[domain])
                 domain_specific_port_index[domain] += 1
 
-        # Adjust nports, disconnect hidden ports
+        # Adjust nports
         for ports in (self.sources, self.sinks):
             self._rewrite_nports(ports)
             self.back_ofthe_bus(ports)
             rekey(ports)
 
+        self._rewrite_bus_ports()
+
         # disconnect hidden ports
         for port in itertools.chain(self.sources, self.sinks):
             if port.get_hide():
                 for connection in port.get_connections():
-                    self.parent.remove_element(connection)
+                    self.parent_flowgraph.remove_element(connection)
+
 
         self.active_sources = [p for p in self.get_sources_gui() if not p.get_hide()]
         self.active_sinks = [p for p in self.get_sinks_gui() if not p.get_hide()]
@@ -201,7 +204,7 @@ class Block(Element):
             for clone in port.clones[nports-1:]:
                 # Remove excess connections
                 for connection in clone.get_connections():
-                    self.parent.remove_element(connection)
+                    self.parent_flowgraph.remove_element(connection)
                 port.remove_clone(clone)
                 ports.remove(clone)
             # Add more cloned ports
@@ -256,8 +259,56 @@ class Block(Element):
                 self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(value, err))
 
     ##############################################
-    # Getters
+    # props
     ##############################################
+
+    @lazy_property
+    def is_throtteling(self):
+        return BLOCK_FLAG_THROTTLE in self.flags
+
+    @lazy_property
+    def is_deprecated(self):
+        return BLOCK_FLAG_DEPRECATED in self.flags
+
+    @property
+    def documentation(self):
+        documentation = self.parent_platform.block_docstrings.get(self.key, {})
+        from_xml = self._doc.strip()
+        if from_xml:
+            documentation[''] = from_xml
+        return documentation
+
+    @property
+    def comment(self):
+        return self.params['comment'].get_value()
+
+    @property
+    def state(self):
+        """Gets the block's current state."""
+        try:
+            return self.STATE_LABELS[int(self.states['_enabled'])]
+        except ValueError:
+            return 'enabled'
+
+    @state.setter
+    def state(self, value):
+        """Sets the state for the block."""
+        try:
+            encoded = self.STATE_LABELS.index(value)
+        except ValueError:
+            encoded = 1
+        self.states['_enabled'] = encoded
+
+    # Enable/Disable Aliases
+    @property
+    def enabled(self):
+        """Get the enabled state of the block"""
+        return self.state != 'disabled'
+
+    ##############################################
+    # Getters (old)
+    ##############################################
+
     def get_imports(self, raw=False):
         """
         Resolve all import statements.
@@ -303,39 +354,6 @@ class Block(Element):
 
     def is_virtual_source(self):
         return self.key == 'virtual_source'
-
-    @property
-    def documentation(self):
-        documentation = self.parent_platform.block_docstrings.get(self.key, {})
-        from_xml = self._doc.strip()
-        if from_xml:
-            documentation[''] = from_xml
-        return documentation
-
-    # Main functions to get and set the block state
-    # Also kept get_enabled and set_enabled to keep compatibility
-    @property
-    def state(self):
-        """Gets the block's current state."""
-        try:
-            return self.STATE_LABELS[int(self.states['_enabled'])]
-        except ValueError:
-            return 'enabled'
-
-    @state.setter
-    def state(self, value):
-        """Sets the state for the block."""
-        try:
-            encoded = self.STATE_LABELS.index(value)
-        except ValueError:
-            encoded = 1
-        self.states['_enabled'] = encoded
-
-    # Enable/Disable Aliases
-    @property
-    def enabled(self):
-        """Get the enabled state of the block"""
-        return self.state != 'disabled'
 
     # Block bypassing
     def get_bypassed(self):
@@ -388,17 +406,6 @@ class Block(Element):
 
     def get_children_gui(self):
         return self.get_ports_gui() + self.params.values()
-
-    def get_comment(self):
-        return self.params['comment'].get_value()
-
-    @lazy_property
-    def is_throtteling(self):
-        return BLOCK_FLAG_THROTTLE in self.flags
-
-    @lazy_property
-    def is_deprecated(self):
-        return BLOCK_FLAG_DEPRECATED in self.flags
 
     ##############################################
     # Access
@@ -597,6 +604,44 @@ class Block(Element):
         if self._bussify_source:
             self.bussify('source')
 
+    def _rewrite_bus_ports(self):
+        return  # fixme: probably broken
+
+        def doit(ports, ports_gui, direc):
+            if not self.current_bus_structure[direc]:
+                return
+
+            bus_structure = self.form_bus_structure(direc)
+            for port in ports_gui[len(bus_structure):]:
+                for connect in port.get_connections():
+                    self.parent_flowgraph.remove_element(connect)
+                ports.remove(port)
+
+            port_factory = self.parent_platform.get_new_port
+
+            if len(ports_gui) < len(bus_structure):
+                for i in range(len(ports_gui), len(bus_structure)):
+                    port = port_factory(self, direction=direc, key=str(1 + i),
+                                        name='bus', type='bus')
+                    ports.append(port)
+
+        doit(self.sources, self.get_sources_gui(), 'source')
+        doit(self.sinks, self.get_sinks_gui(), 'sink')
+
+        if 'bus' in [a.get_type() for a in self.get_sources_gui()]:
+            for i in range(len(self.get_sources_gui())):
+                if not self.get_sources_gui()[i].get_connections():
+                    continue
+                source = self.get_sources_gui()[i]
+                sink = []
+
+                for j in range(len(source.get_connections())):
+                    sink.append(source.get_connections()[j].sink_port)
+                for elt in source.get_connections():
+                    self.parent_flowgraph.remove_element(elt)
+                for j in sink:
+                    self.parent_flowgraph.connect(source, j)
+
 
 class EPyBlock(Block):
 
@@ -711,11 +756,11 @@ class DummyBlock(Block):
     build_in_param_keys = 'id alias affinity minoutbuf maxoutbuf comment'
 
     def __init__(self, parent, key, missing_key, params_n):
-        params = [{'key': p['key'], 'name': p['key'], 'type': 'string'}
-                  for p in params_n if p['key'] not in self.build_in_param_keys]
-        super(DummyBlock, self).__init__(
-            parent=parent, key=missing_key, name='Missing Block', param=params,
-        )
+        super(DummyBlock, self).__init__(parent=parent, key=missing_key, name='Missing Block')
+        param_factory = self.parent_platform.get_new_param
+        for param_n in params_n:
+            key = param_n['key']
+            self.params.setdefault(key, param_factory(self, key=key, name=key, type='string'))
 
     def is_valid(self):
         return False

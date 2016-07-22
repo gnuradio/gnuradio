@@ -42,8 +42,9 @@ class Port(_Port, Element):
         self._connector_coordinate = (0, 0)
         self._hovering = False
         self.force_show_label = False
-        self._bg_color = (0, 0, 0)
+        self._bg_color = 0, 0, 0
         self._line_width_factor = 1.0
+        self._label_layout_offsets = 0, 0
 
         self.width_with_label = self.height = 0
         self.connector_length = 0
@@ -109,8 +110,10 @@ class Port(_Port, Element):
 
         self.width = 2 * Constants.PORT_LABEL_PADDING + label_width
         self.height = 2 * Constants.PORT_LABEL_PADDING + label_height
+        self._label_layout_offsets = [0, Constants.PORT_LABEL_PADDING]
         if self.get_type() == 'bus':
-            self.height += 2 * label_height
+            self.height += Constants.PORT_EXTRA_BUS_HEIGHT
+            self._label_layout_offsets[1] += Constants.PORT_EXTRA_BUS_HEIGHT / 2
         self.height += self.height % 2  # uneven height
 
     def draw(self, widget, cr, border_color, bg_color):
@@ -126,7 +129,7 @@ class Port(_Port, Element):
         if self.is_vertical():
             cr.rotate(-math.pi / 2)
             cr.translate(-self.width, 0)
-        cr.translate(0, Constants.PORT_LABEL_PADDING)
+        cr.translate(*self._label_layout_offsets)
 
         PangoCairo.update_layout(cr, self.label_layout)
         PangoCairo.show_layout(cr, self.label_layout)
@@ -138,8 +141,11 @@ class Port(_Port, Element):
         Returns:
             the connector coordinate (x, y) tuple
         """
-        return [sum(c) for c in zip(self._connector_coordinate, self.coordinate,
-                                    self.parent_block.coordinate)]
+        return [sum(c) for c in zip(
+            self._connector_coordinate,   # relative to port
+            self.coordinate,              # relative to block
+            self.parent_block.coordinate  # abs
+        )]
 
     def get_connector_direction(self):
         """
@@ -167,7 +173,7 @@ class Port(_Port, Element):
         Args:
             direction: degrees to rotate
         """
-        self.parent.rotate(direction)
+        self.parent_block.rotate(direction)
 
     def move(self, delta_coor):
         """
@@ -176,7 +182,7 @@ class Port(_Port, Element):
         Args:
             delta_corr: the (delta_x, delta_y) tuple
         """
-        self.parent.move(delta_coor)
+        self.parent_block.move(delta_coor)
 
     @property
     def highlighted(self):

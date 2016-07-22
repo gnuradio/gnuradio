@@ -31,7 +31,7 @@ class Connection(Element):
 
     is_connection = True
 
-    def __init__(self, flow_graph, porta, portb):
+    def __init__(self, parent, porta, portb):
         """
         Make a new connection given the parent and 2 ports.
 
@@ -44,7 +44,7 @@ class Connection(Element):
         Returns:
             a new connection
         """
-        Element.__init__(self, flow_graph)
+        Element.__init__(self, parent)
 
         source, sink = self._get_sink_source(porta, portb)
 
@@ -52,14 +52,16 @@ class Connection(Element):
         self.sink_port = sink
 
         # Ensure that this connection (source -> sink) is unique
-        for connection in flow_graph.connections:
-            if connection.source_port is source and connection.sink_port is sink:
-                raise LookupError('This connection between source and sink is not unique.')
+        if self in self.parent_flowgraph.connections:
+            raise LookupError('This connection between source and sink is not unique.')
 
         if self.is_bus():
             self._make_bus_connect()
-        else:
-            self.parent_flowgraph.connect(source, sink)
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        return self.source_port == other.source_port and self.sink_port == other.sink_port
 
     @staticmethod
     def _get_sink_source(porta, portb):
@@ -68,7 +70,7 @@ class Connection(Element):
         for port in (porta, portb):
             if port.is_source:
                 source = port
-            else:
+            if port.is_sink:
                 sink = port
         if not source:
             raise ValueError('Connection could not isolate source')
@@ -109,10 +111,6 @@ class Connection(Element):
         """
         Validate the connections.
         The ports must match in io size.
-        """
-        """
-        Validate the connections.
-        The ports must match in type.
         """
         Element.validate(self)
         platform = self.parent_platform

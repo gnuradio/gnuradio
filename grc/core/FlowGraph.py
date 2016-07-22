@@ -20,7 +20,6 @@ from __future__ import absolute_import, print_function
 import imp
 import time
 import re
-from itertools import chain
 from operator import methodcaller
 import collections
 
@@ -201,10 +200,7 @@ class FlowGraph(Element):
         Flag the namespace to be renewed.
         """
         self.renew_namespace()
-        for child in chain(self.blocks, self.connections):
-            child.rewrite()
-
-        self.bus_ports_rewrite()
+        Element.rewrite(self)
 
     def renew_namespace(self):
         namespace = {}
@@ -299,7 +295,7 @@ class FlowGraph(Element):
         """
 
         connection = self.parent_platform.Connection(
-            flow_graph=self, porta=porta, portb=portb)
+            parent=self, porta=porta, portb=portb)
         self.connections.append(connection)
         return connection
 
@@ -452,47 +448,6 @@ class FlowGraph(Element):
 
         self.rewrite()  # global rewrite
         return errors
-
-    ##############################################
-    # Needs to go
-    ##############################################
-    def bus_ports_rewrite(self):
-        # todo: move to block.rewrite()
-        def doit(block, ports, ports_gui, direc):
-            bus_structure = block.form_bus_structure(direc)
-
-            if any('bus' == a.get_type() for a in ports_gui):
-                if len(ports_gui) > len(bus_structure):
-                    for _ in range(len(bus_structure), len(ports_gui)):
-                        for connect in ports_gui[-1].get_connections():
-                            block.parent.remove_element(connect)
-                        ports.remove(ports_gui[-1])
-                elif len(ports_gui) < len(bus_structure):
-                    n = {'name': 'bus', 'type': 'bus'}
-                    if any(isinstance(a.get_nports(), int) for a in ports):
-                        n['nports'] = str(1)
-                    for _ in range(len(ports_gui), len(bus_structure)):
-                        n['key'] = str(len(ports))
-                        port = block.parent.parent.Port(block=block, n=dict(n), dir=direc)
-                        ports.append(port)
-
-            if 'bus' in [a.get_type() for a in block.get_sources_gui()]:
-                for i in range(len(block.get_sources_gui())):
-                    if not block.get_sources_gui()[i].get_connections():
-                        continue
-                    source = block.get_sources_gui()[i]
-                    sink = []
-
-                    for j in range(len(source.get_connections())):
-                        sink.append(source.get_connections()[j].sink_port)
-                    for elt in source.get_connections():
-                        self.remove_element(elt)
-                    for j in sink:
-                        self.connect(source, j)
-
-        for blk in self.blocks:
-            doit(blk, blk.sources, blk.get_sources_gui(), 'source')
-            doit(blk, blk.sinks, blk.get_sinks_gui(), 'sink')
 
 
 def _update_old_message_port_keys(source_key, sink_key, source_block, sink_block):

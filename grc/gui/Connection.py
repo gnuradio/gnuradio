@@ -152,7 +152,7 @@ class Connection(Element, _Connection):
             # create right-angled connector
             self.lines.append([p0, p1, point, p2, p3])
 
-    def draw(self, widget, cr):
+    def draw(self, widget, cr, border_color=None, bg_color=None):
         """
         Draw the connection.
         """

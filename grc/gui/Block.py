@@ -55,8 +55,9 @@ class Block(CoreBlock, Element):
         self._surface_layout_offsets = 0, 0
         self._comment_layout = None
 
+        self._border_color = (Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
+                              Colors.BORDER_COLOR)
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
-        self.has_busses = [False, False]  # source, sink
 
     @property
     def coordinate(self):
@@ -113,7 +114,8 @@ class Block(CoreBlock, Element):
         elif self.is_vertical():
             self.areas.append([0, 0, self.height, self.width])
 
-        for ports, has_busses in zip((self.active_sources, self.active_sinks), self.has_busses):
+        bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
+        for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
             if not ports:
                 continue
             port_separation = PORT_SEPARATION if not has_busses else ports[0].height + PORT_SPACING
@@ -177,25 +179,26 @@ class Block(CoreBlock, Element):
 
         self.create_port_labels()
 
-        def get_min_height_for_ports():
+        def get_min_height_for_ports(ports):
             min_height = 2 * PORT_BORDER_SEPARATION + len(ports) * PORT_SEPARATION
             if ports:
                 min_height -= ports[-1].height
             return min_height
 
-        height = max(
-            [  # labels
-                height
-            ] +
-            [  # ports
-                get_min_height_for_ports() for ports in (self.active_sources, self.active_sinks)
-            ] +
-            [  # bus ports only
-                2 * PORT_BORDER_SEPARATION +
-                sum([port.height + PORT_SPACING for port in ports if port.get_type() == 'bus']) - PORT_SPACING
-                for ports in (self.get_sources_gui(), self.get_sinks_gui())
-            ]
-        )
+        height = max(height,
+                     get_min_height_for_ports(self.active_sinks),
+                     get_min_height_for_ports(self.active_sources))
+
+        def get_min_height_for_bus_ports(ports):
+            return 2 * PORT_BORDER_SEPARATION + sum(
+                port.height + PORT_SPACING for port in ports if port.get_type() == 'bus'
+            ) - PORT_SPACING
+
+        if self.current_bus_structure['sink']:
+            height = max(height, get_min_height_for_bus_ports(self.active_sinks))
+        if self.current_bus_structure['source']:
+            height = max(height, get_min_height_for_bus_ports(self.active_sources))
+
         self.width, self.height = width, height = Utils.align_to_grid((width, height))
 
         self._surface_layout_offsets = [
@@ -203,10 +206,6 @@ class Block(CoreBlock, Element):
             (height - label_height) / 2.0
         ]
 
-        self.has_busses = [
-            any(port.get_type() == 'bus' for port in ports)
-            for ports in (self.get_sources_gui(), self.get_sinks_gui())
-        ]
         self.create_comment_layout()
 
     def create_port_labels(self):
@@ -226,9 +225,9 @@ class Block(CoreBlock, Element):
             complexity = utils.calculate_flowgraph_complexity(self.parent)
             markups.append(
                 '<span foreground="#444" size="medium" font_desc="{font}">'
-                '<b>Complexity: {num}bal</b></span>'.format(num=utils.num_to_str(complexity), font=BLOCK_FONT)
+                '<b>Complexity: {num}bal</b></span>'.format(num=Utils.num_to_str(complexity), font=BLOCK_FONT)
             )
-        comment = self.get_comment()  # Returns None if there are no comments
+        comment = self.comment  # Returns None if there are no comments
         if comment:
             if markups:
                 markups.append('<span></span>')
@@ -242,16 +241,12 @@ class Block(CoreBlock, Element):
         else:
             self._comment_layout = None
 
-    def draw(self, widget, cr):
+    def draw(self, widget, cr, border_color=None, bg_color=None):
         """
         Draw the signal block with label and inputs/outputs.
         """
         bg_color = self._bg_color
-        border_color = (
-            Colors.HIGHLIGHT_COLOR if self.highlighted else
-            Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
-            Colors.BORDER_COLOR
-        )
+        border_color = Colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
         # draw main block
         Element.draw(self, widget, cr, border_color, bg_color)
         for port in self.active_ports():
