@@ -26,16 +26,22 @@ from optparse import OptionParser
 import warnings
 warnings.simplefilter('ignore')
 
+from gnuradio import gr
+
 try:
-    from grc.python.Platform import Platform
+    from grc.core.Platform import Platform
 except ImportError:
-    from gnuradio.grc.python.Platform import Platform
+    from gnuradio.grc.core.Platform import Platform
 
 
 class GRCC:
     def __init__(self, grcfile, out_dir):
         self.out_dir = out_dir
-        self.platform = Platform()
+        self.platform = Platform(
+            prefs_file=gr.prefs(),
+            version=gr.version(),
+            version_parts=(gr.major_version(), gr.api_version(), gr.minor_version())
+        )
         data = self.platform.parse_flow_graph(grcfile)
 
         self.fg = self.platform.get_new_flow_graph()
@@ -48,7 +54,7 @@ class GRCC:
                 ["Validation failed:"] + self.fg.get_error_messages()
             ))
 
-        self.gen = self.platform.get_generator()(self.fg, out_dir)
+        self.gen = self.platform.Generator(self.fg, out_dir)
         self.gen.write()
 
     def exec_program(self):

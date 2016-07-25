@@ -202,10 +202,10 @@ class BlockTreeWindow(gtk.VBox):
         """Update the documentation column of every block"""
 
         def update_doc(model, _, iter_):
-            if model.iter_has_child(iter_):
-                return  # category node, no doc string
             key = model.get_value(iter_, KEY_INDEX)
-            block = self.platform.blocks[key]
+            if not key:
+                return  # category node, no doc string
+            block = self.platform.get_block(key)
             doc = Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc())
             model.set_value(iter_, DOC_INDEX, doc)
 
