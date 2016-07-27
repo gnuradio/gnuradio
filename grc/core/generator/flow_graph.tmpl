@@ -11,7 +11,6 @@
 ##@param parameters the parameter blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
-##@param msgs the msg type connections
 ##@param generate_options the type of flow graph
 ##@param callbacks variable id map to callback strings
 ########################################################
@@ -191,18 +190,6 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #end if
 #for $var in $variables
         $indent($var.get_var_make())
-#end for
-########################################################
-##Create Message Queues
-########################################################
-#if $msgs
-
-        $DIVIDER
-        # Message Queues
-        $DIVIDER
-#end if
-#for $msg in $msgs
-        $(msg.get_source().get_parent().get_id())_msgq_out = $(msg.get_sink().get_parent().get_id())_msgq_in = gr.msg_queue(2)
 #end for
 ########################################################
 ##Create Blocks
