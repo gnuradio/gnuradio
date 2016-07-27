@@ -118,7 +118,6 @@ CORE_TYPES = (  # name, key, sizeof, color
     ('Integer 16',           's16',  2, GRC_COLOR_YELLOW),
     ('Integer 8',             's8',  1, GRC_COLOR_PURPLE_A400),
     ('Bits (unpacked byte)', 'bit',  1, GRC_COLOR_PURPLE_A100),
-    ('Message Queue',        'msg',  0, GRC_COLOR_DARK_GREY),
     ('Async Message',    'message',  0, GRC_COLOR_GREY),
     ('Bus Connection',       'bus',  0, GRC_COLOR_WHITE),
     ('Wildcard',                '',  0, GRC_COLOR_WHITE),

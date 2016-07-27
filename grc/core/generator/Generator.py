@@ -165,10 +165,9 @@ class TopBlockGenerator(object):
                 src = block.get_param('source_code').get_value()
                 output.append((file_path, src))
 
-        # Filter out virtual sink connections
-        def cf(c):
-            return not (c.is_bus() or c.is_msg() or c.sink_block.is_virtual_sink())
-        connections = [con for con in fg.get_enabled_connections() if cf(con)]
+        # Filter out bus and virtual sink connections
+        connections = [con for con in fg.get_enabled_connections()
+                       if not (con.is_bus() or con.sink_block.is_virtual_sink())]
 
         # Get the virtual blocks and resolve their connections
         connection_factory = fg.parent_platform.Connection
@@ -216,7 +215,6 @@ class TopBlockGenerator(object):
         ))
 
         connection_templates = fg.parent.connection_templates
-        msgs = [c for c in fg.get_enabled_connections() if c.is_msg()]
 
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
@@ -245,7 +243,6 @@ class TopBlockGenerator(object):
             'blocks': blocks,
             'connections': connections,
             'connection_templates': connection_templates,
-            'msgs': msgs,
             'generate_options': self._generate_options,
             'callbacks': callbacks,
         }

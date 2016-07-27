@@ -101,9 +101,6 @@ class Connection(Element):
             self.source_block, self.source_port, self.sink_block, self.sink_port,
         )
 
-    def is_msg(self):
-        return self.source_port.get_type() == self.sink_port.get_type() == 'msg'
-
     def is_bus(self):
         return self.source_port.get_type() == 'bus'
 

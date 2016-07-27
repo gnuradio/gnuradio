@@ -124,8 +124,6 @@ class Port(Element):
         elif n['domain'] == Constants.GR_MESSAGE_DOMAIN:
             n['key'] = n['name']
             n['type'] = 'message'  # For port color
-        if n['type'] == 'msg':
-            n['key'] = 'msg'
 
         # Build the port
         Element.__init__(self, parent)
@@ -159,12 +157,6 @@ class Port(Element):
             self.add_error_message('Domain key "{}" is not registered.'.format(self.domain))
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')
-        # Message port logic
-        if self.get_type() == 'msg':
-            if self.get_nports():
-                self.add_error_message('A port of type "msg" cannot have "nports" set.')
-            if self.get_vlen() != 1:
-                self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
 
     def rewrite(self):
         """

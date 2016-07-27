@@ -71,7 +71,7 @@ class Port(_Port, Element):
         Returns:
             a hex color code.
         """
-        color = Colors.PORT_TYPE_TO_COLOR[self.get_type()]
+        color = Colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or Colors.PORT_TYPE_TO_COLOR.get('')
         vlen = self.get_vlen()
         if vlen > 1:
             dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, vlen)]
