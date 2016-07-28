@@ -66,7 +66,7 @@ class ActionHandler:
         Messages.register_messenger(self.main_window.add_console_line)
         Messages.send_init(platform)
         #initialize
-        self.init_file_paths = file_paths
+        self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
         self.init = False
         Actions.APPLICATION_INITIALIZE()
 
@@ -116,13 +116,10 @@ class ActionHandler:
         # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
-            if not self.init_file_paths:
-                self.init_file_paths = filter(os.path.exists, Preferences.get_open_files())
-            if not self.init_file_paths: self.init_file_paths = ['']
-            for file_path in self.init_file_paths:
-                if file_path: main.new_page(file_path) #load pages from file paths
-            if Preferences.file_open() in self.init_file_paths:
-                main.new_page(Preferences.file_open(), show=True)
+            file_path_to_show = Preferences.file_open()
+            for file_path in (self.init_file_paths or Preferences.get_open_files()):
+                if os.path.exists(file_path):
+                    main.new_page(file_path, show=file_path_to_show == file_path)
             if not self.get_page():
                 main.new_page()  # ensure that at least a blank page exists
 
