@@ -116,7 +116,7 @@ $(gui_hint()($win))</make>
       <key>qtgui.NUM_GRAPH_HORIZ</key>
     </option>
     <option>
-      <name>Verticle</name>
+      <name>Vertical</name>
       <key>qtgui.NUM_GRAPH_VERT</key>
     </option>
     <option>

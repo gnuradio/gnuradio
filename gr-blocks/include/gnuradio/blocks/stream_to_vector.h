@@ -43,7 +43,7 @@ namespace gr {
        * Make a stream-to-vector block.
        *
        * \param itemsize the item size of the stream
-       * \param nitems_per_block number of items to but into each vector (vector size)
+       * \param nitems_per_block number of items to put into each vector (vector size)
        */
       static sptr make(size_t itemsize, size_t nitems_per_block);
     };
