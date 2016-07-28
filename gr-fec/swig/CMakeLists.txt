@@ -41,7 +41,7 @@ endif(GSL_FOUND)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/fec_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/fec)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-set(GR_SWIG_LIBRARIES gnuradio-fec)
+set(GR_SWIG_LIBRARIES gnuradio-fec ${GSL_LDFLAGS})
 
 GR_SWIG_MAKE(fec_swig fec_swig.i)
 

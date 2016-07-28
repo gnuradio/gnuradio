@@ -74,13 +74,14 @@ class TopBlockGenerator(object):
         self._flow_graph = FlowGraphProxy(flow_graph)
         self._generate_options = self._flow_graph.get_option('generate_options')
         self._mode = TOP_BLOCK_FILE_MODE
-        dirname = self._dirname = os.path.dirname(file_path)
+        dirname = os.path.dirname(file_path)
         # Handle the case where the directory is read-only
         # In this case, use the system's temp directory
         if not os.access(dirname, os.W_OK):
             dirname = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
         self.file_path = os.path.join(dirname, filename)
+        self._dirname = dirname
 
     def get_file_path(self):
         return self.file_path
