@@ -171,11 +171,12 @@ class TopBlockGenerator(object):
         connections = [con for con in fg.get_enabled_connections() if cf(con)]
 
         # Get the virtual blocks and resolve their connections
+        connection_factory = fg.parent_platform.Connection
         virtual = [c for c in connections if c.source_block.is_virtual_source()]
         for connection in virtual:
             source = connection.source_port.resolve_virtual_source()
             sink = connection.sink_port
-            resolved = fg.parent.Connection(flow_graph=fg, porta=source, portb=sink)
+            resolved = connection_factory(fg.orignal_flowgraph, source, sink)
             connections.append(resolved)
             # Remove the virtual connection
             connections.remove(connection)
@@ -201,8 +202,7 @@ class TopBlockGenerator(object):
                 if not sink.enabled:
                     # Ignore disabled connections
                     continue
-                sink_port = sink.sink_port
-                connection = fg.parent.Connection(flow_graph=fg, porta=source_port, portb=sink_port)
+                connection = connection_factory(fg.orignal_flowgraph, source_port, sink.sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)

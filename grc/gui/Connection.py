@@ -37,9 +37,9 @@ class Connection(Element, _Connection):
     The arrow coloring exposes the enabled and valid states.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         Element.__init__(self)
-        _Connection.__init__(self, **kwargs)
+        _Connection.__init__(self, *args, **kwargs)
 
         self._color = self._color2 = self._arrow_color = None
 

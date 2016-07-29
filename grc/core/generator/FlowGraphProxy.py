@@ -20,13 +20,13 @@ from __future__ import absolute_import
 from six.moves import range
 
 
-class FlowGraphProxy(object):
+class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
 
     def __init__(self, fg):
-        self._fg = fg
+        self.orignal_flowgraph = fg
 
     def __getattr__(self, item):
-        return getattr(self._fg, item)
+        return getattr(self.orignal_flowgraph, item)
 
     def get_hier_block_stream_io(self, direction):
         """
