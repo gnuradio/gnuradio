@@ -687,7 +687,7 @@ class FlowGraph(Element, _Flowgraph):
             self.element_moved = False
         self.update_selected_elements()
 
-    def handle_mouse_motion(self, coordinate, button1_pressed):
+    def handle_mouse_motion(self, coordinate):
         """
         The mouse has moved, respond to mouse dragging or notify elements
         Move a selected element to the new coordinate.
@@ -695,7 +695,7 @@ class FlowGraph(Element, _Flowgraph):
         """
         # to perform a movement, the mouse must be pressed
         # (no longer checking pending events via Gtk.events_pending() - always true in Windows)
-        if not button1_pressed:
+        if not self.mouse_pressed:
             self._handle_mouse_motion_move(coordinate)
         else:
             self._handle_mouse_motion_drag(coordinate)

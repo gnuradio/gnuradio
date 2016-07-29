@@ -117,8 +117,10 @@ class DrawingArea(Gtk.DrawingArea):
         self.button_state[event.button] = True
 
         if event.button == 1:
+            double_click = (event.type == Gdk.EventType._2BUTTON_PRESS)
+            self.button_state[1] = not double_click
             self._flow_graph.handle_mouse_selector_press(
-                double_click=(event.type == Gdk.EventType._2BUTTON_PRESS),
+                double_click=double_click,
                 coordinate=self._translate_event_coords(event),
             )
         elif event.button == 3:
@@ -151,7 +153,6 @@ class DrawingArea(Gtk.DrawingArea):
 
         self._flow_graph.handle_mouse_motion(
             coordinate=self._translate_event_coords(event),
-            button1_pressed=self.button_state[1]
         )
 
     def _auto_scroll(self, event):
