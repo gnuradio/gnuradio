@@ -28,7 +28,7 @@
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("rx_time");
 static const pmt::pmt_t RATE_KEY = pmt::string_to_symbol("rx_rate");
 static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("rx_freq");
-static const pmt::pmt_t RX_METADATA_MSG_PORT = pmt::string_to_symbol("rx_metad");
+static const pmt::pmt_t RX_METADATA_MSG_PORT = pmt::string_to_symbol("rx_metadata");
 
 namespace gr {
   namespace uhd {

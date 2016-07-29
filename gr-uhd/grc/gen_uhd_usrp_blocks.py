@@ -379,7 +379,7 @@ set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
 	</$sourk>
 #if $sourk == 'source'
 	<source>
-		<name>rx_metad</name>
+		<name>rx_metadata</name>
 		<type>message</type>
 		<optional>1</optional>
 		<hide>\$hide_cmd_port</hide>
