@@ -78,8 +78,12 @@ $imp
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'wx_gui'
-    #import gtk
-    #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
+    #from gi.repository import Gtk
+    #try:
+        #set $icon = Gtk.IconTheme().load_icon('gnuradio-grc', 256, 0)
+    #except:
+        #set $icon = ''
+    #end try
 
 
 class $(class_name)(grc_wxgui.top_block_gui):
