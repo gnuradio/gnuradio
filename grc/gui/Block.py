@@ -107,12 +107,10 @@ class Block(CoreBlock, Element):
 
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
-        self.clear()
-
         if self.is_horizontal():
-            self.areas.append([0, 0, self.width, self.height])
+            self.area = [0, 0, self.width, self.height]
         elif self.is_vertical():
-            self.areas.append([0, 0, self.height, self.width])
+            self.area = [0, 0, self.height, self.width]
 
         bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
@@ -241,18 +239,23 @@ class Block(CoreBlock, Element):
         else:
             self._comment_layout = None
 
-    def draw(self, widget, cr, border_color=None, bg_color=None):
+    def draw(self, widget, cr):
         """
         Draw the signal block with label and inputs/outputs.
         """
-        bg_color = self._bg_color
         border_color = Colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
-        # draw main block
-        Element.draw(self, widget, cr, border_color, bg_color)
-        for port in self.active_ports():
+        cr.translate(*self.coordinate)
+
+        for port in self.active_ports():  # ports first
             cr.save()
-            port.draw(widget, cr, border_color, bg_color)
+            port.draw(widget, cr, border_color)
             cr.restore()
+
+        cr.rectangle(*self.area)
+        cr.set_source_rgb(*self._bg_color)
+        cr.fill_preserve()
+        cr.set_source_rgb(*border_color)
+        cr.stroke()
 
         # title and params label
         if self.is_vertical():

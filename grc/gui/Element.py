@@ -45,13 +45,8 @@ class Element(object):
         self.rotation = 0
         self.highlighted = False
 
-        self.areas = []
-        self.lines = []
-
-    def clear(self):
-        """Empty the lines and areas."""
-        del self.areas[:]
-        del self.lines[:]
+        self.area = []
+        self.line = []
 
     def is_horizontal(self, rotation=None):
         """
@@ -94,34 +89,11 @@ class Element(object):
         Create shapes (if applicable) and call on all children.
         Call this base method before creating shapes in the element.
         """
-        self.clear()
         for child in self.get_children():
             child.create_shapes()
 
-    def draw(self, widget, cr, border_color, bg_color):
-        """
-        Draw in the given window.
-
-        Args:
-            widget:
-            cr:
-            border_color: the color for lines and rectangle borders
-            bg_color: the color for the inside of the rectangle
-        """
-        cr.translate(*self.coordinate)
-        for area in self.areas:
-            cr.set_source_rgb(*bg_color)
-            cr.rectangle(*area)
-            cr.fill()
-            cr.set_source_rgb(*border_color)
-            cr.rectangle(*area)
-            cr.stroke()
-
-        cr.set_source_rgb(*border_color)
-        for line in self.lines:
-            for point in line:
-                cr.line_to(*point)
-            cr.stroke()
+    def draw(self, widget, cr):
+        raise NotImplementedError()
 
     def rotate(self, rotation):
         """
@@ -168,7 +140,8 @@ class Element(object):
         if coor_m:
             x_m, y_m = [a - b for a, b in zip(coor_m, self.coordinate)]
             # handle rectangular areas
-            for x1, y1, w, h in self.areas:
+            if self.area:
+                x1, y1, w, h = self.area
                 if (
                     in_between(x1,     x, x_m) and in_between(y1,     y, y_m) or
                     in_between(x1 + w, x, x_m) and in_between(y1,     y, y_m) or
@@ -177,9 +150,9 @@ class Element(object):
                 ):
                     return self
             # handle horizontal or vertical lines
-            for line in self.lines:
-                last_point = line[0]
-                for x2, y2 in line[1:]:
+            elif self.line:
+                last_point = self.line[0]
+                for x2, y2 in self.line[1:]:
                     (x1, y1), last_point = last_point, (x2, y2)
                     if (
                         in_between(x1, x, x_m) and in_between(y1, y, y_m) or
@@ -189,13 +162,14 @@ class Element(object):
             return None
         else:
             # handle rectangular areas
-            for x1, y1, w, h in self.areas:
+            if self.area:
+                x1, y1, w, h = self.area
                 if in_between(x, x1, x1+w) and in_between(y, y1, y1+h):
                     return self
             # handle horizontal or vertical lines
-            for line in self.lines:
-                last_point = line[0]
-                for x2, y2 in line[1:]:
+            elif self.line:
+                last_point = self.line[0]
+                for x2, y2 in self.line[1:]:
                     (x1, y1), last_point = last_point, (x2, y2)
                     if x1 == x2:
                         x1, x2 = x1 - LINE_SELECT_SENSITIVITY, x2 + LINE_SELECT_SENSITIVITY

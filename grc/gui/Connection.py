@@ -104,7 +104,6 @@ class Connection(Element, _Connection):
 
     def _update_after_move(self):
         """Calculate coordinates."""
-        self.clear()
         source = self.source_port
         sink = self.sink_port
         source_dir = source.get_connector_direction()
@@ -136,7 +135,7 @@ class Connection(Element, _Connection):
                 points, alt = alt, points
             # create 3-line connector
             i1, i2 = points
-            self.lines.append([p0, p1, i1, i2, p2, p3])
+            self.line = [p0, p1, i1, i2, p2, p3]
         else:
             # 2 possible points to create a right-angled connector
             point, alt = [(x1, y2), (x2, y1)]
@@ -150,7 +149,7 @@ class Connection(Element, _Connection):
             if Utils.get_angle_from_coordinates(point, p1) == source_dir:
                 point, alt = alt, point
             # create right-angled connector
-            self.lines.append([p0, p1, point, p2, p3])
+            self.line = [p0, p1, point, p2, p3]
 
     def draw(self, widget, cr, border_color=None, bg_color=None):
         """
@@ -169,22 +168,27 @@ class Connection(Element, _Connection):
             self._sink_coor = sink.parent_block.coordinate
             self._source_coor = source.parent_block.coordinate
         # draw
-        color1, color2 = (
+        color1, color2, arrow_color = (
             Colors.HIGHLIGHT_COLOR if self.highlighted else
             Colors.CONNECTION_DISABLED_COLOR if not self.enabled else
-            color for color in (self._color, self._color2))
+            color for color in (self._color, self._color2, self._arrow_color))
 
-        Element.draw(self, widget, cr, color1, Colors.FLOWGRAPH_BACKGROUND_COLOR)
+        cr.translate(*self.coordinate)
+        for point in self.line:
+            cr.line_to(*point)
+        cr.set_source_rgb(*color1)
+        cr.stroke_preserve()
 
         if color1 != color2:
             cr.save()
-            x_pos, y_pos = self.coordinate
-            cr.translate(-x_pos, -y_pos)
             cr.set_dash([5.0, 5.0], 5.0)
-            Element.draw(self, widget, cr, color2, Colors.FLOWGRAPH_BACKGROUND_COLOR)
+            cr.set_source_rgb(*color2)
+            cr.stroke()
             cr.restore()
-        # draw arrow on sink port
-        cr.set_source_rgb(*self._arrow_color)
+        else:
+            cr.new_path()
+
+        cr.set_source_rgb(*arrow_color)
         cr.move_to(*self._arrow[0])
         cr.line_to(*self._arrow[1])
         cr.line_to(*self._arrow[2])

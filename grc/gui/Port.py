@@ -78,12 +78,10 @@ class Port(_Port, Element):
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
-        self.clear()
-
         if self.is_horizontal():
-            self.areas.append([0, 0, self.width, self.height])
+            self.area = [0, 0, self.width, self.height]
         elif self.is_vertical():
-            self.areas.append([0, 0, self.height, self.width])
+            self.area = [0, 0, self.height, self.width]
 
         self._connector_coordinate = {
             0:   (self.width, self.height / 2),
@@ -116,12 +114,18 @@ class Port(_Port, Element):
             self._label_layout_offsets[1] += Constants.PORT_EXTRA_BUS_HEIGHT / 2
         self.height += self.height % 2  # uneven height
 
-    def draw(self, widget, cr, border_color, bg_color):
+    def draw(self, widget, cr, border_color):
         """
         Draw the socket with a label.
         """
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
-        Element.draw(self, widget, cr, border_color, self._bg_color)
+        cr.translate(*self.coordinate)
+
+        cr.rectangle(*self.area)
+        cr.set_source_rgb(*self._bg_color)
+        cr.fill_preserve()
+        cr.set_source_rgb(*border_color)
+        cr.stroke()
 
         if not self._show_label:
             return  # this port is folded (no label)
