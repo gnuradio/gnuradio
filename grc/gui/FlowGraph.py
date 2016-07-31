@@ -34,24 +34,25 @@ from . import Actions, Colors, Utils, Bars, Dialogs
 from .Element import Element
 from .external_editor import ExternalEditor
 
-from ..core.FlowGraph import FlowGraph as _Flowgraph
+from ..core.FlowGraph import FlowGraph as CoreFlowgraph
 from ..core import Messages
 
 
-class FlowGraph(Element, _Flowgraph):
+class FlowGraph(CoreFlowgraph, Element):
     """
     FlowGraph is the data structure to store graphical signal blocks,
     graphical inputs and outputs,
     and the connections between inputs and outputs.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, parent, **kwargs):
         """
         FlowGraph constructor.
         Create a list for signal blocks and connections. Connect mouse handlers.
         """
+        super(self.__class__, self).__init__(parent, **kwargs)
         Element.__init__(self)
-        _Flowgraph.__init__(self, **kwargs)
+        self.drawing_area = None
         # important vars dealing with mouse event tracking
         self.element_moved = False
         self.mouse_pressed = False

@@ -40,17 +40,17 @@ class FlowGraph(Element):
 
     is_flow_graph = True
 
-    def __init__(self, platform):
+    def __init__(self, parent):
         """
         Make a flow graph from the arguments.
 
         Args:
-            platform: a platforms with blocks and contrcutors
+            parent: a platforms with blocks and element factories
 
         Returns:
             the flow graph object
         """
-        Element.__init__(self, parent=platform)
+        Element.__init__(self, parent)
         self._timestamp = time.ctime()
         self._options_block = self.parent_platform.get_new_block(self, 'options')
 

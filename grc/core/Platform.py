@@ -326,7 +326,7 @@ class Platform(Element):
     }
 
     def get_new_flow_graph(self):
-        return self.FlowGraph(platform=self)
+        return self.FlowGraph(parent=self)
 
     def get_new_block(self, parent, key, **kwargs):
         cls = self.block_classes.get(key, self.block_classes[None])

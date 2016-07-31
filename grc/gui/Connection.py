@@ -24,10 +24,10 @@ from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 from .Element import Element
 
 from ..core.Element import nop_write
-from ..core.Connection import Connection as _Connection
+from ..core.Connection import Connection as CoreConnection
 
 
-class Connection(Element, _Connection):
+class Connection(CoreConnection, Element):
     """
     A graphical connection for ports.
     The connection has 2 parts, the arrow and the wire.
@@ -38,8 +38,8 @@ class Connection(Element, _Connection):
     """
 
     def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
         Element.__init__(self)
-        _Connection.__init__(self, *args, **kwargs)
 
         self._color = self._color2 = self._arrow_color = None
 
@@ -64,7 +64,7 @@ class Connection(Element, _Connection):
         return 0
 
     def create_shapes(self):
-        """Precalculate relative coordinates."""
+        """Pre-calculate relative coordinates."""
         Element.create_shapes(self)
         self._sink_rot = None
         self._source_rot = None
