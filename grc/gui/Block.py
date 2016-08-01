@@ -56,9 +56,8 @@ class Block(CoreBlock, Element):
         self._comment_layout = None
 
         self._area = []
-        self._border_color = (Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
-                              Colors.BORDER_COLOR)
-        self._bg_color = Colors.BLOCK_ENABLED_COLOR
+        self._border_color = self._bg_color = Colors.BLOCK_ENABLED_COLOR
+        self._font_color = list(Colors.FONT_COLOR)
 
     @property
     def coordinate(self):
@@ -106,6 +105,19 @@ class Block(CoreBlock, Element):
         """
         self.states['_rotation'] = rot
 
+    def _update_colors(self):
+        self._bg_color = (
+            Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
+            Colors.BLOCK_BYPASSED_COLOR if self.state == 'bypassed' else
+            Colors.BLOCK_ENABLED_COLOR if self.state == 'enabled' else
+            Colors.BLOCK_DISABLED_COLOR
+        )
+        self._font_color[-1] = 1.0 if self.state == 'enabled' else 0.4
+        self._border_color = (
+            Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
+            Colors.BORDER_COLOR_DISABLED if not self.state == 'enabled' else Colors.BORDER_COLOR
+        )
+
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
         if self.is_horizontal():
@@ -136,19 +148,11 @@ class Block(CoreBlock, Element):
 
     def create_labels(self):
         """Create the labels for the signal block."""
-        self._bg_color = (
-            Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
-            Colors.BLOCK_BYPASSED_COLOR if self.get_bypassed() else
-            Colors.BLOCK_ENABLED_COLOR if self.enabled else
-            Colors.BLOCK_DISABLED_COLOR
-        )
-
-        # update the title layout
         title_layout, params_layout = self._surface_layouts
 
         title_layout.set_markup(
-            '<span foreground="{foreground}" font_desc="{font}"><b>{name}</b></span>'.format(
-                foreground='black' if self.is_valid() else 'red', font=BLOCK_FONT,
+            '<span {foreground} font_desc="{font}"><b>{name}</b></span>'.format(
+                foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
                 name=Utils.encode(self.name)
             )
         )
@@ -159,9 +163,7 @@ class Block(CoreBlock, Element):
             markups = [param.format_block_surface_markup()
                        for param in self.params.values() if param.get_hide() not in ('all', 'part')]
         else:
-            markups = ['<span foreground="black" font_desc="{font}"><b>key: </b>{key}</span>'.format(
-                font=PARAM_FONT, key=self.key
-            )]
+            markups = ['<span font_desc="{font}"><b>key: </b>{key}</span>'.format(font=PARAM_FONT, key=self.key)]
 
         params_layout.set_spacing(LABEL_SEPARATION * Pango.SCALE)
         params_layout.set_markup('\n'.join(markups))
@@ -177,6 +179,7 @@ class Block(CoreBlock, Element):
         width = label_width + 2 * BLOCK_LABEL_PADDING
         height = label_height + 2 * BLOCK_LABEL_PADDING
 
+        self._update_colors()
         self.create_port_labels()
 
         def get_min_height_for_ports(ports):
@@ -254,9 +257,9 @@ class Block(CoreBlock, Element):
             cr.restore()
 
         cr.rectangle(*self._area)
-        cr.set_source_rgb(*self._bg_color)
+        cr.set_source_rgba(*self._bg_color)
         cr.fill_preserve()
-        cr.set_source_rgb(*border_color)
+        cr.set_source_rgba(*border_color)
         cr.stroke()
 
         # title and params label
@@ -265,6 +268,7 @@ class Block(CoreBlock, Element):
             cr.translate(-self.width, 0)
         cr.translate(*self._surface_layout_offsets)
 
+        cr.set_source_rgba(*self._font_color)
         for layout in self._surface_layouts:
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)

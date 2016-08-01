@@ -44,7 +44,7 @@ class Port(_Port, Element):
         self.force_show_label = False
 
         self._area = []
-        self._bg_color = self._border_color = 0, 0, 0
+        self._bg_color = self._border_color = 0, 0, 0, 0
         self._line_width_factor = 1.0
         self._label_layout_offsets = 0, 0
 
@@ -73,7 +73,7 @@ class Port(_Port, Element):
         """
         if not self.parent_block.enabled:
             self._bg_color = Colors.BLOCK_DISABLED_COLOR
-            self._border_color = Colors.BORDER_COLOR
+            self._border_color = Colors.BORDER_COLOR_DISABLED
             return
 
         color = Colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or Colors.PORT_TYPE_TO_COLOR.get('')
@@ -110,7 +110,7 @@ class Port(_Port, Element):
         self._update_colors()
 
         layout = self.label_layout
-        layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
+        layout.set_markup('<span font_desc="{font}">{name}</span>'.format(
             name=Utils.encode(self.name), font=Constants.PORT_FONT
         ))
         label_width, label_height = self.label_layout.get_pixel_size()
@@ -132,9 +132,9 @@ class Port(_Port, Element):
         cr.translate(*self.coordinate)
 
         cr.rectangle(*self._area)
-        cr.set_source_rgb(*self._bg_color)
+        cr.set_source_rgba(*self._bg_color)
         cr.fill_preserve()
-        cr.set_source_rgb(*border_color)
+        cr.set_source_rgba(*border_color)
         cr.stroke()
 
         if not self._show_label:
@@ -145,6 +145,7 @@ class Port(_Port, Element):
             cr.translate(-self.width, 0)
         cr.translate(*self._label_layout_offsets)
 
+        cr.set_source_rgba(*Colors.FONT_COLOR)
         PangoCairo.update_layout(cr, self.label_layout)
         PangoCairo.show_layout(cr, self.label_layout)
 

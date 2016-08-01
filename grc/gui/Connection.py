@@ -81,10 +81,11 @@ class Connection(CoreConnection, Element):
         connector_length = self.sink_port.connector_length + CONNECTOR_ARROW_HEIGHT
         self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.sink_port.rotation)
         #build the arrow
-        self.arrow = [(0, 0),
+        self._arrow_base = [
+            (0, 0),
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.sink_port.rotation),
             Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.sink_port.rotation),
-        ]
+        ] if self.sink_block.state != 'bypassed' else []
         source_domain = self.source_port.domain
         sink_domain = self.sink_port.domain
 
@@ -120,7 +121,7 @@ class Connection(CoreConnection, Element):
         p2 = x2, y2 = self.x2 + x3, self.y2 + y3
         p1 = x1, y1 = self.x1, self.y1
         p0 = x_start - x_pos, y_start - y_pos
-        self._arrow = [(x + x3, y + y3) for x, y in self.arrow]
+        self._arrow = [(x + x3, y + y3) for x, y in self._arrow_base]
 
         if abs(source_dir - sink.get_connector_direction()) == 180:
             # 2 possible point sets to create a 3-line connector
@@ -185,21 +186,22 @@ class Connection(CoreConnection, Element):
             cr.line_to(*point)
 
         if color1:  # not a message connection
-            cr.set_source_rgb(*color1)
+            cr.set_source_rgba(*color1)
             cr.stroke_preserve()
 
         if color1 != color2:
             cr.save()
             cr.set_dash([5.0, 5.0], 5.0 if color1 else 0.0)
-            cr.set_source_rgb(*color2)
+            cr.set_source_rgba(*color2)
             cr.stroke()
             cr.restore()
         else:
             cr.new_path()
 
-        cr.set_source_rgb(*arrow_color)
-        cr.move_to(*self._arrow[0])
-        cr.line_to(*self._arrow[1])
-        cr.line_to(*self._arrow[2])
-        cr.close_path()
-        cr.fill()
+        if self._arrow:
+            cr.set_source_rgba(*arrow_color)
+            cr.move_to(*self._arrow[0])
+            cr.line_to(*self._arrow[1])
+            cr.line_to(*self._arrow[2])
+            cr.close_path()
+            cr.fill()

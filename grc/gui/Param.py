@@ -67,11 +67,10 @@ class Param(_Param):
             hasattr(block, 'get_callbacks') and \
             any(self.key in callback for callback in block._callbacks)
 
-        return '<span underline="{line}" foreground="{color}" font_desc="Sans 9">{label}</span>'.format(
-            line='low' if has_callback else 'none',
-            color='blue' if have_pending_changes else
-                  'black' if self.is_valid() else
-                  'red',
+        return '<span {underline} {foreground} font_desc="Sans 9">{label}</span>'.format(
+            underline='underline="low"' if has_callback else '',
+            foreground='foreground="blue"' if have_pending_changes else
+                       'foreground="red"' if not self.is_valid() else '',
             label=Utils.encode(self.name)
         )
 
@@ -157,8 +156,7 @@ class Param(_Param):
         Returns:
             a pango markup string
         """
-        return '<span foreground="{color}" font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
-            color='black' if self.is_valid() else 'red', font=Constants.PARAM_FONT,
-            label=Utils.encode(self.name),
-            value=Utils.encode(self.pretty_print().replace('\n', ' '))
+        return '<span {foreground} font_desc="{font}"><b>{label}:</b> {value}</span>'.format(
+            foreground='foreground="red"' if not self.is_valid() else '', font=Constants.PARAM_FONT,
+            label=Utils.encode(self.name), value=Utils.encode(self.pretty_print().replace('\n', ' '))
         )

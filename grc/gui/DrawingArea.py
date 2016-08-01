@@ -188,7 +188,7 @@ class DrawingArea(Gtk.DrawingArea):
     def draw(self, widget, cr):
         width = widget.get_allocated_width()
         height = widget.get_allocated_height()
-        cr.set_source_rgb(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
+        cr.set_source_rgba(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
         cr.rectangle(0, 0, width, height)
 
         cr.scale(self.zoom_factor, self.zoom_factor)

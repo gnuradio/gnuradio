@@ -32,19 +32,11 @@ def _color_parse(color_code):
 
 
 def get_color(color_code):
-    # color = _color_parse(color_code)
-    # print(dir(cairo.SolidPattern))
-    # cairo_pattern = cairo.SolidPattern(
-    #     red=color.red,
-    #     green=color.green,
-    #     blue=color.blue,
-    #     alpha=color.alpha
-    # )
-    # return cairo_pattern
-
-    chars_per_color = 2 if len(color_code) > 4 else 1
-    offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
-    return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
+    color = _color_parse(color_code)
+    return color.red, color.green, color.blue, color.alpha
+    # chars_per_color = 2 if len(color_code) > 4 else 1
+    # offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
+    # return tuple(int(color_code[o:o + 2], 16) / 255.0 for o in offsets)
 
 #################################################################################
 # fg colors
@@ -52,6 +44,8 @@ def get_color(color_code):
 
 HIGHLIGHT_COLOR = get_color('#00FFFF')
 BORDER_COLOR = get_color('#444444')
+BORDER_COLOR_DISABLED = get_color('#888888')
+FONT_COLOR = get_color('#000000')
 
 # Missing blocks stuff
 MISSING_BLOCK_BACKGROUND_COLOR = get_color('#FFF2F2')
