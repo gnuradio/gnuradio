@@ -34,7 +34,6 @@ except ImportError:
     print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
     raise SystemExit, 1
 
-from optparse import OptionParser
 
 class plot_data:
     def __init__(self, datatype, filenames, options):

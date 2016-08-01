@@ -22,7 +22,7 @@
 
 import os
 import re
-from optparse import OptionParser, OptionGroup
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from gnuradio import gr
 from util_functions import get_modname
@@ -35,6 +35,8 @@ class ModToolException(BaseException):
 class ModTool(object):
     """ Base class for all modtool command classes. """
     name = 'base'
+    description = None
+
     def __init__(self):
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc'] # List subdirs where stuff happens
         self._has_subdirs = {}
@@ -44,45 +46,49 @@ class ModTool(object):
         for subdir in self._subdirs:
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
-        self.parser = self.setup_parser()
         self._dir = None
 
-    def setup_parser(self):
-        """ Init the option parser. If derived classes need to add options,
-        override this and call the parent function. """
-        parser = OptionParser(add_help_option=False)
-        parser.usage = '%prog ' + self.name + ' [options] <PATTERN> \n' + \
-                       ' Call "%prog ' + self.name + '" without any options to run it interactively.'
-        ogroup = OptionGroup(parser, "General options")
-        ogroup.add_option("-h", "--help", action="help", help="Displays this help message.")
-        ogroup.add_option("-d", "--directory", type="string", default=".",
+    @staticmethod
+    def setup_parser(parser):
+        """Override in child class."""
+        pass
+
+    @staticmethod
+    def setup_parser_block(parser):
+        """Setup options specific for block manipulating modules."""
+        parser.add_argument("blockname", nargs="?", metavar="BLOCK_NAME",
+                help="Name of the block/module")
+
+    @staticmethod
+    def get_parser():
+        """Init the option parser."""
+        parser = ArgumentParser(
+                description='Manipulate with GNU Radio modules source code tree. ' + \
+                        'Call it withou options to run specified command interactively',
+                        formatter_class=RawDescriptionHelpFormatter)
+        parser.add_argument("-d", "--directory", default=".",
                 help="Base directory of the module. Defaults to the cwd.")
-        ogroup.add_option("-n", "--module-name", type="string", default=None,
-                help="Use this to override the current module's name (is normally autodetected).")
-        ogroup.add_option("-N", "--block-name", type="string", default=None,
-                help="Name of the block, where applicable.")
-        ogroup.add_option("--skip-lib", action="store_true", default=False,
+        parser.add_argument("--skip-lib", action="store_true",
                 help="Don't do anything in the lib/ subdirectory.")
-        ogroup.add_option("--skip-swig", action="store_true", default=False,
+        parser.add_argument("--skip-swig", action="store_true",
                 help="Don't do anything in the swig/ subdirectory.")
-        ogroup.add_option("--skip-python", action="store_true", default=False,
+        parser.add_argument("--skip-python", action="store_true",
                 help="Don't do anything in the python/ subdirectory.")
-        ogroup.add_option("--skip-grc", action="store_true", default=False,
+        parser.add_argument("--skip-grc", action="store_true",
                 help="Don't do anything in the grc/ subdirectory.")
-        ogroup.add_option("--scm-mode", type="choice", choices=('yes', 'no', 'auto'),
+        parser.add_argument("--scm-mode", choices=('yes', 'no', 'auto'),
                 default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
-                help="Use source control management (yes, no or auto).")
-        ogroup.add_option("-y", "--yes", action="store_true", default=False,
+                help="Use source control management [ yes | no | auto ]).")
+        parser.add_argument("-y", "--yes", action="store_true",
                 help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
-        parser.add_option_group(ogroup)
         return parser
 
-    def setup(self, options, args):
+    def setup(self, options):
         """ Initialise all internal variables, such as the module name etc. """
         self._dir = options.directory
         if not self._check_directory(self._dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
-        if options.module_name is not None:
+        if hasattr(options, 'module_name') and options.module_name is not None:
             self._info['modname'] = options.module_name
         else:
             self._info['modname'] = get_modname()
@@ -102,7 +108,7 @@ class ModTool(object):
             self._skip_subdirs['swig'] = True
         if options.skip_grc or not self._has_subdirs['grc']:
             self._skip_subdirs['grc'] = True
-        self._info['blockname'] = options.block_name
+        self._info['blockname'] = options.blockname
         self._setup_files()
         self._info['yes'] = options.yes
         self.options = options
@@ -181,21 +187,19 @@ class ModTool(object):
                 return fname
         return None
 
-    def run(self):
+    def run(self, options):
         """ Override this. """
-        pass
+        raise NotImplementedError('Module implementation missing')
 
 
-def get_class_dict(the_globals):
-    " Return a dictionary of the available commands in the form command->class "
-    classdict = {}
-    for g in the_globals:
+def get_modtool_modules(all_objects):
+    """Return list with all modtool modules."""
+    modules = []
+    for o in all_objects:
         try:
-            if issubclass(g, ModTool):
-                classdict[g.name] = g
-                for a in g.aliases:
-                    classdict[a] = g
+            if issubclass(o, ModTool) and o != ModTool:
+                modules.append(o)
         except (TypeError, AttributeError):
             pass
-    return classdict
+    return modules
 

@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(FILES
     modtool_add.py
     modtool_base.py
     modtool_disable.py
-    modtool_help.py
     modtool_info.py
     modtool_makexml.py
     modtool_newmod.py
