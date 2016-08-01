@@ -1,5 +1,5 @@
 """
-Copyright 2007-2011 Free Software Foundation, Inc.
+Copyright 2007-2011, 2016q Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -168,6 +168,7 @@ class FlowGraph(CoreFlowgraph, Element):
         """
         self.rewrite()
         self.validate()
+        self.update_elements_to_draw()
         self.create_labels()
         self.create_shapes()
 
@@ -469,6 +470,14 @@ class FlowGraph(CoreFlowgraph, Element):
                 continue  # skip hidden disabled blocks and connections
             self._elements_to_draw.append(element)
 
+    def create_labels(self):
+        for element in self._elements_to_draw:
+            element.create_labels()
+
+    def create_shapes(self):
+        for element in self._elements_to_draw:
+            element.create_shapes()
+
     def _drawables(self):
         show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
         for element in self._elements_to_draw:
@@ -479,9 +488,6 @@ class FlowGraph(CoreFlowgraph, Element):
 
     def draw(self, widget, cr):
         """Draw blocks connections comment and select rectangle"""
-        # todo: only update if required, duplicate logic in
-        self.update_elements_to_draw()
-
         for draw_element in self._drawables():
             cr.save()
             draw_element(widget, cr)

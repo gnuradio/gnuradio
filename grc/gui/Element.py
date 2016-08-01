@@ -76,25 +76,6 @@ class Element(object):
         rotation = rotation or self.rotation
         return rotation in (90, 270)
 
-    def create_labels(self):
-        """
-        Create labels (if applicable) and call on all children.
-        Call this base method before creating labels in the element.
-        """
-        for child in self.get_children():
-            child.create_labels()
-
-    def create_shapes(self):
-        """
-        Create shapes (if applicable) and call on all children.
-        Call this base method before creating shapes in the element.
-        """
-        for child in self.get_children():
-            child.create_shapes()
-
-    def draw(self, widget, cr):
-        raise NotImplementedError()
-
     def rotate(self, rotation):
         """
         Rotate all of the areas by 90 degrees.
@@ -114,6 +95,21 @@ class Element(object):
         x, y = self.coordinate
         dx, dy = delta_coor
         self.coordinate = (x + dx, y + dy)
+
+    def create_labels(self):
+        """
+        Create labels (if applicable) and call on all children.
+        Call this base method before creating labels in the element.
+        """
+
+    def create_shapes(self):
+        """
+        Create shapes (if applicable) and call on all children.
+        Call this base method before creating shapes in the element.
+        """
+
+    def draw(self, widget, cr):
+        raise NotImplementedError()
 
     def bounds_from_area(self, area):
         x1, y1, w, h = area
