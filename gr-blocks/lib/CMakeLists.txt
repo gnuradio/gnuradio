@@ -199,6 +199,7 @@ list(APPEND gr_blocks_sources
     throttle_impl.cc
     transcendental_impl.cc
     tcp_connection.cc
+    tcp_server_sink_impl.cc
     tuntap_pdu_impl.cc
     tag_gate_impl.cc
     tagged_stream_align_impl.cc

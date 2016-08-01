@@ -1,6 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #
-# Copyright 2015 Free Software Foundation, Inc.
+# Copyright 2015-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -32,13 +32,14 @@ Signal Generator App
 # Generated: Sun Jun 28 17:21:28 2015
 ##################################################
 
+from __future__ import print_function
 import sip
 import sys
 import threading
 import time
 from distutils.version import StrictVersion
 from PyQt4 import Qt
-from PyQt4.QtCore import QObject, pyqtSlot
+from PyQt4.QtCore import pyqtSlot
 from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -69,9 +70,9 @@ class uhd_siggen_gui(Qt.QWidget):
         Qt.QWidget.__init__(self)
         self.setWindowTitle("UHD Signal Generator")
         try:
-             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
-             pass
+            pass
         self.top_scroll_layout = Qt.QVBoxLayout()
         self.setLayout(self.top_scroll_layout)
         self.top_scroll = Qt.QScrollArea()
@@ -90,8 +91,8 @@ class uhd_siggen_gui(Qt.QWidget):
         # Widgets + Controls
         ##################################################
         ### Waveform Selector
-        self._waveform_options = uhd_siggen.waveforms.keys()
-        self._waveform_labels = uhd_siggen.waveforms.values()
+        self._waveform_options = uhd_siggen.WAVEFORMS.keys()
+        self._waveform_labels = uhd_siggen.WAVEFORMS.values()
         self._waveform_group_box = Qt.QGroupBox("Waveform")
         self._waveform_box = Qt.QHBoxLayout()
         class variable_chooser_button_group(Qt.QButtonGroup):
@@ -259,11 +260,12 @@ class uhd_siggen_gui(Qt.QWidget):
         self._lo_locked_probe_0_tool_bar.addWidget(self._lo_locked_probe_0_label)
         self.top_grid_layout.addWidget(self._lo_locked_probe_0_tool_bar, 8,0,1,1)
         def _chan0_lo_locked_probe():
+            " Monitor lock status of LO on channel 0 "
             while True:
-                val = all([self.usrp.get_sensor('lo_locked', c).to_bool() for c in range(len(self._sg.channels))])
                 try:
+                    val = all([self.usrp.get_sensor('lo_locked', c).to_bool() for c in range(len(self._sg.channels))])
                     self.set_chan0_lo_locked(val)
-                except AttributeError:
+                except:
                     pass
                 time.sleep(.1)
         _chan0_lo_locked_thread = threading.Thread(target=_chan0_lo_locked_probe)
@@ -366,8 +368,8 @@ class uhd_siggen_gui(Qt.QWidget):
                 self.freq_fine + self.freq_coarse,
                 self.lo_offset
         )
-        for idx, c in enumerate(self._sg.channels):
-            tune_res = self.usrp.set_center_freq(tune_req, c)
+        for idx, chan in enumerate(self._sg.channels):
+            tune_res = self.usrp.set_center_freq(tune_req, chan)
             if idx == 0:
                 self.set_label_dsp_freq(tune_res.actual_dsp_freq)
                 self.set_label_rf_freq(tune_res.actual_rf_freq)
@@ -446,7 +448,7 @@ def main():
     """ Go, go, go! """
     parser = setup_parser()
     args = parser.parse_args()
-    if(StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0")):
+    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
         Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui', 'style', 'raster'))
     qapp = Qt.QApplication(sys.argv)
     siggen_gui = uhd_siggen_gui(args)
@@ -457,14 +459,17 @@ def main():
     qapp.exec_()
     siggen_gui = None #to clean up Qt widgets
 
-if __name__ == '__main__':
+def x11_init_threads():
+    " If on X11, init threads "
     import ctypes
-    import sys
     if sys.platform.startswith('linux'):
         try:
             x11 = ctypes.cdll.LoadLibrary('libX11.so')
             x11.XInitThreads()
         except:
             print("Warning: failed to XInitThreads()")
+
+if __name__ == '__main__':
+    x11_init_threads()
     main()
 

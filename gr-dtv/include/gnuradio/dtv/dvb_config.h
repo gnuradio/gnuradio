@@ -107,6 +107,7 @@ namespace gr {
       MOD_256APSK,
       MOD_BPSK,
       MOD_BPSK_SF2,
+      MOD_8VSB,
       MOD_OTHER,
     };
 
