@@ -185,6 +185,7 @@ gnuradio.blocks
 .. autoblock:: gnuradio.blocks.tagged_stream_mux
 .. autoblock:: gnuradio.blocks.tagged_stream_to_pdu
 .. autoblock:: gnuradio.blocks.tags_strobe
+.. autoblock:: gnuradio.blocks.tcp_server_sink
 .. autoblock:: gnuradio.blocks.threshold_ff
 .. autoblock:: gnuradio.blocks.throttle
 .. autoblock:: gnuradio.blocks.transcendental

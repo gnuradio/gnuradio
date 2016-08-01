@@ -27,7 +27,7 @@
 #include <gnuradio/io_signature.h>
 #include "atsc_viterbi_decoder_impl.h"
 #include "atsc_types.h"
-#include <atsc_viterbi_mux.cc> // machine generated
+#include "atsc_viterbi_mux.h"
 
 namespace gr {
   namespace dtv {

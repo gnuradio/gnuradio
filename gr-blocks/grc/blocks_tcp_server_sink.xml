@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##TCP Server Sink
+###################################################
+ -->
+<block>
+	<name>TCP Server Sink</name>
+	<key>blocks_tcp_server_sink</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.tcp_server_sink($type.size*$vlen, $ipaddr, $port, $noblock)</make>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Destination IP Address</name>
+		<key>ipaddr</key>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Destination Port</name>
+		<key>port</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Nonblocking Mode</name>
+		<key>noblock</key>
+		<type>enum</type>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+</block>

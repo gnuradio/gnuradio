@@ -118,8 +118,9 @@ namespace gr {
     void
     dvbt_bit_inner_interleaver_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-      ninput_items_required[0] = noutput_items;
-      ninput_items_required[1] = noutput_items;
+      unsigned ninputs = ninput_items_required.size();
+      for (unsigned i = 0; i < ninputs; i++)
+        ninput_items_required[i] = noutput_items;
     }
 
     int
