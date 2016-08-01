@@ -250,7 +250,7 @@ class Block(CoreBlock, Element):
 
         for port in self.active_ports():  # ports first
             cr.save()
-            port.draw(widget, cr, border_color)
+            port.draw(widget, cr)
             cr.restore()
 
         cr.rectangle(*self._area)

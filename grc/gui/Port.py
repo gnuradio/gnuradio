@@ -44,7 +44,7 @@ class Port(_Port, Element):
         self.force_show_label = False
 
         self._area = []
-        self._bg_color = 0, 0, 0
+        self._bg_color = self._border_color = 0, 0, 0
         self._line_width_factor = 1.0
         self._label_layout_offsets = 0, 0
 
@@ -63,7 +63,7 @@ class Port(_Port, Element):
         self.width_with_label = value
         self.label_layout.set_width(value * Pango.SCALE)
 
-    def _get_color(self):
+    def _update_colors(self):
         """
         Get the color that represents this port's type.
         Codes differ for ports where the vec length is 1 or greater than 1.
@@ -71,12 +71,18 @@ class Port(_Port, Element):
         Returns:
             a hex color code.
         """
+        if not self.parent_block.enabled:
+            self._bg_color = Colors.BLOCK_DISABLED_COLOR
+            self._border_color = Colors.BORDER_COLOR
+            return
+
         color = Colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or Colors.PORT_TYPE_TO_COLOR.get('')
         vlen = self.get_vlen()
         if vlen > 1:
             dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, vlen)]
             color = tuple(max(c - dark, 0) for c in color)
-        return color
+        self._bg_color = color
+        self._border_color = tuple(max(c - 0.3, 0) for c in color)
 
     def create_shapes(self):
         """Create new areas and labels for the port."""
@@ -101,7 +107,7 @@ class Port(_Port, Element):
         else:
             self._line_width_factor = 2.0
 
-        self._bg_color = self._get_color()
+        self._update_colors()
 
         layout = self.label_layout
         layout.set_markup("""<span foreground="black" font_desc="{font}">{name}</span>""".format(
@@ -117,10 +123,11 @@ class Port(_Port, Element):
             self._label_layout_offsets[1] += Constants.PORT_EXTRA_BUS_HEIGHT / 2
         self.height += self.height % 2  # uneven height
 
-    def draw(self, widget, cr, border_color):
+    def draw(self, widget, cr):
         """
         Draw the socket with a label.
         """
+        border_color = Colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
         cr.translate(*self.coordinate)
 
