@@ -42,6 +42,8 @@ class Port(_Port, Element):
         self._connector_coordinate = (0, 0)
         self._hovering = False
         self.force_show_label = False
+
+        self._area = []
         self._bg_color = 0, 0, 0
         self._line_width_factor = 1.0
         self._label_layout_offsets = 0, 0
@@ -79,9 +81,10 @@ class Port(_Port, Element):
     def create_shapes(self):
         """Create new areas and labels for the port."""
         if self.is_horizontal():
-            self.area = [0, 0, self.width, self.height]
+            self._area = (0, 0, self.width, self.height)
         elif self.is_vertical():
-            self.area = [0, 0, self.height, self.width]
+            self._area = (0, 0, self.height, self.width)
+        self.bounds_from_area(self._area)
 
         self._connector_coordinate = {
             0:   (self.width, self.height / 2),
@@ -121,7 +124,7 @@ class Port(_Port, Element):
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
         cr.translate(*self.coordinate)
 
-        cr.rectangle(*self.area)
+        cr.rectangle(*self._area)
         cr.set_source_rgb(*self._bg_color)
         cr.fill_preserve()
         cr.set_source_rgb(*border_color)

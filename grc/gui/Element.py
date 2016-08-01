@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -45,8 +45,8 @@ class Element(object):
         self.rotation = 0
         self.highlighted = False
 
-        self.area = []
-        self.line = []
+        self._bounding_rects = []
+        self._bounding_points = []
 
     def is_horizontal(self, rotation=None):
         """
@@ -115,6 +115,30 @@ class Element(object):
         dx, dy = delta_coor
         self.coordinate = (x + dx, y + dy)
 
+    def bounds_from_area(self, area):
+        x1, y1, w, h = area
+        x2 = x1 + w
+        y2 = y1 + h
+        self._bounding_rects = [(x1, y1, x2, y2)]
+        self._bounding_points = [(x1, y1), (x2, y1), (x1, y2), (x2, y2)]
+
+    def bounds_from_line(self, line):
+        self._bounding_rects = rects = []
+        self._bounding_points = list(line)
+        last_point = line[0]
+        for x2, y2 in line[1:]:
+            (x1, y1), last_point = last_point, (x2, y2)
+            if x1 == x2:
+                x1, x2 = x1 - LINE_SELECT_SENSITIVITY, x2 + LINE_SELECT_SENSITIVITY
+                if y2 < y1:
+                    y1, y2 = y2, y1
+            elif y1 == y2:
+                y1, y2 = y1 - LINE_SELECT_SENSITIVITY, y2 + LINE_SELECT_SENSITIVITY
+                if x2 < x1:
+                    x1, x2 = x2, x1
+
+            rects.append((x1, y1, x2, y2))
+
     def what_is_selected(self, coor, coor_m=None):
         """
         One coordinate specified:
@@ -131,53 +155,22 @@ class Element(object):
         Returns:
             self if one of the areas/lines encompasses coor, else None.
         """
-        # function to test if p is between a and b (inclusive)
-        def in_between(p, a, b):
-            # return min(a, b) <= p <= max(a, b)
-            return a <= p <= b or b <= p <= a
-        # relative coordinate
         x, y = [a - b for a, b in zip(coor, self.coordinate)]
-        if coor_m:
-            x_m, y_m = [a - b for a, b in zip(coor_m, self.coordinate)]
-            # handle rectangular areas
-            if self.area:
-                x1, y1, w, h = self.area
-                if (
-                    in_between(x1,     x, x_m) and in_between(y1,     y, y_m) or
-                    in_between(x1 + w, x, x_m) and in_between(y1,     y, y_m) or
-                    in_between(x1,     x, x_m) and in_between(y1 + h, y, y_m) or
-                    in_between(x1 + w, x, x_m) and in_between(y1 + h, y, y_m)
-                ):
+
+        if not coor_m:
+            for x1, y1, x2, y2 in self._bounding_rects:
+                if x1 <= x <= x2 and y1 <= y <= y2:
                     return self
-            # handle horizontal or vertical lines
-            elif self.line:
-                last_point = self.line[0]
-                for x2, y2 in self.line[1:]:
-                    (x1, y1), last_point = last_point, (x2, y2)
-                    if (
-                        in_between(x1, x, x_m) and in_between(y1, y, y_m) or
-                        in_between(x2, x, x_m) and in_between(y2, y, y_m)
-                    ):
-                        return self
-            return None
         else:
-            # handle rectangular areas
-            if self.area:
-                x1, y1, w, h = self.area
-                if in_between(x, x1, x1+w) and in_between(y, y1, y1+h):
+            x_m, y_m = [a - b for a, b in zip(coor_m, self.coordinate)]
+            if y_m < y:
+                y, y_m = y_m, y
+            if x_m < x:
+                x, x_m = x_m, x
+
+            for x1, y1 in self._bounding_points:
+                if x <= x1 <= x_m and y <= y1 <= y_m:
                     return self
-            # handle horizontal or vertical lines
-            elif self.line:
-                last_point = self.line[0]
-                for x2, y2 in self.line[1:]:
-                    (x1, y1), last_point = last_point, (x2, y2)
-                    if x1 == x2:
-                        x1, x2 = x1 - LINE_SELECT_SENSITIVITY, x2 + LINE_SELECT_SENSITIVITY
-                    if y1 == y2:
-                        y1, y2 = y1 - LINE_SELECT_SENSITIVITY, y2 + LINE_SELECT_SENSITIVITY
-                    if in_between(x, x1, x2) and in_between(y, y1, y2):
-                        return self
-            return None
 
     def mouse_over(self):
         pass

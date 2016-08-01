@@ -41,6 +41,7 @@ class Connection(CoreConnection, Element):
         super(self.__class__, self).__init__(*args, **kwargs)
         Element.__init__(self)
 
+        self._line = []
         self._color = self._color2 = self._arrow_color = None
 
         self._sink_rot = self._source_rot = None
@@ -65,7 +66,6 @@ class Connection(CoreConnection, Element):
 
     def create_shapes(self):
         """Pre-calculate relative coordinates."""
-        Element.create_shapes(self)
         self._sink_rot = None
         self._source_rot = None
         self._sink_coor = None
@@ -135,7 +135,7 @@ class Connection(CoreConnection, Element):
                 points, alt = alt, points
             # create 3-line connector
             i1, i2 = points
-            self.line = [p0, p1, i1, i2, p2, p3]
+            self._line = [p0, p1, i1, i2, p2, p3]
         else:
             # 2 possible points to create a right-angled connector
             point, alt = [(x1, y2), (x2, y1)]
@@ -149,9 +149,10 @@ class Connection(CoreConnection, Element):
             if Utils.get_angle_from_coordinates(point, p1) == source_dir:
                 point, alt = alt, point
             # create right-angled connector
-            self.line = [p0, p1, point, p2, p3]
+            self._line = [p0, p1, point, p2, p3]
+        self.bounds_from_line(self._line)
 
-    def draw(self, widget, cr, border_color=None, bg_color=None):
+    def draw(self, widget, cr):
         """
         Draw the connection.
         """
@@ -174,7 +175,7 @@ class Connection(CoreConnection, Element):
             color for color in (self._color, self._color2, self._arrow_color))
 
         cr.translate(*self.coordinate)
-        for point in self.line:
+        for point in self._line:
             cr.line_to(*point)
         cr.set_source_rgb(*color1)
         cr.stroke_preserve()

@@ -55,6 +55,7 @@ class Block(CoreBlock, Element):
         self._surface_layout_offsets = 0, 0
         self._comment_layout = None
 
+        self._area = []
         self._border_color = (Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
                               Colors.BORDER_COLOR)
         self._bg_color = Colors.BLOCK_ENABLED_COLOR
@@ -108,9 +109,10 @@ class Block(CoreBlock, Element):
     def create_shapes(self):
         """Update the block, parameters, and ports when a change occurs."""
         if self.is_horizontal():
-            self.area = [0, 0, self.width, self.height]
+            self._area = (0, 0, self.width, self.height)
         elif self.is_vertical():
-            self.area = [0, 0, self.height, self.width]
+            self._area = (0, 0, self.height, self.width)
+        self.bounds_from_area(self._area)
 
         bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
@@ -251,7 +253,7 @@ class Block(CoreBlock, Element):
             port.draw(widget, cr, border_color)
             cr.restore()
 
-        cr.rectangle(*self.area)
+        cr.rectangle(*self._area)
         cr.set_source_rgb(*self._bg_color)
         cr.fill_preserve()
         cr.set_source_rgb(*border_color)
