@@ -38,27 +38,9 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
-# Generate viterbi mux source
-# http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
-########################################################################
-if(NOT CMAKE_CROSSCOMPILING)
-  add_executable(atsc_viterbi_gen atsc/atsc_viterbi_gen.cc)
-  export(TARGETS atsc_viterbi_gen APPEND FILE ${EXPORT_FILE})
-endif()
-
-set(atsc_viterbi_mux_cc ${CMAKE_CURRENT_BINARY_DIR}/atsc_viterbi_mux.cc)
-
-add_custom_command(
-    OUTPUT ${atsc_viterbi_mux_cc}
-    DEPENDS atsc_viterbi_gen
-    COMMAND atsc_viterbi_gen -o ${atsc_viterbi_mux_cc}
-)
-
-########################################################################
 # Setup library
 ########################################################################
 list(APPEND dtv_sources
-  ${atsc_viterbi_mux_cc}
   atsc/atsc_deinterleaver_impl.cc
   atsc/atsc_depad_impl.cc
   atsc/atsc_derandomizer_impl.cc
