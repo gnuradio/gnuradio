@@ -33,14 +33,7 @@ set(MAINT_VERSION ${VERSION_INFO_MAINT_VERSION})
 ########################################################################
 find_package(Git)
 
-if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
-    message(STATUS "Extracting version information from git describe...")
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8 --long
-        OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    )
-else()
+MACRO(create_manual_git_describe)
     if(NOT GR_GIT_COUNT)
         set(GR_GIT_COUNT "compat-xxx")
     endif()
@@ -48,6 +41,20 @@ else()
         set(GR_GIT_HASH "xunknown")
     endif()
     set(GIT_DESCRIBE "v${MAJOR_VERSION}.${API_COMPAT}-${GR_GIT_COUNT}-${GR_GIT_HASH}")
+ENDMACRO()
+
+if(GIT_FOUND AND EXISTS ${CMAKE_SOURCE_DIR}/.git)
+    message(STATUS "Extracting version information from git describe...")
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --always --abbrev=8 --long
+        OUTPUT_VARIABLE GIT_DESCRIBE OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+    if(GIT_DESCRIBE STREQUAL "")
+        create_manual_git_describe()
+    endif()
+else()
+    create_manual_git_describe()
 endif()
 
 ########################################################################
