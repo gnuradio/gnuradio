@@ -61,7 +61,8 @@ class Platform(Element):
         )
 
         self._block_dtd = Constants.BLOCK_DTD
-        self._default_flow_graph = Constants.DEFAULT_FLOW_GRAPH
+        self._default_flow_graph = Constants.USER_DEFAULT_FLOW_GRAPH if \
+            os.path.exists(Constants.USER_DEFAULT_FLOW_GRAPH) else Constants.DEFAULT_FLOW_GRAPH
 
         # Create a dummy flow graph for the blocks
         self._flow_graph = Element(self)
