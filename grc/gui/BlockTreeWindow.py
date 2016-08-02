@@ -263,7 +263,7 @@ class BlockTreeWindow(Gtk.VBox):
             self.search_entry.hide()
 
         elif (event.get_state() & Gdk.ModifierType.CONTROL_MASK and event.keyval == Gdk.KEY_f) \
-             or event.keyval == Gdk.KEY_slash:
+              or event.keyval == Gdk.KEY_slash:
             # propagation doesn't work although treeview search is disabled =(
             # manually trigger action...
             Actions.FIND_BLOCKS.activate()
@@ -284,7 +284,8 @@ class BlockTreeWindow(Gtk.VBox):
         Only call set when the key is valid to ignore DND from categories.
         """
         key = self._get_selected_block_key()
-        if key: selection_data.set(selection_data.target, 8, key)
+        if key:
+            selection_data.set_text(key, len(key))
 
     def _handle_mouse_button_press(self, widget, event):
         """
