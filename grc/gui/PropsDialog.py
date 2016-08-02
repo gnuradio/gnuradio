@@ -43,6 +43,7 @@ class PropsDialog(Gtk.Dialog):
             title='Properties: ' + block.name,
             transient_for=parent,
             modal=True,
+            destroy_with_parent=True,
         )
         self.add_buttons(
             Gtk.STOCK_OK, Gtk.ResponseType.ACCEPT,

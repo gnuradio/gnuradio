@@ -168,7 +168,7 @@ class PythonEditorParam(InputParam):
 
     def __init__(self, *args, **kwargs):
         InputParam.__init__(self, *args, **kwargs)
-        button = self._button = Gtk.Button('Open in Editor')
+        button = self._button = Gtk.Button(label='Open in Editor')
         button.connect('clicked', self.open_editor)
         self.pack_start(button, True, True, True)
 

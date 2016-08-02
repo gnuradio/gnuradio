@@ -33,7 +33,7 @@ from .BlockTreeWindow import BlockTreeWindow
 from .VariableEditor import VariableEditor
 from .Constants import \
     NEW_FLOGRAPH_TITLE, DEFAULT_CONSOLE_WINDOW_WIDTH
-from .Dialogs import TextDisplay, MessageDialogHelper
+from .Dialogs import TextDisplay, MessageDialogWrapper
 from .NotebookPage import NotebookPage
 
 from ..core import Messages
@@ -398,10 +398,10 @@ class MainWindow(Gtk.Window):
             Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
             Gtk.STOCK_SAVE, Gtk.ResponseType.OK
         )
-        return MessageDialogHelper(
-            Gtk.MessageType.QUESTION, Gtk.ButtonsType.NONE, 'Unsaved Changes!',
+        return MessageDialogWrapper(
+            self, Gtk.MessageType.QUESTION, Gtk.ButtonsType.NONE, 'Unsaved Changes!',
             'Would you like to save changes before closing?', Gtk.ResponseType.OK, buttons
-        )
+        ).run_and_destroy()
 
     def _get_files(self):
         """

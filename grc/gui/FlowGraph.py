@@ -28,7 +28,7 @@ from itertools import count
 import six
 from six.moves import filter
 
-from gi.repository import GObject
+from gi.repository import GLib
 
 from . import Actions, Colors, Utils, Bars, Dialogs
 from .Element import Element
@@ -95,7 +95,7 @@ class FlowGraph(CoreFlowgraph, Element):
         else:
             config = self.parent_platform.config
             editor = (find_executable(config.editor) or
-                      Dialogs.ChooseEditorDialog(config))
+                      Dialogs.choose_editor(None, config))  # todo: pass in parent
             if not editor:
                 return
             updater = functools.partial(
@@ -103,7 +103,7 @@ class FlowGraph(CoreFlowgraph, Element):
             editor = self._external_updaters[target] = ExternalEditor(
                 editor=editor,
                 name=target[0], value=param.get_value(),
-                callback=functools.partial(GObject.idle_add, updater)
+                callback=functools.partial(GLib.idle_add, updater)
             )
             editor.start()
         try:

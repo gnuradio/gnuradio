@@ -26,10 +26,7 @@ import subprocess
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from . import Dialogs, Preferences, Actions, Executor, Constants
-from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
-                          SaveConsoleFileDialog, SaveScreenShotDialog,
-                          OpenQSSFileDialog)
+from . import Dialogs, Preferences, Actions, Executor, Constants, FileDialogs
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
@@ -379,13 +376,13 @@ class ActionHandler:
         # Window stuff
         ##################################################
         elif action == Actions.ABOUT_WINDOW_DISPLAY:
-            Dialogs.AboutDialog(self.platform.config)
+            Dialogs.show_about(main, self.platform.config)
         elif action == Actions.HELP_WINDOW_DISPLAY:
-            Dialogs.HelpDialog()
+            Dialogs.show_help(main)
         elif action == Actions.TYPES_WINDOW_DISPLAY:
-            Dialogs.TypesDialog(self.platform)
+            Dialogs.show_types(main)
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
-            Dialogs.ErrorsDialog(flow_graph)
+            Dialogs.ErrorsDialog(main, flow_graph).run_and_destroy()
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:
             main.update_panel_visibility(main.CONSOLE, action.get_active())
             action.save_to_preferences()
@@ -401,7 +398,7 @@ class ActionHandler:
         elif action == Actions.CLEAR_CONSOLE:
             main.text_display.clear()
         elif action == Actions.SAVE_CONSOLE:
-            file_path = SaveConsoleFileDialog(page.file_path).run()
+            file_path = FileDialogs.SaveConsole(main, page.file_path).run()
             if file_path is not None:
                 main.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
@@ -437,7 +434,7 @@ class ActionHandler:
                     # Leave it enabled
                     action.set_sensitive(True)
                     action.set_active(True)
-            #Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_sensitive(action.get_active())
+            # Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_sensitive(action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR:
             if self.init:
@@ -511,7 +508,7 @@ class ActionHandler:
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
                 flow_graph_update()
         elif action == Actions.FLOW_GRAPH_OPEN:
-            file_paths = args if args else OpenFlowGraphFileDialog(page.file_path).run()
+            file_paths = args if args else FileDialogs.OpenFlowGraph(main, page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i==0))
@@ -519,8 +516,8 @@ class ActionHandler:
                     main.tool_bar.refresh_submenus()
                     main.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
-            file_paths = OpenQSSFileDialog(self.platform.config.install_prefix +
-                                           '/share/gnuradio/themes/').run()
+            file_paths = FileDialogs.OpenQSS(main, self.platform.config.install_prefix +
+                                             '/share/gnuradio/themes/').run()
             if file_paths:
                 try:
                     prefs = self.platform.config.prefs
@@ -544,7 +541,7 @@ class ActionHandler:
                     Messages.send_fail_save(page.file_path)
                     page.saved = False
         elif action == Actions.FLOW_GRAPH_SAVE_AS:
-            file_path = SaveFlowGraphFileDialog(page.file_path).run()
+            file_path = FileDialogs.SaveFlowGraph(main, page.file_path).run()
             if file_path is not None:
                 page.file_path = os.path.abspath(file_path)
                 Actions.FLOW_GRAPH_SAVE()
@@ -552,7 +549,7 @@ class ActionHandler:
                 main.tool_bar.refresh_submenus()
                 main.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
-            file_path, background_transparent = SaveScreenShotDialog(page.file_path).run()
+            file_path, background_transparent = FileDialogs.SaveScreenShot(main, page.file_path).run()
             if file_path is not None:
                 pixbuf = flow_graph.get_drawing_area().get_screenshot(background_transparent)
                 pixbuf.save(file_path, Constants.IMAGE_FILE_EXTENSION[1:])
@@ -576,9 +573,10 @@ class ActionHandler:
             if not page.process:
                 Actions.FLOW_GRAPH_GEN()
                 xterm = self.platform.config.xterm_executable
+                Dialogs.show_missing_xterm(main, xterm)
                 if Preferences.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
-                        Dialogs.MissingXTermDialog(xterm)
+                        Dialogs.show_missing_xterm(main, xterm)
                     Preferences.xterm_missing(xterm)
                 if page.saved and page.file_path:
                     Executor.ExecFlowGraphThread(
