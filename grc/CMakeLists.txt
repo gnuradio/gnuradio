@@ -54,16 +54,6 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
 if(ENABLE_GRC)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("grc"
-    DISPLAY_NAME "GNU Radio Companion"
-    DESCRIPTION  "Graphical flow graph designer"
-    DEPENDS      "runtime_python"
-)
-
-########################################################################
 # Create and install the grc conf file
 ########################################################################
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
@@ -93,7 +83,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "grc"
 )
 
 file(GLOB py_files "*.py")
@@ -101,7 +90,6 @@ file(GLOB py_files "*.py")
 GR_PYTHON_INSTALL(
     FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc
-    COMPONENT "grc"
 )
 
 ########################################################################
@@ -117,18 +105,6 @@ string(REPLACE "\\" "\\\\" GRC_BLOCKS_PATH ${GRC_BLOCKS_PATH})
 
 file(TO_NATIVE_PATH ${GR_PYTHON_DIR} GR_PYTHON_POSTFIX)
 string(REPLACE "\\" "\\\\" GR_PYTHON_POSTFIX ${GR_PYTHON_POSTFIX})
-
-CPACK_SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}
-    #!include \\\"winmessages.nsh\\\"
-    WriteRegStr HKLM ${HLKM_ENV} \\\"GRC_BLOCKS_PATH\\\" \\\"$INSTDIR\\\\${GRC_BLOCKS_PATH}\\\"
-    SendMessage \\\${HWND_BROADCAST} \\\${WM_WININICHANGE} 0 \\\"STR:Environment\\\" /TIMEOUT=5000
-")
-
-CPACK_SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "${CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS}
-    #!include \\\"winmessages.nsh\\\"
-    DeleteRegValue HKLM ${HLKM_ENV} \\\"GRC_BLOCKS_PATH\\\"
-    SendMessage \\\${HWND_BROADCAST} \\\${WM_WININICHANGE} 0 \\\"STR:Environment\\\" /TIMEOUT=5000
-")
 
 endif(WIN32)
 

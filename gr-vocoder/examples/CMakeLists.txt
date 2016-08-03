@@ -31,14 +31,12 @@ GR_PYTHON_INSTALL(
     g723_40_audio_loopback.py
     ulaw_audio_loopback.py
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    COMPONENT "vocoder_examples"
 )
 if(LIBCODEC2_FOUND)
   GR_PYTHON_INSTALL(
     PROGRAMS
     codec2_audio_loopback.py
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    COMPONENT "vocoder_examples"
     )
 endif(LIBCODEC2_FOUND)
 if(LIBGSM_FOUND)
@@ -46,6 +44,5 @@ if(LIBGSM_FOUND)
     PROGRAMS
     gsm_audio_loopback.py
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    COMPONENT "vocoder_examples"
     )
 endif(LIBGSM_FOUND)

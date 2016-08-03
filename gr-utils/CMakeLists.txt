@@ -46,16 +46,6 @@ GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
 if(ENABLE_GR_UTILS)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("utils"
-    DISPLAY_NAME "Utils"
-    DESCRIPTION  "Misc gnuradio python utilities"
-    DEPENDS      "runtime_python"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(python/utils)

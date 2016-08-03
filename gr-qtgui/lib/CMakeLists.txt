@@ -177,7 +177,7 @@ endif(ENABLE_PYTHON)
 add_definitions(-DQWT_DLL) #setup QWT library linkage
 add_library(gnuradio-qtgui SHARED ${qtgui_sources})
 target_link_libraries(gnuradio-qtgui ${qtgui_libs})
-GR_LIBRARY_FOO(gnuradio-qtgui RUNTIME_COMPONENT "qtgui_runtime" DEVEL_COMPONENT "qtgui_devel")
+GR_LIBRARY_FOO(gnuradio-qtgui)
 
 if(ENABLE_STATIC_LIBS)
   if(ENABLE_GR_CTRLPORT)
@@ -199,6 +199,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-qtgui_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "qtgui_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

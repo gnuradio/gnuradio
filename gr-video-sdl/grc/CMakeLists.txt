@@ -23,5 +23,3 @@ install(FILES
 
     DESTINATION share/gnuradio/grc/blocks
 )
-
-
