@@ -45,5 +45,4 @@ target_link_libraries(display_qt ${QTGUI_LIBRARIES})
 INSTALL(TARGETS
   display_qt
   DESTINATION ${GR_PKG_QTGUI_EXAMPLES_DIR}
-  COMPONENT "qtgui_examples"
 )

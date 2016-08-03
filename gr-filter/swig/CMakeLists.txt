@@ -50,7 +50,6 @@ GR_SWIG_MAKE(filter_swig filter_swig.i)
 GR_SWIG_INSTALL(
     TARGETS filter_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
-    COMPONENT "filter_python"
 )
 
 install(
@@ -58,5 +57,4 @@ install(
     filter_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/gr_filter_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "filter_swig"
 )

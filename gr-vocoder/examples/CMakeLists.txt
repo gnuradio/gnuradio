@@ -33,5 +33,4 @@ GR_PYTHON_INSTALL(
     gsm_audio_loopback.py
     ulaw_audio_loopback.py
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    COMPONENT "vocoder_examples"
 )

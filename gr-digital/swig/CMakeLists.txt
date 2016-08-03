@@ -55,7 +55,6 @@ GR_SWIG_MAKE(digital_swig digital_swig.i)
 GR_SWIG_INSTALL(
     TARGETS digital_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
-    COMPONENT "digital_python"
 )
 
 install(
@@ -66,5 +65,4 @@ install(
     packet_header.i
     ${CMAKE_CURRENT_BINARY_DIR}/digital_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "digital_swig"
 )

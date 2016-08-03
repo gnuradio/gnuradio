@@ -156,7 +156,7 @@ list(APPEND digital_libs
 
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
-GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
+GR_LIBRARY_FOO(gnuradio-digital)
 
 add_dependencies(
     gnuradio-digital
@@ -195,7 +195,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-digital_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "digital_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

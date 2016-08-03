@@ -55,40 +55,6 @@ SET(GR_PKG_DIGITAL_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/digital)
 if(ENABLE_GR_DIGITAL)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_DIGITAL_DESCRIPTION "GNU Radio Digital Blocks")
-
-CPACK_COMPONENT("digital_runtime"
-    GROUP        "Digital"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("digital_devel"
-    GROUP        "Digital"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("digital_python"
-    GROUP        "Digital"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;digital_runtime"
-)
-
-CPACK_COMPONENT("digital_swig"
-    GROUP        "Digital"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;digital_python;digital_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/digital)
@@ -113,7 +79,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "digital_devel"
 )
 
 endif(ENABLE_GR_DIGITAL)

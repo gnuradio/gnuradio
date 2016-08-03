@@ -38,5 +38,4 @@ install(FILES
     vocoder_ulaw_decode_bs.xml
     vocoder_ulaw_encode_sb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "vocoder_python"
 )

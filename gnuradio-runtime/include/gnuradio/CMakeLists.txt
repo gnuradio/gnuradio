@@ -83,7 +83,6 @@ install(FILES
   rpcserver_selector.h
   ${CMAKE_CURRENT_BINARY_DIR}/logger.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 
 if(THRIFT_FOUND)
@@ -92,7 +91,6 @@ install(FILES
   thrift_application_base.h
   thrift_server_template.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 endif(THRIFT_FOUND)
 

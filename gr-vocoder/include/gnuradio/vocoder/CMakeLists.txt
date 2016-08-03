@@ -37,5 +37,4 @@ install(FILES
     ulaw_decode_bs.h
     ulaw_encode_sb.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_devel"
 )

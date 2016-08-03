@@ -71,9 +71,7 @@ list(APPEND wxgui_libs
 add_library(gnuradio-wxgui SHARED ${gr_wxgui_sources})
 
 target_link_libraries(gnuradio-wxgui ${wxgui_libs})
-GR_LIBRARY_FOO(gnuradio-wxgui
-  RUNTIME_COMPONENT "wxgui_runtime"
-  DEVEL_COMPONENT "wxgui_devel")
+GR_LIBRARY_FOO(gnuradio-wxgui)
 
 if(ENABLE_STATIC_LIBS)
   if(ENABLE_GR_CTRLPORT)
@@ -95,6 +93,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-wxgui_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "wxgui_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

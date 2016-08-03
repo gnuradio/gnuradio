@@ -48,47 +48,6 @@ SET(GR_PKG_VOCODER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/vocoder)
 if(ENABLE_GR_VOCODER)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_VOCODER_DESCRIPTION "GNU Radio Vocoder Blocks")
-
-CPACK_COMPONENT("vocoder_runtime"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("vocoder_devel"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("vocoder_python"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;vocoder_runtime"
-)
-
-CPACK_COMPONENT("vocoder_examples"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Examples"
-    DESCRIPTION  "Python examples for vocoder"
-    DEPENDS      "vocoder_python"
-)
-
-CPACK_COMPONENT("vocoder_swig"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;vocoder_python;vocoder_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/vocoder)
@@ -112,7 +71,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "vocoder_devel"
 )
 
 endif(ENABLE_GR_VOCODER)

@@ -54,6 +54,5 @@ install(FILES
     siso_combined_f.h
     siso_f.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/trellis
-    COMPONENT "trellis_devel"
 )
 

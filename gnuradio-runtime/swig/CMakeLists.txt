@@ -52,7 +52,6 @@ GR_SWIG_MAKE(pmt_swig pmt_swig.i)
 GR_SWIG_INSTALL(
     TARGETS pmt_swig
     DESTINATION ${GR_PYTHON_DIR}/pmt
-    COMPONENT "runtime_python"
 )
 
 add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})
@@ -82,7 +81,6 @@ GR_SWIG_MAKE(runtime_swig runtime_swig.i)
 GR_SWIG_INSTALL(
     TARGETS runtime_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
-    COMPONENT "runtime_python"
 )
 
 install(
@@ -124,5 +122,4 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i
     ${CMAKE_CURRENT_BINARY_DIR}/pmt_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "runtime_swig"
 )

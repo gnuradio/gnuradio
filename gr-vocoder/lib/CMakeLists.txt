@@ -232,7 +232,7 @@ endif(GR_USE_SYSTEM_LIBGSM)
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})
 target_link_libraries(gnuradio-vocoder ${vocoder_libs})
-GR_LIBRARY_FOO(gnuradio-vocoder RUNTIME_COMPONENT "vocoder_runtime" DEVEL_COMPONENT "vocoder_devel")
+GR_LIBRARY_FOO(gnuradio-vocoder)
 
 if(ENABLE_STATIC_LIBS)
   if(ENABLE_GR_CTRLPORT)
@@ -254,6 +254,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-vocoder_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "vocoder_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

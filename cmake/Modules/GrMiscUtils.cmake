@@ -108,7 +108,6 @@ endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 # Generates the .la libtool file
 # This appears to generate libtool files that cannot be used by auto*.
 # Usage GR_LIBTOOL(TARGET [target] DESTINATION [dest])
-# Notice: there is not COMPONENT option, these will not get distributed.
 ########################################################################
 function(GR_LIBTOOL)
     if(NOT DEFINED GENERATE_LIBTOOL)
@@ -135,18 +134,14 @@ endfunction(GR_LIBTOOL)
 # Also handle gnuradio custom naming conventions w/ extras mode.
 ########################################################################
 function(GR_LIBRARY_FOO target)
-    #parse the arguments for component names
-    include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_LIBRARY "" "RUNTIME_COMPONENT;DEVEL_COMPONENT" "" ${ARGN})
-
     #set additional target properties
     set_target_properties(${target} PROPERTIES SOVERSION ${LIBVER})
 
     #install the generated files like so...
     install(TARGETS ${target}
-        LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .so/.dylib file
-        ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_DEVEL_COMPONENT}   # .lib file
-        RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .dll file
+        LIBRARY DESTINATION ${GR_LIBRARY_DIR} # .so/.dylib file
+        ARCHIVE DESTINATION ${GR_LIBRARY_DIR} # .lib file
+        RUNTIME DESTINATION ${GR_RUNTIME_DIR} # .dll file
     )
 
     #extras mode enabled automatically on linux
@@ -178,7 +173,7 @@ function(GR_LIBRARY_FOO target)
             FILES
             ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
             ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
-            DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT}
+            DESTINATION ${GR_LIBRARY_DIR}
         )
 
     endif(LIBRARY_EXTRAS)

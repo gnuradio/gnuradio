@@ -22,11 +22,9 @@ file(GLOB py_files "*.py")
 GR_PYTHON_INSTALL(
     FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/generator
-    COMPONENT "grc"
 )
 
 install(FILES
     flow_graph.tmpl
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/generator
-    COMPONENT "grc"
 )

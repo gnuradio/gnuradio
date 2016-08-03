@@ -130,7 +130,7 @@ endfunction(GR_UNIQUE_TARGET)
 ########################################################################
 function(GR_PYTHON_INSTALL)
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION;COMPONENT" "FILES;PROGRAMS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS" ${ARGN})
 
     ####################################################################
     if(GR_PYTHON_INSTALL_FILES)
@@ -182,7 +182,6 @@ function(GR_PYTHON_INSTALL)
         set(python_install_gen_targets ${pycfiles} ${pyofiles})
         install(FILES ${python_install_gen_targets}
             DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-            COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
         )
 
     ####################################################################
@@ -219,7 +218,6 @@ function(GR_PYTHON_INSTALL)
 
             install(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
                 DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-                COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
             )
         endforeach(pyfile)
 

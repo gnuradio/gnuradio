@@ -119,7 +119,7 @@ list(APPEND filter_libs
 
 add_library(gnuradio-filter SHARED ${filter_sources})
 target_link_libraries(gnuradio-filter ${filter_libs})
-GR_LIBRARY_FOO(gnuradio-filter RUNTIME_COMPONENT "filter_runtime" DEVEL_COMPONENT "filter_devel")
+GR_LIBRARY_FOO(gnuradio-filter)
 add_dependencies(gnuradio-filter
   filter_generated_includes filter_generated_swigs
   gnuradio-runtime gnuradio-fft)
@@ -148,7 +148,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-filter_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "filter_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 
