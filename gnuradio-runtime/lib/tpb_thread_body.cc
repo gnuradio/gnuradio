@@ -55,8 +55,6 @@ namespace gr {
     size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
 
     // Setup the logger for the scheduler
-#ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CPP
     #undef LOG
     std::string config_file = p->get_string("LOG", "log_config", "");
     std::string log_level = p->get_string("LOG", "log_level", "off");
@@ -75,9 +73,6 @@ namespace gr {
         GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
       }
     }
-#endif /* HAVE_LOG4CPP */
-#endif /* ENABLE_GR_LOG */
-
 
     // Set thread affinity if it was set before fg was started.
     if(block->processor_affinity().size() > 0) {

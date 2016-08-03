@@ -37,6 +37,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     Boost_FOUND
     ENABLE_VOLK
     PYTHONINTERP_FOUND
+    LOG4CPP_FOUND
 )
 
 GR_SET_GLOBAL(GNURADIO_RUNTIME_INCLUDE_DIRS
@@ -133,13 +134,11 @@ install(
     COMPONENT "runtime_runtime"
 )
 
-if(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.conf
     DESTINATION ${GR_PREFSDIR}
     COMPONENT "runtime_runtime"
 )
-endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 
 ########################################################################
 # Add subdirectories
