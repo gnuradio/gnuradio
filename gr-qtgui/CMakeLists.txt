@@ -80,40 +80,6 @@ SET(GR_PKG_QTGUI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/qt-gui)
 if(ENABLE_GR_QTGUI)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_QTGUI_DESCRIPTION "GNU Radio QtGUI Blocks")
-
-CPACK_COMPONENT("qtgui_runtime"
-    GROUP        "QtGUI"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("qtgui_devel"
-    GROUP        "QtGUI"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("qtgui_python"
-    GROUP        "QtGUI"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;qtgui_runtime"
-)
-
-CPACK_COMPONENT("qtgui_swig"
-    GROUP        "QtGUI"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;qtgui_python;qtgui_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/qtgui)
@@ -139,7 +105,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-qtgui.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "qtgui_devel"
 )
 
 ########################################################################
@@ -148,7 +113,6 @@ install(
 install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/gr-qtgui.conf
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "qtgui"
 )
 
 
@@ -162,7 +126,6 @@ install(
     themes/alt.qss
     themes/projector.qss
     DESTINATION ${GR_THEMES_DIR}
-    COMPONENT "qtgui"
 )
 
 endif(ENABLE_GR_QTGUI)

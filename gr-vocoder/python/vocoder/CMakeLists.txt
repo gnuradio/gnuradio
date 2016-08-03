@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(
     __init__.py
     cvsd.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_python"
 )
 
 ########################################################################

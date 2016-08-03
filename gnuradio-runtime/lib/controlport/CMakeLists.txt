@@ -84,7 +84,6 @@ list(APPEND gnuradio_runtime_libs
 install(
   FILES ${CMAKE_CURRENT_SOURCE_DIR}/thrift/thrift.conf.example
   DESTINATION ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}
-  COMPONENT "runtime_runtime"
 )
 
 endif(THRIFT_FOUND)

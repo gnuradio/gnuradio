@@ -302,27 +302,6 @@ GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
 )
 
 ########################################################################
-# Add optional dlls specified in DLL_PATHS
-########################################################################
-foreach(path ${DLL_PATHS})
-    file(GLOB _dlls "${path}/*.dll")
-    list(APPEND ALL_DLL_FILES ${_dlls})
-endforeach(path)
-if(DEFINED ALL_DLL_FILES)
-    include(GrPackage)
-    CPACK_COMPONENT("extra_dlls"
-        DISPLAY_NAME "Extra DLLs"
-        DESCRIPTION  "Extra DLLs for runtime dependency requirements"
-    )
-    message(STATUS "")
-    message(STATUS "Including the following dlls into the install:")
-    foreach(_dll ${ALL_DLL_FILES})
-        message(STATUS "  ${_dll}")
-    endforeach(_dll)
-    install(FILES ${ALL_DLL_FILES} DESTINATION ${GR_RUNTIME_DIR} COMPONENT "extra_dlls")
-endif()
-
-########################################################################
 # Setup volk as a subproject
 ########################################################################
 message(STATUS "")
@@ -372,25 +351,6 @@ if(NOT VOLK_FOUND)
 
     set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
     set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
-
-    if(ENABLE_VOLK)
-
-        include(GrPackage)
-        CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
-
-        CPACK_COMPONENT("volk_runtime"
-            GROUP        "Volk"
-            DISPLAY_NAME "Runtime"
-            DESCRIPTION  "Dynamic link libraries"
-        )
-
-        CPACK_COMPONENT("volk_devel"
-            GROUP        "Volk"
-            DISPLAY_NAME "Development"
-            DESCRIPTION  "C++ headers, package config, import libraries"
-        )
-
-    endif(ENABLE_VOLK)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
@@ -410,7 +370,6 @@ find_package(Log4cpp)
 install(
     FILES README README.hacking
     DESTINATION ${GR_PKG_DOC_DIR}
-    COMPONENT "docs"
 )
 
 ########################################################################
@@ -501,12 +460,8 @@ list(REMOVE_ITEM cmake_others
 install(
   FILES ${cmake_configs} ${cmake_others}
   DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 
-#finalize cpack after subdirs processed
-include(GrPackage)
-CPACK_FINALIZE()
 
 ########################################################################
 # Print summary
@@ -533,5 +488,4 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "runtime_devel"
 )

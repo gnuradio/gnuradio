@@ -41,5 +41,4 @@ add_custom_target(grc_generated_xml ALL DEPENDS ${generated_xml_files})
 install(
     FILES ${xml_files} "${CMAKE_CURRENT_BINARY_DIR}/options.xml" ${generated_xml_files}
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "grc"
 )

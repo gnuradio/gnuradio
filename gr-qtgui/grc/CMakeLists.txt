@@ -26,4 +26,4 @@ foreach(xml_cmakein_file IN ITEMS ${xml_cmakein_files})
 	set(xml_files ${xml_files} "${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME}.xml")
 endforeach(xml_cmakein_file)
 
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "qtgui_python")
+install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR})

@@ -52,7 +52,6 @@ GR_SWIG_MAKE(vocoder_swig vocoder_swig.i)
 GR_SWIG_INSTALL(
     TARGETS vocoder_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_python"
 )
 
 install(
@@ -60,5 +59,4 @@ install(
     vocoder_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/vocoder_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "vocoder_swig"
 )

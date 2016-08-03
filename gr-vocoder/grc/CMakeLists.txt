@@ -34,7 +34,6 @@ install(FILES
     vocoder_ulaw_decode_bs.xml
     vocoder_ulaw_encode_sb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "vocoder_python"
 )
 
 if(LIBCODEC2_FOUND)
@@ -42,7 +41,6 @@ if(LIBCODEC2_FOUND)
     vocoder_codec2_decode_ps.xml
     vocoder_codec2_encode_sp.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "vocoder_python"
     )
 endif(LIBCODEC2_FOUND)
 
@@ -51,6 +49,5 @@ if(LIBGSM_FOUND)
     vocoder_gsm_fr_decode_ps.xml
     vocoder_gsm_fr_encode_sp.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "vocoder_python"
     )
 endif(LIBGSM_FOUND)

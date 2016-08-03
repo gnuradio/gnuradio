@@ -32,7 +32,6 @@ GR_PYTHON_INSTALL(
     FILES __init__.py
           "${CMAKE_CURRENT_BINARY_DIR}/range.py"
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
-    COMPONENT "qtgui_python"
 )
 
 ########################################################################

@@ -35,7 +35,6 @@ install(FILES
     ulaw_decode_bs.h
     ulaw_encode_sb.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_devel"
 )
 if(LIBCODEC2_FOUND)
 install(FILES
@@ -43,7 +42,6 @@ install(FILES
     codec2_decode_ps.h
     codec2_encode_sp.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_devel"
 )
 endif(LIBCODEC2_FOUND)
 if(LIBGSM_FOUND)
@@ -51,6 +49,5 @@ install(FILES
     gsm_fr_decode_ps.h
     gsm_fr_encode_sp.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_devel"
 )
 endif(LIBGSM_FOUND)

@@ -28,14 +28,12 @@ GR_PYTHON_INSTALL(PROGRAMS
     gen_whitener.py
     snr_estimators.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
-    COMPONENT "digital_python"
 )
 
 install(
     FILES
     burst_shaper.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}
-    COMPONENT "digital_python"
 )
 
 # Narrowband
@@ -51,7 +49,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     narrowband/digital_bert_tx.py
     narrowband/tunnel.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/narrowband
-    COMPONENT "digital_python"
 )
 
 # OFDM
@@ -65,7 +62,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     ofdm/tunnel.py
     ofdm/uhd_interface.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
-    COMPONENT "digital_python"
 )
 
 install(
@@ -74,7 +70,6 @@ install(
     ofdm/rx_ofdm.grc
     ofdm/ofdm_loopback.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/ofdm
-    COMPONENT "digital_python"
 )
 
 # DEMOD
@@ -93,7 +88,6 @@ install(
     demod/uhd_corr_and_sync_tx.grc
     demod/uhd_corr_and_sync_rx.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
-    COMPONENT "digital_python"
 )
 
 
@@ -124,5 +118,4 @@ install(
     packet/uhd_packet_tx.grc
     packet/uhd_packet_tx_tun.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/packet
-    COMPONENT "digital_python"
 )

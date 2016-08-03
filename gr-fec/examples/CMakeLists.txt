@@ -40,5 +40,4 @@ install(
     polar_code_example.grc
     tpc_ber_curve_gen.grc
     DESTINATION ${GR_PKG_FEC_EXAMPLES_DIR}
-    COMPONENT "fec_python"
 )
