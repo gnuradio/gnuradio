@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 from . import Colors, Utils
-from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
+from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT, GR_MESSAGE_DOMAIN
 from .Element import Element
 
 from ..core.Element import nop_write
@@ -42,6 +42,7 @@ class Connection(CoreConnection, Element):
         Element.__init__(self)
 
         self._line = []
+        self._line_width_factor = 1.0
         self._color = self._color2 = self._arrow_color = None
 
         self._sink_rot = self._source_rot = None
@@ -86,19 +87,21 @@ class Connection(CoreConnection, Element):
         ]
         source_domain = self.source_port.domain
         sink_domain = self.sink_port.domain
-        # self.line_attributes[0] = 2 if source_domain != sink_domain else 0
-        # self.line_attributes[1] = Gdk.LINE_DOUBLE_DASH \
-        #     if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
-        #     else Gdk.LINE_ON_OFF_DASH
 
         def get_domain_color(domain_name):
             domain = self.parent_platform.domains.get(domain_name, {})
             color_spec = domain.get('color')
-            return Colors.get_color(color_spec) if color_spec else \
-                Colors.DEFAULT_DOMAIN_COLOR
+            return Colors.get_color(color_spec) if color_spec else Colors.DEFAULT_DOMAIN_COLOR
 
-        self._color = get_domain_color(source_domain)
-        self._color2 = get_domain_color(sink_domain)
+        if source_domain == GR_MESSAGE_DOMAIN:
+            self._line_width_factor = 1.0
+            self._color = None
+            self._color2 = Colors.CONNECTION_ENABLED_COLOR
+        else:
+            if source_domain != sink_domain:
+                self._line_width_factor = 2.0
+            self._color = get_domain_color(source_domain)
+            self._color2 = get_domain_color(sink_domain)
         self._arrow_color = self._color2 if self.is_valid() else Colors.CONNECTION_ERROR_COLOR
         self._update_after_move()
 
@@ -170,19 +173,24 @@ class Connection(CoreConnection, Element):
             self._source_coor = source.parent_block.coordinate
         # draw
         color1, color2, arrow_color = (
+            None if color is None else
             Colors.HIGHLIGHT_COLOR if self.highlighted else
-            Colors.CONNECTION_DISABLED_COLOR if not self.enabled else
-            color for color in (self._color, self._color2, self._arrow_color))
+            Colors.CONNECTION_DISABLED_COLOR if not self.enabled else color
+            for color in (self._color, self._color2, self._arrow_color)
+        )
 
         cr.translate(*self.coordinate)
+        cr.set_line_width(self._line_width_factor * cr.get_line_width())
         for point in self._line:
             cr.line_to(*point)
-        cr.set_source_rgb(*color1)
-        cr.stroke_preserve()
+
+        if color1:  # not a message connection
+            cr.set_source_rgb(*color1)
+            cr.stroke_preserve()
 
         if color1 != color2:
             cr.save()
-            cr.set_dash([5.0, 5.0], 5.0)
+            cr.set_dash([5.0, 5.0], 5.0 if color1 else 0.0)
             cr.set_source_rgb(*color2)
             cr.stroke()
             cr.restore()
