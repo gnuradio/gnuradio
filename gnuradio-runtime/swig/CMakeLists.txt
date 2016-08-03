@@ -61,12 +61,6 @@ add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})
 #    Build gnuradio-runtime swig
 ###############################################################
 
-# Only use if log4cpp is installed
-# Define ENABLE_GR_LOG for the .i file to ignore it.
-if(ENABLE_GR_LOG)
-     SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
-endif(ENABLE_GR_LOG)
-
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
   list(APPEND GR_SWIG_FLAGS -DGR_CTRLPORT)

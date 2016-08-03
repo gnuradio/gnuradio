@@ -20,12 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*******************************************************************************
-* Author: Mark Plett
-* Description:
-*   The gr::logger module wraps the log4cpp library for logging in gnuradio
-*******************************************************************************/
-
 #ifndef INCLUDED_GR_LOGGER_H
 #define INCLUDED_GR_LOGGER_H
 
@@ -34,13 +28,6 @@
 * \brief GNU Radio logging wrapper for log4cpp library (C++ port of log4j)
 *
 */
-
-#ifndef ENABLE_GR_LOG
-#cmakedefine ENABLE_GR_LOG
-#endif
-#ifndef HAVE_LOG4CPP
-#cmakedefine HAVE_LOG4CPP
-#endif
 
 #ifdef _MSC_VER
 typedef unsigned short mode_t;
@@ -56,71 +43,6 @@ typedef unsigned short mode_t;
 #include <boost/thread.hpp>
 #include <boost/format.hpp>
 #include <pmt/pmt.h>
-
-#ifdef ENABLE_GR_LOG
-
-// We have three configurations... first logging to stdout/stderr
-#ifndef HAVE_LOG4CPP
-
-namespace gr {
-  //#warning GR logging Enabled and using std::cout
-  typedef std::string logger_ptr;
-} /* namespace gr */
-
-#define GR_LOG_DECLARE_LOGPTR(logger)
-#define GR_LOG_ASSIGN_LOGPTR(logger,name)
-#define GR_CONFIG_LOGGER(config)
-#define GR_CONFIG_AND_WATCH_LOGGER(config,period)
-#define GR_LOG_GETLOGGER(logger, name)
-#define GR_SET_LEVEL(name, level)
-#define GR_LOG_SET_LEVEL(logger, level)
-#define GR_GET_LEVEL(name, level)
-#define GR_LOG_GET_LEVEL(logger, level)
-#define GR_ADD_APPENDER(name,appender)
-#define GR_LOG_ADD_APPENDER(logger,appender)
-#define GR_SET_APPENDER(name,appender)
-#define GR_LOG_SET_APPENDER(logger,appender)
-#define GR_ADD_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_LOG_ADD_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_SET_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_LOG_SET_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_ADD_FILE_APPENDER(name,filename,append,pattern)
-#define GR_LOG_ADD_FILE_APPENDER(logger,filename,append,pattern)
-#define GR_SET_FILE_APPENDER(name,filename,append,pattern)
-#define GR_LOG_SET_FILE_APPENDER(logger,filename,append,pattern)
-#define GR_ADD_ROLLINGFILE_APPENDER(name,filename,filesize,bkup_index,append,mode,pattern)
-#define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,filename,filesize,bkup_index,append,mode,pattern)
-#define GR_GET_LOGGER_NAMES(names)
-#define GR_RESET_CONFIGURATION()
-#define GR_DEBUG(name, msg) std::cout<<"DEBUG: "<<msg<<std::endl
-#define GR_INFO(name, msg) std::cout<<"INFO: "<<msg<<std::endl
-#define GR_NOTICE(name, msg) std::cout<<"NOTICE: "<<msg<<std::endl
-#define GR_WARN(name, msg) std::cerr<<"WARN: "<<msg<<std::endl
-#define GR_ERROR(name, msg) std::cerr<<"ERROR: "<<msg<<std::endl
-#define GR_ALERT(name, msg) std::cerr<<"ERROR: "<<msg<<std::endl
-#define GR_CRIT(name, msg) std::cerr<<"ERROR: "<<msg<<std::endl
-#define GR_FATAL(name, msg) std::cerr<<"FATAL: "<<msg<<std::endl
-#define GR_EMERG(name, msg) std::cerr<<"EMERG: "<<msg<<std::endl
-#define GR_ERRORIF(name, cond, msg) {if((cond)) std::cerr<<"ERROR: "<<msg<<std::endl;}
-#define GR_ASSERT(name, cond, msg) {if(!(cond)) std::cerr<<"FATAL: "<<msg<<std::endl; assert(cond);}
-#define GR_LOG_DEBUG(logger, msg) std::cout<<"DEBUG: "<<msg<<std::endl
-#define GR_LOG_INFO(logger, msg) std::cout<<"INFO: "<<msg<<std::endl
-#define GR_LOG_NOTICE(logger, msg) std::cout<<"NOTICE: "<<msg<<std::endl
-#define GR_LOG_WARN(logger, msg) std::cerr<<"WARN: "<<msg<<std::endl
-#define GR_LOG_ERROR(logger, msg) std::cerr<<"ERROR: "<<msg<<std::endl
-#define GR_LOG_ALERT(logger, msg) std::cerr<<"ALERT: "<<msg<<std::endl
-#define GR_LOG_CRIT(logger, msg) std::cerr<<"CRIT: "<<msg<<std::endl
-#define GR_LOG_FATAL(logger, msg) std::cerr<<"FATAL: "<<msg<<std::endl
-#define GR_LOG_EMERG(logger, msg) std::cerr<<"EMERG: "<<msg<<std::endl
-#define GR_LOG_ERRORIF(logger, cond, msg) {             \
-    if((cond)) std::cerr<<"ERROR: "<<msg<<std::endl;}
-#define GR_LOG_ASSERT(logger, cond, msg) {                              \
-    if(!(cond)) {std::cerr<<"FATAL: "<<msg<<std::endl; assert(cond);};}
-
-
-#else /* HAVE_LOG4CPP */
-
-// Second configuration...logging to log4cpp
 #include <log4cpp/Category.hh>
 #include <log4cpp/PropertyConfigurator.hh>
 #include <log4cpp/FileAppender.hh>
@@ -640,69 +562,8 @@ namespace gr {
 
 } /* namespace gr */
 
-#endif /* HAVE_LOG4CPP */
-
   // If Logger disable do nothing
-#else /* ENABLE_GR_LOG */
-
 namespace gr {
-  typedef void* logger_ptr;
-} /* namespace gr */
-
-#define GR_LOG_DECLARE_LOGPTR(logger)
-#define GR_LOG_ASSIGN_LOGPTR(logger,name)
-#define GR_CONFIG_LOGGER(config)
-#define GR_CONFIG_AND_WATCH_LOGGER(config,period)
-#define GR_LOG_GETLOGGER(logger, name)
-#define GR_SET_LEVEL(name, level)
-#define GR_LOG_SET_LEVEL(logger, level)
-#define GR_GET_LEVEL(name, level)
-#define GR_LOG_GET_LEVEL(logger, level)
-#define GR_ADD_APPENDER(name,appender)
-#define GR_LOG_ADD_APPENDER(logger,appender)
-#define GR_SET_APPENDER(name,appender)
-#define GR_LOG_SET_APPENDER(logger,appender)
-#define GR_ADD_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_LOG_ADD_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_SET_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_LOG_SET_CONSOLE_APPENDER(logger,target,pattern)
-#define GR_ADD_FILE_APPENDER(name,filename,append,pattern)
-#define GR_LOG_ADD_FILE_APPENDER(logger,filename,append,pattern)
-#define GR_SET_FILE_APPENDER(name,filename,append,pattern)
-#define GR_LOG_SET_FILE_APPENDER(logger,filename,append,pattern)
-#define GR_ADD_ROLLINGFILE_APPENDER(name,filename,filesize,bkup_index,append,mode,pattern)
-#define GR_LOG_ADD_ROLLINGFILE_APPENDER(logger,filename,filesize,bkup_index,append,mode,pattern)
-#define GR_GET_LOGGER_NAMES(names)
-#define GR_RESET_CONFIGURATION()
-#define GR_DEBUG(name, msg)
-#define GR_INFO(name, msg)
-#define GR_NOTICE(name, msg)
-#define GR_WARN(name, msg)
-#define GR_ERROR(name, msg)
-#define GR_ALERT(name, msg)
-#define GR_CRIT(name, msg)
-#define GR_FATAL(name, msg)
-#define GR_EMERG(name, msg)
-#define GR_ERRORIF(name, cond, msg)
-#define GR_ASSERT(name, cond, msg)
-#define GR_LOG_DEBUG(logger, msg)
-#define GR_LOG_INFO(logger, msg)
-#define GR_LOG_NOTICE(logger, msg)
-#define GR_LOG_WARN(logger, msg)
-#define GR_LOG_ERROR(logger, msg)
-#define GR_LOG_ALERT(logger, msg)
-#define GR_LOG_CRIT(logger, msg)
-#define GR_LOG_FATAL(logger, msg)
-#define GR_LOG_EMERG(logger, msg)
-#define GR_LOG_ERRORIF(logger, cond, msg)
-#define GR_LOG_ASSERT(logger, cond, msg)
-
-#endif /* ENABLE_GR_LOG */
-
-namespace gr {
-
-  // Even if logger is disabled we'll need for methods below to exist in python.
-  // The macros these call will be disabled if ENABLE_GR_LOG is undefined
 
   /********************* Start  Classes and Methods for Python ******************/
   /*!
@@ -852,6 +713,5 @@ namespace gr {
   GR_RUNTIME_API bool update_logger_alias(const std::string &name, const std::string &alias);
 
 } /* namespace gr */
-
 
 #endif /* INCLUDED_GR_LOGGER_H */

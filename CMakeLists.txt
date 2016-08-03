@@ -401,8 +401,8 @@ endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 
-# Handle gr_log enable/disable
-GR_LOGGING()
+# Handle logging
+find_package(Log4cpp)
 
 ########################################################################
 # Distribute the README file
