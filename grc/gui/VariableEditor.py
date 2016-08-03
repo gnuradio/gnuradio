@@ -19,15 +19,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GObject
+from gi.repository import Gtk, Gdk, GObject
 
-from . import Actions
-from . import Preferences
-from .Constants import DEFAULT_BLOCKS_WINDOW_WIDTH
+from . import Actions, Preferences, Constants
 
 BLOCK_INDEX = 0
 ID_INDEX = 1
@@ -39,29 +33,29 @@ class VariableEditorContextMenu(Gtk.Menu):
     def __init__(self, var_edit):
         Gtk.Menu.__init__(self)
 
-        self.imports = Gtk.MenuItem("Add _Import")
+        self.imports = Gtk.MenuItem(label="Add _Import")
         self.imports.connect('activate', var_edit.handle_action, var_edit.ADD_IMPORT)
         self.add(self.imports)
 
-        self.variables = Gtk.MenuItem("Add _Variable")
+        self.variables = Gtk.MenuItem(label="Add _Variable")
         self.variables.connect('activate', var_edit.handle_action, var_edit.ADD_VARIABLE)
         self.add(self.variables)
         self.add(Gtk.SeparatorMenuItem())
 
-        self.enable = Gtk.MenuItem("_Enable")
+        self.enable = Gtk.MenuItem(label="_Enable")
         self.enable.connect('activate', var_edit.handle_action, var_edit.ENABLE_BLOCK)
-        self.disable = Gtk.MenuItem("_Disable")
+        self.disable = Gtk.MenuItem(label="_Disable")
         self.disable.connect('activate', var_edit.handle_action, var_edit.DISABLE_BLOCK)
         self.add(self.enable)
         self.add(self.disable)
         self.add(Gtk.SeparatorMenuItem())
 
-        self.delete = Gtk.MenuItem("_Delete")
+        self.delete = Gtk.MenuItem(label="_Delete")
         self.delete.connect('activate', var_edit.handle_action, var_edit.DELETE_BLOCK)
         self.add(self.delete)
         self.add(Gtk.SeparatorMenuItem())
 
-        self.properties = Gtk.MenuItem("_Properties...")
+        self.properties = Gtk.MenuItem(label="_Properties...")
         self.properties.connect('activate', var_edit.handle_action, var_edit.OPEN_PROPERTIES)
         self.add(self.properties)
         self.show_all()
@@ -85,8 +79,8 @@ class VariableEditor(Gtk.VBox):
     DISABLE_BLOCK = 6
 
     __gsignals__ = {
-        'create_new_block': (GObject.SIGNAL_RUN_FIRST, None, (str,)),
-        'remove_block': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'create_new_block': (GObject.SignalFlags.RUN_FIRST, None, (str,)),
+        'remove_block': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
     def __init__(self):
@@ -100,7 +94,7 @@ class VariableEditor(Gtk.VBox):
         # Generate everything else dynamically
         self.treestore = Gtk.TreeStore(GObject.TYPE_PYOBJECT,  # Block reference
                                        GObject.TYPE_STRING)    # Category and block name
-        self.treeview = Gtk.TreeView(self.treestore)
+        self.treeview = Gtk.TreeView(model=self.treestore)
         self.treeview.set_enable_search(False)
         self.treeview.set_search_column(-1)
         #self.treeview.set_enable_search(True)
@@ -150,8 +144,8 @@ class VariableEditor(Gtk.VBox):
         # Make the scrolled window to hold the tree view
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.add_with_viewport(self.treeview)
-        scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
+        scrolled_window.add(self.treeview)
+        scrolled_window.set_size_request(Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window, True, True, 0)
 
         # Context menus

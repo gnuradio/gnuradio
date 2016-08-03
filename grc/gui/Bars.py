@@ -90,7 +90,7 @@ MENU_BAR_LIST = (
         None,
         Actions.BLOCK_ROTATE_CCW,
         Actions.BLOCK_ROTATE_CW,
-        (Gtk.Action('Align', '_Align', None, None), Actions.BLOCK_ALIGNMENTS),
+        (Gtk.Action(name='Align', label='_Align', tooltip=None, stock_id=None), Actions.BLOCK_ALIGNMENTS),
         None,
         Actions.BLOCK_ENABLE,
         Actions.BLOCK_DISABLE,
@@ -298,7 +298,7 @@ class MenuBar(Gtk.MenuBar, MenuHelperMixin, SubMenuCreator):
             self.append(self._make_sub_menu(main_action, actions))
 
     def create_flow_graph_new(self):
-        main = Gtk.ImageMenuItem(Gtk.STOCK_NEW)
+        main = Gtk.ImageMenuItem(label=Gtk.STOCK_NEW)
         main.set_label(Actions.FLOW_GRAPH_NEW.get_label())
         func = self._fill_flow_graph_new_submenu
         self.submenus.append((Actions.FLOW_GRAPH_NEW, func, main))
@@ -306,7 +306,7 @@ class MenuBar(Gtk.MenuBar, MenuHelperMixin, SubMenuCreator):
         return main
 
     def create_flow_graph_recent(self):
-        main = Gtk.ImageMenuItem(Gtk.STOCK_OPEN)
+        main = Gtk.ImageMenuItem(label=Gtk.STOCK_OPEN)
         main.set_label(Actions.FLOW_GRAPH_OPEN_RECENT.get_label())
         func = self._fill_flow_graph_recent_submenu
         self.submenus.append((Actions.FLOW_GRAPH_OPEN, func, main))

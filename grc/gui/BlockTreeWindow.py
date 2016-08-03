@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -22,8 +22,7 @@ import six
 
 from gi.repository import Gtk, Gdk, GObject
 
-from . import Actions, Utils
-from . import Constants
+from . import Actions, Utils, Constants
 
 
 NAME_INDEX, KEY_INDEX, DOC_INDEX = range(3)
@@ -64,7 +63,7 @@ class BlockTreeWindow(Gtk.VBox):
     """The block selection panel."""
 
     __gsignals__ = {
-        'create_new_block': (GObject.SIGNAL_RUN_FIRST, None, (str,))
+        'create_new_block': (GObject.SignalFlags.RUN_FIRST, None, (str,))
     }
 
     def __init__(self, platform):
@@ -83,9 +82,9 @@ class BlockTreeWindow(Gtk.VBox):
         # search entry
         self.search_entry = Gtk.Entry()
         try:
-            self.search_entry.set_icon_from_stock(Gtk.EntryIconPosition.PRIMARY, Gtk.STOCK_FIND)
+            self.search_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, 'edit-find')
             self.search_entry.set_icon_activatable(Gtk.EntryIconPosition.PRIMARY, False)
-            self.search_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, Gtk.STOCK_CLOSE)
+            self.search_entry.set_icon_from_icon_name(Gtk.EntryIconPosition.SECONDARY, 'window-close')
             self.search_entry.connect('icon-release', self._handle_icon_event)
         except AttributeError:
             pass  # no icon for old pygtk
@@ -97,7 +96,7 @@ class BlockTreeWindow(Gtk.VBox):
         self.treestore = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
         self.treestore_search = Gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
 
-        self.treeview = Gtk.TreeView(self.treestore)
+        self.treeview = Gtk.TreeView(model=self.treestore)
         self.treeview.set_enable_search(False)  # disable pop up search box
         self.treeview.set_search_column(-1)  # really disable search
         self.treeview.set_headers_visible(False)
@@ -119,7 +118,7 @@ class BlockTreeWindow(Gtk.VBox):
         # make the scrolled window to hold the tree view
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.add_with_viewport(self.treeview)
+        scrolled_window.add(self.treeview)
         scrolled_window.set_size_request(Constants.DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
         self.pack_start(scrolled_window, True, True, 0)
         # map categories to iters, automatic mapping for root
