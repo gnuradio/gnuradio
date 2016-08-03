@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -87,6 +87,29 @@ CPACK_COMPONENT("vocoder_swig"
     DESCRIPTION  "SWIG development .i files"
     DEPENDS      "runtime_swig;vocoder_python;vocoder_devel"
 )
+
+########################################################################
+## CODEC2 Support
+########################################################################
+find_package(Codec2)
+if(LIBCODEC2_FOUND)
+  GR_APPEND_SUBCOMPONENT("codec2")
+  #message(STATUS "libcodec2 modes: ${CODEC2_MODES}")
+  if(LIBCODEC2_HAS_CODEC2_MODE_700)
+    #message(STATUS "libcodec2 has 700bps mode")
+  endif()
+  if (LIBCODEC2_HAS_FREEDV_API)
+    #message(STATUS "libcodec2 had FreeDV api modes: ${FREEDV_MODES}")
+  endif()
+endif(LIBCODEC2_FOUND)
+
+########################################################################
+## GSM Support
+########################################################################
+find_package(GSM)
+if(LIBGSM_FOUND)
+  GR_APPEND_SUBCOMPONENT("gsm")
+endif(LIBGSM_FOUND)
 
 ########################################################################
 # Add subdirectories
