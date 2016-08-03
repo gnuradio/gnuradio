@@ -66,7 +66,9 @@ class Element(object):
         Returns:
             true when the element is enabled and has no error messages or is bypassed
         """
-        return (not self.get_error_messages() or not self.enabled) or self.get_bypassed()
+        if not self.enabled or self.get_bypassed():
+            return True
+        return not next(self.iter_error_messages(), False)
 
     def add_error_message(self, msg):
         """
@@ -86,13 +88,20 @@ class Element(object):
         Returns:
             a list of error message strings
         """
-        error_messages = list(self._error_messages)  # Make a copy
+        return [msg if elem is self else "{}:\n\t{}".format(elem, msg.replace("\n", "\n\t"))
+                for elem, msg in self.iter_error_messages()]
+
+    def iter_error_messages(self):
+        """
+        Iterate over error messages. Yields tuples of (element, message)
+        """
+        for msg in self._error_messages:
+            yield self, msg
         for child in self.get_children():
             if not child.enabled or child.get_bypassed():
                 continue
-            for msg in child.get_error_messages():
-                error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
-        return error_messages
+            for element_msg in child.iter_error_messages():
+                yield element_msg
 
     def rewrite(self):
         """
