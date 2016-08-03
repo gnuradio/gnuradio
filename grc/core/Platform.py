@@ -60,9 +60,6 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
-        self._block_dtd = Constants.BLOCK_DTD
-        self._default_flow_graph = Constants.DEFAULT_FLOW_GRAPH
-
         # Create a dummy flow graph for the blocks
         self._flow_graph = Element(self)
         self._flow_graph.connections = []
@@ -188,7 +185,7 @@ class Platform(Element):
     def load_block_xml(self, xml_file):
         """Load block description from xml file"""
         # Validate and import
-        ParseXML.validate_dtd(xml_file, self._block_dtd)
+        ParseXML.validate_dtd(xml_file, Constants.BLOCK_DTD)
         n = ParseXML.from_file(xml_file).find('block')
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
         # Get block instance and add it to the list of blocks
@@ -291,8 +288,8 @@ class Platform(Element):
             nested data
         @throws exception if the validation fails
         """
-        flow_graph_file = flow_graph_file or self._default_flow_graph
-        open(flow_graph_file, 'r')  # Test open
+        flow_graph_file = flow_graph_file or self.config.default_flow_graph
+        open(flow_graph_file, 'r').close()  # Test open
         ParseXML.validate_dtd(flow_graph_file, Constants.FLOW_GRAPH_DTD)
         return ParseXML.from_file(flow_graph_file)
 

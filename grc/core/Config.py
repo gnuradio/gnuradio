@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import os
 from os.path import expanduser, normpath, expandvars, exists
 
+from . import Constants
+
 
 class Config(object):
 
@@ -28,7 +30,7 @@ class Config(object):
     license = __doc__.strip()
     website = 'http://gnuradio.org'
 
-    hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', expanduser('~/.grc_gnuradio'))
+    hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
 
     def __init__(self, prefs_file, version, version_parts=None):
         self.prefs = prefs_file
@@ -53,3 +55,12 @@ class Config(object):
                        for path in collected_paths if exists(path)]
 
         return valid_paths
+
+    @property
+    def default_flow_graph(self):
+        user_default = (
+            os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
+            self.prefs.get_string('grc', 'default_flow_graph', '') or
+            os.path.join(self.hier_block_lib_dir, 'default_flow_graph.grc')
+        )
+        return user_default if exists(user_default) else Constants.DEFAULT_FLOW_GRAPH
