@@ -26,6 +26,5 @@ install(FILES
     wavelet_ff.h
     wvps_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/wavelet
-    COMPONENT "wavelet_devel"
 )
 

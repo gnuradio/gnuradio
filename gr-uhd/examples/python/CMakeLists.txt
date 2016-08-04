@@ -38,5 +38,4 @@ GR_PYTHON_INSTALL(
     usrp_wfm_rcv_sca.py
     usrp_wxapt_rcv.py
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-    COMPONENT "uhd_python"
 )

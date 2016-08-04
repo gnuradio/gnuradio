@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013-2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,20 +22,17 @@
 
 import os
 import re
-from optparse import OptionGroup
 
 from util_functions import append_re_line_sequence, ask_yes_no
 from cmakefile_editor import CMakeFileEditor
 from modtool_base import ModTool, ModToolException
 from templates import Templates
-from code_generator import get_template
-import Cheetah.Template
-
+from code_generator import render_template
 
 class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
     name = 'add'
-    aliases = ('insert',)
+    description = 'Add new block into module.'
     _block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
                     'general', 'tagged_stream', 'hier', 'noblock')
 
@@ -46,30 +43,29 @@ class ModToolAdd(ModTool):
         self._skip_cmakefiles = False
         self._license_file = None
 
-    def setup_parser(self):
-        parser = ModTool.setup_parser(self)
-        ogroup = OptionGroup(parser, "Add module options")
-        ogroup.add_option("-t", "--block-type", type="choice",
-                choices=self._block_types, default=None, help="One of %s." % ', '.join(self._block_types))
-        ogroup.add_option("--license-file", type="string", default=None,
+    @staticmethod
+    def setup_parser(parser):
+        parser.add_argument("-t", "--block-type", choices=ModToolAdd._block_types,
+                help="One of %s." % ', '.join(ModToolAdd._block_types))
+        parser.add_argument("--license-file",
                 help="File containing the license header for every source code file.")
-        ogroup.add_option("--copyright", type="string", default=None,
+        parser.add_argument("--copyright",
                 help="Name of the copyright holder (you or your company) MUST be a quoted string.")
-        ogroup.add_option("--argument-list", type="string", default=None,
+        parser.add_argument("--argument-list",
                 help="The argument list for the constructor and make functions.")
-        ogroup.add_option("--add-python-qa", action="store_true", default=None,
+        parser.add_argument("--add-python-qa", action="store_true", default=None,
                 help="If given, Python QA code is automatically added if possible.")
-        ogroup.add_option("--add-cpp-qa", action="store_true", default=None,
+        parser.add_argument("--add-cpp-qa", action="store_true", default=None,
                 help="If given, C++ QA code is automatically added if possible.")
-        ogroup.add_option("--skip-cmakefiles", action="store_true", default=False,
+        parser.add_argument("--skip-cmakefiles", action="store_true",
                 help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-        ogroup.add_option("-l", "--lang", type="choice", choices=('cpp', 'c++', 'python'),
-                default=None, help="Language (cpp or python)")
-        parser.add_option_group(ogroup)
+        parser.add_argument("-l", "--lang", choices=('cpp', 'c++', 'python'),
+                help="Programing language")
+        ModTool.setup_parser_block(parser)
         return parser
 
-    def setup(self, options, args):
-        ModTool.setup(self, options, args)
+    def setup(self, options):
+        ModTool.setup(self, options)
 
         self._info['blocktype'] = options.block_type
         if self._info['blocktype'] is None:
@@ -82,7 +78,7 @@ class ModToolAdd(ModTool):
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
-            while self._info['lang'] not in ['cpp', 'python']:
+            while self._info['lang'] not in ['c++', 'cpp', 'python']:
                 self._info['lang'] = raw_input("Language (python/cpp): ")
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
@@ -94,10 +90,7 @@ class ModToolAdd(ModTool):
             raise ModToolException('Missing or skipping relevant subdir.')
 
         if self._info['blockname'] is None:
-            if len(args) >= 2:
-                self._info['blockname'] = args[1]
-            else:
-                self._info['blockname'] = raw_input("Enter name of block/code (without module name prefix): ")
+            self._info['blockname'] = raw_input("Enter name of block/code (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             raise ModToolException('Invalid block name.')
         print "Block/code identifier: " + self._info['blockname']
@@ -145,17 +138,18 @@ class ModToolAdd(ModTool):
         elif self._info['is_component']:
             return Templates['grlicense']
         else:
-            return get_template('defaultlicense', **self._info)
+            return Templates['defaultlicense'].format(**self._info)
 
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
         print "Adding file '%s'..." % path_to_file
-        open(path_to_file, 'w').write(get_template(tpl, **self._info))
+        open(path_to_file, 'w').write(render_template(tpl, **self._info))
         self.scm.add_files((path_to_file,))
 
-    def run(self):
+    def run(self, options):
         """ Go, go, go. """
+        self.setup(options)
         has_swig = (
                 self._info['lang'] == 'cpp'
                 and not self._skip_subdirs['swig']
@@ -204,26 +198,6 @@ class ModToolAdd(ModTool):
                     self.scm.mark_files_updated((self._file['qalib'],))
                 except IOError:
                     print "Can't add C++ QA files."
-        def _add_qa36():
-            " Add C++ QA files for pre-3.7 API (not autotools) "
-            fname_qa_cc = 'qa_%s.cc' % self._info['fullblockname']
-            self._write_tpl('qa_cpp36', 'lib', fname_qa_cc)
-            if not self._skip_cmakefiles:
-                open(self._file['cmlib'], 'a').write(
-                    str(
-                        Cheetah.Template.Template(
-                            Templates['qa_cmakeentry36'],
-                            searchList={'basename': os.path.splitext(fname_qa_cc)[0],
-                                        'upperbasename': os.path.splitext(fname_qa_cc)[0].upper(),
-                                        'filename': fname_qa_cc,
-                                        'modname': self._info['modname']
-                                       }
-                        )
-                     )
-                )
-                ed = CMakeFileEditor(self._file['cmlib'])
-                ed.remove_double_newlines()
-                ed.write()
         fname_cc = None
         fname_h  = None
         if self._info['version']  == '37':
@@ -244,7 +218,7 @@ class ModToolAdd(ModTool):
             if self._info['version'] == '37':
                 _add_qa()
             elif self._info['version'] == '36':
-                _add_qa36()
+                print "Warning: C++ QA files not supported for 3.6-style OOTs."
             elif self._info['version'] == 'autofoo':
                 print "Warning: C++ QA files not supported for autotools."
         if not self._skip_cmakefiles:
@@ -269,7 +243,7 @@ class ModToolAdd(ModTool):
         mod_block_sep = '/'
         if self._info['version'] == '36':
             mod_block_sep = '_'
-        swig_block_magic_str = get_template('swig_block_magic', **self._info)
+        swig_block_magic_str = render_template('swig_block_magic', **self._info)
         open(self._file['swig'], 'a').write(swig_block_magic_str)
         include_str = '#include "%s%s%s.h"' % (
                 {True: 'gnuradio/' + self._info['modname'], False: self._info['modname']}[self._info['is_component']],

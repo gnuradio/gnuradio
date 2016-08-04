@@ -115,5 +115,4 @@ install(FILES
     simple_framer_sync.h
     header_payload_demux.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
-    COMPONENT "digital_devel"
 )

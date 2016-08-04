@@ -69,11 +69,6 @@
  */
 
 /*!
- * \defgroup atsc ATSC
- * ATSC Applications...
- */
-
-/*!
  * \defgroup pager Pager
  * Pager Applications
  */

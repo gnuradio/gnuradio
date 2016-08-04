@@ -252,13 +252,6 @@ namespace gr {
      */
     pmt::pmt_t delete_head_nowait( pmt::pmt_t which_port);
 
-    /*!
-     * \param[in] which_port The message port from which to get the message.
-     * \param[in] millisec Optional timeout value (0=no timeout).
-     * \returns returns pmt at head of queue or pmt::pmt_t() if empty.
-     */
-    pmt::pmt_t delete_head_blocking(pmt::pmt_t which_port, unsigned int millisec = 0);
-
     msg_queue_t::iterator get_iterator(pmt::pmt_t which_port) {
       return msg_queue[which_port].begin();
     }
@@ -384,6 +377,12 @@ namespace gr {
 
     virtual std::vector<int> processor_affinity()
     { throw std::runtime_error("processor_affinity not overloaded in child class."); }
+
+    virtual void set_log_level(std::string level)
+    { throw std::runtime_error("set_log_level not overloaded in child class."); }
+
+    virtual std::string log_level()
+    { throw std::runtime_error("log_level not overloaded in child class."); }
   };
 
   inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)

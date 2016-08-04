@@ -44,6 +44,7 @@ install(FILES
   hier_block2.h
   high_res_timer.h
   io_signature.h
+  logger.h
   math.h
   message.h
   misc.h
@@ -81,9 +82,7 @@ install(FILES
   rpcserver_booter_aggregator.h
   rpcserver_booter_base.h
   rpcserver_selector.h
-  ${CMAKE_CURRENT_BINARY_DIR}/logger.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 
 if(THRIFT_FOUND)
@@ -92,14 +91,5 @@ install(FILES
   thrift_application_base.h
   thrift_server_template.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 endif(THRIFT_FOUND)
-
-##########################################################################
-# Configure logger
-##########################################################################
-CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/logger.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/logger.h
-)

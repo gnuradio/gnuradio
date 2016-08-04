@@ -1,4 +1,4 @@
-# Copyright 2010-2016 Free Software Foundation, Inc.
+# Copyright 2010-2012,2014 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -45,9 +45,9 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
-set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 11)
-set(VERSION_INFO_MAINT_VERSION git)
+set(VERSION_INFO_API_COMPAT    8)
+set(VERSION_INFO_MINOR_VERSION git)
+set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
@@ -302,27 +302,6 @@ GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
 )
 
 ########################################################################
-# Add optional dlls specified in DLL_PATHS
-########################################################################
-foreach(path ${DLL_PATHS})
-    file(GLOB _dlls "${path}/*.dll")
-    list(APPEND ALL_DLL_FILES ${_dlls})
-endforeach(path)
-if(DEFINED ALL_DLL_FILES)
-    include(GrPackage)
-    CPACK_COMPONENT("extra_dlls"
-        DISPLAY_NAME "Extra DLLs"
-        DESCRIPTION  "Extra DLLs for runtime dependency requirements"
-    )
-    message(STATUS "")
-    message(STATUS "Including the following dlls into the install:")
-    foreach(_dll ${ALL_DLL_FILES})
-        message(STATUS "  ${_dll}")
-    endforeach(_dll)
-    install(FILES ${ALL_DLL_FILES} DESTINATION ${GR_RUNTIME_DIR} COMPONENT "extra_dlls")
-endif()
-
-########################################################################
 # Setup volk as a subproject
 ########################################################################
 message(STATUS "")
@@ -372,25 +351,6 @@ if(NOT VOLK_FOUND)
 
     set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
     set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
-
-    if(ENABLE_VOLK)
-
-        include(GrPackage)
-        CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
-
-        CPACK_COMPONENT("volk_runtime"
-            GROUP        "Volk"
-            DISPLAY_NAME "Runtime"
-            DESCRIPTION  "Dynamic link libraries"
-        )
-
-        CPACK_COMPONENT("volk_devel"
-            GROUP        "Volk"
-            DISPLAY_NAME "Development"
-            DESCRIPTION  "C++ headers, package config, import libraries"
-        )
-
-    endif(ENABLE_VOLK)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
@@ -401,8 +361,8 @@ endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 
-# Handle gr_log enable/disable
-GR_LOGGING()
+# Handle logging
+find_package(Log4cpp)
 
 ########################################################################
 # Distribute the README file
@@ -410,7 +370,6 @@ GR_LOGGING()
 install(
     FILES README README.hacking
     DESTINATION ${GR_PKG_DOC_DIR}
-    COMPONENT "docs"
 )
 
 ########################################################################
@@ -442,19 +401,15 @@ add_subdirectory(gr-filter)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-dtv)
-add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-channels)
-add_subdirectory(gr-noaa)
-add_subdirectory(gr-pager)
 add_subdirectory(gr-qtgui)
 add_subdirectory(gr-trellis)
 add_subdirectory(gr-uhd)
 add_subdirectory(gr-utils)
 add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
-add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
 add_subdirectory(gr-wxgui)
 add_subdirectory(gr-zeromq)
@@ -505,12 +460,8 @@ list(REMOVE_ITEM cmake_others
 install(
   FILES ${cmake_configs} ${cmake_others}
   DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 
-#finalize cpack after subdirs processed
-include(GrPackage)
-CPACK_FINALIZE()
 
 ########################################################################
 # Print summary
@@ -537,5 +488,4 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "runtime_devel"
 )

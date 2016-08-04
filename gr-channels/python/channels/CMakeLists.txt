@@ -33,7 +33,6 @@ GR_PYTHON_INSTALL(
     phase_noise_gen.py
     quantizer.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/channels
-    COMPONENT "channels_python"
 )
 
 ########################################################################
