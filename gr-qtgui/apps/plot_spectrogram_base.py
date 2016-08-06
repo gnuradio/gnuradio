@@ -21,8 +21,8 @@
 #
 
 from gnuradio import gr, blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import os, sys
 
 try:
@@ -146,25 +146,22 @@ class plot_base(gr.top_block):
         self.start()
 
 def setup_options(desc):
-    parser = OptionParser(option_class=eng_option, description=desc,
-                          conflict_handler="resolve")
-    parser.add_option("-N", "--nsamples", type="int", default=1000000,
-                      help="Set the number of samples to display [default=%default]")
-    parser.add_option("-S", "--start", type="int", default=0,
-                      help="Starting sample number [default=%default]")
-    parser.add_option("-L", "--psd-size", type="int", default=2048,
-                      help="Set the FFT size of the PSD [default=%default]")
-    parser.add_option("-f", "--center-frequency", type="eng_float", default=0.0,
-                      help="Set the center frequency of the signal [default=%default]")
-    parser.add_option("-r", "--sample-rate", type="eng_float", default=1.0,
-                      help="Set the sample rate of the signal [default=%default]")
-    parser.add_option("-a", "--average", type="float", default=1.0,
-                      help="Set amount of averaging (smaller=more averaging) [default=%default]")
-    (options, args) = parser.parse_args()
+    parser = ArgumentParser(description=desc, conflict_handler="resolve")
+    parser.add_argument("-N", "--nsamples", type=int, default=1000000,
+                      help="Set the number of samples to display [default=%(default)r]")
+    parser.add_argument("-S", "--start", type=int, default=0,
+                      help="Starting sample number [default=%(default)r]")
+    parser.add_argument("-L", "--psd-size", type=int, default=2048,
+                      help="Set the FFT size of the PSD [default=%(default)r]")
+    parser.add_argument("-f", "--center-frequency", type=eng_float, default=0.0,
+                      help="Set the center frequency of the signal [default=%(default)r]")
+    parser.add_argument("-r", "--sample-rate", type=eng_float, default=1.0,
+                      help="Set the sample rate of the signal [default=%(default)r]")
+    parser.add_argument("-a", "--average", type=float, default=1.0,
+                      help="Set amount of averaging (smaller=more averaging) [default=%(default)r]")
+    parser.add_argument('files', nargs='+', metavar='FILE',
+                      help="File with complex samples")
+    args = parser.parse_args()
 
-    if(len(args) < 1):
-        parser.print_help()
-        sys.exit(0)
-
-    return (options, args)
+    return args
 
