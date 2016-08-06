@@ -32,6 +32,11 @@ namespace gr {
     /*!
      * \brief resampling MMSE filter with complex input, complex output
      * \ingroup resamplers_blk
+     *
+     * \details
+     * The resampling ratio and mu parameters can be set with a pmt dict
+     * message. Keys are pmt symbols with the strings "resamp_ratio" and "mu"
+     * and values are pmt floats.
      */
     class FILTER_API fractional_resampler_cc : virtual public block
     {
