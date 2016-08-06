@@ -36,8 +36,6 @@ namespace gr {
       d_name = name;
       my_id = base_unique_id++;
 
-#ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CPP
       prefs *p = prefs::singleton();
       std::string config_file = p->get_string("LOG", "log_config", "");
       std::string log_level = p->get_string("LOG", "log_level", "off");
@@ -58,12 +56,8 @@ namespace gr {
           GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
         }
       }
-      d_logger = LOG;
 
-#endif /* HAVE_LOG4CPP */
-#else /* ENABLE_GR_LOG */
-      d_logger = NULL;
-#endif /* ENABLE_GR_LOG */
+      d_logger = LOG;
     }
 
     generic_decoder::~generic_decoder()

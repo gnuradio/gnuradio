@@ -37,5 +37,4 @@ target_link_libraries(gnuradio-config-info gnuradio-runtime ${Boost_LIBRARIES})
 install(
     TARGETS gnuradio-config-info
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "runtime_runtime"
 )

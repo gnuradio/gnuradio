@@ -68,5 +68,4 @@ install(FILES
   VectorDisplayPlot.h
   vector_sink_f.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/qtgui
-  COMPONENT "qtgui_devel"
 )

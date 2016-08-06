@@ -25,6 +25,5 @@ install(FILES
     sink_s.h
     sink_uc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/video_sdl
-    COMPONENT "video_sdl_devel"
 )
 

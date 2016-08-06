@@ -19,4 +19,8 @@
 
 ########################################################################
 file(GLOB xml_files "*.xml")
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "fec_python")
+
+install(FILES
+        ${xml_files}
+        DESTINATION ${GRC_BLOCKS_DIR}
+)

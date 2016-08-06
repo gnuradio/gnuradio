@@ -45,7 +45,6 @@ GR_SWIG_MAKE(wxgui_swig wxgui_swig.i)
 GR_SWIG_INSTALL(
     TARGETS wxgui_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/wxgui
-    COMPONENT "wxgui_python"
 )
 
 install(
@@ -53,5 +52,4 @@ install(
     wxgui_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/wxgui_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "wxgui_swig"
 )

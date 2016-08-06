@@ -26,7 +26,7 @@ install(FILES
     channel_model2.h
     fading_model.h
     selective_fading_model.h
+    selective_fading_model2.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/channels
-    COMPONENT "channels_devel"
 )
 

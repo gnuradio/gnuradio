@@ -28,14 +28,10 @@ GR_PYTHON_INSTALL(
     channel_construction_bec.py
     helper_functions.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/polar
-    COMPONENT "fec_python"
 )
 
 GR_PYTHON_INSTALL(
     PROGRAMS
     polar_channel_construction
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "fec_python"
 )
-
-

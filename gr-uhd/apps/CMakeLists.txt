@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(
     uhd_siggen_base.py
     uhd_app.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd
-    COMPONENT "uhd_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -38,7 +37,6 @@ GR_PYTHON_INSTALL(
     uhd_siggen_gui
     uhd_rx_nogui
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "uhd_python"
 )
 
 ########################################################################
@@ -51,7 +49,6 @@ install(
     hf_radio/README.TXT
     hf_radio/ssb_taps
     DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_radio
-    COMPONENT "uhd_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -62,7 +59,6 @@ GR_PYTHON_INSTALL(
     hf_radio/ssbdemod.py
     hf_radio/startup.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_radio
-    COMPONENT "uhd_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -70,7 +66,6 @@ GR_PYTHON_INSTALL(
     hf_radio/radio.py
     hf_radio/ui.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_radio
-    COMPONENT "uhd_python"
 )
 
 ########################################################################
@@ -81,12 +76,10 @@ install(
     hf_explorer/README
     hf_explorer/hfx_help
     DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_explorer
-    COMPONENT "uhd_python"
 )
 
 GR_PYTHON_INSTALL(
     PROGRAMS
     hf_explorer/hfx.py
     DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_explorer
-    COMPONENT "uhd_python"
 )

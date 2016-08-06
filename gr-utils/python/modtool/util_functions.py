@@ -25,15 +25,6 @@ import sys
 
 # None of these must depend on other modtool stuff!
 
-def get_command_from_argv(possible_cmds):
-    """ Read the requested command from argv. This can't be done with optparse,
-    since the option parser isn't defined before the command is known, and
-    optparse throws an error."""
-    for arg in sys.argv:
-        if arg[0] != "-" and arg in possible_cmds:
-            return arg
-    return None
-
 def append_re_line_sequence(filename, linepattern, newline):
     """ Detects the re 'linepattern' in the file. After its last occurrence,
     paste 'newline'. If the pattern does not exist, append the new line

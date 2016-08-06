@@ -55,18 +55,17 @@ class test_pdu(gr_unittest.TestCase):
         self.tb.connect(src, snk2)
         self.tb.connect(src, snk3)
         self.tb.msg_connect(snk3, "pdus", dbg, "store")
-        self.tb.start()
 
         # make our reference and message pmts
         port = pmt.intern("pdus")
         msg = pmt.cons( pmt.PMT_NIL, pmt.make_u8vector(16, 0xFF))
 
         # post the message
-        src.to_basic_block()._post(port, msg) # eww, what's that smell?
+        src.to_basic_block()._post(port, msg)
+        src.to_basic_block()._post(pmt.intern("system"),
+                pmt.cons(pmt.intern("done"), pmt.PMT_T))
 
-        while dbg.num_messages() < 1:
-            time.sleep(0.1)
-        self.tb.stop()
+        self.tb.start()
         self.tb.wait()
 
         # Get the vector of data from the vector sink
@@ -98,11 +97,11 @@ class test_pdu(gr_unittest.TestCase):
 
         msg = pmt.cons( pmt.PMT_NIL, pmt.init_f32vector(10, src_data))
         src.to_basic_block()._post(port, msg)
+        src.to_basic_block()._post(pmt.intern("system"),
+                pmt.cons(pmt.intern("done"), pmt.PMT_T))
 
         self.tb.start()
-        #ideally, would wait until we get ten samples
-        time.sleep(0.2)
-        self.tb.stop()
+        self.tb.wait()
 
         self.assertEqual(src_data, list(snk.data()) )
 
@@ -125,9 +124,6 @@ class test_pdu(gr_unittest.TestCase):
         self.tb.connect(src, s2ts, ts2pdu)
         self.tb.msg_connect(ts2pdu, "pdus", dbg, "store")
         self.tb.start()
-        while dbg.num_messages() < 1:
-            time.sleep(0.1)
-        self.tb.stop()
         self.tb.wait()
         result_msg = dbg.get_message(0)
         metadata = pmt.to_python(pmt.car(result_msg))
@@ -138,4 +134,3 @@ class test_pdu(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_pdu, "test_pdu.xml")
-
