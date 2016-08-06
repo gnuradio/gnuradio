@@ -32,7 +32,12 @@ namespace gr {
     /*!
      * \brief Resampling MMSE filter with float input, float output
      * \ingroup resamplers_blk
+     *
+     * \details
+     * The resampling ration and mu parameters can be set with a pmt dict
+     * message with the keys "resamp_ratio" and "mu".
      */
+
     class FILTER_API fractional_resampler_ff : virtual public block
     {
     public:

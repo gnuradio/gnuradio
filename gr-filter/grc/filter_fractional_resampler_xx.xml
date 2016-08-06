@@ -42,7 +42,12 @@
 	<sink>
 		<name>rate</name>
 		<type>float</type>
-                <optional>1</optional>
+    <optional>1</optional>
+	</sink>
+	<sink>
+		<name>msg_in</name>
+		<type>message</type>
+    <optional>1</optional>
 	</sink>
 	<source>
 		<name>out</name>
