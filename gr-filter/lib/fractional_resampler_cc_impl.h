@@ -42,6 +42,8 @@ namespace gr {
                                    float resamp_ratio);
       ~fractional_resampler_cc_impl();
 
+      void handle_msg(pmt::pmt_t msg);
+
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);
       int general_work(int noutput_items,
