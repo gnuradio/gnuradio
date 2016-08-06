@@ -52,11 +52,38 @@ namespace gr {
 	throw std::out_of_range("phase shift ratio must be > 0 and < 1");
 
       set_relative_rate(1.0 / resamp_ratio);
+
+      message_port_register_in(pmt::intern("msg_in"));
+      set_msg_handler(pmt::intern("msg_in"), boost::bind(
+              &fractional_resampler_ff_impl::handle_msg, this, _1));
     }
 
     fractional_resampler_ff_impl::~fractional_resampler_ff_impl()
     {
       delete d_resamp;
+    }
+
+    void
+    fractional_resampler_ff_impl::handle_msg(pmt::pmt_t msg) {
+      if(!pmt::is_dict(msg))
+        return;
+      // set resamp_ratio or mu by message dict
+      if(pmt::dict_has_key(msg, pmt::intern("resamp_ratio"))) {
+        set_resamp_ratio(
+          pmt::to_float(
+            pmt::dict_ref(msg, pmt::intern("resamp_ratio"),
+            pmt::from_float(resamp_ratio()))
+          )
+        );
+      }
+      if(pmt::dict_has_key(msg, pmt::intern("mu"))) {
+        set_mu(
+          pmt::to_float(
+            pmt::dict_ref(msg, pmt::intern("mu"),
+            pmt::from_float(mu()))
+          )
+        );
+      }
     }
 
     void
