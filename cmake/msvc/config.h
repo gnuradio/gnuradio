@@ -62,4 +62,7 @@ static inline float rintf(float x){return (x > 0.0f)? floorf(x + 0.5f) : ceilf(x
 static inline long int random (void) { return rand(); }
 static inline void srandom (unsigned int seed) { srand(seed); }
 
+#define srand48(seed) srand(seed)
+#define drand48() (double(rand()) / RAND_MAX)
+
 #endif // _MSC_CONFIG_H_ ]
