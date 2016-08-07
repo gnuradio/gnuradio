@@ -24,6 +24,10 @@
 #include "config.h"
 #endif
 
+#ifdef _MSC_VER
+#include <io.h>
+#endif
+
 #include "audio_registry.h"
 #include <portaudio_source.h>
 #include <portaudio_impl.h>
