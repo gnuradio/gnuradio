@@ -66,7 +66,7 @@ class ParserErrorsDialog(Gtk.Dialog):
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.add_with_viewport(tree_view)
+        scrolled_window.add(tree_view)
 
         self.vbox.pack_start(scrolled_window, True)
         self.set_size_request(2*MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)

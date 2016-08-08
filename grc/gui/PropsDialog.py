@@ -74,7 +74,7 @@ class PropsDialog(Gtk.Dialog):
         doc_view.get_buffer().create_tag('b', weight=Pango.Weight.BOLD)
         self._docs_box = Gtk.ScrolledWindow()
         self._docs_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self._docs_box.add_with_viewport(self._docs_text_display)
+        self._docs_box.add(self._docs_text_display)
         notebook.append_page(self._docs_box, Gtk.Label(label="Documentation"))
 
         # Generated code for the block
@@ -87,7 +87,7 @@ class PropsDialog(Gtk.Dialog):
             # code_view.override_font(Pango.FontDescription('monospace %d' % Constants.FONT_SIZE))
             code_box = Gtk.ScrolledWindow()
             code_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-            code_box.add_with_viewport(self._code_text_display)
+            code_box.add(self._code_text_display)
             notebook.append_page(code_box, Gtk.Label(label="Generated Code"))
         else:
             self._code_text_display = None
@@ -96,7 +96,7 @@ class PropsDialog(Gtk.Dialog):
         self._error_messages_text_display = SimpleTextDisplay()
         self._error_box = Gtk.ScrolledWindow()
         self._error_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self._error_box.add_with_viewport(self._error_messages_text_display)
+        self._error_box.add(self._error_messages_text_display)
         vpaned.pack2(self._error_box)
         vpaned.set_position(int(0.65 * Constants.MIN_DIALOG_HEIGHT))
 
@@ -123,7 +123,7 @@ class PropsDialog(Gtk.Dialog):
             vbox = Gtk.VBox()
             scroll_box = Gtk.ScrolledWindow()
             scroll_box.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-            scroll_box.add_with_viewport(vbox)
+            scroll_box.add(vbox)
             self.notebook.append_page(scroll_box, label)
             self._params_boxes.append((tab, label, vbox))
 

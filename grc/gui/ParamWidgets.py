@@ -147,7 +147,7 @@ class MultiLineEntryParam(InputParam):
 
         self._sw = Gtk.ScrolledWindow()
         self._sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self._sw.add_with_viewport(self._view)
+        self._sw.add(self._view)
 
         self.pack_start(self._sw, True, True, True)
 
