@@ -77,7 +77,7 @@ def entry(key, value=None, default=None):
         }.get(_type, _config_parser.get)
         try:
             result = getter('main', key)
-        except configparser.Error:
+        except (AttributeError, configparser.Error):
             result = _type() if default is None else default
     return result
 
@@ -109,7 +109,7 @@ def get_file_list(key):
     try:
         files = [value for name, value in _config_parser.items(key)
                  if name.startswith('%s_' % key)]
-    except configparser.Error:
+    except (AttributeError, configparser.Error):
         files = []
     return files
 

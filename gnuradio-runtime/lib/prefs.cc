@@ -30,6 +30,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -113,7 +114,7 @@ namespace gr {
             std::string value = o.value[0];
             d_config_map[section][key] = value;
           }
-        } catch(const boost::program_options::invalid_config_file_syntax & e) {
+        } catch(std::exception e) {
           std::cerr << "WARNING: Config file '" << fname << "' failed to parse:" << std::endl;
           std::cerr << e.what() << std::endl;
           std::cerr << "Skipping it" << std::endl;

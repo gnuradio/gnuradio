@@ -46,7 +46,6 @@ GR_SWIG_MAKE(wavelet_swig wavelet_swig.i)
 GR_SWIG_INSTALL(
     TARGETS wavelet_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/wavelet
-    COMPONENT "wavelet_python"
 )
 
 install(
@@ -54,5 +53,4 @@ install(
     wavelet_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/wavelet_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "wavelet_swig"
 )

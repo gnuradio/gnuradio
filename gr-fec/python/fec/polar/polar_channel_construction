@@ -21,25 +21,22 @@
 #
 """ A tool for POLAR code channel construction."""
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 import gnuradio.fec.polar as cc
 
 
 def setup_parser():
-    """ Init the option parser. If derived classes need to add options,
+    """Init the argument parser. If derived classes need to add options,
     override this and call the parent function. """
-    parser = OptionParser(add_help_option=False)
-    parser.usage = '%prog [blocksize] [designsnr] [mu]'
-
-    parser.add_option("-h", "--help", action="help", help="Displays this help message.")
-
-    parser.add_option("-c", "--channel", action="store", type="string", dest="channel",
-                      help="specify channel, currently BEC or AWGN (default='BEC')", default='BEC')
-    parser.add_option("-b", "--blocksize", action="store", type="int", dest="block_size",
+    parser = ArgumentParser()
+    parser.add_argument("-c", "--channel", choices=('BEC', 'AWGN'),
+                      help="specify channel, currently BEC or AWGN (default='BEC')",
+                      default='BEC')
+    parser.add_argument("-b", "--blocksize", type=int, dest="block_size",
                       help="specify block size of polar code (default=16)", default=16)
-    parser.add_option("-s", "--desgin-snr", action="store", type="float", dest="design_snr",
+    parser.add_argument("-s", "--desgin-snr", type=float, dest="design_snr",
                       help="specify design SNR of polar code (default=0.0)", default=0.0)
-    parser.add_option("-k", "--mu", action="store", type="int", dest="mu",
+    parser.add_argument("-k", "--mu", type=int,
                       help="specify block size of polar code (default=2)", default=2)
 
     return parser
@@ -47,26 +44,13 @@ def setup_parser():
 
 def main():
     """ Here we go. Parse command, choose class and run. """
-    print('POLAR code channel constructor commandline tool')
+    print 'POLAR code channel constructor commandline tool'
     parser = setup_parser()
-    (options, args) = parser.parse_args()
+    args = parser.parse_args()
 
-    channel = str(options.channel)
-    block_size = int(options.block_size)
-    design_snr = float(options.design_snr)
-    mu = int(options.mu)
-
-    if len(args) > 0:
-        channel = str(args[0])
-    if len(args) > 1:
-        block_size = int(args[1])
-    if len(args) > 2:
-        design_snr = float(args[2])
-    if len(args) == 4:
-        mu = int(args[3])
-
-    z_params = cc.get_z_params(False, channel, block_size, design_snr, mu)
-    print(z_params)
+    z_params = cc.get_z_params(False, args.channel, args.block_size,
+            args.design_snr, args.mu)
+    print z_params
 
 
 if __name__ == '__main__':

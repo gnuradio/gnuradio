@@ -28,5 +28,4 @@ install(FILES
     oscope_sink_x.h
     trigger_mode.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/wxgui
-    COMPONENT "wxgui_devel"
 )

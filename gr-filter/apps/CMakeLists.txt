@@ -26,5 +26,4 @@ GR_PYTHON_INSTALL(
     PROGRAMS
     gr_filter_design
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "filter_python"
 )

@@ -38,27 +38,9 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
-# Generate viterbi mux source
-# http://www.vtk.org/Wiki/CMake_Cross_Compiling#Using_executables_in_the_build_created_during_the_build
-########################################################################
-if(NOT CMAKE_CROSSCOMPILING)
-  add_executable(atsc_viterbi_gen atsc/atsc_viterbi_gen.cc)
-  export(TARGETS atsc_viterbi_gen APPEND FILE ${EXPORT_FILE})
-endif()
-
-set(atsc_viterbi_mux_cc ${CMAKE_CURRENT_BINARY_DIR}/atsc_viterbi_mux.cc)
-
-add_custom_command(
-    OUTPUT ${atsc_viterbi_mux_cc}
-    DEPENDS atsc_viterbi_gen
-    COMMAND atsc_viterbi_gen -o ${atsc_viterbi_mux_cc}
-)
-
-########################################################################
 # Setup library
 ########################################################################
 list(APPEND dtv_sources
-  ${atsc_viterbi_mux_cc}
   atsc/atsc_deinterleaver_impl.cc
   atsc/atsc_depad_impl.cc
   atsc/atsc_derandomizer_impl.cc
@@ -134,7 +116,7 @@ list(APPEND dtv_libs
 
 include (CheckCCompilerFlag)
 if (MSVC)
-	# 64-bit MSVC always supports SSE2 
+	# 64-bit MSVC always supports SSE2
 	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 		set(SSE2_SUPPORTED true)
 	else ()
@@ -171,4 +153,4 @@ endif(MSVC)
 
 add_library(gnuradio-dtv SHARED ${dtv_sources})
 target_link_libraries(gnuradio-dtv ${dtv_libs})
-GR_LIBRARY_FOO(gnuradio-dtv RUNTIME_COMPONENT "dtv_runtime" DEVEL_COMPONENT "dtv_devel")
+GR_LIBRARY_FOO(gnuradio-dtv)

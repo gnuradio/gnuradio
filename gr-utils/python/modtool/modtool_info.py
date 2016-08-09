@@ -21,7 +21,6 @@
 """ Returns information about a module """
 
 import os
-from optparse import OptionGroup
 
 from modtool_base import ModTool, ModToolException
 from util_functions import get_modname
@@ -30,7 +29,7 @@ from util_functions import get_modname
 class ModToolInfo(ModTool):
     """ Return information about a given module """
     name = 'info'
-    aliases = ('getinfo', 'inf')
+    description = 'Return informations about module.'
 
     def __init__(self):
         ModTool.__init__(self)
@@ -38,26 +37,25 @@ class ModToolInfo(ModTool):
         self._python_readable = False
         self._suggested_dirs = None
 
-    def setup_parser(self):
+    @staticmethod
+    def setup_parser(parser):
         """ Initialise the option parser for 'gr_modtool info' """
-        parser = ModTool.setup_parser(self)
-        parser.usage = '%prog info [options]. \n Call %prog without any options to run it interactively.'
-        ogroup = OptionGroup(parser, "Info options")
-        ogroup.add_option("--python-readable", action="store_true", default=None,
+        #args_group = parser.add_argument_group(title="Info options")
+        parser.add_argument("--python-readable", action="store_true",
                 help="Return the output in a format that's easier to read for Python scripts.")
-        ogroup.add_option("--suggested-dirs", default=None, type="string",
+        parser.add_argument("--suggested-dirs",
                 help="Suggest typical include dirs if nothing better can be detected.")
-        parser.add_option_group(ogroup)
         return parser
 
-    def setup(self, options, args):
+    def setup(self, options):
         # Won't call parent's setup(), because that's too chatty
         self._directory = options.directory
         self._python_readable = options.python_readable
         self._suggested_dirs = options.suggested_dirs
 
-    def run(self):
+    def run(self, options):
         """ Go, go, go! """
+        self.setup(options)
         mod_info = dict()
         mod_info['base_dir'] = self._get_base_dir(self._directory)
         if mod_info['base_dir'] is None:

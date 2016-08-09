@@ -26,5 +26,4 @@ include(GrPython)
 GR_PYTHON_INSTALL(FILES
     blks2/packet.py
     DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio/blks2
-    COMPONENT "digital_python"
 )

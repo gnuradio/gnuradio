@@ -19,7 +19,7 @@
 
 ########################################################################
 file(GLOB xml_files "*.xml")
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "wxgui_python")
+install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR})
 
 ########################################################################
 #The wxgui module contains a top_block + wxgui frame.
@@ -32,5 +32,4 @@ GR_PYTHON_INSTALL(
     panel.py
     top_block_gui.py
     DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio/wxgui
-    COMPONENT "wxgui_python"
 )

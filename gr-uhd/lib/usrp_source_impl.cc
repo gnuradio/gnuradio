@@ -480,6 +480,7 @@ namespace gr {
         {
             _dev->issue_stream_cmd(cmd, _stream_args.channels[i]);
         }
+        _tag_now = true;
     }
 
     bool

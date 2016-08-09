@@ -199,6 +199,7 @@ list(APPEND gr_blocks_sources
     throttle_impl.cc
     transcendental_impl.cc
     tcp_connection.cc
+    tcp_server_sink_impl.cc
     tuntap_pdu_impl.cc
     tag_gate_impl.cc
     tagged_stream_align_impl.cc
@@ -258,7 +259,7 @@ add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
-GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
+GR_LIBRARY_FOO(gnuradio-blocks)
 
 if(ENABLE_STATIC_LIBS)
   # Remove controlport-specific source files from staticlibs build
@@ -289,7 +290,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-blocks_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "blocks_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

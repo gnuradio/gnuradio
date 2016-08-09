@@ -39,6 +39,14 @@
 			<name>1200 bps</name>
 			<key>codec2.MODE_1200</key>
 		</option>
+		<option>
+			<name>700 bps</name>
+			<key>codec2.MODE_700</key>
+		</option>
+		<option>
+			<name>700B bps</name>
+			<key>codec2.MODE_700B</key>
+		</option>
 	</param>
 	<sink>
 		<name>in</name>
@@ -47,7 +55,7 @@
 	<source>
 		<name>out</name>
 		<type>byte</type>
-		<vlen>{ 0: 64, 1: 48, 2: 64, 3: 56, 4: 52, 5: 48 }[$mode]</vlen>
+		<vlen>{ 0: 64, 1: 48, 2: 64, 3: 56, 4: 52, 5: 48, 6: 28, 7: 28 }[$mode]</vlen>
 	</source>
 </block>
 

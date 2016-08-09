@@ -24,7 +24,6 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES __init__.py
     DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio
-    COMPONENT "blocks_python"
 )
 
 GR_PYTHON_INSTALL(FILES
@@ -33,5 +32,4 @@ GR_PYTHON_INSTALL(FILES
     blks2/selector.py
     blks2/tcp.py
     DESTINATION ${GR_PYTHON_DIR}/grc_gnuradio/blks2
-    COMPONENT "blocks_python"
 )

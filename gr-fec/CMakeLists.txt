@@ -34,6 +34,7 @@ GR_REGISTER_COMPONENT("gr-fec" ENABLE_GR_FEC
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
+    GSL_FOUND
 )
 
 GR_SET_GLOBAL(GR_FEC_INCLUDE_DIRS
@@ -49,40 +50,6 @@ SET(GR_PKG_FEC_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/fec)
 # Begin conditional configuration
 ########################################################################
 if(ENABLE_GR_FEC)
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_FEC_DESCRIPTION "GNU Radio FEC Blocks")
-
-CPACK_COMPONENT("fec_runtime"
-    GROUP        "FEC"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("fec_devel"
-    GROUP        "FEC"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("fec_python"
-    GROUP        "FEC"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;fec_runtime"
-)
-
-CPACK_COMPONENT("fec_swig"
-    GROUP        "FEC"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;fec_python;fec_devel"
-)
 
 ########################################################################
 # Add subdirectories
@@ -111,7 +78,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fec.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "fec_devel"
 )
 
 endif(ENABLE_GR_FEC)

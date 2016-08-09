@@ -174,6 +174,7 @@ install(FILES
     tagged_stream_multiply_length.h
     tagged_stream_to_pdu.h
     tags_strobe.h
+    tcp_server_sink.h
     test_tag_variable_rate_ff.h
     threshold_ff.h
     throttle.h
@@ -191,7 +192,6 @@ install(FILES
     wavfile_sink.h
     wavfile_source.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
-    COMPONENT "blocks_devel"
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -203,6 +203,5 @@ install(FILES
   ctrlport_probe2_i.h
   ctrlport_probe2_b.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
-  COMPONENT "blocks_devel"
 )
 endif(ENABLE_GR_CTRLPORT)

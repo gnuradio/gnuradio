@@ -26,10 +26,13 @@
 #include "dvbt_bit_inner_interleaver_impl.h"
 #include <stdio.h>
 
+#define MAX_MODULATION_ORDER 6
+#define INTERLEAVER_BLOCK_SIZE 126
+
 namespace gr {
   namespace dtv {
 
-    const int dvbt_bit_inner_interleaver_impl::d_bsize = 126;
+    const int dvbt_bit_inner_interleaver_impl::d_bsize = INTERLEAVER_BLOCK_SIZE;
 
     int
     dvbt_bit_inner_interleaver_impl::H(int e, int w)
@@ -118,8 +121,9 @@ namespace gr {
     void
     dvbt_bit_inner_interleaver_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-      ninput_items_required[0] = noutput_items;
-      ninput_items_required[1] = noutput_items;
+      unsigned ninputs = ninput_items_required.size();
+      for (unsigned i = 0; i < ninputs; i++)
+        ninput_items_required[i] = noutput_items;
     }
 
     int
@@ -136,8 +140,7 @@ namespace gr {
 
       // First index of d_b is Bit interleaver number
       // Second index of d_b is the position inside the Bit interleaver
-      // Linux: unsigned char d_b[d_v][d_bsize];
-      __GR_VLA2D(unsigned char, d_b, d_v, d_bsize);
+      unsigned char d_b[MAX_MODULATION_ORDER][INTERLEAVER_BLOCK_SIZE];
 
       for (int bcount = 0; bcount < bmax; bcount++) {
         for (int i = 0; i < d_bsize; i++) {

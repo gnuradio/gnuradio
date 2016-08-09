@@ -50,7 +50,6 @@ GR_SWIG_MAKE(trellis_swig trellis_swig.i)
 GR_SWIG_INSTALL(
     TARGETS trellis_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/trellis
-    COMPONENT "trellis_python"
 )
 
 install(
@@ -58,5 +57,4 @@ install(
     trellis_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/trellis_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "trellis_swig"
 )

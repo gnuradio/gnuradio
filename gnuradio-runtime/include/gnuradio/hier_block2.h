@@ -267,6 +267,31 @@ namespace gr {
     std::vector<int> processor_affinity();
 
     /*!
+    * \brief Set the logger's output level.
+    *
+    * Sets the level of the logger for all connected blocks. This takes
+    * a string that is translated to the standard levels and can be
+    * (case insensitive):
+    *
+    * \li off , notset
+    * \li debug
+    * \li info
+    * \li notice
+    * \li warn
+    * \li error
+    * \li crit
+    * \li alert
+    * \li fatal
+    * \li emerg
+    */
+    void set_log_level(std::string level);
+
+    /*!
+     * \brief Get the logger's output level
+     */
+    std::string log_level();
+
+    /*!
      * \brief Get if all block min buffers should be set.
      *
      * \details this returns whether all the block min output buffers

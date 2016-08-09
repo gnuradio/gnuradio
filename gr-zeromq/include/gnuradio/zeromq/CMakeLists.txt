@@ -36,5 +36,4 @@ install(FILES
   req_msg_source.h
 
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/zeromq
-  COMPONENT "zeromq_devel"
 )

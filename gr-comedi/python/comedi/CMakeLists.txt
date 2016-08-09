@@ -26,7 +26,6 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/comedi
-    COMPONENT "comedi_python"
 )
 
 ########################################################################

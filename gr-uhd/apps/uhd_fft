@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 #
-# Copyright 2015 Free Software Foundation, Inc.
+# Copyright 2015-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -277,7 +277,37 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         _freeze_scope_thread = threading.Thread(target=lambda: _freeze_scaling(self.qtgui_time_sink_x_0, 2.0))
         _freeze_scope_thread.daemon = True
         _freeze_scope_thread.start()
-
+        if args.phase_relations and len(self.channels) > 1:
+            self.display_widget_phase = Qt.QWidget()
+            self.display_layout_phase = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.display_widget_phase)
+            self.display_grid_layout_phase = Qt.QGridLayout()
+            self.display_layout_phase.addLayout(self.display_grid_layout_phase)
+            self.display.addTab(self.display_widget_phase, "Rel. Phase")
+            self.qtgui_phase_plot = qtgui.time_sink_f(
+                    1024, #size
+                    self.samp_rate, #samp_rate
+                    "", #name
+                    len(self.channels) - 1
+            )
+            self.qtgui_phase_plot.set_update_time(self.update_rate)
+            self.qtgui_phase_plot.set_y_axis(-3.5, 3.5)
+            self.qtgui_phase_plot.set_y_label("Relative Phase", "")
+            self.qtgui_phase_plot.enable_tags(-1, True)
+            self.qtgui_phase_plot.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+            self.qtgui_phase_plot.enable_autoscale(False)
+            self.qtgui_phase_plot.enable_grid(True)
+            self.qtgui_phase_plot.enable_control_panel(True)
+            self.qtgui_phase_plot.disable_legend()
+            for i in xrange(len(self.channels) - 1):
+                self.qtgui_phase_plot.set_line_label(i, "Phase Delta Channels {0}/{1}".format(i, i+1))
+                self.qtgui_phase_plot.set_line_width(i, widths[i])
+                self.qtgui_phase_plot.set_line_color(i, colors[i])
+                self.qtgui_phase_plot.set_line_style(i, styles[i])
+                self.qtgui_phase_plot.set_line_marker(i, markers[i])
+                self.qtgui_phase_plot.set_line_alpha(i, alphas[i])
+            self._qtgui_phase_plot_win = sip.wrapinstance(self.qtgui_phase_plot.pyqwidget(), Qt.QWidget)
+            self.display_grid_layout_phase.addWidget(self._qtgui_phase_plot_win, 0,0,1,4)
+        ### Other widgets ###################################################
         self._lo_locked_probe_tool_bar = Qt.QToolBar(self)
         self._lo_locked_probe_formatter = lambda x: {True: 'Yes', False: 'No'}[x]
         if self.has_lo_sensor:
@@ -317,10 +347,24 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         ##################################################
         self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.qtgui_freq_sink_x_0, 'freq'))
         self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.usrp, 'command'))
-        for c in self.channels:
-            self.connect((self.usrp, c), (self.qtgui_freq_sink_x_0, c))
-            self.connect((self.usrp, c), (self.qtgui_time_sink_x_0, c))
-            self.connect((self.usrp, c), (self.qtgui_waterfall_sink_x_0, c))
+        for c, idx in enumerate(self.channels):
+            self.connect((self.usrp, c), (self.qtgui_freq_sink_x_0, idx))
+            self.connect((self.usrp, c), (self.qtgui_time_sink_x_0, idx))
+            self.connect((self.usrp, c), (self.qtgui_waterfall_sink_x_0, idx))
+        if args.phase_relations and len(self.channels) > 1:
+            for c, idx in enumerate(self.channels[:-1]):
+                self.connect_phase_plot(
+                        (self.usrp, c),
+                        (self.usrp, self.channels[idx+1]),
+                        (self.qtgui_phase_plot, idx)
+                )
+
+    def connect_phase_plot(self, src_port1, src_port2, dst_port):
+        " Calculate relative phase between two src ports and send it dst_port "
+        from gnuradio import blocks
+        multiplier = blocks.multiply_cc()
+        self.connect(src_port1, (multiplier, 0), blocks.complex_to_arg(), dst_port)
+        self.connect(src_port2, blocks.conjugate_cc(), (multiplier, 1))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "uhd_fft")
@@ -417,6 +461,8 @@ def setup_argparser():
         help="Specify FFT average alpha (overrides --fft-average)")
     group.add_argument("--update-rate", dest="update_rate", type=eng_arg.eng_float, default=eng_notation.num_to_str(.1),
         help="Set GUI widget update rate")
+    group.add_argument("--phase-relations", action="store_true",
+        help="Plot relative phases between multiple channels")
     return parser
 
 

@@ -1732,6 +1732,16 @@ namespace gr {
           m_64apsk[62] = gr_complex( 7.0, -7.0);
           m_64apsk[63] = gr_complex( 7.0,  7.0);
           break;
+        case MOD_8VSB:
+          m_8psk[0] = gr_complex(-7.0 + 1.25, 0.0);
+          m_8psk[1] = gr_complex(-5.0 + 1.25, 0.0);
+          m_8psk[2] = gr_complex(-3.0 + 1.25, 0.0);
+          m_8psk[3] = gr_complex(-1.0 + 1.25, 0.0);
+          m_8psk[4] = gr_complex( 1.0 + 1.25, 0.0);
+          m_8psk[5] = gr_complex( 3.0 + 1.25, 0.0);
+          m_8psk[6] = gr_complex( 5.0 + 1.25, 0.0);
+          m_8psk[7] = gr_complex( 7.0 + 1.25, 0.0);
+          break;
         default:
           m_qpsk[0] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
           m_qpsk[1] = gr_complex((r1 * cos(7 * M_PI / 4.0)), (r1 * sin(7 * M_PI / 4.0)));
@@ -1791,6 +1801,7 @@ namespace gr {
             }
             break;
           case MOD_8PSK:
+          case MOD_8VSB:
           case MOD_8APSK:
             for (int i = 0; i < noutput_items; i++) {
               index = *in++;

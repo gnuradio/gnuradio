@@ -21,7 +21,7 @@
 
 from cmakefile_editor import CMakeFileEditor
 from grc_xml_generator import GRCXMLGenerator
-from modtool_base import ModTool, ModToolException, get_class_dict
+from modtool_base import ModTool, ModToolException, get_modtool_modules
 from modtool_add import ModToolAdd
 from modtool_disable import ModToolDisable
 from modtool_info import ModToolInfo
@@ -31,6 +31,5 @@ from modtool_rm import ModToolRemove
 from modtool_rename import ModToolRename
 from templates import Templates
 # Leave this at the end
-from modtool_help import ModToolHelp
 from parser_cc_block import ParserCCBlock
 from util_functions import *

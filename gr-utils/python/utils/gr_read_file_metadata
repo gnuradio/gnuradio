@@ -21,7 +21,7 @@
 #
 
 import sys
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 import pmt
 from gnuradio.blocks import parse_file_metadata
@@ -69,19 +69,15 @@ def main(filename, detached=False):
         handle.seek(nread, 0)
         print "\n\n"
 
+
 if __name__ == "__main__":
-    usage="%prog: [options] filename"
     description = "Read in a GNU Radio file with meta data, extracts the header and prints it."
 
-    parser = OptionParser(conflict_handler="resolve",
-                          usage=usage, description=description)
-    parser.add_option("-D", "--detached", action="store_true", default=False,
+    parser = ArgumentParser(conflict_handler="resolve", description=description)
+    parser.add_argument("-D", "--detached", action="store_true",
                       help="Used if header is detached.")
-    (options, args) = parser.parse_args ()
+    parser.add_argument("file", metavar="FILE", nargs=1,
+                      help="Input file");
+    args = parser.parse_args()
 
-    if(len(args) < 1):
-        sys.stderr.write("No filename given\n")
-        sys.exit(1)
-
-    filename = args[0]
-    main(filename, options.detached)
+    main(args.file[0], args.detached)

@@ -33,24 +33,26 @@ from cmakefile_editor import CMakeFileEditor
 class ModToolRemove(ModTool):
     """ Remove block (delete files and remove Makefile entries) """
     name = 'remove'
-    aliases = ('rm', 'del')
+    description = 'Remove block from module.'
 
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup(self, options, args):
-        ModTool.setup(self, options, args)
+    @staticmethod
+    def setup_parser(parser):
+        ModTool.setup_parser_block(parser)
 
-        if options.block_name is not None:
-            self._info['pattern'] = options.block_name
-        elif len(args) >= 2:
-            self._info['pattern'] = args[1]
+    def setup(self, options):
+        ModTool.setup(self, options)
+
+        if options.blockname is not None:
+            self._info['pattern'] = options.blockname
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
         if len(self._info['pattern']) == 0:
             self._info['pattern'] = '.'
 
-    def run(self):
+    def run(self, options):
         """ Go, go, go! """
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
@@ -96,6 +98,7 @@ class ModToolRemove(ModTool):
                     (self._info['modname'], pyblockname, self._info['modname'], filename)
             return regexp
         # Go, go, go!
+        self.setup(options)
         if not self._skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)

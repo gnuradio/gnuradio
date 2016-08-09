@@ -5,6 +5,7 @@
 [grc]
 global_blocks_path = @blocksdir@
 local_blocks_path =
+default_flow_graph =
 xterm_executable = @GRC_XTERM_EXE@
 canvas_font_size = 8
 canvas_default_size = 1280, 1024

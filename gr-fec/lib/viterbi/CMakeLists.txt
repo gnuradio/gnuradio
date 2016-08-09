@@ -51,7 +51,6 @@ list(APPEND gnuradio_fec_sources ${viterbi_sources})
 #install(
 #    FILES ${CMAKE_CURRENT_SOURCE_DIR}/viterbi.h
 #    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
-#    COMPONENT "fec_devel"
 #)
 
 ########################################################################
