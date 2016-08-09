@@ -45,6 +45,8 @@ class Port(_Port, Element):
 
         self._area = []
         self._bg_color = self._border_color = 0, 0, 0, 0
+        self._font_color = list(Colors.FONT_COLOR)
+
         self._line_width_factor = 1.0
         self._label_layout_offsets = 0, 0
 
@@ -72,15 +74,15 @@ class Port(_Port, Element):
             a hex color code.
         """
         if not self.parent_block.enabled:
-            self._bg_color = Colors.BLOCK_DISABLED_COLOR
-            self._border_color = Colors.BORDER_COLOR_DISABLED
-            return
-
-        color = Colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or Colors.PORT_TYPE_TO_COLOR.get('')
-        vlen = self.get_vlen()
-        if vlen > 1:
-            dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, vlen)]
-            color = tuple(max(c - dark, 0) for c in color)
+            self._font_color[-1] = 0.4
+            color = Colors.BLOCK_DISABLED_COLOR
+        else:
+            self._font_color[-1] = 1.0
+            color = Colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or Colors.PORT_TYPE_TO_COLOR.get('')
+            vlen = self.get_vlen()
+            if vlen > 1:
+                dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, vlen)]
+                color = tuple(max(c - dark, 0) for c in color)
         self._bg_color = color
         self._border_color = tuple(max(c - 0.3, 0) for c in color)
 
@@ -127,7 +129,7 @@ class Port(_Port, Element):
         """
         Draw the socket with a label.
         """
-        border_color = Colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
+        border_color = self._border_color
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
         cr.translate(*self.coordinate)
 
@@ -145,7 +147,7 @@ class Port(_Port, Element):
             cr.translate(-self.width, 0)
         cr.translate(*self._label_layout_offsets)
 
-        cr.set_source_rgba(*Colors.FONT_COLOR)
+        cr.set_source_rgba(*self._font_color)
         PangoCairo.update_layout(cr, self.label_layout)
         PangoCairo.show_layout(cr, self.label_layout)
 

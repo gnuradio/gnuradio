@@ -43,7 +43,7 @@ def get_color(color_code):
 #################################################################################
 
 HIGHLIGHT_COLOR = get_color('#00FFFF')
-BORDER_COLOR = get_color('#444444')
+BORDER_COLOR = get_color('#616161')
 BORDER_COLOR_DISABLED = get_color('#888888')
 FONT_COLOR = get_color('#000000')
 
