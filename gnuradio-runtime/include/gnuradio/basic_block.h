@@ -369,20 +369,15 @@ namespace gr {
       d_msg_handlers[which_port] = msg_handler_t(msg_handler);
     }
 
-    virtual void set_processor_affinity(const std::vector<int> &mask)
-    { throw std::runtime_error("set_processor_affinity not overloaded in child class."); }
+    virtual void set_processor_affinity(const std::vector<int> &mask) = 0;
 
-    virtual void unset_processor_affinity()
-    { throw std::runtime_error("unset_processor_affinity not overloaded in child class."); }
+    virtual void unset_processor_affinity() = 0;
 
-    virtual std::vector<int> processor_affinity()
-    { throw std::runtime_error("processor_affinity not overloaded in child class."); }
+    virtual std::vector<int> processor_affinity() = 0;
 
-    virtual void set_log_level(std::string level)
-    { throw std::runtime_error("set_log_level not overloaded in child class."); }
+    virtual void set_log_level(std::string level) = 0;
 
-    virtual std::string log_level()
-    { throw std::runtime_error("log_level not overloaded in child class."); }
+    virtual std::string log_level() = 0;
   };
 
   inline bool operator<(basic_block_sptr lhs, basic_block_sptr rhs)
