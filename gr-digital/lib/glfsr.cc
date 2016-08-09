@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2012 Free Software Foundation, Inc.
+ * Copyright 2007,2012,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,7 +26,7 @@
 namespace gr {
   namespace digital {
 
-    static int s_polynomial_masks[] = {
+    static uint32_t s_polynomial_masks[] = {
       0x00000000,
       0x00000001,		// x^1 + 1
       0x00000003,               // x^2 + x^1 + 1
@@ -59,18 +59,27 @@ namespace gr {
       0x10000002,		// x^29 + x^2 + 1
       0x20000029,		// x^30 + x^4 + x^1 + 1
       0x40000004,		// x^31 + x^3 + 1
-      (int) 0x80000057		// x^32 + x^7 + x^5 + x^3 + x^2 + x^1 + 1
+      0x80000057		// x^32 + x^7 + x^5 + x^3 + x^2 + x^1 + 1
     };
 
     glfsr::~glfsr()
     {
     }
 
-    int glfsr::glfsr_mask(int degree)
+    uint32_t glfsr::glfsr_mask(unsigned int degree)
     {
       if(degree < 1 || degree > 32)
-	throw std::runtime_error("glfsr::glfsr_mask(): degree must be between 1 and 32 inclusive");
+        throw std::runtime_error("glfsr::glfsr_mask(): degree must be between 1 and 32 inclusive");
       return s_polynomial_masks[degree];
+    }
+
+    uint8_t glfsr::next_bit()
+    {
+      unsigned char bit = d_shift_register & 0x1;
+      d_shift_register >>= 1;
+      if(bit)
+        d_shift_register ^= d_mask;
+      return bit;
     }
 
   } /* namespace digital */
