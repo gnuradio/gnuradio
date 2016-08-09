@@ -426,7 +426,7 @@ class uhd_siggen_gui(Qt.QWidget):
     def set_lo_locked_probe_0(self, lo_locked_probe_0):
         Qt.QMetaObject.invokeMethod(
                 self._lo_locked_probe_0_label, "setText",
-                Qt.Q_ARG("QString", str(self.lo_locked_probe_0))
+                Qt.Q_ARG("QString", str(lo_locked_probe_0))
         )
 
 
