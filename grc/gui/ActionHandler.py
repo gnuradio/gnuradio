@@ -23,7 +23,7 @@ from __future__ import absolute_import, print_function
 import os
 import subprocess
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 from . import Dialogs, Preferences, Actions, Executor, FileDialogs, Utils
 from .MainWindow import MainWindow
@@ -33,13 +33,14 @@ from .PropsDialog import PropsDialog
 from ..core import ParseXML, Messages
 
 
-class ActionHandler:
+class ActionHandler(Gtk.Application):
     """
     The action handler will setup all the major window components,
     and handle button presses and flow graph operations from the GUI.
     """
 
     def __init__(self, file_paths, platform):
+        Gtk.Application.__init__(self)
         """
         ActionHandler constructor.
         Create the main window, setup the message handler, import the preferences,
@@ -54,16 +55,25 @@ class ActionHandler:
         for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
         #setup the main window
         self.platform = platform
-        self.main_window = MainWindow(platform, self._handle_action)
+
+        #initialize
+        self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
+        self.init = False
+
+    def do_startup(self):
+        Gtk.Application.do_startup(self)
+
+    def do_activate(self):
+        Gtk.Application.do_activate(self)
+
+        self.main_window = MainWindow(self, self.platform, self._handle_action)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
         self.get_focus_flag = self.main_window.get_focus_flag
         #setup the messages
         Messages.register_messenger(self.main_window.add_console_line)
-        Messages.send_init(platform)
-        #initialize
-        self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
-        self.init = False
+        Messages.send_init(self.platform)
+
         Actions.APPLICATION_INITIALIZE()
 
     def _handle_key_press(self, widget, event):

@@ -39,6 +39,8 @@ Is the library path environment variable set correctly?
 def die(error, message):
     msg = "{0}\n\n({1})".format(message, error)
     try:
+        import gi
+        gi.require_version('Gtk', '3.0')
         from gi.repository import Gtk
         d = Gtk.MessageDialog(
             message_type=Gtk.MessageType.ERROR,

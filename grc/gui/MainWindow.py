@@ -41,7 +41,7 @@ from ..core import Messages
 ############################################################
 # Main window
 ############################################################
-class MainWindow(Gtk.Window):
+class MainWindow(Gtk.ApplicationWindow):
     """The topmost window with menus, the tool bar, and other major windows."""
 
     # Constants the action handler can use to indicate which panel visibility to change.
@@ -49,16 +49,17 @@ class MainWindow(Gtk.Window):
     CONSOLE = 1
     VARIABLES = 2
 
-    def __init__(self, platform, action_handler_callback):
+    def __init__(self, app, platform, action_handler_callback):
         """
         MainWindow constructor
         Setup the menu, toolbar, flow graph editor notebook, block selection window...
         """
+        Gtk.ApplicationWindow.__init__(self, title="GNU Radio Companion", application=app)
+
         self._platform = platform
         Preferences.load(platform)
 
         # Setup window
-        GObject.GObject.__init__(self)
         vbox = Gtk.VBox()
         self.add(vbox)
 
