@@ -16,17 +16,17 @@ $framesize2.val, #slurp
 #end if
 #if str($standard) == 'STANDARD_DVBT2'
 #if str($framesize1) == 'FECFRAME_NORMAL'
-$rate1.val, #slurp
+$rate1.val#slurp
 #else
-$rate2.val, #slurp
+$rate2.val#slurp
 #end if
 #else
 #if str($framesize2) == 'FECFRAME_NORMAL'
-$rate3.val, #slurp
+$rate3.val#slurp
 #else if str($framesize2) == 'FECFRAME_MEDIUM'
-$rate4.val, #slurp
+$rate4.val#slurp
 #else
-$rate5.val, #slurp
+$rate5.val#slurp
 #end if
 #end if
 )</make>

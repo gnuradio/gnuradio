@@ -60,6 +60,7 @@ namespace gr {
 
       set_omega(omega);			// also sets min and max omega
       set_relative_rate (1.0 / omega);
+      enable_update_rate(true);  // fixes tag propagation through variable rate block
     }
 
     clock_recovery_mm_ff_impl::~clock_recovery_mm_ff_impl()
