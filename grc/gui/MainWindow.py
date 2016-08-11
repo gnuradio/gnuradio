@@ -25,11 +25,12 @@ from gi.repository import Gtk, Gdk, GObject
 
 from . import Bars, Actions, Utils
 from .BlockTreeWindow import BlockTreeWindow
+from .Console import Console
 from .VariableEditor import VariableEditor
 from .Constants import \
     NEW_FLOGRAPH_TITLE, DEFAULT_CONSOLE_WINDOW_WIDTH
 from .Dialogs import TextDisplay, MessageDialogWrapper
-from .NotebookPage import NotebookPage
+from .Notebook import Notebook, Page
 
 from ..core import Messages
 
@@ -71,19 +72,13 @@ class MainWindow(Gtk.ApplicationWindow):
         vbox.pack_start(self.main, True, True, 0)
 
         # Create the notebook
-        self.notebook = Gtk.Notebook()
+        self.notebook = Notebook()
         self.page_to_be_closed = None
-        self.current_page = None  # type: NotebookPage
-        self.notebook.set_show_border(False)
-        self.notebook.set_scrollable(True)  # scroll arrows for page tabs
-        self.notebook.connect('switch-page', self._handle_page_change)
+
+        self.current_page = None  # type: Page
 
         # Create the console window
-        self.text_display = TextDisplay()
-        self.console_window = Gtk.ScrolledWindow()
-        self.console_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.console_window.add(self.text_display)
-        self.console_window.set_size_request(-1, DEFAULT_CONSOLE_WINDOW_WIDTH)
+        self.console = Console()
 
         # Create the block tree and variable panels
         self.btwin = BlockTreeWindow(platform)
@@ -100,13 +95,13 @@ class MainWindow(Gtk.ApplicationWindow):
         self.variable_panel_sidebar = self.config.variable_editor_sidebar()
         if self.variable_panel_sidebar:
             self.left.pack1(self.notebook)
-            self.left.pack2(self.console_window, False)
+            self.left.pack2(self.console, False)
             self.right.pack1(self.btwin)
             self.right.pack2(self.vars, False)
         else:
             # Put the variable editor in a panel with the console
             self.left.pack1(self.notebook)
-            self.left_subpanel.pack1(self.console_window, shrink=False)
+            self.left_subpanel.pack1(self.console, shrink=False)
             self.left_subpanel.pack2(self.vars, resize=False, shrink=True)
             self.left.pack2(self.left_subpanel, False)
 
@@ -126,7 +121,7 @@ class MainWindow(Gtk.ApplicationWindow):
             self.left_subpanel.set_position(self.config.variable_editor_position())
 
         self.show_all()
-        self.console_window.hide()
+        self.console.hide()
         self.vars.hide()
         self.btwin.hide()
 
@@ -153,20 +148,6 @@ class MainWindow(Gtk.ApplicationWindow):
         Actions.APPLICATION_QUIT()
         return True
 
-    def _handle_page_change(self, notebook, page, page_num):
-        """
-        Handle a page change. When the user clicks on a new tab,
-        reload the flow graph to update the vars window and
-        call handle states (select nothing) to update the buttons.
-
-        Args:
-            notebook: the notebook
-            page: new page
-            page_num: new page number
-        """
-        self.current_page = self.notebook.get_nth_page(page_num)
-        Actions.PAGE_CHANGE()
-
     def update_panel_visibility(self, panel, visibility=True):
         """
         Handles changing visibility of panels.
@@ -176,19 +157,19 @@ class MainWindow(Gtk.ApplicationWindow):
 
         if panel == self.BLOCKS:
             if visibility:
-	        self.btwin.show()
+                self.btwin.show()
             else:
-	        self.btwin.hide()
+                self.btwin.hide()
         elif panel == self.CONSOLE:
             if visibility:
-	        self.console_window.show()
+                self.console.show()
             else:
-	        self.console_window.hide()
+                self.console.hide()
         elif panel == self.VARIABLES:
             if visibility:
-	        self.vars.show()
+                self.vars.show()
             else:
-	        self.vars.hide()
+                self.vars.hide()
         else:
             return
 
@@ -203,7 +184,7 @@ class MainWindow(Gtk.ApplicationWindow):
                 self.right.hide()
             else:
                 self.right.show()
-            if not (self.vars.get_property('visible')) and not (self.console_window.get_property('visible')):
+            if not (self.vars.get_property('visible')) and not (self.console.get_property('visible')):
                 self.left_subpanel.hide()
             else:
                 self.left_subpanel.show()
@@ -212,6 +193,15 @@ class MainWindow(Gtk.ApplicationWindow):
     # Console Window
     ############################################################
 
+    @property
+    def current_page(self):
+        return self.notebook.current_page
+
+    @current_page.setter
+    def current_page(self, page):
+        self.notebook.current_page = page
+
+
     def add_console_line(self, line):
         """
         Place line at the end of the text buffer, then scroll its window all the way down.
@@ -219,7 +209,7 @@ class MainWindow(Gtk.ApplicationWindow):
         Args:
             line: the new text
         """
-        self.text_display.insert(line)
+        self.console.add_line(line)
 
     ############################################################
     # Pages: create and close
@@ -244,7 +234,7 @@ class MainWindow(Gtk.ApplicationWindow):
             flow_graph = self._platform.get_new_flow_graph()
             flow_graph.grc_file_path = file_path
             #print flow_graph
-            page = NotebookPage(
+            page = Page(
                 self,
                 flow_graph=flow_graph,
                 file_path=file_path,

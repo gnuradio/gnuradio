@@ -28,7 +28,32 @@ from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
 
 
-class NotebookPage(Gtk.HBox):
+class Notebook(Gtk.Notebook):
+    def __init__(self):
+        Gtk.Notebook.__init__(self)
+
+        self.current_page = None
+        self.set_show_border(False)
+        self.set_scrollable(True)
+        self.connect('switch-page', self._handle_page_change)
+
+
+    def _handle_page_change(self, notebook, page, page_num):
+        """
+        Handle a page change. When the user clicks on a new tab,
+        reload the flow graph to update the vars window and
+        call handle states (select nothing) to update the buttons.
+
+        Args:
+            notebook: the notebook
+            page: new page
+            page_num: new page number
+        """
+        self.current_page = self.get_nth_page(page_num)
+        Actions.PAGE_CHANGE()
+
+
+class Page(Gtk.HBox):
     """A page in the notebook."""
 
     def __init__(self, main_window, flow_graph, file_path=''):

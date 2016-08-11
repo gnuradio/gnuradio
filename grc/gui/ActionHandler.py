@@ -398,16 +398,16 @@ class ActionHandler(Gtk.Application):
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SCROLL_LOCK:
             active = action.get_active()
-            main.text_display.scroll_lock = active
+            main.console.text_display.scroll_lock = active
             if active:
-                main.text_display.scroll_to_end()
+                main.console.text_display.scroll_to_end()
             action.save_to_preferences()
         elif action == Actions.CLEAR_CONSOLE:
-            main.text_display.clear()
+            main.console.text_display.clear()
         elif action == Actions.SAVE_CONSOLE:
             file_path = FileDialogs.SaveConsole(main, page.file_path).run()
             if file_path is not None:
-                main.text_display.save(file_path)
+                main.console.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
