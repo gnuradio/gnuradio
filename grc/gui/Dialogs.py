@@ -124,7 +124,7 @@ class TextDisplay(SimpleTextDisplay):
             logfile.write(buf.get_text(buf.get_start_iter(),
                                        buf.get_end_iter(), True))
 
-    # Action functions are set by the ActionHandler's init function
+    # Action functions are set by the Application's init function
     def clear_cb(self, menu_item, web_view):
         """ Callback function to clear the text buffer """
         Actions.CLEAR_CONSOLE()

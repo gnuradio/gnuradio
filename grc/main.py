@@ -24,7 +24,7 @@ from gi.repository import Gtk
 
 from gnuradio import gr
 from .gui.Platform import Platform
-from .gui.ActionHandler import ActionHandler
+from .gui.Application import Application
 
 
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
@@ -53,6 +53,6 @@ def main():
         prefs=gr.prefs(),
         install_prefix=gr.prefix()
     )
-    
-    app = ActionHandler(args.flow_graphs, platform)
+
+    app = Application(args.flow_graphs, platform)
     sys.exit(app.run())

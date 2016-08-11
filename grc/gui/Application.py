@@ -33,7 +33,7 @@ from .PropsDialog import PropsDialog
 from ..core import ParseXML, Messages
 
 
-class ActionHandler(Gtk.Application):
+class Application(Gtk.Application):
     """
     The action handler will setup all the major window components,
     and handle button presses and flow graph operations from the GUI.
@@ -42,7 +42,7 @@ class ActionHandler(Gtk.Application):
     def __init__(self, file_paths, platform):
         Gtk.Application.__init__(self)
         """
-        ActionHandler constructor.
+        Application constructor.
         Create the main window, setup the message handler, import the preferences,
         and connect all of the action handlers. Finally, enter the gtk main loop and block.
 

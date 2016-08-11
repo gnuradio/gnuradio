@@ -35,9 +35,6 @@ class ExecFlowGraphThread(threading.Thread):
     def __init__(self, flow_graph_page, xterm_executable, callback):
         """
         ExecFlowGraphThread constructor.
-
-        Args:
-            action_handler: an instance of an ActionHandler
         """
         threading.Thread.__init__(self)
 
