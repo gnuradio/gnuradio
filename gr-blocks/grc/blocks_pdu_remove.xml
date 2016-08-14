@@ -10,6 +10,7 @@
 	<import>from gnuradio import blocks</import>
 	<import>import pmt</import>
 	<make>blocks.pdu_remove($k)</make>
+	<callback>set_key($k)</callback>
 	<param>
 		<name>Key</name>
 		<key>k</key>
