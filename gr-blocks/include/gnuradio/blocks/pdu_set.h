@@ -44,6 +44,8 @@ namespace gr {
        * \brief Construct a PDU meta set block
        */
       static sptr make(pmt::pmt_t k, pmt::pmt_t v);
+      virtual void set_key(pmt::pmt_t key) = 0;
+      virtual void set_val(pmt::pmt_t val) = 0;
     };
 
   } /* namespace blocks */
