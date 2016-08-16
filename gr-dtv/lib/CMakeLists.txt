@@ -77,7 +77,6 @@ list(APPEND dtv_sources
   dvbs2/dvbs2_modulator_bc_impl.cc
   dvbs2/dvbs2_physical_cc_impl.cc
   dvbt/dvbt_energy_dispersal_impl.cc
-  dvbt/dvbt_reed_solomon.cc
   dvbt/dvbt_reed_solomon_enc_impl.cc
   dvbt/dvbt_convolutional_interleaver_impl.cc
   dvbt/dvbt_configure.cc
