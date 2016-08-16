@@ -37,6 +37,8 @@ namespace gr {
     public:
       pdu_set_impl(pmt::pmt_t k, pmt::pmt_t v);
       void handle_msg(pmt::pmt_t msg);
+      void set_key(pmt::pmt_t key) { d_k = key; };
+      void set_val(pmt::pmt_t val) { d_v = val; };
     };
 
   } /* namespace blocks */

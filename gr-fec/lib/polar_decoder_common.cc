@@ -34,6 +34,8 @@ namespace gr {
   namespace fec {
     namespace code {
 
+      const float polar_decoder_common::D_LLR_FACTOR = -2.19722458f;
+
       polar_decoder_common::polar_decoder_common(int block_size, int num_info_bits,
                                                  std::vector<int> frozen_bit_positions,
                                                  std::vector<char> frozen_bit_values) :
