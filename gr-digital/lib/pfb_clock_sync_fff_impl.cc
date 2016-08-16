@@ -66,7 +66,7 @@ namespace gr {
 	d_osps(osps), d_error(0), d_out_idx(0)
     {
       if(taps.size() == 0)
-        throw std::runtime_error("pfb_clock_sync_ccf: please specify a filter.\n");
+        throw std::runtime_error("pfb_clock_sync_fff: please specify a filter.\n");
 
       // Let scheduler adjust our relative_rate.
       enable_update_rate(true);

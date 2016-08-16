@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,10 @@
 #define INCLUDED_DTV_DVBT_REED_SOLOMON_ENC_IMPL_H
 
 #include <gnuradio/dtv/dvbt_reed_solomon_enc.h>
-#include "dvbt_reed_solomon.h"
+
+extern "C" {
+#include <gnuradio/fec/rs.h>
+}
 
 namespace gr {
   namespace dtv {
@@ -30,18 +33,15 @@ namespace gr {
     class dvbt_reed_solomon_enc_impl : public dvbt_reed_solomon_enc
     {
      private:
-      int d_p;
-      int d_m;
-      int d_gfpoly;
       int d_n;
       int d_k;
-      int d_t;
       int d_s;
       int d_blocks;
 
-      unsigned char * d_in;
+      unsigned char *d_data;
 
-      dvbt_reed_solomon d_rs;
+      void *d_rs;    /* Reed-Solomon characteristics structure */
+      void encode(const unsigned char *in, unsigned char *out);
 
      public:
       dvbt_reed_solomon_enc_impl(int p, int m, int gfpoly, int n, int k, int t, int s, int blocks);

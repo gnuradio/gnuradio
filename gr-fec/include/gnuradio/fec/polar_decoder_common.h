@@ -68,7 +68,7 @@ namespace gr {
         bool set_frame_size(unsigned int frame_size){return false;};
 
       private:
-        static BOOST_CONSTEXPR_OR_CONST float D_LLR_FACTOR = -2.19722458f;
+        static BOOST_CONSTEXPR_OR_CONST float D_LLR_FACTOR;
         unsigned int d_frozen_bit_counter;
 
       protected:
