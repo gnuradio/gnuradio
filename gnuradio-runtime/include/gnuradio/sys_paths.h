@@ -24,6 +24,8 @@
 
 #include <gnuradio/api.h>
 
+#include <boost/filesystem/path.hpp>
+
 namespace gr {
 
   //! directory to create temporary files
@@ -33,7 +35,7 @@ namespace gr {
   GR_RUNTIME_API const char *appdata_path();
 
   //! directory to store user configuration
-  GR_RUNTIME_API const char *userconf_path();
+  GR_RUNTIME_API const boost::filesystem::path::value_type *userconf_path();
 
 } /* namespace gr */
 
