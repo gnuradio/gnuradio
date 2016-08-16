@@ -37,6 +37,7 @@
 %include <gnuradio/blocks/control_loop.h>
 
 %{
+#include "gnuradio/digital/glfsr.h"
 #include "gnuradio/digital/additive_scrambler_bb.h"
 #include "gnuradio/digital/binary_slicer_fb.h"
 #include "gnuradio/digital/burst_shaper_cc.h"
@@ -126,6 +127,7 @@
 #include "gnuradio/digital/header_payload_demux.h"
 %}
 
+%include "gnuradio/digital/glfsr.h"
 %include "gnuradio/digital/additive_scrambler_bb.h"
 %include "gnuradio/digital/binary_slicer_fb.h"
 %include "gnuradio/digital/burst_shaper_cc.h"
