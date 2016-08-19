@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_bit_inner_interleaver_impl.h"
-#include <stdio.h>
 
 #define MAX_MODULATION_ORDER 6
 #define INTERLEAVER_BLOCK_SIZE 126
@@ -58,10 +57,10 @@ namespace gr {
       d_v = config.d_m;
       d_hierarchy = config.d_hierarchy;
 
-      d_perm = (unsigned char *)new unsigned char[d_v * d_bsize];
+      d_perm = (unsigned char *)new (std::nothrow) unsigned char[d_v * d_bsize];
       if (d_perm == NULL) {
-        std::cout << "Cannot allocate memory for d_perm" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Bit Inner Interleaver, cannot allocate memory for d_perm.");
+        throw std::bad_alloc();
       }
 
       //Init permutation table (used for b[e][do])
@@ -75,8 +74,8 @@ namespace gr {
       }
 
       if (d_nsize % d_bsize) {
-        std::cout << "Error: Input size must be multiple of block size: " \
-          << "nsize: " << d_nsize << "bsize: " << d_bsize << std::endl;
+        GR_LOG_ERROR(d_logger, boost::format("Input size must be multiple of block size: nsize: %1% bsize: %2%") \
+                     % d_nsize % d_bsize);
       }
     }
 

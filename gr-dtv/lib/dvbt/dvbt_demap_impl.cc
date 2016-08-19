@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include <gnuradio/io_signature.h>
 #include "dvbt_demap_impl.h"
 #include <volk/volk.h>
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -62,15 +61,15 @@ namespace gr {
 
       d_constellation_points = (gr_complex*) volk_malloc(sizeof(gr_complex) * d_constellation_size, volk_get_alignment());
       if (d_constellation_points == NULL) {
-        std::cout << "cannot allocate memory for d_constellation_points" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "DVB-T Demap, cannot allocate memory for d_constellation_points.");
+        throw std::bad_alloc();
       }
 
       d_sq_dist = (float*) volk_malloc(sizeof(float) * d_constellation_size, volk_get_alignment());
       if (d_sq_dist == NULL) {
-        std::cout << "cannot allocate memory for d_sq_dist" << std::endl;
+        GR_LOG_FATAL(d_logger, "DVB-T Demap, cannot allocate memory for d_sq_dist.");
         volk_free(d_constellation_points);
-        exit(1);
+        throw std::bad_alloc();
       }
 
       make_constellation_points(d_constellation_size, d_step, d_alpha);

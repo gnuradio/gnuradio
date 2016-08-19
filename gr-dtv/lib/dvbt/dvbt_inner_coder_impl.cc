@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_inner_coder_impl.h"
-#include <stdio.h>
 #include <assert.h>
 
 namespace gr {
@@ -170,17 +169,17 @@ namespace gr {
       d_out_bs = 4 * d_n;
 
       // allocate bit buffers
-      d_in_buff = new unsigned char[8 * d_in_bs];
+      d_in_buff = new (std::nothrow) unsigned char[8 * d_in_bs];
       if (d_in_buff == NULL) {
-        std::cout << "Cannot allocate memory for d_in_buff" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_in_buff.");
+        throw std::bad_alloc();
       }
 
-      d_out_buff = new unsigned char[8 * d_in_bs * d_n / d_k];
+      d_out_buff = new (std::nothrow) unsigned char[8 * d_in_bs * d_n / d_k];
       if (d_out_buff == NULL) {
-        std::cout << "Cannot allocate memory for d_out_buff" << std::endl;
+        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_out_buff.");
         delete [] d_in_buff;
-        exit(1);
+        throw std::bad_alloc();
       }
     }
 

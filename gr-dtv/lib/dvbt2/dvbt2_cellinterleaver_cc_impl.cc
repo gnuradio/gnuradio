@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt2_cellinterleaver_cc_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -175,14 +174,14 @@ namespace gr {
       }
       time_interleave = (gr_complex *) malloc(sizeof(gr_complex) * cell_size * fecblocks);
       if (time_interleave == NULL) {
-        fprintf(stderr, "Cell interleaver 1st malloc, Out of memory.\n");
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Cell/Time Interleaver, cannot allocate memory for time_interleave.");
+        throw std::bad_alloc();
       }
       cols = (gr_complex **) malloc(sizeof(gr_complex *) * FECBlocksPerBigTIBlock * 5);
       if (cols == NULL) {
         free(time_interleave);
-        fprintf(stderr, "Cell interleaver 2nd malloc, Out of memory.\n");
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Cell/Time Interleaver, cannot allocate memory for cols.");
+        throw std::bad_alloc();
       }
       ti_blocks = tiblocks;
       fec_blocks = fecblocks;

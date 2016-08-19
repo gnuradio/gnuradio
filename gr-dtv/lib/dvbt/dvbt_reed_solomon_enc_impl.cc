@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_reed_solomon_enc_impl.h"
-#include <stdio.h>
 
 #define MPEG_TS_PKT_LENGTH 188
 
@@ -53,14 +52,14 @@ namespace gr {
     {
       d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
       if (d_rs == NULL) {
-        fprintf(stderr, "Reed-Solomon encoder, Out of memory.\n");
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Reed-Solomon Encoder, cannot allocate memory for d_rs.");
+        throw std::bad_alloc();
       }
       d_data = (unsigned char *) malloc(sizeof(unsigned char) * (d_s + MPEG_TS_PKT_LENGTH));
       if (d_data == NULL) {
-        fprintf(stderr, "Reed-Solomon encoder, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Reed-Solomon Encoder, cannot allocate memory for d_data.");
         free_rs_char(d_rs);
-        exit(1);
+        throw std::bad_alloc();
       }
     }
 
