@@ -30,21 +30,16 @@
 namespace gr {
   namespace dtv {
 
-    void
+    inline void
     dvbt_inner_coder_impl::generate_codeword(unsigned char in, int &x, int &y)
     {
       //insert input bit
       d_reg |= ((in & 0x1) << 7);
 
-      d_reg  = d_reg >> 1;
+      d_reg = d_reg >> 1;
 
-      // TODO - do this with polynoms and bitcnt
-      //generate output G1=171(OCT)
-      x = ((d_reg >> 6) ^ (d_reg >> 5) ^ (d_reg >> 4) ^ \
-                        (d_reg >> 3) ^ d_reg) & 0x1;
-      //generate output G2=133(OCT)
-      y = ((d_reg >> 6) ^ (d_reg >> 4) ^ (d_reg >> 3) ^ \
-                        (d_reg >> 1) ^ d_reg) & 0x1;
+      x = d_lookup_171[d_reg];
+      y = d_lookup_133[d_reg];
     }
 
     //TODO - do this based on puncturing matrix
@@ -55,7 +50,7 @@ namespace gr {
      * 00000c0c1c2
      */
 
-    void
+    inline void
     dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coderate, unsigned char * in, unsigned char * out)
     {
       int x, y;
@@ -250,6 +245,26 @@ namespace gr {
       // Tell runtime system how many output items we produced.
       return noutput_items;
     }
+
+    const int dvbt_inner_coder_impl::d_lookup_171[128] = 
+    {0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1};
+
+    const int dvbt_inner_coder_impl::d_lookup_133[128] =
+    {0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1};
 
   } /* namespace dtv */
 } /* namespace gr */
