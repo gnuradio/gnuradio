@@ -36,6 +36,10 @@ $DIVIDER
 import threading
 #end if
 
+#if $generate_options == 'qt_gui'
+from distutils.version import StrictVersion
+#end if
+
 ## Call XInitThreads as the _very_ first thing.
 ## After some Qt import, it's too late
 #if $generate_options in ('wx_gui', 'qt_gui')
@@ -116,7 +120,14 @@ class $(class_name)(gr.top_block, Qt.QWidget):
         self.top_layout.addLayout(self.top_grid_layout)
 
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+
+        try:
+            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+                self.restoreGeometry(self.settings.value("geometry").toByteArray())
+            else:
+                self.restoreGeometry(self.settings.value("geometry"))
+        except:
+            pass
 #elif $generate_options == 'no_gui'
 
 
@@ -380,8 +391,7 @@ def main(top_block_cls=$(class_name), options=None):
     tb.Wait()
         #end if
     #elif $generate_options == 'qt_gui'
-    from distutils.version import StrictVersion
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
+    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')
         Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
@@ -402,7 +412,7 @@ def main(top_block_cls=$(class_name), options=None):
     def quitting():
         tb.stop()
         tb.wait()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.aboutToQuit.connect(quitting)
         #for $m in $monitors
     if $m.has_param('en'):
         if $m.get_param('en').get_value():

@@ -5,36 +5,27 @@
 ###################################################
  -->
 <block>
-  <name>QT GUI Frequency Sink</name>
-  <key>qtgui_freq_sink_x</key>
-  <import>from PyQt4 import Qt</import>
+  <name>QT GUI Constellation Sink</name>
+  <key>qtgui_const_sink_x</key>
+  <import>from PyQt@DESIRED_QT_VERSION@ import Qt</import>
   <import>from gnuradio import qtgui</import>
-  <import>from gnuradio.filter import firdes</import>
   <import>import sip</import>
   <make>#set $win = 'self._%s_win'%$id
 qtgui.$(type.fcn)(
-	$fftsize, \#size
-	$wintype, \#wintype
-	$fc, \#fc
-	$bw, \#bw
+	$size, \#size
 	$name, \#name
 	#if $type.t == 'message' then 0 else $nconnections# \#number of inputs
 )
 self.$(id).set_update_time($update_time)
 self.$(id).set_y_axis($ymin, $ymax)
-self.$(id).set_y_label($label, $units)
-self.$(id).set_trigger_mode($tr_mode, $tr_level, $tr_chan, $tr_tag)
+self.$(id).set_x_axis($xmin, $xmax)
+self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_chan, $tr_tag)
 self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
-self.$(id).set_fft_average($average)
 self.$(id).enable_axis_labels($axislabels)
-self.$(id).enable_control_panel($ctrlpanel)
 
 if not $legend:
   self.$(id).disable_legend()
-
-if "$type" == "float" or "$type" == "msg_float":
-  self.$(id).set_plot_pos_half(not $freqhalf)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
@@ -42,6 +33,10 @@ widths = [$width1, $width2, $width3, $width4, $width5,
           $width6, $width7, $width8, $width9, $width10]
 colors = [$color1, $color2, $color3, $color4, $color5,
           $color6, $color7, $color8, $color9, $color10]
+styles = [$style1, $style2, $style3, $style4, $style5,
+          $style6, $style7, $style8, $style9, $style10]
+markers = [$marker1, $marker2, $marker3, $marker4, $marker5,
+           $marker6, $marker7, $marker8, $marker9, $marker10]
 alphas = [$alpha1, $alpha2, $alpha3, $alpha4, $alpha5,
           $alpha6, $alpha7, $alpha8, $alpha9, $alpha10]
 for i in xrange(#if $type.t == 'message' then 1 else $nconnections#):
@@ -51,16 +46,17 @@ for i in xrange(#if $type.t == 'message' then 1 else $nconnections#):
         self.$(id).set_line_label(i, labels[i])
     self.$(id).set_line_width(i, widths[i])
     self.$(id).set_line_color(i, colors[i])
+    self.$(id).set_line_style(i, styles[i])
+    self.$(id).set_line_marker(i, markers[i])
     self.$(id).set_line_alpha(i, alphas[i])
 
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
-  <callback>set_frequency_range($fc, $bw)</callback>
+  <callback>set_resize($width, $height)</callback>
   <callback>set_update_time($update_time)</callback>
   <callback>set_title($which, $title)</callback>
   <callback>set_color($which, $color)</callback>
-  <callback>set_y_axis($ymin, $ymax)</callback>
-  <callback>self.$(id).set_trigger_mode($tr_mode, $tr_level, $tr_chan, $tr_tag)</callback>
+  <callback>self.$(id).set_trigger_mode($tr_mode, $tr_slope, $tr_level, $tr_chan, $tr_tag)</callback>
 
   <param_tab_order>
     <tab>General</tab>
@@ -76,25 +72,13 @@ $(gui_hint()($win))</make>
     <option>
       <name>Complex</name>
       <key>complex</key>
-      <opt>fcn:freq_sink_c</opt>
+      <opt>fcn:const_sink_c</opt>
       <opt>t:complex</opt>
-    </option>
-    <option>
-      <name>Float</name>
-      <key>float</key>
-      <opt>fcn:freq_sink_f</opt>
-      <opt>t:float</opt>
     </option>
     <option>
       <name>Complex Message</name>
       <key>msg_complex</key>
-      <opt>fcn:freq_sink_c</opt>
-      <opt>t:message</opt>
-    </option>
-    <option>
-      <name>Float Message</name>
-      <key>msg_float</key>
-      <opt>fcn:freq_sink_f</opt>
+      <opt>fcn:const_sink_c</opt>
       <opt>t:message</opt>
     </option>
   </param>
@@ -108,77 +92,11 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <name>FFT Size</name>
-    <key>fftsize</key>
+    <name>Number of Points</name>
+    <key>size</key>
     <value>1024</value>
     <type>int</type>
     <hide>#if $type.t == 'message' then 'all' else 'none'#</hide>
-  </param>
-
-  <param>
-    <name>Spectrum Width</name>
-    <key>freqhalf</key>
-    <value>True</value>
-    <type>enum</type>
-    <hide>#if $type() == "float" or $type() == "msg_float" then 'part' else 'all'#</hide>
-    <option>
-      <name>Full</name>
-      <key>True</key>
-    </option>
-    <option>
-      <name>Half</name>
-      <key>False</key>
-    </option>
-  </param>
-
-  <param>
-    <name>Window Type</name>
-    <key>wintype</key>
-    <value>firdes.WIN_BLACKMAN_hARRIS</value>
-    <type>enum</type>
-    <hide>part</hide>
-    <option>
-      <name>Blackman-harris</name>
-      <key>firdes.WIN_BLACKMAN_hARRIS</key>
-    </option>
-    <option>
-      <name>Hamming</name>
-      <key>firdes.WIN_HAMMING</key>
-    </option>
-    <option>
-      <name>Hann</name>
-      <key>firdes.WIN_HANN</key>
-    </option>
-    <option>
-      <name>Blackman</name>
-      <key>firdes.WIN_BLACKMAN</key>
-    </option>
-    <option>
-      <name>Rectangular</name>
-      <key>firdes.WIN_RECTANGULAR</key>
-    </option>
-    <option>
-      <name>Kaiser</name>
-      <key>firdes.WIN_KAISER</key>
-    </option>
-    <option>
-      <name>Flat-top</name>
-      <key>firdes.WIN_FLATTOP</key>
-    </option>
-  </param>
-
-  <param>
-    <name>Center Frequency (Hz)</name>
-    <key>fc</key>
-    <value>0</value>
-    <type>real</type>
-  </param>
-
-  <param>
-    <name>Bandwidth (Hz)</name>
-    <key>bw</key>
-    <value>samp_rate</value>
-    <type>real</type>
   </param>
 
   <param>
@@ -202,7 +120,6 @@ $(gui_hint()($win))</make>
     <key>autoscale</key>
     <value>False</value>
     <type>enum</type>
-    <hide>part</hide>
     <option>
       <name>Yes</name>
       <key>True</key>
@@ -214,33 +131,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <name>Average</name>
-    <key>average</key>
-    <value>False</value>
-    <type>enum</type>
-    <hide>part</hide>
-    <option>
-      <name>None</name>
-      <key>1.0</key>
-    </option>
-    <option>
-      <name>Low</name>
-      <key>0.2</key>
-    </option>
-    <option>
-      <name>Medium</name>
-      <key>0.1</key>
-    </option>
-    <option>
-      <name>High</name>
-      <key>0.05</key>
-    </option>
-  </param>
-
-  <param>
     <name>Y min</name>
     <key>ymin</key>
-    <value>-140</value>
+    <value>-2</value>
     <type>real</type>
     <hide>part</hide>
   </param>
@@ -248,24 +141,24 @@ $(gui_hint()($win))</make>
   <param>
     <name>Y max</name>
     <key>ymax</key>
-    <value>10</value>
+    <value>2</value>
     <type>real</type>
     <hide>part</hide>
   </param>
 
   <param>
-    <name>Y label</name>
-    <key>label</key>
-    <value>Relative Gain</value>
-    <type>string</type>
+    <name>X min</name>
+    <key>xmin</key>
+    <value>-2</value>
+    <type>real</type>
     <hide>part</hide>
   </param>
 
   <param>
-    <name>Y units</name>
-    <key>units</key>
-    <value>dB</value>
-    <type>string</type>
+    <name>X max</name>
+    <key>xmax</key>
+    <value>2</value>
+    <type>real</type>
     <hide>part</hide>
   </param>
 
@@ -293,24 +186,7 @@ $(gui_hint()($win))</make>
     <hide>part</hide>
   </param>
 
-  <param>
-    <name>Show Msg Ports</name>
-    <key>showports</key>
-    <value>True</value>
-    <type>enum</type>
-    <hide>part</hide>
-    <option>
-      <name>Yes</name>
-      <key>False</key>
-    </option>
-    <option>
-      <name>No</name>
-      <key>True</key>
-    </option>
-  </param>
 
-
-  <!-- Begin Trigger Tab items -->
   <param>
     <name>Trigger Mode</name>
     <key>tr_mode</key>
@@ -332,6 +208,23 @@ $(gui_hint()($win))</make>
     <option>
       <name>Tag</name>
       <key>qtgui.TRIG_MODE_TAG</key>
+    </option>
+    <tab>Trigger</tab>
+  </param>
+
+  <param>
+    <name>Trigger Slope</name>
+    <key>tr_slope</key>
+    <value>qtgui.TRIG_MODE_POS</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Positive</name>
+      <key>qtgui.TRIG_SLOPE_POS</key>
+    </option>
+    <option>
+      <name>Negative</name>
+      <key>qtgui.TRIG_SLOPE_NEG</key>
     </option>
     <tab>Trigger</tab>
   </param>
@@ -366,23 +259,6 @@ $(gui_hint()($win))</make>
 
 
   <!-- Begin Config Tab items -->
-  <param>
-    <name>Control Panel</name>
-    <key>ctrlpanel</key>
-    <value>False</value>
-    <type>enum</type>
-    <hide>part</hide>
-    <option>
-      <name>Yes</name>
-      <key>True</key>
-    </option>
-    <option>
-      <name>No</name>
-      <key>False</key>
-    </option>
-    <tab>Config</tab>
-  </param>
-
   <param>
     <name>Legend</name>
     <key>legend</key>
@@ -477,7 +353,87 @@ $(gui_hint()($win))</make>
     </option>
     <option>
       <name>Dark Blue</name>
-      <key>"dark blue"</key>
+      <key>"Dark Blue"</key>
+    </option>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Line 1 Style</name>
+    <key>style1</key>
+    <type>enum</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <option>
+      <name>None</name>
+      <key>0</key>
+    </option>
+    <option>
+      <name>Solid</name>
+      <key>1</key>
+    </option>
+    <option>
+      <name>Dash</name>
+      <key>2</key>
+    </option>
+    <option>
+      <name>Dots</name>
+      <key>3</key>
+    </option>
+    <option>
+      <name>Dash-Dot</name>
+      <key>4</key>
+    </option>
+    <option>
+      <name>Dash-Dot-Dot</name>
+      <key>5</key>
+    </option>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Line 1 Marker</name>
+    <key>marker1</key>
+    <type>enum</type>
+    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
+    <option>
+      <name>Circle</name>
+      <key>0</key>
+    </option>
+    <option>
+      <name>Rectangle</name>
+      <key>1</key>
+    </option>
+    <option>
+      <name>Diamond</name>
+      <key>2</key>
+    </option>
+    <option>
+      <name>Triangle</name>
+      <key>3</key>
+    </option>
+    <option>
+      <name>Down Triangle</name>
+      <key>4</key>
+    </option>
+    <option>
+      <name>Left Triangle</name>
+      <key>6</key>
+    </option>
+    <option>
+      <name>Right Triangle</name>
+      <key>7</key>
+    </option>
+    <option>
+      <name>Cross</name>
+      <key>8</key>
+    </option>
+    <option>
+      <name>X-Cross</name>
+      <key>9</key>
+    </option>
+    <option>
+      <name>None</name>
+      <key>-1</key>
     </option>
     <tab>Config</tab>
   </param>
@@ -515,6 +471,20 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
+    <base_key>style1</base_key>
+    <name>Line 2 Style</name>
+    <key>style2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 2 Marker</name>
+    <key>marker2</key>
+    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
     <base_key>alpha1</base_key>
     <name>Line 2 Alpha</name>
     <key>alpha2</key>
@@ -540,7 +510,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 3 Color</name>
     <key>color3</key>
-    <value>"green"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 3 Style</name>
+    <key>style3</key>
+    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 3 Marker</name>
+    <key>marker3</key>
     <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
   </param>
 
@@ -570,7 +554,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 4 Color</name>
     <key>color4</key>
-    <value>"black"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 4 Style</name>
+    <key>style4</key>
+    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 4 Marker</name>
+    <key>marker4</key>
     <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
   </param>
 
@@ -600,7 +598,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 5 Color</name>
     <key>color5</key>
-    <value>"cyan"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 5 Style</name>
+    <key>style5</key>
+    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 5 Marker</name>
+    <key>marker5</key>
     <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
   </param>
 
@@ -630,7 +642,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 6 Color</name>
     <key>color6</key>
-    <value>"magenta"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 6 Style</name>
+    <key>style6</key>
+    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 6 Marker</name>
+    <key>marker6</key>
     <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
   </param>
 
@@ -660,7 +686,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 7 Color</name>
     <key>color7</key>
-    <value>"yellow"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 7 Style</name>
+    <key>style7</key>
+    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 7 Marker</name>
+    <key>marker7</key>
     <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
   </param>
 
@@ -690,7 +730,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 8 Color</name>
     <key>color8</key>
-    <value>"dark red"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 8 Style</name>
+    <key>style8</key>
+    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 8 Marker</name>
+    <key>marker8</key>
     <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
   </param>
 
@@ -720,7 +774,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 9 Color</name>
     <key>color9</key>
-    <value>"dark green"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 9 Style</name>
+    <key>style9</key>
+    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 9 Marker</name>
+    <key>marker9</key>
     <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
   </param>
 
@@ -750,7 +818,21 @@ $(gui_hint()($win))</make>
     <base_key>color1</base_key>
     <name>Line 10 Color</name>
     <key>color10</key>
-    <value>"dark blue"</value>
+    <value>"red"</value>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>style1</base_key>
+    <name>Line 10 Style</name>
+    <key>style10</key>
+    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
+  </param>
+
+  <param>
+    <base_key>marker1</base_key>
+    <name>Line 10 Marker</name>
+    <key>marker10</key>
     <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
   </param>
 
@@ -768,20 +850,6 @@ $(gui_hint()($win))</make>
     <nports>#if $type.t == 'message' then 0 else $nconnections#</nports>
     <optional>1</optional>
   </sink>
-
-  <sink>
-    <name>freq</name>
-    <type>message</type>
-    <optional>1</optional>
-    <hide>$showports</hide>
-  </sink>
-
-  <source>
-    <name>freq</name>
-    <type>message</type>
-    <optional>1</optional>
-    <hide>$showports</hide>
-  </source>
 
   <doc>
 The GUI hint can be used to position the widget within the application. \

@@ -22,6 +22,8 @@ include(GrPython)
 
 file(GLOB xml_files "*.xml")
 
+configure_file(options.xml.cmakein "${CMAKE_CURRENT_BINARY_DIR}/options.xml" @ONLY)
+
 macro(GEN_BLOCK_XML _generator _xml_block)
     set(generator ${CMAKE_CURRENT_SOURCE_DIR}/${_generator})
     set(xml_block ${CMAKE_CURRENT_BINARY_DIR}/${_xml_block})
@@ -37,6 +39,6 @@ GEN_BLOCK_XML(variable_struct.xml.py    variable_struct.xml)
 add_custom_target(grc_generated_xml ALL DEPENDS ${generated_xml_files})
 
 install(
-    FILES ${xml_files} ${generated_xml_files}
+    FILES ${xml_files} "${CMAKE_CURRENT_BINARY_DIR}/options.xml" ${generated_xml_files}
     DESTINATION ${GRC_BLOCKS_DIR}
 )
