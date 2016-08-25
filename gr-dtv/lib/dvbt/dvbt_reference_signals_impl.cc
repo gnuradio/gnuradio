@@ -172,7 +172,7 @@ namespace gr {
       //allocate PRBS buffer
       d_wk = new char[d_Kmax - d_Kmin + 1];
       if (d_wk == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_wk.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_wk." << std::endl;
         throw std::bad_alloc();
       }
       // Generate wk sequence
@@ -181,7 +181,7 @@ namespace gr {
       // allocate buffer for scattered pilots
       d_spilot_carriers_val = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
       if (d_spilot_carriers_val == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_spilot_carriers_val.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_spilot_carriers_val." << std::endl;
         delete [] d_wk;
         throw std::bad_alloc();
       }
@@ -189,7 +189,7 @@ namespace gr {
       // allocate buffer for channel gains (for each useful carrier)
       d_channel_gain = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
       if (d_channel_gain == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_channel_gain.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_channel_gain." << std::endl;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
         throw std::bad_alloc();
@@ -198,7 +198,7 @@ namespace gr {
       // Allocate buffer for continual pilots phase diffs
       d_known_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
       if (d_known_phase_diff == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_known_phase_diff.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_known_phase_diff." << std::endl;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
@@ -213,7 +213,7 @@ namespace gr {
 
       d_cpilot_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
       if (d_cpilot_phase_diff == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_cpilot_phase_diff.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_cpilot_phase_diff." << std::endl;
         delete [] d_known_phase_diff;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
@@ -224,7 +224,7 @@ namespace gr {
       // Allocate buffer for derotated input symbol
       d_derot_in = new (std::nothrow) gr_complex[d_fft_length];
       if (d_derot_in == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_derot_in.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_derot_in." << std::endl;
         delete [] d_cpilot_phase_diff;
         delete [] d_known_phase_diff;
         delete [] d_channel_gain;
@@ -236,7 +236,7 @@ namespace gr {
       // allocate buffer for first tps symbol constellation
       d_tps_carriers_val = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_tps_carriers_val == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_tps_carriers_val.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_tps_carriers_val." << std::endl;
         delete [] d_derot_in;
         delete [] d_cpilot_phase_diff;
         delete [] d_known_phase_diff;
@@ -249,7 +249,7 @@ namespace gr {
       // allocate tps data buffer
       d_tps_data = new (std::nothrow) unsigned char[d_symbols_per_frame];
       if (d_tps_data == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_tps_data.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_tps_data." << std::endl;
         delete [] d_tps_carriers_val;
         delete [] d_derot_in;
         delete [] d_cpilot_phase_diff;
@@ -262,7 +262,7 @@ namespace gr {
 
       d_prev_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_prev_tps_symbol == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_prev_tps_symbol.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_prev_tps_symbol." << std::endl;
         delete [] d_tps_data;
         delete [] d_tps_carriers_val;
         delete [] d_derot_in;
@@ -277,7 +277,7 @@ namespace gr {
 
       d_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_tps_symbol == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_tps_symbol.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_tps_symbol." << std::endl;
         delete [] d_prev_tps_symbol;
         delete [] d_tps_data;
         delete [] d_tps_carriers_val;
@@ -305,7 +305,7 @@ namespace gr {
       // Allocate buffer for channel estimation carriers
       d_chanestim_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
       if (d_chanestim_carriers == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_chanestim_carriers.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_chanestim_carriers." << std::endl;
         delete [] d_tps_symbol;
         delete [] d_prev_tps_symbol;
         delete [] d_tps_data;
@@ -322,7 +322,7 @@ namespace gr {
       // Allocate buffer for payload carriers
       d_payload_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
       if (d_payload_carriers == NULL) {
-        GR_LOG_FATAL(d_logger, "Reference Signals, cannot allocate memory for d_payload_carriers.");
+        std::cerr << "Reference Signals, cannot allocate memory for d_payload_carriers." << std::endl;
         delete [] d_chanestim_carriers;
         delete [] d_tps_symbol;
         delete [] d_prev_tps_symbol;
