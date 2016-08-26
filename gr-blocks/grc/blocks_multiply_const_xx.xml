@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Fast Multiply Const Block:
+##	all types, 1 output, 1 input & const
+###################################################
+ -->
+<block>
+	<name>Fast Multiply Const</name>
+	<key>blocks_multiply_const_xx</key>
+	<import>from gnuradio import blocks</import>
+	<make>blocks.multiply_const_$(type.fcn)($const)</make>
+	<callback>set_k($const)</callback>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+	</param>
+	<param>
+		<name>Constant</name>
+		<key>const</key>
+		<value>0</value>
+		<type>$type</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>
