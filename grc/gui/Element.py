@@ -168,6 +168,15 @@ class Element(object):
                 if x <= x1 <= x_m and y <= y1 <= y_m:
                     return self
 
+    @property
+    def extend(self):
+        x_min, y_min = x_max, y_max = self.coordinate
+        x_min += min(x for x, y in self._bounding_points)
+        y_min += min(y for x, y in self._bounding_points)
+        x_max += max(x for x, y in self._bounding_points)
+        y_max += max(y for x, y in self._bounding_points)
+        return x_min, y_min, x_max, y_max
+
     def mouse_over(self):
         pass
 

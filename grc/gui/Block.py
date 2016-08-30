@@ -311,6 +311,16 @@ class Block(CoreBlock, Element):
         PangoCairo.show_layout(cr, self._comment_layout)
         cr.restore()
 
+    @property
+    def extend(self):
+        extend = Element.extend.fget(self)
+        x, y = self.coordinate
+        for port in self.active_ports():
+            extend = (min_or_max(xy, offset + p_xy) for offset, min_or_max, xy, p_xy in zip(
+                (x, y, x, y), (min, min, max, max), extend, port.extend
+            ))
+        return tuple(extend)
+
     ##############################################
     # Controller Modify
     ##############################################
