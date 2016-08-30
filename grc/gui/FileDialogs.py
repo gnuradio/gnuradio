@@ -23,64 +23,20 @@ from os import path
 
 from gi.repository import Gtk
 
-from . import Constants, Preferences, Utils
-from .Dialogs import MessageDialogWrapper
+from . import Constants, Preferences, Utils, Dialogs
 
 
-##################################################
-# Constants
-##################################################
-OPEN_FLOW_GRAPH = 'open flow graph'
-SAVE_FLOW_GRAPH = 'save flow graph'
-SAVE_CONSOLE = 'save console'
-SAVE_IMAGE = 'save image'
-OPEN_QSS_THEME = 'open qss theme'
-
-
-# File Filters
-def get_flow_graph_files_filter():
-    filter = Gtk.FileFilter()
-    filter.set_name('Flow Graph Files')
-    filter.add_pattern('*'+Preferences.file_extension())
-    return filter
-
-
-def get_text_files_filter():
-    filter = Gtk.FileFilter()
-    filter.set_name('Text Files')
-    filter.add_pattern('*' + Constants.TEXT_FILE_EXTENSION)
-    return filter
-
-
-def get_image_files_filter():
-    filter = Gtk.FileFilter()
-    filter.set_name('Image Files')
-    filter.add_pattern('*' + Constants.IMAGE_FILE_EXTENSION)
-    return filter
-
-
-def get_all_files_filter():
-    filter = Gtk.FileFilter()
-    filter.set_name('All Files')
-    filter.add_pattern('*')
-    return filter
-
-
-def get_qss_themes_filter():
-    filter = Gtk.FileFilter()
-    filter.set_name('QSS Themes')
-    filter.add_pattern('*.qss')
-    return filter
-
-
-# File Dialogs
-class FileDialogHelper(Gtk.FileChooserDialog):
+class FileDialogHelper(Gtk.FileChooserDialog, object):
     """
     A wrapper class for the gtk file chooser dialog.
     Implement a file chooser dialog with only necessary parameters.
     """
+    title = ''
+    action = Gtk.FileChooserAction.OPEN
+    filter_label = ''
+    filter_ext = ''
 
-    def __init__(self, parent, action, title):
+    def __init__(self, parent, current_file_path):
         """
         FileDialogHelper contructor.
         Create a save or open dialog with cancel and ok buttons.
@@ -93,66 +49,67 @@ class FileDialogHelper(Gtk.FileChooserDialog):
         ok_stock = {
             Gtk.FileChooserAction.OPEN: 'gtk-open',
             Gtk.FileChooserAction.SAVE: 'gtk-save'
-        }[action]
+        }[self.action]
 
-        Gtk.FileChooserDialog.__init__(
-            self, title=title, action=action,
-            transient_for=parent
-        )
+        Gtk.FileChooserDialog.__init__(self, title=self.title, action=self.action,
+                                       transient_for=parent)
         self.add_buttons('gtk-cancel', Gtk.ResponseType.CANCEL, ok_stock, Gtk.ResponseType.OK)
         self.set_select_multiple(False)
         self.set_local_only(True)
-        self.add_filter(get_all_files_filter())
 
+        self.parent = parent
+        self.current_file_path = current_file_path or path.join(
+            Constants.DEFAULT_FILE_PATH, Constants.NEW_FLOGRAPH_TITLE + Preferences.file_extension())
 
-class FileDialog(FileDialogHelper):
-    """A dialog box to save or open flow graph files. This is a base class, do not use."""
-
-    def __init__(self, parent, current_file_path=''):
-        """
-        FileDialog constructor.
-
-        Args:
-            current_file_path: the current directory or path to the open flow graph
-        """
-        if not current_file_path:
-            current_file_path = path.join(Constants.DEFAULT_FILE_PATH,
-                                          Constants.NEW_FLOGRAPH_TITLE + Preferences.file_extension())
-        if self.type == OPEN_FLOW_GRAPH:
-            FileDialogHelper.__init__(self, parent, Gtk.FileChooserAction.OPEN, 'Open a Flow Graph from a File...')
-            self.add_and_set_filter(get_flow_graph_files_filter())
-            self.set_select_multiple(True)
-        elif self.type == SAVE_FLOW_GRAPH:
-            FileDialogHelper.__init__(self, parent, Gtk.FileChooserAction.SAVE, 'Save a Flow Graph to a File...')
-            self.add_and_set_filter(get_flow_graph_files_filter())
-            self.set_current_name(path.basename(current_file_path))
-        elif self.type == SAVE_CONSOLE:
-            FileDialogHelper.__init__(self, parent, Gtk.FileChooserAction.SAVE, 'Save Console to a File...')
-            self.add_and_set_filter(get_text_files_filter())
-            file_path = path.splitext(path.basename(current_file_path))[0]
-            self.set_current_name(file_path)  # show the current filename
-        elif self.type == SAVE_IMAGE:
-            FileDialogHelper.__init__(self, parent, Gtk.FileChooserAction.SAVE, 'Save a Flow Graph Screen Shot...')
-            self.add_and_set_filter(get_image_files_filter())
-            current_file_path = current_file_path + Constants.IMAGE_FILE_EXTENSION
-            self.set_current_name(path.basename(current_file_path))  # show the current filename
-        elif self.type == OPEN_QSS_THEME:
-            FileDialogHelper.__init__(self, parent, Gtk.FileChooserAction.OPEN, 'Open a QSS theme...')
-            self.add_and_set_filter(get_qss_themes_filter())
-            self.set_select_multiple(False)
         self.set_current_folder(path.dirname(current_file_path))  # current directory
+        self.setup_filters()
 
-    def add_and_set_filter(self, filter):
-        """
-        Add the gtk file filter to the list of filters and set it as the default file filter.
+    def setup_filters(self, filters=None):
+        set_default = True
+        filters = filters or ([(self.filter_label, self.filter_ext)] if self.filter_label else [])
+        filters.append(('All Files', ''))
+        for label, ext in filters:
+            if not label:
+                continue
+            f = Gtk.FileFilter()
+            f.set_name(label)
+            f.add_pattern('*' + ext)
+            self.add_filter(f)
+            if not set_default:
+                self.set_filter(f)
+                set_default = True
 
-        Args:
-            filter: a gtk file filter.
-        """
-        self.add_filter(filter)
-        self.set_filter(filter)
+    def run(self):
+        """Get the filename and destroy the dialog."""
+        response = Gtk.FileChooserDialog.run(self)
+        filename = self.get_filename() if response == Gtk.ResponseType.OK else None
+        self.destroy()
+        return filename
 
-    def get_rectified_filename(self):
+
+class SaveFileDialog(FileDialogHelper):
+    """A dialog box to save or open flow graph files. This is a base class, do not use."""
+    action = Gtk.FileChooserAction.SAVE
+
+    def __init__(self, parent, current_file_path):
+        super(SaveFileDialog, self).__init__(parent, current_file_path)
+        self.set_current_name(path.splitext(path.basename(self.current_file_path))[0] + self.filter_ext)
+        self.set_create_folders(True)
+        self.set_do_overwrite_confirmation(True)
+
+
+class OpenFileDialog(FileDialogHelper):
+    """A dialog box to save or open flow graph files. This is a base class, do not use."""
+    action = Gtk.FileChooserAction.OPEN
+
+    def show_missing_message(self, filename):
+        Dialogs.MessageDialogWrapper(
+            self.parent,
+            Gtk.MessageType.WARNING, Gtk.ButtonsType.CLOSE, 'Cannot Open!',
+            'File <b>{filename}</b> Does not Exist!'.format(filename=Utils.encode(filename)),
+        ).run_and_destroy()
+
+    def get_filename(self):
         """
         Run the dialog and get the filename.
         If this is a save dialog and the file name is missing the extension, append the file extension.
@@ -162,86 +119,80 @@ class FileDialog(FileDialogHelper):
         Returns:
             the complete file path
         """
-        if Gtk.FileChooserDialog.run(self) != Gtk.ResponseType.OK: return None  # response was cancel
-        #############################################
-        # Handle Save Dialogs
-        #############################################
-        if self.type in (SAVE_FLOW_GRAPH, SAVE_CONSOLE, SAVE_IMAGE):
-            filename = self.get_filename()
-            extension = {
-                SAVE_FLOW_GRAPH: Preferences.file_extension(),
-                SAVE_CONSOLE: Constants.TEXT_FILE_EXTENSION,
-                SAVE_IMAGE: Constants.IMAGE_FILE_EXTENSION,
-            }[self.type]
-            # append the missing file extension if the filter matches
-            if path.splitext(filename)[1].lower() != extension:
-                filename += extension
-            self.set_current_name(path.basename(filename))  # show the filename with extension
-            if path.exists(filename):  # ask the user to confirm overwrite
-                response = MessageDialogWrapper(
-                    Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, 'Confirm Overwrite!',
-                    'File <b>{filename}</b> Exists!\nWould you like to overwrite the existing file?'
-                    ''.format(filename=Utils.encode(filename)),
-                ).run_and_destroy()
-                if response == Gtk.ResponseType.NO:
-                    return self.get_rectified_filename()
-            return filename
-        #############################################
-        # Handle Open Dialogs
-        #############################################
-        elif self.type in (OPEN_FLOW_GRAPH, OPEN_QSS_THEME):
-            filenames = self.get_filenames()
-            for filename in filenames:
-                if not path.exists(filename):  # show a warning and re-run
-                    MessageDialogWrapper(
-                        Gtk.MessageType.WARNING, Gtk.ButtonsType.CLOSE, 'Cannot Open!',
-                        'File <b>{filename}</b> Does not Exist!'.format(filename=Utils.encode(filename)),
-                    ).run_and_destroy()
-                    return self.get_rectified_filename()
-            return filenames
-
-    def run(self):
-        """
-        Get the filename and destroy the dialog.
-
-        Returns:
-            the filename or None if a close/cancel occurred.
-        """
-        filename = self.get_rectified_filename()
-        self.destroy()
-        return filename
+        filenames = Gtk.FileChooserDialog.get_filenames(self)
+        for filename in filenames:
+            if not path.exists(filename):
+                self.show_missing_message(filename)
+                return None  # rerun
+        return filenames
 
 
-class OpenFlowGraph(FileDialog):
-    type = OPEN_FLOW_GRAPH
-
-
-class SaveFlowGraph(FileDialog):
-    type = SAVE_FLOW_GRAPH
-
-
-class OpenQSS(FileDialog):
-    type = OPEN_QSS_THEME
-
-
-class SaveConsole(FileDialog):
-    type = SAVE_CONSOLE
-
-
-class SaveImageFileDialog(FileDialog):
-    type = SAVE_IMAGE
-
-
-class SaveScreenShot(SaveImageFileDialog):
+class OpenFlowGraph(OpenFileDialog):
+    title = 'Open a Flow Graph from a File...'
+    filter_label = 'Flow Graph Files'
+    filter_ext = Preferences.file_extension()
 
     def __init__(self, parent, current_file_path=''):
-        SaveImageFileDialog.__init__(self, parent, current_file_path)
+        super(OpenFlowGraph, self).__init__(parent, current_file_path)
+        self.set_select_multiple(True)
+
+
+class OpenQSS(OpenFileDialog):
+    title = 'Open a QSS theme...'
+    filter_label = 'QSS Themes'
+    filter_ext = '.qss'
+
+
+class SaveFlowGraph(SaveFileDialog):
+    title = 'Save a Flow Graph to a File...'
+    filter_label = 'Flow Graph Files'
+    filter_ext = Preferences.file_extension()
+
+
+class SaveConsole(SaveFileDialog):
+    title = 'Save Console to a File...'
+    filter_label = 'Test Files'
+    filter_ext = '.txt'
+
+
+class SaveScreenShot(SaveFileDialog):
+    title = 'Save a Flow Graph Screen Shot...'
+    filters = [('PDF Files', '.pdf'), ('PNG Files', '.png'), ('SVG Files', '.svg')]
+    filter_ext = '.pdf'  # the default
+
+    def __init__(self, parent, current_file_path=''):
+        super(SaveScreenShot, self).__init__(parent, current_file_path)
+
         self._button = button = Gtk.CheckButton(label='Background transparent')
         self._button.set_active(Preferences.screen_shot_background_transparent())
         self.set_extra_widget(button)
 
+    def setup_filters(self, filters=None):
+        super(SaveScreenShot, self).setup_filters(self.filters)
+
+    def show_missing_message(self, filename):
+        Dialogs.MessageDialogWrapper(
+            self.parent,
+            Gtk.MessageType.ERROR, Gtk.ButtonsType.CLOSE, 'Can not Save!',
+            'File Extention of <b>{filename}</b> not supported!'.format(filename=Utils.encode(filename)),
+        ).run_and_destroy()
+
     def run(self):
-        filename = SaveImageFileDialog.run(self)
+        valid_exts = {ext for label, ext in self.filters}
+        filename = None
+        while True:
+            response = Gtk.FileChooserDialog.run(self)
+            if response != Gtk.ResponseType.OK:
+                filename = None
+                break
+
+            filename = self.get_filename()
+            if path.splitext(filename)[1] in valid_exts:
+                break
+
+            self.show_missing_message(filename)
+
         bg_transparent = self._button.get_active()
         Preferences.screen_shot_background_transparent(bg_transparent)
+        self.destroy()
         return filename, bg_transparent

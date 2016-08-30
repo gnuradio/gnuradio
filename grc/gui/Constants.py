@@ -27,10 +27,6 @@ from ..core.Constants import *
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()
 
-# file extensions
-IMAGE_FILE_EXTENSION = '.png'
-TEXT_FILE_EXTENSION = '.txt'
-
 # name for new/unsaved flow graphs
 NEW_FLOGRAPH_TITLE = 'untitled'
 
