@@ -20,8 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 from gi.repository import GLib
+import cairo
 
-from .Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE, COMPLEX_TYPES
+from . import Colors, Constants
 
 
 def get_rotated_coordinate(coor, rotation):
@@ -37,7 +38,7 @@ def get_rotated_coordinate(coor, rotation):
     """
     # handles negative angles
     rotation = (rotation + 360) % 360
-    if rotation not in POSSIBLE_ROTATIONS:
+    if rotation not in Constants.POSSIBLE_ROTATIONS:
         raise ValueError('unusable rotation angle "%s"'%str(rotation))
     # determine the number of degrees to rotate
     cos_r, sin_r = {
@@ -68,7 +69,7 @@ def get_angle_from_coordinates(p1, p2):
 
 def align_to_grid(coor, mode=round):
     def align(value):
-        return int(mode(value / (1.0 * CANVAS_GRID_SIZE)) * CANVAS_GRID_SIZE)
+        return int(mode(value / (1.0 * Constants.CANVAS_GRID_SIZE)) * Constants.CANVAS_GRID_SIZE)
     try:
         return [align(c) for c in coor]
     except TypeError:
@@ -88,7 +89,7 @@ def num_to_str(num):
                 return template.format(value / factor, symbol.strip())
         return template.format(value, '')
 
-    if isinstance(num, COMPLEX_TYPES):
+    if isinstance(num, Constants.COMPLEX_TYPES):
         num = complex(num)  # Cast to python complex
         if num == 0:
             return '0'
@@ -107,3 +108,38 @@ def encode(value):
     """
     valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
     return GLib.markup_escape_text(valid_utf8)
+
+
+def make_screenshot(flow_graph, file_path, transparent_bg=False):
+    if not file_path:
+        return
+
+    x_min, y_min, x_max, y_max = flow_graph.extend
+    padding = Constants.CANVAS_GRID_SIZE
+    width = x_max - x_min + 2 * padding
+    height = y_max - y_min + 2 * padding
+
+    if file_path.endswith('.png'):
+        psurf = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+    elif file_path.endswith('.pdf'):
+        psurf = cairo.PDFSurface(file_path, width, height)
+    elif file_path.endswith('.svg'):
+        psurf = cairo.SVGSurface(file_path, width, height)
+    else:
+        raise ValueError('Unknown file format')
+
+    cr = cairo.Context(psurf)
+
+    if not transparent_bg:
+        cr.set_source_rgba(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
+        cr.rectangle(0, 0, width, height)
+        cr.fill()
+
+    cr.translate(padding - x_min, padding - y_min)
+    flow_graph.draw(cr)
+
+    if file_path.endswith('.png'):
+        psurf.write_to_png(file_path)
+    if file_path.endswith('.pdf') or file_path.endswith('.svg'):
+        cr.show_page()
+    psurf.finish()

@@ -24,9 +24,8 @@ import os
 import subprocess
 
 from gi.repository import Gtk
-from gi.repository import GObject
 
-from . import Dialogs, Preferences, Actions, Executor, Constants, FileDialogs
+from . import Dialogs, Preferences, Actions, Executor, FileDialogs, Utils
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
@@ -548,8 +547,10 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path, background_transparent = FileDialogs.SaveScreenShot(main, page.file_path).run()
             if file_path is not None:
-                pixbuf = flow_graph.get_drawing_area().get_screenshot(background_transparent)
-                pixbuf.save(file_path, Constants.IMAGE_FILE_EXTENSION[1:])
+                try:
+                    Utils.make_screenshot(flow_graph, file_path, background_transparent)
+                except ValueError:
+                    Messages.send('Failed to generate screen shot\n')
         ##################################################
         # Gen/Exec/Stop
         ##################################################

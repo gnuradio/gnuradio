@@ -466,7 +466,7 @@ FLOW_GRAPH_SCREEN_CAPTURE = Action(
     label='Screen Ca_pture',
     tooltip='Create a screen capture of the flow graph',
     stock_id=Gtk.STOCK_PRINT,
-    keypresses=(Gdk.KEY_Print, NO_MODS_MASK),
+    keypresses=(Gdk.KEY_p, Gdk.ModifierType.CONTROL_MASK),
 )
 PORT_CONTROLLER_DEC = Action(
     keypresses=(Gdk.KEY_minus, NO_MODS_MASK, Gdk.KEY_KP_Subtract, NO_MODS_MASK),

@@ -30,7 +30,7 @@ from six.moves import filter
 
 from gi.repository import GLib
 
-from . import Actions, Colors, Utils, Bars, Dialogs
+from . import Actions, Colors, Constants, Utils, Bars, Dialogs
 from .Element import Element
 from .external_editor import ExternalEditor
 
@@ -735,7 +735,7 @@ class FlowGraph(CoreFlowgraph, Element):
             X, Y = self.coordinate
             dX, dY = int(x - X), int(y - Y)
             active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.drawing_area.mod1_mask
-            if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
+            if not active or abs(dX) >= Constants.CANVAS_GRID_SIZE or abs(dY) >= Constants.CANVAS_GRID_SIZE:
                 self.move_selected((dX, dY))
                 self.coordinate = (x, y)
         # queue draw for animation
