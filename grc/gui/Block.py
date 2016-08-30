@@ -244,7 +244,7 @@ class Block(CoreBlock, Element):
         else:
             self._comment_layout = None
 
-    def draw(self, widget, cr):
+    def draw(self, cr):
         """
         Draw the signal block with label and inputs/outputs.
         """
@@ -253,7 +253,7 @@ class Block(CoreBlock, Element):
 
         for port in self.active_ports():  # ports first
             cr.save()
-            port.draw(widget, cr)
+            port.draw(cr)
             cr.restore()
 
         cr.rectangle(*self._area)
@@ -295,7 +295,7 @@ class Block(CoreBlock, Element):
                 return port_selected
         return Element.what_is_selected(self, coor, coor_m)
 
-    def draw_comment(self, widget, cr):
+    def draw_comment(self, cr):
         if not self._comment_layout:
             return
         x, y = self.coordinate
@@ -375,3 +375,4 @@ class Block(CoreBlock, Element):
             except:
                 pass
         return changed
+

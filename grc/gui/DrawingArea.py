@@ -194,7 +194,7 @@ class DrawingArea(Gtk.DrawingArea):
         cr.scale(self.zoom_factor, self.zoom_factor)
         cr.fill()
 
-        self._flow_graph.draw(widget, cr)
+        self._flow_graph.draw(cr)
 
     def _translate_event_coords(self, event):
         return event.x / self.zoom_factor, event.y / self.zoom_factor

@@ -134,14 +134,15 @@ class FlowGraph(CoreFlowgraph, Element):
             coor: an optional coordinate or None for random
         """
         id = self._get_unique_id(key)
-        #calculate the position coordinate
-        h_adj = self.get_scroll_pane().get_hadjustment()
-        v_adj = self.get_scroll_pane().get_vadjustment()
+        scroll_pane = self.drawing_area.get_parent().get_parent()
+        # calculate the position coordinate
+        h_adj = scroll_pane.get_hadjustment()
+        v_adj = scroll_pane.get_vadjustment()
         if coor is None: coor = (
             int(random.uniform(.25, .75)*h_adj.get_page_size() + h_adj.get_value()),
             int(random.uniform(.25, .75)*v_adj.get_page_size() + v_adj.get_value()),
         )
-        #get the new block
+        # get the new block
         block = self.new_block(key)
         block.coordinate = coor
         block.get_param('id').set_value(id)
@@ -190,15 +191,6 @@ class FlowGraph(CoreFlowgraph, Element):
         return success
 
     ###########################################################################
-    # Access Drawing Area
-    ###########################################################################
-    def get_drawing_area(self): return self.drawing_area
-    def queue_draw(self): self.get_drawing_area().queue_draw()
-    def get_scroll_pane(self): return self.drawing_area.get_parent().get_parent()
-    def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
-    def get_mod1_mask(self): return self.drawing_area.mod1_mask
-
-    ###########################################################################
     # Copy Paste
     ###########################################################################
     def copy_to_clipboard(self):
@@ -241,9 +233,10 @@ class FlowGraph(CoreFlowgraph, Element):
         selected = set()
         (x_min, y_min), blocks_n, connections_n = clipboard
         old_id2block = dict()
-        #recalc the position
-        h_adj = self.get_scroll_pane().get_hadjustment()
-        v_adj = self.get_scroll_pane().get_vadjustment()
+        # recalc the position
+        scroll_pane = self.drawing_area.get_parent().get_parent()
+        h_adj = scroll_pane.get_hadjustment()
+        v_adj = scroll_pane.get_vadjustment()
         x_off = h_adj.get_value() - x_min + h_adj.get_page_size() / 4
         y_off = v_adj.get_value() - y_min + v_adj.get_page_size() / 4
         if len(self.get_elements()) <= 1:
@@ -486,15 +479,15 @@ class FlowGraph(CoreFlowgraph, Element):
         for element in self._elements_to_draw:
             yield element.draw
 
-    def draw(self, widget, cr):
+    def draw(self, cr):
         """Draw blocks connections comment and select rectangle"""
         for draw_element in self._drawables():
             cr.save()
-            draw_element(widget, cr)
+            draw_element(cr)
             cr.restore()
 
         # draw multi select rectangle
-        if self.mouse_pressed and (not self.selected_elements or self.get_ctrl_mask()):
+        if self.mouse_pressed and (not self.selected_elements or self.drawing_area.ctrl_mask):
             x1, y1 = self.press_coor
             x2, y2 = self.coordinate
             x, y = int(min(x1, x2)), int(min(y1, y2))
@@ -529,18 +522,18 @@ class FlowGraph(CoreFlowgraph, Element):
             new_selections = self.what_is_selected(self.coordinate)
             # update the selections if the new selection is not in the current selections
             # allows us to move entire selected groups of elements
-            if self.get_ctrl_mask() or new_selections not in self.selected_elements:
+            if self.drawing_area.ctrl_mask or new_selections not in self.selected_elements:
                 selected_elements = new_selections
 
             if self._old_selected_port:
                 self._old_selected_port.force_show_label = False
                 self.create_shapes()
-                self.queue_draw()
+                self.drawing_area.queue_draw()
             elif self._new_selected_port:
                 self._new_selected_port.force_show_label = True
 
         else:  # called from a mouse release
-            if not self.element_moved and (not self.selected_elements or self.get_ctrl_mask()):
+            if not self.element_moved and (not self.selected_elements or self.drawing_area.ctrl_mask):
                 selected_elements = self.what_is_selected(self.coordinate, self.press_coor)
 
         # this selection and the last were ports, try to connect them
@@ -552,7 +545,7 @@ class FlowGraph(CoreFlowgraph, Element):
             return
 
         # if ctrl, set the selected elements to the union - intersection of old and new
-        if self.get_ctrl_mask():
+        if self.drawing_area.ctrl_mask:
             self.selected_elements ^= selected_elements
         else:
             self.selected_elements.clear()
@@ -729,7 +722,7 @@ class FlowGraph(CoreFlowgraph, Element):
         if redraw:
             # self.create_labels()
             self.create_shapes()
-            self.queue_draw()
+            self.drawing_area.queue_draw()
 
     def _handle_mouse_motion_drag(self, coordinate):
         # remove the connection if selected in drag event
@@ -738,15 +731,15 @@ class FlowGraph(CoreFlowgraph, Element):
 
         # move the selected elements and record the new coordinate
         x, y = coordinate
-        if not self.get_ctrl_mask():
+        if not self.drawing_area.ctrl_mask:
             X, Y = self.coordinate
             dX, dY = int(x - X), int(y - Y)
-            active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.get_mod1_mask()
+            active = Actions.TOGGLE_SNAP_TO_GRID.get_active() or self.drawing_area.mod1_mask
             if not active or abs(dX) >= Utils.CANVAS_GRID_SIZE or abs(dY) >= Utils.CANVAS_GRID_SIZE:
                 self.move_selected((dX, dY))
                 self.coordinate = (x, y)
         # queue draw for animation
-        self.queue_draw()
+        self.drawing_area.queue_draw()
 
     def get_max_coords(self, initial=(0, 0)):
         w, h = initial

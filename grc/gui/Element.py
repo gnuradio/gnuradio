@@ -108,7 +108,7 @@ class Element(object):
         Call this base method before creating shapes in the element.
         """
 
-    def draw(self, widget, cr):
+    def draw(self, cr):
         raise NotImplementedError()
 
     def bounds_from_area(self, area):

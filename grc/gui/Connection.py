@@ -156,7 +156,7 @@ class Connection(CoreConnection, Element):
             self._line = [p0, p1, point, p2, p3]
         self.bounds_from_line(self._line)
 
-    def draw(self, widget, cr):
+    def draw(self, cr):
         """
         Draw the connection.
         """

@@ -675,7 +675,7 @@ class ActionHandler:
         main.update()
 
         flow_graph.update_selected()
-        flow_graph.queue_draw()
+        page.drawing_area.queue_draw()
 
         return True  # action was handled
 

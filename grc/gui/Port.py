@@ -125,7 +125,7 @@ class Port(_Port, Element):
             self._label_layout_offsets[1] += Constants.PORT_EXTRA_BUS_HEIGHT / 2
         self.height += self.height % 2  # uneven height
 
-    def draw(self, widget, cr):
+    def draw(self, cr):
         """
         Draw the socket with a label.
         """

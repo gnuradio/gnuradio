@@ -77,7 +77,7 @@ class MainWindow(Gtk.Window):
         # Create the notebook
         self.notebook = Gtk.Notebook()
         self.page_to_be_closed = None
-        self.current_page = None
+        self.current_page = None  # type: NotebookPage
         self.notebook.set_show_border(False)
         self.notebook.set_scrollable(True)  # scroll arrows for page tabs
         self.notebook.connect('switch-page', self._handle_page_change)
@@ -370,7 +370,7 @@ class MainWindow(Gtk.Window):
         Returns:
             the focus flag
         """
-        return self.current_page.get_drawing_area().get_focus_flag()
+        return self.current_page.drawing_area.get_focus_flag()
 
     ############################################################
     # Helpers
