@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_symbol_inner_interleaver_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -125,10 +124,10 @@ namespace gr {
       assert(d_payload_length == d_nsize);
 
       // Allocate memory for h vector
-      d_h = new int[d_fft_length];
+      d_h = new (std::nothrow) int[d_fft_length];
       if (d_h == NULL) {
-        std::cout << "Cannot allocate memory for d_h" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Symbol Inner Interleaver, cannot allocate memory for d_h.");
+        throw std::bad_alloc();
       }
 
       // Setup bit permutation vectors

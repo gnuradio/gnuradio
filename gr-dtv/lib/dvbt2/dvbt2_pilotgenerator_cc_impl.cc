@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1131,7 +1131,11 @@ namespace gr {
       }
       equalization_enable = equalization;
       ofdm_fft_size = vlength;
-      ofdm_fft = new fft::fft_complex(ofdm_fft_size, false, 1);
+      ofdm_fft = new (std::nothrow) fft::fft_complex(ofdm_fft_size, false, 1);
+      if (ofdm_fft == NULL) {
+        GR_LOG_FATAL(d_logger, "Pilot Generator and IFFT, cannot allocate memory for ofdm_fft.");
+        throw std::bad_alloc();
+      }
       num_symbols = numdatasyms + N_P2;
       set_output_multiple(num_symbols);
     }

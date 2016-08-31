@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvb_bbheader_bb_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -504,7 +503,7 @@ namespace gr {
             for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
               if (count == 0) {
                 if (*in != 0x47) {
-                  printf("Transport Stream sync error!\n");
+                  GR_LOG_WARN(d_logger, "Transport Stream sync error!");
                 }
                 j--;
                 in++;
@@ -527,7 +526,7 @@ namespace gr {
             for (int j = 0; j < (int)((kbch - 80 - padding) / 8); j++) {
               if (count == 0) {
                 if (*in != 0x47) {
-                  printf("Transport Stream sync error!\n");
+                  GR_LOG_WARN(d_logger, "Transport Stream sync error!");
                 }
                 in++;
                 b = crc;
@@ -560,7 +559,7 @@ namespace gr {
             if (nibble == TRUE) {
               if (count == 0) {
                 if (*in != 0x47) {
-                  printf("Transport Stream sync error!\n");
+                  GR_LOG_WARN(d_logger, "Transport Stream sync error!");
                 }
                 in++;
                 b = crc;

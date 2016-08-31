@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_energy_dispersal_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -121,7 +120,7 @@ namespace gr {
 
           for (int j = 0; j < d_npacks; j++) {
             if (in[index + count] != d_SYNC) {
-              printf("error: Malformed MPEG-TS!\n");
+              GR_LOG_WARN(d_logger, "Malformed MPEG-TS!");
             }
 
             out[count++] = sync;

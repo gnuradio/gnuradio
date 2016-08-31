@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbs2_physical_cc_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -80,8 +79,8 @@ namespace gr {
         type |= 1;
       }
       if (goldcode < 0 || goldcode > 262141) {
-        fprintf(stderr, "Gold Code must be between 0 and 262141 inclusive.\n");
-        fprintf(stderr, "Gold Code set to 0.\n");
+        GR_LOG_WARN(d_logger, "Gold Code must be between 0 and 262141 inclusive.");
+        GR_LOG_WARN(d_logger, "Gold Code set to 0.");
         goldcode = 0;
       }
       gold_code = goldcode;

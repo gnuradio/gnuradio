@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include <gnuradio/io_signature.h>
 #include "dvbt_reference_signals_impl.h"
 #include <complex>
-#include <stdio.h>
 #include <gnuradio/expj.h>
 #include <gnuradio/math.h>
 
@@ -173,37 +172,37 @@ namespace gr {
       //allocate PRBS buffer
       d_wk = new char[d_Kmax - d_Kmin + 1];
       if (d_wk == NULL) {
-        std::cout << "Cannot allocate memory for d_wk" << std::endl;
-        exit(1);
+        std::cerr << "Reference Signals, cannot allocate memory for d_wk." << std::endl;
+        throw std::bad_alloc();
       }
       // Generate wk sequence
       generate_prbs();
 
       // allocate buffer for scattered pilots
-      d_spilot_carriers_val = new gr_complex[d_Kmax - d_Kmin + 1];
+      d_spilot_carriers_val = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
       if (d_spilot_carriers_val == NULL) {
-        std::cout << "Cannot allocate memory for d_spilot_carriers_val" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_spilot_carriers_val." << std::endl;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // allocate buffer for channel gains (for each useful carrier)
-      d_channel_gain = new gr_complex[d_Kmax - d_Kmin + 1];
+      d_channel_gain = new (std::nothrow) gr_complex[d_Kmax - d_Kmin + 1];
       if (d_channel_gain == NULL) {
-        std::cout << "Cannot allocate memory for d_channel_gain" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_channel_gain." << std::endl;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // Allocate buffer for continual pilots phase diffs
-      d_known_phase_diff = new float[d_cpilot_carriers_size - 1];
+      d_known_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
       if (d_known_phase_diff == NULL) {
-        std::cout << "Cannot allocate memory for d_known_phase_diff" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_known_phase_diff." << std::endl;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // Obtain phase diff for all continual pilots
@@ -212,45 +211,45 @@ namespace gr {
           norm(get_cpilot_value(d_cpilot_carriers[i + 1]) - get_cpilot_value(d_cpilot_carriers[i]));
       }
 
-      d_cpilot_phase_diff = new float[d_cpilot_carriers_size - 1];
+      d_cpilot_phase_diff = new (std::nothrow) float[d_cpilot_carriers_size - 1];
       if (d_cpilot_phase_diff == NULL) {
-        std::cout << "Cannot allocate memory for d_cpilot_phase_diff" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_cpilot_phase_diff." << std::endl;
         delete [] d_known_phase_diff;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // Allocate buffer for derotated input symbol
-      d_derot_in = new gr_complex[d_fft_length];
+      d_derot_in = new (std::nothrow) gr_complex[d_fft_length];
       if (d_derot_in == NULL) {
-        std::cout << "Cannot allocate memory for d_derot_in" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_derot_in." << std::endl;
         delete [] d_cpilot_phase_diff;
         delete [] d_known_phase_diff;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // allocate buffer for first tps symbol constellation
-      d_tps_carriers_val = new gr_complex[d_tps_carriers_size];
+      d_tps_carriers_val = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_tps_carriers_val == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_carriers_val" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_tps_carriers_val." << std::endl;
         delete [] d_derot_in;
         delete [] d_cpilot_phase_diff;
         delete [] d_known_phase_diff;
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // allocate tps data buffer
-      d_tps_data = new unsigned char[d_symbols_per_frame];
+      d_tps_data = new (std::nothrow) unsigned char[d_symbols_per_frame];
       if (d_tps_data == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_data" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_tps_data." << std::endl;
         delete [] d_tps_carriers_val;
         delete [] d_derot_in;
         delete [] d_cpilot_phase_diff;
@@ -258,12 +257,12 @@ namespace gr {
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
-      d_prev_tps_symbol = new gr_complex[d_tps_carriers_size];
+      d_prev_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_prev_tps_symbol == NULL) {
-        std::cout << "Cannot allocate memory for d_prev_tps_symbol" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_prev_tps_symbol." << std::endl;
         delete [] d_tps_data;
         delete [] d_tps_carriers_val;
         delete [] d_derot_in;
@@ -272,13 +271,13 @@ namespace gr {
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
       memset(d_prev_tps_symbol, 0, d_tps_carriers_size * sizeof(gr_complex));
 
-      d_tps_symbol = new gr_complex[d_tps_carriers_size];
+      d_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_tps_symbol == NULL) {
-        std::cout << "Cannot allocate memory for d_tps_symbol" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_tps_symbol." << std::endl;
         delete [] d_prev_tps_symbol;
         delete [] d_tps_data;
         delete [] d_tps_carriers_val;
@@ -288,7 +287,7 @@ namespace gr {
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
       memset(d_tps_symbol, 0, d_tps_carriers_size * sizeof(gr_complex));
 
@@ -304,9 +303,9 @@ namespace gr {
       }
 
       // Allocate buffer for channel estimation carriers
-      d_chanestim_carriers = new int[d_Kmax - d_Kmin + 1];
+      d_chanestim_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
       if (d_chanestim_carriers == NULL) {
-        std::cout << "Cannot allocate memory for d_chanestim_carriers" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_chanestim_carriers." << std::endl;
         delete [] d_tps_symbol;
         delete [] d_prev_tps_symbol;
         delete [] d_tps_data;
@@ -317,13 +316,13 @@ namespace gr {
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // Allocate buffer for payload carriers
-      d_payload_carriers = new int[d_Kmax - d_Kmin + 1];
+      d_payload_carriers = new (std::nothrow) int[d_Kmax - d_Kmin + 1];
       if (d_payload_carriers == NULL) {
-        std::cout << "Cannot allocate memory for d_payload_carriers" << std::endl;
+        std::cerr << "Reference Signals, cannot allocate memory for d_payload_carriers." << std::endl;
         delete [] d_chanestim_carriers;
         delete [] d_tps_symbol;
         delete [] d_prev_tps_symbol;
@@ -335,7 +334,7 @@ namespace gr {
         delete [] d_channel_gain;
         delete [] d_spilot_carriers_val;
         delete [] d_wk;
-        exit(1);
+        throw std::bad_alloc();
       }
 
       // Reset the pilot generator

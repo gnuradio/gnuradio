@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_reed_solomon_dec_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -52,8 +51,8 @@ namespace gr {
     {
       d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
       if (d_rs == NULL) {
-        fprintf(stderr, "Reed-Solomon decoder, Out of memory.\n");
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Reed-Solomon Decoder, cannot allocate memory for d_rs.");
+        throw std::bad_alloc();
       }
       d_nerrors_corrected_count = 0;
       d_bad_packet_count = 0;

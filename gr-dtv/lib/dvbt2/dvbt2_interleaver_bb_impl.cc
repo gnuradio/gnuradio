@@ -249,7 +249,10 @@ namespace gr {
               offset = twist[col];
               for (int row = 0; row < rows; row++) {
                 tempv[offset + (rows * col)] = tempu[index++];
-                offset = (offset + 1) % rows;
+                offset++;
+                if (offset == rows) {
+                  offset = 0;
+                }
               }
             }
             index = 0;
@@ -327,7 +330,10 @@ namespace gr {
               offset = twist[col];
               for (int row = 0; row < rows; row++) {
                 tempv[offset + (rows * col)] = tempu[index++];
-                offset = (offset + 1) % rows;
+                offset++;
+                if (offset == rows) {
+                  offset = 0;
+                }
               }
             }
             index = 0;
@@ -406,7 +412,10 @@ namespace gr {
                 offset = twist256n[col];
                 for (int row = 0; row < rows; row++) {
                   tempv[offset + (rows * col)] = tempu[index++];
-                  offset = (offset + 1) % rows;
+                  offset++;
+                  if (offset == rows) {
+                    offset = 0;
+                  }
                 }
               }
               index = 0;
@@ -479,7 +488,10 @@ namespace gr {
                 offset = twist256s[col];
                 for (int row = 0; row < rows; row++) {
                   tempv[offset + (rows * col)] = tempu[index++];
-                  offset = (offset + 1) % rows;
+                  offset++;
+                  if (offset == rows) {
+                    offset = 0;
+                  }
                 }
               }
               index = 0;
