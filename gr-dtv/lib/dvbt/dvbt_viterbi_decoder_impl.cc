@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_viterbi_decoder_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -597,10 +596,10 @@ namespace gr {
       d_nout = d_nbits / 2 / 8;
 
       // Allocate the buffer for the bits
-      d_inbits = new unsigned char [d_nbits];
+      d_inbits = new (std::nothrow) unsigned char [d_nbits];
       if (d_inbits == NULL) {
-        std::cout << "Cannot allocate memory for d_inbits" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Viterbi Decoder, cannot allocate memory for d_inbits.");
+        throw std::bad_alloc();
       }
 
       mettab[0][0] = 1;

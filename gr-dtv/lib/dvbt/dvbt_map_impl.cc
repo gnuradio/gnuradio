@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include <gnuradio/io_signature.h>
 #include <complex>
 #include "dvbt_map_impl.h"
-#include <stdio.h>
 #include <math.h>
 
 namespace gr {
@@ -59,10 +58,10 @@ namespace gr {
       d_alpha = config.d_alpha;
       d_gain = gain * config.d_norm;
 
-      d_constellation_points = new gr_complex[d_constellation_size];
+      d_constellation_points = new (std::nothrow) gr_complex[d_constellation_size];
       if (d_constellation_points == NULL) {
-        std::cout << "Cannot allocate memory for d_constellation_points" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "DVB-T Map, cannot allocate memory for d_constellation_points.");
+        throw std::bad_alloc();
       }
 
       make_constellation_points(d_constellation_size, d_step, d_alpha);

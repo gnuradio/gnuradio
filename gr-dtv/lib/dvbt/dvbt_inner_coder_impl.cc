@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,27 +24,21 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_inner_coder_impl.h"
-#include <stdio.h>
 #include <assert.h>
 
 namespace gr {
   namespace dtv {
 
-    void
+    inline void
     dvbt_inner_coder_impl::generate_codeword(unsigned char in, int &x, int &y)
     {
       //insert input bit
       d_reg |= ((in & 0x1) << 7);
 
-      d_reg  = d_reg >> 1;
+      d_reg = d_reg >> 1;
 
-      // TODO - do this with polynoms and bitcnt
-      //generate output G1=171(OCT)
-      x = ((d_reg >> 6) ^ (d_reg >> 5) ^ (d_reg >> 4) ^ \
-                        (d_reg >> 3) ^ d_reg) & 0x1;
-      //generate output G2=133(OCT)
-      y = ((d_reg >> 6) ^ (d_reg >> 4) ^ (d_reg >> 3) ^ \
-                        (d_reg >> 1) ^ d_reg) & 0x1;
+      x = d_lookup_171[d_reg];
+      y = d_lookup_133[d_reg];
     }
 
     //TODO - do this based on puncturing matrix
@@ -55,7 +49,7 @@ namespace gr {
      * 00000c0c1c2
      */
 
-    void
+    inline void
     dvbt_inner_coder_impl::generate_punctured_code(dvb_code_rate_t coderate, unsigned char * in, unsigned char * out)
     {
       int x, y;
@@ -175,17 +169,17 @@ namespace gr {
       d_out_bs = 4 * d_n;
 
       // allocate bit buffers
-      d_in_buff = new unsigned char[8 * d_in_bs];
+      d_in_buff = new (std::nothrow) unsigned char[8 * d_in_bs];
       if (d_in_buff == NULL) {
-        std::cout << "Cannot allocate memory for d_in_buff" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_in_buff.");
+        throw std::bad_alloc();
       }
 
-      d_out_buff = new unsigned char[8 * d_in_bs * d_n / d_k];
+      d_out_buff = new (std::nothrow) unsigned char[8 * d_in_bs * d_n / d_k];
       if (d_out_buff == NULL) {
-        std::cout << "Cannot allocate memory for d_out_buff" << std::endl;
+        GR_LOG_FATAL(d_logger, "Inner Coder, cannot allocate memory for d_out_buff.");
         delete [] d_in_buff;
-        exit(1);
+        throw std::bad_alloc();
       }
     }
 
@@ -250,6 +244,26 @@ namespace gr {
       // Tell runtime system how many output items we produced.
       return noutput_items;
     }
+
+    const int dvbt_inner_coder_impl::d_lookup_171[128] = 
+    {0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1,
+     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0,
+     1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1};
+
+    const int dvbt_inner_coder_impl::d_lookup_133[128] =
+    {0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1,
+     1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0,
+     0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1};
 
   } /* namespace dtv */
 } /* namespace gr */
