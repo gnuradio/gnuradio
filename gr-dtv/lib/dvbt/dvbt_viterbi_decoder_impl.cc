@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -578,8 +578,6 @@ namespace gr {
        *
        * out/in rate is therefore km/8n in bytes
        */
-      assert((d_k * d_m) % (8 * d_n) == 0);
-      set_relative_rate((d_k * d_m) / (8 * d_n));
 
       assert ((d_bsize * d_n) % d_m == 0);
       set_output_multiple (d_bsize * d_k / 8);
