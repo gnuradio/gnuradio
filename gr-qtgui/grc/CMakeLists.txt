@@ -18,12 +18,30 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-file(GLOB xml_cmakein_files "*.xml.cmakein")
+file(GLOB xml_files "*.xml")
 
-foreach(xml_cmakein_file IN ITEMS ${xml_cmakein_files})
-	get_filename_component(FILE_NAME ${xml_cmakein_file} NAME_WE)
-	configure_file(${xml_cmakein_file} "${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME}.xml" @ONLY)
-	set(xml_files ${xml_files} "${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME}.xml")
-endforeach(xml_cmakein_file)
+macro(REPLACE_IN_FILE _xml_block match replace)
+    set(xml_block_src "${CMAKE_CURRENT_SOURCE_DIR}/${_xml_block}")
+    set(xml_block     "${CMAKE_CURRENT_BINARY_DIR}/${_xml_block}")
 
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR})
+    list(REMOVE_ITEM xml_files "${xml_block_src}")
+    file(READ "${xml_block_src}" xml_block_src_text)
+    string(REPLACE "${match}" "${replace}"
+           xml_block_text "${xml_block_src_text}")
+    file(WRITE "${xml_block}" "${xml_block_text}")
+
+    list(APPEND generated_xml_files "${xml_block}")
+endmacro()
+
+
+if(DESIRED_QT_VERSION EQUAL 4)
+    foreach(xml_block_src ${xml_files})
+        get_filename_component(xml_block "${xml_block_src}" NAME)
+        REPLACE_IN_FILE("${xml_block}" "PyQt5" "PyQt4")
+    endforeach()
+endif()
+
+install(
+    FILES ${xml_files} ${generated_xml_files}
+    DESTINATION "${GRC_BLOCKS_DIR}"
+)

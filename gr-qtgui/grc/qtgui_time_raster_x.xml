@@ -1,53 +1,90 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##QT GUI Number Sink
+##QT GUI Sink
 ###################################################
  -->
 <block>
-  <name>QT GUI Number Sink</name>
-  <key>qtgui_number_sink</key>
-  <import>from PyQt@DESIRED_QT_VERSION@ import Qt</import>
+  <name>QT GUI Time Raster Sink</name>
+  <key>qtgui_time_raster_sink_x</key>
+  <import>from PyQt5 import Qt</import>
   <import>from gnuradio import qtgui</import>
   <import>import sip</import>
   <make>#set $win = 'self._%s_win'%$id
-qtgui.number_sink(
-    $type.size,
-    $avg,
-    $graph_type,
-    $nconnections
-)
+qtgui.$(type.fcn)(
+	$samp_rate,
+	$nrows,
+	$ncols,
+	$mult,
+	$offset,
+	$name,
+	#if $type.t == 'message' then 0 else $nconnections#,
+	)
+
 self.$(id).set_update_time($update_time)
-self.$(id).set_title($name)
+self.$(id).set_intensity_range($zmin, $zmax)
+self.$(id).enable_grid($grid)
+self.$(id).enable_axis_labels($axislabels)
 
 labels = [$label1, $label2, $label3, $label4, $label5,
           $label6, $label7, $label8, $label9, $label10]
-units = [$unit1, $unit2, $unit3, $unit4, $unit5,
-         $unit6, $unit7, $unit8, $unit9, $unit10]
 colors = [$color1, $color2, $color3, $color4, $color5,
           $color6, $color7, $color8, $color9, $color10]
-factor = [$factor1, $factor2, $factor3, $factor4, $factor5,
-          $factor6, $factor7, $factor8, $factor9, $factor10]
-for i in xrange($nconnections):
-    self.$(id).set_min(i, $min)
-    self.$(id).set_max(i, $max)
-    self.$(id).set_color(i, colors[i][0], colors[i][1])
+alphas = [$alpha1, $alpha2, $alpha3, $alpha4, $alpha5,
+          $alpha6, $alpha7, $alpha8, $alpha9, $alpha10]
+for i in xrange(#if $type.t == 'message' then 1 else $nconnections#):
     if len(labels[i]) == 0:
-        self.$(id).set_label(i, "Data {0}".format(i))
+        self.$(id).set_line_label(i, "Data {0}".format(i))
     else:
-        self.$(id).set_label(i, labels[i])
-    self.$(id).set_unit(i, units[i])
-    self.$(id).set_factor(i, factor[i])
+        self.$(id).set_line_label(i, labels[i])
+    self.$(id).set_color_map(i, colors[i])
+    self.$(id).set_line_alpha(i, alphas[i])
 
-self.$(id).enable_autoscale($autoscale)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
 $(gui_hint()($win))</make>
+  <callback>set_num_rows($nrows)</callback>
+  <callback>set_num_cols($ncols)</callback>
+  <callback>set_multiplier($mult)</callback>
+  <callback>set_offset($offset)</callback>
   <callback>set_update_time($update_time)</callback>
+  <callback>set_title($which, $title)</callback>
+  <callback>set_color($which, $color)</callback>
 
   <param_tab_order>
     <tab>General</tab>
     <tab>Config</tab>
   </param_tab_order>
+
+  <param>
+    <name>Type</name>
+    <key>type</key>
+    <value>complex</value>
+    <type>enum</type>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>fcn:time_raster_sink_b</opt>
+      <opt>t:byte</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>fcn:time_raster_sink_f</opt>
+      <opt>t:float</opt>
+    </option>
+    <option>
+      <name>Byte Message</name>
+      <key>msg_byte</key>
+      <opt>fcn:time_raster_sink_b</opt>
+      <opt>t:message</opt>
+    </option>
+    <option>
+      <name>Float Message</name>
+      <key>msg_float</key>
+      <opt>fcn:time_raster_sink_f</opt>
+      <opt>t:message</opt>
+    </option>
+  </param>
 
   <param>
     <name>Name</name>
@@ -58,37 +95,31 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <name>Input Type</name>
-    <key>type</key>
-    <type>enum</type>
-    <option>
-      <name>Float</name>
-      <key>float</key>
-      <opt>size:gr.sizeof_float</opt>
-    </option>
-    <option>
-      <name>Int</name>
-      <key>int</key>
-      <opt>size:gr.sizeof_int</opt>
-    </option>
-    <option>
-      <name>Short</name>
-      <key>short</key>
-      <opt>size:gr.sizeof_short</opt>
-    </option>
-    <option>
-      <name>Byte</name>
-      <key>byte</key>
-      <opt>size:gr.sizeof_char</opt>
-    </option>
-    <tab>General</tab>
+    <name>Sample Rate</name>
+    <key>samp_rate</key>
+    <value>samp_rate</value>
+    <type>real</type>
   </param>
 
   <param>
-    <name>Autoscale</name>
-    <key>autoscale</key>
+    <name>Num. Rows</name>
+    <key>nrows</key>
+    <type>int</type>
+    <hide>#if $type.t == 'message' then 'all' else 'none'#</hide>
+  </param>
+
+  <param>
+    <name>Num. Cols</name>
+    <key>ncols</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Grid</name>
+    <key>grid</key>
     <value>False</value>
     <type>enum</type>
+    <hide>part</hide>
     <option>
       <name>Yes</name>
       <key>True</key>
@@ -100,30 +131,35 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <name>Average</name>
-    <key>avg</key>
-    <value>0</value>
-    <type>float</type>
-    <tab>General</tab>
+    <name>Int. min</name>
+    <key>zmin</key>
+    <value>-1</value>
+    <type>real</type>
+    <hide>part</hide>
   </param>
 
   <param>
-    <name>Graph Type</name>
-    <key>graph_type</key>
-    <type>enum</type>
-    <option>
-      <name>Horizontal</name>
-      <key>qtgui.NUM_GRAPH_HORIZ</key>
-    </option>
-    <option>
-      <name>Vertical</name>
-      <key>qtgui.NUM_GRAPH_VERT</key>
-    </option>
-    <option>
-      <name>None</name>
-      <key>qtgui.NUM_GRAPH_NONE</key>
-    </option>
-    <tab>General</tab>
+    <name>Int. max</name>
+    <key>zmax</key>
+    <value>1</value>
+    <type>real</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Multiplier</name>
+    <key>mult</key>
+    <value>[]</value>
+    <type>real_vector</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Offset</name>
+    <key>offset</key>
+    <value>[]</value>
+    <type>real_vector</type>
+    <hide>part</hide>
   </param>
 
   <param>
@@ -131,32 +167,15 @@ $(gui_hint()($win))</make>
     <key>nconnections</key>
     <value>1</value>
     <type>int</type>
-    <hide>part</hide>
-    <tab>General</tab>
-  </param>
-
-  <param>
-    <name>Min</name>
-    <key>min</key>
-    <value>-1</value>
-    <type>float</type>
-    <hide>part</hide>
-  </param>
-  <param>
-    <name>Max</name>
-    <key>max</key>
-    <value>1</value>
-    <type>float</type>
-    <hide>part</hide>
+    <hide>#if $type.t == 'message' then 'all' else 'part'#</hide>
   </param>
 
   <param>
     <name>Update Period</name>
     <key>update_time</key>
     <value>0.10</value>
-    <type>float</type>
+    <type>real</type>
     <hide>part</hide>
-    <tab>General</tab>
   </param>
 
   <param>
@@ -165,7 +184,23 @@ $(gui_hint()($win))</make>
     <value></value>
     <type>gui_hint</type>
     <hide>part</hide>
-    <tab>General</tab>
+  </param>
+
+  <param>
+    <name>Axis Labels</name>
+    <key>axislabels</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <tab>Config</tab>
   </param>
 
   <param>
@@ -177,45 +212,41 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <name>Line 1 Unit</name>
-    <key>unit1</key>
-    <type>string</type>
-    <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
-    <tab>Config</tab>
-  </param>
-
-  <param>
     <name>Line 1 Color</name>
     <key>color1</key>
     <type>enum</type>
     <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
     <option>
-      <name>Black</name>
-      <key>("black", "black")</key>
-    </option>
-    <option>
-      <name>Blue-Red</name>
-      <key>("blue", "red")</key>
+      <name>Multi Color</name>
+      <key>0</key>
     </option>
     <option>
       <name>White Hot</name>
-      <key>("black", "white")</key>
+      <key>1</key>
     </option>
     <option>
       <name>Black Hot</name>
-      <key>("white", "black")</key>
+      <key>2</key>
     </option>
     <option>
-      <name>Black-Red</name>
-      <key>("black", "red")</key>
+      <name>Incandescent</name>
+      <key>3</key>
+    </option>
+    <option>
+      <name>Sunset</name>
+      <key>5</key>
+    </option>
+    <option>
+      <name>Cool</name>
+      <key>6</key>
     </option>
     <tab>Config</tab>
   </param>
 
   <param>
-    <name>Line 1 Factor</name>
-    <key>factor1</key>
-    <value>1</value>
+    <name>Line 1 Alpha</name>
+    <key>alpha1</key>
+    <value>1.0</value>
     <type>float</type>
     <hide>#if int($nconnections()) >= 1 then 'part' else 'all'#</hide>
     <tab>Config</tab>
@@ -230,13 +261,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 2 Unit</name>
-    <key>unit2</key>
-    <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 2 Color</name>
     <key>color2</key>
@@ -244,9 +268,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 2 Factor</name>
-    <key>factor2</key>
+    <base_key>alpha1</base_key>
+    <name>Line 2 Alpha</name>
+    <key>alpha2</key>
     <hide>#if int($nconnections()) >= 2 then 'part' else 'all'#</hide>
   </param>
 
@@ -259,13 +283,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 3 Unit</name>
-    <key>unit3</key>
-    <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 3 Color</name>
     <key>color3</key>
@@ -273,9 +290,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 3 Factor</name>
-    <key>factor3</key>
+    <base_key>alpha1</base_key>
+    <name>Line 3 Alpha</name>
+    <key>alpha3</key>
     <hide>#if int($nconnections()) >= 3 then 'part' else 'all'#</hide>
   </param>
 
@@ -288,13 +305,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 4 Unit</name>
-    <key>unit4</key>
-    <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 4 Color</name>
     <key>color4</key>
@@ -302,9 +312,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 4 Factor</name>
-    <key>factor4</key>
+    <base_key>alpha1</base_key>
+    <name>Line 4 Alpha</name>
+    <key>alpha4</key>
     <hide>#if int($nconnections()) >= 4 then 'part' else 'all'#</hide>
   </param>
 
@@ -317,13 +327,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 5 Unit</name>
-    <key>unit5</key>
-    <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 5 Color</name>
     <key>color5</key>
@@ -331,9 +334,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 5 Factor</name>
-    <key>factor5</key>
+    <base_key>alpha1</base_key>
+    <name>Line 5 Alpha</name>
+    <key>alpha5</key>
     <hide>#if int($nconnections()) >= 5 then 'part' else 'all'#</hide>
   </param>
 
@@ -346,13 +349,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 6 Unit</name>
-    <key>unit6</key>
-    <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 6 Color</name>
     <key>color6</key>
@@ -360,9 +356,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 6 Factor</name>
-    <key>factor6</key>
+    <base_key>alpha1</base_key>
+    <name>Line 6 Alpha</name>
+    <key>alpha6</key>
     <hide>#if int($nconnections()) >= 6 then 'part' else 'all'#</hide>
   </param>
 
@@ -375,13 +371,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 7 Unit</name>
-    <key>unit7</key>
-    <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 7 Color</name>
     <key>color7</key>
@@ -389,9 +378,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 7 Factor</name>
-    <key>factor7</key>
+    <base_key>alpha1</base_key>
+    <name>Line 7 Alpha</name>
+    <key>alpha7</key>
     <hide>#if int($nconnections()) >= 7 then 'part' else 'all'#</hide>
   </param>
 
@@ -404,13 +393,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 8 Unit</name>
-    <key>unit8</key>
-    <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 8 Color</name>
     <key>color8</key>
@@ -418,9 +400,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 8 Factor</name>
-    <key>factor8</key>
+    <base_key>alpha1</base_key>
+    <name>Line 8 Alpha</name>
+    <key>alpha8</key>
     <hide>#if int($nconnections()) >= 8 then 'part' else 'all'#</hide>
   </param>
 
@@ -433,13 +415,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 9 Unit</name>
-    <key>unit9</key>
-    <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 9 Color</name>
     <key>color9</key>
@@ -447,9 +422,9 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 9 Factor</name>
-    <key>factor9</key>
+    <base_key>alpha1</base_key>
+    <name>Line 9 Alpha</name>
+    <key>alpha9</key>
     <hide>#if int($nconnections()) >= 9 then 'part' else 'all'#</hide>
   </param>
 
@@ -462,13 +437,6 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>unit1</base_key>
-    <name>Line 10 Unit</name>
-    <key>unit10</key>
-    <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
-  </param>
-
-  <param>
     <base_key>color1</base_key>
     <name>Line 10 Color</name>
     <key>color10</key>
@@ -476,21 +444,23 @@ $(gui_hint()($win))</make>
   </param>
 
   <param>
-    <base_key>factor1</base_key>
-    <name>Line 10 Factor</name>
-    <key>factor10</key>
+    <base_key>alpha1</base_key>
+    <name>Line 10 Alpha</name>
+    <key>alpha10</key>
     <hide>#if int($nconnections()) >= 10 then 'part' else 'all'#</hide>
   </param>
 
 
   <sink>
     <name>in</name>
-    <type>$type</type>
-    <nports>$nconnections</nports>
+    <type>$type.t</type>
+    <nports>#if $type.t == 'message' then 0 else $nconnections#</nports>
+    <optional>1</optional>
   </sink>
+
   <doc>
-    The GUI hint can be used to position the widget within the application. \
-    The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
-    Both the tab specification and the grid position are optional.
+The GUI hint can be used to position the widget within the application. \
+The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. \
+Both the tab specification and the grid position are optional.
   </doc>
 </block>
