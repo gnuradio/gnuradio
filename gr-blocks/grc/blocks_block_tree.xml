@@ -122,8 +122,6 @@
    </cat>
    <cat>
       <name>Message Tools</name>
-      <block>blocks_message_source</block>
-      <block>blocks_message_sink</block>
       <block>blocks_message_burst_source</block>
       <block>blocks_message_strobe</block>
       <block>blocks_message_strobe_random</block>
