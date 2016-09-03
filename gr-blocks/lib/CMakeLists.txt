@@ -142,7 +142,6 @@ list(APPEND gr_blocks_sources
     message_debug_impl.cc
     message_strobe_impl.cc
     message_strobe_random_impl.cc
-    message_burst_source_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_conjugate_cc_impl.cc

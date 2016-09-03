@@ -122,7 +122,6 @@ install(FILES
     message_debug.h
     message_strobe.h
     message_strobe_random.h
-    message_burst_source.h
     multiply_cc.h
     multiply_ff.h
     multiply_conjugate_cc.h
