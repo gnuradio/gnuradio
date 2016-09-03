@@ -26,7 +26,6 @@
 
 #include "top_block_impl.h"
 #include "flat_flowgraph.h"
-#include "scheduler_sts.h"
 #include "scheduler_tpb.h"
 #include <gnuradio/top_block.h>
 #include <gnuradio/prefs.h>
@@ -48,8 +47,7 @@ namespace gr {
     const char *name;
     scheduler_maker f;
   } scheduler_table[] = {
-    { "TPB", scheduler_tpb::make },    // first entry is default
-    { "STS", scheduler_sts::make }
+    { "TPB", scheduler_tpb::make }    // first entry is default
   };
 
   static scheduler_sptr

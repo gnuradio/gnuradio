@@ -106,7 +106,6 @@ install(
     pmt_swig.i
     prefs.i
     realtime.i
-    single_threaded_scheduler.i
     sync_block.i
     sync_decimator.i
     sync_interpolator.i
