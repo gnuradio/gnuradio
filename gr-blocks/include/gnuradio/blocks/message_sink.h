@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Gather received items into messages and insert into msgq
-     * \ingroup message_tools_blk
+     * \ingroup deprecated_blk
      */
     class BLOCKS_API message_sink : virtual public sync_block
     {

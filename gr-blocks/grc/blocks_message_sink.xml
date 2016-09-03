@@ -7,6 +7,7 @@
 <block>
 	<name>Message Sink</name>
 	<key>blocks_message_sink</key>
+        <category>[Core]/Deprecated</category>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.message_sink($type.size*$vlen, $(id)_msgq_out, $dont_block)</make>
 	<param>
