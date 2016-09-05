@@ -42,7 +42,7 @@ from distutils.version import StrictVersion
 
 ## Call XInitThreads as the _very_ first thing.
 ## After some Qt import, it's too late
-#if $generate_options in ('wx_gui', 'qt_gui')
+#if $generate_options == 'qt_gui'
 if __name__ == '__main__':
     import ctypes
     import sys
@@ -76,25 +76,11 @@ $imp
 ##Create Class
 ##  Write the class declaration for a top or hier block.
 ##  The parameter names are the arguments to __init__.
-##  Determine the absolute icon path (wx gui only).
 ##  Setup the IO signature (hier block only).
 ########################################################
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
-#if $generate_options == 'wx_gui'
-    #import gtk
-    #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
-
-
-class $(class_name)(grc_wxgui.top_block_gui):
-
-    def __init__($param_str):
-        grc_wxgui.top_block_gui.__init__(self, title="$title")
-    #if $icon
-        _icon_path = "$icon.get_filename()"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
-    #end if
-#elif $generate_options == 'qt_gui'
+#if $generate_options == 'qt_gui'
 
 
 class $(class_name)(gr.top_block, Qt.QWidget):
@@ -379,18 +365,7 @@ def main(top_block_cls=$(class_name), options=None):
         print "Error: failed to enable real-time scheduling."
     #end if
 
-    #if $generate_options == 'wx_gui'
-    tb = top_block_cls($(', '.join($params_eq_list)))
-        #if $flow_graph.get_option('max_nouts')
-    tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
-        #else
-    tb.Start($flow_graph.get_option('run'))
-        #for $m in $monitors
-    (tb.$m.get_id()).start()
-        #end for
-    tb.Wait()
-        #end if
-    #elif $generate_options == 'qt_gui'
+    #if $generate_options == 'qt_gui'
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')
         Qt.QApplication.setGraphicsSystem(style)
