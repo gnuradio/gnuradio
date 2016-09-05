@@ -65,10 +65,6 @@ else: self.stop(); self.wait()</callback>
 			<key>qt_gui</key>
 		</option>
 		<option>
-			<name>WX GUI</name>
-			<key>wx_gui</key>
-		</option>
-		<option>
 			<name>No GUI</name>
 			<key>no_gui</key>
 		</option>
