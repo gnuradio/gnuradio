@@ -30,7 +30,7 @@ from .utils import odict
 import __builtin__
 
 
-ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(__builtin__)
+ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'math', 'firdes'] + dir(__builtin__)
 try:
     from gnuradio import gr
     ID_BLACKLIST.extend(attr for attr in dir(gr.top_block()) if not attr.startswith('_'))
@@ -215,7 +215,7 @@ class Param(Element):
             'hex', 'string', 'bool',
             'file_open', 'file_save', '_multiline', '_multiline_python_external',
             'id', 'stream_id',
-            'grid_pos', 'notebook', 'gui_hint',
+            'gui_hint',
             'import',
         )
 
@@ -317,8 +317,6 @@ class Param(Element):
                 'string': Constants.BYTE_VECTOR_COLOR_SPEC,
                 'id': Constants.ID_COLOR_SPEC,
                 'stream_id': Constants.ID_COLOR_SPEC,
-                'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
-                'notebook': Constants.INT_VECTOR_COLOR_SPEC,
                 'raw': Constants.WILDCARD_COLOR_SPEC,
             }[self.get_type()]
         except:
@@ -354,9 +352,6 @@ class Param(Element):
                     return 'part'
             except:
                 pass
-        # Hide empty grid positions
-        if self.get_key() in ('grid_pos', 'notebook') and not self.get_value():
-            return 'part'
         return hide
 
     def validate(self):
@@ -550,65 +545,6 @@ class Param(Element):
                 def __str__(self):
                     return self._ws
             return GuiHint(widget_str)
-        #########################
-        # Grid Position Type
-        #########################
-        elif t == 'grid_pos':
-            if not v:
-                # Allow for empty grid pos
-                return ''
-            e = self.get_parent().get_parent().evaluate(v)
-            if not isinstance(e, (list, tuple)) or len(e) != 4 or not all([isinstance(ei, int) for ei in e]):
-                raise Exception('A grid position must be a list of 4 integers.')
-            row, col, row_span, col_span = e
-            # Check row, col
-            if row < 0 or col < 0:
-                raise Exception('Row and column must be non-negative.')
-            # Check row span, col span
-            if row_span <= 0 or col_span <= 0:
-                raise Exception('Row and column span must be greater than zero.')
-            # Get hostage cell parent
-            try:
-                my_parent = self.get_parent().get_param('notebook').evaluate()
-            except:
-                my_parent = ''
-            # Calculate hostage cells
-            for r in range(row_span):
-                for c in range(col_span):
-                    self._hostage_cells.append((my_parent, (row+r, col+c)))
-            # Avoid collisions
-            params = filter(lambda p: p is not self, self.get_all_params('grid_pos'))
-            for param in params:
-                for parent, cell in param._hostage_cells:
-                    if (parent, cell) in self._hostage_cells:
-                        raise Exception('Another graphical element is using parent "{}", cell "{}".'.format(str(parent), str(cell)))
-            return e
-        #########################
-        # Notebook Page Type
-        #########################
-        elif t == 'notebook':
-            if not v:
-                # Allow for empty notebook
-                return ''
-
-            # Get a list of all notebooks
-            notebook_blocks = filter(lambda b: b.get_key() == 'notebook', self.get_parent().get_parent().get_enabled_blocks())
-            # Check for notebook param syntax
-            try:
-                notebook_id, page_index = map(str.strip, v.split(','))
-            except:
-                raise Exception('Bad notebook page format.')
-            # Check that the notebook id is valid
-            try:
-                notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
-            except:
-                raise Exception('Notebook id "{}" is not an existing notebook id.'.format(notebook_id))
-
-            # Check that page index exists
-            if int(page_index) not in range(len(notebook_block.get_param('labels').evaluate())):
-                raise Exception('Page index "{}" is not a valid index number.'.format(page_index))
-            return notebook_id, page_index
-
         #########################
         # Import Type
         #########################
