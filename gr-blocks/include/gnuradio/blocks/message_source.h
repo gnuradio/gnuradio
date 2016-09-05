@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Turn received messages into a stream
-     * \ingroup message_tools_blk
+     * \ingroup deprecated_blk
      */
     class BLOCKS_API message_source : virtual public sync_block
     {
