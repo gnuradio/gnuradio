@@ -1,11 +1,3 @@
-Puncturing values for DVB-S code rates:
-
-1/2 code rate = Puncture Size = 2, Puncture Pattern = 0b11
-2/3 code rate = Puncture Size = 4, Puncture Pattern = 0b1101
-3/4 code rate = Puncture Size = 6, Puncture Pattern = 0b110110
-5/6 code rate = Puncture Size = 10, Puncture Pattern = 0b1101100110
-7/8 code rate = Puncture Size = 14, Puncture Pattern = 0b11010101100110
-
 A test Transport Stream for the example flow graph
 (8 Msyms/s and 7/8 code rate) is available here:
 
