@@ -38,7 +38,7 @@
     </param>
     <param>
       <key>generate_options</key>
-      <value>wx_gui</value>
+      <value>qt_gui</value>
     </param>
     <param>
       <key>hier_block_src_path</key>
@@ -79,6 +79,33 @@
     <param>
       <key>title</key>
       <value></value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(176, 12)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>center_freq</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>429e6</value>
     </param>
   </block>
   <block>
@@ -1189,7 +1216,7 @@
     </param>
     <param>
       <key>freq0</key>
-      <value>429e6</value>
+      <value>center_freq</value>
     </param>
     <param>
       <key>if_gain0</key>
@@ -1197,7 +1224,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>18</value>
+      <value>10</value>
     </param>
     <param>
       <key>ant10</key>

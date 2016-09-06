@@ -371,7 +371,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>advatsc.ts</value>
+      <value>/run/shm/advatsc.ts</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1858,7 +1858,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>0</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -2280,7 +2280,7 @@
     </param>
     <param>
       <key>gain0</key>
-      <value>50</value>
+      <value>tx_gain</value>
     </param>
     <param>
       <key>ant10</key>
@@ -2924,7 +2924,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>_coordinate</key>
