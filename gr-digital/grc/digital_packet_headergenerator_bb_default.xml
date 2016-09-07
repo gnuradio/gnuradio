@@ -1,6 +1,7 @@
 <block>
   <name>Packet Header Generator (Default)</name>
   <key>digital_packet_headergenerator_bb_default</key>
+  <category>Deprecated</category>
   <import>from gnuradio import digital</import>
   <make>digital.packet_headergenerator_bb($header_len, $len_tag_key)</make>
   <param>
@@ -23,4 +24,3 @@
     <type>byte</type>
   </source>
 </block>
-

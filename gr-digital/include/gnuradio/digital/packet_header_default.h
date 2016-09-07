@@ -33,6 +33,7 @@ namespace gr {
     /*!
      * \brief Default header formatter for digital packet transmission.
      * \ingroup packet_operators_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * For bursty/packetized digital transmission, packets are usually prepended

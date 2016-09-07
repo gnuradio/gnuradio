@@ -7,6 +7,7 @@
 <block>
 	<name>Simple Framer</name>
 	<key>digital_simple_framer</key>
+	<category>Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.simple_framer($payload_bytesize)</make>
 	<param>

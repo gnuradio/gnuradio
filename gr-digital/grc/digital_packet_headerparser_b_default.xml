@@ -1,6 +1,7 @@
 <block>
   <name>Packet Header Parser (Default)</name>
   <key>digital_packet_headerparser_b_default</key>
+  <category>Deprecated</category>
   <import>from gnuradio import digital</import>
   <make>digital.packet_headerparser_b($header_len, $len_tag_key)</make>
   <param>
@@ -23,4 +24,3 @@
     <type>message</type>
   </source>
 </block>
-
