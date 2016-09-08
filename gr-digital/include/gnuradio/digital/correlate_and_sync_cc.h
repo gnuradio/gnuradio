@@ -32,7 +32,7 @@ namespace gr {
 
     /*!
      * \brief Correlate to a preamble and send time/phase sync info
-     * \ingroup synchronizers_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * Input:
