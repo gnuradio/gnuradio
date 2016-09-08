@@ -11,11 +11,7 @@
 	<key>options</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.filter import firdes</import>
-	<import>#if $generate_options() == 'wx_gui'
-from grc_gnuradio import wxgui as grc_wxgui
-import wx
-#end if
-#if $generate_options() == 'qt_gui'
+	<import>#if $generate_options() == 'qt_gui'
 from PyQt5 import Qt
 import sys
 #end if
@@ -65,10 +61,6 @@ else: self.stop(); self.wait()</callback>
 			<key>qt_gui</key>
 		</option>
 		<option>
-			<name>WX GUI</name>
-			<key>wx_gui</key>
-		</option>
-		<option>
 			<name>No GUI</name>
 			<key>no_gui</key>
 		</option>
@@ -108,17 +100,7 @@ else: self.stop(); self.wait()</callback>
 		<key>run</key>
 		<value>True</value>
 		<type>bool</type>
-		<hide>
-#if $generate_options() in ('qt_gui', 'wx_gui')
-	#if $run()
-		part
-	#else
-		none
-	#end if
-#else
-	all
-#end if
-		</hide>
+		<hide>#if $generate_options() == 'qt_gui' then ('part' if $run() else 'none') else 'all'#</hide>
 		<option>
 			<name>Autostart</name>
 			<key>True</key>
@@ -133,26 +115,14 @@ else: self.stop(); self.wait()</callback>
 		<key>max_nouts</key>
 		<value>0</value>
 		<type>int</type>
-		<hide>#if $generate_options().startswith('hb')
-all#slurp
-#elif $max_nouts()
-none#slurp
-#else
-part#slurp
-#end if</hide>
+		<hide>#if $generate_options().startswith('hb') then 'all' else ('none' if $max_nouts() else 'part')#</hide>
 	</param>
 	<param>
 		<name>Realtime Scheduling</name>
 		<key>realtime_scheduling</key>
 		<value></value>
 		<type>enum</type>
-		<hide>#if $generate_options().startswith('hb')
-all#slurp
-#elif $realtime_scheduling()
-none#slurp
-#else
-part#slurp
-#end if</hide>
+		<hide>#if $generate_options().startswith('hb') then 'all' else ('none' if $realtime_scheduling() else 'part')#</hide>
 		<option>
 			<name>Off</name>
 			<key></key>
@@ -167,17 +137,7 @@ part#slurp
 		<key>qt_qss_theme</key>
 		<value></value>
 		<type>file_open</type>
-		<hide>
-#if $generate_options() in ('qt_gui',)
-	#if $qt_qss_theme()
-		none
-	#else
-		part
-	#end if
-#else
-	all
-#end if
-</hide>
+		<hide>#if $generate_options() == 'qt_gui' then ('none' if $qt_qss_theme() else 'part') else 'all'#</hide>
 	</param>
 	<param>
 		<name>Thread-safe setters</name>
@@ -200,11 +160,7 @@ part#slurp
 		<key>run_command</key>
 		<value>{python} -u {filename}</value>
 		<type>string</type>
-		<hide>#if $generate_options().startswith('hb')
-all#slurp
-#else
-part#slurp
-#end if</hide>
+		<hide>#if $generate_options().startswith('hb') then 'all' else 'part'</hide>
 		<tab>Advanced</tab>
 	</param>
 	<param>

@@ -133,10 +133,6 @@ class TopBlockGenerator(object):
         def _get_block_sort_text(block):
             code = block.get_make().replace(block.get_id(), ' ')
             try:
-                code += block.get_param('notebook').get_value()  # Older gui markup w/ wxgui
-            except:
-                pass
-            try:
                 code += block.get_param('gui_hint').get_value()  # Newer gui markup w/ qtgui
             except:
                 pass
@@ -165,7 +161,7 @@ class TopBlockGenerator(object):
 
         # Filter out virtual sink connections
         def cf(c):
-            return not (c.is_bus() or c.is_msg() or c.get_sink().get_parent().is_virtual_sink())
+            return not (c.is_bus() or c.get_sink().get_parent().is_virtual_sink())
         connections = filter(cf, fg.get_enabled_connections())
 
         # Get the virtual blocks and resolve their connections
@@ -214,7 +210,6 @@ class TopBlockGenerator(object):
         ))
 
         connection_templates = fg.get_parent().connection_templates
-        msgs = filter(lambda c: c.is_msg(), fg.get_enabled_connections())
 
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
@@ -243,7 +238,6 @@ class TopBlockGenerator(object):
             'blocks': blocks,
             'connections': connections,
             'connection_templates': connection_templates,
-            'msgs': msgs,
             'generate_options': self._generate_options,
             'callbacks': callbacks,
         }

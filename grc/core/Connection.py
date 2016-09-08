@@ -82,9 +82,6 @@ class Connection(Element):
             self.get_sink(),
         )
 
-    def is_msg(self):
-        return self.get_source().get_type() == self.get_sink().get_type() == 'msg'
-
     def is_bus(self):
         return self.get_source().get_type() == self.get_sink().get_type() == 'bus'
 
