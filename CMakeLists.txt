@@ -410,7 +410,6 @@ add_subdirectory(gr-utils)
 add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
 add_subdirectory(gr-wavelet)
-add_subdirectory(gr-wxgui)
 add_subdirectory(gr-zeromq)
 add_subdirectory(grc)
 
