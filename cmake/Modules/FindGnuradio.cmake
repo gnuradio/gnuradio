@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -115,5 +115,4 @@ GR_MODULE(TRELLIS gnuradio-trellis gnuradio/trellis/api.h gnuradio-trellis)
 GR_MODULE(UHD gnuradio-uhd gnuradio/uhd/api.h gnuradio-uhd)
 GR_MODULE(VOCODER gnuradio-vocoder gnuradio/vocoder/api.h gnuradio-vocoder)
 GR_MODULE(WAVELET gnuradio-wavelet gnuradio/wavelet/api.h gnuradio-wavelet)
-GR_MODULE(WXGUI gnuradio-wxgui gnuradio/wxgui/api.h gnuradio-wxgui)
 GR_MODULE(PMT gnuradio-pmt pmt/pmt.h gnuradio-pmt)

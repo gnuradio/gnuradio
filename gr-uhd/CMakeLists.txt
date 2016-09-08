@@ -61,7 +61,6 @@ if(ENABLE_PYTHON)
     add_subdirectory(python/uhd)
     add_subdirectory(grc)
     add_subdirectory(apps)
-    add_subdirectory(examples/python)
     add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
 

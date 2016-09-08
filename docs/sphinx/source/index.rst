@@ -25,7 +25,6 @@ gnuradio
    blocks_video_sdl <video_sdl_blocks>
    blocks_vocoder <vocoder_blocks>
    blocks_wavelet <wavelet_blocks>
-   blocks_wxgui <wxgui_blocks>
    blocks_zeromq <zeromq_blocks>
    analog <analog>
    channels <channels>
@@ -37,7 +36,6 @@ gnuradio
    trellis <trellis>
    uhd <uhd>
    vocoder <vocoder>
-   wxgui <wxgui>
 
 .. automodule:: gnuradio
 .. automodule:: pmt
@@ -656,8 +654,6 @@ Instrumentation Blocks
    gnuradio.qtgui.vector_sink_f
    gnuradio.qtgui.waterfall_sink_c
    gnuradio.qtgui.waterfall_sink_f
-   gnuradio.wxgui.histo_sink_f
-   gnuradio.wxgui.oscope_sink_f
 
 
 
@@ -1464,13 +1460,3 @@ Helper Classes: Vocoder
    gnuradio.vocoder.codec2
    gnuradio.vocoder.cvsd_encode_fb
    gnuradio.vocoder.cvsd_decode_bf
-
-
-Helper Classes: WXGUI
----------------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.wxgui.oscope_sink_x
-   gnuradio.wxgui.histo_sink_f

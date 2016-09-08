@@ -48,7 +48,6 @@
 /*! \defgroup uhd_blk UHD Interface */
 /*! \defgroup waveform_generators_blk Waveform Generators */
 /*! \defgroup wavelet_blk Wavelet Transforms */
-/*! \defgroup wxgui_blk WX Graphical Interfaces */
 
 /*!
  * \defgroup base_blk Base classes for GR Blocks
