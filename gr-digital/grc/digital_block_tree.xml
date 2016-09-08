@@ -126,7 +126,6 @@
     <block>digital_pfb_clock_sync_xxx</block>
     <block>digital_pn_correlator_cc</block>
     <block>digital_corr_est_cc</block>
-    <block>digital_correlate_and_sync_cc</block>
   </cat>
   <cat>
     <name>Waveform Generators</name>
