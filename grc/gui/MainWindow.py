@@ -216,16 +216,16 @@ class MainWindow(gtk.Window):
 
         if self.variable_panel_sidebar:
             # If both the variable editor and block panels are hidden, hide the right container
-            if not (self.btwin.flags() & gtk.VISIBLE) and not (self.vars.flags() & gtk.VISIBLE):
+            if not (self.btwin.get_property('visible')) and not (self.vars.get_property('visible')):
                 self.right.hide()
             else:
                 self.right.show()
         else:
-            if not (self.btwin.flags() & gtk.VISIBLE):
+            if not (self.btwin.get_property('visible')):
                 self.right.hide()
             else:
                 self.right.show()
-            if not (self.vars.flags() & gtk.VISIBLE) and not (self.console_window.flags() & gtk.VISIBLE):
+            if not (self.vars.get_property('visible')) and not (self.console_window.get_property('visible')):
                 self.left_subpanel.hide()
             else:
                 self.left_subpanel.show()
