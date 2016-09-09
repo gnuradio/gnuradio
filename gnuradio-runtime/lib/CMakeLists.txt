@@ -106,9 +106,7 @@ list(APPEND gnuradio_runtime_sources
   realtime.cc
   realtime_impl.cc
   scheduler.cc
-  scheduler_sts.cc
   scheduler_tpb.cc
-  single_threaded_scheduler.cc
   sptr_magic.cc
   sync_block.cc
   sync_decimator.cc
