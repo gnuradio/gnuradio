@@ -136,10 +136,6 @@ class TopBlockGenerator(object):
         def _get_block_sort_text(block):
             code = block.get_make().replace(block.get_id(), ' ')
             try:
-                code += block.get_param('notebook').get_value()  # Older gui markup w/ wxgui
-            except:
-                pass
-            try:
                 code += block.get_param('gui_hint').get_value()  # Newer gui markup w/ qtgui
             except:
                 pass

@@ -58,10 +58,10 @@ namespace gr {
       d_buf(new uint8_t[BUF_SIZE]),
       d_writing(0)
       {
-        std::string s_port = (boost::format("%d") % port).str();
-        std::string s_host = host.empty() ? std::string("localhost") : host;
+        std::string s__port = (boost::format("%d") % port).str();
+        std::string s__host = host.empty() ? std::string("localhost") : host;
         boost::asio::ip::tcp::resolver resolver(d_io_service);
-        boost::asio::ip::tcp::resolver::query query(s_host, s_port,
+        boost::asio::ip::tcp::resolver::query query(s__host, s__port,
             boost::asio::ip::resolver_query_base::passive);
         d_endpoint = *resolver.resolve(query);
 

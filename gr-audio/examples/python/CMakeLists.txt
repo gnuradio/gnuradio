@@ -21,7 +21,6 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
     audio_copy.py
-    audio_fft.py
     audio_play.py
     audio_to_file.py
     dial_tone.py

@@ -37,6 +37,7 @@
 %include <gnuradio/blocks/control_loop.h>
 
 %{
+#include "gnuradio/digital/glfsr.h"
 #include "gnuradio/digital/additive_scrambler_bb.h"
 #include "gnuradio/digital/binary_slicer_fb.h"
 #include "gnuradio/digital/burst_shaper_cc.h"
@@ -59,7 +60,6 @@
 #include "gnuradio/digital/correlate_access_code_tag_bb.h"
 #include "gnuradio/digital/correlate_access_code_bb_ts.h"
 #include "gnuradio/digital/correlate_access_code_ff_ts.h"
-#include "gnuradio/digital/correlate_and_sync_cc.h"
 #include "gnuradio/digital/costas_loop_cc.h"
 #include "gnuradio/digital/cpmmod_bc.h"
 #include "gnuradio/digital/crc32.h"
@@ -126,6 +126,7 @@
 #include "gnuradio/digital/header_payload_demux.h"
 %}
 
+%include "gnuradio/digital/glfsr.h"
 %include "gnuradio/digital/additive_scrambler_bb.h"
 %include "gnuradio/digital/binary_slicer_fb.h"
 %include "gnuradio/digital/burst_shaper_cc.h"
@@ -148,7 +149,6 @@
 %include "gnuradio/digital/correlate_access_code_tag_bb.h"
 %include "gnuradio/digital/correlate_access_code_bb_ts.h"
 %include "gnuradio/digital/correlate_access_code_ff_ts.h"
-%include "gnuradio/digital/correlate_and_sync_cc.h"
 %include "gnuradio/digital/costas_loop_cc.h"
 %include "gnuradio/digital/cpmmod_bc.h"
 %include "gnuradio/digital/crc32.h"
@@ -232,7 +232,6 @@ GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb_ts);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_ff_ts);
-GR_SWIG_BLOCK_MAGIC2(digital, correlate_and_sync_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, crc32_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, crc32_async_bb);

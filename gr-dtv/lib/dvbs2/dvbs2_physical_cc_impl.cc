@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbs2_physical_cc_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -54,7 +53,7 @@ namespace gr {
         type = 0;
         if (rate == C2_9_VLSNR) {
           frame_size = (FRAME_SIZE_NORMAL - NORMAL_PUNCTURING) + (EXTRA_PILOT_SYMBOLS_SET1 * 2);
-          type = 1;    /* force pilots on for VL-SNR */
+          pilots = PILOTS_ON;    /* force pilots on for VL-SNR */
         }
       }
 
@@ -63,16 +62,16 @@ namespace gr {
         type = 2;
         if (rate == C1_5_VLSNR_SF2 || rate == C11_45_VLSNR_SF2) {
           frame_size = ((FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET1) * 2) + EXTRA_PILOT_SYMBOLS_SET1;
-          type = 1;    /* force pilots on for VL-SNR */
+          pilots = PILOTS_ON;    /* force pilots on for VL-SNR */
         }
         if (rate == C1_5_VLSNR || rate == C4_15_VLSNR || rate == C1_3_VLSNR) {
           frame_size = (FRAME_SIZE_SHORT - SHORT_PUNCTURING_SET2) + EXTRA_PILOT_SYMBOLS_SET2;
-          type = 1;    /* force pilots on for VL-SNR */
+          pilots = PILOTS_ON;    /* force pilots on for VL-SNR */
         }
       }
       else  {
         frame_size = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING + EXTRA_PILOT_SYMBOLS_SET1;
-        type = 1;    /* force pilots on for VL-SNR */
+        pilots = PILOTS_ON;    /* force pilots on for VL-SNR */
       }
 
       pilot_mode = pilots;
@@ -80,8 +79,8 @@ namespace gr {
         type |= 1;
       }
       if (goldcode < 0 || goldcode > 262141) {
-        fprintf(stderr, "Gold Code must be between 0 and 262141 inclusive.\n");
-        fprintf(stderr, "Gold Code set to 0.\n");
+        GR_LOG_WARN(d_logger, "Gold Code must be between 0 and 262141 inclusive.");
+        GR_LOG_WARN(d_logger, "Gold Code set to 0.");
         goldcode = 0;
       }
       gold_code = goldcode;
@@ -808,8 +807,7 @@ namespace gr {
       int consumed = 0;
       int produced = 0;
       int slot_count, n;
-      int group;
-      int symbols = 0;
+      int group, symbols;
       gr_complex tempin, tempout;
 
       if (vlsnr_set == VLSNR_OFF) {
@@ -873,6 +871,7 @@ namespace gr {
           n = 0;
           slot_count = 10;
           group = 0;
+          symbols = 0;
           for (int plh = 0; plh < 90; plh++) {
             out[produced++] = m_pl[plh];
             out[produced++] = m_zero;
@@ -1079,6 +1078,7 @@ namespace gr {
           n = 0;
           slot_count = 10;
           group = 0;
+          symbols = 0;
           for (int plh = 0; plh < 90; plh++) {
             out[produced++] = m_pl[plh];
             out[produced++] = m_zero;

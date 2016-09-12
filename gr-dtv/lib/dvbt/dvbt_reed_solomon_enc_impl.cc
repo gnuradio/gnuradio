@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,15 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_reed_solomon_enc_impl.h"
-#include <stdio.h>
+
+#define MPEG_TS_PKT_LENGTH 188
 
 namespace gr {
   namespace dtv {
+
+    static const int rs_init_symsize =     8;
+    static const int rs_init_fcr     =     0;    // first consecutive root
+    static const int rs_init_prim    =     1;    // primitive is 1 (alpha)
 
     dvbt_reed_solomon_enc::sptr
     dvbt_reed_solomon_enc::make(int p, int m, int gfpoly, int n, int k, int t, int s, int blocks)
@@ -43,15 +48,19 @@ namespace gr {
       : block("dvbt_reed_solomon",
           io_signature::make(1, 1, sizeof(unsigned char) * blocks * (k - s)),
           io_signature::make(1, 1, sizeof(unsigned char) * blocks * (n - s))),
-      d_p(p), d_m(m), d_gfpoly(gfpoly), d_n(n), d_k(k), d_t(t), d_s(s), d_blocks(blocks),
-      d_rs(p, m, gfpoly, n, k, t, s, blocks)
+      d_n(n), d_k(k), d_s(s), d_blocks(blocks)
     {
-      d_in = new unsigned char[d_n];
-      if (d_in == NULL) {
-        std::cout << "Cannot allocate memory for d_in" << std::endl;
-        return;
+      d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
+      if (d_rs == NULL) {
+        GR_LOG_FATAL(d_logger, "Reed-Solomon Encoder, cannot allocate memory for d_rs.");
+        throw std::bad_alloc();
       }
-      memset(&d_in[0], 0, d_n);
+      d_data = (unsigned char *) malloc(sizeof(unsigned char) * (d_s + MPEG_TS_PKT_LENGTH));
+      if (d_data == NULL) {
+        GR_LOG_FATAL(d_logger, "Reed-Solomon Encoder, cannot allocate memory for d_data.");
+        free_rs_char(d_rs);
+        throw std::bad_alloc();
+      }
     }
 
     /*
@@ -59,13 +68,26 @@ namespace gr {
      */
     dvbt_reed_solomon_enc_impl::~dvbt_reed_solomon_enc_impl()
     {
-      delete [] d_in;
+      free(d_data);
+      free_rs_char(d_rs);
     }
 
     void
     dvbt_reed_solomon_enc_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       ninput_items_required[0] = noutput_items;
+    }
+
+    void
+    dvbt_reed_solomon_enc_impl::encode(const unsigned char *in, unsigned char *out)
+    {
+      // Shortened Reed-Solomon: prepend zero bytes to message (discarded after encoding)
+      std::memset(d_data, 0, d_s);
+      std::memcpy(&d_data[d_s], in, MPEG_TS_PKT_LENGTH);
+
+      // Copy input message to output then append Reed-Solomon bits
+      std::memcpy(out, in, MPEG_TS_PKT_LENGTH);
+      encode_rs_char(d_rs, d_data, &out[MPEG_TS_PKT_LENGTH]);
     }
 
     int
@@ -76,18 +98,13 @@ namespace gr {
     {
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
+      int j = 0;
+      int k = 0;
 
-      int in_bsize = d_k - d_s;
-      int out_bsize = d_n - d_s;
-
-      // We get a superblock of d_blocks blocks
-      for (int i = 0; i < (d_blocks * noutput_items); i++) {
-        //TODO - zero copy between in/out ?
-        memcpy(&d_in[d_s], &in[i * in_bsize], in_bsize);
-
-        d_rs.rs_encode(&d_in[0], &d_in[d_k]);
-
-        memcpy(&out[i * out_bsize], &d_in[d_s], out_bsize);
+      for (int i = 0; i < noutput_items * d_blocks; i++) {
+        encode(in + j, out + k);
+        j += (d_k - d_s);
+        k += (d_n - d_s);
       }
 
       // Tell runtime system how many input items we consumed on

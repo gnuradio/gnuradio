@@ -16,9 +16,9 @@ $paprmode2.val, #slurp
 #end if
 $version.val, #slurp
 #if str($version) == 'VERSION_111'
-$preamble1.val, #slurp
+$preamble1.val#slurp
 #else
-$preamble2.val, #slurp
+$preamble2.val#slurp
 #end if
 )</make>
   <param>

@@ -96,7 +96,6 @@ SHORT_VECTOR_COLOR_SPEC = _color_parse('#CCCC33')
 BYTE_VECTOR_COLOR_SPEC = _color_parse('#CC66CC')
 
 PARAM_ENTRY_COLORS = {
-
     # Number types
     'complex': COMPLEX_COLOR_SPEC,
     'real': FLOAT_COLOR_SPEC,
@@ -115,8 +114,6 @@ PARAM_ENTRY_COLORS = {
     'string': BYTE_VECTOR_COLOR_SPEC,
     'id': ID_COLOR_SPEC,
     'stream_id': ID_COLOR_SPEC,
-    'grid_pos': INT_VECTOR_COLOR_SPEC,
-    'notebook': INT_VECTOR_COLOR_SPEC,
     'raw': WILDCARD_COLOR_SPEC,
 }
 

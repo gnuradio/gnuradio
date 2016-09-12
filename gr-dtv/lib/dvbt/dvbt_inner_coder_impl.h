@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,9 @@ namespace gr {
      private:
       const dvbt_configure config;
 
+      static const int d_lookup_171[128];
+      static const int d_lookup_133[128];
+
       int d_ninput;
       int d_noutput;
 
@@ -57,8 +60,8 @@ namespace gr {
       // bit output buffer
       unsigned char * d_out_buff;
 
-      void generate_codeword(unsigned char in, int &x, int &y);
-      void generate_punctured_code(dvb_code_rate_t coderate, unsigned char * in, unsigned char * out);
+      inline void generate_codeword(unsigned char in, int &x, int &y);
+      inline void generate_punctured_code(dvb_code_rate_t coderate, unsigned char * in, unsigned char * out);
 
      public:
       dvbt_inner_coder_impl(int ninput, int noutput, dvb_constellation_t constellation, dvbt_hierarchy_t hierarchy, dvb_code_rate_t coderate);

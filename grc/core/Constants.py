@@ -52,7 +52,6 @@ DEFAULT_DOMAIN = GR_STREAM_DOMAIN
 BLOCK_FLAG_THROTTLE = 'throttle'
 BLOCK_FLAG_DISABLE_BYPASS = 'disable_bypass'
 BLOCK_FLAG_NEED_QT_GUI = 'need_qt_gui'
-BLOCK_FLAG_NEED_WX_GUI = 'need_wx_gui'
 BLOCK_FLAG_DEPRECATED = 'deprecated'
 
 # File creation modes
@@ -67,7 +66,7 @@ PARAM_TYPE_NAMES = (
     'hex', 'string', 'bool',
     'file_open', 'file_save', '_multiline', '_multiline_python_external',
     'id', 'stream_id',
-    'grid_pos', 'notebook', 'gui_hint',
+    'gui_hint',
     'import',
 )
 

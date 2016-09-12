@@ -6,6 +6,3 @@ These will be phased-out as new functionaility is merged into gnuradio.
 The blk2s module wraps many blocks in blks2 and gives them streaming outputs.
 Will be phased-out by new message passing implementations.
 Other blks2 blocks will hopefully make their way into blks2impl.
-
-The wxgui module contains a top_block + wxgui frame.
-Will be phased-out by gui.py in wxgui and a new top block template.

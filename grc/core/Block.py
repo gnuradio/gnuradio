@@ -31,7 +31,7 @@ from Cheetah.Template import Template
 from . import utils
 
 from . Constants import (
-    BLOCK_FLAG_NEED_QT_GUI, BLOCK_FLAG_NEED_WX_GUI,
+    BLOCK_FLAG_NEED_QT_GUI,
     ADVANCED_PARAM_TAB,
     BLOCK_FLAG_THROTTLE, BLOCK_FLAG_DISABLE_BYPASS,
     BLOCK_FLAG_DEPRECATED,
@@ -245,7 +245,6 @@ class Block(Element):
                 self.add_error_message("Can't generate this block in mode: {} ".format(
                                        repr(current_generate_option)))
 
-        check_generate_mode('WX GUI', BLOCK_FLAG_NEED_WX_GUI, ('wx_gui',))
         check_generate_mode('QT GUI', BLOCK_FLAG_NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
 
     def _validate_var_value(self):

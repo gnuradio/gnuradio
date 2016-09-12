@@ -181,8 +181,6 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gr-vocoder/include \
                          @CMAKE_SOURCE_DIR@/gr-wavelet/include \
                          @CMAKE_BINARY_DIR@/gr-wavelet/include \
-                         @CMAKE_SOURCE_DIR@/gr-wxgui/include \
-                         @CMAKE_BINARY_DIR@/gr-wxgui/include \
                          @CMAKE_SOURCE_DIR@/gr-zeromq/include \
                          @CMAKE_BINARY_DIR@/gr-zeromq/include \
                          @CMAKE_SOURCE_DIR@/volk/include \
@@ -754,7 +752,6 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/gr-trellis/swig/trellis_swig.py \
                          @abs_top_builddir@/gr-video-sdl/swig/video_sdl_swig.py \
-                         @abs_top_builddir@/gr-wxgui/python \
                          @abs_top_builddir@/grc \
                          @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
@@ -813,8 +810,6 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/gr-vocoder/lib \
                          @abs_top_srcdir@/gr-wavelet/lib \
                          @abs_top_builddir@/gr-wavelet/lib \
-                         @abs_top_srcdir@/gr-wxgui/lib \
-                         @abs_top_builddir@/gr-wxgui/lib \
                          @abs_top_srcdir@/gr-zeromq/lib \
                          @abs_top_builddir@/gr-zeromq/lib \
                          @abs_top_srcdir@/volk/cmake/msvc \

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@
 #include <complex>
 #include <gnuradio/math.h>
 #include <gnuradio/expj.h>
-#include <stdio.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -247,53 +246,53 @@ namespace gr {
 
       d_gamma = (gr_complex*) volk_malloc(sizeof(gr_complex) * d_fft_length, volk_get_alignment());
       if (d_gamma == NULL) {
-        std::cout << "cannot allocate memory for d_gamma" << std::endl;
-        exit(1);
+        GR_LOG_FATAL(d_logger, "OFDM Symbol Acquisition, cannot allocate memory for d_gamma.");
+        throw std::bad_alloc();
       }
 
       d_lambda = (float*) volk_malloc(sizeof(float) * d_fft_length, volk_get_alignment());
       if (d_lambda == NULL) {
-        std::cout << "cannot allocate memory for d_lambda" << std::endl;
+        GR_LOG_FATAL(d_logger, "OFDM Symbol Acquisition, cannot allocate memory for d_lambda.");
         volk_free(d_gamma);
-        exit(1);
+        throw std::bad_alloc();
       }
 
       d_derot = (gr_complex*) volk_malloc(sizeof(gr_complex) * (d_fft_length + d_cp_length), volk_get_alignment());
       if (d_derot == NULL) {
-        std::cout << "cannot allocate memory for d_derot" << std::endl;
+        GR_LOG_FATAL(d_logger, "OFDM Symbol Acquisition, cannot allocate memory for d_derot.");
         volk_free(d_lambda);
         volk_free(d_gamma);
-        exit(1);
+        throw std::bad_alloc();
       }
 
       d_conj = (gr_complex*) volk_malloc(sizeof(gr_complex) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
       if (d_conj == NULL) {
-        std::cout << "cannot allocate memory for d_conj" << std::endl;
+        GR_LOG_FATAL(d_logger, "OFDM Symbol Acquisition, cannot allocate memory for d_conj.");
         volk_free(d_derot);
         volk_free(d_lambda);
         volk_free(d_gamma);
-        exit(1);
+        throw std::bad_alloc();
       }
 
       d_norm = (float*) volk_malloc(sizeof(float) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
       if (d_norm == NULL) {
-        std::cout << "cannot allocate memory for d_norm" << std::endl;
+        GR_LOG_FATAL(d_logger, "OFDM Symbol Acquisition, cannot allocate memory for d_norm.");
         volk_free(d_conj);
         volk_free(d_derot);
         volk_free(d_lambda);
         volk_free(d_gamma);
-        exit(1);
+        throw std::bad_alloc();
       }
 
       d_corr = (gr_complex*) volk_malloc(sizeof(gr_complex) * (2 * d_fft_length + d_cp_length), volk_get_alignment());
       if (d_corr == NULL) {
-        std::cout << "cannot allocate memory for d_corr" << std::endl;
+        GR_LOG_FATAL(d_logger, "OFDM Symbol Acquisition, cannot allocate memory for d_corr.");
         volk_free(d_norm);
         volk_free(d_conj);
         volk_free(d_derot);
         volk_free(d_lambda);
         volk_free(d_gamma);
-        exit(1);
+        throw std::bad_alloc();
       }
 
       peak_detect_init(0.3, 0.9);

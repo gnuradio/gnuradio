@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 #include <gnuradio/io_signature.h>
 #include "dvbt2_paprtr_cc_impl.h"
 #include <volk/volk.h>
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -518,61 +517,65 @@ namespace gr {
       left_nulls = ((vlength - C_PS) / 2) + 1;
       right_nulls = (vlength - C_PS) / 2;
       papr_fft_size = vlength;
-      papr_fft = new fft::fft_complex(papr_fft_size, false, 1);
+      papr_fft = new (std::nothrow) fft::fft_complex(papr_fft_size, false, 1);
+      if (papr_fft == NULL) {
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for papr_fft.");
+        throw std::bad_alloc();
+      }
       ones_freq = (gr_complex*) volk_malloc(sizeof(gr_complex) * papr_fft_size, volk_get_alignment());
       if (ones_freq == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 1st volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for ones_freq.");
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       ones_time = (gr_complex*) volk_malloc(sizeof(gr_complex) * papr_fft_size, volk_get_alignment());
       if (ones_time == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 2nd volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for ones_time.");
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       c = (gr_complex*) volk_malloc(sizeof(gr_complex) * papr_fft_size, volk_get_alignment());
       if (c == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 3rd volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for c.");
         volk_free(ones_time);
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       ctemp = (gr_complex*) volk_malloc(sizeof(gr_complex) * papr_fft_size, volk_get_alignment());
       if (ctemp == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 4th volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for ctemp.");
         volk_free(c);
         volk_free(ones_time);
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       magnitude = (float*) volk_malloc(sizeof(float) * papr_fft_size, volk_get_alignment());
       if (magnitude == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 5th volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for magnitude.");
         volk_free(ctemp);
         volk_free(c);
         volk_free(ones_time);
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       r = (gr_complex*) volk_malloc(sizeof(gr_complex) * N_TR, volk_get_alignment());
       if (r == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 6th volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for r.");
         volk_free(magnitude);
         volk_free(ctemp);
         volk_free(c);
         volk_free(ones_time);
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       rNew = (gr_complex*) volk_malloc(sizeof(gr_complex) * N_TR, volk_get_alignment());
       if (rNew == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 7th volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for rNew.");
         volk_free(r);
         volk_free(magnitude);
         volk_free(ctemp);
@@ -580,11 +583,11 @@ namespace gr {
         volk_free(ones_time);
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       v = (gr_complex*) volk_malloc(sizeof(gr_complex) * N_TR, volk_get_alignment());
       if (v == NULL) {
-        fprintf(stderr, "Tone reservation PAPR 8th volk_malloc, Out of memory.\n");
+        GR_LOG_FATAL(d_logger, "Tone Reservation PAPR, cannot allocate memory for v.");
         volk_free(rNew);
         volk_free(r);
         volk_free(magnitude);
@@ -593,7 +596,7 @@ namespace gr {
         volk_free(ones_time);
         volk_free(ones_freq);
         delete papr_fft;
-        exit(1);
+        throw std::bad_alloc();
       }
       num_symbols = numdatasyms + N_P2;
       set_output_multiple(num_symbols);

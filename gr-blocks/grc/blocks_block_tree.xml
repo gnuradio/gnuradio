@@ -94,6 +94,7 @@
       <block>blocks_add_const_vxx</block>
       <block>blocks_divide_xx</block>
       <block>blocks_multiply_xx</block>
+      <block>blocks_multiply_const_xx</block>
       <block>blocks_multiply_const_vxx</block>
       <block>blocks_multiply_conjugate_cc</block>
       <block>blocks_multiply_matrix_xx</block>
@@ -121,9 +122,6 @@
    </cat>
    <cat>
       <name>Message Tools</name>
-      <block>blocks_message_source</block>
-      <block>blocks_message_sink</block>
-      <block>blocks_message_burst_source</block>
       <block>blocks_message_strobe</block>
       <block>blocks_message_strobe_random</block>
       <block>blocks_message_debug</block>

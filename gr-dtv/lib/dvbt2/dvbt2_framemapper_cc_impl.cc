@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt2_framemapper_cc_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -910,33 +909,33 @@ namespace gr {
         set_output_multiple((N_P2 * C_P2) + (numdatasyms * C_DATA));
         mapped_items = (N_P2 * C_P2) + (numdatasyms * C_DATA);
         if (mapped_items < (stream_items + 1840 + (N_post / eta_mod) + (N_FC - C_FC))) {
-          fprintf(stderr, "Too many FEC blocks in T2 frame.\n");
+          GR_LOG_WARN(d_logger, "Frame Mapper, too many FEC blocks in T2 frame.");
           mapped_items = stream_items + 1840 + (N_post / eta_mod) + (N_FC - C_FC);    /* avoid segfault */
         }
         zigzag_interleave = (gr_complex *) malloc(sizeof(gr_complex) * mapped_items);
         if (zigzag_interleave == NULL) {
-          fprintf(stderr, "Frame mapper 1st malloc, Out of memory.\n");
-          exit(1);
+          GR_LOG_FATAL(d_logger, "Frame Mapper, cannot allocate memory for zigzag_interleave.");
+          throw std::bad_alloc();
         }
       }
       else {
         set_output_multiple((N_P2 * C_P2) + ((numdatasyms - 1) * C_DATA) + N_FC);
         mapped_items = (N_P2 * C_P2) + ((numdatasyms - 1) * C_DATA) + N_FC;
         if (mapped_items < (stream_items + 1840 + (N_post / eta_mod) + (N_FC - C_FC))) {
-          fprintf(stderr, "Too many FEC blocks in T2 frame.\n");
+          GR_LOG_WARN(d_logger, "Frame Mapper, too many FEC blocks in T2 frame.");
           mapped_items = stream_items + 1840 + (N_post / eta_mod) + (N_FC - C_FC);    /* avoid segfault */
         }
         zigzag_interleave = (gr_complex *) malloc(sizeof(gr_complex) * mapped_items);
         if (zigzag_interleave == NULL) {
-          fprintf(stderr, "Frame mapper 1st malloc, Out of memory.\n");
-          exit(1);
+          GR_LOG_FATAL(d_logger, "Frame Mapper, cannot allocate memory for zigzag_interleave.");
+          throw std::bad_alloc();
         }
       }
       dummy_randomize = (gr_complex *) malloc(sizeof(gr_complex) * mapped_items - stream_items - 1840 - (N_post / eta_mod) - (N_FC - C_FC));
       if (dummy_randomize == NULL) {
         free(zigzag_interleave);
-        fprintf(stderr, "Frame mapper 2nd malloc, Out of memory.\n");
-        exit(1);
+        GR_LOG_FATAL(d_logger, "Frame Mapper, cannot allocate memory for dummy_randomize.");
+        throw std::bad_alloc();
       }
       init_dummy_randomizer();
       init_l1_randomizer();

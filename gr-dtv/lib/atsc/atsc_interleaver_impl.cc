@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include "atsc_interleaver_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
@@ -45,14 +44,15 @@ namespace gr {
       J = 4;
       registers = (unsigned char *) malloc(sizeof(unsigned char) * I * ((I - 1) * J));
       if (registers == NULL) {
-        fprintf(stderr, "Out of memory.\n");
-        exit(1);
+        GR_LOG_FATAL(d_logger, "ATSC Interleaver, cannot allocate memory for registers.");
+        throw std::bad_alloc();
       }
 
       pointers = (int *) malloc(sizeof(int) * I);
       if (pointers == NULL) {
-        fprintf(stderr, "Out of memory.\n");
-        exit(1);
+        free(registers);
+        GR_LOG_FATAL(d_logger, "ATSC Interleaver, cannot allocate memory for pointers");
+        throw std::bad_alloc();
       }
 
       memset(registers, 0, sizeof(unsigned char) * I * ((I - 1) * J));

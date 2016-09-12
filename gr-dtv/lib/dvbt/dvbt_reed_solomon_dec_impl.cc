@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,14 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt_reed_solomon_dec_impl.h"
-#include <stdio.h>
 
 namespace gr {
   namespace dtv {
+
+    static const int rs_init_symsize =     8;
+    static const int rs_init_fcr     =     0;	// first consecutive root
+    static const int rs_init_prim    =     1;	// primitive is 1 (alpha)
+    static const int N = (1 << rs_init_symsize) - 1;	// 255
 
     dvbt_reed_solomon_dec::sptr
     dvbt_reed_solomon_dec::make(int p, int m, int gfpoly, int n, int k, int t, int s, int blocks)
@@ -43,15 +47,16 @@ namespace gr {
       : block("dvbt_reed_solomon_dec",
           io_signature::make(1, 1, sizeof(unsigned char) * blocks * (n - s)),
           io_signature::make(1, 1, sizeof(unsigned char) * blocks * (k - s))),
-      d_p(p), d_m(m), d_gfpoly(gfpoly), d_n(n), d_k(k), d_t(t), d_s(s), d_blocks(blocks),
-      d_rs(p, m, gfpoly, n, k, t, s, blocks)
+      d_n(n), d_k(k), d_s(s), d_blocks(blocks)
     {
-      d_in = new unsigned char[d_n];
-      if (d_in == NULL) {
-        std::cout << "Cannot allocate memory for d_in" << std::endl;
-        exit(1);
+      d_rs = init_rs_char(rs_init_symsize, gfpoly, rs_init_fcr, rs_init_prim, (n - k));
+      if (d_rs == NULL) {
+        GR_LOG_FATAL(d_logger, "Reed-Solomon Decoder, cannot allocate memory for d_rs.");
+        throw std::bad_alloc();
       }
-      memset(&d_in[0], 0, d_n);
+      d_nerrors_corrected_count = 0;
+      d_bad_packet_count = 0;
+      d_total_packets = 0;
     }
 
     /*
@@ -59,13 +64,32 @@ namespace gr {
      */
     dvbt_reed_solomon_dec_impl::~dvbt_reed_solomon_dec_impl()
     {
-      delete [] d_in;
+      free_rs_char(d_rs);
     }
 
     void
     dvbt_reed_solomon_dec_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
       ninput_items_required[0] = noutput_items;
+    }
+
+    int
+    dvbt_reed_solomon_dec_impl::decode (unsigned char &out, const unsigned char &in)
+    {
+      unsigned char tmp[N];
+      int ncorrections;
+
+      // add missing prefix zero padding to message
+      memset(tmp, 0, d_s);
+      memcpy(&tmp[d_s], &in, (d_n - d_s));
+
+      // correct message...
+      ncorrections = decode_rs_char(d_rs, tmp, 0, 0);
+
+      // copy corrected message to output, skipping prefix zero padding
+      memcpy (&out, &tmp[d_s], (d_k - d_s));
+
+      return ncorrections;
     }
 
     int
@@ -76,21 +100,23 @@ namespace gr {
     {
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
-
-      // We receive only nonzero data
-      int in_bsize = d_n - d_s;
-      int out_bsize = d_k - d_s;
+      int j = 0;
+      int k = 0;
 
       for (int i = 0; i < (d_blocks * noutput_items); i++) {
-        //TODO - zero copy?
-        // Set first d_s symbols to zero
-        memset(&d_in[0], 0, d_s);
-        // Then copy actual data
-        memcpy(&d_in[d_s], &in[i * in_bsize], in_bsize);
+        int nerrors_corrected = decode(out[k], in[j]);
 
-        d_rs.rs_decode(d_in, NULL, 0);
+        if (nerrors_corrected == -1) {
+          d_bad_packet_count++;
+          d_nerrors_corrected_count += ((d_n - d_s) - (d_k - d_s)) / 2; // lower bound estimate; most this RS can fix
+        }
+        else {
+          d_nerrors_corrected_count += nerrors_corrected;
+        }
 
-        memcpy(&out[i * out_bsize], &d_in[d_s], out_bsize);
+	d_total_packets++;
+        j += (d_n - d_s);
+        k += (d_k - d_s);
       }
 
       // Tell runtime system how many input items we consumed on
