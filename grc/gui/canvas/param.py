@@ -16,18 +16,18 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
-from . import Utils, Constants
 
-from . import ParamWidgets
-from .Element import Element
+from .drawable import Drawable
 
-from ..core.Param import Param as _Param
+from .. import ParamWidgets, Utils, Constants
+
+from ...core.Param import Param as CoreParam
 
 
-class Param(_Param):
+class Param(CoreParam):
     """The graphical parameter."""
 
-    make_cls_with_base = classmethod(Element.make_cls_with_base.__func__)
+    make_cls_with_base = classmethod(Drawable.make_cls_with_base.__func__)
 
     def get_input(self, *args, **kwargs):
         """

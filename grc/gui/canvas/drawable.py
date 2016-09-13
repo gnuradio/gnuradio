@@ -18,12 +18,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import
-from .Constants import LINE_SELECT_SENSITIVITY
+from ..Constants import LINE_SELECT_SENSITIVITY
 
 from six.moves import zip
 
 
-class Element(object):
+class Drawable(object):
     """
     GraphicalElement is the base class for all graphical elements.
     It contains an X,Y coordinate, a list of rectangular areas that the element occupies,

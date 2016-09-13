@@ -18,18 +18,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import
+
 import math
 
 from gi.repository import Gtk, PangoCairo, Pango
 
-from . import Actions, Colors, Utils, Constants
-from .Element import Element
+from .drawable import Drawable
 
-from ..core.Element import nop_write
-from ..core.Port import Port as _Port
+from .. import Actions, Colors, Utils, Constants
+
+from ...core.Element import nop_write
+from ...core.Port import Port as CorePort
 
 
-class Port(_Port, Element):
+class Port(CorePort, Drawable):
     """The graphical port."""
 
     def __init__(self, parent, direction, **n):
@@ -38,7 +40,7 @@ class Port(_Port, Element):
         Create list of connector coordinates.
         """
         super(self.__class__, self).__init__(parent, direction, **n)
-        Element.__init__(self)
+        Drawable.__init__(self)
         self._connector_coordinate = (0, 0)
         self._hovering = False
         self.force_show_label = False
@@ -193,12 +195,7 @@ class Port(_Port, Element):
         self.parent_block.rotate(direction)
 
     def move(self, delta_coor):
-        """
-        Move the parent rather than self.
-
-        Args:
-            delta_corr: the (delta_x, delta_y) tuple
-        """
+        """Move the parent rather than self."""
         self.parent_block.move(delta_coor)
 
     @property

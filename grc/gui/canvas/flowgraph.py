@@ -19,26 +19,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-import functools
 import ast
+import functools
 import random
 from distutils.spawn import find_executable
 from itertools import count
 
 import six
+from gi.repository import GLib
 from six.moves import filter
 
-from gi.repository import GLib
+from .drawable import Drawable
 
-from . import Actions, Colors, Constants, Utils, Bars, Dialogs
-from .Element import Element
-from .external_editor import ExternalEditor
+from .. import Actions, Colors, Constants, Utils, Bars, Dialogs
+from ..external_editor import ExternalEditor
 
-from ..core.FlowGraph import FlowGraph as CoreFlowgraph
-from ..core import Messages
+from ...core import Messages
+from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 
 
-class FlowGraph(CoreFlowgraph, Element):
+class FlowGraph(CoreFlowgraph, Drawable):
     """
     FlowGraph is the data structure to store graphical signal blocks,
     graphical inputs and outputs,
@@ -51,7 +51,7 @@ class FlowGraph(CoreFlowgraph, Element):
         Create a list for signal blocks and connections. Connect mouse handlers.
         """
         super(self.__class__, self).__init__(parent, **kwargs)
-        Element.__init__(self)
+        Drawable.__init__(self)
         self.drawing_area = None
         # important vars dealing with mouse event tracking
         self.element_moved = False

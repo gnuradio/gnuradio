@@ -19,17 +19,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import, print_function
 
-import os
 import sys
 
-from ..core.Platform import Platform as CorePlatform
+import os
 
 from .Config import Config
-from .Block import Block
-from .Connection import Connection
-from .FlowGraph import FlowGraph
-from .Param import Param
-from .Port import Port
+from . import canvas
+from ..core.Platform import Platform as CorePlatform
 
 
 class Platform(CorePlatform):
@@ -64,11 +60,11 @@ class Platform(CorePlatform):
     # Factories
     ##############################################
     Config = Config
-    FlowGraph = FlowGraph
-    Connection = Connection
-    block_classes = {key: Block.make_cls_with_base(cls)
+    FlowGraph = canvas.FlowGraph
+    Connection = canvas.Connection
+    block_classes = {key: canvas.Block.make_cls_with_base(cls)
                      for key, cls in CorePlatform.block_classes.items()}
-    port_classes = {key: Port.make_cls_with_base(cls)
+    port_classes = {key: canvas.Port.make_cls_with_base(cls)
                     for key, cls in CorePlatform.port_classes.items()}
-    param_classes = {key: Param.make_cls_with_base(cls)
+    param_classes = {key: canvas.Param.make_cls_with_base(cls)
                      for key, cls in CorePlatform.param_classes.items()}

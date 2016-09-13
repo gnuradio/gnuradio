@@ -18,23 +18,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from __future__ import absolute_import
+
 import math
 
 import six
 from gi.repository import Gtk, Pango, PangoCairo
 
-from . import Actions, Colors, Utils, Constants
+from .drawable import Drawable
 
-from .Constants import (
+from .. import Actions, Colors, Utils, Constants
+from ..Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
     PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
 )
-from . Element import Element
-from ..core import utils
-from ..core.Block import Block as CoreBlock
+
+from ...core import utils
+from ...core.Block import Block as CoreBlock
 
 
-class Block(CoreBlock, Element):
+class Block(CoreBlock, Drawable):
     """The graphical signal block."""
 
     def __init__(self, parent, **n):
@@ -46,7 +48,7 @@ class Block(CoreBlock, Element):
 
         self.states.update(_coordinate=(0, 0), _rotation=0)
         self.width = self.height = 0
-        Element.__init__(self)  # needs the states and initial sizes
+        Drawable.__init__(self)  # needs the states and initial sizes
 
         self._surface_layouts = [
             Gtk.DrawingArea().create_pango_layout(''),  # title
@@ -293,7 +295,7 @@ class Block(CoreBlock, Element):
             )
             if port_selected:
                 return port_selected
-        return Element.what_is_selected(self, coor, coor_m)
+        return Drawable.what_is_selected(self, coor, coor_m)
 
     def draw_comment(self, cr):
         if not self._comment_layout:
@@ -313,7 +315,7 @@ class Block(CoreBlock, Element):
 
     @property
     def extend(self):
-        extend = Element.extend.fget(self)
+        extend = Drawable.extend.fget(self)
         x, y = self.coordinate
         for port in self.active_ports():
             extend = (min_or_max(xy, offset + p_xy) for offset, min_or_max, xy, p_xy in zip(

@@ -19,15 +19,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-from . import Colors, Utils
-from .Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT, GR_MESSAGE_DOMAIN
-from .Element import Element
+from .drawable import Drawable
 
-from ..core.Element import nop_write
-from ..core.Connection import Connection as CoreConnection
+from .. import Colors, Utils
+from ..Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT, GR_MESSAGE_DOMAIN
+
+from ...core.Connection import Connection as CoreConnection
+from ...core.Element import nop_write
 
 
-class Connection(CoreConnection, Element):
+class Connection(CoreConnection, Drawable):
     """
     A graphical connection for ports.
     The connection has 2 parts, the arrow and the wire.
@@ -39,7 +40,7 @@ class Connection(CoreConnection, Element):
 
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-        Element.__init__(self)
+        Drawable.__init__(self)
 
         self._line = []
         self._line_width_factor = 1.0
