@@ -434,11 +434,10 @@ class ActionHandler:
             action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR:
             if self.init:
-                md = Gtk.MessageDialog(main,
-                    Gtk.DIALOG_DESTROY_WITH_PARENT, Gtk.MESSAGE_INFO,
-                    Gtk.BUTTONS_CLOSE, "Moving the variable editor requires a restart of GRC.")
-                md.run()
-                md.destroy()
+                Dialogs.MessageDialogWrapper(
+                    main, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE,
+                    markup="Moving the variable editor requires a restart of GRC."
+                ).run_and_destroy()
                 action.save_to_preferences()
         ##################################################
         # Param Modifications
