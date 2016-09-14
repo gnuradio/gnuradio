@@ -29,6 +29,7 @@
 <block>
   <name>QAM Mod</name>
   <key>digital_qam_mod</key>
+  <category>[Core]/Deprecated</category>
   <import>from gnuradio import digital</import>
   <make>digital.qam.qam_mod(
   constellation_points=$constellation_points,
