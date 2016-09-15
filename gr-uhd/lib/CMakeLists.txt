@@ -21,12 +21,12 @@
 # Setup the include and linker paths
 ########################################################################
 include_directories(
+    ${UHD_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_UHD_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
-    ${UHD_INCLUDE_DIRS}
 )
 
 link_directories(
