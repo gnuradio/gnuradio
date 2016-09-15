@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## FreeDV audio modem demodulator
+###################################################
+ -->
+<block>
+  <name>FreeDV demodulator</name>
+  <key>vocoder_freedv_rx_ss</key>
+  <import>from gnuradio import vocoder</import>
+  <import>from gnuradio.vocoder import freedv_api</import>
+  <make>vocoder.freedv_rx_ss($mode,$squelch_thresh)</make>
+  <callback>set_squelch_thresh($squelch_thresh)</callback>
+  <param>
+    <name>Operating Mode</name>
+    <key>mode</key>
+    <value>freedv_api.MODE_1600</value>
+    <type>int</type>
+    <option>
+      <name>1600</name>
+      <key>freedv_api.MODE_1600</key>
+    </option>
+    <option>
+      <name>700</name>
+      <key>freedv_api.MODE_700</key>
+    </option>
+    <option>
+      <name>700B</name>
+      <key>freedv_api.MODE_700B</key>
+    </option>
+    <option>
+      <name>2400A</name>
+      <key>freedv_api.MODE_2400A</key>
+    </option>
+    <option>
+      <name>2400B</name>
+      <key>freedv_api.MODE_2400B</key>
+    </option>
+    <option>
+      <name>800XA</name>
+      <key>freedv_api.MODE_800XA</key>
+    </option>
+  </param>
+  <param>
+    <name>Squelch Threshold</name>
+    <key>squelch_thresh</key>
+    <value>-100.0</value>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>short</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>short</type>
+  </source>
+</block>

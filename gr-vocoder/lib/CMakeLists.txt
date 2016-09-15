@@ -61,6 +61,13 @@ if(LIBCODEC2_FOUND)
     codec2_encode_sp_impl.cc
     )
 endif(LIBCODEC2_FOUND)
+if(LIBCODEC2_HAS_FREEDV_API)
+  list(APPEND gr_vocoder_sources
+    freedv_api.cc
+    freedv_rx_ss_impl.cc
+    freedv_tx_ss_impl.cc
+    )
+endif(LIBCODEC2_HAS_FREEDV_API)
 if(LIBGSM_FOUND)
   list(APPEND gr_vocoder_sources
     gsm_fr_decode_ps_impl.cc
