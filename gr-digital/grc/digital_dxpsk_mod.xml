@@ -29,6 +29,7 @@
 <block>
 	<name>DPSK Mod</name>
 	<key>digital_dxpsk_mod</key>
+	<category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.$(type)_mod(
 	samples_per_symbol=$samples_per_symbol,

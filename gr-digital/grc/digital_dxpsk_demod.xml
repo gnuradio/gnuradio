@@ -29,6 +29,7 @@
 <block>
 	<name>DPSK Demod</name>
 	<key>digital_dxpsk_demod</key>
+  	<category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.$(type)_demod(
 	samples_per_symbol=$samples_per_symbol,
