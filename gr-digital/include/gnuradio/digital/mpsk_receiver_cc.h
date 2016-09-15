@@ -34,6 +34,7 @@ namespace gr {
      * \brief This block takes care of receiving M-PSK modulated
      * signals through phase, frequency, and symbol synchronization.
      * \ingroup synchronizers_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * It performs carrier frequency and phase locking as well as

@@ -29,6 +29,7 @@
 <block>
   <name>PSK Mod</name>
   <key>digital_psk_mod</key>
+  <category>[Core]/Deprecated</category>
   <import>from gnuradio import digital</import>
   <make>digital.psk.psk_mod(
   constellation_points=$constellation_points,
