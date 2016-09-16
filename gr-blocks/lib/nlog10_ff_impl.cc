@@ -64,15 +64,16 @@ namespace gr {
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
-      #define novolk  0
       const float *in = (const float *) input_items[0];
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
       volk_32f_log2_32f(out, in, noi);
       volk_32f_s32f_multiply_32f(out, out, d_prefactor, noi);
-      for(int i = 0; i < noi; ++i) {
-        out[i] += d_k;
+      if(d_k != 0.0f) {
+        for(int i = 0; i < noi; ++i) {
+          out[i] += d_k;
+        }
       }
       return noutput_items;
     }
