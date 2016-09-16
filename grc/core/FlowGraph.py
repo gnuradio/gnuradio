@@ -16,16 +16,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import imp
-import time
 from itertools import ifilter, chain
 from operator import methodcaller, attrgetter
-
 import re
+import sys
+import time
 
 from . import Messages
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .Element import Element
-from .utils import odict, expr_utils
+from .utils import odict, expr_utils, shlex
 
 _parameter_matcher = re.compile('^(parameter)$')
 _monitors_searcher = re.compile('(ctrlport_monitor)')
@@ -185,6 +185,16 @@ class FlowGraph(Element):
             the value held by that param
         """
         return self._options_block.get_param(key).get_evaluated()
+
+    def get_run_command(self, file_path, split=False):
+        run_command = self.get_option('run_command')
+        try:
+            run_command = run_command.format(
+                python=shlex.quote(sys.executable),
+                filename=shlex.quote(file_path))
+            return shlex.split(run_command) if split else run_command
+        except Exception as e:
+            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
 
     ##############################################
     # Access Elements
