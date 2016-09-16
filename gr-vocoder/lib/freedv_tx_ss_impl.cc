@@ -57,17 +57,17 @@ namespace gr {
     freedv_tx_ss::make(int mode, const std::string msg_txt)
     {
       return gnuradio::get_initial_sptr
-	(new freedv_tx_ss_impl(mode, msg_txt));
+        (new freedv_tx_ss_impl(mode, msg_txt));
     }
 
     freedv_tx_ss_impl::freedv_tx_ss_impl(int mode, const std::string msg_txt)
       : sync_block("vocoder_freedv_tx_ss",
-		   io_signature::make(1, 1, sizeof(short)),
-		   io_signature::make(1, 1, sizeof(short))),
-	d_mode(mode), d_msg_text(msg_txt)
+                   io_signature::make(1, 1, sizeof(short)),
+                   io_signature::make(1, 1, sizeof(short))),
+        d_mode(mode), d_msg_text(msg_txt)
     {
       if((d_freedv = freedv_open(mode)) == NULL)
-	throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
+        throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
       snprintf(d_cb_state.tx_str,79,"%s",d_msg_text.c_str());
       d_cb_state.ptx_str = d_cb_state.tx_str;
       freedv_set_callback_txt(d_freedv, NULL, get_next_tx_char, (void *) &d_cb_state);
@@ -82,15 +82,15 @@ namespace gr {
 
     int
     freedv_tx_ss_impl::work(int noutput_items,
-			    gr_vector_const_void_star &input_items,
-			    gr_vector_void_star &output_items)
+                            gr_vector_const_void_star &input_items,
+                            gr_vector_void_star &output_items)
     {
       short *in = (short*)input_items[0];
       short *out = (short*)output_items[0];
       int i;
 
       for(i=0;i<(noutput_items/d_nom_modem_samples);i++)
-	freedv_tx(d_freedv, &(out[i*d_nom_modem_samples]), &(in[i*d_nom_modem_samples]));
+        freedv_tx(d_freedv, &(out[i*d_nom_modem_samples]), &(in[i*d_nom_modem_samples]));
       return noutput_items;
     }
 

@@ -50,17 +50,17 @@ namespace gr {
     freedv_rx_ss::make(int mode, float squelch_thresh)
     {
       return gnuradio::get_initial_sptr
-	(new freedv_rx_ss_impl(mode, squelch_thresh));
+        (new freedv_rx_ss_impl(mode, squelch_thresh));
     }
 
     freedv_rx_ss_impl::freedv_rx_ss_impl (int mode, float squelch_thresh)
       : gr::block("vocoder_freedv_rx_ss",
-	      io_signature::make(1, 1, sizeof(short)),
-	      io_signature::make(1, 1, sizeof(short))),
-	d_mode(mode), d_squelch_thresh(squelch_thresh)
+              io_signature::make(1, 1, sizeof(short)),
+              io_signature::make(1, 1, sizeof(short))),
+        d_mode(mode), d_squelch_thresh(squelch_thresh)
     {
       if((d_freedv = freedv_open(mode)) == NULL)
-	throw std::runtime_error("freedv_rx_ss_impl: freedv_open failed");
+        throw std::runtime_error("freedv_rx_ss_impl: freedv_open failed");
       freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
       freedv_set_squelch_en(d_freedv, 0);
       freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, (void *) &d_cb_state);
@@ -85,18 +85,18 @@ namespace gr {
 
     void
     freedv_rx_ss_impl::forecast(int noutput_items,
-				gr_vector_int &ninput_items_required)
+                                gr_vector_int &ninput_items_required)
     {
       unsigned ninputs = ninput_items_required.size();
       for(unsigned i = 0; i < ninputs; i++)
-	ninput_items_required[i] = noutput_items;
+        ninput_items_required[i] = noutput_items;
     }
 
     int
     freedv_rx_ss_impl::general_work(int noutput_items,
-				    gr_vector_int &ninput_items,
-				    gr_vector_const_void_star &input_items,
-				    gr_vector_void_star &output_items)
+                                    gr_vector_int &ninput_items,
+                                    gr_vector_const_void_star &input_items,
+                                    gr_vector_void_star &output_items)
     {
       short *in = (short *) input_items[0];
       short *out = (short *) output_items[0];
@@ -104,20 +104,20 @@ namespace gr {
 
       d_nin = freedv_nin(d_freedv);
       if (ninput_items[0] < d_nin) {
-	consume_each(0);
-	return(0);
+        consume_each(0);
+        return(0);
       }
       for (i=0,n=0; ((n+d_nin) <= noutput_items)&&(i <= ninput_items[0]);) {
-	d_nout = freedv_rx(d_freedv, out, in);
-	i += d_nin;
-	n += d_nout;
-	out = &(out[d_nout]);
-	in = &(in[d_nin]);
-	d_nin = freedv_nin(d_freedv);
+        d_nout = freedv_rx(d_freedv, out, in);
+        i += d_nin;
+        n += d_nout;
+        out = &(out[d_nout]);
+        in = &(in[d_nin]);
+        d_nin = freedv_nin(d_freedv);
       }
       if ((i > ninput_items[0])||((n+d_nin) > noutput_items)) {
-	i -= d_nin;
-	n -= d_nout;
+        i -= d_nin;
+        n -= d_nout;
       } // back up to where we left off processing freedv_rx
 
       freedv_get_modem_stats(d_freedv, &d_sync, &d_snr_est);
