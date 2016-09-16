@@ -420,7 +420,7 @@ class FlowGraph(Element):
                     cwd=self.grc_file_path
                 )
                 if file_path:  # grc file found. load and get block
-                    self.platform.load_and_generate_flow_graph(file_path)
+                    self.platform.load_and_generate_flow_graph(file_path, hier_only=True)
                     block = self.new_block(key)  # can be None
 
             if not block:  # looks like this block key cannot be found
