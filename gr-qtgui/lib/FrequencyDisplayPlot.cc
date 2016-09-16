@@ -607,7 +607,6 @@ FrequencyDisplayPlot::setYLabel(const std::string &label,
   if(unit.length() > 0)
     l += " (" + unit + ")";
   setAxisTitle(QwtPlot::yLeft, QString(l.c_str()));
-  ((FreqDisplayZoomer*)d_zoomer)->setUnitType(unit);
 }
 
 void
