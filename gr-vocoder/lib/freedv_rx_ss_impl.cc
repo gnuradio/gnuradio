@@ -67,7 +67,7 @@ namespace gr {
       d_speech_samples = freedv_get_n_speech_samples(d_freedv);
       d_max_modem_samples = freedv_get_n_max_modem_samples(d_freedv);
       d_nin = freedv_nin(d_freedv);
-      //set_output_multiple(d_max_modem_samples);
+      set_output_multiple(d_max_modem_samples);
     }
 
     freedv_rx_ss_impl::~freedv_rx_ss_impl()
@@ -89,7 +89,7 @@ namespace gr {
     {
       unsigned ninputs = ninput_items_required.size();
       for(unsigned i = 0; i < ninputs; i++)
-        ninput_items_required[i] = noutput_items;
+        ninput_items_required[i] = std::max(d_nin, noutput_items);
     }
 
     int
@@ -100,32 +100,23 @@ namespace gr {
     {
       short *in = (short *) input_items[0];
       short *out = (short *) output_items[0];
-      int i,n;
 
-      d_nin = freedv_nin(d_freedv);
-      if (ninput_items[0] < d_nin) {
-        consume_each(0);
-        return(0);
-      }
-      for (i=0,n=0; ((n+d_nin) <= noutput_items)&&(i <= ninput_items[0]);) {
-        d_nout = freedv_rx(d_freedv, out, in);
-        i += d_nin;
-        n += d_nout;
-        out = &(out[d_nout]);
-        in = &(in[d_nin]);
+      int in_offset = 0, out_offset = 0;
+
+      while ((noutput_items - out_offset) >= d_max_modem_samples
+              && (ninput_items[0] - in_offset) >= d_nin) {
+        d_nout = freedv_rx(d_freedv, out + out_offset, in + in_offset);
+        out_offset += d_nout;
+        in_offset += d_nin;
         d_nin = freedv_nin(d_freedv);
       }
-      if ((i > ninput_items[0])||((n+d_nin) > noutput_items)) {
-        i -= d_nin;
-        n -= d_nout;
-      } // back up to where we left off processing freedv_rx
 
       freedv_get_modem_stats(d_freedv, &d_sync, &d_snr_est);
       freedv_get_modem_extended_stats(d_freedv, &d_stats);
       d_total_bit_errors = freedv_get_total_bit_errors(d_freedv);
 
-      consume_each(i);
-      return(n);
+      consume_each(in_offset);
+      return out_offset;
     }
 
     void put_next_rx_proto(void *callback_state,char *proto_bits) {
