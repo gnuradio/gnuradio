@@ -229,6 +229,12 @@ FreqControlPanel::toggleGrid(bool en)
 }
 
 void
+FreqControlPanel::toggleAxisLabels(bool en)
+{
+  d_axislabels_check->setChecked(en);
+}
+
+void
 FreqControlPanel::toggleMaxHold(bool en)
 {
   d_maxhold_check->setChecked(en);
