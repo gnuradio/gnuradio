@@ -45,6 +45,7 @@ public:
 public slots:
   void notifyAvgSlider(int val);
   void toggleGrid(bool en);
+  void toggleAxisLabels(bool en);
   void toggleMaxHold(bool en);
   void toggleMinHold(bool en);
 
