@@ -230,11 +230,11 @@ def main():
                       help="Specify where to start in the file [default=%(default)r]")
     parser.add_argument("-R", "--sample-rate", type=float, default=1.0,
                       help="Set the sampler rate of the data [default=%(default)r]")
-    parser.add_argument("file", metavar="FILE", nargs=1,
+    parser.add_argument("file", metavar="FILE",
                       help="Input file with complex samples")
     args = parser.parse_args()
 
-    dc = draw_constellation(args.file[0], args)
+    dc = draw_constellation(args.file, args)
 
 if __name__ == "__main__":
     try:
