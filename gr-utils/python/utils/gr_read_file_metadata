@@ -76,8 +76,8 @@ if __name__ == "__main__":
     parser = ArgumentParser(conflict_handler="resolve", description=description)
     parser.add_argument("-D", "--detached", action="store_true",
                       help="Used if header is detached.")
-    parser.add_argument("file", metavar="FILE", nargs=1,
+    parser.add_argument("file", metavar="FILE",
                       help="Input file");
     args = parser.parse_args()
 
-    main(args.file[0], args.detached)
+    main(args.file, args.detached)
