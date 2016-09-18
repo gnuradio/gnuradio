@@ -514,12 +514,7 @@ class ActionHandler:
             file_paths = FileDialogs.OpenQSS(main, self.platform.config.install_prefix +
                                              '/share/gnuradio/themes/').run()
             if file_paths:
-                try:
-                    prefs = self.platform.config.prefs
-                    prefs.set_string("qtgui", "qss", file_paths[0])
-                    prefs.save()
-                except Exception as e:
-                    Messages.send("Failed to save QSS preference: " + str(e))
+                self.platform.config.default_qss_theme = file_paths[0]
         elif action == Actions.FLOW_GRAPH_CLOSE:
             main.close_page()
         elif action == Actions.FLOW_GRAPH_SAVE:

@@ -40,21 +40,21 @@ class Config(_Config):
 
     @property
     def editor(self):
-        return self.prefs.get_string('grc', 'editor', '')
+        return self._gr_prefs.get_string('grc', 'editor', '')
 
     @editor.setter
     def editor(self, value):
-        self.prefs.get_string('grc', 'editor', value)
-        self.prefs.save()
+        self._gr_prefs.get_string('grc', 'editor', value)
+        self._gr_prefs.save()
 
     @property
     def xterm_executable(self):
-        return self.prefs.get_string('grc', 'xterm_executable', 'xterm')
+        return self._gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
     @property
     def default_canvas_size(self):
         try:  # ugly, but matches current code style
-            raw = self.prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
+            raw = self._gr_prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
             value = tuple(int(x.strip('() ')) for x in raw.split(','))
             if len(value) != 2 or not all(300 < x < 4096 for x in value):
                 raise Exception()
@@ -66,8 +66,8 @@ class Config(_Config):
     @property
     def font_size(self):
         try:  # ugly, but matches current code style
-            font_size = self.prefs.get_long('grc', 'canvas_font_size',
-                                            Constants.DEFAULT_FONT_SIZE)
+            font_size = self._gr_prefs.get_long('grc', 'canvas_font_size',
+                                                Constants.DEFAULT_FONT_SIZE)
             if font_size <= 0:
                 raise Exception()
         except:
@@ -75,3 +75,12 @@ class Config(_Config):
             print("Error: invalid 'canvas_font_size' setting.", file=sys.stderr)
 
         return font_size
+
+    @property
+    def default_qss_theme(self):
+        return self._gr_prefs.get_string('qtgui', 'qss', '')
+
+    @default_qss_theme.setter
+    def default_qss_theme(self, value):
+        self._gr_prefs.set_string("qtgui", "qss", value)
+        self._gr_prefs.save()

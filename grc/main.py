@@ -50,9 +50,9 @@ def main():
         pass
 
     platform = Platform(
-        prefs_file=gr.prefs(),
         version=gr.version(),
         version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
+        prefs=gr.prefs(),
         install_prefix=gr.prefix()
     )
     ActionHandler(args.flow_graphs, platform)

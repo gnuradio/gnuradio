@@ -72,7 +72,7 @@ class Platform(Element):
         self.build_block_library()
 
     def __str__(self):
-        return 'Platform - {}({})'.format(self.config.key, self.config.name)
+        return 'Platform - {}'.format(self.config.name)
 
     @staticmethod
     def find_file_in_paths(filename, paths, cwd):
