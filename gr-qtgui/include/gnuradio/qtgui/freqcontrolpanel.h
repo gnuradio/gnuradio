@@ -44,6 +44,7 @@ public:
 
 public slots:
   void notifyAvgSlider(int val);
+  void setFFTAverage(float val);
   void toggleGrid(bool en);
   void toggleAxisLabels(bool en);
   void toggleMaxHold(bool en);

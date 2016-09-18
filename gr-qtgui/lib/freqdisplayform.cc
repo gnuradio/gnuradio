@@ -191,6 +191,8 @@ FreqDisplayForm::setupControlPanel()
           d_controlpanel, SLOT(toggleMaxHold(bool)));
   connect(d_minhold_act, SIGNAL(triggered(bool)),
           d_controlpanel, SLOT(toggleMinHold(bool)));
+  connect(d_avgmenu, SIGNAL(whichTrigger(float)),
+          d_controlpanel, SLOT(setFFTAverage(float)));
   connect(d_tr_mode_menu, SIGNAL(whichTrigger(gr::qtgui::trigger_mode)),
 	  d_controlpanel, SLOT(toggleTriggerMode(gr::qtgui::trigger_mode)));
   connect(this, SIGNAL(signalTriggerMode(gr::qtgui::trigger_mode)),
@@ -206,6 +208,7 @@ FreqDisplayForm::setupControlPanel()
   d_controlpanel->toggleTriggerMode(getTriggerMode());
   d_controlpanel->toggleMaxHold(d_maxhold_act->isChecked());
   d_controlpanel->toggleMinHold(d_minhold_act->isChecked());
+  d_controlpanel->setFFTAverage(getFFTAverage());
 
   emit signalFFTSize(getFFTSize());
   emit signalFFTWindow(getFFTWindowType());

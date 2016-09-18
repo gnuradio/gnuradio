@@ -249,9 +249,20 @@ FreqControlPanel::toggleMinHold(bool en)
 void
 FreqControlPanel::notifyAvgSlider(int val)
 {
-  float fval = static_cast<float>(val) / (d_slider_max - d_slider_min);
+  float fval = static_cast<float>(val) / (d_slider_max - d_slider_min + 1);
   emit signalAvgSlider(fval);
   emit signalAvg(true);
+}
+
+void
+FreqControlPanel::setFFTAverage(float val)
+{
+  int slider_val = static_cast<int>(roundf(val * (d_slider_max - d_slider_min + 1)));
+  if (slider_val > d_slider_max)
+    slider_val = d_slider_max;
+  else if (slider_val < d_slider_min)
+    slider_val = d_slider_min;
+  d_avg_slider->setValue(slider_val);
 }
 
 void
