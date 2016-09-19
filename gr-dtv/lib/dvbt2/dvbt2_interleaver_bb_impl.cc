@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2016 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -271,13 +271,10 @@ namespace gr {
               pack = 0;
               for (int e = 0; e < (mod * 2); e++) {
                 offset = mux[e];
-                pack |= tempu[index + offset];
-                pack <<= 1;
+                pack |= tempu[index++] << (((mod * 2) - 1) - offset);
               }
-              pack >>= 1;
               out[produced++] = pack >> 4;
               out[produced++] = pack & 0xf;
-              index += (mod * 2);
               consumed += (mod * 2);
             }
           }
@@ -356,13 +353,10 @@ namespace gr {
               pack = 0;
               for (int e = 0; e < (mod * 2); e++) {
                 offset = mux[e];
-                pack |= tempu[index + offset];
-                pack <<= 1;
+                pack |= tempu[index++] << (((mod * 2) - 1) - offset);
               }
-              pack >>= 1;
               out[produced++] = pack >> 6;
               out[produced++] = pack & 0x3f;
-              index += (mod * 2);
               consumed += (mod * 2);
             }
           }
@@ -442,13 +436,10 @@ namespace gr {
                 pack = 0;
                 for (int e = 0; e < (mod * 2); e++) {
                   offset = mux[e];
-                  pack |= tempu[index + offset];
-                  pack <<= 1;
+                  pack |= tempu[index++] << (((mod * 2) - 1) - offset);
                 }
-                pack >>= 1;
                 out[produced++] = pack >> 8;
                 out[produced++] = pack & 0xff;
-                index += (mod * 2);
                 consumed += (mod * 2);
               }
             }
@@ -510,12 +501,9 @@ namespace gr {
                 pack = 0;
                 for (int e = 0; e < mod; e++) {
                   offset = mux[e];
-                  pack |= tempu[index + offset];
-                  pack <<= 1;
+                  pack |= tempu[index++] << ((mod - 1) - offset);
                 }
-                pack >>= 1;
                 out[produced++] = pack & 0xff;
-                index += mod;
                 consumed += mod;
               }
             }
@@ -563,72 +551,72 @@ namespace gr {
 
     const int dvbt2_interleaver_bb_impl::mux16[8] =
     {
-      7, 1, 3, 5, 2, 4, 6, 0
+      7, 1, 4, 2, 5, 3, 6, 0
     };
 
     const int dvbt2_interleaver_bb_impl::mux64[12] =
     {
-      11, 8, 5, 2, 10, 7, 4, 1, 9, 6, 3, 0
+      11, 7, 3, 10, 6, 2, 9, 5, 1, 8, 4, 0
     };
 
     const int dvbt2_interleaver_bb_impl::mux256[16] =
     {
-      15, 1, 13, 3, 10, 7, 9, 11, 4, 6, 8, 5, 12, 2, 14, 0
+      15, 1, 13, 3, 8, 11, 9, 5, 10, 6, 4, 7, 12, 2, 14, 0
     };
 
     const int dvbt2_interleaver_bb_impl::mux16_35[8] =
     {
-      0, 2, 3, 6, 4, 1, 7, 5
+      0, 5, 1, 2, 4, 7, 3, 6
     };
 
     const int dvbt2_interleaver_bb_impl::mux16_13[8] =
     {
-      1, 6, 5, 2, 3, 4, 0, 7
+      6, 0, 3, 4, 5, 2, 1, 7
     };
 
     const int dvbt2_interleaver_bb_impl::mux16_25[8] =
     {
-      3, 5, 6, 4, 2, 1, 7, 0
+      7, 5, 4, 0, 3, 1, 2, 6
     };
 
     const int dvbt2_interleaver_bb_impl::mux64_35[12] =
     {
-      4, 6, 0, 5, 8, 10, 2, 1, 7, 3, 11, 9
+      2, 7, 6, 9, 0, 3, 1, 8, 4, 11, 5, 10
     };
 
     const int dvbt2_interleaver_bb_impl::mux64_13[12] =
     {
-      2, 5, 1, 6, 0, 3, 4, 7, 8, 9, 10, 11
+      4, 2, 0, 5, 6, 1, 3, 7, 8, 9, 10, 11
     };
 
     const int dvbt2_interleaver_bb_impl::mux64_25[12] =
     {
-      1, 2, 4, 5, 0, 6, 3, 8, 7, 10, 9, 11
+      4, 0, 1, 6, 2, 3, 5, 8, 7, 10, 9, 11
     };
 
     const int dvbt2_interleaver_bb_impl::mux256_35[16] =
     {
-      4, 6, 0, 2, 3, 14, 12, 10, 7, 5, 8, 1, 15, 9, 11, 13
+      2, 11, 3, 4, 0, 9, 1, 8, 10, 13, 7, 14, 6, 15, 5, 12
     };
 
     const int dvbt2_interleaver_bb_impl::mux256_23[16] =
     {
-      3, 15, 1, 7, 4, 11, 5, 0, 12, 2, 9, 14, 13, 6, 8, 10
+      7, 2, 9, 0, 4, 6, 13, 3, 14, 10, 15, 5, 8, 12, 11, 1
     };
 
     const int dvbt2_interleaver_bb_impl::mux256s[8] =
     {
-      7, 2, 4, 1, 6, 3, 5, 0
+      7, 3, 1, 5, 2, 6, 4, 0
     };
 
     const int dvbt2_interleaver_bb_impl::mux256s_13[8] =
     {
-      1, 2, 3, 5, 0, 4, 6, 7
+      4, 0, 1, 2, 5, 3, 6, 7
     };
 
     const int dvbt2_interleaver_bb_impl::mux256s_25[8] =
     {
-      1, 3, 4, 5, 0, 2, 6, 7
+      4, 0, 5, 1, 2, 3, 6, 7
     };
 
   } /* namespace dtv */

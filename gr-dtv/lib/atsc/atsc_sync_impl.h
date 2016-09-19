@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -44,16 +44,16 @@ namespace gr {
       double             d_mu;	// fractional delay [0,1]
       int                d_incr;
 
-      float		 sample_mem[ATSC_DATA_SEGMENT_LENGTH];
-      float		 data_mem[ATSC_DATA_SEGMENT_LENGTH];
+      float              d_sample_mem[ATSC_DATA_SEGMENT_LENGTH];
+      float              d_data_mem[ATSC_DATA_SEGMENT_LENGTH];
 
       double             d_timing_adjust;
       int                d_counter;	// free running mod 832 counter
       int                d_symbol_index;
       bool               d_seg_locked;
-      int                d_sr;	// 4 bit shift register
+      unsigned char      d_sr;	// 4 bit shift register
       signed char        d_integrator[ATSC_DATA_SEGMENT_LENGTH];
-      int		 output_produced;
+      int                d_output_produced;
 
     public:
       atsc_sync_impl(float rate);
