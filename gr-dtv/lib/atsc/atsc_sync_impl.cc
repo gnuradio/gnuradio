@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -35,8 +35,8 @@ namespace gr {
     static const double ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
     static const int	SYMBOL_INDEX_OFFSET = 3;
     static const int	MIN_SEG_LOCK_CORRELATION_VALUE = 5;
-    static const int	SSI_MIN = -16;
-    static const int	SSI_MAX =  15;
+    static const char   SSI_MIN = -16;
+    static const char   SSI_MAX =  15;
 
     atsc_sync::sptr
     atsc_sync::make(float rate)
@@ -62,9 +62,6 @@ namespace gr {
       d_w = d_rx_clock_to_symbol_freq;
       d_mu = 0.5;
 
-      for (int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++)
-        sample_mem[i] = 0;
-
       d_timing_adjust = 0;
       d_counter = 0;
       d_symbol_index = 0;
@@ -72,8 +69,9 @@ namespace gr {
 
       d_sr = 0;
 
-      for (int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++)
-        d_integrator[i] = SSI_MIN;
+      memset(d_sample_mem, 0,       ATSC_DATA_SEGMENT_LENGTH * sizeof(*d_sample_mem));  // (float)0 = 0x00000000
+      memset(d_data_mem,   0,       ATSC_DATA_SEGMENT_LENGTH * sizeof(*d_data_mem));    // (float)0 = 0x00000000
+      memset(d_integrator, SSI_MIN, ATSC_DATA_SEGMENT_LENGTH * sizeof(*d_integrator));  // signed char
     }
 
     atsc_sync_impl::~atsc_sync_impl()
@@ -103,7 +101,7 @@ namespace gr {
 	// amount actually consumed
 	d_si = 0;
 
-	for (output_produced = 0; output_produced < noutput_items && (d_si + (int)d_interp.ntaps()) < ninput_items[0];) {
+	for (d_output_produced = 0; d_output_produced < noutput_items && (d_si + (int)d_interp.ntaps()) < ninput_items[0];) {
           // First we interpolate a sample from input to work with
           interp_sample = d_interp.interpolate(&in[d_si], d_mu);
 
@@ -119,7 +117,7 @@ namespace gr {
           d_si += d_incr;
 
           // Remember the sample at this count position
-          sample_mem[d_counter] = interp_sample;
+          d_sample_mem[d_counter] = interp_sample;
 
           // Is the sample positive or negative?
           int bit = (interp_sample < 0 ? 0 : 1);
@@ -154,22 +152,22 @@ namespace gr {
             d_seg_locked = best_correlation_value >= MIN_SEG_LOCK_CORRELATION_VALUE;
 
             // the coefficients are -1,-1,+1,+1
-            //d_timing_adjust = sample_mem[best_correlation_index - 3] +
-            //                   sample_mem[best_correlation_index - 2] -
-            //                   sample_mem[best_correlation_index - 1] -
-            //                   sample_mem[best_correlation_index];
+            //d_timing_adjust = d_sample_mem[best_correlation_index - 3] +
+            //                   d_sample_mem[best_correlation_index - 2] -
+            //                   d_sample_mem[best_correlation_index - 1] -
+            //                   d_sample_mem[best_correlation_index];
 
             //printf( "d_timing_adjust = %f\n", d_timing_adjust );
 
             int corr_count = best_correlation_index;
 
-            d_timing_adjust = -sample_mem[corr_count--];
+            d_timing_adjust = -d_sample_mem[corr_count--];
             if( corr_count < 0 ) corr_count = ATSC_DATA_SEGMENT_LENGTH - 1;
-            d_timing_adjust -= sample_mem[corr_count--];
+            d_timing_adjust -= d_sample_mem[corr_count--];
             if( corr_count < 0 ) corr_count = ATSC_DATA_SEGMENT_LENGTH - 1;
-            d_timing_adjust += sample_mem[corr_count--];
+            d_timing_adjust += d_sample_mem[corr_count--];
             if( corr_count < 0 ) corr_count = ATSC_DATA_SEGMENT_LENGTH - 1;
-            d_timing_adjust += sample_mem[corr_count--];
+            d_timing_adjust += d_sample_mem[corr_count--];
 
             d_symbol_index = SYMBOL_INDEX_OFFSET - 1 - best_correlation_index;
             if (d_symbol_index < 0)
@@ -183,19 +181,19 @@ namespace gr {
           // half full, this is OK becouse the fs_checker will not let packets though
           // untill a non-corrupted field packet is found
           if( d_seg_locked ) {
-            data_mem[d_symbol_index] = interp_sample;
+            d_data_mem[d_symbol_index] = interp_sample;
 
             if( d_symbol_index >= (ATSC_DATA_SEGMENT_LENGTH - 1) )
               {
                 for( int i = 0; i < ATSC_DATA_SEGMENT_LENGTH; i++ )
-                  soft_data_segment_out[output_produced].data[i] = data_mem[i];
-                output_produced++;
+                  soft_data_segment_out[d_output_produced].data[i] = d_data_mem[i];
+                d_output_produced++;
               }
           }
 	}
 
 	consume_each(d_si);
-	return output_produced;
+	return d_output_produced;
 
     }
 
