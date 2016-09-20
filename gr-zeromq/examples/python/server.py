@@ -27,8 +27,8 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import analog
 from gnuradio import eng_notation
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import numpy
 import sys
 from threading import Thread
@@ -101,18 +101,18 @@ class top_block(gr.top_block):
 ###############################################################################
 # Options Parser
 ###############################################################################
-def parse_options():
-    """ Options parser. """
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    (options, args) = parser.parse_args()
-    return options
+def parse_args():
+    """Argument parser."""
+    parser = ArgumentParser()
+    args = parser.parse_args()
+    return args
 
 ###############################################################################
 # Main
 ###############################################################################
 if __name__ == "__main__":
-    options = parse_options()
-    tb = top_block(options)
+    args = parse_args()
+    tb = top_block(args)
     try:
         # keep the program running when flowgraph is stopped
         while True:
