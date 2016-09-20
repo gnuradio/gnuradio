@@ -7,11 +7,9 @@
 
 if (${DESIRED_QT_VERSION} MATCHES 5)
   set(QWT_QT_VERSION qt5)
-  message(STATUS "Looking for Qt5Qwt6")
-  pkg_check_modules(QWT Qt5Qwt6)
-  message(STATUS "found ${QWT_FOUND}")
 else()
   set(QWT_QT_VERSION qt4)
+endif()
 
 find_path(QWT_INCLUDE_DIRS
   NAMES qwt_global.h
@@ -44,15 +42,9 @@ find_library (QWT_LIBRARIES
   /usr/local/lib/qwt.framework
 )
 
-endif()
 set(QWT_FOUND FALSE)
 if(QWT_INCLUDE_DIRS)
-  find_path(QWT_GLOBAL_DIR
-    NAMES qwt_global.h
-    HINTS
-    ${QWT_INCLUDE_DIRS}
-    )
-  file(STRINGS "${QWT_GLOBAL_DIR}/qwt_global.h"
+  file(STRINGS "${QWT_INCLUDE_DIRS}/qwt_global.h"
     QWT_STRING_VERSION REGEX "QWT_VERSION_STR")
   set(QWT_WRONG_VERSION True)
   set(QWT_VERSION "No Version")
