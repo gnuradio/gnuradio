@@ -22,6 +22,7 @@ from __future__ import absolute_import, print_function
 
 import os
 import subprocess
+import logging
 
 from gi.repository import Gtk, GObject
 
@@ -31,6 +32,9 @@ from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
 
 from ..core import ParseXML, Messages
+
+
+log = logging.getLogger(__name__)
 
 
 class Application(Gtk.Application):
@@ -57,15 +61,19 @@ class Application(Gtk.Application):
         self.platform = platform
         self.config = platform.config
 
+        log.debug("__init__()")
+
         #initialize
         self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
         self.init = False
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
+        log.debug("do_startup()")
 
     def do_activate(self):
         Gtk.Application.do_activate(self)
+        log.debug("do_activate()")
 
         self.main_window = MainWindow(self, self.platform, self._handle_action)
         self.main_window.connect('delete-event', self._quit)

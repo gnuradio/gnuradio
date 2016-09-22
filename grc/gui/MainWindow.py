@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 import os
+import logging
 
 from gi.repository import Gtk, Gdk, GObject
 
@@ -33,6 +34,9 @@ from .Dialogs import TextDisplay, MessageDialogWrapper
 from .Notebook import Notebook, Page
 
 from ..core import Messages
+
+log = logging.getLogger(__name__)
+
 
 ############################################################
 # Main window
@@ -51,6 +55,7 @@ class MainWindow(Gtk.ApplicationWindow):
         Setup the menu, toolbar, flow graph editor notebook, block selection window...
         """
         Gtk.ApplicationWindow.__init__(self, title="GNU Radio Companion", application=app)
+        log.debug("__init__()")
 
         self._platform = platform
         self.config = platform.config
