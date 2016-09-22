@@ -26,8 +26,9 @@ from distutils.spawn import find_executable
 from itertools import count
 
 import six
-from gi.repository import GLib
 from six.moves import filter
+
+from gi.repository import GLib
 
 from .drawable import Drawable
 

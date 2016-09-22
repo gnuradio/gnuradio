@@ -21,12 +21,7 @@ from __future__ import absolute_import
 
 import os
 
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GObject
-
+from gi.repository import Gtk, Gdk, GObject
 
 from . import Bars, Actions, Preferences, Utils
 from .BlockTreeWindow import BlockTreeWindow

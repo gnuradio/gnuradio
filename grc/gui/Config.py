@@ -22,11 +22,11 @@ from __future__ import absolute_import, print_function
 import sys
 import os
 
-from ..core.Config import Config as _Config
+from ..core.Config import Config as CoreConfig
 from . import Constants
 
 
-class Config(_Config):
+class Config(CoreConfig):
 
     name = 'GNU Radio Companion'
 
@@ -34,7 +34,7 @@ class Config(_Config):
         'GRC_PREFS_PATH', os.path.expanduser('~/.gnuradio/grc.conf'))
 
     def __init__(self, install_prefix, *args, **kwargs):
-        _Config.__init__(self, *args, **kwargs)
+        CoreConfig.__init__(self, *args, **kwargs)
         self.install_prefix = install_prefix
         Constants.update_font_size(self.font_size)
 
