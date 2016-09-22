@@ -365,12 +365,12 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
         # align the blocks as requested
         transform = {
-                Actions.BLOCK_VALIGN_TOP: lambda x, y, w, h: (x, min_y),
-                Actions.BLOCK_VALIGN_MIDDLE: lambda x, y, w, h: (x, ctr_y - h/2),
-                Actions.BLOCK_VALIGN_BOTTOM: lambda x, y, w, h: (x, max_y - h),
-                Actions.BLOCK_HALIGN_LEFT: lambda x, y, w, h: (min_x, y),
-                Actions.BLOCK_HALIGN_CENTER: lambda x, y, w, h: (ctr_x-w/2, y),
-                Actions.BLOCK_HALIGN_RIGHT: lambda x, y, w, h: (max_x - w, y),
+            Actions.BLOCK_VALIGN_TOP: lambda x, y, w, h: (x, min_y),
+            Actions.BLOCK_VALIGN_MIDDLE: lambda x, y, w, h: (x, ctr_y - h/2),
+            Actions.BLOCK_VALIGN_BOTTOM: lambda x, y, w, h: (x, max_y - h),
+            Actions.BLOCK_HALIGN_LEFT: lambda x, y, w, h: (min_x, y),
+            Actions.BLOCK_HALIGN_CENTER: lambda x, y, w, h: (ctr_x-w/2, y),
+            Actions.BLOCK_HALIGN_RIGHT: lambda x, y, w, h: (max_x - w, y),
         }.get(calling_action, lambda *args: args)
 
         for selected_block in blocks:
@@ -523,7 +523,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
             new_selections = self.what_is_selected(self.coordinate)
             # update the selections if the new selection is not in the current selections
             # allows us to move entire selected groups of elements
-            if self.drawing_area.ctrl_mask or new_selections not in self.selected_elements:
+            if not new_selections:
+                selected_elements = set()
+            elif self.drawing_area.ctrl_mask or self.selected_elements.isdisjoint(new_selections):
                 selected_elements = new_selections
 
             if self._old_selected_port:
@@ -666,7 +668,6 @@ class FlowGraph(CoreFlowgraph, Drawable):
         self.press_coor = coordinate
         self.coordinate = coordinate
         self.mouse_pressed = True
-
         if double_click:
             self.unselect()
         self.update_selected_elements()
@@ -729,6 +730,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         # remove the connection if selected in drag event
         if len(self.selected_elements) == 1 and self.get_selected_element().is_connection:
             Actions.ELEMENT_DELETE()
+            self.drawing_area.queue_draw()
 
         # move the selected elements and record the new coordinate
         x, y = coordinate
@@ -739,8 +741,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             if not active or abs(dX) >= Constants.CANVAS_GRID_SIZE or abs(dY) >= Constants.CANVAS_GRID_SIZE:
                 self.move_selected((dX, dY))
                 self.coordinate = (x, y)
-        # queue draw for animation
-        self.drawing_area.queue_draw()
+                self.drawing_area.queue_draw()
 
     def get_max_coords(self, initial=(0, 0)):
         return tuple(max(i, e) for i, e in zip(initial, self.extend[2:]))
