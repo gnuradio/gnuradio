@@ -25,7 +25,7 @@ import subprocess
 
 from gi.repository import Gtk, GObject
 
-from . import Dialogs, Preferences, Actions, Executor, FileDialogs, Utils
+from . import Dialogs, Actions, Executor, FileDialogs, Utils
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
@@ -55,6 +55,7 @@ class ActionHandler(Gtk.Application):
         for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
         #setup the main window
         self.platform = platform
+        self.config = platform.config
 
         #initialize
         self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
@@ -121,8 +122,8 @@ class ActionHandler(Gtk.Application):
         # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
-            file_path_to_show = Preferences.file_open()
-            for file_path in (self.init_file_paths or Preferences.get_open_files()):
+            file_path_to_show = self.config.file_open()
+            for file_path in (self.init_file_paths or self.config.get_open_files()):
                 if os.path.exists(file_path):
                     main.new_page(file_path, show=file_path_to_show == file_path)
             if not main.current_page:
@@ -517,7 +518,7 @@ class ActionHandler(Gtk.Application):
             if file_paths: # Open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i==0))
-                    Preferences.add_recent_file(file_path)
+                    self.config.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
                     main.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
@@ -545,7 +546,7 @@ class ActionHandler(Gtk.Application):
             if file_path is not None:
                 page.file_path = os.path.abspath(file_path)
                 Actions.FLOW_GRAPH_SAVE()
-                Preferences.add_recent_file(file_path)
+                self.config.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
                 main.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
@@ -576,10 +577,10 @@ class ActionHandler(Gtk.Application):
                 Actions.FLOW_GRAPH_GEN()
                 xterm = self.platform.config.xterm_executable
                 Dialogs.show_missing_xterm(main, xterm)
-                if Preferences.xterm_missing() != xterm:
+                if self.config.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
                         Dialogs.show_missing_xterm(main, xterm)
-                    Preferences.xterm_missing(xterm)
+                    self.config.xterm_missing(xterm)
                 if page.saved and page.file_path:
                     Executor.ExecFlowGraphThread(
                         flow_graph_page=page,

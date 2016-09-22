@@ -26,6 +26,7 @@ from ..core.Constants import *
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd()
+FILE_EXTENSION = '.grc'
 
 # name for new/unsaved flow graphs
 NEW_FLOGRAPH_TITLE = 'untitled'

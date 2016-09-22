@@ -23,7 +23,7 @@ from os import path
 
 from gi.repository import Gtk
 
-from . import Constants, Preferences, Utils, Dialogs
+from . import Constants, Utils, Dialogs
 
 
 class FileDialogHelper(Gtk.FileChooserDialog, object):
@@ -59,7 +59,7 @@ class FileDialogHelper(Gtk.FileChooserDialog, object):
 
         self.parent = parent
         self.current_file_path = current_file_path or path.join(
-            Constants.DEFAULT_FILE_PATH, Constants.NEW_FLOGRAPH_TITLE + Preferences.file_extension())
+            Constants.DEFAULT_FILE_PATH, Constants.NEW_FLOGRAPH_TITLE + Constants.FILE_EXTENSION)
 
         self.set_current_folder(path.dirname(current_file_path))  # current directory
         self.setup_filters()
@@ -130,7 +130,7 @@ class OpenFileDialog(FileDialogHelper):
 class OpenFlowGraph(OpenFileDialog):
     title = 'Open a Flow Graph from a File...'
     filter_label = 'Flow Graph Files'
-    filter_ext = Preferences.file_extension()
+    filter_ext = Constants.FILE_EXTENSION
 
     def __init__(self, parent, current_file_path=''):
         super(OpenFlowGraph, self).__init__(parent, current_file_path)
@@ -146,7 +146,7 @@ class OpenQSS(OpenFileDialog):
 class SaveFlowGraph(SaveFileDialog):
     title = 'Save a Flow Graph to a File...'
     filter_label = 'Flow Graph Files'
-    filter_ext = Preferences.file_extension()
+    filter_ext = Constants.FILE_EXTENSION
 
 
 class SaveConsole(SaveFileDialog):
@@ -163,8 +163,10 @@ class SaveScreenShot(SaveFileDialog):
     def __init__(self, parent, current_file_path=''):
         super(SaveScreenShot, self).__init__(parent, current_file_path)
 
+        self.config = Gtk.Application.get_default().config
+
         self._button = button = Gtk.CheckButton(label='Background transparent')
-        self._button.set_active(Preferences.screen_shot_background_transparent())
+        self._button.set_active(self.config.screen_shot_background_transparent())
         self.set_extra_widget(button)
 
     def setup_filters(self, filters=None):
@@ -193,6 +195,6 @@ class SaveScreenShot(SaveFileDialog):
             self.show_missing_message(filename)
 
         bg_transparent = self._button.get_active()
-        Preferences.screen_shot_background_transparent(bg_transparent)
+        self.config.screen_shot_background_transparent(bg_transparent)
         self.destroy()
         return filename, bg_transparent

@@ -23,8 +23,6 @@ import six
 
 from gi.repository import Gtk, Gdk, GObject
 
-from . import Preferences
-
 NO_MODS_MASK = 0
 
 
@@ -166,12 +164,14 @@ class ToggleAction(Gtk.ToggleAction, _ActionBase):
 
     def load_from_preferences(self):
         if self.preference_name is not None:
-            self.set_active(Preferences.entry(
+            config = Gtk.Application.get_default().config
+            self.set_active(config.entry(
                 self.preference_name, default=bool(self.default)))
 
     def save_to_preferences(self):
         if self.preference_name is not None:
-            Preferences.entry(self.preference_name, value=self.get_active())
+            config = Gtk.Application.get_default().config
+            config.entry(self.preference_name, value=self.get_active())
 
 ########################################################################
 # Actions

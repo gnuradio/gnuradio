@@ -23,7 +23,7 @@ import os
 
 from gi.repository import Gtk, Gdk, GObject
 
-from . import Bars, Actions, Preferences, Utils
+from . import Bars, Actions, Utils
 from .BlockTreeWindow import BlockTreeWindow
 from .VariableEditor import VariableEditor
 from .Constants import \
@@ -52,7 +52,7 @@ class MainWindow(Gtk.ApplicationWindow):
         Gtk.ApplicationWindow.__init__(self, title="GNU Radio Companion", application=app)
 
         self._platform = platform
-        Preferences.load(platform)
+        self.config = platform.config
 
         # Setup window
         vbox = Gtk.VBox()
@@ -97,7 +97,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.right = Gtk.VPaned() #orientation=Gtk.Orientation.VERTICAL)
         self.left_subpanel = Gtk.HPaned() #orientation=Gtk.Orientation.HORIZONTAL)
 
-        self.variable_panel_sidebar = Preferences.variable_editor_sidebar()
+        self.variable_panel_sidebar = self.config.variable_editor_sidebar()
         if self.variable_panel_sidebar:
             self.left.pack1(self.notebook)
             self.left.pack2(self.console_window, False)
@@ -117,13 +117,13 @@ class MainWindow(Gtk.ApplicationWindow):
         self.main.pack2(self.right, False)
 
         # Load preferences and show the main window
-        self.resize(*Preferences.main_window_size())
-        self.main.set_position(Preferences.blocks_window_position())
-        self.left.set_position(Preferences.console_window_position())
+        self.resize(*self.config.main_window_size())
+        self.main.set_position(self.config.blocks_window_position())
+        self.left.set_position(self.config.console_window_position())
         if self.variable_panel_sidebar:
-            self.right.set_position(Preferences.variable_editor_position(sidebar=True))
+            self.right.set_position(self.config.variable_editor_position(sidebar=True))
         else:
-            self.left_subpanel.set_position(Preferences.variable_editor_position())
+            self.left_subpanel.set_position(self.config.variable_editor_position())
 
         self.show_all()
         self.console_window.hide()
@@ -279,16 +279,16 @@ class MainWindow(Gtk.ApplicationWindow):
                 break
         if self.notebook.get_n_pages(): return False
         #save state before closing
-        Preferences.set_open_files(open_files)
-        Preferences.file_open(open_file)
-        Preferences.main_window_size(self.get_size())
-        Preferences.console_window_position(self.left.get_position())
-        Preferences.blocks_window_position(self.main.get_position())
+        self.config.set_open_files(open_files)
+        self.config.file_open(open_file)
+        self.config.main_window_size(self.get_size())
+        self.config.console_window_position(self.left.get_position())
+        self.config.blocks_window_position(self.main.get_position())
         if self.variable_panel_sidebar:
-            Preferences.variable_editor_position(self.right.get_position(), sidebar=True)
+            self.config.variable_editor_position(self.right.get_position(), sidebar=True)
         else:
-            Preferences.variable_editor_position(self.left_subpanel.get_position())
-        Preferences.save()
+            self.config.variable_editor_position(self.left_subpanel.get_position())
+        self.config.save()
         return True
 
     def close_page(self, ensure=True):

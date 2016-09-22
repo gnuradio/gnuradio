@@ -205,9 +205,9 @@ class SubMenuCreator(object):
 
     def _fill_flow_graph_recent_submenu(self, action):
         """menu showing recent flow-graphs"""
-        from . import Preferences
         menu = Gtk.Menu()
-        recent_files = Preferences.get_recent_files()
+        config = Gtk.Application.get_default().config
+        recent_files = config.get_recent_files()
         if len(recent_files) > 0:
             for i, file_name in enumerate(recent_files):
                 item = Gtk.MenuItem(name="%d. %s" % (i+1, file_name), use_underline=False)

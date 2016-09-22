@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 from gi.repository import Gtk, Gdk, GObject
 
-from . import Actions, Preferences, Constants
+from . import Actions, Constants
 
 BLOCK_INDEX = 0
 ID_INDEX = 1
@@ -85,6 +85,8 @@ class VariableEditor(Gtk.VBox):
 
     def __init__(self):
         Gtk.VBox.__init__(self)
+        config = Gtk.Application.get_default().config
+
         self._block = None
         self._mouse_button_pressed = False
         self._imports = []
@@ -150,7 +152,7 @@ class VariableEditor(Gtk.VBox):
 
         # Context menus
         self._context_menu = VariableEditorContextMenu(self)
-        self._confirm_delete = Preferences.variable_editor_confirm_delete()
+        self._confirm_delete = config.variable_editor_confirm_delete()
 
     # Sets cell contents
     def set_icon(self, col, cell, model, iter, data):
