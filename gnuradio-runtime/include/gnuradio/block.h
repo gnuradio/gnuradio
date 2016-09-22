@@ -182,6 +182,11 @@ namespace gr {
      */
     virtual bool stop();
 
+    /*!
+     * \brief Called to cancel a blocking work() function.
+     */
+    virtual void cancel_work();
+
     // ----------------------------------------------------------------
 
     /*!

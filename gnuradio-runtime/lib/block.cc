@@ -132,6 +132,11 @@ namespace gr {
   }
 
   void
+  block::cancel_work()
+  {
+  }
+
+  void
   block::set_output_multiple(int multiple)
   {
     if(multiple < 1)

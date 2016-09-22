@@ -63,23 +63,23 @@ namespace gr {
 
     basic_block_vector_t used_blocks = ffg->calc_used_blocks();
     used_blocks = ffg->topological_sort(used_blocks);
-    block_vector_t blocks = flat_flowgraph::make_block_vector(used_blocks);
+    d_blocks = flat_flowgraph::make_block_vector(used_blocks);
 
     // Ensure that the done flag is clear on all blocks
 
-    for(size_t i = 0; i < blocks.size(); i++) {
-      blocks[i]->detail()->set_done(false);
+    for(size_t i = 0; i < d_blocks.size(); i++) {
+      d_blocks[i]->detail()->set_done(false);
     }
 
     // Fire off a thead for each block
 
-    for(size_t i = 0; i < blocks.size(); i++) {
+    for(size_t i = 0; i < d_blocks.size(); i++) {
       std::stringstream name;
-      name << "thread-per-block[" << i << "]: " << blocks[i];
+      name << "thread-per-block[" << i << "]: " << d_blocks[i];
 
       // If set, use internal value instead of global value
-      if(blocks[i]->is_set_max_noutput_items()) {
-        block_max_noutput_items = blocks[i]->max_noutput_items();
+      if(d_blocks[i]->is_set_max_noutput_items()) {
+        block_max_noutput_items = d_blocks[i]->max_noutput_items();
       }
       else {
         block_max_noutput_items = max_noutput_items;
@@ -87,7 +87,7 @@ namespace gr {
 
       d_threads.create_thread(
 	    gr::thread::thread_body_wrapper<tpb_container>
-            (tpb_container(blocks[i], block_max_noutput_items),
+            (tpb_container(d_blocks[i], block_max_noutput_items),
              name.str()));
     }
   }
@@ -100,6 +100,9 @@ namespace gr {
   void
   scheduler_tpb::stop()
   {
+    for(size_t i = 0; i < d_blocks.size(); i++) {
+      d_blocks[i]->cancel_work();
+    }
     d_threads.interrupt_all();
   }
 
