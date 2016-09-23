@@ -32,10 +32,12 @@ class Config(object):
 
     hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
 
-    def __init__(self, prefs_file, version, version_parts=None):
+    def __init__(self, prefs_file, version, version_parts=None, name=None):
         self.prefs = prefs_file
         self.version = version
         self.version_parts = version_parts or version[1:].split('-', 1)[0].split('.')[:3]
+        if name:
+            self.name = name
 
     @property
     def block_paths(self):
