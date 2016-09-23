@@ -11,7 +11,7 @@
 
  At the discretion of the user of this library,
  this software may be licensed under the terms of the
- GNU Public License v3, a BSD-Style license, or the
+ GNU General Public License v3, a BSD-Style license, or the
  original HIDAPI license as outlined in the LICENSE.txt,
  LICENSE-gpl3.txt, LICENSE-bsd.txt, and LICENSE-orig.txt
  files located at the root of the source distribution.
@@ -87,7 +87,7 @@ extern "C" {
 			needed.  This function should be called at the beginning of
 			execution however, if there is a chance of HIDAPI handles
 			being opened by different threads simultaneously.
-
+			
 			@ingroup API
 
 			@returns
@@ -112,6 +112,8 @@ extern "C" {
 
 			This function returns a linked list of all the HID devices
 			attached to the system which match vendor_id and product_id.
+			If @p vendor_id is set to 0 then any vendor matches.
+			If @p product_id is set to 0 then any product matches.
 			If @p vendor_id and @p product_id are both set to 0, then
 			all HID devices will be returned.
 
@@ -155,7 +157,7 @@ extern "C" {
 				This function returns a pointer to a #hid_device object on
 				success or NULL on failure.
 		*/
-		HID_API_EXPORT hid_device * HID_API_CALL hid_open(unsigned short vendor_id, unsigned short product_id, wchar_t *serial_number);
+		HID_API_EXPORT hid_device * HID_API_CALL hid_open(unsigned short vendor_id, unsigned short product_id, const wchar_t *serial_number);
 
 		/** @brief Open a HID device by its path name.
 
@@ -207,7 +209,7 @@ extern "C" {
 			contain the Report number if the device uses numbered reports.
 
 			@ingroup API
-			@param dev A device handle returned from hid_open().
+			@param device A device handle returned from hid_open().
 			@param data A buffer to put the read data into.
 			@param length The number of bytes to read. For devices with
 				multiple reports, make sure to read an extra byte for
@@ -216,7 +218,8 @@ extern "C" {
 
 			@returns
 				This function returns the actual number of bytes read and
-				-1 on error.
+				-1 on error. If no packet was available to be read within
+				the timeout period, this function returns 0.
 		*/
 		int HID_API_EXPORT HID_API_CALL hid_read_timeout(hid_device *dev, unsigned char *data, size_t length, int milliseconds);
 
@@ -235,7 +238,8 @@ extern "C" {
 
 			@returns
 				This function returns the actual number of bytes read and
-				-1 on error.
+				-1 on error. If no packet was available to be read and
+				the handle is in non-blocking mode, this function returns 0.
 		*/
 		int  HID_API_EXPORT HID_API_CALL hid_read(hid_device *device, unsigned char *data, size_t length);
 
@@ -289,22 +293,26 @@ extern "C" {
 
 		/** @brief Get a feature report from a HID device.
 
-			Make sure to set the first byte of @p data[] to the Report
-			ID of the report to be read.  Make sure to allow space for
-			this extra byte in @p data[].
+			Set the first byte of @p data[] to the Report ID of the
+			report to be read.  Make sure to allow space for this
+			extra byte in @p data[]. Upon return, the first byte will
+			still contain the Report ID, and the report data will
+			start in data[1].
 
 			@ingroup API
 			@param device A device handle returned from hid_open().
 			@param data A buffer to put the read data into, including
 				the Report ID. Set the first byte of @p data[] to the
-				Report ID of the report to be read.
+				Report ID of the report to be read, or set it to zero
+				if your device does not use numbered reports.
 			@param length The number of bytes to read, including an
 				extra byte for the report ID. The buffer can be longer
 				than the actual report.
 
 			@returns
-				This function returns the number of bytes read and
-				-1 on error.
+				This function returns the number of bytes read plus
+				one for the report ID (which is still in the first
+				byte), or -1 on error.
 		*/
 		int HID_API_EXPORT HID_API_CALL hid_get_feature_report(hid_device *device, unsigned char *data, size_t length);
 
