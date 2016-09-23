@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2013 Free Software Foundation, Inc.
+ * Copyright 2010-2016 Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -126,6 +126,7 @@ namespace gr {
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::rx_streamer::sptr _rx_stream;
       size_t _samps_per_packet;
+      double _recv_timeout;
 #endif
       bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
