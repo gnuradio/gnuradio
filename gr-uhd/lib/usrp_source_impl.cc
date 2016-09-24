@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2015 Free Software Foundation, Inc.
+ * Copyright 2010-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -70,6 +70,7 @@ namespace gr {
                  io_signature::make(0, 0, 0),
                  args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
+      _recv_timeout(0.1), // seconds
       _tag_now(false),
       _issue_stream_cmd_on_start(issue_stream_cmd_on_start)
     {
@@ -613,15 +614,13 @@ namespace gr {
       //In order to allow for low-latency:
       //We receive all available packets without timeout.
       //This call can timeout under regular operation...
-      size_t num_samps = _rx_stream->recv
-        (output_items, noutput_items, _metadata, 0.0);
-
-      //If receive resulted in a timeout condition:
-      //We now receive a single packet with a large timeout.
-      if(_metadata.error_code == ::uhd::rx_metadata_t::ERROR_CODE_TIMEOUT) {
-        num_samps = _rx_stream->recv
-          (output_items, noutput_items, _metadata, 0.1, true/*one pkt*/);
-      }
+      size_t num_samps = _rx_stream->recv(
+          output_items,
+          noutput_items,
+          _metadata,
+          _recv_timeout,
+          true /* one packet -> minimize latency */
+      );
 #else
       size_t num_samps = _dev->get_device()->recv
         (output_items, noutput_items, _metadata,
