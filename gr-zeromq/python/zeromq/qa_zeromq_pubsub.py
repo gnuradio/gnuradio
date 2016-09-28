@@ -48,5 +48,12 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
         self.tb.wait()
         self.assertFloatTuplesAlmostEqual(sink.data(), src_data)
 
+    def test_002(self):
+        # Test getting the endpoint returns a port we explicitly set endpoint to
+        endpoint = "tcp://127.0.0.1:5554"
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, 1, endpoint, 0)
+        self.assertEqual(endpoint, zeromq_pub_sink.endpoint())
+
+
 if __name__ == '__main__':
     gr_unittest.run(qa_zeromq_pubsub)

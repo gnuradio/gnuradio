@@ -35,6 +35,8 @@ namespace gr {
     public:
       base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
       virtual ~base_impl();
+      std::string endpoint();
+
 
     protected:
       zmq::context_t  *d_context;
