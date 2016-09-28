@@ -18,7 +18,6 @@
 
 import os
 import sys
-import warnings
 
 
 GR_IMPORT_ERROR_MESSAGE = """\
@@ -36,31 +35,7 @@ Is the library path environment variable set correctly?
 
 def die(error, message):
     msg = "{0}\n\n({1})".format(message, error)
-    try:
-        import gtk
-        d = gtk.MessageDialog(
-            type=gtk.MESSAGE_ERROR,
-            buttons=gtk.BUTTONS_CLOSE,
-            message_format=msg,
-        )
-        d.set_title(type(error).__name__)
-        d.run()
-        exit(1)
-    except ImportError:
-        exit(type(error).__name__ + '\n\n' + msg)
-
-
-def check_gtk():
-    try:
-        warnings.filterwarnings("error")
-        import pygtk
-        pygtk.require('2.0')
-        import gtk
-        gtk.init_check()
-        warnings.filterwarnings("always")
-    except Exception as err:
-        die(err, "Failed to initialize GTK. If you are running over ssh, "
-                 "did you enable X forwarding and start ssh with -X?")
+    exit(type(error).__name__ + '\n\n' + msg)
 
 
 def check_gnuradio_import():
@@ -70,28 +45,20 @@ def check_gnuradio_import():
         die(err, GR_IMPORT_ERROR_MESSAGE)
 
 
-def check_blocks_path():
-    if 'GR_DONT_LOAD_PREFS' in os.environ and not os.environ.get('GRC_BLOCKS_PATH', ''):
-        die(EnvironmentError("No block definitions available"),
-            "Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH.")
-
-
 def run_main():
     script_path = os.path.dirname(os.path.abspath(__file__))
     source_tree_subpath = "/grc/scripts"
 
     if not script_path.endswith(source_tree_subpath):
         # run the installed version
-        from gnuradio.grc.main import main
+        from gnuradio.grc.compiler import main
     else:
         print("Running from source tree")
         sys.path.insert(1, script_path[:-len(source_tree_subpath)])
-        from grc.main import main
+        from grc.compiler import main
     exit(main())
 
 
 if __name__ == '__main__':
     check_gnuradio_import()
-    check_gtk()
-    check_blocks_path()
     run_main()

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,10 +17,22 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-GR_PYTHON_INSTALL(
-    PROGRAMS gnuradio-companion grcc
-    DESTINATION ${GR_RUNTIME_DIR}
-)
+from argparse import Namespace
+from os import path
+import tempfile
 
-add_subdirectory(freedesktop)
+from grc.compiler import main
+
+
+def test_compiler(capsys):
+    args = Namespace(
+        output=tempfile.gettempdir(),
+        user_lib_dir=False,
+        grc_files=[path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')],
+        run=True
+    )
+
+    main(args)
+
+    out, err = capsys.readouterr()
+    assert not err
