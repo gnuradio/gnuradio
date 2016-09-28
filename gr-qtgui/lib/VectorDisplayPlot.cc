@@ -284,12 +284,12 @@ void VectorDisplayPlot::setYAxisLabel(const QString &label)
 
 void VectorDisplayPlot::setXAxisUnit(const QString &unit)
 {
-    ((VectorDisplayZoomer*)d_zoomer)->setXUnits(unit);
+  ((VectorDisplayZoomer*)d_zoomer)->setXUnits(unit);
 }
 
 void VectorDisplayPlot::setYAxisUnit(const QString &unit)
 {
-    ((VectorDisplayZoomer*)d_zoomer)->setYUnits(unit);
+  ((VectorDisplayZoomer*)d_zoomer)->setYUnits(unit);
 }
 
 void
@@ -301,17 +301,17 @@ VectorDisplayPlot::setXAxisValues(
   if((start != d_x_axis_start) || (step != d_x_axis_step))
     reset = true;
 
-    d_x_axis_start = start;
-    d_x_axis_step = step;
+  d_x_axis_start = start;
+  d_x_axis_step = step;
 
-    if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
-      setAxisTitle(QwtPlot::xBottom, d_x_axis_label);
-      if(reset) {
-        _resetXAxisPoints();
-        clearMaxData();
-        clearMinData();
-      }
+  if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (d_zoomer != NULL)) {
+    setAxisTitle(QwtPlot::xBottom, d_x_axis_label);
+    if(reset) {
+      _resetXAxisPoints();
+      clearMaxData();
+      clearMinData();
     }
+  }
 }
 
 void
