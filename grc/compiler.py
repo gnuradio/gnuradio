@@ -31,14 +31,13 @@ from .core.Platform import Platform
 
 def argument_parser():
     parser = argparse.ArgumentParser(description=(
-        "Compiles a GRC file (.grc) into a GNU Radio Python program. "
-        "The program is stored in ~/.grc_gnuradio by default, "
-        "but this location can be changed with the -d option."
+        "Compile a GRC file (.grc) into a GNU Radio Python program and run it."
     ))
-    parser.add_argument("-d", "--directory", dest='out_dir', default='',
-                        help="Specify the directory to output the compiled program "
-                             "(default is the hier_block library)")
-    parser.add_argument("-e", "--execute", action="store_true", default=False,
+    parser.add_argument("-o", "--output", metavar='DIR', default='.',
+                        help="Output directory for compiled program [default=%(default)s]")
+    parser.add_argument("-u", "--user-lib-dir", action='store_true', default=False,
+                        help="Output to default hier_block library (overwrites -o)")
+    parser.add_argument("-r", "--run", action="store_true", default=False,
                         help="Run the program after compiling [default=%(default)s]")
     parser.add_argument(metavar="GRC_FILE", dest='grc_files', nargs='+',
                         help=".grc file to compile")
@@ -54,9 +53,13 @@ def main(args=None):
         version=gr.version(),
         version_parts=(gr.major_version(), gr.api_version(), gr.minor_version())
     )
-    out_dir = args.out_dir or platform.config.hier_block_lib_dir
-    if not os.path.exists(out_dir):
-        exit('Error: Invalid output directory.')
+    out_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
+    if os.path.exists(out_dir):
+        pass  # all is well
+    elif args.save_to_lib:
+        os.mkdir(out_dir)  # create missing hier_block lib directory
+    else:
+        exit('Error: Invalid output directory')
 
     Messages.send_init(platform)
     flow_graph = file_path = None
@@ -67,7 +70,7 @@ def main(args=None):
         flow_graph, file_path = platform.load_and_generate_flow_graph(
             os.path.abspath(grc_file), os.path.abspath(out_dir))
         if not file_path:
-            exit('Compilation error. Aborting.')
-    if file_path and args.execute:
+            exit('Compilation error')
+    if file_path and args.run:
         run_command_args = flow_graph.get_run_command(file_path, split=True)
         subprocess.call(run_command_args)

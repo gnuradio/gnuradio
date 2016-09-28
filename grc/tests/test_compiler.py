@@ -25,8 +25,12 @@ from grc.compiler import main
 
 
 def test_compiler(capsys):
-    file_path = path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')
-    args = Namespace(out_dir=tempfile.gettempdir(), grc_files=[file_path], execute=True)
+    args = Namespace(
+        output=tempfile.gettempdir(),
+        user_lib_dir=False,
+        grc_files=[path.join(path.dirname(__file__), 'resources', 'test_compiler.grc')],
+        run=True
+    )
 
     main(args)
 
