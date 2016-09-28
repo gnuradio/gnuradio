@@ -41,71 +41,17 @@ namespace gr {
     }
 
     sub_msg_source_impl::sub_msg_source_impl(char *address, int timeout)
-      : gr::block("sub_msg_source",
+      : msg_base("sub_msg_source",
                   gr::io_signature::make(0, 0, 0),
                   gr::io_signature::make(0, 0, 0)),
-        d_timeout(timeout)
+        msg_base_source_impl(ZMQ_SUB, address, timeout)
     {
-      int major, minor, patch;
-      zmq::version(&major, &minor, &patch);
+      setup_socket();
+    }
 
-      if (major < 3) {
-        d_timeout = timeout*1000;
-      }
-
-      d_context = new zmq::context_t(1);
-      d_socket = new zmq::socket_t(*d_context, ZMQ_SUB);
-
+    void sub_msg_source_impl::setup_socket()
+    {
       d_socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);
-      d_socket->connect (address);
-
-      message_port_register_out(pmt::mp("out"));
-    }
-
-    sub_msg_source_impl::~sub_msg_source_impl()
-    {
-      d_socket->close();
-      delete d_socket;
-      delete d_context;
-    }
-
-    bool sub_msg_source_impl::start()
-    {
-      d_finished = false;
-      d_thread = new boost::thread(boost::bind(&sub_msg_source_impl::readloop, this));
-      return true;
-    }
-
-    bool sub_msg_source_impl::stop()
-    {
-      d_finished = true;
-      d_thread->join();
-      return true;
-    }
-
-    void sub_msg_source_impl::readloop()
-    {
-      while(!d_finished){
-
-        zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
-        zmq::poll(&items[0], 1, d_timeout);
-
-        //  If we got a reply, process
-        if (items[0].revents & ZMQ_POLLIN) {
-
-          // Receive data
-          zmq::message_t msg;
-          d_socket->recv(&msg);
-
-          std::string buf(static_cast<char*>(msg.data()), msg.size());
-          std::stringbuf sb(buf);
-          pmt::pmt_t m = pmt::deserialize(sb);
-
-          message_port_pub(pmt::mp("out"), m);
-        } else {
-          boost::this_thread::sleep(boost::posix_time::microseconds(100));
-        }
-      }
     }
 
   } /* namespace zeromq */

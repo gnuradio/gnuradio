@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_PUB_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -40,7 +40,7 @@ namespace gr {
      * subscriber.  Subscribers can be either another gr-zeromq source
      * block or a non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API pub_sink : virtual public gr::sync_block
+    class ZEROMQ_API pub_sink : virtual public stream_base
     {
     public:
       typedef boost::shared_ptr<pub_sink> sptr;
@@ -57,6 +57,7 @@ namespace gr {
        */
       static sptr make(size_t itemsize, size_t vlen, char *address,
                        int timeout=100, bool pass_tags=false, int hwm=-1);
+
     };
 
   } // namespace zeromq

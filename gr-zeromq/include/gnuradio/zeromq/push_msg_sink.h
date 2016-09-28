@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_PUSH_MSG_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/zeromq/msg_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -39,7 +39,7 @@ namespace gr {
      * PULL socket can be either another gr-zeromq source block or a
      * non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API push_msg_sink : virtual public gr::block
+    class ZEROMQ_API push_msg_sink : virtual public msg_base
     {
     public:
       typedef boost::shared_ptr<push_msg_sink> sptr;

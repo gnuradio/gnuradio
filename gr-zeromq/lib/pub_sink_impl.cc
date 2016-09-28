@@ -39,7 +39,7 @@ namespace gr {
     }
 
     pub_sink_impl::pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
-      : gr::sync_block("pub_sink",
+      : stream_base("pub_sink",
                        gr::io_signature::make(1, 1, itemsize * vlen),
                        gr::io_signature::make(0, 0, 0)),
         base_sink_impl(ZMQ_PUB, itemsize, vlen, address, timeout, pass_tags, hwm)

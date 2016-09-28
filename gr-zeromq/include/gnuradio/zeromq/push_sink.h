@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_PUSH_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -41,7 +41,7 @@ namespace gr {
      * non-GNU Radio ZMQ socket.
      *
      */
-    class ZEROMQ_API push_sink : virtual public gr::sync_block
+    class ZEROMQ_API push_sink : virtual public stream_base
     {
     public:
       typedef boost::shared_ptr<push_sink> sptr;
