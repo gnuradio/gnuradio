@@ -37,8 +37,10 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
         vlen = 10
         src_data = range(vlen)*100
         src = blocks.vector_source_f(src_data, False, vlen)
-        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5556", 0)
-        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5556", 0)
+        endpoint = "tcp://127.0.0.1:"
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, endpoint + "*", 0)
+        port = zeromq_pub_sink.endpoint().split(":")[-1]
+        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, endpoint + port, 0)
         sink = blocks.vector_sink_f(vlen)
         self.tb.connect(src, zeromq_pub_sink)
         self.tb.connect(zeromq_sub_source, sink)
@@ -53,7 +55,6 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
         endpoint = "tcp://127.0.0.1:5554"
         zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, 1, endpoint, 0)
         self.assertEqual(endpoint, zeromq_pub_sink.endpoint())
-
 
 if __name__ == '__main__':
     gr_unittest.run(qa_zeromq_pubsub)
