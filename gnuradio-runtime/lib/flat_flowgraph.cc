@@ -316,6 +316,15 @@ namespace gr {
         setup_buffer_alignment(block);
       }
 
+      // Connect message ports connetions
+      for(msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
+          if(FLAT_FLOWGRAPH_DEBUG)
+              std::cout << boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
+                  i->src().block() % i->src().port() %
+                  i->dst().block() % i->dst().port();
+          i->src().block()->message_port_sub(i->src().port(), pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
+      }
+
       // Now deal with the fact that the block details might have
       // changed numbers of inputs and outputs vs. in the old
       // flowgraph.
