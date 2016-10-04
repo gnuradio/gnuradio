@@ -39,6 +39,8 @@ namespace gr {
       CPPUNIT_TEST(simple_laddr_aln);
       CPPUNIT_TEST(simple_laddr_num);
       CPPUNIT_TEST(simple_laddr_saddr);
+      CPPUNIT_TEST(split_aln_two);
+      CPPUNIT_TEST(split_aln_three);
       CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -50,6 +52,8 @@ namespace gr {
       void simple_laddr_aln();
       void simple_laddr_num();
       void simple_laddr_saddr();
+      void split_aln_two();
+      void split_aln_three();
     };
 
   } /* namespace pager */

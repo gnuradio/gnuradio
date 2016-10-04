@@ -43,6 +43,7 @@ namespace gr {
       float d_freq;
       std::vector<uint32_t> d_datawords;
       std::ostringstream d_payload;
+      std::map<int, std::ostringstream*> d_split_queue;
 
       void parse_frame(std::vector<uint32_t> &data);
 
@@ -179,7 +180,8 @@ namespace gr {
 	    d_len(len) { };
 	virtual ~flex_page() { };
 
-        virtual bool parse(std::ostringstream &stream) = 0;
+        virtual bool parse(std::ostringstream &stream,
+	    std::map<int, std::ostringstream*> &split_queue);
     };
 
     class flex_page_inactive : public flex_page
@@ -188,7 +190,8 @@ namespace gr {
 	flex_page_inactive() : flex_page(NULL, NULL, 0, 0, 0) { }
 	virtual ~flex_page_inactive() { }
 
-	bool parse(std::ostringstream &stream);
+	bool parse(std::ostringstream &stream,
+	    std::map<int, std::ostringstream*> &split_queue);
     };
 
     class flex_page_aln : public flex_page
@@ -206,7 +209,8 @@ namespace gr {
 	  d_capcode(capcode) { }
 	virtual ~flex_page_aln() { }
 
-	bool parse(std::ostringstream &stream);
+	bool parse(std::ostringstream &stream,
+	    std::map<int, std::ostringstream*> &split_queue);
     };
 
     class flex_page_num : public flex_page
@@ -220,7 +224,8 @@ namespace gr {
 	  flex_page(frame, header, meta, mw1, len), d_type(type & 0x7) { }
 	virtual ~flex_page_num() { }
 
-	bool parse(std::ostringstream &stream);
+	bool parse(std::ostringstream &stream,
+	    std::map<int, std::ostringstream*> &split_queue);
     };
 
     class flex_page_iter

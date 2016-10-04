@@ -89,7 +89,7 @@ namespace gr {
 	d_payload << std::setprecision(6) << std::setw(7)
 	  << d_freq/1e6 << FIELD_DELIM;
 
-	if (i->parse(d_payload))
+	if (i->parse(d_payload, d_split_queue))
 	  d_queue->handle(message::make_from_string(d_payload.str()));
       }
     }
@@ -233,7 +233,7 @@ namespace gr {
     flex_frame::validate(size_t start, size_t len)
     {
       return start > get_vector_offset() &&
-	(start + len) < d_datawords.size();
+	(start + len) <= d_datawords.size();
     }
 
     flex_page_iter
@@ -402,13 +402,15 @@ namespace gr {
     }
 
     bool
-    flex_page::parse(std::ostringstream &stream)
+    flex_page::parse(std::ostringstream &stream,
+	std::map<int, std::ostringstream*> &split_queue)
     {
       return d_header->parse(stream);
     }
 
     bool
-    flex_page_inactive::parse(std::ostringstream &stream)
+    flex_page_inactive::parse(std::ostringstream &stream,
+	std::map<int, std::ostringstream*> &split_queue)
     {
       return false;
     }
@@ -439,27 +441,57 @@ namespace gr {
     }
 
     bool
-    flex_page_aln::parse(std::ostringstream &stream)
+    flex_page_aln::parse(std::ostringstream &stream,
+	std::map<int, std::ostringstream*> &split_queue)
     {
+      bool split = false;
       int mw2 = d_mw1 + d_len;
+      std::ostringstream msg;
 
       if (d_mw1 > 87 || mw2 > 87)
 	return false;
 
-      if (!flex_page::parse(stream))
+      if (mw2 == 87)
+	split = true;
+
+      if (!flex_page::parse(stream, split_queue))
 	return false;
 
-      return parse_page(stream);
+      parse_page(msg);
+
+      if (split) {
+	if (split_queue.count(d_capcode) == 0) {
+	  std::ostringstream *ss = new std::ostringstream();
+	  if (ss) {
+	    *ss << msg.str();
+	    split_queue[d_capcode] = ss;
+	  }
+	} else
+	  *split_queue[d_capcode] << msg.str();
+
+	return false;
+      }
+
+      if (split_queue.count(d_capcode) > 0) {
+	*split_queue[d_capcode] << msg.str();
+	stream << split_queue[d_capcode]->str();
+	delete split_queue[d_capcode];
+	split_queue.erase(d_capcode);
+      } else
+	stream << msg.str();
+
+      return true;
     }
 
     bool
-    flex_page_num::parse(std::ostringstream &stream)
+    flex_page_num::parse(std::ostringstream &stream,
+	std::map<int, std::ostringstream*> &split_queue)
     {
       int dw = d_meta;
       unsigned char digit = 0;
       int count = 4;
 
-      if (!flex_page::parse(stream))
+      if (!flex_page::parse(stream, split_queue))
 	return false;
 
       // Skip 10 header bits for numbered numeric pages, otherwise 2
