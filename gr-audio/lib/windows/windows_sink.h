@@ -49,22 +49,24 @@ namespace gr {
       int         d_fd;
       LPWAVEHDR  *d_buffers;
       DWORD       d_chunk_size;
-	  DWORD	      d_buffer_size;
+      DWORD	      d_buffer_size;
+      bool        d_ok_to_block;
       HWAVEOUT    d_h_waveout;
       HANDLE      d_wave_write_event;
-	  WAVEFORMATEX wave_format;
+      WAVEFORMATEX wave_format;
 
     protected:
       int string_to_int(const std::string & s);
       int open_waveout_device(void);
       int write_waveout(LPWAVEHDR lp_wave_hdr);
-	  MMRESULT is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID);
-	  bool is_number(const std::string& s);
-	  UINT find_device(std::string szDeviceName);
+      MMRESULT is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID);
+      bool is_number(const std::string& s);
+      UINT find_device(std::string szDeviceName);
 
     public:
       windows_sink(int sampling_freq,
-                   const std::string device_name = "");
+                   const std::string device_name,
+                   bool ok_to_block);
       ~windows_sink();
 
       int work(int noutput_items,
