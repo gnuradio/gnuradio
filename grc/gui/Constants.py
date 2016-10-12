@@ -96,6 +96,9 @@ SCROLL_DISTANCE = 15
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
 
+_SCREEN_RESOLUTION = gtk.gdk.screen_get_default().get_resolution()
+DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
+
 
 def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
