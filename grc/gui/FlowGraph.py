@@ -407,7 +407,7 @@ class FlowGraph(Element, _Flowgraph):
         Draw the pixmap to the drawable window of this flow graph.
         """
 
-        W,H = self.get_size()
+        W, H = self.get_size()
         hide_disabled_blocks = Actions.TOGGLE_HIDE_DISABLED_BLOCKS.get_active()
         hide_variables = Actions.TOGGLE_HIDE_VARIABLES.get_active()
 
