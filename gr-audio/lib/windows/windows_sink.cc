@@ -46,10 +46,10 @@ namespace gr {
     sink::sptr
     windows_sink_fcn(int sampling_rate,
         const std::string &device_name,
-        bool)
+        bool ok_to_block)
     {
       return sink::sptr
-        (new windows_sink(sampling_rate, device_name));
+        (new windows_sink(sampling_rate, device_name, ok_to_block));
     }
 
     static const double CHUNK_TIME = prefs::singleton()->get_double("audio_windows", "period_time", 0.1); // 100 ms (below 3ms distortion will likely occur regardless of number of buffers, will likely be a higher limit on slower machines)
@@ -63,13 +63,13 @@ namespace gr {
       return (default_device == "default" ? "WAVE_MAPPER" : default_device);
     }
 
-    windows_sink::windows_sink(int sampling_freq, const std::string device_name)
+    windows_sink::windows_sink(int sampling_freq, const std::string device_name, bool ok_to_block)
       : sync_block("audio_windows_sink",
                       io_signature::make(1, 2, sizeof(float)),
                       io_signature::make(0, 0, 0)),
         d_sampling_freq(sampling_freq),
         d_device_name(device_name.empty() ? default_device_name() : device_name),
-        d_fd(-1), d_buffers(0), d_chunk_size(0)
+        d_fd(-1), d_buffers(0), d_chunk_size(0), d_ok_to_block(ok_to_block)
     {
       /* Initialize the WAVEFORMATEX for 16-bit, 44KHz, stereo */
       wave_format.wFormatTag = WAVE_FORMAT_PCM;
@@ -154,10 +154,20 @@ namespace gr {
           }
         }
         if (!chosen_header) {
-          WaitForSingleObject(d_wave_write_event, 100);
-          printf("aO");
+          if (!d_ok_to_block)
+          {
+            // drop the input data, print warning, and return control.
+            printf("aO");
+            return noutput_items;
+          }
+          else {
+            WaitForSingleObject(d_wave_write_event, 100);
+          }
         }
         if (c++ > 10) {
+          // After waiting for 1 second, then something else is seriously wrong so let's 
+          // just fail and give some debugging information about the status
+          // of the buffers.
           for (int i = 0; i < nPeriods; i++) {
             printf("%d: %d\n", i, d_buffers[i]->dwFlags);
           }
