@@ -23,8 +23,16 @@
 #ifndef INCLUDED_AUDIO_WINDOWS_SOURCE_H
 #define INCLUDED_AUDIO_WINDOWS_SOURCE_H
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX		// stops windef.h defining max/min under cygwin
+
+#include <windows.h>
+#include <mmsystem.h>
+
 #include <gnuradio/audio/source.h>
 #include <string>
+
+#include <boost/lockfree/spsc_queue.hpp>
 
 namespace gr {
   namespace audio {
@@ -38,11 +46,22 @@ namespace gr {
      */
     class windows_source : public source
     {
-      int         d_sampling_freq;
-      std::string d_device_name;
-      int         d_fd;
-      short      *d_buffer;
-      int         d_chunk_size;
+      int          d_sampling_freq;
+      std::string  d_device_name;
+      int          d_fd;
+      LPWAVEHDR   *lp_buffers;
+      DWORD        d_chunk_size;
+      DWORD        d_buffer_size;
+      HWAVEIN      d_h_wavein;
+      WAVEFORMATEX wave_format;
+
+		protected:
+			int string_to_int(const std::string & s);
+			int open_wavein_device(void);
+			MMRESULT is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID);
+			bool is_number(const std::string& s);
+			UINT find_device(std::string szDeviceName);
+			boost::lockfree::spsc_queue<LPWAVEHDR> buffer_queue{ 100 };
 
     public:
       windows_source(int sampling_freq,
@@ -53,6 +72,14 @@ namespace gr {
                gr_vector_const_void_star & input_items,
                gr_vector_void_star & output_items);
     };
+
+		static void CALLBACK read_wavein(
+			HWAVEIN   hwi,
+			UINT      uMsg,
+			DWORD_PTR dwInstance,
+			DWORD_PTR dwParam1,
+			DWORD_PTR dwParam2
+		);
 
   } /* namespace audio */
 } /* namespace gr */
