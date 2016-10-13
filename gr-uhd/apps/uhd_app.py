@@ -121,6 +121,20 @@ class UHDApp(object):
             antennas = [antennas[0],] * len(args.channels)
         return antennas
 
+    def normalize_subdev_sel(self, spec):
+        """
+        """
+        if spec is None:
+            return None
+        specs = [x.strip() for x in spec.split(",")]
+        if len(specs) == 1:
+            return spec
+        elif len(specs) != self.usrp.get_num_mboards():
+            raise ValueError("Invalid subdev setting for {n} mboards: {a}".format(
+                n=len(self.usrp.get_num_mboards()), a=spec
+            ))
+        return specs
+
     def async_callback(self, msg):
         """
         Call this when USRP async metadata needs printing.
@@ -151,9 +165,13 @@ class UHDApp(object):
             )
         )
         # Set the subdevice spec:
+        args.spec = self.normalize_subdev_sel(args.spec)
         if args.spec:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                self.usrp.set_subdev_spec(args.spec, mb_idx)
+                if isinstance(args.spec, list):
+                    self.usrp.set_subdev_spec(args.spec[mb_idx], mb_idx)
+                else:
+                    self.usrp.set_subdev_spec(args.spec, mb_idx)
         # Set the clock and/or time source:
         if args.clock_source is not None:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
@@ -298,8 +316,8 @@ class UHDApp(object):
         tx_or_rx = tx_or_rx.strip() + " "
         group = parser.add_argument_group('USRP Arguments')
         group.add_argument("-a", "--args", default="", help="UHD device address args")
-        group.add_argument("--spec", help="Subdevice of UHD device where appropriate")
-        group.add_argument("-A", "--antenna", help="Select {xx}Antenna(s) where appropriate".format(xx=tx_or_rx))
+        group.add_argument("--spec", help="Subdevice(s) of UHD device where appropriate. Use a comma-separated list to set different boards to different specs.")
+        group.add_argument("-A", "--antenna", help="Select {xx}antenna(s) where appropriate".format(xx=tx_or_rx))
         group.add_argument("-s", "--samp-rate", type=eng_arg.eng_float, default=1e6,
                             help="Sample rate")
         group.add_argument("-g", "--gain", type=eng_arg.eng_float, default=None,
