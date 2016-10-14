@@ -23,6 +23,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     FILES __init__.py
           range.py
+          util.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
     COMPONENT "qtgui_python"
 )
