@@ -97,7 +97,7 @@ def encode(value):
     character.
     """
 
-    valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
+    valid_utf8 = value.decode('utf-8', 'replace').encode('utf-8')
     return gobject.markup_escape_text(valid_utf8)
 
 

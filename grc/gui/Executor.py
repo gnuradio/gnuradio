@@ -65,7 +65,7 @@ class ExecFlowGraphThread(threading.Thread):
                 filename=shlex_quote(generator.file_path))
             run_command_args = shlex.split(run_command)
         except Exception as e:
-            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
+            raise ValueError("Can't parse run command {!r}: {0}".format(run_command, e))
 
         # When in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(self.xterm_executable)

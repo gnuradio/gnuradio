@@ -270,7 +270,7 @@ class VariableEditor(gtk.VBox):
                 # Create a context menu to confirm the delete operation
                 confirmation_menu = gtk.Menu()
                 block_id = self._block.get_param('id').get_value().replace("_", "__")
-                confirm = gtk.MenuItem("Delete {}".format(block_id))
+                confirm = gtk.MenuItem("Delete {0}".format(block_id))
                 confirm.connect('activate', self.handle_action, self.DELETE_BLOCK)
                 confirmation_menu.add(confirm)
                 confirmation_menu.show_all()

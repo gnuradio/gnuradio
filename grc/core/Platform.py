@@ -78,7 +78,7 @@ class Platform(Element):
         self.build_block_library()
 
     def __str__(self):
-        return 'Platform - {}({})'.format(self.config.key, self.config.name)
+        return 'Platform - {0}({1})'.format(self.config.key, self.config.name)
 
     @staticmethod
     def find_file_in_paths(filename, paths, cwd):
@@ -116,18 +116,18 @@ class Platform(Element):
             if not flow_graph.get_option('generate_options').startswith('hb'):
                 raise Exception('Not a hier block')
         except Exception as e:
-            Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
+            Messages.send('>>> Load Error: {0}: {1}\n'.format(file_path, str(e)))
             return False
         finally:
             self._auto_hier_block_generate_chain.discard(file_path)
             Messages.set_indent(len(self._auto_hier_block_generate_chain))
 
         try:
-            Messages.send('>>> Generating: {}\n'.format(file_path))
+            Messages.send('>>> Generating: {0}\n'.format(file_path))
             generator = self.Generator(flow_graph, file_path)
             generator.write()
         except Exception as e:
-            Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
+            Messages.send('>>> Generate Error: {0}: {1}\n'.format(file_path, str(e)))
             return False
 
         self.load_block_xml(generator.get_file_path_xml())
@@ -195,7 +195,7 @@ class Platform(Element):
         block = self.Block(self._flow_graph, n)
         key = block.get_key()
         if key in self.blocks:
-            print >> sys.stderr, 'Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
+            print >> sys.stderr, 'Warning: Block with key "{0}" already exists.\n\tIgnoring: {1}'.format(key, xml_file)
         else:  # Store the block
             self.blocks[key] = block
             self._blocks_n[key] = n
@@ -230,10 +230,10 @@ class Platform(Element):
 
         key = n.find('key')
         if not key:
-            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file)
+            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {0}'.format(xml_file)
             return
         if key in self.domains:  # test against repeated keys
-            print >> sys.stderr, 'Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
+            print >> sys.stderr, 'Warning: Domain with key "{0}" already exists.\n\tIgnoring: {1}'.format(key, xml_file)
             return
 
         #to_bool = lambda s, d: d if s is None else s.lower() not in ('false', 'off', '0', '')
@@ -248,7 +248,7 @@ class Platform(Element):
             gtk.gdk.color_parse(color)
         except (ValueError, ImportError):
             if color:  # no color is okay, default set in GUI
-                print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)
+                print >> sys.stderr, 'Warning: Can\'t parse color code "{0}" for domain "{1}" '.format(color, key)
                 color = None
 
         self.domains[key] = dict(
@@ -260,9 +260,9 @@ class Platform(Element):
         for connection_n in n.findall('connection'):
             key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
             if not all(key):
-                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file)
+                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t{0}'.format(xml_file)
             elif key in self.connection_templates:
-                print >> sys.stderr, 'Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file)
+                print >> sys.stderr, 'Warning: Connection template "{0}" already exists.\n\t{1}'.format(key, xml_file)
             else:
                 self.connection_templates[key] = connection_n.find('make') or ''
 

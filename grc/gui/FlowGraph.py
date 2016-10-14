@@ -77,7 +77,7 @@ class FlowGraph(Element, _Flowgraph):
             a unique id
         """
         for index in count():
-            block_id = '{}_{}'.format(base_id, index)
+            block_id = '{0}_{1}'.format(base_id, index)
             if block_id not in (b.get_id() for b in self.blocks):
                 break
         return block_id

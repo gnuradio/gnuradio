@@ -83,7 +83,7 @@ class ParserErrorsDialog(gtk.Dialog):
                 em = self.tree_store.append(parent, ["Line {e.line}: {e.message}".format(e=error)])
                 if code:
                     self.tree_store.append(em, ["\n".join(
-                        "{} {}{}".format(line, code[line - 1].replace("\t", "    ").strip("\n"),
+                        "{0} {1}{2}".format(line, code[line - 1].replace("\t", "    ").strip("\n"),
                                          " " * 20 + "<!-- ERROR -->" if line == error.line else "")
                         for line in range(error.line - 2, error.line + 3) if 0 < line <= len(code)
                     )])
