@@ -137,11 +137,7 @@ namespace gr {
       }
 
       // If a style sheet is set in the prefs file, enable it here.
-      std::string qssfile = prefs::singleton()->get_string("qtgui","qss","");
-      if(qssfile.size() > 0) {
-        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
-        d_qApplication->setStyleSheet(sstext);
-      }
+      check_set_qss(d_qApplication);
 
       int numplots = (d_nconnections > 0) ? d_nconnections : 2;
       d_main_gui = new TimeDisplayForm(numplots, d_parent);

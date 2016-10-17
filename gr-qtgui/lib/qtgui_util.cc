@@ -21,8 +21,11 @@
  */
 
 #include <gnuradio/qtgui/utils.h>
+#include <gnuradio/prefs.h>
 #include <QDebug>
 #include <QFile>
+#include <QCoreApplication>
+#include <qapplication.h>
 
 QString
 get_qt_style_sheet(QString filename)
@@ -101,3 +104,12 @@ QwtDblClickPlotPicker::stateMachine(int n) const
 {
   return new QwtPickerDblClickPointMachine;
 }
+
+void check_set_qss(QApplication *app){
+      std::string qssfile = gr::prefs::singleton()->get_string("qtgui","qss","");
+      if(qssfile.size() > 0) {
+        QString sstext = get_qt_style_sheet(QString(qssfile.c_str()));
+        app->setStyleSheet(sstext);
+      }
+}
+

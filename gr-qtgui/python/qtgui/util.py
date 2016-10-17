@@ -1,5 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,20 +21,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
-'''
-Provides a GUI interface using the QT backend.
-'''
+from PyQt4 import Qt, QtCore, QtGui
+from gnuradio import gr
 
-# The presence of this file turns this directory into a Python package
-import os
+def check_set_qss():
+    app = QtGui.qApp
+    qssfile = gr.prefs().get_string("qtgui","qss","")
+    if(len(qssfile)>0):
+        try:
+            app.setStyleSheet(open(qssfile).read())
+        except:
+            print "WARNING: bad QSS file, %s"%(qssfile)
 
-
-try:
-    from qtgui_swig import *
-except ImportError:
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from qtgui_swig import *
-
-from range import Range, RangeWidget
-import util

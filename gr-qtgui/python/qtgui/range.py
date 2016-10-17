@@ -22,7 +22,7 @@
 #
 
 from PyQt4 import Qt, QtCore, QtGui
-
+import util
 
 class Range(object):
     def __init__(self, minv, maxv, step, default, min_length):
@@ -33,6 +33,7 @@ class Range(object):
         self.min_length = min_length
         self.find_precision()
         self.find_nsteps()
+        util.check_set_qss()
 
     def find_precision(self):
         # Get the decimal part of the step

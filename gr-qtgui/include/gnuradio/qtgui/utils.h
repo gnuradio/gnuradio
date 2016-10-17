@@ -28,6 +28,7 @@
 #include <qwt_plot_picker.h>
 #include <qwt_picker_machine.h>
 #include <QString>
+#include <QCoreApplication>
 
 /*!
  * From QSS file name, extracts the file contents and returns a
@@ -65,5 +66,7 @@ public:
     transition( const QwtEventPattern &eventPattern,
 				  const QEvent *e);
 };
+
+void check_set_qss(QApplication *app);
 
 #endif /* INCLUDED_QTGUI_UTILS_H */
