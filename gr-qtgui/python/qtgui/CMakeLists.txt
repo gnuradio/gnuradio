@@ -27,10 +27,12 @@ else()
 endif()
 
 configure_file(range.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/range.py" @ONLY)
+configure_file(util.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/util.py" @ONLY)
 
 GR_PYTHON_INSTALL(
     FILES __init__.py
           "${CMAKE_CURRENT_BINARY_DIR}/range.py"
+          "${CMAKE_CURRENT_BINARY_DIR}/util.py"
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
 )
 
