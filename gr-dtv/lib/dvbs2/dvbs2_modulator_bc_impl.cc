@@ -211,9 +211,6 @@ namespace gr {
             m_16apsk[13] = gr_complex(0.4984, -1.2088);
             m_16apsk[14] = gr_complex(-1.2088, -0.4984);
             m_16apsk[15] = gr_complex(-0.4984, -1.2088);
-            for (int i = 0; i < 16; i++) {
-              m_16apsk[i] /= 1.2088;
-            }
           }
           else if (rate == C20_30) {
             m_16apsk[0] = gr_complex(0.5061, 0.2474);
@@ -232,9 +229,6 @@ namespace gr {
             m_16apsk[13] = gr_complex(0.4909, -1.2007);
             m_16apsk[14] = gr_complex(-1.2007, -0.4909);
             m_16apsk[15] = gr_complex(-0.4909, -1.2007);
-            for (int i = 0; i < 16; i++) {
-              m_16apsk[i] /= 1.2007;
-            }
           }
           else {
             r2 = m;
@@ -1102,9 +1096,6 @@ namespace gr {
             m_256apsk[253] = gr_complex(-0.1909, -0.3627);
             m_256apsk[254] = gr_complex(-0.3224, -0.5236);
             m_256apsk[255] = gr_complex(-0.3016, -0.5347);
-            for (int i = 0; i < 256; i++) {
-              m_256apsk[i] /= 1.6747;
-            }
           }
           else if (rate == C22_30) {
             m_256apsk[0] = gr_complex(1.5977, 0.1526);
@@ -1363,9 +1354,6 @@ namespace gr {
             m_256apsk[253] = gr_complex(0.3110, -0.5686);
             m_256apsk[254] = gr_complex(-0.3893, -0.7143);
             m_256apsk[255] = gr_complex(-0.3110, -0.5686);
-            for (int i = 0; i < 256; i++) {
-              m_256apsk[i] /= 1.6329;
-            }
           }
           else {
             r8 = m;
