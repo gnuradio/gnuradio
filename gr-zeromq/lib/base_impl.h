@@ -24,21 +24,22 @@
 #define INCLUDED_ZEROMQ_BASE_IMPL_H
 
 #include <zmq.hpp>
-
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
 
-    class base_impl : public virtual gr::sync_block
+    /*
+     * The common base implementation
+     */
+    class base_impl : virtual public stream_base
     {
     public:
-      base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
       virtual ~base_impl();
       std::string endpoint();
 
-
     protected:
+      base_impl(size_t type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
       size_t          d_vsize;
@@ -46,21 +47,23 @@ namespace gr {
       bool            d_pass_tags;
     };
 
+    /*
+     * The base sink implementation
+     */
     class base_sink_impl : public base_impl
     {
-    public:
-      base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
-
     protected:
+      base_sink_impl(size_t type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
       int send_message(const void *in_buf, const int in_nitems, const uint64_t in_offset);
     };
 
+    /*
+     * The base source implementation
+     */
     class base_source_impl : public base_impl
     {
-    public:
-      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
-
     protected:
+      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
       zmq::message_t d_msg;
       std::vector<gr::tag_t> d_tags;
       size_t d_consumed_bytes;

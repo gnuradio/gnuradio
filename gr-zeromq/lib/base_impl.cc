@@ -31,7 +31,7 @@
 namespace gr {
   namespace zeromq {
 
-    base_impl::base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
+    base_impl::base_impl(size_t type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
       : d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       /* "Fix" timeout value (ms for new API, us for old API) */
@@ -64,8 +64,8 @@ namespace gr {
     }
 
 
-
-    base_sink_impl::base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
+    base_sink_impl::base_sink_impl(size_t type, size_t itemsize, size_t vlen, char *address, int timeout,
+                                   bool pass_tags, int hwm)
         : base_impl(type, itemsize, vlen, timeout, pass_tags)
     {
       /* Set high watermark */

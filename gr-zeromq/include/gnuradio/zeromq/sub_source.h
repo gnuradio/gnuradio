@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_SUB_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -37,7 +37,7 @@ namespace gr {
      * This block will connect to a ZMQ PUB socket, then produce all
      * incoming messages as streaming output.
      */
-    class ZEROMQ_API sub_source : virtual public gr::sync_block
+    class ZEROMQ_API sub_source : virtual public stream_base
     {
     public:
       typedef boost::shared_ptr<sub_source> sptr;
@@ -54,11 +54,6 @@ namespace gr {
        */
       static sptr make(size_t itemsize, size_t vlen, char *address,
                        int timeout=100, bool pass_tags=false, int hwm=-1);
-
-      /*!
-       * \brief Return the endpoint address
-       */
-      virtual std::string endpoint() = 0;
     };
 
   } // namespace zeromq

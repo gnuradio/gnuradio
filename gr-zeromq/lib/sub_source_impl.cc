@@ -39,7 +39,7 @@ namespace gr {
     }
 
     sub_source_impl::sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
-      : gr::sync_block("sub_source",
+      : stream_base("sub_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
         base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm)

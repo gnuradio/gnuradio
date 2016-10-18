@@ -28,6 +28,7 @@
 %include "zeromq_swig_doc.i"
 
 %{
+#include "gnuradio/zeromq/stream_base.h"
 #include "gnuradio/zeromq/pub_sink.h"
 #include "gnuradio/zeromq/pub_msg_sink.h"
 #include "gnuradio/zeromq/push_sink.h"
@@ -42,6 +43,7 @@
 #include "gnuradio/zeromq/req_msg_source.h"
 %}
 
+%include "gnuradio/zeromq/stream_base.h"
 %include "gnuradio/zeromq/pub_sink.h"
 %include "gnuradio/zeromq/pub_msg_sink.h"
 %include "gnuradio/zeromq/push_sink.h"
