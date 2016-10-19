@@ -50,7 +50,6 @@ build from source.
 ## How to Build GNU Radio from source:
 
 ```
-cd build
 ./build.sh
 sudo apt-get install gdebi-core
 sudo gdebi gnuradi-XXX.deb
