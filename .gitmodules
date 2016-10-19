@@ -1,4 +1,3 @@
 [submodule "volk"]
 	path = volk
-	url = https://github.com/gnuradio/volk.git
-	branch = master
+	url = git@github.com:nsat/volk.git
