@@ -53,6 +53,13 @@ namespace gr {
          * \brief Return the endpoint address
          */
         virtual std::string endpoint() = 0;
+
+        /*!
+         * \brief Set the zeromq endpoint
+         *
+         * \param address the endpoint address
+         */
+        virtual void set_endpoint(const char* address) = 0;
       };
 
   } // namespace zeromq

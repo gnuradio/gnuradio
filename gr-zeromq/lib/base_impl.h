@@ -40,11 +40,16 @@ namespace gr {
 
     protected:
       base_impl(size_t type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
+      void set_hwm();
+      virtual void setup_socket() {};
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
+      size_t          d_type;
       size_t          d_vsize;
       int             d_timeout;
       bool            d_pass_tags;
+      int             d_hwm;
+      gr::thread::mutex d_mutex;
     };
 
     /*
@@ -52,6 +57,10 @@ namespace gr {
      */
     class base_sink_impl : public base_impl
     {
+    public:
+      std::string endpoint() {return base_impl::endpoint();};
+      void set_endpoint(const char* address);
+
     protected:
       base_sink_impl(size_t type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
       int send_message(const void *in_buf, const int in_nitems, const uint64_t in_offset);
@@ -62,6 +71,10 @@ namespace gr {
      */
     class base_source_impl : public base_impl
     {
+    public:
+      std::string endpoint() {return base_impl::endpoint();};
+      void set_endpoint(const char* address);
+
     protected:
       base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
       zmq::message_t d_msg;

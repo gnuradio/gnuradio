@@ -32,7 +32,7 @@ namespace gr {
   namespace zeromq {
 
     base_impl::base_impl(size_t type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
-      : d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags)
+      : d_type(type), d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       /* "Fix" timeout value (ms for new API, us for old API) */
       int major, minor, patch;
@@ -54,6 +54,20 @@ namespace gr {
         delete d_context;
     }
 
+    void
+    base_impl::set_hwm()
+    {
+      /* Set high watermark */
+      if (d_hwm >= 0) {
+#ifdef ZMQ_RCVHWM
+        d_socket->setsockopt(ZMQ_RCVHWM, &d_hwm, sizeof(d_hwm));
+#else // major < 3
+        uint64_t tmp = d_hwm;
+        d_socket->setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
+#endif
+      }
+    }
+
     std::string
     base_impl::endpoint()
     {
@@ -68,18 +82,24 @@ namespace gr {
                                    bool pass_tags, int hwm)
         : base_impl(type, itemsize, vlen, timeout, pass_tags)
     {
-      /* Set high watermark */
-      if (hwm >= 0) {
-#ifdef ZMQ_SNDHWM
-        d_socket->setsockopt(ZMQ_SNDHWM, &hwm, sizeof(hwm));
-#else // major < 3
-        uint64_t tmp = hwm;
-        d_socket->setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
-#endif
-      }
+      d_hwm = hwm;
+      set_hwm();
 
       /* Bind */
       d_socket->bind(address);
+      setup_socket();
+    }
+
+    void
+    base_sink_impl::set_endpoint(const char* address)
+    {
+      gr::thread::scoped_lock guard(d_mutex);
+      d_socket->close();
+      delete d_socket;
+      d_socket = new zmq::socket_t(*d_context, d_type);
+      set_hwm();
+      d_socket->bind(address);
+      setup_socket();
     }
 
     int
@@ -106,6 +126,7 @@ namespace gr {
       }
 
       /* Send */
+      gr::thread::scoped_lock guard(d_mutex);
       d_socket->send(msg);
 
       /* Report back */
@@ -116,18 +137,23 @@ namespace gr {
         : base_impl(type, itemsize, vlen, timeout, pass_tags),
           d_consumed_bytes(0), d_consumed_items(0)
     {
-      /* Set high watermark */
-      if (hwm >= 0) {
-#ifdef ZMQ_RCVHWM
-        d_socket->setsockopt(ZMQ_RCVHWM, &hwm, sizeof(hwm));
-#else // major < 3
-        uint64_t tmp = hwm;
-        d_socket->setsockopt(ZMQ_HWM, &tmp, sizeof(tmp));
-#endif
-      }
+      d_hwm = hwm;
+      set_hwm();
 
       /* Connect */
       d_socket->connect(address);
+      setup_socket();
+    }
+
+    void
+    base_source_impl::set_endpoint(const char* address)
+    {
+      gr::thread::scoped_lock guard(d_mutex);
+      d_socket->close();
+      delete d_socket;
+      d_socket = new zmq::socket_t(*d_context, d_type);
+      d_socket->connect(address);
+      setup_socket();
     }
 
     bool
@@ -168,6 +194,7 @@ namespace gr {
     bool
     base_source_impl::load_message(bool wait)
     {
+      gr::thread::scoped_lock guard(d_mutex);
       /* Poll for input */
       zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
       zmq::poll(&items[0], 1, wait ? d_timeout : 0);

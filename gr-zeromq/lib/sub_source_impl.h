@@ -36,11 +36,10 @@ namespace gr {
     public:
       sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
 
+      void setup_socket();
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
                gr_vector_void_star &output_items);
-
-      std::string endpoint() {return base_impl::endpoint();}
     };
 
   } // namespace zeromq
