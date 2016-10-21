@@ -64,7 +64,7 @@ class FlowGraph(Element):
         self._options_block = self.new_block('options')
 
     def __str__(self):
-        return 'FlowGraph - {}({})'.format(self.get_option('title'), self.get_option('id'))
+        return 'FlowGraph - {0}({1})'.format(self.get_option('title'), self.get_option('id'))
 
     ##############################################
     # TODO: Move these to new generator package
@@ -461,7 +461,7 @@ class FlowGraph(Element):
                 self.connect(source_port, sink_port)
             except LookupError as e:
                 Messages.send_error_load(
-                    'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
+                    'Connection between {0}({1}) and {2}({3}) could not be made.\n\t{4}'.format(
                         source_block_id, source_key, sink_block_id, sink_key, e))
                 errors = True
 

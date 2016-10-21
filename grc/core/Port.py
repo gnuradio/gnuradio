@@ -32,7 +32,7 @@ def _get_source_from_virtual_sink_port(vsp):
         return _get_source_from_virtual_source_port(
             vsp.get_enabled_connections()[0].get_source())
     except:
-        raise Exception('Could not resolve source for virtual sink port {}'.format(vsp))
+        raise Exception('Could not resolve source for virtual sink port {0}'.format(vsp))
 
 
 def _get_source_from_virtual_source_port(vsp, traversed=[]):
@@ -43,7 +43,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
     if not vsp.get_parent().is_virtual_source():
         return vsp
     if vsp in traversed:
-        raise Exception('Loop found when resolving virtual source {}'.format(vsp))
+        raise Exception('Loop found when resolving virtual source {0}'.format(vsp))
     try:
         return _get_source_from_virtual_source_port(
             _get_source_from_virtual_sink_port(
@@ -57,7 +57,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
             ), traversed + [vsp],
         )
     except:
-        raise Exception('Could not resolve source for virtual source port {}'.format(vsp))
+        raise Exception('Could not resolve source for virtual source port {0}'.format(vsp))
 
 
 def _get_sink_from_virtual_source_port(vsp):
@@ -70,7 +70,7 @@ def _get_sink_from_virtual_source_port(vsp):
         return _get_sink_from_virtual_sink_port(
             vsp.get_enabled_connections()[0].get_sink())
     except:
-        raise Exception('Could not resolve source for virtual source port {}'.format(vsp))
+        raise Exception('Could not resolve source for virtual source port {0}'.format(vsp))
 
 
 def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
@@ -81,7 +81,7 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
     if not vsp.get_parent().is_virtual_sink():
         return vsp
     if vsp in traversed:
-        raise Exception('Loop found when resolving virtual sink {}'.format(vsp))
+        raise Exception('Loop found when resolving virtual sink {0}'.format(vsp))
     try:
         return _get_sink_from_virtual_sink_port(
             _get_sink_from_virtual_source_port(
@@ -95,7 +95,7 @@ def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
             ), traversed + [vsp],
         )
     except:
-        raise Exception('Could not resolve source for virtual sink port {}'.format(vsp))
+        raise Exception('Could not resolve source for virtual sink port {0}'.format(vsp))
 
 
 class Port(Element):
@@ -142,9 +142,9 @@ class Port(Element):
 
     def __str__(self):
         if self.is_source:
-            return 'Source - {}({})'.format(self.get_name(), self.get_key())
+            return 'Source - {0}({1})'.format(self.get_name(), self.get_key())
         if self.is_sink:
-            return 'Sink - {}({})'.format(self.get_name(), self.get_key())
+            return 'Sink - {0}({1})'.format(self.get_name(), self.get_key())
 
     def get_types(self):
         return Constants.TYPE_TO_SIZEOF.keys()
@@ -155,10 +155,10 @@ class Port(Element):
     def validate(self):
         Element.validate(self)
         if self.get_type() not in self.get_types():
-            self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
+            self.add_error_message('Type "{0}" is not a possible type.'.format(self.get_type()))
         platform = self.get_parent().get_parent().get_parent()
         if self.get_domain() not in platform.domains:
-            self.add_error_message('Domain key "{}" is not registered.'.format(self.get_domain()))
+            self.add_error_message('Domain key "{0}" is not registered.'.format(self.get_domain()))
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')
         # Message port logic

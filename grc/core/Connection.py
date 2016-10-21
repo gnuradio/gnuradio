@@ -75,7 +75,7 @@ class Connection(Element):
                     pass
 
     def __str__(self):
-        return 'Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)'.format(
+        return 'Connection (\n\t{0}\n\t\t{1}\n\t{2}\n\t\t{3}\n)'.format(
             self.get_source().get_parent(),
             self.get_source(),
             self.get_sink().get_parent(),
@@ -102,7 +102,7 @@ class Connection(Element):
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
         if (source_domain, sink_domain) not in platform.connection_templates:
-            self.add_error_message('No connection known for domains "{}", "{}"'.format(
+            self.add_error_message('No connection known for domains "{0}", "{1}"'.format(
                     source_domain, sink_domain))
         too_many_other_sinks = (
             not platform.domains.get(source_domain, []).get('multiple_sinks', False) and
@@ -114,15 +114,15 @@ class Connection(Element):
         )
         if too_many_other_sinks:
             self.add_error_message(
-                'Domain "{}" can have only one downstream block'.format(source_domain))
+                'Domain "{0}" can have only one downstream block'.format(source_domain))
         if too_many_other_sources:
             self.add_error_message(
-                'Domain "{}" can have only one upstream block'.format(sink_domain))
+                'Domain "{0}" can have only one upstream block'.format(sink_domain))
 
         source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
         sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
         if source_size != sink_size:
-            self.add_error_message('Source IO size "{}" does not match sink IO size "{}".'.format(source_size, sink_size))
+            self.add_error_message('Source IO size "{0}" does not match sink IO size "{1}".'.format(source_size, sink_size))
 
     def get_enabled(self):
         """

@@ -41,7 +41,7 @@ def _get_elem(lst, key):
     try:
         return lst[_get_keys(lst).index(key)]
     except ValueError:
-        raise ValueError('Key "{}" not found in {}.'.format(key, _get_keys(lst)))
+        raise ValueError('Key "{0}" not found in {1}.'.format(key, _get_keys(lst)))
 
 
 class Block(Element):
@@ -121,7 +121,7 @@ class Block(Element):
             key = param.get_key()
             # Test against repeated keys
             if key in self.get_param_keys():
-                raise Exception('Key "{}" already exists in params'.format(key))
+                raise Exception('Key "{0}" already exists in params'.format(key))
             # Store the param
             self.get_params().append(param)
         # Create the source objects
@@ -130,7 +130,7 @@ class Block(Element):
             key = source.get_key()
             # Test against repeated keys
             if key in self.get_source_keys():
-                raise Exception('Key "{}" already exists in sources'.format(key))
+                raise Exception('Key "{0}" already exists in sources'.format(key))
             # Store the port
             self.get_sources().append(source)
         self.back_ofthe_bus(self.get_sources())
@@ -140,7 +140,7 @@ class Block(Element):
             key = sink.get_key()
             # Test against repeated keys
             if key in self.get_sink_keys():
-                raise Exception('Key "{}" already exists in sinks'.format(key))
+                raise Exception('Key "{0}" already exists in sinks'.format(key))
             # Store the port
             self.get_sinks().append(sink)
         self.back_ofthe_bus(self.get_sinks())
@@ -250,9 +250,9 @@ class Block(Element):
             check_res = self.resolve_dependencies(check)
             try:
                 if not self.get_parent().evaluate(check_res):
-                    self.add_error_message('Check "{}" failed.'.format(check))
+                    self.add_error_message('Check "{0}" failed.'.format(check))
             except:
-                self.add_error_message('Check "{}" did not evaluate.'.format(check))
+                self.add_error_message('Check "{0}" did not evaluate.'.format(check))
 
         # For variables check the value (only if var_value is used
         if self.is_variable and self._var_value != '$value':
@@ -261,7 +261,7 @@ class Block(Element):
                 value = self.get_var_value()
                 self.get_parent().evaluate(value)
             except Exception as err:
-                self.add_error_message('Value "{}" cannot be evaluated:\n{}'.format(value, err))
+                self.add_error_message('Value "{0}" cannot be evaluated:\n{1}'.format(value, err))
 
         # check if this is a GUI block and matches the selected generate option
         current_generate_option = self.get_parent().get_option('generate_options')
@@ -272,7 +272,7 @@ class Block(Element):
                 self.get_name().upper().startswith(label)
             )
             if block_requires_mode and current_generate_option not in valid_options:
-                self.add_error_message("Can't generate this block in mode: {} ".format(
+                self.add_error_message("Can't generate this block in mode: {0} ".format(
                                        repr(current_generate_option)))
 
         check_generate_mode('WX GUI', BLOCK_FLAG_NEED_WX_GUI, ('wx_gui',))
@@ -390,7 +390,7 @@ class Block(Element):
             callback = self.resolve_dependencies(callback)
             if 'self.' in callback:
                 return callback
-            return 'self.{}.{}'.format(self.get_id(), callback)
+            return 'self.{0}.{1}'.format(self.get_id(), callback)
         return map(make_callback, self._callbacks)
 
     def is_virtual_sink(self):
@@ -584,7 +584,7 @@ class Block(Element):
         return True
 
     def __str__(self):
-        return 'Block - {} - {}({})'.format(self.get_id(), self.get_name(), self.get_key())
+        return 'Block - {0} - {1}({2})'.format(self.get_id(), self.get_name(), self.get_key())
 
     def get_id(self):
         return self.get_param('id').get_value()
@@ -699,7 +699,7 @@ class Block(Element):
         try:
             return str(Template(tmpl, n))
         except Exception as err:
-            return "Template error: {}\n    {}".format(tmpl, err)
+            return "Template error: {0}\n    {1}".format(tmpl, err)
 
     ##############################################
     # Controller Modify
