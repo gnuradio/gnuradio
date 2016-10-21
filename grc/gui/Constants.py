@@ -23,7 +23,7 @@ from ..core.Constants import *
 
 
 # default path for the open/save dialogs
-DEFAULT_FILE_PATH = os.getcwd()
+DEFAULT_FILE_PATH = os.getcwd() if os.name != 'nt' else os.path.expanduser("~/Documents")
 
 # file extensions
 IMAGE_FILE_EXTENSION = '.png'
