@@ -25,13 +25,14 @@
 #endif
 
 #include <gnuradio/io_signature.h>
+#include <gnuradio/attributes.h>
 #include "base_impl.h"
 #include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
 
-    base_impl::base_impl(size_t type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
+    base_impl::base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
       : d_type(type), d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags)
     {
       /* "Fix" timeout value (ms for new API, us for old API) */
@@ -71,14 +72,14 @@ namespace gr {
     std::string
     base_impl::endpoint()
     {
-      size_t len;
-      char endpoint[1024];
+      size_t len = 1024;
+      __GR_VLA(char, endpoint, len);
       d_socket->getsockopt(ZMQ_LAST_ENDPOINT, endpoint, &len);
-      return std::string(endpoint);
+      return std::string(endpoint, len-1);
     }
 
 
-    base_sink_impl::base_sink_impl(size_t type, size_t itemsize, size_t vlen, char *address, int timeout,
+    base_sink_impl::base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout,
                                    bool pass_tags, int hwm)
         : base_impl(type, itemsize, vlen, timeout, pass_tags)
     {

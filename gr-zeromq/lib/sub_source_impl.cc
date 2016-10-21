@@ -44,6 +44,7 @@ namespace gr {
                        gr::io_signature::make(1, 1, itemsize * vlen)),
         base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm)
     {
+      setup_socket();
     }
 
     void
