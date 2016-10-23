@@ -30,7 +30,7 @@ from .utils import odict
 import __builtin__
 
 
-ID_BLACKLIST = ['self', 'options', 'gr', 'blks2', 'math', 'firdes'] + dir(__builtin__)
+ID_BLACKLIST = ['self', 'options', 'gr', 'math', 'firdes'] + dir(__builtin__)
 try:
     from gnuradio import gr
     ID_BLACKLIST.extend(attr for attr in dir(gr.top_block()) if not attr.startswith('_'))

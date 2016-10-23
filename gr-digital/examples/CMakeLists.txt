@@ -80,9 +80,6 @@ install(
     demod/mpsk_demod.grc
     demod/pam_sync.grc
     demod/pam_timing.grc
-    demod/ber_simulation.grc
-    demod/dpsk_loopback.grc
-    demod/gfsk_loopback.grc
     demod/test_corr_est.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
 )
