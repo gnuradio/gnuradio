@@ -24,11 +24,6 @@
 #include <iostream>
 #include <stdexcept>
 
-bool rpcmanager::booter_registered(false);
-bool rpcmanager::aggregator_registered(false);
-std::auto_ptr<rpcserver_booter_base> rpcmanager::boot(0);
-std::auto_ptr<rpcserver_booter_aggregator> rpcmanager::aggregator(0);
-
 rpcmanager::rpcmanager() {;}
 
 rpcmanager::~rpcmanager() {;}

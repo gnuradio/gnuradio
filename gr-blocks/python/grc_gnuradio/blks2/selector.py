@@ -40,6 +40,9 @@ class selector(gr.hier_block2):
             gr.io_signature(num_inputs, num_inputs, item_size),
             gr.io_signature(num_outputs, num_outputs, item_size),
         )
+
+        print "Warning: the blks2.selector block is deprecated."
+
         #terminator blocks for unused inputs and outputs
         self.input_terminators = [blocks.null_sink(item_size) for i in range(num_inputs)]
         self.output_terminators = [blocks.head(item_size, 0) for i in range(num_outputs)]
@@ -129,6 +132,8 @@ class valve(selector):
         if open: output_index = -1
         else: output_index = 0
         selector.__init__(self, item_size, 1, 1, 0, output_index)
+
+        print "Warning: the blks2.valve block is deprecated."
 
     def set_open(self, open):
         """
