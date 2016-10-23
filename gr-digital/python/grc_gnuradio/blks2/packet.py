@@ -107,6 +107,8 @@ class packet_encoder(gr.hier_block2):
         #connect
         self.connect(msg_source, self)
 
+        print "Warning: the blks2.packet_encoder block is deprecated."
+
     def send_pkt(self, payload):
         """
         Wrap the payload in a packet and push onto the message queue.
@@ -183,6 +185,8 @@ class packet_decoder(gr.hier_block2):
         self.connect(self, correlator, framer_sink)
         #start thread
         _packet_decoder_thread(msgq, callback)
+
+        print "Warning: the blks2.packet_decoder block is deprecated."
 
 ##################################################
 ## Packet Mod for OFDM Mod and Packet Encoder

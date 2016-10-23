@@ -75,6 +75,9 @@ class error_rate(gr.hier_block2):
             gr.io_signature(2, 2, gr.sizeof_char),
             gr.io_signature(1, 1, gr.sizeof_float),
         )
+
+        print "Warning: the blks2.error_rate is deprecated."
+
         assert type in ('BER', 'SER')
         self._max_samples = win_size
         self._bits_per_symbol = bits_per_symbol
