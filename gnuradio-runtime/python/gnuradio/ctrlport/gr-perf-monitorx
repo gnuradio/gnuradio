@@ -46,7 +46,7 @@ except ImportError:
        "Please check that they are installed and try again."
     sys.exit(1)
 
-from PyQt4 import QtCore,Qt,Qwt5
+from PyQt4 import QtCore,Qt
 import PyQt4.QtGui as QtGui
 import itertools
 
