@@ -23,7 +23,7 @@ import gtk
 
 import Actions
 from Dialogs import SimpleTextDisplay
-from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, FONT_SIZE
+from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, FONT_SIZE, DPI_SCALING
 import Utils
 import pango
 
@@ -72,7 +72,8 @@ class PropsDialog(gtk.Dialog):
                      gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
         )
         self.set_response_sensitive(gtk.RESPONSE_APPLY, False)
-        self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
+        self.set_size_request(MIN_DIALOG_WIDTH +DPI_SCALING,
+                              MIN_DIALOG_HEIGHT * DPI_SCALING)
         self._block = block
 
         vpaned = gtk.VPaned()

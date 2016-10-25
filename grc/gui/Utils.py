@@ -24,7 +24,7 @@ import gobject
 
 from Cheetah.Template import Template
 
-from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE
+from Constants import POSSIBLE_ROTATIONS, CANVAS_GRID_SIZE, DPI_SCALING
 
 
 def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE):
@@ -131,3 +131,8 @@ def align_to_grid(coor, mode=round):
     except TypeError:
         x = coor
         return align(coor)
+
+
+def scale(coor, reverse=False):
+    factor = DPI_SCALING if not reverse else 1 / DPI_SCALING
+    return tuple(int(x * factor) for x in coor)
