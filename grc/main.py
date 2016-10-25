@@ -22,10 +22,6 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk
 
-from gnuradio import gr
-from .gui.Platform import Platform
-from .gui.Application import Application
-
 
 VERSION_AND_DISCLAIMER_TEMPLATE = """\
 GNU Radio Companion %s
@@ -45,6 +41,7 @@ LOG_LEVELS = {
 
 
 def main():
+    from gnuradio import gr
     parser = argparse.ArgumentParser(
         description=VERSION_AND_DISCLAIMER_TEMPLATE % gr.version())
     parser.add_argument('flow_graphs', nargs='*')
@@ -73,8 +70,14 @@ def main():
     console.setFormatter(formatter)
     log.addHandler(console)
 
-    log.debug("Loading platform")
+    log.debug("Running main")
 
+    # Delay importing until the logging is setup
+    # Otherwise, the decorators could not use logging.
+    from .gui.Platform import Platform
+    from .gui.Application import Application
+
+    log.debug("Loading platform")
     platform = Platform(
         version=gr.version(),
         version_parts=(gr.major_version(), gr.api_version(), gr.minor_version()),
