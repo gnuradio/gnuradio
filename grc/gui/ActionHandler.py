@@ -23,7 +23,7 @@ import gtk
 import os
 import subprocess
 
-from . import Dialogs, Preferences, Actions, Executor, Constants, Utils
+from . import Dialogs, Preferences, Actions, Executor, Constants
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveConsoleFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
@@ -688,10 +688,8 @@ class ActionHandler:
         Actions.FLOW_GRAPH_SAVE.set_sensitive(not page.get_saved())
         main.update()
         try: #set the size of the flow graph area (if changed)
-            new_size = Utils.scale(
-                flow_graph.get_option('window_size') or
-                self.platform.config.default_canvas_size
-            )
+            new_size = (flow_graph.get_option('window_size') or
+                        self.platform.config.default_canvas_size)
             if flow_graph.get_size() != tuple(new_size):
                 flow_graph.set_size(*new_size)
         except: pass
