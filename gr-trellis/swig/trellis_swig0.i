@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,7 +25,7 @@
 %include "gnuradio.i"
 
 //load generated python docstrings
-%include "trellis_swig_doc.i"
+%include "trellis_swig0_doc.i"
 
 %include "gnuradio/digital/metric_type.h"
 %include "gnuradio/digital/constellation.h"
@@ -60,39 +60,6 @@
 #include "gnuradio/trellis/metrics_i.h"
 #include "gnuradio/trellis/metrics_f.h"
 #include "gnuradio/trellis/metrics_c.h"
-#include "gnuradio/trellis/pccc_decoder_b.h"
-#include "gnuradio/trellis/pccc_decoder_s.h"
-#include "gnuradio/trellis/pccc_decoder_i.h"
-#include "gnuradio/trellis/pccc_decoder_combined_fb.h"
-#include "gnuradio/trellis/pccc_decoder_combined_fs.h"
-#include "gnuradio/trellis/pccc_decoder_combined_fi.h"
-#include "gnuradio/trellis/pccc_decoder_combined_cb.h"
-#include "gnuradio/trellis/pccc_decoder_combined_cs.h"
-#include "gnuradio/trellis/pccc_decoder_combined_ci.h"
-#include "gnuradio/trellis/viterbi_b.h"
-#include "gnuradio/trellis/viterbi_s.h"
-#include "gnuradio/trellis/viterbi_i.h"
-#include "gnuradio/trellis/viterbi_combined_sb.h"
-#include "gnuradio/trellis/viterbi_combined_ss.h"
-#include "gnuradio/trellis/viterbi_combined_si.h"
-#include "gnuradio/trellis/viterbi_combined_ib.h"
-#include "gnuradio/trellis/viterbi_combined_is.h"
-#include "gnuradio/trellis/viterbi_combined_ii.h"
-#include "gnuradio/trellis/viterbi_combined_fb.h"
-#include "gnuradio/trellis/viterbi_combined_fs.h"
-#include "gnuradio/trellis/viterbi_combined_fi.h"
-#include "gnuradio/trellis/viterbi_combined_cb.h"
-#include "gnuradio/trellis/viterbi_combined_cs.h"
-#include "gnuradio/trellis/viterbi_combined_ci.h"
-#include "gnuradio/trellis/sccc_decoder_b.h"
-#include "gnuradio/trellis/sccc_decoder_s.h"
-#include "gnuradio/trellis/sccc_decoder_i.h"
-#include "gnuradio/trellis/sccc_decoder_combined_fb.h"
-#include "gnuradio/trellis/sccc_decoder_combined_fs.h"
-#include "gnuradio/trellis/sccc_decoder_combined_fi.h"
-#include "gnuradio/trellis/sccc_decoder_combined_cb.h"
-#include "gnuradio/trellis/sccc_decoder_combined_cs.h"
-#include "gnuradio/trellis/sccc_decoder_combined_ci.h"
 %}
 
 %include "gnuradio/trellis/constellation_metrics_cf.h"
@@ -121,39 +88,6 @@
 %include "gnuradio/trellis/metrics_i.h"
 %include "gnuradio/trellis/metrics_f.h"
 %include "gnuradio/trellis/metrics_c.h"
-%include "gnuradio/trellis/pccc_decoder_b.h"
-%include "gnuradio/trellis/pccc_decoder_s.h"
-%include "gnuradio/trellis/pccc_decoder_i.h"
-%include "gnuradio/trellis/pccc_decoder_combined_fb.h"
-%include "gnuradio/trellis/pccc_decoder_combined_fs.h"
-%include "gnuradio/trellis/pccc_decoder_combined_fi.h"
-%include "gnuradio/trellis/pccc_decoder_combined_cb.h"
-%include "gnuradio/trellis/pccc_decoder_combined_cs.h"
-%include "gnuradio/trellis/pccc_decoder_combined_ci.h"
-%include "gnuradio/trellis/viterbi_b.h"
-%include "gnuradio/trellis/viterbi_s.h"
-%include "gnuradio/trellis/viterbi_i.h"
-%include "gnuradio/trellis/viterbi_combined_sb.h"
-%include "gnuradio/trellis/viterbi_combined_ss.h"
-%include "gnuradio/trellis/viterbi_combined_si.h"
-%include "gnuradio/trellis/viterbi_combined_ib.h"
-%include "gnuradio/trellis/viterbi_combined_is.h"
-%include "gnuradio/trellis/viterbi_combined_ii.h"
-%include "gnuradio/trellis/viterbi_combined_fb.h"
-%include "gnuradio/trellis/viterbi_combined_fs.h"
-%include "gnuradio/trellis/viterbi_combined_fi.h"
-%include "gnuradio/trellis/viterbi_combined_cb.h"
-%include "gnuradio/trellis/viterbi_combined_cs.h"
-%include "gnuradio/trellis/viterbi_combined_ci.h"
-%include "gnuradio/trellis/sccc_decoder_b.h"
-%include "gnuradio/trellis/sccc_decoder_s.h"
-%include "gnuradio/trellis/sccc_decoder_i.h"
-%include "gnuradio/trellis/sccc_decoder_combined_fb.h"
-%include "gnuradio/trellis/sccc_decoder_combined_fs.h"
-%include "gnuradio/trellis/sccc_decoder_combined_fi.h"
-%include "gnuradio/trellis/sccc_decoder_combined_cb.h"
-%include "gnuradio/trellis/sccc_decoder_combined_cs.h"
-%include "gnuradio/trellis/sccc_decoder_combined_ci.h"
 
 GR_SWIG_BLOCK_MAGIC2(trellis, constellation_metrics_cf);
 GR_SWIG_BLOCK_MAGIC2(trellis, permutation);
@@ -181,36 +115,3 @@ GR_SWIG_BLOCK_MAGIC2(trellis, metrics_s);
 GR_SWIG_BLOCK_MAGIC2(trellis, metrics_i);
 GR_SWIG_BLOCK_MAGIC2(trellis, metrics_f);
 GR_SWIG_BLOCK_MAGIC2(trellis, metrics_c);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_b);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_s);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_i);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_combined_fb);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_combined_fs);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_combined_fi);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_combined_cb);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_combined_cs);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_decoder_combined_ci);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_b);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_s);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_i);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_sb);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_ss);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_si);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_ib);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_is);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_ii);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_fb);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_fs);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_fi);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_cb);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_cs);
-GR_SWIG_BLOCK_MAGIC2(trellis, viterbi_combined_ci);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_b);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_s);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_i);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_combined_fb);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_combined_fs);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_combined_fi);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_combined_cb);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_combined_cs);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_decoder_combined_ci);
