@@ -281,7 +281,17 @@ string_to_symbol(const std::string &name)
     if (name == _symbol(sym)->name())
       return sym;		// Yes.  Return it
   }
-
+  
+  // Lock the table on insert for thread safety:
+  static boost::mutex thread_safety;
+  boost::mutex::scoped_lock lock(thread_safety);
+  // Re-do the search in case another thread inserted this symbol into the table
+  // before we got the lock
+  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()){
+    if (name == _symbol(sym)->name())
+      return sym;		// Yes.  Return it
+  }
+  
   // Nope.  Make a new one.
   pmt_t sym = pmt_t(new pmt_symbol(name));
   _symbol(sym)->set_next((*get_symbol_hash_table())[hash]);

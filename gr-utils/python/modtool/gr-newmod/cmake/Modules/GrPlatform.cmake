@@ -51,4 +51,12 @@ endif()
 if(NOT DEFINED LIB_SUFFIX AND LIB64_CONVENTION AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
     set(LIB_SUFFIX 64)
 endif()
+
+########################################################################
+# Detect /lib versus /lib64
+########################################################################
+if (CMAKE_INSTALL_LIBDIR MATCHES lib64)
+    set(LIB_SUFFIX 64)
+endif()
+
 set(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
