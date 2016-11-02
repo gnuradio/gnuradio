@@ -25,6 +25,7 @@ import gtk
 
 from . import Colors, Utils, Constants
 from .Element import Element
+from . import Utils
 
 from ..core.Param import Param as _Param
 
@@ -39,7 +40,7 @@ class InputParam(gtk.HBox):
         self._changed_callback = changed_callback
         self._editing_callback = editing_callback
         self.label = gtk.Label() #no label, markup is added by set_markup
-        self.label.set_size_request(150, -1)
+        self.label.set_size_request(Utils.scale_scalar(150), -1)
         self.pack_start(self.label, False)
         self.set_markup = lambda m: self.label.set_markup(m)
         self.tp = None
