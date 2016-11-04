@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Frame Sink</name>
 	<key>digital_ofdm_frame_sink</key>
+        <category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.ofdm_frame_sink($syms, $vals, $queue, $occ_tones, $ph_gain, $frq_gain)</make>
 	<param>

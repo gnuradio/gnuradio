@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Mod</name>
 	<key>digital_ofdm_mod</key>
+        <category>[Core]/Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<import>from gnuradio import digital</import>
 	<make>grc_blks2.packet_mod_$(type.fcn)(digital.ofdm_mod(

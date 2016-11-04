@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Sampler</name>
 	<key>digital_ofdm_sampler</key>
+        <category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.ofdm_sampler($fft_length, $symbol_length, $timeout)</make>
 	<param>

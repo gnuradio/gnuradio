@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Insert Preamble</name>
 	<key>digital_ofdm_insert_preamble</key>
+        <category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.ofdm_insert_preamble($fft_length, $preamble)</make>
 	<param>

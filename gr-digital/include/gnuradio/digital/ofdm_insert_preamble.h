@@ -33,6 +33,7 @@ namespace gr {
      * \brief insert "pre-modulated" preamble symbols before each payload.
      * \ingroup ofdm_blk
      * \ingroup synchronizers_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * <pre>
