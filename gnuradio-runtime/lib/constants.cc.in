@@ -24,6 +24,7 @@
 #include <config.h>
 #endif
 
+#include <stdlib.h>
 #include <gnuradio/constants.h>
 
 namespace gr {
@@ -31,18 +32,36 @@ namespace gr {
   const std::string
   prefix()
   {
+    //Use "GR_PREFIX" environment variable when specified
+    const char *prefix = getenv("GR_PREFIX");
+    if (prefix != NULL) return prefix;
+
     return "@prefix@";
   }
 
   const std::string
   sysconfdir()
   {
+    //Provide the sysconfdir in terms of prefix()
+    //when the "GR_PREFIX" environment var is specified.
+    if (getenv("GR_PREFIX") != NULL)
+    {
+      return prefix() + "/@GR_CONF_DIR@";
+    }
+
     return "@SYSCONFDIR@";
   }
 
   const std::string
   prefsdir()
   {
+    //Provide the prefsdir in terms of sysconfdir()
+    //when the "GR_PREFIX" environment var is specified.
+    if (getenv("GR_PREFIX") != NULL)
+    {
+      return sysconfdir() + "/@CMAKE_PROJECT_NAME@/conf.d";
+    }
+
     return "@GR_PREFSDIR@";
   }
 
