@@ -35,6 +35,7 @@ namespace gr {
      * constellation points suitable for IFFT input to be used in an
      * ofdm modulator.
      * \ingroup ofdm_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * Abstract class must be subclassed with specific mapping.

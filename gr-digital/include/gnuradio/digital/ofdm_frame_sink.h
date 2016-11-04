@@ -35,6 +35,7 @@ namespace gr {
      * 1's, packs them into packets, and sends to to a message queue
      * sink.
      * \ingroup ofdm_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * NOTE: The mod input parameter simply chooses a pre-defined
