@@ -40,7 +40,7 @@ class qa_zeromq_msg_pushpull (gr_unittest.TestCase):
         # The best msg source we have is the strobe, we don't really
         # care how many msgs go through, so just strobe fast enough to
         # guarantee > 1
-        msg_src = blocks.message_strobe(msgs, 10)
+        msg_src = blocks.message_strobe(msgs, 1)
         msg_sink = blocks.message_debug()
         endpoint = "tcp://127.0.0.1:"
         zeromq_push_sink = zeromq.push_msg_sink(endpoint + "5543")

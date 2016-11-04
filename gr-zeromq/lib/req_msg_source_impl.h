@@ -26,24 +26,18 @@
 #include <gnuradio/zeromq/req_msg_source.h>
 #include <zmq.hpp>
 
+#include "msg_base_impl.h"
+
 namespace gr {
   namespace zeromq {
 
-    class req_msg_source_impl : public req_msg_source
+    class req_msg_source_impl : public msg_base_source_impl, public req_msg_source
     {
     private:
-      int             d_timeout;
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
-
       void readloop();
 
     public:
-      bool d_finished;
-
       req_msg_source_impl(char *address, int timeout);
-      ~req_msg_source_impl();
 
       bool start();
       bool stop();

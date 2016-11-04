@@ -39,53 +39,31 @@ namespace gr {
     }
 
     rep_msg_sink_impl::rep_msg_sink_impl(char *address, int timeout)
-      : gr::block("rep_msg_sink",
+      : msg_base("rep_msg_sink",
                   gr::io_signature::make(0, 0, 0),
                   gr::io_signature::make(0, 0, 0)),
-        d_timeout(timeout)
+        msg_base_sink_impl(ZMQ_REP, address, timeout)
     {
-      int major, minor, patch;
-      zmq::version(&major, &minor, &patch);
-
-      if (major < 3) {
-        d_timeout = timeout*1000;
-      }
-
-      d_context = new zmq::context_t(1);
-      d_socket = new zmq::socket_t(*d_context, ZMQ_REP);
-
-      int time = 0;
-      d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
-      d_socket->bind (address);
-
-      message_port_register_in(pmt::mp("in"));
-    }
-
-    rep_msg_sink_impl::~rep_msg_sink_impl()
-    {
-      d_socket->close();
-      delete d_socket;
-      delete d_context;
     }
 
     bool rep_msg_sink_impl::start()
     {
-      d_finished = false;
+      d_zmq_finished = false;
       d_thread = new boost::thread(boost::bind(&rep_msg_sink_impl::readloop, this));
       return true;
     }
 
     bool rep_msg_sink_impl::stop()
     {
-      d_finished = true;
+      d_zmq_finished = true;
       d_thread->join();
       return true;
     }
 
     void rep_msg_sink_impl::readloop()
     {
-      while(!d_finished) {
-
+      gr::thread::scoped_lock guard(d_mutex);
+      while(!d_zmq_finished) {
         // while we have data, wait for query...
         while(!empty_p(pmt::mp("in"))) {
 
@@ -115,7 +93,7 @@ namespace gr {
           } // if req
         } // while !empty
 
-      } // while !d_finished
+      } // while !d_zmq_finished
     }
 
   } /* namespace zeromq */

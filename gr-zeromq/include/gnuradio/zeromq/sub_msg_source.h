@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_SUB_MSG_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/zeromq/msg_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -37,7 +37,7 @@ namespace gr {
      * This block will connect to a ZMQ PUB socket, then convert them
      * to outgoing async messages
      */
-    class ZEROMQ_API sub_msg_source : virtual public gr::block
+    class ZEROMQ_API sub_msg_source : virtual public msg_base
     {
     public:
       typedef boost::shared_ptr<sub_msg_source> sptr;

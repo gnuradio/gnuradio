@@ -26,23 +26,18 @@
 #include <gnuradio/zeromq/rep_msg_sink.h>
 #include <zmq.hpp>
 
+#include "msg_base_impl.h"
+
 namespace gr {
   namespace zeromq {
 
-    class rep_msg_sink_impl : public rep_msg_sink
+    class rep_msg_sink_impl : public msg_base_sink_impl, public rep_msg_sink
     {
     private:
-      int             d_timeout;
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
-      bool            d_finished;
-
-      void            readloop();
+      void readloop();
 
     public:
       rep_msg_sink_impl(char *address, int timeout);
-      ~rep_msg_sink_impl();
 
       bool start();
       bool stop();

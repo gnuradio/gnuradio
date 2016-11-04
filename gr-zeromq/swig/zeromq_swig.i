@@ -29,6 +29,7 @@
 
 %{
 #include "gnuradio/zeromq/stream_base.h"
+#include "gnuradio/zeromq/msg_base.h"
 #include "gnuradio/zeromq/pub_sink.h"
 #include "gnuradio/zeromq/pub_msg_sink.h"
 #include "gnuradio/zeromq/push_sink.h"
@@ -44,6 +45,7 @@
 %}
 
 %include "gnuradio/zeromq/stream_base.h"
+%include "gnuradio/zeromq/msg_base.h"
 %include "gnuradio/zeromq/pub_sink.h"
 %include "gnuradio/zeromq/pub_msg_sink.h"
 %include "gnuradio/zeromq/push_sink.h"
