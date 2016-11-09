@@ -57,7 +57,11 @@ namespace gr {
       d_new_in = 0;
       d_last_out = 0;
 
+#ifdef HAVE_RAND48
       srand48(time(NULL));
+#else
+      srand(time(NULL));
+#endif
     }
 
     test_tag_variable_rate_ff_impl::~test_tag_variable_rate_ff_impl()
@@ -78,7 +82,11 @@ namespace gr {
       GR_LOG_DEBUG(d_logger, boost::format("noutput_items: %1%") % noutput_items);
 
       if(d_update_once) {
+#ifdef HAVE_RAND48
         if(drand48() > 0.5) {
+#else
+        if (rand() > RAND_MAX / 2) {
+#endif
           d_rrate += d_update_step;
         }
         else {
@@ -95,7 +103,11 @@ namespace gr {
       while(i < ninput_items[0]) {
 
         if(!d_update_once) {
+#ifdef HAVE_RAND48
           if(drand48() > 0.5) {
+#else
+          if (rand() > RAND_MAX / 2) {
+#endif
             d_rrate += d_update_step;
           }
           else {
