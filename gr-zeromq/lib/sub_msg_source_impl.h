@@ -34,6 +34,8 @@ namespace gr {
     {
      public:
       sub_msg_source_impl(char *address, int timeout);
+    protected:
+      void setup_socket();
     };
 
   } // namespace zeromq

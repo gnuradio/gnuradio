@@ -43,8 +43,10 @@ class qa_zeromq_msg_reqrep (gr_unittest.TestCase):
         msg_src = blocks.message_strobe(msgs, 1)
         msg_sink = blocks.message_debug()
         endpoint = "tcp://127.0.0.1:"
-        zeromq_rep_sink = zeromq.rep_msg_sink(endpoint + "5544")
-        zeromq_req_source = zeromq.req_msg_source(endpoint + "5544", 0)
+        zeromq_rep_sink = zeromq.rep_msg_sink(endpoint + "*")
+        port = zeromq_rep_sink.endpoint().split(":")[-1]
+        zeromq_req_source = zeromq.req_msg_source(endpoint + port, 0)
+        zeromq_req_source.set_endpoint(endpoint + port)
         self.tb.msg_connect(msg_src, "strobe", zeromq_rep_sink, "in")
         self.tb.msg_connect(zeromq_req_source, "out", msg_sink, "store")
         self.tb.start()

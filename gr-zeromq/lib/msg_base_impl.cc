@@ -35,7 +35,7 @@ namespace gr {
      * Common Base Section
      */
     msg_base_impl::msg_base_impl(int type, char *address, int timeout)
-      : type(type)
+      : d_zmq_started(false), type(type), d_thread(NULL)
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
@@ -73,6 +73,7 @@ namespace gr {
        * because the "default" start/stop is either nothing or start the thread
        * for sub, pull
        */
+      d_zmq_started = true;
       if (type == ZMQ_SUB || type == ZMQ_PULL) {
         d_zmq_finished = false;
         d_thread = new boost::thread(boost::bind(&msg_base_impl::readloop, this));
@@ -82,9 +83,13 @@ namespace gr {
 
     bool msg_base_impl::stop()
     {
-      if (type == ZMQ_SUB || type == ZMQ_PULL) {
-        d_zmq_finished = true;
-        d_thread->join();
+      if (d_zmq_started) {
+        if (type == ZMQ_SUB || type == ZMQ_PULL) {
+          d_zmq_finished = true;
+          d_thread->join();
+          delete d_thread;
+          d_thread = NULL;
+        }
       }
       return true;
     }
@@ -151,7 +156,9 @@ namespace gr {
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind(address);
-      start();
+      if (d_zmq_started) {
+        start();
+      }
     }
 
     /*
@@ -173,7 +180,11 @@ namespace gr {
 
       d_socket = new zmq::socket_t(*d_context, type);
       d_socket->connect(address);
-      start();
+      setup_socket();
+
+      if (d_zmq_started) {
+        start();
+      }
     }
 
   }

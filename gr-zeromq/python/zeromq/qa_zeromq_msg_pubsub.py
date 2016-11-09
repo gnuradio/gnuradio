@@ -43,8 +43,10 @@ class qa_zeromq_msg_pubsub (gr_unittest.TestCase):
         msg_src = blocks.message_strobe(msgs, 1)
         msg_sink = blocks.message_debug()
         endpoint = "tcp://127.0.0.1:"
-        zeromq_pub_sink = zeromq.pub_msg_sink(endpoint + "5542")
-        zeromq_sub_source = zeromq.sub_msg_source(endpoint + "5542", 0)
+        zeromq_pub_sink = zeromq.pub_msg_sink(endpoint + "*")
+        port = zeromq_pub_sink.endpoint().split(":")[-1]
+        zeromq_sub_source = zeromq.sub_msg_source(endpoint + port, 0)
+        zeromq_sub_source.set_endpoint(endpoint + port)
         self.tb.msg_connect(msg_src, "strobe", zeromq_pub_sink, "in")
         self.tb.msg_connect(zeromq_sub_source, "out", msg_sink, "store")
         self.tb.start()

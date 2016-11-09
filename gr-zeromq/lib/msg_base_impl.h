@@ -37,14 +37,16 @@ namespace gr {
     public:
       virtual ~msg_base_impl();
       std::string endpoint();
-      bool d_zmq_finished; // public in old sub_msg_source -- should it be?
 
     protected:
       msg_base_impl(int type, char *address, int timeout=100);
       void handler(pmt::pmt_t msg);
+      virtual void setup_socket() {};
       virtual bool start();
       virtual bool stop();
       virtual void readloop();
+      bool d_zmq_finished; // public in old sub_msg_source -- should it be?
+      int d_zmq_started;
       int type;
       gr::thread::mutex d_mutex;
       boost::thread* d_thread;

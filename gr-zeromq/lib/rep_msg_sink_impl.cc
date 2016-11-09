@@ -55,8 +55,10 @@ namespace gr {
 
     bool rep_msg_sink_impl::stop()
     {
-      d_zmq_finished = true;
-      d_thread->join();
+      if (d_zmq_started) {
+        d_zmq_finished = true;
+        d_thread->join();
+      }
       return true;
     }
 
