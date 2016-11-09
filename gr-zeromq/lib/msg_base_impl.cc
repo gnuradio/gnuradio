@@ -49,6 +49,7 @@ namespace gr {
 
     msg_base_impl::~msg_base_impl()
     {
+      stop();
       d_socket->close();
       delete d_socket;
       delete d_context;

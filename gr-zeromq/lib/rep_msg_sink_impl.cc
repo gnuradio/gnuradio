@@ -48,6 +48,7 @@ namespace gr {
 
     bool rep_msg_sink_impl::start()
     {
+      d_zmq_started = true;
       d_zmq_finished = false;
       d_thread = new boost::thread(boost::bind(&rep_msg_sink_impl::readloop, this));
       return true;
@@ -57,7 +58,11 @@ namespace gr {
     {
       if (d_zmq_started) {
         d_zmq_finished = true;
-        d_thread->join();
+        if (d_thread != NULL) {
+          d_thread->join();
+        }
+        delete d_thread;
+        d_thread = NULL;
       }
       return true;
     }
