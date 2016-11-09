@@ -144,7 +144,7 @@ namespace gr {
 
     @TYPE@ @IMPL_NAME@::sample()
     {
-#ifdef __USE_GNU
+#ifdef HAVE_RAND48
         size_t idx = lrand48() % d_samples.size();
 #else
         size_t idx = rand() % d_samples.size();
@@ -153,7 +153,7 @@ namespace gr {
     }
 
 #ifndef FASTNOISE_RANDOM_SIGN
-#ifdef _MSC_VER
+#ifndef HAVE_RAND48
 #define FASTNOISE_RANDOM_SIGN       ((rand()%2==0)?1:-1)
 #else
 #define FASTNOISE_RANDOM_SIGN       ((lrand48()%2==0)?1:-1)
