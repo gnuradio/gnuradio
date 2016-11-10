@@ -22,6 +22,7 @@ find_path(QWT_INCLUDE_DIRS
   /usr/include/qwt6
   /usr/include/qwt-${QWT_QT_VERSION}
   /usr/include/qwt
+  /usr/include/${QWT_QT_VERSION}/qwt
   /usr/include/qwt5
   /opt/local/include/qwt
   /sw/include/qwt
