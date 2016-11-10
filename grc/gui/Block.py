@@ -274,7 +274,7 @@ class Block(Element, _Block):
         # Show the flowgraph complexity on the top block if enabled
         if Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY.get_active() and self.get_key() == "options":
             complexity = calculate_flowgraph_complexity(self.get_parent())
-            complexity = "Complexity: {}bal".format(num_to_str(complexity))
+            complexity = "Complexity: {0}bal".format(num_to_str(complexity))
 
         layout = gtk.DrawingArea().create_pango_layout('')
         layout.set_markup(Utils.parse_template(COMMENT_COMPLEXITY_MARKUP_TMPL,

@@ -265,7 +265,7 @@ class PropsDialog(gtk.Dialog):
             insert('\n\n# Variables\n', block.get_var_make())
         insert('\n\n# Blocks\n', block.get_make())
         if src:
-            insert('\n\n# External Code ({}.py)\n'.format(block.get_id()), src)
+            insert('\n\n# External Code ({0}.py)\n'.format(block.get_id()), src)
 
     def _handle_key_press(self, widget, event):
         """

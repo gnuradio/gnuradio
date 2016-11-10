@@ -58,6 +58,8 @@ class tcp_source(gr.hier_block2):
         fd = _get_sock_fd(addr, port, server)
         self.connect(blocks.file_descriptor_source(itemsize, fd), self)
 
+        print "Warning: the blks2.tcp_source block is deprecated."
+
 class tcp_sink(gr.hier_block2):
     def __init__(self, itemsize, addr, port, server=False):
         #init hier block
@@ -68,3 +70,5 @@ class tcp_sink(gr.hier_block2):
         )
         fd = _get_sock_fd(addr, port, server)
         self.connect(self, blocks.file_descriptor_sink(itemsize, fd))
+
+        print "Warning: the blks2.tcp_sink block is deprecated."

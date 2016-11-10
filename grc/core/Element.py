@@ -66,7 +66,7 @@ class Element(object):
         error_messages = list(self._error_messages)  # Make a copy
         for child in filter(lambda c: c.get_enabled() and not c.get_bypassed(), self.get_children()):
             for msg in child.get_error_messages():
-                error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
+                error_messages.append("{0}:\n\t{1}".format(child, msg.replace("\n", "\n\t")))
         return error_messages
 
     def rewrite(self):

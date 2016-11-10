@@ -59,7 +59,7 @@ class odict(DictMixin):
         """
         index = (pos_key is None) and len(self._keys) or self._keys.index(pos_key)
         if key in self._keys:
-            raise KeyError('Cannot insert, key "{}" already exists'.format(str(key)))
+            raise KeyError('Cannot insert, key "{0}" already exists'.format(str(key)))
         self._keys.insert(index+1, key)
         self._data[key] = val
 
@@ -75,7 +75,7 @@ class odict(DictMixin):
         """
         index = (pos_key is not None) and self._keys.index(pos_key) or 0
         if key in self._keys:
-            raise KeyError('Cannot insert, key "{}" already exists'.format(str(key)))
+            raise KeyError('Cannot insert, key "{0}" already exists'.format(str(key)))
         self._keys.insert(index, key)
         self._data[key] = val
 
