@@ -32,13 +32,8 @@ set(BOOST_REQUIRED_COMPONENTS
     filesystem
     system
     regex
+    thread
 )
-
-if (MINGW)
-	set(BOOST_REQUIRED_COMPONENTS ${BOOST_REQUIRED_COMPONENTS} thread_win32)
-else(MINGW)
-	set(BOOST_REQUIRED_COMPONENTS ${BOOST_REQUIRED_COMPONENTS} thread)
-endif(MINGW)
 
 if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
     list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
