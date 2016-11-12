@@ -136,3 +136,7 @@ def align_to_grid(coor, mode=round):
 def scale(coor, reverse=False):
     factor = DPI_SCALING if not reverse else 1 / DPI_SCALING
     return tuple(int(x * factor) for x in coor)
+
+def scale_scalar(coor, reverse=False):
+    factor = DPI_SCALING if not reverse else 1 / DPI_SCALING
+    return int(coor * factor)
