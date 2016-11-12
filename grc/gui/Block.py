@@ -95,9 +95,8 @@ class Block(Element, _Block):
         """
         proximity = Constants.BORDER_PROXIMITY_SENSITIVITY
         try: #should evaluate to tuple
-            coor = eval(self.get_param('_coordinate').get_value())
-            x, y = map(int, coor)
-            fgW,fgH = self.get_parent().get_size()
+            x, y = Utils.scale(eval(self.get_param('_coordinate').get_value()))
+            fgW, fgH = self.get_parent().get_size()
             if x <= 0:
                 x = 0
             elif x >= fgW - proximity:
@@ -124,7 +123,7 @@ class Block(Element, _Block):
                 Utils.align_to_grid(coor[0] + offset_x) - offset_x,
                 Utils.align_to_grid(coor[1] + offset_y) - offset_y
             )
-        self.get_param('_coordinate').set_value(str(coor))
+        self.get_param('_coordinate').set_value(str(Utils.scale(coor, reverse=True)))
 
     def bound_move_delta(self, delta_coor):
         """
@@ -141,11 +140,11 @@ class Block(Element, _Block):
 
         try:
             fgW, fgH = self.get_parent().get_size()
-            x, y = map(int, eval(self.get_param("_coordinate").get_value()))
+            x, y = Utils.scale(eval(self.get_param('_coordinate').get_value()))
             if self.is_horizontal():
-               sW, sH = self.W, self.H
+                sW, sH = self.W, self.H
             else:
-               sW, sH = self.H, self.W
+                sW, sH = self.H, self.W
 
             if x + dX < 0:
                 dX = -x
@@ -154,7 +153,7 @@ class Block(Element, _Block):
             if y + dY < 0:
                 dY = -y
             elif dY + y + sH >= fgH:
-               dY = fgH - y - sH
+                dY = fgH - y - sH
         except:
             pass
 

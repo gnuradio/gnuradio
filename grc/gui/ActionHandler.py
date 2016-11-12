@@ -23,7 +23,7 @@ import gtk
 import os
 import subprocess
 
-from . import Dialogs, Preferences, Actions, Executor, Constants
+from . import Dialogs, Preferences, Actions, Executor, Constants, Utils
 from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
                           SaveConsoleFileDialog, SaveScreenShotDialog,
                           OpenQSSFileDialog)
@@ -515,8 +515,9 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_NEW:
             main.new_page()
             if args:
+                flow_graph = main.get_flow_graph()
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
-                flow_graph_update()
+                flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = args if args else OpenFlowGraphFileDialog(page.get_file_path()).run()
             if file_paths: #open a new page for each file, show only the first
@@ -688,8 +689,10 @@ class ActionHandler:
         Actions.FLOW_GRAPH_SAVE.set_sensitive(not page.get_saved())
         main.update()
         try: #set the size of the flow graph area (if changed)
-            new_size = (flow_graph.get_option('window_size') or
-                        self.platform.config.default_canvas_size)
+            new_size = Utils.scale(
+                flow_graph.get_option('window_size') or
+                self.platform.config.default_canvas_size
+            )
             if flow_graph.get_size() != tuple(new_size):
                 flow_graph.set_size(*new_size)
         except: pass
