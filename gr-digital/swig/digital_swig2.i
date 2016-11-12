@@ -37,7 +37,6 @@
 %include <gnuradio/blocks/control_loop.h>
 
 %{
-#include "gnuradio/digital/mpsk_receiver_cc.h"
 #include "gnuradio/digital/mpsk_snr_est.h"
 #include "gnuradio/digital/mpsk_snr_est_cc.h"
 #include "gnuradio/digital/header_format_base.h"
@@ -66,7 +65,6 @@
 #include "gnuradio/digital/header_payload_demux.h"
 %}
 
-%include "gnuradio/digital/mpsk_receiver_cc.h"
 %include "gnuradio/digital/mpsk_snr_est.h"
 %include "gnuradio/digital/mpsk_snr_est_cc.h"
 %include "gnuradio/digital/header_format_base.h"
@@ -91,7 +89,6 @@
 %include "gnuradio/digital/simple_correlator.h"
 %include "gnuradio/digital/simple_framer.h"
 
-GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, protocol_formatter_async);
 GR_SWIG_BLOCK_MAGIC2(digital, protocol_formatter_bb);
