@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Sync PN</name>
 	<key>digital_ofdm_sync_pn</key>
+        <category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.ofdm_sync_pn($fft_length, $cp_length, $logging)</make>
 	<param>

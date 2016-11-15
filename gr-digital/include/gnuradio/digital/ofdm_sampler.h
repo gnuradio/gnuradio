@@ -32,6 +32,7 @@ namespace gr {
     /*!
      * \brief does the rest of the OFDM stuff
      * \ingroup ofdm_blk
+     * \ingroup deprecated_blk
      */
     class DIGITAL_API ofdm_sampler : virtual public block
     {

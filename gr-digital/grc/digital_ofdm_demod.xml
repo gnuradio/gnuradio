@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Demod</name>
 	<key>digital_ofdm_demod</key>
+        <category>[Core]/Deprecated</category>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<import>from gnuradio import digital</import>
 	<make>grc_blks2.packet_demod_$(type.fcn)(digital.ofdm_demod(

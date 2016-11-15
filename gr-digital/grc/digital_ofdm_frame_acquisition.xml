@@ -28,6 +28,7 @@
 <block>
 	<name>OFDM Frame Acquisition</name>
 	<key>digital_ofdm_frame_acquisition</key>
+        <category>[Core]/Deprecated</category>
 	<import>from gnuradio import digital</import>
 	<make>digital.ofdm_frame_acquisition($occupied_carriers, $fft_length, $cplen, $known_symbol, $max_fft_shift_len)</make>
 	<param>
