@@ -69,6 +69,8 @@ namespace gr {
 	d_omega_rel(omega_rel), d_max_omega(0), d_min_omega(0),
 	d_p_2T(0), d_p_1T(0), d_p_0T(0), d_c_2T(0), d_c_1T(0), d_c_0T(0)
     {
+      GR_LOG_WARN(d_logger, "The gr::digital::mpsk_receiver_cc block is deprecated.");
+
       d_interp = new gr::filter::mmse_fir_interpolator_cc();
       d_dl_idx = 0;
 
