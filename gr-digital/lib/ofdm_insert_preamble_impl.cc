@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2010-2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -31,7 +31,7 @@
 
 namespace gr {
   namespace digital {
-    
+
     ofdm_insert_preamble::sptr
     ofdm_insert_preamble::make(int fft_length,
 			       const std::vector<std::vector<gr_complex> > &preamble)
@@ -55,6 +55,8 @@ namespace gr {
 	d_pending_flag(0),
 	d_preamble(preamble)
     {
+      GR_LOG_WARN(d_logger, "The gr::digital::ofdm_insert_preamble block has been deprecated.");
+
       // sanity check preamble symbols
       for(size_t i = 0; i < d_preamble.size(); i++) {
 	if(d_preamble[i].size() != (size_t) d_fft_length)
@@ -113,7 +115,7 @@ namespace gr {
 	  else
 	    ni++;			// eat one input symbol
 	  break;
-      
+
 	case ST_PREAMBLE:
 	  assert(!in_flag || in_flag[ni] & 0x1);
 	  if(d_nsymbols_output >= (int) d_preamble.size()) {
@@ -130,7 +132,7 @@ namespace gr {
 	    d_nsymbols_output++;
 	  }
 	  break;
-      
+
 	case ST_FIRST_PAYLOAD:
 	  // copy first payload symbol from input to output
 	  memcpy(&out_sym[no * d_fft_length],
@@ -142,7 +144,7 @@ namespace gr {
 	  ni++;
 	  enter_payload();
 	  break;
-      
+
 	case ST_PAYLOAD:
 	  if(in_flag && in_flag[ni] & 0x1) {	// this is first symbol of a new payload
 	    enter_preamble();
