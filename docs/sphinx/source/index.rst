@@ -1038,7 +1038,6 @@ Synchronizer Blocks
    gnuradio.digital.corr_est_cc
    gnuradio.digital.costas_loop_cc
    gnuradio.digital.fll_band_edge_cc
-   gnuradio.digital.mpsk_receiver_cc
    gnuradio.digital.msk_timing_recovery_cc
    gnuradio.analog.pll_carriertracking_cc
    gnuradio.analog.pll_freqdet_cf
