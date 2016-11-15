@@ -81,12 +81,7 @@ install(FILES
     ofdm_equalizer_base.h
     ofdm_equalizer_simpledfe.h
     ofdm_equalizer_static.h
-    ofdm_frame_acquisition.h
     ofdm_frame_equalizer_vcvc.h
-    ofdm_frame_sink.h
-    ofdm_insert_preamble.h
-    ofdm_mapper_bcv.h
-    ofdm_sampler.h
     ofdm_serializer_vcc.h
     ofdm_sync_sc_cfb.h
     header_format_base.h

@@ -97,12 +97,7 @@ list(APPEND digital_sources
     ofdm_equalizer_base.cc
     ofdm_equalizer_simpledfe.cc
     ofdm_equalizer_static.cc
-    ofdm_frame_acquisition_impl.cc
     ofdm_frame_equalizer_vcvc_impl.cc
-    ofdm_frame_sink_impl.cc
-    ofdm_insert_preamble_impl.cc
-    ofdm_mapper_bcv_impl.cc
-    ofdm_sampler_impl.cc
     ofdm_serializer_vcc_impl.cc
     ofdm_sync_sc_cfb_impl.cc
     header_format_base.cc
