@@ -34,6 +34,7 @@ namespace gr {
      * \brief take a vector of complex constellation points in from an
      * FFT and performs a correlation and equalization.
      * \ingroup ofdm_blk
+     * \ingroup deprecated_blk
      *
      * \details
      * This block takes the output of an FFT of a received OFDM symbol

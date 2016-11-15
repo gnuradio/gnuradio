@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2007,2008,2010-2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,9 +31,9 @@
 
 namespace gr {
   namespace digital {
-    
+
     ofdm_sampler::sptr
-    ofdm_sampler::make(unsigned int fft_length, 
+    ofdm_sampler::make(unsigned int fft_length,
 		       unsigned int symbol_length,
 		       unsigned int timeout)
     {
@@ -41,7 +41,7 @@ namespace gr {
 	(new ofdm_sampler_impl(fft_length, symbol_length, timeout));
     }
 
-    ofdm_sampler_impl::ofdm_sampler_impl(unsigned int fft_length, 
+    ofdm_sampler_impl::ofdm_sampler_impl(unsigned int fft_length,
 					 unsigned int symbol_length,
 					 unsigned int timeout)
       : block("ofdm_sampler",
@@ -50,6 +50,8 @@ namespace gr {
 	d_state(STATE_NO_SIG), d_timeout_max(timeout),
 	d_fft_length(fft_length), d_symbol_length(symbol_length)
     {
+      GR_LOG_WARN(d_logger, "The gr::digital::ofdm_sampler block has been deprecated.");
+
       set_relative_rate(1.0/(double) fft_length);   // buffer allocator hint
     }
 
@@ -80,7 +82,7 @@ namespace gr {
       gr_complex *optr = (gr_complex*)output_items[0];
       char *outsig = (char*)output_items[1];
 
-      //FIXME: we only process a single OFDM symbol at a time; after the preamble, we can 
+      //FIXME: we only process a single OFDM symbol at a time; after the preamble, we can
       // process a few at a time as long as we always look out for the next preamble.
 
       unsigned int index = d_fft_length;  // start one fft length into the input so we can always look back this far
@@ -96,7 +98,7 @@ namespace gr {
 	else
 	  index++;
       }
-  
+
       unsigned int i, pos, ret;
       switch(d_state) {
       case(STATE_PREAMBLE):
@@ -104,13 +106,13 @@ namespace gr {
 	for(i = (index - d_fft_length + 1); i <= index; i++) {
 	  *optr++ = iptr[i];
 	}
-    
+
 	d_timeout = d_timeout_max; // tell the system to expect at least this many symbols for a frame
 	d_state = STATE_FRAME;
 	consume_each(index - d_fft_length + 1); // consume up to one fft_length away to keep the history
 	ret = 1;
 	break;
-    
+
       case(STATE_FRAME):
 	// use this state when we have processed a preamble and are getting the rest of the frames
 	//FIXME: we could also have a power squelch system here to enter STATE_NO_SIG if no power is received
