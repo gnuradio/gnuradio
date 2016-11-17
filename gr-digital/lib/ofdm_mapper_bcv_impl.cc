@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006-2008,2010-2012 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -34,19 +34,19 @@ namespace gr {
 
     ofdm_mapper_bcv::sptr
     ofdm_mapper_bcv::make(const std::vector<gr_complex> &constellation,
-			  unsigned int msgq_limit, 
+			  unsigned int msgq_limit,
 			  unsigned int occupied_carriers,
 			  unsigned int fft_length)
     {
       return gnuradio::get_initial_sptr
-	(new ofdm_mapper_bcv_impl(constellation, msgq_limit, 
+	(new ofdm_mapper_bcv_impl(constellation, msgq_limit,
 				  occupied_carriers, fft_length));
     }
 
     // Consumes 1 packet and produces as many OFDM symbols of
     // fft_length to hold the full packet
     ofdm_mapper_bcv_impl::ofdm_mapper_bcv_impl(const std::vector<gr_complex> &constellation,
-					       unsigned int msgq_limit, 
+					       unsigned int msgq_limit,
 					       unsigned int occupied_carriers,
 					       unsigned int fft_length)
       : sync_block("ofdm_mapper_bcv",
@@ -61,6 +61,8 @@ namespace gr {
 	d_resid(0),
 	d_nresid(0)
     {
+      GR_LOG_WARN(d_logger, "The gr::digital::ofdm_mapper_bcv block has been deprecated.");
+
       if(!(d_occupied_carriers <= d_fft_length))
 	throw std::invalid_argument("ofdm_mapper_bcv_impl: occupied carriers must be <= fft_length");
 
@@ -72,7 +74,7 @@ namespace gr {
       std::string carriers = "FE7F";
 
       // A bit hacky to fill out carriers to occupied_carriers length
-      int diff = (d_occupied_carriers - 4*carriers.length()); 
+      int diff = (d_occupied_carriers - 4*carriers.length());
       while(diff > 7) {
 	carriers.insert(0, "f");
 	carriers.insert(carriers.length(), "f");
@@ -88,7 +90,7 @@ namespace gr {
       int diff_right=0;
 
       // dictionary to convert from integers to ascii hex representation
-      char abc[16] = {'0', '1', '2', '3', '4', '5', '6', '7', 
+      char abc[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
 		      '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
       if(diff > 0) {
 	char c[2] = {0,0};
@@ -96,23 +98,23 @@ namespace gr {
 	diff_left = (int)ceil((float)diff/2.0f);   // number of carriers to put on the left side
 	c[0] = abc[(1 << diff_left) - 1];          // convert to bits and move to ASCI integer
 	carriers.insert(0, c);
-    
+
 	diff_right = diff - diff_left;	       // number of carriers to put on the right side
 	c[0] = abc[0xF^((1 << diff_right) - 1)];   // convert to bits and move to ASCI integer
         carriers.insert(carriers.length(), c);
       }
-  
+
       // find out how many zeros to pad on the sides; the difference between the fft length and the subcarrier
-      // mapping size in chunks of four. This is the number to pack on the left and this number plus any 
-      // residual nulls (if odd) will be packed on the right. 
-      diff = (d_fft_length/4 - carriers.length())/2; 
+      // mapping size in chunks of four. This is the number to pack on the left and this number plus any
+      // residual nulls (if odd) will be packed on the right.
+      diff = (d_fft_length/4 - carriers.length())/2;
 
       unsigned int i,j,k;
       for(i = 0; i < carriers.length(); i++) {
 	char c = carriers[i];                            // get the current hex character from the string
 	for(j = 0; j < 4; j++) {                         // walk through all four bits
 	  k = (strtol(&c, NULL, 16) >> (3-j)) & 0x1;     // convert to int and extract next bit
-	  if(k) {                                        // if bit is a 1, 
+	  if(k) {                                        // if bit is a 1,
 	    d_subcarrier_map.push_back(4*(i+diff) + j);  // use this subcarrier
 	  }
 	}
@@ -122,7 +124,7 @@ namespace gr {
       if(d_subcarrier_map.size() > d_occupied_carriers) {
 	throw std::invalid_argument("ofdm_mapper_bcv_impl: subcarriers allocated exceeds size of occupied carriers");
       }
-  
+
       d_nbits = (unsigned long)ceil(log10(float(d_constellation.size())) / log10(2.0));
     }
 
@@ -141,7 +143,7 @@ namespace gr {
 			       gr_vector_void_star &output_items)
     {
       gr_complex *out = (gr_complex *)output_items[0];
-  
+
       unsigned int i=0;
 
       //printf("OFDM BPSK Mapper:  ninput_items: %d   noutput_items: %d\n", ninput_items[0], noutput_items);
@@ -149,13 +151,13 @@ namespace gr {
       if(d_eof) {
 	return -1;
       }
-  
+
       if(!d_msg) {
 	d_msg = d_msgq->delete_head();	   // block, waiting for a message
 	d_msg_offset = 0;
 	d_bit_offset = 0;
 	d_pending_flag = 1;			   // new packet, write start of packet flag
-    
+
 	if((d_msg->length() == 0) && (d_msg->type() == 1)) {
 	  d_msg.reset();
 	  return -1;		// We're done; no more messages coming.
@@ -165,12 +167,12 @@ namespace gr {
       char *out_flag = 0;
       if(output_items.size() == 2)
 	out_flag = (char *) output_items[1];
-  
+
 
       // Build a single symbol:
       // Initialize all bins to 0 to set unused carriers
       memset(out, 0, d_fft_length*sizeof(gr_complex));
-  
+
       i = 0;
       unsigned char bits = 0;
       //while((d_msg_offset < d_msg->length()) && (i < d_occupied_carriers)) {
@@ -193,7 +195,7 @@ namespace gr {
 	  d_bit_offset += d_nresid;
 	  d_nresid = 0;
 	  d_resid = 0;
-	  //printf("mod bit(r): %x   resid: %x   nresid: %d    bit_offset: %d\n", 
+	  //printf("mod bit(r): %x   resid: %x   nresid: %d    bit_offset: %d\n",
 	  //     bits, d_resid, d_nresid, d_bit_offset);
 	}
 	else {
@@ -201,11 +203,11 @@ namespace gr {
 	    // take the nbits number of bits at a time from the byte to add to the symbol
 	    bits = ((1 << d_nbits)-1) & (d_msgbytes >> d_bit_offset);
 	    d_bit_offset += d_nbits;
-	
+
 	    out[d_subcarrier_map[i]] = d_constellation[bits];
 	    i++;
 	  }
-	  else {  // if we can't fit nbits, store them for the next 
+	  else {  // if we can't fit nbits, store them for the next
 	    // saves d_nresid bits of this message where d_nresid < d_nbits
 	    unsigned int extra = 8-d_bit_offset;
 	    d_resid = ((1 << extra)-1) & (d_msgbytes >> d_bit_offset);
@@ -213,7 +215,7 @@ namespace gr {
 	    d_nresid = d_nbits - extra;
 	  }
 	}
-            
+
 	if(d_bit_offset == 8) {
 	  d_bit_offset = 0;
 	  d_msg_offset++;

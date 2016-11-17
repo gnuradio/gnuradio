@@ -343,9 +343,7 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
               m->setXValue(sample_offset);
               m->setYValue(yval);
 
-              QBrush brush;
-              brush.setColor(QColor(0xC8, 0x2F, 0x1F));
-              brush.setStyle(Qt::SolidPattern);
+              QBrush brush(getTagBackgroundColor(), getTagBackgroundStyle());
 
               QPen pen;
               pen.setColor(Qt::black);
@@ -367,8 +365,10 @@ TimeDomainDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 #else
               m->setSymbol(sym);
 #endif
+              QwtText tag_label(s.str().c_str());
+              tag_label.setColor(getTagTextColor());
+              m->setLabel(tag_label);
 
-              m->setLabel(QwtText(s.str().c_str()));
               m->attach(this);
 
               if(!(show && d_tag_markers_en[which])) {

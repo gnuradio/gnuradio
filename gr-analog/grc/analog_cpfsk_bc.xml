@@ -7,6 +7,7 @@
 <block>
 	<name>CPFSK</name>
 	<key>analog_cpfsk_bc</key>
+  	<category>[Core]/Deprecated</category>
 	<import>from gnuradio import analog</import>
 	<make>analog.cpfsk_bc($k, $amplitude, $samples_per_symbol)</make>
 	<callback>set_amplitude($amplitude)</callback>

@@ -69,7 +69,7 @@ class Block(CoreBlock, Drawable):
         Returns:
             the coordinate tuple (x, y) or (0, 0) if failure
         """
-        return self.states['_coordinate']
+        return Utils.scale(self.states['_coordinate'])
 
     @coordinate.setter
     def coordinate(self, coor):
@@ -79,6 +79,7 @@ class Block(CoreBlock, Drawable):
         Args:
             coor: the coordinate tuple (x, y)
         """
+        coor = Utils.scale(coor, reverse=True)
         if Actions.TOGGLE_SNAP_TO_GRID.get_active():
             offset_x, offset_y = (0, self.height / 2) if self.is_horizontal() else (self.height / 2, 0)
             coor = (

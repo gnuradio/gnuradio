@@ -90,42 +90,43 @@ class Platform(Element):
             if os.path.exists(os.path.normpath(file_path)):
                 return file_path
 
-    def load_and_generate_flow_graph(self, file_path):
+    def load_and_generate_flow_graph(self, file_path, out_path=None, hier_only=False):
         """Loads a flow graph from file and generates it"""
         Messages.set_indent(len(self._auto_hier_block_generate_chain))
-        Messages.send('>>> Loading: %r\n' % file_path)
+        Messages.send('>>> Loading: {}\n'.format(file_path))
         if file_path in self._auto_hier_block_generate_chain:
             Messages.send('    >>> Warning: cyclic hier_block dependency\n')
-            return False
+            return None, None
         self._auto_hier_block_generate_chain.add(file_path)
         try:
             flow_graph = self.get_new_flow_graph()
             flow_graph.grc_file_path = file_path
-            # Other, nested higiter_blocks might be auto-loaded here
+            # Other, nested hier_blocks might be auto-loaded here
             flow_graph.import_data(self.parse_flow_graph(file_path))
             flow_graph.rewrite()
             flow_graph.validate()
             if not flow_graph.is_valid():
                 raise Exception('Flowgraph invalid')
-            if not flow_graph.get_option('generate_options').startswith('hb'):
+            if hier_only and not flow_graph.get_option('generate_options').startswith('hb'):
                 raise Exception('Not a hier block')
         except Exception as e:
             Messages.send('>>> Load Error: {}: {}\n'.format(file_path, str(e)))
-            return False
+            return None, None
         finally:
             self._auto_hier_block_generate_chain.discard(file_path)
             Messages.set_indent(len(self._auto_hier_block_generate_chain))
 
         try:
-            Messages.send('>>> Generating: {}\n'.format(file_path))
-            generator = self.Generator(flow_graph, file_path)
+            generator = self.Generator(flow_graph, out_path or file_path)
+            Messages.send('>>> Generating: {}\n'.format(generator.file_path))
             generator.write()
         except Exception as e:
             Messages.send('>>> Generate Error: {}: {}\n'.format(file_path, str(e)))
-            return False
+            return None, None
 
-        self.load_block_xml(generator.file_path_xml)
-        return True
+        if flow_graph.get_option('generate_options').startswith('hb'):
+            self.load_block_xml(generator.file_path_xml)
+        return flow_graph, generator.file_path
 
     def build_block_library(self):
         """load the blocks and block tree from the search paths"""

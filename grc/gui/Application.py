@@ -519,8 +519,9 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_NEW:
             main.new_page()
             if args:
+                flow_graph = main.get_flow_graph()
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
-                flow_graph_update()
+                flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = args if args else FileDialogs.OpenFlowGraph(main, page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first

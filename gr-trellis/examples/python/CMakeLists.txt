@@ -22,7 +22,6 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     PROGRAMS
     test_tcm.py
-    test_cpm.py
     DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}
 )
 

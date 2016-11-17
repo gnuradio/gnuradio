@@ -29,6 +29,7 @@
 <block>
   <name>QAM Demod</name>
   <key>digital_qam_demod</key>
+  <category>[Core]/Deprecated</category>
   <import>from gnuradio import digital</import>
   <make>digital.qam.qam_demod(
   constellation_points=$constellation_points,

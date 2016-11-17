@@ -16,12 +16,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
+
 import os
-import threading
 import shlex
 import subprocess
-import sys
-import re
+import threading
 from distutils.spawn import find_executable
 
 from gi.repository import GLib
@@ -39,6 +38,7 @@ class ExecFlowGraphThread(threading.Thread):
         threading.Thread.__init__(self)
 
         self.page = flow_graph_page  # store page and dont use main window calls in run
+        self.flow_graph = self.page.get_flow_graph()
         self.xterm_executable = xterm_executable
         self.update_callback = callback
 
@@ -54,16 +54,9 @@ class ExecFlowGraphThread(threading.Thread):
         """
         Execute this python flow graph.
         """
-        run_command = self.page.flow_graph.get_option('run_command')
         generator = self.page.get_generator()
-
-        try:
-            run_command = run_command.format(
-                python=shlex_quote(sys.executable),
-                filename=shlex_quote(generator.file_path))
-            run_command_args = shlex.split(run_command)
-        except Exception as e:
-            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
+        run_command = self.flow_graph.get_run_command(generator.file_path)
+        run_command_args = shlex.split(run_command)
 
         # When in no gui mode on linux, use a graphical terminal (looks nice)
         xterm_executable = find_executable(self.xterm_executable)
@@ -99,21 +92,3 @@ class ExecFlowGraphThread(threading.Thread):
         Messages.send_end_exec(self.process.returncode)
         self.page.process = None
         self.update_callback()
-
-
-###########################################################
-# back-port from python3
-###########################################################
-_find_unsafe = re.compile(r'[^\w@%+=:,./-]').search
-
-
-def shlex_quote(s):
-    """Return a shell-escaped version of the string *s*."""
-    if not s:
-        return "''"
-    if _find_unsafe(s) is None:
-        return s
-
-    # use single quotes, and put single quotes into double quotes
-    # the string $'b is then quoted as '$'"'"'b'
-    return "'" + s.replace("'", "'\"'\"'") + "'"

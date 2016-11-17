@@ -24,8 +24,8 @@ from gnuradio import gr, digital, filter
 from gnuradio import blocks
 from gnuradio import channels
 from gnuradio import eng_notation
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import sys
 
 try:
@@ -68,34 +68,34 @@ class example_fll(gr.top_block):
         self.connect((self.fll,3), self.vsnk_err)
 
 def main():
-    parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
-    parser.add_option("-N", "--nsamples", type="int", default=2000,
-                      help="Set the number of samples to process [default=%default]")
-    parser.add_option("-S", "--sps", type="int", default=4,
-                      help="Set the samples per symbol [default=%default]")
-    parser.add_option("-r", "--rolloff", type="eng_float", default=0.35,
-                      help="Set the rolloff factor [default=%default]")
-    parser.add_option("-W", "--bandwidth", type="eng_float", default=2*scipy.pi/100.0,
-                      help="Set the loop bandwidth [default=%default]")
-    parser.add_option("-n", "--ntaps", type="int", default=45,
-                      help="Set the number of taps in the filters [default=%default]")
-    parser.add_option("", "--noise", type="eng_float", default=0.0,
-                      help="Set the simulation noise voltage [default=%default]")
-    parser.add_option("-f", "--foffset", type="eng_float", default=0.2,
-                      help="Set the simulation's normalized frequency offset (in Hz) [default=%default]")
-    parser.add_option("-t", "--toffset", type="eng_float", default=1.0,
-                      help="Set the simulation's timing offset [default=%default]")
-    parser.add_option("-p", "--poffset", type="eng_float", default=0.0,
-                      help="Set the simulation's phase offset [default=%default]")
-    (options, args) = parser.parse_args ()
+    parser = ArgumentParser(conflict_handler="resolve")
+    parser.add_argument("-N", "--nsamples", type=int, default=2000,
+                      help="Set the number of samples to process [default=%(default)r]")
+    parser.add_argument("-S", "--sps", type=int, default=4,
+                      help="Set the samples per symbol [default=%(default)r]")
+    parser.add_argument("-r", "--rolloff", type=eng_float, default=0.35,
+                      help="Set the rolloff factor [default=%(default)r]")
+    parser.add_argument("-W", "--bandwidth", type=eng_float, default=2*scipy.pi/100.0,
+                      help="Set the loop bandwidth [default=%(default)r]")
+    parser.add_argument("-n", "--ntaps", type=int, default=45,
+                      help="Set the number of taps in the filters [default=%(default)r]")
+    parser.add_argument("--noise", type=eng_float, default=0.0,
+                      help="Set the simulation noise voltage [default=%(default)r]")
+    parser.add_argument("-f", "--foffset", type=eng_float, default=0.2,
+                      help="Set the simulation's normalized frequency offset (in Hz) [default=%(default)r]")
+    parser.add_argument("-t", "--toffset", type=eng_float, default=1.0,
+                      help="Set the simulation's timing offset [default=%(default)r]")
+    parser.add_argument("-p", "--poffset", type=eng_float, default=0.0,
+                      help="Set the simulation's phase offset [default=%(default)r]")
+    args = parser.parse_args()
 
     # Adjust N for the interpolation by sps
-    options.nsamples = options.nsamples // options.sps
+    args.nsamples = args.nsamples // args.sps
 
     # Set up the program-under-test
-    put = example_fll(options.nsamples, options.sps, options.rolloff,
-                      options.ntaps, options.bandwidth, options.noise,
-                      options.foffset, options.toffset, options.poffset)
+    put = example_fll(args.nsamples, args.sps, args.rolloff,
+                      args.ntaps, args.bandwidth, args.noise,
+                      args.foffset, args.toffset, args.poffset)
     put.run()
 
     data_src = scipy.array(put.vsnk_src.data())
@@ -106,7 +106,7 @@ def main():
 
     # adjust this to align with the data. There are 2 filters of
     # ntaps long and the channel introduces another 4 sample delay.
-    data_fll = scipy.array(put.vsnk_fll.data()[2*options.ntaps-4:])
+    data_fll = scipy.array(put.vsnk_fll.data()[2*args.ntaps-4:])
 
     # Plot the FLL's LO frequency
     f1 = pylab.figure(1, figsize=(12,10))

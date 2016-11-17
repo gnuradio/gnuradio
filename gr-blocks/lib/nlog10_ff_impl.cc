@@ -26,6 +26,7 @@
 
 #include "nlog10_ff_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
   namespace blocks {
@@ -39,8 +40,23 @@ namespace gr {
       : sync_block("nlog10_ff",
 		      io_signature::make (1, 1, sizeof(float)*vlen),
 		      io_signature::make (1, 1, sizeof(float)*vlen)),
-	d_n(n), d_vlen(vlen), d_k(k)
+        d_vlen(vlen)
     {
+      setk(k);
+      setn(n);
+      //TODO message handlers
+    }
+
+    void
+    nlog10_ff_impl::setk(float k)
+    {
+      d_k = k;
+    }
+
+    void
+    nlog10_ff_impl::setn(float n)
+    {
+      d_prefactor = n / log2f(10.0f);
     }
 
     int
@@ -51,12 +67,14 @@ namespace gr {
       const float *in = (const float *) input_items[0];
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
-      float n = d_n;
-      float k = d_k;
 
-      for (int i = 0; i < noi; i++)
-	out[i] = n * log10(std::max(in[i], (float) 1e-18)) + k;
-
+      volk_32f_log2_32f(out, in, noi);
+      volk_32f_s32f_multiply_32f(out, out, d_prefactor, noi);
+      if(d_k != 0.0f) {
+        for(int i = 0; i < noi; ++i) {
+          out[i] += d_k;
+        }
+      }
       return noutput_items;
     }
 

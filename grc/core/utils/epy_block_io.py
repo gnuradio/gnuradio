@@ -24,7 +24,7 @@ def _ports(sigs, msgs):
     for i, dtype in enumerate(sigs):
         port_type = TYPE_MAP.get(dtype.name, None)
         if not port_type:
-            raise ValueError("Can't map {0:!r} to GRC port type".format(dtype))
+            raise ValueError("Can't map {0!r} to GRC port type".format(dtype))
         ports.append((str(i), port_type))
     for msg_key in msgs:
         if msg_key == 'system':

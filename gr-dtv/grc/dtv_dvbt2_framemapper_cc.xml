@@ -494,12 +494,12 @@ $inputmode.val, $reservedbiasbits.val, $l1scrambled.val, $inband.val)</make>
     <hide>$version.hide_131</hide>
     <option>
       <name>Normal</name>
-      <key>FECFRAME_NORMAL</key>
+      <key>INPUTMODE_NORMAL</key>
       <opt>val:dtv.INPUTMODE_NORMAL</opt>
     </option>
     <option>
       <name>High Efficiency</name>
-      <key>FECFRAME_SHORT</key>
+      <key>INPUTMODE_HIEFF</key>
       <opt>val:dtv.INPUTMODE_HIEFF</opt>
     </option>
   </param>

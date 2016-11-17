@@ -35,3 +35,4 @@ except ImportError:
     from qtgui_swig import *
 
 from range import Range, RangeWidget
+import util

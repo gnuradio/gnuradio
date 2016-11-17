@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 from gi.repository import Gtk, Gdk, GObject
 
-from . import Actions, Constants
+from . import Actions, Constants, Utils
 
 BLOCK_INDEX = 0
 ID_INDEX = 1
@@ -114,9 +114,9 @@ class VariableEditor(Gtk.VBox):
         id_column = Gtk.TreeViewColumn("Id", self.id_cell, text=ID_INDEX)
         id_column.set_name("id")
         id_column.set_resizable(True)
-        id_column.set_max_width(300)
-        id_column.set_min_width(80)
-        id_column.set_fixed_width(100)
+        id_column.set_max_width(Utils.scale_scalar(300))
+        id_column.set_min_width(Utils.scale_scalar(80))
+        id_column.set_fixed_width(Utils.scale_scalar(100))
         id_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         id_column.set_cell_data_func(self.id_cell, self.set_properties)
         self.id_column = id_column
@@ -132,7 +132,7 @@ class VariableEditor(Gtk.VBox):
         value_column.set_name("value")
         value_column.set_resizable(False)
         value_column.set_expand(True)
-        value_column.set_min_width(100)
+        value_column.set_min_width(Utils.scale_scalar(100))
         value_column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
         value_column.set_cell_data_func(self.value_cell, self.set_value)
         self.value_column = value_column

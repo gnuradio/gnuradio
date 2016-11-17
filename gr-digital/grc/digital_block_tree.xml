@@ -48,17 +48,11 @@
   <cat>
     <name>Modulators</name>
     <block>digital_cpmmod_bc</block>
-    <block>digital_dxpsk_mod</block>
-    <block>digital_dxpsk_demod</block>
     <block>digital_gfsk_mod</block>
     <block>digital_gfsk_demod</block>
     <block>digital_gmskmod_bc</block>
     <block>digital_gmsk_mod</block>
     <block>digital_gmsk_demod</block>
-    <block>digital_psk_mod</block>
-    <block>digital_psk_demod</block>
-    <block>digital_qam_mod</block>
-    <block>digital_qam_demod</block>
     <block>digital_constellation_modulator</block>
     <block>digital_constellation_receiver_cb</block>
     <block>variable_constellation</block>
@@ -122,7 +116,6 @@
     <block>digital_clock_recovery_mm_xx</block>
     <block>digital_costas_loop_cc</block>
     <block>digital_fll_band_edge_cc</block>
-    <block>digital_mpsk_receiver_cc</block>
     <block>digital_pfb_clock_sync_xxx</block>
     <block>digital_pn_correlator_cc</block>
     <block>digital_corr_est_cc</block>

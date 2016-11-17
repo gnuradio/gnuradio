@@ -22,11 +22,12 @@ import time
 import re
 from operator import methodcaller
 import collections
+import sys
 
 from . import Messages
 from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .Element import Element
-from .utils import expr_utils
+from .utils import expr_utils, shlex
 
 _parameter_matcher = re.compile('^(parameter)$')
 _monitors_searcher = re.compile('(ctrlport_monitor)')
@@ -180,6 +181,16 @@ class FlowGraph(Element):
             the value held by that param
         """
         return self._options_block.get_param(key).get_evaluated()
+
+    def get_run_command(self, file_path, split=False):
+        run_command = self.get_option('run_command')
+        try:
+            run_command = run_command.format(
+                python=shlex.quote(sys.executable),
+                filename=shlex.quote(file_path))
+            return shlex.split(run_command) if split else run_command
+        except Exception as e:
+            raise ValueError("Can't parse run command {!r}: {}".format(run_command, e))
 
     ##############################################
     # Access Elements
@@ -392,7 +403,7 @@ class FlowGraph(Element):
                     cwd=self.grc_file_path
                 )
                 if file_path:  # grc file found. load and get block
-                    self.parent_platform.load_and_generate_flow_graph(file_path)
+                    self.parent_platform.load_and_generate_flow_graph(file_path, hier_only=True)
                     block = self.new_block(key)  # can be None
 
             if not block:  # looks like this block key cannot be found

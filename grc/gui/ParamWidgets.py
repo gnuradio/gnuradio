@@ -20,7 +20,7 @@ import os
 
 from gi.repository import Gtk, Gdk
 
-from . import Colors
+from . import Colors, Utils
 
 
 class InputParam(Gtk.HBox):
@@ -35,7 +35,7 @@ class InputParam(Gtk.HBox):
         self._editing_callback = editing_callback
 
         self.label = Gtk.Label()
-        self.label.set_size_request(150, -1)
+        self.label.set_size_request(Utils.scale_scalar(150), -1)
         self.label.show()
         self.pack_start(self.label, False, False, 0)
 

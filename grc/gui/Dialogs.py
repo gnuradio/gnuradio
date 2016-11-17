@@ -90,7 +90,7 @@ class TextDisplay(SimpleTextDisplay):
         # for each \b delete one char from the buffer
         back_count = 0
         start_iter = self.get_buffer().get_end_iter()
-        while line[back_count] == '\b':
+        while len(line) > back_count and line[back_count] == '\b':
             # stop at the beginning of a line
             if not start_iter.starts_line():
                 start_iter.backward_char()

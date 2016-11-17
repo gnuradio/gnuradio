@@ -145,8 +145,16 @@ namespace gr {
                        tags.erase(tags.begin());
                        goto out;
                     }
+                    if(std::abs(center) >= 1.0f) {
+                        GR_LOG_WARN(d_logger, boost::format("work: ignoring time_est tag "
+                                                            "(%.2f) outside of (-1, 1)") \
+                                    % center);
+                        tags.erase(tags.begin());
+                        goto out;
+                    }
                     d_mu = center;
                     iidx = offset;
+                    //we want positive mu, so offset iidx to compensate
                     if(d_mu<0) {
                         d_mu++;
                         iidx--;

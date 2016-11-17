@@ -22,8 +22,8 @@
 ###############################################################################
 # Imports
 ###############################################################################
-from optparse import OptionParser
-from gnuradio.eng_option import eng_option
+from argparse import ArgumentParser
+from gnuradio.eng_arg import eng_float, intx
 import gui
 import sys
 import os
@@ -141,24 +141,24 @@ class gui(QtGui.QMainWindow):
 ###############################################################################
 # Options Parser
 ###############################################################################
-def parse_options():
-    """ Options parser. """
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    parser.add_option("-s", "--servername", type="string", default="localhost",
+def parse_args():
+    """Options parser."""
+    parser = ArgumentParser()
+    parser.add_argument("-s", "--servername", default="localhost",
                       help="Server hostname")
-    parser.add_option("-c", "--clientname", type="string", default="localhost",
+    parser.add_argument("-c", "--clientname", default="localhost",
                       help="Server hostname")
-    (options, args) = parser.parse_args()
-    return options
+    args = parser.parse_args()
+    return args
 
 
 ###############################################################################
 # Main
 ###############################################################################
 if __name__ == "__main__":
-    options = parse_options()
+    args = parse_args()
     qapp = Qt.QApplication(sys.argv)
-    qapp.main_window = gui("Remote GNU Radio GUI",options)
+    qapp.main_window = gui("Remote GNU Radio GUI", args)
     qapp.main_window.show()
     qapp.exec_()
 

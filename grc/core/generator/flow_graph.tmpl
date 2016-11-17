@@ -80,7 +80,7 @@ $imp
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'qt_gui'
-
+from gnuradio import qtgui
 
 class $(class_name)(gr.top_block, Qt.QWidget):
 
@@ -88,6 +88,7 @@ class $(class_name)(gr.top_block, Qt.QWidget):
         gr.top_block.__init__(self, "$title")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("$title")
+        qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:

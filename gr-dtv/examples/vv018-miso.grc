@@ -504,7 +504,7 @@
     <key>dtv_dvb_bbheader_bb</key>
     <param>
       <key>mode</key>
-      <value>INPUTMODE_NORMAL</value>
+      <value>INPUTMODE_HIEFF</value>
     </param>
     <param>
       <key>alias</key>
@@ -639,7 +639,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 20)</value>
+      <value>(640, 20)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -710,7 +710,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(824, 20)</value>
+      <value>(848, 20)</value>
     </param>
     <param>
       <key>_rotation</key>

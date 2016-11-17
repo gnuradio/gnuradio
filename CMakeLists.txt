@@ -148,6 +148,10 @@ if(MSVC)
     add_definitions(/bigobj) #allow for larger object files
 endif(MSVC)
 
+if(WIN32)
+	add_definitions(-D_USE_MATH_DEFINES)
+endif(WIN32)
+
 # Record Compiler Info for record
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
 set(COMPILER_INFO "")

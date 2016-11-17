@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2006-2008,2010,2011 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -32,14 +32,14 @@
 
 namespace gr {
   namespace digital {
-    
+
 #define VERBOSE 0
 #define M_TWOPI (2*M_PI)
 #define MAX_NUM_SYMBOLS 1000
 
     ofdm_frame_acquisition::sptr
     ofdm_frame_acquisition::make(unsigned int occupied_carriers,
-				 unsigned int fft_length, 
+				 unsigned int fft_length,
 				 unsigned int cplen,
 				 const std::vector<gr_complex> &known_symbol,
 				 unsigned int max_fft_shift_len)
@@ -50,7 +50,7 @@ namespace gr {
     }
 
     ofdm_frame_acquisition_impl::ofdm_frame_acquisition_impl(unsigned occupied_carriers,
-							     unsigned int fft_length, 
+							     unsigned int fft_length,
 							     unsigned int cplen,
 							     const std::vector<gr_complex> &known_symbol,
 							     unsigned int max_fft_shift_len)
@@ -65,6 +65,8 @@ namespace gr {
 	d_coarse_freq(0),
 	d_phase_count(0)
     {
+      GR_LOG_WARN(d_logger, "The gr::digital::ofdm_frame_acquisition block has been deprecated.");
+
       d_symbol_phase_diff.resize(d_fft_length);
       d_known_phase_diff.resize(d_occupied_carriers);
       d_hestimate.resize(d_occupied_carriers);
@@ -75,7 +77,7 @@ namespace gr {
       for(i = 0; i < d_known_symbol.size()-2; i+=2) {
 	d_known_phase_diff[i] = norm(d_known_symbol[i] - d_known_symbol[i+2]);
       }
-  
+
       d_phase_lut = new gr_complex[(2*d_freq_shift_len+1) * MAX_NUM_SYMBOLS];
       for(i = 0; i <= 2*d_freq_shift_len; i++) {
 	for(j = 0; j < MAX_NUM_SYMBOLS; j++) {
@@ -112,7 +114,7 @@ namespace gr {
     ofdm_frame_acquisition_impl::correlate(const gr_complex *symbol, int zeros_on_left)
     {
       unsigned int i,j;
-  
+
       std::fill(d_symbol_phase_diff.begin(), d_symbol_phase_diff.end(), 0);
       for(i = 0; i < d_fft_length-2; i++) {
 	d_symbol_phase_diff[i] = norm(symbol[i] - symbol[i+2]);
@@ -142,16 +144,16 @@ namespace gr {
       unsigned int i=0;
 
       // Set first tap of equalizer
-      d_hestimate[0] = d_known_symbol[0] / 
+      d_hestimate[0] = d_known_symbol[0] /
 	(coarse_freq_comp(d_coarse_freq,1)*symbol[zeros_on_left+d_coarse_freq]);
 
       // set every even tap based on known symbol
       // linearly interpolate between set carriers to set zero-filled carriers
       // FIXME: is this the best way to set this?
       for(i = 2; i < d_occupied_carriers; i+=2) {
-	d_hestimate[i] = d_known_symbol[i] / 
+	d_hestimate[i] = d_known_symbol[i] /
 	  (coarse_freq_comp(d_coarse_freq,1)*(symbol[i+zeros_on_left+d_coarse_freq]));
-	d_hestimate[i-1] = (d_hestimate[i] + d_hestimate[i-2]) / gr_complex(2.0, 0.0);    
+	d_hestimate[i-1] = (d_hestimate[i] + d_hestimate[i-2]) / gr_complex(2.0, 0.0);
       }
 
       // with even number of carriers; last equalizer tap is wrong
@@ -164,7 +166,7 @@ namespace gr {
 	for(i = 0; i < d_occupied_carriers; i++) {
 	  gr_complex sym = coarse_freq_comp(d_coarse_freq,1)*symbol[i+zeros_on_left+d_coarse_freq];
 	  gr_complex output = sym * d_hestimate[i];
-	  fprintf(stderr, "sym: %+.4f + j%+.4f  ks: %+.4f + j%+.4f  eq: %+.4f + j%+.4f  ==>  %+.4f + j%+.4f\n", 
+	  fprintf(stderr, "sym: %+.4f + j%+.4f  ks: %+.4f + j%+.4f  eq: %+.4f + j%+.4f  ==>  %+.4f + j%+.4f\n",
 		  sym .real(), sym.imag(),
 		  d_known_symbol[i].real(), d_known_symbol[i].imag(),
 		  d_hestimate[i].real(), d_hestimate[i].imag(),
@@ -185,7 +187,7 @@ namespace gr {
 
       gr_complex *out = (gr_complex *) output_items[0];
       char *signal_out = (char *) output_items[1];
-  
+
       int unoccupied_carriers = d_fft_length - d_occupied_carriers;
       int zeros_on_left = (int)ceil(unoccupied_carriers/2.0);
 
@@ -203,7 +205,7 @@ namespace gr {
 	out[i] = d_hestimate[i]*coarse_freq_comp(d_coarse_freq,d_phase_count)
 	  *symbol[i+zeros_on_left+d_coarse_freq];
       }
-  
+
       d_phase_count++;
       if(d_phase_count == MAX_NUM_SYMBOLS) {
 	d_phase_count = 1;

@@ -24,9 +24,9 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GR_UHD_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+    ${UHD_INCLUDE_DIRS}
     ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
-    ${UHD_INCLUDE_DIRS}
 )
 
 link_directories(

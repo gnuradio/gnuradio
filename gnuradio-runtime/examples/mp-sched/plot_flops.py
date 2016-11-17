@@ -85,10 +85,10 @@ def handle_file(input_filename):
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument('file', help='Input file', nargs=1)
+    parser.add_argument('file', help='Input file')
     args = parser.parse_args()
 
-    handle_file(args.file[0])
+    handle_file(args.file)
 
 
 if __name__ == '__main__':

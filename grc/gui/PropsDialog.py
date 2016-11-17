@@ -51,7 +51,9 @@ class PropsDialog(Gtk.Dialog):
             Gtk.STOCK_APPLY, Gtk.ResponseType.APPLY,
         )
         self.set_response_sensitive(Gtk.ResponseType.APPLY, False)
-        self.set_size_request(Constants.MIN_DIALOG_WIDTH, Constants.MIN_DIALOG_HEIGHT)
+        self.set_size_request(*Utils.scale(
+            (Constants.MIN_DIALOG_WIDTH, Constants.MIN_DIALOG_HEIGHT)
+        ))
 
         self._block = block
         self._hash = 0

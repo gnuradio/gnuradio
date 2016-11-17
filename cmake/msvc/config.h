@@ -21,7 +21,6 @@ typedef ptrdiff_t ssize_t;
 ////////////////////////////////////////////////////////////////////////
 // rint functions
 ////////////////////////////////////////////////////////////////////////
-#define _USE_MATH_DEFINES
 #include <math.h>
 #if _MSC_VER < 1800
 static inline long lrint(double x){return (long)(x > 0.0 ? x + 0.5 : x - 0.5);}
@@ -61,8 +60,5 @@ static inline float rintf(float x){return (x > 0.0f)? floorf(x + 0.5f) : ceilf(x
 #include <stdlib.h>
 static inline long int random (void) { return rand(); }
 static inline void srandom (unsigned int seed) { srand(seed); }
-
-#define srand48(seed) srand(seed)
-#define drand48() (double(rand()) / RAND_MAX)
 
 #endif // _MSC_CONFIG_H_ ]
