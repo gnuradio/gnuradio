@@ -30,7 +30,7 @@
 */
 
 #ifdef _MSC_VER
-typedef unsigned short mode_t;
+typedef int mode_t;
 #else
 #include <sys/types.h>
 #endif
