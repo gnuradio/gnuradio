@@ -103,20 +103,6 @@ namespace gr {
 #define GR_LOG_GET_LEVEL(logger, level)         \
   gr::logger_get_level(logger,level);
 
-#define GR_ADD_APPENDER(name, appender) {                       \
-    gr::logger_ptr logger = gr::logger_get_logger(name);        \
-    gr::logger_add_appender(logger,appender);}
-
-#define GR_LOG_ADD_APPENDER(logger, appender) { \
-    gr::logger_add_appender(logger, appender);}
-
-#define GR_SET_APPENDER(name, appender) {                       \
-    gr::logger_ptr logger = gr::logger_get_logger(name);        \
-    gr::logger_set_appender(logger,appender);}
-
-#define GR_LOG_SET_APPENDER(logger, appender) { \
-    gr::logger_set_appender(logger, appender);}
-
 #define GR_ADD_CONSOLE_APPENDER(name, target, pattern) {        \
     gr::logger_ptr logger = gr::logger_get_logger(name);        \
     gr::logger_add_console_appender(logger,target,pattern);}
@@ -629,18 +615,6 @@ namespace gr {
 
     /*! \brief inline function, wrapper for LOG4CPP_ASSERT for conditional ERROR message */
     void log_assert(bool cond,std::string msg){GR_LOG_ASSERT(d_logger,cond,msg);}
-
-    /*! \brief inline function, Method to add appender to logger by
-        name (define appender in conf file) */
-    void add_appender(std::string appender) {
-      GR_LOG_ADD_APPENDER(d_logger, appender);
-    }
-
-    /*! \brief inline function, Method to set an appender to logger by
-        name (define appender in conf file) */
-    void set_appender(std::string appender) {
-      GR_LOG_SET_APPENDER(d_logger, appender);
-    }
 
     /*! \brief inline function, Method to add console appender to logger */
     void add_console_appender(std::string target,std::string pattern) {
