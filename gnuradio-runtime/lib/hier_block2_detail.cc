@@ -744,6 +744,21 @@ namespace gr {
 
     std::vector<std::pair<msg_endpoint, bool> > resolved_endpoints;
     for(q = msg_edges.begin(); q != msg_edges.end(); q++) {
+
+      if(ctrlport_on) {
+        basic_block_sptr b;
+        b = q->src().block();
+        if(!b->is_rpc_set()) {
+          b->setup_rpc();
+          b->rpc_set();
+        }
+        b = q->dst().block();
+        if(!b->is_rpc_set()) {
+          b->setup_rpc();
+          b->rpc_set();
+        }
+      }
+
       if(HIER_BLOCK2_DETAIL_DEBUG)
         std::cout << boost::format(" flattening edge ( %s, %s, %d) -> ( %s, %s, %d)\n") % \
           q->src().block() % q->src().port() % q->src().is_hier() % q->dst().block() % \
