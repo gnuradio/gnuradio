@@ -135,6 +135,15 @@ class UHDApp(object):
             ))
         return specs
 
+    def normalize_lo_source_export_sel(self, args):
+        lo_source = [x.strip() for x in args.lo_source.split(",")]
+        lo_export = [x.strip() for x in args.lo_export.split(",")]
+        if len(lo_source) != len(self.channels):
+            raise ValueError("Invalid number of lo-source settings {n} for {c} channels. Must be one argument per channel.".format(n=len(lo_source), c=len(args.channels)))
+        if len(lo_export) != len(self.channels):
+            raise ValueError("Invalid number of lo-export settings {n} for {c} channels. Must be one argument per channel.".format(n=len(lo_source), c=len(args.channels)))
+        return (lo_source, lo_export)
+
     def async_callback(self, msg):
         """
         Call this when USRP async metadata needs printing.
@@ -204,6 +213,32 @@ class UHDApp(object):
         else:
             treq = uhd.tune_request(args.freq)
         self.has_lo_sensor = 'lo_locked' in self.usrp.get_sensor_names()
+        # Set LO export and LO source operation
+        if (args.lo_export is not None) and (args.lo_source is not None):
+            (args.lo_source,args.lo_export) = self.normalize_lo_source_export_sel(args)
+            for chan,lo_source,lo_export in zip(self.channels,args.lo_source,args.lo_export):
+                if (lo_source == "None") or (lo_export == "None"):
+                    continue
+                if lo_export == "True":
+                    #If channel is LO source set frequency and store response
+                    self.usrp.set_lo_export_enabled(True, uhd.ALL_LOS, chan)
+                if lo_source == "internal":
+                    self.lo_source_channel = chan
+                    tune_resp = self.usrp.set_center_freq(treq,chan)
+                self.usrp.set_lo_source(lo_source, uhd.ALL_LOS,chan)
+            # Use lo source tune response to tune dsp_freq on remaining channels
+            if getattr(args, 'lo_offset', None) is not None:
+                treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freq+args.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            else:
+                treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freg, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            for chan in args.channels:
+                if chan == self.lo_source_channel:
+                    continue
+                self.usrp.set_center_freq(treq,chan)
         # Make sure tuning is synched:
         command_time_set = False
         if len(self.channels) > 1:
@@ -265,6 +300,22 @@ class UHDApp(object):
             treq = uhd.tune_request(freq, self.args.lo_offset)
         else:
             treq = uhd.tune_request(freq)
+        # Special TwinRX tuning due to LO sharing
+        if getattr(self, 'lo_source_channel', None) is not None:
+            tune_resp = self.usrp.set_center_freq(treq, self.lo_source_channel)
+            if getattr(self.args, 'lo_offset', None) is not None:
+                treq = uhd.tune_request(target_freq=freq, rf_freq=freq+self.args.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            else:
+                treq = uhd.tune_request(target_freq=freq, rf_freq=freq, rf_freq_policy=uhd.tune_reqest.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            for chan in self.channels:
+                if chan == self.lo_source_channel:
+                    continue
+                self.usrp.set_center_freq(treq,chan)
+
         # Make sure tuning is synched:
         command_time_set = False
         if len(self.channels) > 1 and not skip_sync:
@@ -333,6 +384,8 @@ class UHDApp(object):
         if allow_mimo:
             group.add_argument("-c", "--channels", default=[0,], type=cslist,
                                 help="Select {xx} Channels".format(xx=tx_or_rx))
+        group.add_argument("--lo-export", help="Set TwinRX LO export {None, True, False} for each channel with a comma-separated list. None skips a channel.")
+        group.add_argument("--lo-source", help="Set TwinRX LO source {None, internal, companion, external} for each channel with a comma-separated list. None skips this channel. ")
         group.add_argument("--otw-format", choices=['sc16', 'sc12', 'sc8'], default='sc16',
                             help="Choose over-the-wire data format")
         group.add_argument("--stream-args", default="", help="Set additional stream arguments")
