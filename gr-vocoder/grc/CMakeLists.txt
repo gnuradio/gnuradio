@@ -44,6 +44,15 @@ if(LIBCODEC2_FOUND)
     )
 endif(LIBCODEC2_FOUND)
 
+if(LIBCODEC2_HAS_FREEDV_API)
+  install(FILES
+    vocoder_freedv_rx_ss.xml
+    vocoder_freedv_tx_ss.xml
+    DESTINATION ${GRC_BLOCKS_DIR}
+    COMPONENT "vocoder_python"
+    )
+endif(LIBCODEC2_HAS_FREEDV_API)
+
 if(LIBGSM_FOUND)
   install(FILES
     vocoder_gsm_fr_decode_ps.xml

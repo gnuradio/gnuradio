@@ -85,6 +85,25 @@ GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_decode_ps);
 GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_encode_sp);
 #endif
 
+#ifdef LIBCODEC2_HAS_FREEDV_API
+%{
+#include <codec2/freedv_api.h>
+#include "gnuradio/vocoder/freedv_api.h"
+#include "gnuradio/vocoder/freedv_rx_ss.h"
+#include "gnuradio/vocoder/freedv_tx_ss.h"
+%}
+
+%ignore freedv_set_smooth_symbols;
+%ignore freedv_set_clip;
+%include <codec2/freedv_api.h>
+%include "gnuradio/vocoder/freedv_api.h"
+%include "gnuradio/vocoder/freedv_rx_ss.h"
+%include "gnuradio/vocoder/freedv_tx_ss.h"
+
+GR_SWIG_BLOCK_MAGIC2(vocoder, freedv_rx_ss);
+GR_SWIG_BLOCK_MAGIC2(vocoder, freedv_tx_ss);
+#endif
+
 #ifdef LIBGSM_FOUND
 %{
 #include "gnuradio/vocoder/gsm_fr_decode_ps.h"
