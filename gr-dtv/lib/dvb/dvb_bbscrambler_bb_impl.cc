@@ -279,8 +279,7 @@ namespace gr {
       unsigned char *out = (unsigned char *) output_items[0];
 
       for (int i = 0; i < noutput_items; i += kbch) {
-        for (int j = 0; j < (int)kbch; ++j)
-        {
+        for (int j = 0; j < (int)kbch; ++j) {
           out[i + j] = in[i + j] ^ bb_randomise[j];
         }
       }

@@ -71,6 +71,7 @@ namespace gr {
       }
       else  {
         frame_size = FRAME_SIZE_MEDIUM - MEDIUM_PUNCTURING + EXTRA_PILOT_SYMBOLS_SET1;
+        type = 0;
         pilots = PILOTS_ON;    /* force pilots on for VL-SNR */
       }
 
