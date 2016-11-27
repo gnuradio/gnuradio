@@ -186,6 +186,8 @@ namespace gr {
           max_states = 0;
           logic = &logic1k[0];
           xor_size = 0;
+          bitpermeven = &bitperm1keven[0];
+          bitpermodd = &bitperm1kodd[0];
           break;
       }
       switch (fftsize) {

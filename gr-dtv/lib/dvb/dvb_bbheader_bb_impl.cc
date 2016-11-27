@@ -326,7 +326,7 @@ namespace gr {
     void
     dvb_bbheader_bb_impl::build_crc8_table(void)
     {
-      int r,crc;
+      int r, crc;
 
       for (int i = 0; i < 256; i++) {
         r = i;
