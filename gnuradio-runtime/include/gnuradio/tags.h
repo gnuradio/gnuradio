@@ -69,6 +69,24 @@ namespace gr {
     {
     }
 
+    tag_t(const tag_t &rhs)
+      : offset(rhs.offset),
+        key(rhs.key),
+        value(rhs.value),
+        srcid(rhs.srcid)
+    {
+    }
+    tag_t& operator=(const tag_t &rhs)
+    {
+      if (this != &rhs) {
+        offset = rhs.offset;
+        key = rhs.key;
+        value = rhs.value;
+        srcid = rhs.srcid;
+      }
+      return (*this);
+    }
+
     ~tag_t()
     {
     }
