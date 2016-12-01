@@ -24,7 +24,13 @@
 
 #include <pmt/pmt.h>
 #include <boost/utility.hpp>
-#include <boost/detail/atomic_count.hpp>
+#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53)) 
+  #include <boost/atomic.hpp>
+#else
+  // boost::atomic not available before 1.53
+  // This section will be removed when support for boost 1.48 ceases
+  #include <boost/detail/atomic_count.hpp>
+#endif
 
 /*
  * EVERYTHING IN THIS FILE IS PRIVATE TO THE IMPLEMENTATION!
@@ -36,10 +42,23 @@
 namespace pmt {
 
 class PMT_API pmt_base : boost::noncopyable {
+
+#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53)) 
+  mutable boost::atomic<int> refcount_;
+#else
+  // boost::atomic not available before 1.53
+  // This section will be removed when support for boost 1.48 ceases
   mutable boost::detail::atomic_count count_;
+#endif
 
 protected:
+#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53)) 
+  pmt_base() : refcount_(0) {};
+#else
+  // boost::atomic not available before 1.53
+  // This section will be removed when support for boost 1.48 ceases
   pmt_base() : count_(0) {};
+#endif
   virtual ~pmt_base();
 
 public:
