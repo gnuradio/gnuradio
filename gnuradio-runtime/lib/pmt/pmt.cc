@@ -63,9 +63,26 @@ pmt_base::operator delete(void *p, size_t size)
 
 #endif
 
+#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53))
+void intrusive_ptr_add_ref(pmt_base* p)
+{
+  p->refcount_.fetch_add(1, boost::memory_order_relaxed);
+}
+
+void intrusive_ptr_release(pmt_base* p) {
+  if (p->refcount_.fetch_sub(1, boost::memory_order_release) == 1) {
+    boost::atomic_thread_fence(boost::memory_order_acquire);
+    delete p;
+  }
+}
+#else
+// boost::atomic not available before 1.53
+// This section will be removed when support for boost 1.48 ceases
+// NB: This code is prone to segfault on non-Intel architectures.
 void intrusive_ptr_add_ref(pmt_base* p) { ++(p->count_); }
 void intrusive_ptr_release(pmt_base* p) { if (--(p->count_) == 0 ) delete p; }
-
+#endif
+ 
 pmt_base::~pmt_base()
 {
   // nop -- out of line virtual destructor
