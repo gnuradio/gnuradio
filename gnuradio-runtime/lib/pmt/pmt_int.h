@@ -24,7 +24,8 @@
 
 #include <pmt/pmt.h>
 #include <boost/utility.hpp>
-#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53)) 
+#include <boost/version.hpp>
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
   #include <boost/atomic.hpp>
 #else
   // boost::atomic not available before 1.53
@@ -43,7 +44,7 @@ namespace pmt {
 
 class PMT_API pmt_base : boost::noncopyable {
 
-#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53)) 
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
   mutable boost::atomic<int> refcount_;
 #else
   // boost::atomic not available before 1.53
@@ -52,7 +53,7 @@ class PMT_API pmt_base : boost::noncopyable {
 #endif
 
 protected:
-#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53)) 
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
   pmt_base() : refcount_(0) {};
 #else
   // boost::atomic not available before 1.53
