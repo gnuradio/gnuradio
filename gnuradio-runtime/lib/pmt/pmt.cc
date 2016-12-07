@@ -63,7 +63,7 @@ pmt_base::operator delete(void *p, size_t size)
 
 #endif
 
-#if ((BOOST_VER_MAJOR >= 1) && (BOOST_VER_MINOR >= 53))
+#if ((BOOST_VERSION / 100000 >= 1) && (BOOST_VERSION / 100 % 1000 >= 53)) 
 void intrusive_ptr_add_ref(pmt_base* p)
 {
   p->refcount_.fetch_add(1, boost::memory_order_relaxed);
