@@ -440,10 +440,15 @@ namespace gr {
     void
     usrp_source_impl::issue_stream_cmd(const ::uhd::stream_cmd_t &cmd)
     {
+// This is a new define in UHD 3.6 which is used to separate 3.6 and pre 3.6
+#ifdef INCLUDED_UHD_UTILS_MSG_TASK_HPP
+        _rx_stream->issue_stream_cmd(cmd);
+#else
         for (size_t i = 0; i < _stream_args.channels.size(); i++)
         {
             _dev->issue_stream_cmd(cmd, _stream_args.channels[i]);
         }
+#endif
         _tag_now = true;
     }
 
