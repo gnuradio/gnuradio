@@ -25,7 +25,7 @@ def _ports(sigs, msgs):
     for msg_key in msgs:
         if msg_key == 'system':
             continue
-        ports.append((msg_key, 'message', None))
+        ports.append((msg_key, 'message', 1))
     return ports
 
 
