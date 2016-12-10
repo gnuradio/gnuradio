@@ -196,17 +196,17 @@ class UHDApp(object):
         self.antenna = self.normalize_antenna_sel(args)
         if self.antenna is not None:
             for i, chan in enumerate(self.channels):
-                if not self.antenna[i] in self.usrp.get_antennas(chan):
+                if not self.antenna[i] in self.usrp.get_antennas(i):
                     self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
                     exit(1)
-                self.usrp.set_antenna(self.antenna[i], chan)
+                self.usrp.set_antenna(self.antenna[i], i)
                 self.vprint("[{prefix}] Channel {chan}: Using antenna {ant}.".format(
-                    prefix=self.prefix, chan=chan, ant=self.usrp.get_antenna(chan)
+                    prefix=self.prefix, chan=chan, ant=self.usrp.get_antenna(i)
                 ))
-        self.antenna = self.usrp.get_antenna(self.channels[0])
+        self.antenna = self.usrp.get_antenna(0)
         # Set receive daughterboard gain:
         self.set_gain(args.gain)
-        self.gain_range = self.usrp.get_gain_range(self.channels[0])
+        self.gain_range = self.usrp.get_gain_range(0)
         # Set frequency (tune request takes lo_offset):
         if hasattr(args, 'lo_offset') and args.lo_offset is not None:
             treq = uhd.tune_request(args.freq, args.lo_offset)
@@ -251,8 +251,8 @@ class UHDApp(object):
                 command_time_set = True
             except RuntimeError:
                 sys.stderr.write('[{prefix}] [WARNING] Failed to set command times.\n'.format(prefix=self.prefix))
-        for chan in self.channels:
-            self.tr = self.usrp.set_center_freq(treq, chan)
+        for i, chan in enumerate(self.channels):
+            self.tr = self.usrp.set_center_freq(treq, i)
             if self.tr == None:
                 sys.stderr.write('[{prefix}] [ERROR] Failed to set center frequency on channel {chan}\n'.format(
                     prefix=self.prefix, chan=chan
@@ -263,7 +263,7 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
-        self.freq = self.usrp.get_center_freq(self.channels[0])
+        self.freq = self.usrp.get_center_freq(0)
         if args.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
@@ -278,17 +278,17 @@ class UHDApp(object):
         if gain is None:
             if self.args.verbose:
                 self.vprint("Defaulting to mid-point gains:".format(prefix=self.prefix))
-            for chan in self.channels:
-                self.usrp.set_normalized_gain(.5, chan)
+            for i, chan in enumerate(self.channels):
+                self.usrp.set_normalized_gain(.5, i)
                 if self.args.verbose:
                     self.vprint("Channel {chan} gain: {g} dB".format(
-                        prefix=self.prefix, chan=chan, g=self.usrp.get_gain(chan)
+                        prefix=self.prefix, chan=chan, g=self.usrp.get_gain(i)
                     ))
         else:
             self.vprint("Setting gain to {g} dB.".format(g=gain))
-            for chan in self.channels:
+            for chan in range( len( self.channels ) ):
                 self.usrp.set_gain(gain, chan)
-        self.gain = self.usrp.get_gain(self.channels[0])
+        self.gain = self.usrp.get_gain(0)
 
     def set_freq(self, freq, skip_sync=False):
         """
@@ -326,8 +326,8 @@ class UHDApp(object):
                 command_time_set = True
             except RuntimeError:
                 sys.stderr.write('[{prefix}] [WARNING] Failed to set command times.\n'.format(prefix=self.prefix))
-        for chan in self.channels:
-            self.tr = self.usrp.set_center_freq(treq, chan)
+        for i, chan in enumerate(self.channels ):
+            self.tr = self.usrp.set_center_freq(treq, i)
             if self.tr == None:
                 sys.stderr.write('[{prefix}] [ERROR] Failed to set center frequency on channel {chan}\n'.format(
                     prefix=self.prefix, chan=chan
@@ -338,7 +338,7 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
-        self.freq = self.usrp.get_center_freq(self.channels[0])
+        self.freq = self.usrp.get_center_freq(0)
         self.vprint("First channel has freq: {freq} MHz.".format(freq=self.freq/1e6))
 
     @staticmethod
