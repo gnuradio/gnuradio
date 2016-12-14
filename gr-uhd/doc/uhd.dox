@@ -57,8 +57,8 @@ which automatically sets the PMT types. Assume we only want to set the frequency
 (i.e. the second channel). In this case, we must construct a dictionary:
 \code{.cpp}
 pmt::pmt_t command = pmt::make_dict();
-pmt::dict_add(command, pmt::mp("freq"), pmt::mp(1.1e9)); // Specify frequency
-pmt::dict_add(command, pmt::mp("chan"), pmt::mp(1)); // Specify channel
+command = pmt::dict_add(command, pmt::mp("freq"), pmt::mp(1.1e9)); // Specify frequency
+command = pmt::dict_add(command, pmt::mp("chan"), pmt::mp(1)); // Specify channel
 // Now pass 'command' into the USRP block's command port
 \endcode
 
@@ -72,8 +72,8 @@ The main difference is that we can add more properties to the same
 command PMT, e.g. as such:
 \code{.cpp}
 // 'command' is the same PMT as in the previous example
-pmt::dict_add(command, pmt::mp("gain"), pmt::mp(23.0)); // Specify gain
-pmt::dict_add(command, pmt::mp("antenna"), pmt::mp("TX/RX")); // Switch antenna
+command = pmt::dict_add(command, pmt::mp("gain"), pmt::mp(23.0)); // Specify gain
+command = pmt::dict_add(command, pmt::mp("antenna"), pmt::mp("TX/RX")); // Switch antenna
 // Now pass 'command' into the USRP block's command port
 \endcode
 When the USRP block interprets this command PMT, all properties will be
