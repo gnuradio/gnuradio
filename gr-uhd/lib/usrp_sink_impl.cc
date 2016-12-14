@@ -337,9 +337,11 @@ namespace gr {
       }
 
       //send all ninput_items with metadata
+      boost::this_thread::disable_interruption disable_interrupt;
       const size_t num_sent = _tx_stream->send(
               input_items, ninput_items, _metadata, 1.0
       );
+      boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
 
       //if using length_tags, decrement items left to send by the number of samples sent
       if(not pmt::is_null(_length_tag_key) && _nitems_to_send > 0) {

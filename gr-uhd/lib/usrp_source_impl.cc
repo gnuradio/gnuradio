@@ -561,6 +561,7 @@ namespace gr {
                            gr_vector_void_star &output_items)
     {
       boost::recursive_mutex::scoped_lock lock(d_mutex);
+      boost::this_thread::disable_interruption disable_interrupt;
       //In order to allow for low-latency:
       //We receive all available packets without timeout.
       //This call can timeout under regular operation...
@@ -571,6 +572,7 @@ namespace gr {
           _recv_timeout,
           true /* one packet -> minimize latency */
       );
+      boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
 
       //handle possible errors conditions
       switch(_metadata.error_code) {
