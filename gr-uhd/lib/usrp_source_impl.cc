@@ -610,6 +610,7 @@ namespace gr {
                            gr_vector_void_star &output_items)
     {
       boost::recursive_mutex::scoped_lock lock(d_mutex);
+      boost::this_thread::disable_interruption disable_interrupt;
 #ifdef GR_UHD_USE_STREAM_API
       //In order to allow for low-latency:
       //We receive all available packets without timeout.
@@ -632,8 +633,8 @@ namespace gr {
            ::uhd::device::RECV_MODE_ONE_PACKET, 1.0);
       }
 #endif
-
-      //handle possible errors conditions
+      boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
+      // handle possible errors conditions
       switch(_metadata.error_code) {
       case ::uhd::rx_metadata_t::ERROR_CODE_NONE:
         if(_tag_now) {

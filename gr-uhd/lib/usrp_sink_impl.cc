@@ -367,6 +367,7 @@ namespace gr {
         }
       }
 
+      boost::this_thread::disable_interruption disable_interrupt;
 #ifdef GR_UHD_USE_STREAM_API
       //send all ninput_items with metadata
       const size_t num_sent = _tx_stream->send
@@ -376,6 +377,7 @@ namespace gr {
         (input_items, ninput_items, _metadata,
          *_type, ::uhd::device::SEND_MODE_FULL_BUFF, 1.0);
 #endif
+      boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
 
       //if using length_tags, decrement items left to send by the number of samples sent
       if(not pmt::is_null(_length_tag_key) && _nitems_to_send > 0) {
