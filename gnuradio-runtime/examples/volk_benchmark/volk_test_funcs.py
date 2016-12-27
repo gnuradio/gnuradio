@@ -10,11 +10,7 @@ except ImportError:
     sys.stderr.write("Unable to import Scipy (www.scipy.org)\n")
     sys.exit(1)
 
-try:
-    import sqlite3
-except ImportError:
-    sys.stderr.write("Unable to import sqlite3: requires Python 2.5\n")
-    sys.exit(1)
+import sqlite3
 
 def execute(conn, cmd):
     '''
