@@ -37,6 +37,30 @@ namespace gr {
      * This implements the Mueller and Müller (M&M) discrete-time
      * error-tracking synchronizer.
      *
+     * The peak to peak input signal amplitude must be symmetrical
+     * about zero, as the M&M timing error detector (TED) is a
+     * decision directed TED, and this block uses a symbol decision
+     * slicer referenced at zero.
+     *
+     * The input signal peak amplitude should be controlled to a
+     * consistent level (e.g. +/- 1.0) before this block to achieve
+     * consistent results for given gain settings; as the TED's output
+     * error signal is directly affected by the input amplitude.
+     *
+     * The input signal must have peaks in order for the TED to output
+     * a correct error signal. If the input signal pulses do not have
+     * peaks (e.g. rectangular pulses) the input signal should be
+     * conditioned with a matched pulse filter or other appropriate
+     * filter to peak the input pulses. For a rectangular base pulse
+     * that is N samples wide, the matched filter taps would be
+     * [1.0/float(N)]*N, or in other words a moving average over N
+     * samples.
+     *
+     * This block will output samples at a rate of one sample per
+     * recovered symbol, and is thus not outputting at a constant rate.
+     *
+     * Output symbols are not a subset of input, but may be interpolated.
+     *
      * See "Digital Communication Receivers: Synchronization, Channel
      * Estimation and Signal Processing" by Heinrich Meyr, Marc
      * Moeneclaey, & Stefan Fechtel.  ISBN 0-471-50275-8.
