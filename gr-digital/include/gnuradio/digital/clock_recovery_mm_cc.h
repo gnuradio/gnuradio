@@ -37,6 +37,18 @@ namespace gr {
      * This implements the Mueller and Müller (M&M) discrete-time
      * error-tracking synchronizer.
      *
+     * The input signal must have values around zero, as it works with
+     * sign changes of its input.
+     *
+     * Input can not be a square wave. Use blocks_moving_average_xx
+     * over samples per symbol to turn square wave into suitable input
+     * to this block.
+     *
+     * This block will output samples at a rate of one sample per
+     * recovered symbol, and is thus not outputting at a constant rate.
+     *
+     * Output symbols are not a subset of input, but may be interpolated.
+     *
      * The complex version here is based on: Modified Mueller and
      * Muller clock recovery circuit:
      *
