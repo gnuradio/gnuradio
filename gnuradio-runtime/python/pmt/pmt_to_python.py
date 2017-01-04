@@ -130,6 +130,6 @@ def pmt_to_python(p):
 def python_to_pmt(p):
     for python_type, pmt_check, to_python, from_python in type_mappings:
         if python_type is None:
-            if p == None: return from_python(p)
+            if p is None: return from_python(p)
         elif isinstance(p, python_type): return from_python(p)
     raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
