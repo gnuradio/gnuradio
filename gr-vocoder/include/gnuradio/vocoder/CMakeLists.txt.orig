@@ -1,4 +1,4 @@
-# Copyright 2011,2016 Free Software Foundation, Inc.
+# Copyright 2012,2013,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,32 +18,36 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Install Examples
+# Install header files
 ########################################################################
-include(GrPython)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    alaw_audio_loopback.py
-    cvsd_audio_loopback.py
-    g721_audio_loopback.py
-    g723_24_audio_loopback.py
-    g723_40_audio_loopback.py
-    ulaw_audio_loopback.py
-    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
+install(FILES
+    api.h
+    alaw_decode_bs.h
+    alaw_encode_sb.h
+    cvsd_decode_bs.h
+    cvsd_encode_sb.h
+    g721_decode_bs.h
+    g721_encode_sb.h
+    g723_24_decode_bs.h
+    g723_24_encode_sb.h
+    g723_40_decode_bs.h
+    g723_40_encode_sb.h
+    ulaw_decode_bs.h
+    ulaw_encode_sb.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
 )
 if(LIBCODEC2_FOUND)
-  GR_PYTHON_INSTALL(
-    PROGRAMS
-    codec2_audio_loopback.py
-    grfreedv.grc
-    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    )
+install(FILES
+    codec2.h
+    codec2_decode_ps.h
+    codec2_encode_sp.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
+)
 endif(LIBCODEC2_FOUND)
 if(LIBGSM_FOUND)
-  GR_PYTHON_INSTALL(
-    PROGRAMS
-    gsm_audio_loopback.py
-    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    )
+install(FILES
+    gsm_fr_decode_ps.h
+    gsm_fr_encode_sp.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
+)
 endif(LIBGSM_FOUND)

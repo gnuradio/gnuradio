@@ -53,6 +53,7 @@ namespace gr {
           m_bpsk[0][1] = gr_complex((r1 * cos(5.0 * M_PI / 4.0)), (r1 * sin(5.0 * M_PI / 4.0)));
           m_bpsk[1][0] = gr_complex((r1 * cos(5.0 * M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
           m_bpsk[1][1] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(5.0 * M_PI /4.0)));
+          break;
         case MOD_QPSK:
           m_qpsk[0] = gr_complex((r1 * cos(M_PI / 4.0)), (r1 * sin(M_PI / 4.0)));
           m_qpsk[1] = gr_complex((r1 * cos(7 * M_PI / 4.0)), (r1 * sin(7 * M_PI / 4.0)));

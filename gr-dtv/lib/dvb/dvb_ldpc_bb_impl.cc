@@ -369,12 +369,12 @@ namespace gr {
     void
     dvb_ldpc_bb_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
-        ninput_items_required[0] = (noutput_items / frame_size) * nbch;
+      ninput_items_required[0] = (noutput_items / frame_size) * nbch;
     }
 
 #define LDPC_BF(TABLE_NAME, ROWS) \
 for (int row = 0; row < ROWS; row++) { \
-  for(int n = 0; n < 360; n++) { \
+  for (int n = 0; n < 360; n++) { \
     for (int col = 1; col <= TABLE_NAME[row][0]; col++) { \
       ldpc_encode.p[index] = (TABLE_NAME[row][col] + (n * q)) % pbits; \
       ldpc_encode.d[index] = im; \
@@ -606,7 +606,7 @@ for (int row = 0; row < ROWS; row++) { \
       unsigned char *out = (unsigned char *) output_items[0];
       const unsigned char *d;
       unsigned char *p;
-      unsigned char *b;
+      unsigned char *b = (unsigned char *) output_items[0];
       unsigned char *s;
       // Calculate the number of parity bits
       int plen = (frame_size_real + Xp) - nbch;
@@ -657,7 +657,7 @@ for (int row = 0; row < ROWS; row++) { \
           p[j] ^= p[j-1];
         }
         if (signal_constellation == MOD_128APSK) {
-          for(int j = 0; j < 6; j++) {
+          for (int j = 0; j < 6; j++) {
             p[j + plen] = 0;
           }
         }

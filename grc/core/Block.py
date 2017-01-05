@@ -719,10 +719,11 @@ class EPyBlock(Block):
         iter_ports = iter(ports)
         ports_new = []
         port_current = next(iter_ports, None)
-        for key, port_type in port_specs:
+        for key, port_type, vlen in port_specs:
             reuse_port = (
                 port_current is not None and
                 port_current.get_type() == port_type and
+                port_current.get_vlen() == vlen and
                 (key.isdigit() or port_current.key == key)
             )
             if reuse_port:
@@ -733,6 +734,8 @@ class EPyBlock(Block):
                 if port_type == 'message':
                     n['name'] = key
                     n['optional'] = '1'
+                if vlen > 1:
+                    n['vlen'] = str(vlen)
                 port = port_factory(self, direction=direction, **n)
             ports_new.append(port)
         # replace old port list with new one

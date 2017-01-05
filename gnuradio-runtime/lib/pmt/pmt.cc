@@ -63,9 +63,18 @@ pmt_base::operator delete(void *p, size_t size)
 
 #endif
 
-void intrusive_ptr_add_ref(pmt_base* p) { ++(p->count_); }
-void intrusive_ptr_release(pmt_base* p) { if (--(p->count_) == 0 ) delete p; }
+void intrusive_ptr_add_ref(pmt_base* p)
+{
+  p->refcount_.fetch_add(1, boost::memory_order_relaxed);
+}
 
+void intrusive_ptr_release(pmt_base* p) {
+  if (p->refcount_.fetch_sub(1, boost::memory_order_release) == 1) {
+    boost::atomic_thread_fence(boost::memory_order_acquire);
+    delete p;
+  }
+}
+ 
 pmt_base::~pmt_base()
 {
   // nop -- out of line virtual destructor

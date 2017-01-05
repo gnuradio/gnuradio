@@ -39,9 +39,24 @@ if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
     list(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
 endif(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
 
-if(MSVC)
-    set(BOOST_REQUIRED_COMPONENTS ${BOOST_REQUIRED_COMPONENTS} chrono)
+if(WIN32)
+    #The following libraries are either used indirectly,
+    #or conditionally within the various core components.
+    #We explicitly list the libraries here because they
+    #are either required in environments MSVC and MINGW
+    #or linked-in automatically via header inclusion.
 
+    #However, this is not robust; and its recommended that
+    #these libraries should be listed in the main components
+    #list once the minimum version of boost had been bumped
+    #to a version which always contains these components.
+    list(APPEND BOOST_REQUIRED_COMPONENTS
+        atomic
+        chrono
+    )
+endif(WIN32)
+
+if(MSVC)
     if (NOT DEFINED BOOST_ALL_DYN_LINK)
         set(BOOST_ALL_DYN_LINK TRUE)
     endif()

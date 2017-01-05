@@ -245,7 +245,7 @@ class TopBlockGenerator(object):
         }
         # Build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
-        output.append((self.file_path, str(t)))
+        output.append((self.file_path, "\n".join(line.rstrip() for line in str(t).split("\n"))))
         return output
 
 

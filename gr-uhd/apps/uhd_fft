@@ -126,8 +126,8 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         # Blocks
         ##################################################
         self.setup_usrp(uhd.usrp_source, args)
-        self._ant_options = self.usrp.get_antennas(self.channels[0])
-        for c in self.channels:
+        self._ant_options = self.usrp.get_antennas(0)
+        for c in range(len(self.channels)):
             self.usrp.set_bandwidth(self.samp_rate, c)
         self.usrp_device_info = self.get_usrp_info_string(compact=True, tx_or_rx='rx')
 
@@ -320,7 +320,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.top_grid_layout.addWidget(self._lo_locked_probe_tool_bar, 4,0,1,2)
         def _current_freq_probe():
             while True:
-                val = self.usrp.get_center_freq(self.channels[0])
+                val = self.usrp.get_center_freq(0)
                 try:
                     if val != self.freq:
                         self.set_freq_qt(val, tune_source='freqsink_msg')
@@ -347,15 +347,15 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         ##################################################
         self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.qtgui_freq_sink_x_0, 'freq'))
         self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.usrp, 'command'))
-        for c, idx in enumerate(self.channels):
-            self.connect((self.usrp, c), (self.qtgui_freq_sink_x_0, idx))
-            self.connect((self.usrp, c), (self.qtgui_time_sink_x_0, idx))
-            self.connect((self.usrp, c), (self.qtgui_waterfall_sink_x_0, idx))
+        for idx in range(len(self.channels)):
+            self.connect((self.usrp, idx), (self.qtgui_freq_sink_x_0, idx))
+            self.connect((self.usrp, idx), (self.qtgui_time_sink_x_0, idx))
+            self.connect((self.usrp, idx), (self.qtgui_waterfall_sink_x_0, idx))
         if args.phase_relations and len(self.channels) > 1:
-            for c, idx in enumerate(self.channels[:-1]):
+            for idx in range(len(self.channels[:-1])):
                 self.connect_phase_plot(
-                        (self.usrp, c),
-                        (self.usrp, self.channels[idx+1]),
+                        (self.usrp, idx),
+                        (self.usrp, idx+1),
                         (self.qtgui_phase_plot, idx)
                 )
 
@@ -430,7 +430,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
         self.usrp.set_samp_rate(self.samp_rate)
-        for c in self.channels:
+        for c in range(len(self.channels)):
             self.usrp.set_bandwidth(self.samp_rate, c)
 
     def set_lo_locked_probe(self, lo_locked_probe):
@@ -440,7 +440,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
     def set_ant(self, ant):
         self.antenna = ant
         self._ant_callback(self.antenna)
-        for c in self.channels:
+        for c in range(len(self.channels)):
             self.usrp.set_antenna(self.antenna, c)
 
 

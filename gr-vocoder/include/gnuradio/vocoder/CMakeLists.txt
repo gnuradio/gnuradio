@@ -44,6 +44,15 @@ install(FILES
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
 )
 endif(LIBCODEC2_FOUND)
+if(LIBCODEC2_HAS_FREEDV_API)
+install(FILES
+    freedv_api.h
+    freedv_rx_ss.h
+    freedv_tx_ss.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/vocoder
+    COMPONENT "vocoder_devel"
+)
+endif(LIBCODEC2_HAS_FREEDV_API)
 if(LIBGSM_FOUND)
 install(FILES
     gsm_fr_decode_ps.h

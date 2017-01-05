@@ -93,7 +93,7 @@ namespace gr {
           std::runtime_error("audio_windows_sink:open_waveout_device() failed");
       }
       else if (verbose) {
-        GR_LOG_INFO(logger, "Opened windows waveout device");
+        GR_LOG_INFO(d_logger, "Opened windows waveout device");
       }
       d_buffers = new LPWAVEHDR[nPeriods];
       for (int i = 0; i < nPeriods; i++)
@@ -104,7 +104,7 @@ namespace gr {
         d_buffers[i]->dwBufferLength = d_buffer_size;
         d_buffers[i]->lpData = new CHAR[d_buffer_size];
       }
-      if (verbose) GR_LOG_INFO(logger, boost::format("Initialized %1% %2%ms audio buffers, total memory used: %3$0.2fkB") % (nPeriods) % (CHUNK_TIME * 1000) % ((d_buffer_size * nPeriods) / 1024.0));
+      if (verbose) GR_LOG_INFO(d_logger, boost::format("Initialized %1% %2%ms audio buffers, total memory used: %3$0.2fkB") % (nPeriods) % (CHUNK_TIME * 1000) % ((d_buffer_size * nPeriods) / 1024.0));
     }
 
     windows_sink::~windows_sink()
@@ -252,7 +252,7 @@ namespace gr {
             result = num;
           }
           else {
-            GR_LOG_INFO(logger, boost::format("Warning: waveOut deviceID %d was not found, defaulting to WAVE_MAPPER") % num);
+            GR_LOG_INFO(d_logger, boost::format("Warning: waveOut deviceID %d was not found, defaulting to WAVE_MAPPER") % num);
             result = WAVE_MAPPER;
           }
 
@@ -271,10 +271,10 @@ namespace gr {
             {
               result = i;
             }
-            if (verbose) GR_LOG_INFO(logger, boost::format("WaveOut Device %d: %s") % i % woc.szPname);
+            if (verbose) GR_LOG_INFO(d_logger, boost::format("WaveOut Device %d: %s") % i % woc.szPname);
           }
           if (result == -1) {
-            GR_LOG_INFO(logger, boost::format("Warning: waveOut device '%s' was not found, defaulting to WAVE_MAPPER") % szDeviceName);
+            GR_LOG_INFO(d_logger, boost::format("Warning: waveOut device '%s' was not found, defaulting to WAVE_MAPPER") % szDeviceName);
             result = WAVE_MAPPER;
           }
         }
@@ -306,14 +306,14 @@ namespace gr {
         // would know the device ID so at the moment we will ignore that setting
         // and stick with WAVE_MAPPER
         u_device_id = find_device(d_device_name);
-      if (verbose) GR_LOG_INFO(logger, boost::format("waveOut Device ID: %1%") % (u_device_id));
+      if (verbose) GR_LOG_INFO(d_logger, boost::format("waveOut Device ID: %1%") % (u_device_id));
 
       // Check if the sampling rate/bits/channels are good to go with the device.
       MMRESULT supported = is_format_supported(&wave_format, u_device_id);
       if (supported != MMSYSERR_NOERROR) {
         char err_msg[50];
         waveOutGetErrorText(supported, err_msg, 50);
-        GR_LOG_INFO(logger, boost::format("format error: %s") % err_msg);
+        GR_LOG_INFO(d_logger, boost::format("format error: %s") % err_msg);
         perror("audio_windows_sink: Requested audio format is not supported by device driver");
         return -1;
       }

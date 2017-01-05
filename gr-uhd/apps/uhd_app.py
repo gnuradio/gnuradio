@@ -135,6 +135,15 @@ class UHDApp(object):
             ))
         return specs
 
+    def normalize_lo_source_export_sel(self, args):
+        lo_source = [x.strip() for x in args.lo_source.split(",")]
+        lo_export = [x.strip() for x in args.lo_export.split(",")]
+        if len(lo_source) != len(self.channels):
+            raise ValueError("Invalid number of lo-source settings {n} for {c} channels. Must be one argument per channel.".format(n=len(lo_source), c=len(args.channels)))
+        if len(lo_export) != len(self.channels):
+            raise ValueError("Invalid number of lo-export settings {n} for {c} channels. Must be one argument per channel.".format(n=len(lo_source), c=len(args.channels)))
+        return (lo_source, lo_export)
+
     def async_callback(self, msg):
         """
         Call this when USRP async metadata needs printing.
@@ -187,23 +196,49 @@ class UHDApp(object):
         self.antenna = self.normalize_antenna_sel(args)
         if self.antenna is not None:
             for i, chan in enumerate(self.channels):
-                if not self.antenna[i] in self.usrp.get_antennas(chan):
+                if not self.antenna[i] in self.usrp.get_antennas(i):
                     self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
                     exit(1)
-                self.usrp.set_antenna(self.antenna[i], chan)
+                self.usrp.set_antenna(self.antenna[i], i)
                 self.vprint("[{prefix}] Channel {chan}: Using antenna {ant}.".format(
-                    prefix=self.prefix, chan=chan, ant=self.usrp.get_antenna(chan)
+                    prefix=self.prefix, chan=chan, ant=self.usrp.get_antenna(i)
                 ))
-        self.antenna = self.usrp.get_antenna(self.channels[0])
+        self.antenna = self.usrp.get_antenna(0)
         # Set receive daughterboard gain:
         self.set_gain(args.gain)
-        self.gain_range = self.usrp.get_gain_range(self.channels[0])
+        self.gain_range = self.usrp.get_gain_range(0)
         # Set frequency (tune request takes lo_offset):
         if hasattr(args, 'lo_offset') and args.lo_offset is not None:
             treq = uhd.tune_request(args.freq, args.lo_offset)
         else:
             treq = uhd.tune_request(args.freq)
         self.has_lo_sensor = 'lo_locked' in self.usrp.get_sensor_names()
+        # Set LO export and LO source operation
+        if (args.lo_export is not None) and (args.lo_source is not None):
+            (args.lo_source,args.lo_export) = self.normalize_lo_source_export_sel(args)
+            for chan,lo_source,lo_export in zip(self.channels,args.lo_source,args.lo_export):
+                if (lo_source == "None") or (lo_export == "None"):
+                    continue
+                if lo_export == "True":
+                    #If channel is LO source set frequency and store response
+                    self.usrp.set_lo_export_enabled(True, uhd.ALL_LOS, chan)
+                if lo_source == "internal":
+                    self.lo_source_channel = chan
+                    tune_resp = self.usrp.set_center_freq(treq,chan)
+                self.usrp.set_lo_source(lo_source, uhd.ALL_LOS,chan)
+            # Use lo source tune response to tune dsp_freq on remaining channels
+            if getattr(args, 'lo_offset', None) is not None:
+                treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freq+args.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            else:
+                treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freg, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            for chan in args.channels:
+                if chan == self.lo_source_channel:
+                    continue
+                self.usrp.set_center_freq(treq,chan)
         # Make sure tuning is synched:
         command_time_set = False
         if len(self.channels) > 1:
@@ -216,8 +251,8 @@ class UHDApp(object):
                 command_time_set = True
             except RuntimeError:
                 sys.stderr.write('[{prefix}] [WARNING] Failed to set command times.\n'.format(prefix=self.prefix))
-        for chan in self.channels:
-            self.tr = self.usrp.set_center_freq(treq, chan)
+        for i, chan in enumerate(self.channels):
+            self.tr = self.usrp.set_center_freq(treq, i)
             if self.tr == None:
                 sys.stderr.write('[{prefix}] [ERROR] Failed to set center frequency on channel {chan}\n'.format(
                     prefix=self.prefix, chan=chan
@@ -228,7 +263,7 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
-        self.freq = self.usrp.get_center_freq(self.channels[0])
+        self.freq = self.usrp.get_center_freq(0)
         if args.show_async_msg:
             self.async_msgq = gr.msg_queue(0)
             self.async_src = uhd.amsg_source("", self.async_msgq)
@@ -243,17 +278,17 @@ class UHDApp(object):
         if gain is None:
             if self.args.verbose:
                 self.vprint("Defaulting to mid-point gains:".format(prefix=self.prefix))
-            for chan in self.channels:
-                self.usrp.set_normalized_gain(.5, chan)
+            for i, chan in enumerate(self.channels):
+                self.usrp.set_normalized_gain(.5, i)
                 if self.args.verbose:
                     self.vprint("Channel {chan} gain: {g} dB".format(
-                        prefix=self.prefix, chan=chan, g=self.usrp.get_gain(chan)
+                        prefix=self.prefix, chan=chan, g=self.usrp.get_gain(i)
                     ))
         else:
             self.vprint("Setting gain to {g} dB.".format(g=gain))
-            for chan in self.channels:
+            for chan in range( len( self.channels ) ):
                 self.usrp.set_gain(gain, chan)
-        self.gain = self.usrp.get_gain(self.channels[0])
+        self.gain = self.usrp.get_gain(0)
 
     def set_freq(self, freq, skip_sync=False):
         """
@@ -265,6 +300,22 @@ class UHDApp(object):
             treq = uhd.tune_request(freq, self.args.lo_offset)
         else:
             treq = uhd.tune_request(freq)
+        # Special TwinRX tuning due to LO sharing
+        if getattr(self, 'lo_source_channel', None) is not None:
+            tune_resp = self.usrp.set_center_freq(treq, self.lo_source_channel)
+            if getattr(self.args, 'lo_offset', None) is not None:
+                treq = uhd.tune_request(target_freq=freq, rf_freq=freq+self.args.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            else:
+                treq = uhd.tune_request(target_freq=freq, rf_freq=freq, rf_freq_policy=uhd.tune_reqest.POLICY_MANUAL,
+                                        dsp_freq=tune_resp.actual_dsp_freq,
+                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            for chan in self.channels:
+                if chan == self.lo_source_channel:
+                    continue
+                self.usrp.set_center_freq(treq,chan)
+
         # Make sure tuning is synched:
         command_time_set = False
         if len(self.channels) > 1 and not skip_sync:
@@ -275,8 +326,8 @@ class UHDApp(object):
                 command_time_set = True
             except RuntimeError:
                 sys.stderr.write('[{prefix}] [WARNING] Failed to set command times.\n'.format(prefix=self.prefix))
-        for chan in self.channels:
-            self.tr = self.usrp.set_center_freq(treq, chan)
+        for i, chan in enumerate(self.channels ):
+            self.tr = self.usrp.set_center_freq(treq, i)
             if self.tr == None:
                 sys.stderr.write('[{prefix}] [ERROR] Failed to set center frequency on channel {chan}\n'.format(
                     prefix=self.prefix, chan=chan
@@ -287,7 +338,7 @@ class UHDApp(object):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
-        self.freq = self.usrp.get_center_freq(self.channels[0])
+        self.freq = self.usrp.get_center_freq(0)
         self.vprint("First channel has freq: {freq} MHz.".format(freq=self.freq/1e6))
 
     @staticmethod
@@ -333,6 +384,8 @@ class UHDApp(object):
         if allow_mimo:
             group.add_argument("-c", "--channels", default=[0,], type=cslist,
                                 help="Select {xx} Channels".format(xx=tx_or_rx))
+        group.add_argument("--lo-export", help="Set TwinRX LO export {None, True, False} for each channel with a comma-separated list. None skips a channel.")
+        group.add_argument("--lo-source", help="Set TwinRX LO source {None, internal, companion, external} for each channel with a comma-separated list. None skips this channel. ")
         group.add_argument("--otw-format", choices=['sc16', 'sc12', 'sc8'], default='sc16',
                             help="Choose over-the-wire data format")
         group.add_argument("--stream-args", default="", help="Set additional stream arguments")

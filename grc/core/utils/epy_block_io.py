@@ -22,14 +22,15 @@ BlockIO = collections.namedtuple('BlockIO', 'name cls params sinks sources doc c
 def _ports(sigs, msgs):
     ports = list()
     for i, dtype in enumerate(sigs):
-        port_type = TYPE_MAP.get(dtype.name, None)
+        port_type = TYPE_MAP.get(dtype.base.name, None)
         if not port_type:
             raise ValueError("Can't map {0!r} to GRC port type".format(dtype))
-        ports.append((str(i), port_type))
+        vlen = dtype.shape[0] if len(dtype.shape) > 0 else 1
+        ports.append((str(i), port_type, vlen))
     for msg_key in msgs:
         if msg_key == 'system':
             continue
-        ports.append((msg_key, 'message'))
+        ports.append((msg_key, 'message', 1))
     return ports
 
 
@@ -127,4 +128,3 @@ class blk(gr.sync_block):
     """
     from pprint import pprint
     pprint(dict(extract(blk_code)._asdict()))
-
