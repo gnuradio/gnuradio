@@ -743,14 +743,11 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 self.coordinate = (x, y)
                 self.drawing_area.queue_draw()
 
-    def get_max_coords(self, initial=(0, 0)):
-        return tuple(max(i, e) for i, e in zip(initial, self.extend[2:]))
-
     @property
-    def extend(self):
-        extend = 100000, 100000, 0, 0
+    def extent(self):
+        extent = 100000, 100000, 0, 0
         for element in self._elements_to_draw:
-            extend = (min_or_max(xy, e_xy) for min_or_max, xy, e_xy in zip(
-                (min, min, max, max), extend, element.extend
+            extent = (min_or_max(xy, e_xy) for min_or_max, xy, e_xy in zip(
+                (min, min, max, max), extent, element.extent
             ))
-        return tuple(extend)
+        return tuple(extent)

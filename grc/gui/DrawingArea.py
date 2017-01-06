@@ -102,6 +102,7 @@ class DrawingArea(Gtk.DrawingArea):
 
             if zoom_factor != self.zoom_factor:
                 self.zoom_factor = zoom_factor
+                self._update_size()
                 self.queue_draw()
             return True
 
@@ -155,12 +156,15 @@ class DrawingArea(Gtk.DrawingArea):
             coordinate=self._translate_event_coords(event),
         )
 
+    def _update_size(self):
+        w, h = self._flow_graph.extent[2:]
+        self.set_size_request(w * self.zoom_factor + 100, h * self.zoom_factor + 100)
+
     def _auto_scroll(self, event):
         x, y = event.x, event.y
         scrollbox = self.get_parent().get_parent()
 
-        w, h = self._flow_graph.get_max_coords(initial=(x, y))
-        self.set_size_request(w + 100, h + 100)
+        self._update_size()
 
         def scroll(pos, adj):
             """scroll if we moved near the border"""
@@ -182,8 +186,7 @@ class DrawingArea(Gtk.DrawingArea):
         Update the flowgraph, which calls new pixmap.
         """
         self._flow_graph.update()
-        w, h = self._flow_graph.get_max_coords()
-        self.set_size_request(w + 100, h + 100)
+        self._update_size()
 
     def draw(self, widget, cr):
         width = widget.get_allocated_width()

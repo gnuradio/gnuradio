@@ -315,14 +315,14 @@ class Block(CoreBlock, Drawable):
         cr.restore()
 
     @property
-    def extend(self):
-        extend = Drawable.extend.fget(self)
+    def extent(self):
+        extent = Drawable.extent.fget(self)
         x, y = self.coordinate
         for port in self.active_ports():
-            extend = (min_or_max(xy, offset + p_xy) for offset, min_or_max, xy, p_xy in zip(
-                (x, y, x, y), (min, min, max, max), extend, port.extend
+            extent = (min_or_max(xy, offset + p_xy) for offset, min_or_max, xy, p_xy in zip(
+                (x, y, x, y), (min, min, max, max), extent, port.extent
             ))
-        return tuple(extend)
+        return tuple(extent)
 
     ##############################################
     # Controller Modify

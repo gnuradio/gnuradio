@@ -114,7 +114,7 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
     if not file_path:
         return
 
-    x_min, y_min, x_max, y_max = flow_graph.extend
+    x_min, y_min, x_max, y_max = flow_graph.extent
     padding = Constants.CANVAS_GRID_SIZE
     width = x_max - x_min + 2 * padding
     height = y_max - y_min + 2 * padding

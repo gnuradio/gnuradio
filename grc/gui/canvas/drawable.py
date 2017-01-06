@@ -169,7 +169,7 @@ class Drawable(object):
                     return self
 
     @property
-    def extend(self):
+    def extent(self):
         x_min, y_min = x_max, y_max = self.coordinate
         x_min += min(x for x, y in self._bounding_points)
         y_min += min(y for x, y in self._bounding_points)
