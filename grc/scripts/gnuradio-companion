@@ -80,6 +80,11 @@ def check_blocks_path():
             "Can't find block definitions. Use config.conf or GRC_BLOCKS_PATH.")
 
 
+def check_python_version():
+    if sys.version_info.major > 2:
+        die(RuntimeError('No python3 support yet.'), 'Stay tuned...')
+
+
 def run_main():
     script_path = os.path.dirname(os.path.abspath(__file__))
     source_tree_subpath = "/grc/scripts"
@@ -97,5 +102,6 @@ def run_main():
 if __name__ == '__main__':
     check_gnuradio_import()
     check_gtk()
+    check_python_version()
     check_blocks_path()
     run_main()

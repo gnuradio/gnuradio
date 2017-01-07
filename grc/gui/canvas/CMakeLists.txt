@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,7 +21,5 @@ file(GLOB py_files "*.py")
 
 GR_PYTHON_INSTALL(
     FILES ${py_files}
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/gui
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/utils
 )
-
-add_subdirectory(canvas)
