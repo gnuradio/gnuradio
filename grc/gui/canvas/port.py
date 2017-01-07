@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 
 import math
 
@@ -55,8 +55,7 @@ class Port(CorePort, Drawable):
         self.width_with_label = self.height = 0
         self.connector_length = 0
 
-        self.label_layout = Gtk.DrawingArea().create_pango_layout('')
-        self.label_layout.set_alignment(Pango.Alignment.CENTER)
+        self.label_layout = None
 
     @property
     def width(self):
@@ -103,8 +102,13 @@ class Port(CorePort, Drawable):
             270: (self.height / 2, self.width)
         }[self.get_connector_direction()]
 
-    def create_labels(self):
+    def create_labels(self, cr=None):
         """Create the labels for the socket."""
+        self.label_layout = Gtk.DrawingArea().create_pango_layout('')
+        self.label_layout.set_alignment(Pango.Alignment.CENTER)
+
+        if cr:
+            PangoCairo.update_layout(cr, self.label_layout)
 
         if self.domain in (Constants.GR_MESSAGE_DOMAIN, Constants.DEFAULT_DOMAIN):
             self._line_width_factor = 1.0
@@ -117,10 +121,10 @@ class Port(CorePort, Drawable):
         layout.set_markup('<span font_desc="{font}">{name}</span>'.format(
             name=Utils.encode(self.name), font=Constants.PORT_FONT
         ))
-        label_width, label_height = self.label_layout.get_pixel_size()
+        label_width, label_height = self.label_layout.get_size()
 
-        self.width = 2 * Constants.PORT_LABEL_PADDING + label_width
-        self.height = 2 * Constants.PORT_LABEL_PADDING + label_height
+        self.width = 2 * Constants.PORT_LABEL_PADDING + label_width / Pango.SCALE
+        self.height = 2 * Constants.PORT_LABEL_PADDING + label_height / Pango.SCALE
         self._label_layout_offsets = [0, Constants.PORT_LABEL_PADDING]
         if self.get_type() == 'bus':
             self.height += Constants.PORT_EXTRA_BUS_HEIGHT

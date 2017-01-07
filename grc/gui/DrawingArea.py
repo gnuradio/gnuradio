@@ -43,6 +43,7 @@ class DrawingArea(Gtk.DrawingArea):
         self._flow_graph = flow_graph
 
         self.zoom_factor = 1.0
+        self._update_after_zoom = False
         self.ctrl_mask = False
         self.mod1_mask = False
         self.button_state = [False] * 10
@@ -61,7 +62,7 @@ class DrawingArea(Gtk.DrawingArea):
             Gdk.EventMask.SCROLL_MASK |
             Gdk.EventMask.LEAVE_NOTIFY_MASK |
             Gdk.EventMask.ENTER_NOTIFY_MASK
-            #Gdk.EventMask.FOCUS_CHANGE_MASK
+            # Gdk.EventMask.FOCUS_CHANGE_MASK
         )
 
         # setup drag and drop
@@ -73,7 +74,9 @@ class DrawingArea(Gtk.DrawingArea):
         # setup the focus flag
         self._focus_flag = False
         self.get_focus_flag = lambda: self._focus_flag
-        def _handle_notify_event(widget, event, focus_flag): self._focus_flag = focus_flag
+
+        def _handle_notify_event(widget, event, focus_flag):
+            self._focus_flag = focus_flag
         self.connect('leave-notify-event', _handle_notify_event, False)
         self.connect('enter-notify-event', _handle_notify_event, True)
         # todo: fix
@@ -81,7 +84,7 @@ class DrawingArea(Gtk.DrawingArea):
 #        self.connect('focus-out-event', self._handle_focus_lost_event)
 
     ##########################################################################
-    ## Handlers
+    # Handlers
     ##########################################################################
     def _handle_drag_data_received(self, widget, drag_context, x, y, selection_data, info, time):
         """
@@ -90,19 +93,13 @@ class DrawingArea(Gtk.DrawingArea):
         self._flow_graph.add_new_block(selection_data.get_text(), (x, y))
 
     def _handle_mouse_scroll(self, widget, event):
-        if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
-            if event.direction == Gdk.ScrollDirection.UP:
-                event.direction = Gdk.ScrollDirection.LEFT
-            else:
-                event.direction = Gdk.ScrollDirection.RIGHT
-
-        elif event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             change = 1.2 if event.direction == Gdk.ScrollDirection.UP else 1/1.2
             zoom_factor = min(max(self.zoom_factor * change, 0.1), 5.0)
 
             if zoom_factor != self.zoom_factor:
                 self.zoom_factor = zoom_factor
-                self._update_size()
+                self._update_after_zoom = True
                 self.queue_draw()
             return True
 
@@ -157,7 +154,7 @@ class DrawingArea(Gtk.DrawingArea):
         )
 
     def _update_size(self):
-        w, h = self._flow_graph.extent[2:]
+        w, h = self._flow_graph.get_extents()[2:]
         self.set_size_request(w * self.zoom_factor + 100, h * self.zoom_factor + 100)
 
     def _auto_scroll(self, event):
@@ -191,11 +188,19 @@ class DrawingArea(Gtk.DrawingArea):
     def draw(self, widget, cr):
         width = widget.get_allocated_width()
         height = widget.get_allocated_height()
+
         cr.set_source_rgba(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
         cr.rectangle(0, 0, width, height)
+        cr.fill()
 
         cr.scale(self.zoom_factor, self.zoom_factor)
-        cr.fill()
+        cr.set_line_width(2.0 / self.zoom_factor)
+
+        if self._update_after_zoom:
+            self._flow_graph.create_labels(cr)
+            self._flow_graph.create_shapes()
+            self._update_size()
+            self._update_after_zoom = False
 
         self._flow_graph.draw(cr)
 

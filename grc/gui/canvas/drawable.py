@@ -96,7 +96,7 @@ class Drawable(object):
         dx, dy = delta_coor
         self.coordinate = (x + dx, y + dy)
 
-    def create_labels(self):
+    def create_labels(self, cr=None):
         """
         Create labels (if applicable) and call on all children.
         Call this base method before creating labels in the element.
@@ -168,8 +168,7 @@ class Drawable(object):
                 if x <= x1 <= x_m and y <= y1 <= y_m:
                     return self
 
-    @property
-    def extent(self):
+    def get_extents(self):
         x_min, y_min = x_max, y_max = self.coordinate
         x_min += min(x for x, y in self._bounding_points)
         y_min += min(y for x, y in self._bounding_points)

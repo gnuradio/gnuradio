@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 
 import math
 
@@ -51,10 +51,10 @@ class Block(CoreBlock, Drawable):
         Drawable.__init__(self)  # needs the states and initial sizes
 
         self._surface_layouts = [
-            Gtk.DrawingArea().create_pango_layout(''),  # title
-            Gtk.DrawingArea().create_pango_layout(''),  # params
+            None,  # title
+            None,  # params
         ]
-        self._surface_layout_offsets = 0, 0
+        self._surface_layouts_offsets = 0, 0
         self._comment_layout = None
 
         self._area = []
@@ -149,9 +149,18 @@ class Block(CoreBlock, Drawable):
                 port.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + \
                                         Constants.CONNECTOR_EXTENSION_INCREMENT * index
 
-    def create_labels(self):
+    def create_labels(self, cr=None):
         """Create the labels for the signal block."""
-        title_layout, params_layout = self._surface_layouts
+
+        # (Re-)creating layouts here, because layout.context_changed() doesn't seems to work (after zoom)
+        title_layout, params_layout = self._surface_layouts = [
+            Gtk.DrawingArea().create_pango_layout(''),  # title
+            Gtk.DrawingArea().create_pango_layout(''),  # params
+        ]
+
+        if cr:  # to fix up extents after zooming
+            PangoCairo.update_layout(cr, title_layout)
+            PangoCairo.update_layout(cr, params_layout)
 
         title_layout.set_markup(
             '<span {foreground} font_desc="{font}"><b>{name}</b></span>'.format(
@@ -159,7 +168,7 @@ class Block(CoreBlock, Drawable):
                 name=Utils.encode(self.name)
             )
         )
-        title_width, title_height = title_layout.get_pixel_size()
+        title_width, title_height = title_layout.get_size()
 
         # update the params layout
         if not self.is_dummy_block:
@@ -170,13 +179,12 @@ class Block(CoreBlock, Drawable):
 
         params_layout.set_spacing(LABEL_SEPARATION * Pango.SCALE)
         params_layout.set_markup('\n'.join(markups))
-        params_width, params_height = params_layout.get_pixel_size() if markups else (0, 0)
+        params_width, params_height = params_layout.get_size() if markups else (0, 0)
 
-        label_width = max(title_width, params_width)
-        label_height = title_height + LABEL_SEPARATION + params_height
-
-        title_layout.set_width(label_width * Pango.SCALE)
-        title_layout.set_alignment(Pango.Alignment.CENTER)
+        label_width = max(title_width, params_width) / Pango.SCALE
+        label_height = title_height / Pango.SCALE
+        if markups:
+            label_height += LABEL_SEPARATION + params_height / Pango.SCALE
 
         # calculate width and height needed
         width = label_width + 2 * BLOCK_LABEL_PADDING
@@ -207,10 +215,14 @@ class Block(CoreBlock, Drawable):
 
         self.width, self.height = width, height = Utils.align_to_grid((width, height))
 
-        self._surface_layout_offsets = [
-            (width - label_width) / 2.0,
-            (height - label_height) / 2.0
+        self._surface_layouts_offsets = [
+            (0, (height - label_height) / 2.0),
+            (0, (height - label_height) / 2.0 + LABEL_SEPARATION + title_height / Pango.SCALE)
         ]
+
+        title_layout.set_width(width * Pango.SCALE)
+        title_layout.set_alignment(Pango.Alignment.CENTER)
+        params_layout.set_indent((width - label_width) / 2.0 * Pango.SCALE)
 
         self.create_comment_layout()
 
@@ -269,14 +281,13 @@ class Block(CoreBlock, Drawable):
         if self.is_vertical():
             cr.rotate(-math.pi / 2)
             cr.translate(-self.width, 0)
-        cr.translate(*self._surface_layout_offsets)
-
         cr.set_source_rgba(*self._font_color)
-        for layout in self._surface_layouts:
+        for layout, offset in zip(self._surface_layouts, self._surface_layouts_offsets):
+            cr.save()
+            cr.translate(*offset)
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)
-            _, h = layout.get_pixel_size()
-            cr.translate(0, h + LABEL_SEPARATION)
+            cr.restore()
 
     def what_is_selected(self, coor, coor_m=None):
         """
@@ -314,13 +325,12 @@ class Block(CoreBlock, Drawable):
         PangoCairo.show_layout(cr, self._comment_layout)
         cr.restore()
 
-    @property
-    def extent(self):
-        extent = Drawable.extent.fget(self)
+    def get_extents(self):
+        extent = Drawable.get_extents(self)
         x, y = self.coordinate
         for port in self.active_ports():
             extent = (min_or_max(xy, offset + p_xy) for offset, min_or_max, xy, p_xy in zip(
-                (x, y, x, y), (min, min, max, max), extent, port.extent
+                (x, y, x, y), (min, min, max, max), extent, port.get_extents()
             ))
         return tuple(extent)
 

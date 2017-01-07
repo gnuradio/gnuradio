@@ -464,9 +464,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 continue  # skip hidden disabled blocks and connections
             self._elements_to_draw.append(element)
 
-    def create_labels(self):
+    def create_labels(self, cr=None):
         for element in self._elements_to_draw:
-            element.create_labels()
+            element.create_labels(cr)
 
     def create_shapes(self):
         for element in self._elements_to_draw:
@@ -743,11 +743,10 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 self.coordinate = (x, y)
                 self.drawing_area.queue_draw()
 
-    @property
-    def extent(self):
+    def get_extents(self):
         extent = 100000, 100000, 0, 0
         for element in self._elements_to_draw:
             extent = (min_or_max(xy, e_xy) for min_or_max, xy, e_xy in zip(
-                (min, min, max, max), extent, element.extent
+                (min, min, max, max), extent, element.get_extents()
             ))
         return tuple(extent)

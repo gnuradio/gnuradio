@@ -37,7 +37,6 @@ class Notebook(Gtk.Notebook):
         self.set_scrollable(True)
         self.connect('switch-page', self._handle_page_change)
 
-
     def _handle_page_change(self, notebook, page, page_num):
         """
         Handle a page change. When the user clicks on a new tab,
