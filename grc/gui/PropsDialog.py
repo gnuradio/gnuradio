@@ -180,7 +180,7 @@ class PropsDialog(Gtk.Dialog):
                 # repopulate the params box
                 box_all_valid = True
                 for param in self._block.params.values():
-                    # fixme: why do we even rebuild instead of really hiding params?
+                    # todo: why do we even rebuild instead of really hiding params?
                     if param.get_tab_label() != tab or param.get_hide() == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()

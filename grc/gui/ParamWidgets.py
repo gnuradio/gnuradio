@@ -20,7 +20,37 @@ import os
 
 from gi.repository import Gtk, Gdk
 
-from . import Colors, Utils
+from . import Utils
+
+
+style_provider = Gtk.CssProvider()
+
+style_provider.load_from_data("""
+    #dtype_complex         { background-color: #3399FF; }
+    #dtype_real            { background-color: #FF8C69; }
+    #dtype_float           { background-color: #FF8C69; }
+    #dtype_int             { background-color: #00FF99; }
+
+    #dtype_complex_vector  { background-color: #3399AA; }
+    #dtype_real_vector     { background-color: #CC8C69; }
+    #dtype_float_vector    { background-color: #CC8C69; }
+    #dtype_int_vector      { background-color: #00CC99; }
+
+    #dtype_bool            { background-color: #00FF99; }
+    #dtype_hex             { background-color: #00FF99; }
+    #dtype_string          { background-color: #CC66CC; }
+    #dtype_id              { background-color: #DDDDDD; }
+    #dtype_stream_id       { background-color: #DDDDDD; }
+    #dtype_raw             { background-color: #FFFFFF; }
+
+    #enum_custom           { background-color: #EEEEEE; }
+""")
+
+Gtk.StyleContext.add_provider_for_screen(
+    Gdk.Screen.get_default(),
+    style_provider,
+    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+)
 
 
 class InputParam(Gtk.HBox):
@@ -44,7 +74,7 @@ class InputParam(Gtk.HBox):
 
         self.connect('show', self._update_gui)
 
-    def set_color(self, color):
+    def set_color(self, css_name):
         pass
 
     def set_tooltip_text(self, text):
@@ -58,11 +88,7 @@ class InputParam(Gtk.HBox):
         Set the markup, color, tooltip, show/hide.
         """
         self.label.set_markup(self.param.format_label_markup(self._have_pending_changes))
-
-        # fixme: find a non-deprecated way to change colors
-        # self.set_color(Colors.PARAM_ENTRY_COLORS.get(
-        #     self.param.get_type(), Colors.PARAM_ENTRY_DEFAULT_COLOR)
-        # )
+        self.set_color('dtype_' + self.param.get_type())
 
         self.set_tooltip_text(self.param.format_tooltip_text())
 
@@ -122,8 +148,8 @@ class EntryParam(InputParam):
     def get_text(self):
         return self._input.get_text()
 
-    def set_color(self, color):
-        self._input.override_background_color(Gtk.StateType.NORMAL, color)
+    def set_color(self, css_name):
+        self._input.set_name(css_name)
 
     def set_tooltip_text(self, text):
         self._input.set_tooltip_text(text)
@@ -143,10 +169,10 @@ class MultiLineEntryParam(InputParam):
         self._view.set_buffer(self._buffer)
         self._view.connect('focus-out-event', self._apply_change)
         self._view.connect('key-press-event', self._handle_key_press)
-        # fixme: add border to TextView
 
         self._sw = Gtk.ScrolledWindow()
         self._sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self._sw.set_shadow_type(type=Gtk.ShadowType.IN)
         self._sw.add(self._view)
 
         self.pack_start(self._sw, True, True, True)
@@ -157,8 +183,8 @@ class MultiLineEntryParam(InputParam):
                             include_hidden_chars=False)
         return text.strip()
 
-    def set_color(self, color):
-        self._view.override_background_color(Gtk.StateType.NORMAL, color)
+    def set_color(self, css_name):
+        self._view.set_name(css_name)
 
     def set_tooltip_text(self, text):
         self._view.set_tooltip_text(text)
@@ -245,10 +271,9 @@ class EnumEntryParam(InputParam):
         else:
             self._input.set_tooltip_text(text)
 
-    def set_color(self, color):
-        self._input.get_child().modify_base(
-            Gtk.StateType.NORMAL,
-            color if not self.has_custom_value else Colors.PARAM_ENTRY_ENUM_CUSTOM_COLOR
+    def set_color(self, css_name):
+        self._input.get_child().set_name(
+            css_name if not self.has_custom_value else 'enum_custom'
         )
 
 

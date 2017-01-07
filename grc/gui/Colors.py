@@ -19,20 +19,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-from gi.repository import Gdk, cairo
+from gi.repository import Gtk, Gdk, cairo
 # import pycairo
 
 from . import Constants
 
 
-def _color_parse(color_code):
+def get_color(color_code):
     color = Gdk.RGBA()
     color.parse(color_code)
-    return color
-
-
-def get_color(color_code):
-    color = _color_parse(color_code)
     return color.red, color.green, color.blue, color.alpha
     # chars_per_color = 2 if len(color_code) > 4 else 1
     # offsets = range(1, 3 * chars_per_color + 1, chars_per_color)
@@ -80,42 +75,31 @@ PORT_TYPE_TO_COLOR.update((key, get_color(color)) for key, (_, color) in Constan
 #################################################################################
 # param box colors
 #################################################################################
-COMPLEX_COLOR_SPEC = _color_parse('#3399FF')
-FLOAT_COLOR_SPEC = _color_parse('#FF8C69')
-INT_COLOR_SPEC = _color_parse('#00FF99')
-SHORT_COLOR_SPEC = _color_parse('#FFFF66')
-BYTE_COLOR_SPEC = _color_parse('#FF66FF')
+style_provider = Gtk.CssProvider()
 
-ID_COLOR_SPEC = _color_parse('#DDDDDD')
-WILDCARD_COLOR_SPEC = _color_parse('#FFFFFF')
+style_provider.load_from_data("""
+    #dtype_complex         { background-color: #3399FF; }
+    #dtype_real            { background-color: #FF8C69; }
+    #dtype_float           { background-color: #FF8C69; }
+    #dtype_int             { background-color: #00FF99; }
 
-COMPLEX_VECTOR_COLOR_SPEC = _color_parse('#3399AA')
-FLOAT_VECTOR_COLOR_SPEC = _color_parse('#CC8C69')
-INT_VECTOR_COLOR_SPEC = _color_parse('#00CC99')
-SHORT_VECTOR_COLOR_SPEC = _color_parse('#CCCC33')
-BYTE_VECTOR_COLOR_SPEC = _color_parse('#CC66CC')
+    #dtype_complex_vector  { background-color: #3399AA; }
+    #dtype_real_vector     { background-color: #CC8C69; }
+    #dtype_float_vector    { background-color: #CC8C69; }
+    #dtype_int_vector      { background-color: #00CC99; }
 
-PARAM_ENTRY_COLORS = {
-    # Number types
-    'complex': COMPLEX_COLOR_SPEC,
-    'real': FLOAT_COLOR_SPEC,
-    'float': FLOAT_COLOR_SPEC,
-    'int': INT_COLOR_SPEC,
+    #dtype_bool            { background-color: #00FF99; }
+    #dtype_hex             { background-color: #00FF99; }
+    #dtype_string          { background-color: #CC66CC; }
+    #dtype_id              { background-color: #DDDDDD; }
+    #dtype_stream_id       { background-color: #DDDDDD; }
+    #dtype_raw             { background-color: #FFFFFF; }
 
-    # Vector types
-    'complex_vector': COMPLEX_VECTOR_COLOR_SPEC,
-    'real_vector': FLOAT_VECTOR_COLOR_SPEC,
-    'float_vector': FLOAT_VECTOR_COLOR_SPEC,
-    'int_vector': INT_VECTOR_COLOR_SPEC,
+    #enum_custom           { background-color: #EEEEEE; }
+""")
 
-    # Special
-    'bool': INT_COLOR_SPEC,
-    'hex': INT_COLOR_SPEC,
-    'string': BYTE_VECTOR_COLOR_SPEC,
-    'id': ID_COLOR_SPEC,
-    'stream_id': ID_COLOR_SPEC,
-    'raw': WILDCARD_COLOR_SPEC,
-}
-
-PARAM_ENTRY_DEFAULT_COLOR = _color_parse('#FFFFFF')
-PARAM_ENTRY_ENUM_CUSTOM_COLOR = _color_parse('#EEEEEE')
+Gtk.StyleContext.add_provider_for_screen(
+    Gdk.Screen.get_default(),
+    style_provider,
+    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+)

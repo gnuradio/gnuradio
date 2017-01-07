@@ -473,6 +473,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             element.create_shapes()
 
     def _drawables(self):
+        # todo: cache that
         show_comments = Actions.TOGGLE_SHOW_BLOCK_COMMENTS.get_active()
         for element in self._elements_to_draw:
             if element.is_block and show_comments and element.enabled:

@@ -103,9 +103,9 @@ class TextDisplay(SimpleTextDisplay):
         """ Update view's scroll position. """
         if self.scroll_lock:
             buf = self.get_buffer()
-            buf.move_mark(buf.get_insert(), buf.get_end_iter())
-            # TODO: Fix later
-            #self.scroll_to_mark(buffer.get_insert(), 0.0)
+            mark = buf.get_insert()
+            buf.move_mark(mark, buf.get_end_iter())
+            self.scroll_mark_onscreen(mark)
 
     def clear(self):
         """ Clear all text from buffer. """
