@@ -92,6 +92,8 @@ install(
     demod/test_corr_est.grc
     demod/uhd_corr_and_sync_tx.grc
     demod/uhd_corr_and_sync_rx.grc
+    demod/symbol_sync_test_complex.grc
+    demod/symbol_sync_test_float.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
     COMPONENT "digital_python"
 )

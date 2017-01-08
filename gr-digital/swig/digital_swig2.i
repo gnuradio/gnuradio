@@ -64,6 +64,8 @@
 #include "gnuradio/digital/ofdm_serializer_vcc.h"
 #include "gnuradio/digital/packet_headerparser_b.h"
 #include "gnuradio/digital/header_payload_demux.h"
+#include "gnuradio/digital/symbol_sync_mm_cc.h"
+#include "gnuradio/digital/symbol_sync_mm_ff.h"
 %}
 
 %include "gnuradio/digital/mpsk_receiver_cc.h"
@@ -90,6 +92,8 @@
 %include "gnuradio/digital/scrambler_bb.h"
 %include "gnuradio/digital/simple_correlator.h"
 %include "gnuradio/digital/simple_framer.h"
+%include "gnuradio/digital/symbol_sync_mm_cc.h"
+%include "gnuradio/digital/symbol_sync_mm_ff.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_receiver_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
@@ -107,6 +111,8 @@ GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_correlator);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
+GR_SWIG_BLOCK_MAGIC2(digital, symbol_sync_mm_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, symbol_sync_mm_ff);
 
 // Properly package up non-block objects
 %include "packet_header.i"
