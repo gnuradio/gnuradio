@@ -23,10 +23,9 @@ import math
 
 from gi.repository import Gtk, PangoCairo, Pango
 
+from . import colors
 from .drawable import Drawable
-
-from .. import Actions, Colors, Utils, Constants
-
+from .. import Actions, Utils, Constants
 from ...core.Element import nop_write
 from ...core.Port import Port as CorePort
 
@@ -47,13 +46,12 @@ class Port(CorePort, Drawable):
 
         self._area = []
         self._bg_color = self._border_color = 0, 0, 0, 0
-        self._font_color = list(Colors.FONT_COLOR)
+        self._font_color = list(colors.FONT_COLOR)
 
         self._line_width_factor = 1.0
         self._label_layout_offsets = 0, 0
 
         self.width_with_label = self.height = 0
-        self.connector_length = 0
 
         self.label_layout = None
 
@@ -76,10 +74,10 @@ class Port(CorePort, Drawable):
         """
         if not self.parent_block.enabled:
             self._font_color[-1] = 0.4
-            color = Colors.BLOCK_DISABLED_COLOR
+            color = colors.BLOCK_DISABLED_COLOR
         else:
             self._font_color[-1] = 1.0
-            color = Colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or Colors.PORT_TYPE_TO_COLOR.get('')
+            color = colors.PORT_TYPE_TO_COLOR.get(self.get_type()) or colors.PORT_TYPE_TO_COLOR.get('')
             vlen = self.get_vlen()
             if vlen > 1:
                 dark = (0, 0, 30 / 255.0, 50 / 255.0, 70 / 255.0)[min(4, vlen)]
@@ -100,7 +98,7 @@ class Port(CorePort, Drawable):
             90:  (self.height / 2, 0),
             180: (0, self.height / 2),
             270: (self.height / 2, self.width)
-        }[self.get_connector_direction()]
+        }[self.connector_direction]
 
     def create_labels(self, cr=None):
         """Create the labels for the socket."""
@@ -157,28 +155,18 @@ class Port(CorePort, Drawable):
         PangoCairo.update_layout(cr, self.label_layout)
         PangoCairo.show_layout(cr, self.label_layout)
 
-    def get_connector_coordinate(self):
-        """
-        Get the coordinate where connections may attach to.
-
-        Returns:
-            the connector coordinate (x, y) tuple
-        """
+    @property
+    def connector_coordinate_absolute(self):
+        """the coordinate where connections may attach to"""
         return [sum(c) for c in zip(
             self._connector_coordinate,   # relative to port
             self.coordinate,              # relative to block
             self.parent_block.coordinate  # abs
         )]
 
-    def get_connector_direction(self):
-        """
-        Get the direction that the socket points: 0,90,180,270.
-        This is the rotation degree if the socket is an output or
-        the rotation degree + 180 if the socket is an input.
-
-        Returns:
-            the direction in degrees
-        """
+    @property
+    def connector_direction(self):
+        """Get the direction that the socket points: 0,90,180,270."""
         if self.is_source:
             return self.rotation
         elif self.is_sink:

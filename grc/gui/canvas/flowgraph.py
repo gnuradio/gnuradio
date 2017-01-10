@@ -26,15 +26,13 @@ from distutils.spawn import find_executable
 from itertools import count
 
 import six
+from gi.repository import GLib
 from six.moves import filter
 
-from gi.repository import GLib
-
+from . import colors
 from .drawable import Drawable
-
-from .. import Actions, Colors, Constants, Utils, Bars, Dialogs
+from .. import Actions, Constants, Utils, Bars, Dialogs
 from ..external_editor import ExternalEditor
-
 from ...core import Messages
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
 
@@ -495,9 +493,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
             x, y = int(min(x1, x2)), int(min(y1, y2))
             w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
             cr.set_source_rgba(
-                Colors.HIGHLIGHT_COLOR[0],
-                Colors.HIGHLIGHT_COLOR[1],
-                Colors.HIGHLIGHT_COLOR[2],
+                colors.HIGHLIGHT_COLOR[0],
+                colors.HIGHLIGHT_COLOR[1],
+                colors.HIGHLIGHT_COLOR[2],
                 0.5,
             )
             cr.rectangle(x, y, w, h)

@@ -19,9 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, Gdk
 
-from . import Constants, Colors
+from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
+from . import Constants
 
 
 class DrawingArea(Gtk.DrawingArea):
@@ -189,7 +190,7 @@ class DrawingArea(Gtk.DrawingArea):
         width = widget.get_allocated_width()
         height = widget.get_allocated_height()
 
-        cr.set_source_rgba(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
+        cr.set_source_rgba(*FLOWGRAPH_BACKGROUND_COLOR)
         cr.rectangle(0, 0, width, height)
         cr.fill()
 

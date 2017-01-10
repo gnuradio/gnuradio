@@ -24,14 +24,13 @@ import math
 import six
 from gi.repository import Gtk, Pango, PangoCairo
 
+from . import colors
 from .drawable import Drawable
-
-from .. import Actions, Colors, Utils, Constants
+from .. import Actions, Utils, Constants
 from ..Constants import (
     BLOCK_LABEL_PADDING, PORT_SPACING, PORT_SEPARATION, LABEL_SEPARATION,
     PORT_BORDER_SEPARATION, BLOCK_FONT, PARAM_FONT
 )
-
 from ...core import utils
 from ...core.Block import Block as CoreBlock
 
@@ -58,8 +57,8 @@ class Block(CoreBlock, Drawable):
         self._comment_layout = None
 
         self._area = []
-        self._border_color = self._bg_color = Colors.BLOCK_ENABLED_COLOR
-        self._font_color = list(Colors.FONT_COLOR)
+        self._border_color = self._bg_color = colors.BLOCK_ENABLED_COLOR
+        self._font_color = list(colors.FONT_COLOR)
 
     @property
     def coordinate(self):
@@ -110,15 +109,15 @@ class Block(CoreBlock, Drawable):
 
     def _update_colors(self):
         self._bg_color = (
-            Colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
-            Colors.BLOCK_BYPASSED_COLOR if self.state == 'bypassed' else
-            Colors.BLOCK_ENABLED_COLOR if self.state == 'enabled' else
-            Colors.BLOCK_DISABLED_COLOR
+            colors.MISSING_BLOCK_BACKGROUND_COLOR if self.is_dummy_block else
+            colors.BLOCK_BYPASSED_COLOR if self.state == 'bypassed' else
+            colors.BLOCK_ENABLED_COLOR if self.state == 'enabled' else
+            colors.BLOCK_DISABLED_COLOR
         )
         self._font_color[-1] = 1.0 if self.state == 'enabled' else 0.4
         self._border_color = (
-            Colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
-            Colors.BORDER_COLOR_DISABLED if not self.state == 'enabled' else Colors.BORDER_COLOR
+            colors.MISSING_BLOCK_BORDER_COLOR if self.is_dummy_block else
+            colors.BORDER_COLOR_DISABLED if not self.state == 'enabled' else colors.BORDER_COLOR
         )
 
     def create_shapes(self):
@@ -135,7 +134,7 @@ class Block(CoreBlock, Drawable):
                 continue
             port_separation = PORT_SEPARATION if not has_busses else ports[0].height + PORT_SPACING
             offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
-            for index, port in enumerate(ports):
+            for port in ports:
                 port.create_shapes()
 
                 port.coordinate = {
@@ -143,11 +142,9 @@ class Block(CoreBlock, Drawable):
                     90: (offset, -port.width),
                     180: (-port.width, offset),
                     270: (offset, +self.width),
-                }[port.get_connector_direction()]
-                offset += PORT_SEPARATION if not has_busses else port.height + PORT_SPACING
+                }[port.connector_direction]
 
-                port.connector_length = Constants.CONNECTOR_EXTENSION_MINIMAL + \
-                                        Constants.CONNECTOR_EXTENSION_INCREMENT * index
+                offset += PORT_SEPARATION if not has_busses else port.height + PORT_SPACING
 
     def create_labels(self, cr=None):
         """Create the labels for the signal block."""
@@ -263,7 +260,7 @@ class Block(CoreBlock, Drawable):
         """
         Draw the signal block with label and inputs/outputs.
         """
-        border_color = Colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
+        border_color = colors.HIGHLIGHT_COLOR if self.highlighted else self._border_color
         cr.translate(*self.coordinate)
 
         for port in self.active_ports():  # ports first

@@ -22,7 +22,8 @@ from __future__ import absolute_import
 from gi.repository import GLib
 import cairo
 
-from . import Colors, Constants
+from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
+from . import Constants
 
 
 def get_rotated_coordinate(coor, rotation):
@@ -131,7 +132,7 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
     cr = cairo.Context(psurf)
 
     if not transparent_bg:
-        cr.set_source_rgba(*Colors.FLOWGRAPH_BACKGROUND_COLOR)
+        cr.set_source_rgba(*FLOWGRAPH_BACKGROUND_COLOR)
         cr.rectangle(0, 0, width, height)
         cr.fill()
 
