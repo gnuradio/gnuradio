@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import, division
 
+from argparse import Namespace
 from math import pi
 
 from . import colors
@@ -212,3 +213,39 @@ class Connection(CoreConnection, Drawable):
 
         if hit:
             return self
+
+
+class DummyCoreConnection(object):
+    def __init__(self, source_port, **kwargs):
+        self.parent_platform = source_port.parent_platform
+        self.source_port = source_port
+        self.sink_port = self._dummy_port = Namespace(
+            domain=source_port.domain,
+            rotation=0,
+            coordinate=(0, 0),
+            connector_coordinate_absolute=(0, 0),
+            connector_direction=0,
+            parent_block=Namespace(coordinate=(0, 0)),
+        )
+
+        self.enabled = True
+        self.highlighted = False,
+        self.is_valid = lambda: True
+        self.update(**kwargs)
+
+    def update(self, coordinate=None, rotation=None, sink_port=None):
+        dp = self._dummy_port
+        self.sink_port = sink_port if sink_port else dp
+        if coordinate:
+            dp.coordinate = coordinate
+            dp.connector_coordinate_absolute = coordinate
+            dp.parent_block.coordinate = coordinate
+        if rotation is not None:
+            dp.rotation = rotation
+            dp.connector_direction = (180 + rotation) % 360
+
+    @property
+    def has_real_sink(self):
+        return self.sink_port is not self._dummy_port
+
+DummyConnection = Connection.make_cls_with_base(DummyCoreConnection)

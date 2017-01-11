@@ -31,6 +31,7 @@ from six.moves import filter
 
 from . import colors
 from .drawable import Drawable
+from .connection import DummyConnection
 from .. import Actions, Constants, Utils, Bars, Dialogs
 from ..external_editor import ExternalEditor
 from ...core import Messages
@@ -66,6 +67,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         self._context_menu = Bars.ContextMenu()
         self.get_context_menu = lambda: self._context_menu
 
+        self._new_connection = None
         self._elements_to_draw = []
         self._external_updaters = {}
 
@@ -150,6 +152,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
 
     def make_connection(self):
         """this selection and the last were ports, try to connect them"""
+        if self._new_connection and self._new_connection.has_real_sink:
+            self._old_selected_port = self._new_connection.source_port
+            self._new_selected_port = self._new_connection.sink_port
         if self._old_selected_port and self._new_selected_port:
             try:
                 self.connect(self._old_selected_port, self._new_selected_port)
@@ -476,6 +481,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
         for element in self._elements_to_draw:
             if element.is_block and show_comments and element.enabled:
                 yield element.draw_comment
+        if self._new_connection is not None:
+            yield self._new_connection.draw
         for element in self._elements_to_draw:
             yield element.draw
 
@@ -486,8 +493,12 @@ class FlowGraph(CoreFlowgraph, Drawable):
             draw_element(cr)
             cr.restore()
 
-        # draw multi select rectangle
-        if self.mouse_pressed and (not self.selected_elements or self.drawing_area.ctrl_mask):
+        draw_multi_select_rectangle = (
+            self.mouse_pressed and
+            (not self.selected_elements or self.drawing_area.ctrl_mask) and
+            not self._new_connection
+        )
+        if draw_multi_select_rectangle:
             x1, y1 = self.press_coor
             x2, y2 = self.coordinate
             x, y = int(min(x1, x2)), int(min(y1, y2))
@@ -535,7 +546,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 self._new_selected_port.force_show_label = True
 
         else:  # called from a mouse release
-            if not self.element_moved and (not self.selected_elements or self.drawing_area.ctrl_mask):
+            if not self.element_moved and (not self.selected_elements or self.drawing_area.ctrl_mask) and not self._new_connection:
                 selected_elements = self.what_is_selected(self.coordinate, self.press_coor)
 
         # this selection and the last were ports, try to connect them
@@ -586,6 +597,11 @@ class FlowGraph(CoreFlowgraph, Drawable):
             selected.add(selected_element)
             if not coor_m:
                 break
+
+        if selected_port and selected_port.is_source:
+            selected.remove(selected_port.parent_block)
+            self._new_connection = DummyConnection(selected_port, coordinate=coor)
+            self.drawing_area.queue_draw()
         # update selected ports
         if selected_port is not self._new_selected_port:
             self._old_selected_port = self._new_selected_port
@@ -655,6 +671,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
             self.mouse_pressed = True
             self.update_selected_elements()
             self.mouse_pressed = False
+        if self._new_connection:
+            self._new_connection = None
+            self.drawing_area.queue_draw()
         self._context_menu.popup(None, None, None, None, event.button, event.time)
 
     def handle_mouse_selector_press(self, double_click, coordinate):
@@ -687,6 +706,9 @@ class FlowGraph(CoreFlowgraph, Drawable):
             Actions.BLOCK_MOVE()
             self.element_moved = False
         self.update_selected_elements()
+        if self._new_connection:
+            self._new_connection = None
+            self.drawing_area.queue_draw()
 
     def handle_mouse_motion(self, coordinate):
         """
@@ -696,10 +718,13 @@ class FlowGraph(CoreFlowgraph, Drawable):
         """
         # to perform a movement, the mouse must be pressed
         # (no longer checking pending events via Gtk.events_pending() - always true in Windows)
-        if not self.mouse_pressed:
-            self._handle_mouse_motion_move(coordinate)
-        else:
-            self._handle_mouse_motion_drag(coordinate)
+        redraw = False
+        if not self.mouse_pressed or self._new_connection:
+            redraw = self._handle_mouse_motion_move(coordinate)
+        if self.mouse_pressed:
+            redraw = redraw or self._handle_mouse_motion_drag(coordinate)
+        if redraw:
+            self.drawing_area.queue_draw()
 
     def _handle_mouse_motion_move(self, coordinate):
         # only continue if mouse-over stuff is enabled (just the auto-hide port label stuff for now)
@@ -723,14 +748,22 @@ class FlowGraph(CoreFlowgraph, Drawable):
         if redraw:
             # self.create_labels()
             self.create_shapes()
-            self.drawing_area.queue_draw()
+        return redraw
 
     def _handle_mouse_motion_drag(self, coordinate):
+        redraw = False
         # remove the connection if selected in drag event
         if len(self.selected_elements) == 1 and self.get_selected_element().is_connection:
             Actions.ELEMENT_DELETE()
-            self.drawing_area.queue_draw()
+            redraw = True
 
+        if self._new_connection:
+            e = self.element_under_mouse
+            if e and e.is_port and e.is_sink:
+                self._new_connection.update(sink_port=self.element_under_mouse)
+            else:
+                self._new_connection.update(coordinate=coordinate, rotation=0)
+            return True
         # move the selected elements and record the new coordinate
         x, y = coordinate
         if not self.drawing_area.ctrl_mask:
@@ -740,7 +773,8 @@ class FlowGraph(CoreFlowgraph, Drawable):
             if not active or abs(dX) >= Constants.CANVAS_GRID_SIZE or abs(dY) >= Constants.CANVAS_GRID_SIZE:
                 self.move_selected((dX, dY))
                 self.coordinate = (x, y)
-                self.drawing_area.queue_draw()
+                redraw = True
+        return redraw
 
     def get_extents(self):
         extent = 100000, 100000, 0, 0
