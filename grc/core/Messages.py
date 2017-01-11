@@ -126,7 +126,7 @@ def send_fail_save(file_path):
 
 
 def send_fail_connection(msg=''):
-    send('>>> Error: Cannot create connection.\n' + ('\t' + str(msg) if msg else ''))
+    send('>>> Error: Cannot create connection.\n' + ('\t{}\n'.format(msg) if msg else ''))
 
 
 def send_fail_load_preferences(prefs_file_path):

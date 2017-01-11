@@ -50,7 +50,7 @@ class Connection(CoreConnection, Drawable):
 
         self._line = []
         self._line_width_factor = 1.0
-        self._color = self._color2 = self._arrow_color = None
+        self._color1 = self._color2 = None
 
         self._current_port_rotations = self._current_coordinates = None
 
@@ -99,15 +99,14 @@ class Connection(CoreConnection, Drawable):
 
         if source.domain == GR_MESSAGE_DOMAIN:
             self._line_width_factor = 1.0
-            self._color = None
+            self._color1 = None
             self._color2 = colors.CONNECTION_ENABLED_COLOR
         else:
             if source.domain != sink.domain:
                 self._line_width_factor = 2.0
-            self._color = get_domain_color(source.domain)
+            self._color1 = get_domain_color(source.domain)
             self._color2 = get_domain_color(sink.domain)
 
-        self._arrow_color = self._color2 if self.is_valid() else colors.CONNECTION_ERROR_COLOR
         self._arrow_rotation = -sink.rotation / 180 * pi
 
         if not self._bounding_points:
@@ -155,11 +154,13 @@ class Connection(CoreConnection, Drawable):
             self._make_path(cr)
             self._current_coordinates = new_coordinates
 
-        color1, color2, arrow_color = (
+        color1, color2 = (
             None if color is None else
             colors.HIGHLIGHT_COLOR if self.highlighted else
-            colors.CONNECTION_DISABLED_COLOR if not self.enabled else color
-            for color in (self._color, self._color2, self._arrow_color)
+            colors.CONNECTION_DISABLED_COLOR if not self.enabled else
+            colors.CONNECTION_ERROR_COLOR if not self.is_valid() else
+            color
+            for color in (self._color1, self._color2)
         )
 
         cr.translate(*self.coordinate)
@@ -183,7 +184,7 @@ class Connection(CoreConnection, Drawable):
             cr.new_path()
 
         cr.move_to(*arrow_pos)
-        cr.set_source_rgba(*arrow_color)
+        cr.set_source_rgba(*color2)
         cr.rotate(self._arrow_rotation)
         cr.rel_move_to(CONNECTOR_ARROW_HEIGHT, 0)
         cr.rel_line_to(-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2)
