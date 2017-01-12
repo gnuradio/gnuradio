@@ -9,7 +9,6 @@
 	<key>blocks_udp_sink</key>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.udp_sink($type.size*$vlen, $ipaddr, $port, $psize, $eof)</make>
-	<callback>set_mtu($mtu)</callback>
 	<param>
 		<name>Input Type</name>
 		<key>type</key>
@@ -57,7 +56,7 @@
 		<type>int</type>
 	</param>
 	<param>
-	        <name>Send Null Pkt as EOF</name>
+		<name>Send Null Pkt as EOF</name>
 		<key>eof</key>
 		<value>True</value>
 		<type>bool</type>

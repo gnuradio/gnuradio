@@ -594,12 +594,6 @@ namespace gr {
       basic_block_sptr b;
       b = p->src().block();
 
-      if(ctrlport_on) {
-        if(!b->is_rpc_set()) {
-          b->setup_rpc();
-          b->rpc_set();
-        }
-      }
       if(set_all_min_buff){
         //sets the min buff for every block within hier_block2
         if(min_buff != 0){
@@ -656,12 +650,6 @@ namespace gr {
       }
 
       b = p->dst().block();
-      if(ctrlport_on) {
-        if(!b->is_rpc_set()) {
-          b->setup_rpc();
-          b->rpc_set();
-        }
-      }
       if(set_all_min_buff){
         //sets the min buff for every block within hier_block2
         if(min_buff != 0){
@@ -797,8 +785,16 @@ namespace gr {
 
     // First add the list of singleton blocks
     std::vector<basic_block_sptr>::const_iterator b;   // Because flatten_aux is const
-    for(b = d_blocks.begin(); b != d_blocks.end(); b++)
+    for(b = d_blocks.begin(); b != d_blocks.end(); b++) {
       tmp.push_back(*b);
+      // for every block, attempt to setup RPC
+      if(ctrlport_on) {
+        if(!(*b)->is_rpc_set()) {
+          (*b)->setup_rpc();
+          (*b)->rpc_set();
+        }
+      }
+    }
 
     // Now add the list of connected input blocks
     std::stringstream msg;
