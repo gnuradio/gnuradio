@@ -98,7 +98,6 @@ namespace gr {
       set_trigger_mode(TRIG_MODE_FREE, TRIG_SLOPE_POS, 0, 0);
 
       set_history(2);          // so we can look ahead for the trigger slope
-      declare_sample_delay(1); // delay the tags for a history of 2
    }
 
     const_sink_c_impl::~const_sink_c_impl()
@@ -439,7 +438,7 @@ namespace gr {
       if(tags.size() > 0) {
         d_triggered = true;
         trigger_index = tags[0].offset - nr;
-        d_start = d_index + trigger_index - 1;
+        d_start = d_index + trigger_index;
         d_end = d_start + d_size;
         d_trigger_count = 0;
       }
@@ -516,7 +515,7 @@ namespace gr {
         in = (const gr_complex*)input_items[n];
         volk_32fc_deinterleave_64f_x2(&d_residbufs_real[n][d_index],
                                       &d_residbufs_imag[n][d_index],
-                                      &in[0], nitems);
+                                      &in[history()-1], nitems);
       }
       d_index += nitems;
 

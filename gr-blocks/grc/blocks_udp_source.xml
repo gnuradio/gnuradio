@@ -10,7 +10,6 @@
 	<flags>throttle</flags>
 	<import>from gnuradio import blocks</import>
 	<make>blocks.udp_source($type.size*$vlen, $ipaddr, $port, $psize, $eof)</make>
-	<callback>set_mtu($mtu)</callback>
 	<param>
 		<name>Output Type</name>
 		<key>type</key>
@@ -60,7 +59,7 @@
 		<type>int</type>
 	</param>
 	<param>
-	        <name>Null Pkt is EOF</name>
+		<name>Null Pkt is EOF</name>
 		<key>eof</key>
 		<value>True</value>
 		<type>bool</type>

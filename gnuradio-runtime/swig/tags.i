@@ -25,6 +25,7 @@
 
 %import <pmt_swig.i> //for pmt support
 
+%ignore gr::tag_t::operator=;
 %include <gnuradio/tags.h>
 
 //gives support for a vector of tags (get tags in range)
