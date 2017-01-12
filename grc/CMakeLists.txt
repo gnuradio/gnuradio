@@ -1,4 +1,4 @@
-# Copyright 2011,2013 Free Software Foundation, Inc.
+# Copyright 2011,2013,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,11 +22,70 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE("python >= 2.5"     sys          "sys.version.split()[0] >= '2.5'"           PYTHON_MIN_VER_FOUND)
-GR_PYTHON_CHECK_MODULE("Cheetah >= 2.0.0"  Cheetah      "Cheetah.Version >= '2.0.0'"                CHEETAH_FOUND)
-GR_PYTHON_CHECK_MODULE("lxml >= 1.3.6"     lxml.etree   "lxml.etree.LXML_VERSION >= (1, 3, 6, 0)"   LXML_FOUND)
-GR_PYTHON_CHECK_MODULE("pygtk >= 2.10.0"   gtk          "gtk.pygtk_version >= (2, 10, 0)"           PYGTK_FOUND)
-GR_PYTHON_CHECK_MODULE("numpy"             numpy        True                                        NUMPY_FOUND)
+message(STATUS "")
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "python2 >= 2.7.6 or python3 >= 3.4.0"
+    "import sys; \
+     requirement = (3, 4, 0) if sys.version_info.major >= 3 else (2, 7, 6); \
+     assert sys.version_info[:3] >= requirement"
+    PYTHON_MIN_VER_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "Cheetah >= 2.0.0"
+    "import Cheetah; assert Cheetah.Version >= '2.0.0'"
+    CHEETAH_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "PyYAML >= 3.10"
+    "import yaml; assert yaml.__version__ >= '3.11'"
+    PYYAML_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "mako >= 0.9.1"
+    "import mako; assert mako.__version__ >= '0.9.1'"
+    MAKO_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "lxml >= 1.3.6"
+    "import lxml.etree; assert lxml.etree.LXML_VERSION >= (1, 3, 6, 0)"
+    LXML_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "pygobject >= 2.28.6"
+    "import gi; assert gi.version_info >= (2, 28, 6)"
+    PYGI_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "Gtk (GI) >= 3.10.8"
+    "import gi; gi.require_version('Gtk', '3.0'); \
+     from gi.repository import Gtk; Gtk.check_version(3, 10, 8)"
+    GTK_GI_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "Cairo (GI) >= 1.0"
+    "import gi; gi.require_foreign('cairo', 'Context')"  # Cairo 1.13.0
+    CAIRO_GI_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "PangoCairo (GI) >= 1.0"
+    "import gi; gi.require_version('PangoCairo', '1.0')"  # pangocairo 1.36.3
+    PANGOCAIRO_GI_FOUND
+)
+
+GR_PYTHON_CHECK_MODULE_RAW(
+    "numpy"
+    "import numpy"
+    NUMPY_FOUND
+)
 
 ########################################################################
 # Register component
@@ -37,7 +96,10 @@ if(NOT CMAKE_CROSSCOMPILING)
         PYTHON_MIN_VER_FOUND
         CHEETAH_FOUND
         LXML_FOUND
-        PYGTK_FOUND
+        PYGI_FOUND
+        GTK_GI_FOUND
+        CAIRO_GI_FOUND
+        PANGOCAIRO_GI_FOUND
         NUMPY_FOUND
     )
 endif(NOT CMAKE_CROSSCOMPILING)

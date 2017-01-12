@@ -77,11 +77,25 @@ endif(PYTHON_EXECUTABLE)
 # - cmd an additional command to run
 # - have the result variable to set
 ########################################################################
+macro(GR_PYTHON_CHECK_MODULE_RAW desc python_code have)
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE} -c "${python_code}"
+        RESULT_VARIABLE return_code
+    )
+    if(return_code EQUAL 0)
+        message(STATUS "Python checking for ${desc} - found")
+        set(${have} TRUE)
+    else()
+        message(STATUS "Python checking for ${desc} - not found")
+        set(${have} FALSE)
+    endif()
+endmacro(GR_PYTHON_CHECK_MODULE_RAW)
+
 macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
     message(STATUS "")
     message(STATUS "Python checking for ${desc}")
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c "
+    GR_PYTHON_CHECK_MODULE_RAW(
+        "${desc}" "
 #########################################
 try:
     import ${mod}
@@ -89,15 +103,7 @@ try:
 except ImportError, AssertionError: exit(-1)
 except: pass
 #########################################"
-        RESULT_VARIABLE ${have}
-    )
-    if(${have} EQUAL 0)
-        message(STATUS "Python checking for ${desc} - found")
-        set(${have} TRUE)
-    else(${have} EQUAL 0)
-        message(STATUS "Python checking for ${desc} - not found")
-        set(${have} FALSE)
-    endif(${have} EQUAL 0)
+    "${have}")
 endmacro(GR_PYTHON_CHECK_MODULE)
 
 ########################################################################

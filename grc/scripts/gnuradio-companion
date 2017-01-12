@@ -58,6 +58,7 @@ def check_gtk():
         import gi
         gi.require_version('Gtk', '3.0')
         gi.require_version('PangoCairo', '1.0')
+        gi.require_foreign('cairo', 'Context')
 
         from gi.repository import Gtk
         Gtk.init_check()
