@@ -74,6 +74,13 @@ namespace gr {
       return 10 * std::log10(d_threshold);
     }
 
+
+    double
+    probe_avg_mag_sqrd_c_impl::level() const
+    {
+      return 10 * std::log10(d_level);
+    }
+
     void
     probe_avg_mag_sqrd_c_impl::set_threshold(double decibels)
     {

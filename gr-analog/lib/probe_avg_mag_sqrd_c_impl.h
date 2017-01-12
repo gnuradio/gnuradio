@@ -42,7 +42,7 @@ namespace gr {
       ~probe_avg_mag_sqrd_c_impl();
 
       bool unmuted() const { return d_unmuted; }
-      double level() const { return d_level; }
+      double level() const;
 
       double threshold() const;
 
