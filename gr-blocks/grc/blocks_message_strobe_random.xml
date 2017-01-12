@@ -11,7 +11,7 @@
 	<import>import pmt</import>
 	<make>blocks.message_strobe_random($msg, $dist, $mean, $std)</make>
     <callback>set_msg($msg)</callback>
-    <callback>set_dist($period)</callback>
+    <callback>set_dist($dist)</callback>
     <callback>set_mean($mean)</callback>
     <callback>set_std($std)</callback>
 	<param>
