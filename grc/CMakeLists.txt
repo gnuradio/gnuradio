@@ -48,9 +48,6 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
     ${grc_python_deps}
 )
 
-########################################################################
-# Begin conditional configuration
-########################################################################
 if(ENABLE_GRC)
 
 ########################################################################
@@ -85,15 +82,22 @@ install(
     DESTINATION ${GR_PREFSDIR}
 )
 
+########################################################################
+# Install (+ compile) python sources and data files
+########################################################################
 file(GLOB py_files "*.py")
-
 GR_PYTHON_INSTALL(
     FILES ${py_files}
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc
+    DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
 )
 
+GR_PYTHON_INSTALL(
+    DIRECTORY core gui
+    DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
+    FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl)$"
+)
 ########################################################################
-# Appens NSIS commands to set environment variables
+# Append NSIS commands to set environment variables
 ########################################################################
 if(WIN32)
 
@@ -112,8 +116,6 @@ endif(WIN32)
 # Add subdirectories
 ########################################################################
 add_subdirectory(blocks)
-add_subdirectory(gui)
-add_subdirectory(core)
 add_subdirectory(scripts)
 
 endif(ENABLE_GRC)
