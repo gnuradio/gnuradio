@@ -181,7 +181,7 @@ class Port(Element):
         return Constants.TYPE_TO_SIZEOF.keys()
 
     def is_type_empty(self):
-        return not self._n['type']
+        return not self._n['type'] or not self.get_parent().resolve_dependencies(self._n['type'])
 
     def validate(self):
         Element.validate(self)
