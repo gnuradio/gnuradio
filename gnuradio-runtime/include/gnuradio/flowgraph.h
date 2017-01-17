@@ -264,6 +264,13 @@ namespace gr {
     basic_block_vector_t sort_sources_first(basic_block_vector_t &blocks);
     bool source_p(basic_block_sptr block);
     void topological_dfs_visit(basic_block_sptr block, basic_block_vector_t &output);
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
+
   };
 
   // Convenience functions

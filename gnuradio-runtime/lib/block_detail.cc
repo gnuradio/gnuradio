@@ -75,18 +75,20 @@ namespace gr {
   void
   block_detail::set_input(unsigned int which, buffer_reader_sptr reader)
   {
-    if(which >= d_ninputs)
+    if(which >= d_ninputs) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block_detail::set_input");
       throw std::invalid_argument("block_detail::set_input");
-
+    }
     d_input[which] = reader;
   }
 
   void
   block_detail::set_output(unsigned int which, buffer_sptr buffer)
   {
-    if(which >= d_noutputs)
+    if(which >= d_noutputs) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block_detail::set_output");
       throw std::invalid_argument("block_detail::set_output");
-
+    }
     d_output[which] = buffer;
   }
 
@@ -156,16 +158,20 @@ namespace gr {
   uint64_t
   block_detail::nitems_read(unsigned int which_input)
   {
-    if(which_input >= d_ninputs)
+    if(which_input >= d_ninputs) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block_detail::n_input_items");
       throw std::invalid_argument ("block_detail::n_input_items");
+    }
     return d_input[which_input]->nitems_read();
   }
 
   uint64_t
   block_detail::nitems_written(unsigned int which_output)
   {
-    if(which_output >= d_noutputs)
+    if(which_output >= d_noutputs) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block_detail::n_output_items");
       throw std::invalid_argument ("block_detail::n_output_items");
+    }
     return d_output[which_output]->nitems_written();
   }
 
@@ -193,6 +199,7 @@ namespace gr {
   block_detail::add_item_tag(unsigned int which_output, const tag_t &tag)
   {
     if(!pmt::is_symbol(tag.key)) {
+      GR_LOG_ERROR (d_logger, "pmt::wrong_type: block_detail::add_item_tag key");
       throw pmt::wrong_type("block_detail::add_item_tag key", tag.key);
     }
     else {
@@ -205,6 +212,7 @@ namespace gr {
   block_detail::remove_item_tag(unsigned int which_input, const tag_t &tag, long id)
   {
     if(!pmt::is_symbol(tag.key)) {
+      GR_LOG_ERROR (d_logger, "pmt::wrong_type: block_detail::add_item_tag key");
       throw pmt::wrong_type("block_detail::add_item_tag key", tag.key);
     }
     else {
@@ -258,7 +266,7 @@ namespace gr {
         gr::thread::thread_bind_to_processor(thread, mask);
       }
       catch (std::runtime_error e) {
-        std::cerr << "set_processor_affinity: invalid mask."  << std::endl;;
+        GR_LOG_ERROR (d_logger, "set_processor_affinity: invalid mask.");
       }
     }
   }

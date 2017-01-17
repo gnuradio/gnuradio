@@ -33,8 +33,6 @@
 
 namespace gr {
 
-#define HIER_BLOCK2_DETAIL_DEBUG 0
-
   hier_block2_detail::hier_block2_detail(hier_block2 *owner)
     : d_owner(owner),
       d_parent_detail(0),
@@ -51,6 +49,7 @@ namespace gr {
       std::stringstream msg;
       msg << "Hierarchical blocks do not yet support arbitrary or"
           << " variable numbers of inputs or outputs (" << d_owner->name() << ")";
+      GR_LOG_ERROR (d_logger, msg);
       throw std::runtime_error(msg.str());
     }
 
@@ -74,6 +73,7 @@ namespace gr {
     // Check if duplicate
     if(std::find(d_blocks.begin(), d_blocks.end(), block) != d_blocks.end()) {
       msg << "Block " << block << " already connected.";
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -81,14 +81,14 @@ namespace gr {
     if(block->input_signature()->max_streams() != 0 ||
        block->output_signature()->max_streams() != 0) {
       msg << "Block " << block << " must not have any input or output ports";
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
     hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
 
     if(hblock && hblock.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "connect: block is hierarchical, setting parent to " << this << std::endl;
+      GR_LOG_DEBUG(d_debug_logger, "connect: block is hierarchical, setting parent to " << this);
       hblock->d_detail->d_parent_detail = this;
     }
 
@@ -101,25 +101,23 @@ namespace gr {
   {
     std::stringstream msg;
 
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "connecting: " << endpoint(src, src_port)
-                << " -> " << endpoint(dst, dst_port) << std::endl;
+    GR_LOG_DEBUG (d_debug_logger, "connecting: " << endpoint(src, src_port)
+                << " -> " << endpoint(dst, dst_port));
 
-    if(src.get() == dst.get())
+    if(src.get() == dst.get()) {
+      GR_LOG_ERROR(d_logger, "connect: src and destination blocks cannot be the same");
       throw std::invalid_argument("connect: src and destination blocks cannot be the same");
-
+    }
     hier_block2_sptr src_block(cast_to_hier_block2_sptr(src));
     hier_block2_sptr dst_block(cast_to_hier_block2_sptr(dst));
 
     if(src_block && src.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "connect: src is hierarchical, setting parent to " << this << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "connect: src is hierarchical, setting parent to " << this);
       src_block->d_detail->d_parent_detail = this;
     }
 
     if(dst_block && dst.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "connect: dst is hierarchical, setting parent to " << this << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "connect: dst is hierarchical, setting parent to " << this);
       dst_block->d_detail->d_parent_detail = this;
     }
 
@@ -129,6 +127,7 @@ namespace gr {
       max_port = src->input_signature()->max_streams();
       if((max_port != -1 && (src_port >= max_port)) || src_port < 0) {
         msg << "source port " << src_port << " out of range for " << src;
+	GR_LOG_ERROR (d_logger, msg);
         throw std::invalid_argument(msg.str());
       }
 
@@ -139,6 +138,7 @@ namespace gr {
       max_port = dst->output_signature()->max_streams();
       if((max_port != -1 && (dst_port >= max_port)) || dst_port < 0) {
         msg << "destination port " << dst_port << " out of range for " << dst;
+	GR_LOG_ERROR (d_logger, msg);
         throw std::invalid_argument(msg.str());
       }
 
@@ -155,8 +155,7 @@ namespace gr {
   hier_block2_detail::msg_connect(basic_block_sptr src, pmt::pmt_t srcport,
                                   basic_block_sptr dst, pmt::pmt_t dstport)
   {
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "connecting message port..." << std::endl;
+    GR_LOG_ERROR (d_logger, "connecting message port...");
 
     // add block uniquely to list to internal blocks
     if(std::find(d_blocks.begin(), d_blocks.end(), dst) == d_blocks.end()){
@@ -179,22 +178,19 @@ namespace gr {
     hier_block2_sptr dst_block(cast_to_hier_block2_sptr(dst));
 
     if(src_block && src.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "msg_connect: src is hierarchical, setting parent to " << this << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "msg_connect: src is hierarchical, setting parent to " << this);
       src_block->d_detail->d_parent_detail = this;
     }
 
     if(dst_block && dst.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "msg_connect: dst is hierarchical, setting parent to " << this << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "msg_connect: dst is hierarchical, setting parent to " << this);
       dst_block->d_detail->d_parent_detail = this;
     }
 
     // add edge for this message connection
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << boost::format("msg_connect( (%s, %s, %d), (%s, %s, %d) )\n") % \
+    GR_LOG_DEBUG (d_debug_logger, boost::format("msg_connect( (%s, %s, %d), (%s, %s, %d) )\n") % \
         src % srcport % hier_out %
-        dst % dstport % hier_in;
+        dst % dstport % hier_in);
     d_fg->connect(msg_endpoint(src, srcport, hier_out), msg_endpoint(dst, dstport, hier_in));
   }
 
@@ -202,9 +198,7 @@ namespace gr {
   hier_block2_detail::msg_disconnect(basic_block_sptr src, pmt::pmt_t srcport,
                                      basic_block_sptr dst, pmt::pmt_t dstport)
   {
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "disconnecting message port..." << std::endl;
-
+    GR_LOG_DEBUG (d_debug_logger, "disconnecting message port...");
     // remove edge for this message connection
     bool hier_in=false, hier_out=false;
     if(d_owner == src.get()){
@@ -258,8 +252,7 @@ namespace gr {
 
         hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
         if(block && block.get() != d_owner) {
-          if(HIER_BLOCK2_DETAIL_DEBUG)
-            std::cout << "disconnect: block is hierarchical, clearing parent" << std::endl;
+          GR_LOG_DEBUG (d_debug_logger, "disconnect: block is hierarchical, clearing parent");
           hblock->d_detail->d_parent_detail = 0;
         }
 
@@ -274,14 +267,14 @@ namespace gr {
       if((*p).src().block() == block || (*p).dst().block() == block) {
         edges.push_back(*p);
 
-        if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << "disconnect: block found in edge " << (*p) << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "disconnect: block found in edge " << (*p));
       }
     }
 
     if(edges.size() == 0) {
       std::stringstream msg;
       msg << "cannot disconnect block " << block << ", not found";
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -295,25 +288,22 @@ namespace gr {
   hier_block2_detail::disconnect(basic_block_sptr src, int src_port,
                                  basic_block_sptr dst, int dst_port)
   {
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "disconnecting: " << endpoint(src, src_port)
-                << " -> " << endpoint(dst, dst_port) << std::endl;
-
-    if(src.get() == dst.get())
+    GR_LOG_DEBUG (d_debug_logger, "disconnecting: " << endpoint(src, src_port)
+                << " -> " << endpoint(dst, dst_port));
+    if(src.get() == dst.get()) {
+      GR_LOG_ERROR (d_logger, "disconnect: source and destination blocks cannot be the same");
       throw std::invalid_argument("disconnect: source and destination blocks cannot be the same");
-
+    }
     hier_block2_sptr src_block(cast_to_hier_block2_sptr(src));
     hier_block2_sptr dst_block(cast_to_hier_block2_sptr(dst));
 
     if(src_block && src.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "disconnect: src is hierarchical, clearing parent" << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "disconnect: src is hierarchical, clearing parent");
       src_block->d_detail->d_parent_detail = 0;
     }
 
     if(dst_block && dst.get() != d_owner) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "disconnect: dst is hierarchical, clearing parent" << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "disconnect: dst is hierarchical, clearing parent");
       dst_block->d_detail->d_parent_detail = 0;
     }
 
@@ -341,6 +331,7 @@ namespace gr {
       std::stringstream msg;
       msg << "Hierarchical blocks do not yet support arbitrary or"
         << " variable numbers of inputs or outputs (" << d_owner->name() << ")";
+      GR_LOG_ERROR (d_logger, msg);
       throw std::runtime_error(msg.str());
     }
 
@@ -369,6 +360,7 @@ namespace gr {
 
     if(my_port < 0 || my_port >= (signed)d_inputs.size()) {
       msg << "input port " << my_port << " out of range for " << block;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -378,6 +370,7 @@ namespace gr {
     endpoint_viter_t p = std::find(endps.begin(), endps.end(), endp);
     if(p != endps.end()) {
       msg << "external input port " << my_port << " already wired to " << endp;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -394,12 +387,14 @@ namespace gr {
 
     if(my_port < 0 || my_port >= (signed)d_outputs.size()) {
       msg << "output port " << my_port << " out of range for " << block;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
     if(d_outputs[my_port].block()) {
       msg << "external output port " << my_port << " already connected from "
           << d_outputs[my_port];
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -416,6 +411,7 @@ namespace gr {
 
     if(my_port < 0 || my_port >= (signed)d_inputs.size()) {
       msg << "input port number " << my_port << " out of range for " << block;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -425,6 +421,7 @@ namespace gr {
     endpoint_viter_t p = std::find(endps.begin(), endps.end(), endp);
     if(p == endps.end()) {
       msg << "external input port " << my_port << " not connected to " << endp;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -441,12 +438,14 @@ namespace gr {
 
     if(my_port < 0 || my_port >= (signed)d_outputs.size()) {
       msg << "output port number " << my_port << " out of range for " << block;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
     if(d_outputs[my_port].block() != block) {
       msg << "block " << block << " not assigned to output "
           << my_port << ", can't disconnect";
+      GR_LOG_ERROR (d_logger, msg);
       throw std::invalid_argument(msg.str());
     }
 
@@ -458,23 +457,23 @@ namespace gr {
   {
     std::stringstream msg;
 
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "Resolving port " << port << " as an "
+    GR_LOG_DEBUG (d_debug_logger, "Resolving port " << port << " as an "
                 << (is_input ? "input" : "output")
-                << " of " << d_owner->name() << std::endl;
-
+                << " of " << d_owner->name());
     endpoint_vector_t result;
 
     if(is_input) {
       if(port < 0 || port >= (signed)d_inputs.size()) {
         msg << "resolve_port: hierarchical block '" << d_owner->name()
             << "': input " << port << " is out of range";
+        GR_LOG_ERROR (d_logger, msg);
         throw std::runtime_error(msg.str());
       }
 
       if(d_inputs[port].empty()) {
         msg << "resolve_port: hierarchical block '" << d_owner->name()
             << "': input " << port << " is not connected internally";
+        GR_LOG_ERROR (d_logger, msg);
         throw std::runtime_error(msg.str());
       }
 
@@ -489,12 +488,14 @@ namespace gr {
       if(port < 0 || port >= (signed)d_outputs.size()) {
         msg << "resolve_port: hierarchical block '" << d_owner->name()
             << "': output " << port << " is out of range";
+        GR_LOG_ERROR (d_logger, msg);
         throw std::runtime_error(msg.str());
       }
 
       if(d_outputs[port] == endpoint()) {
         msg << "resolve_port: hierarchical block '" << d_owner->name()
             << "': output " << port << " is not connected internally";
+        GR_LOG_ERROR (d_logger, msg);
         throw std::runtime_error(msg.str());
       }
 
@@ -506,6 +507,7 @@ namespace gr {
           << "': unable to resolve "
           << (is_input ? "input port " : "output port ")
           << port;
+      GR_LOG_ERROR (d_logger, msg);
       throw std::runtime_error(msg.str());
     }
 
@@ -532,8 +534,7 @@ namespace gr {
 
     // Check if endpoint is a leaf node
     if(cast_to_block_sptr(endp.block())) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "Block " << endp.block() << " is a leaf node, returning." << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "Block " << endp.block() << " is a leaf node, returning.");
       result.push_back(endp);
       return result;
     }
@@ -541,23 +542,22 @@ namespace gr {
     // Check if endpoint is a hierarchical block
     hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(endp.block()));
     if(hier_block2) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "Resolving endpoint " << endp << " as an "
+      GR_LOG_DEBUG (d_debug_logger, "Resolving endpoint " << endp << " as an "
                   << (is_input ? "input" : "output")
-                  << ", recursing" << std::endl;
+                  << ", recursing");
       return hier_block2->d_detail->resolve_port(endp.port(), is_input);
     }
 
     msg << "unable to resolve" << (is_input ? " input " : " output ")
         << "endpoint " << endp;
+    GR_LOG_ERROR (d_logger, msg);
     throw std::runtime_error(msg.str());
   }
 
   void
   hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
   {
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << " ** Flattening " << d_owner->name() << " parent: " << d_parent_detail << std::endl;
+    GR_LOG_DEBUG (d_logger, " ** Flattening " << d_owner->name() << " parent: " << d_parent_detail);
     bool is_top_block = (d_parent_detail == NULL);
 
     // Add my edges to the flow graph, resolving references to actual endpoints
@@ -576,15 +576,13 @@ namespace gr {
     bool set_all_max_buff = d_owner->all_max_output_buffer_p();
     // Get the min and max buffer length
     if(set_all_min_buff){
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "Getting (" << (d_owner->alias()).c_str()
-                  << ") min buffer" << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "Getting (" << (d_owner->alias()).c_str()
+                  << ") min buffer");
       min_buff = d_owner->min_output_buffer();
     }
     if(set_all_max_buff){
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "Getting (" << (d_owner->alias()).c_str()
-                  << ") max buffer" << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "Getting (" << (d_owner->alias()).c_str()
+                  << ") max buffer");
       max_buff = d_owner->max_output_buffer();
     }
 
@@ -594,22 +592,15 @@ namespace gr {
       basic_block_sptr b;
       b = p->src().block();
 
-      if(ctrlport_on) {
-        if(!b->is_rpc_set()) {
-          b->setup_rpc();
-          b->rpc_set();
-        }
-      }
       if(set_all_min_buff){
         //sets the min buff for every block within hier_block2
         if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->min_output_buffer(0) != min_buff){
-              if(HIER_BLOCK2_DETAIL_DEBUG)
-                std::cout << "Block (" << (bb->alias()).c_str()
-                          << ") min_buff (" << min_buff
-                          << ")" << std::endl;
+              GR_LOG_DEBUG (d_debug_logger, "Block (" << (bb->alias()).c_str()
+                        << ") min_buff (" << min_buff
+                        << ")");
               bb->set_min_output_buffer(min_buff);
             }
           }
@@ -617,10 +608,9 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->min_output_buffer(0) != min_buff){
-                if(HIER_BLOCK2_DETAIL_DEBUG)
-                  std::cout << "HBlock (" << (hh->alias()).c_str()
-                            << ") min_buff (" << min_buff
-                            << ")" << std::endl;
+                GR_LOG_DEBUG (d_debug_logger, "HBlock (" << (hh->alias()).c_str()
+                          << ") min_buff (" << min_buff
+                          << ")");
                 hh->set_min_output_buffer(min_buff);
               }
             }
@@ -633,10 +623,9 @@ namespace gr {
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->max_output_buffer(0) != max_buff){
-              if(HIER_BLOCK2_DETAIL_DEBUG)
-                std::cout << "Block (" << (bb->alias()).c_str()
-                          << ") max_buff (" << max_buff
-                          << ")" << std::endl;
+              GR_LOG_DEBUG (d_debug_logger, "Block (" << (bb->alias()).c_str()
+                        << ") max_buff (" << max_buff
+                        << ")");
               bb->set_max_output_buffer(max_buff);
             }
           }
@@ -644,10 +633,9 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->max_output_buffer(0) != max_buff){
-                if(HIER_BLOCK2_DETAIL_DEBUG)
-                  std::cout << "HBlock (" << (hh->alias()).c_str()
-                            << ") max_buff (" << max_buff
-                            << ")" << std::endl;
+                GR_LOG_DEBUG (d_debug_logger, "HBlock (" << (hh->alias()).c_str()
+                          << ") max_buff (" << max_buff
+                          << ")");
                 hh->set_max_output_buffer(max_buff);
               }
             }
@@ -656,22 +644,15 @@ namespace gr {
       }
 
       b = p->dst().block();
-      if(ctrlport_on) {
-        if(!b->is_rpc_set()) {
-          b->setup_rpc();
-          b->rpc_set();
-        }
-      }
       if(set_all_min_buff){
         //sets the min buff for every block within hier_block2
         if(min_buff != 0){
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->min_output_buffer(0) != min_buff){
-              if(HIER_BLOCK2_DETAIL_DEBUG)
-                std::cout << "Block (" << (bb->alias()).c_str()
-                          << ") min_buff (" << min_buff
-                          << ")" << std::endl;
+              GR_LOG_DEBUG (d_debug_logger, "Block (" << (bb->alias()).c_str()
+                        << ") min_buff (" << min_buff
+                        << ")");
               bb->set_min_output_buffer(min_buff);
             }
           }
@@ -679,10 +660,9 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->min_output_buffer(0) != min_buff){
-                if(HIER_BLOCK2_DETAIL_DEBUG)
-                  std::cout << "HBlock (" << (hh->alias()).c_str()
-                            << ") min_buff (" << min_buff
-                            << ")" << std::endl;
+                GR_LOG_DEBUG (d_debug_logger, "HBlock (" << (hh->alias()).c_str()
+                          << ") min_buff (" << min_buff
+                          << ")");
                 hh->set_min_output_buffer(min_buff);
               }
             }
@@ -695,10 +675,9 @@ namespace gr {
           block_sptr bb = boost::dynamic_pointer_cast<block>(b);
           if(bb != 0){
             if(bb->max_output_buffer(0) != max_buff){
-              if(HIER_BLOCK2_DETAIL_DEBUG)
-                std::cout << "Block (" << (bb->alias()).c_str()
-                          << ") max_buff (" << max_buff
-                          << ")" << std::endl;
+              GR_LOG_DEBUG (d_debug_logger, "Block (" << (bb->alias()).c_str()
+                        << ") max_buff (" << max_buff
+                        << ")");
               bb->set_max_output_buffer(max_buff);
             }
           }
@@ -706,10 +685,9 @@ namespace gr {
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(b);
             if(hh != 0){
               if(hh->max_output_buffer(0) != max_buff){
-                if(HIER_BLOCK2_DETAIL_DEBUG)
-                  std::cout << "HBlock (" << (hh->alias()).c_str()
-                            << ") max_buff (" << max_buff
-                            << ")" << std::endl;
+                GR_LOG_DEBUG (d_debug_logger, "HBlock (" << (hh->alias()).c_str()
+                          << ") max_buff (" << max_buff
+                          << ")");
                 hh->set_max_output_buffer(max_buff);
               }
             }
@@ -718,12 +696,10 @@ namespace gr {
       }
     }
 
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "Flattening stream connections: " << std::endl;
+    GR_LOG_DEBUG (d_debug_logger, "Flattening stream connections: ");
 
     for(p = edges.begin(); p != edges.end(); p++) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "Flattening edge " << (*p) << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "Flattening edge " << (*p));
 
       endpoint_vector_t src_endps = resolve_endpoint(p->src(), false);
       endpoint_vector_t dst_endps = resolve_endpoint(p->dst(), true);
@@ -731,50 +707,42 @@ namespace gr {
       endpoint_viter_t s, d;
       for(s = src_endps.begin(); s != src_endps.end(); s++) {
         for(d = dst_endps.begin(); d != dst_endps.end(); d++) {
-          if(HIER_BLOCK2_DETAIL_DEBUG)
-            std::cout << (*s) << "->" << (*d) << std::endl;
+          GR_LOG_DEBUG (d_debug_logger, (*s) << "->" << (*d));
           sfg->connect(*s, *d);
         }
       }
     }
 
     // loop through flattening hierarchical connections
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "Flattening msg connections: " << std::endl;
+    GR_LOG_DEBUG (d_debug_logger, "Flattening msg connections: ");
 
     std::vector<std::pair<msg_endpoint, bool> > resolved_endpoints;
     for(q = msg_edges.begin(); q != msg_edges.end(); q++) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << boost::format(" flattening edge ( %s, %s, %d) -> ( %s, %s, %d)\n") % \
-          q->src().block() % q->src().port() % q->src().is_hier() % q->dst().block() % \
-          q->dst().port() % q->dst().is_hier();
-
+      GR_LOG_DEBUG (d_debug_logger, boost::format(" flattening edge ( %s, %s, %d) -> ( %s, %s, %d)\n") % \
+        q->src().block() % q->src().port() % q->src().is_hier() % q->dst().block() % \
+        q->dst().port() % q->dst().is_hier());
 
       if(q->src().is_hier() && q->src().block().get() == d_owner){
         // connection into this block ..
-        if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << "hier incoming port: " << q->src() << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "hier incoming port: " << q->src());
         sfg->replace_endpoint(q->src(), q->dst(), false);
         resolved_endpoints.push_back( std::pair<msg_endpoint,bool>( q->src(), false));
       } else
       if(q->dst().is_hier() && q->dst().block().get() == d_owner){
         // connection out of this block
-        if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << "hier outgoing port: " << q->dst() << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "hier outgoing port: " << q->dst());
         sfg->replace_endpoint(q->dst(), q->src(), true);
         resolved_endpoints.push_back( std::pair<msg_endpoint,bool>(q->dst(), true));
       } else {
         // internal connection only
-        if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << "internal msg connection: " << q->src() << "-->" << q->dst() << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "internal msg connection: " << q->src() << "-->" << q->dst());
         sfg->connect( q->src(), q->dst() );
       }
     }
 
     for(std::vector<std::pair<msg_endpoint, bool> >::iterator it = resolved_endpoints.begin();
         it != resolved_endpoints.end(); it++) {
-      if(HIER_BLOCK2_DETAIL_DEBUG)
-        std::cout << "sfg->clear_endpoint(" << (*it).first << ", " << (*it).second << ") " << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "sfg->clear_endpoint(" << (*it).first << ", " << (*it).second << ") ");
       sfg->clear_endpoint((*it).first, (*it).second);
     }
 
@@ -785,7 +753,7 @@ namespace gr {
         sfg->connect(q->src(), q->dst());
       }
       else {
-        std::cout << "not connecting hier connection!" << std::endl;
+        GR_LOG_INFO (d_logger, "not connecting hier connection!");
       }
     }
     */
@@ -797,8 +765,16 @@ namespace gr {
 
     // First add the list of singleton blocks
     std::vector<basic_block_sptr>::const_iterator b;   // Because flatten_aux is const
-    for(b = d_blocks.begin(); b != d_blocks.end(); b++)
+    for(b = d_blocks.begin(); b != d_blocks.end(); b++) {
       tmp.push_back(*b);
+      // for every block, attempt to setup RPC
+      if(ctrlport_on) {
+        if(!(*b)->is_rpc_set()) {
+          (*b)->setup_rpc();
+          (*b)->rpc_set();
+        }
+      }
+    }
 
     // Now add the list of connected input blocks
     std::stringstream msg;
@@ -806,7 +782,8 @@ namespace gr {
       if(d_inputs[i].size() == 0) {
         msg << "In hierarchical block " << d_owner->name() << ", input " << i
             << " is not connected internally";
-        throw std::runtime_error(msg.str());
+        GR_LOG_ERROR (d_logger, msg);
+	throw std::runtime_error(msg.str());
       }
 
       for(unsigned int j = 0; j < d_inputs[i].size(); j++)
@@ -818,6 +795,7 @@ namespace gr {
       if(!blk) {
         msg << "In hierarchical block " << d_owner->name() << ", output " << i
             << " is not connected internally";
+        GR_LOG_ERROR (d_logger, msg);
         throw std::runtime_error(msg.str());
       }
       // Set the buffers of only the blocks connected to the hier output
@@ -827,22 +805,20 @@ namespace gr {
           block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
           if(bb != 0){
             int bb_src_port = d_outputs[i].port();
-            if(HIER_BLOCK2_DETAIL_DEBUG)
-              std::cout << "Block (" << (bb->alias()).c_str()
-                        << ") Port (" << bb_src_port
-                        << ") min_buff (" << min_buff
-                        << ")" << std::endl;
+            GR_LOG_DEBUG (d_debug_logger, "Block (" << (bb->alias()).c_str()
+                      << ") Port (" << bb_src_port
+                      << ") min_buff (" << min_buff
+                      << ")");
             bb->set_min_output_buffer(bb_src_port, min_buff);
           }
           else{
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
             if(hh != 0){
               int hh_src_port = d_outputs[i].port();
-              if(HIER_BLOCK2_DETAIL_DEBUG)
-                std::cout << "HBlock (" << (hh->alias()).c_str()
-                          << ") Port (" << hh_src_port
-                          << ") min_buff ("<< min_buff
-                          << ")" << std::endl;
+              GR_LOG_DEBUG (d_debug_logger, "HBlock (" << (hh->alias()).c_str()
+                        << ") Port (" << hh_src_port
+                        << ") min_buff ("<< min_buff
+                        << ")");
               hh->set_min_output_buffer(hh_src_port, min_buff);
             }
           }
@@ -854,22 +830,20 @@ namespace gr {
           block_sptr bb = boost::dynamic_pointer_cast<block>(blk);
           if(bb != 0){
             int bb_src_port = d_outputs[i].port();
-            if(HIER_BLOCK2_DETAIL_DEBUG)
-              std::cout << "Block (" << (bb->alias()).c_str()
-                        << ") Port (" << bb_src_port
-                        << ") max_buff (" << max_buff
-                        << ")" << std::endl;
+            GR_LOG_DEBUG (d_debug_logger, "Block (" << (bb->alias()).c_str()
+                      << ") Port (" << bb_src_port
+                      << ") max_buff (" << max_buff
+                      << ")");
             bb->set_max_output_buffer(bb_src_port, max_buff);
           }
           else{
             hier_block2_sptr hh = boost::dynamic_pointer_cast<hier_block2>(blk);
             if(hh != 0){
               int hh_src_port = d_outputs[i].port();
-              if(HIER_BLOCK2_DETAIL_DEBUG)
-                std::cout << "HBlock (" << (hh->alias()).c_str()
-                          << ") Port (" << hh_src_port
-                          << ") max_buff (" << max_buff
-                          << ")" << std::endl;
+              GR_LOG_DEBUG (d_debug_logger, "HBlock (" << (hh->alias()).c_str()
+                        << ") Port (" << hh_src_port
+                        << ") max_buff (" << max_buff
+                        << ")");
               hh->set_max_output_buffer(hh_src_port, max_buff);
             }
           }
@@ -886,9 +860,8 @@ namespace gr {
     for(basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
       hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(*p));
       if(hier_block2 && (hier_block2.get() != d_owner)) {
-        if(HIER_BLOCK2_DETAIL_DEBUG)
-          std::cout << "flatten_aux: recursing into hierarchical block "
-                    << hier_block2->alias() << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "flatten_aux: recursing into hierarchical block "
+                  << hier_block2->alias());
         hier_block2->d_detail->flatten_aux(sfg);
       }
     }
@@ -901,8 +874,8 @@ namespace gr {
     }
 
     // print all primitive connections at exit
-    if(HIER_BLOCK2_DETAIL_DEBUG && is_top_block){
-      std::cout << "flatten_aux finished in top_block" << std::endl;
+    if(is_top_block){
+      GR_LOG_DEBUG (d_debug_logger, "flatten_aux finished in top_block");
       sfg->dump();
     }
   }
@@ -910,9 +883,7 @@ namespace gr {
   void
   hier_block2_detail::lock()
   {
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "lock: entered in " << this << std::endl;
-
+    GR_LOG_DEBUG (d_debug_logger, "lock: entered in " << this);
     if(d_parent_detail)
       d_parent_detail->lock();
     else
@@ -922,8 +893,7 @@ namespace gr {
   void
   hier_block2_detail::unlock()
   {
-    if(HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "unlock: entered in " << this << std::endl;
+    GR_LOG_DEBUG (d_debug_logger, "unlock: entered in " << this);
 
     if(d_parent_detail)
       d_parent_detail->unlock();

@@ -24,6 +24,7 @@
 #define INCLUDED_GR_RUNTIME_BLOCK_EXECUTOR_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <fstream>
@@ -36,6 +37,13 @@ namespace gr {
    */
   class GR_RUNTIME_API block_executor
   {
+  private:
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
+
   protected:
     block_sptr     d_block;    // The block we're trying to run
     std::ofstream *d_log;

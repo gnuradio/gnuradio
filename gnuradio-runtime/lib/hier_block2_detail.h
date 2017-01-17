@@ -57,7 +57,7 @@ namespace gr {
     void set_processor_affinity(const std::vector<int> &mask);
     void unset_processor_affinity();
     std::vector<int> processor_affinity();
-    
+
     // Track output buffer min/max settings
     std::vector<size_t> d_max_output_buffer;
     std::vector<size_t> d_min_output_buffer;
@@ -79,6 +79,12 @@ namespace gr {
 
     endpoint_vector_t resolve_port(int port, bool is_input);
     endpoint_vector_t resolve_endpoint(const endpoint &endp, bool is_input) const;
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
   };
 
 } /* namespace gr */

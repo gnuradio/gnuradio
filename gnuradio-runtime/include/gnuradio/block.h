@@ -26,7 +26,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
 #include <gnuradio/tags.h>
-#include <gnuradio/logger.h>
 
 namespace gr {
 
@@ -826,11 +825,6 @@ namespace gr {
      * Used by calling gr::thread::scoped_lock l(d_setlock);
      */
     gr::thread::mutex d_setlock;
-
-    /*! Used by blocks to access the logger system.
-     */
-    gr::logger_ptr d_logger;
-    gr::logger_ptr d_debug_logger;
 
     // These are really only for internal use, but leaving them public avoids
     // having to work up an ever-varying list of friend GR_RUNTIME_APIs

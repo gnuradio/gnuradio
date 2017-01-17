@@ -24,6 +24,7 @@
 #define GR_RUNTIME_BLOCK_REGISTRY_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/basic_block.h>
 #include <map>
 
@@ -61,6 +62,12 @@ namespace gr {
     pmt::pmt_t d_ref_map;
     std::map< std::string, block*> primitive_map;
     gr::thread::mutex d_mutex;
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
   };
 
 } /* namespace gr */

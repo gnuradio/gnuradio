@@ -24,6 +24,7 @@
 #define INCLUDED_GR_BASIC_BLOCK_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/sptr_magic.h>
 #include <gnuradio/msg_accepter.h>
 #include <gnuradio/runtime_types.h>
@@ -92,6 +93,11 @@ namespace gr {
     std::vector<boost::any> d_rpc_vars; // container for all RPC variables
 
     basic_block(void) {} // allows pure virtual interface sub-classes
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
     //! Protected constructor prevents instantiation by non-derived classes
     basic_block(const std::string &name,
