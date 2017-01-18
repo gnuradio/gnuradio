@@ -184,7 +184,6 @@ class Port(Element):
         return not self._n['type'] or not self.get_parent().resolve_dependencies(self._n['type'])
 
     def validate(self):
-        Element.validate(self)
         if self.get_type() not in self.get_types():
             self.add_error_message('Type "{0}" is not a possible type.'.format(self.get_type()))
         platform = self.get_parent().get_parent().get_parent()
@@ -203,10 +202,10 @@ class Port(Element):
         """
         Handle the port cloning for virtual blocks.
         """
+        del self._error_messages[:]
         if self.is_type_empty():
             self.resolve_empty_type()
 
-        Element.rewrite(self)
         hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
 
@@ -227,6 +226,8 @@ class Port(Element):
         def find_port(finder):
             try:
                 return next((p for p in finder(self) if not p.is_type_empty()), None)
+            except LoopError as error:
+                self.add_error_message(str(error))
             except (StopIteration, Exception) as error:
                 pass
 
