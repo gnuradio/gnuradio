@@ -14,6 +14,7 @@
   #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
 
+#if _MSC_VER < 1900
 struct timespec {
 
 time_t tv_sec; /* Seconds since 00:00:00 GMT, */
@@ -25,6 +26,7 @@ long tv_nsec; /* Additional nanoseconds since */
 /* tv_sec */
 
 };
+#endif
 
 struct timezone
 {
