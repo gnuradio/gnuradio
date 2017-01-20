@@ -89,8 +89,8 @@ namespace gr {
           for (Z = 0; Z < 16; Z++) {
             X = 0;
             Y = 0;
-            Xp = (XYp & 0b10) >> 1;
-            Yp = (XYp & 0b01);
+            Xp = (XYp & 0x02) >> 1;
+            Yp = (XYp & 0x01);
             for (i = 0; i < 4; i++) {
               diff_precoder((W >> i) & 1, (Z >> i) & 1, &Xp, &Yp);
               X |= (Xp << i);
