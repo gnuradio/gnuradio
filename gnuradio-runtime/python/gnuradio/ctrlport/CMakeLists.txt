@@ -50,21 +50,7 @@ GR_PYTHON_INSTALL(
 
 if(THRIFT_FOUND)
 
-EXECUTE_PROCESS(
-   COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
-   OUTPUT_VARIABLE THRIFT_PY_OUTPUT
-   ERROR_VARIABLE THRIFT_PY_ERROR
-   )
-
-GR_PYTHON_INSTALL(
-    FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnectionThrift.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
-    COMPONENT "runtime_python"
-)
-
-GR_PYTHON_INSTALL(
-    FILES
+  list(APPEND thrift_targets
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/__init__.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/constants.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ControlPort.py
@@ -72,8 +58,25 @@ GR_PYTHON_INSTALL(
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/StreamReceiver.py
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/StreamReceiver-remote
     ${CMAKE_CURRENT_BINARY_DIR}/GNURadio/ttypes.py
+    )
+  add_custom_command(
+    DEPENDS ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+    OUTPUT ${thrift_targets}
+    COMMAND ${THRIFT_BIN} --gen py -out ${CMAKE_CURRENT_BINARY_DIR}/ ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+    )
+
+  GR_PYTHON_INSTALL(
+    FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/RPCConnectionThrift.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/
+    COMPONENT "runtime_python"
+    )
+
+  GR_PYTHON_INSTALL(
+    FILES
+    ${thrift_targets}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/ctrlport/GNURadio
     COMPONENT "runtime_python"
-)
+    )
 
 endif(THRIFT_FOUND)
