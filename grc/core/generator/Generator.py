@@ -171,10 +171,10 @@ class TopBlockGenerator(object):
         # Get the virtual blocks and resolve their connections
         virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
         for connection in virtual:
-            source = connection.get_source().resolve_virtual_source()
             sink = connection.get_sink()
-            resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
-            connections.append(resolved)
+            for source in connection.get_source().resolve_virtual_source():
+                resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
+                connections.append(resolved)
             # Remove the virtual connection
             connections.remove(connection)
 
