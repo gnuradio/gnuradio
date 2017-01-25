@@ -30,6 +30,7 @@ from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
+
 from ..core import ParseXML, Messages
 
 gobject.threads_init()
@@ -129,7 +130,8 @@ class ActionHandler:
                 action.set_sensitive(False)  # set all actions disabled
             for action in (
                 Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
-                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_DUPLICATE,
+                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
+                Actions.FLOW_GRAPH_DUPLICATE, Actions.FLOW_GRAPH_SAVE_A_COPY,
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
@@ -560,6 +562,22 @@ class ActionHandler:
                 Preferences.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
                 main.menu_bar.refresh_submenus()
+        elif action == Actions.FLOW_GRAPH_SAVE_A_COPY:
+            try:
+                if not page.get_file_path():
+                    Actions.FLOW_GRAPH_SAVE_AS()
+                else:
+                    dup_file_path = page.get_file_path()
+                    dup_file_name = '.'.join(dup_file_path.split('.')[:-1]) + "_copy" # Assuming .grc extension at the end of file_path
+                    dup_file_path_temp = dup_file_name+'.grc'
+                    count = 1
+                    while (os.path.exists(dup_file_path_temp)):
+                        dup_file_path_temp = dup_file_name+'('+str(count)+').grc'
+                        count += 1
+                    ParseXML.to_file(flow_graph.export_data(), dup_file_path_temp)
+                    Messages.send("Successfully copied to " + dup_file_path_temp)
+            except IOError:
+                Messages.send_fail_save("Can not create a copy of the flowgraph")
         elif action == Actions.FLOW_GRAPH_DUPLICATE:
             curr_flow_graph = main.get_flow_graph()
             main.new_page(flow_graph = curr_flow_graph)
