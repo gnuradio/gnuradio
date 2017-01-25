@@ -34,18 +34,14 @@ class ExternalEditor(threading.Thread):
 
         self.editor = editor
         self.callback = callback
-        self.tempfile = self._create_tempfile(name, value)
+        self.filename = self._create_tempfile(name, value)
 
     def _create_tempfile(self, name, value):
-        fp = tempfile.NamedTemporaryFile(mode='w', suffix='.py',
-                                         prefix=name + '_')
-        fp.write(value)
-        fp.flush()
-        return fp
-
-    @property
-    def filename(self):
-        return self.tempfile.name
+        with tempfile.NamedTemporaryFile(
+            mode='wb', prefix=name + '_', suffix='.py', delete=False,
+        ) as fp:
+            fp.write(value.encode('utf-8'))
+            return fp.name
 
     def open_editor(self):
         proc = subprocess.Popen(args=(self.editor, self.filename))
@@ -65,16 +61,18 @@ class ExternalEditor(threading.Thread):
                 if mtime > last_change:
                     # print "file monitor: reload trigger for", filename
                     last_change = mtime
-                    with open(filename) as fp:
-                        data = fp.read()
+                    with open(filename, 'rb') as fp:
+                        data = fp.read().decode('utf-8')
                     self.callback(data)
                 time.sleep(1)
 
         except Exception as e:
             print >> sys.stderr, "file monitor crashed:", str(e)
-        else:
-            # print "file monitor: done with", filename
-            pass
+        finally:
+            try:
+                os.remove(self.filename)
+            except OSError:
+                pass
 
 
 if __name__ == '__main__':
