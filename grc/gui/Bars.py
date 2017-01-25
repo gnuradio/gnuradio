@@ -69,6 +69,7 @@ MENU_BAR_LIST = (
         None,
         Actions.FLOW_GRAPH_SAVE,
         Actions.FLOW_GRAPH_SAVE_AS,
+        Actions.FLOW_GRAPH_DUPLICATE,
         None,
         Actions.FLOW_GRAPH_SCREEN_CAPTURE,
         None,

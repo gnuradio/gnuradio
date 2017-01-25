@@ -30,7 +30,6 @@ from .FileDialogs import (OpenFlowGraphFileDialog, SaveFlowGraphFileDialog,
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
-
 from ..core import ParseXML, Messages
 
 gobject.threads_init()
@@ -130,7 +129,7 @@ class ActionHandler:
                 action.set_sensitive(False)  # set all actions disabled
             for action in (
                 Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
-                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
+                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_DUPLICATE,
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
@@ -561,6 +560,9 @@ class ActionHandler:
                 Preferences.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
                 main.menu_bar.refresh_submenus()
+        elif action == Actions.FLOW_GRAPH_DUPLICATE:
+            curr_flow_graph = main.get_flow_graph()
+            main.new_page(flow_graph = curr_flow_graph)
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path, background_transparent = SaveScreenShotDialog(page.get_file_path()).run()
             if file_path is not None:

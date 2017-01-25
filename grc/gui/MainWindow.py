@@ -247,7 +247,7 @@ class MainWindow(gtk.Window):
     # Pages: create and close
     ############################################################
 
-    def new_page(self, file_path='', show=False):
+    def new_page(self, file_path='', flow_graph = None, show=False):
         """
         Create a new notebook page.
         Set the tab to be selected.
@@ -263,13 +263,17 @@ class MainWindow(gtk.Window):
             return
         try: #try to load from file
             if file_path: Messages.send_start_load(file_path)
-            flow_graph = self._platform.get_new_flow_graph()
+            is_blank = False
+            if not flow_graph:
+                flow_graph = self._platform.get_new_flow_graph()
+                is_blank = True
             flow_graph.grc_file_path = file_path
             #print flow_graph
             page = NotebookPage(
                 self,
                 flow_graph=flow_graph,
                 file_path=file_path,
+                is_blank = is_blank
             )
             if file_path: Messages.send_end_load()
         except Exception, e: #return on failure
