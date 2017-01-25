@@ -27,6 +27,8 @@ include(GrBoost)
 ########################################################################
 include(GrComponent)
 
+find_package(GSL)
+
 GR_REGISTER_COMPONENT("gr-dtv" ENABLE_GR_DTV
     Boost_FOUND
     GSL_FOUND

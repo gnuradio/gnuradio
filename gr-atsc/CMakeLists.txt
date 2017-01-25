@@ -26,6 +26,9 @@ include(GrBoost)
 # Register component
 ########################################################################
 include(GrComponent)
+
+find_package(GSL)
+
 GR_REGISTER_COMPONENT("gr-atsc" ENABLE_GR_ATSC
     Boost_FOUND
     GSL_FOUND
