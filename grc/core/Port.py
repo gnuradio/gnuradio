@@ -1,5 +1,5 @@
 """
-Copyright 2008-2015 Free Software Foundation, Inc.
+Copyright 2008-2017 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,85 +17,116 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from itertools import chain
+
 from .Constants import DEFAULT_DOMAIN, GR_STREAM_DOMAIN, GR_MESSAGE_DOMAIN
 from .Element import Element
 
 from . import Constants
 
 
-def _get_source_from_virtual_sink_port(vsp):
+class LoopError(Exception):
+    pass
+
+
+def _upstream_ports(port):
+    if port.is_sink:
+        return _sources_from_virtual_sink_port(port)
+    else:
+        return _sources_from_virtual_source_port(port)
+
+
+def _sources_from_virtual_sink_port(sink_port, _traversed=None):
     """
     Resolve the source port that is connected to the given virtual sink port.
     Use the get source from virtual source to recursively resolve subsequent ports.
     """
-    try:
-        return _get_source_from_virtual_source_port(
-            vsp.get_enabled_connections()[0].get_source())
-    except:
-        raise Exception('Could not resolve source for virtual sink port {0}'.format(vsp))
+    source_ports_per_virtual_connection = (
+        # there can be multiple ports per virtual connection
+        _sources_from_virtual_source_port(c.get_source(), _traversed)  # type: list
+        for c in sink_port.get_enabled_connections()
+    )
+    return list(chain(*source_ports_per_virtual_connection))  # concatenate generated lists of ports
 
 
-def _get_source_from_virtual_source_port(vsp, traversed=[]):
+def _sources_from_virtual_source_port(source_port, _traversed=None):
     """
     Recursively resolve source ports over the virtual connections.
     Keep track of traversed sources to avoid recursive loops.
     """
-    if not vsp.get_parent().is_virtual_source():
-        return vsp
-    if vsp in traversed:
-        raise Exception('Loop found when resolving virtual source {0}'.format(vsp))
-    try:
-        return _get_source_from_virtual_source_port(
-            _get_source_from_virtual_sink_port(
-                filter(  # Get all virtual sinks with a matching stream id
-                    lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
-                    filter(  # Get all enabled blocks that are also virtual sinks
-                        lambda b: b.is_virtual_sink(),
-                        vsp.get_parent().get_parent().get_enabled_blocks(),
-                    ),
-                )[0].get_sinks()[0]
-            ), traversed + [vsp],
-        )
-    except:
-        raise Exception('Could not resolve source for virtual source port {0}'.format(vsp))
+    _traversed = set(_traversed or [])  # a new set!
+    if source_port in _traversed:
+        raise LoopError('Loop found when resolving port type')
+    _traversed.add(source_port)
+
+    block = source_port.get_parent()
+    flow_graph = block.get_parent()
+
+    if not block.is_virtual_source():
+        return [source_port]  # nothing to resolve, we're done
+
+    stream_id = block.get_param('stream_id').get_value()
+
+    # currently the validation does not allow multiple virtual sinks and one virtual source
+    # but in the future it may...
+    connected_virtual_sink_blocks = (
+        b for b in flow_graph.get_enabled_blocks()
+        if b.is_virtual_sink() and b.get_param('stream_id').get_value() == stream_id
+    )
+    source_ports_per_virtual_connection = (
+        _sources_from_virtual_sink_port(b.get_sinks()[0], _traversed)  # type: list
+        for b in connected_virtual_sink_blocks
+    )
+    return list(chain(*source_ports_per_virtual_connection))  # concatenate generated lists of ports
 
 
-def _get_sink_from_virtual_source_port(vsp):
+def _downstream_ports(port):
+    if port.is_source:
+        return _sinks_from_virtual_source_port(port)
+    else:
+        return _sinks_from_virtual_sink_port(port)
+
+
+def _sinks_from_virtual_source_port(source_port, _traversed=None):
     """
     Resolve the sink port that is connected to the given virtual source port.
     Use the get sink from virtual sink to recursively resolve subsequent ports.
     """
-    try:
-        # Could have many connections, but use first
-        return _get_sink_from_virtual_sink_port(
-            vsp.get_enabled_connections()[0].get_sink())
-    except:
-        raise Exception('Could not resolve source for virtual source port {0}'.format(vsp))
+    sink_ports_per_virtual_connection = (
+        # there can be multiple ports per virtual connection
+        _sinks_from_virtual_sink_port(c.get_sink(), _traversed)  # type: list
+        for c in source_port.get_enabled_connections()
+    )
+    return list(chain(*sink_ports_per_virtual_connection))  # concatenate generated lists of ports
 
 
-def _get_sink_from_virtual_sink_port(vsp, traversed=[]):
+def _sinks_from_virtual_sink_port(sink_port, _traversed=None):
     """
     Recursively resolve sink ports over the virtual connections.
     Keep track of traversed sinks to avoid recursive loops.
     """
-    if not vsp.get_parent().is_virtual_sink():
-        return vsp
-    if vsp in traversed:
-        raise Exception('Loop found when resolving virtual sink {0}'.format(vsp))
-    try:
-        return _get_sink_from_virtual_sink_port(
-            _get_sink_from_virtual_source_port(
-                filter(  # Get all virtual source with a matching stream id
-                    lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
-                    filter(  # Get all enabled blocks that are also virtual sinks
-                        lambda b: b.is_virtual_source(),
-                        vsp.get_parent().get_parent().get_enabled_blocks(),
-                    ),
-                )[0].get_sources()[0]
-            ), traversed + [vsp],
-        )
-    except:
-        raise Exception('Could not resolve source for virtual sink port {0}'.format(vsp))
+    _traversed = set(_traversed or [])  # a new set!
+    if sink_port in _traversed:
+        raise LoopError('Loop found when resolving port type')
+    _traversed.add(sink_port)
+
+    block = sink_port.get_parent()
+    flow_graph = block.get_parent()
+
+    if not block.is_virtual_sink():
+        return [sink_port]
+
+    stream_id = block.get_param('stream_id').get_value()
+
+    connected_virtual_source_blocks = (
+        b for b in flow_graph.get_enabled_blocks()
+        if b.is_virtual_source() and b.get_param('stream_id').get_value() == stream_id
+    )
+    sink_ports_per_virtual_connection = (
+        _sinks_from_virtual_source_port(b.get_sources()[0], _traversed)  # type: list
+        for b in connected_virtual_source_blocks
+    )
+    return list(chain(*sink_ports_per_virtual_connection))  # concatenate generated lists of ports
 
 
 class Port(Element):
@@ -150,10 +181,9 @@ class Port(Element):
         return Constants.TYPE_TO_SIZEOF.keys()
 
     def is_type_empty(self):
-        return not self._n['type']
+        return not self._n['type'] or not self.get_parent().resolve_dependencies(self._n['type'])
 
     def validate(self):
-        Element.validate(self)
         if self.get_type() not in self.get_types():
             self.add_error_message('Type "{0}" is not a possible type.'.format(self.get_type()))
         platform = self.get_parent().get_parent().get_parent()
@@ -172,18 +202,10 @@ class Port(Element):
         """
         Handle the port cloning for virtual blocks.
         """
+        del self._error_messages[:]
         if self.is_type_empty():
-            try:
-                # Clone type and vlen
-                source = self.resolve_empty_type()
-                self._type = str(source.get_type())
-                self._vlen = str(source.get_vlen())
-            except:
-                # Reset type and vlen
-                self._type = ''
-                self._vlen = ''
+            self.resolve_empty_type()
 
-        Element.rewrite(self)
         hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
 
@@ -197,32 +219,25 @@ class Port(Element):
             self._key = '0'  # Is rectified in rewrite()
 
     def resolve_virtual_source(self):
-        if self.get_parent().is_virtual_sink():
-            return _get_source_from_virtual_sink_port(self)
-        if self.get_parent().is_virtual_source():
-            return _get_source_from_virtual_source_port(self)
+        """Only used by Generator after validation is passed"""
+        return _upstream_ports(self)
 
     def resolve_empty_type(self):
-        if self.is_sink:
+        def find_port(finder):
             try:
-                src = _get_source_from_virtual_sink_port(self)
-                if not src.is_type_empty():
-                    return src
-            except:
+                return next((p for p in finder(self) if not p.is_type_empty()), None)
+            except LoopError as error:
+                self.add_error_message(str(error))
+            except (StopIteration, Exception) as error:
                 pass
-            sink = _get_sink_from_virtual_sink_port(self)
-            if not sink.is_type_empty():
-                return sink
-        if self.is_source:
-            try:
-                src = _get_source_from_virtual_source_port(self)
-                if not src.is_type_empty():
-                    return src
-            except:
-                pass
-            sink = _get_sink_from_virtual_source_port(self)
-            if not sink.is_type_empty():
-                return sink
+
+        try:
+            port = find_port(_upstream_ports) or find_port(_downstream_ports)
+            self._type = str(port.get_type())
+            self._vlen = str(port.get_vlen())
+        except Exception:
+            # Reset type and vlen
+            self._type = self._vlen = ''
 
     def get_vlen(self):
         """
