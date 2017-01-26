@@ -91,6 +91,24 @@ class test_correlate_access_code(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertEqual(expected_result, result_data)
 
+    def test_004(self):
+        code = tuple(string_to_1_0_list(default_access_code))
+        access_code = to_1_0_string(code)
+        pad = (0,) * 64
+        #print code
+        #print access_code
+        src_bits = code + (1, 0, 1, 1) + pad
+        src_data = [2.0*x - 1.0 for x in src_bits]
+        expected_result_bits = code + (1, 0, 1, 1) + pad
+        expected_result = [2.0*x - 1.0 for x in expected_result_bits]
+        src = blocks.vector_source_f(src_data)
+        op = digital.correlate_access_code_tag_ff(access_code, 0, "test")
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 5)
+
 if __name__ == '__main__':
     gr_unittest.run(test_correlate_access_code, "test_correlate_access_code.xml")
 
