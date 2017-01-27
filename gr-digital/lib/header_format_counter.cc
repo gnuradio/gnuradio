@@ -44,9 +44,8 @@ namespace gr {
 
     header_format_counter::header_format_counter(const std::string &access_code,
                                                  int threshold, int bps)
-      : header_format_default(access_code, threshold)
+      : header_format_default(access_code, threshold, bps)
     {
-      d_bps = bps;
       d_counter = 0;
     }
 
