@@ -25,12 +25,12 @@ from StateCache import StateCache
 from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from DrawingArea import DrawingArea
 import os
-from FlowGraph import FlowGraph
+
 
 class NotebookPage(gtk.HBox):
     """A page in the notebook."""
 
-    def __init__(self, main_window, flow_graph, file_path='', is_blank = True):
+    def __init__(self, main_window, flow_graph, file_path=''):
         """
         Page constructor.
 
@@ -38,22 +38,16 @@ class NotebookPage(gtk.HBox):
             main_window: main window
             file_path: path to a flow graph file
         """
-        self._flow_graph = FlowGraph(platform=flow_graph.platform)
+        self._flow_graph = flow_graph
         self.process = None
         #import the file
         self.main_window = main_window
         self.file_path = file_path
+        initial_state = flow_graph.get_parent().parse_flow_graph(file_path)
+        self.state_cache = StateCache(initial_state)
+        self.saved = True
         #import the data to the flow graph
-        if is_blank:
-            initial_state = flow_graph.get_parent().parse_flow_graph(file_path)
-            self.state_cache = StateCache(initial_state)
-            self.get_flow_graph().import_data(initial_state)
-            self.saved = True
-        else:
-            initial_state = flow_graph.export_data()
-            self.state_cache = StateCache(initial_state)
-            self.get_flow_graph().import_data(initial_state)
-            self.saved = False
+        self.get_flow_graph().import_data(initial_state)
         #initialize page gui
         gtk.HBox.__init__(self, False, 0)
         self.show()
