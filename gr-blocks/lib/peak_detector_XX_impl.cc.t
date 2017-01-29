@@ -29,6 +29,7 @@
 #include "@NAME_IMPL@.h"
 #include <gnuradio/io_signature.h>
 #include <string.h>
+#include <limits>
 
 namespace gr {
   namespace blocks {
@@ -70,7 +71,7 @@ namespace gr {
 
       memset(optr, 0, noutput_items*sizeof(char));
 
-      @I_TYPE@ peak_val = -(@I_TYPE@)INFINITY;
+      @I_TYPE@ peak_val = std::numeric_limits<@I_TYPE@>::min();
       int peak_ind = 0;
       unsigned char state = 0;
       int i = 0;
