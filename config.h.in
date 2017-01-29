@@ -36,11 +36,5 @@
 #ifndef GR_RPCSERVER_THRIFT
 #cmakedefine GR_RPCSERVER_THRIFT
 #endif
-#ifndef ENABLE_GR_LOG
-#cmakedefine ENABLE_GR_LOG
-#endif
-#ifndef HAVE_LOG4CPP
-#cmakedefine HAVE_LOG4CPP
-#endif
 
 #endif /* GNURADIO_CONFIG_H */
