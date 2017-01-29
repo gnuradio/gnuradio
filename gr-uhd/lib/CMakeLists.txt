@@ -37,9 +37,6 @@ if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
-include_directories(${LOG4CPP_INCLUDE_DIRS})
-link_directories(${LOG4CPP_LIBRARY_DIRS})
-
 ########################################################################
 # Setup library
 ########################################################################
@@ -68,7 +65,6 @@ list(APPEND uhd_libs
     gnuradio-runtime
     ${Boost_LIBRARIES}
     ${UHD_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})

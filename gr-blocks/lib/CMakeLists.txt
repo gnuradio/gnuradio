@@ -251,7 +251,6 @@ list(APPEND blocks_libs
     gnuradio-runtime
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
@@ -328,7 +327,6 @@ if(ENABLE_TESTING)
     gnuradio-blocks
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
   )
 
   GR_ADD_TEST(test_gr_blocks test-gr-blocks)

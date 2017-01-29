@@ -37,13 +37,11 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-  ${LOG4CPP_LIBRARY_DIRS}
 )
 
 if(ENABLE_GR_CTRLPORT)
