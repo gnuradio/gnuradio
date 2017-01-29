@@ -25,13 +25,11 @@ include_directories(
     ${GR_UHD_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${UHD_INCLUDE_DIRS}
-    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(
   ${UHD_LIBRARY_DIRS}
-  ${LOG4CXX_LIBRARY_DIRS}
   ${Boost_LIBRARY_DIRS}
 )
 
