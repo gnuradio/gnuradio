@@ -129,7 +129,6 @@ include_directories(
     ${QWT_INCLUDE_DIRS}
     ${QT_INCLUDE_DIRS}
     ${FFTW3F_INCLUDE_DIRS}
-    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${PYTHON_INCLUDE_DIRS}
 )
@@ -137,7 +136,6 @@ include_directories(
 link_directories(
     ${QWT_LIBRARY_DIRS}
     ${FFTW3F_LIBRARY_DIRS}
-    ${LOG4CPP_LIBRARY_DIRS}
     ${Boost_LIBRARY_DIRS}
 )
 
@@ -158,7 +156,6 @@ list(APPEND qtgui_libs
     ${QWT_LIBRARIES}
     ${QT_LIBRARIES}
     ${FFTW3F_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 if (WIN32)
   list(APPEND qtgui_libs

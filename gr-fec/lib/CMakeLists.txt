@@ -32,7 +32,6 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -42,7 +41,6 @@ endif(ENABLE_GR_CTRLPORT)
 
 link_directories(
   ${Boost_LIBRARY_DIRS}
-  ${LOG4CPP_LIBRARY_DIRS}
 )
 
 ########################################################################
@@ -110,7 +108,6 @@ list(APPEND gnuradio_fec_libs
     gnuradio-runtime
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 # Only include the LDPC work if we have GSL installed

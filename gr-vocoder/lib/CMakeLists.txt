@@ -161,9 +161,6 @@ if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
-include_directories(${LOG4CPP_INCLUDE_DIRS})
-link_directories(${LOG4CPP_LIBRARY_DIRS})
-
 ########################################################################
 # Setup library
 ########################################################################
@@ -217,7 +214,6 @@ endif(GR_USE_LOCAL_LIBGSM)
 list(APPEND vocoder_libs
     gnuradio-runtime
     ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 if(GR_USE_SYSTEM_LIBCODEC2)
