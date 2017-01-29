@@ -65,7 +65,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${VOLK_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
