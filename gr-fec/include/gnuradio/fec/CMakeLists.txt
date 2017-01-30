@@ -61,6 +61,10 @@ install(FILES
     polar_decoder_common.h
     polar_encoder_systematic.h
     polar_decoder_sc_systematic.h
+    maxstar.h
+    tpc_common.h
+    tpc_decoder.h
+    tpc_encoder.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
 )
 

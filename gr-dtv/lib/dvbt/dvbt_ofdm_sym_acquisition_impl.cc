@@ -25,6 +25,7 @@
 #include <gnuradio/io_signature.h>
 #include "dvbt_ofdm_sym_acquisition_impl.h"
 #include <complex>
+#include <limits>
 #include <gnuradio/math.h>
 #include <gnuradio/expj.h>
 #include <volk/volk.h>
@@ -37,8 +38,8 @@ namespace gr {
     {
       d_avg_alpha = alpha;
       d_threshold_factor_rise = threshold_factor_rise;
-      d_avg_max = - (float)INFINITY;
-      d_avg_min =   (float)INFINITY;
+      d_avg_max = std::numeric_limits<float>::min();
+      d_avg_min = std::numeric_limits<float>::max();
 
       return (0);
     }
@@ -54,7 +55,7 @@ namespace gr {
       peak_pos_length = 1; 
       if (datain_length >= d_fft_length) {
         float min = datain[(peak_index + d_fft_length / 2) % d_fft_length];
-        if (d_avg_min == (float)INFINITY) {
+        if (d_avg_min == std::numeric_limits<float>::max()) {
           d_avg_min = min;
         }
         else {
@@ -62,7 +63,7 @@ namespace gr {
         }
       }
 
-      if (d_avg_max == -(float)INFINITY) {
+      if (d_avg_max == std::numeric_limits<float>::min()) {
         // Initialize d_avg_max with the first value. 
         d_avg_max = datain[peak_index];
       }

@@ -27,6 +27,7 @@
 #include "peak_detector2_fb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <string.h>
+#include <limits>
 
 namespace gr {
   namespace blocks {
@@ -109,7 +110,7 @@ namespace gr {
             sigout[i]=d_avg;
           if(iptr[i] > d_avg * (1.0f + d_threshold_factor_rise)) {
             d_found = true;
-            d_peak_val = -(float)INFINITY;
+            d_peak_val = std::numeric_limits<float>::min();
             set_output_multiple(d_look_ahead);
             return i;
           }
