@@ -20,7 +20,6 @@
 			<name>Complex</name>
 			<key>c</key>
 			<opt>input:complex</opt>
-			<opt>output:float</opt>
 			<opt>optional:1</opt>
 			<opt>hide:all</opt>
 		</option>
@@ -28,7 +27,6 @@
 			<name>Float</name>
 			<key>f</key>
 			<opt>input:float</opt>
-			<opt>output:float</opt>
 			<opt>optional:1</opt>
 			<opt>hide:all</opt>
 		</option>
@@ -36,7 +34,6 @@
 			<name>Complex->Float</name>
 			<key>cf</key>
 			<opt>input:complex</opt>
-			<opt>output:float</opt>
 			<opt>optional:0</opt>
 			<opt>hide:</opt>
 		</option>
@@ -59,7 +56,7 @@
 	</sink>
 	<source>
 		<name>out</name>
-		<type>$type.output</type>
+		<type>float</type>
 		<optional>$type.optional</optional>
 		<hide>$type.hide</hide>
 	</source>
