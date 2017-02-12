@@ -168,7 +168,8 @@ class Port(Element):
 
         self._nports = n.find('nports') or ''
         self._vlen = n.find('vlen') or ''
-        self._optional = bool(n.find('optional'))
+        self._optional = n.find('optional') or ''
+        self._optional_evaluated = False  # Updated on rewrite()
         self._clones = []  # References to cloned ports (for nports > 1)
 
     def __str__(self):
@@ -208,6 +209,8 @@ class Port(Element):
 
         hide = self.get_parent().resolve_dependencies(self._hide).strip().lower()
         self._hide_evaluated = False if hide in ('false', 'off', '0') else bool(hide)
+        optional = self.get_parent().resolve_dependencies(self._optional).strip().lower()
+        self._optional_evaluated = False if optional in ('false', 'off', '0') else bool(optional)
 
         # Update domain if was deduced from (dynamic) port type
         type_ = self.get_type()
@@ -272,7 +275,7 @@ class Port(Element):
             return 1
 
     def get_optional(self):
-        return bool(self._optional)
+        return self._optional_evaluated
 
     def get_color(self):
         """
