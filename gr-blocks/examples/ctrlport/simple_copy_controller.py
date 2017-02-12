@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import unicode_literals
 import sys
 import pmt
 from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient

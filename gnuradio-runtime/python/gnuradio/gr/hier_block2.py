@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #
 # Copyright 2006,2007,2014 Free Software Foundation, Inc.
 #
@@ -21,7 +22,7 @@
 
 import functools
 
-from runtime_swig import hier_block2_swig, dot_graph
+from .runtime_swig import hier_block2_swig, dot_graph
 import pmt
 
 

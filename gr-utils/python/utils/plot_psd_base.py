@@ -20,24 +20,28 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Please install SciPy to run this script (http://www.scipy.org/)"
-    raise SystemExit, 1
+    print("Please install SciPy to run this script (http://www.scipy.org/)")
+    raise SystemExit(1)
 
 try:
     from pylab import *
 except ImportError:
-    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
-    raise SystemExit, 1
+    print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)")
+    raise SystemExit(1)
 
 from argparse import ArgumentParser
 from scipy import log10
 from gnuradio.eng_arg import eng_float, intx
 
-class plot_psd_base:
+class plot_psd_base(object):
     def __init__(self, datatype, filename, options):
         self.hfile = open(filename, "r")
         self.block_length = options.block
@@ -87,12 +91,12 @@ class plot_psd_base:
         show()
 
     def get_data(self):
-        self.position = self.hfile.tell()/self.sizeof_data
+        self.position = self.hfile.tell() / self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % self.position)
         try:
             self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
-            print "End of File"
+            print("End of File")
             return False
         else:
             # retesting length here as newer version of scipy does not throw a MemoryError, just
@@ -100,17 +104,17 @@ class plot_psd_base:
             if(len(self.iq) > 0):
                 tstep = 1.0 / self.sample_rate
                 #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
-                self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
+                self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
 
                 self.iq_psd, self.freq = self.dopsd(self.iq)
                 return True
             else:
-                print "End of File"
+                print("End of File")
                 return False
 
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
-        overlap = self.psdfftsize/4
+        overlap = self.psdfftsize / 4
         winfunc = scipy.blackman
         psd,freq = mlab.psd(iq, self.psdfftsize, self.sample_rate,
                             window = lambda d: d*winfunc(self.psdfftsize),
@@ -174,7 +178,7 @@ class plot_psd_base:
         self.sp_psd.set_xlim([f.min(), f.max()])
 
     def draw_spec(self, t, s):
-        overlap = self.specfftsize/4
+        overlap = self.specfftsize / 4
         winfunc = scipy.blackman
         self.sp_spec.clear()
         self.sp_spec.specgram(s, self.specfftsize, self.sample_rate,
@@ -270,9 +274,9 @@ class plot_psd_base:
 
 def find(item_in, list_search):
     try:
-	return list_search.index(item_in) != None
+        return list_search.index(item_in) != None
     except ValueError:
-	return False
+        return False
 
 def main():
     parser = plot_psd_base.setup_options()
@@ -285,6 +289,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
-
-

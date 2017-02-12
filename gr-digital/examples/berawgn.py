@@ -32,6 +32,10 @@ Of course, expect the maximum value for BER to be one order of
 magnitude below what you chose for N_BITS.
 """
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 
 import math
 import numpy
@@ -43,13 +47,13 @@ import sys
 try:
     from scipy.special import erfc
 except ImportError:
-    print "Error: could not import scipy (http://www.scipy.org/)"
+    print("Error: could not import scipy (http://www.scipy.org/)")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: could not import pylab (http://matplotlib.sourceforge.net/)"
+    print("Error: could not import pylab (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
 # Best to choose powers of 10
@@ -58,7 +62,7 @@ RAND_SEED = 42
 
 def berawgn(EbN0):
     """ Calculates theoretical bit error rate in AWGN (for BPSK and given Eb/N0) """
-    return 0.5 * erfc(math.sqrt(10**(float(EbN0)/10)))
+    return 0.5 * erfc(math.sqrt(10**(float(EbN0) / 10)))
 
 class BitErrors(gr.hier_block2):
     """ Two inputs: true and received bits. We compare them and
@@ -81,7 +85,7 @@ class BitErrors(gr.hier_block2):
                      blocks.unpack_k_bits_bb(bits_per_byte),
                      blocks.uchar_to_float(),
                      blocks.integrate_ff(intdump_decim),
-                     blocks.multiply_const_ff(1.0/N_BITS),
+                     blocks.multiply_const_ff(1.0 / N_BITS),
                      self)
         self.connect((self, 1), (comp, 1))
 
@@ -91,7 +95,7 @@ class BERAWGNSimu(gr.top_block):
         gr.top_block.__init__(self)
         self.const = digital.qpsk_constellation()
         # Source is N_BITS bits, non-repeated
-        data = map(int, numpy.random.randint(0, self.const.arity(), N_BITS/self.const.bits_per_symbol()))
+        data = list(map(int, numpy.random.randint(0, self.const.arity(), N_BITS / self.const.bits_per_symbol())))
         src   = blocks.vector_source_b(data, False)
         mod   = digital.chunks_to_symbols_bc((self.const.points()), 1)
         add   = blocks.add_vcc()
@@ -107,12 +111,12 @@ class BERAWGNSimu(gr.top_block):
 
     def EbN0_to_noise_voltage(self, EbN0):
         """ Converts Eb/N0 to a complex noise voltage (assuming unit symbol power) """
-        return 1.0 / math.sqrt(self.const.bits_per_symbol() * 10**(float(EbN0)/10))
+        return 1.0 / math.sqrt(self.const.bits_per_symbol( * 10**(float(EbN0) / 10)))
 
 
 def simulate_ber(EbN0):
     """ All the work's done here: create flow graph, run, read out BER """
-    print "Eb/N0 = %d dB" % EbN0
+    print("Eb/N0 = %d dB" % EbN0)
     fg = BERAWGNSimu(EbN0)
     fg.run()
     return numpy.sum(fg.sink.data())
@@ -120,9 +124,9 @@ def simulate_ber(EbN0):
 if __name__ == "__main__":
     EbN0_min = 0
     EbN0_max = 15
-    EbN0_range = range(EbN0_min, EbN0_max+1)
+    EbN0_range = list(range(EbN0_min, EbN0_max+1))
     ber_theory = [berawgn(x)      for x in EbN0_range]
-    print "Simulating..."
+    print("Simulating...")
     ber_simu   = [simulate_ber(x) for x in EbN0_range]
 
     f = pylab.figure()
@@ -135,4 +139,3 @@ if __name__ == "__main__":
     s.legend()
     s.grid()
     pylab.show()
-

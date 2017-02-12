@@ -20,12 +20,16 @@
 #
 """ Create a whole new out-of-tree module """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import shutil
 import os
 import re
 from gnuradio import gr
-from modtool_base import ModTool, ModToolException
-from scm import SCMRepoFactory
+from .modtool_base import ModTool, ModToolException
+from .scm import SCMRepoFactory
 
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
@@ -49,7 +53,7 @@ class ModToolNewModule(ModTool):
             if options.module_name:
                 self._info['modname'] = options.module_name
             else:
-                self._info['modname'] = raw_input('Name of the new module: ')
+                self._info['modname'] = eval(input('Name of the new module: '))
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
             raise ModToolException('Invalid module name.')
         self._dir = options.directory
@@ -76,7 +80,7 @@ class ModToolNewModule(ModTool):
         * Rename files and directories that contain the word howto
         """
         self.setup(options)
-        print "Creating out-of-tree module in %s..." % self._dir,
+        print("Creating out-of-tree module in %s..." % (self._dir,))
         try:
             shutil.copytree(self._srcdir, self._dir)
             os.chdir(self._dir)
@@ -93,8 +97,8 @@ class ModToolNewModule(ModTool):
                     os.rename(f, os.path.join(root, filename.replace('howto', self._info['modname'])))
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(os.path.dirname(root), self._info['modname']))
-        print "Done."
+        print("Done.")
         if self.scm.init_repo(path_to_repo="."):
-            print "Created repository... you might want to commit before continuing."
-        print "Use 'gr_modtool add' to add a new block to this currently empty module."
+            print("Created repository... you might want to commit before continuing.")
+        print("Use 'gr_modtool add' to add a new block to this currently empty module.")
 

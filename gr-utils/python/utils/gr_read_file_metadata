@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 import sys
 from argparse import ArgumentParser
 
@@ -45,7 +47,7 @@ def main(filename, detached=False):
             sys.stderr.write("Could not deserialize header: invalid or corrupt data file.\n")
             sys.exit(1)
 
-        print "HEADER {0}".format(nheaders)
+        print("HEADER {0}".format(nheaders))
         info = parse_file_metadata.parse_header(header, True)
 
         if(info["extra_len"] > 0):
@@ -59,7 +61,7 @@ def main(filename, detached=False):
                 sys.stderr.write("Could not deserialize extras: invalid or corrupt data file.\n")
                 sys.exit(1)
 
-            print "\nExtra Header:"
+            print("\nExtra Header:")
             extra_info = parse_file_metadata.parse_extra_dict(extra, info, True)
 
         nheaders += 1
@@ -67,7 +69,7 @@ def main(filename, detached=False):
         if(not detached):
             nread += info['nbytes']
         handle.seek(nread, 0)
-        print "\n\n"
+        print("\n\n")
 
 
 if __name__ == "__main__":

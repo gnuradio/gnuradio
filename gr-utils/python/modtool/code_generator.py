@@ -19,14 +19,16 @@
 # Boston, MA 02110-1301, USA.
 #
 """ A code generator (needed by ModToolAdd) """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from mako.template import Template
-from templates import Templates
-from util_functions import str_to_fancyc_comment
-from util_functions import str_to_python_comment
-from util_functions import strip_default_values
-from util_functions import strip_arg_types
-from util_functions import strip_arg_types_grc
+from .templates import Templates
+from .util_functions import str_to_fancyc_comment
+from .util_functions import str_to_python_comment
+from .util_functions import strip_default_values
+from .util_functions import strip_arg_types
+from .util_functions import strip_arg_types_grc
 
 GRTYPELIST = {
     'sync': 'sync_block',

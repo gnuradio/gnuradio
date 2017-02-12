@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import random
 import cmath
 import time
@@ -39,9 +41,9 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         excess_bw = 0.35
 
         sps = 4
-        loop_bw = cmath.pi/100.0
+        loop_bw = cmath.pi / 100.0
         nfilts = 32
-        init_phase = nfilts/2
+        init_phase = nfilts / 2
         max_rate_deviation = 0.5
         osps = 1
 
@@ -92,9 +94,9 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         excess_bw = 0.35
 
         sps = 4
-        loop_bw = cmath.pi/100.0
+        loop_bw = cmath.pi / 100.0
         nfilts = 32
-        init_phase = nfilts/2
+        init_phase = nfilts / 2
         max_rate_deviation = 0.5
         osps = 1
 
@@ -146,9 +148,9 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         excess_bw1 = 0.22
 
         sps = 4
-        loop_bw = cmath.pi/100.0
+        loop_bw = cmath.pi / 100.0
         nfilts = 32
-        init_phase = nfilts/2
+        init_phase = nfilts / 2
         max_rate_deviation = 0.5
         osps = 1
 
@@ -184,9 +186,9 @@ class test_pfb_clock_sync(gr_unittest.TestCase):
         excess_bw1 = 0.22
 
         sps = 4
-        loop_bw = cmath.pi/100.0
+        loop_bw = cmath.pi / 100.0
         nfilts = 32
-        init_phase = nfilts/2
+        init_phase = nfilts / 2
         max_rate_deviation = 0.5
         osps = 1
 

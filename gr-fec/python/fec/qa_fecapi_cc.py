@@ -20,12 +20,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+
+
 from gnuradio import gr, gr_unittest
-import fec_swig as fec
+from gnuradio import fec
+
 from _qa_helper import _qa_helper
 
-from extended_encoder import extended_encoder
-from extended_decoder import extended_decoder
 
 class test_fecapi_cc(gr_unittest.TestCase):
 
@@ -91,8 +93,8 @@ class test_fecapi_cc(gr_unittest.TestCase):
         k = 7
         rate = 2
         polys = [109,79]
-        enc = map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), range(0,1))
-        dec = map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), range(0,1))
+        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), list(range(0,1))))
+        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), list(range(0,1))))
         threading = None
         self.test = _qa_helper(5*frame_size, enc, dec, threading)
         self.tb.connect(self.test)
@@ -108,8 +110,8 @@ class test_fecapi_cc(gr_unittest.TestCase):
         k = 7
         rate = 2
         polys = [109,79]
-        enc = map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), range(0,1))
-        dec = map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), range(0,1))
+        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), list(range(0,1))))
+        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), list(range(0,1))))
         threading = 'ordinary'
         self.test = _qa_helper(5*frame_size, enc, dec, threading)
         self.tb.connect(self.test)
@@ -125,8 +127,8 @@ class test_fecapi_cc(gr_unittest.TestCase):
         k = 7
         rate = 2
         polys = [109,79]
-        enc = map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), range(0,1))
-        dec = map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), range(0,1))
+        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys)), list(range(0,1))))
+        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys)), list(range(0,1))))
         threading = 'capillary'
         self.test = _qa_helper(5*frame_size, enc, dec, threading)
         self.tb.connect(self.test)
@@ -143,8 +145,8 @@ class test_fecapi_cc(gr_unittest.TestCase):
         rate = 2
         polys = [109,79]
         mode = fec.CC_TERMINATED
-        enc = map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), range(0,4))
-        dec = map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), range(0,4))
+        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
+        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
         threading = 'capillary'
         self.test = _qa_helper(4*frame_size, enc, dec, threading)
         self.tb.connect(self.test)
@@ -161,8 +163,8 @@ class test_fecapi_cc(gr_unittest.TestCase):
         rate = 2
         polys = [109,79]
         mode = fec.CC_TRUNCATED
-        enc = map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), range(0,4))
-        dec = map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), range(0,4))
+        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
+        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
         threading = 'capillary'
         self.test = _qa_helper(4*frame_size, enc, dec, threading)
         self.tb.connect(self.test)
@@ -179,8 +181,8 @@ class test_fecapi_cc(gr_unittest.TestCase):
         rate = 2
         polys = [109,79]
         mode = fec.CC_TAILBITING
-        enc = map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), range(0,4))
-        dec = map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), range(0,4))
+        enc = list(map((lambda a: fec.cc_encoder_make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
+        dec = list(map((lambda a: fec.cc_decoder.make(frame_size*8, k, rate, polys, mode=mode)), list(range(0,4))))
         threading = 'capillary'
         self.test = _qa_helper(4*frame_size, enc, dec, threading)
         self.tb.connect(self.test)

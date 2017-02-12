@@ -21,6 +21,8 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
+from __future__ import print_function
+
 from gnuradio.modtool import *
 
 
@@ -46,7 +48,7 @@ def main():
     try:
         args.module().run(args)
     except ModToolException as err:
-        print >> sys.stderr, err
+        print(err, file=sys.stderr)
         exit(1)
 
 if __name__ == '__main__':

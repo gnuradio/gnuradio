@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 from gnuradio import gr, digital, filter
 from gnuradio import blocks
 from gnuradio import channels
@@ -31,13 +35,13 @@ import sys
 try:
     import scipy
 except ImportError:
-    print "Error: could not import scipy (http://www.scipy.org/)"
+    print("Error: could not import scipy (http://www.scipy.org/)")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: could not import pylab (http://matplotlib.sourceforge.net/)"
+    print("Error: could not import pylab (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
 from scipy import fftpack
@@ -69,8 +73,8 @@ class example_timing(gr.top_block):
             self.taps = self.clk.taps()
             self.dtaps = self.clk.diff_taps()
 
-            self.delay = int(scipy.ceil(((len(rrc_taps)-1)/2 +
-                                         (len(self.taps[0])-1)/2)/float(sps))) + 1
+            self.delay = int(scipy.ceil((old_div((len(rrc_taps)-1) / 2 +
+                                         (len(self.taps[0])-1) / 2),float(sps)))) + 1
 
 
             self.vsnk_err = blocks.vector_sink_f()

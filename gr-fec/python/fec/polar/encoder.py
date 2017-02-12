@@ -18,9 +18,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import numpy as np
-from common import PolarCommon
-import helper_functions as hf
+from .common import PolarCommon
+from . import helper_functions as hf
 
 
 class PolarEncoder(PolarCommon):
@@ -99,8 +103,8 @@ def test_pseudo_rate_1_encoder(encoder, ntests, k):
         u_hat = encoder._encode_efficient(fenc)
         if not (u_hat == u).all():
             print('rate-1 encoder/decoder failed')
-            print u
-            print u_hat
+            print(u)
+            print(u_hat)
             return False
     return True
 
@@ -114,11 +118,11 @@ def test_encoder_impls():
     # frozenbitposition8 = np.array((0, 1, 2, 4), dtype=int)  # keep it!
     frozenbitposition = np.array((0, 1, 2, 3, 4, 5, 8, 9), dtype=int)
     encoder = PolarEncoder(n, k, frozenbitposition)  #, frozenbits)
-    print 'result:', compare_results(encoder, ntests, k)
+    print('result:', compare_results(encoder, ntests, k))
 
     print('Test rate-1 encoder/decoder chain results')
     r1_test = test_pseudo_rate_1_encoder(encoder, ntests, k)
-    print 'Test rate-1 encoder/decoder:', r1_test
+    print('Test rate-1 encoder/decoder:', r1_test)
     test_systematic_encoder(encoder, ntests, k)
 
 

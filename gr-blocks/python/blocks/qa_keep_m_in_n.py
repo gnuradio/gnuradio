@@ -19,6 +19,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 import sys
@@ -27,15 +28,15 @@ import random
 class test_keep_m_in_n(gr_unittest.TestCase):
 
     def setUp(self):
-	pass
+        pass
 
     def tearDown(self):
-	pass
+        pass
 
     def test_001(self):
         self.maxDiff = None;
         tb = gr.top_block()
-        src = blocks.vector_source_b( range(0,100) )
+        src = blocks.vector_source_b( list(range(0,100)) )
 
         # itemsize, M, N, offset
         km2 = blocks.keep_m_in_n( 1, 1, 2, 0 );
@@ -49,11 +50,10 @@ class test_keep_m_in_n(gr_unittest.TestCase):
         tb.connect(src,km7,snk7);
         tb.run();
 
-        self.assertEqual(range(0,100,2), list(snk2.data()));
-        self.assertEqual(range(1,100,3), list(snk3.data()));
-        self.assertEqual(range(2,100,7), list(snk7.data()));
+        self.assertEqual(list(range(0,100,2)), list(snk2.data()));
+        self.assertEqual(list(range(1,100,3)), list(snk3.data()));
+        self.assertEqual(list(range(2,100,7)), list(snk7.data()));
 
 
 if __name__ == '__main__':
     gr_unittest.run(test_keep_m_in_n, "test_keep_m_in_n.xml")
-

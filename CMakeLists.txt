@@ -150,7 +150,7 @@ if(MSVC)
 endif(MSVC)
 
 if(WIN32)
-	add_definitions(-D_USE_MATH_DEFINES)
+    add_definitions(-D_USE_MATH_DEFINES)
 endif(WIN32)
 
 # Record Compiler Info for record
@@ -283,7 +283,11 @@ include(GrBoost)
 ########################################################################
 # Enable python component
 ########################################################################
-find_package(PythonLibs 2)
+
+include(GrPython)
+
+GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
+
 find_package(SWIG)
 
 if(SWIG_FOUND)
@@ -299,6 +303,7 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
     SWIG_FOUND
     SWIG_VERSION_CHECK
+    SIX_FOUND
 )
 
 find_package(CppUnit)

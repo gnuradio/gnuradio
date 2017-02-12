@@ -20,7 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import random, time, struct
+
+import time
+import struct
+
+import six
+
 import pmt
 from gnuradio import gr, gr_unittest, digital, blocks
 from gnuradio.digital import packet_utils
@@ -57,6 +62,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         self.tb.start()
         while (snk_hdr.num_messages() < 1) and (snk_pld.num_messages() < 1):
             time.sleep(0.1)
+
         self.tb.stop()
         self.tb.wait()
 
@@ -65,14 +71,14 @@ class test_packet_format_fb(gr_unittest.TestCase):
 
         result_hdr = pmt.u8vector_elements(result_hdr_pmt)
         result_pld = pmt.u8vector_elements(result_pld_pmt)
-        header = "".join([chr(r) for r in result_hdr])
-        payload = "".join([chr(r) for r in result_pld])
+        header = "".join(chr(r) for r in result_hdr)
+        payload = "".join(chr(r) for r in result_pld)
 
         access_code = packet_utils.conv_1_0_string_to_packed_binary_string(packet_utils.default_access_code)[0]
         rx_access_code = header[0:len(access_code)]
 
         length = len(send_str)
-        rx_length = struct.unpack_from("!H", header, len(access_code))[0]
+        rx_length = struct.unpack_from(b"!H", six.b(header), len(access_code))[0]
 
         self.assertEqual(access_code, rx_access_code)
         self.assertEqual(length, rx_length)
@@ -113,16 +119,16 @@ class test_packet_format_fb(gr_unittest.TestCase):
 
         result_hdr = pmt.u8vector_elements(result_hdr_pmt)
         result_pld = pmt.u8vector_elements(result_pld_pmt)
-        header = "".join([chr(r) for r in result_hdr])
-        payload = "".join([chr(r) for r in result_pld])
+        header = "".join(chr(r) for r in result_hdr)
+        payload = "".join(chr(r) for r in result_pld)
 
         access_code = packet_utils.conv_1_0_string_to_packed_binary_string(packet_utils.default_access_code)[0]
         rx_access_code = header[0:len(access_code)]
 
         length = len(send_str)
-        rx_length = struct.unpack_from("!H", header, len(access_code))[0]
-        rx_bps = struct.unpack_from("!H", header, len(access_code)+4)[0]
-        rx_counter = struct.unpack_from("!H", header, len(access_code)+6)[0]
+        rx_length = struct.unpack_from(b"!H", six.b(header), len(access_code))[0]
+        rx_bps = struct.unpack_from(b"!H", six.b(header), len(access_code)+4)[0]
+        rx_counter = struct.unpack_from(b"!H", six.b(header), len(access_code)+6)[0]
 
         self.assertEqual(access_code, rx_access_code)
         self.assertEqual(length, rx_length)

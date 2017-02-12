@@ -341,7 +341,7 @@ if __name__ == '__main__':
   add_custom_command(
     OUTPUT ${expanded_files_h}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    COMMAND ${PYTHON_EXECUTABLE} -B
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}.h.t ${ARGN}
   )
@@ -387,7 +387,7 @@ if __name__ == '__main__':
   add_custom_command(
     OUTPUT ${expanded_files_cc}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    COMMAND ${PYTHON_EXECUTABLE} -B
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}.cc.t ${ARGN}
   )
@@ -396,7 +396,7 @@ if __name__ == '__main__':
   add_custom_command(
     OUTPUT ${expanded_files_h}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    COMMAND ${PYTHON_EXECUTABLE} -B
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}.h.t ${ARGN}
   )
@@ -450,7 +450,7 @@ if __name__ == '__main__':
   add_custom_command(
     OUTPUT ${expanded_files_cc_impl}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}_impl.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    COMMAND ${PYTHON_EXECUTABLE} -B
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}_impl.cc.t ${ARGN}
   )
@@ -459,7 +459,7 @@ if __name__ == '__main__':
   add_custom_command(
     OUTPUT ${expanded_files_h_impl}
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${root}_impl.h.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+    COMMAND ${PYTHON_EXECUTABLE} -B
     ${CMAKE_CURRENT_BINARY_DIR}/generate_helper.py
     ${root} ${root}_impl.h.t ${ARGN}
   )

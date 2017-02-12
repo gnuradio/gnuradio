@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import time
 
 from gnuradio import gr, gr_unittest, blocks
@@ -79,7 +80,7 @@ class test_pdu(gr_unittest.TestCase):
 
         # Convert the PMT vector into a Python list
         msg_data = []
-        for i in xrange(16):
+        for i in range(16):
             msg_data.append(pmt.u8vector_ref(msg_vec, i))
 
         actual_data = 16*[0xFF,]
@@ -108,7 +109,7 @@ class test_pdu(gr_unittest.TestCase):
 
     def test_002_tags_plus_data(self):
         packet_len = 16
-        src_data = range(packet_len)
+        src_data = list(range(packet_len))
         tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol('spam')

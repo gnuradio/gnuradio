@@ -20,22 +20,26 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Please install SciPy to run this script (http://www.scipy.org/)"
-    raise SystemExit, 1
+    print("Please install SciPy to run this script (http://www.scipy.org/)")
+    raise SystemExit(1)
 
 try:
     from pylab import *
 except ImportError:
-    print "Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and Python TkInter https://wiki.python.org/moin/TkInter to run this script"
-    raise SystemExit, 1
+    print("Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and Python TkInter https://wiki.python.org/moin/TkInter to run this script")
+    raise SystemExit(1)
 
 from argparse import ArgumentParser
 
-class plot_fft_base:
+class plot_fft_base(object):
     def __init__(self, datatype, filename, options):
         self.hfile = open(filename, "r")
         self.block_length = options.block
@@ -79,33 +83,33 @@ class plot_fft_base:
         show()
 
     def get_data(self):
-        self.position = self.hfile.tell()/self.sizeof_data
+        self.position = self.hfile.tell() / self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % (self.position))
         try:
             self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
-            print "End of File"
+            print("End of File")
         else:
             self.iq_fft = self.dofft(self.iq)
 
             tstep = 1.0 / self.sample_rate
             #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
-            self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
+            self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
 
             self.freq = self.calc_freq(self.time, self.sample_rate)
 
     def dofft(self, iq):
         N = len(iq)
         iq_fft = scipy.fftpack.fftshift(scipy.fft(iq))       # fft and shift axis
-        iq_fft = 20*scipy.log10(abs((iq_fft+1e-15)/N)) # convert to decibels, adjust power
+        iq_fft = 20*scipy.log10(abs((iq_fft+1e-15) / N)) # convert to decibels, adjust power
         # adding 1e-15 (-300 dB) to protect against value errors if an item in iq_fft is 0
         return iq_fft
 
     def calc_freq(self, time, sample_rate):
         N = len(time)
-        Fs = 1.0 / (time.max() - time.min())
+        Fs = 1.0 / (time.max( - time.min()))
         Fn = 0.5 * sample_rate
-        freq = scipy.array([-Fn + i*Fs for i in xrange(N)])
+        freq = scipy.array([-Fn + i*Fs for i in range(N)])
         return freq
 
     def make_plots(self):
@@ -228,9 +232,9 @@ class plot_fft_base:
 
 def find(item_in, list_search):
     try:
-	return list_search.index(item_in) != None
+        return list_search.index(item_in) != None
     except ValueError:
-	return False
+        return False
 
 def main():
     parser = plot_fft_base.setup_options()
@@ -243,6 +247,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
-
-

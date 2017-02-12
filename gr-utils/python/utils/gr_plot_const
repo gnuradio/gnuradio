@@ -20,18 +20,20 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 try:
     import scipy
 except ImportError:
-    print "Please install SciPy to run this script (http://www.scipy.org/)"
-    raise SystemExit, 1
+    print("Please install SciPy to run this script (http://www.scipy.org/)")
+    raise SystemExit(1)
 
 try:
     from pylab import *
     from matplotlib.font_manager import fontManager, FontProperties
 except ImportError:
-    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
-    raise SystemExit, 1
+    print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)")
+    raise SystemExit(1)
 
 from argparse import ArgumentParser
 
@@ -83,7 +85,7 @@ class draw_constellation:
         try:
             iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
-            print "End of File"
+            print("End of File")
         else:
             # retesting length here as newer version of scipy does not throw a MemoryError, just
             # returns a zero-length array
@@ -94,7 +96,7 @@ class draw_constellation:
                 self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
                 return True
             else:
-                print "End of File"
+                print("End of File")
                 return False
 
     def make_plots(self):
@@ -215,9 +217,9 @@ class draw_constellation:
 
 def find(item_in, list_search):
     try:
-	return list_search.index(item_in) != None
+        return list_search.index(item_in) != None
     except ValueError:
-	return False
+        return False
 
 
 def main():
@@ -241,6 +243,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         pass
-
-
-

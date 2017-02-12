@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
 import numpy
@@ -45,7 +46,7 @@ class test_hdlc_framer(gr_unittest.TestCase):
         self.tb.msg_connect(deframe, "out", debug, "store")
         self.tb.start()
         msg = pmt.cons(pmt.PMT_NIL, pmt.init_u8vector(len(src_data),src_data))
-        for i in xrange(npkts):
+        for i in range(npkts):
             frame.to_basic_block()._post(pmt.intern("in"), msg)
         sleep(0.2)
         self.tb.stop()
@@ -53,7 +54,7 @@ class test_hdlc_framer(gr_unittest.TestCase):
         rxmsg = debug.get_message(0)
         result_len = pmt.blob_length(pmt.cdr(rxmsg))
         msg_data = []
-        for j in xrange(result_len):
+        for j in range(result_len):
             msg_data.append(pmt.u8vector_ref(pmt.cdr(rxmsg), j))
         self.assertEqual(src_data, msg_data)
 

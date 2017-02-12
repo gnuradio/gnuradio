@@ -4,6 +4,8 @@
 # Title: Affinity Set Test
 ##################################################
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import blocks
@@ -57,7 +59,7 @@ if __name__ == '__main__':
     tb.start()
 
     while(1):
-        ret = raw_input('Enter a new Core # or Press Enter to quit: ')
+        ret = eval(input('Enter a new Core # or Press Enter to quit: '))
 	if(len(ret) == 0):
             tb.stop()
 	    sys.exit(0)
@@ -67,6 +69,6 @@ if __name__ == '__main__':
             try:
                 n = int(ret)
 	    except ValueError:
-                print "Invalid number"
+                print("Invalid number")
 	    else:
                 tb.filter_filt_0.set_processor_affinity([n,])

@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from gnuradio import gr, blocks
 from gnuradio.eng_arg import eng_float, intx
 from argparse import ArgumentParser
@@ -30,13 +33,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Scipy required (www.scipy.org)."
+    print("Error: Scipy required (www.scipy.org).")
     sys.exit(1)
 
 try:
@@ -76,8 +79,8 @@ class plot_base(gr.top_block):
 
         n = 0
         self.srcs = list()
-        self._data_min = sys.maxint
-        self._data_max = -sys.maxint - 1
+        self._data_min = sys.maxsize
+        self._data_max = -sys.maxsize - 1
         for f in self._filelist:
             data,_min,_max = self.read_samples(f, self._start,
                                                self._nsamps, self._psd_size)
@@ -127,8 +130,8 @@ class plot_base(gr.top_block):
 
         self._start = newstart
 
-        self._data_min = sys.maxint
-        self._data_max = -sys.maxint - 1
+        self._data_min = sys.maxsize
+        self._data_max = -sys.maxsize - 1
         for s,f in zip(self.srcs, self._filelist):
             data,_min,_max = self.read_samples(f, self._start, newnsamps, self._psd_size)
             if(_min < self._data_min):

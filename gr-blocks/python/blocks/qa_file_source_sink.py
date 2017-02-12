@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import os
 
@@ -33,8 +34,8 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        src_data = range(1000)
-        expected_result = range(1000)
+        src_data = list(range(1000))
+        expected_result = list(range(1000))
 
         filename = "tmp.32f"
         src = blocks.vector_source_f(src_data)
@@ -57,8 +58,8 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_descriptor_001(self):
-        src_data = range(1000)
-        expected_result = range(1000)
+        src_data = list(range(1000))
+        expected_result = list(range(1000))
 
         filename = "tmp.32f"
         fhandle0 = open(filename, "wb")
@@ -89,7 +90,7 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
 
     def test_file_source_can_seek_after_open(self):
-        src_data = range(1000)
+        src_data = list(range(1000))
 
         filename = "tmp.32f"
         src = blocks.vector_source_f(src_data)

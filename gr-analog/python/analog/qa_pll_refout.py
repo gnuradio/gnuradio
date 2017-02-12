@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import math
 
 from gnuradio import gr, gr_unittest, analog, blocks
@@ -137,7 +139,7 @@ class test_pll_refout(gr_unittest.TestCase):
         sampling_freq = 10e3
         freq = sampling_freq / 100
 
-        loop_bw = math.pi/100.0
+        loop_bw = math.pi / 100.0
         maxf = 1
         minf = -1
 

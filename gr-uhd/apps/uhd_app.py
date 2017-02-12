@@ -24,6 +24,8 @@ USRP Helper Module: Common tasks for uhd-based apps.
 """
 
 from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 import sys
 import time
 import argparse
@@ -176,17 +178,17 @@ class UHDApp(object):
         # Set the subdevice spec:
         args.spec = self.normalize_subdev_sel(args.spec)
         if args.spec:
-            for mb_idx in xrange(self.usrp.get_num_mboards()):
+            for mb_idx in range(self.usrp.get_num_mboards()):
                 if isinstance(args.spec, list):
                     self.usrp.set_subdev_spec(args.spec[mb_idx], mb_idx)
                 else:
                     self.usrp.set_subdev_spec(args.spec, mb_idx)
         # Set the clock and/or time source:
         if args.clock_source is not None:
-            for mb_idx in xrange(self.usrp.get_num_mboards()):
+            for mb_idx in range(self.usrp.get_num_mboards()):
                 self.usrp.set_clock_source(args.clock_source, mb_idx)
         if args.time_source is not None:
-            for mb_idx in xrange(self.usrp.get_num_mboards()):
+            for mb_idx in range(self.usrp.get_num_mboards()):
                 self.usrp.set_time_source(args.time_source, mb_idx)
         # Sampling rate:
         self.usrp.set_samp_rate(args.samp_rate)
@@ -246,7 +248,7 @@ class UHDApp(object):
                 self.usrp.set_time_unknown_pps(uhd.time_spec())
             cmd_time = self.usrp.get_time_now() + uhd.time_spec(COMMAND_DELAY)
             try:
-                for mb_idx in xrange(self.usrp.get_num_mboards()):
+                for mb_idx in range(self.usrp.get_num_mboards()):
                     self.usrp.set_command_time(cmd_time, mb_idx)
                 command_time_set = True
             except RuntimeError:
@@ -259,7 +261,7 @@ class UHDApp(object):
                 ))
                 exit(1)
         if command_time_set:
-            for mb_idx in xrange(self.usrp.get_num_mboards()):
+            for mb_idx in range(self.usrp.get_num_mboards()):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
@@ -294,7 +296,7 @@ class UHDApp(object):
         """
         Safely tune all channels to freq.
         """
-        self.vprint("Tuning all channels to {freq} MHz.".format(freq=freq/1e6))
+        self.vprint("Tuning all channels to {freq} MHz.".format(freq=freq / 1e6))
         # Set frequency (tune request takes lo_offset):
         if hasattr(self.args, 'lo_offset') and self.args.lo_offset is not None:
             treq = uhd.tune_request(freq, self.args.lo_offset)
@@ -321,7 +323,7 @@ class UHDApp(object):
         if len(self.channels) > 1 and not skip_sync:
             cmd_time = self.usrp.get_time_now() + uhd.time_spec(COMMAND_DELAY)
             try:
-                for mb_idx in xrange(self.usrp.get_num_mboards()):
+                for mb_idx in range(self.usrp.get_num_mboards()):
                     self.usrp.set_command_time(cmd_time, mb_idx)
                 command_time_set = True
             except RuntimeError:
@@ -334,12 +336,12 @@ class UHDApp(object):
                 ))
                 exit(1)
         if command_time_set:
-            for mb_idx in xrange(self.usrp.get_num_mboards()):
+            for mb_idx in range(self.usrp.get_num_mboards()):
                 self.usrp.clear_command_time(mb_idx)
             self.vprint("Syncing channels...".format(prefix=self.prefix))
             time.sleep(COMMAND_DELAY)
         self.freq = self.usrp.get_center_freq(0)
-        self.vprint("First channel has freq: {freq} MHz.".format(freq=self.freq/1e6))
+        self.vprint("First channel has freq: {freq} MHz.".format(freq=self.freq / 1e6))
 
     @staticmethod
     def setup_argparser(

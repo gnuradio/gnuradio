@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import time
 
 from gnuradio import gr, gr_unittest, blocks
@@ -95,7 +96,7 @@ class test_message(gr_unittest.TestCase):
         input_data = (0,1,2,3,4,5,6,7,8,9)
         src = blocks.vector_source_b(input_data)
         dst = blocks.vector_sink_b()
-	tb = gr.top_block()
+        tb = gr.top_block()
         tb.connect(src, dst)
         tb.run()
         self.assertEquals(input_data, dst.data())
@@ -105,7 +106,7 @@ class test_message(gr_unittest.TestCase):
         src = blocks.message_strobe(msg, 500)
         snk = blocks.message_debug()
 
-	tb = gr.top_block()
+        tb = gr.top_block()
         tb.msg_connect(src, "strobe", snk, "store")
         tb.start()
         time.sleep(1)

@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from digital_swig0 import *
-from digital_swig1 import *
-from digital_swig2 import *
+from __future__ import absolute_import
+
+from .digital_swig0 import *
+from .digital_swig1 import *
+from .digital_swig2 import *

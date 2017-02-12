@@ -19,6 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 """ Utility functions for gr_modtool """
+from __future__ import unicode_literals
 
 import re
 import sys
@@ -97,7 +98,7 @@ def get_modname():
     regexp = r'(project\s*\(\s*|GR_REGISTER_COMPONENT\(")gr-(?P<modname>[a-zA-Z0-9-_]+)(\s*(CXX)?|" ENABLE)'
     try:
         modname = re.search(regexp, cmfile, flags=re.MULTILINE).group('modname').strip()
-        if modname in modname_trans.keys():
+        if modname in list(modname_trans.keys()):
             modname = modname_trans[modname]
         return modname
     except AttributeError:
@@ -131,7 +132,7 @@ def ask_yes_no(question, default):
     """ Asks a binary question. Returns True for yes, False for no.
     default is given as a boolean. """
     question += {True: ' [Y/n] ', False: ' [y/N] '}[default]
-    if raw_input(question).lower() != {True: 'n', False: 'y'}[default]:
+    if input(question).lower() != {True: 'n', False: 'y'}[default]:
         return default
     else:
         return not default

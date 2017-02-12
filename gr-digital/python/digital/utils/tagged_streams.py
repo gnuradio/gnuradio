@@ -1,27 +1,30 @@
 #!/usr/bin/env python
 #
 # Copyright 2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
 # DEPRECATED -- Marked for removal in 3.8
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 import pmt
 
@@ -30,9 +33,9 @@ def make_lengthtags(lengths, offsets, tagname='length', vlen=1):
     assert(len(offsets) == len(lengths))
     for offset, length in zip(offsets, lengths):
         tag = gr.tag_t()
-        tag.offset = offset/vlen
+        tag.offset = offset / vlen
         tag.key = pmt.string_to_symbol(tagname)
-        tag.value = pmt.from_long(length/vlen)
+        tag.value = pmt.from_long(length / vlen)
         tags.append(tag)
     return tags
 
@@ -75,7 +78,7 @@ def count_bursts(data, tags, lengthtagname, vlen=1):
         if pos in lengths:
             if in_packet:
                 print("Got tag at pos {0} current packet_pos is {1}".format(pos, packet_pos))
-                raise StandardError("Received packet tag while in packet.")
+                raise Exception("Received packet tag while in packet.")
             packet_pos = -1
             packet_length = lengths[pos]
             in_packet = True
@@ -127,9 +130,9 @@ def packets_to_vectors(packets, lengthtagname, vlen=1):
     for packet in packets:
         data.extend(packet)
         tag = gr.tag_t()
-        tag.offset = offset/vlen
+        tag.offset = offset // vlen
         tag.key = pmt.string_to_symbol(lengthtagname)
-        tag.value = pmt.from_long(len(packet)/vlen)
+        tag.value = pmt.from_long(len(packet) // vlen)
         tags.append(tag)
         offset = offset + len(packet)
     return data, tags

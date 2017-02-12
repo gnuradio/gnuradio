@@ -1,37 +1,31 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2008 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
-import math
-from gnuradio import gr
+from __future__ import division
+from __future__ import unicode_literals
 
-try:
-    from gnuradio import filter
-except ImportError:
-    import filter_swig as filter
 
-try:
-    from gnuradio import blocks
-except ImportError:
-    import blocks_swig as blocks
+from gnuradio import gr, blocks, filter
+
 
 class ofdm_sync_ml(gr.hier_block2):
     def __init__(self, fft_length, cp_length, snr, kstime, logging):
@@ -41,13 +35,13 @@ class ofdm_sync_ml(gr.hier_block2):
         Signal Processing, vol. 45, no. 7, pp. 1800-1805, 1997.
         '''
 
-	gr.hier_block2.__init__(self, "ofdm_sync_ml",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+        gr.hier_block2.__init__(self, "ofdm_sync_ml",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
         self.input = blocks.add_const_cc(0)
 
-        SNR = 10.0**(snr/10.0)
+        SNR = 10.0**(snr / 10.0)
         rho = SNR / (SNR + 1.0)
         symbol_length = fft_length + cp_length
 
@@ -66,15 +60,15 @@ class ofdm_sync_ml(gr.hier_block2):
         self.magsqrd2 = blocks.complex_to_mag_squared()
         self.adder = blocks.add_ff()
 
-        moving_sum_taps = [rho/2 for i in range(cp_length)]
+        moving_sum_taps = [rho / 2 for i in range(cp_length)]
         self.moving_sum_filter = filter.fir_filter_fff(1,moving_sum_taps)
-        
+
         self.connect(self.input,self.magsqrd1)
         self.connect(self.delay,self.magsqrd2)
         self.connect(self.magsqrd1,(self.adder,0))
         self.connect(self.magsqrd2,(self.adder,1))
         self.connect(self.adder,self.moving_sum_filter)
-        
+
 
         # Correlation from ML Sync
         self.conjg = blocks.conjugate_cc();
@@ -82,7 +76,7 @@ class ofdm_sync_ml(gr.hier_block2):
 
         movingsum2_taps = [1.0 for i in range(cp_length)]
         self.movingsum2 = filter.fir_filter_ccf(1,movingsum2_taps)
-        
+
         # Correlator data handler
         self.c2mag = blocks.complex_to_mag()
         self.angle = blocks.complex_to_arg()
@@ -104,7 +98,7 @@ class ofdm_sync_ml(gr.hier_block2):
         # use the sync loop values to set the sampler and the NCO
         #     self.diff = theta
         #     self.angle = epsilon
-                          
+
         self.connect(self.diff, self.pk_detect)
 
         # The DPLL corrects for timing differences between CP correlations
@@ -115,7 +109,7 @@ class ofdm_sync_ml(gr.hier_block2):
             self.connect(self.dpll, (self.sample_and_hold,1))
         else:
             self.connect(self.pk_detect, (self.sample_and_hold,1))
-            
+
         self.connect(self.angle, (self.sample_and_hold,0))
 
         ################################
@@ -130,7 +124,7 @@ class ofdm_sync_ml(gr.hier_block2):
         self.div = blocks.divide_ff()
 
         # The output signature of the correlation has a few spikes because the rest of the
-        # system uses the repeated preamble symbol. It needs to work that generically if 
+        # system uses the repeated preamble symbol. It needs to work that generically if
         # anyone wants to use this against a WiMAX-like signal since it, too, repeats.
         # The output theta of the correlator above is multiplied with this correlation to
         # identify the proper peak and remove other products in this cross-correlation
@@ -139,17 +133,17 @@ class ofdm_sync_ml(gr.hier_block2):
         self.f2b = blocks.float_to_char()
         self.b2f = blocks.char_to_float()
         self.mul = blocks.multiply_ff()
-        
+
         # Normalize the power of the corr output by the energy. This is not really needed
         # and could be removed for performance, but it makes for a cleaner signal.
         # if this is removed, the threshold value needs adjustment.
         self.connect(self.input, self.kscorr, self.corrmag, (self.div,0))
         self.connect(self.moving_sum_filter, (self.div,1))
-        
+
         self.connect(self.div, (self.mul,0))
         self.connect(self.pk_detect, self.b2f, (self.mul,1))
         self.connect(self.mul, self.slice)
-        
+
         # Set output signals
         #    Output 0: fine frequency correction value
         #    Output 1: timing signal

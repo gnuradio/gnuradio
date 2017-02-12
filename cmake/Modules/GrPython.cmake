@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,26 +27,21 @@ set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 # This allows the user to specify a specific interpreter,
 # or finds the interpreter via the built-in cmake module.
 ########################################################################
-#this allows the user to override PYTHON_EXECUTABLE
-if(PYTHON_EXECUTABLE)
 
-    set(PYTHONINTERP_FOUND TRUE)
+if (PYTHON_EXECUTABLE)
+    message(STATUS "User set python executable ${PYTHON_EXECUTABLE}")
+    find_package(PythonInterp 2.7 REQUIRED)
+else (PYTHON_EXECUTABLE)
+    message(STATUS "PYTHON_EXECUTABLE not set - using default python3")
+    message(STATUS "Use -DPYTHON_EXECUTABLE=/path/to/python2 to build for python2.")
+    find_package(PythonInterp 3.4 REQUIRED)
+endif (PYTHON_EXECUTABLE)
 
-#otherwise if not set, try to automatically find it
-else(PYTHON_EXECUTABLE)
+if (${PYTHON_VERSION_MAJOR} VERSION_EQUAL 3)
+    set(PYTHON3 TRUE)
+endif ()
 
-    #use the built-in find script
-    find_package(PythonInterp 2)
-
-    #and if that fails use the find program routine
-    if(NOT PYTHONINTERP_FOUND)
-        find_program(PYTHON_EXECUTABLE NAMES python python2 python2.7 python2.6 python2.5)
-        if(PYTHON_EXECUTABLE)
-            set(PYTHONINTERP_FOUND TRUE)
-        endif(PYTHON_EXECUTABLE)
-    endif(NOT PYTHONINTERP_FOUND)
-
-endif(PYTHON_EXECUTABLE)
+find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT)
 
 if (CMAKE_CROSSCOMPILING)
     set(QA_PYTHON_EXECUTABLE "/usr/bin/python")
@@ -58,18 +53,6 @@ endif(CMAKE_CROSSCOMPILING)
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter for QA tests")
 
-#make sure we can use -B with python (introduced in 2.6)
-if(PYTHON_EXECUTABLE)
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -B -c ""
-        OUTPUT_QUIET ERROR_QUIET
-        RESULT_VARIABLE PYTHON_HAS_DASH_B_RESULT
-    )
-    if(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
-        set(PYTHON_DASH_B "-B")
-    endif()
-endif(PYTHON_EXECUTABLE)
-
 ########################################################################
 # Check for the existence of a python module:
 # - desc a string description of the check
@@ -78,15 +61,13 @@ endif(PYTHON_EXECUTABLE)
 # - have the result variable to set
 ########################################################################
 macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
-    message(STATUS "")
-    message(STATUS "Python checking for ${desc}")
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c "
 #########################################
 try:
     import ${mod}
     assert ${cmd}
-except ImportError, AssertionError: exit(-1)
+except (ImportError, AssertionError): exit(-1)
 except: pass
 #########################################"
         RESULT_VARIABLE ${have}
@@ -105,8 +86,8 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 ########################################################################
 if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
-from distutils import sysconfig
-print sysconfig.get_python_lib(plat_specific=True, prefix='')
+import site
+print(site.getsitepackages()[0])
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 endif()
@@ -119,7 +100,7 @@ file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
 function(GR_UNIQUE_TARGET desc)
     file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
-unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
+unique = hashlib.md5(b'${reldir}${ARGN}').hexdigest()[:5]
 print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
     add_custom_target(${_target} ALL DEPENDS ${ARGN})
@@ -233,7 +214,7 @@ endfunction(GR_PYTHON_INSTALL)
 file(WRITE ${CMAKE_BINARY_DIR}/python_compile_helper.py "
 import sys, py_compile
 files = sys.argv[1:]
-srcs, gens = files[:len(files)/2], files[len(files)/2:]
+srcs, gens = files[:len(files)//2], files[len(files)//2:]
 for src, gen in zip(srcs, gens):
     py_compile.compile(file=src, cfile=gen, doraise=True)
 ")

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 import sys, time, re, pprint
 import random,math,operator
 try:
@@ -36,14 +38,14 @@ try:
         try:
             from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
         except ImportError:
-            print sys.argv[0], "could not load QTAgg backend."
+            print(sys.argv[0], "could not load QTAgg backend.")
             sys.exit(1)
 
 
     from matplotlib.figure import Figure
 except ImportError:
-    print sys.argv[0], "requires networkx and matplotlib.", \
-       "Please check that they are installed and try again."
+    print(sys.argv[0], "requires networkx and matplotlib.",
+       "Please check that they are installed and try again.")
     sys.exit(1)
 
 from PyQt4 import QtCore,Qt
@@ -282,7 +284,7 @@ class ConInfoDialog(QtGui.QDialog):
 
 class DataTable(QtGui.QWidget):
     def update(self):
-        print "update"
+        print("update")
 
     def closeEvent(self, event):
         self.timer = None
@@ -498,7 +500,7 @@ class MForm(QtGui.QWidget):
                 self.clockSel.setCurrentIndex(self.clockSelIdx)
                 self.prevent_clock_change = False
             except:
-                print "WARNING: Failed to get current clock setting!"
+                print("WARNING: Failed to get current clock setting!")
 
             nodes_stream = self.G_stream.nodes()
             nodes_msg = self.G_msg.nodes()
@@ -571,7 +573,7 @@ class MForm(QtGui.QWidget):
             self.parent.statusBar().showMessage("Current GNU Radio Control Port Query Latency: %f ms"%\
                                                     (latency*1000))
 
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write("gr-perf-monitorx: radio.getKnobs threw exception ({0}).\n".format(e))
             if(type(self.parent) is MAINWindow):
                 # Find window of connection
@@ -625,7 +627,7 @@ class MForm(QtGui.QWidget):
             return;
         idx = self.clockSel.currentIndex();
         clk = self.clocks.values()[idx]
-#        print "UPDATE CLOCK!!! %d -> %d"%(idx,clk);
+#        print("UPDATE CLOCK!!! %d -> %d"%(idx,clk);)
         k = self.radioclient.getKnobs([self.clockKey]);
         k[self.clockKey].value = clk;
         km = {};

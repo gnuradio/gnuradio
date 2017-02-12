@@ -22,6 +22,8 @@
 """
 Run synthetic.py for npipes in [1,16], nstages in [1,16]
 """
+from __future__ import division
+from __future__ import unicode_literals
 
 import re
 import sys
@@ -49,7 +51,7 @@ def write_shell_script(f, data_filename, description, ncores, gflops, max_pipes_
             # We'd like each run of synthetic to take ~10 seconds
             desired_time_per_run = 10
             est_gflops_avail = min(nstages * npipes, ncores) * gflops
-            nsamples = (est_gflops_avail * desired_time_per_run)/(512.0 * nstages * npipes)
+            nsamples = (est_gflops_avail * desired_time_per_run) / (512.0 * nstages * npipes)
             nsamples = int(nsamples * 1e9)
 
             cmd = "./synthetic.py -m -s %d -p %d -N %d\n" % (nstages, npipes, nsamples)

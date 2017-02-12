@@ -21,6 +21,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks, zeromq
 from gnuradio import eng_notation
@@ -36,7 +37,7 @@ class qa_zeromq_reqrep (gr_unittest.TestCase):
 
     def test_001 (self):
         vlen = 10
-        src_data = range(vlen)*100
+        src_data = list(range(vlen))*100
         src = blocks.vector_source_f(src_data, False, vlen)
         zeromq_rep_sink = zeromq.rep_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5558", 0)
         zeromq_req_source = zeromq.req_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5558", 0)

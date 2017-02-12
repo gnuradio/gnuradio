@@ -24,7 +24,7 @@ GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
 # Handle the generated constants
 ########################################################################
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
-    "import time;print time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime())"
+    "import time;print(time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime()))"
     OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
@@ -53,8 +53,8 @@ list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 ########################################################################
 include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
-		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
-		    ${VOLK_INCLUDE_DIRS}
+            ${CMAKE_CURRENT_BINARY_DIR}/../include/
+            ${VOLK_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
 )
 

@@ -20,13 +20,17 @@
 #
 """ Base class for the modules """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import os
 import re
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from gnuradio import gr
-from util_functions import get_modname
-from scm import SCMRepoFactory
+from .util_functions import get_modname
+from .scm import SCMRepoFactory
 
 class ModToolException(BaseException):
     """ Standard exception for modtool classes. """
@@ -94,7 +98,7 @@ class ModTool(object):
             self._info['modname'] = get_modname()
         if self._info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
-        print "GNU Radio module name identified: " + self._info['modname']
+        print("GNU Radio module name identified: " + self._info['modname'])
         if self._info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self._info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
@@ -144,7 +148,7 @@ class ModTool(object):
         else:
             self.scm = SCMRepoFactory(self.options, '.').make_empty_scm_manager()
         if self.scm is None:
-            print "Error: Can't set up SCM."
+            print("Error: Can't set up SCM.")
             exit(1)
 
     def _check_directory(self, directory):
@@ -156,7 +160,7 @@ class ModTool(object):
             files = os.listdir(directory)
             os.chdir(directory)
         except OSError:
-            print "Can't read or chdir to directory %s." % directory
+            print("Can't read or chdir to directory %s." % directory)
             return False
         self._info['is_component'] = False
         for f in files:
@@ -170,11 +174,11 @@ class ModTool(object):
                     has_makefile = True
             # TODO search for autofoo
             elif os.path.isdir(f):
-                if (f in self._has_subdirs.keys()):
+                if (f in list(self._has_subdirs.keys())):
                     self._has_subdirs[f] = True
                 else:
                     self._skip_subdirs[f] = True
-        return bool(has_makefile and (self._has_subdirs.values()))
+        return bool(has_makefile and (list(self._has_subdirs.values())))
 
     def _get_mainswigfile(self):
         """ Find out which name the main SWIG file has. In particular, is it

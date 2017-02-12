@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import math
 import pmt
 from gnuradio import gr, gr_unittest, analog, blocks

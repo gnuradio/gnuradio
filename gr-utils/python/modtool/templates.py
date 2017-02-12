@@ -19,6 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 ''' All the templates for skeleton files (needed by ModToolAdd) '''
+from __future__ import unicode_literals
 
 from datetime import datetime
 

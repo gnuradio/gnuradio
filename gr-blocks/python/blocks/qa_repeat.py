@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 class test_repeat (gr_unittest.TestCase):
@@ -31,17 +32,17 @@ class test_repeat (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_float(self):
-	src_data = [n*1.0 for n in range(100)];
-	dst_data = []
-	for n in range(100):
-	    dst_data += [1.0*n, 1.0*n, 1.0*n]
+        src_data = [n*1.0 for n in range(100)];
+        dst_data = []
+        for n in range(100):
+            dst_data += [1.0*n, 1.0*n, 1.0*n]
 
-	src = blocks.vector_source_f(src_data)
-	rpt = blocks.repeat(gr.sizeof_float, 3)
-	dst = blocks.vector_sink_f()
-	self.tb.connect(src, rpt, dst)
-	self.tb.run()
-	self.assertFloatTuplesAlmostEqual(dst_data, dst.data(), 6)
+        src = blocks.vector_source_f(src_data)
+        rpt = blocks.repeat(gr.sizeof_float, 3)
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, rpt, dst)
+        self.tb.run()
+        self.assertFloatTuplesAlmostEqual(dst_data, dst.data(), 6)
 
 if __name__ == '__main__':
     gr_unittest.run(test_repeat, "test_repeat.xml")

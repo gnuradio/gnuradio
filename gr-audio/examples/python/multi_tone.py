@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio.eng_arg import eng_float, intx
@@ -59,11 +61,11 @@ class my_top_block(gr.top_block):
         # See "Genesis of a Music".  He was into some very wild tunings...
         base = 392
         ratios = { 1 : 1.0,
-                   3 : 3.0/2,
-                   5 : 5.0/4,
-                   7 : 7.0/4,
-                   9 : 9.0/8,
-                   11 : 11.0/8 }
+                   3 : 3.0 / 2,
+                   5 : 5.0 / 4,
+                   7 : 7.0 / 4,
+                   9 : 9.0 / 8,
+                   11 : 11.0 / 8 }
 
         # progression = (1, 5, 3, 7)
         # progression = (1, 9, 3, 7)

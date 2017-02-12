@@ -22,19 +22,23 @@
 '''
 Filter blocks and related functions.
 '''
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import os
 
 try:
-    from filter_swig import *
+    from .filter_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from filter_swig import *
-from filterbank import *
-from freq_xlating_fft_filter import *
-from rational_resampler import *
-import pfb
-import optfir
+    from .filter_swig import *
+
+from .filterbank import *
+from .freq_xlating_fft_filter import *
+from .rational_resampler import *
+from . import pfb
+from . import optfir
 
 # Pull this into the filter module
 from gnuradio.fft import window

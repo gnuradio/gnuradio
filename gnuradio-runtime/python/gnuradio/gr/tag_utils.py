@@ -1,6 +1,7 @@
+from __future__ import unicode_literals
 import pmt
 
-import runtime_swig as gr
+from . import runtime_swig as gr
 
 class PythonTag(object):
     " Python container for tags "
@@ -51,54 +52,54 @@ def python_to_tag(tag_struct):
     good = False
     tag = gr.tag_t()
     if(type(tag_struct) == dict):
-        if(tag_struct.has_key('offset')):
-            if(isinstance(tag_struct['offset'], (int,long))):
+        if('offset' in tag_struct):
+            if(isinstance(tag_struct['offset'], int)):
                 tag.offset = tag_struct['offset']
                 good = True
 
-        if(tag_struct.has_key('key')):
-            if(isinstance(tag_struct['key'], pmt.pmt_swig.swig_int_ptr)):
+        if('key' in tag_struct):
+            if(isinstance(tag_struct['key'], pmt.swig_int_ptr)):
                 tag.key = tag_struct['key']
                 good = True
 
-        if(tag_struct.has_key('value')):
-            if(isinstance(tag_struct['value'], pmt.pmt_swig.swig_int_ptr)):
+        if('value' in tag_struct):
+            if(isinstance(tag_struct['value'], pmt.swig_int_ptr)):
                 tag.value = tag_struct['value']
                 good = True
 
-        if(tag_struct.has_key('srcid')):
-            if(isinstance(tag_struct['srcid'], pmt.pmt_swig.swig_int_ptr)):
+        if('srcid' in tag_struct):
+            if(isinstance(tag_struct['srcid'], pmt.swig_int_ptr)):
                 tag.srcid = tag_struct['srcid']
                 good = True
 
     elif(type(tag_struct) == list or type(tag_struct) == tuple):
         if(len(tag_struct) == 4):
-            if(isinstance(tag_struct[0], (int,long))):
+            if(isinstance(tag_struct[0], int)):
                 tag.offset = tag_struct[0]
                 good = True
 
-            if(isinstance(tag_struct[1], pmt.pmt_swig.swig_int_ptr)):
+            if(isinstance(tag_struct[1], pmt.swig_int_ptr)):
                 tag.key = tag_struct[1]
                 good = True
 
-            if(isinstance(tag_struct[2], pmt.pmt_swig.swig_int_ptr)):
+            if(isinstance(tag_struct[2], pmt.swig_int_ptr)):
                 tag.value = tag_struct[2]
                 good = True
 
-            if(isinstance(tag_struct[3], pmt.pmt_swig.swig_int_ptr)):
+            if(isinstance(tag_struct[3], pmt.swig_int_ptr)):
                 tag.srcid = tag_struct[3]
                 good = True
 
         elif(len(tag_struct) == 3):
-            if(isinstance(tag_struct[0], (int,long))):
+            if(isinstance(tag_struct[0], int)):
                 tag.offset = tag_struct[0]
                 good = True
 
-            if(isinstance(tag_struct[1], pmt.pmt_swig.swig_int_ptr)):
+            if(isinstance(tag_struct[1], pmt.swig_int_ptr)):
                 tag.key = tag_struct[1]
                 good = True
 
-            if(isinstance(tag_struct[2], pmt.pmt_swig.swig_int_ptr)):
+            if(isinstance(tag_struct[2], pmt.swig_int_ptr)):
                 tag.value = tag_struct[2]
                 good = True
 

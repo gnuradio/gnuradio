@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, gru
 from gnuradio import audio
 from gnuradio import filter
@@ -54,11 +57,11 @@ class my_top_block(gr.top_block):
         input_rate = int(args.input_rate)
         output_rate = int(args.output_rate)
 
-        interp = gru.lcm(input_rate, output_rate) / input_rate
-        decim = gru.lcm(input_rate, output_rate) / output_rate
+        interp = gru.lcm(input_rate / output_rate, input_rate)
+        decim = gru.lcm(input_rate / output_rate, output_rate)
 
-        print "interp =", interp
-        print "decim  =", decim
+        print("interp =", interp)
+        print("decim  =", decim)
 
         ampl = 0.1
         src0 = analog.sig_source_f(input_rate, analog.GR_SIN_WAVE, 650, ampl)

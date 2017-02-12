@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import unittest
 
 from hieroglyph.hieroglyph import parse_hieroglyph_text

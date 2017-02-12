@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio.eng_arg import eng_float, intx
@@ -31,13 +33,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Scipy required (www.scipy.org)."
+    print("Error: Scipy required (www.scipy.org).")
     sys.exit(1)
 
 try:

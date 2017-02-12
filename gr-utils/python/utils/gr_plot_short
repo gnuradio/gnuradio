@@ -20,11 +20,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 try:
     import scipy
 except ImportError:
-    print "Please install SciPy to run this script (http://www.scipy.org/)"
-    raise SystemExit, 1
+    print("Please install SciPy to run this script (http://www.scipy.org/)")
+    raise SystemExit(1)
 
 from argparse import ArgumentParser
 from gnuradio.plot_data import plot_data
