@@ -20,11 +20,22 @@
 			<name>Complex</name>
 			<key>c</key>
 			<opt>input:complex</opt>
+			<opt>optional:1</opt>
+			<opt>hide:all</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>f</key>
 			<opt>input:float</opt>
+			<opt>optional:1</opt>
+			<opt>hide:all</opt>
+		</option>
+		<option>
+			<name>Complex->Float</name>
+			<key>cf</key>
+			<opt>input:complex</opt>
+			<opt>optional:0</opt>
+			<opt>hide:</opt>
 		</option>
 	</param>
 	<param>
@@ -43,6 +54,12 @@
 		<name>in</name>
 		<type>$type.input</type>
 	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<optional>$type.optional</optional>
+		<hide>$type.hide</hide>
+	</source>
 	<doc>
 Available functions to probe: level()
 
