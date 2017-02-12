@@ -857,7 +857,7 @@ namespace gr {
     return boost::dynamic_pointer_cast<block, basic_block>(p);
   }
 
-  std::ostream&
+  GR_RUNTIME_API std::ostream&
   operator << (std::ostream& os, const block *m);
 
 } /* namespace gr */
