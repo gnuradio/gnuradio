@@ -98,6 +98,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.stream_args = args.stream_args
         self.update_rate = args.update_rate
         self.wire_format = args.otw_format
+        self.lo_offset = args.lo_offset
 
         ##################################################
         # Variables
@@ -128,7 +129,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.setup_usrp(uhd.usrp_source, args)
         self._ant_options = self.usrp.get_antennas(0)
         for c in range(len(self.channels)):
-            self.usrp.set_bandwidth(self.samp_rate, c)
+            self.usrp.set_bandwidth(self.samp_rate + abs(self.lo_offset), c)
         self.usrp_device_info = self.get_usrp_info_string(compact=True, tx_or_rx='rx')
 
         ### Now set up the GUI widgets: #####################################
@@ -431,7 +432,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.qtgui_waterfall_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
         self.usrp.set_samp_rate(self.samp_rate)
         for c in range(len(self.channels)):
-            self.usrp.set_bandwidth(self.samp_rate, c)
+            self.usrp.set_bandwidth(self.samp_rate + abs(self.lo_offset), c)
 
     def set_lo_locked_probe(self, lo_locked_probe):
         self.lo_locked_probe = lo_locked_probe
