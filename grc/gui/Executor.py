@@ -38,7 +38,7 @@ class ExecFlowGraphThread(threading.Thread):
         threading.Thread.__init__(self)
 
         self.page = flow_graph_page  # store page and dont use main window calls in run
-        self.flow_graph = self.page.get_flow_graph()
+        self.flow_graph = self.page.flow_graph
         self.xterm_executable = xterm_executable
         self.update_callback = callback
 

@@ -137,7 +137,10 @@ class Block(Element):
         for param_n in params_n:
             key = param_n['key']
             if key in self.params:
-                raise Exception('Key "{}" already exists in params'.format(key))
+                # raise Exception('Key "{}" already exists in params'.format(key))
+                print('Key "{}" already exists in params in block {}'
+                      ''.format(key, self.key))
+                continue
 
             extended_param_n = base_params_n.get(param_n.pop('base_key', None), {})
             extended_param_n.update(param_n)

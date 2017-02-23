@@ -91,7 +91,8 @@ class DrawingArea(Gtk.DrawingArea):
         """
         Handle a drag and drop by adding a block at the given coordinate.
         """
-        self._flow_graph.add_new_block(selection_data.get_text(), (x, y))
+        coords = x / self.zoom_factor, y / self.zoom_factor
+        self._flow_graph.add_new_block(selection_data.get_text(), coords)
 
     def _handle_mouse_scroll(self, widget, event):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
