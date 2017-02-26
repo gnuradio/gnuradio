@@ -108,7 +108,10 @@ class rx_cfile_block(gr.top_block):
                 print("[UHD_RX] Channel {chan} gain: {g} dB".format(chan=chan, g=self._u.get_gain(chan)))
         else:
             for chan in self.channels:
-                self._u.set_gain(options.gain, chan)
+                if options.normalized_gain:
+                    self._u.set_normalized_gain(options.gain, chan)
+                else:
+                    self._u.set_gain(options.gain, chan)
         gain = self._u.get_gain(self.channels[0])
         # Set frequency (tune request takes lo_offset):
         if options.lo_offset is not None:
