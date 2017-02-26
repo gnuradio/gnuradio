@@ -1,10 +1,7 @@
-ChangeLog v3.7.10
-=================
+ChangeLog v3.7.10.2
+===================
 
-This significant feature release of the 3.7 API series, and
-incorporates all the bug fixes implemented in the 3.7.9.3 maintenance
-release.
-
+This is the second bug-fix release for v3.7.10.
 
 Contributors
 ------------
@@ -12,201 +9,170 @@ Contributors
 The following list of people directly contributed code to this
 release:
 
- * A. Maitland Bottoms <bottoms@debian.org>
- * Andrej Rode <mail@andrejro.de>
- * Andy Sloane <andy@a1k0n.net>
- * Andy Walls <awalls@md.metrocast.net>
- * Chris Kuethe <chris.kuethe+github@gmail.com>
- * Clayton Smith <argilo@gmail.com>
- * Daehyun Yang <daehyun.yang@gmail.com>
- * Derek Kozel <derek.kozel@ettus.com>
- * Federico La Rocca <flarroca@fing.edu.uy>
- * Geof Nieboer <gnieboer@corpcomm.net>
- * Glenn Richardson <glenn.richardson@live.com>
- * Glenn Richardson <glenn.richardson@live.com>
- * Jiří Pinkava <j-pi@seznam.cz>
- * Johannes Schmitz <johannes.schmitz1@gmail.com>
- * Johnathan Corgan <johnathan@corganlabs.com>
- * Kevin McQuiggin <mcquiggi@sfu.ca>
- * Laur Joost <daremion@gmail.com>
- * Marcus Müller <marcus.mueller@ettus.com>
- * Martin Braun <martin.braun@ettus.com>
- * Matt Hostetter <mhostetter@users.noreply.github.com>
- * Michael Dickens <michael.dickens@ettus.com>
- * Nathan West <nathan.west@gnuradio.org>
- * Paul Cercueil <paul.cercueil@analog.com>
- * Paul David <paul.david@ettus.com>
- * Philip Balister <philip@balister.org>
- * Ron Economos <w6rz@comcast.net>
- * Sean Nowlan <sean.nowlan@gtri.gatech.edu>
- * Sebastian Koslowski <koslowski@kit.edu>
- * Seth Hitefield <sdh11@vt.edu>
- * Stefan Wunsch <stefan.wunsch@student.kit.edu>
- * Tim O'Shea <tim.oshea753@gmail.com>
- * Tom Rondeau <tom@trondeau.com>
- * Tracie Renea <tracie.perez@mavs.uta.edu>
-
-## Major Development Areas
-
-This release sees the integration of a number of long-time development
-efforts in various areas of the tree, including GRC, new packet/burst
-communications features for gr-digital, new standards implementations
-for gr-dtv.  In addition, it incorporates all of the bug fixes
-released as part of the 3.7.9.3 maintenance release.
+Alexandru Csete <oz9aec@gmail.com>
+A. Maitland Bottoms <bottoms@debian.org>
+Andrej Rode <andrej.rode@ettus.com>
+Andy Walls <awalls.cx18@gmail.com>
+Bastian Bloessl <bloessl@ccs-labs.org>
+Ben Hilburn <ben.hilburn@ettus.com>
+Bob Iannucci <bob@sv.cmu.edu>
+Chris Kuethe <chris.kuethe+github@gmail.com>
+Clayton Smith <argilo@gmail.com>
+Darek Kawamoto <darek@he360.com>
+Ethan Trewhitt <ethan.trewhitt@gtri.gatech.edu>
+Geof Nieboer <gnieboer@corpcomm.net>
+Hatsune Aru <email witheld>
+Jacob Gilbert <mrjacobagilbert@gmail.com>
+Jiří Pinkava <j-pi@seznam.cz>
+Johannes Demel <demel@ant.uni-bremen.de>
+Johnathan Corgan <johnathan@corganlabs.com>
+Johannes Schmitz <johannes.schmitz1@gmail.com>
+Josh Blum <josh@joshknows.com>
+Kartik Patel <kartikpatel1995@gmail.com>
+Konstantin Mochalov <incredible.angst@gmail.com>
+Kyle Unice <kyle.unice@L-3com.com>
+Marcus Müller <marcus@hostalia.de>
+Martin Braun <martin.braun@ettus.com>
+Michael De Nil <michael@morsemicro.com>
+Michael Dickens <michael.dickens@ettus.com>
+Nick Foster <bistromath@gmail.com>
+Paul Cercueil <paul.cercueil@analog.com>
+Pedro Lobo <pedro.lobo@upm.es>
+Peter Horvath <ejcspii@gmail.com>
+Philip Balister <philip@balister.org>
+Ron Economos <w6rz@comcast.net>
+Sean Nowlan <nowlans@ieee.org>
+Sebastian Koslowski <koslowski@kit.edu>
+Sebastian Müller <senpo@posteo.de>
+Sylvain Munaut <tnt@246tNt.com>
+Thomas Habets <habets@google.com>
+Tim O'Shea <tim.oshea753@gmail.com>
+Tobias Blomberg <email witheld>
 
 
-### GRC
+Bug Fixes
+=========
 
-The GNU Radio Companion development environment continues to undergo
-rapid development and refactoring. The tools and workflow have been
-improved in the following ways:
+The GNU Radio project tracks bug fixes via Github pull requests.  You
+can get details on each of the below by going to:
 
- * Variable explorer panel and option to hide variables from canvas
- * Nicer block documentation tool-tip and properties dialog tab
- * Screenshots can have transparent background
- * Darker color for bypassed blocks
- * Select all action
- * Block alignment tools
- * Added bits (unpacked bytes) as a data type
- * Show warning for blocks flagged as deprecated
- * Remove [] around categories in the block library
- * Separate core and OOT block trees via the category of each block
+https://github.com/gnuradio/gnuradio
 
-The refactor of GRC continues. This should be mostly feature neutral
-and make it easier for new contributors to come in and make useful
-changes. Part of this is deprecating blks2 and and xmlrpc blocks and
-moving them to components where they would be expected to be found
-rather than the GRC sub-tree.
 
-### Packet Communications
+gnuradio-runtime
+----------------
 
-A long-time feature branch developed by Tom Rondeau has been merged
-into the tree, implementing new blocks and methods for packet
-communications.  This is intended to replace much of the older,
-overlapping, and Python-only packet-based code that already exists.
-As this code matures, we will be marking this older code as deprecated
-with the plan to remove it in the new 3.8 API.
+#1034 Fixed performance counter clock option (Pedro Lobo)
+#1041 Connect message ports before unlock (Bastian Bloessl)
+#1065 Fixed initialization order of ctrlport static variables (Kyle Unice)
+#1071 Fixed cmake lib/lib64 issues (Philip Balister)
+#1075 Fixed pmt thread safety issue (Darek Kawamoto)
+#1119 Start RPC on message port only blocks (Jacob Gilbert)
+#1121 Fixed tag_t default copy constructor / operator= bug (Darek Kawamoto)
+#1125 Fixed pmt_t threading issue with memory fence (Darek Kawamoto)
+#1152 Fixed numpy warning in pmt code (Bob Iannucci)
+#1160 Fixed swig operator= warning messages (Darek Kawamoto)
 
-### DTV
 
-DTV has new transmitters for DVB-S and ITU-T J.83B 64QAM. New support
-for DVB-S2X VL-SNR code rates, modulation, and framing for AMSAT are
-also available.
+gnuradio-companion
+------------------
 
-A significantly improved OFDM symbol synchronizer was implemented for
-the DVB-T receiver (Ron Economos, Federico La Rocca).
+#901  Backwards compatibility fix for pygtk 2.16 (Michael De Nil)
+#1060 Fixed for Python 2.6.6 compatibility (Ben Hilburn)
+#1063 Fixed IndexError when consuming \b (Sebastian Koslowski)
+#1074 Fixed display scaling (Sebastian Koslowski)
+#1095 Fixed new flowgraph generation mode (Sebastian Koslowski)
+#1096 Fixed column widths for proper scaling (Sebastian Müller)
+#1135 Fixed trailing whitespace output (Clayton Smith)
+#1168 Fixed virtual connection with multiple upstream (Sebastian Koslowski)
+#1200 Fixed cheetah template evaluation 'optional' tag (Sean Nowls)
 
-## Other Feature Development
 
-### Runtime
+docs
+----
 
-Clear tags and reset all item counters when merging connections
-between blocks, which prevents bad values from being propagated on
-lock/unlock operations.
+#1114 Fixed obsolete doxygen tags (A. Maitland Bottoms)
 
-Blocks always set their max_noutput_items before a flowgraph starts if
-it hasn't already been set.
 
-Added some options to gnuradio-config-info that prints information
-about the gnuradio prefs file. The old customized preference file
-reader is replaced with a boost program options object.
+gr-analog
+---------
 
-### QT GUIs
+#1201 Added missing probe_avg_mag_sqrd_cf block to GRC (Sean Nowls)
 
-The QT GUI widgets can now toggle axis labels and the frequency sink
-has a new feature to set the y-axis label. This could be useful for
-changing units on calibrated measurements.
 
-The QT GUI Entry widget has a new message port that emits a message
-containing the new text whenever editing is finished.
+gr-blocks
+---------
 
-QT widgets recently had an optional message port to plot PDUs. This
-release adds a feature to plot the tag metadata contained in the PDU.
+#1161 Fixed minor inconsistencies in block XML (Sebastian Koslowski)
+#1191 Fixed typo on xor block XML (Hatsune Aru)
+#1194 Fixed peak detector fix initial value (Bastian Bloessl)
 
-A new example shows how to build a C++ only QT based application.
 
-### gr-digital
+gr-digital
+----------
 
-New QA for tagged stream correlate access code blocks further cement
-how these blocks should be behaving.
+#1084 Fixed msk_timing_recovery out-of-bounds (warning) (Nick Foster)
+#1149 Clarify documentation of clock_recovery_mm_xx (Thomas Habets)
 
-16QAM is now available from the GRC constellation object dialog drop
-down menu.
 
-### gr-analog
+gr-dtv
+------
 
-The frequency modulator now has sensitivity exposed through
-controlport.
+#902  Fixed incorrect assert and set_relative_rate() (Ron Economos)
+#1066 Fixed GSL link problem with gr-dtv and gr-atsc (Peter Horvath)
+#1177 Add missing find_package for GSL (Geof Gnieboer)
 
-New FM pre emphasis and de-emphasis filters. The previous filters were
-effectively all-pass filters. There is a very nice write up on the new
-filters in gr-analog/python/analog/fm_emph.py
 
-A new message port to sig_source is available that can set signal
-frequency with the same convention as gr-uhd usrp_source.
+gr-fcd
+------
 
-### gr-filter
+#1030 Updated hidapi to latest HEAD (Alexandru Csete)
 
-Use the max_noutput_items in start() to allocate FFT buffers for the
-PFB decimator rather than always allocating/freeing a buffer in
-work().
 
-### gr-blocks
+gr-fec
+------
 
-Add a run-time accessor and setter for interpolation of repeat blocks.
+#1049 Throw exception if K and R are not supported (Clayton Smith)
+#1174 Fixed missing header file installation (Sean Nowls)
 
-vector_sink.reset() clears tags now
 
-Add accessors for the vector_source repeat flag so it's settable
-outside the ctor.
+gr-filter
+---------
 
-Fix tuntap devices MTU size. Previously MTU size argument was used to
-allocate correct buffer size, but didn't actually change the MTU of
-the underlying device.
+#1070 Fix pfb_arb_resampler producing too many samples (Sylvain Munaut)
 
-The UDP source block can read gr prefs file for the payload buffer
-size or default to the existing value of 50.
 
-Yet another block making use of VOLK: the divide_cc block is now 10x
-faster on some machines.
+gr-qtgui
+--------
 
-### gr-uhd
+#899  Fixed dark.qss data lines forced-on (Tim O'Shea)
+#918  Fixed y-axis unit display in Frequency Sink (Tobias Blomberg)
+#920  Fixed axis labels checkbox in Frequency Sink (Tobias Blomberg)
+#1023 Fixed control panel FFT slider in Frequency Sink (Tobias Blomberg)
+#1028 Fixed cmake for C++ example (Bastian Bloessl)
+#1036 Corrected whitespace issues (Sebastian Koslowski)
+#1037 Fixed tag color to obey style sheet (Johannes Demel)
+#1158 Fixed SIGSEGV for tag trigger with constellation sink (Andy Walls)
+#1187 Fixed time sink complex message configuration (Kartik Patel)
+#1192 Fixed redundant time sink configuration options (Kartik Patel)
 
-New argument in usrp_source initializer to start streaming on the
-start of a flowgraph which defaults to true (the existing behavior).
 
-Add a clock-source argument to uhd_fft.
+gr-uhd
+------
 
-A new message command handler for the usrp_source block will trigger a
-time and rate tag to be emitted.
+#914  Fixed order of include dirs (Martin Braun)
+#1133 Fixed channel number resolution (Andrej Rode)
+#1137 Disable boost thread interrupts during send() and recv() (Andrej Rode)
+#1142 Fixed documentation for pmt usage (Marcus Müller)
 
-Added support for importing, exporting, and sharing LOs.
 
-### gr-audio
+Platform-specific changes
+-------------------------
 
-Refactor audio sink for windows with multiple buffers to prevent
-skipping.
-
-### modtool
-
-Add an option to set the copyright field for new files.
-
-New modules will detect PYBOMBS_PREFIX and install to the defined
-location.
-
-Add versioning support for OOT modules by default.
-
-### Builds
-
-Enable controlport for static builds.
-
-Enable GR_GIT_COUNT and GR_GIT_HASH environment variables for extended
-versioning number for packagers.
-
-We explicitly set the C/C++ standards to C++98 and gnu11 rather than
-use the compiler defaults since many compilers are moving to C++11 by
-default.  Incidentally this caused minor breakage with a subtle VOLK
-API fix in gr-dtv which was also fixed.
-
-Fixed finding GNU Radio + VOLK in non-standard prefixes when compiling
-OOT modules.
+#886  Fixed numerous Windows/MSVC portability issues (Josh Blum)
+#1062 Set default filepath to documents dir for windows (Geof Gnieboer)
+#1085 Fixed mingw-w64 portability issues (Paul Cercueil)
+#1140 Added boost atomic and chrono linkage for Windows (Josh Blum)
+#1146 Use -undefined dynamic_lookup linkage for (swig) on MacOS (Konstantin Mochalov)
+#1172 Fixed file monitor on windows (Sebastian Koslowski)
+#1179 MSVC build updates (Josh Blum)

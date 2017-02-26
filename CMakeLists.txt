@@ -46,8 +46,8 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 11)
-set(VERSION_INFO_MAINT_VERSION git)
+set(VERSION_INFO_MINOR_VERSION 10)
+set(VERSION_INFO_MAINT_VERSION 2)
 include(GrVersion) #setup version info
 
 # Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
