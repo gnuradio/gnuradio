@@ -24,6 +24,7 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
 %include "blocks_swig0_doc.i"
 
 %{
