@@ -106,43 +106,22 @@ class UHDApp(object):
         except:
             return "Can't establish USRP info."
 
-    def normalize_antenna_sel(self, args):
+    def normalize_sel(self, num_name, arg_name, num, arg):
         """
-        Make sure the --antenna option matches the --channels option.
+        num_name: meaningful name why we need num arguments
+        arg_name: name of current argument
+        num: required number of arguments
+        arg: actual argument
         """
-        if args.antenna is None:
-            return None
-        antennas = [x.strip() for x in args.antenna.split(",")]
-        if len(antennas) != 1 and len(antennas) != len(args.channels):
-            raise ValueError("Invalid antenna setting for {n} channels: {a}".format(
-                n=len(self.channels), a=args.antenna,
-            ))
-        if len(antennas) == 1:
-            antennas = [antennas[0],] * len(args.channels)
-        return antennas
 
-    def normalize_subdev_sel(self, spec):
-        """
-        """
-        if spec is None:
+        if arg is None:
             return None
-        specs = [x.strip() for x in spec.split(",")]
-        if len(specs) == 1:
-            return spec
-        elif len(specs) != self.usrp.get_num_mboards():
-            raise ValueError("Invalid subdev setting for {n} mboards: {a}".format(
-                n=len(self.usrp.get_num_mboards()), a=spec
+        args = [x.strip() for x in arg.split(",")]
+        if len(args) != num:
+            raise ValueError("Invalid {m} setting for {n} {b}: {a}".format(
+                m=arg_name, n=num, a=arg, b=num_name
             ))
-        return specs
-
-    def normalize_lo_source_export_sel(self, args):
-        lo_source = [x.strip() for x in args.lo_source.split(",")]
-        lo_export = [x.strip() for x in args.lo_export.split(",")]
-        if len(lo_source) != len(self.channels):
-            raise ValueError("Invalid number of lo-source settings {n} for {c} channels. Must be one argument per channel.".format(n=len(lo_source), c=len(args.channels)))
-        if len(lo_export) != len(self.channels):
-            raise ValueError("Invalid number of lo-export settings {n} for {c} channels. Must be one argument per channel.".format(n=len(lo_source), c=len(args.channels)))
-        return (lo_source, lo_export)
+        return args
 
     def async_callback(self, msg):
         """
@@ -174,27 +153,40 @@ class UHDApp(object):
             )
         )
         # Set the subdevice spec:
-        args.spec = self.normalize_subdev_sel(args.spec)
+        args.spec = self.normalize_sel("mboards", "subdev",
+                                       self.usrp.get_num_mboards(), args.spec)
         if args.spec:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                if isinstance(args.spec, list):
-                    self.usrp.set_subdev_spec(args.spec[mb_idx], mb_idx)
-                else:
+                if len(args.spec) == 1:
                     self.usrp.set_subdev_spec(args.spec, mb_idx)
+                else:
+                    self.usrp.set_subdev_spec(args.spec[mb_idx], mb_idx)
         # Set the clock and/or time source:
         if args.clock_source is not None:
+            args.clock_source = self.normalize_sel("mboards", "clock-source",
+                                                   self.usrp.get_num_mboards(), args.clock_source)
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                self.usrp.set_clock_source(args.clock_source, mb_idx)
+                if len(args.time_source) == 1:
+                    self.usrp.set_clock_source(args.clock_source[0], mb_idx)
+                else:
+                    self.usrp.set_clock_source(args.clock_source[mb_idx], mb_idx)
         if args.time_source is not None:
+            args.time_source = self.normalize_sel("mboards", "time-source",
+                                                  self.usrp.get_num_mboards(), args.time_source)
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                self.usrp.set_time_source(args.time_source, mb_idx)
+                if len(args.time_source) == 1:
+                    self.usrp.set_time_source(args.time_source[0], mb_idx)
+                else:
+                    self.usrp.set_time_source(args.time_source[mb_idx], mb_idx)
         # Sampling rate:
         self.usrp.set_samp_rate(args.samp_rate)
         self.samp_rate = self.usrp.get_samp_rate()
         self.vprint("Using sampling rate: {rate}".format(rate=self.samp_rate))
         # Set the antenna:
-        self.antenna = self.normalize_antenna_sel(args)
+        self.antenna = self.normalize_sel("channels", "antenna", len(args.channels), args.antenna)
         if self.antenna is not None:
+            if len(self.antenna) == 1:
+                self.antenna = [self.antenna, ] * len(args.channels)
             for i, chan in enumerate(self.channels):
                 if not self.antenna[i] in self.usrp.get_antennas(i):
                     self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
@@ -215,7 +207,8 @@ class UHDApp(object):
         self.has_lo_sensor = 'lo_locked' in self.usrp.get_sensor_names()
         # Set LO export and LO source operation
         if (args.lo_export is not None) and (args.lo_source is not None):
-            (args.lo_source,args.lo_export) = self.normalize_lo_source_export_sel(args)
+            args.lo_source = self.normalize_sel("channels", "lo-source", len(args.channels), args.lo_source)
+            args.lo_export = self.normalize_sel("channels", "lo-export", len(args.channels), args.lo_export)
             for chan,lo_source,lo_export in zip(self.channels,args.lo_source,args.lo_export):
                 if (lo_source == "None") or (lo_export == "None"):
                     continue
