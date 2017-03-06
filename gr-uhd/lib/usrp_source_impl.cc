@@ -61,6 +61,7 @@ namespace gr {
       _samp_rate = this->get_samp_rate();
 #ifdef GR_UHD_USE_STREAM_API
       _samps_per_packet = 1;
+#endif
       register_msg_cmd_handler(CMD_TAG_KEY, boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
     }
 
