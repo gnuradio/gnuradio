@@ -15,8 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-import expr_utils
-import epy_block_io
-import extract_docs
+from __future__ import absolute_import
 
-from odict import odict
+from . import expr_utils
+from . import epy_block_io
+from . import extract_docs
+
+from ._complexity import calculate_flowgraph_complexity

@@ -17,16 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
+import collections
+
+from six.moves import range
+
 from . import Constants
-from .Element import Element
-from .utils import odict
+from .Element import Element, lazy_property
 
 
 class Connection(Element):
 
     is_connection = True
 
-    def __init__(self, flow_graph, porta, portb):
+    def __init__(self, parent, porta, portb):
         """
         Make a new connection given the parent and 2 ports.
 
@@ -39,75 +44,87 @@ class Connection(Element):
         Returns:
             a new connection
         """
-        Element.__init__(self, flow_graph)
+        Element.__init__(self, parent)
+
+        source, sink = self._get_sink_source(porta, portb)
+
+        self.source_port = source
+        self.sink_port = sink
+
+        # Ensure that this connection (source -> sink) is unique
+        if self in self.parent_flowgraph.connections:
+            raise LookupError('This connection between source and sink is not unique.')
+
+        if self.is_bus():
+            self._make_bus_connect()
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        return self.source_port == other.source_port and self.sink_port == other.sink_port
+
+    @staticmethod
+    def _get_sink_source(porta, portb):
         source = sink = None
         # Separate the source and sink
         for port in (porta, portb):
             if port.is_source:
                 source = port
-            else:
+            if port.is_sink:
                 sink = port
         if not source:
             raise ValueError('Connection could not isolate source')
         if not sink:
             raise ValueError('Connection could not isolate sink')
-        busses = len(filter(lambda a: a.get_type() == 'bus', [source, sink])) % 2
-        if not busses == 0:
-            raise ValueError('busses must get with busses')
+        return source, sink
 
-        if not len(source.get_associated_ports()) == len(sink.get_associated_ports()):
-            raise ValueError('port connections must have same cardinality')
-        # Ensure that this connection (source -> sink) is unique
-        for connection in flow_graph.connections:
-            if connection.get_source() is source and connection.get_sink() is sink:
-                raise LookupError('This connection between source and sink is not unique.')
-        self._source = source
-        self._sink = sink
-        if source.get_type() == 'bus':
+    @lazy_property
+    def source_block(self):
+        return self.source_port.parent_block
 
-            sources = source.get_associated_ports()
-            sinks = sink.get_associated_ports()
+    @lazy_property
+    def sink_block(self):
+        return self.sink_port.parent_block
 
-            for i in range(len(sources)):
-                try:
-                    flow_graph.connect(sources[i], sinks[i])
-                except:
-                    pass
+    @property
+    def enabled(self):
+        """
+        Get the enabled state of this connection.
+
+        Returns:
+            true if source and sink blocks are enabled
+        """
+        return self.source_block.enabled and self.sink_block.enabled
 
     def __str__(self):
         return 'Connection (\n\t{}\n\t\t{}\n\t{}\n\t\t{}\n)'.format(
-            self.get_source().get_parent(),
-            self.get_source(),
-            self.get_sink().get_parent(),
-            self.get_sink(),
+            self.source_block, self.source_port, self.sink_block, self.sink_port,
         )
 
     def is_bus(self):
-        return self.get_source().get_type() == self.get_sink().get_type() == 'bus'
+        return self.source_port.get_type() == 'bus'
 
     def validate(self):
         """
         Validate the connections.
         The ports must match in io size.
         """
-        """
-        Validate the connections.
-        The ports must match in type.
-        """
         Element.validate(self)
-        platform = self.get_parent().get_parent()
-        source_domain = self.get_source().get_domain()
-        sink_domain = self.get_sink().get_domain()
+        platform = self.parent_platform
+
+        source_domain = self.source_port.domain
+        sink_domain = self.sink_port.domain
+
         if (source_domain, sink_domain) not in platform.connection_templates:
             self.add_error_message('No connection known for domains "{}", "{}"'.format(
-                    source_domain, sink_domain))
+                source_domain, sink_domain))
         too_many_other_sinks = (
             not platform.domains.get(source_domain, []).get('multiple_sinks', False) and
-            len(self.get_source().get_enabled_connections()) > 1
+            len(self.source_port.get_enabled_connections()) > 1
         )
         too_many_other_sources = (
             not platform.domains.get(sink_domain, []).get('multiple_sources', False) and
-            len(self.get_sink().get_enabled_connections()) > 1
+            len(self.sink_port.get_enabled_connections()) > 1
         )
         if too_many_other_sinks:
             self.add_error_message(
@@ -116,29 +133,10 @@ class Connection(Element):
             self.add_error_message(
                 'Domain "{}" can have only one upstream block'.format(sink_domain))
 
-        source_size = Constants.TYPE_TO_SIZEOF[self.get_source().get_type()] * self.get_source().get_vlen()
-        sink_size = Constants.TYPE_TO_SIZEOF[self.get_sink().get_type()] * self.get_sink().get_vlen()
+        source_size = Constants.TYPE_TO_SIZEOF[self.source_port.get_type()] * self.source_port.get_vlen()
+        sink_size = Constants.TYPE_TO_SIZEOF[self.sink_port.get_type()] * self.sink_port.get_vlen()
         if source_size != sink_size:
             self.add_error_message('Source IO size "{}" does not match sink IO size "{}".'.format(source_size, sink_size))
-
-    def get_enabled(self):
-        """
-        Get the enabled state of this connection.
-
-        Returns:
-            true if source and sink blocks are enabled
-        """
-        return self.get_source().get_parent().get_enabled() and \
-            self.get_sink().get_parent().get_enabled()
-
-    #############################
-    # Access Ports
-    #############################
-    def get_sink(self):
-        return self._sink
-
-    def get_source(self):
-        return self._source
 
     ##############################################
     # Import/Export Methods
@@ -150,9 +148,23 @@ class Connection(Element):
         Returns:
             a nested data odict
         """
-        n = odict()
-        n['source_block_id'] = self.get_source().get_parent().get_id()
-        n['sink_block_id'] = self.get_sink().get_parent().get_id()
-        n['source_key'] = self.get_source().get_key()
-        n['sink_key'] = self.get_sink().get_key()
+        n = collections.OrderedDict()
+        n['source_block_id'] = self.source_block.get_id()
+        n['sink_block_id'] = self.sink_block.get_id()
+        n['source_key'] = self.source_port.key
+        n['sink_key'] = self.sink_port.key
         return n
+
+    def _make_bus_connect(self):
+        source, sink = self.source_port, self.sink_port
+
+        if source.get_type() == sink.get_type() == 'bus':
+            raise ValueError('busses must get with busses')
+
+        sources = source.get_associated_ports()
+        sinks = sink.get_associated_ports()
+        if len(sources) != len(sinks):
+            raise ValueError('port connections must have same cardinality')
+
+        for ports in zip(sources, sinks):
+            self.parent_flowgraph.connect(*ports)

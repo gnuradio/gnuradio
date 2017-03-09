@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import os
 from os.path import expanduser, normpath, expandvars, exists
 
@@ -24,16 +26,14 @@ from . import Constants
 
 
 class Config(object):
-
-    key = 'grc'
     name = 'GNU Radio Companion (no gui)'
     license = __doc__.strip()
     website = 'http://gnuradio.org'
 
     hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
 
-    def __init__(self, prefs_file, version, version_parts=None, name=None):
-        self.prefs = prefs_file
+    def __init__(self, version, version_parts=None, name=None, prefs=None):
+        self._gr_prefs = prefs if prefs else DummyPrefs()
         self.version = version
         self.version_parts = version_parts or version[1:].split('-', 1)[0].split('.')[:3]
         if name:
@@ -46,8 +46,8 @@ class Config(object):
         paths_sources = (
             self.hier_block_lib_dir,
             os.environ.get('GRC_BLOCKS_PATH', ''),
-            self.prefs.get_string('grc', 'local_blocks_path', ''),
-            self.prefs.get_string('grc', 'global_blocks_path', ''),
+            self._gr_prefs.get_string('grc', 'local_blocks_path', ''),
+            self._gr_prefs.get_string('grc', 'global_blocks_path', ''),
         )
 
         collected_paths = sum((paths.split(path_list_sep)
@@ -62,7 +62,22 @@ class Config(object):
     def default_flow_graph(self):
         user_default = (
             os.environ.get('GRC_DEFAULT_FLOW_GRAPH') or
-            self.prefs.get_string('grc', 'default_flow_graph', '') or
+            self._gr_prefs.get_string('grc', 'default_flow_graph', '') or
             os.path.join(self.hier_block_lib_dir, 'default_flow_graph.grc')
         )
         return user_default if exists(user_default) else Constants.DEFAULT_FLOW_GRAPH
+
+
+class DummyPrefs(object):
+
+    def get_string(self, category, item, default):
+        return str(default)
+
+    def set_string(self, category, item, value):
+        pass
+
+    def get_long(self, category, item, default):
+        return int(default)
+
+    def save(self):
+        pass

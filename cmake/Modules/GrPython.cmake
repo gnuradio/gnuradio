@@ -60,9 +60,23 @@ set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpre
 # - cmd an additional command to run
 # - have the result variable to set
 ########################################################################
-macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+macro(GR_PYTHON_CHECK_MODULE_RAW desc python_code have)
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c "
+        COMMAND ${PYTHON_EXECUTABLE} -c "${python_code}"
+        RESULT_VARIABLE return_code
+    )
+    if(return_code EQUAL 0)
+        message(STATUS "Python checking for ${desc} - found")
+        set(${have} TRUE)
+    else()
+        message(STATUS "Python checking for ${desc} - not found")
+        set(${have} FALSE)
+    endif()
+endmacro(GR_PYTHON_CHECK_MODULE_RAW)
+
+macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+    GR_PYTHON_CHECK_MODULE_RAW(
+        "${desc}" "
 #########################################
 try:
     import ${mod}
@@ -70,15 +84,7 @@ try:
 except (ImportError, AssertionError): exit(-1)
 except: pass
 #########################################"
-        RESULT_VARIABLE ${have}
-    )
-    if(${have} EQUAL 0)
-        message(STATUS "Python checking for ${desc} - found")
-        set(${have} TRUE)
-    else(${have} EQUAL 0)
-        message(STATUS "Python checking for ${desc} - not found")
-        set(${have} FALSE)
-    endif(${have} EQUAL 0)
+    "${have}")
 endmacro(GR_PYTHON_CHECK_MODULE)
 
 ########################################################################
@@ -111,7 +117,7 @@ endfunction(GR_UNIQUE_TARGET)
 ########################################################################
 function(GR_PYTHON_INSTALL)
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS;DIRECTORY" ${ARGN})
 
     ####################################################################
     if(GR_PYTHON_INSTALL_FILES)
@@ -164,6 +170,80 @@ function(GR_PYTHON_INSTALL)
         install(FILES ${python_install_gen_targets}
             DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
         )
+
+    ####################################################################
+    elseif(GR_PYTHON_INSTALL_DIRECTORY)
+    ####################################################################
+        install(${ARGN}) #installs regular python files
+
+        # collect all python files in given directories
+        # #############################################
+        unset(pysrcfiles)
+        foreach(pydir ${GR_PYTHON_INSTALL_DIRECTORY})
+            file(GLOB_RECURSE pysrcfiles_tmp "${pydir}/*.py")
+            list(APPEND pysrcfiles ${pysrcfiles_tmp})
+        endforeach(pydir)
+
+        # build target lists
+        # ##################
+        unset(pycfiles)  # pyc targets
+        unset(pyofiles)  # pyo targets
+        unset(pygen_paths)  # all paths of py[oc] targets
+        foreach(pyfile ${pysrcfiles})
+            # determine if this file is in the source or binary directory
+            file(RELATIVE_PATH source_rel_path ${CMAKE_CURRENT_SOURCE_DIR} ${pyfile})
+            string(LENGTH "${source_rel_path}" source_rel_path_len)
+            file(RELATIVE_PATH binary_rel_path ${CMAKE_CURRENT_BINARY_DIR} ${pyfile})
+            string(LENGTH "${binary_rel_path}" binary_rel_path_len)
+
+            # and set the generated path appropriately
+            if(${source_rel_path_len} GREATER ${binary_rel_path_len})
+                set(pygenfile ${CMAKE_CURRENT_BINARY_DIR}/${binary_rel_path})
+            else()
+                set(pygenfile ${CMAKE_CURRENT_BINARY_DIR}/${source_rel_path})
+            endif()
+            list(APPEND pycfiles "${pygenfile}c")
+            list(APPEND pyofiles "${pygenfile}o")
+
+            get_filename_component(pygen_path "${pygenfile}" DIRECTORY)
+            list(APPEND pygen_paths "${pygen_path}")
+            file(MAKE_DIRECTORY "${pygen_path}")
+        endforeach(pyfile)
+        list(REMOVE_DUPLICATES pygen_paths)
+        list(SORT pygen_paths)
+
+        # generate the py[oc] files
+        # #########################
+        add_custom_command(
+            DEPENDS ${pysrcfiles} OUTPUT ${pycfiles}
+            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/python_compile_helper.py ${pysrcfiles} ${pycfiles}
+        )
+        add_custom_command(
+            DEPENDS ${pysrcfiles} OUTPUT ${pyofiles}
+            COMMAND ${PYTHON_EXECUTABLE} -O ${CMAKE_BINARY_DIR}/python_compile_helper.py ${pysrcfiles} ${pyofiles}
+        )
+        set(python_install_gen_targets ${pycfiles} ${pyofiles})
+
+        # per-directory install rules
+        # ###########################
+        foreach(pygen_path ${pygen_paths})
+            # find all targets in that directory (no "list(FILTER ...)")
+            unset(pygen_path_targets)
+            foreach(pyget_target ${python_install_gen_targets})
+                get_filename_component(pyget_target_path "${pyget_target}" PATH)
+                if(pygen_path STREQUAL pyget_target_path)
+                    list(APPEND pygen_path_targets "${pyget_target}")
+                endif()
+            endforeach(pyget_target)
+
+            # install relative to current binary dir
+            file(RELATIVE_PATH pygen_path_rel "${CMAKE_CURRENT_BINARY_DIR}" "${pygen_path}")
+            list(SORT pygen_path_targets)
+            install(
+                FILES ${pygen_path_targets}
+                DESTINATION "${GR_PYTHON_INSTALL_DESTINATION}/${pygen_path_rel}"
+            )
+        endforeach(pygen_path)
 
     ####################################################################
     elseif(GR_PYTHON_INSTALL_PROGRAMS)

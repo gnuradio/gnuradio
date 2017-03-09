@@ -17,7 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import, print_function
+
 import string
+
+import six
+
 VAR_CHARS = string.letters + string.digits + '_'
 
 
@@ -50,7 +55,7 @@ class graph(object):
         self._graph[src_node_key].remove(dest_node_key)
 
     def get_nodes(self):
-        return self._graph.keys()
+        return list(self._graph.keys())
 
     def get_edges(self, node_key):
         return self._graph[node_key]
@@ -85,7 +90,7 @@ def expr_split(expr, var_chars=VAR_CHARS):
             toks.append(char)
             tok = ''
     toks.append(tok)
-    return filter(lambda t: t, toks)
+    return [t for t in toks if t]
 
 
 def expr_replace(expr, replace_dict):
@@ -101,7 +106,7 @@ def expr_replace(expr, replace_dict):
     """
     expr_splits = expr_split(expr, var_chars=VAR_CHARS + '.')
     for i, es in enumerate(expr_splits):
-        if es in replace_dict.keys():
+        if es in list(replace_dict.keys()):
             expr_splits[i] = replace_dict[es]
     return ''.join(expr_splits)
 
@@ -118,7 +123,7 @@ def get_variable_dependencies(expr, vars):
         a subset of vars used in the expression
     """
     expr_toks = expr_split(expr)
-    return set(var for var in vars if var in expr_toks)
+    return set(v for v in vars if v in expr_toks)
 
 
 def get_graph(exprs):
@@ -131,12 +136,12 @@ def get_graph(exprs):
     Returns:
         a graph of variable deps
     """
-    vars = exprs.keys()
+    vars = list(exprs.keys())
     # Get dependencies for each expression, load into graph
     var_graph = graph()
     for var in vars:
         var_graph.add_node(var)
-    for var, expr in exprs.iteritems():
+    for var, expr in six.iteritems(exprs):
         for dep in get_variable_dependencies(expr, vars):
             if dep != var:
                 var_graph.add_edge(dep, var)
@@ -159,7 +164,7 @@ def sort_variables(exprs):
     # Determine dependency order
     while var_graph.get_nodes():
         # Get a list of nodes with no edges
-        indep_vars = filter(lambda var: not var_graph.get_edges(var), var_graph.get_nodes())
+        indep_vars = [var for var in var_graph.get_nodes() if not var_graph.get_edges(var)]
         if not indep_vars:
             raise Exception('circular dependency caught in sort_variables')
         # Add the indep vars to the end of the list
@@ -189,3 +194,4 @@ def sort_objects(objects, get_id, get_expr):
     sorted_ids = sort_variables(id2expr)
     # Return list of sorted objects
     return [id2obj[id] for id in sorted_ids]
+

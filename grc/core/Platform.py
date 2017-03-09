@@ -17,8 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import, print_function
+
 import os
 import sys
+
+import six
+from six.moves import range
 
 from . import ParseXML, Messages, Constants
 
@@ -27,31 +32,22 @@ from .Element import Element
 from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
-from .Block import Block
-from .Port import Port
+from . import Block
+from .Port import Port, PortClone
 from .Param import Param
 
-from .utils import odict, extract_docs
+from .utils import extract_docs
 
 
 class Platform(Element):
-
-    Config = Config
-    Generator = Generator
-    FlowGraph = FlowGraph
-    Connection = Connection
-    Block = Block
-    Port = Port
-    Param = Param
 
     is_platform = True
 
     def __init__(self, *args, **kwargs):
         """ Make a platform for GNU Radio """
-        Element.__init__(self)
+        Element.__init__(self, parent=None)
 
         self.config = self.Config(*args, **kwargs)
-
         self.block_docstrings = {}
         self.block_docstrings_loaded_callback = lambda: None  # dummy to be replaced by BlockTreeWindow
 
@@ -60,22 +56,23 @@ class Platform(Element):
             callback_finished=lambda: self.block_docstrings_loaded_callback()
         )
 
-        # Create a dummy flow graph for the blocks
-        self._flow_graph = Element(self)
-        self._flow_graph.connections = []
-
-        self.blocks = odict()
-        self._blocks_n = odict()
+        self.blocks = {}
+        self._blocks_n = {}
         self._block_categories = {}
         self.domains = {}
         self.connection_templates = {}
 
         self._auto_hier_block_generate_chain = set()
 
+        # Create a dummy flow graph for the blocks
+        self._flow_graph = Element.__new__(FlowGraph)
+        Element.__init__(self._flow_graph, self)
+        self._flow_graph.connections = []
+
         self.build_block_library()
 
     def __str__(self):
-        return 'Platform - {}({})'.format(self.config.key, self.config.name)
+        return 'Platform - {}'.format(self.config.name)
 
     @staticmethod
     def find_file_in_paths(filename, paths, cwd):
@@ -128,12 +125,13 @@ class Platform(Element):
             return None, None
 
         if flow_graph.get_option('generate_options').startswith('hb'):
-            self.load_block_xml(generator.get_file_path_xml())
+            self.load_block_xml(generator.file_path_xml)
         return flow_graph, generator.file_path
 
     def build_block_library(self):
         """load the blocks and block tree from the search paths"""
         self._docstring_extractor.start()
+
         # Reset
         self.blocks.clear()
         self._blocks_n.clear()
@@ -155,10 +153,11 @@ class Platform(Element):
                 # print >> sys.stderr, 'Warning: Block validation failed:\n\t%s\n\tIgnoring: %s' % (e, xml_file)
                 pass
             except Exception as e:
-                print >> sys.stderr, 'Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file)
+                raise
+                print('Warning: XML parsing failed:\n\t%r\n\tIgnoring: %s' % (e, xml_file), file=sys.stderr)
 
         # Add blocks to block tree
-        for key, block in self.blocks.iteritems():
+        for key, block in six.iteritems(self.blocks):
             category = self._block_categories.get(key, block.category)
             # Blocks with empty categories are hidden
             if not category:
@@ -180,26 +179,27 @@ class Platform(Element):
                 yield block_path
             elif os.path.isdir(block_path):
                 for dirpath, dirnames, filenames in os.walk(block_path):
-                    for filename in sorted(filter(lambda f: f.endswith('.xml'), filenames)):
+                    for filename in sorted(f for f in filenames if f.endswith('.xml')):
                         yield os.path.join(dirpath, filename)
 
     def load_block_xml(self, xml_file):
         """Load block description from xml file"""
         # Validate and import
         ParseXML.validate_dtd(xml_file, Constants.BLOCK_DTD)
-        n = ParseXML.from_file(xml_file).find('block')
+        n = ParseXML.from_file(xml_file).get('block', {})
         n['block_wrapper_path'] = xml_file  # inject block wrapper path
-        # Get block instance and add it to the list of blocks
-        block = self.Block(self._flow_graph, n)
-        key = block.get_key()
-        if key in self.blocks:
-            print >> sys.stderr, 'Warning: Block with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
-        else:  # Store the block
-            self.blocks[key] = block
-            self._blocks_n[key] = n
+        key = n.pop('key')
 
+        if key in self.blocks:
+            print('Warning: Block with key "{}" already exists.\n'
+                  '\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
+            return
+
+        # Store the block
+        self.blocks[key] = block = self.get_new_block(self._flow_graph, key, **n)
+        self._blocks_n[key] = n
         self._docstring_extractor.query(
-            block.get_key(),
+            key,
             block.get_imports(raw=True),
             block.get_make(raw=True)
         )
@@ -211,62 +211,62 @@ class Platform(Element):
         path = []
 
         def load_category(cat_n):
-            path.append(cat_n.find('name').strip())
-            for block_key in cat_n.findall('block'):
+            path.append(cat_n.get('name').strip())
+            for block_key in cat_n.get('block', []):
                 if block_key not in self._block_categories:
                     self._block_categories[block_key] = list(path)
-            for sub_cat_n in cat_n.findall('cat'):
+            for sub_cat_n in cat_n.get('cat', []):
                 load_category(sub_cat_n)
             path.pop()
 
-        load_category(xml.find('cat'))
+        load_category(xml.get('cat', {}))
 
     def load_domain_xml(self, xml_file):
         """Load a domain properties and connection templates from XML"""
         ParseXML.validate_dtd(xml_file, Constants.DOMAIN_DTD)
-        n = ParseXML.from_file(xml_file).find('domain')
+        n = ParseXML.from_file(xml_file).get('domain')
 
-        key = n.find('key')
+        key = n.get('key')
         if not key:
-            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file)
+            print('Warning: Domain with emtpy key.\n\tIgnoring: {}'.format(xml_file), file=sys.stderr)
             return
         if key in self.domains:  # test against repeated keys
-            print >> sys.stderr, 'Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file)
+            print('Warning: Domain with key "{}" already exists.\n\tIgnoring: {}'.format(key, xml_file), file=sys.stderr)
             return
 
-        #to_bool = lambda s, d: d if s is None else s.lower() not in ('false', 'off', '0', '')
+        # to_bool = lambda s, d: d if s is None else s.lower() not in ('false', 'off', '0', '')
         def to_bool(s, d):
             if s is not None:
                 return s.lower() not in ('false', 'off', '0', '')
             return d
 
-        color = n.find('color') or ''
+        color = n.get('color') or ''
         try:
-            import gtk  # ugly but handy
-            gtk.gdk.color_parse(color)
-        except (ValueError, ImportError):
+            chars_per_color = 2 if len(color) > 4 else 1
+            tuple(int(color[o:o + 2], 16) / 255.0 for o in range(1, 3 * chars_per_color, chars_per_color))
+        except ValueError:
             if color:  # no color is okay, default set in GUI
-                print >> sys.stderr, 'Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key)
+                print('Warning: Can\'t parse color code "{}" for domain "{}" '.format(color, key), file=sys.stderr)
                 color = None
 
         self.domains[key] = dict(
-            name=n.find('name') or key,
-            multiple_sinks=to_bool(n.find('multiple_sinks'), True),
-            multiple_sources=to_bool(n.find('multiple_sources'), False),
+            name=n.get('name') or key,
+            multiple_sinks=to_bool(n.get('multiple_sinks'), True),
+            multiple_sources=to_bool(n.get('multiple_sources'), False),
             color=color
         )
-        for connection_n in n.findall('connection'):
-            key = (connection_n.find('source_domain'), connection_n.find('sink_domain'))
+        for connection_n in n.get('connection', []):
+            key = (connection_n.get('source_domain'), connection_n.get('sink_domain'))
             if not all(key):
-                print >> sys.stderr, 'Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file)
+                print('Warning: Empty domain key(s) in connection template.\n\t{}'.format(xml_file), file=sys.stderr)
             elif key in self.connection_templates:
-                print >> sys.stderr, 'Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file)
+                print('Warning: Connection template "{}" already exists.\n\t{}'.format(key, xml_file), file=sys.stderr)
             else:
-                self.connection_templates[key] = connection_n.find('make') or ''
+                self.connection_templates[key] = connection_n.get('make') or ''
 
     def _save_docstring_extraction_result(self, key, docstrings):
         docs = {}
-        for match, docstring in docstrings.iteritems():
+        for match, docstring in six.iteritems(docstrings):
             if not docstring or match.endswith('_sptr'):
                 continue
             docstring = docstring.replace('\n\n', '\n').strip()
@@ -294,14 +294,48 @@ class Platform(Element):
         ParseXML.validate_dtd(flow_graph_file, Constants.FLOW_GRAPH_DTD)
         return ParseXML.from_file(flow_graph_file)
 
-    def get_new_flow_graph(self):
-        return self.FlowGraph(platform=self)
-
     def get_blocks(self):
-        return self.blocks.values()
+        return list(self.blocks.values())
 
-    def get_new_block(self, flow_graph, key):
-        return self.Block(flow_graph, n=self._blocks_n[key])
+    def get_generate_options(self):
+        gen_opts = self.blocks['options'].get_param('generate_options')
+        generate_mode_default = gen_opts.get_value()
+        return [(key, name, key == generate_mode_default)
+                for key, name in zip(gen_opts.options, gen_opts.options_names)]
 
-    def get_colors(self):
-        return [(name, color) for name, key, sizeof, color in Constants.CORE_TYPES]
+    ##############################################
+    # Factories
+    ##############################################
+    Config = Config
+    Generator = Generator
+    FlowGraph = FlowGraph
+    Connection = Connection
+    block_classes = {
+        None: Block.Block,  # default
+        'epy_block': Block.EPyBlock,
+        '_dummy': Block.DummyBlock,
+    }
+    port_classes = {
+        None: Port,  # default
+        'clone': PortClone,  # default
+    }
+    param_classes = {
+        None: Param,  # default
+    }
+
+    def get_new_flow_graph(self):
+        return self.FlowGraph(parent=self)
+
+    def get_new_block(self, parent, key, **kwargs):
+        cls = self.block_classes.get(key, self.block_classes[None])
+        if not kwargs:
+            kwargs = self._blocks_n[key]
+        return cls(parent, key=key, **kwargs)
+
+    def get_new_param(self, parent, **kwargs):
+        cls = self.param_classes[kwargs.pop('cls_key', None)]
+        return cls(parent, **kwargs)
+
+    def get_new_port(self, parent, **kwargs):
+        cls = self.port_classes[kwargs.pop('cls_key', None)]
+        return cls(parent, **kwargs)

@@ -1,28 +1,50 @@
-"""
-Copyright 2008, 2009, 2015 Free Software Foundation, Inc.
-This file is part of GNU Radio
+# Copyright 2008, 2009, 2015, 2016 Free Software Foundation, Inc.
+# This file is part of GNU Radio
+#
+# GNU Radio Companion is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# GNU Radio Companion is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+import weakref
+import functools
 
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-"""
+class lazy_property(object):
+
+    def __init__(self, func):
+        self.func = func
+        functools.update_wrapper(self, func)
+
+    def __get__(self, instance, cls):
+        if instance is None:
+            return self
+        value = self.func(instance)
+        setattr(instance, self.func.__name__, value)
+        return value
+
+
+def nop_write(prop):
+    """Make this a property with a nop setter"""
+    def nop(self, value):
+        pass
+    return prop.setter(nop)
 
 
 class Element(object):
 
     def __init__(self, parent=None):
-        self._parent = parent
-        self._error_messages = list()
+        self._parent = weakref.ref(parent) if parent else lambda: None
+        self._error_messages = []
 
     ##################################################
     # Element Validation API
@@ -33,6 +55,7 @@ class Element(object):
         Call this base method before adding error messages in the subclass.
         """
         del self._error_messages[:]
+
         for child in self.get_children():
             child.validate()
 
@@ -43,7 +66,9 @@ class Element(object):
         Returns:
             true when the element is enabled and has no error messages or is bypassed
         """
-        return (not self.get_error_messages() or not self.get_enabled()) or self.get_bypassed()
+        if not self.enabled or self.get_bypassed():
+            return True
+        return not next(self.iter_error_messages(), False)
 
     def add_error_message(self, msg):
         """
@@ -63,11 +88,20 @@ class Element(object):
         Returns:
             a list of error message strings
         """
-        error_messages = list(self._error_messages)  # Make a copy
-        for child in filter(lambda c: c.get_enabled() and not c.get_bypassed(), self.get_children()):
-            for msg in child.get_error_messages():
-                error_messages.append("{}:\n\t{}".format(child, msg.replace("\n", "\n\t")))
-        return error_messages
+        return [msg if elem is self else "{}:\n\t{}".format(elem, msg.replace("\n", "\n\t"))
+                for elem, msg in self.iter_error_messages()]
+
+    def iter_error_messages(self):
+        """
+        Iterate over error messages. Yields tuples of (element, message)
+        """
+        for msg in self._error_messages:
+            yield self, msg
+        for child in self.get_children():
+            if not child.enabled or child.get_bypassed():
+                continue
+            for element_msg in child.iter_error_messages():
+                yield element_msg
 
     def rewrite(self):
         """
@@ -77,7 +111,8 @@ class Element(object):
         for child in self.get_children():
             child.rewrite()
 
-    def get_enabled(self):
+    @property
+    def enabled(self):
         return True
 
     def get_bypassed(self):
@@ -86,8 +121,39 @@ class Element(object):
     ##############################################
     # Tree-like API
     ##############################################
-    def get_parent(self):
-        return self._parent
+    @property
+    def parent(self):
+        return self._parent()
+
+    def get_parent_by_type(self, cls):
+        parent = self.parent
+        if parent is None:
+            return None
+        elif isinstance(parent, cls):
+            return parent
+        else:
+            return parent.get_parent_by_type(cls)
+
+    @lazy_property
+    def parent_platform(self):
+        from .Platform import Platform
+        return self.get_parent_by_type(Platform)
+
+    @lazy_property
+    def parent_flowgraph(self):
+        from .FlowGraph import FlowGraph
+        return self.get_parent_by_type(FlowGraph)
+
+    @lazy_property
+    def parent_block(self):
+        from .Block import Block
+        return self.get_parent_by_type(Block)
+
+    def reset_parents_by_type(self):
+        """Reset all lazy properties"""
+        for name, obj in vars(Element):  # explicitly only in Element, not subclasses
+            if isinstance(obj, lazy_property):
+                delattr(self, name)
 
     def get_children(self):
         return list()

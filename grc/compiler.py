@@ -49,7 +49,7 @@ def main(args=None):
 
     platform = Platform(
         name='GNU Radio Companion Compiler',
-        prefs_file=gr.prefs(),
+        prefs=gr.prefs(),
         version=gr.version(),
         version_parts=(gr.major_version(), gr.api_version(), gr.minor_version())
     )

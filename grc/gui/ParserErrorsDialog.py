@@ -17,14 +17,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+from __future__ import absolute_import
 
-from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
+import six
+
+from gi.repository import Gtk, GObject
+
+from .Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
 
 
-class ParserErrorsDialog(gtk.Dialog):
+class ParserErrorsDialog(Gtk.Dialog):
     """
     A dialog for viewing parser errors
     """
@@ -36,32 +38,32 @@ class ParserErrorsDialog(gtk.Dialog):
         Args:
             block: a block instance
         """
-        gtk.Dialog.__init__(self, title='Parser Errors', buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_ACCEPT))
+        GObject.GObject.__init__(self, title='Parser Errors', buttons=(Gtk.STOCK_CLOSE, Gtk.ResponseType.ACCEPT))
 
         self._error_logs = None
-        self.tree_store = gtk.TreeStore(str)
+        self.tree_store = Gtk.TreeStore(str)
         self.update_tree_store(error_logs)
 
-        column = gtk.TreeViewColumn('XML Parser Errors by Filename')
-        renderer = gtk.CellRendererText()
+        column = Gtk.TreeViewColumn('XML Parser Errors by Filename')
+        renderer = Gtk.CellRendererText()
         column.pack_start(renderer, True)
         column.add_attribute(renderer, 'text', 0)
         column.set_sort_column_id(0)
 
-        self.tree_view = tree_view = gtk.TreeView(self.tree_store)
+        self.tree_view = tree_view = Gtk.TreeView(self.tree_store)
         tree_view.set_enable_search(False)  # disable pop up search box
         tree_view.set_search_column(-1)  # really disable search
         tree_view.set_reorderable(False)
         tree_view.set_headers_visible(False)
-        tree_view.get_selection().set_mode(gtk.SELECTION_NONE)
+        tree_view.get_selection().set_mode(Gtk.SelectionMode.NONE)
         tree_view.append_column(column)
 
         for row in self.tree_store:
             tree_view.expand_row(row.path, False)
 
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_with_viewport(tree_view)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.add(tree_view)
 
         self.vbox.pack_start(scrolled_window, True)
         self.set_size_request(2*MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
@@ -71,7 +73,7 @@ class ParserErrorsDialog(gtk.Dialog):
         """set up data model"""
         self.tree_store.clear()
         self._error_logs = error_logs
-        for filename, errors in error_logs.iteritems():
+        for filename, errors in six.iteritems(error_logs):
             parent = self.tree_store.append(None, [str(filename)])
             try:
                 with open(filename, 'r') as fp:
@@ -95,6 +97,6 @@ class ParserErrorsDialog(gtk.Dialog):
         Returns:
             true if the response was accept
         """
-        response = gtk.Dialog.run(self)
+        response = Gtk.Dialog.run(self)
         self.destroy()
-        return response == gtk.RESPONSE_ACCEPT
+        return response == Gtk.ResponseType.ACCEPT

@@ -16,11 +16,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 
+from __future__ import absolute_import
+
 import codecs
 import os
 import tempfile
+import operator
+import collections
 
 from Cheetah.Template import Template
+import six
 
 from .FlowGraphProxy import FlowGraphProxy
 from .. import ParseXML, Messages
@@ -28,7 +33,7 @@ from ..Constants import (
     TOP_BLOCK_FILE_MODE, BLOCK_FLAG_NEED_QT_GUI,
     HIER_BLOCK_FILE_MODE, BLOCK_DTD
 )
-from ..utils import expr_utils, odict
+from ..utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
@@ -83,20 +88,18 @@ class TopBlockGenerator(object):
         self.file_path = os.path.join(dirname, filename)
         self._dirname = dirname
 
-    def get_file_path(self):
-        return self.file_path
-
     def write(self):
         """generate output and write it to files"""
         # Do throttle warning
-        throttling_blocks = filter(lambda b: b.throtteling(), self._flow_graph.get_enabled_blocks())
+        throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
+                             if b.is_throtteling]
         if not throttling_blocks and not self._generate_options.startswith('hb'):
             Messages.send_warning("This flow graph may not have flow control: "
                                   "no audio or RF hardware blocks found. "
                                   "Add a Misc->Throttle block to your flow "
                                   "graph to avoid CPU congestion.")
         if len(throttling_blocks) > 1:
-            keys = set(map(lambda b: b.get_key(), throttling_blocks))
+            keys = set([b.key for b in throttling_blocks])
             if len(keys) > 1 and 'blocks_throttle' in keys:
                 Messages.send_warning("This flow graph contains a throttle "
                                       "block and another rate limiting block, "
@@ -139,18 +142,18 @@ class TopBlockGenerator(object):
             return code
 
         blocks_all = expr_utils.sort_objects(
-            filter(lambda b: b.get_enabled() and not b.get_bypassed(), fg.blocks),
-            lambda b: b.get_id(), _get_block_sort_text
+            [b for b in fg.blocks if b.enabled and not b.get_bypassed()],
+            operator.methodcaller('get_id'), _get_block_sort_text
         )
-        deprecated_block_keys = set(block.get_name() for block in blocks_all if block.is_deprecated)
+        deprecated_block_keys = set(b.name for b in blocks_all if b.is_deprecated)
         for key in deprecated_block_keys:
             Messages.send_warning("The block {!r} is deprecated.".format(key))
 
         # List of regular blocks (all blocks minus the special ones)
-        blocks = filter(lambda b: b not in (imports + parameters), blocks_all)
+        blocks = [b for b in blocks_all if b not in imports and b not in parameters]
 
         for block in blocks:
-            key = block.get_key()
+            key = block.key
             file_path = os.path.join(self._dirname, block.get_id() + '.py')
             if key == 'epy_block':
                 src = block.get_param('_source_code').get_value()
@@ -159,17 +162,17 @@ class TopBlockGenerator(object):
                 src = block.get_param('source_code').get_value()
                 output.append((file_path, src))
 
-        # Filter out virtual sink connections
-        def cf(c):
-            return not (c.is_bus() or c.get_sink().get_parent().is_virtual_sink())
-        connections = filter(cf, fg.get_enabled_connections())
+        # Filter out bus and virtual sink connections
+        connections = [con for con in fg.get_enabled_connections()
+                       if not (con.is_bus() or con.sink_block.is_virtual_sink())]
 
         # Get the virtual blocks and resolve their connections
-        virtual = filter(lambda c: c.get_source().get_parent().is_virtual_source(), connections)
+        connection_factory = fg.parent_platform.Connection
+        virtual = [c for c in connections if c.source_block.is_virtual_source()]
         for connection in virtual:
-            sink = connection.get_sink()
-            for source in connection.get_source().resolve_virtual_source():
-                resolved = fg.get_parent().Connection(flow_graph=fg, porta=source, portb=sink)
+            sink = connection.sink_port
+            for source in connection.source_port.resolve_virtual_source():
+                resolved = connection_factory(fg.orignal_flowgraph, source, sink)
                 connections.append(resolved)
             # Remove the virtual connection
             connections.remove(connection)
@@ -183,20 +186,19 @@ class TopBlockGenerator(object):
         for block in bypassed_blocks:
             # Get the upstream connection (off of the sink ports)
             # Use *connections* not get_connections()
-            source_connection = filter(lambda c: c.get_sink() == block.get_sinks()[0], connections)
+            source_connection = [c for c in connections if c.sink_port == block.sinks[0]]
             # The source connection should never have more than one element.
             assert (len(source_connection) == 1)
 
             # Get the source of the connection.
-            source_port = source_connection[0].get_source()
+            source_port = source_connection[0].source_port
 
             # Loop through all the downstream connections
-            for sink in filter(lambda c: c.get_source() == block.get_sources()[0], connections):
-                if not sink.get_enabled():
+            for sink in (c for c in connections if c.source_port == block.sources[0]):
+                if not sink.enabled:
                     # Ignore disabled connections
                     continue
-                sink_port = sink.get_sink()
-                connection = fg.get_parent().Connection(flow_graph=fg, porta=source_port, portb=sink_port)
+                connection = connection_factory(fg.orignal_flowgraph, source_port, sink.sink_port)
                 connections.append(connection)
                 # Remove this sink connection
                 connections.remove(sink)
@@ -205,11 +207,11 @@ class TopBlockGenerator(object):
 
         # List of connections where each endpoint is enabled (sorted by domains, block names)
         connections.sort(key=lambda c: (
-            c.get_source().get_domain(), c.get_sink().get_domain(),
-            c.get_source().get_parent().get_id(), c.get_sink().get_parent().get_id()
+            c.source_port.domain, c.sink_port.domain,
+            c.source_block.get_id(), c.sink_block.get_id()
         ))
 
-        connection_templates = fg.get_parent().connection_templates
+        connection_templates = fg.parent.connection_templates
 
         # List of variable names
         var_ids = [var.get_id() for var in parameters + variables]
@@ -259,7 +261,7 @@ class HierBlockGenerator(TopBlockGenerator):
             file_path: where to write the py file (the xml goes into HIER_BLOCK_LIB_DIR)
         """
         TopBlockGenerator.__init__(self, flow_graph, file_path)
-        platform = flow_graph.get_parent()
+        platform = flow_graph.parent
 
         hier_block_lib_dir = platform.config.hier_block_lib_dir
         if not os.path.exists(hier_block_lib_dir):
@@ -267,18 +269,15 @@ class HierBlockGenerator(TopBlockGenerator):
 
         self._mode = HIER_BLOCK_FILE_MODE
         self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id') + '.py')
-        self._file_path_xml = self.file_path + '.xml'
-
-    def get_file_path_xml(self):
-        return self._file_path_xml
+        self.file_path_xml = self.file_path + '.xml'
 
     def write(self):
         """generate output and write it to files"""
         TopBlockGenerator.write(self)
-        ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.get_file_path_xml())
-        ParseXML.validate_dtd(self.get_file_path_xml(), BLOCK_DTD)
+        ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.file_path_xml)
+        ParseXML.validate_dtd(self.file_path_xml, BLOCK_DTD)
         try:
-            os.chmod(self.get_file_path_xml(), self._mode)
+            os.chmod(self.file_path_xml, self._mode)
         except:
             pass
 
@@ -294,12 +293,12 @@ class HierBlockGenerator(TopBlockGenerator):
         parameters = self._flow_graph.get_parameters()
 
         def var_or_value(name):
-            if name in map(lambda p: p.get_id(), parameters):
-                return "$"+name
+            if name in (p.get_id() for p in parameters):
+                return "$" + name
             return name
 
         # Build the nested data
-        block_n = odict()
+        block_n = collections.OrderedDict()
         block_n['name'] = self._flow_graph.get_option('title') or \
             self._flow_graph.get_option('id').replace('_', ' ').title()
         block_n['key'] = block_key
@@ -324,7 +323,7 @@ class HierBlockGenerator(TopBlockGenerator):
         # Parameters
         block_n['param'] = list()
         for param in parameters:
-            param_n = odict()
+            param_n = collections.OrderedDict()
             param_n['name'] = param.get_param('label').get_value() or param.get_id()
             param_n['key'] = param.get_id()
             param_n['value'] = param.get_param('value').get_value()
@@ -341,7 +340,7 @@ class HierBlockGenerator(TopBlockGenerator):
         for direction in ('sink', 'source'):
             block_n[direction] = list()
             for port in self._flow_graph.get_hier_block_io(direction):
-                port_n = odict()
+                port_n = collections.OrderedDict()
                 port_n['name'] = port['label']
                 port_n['type'] = port['type']
                 if port['type'] != "message":
@@ -374,14 +373,18 @@ class QtHierBlockGenerator(HierBlockGenerator):
 
     def _build_block_n_from_flow_graph_io(self):
         n = HierBlockGenerator._build_block_n_from_flow_graph_io(self)
-        block_n = n['block']
+        block_n = collections.OrderedDict()
+
+        # insert flags after category
+        for key, value in six.iteritems(n['block']):
+            block_n[key] = value
+            if key == 'category':
+                block_n['flags'] = BLOCK_FLAG_NEED_QT_GUI
 
         if not block_n['name'].upper().startswith('QT GUI'):
             block_n['name'] = 'QT GUI ' + block_n['name']
 
-        block_n.insert_after('category', 'flags', BLOCK_FLAG_NEED_QT_GUI)
-
-        gui_hint_param = odict()
+        gui_hint_param = collections.OrderedDict()
         gui_hint_param['name'] = 'GUI Hint'
         gui_hint_param['key'] = 'gui_hint'
         gui_hint_param['value'] = ''
@@ -393,4 +396,5 @@ class QtHierBlockGenerator(HierBlockGenerator):
             "\n#set $win = 'self.%s' % $id"
             "\n${gui_hint()($win)}"
         )
-        return n
+
+        return {'block': block_n}
