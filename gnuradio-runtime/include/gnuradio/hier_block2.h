@@ -248,7 +248,7 @@ namespace gr {
      *
      * \param mask a vector of ints of the core numbers available to this block.
      */
-    void set_processor_affinity(const std::vector<int> &mask);
+    void set_processor_affinity(const std::vector<std::size_t> &mask);
 
     /*!
      * \brief Remove processor affinity for all blocks in hier_block2.
@@ -264,7 +264,7 @@ namespace gr {
      * interface. If any block has been individually set, then this
      * call could be misleading.
      */
-    std::vector<int> processor_affinity();
+    std::vector<std::size_t> processor_affinity();
 
     /*!
      * \brief Get if all block min buffers should be set.

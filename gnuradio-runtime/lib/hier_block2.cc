@@ -161,7 +161,7 @@ namespace gr {
   }
 
   void
-  hier_block2::set_processor_affinity(const std::vector<int> &mask)
+  hier_block2::set_processor_affinity(const std::vector<std::size_t> &mask)
   {
     d_detail->set_processor_affinity(mask);
   }
@@ -172,7 +172,7 @@ namespace gr {
     d_detail->unset_processor_affinity();
   }
 
-  std::vector<int>
+  std::vector<std::size_t>
   hier_block2::processor_affinity()
   {
     return d_detail->processor_affinity();

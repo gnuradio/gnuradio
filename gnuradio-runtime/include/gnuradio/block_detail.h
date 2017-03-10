@@ -181,10 +181,10 @@ namespace gr {
      * \brief Set core affinity of block to the cores in the vector
      * mask.
      *
-     * \param mask a vector of ints of the core numbers available to
+     * \param mask a vector of std::size_t of the core numbers available to
      * this block.
      */
-    void set_processor_affinity(const std::vector<int> &mask);
+    void set_processor_affinity(const std::vector<std::size_t> &mask);
 
     /*!
      * \brief Unset core affinity.

@@ -251,7 +251,7 @@ namespace gr {
   }
 
   void
-  block_detail::set_processor_affinity(const std::vector<int> &mask)
+  block_detail::set_processor_affinity(const std::vector<std::size_t> &mask)
   {
     if(threaded) {
       try {
