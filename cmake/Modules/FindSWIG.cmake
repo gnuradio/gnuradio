@@ -86,7 +86,7 @@ if(SWIG_FOUND)
 
   # SWIG was found; make sure the version meets GR's needs
   message(STATUS "Found SWIG version ${SWIG_VERSION}.")
-  if("${SWIG_VERSION}" VERSION_GREATER "1.3.30")
+  if("${SWIG_VERSION}" VERSION_GREATER "2.0.3")
     if(NOT "${SWIG_VERSION}" VERSION_EQUAL "3.0.3" AND
        NOT "${SWIG_VERSION}" VERSION_EQUAL "3.0.4")
       set(SWIG_VERSION_CHECK TRUE)
@@ -94,7 +94,7 @@ if(SWIG_FOUND)
       message(STATUS "SWIG versions 3.0.3 and 3.0.4 fail to work with GNU Radio.")
     endif()
   else()
-    message(STATUS "Minimum SWIG version required is 1.3.31 for GNU Radio.")
+    message(STATUS "Minimum SWIG version required is 2.0.4 for GNU Radio.")
   endif()
 
 else()
