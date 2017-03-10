@@ -928,7 +928,7 @@ namespace gr {
   }
 
   void
-  hier_block2_detail::set_processor_affinity(const std::vector<int> &mask)
+  hier_block2_detail::set_processor_affinity(const std::vector<std::size_t> &mask)
   {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();
     for(basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
@@ -945,7 +945,7 @@ namespace gr {
     }
   }
 
-  std::vector<int>
+  std::vector<std::size_t>
   hier_block2_detail::processor_affinity()
   {
     basic_block_vector_t tmp = d_fg->calc_used_blocks();

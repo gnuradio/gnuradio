@@ -99,9 +99,9 @@ class gr::block : public gr::basic_block
   float pc_throughput_avg();
 
   // Methods to manage processor affinity.
-  void set_processor_affinity(const std::vector<int> &mask);
+  void set_processor_affinity(const std::vector<std::size_t> &mask);
   void unset_processor_affinity();
-  std::vector<int> processor_affinity();
+  std::vector<std::size_t> processor_affinity();
 
   // Methods to manage thread priority
   int active_thread_priority();

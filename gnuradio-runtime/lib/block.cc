@@ -325,7 +325,7 @@ namespace gr {
   }
 
   void
-  block::set_processor_affinity(const std::vector<int> &mask)
+  block::set_processor_affinity(const std::vector<std::size_t> &mask)
   {
     d_affinity = mask;
     if(d_detail) {

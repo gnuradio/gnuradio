@@ -595,9 +595,9 @@ namespace gr {
     /*!
      * \brief Set the thread's affinity to processor core \p n.
      *
-     * \param mask a vector of ints of the core numbers available to this block.
+     * \param mask a vector of std::size_t of the core numbers available to this block.
      */
-    void set_processor_affinity(const std::vector<int> &mask);
+    void set_processor_affinity(const std::vector<std::size_t> &mask);
 
     /*!
      * \brief Remove processor affinity to a specific core.
@@ -607,7 +607,7 @@ namespace gr {
     /*!
      * \brief Get the current processor affinity.
      */
-    std::vector<int> processor_affinity() { return d_affinity; }
+    std::vector<std::size_t> processor_affinity() { return d_affinity; }
 
     /*!
      * \brief Get the current thread priority in use
@@ -652,7 +652,7 @@ namespace gr {
     int                   d_max_noutput_items;         // value of max_noutput_items for this block
     int                   d_min_noutput_items;
     tag_propagation_policy_t d_tag_propagation_policy; // policy for moving tags downstream
-    std::vector<int>      d_affinity;              // thread affinity proc. mask
+    std::vector<std::size_t>      d_affinity;              // thread affinity proc. mask
     int                   d_priority;              // thread priority level
     bool                  d_pc_rpc_set;
     bool                  d_update_rate;           // should sched update rel rate?
