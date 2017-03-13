@@ -86,9 +86,10 @@ namespace gr {
   void
   random::set_integer_limits(const int minimum, const int maximum){
     // boost expects integer limits defined as [minimum, maximum] which is unintuitive.
-    boost::uniform_int<>::param_type dis_params(minimum, maximum - 1);
-    d_integer_dis->param(dis_params);
+    // use the expected half open interval behavior! [minimum, maximum)!
     delete d_integer_generator;
+    delete d_integer_dis;
+    d_integer_dis = new boost::uniform_int<>(minimum, maximum - 1);
     d_integer_generator = new boost::variate_generator<boost::mt19937&, boost::uniform_int<> >(*d_rng, *d_integer_dis);
   }
 
