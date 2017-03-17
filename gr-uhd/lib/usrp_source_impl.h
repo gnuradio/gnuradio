@@ -125,7 +125,6 @@ namespace gr {
 
       //tag shadows
       double _samp_rate;
-      double _center_freq;
 
       boost::recursive_mutex d_mutex;
     };

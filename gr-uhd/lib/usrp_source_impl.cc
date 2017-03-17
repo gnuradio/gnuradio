@@ -59,7 +59,6 @@ namespace gr {
       _id = pmt::string_to_symbol(str.str());
 
       _samp_rate = this->get_samp_rate();
-      _center_freq = this->get_center_freq(0);
       _samps_per_packet = 1;
       register_msg_cmd_handler(CMD_TAG_KEY, boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
     }
@@ -114,10 +113,8 @@ namespace gr {
     usrp_source_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
                                       size_t chan)
     {
-      const size_t user_chan = chan;
       chan = _stream_args.channels[chan];
       const ::uhd::tune_result_t res = _dev->set_rx_freq(tune_request, chan);
-      _center_freq = this->get_center_freq(user_chan);
       _tag_now = true;
       return res;
     }
@@ -440,10 +437,15 @@ namespace gr {
     void
     usrp_source_impl::issue_stream_cmd(const ::uhd::stream_cmd_t &cmd)
     {
+// This is a new define in UHD 3.6 which is used to separate 3.6 and pre 3.6
+#ifdef INCLUDED_UHD_UTILS_MSG_TASK_HPP
+        _rx_stream->issue_stream_cmd(cmd);
+#else
         for (size_t i = 0; i < _stream_args.channels.size(); i++)
         {
             _dev->issue_stream_cmd(cmd, _stream_args.channels[i]);
         }
+#endif
         _tag_now = true;
     }
 
@@ -589,7 +591,7 @@ namespace gr {
             this->add_item_tag(i, nitems_written(0), RATE_KEY,
                                pmt::from_double(_samp_rate), _id);
             this->add_item_tag(i, nitems_written(0), FREQ_KEY,
-                               pmt::from_double(_center_freq), _id);
+                               pmt::from_double(this->get_center_freq(i)), _id);
           }
         }
         break;

@@ -65,11 +65,13 @@ TOOLBAR_LIST = (
 MENU_BAR_LIST = (
     (Gtk.Action(name='File', label='_File'), [
         'flow_graph_new',
+        Actions.FLOW_GRAPH_DUPLICATE,
         Actions.FLOW_GRAPH_OPEN,
         'flow_graph_recent',
         None,
         Actions.FLOW_GRAPH_SAVE,
         Actions.FLOW_GRAPH_SAVE_AS,
+        Actions.FLOW_GRAPH_SAVE_A_COPY,
         None,
         Actions.FLOW_GRAPH_SCREEN_CAPTURE,
         None,
