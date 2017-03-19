@@ -36,6 +36,7 @@
 #include "gnuradio/blocks/divide_ss.h"
 #include "gnuradio/blocks/divide_ii.h"
 #include "gnuradio/blocks/divide_cc.h"
+#include "gnuradio/blocks/exponentiate_const_cci.h"
 #include "gnuradio/blocks/skiphead.h"
 #include "gnuradio/blocks/stream_mux.h"
 #include "gnuradio/blocks/stream_to_streams.h"
@@ -58,6 +59,7 @@
 %include "gnuradio/blocks/divide_ss.h"
 %include "gnuradio/blocks/divide_ii.h"
 %include "gnuradio/blocks/divide_cc.h"
+%include "gnuradio/blocks/exponentiate_const_cci.h"
 %include "gnuradio/blocks/skiphead.h"
 %include "gnuradio/blocks/stream_mux.h"
 %include "gnuradio/blocks/stream_to_streams.h"
@@ -79,6 +81,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, divide_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, divide_cc);
+GR_SWIG_BLOCK_MAGIC2(blocks, exponentiate_const_cci);
 GR_SWIG_BLOCK_MAGIC2(blocks, skiphead);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_streams);

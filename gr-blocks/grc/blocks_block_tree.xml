@@ -93,6 +93,7 @@
       <block>blocks_add_xx</block>
       <block>blocks_add_const_vxx</block>
       <block>blocks_divide_xx</block>
+      <block>blocks_exponentiate_const_cci</block>
       <block>blocks_multiply_xx</block>
       <block>blocks_multiply_const_xx</block>
       <block>blocks_multiply_const_vxx</block>

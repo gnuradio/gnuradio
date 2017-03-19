@@ -115,6 +115,7 @@ list(APPEND gr_blocks_sources
     divide_ff_impl.cc
     delay_impl.cc
     endian_swap_impl.cc
+    exponentiate_const_cci_impl.cc
     file_descriptor_sink_impl.cc
     file_descriptor_source_impl.cc
     file_sink_impl.cc
