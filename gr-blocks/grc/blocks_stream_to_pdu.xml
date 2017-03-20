@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<block>
+  <name>Stream to PDU</name>
+  <key>blocks_stream_to_pdu</key>
+  <import>from gnuradio import blocks</import>
+  <make>#if $fixed_mode() == 'True'
+blocks.stream_to_pdu($type.tv, $fixed_mode, $tag_key, $offset_key, $packet_length)
+#else
+blocks.stream_to_pdu($type.tv, $fixed_mode, $length_tag_key, $offset_key)
+#end if
+  </make>
+
+  <param>
+    <name>Item Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>tv:blocks.complex_t</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>tv:blocks.float_t</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>tv:blocks.byte_t</opt>
+    </option>
+  </param>
+  <param>
+    <name>Packet Length</name>
+    <key>fixed_mode</key>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Fixed</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>Length Tag Value</name>
+      <key>False</key>
+    </option>
+  </param>
+  <param>
+    <name>Tag Key</name>
+    <key>tag_key</key>
+    <type>string</type>
+    <hide>#if $fixed_mode() == 'True' then 'none' else 'all'</hide>
+  </param>
+  <param>
+    <name>Length</name>
+    <key>packet_length</key>
+    <value>1</value>
+    <type>int</type>
+    <hide>#if $fixed_mode() == 'True' then 'none' else 'all'</hide>
+  </param>
+  <param>
+    <name>Length Tag Key</name>
+    <key>length_tag_key</key>
+    <value>packet_len</value>
+    <type>string</type>
+    <hide>#if $fixed_mode() == 'False' then 'none' else 'all'</hide>
+  </param>
+  <param>
+    <name>Offset Key</name>
+    <key>offset_key</key>
+    <value>offset</value>
+    <type>string</type>
+  </param>
+
+  <check>$packet_length &gt; 0</check>
+
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+  </sink>
+
+  <source>
+    <name>pdus</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+</block>

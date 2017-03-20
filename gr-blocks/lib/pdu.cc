@@ -33,58 +33,88 @@ namespace gr {
       size_t
       itemsize(vector_type type)
       {
-	switch(type) {
-	case byte_t:
-	  return sizeof(char);
-	case float_t:
-	  return sizeof(float);
-	case complex_t:
-	  return sizeof(gr_complex);
-	default:
-	  throw std::runtime_error("bad PDU type");
-	}
+        switch(type) {
+          case byte_t:
+            return sizeof(char);
+          case float_t:
+            return sizeof(float);
+          case complex_t:
+            return sizeof(gr_complex);
+          default:
+            throw std::runtime_error("bad PDU type");
+        }
       }
 
       bool
       type_matches(vector_type type, pmt::pmt_t v)
       {
-	switch(type) {
-	case byte_t:
-	  return pmt::is_u8vector(v);
-	case float_t:
-	  return pmt::is_f32vector(v);
-	case complex_t:
-	  return pmt::is_c32vector(v);
-	default:
-	  throw std::runtime_error("bad PDU type");
-	}
+        switch(type) {
+          case byte_t:
+            return pmt::is_u8vector(v);
+          case float_t:
+            return pmt::is_f32vector(v);
+          case complex_t:
+            return pmt::is_c32vector(v);
+          default:
+            throw std::runtime_error("bad PDU type");
+        }
       }
 
       pmt::pmt_t
-      make_pdu_vector(vector_type type, const uint8_t *buf, size_t items)
+      make_empty_pdu_vector(vector_type type, size_t items)
       {
-	switch(type) {
-	case byte_t:
-	  return pmt::init_u8vector(items, buf);
-	case float_t:
-	  return pmt::init_f32vector(items, (const float *)buf);
-	case complex_t:
-	  return pmt::init_c32vector(items, (const gr_complex *)buf);
-	default:
-	  throw std::runtime_error("bad PDU type");
-	}
+        switch(type) {
+          case byte_t:
+            return pmt::make_u8vector(items, 0);
+          case float_t:
+            return pmt::make_f32vector(items, 0.0f);
+          case complex_t:
+            return pmt::make_c32vector(items, gr_complex(0.0f,0.0f));
+          default:
+            throw std::runtime_error("bad PDU type");
+        }
+      }
+
+      pmt::pmt_t
+      make_pdu_vector(vector_type type, const void *buf, size_t items)
+      {
+        switch(type) {
+          case byte_t:
+            return pmt::init_u8vector(items, (const uint8_t *) buf);
+          case float_t:
+            return pmt::init_f32vector(items, (const float *) buf);
+          case complex_t:
+            return pmt::init_c32vector(items, (const gr_complex *) buf);
+          default:
+            throw std::runtime_error("bad PDU type");
+        }
+      }
+
+      void*
+      pdu_vector_writable_elements(vector_type type, pmt::pmt_t vector, size_t len)
+      {
+        switch(type) {
+          case byte_t:
+            return (void *) pmt::u8vector_writable_elements(vector, len);
+          case float_t:
+            return (void *) pmt::f32vector_writable_elements(vector, len);
+          case complex_t:
+            return (void *) pmt::c32vector_writable_elements(vector, len);
+          default:
+            throw std::runtime_error("bad PDU type");
+        }
       }
 
       vector_type
       type_from_pmt(pmt::pmt_t vector)
       {
-	if(pmt::is_u8vector(vector))
-	  return byte_t;
-	if(pmt::is_f32vector(vector))
-	  return float_t;
-	if(pmt::is_c32vector(vector))
-	  return complex_t;
-	throw std::runtime_error("bad PDU type");
+        if(pmt::is_u8vector(vector))
+          return byte_t;
+        if(pmt::is_f32vector(vector))
+          return float_t;
+        if(pmt::is_c32vector(vector))
+          return complex_t;
+        throw std::runtime_error("bad PDU type");
       }
 
     } /* namespace pdu */

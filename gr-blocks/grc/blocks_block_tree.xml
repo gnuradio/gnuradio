@@ -130,6 +130,7 @@
       <block>blocks_pdu_remove</block>
       <block>blocks_pdu_set</block>
       <block>blocks_pdu_to_tagged_stream</block>
+      <block>blocks_stream_to_pdu</block>
       <block>blocks_tagged_stream_multiply_length</block>
       <block>blocks_tagged_stream_to_pdu</block>
       <block>blocks_random_pdu</block>
