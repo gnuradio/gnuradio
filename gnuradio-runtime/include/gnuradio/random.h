@@ -45,9 +45,9 @@ namespace gr {
 
     boost::mt19937 *d_rng; // mersenne twister as random number generator
     boost::uniform_real<float> *d_uniform; // choose uniform distribution, default is [0,1)
-    boost::random::uniform_int_distribution<> *d_integer_dis;
+    boost::uniform_int<> *d_integer_dis;
     boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > *d_generator;
-    boost::variate_generator<boost::mt19937&, boost::random::uniform_int_distribution<> > *d_integer_generator;
+    boost::variate_generator<boost::mt19937&, boost::uniform_int<> > *d_integer_generator;
 
   public:
     random(unsigned int seed=0, int min_integer = 0, int max_integer = 2);
