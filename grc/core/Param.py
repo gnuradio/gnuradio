@@ -480,13 +480,20 @@ class Param(Element):
             # Can python use this as a variable?
             if not _check_id_matcher.match(v):
                 raise Exception('ID "{}" must begin with a letter and may contain letters, numbers, and underscores.'.format(v))
-            ids = [param.get_value() for param in self.get_all_params(t)]
+            ids = [param.get_value() for param in self.get_all_params(t, 'id')]
 
-            # Id should only appear once, or zero times if block is disabled
-            if ids.count(v) > 1:
-                raise Exception('ID "{}" is not unique.'.format(v))
             if v in ID_BLACKLIST:
                 raise Exception('ID "{}" is blacklisted.'.format(v))
+
+            if self._key == 'id':
+                # Id should only appear once, or zero times if block is disabled
+                if ids.count(v) > 1:
+                    raise Exception('ID "{}" is not unique.'.format(v))
+            else:
+                # Id should exist to be a reference
+                if ids.count(v) < 1:
+                    raise Exception('ID "{}" does not exist.'.format(v))
+
             return v
 
         #########################
@@ -591,17 +598,19 @@ class Param(Element):
         else:
             return v
 
-    def get_all_params(self, type):
+    def get_all_params(self, type, key=None):
         """
-        Get all the params from the flowgraph that have the given type.
+        Get all the params from the flowgraph that have the given type and
+        optionally a given key
 
         Args:
             type: the specified type
+            key: the key to match against
 
         Returns:
             a list of params
         """
-        return sum([filter(lambda p: p.get_type() == type, block.get_params()) for block in self.get_parent().get_parent().get_enabled_blocks()], [])
+        return sum([filter(lambda p: ((p.get_type() == type) and ((key is None) or (p.get_key() == key))), block.get_params()) for block in self.get_parent().get_parent().get_enabled_blocks()], [])
 
     def is_enum(self):
         return self._type == 'enum'
