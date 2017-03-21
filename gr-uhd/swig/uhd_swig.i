@@ -105,6 +105,10 @@
         temp -= what;
         return temp;
     }
+    bool __eq__(const uhd::time_spec_t &what)
+    {
+      return (what == *self);
+    }
 };
 
 %include <uhd/types/stream_cmd.hpp>
