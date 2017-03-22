@@ -133,18 +133,17 @@ class Block(Element):
             add_param(key='maxoutbuf', name='Max Output Buffer', type='int',
                       hide='part', value='0', tab=ADVANCED_PARAM_TAB)
 
-        base_params_n = {n['key']: n for n in params_n}
+        base_params_n = {}
         for param_n in params_n:
             key = param_n['key']
             if key in self.params:
-                # raise Exception('Key "{}" already exists in params'.format(key))
-                print('Key "{}" already exists in params in block {}'
-                      ''.format(key, self.key))
-                continue
+                raise Exception('Key "{}" already exists in params'.format(key))
 
-            extended_param_n = base_params_n.get(param_n.pop('base_key', None), {})
-            extended_param_n.update(param_n)
-            self.params[key] = param_factory(self, **extended_param_n)
+            base_key = param_n.get('base_key', None)
+            param_n_ext = base_params_n.get(base_key, {}).copy()
+            param_n_ext.update(param_n)
+            self.params[key] = param_factory(self, **param_n_ext)
+            base_params_n[key] = param_n_ext
 
         add_param(key='comment', name='Comment', type='_multiline', hide='part',
                   value='', tab=ADVANCED_PARAM_TAB)
