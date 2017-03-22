@@ -42,6 +42,7 @@ namespace gr {
 
   flowgraph::flowgraph()
   {
+    configure_default_loggers(d_logger, d_debug_logger, "flowgraph");
   }
 
   flowgraph::~flowgraph()

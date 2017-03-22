@@ -64,6 +64,7 @@ namespace gr {
   {
     s_ncurrently_allocated++;
     d_pc_start_time = gr::high_res_timer_now();
+    configure_default_loggers(d_logger, d_debug_logger, "block_detail");
   }
 
   block_detail::~block_detail()

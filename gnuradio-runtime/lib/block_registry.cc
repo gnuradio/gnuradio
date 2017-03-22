@@ -34,6 +34,7 @@ namespace gr {
   block_registry::block_registry()
   {
     d_ref_map = pmt::make_dict();
+    configure_default_loggers(d_logger, d_debug_logger, "block_registry");
   }
 
   long

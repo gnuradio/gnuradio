@@ -85,6 +85,8 @@ namespace gr {
       d_write_index(0), d_abs_write_offset(0), d_done(false),
       d_last_min_items_read(0)
   {
+    configure_default_loggers(d_logger, d_debug_logger, "buffer");
+
     if(!allocate_buffer (nitems, sizeof_item))
       throw std::bad_alloc ();
 
@@ -124,7 +126,7 @@ namespace gr {
     // If we rounded-up a whole bunch, give the user a heads up.
     // This only happens if sizeof_item is not a power of two.
 
-    if(nitems > 2 * orig_nitems && nitems * (int) sizeof_item > granularity){
+    if(nitems > 2 * orig_nitems && nitems * (int) sizeof_item > granularity) {
       GR_LOG_WARN (d_logger, "gr::buffer::allocate_buffer: warning: tried to allocate\n"
                 << "   " << orig_nitems << " items of size "
                 << sizeof_item << ". Due to alignment requirements\n"

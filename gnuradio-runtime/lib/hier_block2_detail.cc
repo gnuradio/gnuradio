@@ -43,6 +43,8 @@ namespace gr {
     int min_outputs = owner->output_signature()->min_streams();
     int max_outputs = owner->output_signature()->max_streams();
 
+    configure_default_loggers(d_logger, d_debug_logger, "hier_block2_detail");
+
     if(max_inputs == io_signature::IO_INFINITE ||
        max_outputs == io_signature::IO_INFINITE ||
        (min_inputs != max_inputs) ||(min_outputs != max_outputs) ) {

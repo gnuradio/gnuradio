@@ -54,8 +54,8 @@ namespace gr {
       d_rpc_set(false),
       d_message_subscribers(pmt::make_dict())
   {
-    configure_default_loggers(d_logger, d_debug_logger, symbol_name());
     s_ncurrently_allocated++;
+    configure_default_loggers(d_logger, d_debug_logger, symbol_name());
   }
 
   basic_block::~basic_block()
