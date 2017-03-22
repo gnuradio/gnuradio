@@ -115,7 +115,7 @@ namespace gr {
             << " using ninputs=" << ninputs
             << ", noutputs=" << noutputs;
         GR_LOG_ERROR (d_logger, msg);
-	throw std::runtime_error(msg.str());
+        throw std::runtime_error(msg.str());
       }
     }
   }

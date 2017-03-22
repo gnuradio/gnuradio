@@ -108,7 +108,7 @@ namespace gr {
 
       // Update the block's max_output_buffer based on what was actually allocated.
       if((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1))
-        GR_LOG_WARN(d_logger, boost::format("Block (%1%) max output buffer set to %2%"
+        GR_LOG_WARN (d_logger, boost::format("Block (%1%) max output buffer set to %2%"
                                             " instead of requested %3%") \
                     % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
       grblock->set_max_output_buffer(i, buffer->bufsize());
@@ -142,7 +142,7 @@ namespace gr {
 
     // limit buffer size if indicated
     if(grblock->max_output_buffer(port) > 0) {
-      //GR_LOG_DEBUG (d_debug_logger, "constraining output items to " << block->max_output_buffer(port));
+      GR_LOG_DEBUG (d_debug_logger, "constraining output items to " << grblock->max_output_buffer(port));
       nitems = std::min((long)nitems, (long)grblock->max_output_buffer(port));
       nitems -= nitems%grblock->output_multiple();
       if(nitems < 1) {
@@ -172,7 +172,7 @@ namespace gr {
       nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
     }
 
-    GR_LOG_DEBUG(d_debug_logger, "make_buffer(" << nitems << ", " << item_size << ", " << grblock);
+    GR_LOG_DEBUG (d_debug_logger, "make_buffer(" << nitems << ", " << item_size << ", " << grblock);
     // We're going to let this fail once and retry. If that fails,
     // throw and exit.
     buffer_sptr b;
@@ -235,18 +235,18 @@ namespace gr {
       block_sptr block = cast_to_block_sptr(*p);
 
       if(!block->detail()) {
-        GR_LOG_DEBUG(d_debug_logger, "merge: allocating new detail for block " << (*p));
+        GR_LOG_DEBUG (d_debug_logger, "merge: allocating new detail for block " << (*p));
         block->set_detail(allocate_block_detail(block));
       }
       else {
-        GR_LOG_DEBUG(d_debug_logger, "merge: reusing original detail for block " << (*p));
+        GR_LOG_DEBUG (d_debug_logger, "merge: reusing original detail for block " << (*p));
       }
     }
 
     // Calculate the old edges that will be going away, and clear the
     // buffer readers on the RHS.
     for(edge_viter_t old_edge = old_ffg->d_edges.begin(); old_edge != old_ffg->d_edges.end(); old_edge++) {
-      GR_LOG_DEBUG(d_debug_logger, "merge: testing old edge " << (*old_edge) << "...");
+      GR_LOG_DEBUG (d_debug_logger, "merge: testing old edge " << (*old_edge) << "...");
       edge_viter_t new_edge;
       for(new_edge = d_edges.begin(); new_edge != d_edges.end(); new_edge++)
         if(new_edge->src() == old_edge->src() &&
@@ -254,14 +254,14 @@ namespace gr {
           break;
 
       if(new_edge == d_edges.end()) { // not found in new edge list
-        GR_LOG_DEBUG(d_debug_logger, "not in new edge list");
+        GR_LOG_DEBUG (d_debug_logger, "not in new edge list");
         // zero the buffer reader on RHS of old edge
         block_sptr block(cast_to_block_sptr(old_edge->dst().block()));
         int port = old_edge->dst().port();
         block->detail()->set_input(port, buffer_reader_sptr());
       }
       else {
-        GR_LOG_DEBUG(d_debug_logger, "found in new edge list");
+        GR_LOG_DEBUG (d_debug_logger, "found in new edge list");
       }
     }
 
@@ -269,10 +269,10 @@ namespace gr {
     for(basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
       block_sptr block = cast_to_block_sptr(*p);
 
-      GR_LOG_DEBUG(d_debug_logger, "merge: merging " << (*p) << "...");
+      GR_LOG_DEBUG (d_debug_logger, "merge: merging " << (*p) << "...");
       if(old_ffg->has_block_p(*p)) {
         // Block exists in old flow graph
-        GR_LOG_DEBUG(d_debug_logger, "used in old flow graph");
+        GR_LOG_DEBUG (d_debug_logger, "used in old flow graph");
         block_detail_sptr detail = block->detail();
 
         // Iterate through the inputs and see what needs to be done

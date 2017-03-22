@@ -421,7 +421,7 @@ namespace gr {
   void
   block::set_min_output_buffer(long min_output_buffer)
   {
-    GR_LOG_DEBUG(d_debug_logger,"set_min_output_buffer on block " << unique_id() << " to " << min_output_buffer);
+    GR_LOG_DEBUG (d_debug_logger,"set_min_output_buffer on block " << unique_id() << " to " << min_output_buffer);
     for(int i=0; i<output_signature()->max_streams(); i++) {
       set_min_output_buffer(i, min_output_buffer);
     }
@@ -713,14 +713,14 @@ namespace gr {
   void
   block::system_handler(pmt::pmt_t msg)
   {
-    GR_LOG_DEBUG(d_debug_logger, "system_handler " << msg);
+    GR_LOG_DEBUG (d_debug_logger, "system_handler " << msg);
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, pmt::mp("done"))){
         d_finished = pmt::to_long(pmt::cdr(msg));
         global_block_registry.notify_blk(alias());
     } else {
-        GR_LOG_WARN(d_logger, "WARNING: bad message op on system port!\n");
-        pmt::print(msg);
+        GR_LOG_WARN (d_logger, "WARNING: bad message op on system port!\n");
+        GR_LOG_WARN (d_logger, msg);
     }
   }
 
@@ -748,10 +748,11 @@ namespace gr {
         basic_block_sptr blk = global_block_registry.block_lookup(block);
         blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
 
-        //GR_LOG_DEBUG (d_debug_logger, "notify finished -->");
-        //pmt::print(pmt::cons(block,port));
-
-        }
+        std::ostringstream msg;
+        msg << "notify finished --> ";
+        msg << pmt::cons(block,port);
+        GR_LOG_DEBUG (d_debug_logger, msg.str());
+      }
     }
   }
 

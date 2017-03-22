@@ -30,7 +30,6 @@
 #include <gnuradio/rpcmanager.h>
 #include <gnuradio/rpcserver_selector.h>
 #include <gnuradio/rpcserver_base.h>
-#include <gnuradio/block_registry.h>
 
 // Fixes circular dependency issue before including block_registry.h
 class rpcbasic_base;

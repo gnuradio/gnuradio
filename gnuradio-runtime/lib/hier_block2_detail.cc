@@ -90,7 +90,7 @@ namespace gr {
     hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
 
     if(hblock && hblock.get() != d_owner) {
-      GR_LOG_DEBUG(d_debug_logger, "connect: block is hierarchical, setting parent to " << this);
+      GR_LOG_DEBUG (d_debug_logger, "connect: block is hierarchical, setting parent to " << this);
       hblock->d_detail->d_parent_detail = this;
     }
 
