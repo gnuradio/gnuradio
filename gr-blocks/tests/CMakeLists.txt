@@ -36,9 +36,6 @@ link_directories(
     ${CPPUNIT_LIBRARY_DIRS}
 )
 
-include_directories(${LOG4CPP_INCLUDE_DIRS})
-link_directories(${LOG4CPP_LIBRARY_DIRS})
-
 ########################################################################
 # Build benchmarks and non-registered tests
 ########################################################################
@@ -50,6 +47,5 @@ set(tests_not_run #single source per test
 foreach(test_not_run_src ${tests_not_run})
     get_filename_component(name ${test_not_run_src} NAME_WE)
     add_executable(${name} ${test_not_run_src})
-    target_link_libraries(${name} test-gnuradio-runtime gnuradio-blocks ${LOG4CPP_LIBRARIES})
+    target_link_libraries(${name} test-gnuradio-runtime gnuradio-blocks)
 endforeach(test_not_run_src)
-
