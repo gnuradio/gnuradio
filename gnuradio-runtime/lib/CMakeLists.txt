@@ -44,11 +44,6 @@ configure_file(
 list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 
 ########################################################################
-# Include subdirs rather to populate to the sources lists.
-########################################################################
-#GR_INCLUDE_SUBDIRECTORY(foo)
-
-########################################################################
 # Setup the include and linker paths
 ########################################################################
 include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}

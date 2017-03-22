@@ -57,7 +57,6 @@ if(ENABLE_PYTHON)
     add_subdirectory(python/fft)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
 add_subdirectory(doc)
 
 ########################################################################

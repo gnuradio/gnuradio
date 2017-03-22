@@ -180,9 +180,6 @@ macro(GR_SWIG_MAKE name)
 
     #setup the swig flags with flags and include directories
     set(CMAKE_SWIG_FLAGS -fvirtual -modern -keyword -w511 -module ${name} ${GR_SWIG_FLAGS})
-    foreach(dir ${GR_SWIG_INCLUDE_DIRS})
-        list(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
-    endforeach(dir)
 
     #set the C++ property on the swig .i file so it builds
     set_source_files_properties(${ifiles} PROPERTIES CPLUSPLUS ON)
