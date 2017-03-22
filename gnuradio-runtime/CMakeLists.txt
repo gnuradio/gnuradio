@@ -43,6 +43,7 @@ GR_SET_GLOBAL(GNURADIO_RUNTIME_INCLUDE_DIRS
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/gnuradio-runtime/include
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/include
+    ${LOG4CPP_INCLUDE_DIRS}
 )
 
 GR_SET_GLOBAL(GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS
@@ -137,11 +138,9 @@ endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(apps)
-#add_subdirectory(doc)
 if(ENABLE_PYTHON)
      add_subdirectory(swig)
      add_subdirectory(python)
-#    add_subdirectory(grc)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)
 
