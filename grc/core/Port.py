@@ -67,7 +67,7 @@ def _sources_from_virtual_source_port(source_port, _traversed=None):
     if not block.is_virtual_source():
         return [source_port]  # nothing to resolve, we're done
 
-    stream_id = block.get_parqam('stream_id').get_value()
+    stream_id = block.get_param('stream_id').get_value()
 
     # currently the validation does not allow multiple virtual sinks and one virtual source
     # but in the future it may...

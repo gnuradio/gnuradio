@@ -204,6 +204,9 @@ class Connection(CoreConnection, Drawable):
         x, y = [a - b for a, b in zip(coor, self.coordinate)]
 
         cr = self._current_cr
+
+        if cr is None:
+            return
         cr.save()
         cr.new_path()
         cr.append_path(self._line_path)
