@@ -34,6 +34,7 @@ namespace gr {
   class GR_RUNTIME_API scheduler_tpb : public scheduler
   {
     gr::thread::thread_group d_threads;
+    block_vector_t d_blocks;
 
   protected:
     /*!
