@@ -16,8 +16,8 @@ if any, to build the various GNU Radio components.
 
 Most of these components do not need to be individually compiled or
 installed. Instead, rely on your operating system's package manager or
-binary installation process (the <b>apt-get</b> system in Debian and
-Ubuntu, <b>yum</b> in RedHat and Fedora, etc.). GNU Radio tries to keep an
+binary installation process (the <b>apt-get</b> or \b apt system in Debian and
+Ubuntu, <b>yum</b> or \b dnf in RedHat and Fedora, etc.). GNU Radio tries to keep an
 up-to-date build guide for the majority of the supported operating
 systems on gnuradio.org
 (http://gnuradio.org/redmine/projects/gnuradio/wiki/BuildGuide).
@@ -33,17 +33,24 @@ installation tool (apt-get, pkg_install, YaST, yum, urpmi, etc.)
 first. Most recent systems have these packages available.
 
 \subsection dep_global Global Dependencies
-\li git                      http://git-scm.com/downloads
-\li cmake       (>= 2.6.3)   http://www.cmake.org/cmake/resources/software.html
-\li boost       (>= 1.35)    http://www.boost.org/users/download/
-\li cppunit     (>= 1.9.14)  http://freedesktop.org/wiki/Software/cppunit/
-\li fftw3f      (>= 3.0.1)   http://www.fftw.org/download.html
-\li mako        (>= 0.4.2)   http://www.makotemplates.org/download.html
+
+\li git                                        http://git-scm.com/downloads
+\li cmake       (>= @GR_CMAKE_MIN_VERSION@)    http://www.cmake.org/cmake/resources/software.html
+\li boost       (>= @GR_BOOST_MIN_VERSION@)    http://www.boost.org/users/download/
+\li cppunit     (>= @GR_CPPUNIT_MIN_VERSION@)  http://freedesktop.org/wiki/Software/cppunit/
+\li mako        (>= @GR_MAKO_MIN_VERSION@)     http://www.makotemplates.org/download.html
+
+A C/C++ compiler is also required. These are known to work:
+
+\li gcc/g++     (>= @GCC_MIN_VERSION@)         https://gcc.gnu.org/install/download.html
+\li clang/clang++ (>= @CLANG_MIN_VERSION@)     http://releases.llvm.org/download.html
+
+Other compilers may work, but are not supported.
 
 \subsection dep_python Python Wrappers
-\li python      (>= 2.5)     http://www.python.org/download/
-\li swig        (>= 1.3.31)  http://www.swig.org/download.html
-\li numpy       (>= 1.1.0)   http://sourceforge.net/projects/numpy/files/NumPy/
+\li python      (>= @GR_PYTHON_MIN_VERSION@)   http://www.python.org/download/
+\li swig        (>= @GR_SWIG_MIN_VERSION@)     http://www.swig.org/download.html
+\li numpy       (>= 1.1.0)                     http://sourceforge.net/projects/numpy/files/NumPy/
 
 \subsection dep_docs docs: Building the documentation
 \li doxygen     (>= 1.5)     http://www.stack.nl/~dimitri/doxygen/download.html
@@ -52,6 +59,9 @@ first. Most recent systems have these packages available.
 \subsection dep_grc grc: The GNU Radio Companion
 \li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/
 \li pygtk       (>= 2.10)    http://www.pygtk.org/downloads.html
+
+\subsection dep_fft gr-fft: Fast Frequency Transform
+\li fftw3f      (>= 3.0.1)   http://www.fftw.org/download.html
 
 \subsection dep_wavelet gr-wavelet: Collection of wavelet blocks
 \li gsl         (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
@@ -78,7 +88,7 @@ one(s) that are right for your system. On Linux, don't expect
 audio-osx and audio-windows to be either satisfied or built.
 
 \subsection dep_uhd uhd: The Ettus USRP Hardware Driver Interface
-\li uhd         (>= 3.0.0)   http://code.ettus.com/redmine/ettus/projects/uhd/wiki
+\li uhd         (>= 3.5.5)   https://www.ettus.com/downloads
 
 \subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display
 \li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
