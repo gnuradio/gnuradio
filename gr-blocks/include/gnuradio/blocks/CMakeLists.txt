@@ -99,6 +99,7 @@ install(FILES
     deinterleave.h
     delay.h
     endian_swap.h
+    exponentiate_const_cci.h
     file_descriptor_sink.h
     file_descriptor_source.h
     file_sink.h
