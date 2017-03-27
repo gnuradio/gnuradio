@@ -1,4 +1,4 @@
-# Copyright 2010-2012,2014 Free Software Foundation, Inc.
+# Copyright 2011-2012,2014,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -53,15 +53,15 @@ set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.48")
-set(GR_SWIG_MIN_VERSION "2.0.3")
+set(GR_BOOST_MIN_VERSION "1.54")
+set(GR_SWIG_MIN_VERSION "2.0.11")
 set(GR_CMAKE_MIN_VERSION "2.8.12")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "2.7")
-#set(GR_PYTHON3_MIN_VERSION "3.x") # Py3k not yet supported
+set(GR_PYTHON3_MIN_VERSION "3.4")
 set(GR_CPPUNIT_MIN_VERSION "1.12.1")
-set(GCC_MIN_VERSION "4.4.0")
-set(CLANG_MIN_VERSION "3.3.0")
+set(GCC_MIN_VERSION "4.8.4")
+set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
 
 ########################################################################
