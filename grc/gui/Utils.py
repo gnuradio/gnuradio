@@ -21,6 +21,7 @@ from __future__ import absolute_import
 
 from gi.repository import GLib
 import cairo
+import six
 
 from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
 from . import Constants
@@ -107,7 +108,10 @@ def encode(value):
     Older versions of glib seg fault if the last byte starts a multi-byte
     character.
     """
-    valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
+    if six.PY2:
+        valid_utf8 = value.decode('utf-8', errors='replace').encode('utf-8')
+    else:
+        valid_utf8 = value
     return GLib.markup_escape_text(valid_utf8)
 
 
