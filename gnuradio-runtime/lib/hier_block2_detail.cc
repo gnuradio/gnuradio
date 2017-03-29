@@ -107,7 +107,7 @@ namespace gr {
                 << " -> " << endpoint(dst, dst_port));
 
     if(src.get() == dst.get()) {
-      GR_LOG_ERROR(d_logger, "connect: src and destination blocks cannot be the same");
+      GR_LOG_ERROR (d_logger, "connect: src and destination blocks cannot be the same");
       throw std::invalid_argument("connect: src and destination blocks cannot be the same");
     }
     hier_block2_sptr src_block(cast_to_hier_block2_sptr(src));
@@ -157,7 +157,7 @@ namespace gr {
   hier_block2_detail::msg_connect(basic_block_sptr src, pmt::pmt_t srcport,
                                   basic_block_sptr dst, pmt::pmt_t dstport)
   {
-    GR_LOG_ERROR (d_logger, "connecting message port...");
+    GR_LOG_DEBUG (d_debug_logger, "connecting message port...");
 
     // add block uniquely to list to internal blocks
     if(std::find(d_blocks.begin(), d_blocks.end(), dst) == d_blocks.end()){
@@ -559,7 +559,7 @@ namespace gr {
   void
   hier_block2_detail::flatten_aux(flat_flowgraph_sptr sfg) const
   {
-    GR_LOG_DEBUG (d_logger, " ** Flattening " << d_owner->name() << " parent: " << d_parent_detail);
+    GR_LOG_DEBUG (d_debug_logger, " ** Flattening " << d_owner->name() << " parent: " << d_parent_detail);
     bool is_top_block = (d_parent_detail == NULL);
 
     // Add my edges to the flow graph, resolving references to actual endpoints

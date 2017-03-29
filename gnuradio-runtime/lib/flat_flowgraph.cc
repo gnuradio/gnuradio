@@ -378,24 +378,24 @@ namespace gr {
   void flat_flowgraph::dump()
   {
     for(edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++) {
-      GR_LOG_INFO (d_logger, " edge: " << (*e));
+      GR_LOG_DEBUG (d_debug_logger, " edge: " << (*e));
     }
 
     for(basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-      GR_LOG_INFO (d_logger, " block: " << (*p));
+      GR_LOG_DEBUG (d_debug_logger, " block: " << (*p));
       block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
-      GR_LOG_INFO (d_logger, "  detail @" << detail << ":");
+      GR_LOG_DEBUG (d_debug_logger, "  detail @" << detail << ":");
 
       int ni = detail->ninputs();
       int no = detail->noutputs();
       for(int i = 0; i < no; i++) {
         buffer_sptr buffer = detail->output(i);
-        GR_LOG_INFO (d_logger, "   output " << i << ": " << buffer);
+        GR_LOG_DEBUG (d_debug_logger, "   output " << i << ": " << buffer);
       }
 
       for(int i = 0; i < ni; i++) {
         buffer_reader_sptr reader = detail->input(i);
-        GR_LOG_INFO (d_logger, "   reader " <<  i << ": " << reader
+        GR_LOG_DEBUG (d_debug_logger, "   reader " <<  i << ": " << reader
                   << " reading from buffer=" << reader->buffer());
       }
     }
