@@ -30,11 +30,11 @@ set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 if (PYTHON_EXECUTABLE)
     message(STATUS "User set python executable ${PYTHON_EXECUTABLE}")
-    find_package(PythonInterp 2.7 REQUIRED)
+    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
 else (PYTHON_EXECUTABLE)
     message(STATUS "PYTHON_EXECUTABLE not set - using default python3")
     message(STATUS "Use -DPYTHON_EXECUTABLE=/path/to/python2 to build for python2.")
-    find_package(PythonInterp 3.4 REQUIRED)
+    find_package(PythonInterp ${GR_PYTHON3_MIN_VERSION} REQUIRED)
 endif (PYTHON_EXECUTABLE)
 
 if (${PYTHON_VERSION_MAJOR} VERSION_EQUAL 3)
