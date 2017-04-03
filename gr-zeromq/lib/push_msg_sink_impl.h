@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013,2014 Free Software Foundation, Inc.
+ * Copyright 2013,2014,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -26,21 +26,15 @@
 #include <gnuradio/zeromq/push_msg_sink.h>
 #include <zmq.hpp>
 
+#include "msg_base_impl.h"
+
 namespace gr {
   namespace zeromq {
 
-    class push_msg_sink_impl : public push_msg_sink
+    class push_msg_sink_impl : public msg_base_sink_impl, public push_msg_sink
     {
-    private:
-      float           d_timeout;
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-
     public:
       push_msg_sink_impl(char *address, int timeout);
-      ~push_msg_sink_impl();
-
-      void handler(pmt::pmt_t msg);
     };
 
   } // namespace zeromq

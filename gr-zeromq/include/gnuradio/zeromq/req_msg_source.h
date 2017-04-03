@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_REQ_MSG_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/zeromq/msg_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -37,7 +37,7 @@ namespace gr {
      * This block will connect to a ZMQ REP socket, then resend all
      * incoming messages as asynchronous messages.
      */
-    class ZEROMQ_API req_msg_source : virtual public gr::block
+    class ZEROMQ_API req_msg_source : virtual public msg_base
     {
     public:
       typedef boost::shared_ptr<req_msg_source> sptr;

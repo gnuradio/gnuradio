@@ -39,7 +39,7 @@ namespace gr {
     }
 
     req_source_impl::req_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
-      : gr::sync_block("req_source",
+      : stream_base("req_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
         base_source_impl(ZMQ_REQ, itemsize, vlen, address, timeout, pass_tags, hwm),

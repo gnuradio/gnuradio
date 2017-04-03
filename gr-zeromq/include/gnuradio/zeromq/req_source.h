@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_REQ_SOURCE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -37,7 +37,7 @@ namespace gr {
      * This block will connect to a ZMQ REP socket, then produce all
      * incoming messages as streaming output.
      */
-    class ZEROMQ_API req_source : virtual public gr::sync_block
+    class ZEROMQ_API req_source : virtual public stream_base
     {
     public:
       typedef boost::shared_ptr<req_source> sptr;

@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_REP_SINK_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
@@ -39,7 +39,7 @@ namespace gr {
      * only send its contents to an attached REQ socket when it
      * requests items.
      */
-    class ZEROMQ_API rep_sink : virtual public gr::sync_block
+    class ZEROMQ_API rep_sink : virtual public stream_base
     {
     public:
       typedef boost::shared_ptr<rep_sink> sptr;

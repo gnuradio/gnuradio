@@ -20,41 +20,50 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_PUB_MSG_SINK_H
-#define INCLUDED_ZEROMQ_PUB_MSG_SINK_H
+#ifndef INCLUDED_ZEROMQ_MSG_BASE_H
+#define INCLUDED_ZEROMQ_MSG_BASE_H
 
 #include <gnuradio/zeromq/api.h>
-#include <gnuradio/zeromq/msg_base.h>
+#include <gnuradio/block.h>
 
 namespace gr {
   namespace zeromq {
 
     /*!
-     * \brief Sink the contents of a msg port to a ZMQ PUB socket
+     * \brief Base class providing public API for message zeromq blocks
      * \ingroup zeromq
-     *
-     * \details
-     * This block acts a message port receiver and writes individual
-     * messages to a ZMQ PUB socket.  A PUB socket may have
-     * subscribers and will pass all incoming messages to each
-     * subscriber.  Subscribers can be either another gr-zeromq source
-     * block or a non-GNU Radio ZMQ socket.
      */
-    class ZEROMQ_API pub_msg_sink : virtual public msg_base
+    class ZEROMQ_API msg_base : public gr::block
     {
-    public:
-      typedef boost::shared_ptr<pub_msg_sink> sptr;
-
-      /*!
-       * \brief Return a shared_ptr to a new instance of zeromq::pub_msg_sink.
-       *
-       * \param address  ZMQ socket address specifier
-       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+    protected:
+      /*
+       * Required for virtual inheritance
        */
-      static sptr make(char *address, int timeout=100);
-    };
+      msg_base() {};
+      /*
+       * Actual ctor passed through to block
+       */
+      msg_base(const std::string &name,
+               gr::io_signature::sptr input_signature,
+               gr::io_signature::sptr output_signature) :
+          block(name, input_signature, output_signature) {};
+
+    public:
+    /*!
+     * \brief Return the endpoint address
+     */
+    virtual std::string endpoint() = 0;
+
+    /*!
+     * \brief Set the zeromq endpoint
+     *
+     * \param address the endpoint address
+     */
+    virtual void set_endpoint(const char* address) = 0;
+
+  };
 
   } // namespace zeromq
 } // namespace gr
 
-#endif /* INCLUDED_ZEROMQ_PUB_MSG_SINK_H */
+#endif /* INCLUDED_ZEROMQ_MSG_BASE_H */

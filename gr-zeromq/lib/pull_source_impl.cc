@@ -39,7 +39,7 @@ namespace gr {
     }
 
     pull_source_impl::pull_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
-      : gr::sync_block("pull_source",
+      : stream_base("pull_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
         base_source_impl(ZMQ_PULL, itemsize, vlen, address, timeout, pass_tags, hwm)

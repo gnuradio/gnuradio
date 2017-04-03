@@ -38,10 +38,12 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         self.rx_data = None
         src_data = range(vlen)*100
         src = blocks.vector_source_f(src_data, False, vlen)
-        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5555")
+        endpoint = "tcp://127.0.0.1:"
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, endpoint + "*")
+        port = zeromq_pub_sink.endpoint().split(":")[-1]
         self.tb.connect(src, zeromq_pub_sink)
         self.probe_manager = zeromq.probe_manager()
-        self.probe_manager.add_socket("tcp://127.0.0.1:5555", 'float32', self.recv_data)
+        self.probe_manager.add_socket(endpoint + port, 'float32', self.recv_data)
         self.tb.run()
         self.probe_manager.watcher()
         self.assertFloatTuplesAlmostEqual(self.rx_data, src_data)
