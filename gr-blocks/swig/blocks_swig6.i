@@ -32,6 +32,7 @@
 
 %{
 #include "gnuradio/blocks/tag_gate.h"
+#include "gnuradio/blocks/tag_share.h"
 #include "gnuradio/blocks/tagged_stream_align.h"
 #include "gnuradio/blocks/tagged_stream_mux.h"
 #include "gnuradio/blocks/tagged_stream_multiply_length.h"
@@ -58,6 +59,7 @@
 %}
 
 %include "gnuradio/blocks/tag_gate.h"
+%include "gnuradio/blocks/tag_share.h"
 %include "gnuradio/blocks/tagged_stream_align.h"
 %include "gnuradio/blocks/tagged_stream_mux.h"
 %include "gnuradio/blocks/tagged_stream_multiply_length.h"
@@ -83,6 +85,7 @@
 %include "gnuradio/blocks/xor_ii.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_gate);
+GR_SWIG_BLOCK_MAGIC2(blocks, tag_share);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_align);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_mux);
 GR_SWIG_BLOCK_MAGIC2(blocks, tagged_stream_multiply_length);
