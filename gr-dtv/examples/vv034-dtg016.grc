@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.12'?>
 <flow_graph>
-  <timestamp>Mon Dec 29 00:00:54 2014</timestamp>
+  <timestamp>Sun Dec 28 23:36:42 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>vv009_4kfft</value>
+      <value>vv034_dtg016</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -344,7 +344,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>0</value>
     </param>
     <param>
       <key>file</key>
@@ -395,7 +395,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>/run/shm/vv009-4kfft.ts</value>
+      <value>/run/shm/vv034-dtg016.ts</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -450,7 +450,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -489,7 +489,7 @@
     </param>
     <param>
       <key>cp_len</key>
-      <value>4096 / 32</value>
+      <value>4096 / 16</value>
     </param>
     <param>
       <key>comment</key>
@@ -540,7 +540,7 @@
     <key>dtv_dvb_bbheader_bb</key>
     <param>
       <key>mode</key>
-      <value>INPUTMODE_NORMAL</value>
+      <value>INPUTMODE_HIEFF</value>
     </param>
     <param>
       <key>alias</key>
@@ -548,11 +548,11 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C3_5</value>
     </param>
     <param>
       <key>rate2</key>
-      <value>C1_3</value>
+      <value>C4_5</value>
     </param>
     <param>
       <key>rate3</key>
@@ -584,7 +584,7 @@
     </param>
     <param>
       <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>framesize2</key>
@@ -635,11 +635,11 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C3_5</value>
     </param>
     <param>
       <key>rate2</key>
-      <value>C1_3</value>
+      <value>C4_5</value>
     </param>
     <param>
       <key>rate3</key>
@@ -667,7 +667,7 @@
     </param>
     <param>
       <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>framesize2</key>
@@ -706,11 +706,11 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C3_5</value>
     </param>
     <param>
       <key>rate2</key>
-      <value>C1_3</value>
+      <value>C4_5</value>
     </param>
     <param>
       <key>rate3</key>
@@ -738,7 +738,7 @@
     </param>
     <param>
       <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>framesize2</key>
@@ -777,11 +777,11 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C3_5</value>
     </param>
     <param>
       <key>rate2</key>
-      <value>C1_3</value>
+      <value>C4_5</value>
     </param>
     <param>
       <key>rate3</key>
@@ -813,7 +813,7 @@
     </param>
     <param>
       <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>framesize2</key>
@@ -856,7 +856,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>MOD_64QAM</value>
+      <value>MOD_QPSK</value>
     </param>
     <param>
       <key>affinity</key>
@@ -868,11 +868,11 @@
     </param>
     <param>
       <key>fecblocks</key>
-      <value>31</value>
+      <value>204</value>
     </param>
     <param>
       <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -896,7 +896,7 @@
     </param>
     <param>
       <key>tiblocks</key>
-      <value>3</value>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -911,7 +911,7 @@
     </param>
     <param>
       <key>rate</key>
-      <value>C2_3</value>
+      <value>C4_5</value>
     </param>
     <param>
       <key>comment</key>
@@ -923,7 +923,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>MOD_64QAM</value>
+      <value>MOD_QPSK</value>
     </param>
     <param>
       <key>affinity</key>
@@ -939,11 +939,11 @@
     </param>
     <param>
       <key>fecblocks</key>
-      <value>31</value>
+      <value>204</value>
     </param>
     <param>
       <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>fftsize1</key>
@@ -963,7 +963,7 @@
     </param>
     <param>
       <key>guardinterval</key>
-      <value>GI_1_32</value>
+      <value>GI_1_16</value>
     </param>
     <param>
       <key>id</key>
@@ -975,7 +975,7 @@
     </param>
     <param>
       <key>l1constellation</key>
-      <value>L1_MOD_16QAM</value>
+      <value>L1_MOD_QPSK</value>
     </param>
     <param>
       <key>l1scrambled</key>
@@ -991,7 +991,7 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>500</value>
     </param>
     <param>
       <key>paprmode1</key>
@@ -1003,7 +1003,7 @@
     </param>
     <param>
       <key>pilotpattern</key>
-      <value>PILOT_PP7</value>
+      <value>PILOT_PP5</value>
     </param>
     <param>
       <key>preamble1</key>
@@ -1027,7 +1027,7 @@
     </param>
     <param>
       <key>tiblocks</key>
-      <value>3</value>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -1066,7 +1066,7 @@
     </param>
     <param>
       <key>guardinterval</key>
-      <value>GI_1_32</value>
+      <value>GI_1_16</value>
     </param>
     <param>
       <key>id</key>
@@ -1082,7 +1082,7 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>500</value>
     </param>
     <param>
       <key>paprmode1</key>
@@ -1094,7 +1094,7 @@
     </param>
     <param>
       <key>pilotpattern</key>
-      <value>PILOT_PP7</value>
+      <value>PILOT_PP5</value>
     </param>
     <param>
       <key>preamble1</key>
@@ -1117,7 +1117,7 @@
     </param>
     <param>
       <key>rate</key>
-      <value>C2_3</value>
+      <value>C4_5</value>
     </param>
     <param>
       <key>comment</key>
@@ -1125,7 +1125,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>MOD_64QAM</value>
+      <value>MOD_QPSK</value>
     </param>
     <param>
       <key>affinity</key>
@@ -1137,7 +1137,7 @@
     </param>
     <param>
       <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1176,7 +1176,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>MOD_64QAM</value>
+      <value>MOD_QPSK</value>
     </param>
     <param>
       <key>affinity</key>
@@ -1188,7 +1188,7 @@
     </param>
     <param>
       <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
+      <value>FECFRAME_SHORT</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1251,7 +1251,7 @@
     </param>
     <param>
       <key>guardinterval</key>
-      <value>GI_1_32</value>
+      <value>GI_1_16</value>
     </param>
     <param>
       <key>id</key>
@@ -1267,7 +1267,7 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>500</value>
     </param>
     <param>
       <key>preamble1</key>
@@ -1330,7 +1330,7 @@
     </param>
     <param>
       <key>guardinterval</key>
-      <value>GI_1_32</value>
+      <value>GI_1_16</value>
     </param>
     <param>
       <key>id</key>
@@ -1350,7 +1350,7 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>500</value>
     </param>
     <param>
       <key>paprmode1</key>
@@ -1362,7 +1362,7 @@
     </param>
     <param>
       <key>pilotpattern</key>
-      <value>PILOT_PP7</value>
+      <value>PILOT_PP5</value>
     </param>
     <param>
       <key>preamble1</key>
