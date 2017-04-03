@@ -187,6 +187,7 @@ list(APPEND gr_blocks_sources
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
     sub_ff_impl.cc
+    tag_share_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
     tagged_stream_multiply_length_impl.cc

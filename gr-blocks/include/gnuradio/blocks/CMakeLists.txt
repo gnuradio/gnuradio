@@ -166,6 +166,7 @@ install(FILES
     sub_ff.h
     tag_debug.h
     tag_gate.h
+    tag_share.h
     tagged_file_sink.h
     tagged_stream_align.h
     tagged_stream_mux.h
