@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.12'?>
 <flow_graph>
-  <timestamp>Mon Dec 29 00:00:54 2014</timestamp>
+  <timestamp>Sun Dec 28 23:36:42 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>vv009_4kfft</value>
+      <value>vv013_64qam56</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -344,7 +344,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>False</value>
+      <value>0</value>
     </param>
     <param>
       <key>file</key>
@@ -395,7 +395,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>/run/shm/vv009-4kfft.ts</value>
+      <value>/run/shm/vv013-64qam56.ts</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -450,7 +450,7 @@
     </param>
     <param>
       <key>_enabled</key>
-      <value>True</value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -489,7 +489,7 @@
     </param>
     <param>
       <key>cp_len</key>
-      <value>4096 / 32</value>
+      <value>8192 / 32</value>
     </param>
     <param>
       <key>comment</key>
@@ -505,11 +505,11 @@
     </param>
     <param>
       <key>input_size</key>
-      <value>4096</value>
+      <value>8192</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(344, 464)</value>
+      <value>(512, 320)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -540,7 +540,7 @@
     <key>dtv_dvb_bbheader_bb</key>
     <param>
       <key>mode</key>
-      <value>INPUTMODE_NORMAL</value>
+      <value>INPUTMODE_HIEFF</value>
     </param>
     <param>
       <key>alias</key>
@@ -548,7 +548,7 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C5_6</value>
     </param>
     <param>
       <key>rate2</key>
@@ -635,7 +635,7 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C5_6</value>
     </param>
     <param>
       <key>rate2</key>
@@ -706,7 +706,7 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C5_6</value>
     </param>
     <param>
       <key>rate2</key>
@@ -777,7 +777,7 @@
     </param>
     <param>
       <key>rate1</key>
-      <value>C2_3</value>
+      <value>C5_6</value>
     </param>
     <param>
       <key>rate2</key>
@@ -868,7 +868,7 @@
     </param>
     <param>
       <key>fecblocks</key>
-      <value>31</value>
+      <value>151</value>
     </param>
     <param>
       <key>framesize</key>
@@ -911,7 +911,7 @@
     </param>
     <param>
       <key>rate</key>
-      <value>C2_3</value>
+      <value>C5_6</value>
     </param>
     <param>
       <key>comment</key>
@@ -935,11 +935,11 @@
     </param>
     <param>
       <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
+      <value>CARRIERS_EXTENDED</value>
     </param>
     <param>
       <key>fecblocks</key>
-      <value>31</value>
+      <value>151</value>
     </param>
     <param>
       <key>framesize</key>
@@ -947,7 +947,7 @@
     </param>
     <param>
       <key>fftsize1</key>
-      <value>FFTSIZE_4K</value>
+      <value>FFTSIZE_8K</value>
     </param>
     <param>
       <key>fftsize2</key>
@@ -975,7 +975,7 @@
     </param>
     <param>
       <key>l1constellation</key>
-      <value>L1_MOD_16QAM</value>
+      <value>L1_MOD_64QAM</value>
     </param>
     <param>
       <key>l1scrambled</key>
@@ -991,11 +991,11 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>242</value>
     </param>
     <param>
       <key>paprmode1</key>
-      <value>PAPR_OFF</value>
+      <value>PAPR_TR</value>
     </param>
     <param>
       <key>paprmode2</key>
@@ -1050,11 +1050,11 @@
     </param>
     <param>
       <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
+      <value>CARRIERS_EXTENDED</value>
     </param>
     <param>
       <key>fftsize</key>
-      <value>FFTSIZE_4K</value>
+      <value>FFTSIZE_8K</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1082,11 +1082,11 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>242</value>
     </param>
     <param>
       <key>paprmode1</key>
-      <value>PAPR_OFF</value>
+      <value>PAPR_TR</value>
     </param>
     <param>
       <key>paprmode2</key>
@@ -1117,7 +1117,7 @@
     </param>
     <param>
       <key>rate</key>
-      <value>C2_3</value>
+      <value>C5_6</value>
     </param>
     <param>
       <key>comment</key>
@@ -1231,11 +1231,11 @@
     </param>
     <param>
       <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
+      <value>CARRIERS_EXTENDED</value>
     </param>
     <param>
       <key>fftsize1</key>
-      <value>FFTSIZE_4K</value>
+      <value>FFTSIZE_8K</value>
     </param>
     <param>
       <key>fftsize2</key>
@@ -1243,7 +1243,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(560, 440)</value>
+      <value>(584, 440)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1267,7 +1267,7 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>242</value>
     </param>
     <param>
       <key>preamble1</key>
@@ -1288,6 +1288,85 @@
     <param>
       <key>vclip</key>
       <value>3.3</value>
+    </param>
+  </block>
+  <block>
+    <key>dtv_dvbt2_paprtr_cc</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>carriermode</key>
+      <value>CARRIERS_EXTENDED</value>
+    </param>
+    <param>
+      <key>fftsize</key>
+      <value>FFTSIZE_8K</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(320, 428)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>guardinterval</key>
+      <value>GI_1_32</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>dtv_dvbt2_paprtr_cc_0</value>
+    </param>
+    <param>
+      <key>iterations</key>
+      <value>50</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>numdatasyms</key>
+      <value>242</value>
+    </param>
+    <param>
+      <key>paprmode1</key>
+      <value>PAPR_TR</value>
+    </param>
+    <param>
+      <key>paprmode2</key>
+      <value>PAPR_OFF</value>
+    </param>
+    <param>
+      <key>pilotpattern</key>
+      <value>PILOT_PP7</value>
+    </param>
+    <param>
+      <key>version</key>
+      <value>VERSION_111</value>
+    </param>
+    <param>
+      <key>vclip</key>
+      <value>3.0</value>
     </param>
   </block>
   <block>
@@ -1314,11 +1393,11 @@
     </param>
     <param>
       <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
+      <value>CARRIERS_EXTENDED</value>
     </param>
     <param>
       <key>fftsize</key>
-      <value>FFTSIZE_4K</value>
+      <value>FFTSIZE_8K</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -1350,11 +1429,11 @@
     </param>
     <param>
       <key>numdatasyms</key>
-      <value>100</value>
+      <value>242</value>
     </param>
     <param>
       <key>paprmode1</key>
-      <value>PAPR_OFF</value>
+      <value>PAPR_TR</value>
     </param>
     <param>
       <key>paprmode2</key>
@@ -3310,8 +3389,14 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>dtv_dvbt2_pilotgenerator_cc_0</source_block_id>
+    <source_block_id>dtv_dvbt2_paprtr_cc_0</source_block_id>
     <sink_block_id>digital_ofdm_cyclic_prefixer_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>dtv_dvbt2_pilotgenerator_cc_0</source_block_id>
+    <sink_block_id>dtv_dvbt2_paprtr_cc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
