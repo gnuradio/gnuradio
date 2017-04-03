@@ -113,7 +113,6 @@ class UHDApp(object):
         num: required number of arguments
         arg: actual argument
         """
-
         if arg is None:
             return None
         args = [x.strip() for x in arg.split(",")]
@@ -186,10 +185,10 @@ class UHDApp(object):
         self.antenna = self.normalize_sel("channels", "antenna", len(args.channels), args.antenna)
         if self.antenna is not None:
             if len(self.antenna) == 1:
-                self.antenna = [self.antenna, ] * len(args.channels)
+                self.antenna = self.antenna * len(args.channels)
             for i, chan in enumerate(self.channels):
                 if not self.antenna[i] in self.usrp.get_antennas(i):
-                    self.vprint("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
+                    print("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
                     exit(1)
                 self.usrp.set_antenna(self.antenna[i], i)
                 self.vprint("[{prefix}] Channel {chan}: Using antenna {ant}.".format(
