@@ -30,11 +30,11 @@ set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 
 if (PYTHON_EXECUTABLE)
     message(STATUS "User set python executable ${PYTHON_EXECUTABLE}")
-    find_package(PythonInterp 2.7 REQUIRED)
+    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
 else (PYTHON_EXECUTABLE)
     message(STATUS "PYTHON_EXECUTABLE not set - using default python3")
     message(STATUS "Use -DPYTHON_EXECUTABLE=/path/to/python2 to build for python2.")
-    find_package(PythonInterp 3.4 REQUIRED)
+    find_package(PythonInterp ${GR_PYTHON3_MIN_VERSION} REQUIRED)
 endif (PYTHON_EXECUTABLE)
 
 if (${PYTHON_VERSION_MAJOR} VERSION_EQUAL 3)
@@ -92,8 +92,12 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 ########################################################################
 if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
-import site
-print(site.getsitepackages()[0])
+import os
+import sys
+if os.name == 'posix':
+    print(os.path.join('lib', 'python' + sys.version[:3], 'dist-packages'))
+if os.name == 'nt':
+    print(os.path.join('Lib', 'site-packages'))
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 endif()
