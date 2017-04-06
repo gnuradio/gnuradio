@@ -903,7 +903,12 @@ namespace gr {
       l1_constellation = l1constellation;
       t2_frames = t2frames;
       t2_frame_num = 0;
-      l1_scrambled = l1scrambled;
+      if (version == VERSION_131) {
+        l1_scrambled = l1scrambled;
+      }
+      else {
+        l1_scrambled = FALSE;
+      }
       stream_items = cell_size * fecblocks;
       if (N_FC == 0) {
         set_output_multiple((N_P2 * C_P2) + (numdatasyms * C_DATA));
