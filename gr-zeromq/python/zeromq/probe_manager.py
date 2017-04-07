@@ -38,7 +38,7 @@ class probe_manager(object):
         self.poller.register(socket, zmq.POLLIN)
 
     def watcher(self):
-        poll = dict(self.poller.poll(0))
+        poll = dict(self.poller.poll(None))
         for i in self.interfaces:
             # i = (socket, data_type, callback_func)
             if poll.get(i[0]) == zmq.POLLIN:

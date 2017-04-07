@@ -30,10 +30,12 @@ import time
 class qa_zeromq_reqrep (gr_unittest.TestCase):
 
     def setUp (self):
-        self.tb = gr.top_block ()
+        self.send_tb = gr.top_block()
+        self.recv_tb = gr.top_block()
 
     def tearDown (self):
-        self.tb = None
+        self.send_tb = None
+        self.recv_tb = None
 
     def test_001 (self):
         vlen = 10
@@ -42,12 +44,16 @@ class qa_zeromq_reqrep (gr_unittest.TestCase):
         zeromq_rep_sink = zeromq.rep_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5558", 0)
         zeromq_req_source = zeromq.req_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5558", 0)
         sink = blocks.vector_sink_f(vlen)
-        self.tb.connect(src, zeromq_rep_sink)
-        self.tb.connect(zeromq_req_source, sink)
-        self.tb.start()
+        self.send_tb.connect(src, zeromq_rep_sink)
+        self.recv_tb.connect(zeromq_req_source, sink)
+        self.recv_tb.start()
         time.sleep(0.25)
-        self.tb.stop()
-        self.tb.wait()
+        self.send_tb.start()
+        time.sleep(0.25)
+        self.recv_tb.stop()
+        self.send_tb.stop()
+        self.recv_tb.wait()
+        self.send_tb.wait()
         self.assertFloatTuplesAlmostEqual(sink.data(), src_data)
 
 if __name__ == '__main__':

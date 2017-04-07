@@ -25,6 +25,7 @@
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks, zeromq
 from gnuradio import eng_notation
+import threading
 
 class qa_zeromq_pub (gr_unittest.TestCase):
 
@@ -43,8 +44,11 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         self.tb.connect(src, zeromq_pub_sink)
         self.probe_manager = zeromq.probe_manager()
         self.probe_manager.add_socket("tcp://127.0.0.1:5555", 'float32', self.recv_data)
+        zmq_pull_t = threading.Thread(target=self.probe_manager.watcher)
+        zmq_pull_t.daemon = True
+        zmq_pull_t.start()
         self.tb.run()
-        self.probe_manager.watcher()
+        zmq_pull_t.join()
         self.assertFloatTuplesAlmostEqual(self.rx_data, src_data)
 
     def recv_data (self, data):
