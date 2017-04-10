@@ -83,7 +83,7 @@ std::string str = pmt::symbol_to_string(P_str);
 
 The pmt::intern is another way of saying pmt::string_to_symbol.
 
-In Python, we can make use of the weak typing, and there's actually a
+In Python, we can make use of the dynamic typing, and there's actually a
 helper function to do these conversions (C++ also has a helper
 function for converting to PMTs called pmt::mp(), but its less
 powerful, and not quite as useful, because types are always strictly
