@@ -6,9 +6,24 @@
  -->
 <block>
 	<name>Correlate Access Code - Tag</name>
-	<key>digital_correlate_access_code_tag_bb</key>
+	<key>digital_correlate_access_code_tag_xx</key>
 	<import>from gnuradio import digital</import>
-	<make>digital.correlate_access_code_tag_bb($access_code, $threshold, $tagname)</make>
+	<make>digital.correlate_access_code_tag_$(type.fcn)($access_code, $threshold, $tagname)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:bb</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
 	<param>
 		<name>Access Code</name>
 		<key>access_code</key>
@@ -27,10 +42,10 @@
 	</param>
 	<sink>
 		<name>in</name>
-		<type>byte</type>
+		<type>$type</type>
 	</sink>
 	<source>
 		<name>out</name>
-		<type>byte</type>
+		<type>$type</type>
 	</source>
 </block>

@@ -46,6 +46,7 @@ install(FILES
     corr_est_cc.h
     correlate_access_code_bb.h
     correlate_access_code_tag_bb.h
+    correlate_access_code_tag_ff.h
     correlate_access_code_bb_ts.h
     correlate_access_code_ff_ts.h
     correlate_and_sync_cc.h

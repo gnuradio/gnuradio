@@ -62,6 +62,7 @@ list(APPEND digital_sources
     corr_est_cc_impl.cc
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
+    correlate_access_code_tag_ff_impl.cc
     correlate_access_code_bb_ts_impl.cc
     correlate_access_code_ff_ts_impl.cc
     correlate_and_sync_cc_impl.cc
