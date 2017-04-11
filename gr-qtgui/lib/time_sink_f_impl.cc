@@ -558,12 +558,15 @@ namespace gr {
                         nr, nr + nitems + 1,
                         d_trigger_tag_key);
       if(tags.size() > 0) {
-        d_triggered = true;
         trigger_index = tags[0].offset - nr;
-        d_start = d_index + trigger_index - d_trigger_delay - 1;
-        d_end = d_start + d_size;
-        d_trigger_count = 0;
-        _adjust_tags(-d_start);
+        int start = d_index + trigger_index - d_trigger_delay - 1;
+        if (start >= 0) {
+            d_triggered = true;
+            d_start = start;
+            d_end = d_start + d_size;
+            d_trigger_count = 0;
+            _adjust_tags(-d_start);
+        }
       }
     }
 
