@@ -471,7 +471,7 @@ GR_LOGGING()
 # Distribute the README file
 ########################################################################
 install(
-    FILES README README.hacking
+    FILES README.md README.hacking
     DESTINATION ${GR_PKG_DOC_DIR}
     COMPONENT "docs"
 )
