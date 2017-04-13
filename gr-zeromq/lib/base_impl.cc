@@ -165,6 +165,11 @@ namespace gr {
       if (!(items[0].revents & ZMQ_POLLIN))
         return false;
 
+      /* Is this the start or continuation of a multi-part message? */
+      int64_t more = 0;
+      size_t more_len = sizeof(more);
+      d_socket->getsockopt(ZMQ_RCVMORE, &more, &more_len);
+
       /* Reset */
       d_msg.rebuild();
       d_tags.clear();
@@ -174,8 +179,8 @@ namespace gr {
       /* Get the message */
       d_socket->recv(&d_msg);
 
-      /* Parse header */
-      if (d_pass_tags)
+      /* Parse header from the first (or only) message of a multi-part message */
+      if (d_pass_tags && !more)
       {
         uint64_t rcv_offset;
 
@@ -186,6 +191,14 @@ namespace gr {
         for (unsigned int i=0; i<d_tags.size(); i++) {
           d_tags[i].offset -= rcv_offset;
         }
+      }
+
+      /* Each message must contain an integer mutliple of data vectors */
+      if ((d_msg.size() - d_consumed_bytes) % d_vsize != 0)
+      {
+        throw std::runtime_error(
+            boost::str(boost::format("Incompatible vector sizes: "
+                                     "need a multiple of %1% bytes per message") % d_vsize));
       }
 
       /* We got one ! */
