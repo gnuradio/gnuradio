@@ -25,7 +25,8 @@
 
 #include "scheduler.h"
 
-#include "tpb_thread_body.h"
+#include "block_executor.h"
+#include <gnuradio/block_detail.h>
 #include <gnuradio/thread/thread_body_wrapper.h>
 
 namespace gr {
@@ -70,7 +71,7 @@ namespace gr {
         block_max_noutput_items = max_noutput_items;
       }
 
-      auto f = boost::bind(&tpb_thread_body::run, blocks[i], block_max_noutput_items);
+      auto f = boost::bind(&block_executor::run, blocks[i], block_max_noutput_items);
       d_threads.create_thread(
          gr::thread::thread_body_wrapper<decltype(f)>(f, name.str()));
     }

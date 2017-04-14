@@ -38,7 +38,6 @@ namespace gr {
   {
   protected:
     block_sptr     d_block;    // The block we're trying to run
-    std::ofstream *d_log;
 
     // These are allocated here so we don't have to on each iteration
 
@@ -58,6 +57,8 @@ namespace gr {
   public:
     block_executor(block_sptr block, int max_noutput_items=100000);
     ~block_executor();
+
+    static void run(block_sptr block, int max_noutput_items);
 
     enum state {
       READY,	        // We made progress; everything's cool.

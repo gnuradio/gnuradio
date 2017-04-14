@@ -74,7 +74,7 @@ namespace gr {
   protected:
     friend class flowgraph;
     friend class flat_flowgraph; // TODO: will be redundant
-    friend class tpb_thread_body;
+    friend class block_executor;
 
     enum vcolor { WHITE, GREY, BLACK };
 
