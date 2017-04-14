@@ -25,15 +25,87 @@
 
 #include "scheduler.h"
 
+#include "tpb_thread_body.h"
+#include <gnuradio/thread/thread_body_wrapper.h>
+
 namespace gr {
+
+  scheduler::sptr
+  scheduler::make(flat_flowgraph_sptr ffg, int max_noutput_items)
+  {
+    return scheduler::sptr(new scheduler(ffg, max_noutput_items));
+  }
+
+  class tpb_container
+  {
+    block_sptr d_block;
+    int d_max_noutput_items;
+
+  public:
+    tpb_container(block_sptr block, int max_noutput_items)
+      : d_block(block), d_max_noutput_items(max_noutput_items) {}
+
+    void operator()()
+    {
+      tpb_thread_body body(d_block, d_max_noutput_items);
+    }
+  };
 
   scheduler::scheduler(flat_flowgraph_sptr ffg,
                        int max_noutput_items)
   {
+    int block_max_noutput_items;
+
+    // Get a topologically sorted vector of all the blocks in use.
+    // Being topologically sorted probably isn't going to matter, but
+    // there's a non-zero chance it might help...
+
+    basic_block_vector_t used_blocks = ffg->calc_used_blocks();
+    used_blocks = ffg->topological_sort(used_blocks);
+    block_vector_t blocks = flat_flowgraph::make_block_vector(used_blocks);
+
+    // Ensure that the done flag is clear on all blocks
+
+    for(size_t i = 0; i < blocks.size(); i++) {
+      blocks[i]->detail()->set_done(false);
+    }
+
+    // Fire off a thead for each block
+
+    for(size_t i = 0; i < blocks.size(); i++) {
+      std::stringstream name;
+      name << "thread-per-block[" << i << "]: " << blocks[i];
+
+      // If set, use internal value instead of global value
+      if(blocks[i]->is_set_max_noutput_items()) {
+        block_max_noutput_items = blocks[i]->max_noutput_items();
+      }
+      else {
+        block_max_noutput_items = max_noutput_items;
+      }
+
+      d_threads.create_thread(
+	    gr::thread::thread_body_wrapper<tpb_container>
+            (tpb_container(blocks[i], block_max_noutput_items),
+             name.str()));
+    }
   }
 
   scheduler::~scheduler()
   {
+    stop();
+  }
+
+  void
+  scheduler::stop()
+  {
+    d_threads.interrupt_all();
+  }
+
+  void
+  scheduler::wait()
+  {
+    d_threads.join_all();
   }
 
 } /* namespace gr */

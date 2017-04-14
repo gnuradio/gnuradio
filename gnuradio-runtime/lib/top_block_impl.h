@@ -77,7 +77,7 @@ namespace gr {
 
     top_block *d_owner;
     flat_flowgraph_sptr d_ffg;
-    scheduler_sptr d_scheduler;
+    scheduler::sptr d_scheduler;
 
     gr::thread::mutex d_mutex;    // protects d_state and d_lock_count
     tb_state d_state;
