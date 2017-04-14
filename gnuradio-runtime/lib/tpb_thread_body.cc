@@ -32,10 +32,11 @@
 
 namespace gr {
 
-  tpb_thread_body::tpb_thread_body(block_sptr block, int max_noutput_items)
-    : d_exec(block, max_noutput_items)
-  {
+  void
+  tpb_thread_body::run(block_sptr block, int max_noutput_items) {
     //std::cerr << "tpb_thread_body: " << block << std::endl;
+
+    block_executor executor(block, max_noutput_items);
 
 #if defined(_MSC_VER) || defined(__MINGW32__)
     #include <windows.h>
@@ -114,7 +115,7 @@ namespace gr {
 
       // run one iteration if we are a connected stream block
       if(d->noutputs() >0 || d->ninputs()>0){
-        s = d_exec.run_one_iteration();
+        s = executor.run_one_iteration();
       }
       else {
         s = block_executor::BLKD_IN;
@@ -171,10 +172,6 @@ namespace gr {
         throw std::runtime_error("possible memory corruption in scheduler");
       }
     }
-  }
-
-  tpb_thread_body::~tpb_thread_body()
-  {
   }
 
 } /* namespace gr */

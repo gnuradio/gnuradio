@@ -36,21 +36,6 @@ namespace gr {
     return scheduler::sptr(new scheduler(ffg, max_noutput_items));
   }
 
-  class tpb_container
-  {
-    block_sptr d_block;
-    int d_max_noutput_items;
-
-  public:
-    tpb_container(block_sptr block, int max_noutput_items)
-      : d_block(block), d_max_noutput_items(max_noutput_items) {}
-
-    void operator()()
-    {
-      tpb_thread_body body(d_block, d_max_noutput_items);
-    }
-  };
-
   scheduler::scheduler(flat_flowgraph_sptr ffg,
                        int max_noutput_items)
   {
@@ -84,10 +69,9 @@ namespace gr {
         block_max_noutput_items = max_noutput_items;
       }
 
+      auto f = boost::bind(&tpb_thread_body::run, blocks[i], block_max_noutput_items);
       d_threads.create_thread(
-	    gr::thread::thread_body_wrapper<tpb_container>
-            (tpb_container(blocks[i], block_max_noutput_items),
-             name.str()));
+         gr::thread::thread_body_wrapper<decltype(f)>(f, name.str()));
     }
   }
 

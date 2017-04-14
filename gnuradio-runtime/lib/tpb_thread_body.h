@@ -37,11 +37,8 @@ namespace gr {
    */
   class GR_RUNTIME_API tpb_thread_body
   {
-    block_executor d_exec;
-
   public:
-    tpb_thread_body(block_sptr block, int max_noutput_items=100000);
-    ~tpb_thread_body();
+    static void run(block_sptr block, int max_noutput_items);
   };
 
 } /* namespace gr */
