@@ -172,8 +172,6 @@ namespace gr {
     prefs *prefs = prefs::singleton();
     d_use_pc = prefs->get_bool("PerfCounters", "on", false);
 #endif /* GR_PERFORMANCE_COUNTERS */
-
-    d_block->start();			// enable any drivers, etc.
   }
 
   block_executor::~block_executor()

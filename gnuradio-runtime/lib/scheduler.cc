@@ -53,6 +53,7 @@ namespace gr {
 
     for(size_t i = 0; i < blocks.size(); i++) {
       blocks[i]->detail()->set_done(false);
+      blocks[i]->start();
     }
 
     // Fire off a thead for each block
