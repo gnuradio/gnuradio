@@ -60,6 +60,10 @@ class MainWindow(Gtk.ApplicationWindow):
         self._platform = platform
         self.config = platform.config
 
+        self.actions = app.actions
+        self.actions.set_win(self)
+
+
         # Setup window
         vbox = Gtk.VBox()
         self.add(vbox)

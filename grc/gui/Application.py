@@ -24,7 +24,7 @@ import os
 import subprocess
 import logging
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, Gio, GLib, GObject
 
 from . import Dialogs, Actions, Executor, FileDialogs, Utils
 from .MainWindow import MainWindow
@@ -62,6 +62,13 @@ class Application(Gtk.Application):
         self.config = platform.config
 
         log.debug("__init__()")
+
+        # Main action namespace for the entire application
+        # Other components can access this through 'Gtk.Application.get_default()'
+        # Use: actions.trigger("<action>", arg)
+        self.actions = Actions.Namespace()
+        self.actions.set_app(self)
+
 
         #initialize
         self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
