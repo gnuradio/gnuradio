@@ -54,7 +54,7 @@ include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
 set(GR_BOOST_MIN_VERSION "1.48")
-set(GR_SWIG_MIN_VERSION "2.0.3")
+set(GR_SWIG_MIN_VERSION "2.0.4")
 set(GR_CMAKE_MIN_VERSION "2.8.12")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "2.7")
@@ -347,7 +347,8 @@ find_package(SWIG)
 
 if(SWIG_FOUND)
     set(SWIG_VERSION_CHECK FALSE)
-    if("${SWIG_VERSION}" VERSION_GREATER ${GR_SWIG_MIN_VERSION})
+    if("${SWIG_VERSION}" VERSION_EQUAL ${GR_SWIG_MIN_VERSION} OR
+       "${SWIG_VERSION}" VERSION_GREATER ${GR_SWIG_MIN_VERSION})
         set(SWIG_VERSION_CHECK TRUE)
     endif()
 endif(SWIG_FOUND)
