@@ -43,7 +43,7 @@ operator<<
  const AudioStreamBasicDescription& asbd)
 {
   char format_id[sizeof(asbd.mFormatID)+1];
-  memcpy((void*)(&asbd.mFormatID), format_id, sizeof(asbd.mFormatID));
+  memcpy(format_id, (void*)(&asbd.mFormatID), sizeof(asbd.mFormatID));
   format_id[sizeof(asbd.mFormatID)] = 0;
   s << "  Sample Rate      : " << asbd.mSampleRate << std::endl;
   s << "  Format ID        : " << format_id << std::endl;
