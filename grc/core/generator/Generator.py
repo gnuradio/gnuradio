@@ -328,6 +328,7 @@ class HierBlockGenerator(TopBlockGenerator):
             param_n['key'] = param.get_id()
             param_n['value'] = param.get_param('value').get_value()
             param_n['type'] = 'raw'
+            param_n['hide'] = param.get_param('hide').get_value()
             block_n['param'].append(param_n)
 
         # Bus stuff
