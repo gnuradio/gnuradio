@@ -41,6 +41,7 @@ install(FILES
     fir_filter_with_buffer.h
     fft_filter.h
     iir_filter.h
+    interp_differentiator_taps.h
     interpolator_taps.h
     mmse_fir_interpolator_cc.h
     mmse_fir_interpolator_ff.h
