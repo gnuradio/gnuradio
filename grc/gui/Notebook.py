@@ -28,6 +28,7 @@ from .StateCache import StateCache
 from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
 
+
 log = logging.getLogger(__name__)
 
 

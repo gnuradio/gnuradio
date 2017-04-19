@@ -26,7 +26,7 @@ import logging
 
 from gi.repository import Gtk, Gio, GLib, GObject
 
-from . import Dialogs, Actions, Executor, FileDialogs, Utils
+from . import Dialogs, Actions, Executor, FileDialogs, Utils, Bars
 from .MainWindow import MainWindow
 from .ParserErrorsDialog import ParserErrorsDialog
 from .PropsDialog import PropsDialog
@@ -56,33 +56,43 @@ class Application(Gtk.Application):
         """
         self.clipboard = None
         self.dialog = None
-        for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
-        #setup the main window
+
+        # Setup the main window
         self.platform = platform
         self.config = platform.config
 
-        log.debug("__init__()")
+        log.debug("Application()")
+        # Connect all actions to _handle_action
+        map(lambda x: Actions.connect(x, handler=self._handle_action), Actions.get_actions())
 
-        # Main action namespace for the entire application
-        # Other components can access this through 'Gtk.Application.get_default()'
-        # Use: actions.trigger("<action>", arg)
-        self.actions = Actions.Namespace()
-        self.actions.set_app(self)
+        # Add all "app" actions to the local
+        app_actions = filter(lambda x: x.startswith("app."), Actions.get_actions())
+        map(lambda x: self.add_action(Actions.actions[x]), app_actions)
 
-
-        #initialize
+        # Initialize
         self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
         self.init = False
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
-        log.debug("do_startup()")
+        log.debug("Application.do_startup()")
+
+        # Setup the menu
+        log.debug("Creating menu")
+        '''
+        self.menu = Bars.Menu()
+        self.set_menu()
+        if self.prefers_app_menu():
+            self.set_app_menu(self.menu)
+        else:
+            self.set_menubar(self.menu)
+        '''
 
     def do_activate(self):
         Gtk.Application.do_activate(self)
-        log.debug("do_activate()")
+        log.debug("Application.do_activate()")
 
-        self.main_window = MainWindow(self, self.platform, self._handle_action)
+        self.main_window = MainWindow(self, self.platform)
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
         self.get_focus_flag = self.main_window.get_focus_flag
@@ -90,6 +100,7 @@ class Application(Gtk.Application):
         Messages.register_messenger(self.main_window.add_console_line)
         Messages.send_init(self.platform)
 
+        log.debug("Calling Actions.APPLICATION_INITIALIZE")
         Actions.APPLICATION_INITIALIZE()
 
     def _handle_key_press(self, widget, event):
@@ -125,6 +136,7 @@ class Application(Gtk.Application):
 
     def _handle_action(self, action, *args):
         #print action
+        log.debug("_handle_action({0}, {1})".format(action, args))
         main = self.main_window
         page = main.current_page
         flow_graph = page.flow_graph if page else None
@@ -137,6 +149,7 @@ class Application(Gtk.Application):
         # Initialize/Quit
         ##################################################
         if action == Actions.APPLICATION_INITIALIZE:
+            log.debug("APPLICATION_INITIALIZE")
             file_path_to_show = self.config.file_open()
             for file_path in (self.init_file_paths or self.config.get_open_files()):
                 if os.path.exists(file_path):
@@ -147,8 +160,8 @@ class Application(Gtk.Application):
             main.btwin.search_entry.hide()
 
             # Disable all actions, then re-enable a few
-            for action in Actions.get_all_actions():
-                action.set_sensitive(False)  # set all actions disabled
+            for x in Actions.get_actions():
+                Actions.actions[x].set_enabled(False)  # set all actions disabled
             for action in (
                 Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
@@ -169,12 +182,16 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_HIDE_VARIABLES,
                 Actions.SELECT_ALL,
             ):
-                action.set_sensitive(True)
+                action.set_enabled(True)
                 if hasattr(action, 'load_from_preferences'):
                     action.load_from_preferences()
+            # Hide the panels *IF* it's saved in preferences
+            main.update_panel_visibility(main.BLOCKS, Actions.TOGGLE_BLOCKS_WINDOW.get_active())
+            main.update_panel_visibility(main.CONSOLE, Actions.TOGGLE_CONSOLE_WINDOW.get_active())
+            main.update_panel_visibility(main.VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.get_active())
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
-                Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(True)
+                Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(True)
             self.init = True
         elif action == Actions.APPLICATION_QUIT:
             if main.close_pages():
@@ -407,12 +424,17 @@ class Application(Gtk.Application):
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
             Dialogs.ErrorsDialog(main, flow_graph).run_and_destroy()
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:
+            action.set_active(not action.get_active())
             main.update_panel_visibility(main.CONSOLE, action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_BLOCKS_WINDOW:
+            # This would be better matched to a Gio.PropertyAction, but to do
+            # this, actions would have to be defined in the window not globally
+            action.set_active(not action.get_active())
             main.update_panel_visibility(main.BLOCKS, action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SCROLL_LOCK:
+            action.set_active(not action.get_active())
             active = action.get_active()
             main.console.text_display.scroll_lock = active
             if active:
@@ -425,41 +447,52 @@ class Application(Gtk.Application):
             if file_path is not None:
                 main.console.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
+            action.set_active(not action.get_active())
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
+            action.set_active(not action.get_active())
             action.save_to_preferences()
             for page in main.get_pages():
                 page.flow_graph.create_shapes()
         elif action in (Actions.TOGGLE_SNAP_TO_GRID,
                         Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                         Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB):
+            action.set_active(not action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY:
+            action.set_active(not action.get_active())
             action.save_to_preferences()
             for page in main.get_pages():
                 flow_graph_update(page.flow_graph)
         elif action == Actions.TOGGLE_HIDE_VARIABLES:
-            # Call the variable editor TOGGLE in case it needs to be showing
-            Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR()
+            action.set_active(not action.get_active())
+            active = action.get_active()
+            # Either way, triggering this should simply trigger the variable editor
+            # to be visible.
+            varedit = Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR
+            if active:
+                log.debug("Variables are hidden. Forcing the variable panel to be visible.")
+                varedit.disable()
+            else:
+                varedit.enable()
+            # Just force it to show.
+            varedit.set_active(True)
+            main.update_panel_visibility(main.VARIABLES)
             Actions.NOTHING_SELECT()
             action.save_to_preferences()
+            varedit.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR:
-            # See if the variables are hidden
-            if Actions.TOGGLE_HIDE_VARIABLES.get_active():
-                # Force this to be shown
-                main.update_panel_visibility(main.VARIABLES, True)
-                action.set_active(True)
-                action.set_sensitive(False)
-            else:
-                if action.get_sensitive():
-                    main.update_panel_visibility(main.VARIABLES, action.get_active())
-                else:  # This is occurring after variables are un-hidden
-                    # Leave it enabled
-                    action.set_sensitive(True)
-                    action.set_active(True)
-            # Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_sensitive(action.get_active())
+            # TODO: There may be issues at startup since these aren't triggered
+            # the same was as Gtk.Actions when loading preferences.
+            action.set_active(not action.get_active())
+            # Just assume this was triggered because it was enabled.
+            main.update_panel_visibility(main.VARIABLES, action.get_active())
+            action.save_to_preferences()
+
+            # Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR.set_enabled(action.get_active())
             action.save_to_preferences()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR:
+            action.set_active(not action.get_active())
             if self.init:
                 Dialogs.MessageDialogWrapper(
                     main, Gtk.MessageType.INFO, Gtk.ButtonsType.CLOSE,
@@ -527,7 +560,7 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_NEW:
             main.new_page()
             if args:
-                flow_graph = main.get_flow_graph()
+                flow_graph = main.current_page.flow_graph
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
                 flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
@@ -537,7 +570,7 @@ class Application(Gtk.Application):
                     main.new_page(file_path, show=(i==0))
                     self.config.add_recent_file(file_path)
                     main.tool_bar.refresh_submenus()
-                    main.menu_bar.refresh_submenus()
+                    #main.menu_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
             file_paths = FileDialogs.OpenQSS(main, self.platform.config.install_prefix +
                                              '/share/gnuradio/themes/').run()
@@ -641,7 +674,7 @@ class Application(Gtk.Application):
         elif action == Actions.RELOAD_BLOCKS:
             self.platform.build_block_library()
             main.btwin.repopulate()
-            Actions.XML_PARSER_ERRORS_DISPLAY.set_sensitive(bool(
+            Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(bool(
                 ParseXML.xml_failures))
             Messages.send_xml_errors_if_any(ParseXML.xml_failures)
             # Force a redraw of the graph, by getting the current state and re-importing it
@@ -685,19 +718,19 @@ class Application(Gtk.Application):
         selected_block = selected_blocks[0] if selected_blocks else None
 
         #update general buttons
-        Actions.ERRORS_WINDOW_DISPLAY.set_sensitive(not flow_graph.is_valid())
-        Actions.ELEMENT_DELETE.set_sensitive(bool(flow_graph.selected_elements))
-        Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(selected_block))
-        Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(selected_blocks))
-        Actions.BLOCK_ROTATE_CW.set_sensitive(bool(selected_blocks))
+        Actions.ERRORS_WINDOW_DISPLAY.set_enabled(not flow_graph.is_valid())
+        Actions.ELEMENT_DELETE.set_enabled(bool(flow_graph.selected_elements))
+        Actions.BLOCK_PARAM_MODIFY.set_enabled(bool(selected_block))
+        Actions.BLOCK_ROTATE_CCW.set_enabled(bool(selected_blocks))
+        Actions.BLOCK_ROTATE_CW.set_enabled(bool(selected_blocks))
         #update alignment options
         for act in Actions.BLOCK_ALIGNMENTS:
             if act:
-                act.set_sensitive(len(selected_blocks) > 1)
+                act.set_enabled(len(selected_blocks) > 1)
         #update cut/copy/paste
-        Actions.BLOCK_CUT.set_sensitive(bool(selected_blocks))
-        Actions.BLOCK_COPY.set_sensitive(bool(selected_blocks))
-        Actions.BLOCK_PASTE.set_sensitive(bool(self.clipboard))
+        Actions.BLOCK_CUT.set_enabled(bool(selected_blocks))
+        Actions.BLOCK_COPY.set_enabled(bool(selected_blocks))
+        Actions.BLOCK_PASTE.set_enabled(bool(self.clipboard))
         #update enable/disable/bypass
         can_enable = any(block.state != 'enabled'
                          for block in selected_blocks)
@@ -707,26 +740,26 @@ class Application(Gtk.Application):
             all(block.can_bypass() for block in selected_blocks) and
             any(not block.get_bypassed() for block in selected_blocks)
         )
-        Actions.BLOCK_ENABLE.set_sensitive(can_enable)
-        Actions.BLOCK_DISABLE.set_sensitive(can_disable)
-        Actions.BLOCK_BYPASS.set_sensitive(can_bypass_all)
+        Actions.BLOCK_ENABLE.set_enabled(can_enable)
+        Actions.BLOCK_DISABLE.set_enabled(can_disable)
+        Actions.BLOCK_BYPASS.set_enabled(can_bypass_all)
 
-        Actions.BLOCK_CREATE_HIER.set_sensitive(bool(selected_blocks))
-        Actions.OPEN_HIER.set_sensitive(bool(selected_blocks))
-        Actions.BUSSIFY_SOURCES.set_sensitive(bool(selected_blocks))
-        Actions.BUSSIFY_SINKS.set_sensitive(bool(selected_blocks))
-        Actions.RELOAD_BLOCKS.set_sensitive(True)
-        Actions.FIND_BLOCKS.set_sensitive(True)
+        Actions.BLOCK_CREATE_HIER.set_enabled(bool(selected_blocks))
+        Actions.OPEN_HIER.set_enabled(bool(selected_blocks))
+        Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
+        Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
+        Actions.RELOAD_BLOCKS.enable()
+        Actions.FIND_BLOCKS.enable()
 
         self.update_exec_stop()
 
-        Actions.FLOW_GRAPH_SAVE.set_sensitive(not page.saved)
+        Actions.FLOW_GRAPH_SAVE.set_enabled(not page.saved)
         main.update()
 
         flow_graph.update_selected()
         page.drawing_area.queue_draw()
 
-        return True  # action was handled
+        return True  # Action was handled
 
     def update_exec_stop(self):
         """
@@ -735,6 +768,6 @@ class Application(Gtk.Application):
         """
         page = self.main_window.current_page
         sensitive = page.flow_graph.is_valid() and not page.process
-        Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
-        Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
-        Actions.FLOW_GRAPH_KILL.set_sensitive(page.process is not None)
+        Actions.FLOW_GRAPH_GEN.set_enabled(sensitive)
+        Actions.FLOW_GRAPH_EXEC.set_enabled(sensitive)
+        Actions.FLOW_GRAPH_KILL.set_enabled(page.process is not None)
