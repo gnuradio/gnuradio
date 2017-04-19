@@ -42,28 +42,50 @@ namespace gr {
     static const double k3 = 0.077 * 2 * M_PI;
     static const double k4 = 0.3 * M_PI;
 
+    static double
+    phase_wrap(double arg)
+    {
+      while (arg >= 2.0*M_PI)
+        arg -= 2.0*M_PI;
+      while (arg <= 2.0*M_PI)
+        arg += 2.0*M_PI;
+      return arg;
+    }
+
     static float
     test_fcn_sin(double index)
     {
-      return (2 * sin (index * k1 + k2) + 3 * sin (index * k3 + k4));
+      double arg1 = phase_wrap(index * k1 + k2);
+      double arg2 = phase_wrap(index * k3 + k4);
+
+      return (2 * sin (arg1) + 3 * sin (arg2));
     }
 
     static float
     test_fcn_cos(double index)
     {
-      return (2 * cos (index * k1 + k2) + 3 * cos (index * k3 + k4));
+      double arg1 = phase_wrap(index * k1 + k2);
+      double arg2 = phase_wrap(index * k3 + k4);
+
+      return (2 * cos (arg1) + 3 * cos (arg2));
     }
 
     static float
     test_fcn_dsin(double index)
     {
-      return (k1 * 2 * cos (index * k1 + k2) + k3 * 3 * cos (index * k3 + k4));
+      double arg1 = phase_wrap(index * k1 + k2);
+      double arg2 = phase_wrap(index * k3 + k4);
+
+      return (k1 * 2 * cos (arg1) + k3 * 3 * cos (arg2));
     }
 
     static float
     test_fcn_dcos(double index)
     {
-      return (-k1 * 2 * sin (index * k1 + k2) - k3 * 3 * sin (index * k3 + k4));
+      double arg1 = phase_wrap(index * k1 + k2);
+      double arg2 = phase_wrap(index * k3 + k4);
+
+      return (-k1 * 2 * sin (arg1) - k3 * 3 * sin (arg2));
     }
 
     static gr_complex
@@ -96,8 +118,9 @@ namespace gr {
 	  gr_complex expected = test_fcn_d((i + 3) + imu * inv_nsteps);
 	  gr_complex actual = diffr.differentiate(&input[i], imu * inv_nsteps);
 
-	  CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.004);
-	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
+	  CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0103);
+	  // printf ("%9.6f  %9.6f  %9.6f \n", expected.real(), actual.real(), expected.real() - actual.real());
+	  // printf ("%9.6f  %9.6f  %9.6f \n", expected.imag(), actual.imag(), expected.imag() - actual.imag());
 	}
       }
       volk_free(input);
