@@ -45,6 +45,8 @@ install(FILES
     interpolator_taps.h
     mmse_fir_interpolator_cc.h
     mmse_fir_interpolator_ff.h
+    mmse_interp_differentiator_cc.h
+    mmse_interp_differentiator_ff.h
     pm_remez.h
     polyphase_filterbank.h
     filterbank.h
