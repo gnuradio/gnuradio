@@ -210,7 +210,6 @@ class MainWindow(Gtk.ApplicationWindow):
     def current_page(self, page):
         self.notebook.current_page = page
 
-
     def add_console_line(self, line):
         """
         Place line at the end of the text buffer, then scroll its window all the way down.
