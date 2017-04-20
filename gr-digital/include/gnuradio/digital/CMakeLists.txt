@@ -1,4 +1,4 @@
-# Copyright 2011-2016 Free Software Foundation, Inc.
+# Copyright (C) 2011-2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -38,6 +38,7 @@ install(FILES
     binary_slicer_fb.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
+    clock_tracking_loop.h
     cma_equalizer_cc.h
     constellation.h
     constellation_decoder_cb.h
