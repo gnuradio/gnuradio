@@ -254,7 +254,9 @@ class VariableEditor(Gtk.VBox):
         elif key == self.ADD_VARIABLE:
             self.emit('create_new_block', 'variable')
         elif key == self.OPEN_PROPERTIES:
-            Actions.BLOCK_PARAM_MODIFY(self._block)
+            # TODO: This probably isn't working because the action doesn't expect a parameter
+            #Actions.BLOCK_PARAM_MODIFY()
+            pass
         elif key == self.DELETE_BLOCK:
             self.emit('remove_block', self._block.get_id())
         elif key == self.DELETE_CONFIRM:

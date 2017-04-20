@@ -99,7 +99,6 @@ class Namespace(object):
         if action_name not in self._actions:
             raise Exception("Action '{}' is not registered!".format(action_name))
 
-        log.debug("Triggering action '{}'".format(action_name))
         if target_value:
             self._actions[action_name].activate(target_value)
         else:
@@ -183,7 +182,6 @@ class Action(Gio.SimpleAction):
 
     # Allows actions to be directly called.
     def __call__(self, parameter=None):
-        log.debug("Triggering {} ({})".format(self.name, parameter))
         if self.type and parameter:
             # Try to convert it to the correct type.
             try:
@@ -456,13 +454,14 @@ BLOCK_BYPASS = actions.register("win.block_bypass",
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
     label='_Snap to grid',
     tooltip='Snap blocks to a grid for an easier connection alignment',
-    preference_name='snap_to_grid'
+    preference_name='snap_to_grid',
 )
 TOGGLE_HIDE_DISABLED_BLOCKS = actions.register("win.hide_disabled",
     label='Hide _Disabled Blocks',
     tooltip='Toggle visibility of disabled blocks and connections',
     icon_name='image-missing',
     keypresses=(Gdk.KEY_d, Gdk.ModifierType.CONTROL_MASK),
+    preference_name='hide_disabled',
 )
 TOGGLE_HIDE_VARIABLES = actions.register("win.hide_variables",
     label='Hide Variables',

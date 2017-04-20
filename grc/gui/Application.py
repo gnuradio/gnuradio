@@ -221,13 +221,22 @@ class Application(Gtk.Application):
                 action.set_enabled(True)
                 if hasattr(action, 'load_from_preferences'):
                     action.load_from_preferences()
+
             # Hide the panels *IF* it's saved in preferences
             main.update_panel_visibility(main.BLOCKS, Actions.TOGGLE_BLOCKS_WINDOW.get_active())
             main.update_panel_visibility(main.CONSOLE, Actions.TOGGLE_CONSOLE_WINDOW.get_active())
             main.update_panel_visibility(main.VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.get_active())
+
             if ParseXML.xml_failures:
                 Messages.send_xml_errors_if_any(ParseXML.xml_failures)
                 Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(True)
+
+            # Force an update on the current page to match loaded preferences.
+            # In the future, change the __init__ order to load preferences first
+            page = main.current_page
+            if page:
+                page.flow_graph.update()
+
             self.init = True
         elif action == Actions.APPLICATION_QUIT:
             if main.close_pages():
@@ -517,6 +526,7 @@ class Application(Gtk.Application):
             Actions.NOTHING_SELECT()
             action.save_to_preferences()
             varedit.save_to_preferences()
+            flow_graph_update()
         elif action == Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR:
             # TODO: There may be issues at startup since these aren't triggered
             # the same was as Gtk.Actions when loading preferences.
@@ -539,7 +549,7 @@ class Application(Gtk.Application):
         # Param Modifications
         ##################################################
         elif action == Actions.BLOCK_PARAM_MODIFY:
-            selected_block = args[0] if args else flow_graph.selected_block
+            selected_block = args[0] if args[0] else flow_graph.selected_block
             if selected_block:
                 self.dialog = PropsDialog(self.main_window, selected_block)
                 response = Gtk.ResponseType.APPLY
@@ -747,7 +757,6 @@ class Application(Gtk.Application):
         ##################################################
         # Global Actions for all States
         ##################################################
-        log.debug("Post action handler. Updating the main window.")
         page = main.current_page  # page and flow graph might have changed
         flow_graph = page.flow_graph if page else None
 
