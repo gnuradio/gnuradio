@@ -1,4 +1,4 @@
-# Copyright 2012-2014 Free Software Foundation, Inc.
+# Copyright (C) 2012-2014,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -57,6 +57,7 @@ list(APPEND filter_sources
   fft_filter.cc
   firdes.cc
   iir_filter.cc
+  interpolating_resampler.cc
   mmse_fir_interpolator_cc.cc
   mmse_fir_interpolator_ff.cc
   mmse_interp_differentiator_cc.cc

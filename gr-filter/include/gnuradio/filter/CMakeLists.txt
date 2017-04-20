@@ -1,4 +1,4 @@
-# Copyright 2012,2014 Free Software Foundation, Inc.
+# Copyright (C) 2012,2014,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -42,6 +42,7 @@ install(FILES
     fft_filter.h
     iir_filter.h
     interp_differentiator_taps.h
+    interpolating_resampler.h
     interpolator_taps.h
     mmse_fir_interpolator_cc.h
     mmse_fir_interpolator_ff.h
