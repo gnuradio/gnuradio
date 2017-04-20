@@ -159,28 +159,64 @@ class Application(Gtk.Application):
 
             main.btwin.search_entry.hide()
 
-            # Disable all actions, then re-enable a few
-            for x in Actions.get_actions():
-                Actions.actions[x].set_enabled(False)  # set all actions disabled
+            """
+            Only disable certain actions on startup. Each of these actions are
+            conditionally enabled in _handle_action, so disable them first.
+             - FLOW_GRAPH_UNDO/REDO are set in gui/StateCache.py
+             - XML_PARSER_ERRORS_DISPLAY is set in RELOAD_BLOCKS
+
+            TODO: These 4 should probably be included, but they are not currently
+            enabled anywhere else:
+             - PORT_CONTROLLER_DEC, PORT_CONTROLLER_INC
+             - BLOCK_INC_TYPE, BLOCK_DEC_TYPE
+
+            TODO: These should be handled better. They are set in
+            update_exec_stop(), but not anywhere else
+             - FLOW_GRAPH_GEN, FLOW_GRAPH_EXEC, FLOW_GRAPH_KILL
+            """
             for action in (
-                Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
-                Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
-                Actions.FLOW_GRAPH_DUPLICATE, Actions.FLOW_GRAPH_SAVE_A_COPY,
-                Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
-                Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-                Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
-                Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-                Actions.TOOLS_RUN_FDESIGN, Actions.TOGGLE_SCROLL_LOCK,
-                Actions.CLEAR_CONSOLE, Actions.SAVE_CONSOLE,
-                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID,
+                Actions.ERRORS_WINDOW_DISPLAY,
+                Actions.ELEMENT_DELETE,
+                Actions.BLOCK_PARAM_MODIFY,
+                Actions.BLOCK_ROTATE_CCW,
+                Actions.BLOCK_ROTATE_CW,
+                Actions.BLOCK_VALIGN_TOP,
+                Actions.BLOCK_VALIGN_MIDDLE,
+                Actions.BLOCK_VALIGN_BOTTOM,
+                Actions.BLOCK_HALIGN_LEFT,
+                Actions.BLOCK_HALIGN_CENTER,
+                Actions.BLOCK_HALIGN_RIGHT,
+                Actions.BLOCK_CUT,
+                Actions.BLOCK_COPY,
+                Actions.BLOCK_PASTE,
+                Actions.BLOCK_ENABLE,
+                Actions.BLOCK_DISABLE,
+                Actions.BLOCK_BYPASS,
+                Actions.BLOCK_CREATE_HIER,
+                Actions.OPEN_HIER,
+                Actions.BUSSIFY_SOURCES,
+                Actions.BUSSIFY_SINKS,
+                Actions.FLOW_GRAPH_SAVE,
+                Actions.FLOW_GRAPH_UNDO,
+                Actions.FLOW_GRAPH_REDO,
+                Actions.XML_PARSER_ERRORS_DISPLAY
+            ):
+                action.disable()
+
+            # Load preferences
+            for action in (
+                Actions.TOGGLE_BLOCKS_WINDOW,
+                Actions.TOGGLE_CONSOLE_WINDOW,
+                Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
+                Actions.TOGGLE_SCROLL_LOCK,
+                Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
+                Actions.TOGGLE_SNAP_TO_GRID,
                 Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
                 Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
                 Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
-                Actions.FLOW_GRAPH_OPEN_QSS_THEME,
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
                 Actions.TOGGLE_HIDE_VARIABLES,
-                Actions.SELECT_ALL,
             ):
                 action.set_enabled(True)
                 if hasattr(action, 'load_from_preferences'):
@@ -503,7 +539,7 @@ class Application(Gtk.Application):
         # Param Modifications
         ##################################################
         elif action == Actions.BLOCK_PARAM_MODIFY:
-            selected_block = action.args[0] if action.args else flow_graph.selected_block
+            selected_block = args[0] if args else flow_graph.selected_block
             if selected_block:
                 self.dialog = PropsDialog(self.main_window, selected_block)
                 response = Gtk.ResponseType.APPLY
@@ -711,6 +747,7 @@ class Application(Gtk.Application):
         ##################################################
         # Global Actions for all States
         ##################################################
+        log.debug("Post action handler. Updating the main window.")
         page = main.current_page  # page and flow graph might have changed
         flow_graph = page.flow_graph if page else None
 

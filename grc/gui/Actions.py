@@ -42,7 +42,8 @@ class Namespace(object):
         self._actions[key] = action
 
     def connect(self, name, handler):
-      self._actions[name].connect('activate', handler)
+        #log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
+        self._actions[name].connect('activate', handler)
 
     def register(self, name, parameter=None, handler=None, label=None, tooltip=None,
                  icon_name=None, keypresses=None, preference_name=None, default=None):
@@ -182,6 +183,7 @@ class Action(Gio.SimpleAction):
 
     # Allows actions to be directly called.
     def __call__(self, parameter=None):
+        log.debug("Triggering {} ({})".format(self.name, parameter))
         if self.type and parameter:
             # Try to convert it to the correct type.
             try:
