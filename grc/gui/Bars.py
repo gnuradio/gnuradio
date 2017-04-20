@@ -65,9 +65,9 @@ TOOLBAR_LIST = [
 # The list of actions and categories for the menu bar.
 MENU_BAR_LIST = [
   ('_File', [
-    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new'), Actions.FLOW_GRAPH_OPEN,
-     (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
-    [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS],
+    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new'), Actions.FLOW_GRAPH_DUPLICATE,
+     Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
+    [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
     [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
     [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT]
   ]),

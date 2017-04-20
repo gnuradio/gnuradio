@@ -135,7 +135,6 @@ class Application(Gtk.Application):
         return True
 
     def _handle_action(self, action, *args):
-        #print action
         log.debug("_handle_action({0}, {1})".format(action, args))
         main = self.main_window
         page = main.current_page
@@ -610,7 +609,7 @@ class Application(Gtk.Application):
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
                 flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
-            file_paths = args if args else FileDialogs.OpenFlowGraph(main, page.file_path).run()
+            file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(main, page.file_path).run()
             if file_paths: # Open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i==0))
@@ -644,33 +643,37 @@ class Application(Gtk.Application):
                 Actions.FLOW_GRAPH_SAVE()
                 self.config.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
-                main.menu_bar.refresh_submenus()
-        elif action == Actions.FLOW_GRAPH_SAVE_A_COPY:
+                #TODO
+                #main.menu_bar.refresh_submenus()
+        elif action == Actions.FLOW_GRAPH_SAVE_COPY:
             try:
-                if not page.get_file_path():
+                if not page.file_path:
+                    # Make sure the current flowgraph has been saved
                     Actions.FLOW_GRAPH_SAVE_AS()
                 else:
-                    dup_file_path = page.get_file_path()
+                    dup_file_path = page.file_path
                     dup_file_name = '.'.join(dup_file_path.split('.')[:-1]) + "_copy" # Assuming .grc extension at the end of file_path
                     dup_file_path_temp = dup_file_name+'.grc'
                     count = 1
                     while os.path.exists(dup_file_path_temp):
                         dup_file_path_temp = dup_file_name+'('+str(count)+').grc'
                         count += 1
-                    dup_file_path_user = SaveFlowGraphFileDialog(dup_file_path_temp).run()
+                    dup_file_path_user = FileDialogs.SaveFlowGraph(main, dup_file_path_temp).run()
                     if dup_file_path_user is not None:
                         ParseXML.to_file(flow_graph.export_data(), dup_file_path_user)
                         Messages.send('Saved Copy to: "' + dup_file_path_user + '"\n')
             except IOError:
                 Messages.send_fail_save("Can not create a copy of the flowgraph\n")
         elif action == Actions.FLOW_GRAPH_DUPLICATE:
-            flow_graph = main.get_flow_graph()
+            previous = flow_graph
+            # Create a new page
             main.new_page()
-            curr_page = main.get_page()
-            new_flow_graph = main.get_flow_graph()
-            new_flow_graph.import_data(flow_graph.export_data())
+            page = main.current_page
+            new_flow_graph = page.flow_graph
+            # Import the old data and mark the current as not saved
+            new_flow_graph.import_data(previous.export_data())
             flow_graph_update(new_flow_graph)
-            curr_page.set_saved(False)
+            page.saved = False
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path, background_transparent = FileDialogs.SaveScreenShot(main, page.file_path).run()
             if file_path is not None:
@@ -753,7 +756,7 @@ class Application(Gtk.Application):
                              shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         else:
-            print('!!! Action "%s" not handled !!!' % action)
+            log.warning('!!! Action "%s" not handled !!!' % action)
         ##################################################
         # Global Actions for all States
         ##################################################

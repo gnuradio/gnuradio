@@ -325,9 +325,9 @@ FLOW_GRAPH_SAVE_AS = actions.register("app.flowgraph.save_as",
     icon_name='document-save-as',
     keypresses=(Gdk.KEY_s, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK),
 )
-FLOW_GRAPH_SAVE_A_COPY = actions.register("app.flowgraph.save_copy",
-    label='Save A Copy',
-    tooltip='Save the copy of current flow graph',
+FLOW_GRAPH_SAVE_COPY = actions.register("app.flowgraph.save_copy",
+    label='Save Copy',
+    tooltip='Save a copy of current flow graph',
 )
 FLOW_GRAPH_DUPLICATE = actions.register("app.flowgraph.duplicate",
     label='_Duplicate',
