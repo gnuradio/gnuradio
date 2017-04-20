@@ -62,7 +62,8 @@ def main():
     console = logging.StreamHandler()
     console.setLevel(LOG_LEVELS[args.log])
 
-    msg_format = '[%(asctime)s - %(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)'
+    #msg_format = '[%(asctime)s - %(levelname)8s] --- %(message)s (%(filename)s:%(lineno)s)'
+    msg_format = '[%(levelname)s] %(message)s (%(filename)s:%(lineno)s)'
     date_format = '%I:%M'
     formatter = logging.Formatter(msg_format, datefmt=date_format)
 
