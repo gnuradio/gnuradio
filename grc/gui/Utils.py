@@ -141,6 +141,9 @@ def make_screenshot(flow_graph, file_path, transparent_bg=False):
         cr.fill()
 
     cr.translate(padding - x_min, padding - y_min)
+
+    flow_graph.create_labels(cr)
+    flow_graph.create_shapes()
     flow_graph.draw(cr)
 
     if file_path.endswith('.png'):
