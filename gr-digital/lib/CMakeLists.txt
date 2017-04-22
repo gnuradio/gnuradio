@@ -128,6 +128,7 @@ list(APPEND digital_sources
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
+    timing_error_detector.cc
 )
 
 #Add Windows DLL resource file if using MSVC
