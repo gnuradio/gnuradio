@@ -13,12 +13,9 @@ gnuradio
    blocks_comedi <comedi_blocks>
    blocks_digital <digital_blocks>
    blocks_dtv <dtv_blocks>
-   blocks_fcd <fcd_blocks>
    blocks_fec <fec_blocks>
    blocks_fft <fft_blocks>
    blocks_filter <filter_blocks>
-   blocks_noaa <noaa_blocks>
-   blocks_pager <pager_blocks>
    blocks_qtgui <qtgui_blocks>
    blocks_trellis <trellis_blocks>
    blocks_uhd <uhd_blocks>
@@ -522,15 +519,6 @@ Error Coding Blocks
    gnuradio.fec.tagged_encoder
 
 
-FCD Blocks
-----------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.fcd.source_c
-
-
 File Operator Blocks
 --------------------
 
@@ -855,17 +843,6 @@ Networking Tools Blocks
    gnuradio.blocks.udp_source
 
 
-NOAA Blocks
------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.noaa.hrpt_decoder
-   gnuradio.noaa.hrpt_deframer
-   gnuradio.noaa.hrpt_pll_cf
-
-
 OFDM Blocks
 -----------
 
@@ -909,20 +886,7 @@ Packet Operator Blocks
    gnuradio.digital.simple_correlator
    gnuradio.digital.simple_framer
 
-
-Pager Blocks
-------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.pager.flex_deinterleave
-   gnuradio.pager.flex_frame
-   gnuradio.pager.flex_parse
-   gnuradio.pager.flex_sync
-   gnuradio.pager.slicer_fb
-
-
+   
 Peak Detector Blocks
 --------------------
 
