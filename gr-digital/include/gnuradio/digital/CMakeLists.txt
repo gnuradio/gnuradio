@@ -115,6 +115,8 @@ install(FILES
     simple_correlator.h
     simple_framer.h
     simple_framer_sync.h
+    symbol_sync_cc.h
+    symbol_sync_ff.h
     timing_error_detector.h
     header_payload_demux.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
