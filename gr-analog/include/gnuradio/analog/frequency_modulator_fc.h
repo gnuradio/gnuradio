@@ -49,7 +49,7 @@ namespace gr {
      * systems and 75 KHz for wideband FM, like audio broadcast FM
      * stations.
      *
-     * In this block, the input argument is \p sensivity, not the
+     * In this block, the input argument is \p sensitivity, not the
      * frequency deviation.  The sensitivity specifies how much the
      * phase changes based on the new input sample. Given a maximum
      * deviation, \f$ f_{\Delta} \f$, and sample rate \f$f_s\f$, the
