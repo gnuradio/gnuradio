@@ -38,15 +38,6 @@
 
 namespace gr {
 
-// must be defined to either 0 or 1
-#define ENABLE_LOGGING 0
-
-#if (ENABLE_LOGGING)
-#define LOG(x) do { x; } while(0)
-#else
-#define LOG(x) do {;} while(0)
-#endif
-
   static int which_scheduler  = 0;
 
   inline static unsigned int
@@ -158,31 +149,158 @@ namespace gr {
   }
 
   block_executor::block_executor(block_sptr block, int max_noutput_items)
-    : d_block(block), d_log(0), d_max_noutput_items(max_noutput_items)
+    : d_block(block), d_max_noutput_items(max_noutput_items)
   {
-    if(ENABLE_LOGGING) {
-      std::string name = str(boost::format("sst-%03d.log") % which_scheduler++);
-      d_log = new std::ofstream(name.c_str());
-      std::unitbuf(*d_log);		// make it unbuffered...
-      *d_log << "block_executor: "
-             << d_block << std::endl;
-    }
-
 #ifdef GR_PERFORMANCE_COUNTERS
     prefs *prefs = prefs::singleton();
     d_use_pc = prefs->get_bool("PerfCounters", "on", false);
 #endif /* GR_PERFORMANCE_COUNTERS */
-
-    d_block->start();			// enable any drivers, etc.
   }
 
   block_executor::~block_executor()
   {
-    if(ENABLE_LOGGING)
-      delete d_log;
-
     d_block->stop();			// stop any drivers, etc.
   }
+
+  void
+  block_executor::run(block_sptr block, int max_noutput_items) {
+
+    block_executor executor(block, max_noutput_items);
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    #include <windows.h>
+    thread::set_thread_name(GetCurrentThread(), boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
+#else
+    thread::set_thread_name(pthread_self(), boost::str(boost::format("%s%d") % block->name() % block->unique_id()));
+#endif
+
+    block_detail *d = block->detail().get();
+    block_executor::state s;
+    pmt::pmt_t msg;
+
+    d->threaded = true;
+    d->thread = gr::thread::get_current_thread_id();
+
+    prefs *p = prefs::singleton();
+    size_t max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
+
+    std::string config_file = p->get_string("LOG", "log_config", "");
+    std::string log_level = p->get_string("LOG", "block_executor_log_level", "off");
+    std::string log_file = p->get_string("LOG", "log_file", "");
+    GR_LOG_GETLOGGER(LOG, "gr_log.block_executor-" + block->name());
+    GR_LOG_SET_LEVEL(LOG, log_level);
+    GR_CONFIG_LOGGER(config_file);
+    if(log_file.size() > 0) {
+      if(log_file == "stdout") {
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+      }
+      else if(log_file == "stderr") {
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+      }
+      else {
+        GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
+      }
+    }
+
+    // Set thread affinity if it was set before fg was started.
+    if(block->processor_affinity().size() > 0) {
+      gr::thread::thread_bind_to_processor(d->thread, block->processor_affinity());
+    }
+
+    // Set thread priority if it was set before fg was started
+    if(block->thread_priority() > 0) {
+      gr::thread::set_thread_priority(d->thread, block->thread_priority());
+    }
+
+    // make sure our block isnt finished
+    block->clear_finished();
+
+    while(1) {
+      boost::this_thread::interruption_point();
+
+      d->d_tpb.clear_changed();
+
+      // handle any queued up messages
+      BOOST_FOREACH(basic_block::msg_queue_map_t::value_type &i, block->msg_queue) {
+        // Check if we have a message handler attached before getting
+        // any messages. This is mostly a protection for the unknown
+        // startup sequence of the threads.
+        if(block->has_msg_handler(i.first)) {
+          while((msg = block->delete_head_nowait(i.first))) {
+            block->dispatch_msg(i.first,msg);
+          }
+        }
+        else {
+          // If we don't have a handler but are building up messages,
+          // prune the queue from the front to keep memory in check.
+          if(block->nmsgs(i.first) > max_nmsgs){
+            GR_LOG_WARN(LOG,"asynchronous message buffer overflowing, dropping message");
+            msg = block->delete_head_nowait(i.first);
+          }
+        }
+      }
+
+      // run one iteration if we are a connected stream block
+      if(d->noutputs() >0 || d->ninputs()>0){
+        s = executor.run_one_iteration();
+      }
+      else {
+        s = block_executor::BLKD_IN;
+        // a msg port only block wants to shutdown
+        if(block->finished()) {
+          s = block_executor::DONE;
+        }
+      }
+
+      if(block->finished() && s == block_executor::READY_NO_OUTPUT) {
+        s = block_executor::DONE;
+        d->set_done(true);
+      }
+
+      if(!d->ninputs() && s == block_executor::READY_NO_OUTPUT) {
+        s = block_executor::BLKD_IN;
+      }
+
+      switch(s){
+      case block_executor::READY:              // Tell neighbors we made progress.
+        d->d_tpb.notify_neighbors(d);
+        break;
+
+      case block_executor::READY_NO_OUTPUT:    // Notify upstream only
+        d->d_tpb.notify_upstream(d);
+        break;
+
+      case block_executor::DONE:               // Game over.
+        block->notify_msg_neighbors();
+        d->d_tpb.notify_neighbors(d);
+        return;
+
+      case block_executor::BLKD_IN:            // Wait for input.
+      {
+        gr::thread::scoped_lock guard(d->d_tpb.mutex);
+
+        if(!d->d_tpb.input_changed) {
+          boost::system_time const timeout=boost::get_system_time()+ boost::posix_time::milliseconds(250);
+          d->d_tpb.input_cond.timed_wait(guard, timeout);
+        }
+      }
+      break;
+
+      case block_executor::BLKD_OUT:           // Wait for output buffer space.
+      {
+        gr::thread::scoped_lock guard(d->d_tpb.mutex);
+        while(!d->d_tpb.output_changed) {
+            d->d_tpb.output_cond.wait(guard);
+        }
+      }
+      break;
+
+      default:
+        throw std::runtime_error("possible memory corruption in scheduler");
+      }
+    }
+  }
+
 
   block_executor::state
   block_executor::run_one_iteration()
@@ -197,7 +315,7 @@ namespace gr {
     block        *m = d_block.get();
     block_detail *d = m->detail().get();
 
-    LOG(*d_log << std::endl << m);
+    GR_LOG_GETLOGGER(LOG, "gr_log.block_executor-" + d_block->name());
 
     max_noutput_items = round_down(d_max_noutput_items, m->output_multiple());
 
@@ -217,12 +335,12 @@ namespace gr {
       // determine the minimum available output space
       noutput_items = min_available_space(d, m->output_multiple (), m->min_noutput_items ());
       noutput_items = std::min(noutput_items, max_noutput_items);
-      LOG(*d_log << " source\n  noutput_items = " << noutput_items << std::endl);
+      GR_LOG_DEBUG(LOG, "source\n  noutput_items = " << noutput_items);
       if(noutput_items == -1)		// we're done
         goto were_done;
 
       if(noutput_items == 0){		// we're output blocked
-        LOG(*d_log << "  BLKD_OUT\n");
+        GR_LOG_DEBUG(LOG, "BLKD_OUT");
         return BLKD_OUT;
       }
 
@@ -236,7 +354,7 @@ namespace gr {
       d_input_done.resize(d->ninputs());
       d_output_items.resize (0);
       d_start_nitems_read.resize(d->ninputs());
-      LOG(*d_log << " sink\n");
+      GR_LOG_DEBUG(LOG, "sink");
 
       max_items_avail = 0;
       for(int i = 0; i < d->ninputs (); i++) {
@@ -249,8 +367,8 @@ namespace gr {
           d_input_done[i] = d->input(i)->done();
         }
 
-        LOG(*d_log << "  d_ninput_items[" << i << "] = " << d_ninput_items[i] << std::endl);
-        LOG(*d_log << "  d_input_done[" << i << "] = " << d_input_done[i] << std::endl);
+        GR_LOG_DEBUG(LOG, "d_ninput_items[" << i << "] = " << d_ninput_items[i]);
+        GR_LOG_DEBUG(LOG, "d_input_done[" << i << "] = " << d_input_done[i]);
 
         if (d_ninput_items[i] < m->output_multiple() && d_input_done[i])
           goto were_done;
@@ -262,11 +380,11 @@ namespace gr {
       noutput_items = (int)(max_items_avail * m->relative_rate ());
       noutput_items = round_down(noutput_items, m->output_multiple ());
       noutput_items = std::min(noutput_items, max_noutput_items);
-      LOG(*d_log << "  max_items_avail = " << max_items_avail << std::endl);
-      LOG(*d_log << "  noutput_items = " << noutput_items << std::endl);
+      GR_LOG_DEBUG(LOG, "  max_items_avail = " << max_items_avail);
+      GR_LOG_DEBUG(LOG, "  noutput_items = " << noutput_items);
 
       if(noutput_items == 0) {    // we're blocked on input
-        LOG(*d_log << "  BLKD_IN\n");
+        GR_LOG_DEBUG(LOG, "  BLKD_IN");
         return BLKD_IN;
       }
 
@@ -297,20 +415,15 @@ namespace gr {
 
       // determine the minimum available output space
       noutput_items = min_available_space(d, m->output_multiple(), m->min_noutput_items());
-      if(ENABLE_LOGGING) {
-        *d_log << " regular ";
-        if(m->relative_rate() >= 1.0)
-          *d_log << "1:" << m->relative_rate() << std::endl;
-        else
-          *d_log << 1.0/m->relative_rate() << ":1\n";
-        *d_log << "  max_items_avail = " << max_items_avail << std::endl;
-        *d_log << "  noutput_items = " << noutput_items << std::endl;
-      }
+      GR_LOG_DEBUG(LOG, "regular "
+          << 1.0/m->relative_rate() << ":1"
+          << "\n  max_items_avail = " << max_items_avail
+          << "\n  noutput_items = " << noutput_items);
       if(noutput_items == -1)		// we're done
         goto were_done;
 
       if(noutput_items == 0) {		// we're output blocked
-        LOG(*d_log << "  BLKD_OUT\n");
+        GR_LOG_DEBUG(LOG, "  BLKD_OUT");
         return BLKD_OUT;
       }
 
@@ -398,7 +511,7 @@ namespace gr {
         }
 
         // We're blocked on input
-        LOG(*d_log << "  BLKD_IN\n");
+        GR_LOG_DEBUG(LOG, "  BLKD_IN");
         if(d_input_done[i])   // If the upstream block is done, we're done
           goto were_done;
 
@@ -455,8 +568,8 @@ namespace gr {
         d->stop_perf_counters(noutput_items, n);
 #endif /* GR_PERFORMANCE_COUNTERS */
 
-      LOG(*d_log << "  general_work: noutput_items = " << noutput_items
-          << " result = " << n << std::endl);
+      GR_LOG_DEBUG(LOG, "general_work: noutput_items = " << noutput_items
+          << " result = " << n);
 
       // Adjust number of unaligned items left to process
       if(m->is_unaligned()) {
@@ -509,7 +622,7 @@ namespace gr {
     assert(0);
 
   were_done:
-    LOG(*d_log << "  were_done\n");
+    GR_LOG_DEBUG(LOG, "were_done");
     d->set_done (true);
     return DONE;
   }

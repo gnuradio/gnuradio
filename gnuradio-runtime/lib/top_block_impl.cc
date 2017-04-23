@@ -26,7 +26,7 @@
 
 #include "top_block_impl.h"
 #include "flat_flowgraph.h"
-#include "scheduler_tpb.h"
+#include "scheduler.h"
 #include <gnuradio/top_block.h>
 #include <gnuradio/prefs.h>
 
@@ -39,42 +39,6 @@
 namespace gr {
 
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
-
-  typedef scheduler_sptr(*scheduler_maker)(flat_flowgraph_sptr ffg,
-                                           int max_noutput_items);
-
-  static struct scheduler_table {
-    const char *name;
-    scheduler_maker f;
-  } scheduler_table[] = {
-    { "TPB", scheduler_tpb::make }    // first entry is default
-  };
-
-  static scheduler_sptr
-  make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items)
-  {
-    static scheduler_maker factory = 0;
-
-    if(factory == 0) {
-      char *v = getenv("GR_SCHEDULER");
-      if(!v)
-        factory = scheduler_table[0].f;	// use default
-      else {
-        for(size_t i = 0; i < sizeof(scheduler_table)/sizeof(scheduler_table[0]); i++) {
-          if(strcmp(v, scheduler_table[i].name) == 0) {
-            factory = scheduler_table[i].f;
-            break;
-          }
-        }
-        if(factory == 0) {
-          std::cerr << "warning: Invalid GR_SCHEDULER environment variable value \""
-                    << v << "\".  Using \"" << scheduler_table[0].name << "\"\n";
-          factory = scheduler_table[0].f;
-        }
-      }
-    }
-    return factory(ffg, max_noutput_items);
-  }
 
   top_block_impl::top_block_impl(top_block *owner)
     : d_owner(owner), d_ffg(),
@@ -116,7 +80,7 @@ namespace gr {
     if(p->get_bool("ControlPort", "on", false) && p->get_bool("PerfCounters", "export", false))
       d_ffg->enable_pc_rpc();
 
-    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_scheduler = scheduler::make(d_ffg, d_max_noutput_items);
     d_state = RUNNING;
   }
 
@@ -202,7 +166,7 @@ namespace gr {
     d_ffg = new_ffg;
 
     // Create a new scheduler to execute it
-    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_scheduler = scheduler::make(d_ffg, d_max_noutput_items);
     d_retry_wait = true;
   }
 
