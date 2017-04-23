@@ -109,6 +109,7 @@ list(APPEND gr_blocks_sources
     complex_to_mag_squared_impl.cc
     complex_to_arg_impl.cc
     conjugate_cc_impl.cc
+    concatenate_impl.cc
     copy_impl.cc
     deinterleave_impl.cc
     divide_cc_impl.cc
