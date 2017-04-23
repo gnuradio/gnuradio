@@ -402,7 +402,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.59</value>
+      <value>0.54</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -558,7 +558,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1.0/math.sqrt(2.0)*0+1.7</value>
+      <value>1.0/math.sqrt(2.0)*0+1.3</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1760,7 +1760,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>digital.constellation_bpsk().base()</value>
+      <value>digital.constellation_qpsk().base()</value>
     </param>
     <param>
       <key>ted_type</key>
