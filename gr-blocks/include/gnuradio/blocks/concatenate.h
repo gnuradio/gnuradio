@@ -52,6 +52,8 @@ namespace gr {
        * \param ninputs Number of input streams to concatenate
        */
       static sptr make(size_t itemsize, int ninputs);
+
+      virtual void set_tag_parts(bool val)=0;
     };
 
   } // namespace blocks

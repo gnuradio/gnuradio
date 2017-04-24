@@ -47,10 +47,13 @@ namespace gr {
               gr::io_signature::make(ninputs, ninputs, itemsize),
               gr::io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_ninputs(ninputs), d_current_done(false),
-        d_current_input(0)
+        d_current_input(0), d_tag_parts(false), d_last_input(-1)
     {
-
       set_tag_propagation_policy(TPP_DONT);
+
+      std::stringstream str;
+      str << name() << unique_id();
+      _id = pmt::string_to_symbol(str.str());
     }
 
     /*
@@ -65,6 +68,12 @@ namespace gr {
     {
       d_block_detail = this->detail().get();
       return true;
+    }
+
+    void
+    concatenate_impl::set_tag_parts(bool val)
+    {
+        d_tag_parts = val;
     }
 
     void
@@ -103,6 +112,7 @@ namespace gr {
     {
       int minval;
       int produced = 0;
+      std::vector<tag_t> tags;
 
       const char *in;
       if (d_current_input >= 0)
@@ -116,10 +126,22 @@ namespace gr {
       memcpy(out, in, d_itemsize * minval);
       produced += minval;
 
+      // Add a stream tag to the first item of every input stream if d_tag_parts is set
+      if (d_tag_parts && d_current_input != d_last_input) {
+        add_item_tag(0, nitems_written(0), BEGIN_KEY, pmt::from_long(d_current_input), _id);
+      }
+
+      // Copy all other tags
+      get_tags_in_range(tags, d_current_input, nitems_read(d_current_input), nitems_read(d_current_input) + minval);
+      for (unsigned int i=0; i < tags.size(); i++) {
+        add_item_tag(0, nitems_written(0) + tags[i].offset - nitems_read(d_current_input), tags[i].key, tags[i].value, tags[i].srcid);
+      }
+
       // Tell runtime system how many input items we consumed.
       // We only consume from one input at a time.
       consume (d_current_input, produced);
 
+      d_last_input = d_current_input;
       // If the current input stream has stopped producing items,
       // check if we have consumed as many as there were left
       // when forecast was called. In that case, go to the

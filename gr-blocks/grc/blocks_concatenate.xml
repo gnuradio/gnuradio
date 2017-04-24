@@ -3,7 +3,9 @@
   <name>Concatenate</name>
   <key>blocks_concatenate</key>
   <import>from gnuradio import blocks</import>
-  <make>blocks.concatenate($type.size*$vlen, $ninputs)</make>
+  <make>blocks.concatenate($type.size*$vlen, $ninputs)
+self.$(id).set_tag_parts($tag_parts)</make>
+  <callback>self.$(id).set_tag_parts($tag_parts)</callback>
 
   <param>
         <name>N input streams</name>
@@ -47,6 +49,22 @@
         <value>1</value>
         <type>int</type>
   </param>
+
+  <param>
+      <name>Tag parts</name>
+      <key>tag_parts</key>
+      <value>False</value>
+      <type>bool</type>
+      <option>
+          <name>Yes</name>
+          <key>True</key>
+      </option>
+      <option>
+          <name>No</name>
+          <key>False</key>
+      </option>
+  </param>
+
   <check>$vlen &gt; 0</check>
 
 

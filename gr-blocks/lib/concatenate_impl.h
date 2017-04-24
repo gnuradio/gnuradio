@@ -26,6 +26,8 @@
 #include <gnuradio/blocks/concatenate.h>
 #include <gnuradio/block_detail.h>
 
+static const pmt::pmt_t BEGIN_KEY = pmt::string_to_symbol("concatenated");
+
 namespace gr {
   namespace blocks {
 
@@ -36,7 +38,11 @@ namespace gr {
       int d_ninputs;
       bool d_current_done;
       int d_current_input;
+      bool d_tag_parts;
+      int d_last_input;
+
       int d_current_samples_left;
+      pmt::pmt_t _id;
 
       gr::block_detail *d_block_detail;
 
@@ -53,6 +59,8 @@ namespace gr {
            gr_vector_void_star &output_items);
 
       bool start();
+
+      void set_tag_parts(bool);
     };
 
   } // namespace blocks
