@@ -23,6 +23,17 @@
 from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
 
+# See gr-digital/lib/additive_scrambler_bb_impl.cc for reference.
+def additive_scramble_lfsr(mask, seed, reglen, bpb, data):
+    l = digital.lfsr(mask, seed, reglen)
+    out = []
+    for d in data:
+        scramble_word = 0
+        for i in xrange(0,bpb):
+            scramble_word ^= l.next_bit() << i
+        out.append(d ^ scramble_word)
+    return tuple(out)
+
 class test_scrambler(gr_unittest.TestCase):
 
     def setUp(self):
@@ -97,6 +108,26 @@ class test_scrambler(gr_unittest.TestCase):
         self.tb.connect(src, scrambler, descrambler, dst)
         self.tb.run()
         self.assertEqual(src_data, dst.data())
+
+    def test_additive_scrambler_tags_oneway(self):
+        src_data = range(0, 10)
+        reset_tag_key = 'reset_lfsr'
+        reset_tag1 = gr.tag_t()
+        reset_tag1.key = pmt.string_to_symbol(reset_tag_key)
+        reset_tag1.offset = 0
+        reset_tag2 = gr.tag_t()
+        reset_tag2.key = pmt.string_to_symbol(reset_tag_key)
+        reset_tag2.offset = 10
+        reset_tag3 = gr.tag_t()
+        reset_tag3.key = pmt.string_to_symbol(reset_tag_key)
+        reset_tag3.offset = 20
+        src = blocks.vector_source_b(src_data * 3, False, 1, (reset_tag1, reset_tag2, reset_tag3))
+        scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 0, 8, reset_tag_key)
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, scrambler, dst)
+        self.tb.run()
+        expected_data = additive_scramble_lfsr(0x8a, 0x7f, 7, 8, src_data)
+        self.assertEqual(expected_data * 3, dst.data())
 
 if __name__ == '__main__':
     gr_unittest.run(test_scrambler, "test_scrambler.xml")
