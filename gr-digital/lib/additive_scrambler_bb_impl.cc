@@ -121,18 +121,35 @@ namespace gr {
       unsigned char *out = (unsigned char *)output_items[0];
       int reset_index = _get_next_reset_index(noutput_items);
 
-      for(int i = 0; i < noutput_items; i++) {
-	unsigned char scramble_byte = 0x00;
-	for (int k = 0; k < d_bits_per_byte; k++) {
-	  scramble_byte ^= (d_lfsr.next_bit() << k);
-	}
-	out[i] = in[i] ^ scramble_byte;
-	d_bytes++;
-	if (i == reset_index) {
-	  d_lfsr.reset();
-	  d_bytes = 0;
-	  reset_index = _get_next_reset_index(noutput_items, reset_index);
-	}
+      if (d_count >= 0) {
+        for(int i = 0; i < noutput_items; i++) {
+          unsigned char scramble_byte = 0x00;
+          for (int k = 0; k < d_bits_per_byte; k++) {
+            scramble_byte ^= (d_lfsr.next_bit() << k);
+          }
+          out[i] = in[i] ^ scramble_byte;
+          d_bytes++;
+          if (i == reset_index) {
+            d_lfsr.reset();
+            d_bytes = 0;
+            reset_index = _get_next_reset_index(noutput_items, reset_index);
+          }
+        }
+      } else {
+        for(int i = 0; i < noutput_items; i++) {
+          // Reset should occur at/before the item associated with the tag.
+          if (i == reset_index) {
+            d_lfsr.reset();
+            d_bytes = 0;
+            reset_index = _get_next_reset_index(noutput_items, reset_index);
+          }
+          unsigned char scramble_byte = 0x00;
+          for (int k = 0; k < d_bits_per_byte; k++) {
+            scramble_byte ^= (d_lfsr.next_bit() << k);
+          }
+          out[i] = in[i] ^ scramble_byte;
+          d_bytes++;
+        }
       }
 
       return noutput_items;
