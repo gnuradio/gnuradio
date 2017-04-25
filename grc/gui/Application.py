@@ -63,11 +63,11 @@ class Application(Gtk.Application):
 
         log.debug("Application()")
         # Connect all actions to _handle_action
-        map(lambda x: Actions.connect(x, handler=self._handle_action), Actions.get_actions())
-
-        # Add all "app" actions to the local
-        app_actions = filter(lambda x: x.startswith("app."), Actions.get_actions())
-        map(lambda x: self.add_action(Actions.actions[x]), app_actions)
+        for x in Actions.get_actions():
+            Actions.connect(x, handler=self._handle_action)
+            Actions.actions[x].enable()
+            if x.startswith("app."):
+                self.add_action(Actions.actions[x])
 
         # Initialize
         self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
