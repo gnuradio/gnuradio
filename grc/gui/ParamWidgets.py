@@ -25,7 +25,7 @@ from . import Utils
 
 style_provider = Gtk.CssProvider()
 
-style_provider.load_from_data("""
+style_provider.load_from_data(b"""
     #dtype_complex         { background-color: #3399FF; }
     #dtype_real            { background-color: #FF8C69; }
     #dtype_float           { background-color: #FF8C69; }

@@ -23,7 +23,7 @@ import string
 
 import six
 
-VAR_CHARS = string.letters + string.digits + '_'
+VAR_CHARS = string.ascii_letters + string.digits + '_'
 
 
 class graph(object):
@@ -194,4 +194,3 @@ def sort_objects(objects, get_id, get_expr):
     sorted_ids = sort_variables(id2expr)
     # Return list of sorted objects
     return [id2obj[id] for id in sorted_ids]
-
