@@ -48,7 +48,7 @@ class Config(CoreConfig):
         self.install_prefix = install_prefix
         Constants.update_font_size(self.font_size)
 
-        self.parser = configparser.SafeConfigParser()
+        self.parser = configparser.ConfigParser()
         for section in ['main', 'files_open', 'files_recent']:
             try:
                 self.parser.add_section(section)
