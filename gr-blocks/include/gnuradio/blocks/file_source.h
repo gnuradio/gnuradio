@@ -77,6 +77,11 @@ namespace gr {
        * \brief Close the file handle.
        */
       virtual void close() = 0;
+
+      /*!
+       * \brief Add a stream tag to the first sample of the file if true
+       */
+      virtual void set_begin_tag(bool val) = 0;
     };
 
   } /* namespace blocks */

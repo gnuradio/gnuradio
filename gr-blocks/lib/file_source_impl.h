@@ -26,6 +26,8 @@
 #include <gnuradio/blocks/file_source.h>
 #include <boost/thread/mutex.hpp>
 
+static const pmt::pmt_t BEGIN_KEY = pmt::string_to_symbol("file_begin");
+
 namespace gr {
   namespace blocks {
 
@@ -37,7 +39,12 @@ namespace gr {
       FILE *d_new_fp;
       bool d_repeat;
       bool d_updated;
+      bool d_file_begin;
+      long d_repeat_cnt;
+      bool d_add_begin_tag;
+
       boost::mutex fp_mutex;
+      pmt::pmt_t _id;
 
       void do_update();
 
@@ -52,6 +59,8 @@ namespace gr {
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
+
+      void set_begin_tag(bool val);
     };
 
   } /* namespace blocks */

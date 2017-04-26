@@ -64,10 +64,15 @@ namespace gr {
 		      io_signature::make(0, 0, 0),
 		      io_signature::make(1, 1, itemsize)),
 	d_itemsize(itemsize), d_fp(0), d_new_fp(0), d_repeat(repeat),
-	d_updated(false)
+	d_updated(false), d_file_begin(true), d_repeat_cnt(0),
+       d_add_begin_tag(false)
     {
       open(filename, repeat);
       do_update();
+
+      std::stringstream str;
+      str << name() << unique_id();
+      _id = pmt::string_to_symbol(str.str());
     }
 
     file_source_impl::~file_source_impl()
@@ -139,7 +144,14 @@ namespace gr {
 	d_fp = d_new_fp;    // install new file pointer
 	d_new_fp = 0;
 	d_updated = false;
+       d_file_begin = true;
       }
+    }
+
+    void
+    file_source_impl::set_begin_tag(bool val)
+    {
+      d_add_begin_tag = val;
     }
 
     int
@@ -156,7 +168,14 @@ namespace gr {
 	throw std::runtime_error("work with file not open");
 
       gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
+
       while(size) {
+        // Add stream tag whenever the file starts again
+        if (d_file_begin && d_add_begin_tag) {
+          add_item_tag(0, nitems_written(0) + noutput_items - size, BEGIN_KEY, pmt::from_long(d_repeat_cnt), _id);
+          d_file_begin = false;
+        }
+
 	i = fread(o, d_itemsize, size, (FILE*)d_fp);
 
 	size -= i;
@@ -178,6 +197,10 @@ namespace gr {
 	  fprintf(stderr, "[%s] fseek failed\n", __FILE__);
 	  exit(-1);
 	}
+        if (d_add_begin_tag) {
+          d_file_begin = true;
+          d_repeat_cnt++;
+        }
       }
 
       if(size > 0) {	     		// EOF or error
