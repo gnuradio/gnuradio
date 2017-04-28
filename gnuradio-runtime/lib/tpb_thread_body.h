@@ -24,6 +24,7 @@
 #include <gnuradio/api.h>
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
+#include <gnuradio/thread/thread.h>
 #include "block_executor.h"
 
 namespace gr {
@@ -40,7 +41,7 @@ namespace gr {
     block_executor d_exec;
 
   public:
-    tpb_thread_body(block_sptr block, int max_noutput_items=100000);
+    tpb_thread_body(block_sptr block,  thread::barrier_sptr start_sync, int max_noutput_items=100000);
     ~tpb_thread_body();
   };
 
