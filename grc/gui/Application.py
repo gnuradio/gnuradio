@@ -96,6 +96,15 @@ class Application(Gtk.Application):
         self.main_window.connect('delete-event', self._quit)
         self.main_window.connect('key-press-event', self._handle_key_press)
         self.get_focus_flag = self.main_window.get_focus_flag
+
+        # Setup the shortcut keys
+        # TODO: These are defined globally only to get them to work.
+        # The shortcuts for widgets (notebook) need to be defined there
+        for name in Actions.get_actions():
+            keypress = Actions.actions[name].keypresses
+            if keypress:
+                self.set_accels_for_action(name, keypress)
+
         #setup the messages
         Messages.register_messenger(self.main_window.add_console_line)
         Messages.send_init(self.platform)
@@ -118,9 +127,8 @@ class Application(Gtk.Application):
         # prevent key event stealing while the search box is active
         # .has_focus() only in newer versions 2.17+?
         # .is_focus() seems to work, but exactly the same
-        if self.main_window.btwin.search_entry.has_focus():
+        if self.main_window.btwin.search_entry.has_focus() or self.main_window.vars.has_focus():
             return False
-        return Actions.handle_key_press(event)
 
     def _quit(self, window, event):
         """

@@ -240,52 +240,16 @@ class Action(Gio.SimpleAction):
     '''
 
 
-# OLD ACTIONS
-NO_MODS_MASK = 0
-
-_actions_keypress_dict = dict()
-_keymap = Gdk.Keymap.get_default()
-_used_mods_mask = NO_MODS_MASK
-
-
-def handle_key_press(event):
-    """
-    Call the action associated with the key press event.
-    Both the key value and the mask must have a match.
-
-    Args:
-        event: a gtk key press event
-
-    Returns:
-        true if handled
-    """
-    # extract the key value and the consumed modifiers
-    _unused, keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
-        event.hardware_keycode, event.get_state(), event.group)
-    # get the modifier mask and ignore irrelevant modifiers
-    mod_mask = event.get_state() & ~consumed & _used_mods_mask
-    # look up the keypress and call the action
-    try:
-        _actions_keypress_dict[(keyval, mod_mask)]()
-    except KeyError:
-        return False  # not handled
-    else:
-        return True  # handled here
-
-_all_actions_list = list()
-
-_accel_group = Gtk.AccelGroup()
-
-def get_accel_group():
-    return _accel_group
-
 actions = Namespace()
+
 
 def get_actions():
     return actions.get_actions()
 
+
 def connect(action, handler=None):
     return actions.connect(action, handler=handler)
+
 
 ########################################################################
 # Old Actions
@@ -297,14 +261,14 @@ FLOW_GRAPH_NEW = actions.register("app.flowgraph.new",
     label='_New',
     tooltip='Create a new flow graph',
     icon_name='document-new',
-    keypresses=(Gdk.KEY_n, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>n"],
     parameter="s",
 )
 FLOW_GRAPH_OPEN = actions.register("app.flowgraph.open",
     label='_Open',
     tooltip='Open an existing flow graph',
     icon_name='document-open',
-    keypresses=(Gdk.KEY_o, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>o"],
 )
 FLOW_GRAPH_OPEN_RECENT = actions.register("app.flowgraph.open_recent",
     label='Open _Recent',
@@ -317,13 +281,13 @@ FLOW_GRAPH_SAVE = actions.register("app.flowgraph.save",
     label='_Save',
     tooltip='Save the current flow graph',
     icon_name='document-save',
-    keypresses=(Gdk.KEY_s, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>s"],
 )
 FLOW_GRAPH_SAVE_AS = actions.register("app.flowgraph.save_as",
     label='Save _As',
     tooltip='Save the current flow graph as...',
     icon_name='document-save-as',
-    keypresses=(Gdk.KEY_s, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Ctrl><Shift>s"],
 )
 FLOW_GRAPH_SAVE_COPY = actions.register("app.flowgraph.save_copy",
     label='Save Copy',
@@ -333,39 +297,39 @@ FLOW_GRAPH_DUPLICATE = actions.register("app.flowgraph.duplicate",
     label='_Duplicate',
     tooltip='Create a duplicate of current flow graph',
     #stock_id=Gtk.STOCK_COPY,
-    keypresses=(Gdk.KEY_d, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Ctrl><Shift>d"],
 )
 FLOW_GRAPH_CLOSE = actions.register("app.flowgraph.close",
     label='_Close',
     tooltip='Close the current flow graph',
     icon_name='window-close',
-    keypresses=(Gdk.KEY_w, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>w"],
 )
 APPLICATION_INITIALIZE = actions.register("app.initialize")
 APPLICATION_QUIT = actions.register("app.quit",
     label='_Quit',
     tooltip='Quit program',
     icon_name='application-exit',
-    keypresses=(Gdk.KEY_q, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>q"],
 )
 FLOW_GRAPH_UNDO = actions.register("win.undo",
     label='_Undo',
     tooltip='Undo a change to the flow graph',
     icon_name='edit-undo',
-    keypresses=(Gdk.KEY_z, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>z"],
 )
 FLOW_GRAPH_REDO = actions.register("win.redo",
     label='_Redo',
     tooltip='Redo a change to the flow graph',
     icon_name='edit-redo',
-    keypresses=(Gdk.KEY_y, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>y"],
 )
 NOTHING_SELECT = actions.register("win.unselect")
 SELECT_ALL = actions.register("win.select_all",
     label='Select _All',
     tooltip='Select all blocks and connections in the flow graph',
     icon_name='edit-select-all',
-    keypresses=(Gdk.KEY_a, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>a"],
 )
 ELEMENT_SELECT = actions.register("win.select")
 ELEMENT_CREATE = actions.register("win.add")
@@ -373,50 +337,50 @@ ELEMENT_DELETE = actions.register("win.delete",
     label='_Delete',
     tooltip='Delete the selected blocks',
     icon_name='edit-delete',
-    keypresses=(Gdk.KEY_Delete, NO_MODS_MASK),
+    keypresses=["Delete"],
 )
 BLOCK_MOVE = actions.register("win.block_move")
 BLOCK_ROTATE_CCW = actions.register("win.block_rotate_ccw",
     label='Rotate Counterclockwise',
     tooltip='Rotate the selected blocks 90 degrees to the left',
     icon_name='object-rotate-left',
-    keypresses=(Gdk.KEY_Left, NO_MODS_MASK),
+    keypresses=["Left"],
 )
 BLOCK_ROTATE_CW = actions.register("win.block_rotate",
     label='Rotate Clockwise',
     tooltip='Rotate the selected blocks 90 degrees to the right',
     icon_name='object-rotate-right',
-    keypresses=(Gdk.KEY_Right, NO_MODS_MASK),
+    keypresses=["Right"],
 )
 BLOCK_VALIGN_TOP = actions.register("win.block_align_top",
     label='Vertical Align Top',
     tooltip='Align tops of selected blocks',
-    keypresses=(Gdk.KEY_t, Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Shift>t"],
 )
 BLOCK_VALIGN_MIDDLE = actions.register("win.block_align_middle",
     label='Vertical Align Middle',
     tooltip='Align centers of selected blocks vertically',
-    keypresses=(Gdk.KEY_m, Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Shift>m"],
 )
 BLOCK_VALIGN_BOTTOM = actions.register("win.block_align_bottom",
     label='Vertical Align Bottom',
     tooltip='Align bottoms of selected blocks',
-    keypresses=(Gdk.KEY_b, Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Shift>b"],
 )
 BLOCK_HALIGN_LEFT = actions.register("win.block_align_left",
     label='Horizontal Align Left',
     tooltip='Align left edges of blocks selected blocks',
-    keypresses=(Gdk.KEY_l, Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Shift>l"],
 )
 BLOCK_HALIGN_CENTER = actions.register("win.block_align_center",
     label='Horizontal Align Center',
     tooltip='Align centers of selected blocks horizontally',
-    keypresses=(Gdk.KEY_c, Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Shift>c"],
 )
 BLOCK_HALIGN_RIGHT = actions.register("win.block_align_right",
     label='Horizontal Align Right',
     tooltip='Align right edges of selected blocks',
-    keypresses=(Gdk.KEY_r, Gdk.ModifierType.SHIFT_MASK),
+    keypresses=["<Shift>r"],
 )
 BLOCK_ALIGNMENTS = [
     BLOCK_VALIGN_TOP,
@@ -431,25 +395,25 @@ BLOCK_PARAM_MODIFY = actions.register("win.block_modify",
     label='_Properties',
     tooltip='Modify params for the selected block',
     icon_name='document-properties',
-    keypresses=(Gdk.KEY_Return, NO_MODS_MASK),
+    keypresses=["Return"],
 )
 BLOCK_ENABLE = actions.register("win.block_enable",
     label='E_nable',
     tooltip='Enable the selected blocks',
     icon_name='network-wired',
-    keypresses=(Gdk.KEY_e, NO_MODS_MASK),
+    keypresses=["e"],
 )
 BLOCK_DISABLE = actions.register("win.block_disable",
     label='D_isable',
     tooltip='Disable the selected blocks',
     icon_name='network-wired-disconnected',
-    keypresses=(Gdk.KEY_d, NO_MODS_MASK),
+    keypresses=["d"],
 )
 BLOCK_BYPASS = actions.register("win.block_bypass",
     label='_Bypass',
     tooltip='Bypass the selected block',
     icon_name='media-seek-forward',
-    keypresses=(Gdk.KEY_b, NO_MODS_MASK),
+    keypresses=["b"],
 )
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
     label='_Snap to grid',
@@ -460,7 +424,7 @@ TOGGLE_HIDE_DISABLED_BLOCKS = actions.register("win.hide_disabled",
     label='Hide _Disabled Blocks',
     tooltip='Toggle visibility of disabled blocks and connections',
     icon_name='image-missing',
-    keypresses=(Gdk.KEY_d, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>d"],
     preference_name='hide_disabled',
 )
 TOGGLE_HIDE_VARIABLES = actions.register("win.hide_variables",
@@ -474,7 +438,7 @@ TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register("win.toggle_variable_editor",
     tooltip='Show the variable editor. Modify variables and imports in this flow graph',
     icon_name='accessories-text-editor',
     default=True,
-    keypresses=(Gdk.KEY_e, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>e"],
     preference_name='variable_editor_visable',
 )
 TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = actions.register("win.toggle_variable_editor_sidebar",
@@ -510,25 +474,25 @@ BLOCK_CREATE_HIER = actions.register("win.block_create_hier",
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',
     icon_name='document-new',
-    keypresses=(Gdk.KEY_c, NO_MODS_MASK),
+    keypresses=["c"],
 )
 BLOCK_CUT = actions.register("win.block_cut",
     label='Cu_t',
     tooltip='Cut',
     icon_name='edit-cut',
-    keypresses=(Gdk.KEY_x, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>x"],
 )
 BLOCK_COPY = actions.register("win.block_copy",
     label='_Copy',
     tooltip='Copy',
     icon_name='edit-copy',
-    keypresses=(Gdk.KEY_c, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>c"],
 )
 BLOCK_PASTE = actions.register("win.block_paste",
     label='_Paste',
     tooltip='Paste',
     icon_name='edit-paste',
-    keypresses=(Gdk.KEY_v, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>v"],
 )
 ERRORS_WINDOW_DISPLAY = actions.register("app.errors",
     label='Flowgraph _Errors',
@@ -538,7 +502,7 @@ ERRORS_WINDOW_DISPLAY = actions.register("app.errors",
 TOGGLE_CONSOLE_WINDOW = actions.register("win.toggle_console_window",
     label='Show _Console Panel',
     tooltip='Toggle visibility of the console',
-    keypresses=(Gdk.KEY_r, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>r"],
     preference_name='console_window_visible'
 )
 # TODO: Might be able to convert this to a Gio.PropertyAction eventually.
@@ -546,7 +510,7 @@ TOGGLE_CONSOLE_WINDOW = actions.register("win.toggle_console_window",
 TOGGLE_BLOCKS_WINDOW = actions.register("win.toggle_blocks_window",
     label='Show _Block Tree Panel',
     tooltip='Toggle visibility of the block tree widget',
-    keypresses=(Gdk.KEY_b, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>b"],
     preference_name='blocks_window_visible'
 )
 TOGGLE_SCROLL_LOCK = actions.register("win.console.scroll_lock",
@@ -563,7 +527,7 @@ HELP_WINDOW_DISPLAY = actions.register("app.help",
     label='_Help',
     tooltip='Usage tips',
     icon_name='help-contents',
-    keypresses=(Gdk.KEY_F1, NO_MODS_MASK),
+    keypresses=["F1"],
 )
 TYPES_WINDOW_DISPLAY = actions.register("app.types",
     label='_Types',
@@ -574,37 +538,37 @@ FLOW_GRAPH_GEN = actions.register("app.flowgraph.generate",
     label='_Generate',
     tooltip='Generate the flow graph',
     icon_name='insert-object',
-    keypresses=(Gdk.KEY_F5, NO_MODS_MASK),
+    keypresses=["F5"],
 )
 FLOW_GRAPH_EXEC = actions.register("app.flowgraph.execute",
     label='_Execute',
     tooltip='Execute the flow graph',
     icon_name='media-playback-start',
-    keypresses=(Gdk.KEY_F6, NO_MODS_MASK),
+    keypresses=["F6"],
 )
 FLOW_GRAPH_KILL = actions.register("app.flowgraph.kill",
     label='_Kill',
     tooltip='Kill the flow graph',
     icon_name='media-playback-stop',
-    keypresses=(Gdk.KEY_F7, NO_MODS_MASK),
+    keypresses=["F7"],
 )
 FLOW_GRAPH_SCREEN_CAPTURE = actions.register("app.flowgraph.screen_capture",
     label='Screen Ca_pture',
     tooltip='Create a screen capture of the flow graph',
     icon_name='printer',
-    keypresses=(Gdk.KEY_p, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>p"],
 )
 PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec",
-    keypresses=(Gdk.KEY_minus, NO_MODS_MASK, Gdk.KEY_KP_Subtract, NO_MODS_MASK),
+    keypresses=["minus", "Subtract"],
 )
 PORT_CONTROLLER_INC = actions.register("win.port_controller_inc",
-    keypresses=(Gdk.KEY_plus, NO_MODS_MASK, Gdk.KEY_KP_Add, NO_MODS_MASK),
+    keypresses=["plus", "Add"],
 )
 BLOCK_INC_TYPE = actions.register("win.block_inc_type",
-    keypresses=(Gdk.KEY_Down, NO_MODS_MASK),
+    keypresses=["Down"],
 )
 BLOCK_DEC_TYPE = actions.register("win.block_dec_type",
-    keypresses=(Gdk.KEY_Up, NO_MODS_MASK),
+    keypresses=["Up"],
 )
 RELOAD_BLOCKS = actions.register("app.reload_blocks",
     label='Reload _Blocks',
@@ -615,8 +579,7 @@ FIND_BLOCKS = actions.register("win.find_blocks",
     label='_Find Blocks',
     tooltip='Search for a block by name (and key)',
     icon_name='edit-find',
-    keypresses=(Gdk.KEY_f, Gdk.ModifierType.CONTROL_MASK,
-                Gdk.KEY_slash, NO_MODS_MASK),
+    keypresses=["<Ctrl>f", "slash"],
 )
 CLEAR_CONSOLE = actions.register("win.console.clear",
     label='_Clear Console',

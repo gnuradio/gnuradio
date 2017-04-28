@@ -72,7 +72,6 @@ class MainWindow(Gtk.ApplicationWindow):
 
         # Create the menu bar and toolbar
         generate_modes = platform.get_generate_options()
-        self.add_accel_group(Actions.get_accel_group())
 
         # This needs to be replaced
         # Have an option for either the application menu or this menu
