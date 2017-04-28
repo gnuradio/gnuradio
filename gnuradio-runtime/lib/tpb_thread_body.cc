@@ -32,7 +32,7 @@
 
 namespace gr {
 
-  tpb_thread_body::tpb_thread_body(block_sptr block, int max_noutput_items)
+  tpb_thread_body::tpb_thread_body(block_sptr block, gr::thread::barrier_sptr start_sync, int max_noutput_items)
     : d_exec(block, max_noutput_items)
   {
     //std::cerr << "tpb_thread_body: " << block << std::endl;
@@ -87,6 +87,7 @@ namespace gr {
     // make sure our block isnt finished
     block->clear_finished();
 
+    start_sync->wait();
     while(1) {
       boost::this_thread::interruption_point();
 

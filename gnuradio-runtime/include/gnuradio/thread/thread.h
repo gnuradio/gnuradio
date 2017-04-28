@@ -27,6 +27,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/condition_variable.hpp>
+#include <boost/thread/barrier.hpp>
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
@@ -46,6 +48,8 @@ namespace gr {
     typedef boost::mutex                     mutex;
     typedef boost::unique_lock<boost::mutex> scoped_lock;
     typedef boost::condition_variable        condition_variable;
+    typedef boost::barrier                   barrier;
+    typedef boost::shared_ptr<barrier>       barrier_sptr;
 
     /*! \brief a system-dependent typedef for the underlying thread type.
      */
