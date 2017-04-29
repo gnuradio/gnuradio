@@ -204,41 +204,6 @@ class Action(Gio.SimpleAction):
             config = Gtk.Application.get_default().config
             config.entry(self.preference_name, value=self.get_active())
 
-    '''
-    def __call__(self, *args):
-        """
-        Emit the activate signal when called with ().
-        """
-        self.args = args
-        self.emit('activate')
-    '''
-
-    '''"""
-    Base class for Action and ToggleAction
-    Register actions and keypresses with this module.
-    """
-    def __init__(self, label, keypresses):
-        global _used_mods_mask
-
-        _all_actions_list.append(self)
-        for i in range(len(keypresses)//2):
-            keyval, mod_mask = keypresses[i*2:(i+1)*2]
-            # register this keypress
-            if (keyval, mod_mask) in _actions_keypress_dict:
-                raise KeyError('keyval/mod_mask pair already registered "%s"' % str((keyval, mod_mask)))
-            _actions_keypress_dict[(keyval, mod_mask)] = self
-            _used_mods_mask |= mod_mask
-            # set the accelerator group, and accelerator path
-            # register the key name and mod mask with the accelerator path
-            if label is None:
-                continue  # dont register accel
-            accel_path = '<main>/' + self.get_name()
-            self.set_accel_group(get_accel_group())
-            self.set_accel_path(accel_path)
-            Gtk.AccelMap.add_entry(accel_path, keyval, mod_mask)
-        self.args = None
-    '''
-
 
 actions = Namespace()
 
@@ -337,50 +302,41 @@ ELEMENT_DELETE = actions.register("win.delete",
     label='_Delete',
     tooltip='Delete the selected blocks',
     icon_name='edit-delete',
-    keypresses=["Delete"],
 )
 BLOCK_MOVE = actions.register("win.block_move")
 BLOCK_ROTATE_CCW = actions.register("win.block_rotate_ccw",
     label='Rotate Counterclockwise',
     tooltip='Rotate the selected blocks 90 degrees to the left',
     icon_name='object-rotate-left',
-    keypresses=["Left"],
 )
 BLOCK_ROTATE_CW = actions.register("win.block_rotate",
     label='Rotate Clockwise',
     tooltip='Rotate the selected blocks 90 degrees to the right',
     icon_name='object-rotate-right',
-    keypresses=["Right"],
 )
 BLOCK_VALIGN_TOP = actions.register("win.block_align_top",
     label='Vertical Align Top',
     tooltip='Align tops of selected blocks',
-    keypresses=["<Shift>t"],
 )
 BLOCK_VALIGN_MIDDLE = actions.register("win.block_align_middle",
     label='Vertical Align Middle',
     tooltip='Align centers of selected blocks vertically',
-    keypresses=["<Shift>m"],
 )
 BLOCK_VALIGN_BOTTOM = actions.register("win.block_align_bottom",
     label='Vertical Align Bottom',
     tooltip='Align bottoms of selected blocks',
-    keypresses=["<Shift>b"],
 )
 BLOCK_HALIGN_LEFT = actions.register("win.block_align_left",
     label='Horizontal Align Left',
     tooltip='Align left edges of blocks selected blocks',
-    keypresses=["<Shift>l"],
 )
 BLOCK_HALIGN_CENTER = actions.register("win.block_align_center",
     label='Horizontal Align Center',
     tooltip='Align centers of selected blocks horizontally',
-    keypresses=["<Shift>c"],
 )
 BLOCK_HALIGN_RIGHT = actions.register("win.block_align_right",
     label='Horizontal Align Right',
     tooltip='Align right edges of selected blocks',
-    keypresses=["<Shift>r"],
 )
 BLOCK_ALIGNMENTS = [
     BLOCK_VALIGN_TOP,
@@ -395,25 +351,21 @@ BLOCK_PARAM_MODIFY = actions.register("win.block_modify",
     label='_Properties',
     tooltip='Modify params for the selected block',
     icon_name='document-properties',
-    keypresses=["Return"],
 )
 BLOCK_ENABLE = actions.register("win.block_enable",
     label='E_nable',
     tooltip='Enable the selected blocks',
     icon_name='network-wired',
-    keypresses=["e"],
 )
 BLOCK_DISABLE = actions.register("win.block_disable",
     label='D_isable',
     tooltip='Disable the selected blocks',
     icon_name='network-wired-disconnected',
-    keypresses=["d"],
 )
 BLOCK_BYPASS = actions.register("win.block_bypass",
     label='_Bypass',
     tooltip='Bypass the selected block',
     icon_name='media-seek-forward',
-    keypresses=["b"],
 )
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
     label='_Snap to grid',
@@ -474,7 +426,6 @@ BLOCK_CREATE_HIER = actions.register("win.block_create_hier",
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',
     icon_name='document-new',
-    keypresses=["c"],
 )
 BLOCK_CUT = actions.register("win.block_cut",
     label='Cu_t',
@@ -558,18 +509,10 @@ FLOW_GRAPH_SCREEN_CAPTURE = actions.register("app.flowgraph.screen_capture",
     icon_name='printer',
     keypresses=["<Ctrl>p"],
 )
-PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec",
-    keypresses=["minus", "Subtract"],
-)
-PORT_CONTROLLER_INC = actions.register("win.port_controller_inc",
-    keypresses=["plus", "Add"],
-)
-BLOCK_INC_TYPE = actions.register("win.block_inc_type",
-    keypresses=["Down"],
-)
-BLOCK_DEC_TYPE = actions.register("win.block_dec_type",
-    keypresses=["Up"],
-)
+PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec")
+PORT_CONTROLLER_INC = actions.register("win.port_controller_inc")
+BLOCK_INC_TYPE = actions.register("win.block_inc_type")
+BLOCK_DEC_TYPE = actions.register("win.block_dec_type")
 RELOAD_BLOCKS = actions.register("app.reload_blocks",
     label='Reload _Blocks',
     tooltip='Reload Blocks',

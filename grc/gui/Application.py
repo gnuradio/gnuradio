@@ -68,6 +68,11 @@ class Application(Gtk.Application):
             Actions.actions[x].enable()
             if x.startswith("app."):
                 self.add_action(Actions.actions[x])
+            # Setup the shortcut keys
+            # These are the globally defined shortcuts
+            keypress = Actions.actions[x].keypresses
+            if keypress:
+                self.set_accels_for_action(x, keypress)
 
         # Initialize
         self.init_file_paths = [os.path.abspath(file_path) for file_path in file_paths]
@@ -94,16 +99,7 @@ class Application(Gtk.Application):
 
         self.main_window = MainWindow(self, self.platform)
         self.main_window.connect('delete-event', self._quit)
-        self.main_window.connect('key-press-event', self._handle_key_press)
         self.get_focus_flag = self.main_window.get_focus_flag
-
-        # Setup the shortcut keys
-        # TODO: These are defined globally only to get them to work.
-        # The shortcuts for widgets (notebook) need to be defined there
-        for name in Actions.get_actions():
-            keypress = Actions.actions[name].keypresses
-            if keypress:
-                self.set_accels_for_action(name, keypress)
 
         #setup the messages
         Messages.register_messenger(self.main_window.add_console_line)
@@ -111,24 +107,6 @@ class Application(Gtk.Application):
 
         log.debug("Calling Actions.APPLICATION_INITIALIZE")
         Actions.APPLICATION_INITIALIZE()
-
-    def _handle_key_press(self, widget, event):
-        """
-        Handle key presses from the keyboard and translate key combinations into actions.
-        This key press handler is called prior to the gtk key press handler.
-        This handler bypasses built in accelerator key handling when in focus because
-        * some keys are ignored by the accelerators like the direction keys,
-        * some keys are not registered to any accelerators but are still used.
-        When not in focus, gtk and the accelerators handle the the key press.
-
-        Returns:
-            false to let gtk handle the key action
-        """
-        # prevent key event stealing while the search box is active
-        # .has_focus() only in newer versions 2.17+?
-        # .is_focus() seems to work, but exactly the same
-        if self.main_window.btwin.search_entry.has_focus() or self.main_window.vars.has_focus():
-            return False
 
     def _quit(self, window, event):
         """
