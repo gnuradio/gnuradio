@@ -554,6 +554,11 @@ Templates['grc_xml'] = '''<?xml version="1.0"?>
     <name>out</name>
     <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
   </source>
+
+  <!-- Short description of the module -->
+  <doc>
+<!-- e.g. Transforms each "foo" input into "bar" -->
+  </doc>
 </block>
 '''
 
