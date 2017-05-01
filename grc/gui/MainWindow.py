@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009, 2011 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2011, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -32,31 +32,30 @@ from .NotebookPage import NotebookPage
 from ..core import Messages
 
 MAIN_WINDOW_TITLE_TMPL = """\
-#if not $saved
-*#slurp
-#end if
-#if $basename
-$basename#slurp
-#else
-$new_flowgraph_title#slurp
-#end if
-#if $read_only
- (read only)#slurp
-#end if
-#if $dirname
- - $dirname#slurp
-#end if
- - $platform_name#slurp
+%if not saved:
+*
+%endif
+%if basename:
+${basename}
+%else:
+${new_flowgraph_title}
+%endif
+%if read_only:
+ (read only)
+%endif
+%if dirname:
+ - ${dirname}
+%endif
+ - ${platform_name}
 """
 
 PAGE_TITLE_MARKUP_TMPL = """\
-#set $foreground = $saved and 'black' or 'red'
-<span foreground="$foreground">$encode($title or $new_flowgraph_title)</span>#slurp
-#if $read_only
- (ro)#slurp
-#end if
+<% foreground = saved and 'black' or 'red' %>\
+<span foreground="${foreground}">${encode(title or new_flowgraph_title)}</span>
+%if read_only:
+ (ro)
+%endif
 """
-
 
 ############################################################
 # Main window

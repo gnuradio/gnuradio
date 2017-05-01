@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -157,11 +157,11 @@ def MessageDialogHelper(type, buttons, title=None, markup=None, default_response
 
 
 ERRORS_MARKUP_TMPL="""\
-#for $i, $err_msg in enumerate($errors)
+%for i, err_msg in enumerate(errors):
 <b>Error $i:</b>
-$encode($err_msg.replace('\t', '  '))
+${encode(err_msg.replace('\t', '  '))}
 
-#end for"""
+%endfor"""
 
 
 def ErrorsDialog(flowgraph): MessageDialogHelper(
@@ -206,12 +206,12 @@ def HelpDialog(): MessageDialogHelper(
 COLORS_DIALOG_MARKUP_TMPL = """\
 <b>Color Mapping</b>
 
-#if $colors
-    #set $max_len = max([len(color[0]) for color in $colors]) + 10
-    #for $title, $color_spec in $colors
-<span background="$color_spec"><tt>$($encode($title).center($max_len))</tt></span>
-    #end for
-#end if
+%if colors:
+<% max_len = max([len(color[0]) for color in colors]) + 10 %>
+%for title, color_spec in colors:
+<span background="${color_spec}"><tt>${encode(title).center(max_len)}</tt></span>
+%endfor
+%endif
 """
 
 
