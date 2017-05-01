@@ -30,8 +30,9 @@ namespace gr {
     class dvb_bbscrambler_bb_impl : public dvb_bbscrambler_bb
     {
      private:
-      unsigned int kbch;
+      int kbch;
       unsigned char bb_randomise[FRAME_SIZE_NORMAL];
+      uint64_t* bb_randomize64;
       void init_bb_randomiser(void);
 
      public:
