@@ -65,6 +65,14 @@ def check_gtk():
                  "did you enable X forwarding and start ssh with -X?")
 
 
+def check_gtk_init():
+    try:
+        gtk.init_check()
+    except RuntimeError:
+        print 'GTK initialization failed - bailing'
+        sys.exit()
+
+
 def check_gnuradio_import():
     try:
         from gnuradio import gr
@@ -93,6 +101,7 @@ def run_main():
 
 
 if __name__ == '__main__':
+    check_gtk_init()
     check_gnuradio_import()
     check_gtk()
     check_blocks_path()
