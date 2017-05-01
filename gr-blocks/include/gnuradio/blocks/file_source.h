@@ -51,11 +51,17 @@ namespace gr {
        * If \p repeat is turned on, the file will repeat the file after
        * it's reached the end.
        *
+       * If \p item_offset and \p items_to_read are use, a subset of items in the
+       * file are read, similar to using substr() to take a piece of a
+       *  string. The default values of 0 will read all items.
+       *
        * \param itemsize	the size of each item in the file, in bytes
        * \param filename	name of the file to source from
-       * \param repeat	repeat file from start
+       * \param repeat		repeat file from start
+       * \param item_offset		number of items to seek into the file
+       * \param items_to_read		number of items to read
        */
-      static sptr make(size_t itemsize, const char *filename, bool repeat = false);
+      static sptr make(size_t itemsize, const char *filename, bool repeat = false, int item_offset = 0, int items_to_read = 0);
 
       /*!
        * \brief seek file to \p seek_point relative to \p whence
@@ -71,7 +77,7 @@ namespace gr {
        * \param filename	name of the file to source from
        * \param repeat	repeat file from start
        */
-      virtual void open(const char *filename, bool repeat) = 0;
+      virtual void open(const char *filename, bool repeat, int item_offset, int items_to_read) = 0;
 
       /*!
        * \brief Close the file handle.

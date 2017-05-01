@@ -8,8 +8,8 @@
 	<name>File Source</name>
 	<key>blocks_file_source</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.file_source($type.size*$vlen, $file, $repeat)</make>
-	<callback>open($file, $repeat)</callback>
+	<make>blocks.file_source($type.size*$vlen, $file, $repeat, $item_offset, $items_to_read)</make>
+	<callback>open($file, $repeat, $item_offset, $items_to_read)</callback>
 	<param>
 		<name>File</name>
 		<key>file</key>
@@ -59,6 +59,24 @@
 			<name>No</name>
 			<key>False</key>
 		</option>
+	</param>
+	<param>
+		<name>Offset</name>
+		<key>item_offset</key>
+		<value>0</value>
+		<type>int</type>
+<!--
+		<check>0 &lt;= $item_offset</check>
+-->
+	</param>
+	<param>
+		<name>Read Length</name>
+		<key>items_to_read</key>
+		<value>0</value>
+		<type>int</type>
+<!--
+		<check>0 &lt;= $items_to_read</check>
+-->
 	</param>
 	<param>
 		<name>Vec Length</name>
