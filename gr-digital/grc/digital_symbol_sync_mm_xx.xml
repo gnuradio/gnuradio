@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+  Copyright (C) 2016  Free Software Foundation, Inc. 
+  Copyright (C) 2016-2017  Andy Walls awalls.cx18@gmail.com
+
+  This file is part of GNU Radio
+
+  GNU Radio is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 3, or (at your option)
+  any later version.
+  
+  GNU Radio is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with GNU Radio; see the file COPYING.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street,
+  Boston, MA 02110-1301, USA.
+ -->
+
+<block>
+    <name>Symbol Sync Mueller and Müller</name>
+    <key>digital_symbol_sync_mm_xx</key>
+    <category>[Core]/Synchronizers</category>
+    <import>from gnuradio import digital</import>
+    <make>digital.symbol_sync_mm_$(type)($sps, $loop_bw, $damping, $max_dev, $osps)</make>
+
+    <callback>set_loop_bandwidth($loop_bw)</callback>
+    <callback>set_damping_factor($damping)</callback>
+
+    <param>
+        <name>I/O Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option>
+            <name>Complex</name>
+            <key>cc</key>
+            <opt>input:complex</opt>
+            <opt>output:complex</opt>
+        </option>
+        <option>
+            <name>Float</name>
+            <key>ff</key>
+            <opt>input:float</opt>
+            <opt>output:float</opt>
+        </option>
+    </param>
+    <param>
+        <name>Samples per Symbol</name>
+        <key>sps</key>
+        <value>sps</value>
+        <type>real</type>
+    </param>
+    <param>
+        <name>Loop Bandwidth</name>
+        <key>loop_bw</key>
+        <value>0.045</value>
+        <type>real</type>
+    </param>
+    <param>
+        <name>Damping Factor</name>
+        <key>damping</key>
+        <value>2.0</value>
+        <type>real</type>
+    </param>
+    <param>
+        <name>Maximum Deviation</name>
+        <key>max_dev</key>
+        <value>1.5</value>
+        <type>real</type>
+    </param>
+    <param>
+        <name>Output Samples/Symbol</name>
+        <key>osps</key>
+        <value>1</value>
+        <type>int</type>
+    </param>
+
+    <sink>
+        <name>in</name>
+        <type>$type.input</type>
+    </sink>
+
+    <source>
+        <name>out</name>
+        <type>$type.output</type>
+    </source>
+    <source>
+        <name>error</name>
+        <type>float</type>
+        <optional>1</optional>
+    </source>
+    <source>
+        <name>T_inst</name>
+        <type>float</type>
+        <optional>1</optional>
+    </source>
+    <source>
+        <name>T_avg</name>
+        <type>float</type>
+        <optional>1</optional>
+    </source>
+</block>

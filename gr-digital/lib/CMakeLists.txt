@@ -54,6 +54,7 @@ list(APPEND digital_sources
     binary_slicer_fb_impl.cc
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
+    clock_tracking_loop.cc
     cma_equalizer_cc_impl.cc
     constellation.cc
     constellation_decoder_cb_impl.cc
@@ -127,6 +128,8 @@ list(APPEND digital_sources
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
+    symbol_sync_mm_cc_impl.cc
+    symbol_sync_mm_ff_impl.cc
 )
 
 #Add Windows DLL resource file if using MSVC
