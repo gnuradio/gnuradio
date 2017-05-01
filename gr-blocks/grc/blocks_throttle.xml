@@ -9,7 +9,7 @@
 	<key>blocks_throttle</key>
 	<flags>throttle</flags>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.throttle($type.size*$vlen, $samples_per_second,$ignoretag)</make>
+	<make>blocks.throttle($type.size*$vlen, $samples_per_second, $ignoretag, $max_noutput_items) if $Limit else blocks.throttle($type.size*$vlen, $samples_per_second,$ignoretag,-1)</make>
         <callback>set_sample_rate($samples_per_second)</callback>
 	<param>
 		<name>Type</name>
@@ -59,6 +59,28 @@
         <value>True</value>
         <type>bool</type>
         <hide>#if str($ignoretag()) == 'True' then 'part' else 'none'#</hide>
+    </param>
+    <param>
+    	<name>Limit number of output items</name>
+    	<key>Limit</key>
+    	<value>False</value>
+    	<type>enum</type>
+    	<hide>part</hide>
+    	<option>
+      	  <name>On</name>
+      	  <key>True</key>
+    	</option>
+    	<option>
+      	  <name>Off</name>
+          <key>False</key>
+    	</option>
+    </param>
+    <param>
+     	<name>Max noutput items</name>
+     	<key>max_noutput_items</key>
+     	<value>100</value>
+     	<type>int</type>
+     	<hide>#if $Limit() == 'True' then 'none' else 'all'#</hide>
     </param>
 	<check>$vlen &gt; 0</check>
 	<sink>
