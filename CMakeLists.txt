@@ -386,6 +386,13 @@ if(DEFINED ALL_DLL_FILES)
     install(FILES ${ALL_DLL_FILES} DESTINATION ${GR_RUNTIME_DIR} COMPONENT "extra_dlls")
 endif()
 
+if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
+  include(CodeCoverage)
+  setup_target_for_coverage(coverage "ctest" coverage)
+endif()
+
+
+
 ########################################################################
 # Setup volk as a subproject
 ########################################################################
