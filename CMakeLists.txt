@@ -368,6 +368,12 @@ GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
     CPPUNIT_FOUND
 )
 
+if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
+  include(CodeCoverage)
+  setup_target_for_coverage(coverage "ctest" coverage)
+endif()
+
+
 ########################################################################
 # Setup volk as a subproject
 ########################################################################

@@ -113,7 +113,6 @@ function(GR_ADD_TEST test_name)
         execute_process(COMMAND chmod +x ${sh_file})
 
         add_test(${test_name} ${SHELL} ${sh_file})
-
     endif(UNIX)
 
     if(WIN32)
