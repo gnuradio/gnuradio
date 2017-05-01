@@ -31,15 +31,6 @@
 %include "blocks_swig4_doc.i"
 
 %{
-#include "gnuradio/blocks/nlog10_ff.h"
-#include "gnuradio/blocks/not_bb.h"
-#include "gnuradio/blocks/not_ss.h"
-#include "gnuradio/blocks/not_ii.h"
-#include "gnuradio/blocks/patterned_interleaver.h"
-#include "gnuradio/blocks/pack_k_bits_bb.h"
-#include "gnuradio/blocks/packed_to_unpacked_bb.h"
-#include "gnuradio/blocks/packed_to_unpacked_ss.h"
-#include "gnuradio/blocks/packed_to_unpacked_ii.h"
 #include "gnuradio/blocks/pdu_filter.h"
 #include "gnuradio/blocks/pdu_set.h"
 #include "gnuradio/blocks/pdu_remove.h"
@@ -60,15 +51,8 @@
 #include "gnuradio/blocks/probe_signal_vi.h"
 #include "gnuradio/blocks/probe_signal_vf.h"
 #include "gnuradio/blocks/probe_signal_vc.h"
-#include "gnuradio/blocks/or_bb.h"
-#include "gnuradio/blocks/or_ss.h"
-#include "gnuradio/blocks/or_ii.h"
 %}
 
-%include "gnuradio/blocks/nlog10_ff.h"
-%include "gnuradio/blocks/not_bb.h"
-%include "gnuradio/blocks/not_ss.h"
-%include "gnuradio/blocks/not_ii.h"
 %include "gnuradio/blocks/probe_signal_b.h"
 %include "gnuradio/blocks/probe_signal_s.h"
 %include "gnuradio/blocks/probe_signal_i.h"
@@ -79,14 +63,6 @@
 %include "gnuradio/blocks/probe_signal_vi.h"
 %include "gnuradio/blocks/probe_signal_vf.h"
 %include "gnuradio/blocks/probe_signal_vc.h"
-%include "gnuradio/blocks/or_bb.h"
-%include "gnuradio/blocks/or_ss.h"
-%include "gnuradio/blocks/or_ii.h"
-%include "gnuradio/blocks/pack_k_bits_bb.h"
-%include "gnuradio/blocks/packed_to_unpacked_bb.h"
-%include "gnuradio/blocks/packed_to_unpacked_ss.h"
-%include "gnuradio/blocks/packed_to_unpacked_ii.h"
-%include "gnuradio/blocks/patterned_interleaver.h"
 %include "gnuradio/blocks/pdu_filter.h"
 %include "gnuradio/blocks/pdu_set.h"
 %include "gnuradio/blocks/pdu_remove.h"
@@ -98,15 +74,6 @@
 %include "gnuradio/blocks/plateau_detector_fb.h"
 %include "gnuradio/blocks/probe_rate.h"
 
-GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
-GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
-GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
-GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_fb);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_ib);
 GR_SWIG_BLOCK_MAGIC2(blocks, peak_detector_sb);
@@ -117,9 +84,6 @@ GR_SWIG_BLOCK_MAGIC2(blocks, pdu_set);
 GR_SWIG_BLOCK_MAGIC2(blocks, pdu_remove);
 GR_SWIG_BLOCK_MAGIC2(blocks, pdu_to_tagged_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_rate);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_b);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_s);
 GR_SWIG_BLOCK_MAGIC2(blocks, probe_signal_i);
