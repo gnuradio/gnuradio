@@ -54,9 +54,9 @@ namespace gr {
     void unlock();
     void flatten_aux(flat_flowgraph_sptr sfg) const;
 
-    void set_processor_affinity(const std::vector<int> &mask);
+    void set_processor_affinity(const std::vector<std::size_t> &mask);
     void unset_processor_affinity();
-    std::vector<int> processor_affinity();
+    std::vector<std::size_t> processor_affinity();
     
     // Track output buffer min/max settings
     std::vector<size_t> d_max_output_buffer;

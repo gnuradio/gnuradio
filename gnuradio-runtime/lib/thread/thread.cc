@@ -40,33 +40,33 @@ namespace gr {
     }
 
     void
-    thread_bind_to_processor(int n)
+    thread_bind_to_processor(std::size_t n)
     {
-      std::vector<int> mask(1, n);
+      std::vector<std::size_t> mask(1, n);
       thread_bind_to_processor(get_current_thread_id(), mask);
     }
 
     void
-    thread_bind_to_processor(const std::vector<int> &mask)
+    thread_bind_to_processor(const std::vector<std::size_t> &mask)
     {
       thread_bind_to_processor(get_current_thread_id(), mask);
     }
 
     void
-    thread_bind_to_processor(gr_thread_t thread, int n)
+    thread_bind_to_processor(gr_thread_t thread, std::size_t n)
     {
-      std::vector<int> mask(1, n);
+      std::vector<std::size_t> mask(1, n);
       thread_bind_to_processor(thread, mask);
     }
 
     void
-    thread_bind_to_processor(gr_thread_t thread, const std::vector<int> &mask)
+    thread_bind_to_processor(gr_thread_t thread, const std::vector<std::size_t> &mask)
     {
       //DWORD_PTR mask = (1 << n);
       DWORD_PTR dword_mask = 0;
 
-      std::vector<int> _mask = mask;
-      std::vector<int>::iterator itr;
+      std::vector<std::size_t> _mask = mask;
+      std::vector<std::size_t>::iterator itr;
       for(itr = _mask.begin(); itr != _mask.end(); itr++)
         dword_mask |= (1 << (*itr));
 
@@ -179,25 +179,25 @@ namespace gr {
     }
 
     void
-    thread_bind_to_processor(int n)
+    thread_bind_to_processor(std::size_t n)
     {
       // Not implemented on OSX
     }
 
     void
-    thread_bind_to_processor(gr_thread_t thread, int n)
+    thread_bind_to_processor(gr_thread_t thread, std::size_t n)
     {
       // Not implemented on OSX
     }
 
     void
-    thread_bind_to_processor(const std::vector<int> &mask)
+    thread_bind_to_processor(const std::vector<std::size_t> &mask)
     {
       // Not implemented on OSX
     }
 
     void
-    thread_bind_to_processor(gr_thread_t thread, const std::vector<int> &mask)
+    thread_bind_to_processor(gr_thread_t thread, const std::vector<std::size_t> &mask)
     {
       // Not implemented on OSX
     }
@@ -262,32 +262,32 @@ namespace gr {
     }
 
     void
-    thread_bind_to_processor(int n)
+    thread_bind_to_processor(std::size_t n)
     {
-      std::vector<int> mask(1, n);
+      std::vector<std::size_t> mask(1, n);
       thread_bind_to_processor(get_current_thread_id(), mask);
     }
 
     void
-    thread_bind_to_processor(const std::vector<int> &mask)
+    thread_bind_to_processor(const std::vector<std::size_t> &mask)
     {
       thread_bind_to_processor(get_current_thread_id(), mask);
     }
 
     void
-    thread_bind_to_processor(gr_thread_t thread, int n)
+    thread_bind_to_processor(gr_thread_t thread, std::size_t n)
     {
-      std::vector<int> mask(1, n);
+      std::vector<std::size_t> mask(1, n);
       thread_bind_to_processor(thread, mask);
     }
 
     void
-    thread_bind_to_processor(gr_thread_t thread, const std::vector<int> &mask)
+    thread_bind_to_processor(gr_thread_t thread, const std::vector<std::size_t> &mask)
     {
       cpu_set_t set;
       size_t len = sizeof(cpu_set_t);
-      std::vector<int> _mask = mask;
-      std::vector<int>::iterator itr;
+      std::vector<std::size_t> _mask = mask;
+      std::vector<std::size_t>::iterator itr;
 
       CPU_ZERO(&set);
       for(itr = _mask.begin(); itr != _mask.end(); itr++)

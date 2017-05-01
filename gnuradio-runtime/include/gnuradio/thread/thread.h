@@ -81,7 +81,7 @@ namespace gr {
      * do support in this way since 10.5 is not what we want or can
      * use in this fashion).
      */
-    GR_RUNTIME_API void thread_bind_to_processor(const std::vector<int> &mask);
+    GR_RUNTIME_API void thread_bind_to_processor(const std::vector<std::size_t> &mask);
 
     /*! \brief Convineince function to bind the current thread to a single core.
      *
@@ -93,7 +93,7 @@ namespace gr {
      * do support in this way since 10.5 is not what we want or can
      * use in this fashion).
      */
-    GR_RUNTIME_API void thread_bind_to_processor(int n);
+    GR_RUNTIME_API void thread_bind_to_processor(std::size_t n);
 
     /*! \brief Bind a thread to a set of cores.
      *
@@ -108,7 +108,7 @@ namespace gr {
      * use in this fashion).
      */
     GR_RUNTIME_API void thread_bind_to_processor(gr_thread_t thread,
-                                                 const std::vector<int> &mask);
+                                                 const std::vector<std::size_t> &mask);
 
 
     /*! \brief Convineince function to bind the a thread to a single core.

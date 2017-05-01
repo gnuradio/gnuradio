@@ -59,7 +59,7 @@ Each block has two new data members:
 A block can set and unset its affinity at any time using the
 following member functions:
 
-- gr::block::set_processor_affinity(const std::vector<int> &mask)
+- gr::block::set_processor_affinity(const std::vector<std::size_t> &mask)
 - gr::block::unset_processor_affinity()
 
 Where \p mask is a vector of core numbers to set the thread's affinity
@@ -85,7 +85,7 @@ to that affinity setting.
 The gr::hier_block2 class supports the same API interface to the block
 thread affinity:
 
-- gr::hier_block2::set_processor_affinity(const std::vector<int> &mask)
+- gr::hier_block2::set_processor_affinity(const std::vector<std::size_t> &mask)
 - gr::hier_block2::unset_processor_affinity()
 - gr::hier_block2::processor_affinity()
 

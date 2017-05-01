@@ -87,9 +87,9 @@ namespace gr {
     void message_port_register_hier_in(pmt::pmt_t port_id);
     void message_port_register_hier_out(pmt::pmt_t port_id);
 
-    void set_processor_affinity(const std::vector<int> &mask);
+    void set_processor_affinity(const std::vector<std::size_t> &mask);
     void unset_processor_affinity();
-    std::vector<int> processor_affinity();
+    std::vector<std::size_t> processor_affinity();
 
     // Methods to manage block's min/max buffer sizes.
     size_t max_output_buffer(int i);
