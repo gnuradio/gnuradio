@@ -1,4 +1,4 @@
-# Copyright 2011,2013 Free Software Foundation, Inc.
+# Copyright 2011,2013,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -96,6 +96,8 @@ add_subdirectory(include/gnuradio/atsc)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/atsc)
+    add_subdirectory(grc)
+    add_subdirectory(examples)
 endif(ENABLE_PYTHON)
 
 ########################################################################

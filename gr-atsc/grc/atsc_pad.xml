@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<block>
+  <name>ATSC Pad</name>
+  <key>atsc_pad</key>
+  <category>ATSC</category>
+  <import>from gnuradio import atsc</import>
+  <make>atsc.pad()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+    <vlen>1</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>byte</type>
+    <vlen>256</vlen>
+  </source>
+</block>
