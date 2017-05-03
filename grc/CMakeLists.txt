@@ -156,8 +156,9 @@ GR_PYTHON_INSTALL(
 GR_PYTHON_INSTALL(
     DIRECTORY core gui
     DESTINATION "${GR_PYTHON_DIR}/gnuradio/grc"
-    FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl)$"
+    FILES_MATCHING REGEX "\\.(py|dtd|grc|tmpl|png)$"
 )
+  
 ########################################################################
 # Append NSIS commands to set environment variables
 ########################################################################

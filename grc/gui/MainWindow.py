@@ -70,6 +70,9 @@ class MainWindow(Gtk.ApplicationWindow):
         vbox = Gtk.VBox()
         self.add(vbox)
 
+        # Set window icon
+        self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
+
         # Create the menu bar and toolbar
         generate_modes = platform.get_generate_options()
 
