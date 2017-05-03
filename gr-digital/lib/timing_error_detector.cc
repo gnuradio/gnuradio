@@ -63,6 +63,9 @@ namespace gr {
         case TED_SIGNUM_TIMES_SLOPE_ML:
             ret = new ted_signum_times_slope_ml();
             break;
+        case TED_MENGALI_AND_DANDREA_GMSK:
+            ret = new ted_gaussian_msk();
+            break;
         default: 
             break;
         }
@@ -106,6 +109,7 @@ namespace gr {
         case TED_DANDREA_AND_MENGALI_GEN_MSK:
         case TED_SIGNAL_TIMES_SLOPE_ML:
         case TED_SIGNUM_TIMES_SLOPE_ML:
+        case TED_MENGALI_AND_DANDREA_GMSK:
             break;
         case TED_NONE:
         default: 
