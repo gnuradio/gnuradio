@@ -23,3 +23,10 @@ GR_PYTHON_INSTALL(
     FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/gui
 )
+
+install(
+    FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/icon.png
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/gui
+    COMPONENT "grc"
+)
