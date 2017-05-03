@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 import os
+import logging
 
 from gi.repository import Gtk, Gdk, GObject
 
@@ -28,14 +29,23 @@ from .Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from .DrawingArea import DrawingArea
 
 
+log = logging.getLogger(__name__)
+
+
 class Notebook(Gtk.Notebook):
     def __init__(self):
         Gtk.Notebook.__init__(self)
-
+        log.debug("notebook()")
+        self.app = Gtk.Application.get_default()
         self.current_page = None
+
         self.set_show_border(False)
         self.set_scrollable(True)
         self.connect('switch-page', self._handle_page_change)
+
+        self.add_events(Gdk.EventMask.SCROLL_MASK)
+        self.connect('scroll-event', self._handle_scroll)
+        self._ignore_consecutive_scrolls = 0
 
     def _handle_page_change(self, notebook, page, page_num):
         """
@@ -50,6 +60,26 @@ class Notebook(Gtk.Notebook):
         """
         self.current_page = self.get_nth_page(page_num)
         Actions.PAGE_CHANGE()
+
+    def _handle_scroll(self, widget, event):
+        # Not sure how to handle this at the moment.
+        natural = True
+        # Slow it down
+        if self._ignore_consecutive_scrolls == 0:
+            if event.direction in (Gdk.ScrollDirection.UP, Gdk.ScrollDirection.LEFT):
+                if natural:
+                    self.prev_page()
+                else:
+                    self.next_page()
+            elif event.direction in (Gdk.ScrollDirection.DOWN, Gdk.ScrollDirection.RIGHT):
+                if natural:
+                    self.next_page()
+                else:
+                    self.prev_page()
+            self._ignore_consecutive_scrolls = 3
+        else:
+            self._ignore_consecutive_scrolls -= 1
+        return False
 
 
 class Page(Gtk.HBox):
@@ -99,20 +129,12 @@ class Page(Gtk.HBox):
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
-        self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
+
         self.scrolled_window.add(self.drawing_area)
         self.pack_start(self.scrolled_window, True, True, 0)
-
         self.show_all()
 
-    def _handle_scroll_window_key_press(self, widget, event):
-        """forward Ctrl-PgUp/Down to NotebookPage (switch fg instead of horiz. scroll"""
-        is_ctrl_pg = (
-            event.state & Gdk.ModifierType.CONTROL_MASK and
-            event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
-        )
-        if is_ctrl_pg:
-            return self.get_parent().event(event)
+
 
     def get_generator(self):
         """

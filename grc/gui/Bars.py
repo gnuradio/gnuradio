@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009, 2015 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2015, 2016 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -19,306 +19,299 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-from gi.repository import Gtk, GObject
+import logging
+
+from gi.repository import Gtk, GObject, Gio, GLib
 
 from . import Actions
 
 
+log = logging.getLogger(__name__)
+
+
+'''
+# Menu/Toolbar Lists:
+#
+# Sub items can be 1 of 3 types
+#  - List    Creates a section within the current menu
+#  - Tuple   Creates a submenu using a string or action as the parent. The child
+#            can be another menu list or an identifier used to call a helper function.
+#  - Action  Appends a new menu item to the current menu
+#
+
+LIST_NAME = [
+    [Action1, Action2], # New section
+    (Action3, [Action4, Action5]), # Submenu with action as parent
+    ("Label", [Action6, Action7]), # Submenu with string as parent
+    ("Label2", "helper") # Submenu with helper function. Calls 'create_helper()'
+]
+'''
+
+
 # The list of actions for the toolbar.
-TOOLBAR_LIST = (
-    (Actions.FLOW_GRAPH_NEW, 'flow_graph_new'),
-    (Actions.FLOW_GRAPH_OPEN, 'flow_graph_recent'),
-    Actions.FLOW_GRAPH_SAVE,
-    Actions.FLOW_GRAPH_CLOSE,
-    None,
-    Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
-    Actions.FLOW_GRAPH_SCREEN_CAPTURE,
-    None,
-    Actions.BLOCK_CUT,
-    Actions.BLOCK_COPY,
-    Actions.BLOCK_PASTE,
-    Actions.ELEMENT_DELETE,
-    None,
-    Actions.FLOW_GRAPH_UNDO,
-    Actions.FLOW_GRAPH_REDO,
-    None,
-    Actions.ERRORS_WINDOW_DISPLAY,
-    Actions.FLOW_GRAPH_GEN,
-    Actions.FLOW_GRAPH_EXEC,
-    Actions.FLOW_GRAPH_KILL,
-    None,
-    Actions.BLOCK_ROTATE_CCW,
-    Actions.BLOCK_ROTATE_CW,
-    None,
-    Actions.BLOCK_ENABLE,
-    Actions.BLOCK_DISABLE,
-    Actions.BLOCK_BYPASS,
-    Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-    None,
-    Actions.FIND_BLOCKS,
-    Actions.RELOAD_BLOCKS,
-    Actions.OPEN_HIER,
-)
+TOOLBAR_LIST = [
+    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new'), Actions.FLOW_GRAPH_OPEN,
+    (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent'), Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_CLOSE],
+    [Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.FLOW_GRAPH_SCREEN_CAPTURE],
+    [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
+    [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
+    [Actions.ERRORS_WINDOW_DISPLAY, Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL],
+    [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW],
+    [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS, Actions.TOGGLE_HIDE_DISABLED_BLOCKS],
+    [Actions.FIND_BLOCKS, Actions.RELOAD_BLOCKS, Actions.OPEN_HIER]
+]
 
 
 # The list of actions and categories for the menu bar.
-MENU_BAR_LIST = (
-    (Gtk.Action(name='File', label='_File'), [
-        'flow_graph_new',
-        Actions.FLOW_GRAPH_DUPLICATE,
-        Actions.FLOW_GRAPH_OPEN,
-        'flow_graph_recent',
-        None,
-        Actions.FLOW_GRAPH_SAVE,
-        Actions.FLOW_GRAPH_SAVE_AS,
-        Actions.FLOW_GRAPH_SAVE_A_COPY,
-        None,
-        Actions.FLOW_GRAPH_SCREEN_CAPTURE,
-        None,
-        Actions.FLOW_GRAPH_CLOSE,
-        Actions.APPLICATION_QUIT,
-    ]),
-    (Gtk.Action(name='Edit', label='_Edit'), [
-        Actions.FLOW_GRAPH_UNDO,
-        Actions.FLOW_GRAPH_REDO,
-        None,
-        Actions.BLOCK_CUT,
-        Actions.BLOCK_COPY,
-        Actions.BLOCK_PASTE,
-        Actions.ELEMENT_DELETE,
-        Actions.SELECT_ALL,
-        None,
-        Actions.BLOCK_ROTATE_CCW,
-        Actions.BLOCK_ROTATE_CW,
-        (Gtk.Action(name='Align', label='_Align', tooltip=None, stock_id=None), Actions.BLOCK_ALIGNMENTS),
-        None,
-        Actions.BLOCK_ENABLE,
-        Actions.BLOCK_DISABLE,
-        Actions.BLOCK_BYPASS,
-        None,
-        Actions.BLOCK_PARAM_MODIFY,
-    ]),
-    (Gtk.Action(name='View', label='_View'), [
-        Actions.TOGGLE_BLOCKS_WINDOW,
-        None,
-        Actions.TOGGLE_CONSOLE_WINDOW,
-        Actions.TOGGLE_SCROLL_LOCK,
-        Actions.SAVE_CONSOLE,
-        Actions.CLEAR_CONSOLE,
-        None,
-        Actions.TOGGLE_HIDE_VARIABLES,
-        Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
-        Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
-        None,
-        Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
-        Actions.TOGGLE_AUTO_HIDE_PORT_LABELS,
-        Actions.TOGGLE_SNAP_TO_GRID,
-        Actions.TOGGLE_SHOW_BLOCK_COMMENTS,
-        None,
-        Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB,
-        None,
-        Actions.ERRORS_WINDOW_DISPLAY,
-        Actions.FIND_BLOCKS,
-    ]),
-    (Gtk.Action(name='Run', label='_Run'), [
-        Actions.FLOW_GRAPH_GEN,
-        Actions.FLOW_GRAPH_EXEC,
-        Actions.FLOW_GRAPH_KILL,
-    ]),
-    (Gtk.Action(name='Tools', label='_Tools'), [
-        Actions.TOOLS_RUN_FDESIGN,
-        Actions.FLOW_GRAPH_OPEN_QSS_THEME,
-        None,
-        Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY,
-        None,
-        Actions.TOOLS_MORE_TO_COME,
-    ]),
-    (Gtk.Action(name='Help', label='_Help'), [
-        Actions.HELP_WINDOW_DISPLAY,
-        Actions.TYPES_WINDOW_DISPLAY,
-        Actions.XML_PARSER_ERRORS_DISPLAY,
-        None,
-        Actions.ABOUT_WINDOW_DISPLAY,
-    ]),
-)
+MENU_BAR_LIST = [
+  ('_File', [
+    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new'), Actions.FLOW_GRAPH_DUPLICATE,
+     Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
+    [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
+    [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
+    [Actions.FLOW_GRAPH_CLOSE, Actions.APPLICATION_QUIT]
+  ]),
+  ('_Edit', [
+    [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],
+    [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE, Actions.SELECT_ALL],
+    [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW, ('_Align', Actions.BLOCK_ALIGNMENTS)],
+    [Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
+    [Actions.BLOCK_PARAM_MODIFY]
+  ]),
+  ('_View', [
+    [Actions.TOGGLE_BLOCKS_WINDOW],
+    [Actions.TOGGLE_CONSOLE_WINDOW, Actions.TOGGLE_SCROLL_LOCK, Actions.SAVE_CONSOLE, Actions.CLEAR_CONSOLE],
+    [Actions.TOGGLE_HIDE_VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR],
+    [Actions.TOGGLE_HIDE_DISABLED_BLOCKS, Actions.TOGGLE_AUTO_HIDE_PORT_LABELS, Actions.TOGGLE_SNAP_TO_GRID, Actions.TOGGLE_SHOW_BLOCK_COMMENTS],
+    [Actions.TOGGLE_SHOW_CODE_PREVIEW_TAB],
+    [Actions.ERRORS_WINDOW_DISPLAY, Actions.FIND_BLOCKS],
+  ]),
+  ('_Run', [
+    Actions.FLOW_GRAPH_GEN, Actions.FLOW_GRAPH_EXEC, Actions.FLOW_GRAPH_KILL
+  ]),
+  ('_Tools', [
+    [Actions.TOOLS_RUN_FDESIGN, Actions.FLOW_GRAPH_OPEN_QSS_THEME],
+    [Actions.TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY]
+  ]),
+  ('_Help', [
+      [Actions.HELP_WINDOW_DISPLAY, Actions.TYPES_WINDOW_DISPLAY, Actions.XML_PARSER_ERRORS_DISPLAY],
+      [Actions.ABOUT_WINDOW_DISPLAY]
+  ])]
 
 
 # The list of actions for the context menu.
 CONTEXT_MENU_LIST = [
-    Actions.BLOCK_CUT,
-    Actions.BLOCK_COPY,
-    Actions.BLOCK_PASTE,
-    Actions.ELEMENT_DELETE,
-    None,
-    Actions.BLOCK_ROTATE_CCW,
-    Actions.BLOCK_ROTATE_CW,
-    Actions.BLOCK_ENABLE,
-    Actions.BLOCK_DISABLE,
-    Actions.BLOCK_BYPASS,
-    None,
-    (Gtk.Action(name='More', label='_More'), [
-        Actions.BLOCK_CREATE_HIER,
-        Actions.OPEN_HIER,
-        None,
-        Actions.BUSSIFY_SOURCES,
-        Actions.BUSSIFY_SINKS,
-    ]),
-    Actions.BLOCK_PARAM_MODIFY
+    [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
+    [Actions.BLOCK_ROTATE_CCW, Actions.BLOCK_ROTATE_CW, Actions.BLOCK_ENABLE, Actions.BLOCK_DISABLE, Actions.BLOCK_BYPASS],
+    [("_More", [
+        [Actions.BLOCK_CREATE_HIER, Actions.OPEN_HIER],
+        [Actions.BUSSIFY_SOURCES, Actions.BUSSIFY_SINKS]]
+    )],
+    [Actions.BLOCK_PARAM_MODIFY],
 ]
 
 
-class SubMenuCreator(object):
+class SubMenuHelper(object):
+    ''' Generates custom submenus for the main menu or toolbar. '''
 
-    def __init__(self, generate_modes, action_handler_callback):
-        self.generate_modes = generate_modes
-        self.action_handler_callback = action_handler_callback
-        self.submenus = []
+    def __init__(self):
+        self.submenus = {}
 
-    def create_submenu(self, action_tuple, item):
-        func = getattr(self, '_fill_' + action_tuple[1] + "_submenu")
-        self.submenus.append((action_tuple[0], func, item))
-        self.refresh_submenus()
+    def build_submenu(self, name, obj, set_func):
+        # Get the correct helper function
+        create_func = getattr(self, "create_{}".format(name))
+        # Save the helper functions for rebuilding the menu later
+        self.submenus[name] = (create_func, obj, set_func)
+        # Actually build the menu
+        set_func(obj, create_func())
 
     def refresh_submenus(self):
-        for action, func, item in self.submenus:
-            try:
-                item.set_property("menu", func(action))
-            except TypeError:
-                item.set_property("submenu", func(action))
-            item.set_property('sensitive', True)
+        for name in self.submenus:
+            create_func, obj, set_func = self.submenus[name]
+            print ("refresh", create_func, obj, set_func)
+            set_func(obj, create_func())
 
-    def callback_adaptor(self, item, action_key):
-        action, key = action_key
-        self.action_handler_callback(action, key)
-
-    def _fill_flow_graph_new_submenu(self, action):
-        """Sub menu to create flow-graph with pre-set generate mode"""
-        menu = Gtk.Menu()
-        for key, name, default in self.generate_modes:
-            if default:
-                item = Actions.FLOW_GRAPH_NEW.create_menu_item()
-                item.set_label(name)
-            else:
-                item = Gtk.MenuItem(name=name, use_underline=False)
-                item.connect('activate', self.callback_adaptor, (action, key))
-            menu.append(item)
-        menu.show_all()
+    def create_flow_graph_new(self):
+        """ Different flowgraph types """
+        menu = Gio.Menu()
+        platform = Gtk.Application.get_default().platform
+        generate_modes = platform.get_generate_options()
+        for key, name, default in generate_modes:
+            target = "app.flowgraph.new::{}".format(key)
+            menu.append(name, target)
         return menu
 
-    def _fill_flow_graph_recent_submenu(self, action):
-        """menu showing recent flow-graphs"""
-        menu = Gtk.Menu()
+    def create_flow_graph_recent(self):
+        """ Recent flow graphs """
+
         config = Gtk.Application.get_default().config
         recent_files = config.get_recent_files()
+        menu = Gio.Menu()
         if len(recent_files) > 0:
+            files = Gio.Menu()
             for i, file_name in enumerate(recent_files):
-                item = Gtk.MenuItem(name="%d. %s" % (i+1, file_name), use_underline=False)
-                item.connect('activate', self.callback_adaptor,
-                             (action, file_name))
-                menu.append(item)
-            menu.show_all()
-            return menu
-        return None
+                target = "app.flowgraph.open_recent::{}".format(file_name)
+                files.append(file_name, target)
+            menu.append_section(None, files)
+            #clear = Gio.Menu()
+            #clear.append("Clear recent files", "app.flowgraph.clear_recent")
+            #menu.append_section(None, clear)
+        else:
+            # Show an empty menu
+            menuitem = Gio.MenuItem.new("No items found", "app.none")
+            menu.append_item(menuitem)
+        return menu
 
 
-class Toolbar(Gtk.Toolbar, SubMenuCreator):
-    """The gtk toolbar with actions added from the toolbar list."""
+class MenuHelper(SubMenuHelper):
+    """
+    Recursively builds a menu from a given list of actions.
 
-    def __init__(self, generate_modes, action_handler_callback):
+    Args:
+     - actions:  List of actions to build the menu
+     - menu:     Current menu being built
+
+    Notes:
+     - Tuple:  Create a new submenu from the parent (1st) and child (2nd) elements
+     - Action: Append to current menu
+     - List:   Start a new section
+    """
+
+    def __init__(self):
+        SubMenuHelper.__init__(self)
+
+    def build_menu(self, actions, menu):
+        for item in actions:
+            if isinstance(item, tuple):
+                # Create a new submenu
+                parent, child = (item[0], item[1])
+
+                # Create the parent
+                label, target = (parent, None)
+                if isinstance(parent, Actions.Action):
+                    label = parent.label
+                    target = "{}.{}".format(parent.prefix, parent.name)
+                menuitem = Gio.MenuItem.new(label, None)
+                if hasattr(parent, "icon_name"):
+                    menuitem.set_icon(Gio.Icon.new_for_string(parent.icon_name))
+
+                # Create the new submenu
+                if isinstance(child, list):
+                    submenu = Gio.Menu()
+                    self.build_menu(child, submenu)
+                    menuitem.set_submenu(submenu)
+                elif isinstance(child, str):
+                    # Child is the name of the submenu to create
+                    def set_func(obj, menu):
+                        obj.set_submenu(menu)
+                    self.build_submenu(child, menuitem, set_func)
+                menu.append_item(menuitem)
+
+            elif isinstance(item, list):
+                # Create a new section
+                section = Gio.Menu()
+                self.build_menu(item, section)
+                menu.append_section(None, section)
+
+            elif isinstance(item, Actions.Action):
+                # Append a new menuitem
+                target = "{}.{}".format(item.prefix, item.name)
+                menuitem = Gio.MenuItem.new(item.label, target)
+                if item.icon_name:
+                    menuitem.set_icon(Gio.Icon.new_for_string(item.icon_name))
+                menu.append_item(menuitem)
+
+
+class ToolbarHelper(SubMenuHelper):
+    """
+     Builds a toolbar from a given list of actions.
+
+    Args:
+     - actions:  List of actions to build the menu
+     - item:     Current menu being built
+
+    Notes:
+     - Tuple:  Create a new submenu from the parent (1st) and child (2nd) elements
+     - Action: Append to current menu
+     - List:   Start a new section
+    """
+
+    def __init__(self):
+        SubMenuHelper.__init__(self)
+
+    def build_toolbar(self, actions, current):
+        for item in actions:
+            if isinstance(item, list):
+                # Toolbar's don't have sections like menus, so call this function
+                #  recursively with the "section" and just append a separator.
+                self.build_toolbar(item, self)
+                current.insert(Gtk.SeparatorToolItem.new(), -1)
+
+            elif isinstance(item, tuple):
+                parent, child = (item[0], item[1])
+                # Create an item with a submenu
+                # Generate the submenu and add to the item.
+                # Add the item to the toolbar
+                button = Gtk.MenuToolButton.new()
+                # The tuple should be made up of an Action and something.
+                button.set_label(parent.label)
+                button.set_tooltip_text(parent.tooltip)
+                button.set_icon_name(parent.icon_name)
+
+                target = "{}.{}".format(parent.prefix, parent.name)
+                button.set_action_name(target)
+
+                def set_func(obj, menu):
+                    obj.set_menu(Gtk.Menu.new_from_model(menu))
+
+                self.build_submenu(child, button, set_func)
+                current.insert(button, -1)
+
+            elif isinstance(item, Actions.Action):
+                button = Gtk.ToolButton.new()
+                button.set_label(item.label)
+                button.set_tooltip_text(item.tooltip)
+                button.set_icon_name(item.icon_name)
+                target = "{}.{}".format(item.prefix, item.name)
+                button.set_action_name(target)
+                current.insert(button, -1)
+
+
+class Menu(Gio.Menu, MenuHelper):
+    """ Main Menu """
+
+    def __init__(self):
+        GObject.GObject.__init__(self)
+        MenuHelper.__init__(self)
+
+        log.debug("Building the main menu")
+        self.build_menu(MENU_BAR_LIST, self)
+
+
+class ContextMenu(Gio.Menu, MenuHelper):
+    """ Context menu for the drawing area """
+
+    def __init__(self):
+        GObject.GObject.__init__(self)
+
+        log.debug("Building the context menu")
+        self.build_menu(CONTEXT_MENU_LIST, self)
+
+
+class Toolbar(Gtk.Toolbar, ToolbarHelper):
+    """ The gtk toolbar with actions added from the toolbar list. """
+
+    def __init__(self):
         """
         Parse the list of action names in the toolbar list.
         Look up the action for each name in the action list and add it to the
         toolbar.
         """
         GObject.GObject.__init__(self)
+        ToolbarHelper.__init__(self)
+
         self.set_style(Gtk.ToolbarStyle.ICONS)
-        SubMenuCreator.__init__(self, generate_modes, action_handler_callback)
+        #self.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR)
 
-        for action in TOOLBAR_LIST:
-            if isinstance(action, tuple) and isinstance(action[1], str):
-                # create a button with a sub-menu
-                # TODO: Fix later
-                #action[0].set_tool_item_type(Gtk.MenuToolButton)
-                item = action[0].create_tool_item()
-                #self.create_submenu(action, item)
-                #self.refresh_submenus()
-
-            elif action is None:
-                item = Gtk.SeparatorToolItem()
-
-            else:
-                #TODO: Fix later
-                #action.set_tool_item_type(Gtk.ToolButton)
-                item = action.create_tool_item()
-                # this reset of the tooltip property is required
-                # (after creating the tool item) for the tooltip to show
-                action.set_property('tooltip', action.get_property('tooltip'))
-            self.add(item)
-
-
-class MenuHelperMixin(object):
-    """Mixin class to help build menus from the above action lists"""
-
-    def _fill_menu(self, actions, menu=None):
-        """Create a menu from list of actions"""
-        menu = menu or Gtk.Menu()
-        for item in actions:
-            if isinstance(item, tuple):
-                menu_item = self._make_sub_menu(*item)
-            elif isinstance(item, str):
-                menu_item = getattr(self, 'create_' + item)()
-            elif item is None:
-                menu_item = Gtk.SeparatorMenuItem()
-            else:
-                menu_item = item.create_menu_item()
-            menu.append(menu_item)
-        menu.show_all()
-        return menu
-
-    def _make_sub_menu(self, main, actions):
-        """Create a submenu from a main action and a list of actions"""
-        main = main.create_menu_item()
-        main.set_submenu(self._fill_menu(actions))
-        return main
-
-
-class MenuBar(Gtk.MenuBar, MenuHelperMixin, SubMenuCreator):
-    """The gtk menu bar with actions added from the menu bar list."""
-
-    def __init__(self, generate_modes, action_handler_callback):
-        """
-        Parse the list of submenus from the menubar list.
-        For each submenu, get a list of action names.
-        Look up the action for each name in the action list and add it to the
-        submenu. Add the submenu to the menu bar.
-        """
-        GObject.GObject.__init__(self)
-        SubMenuCreator.__init__(self, generate_modes, action_handler_callback)
-        for main_action, actions in MENU_BAR_LIST:
-            self.append(self._make_sub_menu(main_action, actions))
-
-    def create_flow_graph_new(self):
-        main = Gtk.ImageMenuItem(label=Gtk.STOCK_NEW)
-        main.set_label(Actions.FLOW_GRAPH_NEW.get_label())
-        func = self._fill_flow_graph_new_submenu
-        self.submenus.append((Actions.FLOW_GRAPH_NEW, func, main))
-        self.refresh_submenus()
-        return main
-
-    def create_flow_graph_recent(self):
-        main = Gtk.ImageMenuItem(label=Gtk.STOCK_OPEN)
-        main.set_label(Actions.FLOW_GRAPH_OPEN_RECENT.get_label())
-        func = self._fill_flow_graph_recent_submenu
-        self.submenus.append((Actions.FLOW_GRAPH_OPEN, func, main))
-        self.refresh_submenus()
-        if main.get_submenu() is None:
-            main.set_property('sensitive', False)
-        return main
-
-
-class ContextMenu(Gtk.Menu, MenuHelperMixin):
-    """The gtk menu with actions added from the context menu list."""
-
-    def __init__(self):
-        GObject.GObject.__init__(self)
-        self._fill_menu(CONTEXT_MENU_LIST, self)
+        #SubMenuCreator.__init__(self)
+        self.build_toolbar(TOOLBAR_LIST, self)

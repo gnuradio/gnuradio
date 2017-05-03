@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 import os
+import logging
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -31,9 +32,14 @@ from .Dialogs import TextDisplay, MessageDialogWrapper
 from ..core import Messages
 
 
+log = logging.getLogger(__name__)
+
+
 class Console(Gtk.ScrolledWindow):
     def __init__(self):
         Gtk.ScrolledWindow.__init__(self)
+        log.debug("console()")
+        self.app = Gtk.Application.get_default()
 
         self.text_display = TextDisplay()
 

@@ -403,7 +403,7 @@ class Block(Element):
         return itertools.chain(self.active_sources, self.active_sinks)
 
     def get_children(self):
-        return self.get_ports() + self.params.values()
+        return self.get_ports() + list(self.params.values())
 
     def get_children_gui(self):
         return self.get_ports_gui() + self.params.values()

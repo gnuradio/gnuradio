@@ -105,7 +105,7 @@ class Param(CoreParam):
                 if style < 0:  # Front truncate
                     string = '...' + string[3-max_len:]
                 elif style == 0:  # Center truncate
-                    string = string[:max_len/2 - 3] + '...' + string[-max_len/2:]
+                    string = string[:max_len//2 - 3] + '...' + string[-max_len//2:]
                 elif style > 0:  # Rear truncate
                     string = string[:max_len-3] + '...'
             return string

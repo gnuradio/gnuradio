@@ -35,6 +35,7 @@ from .Notebook import Notebook, Page
 
 from ..core import Messages
 
+
 log = logging.getLogger(__name__)
 
 
@@ -49,7 +50,7 @@ class MainWindow(Gtk.ApplicationWindow):
     CONSOLE = 1
     VARIABLES = 2
 
-    def __init__(self, app, platform, action_handler_callback):
+    def __init__(self, app, platform):
         """
         MainWindow constructor
         Setup the menu, toolbar, flow graph editor notebook, block selection window...
@@ -58,7 +59,12 @@ class MainWindow(Gtk.ApplicationWindow):
         log.debug("__init__()")
 
         self._platform = platform
+        self.app = app
         self.config = platform.config
+
+        # Add all "win" actions to the local
+        win_actions = filter(lambda x: x.startswith("win."), Actions.get_actions())
+        map(lambda x: self.add_action(Actions.actions[x]), win_actions)
 
         # Setup window
         vbox = Gtk.VBox()
@@ -66,10 +72,16 @@ class MainWindow(Gtk.ApplicationWindow):
 
         # Create the menu bar and toolbar
         generate_modes = platform.get_generate_options()
-        self.add_accel_group(Actions.get_accel_group())
-        self.menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
+
+        # This needs to be replaced
+        # Have an option for either the application menu or this menu
+        self.menu_bar = Gtk.MenuBar.new_from_model(Bars.Menu())
         vbox.pack_start(self.menu_bar, False, False, 0)
-        self.tool_bar = Bars.Toolbar(generate_modes, action_handler_callback)
+
+        self.tool_bar = Bars.Toolbar()
+        self.tool_bar.set_hexpand(True)
+        # Show the toolbar
+        self.tool_bar.show()
         vbox.pack_start(self.tool_bar, False, False, 0)
 
         # Main parent container for the different panels
@@ -126,9 +138,7 @@ class MainWindow(Gtk.ApplicationWindow):
             self.left_subpanel.set_position(self.config.variable_editor_position())
 
         self.show_all()
-        self.console.hide()
-        self.vars.hide()
-        self.btwin.hide()
+        log.debug("Main window ready")
 
     ############################################################
     # Event Handlers
@@ -205,7 +215,6 @@ class MainWindow(Gtk.ApplicationWindow):
     @current_page.setter
     def current_page(self, page):
         self.notebook.current_page = page
-
 
     def add_console_line(self, line):
         """

@@ -156,7 +156,7 @@ def to_file(nested_data, xml_file):
         ), xml_declaration=True, pretty_print=True, encoding='utf-8')
     xml_data += etree.tostring(_to_file(nested_data)[0],
                                pretty_print=True, encoding='utf-8')
-    with open(xml_file, 'w') as fp:
+    with open(xml_file, 'wb') as fp:
         fp.write(xml_data)
 
 

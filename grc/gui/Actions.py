@@ -20,286 +20,323 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 import six
+import logging
 
-from gi.repository import Gtk, Gdk, GObject
-
-NO_MODS_MASK = 0
-
-
-########################################################################
-# Actions API
-########################################################################
-_actions_keypress_dict = dict()
-_keymap = Gdk.Keymap.get_default()
-_used_mods_mask = NO_MODS_MASK
+from gi.repository import Gtk, Gdk, Gio, GLib, GObject
 
 
-def handle_key_press(event):
-    """
-    Call the action associated with the key press event.
-    Both the key value and the mask must have a match.
-
-    Args:
-        event: a gtk key press event
-
-    Returns:
-        true if handled
-    """
-    # extract the key value and the consumed modifiers
-    _unused, keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
-        event.hardware_keycode, event.get_state(), event.group)
-    # get the modifier mask and ignore irrelevant modifiers
-    mod_mask = event.get_state() & ~consumed & _used_mods_mask
-    # look up the keypress and call the action
-    try:
-        _actions_keypress_dict[(keyval, mod_mask)]()
-    except KeyError:
-        return False  # not handled
-    else:
-        return True  # handled here
-
-_all_actions_list = list()
+log = logging.getLogger(__name__)
 
 
-def get_all_actions():
-    return _all_actions_list
-
-_accel_group = Gtk.AccelGroup()
+def filter_from_dict(vars):
+    return filter(lambda x: isinstance(x[1], Action), vars.items())
 
 
-def get_accel_group():
-    return _accel_group
+class Namespace(object):
+
+    def __init__(self):
+        self._actions = {}
+
+    def add(self, action):
+        key = action.props.name
+        self._actions[key] = action
+
+    def connect(self, name, handler):
+        #log.debug("Connecting action <{}> to handler <{}>".format(name, handler.__name__))
+        self._actions[name].connect('activate', handler)
+
+    def register(self, name, parameter=None, handler=None, label=None, tooltip=None,
+                 icon_name=None, keypresses=None, preference_name=None, default=None):
+        # Check types
+        if not isinstance(name, str):
+            raise TypeError("Cannot register fuction: 'name' must be a str")
+        if parameter and not isinstance(parameter, str):
+            raise TypeError("Cannot register fuction: 'parameter' must be a str")
+        if handler and not callable(handler):
+            raise TypeError("Cannot register fuction: 'handler' must be callable")
+
+        # Check if the name has a prefix.
+        prefix = None
+        if name.startswith("app.") or name.startswith("win."):
+            # Set a prefix for later and remove it
+            prefix = name[0:3]
+            name = name[4:]
+
+        if handler:
+            log.debug("Register action [{}, prefix={}, param={}, handler={}]".format(
+                  name, prefix, parameter, handler.__name__))
+        else:
+            log.debug("Register action [{}, prefix={}, param={}, handler=None]".format(
+                  name, prefix, parameter))
+
+        action = Action(name, parameter, label=label, tooltip=tooltip,
+                        icon_name=icon_name, keypresses=keypresses, prefix=prefix,
+                        preference_name=preference_name, default=default)
+        if handler:
+            action.connect('activate', handler)
+
+        key = name
+        if prefix:
+            key = "{}.{}".format(prefix, name)
+            if prefix == "app":
+                pass
+                #self.app.add_action(action)
+            elif prefix == "win":
+                pass
+                #self.win.add_action(action)
+
+        #log.debug("Registering action as '{}'".format(key))
+        self._actions[key] = action
+        return action
 
 
-class _ActionBase(object):
-    """
-    Base class for Action and ToggleAction
-    Register actions and keypresses with this module.
-    """
-    def __init__(self, label, keypresses):
-        global _used_mods_mask
+    # If the actions namespace is called, trigger an action
+    def __call__(self, name):
+        # Try to parse the action string.
+        valid, action_name, target_value = Action.parse_detailed_name(name)
+        if not valid:
+            raise Exception("Invalid action string: '{}'".format(name))
+        if action_name not in self._actions:
+            raise Exception("Action '{}' is not registered!".format(action_name))
 
-        _all_actions_list.append(self)
-        for i in range(len(keypresses)/2):
-            keyval, mod_mask = keypresses[i*2:(i+1)*2]
-            # register this keypress
-            if (keyval, mod_mask) in _actions_keypress_dict:
-                raise KeyError('keyval/mod_mask pair already registered "%s"' % str((keyval, mod_mask)))
-            _actions_keypress_dict[(keyval, mod_mask)] = self
-            _used_mods_mask |= mod_mask
-            # set the accelerator group, and accelerator path
-            # register the key name and mod mask with the accelerator path
-            if label is None:
-                continue  # dont register accel
-            accel_path = '<main>/' + self.get_name()
-            self.set_accel_group(get_accel_group())
-            self.set_accel_path(accel_path)
-            Gtk.AccelMap.add_entry(accel_path, keyval, mod_mask)
-        self.args = None
+        if target_value:
+            self._actions[action_name].activate(target_value)
+        else:
+            self._actions[action_name].activate()
+
+    def __getitem__(self, key):
+        return self._actions[key]
+
+    def __iter__(self):
+        return self._actions.itervalues()
+
+    def __repr__(self):
+        return str(self)
+
+    def get_actions(self):
+        return self._actions
 
     def __str__(self):
-        """
-        The string representation should be the name of the action id.
-        Try to find the action id for this action by searching this module.
-        """
-        for name, value in six.iteritems(globals()):
-            if value == self:
-                return name
-        return self.get_name()
-
-    def __repr__(self): return str(self)
-
-    def __call__(self, *args):
-        """
-        Emit the activate signal when called with ().
-        """
-        self.args = args
-        self.emit('activate')
+        s = "{Actions:"
+        for key in self._actions:
+            s += " {},".format(key)
+        s = s.rstrip(",") + "}"
+        return s
 
 
-class Action(Gtk.Action, _ActionBase):
-    """
-    A custom Action class based on Gtk.Action.
-    Pass additional arguments such as keypresses.
-    """
+class Action(Gio.SimpleAction):
 
-    def __init__(self, keypresses=(), name=None, label=None, tooltip=None,
-                 stock_id=None):
-        """
-        Create a new Action instance.
+    # Change these to normal python properties.
+    #prefs_name
 
-        Args:
-            key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
-            the: regular Gtk.Action parameters (defaults to None)
-        """
-        if name is None:
-            name = label
-        GObject.GObject.__init__(self, name=name, label=label, tooltip=tooltip,
-                            stock_id=stock_id)
-        _ActionBase.__init__(self, label, keypresses)
-
-
-class ToggleAction(Gtk.ToggleAction, _ActionBase):
-    """
-    A custom Action class based on Gtk.ToggleAction.
-    Pass additional arguments such as keypresses.
-    """
-
-    def __init__(self, keypresses=(), name=None, label=None, tooltip=None,
-                 stock_id=None, preference_name=None, default=True):
-        """
-        Create a new ToggleAction instance.
-
-        Args:
-            key_presses: a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
-            the: regular Gtk.Action parameters (defaults to None)
-        """
-        if name is None:
-            name = label
-        GObject.GObject.__init__(self, name=name, label=label,
-                                  tooltip=tooltip, stock_id=stock_id)
-        _ActionBase.__init__(self, label, keypresses)
+    def __init__(self, name, parameter=None, label=None, tooltip=None,
+                 icon_name=None, keypresses=None, prefix=None,
+                 preference_name=None, default=None):
+        self.name = name
+        self.label = label
+        self.tooltip = tooltip
+        self.icon_name = icon_name
+        self.keypresses = keypresses
+        self.prefix = prefix
         self.preference_name = preference_name
         self.default = default
 
-    def load_from_preferences(self):
+        # Don't worry about checking types here, since it's done in register()
+        # Save the parameter type to use for converting in __call__
+        self.type = None
+
+        variant = None
+        state = None
+        if parameter:
+            variant = GLib.VariantType.new(parameter)
+        if preference_name:
+            state = GLib.Variant.new_boolean(True)
+        Gio.SimpleAction.__init__(self, name=name, parameter_type=variant, state=state)
+
+    def enable(self):
+        self.props.enabled = True
+
+    def disable(self):
+        self.props.enabled = False
+
+    def set_enabled(self, state):
+        if not isinstance(state, bool):
+            raise TypeError("State must be True/False.")
+        self.props.enabled = state
+
+    def __str__(self):
+        return self.props.name
+
+    def __repr__(self):
+        return str(self)
+
+    def get_active(self):
+        if self.props.state:
+            return self.props.state.get_boolean()
+        return False
+
+    def set_active(self, state):
+        if not isinstance(state, bool):
+            raise TypeError("State must be True/False.")
+        self.change_state(GLib.Variant.new_boolean(state))
+
+    # Allows actions to be directly called.
+    def __call__(self, parameter=None):
+        if self.type and parameter:
+            # Try to convert it to the correct type.
+            try:
+                param = GLib.Variant(self.type, parameter)
+                self.activate(param)
+            except TypeError:
+                raise TypeError("Invalid parameter type for action '{}'. Expected: '{}'".format(self.get_name(), self.type))
+        else:
+            self.activate()
+
+    def load_from_preferences(self, *args):
+        log.debug("load_from_preferences({})".format(args))
         if self.preference_name is not None:
             config = Gtk.Application.get_default().config
-            self.set_active(config.entry(
-                self.preference_name, default=bool(self.default)))
+            self.set_active(config.entry(self.preference_name, default=bool(self.default)))
 
-    def save_to_preferences(self):
+    def save_to_preferences(self, *args):
+        log.debug("save_to_preferences({})".format(args))
         if self.preference_name is not None:
             config = Gtk.Application.get_default().config
             config.entry(self.preference_name, value=self.get_active())
 
+
+actions = Namespace()
+
+
+def get_actions():
+    return actions.get_actions()
+
+
+def connect(action, handler=None):
+    return actions.connect(action, handler=handler)
+
+
 ########################################################################
-# Actions
+# Old Actions
 ########################################################################
-PAGE_CHANGE = Action()
-EXTERNAL_UPDATE = Action()
-VARIABLE_EDITOR_UPDATE = Action()
-FLOW_GRAPH_NEW = Action(
+PAGE_CHANGE = actions.register("win.page_change")
+EXTERNAL_UPDATE = actions.register("app.external_update")
+VARIABLE_EDITOR_UPDATE = actions.register("app.variable_editor_update")
+FLOW_GRAPH_NEW = actions.register("app.flowgraph.new",
     label='_New',
     tooltip='Create a new flow graph',
-    stock_id=Gtk.STOCK_NEW,
-    keypresses=(Gdk.KEY_n, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='document-new',
+    keypresses=["<Ctrl>n"],
+    parameter="s",
 )
-FLOW_GRAPH_OPEN = Action(
+FLOW_GRAPH_OPEN = actions.register("app.flowgraph.open",
     label='_Open',
     tooltip='Open an existing flow graph',
-    stock_id=Gtk.STOCK_OPEN,
-    keypresses=(Gdk.KEY_o, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='document-open',
+    keypresses=["<Ctrl>o"],
 )
-FLOW_GRAPH_OPEN_RECENT = Action(
+FLOW_GRAPH_OPEN_RECENT = actions.register("app.flowgraph.open_recent",
     label='Open _Recent',
     tooltip='Open a recently used flow graph',
-    stock_id=Gtk.STOCK_OPEN,
+    icon_name='document-open-recent',
+    parameter="s",
 )
-FLOW_GRAPH_SAVE = Action(
+FLOW_GRAPH_CLEAR_RECENT = actions.register("app.flowgraph.clear_recent")
+FLOW_GRAPH_SAVE = actions.register("app.flowgraph.save",
     label='_Save',
     tooltip='Save the current flow graph',
-    stock_id=Gtk.STOCK_SAVE,
-    keypresses=(Gdk.KEY_s, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='document-save',
+    keypresses=["<Ctrl>s"],
 )
-FLOW_GRAPH_SAVE_AS = Action(
+FLOW_GRAPH_SAVE_AS = actions.register("app.flowgraph.save_as",
     label='Save _As',
     tooltip='Save the current flow graph as...',
-    stock_id=Gtk.STOCK_SAVE_AS,
-    keypresses=(Gdk.KEY_s, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK),
+    icon_name='document-save-as',
+    keypresses=["<Ctrl><Shift>s"],
 )
-FLOW_GRAPH_SAVE_A_COPY = Action(
-    label='Save A Copy',
-    tooltip='Save the copy of current flow graph',
+FLOW_GRAPH_SAVE_COPY = actions.register("app.flowgraph.save_copy",
+    label='Save Copy',
+    tooltip='Save a copy of current flow graph',
 )
-FLOW_GRAPH_DUPLICATE = Action(
+FLOW_GRAPH_DUPLICATE = actions.register("app.flowgraph.duplicate",
     label='_Duplicate',
     tooltip='Create a duplicate of current flow graph',
-    stock_id=Gtk.STOCK_COPY,
-    keypresses=(Gdk.KEY_d, Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK),
+    #stock_id=Gtk.STOCK_COPY,
+    keypresses=["<Ctrl><Shift>d"],
 )
-FLOW_GRAPH_CLOSE = Action(
+FLOW_GRAPH_CLOSE = actions.register("app.flowgraph.close",
     label='_Close',
     tooltip='Close the current flow graph',
-    stock_id=Gtk.STOCK_CLOSE,
-    keypresses=(Gdk.KEY_w, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='window-close',
+    keypresses=["<Ctrl>w"],
 )
-APPLICATION_INITIALIZE = Action()
-APPLICATION_QUIT = Action(
+APPLICATION_INITIALIZE = actions.register("app.initialize")
+APPLICATION_QUIT = actions.register("app.quit",
     label='_Quit',
     tooltip='Quit program',
-    stock_id=Gtk.STOCK_QUIT,
-    keypresses=(Gdk.KEY_q, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='application-exit',
+    keypresses=["<Ctrl>q"],
 )
-FLOW_GRAPH_UNDO = Action(
+FLOW_GRAPH_UNDO = actions.register("win.undo",
     label='_Undo',
     tooltip='Undo a change to the flow graph',
-    stock_id=Gtk.STOCK_UNDO,
-    keypresses=(Gdk.KEY_z, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='edit-undo',
+    keypresses=["<Ctrl>z"],
 )
-FLOW_GRAPH_REDO = Action(
+FLOW_GRAPH_REDO = actions.register("win.redo",
     label='_Redo',
     tooltip='Redo a change to the flow graph',
-    stock_id=Gtk.STOCK_REDO,
-    keypresses=(Gdk.KEY_y, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='edit-redo',
+    keypresses=["<Ctrl>y"],
 )
-NOTHING_SELECT = Action()
-SELECT_ALL = Action(
+NOTHING_SELECT = actions.register("win.unselect")
+SELECT_ALL = actions.register("win.select_all",
     label='Select _All',
     tooltip='Select all blocks and connections in the flow graph',
-    stock_id=Gtk.STOCK_SELECT_ALL,
-    keypresses=(Gdk.KEY_a, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='edit-select-all',
+    keypresses=["<Ctrl>a"],
 )
-ELEMENT_SELECT = Action()
-ELEMENT_CREATE = Action()
-ELEMENT_DELETE = Action(
+ELEMENT_SELECT = actions.register("win.select")
+ELEMENT_CREATE = actions.register("win.add")
+ELEMENT_DELETE = actions.register("win.delete",
     label='_Delete',
     tooltip='Delete the selected blocks',
-    stock_id=Gtk.STOCK_DELETE,
-    keypresses=(Gdk.KEY_Delete, NO_MODS_MASK),
+    icon_name='edit-delete',
 )
-BLOCK_MOVE = Action()
-BLOCK_ROTATE_CCW = Action(
+BLOCK_MOVE = actions.register("win.block_move")
+BLOCK_ROTATE_CCW = actions.register("win.block_rotate_ccw",
     label='Rotate Counterclockwise',
     tooltip='Rotate the selected blocks 90 degrees to the left',
-    stock_id=Gtk.STOCK_GO_BACK,
-    keypresses=(Gdk.KEY_Left, NO_MODS_MASK),
+    icon_name='object-rotate-left',
 )
-BLOCK_ROTATE_CW = Action(
+BLOCK_ROTATE_CW = actions.register("win.block_rotate",
     label='Rotate Clockwise',
     tooltip='Rotate the selected blocks 90 degrees to the right',
-    stock_id=Gtk.STOCK_GO_FORWARD,
-    keypresses=(Gdk.KEY_Right, NO_MODS_MASK),
+    icon_name='object-rotate-right',
 )
-BLOCK_VALIGN_TOP = Action(
+BLOCK_VALIGN_TOP = actions.register("win.block_align_top",
     label='Vertical Align Top',
     tooltip='Align tops of selected blocks',
-    keypresses=(Gdk.KEY_t, Gdk.ModifierType.SHIFT_MASK),
 )
-BLOCK_VALIGN_MIDDLE = Action(
+BLOCK_VALIGN_MIDDLE = actions.register("win.block_align_middle",
     label='Vertical Align Middle',
     tooltip='Align centers of selected blocks vertically',
-    keypresses=(Gdk.KEY_m, Gdk.ModifierType.SHIFT_MASK),
 )
-BLOCK_VALIGN_BOTTOM = Action(
+BLOCK_VALIGN_BOTTOM = actions.register("win.block_align_bottom",
     label='Vertical Align Bottom',
     tooltip='Align bottoms of selected blocks',
-    keypresses=(Gdk.KEY_b, Gdk.ModifierType.SHIFT_MASK),
 )
-BLOCK_HALIGN_LEFT = Action(
+BLOCK_HALIGN_LEFT = actions.register("win.block_align_left",
     label='Horizontal Align Left',
     tooltip='Align left edges of blocks selected blocks',
-    keypresses=(Gdk.KEY_l, Gdk.ModifierType.SHIFT_MASK),
 )
-BLOCK_HALIGN_CENTER = Action(
+BLOCK_HALIGN_CENTER = actions.register("win.block_align_center",
     label='Horizontal Align Center',
     tooltip='Align centers of selected blocks horizontally',
-    keypresses=(Gdk.KEY_c, Gdk.ModifierType.SHIFT_MASK),
 )
-BLOCK_HALIGN_RIGHT = Action(
+BLOCK_HALIGN_RIGHT = actions.register("win.block_align_right",
     label='Horizontal Align Right',
     tooltip='Align right edges of selected blocks',
-    keypresses=(Gdk.KEY_r, Gdk.ModifierType.SHIFT_MASK),
 )
 BLOCK_ALIGNMENTS = [
     BLOCK_VALIGN_TOP,
@@ -310,234 +347,222 @@ BLOCK_ALIGNMENTS = [
     BLOCK_HALIGN_CENTER,
     BLOCK_HALIGN_RIGHT,
 ]
-BLOCK_PARAM_MODIFY = Action(
+BLOCK_PARAM_MODIFY = actions.register("win.block_modify",
     label='_Properties',
     tooltip='Modify params for the selected block',
-    stock_id=Gtk.STOCK_PROPERTIES,
-    keypresses=(Gdk.KEY_Return, NO_MODS_MASK),
+    icon_name='document-properties',
 )
-BLOCK_ENABLE = Action(
+BLOCK_ENABLE = actions.register("win.block_enable",
     label='E_nable',
     tooltip='Enable the selected blocks',
-    stock_id=Gtk.STOCK_CONNECT,
-    keypresses=(Gdk.KEY_e, NO_MODS_MASK),
+    icon_name='network-wired',
 )
-BLOCK_DISABLE = Action(
+BLOCK_DISABLE = actions.register("win.block_disable",
     label='D_isable',
     tooltip='Disable the selected blocks',
-    stock_id=Gtk.STOCK_DISCONNECT,
-    keypresses=(Gdk.KEY_d, NO_MODS_MASK),
+    icon_name='network-wired-disconnected',
 )
-BLOCK_BYPASS = Action(
+BLOCK_BYPASS = actions.register("win.block_bypass",
     label='_Bypass',
     tooltip='Bypass the selected block',
-    stock_id=Gtk.STOCK_MEDIA_FORWARD,
-    keypresses=(Gdk.KEY_b, NO_MODS_MASK),
+    icon_name='media-seek-forward',
 )
-TOGGLE_SNAP_TO_GRID = ToggleAction(
+TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
     label='_Snap to grid',
     tooltip='Snap blocks to a grid for an easier connection alignment',
-    preference_name='snap_to_grid'
+    preference_name='snap_to_grid',
 )
-TOGGLE_HIDE_DISABLED_BLOCKS = ToggleAction(
+TOGGLE_HIDE_DISABLED_BLOCKS = actions.register("win.hide_disabled",
     label='Hide _Disabled Blocks',
     tooltip='Toggle visibility of disabled blocks and connections',
-    stock_id=Gtk.STOCK_MISSING_IMAGE,
-    keypresses=(Gdk.KEY_d, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='image-missing',
+    keypresses=["<Ctrl>d"],
+    preference_name='hide_disabled',
 )
-TOGGLE_HIDE_VARIABLES = ToggleAction(
+TOGGLE_HIDE_VARIABLES = actions.register("win.hide_variables",
     label='Hide Variables',
     tooltip='Hide all variable blocks',
     preference_name='hide_variables',
     default=False,
 )
-TOGGLE_FLOW_GRAPH_VAR_EDITOR = ToggleAction(
+TOGGLE_FLOW_GRAPH_VAR_EDITOR = actions.register("win.toggle_variable_editor",
     label='Show _Variable Editor',
     tooltip='Show the variable editor. Modify variables and imports in this flow graph',
-    stock_id=Gtk.STOCK_EDIT,
+    icon_name='accessories-text-editor',
     default=True,
-    keypresses=(Gdk.KEY_e, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>e"],
     preference_name='variable_editor_visable',
 )
-TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = ToggleAction(
+TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR = actions.register("win.toggle_variable_editor_sidebar",
     label='Move the Variable Editor to the Sidebar',
     tooltip='Move the variable editor to the sidebar',
     default=False,
     preference_name='variable_editor_sidebar',
 )
-TOGGLE_AUTO_HIDE_PORT_LABELS = ToggleAction(
+TOGGLE_AUTO_HIDE_PORT_LABELS = actions.register("win.auto_hide_port_labels",
     label='Auto-Hide _Port Labels',
     tooltip='Automatically hide port labels',
     preference_name='auto_hide_port_labels'
 )
-TOGGLE_SHOW_BLOCK_COMMENTS = ToggleAction(
+TOGGLE_SHOW_BLOCK_COMMENTS = actions.register("win.show_block_comments",
     label='Show Block Comments',
     tooltip="Show comment beneath each block",
     preference_name='show_block_comments'
 )
-TOGGLE_SHOW_CODE_PREVIEW_TAB = ToggleAction(
+TOGGLE_SHOW_CODE_PREVIEW_TAB = actions.register("win.toggle_code_preview",
     label='Generated Code Preview',
     tooltip="Show a preview of the code generated for each Block in its "
             "Properties Dialog",
     preference_name='show_generated_code_tab',
     default=False,
 )
-TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = ToggleAction(
+TOGGLE_SHOW_FLOWGRAPH_COMPLEXITY = actions.register("win.show_flowgraph_complexity",
     label='Show Flowgraph Complexity',
     tooltip="How many Balints is the flowgraph...",
     preference_name='show_flowgraph_complexity',
     default=False,
 )
-BLOCK_CREATE_HIER = Action(
+BLOCK_CREATE_HIER = actions.register("win.block_create_hier",
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',
-    stock_id=Gtk.STOCK_CONNECT,
-#   keypresses=(Gdk.KEY_c, NO_MODS_MASK),
+    icon_name='document-new',
 )
-BLOCK_CUT = Action(
+BLOCK_CUT = actions.register("win.block_cut",
     label='Cu_t',
     tooltip='Cut',
-    stock_id=Gtk.STOCK_CUT,
-    keypresses=(Gdk.KEY_x, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='edit-cut',
+    keypresses=["<Ctrl>x"],
 )
-BLOCK_COPY = Action(
+BLOCK_COPY = actions.register("win.block_copy",
     label='_Copy',
     tooltip='Copy',
-    stock_id=Gtk.STOCK_COPY,
-    keypresses=(Gdk.KEY_c, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='edit-copy',
+    keypresses=["<Ctrl>c"],
 )
-BLOCK_PASTE = Action(
+BLOCK_PASTE = actions.register("win.block_paste",
     label='_Paste',
     tooltip='Paste',
-    stock_id=Gtk.STOCK_PASTE,
-    keypresses=(Gdk.KEY_v, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='edit-paste',
+    keypresses=["<Ctrl>v"],
 )
-ERRORS_WINDOW_DISPLAY = Action(
+ERRORS_WINDOW_DISPLAY = actions.register("app.errors",
     label='Flowgraph _Errors',
     tooltip='View flow graph errors',
-    stock_id=Gtk.STOCK_DIALOG_ERROR,
+    icon_name='dialog-error',
 )
-TOGGLE_CONSOLE_WINDOW = ToggleAction(
+TOGGLE_CONSOLE_WINDOW = actions.register("win.toggle_console_window",
     label='Show _Console Panel',
     tooltip='Toggle visibility of the console',
-    keypresses=(Gdk.KEY_r, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>r"],
     preference_name='console_window_visible'
 )
-TOGGLE_BLOCKS_WINDOW = ToggleAction(
+# TODO: Might be able to convert this to a Gio.PropertyAction eventually.
+#       actions would need to be defined in the correct class and not globally
+TOGGLE_BLOCKS_WINDOW = actions.register("win.toggle_blocks_window",
     label='Show _Block Tree Panel',
     tooltip='Toggle visibility of the block tree widget',
-    keypresses=(Gdk.KEY_b, Gdk.ModifierType.CONTROL_MASK),
+    keypresses=["<Ctrl>b"],
     preference_name='blocks_window_visible'
 )
-TOGGLE_SCROLL_LOCK = ToggleAction(
+TOGGLE_SCROLL_LOCK = actions.register("win.console.scroll_lock",
     label='Console Scroll _Lock',
     tooltip='Toggle scroll lock for the console window',
     preference_name='scroll_lock'
 )
-ABOUT_WINDOW_DISPLAY = Action(
+ABOUT_WINDOW_DISPLAY = actions.register("app.about",
     label='_About',
     tooltip='About this program',
-    stock_id=Gtk.STOCK_ABOUT,
+    icon_name='help-about',
 )
-HELP_WINDOW_DISPLAY = Action(
+HELP_WINDOW_DISPLAY = actions.register("app.help",
     label='_Help',
     tooltip='Usage tips',
-    stock_id=Gtk.STOCK_HELP,
-    keypresses=(Gdk.KEY_F1, NO_MODS_MASK),
+    icon_name='help-contents',
+    keypresses=["F1"],
 )
-TYPES_WINDOW_DISPLAY = Action(
+TYPES_WINDOW_DISPLAY = actions.register("app.types",
     label='_Types',
     tooltip='Types color mapping',
-    stock_id=Gtk.STOCK_DIALOG_INFO,
+    icon_name='dialog-information',
 )
-FLOW_GRAPH_GEN = Action(
+FLOW_GRAPH_GEN = actions.register("app.flowgraph.generate",
     label='_Generate',
     tooltip='Generate the flow graph',
-    stock_id=Gtk.STOCK_CONVERT,
-    keypresses=(Gdk.KEY_F5, NO_MODS_MASK),
+    icon_name='insert-object',
+    keypresses=["F5"],
 )
-FLOW_GRAPH_EXEC = Action(
+FLOW_GRAPH_EXEC = actions.register("app.flowgraph.execute",
     label='_Execute',
     tooltip='Execute the flow graph',
-    stock_id=Gtk.STOCK_MEDIA_PLAY,
-    keypresses=(Gdk.KEY_F6, NO_MODS_MASK),
+    icon_name='media-playback-start',
+    keypresses=["F6"],
 )
-FLOW_GRAPH_KILL = Action(
+FLOW_GRAPH_KILL = actions.register("app.flowgraph.kill",
     label='_Kill',
     tooltip='Kill the flow graph',
-    stock_id=Gtk.STOCK_STOP,
-    keypresses=(Gdk.KEY_F7, NO_MODS_MASK),
+    icon_name='media-playback-stop',
+    keypresses=["F7"],
 )
-FLOW_GRAPH_SCREEN_CAPTURE = Action(
+FLOW_GRAPH_SCREEN_CAPTURE = actions.register("app.flowgraph.screen_capture",
     label='Screen Ca_pture',
     tooltip='Create a screen capture of the flow graph',
-    stock_id=Gtk.STOCK_PRINT,
-    keypresses=(Gdk.KEY_p, Gdk.ModifierType.CONTROL_MASK),
+    icon_name='printer',
+    keypresses=["<Ctrl>p"],
 )
-PORT_CONTROLLER_DEC = Action(
-    keypresses=(Gdk.KEY_minus, NO_MODS_MASK, Gdk.KEY_KP_Subtract, NO_MODS_MASK),
-)
-PORT_CONTROLLER_INC = Action(
-    keypresses=(Gdk.KEY_plus, NO_MODS_MASK, Gdk.KEY_KP_Add, NO_MODS_MASK),
-)
-BLOCK_INC_TYPE = Action(
-    keypresses=(Gdk.KEY_Down, NO_MODS_MASK),
-)
-BLOCK_DEC_TYPE = Action(
-    keypresses=(Gdk.KEY_Up, NO_MODS_MASK),
-)
-RELOAD_BLOCKS = Action(
+PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec")
+PORT_CONTROLLER_INC = actions.register("win.port_controller_inc")
+BLOCK_INC_TYPE = actions.register("win.block_inc_type")
+BLOCK_DEC_TYPE = actions.register("win.block_dec_type")
+RELOAD_BLOCKS = actions.register("app.reload_blocks",
     label='Reload _Blocks',
     tooltip='Reload Blocks',
-    stock_id=Gtk.STOCK_REFRESH
+    icon_name='view-refresh'
 )
-FIND_BLOCKS = Action(
+FIND_BLOCKS = actions.register("win.find_blocks",
     label='_Find Blocks',
     tooltip='Search for a block by name (and key)',
-    stock_id=Gtk.STOCK_FIND,
-    keypresses=(Gdk.KEY_f, Gdk.ModifierType.CONTROL_MASK,
-                Gdk.KEY_slash, NO_MODS_MASK),
+    icon_name='edit-find',
+    keypresses=["<Ctrl>f", "slash"],
 )
-CLEAR_CONSOLE = Action(
+CLEAR_CONSOLE = actions.register("win.console.clear",
     label='_Clear Console',
     tooltip='Clear Console',
-    stock_id=Gtk.STOCK_CLEAR,
+    icon_name='edit-clear',
 )
-SAVE_CONSOLE = Action(
+SAVE_CONSOLE = actions.register("win.console.save",
     label='_Save Console',
     tooltip='Save Console',
-    stock_id=Gtk.STOCK_SAVE,
+    icon_name='edit-save',
 )
-OPEN_HIER = Action(
+OPEN_HIER = actions.register("win.open_hier",
     label='Open H_ier',
     tooltip='Open the source of the selected hierarchical block',
-    stock_id=Gtk.STOCK_JUMP_TO,
+    icon_name='go-jump',
 )
-BUSSIFY_SOURCES = Action(
+BUSSIFY_SOURCES = actions.register("win.bussify_sources",
     label='Toggle So_urce Bus',
     tooltip='Gang source ports into a single bus port',
-    stock_id=Gtk.STOCK_JUMP_TO,
+    icon_name='go-jump',
 )
-BUSSIFY_SINKS = Action(
+BUSSIFY_SINKS = actions.register("win.bussify_sinks",
     label='Toggle S_ink Bus',
     tooltip='Gang sink ports into a single bus port',
-    stock_id=Gtk.STOCK_JUMP_TO,
+    icon_name='go-jump',
 )
-XML_PARSER_ERRORS_DISPLAY = Action(
+XML_PARSER_ERRORS_DISPLAY = actions.register("app.xml_errors",
     label='_Parser Errors',
     tooltip='View errors that occurred while parsing XML files',
-    stock_id=Gtk.STOCK_DIALOG_ERROR,
+    icon_name='dialog-error',
 )
-FLOW_GRAPH_OPEN_QSS_THEME = Action(
+FLOW_GRAPH_OPEN_QSS_THEME = actions.register("app.open_qss_theme",
     label='Set Default QT GUI _Theme',
     tooltip='Set a default QT Style Sheet file to use for QT GUI',
-    stock_id=Gtk.STOCK_OPEN,
+    icon_name='document-open',
 )
-TOOLS_RUN_FDESIGN = Action(
+TOOLS_RUN_FDESIGN = actions.register("app.filter_design",
     label='Filter Design Tool',
     tooltip='Execute gr_filter_design',
-    stock_id=Gtk.STOCK_EXECUTE,
+    icon_name='media-playback-start',
 )
-TOOLS_MORE_TO_COME = Action(
-    label='More to come',
-)
+POST_HANDLER = actions.register("app.post_handler")
+READY = actions.register("app.ready")
