@@ -98,3 +98,36 @@ if(ENABLE_STATIC_LIBS)
     ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "pager_devel"   # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
+
+########################################################################
+# QA C++ Code for gr-pager
+########################################################################
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  include_directories(${CPPUNIT_INCLUDE_DIRS})
+  link_directories(${CPPUNIT_LIBRARY_DIRS})
+
+  list(APPEND test_gr_pager_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_pager.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_pager.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_flex_parse_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/flex_parse_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/flex_modes.cc
+    )
+
+  add_executable(test-gr-pager ${test_gr_pager_sources})
+
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-pager)
+
+  target_link_libraries(
+    test-gr-pager
+    gnuradio-runtime
+    gnuradio-pager
+    ${Boost_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+    gcov
+  )
+
+  GR_ADD_TEST(test_gr_pager test-gr-pager)
+endif(ENABLE_TESTING)
