@@ -49,5 +49,25 @@ class test_sample_and_hold(gr_unittest.TestCase):
         result = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result, places=6)
 
+    def test_002(self):
+        # test with complex data
+        # test if first output element is 0 when no control signal came
+        src_data        = [5+5j,] + 10*[2+1j,1-1j,2+3j,1+1j,3-1j,3+0j,0+3j]
+        ctrl_data       = [   0,] + 10*[   1,   0,   0,   0,   1,   1,   1]
+        expected_result = [   0,] + 10*[2+1j,2+1j,2+1j,2+1j,3-1j,3+0j,0+3j]
+
+        src  = blocks.vector_source_c(src_data)
+        ctrl = blocks.vector_source_b(ctrl_data)
+        op = blocks.sample_and_hold_cc()
+        dst = blocks.vector_sink_c()
+
+        self.tb.connect(src,  (op,0))
+        self.tb.connect(ctrl, (op,1))
+        self.tb.connect(op, dst)
+        self.tb.run()
+
+        result = dst.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, result, places=6)
+
 if __name__ == '__main__':
     gr_unittest.run(test_sample_and_hold, "test_sample_and_hold.xml")
