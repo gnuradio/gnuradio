@@ -158,8 +158,9 @@ class ModToolRemove(ModTool):
             self.scm.remove_file(f)
             os.unlink(f)
             print "Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path)
-            for var in makefile_vars:
-                ed.remove_value(var, b)
+            if re.match('lib/qa_\w*',f) is None:
+                for var in makefile_vars:
+                    ed.remove_value(var, b)
             if cmakeedit_func is not None:
                 cmakeedit_func(b, ed)
         ed.write()
