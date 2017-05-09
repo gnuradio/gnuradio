@@ -88,7 +88,7 @@ class Connection(Element, _Connection):
         source_domain = self.get_source().get_domain()
         sink_domain = self.get_sink().get_domain()
         self.line_attributes[0] = 2 if source_domain != sink_domain else 0
-        self.line_attributes[1] = gtk.gdk.LINE_DOUBLE_DASH \
+        self.line_attributes[1] = gtk.gdk.LINE_SOLID \
             if not source_domain == sink_domain == GR_MESSAGE_DOMAIN \
             else gtk.gdk.LINE_ON_OFF_DASH
         get_domain_color = lambda d: Colors.get_color((
