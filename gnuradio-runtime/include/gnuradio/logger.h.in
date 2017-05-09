@@ -35,12 +35,59 @@
 *
 */
 
-#ifndef ENABLE_GR_LOG
+// handle current status of GR_LOG
+#ifdef EXT_ENABLE_GR_LOG
+#undef EXT_ENABLE_GR_LOG
+#endif
+#ifdef ENABLE_GR_LOG
+#define EXT_ENABLE_GR_LOG
+#undef ENABLE_GR_LOG
+#endif
+
+// did GR enable LOG?
 #cmakedefine ENABLE_GR_LOG
+
+// if GR does not provide logging and the current module is requesting
+// it, disable it.
+#if defined(EXT_ENABLE_GR_LOG) && !defined(ENABLE_GR_LOG)
+#warning "Logging was requested but is not enabled in GNU Radio, so disabling."
+#undef EXT_ENABLE_GR_LOG
 #endif
-#ifndef HAVE_LOG4CPP
+
+// if GR provides logging but the current module is not requesting it,
+// disable it.
+#if !defined(EXT_ENABLE_GR_LOG) && defined(ENABLE_GR_LOG)
+#undef ENABLE_GR_LOG
+#endif
+
+// the other 2 cases work; no need to check them!
+
+// handle current status of LOG4CPP
+#ifdef EXT_HAVE_LOG4CPP
+#undef EXT_HAVE_LOG4CPP
+#endif
+#ifdef HAVE_LOG4CPP
+#define EXT_HAVE_LOG4CPP
+#undef HAVE_LOG4CPP
+#endif
+
+// did GR use log4cpp?
 #cmakedefine HAVE_LOG4CPP
+
+// if GR does not use log4cpp and the current module is requesting it,
+// disable it & print a warning.
+#if defined(EXT_HAVE_LOG4CPP) && !defined(HAVE_LOG4CPP)
+#warning "Log4Cpp use was requested but was not in GNU Radio, so disabling."
+#undef EXT_HAVE_LOG4CPP
 #endif
+
+// if GR provides for using log4cpp but the current module is not
+// requesting it, disable it quietly.
+#if !defined(EXT_HAVE_LOG4CPP) && defined(HAVE_LOG4CPP)
+#undef HAVE_LOG4CPP
+#endif
+
+// the other 2 cases work; no need to check them!
 
 #ifdef _MSC_VER
 typedef unsigned short mode_t;
