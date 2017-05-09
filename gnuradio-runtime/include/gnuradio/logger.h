@@ -72,7 +72,6 @@ namespace gr {
 
 } /* namespace gr */
 
-
   /* Macros for Programmatic Configuration */
 #define GR_LOG_DECLARE_LOGPTR(logger)           \
   gr::logger_ptr logger;
