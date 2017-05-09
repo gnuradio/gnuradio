@@ -29,8 +29,13 @@ namespace gr {
 namespace audio {
 namespace osx {
 
+#ifndef _OSX_AU_DEBUG_
 #define _OSX_AU_DEBUG_ 0
+#endif
+
+#ifndef _OSX_AU_DEBUG_RENDER_
 #define _OSX_AU_DEBUG_RENDER_ 0
+#endif
 
 #define check_error_and_throw(err,what,throw_str)			\
   if(err) {                                                             \

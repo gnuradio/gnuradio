@@ -33,10 +33,6 @@
 #include <locale>
 #include <stdexcept>
 
-namespace gr {
-namespace audio {
-namespace osx {
-
 std::ostream&
 operator<<
 (std::ostream& s,
@@ -69,6 +65,10 @@ operator<<
   s << "  Bits / Channel   : " << asbd.mBitsPerChannel;
   return(s);
 };
+
+namespace gr {
+namespace audio {
+namespace osx {
 
 static UInt32
 _get_num_channels
