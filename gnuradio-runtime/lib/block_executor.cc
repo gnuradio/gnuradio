@@ -391,7 +391,9 @@ namespace gr {
 
       if(i < d->ninputs()) {			// not enough input on input[i]
         // if we can, try reducing the size of our output request
-        if(noutput_items > m->output_multiple()) {
+        // ... if there are any inputs available
+        if((d_ninput_items[i] != 0) &&
+           (noutput_items > m->output_multiple())) {
           noutput_items /= 2;
           noutput_items = round_up(noutput_items, m->output_multiple());
           goto try_again;
