@@ -27,6 +27,7 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
@@ -56,6 +57,8 @@ namespace gr {
       d_message_subscribers(pmt::make_dict())
   {
     s_ncurrently_allocated++;
+    prefs *p = prefs::singleton();
+    max_nmsgs = static_cast<size_t>(p->get_long("DEFAULT", "max_messages", 100));
   }
 
   basic_block::~basic_block()
@@ -203,6 +206,11 @@ namespace gr {
     if((msg_queue.find(which_port) == msg_queue.end()) || (msg_queue_ready.find(which_port) == msg_queue_ready.end())) {
       std::cout << "target port = " << pmt::symbol_to_string(which_port) << std::endl;
       throw std::runtime_error("attempted to insert_tail on invalid queue!");
+    }
+
+    while(msg_queue[which_port].size() > max_nmsgs) {
+      gr::thread::condition_variable queue_full;
+      queue_full.wait(guard);
     }
 
     msg_queue[which_port].push_back(msg);
