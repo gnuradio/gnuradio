@@ -74,7 +74,6 @@ def main():
     log.debug("Running main")
 
     # Delay importing until the logging is setup
-    # Otherwise, the decorators could not use logging.
     from .gui.Platform import Platform
     from .gui.Application import Application
 

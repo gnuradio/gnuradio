@@ -129,12 +129,19 @@ class Page(Gtk.HBox):
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.scrolled_window.set_policy(Gtk.PolicyType.ALWAYS, Gtk.PolicyType.ALWAYS)
+        self.scrolled_window.connect('key-press-event', self._handle_scroll_window_key_press)
 
         self.scrolled_window.add(self.drawing_area)
         self.pack_start(self.scrolled_window, True, True, 0)
         self.show_all()
 
-
+    def _handle_scroll_window_key_press(self, widget, event):
+        is_ctrl_pg = (
+            event.state & Gdk.ModifierType.CONTROL_MASK and
+            event.keyval in (Gdk.KEY_Page_Up, Gdk.KEY_Page_Down)
+        )
+        if is_ctrl_pg:
+            return self.get_parent().event(event)
 
     def get_generator(self):
         """

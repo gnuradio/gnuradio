@@ -92,6 +92,29 @@ class DrawingArea(Gtk.DrawingArea):
 #        self.set_flags(Gtk.CAN_FOCUS)  # self.set_can_focus(True)
 #        self.connect('focus-out-event', self._handle_focus_lost_event)
 
+        # Setup a map of the accelerator keys to the action to trigger
+        self.accels = {
+            Gtk.accelerator_parse('d'): Actions.BLOCK_DISABLE,
+            Gtk.accelerator_parse('e'): Actions.BLOCK_ENABLE,
+            Gtk.accelerator_parse('b'): Actions.BLOCK_BYPASS,
+            Gtk.accelerator_parse('c'): Actions.BLOCK_CREATE_HIER,
+            Gtk.accelerator_parse('Up'): Actions.BLOCK_DEC_TYPE,
+            Gtk.accelerator_parse('Down'): Actions.BLOCK_INC_TYPE,
+            Gtk.accelerator_parse('Left'): Actions.BLOCK_ROTATE_CCW,
+            Gtk.accelerator_parse('Right'): Actions.BLOCK_ROTATE_CW,
+            Gtk.accelerator_parse('minus'): Actions.PORT_CONTROLLER_DEC,
+            Gtk.accelerator_parse('plus'): Actions.PORT_CONTROLLER_INC,
+            Gtk.accelerator_parse('Add'): Actions.PORT_CONTROLLER_INC,
+            Gtk.accelerator_parse('Subtract'): Actions.PORT_CONTROLLER_DEC,
+            Gtk.accelerator_parse('Return'): Actions.BLOCK_PARAM_MODIFY,
+            Gtk.accelerator_parse('<Shift>t'): Actions.BLOCK_VALIGN_TOP,
+            Gtk.accelerator_parse('<Shift>m'): Actions.BLOCK_VALIGN_MIDDLE,
+            Gtk.accelerator_parse('<Shift>b'): Actions.BLOCK_VALIGN_BOTTOM,
+            Gtk.accelerator_parse('<Shift>l'): Actions.BLOCK_HALIGN_LEFT,
+            Gtk.accelerator_parse('<Shift>c'): Actions.BLOCK_HALIGN_CENTER,
+            Gtk.accelerator_parse('<Shift>r'): Actions.BLOCK_HALIGN_RIGHT,
+        }
+
 
     ##########################################################################
     # Handlers
@@ -172,32 +195,12 @@ class DrawingArea(Gtk.DrawingArea):
         key = event.keyval
         mod = event.state
 
-        # Setup a map of the accelerator keys to the action to trigger
-        accels = {
-            Gtk.accelerator_parse('d'): Actions.BLOCK_DISABLE,
-            Gtk.accelerator_parse('e'): Actions.BLOCK_ENABLE,
-            Gtk.accelerator_parse('b'): Actions.BLOCK_BYPASS,
-            Gtk.accelerator_parse('c'): Actions.BLOCK_CREATE_HIER,
-            Gtk.accelerator_parse('Up'): Actions.BLOCK_DEC_TYPE,
-            Gtk.accelerator_parse('Down'): Actions.BLOCK_INC_TYPE,
-            Gtk.accelerator_parse('Left'): Actions.BLOCK_ROTATE_CCW,
-            Gtk.accelerator_parse('Right'): Actions.BLOCK_ROTATE_CW,
-            Gtk.accelerator_parse('minus'): Actions.PORT_CONTROLLER_DEC,
-            Gtk.accelerator_parse('plus'): Actions.PORT_CONTROLLER_INC,
-            Gtk.accelerator_parse('Add'): Actions.PORT_CONTROLLER_INC,
-            Gtk.accelerator_parse('Subtract'): Actions.PORT_CONTROLLER_DEC,
-            Gtk.accelerator_parse('Return'): Actions.BLOCK_PARAM_MODIFY,
-            Gtk.accelerator_parse('<Shift>t'): Actions.BLOCK_VALIGN_TOP,
-            Gtk.accelerator_parse('<Shift>m'): Actions.BLOCK_VALIGN_MIDDLE,
-            Gtk.accelerator_parse('<Shift>b'): Actions.BLOCK_VALIGN_BOTTOM,
-            Gtk.accelerator_parse('<Shift>l'): Actions.BLOCK_HALIGN_LEFT,
-            Gtk.accelerator_parse('<Shift>c'): Actions.BLOCK_HALIGN_CENTER,
-            Gtk.accelerator_parse('<Shift>r'): Actions.BLOCK_HALIGN_RIGHT,
-        }
-        # Not sold on this.
-        if (key, mod) in accels:
-            accels[(key, mod)]()
+        try:
+            action = self.accels[(key, mod)]
+            action()
             return True
+        except KeyError:
+            return False
 
     def _update_size(self):
         w, h = self._flow_graph.get_extents()[2:]

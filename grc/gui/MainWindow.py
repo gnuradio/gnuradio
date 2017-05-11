@@ -63,8 +63,9 @@ class MainWindow(Gtk.ApplicationWindow):
         self.config = platform.config
 
         # Add all "win" actions to the local
-        win_actions = filter(lambda x: x.startswith("win."), Actions.get_actions())
-        map(lambda x: self.add_action(Actions.actions[x]), win_actions)
+        for x in Actions.get_actions():
+            if x.startswith("win."):
+                self.add_action(Actions.actions[x])
 
         # Setup window
         vbox = Gtk.VBox()
