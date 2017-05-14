@@ -107,23 +107,22 @@ class test_file_source_sink(gr_unittest.TestCase):
         src_data = range(1000)
         expected_result = range(1000)
 
-        filename = "tmp.32f"
-        src = blocks.vector_source_f(src_data)
-        snk = blocks.file_sink(gr.sizeof_float, filename)
-        snk.set_unbuffered(True)
-
-        src2 = blocks.file_source(gr.sizeof_float, filename)
-        src2.set_begin_tag(True)
         snk2 = blocks.vector_sink_f()
 
-        self.tb.connect(src, snk)
-        self.tb.run()
+        with tempfile.NamedTemporaryFile() as temp:
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_sink(gr.sizeof_float, temp.name)
+            snk.set_unbuffered(True)
 
-        self.tb.disconnect(src, snk)
-        self.tb.connect(src2, snk2)
-        self.tb.run()
+            src2 = blocks.file_source(gr.sizeof_float, temp.name)
+            src2.set_begin_tag(True)
 
-        os.remove(filename)
+            self.tb.connect(src, snk)
+            self.tb.run()
+
+            self.tb.disconnect(src, snk)
+            self.tb.connect(src2, snk2)
+            self.tb.run()
 
         result_data = snk2.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
@@ -134,24 +133,23 @@ class test_file_source_sink(gr_unittest.TestCase):
         expected_result = range(1000)
         expected_result.extend(range(1000))
 
-        filename = "tmp.32f"
-        src = blocks.vector_source_f(src_data)
-        snk = blocks.file_sink(gr.sizeof_float, filename)
-        snk.set_unbuffered(True)
-
-        src2 = blocks.file_source(gr.sizeof_float, filename, True)
-        src2.set_begin_tag(True)
-        hd = blocks.head(gr.sizeof_float, 2000)
         snk2 = blocks.vector_sink_f()
 
-        self.tb.connect(src, snk)
-        self.tb.run()
+        with tempfile.NamedTemporaryFile() as temp:
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_sink(gr.sizeof_float, temp.name)
+            snk.set_unbuffered(True)
 
-        self.tb.disconnect(src, snk)
-        self.tb.connect(src2, hd, snk2)
-        self.tb.run()
+            src2 = blocks.file_source(gr.sizeof_float, temp.name, True)
+            src2.set_begin_tag(True)
+            hd = blocks.head(gr.sizeof_float, 2000)
 
-        os.remove(filename)
+            self.tb.connect(src, snk)
+            self.tb.run()
+
+            self.tb.disconnect(src, snk)
+            self.tb.connect(src2, hd, snk2)
+            self.tb.run()
 
         result_data = snk2.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
