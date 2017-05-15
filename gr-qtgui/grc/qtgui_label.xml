@@ -21,7 +21,7 @@ $win = Qt.QToolBar(self)
 if $(formatter):
   self._$(id)_formatter = $formatter
 else:
-  self._$(id)_formatter = lambda x: x
+  self._$(id)_formatter = lambda x: $(type.str)(x)
 
 $(win).addWidget(Qt.QLabel($label+": "))
 self._$(id)_label = Qt.QLabel(str(self._$(id)_formatter(self.$id)))
@@ -30,7 +30,7 @@ $(gui_hint()($win))
   </make>
 
   <callback>self.set_$(id)(self._$(id)_formatter($value))</callback>
-  <callback>Qt.QMetaObject.invokeMethod(self._$(id)_label, "setText", Qt.Q_ARG("QString", $(type.str)($id)))</callback>
+  <callback>Qt.QMetaObject.invokeMethod(self._$(id)_label, "setText", Qt.Q_ARG("QString", $id))</callback>
 
   <param>
     <name>Label</name>
