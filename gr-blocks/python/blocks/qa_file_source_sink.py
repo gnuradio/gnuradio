@@ -22,6 +22,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 import os
+import tempfile
 
 class test_file_source_sink(gr_unittest.TestCase):
 
@@ -36,22 +37,21 @@ class test_file_source_sink(gr_unittest.TestCase):
         src_data = range(1000)
         expected_result = range(1000)
 
-        filename = "tmp.32f"
-        src = blocks.vector_source_f(src_data)
-        snk = blocks.file_sink(gr.sizeof_float, filename)
-        snk.set_unbuffered(True)
-
-        src2 = blocks.file_source(gr.sizeof_float, filename)
         snk2 = blocks.vector_sink_f()
 
-        self.tb.connect(src, snk)
-        self.tb.run()
+        with tempfile.NamedTemporaryFile() as temp:
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_sink(gr.sizeof_float, temp.name)
+            snk.set_unbuffered(True)
 
-        self.tb.disconnect(src, snk)
-        self.tb.connect(src2, snk2)
-        self.tb.run()
+            src2 = blocks.file_source(gr.sizeof_float, temp.name)
 
-        os.remove(filename)
+            self.tb.connect(src, snk)
+            self.tb.run()
+
+            self.tb.disconnect(src, snk)
+            self.tb.connect(src2, snk2)
+            self.tb.run()
 
         result_data = snk2.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
@@ -60,30 +60,29 @@ class test_file_source_sink(gr_unittest.TestCase):
         src_data = range(1000)
         expected_result = range(1000)
 
-        filename = "tmp.32f"
-        fhandle0 = open(filename, "wb")
-        fd0 = fhandle0.fileno()
-
-        src = blocks.vector_source_f(src_data)
-        snk = blocks.file_descriptor_sink(gr.sizeof_float, fd0)
-
-        self.tb.connect(src, snk)
-        self.tb.run()
-        os.fsync(fd0)
-        fhandle0.close()
-
-        fhandle1 = open(filename, "rb")
-        fd1 = fhandle1.fileno()
-        src2 = blocks.file_descriptor_source(gr.sizeof_float, fd1, False)
         snk2 = blocks.vector_sink_f()
 
-        self.tb.disconnect(src, snk)
-        self.tb.connect(src2, snk2)
-        self.tb.run()
-        os.fsync(fd1)
-        fhandle1.close()
+        with tempfile.NamedTemporaryFile() as temp:
+            fhandle0 = open(temp.name, "wb")
+            fd0 = fhandle0.fileno()
 
-        os.remove(filename)
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_descriptor_sink(gr.sizeof_float, fd0)
+
+            self.tb.connect(src, snk)
+            self.tb.run()
+            os.fsync(fd0)
+            fhandle0.close()
+
+            fhandle1 = open(temp.name, "rb")
+            fd1 = fhandle1.fileno()
+            src2 = blocks.file_descriptor_source(gr.sizeof_float, fd1, False)
+
+            self.tb.disconnect(src, snk)
+            self.tb.connect(src2, snk2)
+            self.tb.run()
+            os.fsync(fd1)
+            fhandle1.close()
 
         result_data = snk2.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
@@ -91,18 +90,16 @@ class test_file_source_sink(gr_unittest.TestCase):
     def test_file_source_can_seek_after_open(self):
         src_data = range(1000)
 
-        filename = "tmp.32f"
-        src = blocks.vector_source_f(src_data)
-        snk = blocks.file_sink(gr.sizeof_float, filename)
-        snk.set_unbuffered(True)
+        with tempfile.NamedTemporaryFile() as temp:
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_sink(gr.sizeof_float, temp.name)
+            snk.set_unbuffered(True)
 
-        self.tb.connect(src, snk)
-        self.tb.run()
+            self.tb.connect(src, snk)
+            self.tb.run()
 
-        source = blocks.file_source(gr.sizeof_float, filename)
-        self.assertTrue(source.seek(0, os.SEEK_SET))
-
-        os.remove(filename)
+            source = blocks.file_source(gr.sizeof_float, temp.name)
+            self.assertTrue(source.seek(0, os.SEEK_SET))
 
 if __name__ == '__main__':
     gr_unittest.run(test_file_source_sink, "test_file_source_sink.xml")
