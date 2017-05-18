@@ -22,8 +22,9 @@
 #define INCLUDED_DTV_DVBT2_PILOTGENERATOR_CC_IMPL_H
 
 #include <gnuradio/dtv/dvbt2_pilotgenerator_cc.h>
-#include <gnuradio/fft/fft.h>
 #include "dvb/dvb_defines.h"
+#include <gnuradio/fft/fft.h>
+#include <vector>
 
 #define CHIPS 2624
 #define MAX_CARRIERS 27841
@@ -66,7 +67,7 @@ namespace gr {
       int prbs[MAX_CARRIERS];
       int pn_sequence[CHIPS];
       int p2_carrier_map[MAX_CARRIERS];
-      int data_carrier_map[MAX_CARRIERS];
+      std::vector< std::vector<int> > data_carrier_map;
       int fc_carrier_map[MAX_CARRIERS];
       int N_P2;
       int C_P2;
@@ -81,7 +82,7 @@ namespace gr {
       int miso;
       int miso_group;
       void init_prbs(void);
-      void init_pilots(int);
+      void init_pilots(void);
 
       fft::fft_complex *ofdm_fft;
       int ofdm_fft_size;
