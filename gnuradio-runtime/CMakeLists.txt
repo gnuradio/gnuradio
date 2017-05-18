@@ -130,6 +130,7 @@ install(FILES
     DESTINATION ${GR_PREFSDIR}
     COMPONENT "runtime_runtime"
 )
+set(PC_ADD_LIBS -llog4cpp)
 endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 
 ########################################################################
