@@ -7,5 +7,5 @@ Name: gnuradio-runtime
 Description: GNU Radio core runtime infrastructure
 Requires:
 Version: @LIBVER@
-Libs: -L${libdir} -lgnuradio-runtime -lgnuradio-pmt
+Libs: -L${libdir} -lgnuradio-runtime -lgnuradio-pmt -llog4cpp
 Cflags: -I${includedir}
