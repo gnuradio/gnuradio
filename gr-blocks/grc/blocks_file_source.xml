@@ -8,6 +8,7 @@
 	<name>File Source</name>
 	<key>blocks_file_source</key>
 	<import>from gnuradio import blocks</import>
+	<import>import pmt</import>
 	<make>blocks.file_source($type.size*$vlen, $file, $repeat)
 self.$(id).set_begin_tag($begin_tag)</make>
 	<callback>open($file, $repeat)</callback>
@@ -72,16 +73,8 @@ self.$(id).set_begin_tag($begin_tag)</make>
 	<param>
 		<name>Add begin tag</name>
 		<key>begin_tag</key>
-		<value>False</value>
-		<type>bool</type>
-		<option>
-			<name>Yes</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>No</name>
-			<key>False</key>
-		</option>
+		<value>pmt.PMT_NIL</value>
+		<type>raw</type>
 	</param>
 	<check>$vlen &gt; 0</check>
 	<source>

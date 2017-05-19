@@ -23,6 +23,7 @@
 from gnuradio import gr, gr_unittest, blocks
 import os
 import tempfile
+import pmt
 
 class test_file_source_sink(gr_unittest.TestCase):
 
@@ -115,7 +116,7 @@ class test_file_source_sink(gr_unittest.TestCase):
             snk.set_unbuffered(True)
 
             src2 = blocks.file_source(gr.sizeof_float, temp.name)
-            src2.set_begin_tag(True)
+            src2.set_begin_tag(pmt.string_to_symbol("file_begin"))
 
             self.tb.connect(src, snk)
             self.tb.run()
@@ -141,7 +142,7 @@ class test_file_source_sink(gr_unittest.TestCase):
             snk.set_unbuffered(True)
 
             src2 = blocks.file_source(gr.sizeof_float, temp.name, True)
-            src2.set_begin_tag(True)
+            src2.set_begin_tag(pmt.string_to_symbol("file_begin"))
             hd = blocks.head(gr.sizeof_float, 2000)
 
             self.tb.connect(src, snk)
