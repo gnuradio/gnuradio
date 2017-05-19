@@ -65,7 +65,7 @@ namespace gr {
 		      io_signature::make(1, 1, itemsize)),
 	d_itemsize(itemsize), d_fp(0), d_new_fp(0), d_repeat(repeat),
 	d_updated(false), d_file_begin(true), d_repeat_cnt(0),
-       d_add_begin_tag(false)
+       d_add_begin_tag(pmt::PMT_NIL)
     {
       open(filename, repeat);
       do_update();
@@ -149,7 +149,7 @@ namespace gr {
     }
 
     void
-    file_source_impl::set_begin_tag(bool val)
+    file_source_impl::set_begin_tag(pmt::pmt_t val)
     {
       d_add_begin_tag = val;
     }
@@ -171,8 +171,8 @@ namespace gr {
 
       while(size) {
         // Add stream tag whenever the file starts again
-        if (d_file_begin && d_add_begin_tag) {
-          add_item_tag(0, nitems_written(0) + noutput_items - size, BEGIN_KEY, pmt::from_long(d_repeat_cnt), _id);
+        if (d_file_begin && d_add_begin_tag != pmt::PMT_NIL) {
+          add_item_tag(0, nitems_written(0) + noutput_items - size, d_add_begin_tag, pmt::from_long(d_repeat_cnt), _id);
           d_file_begin = false;
         }
 
@@ -197,7 +197,7 @@ namespace gr {
 	  fprintf(stderr, "[%s] fseek failed\n", __FILE__);
 	  exit(-1);
 	}
-        if (d_add_begin_tag) {
+        if (d_add_begin_tag != pmt::PMT_NIL) {
           d_file_begin = true;
           d_repeat_cnt++;
         }

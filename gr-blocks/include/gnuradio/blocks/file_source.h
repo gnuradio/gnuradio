@@ -81,7 +81,7 @@ namespace gr {
       /*!
        * \brief Add a stream tag to the first sample of the file if true
        */
-      virtual void set_begin_tag(bool val) = 0;
+      virtual void set_begin_tag(pmt::pmt_t val) = 0;
     };
 
   } /* namespace blocks */
