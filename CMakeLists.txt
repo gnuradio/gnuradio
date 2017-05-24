@@ -304,6 +304,7 @@ file(TO_NATIVE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
 
 ########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set
+# Also, look for libraries installed by macports
 ########################################################################
 if(APPLE)
     if(NOT CMAKE_INSTALL_NAME_DIR)
@@ -320,6 +321,9 @@ if(APPLE)
         set(CMAKE_BUILD_WITH_INSTALL_RPATH ON CACHE
             BOOL "Do Build Using Library Install RPath" FORCE)
     endif(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
+    SET(GCC_COVERAGE_COMPILE_FLAGS "-L/opt/local/lib -Qunused-arguments")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 endif(APPLE)
 
 ########################################################################
