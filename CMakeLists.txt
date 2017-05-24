@@ -287,9 +287,11 @@ find_package(PythonLibs 2)
 find_package(SWIG)
 
 if(SWIG_FOUND)
-    # Minimum SWIG version required is 1.3.31
+  # Minimum SWIG version required is 2.0.4
+  # Recommended revisit: EOL of Ubuntu 12.04 LTS, bump to 2.0.7
+  # see https://github.com/gnuradio/gnuradio/issues/1222
     set(SWIG_VERSION_CHECK FALSE)
-    if("${SWIG_VERSION}" VERSION_GREATER "1.3.30")
+    if("${SWIG_VERSION}" VERSION_GREATER "2.0.3")
         set(SWIG_VERSION_CHECK TRUE)
     endif()
 endif(SWIG_FOUND)

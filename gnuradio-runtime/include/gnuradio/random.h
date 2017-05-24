@@ -28,6 +28,7 @@
 
 #include <stdlib.h>
 #include <boost/random.hpp>
+#include <boost/random/uniform_int.hpp>
 #include <ctime>
 
 namespace gr {
