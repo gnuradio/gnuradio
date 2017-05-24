@@ -76,8 +76,9 @@ namespace gr {
       gr::thread::scoped_lock guard(*d->output(i)->mutex());
       int avail_n = round_down(d->output(i)->space_available(), output_multiple);
       int best_n = round_down(d->output(i)->bufsize()/2, output_multiple);
-      if(best_n < min_noutput_items)
+      if(best_n < min_noutput_items) {
         throw std::runtime_error("Buffer too small for min_noutput_items");
+      }
       int n = std::min(avail_n, best_n);
       if(n < min_noutput_items){  // We're blocked on output.
         if(d->output(i)->done()){ // Downstream is done, therefore we're done.
@@ -146,7 +147,6 @@ namespace gr {
         }
       }
       else  {
-        std::cerr << "Error: block_executor: propagation_policy 'ONE-TO-ONE' requires ninputs == noutputs" << std::endl;
         return false;
       }
 
@@ -378,13 +378,13 @@ namespace gr {
           break;
 
         if(d_ninput_items_required[i] < 0) {
-          std::cerr << "\nsched: <block " << m->name()
+          GR_LOG_ERROR (d_logger, "\nsched: <block " << m->name()
                     << " (" << m->unique_id() << ")>"
                     << " thinks its ninput_items required is "
                     << d_ninput_items_required[i]
                     << " and cannot be negative.\n"
                     << "Some parameterization is wrong. "
-                    << "Too large a decimation value?\n\n";
+                    << "Too large a decimation value?\n");
           goto were_done;
         }
       }
@@ -405,7 +405,7 @@ namespace gr {
         // Is it possible to ever fulfill this request?
         if(d_ninput_items_required[i] > d->input(i)->max_possible_items_available()) {
           // Nope, never going to happen...
-          std::cerr << "\nsched: <block " << m->name()
+          GR_LOG_ERROR (d_logger, "\nsched: <block " << m->name()
                     << " (" << m->unique_id() << ")>"
                     << " is requesting more input data\n"
                     << "  than we can provide.\n"
@@ -413,7 +413,7 @@ namespace gr {
                     << d_ninput_items_required[i] << "\n"
                     << "  max_possible_items_available = "
                     << d->input(i)->max_possible_items_available() << "\n"
-                    << "  If this is a filter, consider reducing the number of taps.\n";
+                    << "  If this is a filter, consider reducing the number of taps.");
           goto were_done;
         }
 
@@ -496,8 +496,8 @@ namespace gr {
       /*
       // If this is a source, it's broken.
       if(d->source_p()) {
-        std::cerr << "block_executor: source " << m
-                  << " produced no output.  We're marking it DONE.\n";
+        GR_LOG_ERROR (d_logger, "block_executor: source " << m
+                  << " produced no output.  We're marking it DONE.");
         // FIXME maybe we ought to raise an exception...
         goto were_done;
       }

@@ -24,6 +24,7 @@
 #define INCLUDED_GR_RUNTIME_BUFFER_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tags.h>
 #include <boost/weak_ptr.hpp>
@@ -144,6 +145,11 @@ namespace gr {
     friend GR_RUNTIME_API buffer_sptr make_buffer(int nitems, size_t sizeof_item, block_sptr link);
     friend GR_RUNTIME_API buffer_reader_sptr buffer_add_reader
       (buffer_sptr buf, int nzero_preload, block_sptr link, int delay);
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
+
 
   protected:
     char			       *d_base;		// base address of buffer

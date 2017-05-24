@@ -134,9 +134,10 @@ namespace gr {
   void
   block::set_output_multiple(int multiple)
   {
-    if(multiple < 1)
+    if(multiple < 1) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block::set_output_multiple");
       throw std::invalid_argument("block::set_output_multiple");
-
+    }
     d_output_multiple_set = true;
     d_output_multiple = multiple;
   }
@@ -144,9 +145,10 @@ namespace gr {
   void
   block::set_alignment(int multiple)
   {
-    if(multiple < 1)
+    if(multiple < 1) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block::set_alignment_multiple");
       throw std::invalid_argument("block::set_alignment_multiple");
-
+    }
     d_output_multiple = multiple;
   }
 
@@ -155,9 +157,10 @@ namespace gr {
   {
     // unaligned value must be less than 0 and it doesn't make sense
     // that it's larger than the alignment value.
-    if((na < 0) || (na > d_output_multiple))
+    if((na < 0) || (na > d_output_multiple)) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block::set_unaligned");
       throw std::invalid_argument("block::set_unaligned");
-
+    }
     d_unaligned = na;
   }
 
@@ -170,9 +173,10 @@ namespace gr {
   void
   block::set_relative_rate(double relative_rate)
   {
-    if(relative_rate < 0.0)
+    if(relative_rate < 0.0) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: block::set_relative_rate");
       throw std::invalid_argument("block::set_relative_rate");
-
+    }
     d_relative_rate = relative_rate;
   }
 
@@ -305,9 +309,10 @@ namespace gr {
   void
   block::set_max_noutput_items(int m)
   {
-    if(m <= 0)
+    if(m <= 0) {
+      GR_LOG_ERROR (d_logger, "runtime_error: block::set_max_noutput_items: value for max_noutput_items must be greater than 0.\n");
       throw std::runtime_error("block::set_max_noutput_items: value for max_noutput_items must be greater than 0.\n");
-
+    }
     d_max_noutput_items = m;
     d_max_noutput_items_set = true;
   }
@@ -379,8 +384,10 @@ namespace gr {
   long
   block::max_output_buffer(size_t i)
   {
-    if(i >= d_max_output_buffer.size())
+    if(i >= d_max_output_buffer.size()) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: basic_block::max_output_buffer: port out of range.");
       throw std::invalid_argument("basic_block::max_output_buffer: port out of range.");
+    }
     return d_max_output_buffer[i];
   }
 
@@ -404,15 +411,17 @@ namespace gr {
   long
   block::min_output_buffer(size_t i)
   {
-    if(i >= d_min_output_buffer.size())
+    if(i >= d_min_output_buffer.size()) {
+      GR_LOG_ERROR (d_logger, "invalid_argument: basic_block::min_output_buffer: port out of range.");
       throw std::invalid_argument("basic_block::min_output_buffer: port out of range.");
+    }
     return d_min_output_buffer[i];
   }
 
   void
   block::set_min_output_buffer(long min_output_buffer)
   {
-    std::cout << "set_min_output_buffer on block " << unique_id() << " to " << min_output_buffer << std::endl;
+    GR_LOG_DEBUG (d_debug_logger,"set_min_output_buffer on block " << unique_id() << " to " << min_output_buffer);
     for(int i=0; i<output_signature()->max_streams(); i++) {
       set_min_output_buffer(i, min_output_buffer);
     }
@@ -704,14 +713,14 @@ namespace gr {
   void
   block::system_handler(pmt::pmt_t msg)
   {
-    //std::cout << "system_handler " << msg << "\n";
+    GR_LOG_DEBUG (d_debug_logger, "system_handler " << msg);
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, pmt::mp("done"))){
         d_finished = pmt::to_long(pmt::cdr(msg));
         global_block_registry.notify_blk(alias());
     } else {
-        std::cout << "WARNING: bad message op on system port!\n";
-        pmt::print(msg);
+        GR_LOG_WARN (d_logger, "WARNING: bad message op on system port!\n");
+        GR_LOG_WARN (d_logger, msg);
     }
   }
 
@@ -739,11 +748,11 @@ namespace gr {
         basic_block_sptr blk = global_block_registry.block_lookup(block);
         blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
 
-        //std::cout << "notify finished --> ";
-        //pmt::print(pmt::cons(block,port));
-        //std::cout << "\n";
-
-        }
+        std::ostringstream msg;
+        msg << "notify finished --> ";
+        msg << pmt::cons(block,port);
+        GR_LOG_DEBUG (d_debug_logger, msg.str());
+      }
     }
   }
 

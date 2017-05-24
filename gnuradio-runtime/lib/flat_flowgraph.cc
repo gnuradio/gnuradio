@@ -35,8 +35,6 @@
 
 namespace gr {
 
-#define FLAT_FLOWGRAPH_DEBUG  0
-
 // 32Kbyte buffer size between blocks
 #define GR_FIXED_BUFFER_SIZE (32*(1L<<10))
 
@@ -77,10 +75,9 @@ namespace gr {
 
     // Connect message ports connetions
     for(msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
-      if(FLAT_FLOWGRAPH_DEBUG)
-        std::cout << boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
-          i->src().block() % i->src().port() %
-          i->dst().block() % i->dst().port();
+      GR_LOG_DEBUG (d_debug_logger, boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
+                                            i->src().block() % i->src().port() %
+                                            i->dst().block() % i->dst().port());
       i->src().block()->message_port_sub(i->src().port(), pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
     }
   }
@@ -93,25 +90,25 @@ namespace gr {
     block_detail_sptr detail = make_block_detail(ninputs, noutputs);
 
     block_sptr grblock = cast_to_block_sptr(block);
-    if(!grblock)
+    if(!grblock) {
+      GR_LOG_ERROR (d_logger, (boost::format("allocate_block_detail found non-gr::block (%s)")%
+			          block->alias()).str());
       throw std::runtime_error(
         (boost::format("allocate_block_detail found non-gr::block (%s)")%
         block->alias()).str());
+    }
 
-    if(FLAT_FLOWGRAPH_DEBUG)
-      std::cout << "Creating block detail for " << block << std::endl;
-
+    GR_LOG_DEBUG (d_debug_logger, "Creating block detail for " << block);
     for(int i = 0; i < noutputs; i++) {
       grblock->expand_minmax_buffer(i);
 
       buffer_sptr buffer = allocate_buffer(block, i);
-      if(FLAT_FLOWGRAPH_DEBUG)
-        std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "Allocated buffer for output " << block << ":" << i);
       detail->set_output(i, buffer);
 
       // Update the block's max_output_buffer based on what was actually allocated.
       if((grblock->max_output_buffer(i) != buffer->bufsize()) && (grblock->max_output_buffer(i) != -1))
-        GR_LOG_WARN(d_logger, boost::format("Block (%1%) max output buffer set to %2%"
+        GR_LOG_WARN (d_logger, boost::format("Block (%1%) max output buffer set to %2%"
                                             " instead of requested %3%") \
                     % grblock->alias() % buffer->bufsize() % grblock->max_output_buffer(i));
       grblock->set_max_output_buffer(i, buffer->bufsize());
@@ -124,8 +121,10 @@ namespace gr {
   flat_flowgraph::allocate_buffer(basic_block_sptr block, int port)
   {
     block_sptr grblock = cast_to_block_sptr(block);
-    if(!grblock)
+    if(!grblock) {
+      GR_LOG_ERROR (d_logger, "allocate_buffer found non-gr::block");
       throw std::runtime_error("allocate_buffer found non-gr::block");
+    }
     int item_size = block->output_signature()->sizeof_stream_item(port);
 
     // *2 because we're now only filling them 1/2 way in order to
@@ -143,23 +142,29 @@ namespace gr {
 
     // limit buffer size if indicated
     if(grblock->max_output_buffer(port) > 0) {
-      //std::cout << "constraining output items to " << block->max_output_buffer(port) << "\n";
+      GR_LOG_DEBUG (d_debug_logger, "constraining output items to " << grblock->max_output_buffer(port));
       nitems = std::min((long)nitems, (long)grblock->max_output_buffer(port));
       nitems -= nitems%grblock->output_multiple();
-      if(nitems < 1)
+      if(nitems < 1) {
+        GR_LOG_ERROR (d_logger, "problems allocating a buffer with the given max output buffer constraint!");
         throw std::runtime_error("problems allocating a buffer with the given max output buffer constraint!");
+      }
     }
     else if(grblock->min_output_buffer(port) > 0) {
       nitems = std::max((long)nitems, (long)grblock->min_output_buffer(port));
       nitems -= nitems%grblock->output_multiple();
-      if(nitems < 1)
+      if(nitems < 1) {
+        GR_LOG_ERROR (d_logger, "problems allocating a buffer with the given min output buffer constraint!");
         throw std::runtime_error("problems allocating a buffer with the given min output buffer constraint!");
+      }
     }
 
     for(basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
       block_sptr dgrblock = cast_to_block_sptr(*p);
-      if(!dgrblock)
+      if(!dgrblock) {
+        GR_LOG_ERROR (d_logger, "allocate_buffer found non-gr::block");
         throw std::runtime_error("allocate_buffer found non-gr::block");
+      }
 
       double decimation = (1.0/dgrblock->relative_rate());
       int multiple      = dgrblock->output_multiple();
@@ -167,7 +172,7 @@ namespace gr {
       nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
     }
 
-    //  std::cout << "make_buffer(" << nitems << ", " << item_size << ", " << grblock << "\n";
+    GR_LOG_DEBUG (d_debug_logger, "make_buffer(" << nitems << ", " << item_size << ", " << grblock);
     // We're going to let this fail once and retry. If that fails,
     // throw and exit.
     buffer_sptr b;
@@ -191,8 +196,10 @@ namespace gr {
   flat_flowgraph::connect_block_inputs(basic_block_sptr block)
   {
     block_sptr grblock = cast_to_block_sptr(block);
-    if (!grblock)
+    if (!grblock) {
+      GR_LOG_ERROR (d_logger, "connect_block_inputs found non-gr::block");
       throw std::runtime_error("connect_block_inputs found non-gr::block");
+    }
 
     // Get its detail and edges that feed into it
     block_detail_sptr detail = grblock->detail();
@@ -206,13 +213,13 @@ namespace gr {
       int src_port = e->src().port();
       basic_block_sptr src_block = e->src().block();
       block_sptr src_grblock = cast_to_block_sptr(src_block);
-      if(!src_grblock)
+      if(!src_grblock) {
+        GR_LOG_ERROR (d_logger, "connect_block_inputs found non-gr::block");
         throw std::runtime_error("connect_block_inputs found non-gr::block");
+      }
       buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
 
-      if(FLAT_FLOWGRAPH_DEBUG)
-        std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
-
+      GR_LOG_DEBUG (d_debug_logger, "Setting input " << dst_port << " from edge " << (*e));
       detail->set_input(dst_port, buffer_add_reader(src_buffer, grblock->history()-1, grblock,
                                                     grblock->sample_delay(src_port)));
     }
@@ -228,22 +235,18 @@ namespace gr {
       block_sptr block = cast_to_block_sptr(*p);
 
       if(!block->detail()) {
-        if(FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "merge: allocating new detail for block " << (*p) << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "merge: allocating new detail for block " << (*p));
         block->set_detail(allocate_block_detail(block));
       }
       else {
-        if(FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "merge: reusing original detail for block " << (*p) << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "merge: reusing original detail for block " << (*p));
       }
     }
 
     // Calculate the old edges that will be going away, and clear the
     // buffer readers on the RHS.
     for(edge_viter_t old_edge = old_ffg->d_edges.begin(); old_edge != old_ffg->d_edges.end(); old_edge++) {
-      if(FLAT_FLOWGRAPH_DEBUG)
-        std::cout << "merge: testing old edge " << (*old_edge) << "...";
-
+      GR_LOG_DEBUG (d_debug_logger, "merge: testing old edge " << (*old_edge) << "...");
       edge_viter_t new_edge;
       for(new_edge = d_edges.begin(); new_edge != d_edges.end(); new_edge++)
         if(new_edge->src() == old_edge->src() &&
@@ -251,16 +254,14 @@ namespace gr {
           break;
 
       if(new_edge == d_edges.end()) { // not found in new edge list
-        if(FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "not in new edge list" << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "not in new edge list");
         // zero the buffer reader on RHS of old edge
         block_sptr block(cast_to_block_sptr(old_edge->dst().block()));
         int port = old_edge->dst().port();
         block->detail()->set_input(port, buffer_reader_sptr());
       }
       else {
-        if (FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "found in new edge list" << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "found in new edge list");
       }
     }
 
@@ -268,20 +269,16 @@ namespace gr {
     for(basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
       block_sptr block = cast_to_block_sptr(*p);
 
-      if(FLAT_FLOWGRAPH_DEBUG)
-        std::cout << "merge: merging " << (*p) << "...";
-
+      GR_LOG_DEBUG (d_debug_logger, "merge: merging " << (*p) << "...");
       if(old_ffg->has_block_p(*p)) {
         // Block exists in old flow graph
-        if(FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "used in old flow graph" << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "used in old flow graph");
         block_detail_sptr detail = block->detail();
 
         // Iterate through the inputs and see what needs to be done
         int ninputs = calc_used_ports(block, true).size(); // Might be different now
         for(int i = 0; i < ninputs; i++) {
-          if(FLAT_FLOWGRAPH_DEBUG)
-            std::cout << "Checking input " << block << ":" << i << "...";
+          GR_LOG_DEBUG (d_debug_logger, "Checking input " << block << ":" << i << "...");
           edge edge = calc_upstream_edge(*p, i);
 
           // Fish out old buffer reader and see if it matches correct buffer from edge list
@@ -294,12 +291,10 @@ namespace gr {
 
           // If there's a match, use it
           if(old_reader && (src_buffer == old_reader->buffer())) {
-            if(FLAT_FLOWGRAPH_DEBUG)
-              std::cout << "matched, reusing" << std::endl;
+            GR_LOG_DEBUG (d_debug_logger, "matched, reusing");
           }
           else {
-            if(FLAT_FLOWGRAPH_DEBUG)
-              std::cout << "needs a new reader" << std::endl;
+            GR_LOG_DEBUG (d_debug_logger, "needs a new reader");
 
             // Create new buffer reader and assign
             detail->set_input(i, buffer_add_reader(src_buffer, block->history()-1, block));
@@ -308,8 +303,7 @@ namespace gr {
       }
       else {
         // Block is new, it just needs buffer readers at this point
-        if(FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "new block" << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "new block");
         connect_block_inputs(block);
 
         // Make sure all buffers are aligned
@@ -318,10 +312,10 @@ namespace gr {
 
       // Connect message ports connetions
       for(msg_edge_viter_t i = d_msg_edges.begin(); i != d_msg_edges.end(); i++) {
-          if(FLAT_FLOWGRAPH_DEBUG)
-              std::cout << boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
-                  i->src().block() % i->src().port() %
-                  i->dst().block() % i->dst().port();
+          GR_LOG_DEBUG (d_debug_logger, boost::format("flat_fg connecting msg primitives: (%s, %s)->(%s, %s)\n") %
+              i->src().block() % i->src().port() %
+              i->dst().block() % i->dst().port());
+
           i->src().block()->message_port_sub(i->src().port(), pmt::cons(i->dst().block()->alias_pmt(), i->dst().port()));
       }
 
@@ -341,7 +335,7 @@ namespace gr {
     for(int i = 0; i < block->detail()->ninputs(); i++) {
       void *r = (void*)block->detail()->input(i)->read_pointer();
       uintptr_t ri = (uintptr_t)r % alignment;
-      //std::cerr << "reader: " << r << "  alignment: " << ri << std::endl;
+      GR_LOG_INFO (d_logger, "reader: " << r << "  alignment: " << ri);
       if(ri != 0) {
         size_t itemsize = block->detail()->input(i)->get_sizeof_item();
         block->detail()->input(i)->update_read_pointer((alignment-ri)/itemsize);
@@ -353,7 +347,7 @@ namespace gr {
     for(int i = 0; i < block->detail()->noutputs(); i++) {
       void *w = (void*)block->detail()->output(i)->write_pointer();
       uintptr_t wi = (uintptr_t)w % alignment;
-      //std::cerr << "writer: " << w << "  alignment: " << wi << std::endl;
+      GR_LOG_INFO (d_logger, "writer: " << w << "  alignment: " << wi);
       if(wi != 0) {
         size_t itemsize = block->detail()->output(i)->get_sizeof_item();
         block->detail()->output(i)->update_write_pointer((alignment-wi)/itemsize);
@@ -383,25 +377,26 @@ namespace gr {
 
   void flat_flowgraph::dump()
   {
-    for(edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
-      std::cout << " edge: " << (*e) << std::endl;
+    for(edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++) {
+      GR_LOG_DEBUG (d_debug_logger, " edge: " << (*e));
+    }
 
     for(basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-      std::cout << " block: " << (*p) << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, " block: " << (*p));
       block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
-      std::cout << "  detail @" << detail << ":" << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "  detail @" << detail << ":");
 
       int ni = detail->ninputs();
       int no = detail->noutputs();
       for(int i = 0; i < no; i++) {
         buffer_sptr buffer = detail->output(i);
-        std::cout << "   output " << i << ": " << buffer << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "   output " << i << ": " << buffer);
       }
 
       for(int i = 0; i < ni; i++) {
         buffer_reader_sptr reader = detail->input(i);
-        std::cout << "   reader " <<  i << ": " << reader
-                  << " reading from buffer=" << reader->buffer() << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "   reader " <<  i << ": " << reader
+                  << " reading from buffer=" << reader->buffer());
       }
     }
   }
@@ -439,14 +434,11 @@ namespace gr {
   void
   flat_flowgraph::clear_hier()
   {
-    if(FLAT_FLOWGRAPH_DEBUG)
-      std::cout << "Clear_hier()" << std::endl;
+    GR_LOG_DEBUG (d_debug_logger, "Clear_hier()");
     for(size_t i=0; i<d_msg_edges.size(); i++) {
-      if(FLAT_FLOWGRAPH_DEBUG)
-        std::cout << "edge: " << d_msg_edges[i].src() << "-->" << d_msg_edges[i].dst() << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "edge: " << d_msg_edges[i].src() << "-->" << d_msg_edges[i].dst());
       if(d_msg_edges[i].src().is_hier() || d_msg_edges[i].dst().is_hier()){
-        if(FLAT_FLOWGRAPH_DEBUG)
-          std::cout << "is hier" << std::endl;
+        GR_LOG_DEBUG (d_debug_logger, "is hier");
         d_msg_edges.erase(d_msg_edges.begin() + i);
         i--;
       }
@@ -457,23 +449,20 @@ namespace gr {
   flat_flowgraph::replace_endpoint(const msg_endpoint &e, const msg_endpoint &r, bool is_src)
   {
     size_t n_replr(0);
-    if(FLAT_FLOWGRAPH_DEBUG)
-      std::cout << boost::format("flat_flowgraph::replace_endpoint( %s, %s, %d )\n") % e.block()% r.block()% is_src;
+    GR_LOG_DEBUG (d_debug_logger, boost::format("flat_flowgraph::replace_endpoint( %s, %s, %d )") % e.block()% r.block()% is_src);
     for(size_t i=0; i<d_msg_edges.size(); i++) {
       if(is_src) {
         if(d_msg_edges[i].src() == e) {
-          if(FLAT_FLOWGRAPH_DEBUG)
-            std::cout << boost::format("flat_flowgraph::replace_endpoint() flattening to ( %s, %s )\n") \
-              % r% d_msg_edges[i].dst();
+          GR_LOG_DEBUG (d_debug_logger, boost::format("flat_flowgraph::replace_endpoint() flattening to ( %s, %s )") \
+              % r% d_msg_edges[i].dst());
           d_msg_edges.push_back( msg_edge(r, d_msg_edges[i].dst() ) );
           n_replr++;
         }
       }
       else {
         if(d_msg_edges[i].dst() == e) {
-          if(FLAT_FLOWGRAPH_DEBUG)
-            std::cout << boost::format("flat_flowgraph::replace_endpoint() flattening to ( %s, %s )\n") \
-              % r% d_msg_edges[i].src();
+          GR_LOG_DEBUG (d_debug_logger, boost::format("flat_flowgraph::replace_endpoint() flattening to ( %s, %s )") \
+              % r% d_msg_edges[i].src());
           d_msg_edges.push_back( msg_edge(d_msg_edges[i].src(), r ) );
           n_replr++;
         }

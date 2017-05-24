@@ -26,7 +26,6 @@
 
 #include <gnuradio/basic_block.h>
 #include <gnuradio/block_registry.h>
-#include <gnuradio/logger.h>
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
@@ -56,6 +55,7 @@ namespace gr {
       d_message_subscribers(pmt::make_dict())
   {
     s_ncurrently_allocated++;
+    configure_default_loggers(d_logger, d_debug_logger, symbol_name());
   }
 
   basic_block::~basic_block()
@@ -93,6 +93,7 @@ namespace gr {
   basic_block::message_port_register_in(pmt::pmt_t port_id)
   {
     if(!pmt::is_symbol(port_id)) {
+      GR_LOG_ERROR (d_logger, "message_port_register_in: bad port id");
       throw std::runtime_error("message_port_register_in: bad port id");
     }
     msg_queue[port_id] = msg_queue_t();
@@ -116,9 +117,11 @@ namespace gr {
   basic_block::message_port_register_out(pmt::pmt_t port_id)
   {
     if(!pmt::is_symbol(port_id)) {
+      GR_LOG_ERROR (d_logger, "message_port_register_out: bad port id");
       throw std::runtime_error("message_port_register_out: bad port id");
     }
     if(pmt::dict_has_key(d_message_subscribers, port_id)) {
+      GR_LOG_ERROR (d_logger, "message_port_register_out: port already in use");
       throw std::runtime_error("message_port_register_out: port already in use");
     }
     d_message_subscribers = pmt::dict_add(d_message_subscribers, port_id, pmt::PMT_NIL);
@@ -140,6 +143,7 @@ namespace gr {
   void basic_block::message_port_pub(pmt::pmt_t port_id, pmt::pmt_t msg)
   {
     if(!pmt::dict_has_key(d_message_subscribers, port_id)) {
+      GR_LOG_ERROR (d_logger, "port does not exist");
       throw std::runtime_error("port does not exist");
     }
 
@@ -165,6 +169,7 @@ namespace gr {
       std::stringstream ss;
       ss << "Port does not exist: \"" << pmt::write_string(port_id) << "\" on block: "
          << pmt::write_string(target) << std::endl;
+      GR_LOG_ERROR (d_logger, ss);
       throw std::runtime_error(ss.str());
     }
     pmt::pmt_t currlist = pmt::dict_ref(d_message_subscribers,port_id,pmt::PMT_NIL);
@@ -181,6 +186,7 @@ namespace gr {
       std::stringstream ss;
       ss << "Port does not exist: \"" << pmt::write_string(port_id) << "\" on block: "
          << pmt::write_string(target) << std::endl;
+      GR_LOG_ERROR (d_logger, ss);
       throw std::runtime_error(ss.str());
     }
 
@@ -201,7 +207,8 @@ namespace gr {
     gr::thread::scoped_lock guard(mutex);
 
     if((msg_queue.find(which_port) == msg_queue.end()) || (msg_queue_ready.find(which_port) == msg_queue_ready.end())) {
-      std::cout << "target port = " << pmt::symbol_to_string(which_port) << std::endl;
+      GR_LOG_DEBUG (d_debug_logger, "target port = " << pmt::symbol_to_string(which_port));
+      GR_LOG_ERROR (d_logger, "attempted to insert_tail on invalid queue!");
       throw std::runtime_error("attempted to insert_tail on invalid queue!");
     }
 

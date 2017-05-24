@@ -34,6 +34,7 @@ namespace gr {
   block_registry::block_registry()
   {
     d_ref_map = pmt::make_dict();
+    configure_default_loggers(d_logger, d_debug_logger, "block_registry");
   }
 
   long
@@ -74,7 +75,7 @@ namespace gr {
   {
     std::stringstream ss;
     ss << block->name() << block->symbolic_id();
-    //std::cout << "register_symbolic_name: " << ss.str() << std::endl;
+    GR_LOG_DEBUG (d_debug_logger, "register_symbolic_name: " << ss.str());
     register_symbolic_name(block, ss.str());
     return ss.str();
   }
@@ -85,6 +86,7 @@ namespace gr {
     gr::thread::scoped_lock guard(d_mutex);
 
     if(pmt::dict_has_key(d_ref_map, pmt::intern(name))) {
+      GR_LOG_ERROR (d_logger, "symbol already exists, can not re-use!");
       throw std::runtime_error("symbol already exists, can not re-use!");
     }
     d_ref_map = pmt::dict_add(d_ref_map, pmt::intern(name), pmt::make_any(block));
@@ -96,6 +98,7 @@ namespace gr {
     gr::thread::scoped_lock guard(d_mutex);
 
     if(pmt::dict_has_key(d_ref_map, pmt::intern(name))) {
+      GR_LOG_ERROR (d_logger, "symbol already exists, can not re-use!");
       throw std::runtime_error("symbol already exists, can not re-use!");
     }
 
@@ -117,6 +120,7 @@ namespace gr {
 
     pmt::pmt_t ref = pmt::dict_ref(d_ref_map, symbol, pmt::PMT_NIL);
     if(pmt::eq(ref, pmt::PMT_NIL)) {
+      GR_LOG_ERROR (d_logger, "block lookup failed! block not found!");
       throw std::runtime_error("block lookup failed! block not found!");
     }
     basic_block* blk = boost::any_cast<basic_block*>(pmt::any_ref(ref));

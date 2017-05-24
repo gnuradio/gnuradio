@@ -32,8 +32,6 @@
 
 namespace gr {
 
-#define GR_HIER_BLOCK2_DEBUG 0
-
   hier_block2_sptr
   make_hier_block2(const std::string &name,
                    gr::io_signature::sptr input_signature,

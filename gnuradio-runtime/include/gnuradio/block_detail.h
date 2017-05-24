@@ -24,6 +24,7 @@
 #define INCLUDED_GR_RUNTIME_BLOCK_DETAIL_H
 
 #include <gnuradio/api.h>
+#include <gnuradio/logger.h>
 #include <gnuradio/runtime_types.h>
 #include <gnuradio/tpb_detail.h>
 #include <gnuradio/tags.h>
@@ -278,6 +279,11 @@ namespace gr {
     float d_pc_counter;
 
     block_detail(unsigned int ninputs, unsigned int noutputs);
+
+    /*! Used by blocks to access the logger system.
+     */
+    gr::logger_ptr d_logger;
+    gr::logger_ptr d_debug_logger;
 
     friend struct tpb_detail;
 

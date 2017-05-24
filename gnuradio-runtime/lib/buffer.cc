@@ -85,6 +85,8 @@ namespace gr {
       d_write_index(0), d_abs_write_offset(0), d_done(false),
       d_last_min_items_read(0)
   {
+    configure_default_loggers(d_logger, d_debug_logger, "buffer");
+
     if(!allocate_buffer (nitems, sizeof_item))
       throw std::bad_alloc ();
 
@@ -124,20 +126,21 @@ namespace gr {
     // If we rounded-up a whole bunch, give the user a heads up.
     // This only happens if sizeof_item is not a power of two.
 
-    if(nitems > 2 * orig_nitems && nitems * (int) sizeof_item > granularity){
-      std::cerr << "gr::buffer::allocate_buffer: warning: tried to allocate\n"
+    if(nitems > 2 * orig_nitems && nitems * (int) sizeof_item > granularity) {
+      GR_LOG_WARN (d_logger, "gr::buffer::allocate_buffer: warning: tried to allocate\n"
                 << "   " << orig_nitems << " items of size "
                 << sizeof_item << ". Due to alignment requirements\n"
                 << "   " << nitems << " were allocated.  If this isn't OK, consider padding\n"
                 << "   your structure to a power-of-two bytes.\n"
-                << "   On this platform, our allocation granularity is " << granularity << " bytes.\n";
+                << "   On this platform, our allocation granularity is " << granularity << " bytes.");
     }
 
     d_bufsize = nitems;
     d_vmcircbuf = gr::vmcircbuf_sysconfig::make(d_bufsize * d_sizeof_item);
     if(d_vmcircbuf == 0){
-      std::cerr << "gr::buffer::allocate_buffer: failed to allocate buffer of size "
-                << d_bufsize * d_sizeof_item / 1024 << " KB\n";
+      GR_LOG_ERROR (d_logger, "gr::buffer::allocate_buffer: failed to allocate buffer of size "
+                << d_bufsize * d_sizeof_item / 1024 << " KB");
+
       return false;
     }
 
@@ -196,9 +199,9 @@ namespace gr {
   buffer_reader_sptr
   buffer_add_reader(buffer_sptr buf, int nzero_preload, block_sptr link, int delay)
   {
-    if(nzero_preload < 0)
+    if(nzero_preload < 0) {
       throw std::invalid_argument("buffer_add_reader: nzero_preload must be >= 0");
-
+    }
     buffer_reader_sptr r(new buffer_reader(buf,
                                            buf->index_sub(buf->d_write_index,
                                                           nzero_preload),
@@ -215,9 +218,10 @@ namespace gr {
     std::vector<buffer_reader *>::iterator result =
       std::find(d_readers.begin(), d_readers.end(), reader);
 
-    if(result == d_readers.end())
+    if(result == d_readers.end()) {
+      GR_LOG_ERROR (d_logger, "buffer::drop_reader");
       throw std::invalid_argument("buffer::drop_reader");    // we didn't find it...
-
+    }
     d_readers.erase(result);
   }
 
