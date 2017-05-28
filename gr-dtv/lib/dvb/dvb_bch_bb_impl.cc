@@ -490,6 +490,31 @@ namespace gr {
       sr[0] = (sr[0] >> 1);
     }
 
+    //precalculate the crc from: http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html - cf. CRC-32 Lookup
+    void dvb_bch_bb_impl::CalculateCrcTable()
+    {
+      for (int divident = 0; divident < 256; divident++) /* iterate over all possible input byte values 0 - 255 */
+      {
+        std::bitset<192> curByte(divident);
+        curByte <<= 184;
+
+        for (unsigned char bit = 0; bit < 8; bit++)
+        {
+          if ((curByte[191]) != 0)
+	  {
+            curByte <<= 1;
+            curByte ^= polynome;
+          }
+          else
+          {
+            curByte <<= 1;
+          }
+        }
+
+        crcTable[divident] = curByte;
+      }
+    }
+
     void
     dvb_bch_bb_impl::bch_poly_build_tables(void)
     {
@@ -555,6 +580,13 @@ namespace gr {
       len = poly_mult(polyn12, 17, polyout[1], len, polyout[0]);
       poly_pack(polyout[0], m_poly_n_12, 192);
 
+      //pack the polynome in a bitset
+      for (int i = 0; i < 192; i += 1) {
+        polynome[i] = polyout[0][i];
+      }
+	  CalculateCrcTable();
+
+
       len = poly_mult(polys01, 15, polys02,    15,  polyout[0]);
       len = poly_mult(polys03, 15, polyout[0], len, polyout[1]);
       len = poly_mult(polys04, 15, polyout[1], len, polyout[0]);
@@ -592,33 +624,34 @@ namespace gr {
       unsigned char *out = (unsigned char *) output_items[0];
       unsigned char b, temp;
       unsigned int shift[6];
+      std::bitset<192> parity_bits;
       int consumed = 0;
 
       switch (bch_code) {
         case BCH_CODE_N12:
           for (int i = 0; i < noutput_items; i += nbch) {
-            //Zero the shift register
-            memset(shift, 0, sizeof(unsigned int) * 6);
-            // MSB of the codeword first
-            for (int j = 0; j < (int)kbch; j++) {
-              temp = *in++;
-              *out++ = temp;
-              consumed++;
-              b = (temp ^ (shift[5] & 1));
-              reg_6_shift(shift);
-              if (b) {
-                shift[0] ^= m_poly_n_12[0];
-                shift[1] ^= m_poly_n_12[1];
-                shift[2] ^= m_poly_n_12[2];
-                shift[3] ^= m_poly_n_12[3];
-                shift[4] ^= m_poly_n_12[4];
-                shift[5] ^= m_poly_n_12[5];
+            for (int j = 0; j < (int)kbch/8; j++) {
+              b = 0;
+
+              // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
+              for (int e = 0; e < 8; e++) {
+                temp = *in++;
+                *out++ = temp;
+                consumed++;
+
+	        b |= temp << (7 - e);
               }
+
+              unsigned long msB_CRC = (parity_bits >> 184).to_ulong();
+              /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
+              unsigned char pos = (unsigned char)(msB_CRC ^ b);
+              /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
+              parity_bits = (parity_bits << 8) ^ crcTable[pos];
             }
             // Now add the parity bits to the output
             for (int n = 0; n < 192; n++) {
-              *out++ = (shift[5] & 1);
-              reg_6_shift(shift);
+              *out++ = (char) parity_bits[191];
+              parity_bits <<= 1;
             }
           }
           break;
