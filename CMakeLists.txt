@@ -345,6 +345,10 @@ include(GrBoost)
 find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
 find_package(SWIG)
 
+if(APPLE)
+    set(PYTHON_LIBRARY "-undefined dynamic_lookup")
+endif(APPLE)
+
 if(SWIG_FOUND)
     set(SWIG_VERSION_CHECK FALSE)
     if("${SWIG_VERSION}" VERSION_EQUAL ${GR_SWIG_MIN_VERSION} OR
