@@ -47,6 +47,14 @@ set(GR_SWIG_LIBRARIES gnuradio-howto)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/howto_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
+foreach(howto_source_file ${howto_sources})
+    if(IS_ABSOLUTE howto_source_file)
+        list(APPEND GR_SWIG_SOURCE_DEPS ${howto_source_file})
+    else()
+        list(APPEND GR_SWIG_SOURCE_DEPS ${CMAKE_SOURCE_DIR}/lib/${howto_source_file})
+    endif()
+endforeach()
+
 GR_SWIG_MAKE(howto_swig howto_swig.i)
 
 ########################################################################
