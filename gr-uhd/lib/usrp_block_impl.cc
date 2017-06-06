@@ -27,6 +27,8 @@ using namespace gr::uhd;
 
 const double usrp_block_impl::LOCK_TIMEOUT = 1.5;
 
+const pmt::pmt_t usrp_block_impl::COMMAND_PORT = pmt::mp("command");
+
 const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
 const pmt::pmt_t CMD_GAIN_KEY = pmt::mp("gain");
 const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
@@ -74,9 +76,9 @@ usrp_block_impl::usrp_block_impl(
   _check_mboard_sensors_locked();
 
   // Set up message ports:
-  message_port_register_in(pmt::mp("command"));
+  message_port_register_in(COMMAND_PORT);
   set_msg_handler(
-      pmt::mp("command"),
+      COMMAND_PORT,
       boost::bind(&usrp_block_impl::msg_handler_command, this, _1)
   );
 

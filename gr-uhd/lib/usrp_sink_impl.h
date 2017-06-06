@@ -29,6 +29,7 @@ static const pmt::pmt_t EOB_KEY = pmt::string_to_symbol("tx_eob");
 static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("tx_time");
 static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("tx_freq");
 static const pmt::pmt_t COMMAND_KEY = pmt::string_to_symbol("tx_command");
+static const pmt::pmt_t TX_ASYNC_MSG_PORT = pmt::string_to_symbol("tx_async");
 
 namespace gr {
   namespace uhd {
@@ -111,6 +112,8 @@ namespace gr {
 
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::tx_streamer::sptr _tx_stream;
+      void _async_loop();
+      gr::thread::thread _async_thread;
 #endif
       ::uhd::tx_metadata_t _metadata;
       double _sample_rate;
