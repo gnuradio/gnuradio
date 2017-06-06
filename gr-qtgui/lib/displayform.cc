@@ -313,12 +313,25 @@ DisplayForm::setStop(bool on)
     // will auto-detach if already attached.
     d_display_plot->setStop(false);
     d_stop_state = false;
+    d_display_plot->replot();
   }
   else {
     d_display_plot->setStop(true);
     d_stop_state = true;
+    d_display_plot->replot();
+
+    // print samples of d_display_plot
+    std::vector<std::vector<double> > ydata = getPlot()->getPlotData();
+    std::cout << "Plot stopped. Samples:" << std::endl;
+    for (size_t plot = 0; plot < ydata.size(); plot++) {
+      std::vector<double> plot_ydata = ydata[plot];
+      std::cout << "Plot curve # " << plot <<  std::endl;
+      for (size_t i = 0; i < plot_ydata.size(); i++) {
+        std::cout << plot_ydata[i] << ", ";
+      }
+      std::cout << std::endl;
+    }
   }
-  d_display_plot->replot();
 }
 
 void
