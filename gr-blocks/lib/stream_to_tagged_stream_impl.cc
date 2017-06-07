@@ -84,6 +84,13 @@ namespace gr {
         return noutput_items;
     }
 
+    bool
+    stream_to_tagged_stream_impl::start()
+    {
+        d_next_tag_pos = 0;
+        return true;
+    }
+
   } /* namespace blocks */
 } /* namespace gr */
 
