@@ -46,10 +46,12 @@ static int my_fftw_read_char(void *f) { return fgetc((FILE *) f); }
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/interprocess/sync/file_lock.hpp>
 namespace fs = boost::filesystem;
 
 namespace gr {
   namespace fft {
+    static boost::mutex wisdom_thread_mutex;
 
     gr_complex *
     malloc_complex(int size)
@@ -89,6 +91,30 @@ namespace gr {
       static fs::path path;
       path = fs::path(gr::appdata_path()) / ".gr_fftw_wisdom";
       return path.string();
+    }
+
+    static void
+    lock_wisdom()
+    {
+      const std::string wisdom_lock_file = wisdom_filename() + ".lock";
+      int fd = open(wisdom_lock_file.c_str(),
+                    O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK,
+                    0666);
+      if (fd < 0){
+        throw std::exception();
+      }
+      boost::interprocess::file_lock wisdom_lock(wisdom_lock_file.c_str());
+      wisdom_lock.lock();
+      wisdom_thread_mutex.lock();
+    }
+
+    static void
+    unlock_wisdom()
+    {
+      const std::string wisdom_lock_file = wisdom_filename() + ".lock";
+      boost::interprocess::file_lock wisdom_lock(wisdom_lock_file.c_str());
+      wisdom_lock.unlock();
+      wisdom_thread_mutex.unlock();
     }
 
     static void
@@ -162,6 +188,7 @@ namespace gr {
 
       d_nthreads = nthreads;
       config_threading(nthreads);
+      lock_wisdom();
       import_wisdom();	// load prior wisdom from disk
 
       d_plan = fftwf_plan_dft_1d (fft_size,
@@ -175,6 +202,7 @@ namespace gr {
         throw std::runtime_error ("fftwf_plan_dft_1d failed");
       }
       export_wisdom();	// store new wisdom to disk
+      unlock_wisdom();
     }
 
     fft_complex::~fft_complex()
@@ -233,6 +261,7 @@ namespace gr {
 
       d_nthreads = nthreads;
       config_threading(nthreads);
+      lock_wisdom();
       import_wisdom();	// load prior wisdom from disk
 
       d_plan = fftwf_plan_dft_r2c_1d (fft_size,
@@ -245,6 +274,7 @@ namespace gr {
         throw std::runtime_error ("fftwf_plan_dft_r2c_1d failed");
       }
       export_wisdom();	// store new wisdom to disk
+      unlock_wisdom();
     }
 
     fft_real_fwd::~fft_real_fwd()
@@ -303,6 +333,7 @@ namespace gr {
 
       d_nthreads = nthreads;
       config_threading(nthreads);
+      lock_wisdom();
       import_wisdom();	// load prior wisdom from disk
 
       // FIXME If there's ever a chance that the planning functions
@@ -318,6 +349,7 @@ namespace gr {
         throw std::runtime_error ("fftwf_plan_dft_c2r_1d failed");
       }
       export_wisdom ();	// store new wisdom to disk
+      unlock_wisdom();
     }
 
     fft_real_rev::~fft_real_rev ()
