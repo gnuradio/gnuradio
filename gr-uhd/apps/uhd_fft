@@ -140,9 +140,15 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self._samp_rate__tool_bar.addWidget(self._samp_rate__line_edit)
         self._samp_rate__line_edit.returnPressed.connect(
             lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate__line_edit.text().toAscii()))))
-        self.top_grid_layout.addWidget(self._samp_rate__tool_bar, 3,2,1,2)
+        self.top_grid_layout.addWidget(self._samp_rate__tool_bar, 3, 2, 1, 2)
         # Gain:
-        self._gain__range = Range(self.gain_range.start(), self.gain_range.stop(), self.gain_range.step(), self.gain, 200)
+        self._gain__range = Range(
+            self.gain_range.start(),
+            self.gain_range.stop(),
+            max(self.gain_range.step(), 1.0),
+            self.gain,
+            200
+        )
         self._gain__win = RangeWidget(self._gain__range, self.set_gain, "RX Gain", "counter_slider", float)
         self.top_grid_layout.addWidget(self._gain__win, 2,0,1,4)
         # Center frequency:
