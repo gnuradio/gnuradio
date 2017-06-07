@@ -24,41 +24,59 @@
 #define INCLUDED_ZEROMQ_BASE_IMPL_H
 
 #include <zmq.hpp>
-
-#include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/stream_base.h>
 
 namespace gr {
   namespace zeromq {
 
-    class base_impl : public virtual gr::sync_block
+    /*
+     * The common base implementation
+     */
+    class base_impl : virtual public stream_base
     {
     public:
-      base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
       virtual ~base_impl();
+      std::string endpoint();
 
     protected:
+      base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
+      void set_hwm();
+      virtual void setup_socket() {};
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
+      int             d_type;
       size_t          d_vsize;
       int             d_timeout;
       bool            d_pass_tags;
+      int             d_hwm;
+      gr::thread::mutex d_mutex;
     };
 
+    /*
+     * The base sink implementation
+     */
     class base_sink_impl : public base_impl
     {
     public:
-      base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      std::string endpoint() {return base_impl::endpoint();};
+      void set_endpoint(const char* address);
 
     protected:
+      base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
       int send_message(const void *in_buf, const int in_nitems, const uint64_t in_offset);
     };
 
+    /*
+     * The base source implementation
+     */
     class base_source_impl : public base_impl
     {
     public:
-      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      std::string endpoint() {return base_impl::endpoint();};
+      void set_endpoint(const char* address);
 
     protected:
+      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
       zmq::message_t d_msg;
       std::vector<gr::tag_t> d_tags;
       size_t d_consumed_bytes;

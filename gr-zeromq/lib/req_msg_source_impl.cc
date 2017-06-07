@@ -28,7 +28,6 @@
 #include <boost/thread/thread.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "req_msg_source_impl.h"
-#include "tag_headers.h"
 
 namespace gr {
   namespace zeromq {
@@ -41,54 +40,39 @@ namespace gr {
     }
 
     req_msg_source_impl::req_msg_source_impl(char *address, int timeout)
-      : gr::block("req_msg_source",
+      : msg_base("req_msg_source",
                   gr::io_signature::make(0, 0, 0),
                   gr::io_signature::make(0, 0, 0)),
-        d_timeout(timeout)
+        msg_base_source_impl(ZMQ_REQ, address, timeout)
     {
-      int major, minor, patch;
-      zmq::version(&major, &minor, &patch);
-
-      if (major < 3) {
-        d_timeout = timeout*1000;
-      }
-
-      d_context = new zmq::context_t(1);
-      d_socket = new zmq::socket_t(*d_context, ZMQ_REQ);
-
       int time = 0;
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
-      d_socket->connect (address);
-
-      message_port_register_out(pmt::mp("out"));
-    }
-
-    req_msg_source_impl::~req_msg_source_impl()
-    {
-      d_socket->close();
-      delete d_socket;
-      delete d_context;
     }
 
     bool req_msg_source_impl::start()
     {
-      d_finished = false;
+      d_zmq_started = true;
+      d_zmq_finished = false;
       d_thread = new boost::thread(boost::bind(&req_msg_source_impl::readloop, this));
       return true;
     }
 
     bool req_msg_source_impl::stop()
     {
-      d_finished = true;
-      d_thread->join();
+      if (d_zmq_started) {
+        if (d_thread != NULL) {
+          d_zmq_finished = true;
+          d_thread->join();
+          delete d_thread;
+          d_thread = NULL;
+        }
+      }
       return true;
     }
 
     void req_msg_source_impl::readloop()
     {
-      while(!d_finished){
-        //std::cout << "readloop\n";
-
+      while(!d_zmq_finished){
         zmq::pollitem_t itemsout[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLOUT, 0 } };
         zmq::poll(&itemsout[0], 1, d_timeout);
 

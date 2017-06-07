@@ -24,29 +24,18 @@
 #define INCLUDED_ZEROMQ_SUB_MSG_SOURCE_IMPL_H
 
 #include <gnuradio/zeromq/sub_msg_source.h>
+#include "msg_base_impl.h"
 #include "zmq.hpp"
 
 namespace gr {
   namespace zeromq {
 
-    class sub_msg_source_impl : public sub_msg_source
+    class sub_msg_source_impl : public msg_base_source_impl, public sub_msg_source
     {
-     private:
-      int             d_timeout; // microseconds, -1 is blocking
-      zmq::context_t  *d_context;
-      zmq::socket_t   *d_socket;
-      boost::thread   *d_thread;
-
-      void readloop();
-
      public:
-      bool d_finished;
-
       sub_msg_source_impl(char *address, int timeout);
-      ~sub_msg_source_impl();
-
-      bool start();
-      bool stop();
+    protected:
+      void setup_socket();
     };
 
   } // namespace zeromq

@@ -39,8 +39,10 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
         vlen = 10
         src_data = range(vlen)*100
         src = blocks.vector_source_f(src_data, False, vlen)
-        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5556", 0)
-        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5556", 0)
+        endpoint = "tcp://127.0.0.1:"
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, endpoint + "*", 0)
+        port = zeromq_pub_sink.endpoint().split(":")[-1]
+        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, endpoint + port, 0)
         sink = blocks.vector_sink_f(vlen)
         self.send_tb.connect(src, zeromq_pub_sink)
         self.recv_tb.connect(zeromq_sub_source, sink)
@@ -53,6 +55,35 @@ class qa_zeromq_pubsub (gr_unittest.TestCase):
         self.recv_tb.wait()
         self.send_tb.wait()
         self.assertFloatTuplesAlmostEqual(sink.data(), src_data)
+
+    def test_002(self):
+        # Test getting the endpoint returns a port we explicitly set endpoint to
+        endpoint = "tcp://127.0.0.1:5554"
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, 1, endpoint, 0)
+        self.assertEqual(endpoint, zeromq_pub_sink.endpoint())
+
+    def test_003 (self):
+        # Test the set_endpoint() call
+        vlen = 10
+        src_data = range(vlen)*100
+        src = blocks.vector_source_f(src_data, False, vlen)
+        endpoint = "tcp://127.0.0.1:"
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, endpoint + "*", 0)
+        port = zeromq_pub_sink.endpoint().split(":")[-1]
+        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, endpoint + port, 0)
+        # Now set new endpoints
+        zeromq_pub_sink.set_endpoint(endpoint + "*")
+        port = zeromq_pub_sink.endpoint().split(":")[-1]
+        zeromq_sub_source.set_endpoint(endpoint + port)
+        sink = blocks.vector_sink_f(vlen)
+        self.tb.connect(src, zeromq_pub_sink)
+        self.tb.connect(zeromq_sub_source, sink)
+        self.tb.start()
+        time.sleep(0.25)
+        self.tb.stop()
+        self.tb.wait()
+        self.assertFloatTuplesAlmostEqual(sink.data(), src_data)
+
 
 if __name__ == '__main__':
     gr_unittest.run(qa_zeromq_pubsub)
