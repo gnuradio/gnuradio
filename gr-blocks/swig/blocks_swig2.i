@@ -51,6 +51,7 @@
 #include "gnuradio/blocks/complex_to_mag.h"
 #include "gnuradio/blocks/complex_to_mag_squared.h"
 #include "gnuradio/blocks/complex_to_arg.h"
+#include "gnuradio/blocks/concatenate.h"
 #include "gnuradio/blocks/conjugate_cc.h"
 %}
 
@@ -74,6 +75,7 @@
 %include "gnuradio/blocks/complex_to_mag.h"
 %include "gnuradio/blocks/complex_to_mag_squared.h"
 %include "gnuradio/blocks/complex_to_arg.h"
+%include "gnuradio/blocks/concatenate.h"
 %include "gnuradio/blocks/conjugate_cc.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, and_const_bb);
@@ -96,4 +98,5 @@ GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_imag);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_mag);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_mag_squared);
 GR_SWIG_BLOCK_MAGIC2(blocks, complex_to_arg);
+GR_SWIG_BLOCK_MAGIC2(blocks, concatenate);
 GR_SWIG_BLOCK_MAGIC2(blocks, conjugate_cc);

@@ -95,6 +95,7 @@ install(FILES
     complex_to_mag_squared.h
     complex_to_arg.h
     conjugate_cc.h
+    concatenate.h
     copy.h
     deinterleave.h
     delay.h

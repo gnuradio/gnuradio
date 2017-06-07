@@ -170,6 +170,7 @@
    </cat>
    <cat>
       <name>Stream Operators</name>
+      <block>blocks_concatenate</block>
       <block>blocks_deinterleave</block>
       <block>blocks_interleave</block>
       <block>blocks_keep_m_in_n</block>
