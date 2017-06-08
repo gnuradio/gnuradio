@@ -160,6 +160,7 @@ install(FILES
     skiphead.h
     socket_pdu.h
     stream_mux.h
+    stream_to_pdu.h
     stream_to_streams.h
     stream_to_tagged_stream.h
     stream_to_vector.h

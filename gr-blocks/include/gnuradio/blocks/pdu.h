@@ -37,7 +37,9 @@ namespace gr {
 
       BLOCKS_API size_t itemsize(vector_type type);
       BLOCKS_API bool type_matches(vector_type type, pmt::pmt_t v);
-      BLOCKS_API pmt::pmt_t make_pdu_vector(vector_type type, const uint8_t* buf, size_t items);
+      BLOCKS_API pmt::pmt_t make_empty_pdu_vector(vector_type type, size_t items);
+      BLOCKS_API pmt::pmt_t make_pdu_vector(vector_type type, const void* buf, size_t items);
+      BLOCKS_API void* pdu_vector_writable_elements(vector_type type, pmt::pmt_t vector, size_t len);
       BLOCKS_API vector_type type_from_pmt(pmt::pmt_t vector);
 
     } /* namespace pdu */

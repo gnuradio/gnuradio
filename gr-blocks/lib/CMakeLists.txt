@@ -183,6 +183,7 @@ list(APPEND gr_blocks_sources
     socket_pdu_impl.cc
     stream_mux_impl.cc
     stream_pdu_base.cc
+    stream_to_pdu_impl.cc
     stream_to_streams_impl.cc
     stream_to_tagged_stream_impl.cc
     stream_to_vector_impl.cc

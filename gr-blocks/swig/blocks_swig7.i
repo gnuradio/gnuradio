@@ -24,6 +24,7 @@
 #define GR_RUNTIME_API
 
 %include "gnuradio.i"
+%include "gnuradio/blocks/pdu.h"
 
 //load generated python docstrings
 %include "blocks_swig7_doc.i"
@@ -39,6 +40,7 @@
 #include "gnuradio/blocks/exponentiate_const_cci.h"
 #include "gnuradio/blocks/skiphead.h"
 #include "gnuradio/blocks/stream_mux.h"
+#include "gnuradio/blocks/stream_to_pdu.h"
 #include "gnuradio/blocks/stream_to_streams.h"
 #include "gnuradio/blocks/stream_to_tagged_stream.h"
 #include "gnuradio/blocks/stream_to_vector.h"
@@ -62,6 +64,7 @@
 %include "gnuradio/blocks/exponentiate_const_cci.h"
 %include "gnuradio/blocks/skiphead.h"
 %include "gnuradio/blocks/stream_mux.h"
+%include "gnuradio/blocks/stream_to_pdu.h"
 %include "gnuradio/blocks/stream_to_streams.h"
 %include "gnuradio/blocks/stream_to_tagged_stream.h"
 %include "gnuradio/blocks/stream_to_vector.h"
@@ -84,6 +87,7 @@ GR_SWIG_BLOCK_MAGIC2(blocks, divide_cc);
 GR_SWIG_BLOCK_MAGIC2(blocks, exponentiate_const_cci);
 GR_SWIG_BLOCK_MAGIC2(blocks, skiphead);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
+GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_pdu);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_streams);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_tagged_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_vector);
