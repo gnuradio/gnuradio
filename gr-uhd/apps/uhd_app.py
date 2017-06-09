@@ -121,6 +121,8 @@ class UHDApp(object):
         if arg is None:
             return None
         args = [x.strip() for x in arg.split(",")]
+        if len(args) == 1:
+            args = args * num
         if len(args) != num:
             raise ValueError("Invalid {m} setting for {n} {b}: {a}".format(
                 m=arg_name, n=num, a=arg, b=num_name
@@ -161,27 +163,18 @@ class UHDApp(object):
                                        self.usrp.get_num_mboards(), args.spec)
         if self.spec:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                if len(self.spec) == 1:
-                    self.usrp.set_subdev_spec(self.spec, mb_idx)
-                else:
-                    self.usrp.set_subdev_spec(self.spec[mb_idx], mb_idx)
+                self.usrp.set_subdev_spec(self.spec[mb_idx], mb_idx)
         # Set the clock and/or time source:
         if args.clock_source is not None:
             self.clock_source = self.normalize_sel("mboards", "clock-source",
                                                    self.usrp.get_num_mboards(), args.clock_source)
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                if len(self.clock_source) == 1:
-                    self.usrp.set_clock_source(self.clock_source[0], mb_idx)
-                else:
-                    self.usrp.set_clock_source(self.clock_source[mb_idx], mb_idx)
+                self.usrp.set_clock_source(self.clock_source[mb_idx], mb_idx)
         if args.time_source is not None:
             self.time_source = self.normalize_sel("mboards", "time-source",
                                                   self.usrp.get_num_mboards(), args.time_source)
             for mb_idx in xrange(self.usrp.get_num_mboards()):
-                if len(self.time_source) == 1:
-                    self.usrp.set_time_source(self.time_source[0], mb_idx)
-                else:
-                    self.usrp.set_time_source(self.time_source[mb_idx], mb_idx)
+                self.usrp.set_time_source(self.time_source[mb_idx], mb_idx)
         # Sampling rate:
         self.usrp.set_samp_rate(args.samp_rate)
         self.samp_rate = self.usrp.get_samp_rate()
@@ -189,8 +182,6 @@ class UHDApp(object):
         # Set the antenna:
         self.antenna = self.normalize_sel("channels", "antenna", len(args.channels), args.antenna)
         if self.antenna is not None:
-            if len(self.antenna) == 1:
-                self.antenna = self.antenna * len(args.channels)
             for i, chan in enumerate(self.channels):
                 if not self.antenna[i] in self.usrp.get_antennas(i):
                     print("[ERROR] {} is not a valid antenna name for this USRP device!".format(self.antenna[i]))
