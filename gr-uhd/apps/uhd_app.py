@@ -162,7 +162,7 @@ class UHDApp(object):
         if self.spec:
             for mb_idx in xrange(self.usrp.get_num_mboards()):
                 if len(self.spec) == 1:
-                    self.usrp.set_subdev_spec(self.spec, mb_idx)
+                    self.usrp.set_subdev_spec(self.spec[0], mb_idx)
                 else:
                     self.usrp.set_subdev_spec(self.spec[mb_idx], mb_idx)
         # Set the clock and/or time source:
