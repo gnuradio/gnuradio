@@ -79,9 +79,9 @@ qa_fxpt_vco::t1()
 {
   gr::vco<float,float>	ref_vco;
   gr::fxpt_vco		new_vco;
-  float			ref_block[SIN_COS_BLOCK_SIZE];
-  float			new_block[SIN_COS_BLOCK_SIZE];
-  float			input[SIN_COS_BLOCK_SIZE];
+  float		*ref_block = new float[SIN_COS_BLOCK_SIZE];
+  float		*new_block = new float[SIN_COS_BLOCK_SIZE];
+  float		*input = new float[SIN_COS_BLOCK_SIZE];
   double max_error = 0;
 
   for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
@@ -97,6 +97,9 @@ qa_fxpt_vco::t1()
   }
   CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_vco.get_phase(), new_vco.get_phase(), SIN_COS_TOLERANCE);
   // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, ref_vco.get_phase()-new_vco.get_phase());
+  delete[] ref_block;
+  delete[] new_block;
+  delete[] input;
 }
 
 void
@@ -104,9 +107,9 @@ qa_fxpt_vco::t2()
 {
   gr::vco<gr_complex,float> ref_vco;
   gr::fxpt_vco		new_vco;
-  gr_complex		ref_block[SIN_COS_BLOCK_SIZE];
-  gr_complex		new_block[SIN_COS_BLOCK_SIZE];
-  float			input[SIN_COS_BLOCK_SIZE];
+  gr_complex		*ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+  gr_complex		*new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+  float		*input = new float[SIN_COS_BLOCK_SIZE];
   double max_error = 0;
 
   for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
@@ -122,6 +125,9 @@ qa_fxpt_vco::t2()
   }
   CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_vco.get_phase(), new_vco.get_phase(), SIN_COS_TOLERANCE);
   // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, ref_vco.get_phase()-new_vco.get_phase());
+  delete[] ref_block;
+  delete[] new_block;
+  delete[] input;
 }
 
 void

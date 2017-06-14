@@ -86,8 +86,8 @@ qa_fxpt_nco::t1()
 {
   gr::nco<float,float>	ref_nco;
   gr::fxpt_nco		new_nco;
-  gr_complex		ref_block[SIN_COS_BLOCK_SIZE];
-  gr_complex		new_block[SIN_COS_BLOCK_SIZE];
+  gr_complex*		ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
+  gr_complex*		new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
   double max_error = 0;
 
   ref_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
@@ -107,6 +107,8 @@ qa_fxpt_nco::t1()
   }
   CPPUNIT_ASSERT_DOUBLES_EQUAL (ref_nco.get_phase(), new_nco.get_phase(), SIN_COS_TOLERANCE);
   // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, max_phase_error);
+  delete[] ref_block;
+  delete[] new_block;
 }
 
 void
