@@ -36,6 +36,10 @@ static int my_fftw_read_char(void *f) { return fgetc((FILE *) f); }
 #define fftw_import_wisdom_from_file(f) fftw_import_wisdom(my_fftw_read_char, (void*) (f))
 #define fftwf_import_wisdom_from_file(f) fftwf_import_wisdom(my_fftw_read_char, (void*) (f))
 #define fftwl_import_wisdom_from_file(f) fftwl_import_wisdom(my_fftw_read_char, (void*) (f))
+#include <fcntl.h> 
+#include <io.h>
+#define O_NOCTTY 0
+#define O_NONBLOCK 0
 #endif //_MSC_VER
 
 #include <stdlib.h>
