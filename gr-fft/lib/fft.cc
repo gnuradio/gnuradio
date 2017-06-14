@@ -56,6 +56,7 @@ namespace fs = boost::filesystem;
 namespace gr {
   namespace fft {
     static boost::mutex wisdom_thread_mutex;
+	boost::interprocess::file_lock wisdom_lock;
 
     gr_complex *
     malloc_complex(int size)
@@ -100,23 +101,13 @@ namespace gr {
     static void
     lock_wisdom()
     {
-      const std::string wisdom_lock_file = wisdom_filename() + ".lock";
-      int fd = open(wisdom_lock_file.c_str(),
-                    O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK,
-                    0666);
-      if (fd < 0){
-        throw std::exception();
-      }
-      boost::interprocess::file_lock wisdom_lock(wisdom_lock_file.c_str());
-      wisdom_lock.lock();
-      wisdom_thread_mutex.lock();
+	  wisdom_thread_mutex.lock(); 
+	  wisdom_lock.lock();
     }
 
     static void
     unlock_wisdom()
     {
-      const std::string wisdom_lock_file = wisdom_filename() + ".lock";
-      boost::interprocess::file_lock wisdom_lock(wisdom_lock_file.c_str());
       wisdom_lock.unlock();
       wisdom_thread_mutex.unlock();
     }
@@ -172,6 +163,15 @@ namespace gr {
     {
       // Hold global mutex during plan construction and destruction.
       planner::scoped_lock lock(planner::mutex());
+	  const std::string wisdom_lock_file = wisdom_filename() + ".lock";
+	  int fd = open(wisdom_lock_file.c_str(),
+		  O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
+		  0666);
+	  if (fd < 0) {
+		  throw std::exception();
+	  }
+	  close(fd);
+	  wisdom_lock = boost::interprocess::file_lock(wisdom_lock_file.c_str());
 
       assert (sizeof (fftwf_complex) == sizeof (gr_complex));
 
