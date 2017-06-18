@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/dtv/catv_config.h>
 
 namespace gr {
   namespace dtv {
@@ -43,7 +44,7 @@ namespace gr {
        * \brief Create an ITU-T J.83B Trellis Encoder.
        *
        */
-      static sptr make();
+      static sptr make(catv_constellation_t constellation);
     };
 
   } // namespace dtv
