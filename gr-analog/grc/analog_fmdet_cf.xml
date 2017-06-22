@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##FM Detector
+###################################################
+ -->
+<block>
+	<name>FM Detector</name>
+	<key>analog_fmdet_cf</key>
+	<import>from gnuradio import analog</import>
+	<make>analog.fmdet_cf(
+	samplerate=$samplerate,
+	freq_low=$freq_low,
+	freq_high=$freq_high,
+	scl=$scl
+)</make>
+	<param>
+		<name>Sample rate</name>
+		<key>samplerate</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Lowest frequency</name>
+		<key>freq_low</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Highest frequency</name>
+		<key>freq_high</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Scale factor</name>
+		<key>scl</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>
