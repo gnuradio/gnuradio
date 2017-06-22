@@ -131,7 +131,7 @@ class UHDApp(object):
             return spec
         elif len(specs) != self.usrp.get_num_mboards():
             raise ValueError("Invalid subdev setting for {n} mboards: {a}".format(
-                n=len(self.usrp.get_num_mboards()), a=spec
+                n=self.usrp.get_num_mboards(), a=spec
             ))
         return specs
 
