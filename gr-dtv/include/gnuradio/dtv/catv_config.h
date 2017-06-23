@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016,2017 Free Software Foundation, Inc.
+ * Copyright 2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,32 +18,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_DTV_CATV_RANDOMIZER_BB_IMPL_H
-#define INCLUDED_DTV_CATV_RANDOMIZER_BB_IMPL_H
-
-#include <gnuradio/dtv/catv_randomizer_bb.h>
+#ifndef INCLUDED_DTV_CATV_CONFIG_H
+#define INCLUDED_DTV_CATV_CONFIG_H
 
 namespace gr {
   namespace dtv {
-
-    class catv_randomizer_bb_impl : public catv_randomizer_bb
-    {
-     private:
-      unsigned char rseq[88 * 128];
-      int offset, max_offset;
-      void init_rand();
-
-     public:
-      catv_randomizer_bb_impl(catv_constellation_t constellation);
-      ~catv_randomizer_bb_impl();
-
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+    enum catv_constellation_t {
+      CATV_MOD_64QAM = 0,
+      CATV_MOD_256QAM,
     };
 
   } // namespace dtv
 } // namespace gr
 
-#endif /* INCLUDED_DTV_CATV_RANDOMIZER_BB_IMPL_H */
+typedef gr::dtv::catv_constellation_t catv_constellation_t;
+
+#endif /* INCLUDED_DTV_CATV_CONFIG_H */
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,24 +29,28 @@ namespace gr {
   namespace dtv {
 
     catv_randomizer_bb::sptr
-    catv_randomizer_bb::make()
+    catv_randomizer_bb::make(catv_constellation_t constellation)
     {
       return gnuradio::get_initial_sptr
-        (new catv_randomizer_bb_impl());
+        (new catv_randomizer_bb_impl(constellation));
     }
 
     /*
      * The private constructor
      */
-    catv_randomizer_bb_impl::catv_randomizer_bb_impl()
+    catv_randomizer_bb_impl::catv_randomizer_bb_impl(catv_constellation_t constellation)
       : gr::sync_block("catv_randomizer_bb",
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(1, 1, sizeof(unsigned char)))
     {
-      init_rand();
-
       offset = 0;
-      max_offset = 60 * 128;
+      if (constellation == CATV_MOD_64QAM) {
+        max_offset = 60 * 128;
+      }
+      else {
+        max_offset = 88 * 128;
+      }
+      init_rand();
     }
 
     /*
@@ -63,7 +67,7 @@ namespace gr {
       unsigned char c2_new, c1_new, c0_new;
       int n, i;
 
-      for (n = 0; n < 60 * 128; n++) {
+      for (n = 0; n < max_offset; n++) {
         rseq[n] = c2;
         c2_new = c1;
         c1_new = c0 ^ c2;

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,13 +35,16 @@ namespace gr {
       unsigned char trellis_table_x[16][16][6];
       unsigned char trellis_table_y[16][16][6];
       unsigned char Xq, Yq, XYp;
+      int signal_constellation;
+      int trellis_group;
 
       void diff_precoder(unsigned char W, unsigned char Z, unsigned char *Xp, unsigned char *Yp);
       void init_trellis();
-      void trellis_code(const unsigned char *rs, unsigned char *qs);
+      void trellis_code_64qam(const unsigned char *rs, unsigned char *qs);
+      void trellis_code_256qam(const unsigned char *rs, unsigned char *qs);
 
      public:
-      catv_trellis_enc_bb_impl();
+      catv_trellis_enc_bb_impl(catv_constellation_t constellation);
       ~catv_trellis_enc_bb_impl();
 
       // Where all the action really happens
