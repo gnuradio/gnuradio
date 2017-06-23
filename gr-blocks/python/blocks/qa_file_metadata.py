@@ -109,6 +109,7 @@ class test_file_metadata(gr_unittest.TestCase):
         self.tb.connect(src, ssnk)
         self.tb.run()
 
+        fsrc.close() 
         # Test to make sure tags with 'samp_rate' and 'rx_rate' keys
         # were generated and received correctly.
         tags = tsnk.current_tags()
@@ -190,6 +191,7 @@ class test_file_metadata(gr_unittest.TestCase):
         self.tb.connect(src, ssnk)
         self.tb.run()
 
+        fsrc.close()
         # Test to make sure tags with 'samp_rate' and 'rx_rate' keys
         # were generated and received correctly.
         tags = tsnk.current_tags()

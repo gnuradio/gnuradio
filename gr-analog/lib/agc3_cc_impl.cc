@@ -79,7 +79,7 @@ namespace gr {
 #else
     // Compute a linear average on reset (no expected)
 	if(!d_reset) {
-	  std::vector<float> mags(noutput_items);
+      _declspec(align(16)) std::vector<float> mags(noutput_items) ;
       volk_32fc_magnitude_32f(&mags[0], &in[0], noutput_items);
 #endif
         float mag(0.0);
@@ -104,8 +104,8 @@ namespace gr {
       else {
         // Otherwise perform a normal iir update
 #ifdef _MSC_VER
-		std::vector<float> mag_sq(noutput_items/d_iir_update_decim);
-		std::vector<float> inv_mag(noutput_items/d_iir_update_decim);
+        __declspec(align(16)) std::vector<float> mag_sq(noutput_items/d_iir_update_decim) ;
+        __declspec(align(16)) std::vector<float> inv_mag(noutput_items/d_iir_update_decim) ;
 #else
         float mag_sq[noutput_items/d_iir_update_decim] __attribute__ ((aligned (16)));
         float inv_mag[noutput_items/d_iir_update_decim] __attribute__ ((aligned (16)));
@@ -123,8 +123,8 @@ namespace gr {
         // apply updates
         for(int i=0; i<noutput_items/d_iir_update_decim; i++){
             float magi = inv_mag[i];
-#ifdef _MSC_VER
-			if(!_finite(magi)){
+#if defined(_MSC_VER) && _MSC_VER < 1900
+            if(!_finite(magi)){
 #else
             if(std::isfinite(magi)){
 #endif

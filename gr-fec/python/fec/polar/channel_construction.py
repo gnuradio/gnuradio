@@ -39,7 +39,7 @@ Z_PARAM_FIRST_HEADER_LINE = "Bhattacharyya parameters (Z-parameters) for a polar
 def get_frozen_bit_indices_from_capacities(chan_caps, nfrozen):
     indexes = np.array([], dtype=int)
     while indexes.size < nfrozen:
-        index = np.argmin(chan_caps)
+        index = np.argmin(chan_caps).astype(int)
         indexes = np.append(indexes, index)
         chan_caps[index] = 2.0  # make absolutely sure value is out of range!
     return np.sort(indexes)
@@ -48,7 +48,7 @@ def get_frozen_bit_indices_from_capacities(chan_caps, nfrozen):
 def get_frozen_bit_indices_from_z_parameters(z_params, nfrozen):
     indexes = np.array([], dtype=int)
     while indexes.size < nfrozen:
-        index = np.argmax(z_params)
+        index = np.argmax(z_params).astype(int)
         indexes = np.append(indexes, index)
         z_params[index] = -1.0
     return np.sort(indexes)
