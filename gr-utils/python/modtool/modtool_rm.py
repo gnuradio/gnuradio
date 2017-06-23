@@ -130,7 +130,7 @@ class ModToolRemove(ModTool):
         # 1. Create a filtered list
         files = []
         for g in globs:
-            files = files + glob.glob("%s/%s"% (path, g))
+            files = files + sorted(glob.glob("%s/%s"% (path, g)))
         files_filt = []
         print "Searching for matching files in %s/:" % path
         for f in files:

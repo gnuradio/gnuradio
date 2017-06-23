@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,9 +30,10 @@ namespace gr {
     {
      private:
       int control_word;
+      int signal_constellation;
 
      public:
-      catv_frame_sync_enc_bb_impl(int ctrlword);
+      catv_frame_sync_enc_bb_impl(catv_constellation_t constellation, int ctrlword);
       ~catv_frame_sync_enc_bb_impl();
 
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);
