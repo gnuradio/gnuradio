@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>catv_tx_64qam</value>
+      <value>catv_tx_256qam</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -240,7 +240,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5056941 * 2</value>
+      <value>5360537 * 2</value>
     </param>
   </block>
   <block>
@@ -452,7 +452,7 @@
     </param>
     <param>
       <key>file</key>
-      <value>/run/shm/advqam64.ts</value>
+      <value>/run/shm/advqam256.ts</value>
     </param>
     <param>
       <key>_coordinate</key>
@@ -605,7 +605,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>CATV_MOD_64QAM</value>
+      <value>CATV_MOD_256QAM</value>
     </param>
     <param>
       <key>ctrlword</key>
@@ -621,7 +621,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(640, 332)</value>
+      <value>(648, 332)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -652,7 +652,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>CATV_MOD_64QAM</value>
+      <value>CATV_MOD_256QAM</value>
     </param>
     <param>
       <key>affinity</key>
@@ -773,7 +773,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>CATV_MOD_64QAM</value>
+      <value>CATV_MOD_256QAM</value>
     </param>
     <param>
       <key>affinity</key>
@@ -832,7 +832,7 @@
     </param>
     <param>
       <key>constellation</key>
-      <value>MOD_64QAM</value>
+      <value>MOD_256QAM</value>
     </param>
     <param>
       <key>affinity</key>
@@ -848,7 +848,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(376, 492)</value>
+      <value>(384, 492)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -970,7 +970,7 @@
     </param>
     <param>
       <key>taps</key>
-      <value>firdes.root_raised_cosine(0.14, samp_rate, samp_rate/2, 0.18, rrc_taps)</value>
+      <value>firdes.root_raised_cosine(0.06, samp_rate, samp_rate/2, 0.12, rrc_taps)</value>
     </param>
     <param>
       <key>type</key>

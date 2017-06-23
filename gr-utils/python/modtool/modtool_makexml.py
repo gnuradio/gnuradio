@@ -82,7 +82,7 @@ class ModToolMakeXML(ModTool):
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
-        files = glob.glob("%s/%s"% (path, path_glob))
+        files = sorted(glob.glob("%s/%s"% (path, path_glob)))
         files_filt = []
         print("Searching for matching files in %s/:" % path)
         for f in files:

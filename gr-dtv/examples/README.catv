@@ -1,9 +1,16 @@
-A test Transport Stream (26.970352 Mbps) for the example flow graph
+A test Transport Stream (26.970352 Mbps) for the 64QAM example flow graph
 is available here:
 
 http://www.w6rz.net/advqam64.ts
 
 It is 357,356,980 bytes.
+
+A test Transport Stream (38.810701 Mbps) for the 256QAM example flow graph
+is available here:
+
+http://www.w6rz.net/advqam256.ts
+
+It is 514,241,664 bytes.
 
 The three parameters Control_Word, I_taps and J_increment can be
 used to control the interleaver from the following table.
