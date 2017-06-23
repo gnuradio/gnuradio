@@ -125,6 +125,7 @@ class UHDApp(object):
             raise ValueError("Invalid {m} setting for {n} {b}: {a}".format(
                 m=arg_name, n=num, a=arg, b=num_name
             ))
+
         return args
 
     def async_callback(self, msg):

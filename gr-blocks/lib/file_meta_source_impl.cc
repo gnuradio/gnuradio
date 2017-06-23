@@ -111,17 +111,7 @@ namespace gr {
     {
       close();
 
-      if(d_fp) {
-	fclose(d_fp);
-	d_fp = 0;
-      }
 
-      if(d_state == STATE_DETACHED) {
-	if(d_hdr_fp) {
-	  fclose(d_hdr_fp);
-	  d_hdr_fp = 0;
-	}
-      }
     }
 
     bool
@@ -339,6 +329,18 @@ namespace gr {
 	d_new_fp = 0;
       }
       d_updated = true;
+
+      if (d_fp) {
+        fclose(d_fp);
+        d_fp = 0;
+      }
+
+      if (d_state == STATE_DETACHED) {
+        if (d_hdr_fp) {
+          fclose(d_hdr_fp);
+          d_hdr_fp = 0;
+        }
+      }
     }
 
     void
