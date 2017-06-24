@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014, 2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,7 +32,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Matrix multiplexer/multiplier: y(k) = A * x(k)
+     * \brief Matrix multiplexer/multiplier: y(k) = A x(k)
      * \ingroup blocks
      *
      * This block is similar to gr::blocks::multiply_const_ff, the difference
@@ -50,8 +50,8 @@ namespace gr {
      * - Summing up streams with variable coefficients
      *
      * This block features a special tag propagation mode: When setting the tag propagation policy
-     * to gr::blocks::@NAME@::TPP_SELECT_BY_MATRIX, a tag is propagated from input k
-     * to output l if \f$(A)_{l,k} \neq 0\f$.
+     * to gr::block::TPP_CUSTOM, a tag is propagated from input \f$k\f$
+     * to output \f$l\f$, if \f$(A)_{l,k} \neq 0\f$.
      *
      * \section blocks_matrixmult_msgports_@NAME@ Message Ports
      *
@@ -72,7 +72,11 @@ namespace gr {
       /*!
        * \param A The matrix
        * \param tag_propagation_policy The tag propagation policy.
-       *                               Note this can be any gr::block::tag_propagation_policy_t value, or TPP_SELECT_BY_MATRIX.
+       *                               Note this can be any
+       *                               gr::block::tag_propagation_policy_t
+       *                               value. In case of TPP_CUSTOM, tags are
+       *                               only transferred from input \f$k\f$ to
+       *                               output \f$l \iff (A)_{l,k} \neq 0\f$.
        */
       static sptr make(
           std::vector<std::vector<@O_TYPE@> > A,
@@ -84,14 +88,6 @@ namespace gr {
       //! Sets the matrix to a new value \p new_A. Returns true if the new matrix was valid and could be changed.
       virtual bool set_A(const std::vector<std::vector<@O_TYPE@> > &new_A) = 0;
 
-      /*!
-       * \brief Set the policy by the scheduler to determine how tags are moved downstream.
-       *
-       * This will also accept the value TPP_SELECT_BY_MATRIX.
-       */
-      virtual void set_tag_propagation_policy(gr::block::tag_propagation_policy_t p) = 0;
-
-      static const int TPP_SELECT_BY_MATRIX;
       static const std::string MSG_PORT_NAME_SET_A;
     };
 

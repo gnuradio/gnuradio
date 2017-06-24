@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008-2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008-2010,2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -103,8 +103,8 @@ namespace gr {
 
     switch(policy) {
     case block::TPP_DONT:
+    case block::TPP_CUSTOM:
       return true;
-      break;
     case block::TPP_ALL_TO_ALL:
       // every tag on every input propogates to everyone downstream
       for(int i = 0; i < d->ninputs(); i++) {
