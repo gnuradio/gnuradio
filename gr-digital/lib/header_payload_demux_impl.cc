@@ -134,9 +134,6 @@ namespace gr {
       if (d_header_len < 1) {
         throw std::invalid_argument("Header length must be at least 1 symbol.");
       }
-      if (header_padding < 0) {
-        throw std::invalid_argument("Header padding must be non-negative.");
-      }
       if (d_items_per_symbol < 1 || d_gi < 0 || d_itemsize < 1) {
         throw std::invalid_argument("Items and symbol sizes must be at least 1.");
       }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -31,7 +31,6 @@
 namespace gr {
   namespace blocks {
 
-    const int multiply_matrix_cc::TPP_SELECT_BY_MATRIX = 999;
     const std::string multiply_matrix_cc::MSG_PORT_NAME_SET_A = "set_A";
 
     multiply_matrix_cc::sptr
@@ -85,7 +84,7 @@ namespace gr {
           }
         }
       }
-      if (d_tag_prop_select) {
+      if (tag_propagation_policy() == TPP_CUSTOM) {
         propagate_tags_by_A(noutput_items, input_items.size(), output_items.size());
       }
       return noutput_items;
@@ -178,17 +177,6 @@ namespace gr {
       }
     }
 
-    void
-    multiply_matrix_cc_impl::set_tag_propagation_policy(gr::block::tag_propagation_policy_t tpp)
-    {
-      if (tpp == TPP_SELECT_BY_MATRIX) {
-        set_tag_propagation_policy(TPP_DONT);
-        d_tag_prop_select = true;
-      } else {
-        gr::block::set_tag_propagation_policy(tpp);
-        d_tag_prop_select = false;
-      }
-    }
 
   } /* namespace blocks */
 } /* namespace gr */
