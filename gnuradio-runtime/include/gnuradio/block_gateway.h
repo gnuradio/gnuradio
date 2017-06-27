@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011-2013 Free Software Foundation, Inc.
+ * Copyright 2011-2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -44,7 +44,8 @@ namespace gr {
   enum tag_propagation_policy_t {
     TPP_DONT = 0,
     TPP_ALL_TO_ALL = 1,
-    TPP_ONE_TO_ONE = 2
+    TPP_ONE_TO_ONE = 2,
+    TPP_CUSTOM = 3
   };
 
   /*!

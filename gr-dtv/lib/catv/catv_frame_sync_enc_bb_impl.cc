@@ -112,9 +112,8 @@ namespace gr {
           for (int n = 6; n >= 0; n--) {
             out[i++] = b & (1 << n) ? 1 : 0;
           }
-          b = 0x00;
           for (int n = 6; n >= 0; n--) {
-            out[i++] = b & (1 << n) ? 1 : 0;
+            out[i++] = 0;
           }
         }
         else {
