@@ -47,15 +47,15 @@ public:
   virtual ~rpcserver_thrift();
 
   void registerConfigureCallback(const std::string &id,
-                                 const configureCallback_t callback);
+                                 const configureCallback_t& callback);
   void unregisterConfigureCallback(const std::string &id);
 
   void registerQueryCallback(const std::string &id,
-                             const queryCallback_t callback);
+                             const queryCallback_t& callback);
   void unregisterQueryCallback(const std::string &id);
 
   void registerHandlerCallback(const std::string &id,
-                               const handlerCallback_t callback);
+                               const handlerCallback_t& callback);
   void unregisterHandlerCallback(const std::string &id);
 
   void setKnobs(const GNURadio::KnobMap&);

@@ -47,7 +47,7 @@ rpcserver_thrift::~rpcserver_thrift()
 
 void
 rpcserver_thrift::registerConfigureCallback(const std::string &id,
-                                            const configureCallback_t callback)
+                                            const configureCallback_t& callback)
 {
   boost::mutex::scoped_lock lock(d_callback_map_lock);
   {
@@ -86,7 +86,7 @@ rpcserver_thrift::unregisterConfigureCallback(const std::string &id)
 
 void
 rpcserver_thrift::registerQueryCallback(const std::string &id,
-                                        const queryCallback_t callback)
+                                        const queryCallback_t& callback)
 {
   boost::mutex::scoped_lock lock(d_callback_map_lock);
   {
@@ -128,7 +128,7 @@ rpcserver_thrift::unregisterQueryCallback(const std::string &id)
 
 void
 rpcserver_thrift::registerHandlerCallback(const std::string &id,
-                                          const handlerCallback_t callback)
+                                          const handlerCallback_t& callback)
 {
   boost::mutex::scoped_lock lock(d_callback_map_lock);
   {
