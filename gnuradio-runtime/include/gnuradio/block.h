@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2009,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2009,2010,2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -67,10 +67,14 @@ namespace gr {
       WORK_DONE = -1
     };
 
+    /*!
+     * \brief enum to represent different tag propagation policies.
+     */
     enum tag_propagation_policy_t {
-      TPP_DONT = 0,
-      TPP_ALL_TO_ALL = 1,
-      TPP_ONE_TO_ONE = 2
+      TPP_DONT = 0, /*!< Scheduler doesn't propagate tags from in- to output. The block itself is free to insert tags as it wants. */
+      TPP_ALL_TO_ALL = 1, /*!< Propagate tags from all in- to all outputs. The scheduler takes care of that. */
+      TPP_ONE_TO_ONE = 2, /*!< Propagate tags from n. input to n. output. Requires same number of in- and outputs */
+      TPP_CUSTOM = 3 /*!< Like TPP_DONT, but signals the block it should implement application-specific forwarding behaviour. */
     };
 
     virtual ~block();

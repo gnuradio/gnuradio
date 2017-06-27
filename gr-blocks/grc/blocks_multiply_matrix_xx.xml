@@ -44,7 +44,7 @@
 	</option>
 	<option>
 		<name>Matrix-Defined</name>
-		<key>999</key>
+		<key>gr.TPP_CUSTOM</key>
 	</option>
   </param>
   <check>len($A) > 0</check>
