@@ -47,7 +47,7 @@ rpcserver_aggregator::registeredServers()
 
 void
 rpcserver_aggregator::registerConfigureCallback(const std::string &id,
-						const configureCallback_t &callback)
+						const configureCallback_t callback)
 {
   std::for_each(d_serverlist.begin(), d_serverlist.end(),
 		registerConfigureCallback_f<rpcmanager_base::rpcserver_booter_base_sptr, configureCallback_t>(id, callback));
@@ -61,7 +61,7 @@ rpcserver_aggregator::unregisterConfigureCallback(const std::string &id)
 }
 
 void
-rpcserver_aggregator::registerQueryCallback(const std::string &id, const queryCallback_t &callback)
+rpcserver_aggregator::registerQueryCallback(const std::string &id, const queryCallback_t callback)
 {
   std::for_each(d_serverlist.begin(), d_serverlist.end(),
 		registerQueryCallback_f<rpcmanager_base::rpcserver_booter_base_sptr, queryCallback_t>(id, callback));
@@ -78,7 +78,7 @@ rpcserver_aggregator::unregisterQueryCallback(const std::string &id)
 
 void
 rpcserver_aggregator::registerHandlerCallback(const std::string &id,
-                                              const handlerCallback_t &callback)
+                                              const handlerCallback_t callback)
 {
   std::for_each(d_serverlist.begin(), d_serverlist.end(),
 		registerHandlerCallback_f<rpcmanager_base::rpcserver_booter_base_sptr, handlerCallback_t>(id, callback));
