@@ -104,11 +104,11 @@ struct callbackregister_base
   callbackregister_base() {;}
   virtual ~callbackregister_base() {;}
 
-  virtual void registerConfigureCallback(const std::string &id, const configureCallback_t &callback) = 0;
+  virtual void registerConfigureCallback(const std::string &id, const configureCallback_t callback) = 0;
   virtual void unregisterConfigureCallback(const std::string &id) = 0;
-  virtual void registerQueryCallback(const std::string &id, const queryCallback_t &callback) = 0;
+  virtual void registerQueryCallback(const std::string &id, const queryCallback_t callback) = 0;
   virtual void unregisterQueryCallback(const std::string &id) = 0;
-  virtual void registerHandlerCallback(const std::string &id, const handlerCallback_t &callback) = 0;
+  virtual void registerHandlerCallback(const std::string &id, const handlerCallback_t callback) = 0;
   virtual void unregisterHandlerCallback(const std::string &id) = 0;
 };
 
