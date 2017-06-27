@@ -261,10 +261,19 @@ namespace gr {
       double inm1 = 1.0/((double)(ntaps-1));
       double temp;
 
-      for(int i = 0; i < ntaps; i++) {
+      /* extracting first and last element out of the loop, since
+         sqrt(1.0-temp*temp) might trigger unexpected floating point behaviour
+         if |temp| = 1.0+epsilon, which can happen for i==0 and
+         1/i==1/(ntaps-1)==inm1 ; compare
+         https://github.com/gnuradio/gnuradio/issues/1348 .
+         In any case, the 0. Bessel function of first kind is 1 at point 0.
+       */
+      taps[0] = IBeta;
+      for(int i = 1; i < ntaps-1; i++) {
         temp = 2*i*inm1 - 1;
         taps[i] = Izero(beta*sqrt(1.0-temp*temp)) * IBeta;
       }
+      taps[ntaps-1] = IBeta;
       return taps;
     }
 
