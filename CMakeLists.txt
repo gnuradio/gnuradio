@@ -151,6 +151,10 @@ endif(MSVC)
 
 if(WIN32)
 	add_definitions(-D_USE_MATH_DEFINES)
+
+	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+		add_definitions(-DMS_WIN64)
+	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(WIN32)
 
 # Record Compiler Info for record
