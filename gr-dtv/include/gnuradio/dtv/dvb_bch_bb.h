@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015-2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ namespace gr {
      * \ingroup dtv
      *
      * \details
-     * Input: Variable length FEC baseband frames (BBFRAME).
+     * Input: Variable length FEC baseband frames (BBFRAME). \n
      * Output: Variable length FEC baseband frames with appended BCH (BCHFEC).
      */
     class DTV_API dvb_bch_bb : virtual public gr::block

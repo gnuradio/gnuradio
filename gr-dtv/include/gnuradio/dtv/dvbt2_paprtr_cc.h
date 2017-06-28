@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Peak to Average Power Ratio (PAPR) reduction.
      * \ingroup dtv
      *
-     * Input: A T2 frame of OFDM symbols.
+     * Input: A T2 frame of OFDM symbols. \n
      * Output: A T2 frame of PAPR reduced OFDM symbols.
      */
     class DTV_API dvbt2_paprtr_cc : virtual public gr::sync_block

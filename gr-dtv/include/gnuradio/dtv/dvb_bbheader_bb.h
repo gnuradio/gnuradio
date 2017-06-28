@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015-2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ namespace gr {
      * \ingroup dtv
      *
      * \details
-     * Input: 188-byte MPEG-2 Transport Stream packets.
+     * Input: 188-byte MPEG-2 Transport Stream packets. \n
      * Output: Variable length FEC baseband frames (BBFRAME). The output frame
      *         length is based on the FEC rate.
      */
