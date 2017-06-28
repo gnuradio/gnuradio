@@ -386,6 +386,8 @@ class FlowGraph(Element):
 
         had_connect_errors = False
         _blocks = {block.name: block for block in self.blocks}
+
+        # TODO: Crashes if connections section exists without actual connections.
         for src_blk_id, src_port_id, snk_blk_id, snk_port_id in data.get('connections', []):
             try:
                 source_block = _blocks[src_blk_id]

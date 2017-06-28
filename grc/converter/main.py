@@ -47,7 +47,8 @@ class Converter(object):
 
     def __init__(self, search_path, output_dir='~/.cache/grc_gnuradio'):
         self.search_path = search_path
-        self.output_dir = output_dir
+        self.output_dir = os.path.expanduser(output_dir)
+        logger.info("Saving converted files to {}".format(self.output_dir))
 
         self._force = False
 

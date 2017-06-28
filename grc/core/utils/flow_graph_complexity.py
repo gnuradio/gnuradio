@@ -1,6 +1,7 @@
 
 def calculate(flowgraph):
     """ Determines the complexity of a flowgraph """
+    return "  *** DISABLED ***  "  # TODO: Temporarily disabled.
     dbal = 0
     for block in flowgraph.blocks:
         # Skip options block

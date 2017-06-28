@@ -179,18 +179,19 @@ def get_hier_block_io(flow_graph, direction, domain=None):
             'size':  type_param.options.attributes[type_param.get_value()]['size'],
             'optional': bool(pad.params['optional'].get_evaluated()),
         }
-        if domain and pad.
 
-        num_ports = pad.params['num_streams'].get_evaluated()
-        if num_ports <= 1:
-            yield master
-        else:
-            for i in range(num_ports):
-                clone = master.copy()
-                clone['label'] += str(i)
-                ports.append(clone)
+        if domain and pad:
+            num_ports = pad.params['num_streams'].get_evaluated()
+            if num_ports <= 1:
+                yield master
+            else:
+                for i in range(num_ports):
+                    clone = master.copy()
+                    clone['label'] += str(i)
+                    ports.append(clone)
         else:
             ports.append(master)
+
     if domain is not None:
         ports = [p for p in ports if p.domain == domain]
-    return ports
+        yield ports  # TODO: Not sure this fix is correct
