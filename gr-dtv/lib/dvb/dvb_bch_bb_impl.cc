@@ -371,6 +371,24 @@ namespace gr {
         }
       }
 
+      switch (bch_code) {
+        case BCH_CODE_N12:
+          num_parity_bits = 192;
+          break;
+        case BCH_CODE_N10:
+          num_parity_bits = 160;
+          break;
+        case BCH_CODE_N8:
+          num_parity_bits = 128;
+          break;
+        case BCH_CODE_M12:
+          num_parity_bits = 180;
+          break;
+        case BCH_CODE_S12:
+          num_parity_bits = 168;
+          break;
+      }
+
       bch_poly_build_tables();
       set_output_multiple(nbch);
     }
@@ -415,103 +433,24 @@ namespace gr {
       return max + 1;
     }
 
-    /*
-     * Pack the polynomial into a 32 bit array
-     */
-    void
-    dvb_bch_bb_impl::poly_pack(const int *pin, unsigned int* pout, int len)
-    {
-      int lw = len / 32;
-      int ptr = 0;
-      unsigned int temp;
-      if (len % 32) {
-        lw++;
-      }
-
-      for (int i = 0; i < lw; i++) {
-        temp = 0x80000000;
-        pout[i] = 0;
-        for (int j = 0; j < 32; j++) {
-          if (pin[ptr++]) {
-            pout[i] |= temp;
-          }
-          temp >>= 1;
-        }
-      }
-    }
-
-    void
-    dvb_bch_bb_impl::poly_reverse(int *pin, int *pout, int len)
-    {
-      int c;
-      c = len - 1;
-
-      for (int i = 0; i < len; i++) {
-        pout[c--] = pin[i];
-      }
-    }
-
-    /*
-     *Shift a 128 bit register
-     */
-    inline void
-    dvb_bch_bb_impl::reg_4_shift(unsigned int *sr)
-    {
-      sr[3] = (sr[3] >> 1) | (sr[2] << 31);
-      sr[2] = (sr[2] >> 1) | (sr[1] << 31);
-      sr[1] = (sr[1] >> 1) | (sr[0] << 31);
-      sr[0] = (sr[0] >> 1);
-    }
-
-    /*
-     * Shift 160 bits
-     */
-    inline void
-    dvb_bch_bb_impl::reg_5_shift(unsigned int *sr)
-    {
-      sr[4] = (sr[4] >> 1) | (sr[3] << 31);
-      sr[3] = (sr[3] >> 1) | (sr[2] << 31);
-      sr[2] = (sr[2] >> 1) | (sr[1] << 31);
-      sr[1] = (sr[1] >> 1) | (sr[0] << 31);
-      sr[0] = (sr[0] >> 1);
-    }
-
-    /*
-     * Shift 192 bits
-     */
-    inline void
-    dvb_bch_bb_impl::reg_6_shift(unsigned int *sr)
-    {
-      sr[5] = (sr[5] >> 1) | (sr[4] << 31);
-      sr[4] = (sr[4] >> 1) | (sr[3] << 31);
-      sr[3] = (sr[3] >> 1) | (sr[2] << 31);
-      sr[2] = (sr[2] >> 1) | (sr[1] << 31);
-      sr[1] = (sr[1] >> 1) | (sr[0] << 31);
-      sr[0] = (sr[0] >> 1);
-    }
-
     //precalculate the crc from: http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html - cf. CRC-32 Lookup
-    void dvb_bch_bb_impl::CalculateCrcTable()
+    void
+    dvb_bch_bb_impl::calculate_crc_table(void)
     {
-      for (int divident = 0; divident < 256; divident++) /* iterate over all possible input byte values 0 - 255 */
-      {
-        std::bitset<192> curByte(divident);
-        curByte <<= 184;
+      for (int divident = 0; divident < 256; divident++) { /* iterate over all possible input byte values 0 - 255 */
+        std::bitset<MAX_BCH_PARITY_BITS> curByte(divident);
+        curByte <<= num_parity_bits - 8;
 
-        for (unsigned char bit = 0; bit < 8; bit++)
-        {
-          if ((curByte[191]) != 0)
-	  {
+        for (unsigned char bit = 0; bit < 8; bit++) {
+          if ((curByte[num_parity_bits - 1]) != 0) {
             curByte <<= 1;
             curByte ^= polynome;
           }
-          else
-          {
+          else {
             curByte <<= 1;
           }
         }
-
-        crcTable[divident] = curByte;
+        crc_table[divident] = curByte;
       }
     }
 
@@ -563,55 +502,73 @@ namespace gr {
       int len;
       int polyout[2][200];
 
-      len = poly_mult(polyn01, 17, polyn02,    17,  polyout[0]);
-      len = poly_mult(polyn03, 17, polyout[0], len, polyout[1]);
-      len = poly_mult(polyn04, 17, polyout[1], len, polyout[0]);
-      len = poly_mult(polyn05, 17, polyout[0], len, polyout[1]);
-      len = poly_mult(polyn06, 17, polyout[1], len, polyout[0]);
-      len = poly_mult(polyn07, 17, polyout[0], len, polyout[1]);
-      len = poly_mult(polyn08, 17, polyout[1], len, polyout[0]);
-      poly_pack(polyout[0], m_poly_n_8, 128);
+#define COPY_BCH_POLYNOME \
+for (unsigned int i = 0; i < num_parity_bits; i ++) {\
+  polynome[i] = polyout[0][i];\
+}
 
-      len = poly_mult(polyn09, 17, polyout[0], len, polyout[1]);
-      len = poly_mult(polyn10, 17, polyout[1], len, polyout[0]);
-      poly_pack(polyout[0], m_poly_n_10, 160);
+      switch (bch_code) {
+      case BCH_CODE_N12:
+      case BCH_CODE_N10:
+      case BCH_CODE_N8:
 
-      len = poly_mult(polyn11, 17, polyout[0], len, polyout[1]);
-      len = poly_mult(polyn12, 17, polyout[1], len, polyout[0]);
-      poly_pack(polyout[0], m_poly_n_12, 192);
+        len = poly_mult(polyn01, 17, polyn02,    17,  polyout[0]);
+        len = poly_mult(polyn03, 17, polyout[0], len, polyout[1]);
+        len = poly_mult(polyn04, 17, polyout[1], len, polyout[0]);
+        len = poly_mult(polyn05, 17, polyout[0], len, polyout[1]);
+        len = poly_mult(polyn06, 17, polyout[1], len, polyout[0]);
+        len = poly_mult(polyn07, 17, polyout[0], len, polyout[1]);
+        len = poly_mult(polyn08, 17, polyout[1], len, polyout[0]);
+        if (bch_code == BCH_CODE_N8) {
+          COPY_BCH_POLYNOME
+        }
 
-      //pack the polynome in a bitset
-      for (int i = 0; i < 192; i += 1) {
-        polynome[i] = polyout[0][i];
+        len = poly_mult(polyn09, 17, polyout[0], len, polyout[1]);
+        len = poly_mult(polyn10, 17, polyout[1], len, polyout[0]);
+        if (bch_code == BCH_CODE_N10) {
+          COPY_BCH_POLYNOME
+        }
+
+        len = poly_mult(polyn11, 17, polyout[0], len, polyout[1]);
+        len = poly_mult(polyn12, 17, polyout[1], len, polyout[0]);
+        if (bch_code == BCH_CODE_N12) {
+          COPY_BCH_POLYNOME
+        }
+        break;
+
+      case BCH_CODE_S12:
+        len = poly_mult(polys01, 15, polys02,    15,  polyout[0]);
+        len = poly_mult(polys03, 15, polyout[0], len, polyout[1]);
+        len = poly_mult(polys04, 15, polyout[1], len, polyout[0]);
+        len = poly_mult(polys05, 15, polyout[0], len, polyout[1]);
+        len = poly_mult(polys06, 15, polyout[1], len, polyout[0]);
+        len = poly_mult(polys07, 15, polyout[0], len, polyout[1]);
+        len = poly_mult(polys08, 15, polyout[1], len, polyout[0]);
+        len = poly_mult(polys09, 15, polyout[0], len, polyout[1]);
+        len = poly_mult(polys10, 15, polyout[1], len, polyout[0]);
+        len = poly_mult(polys11, 15, polyout[0], len, polyout[1]);
+        len = poly_mult(polys12, 15, polyout[1], len, polyout[0]);
+
+        COPY_BCH_POLYNOME
+        break;
+
+      case BCH_CODE_M12:
+        len = poly_mult(polym01, 16, polym02,    16,  polyout[0]);
+        len = poly_mult(polym03, 16, polyout[0], len, polyout[1]);
+        len = poly_mult(polym04, 16, polyout[1], len, polyout[0]);
+        len = poly_mult(polym05, 16, polyout[0], len, polyout[1]);
+        len = poly_mult(polym06, 16, polyout[1], len, polyout[0]);
+        len = poly_mult(polym07, 16, polyout[0], len, polyout[1]);
+        len = poly_mult(polym08, 16, polyout[1], len, polyout[0]);
+        len = poly_mult(polym09, 16, polyout[0], len, polyout[1]);
+        len = poly_mult(polym10, 16, polyout[1], len, polyout[0]);
+        len = poly_mult(polym11, 16, polyout[0], len, polyout[1]);
+        len = poly_mult(polym12, 16, polyout[1], len, polyout[0]);
+
+        COPY_BCH_POLYNOME
+        break;
       }
-	  CalculateCrcTable();
-
-
-      len = poly_mult(polys01, 15, polys02,    15,  polyout[0]);
-      len = poly_mult(polys03, 15, polyout[0], len, polyout[1]);
-      len = poly_mult(polys04, 15, polyout[1], len, polyout[0]);
-      len = poly_mult(polys05, 15, polyout[0], len, polyout[1]);
-      len = poly_mult(polys06, 15, polyout[1], len, polyout[0]);
-      len = poly_mult(polys07, 15, polyout[0], len, polyout[1]);
-      len = poly_mult(polys08, 15, polyout[1], len, polyout[0]);
-      len = poly_mult(polys09, 15, polyout[0], len, polyout[1]);
-      len = poly_mult(polys10, 15, polyout[1], len, polyout[0]);
-      len = poly_mult(polys11, 15, polyout[0], len, polyout[1]);
-      len = poly_mult(polys12, 15, polyout[1], len, polyout[0]);
-      poly_pack(polyout[0], m_poly_s_12, 168);
-
-      len = poly_mult(polym01, 16, polym02,    16,  polyout[0]);
-      len = poly_mult(polym03, 16, polyout[0], len, polyout[1]);
-      len = poly_mult(polym04, 16, polyout[1], len, polyout[0]);
-      len = poly_mult(polym05, 16, polyout[0], len, polyout[1]);
-      len = poly_mult(polym06, 16, polyout[1], len, polyout[0]);
-      len = poly_mult(polym07, 16, polyout[0], len, polyout[1]);
-      len = poly_mult(polym08, 16, polyout[1], len, polyout[0]);
-      len = poly_mult(polym09, 16, polyout[0], len, polyout[1]);
-      len = poly_mult(polym10, 16, polyout[1], len, polyout[0]);
-      len = poly_mult(polym11, 16, polyout[0], len, polyout[1]);
-      len = poly_mult(polym12, 16, polyout[1], len, polyout[0]);
-      poly_pack(polyout[0], m_poly_m_12, 180);
+      calculate_crc_table();
     }
 
     int
@@ -623,143 +580,36 @@ namespace gr {
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
       unsigned char b, temp;
-      unsigned int shift[6];
-      std::bitset<192> parity_bits;
+
+      // We can use a 192 bits long bitset, all higher bits not used by the bch will just be ignored
+      std::bitset<MAX_BCH_PARITY_BITS> parity_bits;
       int consumed = 0;
 
-      switch (bch_code) {
-        case BCH_CODE_N12:
-          for (int i = 0; i < noutput_items; i += nbch) {
-            for (int j = 0; j < (int)kbch/8; j++) {
-              b = 0;
+      for (int i = 0; i < noutput_items; i += nbch) {
+        for (int j = 0; j < (int)kbch/8; j++) {
+          b = 0;
 
-              // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
-              for (int e = 0; e < 8; e++) {
-                temp = *in++;
-                *out++ = temp;
-                consumed++;
+          // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
+          for (int e = 0; e < 8; e++) {
+            temp = *in++;
+            *out++ = temp;
+            consumed++;
 
-	        b |= temp << (7 - e);
-              }
+            b |= temp << (7 - e);
+          }
 
-              unsigned long msB_CRC = (parity_bits >> 184).to_ulong();
-              /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
-              unsigned char pos = (unsigned char)(msB_CRC ^ b);
-              /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
-              parity_bits = (parity_bits << 8) ^ crcTable[pos];
-            }
-            // Now add the parity bits to the output
-            for (int n = 0; n < 192; n++) {
-              *out++ = (char) parity_bits[191];
-              parity_bits <<= 1;
-            }
-          }
-          break;
-        case BCH_CODE_N10:
-          for (int i = 0; i < noutput_items; i += nbch) {
-            //Zero the shift register
-            memset(shift, 0, sizeof(unsigned int) * 5);
-            // MSB of the codeword first
-            for (int j = 0; j < (int)kbch; j++) {
-              temp = *in++;
-              *out++ = temp;
-              consumed++;
-              b = (temp ^ (shift[4] & 1));
-              reg_5_shift(shift);
-              if (b) {
-                shift[0] ^= m_poly_n_10[0];
-                shift[1] ^= m_poly_n_10[1];
-                shift[2] ^= m_poly_n_10[2];
-                shift[3] ^= m_poly_n_10[3];
-                shift[4] ^= m_poly_n_10[4];
-              }
-            }
-            // Now add the parity bits to the output
-            for( int n = 0; n < 160; n++ ) {
-              *out++ = (shift[4] & 1);
-              reg_5_shift(shift);
-            }
-          }
-          break;
-        case BCH_CODE_N8:
-          for (int i = 0; i < noutput_items; i += nbch) {
-            //Zero the shift register
-            memset(shift, 0, sizeof(unsigned int) * 4);
-            // MSB of the codeword first
-            for (int j = 0; j < (int)kbch; j++) {
-              temp = *in++;
-              *out++ = temp;
-              consumed++;
-              b = temp ^ (shift[3] & 1);
-              reg_4_shift(shift);
-              if (b) {
-                shift[0] ^= m_poly_n_8[0];
-                shift[1] ^= m_poly_n_8[1];
-                shift[2] ^= m_poly_n_8[2];
-                shift[3] ^= m_poly_n_8[3];
-              }
-            }
-            // Now add the parity bits to the output
-            for (int n = 0; n < 128; n++) {
-              *out++ = shift[3] & 1;
-              reg_4_shift(shift);
-            }
-          }
-          break;
-        case BCH_CODE_S12:
-          for (int i = 0; i < noutput_items; i += nbch) {
-            //Zero the shift register
-            memset(shift, 0, sizeof(unsigned int) * 6);
-            // MSB of the codeword first
-            for (int j = 0; j < (int)kbch; j++) {
-              temp = *in++;
-              *out++ = temp;
-              consumed++;
-              b = (temp ^ ((shift[5] & 0x01000000) ? 1 : 0));
-              reg_6_shift(shift);
-              if (b) {
-                shift[0] ^= m_poly_s_12[0];
-                shift[1] ^= m_poly_s_12[1];
-                shift[2] ^= m_poly_s_12[2];
-                shift[3] ^= m_poly_s_12[3];
-                shift[4] ^= m_poly_s_12[4];
-                shift[5] ^= m_poly_s_12[5];
-              }
-            }
-            // Now add the parity bits to the output
-            for (int n = 0; n < 168; n++) {
-              *out++ = (shift[5] & 0x01000000) ? 1 : 0;
-              reg_6_shift(shift);
-            }
-          }
-          break;
-        case BCH_CODE_M12:
-          for (int i = 0; i < noutput_items; i += nbch) {
-            //Zero the shift register
-            memset(shift, 0, sizeof(unsigned int) * 6);
-            // MSB of the codeword first
-            for (int j = 0; j < (int)kbch; j++) {
-              temp = *in++;
-              *out++ = temp;
-              consumed++;
-              b = (temp ^ ((shift[5] & 0x00001000) ? 1 : 0));
-              reg_6_shift(shift);
-              if (b) {
-                shift[0] ^= m_poly_m_12[0];
-                shift[1] ^= m_poly_m_12[1];
-                shift[2] ^= m_poly_m_12[2];
-                shift[3] ^= m_poly_m_12[3];
-                shift[4] ^= m_poly_m_12[4];
-                shift[5] ^= m_poly_m_12[5];
-              }
-            }
-            // Now add the parity bits to the output
-            for (int n = 0; n < 180; n++) {
-              *out++ = (shift[5] & 0x00001000) ? 1 : 0;
-              reg_6_shift(shift);
-            }
-          }
-          break;
+          unsigned long msB_CRC = (parity_bits >> (num_parity_bits - 8)).to_ulong();
+          /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
+          unsigned char pos = (unsigned char)(msB_CRC ^ b);
+          /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
+          parity_bits = (parity_bits << 8) ^ crc_table[pos];
+        }
+
+        // Now add the parity bits to the output
+        for (unsigned int n = 0; n < num_parity_bits; n++) {
+          *out++ = (char) parity_bits[num_parity_bits - 1];
+          parity_bits <<= 1;
+        }
       }
 
       // Tell runtime system how many input items we consumed on

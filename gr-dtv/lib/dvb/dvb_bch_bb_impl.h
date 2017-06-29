@@ -25,6 +25,8 @@
 #include "dvb_defines.h"
 #include <bitset>
 
+#define MAX_BCH_PARITY_BITS 192
+
 namespace gr {
   namespace dtv {
 
@@ -34,20 +36,13 @@ namespace gr {
       unsigned int kbch;
       unsigned int nbch;
       unsigned int bch_code;
-      unsigned int m_poly_n_8[4];
-      unsigned int m_poly_n_10[5];
-      unsigned int m_poly_n_12[6];
-      unsigned int m_poly_s_12[6];
-      unsigned int m_poly_m_12[6];
-      std::bitset<192> polynome;
-      std::bitset<192> crcTable[256];
-      void CalculateCrcTable();
+
+      std::bitset<MAX_BCH_PARITY_BITS> crc_table[256];
+      unsigned int num_parity_bits;
+      std::bitset<MAX_BCH_PARITY_BITS> polynome;
+
+      void calculate_crc_table();
       int poly_mult(const int*, int, const int*, int, int*);
-      void poly_pack(const int*, unsigned int*, int);
-      void poly_reverse(int*, int*, int);
-      inline void reg_4_shift(unsigned int*);
-      inline void reg_5_shift(unsigned int*);
-      inline void reg_6_shift(unsigned int*);
       void bch_poly_build_tables(void);
 
      public:
