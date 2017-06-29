@@ -23,12 +23,8 @@
 
 #include <gnuradio/dtv/dvb_ldpc_bb.h>
 #include "dvb_defines.h"
+#include <boost/smart_ptr.hpp>
 
-typedef struct{
-    int table_length;
-    int d[LDPC_ENCODE_TABLE_LENGTH];
-    int p[LDPC_ENCODE_TABLE_LENGTH];
-}ldpc_encode_table;
 
 namespace gr {
   namespace dtv {
@@ -50,7 +46,8 @@ namespace gr {
       unsigned char puncturing_buffer[FRAME_SIZE_NORMAL];
       unsigned char shortening_buffer[FRAME_SIZE_NORMAL];
       void ldpc_lookup_generate(void);
-      ldpc_encode_table ldpc_encode;
+
+      int** ldpc_lut;
 
       const static int ldpc_tab_1_4N[45][13];
       const static int ldpc_tab_1_3N[60][13];

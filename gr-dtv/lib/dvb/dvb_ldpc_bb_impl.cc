@@ -364,6 +364,8 @@ namespace gr {
      */
     dvb_ldpc_bb_impl::~dvb_ldpc_bb_impl()
     {
+      delete[] ldpc_lut[0];
+      delete[] ldpc_lut;
     }
 
     void
@@ -373,29 +375,48 @@ namespace gr {
     }
 
 #define LDPC_BF(TABLE_NAME, ROWS) \
+for (int row = 0; row < ROWS; row++) { /* count the entries in the table */ \
+  max_lut_arraysize += TABLE_NAME[row][0]; \
+} \
+max_lut_arraysize *= 360; /* 360 bits per table entry */ \
+max_lut_arraysize /= pbits; /* spread over all parity bits */ \
+max_lut_arraysize += 2; /* 1 for the size at the start of the array, one as buffer */ \
+\
+/* Allocate a 2D Array with pbits * max_lut_arraysize
+ * while preserving two-subscript access
+ * see https://stackoverflow.com/questions/29375797/copy-2d-array-using-memcpy/29375830#29375830
+ */ \
+ldpc_lut = new int*[pbits]; \
+ldpc_lut[0] = new int[pbits * max_lut_arraysize]; \
+ldpc_lut[0][0] = 1; \
+for (int i = 1; i < pbits; i++) { \
+  ldpc_lut[i] = ldpc_lut[i-1] + max_lut_arraysize; \
+  ldpc_lut[i][0] = 1; \
+} \
 for (int row = 0; row < ROWS; row++) { \
   for (int n = 0; n < 360; n++) { \
     for (int col = 1; col <= TABLE_NAME[row][0]; col++) { \
-      ldpc_encode.p[index] = (TABLE_NAME[row][col] + (n * q)) % pbits; \
-      ldpc_encode.d[index] = im; \
-      index++; \
+      int current_pbit = (TABLE_NAME[row][col] + (n * q)) % pbits; \
+      ldpc_lut[current_pbit][ldpc_lut[current_pbit][0]] = im; \
+      ldpc_lut[current_pbit][0]++; \
     } \
     im++; \
   } \
-} 
+}
 
+    /*
+     * fill the lookup table, for each paritybit it contains
+     * {number of infobits, infobit1, infobit2, ... ]
+     * maximum number of infobits is calculated using the entries
+     * in the ldpc tables
+     */
     void
     dvb_ldpc_bb_impl::ldpc_lookup_generate(void)
     {
-      int im;
-      int index;
-      int pbits;
-      int q;
-      index = 0;
-      im = 0;
-
-      pbits = (frame_size_real + Xp) - nbch;    //number of parity bits
-      q = q_val;
+      int im = 0;
+      int pbits = (frame_size_real + Xp) - nbch;    //number of parity bits
+      int q = q_val;
+      int max_lut_arraysize = 0;
 
       if (frame_size_type == FECFRAME_NORMAL) {
         if (code_rate == C1_4) {
@@ -593,7 +614,6 @@ for (int row = 0; row < ROWS; row++) { \
           LDPC_BF(ldpc_tab_1_3M,   30);
         }
       }
-      ldpc_encode.table_length = index;
     }
 
     int
@@ -628,14 +648,20 @@ for (int row = 0; row < ROWS; row++) { \
         }
         // First zero all the parity bits
         memset(p, 0, sizeof(unsigned char) * plen);
-        for (int j = 0; j < (int)nbch; j++) {
-          out[i + j] = in[consumed];
-          consumed++;
-        }
+
+        // copy the information bits
+        memcpy(&out[i], &in[consumed], sizeof(unsigned char)*nbch);
+        consumed += nbch;
+
         // now do the parity checking
-        for (int j = 0; j < ldpc_encode.table_length; j++) {
-          p[ldpc_encode.p[j]] ^= d[ldpc_encode.d[j]];
+        for (int i_p = 0; i_p < plen; i_p++) {
+          unsigned char pbit = 0;
+          for (int i_d = 1; i_d < ldpc_lut[i_p][0]; i_d++) {
+            pbit ^= d[ldpc_lut[i_p][i_d]];
+          }
+          p[i_p] = pbit;
         }
+
         if (P != 0) {
           puncture = 0;
           for (int j = 0; j < plen; j += P) {
