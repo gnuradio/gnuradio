@@ -277,6 +277,7 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
+      // noutput_items is multiple of kbch and kbch is always divisible by 8
       const uint64_t *in = (const uint64_t *) input_items[0];
       uint64_t *out = (uint64_t *) output_items[0];
 
