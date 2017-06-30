@@ -38,10 +38,11 @@ namespace gr {
       int mod;
       int packed_items;
       unsigned char tempu[FRAME_SIZE_NORMAL];
-      unsigned char tempv[FRAME_SIZE_NORMAL];
       int lookup_table[FRAME_SIZE_NORMAL];
 
       void generate_lookup();
+      inline void interleave_parity_bits(int *tempu, const int *&in);
+      inline void twist_interleave_columns(int* tempv, int* tempu, int rows, const int *twist);
 
       const static int twist16n[8];
       const static int twist64n[12];

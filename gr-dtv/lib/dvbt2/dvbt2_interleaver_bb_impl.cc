@@ -149,86 +149,208 @@ namespace gr {
       generate_lookup();
     }
 
-      void
-      dvbt2_interleaver_bb_impl::generate_lookup(){
-        int rows, offset, index;
-        int tempv[FRAME_SIZE_NORMAL];
-        int tempu[FRAME_SIZE_NORMAL];
+    inline void
+    dvbt2_interleaver_bb_impl::interleave_parity_bits(int *tempu, const int *&in)
+    {
+      for (int k = 0; k < nbch; k++) {
+        tempu[k] = *in++;
+      }
+      for (int t = 0; t < q_val; t++) {
+        for (int s = 0; s < 360; s++) {
+          tempu[nbch + (360 * t) + s] = in[(q_val * s) + t];
+        }
+      }
+      in = in + (q_val * 360);
+    }
 
+    inline void
+    dvbt2_interleaver_bb_impl::twist_interleave_columns(int* tempv, int* tempu, int rows, const int *twist)
+    {
+      int index = 0, offset;
+      for (int col = 0; col < (mod * 2); col++) {
+        offset = twist[col];
+        for (int row = 0; row < rows; row++) {
+          tempv[offset + (rows * col)] = tempu[index++];
+          offset++;
+          if (offset == rows) {
+            offset = 0;
+          }
+        }
+      }
+    }
 
-        for(int i=0; i<FRAME_SIZE_NORMAL; i++){
-          lookup_table[i]=i;
+    void
+    dvbt2_interleaver_bb_impl::generate_lookup()
+    {
+      int rows, index = 0;
+      int tempv[FRAME_SIZE_NORMAL];
+      int tempu[FRAME_SIZE_NORMAL];
+      const int *twist;
+      const int *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
+      const int *c9, *c10, *c11, *c12, *c13, *c14, *c15, *c16;
+
+      for(int i=0; i<FRAME_SIZE_NORMAL; i++) {
+        lookup_table[i] = i;
+      }
+
+      const int *in = &lookup_table[0];
+
+      switch (signal_constellation) {
+      //ignore QPSK, not worth it, as there is no column interleaving
+      case MOD_16QAM:
+        rows = frame_size / (mod * 2);
+
+        if (frame_size == FRAME_SIZE_NORMAL) {
+          twist = &twist16n[0];
+        }
+        else {
+          twist = &twist16s[0];
         }
 
-        const int *in = &lookup_table[0];
+        interleave_parity_bits(tempu, in);
 
-        //for now only 256QAM and FRAME_SIZE_NORMAL
-        if(signal_constellation == MOD_256QAM)
-          if (frame_size == FRAME_SIZE_NORMAL) {
+        c1 = &tempv[0];
+        c2 = &tempv[rows];
+        c3 = &tempv[rows * 2];
+        c4 = &tempv[rows * 3];
+        c5 = &tempv[rows * 4];
+        c6 = &tempv[rows * 5];
+        c7 = &tempv[rows * 6];
+        c8 = &tempv[rows * 7];
 
-            rows = frame_size / (mod * 2);
-            const int *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
-            const int *c9, *c10, *c11, *c12, *c13, *c14, *c15, *c16;
-            c1 = &tempv[0];
-            c2 = &tempv[rows];
-            c3 = &tempv[rows * 2];
-            c4 = &tempv[rows * 3];
-            c5 = &tempv[rows * 4];
-            c6 = &tempv[rows * 5];
-            c7 = &tempv[rows * 6];
-            c8 = &tempv[rows * 7];
-            c9 = &tempv[rows * 8];
-            c10 = &tempv[rows * 9];
-            c11 = &tempv[rows * 10];
-            c12 = &tempv[rows * 11];
-            c13 = &tempv[rows * 12];
-            c14 = &tempv[rows * 13];
-            c15 = &tempv[rows * 14];
-            c16 = &tempv[rows * 15];
-            for (int k = 0; k < nbch; k++) {
-              tempu[k] = *in++;
-            }
-            for (int t = 0; t < q_val; t++) {
-              for (int s = 0; s < 360; s++) {
-                tempu[nbch + (360 * t) + s] = in[(q_val * s) + t];
-              }
-            }
-            in = in + (q_val * 360);
-            index = 0;
-            for (int col = 0; col < (mod * 2); col++) {
-              offset = twist256n[col];
-              for (int row = 0; row < rows; row++) {
-                tempv[offset + (rows * col)] = tempu[index++];
-                offset++;
-                if (offset == rows) {
-                  offset = 0;
-                }
-              }
-            }
-            index = 0;
-            for (int j = 0; j < rows; j++) {
-              tempu[index++] = c1[j];
-              tempu[index++] = c2[j];
-              tempu[index++] = c3[j];
-              tempu[index++] = c4[j];
-              tempu[index++] = c5[j];
-              tempu[index++] = c6[j];
-              tempu[index++] = c7[j];
-              tempu[index++] = c8[j];
-              tempu[index++] = c9[j];
-              tempu[index++] = c10[j];
-              tempu[index++] = c11[j];
-              tempu[index++] = c12[j];
-              tempu[index++] = c13[j];
-              tempu[index++] = c14[j];
-              tempu[index++] = c15[j];
-              tempu[index++] = c16[j];
-            }
+        twist_interleave_columns(tempv, tempu, rows, twist);
 
-            memcpy(lookup_table, tempu, FRAME_SIZE_NORMAL*sizeof(int));
+        for (int j = 0; j < rows; j++) {
+          tempu[index++] = c1[j];
+          tempu[index++] = c2[j];
+          tempu[index++] = c3[j];
+          tempu[index++] = c4[j];
+          tempu[index++] = c5[j];
+          tempu[index++] = c6[j];
+          tempu[index++] = c7[j];
+          tempu[index++] = c8[j];
+        }
+        break;
+
+      case MOD_64QAM:
+        rows = frame_size / (mod * 2);
+
+        if (frame_size == FRAME_SIZE_NORMAL) {
+          twist = twist64n;
+        }
+        else {
+          twist = twist64s;
+        }
+
+        interleave_parity_bits(tempu, in);
+
+        c1 = &tempv[0];
+        c2 = &tempv[rows];
+        c3 = &tempv[rows * 2];
+        c4 = &tempv[rows * 3];
+        c5 = &tempv[rows * 4];
+        c6 = &tempv[rows * 5];
+        c7 = &tempv[rows * 6];
+        c8 = &tempv[rows * 7];
+        c9 = &tempv[rows * 8];
+        c10 = &tempv[rows * 9];
+        c11 = &tempv[rows * 10];
+        c12 = &tempv[rows * 11];
+
+        twist_interleave_columns(tempv, tempu, rows, twist);
+
+        for (int j = 0; j < rows; j++) {
+          tempu[index++] = c1[j];
+          tempu[index++] = c2[j];
+          tempu[index++] = c3[j];
+          tempu[index++] = c4[j];
+          tempu[index++] = c5[j];
+          tempu[index++] = c6[j];
+          tempu[index++] = c7[j];
+          tempu[index++] = c8[j];
+          tempu[index++] = c9[j];
+          tempu[index++] = c10[j];
+          tempu[index++] = c11[j];
+          tempu[index++] = c12[j];
+        }
+        break;
+
+      case MOD_256QAM:
+        if (frame_size == FRAME_SIZE_NORMAL) {
+          rows = frame_size / (mod * 2);
+
+          interleave_parity_bits(tempu, in);
+
+          c1 = &tempv[0];
+          c2 = &tempv[rows];
+          c3 = &tempv[rows * 2];
+          c4 = &tempv[rows * 3];
+          c5 = &tempv[rows * 4];
+          c6 = &tempv[rows * 5];
+          c7 = &tempv[rows * 6];
+          c8 = &tempv[rows * 7];
+          c9 = &tempv[rows * 8];
+          c10 = &tempv[rows * 9];
+          c11 = &tempv[rows * 10];
+          c12 = &tempv[rows * 11];
+          c13 = &tempv[rows * 12];
+          c14 = &tempv[rows * 13];
+          c15 = &tempv[rows * 14];
+          c16 = &tempv[rows * 15];
+
+          twist_interleave_columns(tempv, tempu, rows, twist256n);
+
+          for (int j = 0; j < rows; j++) {
+            tempu[index++] = c1[j];
+            tempu[index++] = c2[j];
+            tempu[index++] = c3[j];
+            tempu[index++] = c4[j];
+            tempu[index++] = c5[j];
+            tempu[index++] = c6[j];
+            tempu[index++] = c7[j];
+            tempu[index++] = c8[j];
+            tempu[index++] = c9[j];
+            tempu[index++] = c10[j];
+            tempu[index++] = c11[j];
+            tempu[index++] = c12[j];
+            tempu[index++] = c13[j];
+            tempu[index++] = c14[j];
+            tempu[index++] = c15[j];
+            tempu[index++] = c16[j];
           }
+        }
+        else { //frame_size == FRAME_SIZE_SHORT
+          rows = frame_size / mod;
 
+          interleave_parity_bits(tempu, in);
+
+          c1 = &tempv[0];
+          c2 = &tempv[rows];
+          c3 = &tempv[rows * 2];
+          c4 = &tempv[rows * 3];
+          c5 = &tempv[rows * 4];
+          c6 = &tempv[rows * 5];
+          c7 = &tempv[rows * 6];
+          c8 = &tempv[rows * 7];
+
+          twist_interleave_columns(tempv, tempu, rows, twist256s);
+
+          for (int j = 0; j < rows; j++) {
+            tempu[index++] = c1[j];
+            tempu[index++] = c2[j];
+            tempu[index++] = c3[j];
+            tempu[index++] = c4[j];
+            tempu[index++] = c5[j];
+            tempu[index++] = c6[j];
+            tempu[index++] = c7[j];
+            tempu[index++] = c8[j];
+          }
+        }
       }
+
+      //tempu now has the input indices interleaved correctly, so save it
+      memcpy(lookup_table, tempu, FRAME_SIZE_NORMAL * sizeof(int));
+    }
 
     /*
      * Our virtual destructor.
@@ -255,7 +377,6 @@ namespace gr {
       int produced = 0;
       int rows, offset, index;
       unsigned int pack;
-      const int *twist;
       const int *mux;
 
       switch (signal_constellation) {
@@ -287,13 +408,8 @@ namespace gr {
             }
           }
           break;
+
         case MOD_16QAM:
-          if (frame_size == FRAME_SIZE_NORMAL) {
-            twist = &twist16n[0];
-          }
-          else {
-            twist = &twist16s[0];
-          }
           if (code_rate == C3_5 && frame_size == FRAME_SIZE_NORMAL) {
             mux = &mux16_35[0];
           }
@@ -307,67 +423,22 @@ namespace gr {
             mux = &mux16[0];
           }
           for (int i = 0; i < noutput_items; i += packed_items) {
-            rows = frame_size / (mod * 2);
-            const unsigned char *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
-            c1 = &tempv[0];
-            c2 = &tempv[rows];
-            c3 = &tempv[rows * 2];
-            c4 = &tempv[rows * 3];
-            c5 = &tempv[rows * 4];
-            c6 = &tempv[rows * 5];
-            c7 = &tempv[rows * 6];
-            c8 = &tempv[rows * 7];
-            for (int k = 0; k < nbch; k++) {
-              tempu[k] = *in++;
-            }
-            for (int t = 0; t < q_val; t++) {
-              for (int s = 0; s < 360; s++) {
-                tempu[nbch + (360 * t) + s] = in[(q_val * s) + t];
-              }
-            }
-            in = in + (q_val * 360);
-            index = 0;
-            for (int col = 0; col < (mod * 2); col++) {
-              offset = twist[col];
-              for (int row = 0; row < rows; row++) {
-                tempv[offset + (rows * col)] = tempu[index++];
-                offset++;
-                if (offset == rows) {
-                  offset = 0;
-                }
-              }
-            }
-            index = 0;
-            for (int j = 0; j < rows; j++) {
-              tempu[index++] = c1[j];
-              tempu[index++] = c2[j];
-              tempu[index++] = c3[j];
-              tempu[index++] = c4[j];
-              tempu[index++] = c5[j];
-              tempu[index++] = c6[j];
-              tempu[index++] = c7[j];
-              tempu[index++] = c8[j];
-            }
             index = 0;
             for (int d = 0; d < frame_size / (mod * 2); d++) {
               pack = 0;
               for (int e = 0; e < (mod * 2); e++) {
                 offset = mux[e];
-                pack |= tempu[index++] << (((mod * 2) - 1) - offset);
+                pack |= in[lookup_table[index++]] << (((mod * 2) - 1) - offset);
               }
               out[produced++] = pack >> 4;
               out[produced++] = pack & 0xf;
-              consumed += (mod * 2);
             }
+            consumed += frame_size;
+            in += frame_size;
           }
           break;
+
         case MOD_64QAM:
-          if (frame_size == FRAME_SIZE_NORMAL) {
-            twist = &twist64n[0];
-          }
-          else {
-            twist = &twist64s[0];
-          }
           if (code_rate == C3_5 && frame_size == FRAME_SIZE_NORMAL) {
             mux = &mux64_35[0];
           }
@@ -381,126 +452,25 @@ namespace gr {
             mux = &mux64[0];
           }
           for (int i = 0; i < noutput_items; i += packed_items) {
-            rows = frame_size / (mod * 2);
-            const unsigned char *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8, *c9, *c10, *c11, *c12;
-            c1 = &tempv[0];
-            c2 = &tempv[rows];
-            c3 = &tempv[rows * 2];
-            c4 = &tempv[rows * 3];
-            c5 = &tempv[rows * 4];
-            c6 = &tempv[rows * 5];
-            c7 = &tempv[rows * 6];
-            c8 = &tempv[rows * 7];
-            c9 = &tempv[rows * 8];
-            c10 = &tempv[rows * 9];
-            c11 = &tempv[rows * 10];
-            c12 = &tempv[rows * 11];
-            for (int k = 0; k < nbch; k++) {
-              tempu[k] = *in++;
-            }
-            for (int t = 0; t < q_val; t++) {
-              for (int s = 0; s < 360; s++) {
-                tempu[nbch + (360 * t) + s] = in[(q_val * s) + t];
-              }
-            }
-            in = in + (q_val * 360);
-            index = 0;
-            for (int col = 0; col < (mod * 2); col++) {
-              offset = twist[col];
-              for (int row = 0; row < rows; row++) {
-                tempv[offset + (rows * col)] = tempu[index++];
-                offset++;
-                if (offset == rows) {
-                  offset = 0;
-                }
-              }
-            }
-            index = 0;
-            for (int j = 0; j < rows; j++) {
-              tempu[index++] = c1[j];
-              tempu[index++] = c2[j];
-              tempu[index++] = c3[j];
-              tempu[index++] = c4[j];
-              tempu[index++] = c5[j];
-              tempu[index++] = c6[j];
-              tempu[index++] = c7[j];
-              tempu[index++] = c8[j];
-              tempu[index++] = c9[j];
-              tempu[index++] = c10[j];
-              tempu[index++] = c11[j];
-              tempu[index++] = c12[j];
-            }
             index = 0;
             for (int d = 0; d < frame_size / (mod * 2); d++) {
               pack = 0;
               for (int e = 0; e < (mod * 2); e++) {
                 offset = mux[e];
-                pack |= tempu[index++] << (((mod * 2) - 1) - offset);
+                pack |= in[lookup_table[index++]] << (((mod * 2) - 1) - offset);
               }
               out[produced++] = pack >> 6;
               out[produced++] = pack & 0x3f;
-              consumed += (mod * 2);
             }
+            consumed += frame_size;
+            in += frame_size;
           }
           break;
 
-
-
         case MOD_256QAM:
           if (frame_size == FRAME_SIZE_NORMAL) {
-
-            //////////////////////////////////////////////////////////////////////////
-            //very fast optimization only for C3_5 code for now
-            //hard coded mapping and loop unrolling
-            //////////////////////////////////////////////////////////////////////////
             if (code_rate == C3_5) {
-                for (int i = 0; i < noutput_items; i += packed_items) {
-                    index = 0;
-                    unsigned char tmp1, tmp2, tmp3, tmp4;
-                    for (int d = 0; d< FRAME_SIZE_NORMAL / (8*2)/2 ; d++)  {
-                        tmp1=0, tmp2=0, tmp3=0, tmp4=0;
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[0]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[1]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[2]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[3]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[4]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[5]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[6]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[7]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[8]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[9]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[10]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[11]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[12]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[13]);
-                        tmp2 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[14]);
-                        tmp1 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[15]);
-                        out[produced++] = tmp2;
-                        out[produced++] = tmp1;
-
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[0]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[1]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[2]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[3]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[4]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[5]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[6]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[7]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[8]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[9]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[10]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[11]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[12]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[13]);
-                        tmp4 |= in[lookup_table[index++]] << (((8 * 2) - 1-8) - mux256_35[14]);
-                        tmp3 |= in[lookup_table[index++]] << (((8 * 2) - 1) -   mux256_35[15]);
-                        out[produced++] = tmp4;
-                        out[produced++] = tmp3;
-                    }
-                    consumed += frame_size;
-                    in+=frame_size;
-                }
-                break;
+              mux = &mux256_35[0];
             }
             else if (code_rate == C2_3) {
               mux = &mux256_23[0];
@@ -509,43 +479,22 @@ namespace gr {
               mux = &mux256[0];
             }
             for (int i = 0; i < noutput_items; i += packed_items) {
-
-              for (int j = 0; j < FRAME_SIZE_NORMAL; j++) {
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-                  j++;
-                  tempu[j] = in[lookup_table[j]];
-              }
-                in += FRAME_SIZE_NORMAL;
-
               index = 0;
               for (int d = 0; d < frame_size / (mod * 2); d++) {
                 pack = 0;
                 for (int e = 0; e < (mod * 2); e++) {
                   offset = mux[e];
-                  pack |= tempu[index++] << (((mod * 2) - 1) - offset);
+                  pack |= in[lookup_table[index++]] << (((mod * 2) - 1) - offset);
                 }
                 out[produced++] = pack >> 8;
                 out[produced++] = pack & 0xff;
-                consumed += (mod * 2);
               }
+              consumed += frame_size;
+              in += frame_size;
             }
           }
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-          else {
+          else { //frame_size = FRAME_SIZE_SHORT
             if (code_rate == C1_3) {
               mux = &mux256s_13[0];
             }
@@ -556,57 +505,17 @@ namespace gr {
               mux = &mux256s[0];
             }
             for (int i = 0; i < noutput_items; i += packed_items) {
-              rows = frame_size / mod;
-              const unsigned char *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
-              c1 = &tempv[0];
-              c2 = &tempv[rows];
-              c3 = &tempv[rows * 2];
-              c4 = &tempv[rows * 3];
-              c5 = &tempv[rows * 4];
-              c6 = &tempv[rows * 5];
-              c7 = &tempv[rows * 6];
-              c8 = &tempv[rows * 7];
-              for (int k = 0; k < nbch; k++) {
-                tempu[k] = *in++;
-              }
-              for (int t = 0; t < q_val; t++) {
-                for (int s = 0; s < 360; s++) {
-                  tempu[nbch + (360 * t) + s] = in[(q_val * s) + t];
-                }
-              }
-              in = in + (q_val * 360);
-              index = 0;
-              for (int col = 0; col < mod; col++) {
-                offset = twist256s[col];
-                for (int row = 0; row < rows; row++) {
-                  tempv[offset + (rows * col)] = tempu[index++];
-                  offset++;
-                  if (offset == rows) {
-                    offset = 0;
-                  }
-                }
-              }
-              index = 0;
-              for (int j = 0; j < rows; j++) {
-                tempu[index++] = c1[j];
-                tempu[index++] = c2[j];
-                tempu[index++] = c3[j];
-                tempu[index++] = c4[j];
-                tempu[index++] = c5[j];
-                tempu[index++] = c6[j];
-                tempu[index++] = c7[j];
-                tempu[index++] = c8[j];
-              }
               index = 0;
               for (int d = 0; d < frame_size / mod; d++) {
                 pack = 0;
                 for (int e = 0; e < mod; e++) {
                   offset = mux[e];
-                  pack |= tempu[index++] << ((mod - 1) - offset);
+                  pack |= in[lookup_table[index++]] << ((mod - 1) - offset);
                 }
                 out[produced++] = pack & 0xff;
-                consumed += mod;
               }
+              consumed += frame_size;
+              in += frame_size;
             }
           }
           break;
@@ -695,7 +604,7 @@ namespace gr {
       4, 0, 1, 6, 2, 3, 5, 8, 7, 10, 9, 11
     };
 
-    constexpr int dvbt2_interleaver_bb_impl::mux256_35[16] =
+    const int dvbt2_interleaver_bb_impl::mux256_35[16] =
     {
       2, 11, 3, 4, 0, 9, 1, 8, 10, 13, 7, 14, 6, 15, 5, 12
     };
