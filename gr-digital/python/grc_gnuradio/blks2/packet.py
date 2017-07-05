@@ -54,7 +54,6 @@ class _packet_encoder_thread(_threading.Thread):
         self.start()
 
     def run(self):
-        count = 0
         while self.keep_running:
             sample = ''  # residual sample
             msg = self._msgq.delete_head() #blocking read of message queue
@@ -64,12 +63,11 @@ class _packet_encoder_thread(_threading.Thread):
                 payload = sample[:self._payload_length]
                 sample = sample[self._payload_length:]
 
-                print "payload length: ", len(payload), " sample length: ", len(sample)
+                #check if sample has remaining data to transmit that is shorter than the payload length
                 if len(sample) > 0 and len(sample) < self._payload_length:
-                    print "adding padding"
+                    #arbitrary padding to satisfy send on next loop for payload less than _payload_length
                     padding = ('x' * (self._payload_length - len(sample)))
                     sample = sample + padding
-                    print "new sample length: ", len(sample)
 
                 self._send(payload)
 
