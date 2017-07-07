@@ -41,10 +41,13 @@ namespace gr {
 	(new costas_loop_cc_impl(loop_bw, order, use_snr));
     }
 
+    static int ios[] = { sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float) };
+    static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
+
     costas_loop_cc_impl::costas_loop_cc_impl(float loop_bw, int order, bool use_snr)
       : sync_block("costas_loop_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
-                   io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float))),
+                   io_signature::makev(1, 4, iosig)),
 	blocks::control_loop(loop_bw, 1.0, -1.0),
 	d_order(order), d_error(0), d_noise(1.0), d_phase_detector(NULL)
     {
@@ -180,9 +183,9 @@ namespace gr {
     {
       const gr_complex *iptr = (gr_complex *) input_items[0];
       gr_complex *optr = (gr_complex *) output_items[0];
-      float *foptr = (float *) output_items[1];
-
-      bool write_foptr = output_items.size() >= 2;
+      float *freq_optr  = output_items.size() >= 2 ? (float *) output_items[1] : NULL;
+      float *phase_optr = output_items.size() >= 3 ? (float *) output_items[2] : NULL;
+      float *error_optr = output_items.size() >= 4 ? (float *) output_items[3] : NULL;
 
       gr_complex nco_out;
 
@@ -191,47 +194,30 @@ namespace gr {
                         nitems_read(0)+noutput_items,
                         pmt::intern("phase_est"));
 
-      if(write_foptr) {
-        for(int i = 0; i < noutput_items; i++) {
-          if(tags.size() > 0) {
-            if(tags[0].offset-nitems_read(0) == (size_t)i) {
-              d_phase = (float)pmt::to_double(tags[0].value);
-              tags.erase(tags.begin());
-            }
+      for(int i = 0; i < noutput_items; i++) {
+        if(tags.size() > 0) {
+          if(tags[0].offset-nitems_read(0) == (size_t)i) {
+            d_phase = (float)pmt::to_double(tags[0].value);
+            tags.erase(tags.begin());
           }
-
-          nco_out = gr_expj(-d_phase);
-          optr[i] = iptr[i] * nco_out;
-
-          d_error = (*this.*d_phase_detector)(optr[i]);
-          d_error = gr::branchless_clip(d_error, 1.0);
-
-          advance_loop(d_error);
-          phase_wrap();
-          frequency_limit();
-
-          foptr[i] = d_freq;
         }
-      }
-      else {
-        for(int i = 0; i < noutput_items; i++) {
-          if(tags.size() > 0) {
-            if(tags[0].offset-nitems_read(0) == (size_t)i) {
-              d_phase = (float)pmt::to_double(tags[0].value);
-              tags.erase(tags.begin());
-            }
-          }
 
-          nco_out = gr_expj(-d_phase);
-          optr[i] = iptr[i] * nco_out;
+        nco_out = gr_expj(-d_phase);
+        optr[i] = iptr[i] * nco_out;
 
-          d_error = (*this.*d_phase_detector)(optr[i]);
-          d_error = gr::branchless_clip(d_error, 1.0);
+        d_error = (*this.*d_phase_detector)(optr[i]);
+        d_error = gr::branchless_clip(d_error, 1.0);
 
-          advance_loop(d_error);
-          phase_wrap();
-          frequency_limit();
-        }
+        advance_loop(d_error);
+        phase_wrap();
+        frequency_limit();
+
+        if (freq_optr != NULL)
+          freq_optr[i] = d_freq;
+        if (phase_optr != NULL)
+          phase_optr[i] = d_phase;
+        if (error_optr != NULL)
+          error_optr[i] = d_error;
       }
 
       return noutput_items;

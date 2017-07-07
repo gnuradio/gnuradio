@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ namespace gr {
     class catv_randomizer_bb_impl : public catv_randomizer_bb
     {
      private:
-      unsigned char rseq[60 * 128];
+      unsigned char rseq[88 * 128];
       int offset, max_offset;
       void init_rand();
 
      public:
-      catv_randomizer_bb_impl();
+      catv_randomizer_bb_impl(catv_constellation_t constellation);
       ~catv_randomizer_bb_impl();
 
       int work(int noutput_items,

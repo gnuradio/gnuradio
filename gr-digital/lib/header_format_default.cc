@@ -34,16 +34,16 @@ namespace gr {
 
     header_format_default::sptr
     header_format_default::make(const std::string &access_code,
-                                int threshold)
+                                int threshold, int bps)
     {
       return header_format_default::sptr
-        (new header_format_default(access_code, threshold));
+       (new header_format_default(access_code, threshold, bps));
     }
 
     header_format_default::header_format_default(const std::string &access_code,
-                                                 int threshold)
+                                                 int threshold, int bps)
       : header_format_base(),
-        d_data_reg(0), d_mask(0), d_threshold(0),
+        d_bps(bps), d_data_reg(0), d_mask(0), d_threshold(0),
         d_pkt_len(0), d_pkt_count(0), d_nbits(0)
     {
       if(!set_access_code(access_code)) {
@@ -214,7 +214,7 @@ namespace gr {
 
       d_info = pmt::make_dict();
       d_info = pmt::dict_add(d_info, pmt::intern("payload symbols"),
-                             pmt::from_long(8*len));
+                             pmt::from_long(8*len / d_bps));
       return static_cast<int>(len);
     }
 

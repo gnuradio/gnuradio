@@ -47,6 +47,21 @@ namespace gr {
        * \param propagate_tags Set this to true to allow tags to pass through this block.
        */
       static sptr make(size_t item_size, bool propagate_tags=false);
+
+      /*!
+       * \brief Only gate stream tags with one specific key instead of all keys
+       *
+       * \details
+       * If set to "", all tags will be affected by the gate.
+       * If set to "foo", all tags with key different from "foo" will pass
+       * through.
+       */
+      virtual void set_single_key(const std::string &single_key)=0;
+
+      /*!
+       * \brief Get the current single key.
+      */
+      virtual std::string single_key() const = 0;
     };
 
   } // namespace blocks

@@ -51,7 +51,7 @@ $constellation.val, $interpolation.val)</make>
     <name>Code rate</name>
     <key>rate1</key>
     <type>enum</type>
-    <hide>#if str($constellation) == 'MOD_8VSB' or str($constellation) == 'MOD_64QAM' then $constellation.hide_dvb else $framesize.hide_normal</hide>
+    <hide>#if str($constellation) == 'MOD_8VSB' or str($constellation) == 'MOD_64QAM' or str($constellation) == 'MOD_256QAM' then $constellation.hide_dvb else $framesize.hide_normal</hide>
     <option>
       <name>1/4</name>
       <key>C1_4</key>
@@ -232,7 +232,7 @@ $constellation.val, $interpolation.val)</make>
     <name>Code rate</name>
     <key>rate2</key>
     <type>enum</type>
-    <hide>#if str($constellation) == 'MOD_8VSB' or str($constellation) == 'MOD_64QAM' then $constellation.hide_dvb else $framesize.hide_medium</hide>
+    <hide>#if str($constellation) == 'MOD_8VSB' or str($constellation) == 'MOD_64QAM' or str($constellation) == 'MOD_256QAM' then $constellation.hide_dvb else $framesize.hide_medium</hide>
     <option>
       <name>1/5</name>
       <key>C1_5_MEDIUM</key>
@@ -253,7 +253,7 @@ $constellation.val, $interpolation.val)</make>
     <name>Code rate</name>
     <key>rate3</key>
     <type>enum</type>
-    <hide>#if str($constellation) == 'MOD_8VSB' or str($constellation) == 'MOD_64QAM' then $constellation.hide_dvb else $framesize.hide_short</hide>
+    <hide>#if str($constellation) == 'MOD_8VSB' or str($constellation) == 'MOD_64QAM' or str($constellation) == 'MOD_256QAM' then $constellation.hide_dvb else $framesize.hide_short</hide>
     <option>
       <name>1/4</name>
       <key>C1_4</key>
@@ -451,6 +451,12 @@ $constellation.val, $interpolation.val)</make>
       <name>64QAM (ITU-T J.83B)</name>
       <key>MOD_64QAM</key>
       <opt>val:dtv.MOD_64QAM</opt>
+      <opt>hide_dvb:all</opt>
+    </option>
+    <option>
+      <name>256QAM (ITU-T J.83B)</name>
+      <key>MOD_256QAM</key>
+      <opt>val:dtv.MOD_256QAM</opt>
       <opt>hide_dvb:all</opt>
     </option>
     <option>

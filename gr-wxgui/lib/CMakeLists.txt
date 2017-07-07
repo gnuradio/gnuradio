@@ -64,7 +64,6 @@ list(APPEND wxgui_libs
     gnuradio-runtime
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${BLOCKS_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
 )
 
