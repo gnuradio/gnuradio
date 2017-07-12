@@ -89,10 +89,7 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/wavelet)
-#    add_subdirectory(grc)
 endif(ENABLE_PYTHON)
-#add_subdirectory(examples)
-#add_subdirectory(doc)
 
 ########################################################################
 # Create Pkg Config File

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015-2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +46,9 @@ namespace gr {
       L1Pre *l1preinit = &L1_Signalling[0].l1pre_data;
       L1Post *l1postinit = &L1_Signalling[0].l1post_data;
       double normalization;
+      double m_16qam_lookup[4] = {3.0, 1.0, -3.0, -1.0};
+      double m_64qam_lookup[8] = {7.0, 5.0, 1.0, 3.0, -7.0, -5.0, -1.0, -3.0};
+      int real_index, imag_index;
       int N_punc_temp, N_post_temp;
       if (framesize == FECFRAME_NORMAL) {
         switch (constellation) {
@@ -244,90 +247,20 @@ namespace gr {
           break;
         case L1_MOD_16QAM:
           normalization = sqrt(10);
-          m_16qam[0] = gr_complex( 3.0 / normalization,  3.0 / normalization);
-          m_16qam[1] = gr_complex( 3.0 / normalization,  1.0 / normalization);
-          m_16qam[2] = gr_complex( 1.0 / normalization,  3.0 / normalization);
-          m_16qam[3] = gr_complex( 1.0 / normalization,  1.0 / normalization);
-          m_16qam[4] = gr_complex( 3.0 / normalization, -3.0 / normalization);
-          m_16qam[5] = gr_complex( 3.0 / normalization, -1.0 / normalization);
-          m_16qam[6] = gr_complex( 1.0 / normalization, -3.0 / normalization);
-          m_16qam[7] = gr_complex( 1.0 / normalization, -1.0 / normalization);
-          m_16qam[8] = gr_complex(-3.0 / normalization,  3.0 / normalization);
-          m_16qam[9] = gr_complex(-3.0 / normalization,  1.0 / normalization);
-          m_16qam[10] = gr_complex(-1.0 / normalization,  3.0 / normalization);
-          m_16qam[11] = gr_complex(-1.0 / normalization,  1.0 / normalization);
-          m_16qam[12] = gr_complex(-3.0 / normalization, -3.0 / normalization);
-          m_16qam[13] = gr_complex(-3.0 / normalization, -1.0 / normalization);
-          m_16qam[14] = gr_complex(-1.0 / normalization, -3.0 / normalization);
-          m_16qam[15] = gr_complex(-1.0 / normalization, -1.0 / normalization);
+          for (int i = 0; i < 16; i++) {
+            real_index = ((i & 0x8) >> 2) | ((i & 0x2) >> 1);
+            imag_index = ((i & 0x4) >> 1) | ((i & 0x1) >> 0);
+            m_16qam[i] = gr_complex(m_16qam_lookup[real_index] / normalization, m_16qam_lookup[imag_index] / normalization);
+          }
           eta_mod = 4;
           break;
         case L1_MOD_64QAM:
           normalization = sqrt(42);
-          m_64qam[0] = gr_complex(  7.0 / normalization,   7.0 / normalization);
-          m_64qam[1] = gr_complex(  7.0 / normalization,   5.0 / normalization);
-          m_64qam[2] = gr_complex(  5.0 / normalization,   7.0 / normalization);
-          m_64qam[3] = gr_complex(  5.0 / normalization,   5.0 / normalization);
-          m_64qam[4] = gr_complex(  7.0 / normalization,   1.0 / normalization);
-          m_64qam[5] = gr_complex(  7.0 / normalization,   3.0 / normalization);
-          m_64qam[6] = gr_complex(  5.0 / normalization,   1.0 / normalization);
-          m_64qam[7] = gr_complex(  5.0 / normalization,   3.0 / normalization);
-          m_64qam[8] = gr_complex(  1.0 / normalization,   7.0 / normalization);
-          m_64qam[9] = gr_complex(  1.0 / normalization,   5.0 / normalization);
-          m_64qam[10] = gr_complex( 3.0 / normalization,  7.0 / normalization);
-          m_64qam[11] = gr_complex( 3.0 / normalization,  5.0 / normalization);
-          m_64qam[12] = gr_complex( 1.0 / normalization,  1.0 / normalization);
-          m_64qam[13] = gr_complex( 1.0 / normalization,  3.0 / normalization);
-          m_64qam[14] = gr_complex( 3.0 / normalization,  1.0 / normalization);
-          m_64qam[15] = gr_complex( 3.0 / normalization,  3.0 / normalization);
-          m_64qam[16] = gr_complex( 7.0 / normalization, -7.0 / normalization);
-          m_64qam[17] = gr_complex( 7.0 / normalization, -5.0 / normalization);
-          m_64qam[18] = gr_complex( 5.0 / normalization, -7.0 / normalization);
-          m_64qam[19] = gr_complex( 5.0 / normalization, -5.0 / normalization);
-          m_64qam[20] = gr_complex( 7.0 / normalization, -1.0 / normalization);
-          m_64qam[21] = gr_complex( 7.0 / normalization, -3.0 / normalization);
-          m_64qam[22] = gr_complex( 5.0 / normalization, -1.0 / normalization);
-          m_64qam[23] = gr_complex( 5.0 / normalization, -3.0 / normalization);
-          m_64qam[24] = gr_complex( 1.0 / normalization, -7.0 / normalization);
-          m_64qam[25] = gr_complex( 1.0 / normalization, -5.0 / normalization);
-          m_64qam[26] = gr_complex( 3.0 / normalization, -7.0 / normalization);
-          m_64qam[27] = gr_complex( 3.0 / normalization, -5.0 / normalization);
-          m_64qam[28] = gr_complex( 1.0 / normalization, -1.0 / normalization);
-          m_64qam[29] = gr_complex( 1.0 / normalization, -3.0 / normalization);
-          m_64qam[30] = gr_complex( 3.0 / normalization, -1.0 / normalization);
-          m_64qam[31] = gr_complex( 3.0 / normalization, -3.0 / normalization);
-          m_64qam[32] = gr_complex(-7.0 / normalization,  7.0 / normalization);
-          m_64qam[33] = gr_complex(-7.0 / normalization,  5.0 / normalization);
-          m_64qam[34] = gr_complex(-5.0 / normalization,  7.0 / normalization);
-          m_64qam[35] = gr_complex(-5.0 / normalization,  5.0 / normalization);
-          m_64qam[36] = gr_complex(-7.0 / normalization,  1.0 / normalization);
-          m_64qam[37] = gr_complex(-7.0 / normalization,  3.0 / normalization);
-          m_64qam[38] = gr_complex(-5.0 / normalization,  1.0 / normalization);
-          m_64qam[39] = gr_complex(-5.0 / normalization,  3.0 / normalization);
-          m_64qam[40] = gr_complex(-1.0 / normalization,  7.0 / normalization);
-          m_64qam[41] = gr_complex(-1.0 / normalization,  5.0 / normalization);
-          m_64qam[42] = gr_complex(-3.0 / normalization,  7.0 / normalization);
-          m_64qam[43] = gr_complex(-3.0 / normalization,  5.0 / normalization);
-          m_64qam[44] = gr_complex(-1.0 / normalization,  1.0 / normalization);
-          m_64qam[45] = gr_complex(-1.0 / normalization,  3.0 / normalization);
-          m_64qam[46] = gr_complex(-3.0 / normalization,  1.0 / normalization);
-          m_64qam[47] = gr_complex(-3.0 / normalization,  3.0 / normalization);
-          m_64qam[48] = gr_complex(-7.0 / normalization, -7.0 / normalization);
-          m_64qam[49] = gr_complex(-7.0 / normalization, -5.0 / normalization);
-          m_64qam[50] = gr_complex(-5.0 / normalization, -7.0 / normalization);
-          m_64qam[51] = gr_complex(-5.0 / normalization, -5.0 / normalization);
-          m_64qam[52] = gr_complex(-7.0 / normalization, -1.0 / normalization);
-          m_64qam[53] = gr_complex(-7.0 / normalization, -3.0 / normalization);
-          m_64qam[54] = gr_complex(-5.0 / normalization, -1.0 / normalization);
-          m_64qam[55] = gr_complex(-5.0 / normalization, -3.0 / normalization);
-          m_64qam[56] = gr_complex(-1.0 / normalization, -7.0 / normalization);
-          m_64qam[57] = gr_complex(-1.0 / normalization, -5.0 / normalization);
-          m_64qam[58] = gr_complex(-3.0 / normalization, -7.0 / normalization);
-          m_64qam[59] = gr_complex(-3.0 / normalization, -5.0 / normalization);
-          m_64qam[60] = gr_complex(-1.0 / normalization, -1.0 / normalization);
-          m_64qam[61] = gr_complex(-1.0 / normalization, -3.0 / normalization);
-          m_64qam[62] = gr_complex(-3.0 / normalization, -1.0 / normalization);
-          m_64qam[63] = gr_complex(-3.0 / normalization, -3.0 / normalization);
+          for (int i = 0; i < 64; i++) {
+            real_index = ((i & 0x20) >> 3) | ((i & 0x8) >> 2) | ((i & 0x2) >> 1);
+            imag_index = ((i & 0x10) >> 2) | ((i & 0x4) >> 1) | ((i & 0x1) >> 0);
+            m_64qam[i] = gr_complex(m_64qam_lookup[real_index] / normalization, m_64qam_lookup[imag_index] / normalization);
+          }
           eta_mod = 6;
           break;
       }

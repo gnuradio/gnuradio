@@ -131,6 +131,7 @@ class ActionHandler:
             for action in (
                 Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
                 Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
+                Actions.FLOW_GRAPH_DUPLICATE, Actions.FLOW_GRAPH_SAVE_A_COPY,
                 Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
                 Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
                 Actions.TYPES_WINDOW_DISPLAY, Actions.TOGGLE_BLOCKS_WINDOW,
@@ -561,6 +562,32 @@ class ActionHandler:
                 Preferences.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
                 main.menu_bar.refresh_submenus()
+        elif action == Actions.FLOW_GRAPH_SAVE_A_COPY:
+            try:
+                if not page.get_file_path():
+                    Actions.FLOW_GRAPH_SAVE_AS()
+                else:
+                    dup_file_path = page.get_file_path()
+                    dup_file_name = '.'.join(dup_file_path.split('.')[:-1]) + "_copy" # Assuming .grc extension at the end of file_path
+                    dup_file_path_temp = dup_file_name+'.grc'
+                    count = 1
+                    while os.path.exists(dup_file_path_temp):
+                        dup_file_path_temp = dup_file_name+'('+str(count)+').grc'
+                        count += 1
+                    dup_file_path_user = SaveFlowGraphFileDialog(dup_file_path_temp).run()
+                    if dup_file_path_user is not None:
+                        ParseXML.to_file(flow_graph.export_data(), dup_file_path_user)
+                        Messages.send('Saved Copy to: "' + dup_file_path_user + '"\n')
+            except IOError:
+                Messages.send_fail_save("Can not create a copy of the flowgraph\n")
+        elif action == Actions.FLOW_GRAPH_DUPLICATE:
+            flow_graph = main.get_flow_graph()
+            main.new_page()
+            curr_page = main.get_page()
+            new_flow_graph = main.get_flow_graph()
+            new_flow_graph.import_data(flow_graph.export_data())
+            flow_graph_update(new_flow_graph)
+            curr_page.set_saved(False)
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
             file_path, background_transparent = SaveScreenShotDialog(page.get_file_path()).run()
             if file_path is not None:

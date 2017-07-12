@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015-2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,10 @@
 #include <gnuradio/io_signature.h>
 #include "dvbt2_paprtr_cc_impl.h"
 #include <volk/volk.h>
+
+/* An early exit from the iteration loop is a very effective optimization */
+/* Change this line to #undef for validation testing with BBC V&V streams */
+#define EARLY_EXIT
 
 namespace gr {
   namespace dtv {
@@ -758,9 +762,15 @@ namespace gr {
                     m = n;
                   }
                 }
+#ifdef EARLY_EXIT
                 if (y < v_clip + 0.01) {
                   break;
                 }
+#else
+                if (y < v_clip) {
+                  break;
+                }
+#endif
                 u = (in[m] + c[m]) / y;
                 alpha = y - v_clip;
                 for (int n = 0; n < N_TR; n++) {

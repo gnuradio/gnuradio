@@ -155,6 +155,7 @@ macro(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   endif(HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
 
   get_directory_property(cmake_include_directories INCLUDE_DIRECTORIES)
+  list(REMOVE_DUPLICATES cmake_include_directories)
   set(swig_include_dirs)
   foreach(it ${cmake_include_directories})
     set(swig_include_dirs ${swig_include_dirs} "-I${it}")
@@ -224,9 +225,9 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
   foreach(swig_gen_file ${${outfiles}})
     add_custom_command(
       OUTPUT ${swig_gen_file}
-      COMMAND
+      COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${swig_gen_file}"
       DEPENDS ${_target}
-      COMMENT
+      COMMENT "dummy command to show ${_target} dependency of ${swig_gen_file}"
     )
   endforeach()
 

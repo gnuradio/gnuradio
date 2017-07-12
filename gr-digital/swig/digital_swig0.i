@@ -46,6 +46,7 @@
 #include "gnuradio/digital/corr_est_cc.h"
 #include "gnuradio/digital/correlate_access_code_bb.h"
 #include "gnuradio/digital/correlate_access_code_tag_bb.h"
+#include "gnuradio/digital/correlate_access_code_tag_ff.h"
 #include "gnuradio/digital/correlate_access_code_bb_ts.h"
 #include "gnuradio/digital/correlate_access_code_ff_ts.h"
 #include "gnuradio/digital/correlate_and_sync_cc.h"
@@ -81,6 +82,7 @@
 %include "gnuradio/digital/corr_est_cc.h"
 %include "gnuradio/digital/correlate_access_code_bb.h"
 %include "gnuradio/digital/correlate_access_code_tag_bb.h"
+%include "gnuradio/digital/correlate_access_code_tag_ff.h"
 %include "gnuradio/digital/correlate_access_code_bb_ts.h"
 %include "gnuradio/digital/correlate_access_code_ff_ts.h"
 %include "gnuradio/digital/correlate_and_sync_cc.h"
@@ -114,6 +116,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, constellation_soft_decoder_cf);
 GR_SWIG_BLOCK_MAGIC2(digital, corr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
+GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb_ts);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_ff_ts);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_and_sync_cc);

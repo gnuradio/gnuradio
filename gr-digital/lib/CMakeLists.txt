@@ -29,12 +29,10 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
-link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
@@ -64,6 +62,7 @@ list(APPEND digital_sources
     corr_est_cc_impl.cc
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
+    correlate_access_code_tag_ff_impl.cc
     correlate_access_code_bb_ts_impl.cc
     correlate_access_code_ff_ts_impl.cc
     correlate_and_sync_cc_impl.cc
@@ -151,7 +150,6 @@ list(APPEND digital_libs
     gnuradio-analog
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-digital SHARED ${digital_sources})
@@ -228,7 +226,6 @@ if(ENABLE_TESTING)
     gnuradio-digital
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
   )
 
   GR_ADD_TEST(test_gr_digital test-gr-digital)

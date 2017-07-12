@@ -27,6 +27,7 @@
 #include "correlate_access_code_ff_ts_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 #include <volk/volk.h>
 #include <cstdio>
@@ -34,8 +35,6 @@
 
 namespace gr {
   namespace digital {
-
-#define VERBOSE 0
 
     correlate_access_code_ff_ts::sptr
     correlate_access_code_ff_ts::make(const std::string &access_code,
@@ -58,6 +57,7 @@ namespace gr {
       set_tag_propagation_policy(TPP_DONT);
 
       if(!set_access_code(access_code)) {
+	GR_LOG_ERROR(d_logger, "access_code is > 64 bits");
 	throw std::out_of_range ("access_code is > 64 bits");
       }
 
@@ -91,10 +91,9 @@ namespace gr {
       for(unsigned i=0; i < d_len; i++){
         d_access_code = (d_access_code << 1) | (access_code[i] & 1);
       }
-      if(VERBOSE) {
-          std::cerr << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
-          std::cerr << "Mask: " << std::hex << d_mask << std::dec << std::endl;
-      }
+
+      GR_LOG_DEBUG(d_logger, boost::format("Access code: %llx") % d_access_code);
+      GR_LOG_DEBUG(d_logger, boost::format("Mask: %llx") % d_mask);
 
       return true;
     }

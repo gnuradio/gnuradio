@@ -43,6 +43,7 @@ GR_SET_GLOBAL(GNURADIO_RUNTIME_INCLUDE_DIRS
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/gnuradio-runtime/include
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/include
+    ${LOG4CPP_INCLUDE_DIRS}
 )
 
 GR_SET_GLOBAL(GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS
@@ -61,16 +62,6 @@ GR_SET_GLOBAL(GNURADIO_RUNTIME_PYTHONPATH ${GNURADIO_RUNTIME_PYTHONPATH})
 ########################################################################
 
 FIND_PACKAGE(SWIG)
-
-if(SWIG_FOUND)
-  set(SWIG_VERSION_CHECK FALSE)
-  if("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
-    set(SWIG_VERSION_CHECK TRUE)
-  else("${SWIG_VERSION}" VERSION_GREATER "2.0.0")
-    message(STATUS "")
-    message(STATUS "Ctrlport requires SWIG version >= 2.0")
-  endif()
-endif(SWIG_FOUND)
 
 GR_REGISTER_COMPONENT("gr-ctrlport" ENABLE_GR_CTRLPORT
   Boost_FOUND
@@ -148,11 +139,9 @@ endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(apps)
-#add_subdirectory(doc)
 if(ENABLE_PYTHON)
      add_subdirectory(swig)
      add_subdirectory(python)
-#    add_subdirectory(grc)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)
 

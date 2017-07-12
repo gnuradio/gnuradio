@@ -112,7 +112,6 @@ namespace gr {
 
     protected:
       uint16_t d_counter;    //!< keeps track of the number of packets transmitted
-      uint16_t d_bps;        //!< bits/sec of payload modulation
 
       //! Verify that the header is valid
       bool header_ok();

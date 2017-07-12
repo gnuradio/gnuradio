@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<block>
+  <name>Tag Share</name>
+  <key>blocks_tag_share</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.tag_share($io_type.size, $share_type.size, $vlen)</make>
+
+  <param>
+    <name>IO Type</name>
+    <key>io_type</key>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>size:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>size:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>size:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+  </param>
+  <param>
+    <name>Share Type</name>
+    <key>share_type</key>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>size:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>size:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>size:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+  </param>
+  <param>
+    <name>Vec Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+    <hide>part</hide>
+  </param>
+
+  <check>$vlen &gt; 0</check>
+
+  <sink>
+    <name>in</name>
+    <type>$io_type</type>
+    <vlen>$vlen</vlen>
+  </sink>
+  <sink>
+    <name>share</name>
+    <type>$share_type</type>
+    <vlen>$vlen</vlen>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>$io_type</type>
+    <vlen>$vlen</vlen>
+  </source>
+</block>

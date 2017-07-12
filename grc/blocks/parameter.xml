@@ -79,6 +79,21 @@ none#slurp
 part#slurp
 #end if</hide>
 	</param>
+	<param>
+		<name>Show</name>
+		<key>hide</key>
+		<value></value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Always</name>
+			<key>none</key> <!--## Do not hide the parameter value-->
+		</option>
+		<option>
+			<name>Only in Properties</name>
+			<key>part</key> <!--## Partially hide the parameter value-->
+		</option>
+	</param>
 	<check>len($short_id) in (0, 1)</check>
 	<check>$short_id == '' or $(short_id).isalpha()</check>
 	<doc>
@@ -95,5 +110,7 @@ When type is not None, this parameter also becomes a command line option of the 
 -[short_id] --[id] [value]
 
 The Short ID field may be left blank.
+
+To disable showing the parameter on the hierarchical block in GRC, use Only in Properties option in the Show field.
 	</doc>
 </block>

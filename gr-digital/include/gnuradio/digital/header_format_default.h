@@ -82,7 +82,8 @@ namespace gr {
       : public header_format_base
     {
      public:
-      header_format_default(const std::string &access_code, int threshold);
+      header_format_default(const std::string &access_code, int threshold,
+                            int bps);
       virtual ~header_format_default();
 
       /*!
@@ -179,12 +180,17 @@ namespace gr {
        * receiver. Can be up to 64-bits long.
        * \param threshold How many bits can be wrong in the access
        * code and still count as correct.
+       * \param bps The number of bits/second used in the payload's
+       * modulator.
        */
-      static sptr make(const std::string &access_code, int threshold);
+      static sptr make(const std::string &access_code, int threshold,
+                       int bps = 1);
 
     protected:
       uint64_t d_access_code;        //!< register to hold the access code
       size_t d_access_code_len;      //!< length in bits of the access code
+
+      uint16_t d_bps;                //!< bits/sec of payload modulation
 
       unsigned long long d_data_reg; //!< used to look for access_code
       unsigned long long d_mask;     /*!< masks access_code bits (top N bits are set where

@@ -224,9 +224,9 @@ print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
   foreach(swig_gen_file ${${outfiles}})
     add_custom_command(
       OUTPUT ${swig_gen_file}
-      COMMAND ""
+      COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${swig_gen_file}"
       DEPENDS ${_target}
-      COMMENT ""
+      COMMENT "dummy command to show ${_target} dependency of ${swig_gen_file}"
     )
   endforeach()
 
