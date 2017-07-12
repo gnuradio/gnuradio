@@ -50,13 +50,12 @@ with complex inputs. The time raster plots accept bits and floats.
 
 Because the time raster plots are designed to show structure over time
 in a signal, frame, packet, etc., they never drop samples. This is a
-
 fairly taxing job and performance can be an issue. Since it is
 expected that this block will work on a frame or packet structure, we
 tend to be at the lowest possible rate at this point, so that will
 help. Expect performance issues at high data rates.
 
-Note: There seem to be extra performance issue with the raster
+Note: There seem to be extra performance issues with the raster
 plotters in QWT version 5 that were fixed with QWT version 6. As such,
 the time raster plots have incredibly poor performance with QWT5 to
 the point of almost being unusable. In the future, we may restrict
@@ -82,8 +81,8 @@ Each type of graph has a different set of menu items in the context
 menu. Most have some way to change the appearance of the lines or
 surfaces, such as changing the line width color, marker, and
 transparency. Other common features can set the sampling rate, turn a
-grid on an off, pause and unpause (stop/start) the display update, and
-save the current figure. Specific feature are things like setting the
+grid on and off, pause and unpause (stop/start) the display update, and
+save the current figure. Specific features are things like setting the
 number of points to display, setting the FFT size, FFT window, and any
 FFT averaging.
 
@@ -96,9 +95,9 @@ specific stream tag such that whenever a tag of a given key is found,
 the scope will trigger.
 
 In the signal level mode, the trigger can be either 'auto' or 'normal'
-where the latter will only trigger when the even is seen. The 'auto'
+where the latter will only trigger when the event is seen. The 'auto'
 mode will trigger on the event or every so often even if no trigger is
-found. The 'free' mode ignores ignores triggering and continuously
+found. The 'free' mode ignores triggering and continuously
 plots.
 
 By default, the triggers plot the triggering event at the x=0 (i.e.,
@@ -135,7 +134,7 @@ The QT GUI blocks require the following dependencies.
 
 \section qtgui_usage Usage
 
-To use the qtgui interface, a bit of boiler-plate lines must be
+To use the QTGUI interface, a bit of boiler-plate lines must be
 included. First, the sink is defined, then it must be exposed from C++
 into Python using the "sip.wrapinstance" command, and finally, the
 "show" method is run on the new Python object. This sets up the QT
@@ -205,9 +204,8 @@ type interface, GRC will hide certain parameters that are not usable
 or settable anymore. For example, when plotting a message in the time
 sink, the number of points shown in the time sink is determined by the
 length of the vector in the message. Presetting this in the GUI would
-have no effect.
-
-The behavior in GRC is for convenience and to try and reduce confusion
+have no effect. 
+This behavior in GRC is for convenience and to try and reduce confusion
 about properties and settings in the message mode. However, all of the
 API hooks are still there, so it is possible to set all of this
 programmatically. The results would be harmless, however.
@@ -240,13 +238,13 @@ widgets. Most of the widgets are implemented directly in Python
 through PyQT. However, GNU Radio is introducing more widgets, written
 and therefore available in C++ that also produce messsages. The
 Python-based widgets only act as variables and so as they are changed,
-any block using those widgets to set paramters has the callback (i.e.,
+any block using those widgets to set parameters has the callback (i.e.,
 set_value()) function's called.
 
 \subsection qtgui_widgets_python Python widgets:
 
 \li Range: creates a slider and/or combo box to change to set/change
-the value of a parameter. This widget can set either float of int
+the value of a parameter. This widget can set either float or int
 values.
 \li Entry: An edit box that allows a user to directly set a
 new value for the parameter.
@@ -266,7 +264,6 @@ span". Simply using "tab widget name@index" will put that widget into
 the specific index (starting at 0) of the tab widget while adding the
 "row, col, row span, col span" will allow the user to place them in
 the tab grid.
-\li
 
 
 \subsection qtgui_widgets_cpp C++ and Message-Passing Widgets
