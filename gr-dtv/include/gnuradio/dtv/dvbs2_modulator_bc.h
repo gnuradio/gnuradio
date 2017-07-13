@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015-2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Modulates DVB-S2 frames.
      * \ingroup dtv
      *
-     * Input: Bit interleaved baseband frames.
+     * Input: Bit interleaved baseband frames. \n
      * Output: QPSK, 8PSK, 16APSK or 32APSK modulated complex IQ values (XFECFRAME).
      */
     class DTV_API dvbs2_modulator_bc : virtual public gr::block
