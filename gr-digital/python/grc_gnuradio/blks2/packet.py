@@ -54,13 +54,21 @@ class _packet_encoder_thread(_threading.Thread):
         self.start()
 
     def run(self):
-        sample = '' #residual sample
         while self.keep_running:
+            sample = ''  # residual sample
             msg = self._msgq.delete_head() #blocking read of message queue
             sample = sample + msg.to_string() #get the body of the msg as a string
+
             while len(sample) >= self._payload_length:
                 payload = sample[:self._payload_length]
                 sample = sample[self._payload_length:]
+
+                #check if sample has remaining data to transmit that is shorter than the payload length
+                if len(sample) > 0 and len(sample) < self._payload_length:
+                    #arbitrary padding to satisfy send on next loop for payload less than _payload_length
+                    padding = ('x' * (self._payload_length - len(sample)))
+                    sample = sample + padding
+
                 self._send(payload)
 
 class packet_encoder(gr.hier_block2):
@@ -106,6 +114,7 @@ class packet_encoder(gr.hier_block2):
         )
         #connect
         self.connect(msg_source, self)
+
 
         print "Warning: the blks2.packet_encoder block is deprecated."
 
@@ -197,9 +206,10 @@ class packet_mod_base(gr.hier_block2):
     """
 
     def __init__(self, packet_source=None, payload_length=0):
+
         if not payload_length: #get payload length
             payload_length = DEFAULT_PAYLOAD_LEN
-        if payload_length%self._item_size_in != 0:  #verify that packet length is a multiple of the stream size
+        if (payload_length % self._item_size_in) != 0:  #verify that packet length is a multiple of the stream size
             raise ValueError, 'The payload length: "%d" is not a mutiple of the stream size: "%d".'%(payload_length, self._item_size_in)
         #initialize hier2
         gr.hier_block2.__init__(
