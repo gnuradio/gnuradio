@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Modulates DVB-T2 cells.
      * \ingroup dtv
      *
-     * Input: Bit interleaved (with column twist and bit to cell word de-multiplexing) cells.
+     * Input: Bit interleaved (with column twist and bit to cell word de-multiplexing) cells. \n
      * Output: QPSK, 16QAM, 64QAM or 256QAM modulated complex IQ values (cells).
      */
     class DTV_API dvbt2_modulator_bc : virtual public gr::block

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015-2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ namespace gr {
      * \brief Encodes a LDPC (Low-Density Parity-Check) FEC.
      * \ingroup dtv
      *
-     * Input: Variable length FEC baseband frames with appended BCH (BCHFEC).
+     * Input: Variable length FEC baseband frames with appended BCH (BCHFEC). \n
      * Output: Normal, medium or short FEC baseband frames with appended LPDC (LDPCFEC).
      */
     class DTV_API dvb_ldpc_bb : virtual public gr::block

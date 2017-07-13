@@ -8,8 +8,11 @@
 	<name>File Source</name>
 	<key>blocks_file_source</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.file_source($type.size*$vlen, $file, $repeat)</make>
+	<import>import pmt</import>
+	<make>blocks.file_source($type.size*$vlen, $file, $repeat)
+self.$(id).set_begin_tag($begin_tag)</make>
 	<callback>open($file, $repeat)</callback>
+    <callback>self.$(id).set_begin_tag($begin_tag)</callback>
 	<param>
 		<name>File</name>
 		<key>file</key>
@@ -65,6 +68,13 @@
 		<key>vlen</key>
 		<value>1</value>
 		<type>int</type>
+	</param>
+
+	<param>
+		<name>Add begin tag</name>
+		<key>begin_tag</key>
+		<value>pmt.PMT_NIL</value>
+		<type>raw</type>
 	</param>
 	<check>$vlen &gt; 0</check>
 	<source>

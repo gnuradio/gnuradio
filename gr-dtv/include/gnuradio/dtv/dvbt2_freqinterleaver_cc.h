@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Frequency interleaves a T2 frame.
      * \ingroup dtv
      *
-     * Input: T2 frame.
+     * Input: T2 frame. \n
      * Output: Frequency interleaved T2 frame.
      */
     class DTV_API dvbt2_freqinterleaver_cc : virtual public gr::sync_block
