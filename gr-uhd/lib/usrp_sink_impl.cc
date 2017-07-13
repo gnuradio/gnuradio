@@ -535,7 +535,8 @@ namespace gr {
     bool
     usrp_sink_impl::start(void)
     {
-      _tx_stream = _dev->get_tx_stream(_stream_args);
+      if (not _tx_stream)
+        _tx_stream = _dev->get_tx_stream(_stream_args);
 
       _metadata.start_of_burst = true;
       _metadata.end_of_burst = false;
