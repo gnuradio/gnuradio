@@ -580,7 +580,8 @@ namespace gr {
     usrp_sink_impl::start(void)
     {
 #ifdef GR_UHD_USE_STREAM_API
-      _tx_stream = _dev->get_tx_stream(_stream_args);
+      if (not _tx_stream)
+        _tx_stream = _dev->get_tx_stream(_stream_args);
 #endif
 
       _metadata.start_of_burst = true;
