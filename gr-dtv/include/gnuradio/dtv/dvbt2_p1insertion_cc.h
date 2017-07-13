@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Inserts a P1 symbol.
      * \ingroup dtv
      *
-     * Input: OFDM T2 frame.
+     * Input: OFDM T2 frame. \n
      * Output: OFDM T2 frame with P1 symbol.
      */
     class DTV_API dvbt2_p1insertion_cc : virtual public gr::block

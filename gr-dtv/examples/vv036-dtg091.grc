@@ -2491,7 +2491,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>uhd.tune_request(429000000, 3500000)</value>
+      <value>uhd.tune_request(center_freq, 3500000)</value>
     </param>
     <param>
       <key>norm_gain0</key>
