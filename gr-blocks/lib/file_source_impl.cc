@@ -110,6 +110,16 @@ namespace gr {
 	throw std::runtime_error("can't open file");
       }
 
+      //Check to ensure the file will be consumed according to item size
+      fseek(d_new_fp, 0, SEEK_END);
+      int file_size = ftell(d_new_fp);
+      rewind (d_new_fp);
+
+      //Warn the user if part of the file will not be consumed.
+      if(file_size % d_itemsize){
+        GR_LOG_WARN(d_logger, "WARNING: File will not be fully consumed with the current output type");
+      }
+
       d_updated = true;
       d_repeat = repeat;
     }
