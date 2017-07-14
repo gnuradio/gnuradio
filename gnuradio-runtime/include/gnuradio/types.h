@@ -30,6 +30,8 @@
 
 #include <gnuradio/gr_complex.h>
 
+#include <stdint.h>
+
 typedef std::vector<int>			gr_vector_int;
 typedef std::vector<unsigned int>		gr_vector_uint;
 typedef std::vector<float>			gr_vector_float;
@@ -37,29 +39,5 @@ typedef std::vector<double>			gr_vector_double;
 typedef std::vector<void *>			gr_vector_void_star;
 typedef std::vector<const void *>		gr_vector_const_void_star;
 
-/*
- * #include <config.h> must be placed beforehand
- * in the source file including gnuradio/types.h for
- * the following to work correctly
- */
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-typedef int16_t			gr_int16;
-typedef int32_t			gr_int32;
-typedef int64_t			gr_int64;
-typedef uint16_t		gr_uint16;
-typedef uint32_t 		gr_uint32;
-typedef uint64_t		gr_uint64;
-#else
-/*
- * Note: these defaults may be wrong on 64-bit systems
- */
-typedef short 			gr_int16;
-typedef int   			gr_int32;
-typedef long long		gr_int64;
-typedef unsigned short 		gr_uint16;
-typedef unsigned int   		gr_uint32;
-typedef unsigned long long	gr_uint64;
-#endif	/* HAVE_STDINT_H */
 
 #endif /* INCLUDED_GR_TYPES_H */
