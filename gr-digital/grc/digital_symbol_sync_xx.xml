@@ -54,47 +54,47 @@
         <type>enum</type>
         <option>
             <name>Mueller and Müller</name>
-            <key>digital.timing_error_detector.TED_MUELLER_AND_MULLER</key>
+            <key>digital.TED_MUELLER_AND_MULLER</key>
             <opt>hide_constellation:part</opt>
         </option>
         <option>
             <name>Modified Mueller and Müller</name>
-            <key>digital.timing_error_detector.TED_MOD_MUELLER_AND_MULLER</key>
+            <key>digital.TED_MOD_MUELLER_AND_MULLER</key>
             <opt>hide_constellation:part</opt>
         </option>
         <option>
             <name>Zero Crossing</name>
-            <key>digital.timing_error_detector.TED_ZERO_CROSSING</key>
+            <key>digital.TED_ZERO_CROSSING</key>
             <opt>hide_constellation:part</opt>
         </option>
         <option>
             <name>Gardner</name>
-            <key>digital.timing_error_detector.TED_GARDNER</key>
+            <key>digital.TED_GARDNER</key>
             <opt>hide_constellation:all</opt>
         </option>
         <option>
             <name>Early-Late</name>
-            <key>digital.timing_error_detector.TED_EARLY_LATE</key>
+            <key>digital.TED_EARLY_LATE</key>
             <opt>hide_constellation:all</opt>
         </option>
         <option>
             <name>D'Andrea and Mengali Gen MSK</name>
-            <key>digital.timing_error_detector.TED_DANDREA_AND_MENGALI_GEN_MSK</key>
+            <key>digital.TED_DANDREA_AND_MENGALI_GEN_MSK</key>
             <opt>hide_constellation:all</opt>
         </option>
         <option>
             <name>Mengali and D'Andrea GMSK</name>
-            <key>digital.timing_error_detector.TED_MENGALI_AND_DANDREA_GMSK</key>
+            <key>digital.TED_MENGALI_AND_DANDREA_GMSK</key>
             <opt>hide_constellation:all</opt>
         </option>
         <option>
             <name>y[n]y'[n] Maximum Likelyhood</name>
-            <key>digital.timing_error_detector.TED_SIGNAL_TIMES_SLOPE_ML</key>
+            <key>digital.TED_SIGNAL_TIMES_SLOPE_ML</key>
             <opt>hide_constellation:all</opt>
         </option>
         <option>
             <name>sgn(y[n])y'[n] Maximum Likelyhood</name>
-            <key>digital.timing_error_detector.TED_SIGNUM_TIMES_SLOPE_ML</key>
+            <key>digital.TED_SIGNUM_TIMES_SLOPE_ML</key>
             <opt>hide_constellation:all</opt>
         </option>
     </param>

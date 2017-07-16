@@ -25,7 +25,7 @@
 
 #include <gnuradio/digital/symbol_sync_cc.h>
 #include <gnuradio/digital/clock_tracking_loop.h>
-#include <gnuradio/digital/timing_error_detector.h>
+#include "timing_error_detector.h"
 #include <gnuradio/filter/interpolating_resampler.h>
 
 namespace gr {
@@ -34,7 +34,7 @@ namespace gr {
     class symbol_sync_cc_impl : public symbol_sync_cc
     {
     public:
-      symbol_sync_cc_impl(timing_error_detector::ted_type detector_type,
+      symbol_sync_cc_impl(enum ted_type detector_type,
                           float sps,
                           float loop_bw,
                           float damping_factor,

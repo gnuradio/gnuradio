@@ -25,7 +25,8 @@
 
 #include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
-#include <gnuradio/digital/timing_error_detector.h>
+#include <gnuradio/digital/timing_error_detector_type.h>
+#include <gnuradio/digital/constellation.h>
 #include <gnuradio/filter/interpolating_resampler.h>
 
 namespace gr {
@@ -78,7 +79,7 @@ namespace gr {
        *
        * \param detector_type
        * The enumerated type of timing error detector to use.
-       * See the timing_error_detector class for a list of possible types.
+       * See enum ted_type for a list of possible types.
        *
        * \param sps
        * User specified nominal clock period in samples per symbol.
@@ -122,7 +123,7 @@ namespace gr {
        * The prototype filter for the polyphase filterbank of the interpolating
        * resampler, if using an interpolating resampler that uses a PFB.
        */
-      static sptr make(timing_error_detector::ted_type detector_type,
+      static sptr make(enum ted_type detector_type,
                        float sps,
                        float loop_bw,
                        float damping_factor = 2.0f,

@@ -34,7 +34,7 @@ namespace gr {
   namespace digital {
 
     symbol_sync_ff::sptr
-    symbol_sync_ff::make(timing_error_detector::ted_type detector_type,
+    symbol_sync_ff::make(enum ted_type detector_type,
                          float sps,
                          float loop_bw,
                          float damping_factor,
@@ -59,7 +59,7 @@ namespace gr {
     }
 
     symbol_sync_ff_impl::symbol_sync_ff_impl(
-                           timing_error_detector::ted_type detector_type,
+                           enum ted_type detector_type,
                            float sps,
                            float loop_bw,
                            float damping_factor,

@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/digital/timing_error_detector.h>
+#include "timing_error_detector.h"
 #include <gnuradio/math.h>
 #include <stdexcept>
 

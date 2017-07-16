@@ -23,16 +23,13 @@
 #ifndef INCLUDED_DIGITAL_TIMING_ERROR_DETECTOR_H
 #define INCLUDED_DIGITAL_TIMING_ERROR_DETECTOR_H
 
-#include <gnuradio/digital/api.h>
-
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/digital/timing_error_detector_type.h>
 #include <gnuradio/digital/constellation.h>
 #include <deque>
 
 namespace gr {
   namespace digital {
-
-    class timing_error_detector;
 
     /*!
      * \brief Base class for the composite symbol clock timing error
@@ -54,24 +51,9 @@ namespace gr {
      * The derived classes only have to provide the simple functions
      * to actually compute the timing error.
      */
-    class DIGITAL_API timing_error_detector
+    class timing_error_detector
     {
       public:
-
-        // Timing Error Detector types.
-        // A decision directed algorithm requires a constellation.
-        enum ted_type {
-            TED_NONE                         = -1,
-            TED_MUELLER_AND_MULLER           = 0, // Decision directed
-            TED_MOD_MUELLER_AND_MULLER       = 1, // Decision directed
-            TED_ZERO_CROSSING                = 2, // Decision directed     
-            TED_GARDNER                      = 4,
-            TED_EARLY_LATE                   = 5,
-            TED_DANDREA_AND_MENGALI_GEN_MSK  = 6, // Operates on the CPM signal
-            TED_SIGNAL_TIMES_SLOPE_ML        = 7, // ML approx. for small signal
-            TED_SIGNUM_TIMES_SLOPE_ML        = 8, // ML approx. for large signal
-            TED_MENGALI_AND_DANDREA_GMSK     = 9, // Operates on the CPM signal
-        };
 
         /*!
          * \brief Create a timing error detector object of the specified
@@ -260,7 +242,7 @@ namespace gr {
      * Synchronous Data Receivers", _IEEE_Transactions_on_Communications_,
      * Vol. COM-24, No. 5, May 1976, pp. 516-531
      */
-    class DIGITAL_API ted_mueller_and_muller : public timing_error_detector
+    class ted_mueller_and_muller : public timing_error_detector
     {
       public:
         /*!
@@ -268,7 +250,7 @@ namespace gr {
          * \param constellation A constellation to be used as a decision slicer
          */
         ted_mueller_and_muller(constellation_sptr constellation)
-          : timing_error_detector(timing_error_detector::TED_MUELLER_AND_MULLER,
+          : timing_error_detector(TED_MUELLER_AND_MULLER,
                                   1, 2, false, false, constellation)
         {}
         ~ted_mueller_and_muller() {};
@@ -296,7 +278,7 @@ namespace gr {
      * and Muller algorithm," Electronics Letters, Vol. 31, no. 13, 22
      * June 1995, pp. 1032 - 1033.
      */
-    class DIGITAL_API ted_mod_mueller_and_muller : public timing_error_detector
+    class ted_mod_mueller_and_muller : public timing_error_detector
     {
       public:
         /*!
@@ -305,9 +287,8 @@ namespace gr {
          * \param constellation A constellation to be used as a decision slicer
          */
         ted_mod_mueller_and_muller(constellation_sptr constellation)
-          : timing_error_detector(
-                              timing_error_detector::TED_MOD_MUELLER_AND_MULLER,
-                              1, 3, false, false, constellation)
+          : timing_error_detector(TED_MOD_MUELLER_AND_MULLER,
+                                  1, 3, false, false, constellation)
         {}
         ~ted_mod_mueller_and_muller() {};
 
@@ -325,7 +306,7 @@ namespace gr {
      * It is a decision directed timing error detector, and
      * requires an input slicer constellation to make decisions.
      */
-    class DIGITAL_API ted_zero_crossing : public timing_error_detector
+    class ted_zero_crossing : public timing_error_detector
     {
       public:
         /*!
@@ -333,7 +314,7 @@ namespace gr {
          * \param constellation A constellation to be used as a decision slicer
          */
         ted_zero_crossing(constellation_sptr constellation)
-          : timing_error_detector(timing_error_detector::TED_ZERO_CROSSING,
+          : timing_error_detector(TED_ZERO_CROSSING,
                                   2, 3, false, false, constellation)
         {}
         ~ted_zero_crossing() {};
@@ -354,14 +335,14 @@ namespace gr {
      * F.M. Gardner, “A BPSK/QPSK Timing Error Detector for Sampled Receivers”, 
      * IEEE Trans., COM-34, (5), 1988, pp. 423 – 429.
      */
-    class DIGITAL_API ted_gardner : public timing_error_detector
+    class ted_gardner : public timing_error_detector
     {
       public:
         /*!
          * \brief Create a Gardner timing error detector
          */
         ted_gardner()
-          : timing_error_detector(timing_error_detector::TED_GARDNER,
+          : timing_error_detector(TED_GARDNER,
                                   2, 3, false, false,
                                   constellation_sptr())
         {}
@@ -381,14 +362,14 @@ namespace gr {
      * It requires a lookahead sample to compute the symbol timing error
      * at the symbol sampling instant.
      */
-    class DIGITAL_API ted_early_late : public timing_error_detector
+    class ted_early_late : public timing_error_detector
     {
       public:
         /*!
          * \brief Create a Early-Late timing error detector
          */
         ted_early_late()
-          : timing_error_detector(timing_error_detector::TED_EARLY_LATE,
+          : timing_error_detector(TED_EARLY_LATE,
                                   2, 2, true, false,
                                   constellation_sptr())
         {}
@@ -412,16 +393,15 @@ namespace gr {
      * recovery in generalized minimum shift keying", IEEE Transactions on
      * Vehicular Technology, Vol. 39, Issue 3, August 1990, pp. 227-234
      */
-    class DIGITAL_API ted_generalized_msk : public timing_error_detector
+    class ted_generalized_msk : public timing_error_detector
     {
       public:
         /*!
          * \brief Create a Generalized MSK timing error detector
          */
         ted_generalized_msk()
-          : timing_error_detector(
-                         timing_error_detector::TED_DANDREA_AND_MENGALI_GEN_MSK,
-                         2, 4, false, false, constellation_sptr())
+          : timing_error_detector(TED_DANDREA_AND_MENGALI_GEN_MSK,
+                                  2, 4, false, false, constellation_sptr())
         {}
         ~ted_generalized_msk() {};
 
@@ -442,16 +422,15 @@ namespace gr {
      * U. Mengali, A.N. D'Andrea, _Synchronization_Techniques_for_Digital_
      * Receviers_, New York, Plenum Press 1997
      */
-    class DIGITAL_API ted_gaussian_msk : public timing_error_detector
+    class ted_gaussian_msk : public timing_error_detector
     {
       public:
         /*!
          * \brief Create a Generalized MSK timing error detector
          */
         ted_gaussian_msk()
-          : timing_error_detector(
-                            timing_error_detector::TED_MENGALI_AND_DANDREA_GMSK,
-                            2, 4, false, false, constellation_sptr())
+          : timing_error_detector(TED_MENGALI_AND_DANDREA_GMSK,
+                                  2, 4, false, false, constellation_sptr())
         {}
         ~ted_gaussian_msk() {};
 
@@ -476,7 +455,7 @@ namespace gr {
      * _IEEE_Journal_on_Selected_Areas_in_Communications_, Vol. 19, No. 12,
      * December 2001, pp. 2346 - 2357
      */
-    class DIGITAL_API ted_signal_times_slope_ml : public timing_error_detector
+    class ted_signal_times_slope_ml : public timing_error_detector
     {
       public:
         /*!
@@ -484,9 +463,8 @@ namespace gr {
          * approximation timing error detector
          */
         ted_signal_times_slope_ml()
-          : timing_error_detector(
-                               timing_error_detector::TED_SIGNAL_TIMES_SLOPE_ML,
-                               1, 1, false, true, constellation_sptr())
+          : timing_error_detector(TED_SIGNAL_TIMES_SLOPE_ML,
+                                  1, 1, false, true, constellation_sptr())
         {}
         ~ted_signal_times_slope_ml() {};
 
@@ -511,7 +489,7 @@ namespace gr {
      * _IEEE_Journal_on_Selected_Areas_in_Communications_, Vol. 19, No. 12,
      * December 2001, pp. 2346 - 2357
      */
-    class DIGITAL_API ted_signum_times_slope_ml : public timing_error_detector
+    class ted_signum_times_slope_ml : public timing_error_detector
     {
       public:
         /*!
@@ -519,9 +497,8 @@ namespace gr {
          * approximation timing error detector
          */
         ted_signum_times_slope_ml()
-          : timing_error_detector(
-                               timing_error_detector::TED_SIGNUM_TIMES_SLOPE_ML,
-                               1, 1, false, true, constellation_sptr())
+          : timing_error_detector(TED_SIGNUM_TIMES_SLOPE_ML,
+                                  1, 1, false, true, constellation_sptr())
         {}
         ~ted_signum_times_slope_ml() {};
 

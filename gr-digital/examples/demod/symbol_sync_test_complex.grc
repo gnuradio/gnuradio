@@ -1764,7 +1764,7 @@
     </param>
     <param>
       <key>ted_type</key>
-      <value>digital.timing_error_detector.TED_MUELLER_AND_MULLER</value>
+      <value>digital.TED_MUELLER_AND_MULLER</value>
     </param>
   </block>
   <block>
