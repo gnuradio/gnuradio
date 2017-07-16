@@ -262,7 +262,7 @@ namespace gr {
     /*************************************************************************/
 
 #include <gnuradio/filter/interpolator_taps.h>
-#include <gnuradio/filter/interp_differentiator_taps.h>
+#include "gnuradio/filter/interp_differentiator_taps.h"
 
     interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(
                                                                 bool derivative,

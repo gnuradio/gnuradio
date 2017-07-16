@@ -25,7 +25,7 @@
 #endif
 
 #include <gnuradio/filter/mmse_interp_differentiator_ff.h>
-#include <gnuradio/filter/interp_differentiator_taps.h>
+#include "gnuradio/filter/interp_differentiator_taps.h"
 #include <stdexcept>
 
 namespace gr {
