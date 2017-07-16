@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/digital/clock_tracking_loop.h>
+#include "clock_tracking_loop.h"
 #include <gnuradio/math.h>
 #include <stdexcept>
 

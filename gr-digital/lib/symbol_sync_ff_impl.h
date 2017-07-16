@@ -24,7 +24,7 @@
 #define INCLUDED_DIGITAL_SYMBOL_SYNC_FF_IMPL_H
 
 #include <gnuradio/digital/symbol_sync_ff.h>
-#include <gnuradio/digital/clock_tracking_loop.h>
+#include "clock_tracking_loop.h"
 #include "timing_error_detector.h"
 #include <gnuradio/filter/interpolating_resampler.h>
 

@@ -23,8 +23,6 @@
 #ifndef INCLUDED_DIGITAL_CLOCK_TRACKING_LOOP_H
 #define INCLUDED_DIGITAL_CLOCK_TRACKING_LOOP_H
 
-#include <gnuradio/digital/api.h>
-
 namespace gr {
   namespace digital {
 
@@ -220,7 +218,7 @@ namespace gr {
      * the symbol clock tracking loop.
      *
      */
-    class DIGITAL_API clock_tracking_loop
+    class clock_tracking_loop
     {
     protected:
       // Estimate of the average clock period, T_avg, in units of
