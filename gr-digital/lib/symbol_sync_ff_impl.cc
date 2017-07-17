@@ -41,7 +41,7 @@ namespace gr {
                          float max_deviation,
                          int osps,
                          constellation_sptr slicer,
-                         filter::interpolating_resampler::ir_type interp_type,
+                         ir_type interp_type,
                          int n_filters,
                          const std::vector<float> &taps)
     {
@@ -66,7 +66,7 @@ namespace gr {
                            float max_deviation,
                            int osps,
                            constellation_sptr slicer,
-                           filter::interpolating_resampler::ir_type interp_type,
+                           ir_type interp_type,
                            int n_filters,
                            const std::vector<float> &taps)
       : block("symbol_sync_ff",
@@ -112,10 +112,9 @@ namespace gr {
         throw std::runtime_error("unable to create timing_error_detector");
 
       // Interpolating Resampler
-      d_interp = filter::interpolating_resampler_fff::make(
-                                                      interp_type,
-                                                      d_ted->needs_derivative(),
-                                                      n_filters, taps);
+      d_interp = interpolating_resampler_fff::make(interp_type,
+                                                   d_ted->needs_derivative(),
+                                                   n_filters, taps);
       if (d_interp == NULL)
        throw std::runtime_error("unable to create interpolating_resampler_fff");
 

@@ -27,7 +27,7 @@
 #include <gnuradio/block.h>
 #include <gnuradio/digital/timing_error_detector_type.h>
 #include <gnuradio/digital/constellation.h>
-#include <gnuradio/filter/interpolating_resampler.h>
+#include <gnuradio/digital/interpolating_resampler_type.h>
 
 namespace gr {
   namespace digital {
@@ -113,7 +113,7 @@ namespace gr {
        *
        * \param interp_type
        * The enumerated type of interpolating resampler to use.
-       * See the interpolating resampler class for a list of possible types.
+       * See the interpolating resampler type enum for a list of possible types.
        *
        * \param n_filters
        * The number of arms in the polyphase filterbank of the interpolating
@@ -130,8 +130,7 @@ namespace gr {
                        float max_deviation = 1.5f,
                        int osps = 1,
                        constellation_sptr slicer = constellation_sptr(),
-                       filter::interpolating_resampler::ir_type interp_type = 
-                                  filter::interpolating_resampler::IR_MMSE_8TAP,
+                       ir_type interp_type = IR_MMSE_8TAP,
                        int n_filters = 128,
                        const std::vector<float> &taps = std::vector<float>());
 

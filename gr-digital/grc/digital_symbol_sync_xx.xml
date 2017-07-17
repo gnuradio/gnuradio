@@ -141,19 +141,19 @@
         <type>enum</type>
         <option>
             <name>MMSE, 8 tap FIR</name>
-            <key>filter.interpolating_resampler.IR_MMSE_8TAP</key>
+            <key>digital.IR_MMSE_8TAP</key>
             <opt>hide_nfilters:all</opt>
             <opt>hide_pfb_mf_taps:all</opt>
         </option>
         <option>
             <name>Polyphase Filterbank, MMSE</name>
-            <key>filter.interpolating_resampler.IR_PFB_NO_MF</key>
+            <key>digital.IR_PFB_NO_MF</key>
             <opt>hide_nfilters:</opt>
             <opt>hide_pfb_mf_taps:all</opt>
         </option>
         <option>
             <name>Polyphase Filterbank, MF</name>
-            <key>filter.interpolating_resampler.IR_PFB_MF</key>
+            <key>digital.IR_PFB_MF</key>
             <opt>hide_nfilters:</opt>
             <opt>hide_pfb_mf_taps:</opt>
         </option>

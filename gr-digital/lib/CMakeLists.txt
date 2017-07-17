@@ -128,6 +128,7 @@ list(APPEND digital_sources
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
+    interpolating_resampler.cc
     symbol_sync_cc_impl.cc
     symbol_sync_ff_impl.cc
     timing_error_detector.cc

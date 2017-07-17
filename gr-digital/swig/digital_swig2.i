@@ -36,13 +36,13 @@
 #include <gnuradio/blocks/control_loop.h>
 #include "gnuradio/digital/constellation.h"
 #include "gnuradio/digital/timing_error_detector_type.h"
-#include "gnuradio/filter/interpolating_resampler.h"
+#include "gnuradio/digital/interpolating_resampler_type.h"
 %}
 
 %include <gnuradio/blocks/control_loop.h>
 %include "gnuradio/digital/constellation.h"
 %include "gnuradio/digital/timing_error_detector_type.h"
-%include "gnuradio/filter/interpolating_resampler.h"
+%include "gnuradio/digital/interpolating_resampler_type.h"
 
 %{
 #include "gnuradio/digital/mpsk_receiver_cc.h"

@@ -114,6 +114,7 @@ install(FILES
     simple_correlator.h
     simple_framer.h
     simple_framer_sync.h
+    interpolating_resampler_type.h
     symbol_sync_cc.h
     symbol_sync_ff.h
     timing_error_detector_type.h

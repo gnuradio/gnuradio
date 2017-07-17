@@ -24,13 +24,13 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/filter/interpolating_resampler.h>
+#include "interpolating_resampler.h"
 #include <gnuradio/math.h>
 #include <stdexcept>
 #include <deque>
 
 namespace gr {
-  namespace filter {
+  namespace digital {
 
     interpolating_resampler::interpolating_resampler(enum ir_type type,
                                                      bool derivative)
@@ -167,17 +167,16 @@ namespace gr {
 
     interp_resampler_mmse_8tap_cc::interp_resampler_mmse_8tap_cc(
                                                                 bool derivative)
-    : interpolating_resampler_ccf(interpolating_resampler::IR_MMSE_8TAP,
-                                  derivative),
+    : interpolating_resampler_ccf(IR_MMSE_8TAP, derivative),
       d_interp(NULL),
       d_interp_diff(NULL)
     {
-        d_interp = new mmse_fir_interpolator_cc(); 
+        d_interp = new filter::mmse_fir_interpolator_cc();
         if (d_interp == NULL)
           throw std::runtime_error("unable to create mmse_fir_interpolator_cc");
 
         if (d_derivative) {
-            d_interp_diff = new mmse_interp_differentiator_cc();
+            d_interp_diff = new filter::mmse_interp_differentiator_cc();
             if (d_interp_diff == NULL)
                 throw std::runtime_error("unable to create "
                                          "mmse_interp_differentiator_cc");
@@ -215,17 +214,16 @@ namespace gr {
 
     interp_resampler_mmse_8tap_ff::interp_resampler_mmse_8tap_ff(
                                                                 bool derivative)
-    : interpolating_resampler_fff(interpolating_resampler::IR_MMSE_8TAP,
-                                  derivative),
+    : interpolating_resampler_fff(IR_MMSE_8TAP, derivative),
       d_interp(NULL),
       d_interp_diff(NULL)
     {
-        d_interp = new mmse_fir_interpolator_ff(); 
+        d_interp = new filter::mmse_fir_interpolator_ff();
         if (d_interp == NULL)
           throw std::runtime_error("unable to create mmse_fir_interpolator_ff");
 
         if (d_derivative) {
-            d_interp_diff = new mmse_interp_differentiator_ff();
+            d_interp_diff = new filter::mmse_interp_differentiator_ff();
             if (d_interp_diff == NULL)
                 throw std::runtime_error("unable to create "
                                          "mmse_interp_differentiator_ff");
@@ -261,14 +259,13 @@ namespace gr {
 
     /*************************************************************************/
 
-#include <gnuradio/filter/interpolator_taps.h>
+#include "gnuradio/filter/interpolator_taps.h"
 #include "gnuradio/filter/interp_differentiator_taps.h"
 
     interp_resampler_pfb_no_mf_cc::interp_resampler_pfb_no_mf_cc(
                                                                 bool derivative,
                                                                 int nfilts)
-    : interpolating_resampler_ccf(interpolating_resampler::IR_PFB_NO_MF,
-                                  derivative),
+    : interpolating_resampler_ccf(IR_PFB_NO_MF, derivative),
       d_nfilters(0),
       d_filters(),
       d_diff_filters()
@@ -294,9 +291,11 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters + 1, NULL);
-        d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters + 1,
-                                                              NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1,
+                                                                 NULL);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(
+                                                                 d_nfilters + 1,
+                                                                 NULL);
 
         std::vector<float> t(NTAPS, 0);
         int incr = NSTEPS/d_nfilters;
@@ -304,13 +303,13 @@ namespace gr {
         for (src = 0, dst = 0; src <= NSTEPS; src += incr, dst++) {
 
             t.assign(&taps[src][0], &taps[src][NTAPS]);
-            d_filters[dst] = new kernel::fir_filter_ccf(1, t);
+            d_filters[dst] = new filter::kernel::fir_filter_ccf(1, t);
             if (d_filters[dst] == NULL)
                 throw std::runtime_error("unable to create fir_filter_ccf");
 
             if (d_derivative) {
                 t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
-                d_diff_filters[dst] = new kernel::fir_filter_ccf(1, t);
+                d_diff_filters[dst] = new filter::kernel::fir_filter_ccf(1, t);
                 if (d_diff_filters[dst] == NULL)
                     throw std::runtime_error("unable to create fir_filter_ccf");
             }
@@ -363,8 +362,7 @@ namespace gr {
     interp_resampler_pfb_no_mf_ff::interp_resampler_pfb_no_mf_ff(
                                                                 bool derivative,
                                                                 int nfilts)
-    : interpolating_resampler_fff(interpolating_resampler::IR_PFB_NO_MF,
-                                  derivative),
+    : interpolating_resampler_fff(IR_PFB_NO_MF, derivative),
       d_nfilters(0),
       d_filters(),
       d_diff_filters()
@@ -390,9 +388,11 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters + 1, NULL);
-        d_diff_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters + 1,
-                                                              NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1,
+                                                                 NULL);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(
+                                                                 d_nfilters + 1,
+                                                                 NULL);
 
         std::vector<float> t(NTAPS, 0);
         int incr = NSTEPS/d_nfilters;
@@ -400,13 +400,13 @@ namespace gr {
         for (src = 0, dst = 0; src <= NSTEPS; src += incr, dst++) {
 
             t.assign(&taps[src][0], &taps[src][NTAPS]);
-            d_filters[dst] = new kernel::fir_filter_fff(1, t);
+            d_filters[dst] = new filter::kernel::fir_filter_fff(1, t);
             if (d_filters[dst] == NULL)
                 throw std::runtime_error("unable to create fir_filter_fff");
 
             if (d_derivative) {
                 t.assign(&Dtaps[src][0], &Dtaps[src][DNTAPS]);
-                d_diff_filters[dst] = new kernel::fir_filter_fff(1, t);
+                d_diff_filters[dst] = new filter::kernel::fir_filter_fff(1, t);
                 if (d_diff_filters[dst] == NULL)
                     throw std::runtime_error("unable to create fir_filter_fff");
             }
@@ -460,8 +460,7 @@ namespace gr {
                                                  const std::vector<float> &taps,
                                                  int nfilts,
                                                  bool derivative)
-    : interpolating_resampler_ccf(interpolating_resampler::IR_PFB_MF,
-                                  derivative),
+    : interpolating_resampler_ccf(IR_PFB_MF, derivative),
       d_nfilters(nfilts),
       d_taps_per_filter(static_cast<unsigned int>(
                                      ceil(  static_cast<double>(taps.size())
@@ -542,9 +541,11 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters + 1, NULL);
-        d_diff_filters = std::vector<kernel::fir_filter_ccf*>(d_nfilters + 1,
-                                                              NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1,
+                                                                 NULL);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(
+                                                                 d_nfilters + 1,
+                                                                 NULL);
 
         m = taps.size();
         n = diff_taps.size();
@@ -559,7 +560,7 @@ namespace gr {
                 if (k < m)
                     d_taps[i][j] = taps[k];
             }
-            d_filters[i] = new kernel::fir_filter_ccf(1, d_taps[i]);
+            d_filters[i] = new filter::kernel::fir_filter_ccf(1, d_taps[i]);
             if (d_filters[i] == NULL)
                 throw std::runtime_error("unable to create fir_filter_ccf");
 
@@ -572,7 +573,9 @@ namespace gr {
                 if (k < n)
                     d_diff_taps[i][j] = diff_taps[k];
             }
-            d_diff_filters[i] = new kernel::fir_filter_ccf(1, d_diff_taps[i]);
+            d_diff_filters[i] = new filter::kernel::fir_filter_ccf(
+                                                                1,
+                                                                d_diff_taps[i]);
             if (d_diff_filters[i] == NULL)
                 throw std::runtime_error("unable to create fir_filter_ccf");
         }
@@ -625,8 +628,7 @@ namespace gr {
                                                  const std::vector<float> &taps,
                                                  int nfilts,
                                                  bool derivative)
-    : interpolating_resampler_fff(interpolating_resampler::IR_PFB_MF,
-                                  derivative),
+    : interpolating_resampler_fff(IR_PFB_MF, derivative),
       d_nfilters(nfilts),
       d_taps_per_filter(static_cast<unsigned int>(
                                      ceil(  static_cast<double>(taps.size())
@@ -707,9 +709,11 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters + 1, NULL);
-        d_diff_filters = std::vector<kernel::fir_filter_fff*>(d_nfilters + 1,
-                                                              NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1,
+                                                                 NULL);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(
+                                                                 d_nfilters + 1,
+                                                                 NULL);
 
         m = taps.size();
         n = diff_taps.size();
@@ -724,7 +728,7 @@ namespace gr {
                 if (k < m)
                     d_taps[i][j] = taps[k];
             }
-            d_filters[i] = new kernel::fir_filter_fff(1, d_taps[i]);
+            d_filters[i] = new filter::kernel::fir_filter_fff(1, d_taps[i]);
             if (d_filters[i] == NULL)
                 throw std::runtime_error("unable to create fir_filter_fff");
 
@@ -737,7 +741,9 @@ namespace gr {
                 if (k < n)
                     d_diff_taps[i][j] = diff_taps[k];
             }
-            d_diff_filters[i] = new kernel::fir_filter_fff(1, d_diff_taps[i]);
+            d_diff_filters[i] = new filter::kernel::fir_filter_fff(
+                                                                1,
+                                                                d_diff_taps[i]);
             if (d_diff_filters[i] == NULL)
                 throw std::runtime_error("unable to create fir_filter_fff");
         }
@@ -784,5 +790,5 @@ namespace gr {
         return d_taps_per_filter;
     }
 
-  } /* namespace filter */
+  } /* namespace digital */
 } /* namespace gr */

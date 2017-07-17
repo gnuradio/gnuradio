@@ -20,12 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FILTER_INTERPOLATING_RESAMPLER_H
-#define INCLUDED_FILTER_INTERPOLATING_RESAMPLER_H
-
-#include <gnuradio/filter/api.h>
+#ifndef INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_H
+#define INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_H
 
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/digital/interpolating_resampler_type.h>
 #include <vector>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
@@ -33,7 +32,7 @@
 #include <gnuradio/filter/mmse_interp_differentiator_ff.h>
 
 namespace gr {
-  namespace filter {
+  namespace digital {
 
     /*!
      * \brief Base class for the composite interpolating resampler objects
@@ -53,17 +52,9 @@ namespace gr {
      * The sample phase increments and phase state are assumed to be in
      * units of samples, and a complete sample phase cycle is one sample.
      */
-    class FILTER_API interpolating_resampler
+    class interpolating_resampler
     {
       public:
-
-        // Interpolating Resampler type
-        enum ir_type {
-            IR_NONE      = -1,
-            IR_MMSE_8TAP = 0,  // Valid for [-Fs/4, Fs/4] bandlimited input
-            IR_PFB_NO_MF = 1,  // No matched filtering, just interpolation
-            IR_PFB_MF    = 2,
-        };
 
         virtual ~interpolating_resampler() {}
 
@@ -167,8 +158,7 @@ namespace gr {
      * be bothered with the underlying implementation after the object is
      * instantiated.
      */
-    class FILTER_API interpolating_resampler_ccf
-                     : public interpolating_resampler
+    class interpolating_resampler_ccf : public interpolating_resampler
     {
       public:
         /*!
@@ -231,8 +221,7 @@ namespace gr {
      * be bothered with the underlying implementation after the object is
      * instantiated.
      */
-    class FILTER_API interpolating_resampler_fff
-                     : public interpolating_resampler
+    class interpolating_resampler_fff : public interpolating_resampler
     {
       public:
         /*!
@@ -288,8 +277,7 @@ namespace gr {
      * object using the MMSE interpolator filter bank as its underlying
      * polyphase filterbank interpolator.
      */
-    class FILTER_API interp_resampler_mmse_8tap_cc
-                     : public interpolating_resampler_ccf
+    class interp_resampler_mmse_8tap_cc : public interpolating_resampler_ccf
     {
       public:
         /*!
@@ -323,8 +311,8 @@ namespace gr {
         gr_complex differentiate(const gr_complex input[], float mu) const;
 
       private:
-        mmse_fir_interpolator_cc *d_interp;
-        mmse_interp_differentiator_cc *d_interp_diff;
+        filter::mmse_fir_interpolator_cc *d_interp;
+        filter::mmse_interp_differentiator_cc *d_interp_diff;
     };
 
     /*!
@@ -337,8 +325,7 @@ namespace gr {
      * object using the MMSE interpolator filter bank as its underlying
      * polyphase filterbank interpolator.
      */
-    class FILTER_API interp_resampler_mmse_8tap_ff
-                     : public interpolating_resampler_fff
+    class interp_resampler_mmse_8tap_ff : public interpolating_resampler_fff
     {
       public:
         /*!
@@ -372,8 +359,8 @@ namespace gr {
         float differentiate(const float input[], float mu) const;
 
       private:
-        mmse_fir_interpolator_ff *d_interp;
-        mmse_interp_differentiator_ff *d_interp_diff;
+        filter::mmse_fir_interpolator_ff *d_interp;
+        filter::mmse_interp_differentiator_ff *d_interp_diff;
     };
 
     /*************************************************************************/
@@ -390,8 +377,7 @@ namespace gr {
      * filter arms.  This class has the "advantage" that the number of arms
      * used can be reduced from 128 (default) to 64, 32, 16, 8, 4, or 2.
      */
-    class FILTER_API interp_resampler_pfb_no_mf_cc
-                     : public interpolating_resampler_ccf
+    class interp_resampler_pfb_no_mf_cc : public interpolating_resampler_ccf
     {
       public:
         /*!
@@ -429,8 +415,8 @@ namespace gr {
 
       private:
         int d_nfilters;
-        std::vector<kernel::fir_filter_ccf*> d_filters;
-        std::vector<kernel::fir_filter_ccf*> d_diff_filters;
+        std::vector<filter::kernel::fir_filter_ccf*> d_filters;
+        std::vector<filter::kernel::fir_filter_ccf*> d_diff_filters;
     };
 
     /*!
@@ -445,8 +431,7 @@ namespace gr {
      * filter arms.  This class has the "advantage" that the number of arms
      * used can be reduced from 128 (default) to 64, 32, 16, 8, 4, or 2.
      */
-    class FILTER_API interp_resampler_pfb_no_mf_ff
-                     : public interpolating_resampler_fff
+    class interp_resampler_pfb_no_mf_ff : public interpolating_resampler_fff
     {
       public:
         /*!
@@ -484,8 +469,8 @@ namespace gr {
 
       private:
         int d_nfilters;
-        std::vector<kernel::fir_filter_fff*> d_filters;
-        std::vector<kernel::fir_filter_fff*> d_diff_filters;
+        std::vector<filter::kernel::fir_filter_fff*> d_filters;
+        std::vector<filter::kernel::fir_filter_fff*> d_diff_filters;
     };
 
     /*************************************************************************/
@@ -502,8 +487,7 @@ namespace gr {
      * matched filter.  The prototype matched filter must be designed at a
      * rate of nfilts times the output rate.
      */
-    class FILTER_API interp_resampler_pfb_mf_ccf
-                     : public interpolating_resampler_ccf
+    class interp_resampler_pfb_mf_ccf : public interpolating_resampler_ccf
     {
       public:
         /*!
@@ -543,8 +527,8 @@ namespace gr {
       private:
         int d_nfilters;
         const unsigned int d_taps_per_filter;
-        std::vector<kernel::fir_filter_ccf*> d_filters;
-        std::vector<kernel::fir_filter_ccf*> d_diff_filters;
+        std::vector<filter::kernel::fir_filter_ccf*> d_filters;
+        std::vector<filter::kernel::fir_filter_ccf*> d_diff_filters;
 
         std::vector< std::vector<float> > d_taps;
         std::vector< std::vector<float> > d_diff_taps;
@@ -562,8 +546,7 @@ namespace gr {
      * matched filter.  The prototype matched filter must be designed at a
      * rate of nfilts times the output rate.
      */
-    class FILTER_API interp_resampler_pfb_mf_fff
-                     : public interpolating_resampler_fff
+    class interp_resampler_pfb_mf_fff : public interpolating_resampler_fff
     {
       public:
         /*!
@@ -603,14 +586,14 @@ namespace gr {
       private:
         int d_nfilters;
         const unsigned int d_taps_per_filter;
-        std::vector<kernel::fir_filter_fff*> d_filters;
-        std::vector<kernel::fir_filter_fff*> d_diff_filters;
+        std::vector<filter::kernel::fir_filter_fff*> d_filters;
+        std::vector<filter::kernel::fir_filter_fff*> d_diff_filters;
 
         std::vector< std::vector<float> > d_taps;
         std::vector< std::vector<float> > d_diff_taps;
     };
 
-  } /* namespace filter */
+  } /* namespace digital */
 } /* namespace gr */
 
-#endif /* INCLUDED_FILTER_INTERPOLATING_RESAMPLER_H */
+#endif /* INCLUDED_DIGITAL_INTERPOLATING_RESAMPLER_H */

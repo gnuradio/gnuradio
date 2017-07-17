@@ -26,7 +26,7 @@
 #include <gnuradio/digital/symbol_sync_ff.h>
 #include "clock_tracking_loop.h"
 #include "timing_error_detector.h"
-#include <gnuradio/filter/interpolating_resampler.h>
+#include "interpolating_resampler.h"
 
 namespace gr {
   namespace digital {
@@ -41,7 +41,7 @@ namespace gr {
                           float max_deviation,
                           int osps,
                           constellation_sptr slicer,
-                          filter::interpolating_resampler::ir_type interp_type,
+                          ir_type interp_type,
                           int n_filters,
                           const std::vector<float> &taps);
       ~symbol_sync_ff_impl();
@@ -75,7 +75,7 @@ namespace gr {
       clock_tracking_loop *d_clock;
 
       // Interpolator and Interpolator Positioning and Alignment
-      filter::interpolating_resampler_fff *d_interp;
+      interpolating_resampler_fff *d_interp;
 
       // Block Internal Clocks
       // 4 clocks that run synchronously, aligned to the Symbol Clock:

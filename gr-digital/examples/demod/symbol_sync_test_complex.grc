@@ -1728,7 +1728,7 @@
     </param>
     <param>
       <key>resamp_type</key>
-      <value>filter.interpolating_resampler.IR_MMSE_8TAP</value>
+      <value>digital.IR_MMSE_8TAP</value>
     </param>
     <param>
       <key>loop_bw</key>

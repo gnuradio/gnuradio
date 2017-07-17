@@ -41,7 +41,6 @@ install(FILES
     fir_filter_with_buffer.h
     fft_filter.h
     iir_filter.h
-    interpolating_resampler.h
     interpolator_taps.h
     mmse_fir_interpolator_cc.h
     mmse_fir_interpolator_ff.h
