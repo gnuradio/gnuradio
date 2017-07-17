@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,6 +22,7 @@
 #define DIGITAL_API
 #define ANALOG_API
 #define BLOCKS_API
+#define FILTER_API
 
 %include "gnuradio.i"
 %include "stdint.i"
@@ -33,8 +34,15 @@
 
 %{
 #include <gnuradio/blocks/control_loop.h>
+#include "gnuradio/digital/constellation.h"
+#include "gnuradio/digital/timing_error_detector_type.h"
+#include "gnuradio/digital/interpolating_resampler_type.h"
 %}
+
 %include <gnuradio/blocks/control_loop.h>
+%include "gnuradio/digital/constellation.h"
+%include "gnuradio/digital/timing_error_detector_type.h"
+%include "gnuradio/digital/interpolating_resampler_type.h"
 
 %{
 #include "gnuradio/digital/mpsk_snr_est.h"
@@ -60,6 +68,8 @@
 #include "gnuradio/digital/scrambler_bb.h"
 #include "gnuradio/digital/simple_correlator.h"
 #include "gnuradio/digital/simple_framer.h"
+#include "gnuradio/digital/symbol_sync_cc.h"
+#include "gnuradio/digital/symbol_sync_ff.h"
 #include "gnuradio/digital/ofdm_serializer_vcc.h"
 #include "gnuradio/digital/packet_headerparser_b.h"
 #include "gnuradio/digital/header_payload_demux.h"
@@ -88,6 +98,8 @@
 %include "gnuradio/digital/scrambler_bb.h"
 %include "gnuradio/digital/simple_correlator.h"
 %include "gnuradio/digital/simple_framer.h"
+%include "gnuradio/digital/symbol_sync_cc.h"
+%include "gnuradio/digital/symbol_sync_ff.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, mpsk_snr_est_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, protocol_formatter_async);
@@ -104,6 +116,9 @@ GR_SWIG_BLOCK_MAGIC2(digital, probe_mpsk_snr_est_c);
 GR_SWIG_BLOCK_MAGIC2(digital, scrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_correlator);
 GR_SWIG_BLOCK_MAGIC2(digital, simple_framer);
+GR_SWIG_BLOCK_MAGIC2(digital, symbol_sync_cc);
+GR_SWIG_BLOCK_MAGIC2(digital, symbol_sync_ff);
 
 // Properly package up non-block objects
 %include "packet_header.i"
+%include "constellation.i"

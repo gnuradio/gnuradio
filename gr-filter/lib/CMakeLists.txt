@@ -1,4 +1,4 @@
-# Copyright 2012-2014 Free Software Foundation, Inc.
+# Copyright (C) 2012-2014,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -59,6 +59,8 @@ list(APPEND filter_sources
   iir_filter.cc
   mmse_fir_interpolator_cc.cc
   mmse_fir_interpolator_ff.cc
+  mmse_interp_differentiator_cc.cc
+  mmse_interp_differentiator_ff.cc
   pm_remez.cc
   polyphase_filterbank.cc
   ${generated_sources}
@@ -167,6 +169,8 @@ if(ENABLE_TESTING)
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_fir_filter_with_buffer.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_cc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_ff.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_interp_differentiator_cc.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_interp_differentiator_ff.cc
     )
 
   add_executable(test-gr-filter ${test_gr_filter_sources})
