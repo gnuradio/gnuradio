@@ -25,6 +25,10 @@
 %include "std_string.i"
 %include "stdint.i"
 
+%begin %{
+#define SWIG_PYTHON_2_UNICODE
+%}
+
 %{
 #include <boost/intrusive_ptr.hpp>
 #include <boost/shared_ptr.hpp>
@@ -57,6 +61,8 @@
 %template(pmt_vector_double) std::vector<double>;
 %template(pmt_vector_cfloat) std::vector< std::complex<float> >;
 %template(pmt_vector_cdouble) std::vector< std::complex<double> >;
+
+%import py3compat.i
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler

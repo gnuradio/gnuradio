@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import math
 
 from gnuradio import gr, gr_unittest, digital
@@ -37,7 +38,7 @@ class test_lfsr(gr_unittest.TestCase):
         l = digital.lfsr(1, 1, reglen)
 
         result_data = []
-        for i in xrange(4*(reglen+1)):
+        for i in range(4*(reglen+1)):
             result_data.append(l.next_bit())
 
         expected_result = 4*([1,] + reglen*[0,])

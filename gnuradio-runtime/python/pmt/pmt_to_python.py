@@ -17,8 +17,9 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-try: import pmt_swig as pmt
-except: import pmt
+from __future__ import unicode_literals
+
+from . import pmt_swig as pmt
 import numpy
 
 # SWIG isn't taking in the #define PMT_NIL;
@@ -34,7 +35,7 @@ def pmt_to_tuple(p):
     return tuple(elems)
 
 def pmt_from_tuple(p):
-    args = map(python_to_pmt, p)
+    args = list(map(python_to_pmt, p))
     return pmt.make_tuple(*args)
 
 def pmt_to_vector(p):
@@ -62,7 +63,7 @@ def pmt_to_dict(p):
 
 def pmt_from_dict(p):
     d = pmt.make_dict()
-    for k, v in p.iteritems():
+    for k, v in list(p.items()):
         #dict is immutable -> therefore pmt_dict_add returns the new dict
         d = pmt.dict_add(d, python_to_pmt(k), python_to_pmt(v))
     return d
@@ -88,27 +89,27 @@ uvector_mappings = dict([ (numpy_mappings[key][3], (numpy_mappings[key][2], key)
 def numpy_to_uvector(numpy_array):
     try:
         mapping = numpy_mappings[numpy_array.dtype]
-        pc = map(mapping[1], numpy.ravel(numpy_array))
+        pc = list(map(mapping[1], numpy.ravel(numpy_array)))
         return mapping[0](numpy_array.size, pc)
     except KeyError:
         raise ValueError("unsupported numpy array dtype for converstion to pmt %s"%(numpy_array.dtype))
 
 def uvector_to_numpy(uvector):
-	match = None
-	for test_func in uvector_mappings.keys():
-		if test_func(uvector):
-			match = uvector_mappings[test_func]
-			return numpy.array(match[0](uvector), dtype = match[1])
-	else:
-		raise ValueError("unsupported uvector data type for conversion to numpy array %s"%(uvector))
+        match = None
+        for test_func in list(uvector_mappings.keys()):
+                if test_func(uvector):
+                        match = uvector_mappings[test_func]
+                        return numpy.array(match[0](uvector), dtype = match[1])
+        else:
+                raise ValueError("unsupported uvector data type for conversion to numpy array %s"%(uvector))
 
 type_mappings = ( #python type, check pmt type, to python, from python
     (None, pmt.is_null, lambda x: None, lambda x: PMT_NIL),
     (bool, pmt.is_bool, pmt.to_bool, pmt.from_bool),
     (str, pmt.is_symbol, pmt.symbol_to_string, pmt.string_to_symbol),
-    (unicode, lambda x: False, None, lambda x: pmt.string_to_symbol(x.encode('utf-8'))),
+    (str, lambda x: False, None, lambda x: pmt.string_to_symbol(x.encode('utf-8'))),
     (int, pmt.is_integer, pmt.to_long, pmt.from_long),
-    (long, pmt.is_uint64, lambda x: long(pmt.to_uint64(x)), pmt.from_uint64),
+    (int, pmt.is_uint64, lambda x: int(pmt.to_uint64(x)), pmt.from_uint64),
     (float, pmt.is_real, pmt.to_double, pmt.from_double),
     (complex, pmt.is_complex, pmt.to_complex, pmt.from_complex),
     (tuple, pmt.is_tuple, pmt_to_tuple, pmt_from_tuple),

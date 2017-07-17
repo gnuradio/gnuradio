@@ -28,4 +28,4 @@ if(NOT ENABLE_GR_CTRLPORT)
     )
 endif(NOT ENABLE_GR_CTRLPORT)
 
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "blocks_python")
+install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR})

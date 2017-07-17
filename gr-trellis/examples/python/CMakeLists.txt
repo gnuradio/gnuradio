@@ -22,15 +22,12 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     PROGRAMS
     test_tcm.py
-    test_cpm.py
     DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}
-    COMPONENT "trellis_examples"
 )
 
 install(
     FILES README
     DESTINATION ${GR_PKG_DATA_DIR}/examples/trellis
-    COMPONENT "trellis_examples"
 )
 
 install(
@@ -68,5 +65,4 @@ install(
     fsm_files/simple.fsm
     fsm_files/uncoded4.fsm
     DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}/fsm_files
-    COMPONENT "trellis_examples"
 )

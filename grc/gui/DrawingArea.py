@@ -17,15 +17,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+from __future__ import absolute_import
 
-from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, DND_TARGETS
-import Colors
+from gi.repository import Gtk, Gdk
+
+from .canvas.colors import FLOWGRAPH_BACKGROUND_COLOR
+from . import Constants
+from . import Actions
 
 
-class DrawingArea(gtk.DrawingArea):
+class DrawingArea(Gtk.DrawingArea):
     """
     DrawingArea is the gtk pixel map that graphical elements may draw themselves on.
     The drawing area also responds to mouse and key events.
@@ -39,104 +40,191 @@ class DrawingArea(gtk.DrawingArea):
         Args:
             main_window: the main_window containing all flow graphs
         """
+        Gtk.DrawingArea.__init__(self)
+
+        self._flow_graph = flow_graph
+        self.set_property('can_focus', True)
+
+        self.zoom_factor = 1.0
+        self._update_after_zoom = False
         self.ctrl_mask = False
         self.mod1_mask = False
-        self._flow_graph = flow_graph
-        gtk.DrawingArea.__init__(self)
-        self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+        self.button_state = [False] * 10
+
+        # self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
         self.connect('realize', self._handle_window_realize)
-        self.connect('configure-event', self._handle_window_configure)
-        self.connect('expose-event', self._handle_window_expose)
+        self.connect('draw', self.draw)
         self.connect('motion-notify-event', self._handle_mouse_motion)
         self.connect('button-press-event', self._handle_mouse_button_press)
         self.connect('button-release-event', self._handle_mouse_button_release)
         self.connect('scroll-event', self._handle_mouse_scroll)
         self.add_events(
-            gtk.gdk.BUTTON_PRESS_MASK | \
-            gtk.gdk.POINTER_MOTION_MASK | \
-            gtk.gdk.BUTTON_RELEASE_MASK | \
-            gtk.gdk.LEAVE_NOTIFY_MASK | \
-            gtk.gdk.ENTER_NOTIFY_MASK | \
-            gtk.gdk.FOCUS_CHANGE_MASK
+            Gdk.EventMask.BUTTON_PRESS_MASK |
+            Gdk.EventMask.POINTER_MOTION_MASK |
+            Gdk.EventMask.BUTTON_RELEASE_MASK |
+            Gdk.EventMask.SCROLL_MASK |
+            Gdk.EventMask.LEAVE_NOTIFY_MASK |
+            Gdk.EventMask.ENTER_NOTIFY_MASK
+            # Gdk.EventMask.FOCUS_CHANGE_MASK
         )
-        #setup drag and drop
-        self.drag_dest_set(gtk.DEST_DEFAULT_ALL, DND_TARGETS, gtk.gdk.ACTION_COPY)
+
+        # This may not be the correct place to be handling the user events
+        # Should this be in the page instead?
+        # Or should more of the page functionality move here?
+        self.connect('key_press_event', self._handle_key_press)
+
+        # setup drag and drop
+        self.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         self.connect('drag-data-received', self._handle_drag_data_received)
-        #setup the focus flag
+        self.drag_dest_set_target_list(None)
+        self.drag_dest_add_text_targets()
+
+        # setup the focus flag
         self._focus_flag = False
         self.get_focus_flag = lambda: self._focus_flag
-        def _handle_notify_event(widget, event, focus_flag): self._focus_flag = focus_flag
+
+        def _handle_notify_event(widget, event, focus_flag):
+            self._focus_flag = focus_flag
+
         self.connect('leave-notify-event', _handle_notify_event, False)
         self.connect('enter-notify-event', _handle_notify_event, True)
-        self.set_flags(gtk.CAN_FOCUS)  # self.set_can_focus(True)
-        self.connect('focus-out-event', self._handle_focus_lost_event)
+        # todo: fix
+#        self.set_flags(Gtk.CAN_FOCUS)  # self.set_can_focus(True)
+#        self.connect('focus-out-event', self._handle_focus_lost_event)
 
-    def new_pixmap(self, width, height):
-        return gtk.gdk.Pixmap(self.window, width, height, -1)
-
-    def get_screenshot(self, transparent_bg=False):
-        pixmap = self._pixmap
-        W, H = pixmap.get_size()
-        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, W, H)
-        pixbuf.fill(0xFF + Colors.FLOWGRAPH_BACKGROUND_COLOR.pixel << 8)
-        pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, W-1, H-1)
-        if transparent_bg:
-            bgc = Colors.FLOWGRAPH_BACKGROUND_COLOR
-            pixbuf = pixbuf.add_alpha(True, bgc.red, bgc.green, bgc.blue)
-        return pixbuf
+        # Setup a map of the accelerator keys to the action to trigger
+        self.accels = {
+            Gtk.accelerator_parse('d'): Actions.BLOCK_DISABLE,
+            Gtk.accelerator_parse('e'): Actions.BLOCK_ENABLE,
+            Gtk.accelerator_parse('b'): Actions.BLOCK_BYPASS,
+            Gtk.accelerator_parse('c'): Actions.BLOCK_CREATE_HIER,
+            Gtk.accelerator_parse('Up'): Actions.BLOCK_DEC_TYPE,
+            Gtk.accelerator_parse('Down'): Actions.BLOCK_INC_TYPE,
+            Gtk.accelerator_parse('Left'): Actions.BLOCK_ROTATE_CCW,
+            Gtk.accelerator_parse('Right'): Actions.BLOCK_ROTATE_CW,
+            Gtk.accelerator_parse('minus'): Actions.PORT_CONTROLLER_DEC,
+            Gtk.accelerator_parse('plus'): Actions.PORT_CONTROLLER_INC,
+            Gtk.accelerator_parse('Add'): Actions.PORT_CONTROLLER_INC,
+            Gtk.accelerator_parse('Subtract'): Actions.PORT_CONTROLLER_DEC,
+            Gtk.accelerator_parse('Return'): Actions.BLOCK_PARAM_MODIFY,
+            Gtk.accelerator_parse('<Shift>t'): Actions.BLOCK_VALIGN_TOP,
+            Gtk.accelerator_parse('<Shift>m'): Actions.BLOCK_VALIGN_MIDDLE,
+            Gtk.accelerator_parse('<Shift>b'): Actions.BLOCK_VALIGN_BOTTOM,
+            Gtk.accelerator_parse('<Shift>l'): Actions.BLOCK_HALIGN_LEFT,
+            Gtk.accelerator_parse('<Shift>c'): Actions.BLOCK_HALIGN_CENTER,
+            Gtk.accelerator_parse('<Shift>r'): Actions.BLOCK_HALIGN_RIGHT,
+        }
 
 
     ##########################################################################
-    ## Handlers
+    # Handlers
     ##########################################################################
     def _handle_drag_data_received(self, widget, drag_context, x, y, selection_data, info, time):
         """
         Handle a drag and drop by adding a block at the given coordinate.
         """
-        self._flow_graph.add_new_block(selection_data.data, (x, y))
+        coords = x / self.zoom_factor, y / self.zoom_factor
+        self._flow_graph.add_new_block(selection_data.get_text(), coords)
 
     def _handle_mouse_scroll(self, widget, event):
-        if event.state & gtk.gdk.SHIFT_MASK:
-           if event.direction == gtk.gdk.SCROLL_UP:
-               event.direction = gtk.gdk.SCROLL_LEFT
-           else:
-               event.direction = gtk.gdk.SCROLL_RIGHT
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+            change = 1.2 if event.direction == Gdk.ScrollDirection.UP else 1/1.2
+            zoom_factor = min(max(self.zoom_factor * change, 0.1), 5.0)
+
+            if zoom_factor != self.zoom_factor:
+                self.zoom_factor = zoom_factor
+                self._update_after_zoom = True
+                self.queue_draw()
+            return True
+
+        return False
 
     def _handle_mouse_button_press(self, widget, event):
         """
         Forward button click information to the flow graph.
         """
         self.grab_focus()
-        self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
-        if event.button == 1: self._flow_graph.handle_mouse_selector_press(
-            double_click=(event.type == gtk.gdk._2BUTTON_PRESS),
-            coordinate=(event.x, event.y),
-        )
-        if event.button == 3: self._flow_graph.handle_mouse_context_press(
-            coordinate=(event.x, event.y),
-            event=event,
-        )
+        self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
+        self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
+        self.button_state[event.button] = True
+
+        if event.button == 1:
+            double_click = (event.type == Gdk.EventType._2BUTTON_PRESS)
+            self.button_state[1] = not double_click
+            self._flow_graph.handle_mouse_selector_press(
+                double_click=double_click,
+                coordinate=self._translate_event_coords(event),
+            )
+        elif event.button == 3:
+            self._flow_graph.handle_mouse_context_press(
+                coordinate=self._translate_event_coords(event),
+                event=event,
+            )
 
     def _handle_mouse_button_release(self, widget, event):
         """
         Forward button release information to the flow graph.
         """
-        self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
-        if event.button == 1: self._flow_graph.handle_mouse_selector_release(
-            coordinate=(event.x, event.y),
-        )
+        self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
+        self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
+        self.button_state[event.button] = False
+        if event.button == 1:
+            self._flow_graph.handle_mouse_selector_release(
+                coordinate=self._translate_event_coords(event),
+            )
 
     def _handle_mouse_motion(self, widget, event):
         """
         Forward mouse motion information to the flow graph.
         """
-        self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-        self.mod1_mask = event.state & gtk.gdk.MOD1_MASK
+        self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
+        self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
+
+        if self.button_state[1]:
+            self._auto_scroll(event)
+
         self._flow_graph.handle_mouse_motion(
-            coordinate=(event.x, event.y),
+            coordinate=self._translate_event_coords(event),
         )
+
+    def _handle_key_press(self, widget, event):
+        """
+        Handle specific keypresses when the drawing area has focus that
+        triggers actions by the user.
+        """
+        key = event.keyval
+        mod = event.state
+
+        try:
+            action = self.accels[(key, mod)]
+            action()
+            return True
+        except KeyError:
+            return False
+
+    def _update_size(self):
+        w, h = self._flow_graph.get_extents()[2:]
+        self.set_size_request(w * self.zoom_factor + 100, h * self.zoom_factor + 100)
+
+    def _auto_scroll(self, event):
+        x, y = event.x, event.y
+        scrollbox = self.get_parent().get_parent()
+
+        self._update_size()
+
+        def scroll(pos, adj):
+            """scroll if we moved near the border"""
+            adj_val = adj.get_value()
+            adj_len = adj.get_page_size()
+            if pos - adj_val > adj_len - Constants.SCROLL_PROXIMITY_SENSITIVITY:
+                adj.set_value(adj_val + Constants.SCROLL_DISTANCE)
+                adj.emit('changed')
+            elif pos - adj_val < Constants.SCROLL_PROXIMITY_SENSITIVITY:
+                adj.set_value(adj_val - Constants.SCROLL_DISTANCE)
+                adj.emit('changed')
+
+        scroll(x, scrollbox.get_hadjustment())
+        scroll(y, scrollbox.get_vadjustment())
 
     def _handle_window_realize(self, widget):
         """
@@ -144,32 +232,33 @@ class DrawingArea(gtk.DrawingArea):
         Update the flowgraph, which calls new pixmap.
         """
         self._flow_graph.update()
+        self._update_size()
 
-    def _handle_window_configure(self, widget, event):
-        """
-        Called when the window is resized.
-        Create a new pixmap for background buffer.
-        """
-        self._pixmap = self.new_pixmap(*self.get_size_request())
+    def draw(self, widget, cr):
+        width = widget.get_allocated_width()
+        height = widget.get_allocated_height()
 
-    def _handle_window_expose(self, widget, event):
-        """
-        Called when window is exposed, or queue_draw is called.
-        Double buffering: draw to pixmap, then draw pixmap to window.
-        """
-        gc = self.window.new_gc()
-        self._flow_graph.draw(gc, self._pixmap)
-        self.window.draw_drawable(gc, self._pixmap, 0, 0, 0, 0, -1, -1)
-        # draw a light grey line on the bottom and right end of the canvas.
-        # this is useful when the theme uses the same panel bg color as the canvas
-        W, H = self._pixmap.get_size()
-        gc.set_foreground(Colors.FLOWGRAPH_EDGE_COLOR)
-        self.window.draw_line(gc, 0, H-1, W, H-1)
-        self.window.draw_line(gc, W-1, 0, W-1, H)
+        cr.set_source_rgba(*FLOWGRAPH_BACKGROUND_COLOR)
+        cr.rectangle(0, 0, width, height)
+        cr.fill()
+
+        cr.scale(self.zoom_factor, self.zoom_factor)
+        cr.set_line_width(2.0 / self.zoom_factor)
+
+        if self._update_after_zoom:
+            self._flow_graph.create_labels(cr)
+            self._flow_graph.create_shapes()
+            self._update_size()
+            self._update_after_zoom = False
+
+        self._flow_graph.draw(cr)
+
+    def _translate_event_coords(self, event):
+        return event.x / self.zoom_factor, event.y / self.zoom_factor
 
     def _handle_focus_lost_event(self, widget, event):
         # don't clear selection while context menu is active
-        if not self._flow_graph.get_context_menu().flags() & gtk.VISIBLE:
+        if not self._flow_graph.context_menu.get_take_focus():
             self._flow_graph.unselect()
             self._flow_graph.update_selected()
             self._flow_graph.queue_draw()

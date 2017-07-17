@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+from __future__ import division
+
 import sys
 import numpy
 import random
@@ -203,7 +205,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         tx_data = shift_tuple(sync_symbol1, carr_offset) + \
                   shift_tuple(sync_symbol2, carr_offset) + \
                   shift_tuple(data_symbol, carr_offset)
-        channel = range(fft_len)
+        channel = list(range(fft_len))
         src = blocks.vector_source_c(tx_data, False, fft_len)
         chan = blocks.multiply_const_vcc(channel)
         chanest = digital.ofdm_chanest_vcvc(sync_symbol1, sync_symbol2, 1)
@@ -234,7 +236,7 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
         n_iter = 20 # The more the accurater
         def run_flow_graph(sync_sym1, sync_sym2, data_sym):
             top_block = gr.top_block()
-            carr_offset = random.randint(-max_offset/2, max_offset/2) * 2
+            carr_offset = random.randint(-max_offset / 2, max_offset / 2) * 2
             tx_data = shift_tuple(sync_sym1, carr_offset) + \
                       shift_tuple(sync_sym2, carr_offset) + \
                       shift_tuple(data_sym,  carr_offset)
@@ -265,14 +267,14 @@ class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
                     rx_sym_est[i] = (sink.data()[i] / channel_est[i]).real
             return (carr_offset, list(shift_tuple(rx_sym_est, -carr_offset_hat)))
         bit_errors = 0
-        for k in xrange(n_iter):
+        for k in range(n_iter):
             sync_sym = [(random.randint(0, 1) * 2 - 1) * syncsym_mask[i] for i in range(fft_len)]
             ref_sym  = [(random.randint(0, 1) * 2 - 1) * carrier_mask[i] for i in range(fft_len)]
             data_sym = [(random.randint(0, 1) * 2 - 1) * carrier_mask[i] for i in range(fft_len)]
             data_sym[26] = 1
             (carr_offset, rx_sym) = run_flow_graph(sync_sym, ref_sym, data_sym)
             rx_sym_est = [0,] * fft_len
-            for i in xrange(fft_len):
+            for i in range(fft_len):
                 if carrier_mask[i] == 0:
                     continue
                 rx_sym_est[i] = {True: 1, False: -1}[rx_sym[i] > 0]

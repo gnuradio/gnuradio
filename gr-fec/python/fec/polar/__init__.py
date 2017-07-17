@@ -21,9 +21,12 @@
 
 # turn this folder into a Python module
 
-import channel_construction as cc
-from channel_construction_bec import bhattacharyya_bounds
-from helper_functions import is_power_of_two
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from . import channel_construction as cc
+from .channel_construction_bec import bhattacharyya_bounds
+from .helper_functions import is_power_of_two
 
 
 CHANNEL_TYPE_AWGN = 'AWGN'

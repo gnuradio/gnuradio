@@ -51,5 +51,4 @@ install(FILES
     variable_band_reject_filter_taps.xml
     variable_rrc_filter_taps.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "filter_python"
 )

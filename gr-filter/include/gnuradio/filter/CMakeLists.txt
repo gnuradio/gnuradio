@@ -76,6 +76,5 @@ install(FILES
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
-    COMPONENT "filter_devel"
 )
 

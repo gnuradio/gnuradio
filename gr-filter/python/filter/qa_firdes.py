@@ -20,16 +20,17 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, filter
 import sys
 
 class test_firdes(gr_unittest.TestCase):
 
     def setUp(self):
-	pass
+        pass
 
     def tearDown(self):
-	pass
+        pass
 
     def test_low_pass(self):
         known_taps = (0.0024871660862118006, -4.403502608370943e-18,
@@ -187,4 +188,3 @@ class test_firdes(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_firdes, "test_firdes.xml")
-

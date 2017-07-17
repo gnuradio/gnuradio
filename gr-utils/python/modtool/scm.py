@@ -20,6 +20,9 @@
 #
 """ Class to handle source code management repositories. """
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import subprocess
 
 try:
@@ -191,12 +194,12 @@ class SCMRepoFactory(object):
         """ Returns a valid, usable object of type SCMRepository. """
         if self.options.scm_mode == 'no':
             return SCMRepository(self.path_to_repo)
-        for glbl in globals().values():
+        for glbl in list(globals().values()):
             try:
                 if issubclass(glbl, SCMRepository):
                     the_scm = glbl(self.path_to_repo)
                     if the_scm.is_active():
-                        print 'Found SCM of type:', the_scm.handles_scm_type
+                        print('Found SCM of type:', the_scm.handles_scm_type)
                         return the_scm
             except (TypeError, AttributeError, InvalidSCMError):
                 pass
@@ -208,7 +211,7 @@ class SCMRepoFactory(object):
         """ Returns a valid, usable object of type SCMRepository for an unitialized dir. """
         if self.options.scm_mode == 'no':
             return SCMRepository(self.path_to_repo)
-        for glbl in globals().values():
+        for glbl in list(globals().values()):
             try:
                 if issubclass(glbl, SCMRepository):
                     if glbl.handles_scm_type == scm_type:

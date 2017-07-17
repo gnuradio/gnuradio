@@ -19,6 +19,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 from gnuradio import gr, filter
 import math
 import cmath
@@ -132,8 +136,8 @@ class fm_deemph(gr.hier_block2):
         # Since H(s = 0) = 1.0, then H(z = 1) = 1.0 and has 0 dB gain at DC
 
         if 0:
-            print "btaps =", btaps
-            print "ataps =", ataps
+            print("btaps =", btaps)
+            print("ataps =", ataps)
             global plot1
             plot1 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 
@@ -149,11 +153,11 @@ class fm_deemph(gr.hier_block2):
 #  o------+             +-----+--------o
 #         |      R1     |     |
 #         +----/\/\/\/--+     \
-#                             /
+    #                             /
 #                             \ R2
 #                             /
 #                             \
-#                             |
+    #                             |
 #  o--------------------------+--------o
 #
 #  (This fine ASCII rendition is based on Figure 5-15
@@ -263,44 +267,43 @@ class fm_preemph(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_float),  # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_float))  # Output signature
 
-	# Set fh to something sensible, if needed.
-	# N.B. fh == fs/2.0 or fh == 0.0 results in a pole on the unit circle
-	# at z = -1.0 or z = 1.0 respectively.  That makes the filter unstable
-	# and useless.
-	if fh <= 0.0 or fh >= fs/2.0:
-		fh = 0.925 * fs/2.0
+        # Set fh to something sensible, if needed.
+        # N.B. fh == fs/2.0 or fh == 0.0 results in a pole on the unit circle
+        # at z = -1.0 or z = 1.0 respectively.  That makes the filter unstable
+        # and useless.
+        if fh <= 0.0 or fh >= fs / 2.0:
+            fh = 0.925 * fs/2.0
 
-	# Digital corner frequencies
-	w_cl = 1.0 / tau
-	w_ch = 2.0 * math.pi * fh
+        # Digital corner frequencies
+        w_cl = 1.0 / tau
+        w_ch = 2.0 * math.pi * fh
 
-	# Prewarped analog corner frequencies
-	w_cla = 2.0 * fs * math.tan(w_cl / (2.0 * fs))
-	w_cha = 2.0 * fs * math.tan(w_ch / (2.0 * fs))
+        # Prewarped analog corner frequencies
+        w_cla = 2.0 * fs * math.tan(w_cl / (2.0 * fs))
+        w_cha = 2.0 * fs * math.tan(w_ch / (2.0 * fs))
 
-	# Resulting digital pole, zero, and gain term from the bilinear
-	# transformation of H(s) = (s + w_cla) / (s + w_cha) to
-	# H(z) = b0 (1 - z1 z^-1)/(1 - p1 z^-1)
-	kl = -w_cla / (2.0 * fs)
-	kh = -w_cha / (2.0 * fs)
-	z1 = (1.0 + kl) / (1.0 - kl)
-	p1 = (1.0 + kh) / (1.0 - kh)
-	b0 = (1.0 - kl) / (1.0 - kh)
+        # Resulting digital pole, zero, and gain term from the bilinear
+        # transformation of H(s) = (s + w_cla) / (s + w_cha) to
+        # H(z) = b0 (1 - z1 z^-1)/(1 - p1 z^-1)
+        kl = -w_cla / (2.0 * fs)
+        kh = -w_cha / (2.0 * fs)
+        z1 = (1.0 + kl) / (1.0 - kl)
+        p1 = (1.0 + kh) / (1.0 - kh)
+        b0 = (1.0 - kl) / (1.0 - kh)
 
-	# Since H(s = infinity) = 1.0, then H(z = -1) = 1.0 and
-	# this filter  has 0 dB gain at fs/2.0.
-	# That isn't what users are going to expect, so adjust with a
-	# gain, g, so that H(z = 1) = 1.0 for 0 dB gain at DC.
-	w_0dB = 2.0 * math.pi * 0.0
-	g =        abs(1.0 - p1 * cmath.rect(1.0, -w_0dB))  \
-	   / (b0 * abs(1.0 - z1 * cmath.rect(1.0, -w_0dB)))
+        # Since H(s = infinity) = 1.0, then H(z = -1) = 1.0 and
+        # this filter  has 0 dB gain at fs/2.0.
+        # That isn't what users are going to expect, so adjust with a
+        # gain, g, so that H(z = 1) = 1.0 for 0 dB gain at DC.
+        w_0dB = 2.0 * math.pi * 0.0
+        g =        abs(1.0 - p1 * cmath.rect(1.0 / -w_0dB), (b0 * abs(1.0 - z1 * cmath.rect(1.0, -w_0dB))))
 
-	btaps = [ g * b0 * 1.0, g * b0 * -z1 ]
-	ataps = [          1.0,          -p1 ]
+        btaps = [ g * b0 * 1.0, g * b0 * -z1 ]
+        ataps = [          1.0,          -p1 ]
 
         if 0:
-            print "btaps =", btaps
-            print "ataps =", ataps
+            print("btaps =", btaps)
+            print("ataps =", ataps)
             global plot2
             plot2 = gru.gnuplot_freqz(gru.freqz(btaps, ataps), fs, True)
 

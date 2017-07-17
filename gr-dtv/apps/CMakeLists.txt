@@ -25,5 +25,4 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     PROGRAMS
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "dtv_python"
 )

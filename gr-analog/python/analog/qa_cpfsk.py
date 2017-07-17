@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import math
 
 from gnuradio import gr, gr_unittest, analog, blocks
@@ -50,7 +51,7 @@ class test_cpfsk_bc(gr_unittest.TestCase):
 
     def test_cpfsk_bc_002(self):
         src_data = 10*[0, 1]
-        expected_result = map(lambda x: complex(2*x-1,0), src_data)
+        expected_result = [complex(2*x-1,0) for x in src_data]
 
         src = blocks.vector_source_b(src_data)
         op = analog.cpfsk_bc(2, 1, 2)

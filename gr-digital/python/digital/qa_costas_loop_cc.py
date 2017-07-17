@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import random
 import cmath
 
@@ -57,7 +59,7 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         order = 2
         self.test = digital.costas_loop_cc(natfreq, order)
 
-        data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
+        data = [complex(2*random.randint(0,1)-1, 0) for i in range(100)]
         self.src = blocks.vector_source_c(data, False)
         self.snk = blocks.vector_sink_c()
 
@@ -76,7 +78,7 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         self.test = digital.costas_loop_cc(natfreq, order)
 
         rot = cmath.exp(0.2j) # some small rotation
-        data = [complex(2*random.randint(0,1)-1, 0) for i in xrange(100)]
+        data = [complex(2*random.randint(0,1)-1, 0) for i in range(100)]
 
         N = 40 # settling time
         expected_result = data[N:]
@@ -102,7 +104,7 @@ class test_costas_loop_cc(gr_unittest.TestCase):
 
         rot = cmath.exp(0.2j) # some small rotation
         data = [complex(2*random.randint(0,1)-1, 2*random.randint(0,1)-1)
-                for i in xrange(100)]
+                for i in range(100)]
 
         N = 40 # settling time
         expected_result = data[N:]
@@ -126,9 +128,9 @@ class test_costas_loop_cc(gr_unittest.TestCase):
         order = 8
         self.test = digital.costas_loop_cc(natfreq, order)
 
-        rot = cmath.exp(-cmath.pi/8.0j) # rotate to match Costas rotation
+        rot = cmath.exp(-cmath.pi / 8.0j) # rotate to match Costas rotation
         const = psk.psk_constellation(order)
-        data = [random.randint(0,7) for i in xrange(100)]
+        data = [random.randint(0,7) for i in range(100)]
         data = [2*rot*const.points()[d] for d in data]
 
         N = 40 # settling time

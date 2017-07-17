@@ -20,9 +20,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blocks
-import fec_swig as fec
+from __future__ import division
+from __future__ import unicode_literals
+
 import math
+
+from gnuradio import gr, blocks
+from . import fec_swig as fec
+
 
 class capillary_threaded_decoder(gr.hier_block2):
     def __init__(self, decoder_list_0, input_size, output_size):
@@ -64,7 +69,7 @@ class capillary_threaded_decoder(gr.hier_block2):
                 branchcount += 2
 
         codercount = 0
-        for i in range(len(decoder_list_0)/2):
+        for i in range(len(decoder_list_0) // 2):
             self.connect((self.deinterleaves_0[rootcount], 0), (self.generic_decoders_0[codercount], 0))
             self.connect((self.deinterleaves_0[rootcount], 1), (self.generic_decoders_0[codercount + 1], 0))
             rootcount += 1
@@ -80,7 +85,7 @@ class capillary_threaded_decoder(gr.hier_block2):
                 branchcount += 2
 
         codercount = 0
-        for i in range(len(decoder_list_0)/2):
+        for i in range(len(decoder_list_0) // 2):
             self.connect((self.generic_decoders_0[codercount], 0), (self.interleaves_0[rootcount], 0))
             self.connect((self.generic_decoders_0[codercount + 1], 0), (self.interleaves_0[rootcount], 1))
             rootcount += 1

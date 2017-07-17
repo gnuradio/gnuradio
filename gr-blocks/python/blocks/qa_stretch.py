@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, blocks
 
 class test_stretch(gr_unittest.TestCase):
@@ -34,8 +36,8 @@ class test_stretch(gr_unittest.TestCase):
         tb = self.tb
 
         data = 10*[1,]
-        data0 = map(lambda x: x/20.0, data)
-        data1 = map(lambda x: x/10.0, data)
+        data0 = [x / 20.0 for x in data]
+        data1 = [x / 10.0 for x in data]
 
         expected_result0 = 10*[0.05,]
         expected_result1 = 10*[0.1,]

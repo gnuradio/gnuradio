@@ -19,18 +19,23 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import runtime_swig as gr
-from runtime_swig import io_signature, io_signaturev
-from runtime_swig import block_gw_message_type
-from runtime_swig import block_gateway
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
 import numpy
+
+from . import runtime_swig as gr
+from .runtime_swig import io_signature, io_signaturev
+from .runtime_swig import block_gw_message_type
+from .runtime_swig import block_gateway
 
 ########################################################################
 # Magic to turn pointers into numpy arrays
 # http://docs.scipy.org/doc/numpy/reference/arrays.interface.html
 ########################################################################
 def pointer_to_ndarray(addr, dtype, nitems):
-    class array_like:
+    class array_like(object):
         __array_interface__ = {
             'data' : (int(addr), False),
             'typestr' : dtype.base.str,
@@ -87,13 +92,13 @@ class gateway_block(object):
         #ensure that the sigs are iterable dtypes
         def sig_to_dtype_sig(sig):
             if sig is None: sig = ()
-            return map(numpy.dtype, sig)
+            return list(map(numpy.dtype, sig))
         self.__in_sig = sig_to_dtype_sig(in_sig)
         self.__out_sig = sig_to_dtype_sig(out_sig)
 
         #cache the ranges to iterate when dispatching work
-        self.__in_indexes = range(len(self.__in_sig))
-        self.__out_indexes = range(len(self.__out_sig))
+        self.__in_indexes = list(range(len(self.__in_sig)))
+        self.__out_indexes = list(range(len(self.__out_sig)))
 
         #convert the signatures into gr.io_signatures
         def sig_to_gr_io_sigv(sig):

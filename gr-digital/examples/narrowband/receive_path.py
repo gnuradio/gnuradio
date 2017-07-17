@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 #
 # Copyright 2005-2007,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 
 from gnuradio import gr, gru, filter
 from gnuradio import eng_notation
@@ -34,10 +38,10 @@ import sys
 
 class receive_path(gr.hier_block2):
     def __init__(self, demod_class, rx_callback, options):
-	gr.hier_block2.__init__(self, "receive_path",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex),
-				gr.io_signature(0, 0, 0))
-        
+        gr.hier_block2.__init__(self, "receive_path",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(0, 0, 0))
+
         options = copy.copy(options)    # make a copy so we can destructively modify
 
         self._verbose     = options.verbose
@@ -56,10 +60,10 @@ class receive_path(gr.hier_block2):
 
         # Make sure the channel BW factor is between 1 and sps/2
         # or the filter won't work.
-        if(self._chbw_factor < 1.0 or self._chbw_factor > self.samples_per_symbol()/2):
-            sys.stderr.write("Channel bandwidth factor ({0}) must be within the range [1.0, {1}].\n".format(self._chbw_factor, self.samples_per_symbol()/2))
+        if(self._chbw_factor < 1.0 or self._chbw_factor > self.samples_per_symbol() / 2):
+            sys.stderr.write("Channel bandwidth factor ({0}) must be within the range [1.0, {1}].\n".format(self._chbw_factor, self.samples_per_symbol() / 2))
             sys.exit(1)
-        
+
         # Design filter to get actual channel we want
         sw_decim = 1
         chan_coeffs = filter.firdes.low_pass(1.0,                  # gain
@@ -68,7 +72,7 @@ class receive_path(gr.hier_block2):
                                              0.5,                  # width of trans. band
                                              filter.firdes.WIN_HANN)   # filter type
         self.channel_filter = filter.fft_filter_ccc(sw_decim, chan_coeffs)
-        
+
         # receiver
         self.packet_receiver = \
             digital.demod_pkts(self.demodulator,
@@ -85,8 +89,8 @@ class receive_path(gr.hier_block2):
         if self._verbose:
             self._print_verbage()
 
-	# connect block input to channel filter
-	self.connect(self, self.channel_filter)
+        # connect block input to channel filter
+        self.connect(self, self.channel_filter)
 
         # connect the channel input filter to the carrier power detector
         self.connect(self.channel_filter, self.probe)
@@ -145,8 +149,8 @@ class receive_path(gr.hier_block2):
         """
         Prints information about the receive path
         """
-        print "\nReceive Path:"
-        print "modulation:      %s"    % (self._demod_class.__name__)
-        print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
-        print "samples/symbol:  %.4f"    % (self.samples_per_symbol())
-        print "Differential:    %s"    % (self.differential())
+        print("\nReceive Path:")
+        print("modulation:      %s"    % (self._demod_class.__name__))
+        print("bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate)))
+        print("samples/symbol:  %.4f"    % (self.samples_per_symbol()))
+        print("Differential:    %s"    % (self.differential()))

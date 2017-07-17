@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import sys
 from gnuradio import gr, blocks
 import pmt
@@ -65,7 +69,7 @@ def parse_header(p, VERBOSE=False):
         r = pmt.dict_ref(p, pmt.string_to_symbol("version"), dump)
         version = pmt.to_long(r)
         if(VERBOSE):
-            print "Version Number: {0}".format(version)
+            print("Version Number: {0}".format(version))
     else:
         sys.stderr.write("Could not find key 'version': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -76,7 +80,7 @@ def parse_header(p, VERBOSE=False):
         samp_rate = pmt.to_double(r)
         info["rx_rate"] = samp_rate
         if(VERBOSE):
-            print "Sample Rate: {0:.2f} sps".format(samp_rate)
+            print("Sample Rate: {0:.2f} sps".format(samp_rate))
     else:
         sys.stderr.write("Could not find key 'sr': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -91,7 +95,7 @@ def parse_header(p, VERBOSE=False):
         t = secs + fracs
         info["rx_time"] = t
         if(VERBOSE):
-            print "Seconds: {0:.6f}".format(t)
+            print("Seconds: {0:.6f}".format(t))
     else:
         sys.stderr.write("Could not find key 'time': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -102,7 +106,7 @@ def parse_header(p, VERBOSE=False):
         dsize = pmt.to_long(r)
         info["size"] = dsize
         if(VERBOSE):
-            print "Item size: {0}".format(dsize)
+            print("Item size: {0}".format(dsize))
     else:
         sys.stderr.write("Could not find key 'size': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -114,7 +118,7 @@ def parse_header(p, VERBOSE=False):
         stype = ftype_to_string[dtype]
         info["type"] = stype
         if(VERBOSE):
-            print "Data Type: {0} ({1})".format(stype, dtype)
+            print("Data Type: {0} ({1})".format(stype, dtype))
     else:
         sys.stderr.write("Could not find key 'type': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -125,7 +129,7 @@ def parse_header(p, VERBOSE=False):
         cplx = pmt.to_bool(r)
         info["cplx"] = cplx
         if(VERBOSE):
-            print "Complex? {0}".format(cplx)
+            print("Complex? {0}".format(cplx))
     else:
         sys.stderr.write("Could not find key 'cplx': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -138,9 +142,9 @@ def parse_header(p, VERBOSE=False):
         info["extra_len"] = seg_start - HEADER_LENGTH
         info["has_extra"] = info["extra_len"] > 0
         if(VERBOSE):
-            print "Header Length: {0} bytes".format(info["hdr_len"])
-            print "Extra Length:  {0}".format((info["extra_len"]))
-            print "Extra Header?  {0}".format(info["has_extra"])
+            print("Header Length: {0} bytes".format(info["hdr_len"]))
+            print("Extra Length:  {0}".format((info["extra_len"])))
+            print("Extra Header?  {0}".format(info["has_extra"]))
     else:
         sys.stderr.write("Could not find key 'strt': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -150,13 +154,13 @@ def parse_header(p, VERBOSE=False):
         r = pmt.dict_ref(p, pmt.string_to_symbol("bytes"), dump)
         nbytes = pmt.to_uint64(r)
 
-        nitems = nbytes/dsize
+        nitems = nbytes / dsize
         info["nitems"] = nitems
         info["nbytes"] = nbytes
 
         if(VERBOSE):
-            print "Size of Data: {0} bytes".format(nbytes)
-            print "              {0} items".format(nitems)
+            print("Size of Data: {0} bytes".format(nbytes))
+            print("              {0} items".format(nitems))
     else:
         sys.stderr.write("Could not find key 'size': invalid or corrupt data file.\n")
         sys.exit(1)
@@ -171,12 +175,12 @@ def parse_extra_dict(p, info, VERBOSE=False):
 
     items = pmt.dict_items(p)
     nitems = pmt.length(items)
-    for i in xrange(nitems):
+    for i in range(nitems):
         item = pmt.nth(i, items)
         key = pmt.symbol_to_string(pmt.car(item))
         val = pmt.cdr(item)
         info[key] = val
         if(VERBOSE):
-            print "{0}: {1}".format(key, val)
+            print("{0}: {1}".format(key, val))
 
     return info

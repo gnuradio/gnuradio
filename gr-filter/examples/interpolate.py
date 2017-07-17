@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
@@ -79,10 +82,10 @@ class pfb_top_block(gr.top_block):
                                                window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
-        tpc = scipy.ceil(float(len(self._taps)) /  float(self._interp))
-        print "Number of taps:     ", len(self._taps)
-        print "Number of filters:  ", self._interp
-        print "Taps per channel:   ", tpc
+        tpc = scipy.ceil(float(len(self._taps)) / float(self._interp))
+        print("Number of taps:     ", len(self._taps))
+        print("Number of filters:  ", self._interp)
+        print("Taps per channel:   ", tpc)
 
         # Create a couple of signals at different frequencies
         self.signal1 = analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freq1, 0.5)
@@ -121,7 +124,7 @@ def main():
     tstart = time.time()
     tb.run()
     tend = time.time()
-    print "Run time: %f" % (tend - tstart)
+    print("Run time: %f" % (tend - tstart))
 
 
     if 1:
@@ -141,11 +144,11 @@ def main():
         d = tb.snk_i.data()[Ns:Ns+Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
+        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
+        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
         sp1_f.set_xlim([min(f_in), max(f_in)+1])
         sp1_f.set_ylim([-200.0, 50.0])
@@ -155,7 +158,7 @@ def main():
         sp1_f.set_xlabel("Frequency (Hz)")
         sp1_f.set_ylabel("Power (dBW)")
 
-        Ts = 1.0/fs
+        Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
         t_in = scipy.arange(0, Tmax, Ts)
@@ -175,11 +178,11 @@ def main():
 
         sp2_f = fig2.add_subplot(2, 1, 1)
         d = tb.snk1.data()[Ns:Ns+(tb._interp*Ne)]
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
+        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
         X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_o = scipy.arange(-fs_int/2.0, fs_int/2.0, fs_int/float(X_o.size))
+        f_o = scipy.arange(-fs_int / 2.0, fs_int / 2.0, fs_int / float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
         sp2_f.set_xlim([min(f_o), max(f_o)+1])
         sp2_f.set_ylim([-200.0, 50.0])
@@ -188,7 +191,7 @@ def main():
         sp2_f.set_xlabel("Frequency (Hz)")
         sp2_f.set_ylabel("Power (dBW)")
 
-        Ts_int = 1.0/fs_int
+        Ts_int = 1.0 / fs_int
         Tmax = len(d)*Ts_int
 
         t_o = scipy.arange(0, Tmax, Ts_int)
@@ -208,11 +211,11 @@ def main():
 
         sp3_f = fig3.add_subplot(2, 1, 1)
         d = tb.snk2.data()[Ns:Ns+(tb._interp*Ne)]
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
+        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
         X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_o = scipy.arange(-fs_aint/2.0, fs_aint/2.0, fs_aint/float(X_o.size))
+        f_o = scipy.arange(-fs_aint / 2.0, fs_aint / 2.0, fs_aint / float(X_o.size))
         p3_f = sp3_f.plot(f_o, X_o, "b")
         sp3_f.set_xlim([min(f_o), max(f_o)+1])
         sp3_f.set_ylim([-200.0, 50.0])
@@ -221,7 +224,7 @@ def main():
         sp3_f.set_xlabel("Frequency (Hz)")
         sp3_f.set_ylabel("Power (dBW)")
 
-        Ts_aint = 1.0/fs_aint
+        Ts_aint = 1.0 / fs_aint
         Tmax = len(d)*Ts_aint
 
         t_o = scipy.arange(0, Tmax, Ts_aint)

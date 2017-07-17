@@ -20,13 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio.filter import filter_design
 import sys
 try:
     from PyQt4 import Qt, QtCore, QtGui
 except ImportError:
-    print "Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)"
-    raise SystemExit, 1
+    print("Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    raise SystemExit(1)
 
 '''
 Callback example
@@ -36,10 +38,10 @@ launch function returns gr_filter_design mainwindow
 object when callback is not None
 '''
 def print_params(filtobj):
-    print "Filter Count:", filtobj.get_filtercount()
-    print "Filter type:", filtobj.get_restype()
-    print "Filter params", filtobj.get_params()
-    print "Filter Coefficients", filtobj.get_taps()
+    print("Filter Count:", filtobj.get_filtercount())
+    print("Filter type:", filtobj.get_restype())
+    print("Filter params", filtobj.get_params())
+    print("Filter Coefficients", filtobj.get_taps())
 
 app = Qt.QApplication(sys.argv)
 #launch function returns gr_filter_design mainwindow object

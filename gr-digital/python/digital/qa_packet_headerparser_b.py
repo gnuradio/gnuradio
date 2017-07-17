@@ -19,6 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 import time
 import random
 
@@ -77,7 +78,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         header_len = 32
         packet_len_tagname = "packet_len"
         packet_lengths = [random.randint(1, 100) for x in range(N)]
-        data, tags = tagged_streams.packets_to_vectors([range(packet_lengths[i]) for i in range(N)], packet_len_tagname)
+        data, tags = tagged_streams.packets_to_vectors([list(range(packet_lengths[i])) for i in range(N)], packet_len_tagname)
         src = blocks.vector_source_b(data, False, 1, tags)
         header_gen = digital.packet_headergenerator_bb(header_len, packet_len_tagname)
         header_parser = digital.packet_headerparser_b(header_len, packet_len_tagname)
@@ -89,7 +90,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         self.tb.stop()
         self.tb.wait()
         self.assertEqual(sink.num_messages(), N)
-        for i in xrange(N):
+        for i in range(N):
             msg = pmt.to_python(sink.get_message(i))
             self.assertEqual(msg, {'packet_len': packet_lengths[i], 'packet_num': i})
 
@@ -110,7 +111,7 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         frame_len_tagname = "frame_len"
         src = blocks.vector_source_b(encoded_headers)
         header_formatter = digital.packet_header_ofdm(
-                (range(32),range(4),range(8)), # 32/4/8 carriers are occupied (which doesn't matter here)
+                (list(range(32)),list(range(4)),list(range(8))), # 32/4/8 carriers are occupied (which doesn't matter here)
                 1,         # 1 OFDM symbol per header (= 32 bits)
                 packet_len_tagname,
                 frame_len_tagname,
@@ -141,10 +142,10 @@ class qa_packet_headerparser_b (gr_unittest.TestCase):
         packet_length = 23
         packet_len_tagname = "packet_len"
         frame_len_tagname = "frame_len"
-        data, tags = tagged_streams.packets_to_vectors([range(packet_length),range(packet_length),], packet_len_tagname)
+        data, tags = tagged_streams.packets_to_vectors([list(range(packet_length)),list(range(packet_length)),], packet_len_tagname)
         src = blocks.vector_source_b(data, False, 1, tags)
         header_formatter = digital.packet_header_ofdm(
-                (range(32),), # 32 carriers are occupied (which doesn't matter here)
+                (list(range(32)),), # 32 carriers are occupied (which doesn't matter here)
                 1,         # 1 OFDM symbol per header (= 32 bits)
                 packet_len_tagname,
                 frame_len_tagname,

@@ -23,13 +23,16 @@
 This is the gr-vocoder package. This package includes the various
 vocoder blocks in GNU Radio.
 '''
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import os
 
 try:
-    from vocoder_swig import *
+    from .vocoder_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from vocoder_swig import *
+    from .vocoder_swig import *
 
-from cvsd import *
+from .cvsd import *

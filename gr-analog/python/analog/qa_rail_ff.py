@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, analog, blocks
 
 def clip(x, lo, hi):
@@ -60,7 +61,7 @@ class test_rail(gr_unittest.TestCase):
         lo = -0.75
         hi = 0.90
         src_data = [-2, -1, -0.5, -0.25, 0, 0.25, 0.5, 1, 2]
-        expected_result = map(lambda x: clip(x, lo, hi), src_data)
+        expected_result = [clip(x, lo, hi) for x in src_data]
 
         src = blocks.vector_source_f(src_data)
         op = analog.rail_ff(lo, hi)

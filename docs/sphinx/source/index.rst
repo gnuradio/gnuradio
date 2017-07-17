@@ -13,19 +13,15 @@ gnuradio
    blocks_comedi <comedi_blocks>
    blocks_digital <digital_blocks>
    blocks_dtv <dtv_blocks>
-   blocks_fcd <fcd_blocks>
    blocks_fec <fec_blocks>
    blocks_fft <fft_blocks>
    blocks_filter <filter_blocks>
-   blocks_noaa <noaa_blocks>
-   blocks_pager <pager_blocks>
    blocks_qtgui <qtgui_blocks>
    blocks_trellis <trellis_blocks>
    blocks_uhd <uhd_blocks>
    blocks_video_sdl <video_sdl_blocks>
    blocks_vocoder <vocoder_blocks>
    blocks_wavelet <wavelet_blocks>
-   blocks_wxgui <wxgui_blocks>
    blocks_zeromq <zeromq_blocks>
    analog <analog>
    channels <channels>
@@ -37,7 +33,6 @@ gnuradio
    trellis <trellis>
    uhd <uhd>
    vocoder <vocoder>
-   wxgui <wxgui>
 
 .. automodule:: gnuradio
 .. automodule:: pmt
@@ -524,15 +519,6 @@ Error Coding Blocks
    gnuradio.fec.tagged_encoder
 
 
-FCD Blocks
-----------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.fcd.source_c
-
-
 File Operator Blocks
 --------------------
 
@@ -656,8 +642,6 @@ Instrumentation Blocks
    gnuradio.qtgui.vector_sink_f
    gnuradio.qtgui.waterfall_sink_c
    gnuradio.qtgui.waterfall_sink_f
-   gnuradio.wxgui.histo_sink_f
-   gnuradio.wxgui.oscope_sink_f
 
 
 
@@ -859,17 +843,6 @@ Networking Tools Blocks
    gnuradio.blocks.udp_source
 
 
-NOAA Blocks
------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.noaa.hrpt_decoder
-   gnuradio.noaa.hrpt_deframer
-   gnuradio.noaa.hrpt_pll_cf
-
-
 OFDM Blocks
 -----------
 
@@ -913,20 +886,7 @@ Packet Operator Blocks
    gnuradio.digital.simple_correlator
    gnuradio.digital.simple_framer
 
-
-Pager Blocks
-------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.pager.flex_deinterleave
-   gnuradio.pager.flex_frame
-   gnuradio.pager.flex_parse
-   gnuradio.pager.flex_sync
-   gnuradio.pager.slicer_fb
-
-
+   
 Peak Detector Blocks
 --------------------
 
@@ -1042,7 +1002,6 @@ Synchronizer Blocks
    gnuradio.digital.corr_est_cc
    gnuradio.digital.costas_loop_cc
    gnuradio.digital.fll_band_edge_cc
-   gnuradio.digital.mpsk_receiver_cc
    gnuradio.digital.msk_timing_recovery_cc
    gnuradio.analog.pll_carriertracking_cc
    gnuradio.analog.pll_freqdet_cf
@@ -1464,13 +1423,3 @@ Helper Classes: Vocoder
    gnuradio.vocoder.codec2
    gnuradio.vocoder.cvsd_encode_fb
    gnuradio.vocoder.cvsd_decode_bf
-
-
-Helper Classes: WXGUI
----------------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.wxgui.oscope_sink_x
-   gnuradio.wxgui.histo_sink_f

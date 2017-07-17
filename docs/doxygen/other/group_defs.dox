@@ -29,7 +29,6 @@
 /*! \defgroup deprecated_blk Deprecated */
 /*! \defgroup equalizers_blk Equalizers */
 /*! \defgroup error_coding_blk Error Coding and Decoding */
-/*! \defgroup fcd_blk FCD Interface */
 /*! \defgroup file_operators_blk File Operators */
 /*! \defgroup filter_blk Filters */
 /*! \defgroup fourier_analysis_blk Fourier Analysis */
@@ -41,11 +40,9 @@
 /*! \defgroup misc_blk Miscellaneous */
 /*! \defgroup modulators_blk Modulators and Demodulators */
 /*! \defgroup networking_tools_blk Networking Tools */
-/*! \defgroup noaa_blk NOAA Blocks */
 /*! \defgroup ofdm_blk OFDM Blocks */
 /*! \defgroup packet_operators_blk Packet/Frame Operators */
 /*! \defgroup peak_detectors_blk Peak Detectors */
-/*! \defgroup pager_blk Pager Blocks */
 /*! \defgroup qtgui_blk QT Graphical Interfaces */
 /*! \defgroup resamplers_blk Resamplers */
 /*! \defgroup stream_operators_blk Streams Operators */
@@ -57,7 +54,6 @@
 /*! \defgroup uhd_blk UHD Interface */
 /*! \defgroup waveform_generators_blk Waveform Generators */
 /*! \defgroup wavelet_blk Wavelet Transforms */
-/*! \defgroup wxgui_blk WX Graphical Interfaces */
 
 /*!
  * \defgroup base_blk Base classes for GR Blocks
@@ -75,16 +71,6 @@
  * \defgroup applications Applications
  * These are some applications build using gnuradio...
  * @{
- */
-
-/*!
- * \defgroup atsc ATSC
- * ATSC Applications...
- */
-
-/*!
- * \defgroup pager Pager
- * Pager Applications
  */
 
 /*! @} */

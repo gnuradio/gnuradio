@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import os
 import tempfile
@@ -35,8 +36,8 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        src_data = range(1000)
-        expected_result = range(1000)
+        src_data = list(range(1000))
+        expected_result = list(range(1000))
 
         snk2 = blocks.vector_sink_f()
 
@@ -59,8 +60,8 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.assertEqual(len(snk2.tags()), 0)
 
     def test_descriptor_001(self):
-        src_data = range(1000)
-        expected_result = range(1000)
+        src_data = list(range(1000))
+        expected_result = list(range(1000))
 
         snk2 = blocks.vector_sink_f()
 
@@ -91,7 +92,7 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.assertEqual(len(snk2.tags()), 0)
 
     def test_file_source_can_seek_after_open(self):
-        src_data = range(1000)
+        src_data = list(range(1000))
 
         with tempfile.NamedTemporaryFile() as temp:
             src = blocks.vector_source_f(src_data)

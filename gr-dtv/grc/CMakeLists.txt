@@ -74,5 +74,4 @@ install(FILES
     dtv_catv_frame_sync_enc_bb.xml
     dtv_catv_trellis_enc_bb.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "dtv_python"
 )
