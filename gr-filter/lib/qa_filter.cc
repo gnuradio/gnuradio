@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright (C) 2012,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,6 +30,8 @@
 #include <qa_fir_filter_with_buffer.h>
 #include <qa_mmse_fir_interpolator_cc.h>
 #include <qa_mmse_fir_interpolator_ff.h>
+#include <qa_mmse_interp_differentiator_cc.h>
+#include <qa_mmse_interp_differentiator_ff.h>
 
 CppUnit::TestSuite *
 qa_gr_filter::suite ()
@@ -42,6 +44,8 @@ qa_gr_filter::suite ()
   s->addTest(gr::filter::ccf::qa_fir_filter_with_buffer_ccf::suite());
   s->addTest(gr::filter::qa_mmse_fir_interpolator_cc::suite());
   s->addTest(gr::filter::qa_mmse_fir_interpolator_ff::suite());
+  s->addTest(gr::filter::qa_mmse_interp_differentiator_cc::suite());
+  s->addTest(gr::filter::qa_mmse_interp_differentiator_ff::suite());
 
   return s;
 }
