@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- Copyright 2011-2016 Free Software Foundation, Inc.
+ Copyright (C) 2011-2017 Free Software Foundation, Inc.
 
  This file is part of GNU Radio
 
@@ -118,6 +118,7 @@
     <block>digital_fll_band_edge_cc</block>
     <block>digital_pfb_clock_sync_xxx</block>
     <block>digital_pn_correlator_cc</block>
+    <block>digital_symbol_sync_xx</block>
     <block>digital_corr_est_cc</block>
   </cat>
   <cat>

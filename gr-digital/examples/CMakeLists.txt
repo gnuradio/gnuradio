@@ -76,6 +76,8 @@ install(
     demod/mpsk_demod.grc
     demod/pam_sync.grc
     demod/pam_timing.grc
+    demod/symbol_sync_test_complex.grc
+    demod/symbol_sync_test_float.grc
     demod/test_corr_est.grc
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/demod
 )
