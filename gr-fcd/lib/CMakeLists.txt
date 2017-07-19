@@ -79,6 +79,8 @@ endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   FIND_LIBRARY(IOKIT_LIBRARY IOKit)
   list(APPEND fcd_libs ${IOKIT_LIBRARY})
+  FIND_LIBRARY(CF_LIBRARY CoreFoundation)
+  list(APPEND fcd_libs ${CF_LIBRARY})
 elseif (NOT WIN32)
   list(APPEND fcd_libs
     ${LIBUSB_LIBRARIES}
