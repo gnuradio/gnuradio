@@ -291,11 +291,8 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1,
-                                                                 NULL);
-        d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(
-                                                                 d_nfilters + 1,
-                                                                 NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
 
         std::vector<float> t(NTAPS, 0);
         int incr = NSTEPS/d_nfilters;
@@ -388,11 +385,8 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1,
-                                                                 NULL);
-        d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(
-                                                                 d_nfilters + 1,
-                                                                 NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
 
         std::vector<float> t(NTAPS, 0);
         int incr = NSTEPS/d_nfilters;
@@ -541,11 +535,8 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1,
-                                                                 NULL);
-        d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(
-                                                                 d_nfilters + 1,
-                                                                 NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_ccf*>(d_nfilters + 1);
 
         m = taps.size();
         n = diff_taps.size();
@@ -709,11 +700,8 @@ namespace gr {
         // N.B. We create an extra final row for an offset of 1.0, because it's
         // easier than dealing with wrap around from 0.99... to 0.0 shifted
         // by 1 tap.
-        d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1,
-                                                                 NULL);
-        d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(
-                                                                 d_nfilters + 1,
-                                                                 NULL);
+        d_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
+        d_diff_filters = std::vector<filter::kernel::fir_filter_fff*>(d_nfilters + 1);
 
         m = taps.size();
         n = diff_taps.size();
