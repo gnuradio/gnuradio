@@ -626,9 +626,9 @@ class ActionHandler:
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.get_proc():
                 try:
-                    page.get_proc().kill()
+                    page.term_proc()
                 except:
-                    print "could not kill process: %d" % page.get_proc().pid
+                    print "could not terminate process: %d" % page.get_proc().pid
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
