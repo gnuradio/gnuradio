@@ -25,12 +25,14 @@
   <param>
     <name>Block size (N)</name>
     <key>block_size</key>
+    <value>32</value>
     <type>int</type>
   </param>
 
   <param>
-    <name>#Info Bits (K)</name>
+    <name>Info Bits (K)</name>
     <key>num_info_bits</key>
+    <value>16</value>
     <type>int</type>
   </param>
 
@@ -46,6 +48,12 @@
     <key>mu</key>
     <value>16</value>
     <type>int</type>
-    <hide>#if 'BEC' in $getVar('channel') then 'all' else 'none' #</hide>
   </param>
+  <doc>This block serves as an interface to the underlying Python functions for channel construction.
+  
+  Current channel types are: BEC/AWGN
+  Block size must be a power of 2!
+  Info Bits must be 0 smaller K  smaller N
+  Design SNR does affect the target transmission SNR and thus performance.
+  The parameter mu is only relevant for AWGN channels. It is passed on to the corresponding Channel construction algorithm.</doc>
 </block>
