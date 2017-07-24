@@ -1,5 +1,6 @@
 id: options
 label: Options
+flags: has_python, has_cpp
 
 parameters:
 -   id: title
@@ -22,12 +23,36 @@ parameters:
     label: Canvas Size
     dtype: int_vector
     hide: part
+-   id: output_language
+    label: Output Language
+    dtype: enum
+    default: python
+    options: [python, cpp]
+    option_labels: [Python, C++]
 -   id: generate_options
     label: Generate Options
     dtype: enum
     default: qt_gui
     options: [qt_gui, bokeh_gui, no_gui, hb, hb_qt_gui]
     option_labels: [QT GUI, Bokeh GUI, No GUI, Hier Block, Hier Block (QT GUI)]
+-   id: gen_linking
+    label: Linking
+    dtype: enum
+    default: dynamic
+    options: [dynamic, static]
+    option_labels: [ Dynamic, Static ]
+    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+-   id: gen_cmake
+    label: Generate CMakeLists.txt
+    dtype: enum
+    default: 'On'
+    options: ['On', 'Off']
+    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+-   id: cmake_opt
+    label: CMake options
+    dtype: string
+    default: ''
+    hide: ${ ('part' if output_language == 'cpp' else 'all') }
 -   id: category
     label: Category
     dtype: string
@@ -129,6 +154,9 @@ templates:
     - 'if ${run}: self.start()
 
         else: self.stop(); self.wait()'
+
+cpp_templates:
+    includes: '#include <gnuradio/top_block.h>'
 
 documentation: |-
     The options block sets special parameters for the flow graph. Only one option block is allowed per flow graph.

@@ -19,6 +19,8 @@
 from __future__ import absolute_import
 from six.moves import range
 
+from ..utils import expr_utils
+from operator import methodcaller, attrgetter
 
 class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
 
@@ -130,6 +132,34 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
                     key_offset += len(pad.sinks) + len(pad.sources)
         return -1
 
+    def get_cpp_variables(self):
+        """
+        Get a list of all variables (C++) in this flow graph namespace.
+        Exclude parameterized variables.
+
+        Returns:
+            a sorted list of variable blocks in order of dependency (indep -> dep)
+        """
+        variables = [block for block in self.iter_enabled_blocks() if block.is_variable]
+        return expr_utils.sort_objects(variables, attrgetter('name'), methodcaller('get_cpp_var_make'))
+
+    def includes(self):
+        """
+        Get a set of all include statements (C++) in this flow graph namespace.
+
+        Returns:
+            a list of #include statements
+        """
+        return [block.cpp_templates.render('includes') for block in self.iter_enabled_blocks()]
+
+    def links(self):
+        """
+        Get a set of all libraries to link against (C++) in this flow graph namespace.
+
+        Returns:
+            a list of GNU Radio modules
+        """
+        return [block.cpp_templates.render('link') for block in self.iter_enabled_blocks()]
 
 def get_hier_block_io(flow_graph, direction, domain=None):
     """

@@ -21,16 +21,17 @@ from __future__ import absolute_import
 
 import collections
 import itertools
+import copy
 
 import six
 from six.moves import range
+import re
 
 from ._templates import MakoTemplates
 from ._flags import Flags
 
 from ..base import Element
 from ..utils.descriptors import lazy_property
-
 
 def _get_elem(iterable, key):
     items = list(iterable)
@@ -49,6 +50,7 @@ class Block(Element):
     key = ''
     label = ''
     category = ''
+    vtype = '' # This is only used for variables when we want C++ output
     flags = Flags('')
     documentation = {'': ''}
 
@@ -83,6 +85,7 @@ class Block(Element):
         self.active_sinks = []  # on rewrite
 
         self.states = {'state': True}
+        self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
 
     # region Rewrite_and_Validation
     def rewrite(self):
@@ -136,6 +139,7 @@ class Block(Element):
         Element.validate(self)
         self._run_asserts()
         self._validate_generate_mode_compat()
+        self._validate_output_language_compat()
         self._validate_var_value()
 
     def _run_asserts(self):
@@ -160,6 +164,13 @@ class Block(Element):
                                        repr(current_generate_option)))
 
         check_generate_mode('QT GUI', Flags.NEED_QT_GUI, ('qt_gui', 'hb_qt_gui'))
+
+    def _validate_output_language_compat(self):
+        """check if this block supports the selected output language"""
+        current_output_language = self.parent.get_option('output_language')
+
+        if current_output_language == 'cpp' and 'has_cpp' not in self.flags:
+                self.add_error_message("This block does not support C++ output.")
 
     def _validate_var_value(self):
         """or variables check the value (only if var_value is used)"""
@@ -227,6 +238,9 @@ class Block(Element):
     def get_var_make(self):
         return self.templates.render('var_make')
 
+    def get_cpp_var_make(self):
+        return self.cpp_templates.render('var_make')
+
     def get_var_value(self):
         return self.templates.render('var_value')
 
@@ -241,7 +255,87 @@ class Block(Element):
             if 'self.' in callback:
                 return callback
             return 'self.{}.{}'.format(self.name, callback)
+
         return [make_callback(c) for c in self.templates.render('callbacks')]
+
+    def get_cpp_callbacks(self):
+        """
+        Get a list of C++ function callbacks for this block.
+
+        Returns:
+            a list of strings
+        """
+        def make_callback(callback):
+            if 'this->' in callback:
+                return callback
+            return 'this->{}->{}'.format(self.name, callback)
+
+        return [make_callback(c) for c in self.cpp_templates.render('callbacks')]
+
+    def decide_type(self):
+        """
+        Evaluate the value of the variable block and decide its type.
+
+        Returns:
+            None
+        """
+        value = self.params['value'].value
+        self.cpp_templates = copy.copy(self.orig_cpp_templates)
+
+        def get_type(element):
+            try:
+                evaluated = ast.literal_eval(element)
+
+            except ValueError or SyntaxError:
+                if re.match(r'^(numpy|np|scipy|sp)\.pi$', value):
+                    return 'pi'
+                else:
+                    return 'std::string'
+
+            else:
+                _vtype = type(evaluated)
+                if _vtype in [int, float, bool, list]:
+                    if _vtype == (int or long):
+                        return 'int'
+
+                    if _vtype == float:
+                        return 'double'
+
+                    if _vtype == bool:
+                        return 'bool'
+
+                    if _vtype == list:
+                        try:
+                            first_element_type = type(evaluated[0])
+                            if first_element_type != str:
+                                list_type = get_type(str(evaluated[0]))
+                            else:
+                                list_type = get_type(evaluated[0])
+
+                        except IndexError: # empty list
+                            return 'std::vector<std::string>'
+
+                        else:
+                            return 'std::vector<' + list_type + '>'
+
+                else:
+                    return 'std::string'
+
+        self.vtype = get_type(value)
+        if self.vtype == 'bool':
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', (value[0].lower() + value[1:]))
+
+        elif self.vtype == 'pi':
+            self.vtype = 'double'
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', 'boost::math::constants::pi<double>()')
+            self.cpp_templates['includes'].append('#include <boost/math/constants/constants.hpp>')
+
+        elif 'std::vector' in self.vtype:
+            self.cpp_templates['includes'].append('#include <vector>')
+            self.cpp_templates['var_make'] = self.cpp_templates['var_make'].replace('${value}', '{' + value[1:-1] + '}')
+
+        if 'string' in self.vtype:
+            self.cpp_templates['includes'].append('#include <string>')
 
     def is_virtual_sink(self):
         return self.key == 'virtual_sink'
@@ -261,7 +355,7 @@ class Block(Element):
         Bypass the block
 
         Returns:
-            True if block chagnes state
+            True if block changes state
         """
         if self.state != 'bypassed' and self.can_bypass():
             self.state = 'bypassed'
