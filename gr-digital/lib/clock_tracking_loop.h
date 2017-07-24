@@ -35,9 +35,9 @@ namespace gr {
      * which need a symbol clock tracking loop to determine the optimal
      * instant to sample a received symbol from an input sample
      * stream (i.e. *_clock_recovery* and *_clock_sync* blocks).
-     * It takes in a normalized loop bandwidth and damping factor
-     * as well as clock period bounds and provides the functions that
-     * control the update of the loop.
+     * It takes in an expected timing error detector gain, a normalized loop
+     * bandwidth and damping factor, as well as clock period bounds, and
+     * provides the functions that control the update of the loop.
      *
      * This control loop runs at the rate of the output clock, so
      * each step of the loop produces estimates about the output clock,
@@ -51,9 +51,9 @@ namespace gr {
      * The loop's low pass filter is a Proportional-Integral (PI) filter.
      * The proportional and integral gains of the filter are termed alpha
      * and beta respectively. These gains are calculated using the input
-     * loop bandwidth and damping factor.  If needed, the alpha and beta
-     * gain values can be set using their respective #set_alpha or #set_beta
-     * functions.
+     * expected timing error detector gain, loop bandwidth and damping factor.
+     * If needed, the alpha and beta gain values can be set using their
+     * respective #set_alpha or #set_beta functions.
      *
      * The class estimates the average clock period, T_avg; the instantaneous
      * clock period, T_inst; and the instantaneous clock phase, tau; of a
@@ -70,20 +70,21 @@ namespace gr {
      * keeps the phase within +/-T_avg/2).
      *
      * The clock tracking loop, with its PI filter, when properly implemented, has
-     * a digital loop phase-transfer function, in terms of the proportional gain
-     * \f$\alpha\f$ and the integral gain \f$\beta\f$ as follows:
+     * a digital loop phase-transfer function, in terms of the timing error
+     * detector gain, \f$K_{ted}\f$; proportional gain, \f$\alpha\f$; and the
+     * integral gain, \f$\beta\f$, as follows:
      * 
      * \f{align*}
      *    H(z) &= \dfrac {\Theta_o(z)}{\Theta_i(z)}
-     *          = (\alpha + \beta)z^{-1} \cdot
+     *          = K_{ted}(\alpha + \beta)z^{-1} \cdot
      *            \dfrac{
      *                   1
      *                   - \dfrac{\alpha}{\alpha + \beta} z^{-1}
      *                  }
      *                  {
      *                   1
-     *                   - 2 \left(1 - \dfrac{\alpha + \beta}{2}\right) z^{-1}
-     *                   + (1 - \alpha) z^{-2}
+     *                   - 2 \left(1 - K_{ted}\dfrac{\alpha + \beta}{2}\right) z^{-1}
+     *                   + (1 - K_{ted}\alpha) z^{-2}
      *                  } \\
      * \f}
      *
@@ -140,23 +141,27 @@ namespace gr {
      * \\
      * \f}
      * 
-     * The PI filter gains, expressed in terms of the damping factor \f$\zeta\f$,
-     * the natural radian frequency \f$\omega_{n}\f$, the damped radian frequency of
-     * oscillation \f$\omega_{d}\f$, and the clock period \f$T\f$ are:
+     * The PI filter gains, expressed in terms of the damping factor, \f$\zeta\f$;
+     * the natural radian frequency, \f$\omega_{n}\f$; the damped radian frequency of
+     * oscillation, \f$\omega_{d}\f$; the timing error detector gain \f$K_{ted}\f$;
+     * and the clock period \f$T\f$ are:
      * 
      * \f{align*}
-     *   \alpha &= 2e^{-\zeta\omega_{n}T} \sinh(\zeta\omega_{n}T) \\
+     *   \alpha &= \dfrac{2}{K_{ted}}e^{-\zeta\omega_{n}T} \sinh(\zeta\omega_{n}T) \\
      * \\
      *   \beta  &=
      *      \begin{cases}
-     *         2
-     *         -2e^{-\zeta\omega_{n}T} [\sinh(\zeta\omega_{n}T) + \cos(\omega_{d}T)] &
-     *         \text{for} \quad \zeta < 1 \quad (under \: damped)\\
-     *         2
-     *         -2e^{-\zeta\omega_{n}T} [\sinh(\zeta\omega_{n}T) + 1] &
-     *         \text{for} \quad \zeta = 1 \quad (critically \: damped)\\
-     *         2
-     *         -2e^{-\zeta\omega_{n}T} [\sinh(\zeta\omega_{n}T) +\cosh(\omega_{d}T)] &
+     *         \dfrac{2}{K_{ted}} \left(1 -
+     *          e^{-\zeta\omega_{n}T} [\sinh(\zeta\omega_{n}T) + \cos(\omega_{d}T)]
+     *          \right) &
+     *         \text{for} \quad \zeta < 1 \quad (under \: damped)\\ \\
+     *         \dfrac{2}{K_{ted}} \left(1 -
+     *          e^{-\zeta\omega_{n}T} [\sinh(\zeta\omega_{n}T) + 1]
+     *          \right) &
+     *         \text{for} \quad \zeta = 1 \quad (critically \: damped)\\ \\
+     *         \dfrac{2}{K_{ted}} \left(1 -
+     *          e^{-\zeta\omega_{n}T} [\sinh(\zeta\omega_{n}T) +\cosh(\omega_{d}T)]
+     *          \right) &
      *         \text{for} \quad \zeta > 1 \quad (over \: damped)\\
      *      \end{cases} \\
      * \\
@@ -179,6 +184,17 @@ namespace gr {
      *     \pi \dfrac{f_{n}}{\left(\dfrac{F_{c}}{2}\right)}
      * \f}
      * 
+     * In practice, the timing error detector (TED) of the symbol clock
+     * tracking loop is implemented with an estimator of symbol clock phase
+     * error, which has some gain \f$K_{ted}\f$.  The gain, \f$K_{ted}\f$, is
+     * defined as the slope of a TED's S-curve plot at a symbol clock phase
+     * offset of \f$\tau = 0\f$.  The S-curve shape and central slope, and
+     * hence the gain \f$K_{ted}\f$, depend on the TED's estimator espression,
+     * the input signal level, the pulse shaping filter, and the \f$E_s/N_0\f$
+     * of the incomping signal.  The user must determine the TED's
+     * S-curve by analysis or simulation of the particular situation, in order
+     * to determine an appropriate value for \f$K_{ted}\f$.
+     *
      * * A note on symbol clock phase vs. interpolating resampler sample phase,
      * since most GNURadio symbol synchronization blocks seem to have the same
      * implementation error:
@@ -263,6 +279,13 @@ namespace gr {
       // omega_n_norm = omega_n*T  = 2*pi*f_n*T = 2*pi*f_n_norm
       float d_omega_n_norm;
 
+      // Expected gain of the timing error detector in use, given the
+      // TED estimator expression, the expected input amplitude, the
+      // input pulse shape, and the expected input Es/No.  (This value is the
+      // slope of the TED's S-curve plot at a timing offset of tau = 0, and
+      // must be determined by analysis and/or simulation by the user.)
+      float d_ted_gain;
+
       // Proportional gain of the PI loop filter (aka gain_mu)
       // (aka gain_mu in some clock recovery blocks)
       float d_alpha;
@@ -315,16 +338,27 @@ namespace gr {
        * Damping in the range (1.0, Inf) yields an over-damped loop.
        * Damping equal to 1.0 yields a crtically-damped loop.
        * Under-damped loops are not generally useful for clock tracking.
-       * This parameter defaults to 2.0, if not specified.
+       * This parameter defaults to 1.0, if not specified.
+       *
+       * \param ted_gain
+       * Expected gain of the timing error detector, given the TED in use
+       * and the anticipated input amplitude, pulse shape, and Es/No.
+       * This value is the slope of the TED's S-curve at timing offset tau = 0.
+       * This value is normally computed by the user analytically or by
+       * simulation in a tool outside of GNURadio.
+       * This value must be correct for the loop filter gains to be computed
+       * properly from the desired input loop bandwidth and damping factor.
+       * This parameter defaults to 1.0, if not specified.
        */
       clock_tracking_loop(float loop_bw,
                           float max_period, float min_period,
                           float nominal_period = 0.0f,
-                          float damping = 2.0f);
+                          float damping = 1.0f,
+                          float ted_gain = 1.0f);
 
       virtual ~clock_tracking_loop();
 
-      /*! \brief Update the gains from the loop bandwidth and damping factor.
+      /*! \brief Update the gains from the ted_gain, loop bw and damping factor.
        *
        * \details
        * This function updates the gains based on the loop
@@ -443,6 +477,25 @@ namespace gr {
        * \param df    loop damping factor
        */
       void set_damping_factor(float df);
+
+      /*!
+       * \brief Set the expected gain of the Timing Error Detector.
+       *
+       * \details
+       * Sets the expected gain of the timing error detector, given the TED in
+       * use and the anticipated input amplitude, pulse shape, and Es/No.
+       * This value is the slope of the TED's S-curve at timing offset tau = 0.
+       * This value is normally computed by the user analytically or by
+       * simulation in a tool outside of GNURadio.
+       * This value must be correct for the loop filter gains to be computed
+       * properly from the desired input loop bandwidth and damping factor.
+       *
+       * When a new ted_gain is set, the gains, alpha and beta,
+       * of the loop are automatcally recalculated.
+       *
+       * \param ted_gain    expected gain of the timing error detector
+       */
+      void set_ted_gain (float ted_gain);
 
       /*!
        * \brief Set the PI filter proportional gain, alpha.
@@ -619,6 +672,15 @@ namespace gr {
        * set gains, the value returned by this method will be inaccurate/stale.
        */
       float get_damping_factor() const;
+
+      /*!
+       * \brief Returns the user providded expected gain of the Timing Error
+       * Detector.
+       *
+       * \details
+       * See the documenation for set_ted_gain() for more details.
+       */
+      float get_ted_gain() const;
 
       /*!
        * \brief Returns the PI filter proportional gain, alpha.

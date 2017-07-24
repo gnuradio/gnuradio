@@ -38,6 +38,7 @@ namespace gr {
                          float sps,
                          float loop_bw,
                          float damping_factor,
+                         float ted_gain,
                          float max_deviation,
                          int osps,
                          constellation_sptr slicer,
@@ -50,6 +51,7 @@ namespace gr {
                                  sps,
                                  loop_bw,
                                  damping_factor,
+                                 ted_gain,
                                  max_deviation,
                                  osps,
                                  slicer,
@@ -63,6 +65,7 @@ namespace gr {
                            float sps,
                            float loop_bw,
                            float damping_factor,
+                           float ted_gain,
                            float max_deviation,
                            int osps,
                            constellation_sptr slicer,
@@ -146,7 +149,8 @@ namespace gr {
                                         sps + max_deviation,
                                         sps - max_deviation,
                                         sps,
-                                        damping_factor);
+                                        damping_factor,
+                                        ted_gain);
 
       // Timing Error Detector
       d_ted->sync_reset();
