@@ -1,10 +1,16 @@
 # - Find Log4cpp
 # Find the native LOG4CPP includes and library
 #
-#  LOG4CPP_INCLUDE_DIR - where to find LOG4CPP.h, etc.
-#  LOG4CPP_LIBRARIES   - List of libraries when using LOG4CPP.
-#  LOG4CPP_FOUND       - True if LOG4CPP found.
+# Defines the following variables on exit:
+#  LOG4CPP_INCLUDE_DIRS - where to find LOG4CPP.h, etc.
+#  LOG4CPP_LIBRARIES    - List of libraries when using LOG4CPP.
+#  LOG4CPP_FOUND        - True if LOG4CPP found.
 
+# if LOG4CPP_FOUND is already defined, just return;
+# assume that whatever argument(s) is/are provided to CMake are valid.
+if(DEFINED LOG4CPP_FOUND)
+  return()
+endif()
 
 if (LOG4CPP_INCLUDE_DIR)
   # Already in cache, be silent
@@ -12,17 +18,18 @@ if (LOG4CPP_INCLUDE_DIR)
 endif ()
 
 find_path(LOG4CPP_INCLUDE_DIR log4cpp/Category.hh
-  /opt/local/include
-  /usr/local/include
-  /usr/include
+  HINTS ${LOG4CPP_INCLUDE_DIRS} ${LOG4CPP_INCLUDE_DIR}
+  PATHS /opt/local/include
+    /usr/local/include
+    /usr/include
 )
 
 set(LOG4CPP_NAMES log4cpp)
 find_library(LOG4CPP_LIBRARY
   NAMES ${LOG4CPP_NAMES}
+  HINTS ${LOG4CPP_LIBRARIES} ${LOG4CPP_LIBRARY}
   PATHS /usr/lib /usr/local/lib /opt/local/lib
 )
-
 
 if (LOG4CPP_INCLUDE_DIR AND LOG4CPP_LIBRARY)
   set(LOG4CPP_FOUND TRUE)

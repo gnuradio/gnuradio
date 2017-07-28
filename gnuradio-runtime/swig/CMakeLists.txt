@@ -35,7 +35,6 @@ link_directories(${Boost_LIBRARY_DIRS})
 set(GR_SWIG_LIBRARIES
     gnuradio-pmt
     gnuradio-runtime
-    ${LOG4CPP_LIBRARIES}
 )
 
 ###############################################################
@@ -60,21 +59,24 @@ add_custom_target(pmt_swig DEPENDS ${SWIG_MODULE_pmt_swig_REAL_NAME})
 #    Build gnuradio-runtime swig
 ###############################################################
 
-# Only use if log4cpp is installed
 # Define ENABLE_GR_LOG for the .i file to ignore it.
 if(ENABLE_GR_LOG)
      SET(GR_SWIG_FLAGS "-DENABLE_GR_LOG")
 endif(ENABLE_GR_LOG)
 
 if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS -DGR_CTRLPORT)
+    ADD_DEFINITIONS(-DGR_CTRLPORT)
+    list(APPEND GR_SWIG_FLAGS -DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 set(GR_RUNTIME_SWIG_DOC_FILE ${GR_SWIG_DOC_FILE})
 list(APPEND GR_SWIG_TARGET_DEPS pmt_swig)
+
+if(HAVE_LOG4CPP)
+    list(APPEND GR_SWIG_LIBRARIES ${LOG4CPP_LIBRARIES})
+endif(HAVE_LOG4CPP)
 
 GR_SWIG_MAKE(runtime_swig runtime_swig.i)
 
