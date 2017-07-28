@@ -25,6 +25,19 @@ import pmt
 
 from gnuradio import gr, gr_unittest, blocks
 
+
+class non_sync_block(gr.basic_block):
+    def __init__(self):
+        gr.basic_block.__init__(self,
+            name="non_sync_block",
+            in_sig=[numpy.float32],
+            out_sig=[numpy.float32, numpy.float32])
+    def general_work(self, input_items, output_items):
+        self.consume(0, len(input_items[0]))
+        self.produce(0,2)
+        self.produce(1,1)
+        return gr.WORK_CALLED_PRODUCE
+
 class add_2_f32_1_f32(gr.sync_block):
     def __init__(self):
         gr.sync_block.__init__(
@@ -274,6 +287,18 @@ class test_block_gateway(gr_unittest.TestCase):
         tb.connect(src, convert, v2s, sink)
         tb.run()
         self.assertEqual(sink.data(), (1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+
+    def test_non_sync_block(self):
+        tb = gr.top_block ()
+        src = blocks.vector_source_f(range(1000000))
+        sinks = [blocks.vector_sink_f(), blocks.vector_sink_f()]
+        dut = non_sync_block()
+        tb.connect(src, dut)
+        tb.connect((dut,0), sinks[0])
+        tb.connect((dut,1), sinks[1])
+        tb.run ()
+        self.assertEqual(len(sinks[0].data()), 2*len(sinks[1].data()))
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_block_gateway, "test_block_gateway.xml")
