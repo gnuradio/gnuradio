@@ -265,14 +265,17 @@ def show_about(parent, config):
     ad = Gtk.AboutDialog(transient_for=parent)
     ad.set_program_name(config.name)
     ad.set_name('')
-    ad.set_version(config.version)
     ad.set_license(config.license)
+
+    py_version = sys.version.split()[0]
+    ad.set_version("{} (Python {})".format(config.version, py_version))
 
     try:
         ad.set_logo(Gtk.IconTheme().load_icon('gnuradio-grc', 64, 0))
     except:
         pass
 
+    #ad.set_comments("")
     ad.set_copyright(config.license.splitlines()[0])
     ad.set_website(config.website)
 

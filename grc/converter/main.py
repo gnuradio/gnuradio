@@ -64,6 +64,7 @@ class Converter(object):
         self._force = force
 
         try:
+            logger.debug("Loading block cache from: {}".format(self.cache_file))
             with open(self.cache_file, encoding='utf-8') as cache_file:
                 self.cache = byteify(json.load(cache_file))
         except (IOError, ValueError):
@@ -158,7 +159,7 @@ def byteify(data):
         return {byteify(key): byteify(value) for key, value in six.iteritems(data)}
     elif isinstance(data, list):
         return [byteify(element) for element in data]
-    elif isinstance(data, unicode):
+    elif isinstance(data, six.text_type) and six.PY2:
         return data.encode('utf-8')
     else:
         return data
