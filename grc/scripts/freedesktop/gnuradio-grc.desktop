@@ -1,7 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=GRC
+Name=GNU Radio Companion
+Comment=Graphical tool for creating signal flow graphs and generating flow-graph source code
 Exec=gnuradio-companion %F
 Categories=Development;
 MimeType=application/gnuradio-grc;
