@@ -55,7 +55,7 @@ std::cout << P2 << std::endl;
 std::cout << pmt::is_complex(P2) << std::endl;
 \endcode
 
-Two things stand out in both Python and C++: First we can simply print
+Two things stand out in both Python and C++.  First, we can simply print
 the contents of a PMT. How is this possible? Well, the PMTs have
 in-built capability to cast their value to a string (this is not
 possible with all types, though). Second, PMTs must obviously know
@@ -85,7 +85,7 @@ The pmt::intern is another way of saying pmt::string_to_symbol.
 
 In Python, we can make use of the dynamic typing, and there's actually a
 helper function to do these conversions (C++ also has a helper
-function for converting to PMTs called pmt::mp(), but its less
+function for converting to PMTs called pmt::mp(), but it's less
 powerful, and not quite as useful, because types are always strictly
 known in C++):
 
@@ -283,7 +283,7 @@ if(pmt::is_double(pmt_a))
 
 \section pmt_dict Dictionaries
 
-PMT dictionaries and lists of key:value pairs. They have a
+PMT dictionaries are lists of key:value pairs. They have a
 well-defined interface for creating, adding, removing, and accessing
 items in the dictionary. Note that every operation that changes the
 dictionary both takes a PMT dictionary as an argument and returns a
