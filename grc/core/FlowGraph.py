@@ -387,9 +387,9 @@ class FlowGraph(Element):
         had_connect_errors = False
         _blocks = {block.name: block for block in self.blocks}
 
-        # TODO: Crashes if connections section exists without actual connections.
-        for src_blk_id, src_port_id, snk_blk_id, snk_port_id in data.get('connections', []):
-            try:
+        try:
+            # TODO: Add better error handling if no connections exist in the flowgraph file.
+            for src_blk_id, src_port_id, snk_blk_id, snk_port_id in data.get('connections', []):
                 source_block = _blocks[src_blk_id]
                 sink_block = _blocks[snk_blk_id]
 
@@ -404,11 +404,11 @@ class FlowGraph(Element):
 
                 self.connect(source_port, sink_port)
 
-            except (KeyError, LookupError) as e:
-                Messages.send_error_load(
-                    'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
-                        src_blk_id, src_port_id, snk_blk_id, snk_port_id, e))
-                had_connect_errors = True
+        except (KeyError, LookupError) as e:
+            Messages.send_error_load(
+                'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
+                    src_blk_id, src_port_id, snk_blk_id, snk_port_id, e))
+            had_connect_errors = True
 
         self.rewrite()  # global rewrite
         return had_connect_errors

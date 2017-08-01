@@ -191,7 +191,3 @@ def get_hier_block_io(flow_graph, direction, domain=None):
                     ports.append(clone)
         else:
             ports.append(master)
-
-    if domain is not None:
-        ports = [p for p in ports if p.domain == domain]
-        yield ports  # TODO: Not sure this fix is correct
