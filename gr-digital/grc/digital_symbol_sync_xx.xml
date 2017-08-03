@@ -26,10 +26,11 @@
     <category>[Core]/Synchronizers</category>
     <import>from gnuradio import digital</import>
     <import>from gnuradio import filter</import>
-    <make>digital.symbol_sync_$(type)($ted_type, $sps, $loop_bw, $damping, $max_dev, $osps, $constellation, $resamp_type, $nfilters, $pfb_mf_taps)</make>
+    <make>digital.symbol_sync_$(type)($ted_type, $sps, $loop_bw, $damping, $ted_gain, $max_dev, $osps, $constellation, $resamp_type, $nfilters, $pfb_mf_taps)</make>
 
     <callback>set_loop_bandwidth($loop_bw)</callback>
     <callback>set_damping_factor($damping)</callback>
+    <callback>set_ted_gain($ted_gain)</callback>
 
     <param>
         <name>I/O Type</name>
@@ -112,6 +113,12 @@
         <type>real</type>
     </param>
     <param>
+        <name>Expected TED Gain</name>
+        <key>ted_gain</key>
+        <value>1.0</value>
+        <type>real</type>
+    </param>
+    <param>
         <name>Loop Bandwidth</name>
         <key>loop_bw</key>
         <value>0.045</value>
@@ -120,7 +127,7 @@
     <param>
         <name>Damping Factor</name>
         <key>damping</key>
-        <value>1.0/math.sqrt(2.0)</value>
+        <value>1.0</value>
         <type>real</type>
     </param>
     <param>

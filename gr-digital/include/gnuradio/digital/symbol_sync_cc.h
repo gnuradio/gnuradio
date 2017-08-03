@@ -97,6 +97,15 @@ namespace gr {
        * Damping = 1.0f is a critically-damped loop.
        * Damping > 1.0f is an over-damped loop.
        *
+       * \param ted_gain
+       * Expected gain of the timing error detector, given the TED in use
+       * and the anticipated input amplitude, pulse shape, and Es/No.
+       * This value is the slope of the TED's S-curve at timing offset tau = 0.
+       * This value is normally computed by the user analytically or by
+       * simulation in a tool outside of GNURadio.
+       * This value must be correct for the loop filter gains to be computed
+       * properly from the desired input loop bandwidth and damping factor.
+       *
        * \param max_deviation
        * Maximum absolute deviation of the average clock period estimate
        * from the user specified nominal clock period in samples per symbol.
@@ -126,7 +135,8 @@ namespace gr {
       static sptr make(enum ted_type detector_type,
                        float sps,
                        float loop_bw,
-                       float damping_factor = 2.0f,
+                       float damping_factor = 1.0f,
+                       float ted_gain = 1.0f,
                        float max_deviation = 1.5f,
                        int osps = 1,
                        constellation_sptr slicer = constellation_sptr(),
@@ -155,6 +165,15 @@ namespace gr {
        * set gains, the value returned by this method will be inaccurate/stale.
        */
       virtual float damping_factor() const = 0;
+
+      /*!
+       * \brief Returns the user provided expected gain of the Timing Error
+       * Detector.
+       *
+       * \details
+       * See the documenation for set_ted_gain() for more details.
+       */
+      virtual float ted_gain() const = 0;
 
       /*!
        * \brief Returns the PI filter proportional gain, alpha.
@@ -222,6 +241,25 @@ namespace gr {
        * \param zeta    loop damping factor
        */
       virtual void set_damping_factor (float zeta) = 0;
+
+      /*!
+       * \brief Set the expected gain of the Timing Error Detector.
+       *
+       * \details
+       * Sets the expected gain of the timing error detector, given the TED in
+       * use and the anticipated input amplitude, pulse shape, and Es/No.
+       * This value is the slope of the TED's S-curve at timing offset tau = 0.
+       * This value is normally computed by the user analytically or by
+       * simulation in a tool outside of GNURadio.
+       * This value must be correct for the loop filter gains to be computed
+       * properly from the desired input loop bandwidth and damping factor.
+       *
+       * When a new ted_gain is set, the gains, alpha and beta,
+       * of the loop are automatcally recalculated.
+       *
+       * \param ted_gain    expected gain of the timing error detector
+       */
+      virtual void set_ted_gain (float ted_gain) = 0;
 
       /*!
        * \brief Set the PI filter proportional gain, alpha.

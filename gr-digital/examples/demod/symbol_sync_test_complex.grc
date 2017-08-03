@@ -239,7 +239,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(2304, 572)</value>
+      <value>(2288, 588)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -247,11 +247,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>gain_mu</value>
+      <value>integral_gain</value>
     </param>
     <param>
       <key>value</key>
-      <value>2.0*math.exp(-zeta*omega_n_norm)*math.sinh(zeta*omega_n_norm)</value>
+      <value>(2.0-proportional_gain-2.0*math.exp(-zeta*omega_n_norm)*(math.cosh(omega_d_norm) if zeta &gt; 1.0 else math.cos(omega_d_norm)))/ted_gain</value>
     </param>
   </block>
   <block>
@@ -262,7 +262,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>"%8.6f" % gain_mu</value>
+      <value>"%8.6f" % integral_gain</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -274,77 +274,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(2808, 572)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>1,2,1,1</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>gain_mu_label</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Gain Mu</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(2304, 636)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>gain_omega</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>2.0-gain_mu-2.0*math.exp(-zeta*omega_n_norm)*(math.cosh(omega_d_norm) if zeta &gt; 1.0 else math.cos(omega_d_norm))</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_label</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>"%8.6f" % gain_omega</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>formatter</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(2640, 572)</value>
+      <value>(2760, 484)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -356,11 +286,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>gain_omega_label</value>
+      <value>integral_gain_label</value>
     </param>
     <param>
       <key>label</key>
-      <value>Gain Omega</value>
+      <value>Integral Gain</value>
     </param>
     <param>
       <key>type</key>
@@ -379,7 +309,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(2304, 508)</value>
+      <value>(2288, 460)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -402,7 +332,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.54</value>
+      <value>0.25</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -531,6 +461,76 @@
     </param>
     <param>
       <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(2288, 524)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>proportional_gain</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>2.0/ted_gain*math.exp(-zeta*omega_n_norm)*math.sinh(zeta*omega_n_norm)</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_label</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>"%8.6f" % proportional_gain</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>formatter</key>
+      <value>None</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(2760, 564)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>1,2,1,1</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>proportional_gain_label</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Proportional Gain</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
@@ -558,7 +558,70 @@
     </param>
     <param>
       <key>value</key>
-      <value>1.0/math.sqrt(2.0)*0+1.3</value>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(2608, 568)</value>
+    </param>
+    <param>
+      <key>gui_hint</key>
+      <value>1,0,1,1</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ted_gain</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Expected TED Gain</value>
+    </param>
+    <param>
+      <key>min_len</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>orient</key>
+      <value>Qt.Horizontal</value>
+    </param>
+    <param>
+      <key>start</key>
+      <value>0.1</value>
+    </param>
+    <param>
+      <key>step</key>
+      <value>0.1</value>
+    </param>
+    <param>
+      <key>stop</key>
+      <value>5.0</value>
+    </param>
+    <param>
+      <key>rangeType</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>widget</key>
+      <value>counter_slider</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_qtgui_range</key>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1.0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -837,7 +900,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(2752, 320)</value>
+      <value>(2752, 328)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1707,12 +1770,16 @@
       <value>True</value>
     </param>
     <param>
+      <key>ted_gain</key>
+      <value>1.0</value>
+    </param>
+    <param>
       <key>nfilters</key>
       <value>128</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(2376, 296)</value>
+      <value>(2376, 292)</value>
     </param>
     <param>
       <key>_rotation</key>

@@ -38,6 +38,7 @@ namespace gr {
                           float sps,
                           float loop_bw,
                           float damping_factor,
+                          float ted_gain,
                           float max_deviation,
                           int osps,
                           constellation_sptr slicer,
@@ -55,6 +56,7 @@ namespace gr {
       // Symbol Clock Tracking and Estimation
       float loop_bandwidth() const { return d_clock->get_loop_bandwidth(); }
       float damping_factor() const { return d_clock->get_damping_factor(); }
+      float ted_gain() const { return d_clock->get_ted_gain(); }
       float alpha() const { return d_clock->get_alpha(); }
       float beta() const { return d_clock->get_beta(); }
 
@@ -64,6 +66,7 @@ namespace gr {
       void set_damping_factor (float zeta) {
           d_clock->set_damping_factor(zeta);
       }
+      void set_ted_gain (float ted_gain) { d_clock->set_ted_gain(ted_gain); }
       void set_alpha (float alpha) { d_clock->set_alpha(alpha); }
       void set_beta (float beta) { d_clock->set_beta(beta); }
 

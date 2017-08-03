@@ -703,9 +703,10 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
                 try:
-                    page.process.kill()
+                    page.term_proc()
                 except:
-                    print("could not kill process: %d" % page.process.pid)
+                    print("could not terminate process: %d" % page.get_proc().pid)
+
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
         elif action == Actions.RELOAD_BLOCKS:
