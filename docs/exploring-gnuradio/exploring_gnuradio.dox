@@ -43,7 +43,7 @@ We next take the three blocks we've built and connect together the
 flowgraph. The flowgraph connects sources to sinks through other
 signal processing blocks. Here, we are directly connecting two sources
 to a single sink. The next example uses more complex flowgraphs to
-farther explore these concepts. The two lines containing the
+further explore these concepts. The two lines containing the
 "tb.connect" statements are where the connections are made. The
 flowgraph will look like:
 
@@ -69,7 +69,7 @@ is implied. Otherwise, we could write this as "tb.connect((src0, 0),
 
 When we are done connecting the blocks, we have a flowgraph in the
 object "tb". While it's connected, the sources are not generating any
-samples. We have to start the flowgraph running. In the main section,
+samples. We have to start running the flowgraph. In the main section,
 we return the top_block object and then call the "start" function on
 it. This is a non-blocking call that launches the flowgraph's main
 thread, which initiates the sources to start sending samples through
@@ -97,15 +97,15 @@ outputting the original signal to the audio system as well as viewing
 it in time and frequency at different stages.
 
 The intent of this example is to generate a frequency-modulated dial
-tone signal and save itto a file. While saving it to a file, we only
-want to generate a signal large enough to make use of but it doesn't
+tone signal and save it to a file. While saving it to a file, we only
+want to generate a signal large enough to make use of it, but it doesn't
 have to be too large. So we put a gr::blocks::head block that limits
 the number of samples into the file sink. Once this block has seen N
 number of samples, it will stop the flowgraph. Meanwhile, we use a
 gr::blocks::skiphead block to ignore the first M samples, which helps
 us avoid the transients and group delay of the filters in the system.
 
-We run this either using the menu "Build->Execute" or using the gears
+We run this either using the menu "Build->Execute" or using the play
 button on the toolbar. It will run for a short amount of time and stop
 once the head has seen the items set in the "nitems" parameter. The
 result is a file "dummy.dat" that contains the complex FM samples.
@@ -129,7 +129,7 @@ any rate as well as filter the signal to the audio rate we want. The
 output of this block is filtered to a 15 kHz bandwidth at a sample
 rate of 44.1 ksps, which is ready for the gr::audio::sink block.
 
-Both the GRC and Python files can be explored farther to better
+Both the GRC and Python files can be explored further to better
 understand the operations of the blocks.
 
 */
