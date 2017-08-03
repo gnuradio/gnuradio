@@ -34,7 +34,8 @@ namespace gr {
     clock_tracking_loop::clock_tracking_loop(float loop_bw,
                                              float max_period, float min_period,
                                              float nominal_period,
-                                             float damping)
+                                             float damping,
+                                             float ted_gain)
       : d_avg_period(nominal_period),
         d_max_avg_period(max_period),
         d_min_avg_period(min_period),
@@ -43,6 +44,7 @@ namespace gr {
         d_phase(0.0f),
         d_zeta(damping),
         d_omega_n_norm(loop_bw),
+        d_ted_gain(ted_gain),
         d_alpha(0.0f),
         d_beta(0.0f),
         d_prev_avg_period(nominal_period),
@@ -64,6 +66,10 @@ namespace gr {
             throw std::out_of_range (
              "clock_tracking_loop: loop bandwidth must be greater than 0.0");
 
+        if (d_ted_gain <= 0.0f)
+            throw std::out_of_range (
+             "clock_tracking_loop: expected ted gain must be greater than 0.0");
+
         update_gains();
     }
 
@@ -74,12 +80,15 @@ namespace gr {
     void
     clock_tracking_loop::update_gains()
     {
-        float omega_n_T, omega_d_T, zeta_omega_n_T, k1, cosx_omega_d_T;
+        float omega_n_T, omega_d_T, zeta_omega_n_T, cosx_omega_d_T;
+        float k0, k1, sinh_zeta_omega_n_T;
         float alpha, beta;
 
         omega_n_T = d_omega_n_norm;
         zeta_omega_n_T = d_zeta * omega_n_T;
-        k1 = 2.0f * expf(-zeta_omega_n_T);
+        k0 = 2.0f/d_ted_gain;
+        k1 = expf(-zeta_omega_n_T);
+        sinh_zeta_omega_n_T = sinhf(zeta_omega_n_T);
 
         if (d_zeta > 1.0f) { // Over-damped (or critically-damped too)
 
@@ -100,8 +109,8 @@ namespace gr {
             // cos ----------^^^
         }
 
-        alpha = k1 * sinhf(zeta_omega_n_T);
-        beta  = 2.0f - (alpha + k1 * cosx_omega_d_T);
+        alpha = k0 * k1 * sinh_zeta_omega_n_T;
+        beta  = k0 * (1 - k1*(sinh_zeta_omega_n_T + cosx_omega_d_T));
 
         set_alpha(alpha);
         set_beta(beta);
@@ -180,6 +189,17 @@ namespace gr {
     }
 
     void
+    clock_tracking_loop::set_ted_gain(float ted_gain)
+    {
+        if (ted_gain <= 0.0f)
+            throw std::out_of_range (
+                        "clock_tracking_loop: expected ted gain must be > 0.0");
+
+        d_ted_gain = ted_gain;
+        update_gains();
+    }
+
+    void
     clock_tracking_loop::set_alpha(float alpha)
     {
         d_alpha = alpha;
@@ -253,6 +273,12 @@ namespace gr {
     clock_tracking_loop::get_damping_factor() const
     {
         return d_zeta;
+    }
+
+    float
+    clock_tracking_loop::get_ted_gain() const
+    {
+        return d_ted_gain;
     }
 
     float

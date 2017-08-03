@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 import Actions
 from StateCache import StateCache
 from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
@@ -151,6 +152,30 @@ class NotebookPage(gtk.HBox):
             process: the new subprocess
         """
         self.process = process
+
+    def term_proc(self):
+        """
+        Terminate the subprocess object
+
+        Add a callback to kill the process
+        after 2 seconds if not already terminated
+        """
+        def kill(process):
+            """
+            Kill process if not already terminated
+
+            Called by gobject.timeout_add
+
+            Returns:
+                False to stop timeout_add periodic calls
+            """
+            is_terminated = process.poll()
+            if is_terminated is None:
+                process.kill()
+            return False
+
+        self.get_proc().terminate()
+        gobject.timeout_add(2000, kill, self.get_proc())
 
     def get_flow_graph(self):
         """

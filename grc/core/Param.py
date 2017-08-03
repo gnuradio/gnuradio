@@ -135,6 +135,14 @@ class TemplateArg(object):
     def __getitem__(self, item):
         return str(self._param.get_opt(item)) if self._param.is_enum() else NotImplemented
 
+    def __getattr__(self, item):
+        if not self._param.is_enum():
+            raise AttributeError()
+        try:
+            return str(self._param.get_opt(item))
+        except KeyError:
+            raise AttributeError()
+
     def __str__(self):
         return str(self._param.to_code())
 
