@@ -14,9 +14,8 @@
 Metadata files have extra information in the form of headers that
 carry metadata about the samples in the file. Raw, binary files carry
 no extra information and must be handled delicately. Any changes in
-the system state such as sample rate or if a receiver's frequency are
-not conveyed with the data in the file itself. Header of metadata
-solve this problem.
+the system state such as a receiver's sample rate or frequency are
+not conveyed with the data in the file itself. Headers solve this problem.
 
 We write metadata files using gr::blocks::file_meta_sink and read metadata
 files using gr::blocks::file_meta_source.
@@ -35,14 +34,14 @@ information.
 - version: (char) version number (usually set to METADATA_VERSION)
 - rx_rate: (double) Stream's sample rate
 - rx_time: (pmt::pmt_t pair - (uint64_t, double)) Time stamp (format from UHD)
-- size: (int) item size in bytes - reflects vector length if any.
+- size: (int) item size in bytes - reflects vector length if any
 - type: (int) data type (enum below)
 - cplx: (bool) true if data is complex
 - strt: (uint64_t) start of data relative to current header
 - bytes: (uint64_t) size of following data segment in bytes
 
 An optional extra section of the header stores information in any
-received tags. The two main tags associated with tags are:
+received tags. The two main tags associated with headers are:
 
 - rx_rate: the sample rate of the stream.
 - rx_time: the time stamp of the first item in the segment.
@@ -51,15 +50,15 @@ These tags were inspired by the UHD tag format.
 
 The header gives enough information to process and handle the
 data. One cautionary note, though, is that the data type should never
-change within a file. There should be very little need for this, but
-more importantly. GNU Radio blocks can only set the data type of their
+change within a file. There should be very little need for this, because
+GNU Radio blocks can only set the data type of their
 IO signatures in the constructor, so changes in the data type
 afterward will not be recognized.
 
-We also have an extra header segment that is option. This can be
+We also have an extra header segment that is optional. This can be
 loaded up at the beginning by the user specifying some extra metadata
 that should be transmitted along with the data. It also grows whenever
-it sees a stream tag, so the dictionary will contain and key:value
+it sees a stream tag, so the dictionary will contain any key:value
 pairs out of tags from the flowgraph.
 
 
@@ -114,7 +113,7 @@ Metadata files are created using gr::blocks::file_meta_sink. The
 default behavior is to create a single file with inline headers as
 metadata. An option can be set to switch to detached header mode.
 
-Metadata file are read into a flowgraph using
+Metadata files are read into a flowgraph using
 gr::blocks::file_meta_source. This source reads a metadata file,
 inline by default with a settable option to use detached headers. The
 data from the segments is converted into a standard streaming
@@ -132,7 +131,7 @@ dictionary. Headers are created by building a PMT dictionary
 serialized into a string to be written to file. The header is always
 the same length that is predetermined by the version of the header
 (this must be known already). The header will then indicate if there
-is an extra data to be extracted as a separate serialized dictionary.
+is extra data to be extracted as a separate serialized dictionary.
 
 To work with the PMTs for creating and extracting header information,
 we use PMT operators. For example, we create a simplified version of
@@ -261,7 +260,7 @@ data type of the PMT value. The key is always a PMT symbol, but the
 value can be any other PMT type. There are PMT functions that allow us
 to query the PMT to test if it is a particular type. We also have the
 ability to do pmt::print on any PMT object to print it to
-screen. Before converting from a PMT to it's natural data type, it is
+screen. Before converting from a PMT to its natural data type, it is
 necessary to know the data type.
 
 
@@ -327,7 +326,7 @@ vectors of data.
 
 The following shows a simple way of creating extra metadata for a
 metadata file. This example is just showing how we can insert a date
-into the metadata to keep track of later. The date in this case is
+into the metadata to keep track of it later. The date in this case is
 encoded as a vector of uint16 with [day, month, year].
 
 \code

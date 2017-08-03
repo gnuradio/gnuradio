@@ -22,7 +22,7 @@ between.
 A program must at least create a GNU Radio 'top_block', which
 represents the top-most structure of the flowgraph. The top blocks
 provide the overall control and hold methods such as 'start,' 'stop,'
-and 'wait.'
+and 'wait'.
 
 The general construction of a GNU Radio application is to create a
 gr_top_block, instantiate the blocks, connect the blocks together, and
@@ -67,7 +67,7 @@ By default, GNU Radio runs a scheduler that attempts to optimize
 throughput. Using a dynamic scheduler, blocks in a flowgraph pass
 chunks of items from sources to sinks. The sizes of these chunks will
 vary depending on the speed of processing. For each block, the number
-of items is can process is dependent on how much space it has in its
+of items it can process is dependent on how much space it has in its
 output buffer(s) and how many items are available on the input
 buffer(s).
 
@@ -153,8 +153,8 @@ latency. Limiting the size of the buffer may decrease performance.
 4. The real buffer size is actually based on a minimum granularity of
 the system. Typically, this is a page size, which is typically 4096
 bytes. This means that any buffer size that is specified with this
-command will get rounded up to the nearest granularity (e.g., page)
-size. When calling max_output_buffer(port) after the flowgraph is
+command will get rounded up to the nearest granularity (e.g., page size). 
+When calling max_output_buffer(port) after the flowgraph is
 started, you will get how many items were actually allocated in the
 buffer, which may be different than what was initially specified.
 
