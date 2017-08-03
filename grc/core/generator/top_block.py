@@ -203,13 +203,13 @@ class TopBlockGenerator(object):
             callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_callbacks())
 
         # Map var id to callbacks
-        def uses_var_id():
+        def uses_var_id(callback):
             used = expr_utils.get_variable_dependencies(callback, [var_id])
             return used and 'self.' + var_id in callback  # callback might contain var_id itself
 
         callbacks = {}
         for var_id in var_ids:
-            callbacks[var_id] = [callback for callback in callbacks_all if uses_var_id()]
+            callbacks[var_id] = [callback for callback in callbacks_all if uses_var_id(callback)]
 
         return callbacks
 
