@@ -332,7 +332,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.07</value>
+      <value>0.125</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -558,7 +558,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1.0</value>
+      <value>0.28365</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -594,11 +594,11 @@
     </param>
     <param>
       <key>start</key>
-      <value>0.1</value>
+      <value>0.05</value>
     </param>
     <param>
       <key>step</key>
-      <value>0.1</value>
+      <value>0.01</value>
     </param>
     <param>
       <key>stop</key>

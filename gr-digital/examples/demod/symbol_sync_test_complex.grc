@@ -594,11 +594,11 @@
     </param>
     <param>
       <key>start</key>
-      <value>0.1</value>
+      <value>0.05</value>
     </param>
     <param>
       <key>step</key>
-      <value>0.1</value>
+      <value>0.01</value>
     </param>
     <param>
       <key>stop</key>
