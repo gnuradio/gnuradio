@@ -54,8 +54,11 @@ x = tea_sps * upsample(symbols, tea_sps);
 baseband = filter(pf_taps, [1], x);
 
 % Create rectangular matched filter,
-% that's a little too long, to introduce more ISI
-isi_sps = 6; % Play with isi samples to see S-curve effects
+% that's a little too long (7 sps vs 6.667 sps), to introduce more ISI
+isi_sps = round((tea_sps/a_sps * 7) - tea_sps); % Play with isi samples to see S-curve effects
+if (mod(isi_sps, 2) != 0)
+    isi_sps = isi_sps + 1;
+end
 mf_taps = 1/(tea_sps+isi_sps) * ones((tea_sps+isi_sps), 1);
 mf_len = length(mf_taps);
 mf_delay = mf_len/2;
