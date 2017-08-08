@@ -182,11 +182,11 @@ class RangeWidget(QtGui.QWidget):
             self.rangeType = rangeType
 
             # Setup the counter
+            self.setDecimals(ranges.precision)
             self.setRange(ranges.min, ranges.max)
             self.setValue(ranges.default)
             self.setSingleStep(ranges.step)
             self.setKeyboardTracking(False)
-            self.setDecimals(ranges.precision)
 
             # The counter already handles floats and can be connected directly.
             self.valueChanged.connect(self.changed)
