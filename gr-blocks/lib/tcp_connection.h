@@ -53,7 +53,9 @@ namespace gr {
       void start(gr::basic_block *block);
       void send(pmt::pmt_t vector);
       void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
-      void handle_write(const boost::system::error_code& error, size_t bytes_transferred) { }
+      void handle_write(char* txbuf, const boost::system::error_code& error, size_t bytes_transferred) {
+          delete[] txbuf;
+      }
     };
 
   } /* namespace blocks */
