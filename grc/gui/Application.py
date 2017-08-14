@@ -594,7 +594,7 @@ class Application(Gtk.Application):
             main.new_page()
             if args:
                 flow_graph = main.current_page.flow_graph
-                flow_graph._options_block.get_param('generate_options').set_value(args[0])
+                flow_graph._options_block.params['generate_options'].set_value(str(args[0])[1:-1])
                 flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
             file_paths = args[0] if args[0] else FileDialogs.OpenFlowGraph(main, page.file_path).run()
