@@ -179,7 +179,7 @@ namespace gr {
         for(unsigned int i = 0; i < d_frame_size; ++i) {
           my_state = (my_state << 1) | (in[i] & 1);
           for(unsigned int j = 0; j < d_rate; ++j) {
-            out[i * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
+            out[i * d_rate + j] = (d_polys[j] < 0) ^ parity(my_state & abs(d_polys[j])) ? 1 : 0;
           }
         }
 
@@ -187,7 +187,7 @@ namespace gr {
           for(unsigned int i = 0; i < d_k - 1; ++i) {
             my_state = (my_state << 1) | ((d_start_state >> (d_k - 2 - i)) & 1);
             for(unsigned int j = 0; j < d_rate; ++j) {
-              out[(i + d_frame_size) * d_rate + j] = parity(my_state & d_polys[j]) == 0 ? 0 : 1;
+              out[(i + d_frame_size) * d_rate + j] = (d_polys[j] < 0) ^ parity(my_state & abs(d_polys[j])) ? 1 : 0;
             }
           }
         }
