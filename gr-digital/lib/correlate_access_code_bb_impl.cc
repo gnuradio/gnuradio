@@ -109,13 +109,6 @@ namespace gr {
 	// test for access code with up to threshold errors
 	new_flag = (nwrong <= d_threshold);
 
-	if(new_flag) {
-	  GR_LOG_DEBUG(d_logger, boost::format("access code found: %llx") % d_access_code);
-	}
-	else {
-	  GR_LOG_DEBUG(d_logger, boost::format("%llx  ==>  %llx") % d_access_code % d_data_reg);
-	}
-
 	// shift in new data and new flag
 	d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
 	d_flag_reg = (d_flag_reg << 1);
