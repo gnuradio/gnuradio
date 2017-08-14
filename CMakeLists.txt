@@ -222,16 +222,16 @@ IF(MSVC)
     IF(MSVC90)   #Visual Studio 9
         SET(cmake_c_compiler_version "Microsoft Visual Studio 9.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 9.0")
-    ELSE(MSVC10) #Visual Studio 10
+    ELSEIF(MSVC10) #Visual Studio 10
         SET(cmake_c_compiler_version "Microsoft Visual Studio 10.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 10.0")
-    ELSE(MSVC11) #Visual Studio 11
+    ELSEIF(MSVC11) #Visual Studio 11
         SET(cmake_c_compiler_version "Microsoft Visual Studio 11.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 11.0")
-    ELSE(MSVC12) #Visual Studio 12
+    ELSEIF(MSVC12) #Visual Studio 12
         SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 12.0")
-    ELSE(MSVC14) #Visual Studio 14
+    ELSEIF(MSVC14) #Visual Studio 14
         SET(cmake_c_compiler_version "Microsoft Visual Studio 14.0")
         SET(cmake_cxx_compiler_version "Microsoft Visual Studio 14.0")
     ENDIF()
