@@ -251,7 +251,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>(2.0-proportional_gain-2.0*math.exp(-zeta*omega_n_norm)*(math.cosh(omega_d_norm) if zeta &gt; 1.0 else math.cos(omega_d_norm)))/ted_gain</value>
+      <value>2.0/ted_gain*(1.0-math.exp(-zeta*omega_n_norm)*(math.sinh(zeta*omega_n_norm)+(math.cosh(omega_d_norm) if zeta &gt; 1.0 else math.cos(omega_d_norm))))</value>
     </param>
   </block>
   <block>
@@ -332,7 +332,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>0.07</value>
+      <value>0.125</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -558,7 +558,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1.0</value>
+      <value>0.28365</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -594,11 +594,11 @@
     </param>
     <param>
       <key>start</key>
-      <value>0.1</value>
+      <value>0.05</value>
     </param>
     <param>
       <key>step</key>
-      <value>0.1</value>
+      <value>0.01</value>
     </param>
     <param>
       <key>stop</key>
@@ -1591,7 +1591,7 @@
     </param>
     <param>
       <key>ted_gain</key>
-      <value>1.0</value>
+      <value>ted_gain</value>
     </param>
     <param>
       <key>nfilters</key>
