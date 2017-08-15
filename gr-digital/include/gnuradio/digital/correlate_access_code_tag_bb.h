@@ -63,6 +63,8 @@ namespace gr {
        *                    e.g., "010101010111000100"
        */
       virtual bool set_access_code(const std::string &access_code) = 0;
+      virtual void set_threshold(int threshold) = 0;
+      virtual void set_tagname(const std::string &tagname) = 0;
     };
 
   } /* namespace digital */

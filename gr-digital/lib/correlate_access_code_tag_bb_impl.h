@@ -42,6 +42,8 @@ namespace gr {
 
       pmt::pmt_t d_key, d_me; //d_key is the tag name, d_me is the block name + unique ID
 
+      gr::thread::mutex d_mutex_access_code;
+
     public:
       correlate_access_code_tag_bb_impl(const std::string &access_code,
 					int threshold,
@@ -53,6 +55,8 @@ namespace gr {
 	       gr_vector_void_star &output_items);
 
       bool set_access_code(const std::string &access_code);
+      void set_threshold(int threshold) { d_threshold = threshold; };
+      void set_tagname(const std::string &tag_name) { d_key = pmt::string_to_symbol(tag_name); };
     };
 
   } /* namespace digital */
