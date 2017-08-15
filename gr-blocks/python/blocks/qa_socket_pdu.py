@@ -117,8 +117,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         self.tb.msg_connect(self.pdu_recv, "pdus", self.pdu_sink, "store")
 
         self.tb.start()
-        while self.pdu_sink.num_messages() < 1:
-            time.sleep(0.1)
+        time.sleep(1)
         self.tb.stop()
         self.tb.wait()
 
