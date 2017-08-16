@@ -131,30 +131,33 @@ ELSE()
     MESSAGE(status "Skipping compiler version check.")
 ENDIF()
 
-# Configure C++ and C standards
-IF(CMAKE_VERSION VERSION_LESS "3.1")
-    IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
-    ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
-    ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
-    ELSE()
-        MESSAGE(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
-    ENDIF()
+# Configure C++ standard if not externally specified (will actually be
+# set after CppUnit check below). Use the variable CMAKE_CXX_STANDARD
+# since it will actually be used for this purposes starting in CMake 3.1.
 
-    IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
-    ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
-    ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
-    ELSE()
-        MESSAGE(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
-    ENDIF()
-ELSE()
-    SET(CMAKE_C_STANDARD 90)
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     SET(CMAKE_CXX_STANDARD 98)
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_CXX_STANDARD 98)
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_CXX_STANDARD 98)
+ELSE()
+    message(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
+IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_C_STANDARD 99)
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    SET(CMAKE_C_STANDARD 99)
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_C_STANDARD 11)
+ELSE()
+    message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
+# if cmake version is < 3.1, explicitly set C standard to use.
+IF(${CMAKE_VERSION} VERSION_LESS "3.1")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c${CMAKE_C_STANDARD}")
 ENDIF()
 
 ########################################################################
@@ -368,6 +371,19 @@ find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})
 GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
     CPPUNIT_FOUND
 )
+
+# check if CppUnit version is 1.14.0 or greater; requires c++11 ...
+
+if(CPPUNIT_FOUND AND NOT "${CPPUNIT_VERSION}" VERSION_LESS "1.14.0")
+    message(WARNING "\nWarning: CppUnit version is ${CPPUNIT_VERSION} which requires C++11 for building. Trying to set CMake internally to use C++11 ...")
+    SET(CMAKE_CXX_STANDARD 11)
+endif()
+
+# if cmake version is < 3.1, explicitly set C++ standard to use.
+
+if(${CMAKE_VERSION} VERSION_LESS "3.1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
+endif()
 
 ########################################################################
 # Add optional dlls specified in DLL_PATHS
