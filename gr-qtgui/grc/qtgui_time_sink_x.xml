@@ -931,6 +931,8 @@ $(gui_hint()($win))</make>
     <hide>#if ((int($nconnections()) >= 10 or ($type() == "complex" and int($nconnections()) >= 5)) and not $type.t == "message") then 'part' else 'all'#</hide>
   </param>
 
+  <check>$nconnections &lt;= #if $type() == "complex" then 5 else 10#</check>
+
   <sink>
     <name>in</name>
     <type>$type.t</type>
