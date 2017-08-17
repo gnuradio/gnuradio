@@ -37,7 +37,7 @@ set(__INCLUDED_GR_BUILD_TYPES_CMAKE TRUE)
 # Defines the list of acceptable cmake build types. When adding a new
 # build type below, make sure to add it to this list.
 list(APPEND AVAIL_BUILDTYPES
-  None Debug Release RelWithDebInfo MinSizeRel
+  None Debug Release RelWithDebInfo MinSizeRel DebugAll
   Coverage NoOptWithASM O2WithASM O3WithASM
 )
 
@@ -93,6 +93,37 @@ if(NOT WIN32)
     CMAKE_EXE_LINKER_FLAGS_COVERAGE
     CMAKE_SHARED_LINKER_FLAGS_COVERAGE)
 endif(NOT WIN32)
+
+########################################################################
+# For GCC and Clang, we can set a build type:
+#
+# -DCMAKE_BUILD_TYPE=DebugAll
+#
+# This type uses no optimization (-O0), outputs debug symbols (-g) and
+# outputs all intermediary files the build system produces, including
+# all assembly (.s) files. Look in the build directory for these
+# files.
+# NOTE: This is not defined on Windows systems.
+########################################################################
+if(NOT WIN32)
+  SET(CMAKE_CXX_FLAGS_DEBUGALL "-Wall -pedantic -pthread -g -O0" CACHE STRING
+    "Flags used by the C++ compiler during full debug builds." FORCE)
+  SET(CMAKE_C_FLAGS_DEBUGALL "-Wall -pedantic -pthread -g -O0" CACHE STRING
+    "Flags used by the C compiler during full debug builds." FORCE)
+  SET(CMAKE_EXE_LINKER_FLAGS_DEBUGALL
+    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
+    "Flags used for linking binaries during full debug builds." FORCE)
+  SET(CMAKE_SHARED_LINKER_FLAGS_DEBUGALL
+    "-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
+    "Flags used by the shared lib linker during full debug builds." FORCE)
+
+  MARK_AS_ADVANCED(
+    CMAKE_CXX_FLAGS_DEBUGALL
+    CMAKE_C_FLAGS_DEBUGALL
+    CMAKE_EXE_LINKER_FLAGS_DEBUGALL
+    CMAKE_SHARED_LINKER_FLAGS_DEBUGALL)
+endif(NOT WIN32)
+
 
 
 ########################################################################
