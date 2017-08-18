@@ -55,8 +55,8 @@
    </cat>
    <cat>
       <name>Resamplers</name>
-      <block>fractional_resampler_xx</block>
-      <block>fractional_interpolator_xx</block>
+      <block>mmse_resampler_xx</block>
+      <block>mmse_interpolator_xx</block>
       <block>pfb_arb_resampler_xxx</block>
       <block>rational_resampler_xxx</block>
       <block>rational_resampler_base_xxx</block>

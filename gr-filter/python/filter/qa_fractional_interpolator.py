@@ -35,7 +35,7 @@ def sig_source_c(samp_rate, freq, amp, N):
                 1j*math.sin(2.*math.pi*freq*x), t)
     return y
 
-class test_fractional_resampler(gr_unittest.TestCase):
+class test_mmse_resampler(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -51,7 +51,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         freq = 10
         data = sig_source_f(fs, freq, 1, N)
         signal = blocks.vector_source_f(data)
-        op = filter.fractional_interpolator_ff(0, rrate)
+        op = filter.mmse_interpolator_ff(0, rrate)
         snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, op, snk)
@@ -77,7 +77,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         freq = 10
         data = sig_source_c(fs, freq, 1, N)
         signal = blocks.vector_source_c(data)
-        op = filter.fractional_interpolator_cc(0.0, rrate)
+        op = filter.mmse_interpolator_cc(0.0, rrate)
         snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, op, snk)
@@ -97,4 +97,4 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fractional_resampler, "test_fractional_resampler.xml")
+    gr_unittest.run(test_mmse_resampler, "test_mmse_resampler.xml")

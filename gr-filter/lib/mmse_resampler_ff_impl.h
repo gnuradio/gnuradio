@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2012-2013 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,27 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FRACTIONAL_INTERPOLATOR_FF_IMPL_H
-#define	INCLUDED_FRACTIONAL_INTERPOLATOR_FF_IMPL_H
+#ifndef INCLUDED_MMSE_RESAMPLER_FF_IMPL_H
+#define	INCLUDED_MMSE_RESAMPLER_FF_IMPL_H
 
-#include <gnuradio/filter/fractional_interpolator_ff.h>
+#include <gnuradio/filter/mmse_resampler_ff.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API fractional_interpolator_ff_impl
-      : public fractional_interpolator_ff
+    class FILTER_API mmse_resampler_ff_impl
+      : public mmse_resampler_ff
     {
     private:
       float d_mu;
       float d_mu_inc;
-      mmse_fir_interpolator_ff *d_interp;
+      mmse_fir_interpolator_ff *d_resamp;
 
     public:
-      fractional_interpolator_ff_impl(float phase_shift,
-				      float interp_ratio);
-      ~fractional_interpolator_ff_impl();
+      mmse_resampler_ff_impl(float phase_shift,
+                                   float resamp_ratio);
+      ~mmse_resampler_ff_impl();
+
+      void handle_msg(pmt::pmt_t msg);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);
@@ -50,12 +52,12 @@ namespace gr {
 		       gr_vector_void_star &output_items);
 
       float mu() const;
-      float interp_ratio() const;
+      float resamp_ratio() const;
       void set_mu(float mu);
-      void set_interp_ratio(float interp_ratio);
+      void set_resamp_ratio(float resamp_ratio);
     };
 
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* INCLUDED_FRACTIONAL_INTERPOLATOR_FF_IMPL_H */
+#endif /* INCLUDED_MMSE_RESAMPLER_FF_IMPL_H */

@@ -16,10 +16,10 @@ gnuradio.filters
 .. autoblock:: gnuradio.filter.fir_filter_fff
 .. autoblock:: gnuradio.filter.fir_filter_fsf
 .. autoblock:: gnuradio.filter.fir_filter_scc
-.. autoblock:: gnuradio.filter.fractional_interpolator_cc
-.. autoblock:: gnuradio.filter.fractional_interpolator_ff
-.. autoblock:: gnuradio.filter.fractional_resampler_cc
-.. autoblock:: gnuradio.filter.fractional_resampler_ff
+.. autoblock:: gnuradio.filter.mmse_interpolator_cc
+.. autoblock:: gnuradio.filter.mmse_interpolator_ff
+.. autoblock:: gnuradio.filter.mmse_resampler_cc
+.. autoblock:: gnuradio.filter.mmse_resampler_ff
 .. autoblock:: gnuradio.filter.freq_xlating_fir_filter_ccc
 .. autoblock:: gnuradio.filter.freq_xlating_fir_filter_ccf
 .. autoblock:: gnuradio.filter.freq_xlating_fir_filter_fcc
