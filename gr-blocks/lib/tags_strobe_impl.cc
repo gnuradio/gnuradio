@@ -60,6 +60,7 @@ namespace gr {
       set_value(value);
       set_key(key);
       set_nsamps(nsamps);
+      d_offset = 0;
     }
 
     tags_strobe_impl::~tags_strobe_impl()
@@ -82,7 +83,6 @@ namespace gr {
     tags_strobe_impl::set_nsamps(uint64_t nsamps)
     {
       d_nsamps = nsamps;
-      d_offset = 0;
     }
 
     int
