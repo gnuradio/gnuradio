@@ -398,6 +398,6 @@ class QtHierBlockGenerator(HierBlockGenerator):
 
         block_n['make'] += (
             "\n#set $win = 'self.%s' % $id"
-            "\n${gui_hint()($win)}"
+            "\n${gui_hint() % $win}"
         )
         return n
