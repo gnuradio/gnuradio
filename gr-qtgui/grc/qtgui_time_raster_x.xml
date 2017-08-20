@@ -41,7 +41,8 @@ for i in xrange(#if $type.t == 'message' then 1 else $nconnections#):
     self.$(id).set_line_alpha(i, alphas[i])
 
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
+
   <callback>set_num_rows($nrows)</callback>
   <callback>set_num_cols($ncols)</callback>
   <callback>set_multiplier($mult)</callback>
