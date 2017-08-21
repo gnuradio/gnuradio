@@ -53,7 +53,7 @@ class ModToolNewModule(ModTool):
             if options.module_name:
                 self._info['modname'] = options.module_name
             else:
-                self._info['modname'] = eval(input('Name of the new module: '))
+                self._info['modname'] = input('Name of the new module: ')
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
             raise ModToolException('Invalid module name.')
         self._dir = options.directory

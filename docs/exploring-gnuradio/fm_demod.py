@@ -82,7 +82,7 @@ class build_graph(gr.top_block):
 def main(args):
     tb = build_graph()
     tb.start()        # fork thread and return
-    eval(input('Press Enter to quit: '))
+    input('Press Enter to quit: ')
     tb.stop()
 
 if __name__ == '__main__':

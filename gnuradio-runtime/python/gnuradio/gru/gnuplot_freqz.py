@@ -101,4 +101,4 @@ def test_plot ():
 
 if __name__ == '__main__':
     handle = test_plot ()
-    eval(input ('Press Enter to continue: '))
+    input ('Press Enter to continue: ')
