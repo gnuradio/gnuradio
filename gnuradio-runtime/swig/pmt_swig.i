@@ -101,6 +101,10 @@ namespace pmt{
   pmt_t intern(const std::string &s);
   const std::string symbol_to_string(const pmt_t& sym);
 
+  bool is_string(const pmt_t& p);
+  pmt_t from_string(std::string str, bool interned=false);
+  std::string to_string(const pmt_t& p);
+
   bool is_number(pmt_t obj);
   bool is_integer(pmt_t x);
   pmt_t from_long(long x);

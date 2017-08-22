@@ -122,6 +122,12 @@ _symbol(pmt_t x)
   return dynamic_cast<pmt_symbol*>(x.get());
 }
 
+static pmt_string *
+_string(pmt_t x)
+{
+  return dynamic_cast<pmt_string*>(x.get());
+}
+
 static pmt_integer *
 _integer(pmt_t x)
 {
@@ -332,7 +338,40 @@ symbol_to_string(const pmt_t& sym)
   return _symbol(sym)->name();
 }
 
+////////////////////////////////////////////////////////////////////////////
+//                             Non-interned strings
+////////////////////////////////////////////////////////////////////////////
 
+pmt_string::pmt_string(std::string value) : d_value(value) {}
+
+bool
+is_string(const pmt_t& p)
+{
+  return p->is_string();
+}
+
+
+pmt_t
+from_string(std::string str, bool interned)
+{
+  if (interned) {
+    return string_to_symbol(str);
+  } else {
+    return pmt_t(new pmt_string(str));
+  }
+}
+
+std::string
+to_string(const pmt_t& p)
+{
+  if (p->is_symbol()) {
+    return symbol_to_string(p);
+  } else if (p->is_string()) {
+    return _string(p)->value();
+  }
+
+  throw wrong_type("pmt_to_string", p);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 //                             Number
@@ -1080,6 +1119,9 @@ eqv(const pmt_t& x, const pmt_t& y)
   if (x == y)
     return true;
 
+  if (x->is_string() && y->is_string())
+    return _string(x)->value() == _string(y)->value();
+
   if (x->is_integer() && y->is_integer())
     return _integer(x)->value() == _integer(y)->value();
 
@@ -1100,6 +1142,9 @@ eqv_raw(pmt_base *x, pmt_base *y)
 {
   if (x == y)
     return true;
+
+  if (x->is_string() && y->is_string())
+    return _string(x)->value() == _string(y)->value();
 
   if (x->is_integer() && y->is_integer())
     return _integer(x)->value() == _integer(y)->value();

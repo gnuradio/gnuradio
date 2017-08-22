@@ -65,6 +65,7 @@ protected:
 public:
   virtual bool is_bool()    const { return false; }
   virtual bool is_symbol()  const { return false; }
+  virtual bool is_string()  const { return false; }
   virtual bool is_number()  const { return false; }
   virtual bool is_integer() const { return false; }
   virtual bool is_uint64()  const { return false; }
@@ -124,6 +125,19 @@ public:
 
   pmt_t next() { return d_next; }		// symbol table link
   void set_next(pmt_t next) { d_next = next; }
+};
+
+class pmt_string : public pmt_base
+{
+  std::string d_value;
+
+public:
+  pmt_string(std::string value);
+  //~pmt_string(){}
+
+  bool is_string() const { return true; }
+  std::string value() { return d_value; }
+
 };
 
 class pmt_integer : public pmt_base

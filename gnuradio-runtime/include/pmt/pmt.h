@@ -154,6 +154,26 @@ PMT_API pmt_t intern(const std::string &s);
  */
 PMT_API const std::string symbol_to_string(const pmt_t& sym);
 
+
+/*
+ * ------------------------------------------------------------------------
+ *                 Non-interned strings
+ * ------------------------------------------------------------------------
+ */
+
+//! Return true if obj is a non-interned string PMT, else false.
+PMT_API bool is_string(const pmt_t& p);
+
+/*!
+ * Return an interned or non-interned string PMT containing the given string.
+ */
+PMT_API pmt_t from_string(std::string str, bool interned=false);
+
+/*!
+ * If \p is a string PMT (interned or non-interned), return the contained string
+ */
+PMT_API std::string to_string(const pmt_t& p);
+
 /*
  * ------------------------------------------------------------------------
  *           Numbers: we support integer, real and complex
