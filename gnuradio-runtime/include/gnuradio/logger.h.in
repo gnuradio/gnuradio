@@ -64,7 +64,7 @@ typedef unsigned short mode_t;
 
 namespace gr {
   //#warning GR logging Enabled and using std::cout
-  typedef std::string logger_ptr;
+  typedef void* logger_ptr;
 } /* namespace gr */
 
 #define GR_LOG_DECLARE_LOGPTR(logger)
