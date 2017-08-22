@@ -107,6 +107,7 @@ namespace gr {
       double set_lo_freq(double freq, const std::string &name, size_t chan);
 
       void issue_stream_cmd(const ::uhd::stream_cmd_t &cmd);
+      void set_recv_timeout(const double timeout, const bool one_packet);
       void flush(void);
       bool start(void);
       bool stop(void);
@@ -126,7 +127,10 @@ namespace gr {
 #ifdef GR_UHD_USE_STREAM_API
       ::uhd::rx_streamer::sptr _rx_stream;
       size_t _samps_per_packet;
+      //! Timeout value for UHD's recv() call. Lower values mean lower latency.
       double _recv_timeout;
+      //! one_packet value for UHD's recv() call. 'true' is lower latency.
+      bool _recv_one_packet;
 #endif
       bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
