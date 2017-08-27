@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2010,2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -28,6 +28,7 @@
 
 #include <@NAME_IMPL@.h>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/thread/thread.h>
 #include <algorithm>
 #include <iostream>
 
@@ -55,13 +56,24 @@ namespace gr {
     std::vector<@TYPE@>
     @NAME_IMPL@::data() const
     {
+      gr::thread::scoped_lock guard(d_data_mutex);
       return d_data;
     }
 
     std::vector<tag_t>
     @NAME_IMPL@::tags() const
     {
+      gr::thread::scoped_lock guard(d_data_mutex);
       return d_tags;
+    }
+
+
+    void
+    @NAME_IMPL@::reset()
+    {
+      gr::thread::scoped_lock guard(d_data_mutex);
+      d_tags.clear();
+      d_data.clear();
     }
 
     int
@@ -71,6 +83,9 @@ namespace gr {
     {
       @TYPE@ *iptr = (@TYPE@*)input_items[0];
 
+      // can't touch this (as long as work() is working, the accessors shall not
+      // read the data
+      gr::thread::scoped_lock guard(d_data_mutex);
       for(int i = 0; i < noutput_items * d_vlen; i++)
         d_data.push_back (iptr[i]);
       std::vector<tag_t> tags;

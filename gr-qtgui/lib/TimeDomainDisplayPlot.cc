@@ -170,8 +170,14 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(int nplots, QWidget* parent)
   colors << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
 	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
 	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
+	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray)
+	 // cycle through all colors again to increase time_sink_f input limit
+	 // from 12 to 24, otherwise you get a segfault
+	 << QColor(Qt::blue) << QColor(Qt::red) << QColor(Qt::green)
+	 << QColor(Qt::black) << QColor(Qt::cyan) << QColor(Qt::magenta)
+	 << QColor(Qt::yellow) << QColor(Qt::gray) << QColor(Qt::darkRed)
 	 << QColor(Qt::darkGreen) << QColor(Qt::darkBlue) << QColor(Qt::darkGray);
-
+	 
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
   for(int i = 0; i < d_nplots; i++) {

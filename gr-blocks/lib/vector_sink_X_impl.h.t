@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,7 @@
 #define @GUARD_NAME_IMPL@
 
 #include <gnuradio/blocks/@NAME@.h>
+#include <gnuradio/thread/thread.h>
 
 namespace gr {
   namespace blocks {
@@ -35,13 +36,14 @@ namespace gr {
     private:
       std::vector<@TYPE@> d_data;
       std::vector<tag_t> d_tags;
+      mutable gr::thread::mutex d_data_mutex; // protects internal data access.
       int d_vlen;
 
     public:
       @NAME_IMPL@(int vlen);
       ~@NAME_IMPL@();
 
-      void reset() { d_data.clear(); d_tags.clear(); }
+      void reset();
       std::vector<@TYPE@> data() const;
       std::vector<tag_t> tags() const;
 
