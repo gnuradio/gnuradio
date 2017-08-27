@@ -517,6 +517,10 @@ PARAMS_TMPL = """	<param>
 			<name>RX2</name>
 			<key>RX2</key>
 		</option>
+		<option>
+			<name>RX1</name>
+			<key>RX1</key>
+		</option>
 #end if
 		<tab>RF Options</tab>
 	</param>
