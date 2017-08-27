@@ -54,16 +54,24 @@ namespace gr {
     tcp_connection::send(pmt::pmt_t vector)
     {
       size_t len = pmt::blob_length(vector);
+
+      // Asio async_write() requires the buffer to remain valid until the handler is called.
+      boost::shared_ptr<char[]> txbuf(new char[len]);
+
+      size_t temp = 0;
+      memcpy(txbuf.get(), pmt::uniform_vector_elements(vector, temp), len);
+
       size_t offset = 0;
-      std::vector<char> txbuf(std::min(len, d_buf.size()));
       while (offset < len) {
-        size_t send_len = std::min((len - offset), txbuf.size());
-        memcpy(&txbuf[0], pmt::uniform_vector_elements(vector, offset), send_len);
+        // Limit the size of each write() to the MTU.
+        // FIXME: Note that this has the effect of breaking a large PDU into several smaller PDUs, each
+        // containing <= MTU bytes. Is this the desired behavior?
+        size_t send_len = std::min((len - offset), d_buf.size());
+        boost::asio::async_write(d_socket, boost::asio::buffer(txbuf.get() + offset, send_len),
+          boost::bind(&tcp_connection::handle_write, this, txbuf,
+            boost::asio::placeholders::error,
+            boost::asio::placeholders::bytes_transferred));
         offset += send_len;
-        boost::asio::async_write(d_socket, boost::asio::buffer(txbuf, send_len),
-			       boost::bind(&tcp_connection::handle_write, this,
-					   boost::asio::placeholders::error,
-					   boost::asio::placeholders::bytes_transferred));
       }
     }
 

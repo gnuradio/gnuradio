@@ -9,6 +9,10 @@
 	<key>digital_correlate_access_code_tag_xx</key>
 	<import>from gnuradio import digital</import>
 	<make>digital.correlate_access_code_tag_$(type.fcn)($access_code, $threshold, $tagname)</make>
+	<callback>set_access_code($access_code)</callback>
+	<callback>set_threshold($threshold)</callback>
+	<callback>set_tagname($tagname)</callback>
+
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
