@@ -25,6 +25,7 @@
 
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
 #include <pmt/pmt.h>
 
 namespace gr {
@@ -53,7 +54,8 @@ namespace gr {
       void start(gr::basic_block *block);
       void send(pmt::pmt_t vector);
       void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
-      void handle_write(const boost::system::error_code& error, size_t bytes_transferred) { }
+      void handle_write(boost::shared_ptr<char[]> txbuf, const boost::system::error_code& error,
+                        size_t bytes_transferred) { }
     };
 
   } /* namespace blocks */
