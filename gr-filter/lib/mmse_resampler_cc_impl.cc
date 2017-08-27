@@ -25,22 +25,22 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "fractional_resampler_cc_impl.h"
+#include "mmse_resampler_cc_impl.h"
 #include <stdexcept>
 
 namespace gr {
   namespace filter {
 
-    fractional_resampler_cc::sptr
-    fractional_resampler_cc::make(float phase_shift, float resamp_ratio)
+    mmse_resampler_cc::sptr
+    mmse_resampler_cc::make(float phase_shift, float resamp_ratio)
     {
       return gnuradio::get_initial_sptr
-        (new fractional_resampler_cc_impl(phase_shift, resamp_ratio));
+        (new mmse_resampler_cc_impl(phase_shift, resamp_ratio));
     }
 
-    fractional_resampler_cc_impl::fractional_resampler_cc_impl
+    mmse_resampler_cc_impl::mmse_resampler_cc_impl
                                      (float phase_shift, float resamp_ratio)
-      : block("fractional_resampler_cc",
+      : block("mmse_resampler_cc",
               io_signature::make2(1, 2, sizeof(gr_complex), sizeof(float)),
               io_signature::make(1, 1, sizeof(gr_complex))),
 	d_mu(phase_shift), d_mu_inc(resamp_ratio),
@@ -54,16 +54,16 @@ namespace gr {
       set_relative_rate(1.0 / resamp_ratio);
       message_port_register_in(pmt::intern("msg_in"));
       set_msg_handler(pmt::intern("msg_in"), boost::bind(
-              &fractional_resampler_cc_impl::handle_msg, this, _1));
+              &mmse_resampler_cc_impl::handle_msg, this, _1));
     }
 
-    fractional_resampler_cc_impl::~fractional_resampler_cc_impl()
+    mmse_resampler_cc_impl::~mmse_resampler_cc_impl()
     {
       delete d_resamp;
     }
 
     void
-    fractional_resampler_cc_impl::handle_msg(pmt::pmt_t msg) {
+    mmse_resampler_cc_impl::handle_msg(pmt::pmt_t msg) {
       if(!pmt::is_dict(msg))
         return;
       // set resamp_ratio or mu by message dict
@@ -86,7 +86,7 @@ namespace gr {
     }
 
     void
-    fractional_resampler_cc_impl::forecast(int noutput_items,
+    mmse_resampler_cc_impl::forecast(int noutput_items,
                                            gr_vector_int &ninput_items_required)
     {
       unsigned ninputs = ninput_items_required.size();
@@ -97,7 +97,7 @@ namespace gr {
     }
 
     int
-    fractional_resampler_cc_impl::general_work(int noutput_items,
+    mmse_resampler_cc_impl::general_work(int noutput_items,
                                                gr_vector_int &ninput_items,
                                                gr_vector_const_void_star &input_items,
                                                gr_vector_void_star &output_items)
@@ -143,25 +143,25 @@ namespace gr {
     }
 
     float
-    fractional_resampler_cc_impl::mu() const
+    mmse_resampler_cc_impl::mu() const
     {
       return d_mu;
     }
 
     float
-    fractional_resampler_cc_impl::resamp_ratio() const
+    mmse_resampler_cc_impl::resamp_ratio() const
     {
       return d_mu_inc;
     }
 
     void
-    fractional_resampler_cc_impl::set_mu(float mu)
+    mmse_resampler_cc_impl::set_mu(float mu)
     {
       d_mu = mu;
     }
 
     void
-    fractional_resampler_cc_impl::set_resamp_ratio(float resamp_ratio)
+    mmse_resampler_cc_impl::set_resamp_ratio(float resamp_ratio)
     {
       d_mu_inc = resamp_ratio;
     }

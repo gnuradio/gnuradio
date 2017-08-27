@@ -65,7 +65,7 @@ class channel_model(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex))
 
 
-        timing_offset = filter.fractional_resampler_cc(0, timing)
+        timing_offset = filter.mmse_resampler_cc(0, timing)
         noise_adder = blocks.add_cc()
         noise = analog.noise_source_c(analog.GR_GAUSSIAN,
                                       noise_voltage, 0)
