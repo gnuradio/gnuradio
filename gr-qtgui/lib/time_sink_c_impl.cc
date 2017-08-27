@@ -55,6 +55,9 @@ namespace gr {
 	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
 	d_nconnections(2*nconnections), d_parent(parent)
     {
+      if(nconnections > 12)
+        throw std::runtime_error("time_sink_c only supports up to 12 inputs");
+
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
       // life of the qApplication:

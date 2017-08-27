@@ -116,7 +116,7 @@ namespace gr {
         output[i] = message[i];
       }
 
-      output[127] = gf_poly_eval(output, 128, gf_exp[6]);
+      output[127] = gf_poly_eval(output, 127, gf_exp[6]);
     }
 
     void
