@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FRACTIONAL_INTERPOLATOR_FF_H
-#define	INCLUDED_FRACTIONAL_INTERPOLATOR_FF_H
+#ifndef INCLUDED_MMSE_INTERPOLATOR_CC_H
+#define	INCLUDED_MMSE_INTERPOLATOR_CC_H
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
@@ -30,17 +30,17 @@ namespace gr {
   namespace filter {
 
     /*!
-     * \brief Interpolating MMSE filter with float input, float output
+     * \brief Interpolating MMSE filter with complex input, complex output
      * \ingroup resamplers_blk
      */
-    class FILTER_API fractional_interpolator_ff : virtual public block
+    class FILTER_API mmse_interpolator_cc : virtual public block
     {
     public:
-      // gr::filter::fractional_interpolator_ff::sptr
-      typedef boost::shared_ptr<fractional_interpolator_ff> sptr;
+      // gr::filter::mmse_interpolator_cc::sptr
+      typedef boost::shared_ptr<mmse_interpolator_cc> sptr;
 
       /*!
-       * \brief Build the interpolating MMSE filter (float input, float output)
+       * \brief Build the interpolating MMSE filter (complex input, complex output)
        *
        * \param phase_shift The phase shift of the output signal to the input
        * \param interp_ratio The interpolation ratio = input_rate / output_rate.
@@ -57,4 +57,4 @@ namespace gr {
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* INCLUDED_FRACTIONAL_INTERPOLATOR_FF_H */
+#endif /* INCLUDED_MMSE_INTERPOLATOR_FF_H */

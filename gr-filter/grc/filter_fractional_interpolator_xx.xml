@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Fractional Interpolator</name>
-	<key>fractional_interpolator_xx</key>
+	<key>mmse_interpolator_xx</key>
 	<import>from gnuradio import filter</import>
-	<make>filter.fractional_interpolator_$(type.fcn)($phase_shift, $interp_ratio)</make>
+	<make>filter.mmse_interpolator_$(type.fcn)($phase_shift, $interp_ratio)</make>
 	<callback>set_interp_ratio($interp_ratio)</callback>
 	<param>
 		<name>Type</name>

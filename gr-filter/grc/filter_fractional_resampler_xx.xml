@@ -6,9 +6,9 @@
  -->
 <block>
 	<name>Fractional Resampler</name>
-	<key>fractional_resampler_xx</key>
+	<key>mmse_resampler_xx</key>
 	<import>from gnuradio import filter</import>
-	<make>filter.fractional_resampler_$(type.fcn)($phase_shift, $resamp_ratio)</make>
+	<make>filter.mmse_resampler_$(type.fcn)($phase_shift, $resamp_ratio)</make>
 	<callback>set_resamp_ratio($resamp_ratio)</callback>
 	<param>
 		<name>Type</name>

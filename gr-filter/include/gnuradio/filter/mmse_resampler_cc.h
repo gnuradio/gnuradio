@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_FRACTIONAL_RESAMPLER_CC_H
-#define	INCLUDED_FRACTIONAL_RESAMPLER_CC_H
+#ifndef INCLUDED_MMSE_RESAMPLER_CC_H
+#define	INCLUDED_MMSE_RESAMPLER_CC_H
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
@@ -38,11 +38,11 @@ namespace gr {
      * message. Keys are pmt symbols with the strings "resamp_ratio" and "mu"
      * and values are pmt floats.
      */
-    class FILTER_API fractional_resampler_cc : virtual public block
+    class FILTER_API mmse_resampler_cc : virtual public block
     {
     public:
-      // gr::filter::fractional_resampler_cc::sptr
-      typedef boost::shared_ptr<fractional_resampler_cc> sptr;
+      // gr::filter::mmse_resampler_cc::sptr
+      typedef boost::shared_ptr<mmse_resampler_cc> sptr;
 
       /*!
        * \brief Build the resampling MMSE filter (complex input, complex output)
@@ -62,4 +62,4 @@ namespace gr {
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* INCLUDED_FRACTIONAL_RESAMPLER_FF_H */
+#endif /* INCLUDED_MMSE_RESAMPLER_FF_H */

@@ -553,10 +553,10 @@ Filter Blocks
    gnuradio.filter.fir_filter_fff
    gnuradio.filter.fir_filter_fsf
    gnuradio.filter.fir_filter_scc
-   gnuradio.filter.fractional_interpolator_cc
-   gnuradio.filter.fractional_interpolator_ff
-   gnuradio.filter.fractional_resampler_cc
-   gnuradio.filter.fractional_resampler_ff
+   gnuradio.filter.mmse_interpolator_cc
+   gnuradio.filter.mmse_interpolator_ff
+   gnuradio.filter.mmse_resampler_cc
+   gnuradio.filter.mmse_resampler_ff
    gnuradio.filter.freq_xlating_fir_filter_ccc
    gnuradio.filter.freq_xlating_fir_filter_ccf
    gnuradio.filter.freq_xlating_fir_filter_fcc
@@ -907,8 +907,8 @@ Resampler Blocks
 .. autosummary::
    :nosignatures:
 
-   gnuradio.filter.fractional_resampler_cc
-   gnuradio.filter.fractional_resampler_ff
+   gnuradio.filter.mmse_resampler_cc
+   gnuradio.filter.mmse_resampler_ff
    gnuradio.filter.pfb.arb_resampler_ccf
    gnuradio.filter.pfb.arb_resampler_fff
    gnuradio.filter.pfb.arb_resampler_ccc
