@@ -73,6 +73,8 @@ namespace gr {
     correlate_access_code_tag_bb_impl::set_access_code(
         const std::string &access_code)
     {
+      gr::thread::scoped_lock l(d_mutex_access_code);
+
       d_len = access_code.length();	// # of bytes in string
       if(d_len > 64)
         return false;
@@ -96,6 +98,8 @@ namespace gr {
 					    gr_vector_const_void_star &input_items,
 					    gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock l(d_mutex_access_code);
+
       const unsigned char *in = (const unsigned char*)input_items[0];
       unsigned char *out = (unsigned char*)output_items[0];
 
