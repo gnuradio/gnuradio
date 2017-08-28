@@ -908,7 +908,12 @@ namespace gr {
       //Clause 4.6.2.9
       set_tps_bits(39, 38, config.d_transmission_mode);
       //Clause 4.6.2.10
-      set_tps_bits(47, 40, config.d_cell_id);
+      if (d_frame_index % 2) {
+        set_tps_bits(47, 40, config.d_cell_id & 0xff);
+      }
+      else {
+        set_tps_bits(47, 40, (config.d_cell_id >> 8) & 0xff);
+      }
       //These bits are set to zero
       set_tps_bits(53, 48, 0);
       //Clause 4.6.2.11
