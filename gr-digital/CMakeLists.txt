@@ -91,7 +91,7 @@ CPACK_COMPONENT("digital_swig"
 ########################################################################
 add_subdirectory(include/gnuradio/digital)
 add_subdirectory(lib)
-add_subdirectory(doc)
+add_subdirectory(docs)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/digital)
