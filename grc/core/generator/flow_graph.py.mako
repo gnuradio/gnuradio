@@ -82,6 +82,14 @@ class ${class_name}(gr.top_block, Qt.QWidget):
                 self.restoreGeometry(self.settings.value("geometry"))
         except:
             pass
+#elif $generate_options == 'bokeh_gui'
+
+class $(class_name)(gr.top_block):
+    def __init__(self, doc):
+        gr.top_block.__init__(self, "${title}")
+        self.doc = doc
+        self.plot_lst = []
+        self.widget_lst = []
 % elif generate_options == 'no_gui':
 
 class ${class_name}(gr.top_block):
@@ -180,6 +188,22 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(ize_strs)}])
 ##         (self.${blk.name}).set_max_output_buffer(${blk.params['maxoutbuf'].get_evaluated()})
 ##         % endif
         % endfor
+
+##########################################################
+## Create a layout entry if not manually done for BokehGUI
+##########################################################
+%if generate_options == 'bokeh_gui'
+        if self.widget_lst:
+            input_t = bokehgui.BokehLayout.widgetbox(self.widget_lst)
+            widgetbox = bokehgui.BokehLayout.WidgetLayout(input_t)
+            widgetbox.set_layout(*(${flow_graph.get_option('placement')}))
+            list_obj = [widgetbox] + self.plot_lst
+        else:
+            list_obj = self.plot_lst
+        layout_t = bokehgui.BokehLayout.create_layout(list_obj, "${flow_graph.get_option('sizing_mode')}")
+        self.doc.add_root(layout_t)
+% endif
+
         % if connections:
 
         ${'##################################################'}
@@ -325,6 +349,37 @@ def main(top_block_cls=${class_name}, options=None):
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.${m.name}"))
     % endfor
     qapp.exec_()
+    #elif $generate_options == 'bokeh_gui'
+    serverProc, port = bokehgui.utils.create_server()
+    def killProc(signum, frame, tb):
+        tb.stop()
+        tb.wait()
+        serverProc.terminate()
+        serverProc.kill()
+    time.sleep(1)
+    try:
+        ${'#'} Define the document instance
+        doc = curdoc()
+        #if ${flow_graph.get_option('author')}
+        doc.title = "$title - ${flow_graph.get_option('author')}"
+        #else
+        doc.title = "${title}"
+        #end if
+        session = push_session(doc, session_id="${flow_graph.get_option('id')}",
+                               url = "http://localhost:" + port + "/bokehgui")
+        ${'#'} Create Top Block instance
+        tb = top_block_cls(doc)
+        try:
+            tb.start()
+            signal.signal(signal.SIGTERM, functools.partial(killProc, tb=tb))
+            session.loop_until_closed()
+        finally:
+            print("Exiting the simulation. Stopping Bokeh Server")
+            tb.stop()
+            tb.wait()
+    finally:
+        serverProc.terminate()
+        serverProc.kill()
     % elif generate_options == 'no_gui':
     tb = top_block_cls(${ ', '.join(params_eq_list) })
     % if flow_graph.get_option('run_options') == 'prompt':
