@@ -15,6 +15,13 @@
 from PyQt5 import Qt
 import sys
 #end if
+#if $generate_options() == 'bokeh_gui'
+import time
+import signal
+import functools
+from bokeh.client import push_session
+from bokeh.plotting import curdoc
+#end if
 #if not $generate_options().startswith('hb')
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
@@ -57,6 +64,10 @@ else: self.stop(); self.wait()</callback>
 		<value>qt_gui</value>
 		<type>enum</type>
 		<option>
+			<name>Bokeh GUI</name>
+			<key>bokeh_gui</key>
+		</option>
+		<option>
 			<name>QT GUI</name>
 			<key>qt_gui</key>
 		</option>
@@ -96,11 +107,45 @@ else: self.stop(); self.wait()</callback>
 		</option>
 	</param>
 	<param>
+		<name>Widget Placement</name>
+		<key>placement</key>
+		<value>(0,0)</value>
+		<type>int_vector</type>
+		<hide>#if $generate_options() == 'bokeh_gui' then 'part' else 'all'#</hide>
+	</param>
+  <param>
+    <name>Sizing Mode</name>
+    <key>sizing_mode</key>
+    <value>fixed</value>
+    <type>enum</type>
+		<hide>#if $generate_options() == 'bokeh_gui' then 'part' else 'all'#</hide>
+    <option>
+      <name>Fixed</name>
+      <key>fixed</key>
+    </option>
+    <option>
+      <name>Stretch Both</name>
+      <key>stretch_both</key>
+    </option>
+    <option>
+      <name>Scale Width</name>
+      <key>scale_width</key>
+    </option>
+    <option>
+      <name>Scale Height</name>
+      <key>scale_height</key>
+    </option>
+    <option>
+      <name>Scale Both</name>
+      <key>scale_both</key>
+    </option>
+  </param>
+  <param>
 		<name>Run</name>
 		<key>run</key>
 		<value>True</value>
 		<type>bool</type>
-		<hide>#if $generate_options() == 'qt_gui' then ('part' if $run() else 'none') else 'all'#</hide>
+		<hide>#if $generate_options() in ('qt_gui', 'bokeh_gui') then ('part' if $run() else 'none') else 'all'#</hide>
 		<option>
 			<name>Autostart</name>
 			<key>True</key>
@@ -174,7 +219,9 @@ else: self.stop(); self.wait()</callback>
 	<check>not $window_size or len($window_size) == 2</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[0] &lt;= 4096</check>
 	<check>not $window_size or 300 &lt;= $(window_size)[1] &lt;= 4096</check>
-	<doc>
+  <check>len($placement) == 4 or len($placement) == 2</check>
+  <check>all(i &gt;= 0 for i in $(placement))</check>
+  <doc>
 The options block sets special parameters for the flow graph. \
 Only one option block is allowed per flow graph.
 
