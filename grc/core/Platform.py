@@ -31,7 +31,7 @@ from .Block import Block
 from .Port import Port
 from .Param import Param
 
-from .utils import odict, extract_docs
+from .utils import odict, extract_docs, hide_bokeh_gui_options_if_not_installed
 
 
 class Platform(Element):
@@ -171,6 +171,8 @@ class Platform(Element):
 
         self._docstring_extractor.finish()
         # self._docstring_extractor.wait()
+
+        hide_bokeh_gui_options_if_not_installed(self.blocks['options'])
 
     def iter_xml_files(self):
         """Iterator for block descriptions and category trees"""
