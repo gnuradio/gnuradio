@@ -256,12 +256,14 @@ serialize(pmt_t obj, std::streambuf &sb)
   if(is_null(obj))
     return serialize_untagged_u8(PST_NULL, sb);
 
-  if(is_symbol(obj) || is_string(obj)) {
+  if(is_string(obj)) {
     const std::string s = to_string(obj);
     size_t len = s.size();
     if (is_symbol(obj)) {
+      // Interned
       ok = serialize_untagged_u8(PST_SYMBOL, sb);
     } else {
+      // Not interned
       ok = serialize_untagged_u8(PST_STRING, sb);
     }
     ok &= serialize_untagged_u16(len, sb);

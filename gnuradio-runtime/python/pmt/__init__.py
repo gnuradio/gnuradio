@@ -57,4 +57,3 @@ PMT_EOF = get_PMT_EOF()
 
 from pmt_to_python import pmt_to_python as to_python
 from pmt_to_python import python_to_pmt as to_pmt
-from pmt_to_python import str_noninterned as str_noninterned

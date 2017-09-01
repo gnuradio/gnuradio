@@ -102,8 +102,8 @@ namespace pmt{
   const std::string symbol_to_string(const pmt_t& sym);
 
   bool is_string(const pmt_t& p);
-  pmt_t from_string(std::string str, bool interned=false);
-  std::string to_string(const pmt_t& p);
+  pmt_t from_string(const std::string &str);
+  const std::string to_string(const pmt_t& p);
 
   bool is_number(pmt_t obj);
   bool is_integer(pmt_t x);

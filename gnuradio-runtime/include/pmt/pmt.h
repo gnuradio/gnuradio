@@ -161,18 +161,19 @@ PMT_API const std::string symbol_to_string(const pmt_t& sym);
  * ------------------------------------------------------------------------
  */
 
-//! Return true if obj is a non-interned string PMT, else false.
+//! Return true if obj is a string PMT, else false.
 PMT_API bool is_string(const pmt_t& p);
 
 /*!
- * Return an interned or non-interned string PMT containing the given string.
+ * Return a string PMT containing the given string - if the string is already in the
+ * symbol table, the PMT will be interned, otherwise it will be non-interned.
  */
-PMT_API pmt_t from_string(std::string str, bool interned=false);
+PMT_API pmt_t from_string(const std::string &str);
 
 /*!
  * If \p is a string PMT (interned or non-interned), return the contained string
  */
-PMT_API std::string to_string(const pmt_t& p);
+PMT_API const std::string to_string(const pmt_t& p);
 
 /*
  * ------------------------------------------------------------------------

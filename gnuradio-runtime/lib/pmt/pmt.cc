@@ -116,12 +116,6 @@ notimplemented::notimplemented(const std::string &msg, pmt_t obj)
 //                          Dynamic Casts
 ////////////////////////////////////////////////////////////////////////////
 
-static pmt_symbol *
-_symbol(pmt_t x)
-{
-  return dynamic_cast<pmt_symbol*>(x.get());
-}
-
 static pmt_string *
 _string(pmt_t x)
 {
@@ -268,7 +262,7 @@ get_symbol_hash_table()
   return &s_symbol_hash_table;
 }
 
-pmt_symbol::pmt_symbol(const std::string &name) : d_name(name){}
+pmt_string::pmt_string(const std::string &name) : d_name(name), d_next(NULL) {}
 
 
 static unsigned int
@@ -289,9 +283,9 @@ hash_string(const std::string &s)
 }
 
 bool
-is_symbol(const pmt_t& obj)
+is_symbol(const pmt_t& p)
 {
-  return obj->is_symbol();
+  return p->is_string() && _string(p)->is_interned();
 }
 
 pmt_t
@@ -300,8 +294,8 @@ string_to_symbol(const std::string &name)
   unsigned hash = hash_string(name) % get_symbol_hash_table_size();
 
   // Does a symbol with this name already exist?
-  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()){
-    if (name == _symbol(sym)->name())
+  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _string(sym)->next()){
+    if (name == _string(sym)->name())
       return sym;		// Yes.  Return it
   }
   
@@ -310,14 +304,14 @@ string_to_symbol(const std::string &name)
   boost::mutex::scoped_lock lock(thread_safety);
   // Re-do the search in case another thread inserted this symbol into the table
   // before we got the lock
-  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _symbol(sym)->next()){
-    if (name == _symbol(sym)->name())
+  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _string(sym)->next()){
+    if (name == _string(sym)->name())
       return sym;		// Yes.  Return it
   }
   
   // Nope.  Make a new one.
-  pmt_t sym = pmt_t(new pmt_symbol(name));
-  _symbol(sym)->set_next((*get_symbol_hash_table())[hash]);
+  pmt_t sym = pmt_t(new pmt_string(name));
+  _string(sym)->set_next((*get_symbol_hash_table())[hash]);
   (*get_symbol_hash_table())[hash] = sym;
   return sym;
 }
@@ -332,45 +326,39 @@ intern(const std::string &name)
 const std::string
 symbol_to_string(const pmt_t& sym)
 {
-  if (!sym->is_symbol())
+  if (!sym->is_string())
     throw wrong_type("pmt_symbol_to_string", sym);
 
-  return _symbol(sym)->name();
+  return _string(sym)->name();
 }
 
-////////////////////////////////////////////////////////////////////////////
-//                             Non-interned strings
-////////////////////////////////////////////////////////////////////////////
+pmt_t
+from_string(const std::string &str)
+{
+  unsigned hash = hash_string(str) % get_symbol_hash_table_size();
 
-pmt_string::pmt_string(std::string value) : d_value(value) {}
+  // Does a symbol with this name already exist?
+  for (pmt_t sym = (*get_symbol_hash_table())[hash]; sym; sym = _string(sym)->next()) {
+    if (str == _string(sym)->name())
+      return sym;   // Yes.  Return it
+  }
+
+  return pmt_t(new pmt_string(str));
+}
+
+const std::string
+to_string(const pmt_t& p)
+{
+  if (!p->is_string())
+    throw wrong_type("pmt_to_string", p);
+
+  return _string(p)->name();
+}
 
 bool
 is_string(const pmt_t& p)
 {
   return p->is_string();
-}
-
-
-pmt_t
-from_string(std::string str, bool interned)
-{
-  if (interned) {
-    return string_to_symbol(str);
-  } else {
-    return pmt_t(new pmt_string(str));
-  }
-}
-
-std::string
-to_string(const pmt_t& p)
-{
-  if (p->is_symbol()) {
-    return symbol_to_string(p);
-  } else if (p->is_string()) {
-    return _string(p)->value();
-  }
-
-  throw wrong_type("pmt_to_string", p);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -1120,7 +1108,7 @@ eqv(const pmt_t& x, const pmt_t& y)
     return true;
 
   if (x->is_string() && y->is_string())
-    return _string(x)->value() == _string(y)->value();
+    return _string(x)->name() == _string(y)->name();
 
   if (x->is_integer() && y->is_integer())
     return _integer(x)->value() == _integer(y)->value();
@@ -1144,7 +1132,7 @@ eqv_raw(pmt_base *x, pmt_base *y)
     return true;
 
   if (x->is_string() && y->is_string())
-    return _string(x)->value() == _string(y)->value();
+    return _string(x)->name() == _string(y)->name();
 
   if (x->is_integer() && y->is_integer())
     return _integer(x)->value() == _integer(y)->value();
@@ -1563,7 +1551,7 @@ dump_sizeof()
   printf("sizeof(pmt_t)              = %3zd\n", sizeof(pmt_t));
   printf("sizeof(pmt_base)           = %3zd\n", sizeof(pmt_base));
   printf("sizeof(pmt_bool)           = %3zd\n", sizeof(pmt_bool));
-  printf("sizeof(pmt_symbol)         = %3zd\n", sizeof(pmt_symbol));
+  printf("sizeof(pmt_string)         = %3zd\n", sizeof(pmt_string));
   printf("sizeof(pmt_integer)        = %3zd\n", sizeof(pmt_integer));
   printf("sizeof(pmt_uint64)         = %3zd\n", sizeof(pmt_uint64));
   printf("sizeof(pmt_real)           = %3zd\n", sizeof(pmt_real));

@@ -64,7 +64,6 @@ protected:
 
 public:
   virtual bool is_bool()    const { return false; }
-  virtual bool is_symbol()  const { return false; }
   virtual bool is_string()  const { return false; }
   virtual bool is_number()  const { return false; }
   virtual bool is_integer() const { return false; }
@@ -111,33 +110,21 @@ public:
 };
 
 
-class pmt_symbol : public pmt_base
+class pmt_string : public pmt_base
 {
   std::string	d_name;
   pmt_t		d_next;
 
 public:
-  pmt_symbol(const std::string &name);
-  //~pmt_symbol(){}
-
-  bool is_symbol() const { return true; }
-  const std::string name() { return d_name; }
-
-  pmt_t next() { return d_next; }		// symbol table link
-  void set_next(pmt_t next) { d_next = next; }
-};
-
-class pmt_string : public pmt_base
-{
-  std::string d_value;
-
-public:
-  pmt_string(std::string value);
+  pmt_string(const std::string &name);
   //~pmt_string(){}
 
   bool is_string() const { return true; }
-  std::string value() { return d_value; }
+  const std::string name() { return d_name; }
+  bool is_interned() { return (d_next != NULL); }
 
+  pmt_t next() { return d_next; }		// symbol table link
+  void set_next(pmt_t next) { d_next = next; }
 };
 
 class pmt_integer : public pmt_base
