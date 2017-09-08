@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -87,5 +87,41 @@ class test_moving_average(gr_unittest.TestCase):
         # make sure result is close to zero
         self.assertComplexTuplesAlmostEqual(expected_result, dst_data, 1)
 
+    def test_03(self):
+        tb = self.tb
+
+        print "setting up"
+        vlen = 5
+        N = 10*vlen
+        seed = 0
+        data = make_random_float_tuple(N, 2**10)
+        data = [int(d*1000) for d in data]
+        print "making blocks"
+        src = blocks.vector_source_i(data, False)
+        one_to_many = blocks.stream_to_streams(gr.sizeof_int, vlen)
+        one_to_vector = blocks.stream_to_vector(gr.sizeof_int, vlen)
+        many_to_vector = blocks.streams_to_vector(gr.sizeof_int, vlen)
+        isolated  = [ blocks.moving_average_ii(100, 1) for i in range(vlen)]
+        dut = blocks.moving_average_ii(100, 1, vlen=vlen)
+        dut_dst = blocks.vector_sink_i(vlen=vlen)
+        ref_dst = blocks.vector_sink_i(vlen=vlen)
+
+        print "connecting"
+        tb.connect(src, one_to_many)
+        tb.connect(src, one_to_vector, dut, dut_dst)
+        tb.connect(many_to_vector, ref_dst)
+        for idx, single in enumerate(isolated):
+            tb.connect((one_to_many,idx), single, (many_to_vector,idx))
+
+
+        print "running"
+        tb.run()
+
+        print "comparing"
+        dut_data = dut_dst.data()
+        ref_data = ref_dst.data()
+
+        # make sure result is close to zero
+        self.assertTupleEqual(dut_data, ref_data)
 if __name__ == '__main__':
     gr_unittest.run(test_moving_average, "test_moving_average.xml")
