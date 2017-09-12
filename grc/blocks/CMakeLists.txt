@@ -20,6 +20,7 @@
 ########################################################################
 include(GrPython)
 
+file(GLOB yml_files "*.yml")
 file(GLOB xml_files "*.xml")
 
 macro(REPLACE_IN_FILE _xml_block match replace)
@@ -54,6 +55,6 @@ endif()
 add_custom_target(grc_generated_xml ALL DEPENDS ${generated_xml_files})
 
 install(
-    FILES ${xml_files} ${generated_xml_files}
+    FILES ${yml_files} ${xml_files} ${generated_xml_files}
     DESTINATION ${GRC_BLOCKS_DIR}
 )
