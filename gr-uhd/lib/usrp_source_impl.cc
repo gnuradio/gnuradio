@@ -149,7 +149,17 @@ namespace gr {
       return res;
     }
 
-    SET_CENTER_FREQ_FROM_INTERNALS(usrp_source_impl, set_rx_freq);
+    ::uhd::tune_result_t
+    usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direction)
+    {
+      _chans_to_tune.reset(chan);
+      if (pmt::eqv(direction, pmt::mp("TX"))) {
+        // TODO: what happens if the TX device is not instantiated? Catch error?
+        return _dev->set_tx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
+      } else {
+        return _dev->set_rx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
+      }
+    }
 
     double
     usrp_source_impl::get_center_freq(size_t chan)
@@ -534,7 +544,7 @@ namespace gr {
           _rx_stream->recv(outputs, nbytes/bpi, _metadata, 0.0);
         else
           // no rx streamer -- nothing to flush
-          break; 
+          break;
 #else
         _dev->get_device()->recv
           (outputs, nbytes/_type->size, _metadata, *_type,
