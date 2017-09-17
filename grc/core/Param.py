@@ -408,3 +408,6 @@ class Param(Element):
                 return '(%s)' % v
         else:
             return v
+
+    def get_opt(self, item):
+        return self.options.attributes[self.get_value()][item]
