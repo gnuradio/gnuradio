@@ -71,19 +71,15 @@ ELSE()
 ENDIF()
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_C_STANDARD 99)
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    SET(CMAKE_C_STANDARD 99)
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_C_STANDARD 11)
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
 ELSE()
     message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
 
-# if cmake version is < 3.1, explicitly set C standard to use.
-IF(${CMAKE_VERSION} VERSION_LESS "3.1")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c${CMAKE_C_STANDARD}")
-ENDIF()
 
 # Set cmake policies.
 # This will suppress developer warnings during the cmake process that can occur
