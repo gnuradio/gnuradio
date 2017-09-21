@@ -114,14 +114,15 @@ class pmt_string : public pmt_base
 {
   std::string	d_name;
   pmt_t		d_next;
+  bool d_is_interned;
 
 public:
-  pmt_string(const std::string &name);
+  pmt_string(const std::string &name, bool is_interned);
   //~pmt_string(){}
 
   bool is_string() const { return true; }
   const std::string name() { return d_name; }
-  bool is_interned() { return (d_next != NULL); }
+  bool is_interned() { return d_is_interned; }
 
   pmt_t next() { return d_next; }		// symbol table link
   void set_next(pmt_t next) { d_next = next; }

@@ -262,7 +262,7 @@ get_symbol_hash_table()
   return &s_symbol_hash_table;
 }
 
-pmt_string::pmt_string(const std::string &name) : d_name(name), d_next(NULL) {}
+pmt_string::pmt_string(const std::string &name, bool is_interned) : d_name(name), d_is_interned(is_interned) {}
 
 
 static unsigned int
@@ -310,7 +310,7 @@ string_to_symbol(const std::string &name)
   }
   
   // Nope.  Make a new one.
-  pmt_t sym = pmt_t(new pmt_string(name));
+  pmt_t sym = pmt_t(new pmt_string(name, true));
   _string(sym)->set_next((*get_symbol_hash_table())[hash]);
   (*get_symbol_hash_table())[hash] = sym;
   return sym;
@@ -343,7 +343,7 @@ from_string(const std::string &str)
       return sym;   // Yes.  Return it
   }
 
-  return pmt_t(new pmt_string(str));
+  return pmt_t(new pmt_string(str, false));
 }
 
 const std::string
