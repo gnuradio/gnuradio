@@ -1,5 +1,13 @@
 % if not generate_options.startswith('hb'):
+<%
+from sys import version_info
+python_version = version_info.major
+%>\
+% if python_version == 2:
 #!/usr/bin/env python2
+% elif python_version == 3:
+#!/usr/bin/env python3
+% endif
 % endif
 # -*- coding: utf-8 -*-
 <%def name="indent(code)">${ '\n        '.join(str(code).splitlines()) }</%def>
@@ -27,7 +35,7 @@ if __name__ == '__main__':
             x11 = ctypes.cdll.LoadLibrary('libX11.so')
             x11.XInitThreads()
         except:
-            print "Warning: failed to XInitThreads()"
+            print("Warning: failed to XInitThreads()")
 
 % endif
 ########################################################
@@ -333,7 +341,7 @@ def main(top_block_cls=${class_name}, options=None):
     (tb.${m.name}).start()
     % endfor
     try:
-        raw_input('Press Enter to quit: ')
+        input('Press Enter to quit: ')
     except EOFError:
         pass
     tb.stop()
