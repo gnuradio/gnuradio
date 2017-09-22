@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Fractional Interpolator
+##Fractional MMSE Interpolator
 ###################################################
  -->
 <block>
