@@ -57,7 +57,7 @@ namespace gr {
       :	block("tuntap_pdu",
 		 io_signature::make (0, 0, 0),
 		 io_signature::make (0, 0, 0)),
-	stream_pdu_base(MTU),
+	stream_pdu_base(istunflag ? MTU : MTU + 14),
 	d_dev(dev),
 	d_istunflag(istunflag)
     {
