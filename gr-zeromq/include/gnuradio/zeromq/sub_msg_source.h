@@ -46,7 +46,7 @@ namespace gr {
        * \brief Return a shared_ptr to a new instance of gr::zeromq::sub_msg_source.
        *
        * \param address  ZMQ socket address specifier
-       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments
+       * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments
        *
        */
       static sptr make(char *address, int timeout=100);

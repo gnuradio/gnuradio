@@ -50,7 +50,7 @@ namespace gr {
        * \param itemsize Size of a stream item in bytes.
        * \param vlen Vector length of the input items. Note that one vector is one item.
        * \param address  ZMQ socket address specifier.
-       * \param timeout  Receive timeout in seconds, default is 100ms, 1us increments.
+       * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments.
        * \param pass_tags Whether sink will serialize and pass tags over the link.
        * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
        */
