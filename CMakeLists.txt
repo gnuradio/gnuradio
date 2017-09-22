@@ -180,6 +180,12 @@ set(EXPORT_FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
 file(WRITE ${EXPORT_FILE}) #blank the file (subdirs will append)
 
 ########################################################################
+# Incorporate CMake function/macros overloading.
+########################################################################
+
+include(CMakeOverloads)
+
+########################################################################
 # Compiler specific setup
 ########################################################################
 include(GrMiscUtils) #compiler flag check
