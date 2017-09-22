@@ -58,7 +58,7 @@ class ModToolMakeXML(ModTool):
         if options.blockname is not None:
             self._info['pattern'] = options.blockname
         else:
-            self._info['pattern'] = eval(input('Which blocks do you want to parse? (Regex): '))
+            self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
         if len(self._info['pattern']) == 0:
             self._info['pattern'] = '.'
 

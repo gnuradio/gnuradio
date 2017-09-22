@@ -43,6 +43,6 @@ def build_graph():
 if __name__ == '__main__':
     tb = build_graph()
     tb.start()
-    eval(input ('Press Enter to exit: '))
+    input ('Press Enter to exit: ')
     tb.stop()
     tb.wait()

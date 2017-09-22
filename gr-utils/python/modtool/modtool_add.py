@@ -76,14 +76,14 @@ class ModToolAdd(ModTool):
             # Print(list out of blocktypes to user for reference)
             print(str(self._block_types))
             while self._info['blocktype'] not in self._block_types:
-                self._info['blocktype'] = eval(input("Enter block type: "))
+                self._info['blocktype'] = input("Enter block type: ")
                 if self._info['blocktype'] not in self._block_types:
                     print('Must be one of ' + str(self._block_types))
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
             while self._info['lang'] not in ['c++', 'cpp', 'python']:
-                self._info['lang'] = eval(input("Language (python/cpp): "))
+                self._info['lang'] = input("Language (python/cpp): ")
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
 
@@ -94,7 +94,7 @@ class ModToolAdd(ModTool):
             raise ModToolException('Missing or skipping relevant subdir.')
 
         if self._info['blockname'] is None:
-            self._info['blockname'] = eval(input("Enter name of block/code (without module name prefix): "))
+            self._info['blockname'] = input("Enter name of block/code (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             raise ModToolException('Invalid block name.')
         print("Block/code identifier: " + self._info['blockname'])
@@ -110,7 +110,7 @@ class ModToolAdd(ModTool):
         if options.argument_list is not None:
             self._info['arglist'] = options.argument_list
         else:
-            self._info['arglist'] = eval(input('Enter valid argument list, including default arguments: '))
+            self._info['arglist'] = input('Enter valid argument list, including default arguments: ')
 
         if not (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
             self._add_py_qa = options.add_python_qa

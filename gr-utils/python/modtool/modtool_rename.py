@@ -62,7 +62,7 @@ class ModToolRename(ModTool):
         # first make sure the old block name is provided
         self._info['oldname'] = options.blockname
         if self._info['oldname'] is None:
-            self._info['oldname'] = eval(input("Enter name of block/code to rename (without module name prefix): "))
+            self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
             raise ModToolException('Invalid block name.')
         print("Block/code to rename identifier: " + self._info['oldname'])
@@ -70,7 +70,7 @@ class ModToolRename(ModTool):
 
         # now get the new block name
         if options.new_name is None:
-            self._info['newname'] = eval(input("Enter name of block/code (without module name prefix): "))
+            self._info['newname'] = input("Enter name of block/code (without module name prefix): ")
         else:
             self._info['newname'] = options.new_name[0]
         if not re.match('[a-zA-Z0-9_]+', self._info['newname']):

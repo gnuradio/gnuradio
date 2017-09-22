@@ -295,7 +295,7 @@ def main():
         print(ex)
         exit(1)
     tb.start()
-    eval(input('[UHD-SIGGEN] Press Enter to quit:\n'))
+    input('[UHD-SIGGEN] Press Enter to quit:\n')
     tb.stop()
     tb.wait()
 

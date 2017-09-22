@@ -59,7 +59,7 @@ if __name__ == '__main__':
     tb.start()
 
     while(1):
-        ret = eval(input('Enter a new Core # or Press Enter to quit: '))
+        ret = input('Enter a new Core # or Press Enter to quit: ')
 	if(len(ret) == 0):
             tb.stop()
 	    sys.exit(0)
