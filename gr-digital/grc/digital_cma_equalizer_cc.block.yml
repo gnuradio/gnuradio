@@ -1,0 +1,33 @@
+id: digital_cma_equalizer_cc
+label: CMA Equalizer
+
+parameters:
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: modulus
+    label: Modulus
+    dtype: real
+-   id: mu
+    label: Gain
+    dtype: real
+-   id: sps
+    label: Samples per Symbol
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.cma_equalizer_cc(${num_taps}, ${modulus}, ${mu}, ${sps})
+    callbacks:
+    - set_gain(${mu})
+    - set_modulus(${modulus})
+
+file_format: 1

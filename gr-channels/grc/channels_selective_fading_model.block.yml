@@ -1,0 +1,87 @@
+id: channels_selective_fading_model
+label: Frequency Selective Fading Model
+
+parameters:
+-   id: N
+    label: Num Sinusoids (SoS model)
+    dtype: int
+    default: '8'
+-   id: fDTs
+    label: Normalized Max Doppler (fD*Ts)
+    dtype: real
+    default: 10.0/samp_rate
+-   id: LOS
+    label: LOS Model
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Rayleigh/NLOS, Rician/LOS]
+    option_attributes:
+        hide_K: [all, '']
+-   id: K
+    label: Rician factor (K)
+    dtype: real
+    default: '4.0'
+    hide: ${ LOS.hide_K }
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+-   id: delays
+    label: PDP Delays (samp)
+    dtype: real_vector
+    default: 0.0,0.1,1.3
+-   id: mags
+    label: PDP Magnitudes
+    dtype: real_vector
+    default: 1,0.99,0.97
+-   id: ntaps
+    label: Num Taps
+    dtype: int
+    default: '8'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.selective_fading_model( ${N}, ${fDTs}, ${LOS}, ${K}, ${seed}, ${delays},
+        ${mags}, ${ntaps} )
+    callbacks:
+    - set_fDTs(${fDTs})
+    - set_K(${K})
+
+documentation: |-
+    int d_N=8;          // number of sinusoids used to simulate gain on each ray
+        float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate)
+        float d_K=4;        // Rician factor (ratio of the specular power to the scattered power)
+        bool d_LOS=true;    // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
+        int seed=0;         // noise seed
+        int ntaps;          // Number of FIR taps to use in selective fading model
+
+          These two vectors comprise the Power Delay Profile of the signal
+        float_vector delays   // Time delay in the fir filter (in samples) for each arriving WSSUS Ray
+        float_vector mags     // Magnitude corresponding to each WSSUS Ray
+
+        If using a LOS model, the first delay and mag should correspond with the LOS component
+
+      References:
+
+      The flat-fading portion of the algorithm implements the following
+       Compact Rayleigh and Rician fading simulator based on random walk processes
+       A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
+       26th November 2008
+
+      The frequency selective extension of the block roughly implements
+       A Low-Complexity Hardware Implementation of Discrete-Time
+       Frequency-Selective Rayleigh Fading Channels
+       F. Ren and Y. Zheng
+       24-27 May 2009
+
+      Implementation by Tim O'Shea
+
+file_format: 1

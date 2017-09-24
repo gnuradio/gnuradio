@@ -1,0 +1,25 @@
+id: digital_correlate_access_code_bb
+label: Correlate Access Code
+
+parameters:
+-   id: access_code
+    label: Access Code
+    dtype: string
+    default: '101010'
+-   id: threshold
+    label: Threshold
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.correlate_access_code_bb(${access_code}, ${threshold})
+
+file_format: 1

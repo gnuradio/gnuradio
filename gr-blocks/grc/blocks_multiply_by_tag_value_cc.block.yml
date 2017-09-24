@@ -1,0 +1,25 @@
+id: blocks_multiply_by_tag_value_cc
+label: Multiply by Tag Value
+
+parameters:
+-   id: tagname
+    label: Tag Name
+    dtype: string
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.multiply_by_tag_value_cc(${tagname}, ${vlen})
+
+file_format: 1

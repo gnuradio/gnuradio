@@ -1,0 +1,31 @@
+id: variable_ldpc_G_matrix_def
+label: LDPC Generator Matrix
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: filename
+    label: File
+    dtype: file_open
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: self.${id} = ${id} = fec.ldpc_G_matrix(${filename})
+
+documentation: |-
+    This block creates a LDPC Generator Matrix variable.
+
+    This variable can be used by:
+      1) LDPC Encoder Definition (via Generator) block
+      2) LDPC Bit Flip Decoder Definition block
+
+    Provide an alist file, which contains a Generator matrix, G, in the standard format G = [I P], where I is an identity matrix and P is the parity submatrix.
+
+    The format of alist files is described at:
+    http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+
+file_format: 1

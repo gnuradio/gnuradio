@@ -1,0 +1,44 @@
+id: analog_pwr_squelch_xx
+label: Power Squelch
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: threshold
+    label: Threshold (dB)
+    dtype: real
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: 1e-4
+-   id: ramp
+    label: Ramp
+    dtype: int
+    default: '0'
+-   id: gate
+    label: Gate
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.pwr_squelch_${type.fcn}(${threshold}, ${alpha}, ${ramp}, ${gate})
+    callbacks:
+    - set_threshold(${threshold})
+    - set_alpha(${alpha})
+
+file_format: 1

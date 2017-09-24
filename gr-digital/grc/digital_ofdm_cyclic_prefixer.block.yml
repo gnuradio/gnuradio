@@ -1,0 +1,38 @@
+id: digital_ofdm_cyclic_prefixer
+label: OFDM Cyclic Prefixer
+
+parameters:
+-   id: input_size
+    label: FFT Length
+    dtype: int
+    default: fft_len
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: cp_len
+    label: CP Length
+    dtype: int
+    default: fft_len/4
+-   id: rolloff
+    label: Rolloff
+    dtype: int
+    default: '0'
+    hide: ${ ('none' if rolloff else 'part') }
+-   id: tagname
+    label: Length Tag Key
+    dtype: string
+    default: '"frame_len"'
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ input_size }
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.ofdm_cyclic_prefixer(${input_size}, ${input_size+cp_len}, ${rolloff},
+        ${tagname})
+
+file_format: 1

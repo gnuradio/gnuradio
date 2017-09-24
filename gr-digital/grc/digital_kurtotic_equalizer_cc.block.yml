@@ -1,0 +1,26 @@
+id: digital_kurtotic_equalizer_cc
+label: Kurtotic Equalizer
+
+parameters:
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: mu
+    label: Mu
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.kurtotic_equalizer_cc(${num_taps}, ${mu})
+    callbacks:
+    - set_gain(${mu})
+
+file_format: 1

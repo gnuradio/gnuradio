@@ -1,0 +1,21 @@
+id: digital_constellation_soft_decoder_cf
+label: Constellation Soft Decoder
+
+parameters:
+-   id: constellation
+    label: Constellation Object
+    dtype: raw
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.constellation_soft_decoder_cf(${constellation})
+
+file_format: 1

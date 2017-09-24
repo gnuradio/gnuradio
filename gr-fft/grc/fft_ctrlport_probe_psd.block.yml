@@ -1,0 +1,31 @@
+id: fft_ctrlport_probe_psd
+label: Ctrlport Probe PSD
+
+parameters:
+-   id: name
+    label: Name
+    dtype: string
+    default: psd
+-   id: desc
+    label: Description
+    dtype: string
+    default: PSD Plot
+-   id: len
+    label: Length
+    dtype: int
+    default: '1024'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import fft
+    make: fft.ctrlport_probe_psd(${name}, ${desc}, ${len})
+    callbacks:
+    - set_length(${len})
+
+documentation: |-
+    Place this in a graph to export PSD values to a GRCP port probe.
+
+file_format: 1

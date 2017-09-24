@@ -1,0 +1,48 @@
+id: digital_costas_loop_cc
+label: Costas Loop
+
+parameters:
+-   id: w
+    label: Loop Bandwidth
+    dtype: real
+-   id: order
+    label: Order
+    dtype: int
+-   id: use_snr
+    label: Use SNR
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: noise
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   label: frequency
+    domain: stream
+    dtype: float
+    optional: true
+-   label: phase
+    domain: stream
+    dtype: float
+    optional: true
+-   label: error
+    domain: stream
+    dtype: float
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.costas_loop_cc(${w}, ${order}, ${use_snr})
+    callbacks:
+    - set_loop_bandwidth(${w})
+
+file_format: 1

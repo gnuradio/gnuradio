@@ -1,0 +1,17 @@
+id: blocks_ctrlport_monitor
+label: CtrlPort Monitor
+
+parameters:
+-   id: en
+    label: Enabled
+    dtype: enum
+    options: ['True', 'False']
+
+templates:
+    imports: from gnuradio.ctrlport.monitor import *
+    make: not ${en} or monitor()
+
+documentation: |-
+    Place this in a graph to launch a QtPy GR CtrlPort Monitor app.
+
+file_format: 1

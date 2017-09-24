@@ -1,0 +1,37 @@
+id: digital_glfsr_source_x
+label: GLFSR Source
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [float, byte]
+    option_attributes:
+        fcn: [f, b]
+    hide: part
+-   id: degree
+    label: Degree
+    dtype: int
+-   id: repeat
+    label: Repeat
+    dtype: enum
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: mask
+    label: Mask
+    dtype: int
+    default: '0'
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '1'
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.glfsr_source_${type.fcn}(${degree}, ${repeat}, ${mask}, ${seed})
+
+file_format: 1

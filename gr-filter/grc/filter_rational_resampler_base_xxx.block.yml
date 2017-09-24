@@ -1,0 +1,46 @@
+id: rational_resampler_base_xxx
+label: Rational Resampler Base
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fcc, fff, fsf, scc]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Complex (Complex Taps), Float->Float (Real Taps), Float->Short (Real
+            Taps), Short->Complex (Complex Taps)]
+    option_attributes:
+        input: [complex, complex, float, float, float, short]
+        output: [complex, complex, complex, float, short, complex]
+        taps: [complex_vector, real_vector, complex_vector, real_vector, real_vector,
+            complex_vector]
+    hide: part
+-   id: interp
+    label: Interpolation
+    dtype: int
+    default: '1'
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: ${ type.taps }
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: filter.rational_resampler_base_${type}(${interp}, ${decim}, ${taps})
+    callbacks:
+    - set_taps(${taps})
+
+file_format: 1

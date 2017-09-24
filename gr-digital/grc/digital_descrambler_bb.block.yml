@@ -1,0 +1,30 @@
+id: digital_descrambler_bb
+label: Descrambler
+
+parameters:
+-   id: mask
+    label: Mask
+    dtype: hex
+    default: '0x8A'
+-   id: seed
+    label: Seed
+    dtype: hex
+    default: '0x7F'
+-   id: len
+    label: Length
+    dtype: int
+    default: '7'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.descrambler_bb(${mask}, ${seed}, ${len})
+
+file_format: 1

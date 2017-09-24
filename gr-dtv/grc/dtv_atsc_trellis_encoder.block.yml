@@ -1,0 +1,18 @@
+id: dtv_atsc_trellis_encoder
+label: ATSC Trellis Encoder
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_trellis_encoder()
+
+file_format: 1

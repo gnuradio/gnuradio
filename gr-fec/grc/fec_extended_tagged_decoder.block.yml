@@ -1,0 +1,47 @@
+id: fec_extended_tagged_decoder
+label: FEC Extended Tagged Decoder
+
+parameters:
+-   id: value
+    label: fake val
+    dtype: string
+    default: fec_extended_decoder
+    hide: all
+-   id: decoder_list
+    label: Decoder Objects
+    dtype: raw
+    default: decoder_variable
+-   id: mtu
+    label: MTU (bytes)
+    dtype: int
+    default: '1500'
+-   id: ann
+    label: Annihilator
+    dtype: raw
+    default: None
+-   id: puncpat
+    label: Puncture Pattern
+    dtype: string
+    default: '''11'''
+-   id: lentagname
+    label: Length Tag Name
+    dtype: string
+    default: None
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import fec
+    make: self.${id} = ${id} = fec.extended_tagged_decoder(decoder_obj_list=${decoder_list},
+        ann=${ann}, puncpat=${puncpat}, integration_period=10000, lentagname=${lentagname},
+        mtu=${mtu})
+
+documentation: ""
+
+file_format: 1

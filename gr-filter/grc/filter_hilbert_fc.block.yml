@@ -1,0 +1,35 @@
+id: hilbert_fc
+label: Hilbert
+
+parameters:
+-   id: num_taps
+    label: Num Taps
+    dtype: int
+    default: '65'
+-   id: win
+    label: Window
+    dtype: int
+    default: firdes.WIN_HAMMING
+    options: [firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN, firdes.WIN_BLACKMAN_hARRIS,
+        firdes.WIN_RECTANGULAR, firdes.WIN_KAISER]
+    option_labels: [Hamming, Hann, Blackman, Blackman-harris, Rectangular, Kaiser]
+    hide: part
+-   id: beta
+    label: Beta
+    dtype: real
+    default: '6.76'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.hilbert_fc(${num_taps}, ${win}, ${beta})
+
+file_format: 1

@@ -1,0 +1,25 @@
+id: digital_packet_headerparser_b_default
+label: Packet Header Parser (Default)
+
+parameters:
+-   id: header_len
+    label: Header Length
+    dtype: int
+-   id: len_tag_key
+    label: Length Tag Name
+    dtype: string
+    default: '"packet_len"'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: message
+    id: header_data
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.packet_headerparser_b(${header_len}, ${len_tag_key})
+
+file_format: 1

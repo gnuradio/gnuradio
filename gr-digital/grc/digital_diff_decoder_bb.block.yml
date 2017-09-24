@@ -1,0 +1,21 @@
+id: digital_diff_decoder_bb
+label: Differential Decoder
+
+parameters:
+-   id: modulus
+    label: Modulus
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.diff_decoder_bb(${modulus})
+
+file_format: 1

@@ -1,0 +1,16 @@
+id: vocoder_cvsd_decode_bs
+label: CVSD Audio Decoder (Raw Bit-Level)
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.cvsd_decode_bs()
+
+file_format: 1

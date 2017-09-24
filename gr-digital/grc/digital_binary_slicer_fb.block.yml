@@ -1,0 +1,16 @@
+id: digital_binary_slicer_fb
+label: Binary Slicer
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.binary_slicer_fb()
+
+file_format: 1

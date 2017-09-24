@@ -1,0 +1,30 @@
+id: fec_extended_async_encoder
+label: FEC Extended Async Encoder
+
+parameters:
+-   id: encoder_list
+    label: Encoder Objects
+    dtype: raw
+    default: encoder_variable
+-   id: puncpat
+    label: Puncture Pattern
+    dtype: string
+    default: '''11'''
+
+inputs:
+-   domain: message
+    id: in
+    optional: true
+
+outputs:
+-   domain: message
+    id: out
+    optional: true
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.extended_async_encoder(encoder_obj_list=${encoder_list}, puncpat=${puncpat})
+
+documentation: ""
+
+file_format: 1
