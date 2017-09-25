@@ -99,6 +99,11 @@ endif(THRIFT_FOUND)
 ##########################################################################
 # Configure logger
 ##########################################################################
+# just for here, set HAVE_LOG4CPP to LOG4CPP_FOUND to get the embedded
+# #cmakedefine correct.
+
+set(HAVE_LOG4CPP ${LOG4CPP_FOUND})
+
 CONFIGURE_FILE(
   ${CMAKE_CURRENT_SOURCE_DIR}/logger.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/logger.h

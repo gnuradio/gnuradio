@@ -42,7 +42,7 @@ namespace gr {
       ldpc_G_matrix_impl::ldpc_G_matrix_impl(const std::string filename)
         : fec_mtrx_impl()
       {
-        configure_default_loggers(d_logger, d_debug_logger, "ldpc_G_matrix");
+        gr::configure_default_loggers(d_logger, d_debug_logger, "ldpc_G_matrix");
 
         // Read the matrix from a file in alist format
         matrix_sptr x = read_matrix_from_file(filename);
