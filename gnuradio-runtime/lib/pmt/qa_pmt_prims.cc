@@ -31,12 +31,12 @@
 void
 qa_pmt_prims::test_symbols()
 {
-  CPPUNIT_ASSERT(!pmt::is_symbol(pmt::PMT_T));
-  CPPUNIT_ASSERT(!pmt::is_symbol(pmt::PMT_F));
+  CPPUNIT_ASSERT(!pmt::is_string(pmt::PMT_T));
+  CPPUNIT_ASSERT(!pmt::is_string(pmt::PMT_F));
   CPPUNIT_ASSERT_THROW(pmt::symbol_to_string(pmt::PMT_F), pmt::wrong_type);
 
   pmt::pmt_t sym1 = pmt::mp("test");
-  CPPUNIT_ASSERT(pmt::is_symbol(sym1));
+  CPPUNIT_ASSERT(pmt::is_string(sym1));
   CPPUNIT_ASSERT_EQUAL(std::string("test"), pmt::symbol_to_string(sym1));
   CPPUNIT_ASSERT(pmt::is_true(sym1));
   CPPUNIT_ASSERT(!pmt::is_false(sym1));
@@ -597,7 +597,7 @@ qa_pmt_prims::test_sets()
 void
 qa_pmt_prims::test_sugar()
 {
-  CPPUNIT_ASSERT(pmt::is_symbol(pmt::mp("my-symbol")));
+  CPPUNIT_ASSERT(pmt::is_string(pmt::mp("my-symbol")));
   CPPUNIT_ASSERT_EQUAL((long) 10, pmt::to_long(pmt::mp(10)));
   CPPUNIT_ASSERT_EQUAL((double) 1e6, pmt::to_double(pmt::mp(1e6)));
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, 3),

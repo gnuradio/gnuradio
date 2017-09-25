@@ -285,6 +285,12 @@ hash_string(const std::string &s)
 bool
 is_symbol(const pmt_t& p)
 {
+  return p->is_string();
+}
+
+bool
+is_interned_string(const pmt_t& p)
+{
   return p->is_string() && _string(p)->is_interned();
 }
 

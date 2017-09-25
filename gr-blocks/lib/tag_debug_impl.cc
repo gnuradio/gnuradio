@@ -128,7 +128,7 @@ namespace gr {
           for(d_tags_itr = d_tags.begin(); d_tags_itr != d_tags.end(); d_tags_itr++) {
             sout << std::setw(10) << "Offset: " << d_tags_itr->offset
                  << std::setw(10) << "Source: "
-                 << (pmt::is_symbol(d_tags_itr->srcid) ? pmt::symbol_to_string(d_tags_itr->srcid) : "n/a")
+                 << (pmt::is_string(d_tags_itr->srcid) ? pmt::symbol_to_string(d_tags_itr->srcid) : "n/a")
                  << std::setw(10) << "Key: " << pmt::symbol_to_string(d_tags_itr->key)
                  << std::setw(10) << "Value: ";
             sout << d_tags_itr->value << std::endl;

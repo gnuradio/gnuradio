@@ -91,7 +91,7 @@ namespace gr {
   hier_block2::msg_connect(basic_block_sptr src, pmt::pmt_t srcport,
                            basic_block_sptr dst, pmt::pmt_t dstport)
   {
-    if(!pmt::is_symbol(srcport)) {
+    if(!pmt::is_string(srcport)) {
       throw std::runtime_error("bad port id");
     }
     d_detail->msg_connect(src, srcport, dst, dstport);
@@ -108,7 +108,7 @@ namespace gr {
   hier_block2::msg_disconnect(basic_block_sptr src, pmt::pmt_t srcport,
                               basic_block_sptr dst, pmt::pmt_t dstport)
   {
-    if(!pmt::is_symbol(srcport)) {
+    if(!pmt::is_string(srcport)) {
       throw std::runtime_error("bad port id");
     }
     d_detail->msg_disconnect(src, srcport, dst, dstport);

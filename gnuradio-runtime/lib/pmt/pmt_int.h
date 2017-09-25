@@ -109,6 +109,7 @@ public:
   bool is_bool() const { return true; }
 };
 
+bool is_interned_string(const pmt_t& obj);
 
 class pmt_string : public pmt_base
 {

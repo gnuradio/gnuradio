@@ -34,7 +34,7 @@ rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)
     result.value.__set_a_double(pmt::to_double(knob));
     return result;
   }
-  else if(pmt::is_symbol(knob)) {
+  else if(pmt::is_string(knob)) {
     std::string value = pmt::symbol_to_string(knob);
     GNURadio::Knob result;
     result.type = GNURadio::BaseTypes::STRING;

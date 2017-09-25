@@ -24,6 +24,7 @@
 #define INCLUDED_PMT_H
 
 #include <pmt/api.h>
+#include <gnuradio/attributes.h>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
@@ -139,6 +140,7 @@ PMT_API bool to_bool(pmt_t val);
  */
 
 //! Return true if obj is a symbol, else false.
+__GR_ATTR_DEPRECATED
 PMT_API bool is_symbol(const pmt_t& obj);
 
 //! Return the symbol whose name is \p s.
