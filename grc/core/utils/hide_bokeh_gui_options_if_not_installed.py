@@ -1,4 +1,4 @@
-# Copyright 2008-2015 Free Software Foundation, Inc.
+# Copyright 2008-2017 Free Software Foundation, Inc.
 # This file is part of GNU Radio
 #
 # GNU Radio Companion is free software; you can redistribute it and/or
@@ -15,9 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-import expr_utils
-import epy_block_io
-import extract_docs
 
-from odict import odict
-from hide_bokeh_gui_options_if_not_installed import hide_bokeh_gui_options_if_not_installed
+def hide_bokeh_gui_options_if_not_installed(options):
+    try:
+        import bokehgui
+    except ImportError:
+        generate_option = options.get_param('generate_options')
+        list_generate_option = generate_option.get_options()
+        for option in list_generate_option:
+            if option.get_key() == 'bokeh_gui':
+                list_generate_option.remove(option)
+                return
