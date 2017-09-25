@@ -111,7 +111,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(grc)
     add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
-add_subdirectory(doc)
+add_subdirectory(docs)
 
 if(ENABLE_GR_ANALOG)
   add_subdirectory(examples/c++)

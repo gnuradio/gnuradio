@@ -93,7 +93,7 @@ CPACK_COMPONENT("vocoder_swig"
 ########################################################################
 add_subdirectory(include/gnuradio/vocoder)
 add_subdirectory(lib)
-add_subdirectory(doc)
+add_subdirectory(docs)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/vocoder)
