@@ -193,6 +193,7 @@ class Platform(Element):
 
         self._docstring_extractor.finish()
         # self._docstring_extractor.wait()
+        utils.hide_bokeh_gui_options_if_not_installed(self.blocks['options'])
 
     def _iter_files_in_block_path(self, path=None, ext='yml'):
         """Iterator for block descriptions and category trees"""
