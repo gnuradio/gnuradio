@@ -103,8 +103,8 @@ namespace gr {
 
       unsigned int num_iter = (unsigned int)((noutput_items>d_max_iter) ? d_max_iter : noutput_items);
       if(d_vlen == 1) {
-        @I_TYPE@ sum = 0;
-        for(unsigned int i = 0; i < d_length-1; i++) {
+        @I_TYPE@ sum = in[0];
+        for(unsigned int i = 1; i < d_length-1; i++) {
           sum += in[i];
         }
 
@@ -115,10 +115,12 @@ namespace gr {
         }
 
       } else { // d_vlen > 1
-        //TODO: VOLKize this zeroing?
-        std::fill(d_sum.begin(), d_sum.end(), (@I_TYPE@)0);
+        //gets automatically optimized well
+        for(unsigned int elem = 0; elem < d_vlen; elem++) {
+          d_sum[elem] = in[elem];
+        }
 
-        for(unsigned int i = 0; i < d_length - 1; i++) {
+        for(unsigned int i = 1; i < d_length - 1; i++) {
           for(unsigned int elem = 0; elem < d_vlen; elem++) {
             d_sum[elem] += in[i*d_vlen + elem];
           }
