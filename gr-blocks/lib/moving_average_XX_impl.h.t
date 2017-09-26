@@ -25,9 +25,9 @@
 #ifndef @GUARD_NAME_IMPL@
 #define @GUARD_NAME_IMPL@
 
+#include <gnuradio/blocks/@NAME@.h>
 #include <vector>
 #include <algorithm>
-#include <gnuradio/blocks/@NAME@.h>
 
 namespace gr {
   namespace blocks {
