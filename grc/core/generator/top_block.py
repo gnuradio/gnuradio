@@ -4,7 +4,6 @@ import os
 import tempfile
 import textwrap
 import time
-import re
 
 from mako.template import Template
 
@@ -228,7 +227,7 @@ class TopBlockGenerator(object):
                 key = port.key
 
             if not key.isdigit():
-                key = re.findall(r'\d+', key)[0]
+                key.repr(key)
 
             return '({block}, {key})'.format(block=block, key=key)
 
