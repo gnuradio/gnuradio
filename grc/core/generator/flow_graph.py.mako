@@ -90,7 +90,7 @@ class ${class_name}(gr.top_block, Qt.QWidget):
                 self.restoreGeometry(self.settings.value("geometry"))
         except:
             pass
-#elif $generate_options == 'bokeh_gui'
+% elif generate_options == 'bokeh_gui':
 
 class $(class_name)(gr.top_block):
     def __init__(self, doc):
@@ -200,7 +200,7 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(ize_strs)}])
 ##########################################################
 ## Create a layout entry if not manually done for BokehGUI
 ##########################################################
-%if generate_options == 'bokeh_gui'
+% if generate_options == 'bokeh_gui':
         if self.widget_lst:
             input_t = bokehgui.BokehLayout.widgetbox(self.widget_lst)
             widgetbox = bokehgui.BokehLayout.WidgetLayout(input_t)
@@ -357,7 +357,7 @@ def main(top_block_cls=${class_name}, options=None):
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.${m.name}"))
     % endfor
     qapp.exec_()
-    #elif $generate_options == 'bokeh_gui'
+    % elif generate_options == 'bokeh_gui':
     serverProc, port = bokehgui.utils.create_server()
     def killProc(signum, frame, tb):
         tb.stop()

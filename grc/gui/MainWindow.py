@@ -71,7 +71,7 @@ class MainWindow(Gtk.ApplicationWindow):
         vbox = Gtk.VBox()
         self.add(vbox)
 
-        icon_theme = gtk.icon_theme_get_default()
+        icon_theme = Gtk.IconTheme.get_default()
         icon = icon_theme.lookup_icon("gnuradio-grc", 48, 0)
         if not icon:
             # Set window icon
