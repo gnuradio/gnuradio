@@ -70,7 +70,7 @@ def main(args=None):
         Messages.send('\n')
 
         flow_graph, file_path = platform.load_and_generate_flow_graph(
-            os.path.abspath(grc_file), os.path.abspath(out_dir))
+            os.path.abspath(grc_file), os.path.abspath(out_dir) + "/")
         if not file_path:
             exit('Compilation error')
     if file_path and args.run:
