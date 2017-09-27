@@ -151,7 +151,7 @@ class Page(Gtk.HBox):
             generator
         """
         platform = self.flow_graph.parent_platform
-        return platform.Generator(self.flow_graph, self.file_path)
+        return platform.Generator(self.flow_graph, os.path.dirname(self.file_path))
 
     def _handle_button(self, button):
         """
