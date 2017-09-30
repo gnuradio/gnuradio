@@ -533,38 +533,10 @@ class Param(Element):
         # GUI Position/Hint
         #########################
         elif t == 'gui_hint':
-            if ':' in v:
-                tab, pos = v.split(':')
-            elif '@' in v:
-                tab, pos = v, ''
+            if (self.get_parent().get_state() == Constants.BLOCK_DISABLED):
+                return ''
             else:
-                tab, pos = '', v
-
-            if '@' in tab:
-                tab, index = tab.split('@')
-            else:
-                index = '?'
-
-            # TODO: Problem with this code. Produces bad tabs
-            widget_str = ({
-                (True, True): 'self.%(tab)s_grid_layout_%(index)s.addWidget(%(widget)s, %(pos)s)',
-                (True, False): 'self.%(tab)s_layout_%(index)s.addWidget(%(widget)s)',
-                (False, True): 'self.top_grid_layout.addWidget(%(widget)s, %(pos)s)',
-                (False, False): 'self.top_layout.addWidget(%(widget)s)',
-            }[bool(tab), bool(pos)]) % {'tab': tab, 'index': index, 'widget': '%s', 'pos': pos}
-
-            # FIXME: Move replace(...) into the make template of the qtgui blocks
-            # Return a string here
-            class GuiHint(object):
-                def __init__(self, ws):
-                    self._ws = ws
-
-                def __call__(self, w):
-                    return (self._ws.replace('addWidget', 'addLayout') if 'layout' in w else self._ws) % w
-
-                def __str__(self):
-                    return self._ws
-            return GuiHint(widget_str)
+                return self.parse_gui_hint(v)
         #########################
         # Grid Position Type
         #########################
@@ -753,3 +725,119 @@ class Param(Element):
         n['key'] = self.get_key()
         n['value'] = self.get_value()
         return n
+
+    ##############################################
+    # GUI Hint
+    ##############################################
+    def parse_gui_hint(self, v):
+        """
+        Parse/validate gui hint value.
+
+        Args:
+            v: gui_hint string from a block's 'gui_hint' param
+
+        Returns:
+            string of python code for positioning GUI elements in pyQT
+        """
+
+        # Parsing
+        if ':' in v:
+            tab, pos = v.split(':')
+        elif ',' in v:
+            tab, pos = '', v
+        else:
+            tab, pos = v, ''
+
+        if '@' in tab:
+            tab, index = tab.split('@')
+        else:
+            index = '0'
+        index = int(index)
+
+        position_set = bool(pos)
+        tab_set = bool(tab)
+
+        # Validation
+        if position_set:
+            e = self.get_parent().get_parent().evaluate(pos)
+
+            if len(e) == 2:
+                e = e + (1,1)
+            row, col, row_span, col_span = e
+
+            if not isinstance(e, (list, tuple)) or not (len(e) == 2 or len(e) == 4) or not all([isinstance(ei, int) for ei in e]):
+                raise Exception('Invalid GUI Hint entered: {e!s:s} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
+
+            if (row < 0) or (col < 0):
+                raise Exception('Invalid GUI Hint entered: {e!s:s} (non-negative integers only).'.format(e=e))
+
+            if (row_span < 1) or (col_span < 1):
+                raise Exception('Invalid GUI Hint entered: {e!s:s} (positive row/column span required).'.format(e=e))
+
+        if tab_set:
+            enabled_blocks = self.get_parent().get_parent().get_enabled_blocks()
+            tab_list = filter(lambda block: str(block.get_key()) == 'qtgui_tab_widget', enabled_blocks)
+            tab_match = filter(lambda t: t.get_id() == tab, tab_list)
+            if not tab_match:
+                raise Exception('Invalid tab name entered: {tab!s:s} (Tab name not found).'.format(tab=tab))
+
+            tab_index_size = int(tab_match[0].get_param('num_tabs').get_value())
+            if index >= tab_index_size:
+                raise Exception('Invalid tab index entered: {tab!s:s}@{index!s:s} (Index out of range).'.format(tab=tab,
+                                                                                                                index=index))
+
+        # Code Generation
+        if position_set and tab_set:
+            widget_str = 'self.{tab:s}_grid_layout_{index!s:s}.addWidget({widget:s}, {e!s:s})'
+            widget_str += '\n[self.{tab:s}_grid_layout_{index!s:s}.setRowStretch(r,1) for r in range({fRow:d},{lRow:d})]'
+            widget_str += '\n[self.{tab:s}_grid_layout_{index!s:s}.setColumnStretch(c,1) for c in range({fCol:d},{lCol:d})]'
+            widget_str = widget_str.format(tab=tab,
+                                            index=index,
+                                            widget='%s',
+                                            e=str(e)[1:-1],
+                                            fRow=row,
+                                            lRow=(row + row_span),
+                                            fCol=col,
+                                            lCol=(col + col_span))
+
+        elif position_set and not tab_set:
+            widget_str = 'self.top_grid_layout.addWidget({widget:s}, {e!s:s})'
+            widget_str += '\n[self.top_grid_layout.setRowStretch(r,1) for r in range({fRow:d},{lRow:d})]'
+            widget_str += '\n[self.top_grid_layout.setColumnStretch(c,1) for c in range({fCol:d},{lCol:d})]'
+            widget_str = widget_str.format(widget='%s',
+                                            e=str(e)[1:-1],
+                                            fRow=row,
+                                            lRow=(row + row_span),
+                                            fCol=col,
+                                            lCol=(col + col_span))
+
+        elif not position_set and tab_set:
+            widget_str = 'self.{tab:s}_layout_{index!s:s}.addWidget({widget:s})'
+            widget_str = widget_str.format(tab=tab,
+                                            index=index,
+                                            widget='%s')
+
+        elif not position_set and not tab_set:
+            widget_str = 'self.top_layout.addWidget({widget:s})'
+            widget_str = widget_str.format(widget='%s')
+
+        # Collision Detection
+        if position_set:
+            if tab_set:
+                my_parent = '{tab:s}@{index!s:s}'.format(tab=tab,
+                                                        index=index)
+            else:
+                my_parent = 'main'
+            # Calculate hostage cells
+            for r in range(row, row + row_span):
+                for c in range(col, col + col_span):
+                    self._hostage_cells.append((my_parent, (r, c)))
+            # Avoid collisions
+            params = filter(lambda p: p is not self, self.get_all_params('gui_hint'))
+            for param in params:
+                for parent, cell in param._hostage_cells:
+                    if (parent, cell) in self._hostage_cells:
+                        raise Exception('Another graphical element is using parent "{parent!s:s}", cell "{cell!s:s}".'.format(parent=parent,
+                                                                                                                                cell=cell))
+
+        return widget_str

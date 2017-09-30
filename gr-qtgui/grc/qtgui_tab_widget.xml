@@ -21,7 +21,8 @@ self.$(id)_grid_layout_$(i) = Qt.QGridLayout()
 self.$(id)_layout_$(i).addLayout(self.$(id)_grid_layout_$(i))
 $(win).addTab(self.$(id)_widget_$(i), $label)
 #end for
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
+
 	<param>
 		<name>Num Tabs</name>
 		<key>num_tabs</key>

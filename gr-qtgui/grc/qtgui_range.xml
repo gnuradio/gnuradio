@@ -17,7 +17,8 @@
 #end if
 $(range) = Range($start, $stop, $step, $value, $min_len)
 $(win) = RangeWidget($range, self.set_$(id), $label, "$widget", $rangeType)
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
+
   <callback>self.set_$(id)($value)</callback>
 
   <param>
