@@ -127,11 +127,10 @@ class Block(Element):
         port_factory = self.parent_platform.make_port
         port_ids = set()
 
-        def make_stream_port_id(_pool=itertools.count()):
-            return {'sink': 'in', 'source': 'out'}[direction] + str(next(_pool))
+        stream_port_ids = itertools.count()
 
         for i, port_data in enumerate(ports_n):
-            port_id = port_data.setdefault('id', make_stream_port_id())
+            port_id = port_data.setdefault('id', str(next(stream_port_ids)))
             if port_id in port_ids:
                 raise Exception('Port id "{}" already exists in {}s'.format(port_id, direction))
             port_ids.add(port_id)
