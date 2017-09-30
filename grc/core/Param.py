@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import ast
 import weakref
 import re
+import textwrap
 
 from . import Constants
 from .Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
@@ -212,7 +213,7 @@ class Param(Element):
             self._value = value or ''
         self._default = value
         self._init = False
-        self._hostage_cells = list()
+        self.hostage_cells = set()
         self.template_arg = TemplateArg(self)
 
     def get_types(self):
@@ -395,7 +396,6 @@ class Param(Element):
         self._init = True
         self._lisitify_flag = False
         self._stringify_flag = False
-        self._hostage_cells = list()
         t = self.get_type()
         v = self.get_value()
 
@@ -562,12 +562,12 @@ class Param(Element):
             # Calculate hostage cells
             for r in range(row_span):
                 for c in range(col_span):
-                    self._hostage_cells.append((my_parent, (row+r, col+c)))
+                    self.hostage_cells.append((my_parent, (row + r, col + c)))
             # Avoid collisions
             params = filter(lambda p: p is not self, self.get_all_params('grid_pos'))
             for param in params:
                 for parent, cell in param._hostage_cells:
-                    if (parent, cell) in self._hostage_cells:
+                    if (parent, cell) in self.hostage_cells:
                         raise Exception('Another graphical element is using parent "{0}", cell "{1}".'.format(str(parent), str(cell)))
             return e
         #########################
@@ -739,6 +739,7 @@ class Param(Element):
         Returns:
             string of python code for positioning GUI elements in pyQT
         """
+        self.hostage_cells.clear()
 
         # Parsing
         if ':' in v:
@@ -754,90 +755,83 @@ class Param(Element):
             index = '0'
         index = int(index)
 
-        position_set = bool(pos)
-        tab_set = bool(tab)
-
         # Validation
-        if position_set:
+        def parse_pos():
             e = self.get_parent().get_parent().evaluate(pos)
 
-            if len(e) == 2:
-                e = e + (1,1)
-            row, col, row_span, col_span = e
+            if not isinstance(e, (list, tuple)) or len(e) not in (2, 4) or not all(isinstance(ei, int) for ei in e):
+                raise Exception('Invalid GUI Hint entered: {e!r} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
 
-            if not isinstance(e, (list, tuple)) or not (len(e) == 2 or len(e) == 4) or not all([isinstance(ei, int) for ei in e]):
-                raise Exception('Invalid GUI Hint entered: {e!s:s} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
+            if len(e) == 2:
+                row, col = e
+                row_span = col_span = 1
+            else:
+                row, col, row_span, col_span = e
 
             if (row < 0) or (col < 0):
-                raise Exception('Invalid GUI Hint entered: {e!s:s} (non-negative integers only).'.format(e=e))
+                raise Exception('Invalid GUI Hint entered: {e!r} (non-negative integers only).'.format(e=e))
 
             if (row_span < 1) or (col_span < 1):
-                raise Exception('Invalid GUI Hint entered: {e!s:s} (positive row/column span required).'.format(e=e))
+                raise Exception('Invalid GUI Hint entered: {e!r} (positive row/column span required).'.format(e=e))
 
-        if tab_set:
-            enabled_blocks = self.get_parent().get_parent().get_enabled_blocks()
-            tab_list = filter(lambda block: str(block.get_key()) == 'qtgui_tab_widget', enabled_blocks)
-            tab_match = filter(lambda t: t.get_id() == tab, tab_list)
-            if not tab_match:
-                raise Exception('Invalid tab name entered: {tab!s:s} (Tab name not found).'.format(tab=tab))
+            return row, col, row_span, col_span
 
-            tab_index_size = int(tab_match[0].get_param('num_tabs').get_value())
+        def validate_tab():
+            enabled_blocks = self.get_parent().get_parent().iter_enabled_blocks()
+            tabs = (block for block in enabled_blocks
+                    if block.get_key() == 'qtgui_tab_widget' and block.get_id() == tab)
+            tab_block = next(iter(tabs), None)
+            if not tab_block:
+                raise Exception('Invalid tab name entered: {tab} (Tab name not found).'.format(tab=tab))
+
+            tab_index_size = int(tab_block.get_param('num_tabs').get_value())
             if index >= tab_index_size:
-                raise Exception('Invalid tab index entered: {tab!s:s}@{index!s:s} (Index out of range).'.format(tab=tab,
-                                                                                                                index=index))
-
-        # Code Generation
-        if position_set and tab_set:
-            widget_str = 'self.{tab:s}_grid_layout_{index!s:s}.addWidget({widget:s}, {e!s:s})'
-            widget_str += '\n[self.{tab:s}_grid_layout_{index!s:s}.setRowStretch(r,1) for r in range({fRow:d},{lRow:d})]'
-            widget_str += '\n[self.{tab:s}_grid_layout_{index!s:s}.setColumnStretch(c,1) for c in range({fCol:d},{lCol:d})]'
-            widget_str = widget_str.format(tab=tab,
-                                            index=index,
-                                            widget='%s',
-                                            e=str(e)[1:-1],
-                                            fRow=row,
-                                            lRow=(row + row_span),
-                                            fCol=col,
-                                            lCol=(col + col_span))
-
-        elif position_set and not tab_set:
-            widget_str = 'self.top_grid_layout.addWidget({widget:s}, {e!s:s})'
-            widget_str += '\n[self.top_grid_layout.setRowStretch(r,1) for r in range({fRow:d},{lRow:d})]'
-            widget_str += '\n[self.top_grid_layout.setColumnStretch(c,1) for c in range({fCol:d},{lCol:d})]'
-            widget_str = widget_str.format(widget='%s',
-                                            e=str(e)[1:-1],
-                                            fRow=row,
-                                            lRow=(row + row_span),
-                                            fCol=col,
-                                            lCol=(col + col_span))
-
-        elif not position_set and tab_set:
-            widget_str = 'self.{tab:s}_layout_{index!s:s}.addWidget({widget:s})'
-            widget_str = widget_str.format(tab=tab,
-                                            index=index,
-                                            widget='%s')
-
-        elif not position_set and not tab_set:
-            widget_str = 'self.top_layout.addWidget({widget:s})'
-            widget_str = widget_str.format(widget='%s')
+                raise Exception('Invalid tab index entered: {tab}@{index} (Index out of range).'.format(
+                    tab=tab, index=index))
 
         # Collision Detection
-        if position_set:
-            if tab_set:
-                my_parent = '{tab:s}@{index!s:s}'.format(tab=tab,
-                                                        index=index)
-            else:
-                my_parent = 'main'
+        def collision_detection(row, col, row_span, col_span):
+            my_parent = '{tab}@{index}'.format(tab=tab, index=index) if tab else 'main'
             # Calculate hostage cells
             for r in range(row, row + row_span):
                 for c in range(col, col + col_span):
-                    self._hostage_cells.append((my_parent, (r, c)))
-            # Avoid collisions
-            params = filter(lambda p: p is not self, self.get_all_params('gui_hint'))
-            for param in params:
-                for parent, cell in param._hostage_cells:
-                    if (parent, cell) in self._hostage_cells:
-                        raise Exception('Another graphical element is using parent "{parent!s:s}", cell "{cell!s:s}".'.format(parent=parent,
-                                                                                                                                cell=cell))
+                    self.hostage_cells.add((my_parent, (r, c)))
+
+            for other in self.get_all_params('gui_hint'):
+                if other is self:
+                    continue
+                collision = next(iter(self.hostage_cells & other.hostage_cells), None)
+                if collision:
+                    raise Exception('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
+                        block=other.get_parent().get_id(), parent=collision[0], cell=collision[1]
+                    ))
+
+        # Code Generation
+        if tab:
+            validate_tab()
+            layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
+        else:
+            layout = 'top_grid_layout'
+
+        widget = '%s'  # to be fill-out in the mail template
+
+        if pos:
+            row, col, row_span, col_span = parse_pos()
+            collision_detection(row, col, row_span, col_span)
+
+            widget_str = textwrap.dedent("""
+                self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
+                for r in range({row}, {row_end}):
+                    self.{layout}.setRowStretch(r, 1)
+                for c in range({col}, {col_end}):
+                    self.{layout}.setColumnStretch(c, 1)
+            """.strip('\n')).format(
+                layout=layout, widget=widget,
+                row=row, row_span=row_span, row_end=row+row_span,
+                col=col, col_span=col_span, col_end=col+col_span,
+            )
+
+        else:
+            widget_str = 'self.{layout}.addWidget({widget})'.format(layout=layout, widget=widget)
 
         return widget_str
