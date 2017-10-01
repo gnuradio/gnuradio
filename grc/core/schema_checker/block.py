@@ -44,7 +44,7 @@ BLOCK_SCHEME = expand(
     inputs=Spec(types=list, required=False, item_scheme=PORT_SCHEME),
     outputs=Spec(types=list, required=False, item_scheme=PORT_SCHEME),
 
-    checks=(list, str_),
+    asserts=(list, str_),
     value=str_,
 
     templates=Spec(types=dict, required=False, item_scheme=TEMPLATES_SCHEME),

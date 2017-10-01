@@ -95,13 +95,13 @@ def convert_block_xml(node):
 
     data['outputs'] = [convert_port_xml(port_node, converter.to_python_dec)
                        for port_node in node.iterfind('source')] or no_value
-
-    data['checks'] = [converter.to_python_dec(check_node.text)
-                      for check_node in node.iterfind('checks')] or no_value
     data['value'] = (
         converter.to_python_dec(node.findtext('var_value')) or
         ('${ value }' if block_id.startswith('variable') else no_value)
     )
+
+    data['asserts'] = [converter.to_python_dec(check_node.text)
+                       for check_node in node.iterfind('check')] or no_value
 
     data['templates'] = convert_templates(node, converter.to_mako, block_id) or no_value
 

@@ -55,7 +55,7 @@ class Block(Element):
     documentation = {'': ''}
 
     value = None
-    checks = []
+    asserts = []
 
     templates = MakoTemplates()
     parameters_data = []
@@ -190,18 +190,18 @@ class Block(Element):
         Evaluate the checks: each check must evaluate to True.
         """
         Element.validate(self)
-        self._run_checks()
+        self._run_asserts()
         self._validate_generate_mode_compat()
         self._validate_var_value()
 
-    def _run_checks(self):
+    def _run_asserts(self):
         """Evaluate the checks"""
-        for check in self.checks:
+        for expr in self.asserts:
             try:
-                if not self.evaluate(check):
-                    self.add_error_message('Check "{}" failed.'.format(check))
+                if not self.evaluate(expr):
+                    self.add_error_message('Assertion "{}" failed.'.format(expr))
             except:
-                self.add_error_message('Check "{}" did not evaluate.'.format(check))
+                self.add_error_message('Assertion "{}" did not evaluate.'.format(expr))
 
     def _validate_generate_mode_compat(self):
         """check if this is a GUI block and matches the selected generate option"""
