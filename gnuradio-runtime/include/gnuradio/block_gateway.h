@@ -152,6 +152,10 @@ namespace gr {
       return gr::block::set_min_output_buffer(size);
     }
 
+    void block__set_max_noutput_items(int m) {
+      return gr::block::set_max_noutput_items(m);
+    }
+    
     int block__output_multiple(void) const {
       return gr::block::output_multiple();
     }
