@@ -90,9 +90,9 @@ class ${class_name}(gr.top_block, Qt.QWidget):
                 self.restoreGeometry(self.settings.value("geometry"))
         except:
             pass
-#elif $generate_options == 'bokeh_gui'
+% elif generate_options == 'bokeh_gui':
 
-class $(class_name)(gr.top_block):
+class ${class_name}(gr.top_block):
     def __init__(self, doc):
         gr.top_block.__init__(self, "${title}")
         self.doc = doc
@@ -117,8 +117,8 @@ class ${class_name}(gr.hier_block2):
 <%def name="make_io_sig(io_sigs)">
     <% size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in io_sigs] %>
     % if len(io_sigs) == 0:
-gr.io_signature(0, 0, 0)\
-    #elif len(${io_sigs}) == 1
+gr.io_signature(0, 0, 0)
+    % elif len(io_sigs) == 1:
 gr.io_signature(1, 1, ${size_strs[0]})
     % else:
 gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(ize_strs)}])
@@ -200,7 +200,7 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(ize_strs)}])
 ##########################################################
 ## Create a layout entry if not manually done for BokehGUI
 ##########################################################
-%if generate_options == 'bokeh_gui'
+% if generate_options == 'bokeh_gui':
         if self.widget_lst:
             input_t = bokehgui.BokehLayout.widgetbox(self.widget_lst)
             widgetbox = bokehgui.BokehLayout.WidgetLayout(input_t)
@@ -357,7 +357,7 @@ def main(top_block_cls=${class_name}, options=None):
         sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.${m.name}"))
     % endfor
     qapp.exec_()
-    #elif $generate_options == 'bokeh_gui'
+    % elif generate_options == 'bokeh_gui':
     serverProc, port = bokehgui.utils.create_server()
     def killProc(signum, frame, tb):
         tb.stop()
@@ -366,16 +366,16 @@ def main(top_block_cls=${class_name}, options=None):
         serverProc.kill()
     time.sleep(1)
     try:
-        ${'#'} Define the document instance
+        # Define the document instance
         doc = curdoc()
-        #if ${flow_graph.get_option('author')}
-        doc.title = "$title - ${flow_graph.get_option('author')}"
-        #else
+        % if flow_graph.get_option('author'):
+        doc.title = "${title} - ${flow_graph.get_option('author')}"
+        % else:
         doc.title = "${title}"
-        #end if
+        % endif
         session = push_session(doc, session_id="${flow_graph.get_option('id')}",
                                url = "http://localhost:" + port + "/bokehgui")
-        ${'#'} Create Top Block instance
+        # Create Top Block instance
         tb = top_block_cls(doc)
         try:
             tb.start()

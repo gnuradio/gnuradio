@@ -64,12 +64,12 @@ else: self.stop(); self.wait()</callback>
 		<value>qt_gui</value>
 		<type>enum</type>
 		<option>
-			<name>Bokeh GUI</name>
-			<key>bokeh_gui</key>
-		</option>
-		<option>
 			<name>QT GUI</name>
 			<key>qt_gui</key>
+		</option>
+		<option>
+			<name>Bokeh GUI</name>
+			<key>bokeh_gui</key>
 		</option>
 		<option>
 			<name>No GUI</name>
