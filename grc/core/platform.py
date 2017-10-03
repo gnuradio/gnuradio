@@ -28,7 +28,7 @@ from six.moves import range
 
 from . import (
     Messages, Constants,
-    blocks, ports, errors, utils, schema_checker
+    blocks, params, ports, errors, utils, schema_checker
 )
 
 from .Config import Config
@@ -38,7 +38,6 @@ from .io import yaml
 from .generator import Generator
 from .FlowGraph import FlowGraph
 from .Connection import Connection
-from .Param import Param
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -395,7 +394,7 @@ class Platform(Element):
         'clone': ports.PortClone,  # clone of ports with multiplicity > 1
     }
     param_classes = {
-        None: Param,  # default
+        None: params.Param,  # default
     }
 
     def make_flow_graph(self, from_filename=None):

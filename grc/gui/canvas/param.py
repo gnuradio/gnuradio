@@ -18,10 +18,8 @@
 from __future__ import absolute_import
 
 from .drawable import Drawable
-
 from .. import ParamWidgets, Utils, Constants
-
-from ...core.Param import Param as CoreParam
+from ...core.params import Param as CoreParam
 
 
 class Param(CoreParam):
