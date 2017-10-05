@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -53,6 +53,7 @@
 #include "gnuradio/digital/diff_phasor_cc.h"
 #include "gnuradio/digital/fll_band_edge_cc.h"
 #include "gnuradio/digital/framer_sink_1.h"
+#include "gnuradio/digital/glfsr.h"
 #include "gnuradio/digital/glfsr_source_b.h"
 #include "gnuradio/digital/glfsr_source_f.h"
 #include "gnuradio/digital/hdlc_deframer_bp.h"
@@ -82,6 +83,7 @@
 %include "gnuradio/digital/diff_phasor_cc.h"
 %include "gnuradio/digital/fll_band_edge_cc.h"
 %include "gnuradio/digital/framer_sink_1.h"
+%include "gnuradio/digital/glfsr.h"
 %include "gnuradio/digital/glfsr_source_b.h"
 %include "gnuradio/digital/glfsr_source_f.h"
 %include "gnuradio/digital/hdlc_deframer_bp.h"
