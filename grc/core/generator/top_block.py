@@ -4,7 +4,6 @@ import os
 import tempfile
 import textwrap
 import time
-import re
 
 from mako.template import Template
 
@@ -33,14 +32,13 @@ class TopBlockGenerator(object):
         self._generate_options = self._flow_graph.get_option('generate_options')
 
         self._mode = TOP_BLOCK_FILE_MODE
-        dirname = os.path.dirname(file_path)
         # Handle the case where the directory is read-only
         # In this case, use the system's temp directory
-        if not os.access(dirname, os.W_OK):
-            dirname = tempfile.gettempdir()
+        if not os.access(file_path, os.W_OK):
+            file_path = tempfile.gettempdir()
         filename = self._flow_graph.get_option('id') + '.py'
-        self.file_path = os.path.join(dirname, filename)
-        self._dirname = dirname
+        self.file_path = os.path.join(file_path, filename)
+        self._dirname = file_path
 
     def _warnings(self):
         throttling_blocks = [b for b in self._flow_graph.get_enabled_blocks()
@@ -228,7 +226,7 @@ class TopBlockGenerator(object):
                 key = port.key
 
             if not key.isdigit():
-                key = re.findall(r'\d+', key)[0]
+                key.repr(key)
 
             return '({block}, {key})'.format(block=block, key=key)
 

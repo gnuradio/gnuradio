@@ -25,7 +25,7 @@ from ._templates import MakoTemplates
 
 
 def build(id, label='', category='', flags='', documentation='',
-          checks=None, value=None,
+          value=None, asserts=None,
           parameters=None, inputs=None, outputs=None, templates=None, **kwargs):
     block_id = id
 
@@ -41,7 +41,7 @@ def build(id, label='', category='', flags='', documentation='',
 
     cls.documentation = {'': documentation.strip('\n\t ').replace('\\\n', '')}
 
-    cls.checks = [_single_mako_expr(check, block_id) for check in (checks or [])]
+    cls.asserts = [_single_mako_expr(a, block_id) for a in (asserts or [])]
 
     cls.parameters_data = parameters or []
     cls.inputs_data = inputs or []
