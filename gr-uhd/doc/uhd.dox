@@ -93,6 +93,7 @@ Command name | Value Type   | Description
 `tune`       | tune_request | Like freq, but sets a full tune request (i.e. center frequency and DSP offset). Defaults to all channels.
 `lo_freq`    | double       | For fully manual tuning: Set the LO frequency (RF frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
 `dsp_freq`   | double       | For fully manual tuning: Set the DSP frequency (CORDIC frequency). Conflicts with `freq`, `lo_offset`, and `tune`.
+`direction`  | string       | Used for timed transceiver tuning to ensure tuning order is maintained. Values other than 'TX' or 'RX' will be ignored.
 `rate`       | double       | See usrp_block::set_samp_rate(). *Always* affects all channels.
 `bandwidth`  | double       | See usrp_block::set_bandwidth(). Defaults to all channels.
 `time`       | timestamp    | Sets a command time. See usrp_block::set_command_time(). A value of PMT_NIL will clear the command time.

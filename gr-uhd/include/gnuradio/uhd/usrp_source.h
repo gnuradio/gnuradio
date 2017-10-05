@@ -98,6 +98,33 @@ namespace gr {
        */
       virtual void issue_stream_cmd(const ::uhd::stream_cmd_t &cmd) = 0;
 
+      /*! Configure the timeout value on the UHD recv() call
+       *
+       * This is an advanced use parameter. Changing the timeout value affects
+       * the latency of this block; a high timeout value can be more optimal
+       * for high-throughput applications (e.g., 1 second) and setting it to
+       * zero will have the best latency. Changing the timeout value may also
+       * be useful for custom FPGA modifications, where traffic might not be
+       * continuously streaming.
+       * For specialized high-performance use cases, twiddling these knobs may
+       * improve performance, but changes are not generally applicable.
+       *
+       * Note that UHD's recv() call may block until the timeout is over, which
+       * means this block might also block for up to the timeout value.
+       *
+       * \param timeout Timeout parameter in seconds. Cf. the UHD manual for
+       *                uhd::rx_streamer::recv() for more details. A lower
+       *                value will mean lower latency, but higher CPU load.
+       * \param one_packet If true, only receive one packet at a time. Cf. the
+       *                   UHD manual for uhd::rx_streamer::recv() for more
+       *                   details. A value of true will mean lower latency,
+       *                   but higher CPU load.
+       */
+      virtual void set_recv_timeout(
+          const double timeout,
+          const bool one_packet=true
+      ) = 0;
+
       /*!
        * Returns identifying information about this USRP's configuration.
        * Returns motherboard ID, name, and serial.

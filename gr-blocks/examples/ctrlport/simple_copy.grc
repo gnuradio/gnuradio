@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.11'?>
+<?grc format='1' created='3.7.12'?>
 <flow_graph>
   <timestamp>Sat Mar 16 22:03:14 2013</timestamp>
   <block>
@@ -390,48 +390,6 @@ to enable/disablethis block</value>
     <param>
       <key>vlen</key>
       <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>epy_block</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_io_cache</key>
-      <value>('Null Msg Source', 'blk', [], [], [('fake_output', 'message', 1)], '', [])</value>
-    </param>
-    <param>
-      <key>_source_code</key>
-      <value># Block that doesn't do anything, just used to get a msg input port on another block exposed to ControlPort
-from gnuradio import gr
-import pmt
-class blk(gr.basic_block):
-    def __init__(self): 
-        gr.basic_block.__init__(self,name='Null Msg Source',in_sig=[],out_sig=[])
-        self.message_port_register_out(pmt.intern("fake_output"))
-</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(357, 218)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>epy_block_0</value>
     </param>
   </block>
   <block>
@@ -860,11 +818,5 @@ python simple_copy_controller.py 127.0.0.1 &lt;PORT&gt; true</value>
     <sink_block_id>blocks_add_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>epy_block_0</source_block_id>
-    <sink_block_id>blocks_copy_0</sink_block_id>
-    <source_key>fake_output</source_key>
-    <sink_key>en</sink_key>
   </connection>
 </flow_graph>
