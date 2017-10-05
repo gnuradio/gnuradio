@@ -787,13 +787,6 @@ namespace gr {
     std::vector<basic_block_sptr>::const_iterator b;   // Because flatten_aux is const
     for(b = d_blocks.begin(); b != d_blocks.end(); b++) {
       tmp.push_back(*b);
-      // for every block, attempt to setup RPC
-      if(ctrlport_on) {
-        if(!(*b)->is_rpc_set()) {
-          (*b)->setup_rpc();
-          (*b)->rpc_set();
-        }
-      }
     }
 
     // Now add the list of connected input blocks
@@ -900,6 +893,16 @@ namespace gr {
     if(HIER_BLOCK2_DETAIL_DEBUG && is_top_block){
       std::cout << "flatten_aux finished in top_block" << std::endl;
       sfg->dump();
+    }
+
+    // if ctrlport is enabled, call setup RPC for all blocks in the flowgraph
+    if(ctrlport_on) {
+      for(b = blocks.begin(); b != blocks.end(); b++) {
+        if(!(*b)->is_rpc_set()) {
+          (*b)->setup_rpc();
+          (*b)->rpc_set();
+        }
+      }
     }
   }
 
