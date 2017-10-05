@@ -1,0 +1,15 @@
+'[Core]':
+- Misc:
+  - pad_source
+  - pad_sink
+  - virtual_source
+  - virtual_sink
+  - epy_module
+  - note
+  - import
+- Variables:
+  - variable
+  - variable_struct
+  - variable_config
+  - variable_function_probe
+  - parameter
