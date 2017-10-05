@@ -120,7 +120,7 @@ namespace gr {
 
     private:
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
-      ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
+      ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction);
       void _cmd_handler_tag(const pmt::pmt_t &tag);
 
 #ifdef GR_UHD_USE_STREAM_API
