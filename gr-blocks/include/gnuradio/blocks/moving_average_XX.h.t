@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2013 Free Software Foundation, Inc.
+ * Copyright 2008,2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -48,9 +48,11 @@ namespace gr {
        * \param scale scale factor for the result.
        * \param max_iter limits how long we go without flushing the accumulator
        *        This is necessary to avoid numerical instability for float and complex.
+       * \param vlen When > 1, do a per-vector-element moving average
        */
       static sptr make(int length, @O_TYPE@ scale,
-                       int max_iter = 4096);
+                       int max_iter = 4096,
+                       unsigned int vlen = 1);
 
       /*!
        * Get the length used in the avaraging calculation.

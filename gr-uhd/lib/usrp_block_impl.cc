@@ -39,6 +39,7 @@ const pmt::pmt_t CMD_BANDWIDTH_KEY = pmt::mp("bandwidth");
 const pmt::pmt_t CMD_TIME_KEY = pmt::mp("time");
 const pmt::pmt_t CMD_MBOARD_KEY = pmt::mp("mboard");
 const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("antenna");
+const pmt::pmt_t CMD_DIRECTION_KEY = pmt::mp("direction");
 
 
 /**********************************************************************
@@ -209,11 +210,11 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
 }
 
 void
-usrp_block_impl::_set_center_freq_from_internals_allchans()
+usrp_block_impl::_set_center_freq_from_internals_allchans(pmt::pmt_t direction)
 {
   while (_chans_to_tune.any()) {
     // This resets() bits, so this loop should not run indefinitely
-    _set_center_freq_from_internals(_chans_to_tune.find_first());
+    _set_center_freq_from_internals(_chans_to_tune.find_first(), direction);
   }
 }
 
@@ -503,8 +504,14 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     }
   }
 
-  /// 4) Check if we need to re-tune
-  _set_center_freq_from_internals_allchans();
+  /// 4) See if a direction was specified
+  pmt::pmt_t direction = pmt::dict_ref(
+      msg, CMD_DIRECTION_KEY,
+      pmt::PMT_NIL // Anything except "TX" or "RX will default to the messaged block direction"
+  );
+
+  /// 5) Check if we need to re-tune
+  _set_center_freq_from_internals_allchans(direction);
 }
 
 
@@ -663,4 +670,3 @@ void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t &dspfreq, int chan, 
 
   _update_curr_tune_req(new_tune_request, chan);
 }
-

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2013 Free Software Foundation, Inc.
+ * Copyright 2008,2013,2017 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,8 @@
 #define @GUARD_NAME_IMPL@
 
 #include <gnuradio/blocks/@NAME@.h>
+#include <vector>
+#include <algorithm>
 
 namespace gr {
   namespace blocks {
@@ -36,6 +38,9 @@ namespace gr {
       int d_length;
       @O_TYPE@ d_scale;
       int d_max_iter;
+      unsigned int d_vlen;
+      std::vector<@I_TYPE@> d_sum;
+
 
       int d_new_length;
       @O_TYPE@ d_new_scale;
@@ -43,11 +48,13 @@ namespace gr {
 
     public:
       @NAME_IMPL@(int length, @O_TYPE@ scale,
-                  int max_iter = 4096);
+                  int max_iter = 4096,
+                  unsigned int vlen = 1);
       ~@NAME_IMPL@();
 
       int length() const { return d_new_length; }
       @O_TYPE@ scale() const { return d_new_scale; }
+      unsigned int vlen() const { return d_vlen; }
 
       void set_length_and_scale(int length, @O_TYPE@ scale);
       void set_length(int length);

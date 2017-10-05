@@ -99,6 +99,7 @@ namespace gr {
       double set_lo_freq(double freq, const std::string &name, size_t chan);
 
       void issue_stream_cmd(const ::uhd::stream_cmd_t &cmd);
+      void set_recv_timeout(const double timeout, const bool one_packet);
       void flush(void);
       bool start(void);
       bool stop(void);
@@ -112,12 +113,16 @@ namespace gr {
 
     private:
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
-      ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan);
+      ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction);
       void _cmd_handler_tag(const pmt::pmt_t &tag);
 
       ::uhd::rx_streamer::sptr _rx_stream;
       size_t _samps_per_packet;
+      //! Timeout value for UHD's recv() call. Lower values mean lower latency.
       double _recv_timeout;
+      //! one_packet value for UHD's recv() call. 'true' is lower latency.
+      bool _recv_one_packet;
+
       bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
       pmt::pmt_t _id;
