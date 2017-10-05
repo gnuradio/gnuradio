@@ -256,10 +256,16 @@ serialize(pmt_t obj, std::streambuf &sb)
   if(is_null(obj))
     return serialize_untagged_u8(PST_NULL, sb);
 
-  if(is_symbol(obj)) {
-    const std::string s = symbol_to_string(obj);
+  if(is_string(obj)) {
+    const std::string s = to_string(obj);
     size_t len = s.size();
-    ok = serialize_untagged_u8(PST_SYMBOL, sb);
+    if (is_interned_string(obj)) {
+      // Interned
+      ok = serialize_untagged_u8(PST_SYMBOL, sb);
+    } else {
+      // Not interned
+      ok = serialize_untagged_u8(PST_STRING, sb);
+    }
     ok &= serialize_untagged_u16(len, sb);
     for(size_t i = 0; i < len; i++)
       ok &= serialize_untagged_u8(s[i], sb);
@@ -555,6 +561,16 @@ deserialize(std::streambuf &sb)
     if (sb.sgetn(tmpbuf, u16) != u16)
       goto error;
     return intern(std::string(tmpbuf, u16));
+
+  case PST_STRING:
+    if (!deserialize_untagged_u16(&u16, sb))
+      goto error;
+    if (u16 > sizeof(tmpbuf))
+      throw notimplemented("pmt::deserialize: very long string",
+         PMT_F);
+    if (sb.sgetn(tmpbuf, u16) != u16)
+      goto error;
+    return from_string(std::string(tmpbuf, u16));
 
   case PST_INT32:
     if (!deserialize_untagged_u32(&u32, sb))

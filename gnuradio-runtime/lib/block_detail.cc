@@ -192,7 +192,7 @@ namespace gr {
   void
   block_detail::add_item_tag(unsigned int which_output, const tag_t &tag)
   {
-    if(!pmt::is_symbol(tag.key)) {
+    if(!pmt::is_string(tag.key)) {
       throw pmt::wrong_type("block_detail::add_item_tag key", tag.key);
     }
     else {
@@ -204,7 +204,7 @@ namespace gr {
   void
   block_detail::remove_item_tag(unsigned int which_input, const tag_t &tag, long id)
   {
-    if(!pmt::is_symbol(tag.key)) {
+    if(!pmt::is_string(tag.key)) {
       throw pmt::wrong_type("block_detail::add_item_tag key", tag.key);
     }
     else {

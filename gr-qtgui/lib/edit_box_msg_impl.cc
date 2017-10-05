@@ -391,7 +391,7 @@ namespace gr {
         }
         break;
       case STRING:
-        if(pmt::is_symbol(val)) {
+        if(pmt::is_string(val)) {
           xs = pmt::symbol_to_string(val);
           d_val->setText(QString(xs.c_str()));
         }

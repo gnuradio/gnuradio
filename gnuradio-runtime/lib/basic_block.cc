@@ -92,7 +92,7 @@ namespace gr {
   void
   basic_block::message_port_register_in(pmt::pmt_t port_id)
   {
-    if(!pmt::is_symbol(port_id)) {
+    if(!pmt::is_string(port_id)) {
       throw std::runtime_error("message_port_register_in: bad port id");
     }
     msg_queue[port_id] = msg_queue_t();
@@ -115,7 +115,7 @@ namespace gr {
   void
   basic_block::message_port_register_out(pmt::pmt_t port_id)
   {
-    if(!pmt::is_symbol(port_id)) {
+    if(!pmt::is_string(port_id)) {
       throw std::runtime_error("message_port_register_out: bad port id");
     }
     if(pmt::dict_has_key(d_message_subscribers, port_id)) {

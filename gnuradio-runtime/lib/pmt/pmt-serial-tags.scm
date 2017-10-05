@@ -36,6 +36,8 @@
 (define pst-uint64	#x0b)
 (define pst-tuple	#x0c)
 
+(define pst-string        #x0d)   ; untagged-int16 n; followed by n bytes of string value
+
 ;; u8, s8, u16, s16, u32, s32, u64, s64, f32, f64, c32, c64
 ;;
 ;;   untagged-uint8  tag

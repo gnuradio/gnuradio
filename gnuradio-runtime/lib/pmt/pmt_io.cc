@@ -60,8 +60,8 @@ write(pmt_t obj, std::ostream &port)
     else
       port << "#f";
   }
-  else if (is_symbol(obj)){
-    port << symbol_to_string(obj);
+  else if (is_string(obj)){
+    port << to_string(obj);
   }
   else if (is_number(obj)){
     if (is_integer(obj))
