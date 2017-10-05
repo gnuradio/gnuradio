@@ -71,6 +71,7 @@ namespace gr {
                     args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
       _recv_timeout(0.1), // seconds
+      _recv_one_packet(true),
       _tag_now(false),
       _issue_stream_cmd_on_start(issue_stream_cmd_on_start)
     {
@@ -499,6 +500,15 @@ namespace gr {
         _tag_now = true;
     }
 
+    void
+    usrp_source_impl::set_recv_timeout(
+            const double timeout,
+            const bool one_packet
+    ) {
+        _recv_timeout = timeout;
+        _recv_one_packet = one_packet;
+    }
+
     bool
     usrp_source_impl::start(void)
     {
@@ -635,7 +645,7 @@ namespace gr {
           noutput_items,
           _metadata,
           _recv_timeout,
-          true /* one packet -> minimize latency */
+          _recv_one_packet
       );
 #else
       size_t num_samps = _dev->get_device()->recv
