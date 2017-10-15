@@ -146,7 +146,6 @@ namespace gr {
                                  size_t bytes_transferred)
     {
       if(!error) {
-        {
           boost::lock_guard<gr::thread::mutex> lock(d_udp_mutex);
           if(d_eof && (bytes_transferred == 0)) {
             // If we are using EOF notification, test for it and don't
@@ -170,7 +169,6 @@ namespace gr {
             }
           }
           d_cond_wait.notify_one();
-        }
       }
       start_receive();
     }
