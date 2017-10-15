@@ -203,6 +203,16 @@ FLOW_GRAPH_SAVE_AS = Action(
     stock_id=gtk.STOCK_SAVE_AS,
     keypresses=(gtk.keysyms.s, gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
 )
+FLOW_GRAPH_SAVE_A_COPY = Action(
+    label='Save A Copy',
+    tooltip='Save the copy of current flowgraph',
+)
+FLOW_GRAPH_DUPLICATE = Action(
+    label='_Duplicate',
+    tooltip='Create a duplicate of current flowgraph',
+    stock_id=gtk.STOCK_COPY,
+    keypresses=(gtk.keysyms.d, gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
+)
 FLOW_GRAPH_CLOSE = Action(
     label='_Close',
     tooltip='Close the current flow graph',

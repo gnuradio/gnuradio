@@ -25,16 +25,18 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 ########################################################################
 # Project setup
 ########################################################################
+# Make sure this version matches ${GR_CMAKE_MIN_VERSION} (a variable can't be
+# used here).
 cmake_minimum_required(VERSION 2.6)
 project(gnuradio CXX C)
 enable_testing()
 
-#make sure our local CMake Modules path comes first
+# Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
 include(GrBuildTypes)
 
-#select the release build type by default to get optimization flags
+# Select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE "Release")
    message(STATUS "Build type not specified: defaulting to release.")
@@ -46,14 +48,87 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
 set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 11)
-set(VERSION_INFO_MAINT_VERSION 1)
+set(VERSION_INFO_MINOR_VERSION 12)
+set(VERSION_INFO_MAINT_VERSION git)
 include(GrVersion) #setup version info
 
+# Minimum dependency versions for central dependencies:
+set(GR_BOOST_MIN_VERSION "1.48")
+set(GR_SWIG_MIN_VERSION "2.0.4")
+set(GR_CMAKE_MIN_VERSION "2.8.12")
+set(GR_MAKO_MIN_VERSION "0.4.2")
+set(GR_PYTHON_MIN_VERSION "2.7")
+#set(GR_PYTHON3_MIN_VERSION "3.x") # Py3k not yet supported
+set(GR_CPPUNIT_MIN_VERSION "1.12.1")
+set(GCC_MIN_VERSION "4.4.0")
+set(CLANG_MIN_VERSION "3.3.0")
+set(APPLECLANG_MIN_VERSION "500")
+
+########################################################################
+# Configure CMake policies
+########################################################################
+# This will suppress developer warnings during the cmake process that can occur
+# if a newer cmake version than the minimum is used.
+if(POLICY CMP0026)
+    cmake_policy(SET CMP0026 OLD)
+endif()
+if(POLICY CMP0043)
+    cmake_policy(SET CMP0043 OLD)
+endif()
+if(POLICY CMP0045)
+    cmake_policy(SET CMP0045 OLD)
+endif()
+if(POLICY CMP0046)
+    cmake_policy(SET CMP0046 OLD)
+endif()
+
+########################################################################
+# Compiler version setup
+########################################################################
 # Append -O2 optimization flag for Debug builds (Not on MSVC since conflicts with RTC1 flag)
 IF (NOT MSVC)
     SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O2")
     SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O2")
+ENDIF()
+
+# Check compiler version against our minimum
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    IF(DEFINED CMAKE_CXX_COMPILER_VERSION)
+        IF(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS ${GCC_MIN_VERSION})
+            MESSAGE(WARNING "\nThe compiler selected to build GNU Radio (GCC version ${CMAKE_CXX_COMPILER_VERSION} : ${CMAKE_CXX_COMPILER}) is older than that officially supported (${GCC_MIN_VERSION} minimum). This build may or not work. We highly recommend using a more recent GCC version.")
+        ENDIF()
+    ELSE()
+        MESSAGE(WARNING "\nCannot determine the version of the compiler selected to build GNU Radio (GCC : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using GCC version ${GCC_MIN_VERSION} or more recent.")
+    ENDIF()
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    EXECUTE_PROCESS(COMMAND
+        ${CMAKE_CXX_COMPILER} -v
+        RESULT_VARIABLE _res ERROR_VARIABLE _err
+        ERROR_STRIP_TRAILING_WHITESPACE)
+    IF(${_res} STREQUAL "0")
+        # output is in error stream
+        STRING(REGEX MATCH "^Apple.*" IS_APPLE ${_err})
+        IF("${IS_APPLE}" STREQUAL "")
+            SET(MIN_VERSION ${CLANG_MIN_VERSION})
+            SET(APPLE_STR "")
+            # retrieve the compiler's version from it
+            STRING(REGEX MATCH "clang version [0-9.]+" CLANG_OTHER_VERSION ${_err})
+            STRING(REGEX MATCH "[0-9.]+" CLANG_VERSION ${CLANG_OTHER_VERSION})
+        ELSE()
+            SET(MIN_VERSION ${APPLECLANG_MIN_VERSION})
+            SET(APPLE_STR "Apple ")
+            # retrieve the compiler's version from it
+            STRING(REGEX MATCH "(clang-[0-9.]+)" CLANG_APPLE_VERSION ${_err})
+            STRING(REGEX MATCH "[0-9.]+" CLANG_VERSION ${CLANG_APPLE_VERSION})
+        ENDIF()
+        IF(${CLANG_VERSION} VERSION_LESS "${MIN_VERSION}")
+            MESSAGE(WARNING "\nThe compiler selected to build GNU Radio (${APPLE_STR}Clang version ${CLANG_VERSION} : ${CMAKE_CXX_COMPILER}) is older than that officially supported (${MIN_VERSION} minimum). This build may or not work. We highly recommend using Apple Clang version ${APPLECLANG_MIN_VERSION} or more recent, or Clang version ${CLANG_MIN_VERSION} or more recent.")
+        ENDIF()
+    ELSE()
+        MESSAGE(WARNING "\nCannot determine the version of the compiler selected to build GNU Radio (${APPLE_STR}Clang : ${CMAKE_CXX_COMPILER}). This build may or not work. We highly recommend using Apple Clang version ${APPLECLANG_MIN_VERSION} or more recent, or Clang version ${CLANG_MIN_VERSION} or more recent.")
+    ENDIF()
+ELSE()
+    MESSAGE(status "Skipping compiler version check.")
 ENDIF()
 
 # Configure C++ standard if not externally specified (will actually be
@@ -80,23 +155,6 @@ ELSE()
     message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
 
-
-# Set cmake policies.
-# This will suppress developer warnings during the cmake process that can occur
-# if a newer cmake version than the minimum is used.
-
-if(POLICY CMP0026)
-    cmake_policy(SET CMP0026 OLD)
-endif()
-if(POLICY CMP0043)
-    cmake_policy(SET CMP0043 OLD)
-endif()
-if(POLICY CMP0045)
-    cmake_policy(SET CMP0045 OLD)
-endif()
-if(POLICY CMP0046)
-    cmake_policy(SET CMP0046 OLD)
-endif()
 
 ########################################################################
 # Environment setup
@@ -293,13 +351,13 @@ include(GrBoost)
 ########################################################################
 # Enable python component
 ########################################################################
-find_package(PythonLibs 2)
+find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
 find_package(SWIG)
 
 if(SWIG_FOUND)
-    # Minimum SWIG version required is 1.3.31
     set(SWIG_VERSION_CHECK FALSE)
-    if("${SWIG_VERSION}" VERSION_GREATER "1.3.30")
+    if("${SWIG_VERSION}" VERSION_EQUAL ${GR_SWIG_MIN_VERSION} OR
+       "${SWIG_VERSION}" VERSION_GREATER ${GR_SWIG_MIN_VERSION})
         set(SWIG_VERSION_CHECK TRUE)
     endif()
 endif(SWIG_FOUND)
@@ -311,7 +369,7 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     SWIG_VERSION_CHECK
 )
 
-find_package(CppUnit)
+find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})
 GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
     CPPUNIT_FOUND
 )
@@ -443,7 +501,7 @@ GR_LOGGING()
 # Distribute the README file
 ########################################################################
 install(
-    FILES README README.hacking
+    FILES README.md README.hacking
     DESTINATION ${GR_PKG_DOC_DIR}
     COMPONENT "docs"
 )

@@ -65,7 +65,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/../include
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${VOLK_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -116,6 +115,7 @@ list(APPEND gr_blocks_sources
     divide_ff_impl.cc
     delay_impl.cc
     endian_swap_impl.cc
+    exponentiate_const_cci_impl.cc
     file_descriptor_sink_impl.cc
     file_descriptor_source_impl.cc
     file_sink_impl.cc
@@ -190,6 +190,7 @@ list(APPEND gr_blocks_sources
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
     sub_ff_impl.cc
+    tag_share_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
     tagged_stream_multiply_length_impl.cc
@@ -251,8 +252,6 @@ list(APPEND blocks_libs
     gnuradio-runtime
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${BLOCKS_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
@@ -329,7 +328,6 @@ if(ENABLE_TESTING)
     gnuradio-blocks
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
   )
 
   GR_ADD_TEST(test_gr_blocks test-gr-blocks)

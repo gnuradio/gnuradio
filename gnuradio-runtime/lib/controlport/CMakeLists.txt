@@ -51,28 +51,28 @@ MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
 message(STATUS "Found and enabling Thrift backend to ControlPort")
 GR_APPEND_SUBCOMPONENT("thrift")
 
-# Run Thrrift To compile C++ and Python files
+# Run Thrift To compile C++ and Python files
 message(STATUS "Running thrift to build C++ bindings")
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/thrift/)
-EXECUTE_PROCESS(
-   COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/thrift/gnuradio.thrift
-   OUTPUT_VARIABLE THRIFT_CPP_OUTPUT
-   ERROR_VARIABLE THRIFT_CPP_ERROR
-   )
 
+list(APPEND gnuradio_thrift_generated_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_types.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/thrift/ControlPort.cpp
+  )
+add_custom_command(
+  DEPENDS ${CMAKE_SOURCE_DIR}/gnuradio-runtime/lib/controlport/thrift/gnuradio.thrift
+  OUTPUT ${gnuradio_thrift_generated_sources}
+  COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/thrift/gnuradio.thrift
+  )
 list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_thrift.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcpmtconverters_thrift.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/thrift/rpcserver_booter_thrift.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/thrift/thrift_application_base.cc
-)
-
-# add files built by compiling gnuradio.thrift
-list(APPEND gnuradio_ctrlport_sources
-  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_types.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/thrift/gnuradio_constants.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/thrift/ControlPort.cpp
-)
+  # add files built by compiling gnuradio.thrift
+  ${gnuradio_thrift_generated_sources}
+  )
 
 # Add  required libraries here
 list(APPEND gnuradio_runtime_libs

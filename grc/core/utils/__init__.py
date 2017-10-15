@@ -20,3 +20,4 @@ import epy_block_io
 import extract_docs
 
 from odict import odict
+from hide_bokeh_gui_options_if_not_installed import hide_bokeh_gui_options_if_not_installed

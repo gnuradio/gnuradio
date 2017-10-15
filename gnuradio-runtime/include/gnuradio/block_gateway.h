@@ -41,6 +41,11 @@ namespace gr {
     GR_BLOCK_GW_WORK_INTERP,
   };
 
+  //! Magic return values from general_work, \ref gr::block::WORK_CALLED_PRODUCE
+  enum block_gw_work_return_type{
+    WORK_CALLED_PRODUCE = -2,
+    WORK_DONE = -1
+  };
   enum tag_propagation_policy_t {
     TPP_DONT = 0,
     TPP_ALL_TO_ALL = 1,

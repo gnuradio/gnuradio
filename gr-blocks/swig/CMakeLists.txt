@@ -52,6 +52,11 @@ set(GR_SWIG_BLOCK_IFILES
   blocks_swig3
   blocks_swig4
   blocks_swig5
+  blocks_swig6
+  blocks_swig7
+  blocks_swig8
+  blocks_swig9
+  blocks_swig10
 )
 
 foreach(swigfile ${GR_SWIG_BLOCK_IFILES})

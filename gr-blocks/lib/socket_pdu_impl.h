@@ -24,7 +24,6 @@
 #define INCLUDED_BLOCKS_SOCKET_PDU_IMPL_H
 
 #include <gnuradio/blocks/socket_pdu.h>
-#include "stream_pdu_base.h"
 #include "tcp_connection.h"
 
 namespace gr {

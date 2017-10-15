@@ -99,6 +99,7 @@ install(FILES
     deinterleave.h
     delay.h
     endian_swap.h
+    exponentiate_const_cci.h
     file_descriptor_sink.h
     file_descriptor_source.h
     file_sink.h
@@ -168,6 +169,7 @@ install(FILES
     sub_ff.h
     tag_debug.h
     tag_gate.h
+    tag_share.h
     tagged_file_sink.h
     tagged_stream_align.h
     tagged_stream_mux.h

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.11'?>
+<?grc format='1' created='3.7.12'?>
 <flow_graph>
   <timestamp>Thu Feb 20 21:02:41 2014</timestamp>
   <block>
@@ -604,6 +604,10 @@
       <value></value>
     </param>
     <param>
+      <key>constellation</key>
+      <value>CATV_MOD_64QAM</value>
+    </param>
+    <param>
       <key>ctrlword</key>
       <value>Control_Word</value>
     </param>
@@ -617,7 +621,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(624, 340)</value>
+      <value>(640, 332)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -647,6 +651,10 @@
       <value></value>
     </param>
     <param>
+      <key>constellation</key>
+      <value>CATV_MOD_64QAM</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -656,7 +664,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 344)</value>
+      <value>(440, 340)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -764,6 +772,10 @@
       <value></value>
     </param>
     <param>
+      <key>constellation</key>
+      <value>CATV_MOD_64QAM</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -773,7 +785,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(176, 504)</value>
+      <value>(176, 500)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2295,7 +2307,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>center_freq</value>
+      <value>uhd.tune_request(center_freq, 3500000)</value>
     </param>
     <param>
       <key>norm_gain0</key>

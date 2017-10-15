@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ namespace gr {
      * \brief Bit interleaves DVB-T2 FEC baseband frames.
      * \ingroup dtv
      *
-     * Input: Normal or short FEC baseband frames with appended LPDC (LDPCFEC).
+     * Input: Normal or short FEC baseband frames with appended LPDC (LDPCFEC). \n
      * Output: Bit interleaved (with column twist and bit to cell word de-multiplexed) cells.
      */
     class DTV_API dvbt2_interleaver_bb : virtual public gr::block

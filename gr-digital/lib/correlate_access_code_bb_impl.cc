@@ -27,13 +27,12 @@
 #include "correlate_access_code_bb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/count_bits.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 #include <cstdio>
 
 namespace gr {
   namespace digital {
-
-#define VERBOSE 0
 
     correlate_access_code_bb::sptr
     correlate_access_code_bb::make(const std::string &access_code, int threshold)
@@ -51,6 +50,7 @@ namespace gr {
 	d_threshold(threshold)
     {
       if(!set_access_code(access_code)) {
+	GR_LOG_ERROR(d_logger, "access_code is > 64 bits");
 	throw std::out_of_range ("access_code is > 64 bits");
       }
     }
@@ -108,15 +108,6 @@ namespace gr {
 
 	// test for access code with up to threshold errors
 	new_flag = (nwrong <= d_threshold);
-
-#if VERBOSE
-	if(new_flag) {
-	  fprintf(stderr, "access code found: %llx\n", d_access_code);
-	}
-	else {
-	  fprintf(stderr, "%llx  ==>  %llx\n", d_access_code, d_data_reg);
-	}
-#endif
 
 	// shift in new data and new flag
 	d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
