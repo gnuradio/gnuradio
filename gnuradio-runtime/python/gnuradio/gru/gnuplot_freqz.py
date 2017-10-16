@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 __all__ = ['gnuplot_freqz']
 
 import tempfile
@@ -46,10 +48,10 @@ def gnuplot_freqz (hw, Fs=None, logfreq=False):
 
     h, w = hw
     ampl = 20 * numpy.log10 (numpy.absolute (h) + 1e-9)
-    phase = map (lambda x: math.atan2 (x.imag, x.real), h)
+    phase = [math.atan2 (x.imag, x.real) for x in h]
 
     if Fs:
-        w *= (Fs/(2*math.pi))
+        w *= (Fs / (2*math.pi))
 
     for freq, a, ph in zip (w, ampl, phase):
         data_file.write ("%g\t%g\t%g\n" % (freq, a, ph))
@@ -99,4 +101,4 @@ def test_plot ():
 
 if __name__ == '__main__':
     handle = test_plot ()
-    raw_input ('Press Enter to continue: ')
+    input ('Press Enter to continue: ')

@@ -20,18 +20,20 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter, blocks
 import math
 
 def sig_source_f(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 def fir_filter(x, taps):
     y = []
     x2 = (len(taps)-1)*[0,] + x
-    delay = (len(taps)-1)/2
+    delay = (len(taps)-1) // 2
     for i in range(len(x)):
         yi = 0
         for j in range(len(taps)):

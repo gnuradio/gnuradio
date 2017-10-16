@@ -24,6 +24,8 @@ Provide a base flow graph for USRP signal generators.
 """
 
 from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 import math
 try:
     from uhd_app import UHDApp
@@ -124,7 +126,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         """
         When sampling rate is updated, also update the signal sources.
         """
-        self.vprint("Setting sampling rate to: {rate} Msps".format(rate=samp_rate/1e6))
+        self.vprint("Setting sampling rate to: {rate} Msps".format(rate=samp_rate / 1e6))
         self.usrp.set_samp_rate(samp_rate)
         samp_rate = self.usrp.get_samp_rate()
         if self[TYPE_KEY] in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE):
@@ -137,7 +139,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self._src2.set_sampling_freq(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
         else:
             return True # Waveform not yet set
-        self.vprint("Set sample rate to: {rate} Msps".format(rate=samp_rate/1e6))
+        self.vprint("Set sample rate to: {rate} Msps".format(rate=samp_rate / 1e6))
         return True
 
     def set_waveform_freq(self, freq):
@@ -184,14 +186,14 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self._src1 = analog.sig_source_c(self[SAMP_RATE_KEY],
                                              analog.GR_SIN_WAVE,
                                              self[WAVEFORM_FREQ_KEY],
-                                             self[AMPLITUDE_KEY]/2.0,
+                                             self[AMPLITUDE_KEY] / 2.0,
                                              0)
             if self[WAVEFORM2_FREQ_KEY] is None:
                 self[WAVEFORM2_FREQ_KEY] = -self[WAVEFORM_FREQ_KEY]
             self._src2 = analog.sig_source_c(self[SAMP_RATE_KEY],
                                              analog.GR_SIN_WAVE,
                                              self[WAVEFORM2_FREQ_KEY],
-                                             self[AMPLITUDE_KEY]/2.0,
+                                             self[AMPLITUDE_KEY] / 2.0,
                                              0)
             self._src = blocks.add_cc()
             self.connect(self._src1, (self._src, 0))
@@ -213,7 +215,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self.connect(self._src1, self._src2, self._src)
         else:
             raise RuntimeError("[UHD-SIGGEN] Unknown waveform waveform_type")
-        for chan in xrange(len(self.channels)):
+        for chan in range(len(self.channels)):
             self.connect(self._src, (self.usrp, chan))
         if self.extra_sink is not None:
             self.connect(self._src, self.extra_sink)
@@ -226,7 +228,7 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
             self.vprint("Tone 1: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),))
             self.vprint("Tone 2: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),))
         elif waveform_type == "sweep":
-            self.vprint("Sweeping across %sHz to %sHz" % (n2s(-self[WAVEFORM_FREQ_KEY]/2.0), n2s(self[WAVEFORM_FREQ_KEY]/2.0)))
+            self.vprint("Sweeping across %sHz to %sHz" % (n2s(-self[WAVEFORM_FREQ_KEY] / 2.0), n2s(self[WAVEFORM_FREQ_KEY] / 2.0)))
             self.vprint("Sweep rate: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),))
         self.vprint("TX amplitude:", self[AMPLITUDE_KEY])
 
@@ -240,8 +242,8 @@ class USRPSiggen(gr.top_block, pubsub, UHDApp):
         if self[TYPE_KEY] in (analog.GR_SIN_WAVE, analog.GR_CONST_WAVE, analog.GR_GAUSSIAN, analog.GR_UNIFORM):
             self._src.set_amplitude(amplitude)
         elif self[TYPE_KEY] == "2tone":
-            self._src1.set_amplitude(amplitude/2.0)
-            self._src2.set_amplitude(amplitude/2.0)
+            self._src1.set_amplitude(amplitude / 2.0)
+            self._src2.set_amplitude(amplitude / 2.0)
         elif self[TYPE_KEY] == "sweep":
             self._src.set_k(amplitude)
         else:
@@ -293,7 +295,7 @@ def main():
         print(ex)
         exit(1)
     tb.start()
-    raw_input('[UHD-SIGGEN] Press Enter to quit:\n')
+    input('[UHD-SIGGEN] Press Enter to quit:\n')
     tb.stop()
     tb.wait()
 

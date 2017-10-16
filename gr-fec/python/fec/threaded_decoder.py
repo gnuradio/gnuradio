@@ -20,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import gr, blocks
-import fec_swig as fec
+from . import fec_swig as fec
+
 
 class threaded_decoder(gr.hier_block2):
     def __init__(self, decoder_list_0, input_size, output_size):

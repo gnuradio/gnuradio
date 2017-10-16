@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import random
 import pmt
@@ -67,7 +68,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         received = self.dbg.get_message(0)
         received_data = pmt.cdr(received)
         msg_data = []
-        for i in xrange(4):
+        for i in range(4):
             msg_data.append(pmt.u8vector_ref(received_data, i))
         self.assertEqual(srcdata, tuple(msg_data))
 

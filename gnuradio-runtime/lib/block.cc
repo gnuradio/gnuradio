@@ -707,12 +707,25 @@ namespace gr {
     //std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, pmt::mp("done"))){
-        d_finished = pmt::to_long(pmt::cdr(msg));
-        global_block_registry.notify_blk(alias());
+        d_finished = pmt::to_bool(pmt::cdr(msg));
     } else {
         std::cout << "WARNING: bad message op on system port!\n";
         pmt::print(msg);
     }
+  }
+
+  void
+  block::set_log_level(std::string level)
+  {
+    logger_set_level(d_logger, level);
+  }
+
+  std::string
+  block::log_level()
+  {
+    std::string level;
+    logger_get_level(d_logger, level);
+    return level;
   }
 
   void
@@ -737,7 +750,7 @@ namespace gr {
 
         currlist = pmt::cdr(currlist);
         basic_block_sptr blk = global_block_registry.block_lookup(block);
-        blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
+        blk->post(port, pmt::cons(pmt::mp("done"), pmt::PMT_T));
 
         //std::cout << "notify finished --> ";
         //pmt::print(pmt::cons(block,port));
@@ -750,7 +763,7 @@ namespace gr {
   bool
   block::finished()
   {
-    if((detail()->ninputs() != 0) || (detail()->noutputs() != 0))
+    if(detail()->ninputs() != 0)
       return false;
     else
       return d_finished;

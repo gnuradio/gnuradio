@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 import random
@@ -139,7 +140,7 @@ class test_packing(gr_unittest.TestCase):
     def test_009(self):
         random.seed(0)
         src_data = []
-        for i in xrange(202):
+        for i in range(202):
             src_data.append((random.randint(0,255)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -158,7 +159,7 @@ class test_packing(gr_unittest.TestCase):
     def test_010(self):
         random.seed(0)
         src_data = []
-        for i in xrange(56):
+        for i in range(56):
             src_data.append((random.randint(0,255)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -176,7 +177,7 @@ class test_packing(gr_unittest.TestCase):
     def test_011(self):
         random.seed(0)
         src_data = []
-        for i in xrange(56):
+        for i in range(56):
             src_data.append((random.randint(0,255)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -196,7 +197,7 @@ class test_packing(gr_unittest.TestCase):
     def test_100a(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -214,7 +215,7 @@ class test_packing(gr_unittest.TestCase):
     def test_100b(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -232,7 +233,7 @@ class test_packing(gr_unittest.TestCase):
     def test_101a(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -250,7 +251,7 @@ class test_packing(gr_unittest.TestCase):
     def test_101b(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**15,2**15-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -270,7 +271,7 @@ class test_packing(gr_unittest.TestCase):
     def test_200a(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -288,7 +289,7 @@ class test_packing(gr_unittest.TestCase):
     def test_200b(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -306,7 +307,7 @@ class test_packing(gr_unittest.TestCase):
     def test_201a(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data
@@ -324,7 +325,7 @@ class test_packing(gr_unittest.TestCase):
     def test_201b(self):
         random.seed(0)
         src_data = []
-        for i in xrange(100):
+        for i in range(100):
             src_data.append((random.randint(-2**31,2**31-1)))
         src_data = tuple(src_data)
         expected_results = src_data

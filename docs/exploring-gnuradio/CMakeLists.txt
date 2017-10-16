@@ -26,5 +26,4 @@ install(
     fm_rx.grc
     fm_demod.py
     DESTINATION ${GR_PKG_DOC_DIR}
-    COMPONENT "docs"
 )

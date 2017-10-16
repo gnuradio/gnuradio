@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,13 +25,25 @@ include(GrPython)
 GR_PYTHON_INSTALL(
     PROGRAMS
     alaw_audio_loopback.py
-    codec2_audio_loopback.py
     cvsd_audio_loopback.py
     g721_audio_loopback.py
     g723_24_audio_loopback.py
     g723_40_audio_loopback.py
-    gsm_audio_loopback.py
     ulaw_audio_loopback.py
     DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
-    COMPONENT "vocoder_examples"
 )
+if(LIBCODEC2_FOUND)
+  GR_PYTHON_INSTALL(
+    PROGRAMS
+    codec2_audio_loopback.py
+    grfreedv.grc
+    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
+    )
+endif(LIBCODEC2_FOUND)
+if(LIBGSM_FOUND)
+  GR_PYTHON_INSTALL(
+    PROGRAMS
+    gsm_audio_loopback.py
+    DESTINATION ${GR_PKG_VOCODER_EXAMPLES_DIR}
+    )
+endif(LIBGSM_FOUND)

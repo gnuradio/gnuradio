@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import math
 
 from gnuradio import gr, gr_unittest, analog, blocks
@@ -38,8 +40,8 @@ class test_phase_modulator(gr_unittest.TestCase):
 
     def test_fm_001(self):
         pi = math.pi
-        sensitivity = pi/4
-        src_data = (1.0/4, 1.0/2, 1.0/4, -1.0/4, -1.0/2, -1/4.0)
+        sensitivity = pi / 4
+        src_data = (1.0 / 4, 1.0 / 2, 1.0 / 4, -1.0 / 4, -1.0 / 2, -1 / 4.0)
         expected_result = tuple([sincos(sensitivity*x) for x in src_data])
 
         src = blocks.vector_source_f(src_data)

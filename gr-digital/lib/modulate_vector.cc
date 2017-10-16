@@ -23,8 +23,8 @@
 /*
 * Generate a modulated transmit vector corresponding to a particular
 * data sequence, resampling rate, and shaping filter. The output is
-* suitable for use as a candidate filter for the correlate_and_sync
-* block, or just for prototyping.
+* suitable for use as a candidate filter for the corr_est block, or
+* just for prototyping.
 *
 * It accepts a sptr to a modulator block as an argument; given
 * suitable data vectors and arguments you should be able to use any of

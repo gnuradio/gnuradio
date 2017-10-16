@@ -25,17 +25,20 @@ Used to send and receive data between the Ettus Research, LLC product
 line.
 '''
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 ########################################################################
 # Prepare uhd swig module to make it more pythonic
 ########################################################################
 def _prepare_uhd_swig():
     try:
-        import uhd_swig
+        from . import uhd_swig
     except ImportError:
         import os
         dirname, filename = os.path.split(os.path.abspath(__file__))
         __path__.append(os.path.join(dirname, "..", "..", "swig"))
-        import uhd_swig
+        from . import uhd_swig
 
     #some useful typedefs for the user
     setattr(uhd_swig, 'freq_range_t', uhd_swig.meta_range_t)
@@ -50,7 +53,7 @@ def _prepare_uhd_swig():
         def __float__(self): return self.target_freq
         def __init__(self, *args, **kwargs):
             super(tune_request_t, self).__init__(*args)
-            for key, val in kwargs.iteritems(): setattr(self, key, val)
+            for key, val in list(kwargs.items()): setattr(self, key, val)
     setattr(uhd_swig, 'tune_request_t', tune_request_t)
 
     #Make the python tune request object inherit from string
@@ -64,14 +67,14 @@ def _prepare_uhd_swig():
         def __init__(self, *args, **kwargs):
             super(device_addr_t, self).__init__(*args)
             if args and isinstance(args[0], device_addr_t):
-                for key in args[0].keys(): self[key] = args[0][key]
+                for key in list(args[0].keys()): self[key] = args[0][key]
     setattr(uhd_swig, 'device_addr_t', device_addr_t)
 
     #make the streamer args take **kwargs on init
     class stream_args_t(uhd_swig.stream_args_t):
         def __init__(self, *args, **kwargs):
             super(stream_args_t, self).__init__(*args)
-            for key, val in kwargs.iteritems():
+            for key, val in list(kwargs.items()):
                 #for some reason, i cant assign a list in the constructor
                 #but what i can do is append the elements individually
                 if key == 'channels':
@@ -97,7 +100,7 @@ def _prepare_uhd_swig():
     def find_devices(*args, **kwargs):
         def to_pythonized_dev_addr(dev_addr):
             new_dev_addr = uhd_swig.device_addr_t()
-            for key in dev_addr.keys(): new_dev_addr[key] = dev_addr.get(key)
+            for key in list(dev_addr.keys()): new_dev_addr[key] = dev_addr.get(key)
             return new_dev_addr
         return __builtins__['map'](to_pythonized_dev_addr, uhd_swig.find_devices_raw(*args, **kwargs))
     setattr(uhd_swig, 'find_devices', find_devices)
@@ -114,11 +117,11 @@ def _prepare_uhd_swig():
                 ):
                     try:
                         if len(args) > index: args[index] = cast(args[index])
-                        if kwargs.has_key(key): kwargs[key] = cast(kwargs[key])
+                        if key in kwargs: kwargs[key] = cast(kwargs[key])
                     except: pass
                 #dont pass kwargs, it confuses swig, map into args list:
                 for key in ('device_addr', 'stream_args', 'io_type', 'num_channels', 'msgq'):
-                    if kwargs.has_key(key): args.append(kwargs[key])
+                    if key in kwargs: args.append(kwargs[key])
                 return old_constructor(*args)
             return constructor_interceptor
         setattr(uhd_swig, attr, constructor_factory(getattr(uhd_swig, attr)))
@@ -133,4 +136,4 @@ def _prepare_uhd_swig():
 # Initialize this module with the contents of uhd swig
 ########################################################################
 _prepare_uhd_swig()
-from uhd_swig import *
+from .uhd_swig import *

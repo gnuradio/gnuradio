@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import unittest
 from hieroglyph.nodes import Node, Arg, Raises, Except, Returns, Warning, Note
 

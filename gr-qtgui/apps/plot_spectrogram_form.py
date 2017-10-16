@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sys
 from gnuradio import filter
 
@@ -27,7 +30,7 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4."
+    print("Error: Program requires PyQt4.")
     sys.exit(1)
 
 try:
@@ -113,7 +116,7 @@ class plot_spectrogram_form(plot_form):
         self._style_edit = []
         self._marker_edit = []
         self._alpha_edit = []
-        for n in xrange(self.top_block._nsigs):
+        for n in range(self.top_block._nsigs):
             self._line_pages.append(QtGui.QDialog())
             self._line_forms.append(QtGui.QFormLayout(self._line_pages[-1]))
 

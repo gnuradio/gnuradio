@@ -955,4 +955,22 @@ namespace gr {
     return tmp[0]->processor_affinity();
   }
 
+  void
+  hier_block2_detail::set_log_level(std::string level)
+  {
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    for(basic_block_viter_t p = tmp.begin(); p != tmp.end(); p++) {
+      (*p)->set_log_level(level);
+    }
+  }
+
+  std::string
+  hier_block2_detail::log_level()
+  {
+    // Assume that log_level was set for all hier_block2 blocks
+    basic_block_vector_t tmp = d_fg->calc_used_blocks();
+    return tmp[0]->log_level();
+  }
+
+
 } /* namespace gr */

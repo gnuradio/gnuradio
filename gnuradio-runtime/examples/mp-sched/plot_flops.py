@@ -23,12 +23,13 @@
 Reads output from run_synthetic.py and runs gnuplot showing
 GFLOPS as f(npipes, nstages)
 """
+from __future__ import unicode_literals
 
 import re
 import sys
 import os
 import tempfile
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 
 def parse_file(input_filename, output):
@@ -84,14 +85,11 @@ def handle_file(input_filename):
 
 
 def main():
-    usage = "usage: %prog [options] file.dat"
-    parser = OptionParser(usage=usage)
-    (options, args) = parser.parse_args()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
+    parser = ArgumentParser()
+    parser.add_argument('file', help='Input file')
+    args = parser.parse_args()
 
-    handle_file(args[0])
+    handle_file(args.file)
 
 
 if __name__ == '__main__':

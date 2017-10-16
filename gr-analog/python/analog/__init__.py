@@ -21,24 +21,26 @@
 '''
 Blocks and utilities for analog modulation and demodulation.
 '''
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os
 
 try:
-    from analog_swig import *
+    from .analog_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from analog_swig import *
+    from .analog_swig import *
 
-from am_demod import *
-from fm_demod import *
-from fm_emph import *
-from nbfm_rx import *
-from nbfm_tx import *
-from standard_squelch import *
-from wfm_rcv import *
-from wfm_rcv_fmdet import *
-from wfm_rcv_pll import *
-from wfm_tx import *
+from .am_demod import *
+from .fm_demod import *
+from .fm_emph import *
+from .nbfm_rx import *
+from .nbfm_tx import *
+from .standard_squelch import *
+from .wfm_rcv import *
+from .wfm_rcv_fmdet import *
+from .wfm_rcv_pll import *
+from .wfm_tx import *

@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 import os
@@ -49,8 +50,8 @@ class test_stream_mux (gr_unittest.TestCase):
         return dst.data ()
 
     def help_stream_ramp_2ff(self, N, stream_sizes):
-        r1 = range(N)
-        r2 = range(N)
+        r1 = list(range(N))
+        r2 = list(range(N))
         r2.reverse()
 
         v0 = blocks.vector_source_f(r1, False)

@@ -24,7 +24,7 @@ GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
 # Handle the generated constants
 ########################################################################
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
-    "import time;print time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime())"
+    "import time;print(time.strftime('%a, %d %b %Y %H:%M:%S', time.gmtime()))"
     OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 message(STATUS "Loading build date ${BUILD_DATE} into constants...")
@@ -48,8 +48,8 @@ list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 ########################################################################
 include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
-		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
-		    ${VOLK_INCLUDE_DIRS}
+            ${CMAKE_CURRENT_BINARY_DIR}/../include/
+            ${VOLK_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
 )
 
@@ -101,9 +101,7 @@ list(APPEND gnuradio_runtime_sources
   realtime.cc
   realtime_impl.cc
   scheduler.cc
-  scheduler_sts.cc
   scheduler_tpb.cc
-  single_threaded_scheduler.cc
   sptr_magic.cc
   sync_block.cc
   sync_decimator.cc
@@ -198,7 +196,7 @@ endif(TRY_SHM_VMCIRCBUF)
 #######################################################
 add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
 target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
-GR_LIBRARY_FOO(gnuradio-runtime RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
+GR_LIBRARY_FOO(gnuradio-runtime)
 
 add_dependencies(gnuradio-runtime
   pmt_generated runtime_generated_includes
@@ -236,7 +234,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-runtime_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "runtime_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

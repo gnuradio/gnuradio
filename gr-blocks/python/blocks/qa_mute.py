@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 class test_mute(gr_unittest.TestCase):
@@ -31,7 +32,7 @@ class test_mute(gr_unittest.TestCase):
         self.tb = None
 
     def help_ii(self, src_data, exp_data, op):
-        for s in zip(range(len(src_data)), src_data):
+        for s in zip(list(range(len(src_data))), src_data):
             src = blocks.vector_source_i(s[1])
             self.tb.connect(src, (op, s[0]))
         dst = blocks.vector_sink_i()
@@ -41,7 +42,7 @@ class test_mute(gr_unittest.TestCase):
         self.assertEqual(exp_data, result_data)
 
     def help_ff(self, src_data, exp_data, op):
-        for s in zip(range(len(src_data)), src_data):
+        for s in zip(list(range(len(src_data))), src_data):
             src = blocks.vector_source_f(s[1])
             self.tb.connect(src, (op, s[0]))
         dst = blocks.vector_sink_f()
@@ -51,7 +52,7 @@ class test_mute(gr_unittest.TestCase):
         self.assertEqual(exp_data, result_data)
 
     def help_cc(self, src_data, exp_data, op):
-        for s in zip(range(len(src_data)), src_data):
+        for s in zip(list(range(len(src_data))), src_data):
             src = blocks.vector_source_c(s[1])
             self.tb.connect(src, (op, s[0]))
         dst = blocks.vector_sink_c()

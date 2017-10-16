@@ -88,7 +88,7 @@ ENDIF(MSVC)
 
 add_library(gnuradio-trellis SHARED ${trellis_sources})
 target_link_libraries(gnuradio-trellis ${trellis_libs})
-GR_LIBRARY_FOO(gnuradio-trellis RUNTIME_COMPONENT "trellis_runtime" DEVEL_COMPONENT "trellis_devel")
+GR_LIBRARY_FOO(gnuradio-trellis)
 add_dependencies(gnuradio-trellis
   trellis_generated_includes trellis_generated_swigs
   gnuradio-runtime gnuradio-digital)
@@ -118,6 +118,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-trellis_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "trellis_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

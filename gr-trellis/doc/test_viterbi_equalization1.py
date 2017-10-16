@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import trellis, digital, filter, blocks
@@ -34,7 +37,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     # CHANNEL
     isi = filter.fir_filter_fff(1,channel)
     add = blocks.add_ff()
-    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0 / 2),seed)
 
     # RX
     skip = blocks.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
@@ -78,14 +81,14 @@ def main(args):
     modulation = fsm_utils.pam4 # see fsm_utlis.py for available predefined modulations
     channel = fsm_utils.c_channel # see fsm_utlis.py for available predefined test channels
     f=trellis.fsm(len(modulation[1]),len(channel)) # generate the FSM automatically
-    bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
-    K=Kb/bitspersymbol # packet size in trellis steps
+    bitspersymbol = int(round(math.log(f.I()) / math.log(2))) # bits per FSM input symbol
+    K=Kb / bitspersymbol # packet size in trellis steps
 
     tot_channel = fsm_utils.make_isi_lookup(modulation,channel,True) # generate the lookup table (normalize energy to 1)
     dimensionality = tot_channel[0]
     tot_constellation = tot_channel[1]
-    N0=pow(10.0,-esn0_db/10.0); # noise variance
-    if len(tot_constellation)/dimensionality != f.O():
+    N0=pow(10.0,-esn0_db / 10.0); # noise variance
+    if len(tot_constellation) / dimensionality != f.O():
         sys.stderr.write ('Incompatible FSM output cardinality and lookup table size.\n')
         sys.exit (1)
 
@@ -94,14 +97,14 @@ def main(args):
     terr_p=0 # total number of packets in error
 
     for i in range(rep):
-        (s,e)=run_test(f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,-long(666+i)) # run experiment with different seed to get different data and noise realizations
+        (s,e)=run_test(f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,-int(666+i)) # run experiment with different seed to get different data and noise realizations
         tot_s=tot_s+s
         terr_s=terr_s+e
         terr_p=terr_p+(terr_s!=0)
         if ((i+1)%100==0) : # display progress
-            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
+            print(i+1,terr_p, '%.2e' % ((1.0*terr_p) / (i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s) / tot_s))
     # estimate of the (short or symbol) error rate
-    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
+    print(rep,terr_p, '%.2e' % ((1.0*terr_p) / (i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s) / tot_s))
 
 
 if __name__ == '__main__':

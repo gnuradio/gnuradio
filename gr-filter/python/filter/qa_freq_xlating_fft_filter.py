@@ -19,6 +19,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter, blocks
 
 import cmath, math
@@ -34,14 +36,14 @@ def fir_filter(x, taps, decim=1):
     return y
 
 def sig_source_s(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: int(100*math.sin(2.*math.pi*freq*x)), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [int(100*math.sin(2.*math.pi*freq*x)) for x in t]
     return y
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 def mix(lo, data):
@@ -60,17 +62,17 @@ class test_freq_xlating_filter(gr_unittest.TestCase):
         self.fs = fs = 1
         self.fc = fc = 0.3
         self.bw = bw = 0.1
-        self.taps = filter.firdes.low_pass(1, fs, bw, bw/4)
-        times = xrange(1024)
-        self.src_data = map(lambda t: cmath.exp(-2j*cmath.pi*fc/fs*(t/100.0)), times)
+        self.taps = filter.firdes.low_pass(1, fs, bw, bw / 4)
+        times = list(range(1024))
+        self.src_data = [cmath.exp(-2j*cmath.pi*fc/fs*(t / 100.0)) for t in times]
 
     def generate_ccc_source(self):
         self.fs = fs = 1
         self.fc = fc = 0.3
         self.bw = bw = 0.1
-        self.taps = filter.firdes.complex_band_pass(1, fs, -bw/2, bw/2, bw/4)
-        times = xrange(1024)
-        self.src_data = map(lambda t: cmath.exp(-2j*cmath.pi*fc/fs*(t/100.0)), times)
+        self.taps = filter.firdes.complex_band_pass(1, fs, -bw / 2, bw / 2, bw / 4)
+        times = list(range(1024))
+        self.src_data = [cmath.exp(-2j*cmath.pi*fc/fs*(t / 100.0)) for t in times]
 
     def assert_fft_ok(self, expected_result, result_data):
         expected_result = expected_result[:len(result_data)]

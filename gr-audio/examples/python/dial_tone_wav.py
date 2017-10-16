@@ -22,10 +22,11 @@
 
 # GNU Radio example program to record a dial tone to a WAV file
 
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float
+from argparse import ArgumentParser
 
 try:
     from gnuradio import analog
@@ -38,25 +39,23 @@ class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-	usage = "%prog: [options] filename"
-        parser = OptionParser(option_class=eng_option, usage=usage)
-        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
-                          help="set sample rate to RATE (48000)")
-	parser.add_option("-N", "--samples", type="eng_float", default=None,
-			  help="number of samples to record")
-        (options, args) = parser.parse_args ()
-        if len(args) != 1 or options.samples is None:
-            parser.print_help()
-            raise SystemExit, 1
+        parser = ArgumentParser()
+        parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
+                          help="set sample rate to RATE (%(default)r)")
+        parser.add_argument("-N", "--samples", type=eng_float, required=True,
+                          help="number of samples to record")
+        parser.add_argument('file_name', metavar='WAV-FILE',
+                          help='Output WAV file name', nargs=1)
+        args = parser.parse_args()
 
-        sample_rate = int(options.sample_rate)
+        sample_rate = int(args.sample_rate)
         ampl = 0.1
 
         src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 350, ampl)
         src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, ampl)
-	head0 = blocks.head(gr.sizeof_float, int(options.samples))
-	head1 = blocks.head(gr.sizeof_float, int(options.samples))
-	dst = blocks.wavfile_sink(args[0], 2, int(options.sample_rate), 16)
+        head0 = blocks.head(gr.sizeof_float, int(args.samples))
+        head1 = blocks.head(gr.sizeof_float, int(args.samples))
+        dst = blocks.wavfile_sink(args.file_name[0], 2, int(args.sample_rate), 16)
 
         self.connect(src0, head0, (dst, 0))
         self.connect(src1, head1, (dst, 1))

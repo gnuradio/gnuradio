@@ -1,6 +1,7 @@
 """
 Customizations of sphinx for gnuradio use.
 """
+from __future__ import unicode_literals
 
 from sphinx.ext.autodoc import py_ext_sig_re
 from sphinx.ext.autodoc import ClassDocumenter, FunctionDocumenter, members_option

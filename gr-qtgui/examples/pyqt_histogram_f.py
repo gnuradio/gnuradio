@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,16 +20,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtWidgets, Qt
     import sip
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
     sys.exit(1)
 
 try:
@@ -38,108 +40,101 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
-class dialog_box(QtGui.QWidget):
+class dialog_box(QtWidgets.QWidget):
     def __init__(self, display, control):
-        QtGui.QWidget.__init__(self, None)
+        QtWidgets.QWidget.__init__(self, None)
         self.setWindowTitle('PyQt Test GUI')
 
-        self.boxlayout = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight, self)
+        self.boxlayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
         self.boxlayout.addWidget(control)
 
         self.resize(800, 500)
 
-class control_box(QtGui.QWidget):
+class control_box(QtWidgets.QWidget):
     def __init__(self, snk, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self.setWindowTitle('Control Panel')
         self.snk = snk
 
         self.setToolTip('Control the signals')
-        QtGui.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
+        QtWidgets.QToolTip.setFont(Qt.QFont('OldEnglish', 10))
 
-        self.layout = QtGui.QFormLayout(self)
+        self.layout = QtWidgets.QFormLayout(self)
 
         # Control the first signal
-        self.freq1Edit = QtGui.QLineEdit(self)
+        self.freq1Edit = QtWidgets.QLineEdit(self)
         self.freq1Edit.setMinimumWidth(100)
         self.layout.addRow("Sine Frequency:", self.freq1Edit)
-        self.connect(self.freq1Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.freq1EditText)
+        self.freq1Edit.editingFinished.connect(self.freq1EditText)
 
-        self.amp1Edit = QtGui.QLineEdit(self)
+        self.amp1Edit = QtWidgets.QLineEdit(self)
         self.amp1Edit.setMinimumWidth(100)
         self.layout.addRow("Sine Amplitude:", self.amp1Edit)
-        self.connect(self.amp1Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.amp1EditText)
+        self.amp1Edit.editingFinished.connect(self.amp1EditText)
 
 
         # Control the second signal
-        self.amp2Edit = QtGui.QLineEdit(self)
+        self.amp2Edit = QtWidgets.QLineEdit(self)
         self.amp2Edit.setMinimumWidth(100)
         self.layout.addRow("Noise Amplitude:", self.amp2Edit)
-        self.connect(self.amp2Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.amp2EditText)
+        self.amp2Edit.editingFinished.connect(self.amp2EditText)
 
         # Control the histogram
-        self.hist_npts = QtGui.QLineEdit(self)
+        self.hist_npts = QtWidgets.QLineEdit(self)
         self.hist_npts.setMinimumWidth(100)
-        self.hist_npts.setValidator(QtGui.QIntValidator(0, 8191))
+        self.hist_npts.setValidator(Qt.QIntValidator(0, 8191))
         self.hist_npts.setText("{0}".format(self.snk.nsamps()))
         self.layout.addRow("Number of Points:", self.hist_npts)
-        self.connect(self.hist_npts, QtCore.SIGNAL("editingFinished()"),
-                     self.set_nsamps)
+        self.hist_npts.editingFinished.connect(self.set_nsamps)
 
-        self.hist_bins = QtGui.QLineEdit(self)
+        self.hist_bins = QtWidgets.QLineEdit(self)
         self.hist_bins.setMinimumWidth(100)
-        self.hist_bins.setValidator(QtGui.QIntValidator(0, 1000))
+        self.hist_bins.setValidator(Qt.QIntValidator(0, 1000))
         self.hist_bins.setText("{0}".format(self.snk.bins()))
         self.layout.addRow("Number of Bins:", self.hist_bins)
-        self.connect(self.hist_bins, QtCore.SIGNAL("editingFinished()"),
-                     self.set_bins)
+        self.hist_bins.editingFinished.connect(self.set_bins)
 
-        self.hist_auto = QtGui.QPushButton("scale", self)
+        self.hist_auto = QtWidgets.QPushButton("scale", self)
         self.layout.addRow("Autoscale X:", self.hist_auto)
-        self.connect(self.hist_auto, QtCore.SIGNAL("pressed()"),
-                     self.autoscalex)
+        self.hist_auto.pressed.connect(self.autoscalex)
 
-        self.quit = QtGui.QPushButton('Close', self)
+        self.quit = QtWidgets.QPushButton('Close', self)
         self.quit.setMinimumWidth(100)
         self.layout.addWidget(self.quit)
 
-        self.connect(self.quit, QtCore.SIGNAL('clicked()'),
-                     QtGui.qApp, QtCore.SLOT('quit()'))
+        self.quit.clicked.connect(QtWidgets.qApp.quit)
 
 
     def attach_signal1(self, signal):
         self.signal1 = signal
-        self.freq1Edit.setText(QtCore.QString("%1").arg(self.signal1.frequency()))
-        self.amp1Edit.setText(QtCore.QString("%1").arg(self.signal1.amplitude()))
+        self.freq1Edit.setText(("{0}").format(self.signal1.frequency()))
+        self.amp1Edit.setText(("{0}").format(self.signal1.amplitude()))
 
     def attach_signal2(self, signal):
         self.signal2 = signal
-        self.amp2Edit.setText(QtCore.QString("%1").arg(self.signal2.amplitude()))
+        self.amp2Edit.setText(("{0}").format(self.signal2.amplitude()))
 
     def freq1EditText(self):
         try:
             newfreq = float(self.freq1Edit.text())
             self.signal1.set_frequency(newfreq)
         except ValueError:
-            print "Bad frequency value entered"
+            print("Bad frequency value entered")
 
     def amp1EditText(self):
         try:
             newamp = float(self.amp1Edit.text())
             self.signal1.set_amplitude(newamp)
         except ValueError:
-            print "Bad amplitude value entered"
+            print("Bad amplitude value entered")
 
     def amp2EditText(self):
         try:
             newamp = float(self.amp2Edit.text())
             self.signal2.set_amplitude(newamp)
         except ValueError:
-            print "Bad amplitude value entered"
+            print("Bad amplitude value entered")
 
     def set_nsamps(self):
         res = self.hist_npts.text().toInt()
@@ -164,7 +159,7 @@ class my_top_block(gr.top_block):
 
         npts = 2048
 
-        self.qapp = QtGui.QApplication(sys.argv)
+        self.qapp = QtWidgets.QApplication(sys.argv)
 
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0, 0)
         src2 = analog.noise_source_f(analog.GR_GAUSSIAN, 1)
@@ -172,6 +167,7 @@ class my_top_block(gr.top_block):
         thr = blocks.throttle(gr.sizeof_float, 100*npts)
         self.snk1 = qtgui.histogram_sink_f(npts, 200, -5, 5,
                                            "Histogram")
+        self.snk1.disable_legend()
 
         self.connect(src1, (src,0))
         self.connect(src2, (src,1))
@@ -185,8 +181,8 @@ class my_top_block(gr.top_block):
         pyQt  = self.snk1.pyqwidget()
 
         # Wrap the pointer as a PyQt SIP object
-        # This can now be manipulated as a PyQt4.QtGui.QWidget
-        pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
+        # This can now be manipulated as a PyQt5.QtWidgets.QWidget
+        pyWin = sip.wrapinstance(pyQt, QtWidgets.QWidget)
 
         #pyWin.show()
         self.main_box = dialog_box(pyWin, self.ctrl_win)
@@ -197,4 +193,3 @@ if __name__ == "__main__":
     tb.start()
     tb.qapp.exec_()
     tb.stop()
-

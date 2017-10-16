@@ -52,10 +52,7 @@ namespace gr {
     int pdu_to_tagged_stream_impl::calculate_output_stream_length(const gr_vector_int &)
     {
       if (d_curr_len == 0) {
-          /* FIXME: This blocking call is far from ideal but is the best we
-	   *        can do at the moment
-	   */
-        pmt::pmt_t msg(delete_head_blocking(PDU_PORT_ID, 100));
+        pmt::pmt_t msg(delete_head_nowait(PDU_PORT_ID));
         if (msg.get() == NULL) {
           return 0;
         }

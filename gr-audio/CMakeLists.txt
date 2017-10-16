@@ -43,47 +43,6 @@ SET(GR_PKG_AUDIO_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/audio)
 if(ENABLE_GR_AUDIO)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_AUDIO_DESCRIPTION "GNU Radio Audio Blocks")
-
-CPACK_COMPONENT("audio_runtime"
-    GROUP        "Audio"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("audio_devel"
-    GROUP        "Audio"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("audio_python"
-    GROUP        "Audio"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;audio_runtime"
-)
-
-CPACK_COMPONENT("audio_examples"
-    GROUP        "Audio"
-    DISPLAY_NAME "Examples"
-    DESCRIPTION  "Example programs"
-    DEPENDS      "audio_runtime"
-)
-
-CPACK_COMPONENT("audio_swig"
-    GROUP        "Audio"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;audio_python;audio_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(lib)
@@ -112,7 +71,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-audio.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "audio_devel"
 )
 
 endif(ENABLE_GR_AUDIO)

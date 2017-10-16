@@ -22,7 +22,7 @@
 ########################################################################
 include(GrBoost)
 
-find_package(UHD)
+find_package(UHD "3.5.5")
 
 ########################################################################
 # Register component
@@ -50,47 +50,6 @@ SET(GR_PKG_UHD_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/uhd)
 if(ENABLE_GR_UHD)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_UHD_DESCRIPTION "GNU Radio UHD Blocks")
-
-CPACK_COMPONENT("uhd_runtime"
-    GROUP        "UHD"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("uhd_devel"
-    GROUP        "UHD"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("uhd_python"
-    GROUP        "UHD"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;uhd_runtime"
-)
-
-CPACK_COMPONENT("uhd_examples"
-    GROUP        "UHD"
-    DISPLAY_NAME "Examples"
-    DESCRIPTION  "Example programs"
-    DEPENDS      "uhd_runtime"
-)
-
-CPACK_COMPONENT("uhd_swig"
-    GROUP        "UHD"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;uhd_python;uhd_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/uhd)
@@ -100,9 +59,8 @@ add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/uhd)
-    add_subdirectory(grc)
+    #add_subdirectory(grc)
     add_subdirectory(apps)
-    add_subdirectory(examples/python)
     add_subdirectory(examples/grc)
 endif(ENABLE_PYTHON)
 
@@ -117,7 +75,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-uhd.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "uhd_devel"
 )
 
 endif(ENABLE_GR_UHD)

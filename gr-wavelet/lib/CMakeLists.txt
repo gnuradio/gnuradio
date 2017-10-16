@@ -78,7 +78,7 @@ if(CMAKE_COMPILER_IS_GNUCC AND NOT APPLE)
     SET_TARGET_PROPERTIES(gnuradio-wavelet PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
 endif()
 
-GR_LIBRARY_FOO(gnuradio-wavelet RUNTIME_COMPONENT "wavelet_runtime" DEVEL_COMPONENT "wavelet_devel")
+GR_LIBRARY_FOO(gnuradio-wavelet)
 add_dependencies(gnuradio-wavelet
   wavelet_generated_includes wavelet_generated_swigs
   gnuradio-runtime)
@@ -106,6 +106,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-wavelet_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "wavelet_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

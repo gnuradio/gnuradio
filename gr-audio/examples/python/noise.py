@@ -20,33 +20,30 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import digital
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float
+from argparse import ArgumentParser
 
 class my_top_block(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self)
 
-        parser = OptionParser(option_class=eng_option)
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser = ArgumentParser()
+        parser.add_argument("-O", "--audio-output", default="",
                           help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
-        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
+        parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
                           help="set sample rate to RATE (48000)")
-        (options, args) = parser.parse_args ()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
-
-        sample_rate = int(options.sample_rate)
+        args = parser.parse_args()
+        sample_rate = int(args.sample_rate)
         ampl = 0.1
 
         src = digital.glfsr_source_b(32)     # Pseudorandom noise source
         b2f = digital.chunks_to_symbols_bf([ampl, -ampl], 1)
-        dst = audio.sink(sample_rate, options.audio_output)
+        dst = audio.sink(sample_rate, args.audio_output)
         self.connect(src, b2f, dst)
 
 if __name__ == '__main__':
