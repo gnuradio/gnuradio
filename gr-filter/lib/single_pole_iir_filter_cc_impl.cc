@@ -60,6 +60,14 @@ namespace gr {
       }
     }
 
+    void
+    single_pole_iir_filter_cc_impl::reset()
+    {
+      for(unsigned int i = 0; i < d_vlen; i++) {
+        d_iir[i].reset();
+      }
+    }
+
     int
     single_pole_iir_filter_cc_impl::work(int noutput_items,
 					 gr_vector_const_void_star &input_items,
