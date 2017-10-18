@@ -218,6 +218,28 @@ class test_fft_filter(gr_unittest.TestCase):
 
             self.assert_fft_ok2(expected_result, result_data)
 
+    def test_ccc_007(self):
+        # Test reset
+	tb = gr.top_block()
+        src_data = (2,2,2,2)
+        taps = (1,1)
+        src = blocks.vector_source_c(src_data)
+        op = filter.fft_filter_ccc(1, taps)
+        dst = blocks.vector_sink_c()
+        tb.connect(src, op, dst)
+        tb.run()
+        op.reset()
+        src.set_data((0,0,0,0))
+        tb.run()
+        result_data = dst.data()
+
+        # Make sure we have a hard falling edge instead of smoothed
+        expected_result = (2,4,4,0,0,0)
+
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
+
     # ----------------------------------------------------------------
     # test _ccf version
     # ----------------------------------------------------------------
@@ -336,6 +358,28 @@ class test_fft_filter(gr_unittest.TestCase):
 	    result_data = dst.data()
 
             self.assert_fft_ok2(expected_result, result_data)
+
+    def test_ccf_007(self):
+        # Test reset
+	tb = gr.top_block()
+        src_data = (2,2,2,2)
+        taps = (1,1)
+        src = blocks.vector_source_c(src_data)
+        op = filter.fft_filter_ccf(1, taps)
+        dst = blocks.vector_sink_c()
+        tb.connect(src, op, dst)
+        tb.run()
+        op.reset()
+        src.set_data((0,0,0,0))
+        tb.run()
+        result_data = dst.data()
+
+        # Make sure we have a hard falling edge instead of smoothed
+        expected_result = (2,4,4,0,0,0)
+
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
 
     # ----------------------------------------------------------------
     # test _fff version
@@ -480,6 +524,28 @@ class test_fft_filter(gr_unittest.TestCase):
             result_data = dst.data()
 
             self.assert_fft_float_ok2(expected_result, result_data)
+
+    def test_fff_008(self):
+        # Test reset
+	tb = gr.top_block()
+        src_data = (2,2,2,2)
+        taps = (1,1)
+        src = blocks.vector_source_f(src_data)
+        op = filter.fft_filter_fff(1, taps)
+        dst = blocks.vector_sink_f()
+        tb.connect(src, op, dst)
+        tb.run()
+        op.reset()
+        src.set_data((0,0,0,0))
+        tb.run()
+        result_data = dst.data()
+
+        # Make sure we have a hard falling edge instead of smoothed
+        expected_result = (2,4,4,0,0,0)
+
+        #print 'expected:', expected_result
+        #print 'results: ', result_data
+        self.assertComplexTuplesAlmostEqual (expected_result, result_data, 5)
 
     def test_fff_get0(self):
         random.seed(0)

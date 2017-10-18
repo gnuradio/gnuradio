@@ -134,6 +134,11 @@ namespace gr {
 	 * \param output  The result of the filter operation
 	 */
 	int filter(int nitems, const float *input, float *output);
+
+        /*!
+         * \brief Reset filter to initial (zero) state.
+         */
+        void reset();
       };
 
 
@@ -239,6 +244,11 @@ namespace gr {
 	 * \param output  The result of the filter operation
 	 */
 	int filter(int nitems, const gr_complex *input, gr_complex *output);
+
+        /*!
+         * \brief Reset filter to initial (zero) state.
+         */
+        void reset();
       };
 
 
@@ -355,6 +365,11 @@ namespace gr {
 	 * \param output  The result of the filter operation
 	 */
 	int filter(int nitems, const gr_complex *input, gr_complex *output);
+
+        /*!
+         * \brief Reset filter to initial (zero) state.
+         */
+        void reset();
       };
 
     } /* namespace kernel */

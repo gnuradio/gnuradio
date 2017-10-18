@@ -188,6 +188,12 @@ namespace gr {
 	return nitems;
       }
 
+      void
+      fft_filter_fff::reset()
+      {
+        std::fill(d_tail.begin(), d_tail.end(), 0);
+      }
+
 
       /**************************************************************/
 
@@ -343,6 +349,12 @@ namespace gr {
 	}
 
 	return nitems;
+      }
+
+      void
+      fft_filter_ccc::reset()
+      {
+        std::fill(d_tail.begin(), d_tail.end(), 0);
       }
 
 
@@ -506,6 +518,12 @@ namespace gr {
 	}
 
 	return nitems;
+      }
+
+      void
+      fft_filter_ccf::reset()
+      {
+        std::fill(d_tail.begin(), d_tail.end(), 0);
       }
 
 
