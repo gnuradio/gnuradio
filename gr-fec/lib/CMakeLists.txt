@@ -114,7 +114,7 @@ list(APPEND gnuradio_fec_libs
 if(GSL_FOUND)
   include_directories(${GSL_INCLUDE_DIRS})
   link_directories(${GSL_LIBRARY_DIRS})
-  list(APPEND gnuradio_fec_libs ${GSL_LIBRARIES})
+  list(APPEND gnuradio_fec_libs ${GSL_LDFLAGS})
 
   list(APPEND gnuradio_fec_sources
     ldpc_bit_flip_decoder_impl.cc
