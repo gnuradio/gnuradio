@@ -21,7 +21,7 @@
 #
 
 import numpy
-from constellation_map_generator import *
+from constellation_map_generator import constellation_map_generator
 
 '''
 Note on the naming scheme. Each constellation is named using a prefix
