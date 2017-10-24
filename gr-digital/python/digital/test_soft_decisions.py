@@ -22,9 +22,9 @@
 
 import numpy, pylab, sys
 from gnuradio import digital
-from soft_dec_lut_gen import *
-from psk_constellations import *
-from qam_constellations import *
+from soft_dec_lut_gen import soft_dec_table, calc_soft_dec_from_table, calc_soft_dec
+from psk_constellations import psk_4_0, psk_4_1, psk_4_2, psk_4_3, psk_4_4, psk_4_5, psk_4_6, psk_4_7, sd_psk_4_0, sd_psk_4_1, sd_psk_4_2, sd_psk_4_3, sd_psk_4_4, sd_psk_4_5, sd_psk_4_6, sd_psk_4_7
+from qam_constellations import qam_16_0, sd_qam_16_0
 
 def test_qpsk(i, sample, prec):
     qpsk_const_list = [psk_4_0, psk_4_1, psk_4_2, psk_4_3,
