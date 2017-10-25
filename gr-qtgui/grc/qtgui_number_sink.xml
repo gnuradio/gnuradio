@@ -41,7 +41,8 @@ for i in xrange($nconnections):
 
 self.$(id).enable_autoscale($autoscale)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
+
   <callback>set_update_time($update_time)</callback>
 
   <param_tab_order>

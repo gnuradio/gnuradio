@@ -23,9 +23,10 @@ import ast
 import numbers
 import re
 import collections
+import textwrap
 
 import six
-from six.moves import builtins, filter, map, range, zip
+from six.moves import builtins, range
 
 from . import Constants, blocks
 from .base import Element
@@ -102,6 +103,7 @@ class Param(Element):
         self._evaluated = None
         self._stringify_flag = False
         self._lisitify_flag = False
+        self.hostage_cells = set()
         self._init = False
 
     @property
@@ -299,38 +301,11 @@ class Param(Element):
         # GUI Position/Hint
         #########################
         elif dtype == 'gui_hint':
-            if ':' in expr:
-                tab, pos = expr.split(':')
-            elif '@' in expr:
-                tab, pos = expr, ''
+            if self.parent_block.state == 'disabled':
+                return ''
             else:
-                tab, pos = '', expr
+                return self.parse_gui_hint(expr)
 
-            if '@' in tab:
-                tab, index = tab.split('@')
-            else:
-                index = '?'
-
-            # TODO: Problem with this code. Produces bad tabs
-            widget_str = ({
-                (True, True): 'self.%(tab)s_grid_layout_%(index)s.addWidget(%(widget)s, %(pos)s)',
-                (True, False): 'self.%(tab)s_layout_%(index)s.addWidget(%(widget)s)',
-                (False, True): 'self.top_grid_layout.addWidget(%(widget)s, %(pos)s)',
-                (False, False): 'self.top_layout.addWidget(%(widget)s)',
-            }[bool(tab), bool(pos)]) % {'tab': tab, 'index': index, 'widget': '%s', 'pos': pos}
-
-            # FIXME: Move replace(...) into the make template of the qtgui blocks
-            # Return a string here
-            class GuiHint(object):
-                def __init__(self, ws):
-                    self._ws = ws
-
-                def __call__(self, w):
-                    return (self._ws.replace('addWidget', 'addLayout') if 'layout' in w else self._ws) % w
-
-                def __str__(self):
-                    return self._ws
-            return GuiHint(widget_str)
         #########################
         # Import Type
         #########################
@@ -411,3 +386,132 @@ class Param(Element):
 
     def get_opt(self, item):
         return self.options.attributes[self.get_value()][item]
+
+    ##############################################
+    # GUI Hint
+    ##############################################
+    def parse_gui_hint(self, expr):
+        """
+        Parse/validate gui hint value.
+
+        Args:
+            expr: gui_hint string from a block's 'gui_hint' param
+
+        Returns:
+            string of python code for positioning GUI elements in pyQT
+        """
+        self.hostage_cells.clear()
+
+        # Parsing
+        if ':' in expr:
+            tab, pos = expr.split(':')
+        elif ',' in expr:
+            tab, pos = '', expr
+        else:
+            tab, pos = expr, ''
+
+        if '@' in tab:
+            tab, index = tab.split('@')
+        else:
+            index = '0'
+        index = int(index)
+
+        # Validation
+        def parse_pos():
+            e = self.parent_flowgraph.evaluate(pos)
+
+            if not isinstance(e, (list, tuple)) or len(e) not in (2, 4) or not all(isinstance(ei, int) for ei in e):
+                raise Exception('Invalid GUI Hint entered: {e!r} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
+
+            if len(e) == 2:
+                row, col = e
+                row_span = col_span = 1
+            else:
+                row, col, row_span, col_span = e
+
+            if (row < 0) or (col < 0):
+                raise Exception('Invalid GUI Hint entered: {e!r} (non-negative integers only).'.format(e=e))
+
+            if (row_span < 1) or (col_span < 1):
+                raise Exception('Invalid GUI Hint entered: {e!r} (positive row/column span required).'.format(e=e))
+
+            return row, col, row_span, col_span
+
+        def validate_tab():
+            tabs = (block for block in self.parent_flowgraph.iter_enabled_blocks()
+                    if block.key == 'qtgui_tab_widget' and block.name == tab)
+            tab_block = next(iter(tabs), None)
+            if not tab_block:
+                raise Exception('Invalid tab name entered: {tab} (Tab name not found).'.format(tab=tab))
+
+            tab_index_size = int(tab_block.params['num_tabs'].value)
+            if index >= tab_index_size:
+                raise Exception('Invalid tab index entered: {tab}@{index} (Index out of range).'.format(
+                    tab=tab, index=index))
+
+        # Collision Detection
+        def collision_detection(row, col, row_span, col_span):
+            my_parent = '{tab}@{index}'.format(tab=tab, index=index) if tab else 'main'
+            # Calculate hostage cells
+            for r in range(row, row + row_span):
+                for c in range(col, col + col_span):
+                    self.hostage_cells.add((my_parent, (r, c)))
+
+            for other in self.get_all_params('gui_hint'):
+                if other is self:
+                    continue
+                collision = next(iter(self.hostage_cells & other.hostage_cells), None)
+                if collision:
+                    raise Exception('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
+                        block=other.parent_block.name, parent=collision[0], cell=collision[1]
+                    ))
+
+        # Code Generation
+        if tab:
+            validate_tab()
+            layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
+        else:
+            layout = 'top_grid_layout'
+
+        widget = '%s'  # to be fill-out in the mail template
+
+        if pos:
+            row, col, row_span, col_span = parse_pos()
+            collision_detection(row, col, row_span, col_span)
+
+            widget_str = textwrap.dedent("""
+                self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
+                for r in range({row}, {row_end}):
+                    self.{layout}.setRowStretch(r, 1)
+                for c in range({col}, {col_end}):
+                    self.{layout}.setColumnStretch(c, 1)
+            """.strip('\n')).format(
+                layout=layout, widget=widget,
+                row=row, row_span=row_span, row_end=row+row_span,
+                col=col, col_span=col_span, col_end=col+col_span,
+            )
+
+        else:
+            widget_str = 'self.{layout}.addWidget({widget})'.format(layout=layout, widget=widget)
+
+        return widget_str
+
+    def get_all_params(self, dtype, key=None):
+        """
+        Get all the params from the flowgraph that have the given type and
+        optionally a given key
+
+        Args:
+            type: the specified type
+            key: the key to match against
+
+        Returns:
+            a list of params
+        """
+        params = []
+        for block in self.parent_flowgraph.iter_enabled_blocks():
+            params.extend(
+                param for param in block.params.values()
+                if param.dtype == dtype and (key is None or key == param.name)
+            )
+        return params
