@@ -28,8 +28,8 @@ import Utils
 import pango
 
 TAB_LABEL_MARKUP_TMPL="""\
-#set $foreground = $valid and 'black' or 'red'
-<span foreground="$foreground">$encode($tab)</span>"""
+#set $foreground = not $valid and 'foreground="red"' or ''
+<span $foreground>$encode($tab)</span>"""
 
 
 def get_title_label(title):
