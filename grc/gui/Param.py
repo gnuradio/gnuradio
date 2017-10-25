@@ -23,7 +23,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from . import Colors, Utils, Constants
+from . import Colors, Constants
 from .Element import Element
 from . import Utils
 
@@ -133,17 +133,18 @@ class EntryParam(InputParam):
     def set_color(self, color):
         need_status_color = self.label not in self.get_children()
         text_color = (
-            Colors.PARAM_ENTRY_TEXT_COLOR if not need_status_color else
+            None if not need_status_color else
             gtk.gdk.color_parse('blue') if self._have_pending_changes else
             gtk.gdk.color_parse('red') if not self.param.is_valid() else
-            Colors.PARAM_ENTRY_TEXT_COLOR)
+            None)
         base_color = (
             Colors.BLOCK_DISABLED_COLOR
             if need_status_color and not self.param.get_parent().get_enabled()
             else gtk.gdk.color_parse(color)
         )
         self._input.modify_base(gtk.STATE_NORMAL, base_color)
-        self._input.modify_text(gtk.STATE_NORMAL, text_color)
+        if text_color:
+            self._input.modify_text(gtk.STATE_NORMAL, text_color)
 
     def set_tooltip_text(self, text):
         try:
@@ -179,7 +180,6 @@ class MultiLineEntryParam(InputParam):
 
     def set_color(self, color):
         self._view.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-        self._view.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
     def set_tooltip_text(self, text):
         try:
@@ -243,8 +243,7 @@ class PythonEditorParam(InputParam):
         pass  # we never update the value from here
 
     def set_color(self, color):
-        # self._button.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-        self._button.modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
+        pass
 
     def _apply_change(self, *args):
         pass
@@ -305,10 +304,8 @@ class EnumEntryParam(InputParam):
     def set_color(self, color):
         if self._input.get_active() == -1: #custom entry, use color
             self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-            self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
         else: #from enum, make pale background
             self._input.get_child().modify_base(gtk.STATE_NORMAL, Colors.ENTRYENUM_CUSTOM_COLOR)
-            self._input.get_child().modify_text(gtk.STATE_NORMAL, Colors.PARAM_ENTRY_TEXT_COLOR)
 
 
 class FileParam(EntryParam):
@@ -365,9 +362,9 @@ PARAM_MARKUP_TMPL="""\
 <span foreground="$foreground" font_desc="$font"><b>$encode($param.get_name()): </b>$encode(repr($param).replace('\\n',' '))</span>"""
 
 PARAM_LABEL_MARKUP_TMPL="""\
-#set $foreground = $modified and 'blue' or $param.is_valid() and 'black' or 'red'
+#set $foreground = $modified and 'foreground="blue"' or not $param.is_valid() and 'foreground="red"' or ''
 #set $underline = $has_cb and 'low' or 'none'
-<span underline="$underline" foreground="$foreground" font_desc="Sans 9">$encode($param.get_name())</span>"""
+<span underline="$underline" $foreground font_desc="Sans 9">$encode($param.get_name())</span>"""
 
 TIP_MARKUP_TMPL="""\
 ########################################
