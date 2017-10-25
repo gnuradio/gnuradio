@@ -34,9 +34,10 @@ class InputParam(gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
     expand = False
 
-    def __init__(self, param, changed_callback=None, editing_callback=None):
+    def __init__(self, param, parent, changed_callback=None, editing_callback=None):
         gtk.HBox.__init__(self)
         self.param = param
+        self._parent = parent
         self._changed_callback = changed_callback
         self._editing_callback = editing_callback
         self.label = gtk.Label() #no label, markup is added by set_markup
@@ -236,7 +237,7 @@ class PythonEditorParam(InputParam):
 
     def open_editor(self, widget=None):
         flowgraph = self.param.get_parent().get_parent()
-        flowgraph.install_external_editor(self.param)
+        flowgraph.install_external_editor(self.param, self._parent)
 
     def get_text(self):
         pass  # we never update the value from here
@@ -339,10 +340,10 @@ class FileParam(EntryParam):
 
         #build the dialog
         if self.param.get_type() == 'file_open':
-            file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
+            file_dialog = gtk.FileChooserDialog('Open a Data File...', self._parent,
                 gtk.FILE_CHOOSER_ACTION_OPEN, ('gtk-cancel',gtk.RESPONSE_CANCEL,'gtk-open',gtk.RESPONSE_OK))
         elif self.param.get_type() == 'file_save':
-            file_dialog = gtk.FileChooserDialog('Save a Data File...', None,
+            file_dialog = gtk.FileChooserDialog('Save a Data File...', self._parent,
                 gtk.FILE_CHOOSER_ACTION_SAVE, ('gtk-cancel',gtk.RESPONSE_CANCEL, 'gtk-save',gtk.RESPONSE_OK))
             file_dialog.set_do_overwrite_confirmation(True)
             file_dialog.set_current_name(basename) #show the current filename
