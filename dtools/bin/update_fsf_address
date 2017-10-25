@@ -23,7 +23,7 @@ import re
 import os
 import os.path
 import sys
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 dry_run = False
 modified_files = []
@@ -109,22 +109,22 @@ def handle_file_or_dir(file_or_dir):
 def main():
     global dry_run
 
-    usage = '%prog: [options] [file_or_dir...]'
-    parser = OptionParser (usage=usage)
-    parser.add_option('-l', '--list-modified-files', action='store_true', default=False,
-                      help='List modified files to stdout [default=%default]')
-    parser.add_option('', '--dry-run', action='store_true', default=False,
-                      help="Don't modify any files, just report what would be modified [default=%default]")
-    (options, args) = parser.parse_args()
+    parser = ArgumentParser()
+    parser.add_argument('-l', '--list-modified-files', action='store_true',
+                      help='List modified files to stdout')
+    parser.add_argument('--dry-run', action='store_true',
+                      help="Don't modify any files, just report what would be modified")
+    parser.add_argument('file_or_dir', metavar='FILE-OR-DIR', nargs='*')
+    args = parser.parse_args()
 
-    dry_run = options.dry_run
-    if options.dry_run:
-        options.list_modified_files = True
+    dry_run = args.dry_run
+    if args.dry_run:
+        args.list_modified_files = True
 
-    for file_or_dir in args:
+    for file_or_dir in args.file_or_dir:
         handle_file_or_dir(file_or_dir)
 
-    if options.list_modified_files:
+    if args.list_modified_files:
         for f in modified_files:
             sys.stdout.write(f + '\n')
 

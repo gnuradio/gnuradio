@@ -19,10 +19,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 import struct
+
 import numpy
+import six
+
 from gnuradio import gru
-import crc
+from . import crc
+
 
 def conv_packed_binary_string_to_1_0_string(s):
     """
@@ -35,7 +43,7 @@ def conv_packed_binary_string_to_1_0_string(s):
             t = (x >> i) & 0x1
             r.append(t)
 
-    return ''.join(map(lambda x: chr(x + ord('0')), r))
+    return ''.join([chr(x + ord('0')) for x in r])
 
 def conv_1_0_string_to_packed_binary_string(s):
     """
@@ -46,7 +54,7 @@ def conv_1_0_string_to_packed_binary_string(s):
     to get to a multiple of 8.
     """
     if not is_1_0_string(s):
-        raise ValueError, "Input must be a string containing only 0's and 1's"
+        raise ValueError("Input must be a string containing only 0's and 1's")
 
     # pad to multiple of 8
     padded = False
@@ -83,7 +91,7 @@ def is_1_0_string(s):
     return True
 
 def string_to_hex_list(s):
-    return map(lambda x: hex(ord(x)), s)
+    return [hex(ord(x)) for x in s]
 
 
 def whiten(s, o):
@@ -98,8 +106,8 @@ def dewhiten(s, o):
 def make_header(payload_len, whitener_offset=0):
     # Upper nibble is offset, lower 12 bits is len
     val = ((whitener_offset & 0xf) << 12) | (payload_len & 0x0fff)
-    #print "offset =", whitener_offset, " len =", payload_len, " val=", val
-    return struct.pack('!HH', val, val)
+    #print("offset =", whitener_offset, " len =", payload_len, " val=", val)
+    return struct.pack(b'!HH', val, val)
 
 def make_packet(payload, samples_per_symbol, bits_per_symbol,
                 preamble=default_preamble, access_code=default_access_code,
@@ -123,13 +131,13 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     and finally CRC-32.
     """
     if not is_1_0_string(preamble):
-        raise ValueError, "preamble must be a string containing only 0's and 1's (%r)" % (preamble,)
+        raise ValueError("preamble must be a string containing only 0's and 1's (%r)" % (preamble,))
 
     if not is_1_0_string(access_code):
-        raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
+        raise ValueError("access_code must be a string containing only 0's and 1's (%r)" % (access_code,))
 
     if not whitener_offset >=0 and whitener_offset < 16:
-        raise ValueError, "whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,)
+        raise ValueError("whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,))
 
     (packed_access_code, padded) = conv_1_0_string_to_packed_binary_string(access_code)
     (packed_preamble, ignore) = conv_1_0_string_to_packed_binary_string(preamble)
@@ -138,24 +146,24 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
         payload_with_crc = crc.gen_and_append_crc32(payload)
     else:
         payload_with_crc = payload
-    #print "outbound crc =", string_to_hex_list(payload_with_crc[-4:])
+    #print("outbound crc =", string_to_hex_list(payload_with_crc[-4:]))
 
     L = len(payload_with_crc)
     MAXLEN = len(random_mask_tuple)
     if L > MAXLEN:
-        raise ValueError, "len(payload) must be in [0, %d]" % (MAXLEN,)
+        raise ValueError("len(payload) must be in [0, %d]" % (MAXLEN,))
 
     if whitening:
-        pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
-                       whiten(payload_with_crc, whitener_offset), '\x55'))
+        pkt = b''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                       whiten(payload_with_crc, whitener_offset), b'\x55'))
     else:
-        pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
-                       (payload_with_crc), '\x55'))
+        pkt = b''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                       (payload_with_crc), b'\x55'))
 
     if pad_for_usrp:
-        pkt = pkt + (_npadding_bytes(len(pkt), int(samples_per_symbol), bits_per_symbol) * '\x55')
+        pkt = pkt + (_npadding_bytes(len(pkt), int(samples_per_symbol), bits_per_symbol) * b'\x55')
 
-    #print "make_packet: len(pkt) =", len(pkt)
+    #print("make_packet: len(pkt) =", len(pkt))
     return pkt
 
 def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
@@ -175,7 +183,7 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
         number of bytes of padding to append.
     """
     modulus = 128
-    byte_modulus = gru.lcm(modulus/8, samples_per_symbol) * bits_per_symbol / samples_per_symbol
+    byte_modulus = gru.lcm(modulus // 8, samples_per_symbol) * bits_per_symbol // samples_per_symbol
     r = pkt_byte_len % byte_modulus
     if r == 0:
         return 0
@@ -206,10 +214,10 @@ def unmake_packet(whitened_payload_with_crc, whitener_offset=0,
         ok = True
 
     if 0:
-        print "payload_with_crc =", string_to_hex_list(payload_with_crc)
-        print "ok = %r, len(payload) = %d" % (ok, len(payload))
-        print "payload =", string_to_hex_list(payload)
-        print ""
+        print("payload_with_crc =", string_to_hex_list(payload_with_crc))
+        print("ok = %r, len(payload) = %d" % (ok, len(payload)))
+        print("payload =", string_to_hex_list(payload))
+        print("")
 
     return ok, payload
 

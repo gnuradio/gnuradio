@@ -20,13 +20,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 def calc_expected_result(src_data, n):
     assert (len(src_data) % n) == 0
     result = [list() for x in range(n)]
     #print "len(result) =", len(result)
-    for i in xrange(len(src_data)):
+    for i in range(len(src_data)):
         (result[i % n]).append(src_data[i])
     return [tuple(x) for x in result]
 
@@ -45,7 +46,7 @@ class test_pipe_fittings(gr_unittest.TestCase):
         """
         n = 8
         src_len = n * 8
-        src_data = range(src_len)
+        src_data = list(range(src_len))
 
         expected_results = calc_expected_result(src_data, n)
         #print "expected results: ", expected_results

@@ -19,8 +19,10 @@
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, filter
-import dtv_swig as dtv
+from . import dtv_swig as dtv
 
 # FIXME move these into separate constants module
 ATSC_CHANNEL_BW   = 6.0e6
@@ -38,10 +40,10 @@ class atsc_rx_filter(gr.hier_block2):
         nfilts = 16
         output_rate = ATSC_SYMBOL_RATE*sps # Desired oversampled sample rate
         filter_rate = input_rate*nfilts
-        symbol_rate = ATSC_SYMBOL_RATE/2.0 # One-sided bandwidth of sideband
+        symbol_rate = ATSC_SYMBOL_RATE / 2.0 # One-sided bandwidth of sideband
         excess_bw = 0.1152 #1.0-(0.5*ATSC_SYMBOL_RATE/ATSC_CHANNEL_BW) # ~10.3%
         ntaps = int((2*ATSC_RRC_SYMS+1)*sps*nfilts)
-        interp = output_rate/input_rate
+        interp = output_rate / input_rate
         gain = nfilts*symbol_rate/filter_rate
         rrc_taps = filter.firdes.root_raised_cosine(gain,             # Filter gain
                                                     filter_rate,      # PFB filter prototype rate

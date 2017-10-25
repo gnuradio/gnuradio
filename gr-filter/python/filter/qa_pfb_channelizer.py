@@ -20,13 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter, blocks, analog
 import math, cmath
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 
@@ -45,7 +47,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         self.ifs = self.M*self.fs
 
         self.taps = filter.firdes.low_pass_2(
-            1, self.ifs, self.fs/2, self.fs/10,
+            1, self.ifs, self.fs / 2, self.fs / 10,
             attenuation_dB=80,
             window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
@@ -67,7 +69,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         """Test roundig error handling for oversample rate (ok)."""
         channels, oversample = 36, 25.
         filter.pfb.channelizer_ccf(channels, taps=self.taps,
-                                   oversample_rate=channels/oversample)
+                                   oversample_rate=channels / oversample)
 
     def test_0003(self):
         """Test roundig error handling for oversample rate, (bad)."""
@@ -83,7 +85,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         tb = gr.top_block()
         signals = []
         add = blocks.add_cc()
-        for i in xrange(len(self.freqs)):
+        for i in range(len(self.freqs)):
             f = self.freqs[i] + i*self.fs
             signals.append(analog.sig_source_c(self.ifs, analog.GR_SIN_WAVE, f, 1))
             tb.connect(signals[i], (add,i))
@@ -97,7 +99,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
     def check_channelizer(self, channelizer_block):
         signals = list()
         add = blocks.add_cc()
-        for i in xrange(len(self.freqs)):
+        for i in range(len(self.freqs)):
             f = self.freqs[i] + i*self.fs
             data = sig_source_c(self.ifs, f, 1, self.N)
             signals.append(blocks.vector_source_c(data))
@@ -109,7 +111,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         self.tb.connect(add, channelizer_block)
 
         snks = list()
-        for i in xrange(self.M):
+        for i in range(self.M):
             snks.append(blocks.vector_sink_c())
             #self.tb.connect((s2ss,i), (channelizer_block,i))
             self.tb.connect((channelizer_block, i), snks[i])
@@ -128,8 +130,8 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         Ntest = 50
         expected = expected[-Ntest:]
         received = received[-Ntest:]
-        expected = [x/expected[0] for x in expected]
-        received = [x/received[0] for x in received]
+        expected = [x / expected[0] for x in expected]
+        received = [x / received[0] for x in received]
         self.assertComplexTuplesAlmostEqual(expected, received, 3)
 
 
@@ -142,7 +144,7 @@ class test_pfb_channelizer(gr_unittest.TestCase):
             if diff < -math.pi:
                 diff += 2*math.pi
             freqs.append(diff)
-        freq = float(sum(freqs))/len(freqs)
+        freq = float(sum(freqs)) / len(freqs)
         freq /= 2*math.pi
         return freq
 
@@ -154,12 +156,12 @@ class test_pfb_channelizer(gr_unittest.TestCase):
         delay = int(delay)
 
         # Create a time scale that's delayed to match the filter delay
-        t = map(lambda x: float(x)/self.fs, xrange(delay, L+delay))
+        t = [float(x) / self.fs for x in range(delay, L+delay)]
 
         # Create known data as complex sinusoids at the different baseband freqs
         # the different channel numbering is due to channelizer output order.
-        expected_data = [map(lambda x: math.cos(2.*math.pi*f*x) +
-                             1j*math.sin(2.*math.pi*f*x), t) for f in self.freqs]
+        expected_data = [[math.cos(2.*math.pi*f*x) +
+                             1j*math.sin(2.*math.pi*f*x) for x in t] for f in self.freqs]
         return expected_data
 
 

@@ -8,12 +8,6 @@
       <block>virtual_source</block>
       <block>virtual_sink</block>
 
-      <block>bus_sink</block>
-      <block>bus_source</block>
-      <block>bus_structure_sink</block>
-      <block>bus_structure_source</block>
-
-      <block>epy_block</block>
       <block>epy_module</block>
 
       <block>note</block>

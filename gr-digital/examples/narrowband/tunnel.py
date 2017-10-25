@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2006,2009,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 
 
 # ////////////////////////////////////////////////////////////////////
@@ -49,7 +53,7 @@ from uhd_interface import uhd_receiver
 import os, sys
 import random, time, struct
 
-#print os.getpid()
+#print(os.getpid())
 #raw_input('Attach and press enter')
 
 # ////////////////////////////////////////////////////////////////////
@@ -71,7 +75,7 @@ IFF_ONE_QUEUE	= 0x2000   # beats me ;)
 
 def open_tun_interface(tun_device_filename):
     from fcntl import ioctl
-    
+
     mode = IFF_TAP | IFF_NO_PI
     TUNSETIFF = 0x400454ca
 
@@ -79,7 +83,7 @@ def open_tun_interface(tun_device_filename):
     ifs = ioctl(tun, TUNSETIFF, struct.pack("16sH", "gr%d", mode))
     ifname = ifs[:16].strip("\x00")
     return (tun, ifname)
-    
+
 
 # ////////////////////////////////////////////////////////////////////
 #                     the flow graph
@@ -94,20 +98,20 @@ class my_top_block(gr.top_block):
 
         # Get the modulation's bits_per_symbol
         args = mod_class.extract_kwargs_from_options(options)
-        symbol_rate = options.bitrate / mod_class(**args).bits_per_symbol()
+        symbol_rate = options.bitrate / mod_class(**args.bits_per_symbol())
 
         self.source = uhd_receiver(options.args, symbol_rate,
                                    options.samples_per_symbol,
                                    options.rx_freq, options.rx_gain,
                                    options.spec, options.antenna,
                                    options.verbose)
-        
+
         self.sink = uhd_transmitter(options.args, symbol_rate,
                                     options.samples_per_symbol,
                                     options.tx_freq, options.tx_gain,
                                     options.spec, options.antenna,
                                     options.verbose)
-        
+
         options.samples_per_symbol = self.source._sps
 
         self.txpath = transmit_path(mod_class, options)
@@ -131,7 +135,7 @@ class my_top_block(gr.top_block):
 
         self.sink.set_freq(target_freq)
         self.source.set_freq(target_freq)
-        
+
 
 # ////////////////////////////////////////////////////////////////////
 #                           Carrier Sense MAC
@@ -166,7 +170,7 @@ class cs_mac(object):
             payload: contents of the packet (string)
         """
         if self.verbose:
-            print "Rx: ok = %r  len(payload) = %4d" % (ok, len(payload))
+            print("Rx: ok = %r  len(payload) = %4d" % (ok, len(payload)))
         if ok:
             os.write(self.tun_fd, payload)
 
@@ -186,7 +190,7 @@ class cs_mac(object):
                 break
 
             if self.verbose:
-                print "Tx: len(payload) = %4d" % (len(payload),)
+                print("Tx: len(payload) = %4d" % (len(payload),))
 
             delay = min_delay
             while self.tb.carrier_sensed():
@@ -209,10 +213,10 @@ def main():
 
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
-    parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
+    parser.add_option("-m", "--modulation", type="choice", choices=list(mods.keys()),
                       default='gmsk',
                       help="Select modulation from: %s [default=%%default]"
-                            % (', '.join(mods.keys()),))
+                            % (', '.join(list(mods.keys())),))
 
     parser.add_option("-s", "--size", type="eng_float", default=1500,
                       help="set packet size [default=%default]")
@@ -227,10 +231,10 @@ def main():
     uhd_receiver.add_options(parser)
     uhd_transmitter.add_options(parser)
 
-    for mod in mods.values():
+    for mod in list(mods.values()):
         mod.add_options(expert_grp)
 
-    for demod in demods.values():
+    for demod in list(demods.values()):
         demod.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
@@ -247,7 +251,7 @@ def main():
         realtime = True
     else:
         realtime = False
-        print "Note: failed to enable realtime scheduling"
+        print("Note: failed to enable realtime scheduling")
 
     # instantiate the MAC
     mac = cs_mac(tun_fd, verbose=True)
@@ -261,26 +265,26 @@ def main():
     mac.set_top_block(tb)    # give the MAC a handle for the PHY
 
     if tb.txpath.bitrate() != tb.rxpath.bitrate():
-        print "WARNING: Transmit bitrate = %sb/sec, Receive bitrate = %sb/sec" % (
+        print("WARNING: Transmit bitrate = %sb/sec, Receive bitrate = %sb/sec" % (
             eng_notation.num_to_str(tb.txpath.bitrate()),
-            eng_notation.num_to_str(tb.rxpath.bitrate()))
-             
-    print "modulation:     %s"   % (options.modulation,)
-    print "freq:           %s"      % (eng_notation.num_to_str(options.tx_freq))
-    print "bitrate:        %sb/sec" % (eng_notation.num_to_str(tb.txpath.bitrate()),)
-    print "samples/symbol: %3d" % (tb.txpath.samples_per_symbol(),)
+            eng_notation.num_to_str(tb.rxpath.bitrate())))
+
+    print("modulation:     %s"   % (options.modulation,))
+    print("freq:           %s"      % (eng_notation.num_to_str(options.tx_freq)))
+    print("bitrate:        %sb/sec" % (eng_notation.num_to_str(tb.txpath.bitrate()),))
+    print("samples/symbol: %3d" % (tb.txpath.samples_per_symbol(),))
 
     tb.rxpath.set_carrier_threshold(options.carrier_threshold)
-    print "Carrier sense threshold:", options.carrier_threshold, "dB"
-    
-    print
-    print "Allocated virtual ethernet interface: %s" % (tun_ifname,)
-    print "You must now use ifconfig to set its IP address. E.g.,"
-    print
-    print "  $ sudo ifconfig %s 192.168.200.1" % (tun_ifname,)
-    print
-    print "Be sure to use a different address in the same subnet for each machine."
-    print
+    print("Carrier sense threshold:", options.carrier_threshold, "dB")
+
+    print()
+    print("Allocated virtual ethernet interface: %s" % (tun_ifname,))
+    print("You must now use ifconfig to set its IP address. E.g.,")
+    print()
+    print("  $ sudo ifconfig %s 192.168.200.1" % (tun_ifname,))
+    print()
+    print("Be sure to use a different address in the same subnet for each machine.")
+    print()
 
 
     tb.start()    # Start executing the flow graph (runs in separate threads)
@@ -289,7 +293,7 @@ def main():
 
     tb.stop()     # but if it does, tell flow graph to stop.
     tb.wait()     # wait for it to finish
-                
+
 
 if __name__ == '__main__':
     try:

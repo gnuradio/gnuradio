@@ -16,13 +16,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 
-def hide_bokeh_gui_options_if_not_installed(options):
+def hide_bokeh_gui_options_if_not_installed(options_blk):
     try:
         import bokehgui
     except ImportError:
-        generate_option = options.get_param('generate_options')
-        list_generate_option = generate_option.get_options()
-        for option in list_generate_option:
-            if option.get_key() == 'bokeh_gui':
-                list_generate_option.remove(option)
-                return
+        for param in options_blk.parameters_data:
+            if param['id'] == 'generate_options':
+                ind = param['options'].index('bokeh_gui')
+                del param['options'][ind]
+                del param['option_labels'][ind]

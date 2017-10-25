@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 #
 # Copyright 2012-2014 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import division
 
 import numpy
 
@@ -42,7 +44,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
                       0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
         expected_result = tuple(range(1, 16)) + (0, 0, 0)
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
-        n_syms = len(tx_symbols)/fft_len
+        n_syms = len(tx_symbols) // fft_len
         src = blocks.vector_source_c(tx_symbols, False, fft_len)
         serializer = digital.ofdm_serializer_vcc(fft_len, occupied_carriers, self.tsb_key, "", 0, "", False)
         sink = blocks.tsb_vector_sink_c(tsb_key=self.tsb_key)
@@ -60,7 +62,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
         )
         expected_result = tuple(range(18))
         occupied_carriers = ((13, 14, 15, 1, 2, 3), (-4, -2, -1, 1, 2, 4),)
-        n_syms = len(tx_symbols)/fft_len
+        n_syms = len(tx_symbols) // fft_len
         src = blocks.vector_source_c(tx_symbols, False, fft_len)
         serializer = digital.ofdm_serializer_vcc(fft_len, occupied_carriers, self.tsb_key)
         sink = blocks.tsb_vector_sink_c(tsb_key=self.tsb_key)
@@ -71,14 +73,14 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
     def test_002_with_offset (self):
         """ Standard test, carrier offset """
         fft_len = 16
-        tx_symbols = range(1, 16);
+        tx_symbols = list(range(1, 16));
         tx_symbols = (0, 0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,
                       0, 0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12,
                       0, 0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0)
         carr_offset = 1 # Compare this with tx_symbols from the previous test
         expected_result = tuple(range(1, 16)) + (0, 0, 0)
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
-        n_syms = len(tx_symbols)/fft_len
+        n_syms = len(tx_symbols) // fft_len
         offsettag = gr.tag_t()
         offsettag.offset = 0
         offsettag.key = pmt.string_to_symbol("ofdm_sync_carr_offset")
@@ -156,7 +158,7 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
                        pilot_carriers,
                        pilot_symbols, (),
                        self.tsb_key)
-        tx_ifft = fft.fft_vcc(fft_len, False, (1.0/fft_len,)*fft_len, True)
+        tx_ifft = fft.fft_vcc(fft_len, False, (1.0 / fft_len,)*fft_len, True)
         oscillator = analog.sig_source_c(1.0, analog.GR_COS_WAVE, freq_offset, 1.0)
         mixer = blocks.multiply_cc()
         rx_fft  = fft.fft_vcc(fft_len, True, (), True)
@@ -182,13 +184,13 @@ class qa_ofdm_serializer_vcc (gr_unittest.TestCase):
     def test_005_packet_len_tag (self):
         """ Standard test """
         fft_len = 16
-        tx_symbols = range(1, 16);
+        tx_symbols = list(range(1, 16));
         tx_symbols = (0, 1,  1j,  2,  3, 0, 0, 0, 0, 0, 0, 4,  5,  2j, 6,  0,
                       0, 7,  8,  3j,  9, 0, 0, 0, 0, 0, 0, 10, 4j, 11, 12, 0,
                       0, 13, 1j, 14, 15, 0, 0, 0, 0, 0, 0, 0,  0,  2j, 0,  0)
         expected_result = tuple(range(1, 16))
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
-        n_syms = len(tx_symbols)/fft_len
+        n_syms = len(tx_symbols) // fft_len
         packet_len_tsb_key = "packet_len"
         tag2 = gr.tag_t()
         tag2.offset = 0

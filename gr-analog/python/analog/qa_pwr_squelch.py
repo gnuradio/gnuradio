@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, analog, blocks
 
 class test_pwr_squelch(gr_unittest.TestCase):
@@ -61,7 +63,7 @@ class test_pwr_squelch(gr_unittest.TestCase):
         alpha = 0.0001
         thr = -25
 
-        src_data = map(lambda x: float(x)/10.0, range(1, 40))
+        src_data = [float(x) / 10.0 for x in range(1, 40)]
         src = blocks.vector_source_c(src_data)
         op = analog.pwr_squelch_cc(thr, alpha)
         dst = blocks.vector_sink_c()
@@ -107,7 +109,7 @@ class test_pwr_squelch(gr_unittest.TestCase):
         alpha = 0.0001
         thr = -25
 
-        src_data = map(lambda x: float(x)/10.0, range(1, 40))
+        src_data = [float(x) / 10.0 for x in range(1, 40)]
         src = blocks.vector_source_f(src_data)
         op = analog.pwr_squelch_ff(thr, alpha)
         dst = blocks.vector_sink_f()

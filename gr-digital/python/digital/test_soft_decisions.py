@@ -1,30 +1,35 @@
 #!/usr/bin/env python
 #
 # Copyright 2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
 
 import numpy, pylab, sys
 from gnuradio import digital
-from soft_dec_lut_gen import *
-from psk_constellations import *
-from qam_constellations import *
+from .soft_dec_lut_gen import *
+from .psk_constellations import *
+from .qam_constellations import *
 
 def test_qpsk(i, sample, prec):
     qpsk_const_list = [psk_4_0, psk_4_1, psk_4_2, psk_4_3,
@@ -61,7 +66,7 @@ def test_qpsk(i, sample, prec):
             y_cpp_table, y_cpp_raw_calc, constel, code, c)
 
 def test_qam16(i, sample, prec):
-    sample = sample/1
+    sample = sample / 1
     qam_const_list = [qam_16_0, ]
     qam_lut_gen_list = [sd_qam_16_0, ]
 
@@ -114,12 +119,12 @@ if __name__ == "__main__":
 
     k = numpy.log2(len(constel))
 
-    print "Sample: ", x
-    print "Python Generator Calculated: ", (y_python_gen_calc)
-    print "Python Generator Table:      ", (y_python_table)
-    print "Python Raw calc:             ", (y_python_raw_calc)
-    print "C++ Table calc:              ", (y_cpp_table)
-    print "C++ Raw calc:                ", (y_cpp_raw_calc)
+    print("Sample: ", x)
+    print("Python Generator Calculated: ", (y_python_gen_calc))
+    print("Python Generator Table:      ", (y_python_table))
+    print("Python Raw calc:             ", (y_python_raw_calc))
+    print("C++ Table calc:              ", (y_cpp_table))
+    print("C++ Raw calc:                ", (y_cpp_raw_calc))
 
     fig = pylab.figure(1)
     sp1 = fig.add_subplot(1,1,1)

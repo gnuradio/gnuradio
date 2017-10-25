@@ -41,21 +41,21 @@ after importing by using:
 
 
 \section audio_usage Usage
-For an audio source, a typical OptionParser option and it's use looks
+For an audio source, a typical ArgumentParser option and it's use looks
 like:
 
 \code
-    parser.add_option("-O", "--audio-output", type="string", default="",
+    parser.add_argument("-O", "--audio-output", default="",
                        help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
     audio_rate = 32e3
     audio_sink = audio.sink (int (audio_rate), options.audio_output)
 \endcode
 
-Similarly, an audio sink would have a typical OptionParser option and
+Similarly, an audio sink would have a typical ArgumentParser option and
 its use would look like:
 
 \code
-    parser.add_option("-I", "--audio-input", type="string", default="",
+    parser.add_argument("-I", "--audio-input", default="",
                       help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
     audio_rate = 32e3
     audio_source = audio.source(int(audio_rate), audio_input)

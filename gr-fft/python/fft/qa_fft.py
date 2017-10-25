@@ -19,6 +19,8 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, fft, blocks
 
 # Note: Octave code to verify these results:

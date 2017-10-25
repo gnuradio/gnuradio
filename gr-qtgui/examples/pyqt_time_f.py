@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2011,2012,2015 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,16 +20,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import sys
 
 try:
     from gnuradio import qtgui
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtWidgets, Qt
     import sip
 except ImportError:
-    sys.stderr.write("Error: Program requires PyQt4 and gr-qtgui.\n")
+    sys.stderr.write("Error: Program requires PyQt5 and gr-qtgui.\n")
     sys.exit(1)
 
 try:
@@ -38,85 +40,80 @@ except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
     sys.exit(1)
 
-class dialog_box(QtGui.QWidget):
+class dialog_box(QtWidgets.QWidget):
     def __init__(self, display, control):
-        QtGui.QWidget.__init__(self, None)
+        QtWidgets.QWidget.__init__(self, None)
         self.setWindowTitle('PyQt Test GUI')
 
-        self.boxlayout = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight, self)
+        self.boxlayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.LeftToRight, self)
         self.boxlayout.addWidget(display, 1)
         self.boxlayout.addWidget(control)
 
         self.resize(800, 500)
 
-class control_box(QtGui.QWidget):
+class control_box(QtWidgets.QWidget):
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self.setWindowTitle('Control Panel')
 
         self.setToolTip('Control the signals')
-        QtGui.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
+        QtWidgets.QToolTip.setFont(Qt.QFont('OldEnglish', 10))
 
-        self.layout = QtGui.QFormLayout(self)
+        self.layout = QtWidgets.QFormLayout(self)
 
         # Control the first signal
-        self.freq1Edit = QtGui.QLineEdit(self)
+        self.freq1Edit = QtWidgets.QLineEdit(self)
         self.freq1Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 1 Frequency:", self.freq1Edit)
-        self.connect(self.freq1Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.freq1EditText)
+        self.freq1Edit.editingFinished.connect(self.freq1EditText)
 
-        self.amp1Edit = QtGui.QLineEdit(self)
+        self.amp1Edit = QtWidgets.QLineEdit(self)
         self.amp1Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 1 Amplitude:", self.amp1Edit)
-        self.connect(self.amp1Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.amp1EditText)
+        self.amp1Edit.editingFinished.connect(self.amp1EditText)
 
 
         # Control the second signal
-        self.freq2Edit = QtGui.QLineEdit(self)
+        self.freq2Edit = QtWidgets.QLineEdit(self)
         self.freq2Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 2 Frequency:", self.freq2Edit)
-        self.connect(self.freq2Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.freq2EditText)
+        self.freq2Edit.editingFinished.connect(self.freq2EditText)
 
 
-        self.amp2Edit = QtGui.QLineEdit(self)
+        self.amp2Edit = QtWidgets.QLineEdit(self)
         self.amp2Edit.setMinimumWidth(100)
         self.layout.addRow("Signal 2 Amplitude:", self.amp2Edit)
-        self.connect(self.amp2Edit, QtCore.SIGNAL("editingFinished()"),
-                     self.amp2EditText)
+        self.amp2Edit.editingFinished.connect(self.amp2EditText)
 
-        self.quit = QtGui.QPushButton('Close', self)
+        self.quit = QtWidgets.QPushButton('Close', self)
         self.quit.setMinimumWidth(100)
         self.layout.addWidget(self.quit)
 
-        self.connect(self.quit, QtCore.SIGNAL('clicked()'),
-                     QtGui.qApp, QtCore.SLOT('quit()'))
+        self.quit.clicked.connect(QtWidgets.qApp.quit)
 
     def attach_signal1(self, signal):
         self.signal1 = signal
-        self.freq1Edit.setText(QtCore.QString("%1").arg(self.signal1.frequency()))
-        self.amp1Edit.setText(QtCore.QString("%1").arg(self.signal1.amplitude()))
+        self.freq1Edit.setText(("{0}").format(self.signal1.frequency()))
+        self.amp1Edit.setText(("{0}").format(self.signal1.amplitude()))
 
     def attach_signal2(self, signal):
         self.signal2 = signal
-        self.freq2Edit.setText(QtCore.QString("%1").arg(self.signal2.frequency()))
-        self.amp2Edit.setText(QtCore.QString("%1").arg(self.signal2.amplitude()))
+        self.freq2Edit.setText(("{0}").format(self.signal2.frequency()))
+        self.amp2Edit.setText(("{0}").format(self.signal2.amplitude()))
 
     def freq1EditText(self):
         try:
             newfreq = float(self.freq1Edit.text())
             self.signal1.set_frequency(newfreq)
         except ValueError:
-            print "Bad frequency value entered"
+            print("Bad frequency value entered")
 
     def amp1EditText(self):
         try:
             newamp = float(self.amp1Edit.text())
             self.signal1.set_amplitude(newamp)
         except ValueError:
-            print "Bad amplitude value entered"
+            print("Bad amplitude value entered")
 
 
     def freq2EditText(self):
@@ -124,14 +121,14 @@ class control_box(QtGui.QWidget):
             newfreq = float(self.freq2Edit.text())
             self.signal2.set_frequency(newfreq)
         except ValueError:
-            print "Bad frequency value entered"
+            print("Bad frequency value entered")
 
     def amp2EditText(self):
         try:
             newamp = float(self.amp2Edit.text())
             self.signal2.set_amplitude(newamp)
         except ValueError:
-            print "Bad amplitude value entered"
+            print("Bad amplitude value entered")
 
 
 class my_top_block(gr.top_block):
@@ -144,7 +141,7 @@ class my_top_block(gr.top_block):
 
         npts = 2048
 
-        self.qapp = QtGui.QApplication(sys.argv)
+        self.qapp = QtWidgets.QApplication(sys.argv)
 
         src1 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = analog.sig_source_f(Rs, analog.GR_SIN_WAVE, f2, 0.1, 0)
@@ -171,13 +168,14 @@ class my_top_block(gr.top_block):
         pyQt  = self.snk1.pyqwidget()
 
         # Wrap the pointer as a PyQt SIP object
-        # This can now be manipulated as a PyQt4.QtGui.QWidget
-        pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
+        # This can now be manipulated as a PyQt5.QtWidgets.QWidget
+        pyWin = sip.wrapinstance(pyQt, QtWidgets.QWidget)
 
         # Example of using signal/slot to set the title of a curve
-        pyWin.connect(pyWin, QtCore.SIGNAL("setLineLabel(int, QString)"),
-                      pyWin, QtCore.SLOT("setLineLabel(int, QString)"))
-        pyWin.emit(QtCore.SIGNAL("setLineLabel(int, QString)"), 0, "sum")
+        # FIXME: update for Qt5
+        #pyWin.setLineLabel.connect(pyWin.setLineLabel)
+        #pyWin.emit(QtCore.SIGNAL("setLineLabel(int, QString)"), 0, "Re{sum}")
+        self.snk1.set_line_label(0, "Re{sum}")
         self.snk1.set_line_label(1, "src1")
         self.snk1.set_line_label(2, "src2")
 
@@ -193,4 +191,3 @@ if __name__ == "__main__":
     tb.start()
     tb.qapp.exec_()
     tb.stop()
-

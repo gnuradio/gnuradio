@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import pmt
 from gnuradio import gr, gr_unittest, digital, blocks
 
@@ -138,12 +139,12 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
 
 
     def test_sf_callback(self):
-	constA = [-3, -1, 1, 3]
+        constA = [-3, -1, 1, 3]
         constB = [12, -12, 6, -6]
         src_data = (0, 1, 2, 3, 3, 2, 1, 0)
         expected_result=(12, -12, 6, -6, -6, 6, -12, 12)
 
-	src = blocks.vector_source_s(src_data, False, 1, "")
+        src = blocks.vector_source_s(src_data, False, 1, "")
         op = digital.chunks_to_symbols_sf(constA)
         op.set_symbol_table(constB)
         dst = blocks.vector_sink_f()
@@ -159,7 +160,7 @@ class test_chunks_to_symbols(gr_unittest.TestCase):
         src_data = (0, 1, 2, 3, 3, 2, 1, 0)
         expected_result=(12.0+1j, -12.0-1j, 6.0+1j, -6-1j, -6-1j, 6+1j, -12-1j, 12+1j)
 
-	src = blocks.vector_source_s(src_data, False, 1, "")
+        src = blocks.vector_source_s(src_data, False, 1, "")
         op = digital.chunks_to_symbols_sc(constA)
         op.set_symbol_table(constB)
         dst = blocks.vector_sink_c()

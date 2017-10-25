@@ -93,5 +93,5 @@ if __name__ == '__main__':
 
     data = make_xml(MAX_NUM_FIELDS)
 
-    with open(filename, 'w') as fp:
+    with open(filename, 'wb') as fp:
         fp.write(data.encode())

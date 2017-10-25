@@ -4,13 +4,15 @@
 # Title: Affinity Set Test
 ##################################################
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
-from gnuradio.eng_option import eng_option
+from gnuradio.eng_arg import eng_arg
 from gnuradio.filter import firdes
-from optparse import OptionParser
+from argparse import ArgumentParser
 import sys
 
 class affinity_set(gr.top_block):
@@ -51,13 +53,13 @@ class affinity_set(gr.top_block):
         self.samp_rate = samp_rate
 
 if __name__ == '__main__':
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    (options, args) = parser.parse_args()
+    parser = ArgumentParser()
+    args = parser.parse_args()
     tb = affinity_set()
     tb.start()
 
     while(1):
-        ret = raw_input('Enter a new Core # or Press Enter to quit: ')
+        ret = input('Enter a new Core # or Press Enter to quit: ')
 	if(len(ret) == 0):
             tb.stop()
 	    sys.exit(0)
@@ -67,6 +69,6 @@ if __name__ == '__main__':
             try:
                 n = int(ret)
 	    except ValueError:
-                print "Invalid number"
+                print("Invalid number")
 	    else:
                 tb.filter_filt_0.set_processor_affinity([n,])

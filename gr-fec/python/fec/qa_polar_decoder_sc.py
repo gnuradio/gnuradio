@@ -20,13 +20,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, blocks
-import fec_swig as fec
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 
 import numpy as np
-from extended_decoder import extended_decoder
-from polar.encoder import PolarEncoder
-import polar.channel_construction as cc
+
+from gnuradio import gr, gr_unittest, blocks
+from gnuradio import fec
+from fec import extended_decoder
+from fec.polar.encoder import PolarEncoder
+from fec.polar import channel_construction as cc
 
 # import os
 # print('PID:', os.getpid())

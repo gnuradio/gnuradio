@@ -50,7 +50,6 @@ GR_SWIG_MAKE(analog_swig analog_swig.i)
 GR_SWIG_INSTALL(
     TARGETS analog_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/analog
-    COMPONENT "analog_python"
 )
 
 install(
@@ -58,5 +57,4 @@ install(
     analog_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/analog_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "analog_swig"
 )

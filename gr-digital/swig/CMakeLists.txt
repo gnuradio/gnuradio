@@ -70,7 +70,7 @@ foreach(swigfile ${GR_SWIG_BLOCK_IFILES})
   GR_SWIG_INSTALL(
     TARGETS ${swigfile}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
-    COMPONENT "digital_python")
+  )
 
   list(APPEND SWIGFILES ${swigfile}.i)
   list(APPEND SWIGDOCFILES ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
@@ -84,12 +84,10 @@ install(
   packet_header.i
   ${SWIGDOCFILES}
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-  COMPONENT "digital_swig"
 )
 
 # Install the Python file that pulls in the swig built files.
 GR_PYTHON_INSTALL(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/digital_swig.py
   DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
-  COMPONENT "digital_python"
 )

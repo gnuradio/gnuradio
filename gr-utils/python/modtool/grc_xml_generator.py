@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #
 # Copyright 2013 Free Software Foundation, Inc.
 #
@@ -19,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 import xml.etree.ElementTree as ET
-from util_functions import is_number, xml_indent
+from .util_functions import is_number, xml_indent
 
 try:
     import lxml.etree

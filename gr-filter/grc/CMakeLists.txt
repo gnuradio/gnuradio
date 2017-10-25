@@ -24,8 +24,8 @@ install(FILES
     filter_fir_filter_xxx.xml
     filter_filter_delay_fc.xml
     filter_filterbank_vcvcf.xml
-    filter_fractional_interpolator_xx.xml
-    filter_fractional_resampler_xx.xml
+    filter_mmse_interpolator_xx.xml
+    filter_mmse_resampler_xx.xml
     filter_freq_xlating_fft_filter_ccc.xml
     filter_freq_xlating_fir_filter_xxx.xml
     filter_hilbert_fc.xml
@@ -51,5 +51,4 @@ install(FILES
     variable_band_reject_filter_taps.xml
     variable_rrc_filter_taps.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "filter_python"
 )

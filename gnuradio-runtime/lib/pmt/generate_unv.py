@@ -23,6 +23,7 @@
 """
 Generate code for uniform numeric vectors
 """
+from __future__ import unicode_literals
 
 import re, os, os.path
 
@@ -93,7 +94,7 @@ using namespace pmt;
 # set srcdir to the directory that contains Makefile.am
 try:
     srcdir = os.environ['srcdir']
-except KeyError, e:
+except KeyError as e:
     srcdir = "."
 srcdir = srcdir + '/'
 

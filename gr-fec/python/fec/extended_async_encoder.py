@@ -20,10 +20,17 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
-import fec_swig as fec
-from bitflip import read_bitlist
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import weakref
+
+from gnuradio import gr
+
+from . import fec_swig as fec
+from .bitflip import read_bitlist
+
 
 class extended_async_encoder(gr.hier_block2):
     def __init__(self, encoder_obj_list, puncpat=None):

@@ -6,6 +6,9 @@
 # Generated: Thu Aug  1 12:46:10 2013
 ##################################################
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import gr
@@ -13,10 +16,10 @@ from gnuradio.filter import firdes
 import math
 
 #Import locally
-from phase_noise_gen import *
-from iqbal_gen import *
-from distortion_2_gen import *
-from distortion_3_gen import *
+from .phase_noise_gen import *
+from .iqbal_gen import *
+from .distortion_2_gen import *
+from .distortion_3_gen import *
 
 class impairments(gr.hier_block2):
 
@@ -42,7 +45,7 @@ class impairments(gr.hier_block2):
         ##################################################
         # Blocks
         ##################################################
-        self.channels_phase_noise_gen_0_0 = phase_noise_gen(math.pow(10.0,phase_noise_mag/20.0), .01)
+        self.channels_phase_noise_gen_0_0 = phase_noise_gen(math.pow(10.0,phase_noise_mag / 20.0), .01)
         self.channels_iqbal_gen_0 = iqbal_gen(magbal, phasebal)
         self.channels_distortion_3_gen_0 = distortion_3_gen(beta)
         self.channels_distortion_2_gen_0 = distortion_2_gen(gamma)
@@ -75,7 +78,7 @@ class impairments(gr.hier_block2):
 
     def set_phase_noise_mag(self, phase_noise_mag):
         self.phase_noise_mag = phase_noise_mag
-        self.channels_phase_noise_gen_0_0.set_noise_mag(math.pow(10.0,self.phase_noise_mag/20.0))
+        self.channels_phase_noise_gen_0_0.set_noise_mag(math.pow(10.0,self.phase_noise_mag / 20.0))
 
     def get_magbal(self):
         return self.magbal

@@ -20,10 +20,12 @@
 #
 
 '''Add support for engineering notation to optparse.OptionParser'''
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from copy import copy
 from optparse import Option, OptionValueError
-import eng_notation
+from . import eng_notation
 
 def check_eng_float (option, opt, value):
     try:
@@ -39,25 +41,9 @@ def check_intx (option, opt, value):
         raise OptionValueError (
             "option %s: invalid integer value: %r" % (opt, value))
 
-def check_subdev (option, opt, value):
-    """
-    Value has the form: (A|B)(:0|1)?
-
-    Returns:
-        a 2-tuple (0|1, 0|1)
-    """
-    d = { 'A' : (0, 0), 'A:0' : (0, 0), 'A:1' : (0, 1), 'A:2' : (0, 2),
-          'B' : (1, 0), 'B:0' : (1, 0), 'B:1' : (1, 1), 'B:2' : (1, 2) }
-    try:
-        return d[value.upper()]
-    except:
-        raise OptionValueError(
-            "option %s: invalid subdev: '%r', must be one of %s" % (opt, value, ', '.join(sorted(d.keys()))))
-
 class eng_option (Option):
     TYPES = Option.TYPES + ("eng_float", "intx", "subdev")
     TYPE_CHECKER = copy (Option.TYPE_CHECKER)
     TYPE_CHECKER["eng_float"] = check_eng_float
     TYPE_CHECKER["intx"] = check_intx
-    TYPE_CHECKER["subdev"] = check_subdev
 

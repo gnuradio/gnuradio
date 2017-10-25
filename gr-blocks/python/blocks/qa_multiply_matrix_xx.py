@@ -21,6 +21,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 import time
 import numpy
 import os
@@ -73,7 +74,7 @@ class test_multiply_matrix_xx (gr_unittest.TestCase):
             self.multiplier.set_A(A2)
             A = A2
             A_matrix = numpy.matrix(A)
-        for i in xrange(N):
+        for i in range(N):
             if tags is None:
                 these_tags = ()
             else:
@@ -83,17 +84,17 @@ class test_multiply_matrix_xx (gr_unittest.TestCase):
                     (self.multiplier, i)
             )
         sinks = []
-        for i in xrange(M):
+        for i in range(M):
             sinks.append(BLOCK_LOOKUP[datatype]['sink']())
             self.tb.connect((self.multiplier, i), sinks[i])
         # Run and check
         self.tb.run()
-        for i in xrange(X_in.shape[1]):
+        for i in range(X_in.shape[1]):
             Y_out_exp[:,i] = A_matrix * X_in[:,i]
         Y_out = [list(x.data()) for x in sinks]
         if tags is not None:
             self.the_tags = []
-            for i in xrange(M):
+            for i in range(M):
                 self.the_tags.append(sinks[i].tags())
         self.assertEqual(list(Y_out), Y_out_exp.tolist())
 

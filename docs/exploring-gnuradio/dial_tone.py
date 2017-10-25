@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import analog
@@ -40,5 +41,5 @@ def build_graph():
 if __name__ == '__main__':
     tb = build_graph()
     tb.start()
-    raw_input('Press Enter to quit: ')
+    input('Press Enter to quit: ')
     tb.stop()

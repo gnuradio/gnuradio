@@ -42,5 +42,4 @@ install(FILES
     uhd_amsg_source.xml
     uhd_block_tree.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "uhd_python"
 )

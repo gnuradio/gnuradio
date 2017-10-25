@@ -46,7 +46,6 @@ GR_SWIG_MAKE(comedi_swig comedi_swig.i)
 GR_SWIG_INSTALL(
     TARGETS comedi_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/comedi
-    COMPONENT "comedi_python"
 )
 
 install(
@@ -54,5 +53,4 @@ install(
     comedi_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "comedi_swig"
 )

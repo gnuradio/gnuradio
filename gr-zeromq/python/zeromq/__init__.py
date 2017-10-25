@@ -22,15 +22,17 @@
 '''
 Blocks for interfacing with ZeroMQ endpoints.
 '''
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import os
 
 try:
-    from zeromq_swig import *
+    from .zeromq_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from zeromq_swig import *
+    from .zeromq_swig import *
 
-from probe_manager import probe_manager
-from rpc_manager import rpc_manager
+from .probe_manager import probe_manager
+from .rpc_manager import rpc_manager

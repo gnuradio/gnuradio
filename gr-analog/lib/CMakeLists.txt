@@ -106,7 +106,7 @@ list(APPEND analog_libs
 
 add_library(gnuradio-analog SHARED ${analog_sources})
 target_link_libraries(gnuradio-analog ${analog_libs})
-GR_LIBRARY_FOO(gnuradio-analog RUNTIME_COMPONENT "analog_runtime" DEVEL_COMPONENT "analog_devel")
+GR_LIBRARY_FOO(gnuradio-analog)
 add_dependencies(gnuradio-analog analog_generated_includes analog_generated_swigs gnuradio-filter)
 
 if(ENABLE_STATIC_LIBS)
@@ -122,7 +122,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-analog_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "analog_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

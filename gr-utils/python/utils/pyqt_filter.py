@@ -7,6 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+from __future__ import unicode_literals
 from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(object):
