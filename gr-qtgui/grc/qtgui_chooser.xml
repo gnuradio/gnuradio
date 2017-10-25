@@ -86,7 +86,8 @@ self._$(id)_callback(self.$id)
 self._$(id)_button_group.buttonClicked[int].connect(
 	lambda i: self.set_$(id)(self._$(id)_options[i]))
 #end if
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
+
 	<callback>self.set_$(id)($value)</callback>
 	<callback>self._$(id)_callback($id)</callback>
 	<param>

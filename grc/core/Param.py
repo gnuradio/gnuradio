@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import ast
 import weakref
 import re
+import textwrap
 
 from . import Constants
 from .Constants import VECTOR_TYPES, COMPLEX_TYPES, REAL_TYPES, INT_TYPES
@@ -212,7 +213,7 @@ class Param(Element):
             self._value = value or ''
         self._default = value
         self._init = False
-        self._hostage_cells = list()
+        self.hostage_cells = set()
         self.template_arg = TemplateArg(self)
 
     def get_types(self):
@@ -390,7 +391,6 @@ class Param(Element):
         self._init = True
         self._lisitify_flag = False
         self._stringify_flag = False
-        self._hostage_cells = list()
         t = self.get_type()
         v = self.get_value()
 
@@ -528,38 +528,11 @@ class Param(Element):
         # GUI Position/Hint
         #########################
         elif t == 'gui_hint':
-            if ':' in v:
-                tab, pos = v.split(':')
-            elif '@' in v:
-                tab, pos = v, ''
+            if self.get_parent().get_state() == Constants.BLOCK_DISABLED:
+                return ''
             else:
-                tab, pos = '', v
+                return self.parse_gui_hint(v)
 
-            if '@' in tab:
-                tab, index = tab.split('@')
-            else:
-                index = '?'
-
-            # TODO: Problem with this code. Produces bad tabs
-            widget_str = ({
-                (True, True): 'self.%(tab)s_grid_layout_%(index)s.addWidget(%(widget)s, %(pos)s)',
-                (True, False): 'self.%(tab)s_layout_%(index)s.addWidget(%(widget)s)',
-                (False, True): 'self.top_grid_layout.addWidget(%(widget)s, %(pos)s)',
-                (False, False): 'self.top_layout.addWidget(%(widget)s)',
-            }[bool(tab), bool(pos)]) % {'tab': tab, 'index': index, 'widget': '%s', 'pos': pos}
-
-            # FIXME: Move replace(...) into the make template of the qtgui blocks
-            # Return a string here
-            class GuiHint(object):
-                def __init__(self, ws):
-                    self._ws = ws
-
-                def __call__(self, w):
-                    return (self._ws.replace('addWidget', 'addLayout') if 'layout' in w else self._ws) % w
-
-                def __str__(self):
-                    return self._ws
-            return GuiHint(widget_str)
         #########################
         # Import Type
         #########################
@@ -689,3 +662,113 @@ class Param(Element):
         n['key'] = self.get_key()
         n['value'] = self.get_value()
         return n
+
+    ##############################################
+    # GUI Hint
+    ##############################################
+    def parse_gui_hint(self, v):
+        """
+        Parse/validate gui hint value.
+
+        Args:
+            v: gui_hint string from a block's 'gui_hint' param
+
+        Returns:
+            string of python code for positioning GUI elements in pyQT
+        """
+        self.hostage_cells.clear()
+
+        # Parsing
+        if ':' in v:
+            tab, pos = v.split(':')
+        elif ',' in v:
+            tab, pos = '', v
+        else:
+            tab, pos = v, ''
+
+        if '@' in tab:
+            tab, index = tab.split('@')
+        else:
+            index = '0'
+        index = int(index)
+
+        # Validation
+        def parse_pos():
+            e = self.get_parent().get_parent().evaluate(pos)
+
+            if not isinstance(e, (list, tuple)) or len(e) not in (2, 4) or not all(isinstance(ei, int) for ei in e):
+                raise Exception('Invalid GUI Hint entered: {e!r} (Must be a list of {{2,4}} non-negative integers).'.format(e=e))
+
+            if len(e) == 2:
+                row, col = e
+                row_span = col_span = 1
+            else:
+                row, col, row_span, col_span = e
+
+            if (row < 0) or (col < 0):
+                raise Exception('Invalid GUI Hint entered: {e!r} (non-negative integers only).'.format(e=e))
+
+            if (row_span < 1) or (col_span < 1):
+                raise Exception('Invalid GUI Hint entered: {e!r} (positive row/column span required).'.format(e=e))
+
+            return row, col, row_span, col_span
+
+        def validate_tab():
+            enabled_blocks = self.get_parent().get_parent().iter_enabled_blocks()
+            tabs = (block for block in enabled_blocks
+                    if block.get_key() == 'qtgui_tab_widget' and block.get_id() == tab)
+            tab_block = next(iter(tabs), None)
+            if not tab_block:
+                raise Exception('Invalid tab name entered: {tab} (Tab name not found).'.format(tab=tab))
+
+            tab_index_size = int(tab_block.get_param('num_tabs').get_value())
+            if index >= tab_index_size:
+                raise Exception('Invalid tab index entered: {tab}@{index} (Index out of range).'.format(
+                    tab=tab, index=index))
+
+        # Collision Detection
+        def collision_detection(row, col, row_span, col_span):
+            my_parent = '{tab}@{index}'.format(tab=tab, index=index) if tab else 'main'
+            # Calculate hostage cells
+            for r in range(row, row + row_span):
+                for c in range(col, col + col_span):
+                    self.hostage_cells.add((my_parent, (r, c)))
+
+            for other in self.get_all_params('gui_hint'):
+                if other is self:
+                    continue
+                collision = next(iter(self.hostage_cells & other.hostage_cells), None)
+                if collision:
+                    raise Exception('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
+                        block=other.get_parent().get_id(), parent=collision[0], cell=collision[1]
+                    ))
+
+        # Code Generation
+        if tab:
+            validate_tab()
+            layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
+        else:
+            layout = 'top_grid_layout'
+
+        widget = '%s'  # to be fill-out in the mail template
+
+        if pos:
+            row, col, row_span, col_span = parse_pos()
+            collision_detection(row, col, row_span, col_span)
+
+            widget_str = textwrap.dedent("""
+                self.{layout}.addWidget({widget}, {row}, {col}, {row_span}, {col_span})
+                for r in range({row}, {row_end}):
+                    self.{layout}.setRowStretch(r, 1)
+                for c in range({col}, {col_end}):
+                    self.{layout}.setColumnStretch(c, 1)
+            """.strip('\n')).format(
+                layout=layout, widget=widget,
+                row=row, row_span=row_span, row_end=row+row_span,
+                col=col, col_span=col_span, col_end=col+col_span,
+            )
+
+        else:
+            widget_str = 'self.{layout}.addWidget({widget})'.format(layout=layout, widget=widget)
+
+        return widget_str

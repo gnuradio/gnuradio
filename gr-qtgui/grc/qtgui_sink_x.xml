@@ -25,7 +25,7 @@ qtgui.$(type.fcn)(
 )
 self.$(id).set_update_time(1.0/$rate)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
-$(gui_hint()($win))
+$(gui_hint() % $win)
 
 self.$(id).enable_rf_freq($showrf)
 

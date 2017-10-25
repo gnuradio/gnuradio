@@ -13,7 +13,7 @@
   <make>#set $win = 'self._%s_win'%$id
 qtgui.edit_box_msg($(type.t), $value, $label, $is_pair, $is_static, $key)
 self._$(id)_win = sip.wrapinstance(self.$(id).pyqwidget(), Qt.QWidget)
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
 
   <param>
     <name>Type</name>
