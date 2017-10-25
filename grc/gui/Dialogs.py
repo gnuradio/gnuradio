@@ -128,16 +128,18 @@ class TextDisplay(SimpleTextDisplay):
         return False
 
 
-def MessageDialogHelper(type, buttons, title=None, markup=None, default_response=None, extra_buttons=None):
+def MessageDialogHelper(type, buttons, parent, title=None, markup=None, default_response=None, extra_buttons=None):
     """
     Create a modal message dialog and run it.
 
-    Args:
+    Required args:
         type: the type of message: gtk.MESSAGE_INFO, gtk.MESSAGE_WARNING, gtk.MESSAGE_QUESTION or gtk.MESSAGE_ERROR
         buttons: the predefined set of buttons to use:
-        gtk.BUTTONS_NONE, gtk.BUTTONS_OK, gtk.BUTTONS_CLOSE, gtk.BUTTONS_CANCEL, gtk.BUTTONS_YES_NO, gtk.BUTTONS_OK_CANCEL
+            gtk.BUTTONS_NONE, gtk.BUTTONS_OK, gtk.BUTTONS_CLOSE, gtk.BUTTONS_CANCEL, gtk.BUTTONS_YES_NO,
+            gtk.BUTTONS_OK_CANCEL
+        parent: gtk parent window (which will be blocked explicitly by this modal dialog)
 
-    Args:
+    Optional args:
         title: the title of the window (string)
         markup: the message text with pango markup
         default_response: if set, determines which button is highlighted by default
@@ -146,7 +148,7 @@ def MessageDialogHelper(type, buttons, title=None, markup=None, default_response
     Returns:
         the gtk response from run()
     """
-    message_dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, type, buttons)
+    message_dialog = gtk.MessageDialog(parent, gtk.DIALOG_MODAL, type, buttons)
     if title: message_dialog.set_title(title)
     if markup: message_dialog.set_markup(markup)
     if extra_buttons: message_dialog.add_buttons(*extra_buttons)
@@ -164,20 +166,23 @@ $encode($err_msg.replace('\t', '  '))
 #end for"""
 
 
-def ErrorsDialog(flowgraph): MessageDialogHelper(
-    type=gtk.MESSAGE_ERROR,
-    buttons=gtk.BUTTONS_CLOSE,
-    title='Flow Graph Errors',
-    markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
-)
+def ErrorsDialog(flowgraph, parent):
+    MessageDialogHelper(
+        type=gtk.MESSAGE_ERROR,
+        buttons=gtk.BUTTONS_CLOSE,
+        parent=parent,
+        title='Flow Graph Errors',
+        markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
+    )
 
 
 class AboutDialog(gtk.AboutDialog):
     """A cute little about dialog."""
 
-    def __init__(self, config):
+    def __init__(self, config, parent):
         """AboutDialog constructor."""
         gtk.AboutDialog.__init__(self)
+        self.set_transient_for(parent)
         self.set_name(config.name)
         self.set_version(config.version)
         self.set_license(config.license)
@@ -187,11 +192,13 @@ class AboutDialog(gtk.AboutDialog):
         self.destroy()
 
 
-def HelpDialog(): MessageDialogHelper(
-    type=gtk.MESSAGE_INFO,
-    buttons=gtk.BUTTONS_CLOSE,
-    title='Help',
-    markup="""\
+def HelpDialog(parent):
+    MessageDialogHelper(
+        type=gtk.MESSAGE_INFO,
+        buttons=gtk.BUTTONS_CLOSE,
+        parent=parent,
+        title='Help',
+        markup="""\
 <b>Usage Tips</b>
 
 <u>Add block</u>: drag and drop or double click a block in the block selection window.
@@ -201,7 +208,8 @@ def HelpDialog(): MessageDialogHelper(
 <u>Make connection</u>: click on the source port of one block, then click on the sink port of another block.
 <u>Remove connection</u>: select the connection and press delete, or drag the connection.
 
-* See the menu for other keyboard shortcuts.""")
+* See the menu for other keyboard shortcuts."""
+    )
 
 COLORS_DIALOG_MARKUP_TMPL = """\
 <b>Color Mapping</b>
@@ -215,20 +223,22 @@ COLORS_DIALOG_MARKUP_TMPL = """\
 """
 
 
-def TypesDialog(platform):
+def TypesDialog(platform, parent):
     MessageDialogHelper(
         type=gtk.MESSAGE_INFO,
         buttons=gtk.BUTTONS_CLOSE,
+        parent=parent,
         title='Types',
         markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL,
                                     colors=platform.get_colors())
     )
 
 
-def MissingXTermDialog(xterm):
+def MissingXTermDialog(xterm, parent):
     MessageDialogHelper(
         type=gtk.MESSAGE_WARNING,
         buttons=gtk.BUTTONS_OK,
+        parent=parent,
         title='Warning: missing xterm executable',
         markup=("The xterm executable {0!r} is missing.\n\n"
                 "You can change this setting in your gnuradio.conf, in "
@@ -238,7 +248,7 @@ def MissingXTermDialog(xterm):
     )
 
 
-def ChooseEditorDialog(config):
+def ChooseEditorDialog(config, parent):
     # Give the option to either choose an editor or use the default
     # Always return true/false so the caller knows it was successful
     buttons = (
@@ -247,15 +257,15 @@ def ChooseEditorDialog(config):
         gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL
     )
     response = MessageDialogHelper(
-        gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Choose Editor',
-        'Would you like to choose the editor to use?', gtk.RESPONSE_YES, buttons
+        gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, parent,
+        'Choose Editor', 'Would you like to choose the editor to use?', gtk.RESPONSE_YES, buttons
     )
 
     # Handle the inital default/choose/cancel response
     # User wants to choose the editor to use
     if response == gtk.RESPONSE_YES:
         file_dialog = gtk.FileChooserDialog(
-            'Select an Editor...', None,
+            'Select an Editor...', parent,
             gtk.FILE_CHOOSER_ACTION_OPEN,
             ('gtk-cancel', gtk.RESPONSE_CANCEL, 'gtk-open', gtk.RESPONSE_OK)
         )
