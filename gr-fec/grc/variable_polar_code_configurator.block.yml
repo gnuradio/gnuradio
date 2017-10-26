@@ -1,0 +1,42 @@
+id: variable_polar_code_configurator
+label: POLAR code Configurator
+
+parameters:
+-   id: channel
+    label: Channel
+    dtype: string
+    default: polar.CHANNEL_TYPE_BEC
+    options: [polar.CHANNEL_TYPE_BEC, polar.CHANNEL_TYPE_AWGN]
+    option_labels: [BEC, AWGN]
+-   id: block_size
+    label: Block size (N)
+    dtype: int
+    default: '32'
+-   id: num_info_bits
+    label: Info Bits (K)
+    dtype: int
+    default: '16'
+-   id: design_snr
+    label: design SNR
+    dtype: float
+    default: '0.0'
+-   id: mu
+    label: mu
+    dtype: int
+    default: '16'
+value: ${ polar.load_frozen_bits_info(True, channel, block_size, num_info_bits, design_snr,
+    mu) }
+
+templates:
+    imports: from gnuradio.fec import polar
+    var_make: self.${id} = ${id} = polar.load_frozen_bits_info(False, ${channel},
+        ${block_size}, ${num_info_bits}, ${design_snr}, ${mu})
+
+documentation: "This block serves as an interface to the underlying Python functions\
+    \ for channel construction.\n  \n  Current channel types are: BEC/AWGN\n  Block\
+    \ size must be a power of 2!\n  Info Bits must be 0 smaller K  smaller N\n  Design\
+    \ SNR does affect the target transmission SNR and thus performance.\n  The parameter\
+    \ mu is only relevant for AWGN channels. It is passed on to the corresponding\
+    \ Channel construction algorithm."
+
+file_format: 1

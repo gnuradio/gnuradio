@@ -1,0 +1,22 @@
+id: dtv_atsc_sync
+label: ATSC Receiver SYNC
+
+parameters:
+-   id: rate
+    label: Sample Rate
+    dtype: float
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 4096
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_sync(${rate})
+
+file_format: 1

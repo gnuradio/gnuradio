@@ -1,0 +1,41 @@
+id: dtv_dvbt2_cellinterleaver_cc
+label: Cell/Time Interleaver
+
+parameters:
+-   id: framesize
+    label: FECFRAME size
+    dtype: enum
+    options: [FECFRAME_NORMAL, FECFRAME_SHORT]
+    option_labels: [Normal, Short]
+    option_attributes:
+        val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_SHORT]
+-   id: constellation
+    label: Constellation
+    dtype: enum
+    options: [MOD_QPSK, MOD_16QAM, MOD_64QAM, MOD_256QAM]
+    option_labels: [QPSK, 16QAM, 64QAM, 256QAM]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_16QAM, dtv.MOD_64QAM, dtv.MOD_256QAM]
+-   id: fecblocks
+    label: FEC blocks per frame
+    dtype: int
+    default: '168'
+-   id: tiblocks
+    label: TI blocks per frame
+    dtype: int
+    default: '3'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt2_cellinterleaver_cc(${framesize.val}, ${constellation.val}, ${fecblocks},
+        ${tiblocks})
+
+file_format: 1

@@ -1,0 +1,24 @@
+id: digital_probe_density_b
+label: Probe Density
+
+parameters:
+-   id: alpha
+    label: Alpha
+    dtype: real
+    default: '1'
+-   id: probe_rate
+    label: Probe Rate
+    dtype: real
+    default: '10'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.probe_density_b(${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+
+file_format: 1

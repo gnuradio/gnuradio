@@ -1,0 +1,29 @@
+id: digital_pn_correlator_cc
+label: PN Correlator
+
+parameters:
+-   id: degree
+    label: Degree
+    dtype: int
+-   id: mask
+    label: Mask
+    dtype: int
+    default: '0'
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.pn_correlator_cc(${degree}, ${mask}, ${seed})
+
+file_format: 1

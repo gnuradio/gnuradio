@@ -1,0 +1,57 @@
+id: channels_fading_model
+label: Fading Model
+
+parameters:
+-   id: N
+    label: Num Sinusoids (SoS model)
+    dtype: int
+    default: '8'
+-   id: fDTs
+    label: Normalized Max Doppler (fD*Ts)
+    dtype: real
+    default: 10.0/samp_rate
+-   id: LOS
+    label: LOS Model
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Rayleigh/NLOS, Rician/LOS]
+    option_attributes:
+        hide_K: [all, '']
+-   id: K
+    label: Rician factor (K)
+    dtype: real
+    default: '4.0'
+    hide: ${ LOS.hide_K }
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.fading_model( ${N}, ${fDTs}, ${LOS}, ${K}, ${seed} )
+    callbacks:
+    - set_fDTs(${fDTs})
+    - set_K(${K})
+
+documentation: |-
+    This algorithm implements the method described in
+       Compact Rayleigh and Rician fading simulator based on random walk processes
+       A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
+       26th November 2008
+
+        int d_N=8;          // number of sinusoids
+        float d_fDTs=0.01   // normalized maximum doppler frequency (f_doppler / f_samprate)
+        float d_K=4;        // Rician factor (ratio of the specular power to the scattered power)
+        bool d_LOS=true;    // LOS path exists? chooses Rician (LOS) vs Rayleigh (NLOS) model.
+        int seed=0;         // noise seed
+
+file_format: 1

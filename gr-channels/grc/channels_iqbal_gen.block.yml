@@ -1,0 +1,29 @@
+id: channels_iqbal_gen
+label: IQ Imbalance Generator
+
+parameters:
+-   id: mag
+    label: Magnitude
+    dtype: float
+    default: '0'
+-   id: phase
+    label: Phase
+    dtype: float
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.iqbal_gen(${mag}, ${phase})
+    callbacks:
+    - set_magnitude(${mag})
+    - set_phase(${phase})
+
+file_format: 1

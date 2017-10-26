@@ -1,0 +1,61 @@
+id: video_sdl_sink
+label: Video SDL Sink
+
+parameters:
+-   id: type
+    label: Input Type
+    dtype: enum
+    options: [byte, short]
+    option_attributes:
+        fcn: [uc, s]
+    hide: part
+-   id: width
+    label: Input Width
+    dtype: int
+    default: '640'
+-   id: height
+    label: Input Height
+    dtype: int
+    default: '480'
+-   id: display_width
+    label: Display Width
+    dtype: int
+    default: '640'
+-   id: display_height
+    label: Display Height
+    dtype: int
+    default: '480'
+-   id: fps
+    label: Framerate
+    dtype: float
+    default: '0'
+-   id: num_channels
+    label: Channels
+    dtype: enum
+    options: ['1', '2', '3']
+    option_labels: [1 (Grayscale), '2 (Y, alternating pixels U and V)', 3 (YUV)]
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: 1
+    multiplicity: ${ num_channels }
+
+templates:
+    imports: from gnuradio import video_sdl
+    make: video_sdl.sink_${type.fcn}(${fps}, ${width}, ${height}, 0, ${display_width},
+        ${display_height})
+
+documentation: |-
+    Provides a rudimentary on-screen video display using libsdl.
+
+    A framerate of zero means video will be displayed as quickly as possible.
+
+    In 1-channel mode, input data is assumed to be grayscale, with each input item mapping to a single pixel.
+
+    In 2-channel mode, the first channel is Y for every pixel while the second channel alternates between pixels values for U and V.
+
+    In 3-channel mode, input channels are assumed to be matching triples of YUV values, one byte per pixel, per channel.
+
+file_format: 1

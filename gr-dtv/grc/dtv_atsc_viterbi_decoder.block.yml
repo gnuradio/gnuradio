@@ -1,0 +1,18 @@
+id: dtv_atsc_viterbi_decoder
+label: ATSC Viterbi Decoder
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 4096
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_viterbi_decoder()
+
+file_format: 1

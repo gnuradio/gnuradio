@@ -1,0 +1,21 @@
+id: digital_map_bb
+label: Map
+
+parameters:
+-   id: map
+    label: Map
+    dtype: int_vector
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.map_bb(${map})
+
+file_format: 1

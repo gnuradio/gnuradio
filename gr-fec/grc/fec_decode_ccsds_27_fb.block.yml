@@ -1,0 +1,16 @@
+id: fec_decode_ccsds_27_fb
+label: Decode CCSDS 27
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.decode_ccsds_27_fb()
+
+file_format: 1

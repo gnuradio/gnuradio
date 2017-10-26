@@ -1,0 +1,32 @@
+id: digital_lms_dd_equalizer_cc
+label: LMS DD Equalizer
+
+parameters:
+-   id: mu
+    label: Gain
+    dtype: real
+-   id: num_taps
+    label: Num. Taps
+    dtype: int
+-   id: sps
+    label: Samples per Symbol
+    dtype: int
+-   id: cnst
+    label: Constellation Object
+    dtype: raw
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.lms_dd_equalizer_cc(${num_taps}, ${mu}, ${sps}, ${cnst})
+    callbacks:
+    - set_gain(${mu})
+
+file_format: 1

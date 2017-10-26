@@ -1,0 +1,23 @@
+'[Core]':
+- Instrumentation:
+  - QT:
+    - qtgui_freq_sink_x
+    - qtgui_time_sink_x
+    - qtgui_const_sink_x
+    - qtgui_waterfall_sink_x
+    - qtgui_time_raster_sink_x
+    - qtgui_bercurve_sink
+    - qtgui_histogram_sink_x
+    - qtgui_number_sink
+    - qtgui_vector_sink_f
+    - qtgui_sink_x
+- GUI Widgets:
+  - QT:
+    - qtgui_tab_widget
+    - variable_qtgui_range
+    - variable_qtgui_chooser
+    - variable_qtgui_check_box
+    - variable_qtgui_push_button
+    - variable_qtgui_entry
+    - variable_qtgui_label
+    - qtgui_edit_box_msg

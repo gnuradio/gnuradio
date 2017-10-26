@@ -1,0 +1,51 @@
+id: digital_clock_recovery_mm_xx
+label: Clock Recovery MM
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: omega
+    label: Omega
+    dtype: real
+    default: samp_per_sym*(1+0.0)
+-   id: gain_omega
+    label: Gain Omega
+    dtype: real
+    default: 0.25*0.175*0.175
+-   id: mu
+    label: Mu
+    dtype: real
+    default: '0.5'
+-   id: gain_mu
+    label: Gain Mu
+    dtype: real
+    default: '0.175'
+-   id: omega_relative_limit
+    label: Omega Relative Limit
+    dtype: real
+    default: '0.005'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.clock_recovery_mm_${type.fcn}(${omega}, ${gain_omega}, ${mu}, ${gain_mu},
+        ${omega_relative_limit})
+    callbacks:
+    - set_omega(${omega})
+    - set_gain_omega(${gain_omega})
+    - set_mu(${mu})
+    - set_gain_mu(${gain_mu})
+
+file_format: 1

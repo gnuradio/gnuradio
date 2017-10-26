@@ -1,0 +1,21 @@
+id: digital_simple_framer
+label: Simple Framer
+
+parameters:
+-   id: payload_bytesize
+    label: Payload Byte Size
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.simple_framer(${payload_bytesize})
+
+file_format: 1

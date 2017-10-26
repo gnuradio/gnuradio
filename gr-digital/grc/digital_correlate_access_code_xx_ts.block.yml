@@ -1,0 +1,37 @@
+id: digital_correlate_access_code_xx_ts
+label: Correlate Access Code - Tag Stream
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [float, byte]
+    option_attributes:
+        fcn: [ff, bb]
+    hide: part
+-   id: access_code
+    label: Access Code
+    dtype: string
+    default: '101010'
+-   id: threshold
+    label: Threshold
+    dtype: int
+-   id: tagname
+    label: Tag Name
+    dtype: string
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.correlate_access_code_${type.fcn}_ts(${access_code},
+          ${threshold}, ${tagname})
+
+file_format: 1

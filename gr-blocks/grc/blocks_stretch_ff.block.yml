@@ -1,0 +1,28 @@
+id: blocks_stretch_ff
+label: Stretch
+
+parameters:
+-   id: lo
+    label: Low
+    dtype: real
+-   id: vlen
+    label: Vec. Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: float
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.stretch_ff(${lo}, ${vlen})
+
+file_format: 1

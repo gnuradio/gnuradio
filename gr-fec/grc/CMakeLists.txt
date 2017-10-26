@@ -18,9 +18,9 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-file(GLOB xml_files "*.xml")
+file(GLOB yml_files "*.yml")
 
 install(FILES
-        ${xml_files}
+        ${yml_files}
         DESTINATION ${GRC_BLOCKS_DIR}
 )

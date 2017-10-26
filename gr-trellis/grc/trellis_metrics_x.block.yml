@@ -1,0 +1,50 @@
+id: trellis_metrics_x
+label: Trellis Metrics
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [c, f, i, s]
+    option_labels: [Complex, Float, Int, Short]
+    option_attributes:
+        io: [complex, float, int, short]
+        table: [complex_vector, real_vector, int_vector, int_vector]
+    hide: part
+-   id: card
+    label: Output Cardinality
+    dtype: int
+-   id: dim
+    label: Dimensionality
+    dtype: int
+-   id: table
+    label: Constellation
+    dtype: ${ type.table }
+-   id: metric_type
+    label: Metric Type
+    dtype: enum
+    options: [digital.TRELLIS_EUCLIDEAN, digital.TRELLIS_HARD_SYMBOL, digital.TRELLIS_HARD_BIT]
+    option_labels: [Euclidean, Hard Symbol, Hard Bit]
+
+inputs:
+-   domain: stream
+    dtype: ${ type.io }
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import trellis, digital
+    make: trellis.metrics_${type}(${card}, ${dim}, ${table}, ${metric_type})
+    callbacks:
+    - set_O(${card})
+    - set_D(${dim})
+    - set_TYPE(${metric_type})
+    - set_TABLE(${table})
+
+documentation: |-
+    Generate metrics required for Viterbi or SISO algorithms.
+
+file_format: 1

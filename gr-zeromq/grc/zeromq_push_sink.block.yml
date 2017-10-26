@@ -1,0 +1,48 @@
+id: zeromq_push_sink
+label: ZMQ PUSH Sink
+category: '[Core]/ZeroMQ Interfaces'
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        itemsize: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: address
+    label: Address
+    dtype: string
+-   id: timeout
+    label: Timeout (msec)
+    dtype: float
+    default: '100'
+-   id: pass_tags
+    label: Pass Tags
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: hwm
+    label: High Watermark
+    dtype: int
+    default: '-1'
+    hide: ${ ('part' if hwm == -1 else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import zeromq
+    make: zeromq.push_sink(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
+        ${hwm})
+
+file_format: 1

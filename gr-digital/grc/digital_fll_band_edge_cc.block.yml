@@ -1,0 +1,53 @@
+id: digital_fll_band_edge_cc
+label: FLL Band-Edge
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [cc]
+    option_labels: [Complex->Complex]
+    option_attributes:
+        input: [complex]
+        output: [complex]
+    hide: part
+-   id: samps_per_sym
+    label: Samples Per Symbol
+    dtype: real
+-   id: rolloff
+    label: Filter Rolloff Factor
+    dtype: real
+-   id: filter_size
+    label: Prototype Filter Size
+    dtype: int
+-   id: w
+    label: Loop Bandwidth
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+-   label: freq
+    domain: stream
+    dtype: float
+    optional: true
+-   label: phase
+    domain: stream
+    dtype: float
+    optional: true
+-   label: error
+    domain: stream
+    dtype: float
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.fll_band_edge_cc(${samps_per_sym}, ${rolloff}, ${filter_size}, ${w})
+    callbacks:
+    - set_loop_bandwidth(${w})
+
+file_format: 1

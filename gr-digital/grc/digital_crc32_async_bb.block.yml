@@ -1,0 +1,25 @@
+id: digital_crc32_async_bb
+label: Async CRC32
+
+parameters:
+-   id: check
+    label: Mode
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Generate CRC, Check CRC]
+
+inputs:
+-   domain: message
+    id: in
+    optional: true
+
+outputs:
+-   domain: message
+    id: out
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.crc32_async_bb(${check})
+
+file_format: 1

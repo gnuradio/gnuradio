@@ -1,0 +1,22 @@
+id: variable_modulate_vector
+label: Modulate Vector
+category: Modulators
+
+parameters:
+-   id: mod
+    label: Modulator
+    dtype: raw
+-   id: data
+    label: Data vector
+    dtype: int_vector
+-   id: taps
+    label: Filter taps
+    dtype: float_vector
+value: ${ digital.modulate_vector_bc(mod .to_basic_block(), data, taps) }
+
+templates:
+    imports: from gnuradio import digital
+    var_make: self.${id} = ${id} = digital.modulate_vector_bc(${mod} .to_basic_block(),
+        ${data}, ${taps})
+
+file_format: 1

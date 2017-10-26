@@ -1,0 +1,37 @@
+id: blocks_interleaved_short_to_complex
+label: IShort To Complex
+
+parameters:
+-   id: vector_input
+    label: Vector Input
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    option_attributes:
+        vlen: ['1', '2']
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: swap
+    label: Swap
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: short
+    vlen: ${ vector_input.vlen }
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.interleaved_short_to_complex(${vector_input}, ${swap})
+    callbacks:
+    - set_swap(${swap})
+
+file_format: 1

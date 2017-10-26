@@ -1,0 +1,16 @@
+id: vocoder_alaw_encode_sb
+label: g711 Alaw Audio Encoder
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.alaw_encode_sb()
+
+file_format: 1

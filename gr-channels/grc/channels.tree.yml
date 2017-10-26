@@ -1,0 +1,20 @@
+'[Core]':
+- Channel Models:
+  - channels_channel_model
+  - channels_channel_model2
+  - channels_conj_fs_iqcorr
+  - channels_fading_model
+  - channels_dynamic_channel_model
+  - channels_selective_fading_model
+  - channels_selective_fading_model2
+- Impairment Models:
+  - channels_impairments
+  - channels_quantizer
+  - channels_phase_noise_gen
+  - channels_iqbal_gen
+  - channels_distortion_2_gen
+  - channels_distortion_3_gen
+  - channels_amp_bal
+  - channels_phase_bal
+  - channels_cfo_model
+  - channels_sro_model

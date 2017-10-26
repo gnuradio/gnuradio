@@ -1,0 +1,30 @@
+id: digital_gmskmod_bc
+label: GMSK Modulator
+
+parameters:
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '2'
+-   id: bt
+    label: 3 dB Time-Bandwith Product
+    dtype: real
+    default: '0.3'
+-   id: L
+    label: Pulse Duration (Symbols)
+    dtype: int
+    default: '4'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.gmskmod_bc(${samples_per_symbol}, ${L}, ${bt})
+
+file_format: 1

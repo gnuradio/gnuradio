@@ -1,0 +1,40 @@
+id: digital_cpmmod_bc
+label: Continuous Phase Modulation
+
+parameters:
+-   id: type
+    label: CPM Type
+    dtype: enum
+    options: [analog.cpm.LREC, analog.cpm.LRC, analog.cpm.LSRC, analog.cpm.TFM, analog.cpm.GAUSSIAN]
+    option_labels: [L-REC (Rectangular phase response), L-RC (Raised Cosine), L-SRC
+            (Spectral raised cosine), TFM (Tamed frequency modulation), Gaussian]
+-   id: mod_index
+    label: Modulation Index
+    dtype: real
+    default: '0.5'
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '4'
+-   id: L
+    label: Pulse Duration (Symbols)
+    dtype: int
+    default: '4'
+-   id: beta
+    label: Phase Response Parameter (BT or Beta)
+    dtype: real
+    default: '0.3'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import gr, digital, analog
+    make: digital.cpmmod_bc(${type}, ${mod_index}, ${samples_per_symbol}, ${L}, ${beta})
+
+file_format: 1
