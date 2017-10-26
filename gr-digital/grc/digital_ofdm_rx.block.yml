@@ -29,7 +29,7 @@ parameters:
     dtype: raw
     default: ()
     hide: ${ 'none' if pilot_symbols else 'part' }
-    -   id: sync_word1
+-   id: sync_word1
     label: Sync Word 1
     dtype: raw
     default: ()

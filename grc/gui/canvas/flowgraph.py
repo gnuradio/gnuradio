@@ -88,7 +88,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
                 break
         return block_id
 
-    def install_external_editor(self, param):
+    def install_external_editor(self, param, parent=None):
         target = (param.parent_block.name, param.key)
 
         if target in self._external_updaters:
@@ -96,7 +96,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         else:
             config = self.parent_platform.config
             editor = (find_executable(config.editor) or
-                      Dialogs.choose_editor(None, config))  # todo: pass in parent
+                      Dialogs.choose_editor(parent, config))  # todo: pass in parent
             if not editor:
                 return
             updater = functools.partial(
