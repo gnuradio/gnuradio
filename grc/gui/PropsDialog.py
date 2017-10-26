@@ -28,8 +28,8 @@ import Utils
 import pango
 
 TAB_LABEL_MARKUP_TMPL="""\
-#set $foreground = $valid and 'black' or 'red'
-<span foreground="$foreground">$encode($tab)</span>"""
+#set $foreground = not $valid and 'foreground="red"' or ''
+<span $foreground>$encode($tab)</span>"""
 
 
 def get_title_label(title):
@@ -55,7 +55,7 @@ class PropsDialog(gtk.Dialog):
     A dialog to set block parameters, view errors, and view documentation.
     """
 
-    def __init__(self, block):
+    def __init__(self, block, parent):
         """
         Properties dialog constructor.
 
@@ -67,6 +67,7 @@ class PropsDialog(gtk.Dialog):
         gtk.Dialog.__init__(
             self,
             title='Properties: %s' % block.get_name(),
+            parent=parent,
             buttons=(gtk.STOCK_OK, gtk.RESPONSE_ACCEPT,
                      gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                      gtk.STOCK_APPLY, gtk.RESPONSE_APPLY)
@@ -76,6 +77,7 @@ class PropsDialog(gtk.Dialog):
             (MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
         ))
         self._block = block
+        self._parent = parent
 
         vpaned = gtk.VPaned()
         self.vbox.pack_start(vpaned)
@@ -190,7 +192,7 @@ class PropsDialog(gtk.Dialog):
                     if param.get_hide() == 'all':
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
-                    input_widget = param.get_input(self._handle_changed, self._activate_apply)
+                    input_widget = param.get_input(self, self._handle_changed, self._activate_apply)
                     vbox.pack_start(input_widget, input_widget.expand)
                 label.set_markup(Utils.parse_template(TAB_LABEL_MARKUP_TMPL, valid=box_all_valid, tab=tab))
                 # show params box with new params

@@ -453,7 +453,7 @@ class MainWindow(gtk.Window):
             gtk.STOCK_SAVE, gtk.RESPONSE_OK
         )
         return MessageDialogHelper(
-            gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, 'Unsaved Changes!',
+            gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, self, 'Unsaved Changes!',
             'Would you like to save changes before closing?', gtk.RESPONSE_OK, buttons
         )
 
