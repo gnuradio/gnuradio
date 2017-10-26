@@ -384,13 +384,13 @@ class ActionHandler:
         ##################################################
         elif action == Actions.ABOUT_WINDOW_DISPLAY:
             platform = flow_graph.get_parent()
-            Dialogs.AboutDialog(platform.config)
+            Dialogs.AboutDialog(platform.config, main)
         elif action == Actions.HELP_WINDOW_DISPLAY:
-            Dialogs.HelpDialog()
+            Dialogs.HelpDialog(main)
         elif action == Actions.TYPES_WINDOW_DISPLAY:
-            Dialogs.TypesDialog(flow_graph.get_parent())
+            Dialogs.TypesDialog(flow_graph.get_parent(), main)
         elif action == Actions.ERRORS_WINDOW_DISPLAY:
-            Dialogs.ErrorsDialog(flow_graph)
+            Dialogs.ErrorsDialog(flow_graph, main)
         elif action == Actions.TOGGLE_CONSOLE_WINDOW:
             main.update_panel_visibility(main.CONSOLE, action.get_active())
             action.save_to_preferences()
@@ -406,7 +406,7 @@ class ActionHandler:
         elif action == Actions.CLEAR_CONSOLE:
             main.text_display.clear()
         elif action == Actions.SAVE_CONSOLE:
-            file_path = SaveConsoleFileDialog(page.get_file_path()).run()
+            file_path = SaveConsoleFileDialog(page.get_file_path(), main).run()
             if file_path is not None:
                 main.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
@@ -461,7 +461,7 @@ class ActionHandler:
             else:
                 selected_block = flow_graph.get_selected_block()
             if selected_block:
-                self.dialog = PropsDialog(selected_block)
+                self.dialog = PropsDialog(selected_block, main)
                 response = gtk.RESPONSE_APPLY
                 while response == gtk.RESPONSE_APPLY:  # rerun the dialog if Apply was hit
                     response = self.dialog.run()
@@ -520,7 +520,7 @@ class ActionHandler:
                 flow_graph._options_block.get_param('generate_options').set_value(args[0])
                 flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_OPEN:
-            file_paths = args if args else OpenFlowGraphFileDialog(page.get_file_path()).run()
+            file_paths = args if args else OpenFlowGraphFileDialog(main, page.get_file_path()).run()
             if file_paths: #open a new page for each file, show only the first
                 for i,file_path in enumerate(file_paths):
                     main.new_page(file_path, show=(i==0))
@@ -530,7 +530,7 @@ class ActionHandler:
                     main.vars.update_gui()
 
         elif action == Actions.FLOW_GRAPH_OPEN_QSS_THEME:
-            file_paths = OpenQSSFileDialog(self.platform.config.install_prefix +
+            file_paths = OpenQSSFileDialog(main, self.platform.config.install_prefix +
                                            '/share/gnuradio/themes/').run()
             if file_paths:
                 try:
@@ -555,7 +555,7 @@ class ActionHandler:
                     Messages.send_fail_save(page.get_file_path())
                     page.set_saved(False)
         elif action == Actions.FLOW_GRAPH_SAVE_AS:
-            file_path = SaveFlowGraphFileDialog(page.get_file_path()).run()
+            file_path = SaveFlowGraphFileDialog(main, page.get_file_path()).run()
             if file_path is not None:
                 page.set_file_path(file_path)
                 Actions.FLOW_GRAPH_SAVE()
@@ -574,7 +574,7 @@ class ActionHandler:
                     while os.path.exists(dup_file_path_temp):
                         dup_file_path_temp = dup_file_name+'('+str(count)+').grc'
                         count += 1
-                    dup_file_path_user = SaveFlowGraphFileDialog(dup_file_path_temp).run()
+                    dup_file_path_user = SaveFlowGraphFileDialog(main, dup_file_path_temp).run()
                     if dup_file_path_user is not None:
                         ParseXML.to_file(flow_graph.export_data(), dup_file_path_user)
                         Messages.send('Saved Copy to: "' + dup_file_path_user + '"\n')
@@ -589,7 +589,7 @@ class ActionHandler:
             flow_graph_update(new_flow_graph)
             curr_page.set_saved(False)
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
-            file_path, background_transparent = SaveScreenShotDialog(page.get_file_path()).run()
+            file_path, background_transparent = SaveScreenShotDialog(main, page.get_file_path()).run()
             if file_path is not None:
                 pixbuf = flow_graph.get_drawing_area().get_screenshot(background_transparent)
                 pixbuf.save(file_path, Constants.IMAGE_FILE_EXTENSION[1:])
@@ -615,7 +615,7 @@ class ActionHandler:
                 xterm = self.platform.config.xterm_executable
                 if Preferences.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
-                        Dialogs.MissingXTermDialog(xterm)
+                        Dialogs.MissingXTermDialog(xterm, main)
                     Preferences.xterm_missing(xterm)
                 if page.get_saved() and page.get_file_path():
                     Executor.ExecFlowGraphThread(
