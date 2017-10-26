@@ -31,6 +31,8 @@ BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
 DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc')
 DEFAULT_HIER_BLOCK_LIB_DIR = os.path.expanduser('~/.grc_gnuradio')
 
+CACHE_FILE = os.path.expanduser('~/.cache/grc_gnuradio/cache.json')
+
 BLOCK_DESCRIPTION_FILE_FORMAT_VERSION = 1
 # File format versions:
 #  0: undefined / legacy

@@ -15,6 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+from __future__ import absolute_import
+
+import six
+
 
 class Evaluated(object):
     def __init__(self, expected_type, default, name=None):
@@ -62,7 +66,7 @@ class Evaluated(object):
     def __set__(self, instance, value):
         attribs = instance.__dict__
         value = value or self.default
-        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
+        if isinstance(value, six.text_type) and value.startswith('${') and value.endswith('}'):
             attribs[self.name_raw] = value[2:-1].strip()
         else:
             attribs[self.name] = type(self.default)(value)

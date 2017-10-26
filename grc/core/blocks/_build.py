@@ -29,7 +29,7 @@ def build(id, label='', category='', flags='', documentation='',
           parameters=None, inputs=None, outputs=None, templates=None, **kwargs):
     block_id = id
 
-    cls = type(block_id, (Block,), {})
+    cls = type(str(block_id), (Block,), {})
     cls.key = block_id
 
     cls.label = label or block_id.title()
@@ -63,7 +63,9 @@ def build(id, label='', category='', flags='', documentation='',
 
 
 def _single_mako_expr(value, block_id):
-    match = re.match(r'\s*\$\{\s*(.*?)\s*\}\s*', str(value))
-    if value and not match:
+    if not value:
+        return None
+    value = value.strip()
+    if not (value.startswith('${') and value.endswith('}')):
         raise ValueError('{} is not a mako substitution in {}'.format(value, block_id))
-    return match.group(1) if match else None
+    return value[2:-1].strip()

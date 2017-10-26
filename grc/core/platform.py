@@ -19,7 +19,6 @@ from __future__ import absolute_import, print_function
 
 from codecs import open
 from collections import namedtuple
-import glob
 import os
 import logging
 from itertools import chain
@@ -33,6 +32,7 @@ from . import (
 )
 
 from .Config import Config
+from .cache import Cache
 from .base import Element
 from .io import yaml
 from .generator import Generator
@@ -141,44 +141,41 @@ class Platform(Element):
         self.connection_templates.clear()
         self._block_categories.clear()
 
-        # FIXME: remove this as soon as converter is stable
-        from ..converter import Converter
-        converter = Converter(self.config.block_paths, self.config.yml_block_cache)
-        converter.run()
-        logging.info('XML converter done.')
+        # # FIXME: remove this as soon as converter is stable
+        # from ..converter import Converter
+        # converter = Converter(self.config.block_paths, self.config.yml_block_cache)
+        # converter.run()
+        # logging.info('XML converter done.')
 
-        for file_path in self._iter_files_in_block_path(path):
-            try:
-                data = converter.cache[file_path]
-            except KeyError:
-                with open(file_path, encoding='utf-8') as fp:
-                    data = yaml.safe_load(fp)
+        with Cache(Constants.CACHE_FILE) as cache:
+            for file_path in self._iter_files_in_block_path(path):
+                data = cache.get_or_load(file_path)
 
-            if file_path.endswith('.block.yml'):
-                loader = self.load_block_description
-                scheme = schema_checker.BLOCK_SCHEME
-            elif file_path.endswith('.domain.yml'):
-                loader = self.load_domain_description
-                scheme = schema_checker.DOMAIN_SCHEME
-            elif file_path.endswith('.tree.yml'):
-                loader = self.load_category_tree_description
-                scheme = None
-            else:
-                continue
+                if file_path.endswith('.block.yml'):
+                    loader = self.load_block_description
+                    scheme = schema_checker.BLOCK_SCHEME
+                elif file_path.endswith('.domain.yml'):
+                    loader = self.load_domain_description
+                    scheme = schema_checker.DOMAIN_SCHEME
+                elif file_path.endswith('.tree.yml'):
+                    loader = self.load_category_tree_description
+                    scheme = None
+                else:
+                    continue
 
-            try:
-                checker = schema_checker.Validator(scheme)
-                passed = checker.run(data)
-                for msg in checker.messages:
-                    logger.warning('{:<40s} {}'.format(os.path.basename(file_path), msg))
-                if not passed:
-                    logger.info('YAML schema check failed for: ' + file_path)
+                try:
+                    checker = schema_checker.Validator(scheme)
+                    passed = checker.run(data)
+                    for msg in checker.messages:
+                        logger.warning('{:<40s} {}'.format(os.path.basename(file_path), msg))
+                    if not passed:
+                        logger.info('YAML schema check failed for: ' + file_path)
 
-                loader(data, file_path)
-            except Exception as error:
-                logger.exception('Error while loading %s', file_path)
-                logger.exception(error)
-                raise
+                    loader(data, file_path)
+                except Exception as error:
+                    logger.exception('Error while loading %s', file_path)
+                    logger.exception(error)
+                    raise
 
         for key, block in six.iteritems(self.blocks):
             category = self._block_categories.get(key, block.category)
@@ -201,10 +198,9 @@ class Platform(Element):
             if os.path.isfile(entry):
                 yield entry
             elif os.path.isdir(entry):
-                pattern = os.path.join(entry, '**.' + ext)
-                yield_from = glob.iglob(pattern)
-                for file_path in yield_from:
-                    yield file_path
+                for dirpath, dirnames, filenames in os.walk(entry):
+                    for filename in sorted(filter(lambda f: f.endswith('.' + ext), filenames)):
+                        yield os.path.join(dirpath, filename)
             else:
                 logger.debug('Ignoring invalid path entry %r', entry)
 
@@ -232,16 +228,18 @@ class Platform(Element):
             log.error('Unknown format version %d in %s', file_format, file_path)
             return
 
-        block_id = data.pop('id').rstrip('_')
+        block_id = data['id'] = data['id'].rstrip('_')
 
         if block_id in self.block_classes_build_in:
             log.warning('Not overwriting build-in block %s with %s', block_id, file_path)
             return
         if block_id in self.blocks:
-            log.warning('Block with id "%s" overwritten by %s', block_id, file_path)
+            log.warning('Block with id "%s" loaded from\n  %s\noverwritten by\n  %s',
+                        block_id, self.blocks[block_id].loaded_from, file_path)
 
         try:
-            block_cls = self.blocks[block_id] = self.new_block_class(block_id, **data)
+            block_cls = self.blocks[block_id] = self.new_block_class(**data)
+            block_cls.loaded_from = file_path
         except errors.BlockLoadError as error:
             log.error('Unable to load block %s', block_id)
             log.exception(error)
@@ -288,19 +286,12 @@ class Platform(Element):
         path = []
 
         def load_category(name, elements):
-            if not isinstance(name, str):
-                log.debug('invalid name %r', name)
-                return
-            if isinstance(elements, list):
-                pass
-            elif isinstance(elements, str):
-                elements = [elements]
-            else:
-                log.debug('Ignoring elements of %s', name)
+            if not isinstance(name, six.string_types):
+                log.debug('Invalid name %r', name)
                 return
             path.append(name)
-            for element in elements:
-                if isinstance(element, str):
+            for element in utils.to_list(elements):
+                if isinstance(element, six.string_types):
                     block_id = element
                     self._block_categories[block_id] = list(path)
                 elif isinstance(element, dict):
@@ -415,8 +406,8 @@ class Platform(Element):
             fg.import_data(data)
         return fg
 
-    def new_block_class(self, block_id, **data):
-        return blocks.build(block_id, **data)
+    def new_block_class(self, **data):
+        return blocks.build(**data)
 
     def make_block(self, parent, block_id, **kwargs):
         cls = self.block_classes[block_id]

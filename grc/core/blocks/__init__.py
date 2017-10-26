@@ -29,6 +29,7 @@ build_ins = {}
 
 
 def register_build_in(cls):
+    cls.loaded_from = '(build-in)'
     build_ins[cls.key] = cls
     return cls
 
