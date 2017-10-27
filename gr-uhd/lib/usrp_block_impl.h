@@ -29,13 +29,6 @@
 #include <boost/dynamic_bitset.hpp>
 #include <boost/bind.hpp>
 
-#define SET_CENTER_FREQ_FROM_INTERNALS(usrp_class, tune_method) \
-    ::uhd::tune_result_t \
-    usrp_class::_set_center_freq_from_internals(size_t chan) \
-    { \
-      _chans_to_tune.reset(chan); \
-      return _dev->tune_method(_curr_tune_req[chan], _stream_args.channels[chan]); \
-    }
 
 namespace gr {
   namespace uhd {
@@ -213,10 +206,10 @@ namespace gr {
       }
 
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
-      virtual ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan) = 0;
+      virtual ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction) = 0;
 
       //! Calls _set_center_freq_from_internals() on all channels
-      void _set_center_freq_from_internals_allchans();
+      void _set_center_freq_from_internals_allchans(pmt::pmt_t direction);
 
       /**********************************************************************
        * Members
@@ -247,4 +240,3 @@ namespace gr {
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_UHD_BLOCK_IMPL_H */
-

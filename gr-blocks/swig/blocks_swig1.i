@@ -24,24 +24,10 @@
 
 %include "gnuradio.i"
 
+//load generated python docstrings
 %include "blocks_swig1_doc.i"
 
 %{
-#include "gnuradio/blocks/skiphead.h"
-#include "gnuradio/blocks/stream_mux.h"
-#include "gnuradio/blocks/stream_to_streams.h"
-#include "gnuradio/blocks/stream_to_tagged_stream.h"
-#include "gnuradio/blocks/stream_to_vector.h"
-#include "gnuradio/blocks/streams_to_stream.h"
-#include "gnuradio/blocks/streams_to_vector.h"
-#include "gnuradio/blocks/tag_debug.h"
-#include "gnuradio/blocks/tagged_file_sink.h"
-#include "gnuradio/blocks/tsb_vector_sink_b.h"
-#include "gnuradio/blocks/tsb_vector_sink_c.h"
-#include "gnuradio/blocks/tsb_vector_sink_f.h"
-#include "gnuradio/blocks/tsb_vector_sink_i.h"
-#include "gnuradio/blocks/tsb_vector_sink_s.h"
-#include "gnuradio/blocks/throttle.h"
 #include "gnuradio/blocks/vector_map.h"
 #include "gnuradio/blocks/vector_to_stream.h"
 #include "gnuradio/blocks/vector_to_streams.h"
@@ -64,21 +50,6 @@
 #include "gnuradio/blocks/wavfile_source.h"
 %}
 
-%include "gnuradio/blocks/skiphead.h"
-%include "gnuradio/blocks/stream_mux.h"
-%include "gnuradio/blocks/stream_to_streams.h"
-%include "gnuradio/blocks/stream_to_tagged_stream.h"
-%include "gnuradio/blocks/stream_to_vector.h"
-%include "gnuradio/blocks/streams_to_stream.h"
-%include "gnuradio/blocks/streams_to_vector.h"
-%include "gnuradio/blocks/tag_debug.h"
-%include "gnuradio/blocks/tagged_file_sink.h"
-%include "gnuradio/blocks/tsb_vector_sink_b.h"
-%include "gnuradio/blocks/tsb_vector_sink_c.h"
-%include "gnuradio/blocks/tsb_vector_sink_f.h"
-%include "gnuradio/blocks/tsb_vector_sink_i.h"
-%include "gnuradio/blocks/tsb_vector_sink_s.h"
-%include "gnuradio/blocks/throttle.h"
 %include "gnuradio/blocks/vector_map.h"
 %include "gnuradio/blocks/vector_to_stream.h"
 %include "gnuradio/blocks/vector_to_streams.h"
@@ -100,21 +71,6 @@
 %include "gnuradio/blocks/wavfile_sink.h"
 %include "gnuradio/blocks/wavfile_source.h"
 
-GR_SWIG_BLOCK_MAGIC2(blocks, skiphead);
-GR_SWIG_BLOCK_MAGIC2(blocks, stream_mux);
-GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_streams);
-GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_tagged_stream);
-GR_SWIG_BLOCK_MAGIC2(blocks, stream_to_vector);
-GR_SWIG_BLOCK_MAGIC2(blocks, streams_to_stream);
-GR_SWIG_BLOCK_MAGIC2(blocks, streams_to_vector);
-GR_SWIG_BLOCK_MAGIC2(blocks, tag_debug);
-GR_SWIG_BLOCK_MAGIC2(blocks, tagged_file_sink);
-GR_SWIG_BLOCK_MAGIC2(blocks, tsb_vector_sink_b);
-GR_SWIG_BLOCK_MAGIC2(blocks, tsb_vector_sink_c);
-GR_SWIG_BLOCK_MAGIC2(blocks, tsb_vector_sink_f);
-GR_SWIG_BLOCK_MAGIC2(blocks, tsb_vector_sink_i);
-GR_SWIG_BLOCK_MAGIC2(blocks, tsb_vector_sink_s);
-GR_SWIG_BLOCK_MAGIC2(blocks, throttle);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_map);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_stream);
 GR_SWIG_BLOCK_MAGIC2(blocks, vector_to_streams);

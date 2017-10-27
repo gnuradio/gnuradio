@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<block>
+  <name>Exponentiate Const Int</name>
+  <key>blocks_exponentiate_const_cci</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.exponentiate_const_cci($exponent, $vlen)</make>
+  <callback>set_exponent($exponent)</callback>
+
+  <param>
+    <name>Num Ports</name>
+    <key>num_ports</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Vec Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Exponent</name>
+    <key>exponent</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  
+  <check>$num_ports &gt; 0</check>
+  <check>$vlen &gt; 0</check>
+  <check>$exponent &gt; 0</check>
+  
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+    <vlen>$vlen</vlen>
+    <nports>$num_ports</nports>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <vlen>$vlen</vlen>
+    <nports>$num_ports</nports>
+  </source>
+</block>

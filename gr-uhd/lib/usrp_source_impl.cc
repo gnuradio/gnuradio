@@ -71,6 +71,7 @@ namespace gr {
                     args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
       _recv_timeout(0.1), // seconds
+      _recv_one_packet(true),
       _tag_now(false),
       _issue_stream_cmd_on_start(issue_stream_cmd_on_start)
     {
@@ -79,7 +80,6 @@ namespace gr {
       _id = pmt::string_to_symbol(str.str());
 
       _samp_rate = this->get_samp_rate();
-      _center_freq = this->get_center_freq(0);
 #ifdef GR_UHD_USE_STREAM_API
       _samps_per_packet = 1;
 #endif
@@ -144,15 +144,23 @@ namespace gr {
     usrp_source_impl::set_center_freq(const ::uhd::tune_request_t tune_request,
                                       size_t chan)
     {
-      const size_t user_chan = chan;
       chan = _stream_args.channels[chan];
       const ::uhd::tune_result_t res = _dev->set_rx_freq(tune_request, chan);
-      _center_freq = this->get_center_freq(user_chan);
       _tag_now = true;
       return res;
     }
 
-    SET_CENTER_FREQ_FROM_INTERNALS(usrp_source_impl, set_rx_freq);
+    ::uhd::tune_result_t
+    usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direction)
+    {
+      _chans_to_tune.reset(chan);
+      if (pmt::eqv(direction, pmt::mp("TX"))) {
+        // TODO: what happens if the TX device is not instantiated? Catch error?
+        return _dev->set_tx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
+      } else {
+        return _dev->set_rx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
+      }
+    }
 
     double
     usrp_source_impl::get_center_freq(size_t chan)
@@ -492,6 +500,15 @@ namespace gr {
         _tag_now = true;
     }
 
+    void
+    usrp_source_impl::set_recv_timeout(
+            const double timeout,
+            const bool one_packet
+    ) {
+        _recv_timeout = timeout;
+        _recv_one_packet = one_packet;
+    }
+
     bool
     usrp_source_impl::start(void)
     {
@@ -537,7 +554,7 @@ namespace gr {
           _rx_stream->recv(outputs, nbytes/bpi, _metadata, 0.0);
         else
           // no rx streamer -- nothing to flush
-          break; 
+          break;
 #else
         _dev->get_device()->recv
           (outputs, nbytes/_type->size, _metadata, *_type,
@@ -628,7 +645,7 @@ namespace gr {
           noutput_items,
           _metadata,
           _recv_timeout,
-          true /* one packet -> minimize latency */
+          _recv_one_packet
       );
 #else
       size_t num_samps = _dev->get_device()->recv
@@ -657,7 +674,7 @@ namespace gr {
             this->add_item_tag(i, nitems_written(0), RATE_KEY,
                                pmt::from_double(_samp_rate), _id);
             this->add_item_tag(i, nitems_written(0), FREQ_KEY,
-                               pmt::from_double(_center_freq), _id);
+                               pmt::from_double(this->get_center_freq(i)), _id);
           }
         }
         break;

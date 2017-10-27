@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/dtv/catv_config.h>
 
 namespace gr {
   namespace dtv {
@@ -32,7 +33,7 @@ namespace gr {
      * \ingroup dtv
      *
      * Input: Interleaved MPEG-2 + RS parity bitstream packets of 128 7-bit symbols.\n
-     * Output: Scrambled FEC Frame packets of 60 * 128 7-bit symbols.
+     * Output: Scrambled FEC Frame packets of 60 * 128 (64QAM) or 88 * 128 (256QAM) 7-bit symbols.
      */
     class DTV_API catv_randomizer_bb : virtual public gr::sync_block
     {
@@ -42,8 +43,9 @@ namespace gr {
       /*!
        * \brief Create an ITU-T J.83B randomizer.
        *
+       * \param constellation 64QAM or 256QAM constellation.
        */
-      static sptr make();
+      static sptr make(catv_constellation_t constellation);
     };
 
   } // namespace dtv

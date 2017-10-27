@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2017 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ namespace gr {
      * \brief Signals DVB-S2 physical layer frames.
      * \ingroup dtv
      *
-     * Input: QPSK, 8PSK, 16APSK or 32APSK modulated complex IQ values (XFECFRAME).
+     * Input: QPSK, 8PSK, 16APSK or 32APSK modulated complex IQ values (XFECFRAME). \n
      * Output: DVB-S2 PLFRAME.
      */
     class DTV_API dvbs2_physical_cc : virtual public gr::block

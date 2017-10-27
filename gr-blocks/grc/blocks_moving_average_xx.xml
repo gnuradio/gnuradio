@@ -8,7 +8,7 @@
 	<name>Moving Average</name>
 	<key>blocks_moving_average_xx</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.moving_average_$(type.fcn)($length, $scale, $max_iter)</make>
+	<make>blocks.moving_average_$(type.fcn)($length, $scale, $max_iter, $vlen)</make>
 	<callback>set_length_and_scale($length, $scale)</callback>
 	<param>
 		<name>Type</name>
@@ -57,12 +57,21 @@
 		<value>4000</value>
 		<type>int</type>
 	</param>
+	<param>
+		<name>Length of Vectors</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
+		<vlen>$vlen</vlen>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
+		<vlen>$vlen</vlen>
 	</source>
 </block>

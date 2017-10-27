@@ -27,15 +27,13 @@ include(GrBoost)
 ########################################################################
 include(GrComponent)
 
-find_package(GSL)
-
 GR_REGISTER_COMPONENT("gr-dtv" ENABLE_GR_DTV
     Boost_FOUND
-    GSL_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_ANALOG
     ENABLE_GR_FILTER
     ENABLE_GR_FEC
+    ENABLE_VOLK
 )
 
 GR_SET_GLOBAL(GR_DTV_INCLUDE_DIRS

@@ -26,14 +26,11 @@ include_directories(
     ${GR_WAVELET_INCLUDE_DIRS}
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${LOG4CXX_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
     ${GSL_INCLUDE_DIRS}
 )
 
-# is this correct?
 link_directories(${GR_WAVELET_LIBRARY_DIRS})
-link_directories(${LOG4CXX_LIBRARY_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${GSL_LIBRARY_DIRS})
 add_definitions(${GSL_DEFINITIONS})
@@ -41,9 +38,6 @@ add_definitions(${GSL_DEFINITIONS})
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
-
-include_directories(${LOG4CPP_INCLUDE_DIRS})
-link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 ########################################################################
 # Setup library
@@ -74,7 +68,6 @@ list(APPEND wavelet_libs
     ${Boost_LIBRARIES}
     ${WAVELET_LIBRARIES}
     ${GSL_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-wavelet SHARED ${gr_wavelet_sources})

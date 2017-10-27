@@ -1,4 +1,4 @@
-# Copyright 2011-2016 Free Software Foundation, Inc.
+# Copyright (C) 2011-2016,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,12 +29,10 @@ include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
     ${VOLK_INCLUDE_DIRS}
-    ${LOG4CPP_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
 )
 
 link_directories(${Boost_LIBRARY_DIRS})
-link_directories(${LOG4CPP_LIBRARY_DIRS})
 
 if(ENABLE_GR_CTRLPORT)
   ADD_DEFINITIONS(-DGR_CTRLPORT)
@@ -56,6 +54,7 @@ list(APPEND digital_sources
     binary_slicer_fb_impl.cc
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
+    clock_tracking_loop.cc
     cma_equalizer_cc_impl.cc
     constellation.cc
     constellation_decoder_cb_impl.cc
@@ -64,6 +63,7 @@ list(APPEND digital_sources
     corr_est_cc_impl.cc
     correlate_access_code_bb_impl.cc
     correlate_access_code_tag_bb_impl.cc
+    correlate_access_code_tag_ff_impl.cc
     correlate_access_code_bb_ts_impl.cc
     correlate_access_code_ff_ts_impl.cc
     correlate_and_sync_cc_impl.cc
@@ -128,6 +128,10 @@ list(APPEND digital_sources
     scrambler_bb_impl.cc
     simple_correlator_impl.cc
     simple_framer_impl.cc
+    interpolating_resampler.cc
+    symbol_sync_cc_impl.cc
+    symbol_sync_ff_impl.cc
+    timing_error_detector.cc
 )
 
 #Add Windows DLL resource file if using MSVC
@@ -151,7 +155,6 @@ list(APPEND digital_libs
     gnuradio-analog
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
 )
 
 add_library(gnuradio-digital SHARED ${digital_sources})
@@ -228,7 +231,6 @@ if(ENABLE_TESTING)
     gnuradio-digital
     ${Boost_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
   )
 
   GR_ADD_TEST(test_gr_digital test-gr-digital)

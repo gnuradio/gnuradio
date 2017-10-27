@@ -1,4 +1,4 @@
-# Copyright 2012,2014 Free Software Foundation, Inc.
+# Copyright (C) 2012,2014,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -44,6 +44,8 @@ install(FILES
     interpolator_taps.h
     mmse_fir_interpolator_cc.h
     mmse_fir_interpolator_ff.h
+    mmse_interp_differentiator_cc.h
+    mmse_interp_differentiator_ff.h
     pm_remez.h
     polyphase_filterbank.h
     filterbank.h

@@ -26,6 +26,7 @@
 
 #include "correlate_access_code_tag_bb_impl.h"
 #include <gnuradio/io_signature.h>
+#include <boost/format.hpp>
 #include <stdexcept>
 #include <volk/volk.h>
 #include <cstdio>
@@ -33,8 +34,6 @@
 
 namespace gr {
   namespace digital {
-
-#define VERBOSE 0
 
     correlate_access_code_tag_bb::sptr
     correlate_access_code_tag_bb::make(const std::string &access_code,
@@ -56,6 +55,7 @@ namespace gr {
 	d_threshold(threshold), d_len(0)
     {
       if(!set_access_code(access_code)) {
+	GR_LOG_ERROR(d_logger, "access_code is > 64 bits");
 	throw std::out_of_range ("access_code is > 64 bits");
       }
 
@@ -73,6 +73,8 @@ namespace gr {
     correlate_access_code_tag_bb_impl::set_access_code(
         const std::string &access_code)
     {
+      gr::thread::scoped_lock l(d_mutex_access_code);
+
       d_len = access_code.length();	// # of bytes in string
       if(d_len > 64)
         return false;
@@ -85,10 +87,8 @@ namespace gr {
         d_access_code = (d_access_code << 1) | (access_code[i] & 1);
       }
 
-      if(VERBOSE) {
-          std::cerr << "Access code: " << std::hex << d_access_code << std::dec << std::endl;
-          std::cerr << "Mask: " << std::hex << d_mask << std::dec << std::endl;
-      }
+      GR_LOG_DEBUG(d_logger, boost::format("Access code: %llx") % d_access_code);
+      GR_LOG_DEBUG(d_logger, boost::format("Mask: %llx") % d_mask);
 
       return true;
     }
@@ -98,6 +98,8 @@ namespace gr {
 					    gr_vector_const_void_star &input_items,
 					    gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock l(d_mutex_access_code);
+
       const unsigned char *in = (const unsigned char*)input_items[0];
       unsigned char *out = (unsigned char*)output_items[0];
 
@@ -116,8 +118,7 @@ namespace gr {
 	// shift in new data
 	d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
 	if(nwrong <= d_threshold) {
-	  if(VERBOSE)
-	    std::cerr << "writing tag at sample " << abs_out_sample_cnt + i << std::endl;
+	  GR_LOG_DEBUG(d_logger, boost::format("writing tag at sample %llu") % (abs_out_sample_cnt + i));
 	  add_item_tag(0, //stream ID
 		       abs_out_sample_cnt + i, //sample
 		       d_key,      //frame info
