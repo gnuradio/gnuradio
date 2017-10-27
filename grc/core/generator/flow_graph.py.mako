@@ -120,17 +120,16 @@ class ${class_name}(gr.hier_block2, Qt.QWidget):
 % else:
 class ${class_name}(gr.hier_block2):
 % endif
-<%def name="make_io_sig(io_sigs)">
-    <% size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in io_sigs] %>
+<%def name="make_io_sig(io_sigs)">\
+    <% size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in io_sigs] %>\
     % if len(io_sigs) == 0:
-gr.io_signature(0, 0, 0)
+gr.io_signature(0, 0, 0)\
     % elif len(io_sigs) == 1:
-gr.io_signature(1, 1, ${size_strs[0]})
+gr.io_signature(1, 1, ${size_strs[0]})\
     % else:
-gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(ize_strs)}])
+gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
     % endif
-</%def>
-
+</%def>\
     def __init__(${param_str}):
         gr.hier_block2.__init__(
             self, "${ title }",
@@ -188,7 +187,9 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(ize_strs)}])
         ${'##################################################'}
         % endif
         % for blk, blk_make in blocks:
+        % if blk_make:
         ${ indent(blk_make.strip('\n')) }
+        % endif
 ##         % if 'alias' in blk.params and blk.params['alias'].get_evaluated():
 ##         (self.${blk.name}).set_block_alias("${blk.params['alias'].get_evaluated()}")
 ##         % endif

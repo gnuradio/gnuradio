@@ -2,14 +2,16 @@ import collections
 import os
 
 import six
+import codecs
 
 from .top_block import TopBlockGenerator
 
-from .. import ParseXML, Constants
+from .. import Constants
+from ..io import yaml
 
 
 class HierBlockGenerator(TopBlockGenerator):
-    """Extends the top block generator to also generate a block XML file"""
+    """Extends the top block generator to also generate a block YML file"""
 
     def __init__(self, flow_graph, file_path):
         """
@@ -17,7 +19,7 @@ class HierBlockGenerator(TopBlockGenerator):
 
         Args:
             flow_graph: the flow graph object
-            file_path: where to write the py file (the xml goes into HIER_BLOCK_LIB_DIR)
+            file_path: where to write the py file (the yml goes into HIER_BLOCK_LIB_DIR)
         """
         TopBlockGenerator.__init__(self, flow_graph, file_path)
         platform = flow_graph.parent
@@ -28,24 +30,39 @@ class HierBlockGenerator(TopBlockGenerator):
 
         self._mode = Constants.HIER_BLOCK_FILE_MODE
         self.file_path = os.path.join(hier_block_lib_dir, self._flow_graph.get_option('id') + '.py')
-        self.file_path_xml = self.file_path + '.xml'
+        self.file_path_yml = self.file_path + '.block.yml'
 
     def write(self):
         """generate output and write it to files"""
         TopBlockGenerator.write(self)
-        ParseXML.to_file(self._build_block_n_from_flow_graph_io(), self.file_path_xml)
-        ParseXML.validate_dtd(self.file_path_xml, Constants.BLOCK_DTD)
+
+        data = yaml.dump(self._build_block_n_from_flow_graph_io())
+
+        replace = [
+            ('parameters:', '\nparameters:'),
+            ('inputs:', '\ninputs:'),
+            ('outputs:', '\noutputs:'),
+            ('asserts:', '\nasserts:'),
+            ('templates:', '\ntemplates:'),
+            ('documentation:', '\ndocumentation:'),
+            ('file_format:', '\nfile_format:'),
+        ]
+        for r in replace:
+            data = data.replace(*r)
+
+        with codecs.open(self.file_path_yml, 'w', encoding='utf-8') as fp:
+            fp.write(data)
         try:
-            os.chmod(self.file_path_xml, self._mode)
+            os.chmod(self.file_path_yml, self._mode)
         except:
             pass
 
     def _build_block_n_from_flow_graph_io(self):
         """
-        Generate a block XML nested data from the flow graph IO
+        Generate a block YML nested data from the flow graph IO
 
         Returns:
-            a xml node tree
+            a yml node tree
         """
         # Extract info from the flow graph
         block_id = self._flow_graph.get_option('id')
@@ -74,7 +91,7 @@ class HierBlockGenerator(TopBlockGenerator):
             p['dtype'] = 'raw'
             p['value'] = param_block.params['value'].get_value()
             p['hide'] = param_block.params['hide'].get_value()
-            data['param'].append(p)
+            data['parameters'].append(p)
 
         # Ports
         for direction in ('inputs', 'outputs'):
@@ -83,7 +100,7 @@ class HierBlockGenerator(TopBlockGenerator):
                 p = collections.OrderedDict()
                 if port.domain == Constants.GR_MESSAGE_DOMAIN:
                     p['id'] = port.id
-                p['label'] = port.label
+                p['label'] = port.parent.params['label'].value
                 if port.domain != Constants.DEFAULT_DOMAIN:
                     p['domain'] = port.domain
                 p['dtype'] = port.dtype
@@ -95,34 +112,35 @@ class HierBlockGenerator(TopBlockGenerator):
 
         t = data['templates'] = collections.OrderedDict()
 
-        t['import'] = "from {0} import {0}  # grc-generated hier_block".format(
+        t['imports'] = "from {0} import {0}  # grc-generated hier_block".format(
             self._flow_graph.get_option('id'))
         # Make data
         if parameters:
             t['make'] = '{cls}(\n    {kwargs},\n)'.format(
                 cls=block_id,
                 kwargs=',\n    '.join(
-                    '{key}=${key}'.format(key=param.name) for param in parameters
+                    '{key}=${{ {key} }}'.format(key=param.name) for param in parameters
                 ),
             )
         else:
             t['make'] = '{cls}()'.format(cls=block_id)
         # Callback data
-        t['callback'] = [
-            'set_{key}(${key})'.format(key=param_block.name) for param_block in parameters
+        t['callbacks'] = [
+            'set_{key}(${{ {key} }})'.format(key=param_block.name) for param_block in parameters
         ]
 
 
         # Documentation
-        data['doc'] = "\n".join(field for field in (
+        data['documentation'] = "\n".join(field for field in (
             self._flow_graph.get_option('author'),
             self._flow_graph.get_option('description'),
             self.file_path
         ) if field)
         data['grc_source'] = str(self._flow_graph.grc_file_path)
 
-        n = {'block': data}
-        return n
+        data['file_format'] = 1
+
+        return data
 
 
 class QtHierBlockGenerator(HierBlockGenerator):
@@ -153,41 +171,19 @@ class QtHierBlockGenerator(HierBlockGenerator):
             "\n${ gui_hint % win }"
         )
 
-        return {'block': block_n}
+        return block_n
 
 
 def get_hier_block_io(flow_graph, direction, domain=None):
     """
     Get a list of io ports for this flow graph.
 
-    Returns a list of dicts with: type, label, vlen, size, optional
+    Returns a list of blocks
     """
     pads = flow_graph.get_pad_sources() if direction == 'inputs' else flow_graph.get_pad_sinks()
 
-    ports = []
     for pad in pads:
         for port in (pad.sources if direction == 'inputs' else pad.sinks):
             if domain and port.domain != domain:
                 continue
             yield port
-
-        type_param = pad.params['type']
-        master = {
-            'label': str(pad.params['label'].get_evaluated()),
-            'type': str(pad.params['type'].get_evaluated()),
-            'vlen': str(pad.params['vlen'].get_value()),
-            'size':  type_param.options.attributes[type_param.get_value()]['size'],
-            'optional': bool(pad.params['optional'].get_evaluated()),
-        }
-
-        if domain and pad:
-            num_ports = pad.params['num_streams'].get_evaluated()
-            if num_ports <= 1:
-                yield master
-            else:
-                for i in range(num_ports):
-                    clone = master.copy()
-                    clone['label'] += str(i)
-                    ports.append(clone)
-        else:
-            ports.append(master)
