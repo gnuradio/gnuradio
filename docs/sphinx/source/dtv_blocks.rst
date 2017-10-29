@@ -19,6 +19,7 @@ gnuradio.dtv
 .. autoblock:: gnuradio.dtv.atsc_trellis_encoder
 .. autoblock:: gnuradio.dtv.atsc_viterbi_decoder
 .. autoblock:: gnuradio.dtv.dvb_bbheader_bb
+.. autoblock:: gnuradio.dtv.dvb_bbheader_raw_bb
 .. autoblock:: gnuradio.dtv.dvb_bbscrambler_bb
 .. autoblock:: gnuradio.dtv.dvb_bch_bb
 .. autoblock:: gnuradio.dtv.dvb_ldpc_bb

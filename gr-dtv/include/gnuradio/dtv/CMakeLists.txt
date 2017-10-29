@@ -44,6 +44,7 @@ install(FILES
     dvbt2_config.h
     catv_config.h
     dvb_bbheader_bb.h
+    dvb_bbheader_raw_bb.h
     dvb_bbscrambler_bb.h
     dvb_bch_bb.h
     dvb_ldpc_bb.h

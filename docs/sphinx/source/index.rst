@@ -466,6 +466,7 @@ DTV Blocks
    gnuradio.dtv.atsc_trellis_encoder
    gnuradio.dtv.atsc_viterbi_decoder
    gnuradio.dtv.dvb_bbheader_bb
+   gnuradio.dtv.dvb_bbheader_raw_bb
    gnuradio.dtv.dvb_bbscrambler_bb
    gnuradio.dtv.dvb_bch_bb
    gnuradio.dtv.dvb_ldpc_bb

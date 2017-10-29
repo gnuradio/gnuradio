@@ -49,6 +49,7 @@
 #include "gnuradio/dtv/dvbs2_config.h"
 #include "gnuradio/dtv/catv_config.h"
 #include "gnuradio/dtv/dvb_bbheader_bb.h"
+#include "gnuradio/dtv/dvb_bbheader_raw_bb.h"
 #include "gnuradio/dtv/dvb_bbscrambler_bb.h"
 #include "gnuradio/dtv/dvb_bch_bb.h"
 #include "gnuradio/dtv/dvb_ldpc_bb.h"
@@ -108,6 +109,7 @@
 %include "gnuradio/dtv/dvbs2_config.h"
 %include "gnuradio/dtv/catv_config.h"
 %include "gnuradio/dtv/dvb_bbheader_bb.h"
+%include "gnuradio/dtv/dvb_bbheader_raw_bb.h"
 %include "gnuradio/dtv/dvb_bbscrambler_bb.h"
 %include "gnuradio/dtv/dvb_bch_bb.h"
 %include "gnuradio/dtv/dvb_ldpc_bb.h"
@@ -161,6 +163,7 @@ GR_SWIG_BLOCK_MAGIC2(dtv, atsc_sync);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_trellis_encoder);
 GR_SWIG_BLOCK_MAGIC2(dtv, atsc_viterbi_decoder);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bbheader_bb);
+GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bbheader_raw_bb);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bbscrambler_bb);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvb_bch_bb);
 GR_SWIG_BLOCK_MAGIC2(dtv, dvb_ldpc_bb);
