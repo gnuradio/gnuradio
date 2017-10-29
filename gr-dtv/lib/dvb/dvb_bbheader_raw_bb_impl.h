@@ -70,7 +70,7 @@ namespace gr {
       void add_inband_type_b(unsigned char *, int);
 
      public:
-      dvb_bbheader_raw_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate);
+      dvb_bbheader_raw_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate, int transportType, bool singleStream, bool ccm, bool issyi, bool npd, int upl);
       ~dvb_bbheader_raw_bb_impl();
 
       void forecast (int noutput_items, gr_vector_int &ninput_items_required);

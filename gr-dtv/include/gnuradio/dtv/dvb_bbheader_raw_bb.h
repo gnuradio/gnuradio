@@ -56,8 +56,14 @@ namespace gr {
        * \param inband DVB-T2 Type B in-band signalling.
        * \param fecblocks DVB-T2 number of FEC block for in-band signalling.
        * \param tsrate DVB-T2 Transport Stream rate for in-band signalling.
+       * \param transportType Transport Type TS_GS_TRANSPORT = 3, TS_GS_GENERIC_PACKETIZED = 0 TS_GS_GENERIC_CONTINUOUS = 1 TS_GS_RESERVED = 2
+       * \param singleStream DVB-S2 contains single stream or multiple streams
+       * \param ccm DVB-S2 stream is CCM or ACM
+       * \param issyi DVB-S2 ISSYI is enabled
+       * \param npd DVB-S2 NPD is active
+       * \param upl DVB-S2 User Packet Length
        */
-      static sptr make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate);
+      static sptr make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate, int transportType, bool singleStream, bool ccm, bool issyi, bool npd, int upl);
     };
 
   } // namespace dtv

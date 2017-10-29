@@ -29,7 +29,7 @@ $rate4.val, #slurp
 $rate5.val, #slurp
 #end if
 #end if
-$rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
+$rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate, $transportType, $singleStream, $ccm, $issyi, $npd, $upl)</make>
   <param>
     <name>Standard</name>
     <key>standard</key>
@@ -584,6 +584,102 @@ $rolloff.val, $mode.val, $inband.val, $fecblocks, $tsrate)</make>
     <value>4000000</value>
     <type>int</type>
     <hide>$inband.hide_rate</hide>
+  </param>
+  <param>
+    <name>Transport Type</name>
+    <key>transportType</key>
+    <type>enum</type>
+    <hide>$standard.hide_dvbs2</hide>
+    <option>
+      <name>Packetized</name>
+      <key>0</key>
+      <opt>val:0</opt>
+    </option>
+    <option>
+      <name>Continuous</name>
+      <key>1</key>
+      <opt>val:1</opt>
+    </option>
+    <option>
+      <name>Reserved</name>
+      <key>2</key>
+      <opt>val:2</opt>
+    </option>
+    <option>
+      <name>Transport</name>
+      <key>3</key>
+      <opt>val:3</opt>
+    </option>
+  </param>
+  <param>
+    <name>Single Stream</name>
+    <key>singleStream</key>
+    <type>enum</type>
+    <hide>$standard.hide_dvbs2</hide>
+    <option>
+      <name>True</name>
+      <key>True</key>
+      <opt>val:True</opt>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+      <opt>val:False</opt>
+    </option>
+  </param>
+  <param>
+    <name>Modulation Type</name>
+    <key>ccm</key>
+    <type>enum</type>
+    <hide>$standard.hide_dvbs2</hide>
+    <option>
+      <name>CCM</name>
+      <key>True</key>
+      <opt>val:True</opt>
+    </option>
+    <option>
+      <name>ACM</name>
+      <key>False</key>
+      <opt>val:False</opt>
+    </option>
+  </param>
+  <param>
+    <name>ISSYI</name>
+    <key>issyi</key>
+    <type>enum</type>
+    <hide>$standard.hide_dvbs2</hide>
+    <option>
+      <name>True</name>
+      <key>True</key>
+      <opt>val:True</opt>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+      <opt>val:False</opt>
+    </option>
+  </param>
+  <param>
+    <name>NPD</name>
+    <key>npd</key>
+    <type>enum</type>
+    <hide>$standard.hide_dvbs2</hide>
+    <option>
+      <name>True</name>
+      <key>True</key>
+      <opt>val:True</opt>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+      <opt>val:False</opt>
+    </option>
+  </param>
+  <param>
+    <name>User Payload Length</name>
+    <key>upl</key>
+    <type>int</type>
+    <hide>$standard.hide_dvbs2</hide>
   </param>
   <sink>
     <name>in</name>

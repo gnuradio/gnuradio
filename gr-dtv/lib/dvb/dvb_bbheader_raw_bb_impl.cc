@@ -29,16 +29,16 @@ namespace gr {
   namespace dtv {
 
     dvb_bbheader_raw_bb::sptr
-    dvb_bbheader_raw_bb::make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate)
+    dvb_bbheader_raw_bb::make(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate, int transportType, bool singleStream, bool ccm, bool issyi, bool npd, int upl)
     {
       return gnuradio::get_initial_sptr
-        (new dvb_bbheader_raw_bb_impl(standard, framesize, rate, rolloff, mode, inband, fecblocks, tsrate));
+        (new dvb_bbheader_raw_bb_impl(standard, framesize, rate, rolloff, mode, inband, fecblocks, tsrate, transportType, singleStream, ccm, issyi, npd, upl));
     }
 
     /*
      * The private constructor
      */
-    dvb_bbheader_raw_bb_impl::dvb_bbheader_raw_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate)
+    dvb_bbheader_raw_bb_impl::dvb_bbheader_raw_bb_impl(dvb_standard_t standard, dvb_framesize_t framesize, dvb_code_rate_t rate, dvbs2_rolloff_factor_t rolloff, dvbt2_inputmode_t mode, dvbt2_inband_t inband, int fecblocks, int tsrate, int transportType, bool singleStream, bool ccm, bool issyi, bool npd, int upl)
       : gr::block("dvb_bbheader_raw_bb",
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(1, 1, sizeof(unsigned char)))
@@ -256,18 +256,18 @@ namespace gr {
         mode = INPUTMODE_NORMAL;
         inband_type_b = FALSE;
       }
-      f->ts_gs   = TS_GS_TRANSPORT;
-      f->sis_mis = SIS_MIS_SINGLE;
-      f->ccm_acm = CCM;
-      f->issyi   = ISSYI_NOT_ACTIVE;
-      f->npd     = NPD_NOT_ACTIVE;
+      f->ts_gs   = transportType;
+      f->sis_mis = singleStream ? SIS_MIS_SINGLE : SIS_MIS_MULTIPLE;
+      f->ccm_acm = ccm ? CCM : ACM;
+      f->issyi   = issyi ? ISSYI_ACTIVE : ISSYI_NOT_ACTIVE;
+      f->npd     = npd ? NPD_ACTIVE : NPD_NOT_ACTIVE;
+      f->upl     = upl;
+
       if (mode == INPUTMODE_NORMAL) {
-        f->upl  = 188 * 8;
         f->dfl  = kbch - 80;
         f->sync = 0x47;
       }
       else {
-        f->upl  = 0;
         f->dfl  = kbch - 80;
         f->sync = 0;
       }
