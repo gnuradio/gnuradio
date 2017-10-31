@@ -73,7 +73,7 @@ Complete build instructions are detailed in the
 [GNU Radio Build Guide](https://gnuradio.org/doc/doxygen/build_guide.html). 
 Abbreviated instructions are duplicated below.
 
-1. Ensure that you have satisfied the external dependencies, see 
+1. To check whether you have satisfied external dependencies follow the below link: 
 [GNU Radio Dependencies](https://gnuradio.org/doc/doxygen/build_guide.html).
 
 2. Checkout the latest code:
