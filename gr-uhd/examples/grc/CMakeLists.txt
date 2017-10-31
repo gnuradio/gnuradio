@@ -27,5 +27,4 @@ install(
     uhd_tx_dpsk.grc
     uhd_wbfm_receive.grc
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-    COMPONENT "uhd_python"
 )

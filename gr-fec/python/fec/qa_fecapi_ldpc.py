@@ -20,14 +20,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import fec_swig as fec
-from _qa_helper import _qa_helper
+from __future__ import absolute_import
 
-from extended_encoder import extended_encoder
-from extended_decoder import extended_decoder
 
 import os
+
+from gnuradio import gr, gr_unittest
+from gnuradio import fec
+from fec import extended_encoder
+from fec import extended_decoder
+
+from _qa_helper import _qa_helper
+
 
 # Get location of the alist files. If run in 'ctest' or 'make test',
 # the shell script sets srcdir. Otherwise, we assume we're running
@@ -131,8 +135,8 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         gap = 4
         LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)), range(0,1))
-        dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), range(0,1))
+        enc = list(map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)), list(range(0,1))))
+        dec = list(map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), list(range(0,1))))
         threading = None
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
@@ -148,8 +152,8 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         gap = 4
         LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)), range(0,1))
-        dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), range(0,1))
+        enc = list(map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)), list(range(0,1))))
+        dec = list(map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), list(range(0,1))))
         threading = 'ordinary'
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
@@ -165,8 +169,8 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         gap = 4
         LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        enc = map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)), range(0,1))
-        dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), range(0,1))
+        enc = list(map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)), list(range(0,1))))
+        dec = list(map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), list(range(0,1))))
         threading = 'capillary'
         self.test = _qa_helper(10*k, enc, dec, threading)
         self.tb.connect(self.test)
@@ -255,7 +259,7 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         dims = 5
         LDPC_matrix_object = fec.ldpc_H_matrix(filename, gap)
         k = LDPC_matrix_object.k()
-        dec = map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), range(0,dims))
+        dec = list(map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())), list(range(0,dims))))
         threading = 'capillary'
         self.assertRaises(AttributeError, lambda: extended_decoder(dec, threading=threading, puncpat="11"))
 
@@ -267,8 +271,8 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         k = LDPC_matrix_object.k()
         dims1 = 16
         dims2 = 16
-        enc = map((lambda b: map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)),
-                                 range(0,dims1))), range(0,dims2))
+        enc = list(map((lambda b: list(map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)),
+                                 list(range(0,dims1))))), list(range(0,dims2))))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
@@ -281,8 +285,8 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         k = LDPC_matrix_object.k()
         dims1 = 16
         dims2 = 16
-        enc = map((lambda b: map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)),
-                                 range(0,dims1))), range(0,dims2))
+        enc = list(map((lambda b: list(map((lambda a: fec.ldpc_par_mtrx_encoder.make_H(LDPC_matrix_object)),
+                                 list(range(0,dims1))))), list(range(0,dims2))))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
@@ -295,8 +299,8 @@ class test_fecapi_ldpc(gr_unittest.TestCase):
         k = LDPC_matrix_object.k()
         dims1 = 16
         dims2 = 16
-        dec = map((lambda b: map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())),
-                                 range(0,dims1))), range(0,dims2))
+        dec = list(map((lambda b: list(map((lambda a: fec.ldpc_bit_flip_decoder.make(LDPC_matrix_object.get_base_sptr())),
+                                 list(range(0,dims1))))), list(range(0,dims2))))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_decoder(dec, threading=threading, puncpat="11"))

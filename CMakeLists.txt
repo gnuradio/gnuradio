@@ -1,4 +1,4 @@
-# Copyright 2010-2017 Free Software Foundation, Inc.
+# Copyright 2011-2012,2014,2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,7 +27,7 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 ########################################################################
 # Make sure this version matches ${GR_CMAKE_MIN_VERSION} (a variable can't be
 # used here).
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.12)
 project(gnuradio CXX C)
 enable_testing()
 
@@ -47,21 +47,21 @@ message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
 set(VERSION_INFO_MAJOR_VERSION 3)
-set(VERSION_INFO_API_COMPAT    7)
-set(VERSION_INFO_MINOR_VERSION 12)
-set(VERSION_INFO_MAINT_VERSION git)
+set(VERSION_INFO_API_COMPAT    8)
+set(VERSION_INFO_MINOR_VERSION git)
+set(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.48")
-set(GR_SWIG_MIN_VERSION "2.0.4")
+set(GR_BOOST_MIN_VERSION "1.54")
+set(GR_SWIG_MIN_VERSION "2.0.11")
 set(GR_CMAKE_MIN_VERSION "2.8.12")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "2.7")
-#set(GR_PYTHON3_MIN_VERSION "3.x") # Py3k not yet supported
+set(GR_PYTHON3_MIN_VERSION "3.4")
 set(GR_CPPUNIT_MIN_VERSION "1.12.1")
-set(GCC_MIN_VERSION "4.4.0")
-set(CLANG_MIN_VERSION "3.3.0")
+set(GCC_MIN_VERSION "4.8.4")
+set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
 
 ########################################################################
@@ -136,25 +136,29 @@ ENDIF()
 # since it will actually be used for this purposes starting in CMake 3.1.
 
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_CXX_STANDARD 98)
+    SET(CMAKE_CXX_STANDARD 11)
 ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    SET(CMAKE_CXX_STANDARD 98)
+    SET(CMAKE_CXX_STANDARD 11)
 ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_CXX_STANDARD 98)
+    SET(CMAKE_CXX_STANDARD 11)
 ELSE()
     message(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+    SET(CMAKE_C_STANDARD 11)
 ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+    SET(CMAKE_C_STANDARD 11)
 ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+    SET(CMAKE_C_STANDARD 11)
 ELSE()
     message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
 
+# if cmake version is < 3.1, explicitly set C standard to use.
+IF(${CMAKE_VERSION} VERSION_LESS "3.1")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c${CMAKE_C_STANDARD}")
+ENDIF()
 
 ########################################################################
 # Environment setup
@@ -214,11 +218,10 @@ if(MSVC)
 endif(MSVC)
 
 if(WIN32)
-	add_definitions(-D_USE_MATH_DEFINES)
-
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		add_definitions(-DMS_WIN64)
-	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    add_definitions(-D_USE_MATH_DEFINES)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        add_definitions(-DMS_WIN64)
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(WIN32)
 
 # Record Compiler Info for record
@@ -351,7 +354,9 @@ include(GrBoost)
 ########################################################################
 # Enable python component
 ########################################################################
+include(GrPython)
 find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
+GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
 find_package(SWIG)
 
 if(SWIG_FOUND)
@@ -367,6 +372,7 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
     SWIG_FOUND
     SWIG_VERSION_CHECK
+    SIX_FOUND
 )
 
 find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})
@@ -387,32 +393,10 @@ if(${CMAKE_VERSION} VERSION_LESS "3.1")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
 endif()
 
-########################################################################
-# Add optional dlls specified in DLL_PATHS
-########################################################################
-foreach(path ${DLL_PATHS})
-    file(GLOB _dlls "${path}/*.dll")
-    list(APPEND ALL_DLL_FILES ${_dlls})
-endforeach(path)
-if(DEFINED ALL_DLL_FILES)
-    include(GrPackage)
-    CPACK_COMPONENT("extra_dlls"
-        DISPLAY_NAME "Extra DLLs"
-        DESCRIPTION  "Extra DLLs for runtime dependency requirements"
-    )
-    message(STATUS "")
-    message(STATUS "Including the following dlls into the install:")
-    foreach(_dll ${ALL_DLL_FILES})
-        message(STATUS "  ${_dll}")
-    endforeach(_dll)
-    install(FILES ${ALL_DLL_FILES} DESTINATION ${GR_RUNTIME_DIR} COMPONENT "extra_dlls")
-endif()
-
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
   include(CodeCoverage)
   setup_target_for_coverage(coverage "ctest" coverage)
 endif()
-
 
 
 ########################################################################
@@ -465,25 +449,6 @@ if(NOT VOLK_FOUND)
 
     set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
     set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
-
-    if(ENABLE_VOLK)
-
-        include(GrPackage)
-        CPACK_SET(CPACK_COMPONENT_GROUP_VOLK_DESCRIPTION "Vector optimized library of kernels")
-
-        CPACK_COMPONENT("volk_runtime"
-            GROUP        "Volk"
-            DISPLAY_NAME "Runtime"
-            DESCRIPTION  "Dynamic link libraries"
-        )
-
-        CPACK_COMPONENT("volk_devel"
-            GROUP        "Volk"
-            DISPLAY_NAME "Development"
-            DESCRIPTION  "C++ headers, package config, import libraries"
-        )
-
-    endif(ENABLE_VOLK)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
     set(ENABLE_VOLK TRUE)
@@ -494,8 +459,8 @@ endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 
-# Handle gr_log enable/disable
-GR_LOGGING()
+# Handle logging
+find_package(Log4cpp)
 
 ########################################################################
 # Distribute the README file
@@ -503,7 +468,6 @@ GR_LOGGING()
 install(
     FILES README.md README.hacking
     DESTINATION ${GR_PKG_DOC_DIR}
-    COMPONENT "docs"
 )
 
 ########################################################################
@@ -528,29 +492,24 @@ list(APPEND GR_TEST_PYTHON_DIRS
 add_subdirectory(docs)
 add_subdirectory(gnuradio-runtime)
 add_subdirectory(gr-blocks)
-add_subdirectory(grc)
 add_subdirectory(gr-fec)
 add_subdirectory(gr-fft)
 add_subdirectory(gr-filter)
 add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-dtv)
-add_subdirectory(gr-atsc)
 add_subdirectory(gr-audio)
 add_subdirectory(gr-comedi)
 add_subdirectory(gr-channels)
-add_subdirectory(gr-noaa)
-add_subdirectory(gr-pager)
 add_subdirectory(gr-qtgui)
 add_subdirectory(gr-trellis)
 add_subdirectory(gr-uhd)
 add_subdirectory(gr-utils)
 add_subdirectory(gr-video-sdl)
 add_subdirectory(gr-vocoder)
-add_subdirectory(gr-fcd)
 add_subdirectory(gr-wavelet)
-add_subdirectory(gr-wxgui)
 add_subdirectory(gr-zeromq)
+add_subdirectory(grc)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
@@ -598,12 +557,8 @@ list(REMOVE_ITEM cmake_others
 install(
   FILES ${cmake_configs} ${cmake_others}
   DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
-  COMPONENT "runtime_devel"
 )
 
-#finalize cpack after subdirs processed
-include(GrPackage)
-CPACK_FINALIZE()
 
 ########################################################################
 # Print summary
@@ -630,5 +585,4 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime/include/gnuradio/config.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio
-    COMPONENT "runtime_devel"
 )

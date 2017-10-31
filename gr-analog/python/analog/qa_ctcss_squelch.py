@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, analog, blocks
 
 class test_ctcss_squelch(gr_unittest.TestCase):
@@ -63,7 +65,7 @@ class test_ctcss_squelch(gr_unittest.TestCase):
         ramp = 1
         gate = True
 
-        src_data = map(lambda x: float(x)/10.0, range(1, 40))
+        src_data = [float(x) / 10.0 for x in range(1, 40)]
         expected_result = src_data
         expected_result[0] = 0
 
@@ -88,7 +90,7 @@ class test_ctcss_squelch(gr_unittest.TestCase):
         ramp = 1
         gate = False
 
-        src_data = map(lambda x: float(x)/10.0, range(1, 40))
+        src_data = [float(x) / 10.0 for x in range(1, 40)]
         src = blocks.vector_source_f(src_data)
         op = analog.ctcss_squelch_ff(rate, freq, level,
                                      length, ramp, gate)

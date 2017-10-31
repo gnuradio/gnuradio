@@ -121,11 +121,8 @@ install(FILES
     keep_one_in_n.h
     lfsr_32k_source_s.h
     message_debug.h
-    message_sink.h
-    message_source.h
     message_strobe.h
     message_strobe_random.h
-    message_burst_source.h
     multiply_cc.h
     multiply_ff.h
     multiply_conjugate_cc.h
@@ -194,7 +191,6 @@ install(FILES
     wavfile_sink.h
     wavfile_source.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
-    COMPONENT "blocks_devel"
 )
 
 if(ENABLE_GR_CTRLPORT)
@@ -206,6 +202,5 @@ install(FILES
   ctrlport_probe2_i.h
   ctrlport_probe2_b.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/blocks
-  COMPONENT "blocks_devel"
 )
 endif(ENABLE_GR_CTRLPORT)

@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import unicode_literals
 #
 # Copyright 2008 Free Software Foundation, Inc.
 #
@@ -23,8 +25,8 @@ from gnuradio import gr
 from gnuradio import blocks
 import sys, math
 
-import fft_swig as fft
-from fft_swig import window
+from . import fft_swig as fft
+from .fft_swig import window
 
 try:
     from gnuradio import filter
@@ -63,14 +65,14 @@ class _logpwrfft_base(gr.hier_block2):
         if win is None: win = window.blackmanharris
         fft_window = win(fft_size)
         fft = self._fft_block[0](fft_size, True, fft_window)
-        window_power = sum(map(lambda x: x*x, fft_window))
+        window_power = sum([x*x for x in fft_window])
 
         c2magsq = blocks.complex_to_mag_squared(fft_size)
         self._avg = filter.single_pole_iir_filter_ff(1.0, fft_size)
         self._log = blocks.nlog10_ff(10, fft_size,
                                      -20*math.log10(fft_size)              # Adjust for number of bins
-                                     -10*math.log10(float(window_power)/fft_size) # Adjust for windowing loss
-                                     -20*math.log10(float(ref_scale)/2))      # Adjust for reference scale
+                                     -10*math.log10(float(window_power) / fft_size) # Adjust for windowing loss
+                                     -20*math.log10(float(ref_scale) / 2))      # Adjust for reference scale
         self.connect(self, self._sd, fft, c2magsq, self._avg, self._log, self)
 
         self._average = average
@@ -173,4 +175,3 @@ class logpwrfft_c(_logpwrfft_base):
         _name = "logpwrfft_c"
         _item_size = gr.sizeof_gr_complex
         _fft_block = (fft.fft_vcc, )
-

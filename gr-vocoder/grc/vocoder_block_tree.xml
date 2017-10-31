@@ -38,6 +38,8 @@
 		<block>vocoder_cvsd_encode_sb</block>
 		<block>vocoder_cvsd_decode_bf</block>
 		<block>vocoder_cvsd_encode_fb</block>
+		<block>vocoder_freedv_tx_ss</block>
+		<block>vocoder_freedv_rx_ss</block>
 		<block>vocoder_g721_decode_bs</block>
 		<block>vocoder_g721_encode_sb</block>
 		<block>vocoder_g723_24_decode_bs</block>

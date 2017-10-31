@@ -26,6 +26,7 @@ ports on a computer.
 The underlying hardware driver is system and OS dependent and this
 module should automatically discover the correct one to use.
 '''
+from __future__ import unicode_literals
 import os
 
 try:

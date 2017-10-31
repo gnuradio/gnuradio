@@ -20,10 +20,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+from __future__ import unicode_literals
 from gnuradio import gr, gru
 from gnuradio import blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import sys
 
 class my_graph(gr.top_block):
@@ -31,12 +32,8 @@ class my_graph(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        parser = OptionParser(option_class=eng_option)
-        (options, args) = parser.parse_args ()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
-
+        parser = ArgumentParser()
+        args = parser.parse_args()
         src = blocks.lfsr_32k_source_s()
         head = blocks.head(gr.sizeof_short, 2048)
         self.dst = blocks.vector_sink_s()
@@ -54,8 +51,7 @@ if __name__ == '__main__':
             i = i+2
             if i % 16 == 0:
                 f.write('\n')
-                    
+
     except KeyboardInterrupt:
         pass
-    
-    
+

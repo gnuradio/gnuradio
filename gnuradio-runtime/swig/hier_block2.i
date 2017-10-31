@@ -91,6 +91,9 @@ namespace gr {
     void unset_processor_affinity();
     std::vector<int> processor_affinity();
 
+    void set_log_level(std::string level);
+    std::string log_level();
+
     // Methods to manage block's min/max buffer sizes.
     size_t max_output_buffer(int i);
     void set_max_output_buffer(size_t max_output_buffer);

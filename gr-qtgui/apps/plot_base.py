@@ -20,9 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 from gnuradio import gr, blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
 import os, sys
 
 os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
@@ -32,13 +34,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Scipy required (www.scipy.org)."
+    print("Error: Scipy required (www.scipy.org).")
     sys.exit(1)
 
 try:
@@ -66,8 +68,8 @@ def read_samples(filename, start, in_size, min_size, dtype, dtype_size):
 
     if(min_size > 0):
         if(len(data) < in_size):
-            print "Warning: read in {0} samples but asked for {1} samples.".format(
-                len(data), in_size)
+            print("Warning: read in {0} samples but asked for {1} samples.".format(
+                len(data), in_size))
     else:
         # If we have to, append 0's to create min_size samples of data
         if(len(data) < min_size):
@@ -110,8 +112,8 @@ def read_samples_c(filename, start, in_size, min_size=0):
 
     if(min_size > 0):
         if(len(data) < in_size):
-            print "Warning: read in {0} samples but asked for {1} samples.".format(
-                len(data), in_size)
+            print("Warning: read in {0} samples but asked for {1} samples.".format(
+                len(data), in_size))
     else:
         # If we have to, append 0's to create min_size samples of data
         if(len(data) < min_size):
@@ -121,9 +123,9 @@ def read_samples_c(filename, start, in_size, min_size=0):
 
 class source_ints_to_float(gr.hier_block2):
     def __init__(self, data):
-	gr.hier_block2.__init__(self, "ints_to_floats",
-				gr.io_signature(0, 0, 0),
-				gr.io_signature(1, 1, gr.sizeof_float))
+        gr.hier_block2.__init__(self, "ints_to_floats",
+                                gr.io_signature(0, 0, 0),
+                                gr.io_signature(1, 1, gr.sizeof_float))
         self.src = blocks.vector_source_i(data)
         self.cvt = blocks.int_to_float()
         self.connect(self.src, self.cvt, self)
@@ -133,9 +135,9 @@ class source_ints_to_float(gr.hier_block2):
 
 class source_shorts_to_float(gr.hier_block2):
     def __init__(self, data):
-	gr.hier_block2.__init__(self, "shorts_to_floats",
-				gr.io_signature(0, 0, 0),
-				gr.io_signature(1, 1, gr.sizeof_float))
+        gr.hier_block2.__init__(self, "shorts_to_floats",
+                                gr.io_signature(0, 0, 0),
+                                gr.io_signature(1, 1, gr.sizeof_float))
         self.src = blocks.vector_source_s(data)
         self.cvt = blocks.short_to_float()
         self.connect(self.src, self.cvt, self)
@@ -145,9 +147,9 @@ class source_shorts_to_float(gr.hier_block2):
 
 class source_chars_to_float(gr.hier_block2):
     def __init__(self, data):
-	gr.hier_block2.__init__(self, "chars_to_floats",
-				gr.io_signature(0, 0, 0),
-				gr.io_signature(1, 1, gr.sizeof_float))
+        gr.hier_block2.__init__(self, "chars_to_floats",
+                                gr.io_signature(0, 0, 0),
+                                gr.io_signature(1, 1, gr.sizeof_float))
         self.src = blocks.vector_source_b(data)
         self.cvt = blocks.char_to_float()
         self.connect(self.src, self.cvt, self)

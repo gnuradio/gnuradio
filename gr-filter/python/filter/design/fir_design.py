@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import unicode_literals
 # Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -38,7 +40,7 @@ def design_win_lpf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.low_pass_2(gain, fs, pb, tb,
                                             atten, wintype)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
             return ([], [], ret)
@@ -65,7 +67,7 @@ def design_win_bpf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
                                              atten, wintype)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
             return ([], [], ret)
@@ -92,7 +94,7 @@ def design_win_cbpf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
                                                      atten, wintype)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
             return ([], [], ret)
@@ -119,7 +121,7 @@ def design_win_bnf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
                                                atten, wintype)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
             return ([], [], ret)
@@ -145,7 +147,7 @@ def design_win_hpf(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.high_pass_2(gain, fs, pb, tb,
                                              atten, wintype)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
         else:
@@ -195,7 +197,7 @@ def design_win_rrc(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.root_raised_cosine(gain, fs, sr,
                                                     alpha, ntaps)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
         else:
@@ -220,7 +222,7 @@ def design_win_gaus(fs, gain, wintype, mainwin):
         try:
             taps = filter.firdes.gaussian(gain, spb, bt, ntaps)
 
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Runtime Error",
                                                   e.args[0], "&Ok")
         else:
@@ -247,7 +249,7 @@ def design_opt_lpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.low_pass(gain, fs, pb, sb,
                                           ripple, atten)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
             return ([],[],False)
@@ -278,7 +280,7 @@ def design_opt_bpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                            ripple, atten)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
             return ([],[],False)
@@ -311,7 +313,7 @@ def design_opt_cbpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                                    ripple, atten)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
             return ([],[],False)
@@ -343,7 +345,7 @@ def design_opt_bnf(fs, gain, mainwin):
         try:
             taps = filter.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
                                              ripple, atten)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
             return ([],[],False)
@@ -369,10 +371,10 @@ def design_opt_hb(fs, gain, mainwin):
 
     if(ret):
         try:
-            bands = [0,.25 - (trwidth/fs), .25 + (trwidth/fs), 0.5]
+            bands = [0,.25 - (trwidth / fs), .25 + (trwidth / fs), 0.5]
             taps = scipy.signal.remez(int(filtord)+1, bands, [1,0], [1,1])
             taps[abs(taps) <= 1e-6] = 0.
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter Design Error",
                                                   e.args[0], "&Ok")
             return ([],[],False)
@@ -398,7 +400,7 @@ def design_opt_hpf(fs, gain, mainwin):
         try:
             taps = filter.optfir.high_pass(gain, fs, sb, pb,
                                            atten, ripple)
-        except RuntimeError, e:
+        except RuntimeError as e:
             reply = QtGui.QMessageBox.information(mainwin, "Filter did not converge",
                                                   e.args[0], "&Ok")
             return ([],[],False)

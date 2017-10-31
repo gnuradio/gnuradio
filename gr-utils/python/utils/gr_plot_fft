@@ -27,13 +27,9 @@ from gnuradio.plot_fft_base import plot_fft_base
 
 def main():
     parser = plot_fft_base.setup_options()
-    (options, args) = parser.parse_args ()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filename = args[0]
+    args = parser.parse_args()
 
-    dc = plot_fft_base(options.data_type, filename, options)
+    dc = plot_fft_base(args.data_type, args.file, args)
 
 if __name__ == "__main__":
     try:

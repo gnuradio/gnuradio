@@ -22,10 +22,16 @@
 """
 GNU radio specific extension of unittest.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import division
+
+import os
+import stat
 
 import unittest
-import gr_xmlrunner
-import sys, os, stat
+from . import gr_xmlrunner
+
 
 class TestCase(unittest.TestCase):
     """A subclass of unittest.TestCase that adds additional assertions
@@ -43,11 +49,12 @@ class TestCase(unittest.TestCase):
            as significant digits (measured from the most signficant digit).
        """
         if round(second.real-first.real, places) != 0:
-            raise self.failureException, \
-                  (msg or '%s != %s within %s places' % (`first`, `second`, `places` ))
+            raise self.failureException(
+                msg or '%r != %r within %r places' % (first, second, places))
         if round(second.imag-first.imag, places) != 0:
-            raise self.failureException, \
-                  (msg or '%s != %s within %s places' % (`first`, `second`, `places` ))
+            raise self.failureException(
+                msg or '%r != %r within %r places' % (first, second, places)
+            )
 
     def assertComplexAlmostEqual2 (self, ref, x, abs_eps=1e-12, rel_eps=1e-6, msg=None):
         """
@@ -57,48 +64,52 @@ class TestCase(unittest.TestCase):
             return
 
         if abs(ref) > abs_eps:
-            if abs(ref-x)/abs(ref) > rel_eps:
-                raise self.failureException, \
-                      (msg or '%s != %s rel_error = %s rel_limit = %s' % (
-                    `ref`, `x`, abs(ref-x)/abs(ref), `rel_eps` ))
+            if abs(ref-x) / abs(ref) > rel_eps:
+                raise self.failureException(
+                    msg or '%r != %r rel_error = %r rel_limit = %r' % (
+                        ref, x, abs(ref-x) / abs(ref), rel_eps
+                    )
+                )
         else:
-            raise self.failureException, \
-                      (msg or '%s != %s rel_error = %s rel_limit = %s' % (
-                    `ref`, `x`, abs(ref-x)/abs(ref), `rel_eps` ))
+            raise self.failureException(
+                msg or '%r != %r rel_error = %r rel_limit = %r' % (
+                    ref, x, abs(ref-x) / abs(ref), rel_eps
+                )
+            )
 
 
 
     def assertComplexTuplesAlmostEqual (self, a, b, places=7, msg=None):
         self.assertEqual (len(a), len(b))
-        for i in xrange (len(a)):
+        for i in range (len(a)):
             self.assertComplexAlmostEqual (a[i], b[i], places, msg)
 
     def assertComplexTuplesAlmostEqual2 (self, ref, x,
                                          abs_eps=1e-12, rel_eps=1e-6, msg=None):
         self.assertEqual (len(ref), len(x))
-        for i in xrange (len(ref)):
+        for i in range (len(ref)):
             try:
                 self.assertComplexAlmostEqual2 (ref[i], x[i], abs_eps, rel_eps, msg)
-            except self.failureException, e:
+            except self.failureException as e:
                 #sys.stderr.write("index = %d " % (i,))
-                #sys.stderr.write("%s\n" % (e,))
+                #sys.stderr.write("%r\n" % (e,))
                 raise
 
     def assertFloatTuplesAlmostEqual (self, a, b, places=7, msg=None):
         self.assertEqual (len(a), len(b))
-        for i in xrange (len(a)):
+        for i in range (len(a)):
             self.assertAlmostEqual (a[i], b[i], places, msg)
 
 
     def assertFloatTuplesAlmostEqual2 (self, ref, x,
                                        abs_eps=1e-12, rel_eps=1e-6, msg=None):
         self.assertEqual (len(ref), len(x))
-        for i in xrange (len(ref)):
+        for i in range (len(ref)):
             try:
                 self.assertComplexAlmostEqual2 (ref[i], x[i], abs_eps, rel_eps, msg)
-            except self.failureException, e:
+            except self.failureException as e:
                 #sys.stderr.write("index = %d " % (i,))
-                #sys.stderr.write("%s\n" % (e,))
+                #sys.stderr.write("%r\n" % (e,))
                 raise
 
 
@@ -124,7 +135,7 @@ def run(PUT, filename=None):
         path = basepath + "/python"
 
         if not os.path.exists(basepath):
-            os.makedirs(basepath, 0750)
+            os.makedirs(basepath, mode=0o750)
 
         xmlrunner = None
         # only proceed if .unittests is writable
@@ -132,13 +143,13 @@ def run(PUT, filename=None):
         if(st & stat.S_IWUSR > 0):
             # Test if path exists; if not, build it
             if not os.path.exists(path):
-                os.makedirs(path, 0750)
+                os.makedirs(path, mode=0o750)
 
             # Just for safety: make sure we can write here, too
             st = os.stat(path)[stat.ST_MODE]
             if(st & stat.S_IWUSR > 0):
                 # Create an XML runner to filename
-                fout = file(path+"/"+filename, "w")
+                fout = open(path+"/"+filename, "w")
                 xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
 
         txtrunner = TextTestRunner(verbosity=1)
@@ -148,7 +159,7 @@ def run(PUT, filename=None):
         suite = TestLoader().loadTestsFromTestCase(PUT)
 
         # use the xmlrunner if we can write the the directory
-        if(xmlrunner is not None):
+        if xmlrunner is not None:
             xmlrunner.run(suite)
 
         main()

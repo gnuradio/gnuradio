@@ -48,7 +48,6 @@ GR_SWIG_MAKE(video_sdl_swig video_sdl_swig.i)
 GR_SWIG_INSTALL(
     TARGETS video_sdl_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/video_sdl
-    COMPONENT "video_sdl_python"
 )
 
 install(
@@ -56,5 +55,4 @@ install(
     video_sdl_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "video_sdl_swig"
 )

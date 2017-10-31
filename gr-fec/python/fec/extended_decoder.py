@@ -20,24 +20,25 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, blocks
-import fec_swig as fec
-from bitflip import *
-import sys
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
 
-if sys.modules.has_key("gnuradio.digital"):
-    digital = sys.modules["gnuradio.digital"]
-else:
-    from gnuradio import digital
+from gnuradio import gr, blocks, digital
 
-from threaded_decoder import threaded_decoder
-from capillary_threaded_decoder import capillary_threaded_decoder
+from . import fec_swig as fec
+
+from .bitflip import *
+from .threaded_decoder import threaded_decoder
+from .capillary_threaded_decoder import capillary_threaded_decoder
+
 
 class extended_decoder(gr.hier_block2):
 
 #solution to log_(1-2*t)(1-2*.0335) = 1/taps where t is thresh (syndrome density)
 #for i in numpy.arange(.1, .499, .01):
-    #print str(log((1-(2 * .035)), (1-(2 * i)))) + ':' + str(i);
+    #print(str(log((1-(2 * .035)), (1-(2 * i)))) + ':' + str(i);)
     garbletable = {
         0.310786835319:0.1,
         0.279118162802:0.11,
@@ -127,13 +128,13 @@ class extended_decoder(gr.hier_block2):
                 cat.append(i);
 
             synd_garble = .49
-            idx_list = self.garbletable.keys()
+            idx_list = list(self.garbletable.keys())
             idx_list.sort()
             for i in idx_list:
-                if 1.0/self.ann.count('1') >= i:
+                if 1.0 / self.ann.count('1') >= i:
                     synd_garble = self.garbletable[i]
-            print 'using syndrom garble threshold ' + str(synd_garble) + 'for conv_bit_corr_bb'
-            print 'ceiling: .0335 data garble rate'
+            print('using syndrom garble threshold ' + str(synd_garble) + 'for conv_bit_corr_bb')
+            print('ceiling: .0335 data garble rate')
             self.blocks.append(fec.conv_bit_corr_bb(cat, len(puncpat) - puncpat.count('0'),
                                                     len(ann), integration_period, flush, synd_garble))
 

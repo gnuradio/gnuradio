@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, analog, blocks
 
 class test_dpll_bb(gr_unittest.TestCase):
@@ -42,7 +44,7 @@ class test_dpll_bb(gr_unittest.TestCase):
         self.assertAlmostEqual(g, 0.2)
 
         f = op.freq()
-        self.assertEqual(1/period, f)
+        self.assertEqual(1 / period, f)
 
         d0 = 1.0 - 0.5*f;
         d1 = op.decision_threshold()

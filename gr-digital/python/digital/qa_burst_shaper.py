@@ -21,6 +21,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks, digital
 import pmt
@@ -121,7 +122,7 @@ class qa_burst_shaper (gr_unittest.TestCase):
         window = np.concatenate((-2.0*np.ones(5), -4.0*np.ones(5)))
         tags = (make_length_tag(0, length),)
         phasing = np.zeros(5)
-        for i in xrange(5):
+        for i in range(5):
             phasing[i] = ((-1.0)**i)
         expected = np.concatenate((np.zeros(prepad), phasing*window[0:5],
                                    np.ones(length), phasing*window[5:10],
@@ -154,7 +155,7 @@ class qa_burst_shaper (gr_unittest.TestCase):
                                  -4.0*np.ones(5, dtype=complex)))
         tags = (make_length_tag(0, length),)
         phasing = np.zeros(5, dtype=complex)
-        for i in xrange(5):
+        for i in range(5):
             phasing[i] = complex((-1.0)**i)
         expected = np.concatenate((np.zeros(prepad, dtype=complex),
                                    phasing*window[0:5],
@@ -264,7 +265,7 @@ class qa_burst_shaper (gr_unittest.TestCase):
 
         # checks
         self.assertFloatTuplesAlmostEqual(sink.data(), expected, 6)
-        for i in xrange(len(etags)):
+        for i in range(len(etags)):
             self.assertTrue(compare_tags(sink.tags()[i], etags[i]))
 
     def test_tag_gap (self):
@@ -303,7 +304,7 @@ class qa_burst_shaper (gr_unittest.TestCase):
 
         # checks
         self.assertFloatTuplesAlmostEqual(sink.data(), expected, 6)
-        for i in xrange(len(etags)):
+        for i in range(len(etags)):
             self.assertTrue(compare_tags(sink.tags()[i], etags[i]))
 
     def test_tag_propagation (self):

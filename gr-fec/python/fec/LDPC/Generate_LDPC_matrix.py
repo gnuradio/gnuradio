@@ -20,7 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from Generate_LDPC_matrix_functions import *
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
+from .Generate_LDPC_matrix_functions import *
 
 # This is an example of how to generate a parity check matrix for
 # use with the LDPC Richardson Urbanke encoder. A significant amount
@@ -62,18 +67,18 @@ newH = get_full_rank_H_matrix(parity_check_matrix.H)
 # can take a while...
 [bestH,g] = get_best_matrix(newH,100)
 
-# Print out some of the resulting properties.
+# Print(out some of the resulting properties.)
 n = bestH.shape[1]
 k = n - bestH.shape[0]
-print "Parity check matrix properties:"
-print "\tSize :", bestH.shape
-print "\tRank :", linalg.matrix_rank(bestH)
-print "\tRate : %.3f" % ((k*1.0)/n)
-print "\tn    :", n, " (codeword length)"
-print "\tk    :", k, " (info word length)"
-print "\tgap  : %i" % g
+print("Parity check matrix properties:")
+print("\tSize :", bestH.shape)
+print("\tRank :", linalg.matrix_rank(bestH))
+print("\tRate : %.3f" % ((k*1.0) / n))
+print("\tn    :", n, " (codeword length)")
+print("\tk    :", k, " (info word length)")
+print("\tgap  : %i" % g)
 
 # Save the matrix to an alist file for future use:
 alist_filename = "n_%04i_k_%04i_gap_%02i.alist" % (n,k,g)
 write_alist_file(alist_filename,bestH)
-print '\nMatrix saved to alist file:', alist_filename, "\n"
+print('\nMatrix saved to alist file:', alist_filename, "\n")

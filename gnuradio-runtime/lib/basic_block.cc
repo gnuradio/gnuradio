@@ -228,29 +228,6 @@ namespace gr {
   }
 
   pmt::pmt_t
-  basic_block::delete_head_blocking(pmt::pmt_t which_port, unsigned int millisec)
-  {
-    gr::thread::scoped_lock guard(mutex);
-
-    if (millisec) {
-       boost::system_time const timeout = boost::get_system_time() + boost::posix_time::milliseconds(millisec);
-       while (empty_p(which_port)) {
-         if (!msg_queue_ready[which_port]->timed_wait(guard, timeout)) {
-           return pmt::pmt_t();
-	 }
-       }
-    } else {
-      while(empty_p(which_port)) {
-        msg_queue_ready[which_port]->wait(guard);
-      }
-    }
-
-    pmt::pmt_t m(msg_queue[which_port].front());
-    msg_queue[which_port].pop_front();
-    return m;
-  }
-
-  pmt::pmt_t
   basic_block::message_subscribers(pmt::pmt_t port)
   {
     return pmt::dict_ref(d_message_subscribers,port,pmt::PMT_NIL);

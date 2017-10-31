@@ -20,12 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sys, subprocess, re, signal, time, atexit, os
 from gnuradio import gr
 
-class monitor:
+class monitor(object):
     def __init__(self,tool="gr-ctrlport-monitor"):
-        print "ControlPort Monitor running."
+        print("ControlPort Monitor running.")
         self.started = False
         self.tool = tool
         atexit.register(self.shutdown)
@@ -38,35 +41,35 @@ class monitor:
                 gr.prefs().singleton().set_bool("PerfCounters","on",True);
                 gr.prefs().singleton().set_bool("PerfCounters","export",True);
         except:
-            print "no support for gr.prefs setting"
+            print("no support for gr.prefs setting")
 
     def __del__(self):
         if(self.started):
             self.stop()
 
     def start(self):
-        print "monitor::endpoints() = %s" % (gr.rpcmanager_get().endpoints())
+        print("monitor::endpoints() = %s" % (gr.rpcmanager_get().endpoints()))
         try:
             cmd = map(lambda a: [self.tool,
                                  re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)",a).group(1),
                                  re.search("-p (\d+)",a).group(1)],
                       gr.rpcmanager_get().endpoints())[0]
-            print "running: %s"%(str(cmd))
+            print("running: %s"%(str(cmd)))
             self.proc = subprocess.Popen(cmd);
             self.started = True
         except:
             self.proc = None
-            print "failed to to start ControlPort Monitor on specified port"
+            print("failed to to start ControlPort Monitor on specified port")
 
     def stop(self):
         if(self.proc):
             if(self.proc.returncode == None):
-                print "\tcalling stop on shutdown"
+                print("\tcalling stop on shutdown")
                 self.proc.terminate()
         else:
-            print "\tno proc to shut down, exiting"
+            print("\tno proc to shut down, exiting")
 
     def shutdown(self):
-        print "ctrlport.monitor received shutdown signal"
+        print("ctrlport.monitor received shutdown signal")
         if(self.started):
             self.stop()

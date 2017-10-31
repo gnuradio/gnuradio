@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 class test_copy(gr_unittest.TestCase):
@@ -46,7 +47,7 @@ class test_copy(gr_unittest.TestCase):
         expected_result = ()
         src = blocks.vector_source_b(src_data)
         op = blocks.copy(gr.sizeof_char)
-	op.set_enabled(False)
+        op.set_enabled(False)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, op, dst)
         self.tb.run()

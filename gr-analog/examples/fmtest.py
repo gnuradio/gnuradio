@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
@@ -31,13 +34,13 @@ try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    print("Error: Program requires scipy (see: www.scipy.org).")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    print("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).")
     sys.exit(1)
 
 
@@ -80,7 +83,7 @@ class fmtest(gr.top_block):
 
         # Create a signal source and frequency modulate it
         self.sum = blocks.add_cc()
-        for n in xrange(self._N):
+        for n in range(self._N):
             sig = analog.sig_source_f(self._audio_rate, analog.GR_SIN_WAVE, freq[n], 0.5)
             fm = fmtx(f_lo[n], self._audio_rate, self._if_rate)
             self.connect(sig, fm)
@@ -95,17 +98,17 @@ class fmtest(gr.top_block):
 
         # Design the channlizer
         self._M = 10
-        bw = chspacing/2.0
-        t_bw = chspacing/10.0
+        bw = chspacing / 2.0
+        t_bw = chspacing / 10.0
         self._chan_rate = self._if_rate / self._M
         self._taps = filter.firdes.low_pass_2(1, self._if_rate, bw, t_bw,
                                               attenuation_dB=100,
                                               window=filter.firdes.WIN_BLACKMAN_hARRIS)
-        tpc = math.ceil(float(len(self._taps)) /  float(self._M))
+        tpc = math.ceil(float(len(self._taps)) / float(self._M))
 
-        print "Number of taps:     ", len(self._taps)
-        print "Number of channels: ", self._M
-        print "Taps per channel:   ", tpc
+        print("Number of taps:     ", len(self._taps))
+        print("Number of channels: ", self._M)
+        print("Taps per channel:   ", tpc)
 
         self.pfb = filter.pfb.channelizer_ccf(self._M, self._taps)
 
@@ -115,7 +118,7 @@ class fmtest(gr.top_block):
         self.fmdet = list()
         self.squelch = list()
         self.snks = list()
-        for i in xrange(self._M):
+        for i in range(self._M):
             self.fmdet.append(analog.nbfm_rx(self._audio_rate, self._chan_rate))
             self.squelch.append(analog.standard_squelch(self._audio_rate*10))
             self.snks.append(blocks.vector_sink_f())
@@ -152,11 +155,11 @@ def main():
         d = fm.snk_tx.data()[Ns:Ns+Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X,freq = sp1_f.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
+        X,freq = sp1_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                            window = lambda d: d*winfunc(fftlen),
                            visible=False)
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
+        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
         sp1_f.set_xlim([min(f_in), max(f_in)+1])
         sp1_f.set_ylim([-120.0, 20.0])
@@ -165,7 +168,7 @@ def main():
         sp1_f.set_xlabel("Frequency (Hz)")
         sp1_f.set_ylabel("Power (dBW)")
 
-        Ts = 1.0/fs
+        Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
         t_in = scipy.arange(0, Tmax, Ts)
@@ -184,20 +187,20 @@ def main():
         # Plot each of the channels outputs. Frequencies on Figure 2 and
         # time signals on Figure 3
         fs_o = fm._audio_rate
-        for i in xrange(len(fm.snks)):
+        for i in range(len(fm.snks)):
             # remove issues with the transients at the beginning
             # also remove some corruption at the end of the stream
             #    this is a bug, probably due to the corner cases
             d = fm.snks[i].data()[Ns:Ne]
 
             sp2_f = fig2.add_subplot(Nrows, Ncols, 1+i)
-            X,freq = sp2_f.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs_o,
+            X,freq = sp2_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
                                window = lambda d: d*winfunc(fftlen),
                                visible=False)
             #X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
             X_o = 10.0*scipy.log10(abs(X))
             #f_o = scipy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
-            f_o = scipy.arange(0, fs_o/2.0, fs_o/2.0/float(X_o.size))
+            f_o = scipy.arange(0, fs_o / 2.0, fs_o/2.0/float(X_o.size))
             p2_f = sp2_f.plot(f_o, X_o, "b")
             sp2_f.set_xlim([min(f_o), max(f_o)+0.1])
             sp2_f.set_ylim([-120.0, 20.0])
@@ -208,7 +211,7 @@ def main():
             sp2_f.set_ylabel("Power (dBW)")
 
 
-            Ts = 1.0/fs_o
+            Ts = 1.0 / fs_o
             Tmax = len(d)*Ts
             t_o = scipy.arange(0, Tmax, Ts)
 

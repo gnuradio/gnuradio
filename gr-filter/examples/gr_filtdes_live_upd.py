@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio.filter import filter_design
 from gnuradio import gr, filter
 from gnuradio import blocks
@@ -89,8 +91,8 @@ class my_top_block(gr.top_block):
         pyWin.show()
 
     def update_filter(self, filtobj):
-        print "Filter type:", filtobj.get_restype()
-        print "Filter params", filtobj.get_params()
+        print("Filter type:", filtobj.get_restype())
+        print("Filter params", filtobj.get_params())
         self.filt.set_taps(filtobj.get_taps())
 
 if __name__ == "__main__":

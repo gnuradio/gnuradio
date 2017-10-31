@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 
@@ -37,7 +38,7 @@ class qa_tag_gate (gr_unittest.TestCase):
         tag.key = pmt.string_to_symbol('key')
         tag.value = pmt.from_long(42)
         tag.offset = 0
-        src = blocks.vector_source_f(range(20), False, 1, (tag,))
+        src = blocks.vector_source_f(list(range(20)), False, 1, (tag,))
         gate = blocks.tag_gate(gr.sizeof_float, False)
         sink = blocks.vector_sink_f()
         self.tb.connect(src, gate, sink)

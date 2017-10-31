@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
@@ -46,7 +48,7 @@ class build_graph(gr.top_block):
 
         # Set the demodulator using the same deviation as the receiver.
         max_dev = 75e3
-        fm_demod_gain = input_rate/(2*math.pi*max_dev/8.0)
+        fm_demod_gain = input_rate / (2*math.pi*max_dev/8.0)
         fm_demod = analog.quadrature_demod_cf(fm_demod_gain)
 
         # Create a filter for the resampler and filter the audio
@@ -80,7 +82,7 @@ class build_graph(gr.top_block):
 def main(args):
     tb = build_graph()
     tb.start()        # fork thread and return
-    raw_input('Press Enter to quit: ')
+    input('Press Enter to quit: ')
     tb.stop()
 
 if __name__ == '__main__':

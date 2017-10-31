@@ -1,25 +1,56 @@
 """
 XML Test Runner for PyUnit
 """
-
 # Written by Sebastian Rittau <srittau@jroger.in-berlin.de> and placed in
 # the Public Domain. With contributions by Paolo Borelli and others.
 # Added to GNU Radio Oct. 3, 2010
 
-__version__ = "0.1"
+from __future__ import unicode_literals
 
 import os.path
 import re
 import sys
 import time
-import traceback
 import unittest
+import linecache
 from xml.sax.saxutils import escape
+from io import StringIO
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+
+__version__ = "0.1"
+
+
+# inline trackeback.print_tb so that py2 uses unicode literals (py2/3 compat)
+def print_tb(tb, limit=None, out=None):
+    """Print up to 'limit' stack trace entries from the traceback 'tb'.
+
+    If 'limit' is omitted or None, all entries are printed.  If 'file'
+    is omitted or None, the output goes to sys.stderr; otherwise
+    'file' should be an open file or file-like object with a write()
+    method.
+    """
+    def _print(out, s='', terminator='\n'):
+        out.write(s+terminator)
+
+    if out is None:
+        out = sys.stderr
+    if limit is None:
+        if hasattr(sys, 'tracebacklimit'):
+            limit = sys.tracebacklimit
+    n = 0
+    while tb is not None and (limit is None or n < limit):
+        f = tb.tb_frame
+        lineno = tb.tb_lineno
+        co = f.f_code
+        filename = co.co_filename
+        name = co.co_name
+        _print(out, '  Out "%s", line %d, in %s' % (filename, lineno, name))
+        linecache.checkcache(filename)
+        line = linecache.getline(filename, lineno, f.f_globals)
+        if line:
+            _print(out, '    ' + line.strip())
+        tb = tb.tb_next
+        n = n+1
 
 
 class _TestInfo(object):
@@ -60,12 +91,12 @@ class _TestInfo(object):
         supplied stream.
 
         """
-        stream.write('  <testcase classname="%(class)s" name="%(method)s" time="%(time).4f">' % \
-            {
-                "class": self._class,
-                "method": self._method,
-                "time": self._time,
-            })
+        stream.write('  <testcase classname="%(class)s" name="%(method)s" time="%(time).4f">' %
+                     {
+                         'class': self._class,
+                         'method': self._method,
+                         'time': self._time,
+                     })
         if self._failure is not None:
             self._print_error(stream, 'failure', self._failure)
         if self._error is not None:
@@ -76,10 +107,10 @@ class _TestInfo(object):
         """Print information from a failure or error to the supplied stream."""
         text = escape(str(error[1]))
         stream.write('\n')
-        stream.write('    <%s type="%s">%s\n' \
-            % (tagname, _clsname(error[0]), text))
+        stream.write('    <%s type="%s">%s\n'
+                     % (tagname, _clsname(error[0]), text))
         tb_stream = StringIO()
-        traceback.print_tb(error[2], None, tb_stream)
+        print_tb(error[2], None, tb_stream)
         stream.write(escape(tb_stream.getvalue()))
         stream.write('    </%s>\n' % tagname)
         stream.write('  ')
@@ -137,14 +168,17 @@ class _XMLTestResult(unittest.TestResult):
         output and standard error streams must be passed in.a
 
         """
-        stream.write('<testsuite errors="%(e)d" failures="%(f)d" ' % \
-            { "e": len(self.errors), "f": len(self.failures) })
-        stream.write('name="%(n)s" tests="%(t)d" time="%(time).3f">\n' % \
-            {
-                "n": self._test_name,
-                "t": self.testsRun,
-                "time": time_taken,
-            })
+        stream.write('<testsuite errors="%(e)d" failures="%(f)d" ' %
+                     {
+                         "e": len(self.errors),
+                         "f": len(self.failures)
+                     })
+        stream.write('name="%(n)s" tests="%(t)d" time="%(time).3f">\n' %
+                     {
+                         "n": self._test_name,
+                         "t": self.testsRun,
+                         "time": time_taken
+                     })
         for info in self._tests:
             info.print_report(stream)
         stream.write('  <system-out><![CDATA[%s]]></system-out>\n' % out)
@@ -173,9 +207,9 @@ class XMLTestRunner(object):
         """Run the given test case or test suite."""
         class_ = test.__class__
         classname = class_.__module__ + "." + class_.__name__
-        if self._stream == None:
+        if self._stream is None:
             filename = "TEST-%s.xml" % classname
-            stream = file(os.path.join(self._path, filename), "w")
+            stream = open(os.path.join(self._path, filename), "w")
             stream.write('<?xml version="1.0" encoding="utf-8"?>\n')
         else:
             stream = self._stream

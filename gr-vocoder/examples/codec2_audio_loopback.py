@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import blocks
@@ -34,7 +36,7 @@ def build_graph():
     enc = vocoder.codec2_encode_sp(codec2.MODE_2400)
     dec = vocoder.codec2_decode_ps(codec2.MODE_2400)
     s2f = blocks.short_to_float()
-    sink_scale = blocks.multiply_const_ff(1.0/32767.)
+    sink_scale = blocks.multiply_const_ff(1.0 / 32767.)
     sink = audio.sink(8000)
     tb.connect(src, src_scale, f2s, enc, dec, s2f, sink_scale, sink)
     return tb
@@ -42,6 +44,6 @@ def build_graph():
 if __name__ == '__main__':
     tb = build_graph()
     tb.start()
-    raw_input ('Press Enter to exit: ')
+    input ('Press Enter to exit: ')
     tb.stop()
     tb.wait()

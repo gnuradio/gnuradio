@@ -26,11 +26,9 @@ GR_PYTHON_INSTALL(PROGRAMS
   synthetic.py
   wfm_rcv_pll_to_wav.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-  COMPONENT "runtime_python"
 )
 
 install(
     FILES README
     DESTINATION ${GR_PKG_DATA_DIR}/examples/mp-sched
-    COMPONENT "runtime_python"
 )

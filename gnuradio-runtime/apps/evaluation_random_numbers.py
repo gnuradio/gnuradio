@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 import numpy as np
 from scipy.stats import norm, laplace, rayleigh
@@ -40,7 +43,7 @@ laplace_num_bins = 31
 
 rndm = gr.random() # instance of gnuradio random class (gr::random)
 
-print 'All histograms contain',num_tests,'realisations.'
+print('All histograms contain',num_tests,'realisations.')
 
 #*** GENERATE DATA ***#
 
@@ -73,7 +76,7 @@ rayleigh_expected = np.zeros(rayleigh_num_bins-1)
 laplace_expected = np.zeros(laplace_num_bins-1)
 
 for k in range(len(uniform_hist[0])):
-    uniform_expected[k] = num_tests/float(uniform_num_bins-1)
+    uniform_expected[k] = num_tests / float(uniform_num_bins-1)
 
 for k in range(len(gauss_hist[0])):
     gauss_expected[k] = float(norm.cdf(gauss_hist[1][k+1])-norm.cdf(gauss_hist[1][k]))*num_tests
@@ -86,10 +89,10 @@ for k in range(len(laplace_hist[0])):
 
 #*** PLOT HISTOGRAMS AND EXPECTATIONS TAKEN FROM SCIPY ***#
 
-uniform_bins_center = uniform_bins[0:-1]+(uniform_bins[1]-uniform_bins[0])/2.0
-gauss_bins_center = gauss_bins[0:-1]+(gauss_bins[1]-gauss_bins[0])/2.0
-rayleigh_bins_center = rayleigh_bins[0:-1]+(rayleigh_bins[1]-rayleigh_bins[0])/2.0
-laplace_bins_center = laplace_bins[0:-1]+(laplace_bins[1]-laplace_bins[0])/2.0
+uniform_bins_center = uniform_bins[0:-1]+(uniform_bins[1]-uniform_bins[0]) / 2.0
+gauss_bins_center = gauss_bins[0:-1]+(gauss_bins[1]-gauss_bins[0]) / 2.0
+rayleigh_bins_center = rayleigh_bins[0:-1]+(rayleigh_bins[1]-rayleigh_bins[0]) / 2.0
+laplace_bins_center = laplace_bins[0:-1]+(laplace_bins[1]-laplace_bins[0]) / 2.0
 
 plt.figure(1)
 
@@ -99,7 +102,7 @@ plt.xlabel('Bins'), plt.ylabel('Count'), plt.title('Uniform: Distribution')
 plt.legend(['histogram gr::random','calculation scipy'],loc=1)
 
 plt.subplot(2,1,2)
-plt.plot(uniform_bins_center,uniform_hist[0]/uniform_expected,'rs--')
+plt.plot(uniform_bins_center,uniform_hist[0] / uniform_expected,'rs--')
 plt.xlabel('Bins'), plt.ylabel('Relative deviation'), plt.title('Uniform: Relative deviation to scipy')
 
 plt.figure(2)
@@ -110,7 +113,7 @@ plt.xlabel('Bins'), plt.ylabel('Count'), plt.title('Gauss: Distribution')
 plt.legend(['histogram gr::random','calculation scipy'],loc=1)
 
 plt.subplot(2,1,2)
-plt.plot(gauss_bins_center,gauss_hist[0]/gauss_expected,'rs--')
+plt.plot(gauss_bins_center,gauss_hist[0] / gauss_expected,'rs--')
 plt.xlabel('Bins'), plt.ylabel('Relative deviation'), plt.title('Gauss: Relative deviation to scipy')
 
 plt.figure(3)
@@ -122,7 +125,7 @@ plt.legend(['histogram gr::random','calculation scipy'],loc=1)
 
 
 plt.subplot(2,1,2)
-plt.plot(rayleigh_bins_center,rayleigh_hist[0]/rayleigh_expected,'rs--')
+plt.plot(rayleigh_bins_center,rayleigh_hist[0] / rayleigh_expected,'rs--')
 plt.xlabel('Bins'), plt.ylabel('Relative deviation'), plt.title('Rayleigh: Relative deviation to scipy')
 
 plt.figure(4)
@@ -133,7 +136,7 @@ plt.xlabel('Bins'), plt.ylabel('Count'), plt.title('Laplace: Distribution')
 plt.legend(['histogram gr::random','calculation scipy'],loc=1)
 
 plt.subplot(2,1,2)
-plt.plot(laplace_bins_center,laplace_hist[0]/laplace_expected,'rs--')
+plt.plot(laplace_bins_center,laplace_hist[0] / laplace_expected,'rs--')
 plt.xlabel('Bins'), plt.ylabel('Relative deviation'), plt.title('Laplace: Relative deviation to scipy')
 
 plt.show()

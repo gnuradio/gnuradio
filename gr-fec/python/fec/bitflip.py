@@ -20,6 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
+
+
+
 def bitreverse(mint):
     res = 0;
     while mint != 0:
@@ -51,7 +56,7 @@ def read_bitlist(bitlist):
 
 def read_big_bitlist(bitlist):
     ret = []
-    for j in range(0, len(bitlist)/64):
+    for j in range(0, len(bitlist) / 64):
         res = 0;
         for i in range(0, 64):
             if int(bitlist[j*64+i]) == 1:
@@ -72,9 +77,9 @@ def generate_symmetries(symlist):
         for i in range(len(symlist[0])):
             retlist.append(symlist[0][i:] + symlist[0][0:i]);
         invlist = symlist[0];
-        for i in range(1, len(symlist[0])/2):
-            invlist[i] = symlist[0][i + len(symlist[0])/2];
-            invlist[i + len(symlist[0])/2] = symlist[0][i];
+        for i in range(1, len(symlist[0]) / 2):
+            invlist[i] = symlist[0][i + len(symlist[0]) / 2];
+            invlist[i + len(symlist[0]) / 2] = symlist[0][i];
         for i in range(len(symlist[0])):
             retlist.append(symlist[0][i:] + symlist[0][0:i]);
         return retlist;

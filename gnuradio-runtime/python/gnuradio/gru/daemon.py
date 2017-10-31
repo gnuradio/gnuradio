@@ -18,6 +18,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os, sys, signal
 
 # Turn application into a background daemon process.
@@ -55,38 +59,38 @@ import os, sys, signal
 def daemonize(pidfile=None, logfile=None):
     # fork() into background
     try:
-	pid = os.fork()
-    except OSError, e:
-	raise Exception, "%s [%d]" % (e.strerror, e.errno)
+        pid = os.fork()
+    except OSError as e:
+        raise Exception("%s [%d]" % (e.strerror, e.errno))
 
     if pid == 0:	# First child of first fork()
-	# Become session leader of new session
-	os.setsid()
+        # Become session leader of new session
+        os.setsid()
 
-	# fork() into background again
-	try:
-	    pid = os.fork()
-	except OSError, e:
-	    raise Exception, "%s [%d]" % (e.strerror, e.errno)
+        # fork() into background again
+        try:
+            pid = os.fork()
+        except OSError as e:
+            raise Exception("%s [%d]" % (e.strerror, e.errno))
 
-	if pid != 0:
-	    os._exit(0) # Second child of second fork()
+        if pid != 0:
+            os._exit(0) # Second child of second fork()
 
-    else:		# Second child of first fork()
-	os._exit(0)
+    else:                # Second child of first fork()
+        os._exit(0)
 
-    os.umask(0111)
+    os.umask(0o111)
 
     # Write pid
     pid = os.getpid()
     if pidfile is not None:
-	open(pidfile, 'w').write('%d\n'%pid)
+        open(pidfile, 'w').write('%d\n'%pid)
 
     # Redirect streams
     if logfile is not None:
-	lf = open(logfile, 'a+')
-	sys.stdout = lf
-	sys.stderr = lf
+        lf = open(logfile, 'a+')
+        sys.stdout = lf
+        sys.stderr = lf
 
     # Prevent pinning any filesystem mounts
     os.chdir('/')
@@ -97,6 +101,6 @@ def daemonize(pidfile=None, logfile=None):
 if __name__ == "__main__":
     import time
     daemonize()
-    print "Hello, world, from daemon process."
+    print("Hello, world, from daemon process.")
     time.sleep(20)
-    print "Goodbye, world, from daemon process."
+    print("Goodbye, world, from daemon process.")

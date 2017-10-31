@@ -36,6 +36,7 @@
     <block>channels_fading_model</block>
     <block>channels_dynamic_channel_model</block>
     <block>channels_selective_fading_model</block>
+    <block>channels_selective_fading_model2</block>
   </cat>
   <cat>
     <name>Impairment Models</name>
