@@ -967,7 +967,7 @@ namespace gr {
 	ret = 8;
       else if(im >= 2*level && re >= 2*level)
 	ret = 9;
-      else if(im >= 0 && im <= 2*level && re <= 0 && re <= -2*level)
+      else if(im >= 0 && im <= 2*level && re <= 0 && re >= -2*level)
 	ret = 10;
       else if(im >= 0 && im <= 2*level && re >= 0 && re <= 2*level)
 	ret = 11;
