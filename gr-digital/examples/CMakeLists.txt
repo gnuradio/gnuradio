@@ -90,6 +90,7 @@ install(
     demod/gfsk_loopback.grc
     demod/symbol_sync_test_complex.grc
     demod/symbol_sync_test_float.grc
+    demod/symbol_sync_test_float_ted_gain.m
     demod/test_corr_and_sync.grc
     demod/test_corr_est.grc
     demod/uhd_corr_and_sync_tx.grc

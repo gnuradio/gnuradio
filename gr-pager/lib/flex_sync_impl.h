@@ -59,7 +59,7 @@ namespace gr {
       int d_spb;      // Current samples per baud
       bool d_hibit;   // Alternating bit indicator for 3200 bps
 
-      int d_fiw;      // Frame information word
+      uint32_t d_fiw;      // Frame information word
       int d_frame;    // Current FLEX frame
       int d_cycle;    // Current FLEX cycle
       int d_unknown1;

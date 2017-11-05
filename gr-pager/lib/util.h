@@ -29,7 +29,7 @@ namespace gr {
   namespace pager {
 
     unsigned char reverse_bits8(unsigned char val);
-    int32_t reverse_bits32(int32_t val);
+    uint32_t reverse_bits32(uint32_t val);
 
   } /* namespace pager */
 } /* namespace gr */

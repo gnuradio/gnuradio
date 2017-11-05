@@ -40,10 +40,10 @@ namespace gr {
       return (val * 0x0202020202ULL & 0x010884422010ULL) % 1023;
     }
 
-    int32_t
-    reverse_bits32(int32_t val)
+    uint32_t
+    reverse_bits32(uint32_t val)
     {
-      int32_t out = 0x00000000;
+      uint32_t out = 0x00000000;
       out |= (reverse_bits8((val >> 24) & 0x000000FF)      );
       out |= (reverse_bits8((val >> 16) & 0x000000FF) <<  8);
       out |= (reverse_bits8((val >>  8) & 0x000000FF) << 16);

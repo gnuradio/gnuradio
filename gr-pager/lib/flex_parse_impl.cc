@@ -25,7 +25,7 @@
 #endif
 
 #include "flex_parse_impl.h"
-#include "bch3221.h"
+#include "bch3121.h"
 #include <gnuradio/io_signature.h>
 #include <ctype.h>
 #include <iostream>

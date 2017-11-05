@@ -25,7 +25,7 @@
 #endif
 
 #include "flex_deinterleave_impl.h"
-#include "bch3221.h"
+#include "bch3121.h"
 #include "util.h"
 #include <gnuradio/io_signature.h>
 
@@ -56,7 +56,7 @@ namespace gr {
 				     gr_vector_void_star &output_items)
     {
       const unsigned char *in = (const unsigned char *)input_items[0];
-      int *out = (int *)output_items[0];
+      uint32_t *out = (uint32_t *)output_items[0];
 
       // FLEX codewords are interleaved in blocks of 256 bits or 8, 32
       // bit codes.  To deinterleave we parcel each incoming bit into
@@ -85,11 +85,11 @@ namespace gr {
 
       // Now convert code words into data words
       for(j = 0; j < 8; j++) {
-	int codeword = d_codewords[j];
+	uint32_t codeword = d_codewords[j];
 
-	// Apply BCH 32,21 error correction
+	// Apply BCH 31,21 error correction
 	// TODO: mark dataword when codeword fails ECC
-	bch3221(codeword);
+	bch3121(codeword);
 
 	// Reverse bit order
 	codeword = reverse_bits32(codeword);

@@ -26,7 +26,7 @@
 
 #include "flex_sync_impl.h"
 #include "flex_modes.h"
-#include "bch3221.h"
+#include "bch3121.h"
 #include "util.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/count_bits.h>
@@ -320,7 +320,7 @@ namespace gr {
 	    d_fiw = (d_fiw << 1) | (sym > 1);
 	    if(++d_count == 48) {
 	      // FIW is accumulated, call BCH to error correct it
-	      bch3221(d_fiw);
+	      bch3121(d_fiw);
 	      parse_fiw();
 	      enter_sync2();
 	    }

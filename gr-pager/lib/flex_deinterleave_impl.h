@@ -37,7 +37,7 @@ namespace gr {
     {
     private:
       // One FLEX block of deinterleaved data
-      int d_codewords[8];
+      uint32_t d_codewords[8];
 
     public:
       flex_deinterleave_impl();
