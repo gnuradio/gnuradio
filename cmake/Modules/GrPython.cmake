@@ -63,6 +63,7 @@ set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpre
 macro(GR_PYTHON_CHECK_MODULE_RAW desc python_code have)
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c "${python_code}"
+        OUTPUT_QUIET ERROR_QUIET
         RESULT_VARIABLE return_code
     )
     if(return_code EQUAL 0)
