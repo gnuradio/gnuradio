@@ -17,6 +17,8 @@
 
 from __future__ import absolute_import
 
+import numbers
+
 from .drawable import Drawable
 from .. import ParamWidgets, Utils, Constants
 from ...core.params import Param as CoreParam
@@ -126,7 +128,7 @@ class Param(CoreParam):
         t = self.dtype
         if isinstance(e, bool):
             return str(e)
-        elif isinstance(e, Constants.COMPLEX_TYPES):
+        elif isinstance(e, numbers.Complex):
             dt_str = Utils.num_to_str(e)
         elif isinstance(e, Constants.VECTOR_TYPES):
             # Vector types

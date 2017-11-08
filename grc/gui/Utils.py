@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
+import numbers
+
 from gi.repository import GLib
 import cairo
 import six
@@ -91,7 +93,7 @@ def num_to_str(num):
                 return template.format(value / factor, symbol.strip())
         return template.format(value, '')
 
-    if isinstance(num, Constants.COMPLEX_TYPES):
+    if isinstance(num, numbers.Complex):
         num = complex(num)  # Cast to python complex
         if num == 0:
             return '0'

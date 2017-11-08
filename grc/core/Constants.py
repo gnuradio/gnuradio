@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from __future__ import absolute_import
 
 import os
+import numbers
 import stat
 
 import numpy
@@ -54,7 +55,7 @@ TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP 
                       stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
 HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
 
-PARAM_TYPE_NAMES = (
+PARAM_TYPE_NAMES = {
     'raw', 'enum',
     'complex', 'real', 'float', 'int',
     'complex_vector', 'real_vector', 'float_vector', 'int_vector',
@@ -63,18 +64,17 @@ PARAM_TYPE_NAMES = (
     'id', 'stream_id',
     'gui_hint',
     'import',
-)
+}
+
+PARAM_TYPE_MAP = {
+    'complex': numbers.Complex,
+    'float': numbers.Real,
+    'real': numbers.Real,
+    'int': numbers.Integral,
+}
 
 # Define types, native python + numpy
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
-COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
-REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
-INT_TYPES = [int, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
-             numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
-# Cast to tuple for isinstance, concat subtypes
-COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
-REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
-INT_TYPES = tuple(INT_TYPES)
 
 # Updating colors. Using the standard color palette from:
 #   http://www.google.com/design/spec/style/color.html#color-color-palette

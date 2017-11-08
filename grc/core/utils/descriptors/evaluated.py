@@ -79,9 +79,10 @@ class Evaluated(object):
 
 class EvaluatedEnum(Evaluated):
     def __init__(self, allowed_values, default=None, name=None):
-        self.allowed_values = allowed_values if isinstance(allowed_values, (list, tuple)) else \
-            allowed_values.split()
-        default = default if default is not None else self.allowed_values[0]
+        if isinstance(allowed_values, six.string_types):
+            allowed_values = set(allowed_values.split())
+        self.allowed_values = allowed_values
+        default = default if default is not None else next(iter(self.allowed_values))
         super(EvaluatedEnum, self).__init__(str, default, name)
 
     def default_eval_func(self, instance):
