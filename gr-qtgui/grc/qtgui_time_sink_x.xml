@@ -29,6 +29,7 @@ self.$(id).enable_autoscale($autoscale)
 self.$(id).enable_grid($grid)
 self.$(id).enable_axis_labels($axislabels)
 self.$(id).enable_control_panel($ctrlpanel)
+self.$(id).enable_stem_plot($stemplot)
 
 if not $legend:
   self.$(id).disable_legend()
@@ -367,6 +368,23 @@ $(gui_hint()($win))</make>
     <name>Axis Labels</name>
     <key>axislabels</key>
     <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <tab>Config</tab>
+  </param>
+
+  <param>
+    <name>Stem Plot</name>
+    <key>stemplot</key>
+    <value>False</value>
     <type>enum</type>
     <hide>part</hide>
     <option>
