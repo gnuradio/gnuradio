@@ -537,17 +537,17 @@ namespace gr {
     std::vector<float> pc_input_buffers_full_var();
 
     /*!
-     * \brief Gets instantaneous fullness of \p which input buffer.
+     * \brief Gets instantaneous fullness of \p which output buffer.
      */
     float pc_output_buffers_full(int which);
 
     /*!
-     * \brief Gets average fullness of \p which input buffer.
+     * \brief Gets average fullness of \p which output buffer.
      */
     float pc_output_buffers_full_avg(int which);
 
     /*!
-     * \brief Gets variance of fullness of \p which input buffer.
+     * \brief Gets variance of fullness of \p which output buffer.
      */
     float pc_output_buffers_full_var(int which);
 
