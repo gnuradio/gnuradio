@@ -40,25 +40,25 @@ def num_to_str (n):
     '''Convert a number to a string in engineering notation.  E.g., 5e-9 -> 5n'''
     m = abs(n)
     if m >= 1e9:
-        return "%gG" % (n * 1e-9)
+        return "%0.9gG" % (n * 1e-9)
     elif m >= 1e6:
-        return "%gM" % (n * 1e-6)
+        return "%0.9gM" % (n * 1e-6)
     elif m >= 1e3:
-        return "%gk" % (n * 1e-3)
+        return "%0.9gk" % (n * 1e-3)
     elif m >= 1:
-        return "%g" % (n)
+        return "%0.9g" % (n)
     elif m >= 1e-3:
-        return "%gm" % (n * 1e3)
+        return "%0.9gm" % (n * 1e3)
     elif m >= 1e-6:
-        return "%gu" % (n * 1e6)        # where's that mu when you need it (unicode?)
+        return "%0.9gu" % (n * 1e6)        # where's that mu when you need it (unicode?)
     elif m >= 1e-9:
-        return "%gn" % (n * 1e9)
+        return "%0.9gn" % (n * 1e9)
     elif m >= 1e-12:
-        return "%gp" % (n * 1e12)
+        return "%0.9gp" % (n * 1e12)
     elif m >= 1e-15:
-        return "%gf" % (n * 1e15)
+        return "%0.9gf" % (n * 1e15)
     else:
-        return "%g" % (n)
+        return "%0.9g" % (n)
 
 
 def str_to_num (value):
