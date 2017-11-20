@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012, 2017 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -26,7 +26,7 @@ from gnuradio.modtool import *
 
 def main():
     """ Here we go. Parse command, choose class and run. """
-    cmd_dict = get_class_dict(globals().values())
+    cmd_dict = get_class_dict(ModTool.__subclasses__())
     command = get_command_from_argv(cmd_dict.keys())
     if command is None:
         print 'Usage:' + Templates['usage']
