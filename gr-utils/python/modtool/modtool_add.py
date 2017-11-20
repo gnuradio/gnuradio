@@ -23,8 +23,9 @@
 import os
 import re
 from optparse import OptionGroup
+import readline
 
-from util_functions import append_re_line_sequence, ask_yes_no
+from util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from cmakefile_editor import CMakeFileEditor
 from modtool_base import ModTool, ModToolException
 from templates import Templates
@@ -75,15 +76,19 @@ class ModToolAdd(ModTool):
         if self._info['blocktype'] is None:
             # Print list out of blocktypes to user for reference
             print str(self._block_types)
-            while self._info['blocktype'] not in self._block_types:
-                self._info['blocktype'] = raw_input("Enter block type: ")
-                if self._info['blocktype'] not in self._block_types:
-                    print 'Must be one of ' + str(self._block_types)
+            with SequenceCompleter(sorted(self._block_types)):
+                while self._info['blocktype'] not in self._block_types:
+                    self._info['blocktype'] = raw_input("Enter block type: ")
+                    if self._info['blocktype'] not in self._block_types:
+                        print 'Must be one of ' + str(self._block_types)
+
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
-            while self._info['lang'] not in ['cpp', 'python']:
-                self._info['lang'] = raw_input("Language (python/cpp): ")
+            language_candidates = ('cpp', 'python')
+            with SequenceCompleter(language_candidates):
+                while self._info['lang'] not in language_candidates:
+                    self._info['lang'] = raw_input("Language (python/cpp): ")
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
 
