@@ -20,7 +20,6 @@
 install(FILES
     vocoder_alaw_decode_bs.block.yml
     vocoder_alaw_encode_sb.block.yml
-    vocoder.tree.yml
     vocoder_cvsd_decode_bs.block.yml
     vocoder_cvsd_decode.block.yml
     vocoder_cvsd_encode_sb.block.yml

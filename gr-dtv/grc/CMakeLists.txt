@@ -29,7 +29,6 @@ install(FILES
     dtv_atsc_rx_filter.block.yml
     dtv_atsc_sync.block.yml
     dtv_atsc_viterbi_decoder.block.yml
-    dtv_block_tree.block.yml
     dtv_atsc_pad.block.yml
     dtv_atsc_randomizer.block.yml
     dtv_atsc_rs_encoder.block.yml
