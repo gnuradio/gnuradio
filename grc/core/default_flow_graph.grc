@@ -5,6 +5,7 @@
 
 options:
   parameters:
+    id: 'top_block'
     title: 'top_block'
   states:
     coordinate:
