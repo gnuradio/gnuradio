@@ -73,8 +73,8 @@ class Cache(object):
             return
 
         logger.info('Saving %d entries to json cache', len(self.cache))
-        with open(self.cache_file, 'wb') as cache_file:
-            json.dump(self.cache, cache_file, encoding='utf-8')
+        with open(self.cache_file, 'w', encoding='utf8') as cache_file:
+            json.dump(self.cache, cache_file)
 
     def prune(self):
         for filename in (set(self.cache) - self._accessed_items):
