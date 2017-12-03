@@ -88,9 +88,9 @@ def validate_stream_id(param):
 @validates('complex', 'real', 'float', 'int')
 def validate_scalar(param):
     valid_types = Constants.PARAM_TYPE_MAP[param.dtype]
-    if not isinstance(param.value, valid_types):
+    if not isinstance(param.get_evaluated(), valid_types):
         raise ValidateError('Expression {!r} is invalid for type {!r}.'.format(
-            param.value, param.dtype))
+            param.get_evaluated(), param.dtype))
 
 
 @validates('complex_vector', 'real_vector', 'float_vector', 'int_vector')
@@ -98,6 +98,6 @@ def validate_vector(param):
     # todo: check vector types
 
     valid_types = Constants.PARAM_TYPE_MAP[param.dtype.split('_', 1)[0]]
-    if not all(isinstance(item, valid_types) for item in param.value):
+    if not all(isinstance(item, valid_types) for item in param.get_evaluated()):
         raise ValidateError('Expression {!r} is invalid for type {!r}.'.format(
-            param.value, param.dtype))
+            param.get_evaluated(), param.dtype))
