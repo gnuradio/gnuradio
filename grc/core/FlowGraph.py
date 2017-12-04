@@ -172,7 +172,7 @@ class FlowGraph(Element):
         return elements
 
     def children(self):
-        return itertools.chain(self.blocks, self.connections)
+        return itertools.chain(self.iter_enabled_blocks(), self.connections)
 
     def rewrite(self):
         """
