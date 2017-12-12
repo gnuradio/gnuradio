@@ -313,17 +313,19 @@ namespace gr {
       d_total_noutput_items = noutput_items;
       d_pc_start_time = (float)gr::high_res_timer_now();
       for(size_t i=0; i < d_input.size(); i++) {
-	gr::thread::scoped_lock guard(*d_input[i]->mutex());
-        float pfull = static_cast<float>(d_input[i]->items_available()) /
-          static_cast<float>(d_input[i]->max_possible_items_available());
+        buffer_reader_sptr in_buf = d_input[i];
+        gr::thread::scoped_lock guard(*in_buf->mutex());
+        float pfull = static_cast<float>(in_buf->items_available()) /
+          static_cast<float>(in_buf->max_possible_items_available());
         d_ins_input_buffers_full[i] = pfull;
         d_avg_input_buffers_full[i] = pfull;
         d_var_input_buffers_full[i] = 0;
       }
       for(size_t i=0; i < d_output.size(); i++) {
-	gr::thread::scoped_lock guard(*d_output[i]->mutex());
-        float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
-          static_cast<float>(d_output[i]->bufsize());
+        buffer_sptr out_buf = d_output[i];
+        gr::thread::scoped_lock guard(*out_buf->mutex());
+        float pfull = 1.0f - static_cast<float>(out_buf->space_available()) /
+          static_cast<float>(out_buf->bufsize());
         d_ins_output_buffers_full[i] = pfull;
         d_avg_output_buffers_full[i] = pfull;
         d_var_output_buffers_full[i] = 0;
@@ -351,9 +353,10 @@ namespace gr {
       d_avg_throughput = d_total_noutput_items / monitor_time;
 
       for(size_t i=0; i < d_input.size(); i++) {
-	gr::thread::scoped_lock guard(*d_input[i]->mutex());
-        float pfull = static_cast<float>(d_input[i]->items_available()) /
-          static_cast<float>(d_input[i]->max_possible_items_available());
+        buffer_reader_sptr in_buf = d_input[i];
+        gr::thread::scoped_lock guard(*in_buf->mutex());
+        float pfull = static_cast<float>(in_buf->items_available()) /
+          static_cast<float>(in_buf->max_possible_items_available());
 
         d = pfull - d_avg_input_buffers_full[i];
         d_ins_input_buffers_full[i] = pfull;
@@ -362,9 +365,10 @@ namespace gr {
       }
 
       for(size_t i=0; i < d_output.size(); i++) {
-	gr::thread::scoped_lock guard(*d_output[i]->mutex());
-        float pfull = 1.0f - static_cast<float>(d_output[i]->space_available()) /
-          static_cast<float>(d_output[i]->bufsize());
+        buffer_sptr out_buf = d_output[i];
+        gr::thread::scoped_lock guard(*out_buf->mutex());
+        float pfull = 1.0f - static_cast<float>(out_buf->space_available()) /
+          static_cast<float>(out_buf->bufsize());
 
         d = pfull - d_avg_output_buffers_full[i];
         d_ins_output_buffers_full[i] = pfull;
