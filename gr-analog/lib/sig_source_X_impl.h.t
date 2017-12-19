@@ -41,10 +41,11 @@ namespace gr {
       double		d_ampl;
       @TYPE@		d_offset;
       gr::fxpt_nco	d_nco;
+      double            d_phase;
 
     public:
       @IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,
-		  double wave_freq, double ampl, @TYPE@ offset = 0);
+		  double wave_freq, double ampl, @TYPE@ offset = 0, double phase = 0);
       ~@IMPL_NAME@();
 
       virtual int work(int noutput_items,
@@ -56,6 +57,7 @@ namespace gr {
       double frequency() const { return d_frequency; }
       double amplitude() const { return d_ampl; }
       @TYPE@ offset() const { return d_offset; }
+      double phase() const { return d_phase; }
 
       void set_sampling_freq(double sampling_freq);
       void set_waveform(gr_waveform_t waveform);
@@ -63,6 +65,7 @@ namespace gr {
       void set_frequency(double frequency);
       void set_amplitude(double ampl);
       void set_offset(@TYPE@ offset);
+      void set_phase(double phase);
     };
 
   } /* namespace analog */

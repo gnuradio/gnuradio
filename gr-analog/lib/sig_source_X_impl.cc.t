@@ -38,21 +38,22 @@ namespace gr {
 
     @BASE_NAME@::sptr
     @BASE_NAME@::make(double sampling_freq, gr_waveform_t waveform,
-		      double frequency, double ampl, @TYPE@ offset)
+		      double frequency, double ampl, @TYPE@ offset, double phase)
     {
       return gnuradio::get_initial_sptr
-	(new @IMPL_NAME@(sampling_freq, waveform, frequency, ampl, offset));
+	(new @IMPL_NAME@(sampling_freq, waveform, frequency, ampl, offset, phase));
     }
 
     @IMPL_NAME@::@IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,
-			     double frequency, double ampl, @TYPE@ offset)
+			     double frequency, double ampl, @TYPE@ offset, double phase)
     : sync_block("@BASE_NAME@",
 		    io_signature::make(0, 0, 0),
 		    io_signature::make(1, 1, sizeof(@TYPE@))),
       d_sampling_freq(sampling_freq), d_waveform(waveform),
-      d_frequency(frequency), d_ampl(ampl), d_offset(offset)
+      d_frequency(frequency), d_ampl(ampl), d_offset(offset), d_phase(phase)
     {
       set_frequency(frequency);
+      set_phase(phase);
 
       message_port_register_in(pmt::mp("freq"));
       set_msg_handler(pmt::mp("freq"), boost::bind(&@IMPL_NAME@::set_frequency_msg, this, _1));
@@ -274,6 +275,13 @@ namespace gr {
     @NAME@::set_amplitude(double ampl)
     {
       d_ampl = ampl;
+    }
+
+    void
+    @NAME@::set_phase(double phase)
+    {
+      d_phase = phase;
+      d_nco.set_phase(phase);
     }
 
     void

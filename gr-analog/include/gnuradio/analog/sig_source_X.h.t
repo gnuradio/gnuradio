@@ -54,19 +54,21 @@ namespace gr {
       static sptr make(double sampling_freq,
 		       gr::analog::gr_waveform_t waveform,
 		       double wave_freq,
-		       double ampl, @TYPE@ offset = 0);
+		       double ampl, @TYPE@ offset = 0, double phase = 0);
 
       virtual double sampling_freq() const = 0;
       virtual gr::analog::gr_waveform_t waveform() const = 0;
       virtual double frequency() const = 0;
       virtual double amplitude() const = 0;
       virtual @TYPE@ offset() const = 0;
+      virtual double phase() const = 0;
 
       virtual void set_sampling_freq(double sampling_freq) = 0;
       virtual void set_waveform(gr::analog::gr_waveform_t waveform) = 0;
       virtual void set_frequency(double frequency) = 0;
       virtual void set_amplitude(double ampl) = 0;
       virtual void set_offset(@TYPE@ offset) = 0;
+      virtual void set_phase(double phase) = 0;
     };
 
   } /* namespace analog */
