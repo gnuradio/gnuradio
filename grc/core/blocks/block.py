@@ -169,8 +169,13 @@ class Block(Element):
         """check if this block supports the selected output language"""
         current_output_language = self.parent.get_option('output_language')
 
-        if current_output_language == 'cpp' and 'has_cpp' not in self.flags:
+        if current_output_language == 'cpp':
+            if 'cpp' not in self.flags:
                 self.add_error_message("This block does not support C++ output.")
+
+            if self.key == 'parameter':
+                if not self.params['type'].value:
+                    self.add_error_message("C++ output requires you to choose a parameter type.")
 
     def _validate_var_value(self):
         """or variables check the value (only if var_value is used)"""
@@ -266,6 +271,8 @@ class Block(Element):
             a list of strings
         """
         def make_callback(callback):
+            if self.is_variable:
+                return callback
             if 'this->' in callback:
                 return callback
             return 'this->{}->{}'.format(self.name, callback)

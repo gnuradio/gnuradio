@@ -1,5 +1,6 @@
 id: blocks_patterned_interleaver
 label: Patterned Interleaver
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,5 +39,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.patterned_interleaver(${type.size}*${vlen}, ${pattern})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/patterned_interleaver.h>']
+    declarations: 'blocks::patterned_interleaver::sptr ${id};'
+    make: 'this->${id} = blocks::patterned_interleaver::make(${type.size}*${vlen}, ${pattern});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

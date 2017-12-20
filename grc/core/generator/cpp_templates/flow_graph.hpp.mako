@@ -1,3 +1,4 @@
+<%def name="indent(code)">${ '    ' + '\n    '.join(str(code).splitlines()) }</%def>\
 #ifndef ${flow_graph.get_option('id').upper()}_HPP
 #define ${flow_graph.get_option('id').upper()}_HPP
 /********************
@@ -28,19 +29,25 @@ ${inc}
 #include <QSettings>
 % endif
 
+% if parameters:
+#include <iostream>
+#include <boost/program_options.hpp>
+% endif
+
 using namespace gr;
 
 <%
-	class_name = flow_graph.get_option('id')
-## TODO: param_str
+class_name = flow_graph.get_option('id')
+param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 %>\
 
+
 % if generate_options == 'no_gui':
-class ${class_name} : public top_block {
+class ${class_name} {
 % elif generate_options.startswith('hb'):
 class ${class_name} : public hier_block2 {
 % elif generate_options == 'qt_gui':
-class ${class_name} : public QWidget, public top_block {
+class ${class_name} : public QWidget {
     Q_OBJECT
 % endif
 
@@ -56,15 +63,15 @@ private:
 
 
 % for block, make, declarations in blocks:
-    % if declarations:
-    ${declarations}
-    % endif
+% if declarations:
+${indent(declarations)}
+% endif
 % endfor
 
 % if parameters:
 // Parameters:
 % for param in parameters:
-    ${param.get_var_make()}
+    ${param.get_cpp_var_make()}
 % endfor
 % endif
 
@@ -76,8 +83,10 @@ private:
 % endif
 
 public:
-	${class_name}();
-    ## TODO: param_str
+% if not generate_options.startswith('hb'):
+    top_block_sptr tb;
+% endif
+	${class_name}(${param_str});
 	~${class_name}();
 
 % for var in parameters + variables:

@@ -1,5 +1,6 @@
 id: blocks_rms_xx
 label: RMS
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -25,6 +26,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.rms_${type.fcn}f(${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/rms_${type.fcn}f.h>']
+    declarations: 'blocks::rms_${type.fcn}f::sptr ${id};'
+    make: 'this->${id} = blocks::rms_${type.fcn}f::make(${alpha});'
     callbacks:
     - set_alpha(${alpha})
 

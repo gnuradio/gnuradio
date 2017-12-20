@@ -79,49 +79,6 @@ class ExecFlowGraphThread(threading.Thread):
             shell=False, universal_newlines=True
         )
 
-    def _cpp_run_cmake(self):
-        """
-        Generate and compile this C++ flow graph.
-        """
-        generator = self.page.get_generator()
-
-        xterm_executable = find_executable(self.xterm_executable)
-
-        dirname = generator.file_path
-        builddir = os.path.join(dirname, 'build')
-
-        run_command_args = [ 'cmake', '..' ]
-        Messages.send_start_exec(' '.join(run_command_args))
-
-        return subprocess.Popen(
-            args=run_command_args,
-            cwd=builddir,
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=False, universal_newlines=True
-        )
-
-    def _cpp_compile(self):
-        """
-        Compile this C++ flow graph.
-        """
-        generator = self.page.get_generator()
-
-        xterm_executable = find_executable(self.xterm_executable)
-
-        dirname = generator.file_path
-        builddir = os.path.join(dirname, 'build')
-
-        run_command_args = [ 'make' ]
-        Messages.send_start_exec(' '.join(run_command_args))
-
-        return subprocess.Popen(
-            args=run_command_args,
-            cwd=builddir,
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=False, universal_newlines=True
-        )
-
-
     def _cpp_popen(self):
         """
         Execute this C++ flow graph after generating and compiling it.
@@ -129,22 +86,22 @@ class ExecFlowGraphThread(threading.Thread):
         generator = self.page.get_generator()
         run_command = generator.file_path + '/build/' + self.flow_graph.get_option('id')
 
+        dirname = generator.file_path
+        builddir = os.path.join(dirname, 'build')
+
         if os.path.isfile(run_command):
             os.remove(run_command)
 
         xterm_executable = find_executable(self.xterm_executable)
-        process = self._cpp_run_cmake()
-        process.wait()
-        process = self._cpp_compile()
-        process.wait()
 
-        run_command_args = [xterm_executable, '-e', run_command]
+        run_command_args = ['cmake .. &&', 'make && ', xterm_executable, '-e', run_command]
         Messages.send_start_exec(' '.join(run_command_args))
 
         return subprocess.Popen(
-            args=run_command_args,
+            args=' '.join(run_command_args),
+            cwd=builddir,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            shell=False, universal_newlines=True
+            shell=True, universal_newlines=True
         )
 
     def run(self):

@@ -1,5 +1,6 @@
 id: blocks_probe_rate
 label: Probe Rate
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -40,5 +41,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.probe_rate(${type.size}*${vlen}, ${mintime}, ${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/probe_rate.h>']
+    declarations: 'blocks::probe_rate::sptr ${id};'
+    make: 'this->${id} = blocks::probe_rate::make(${type.size}*${vlen}, ${mintime}, ${alpha});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: blocks_keep_m_in_n
 label: Keep M in N
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -47,5 +48,16 @@ templates:
     - set_offset(${offset})
     - set_m(${m})
     - set_n(${n})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/keep_m_in_n.h>']
+    declarations: 'blocks::keep_m_in_n::sptr ${id};'
+    make: 'this->${id} = blocks::keep_m_in_n::make(${type.size}, ${m}, ${n}, ${offset});'
+    callbacks:
+    - set_offset(${offset})
+    - set_m(${m})
+    - set_n(${n})
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

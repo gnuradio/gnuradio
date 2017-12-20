@@ -1,5 +1,6 @@
 id: blocks_divide_xx
 label: Divide
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,5 +39,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.divide_${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/divide_${type.fcn}.h>']
+    declarations: 'blocks::divide_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::divide_${type.fcn}::make(${vlen});'
 
 file_format: 1

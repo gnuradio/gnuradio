@@ -1,5 +1,6 @@
 id: xmlrpc_client
 label: XMLRPC Client
+flags: python
 
 parameters:
 -   id: addr

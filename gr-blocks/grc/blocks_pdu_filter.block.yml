@@ -1,5 +1,6 @@
 id: blocks_pdu_filter
 label: PDU Filter
+flags: python
 
 parameters:
 -   id: k

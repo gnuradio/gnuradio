@@ -1,5 +1,6 @@
 id: analog_rail_ff
 label: Rail
+flags: python, cpp
 
 parameters:
 -   id: lo
@@ -23,5 +24,13 @@ templates:
     callbacks:
     - set_lo(${lo})
     - set_hi(${hi})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/rail_ff.h>']
+    make: 'this->${id} = analog::rail_ff::make(${lo}, ${hi});'
+    callbacks:
+    - set_lo(${lo})
+    - set_hi(${hi})
+    link: ['gnuradio-analog']
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: analog_fm_demod_cf
 label: FM Demod
+flags: python
 
 parameters:
 -   id: chan_rate

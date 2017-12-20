@@ -1,5 +1,6 @@
 id: blocks_vector_to_stream
 label: Vector to Stream
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,5 +39,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.vector_to_stream(${type.size}*${vlen}, ${num_items})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vector_to_stream.h>']
+    declarations: 'blocks::vector_to_stream::sptr ${id};'
+    make: 'this->${id} = blocks::vector_to_stream::make(${type.size}*${vlen}, ${num_items});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

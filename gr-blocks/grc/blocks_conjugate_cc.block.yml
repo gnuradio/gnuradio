@@ -1,5 +1,6 @@
 id: blocks_conjugate_cc
 label: Complex Conjugate
+flags: python, cpp
 
 inputs:
 -   domain: stream
@@ -13,4 +14,8 @@ templates:
     imports: from gnuradio import blocks
     make: blocks.conjugate_cc()
 
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/conjugate_cc.h>']
+    declarations: 'blocks::conjugate_cc::sptr ${id};'
+    make: 'this->${id} = blocks::conjugate_cc::make();'
 file_format: 1

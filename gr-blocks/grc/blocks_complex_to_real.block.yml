@@ -1,5 +1,6 @@
 id: blocks_complex_to_real
 label: Complex To Real
+flags: python, cpp
 
 parameters:
 -   id: vlen
@@ -25,5 +26,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.complex_to_real(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_real.h>']
+    declarations: 'blocks::complex_to_real::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_real::make(${vlen});'
 
 file_format: 1

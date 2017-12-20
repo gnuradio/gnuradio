@@ -1,5 +1,6 @@
 id: analog_nbfm_rx
 label: NBFM Receive
+flags: python
 
 parameters:
 -   id: audio_rate

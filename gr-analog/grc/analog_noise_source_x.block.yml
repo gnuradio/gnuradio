@@ -1,5 +1,6 @@
 id: analog_noise_source_x
 label: Noise Source
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -34,5 +35,15 @@ templates:
     callbacks:
     - set_type(${noise_type})
     - set_amplitude(${amp})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/noise_source_${type.fcn}.h>']
+    make: 'this->${id} = analog::noise_source_${type.fcn}::make(${noise_type}, ${amp}, ${seed});'
+    callbacks:
+    - set_type(${noise_type})
+    - set_amplitude(${amp})
+    link: ['gnuradio-analog']
+    translations:
+        analog.: 'analog::'
 
 file_format: 1

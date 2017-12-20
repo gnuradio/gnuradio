@@ -1,5 +1,6 @@
 id: pad_source
 label: Pad Source
+flags: python
 
 parameters:
 -   id: label

@@ -1,6 +1,7 @@
 id: analog_cpfsk_bc
 label: CPFSK
 category: '[Core]/Deprecated'
+flags: python, cpp
 
 parameters:
 -   id: k
@@ -27,5 +28,13 @@ templates:
     make: analog.cpfsk_bc(${k}, ${amplitude}, ${samples_per_symbol})
     callbacks:
     - set_amplitude(${amplitude})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/cpfsk_bc.h>']
+    make: 'this->${id} = analog::cpfsk_bc::make(${k}, ${amplitude}, ${samples_per_symbol});'
+    callbacks:
+    - set_amplitude(${amplitude})
+    link: ['gnuradio-analog']
+
 
 file_format: 1

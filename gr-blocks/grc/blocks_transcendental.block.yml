@@ -1,5 +1,6 @@
 id: blocks_transcendental
 label: Transcendental
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -26,5 +27,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.transcendental(${name}, "${type}")
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/transcendental.h>']
+    declarations: 'blocks::transcendental::sptr ${id};'
+    make: 'this->${id} = blocks::transcendental::make(${name}, "$type");'
 
 file_format: 1

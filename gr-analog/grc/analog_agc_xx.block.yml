@@ -1,5 +1,6 @@
 id: analog_agc_xx
 label: AGC
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -44,5 +45,18 @@ templates:
     - set_reference(${reference})
     - set_gain(${gain})
     - set_max_gain(${max_gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/agc_${type.fcn}.h>']
+    declarations: 'analog::agc_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = analog::agc_${type.fcn}::make(${rate}, ${reference}, ${gain});
+        this->${id}.set_max_gain(${max_gain});
+    callbacks:
+    - set_rate(${rate})
+    - set_reference(${reference})
+    - set_gain(${gain})
+    - set_max_gain(${max_gain})
+    link: ['gnuradio-analog']
 
 file_format: 1

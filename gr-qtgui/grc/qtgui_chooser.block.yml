@@ -1,5 +1,6 @@
 id: variable_qtgui_chooser
 label: QT GUI Chooser
+flags: python
 
 parameters:
 -   id: label

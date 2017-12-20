@@ -1,5 +1,6 @@
 id: blocks_streams_to_stream
 label: Streams to Stream
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -39,5 +40,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.streams_to_stream(${type.size}*${vlen}, ${num_streams})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/streams_to_stream.h>']
+    declarations: 'blocks::streams_to_stream::sptr ${id};'
+    make: 'this->${id} = blocks::streams_to_stream::make(${type.size}*${vlen}, ${num_streams});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

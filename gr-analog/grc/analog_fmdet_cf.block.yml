@@ -1,5 +1,6 @@
 id: analog_fmdet_cf
 label: FM Detector
+flags: python
 
 parameters:
 -   id: samplerate

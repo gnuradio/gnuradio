@@ -1,5 +1,6 @@
 id: blocks_multiply_matrix_xx
 label: Multiply by Matrix
+flags: python
 
 parameters:
 -   id: type
@@ -41,6 +42,13 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.multiply_matrix_${type.fcn}(${A}, ${tag_propagation_policy})
+    callbacks:
+    - set_A(${A})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply_matrix_${type.fcn}.h>']
+    declarations: 'blocks::multiply_matrix_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_matrix_${type.fcn}::make(${A}, ${tag_propagation_policy});'
     callbacks:
     - set_A(${A})
 

@@ -1,3 +1,4 @@
+<%def name="doubleindent(code)">${ '\n        '.join(str(code).splitlines()) }</%def>\
 /********************
 GNU Radio C++ Flow Graph Source File
 
@@ -12,21 +13,24 @@ Generated: ${generated_time}
 ********************/
 
 #include "${flow_graph.get_option('id')}.hpp"
+% if parameters:
 
+namespace po = boost::program_options;
+
+% endif
 using namespace gr;
 
 <%
-	class_name = flow_graph.get_option('id')
-## TODO: param_str
+class_name = flow_graph.get_option('id')
+param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
+param_str_without_types = ", ".join(param.name for param in parameters)
 %>\
-<%def name="indent(code)">${ '\n        '.join(str(code).splitlines()) }</%def>
 
-## TODO: param_str
 % if generate_options == 'no_gui':
-${class_name}::${class_name} () : top_block("${title}") {
+${class_name}::${class_name} (${param_str}) {
 % elif generate_options.startswith('hb'):
 ## TODO: make_io_sig
-${class_name}::${class_name} () : hier_block2("${title}") {
+${class_name}::${class_name} (${param_str}) : hier_block2("${title}") {
 % for pad in flow_graph.get_hier_block_message_io('in'):
     message_port_register_hier_in("${pad['label']}")
 % endfor
@@ -34,7 +38,7 @@ ${class_name}::${class_name} () : hier_block2("${title}") {
     message_port_register_hier_out("${pad['label']}")
 % endfor
 % elif generate_options == 'qt_gui':
-${class_name}::${class_name} () : QWidget(), top_block("display_qt") {
+${class_name}::${class_name} (${param_str}) : QWidget() {
     this->setWindowTitle("${title}");
     // check_set_qss
     // set icon
@@ -58,11 +62,15 @@ ${class_name}::${class_name} () : QWidget(), top_block("display_qt") {
 ## self._lock = threading.RLock()
 % endif
 
+% if not generate_options.startswith('hb'):
+    this->tb = make_top_block("${title}");
+% endif
+
 % if blocks:
 // Blocks:
 % for blk, blk_make, declarations in blocks:
     {
-        ${indent(blk_make)}
+        ${doubleindent(blk_make)}
 ##      % if 'alias' in blk.params and blk.params['alias'].get_evaluated():
 ##      ${blk.name}.set_block_alias("${blk.params['alias'].get_evaluated()}")
 ##      % endif
@@ -107,11 +115,31 @@ void ${class_name}::set_${var.name} (${var.vtype} ${var.name}) {
     % endfor
 % endif
 }
+
 % endfor
 
 int main (int argc, char **argv) {
     % if parameters:
-    ## parse args
+    % for parameter in parameters:
+    ${parameter.vtype} ${parameter.name};
+    % endfor
+
+    po::options_description desc("Options");
+    desc.add_options()
+    ("help", "display help")
+    % for parameter in parameters:
+    ("${parameter.name}", po::value<${parameter.vtype}>(&${parameter.name}), "${parameter.label}")
+    % endfor
+    ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help")) {
+        std::cout << desc << std::endl;
+        return 0;
+    }
     % endif
     % if flow_graph.get_option('realtime_scheduling'):
     if (enable_realtime_scheduling() != RT_OK) {
@@ -123,7 +151,7 @@ int main (int argc, char **argv) {
     ${class_name}* top_block = new ${class_name}();
     ## TODO: params
     % if flow_graph.get_option('run_options') == 'prompt':
-    top_block->start();
+    top_block->tb->start();
     % for m in monitors:
     (top_block->${m.name}).start();
     % endfor
@@ -131,7 +159,7 @@ int main (int argc, char **argv) {
     std::cin.ignore();
     top_block->stop();
     % elif flow_graph.get_option('run_options') == 'run':
-    top_block->start();
+    top_block->tb->start();
     % endif
     % for m in monitors:
     (top_block->${m.name}).start();
@@ -140,9 +168,9 @@ int main (int argc, char **argv) {
     % elif generate_options == 'qt_gui':
     QApplication app(argc, argv);
 
-    ${class_name} *top_block = new ${class_name}();
+    ${class_name} *top_block = new ${class_name}(${param_str_without_types});
 
-    top_block->start();
+    top_block->tb->start();
     top_block->show();
     app.exec();
 

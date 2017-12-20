@@ -1,5 +1,6 @@
 id: analog_quadrature_demod_cf
 label: Quadrature Demod
+flags: python
 
 parameters:
 -   id: gain

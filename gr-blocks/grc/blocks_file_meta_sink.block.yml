@@ -1,5 +1,6 @@
 id: blocks_file_meta_sink
 label: File Meta Sink
+flags: python
 
 parameters:
 -   id: file

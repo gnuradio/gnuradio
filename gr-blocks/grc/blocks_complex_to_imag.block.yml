@@ -1,5 +1,6 @@
 id: blocks_complex_to_imag
 label: Complex to Imag
+flags: python, cpp
 
 parameters:
 -   id: vlen
@@ -24,5 +25,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.complex_to_imag(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_imag.h>']
+    declarations: 'blocks::complex_to_imag::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_imag::make(${vlen});'
 
 file_format: 1

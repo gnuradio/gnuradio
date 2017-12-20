@@ -1,5 +1,6 @@
 id: qtgui_edit_box_msg
 label: QT GUI Message Edit Box
+flags: python
 
 parameters:
 -   id: type

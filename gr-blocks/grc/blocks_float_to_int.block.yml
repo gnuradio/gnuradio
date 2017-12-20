@@ -1,5 +1,6 @@
 id: blocks_float_to_int
 label: Float To Int
+flags: python, cpp
 
 parameters:
 -   id: vlen
@@ -25,6 +26,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.float_to_int(${vlen}, ${scale})
+    callbacks:
+    - set_scale(${scale})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/float_to_int.h>']
+    declarations: 'blocks::float_to_int::sptr ${id};'
+    make: 'this->${id} = blocks::float_to_int::make(${vlen}, ${scale});'
     callbacks:
     - set_scale(${scale})
 

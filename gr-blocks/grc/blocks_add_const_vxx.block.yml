@@ -1,5 +1,6 @@
 id: blocks_add_const_vxx
 label: Add Const
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,6 +39,13 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.add_const_${ 'v' if context.get('vlen')() > 1 else '' }${type.fcn}(${const})
+    callbacks:
+    - set_k(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/add_const_${"v" if context.get("vlen")() > 1 else ""}${type.fcn}.h>']
+    declarations: 'blocks::add_const_${"v" if context.get("vlen")() > 1 else ""}${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::add_const_${"v" if context.get("vlen")() > 1 else ""}${type.fcn}::make(${const});'
     callbacks:
     - set_k(${const})
 

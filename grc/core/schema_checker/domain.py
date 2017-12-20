@@ -3,6 +3,7 @@ from .utils import Spec, expand, str_
 DOMAIN_CONNECTION = expand(
     type=Spec(types=list, required=True, item_scheme=None),
     connect=str_,
+    cpp_connect=str_,
 )
 
 DOMAIN_SCHEME = expand(

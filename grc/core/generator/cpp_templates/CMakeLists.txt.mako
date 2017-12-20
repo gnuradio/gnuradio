@@ -16,7 +16,7 @@ class_name = flow_graph.get_option('id')
 cmake_opt_list = flow_graph.get_option('cmake_opt').split(";")
 %>\
 
-# cmake_minimum_required(VERSION 3.8) Which version?
+cmake_minimum_required(VERSION 3.8) # Which version?
 
 % if generate_options == 'qt_gui':
 find_package(Qt5Widgets REQUIRED)
@@ -50,11 +50,14 @@ set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 
 set(GR_LIBRARIES
     boost_system
+    % if parameters:
+    boost_program_options
+    % endif
     gnuradio-blocks
     gnuradio-runtime
     gnuradio-pmt
     % for link in links:
-    % if link != '':
+    % if link:
     ${link}
     % endif
     % endfor

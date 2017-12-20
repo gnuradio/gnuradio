@@ -1,5 +1,6 @@
 id: blocks_xor_xx
 label: Xor
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -30,5 +31,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.xor_${type.fcn}()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/xor_${type.fcn}.h>']
+    declarations: 'blocks::xor_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::xor_${type.fcn}::make();'
 
 file_format: 1

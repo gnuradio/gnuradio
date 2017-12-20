@@ -1,5 +1,6 @@
 id: import_
 label: Import
+flags: python
 
 parameters:
 -   id: imports

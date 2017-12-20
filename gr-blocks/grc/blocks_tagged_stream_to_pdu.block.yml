@@ -1,5 +1,6 @@
 id: blocks_tagged_stream_to_pdu
 label: Tagged Stream to PDU
+flags: python
 
 parameters:
 -   id: type
@@ -26,5 +27,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.tagged_stream_to_pdu(${type.tv}, ${tag})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tagged_stream_to_pdu.h>']
+    declarations: 'blocks::tagged_stream_to_pdu::sptr ${id};'
+    make: 'this->${id} = blocks::tagged_stream_to_pdu::make(${type.tv}, ${tag});'
 
 file_format: 1

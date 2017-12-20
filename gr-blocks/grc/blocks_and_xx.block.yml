@@ -1,5 +1,6 @@
 id: blocks_and_xx
 label: And
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -30,5 +31,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.and_${type.fcn}()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/and_${type.fcn}.h>']
+    declarations: 'blocks::and_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::and_${type.fcn}::make();'
 
 file_format: 1

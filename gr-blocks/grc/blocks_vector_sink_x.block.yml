@@ -1,5 +1,6 @@
 id: blocks_vector_sink_x
 label: Vector Sink
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -31,5 +32,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.vector_sink_${type.fcn}(${vlen}, ${reserve_items})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vector_sink_${type.fcn}.h>']
+    declarations: 'blocks::vector_sink_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::vector_sink_${type.fcn}::make(${vlen}, ${reserve_items});'
 
 file_format: 1

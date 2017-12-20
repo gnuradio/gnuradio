@@ -1,5 +1,6 @@
 id: qtgui_number_sink
 label: QT GUI Number Sink
+flags: python
 
 parameters:
 -   id: name

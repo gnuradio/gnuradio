@@ -1,5 +1,6 @@
 id: blocks_unpack_k_bits_bb
 label: Unpack K Bits
+flags: python, cpp
 
 parameters:
 -   id: k
@@ -17,5 +18,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.unpack_k_bits_bb(${k})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/unpack_k_bits_bb.h>']
+    declarations: 'blocks::unpack_k_bits_bb::sptr ${id};'
+    make: 'this->${id} = blocks::unpack_k_bits_bb::make(${k});'
 
 file_format: 1

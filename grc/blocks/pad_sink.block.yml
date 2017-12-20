@@ -1,5 +1,6 @@
 id: pad_sink
 label: Pad Sink
+flags: python
 
 parameters:
 -   id: label

@@ -1,5 +1,6 @@
 id: blocks_multiply_by_tag_value_cc
 label: Multiply by Tag Value
+flags: python, cpp
 
 parameters:
 -   id: tagname
@@ -21,5 +22,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.multiply_by_tag_value_cc(${tagname}, ${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply_by_tag_value_cc.h>']
+    declarations: 'blocks::multiply_by_tag_value_cc::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_by_tag_value_cc::make(${tagname}, ${vlen});'
 
 file_format: 1

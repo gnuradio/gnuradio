@@ -1,5 +1,6 @@
 id: blocks_ctrlport_probe2_x
 label: Ctrlport Probe
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,6 +39,16 @@ templates:
     make: blocks.ctrlport_probe2_${type.fcn}(${name}, ${desc}, ${len}, ${disp_mask})
     callbacks:
     - set_length(${len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/ctrlport_probe2_${type.fcn}.h>']
+    declarations: 'blocks::ctrlport_probe2_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::ctrlport_probe2_${type.fcn}::make(${name}, ${desc}, ${len}, ${disp_mask});'
+    callbacks:
+    - set_length(${len})
+    translations:
+        gr.: ''
+
 
 documentation: |-
     Place this in a graph to export vectors of samples to a GRCP port probe.

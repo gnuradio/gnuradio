@@ -1,5 +1,6 @@
 id: blocks_multiply_const_xx
 label: Fast Multiply Const
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -36,6 +37,13 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.multiply_const_${type.fcn}(${const}, ${vlen})
+    callbacks:
+    - set_k(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/multiply_const_${type.fcn}.h>']
+    declarations: 'blocks::multiply_const_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_const_${type.fcn}::make(${const}, ${vlen});'
     callbacks:
     - set_k(${const})
 

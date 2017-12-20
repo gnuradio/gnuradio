@@ -1,5 +1,6 @@
 id: blocks_multiply_xx
 label: Multiply
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,5 +39,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.multiply_v${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply_v.h>']
+    declarations: 'blocks::multiply_v::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_v${type.fcn}::make(${vlen});'
 
 file_format: 1

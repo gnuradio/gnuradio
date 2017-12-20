@@ -7,5 +7,5 @@ multiple_connections_per_output: true
 
 templates:
 -   type: [stream, stream]
-    connect: connect(${ make_port_sig(source) }, ${ make_port_sig(sink) })
+    connect: self.connect(${ make_port_sig(source) }, ${ make_port_sig(sink) })
     cpp_connect: hier_block2::connect(${ make_port_sig(source) }, ${ make_port_sig(sink) })

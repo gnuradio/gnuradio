@@ -1,5 +1,6 @@
 id: blocks_tag_debug
 label: Tag Debug
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -51,5 +52,18 @@ templates:
         self.${id}.set_display(${display})
     callbacks:
     - set_display(${display})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tag_debug.h>']
+    declarations: 'blocks::tag_debug::sptr ${id};'
+    make: |-
+        this->${id} = blocks::tag_debug::make(${type.size}*${vlen}, ${name}, ${filter});
+        this->${id}.set_display(${display});
+    callbacks:
+    - set_display(${display})
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

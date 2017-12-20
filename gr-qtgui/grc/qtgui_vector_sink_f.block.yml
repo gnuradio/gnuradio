@@ -1,5 +1,6 @@
 id: qtgui_vector_sink_f
 label: QT GUI Vector Sink
+flags: python
 
 parameters:
 -   id: name

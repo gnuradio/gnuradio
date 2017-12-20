@@ -1,5 +1,6 @@
 id: blocks_pdu_set
 label: PDU Set
+flags: python
 
 parameters:
 -   id: k

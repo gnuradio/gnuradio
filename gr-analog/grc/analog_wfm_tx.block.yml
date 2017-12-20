@@ -1,5 +1,6 @@
 id: analog_wfm_tx
 label: WBFM Transmit
+flags: python
 
 parameters:
 -   id: audio_rate

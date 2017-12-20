@@ -60,6 +60,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
         parameters = fg.get_parameters()
         monitors = fg.get_monitors()
         self._variable_types()
+        self._parameter_types()
 
         self.namespace = {
             'flow_graph': fg,
@@ -245,6 +246,14 @@ class CppTopBlockGenerator(TopBlockGenerator):
         for var in variables:
             var.decide_type()
 
+    def _parameter_types(self):
+        fg = self._flow_graph
+        parameters = fg.get_parameters()
+
+        for param in parameters:
+            type_translation = {'eng_float' : 'double', 'intx' : 'int', 'std' : 'std::string'};
+            param.vtype = type_translation[param.params['type'].value]
+
     def _callbacks(self):
         fg = self._flow_graph
         variables = fg.get_cpp_variables()
@@ -338,7 +347,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
             code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
-            code = 'this->' + code
+            code = 'this->tb->' + code
             rendered.append(code)
 
         return rendered

@@ -1,5 +1,6 @@
 id: blocks_ctrlport_monitor_performance
 label: CtrlPort Performance Monitor
+flags: python
 
 parameters:
 -   id: en

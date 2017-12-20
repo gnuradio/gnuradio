@@ -39,6 +39,7 @@ CPP_TEMPLATES_SCHEME = expand(
     includes=list,
     declarations=str_,
     make=str_,
+    var_make=str_,
     callbacks=list,
     link=list,
     translations=dict,

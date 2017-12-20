@@ -266,6 +266,9 @@ class TopBlockGenerator(object):
             # Remove the virtual connection
             connections.remove(connection)
 
+        for connection in virtual_sink_connections:
+            connections.remove(connection)
+
         # Bypassing blocks: Need to find all the enabled connections for the block using
         # the *connections* object rather than get_connections(). Create new connections
         # that bypass the selected block and remove the existing ones. This allows adjacent

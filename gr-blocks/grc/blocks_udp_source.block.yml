@@ -1,6 +1,6 @@
 id: blocks_udp_source
 label: UDP Source
-flags: throttle
+flags: throttle, python, cpp
 
 parameters:
 -   id: type
@@ -44,5 +44,14 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.udp_source(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/udp_source.h>']
+    declarations: 'blocks::udp_source::sptr ${id};'
+    make: 'this->${id} = blocks::udp_source::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof});'
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

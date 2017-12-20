@@ -1,5 +1,6 @@
 id: blocks_stretch_ff
 label: Stretch
+flags: python, cpp
 
 parameters:
 -   id: lo
@@ -24,5 +25,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.stretch_ff(${lo}, ${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/stretch_ff.h>']
+    declarations: 'blocks::stretch_ff::sptr ${id};'
+    make: 'this->${id} = blocks::stretch_ff::make(${lo}, ${vlen});'
 
 file_format: 1

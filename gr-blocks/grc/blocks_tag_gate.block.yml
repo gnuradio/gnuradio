@@ -1,5 +1,6 @@
 id: blocks_tag_gate
 label: Tag Gate
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -46,5 +47,17 @@ templates:
         self.${id}.set_single_key(${single_key})
     callbacks:
     - self.${id}.set_single_key(${single_key})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tag_gate.h>']
+    make: |-
+        this->${id} = blocks::tag_gate::make(${type.size} * ${vlen}, ${propagate_tags});
+        this->${id}.set_single_key(${single_key});
+    callbacks:
+    - self.${id}.set_single_key(${single_key})
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

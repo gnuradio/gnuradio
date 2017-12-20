@@ -1,5 +1,6 @@
 id: blocks_and_const_xx
 label: And Const
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -25,6 +26,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.and_const_${type.fcn}(${const})
+    callbacks:
+    - set_k(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/and_const_${type.fcn}.h>']
+    declarations: 'blocks::and_const_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::and_const_${type.fcn}::make(${const});'
     callbacks:
     - set_k(${const})
 

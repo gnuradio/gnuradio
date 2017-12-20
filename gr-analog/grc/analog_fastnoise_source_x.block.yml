@@ -1,5 +1,6 @@
 id: analog_fastnoise_source_x
 label: Fast Noise Source
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -38,6 +39,16 @@ templates:
     callbacks:
     - set_type(${noise_type})
     - set_amplitude(${amp})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/fastnoise_source_${type.fcn}.h>']
+    make: 'this->${id} = analog::fastnoise_source_${type.fcn}::make(${noise_type}, ${amp}, ${seed}, ${samples});'
+    callbacks:
+    - set_type(${noise_type})
+    - set_amplitude(${amp})
+    link: ['gnuradio-analog']
+    translations:
+        analog.: 'analog::'
 
 documentation: |-
     The fast noise source works by pre-generating a pool of random variates taken from the specified distribution.  At runtime, samples are then uniform randomly chosen from this pool which is a very fast operation.

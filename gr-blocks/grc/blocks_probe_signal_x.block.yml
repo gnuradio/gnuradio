@@ -1,5 +1,6 @@
 id: blocks_probe_signal_x
 label: Probe Signal
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -17,6 +18,11 @@ inputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.probe_signal_${type.fcn}()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/probe_signal_${type.fcn}.h>']
+    declarations: 'blocks::probe_signal_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::probe_signal_${type.fcn}::make();'
 
 documentation: |-
     Available functions to probe: level()

@@ -1,5 +1,6 @@
 id: analog_const_source_x
 label: Constant Source
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -24,5 +25,12 @@ templates:
     make: analog.sig_source_${type.fcn}(0, analog.GR_CONST_WAVE, 0, 0, ${const})
     callbacks:
     - set_offset(${const})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/sig_source_${type.fcn}.h>']
+    make: 'this->${id} = analog::sig_source_${type.fcn}::make(0, analog::GR_CONST_WAVE, 0, 0, ${const});'
+    callbacks:
+    - set_offset(${const})
+    link: ['gnuradio-analog']
 
 file_format: 1

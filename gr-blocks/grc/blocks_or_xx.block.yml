@@ -1,5 +1,6 @@
 id: blocks_or_xx
 label: Or
+flags: python, cpp
 
 parameters:
 -   id: type
@@ -30,5 +31,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.or_${type.fcn}()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/or_${type.fcn}.h>']
+    declarations: 'blocks::or_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::or_${type.fcn}::make();'
 
 file_format: 1

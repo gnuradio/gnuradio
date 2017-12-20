@@ -1,6 +1,6 @@
 id: options
 label: Options
-flags: has_python, has_cpp
+flags: python, cpp
 
 parameters:
 -   id: title
@@ -156,7 +156,7 @@ templates:
         else: self.stop(); self.wait()'
 
 cpp_templates:
-    includes: '#include <gnuradio/top_block.h>'
+    includes: ['#include <gnuradio/top_block.h>']
 
 documentation: |-
     The options block sets special parameters for the flow graph. Only one option block is allowed per flow graph.

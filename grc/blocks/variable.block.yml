@@ -1,6 +1,6 @@
 id: variable
 label: Variable
-flags: has_python, has_cpp
+flags: python, cpp
 
 parameters:
 -   id: value

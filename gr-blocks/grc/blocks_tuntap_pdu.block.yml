@@ -1,5 +1,6 @@
 id: blocks_tuntap_pdu
 label: TUNTAP PDU
+flags: python, cpp
 
 parameters:
 -   id: ifn
@@ -30,5 +31,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.tuntap_pdu(${ifn}, ${mtu}, ${istunflag})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tuntap_pdu.h>']
+    declarations: 'blocks::tuntap_pdu::sptr ${id};'
+    make: 'this->${id} = blocks::tuntap_pdu::make(${ifn}, ${mtu}, ${istunflag});'
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1
