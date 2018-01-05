@@ -242,10 +242,8 @@ namespace gr {
         noutput_items = min_available_space(d, m->output_multiple ());
         if(ENABLE_LOGGING){
           *d_log << " regular ";
-          if(m->relative_rate() >= 1.0)
-            *d_log << "1:" << m->relative_rate() << std::endl;
-          else
-            *d_log << 1.0/m->relative_rate() << ":1\n";
+          *d_log << m->relative_rate_i() << ":"
+                 << m->relative_rate_d() << std::endl;
           *d_log << "  max_items_avail = " << max_items_avail << std::endl;
           *d_log << "  noutput_items = " << noutput_items << std::endl;
         }

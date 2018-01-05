@@ -23,6 +23,8 @@
 include(GrBoost)
 include(GrPython)
 
+find_package(MPIR REQUIRED)
+
 ########################################################################
 # Setup compatibility checks and defines
 ########################################################################
@@ -37,6 +39,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     Boost_FOUND
     ENABLE_VOLK
     PYTHONINTERP_FOUND
+    MPIR_FOUND
 )
 
 GR_SET_GLOBAL(GNURADIO_RUNTIME_INCLUDE_DIRS
