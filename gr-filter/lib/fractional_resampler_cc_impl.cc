@@ -51,7 +51,7 @@ namespace gr {
       if(phase_shift <  0  || phase_shift > 1)
 	throw std::out_of_range("phase shift ratio must be > 0 and < 1");
 
-      set_relative_rate(1.0 / resamp_ratio);
+      set_inverse_relative_rate(d_mu_inc);
       message_port_register_in(pmt::intern("msg_in"));
       set_msg_handler(pmt::intern("msg_in"), boost::bind(
               &fractional_resampler_cc_impl::handle_msg, this, _1));
@@ -110,7 +110,7 @@ namespace gr {
 
       if(ninput_items.size() == 1) {
         while(oo < noutput_items) {
-          out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
+          out[oo++] = d_resamp->interpolate(&in[ii], (float)d_mu);
 
           double s = d_mu + d_mu_inc;
           double f = floor(s);
@@ -126,8 +126,8 @@ namespace gr {
       else {
         const float *rr = (const float*)input_items[1];
         while(oo < noutput_items) {
-          out[oo++] = d_resamp->interpolate(&in[ii], d_mu);
-          d_mu_inc = rr[ii];
+          out[oo++] = d_resamp->interpolate(&in[ii], (float)d_mu);
+          d_mu_inc = (double)rr[ii];
 
           double s = d_mu + d_mu_inc;
           double f = floor(s);
@@ -136,7 +136,7 @@ namespace gr {
           ii += incr;
         }
 
-        set_relative_rate(1.0 / d_mu_inc);
+        set_inverse_relative_rate(d_mu_inc);
         consume_each(ii);
         return noutput_items;
       }
@@ -145,25 +145,25 @@ namespace gr {
     float
     fractional_resampler_cc_impl::mu() const
     {
-      return d_mu;
+      return (float)d_mu;
     }
 
     float
     fractional_resampler_cc_impl::resamp_ratio() const
     {
-      return d_mu_inc;
+      return (float)d_mu_inc;
     }
 
     void
     fractional_resampler_cc_impl::set_mu(float mu)
     {
-      d_mu = mu;
+      d_mu = (double)mu;
     }
 
     void
     fractional_resampler_cc_impl::set_resamp_ratio(float resamp_ratio)
     {
-      d_mu_inc = resamp_ratio;
+      d_mu_inc = (double)resamp_ratio;
     }
 
   } /* namespace filter */
