@@ -105,7 +105,7 @@ namespace gr {
       set_taps(taps, d_taps, d_filters);
       set_taps(dtaps, d_dtaps, d_diff_filters);
 
-      set_relative_rate((float)d_osps/(float)d_sps);
+      set_relative_rate((uint64_t)d_osps, (uint64_t)d_sps);
     }
 
     pfb_clock_sync_fff_impl::~pfb_clock_sync_fff_impl()

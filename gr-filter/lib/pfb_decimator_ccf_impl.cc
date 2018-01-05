@@ -64,7 +64,7 @@ namespace gr {
         d_rotator[i] = gr_expj(i*d_chan*2*M_PI/d_rate);
       }
 
-      set_relative_rate(1.0/(float)decim);
+      set_relative_rate(1, (uint64_t)decim);
 
       if(d_use_fft_filters) {
         set_history(1);

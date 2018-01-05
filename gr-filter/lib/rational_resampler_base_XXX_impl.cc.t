@@ -61,7 +61,7 @@ namespace gr {
       if(decimation == 0)
 	throw std::out_of_range("@IMPL_NAME@: decimation must be > 0");
 
-      set_relative_rate(1.0 * interpolation / decimation);
+      set_relative_rate((uint64_t)interpolation, (uint64_t)decimation);
       set_output_multiple(1);
 
       std::vector<@TAP_TYPE@> dummy_taps;

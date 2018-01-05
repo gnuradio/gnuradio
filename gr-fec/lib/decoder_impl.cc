@@ -49,7 +49,8 @@ namespace gr {
         d_input_item_size(input_item_size), d_output_item_size(output_item_size)
     {
       set_fixed_rate(true);
-      set_relative_rate((double)(my_decoder->get_output_size())/my_decoder->get_input_size());
+      set_relative_rate((uint64_t)my_decoder->get_output_size(),
+                        (uint64_t)my_decoder->get_input_size());
 
       //want to guarantee you have enough to run at least one time...
       //remember! this is not a sync block... set_output_multiple does not

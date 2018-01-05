@@ -66,7 +66,7 @@ namespace gr {
       }
 
       set_output_multiple(m);
-      set_relative_rate(static_cast<double>(d_m)/static_cast<double>(d_n));
+      set_relative_rate(static_cast<uint64_t>(d_m), static_cast<uint64_t>(d_n));
     }
 
     void
@@ -80,14 +80,14 @@ namespace gr {
     {
       d_m = m;
       set_output_multiple(m);
-      set_relative_rate(static_cast<double>(d_m)/static_cast<double>(d_n));
+      set_relative_rate(static_cast<uint64_t>(d_m), static_cast<uint64_t>(d_n));
     }
 
     void
     keep_m_in_n_impl::set_n(int n)
     {
       d_n = n;
-      set_relative_rate(static_cast<double>(d_m)/static_cast<double>(d_n));
+      set_relative_rate(static_cast<uint64_t>(d_m), static_cast<uint64_t>(d_n));
     }
 
     void

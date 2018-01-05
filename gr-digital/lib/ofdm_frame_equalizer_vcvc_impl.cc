@@ -77,7 +77,7 @@ namespace gr {
       if (d_fixed_frame_len) {
         set_output_multiple(d_fixed_frame_len);
       }
-      set_relative_rate(1.0);
+      set_relative_rate(1, 1);
       // Really, we have TPP_ONE_TO_ONE, but the channel state is not propagated
       set_tag_propagation_policy(TPP_DONT);
     }

@@ -69,7 +69,7 @@ namespace gr {
       d_repetitions(repetitions),
       d_SISO_TYPE(SISO_TYPE)
     {
-      set_relative_rate (1.0 / ((double) d_FSM1.O() * d_FSM2.O()));
+      set_relative_rate (1, (uint64_t)(d_FSM1.O() * d_FSM2.O()));
       set_output_multiple (d_blocklength);
     }
 

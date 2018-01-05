@@ -45,7 +45,7 @@ namespace gr {
 	d_constellation(constellation),
 	d_dim(constellation->dimensionality())
     {
-      set_relative_rate(1.0 / ((double)d_dim));
+      set_relative_rate(1, (uint64_t)d_dim);
     }
 
     constellation_decoder_cb_impl::~constellation_decoder_cb_impl()

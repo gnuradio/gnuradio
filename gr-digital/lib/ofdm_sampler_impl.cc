@@ -52,7 +52,7 @@ namespace gr {
     {
       GR_LOG_WARN(d_logger, "The gr::digital::ofdm_sampler block has been deprecated.");
 
-      set_relative_rate(1.0/(double) fft_length);   // buffer allocator hint
+      set_relative_rate(1, (uint64_t)fft_length);   // buffer allocator hint
     }
 
     ofdm_sampler_impl::~ofdm_sampler_impl()

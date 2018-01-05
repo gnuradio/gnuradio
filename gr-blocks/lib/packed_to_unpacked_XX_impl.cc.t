@@ -55,7 +55,7 @@ namespace gr {
       assert(bits_per_chunk <= BITS_PER_TYPE);
       assert(bits_per_chunk > 0);
 
-      set_relative_rate((1.0 * BITS_PER_TYPE) / bits_per_chunk);
+      set_relative_rate((uint64_t)BITS_PER_TYPE, (uint64_t)bits_per_chunk);
     }
 
     @NAME_IMPL@::~@NAME_IMPL@()

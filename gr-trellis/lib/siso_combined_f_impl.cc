@@ -63,15 +63,15 @@ namespace gr {
       set_output_multiple(d_K*multiple);
 
       //what is the meaning of relative rate for a block with 2 inputs?
-      //set_relative_rate ( multiple / ((double) d_FSM.I()) );
+      //set_relative_rate ((uint64_t) multiple, (uint64_t) d_FSM.I() );
       // it turns out that the above gives problems in the scheduler, so
       // let's try (assumption O>I)
-      //set_relative_rate ( multiple / ((double) d_FSM.O()) );
+      //set_relative_rate ((uint64_t) multiple, (uint64_t) d_FSM.O() );
       // I am tempted to automate like this
       if(d_FSM.I() <= d_D)
-        set_relative_rate(multiple / ((double)d_D));
+        set_relative_rate((uint64_t)multiple, (uint64_t)d_D);
       else
-        set_relative_rate(multiple / ((double)d_FSM.I()));
+        set_relative_rate((uint64_t)multiple, (uint64_t)d_FSM.I());
     }
     
 

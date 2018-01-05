@@ -71,7 +71,8 @@ namespace gr {
       d_puncholes = count_mask - count_pat;
 
       set_fixed_rate(true);
-      set_relative_rate((double)(d_puncsize - d_puncholes)/d_puncsize);
+      set_relative_rate((uint64_t)(d_puncsize - d_puncholes),
+                        (uint64_t)d_puncsize);
       set_output_multiple(d_puncsize - d_puncholes);
       //set_msg_handler(boost::bind(&puncture_bb_impl::catch_msg, this, _1));
     }

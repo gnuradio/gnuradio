@@ -79,7 +79,7 @@ namespace gr {
       d_scaling(scaling)
     {
       assert(d_FSMo.I() == d_FSMi.I());
-      set_relative_rate (1.0 / ((double) d_D));
+      set_relative_rate (1, (uint64_t) d_D);
       set_output_multiple (d_blocklength);
     }
 

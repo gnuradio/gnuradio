@@ -66,7 +66,7 @@ namespace gr {
       d_repetitions(repetitions),
       d_SISO_TYPE(SISO_TYPE)
     {
-      set_relative_rate(1.0 / ((double) d_FSMi.O()));
+      set_relative_rate(1, (uint64_t) d_FSMi.O());
       set_output_multiple(d_blocklength);
     }
 

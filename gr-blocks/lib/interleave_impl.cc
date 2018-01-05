@@ -48,7 +48,7 @@ namespace gr {
     bool
     interleave_impl::check_topology(int ninputs, int noutputs)
     {
-      set_relative_rate((double)ninputs);
+      set_relative_rate((uint64_t)ninputs, 1);
       d_ninputs = ninputs;
       set_output_multiple(d_blocksize * d_ninputs);
       return true;

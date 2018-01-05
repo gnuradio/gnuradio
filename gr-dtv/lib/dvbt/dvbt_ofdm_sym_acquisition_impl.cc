@@ -240,7 +240,7 @@ namespace gr {
         d_initial_acquisition(0), d_cp_start(0), \
         d_to_consume(0), d_to_out(0), d_consumed(0), d_out(0)
     {
-      set_relative_rate(1.0 / (double) (d_cp_length + d_fft_length));
+      set_relative_rate(1, (uint64_t) (d_cp_length + d_fft_length));
 
       d_snr = pow(10, d_snr / 10.0);
       d_rho = d_snr / (d_snr + 1.0);

@@ -84,7 +84,7 @@ namespace gr {
             d_down_phasing[i] = symbol * d_down_ramp[i];
         }
 
-        //set_relative_rate(1.0);
+        //set_relative_rate(1, 1);
         set_tag_propagation_policy(TPP_DONT);
     }
 
