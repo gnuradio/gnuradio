@@ -53,7 +53,7 @@ namespace gr {
       if(phase_shift <  0  || phase_shift > 1)
 	throw std::out_of_range("phase shift ratio must be > 0 and < 1");
 
-      set_relative_rate(1.0 / interp_ratio);
+      set_inverse_relative_rate(d_mu_inc);
     }
 
     fractional_interpolator_cc_impl::~fractional_interpolator_cc_impl()
@@ -85,7 +85,7 @@ namespace gr {
       int oo = 0; // output index
 
       while(oo < noutput_items) {
-	out[oo++] = d_interp->interpolate(&in[ii], d_mu);
+	out[oo++] = d_interp->interpolate(&in[ii], (float)d_mu);
 
 	double s = d_mu + d_mu_inc;
 	double f = floor(s);
@@ -102,25 +102,25 @@ namespace gr {
     float
     fractional_interpolator_cc_impl::mu() const
     {
-      return d_mu;
+      return (float)d_mu;
     }
 
     float
     fractional_interpolator_cc_impl::interp_ratio() const
     {
-      return d_mu_inc;
+      return (float)d_mu_inc;
     }
 
     void
     fractional_interpolator_cc_impl::set_mu(float mu)
     {
-      d_mu = mu;
+      d_mu = (double)mu;
     }
 
     void
     fractional_interpolator_cc_impl::set_interp_ratio(float interp_ratio)
     {
-      d_mu_inc = interp_ratio;
+      d_mu_inc = (double)interp_ratio;
     }
 
   } /* namespace filter */
