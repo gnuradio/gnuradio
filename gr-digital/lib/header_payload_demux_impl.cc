@@ -142,9 +142,10 @@ namespace gr {
         throw std::invalid_argument("Items and symbol sizes must be at least 1.");
       }
       if (d_output_symbols) {
-        set_relative_rate(1.0 / (d_items_per_symbol + d_gi));
+        set_relative_rate(1, (uint64_t)(d_items_per_symbol + d_gi));
       } else {
-        set_relative_rate((double)d_items_per_symbol / (d_items_per_symbol + d_gi));
+        set_relative_rate((uint64_t)d_items_per_symbol,
+                          (uint64_t)(d_items_per_symbol + d_gi));
         set_output_multiple(d_items_per_symbol);
       }
       if ((d_output_symbols || d_gi) && d_header_padding_items) {

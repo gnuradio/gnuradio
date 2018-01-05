@@ -48,7 +48,7 @@ namespace gr {
           io_signature::make(1, 1, sizeof (unsigned char) * I * blocks)),
       d_blocks(blocks), d_I(I), d_M(M)
     {
-      set_relative_rate(1.0 / d_I * d_blocks);
+      set_relative_rate(1, (uint64_t)(d_I * d_blocks));
       set_output_multiple(2);
       //The positions are shift registers (FIFOs)
       //of length i*M
