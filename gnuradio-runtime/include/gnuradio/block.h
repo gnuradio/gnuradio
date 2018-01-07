@@ -23,11 +23,12 @@
 #ifndef INCLUDED_GR_RUNTIME_BLOCK_H
 #define INCLUDED_GR_RUNTIME_BLOCK_H
 
+#include <gnuradio/config.h>
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/logger.h>
-#ifdef MPLib_MPIR
+#ifdef GR_MPLIB_MPIR
 #include <mpirxx.h>
 #else
 #include <gmpxx.h>

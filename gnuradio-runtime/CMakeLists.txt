@@ -136,6 +136,9 @@ install(FILES
 set(PC_ADD_LIBS -llog4cpp)
 endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 
+set(PC_ADD_LIBS "${MPLib_PC_ADD_LIBS} ${PC_ADD_LIBS}")
+set(PC_ADD_CFLAGS ${MPLib_PC_ADD_CFLAGS})
+
 ########################################################################
 # Add subdirectories
 ########################################################################
