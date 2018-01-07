@@ -507,6 +507,11 @@ list(APPEND GR_TEST_PYTHON_DIRS
 # installed code to import the same names, so we have to grab from the
 # binary directory first.
 
+# gnuradio-runtime/include/gnuradio/block.h needs a define to tell it which
+# multiprecision arithmetic library header to include
+find_package(MPLib)
+add_definitions(${MPLib_DEFINITIONS})
+
 ########################################################################
 # Add subdirectories (in order of deps)
 ########################################################################
