@@ -27,7 +27,11 @@
 #include <gnuradio/basic_block.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/logger.h>
+#ifdef MPLib_MPIR
 #include <mpirxx.h>
+#else
+#include <gmpxx.h>
+#endif
 
 namespace gr {
 

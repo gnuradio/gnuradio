@@ -1,0 +1,21 @@
+find_package(GMP)
+find_package(MPIR)
+
+if(GMP_FOUND)
+    set(MPLib_DEFINITIONS "-DMPLib_GMP ${GMP_DEFINITIONS}")
+    set(MPLib_INCLUDE_DIR ${GMP_INCLUDE_DIR})
+    set(MPLib_LIBRARY ${GMP_LIBRARY})
+    set(MPLibXX_LIBRARY ${GMPXX_LIBRARY})
+else(GMP_FOUND)
+    set(MPLib_DEFINITIONS "-DMPLib_MPIR ${MPIR_DEFINITIONS}")
+    set(MPLib_INCLUDE_DIR ${MPIR_INCLUDE_DIR})
+    set(MPLib_LIBRARY ${MPIR_LIBRARY})
+    set(MPLibXX_LIBRARY ${MPIRXX_LIBRARY})
+endif(GMP_FOUND)
+
+set(MPLib_INCLUDE_DIRS ${MPLib_INCLUDE_DIR})
+set(MPLib_LIBRARIES ${MPLibXX_LIBRARY} ${MPLib_LIBRARY})
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(MPLib DEFAULT_MSG MPLibXX_LIBRARY MPLib_LIBRARY MPLib_INCLUDE_DIR)
+mark_as_advanced(MPLibXX_LIBRARY MPLib_LIBRARY MPLib_INCLUDE_DIR)

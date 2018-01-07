@@ -51,7 +51,7 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
 		    ${CMAKE_CURRENT_BINARY_DIR}/../include/
 		    ${VOLK_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
-                    ${MPIR_INCLUDE_DIRS}
+                    ${MPLib_INCLUDE_DIRS}
 )
 
 if(ENABLE_CTRLPORT_THRIFT)
@@ -138,7 +138,7 @@ list(APPEND gnuradio_runtime_libs
     ${VOLK_LIBRARIES}
     ${Boost_LIBRARIES}
     ${LOG4CPP_LIBRARIES}
-    ${MPIR_LIBRARIES}
+    ${MPLib_LIBRARIES}
 )
 
 #Add libraries for winsock2.h on Windows
