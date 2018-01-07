@@ -36,5 +36,11 @@
 #ifndef GR_RPCSERVER_THRIFT
 #cmakedefine GR_RPCSERVER_THRIFT
 #endif
+#ifndef GR_MPLIB_GMP
+#cmakedefine GR_MPLIB_GMP
+#endif
+#ifndef GR_MPLIB_MPIR
+#cmakedefine GR_MPLIB_MPIR
+#endif
 
 #endif /* GNURADIO_CONFIG_H */
