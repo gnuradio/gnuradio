@@ -23,7 +23,7 @@
 include(GrBoost)
 include(GrPython)
 
-find_package(MPLib REQUIRED)
+find_package(MPLIB REQUIRED)
 
 ########################################################################
 # Setup compatibility checks and defines
@@ -39,7 +39,7 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     Boost_FOUND
     ENABLE_VOLK
     PYTHONINTERP_FOUND
-    MPLib_FOUND
+    MPLIB_FOUND
 )
 
 GR_SET_GLOBAL(GNURADIO_RUNTIME_INCLUDE_DIRS
@@ -136,8 +136,8 @@ install(FILES
 set(PC_ADD_LIBS -llog4cpp)
 endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 
-set(PC_ADD_LIBS "${MPLib_PC_ADD_LIBS} ${PC_ADD_LIBS}")
-set(PC_ADD_CFLAGS ${MPLib_PC_ADD_CFLAGS})
+set(PC_ADD_LIBS "${MPLIB_PC_ADD_LIBS} ${PC_ADD_LIBS}")
+set(PC_ADD_CFLAGS ${MPLIB_PC_ADD_CFLAGS})
 
 ########################################################################
 # Add subdirectories
