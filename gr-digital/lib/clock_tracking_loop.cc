@@ -251,7 +251,7 @@ namespace gr {
     void
     clock_tracking_loop::set_nom_avg_period(float period)
     {
-        if (period < d_min_avg_period or
+        if (period < d_min_avg_period ||
             period > d_max_avg_period   ) {
             d_nom_avg_period = (d_max_avg_period + d_min_avg_period)/2.0f;
         } else {
