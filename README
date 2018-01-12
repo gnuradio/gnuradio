@@ -27,11 +27,11 @@ and source code viewer.
 
 If you've got questions about GNU Radio, please subscribe to the
 discuss-gnuradio mailing list and post your questions there.
-http://gnuradio.org/redmine/projects/gnuradio/wiki/MailingLists
+https://wiki.gnuradio.org/index.php/MailingLists
 
 There is also a "Build Guide" in the wiki that contains OS specific
 recommendations:
-http://gnuradio.org/redmine/projects/gnuradio/wiki/BuildGuide
+https://wiki.gnuradio.org/index.php/BuildGuide
 
 
 The bleeding edge code can be found in our git repository at
@@ -41,7 +41,7 @@ this command:
   $ git clone git://git.gnuradio.org/gnuradio
 
 For information about using Git, please see:
-http://gnuradio.org/redmine/projects/gnuradio/wiki/DevelopingWithGit
+https://wiki.gnuradio.org/index.php/DevelopingWithGit
 
 
 How to Build GNU Radio:

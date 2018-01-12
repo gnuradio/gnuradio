@@ -51,8 +51,7 @@ all else fails, VOLK can fall back on the generic proto-kernel, which
 will always work.
 
 See <a
-href="http://gnuradio.org/redmine/projects/gnuradio/wiki/Volk">VOLK on
-gnuradio.org</a> for details on the VOLK naming scheme.
+href="http://libvolk.org</a> for details on the VOLK naming scheme.
 
 
 \section volk_alignment Setting and Using Memory Alignment Information
