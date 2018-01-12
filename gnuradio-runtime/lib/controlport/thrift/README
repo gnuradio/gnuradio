@@ -1,6 +1,6 @@
 For info on ControlPort and Thrift, see the wiki page:
 
-http://gnuradio.org/redmine/projects/gnuradio/wiki/ControlPort
+https://wiki.gnuradio.org/index.php/ControlPort
 
 This readme is to address the patch file in the repo for Thrift. We
 believe that there is a bug in Thrift itself that occasionally causes
