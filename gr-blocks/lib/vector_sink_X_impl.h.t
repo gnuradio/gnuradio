@@ -40,7 +40,7 @@ namespace gr {
       int d_vlen;
 
     public:
-      @NAME_IMPL@(int vlen);
+      @NAME_IMPL@(const int vlen, const int min_items);
       ~@NAME_IMPL@();
 
       void reset();

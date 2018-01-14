@@ -41,7 +41,7 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
-      static sptr make(int vlen = 1);
+      static sptr make(const int vlen = 1, const int min_items = 100);
 
       //! Clear the data and tags containers.
       virtual void reset() = 0;
