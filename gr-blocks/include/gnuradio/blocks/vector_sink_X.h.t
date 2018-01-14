@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -41,7 +41,7 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
-      static sptr make(int vlen = 1);
+      static sptr make(const int vlen = 1, const int reserve_items = 1024);
 
       //! Clear the data and tags containers.
       virtual void reset() = 0;

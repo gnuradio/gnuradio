@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2009,2013,2017 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2013,2017-2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -40,7 +40,7 @@ namespace gr {
       int d_vlen;
 
     public:
-      @NAME_IMPL@(int vlen);
+      @NAME_IMPL@(const int vlen, const int reserve_items);
       ~@NAME_IMPL@();
 
       void reset();
