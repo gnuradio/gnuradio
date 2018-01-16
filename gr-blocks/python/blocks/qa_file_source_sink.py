@@ -58,6 +58,54 @@ class test_file_source_sink(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, result_data)
         self.assertEqual(len(snk2.tags()), 0)
 
+    def test_offset(self):
+        src_data = range(1000)
+        expected_result = range(100,1000)
+
+        snk2 = blocks.vector_sink_f()
+
+        with tempfile.NamedTemporaryFile() as temp:
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_sink(gr.sizeof_float, temp.name)
+            snk.set_unbuffered(True)
+
+            self.tb.connect(src, snk)
+            self.tb.run()
+
+            src2 = blocks.file_source(gr.sizeof_float, temp.name, offset=100)
+
+            self.tb.disconnect(src, snk)
+            self.tb.connect(src2, snk2)
+            self.tb.run()
+
+        result_data = snk2.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
+        self.assertEqual(len(snk2.tags()), 0)
+
+    def test_offset_and_len(self):
+        src_data = range(1000)
+        expected_result = range(100,700)
+
+        snk2 = blocks.vector_sink_f()
+
+        with tempfile.NamedTemporaryFile() as temp:
+            src = blocks.vector_source_f(src_data)
+            snk = blocks.file_sink(gr.sizeof_float, temp.name)
+            snk.set_unbuffered(True)
+
+            self.tb.connect(src, snk)
+            self.tb.run()
+
+            src2 = blocks.file_source(gr.sizeof_float, temp.name, offset=100, len=600)
+
+            self.tb.disconnect(src, snk)
+            self.tb.connect(src2, snk2)
+            self.tb.run()
+
+        result_data = snk2.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data)
+        self.assertEqual(len(snk2.tags()), 0)
+
     def test_descriptor_001(self):
         src_data = range(1000)
         expected_result = range(1000)
