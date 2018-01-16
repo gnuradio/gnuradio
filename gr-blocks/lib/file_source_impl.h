@@ -33,6 +33,9 @@ namespace gr {
     {
     private:
       size_t d_itemsize;
+      size_t d_start_offset_items;
+      size_t d_length_items;
+      size_t d_items_remaining;
       FILE *d_fp;
       FILE *d_new_fp;
       bool d_repeat;
@@ -47,11 +50,12 @@ namespace gr {
       void do_update();
 
     public:
-      file_source_impl(size_t itemsize, const char *filename, bool repeat);
+      file_source_impl(size_t itemsize, const char *filename, bool repeat,
+                       size_t offset, size_t len);
       ~file_source_impl();
 
       bool seek(long seek_point, int whence);
-      void open(const char *filename, bool repeat);
+      void open(const char *filename, bool repeat, size_t offset, size_t len);
       void close();
 
       int work(int noutput_items,

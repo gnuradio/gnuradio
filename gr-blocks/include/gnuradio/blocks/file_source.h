@@ -46,16 +46,23 @@ namespace gr {
        * Opens \p filename as a source of items into a flowgraph. The
        * data is expected to be in binary format, item after item. The
        * \p itemsize of the block determines the conversion from bits
-       * to items.
+       * to items. The first \p offset items (default 0) will be
+       * skipped.
        *
        * If \p repeat is turned on, the file will repeat the file after
        * it's reached the end.
        *
+       * If \p len is non-zero, only items [offset, offset+len) will
+       * be produced.
+       *
        * \param itemsize	the size of each item in the file, in bytes
        * \param filename	name of the file to source from
        * \param repeat	repeat file from start
+       * \param offset  begin this many items into file
+       * \param len     produce only items [offset, offset+len)
        */
-      static sptr make(size_t itemsize, const char *filename, bool repeat = false);
+      static sptr make(size_t itemsize, const char *filename, bool repeat = false,
+                       size_t offset = 0, size_t len = 0);
 
       /*!
        * \brief seek file to \p seek_point relative to \p whence
@@ -70,8 +77,10 @@ namespace gr {
        *
        * \param filename	name of the file to source from
        * \param repeat	repeat file from start
+       * \param offset  begin this many items into file
+       * \param len     produce only items [offset, offset+len)
        */
-      virtual void open(const char *filename, bool repeat) = 0;
+      virtual void open(const char *filename, bool repeat, size_t offset = 0, size_t len = 0) = 0;
 
       /*!
        * \brief Close the file handle.
