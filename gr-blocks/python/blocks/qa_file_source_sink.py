@@ -45,10 +45,10 @@ class test_file_source_sink(gr_unittest.TestCase):
             snk = blocks.file_sink(gr.sizeof_float, temp.name)
             snk.set_unbuffered(True)
 
-            src2 = blocks.file_source(gr.sizeof_float, temp.name)
-
             self.tb.connect(src, snk)
             self.tb.run()
+
+            src2 = blocks.file_source(gr.sizeof_float, temp.name)
 
             self.tb.disconnect(src, snk)
             self.tb.connect(src2, snk2)
@@ -115,11 +115,11 @@ class test_file_source_sink(gr_unittest.TestCase):
             snk = blocks.file_sink(gr.sizeof_float, temp.name)
             snk.set_unbuffered(True)
 
-            src2 = blocks.file_source(gr.sizeof_float, temp.name)
-            src2.set_begin_tag(pmt.string_to_symbol("file_begin"))
-
             self.tb.connect(src, snk)
             self.tb.run()
+
+            src2 = blocks.file_source(gr.sizeof_float, temp.name)
+            src2.set_begin_tag(pmt.string_to_symbol("file_begin"))
 
             self.tb.disconnect(src, snk)
             self.tb.connect(src2, snk2)
@@ -141,12 +141,12 @@ class test_file_source_sink(gr_unittest.TestCase):
             snk = blocks.file_sink(gr.sizeof_float, temp.name)
             snk.set_unbuffered(True)
 
+            self.tb.connect(src, snk)
+            self.tb.run()
+
             src2 = blocks.file_source(gr.sizeof_float, temp.name, True)
             src2.set_begin_tag(pmt.string_to_symbol("file_begin"))
             hd = blocks.head(gr.sizeof_float, 2000)
-
-            self.tb.connect(src, snk)
-            self.tb.run()
 
             self.tb.disconnect(src, snk)
             self.tb.connect(src2, hd, snk2)
@@ -165,4 +165,3 @@ class test_file_source_sink(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_file_source_sink, "test_file_source_sink.xml")
-
