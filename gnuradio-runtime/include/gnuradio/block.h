@@ -44,9 +44,14 @@ namespace gr {
    * streams and output streams respectively, and the type of the data
    * items in each stream.
    *
-   * Although blocks may consume data on each input stream at a
-   * different rate, all outputs streams must produce data at the same
-   * rate.  That rate may be different from any of the input rates.
+   * Blocks report the number of items consumed on each input in
+   * general_work(), using consume() or consume_each().
+   *
+   * If the same number of items is produced on each output, the block
+   * returns that number from general_work(). Otherwise, the block
+   * calls produce() for each output, then returns
+   * WORK_CALLED_PRODUCE. The input and output rates are not required
+   * to be related.
    *
    * User derived blocks override two methods, forecast and
    * general_work, to implement their signal processing
@@ -160,8 +165,15 @@ namespace gr {
      * \param input_items	vector of pointers to the input items, one entry per input stream
      * \param output_items	vector of pointers to the output items, one entry per output stream
      *
-     * \returns number of items actually written to each output stream, or -1 on EOF.
-     * It is OK to return a value less than noutput_items.  -1 <= return value <= noutput_items
+     * \returns number of items actually written to each output stream
+     * or WORK_CALLED_PRODUCE or WORK_DONE.  It is OK to return a
+     * value less than noutput_items.
+     *
+     * WORK_CALLED_PRODUCE is used where not all outputs produce the
+     * same number of items. general_work must call produce() for each
+     * output to indicate the numer of items actually produced.
+     *
+     * WORK_DONE indicates that no more data will be produced by this block.
      *
      * general_work must call consume or consume_each to indicate how
      * many items were consumed on each input stream.
