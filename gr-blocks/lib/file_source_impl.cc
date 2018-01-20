@@ -150,6 +150,7 @@ namespace gr {
         else {
           GR_LOG_WARN(d_logger, "WARNING: file is too small");
         }
+        fclose(d_new_fp);
         throw std::runtime_error("file size too small");
       }
 
