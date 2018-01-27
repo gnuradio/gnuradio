@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, analog
+from gnuradio import gr, gr_unittest, analog, blocks
+import numpy
 
 class test_fastnoise_source(gr_unittest.TestCase):
 
@@ -30,21 +31,58 @@ class test_fastnoise_source(gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_001(self):
-        # Just confirm that we can instantiate a noise source
-        op = analog.fastnoise_source_f(analog.GR_GAUSSIAN, 10, 10)
+    def test_001_test_moments(self):
+        tb = self.tb
 
-    def test_002(self):
-        # Test get methods
-        set_type = analog.GR_GAUSSIAN
-        set_ampl = 10
-        op = analog.fastnoise_source_f(set_type, set_ampl, 10)
-        get_type = op.type()
-        get_ampl = op.amplitude()
+        NUM = 2**22
+        NUM_ITEMS = 10**6
+        DEFAULTARGS = {"samples": NUM, "seed": 43, "ampl": 1}
+        self.uni_real_src = analog.fastnoise_source_f(type = analog.GR_UNIFORM, **DEFAULTARGS)
+        self.uni_cplx_src = analog.fastnoise_source_c(type = analog.GR_UNIFORM, **DEFAULTARGS)
 
-        self.assertEqual(get_type, set_type)
-        self.assertEqual(get_ampl, set_ampl)
+        self.norm_real_src = analog.fastnoise_source_f(type = analog.GR_GAUSSIAN, **DEFAULTARGS)
+        self.norm_cplx_src = analog.fastnoise_source_c(type = analog.GR_GAUSSIAN, **DEFAULTARGS)
 
+        self.lapl_real_src = analog.fastnoise_source_f(type = analog.GR_LAPLACIAN, **DEFAULTARGS)
+
+        types = {
+            self.uni_real_src: "uniform", self.uni_cplx_src: "uniform",
+            self.norm_cplx_src: "norm", self.norm_cplx_src: "norm",
+            self.lapl_real_src: "laplace"
+        }
+
+        real_srcs = [self.uni_real_src, self.norm_real_src, self.lapl_real_src]
+        cplx_srcs = [self.uni_cplx_src, self.norm_cplx_src]
+
+        paths = {}
+        for src in real_srcs:
+            head = blocks.head(nitems=NUM_ITEMS, sizeof_stream_item=gr.sizeof_float)
+            sink = blocks.vector_sink_f()
+            paths[src] = (src, head, sink)
+
+        for src in cplx_srcs:
+            head = blocks.head(nitems=NUM_ITEMS, sizeof_stream_item=gr.sizeof_gr_complex)
+            sink = blocks.vector_sink_c()
+            paths[src] = (src, head, sink)
+        for path in paths.itervalues():
+            tb.connect(*path)
+
+        tb.run()
+        self.data = {src: path[2].data() for src, path in paths.iteritems()}
+        data = self.data
+        # min, max
+        self.assertAlmostEqual(min(data[self.uni_real_src]), -1, places=4)
+        self.assertAlmostEqual(max(data[self.uni_real_src]), 1, places=4)
+        # mean, variance
+        data = numpy.array(data[self.uni_real_src])
+        self.assertAlmostEqual(data.mean(), 0, places = 2)
+        self.assertAlmostEqual(data.var(), (1-(-1))**2./12, places = 3)
+        data = numpy.array(self.data[self.norm_real_src])
+        self.assertAlmostEqual(data.mean(), 0, places=2)
+        self.assertAlmostEqual(data.var(), 1, places=2)
+        data = numpy.array(self.data[self.lapl_real_src])
+        self.assertAlmostEqual(data.mean(), 0, places=2)
+        self.assertAlmostEqual(data.var(), 2, places=2)
 
 if __name__ == '__main__':
     gr_unittest.run(test_fastnoise_source, "test_fastnoise_source.xml")
