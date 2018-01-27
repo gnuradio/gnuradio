@@ -130,8 +130,8 @@ namespace gr {
               s = x*x+y*y;
           }while(s >= 1.0f || s == 0.0f);
           d_gauss_stored = true;
-          d_gauss_value = x*sqrt(-2.0*log(s)/s);
-          return y*sqrt(-2.0*log(s)/s);
+          d_gauss_value = x*sqrtf(-2.0*logf(s)/s);
+          return y*sqrtf(-2.0*logf(s)/s);
       }
   }
 
@@ -139,8 +139,8 @@ namespace gr {
   random::laplacian()
   {
     float z = ran1()-0.5;
-    if(z>0) return -log(1-2*z);
-    else return log(1+2*z);
+    if(z>0) return -logf(1-2*z);
+    else return logf(1+2*z);
   }
 
   /*
@@ -151,7 +151,7 @@ namespace gr {
   float
   random::impulse(float factor = 5)
   {
-    float z = -M_SQRT2 * log(ran1());
+    float z = -M_SQRT2 * logf(ran1());
     if(fabsf(z) <= factor)
       return 0.0;
     else
@@ -167,7 +167,7 @@ namespace gr {
   float
   random::rayleigh()
   {
-    return sqrt(-2.0 * log(ran1()));
+    return sqrtf(-2.0 * logf(ran1()));
   }
 
 } /* namespace gr */
