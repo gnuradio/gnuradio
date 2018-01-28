@@ -70,7 +70,7 @@ namespace gr {
         d_u = d_m - 2.0f*(d_p*d_p) - d_q*d_q;
 
         gr_complex F = (1.0f / (d_p*d_p*d_p)) *
-          (sign(d_u) * (nrm*cnj - 2.0f*d_p*cnj - conj(d_q)*out) -
+          (sign(d_u) * (nrm*cnj - 2.0f*d_p*cnj - std::conj(d_q)*out) -
            std::abs(d_u)*cnj);
 
         float re = gr::clip(F.real(), 1.0);
