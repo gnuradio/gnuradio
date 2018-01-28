@@ -102,13 +102,13 @@ namespace gr {
       }
       else {
         GR_LOG_WARN(d_logger, "file_source: bad seek mode");
-        return -1;
+        return 0;
       }
 
       if ((seek_point < (long)d_start_offset_items)
           || (seek_point > (long)(d_start_offset_items+d_length_items-1))) {
         GR_LOG_WARN(d_logger, "file_source: bad seek point");
-        return -1;
+        return 0;
       }
 
       return fseek((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
