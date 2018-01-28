@@ -39,15 +39,15 @@
 #include <io.h>
 #endif
 #ifdef O_BINARY
-#define	OUR_O_BINARY O_BINARY
+#define OUR_O_BINARY O_BINARY
 #else
-#define	OUR_O_BINARY 0
+#define OUR_O_BINARY 0
 #endif
 // should be handled via configure
 #ifdef O_LARGEFILE
-#define	OUR_O_LARGEFILE	O_LARGEFILE
+#define OUR_O_LARGEFILE O_LARGEFILE
 #else
-#define	OUR_O_LARGEFILE 0
+#define OUR_O_LARGEFILE 0
 #endif
 
 namespace gr {
@@ -57,15 +57,15 @@ namespace gr {
                                         size_t start_offset_items, size_t length_items)
     {
       return gnuradio::get_initial_sptr
-	(new file_source_impl(itemsize, filename, repeat, start_offset_items, length_items));
+        (new file_source_impl(itemsize, filename, repeat, start_offset_items, length_items));
     }
 
     file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat,
                                        size_t start_offset_items, size_t length_items)
       : sync_block("file_source",
-		      io_signature::make(0, 0, 0),
-		      io_signature::make(1, 1, itemsize)),
-	d_itemsize(itemsize),
+                   io_signature::make(0, 0, 0),
+                   io_signature::make(1, 1, itemsize)),
+        d_itemsize(itemsize),
         d_start_offset_items(start_offset_items), d_length_items(length_items),
         d_fp(0), d_new_fp(0), d_repeat(repeat), d_updated(false),
         d_file_begin(true), d_repeat_cnt(0), d_add_begin_tag(pmt::PMT_NIL)
@@ -91,12 +91,15 @@ namespace gr {
     {
       seek_point += d_start_offset_items;
 
-      if (whence == SEEK_SET)
+      if (whence == SEEK_SET) {
         ;
-      else if (whence == SEEK_CUR)
+      }
+      else if (whence == SEEK_CUR) {
         seek_point += (d_length_items - d_items_remaining);
-      else if (whence == SEEK_END)
+      }
+      else if (whence == SEEK_END) {
         seek_point = d_length_items - seek_point;
+      }
       else {
         GR_LOG_WARN(d_logger, "file_source: bad seek mode");
         return -1;
@@ -123,19 +126,19 @@ namespace gr {
 
       // we use "open" to use to the O_LARGEFILE flag
       if((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-	perror(filename);
-	throw std::runtime_error("can't open file");
+        perror(filename);
+        throw std::runtime_error("can't open file");
       }
 
       if(d_new_fp) {
-	fclose(d_new_fp);
-	d_new_fp = 0;
+        fclose(d_new_fp);
+        d_new_fp = 0;
       }
 
       if((d_new_fp = fdopen (fd, "rb")) == NULL) {
-	perror(filename);
-	::close(fd);	// don't leak file descriptor if fdopen fails
-	throw std::runtime_error("can't open file");
+        perror(filename);
+        ::close(fd);    // don't leak file descriptor if fdopen fails
+        throw std::runtime_error("can't open file");
       }
 
       //Check to ensure the file will be consumed according to item size
@@ -187,8 +190,8 @@ namespace gr {
       gr::thread::scoped_lock lock(fp_mutex);
 
       if(d_new_fp != NULL) {
-	fclose(d_new_fp);
-	d_new_fp = NULL;
+        fclose(d_new_fp);
+        d_new_fp = NULL;
       }
       d_updated = true;
     }
@@ -197,15 +200,15 @@ namespace gr {
     file_source_impl::do_update()
     {
       if(d_updated) {
-	gr::thread::scoped_lock lock(fp_mutex); // hold while in scope
+        gr::thread::scoped_lock lock(fp_mutex); // hold while in scope
 
-	if(d_fp)
-	  fclose(d_fp);
+        if(d_fp)
+          fclose(d_fp);
 
-	d_fp = d_new_fp;    // install new file pointer
-	d_new_fp = 0;
-	d_updated = false;
-       d_file_begin = true;
+        d_fp = d_new_fp;    // install new file pointer
+        d_new_fp = 0;
+        d_updated = false;
+        d_file_begin = true;
       }
     }
 
@@ -217,15 +220,15 @@ namespace gr {
 
     int
     file_source_impl::work(int noutput_items,
-			   gr_vector_const_void_star &input_items,
-			   gr_vector_void_star &output_items)
+                           gr_vector_const_void_star &input_items,
+                           gr_vector_void_star &output_items)
     {
       char *o = (char*)output_items[0];
       int size = noutput_items;
 
       do_update();       // update d_fp is reqd
       if(d_fp == NULL)
-	throw std::runtime_error("work with file not open");
+        throw std::runtime_error("work with file not open");
 
       gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
 
@@ -245,12 +248,12 @@ namespace gr {
         size_t nitems_to_read = std::min((size_t)size, d_items_remaining);
 
         // Since the bounds of the file are know, unexpected nitems is an error
-	if (nitems_to_read != fread(o, d_itemsize, nitems_to_read, (FILE*)d_fp))
+        if (nitems_to_read != fread(o, d_itemsize, nitems_to_read, (FILE*)d_fp))
           throw std::runtime_error("fread error");
 
-	size -= nitems_to_read;
+        size -= nitems_to_read;
         d_items_remaining -= nitems_to_read;
-	o += nitems_to_read * d_itemsize;
+        o += nitems_to_read * d_itemsize;
 
         // Ran out of items ("EOF")
         if (d_items_remaining == 0) {

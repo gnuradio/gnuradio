@@ -55,9 +55,9 @@ namespace gr {
        * If \p len is non-zero, only items [offset, offset+len) will
        * be produced.
        *
-       * \param itemsize	the size of each item in the file, in bytes
-       * \param filename	name of the file to source from
-       * \param repeat	repeat file from start
+       * \param itemsize        the size of each item in the file, in bytes
+       * \param filename        name of the file to source from
+       * \param repeat  repeat file from start
        * \param offset  begin this many items into file
        * \param len     produce only items [offset, offset+len)
        */
@@ -67,16 +67,16 @@ namespace gr {
       /*!
        * \brief seek file to \p seek_point relative to \p whence
        *
-       * \param seek_point	sample offset in file
-       * \param whence	one of SEEK_SET, SEEK_CUR, SEEK_END (man fseek)
+       * \param seek_point      sample offset in file
+       * \param whence  one of SEEK_SET, SEEK_CUR, SEEK_END (man fseek)
        */
       virtual bool seek(long seek_point, int whence) = 0;
 
       /*!
        * \brief Opens a new file.
        *
-       * \param filename	name of the file to source from
-       * \param repeat	repeat file from start
+       * \param filename        name of the file to source from
+       * \param repeat  repeat file from start
        * \param offset  begin this many items into file
        * \param len     produce only items [offset, offset+len)
        */
