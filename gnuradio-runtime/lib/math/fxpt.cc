@@ -33,6 +33,7 @@ namespace gr {
   };
 
   const float fxpt::PI = 3.14159265358979323846;
+  const float fxpt::TAU = 2.0 * 3.14159265358979323846;
   const float fxpt::TWO_TO_THE_31 = 2147483648.0;
 
 } /* namespace gr */
