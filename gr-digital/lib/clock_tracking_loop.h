@@ -655,7 +655,7 @@ namespace gr {
        * \brief Returns the normalized approximate loop bandwidth.
        *
        * \details
-       * See the documenation for set_loop_bandwidth() for more details.
+       * See the documentation for set_loop_bandwidth() for more details.
        *
        * Note that if set_alpha() or set_beta() were called to directly
        * set gains, the value returned by this method will be inaccurate/stale.
@@ -666,7 +666,7 @@ namespace gr {
        * \brief Returns the loop damping factor.
        *
        * \details
-       * See the documenation for set_damping_factor() for more details.
+       * See the documentation for set_damping_factor() for more details.
        *
        * Note that if set_alpha() or set_beta() were called to directly
        * set gains, the value returned by this method will be inaccurate/stale.
@@ -678,7 +678,7 @@ namespace gr {
        * Detector.
        *
        * \details
-       * See the documenation for set_ted_gain() for more details.
+       * See the documentation for set_ted_gain() for more details.
        */
       float get_ted_gain() const;
 
@@ -686,7 +686,7 @@ namespace gr {
        * \brief Returns the PI filter proportional gain, alpha.
        *
        * \details
-       * See the documenation for set_alpha() for more details.
+       * See the documentation for set_alpha() for more details.
        */
       float get_alpha() const;
 
@@ -694,7 +694,7 @@ namespace gr {
        * \brief Returns the PI filter integral gain, beta.
        *
        * \details
-       * See the documenation for set_beta() for more details.
+       * See the documentation for set_beta() for more details.
        */
       float get_beta() const;
 
@@ -748,7 +748,7 @@ namespace gr {
        * \brief Get the maximum average clock period estimate limit, T_avg_max.
        *
        * \details
-       * See the documenation for set_max_avg_period() for more details.
+       * See the documentation for set_max_avg_period() for more details.
        */
       float get_max_avg_period() const;
 
@@ -756,7 +756,7 @@ namespace gr {
        * \brief Get the minimum average clock period estimate limit, T_avg_min.
        *
        * \details
-       * See the documenation for set_min_avg_period() for more details.
+       * See the documentation for set_min_avg_period() for more details.
        */
       float get_min_avg_period() const;
 

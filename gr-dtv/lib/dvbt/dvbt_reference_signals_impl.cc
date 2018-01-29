@@ -1179,7 +1179,7 @@ namespace gr {
       // - symbol timing (pre-FFT)
       // - symbol frequency correction (pre-FFT)
       // - integer frequency correction (post-FFT)
-      // TODO - call this just in the aquisition mode
+      // TODO - call this just in the acquisition mode
       compute_oneshot_csft(in);
 
       // Gather all corrections and obtain a corrected OFDM symbol:

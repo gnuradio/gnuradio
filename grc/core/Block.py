@@ -686,7 +686,7 @@ class Block(Element):
 
     def resolve_dependencies(self, tmpl):
         """
-        Resolve a paramater dependency with cheetah templates.
+        Resolve a parameter dependency with cheetah templates.
 
         Args:
             tmpl: the string with dependencies

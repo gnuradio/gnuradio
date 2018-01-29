@@ -204,7 +204,7 @@ static void free_hid_device(hid_device *dev)
 }
 
 #if 0
-/*TODO: Implement this funciton on hidapi/libusb.. */
+/*TODO: Implement this function on hidapi/libusb.. */
 static void register_error(hid_device *device, const char *op)
 {
 

@@ -45,7 +45,7 @@ GrAtscBitTimingLoop3::GrAtscBitTimingLoop3 (double ratio_of_rx_clock_to_symbol_f
 // We are nominally a 2x decimator, but our actual rate varies slightly
 // depending on the difference between the transmitter and receiver
 // sampling clocks.  Hence, we need to compute our input ranges
-// explictly.
+// explicitly.
 
 int
 GrAtscBitTimingLoop3::forecast(VrSampleRange output,

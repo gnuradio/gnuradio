@@ -485,7 +485,7 @@
     </param>
     <param>
       <key>label</key>
-      <value>Singal Power (dB)</value>
+      <value>Signal Power (dB)</value>
     </param>
     <param>
       <key>value</key>

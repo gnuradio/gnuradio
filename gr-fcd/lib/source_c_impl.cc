@@ -47,7 +47,7 @@ namespace gr {
         (new source_c_impl(device_name));
     }
 
-    static const int MIN_IN = 0;  /*!< Mininum number of input streams. */
+    static const int MIN_IN = 0;  /*!< Minimum number of input streams. */
     static const int MAX_IN = 0;  /*!< Maximum number of input streams. */
     static const int MIN_OUT = 1; /*!< Minimum number of output streams. */
     static const int MAX_OUT = 1; /*!< Maximum number of output streams. */

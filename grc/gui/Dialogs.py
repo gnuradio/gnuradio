@@ -251,7 +251,7 @@ def ChooseEditorDialog(config):
         'Would you like to choose the editor to use?', gtk.RESPONSE_YES, buttons
     )
 
-    # Handle the inital default/choose/cancel response
+    # Handle the initial default/choose/cancel response
     # User wants to choose the editor to use
     if response == gtk.RESPONSE_YES:
         file_dialog = gtk.FileChooserDialog(

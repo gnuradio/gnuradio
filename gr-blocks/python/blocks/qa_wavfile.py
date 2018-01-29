@@ -54,7 +54,7 @@ class test_wavefile(gr_unittest.TestCase):
 	self.tb.run()
 	wf_out.close()
 
-	# we're loosing all extra header chunks
+	# we're losing all extra header chunks
 	self.assertEqual(getsize(infile) - g_extra_header_len, getsize(outfile))
 
 	in_f  = file(infile,  'rb')

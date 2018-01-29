@@ -32,7 +32,7 @@ namespace gr {
      * \ingroup fcd_blk
      *
      * \details
-     * This class provides a Funcube Dongle soure block by wrapping
+     * This class provides a Funcube Dongle source block by wrapping
      * the USB audio interface and the USB HID control interface of
      * the Funcube Dongle into one convenient source block.
      *

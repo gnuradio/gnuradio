@@ -229,7 +229,7 @@ class Platform(Element):
 
         key = n.find('key')
         if not key:
-            print >> sys.stderr, 'Warning: Domain with emtpy key.\n\tIgnoring: {0}'.format(xml_file)
+            print >> sys.stderr, 'Warning: Domain with empty key.\n\tIgnoring: {0}'.format(xml_file)
             return
         if key in self.domains:  # test against repeated keys
             print >> sys.stderr, 'Warning: Domain with key "{0}" already exists.\n\tIgnoring: {1}'.format(key, xml_file)

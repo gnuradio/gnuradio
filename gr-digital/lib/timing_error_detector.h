@@ -440,12 +440,12 @@ namespace gr {
     };
 
     /*!
-     * \brief Signal times Slope Maximum Likelyhood solution approximation
+     * \brief Signal times Slope Maximum Likelihood solution approximation
      * timing error detector algorithm class
      * \ingroup internal
      *
      * \details
-     * This is the Signal times Slope Maximum Likelyhood solution approximation
+     * This is the Signal times Slope Maximum Likelihood solution approximation
      * timing error detector algorithm class.  This approximation is good for
      * small signals (< 1.0) and/or situations with low SNR.
      *
@@ -459,7 +459,7 @@ namespace gr {
     {
       public:
         /*!
-         * \brief Create a Signal times Slope Maximum Likelyhood solution
+         * \brief Create a Signal times Slope Maximum Likelihood solution
          * approximation timing error detector
          */
         ted_signal_times_slope_ml()
@@ -474,12 +474,12 @@ namespace gr {
     };
 
     /*!
-     * \brief Signum times Slope Maximum Likelyhood solution approximation
+     * \brief Signum times Slope Maximum Likelihood solution approximation
      * timing error detector algorithm class
      * \ingroup internal
      *
      * \details
-     * This is the Signum times Slope Maximum Likelyhood solution approximation
+     * This is the Signum times Slope Maximum Likelihood solution approximation
      * timing error detector algorithm class.  This approximation is good for
      * large signals (> 1.0) and/or situations with high SNR.
      *
@@ -493,7 +493,7 @@ namespace gr {
     {
       public:
         /*!
-         * \brief Create a Signum times Slope Maximum Likelyhood solution
+         * \brief Create a Signum times Slope Maximum Likelihood solution
          * approximation timing error detector
          */
         ted_signum_times_slope_ml()

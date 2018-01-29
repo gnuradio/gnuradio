@@ -194,7 +194,7 @@ If not specified, the "Release" mode is the default.
 \li ENABLE_STATIC_LIBS: build static library files. Default is False.
 \li CMAKE_TOOLCHAIN_FILE: A toolchain file to setup the CMake environment for cross-compiling.
 
-Here are som other potentially helpful CMake flags. These are to help you specifically locate certain dependencies. While the CMake scripts themselves should generally find these for us, we can use these to help direct CMake to specific locations if we have installed a different version elsewhere on the system that CMake doesn't know about.
+Here are some other potentially helpful CMake flags. These are to help you specifically locate certain dependencies. While the CMake scripts themselves should generally find these for us, we can use these to help direct CMake to specific locations if we have installed a different version elsewhere on the system that CMake doesn't know about.
 
 \li QWT_LIBRARIES: shared library to use for Qwt (in the form \<path\>/libqwt.so).
 \li QWT_INCLUDE_DIRS: path to Qwt include files (e.g., /usr/include/qwt).

@@ -141,7 +141,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
         npts = self.get_npts()
         if(self._npts != npts):
 
-            # Adjust buffers to accomodate new settings
+            # Adjust buffers to accommodate new settings
             for n in xrange(self._ncons):
                 if(npts < self._npts):
                     if(self._data_len[n] < npts):

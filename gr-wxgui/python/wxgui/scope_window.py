@@ -121,7 +121,7 @@ class control_panel(wx.Panel):
 			parent.subscribe(USE_PERSISTENCE_KEY, widget.Enable)
 			widget.Enable(parent[USE_PERSISTENCE_KEY])
 			parent.subscribe(USE_PERSISTENCE_KEY, widget.ShowItems)
-                        #allways show initially, so room is reserved for them
+                        #always show initially, so room is reserved for them
 			widget.ShowItems(True) # (parent[USE_PERSISTENCE_KEY])
 
                 parent.subscribe(USE_PERSISTENCE_KEY, self._update_layout)
@@ -407,7 +407,7 @@ class control_panel(wx.Panel):
 	##################################################
         def _update_layout(self,key):
           # Just ignore the key value we get
-          # we only need to now that the visability or size of something has changed
+          # we only need to now that the visibility or size of something has changed
           self.parent.Layout()
           #self.parent.Fit()
 
