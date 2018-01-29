@@ -106,7 +106,7 @@ namespace gr {
     case block::TPP_CUSTOM:
       return true;
     case block::TPP_ALL_TO_ALL:
-      // every tag on every input propogates to everyone downstream
+      // every tag on every input propagates to everyone downstream
       for(int i = 0; i < d->ninputs(); i++) {
         d->get_tags_in_range(rtags, i, start_nitems_read[i],
                              d->nitems_read(i), block_id);

@@ -54,7 +54,7 @@ class Block(Element, _Block):
 
     def __init__(self, flow_graph, n):
         """
-        Block contructor.
+        Block constructor.
         Add graphics related params to the block.
         """
         _Block.__init__(self, flow_graph, n)

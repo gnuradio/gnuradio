@@ -199,7 +199,7 @@ namespace gr {
        * point to the proper decision function for the specified
        * constellation order.
        *
-       * \return index into d_constellation point that is the closest to the recieved sample
+       * \return index into d_constellation point that is the closest to the received sample
        */
       unsigned int (mpsk_receiver_cc_impl::*d_decision)(gr_complex sample) const;
 

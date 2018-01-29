@@ -210,7 +210,7 @@ class packet_mod_base(gr.hier_block2):
         if not payload_length: #get payload length
             payload_length = DEFAULT_PAYLOAD_LEN
         if (payload_length % self._item_size_in) != 0:  #verify that packet length is a multiple of the stream size
-            raise ValueError, 'The payload length: "%d" is not a mutiple of the stream size: "%d".'%(payload_length, self._item_size_in)
+            raise ValueError, 'The payload length: "%d" is not a multiple of the stream size: "%d".'%(payload_length, self._item_size_in)
         #initialize hier2
         gr.hier_block2.__init__(
             self,

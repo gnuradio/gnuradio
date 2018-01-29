@@ -90,7 +90,7 @@ class FileDialogHelper(gtk.FileChooserDialog):
 
     def __init__(self, action, title):
         """
-        FileDialogHelper contructor.
+        FileDialogHelper constructor.
         Create a save or open dialog with cancel and ok buttons.
         Use standard settings: no multiple selection, local files only, and the * filter.
 

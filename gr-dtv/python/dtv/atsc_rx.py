@@ -41,7 +41,7 @@ class atsc_rx(gr.hier_block2):
         # Normalize signal to proper constellation amplitude
         agc = analog.agc_ff(1e-5, 4.0)
 
-        # Synchronize bit and segement timing
+        # Synchronize bit and segment timing
         btl = dtv.atsc_sync(output_rate)
 
         # Check for correct field sync

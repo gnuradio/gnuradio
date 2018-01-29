@@ -73,7 +73,7 @@ class vector_source_ts(gr.hier_block2):
     """
     def __init__(self, ts):
         """
-        Pad tranport stream packets to 256 bytes and reformat appropriately.
+        Pad transport stream packets to 256 bytes and reformat appropriately.
 
         Args:
             ts: MPEG transport stream. (sequence of ints in [0,255]; len(ts) % 188 == 0)
@@ -105,9 +105,9 @@ class vector_sink_ts(gr.hier_block2):
 
     def data(self):
         """
-        Extracts tranport stream from sink and returns it to python.
+        Extracts transport stream from sink and returns it to python.
 
-        Depads tranport stream packets from 256 back to 188 bytes.
+        Depads transport stream packets from 256 back to 188 bytes.
         @rtype: tuple of ints in [0,255]; len(result) % 188 == 0
         """
         return tuple(depad_transport_stream(self.sink.data()))

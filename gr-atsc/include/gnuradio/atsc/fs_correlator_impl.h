@@ -29,7 +29,7 @@
  * \brief abstract base class for ATSC field sync correlator
  *
  * Processes input samples one at a time looking for
- * an occurence of either the field sync 1 or field sync 2 pattern.
+ * an occurrence of either the field sync 1 or field sync 2 pattern.
  *
  * For each sample processed, an output sample and an output tag are produced.
  * The output samples are identical to the input samples but are delayed by

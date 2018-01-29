@@ -141,7 +141,7 @@ namespace gr {
       //Determine m - constellation symbol size
       d_m = config.d_m;
 
-      // In order to accomodate all constalations (m=2,4,6)
+      // In order to accommodate all constalations (m=2,4,6)
       // and rates (1/2, 2/3, 3/4, 5/6, 7/8)
       // We need the following things to happen:
       // - output item size multiple of 1512bytes

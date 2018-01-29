@@ -39,7 +39,7 @@ class ofdm_sync_pn(gr.hier_block2):
         """
         OFDM synchronization using PN Correlation:
         T. M. Schmidl and D. C. Cox, "Robust Frequency and Timing
-        Synchonization for OFDM," IEEE Trans. Communications, vol. 45,
+        Synchronization for OFDM," IEEE Trans. Communications, vol. 45,
         no. 12, 1997.
         """
 

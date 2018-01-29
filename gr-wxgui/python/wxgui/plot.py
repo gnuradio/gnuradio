@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------------
 # 12/15/2003 - Jeff Grimmett (grimmtooth@softhome.net)
 #
-# o 2.5 compatability update.
+# o 2.5 compatibility update.
 # o Renamed to plot.py in the wx.lib directory.
 # o Reworked test frame to work with wx demo framework. This saves a bit
 #   of tedious cut and paste, and the test app is excellent.
@@ -508,7 +508,7 @@ class PlotCanvas(wx.Window):
     # SaveFile
     def SaveFile(self, fileName= ''):
         """Saves the file to the type specified in the extension. If no file
-        name is specified a dialog box is provided.  Returns True if sucessful,
+        name is specified a dialog box is provided.  Returns True if successful,
         otherwise False.
 
         .bmp  Save a Windows bitmap file.
@@ -528,7 +528,7 @@ class PlotCanvas(wx.Window):
                 while 1:
                     if dlg1.ShowModal() == wx.ID_OK:
                         fileName = dlg1.GetPath()
-                        # Check for proper exension
+                        # Check for proper extension
                         if _string.lower(fileName[-3:]) not in ['bmp','xbm','xpm','png','jpg']:
                             dlg2 = wx.MessageDialog(self, 'File name extension\n'
                             'must be one of\n'
@@ -1435,7 +1435,7 @@ class PlotPrintout(wx.Printout):
 ##        print "DC GetSize", dc.GetSize()
 ##        print "GetPageSizePixels", self.GetPageSizePixels()
         # Note PPIScreen does not give the correct number
-        # Calulate everything for printer and then scale for preview
+        # Calculate everything for printer and then scale for preview
         PPIPrinter= self.GetPPIPrinter()        # printer dots/inch (w,h)
         #PPIScreen= self.GetPPIScreen()          # screen dots/inch (w,h)
         dcSize= dc.GetSize()                    # DC size
@@ -1667,7 +1667,7 @@ class TestFrame(wx.Frame):
         self.Show(True)
 
     def DrawPointLabel(self, dc, mDataDict):
-        """This is the fuction that defines how the pointLabels are plotted
+        """This is the function that defines how the pointLabels are plotted
             dc - DC that will be passed
             mDataDict - Dictionary of data that you want to use for the pointLabel
 

@@ -46,7 +46,7 @@ namespace gr {
   /************************ BEGIN LOG4CPP HELPERS ***********************/
   /* Logger config class.  This is a singleton that controls how
    * log4cpp is configured If watch_period>0 a thread is started to
-   * watch teh config file for changes.
+   * watch the config file for changes.
    */
 
   // Getters of logger_config

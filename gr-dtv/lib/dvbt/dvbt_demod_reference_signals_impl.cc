@@ -112,7 +112,7 @@ namespace gr {
 
       /*
        * Wait for a sync_start tag from upstream that signals when to start.
-       * Allways consume until to a superframe start.
+       * Always consume until to a superframe start.
        */
       if (is_sync_start(noutput_items)) {
         d_init = 0;

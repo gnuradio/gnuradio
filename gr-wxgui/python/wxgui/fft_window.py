@@ -101,7 +101,7 @@ class control_panel(wx.Panel):
 			parent.subscribe(AVERAGE_KEY, widget.Enable)
 			widget.Enable(parent[AVERAGE_KEY])
 			parent.subscribe(AVERAGE_KEY, widget.ShowItems)
-                        #allways show initially, so room is reserved for them
+                        #always show initially, so room is reserved for them
 			widget.ShowItems(True) # (parent[AVERAGE_KEY])
 
                 parent.subscribe(AVERAGE_KEY, self._update_layout)
@@ -127,7 +127,7 @@ class control_panel(wx.Panel):
 			parent.subscribe(USE_PERSISTENCE_KEY, widget.Enable)
 			widget.Enable(parent[USE_PERSISTENCE_KEY])
 			parent.subscribe(USE_PERSISTENCE_KEY, widget.ShowItems)
-                        #allways show initially, so room is reserved for them
+                        #always show initially, so room is reserved for them
 			widget.ShowItems(True) # (parent[USE_PERSISTENCE_KEY])
 
                 parent.subscribe(USE_PERSISTENCE_KEY, self._update_layout)
@@ -201,7 +201,7 @@ class control_panel(wx.Panel):
 	##################################################
         def _update_layout(self,key):
           # Just ignore the key value we get
-          # we only need to now that the visability or size of something has changed
+          # we only need to now that the visibility or size of something has changed
           self.parent.Layout()
           #self.parent.Fit()
 
@@ -254,7 +254,7 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self[PERSIST_ALPHA_KEY] = persist_alpha
 		for trace in TRACES:
 			#a function that returns a function
-			#so the function wont use local trace
+			#so the function won't use local trace
 			def new_store_trace(my_trace):
 				def store_trace(*args):
 					self._traces[my_trace] = self.samples

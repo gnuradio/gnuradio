@@ -87,7 +87,7 @@ class _ActionBase(object):
             # set the accelerator group, and accelerator path
             # register the key name and mod mask with the accelerator path
             if label is None:
-                continue  # dont register accel
+                continue  # don't register accel
             accel_path = '<main>/' + self.get_name()
             self.set_accel_group(get_accel_group())
             self.set_accel_path(accel_path)

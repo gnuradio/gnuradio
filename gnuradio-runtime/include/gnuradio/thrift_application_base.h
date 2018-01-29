@@ -174,7 +174,7 @@ private:
   // and since ::i() is static, this function must be static as well.
   static void start_application();
 
-  // Pointer to the structure containing staticly allocated
+  // Pointer to the structure containing statically allocated
   // state information for the applicaiton_base singleton.
   static boost::scoped_ptr<thrift_application_base_impl > p_impl;
 

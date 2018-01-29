@@ -49,7 +49,7 @@ namespace gr {
    *
    * This function calculates the angle of the vector (x,y) based on a
    * table lookup and linear interpolation. The table uses a 256 point
-   * table covering -45 to +45 degrees and uses symetry to determine
+   * table covering -45 to +45 degrees and uses symmetry to determine
    * the final angle value in the range of -180 to 180 degrees. Note
    * that this function uses the small angle approximation for values
    * close to zero. This routine calculates the arc tangent with an

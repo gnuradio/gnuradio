@@ -507,7 +507,7 @@ EXTERN FCD_MODE_ENUM fcdBlReset(void)
         It seems that the read_callback() in hid-libusb.c will never receive any
         data during the reconfiguration. Since the same logic works in the native
         windows application, it could be a libusb thing. Anyhow, since the value
-        returned by this function is not used, we may as well jsut skip the hid_read()
+        returned by this function is not used, we may as well just skip the hid_read()
         and return FME_NONE.
         Correct switch from BL to APP mode can be observed in /var/log/messages (linux)
         (when in bootloader mode the device version includes 'BL')
@@ -680,7 +680,7 @@ EXTERN FCD_MODE_ENUM fcdBlWriteFirmware(char *pc, int64_t n64Size)
 /** \brief Verify firmware in FCd flash.
   * \param pc Pointer to firmware data to verify against.
   * \param n64Size Size of the data in pc.
-  * \return The FCD_MODE_BL if verification was succesful.
+  * \return The FCD_MODE_BL if verification was successful.
   *
   * This function verifies the firmware currently in the FCd flash against the firmware
   * image pointed to by pc. The function return FCD_MODE_BL if the verification is OK and

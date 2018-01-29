@@ -89,12 +89,12 @@
             <opt>hide_constellation:all</opt>
         </option>
         <option>
-            <name>y[n]y'[n] Maximum Likelyhood</name>
+            <name>y[n]y'[n] Maximum Likelihood</name>
             <key>digital.TED_SIGNAL_TIMES_SLOPE_ML</key>
             <opt>hide_constellation:all</opt>
         </option>
         <option>
-            <name>sgn(y[n])y'[n] Maximum Likelyhood</name>
+            <name>sgn(y[n])y'[n] Maximum Likelihood</name>
             <key>digital.TED_SIGNUM_TIMES_SLOPE_ML</key>
             <opt>hide_constellation:all</opt>
         </option>

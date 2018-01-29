@@ -96,12 +96,12 @@ atsc_bit_timing_loop::work (int noutput_items,
   double        timing_adjustment = 0;
   bool          seg_locked;
   atsc::syminfo    tag;
-  // ammount requested in forecast
+  // amount requested in forecast
   unsigned long input_size = noutput_items * d_rx_clock_to_symbol_freq + 1500 -1;
 
   memset (&tag, 0, sizeof (tag));
 
-  // ammount actually consumed
+  // amount actually consumed
   d_si = 0;
 
   for (k = 0; k < noutput_items; k++){

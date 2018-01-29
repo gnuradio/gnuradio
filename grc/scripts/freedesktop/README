@@ -6,8 +6,8 @@ This directory contains icons, a mime type, and menu files for grc.
 Installation of these files requires a set of tools called xdg-utils.
 xdg-utils will install files in a standard way according to the freedesktop.org standards.
 
-Desktop enviroments that implement these standards are gnome, kde, xfce, and others.
-If you have one of these desktop enviroments, xdg-utils should come installed.
+Desktop environments that implement these standards are gnome, kde, xfce, and others.
+If you have one of these desktop environments, xdg-utils should come installed.
 If xdg-utils is not installed, then this directory will be ignored by the build.
 
 The gtk IconTheme module locates the installed icons for use inside the grc app.

@@ -24,7 +24,7 @@ from OpenGL.GL import *
 """
 Optimize with psyco if possible, this gains us about 50% speed when
 creating our textures in trade for about 4MBytes of additional memory usage for
-psyco. If you don't like loosing the memory you have to turn the lines following
+psyco. If you don't like losing the memory you have to turn the lines following
 "enable psyco" into a comment while uncommenting the line after "Disable psyco".
 """
 #Try to enable psyco
