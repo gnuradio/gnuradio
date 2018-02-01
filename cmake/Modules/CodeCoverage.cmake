@@ -148,7 +148,7 @@ FUNCTION(SETUP_TARGET_FOR_COVERAGE _targetname _testrunner _outputname)
 		COMMAND ${LCOV_PATH} --directory . --capture --output-file ${coverage_info}
 		COMMAND ${LCOV_PATH} --remove ${coverage_info} 'tests/*' '/usr/*' 'swig/*' '*/swig/*' '*/qa_*' --output-file ${coverage_cleaned}
 		COMMAND ${GENHTML_PATH} -o ${_outputname} ${coverage_cleaned}
-		COMMAND ${CMAKE_COMMAND} -E remove ${coverage_info} ${coverage_cleaned}
+		# Don't remove fragments so CI can upload them to codecov
 
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 		COMMENT "Resetting code coverage counters to zero.\nProcessing code coverage counters and generating report."
