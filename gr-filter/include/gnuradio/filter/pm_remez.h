@@ -64,7 +64,7 @@ namespace gr {
 	     const std::vector<double> &error_weight,
 	     const std::string filter_type = "bandpass",
 	     int grid_density = 16
-	     ) throw (std::runtime_error);
+             ) noexcept(false);
 
   } /* namespace filter */
 } /* namespace gr */
