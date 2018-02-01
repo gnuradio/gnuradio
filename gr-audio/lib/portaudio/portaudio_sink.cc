@@ -368,7 +368,7 @@ namespace gr {
     }
 
     void
-    portaudio_sink::bail(const char *msg, int err) throw (std::runtime_error)
+    portaudio_sink::bail(const char *msg, int err)
     {
       output_error_msg(msg, err);
       throw std::runtime_error("audio_portaudio_sink");
