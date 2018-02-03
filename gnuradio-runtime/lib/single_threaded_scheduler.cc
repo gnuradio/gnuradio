@@ -112,9 +112,10 @@ namespace gr {
     int min_space = std::numeric_limits<int>::max();
 
     for(int i = 0; i < d->noutputs (); i++) {
-      int n = round_down (d->output(i)->space_available (), output_multiple);
+      buffer_sptr out_buf = d->output(i);
+      int n = round_down (out_buf->space_available (), output_multiple);
       if(n == 0) {			// We're blocked on output.
-        if(d->output(i)->done()) {	// Downstream is done, therefore we're done.
+        if(out_buf->done()) {	// Downstream is done, therefore we're done.
           return -1;
         }
         return 0;
@@ -201,9 +202,10 @@ namespace gr {
 
         max_items_avail = 0;
         for(int i = 0; i < d->ninputs (); i++) {
-          ninput_items[i] = d->input(i)->items_available();
-          //if (ninput_items[i] == 0 && d->input(i)->done())
-          if(ninput_items[i] < m->output_multiple() && d->input(i)->done())
+          buffer_reader_sptr in_buf = d->input(i);
+          ninput_items[i] = in_buf->items_available();
+          //if (ninput_items[i] == 0 && in_buf->done())
+          if(ninput_items[i] < m->output_multiple() && in_buf->done())
             goto were_done;
 
           max_items_avail = std::max (max_items_avail, ninput_items[i]);
@@ -294,12 +296,13 @@ namespace gr {
           }
 
           // We're blocked on input
+          buffer_reader_sptr in_buf = d->input(i);
           LOG(*d_log << "  BLKD_IN\n");
-          if(d->input(i)->done())    // If the upstream block is done, we're done
+          if(in_buf->done())    // If the upstream block is done, we're done
             goto were_done;
 
           // Is it possible to ever fulfill this request?
-          if(ninput_items_required[i] > d->input(i)->max_possible_items_available ()) {
+          if(ninput_items_required[i] > in_buf->max_possible_items_available ()) {
             // Nope, never going to happen...
             std::cerr << "\nsched: <block " << m->name()
                       << " (" << m->unique_id() << ")>"
@@ -308,7 +311,7 @@ namespace gr {
                       << "  ninput_items_required = "
                       << ninput_items_required[i] << "\n"
                       << "  max_possible_items_available = "
-                      << d->input(i)->max_possible_items_available() << "\n"
+                      << in_buf->max_possible_items_available() << "\n"
                       << "  If this is a filter, consider reducing the number of taps.\n";
             goto were_done;
           }
