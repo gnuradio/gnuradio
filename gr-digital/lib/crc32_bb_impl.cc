@@ -45,15 +45,14 @@ namespace gr {
       d_crc_length = 4;
       if (!d_packed) {
         d_crc_length = 32;
-        d_unpacked_crc = new char[d_crc_length];
+        d_buffer = std::vector<char>(d_crc_length);
+      }else{
+        d_buffer = std::vector<char>(4096);
       }
       set_tag_propagation_policy(TPP_DONT);
     }
 
     crc32_bb_impl::~crc32_bb_impl() {
-      if (!d_packed){
-        delete[] d_unpacked_crc;
-      }
     }
 
     int
@@ -71,12 +70,14 @@ namespace gr {
       d_crc_impl.reset();
       if (!d_packed){
         const size_t n_packed_length = 1 + ((packet_length - 1) / 8);
-        unsigned char packed_buffer[n_packed_length];
-        memset(packed_buffer, 0, n_packed_length);
+        if (n_packed_length > d_buffer.size()){
+          d_buffer.resize(n_packed_length);
+          }
+        d_buffer.clear();
         for (size_t bit = 0; bit < packet_length; bit++){
-          packed_buffer[bit/8] |= (in[bit] << (bit % 8));
+          d_buffer[bit/8] |= (in[bit] << (bit % 8));
         }
-        d_crc_impl.process_bytes(packed_buffer, n_packed_length);
+        d_crc_impl.process_bytes(&d_buffer[0], n_packed_length);
         crc = d_crc_impl();
       } else{
         d_crc_impl.process_bytes(in, packet_length);
@@ -123,9 +124,9 @@ namespace gr {
         }
         else {
           for (int i = 0; i < d_crc_length; i++) { // unpack CRC and store in buffer
-            d_unpacked_crc[i] = (crc >> i) & 0x1;
+            d_buffer[i] = (crc >> i) & 0x1;
           }
-          memcpy((void *) (out + packet_length), (void *) d_unpacked_crc, d_crc_length);
+          memcpy((void *) (out + packet_length), (void *) &d_buffer[0], d_crc_length);
         }
       }
 

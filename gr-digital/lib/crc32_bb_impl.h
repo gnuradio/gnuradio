@@ -36,7 +36,7 @@ namespace gr {
       bool d_packed;
       boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true>    d_crc_impl;
       int d_crc_length;
-      char *d_unpacked_crc;
+      std::vector<char> d_buffer;
       unsigned int calculate_crc32(const unsigned char* in, size_t packet_length);
 
      public:
