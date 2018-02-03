@@ -50,7 +50,7 @@ class CMakeFileEditor(object):
         Then run:
         >>> C.remove_value('list', 'file.cc', 'SOURCES')
 
-        Returns the number of occurences of entry in the current file
+        Returns the number of occurrences of entry in the current file
         that were removed.
         """
         # In the case of the example above, these are cases we need to catch:

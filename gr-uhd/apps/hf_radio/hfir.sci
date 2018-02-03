@@ -15,7 +15,7 @@
 //  The filter is a lowpass kaiser windowed filter with parameter 3
 //  The phase response is 45 degrees for positive frequencies and -45
 //   for negative frequencies.
-//  The coefficent set is used in one path and the same coefficients
+//  The coefficient set is used in one path and the same coefficients
 //   are used time reversed in the other. This results in the net effect
 //   of +/- 90 degrees as in the usual hilbert application.
 //
@@ -26,7 +26,7 @@
 // and compensating delay but fascinating none the less.
 //
 // This program is for the scilab language a very powerful free math
-// package similar to Matlab with infinitely better price/performace.
+// package similar to Matlab with infinitely better price/performance.
 //
 // compute the prototype lowpass fir
 // length is 255 (odd) for the same symmetry reasons as the hilbert transformer

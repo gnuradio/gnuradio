@@ -66,7 +66,7 @@ namespace gr {
 
 //        d_msgrecv_rpc(alias(), "messages_recieved",  &d_msgrecv,
 //                      pmt::mp(0), pmt::mp(65536), pmt::mp(0),
-//                      "messages", "Asynch Messages Recieved",
+//                      "messages", "Asynch Messages Received",
 //                      RPC_PRIVLVL_MIN, DISPTIME | DISPOPTSTRIP),
 //        d_msgsent_rpc(alias(), "messages_sent",  &d_msgsent,
 //                      pmt::mp(0), pmt::mp(65536), pmt::mp(0),

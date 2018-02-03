@@ -221,7 +221,7 @@ int CODEC2_WIN32SUPPORT codec2_samples_per_frame(struct CODEC2 *c2) {
     if  (c2->mode == CODEC2_MODE_1200)
 	return 320;
 
-    return 0; /* shouldnt get here */
+    return 0; /* shouldn't get here */
 }
 
 void CODEC2_WIN32SUPPORT codec2_encode(struct CODEC2 *c2, unsigned char *bits, short speech[])

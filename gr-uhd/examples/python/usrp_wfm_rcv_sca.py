@@ -37,7 +37,7 @@ displayed on the Post FM Demod FFT if present.
 
 The range below 67 kHz is used for SCA only when Stereo is not used.
 
-The SCA recieve range is not as far as the main FM carrier receive range
+The SCA receive range is not as far as the main FM carrier receive range
 so tune in strong local stations first.
 
 I tried to comment the code with the various parameters.  There seems to

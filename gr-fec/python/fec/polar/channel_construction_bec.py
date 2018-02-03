@@ -27,7 +27,7 @@ def bec_channel(eta):
     binary erasure channel (BEC)
     for each y e Y
     W(y|0) * W(y|1) = 0 or W(y|0) = W(y|1)
-    transistions are 1 -> 1 or 0 -> 0 or {0, 1} -> ? (erased symbol)
+    transitions are 1 -> 1 or 0 -> 0 or {0, 1} -> ? (erased symbol)
     '''
     # looks like BSC but should be interpreted differently.
     w = np.array((1 - eta, eta, 1 - eta), dtype=float)

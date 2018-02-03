@@ -80,7 +80,7 @@
   AUTHOR......: David Rowe
   DATE CREATED: 24/2/93
 
-  This function evalutes a series of chebyshev polynomials
+  This function evaluates a series of chebyshev polynomials
 
   FIXME: performing memory allocation at run time is very inefficient,
   replace with stack variables of MAX_P size.

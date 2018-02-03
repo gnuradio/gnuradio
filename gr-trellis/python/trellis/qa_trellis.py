@@ -77,7 +77,7 @@ class test_trellis (gr_unittest.TestCase):
             noise = 0.1
             tb = trellis_tb(constellation, fsms, noise)
             tb.run()
-            # Make sure all packets succesfully transmitted.
+            # Make sure all packets successfully transmitted.
             self.assertEqual(tb.dst.ntotal(), tb.dst.nright())
 
 

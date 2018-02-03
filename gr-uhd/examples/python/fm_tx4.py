@@ -189,7 +189,7 @@ class fm_tx_block(stdgui2.std_top_block):
         tune as close to the desired frequency as it can.  Then we use
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.  Finally, we feed
-        any residual_freq to the s/w freq translater.
+        any residual_freq to the s/w freq translator.
         """
 
         r = self.u.set_center_freq(target_freq, 0)

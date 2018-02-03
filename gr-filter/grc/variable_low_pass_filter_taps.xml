@@ -70,6 +70,6 @@ self.$(id) = $(id) = firdes.low_pass($gain, $samp_rate, $cutoff_freq, $width, $w
   <doc>
     This variable is a convenience wrapper around a call to firdes.low_pass(...).
 
-    The beta paramater only applies to the Kaiser window.
+    The beta parameter only applies to the Kaiser window.
   </doc>
 </block>

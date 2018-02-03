@@ -558,7 +558,7 @@ int main(int argc, char *argv[])
 #endif
 
 	    /* experimenting with non-linear LSP spacing to see if
-	       it's just noticable */
+	       it's just noticeable */
 
 	    if (lspjnd) {
 		for(i=0; i<LPC_ORD; i++)
