@@ -44,7 +44,7 @@ namespace gr {
       //! \return the number of 1s in the four bytes of an input unsigned integer
       unsigned char cvsd_bitwise_sum(unsigned int input);
 
-      // Members variables related to the CVSD encoder use to update interal reference value
+      // Members variables related to the CVSD encoder use to update internal reference value
       short d_min_step;
       short d_max_step;
       double d_step_decay;

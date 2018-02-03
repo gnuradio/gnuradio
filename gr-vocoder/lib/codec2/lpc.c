@@ -225,7 +225,7 @@ void inverse_filter(
  The synthesis filter has memory as well, this is treated in the same way
  as the memory for the inverse filter (see inverse_filter() notes above).
  The difference is that the memory for the synthesis filter is stored in
- the output array, wheras the memory of the inverse filter is stored in the
+ the output array, whereas the memory of the inverse filter is stored in the
  input array.
 
  Note: the calling function must update the filter memory.

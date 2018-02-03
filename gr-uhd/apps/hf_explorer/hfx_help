@@ -76,9 +76,9 @@
         to rapidly switch to the center of that band. To change a band,
         type the frequency in Hz into the box under "Center Frequency",
         then press "Set" on the left, then the button you want to
-        program. From then on (untill the program is exited) pushing
+        program. From then on (until the program is exited) pushing
         that button takes you to that band.  To make a band button
-        permenant edit the hfx.py script with whatever frequency you
+        permanent edit the hfx.py script with whatever frequency you
         want assigned to what button.
 
 
@@ -101,7 +101,7 @@
  Volume:
 
 	Move the volume slider with the mouse, or push the Powermate knob
-	untill the volume button is active, or click on the volume button,
+	until the volume button is active, or click on the volume button,
 	then turn the knob. Volume can also be set by web control if web
 	control is setup and enabled.
 
@@ -169,7 +169,7 @@
 
 	There is a provision for outputting un-demodulated complex
 	through the audio out in stereo for use with Digital Radio
-	Mondial (DRM) or using a seperate demodulation program like
+	Mondial (DRM) or using a separate demodulation program like
 	SDRadio (by I2PHD).
 	Set IF_OUTPUT to True in weaver_isb_am1_usrp4.py.
 

@@ -157,7 +157,7 @@ with added argument to set the out-of-band attenuation (in dB).
 \li gr::filter::firdes::root_raised_cosine: creates a root raised
 cosine (RRC) pulse shaping filter.
 
-\li gr::filter::firdes::guassian: creates a Gaussian pulse shaping
+\li gr::filter::firdes::gaussian: creates a Gaussian pulse shaping
 filter.
 
 \li gr::filter::firdes::window: Returns the window function for the

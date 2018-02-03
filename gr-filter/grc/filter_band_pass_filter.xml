@@ -161,6 +161,6 @@ This filter is a convenience wrapper for an fir filter and a firdes taps generat
 
 Sample rate, cutoff frequency, and transition width are in Hertz.
 
-The beta paramater only applies to the Kaiser window.
+The beta parameter only applies to the Kaiser window.
 	</doc>
 </block>

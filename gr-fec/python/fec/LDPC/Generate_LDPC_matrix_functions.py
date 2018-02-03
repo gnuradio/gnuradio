@@ -55,7 +55,7 @@ def read_alist_file(filename):
 def write_alist_file(filename, H, verbose=0):
   """
   This function writes an alist file for the parity check
-  matrix. The format of alist files is desribed at:
+  matrix. The format of alist files is described at:
   http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
   """
 

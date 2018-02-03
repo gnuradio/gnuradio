@@ -541,7 +541,7 @@ static void top_amp(struct PEXP *pexp, MODEL *model, int start, int end, int n_h
 	    removed++;
 	}
 	else {
-	    /* need to make this work thru budget of bits */
+	    /* need to make this work through budget of bits */
 	    quant_phase(&model->phi[i], -PI, PI, 3);
 	    not_removed++;
 	}

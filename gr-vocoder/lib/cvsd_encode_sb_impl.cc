@@ -129,7 +129,7 @@ namespace gr {
 	// Update Accum (i.e. the reference value)
 	if(output_bit) {
 	  d_accum=d_accum+d_stepsize;
-	  //printf("Addding %d to the accum; the result is: %d.\n", d_stepsize, d_accum);
+	  //printf("Adding %d to the accum; the result is: %d.\n", d_stepsize, d_accum);
 	}
 	else {
 	  d_accum=d_accum-d_stepsize;
@@ -165,7 +165,7 @@ namespace gr {
 	// Runner is a shift-register; shift left, add on newest output bit
 	d_runner = (d_runner<<1) | ((unsigned int) output_bit);
 
-	// Update the ouput type; shift left, add on newest output bit
+	// Update the output type; shift left, add on newest output bit
 	// If you have put in 8 bits, output it as a byte
 	output_byte = (output_byte<<1) | output_bit;
 	bit_count++;

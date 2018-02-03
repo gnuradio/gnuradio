@@ -297,7 +297,7 @@ def lporder (freq1, freq2, delta_p, delta_s):
     deviation (ripple), delta_s is the stopband deviation (ripple).
 
     Note, this works for high pass filters too (freq1 > freq2), but
-    doesnt work well if the transition is near f == 0 or f == fs/2
+    doesn't work well if the transition is near f == 0 or f == fs/2
 
     From Herrmann et al (1973), Practical design rules for optimum
     finite impulse response filters.  Bell System Technical J., 52, 769-99

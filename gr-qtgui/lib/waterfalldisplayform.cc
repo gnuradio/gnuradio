@@ -358,7 +358,7 @@ void
 WaterfallDisplayForm::setUpdateTime(double t)
 {
    d_update_time = t;
-   // Assume times are equal unless explictly told by setTimePerFFT()
+   // Assume times are equal unless explicitly told by setTimePerFFT()
    // This is the case when plotting using gr_spectrogram_plot
    d_time_per_fft = t;
 }
