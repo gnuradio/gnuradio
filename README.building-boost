@@ -6,14 +6,20 @@ If running a distribution that requires boost 1.35 (or later) be built
 from scratch, these instructions explain how to do so, and in a way
 that allows it to peacefully coexist with earlier versions of boost.
 
-There are two recommended methods:
-Installing boost using the PyBOMBS utility, or building it from a source
-tarball.
+Notice that this is **not** the usual case. If you're using a Linux distribution
+shipping a boost version prior to 1.35, you should very strongly consider just
+updating to a more recent version. Even CentOS / RedHat 6.9 ship sufficiently
+recent versions. Distributions older than that are generally considered to be
+end-of-life.
+
+There are two recommended methods (aside from the far more recommended method of
+upgrading your system): Installing boost using the PyBOMBS utility, or building
+it from a source tarball.
 
 1. Installing Boost using PyBOMBS
 ---------------------------------
 
-Following http://gnuradio.org/redmine/projects/pybombs/wiki/Using you can
+You can
 install a recent boost by downloading and executing the PyBOMBS utility:
 
 # go to a directory you have write access to

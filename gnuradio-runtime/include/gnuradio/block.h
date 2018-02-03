@@ -240,13 +240,19 @@ namespace gr {
     /*!
      * \brief Tell the scheduler \p how_many_items of input stream \p
      * which_input were consumed.
-     * This function should be called at the end of work() or general_work(), after all processing is finished.
+     *
+     * This function should be used in general_work() to tell the scheduler the
+     * number of input items processed. Calling consume() multiple times in the
+     * same general_work() call is safe. Every invocation of consume() updates
+     * the values returned by nitems_read().
      */
     void consume(int which_input, int how_many_items);
 
     /*!
      * \brief Tell the scheduler \p how_many_items were consumed on
      * each input stream.
+     *
+     * Also see notes on consume().
      */
     void consume_each(int how_many_items);
 
@@ -254,8 +260,12 @@ namespace gr {
      * \brief Tell the scheduler \p how_many_items were produced on
      * output stream \p which_output.
      *
-     * If the block's general_work method calls produce, \p
-     * general_work must return WORK_CALLED_PRODUCE.
+     * This function should be used in general_work() to tell the scheduler the
+     * number of output items produced. If produce() is called in
+     * general_work(), general_work() must return \p WORK_CALLED_PRODUCE.
+     * Calling produce() multiple times in the same general_work() call is safe.
+     * Every invocation of produce() updates the values returned by
+     * nitems_written().
      */
     void produce(int which_output, int how_many_items);
 

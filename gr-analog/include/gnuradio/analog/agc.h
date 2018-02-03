@@ -25,7 +25,7 @@
 
 #include <gnuradio/analog/api.h>
 #include <gnuradio/gr_complex.h>
-#include <math.h>
+#include <cmath>
 
 namespace gr {
   namespace analog {
@@ -70,7 +70,7 @@ namespace gr {
 	{
 	  gr_complex output = input * _gain;
 
-	  _gain +=  _rate * (_reference - sqrt(output.real()*output.real() +
+	  _gain +=  _rate * (_reference - std::sqrt(output.real()*output.real() +
 					       output.imag()*output.imag()));
 	  if(_max_gain > 0.0 && _gain > _max_gain) {
 	    _gain = _max_gain;

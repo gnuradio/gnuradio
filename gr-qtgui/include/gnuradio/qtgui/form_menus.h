@@ -698,9 +698,9 @@ public:
   QAction * getActionFromSize(int size)
   {
     float ipt;
-    float which = logf(static_cast<float>(size))/logf(2.0) - 5;
+    float which = std::log(static_cast<float>(size))/std::log(2.0f) - 5;
     // If we're a predefined value
-    if(modff(which,&ipt) == 0) {
+    if(std::modf(which,&ipt) == 0) {
       if(which < d_act.size()-1)
         return d_act[static_cast<int>(which)];
       else

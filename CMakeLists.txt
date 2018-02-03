@@ -410,7 +410,7 @@ endif()
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
   include(CodeCoverage)
-  setup_target_for_coverage(coverage "ctest" coverage)
+  setup_target_for_coverage(coverage "ctest || exit 0" coverage)
 endif()
 
 

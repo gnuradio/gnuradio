@@ -349,12 +349,12 @@ import numpy
 #if $blocktype == 'source'
 #set $inputsig = 'None'
 #else
-#set $inputsig = '[<+numpy.float+>]'
+#set $inputsig = '[<+numpy.float32+>]'
 #end if
 #if $blocktype == 'sink'
 #set $outputsig = 'None'
 #else
-#set $outputsig = '[<+numpy.float+>]'
+#set $outputsig = '[<+numpy.float32+>]'
 #end if
 #else
 #if $blocktype == 'source'
