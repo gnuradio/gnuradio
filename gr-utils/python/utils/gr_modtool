@@ -25,7 +25,7 @@ from gnuradio.modtool import *
 
 
 def setup_parser():
-    modules = get_modtool_modules(globals().values())
+    modules = get_modtool_modules(ModTool.__subclasses__())
     parser = ModTool.get_parser()
     subparsers = parser.add_subparsers(title="Commands")
     epilog = []
