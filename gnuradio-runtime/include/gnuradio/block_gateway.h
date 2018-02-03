@@ -70,13 +70,13 @@ namespace gr {
 
     int general_work_args_noutput_items;
     std::vector<int> general_work_args_ninput_items;
-    std::vector<void *> general_work_args_input_items; //TODO this should be const void*, but swig cant int cast it right
+    std::vector<void *> general_work_args_input_items; //TODO this should be const void*, but swig can't int cast it right
     std::vector<void *> general_work_args_output_items;
     int general_work_args_return_value;
 
     int work_args_ninput_items;
     int work_args_noutput_items;
-    std::vector<void *> work_args_input_items; //TODO this should be const void*, but swig cant int cast it right
+    std::vector<void *> work_args_input_items; //TODO this should be const void*, but swig can't int cast it right
     std::vector<void *> work_args_output_items;
     int work_args_return_value;
 

@@ -68,7 +68,7 @@ class qa_ofdm_sync_sc_cfb (gr_unittest.TestCase):
         self.assertEqual(numpy.sum(sig2_detect), 1)
 
     def test_002_freq (self):
-        """ Add a fine frequency offset and see if that get's detected properly """
+        """ Add a fine frequency offset and see if that gets detected properly """
         fft_len = 32
         cp_len = 4
         # This frequency offset is normalized to rads, i.e. \pi == f_s/2

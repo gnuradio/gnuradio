@@ -56,7 +56,7 @@ if(ENABLE_GR_ANALOG)
 ########################################################################
 add_subdirectory(include/gnuradio/analog)
 add_subdirectory(lib)
-add_subdirectory(doc)
+add_subdirectory(docs)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/analog)

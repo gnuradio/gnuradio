@@ -46,7 +46,7 @@ def pointer_to_ndarray(addr, dtype, nitems):
 ########################################################################
 class gateway_handler(gr.feval_ll):
 
-    #dont put a constructor, it wont work
+    #don't put a constructor, it won't work
 
     def init(self, callback):
         self._callback = callback
@@ -64,7 +64,7 @@ class gateway_handler(gr.feval_ll):
 ########################################################################
 class msg_handler(gr.feval_p):
 
-    #dont put a constructor, it wont work
+    #don't put a constructor, it won't work
 
     def init(self, callback):
         self._callback = callback

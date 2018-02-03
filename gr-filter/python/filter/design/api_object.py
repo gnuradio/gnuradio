@@ -21,7 +21,7 @@
 class ApiObject():
     '''
         Filter count variable if the filter design tool has to
-        return multiple filter paramters in future
+        return multiple filter parameters in future
         e.g Cascaded Filters
     '''
     def __init__(self, filtcount = 1):

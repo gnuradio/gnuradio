@@ -66,7 +66,7 @@ class odict(DictMixin):
     def insert_before(self, pos_key, key, val):
         """
         Insert the new key, value entry before the entry given by the position key.
-        If the positional key is None, insert at the begining.
+        If the positional key is None, insert at the beginning.
 
         Args:
             pos_key: the positional key

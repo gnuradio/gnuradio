@@ -195,7 +195,7 @@ class gfsk_demod(gr.hier_block2):
             verbose: Print information about modulator? (bool)
             log: Print modualtion data to files? (bool)
 
-        Clock recovery parameters.  These all have reasonble defaults.
+        Clock recovery parameters.  These all have reasonable defaults.
         
         Args:
             gain_mu: controls rate of mu adjustment (float)

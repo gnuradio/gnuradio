@@ -80,7 +80,7 @@ namespace gr {
                 N_BUFFERS*bufsize_samples/d_output_parameters.channelCount);
       }
 
-      // FYI, the buffer indicies are in units of samples.
+      // FYI, the buffer indices are in units of samples.
       d_writer = gr::make_buffer(N_BUFFERS * bufsize_samples, sizeof(sample_t));
       d_reader = gr::buffer_add_reader(d_writer, 0);
     }

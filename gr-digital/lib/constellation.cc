@@ -345,7 +345,7 @@ namespace gr {
         float xim = branchless_clip(sample.imag(), 0.99);
 
         // We normalize the constellation in the ctor, so we know that
-        // the maximum dimenions go from -1 to +1. We can infer the x
+        // the maximum dimensions go from -1 to +1. We can infer the x
         // and y scale directly.
         float scale = d_lut_scale / (2.0f);
 
@@ -967,7 +967,7 @@ namespace gr {
 	ret = 8;
       else if(im >= 2*level && re >= 2*level)
 	ret = 9;
-      else if(im >= 0 && im <= 2*level && re <= 0 && re <= -2*level)
+      else if(im >= 0 && im <= 2*level && re <= 0 && re >= -2*level)
 	ret = 10;
       else if(im >= 0 && im <= 2*level && re >= 0 && re <= 2*level)
 	ret = 11;

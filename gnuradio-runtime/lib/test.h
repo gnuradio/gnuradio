@@ -46,11 +46,11 @@ namespace gr {
    * \brief Test class for testing runtime system (setting up buffers and such.)
    * \ingroup misc
    *
-   * This block does not do any usefull actual data processing. It
+   * This block does not do any useful actual data processing. It
    * just exposes setting all standard block parameters using the
-   * contructor or public methods.
+   * constructor or public methods.
    *
-   * This block can be usefull when testing the runtime system.
+   * This block can be useful when testing the runtime system.
    * You can force this block to have a large history, decimation
    * factor and/or large output_multiple.
    * The runtime system should detect this and create large enough buffers

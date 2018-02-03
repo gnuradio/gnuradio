@@ -32,7 +32,7 @@ class StateCache(object):
         StateCache constructor.
 
         Args:
-            initial_state: the intial state (nested data)
+            initial_state: the initial state (nested data)
         """
         self.states = [None] * STATE_CACHE_SIZE #fill states
         self.current_state_index = 0

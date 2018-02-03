@@ -71,7 +71,7 @@ COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
 REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
 INT_TYPES = tuple(INT_TYPES)
 
-# Updating colors. Using the standard color pallette from:
+# Updating colors. Using the standard color palette from:
 #  http://www.google.com/design/spec/style/color.html#color-color-palette
 # Most are based on the main, primary color standard. Some are within
 # that color's spectrum when it was deemed necessary.

@@ -27,6 +27,7 @@
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/math.h>
 #include <stdexcept>
+#include <complex>
 
 namespace gr {
   namespace digital {
@@ -51,30 +52,30 @@ namespace gr {
       }
 
     protected:
-      virtual gr_complex error(const gr_complex &out) 
+      virtual gr_complex error(const gr_complex &out)
       {
 	// p = E[|z|^2]
 	// q = E[z^2]
 	// m = E[|z|^4]
 	// u = E[kurtosis(z)]
 
-	float nrm = norm(out);
-	gr_complex cnj = conj(out);
-	float epsilon_f = 1e-12;
-	gr_complex epsilon_c = gr_complex(1e-12, 1e-12);
-    
-	d_p = (1-d_alpha_p)*d_p + (d_alpha_p)*nrm + epsilon_f;
-	d_q = (1-d_alpha_q)*d_q + (d_alpha_q)*out*out + epsilon_c;
-	d_m = (1-d_alpha_m)*d_m + (d_alpha_m)*nrm*nrm + epsilon_f;
-	d_u = d_m - 2.0f*(d_p*d_p) - d_q*d_q;
+        float nrm = std::norm(out);
+        gr_complex cnj = std::conj(out);
+        float epsilon_f = 1e-12;
+        gr_complex epsilon_c = gr_complex(1e-12, 1e-12);
 
-	gr_complex F = (1.0f / (d_p*d_p*d_p)) *
-	  (sign(d_u) * (nrm*cnj - 2.0f*d_p*cnj - conj(d_q)*out) -
-	   abs(d_u)*cnj);
+        d_p = (1-d_alpha_p)*d_p + (d_alpha_p)*nrm + epsilon_f;
+        d_q = (1-d_alpha_q)*d_q + (d_alpha_q)*out*out + epsilon_c;
+        d_m = (1-d_alpha_m)*d_m + (d_alpha_m)*nrm*nrm + epsilon_f;
+        d_u = d_m - 2.0f*(d_p*d_p) - d_q*d_q;
 
-	float re = gr::clip(F.real(), 1.0);
-	float im = gr::clip(F.imag(), 1.0);
-	return gr_complex(re, im);
+        gr_complex F = (1.0f / (d_p*d_p*d_p)) *
+          (sign(d_u) * (nrm*cnj - 2.0f*d_p*cnj - std::conj(d_q)*out) -
+           std::abs(d_u)*cnj);
+
+        float re = gr::clip(F.real(), 1.0);
+        float im = gr::clip(F.imag(), 1.0);
+        return gr_complex(re, im);
       }
 
       virtual void update_tap(gr_complex &tap, const gr_complex &in) 

@@ -80,7 +80,7 @@ namespace gr {
                 N_BUFFERS*bufsize_samples/d_input_parameters.channelCount);
       }
 
-      // FYI, the buffer indicies are in units of samples.
+      // FYI, the buffer indices are in units of samples.
       d_writer = gr::make_buffer(N_BUFFERS * bufsize_samples, sizeof(sample_t));
       d_reader = gr::buffer_add_reader(d_writer, 0);
     }
@@ -323,7 +323,7 @@ namespace gr {
 
           // There's no data and we're not allowed to block.
           // (A USRP is most likely controlling the pacing through the pipeline.)
-          // This is an underun.  The scheduler wouldn't have called us if it
+          // This is an underrun.  The scheduler wouldn't have called us if it
           // had anything better to do.  Thus we really need to produce some amount
           // of "fill".
           //

@@ -190,7 +190,7 @@ namespace gr {
       void generate_bch_code();
       // Verify parity on TPS data
       int verify_bch_code(std::deque<char> data);
-      // TPS data processing metods
+      // TPS data processing methods
       int process_tps_data(const gr_complex * in, const int diff_symbo_index);
 
       // Channel estimation methods

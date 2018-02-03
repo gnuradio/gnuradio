@@ -182,7 +182,7 @@ class ModToolRename(ModTool):
         if not os.path.isfile(filename):
             return False
         else:
-            print "In '%s' renaming occurences of '%s' to '%s'" % (filename, old, new)
+            print "In '%s' renaming occurrences of '%s' to '%s'" % (filename, old, new)
 
         cfile = open(filename).read()
         (cfile, nsubs) = re.subn(old, new, cfile)

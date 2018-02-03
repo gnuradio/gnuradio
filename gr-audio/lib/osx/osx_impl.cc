@@ -267,7 +267,7 @@ find_audio_devices
     }
     std::string name_buf(c_name_buf);
 
-    // compare the retreived name with the desired one, if
+    // compare the retrieved name with the desired one, if
     // provided; case insensitive.
 
     if (device_name.length() > 0) {

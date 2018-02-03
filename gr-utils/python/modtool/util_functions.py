@@ -22,6 +22,7 @@
 
 import re
 import sys
+import readline
 
 # None of these must depend on other modtool stuff!
 
@@ -135,3 +136,29 @@ def ask_yes_no(question, default):
         return default
     else:
         return not default
+
+class SequenceCompleter(object):
+    """ A simple completer function wrapper to be used with readline, e.g.
+    option_iterable = ("search", "seek", "destroy")
+    readline.set_completer(SequenceCompleter(option_iterable).completefunc)
+    """
+
+    def __init__(self, sequence):
+        self._seq = sequence
+        self._tmp_matches = []
+
+    def completefunc(self, text, state):
+        if not text and state < len(self._seq):
+            return self._seq[state]
+        if not state:
+            self._tmp_matches = filter(lambda candidate: candidate.startswith(text), self._seq)
+        if state < len(self._tmp_matches):
+            return self._tmp_matches[state]
+
+    def __enter__(self):
+        self._old_completer = readline.get_completer()
+        readline.set_completer(self.completefunc)
+        readline.parse_and_bind("tab: complete")
+
+    def __exit__(self):
+        readline.set_completer(self._old_completer)

@@ -158,7 +158,7 @@ def timeit(tb, iterations):
 
 def format_results(kernel, times):
     '''
-    Convinience function to convert the results of the timeit function
+    Convenience function to convert the results of the timeit function
     into a dictionary.
     '''
     res = dict()

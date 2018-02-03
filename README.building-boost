@@ -6,14 +6,20 @@ If running a distribution that requires boost 1.35 (or later) be built
 from scratch, these instructions explain how to do so, and in a way
 that allows it to peacefully coexist with earlier versions of boost.
 
-There are two recommended methods:
-Installing boost using the PyBOMBS utility, or building it from a source
-tarball.
+Notice that this is **not** the usual case. If you're using a Linux distribution
+shipping a boost version prior to 1.35, you should very strongly consider just
+updating to a more recent version. Even CentOS / RedHat 6.9 ship sufficiently
+recent versions. Distributions older than that are generally considered to be
+end-of-life.
+
+There are two recommended methods (aside from the far more recommended method of
+upgrading your system): Installing boost using the PyBOMBS utility, or building
+it from a source tarball.
 
 1. Installing Boost using PyBOMBS
 ---------------------------------
 
-Following http://gnuradio.org/redmine/projects/pybombs/wiki/Using you can
+You can
 install a recent boost by downloading and executing the PyBOMBS utility:
 
 # go to a directory you have write access to
@@ -25,7 +31,6 @@ The utility will take care of everything from thereon, install it from a
 package source if a recent version is available for your system or build
 it from source if necessary.
 
-
 2. Building Boost from a source tarball
 ---------------------------------------
 
@@ -36,26 +41,24 @@ instructions don't work, check the website www.boost.org for more
 help.
 
 unpack it somewhere
-cd into the resulting directory
+cd (change directory) into the resulting directory
 
 $ cd boost_1_49_0
 
-# Pick a prefix to install it into.  I used /opt/boost_1_49_0
+# Pick a prefix to install it into. I used /opt/boost_1_49_0
 
 $ BOOST_PREFIX=/opt/boost_1_49_0
 
 $ ./bootstrap.sh
 $ sudo ./b2 --prefix=$BOOST_PREFIX --with-thread --with-date_time --with-program_options --with-filesystem --with-system --layout=versioned threading=multi variant=release install
 
-# Done!  That was easy!
+# Done! That was easy!
 
 Note that you don't have to specify each library, which will then
 build all Boost libraries and projects. By specifying only those
 required will just save compilation time.
 
-
 ----------------------------------------------------------------------
-
 
 Installing GNU Radio with new Boost libraries.
 

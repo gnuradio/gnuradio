@@ -185,7 +185,7 @@ endfunction(GR_LIBRARY_FOO)
 #   GR_GEN_TARGET_DEPS(unique_name target_deps <target1> <target2> ...)
 #   ADD_CUSTOM_COMMAND(<the usual args> ${target_deps})
 #
-# Custom command cant depend on targets, but can depend on executables,
+# Custom command can't depend on targets, but can depend on executables,
 # and executables can depend on targets. So this is the process:
 ########################################################################
 function(GR_GEN_TARGET_DEPS name var)
@@ -204,7 +204,7 @@ function(GR_GEN_TARGET_DEPS name var)
     endif(ARGN)
 
     if(CMAKE_CROSSCOMPILING)
-        set(${var} "DEPENDS;${name}" PARENT_SCOPE) #cant call command when cross
+        set(${var} "DEPENDS;${name}" PARENT_SCOPE) #can't call command when cross
     else()
         set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
     endif()

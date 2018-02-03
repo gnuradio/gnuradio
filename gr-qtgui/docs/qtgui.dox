@@ -236,7 +236,7 @@ The QTGUI component also includes a number of widgets that can be used
 to perform live updates of variables through standard QT input
 widgets. Most of the widgets are implemented directly in Python
 through PyQT. However, GNU Radio is introducing more widgets, written
-and therefore available in C++ that also produce messsages. The
+and therefore available in C++ that also produce messages. The
 Python-based widgets only act as variables and so as they are changed,
 any block using those widgets to set parameters has the callback (i.e.,
 set_value()) function's called.

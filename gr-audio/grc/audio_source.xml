@@ -78,7 +78,7 @@
 	<doc>
 Not all sampling rates will be supported by your hardware.
 
-Leave the device name blank to choose deafult audio device. \
+Leave the device name blank to choose default audio device. \
 ALSA users with audio trouble may try setting the device name to plughw:0,0
 
 The audio source can have multiple outputs depending upon your hardware. \
