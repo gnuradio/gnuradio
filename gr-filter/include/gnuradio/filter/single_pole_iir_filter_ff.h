@@ -71,6 +71,8 @@ namespace gr {
       static sptr make(double alpha, unsigned int vlen=1);
 
       virtual void set_taps (double alpha) = 0;
+
+      virtual void reset() = 0;
     };
 
   } /* namespace filter */

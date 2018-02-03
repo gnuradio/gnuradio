@@ -81,6 +81,11 @@ namespace gr {
        * \brief Get number of threads being used.
        */
       virtual int nthreads() const = 0;
+
+      /*!
+       * \brief Reset filter to initial (zero) state.
+       */
+      virtual void reset() = 0;
     };
 
   } /* namespace filter */

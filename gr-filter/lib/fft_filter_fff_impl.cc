@@ -95,6 +95,12 @@ namespace gr {
 	return 0;
     }
 
+    void
+    fft_filter_fff_impl::reset()
+    {
+      d_filter->reset();
+    }
+
     int
     fft_filter_fff_impl::work(int noutput_items,
 			      gr_vector_const_void_star &input_items,

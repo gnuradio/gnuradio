@@ -66,6 +66,22 @@ class test_single_pole_iir_filter(gr_unittest.TestCase):
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual(expected_result, result_data, 3)
 
+    def test_ff_004(self):
+        # Test reset
+        src_data  = (1000, 1000, 1000)
+        src = blocks.vector_source_f(src_data)
+        op = filter.single_pole_iir_filter_ff(0.5)
+        dst = blocks.vector_sink_f()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        op.reset()
+        src.set_data((0, 0))
+        self.tb.run()
+        result_data = dst.data()
+        # Ensure that we have a hard edge instead of smooth
+        expected_result = (500, 750, 875, 0, 0)
+        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 3)
+
     def test_cc_001(self):
         src_data = (0+0j, 1000+1000j, 2000+2000j, 3000+3000j, 4000+4000j, 5000+5000j)
         expected_result = src_data
@@ -107,6 +123,22 @@ class test_single_pole_iir_filter(gr_unittest.TestCase):
         self.tb.run()
         result_data = dst.data()
         self.assertComplexTuplesAlmostEqual(expected_result, result_data, 3)
+
+    def test_cc_004(self):
+        # Test reset
+        src_data = (1000+1000j, 1000+1000j, 1000+1000j)
+        src = blocks.vector_source_c(src_data)
+        op = filter.single_pole_iir_filter_cc(0.5)
+        dst = blocks.vector_sink_c()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
+        op.reset()
+        src.set_data((0+0j, 0+0j))
+        self.tb.run()
+        result_data = dst.data()
+        # Ensure that we have a hard edge instead of smooth
+        expected_result = (500+500j, 750+750j, 875+875j, 0+0j, 0+0j)
+        self.assertComplexTuplesAlmostEqual(expected_result, result_data)
 
 if __name__ == '__main__':
     gr_unittest.run(test_single_pole_iir_filter, "test_single_pole_iir_filter.xml")
