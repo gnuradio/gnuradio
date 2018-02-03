@@ -94,7 +94,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(grc)
     add_subdirectory(examples)
 endif(ENABLE_PYTHON)
-add_subdirectory(doc)
+add_subdirectory(docs)
 
 ########################################################################
 # Create Pkg Config File

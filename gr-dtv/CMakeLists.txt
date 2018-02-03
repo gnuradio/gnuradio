@@ -95,7 +95,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(examples)
     add_subdirectory(apps)
 endif(ENABLE_PYTHON)
-add_subdirectory(doc)
+add_subdirectory(docs)
 
 ########################################################################
 # Create Pkg Config File

@@ -96,7 +96,7 @@ if(ENABLE_PYTHON)
     add_subdirectory(grc)
 endif(ENABLE_PYTHON)
 add_subdirectory(examples)
-add_subdirectory(doc)
+add_subdirectory(docs)
 add_subdirectory(ldpc_alist)
 add_subdirectory(apps)
 
