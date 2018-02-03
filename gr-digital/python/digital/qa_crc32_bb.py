@@ -222,6 +222,36 @@ class qa_crc32_bb (gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(sink1.data(), sink2.data())
 
+    def test_003_crc_equal_unpacked (self):
+        """ Test unpacked operation with packed operation
+        """
+        data = range(35)
+        src = blocks.vector_source_b(data)
+        unpack1 = blocks.repack_bits_bb(8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
+        unpack2 = blocks.repack_bits_bb(8, 1, self.tsb_key, False, gr.GR_LSB_FIRST)
+        crc_unpacked = digital.crc32_bb(False, self.tsb_key, False)
+        crc_packed = digital.crc32_bb(False, self.tsb_key, True)
+        sink1 = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
+        sink2 = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
+
+        self.tb.connect(
+                src,
+                blocks.stream_to_tagged_stream(gr.sizeof_char, 1, len(data), self.tsb_key),
+                crc_packed,
+                unpack1,
+                sink1
+        )
+        self.tb.connect(
+            src,
+            blocks.stream_to_tagged_stream(gr.sizeof_char, 1, len(data), self.tsb_key),
+            unpack2,
+            crc_unpacked,
+            sink2
+        )
+        self.tb.run()
+        self.assertEqual(sink1.data(), sink2.data())
+
+
     def test_008_crc_correct_lentag (self):
         tag_name = "length"
         pack_len = 8
