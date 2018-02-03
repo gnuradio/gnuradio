@@ -46,7 +46,7 @@ qa_fxpt::t0()
      * These are disabled because of some precision issues.
      *
      * Different compilers seem to have different opinions on whether
-     * the calulations are done single or double (or extended)
+     * the calculations are done single or double (or extended)
      * precision.  Any of the answers are fine for our real purpose, but
      * sometimes the answer is off by a few bits at the bottom.
      * Hence, the disabled check.

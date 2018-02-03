@@ -139,7 +139,7 @@ class receive_path(gr.hier_block2):
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to files (CAUTION: lots of data)")
         expert.add_option("", "--chbw-factor", type="float", default=1.0,
-                          help="Channel bandwidth = chbw_factor x signal bandwidth [defaut=%default]")
+                          help="Channel bandwidth = chbw_factor x signal bandwidth [default=%default]")
 
     def _print_verbage(self):
         """

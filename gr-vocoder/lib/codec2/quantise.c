@@ -762,7 +762,7 @@ void force_min_lsp_dist(float lsp[], int lpc_order)
    lpc_post_filter()
 
    Applies a post filter to the LPC synthesis filter power spectrum
-   Pw, which supresses the inter-formant energy.
+   Pw, which suppresses the inter-formant energy.
 
    The algorithm is from p267 (Section 8.6) of "Digital Speech",
    edited by A.M. Kondoz, 1994 published by Wiley and Sons.  Chapter 8
@@ -1003,7 +1003,7 @@ void aks_to_M2(
          just above nulls.  This algorithm does the reverse to
          compensate - raising the amplitudes of spectral peaks, while
          attenuating the null.  This enhances the formants, and
-         supresses the energy between formants. */
+         suppresses the energy between formants. */
 
       if (sim_pf) {
           if (Am > model->A[m])
@@ -1607,7 +1607,7 @@ void bw_expand_lsps2(float lsp[],
 
   Applies a form of Bandwidth Expansion (BW) to a vector of LSPs.
   Listening tests have determined that "quantising" the position of
-  each LSP to the non-linear steps below introduces a "just noticable
+  each LSP to the non-linear steps below introduces a "just noticeable
   difference" in the synthesised speech.
 
   This operation can be used before quantisation to limit the input
@@ -1830,7 +1830,7 @@ void compute_weights2(const float *x, const float *xp, float *w, int ndim)
   both the pitch and energy tend to only change by small amounts
   during voiced speech, however it is important that these changes be
   coded carefully.  During unvoiced speech they both change a lot but
-  the ear is less sensitve to errors so coarser quantisation is OK.
+  the ear is less sensitive to errors so coarser quantisation is OK.
 
   The ear is sensitive to log energy and loq pitch so we quantise in
   these domains.  That way the error measure used to quantise the

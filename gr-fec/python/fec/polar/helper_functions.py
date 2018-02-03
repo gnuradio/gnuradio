@@ -30,7 +30,7 @@ def bsc_channel(p):
     W(0|0) = W(1|1) and W(1|0) = W(0|1)
 
     this function returns a prob's vector for a BSC
-    p denotes an erroneous transistion
+    p denotes an erroneous transition
     '''
     if not (p >= 0.0 and p <= 1.0):
         print "given p is out of range!"

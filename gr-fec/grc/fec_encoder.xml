@@ -85,7 +85,7 @@
   </source>
 
   <doc>
-    This is a GNU Radio adaptor for any FEC encoder following the generic_encoder API in the fec module. Input and output are flexible to accomodate encoders that, say, modulate their encoded results into complex or float types.
+    This is a GNU Radio adaptor for any FEC encoder following the generic_encoder API in the fec module. Input and output are flexible to accommodate encoders that, say, modulate their encoded results into complex or float types.
   </doc>
 
 </block>

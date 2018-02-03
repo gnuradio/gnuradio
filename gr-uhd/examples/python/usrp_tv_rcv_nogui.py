@@ -29,7 +29,7 @@ usrp_rx_cfile.py)
 
 Can also use usrp directly as capture source, but then you need a
 higher decimation factor (64) and thus get a lower horizontal
-resulution.  There is no synchronisation yet. The sync blocks are in
+resolution.  There is no synchronisation yet. The sync blocks are in
 development but not yet in cvs.
 
 """
@@ -58,7 +58,7 @@ class my_top_block(gr.top_block):
         usage=("%prog: [options] output_filename.\nSpecial output_filename" + \
             "\"sdl\" will use video_sink_sdl as realtime output window. " + \
             "You then need to have gr-video-sdl installed.\n" +\
-            "Make sure your input capture file containes interleaved " + \
+            "Make sure your input capture file contains interleaved " + \
             "shorts not complex floats")
         parser = OptionParser(option_class=eng_option, usage=usage)
         parser.add_option("-a", "--args", type="string", default="",

@@ -32,7 +32,7 @@
 # complex samples / sec, then lowpass filters with a cutoff of 3.2MHz
 # and a transition band width of .5MHz.  Center of the tv channels is
 # now at 0 with edges at -3.2MHz and 3.2MHz. This puts the pilot at
-# -3MHz + 309KHz. Next a root raised cosine filter is aplied to match the one
+# -3MHz + 309KHz. Next a root raised cosine filter is applied to match the one
 # in the transmitter and thus reduce ISI. The phased locked loop then locks to
 # the pilot and outputs just the real part of the signal ( as information is
 # not stored in the phase with atsc ), this is then feed to the bit lock
@@ -79,7 +79,7 @@ def graph (args):
 	ilp_coeffs = filter.firdes.low_pass(1, input_rate, 3.2e6, .5e6, filter.firdes.WIN_HAMMING)
 	ilp = filter.interp_fir_filter_ccf(3, ilp_coeffs)
 
-	# Move the center frequency to 5.75MHz ( this wont be needed soon )
+	# Move the center frequency to 5.75MHz ( this won't be needed soon )
 	duc_coeffs = filter.firdes.low_pass ( 1, 19.2e6, 9e6, 1e6, filter.firdes.WIN_HAMMING )
     	duc = filter.freq_xlating_fir_filter_ccf ( 1, duc_coeffs, -5.75e6, 19.2e6 )
 

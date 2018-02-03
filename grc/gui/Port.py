@@ -40,7 +40,7 @@ class Port(_Port, Element):
 
     def __init__(self, block, n, dir):
         """
-        Port contructor.
+        Port constructor.
         Create list of connector coordinates.
         """
         _Port.__init__(self, block, n, dir)

@@ -252,7 +252,7 @@ SpectrumGUIClass::updateWindow(const bool updateDisplayFlag,
 
     //ALL OF THIS SHIT SHOULD BE COMBINED WITH THE FFTSHIFT
     //USE VOLK_32FC_DEINTERLEAVE_64F_X2_A TO GET REAL/IMAG FROM COMPLEX32
-    // Can't do a memcpy since ths is going from float to double data type
+    // Can't do a memcpy since this is going from float to double data type
     if((realTimeDomainData != NULL) && (realTimeDomainDataSize > 0)){
       const float* realTimeDomainDataPtr = realTimeDomainData;
 

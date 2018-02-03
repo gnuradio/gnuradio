@@ -72,8 +72,8 @@ def _prepare_uhd_swig():
         def __init__(self, *args, **kwargs):
             super(stream_args_t, self).__init__(*args)
             for key, val in kwargs.iteritems():
-                #for some reason, i cant assign a list in the constructor
-                #but what i can do is append the elements individually
+                #for some reason, I can't assign a list in the constructor
+                #but what I can do is append the elements individually
                 if key == 'channels':
                     for v in val: self.channels.append(v)
                 elif key == 'args':
@@ -116,7 +116,7 @@ def _prepare_uhd_swig():
                         if len(args) > index: args[index] = cast(args[index])
                         if kwargs.has_key(key): kwargs[key] = cast(kwargs[key])
                     except: pass
-                #dont pass kwargs, it confuses swig, map into args list:
+                #don't pass kwargs, it confuses swig, map into args list:
                 for key in ('device_addr', 'stream_args', 'io_type', 'num_channels', 'msgq'):
                     if kwargs.has_key(key): args.append(kwargs[key])
                 return old_constructor(*args)

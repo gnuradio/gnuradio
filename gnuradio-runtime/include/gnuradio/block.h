@@ -859,7 +859,7 @@ namespace gr {
 	*/
    void notify_msg_neighbors();
 
-   /*! \brief Make sure we dont think we are finished
+   /*! \brief Make sure we don't think we are finished
 	*/
    void clear_finished(){ d_finished = false; }
 

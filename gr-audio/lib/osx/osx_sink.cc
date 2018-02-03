@@ -371,7 +371,7 @@ namespace gr {
 
         // set up a listener for the default output device so that if
         // the device changes, this routine will be called and we can
-        // internally handle this change (if/as necesary)
+        // internally handle this change (if/as necessary)
 
         {
           AudioObjectPropertyAddress property = {
@@ -1002,7 +1002,7 @@ namespace gr {
         This->d_queue_sample_count -= in_number_frames;
       }
 
-      // signal that data is available, if appropraite
+      // signal that data is available, if appropriate
 
       if (This->d_waiting_for_data) {
 #if _OSX_AU_DEBUG_RENDER_

@@ -62,7 +62,7 @@ class tv_rx_block (stdgui2.std_top_block):
         stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         usage="%prog: [options] [input_filename]. \n If you don't specify an input filename the usrp will be used as source\n " \
-              "Make sure your input capture file containes interleaved shorts not complex floats"
+              "Make sure your input capture file contains interleaved shorts not complex floats"
         parser=OptionParser(option_class=eng_option, usage=usage)
         parser.add_option("-a", "--args", type="string", default="",
                           help="UHD device address args [default=%default]")

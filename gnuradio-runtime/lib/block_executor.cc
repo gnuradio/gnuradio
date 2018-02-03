@@ -108,7 +108,7 @@ namespace gr {
       return true;
     case block::TPP_ALL_TO_ALL:
     {
-      // every tag on every input propogates to everyone downstream
+      // every tag on every input propagates to everyone downstream
       std::vector<buffer_sptr> out_buf;
 
       for(int i = 0; i < d->ninputs(); i++) {

@@ -4,7 +4,7 @@
   AUTHOR......: David Rowe
   DATE CREATED: May 2 2013
 
-  Machine dependant functions.
+  Machine dependent functions.
 
 \*---------------------------------------------------------------------------*/
 

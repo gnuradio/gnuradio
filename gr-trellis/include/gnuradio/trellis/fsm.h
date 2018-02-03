@@ -165,7 +165,7 @@ namespace gr {
       fsm(const fsm &FSMo, const fsm &FSMi, bool serial);
 
       /*!
-       * \brief Creates an FSMS representing n stages through the originial FSM (AKA radix-n FSM).
+       * \brief Creates an FSMS representing n stages through the original FSM (AKA radix-n FSM).
        *
        * \param FSM      Original FSMs
        * \param n        Number of stages.

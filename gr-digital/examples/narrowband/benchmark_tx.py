@@ -92,7 +92,7 @@ def main():
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")
     parser.add_option("","--discontinuous", action="store_true", default=False,
-                      help="enable discontinous transmission (bursts of 5 packets)")
+                      help="enable discontinuous transmission (bursts of 5 packets)")
     parser.add_option("","--from-file", default=None,
                       help="use intput file for packet contents")
     parser.add_option("","--to-file", default=None,

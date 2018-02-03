@@ -110,7 +110,7 @@ class test_constellation_receiver(gr_unittest.TestCase):
         for req_correct, tcs in requirements:
             for constellation, differential in tcs:
                 # The constellation_receiver doesn't work for constellations
-                # of multple dimensions (i.e. multiple complex numbers to a
+                # of multiple dimensions (i.e. multiple complex numbers to a
                 # single symbol).
                 # That is not implemented since the receiver has no way of
                 # knowing where the beginning of a symbol is.

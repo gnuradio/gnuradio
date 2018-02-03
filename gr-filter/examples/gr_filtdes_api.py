@@ -30,7 +30,7 @@ returns b,a for IIR filter design
 '''
 filtobj = filter_design.launch(sys.argv)
 
-# Displaying all filter paramters
+# Displaying all filter parameters
 print "Filter Count:", filtobj.get_filtercount()
 print "Filter type:", filtobj.get_restype()
 print "Filter params", filtobj.get_params()

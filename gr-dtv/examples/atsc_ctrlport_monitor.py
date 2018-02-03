@@ -31,7 +31,7 @@ from scipy import fftpack
 If a host is running the ATSC receiver chain with ControlPort
 turned on, this script will connect to the host using the hostname and
 port pair of the ControlPort instance and display metrics of the
-receiver. The ATSC publishes information about the succes of the
+receiver. The ATSC publishes information about the success of the
 Reed-Solomon decoder and Viterbi metrics for use here in displaying
 the link quality. This also gets the equalizer taps of the receiver
 and displays the frequency response.

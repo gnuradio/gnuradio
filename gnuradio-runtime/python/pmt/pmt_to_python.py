@@ -91,7 +91,7 @@ def numpy_to_uvector(numpy_array):
         pc = map(mapping[1], numpy.ravel(numpy_array))
         return mapping[0](numpy_array.size, pc)
     except KeyError:
-        raise ValueError("unsupported numpy array dtype for converstion to pmt %s"%(numpy_array.dtype))
+        raise ValueError("unsupported numpy array dtype for conversion to pmt %s"%(numpy_array.dtype))
 
 def uvector_to_numpy(uvector):
 	match = None

@@ -29,7 +29,7 @@ Typically, a packet consists of the following elements:
 - The payload.
 - A checksum, typically a CRC value, to validate the packet contents.
 
-At the transmitter stage, these are modulated and prepared for transmission (a forward error correction code may also be applied). Because the transmitter knows te packet length, is a trivial matter to create the transmit frames using the tagged stream blocks.
+At the transmitter stage, these are modulated and prepared for transmission (a forward error correction code may also be applied). Because the transmitter knows the packet length, is a trivial matter to create the transmit frames using the tagged stream blocks.
 
 The receiver has to perform a multitude of things to obtain the packet again.
 Most importantly, it has to convert an infinite stream (coming from the receiver

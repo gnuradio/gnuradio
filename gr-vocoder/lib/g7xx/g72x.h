@@ -42,7 +42,7 @@
  * used by the G.721/G.723 encoder and decoder to preserve their internal
  * state between successive calls.  The meanings of the majority
  * of the state structure fields are explained in detail in the
- * CCITT Recommendation G.721.  The field names are essentially indentical
+ * CCITT Recommendation G.721.  The field names are essentially identical
  * to variable names in the bit level description of the coding algorithm
  * included in this Recommendation.
  */

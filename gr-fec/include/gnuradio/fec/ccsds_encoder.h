@@ -46,7 +46,7 @@ namespace gr {
        * where we can set the rate, constraint length, and polynomial,
        * see gr::fec::code::cc_encoder.
        *
-       * The encoder is set up wtih a number of bits per frame in the
+       * The encoder is set up with a number of bits per frame in the
        * constructor. When not being used in a tagged stream mode,
        * this encoder will only process frames of the length provided
        * here. If used in a tagged stream block, this setting becomes

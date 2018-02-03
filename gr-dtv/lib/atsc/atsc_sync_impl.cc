@@ -178,8 +178,8 @@ namespace gr {
 
           // If we are locked we can start filling and producing data packets
           // Due to the way we lock the first data packet will almost always be
-          // half full, this is OK becouse the fs_checker will not let packets though
-          // untill a non-corrupted field packet is found
+          // half full, this is OK because the fs_checker will not let packets though
+          // until a non-corrupted field packet is found
           if( d_seg_locked ) {
             d_data_mem[d_symbol_index] = interp_sample;
 

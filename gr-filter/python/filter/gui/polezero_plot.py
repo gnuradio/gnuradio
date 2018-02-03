@@ -336,7 +336,7 @@ class CanvasPicker(Qt.QObject):
         if(self.__selectedPoint != -1):
             xData=delete(xData, self.__selectedPoint)
             yData=delete(yData, self.__selectedPoint)
-        #one less to accomodate previous delete
+        #one less to accommodate previous delete
         if(self.__selectedcPoint != -1):
             xData=delete(xData, self.__selectedcPoint-1)
             yData=delete(yData, self.__selectedcPoint-1)

@@ -238,7 +238,7 @@ void dft_speech(kiss_fft_cfg fft_fwd_cfg, COMP Sw[], float Sn[], float w[])
 
 void two_stage_pitch_refinement(MODEL *model, COMP Sw[])
 {
-  float pmin,pmax,pstep;	/* pitch refinment minimum, maximum and step */
+  float pmin,pmax,pstep;	/* pitch refinement minimum, maximum and step */
 
   /* Coarse refinement */
 
@@ -461,7 +461,7 @@ float est_voicing_mbe(
     /* post processing, helps clean up some voicing errors ------------------*/
 
     /*
-       Determine the ratio of low freqency to high frequency energy,
+       Determine the ratio of low frequency to high frequency energy,
        voiced speech tends to be dominated by low frequency energy,
        unvoiced by high frequency. This measure can be used to
        determine if we have made any gross errors.
@@ -511,7 +511,7 @@ float est_voicing_mbe(
   AUTHOR......: David Rowe
   DATE CREATED: 11/5/94
 
-  Init function that generates the trapezoidal (Parzen) sythesis window.
+  Init function that generates the trapezoidal (Parzen) synthesis window.
 
 \*---------------------------------------------------------------------------*/
 
@@ -545,7 +545,7 @@ void make_synthesis_window(float Pn[])
 
   Synthesise a speech signal in the frequency domain from the
   sinusodal model parameters.  Uses overlap-add with a trapezoidal
-  window to smoothly interpolate betwen frames.
+  window to smoothly interpolate between frames.
 
 \*---------------------------------------------------------------------------*/
 

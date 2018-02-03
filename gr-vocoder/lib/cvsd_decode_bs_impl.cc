@@ -122,7 +122,7 @@ namespace gr {
       // Loop through each input data point
       for(i = 0; i < noutput_items/8.0; i++) {
 	input_byte = in[i];
-	// Initiliaze bit counter
+	// Initialize bit counter
 	bit_count=0;
 
 	while(bit_count<8) {

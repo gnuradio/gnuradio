@@ -81,7 +81,7 @@ def add_common_options(parser):
                       help="Select modulation code from: %s [default=%%default]"
                             % (', '.join(mod_codes.codes),))
     parser.add_option("", "--excess-bw", type="float", default=_def_excess_bw,
-                      help="set RRC excess bandwith factor [default=%default]")
+                      help="set RRC excess bandwidth factor [default=%default]")
 
 
 # /////////////////////////////////////////////////////////////////////////////

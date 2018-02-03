@@ -61,7 +61,7 @@ namespace gr {
          *        handled. If set to True, the encoder's
          *        get_output_conversion returns 'packed_bits', meaning
          *        that the output data of the encoder is packed and
-         *        should be unpacked. Generally handled throug an
+         *        should be unpacked. Generally handled through an
          *        extended encoder interface.
          */
         static generic_encoder::sptr make(int frame_size, bool pack = false,

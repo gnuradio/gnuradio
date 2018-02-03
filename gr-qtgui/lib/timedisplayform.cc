@@ -525,7 +525,7 @@ TimeDisplayForm::getTriggerTagKey() const
 
 
 /********************************************************************
- * Notifcation messages from the control panel
+ * Notification messages from the control panel
  *******************************************************************/
 
 void
