@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -169,5 +169,5 @@ class SequenceCompleter(object):
         readline.set_completer(self.completefunc)
         readline.parse_and_bind("tab: complete")
 
-    def __exit__(self):
+    def __exit__(self, exception_type, exception_value, traceback):
         readline.set_completer(self._old_completer)
