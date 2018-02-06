@@ -31,6 +31,9 @@
 #include <gnuradio/api.h>
 #include <gnuradio/gr_complex.h>
 
+#define M_SQRT2	1.41421356237309504880	/* sqrt(2) */
+#define M_LOG2E	1.4426950408889634074	/* log_2 e */
+
 namespace gr {
 
   static inline bool
