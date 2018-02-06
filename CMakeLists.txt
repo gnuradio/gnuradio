@@ -158,6 +158,7 @@ ENDIF()
 # if cmake version is < 3.1, explicitly set C standard to use.
 IF(${CMAKE_VERSION} VERSION_LESS "3.1")
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c${CMAKE_C_STANDARD}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
 ENDIF()
 
 ########################################################################
@@ -377,19 +378,6 @@ find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})
 GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
     CPPUNIT_FOUND
 )
-
-# check if CppUnit version is 1.14.0 or greater; requires c++11 ...
-
-if(CPPUNIT_FOUND AND NOT "${CPPUNIT_VERSION}" VERSION_LESS "1.14.0")
-    message(WARNING "\nWarning: CppUnit version is ${CPPUNIT_VERSION} which requires C++11 for building. Trying to set CMake internally to use C++11 ...")
-    SET(CMAKE_CXX_STANDARD 11)
-endif()
-
-# if cmake version is < 3.1, explicitly set C++ standard to use.
-
-if(${CMAKE_VERSION} VERSION_LESS "3.1")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
-endif()
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Coverage")
   include(CodeCoverage)
