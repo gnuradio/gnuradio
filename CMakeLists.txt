@@ -135,6 +135,9 @@ ENDIF()
 # set after CppUnit check below). Use the variable CMAKE_CXX_STANDARD
 # since it will actually be used for this purposes starting in CMake 3.1.
 
+SET(CMAKE_C_EXTENSIONS OFF)
+SET(CMAKE_CXX_EXTENSIONS OFF)
+
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     SET(CMAKE_CXX_STANDARD 11)
 ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
