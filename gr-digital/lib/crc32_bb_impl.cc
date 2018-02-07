@@ -40,8 +40,7 @@ namespace gr {
                               io_signature::make(1, 1, sizeof(char)),
                               io_signature::make(1, 1, sizeof(char)),
                               lengthtagname),
-          d_check(check), d_packed(packed),
-          d_npass(0), d_nfail(0) {
+          d_check(check), d_packed(packed){
       d_crc_length = 4;
       if (!d_packed) {
         d_crc_length = 32;
@@ -98,23 +97,23 @@ namespace gr {
       unsigned int crc;
 
       if (d_check) {
+        if (packet_length <= d_crc_length){
+          return 0;
+        }
         d_crc_impl.process_bytes(in, packet_length - d_crc_length);
         crc = calculate_crc32(in, packet_length - d_crc_length);
         if (d_packed) {
           if (crc != *(unsigned int *) (in + packet_length - d_crc_length)) { // Drop package
-            d_nfail++;
             return 0;
           }
         }
         else{
           for(int i=0; i < d_crc_length; i++){
             if(((crc >> i) & 0x1) != *(in + packet_length - d_crc_length + i)) { // Drop package
-              d_nfail++;
               return 0;
             }
           }
         }
-        d_npass++;
         memcpy((void *) out, (const void *) in, packet_length - d_crc_length);
       } else {
         crc = calculate_crc32(in, packet_length);
