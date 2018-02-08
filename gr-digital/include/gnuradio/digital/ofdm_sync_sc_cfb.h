@@ -71,8 +71,13 @@ namespace gr {
        *  \param use_even_carriers If true, the carriers in the sync preamble are occupied such
        *                     that the even carriers are used (0, 2, 4, ...). If you use all
        *                     carriers, that would include the DC carrier, so be careful.
+       *  \param threshold detection threshold. Default is 0.9.
        */
-      static sptr make(int fft_len, int cp_len, bool use_even_carriers=false);
+      static sptr make(int fft_len, int cp_len, bool use_even_carriers=false,
+                       float threshold=0.9);
+
+      virtual void set_threshold(float threshold) = 0;
+      virtual float threshold() const = 0;
     };
 
   } // namespace digital

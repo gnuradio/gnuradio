@@ -27,7 +27,6 @@
 #include <gnuradio/io_signature.h>
 #include "ofdm_sync_sc_cfb_impl.h"
 
-#include <gnuradio/blocks/plateau_detector_fb.h>
 #include <gnuradio/blocks/complex_to_arg.h>
 #include <gnuradio/blocks/complex_to_mag_squared.h>
 #include <gnuradio/blocks/conjugate_cc.h>
@@ -43,12 +42,12 @@ namespace gr {
   namespace digital {
 
     ofdm_sync_sc_cfb::sptr
-    ofdm_sync_sc_cfb::make(int fft_len, int cp_len, bool use_even_carriers)
+    ofdm_sync_sc_cfb::make(int fft_len, int cp_len, bool use_even_carriers, float threshold)
     {
-      return gnuradio::get_initial_sptr (new ofdm_sync_sc_cfb_impl(fft_len, cp_len, use_even_carriers));
+      return gnuradio::get_initial_sptr (new ofdm_sync_sc_cfb_impl(fft_len, cp_len, use_even_carriers, threshold));
     }
 
-    ofdm_sync_sc_cfb_impl::ofdm_sync_sc_cfb_impl(int fft_len, int cp_len, bool use_even_carriers)
+    ofdm_sync_sc_cfb_impl::ofdm_sync_sc_cfb_impl(int fft_len, int cp_len, bool use_even_carriers, float threshold)
 	: hier_block2 ("ofdm_sync_sc_cfb",
 		       io_signature::make(1, 1, sizeof (gr_complex)),
 #ifndef SYNC_ADD_DEBUG_OUTPUT
@@ -72,7 +71,10 @@ namespace gr {
       gr::blocks::complex_to_arg::sptr         peak_to_angle(gr::blocks::complex_to_arg::make());
       gr::blocks::sample_and_hold_ff::sptr     sample_and_hold(gr::blocks::sample_and_hold_ff::make());
 
-      gr::blocks::plateau_detector_fb::sptr    plateau_detector(gr::blocks::plateau_detector_fb::make(cp_len));
+      gr::blocks::plateau_detector_fb::sptr    plateau_detector(gr::blocks::plateau_detector_fb::make(cp_len, threshold));
+
+      // store plateau detector for use in callback setting threshold
+      d_plateau_detector = plateau_detector;
 
       // Delay Path
       connect(self(),               0, delay,                0);
@@ -106,6 +108,15 @@ namespace gr {
     {
     }
 
+    void ofdm_sync_sc_cfb_impl::set_threshold(float threshold)
+    {
+      d_plateau_detector->set_threshold(threshold);
+    }
+
+    float ofdm_sync_sc_cfb_impl::threshold() const
+    {
+      return d_plateau_detector->threshold();
+    }
+
   } /* namespace digital */
 } /* namespace gr */
-
