@@ -155,8 +155,8 @@ class SequenceCompleter(object):
     at exit, thus nestable.
     """
 
-    def __init__(self, sequence=[]):
-        self._seq = sequence
+    def __init__(self, sequence=None):
+        self._seq = sequence or []
         self._tmp_matches = []
 
     def completefunc(self, text, state):
