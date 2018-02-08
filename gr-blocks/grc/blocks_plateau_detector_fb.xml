@@ -4,6 +4,7 @@
   <key>blocks_plateau_detector_fb</key>
   <import>from gnuradio import blocks</import>
   <make>blocks.plateau_detector_fb($max_len, $threshold)</make>
+  <callback>set_threshold($threshold)</callback>
   <param>
     <name>Max. plateau length</name>
     <key>max_len</key>

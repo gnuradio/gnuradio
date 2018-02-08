@@ -86,6 +86,16 @@ namespace gr {
       return i;
     }
 
+    void plateau_detector_fb_impl::set_threshold(float threshold)
+    {
+      d_threshold = threshold;
+    }
+
+    float plateau_detector_fb_impl::threshold() const
+    {
+      return d_threshold;
+    }
+
   } /* namespace blocks */
 } /* namespace gr */
 

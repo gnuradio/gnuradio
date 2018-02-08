@@ -61,6 +61,9 @@ namespace gr {
 	* \param threshold Anything above this value is considered a plateau
 	*/
        static sptr make(int max_len, float threshold=0.9);
+
+       virtual void set_threshold(float threshold) = 0;
+       virtual float threshold() const = 0;
     };
 
   } // namespace blocks
