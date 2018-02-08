@@ -1163,7 +1163,7 @@ equal(const pmt_t& x, const pmt_t& y)
 	       len_x) == 0)
       return true;
 
-    return true;
+    return false;
   }
 
   // FIXME add other cases here...
