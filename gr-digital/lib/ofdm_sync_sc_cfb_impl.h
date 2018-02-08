@@ -24,6 +24,7 @@
 #define INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
 
 #include <gnuradio/digital/ofdm_sync_sc_cfb.h>
+#include <gnuradio/blocks/plateau_detector_fb.h>
 
 namespace gr {
   namespace digital {
@@ -31,8 +32,15 @@ namespace gr {
     class ofdm_sync_sc_cfb_impl : public ofdm_sync_sc_cfb
     {
      public:
-      ofdm_sync_sc_cfb_impl(int fft_len, int cp_len, bool use_even_carriers);
+      ofdm_sync_sc_cfb_impl(int fft_len, int cp_len, bool use_even_carriers, float threshold);
       ~ofdm_sync_sc_cfb_impl();
+
+      virtual void set_threshold(float threshold);
+      virtual float threshold() const;
+
+     private:
+      gr::blocks::plateau_detector_fb::sptr d_plateau_detector;
+
     };
 
   } // namespace digital
