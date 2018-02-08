@@ -101,13 +101,13 @@ namespace gr {
         seek_point = d_length_items - seek_point;
         break;
       default:
-        GR_LOG_WARN(d_logger, "file_source: bad seek mode");
+        GR_LOG_WARN(d_logger, "bad seek mode");
         return 0;
       }
 
       if ((seek_point < (long)d_start_offset_items)
           || (seek_point > (long)(d_start_offset_items+d_length_items-1))) {
-        GR_LOG_WARN(d_logger, "file_source: bad seek point");
+        GR_LOG_WARN(d_logger, "bad seek point");
         return 0;
       }
 
@@ -126,7 +126,7 @@ namespace gr {
 
       // we use "open" to use to the O_LARGEFILE flag
       if((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         throw std::runtime_error("can't open file");
       }
 
@@ -136,7 +136,7 @@ namespace gr {
       }
 
       if((d_new_fp = fdopen (fd, "rb")) == NULL) {
-        perror(filename);
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
         ::close(fd);    // don't leak file descriptor if fdopen fails
         throw std::runtime_error("can't open file");
       }
@@ -148,13 +148,13 @@ namespace gr {
       // Make sure there will be at least one item available
       if ((file_size / d_itemsize) < (start_offset_items+1)) {
         if (start_offset_items) {
-          GR_LOG_WARN(d_logger, "WARNING: file is too small for start offset");
+          GR_LOG_WARN(d_logger, "file is too small for start offset");
         }
         else {
-          GR_LOG_WARN(d_logger, "WARNING: file is too small");
+          GR_LOG_WARN(d_logger, "file is too small");
         }
         fclose(d_new_fp);
-        throw std::runtime_error("file size too small");
+        throw std::runtime_error("file is too small");
       }
 
       size_t items_available = (file_size / d_itemsize - start_offset_items);
@@ -163,14 +163,14 @@ namespace gr {
       if (length_items == 0) {
         length_items = items_available;
         if (file_size % d_itemsize){
-          GR_LOG_WARN(d_logger, "WARNING: File size is not a multiple of item size");
+          GR_LOG_WARN(d_logger, "file size is not a multiple of item size");
         }
       }
 
       // Check specified length. Warn and use available items instead of throwing an exception.
       if (length_items > items_available) {
         length_items = items_available;
-        GR_LOG_WARN(d_logger, "WARNING: File too short, will read fewer than requested items");
+        GR_LOG_WARN(d_logger, "file too short, will read fewer than requested items");
       }
 
       // Rewind to start offset

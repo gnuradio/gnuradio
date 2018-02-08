@@ -61,6 +61,14 @@ class test_file_source(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(self._vector, result_data)
         self.assertEqual(len(snk.tags()), 0)
 
+    def test_file_source_no_such_file(self):
+
+        try:
+            src = blocks.file_source(gr.sizeof_float, "___no_such_file___")
+            self.assertTrue(False)
+        except RuntimeError, e:
+            self.assertTrue(True)
+
     def test_file_source_with_offset(self):
         expected_result = self._vector[100:]
 
