@@ -91,16 +91,16 @@ namespace gr {
     {
       seek_point += d_start_offset_items;
 
-      if (whence == SEEK_SET) {
-        ;
-      }
-      else if (whence == SEEK_CUR) {
+      switch(whence) {
+      case SEEK_SET:
+        break;
+      case SEEK_CUR:
         seek_point += (d_length_items - d_items_remaining);
-      }
-      else if (whence == SEEK_END) {
+        break;
+      case SEEK_END:
         seek_point = d_length_items - seek_point;
-      }
-      else {
+        break;
+      default:
         GR_LOG_WARN(d_logger, "file_source: bad seek mode");
         return 0;
       }
