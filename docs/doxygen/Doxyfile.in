@@ -703,7 +703,8 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = @top_srcdir@ \
+INPUT                  = @top_srcdir@/docs/doxygen/other/ \
+                         @top_srcdir@ \
                          @top_builddir@ \
                          @top_srcdir@/docs/doxygen/other/license.dox
 
@@ -1531,7 +1532,7 @@ USE_PDFLATEX           = NO
 # running if errors occur, instead of asking the user for help.
 # This option is also used when generating formulas in HTML.
 
-LATEX_BATCHMODE        = NO
+LATEX_BATCHMODE        = YES
 
 # If LATEX_HIDE_INDICES is set to YES then doxygen will not
 # include the index chapters (such as File Index, Compound Index, etc.)
