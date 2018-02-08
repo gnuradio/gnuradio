@@ -150,9 +150,12 @@ class SequenceCompleter(object):
     """ A simple completer function wrapper to be used with readline, e.g.
     option_iterable = ("search", "seek", "destroy")
     readline.set_completer(SequenceCompleter(option_iterable).completefunc)
+
+    Typical usage is with the `with` statement. Restores the previous completer
+    at exit, thus nestable.
     """
 
-    def __init__(self, sequence):
+    def __init__(self, sequence=[]):
         self._seq = sequence
         self._tmp_matches = []
 
