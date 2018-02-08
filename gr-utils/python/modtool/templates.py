@@ -494,7 +494,10 @@ ${str_to_python_comment($license)}
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 #if $lang == 'cpp'
-import ${modname}_swig as ${modname}
+try:
+    import ${modname}_swig as ${modname}
+except ImportError:
+    import ${modname} as ${modname}
 #else
 from ${blockname} import ${blockname}
 #end if
@@ -782,4 +785,3 @@ add_executable($basename $filename)
 target_link_libraries($basename gnuradio-$modname \${Boost_LIBRARIES})
 GR_ADD_TEST($basename $basename)
 """
-
