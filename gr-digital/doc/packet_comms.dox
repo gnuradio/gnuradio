@@ -72,16 +72,16 @@ transmitted frame:
   the PDU to tagged stream mode, the \ref gr::blocks::repack_bits_bb
   "Repack Bits block" takes the packed 8-bits/byte data and converts
   this into "chunks" of the number of bits per symbol of the
-  modulation (using the \ref
-  gr::digital::constellation::bits_per_symbol() "bits_per_symbol()"
+  modulation (using the
+  gr::digital::constellation::bits_per_symbol()
   property of the constellation object). We then map these chunks into
   some known mapping function, most often a form of Gray Coding, using
-  the \ref gr::digital::map_bb "Map block" and the constellation object's \ref
-  gr::digital::constellation::pre_diff_code() "pre_diff_code()"
+  the \ref gr::digital::map_bb "Map block" and the constellation object's
+  gr::digital::constellation::pre_diff_code()
   function. We then move these remapped chunks to complex symbols,
-  again as defined by the constellation object through the \ref
-  gr::digital::constellation::points() "points()" function in the
-  \ref gr::digital::chunks_to_symbols_bc "Chunks to Symbols block".
+  again as defined by the constellation object through the
+  gr::digital::constellation::points() function in the
+  gr::digital::chunks_to_symbols_bc block.
 
 - Combine the header and payload. We need to take both the header and
   payload paths back together into a single stream. In packet_tx.grc,
@@ -93,12 +93,12 @@ transmitted frame:
   burst transmission. We apply two blocks to shape the burst
   appropriately.
 
-  First, the \ref gr::digital::burst_shaper_cc "Burst Shaping block"
+  First, the gr::digital::burst_shaper_cc
   handles the structure of the burst by applying two different forms
   of padding. First, there is a window that is applied to the time
   domain of the burst. This involves a ramping up stage from 0 and a
   ramping down stage back to 0. We define a window as a vector, and
-  the \ref gr::fft::window "fft.window" set of window functions is
+  the gr::fft::window set of window functions is
   useful here, such as using a Hann or Kaiser window. The size of the
   window is split in half to apply the left half of the window for the
   ramp-up and the right half of the window for the ramp-down. The
@@ -257,7 +257,7 @@ the transmit processing.
   within the coarse of a single sample, which again provides large OOB
   emissions. We need to shape the bursts properly from here.
 
-- tx_stage5.grc: Adds the \ref gr::digital::burst_shaper_cc "Burst Shaper"
+- tx_stage5.grc: Adds the gr::digital::burst_shaper_cc block
   block. The default parameters are to use a Hann window of 50 symbols
   and to add 10 0's as pre- and post-padding. We can adjust any of
   these values to explore what the output burst looks like. We can
