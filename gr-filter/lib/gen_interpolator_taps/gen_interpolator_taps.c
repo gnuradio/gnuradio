@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002-2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <gsl/gsl_integration.h>
 
 #define	NSTEPS		 10	// how many steps of mu are in the generated table
 #define	MAX_NSTEPS	256
@@ -33,6 +34,7 @@ extern void initpt (double x[], int ntaps);
 extern double objective (double x[], int *ntaps);
 extern double global_mu;
 extern double global_B;
+extern gsl_integration_workspace *global_gsl_int_workspace;
 
 // fortran
 extern double prax2_ (double (fct)(double x[], int *ntaps),
@@ -123,6 +125,13 @@ main (int argc, char **argv)
     exit (1);
   }
 
+  global_gsl_int_workspace = gsl_integration_workspace_alloc(4000);
+  if (global_gsl_int_workspace == NULL) {
+    fprintf (stderr, "%s: unable to allocate GSL integration work space\n",
+             argv[0]);
+    exit (1);
+  }
+
   step_size = 1.0/nsteps;
 
   // the optimizer chokes on the two easy cases (0/N and N/N).  We do them by hand...
@@ -151,6 +160,8 @@ main (int argc, char **argv)
       fprintf (stderr, "Objective: %g\n", result);
     }
   }
+
+  gsl_integration_workspace_free(global_gsl_int_workspace);
 
   // now compute remaining values via symmetry
 
