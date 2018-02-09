@@ -1,6 +1,6 @@
 /* -*- c -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002-2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,7 +26,7 @@
 
 #include <math.h>
 #include <assert.h>
-#include "simpson.h"
+#include <gsl/gsl_integration.h>
 
 #define	MU	0.5			/* the MU for which we're computing coeffs */
 
@@ -39,6 +39,8 @@ static double  *global_h;
 double		global_mu = MU;
 double		global_B  = B;
 
+gsl_integration_workspace *global_gsl_int_workspace = NULL;
+
 /*
  * This function computes the difference squared between the ideal
  * interpolator frequency response at frequency OMEGA and the
@@ -49,7 +51,7 @@ double		global_B  = B;
  */
 
 static double
-integrand (double omega)
+integrand (double omega, void *params)
 {
   double real_ideal;
   double real_approx;
@@ -89,10 +91,19 @@ integrand (double omega)
 double
 c_fcn (double *x, int n)
 {
+  gsl_function F;
+  double result, error;
+
+  F.function = integrand;
+  F.params = NULL;
+
   assert ((n & 1) == 0);	/* assert n is even */
   global_n = n;
   global_h = x;
-  return qsimp (integrand, -2 * M_PI * global_B, 2 * M_PI * global_B);
+  gsl_integration_qag(&F, -2 * M_PI * global_B, 2 * M_PI * global_B,
+                      0.0, 1e-12, 1000, GSL_INTEG_GAUSS61,
+                      global_gsl_int_workspace, &result, &error);
+  return result;
 }
 
 /* this is the interface expected by the calling fortran code */

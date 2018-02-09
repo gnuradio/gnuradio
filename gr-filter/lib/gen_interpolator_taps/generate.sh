@@ -31,12 +31,12 @@ gfortran -o gen_interp_differentiator_taps \
 ./gen_interp_differentiator_taps -n 128 -t 8 -B 0.25 \
         > interp_differentiator_taps.h
 
-gcc      -c -o simpson.o               simpson.c
 gcc      -c -o objective_fct.o         objective_fct.c
 gcc      -c -o gen_interpolator_taps.o gen_interpolator_taps.c
 
 gfortran -o gen_interpolator_taps \
-        gen_interpolator_taps.o praxis.o objective_fct.o simpson.o
+        gen_interpolator_taps.o praxis.o objective_fct.o \
+        -lgsl -lgslcblas
 
 ./gen_interpolator_taps -n 128 -t 8 -B 0.25 \
         > interpolator_taps.h
