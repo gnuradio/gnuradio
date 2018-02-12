@@ -1,5 +1,5 @@
 #
-# Copyright 2003-2012 Free Software Foundation, Inc.
+# Copyright 2003-2012, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -44,7 +44,7 @@ from exceptions import *
 from top_block import *
 from hier_block2 import *
 from tag_utils import *
-from gateway import basic_block, sync_block, decim_block, interp_block
+from gateway import basic_block, sync_block, decim_block, interp_block, py_io_signature
 
 # Force the preference database to be initialized
 prefs = prefs.singleton

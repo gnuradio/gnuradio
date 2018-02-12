@@ -1,5 +1,5 @@
 #
-# Copyright 2011-2012 Free Software Foundation, Inc.
+# Copyright 2011-2012, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -78,35 +78,61 @@ class msg_handler(gr.feval_p):
         return 0
 
 ########################################################################
+# io_signature for Python
+########################################################################
+class py_io_signature(object):
+
+    # Minimum and maximum number of ports, and a list of numpy types.
+    def __init__(self, min_ports, max_ports, type_list):
+        self.__min_ports = min_ports
+        self.__max_ports = max_ports
+        self.__types = map(numpy.dtype, type_list)
+
+    # Make/return a gr.io_signature. A non-empty list of sizes is
+    # required, even if there are no ports.
+    def gr_io_signature(self):
+        return io_signaturev(self.__min_ports, self.__max_ports,
+                             [t.itemsize for t in self.__types] or [0])
+
+    # Return data types for the first nports ports. If nports is
+    # smaller than the provided type list, return a truncated list. If
+    # larger, fill with the last type.
+    def port_types(self, nports):
+        ntypes = len(self.__types)
+        if ntypes == 0:
+            return []
+        if nports <= ntypes:
+            return self.__types[:nports]
+        return self.__types + [self.__types[-1]]*(nports-ntypes)
+
+########################################################################
 # The guts that make this into a gr block
 ########################################################################
 class gateway_block(object):
 
     def __init__(self, name, in_sig, out_sig, work_type, factor):
 
-        #ensure that the sigs are iterable dtypes
-        def sig_to_dtype_sig(sig):
-            if sig is None: sig = ()
-            return map(numpy.dtype, sig)
-        self.__in_sig = sig_to_dtype_sig(in_sig)
-        self.__out_sig = sig_to_dtype_sig(out_sig)
+        # Normalize the many Python ways of saying 'nothing' to '[]'
+        in_sig = in_sig or []
+        out_sig = out_sig or []
 
-        #cache the ranges to iterate when dispatching work
-        self.__in_indexes = range(len(self.__in_sig))
-        self.__out_indexes = range(len(self.__out_sig))
-
-        #convert the signatures into gr.io_signatures
-        def sig_to_gr_io_sigv(sig):
-            if not len(sig): return io_signature(0, 0, 0)
-            return io_signaturev(len(sig), len(sig), [s.itemsize for s in sig])
-        gr_in_sig = sig_to_gr_io_sigv(self.__in_sig)
-        gr_out_sig = sig_to_gr_io_sigv(self.__out_sig)
+        # Backward compatibility: array of type strings -> py_io_signature
+        if type(in_sig) is py_io_signature:
+            self.__in_sig = in_sig
+        else:
+            self.__in_sig = py_io_signature(len(in_sig), len(in_sig), in_sig)
+        if type(out_sig) is py_io_signature:
+            self.__out_sig = out_sig
+        else:
+            self.__out_sig = py_io_signature(len(out_sig), len(out_sig), out_sig)
 
         #create internal gateway block
         self.__handler = gateway_handler()
         self.__handler.init(self.__gr_block_handle)
         self.__gateway = block_gateway(
-            self.__handler, name, gr_in_sig, gr_out_sig, work_type, factor)
+            self.__handler, name,
+            self.__in_sig.gr_io_signature(), self.__out_sig.gr_io_signature(),
+            work_type, factor)
         self.__message = self.__gateway.block_message()
 
         #dict to keep references to all message handlers
@@ -128,36 +154,47 @@ class gateway_block(object):
         """
         Dispatch tasks according to the action type specified in the message.
         """
+
         if self.__message.action == gr.block_gw_message_type.ACTION_GENERAL_WORK:
+            # Actual number of inputs/output from scheduler
+            ninputs = len(self.__message.general_work_args_input_items)
+            noutputs = len(self.__message.general_work_args_output_items)
+            in_types = self.__in_sig.port_types(ninputs)
+            out_types = self.__out_sig.port_types(noutputs)
             self.__message.general_work_args_return_value = self.general_work(
 
                 input_items=[pointer_to_ndarray(
                     self.__message.general_work_args_input_items[i],
-                    self.__in_sig[i],
+                    in_types[i],
                     self.__message.general_work_args_ninput_items[i]
-                ) for i in self.__in_indexes],
+                ) for i in xrange(ninputs)],
 
                 output_items=[pointer_to_ndarray(
                     self.__message.general_work_args_output_items[i],
-                    self.__out_sig[i],
+                    out_types[i],
                     self.__message.general_work_args_noutput_items
-                ) for i in self.__out_indexes],
+                ) for i in xrange(noutputs)],
             )
 
         elif self.__message.action == gr.block_gw_message_type.ACTION_WORK:
+            # Actual number of inputs/output from scheduler
+            ninputs = len(self.__message.work_args_input_items)
+            noutputs = len(self.__message.work_args_output_items)
+            in_types = self.__in_sig.port_types(ninputs)
+            out_types = self.__out_sig.port_types(noutputs)
             self.__message.work_args_return_value = self.work(
 
                 input_items=[pointer_to_ndarray(
                     self.__message.work_args_input_items[i],
-                    self.__in_sig[i],
+                    in_types[i],
                     self.__message.work_args_ninput_items
-                ) for i in self.__in_indexes],
+                ) for i in xrange(ninputs)],
 
                 output_items=[pointer_to_ndarray(
                     self.__message.work_args_output_items[i],
-                    self.__out_sig[i],
+                    out_types[i],
                     self.__message.work_args_noutput_items
-                ) for i in self.__out_indexes],
+                ) for i in xrange(noutputs)],
             )
 
         elif self.__message.action == gr.block_gw_message_type.ACTION_FORECAST:
