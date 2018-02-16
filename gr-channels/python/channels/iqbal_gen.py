@@ -30,25 +30,27 @@ class iqbal_gen(gr.hier_block2):
         # Blocks
         ##################################################
         self.mag = blocks.multiply_const_vff((math.pow(10,magnitude/20.0), ))
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((math.sin(phase*math.pi/180.0), ))
-        self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
-        self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
-        self.blocks_add_xx_0 = blocks.add_vff(1)
+        self.sin_phase = blocks.multiply_const_vff((math.sin(phase*math.pi/180.0), ))
+        self.cos_phase = blocks.multiply_const_vff((math.cos(phase*math.pi/180.0), ))
+        self.f2c = blocks.float_to_complex(1)
+        self.c2f = blocks.complex_to_float(1)
+        self.adder = blocks.add_vff(1)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_float_to_complex_0, 0), (self, 0))
-        self.connect((self, 0), (self.blocks_complex_to_float_0, 0))
-        self.connect((self.blocks_complex_to_float_0, 0), (self.mag, 0))
-        self.connect((self.mag, 0), (self.blocks_float_to_complex_0, 0))
-        self.connect((self.blocks_add_xx_0, 0), (self.blocks_float_to_complex_0, 1))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 0))
-        self.connect((self.blocks_complex_to_float_0, 1), (self.blocks_add_xx_0, 1))
-        self.connect((self.blocks_complex_to_float_0, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self, 0), (self.c2f, 0))
+        self.connect((self.c2f, 0), (self.mag, 0))
+        self.connect((self.mag, 0), (self.cos_phase, 0))
+        self.connect((self.cos_phase, 0), (self.f2c, 0))
+        self.connect((self.mag, 0), (self.sin_phase, 0))
+        self.connect((self.sin_phase, 0), (self.adder, 0))
+        self.connect((self.c2f, 1), (self.adder, 1))
+        self.connect((self.adder, 0), (self.f2c, 1))
+        self.connect((self.f2c, 0), (self, 0))
 
 
-# QT sink close method reimplementation
+    # QT sink close method reimplementation
 
     def get_magnitude(self):
         return self.magnitude
@@ -62,6 +64,7 @@ class iqbal_gen(gr.hier_block2):
 
     def set_phase(self, phase):
         self.phase = phase
-        self.blocks_multiply_const_vxx_0.set_k((math.sin(self.phase*math.pi/180.0), ))
+        self.sin_phase.set_k((math.sin(self.phase*math.pi/180.0), ))
+        self.cos_phase.set_k((math.cos(self.phase*math.pi/180.0), ))
 
 
