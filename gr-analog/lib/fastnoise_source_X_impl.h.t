@@ -38,6 +38,7 @@ namespace gr {
       float d_ampl;
       gr::random d_rng;
       std::vector<@TYPE@> d_samples;
+      uint64_t d_state[2];
 
     public:
       @IMPL_NAME@(noise_type_t type, float ampl, long seed, long samples);
