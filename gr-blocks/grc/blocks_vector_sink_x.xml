@@ -46,9 +46,9 @@
 		<type>int</type>
 	</param>
 	<param>
-		<name>Minimum data items</name>
+		<name>Reserve memory for items</name>
 		<key>reserve_items</key>
-		<value>100</value>
+		<value>1024</value>
 		<type>int</type>
 	</param>
 	<check>$vlen &gt; 0</check>
