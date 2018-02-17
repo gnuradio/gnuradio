@@ -8,7 +8,7 @@
 	<name>Vector Sink</name>
 	<key>blocks_vector_sink_x</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.vector_sink_$(type.fcn)($vlen, $min_items)</make>
+	<make>blocks.vector_sink_$(type.fcn)($vlen, $reserve_items)</make>
 	<param>
 		<name>Input Type</name>
 		<key>type</key>
@@ -47,7 +47,7 @@
 	</param>
 	<param>
 		<name>Minimum data items</name>
-		<key>min_items</key>
+		<key>reserve_items</key>
 		<value>100</value>
 		<type>int</type>
 	</param>
