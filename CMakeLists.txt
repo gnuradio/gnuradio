@@ -38,31 +38,31 @@ include(GrBuildTypes)
 
 # Select the release build type by default to get optimization flags
 if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE "Release")
+   SET(CMAKE_BUILD_TYPE "Release")
    message(STATUS "Build type not specified: defaulting to release.")
 endif(NOT CMAKE_BUILD_TYPE)
 GR_CHECK_BUILD_TYPE(${CMAKE_BUILD_TYPE})
-set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
+SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
-set(VERSION_INFO_MAJOR_VERSION 3)
-set(VERSION_INFO_API_COMPAT    8)
-set(VERSION_INFO_MINOR_VERSION git)
-set(VERSION_INFO_MAINT_VERSION 0)
+SET(VERSION_INFO_MAJOR_VERSION 3)
+SET(VERSION_INFO_API_COMPAT    8)
+SET(VERSION_INFO_MINOR_VERSION git)
+SET(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-set(GR_BOOST_MIN_VERSION "1.54")
-set(GR_SWIG_MIN_VERSION "2.0.11")
-set(GR_CMAKE_MIN_VERSION "2.8.12")
-set(GR_MAKO_MIN_VERSION "0.4.2")
-set(GR_PYTHON_MIN_VERSION "2.7")
-set(GR_PYTHON3_MIN_VERSION "3.4")
-set(GR_CPPUNIT_MIN_VERSION "1.12.1")
-set(GCC_MIN_VERSION "4.8.4")
-set(CLANG_MIN_VERSION "3.4.0")
-set(APPLECLANG_MIN_VERSION "500")
+SET(GR_BOOST_MIN_VERSION "1.54")
+SET(GR_SWIG_MIN_VERSION "2.0.11")
+SET(GR_CMAKE_MIN_VERSION "2.8.12")
+SET(GR_MAKO_MIN_VERSION "0.4.2")
+SET(GR_PYTHON_MIN_VERSION "2.7")
+SET(GR_PYTHON3_MIN_VERSION "3.4")
+SET(GR_CPPUNIT_MIN_VERSION "1.12.1")
+SET(GCC_MIN_VERSION "4.8.4")
+SET(CLANG_MIN_VERSION "3.4.0")
+SET(APPLECLANG_MIN_VERSION "500")
 
 ########################################################################
 # Configure CMake policies
@@ -180,7 +180,7 @@ if(IMPORT_EXECUTABLES)
 endif(IMPORT_EXECUTABLES)
 
 #set file that the native build will fill with exports
-set(EXPORT_FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
+SET(EXPORT_FILE ${CMAKE_BINARY_DIR}/ImportExecutables.cmake)
 file(WRITE ${EXPORT_FILE}) #blank the file (subdirs will append)
 
 ########################################################################
@@ -231,7 +231,7 @@ endif(WIN32)
 
 # Record Compiler Info for record
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
-set(COMPILER_INFO "")
+SET(COMPILER_INFO "")
 IF(MSVC)
     IF(MSVC90)   #Visual Studio 9
         SET(cmake_c_compiler_version "Microsoft Visual Studio 9.0")
@@ -255,7 +255,7 @@ ELSE()
     execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
             OUTPUT_VARIABLE cmake_cxx_compiler_version)
 ENDIF(MSVC)
-set(COMPILER_INFO "${CMAKE_C_COMPILER}:::${CMAKE_C_FLAGS_${GRCBTU}} ${CMAKE_C_FLAGS}\n${CMAKE_CXX_COMPILER}:::${CMAKE_CXX_FLAGS_${GRCBTU}} ${CMAKE_CXX_FLAGS}\n" )
+SET(COMPILER_INFO "${CMAKE_C_COMPILER}:::${CMAKE_C_FLAGS_${GRCBTU}} ${CMAKE_C_FLAGS}\n${CMAKE_CXX_COMPILER}:::${CMAKE_CXX_FLAGS_${GRCBTU}} ${CMAKE_CXX_FLAGS}\n" )
 
 # Convert to a C string to compile and display properly
 string(STRIP "${cmake_c_compiler_version}" cmake_c_compiler_version)
@@ -271,30 +271,30 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 # Install directories
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
-set(GR_RUNTIME_DIR     bin CACHE PATH "Path to install all binaries")
-set(GR_LIBRARY_DIR     lib${LIB_SUFFIX} CACHE PATH "Path to install libraries")
-set(GR_INCLUDE_DIR     include CACHE PATH "Path to install header files")
-set(GR_DATA_DIR        share CACHE PATH "Base location for data")
-set(GR_PKG_DATA_DIR    ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package data")
-set(GR_DOC_DIR         ${GR_DATA_DIR}/doc CACHE PATH "Path to install documentation")
-set(GR_PKG_DOC_DIR     ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME}-${DOCVER} CACHE PATH "Path to install package docs")
-set(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
-set(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
-set(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
-set(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTGUI themes")
+SET(GR_RUNTIME_DIR     bin CACHE PATH "Path to install all binaries")
+SET(GR_LIBRARY_DIR     lib${LIB_SUFFIX} CACHE PATH "Path to install libraries")
+SET(GR_INCLUDE_DIR     include CACHE PATH "Path to install header files")
+SET(GR_DATA_DIR        share CACHE PATH "Base location for data")
+SET(GR_PKG_DATA_DIR    ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package data")
+SET(GR_DOC_DIR         ${GR_DATA_DIR}/doc CACHE PATH "Path to install documentation")
+SET(GR_PKG_DOC_DIR     ${GR_DOC_DIR}/${CMAKE_PROJECT_NAME}-${DOCVER} CACHE PATH "Path to install package docs")
+SET(GR_LIBEXEC_DIR     libexec CACHE PATH "Path to install libexec files")
+SET(GR_PKG_LIBEXEC_DIR ${GR_LIBEXEC_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package libexec files")
+SET(GRC_BLOCKS_DIR     ${GR_PKG_DATA_DIR}/grc/blocks CACHE PATH "Path to install GRC blocks")
+SET(GR_THEMES_DIR      ${GR_PKG_DATA_DIR}/themes CACHE PATH "Path to install QTGUI themes")
 
 # Set location of config/prefs files in /etc
 # Special exception if prefix is /usr so we don't make a /usr/etc.
-set(GR_CONF_DIR etc CACHE PATH "Path to install config files")
+SET(GR_CONF_DIR etc CACHE PATH "Path to install config files")
 string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr" isusr)
 if(isusr)
-  set(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
+  SET(SYSCONFDIR "/${GR_CONF_DIR}" CACHE PATH "System configuration directory")
 else(isusr)
-  set(SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory" FORCE)
+  SET(SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/${GR_CONF_DIR}" CACHE PATH "System configuration directory" FORCE)
 endif(isusr)
 
-set(GR_PKG_CONF_DIR ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install package configs")
-set(GR_PREFSDIR     ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install preference files")
+SET(GR_PKG_CONF_DIR ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install package configs")
+SET(GR_PREFSDIR     ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}/conf.d CACHE PATH "Path to install preference files")
 
 OPTION(ENABLE_PERFORMANCE_COUNTERS "Enable block performance counters" ON)
 if(ENABLE_PERFORMANCE_COUNTERS)
@@ -324,17 +324,17 @@ file(TO_NATIVE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
 ########################################################################
 if(APPLE)
     if(NOT CMAKE_INSTALL_NAME_DIR)
-        set(CMAKE_INSTALL_NAME_DIR
+        SET(CMAKE_INSTALL_NAME_DIR
             ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR} CACHE
             PATH "Library Install Name Destination Directory" FORCE)
     endif(NOT CMAKE_INSTALL_NAME_DIR)
     if(NOT CMAKE_INSTALL_RPATH)
-        set(CMAKE_INSTALL_RPATH
+        SET(CMAKE_INSTALL_RPATH
             ${CMAKE_INSTALL_PREFIX}/${GR_LIBRARY_DIR} CACHE
             PATH "Library Install RPath" FORCE)
     endif(NOT CMAKE_INSTALL_RPATH)
     if(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
-        set(CMAKE_BUILD_WITH_INSTALL_RPATH ON CACHE
+        SET(CMAKE_BUILD_WITH_INSTALL_RPATH ON CACHE
             BOOL "Do Build Using Library Install RPath" FORCE)
     endif(NOT CMAKE_BUILD_WITH_INSTALL_RPATH)
 endif(APPLE)
@@ -363,10 +363,10 @@ find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
 find_package(SWIG)
 
 if(SWIG_FOUND)
-    set(SWIG_VERSION_CHECK FALSE)
+    SET(SWIG_VERSION_CHECK FALSE)
     if("${SWIG_VERSION}" VERSION_EQUAL ${GR_SWIG_MIN_VERSION} OR
        "${SWIG_VERSION}" VERSION_GREATER ${GR_SWIG_MIN_VERSION})
-        set(SWIG_VERSION_CHECK TRUE)
+        SET(SWIG_VERSION_CHECK TRUE)
     endif()
 endif(SWIG_FOUND)
 
@@ -395,7 +395,7 @@ message(STATUS "")
 message(STATUS "Configuring VOLK support...")
 
 OPTION(ENABLE_INTERNAL_VOLK "Enable internal VOLK only" ON)
-unset(VOLK_FOUND)
+unSET(VOLK_FOUND)
 if(NOT ENABLE_INTERNAL_VOLK)
     find_package(Volk)
     if(NOT VOLK_FOUND)
@@ -429,21 +429,21 @@ if(NOT VOLK_FOUND)
     include(GrComponent)
     GR_REGISTER_COMPONENT("volk" ENABLE_VOLK)
 
-    set(VOLK_INCLUDE_DIRS
+    SET(VOLK_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
         ${CMAKE_CURRENT_BINARY_DIR}/volk/include
     )
 
-    set(VOLK_LIBRARIES volk)
+    SET(VOLK_LIBRARIES volk)
 
-    set(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
-    set(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
+    SET(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+    SET(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
 else()
     message(STATUS "  An external VOLK has been found and will be used for build.")
-    set(ENABLE_VOLK TRUE)
+    SET(ENABLE_VOLK TRUE)
 
     get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
-    set(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
+    SET(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
 endif(NOT VOLK_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
@@ -502,14 +502,14 @@ add_subdirectory(grc)
 
 # Defining GR_CTRLPORT for gnuradio/config.h
 if(ENABLE_GR_CTRLPORT)
-  set(GR_CTRLPORT True)
+  SET(GR_CTRLPORT True)
   add_definitions(-DGR_CTRLPORT)
 
   if(CTRLPORT_BACKENDS GREATER 0)
-    set(GR_RPCSERVER_ENABLED True)
+    SET(GR_RPCSERVER_ENABLED True)
 
     if(THRIFT_FOUND)
-      set(GR_RPCSERVER_THRIFT True)
+      SET(GR_RPCSERVER_THRIFT True)
     endif(THRIFT_FOUND)
   endif(CTRLPORT_BACKENDS GREATER 0)
 endif(ENABLE_GR_CTRLPORT)
@@ -534,7 +534,7 @@ SET(cmake_configs
 )
 
 if(NOT CMAKE_MODULES_DIR)
-  set(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+  SET(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
 endif(NOT CMAKE_MODULES_DIR)
 
 # Install all other cmake files into same directory
