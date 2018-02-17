@@ -81,6 +81,19 @@ class msg_handler(gr.feval_p):
 # io_signature for Python
 ########################################################################
 class py_io_signature(object):
+    """Describes the type/number of ports for block input or output.
+
+    Args:
+
+    min_ports (int): mininum number of connected ports.
+
+    max_ports (int): maximum number of connected ports. -1 indicates
+    no limit.
+
+    type_list (list[str]): numpy type names for each port. If the
+    number of connected ports is greater than the number of types
+    provided, the last type in the list is repeated.
+    """
 
     # Minimum and maximum number of ports, and a list of numpy types.
     def __init__(self, min_ports, max_ports, type_list):
@@ -249,6 +262,17 @@ class gateway_block(object):
 # Wrappers for the user to inherit from
 ########################################################################
 class basic_block(gateway_block):
+    """Args:
+    name (str): block name
+
+    in_sig (gr.py_io_signature): input port signature
+
+    out_sig (gr.py_io_signature): output port signature
+
+    For backward compatibility, a sequence of numpy type names is also
+    accepted as an io signature.
+
+    """
     def __init__(self, name, in_sig, out_sig):
         gateway_block.__init__(self,
             name=name,
@@ -259,6 +283,17 @@ class basic_block(gateway_block):
         )
 
 class sync_block(gateway_block):
+    """
+    Args:
+    name (str): block name
+
+    in_sig (gr.py_io_signature): input port signature
+
+    out_sig (gr.py_io_signature): output port signature
+
+    For backward compatibility, a sequence of numpy type names is also
+    accepted as an io signature.
+    """
     def __init__(self, name, in_sig, out_sig):
         gateway_block.__init__(self,
             name=name,
@@ -269,6 +304,17 @@ class sync_block(gateway_block):
         )
 
 class decim_block(gateway_block):
+    """
+    Args:
+    name (str): block name
+
+    in_sig (gr.py_io_signature): input port signature
+
+    out_sig (gr.py_io_signature): output port signature
+
+    For backward compatibility, a sequence of numpy type names is also
+    accepted as an io signature.
+    """
     def __init__(self, name, in_sig, out_sig, decim):
         gateway_block.__init__(self,
             name=name,
@@ -279,6 +325,17 @@ class decim_block(gateway_block):
         )
 
 class interp_block(gateway_block):
+    """
+    Args:
+    name (str): block name
+
+    in_sig (gr.py_io_signature): input port signature
+
+    out_sig (gr.py_io_signature): output port signature
+
+    For backward compatibility, a sequence of numpy type names is also
+    accepted as an io signature.
+    """
     def __init__(self, name, in_sig, out_sig, interp):
         gateway_block.__init__(self,
             name=name,
