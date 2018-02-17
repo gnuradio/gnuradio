@@ -100,7 +100,7 @@ class py_io_signature(object):
     def port_types(self, nports):
         ntypes = len(self.__types)
         if ntypes == 0:
-            return []
+            return ()
         if nports <= ntypes:
             return self.__types[:nports]
         return self.__types + [self.__types[-1]]*(nports-ntypes)
@@ -112,9 +112,9 @@ class gateway_block(object):
 
     def __init__(self, name, in_sig, out_sig, work_type, factor):
 
-        # Normalize the many Python ways of saying 'nothing' to '[]'
-        in_sig = in_sig or []
-        out_sig = out_sig or []
+        # Normalize the many Python ways of saying 'nothing' to '()'
+        in_sig = in_sig or ()
+        out_sig = out_sig or ()
 
         # Backward compatibility: array of type strings -> py_io_signature
         if type(in_sig) is py_io_signature:
