@@ -167,13 +167,13 @@ class gateway_block(object):
                     self.__message.general_work_args_input_items[i],
                     in_types[i],
                     self.__message.general_work_args_ninput_items[i]
-                ) for i in xrange(ninputs)],
+                ) for i in range(ninputs)],
 
                 output_items=[pointer_to_ndarray(
                     self.__message.general_work_args_output_items[i],
                     out_types[i],
                     self.__message.general_work_args_noutput_items
-                ) for i in xrange(noutputs)],
+                ) for i in range(noutputs)],
             )
 
         elif self.__message.action == gr.block_gw_message_type.ACTION_WORK:
@@ -188,13 +188,13 @@ class gateway_block(object):
                     self.__message.work_args_input_items[i],
                     in_types[i],
                     self.__message.work_args_ninput_items
-                ) for i in xrange(ninputs)],
+                ) for i in range(ninputs)],
 
                 output_items=[pointer_to_ndarray(
                     self.__message.work_args_output_items[i],
                     out_types[i],
                     self.__message.work_args_noutput_items
-                ) for i in xrange(noutputs)],
+                ) for i in range(noutputs)],
             )
 
         elif self.__message.action == gr.block_gw_message_type.ACTION_FORECAST:
