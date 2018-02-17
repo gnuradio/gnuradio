@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2010,2013,2017 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2010,2013,2017-2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -36,18 +36,20 @@ namespace gr {
   namespace blocks {
 
     @NAME@::sptr
-    @BASE_NAME@::make(int vlen)
+    @BASE_NAME@::make(const int vlen, const int reserve_items)
     {
       return gnuradio::get_initial_sptr
-        (new @NAME_IMPL@(vlen));
+        (new @NAME_IMPL@(vlen, reserve_items));
     }
 
-    @NAME_IMPL@::@NAME_IMPL@(int vlen)
+    @NAME_IMPL@::@NAME_IMPL@(const int vlen, const int reserve_items)
     : sync_block("@NAME@",
                     io_signature::make(1, 1, sizeof(@TYPE@) * vlen),
                     io_signature::make(0, 0, 0)),
     d_vlen(vlen)
     {
+      gr::thread::scoped_lock guard(d_data_mutex);
+      d_data.reserve(d_vlen * reserve_items);
     }
 
     @NAME_IMPL@::~@NAME_IMPL@()

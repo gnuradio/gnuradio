@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008,2009,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -41,7 +41,16 @@ namespace gr {
       // gr::blocks::@NAME@::sptr
       typedef boost::shared_ptr<@NAME@> sptr;
 
-      static sptr make(int vlen = 1);
+      /*!
+       * \brief Make a new instance of the vector source, and return a shared pointer to it.
+       * \param vlen length of vector items
+       * \param reserve_items reserve space in the internal storage for this many items;
+       *                      the internal storage will still grow to accommodate more item
+       *                      if necessary, but setting this to a realistic value can avoid
+       *                      memory allocations during runtime, especially if you know a
+       *                      priori how many items you're going to store.
+       */
+      static sptr make(const int vlen = 1, const int reserve_items = 1024);
 
       //! Clear the data and tags containers.
       virtual void reset() = 0;
