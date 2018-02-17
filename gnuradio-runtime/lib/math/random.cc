@@ -151,7 +151,7 @@ namespace gr {
   float
   random::impulse(float factor = 5)
   {
-    float z = -M_SQRT2 * logf(ran1());
+    float z = -GR_M_SQRT2 * logf(ran1());
     if(fabsf(z) <= factor)
       return 0.0;
     else

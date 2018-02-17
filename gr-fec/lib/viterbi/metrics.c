@@ -48,10 +48,10 @@
 extern double erf(double x);
 
 /* Normal function integrated from -Inf to x. Range: 0-1 */
-#define	normal(x)	(0.5 + 0.5*erf((x)/M_SQRT2))
+#define	normal(x)	(0.5 + 0.5*erf((x)/GR_M_SQRT2))
 
 /* Logarithm base 2 */
-#define gr_log2(x) (log(x)*M_LOG2E)
+#define gr_log2(x) (log(x)*GR_M_LOG2E)
 
 namespace gr{
   namespace fec{
