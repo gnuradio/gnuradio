@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,13 +21,14 @@
  */
 
 #include <flat_fader_impl.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace channels {
 
     flat_fader_impl::flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, int seed ) :
         seed_1((int)seed),
-        dist_1(-M_PI, M_PI),
+        dist_1(-GR_M_PI, GR_M_PI),
         rv_1( seed_1, dist_1 ), // U(-pi,pi)
 
         seed_2((int)seed+1),
@@ -75,16 +76,16 @@ namespace gr {
         for(int i = 0; i < n_samples; i++){
             gr_complex H(0,0);
             for(int n=1; n<d_N+1; n++){
-                float alpha_n = (2*M_PI*n - M_PI + d_theta)/(4*d_N);
-                d_psi[n] = fmod(d_psi[n] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
-                d_phi[n] = fmod(d_phi[n] + 2*M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*M_PI);
+                float alpha_n = (2*GR_M_PI*n - GR_M_PI + d_theta)/(4*d_N);
+                d_psi[n] = fmod(d_psi[n] + 2*GR_M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*GR_M_PI);
+                d_phi[n] = fmod(d_phi[n] + 2*GR_M_PI*d_fDTs*_GRFASTCOS(alpha_n), 2*GR_M_PI);
                 float s_i = scale_sin*_GRFASTCOS(d_psi[n]);
                 float s_q = scale_sin*_GRFASTSIN(d_phi[n]);
                 H += gr_complex(s_i, s_q);
                 }
     
             if(d_LOS){
-                d_psi[0] = fmod(d_psi[0] + 2*M_PI*d_fDTs*_GRFASTCOS(d_theta_los), 2*M_PI);
+                d_psi[0] = fmod(d_psi[0] + 2*GR_M_PI*d_fDTs*_GRFASTCOS(d_theta_los), 2*GR_M_PI);
                 float los_i = scale_los*_GRFASTCOS(d_psi[0]);
                 float los_q = scale_los*_GRFASTSIN(d_psi[0]);
                 H = H*scale_nlos + gr_complex(los_i,los_q);
@@ -105,10 +106,10 @@ namespace gr {
     void flat_fader_impl::update_theta()
     {
         d_theta += (d_step*rv_2());
-        if(d_theta > M_PI){
-            d_theta = M_PI; d_step = -d_step;
-        } else if(d_theta < -M_PI){
-            d_theta = -M_PI; d_step = -d_step;
+        if(d_theta > GR_M_PI){
+            d_theta = GR_M_PI; d_step = -d_step;
+        } else if(d_theta < -GR_M_PI){
+            d_theta = -GR_M_PI; d_step = -d_step;
         }
     }
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2012,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,7 +34,6 @@
 namespace gr {
   namespace digital {
 
-#define M_TWOPI (2*M_PI)
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
 #define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2003,2010,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -31,6 +31,7 @@
 
 #include "@IMPL_NAME@.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -90,7 +91,7 @@ namespace gr {
       // center frequency fwT0. We then apply a derotator
       // with -fwT0 to downshift the signal to baseband.
 
-      float fwT0 = 2 * M_PI * d_center_freq / d_sampling_freq;
+      float fwT0 = 2 * GR_M_PI * d_center_freq / d_sampling_freq;
       for(unsigned int i = 0; i < d_proto_taps.size(); i++) {
 	ctaps[i] = d_proto_taps[i] * exp(gr_complex(0, i * fwT0));
       }

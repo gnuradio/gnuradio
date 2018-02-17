@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018 Free Software Foundation, Inc.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt_ofdm_sym_acquisition_impl.h"
-#include <complex>
-#include <limits>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/expj.h>
 #include <volk/volk.h>
+#include <complex>
+#include <limits>
 
 namespace gr {
   namespace dtv {
@@ -170,11 +170,11 @@ namespace gr {
           // We are interested only in fft_length
           d_phase += d_phaseinc;
 
-          while (d_phase > (float)M_PI) {
-            d_phase -= (float)(2.0 * M_PI);
+          while (d_phase > (float)GR_M_PI) {
+            d_phase -= (float)(2.0 * GR_M_PI);
           }
-          while (d_phase < (float)(-M_PI)) {
-            d_phase += (float)(2.0 * M_PI);
+          while (d_phase < (float)(-GR_M_PI)) {
+            d_phase += (float)(2.0 * GR_M_PI);
           }
 
           derot[i] = gr_expj(d_phase);
@@ -190,11 +190,11 @@ namespace gr {
         for (int i = 0; i < (d_cp_length + d_fft_length); i++) {
           d_phase += d_phaseinc;
 
-          while (d_phase > (float)M_PI) {
-            d_phase -= (float)(2.0 * M_PI);
+          while (d_phase > (float)GR_M_PI) {
+            d_phase -= (float)(2.0 * GR_M_PI);
           }
-          while (d_phase < (float)(-M_PI)) {
-            d_phase += (float)(2.0 * M_PI);
+          while (d_phase < (float)(-GR_M_PI)) {
+            d_phase += (float)(2.0 * GR_M_PI);
           }
         }
 

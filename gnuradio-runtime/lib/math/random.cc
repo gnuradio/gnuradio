@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002, 2015 Free Software Foundation, Inc.
+ * Copyright 2002,2015,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,8 +39,10 @@
 #include <config.h>
 #endif
 
-#include <math.h>
 #include <gnuradio/random.h>
+#include <gnuradio/math.h>
+
+#include <cmath>
 
 namespace gr {
 

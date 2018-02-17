@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2018 Free Software Foundation, Inc.
  *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,20 +24,17 @@
 #include "config.h"
 #endif
 
+#include <gnuradio/analog/cpm.h>
+#include <gnuradio/math.h>
+
 #include <cmath>
 #include <cfloat>
-#include <gnuradio/analog/cpm.h>
-
 //gives us erf on compilers without it
 #include <boost/math/special_functions/erf.hpp>
 namespace bm = boost::math;
 
 namespace gr {
   namespace analog {
-
-#ifndef M_TWOPI
-#  define M_TWOPI (2*M_PI)
-#endif
 
     //! Normalised sinc function, sinc(x)=sin(pi*x)/pi*x
     inline double
@@ -46,7 +43,7 @@ namespace gr {
       if(x == 0) {
 	return 1.0;
       }
-      return sin(M_PI * x) / (M_PI * x);
+      return sin(GR_M_PI * x) / (GR_M_PI * x);
     }
 
 
@@ -56,7 +53,7 @@ namespace gr {
     {
       std::vector<float> taps(samples_per_sym * L, 1.0/L/samples_per_sym);
       for(unsigned i = 0; i < samples_per_sym * L; i++) {
-	taps[i] *= 1 - cos(M_TWOPI * i / L / samples_per_sym);
+	taps[i] *= 1 - cos(GR_M_TWOPI * i / L / samples_per_sym);
       }
 
       return taps;
@@ -96,11 +93,11 @@ namespace gr {
 	// and the whole thing converges to PI/4 (to prove this, use de
 	// l'hopital's rule).
 	if(fabs(fabs(k) - Ls/4/beta) < 2*DBL_EPSILON) {
-	  taps_d[i] *= M_PI_4;
+	  taps_d[i] *= GR_M_PI_4;
 	}
 	else {
 	  double tmp = 4.0 * beta * k / Ls;
-	  taps_d[i] *= cos(beta * M_TWOPI * k / Ls) / (1 - tmp * tmp);
+	  taps_d[i] *= cos(beta * GR_M_TWOPI * k / Ls) / (1 - tmp * tmp);
 	}
 	sum += taps_d[i];
       }
@@ -127,7 +124,7 @@ namespace gr {
       }
 
       const double pi2_24 = 0.411233516712057; // pi^2/24
-      double f = M_PI * k / sps;
+      double f = GR_M_PI * k / sps;
       return sinc(k/sps) - pi2_24 * (2 * sin(f) - 2*f*cos(f) - f*f*sin(f)) / (f*f*f);
     }
 

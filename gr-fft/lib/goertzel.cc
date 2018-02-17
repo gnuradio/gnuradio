@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2011,2012 Free Software Foundation, Inc.
+ * Copyright 2002,2011,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,8 +24,9 @@
 #include <config.h>
 #endif
 
-#include <cmath>
 #include <gnuradio/fft/goertzel.h>
+#include <gnuradio/math.h>
+#include <cmath>
 
 namespace gr {
   namespace fft {
@@ -41,7 +42,7 @@ namespace gr {
       d_d1 = 0.0;
       d_d2 = 0.0;
 
-      float w = 2.0*M_PI*freq/rate;
+      float w = 2.0*GR_M_PI*freq/rate;
       d_wr = 2.0*std::cos(w);
       d_wi = std::sin(w);
       d_len = len;
