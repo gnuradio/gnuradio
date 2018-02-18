@@ -45,7 +45,7 @@ namespace gr {
       : sync_block("annotator_alltoall",
                       io_signature::make(1, -1, sizeof_stream_item),
                       io_signature::make(1, -1, sizeof_stream_item)),
-        d_itemsize(sizeof_stream_item), d_when((uint64_t)when)
+                      d_when((uint64_t)when)
     {
       set_tag_propagation_policy(TPP_ALL_TO_ALL);
 
