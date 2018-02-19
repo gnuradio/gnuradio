@@ -30,22 +30,13 @@ class iqbal_gen(gr.hier_block2):
         ##################################################
         # Blocks
         ##################################################
-        if(self.mode):
-            # Receiver Mode
-            self.mag = blocks.multiply_const_vff((math.pow(10,magnitude/20.0), ))
-            self.sin_phase = blocks.multiply_const_vff((math.sin(phase*math.pi/180.0), ))
-            self.cos_phase = blocks.multiply_const_vff((math.cos(phase*math.pi/180.0), ))
-            self.f2c = blocks.float_to_complex(1)
-            self.c2f = blocks.complex_to_float(1)
-            self.adder = blocks.add_vff(1)
-        else:
-            # Transmitter Mode
-            self.mag = blocks.multiply_const_vff((math.pow(10,magnitude/20.0), ))
-            self.sin_phase = blocks.multiply_const_vff((math.sin(phase*math.pi/180.0), ))
-            self.cos_phase = blocks.multiply_const_vff((math.cos(phase*math.pi/180.0), ))
-            self.f2c = blocks.float_to_complex(1)
-            self.c2f = blocks.complex_to_float(1)
-            self.adder = blocks.add_vff(1)
+        # Same blocks for Transmitter and Receiver
+        self.mag = blocks.multiply_const_vff((math.pow(10,magnitude/20.0), ))
+        self.sin_phase = blocks.multiply_const_vff((math.sin(phase*math.pi/180.0), ))
+        self.cos_phase = blocks.multiply_const_vff((math.cos(phase*math.pi/180.0), ))
+        self.f2c = blocks.float_to_complex(1)
+        self.c2f = blocks.complex_to_float(1)
+        self.adder = blocks.add_vff(1)
 
         ##################################################
         # Connections
