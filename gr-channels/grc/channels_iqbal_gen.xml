@@ -8,7 +8,7 @@
   <name>IQ Imbalance Generator</name>
   <key>channels_iqbal_gen</key>
   <import>from gnuradio import channels</import>
-  <make>channels.iqbal_gen($mag, $phase)</make>
+  <make>channels.iqbal_gen($mag, $phase, $mode)</make>
   <callback>set_magnitude($mag)</callback>
   <callback>set_phase($phase)</callback>
   <param>
@@ -22,6 +22,20 @@
     <key>phase</key>
     <value>0</value>
     <type>float</type>
+  </param>
+  <param>
+    <name>Origin</name>
+    <key>mode</key>
+    <value>0</value>
+    <type>enum</type>
+		<option>
+			<name>Reciever</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>Transmitter</name>
+			<key>0</key>
+		</option>
   </param>
   <sink>
     <name>in</name>
