@@ -38,6 +38,8 @@ namespace gr {
       boost::thread   *d_thread;
       bool            d_finished;
 
+      const pmt::pmt_t d_port;
+
       void            readloop();
 
     public:
