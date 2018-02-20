@@ -36,6 +36,24 @@ namespace gr {
       static const size_t ALL_MBOARDS = ::uhd::usrp::multi_usrp::ALL_MBOARDS;
       static const size_t ALL_CHANS = ::uhd::usrp::multi_usrp::ALL_CHANS;
       static const std::string ALL_GAINS = ::uhd::usrp::multi_usrp::ALL_GAINS;
+
+      static const pmt::pmt_t CMD_CHAN_KEY;
+      static const pmt::pmt_t CMD_GAIN_KEY;
+      static const pmt::pmt_t CMD_FREQ_KEY;
+      static const pmt::pmt_t CMD_LO_OFFSET_KEY;
+      static const pmt::pmt_t CMD_TUNE_KEY;
+      static const pmt::pmt_t CMD_LO_FREQ_KEY;
+      static const pmt::pmt_t CMD_DSP_FREQ_KEY;
+      static const pmt::pmt_t CMD_RATE_KEY;
+      static const pmt::pmt_t CMD_BANDWIDTH_KEY;
+      static const pmt::pmt_t CMD_TIME_KEY;
+      static const pmt::pmt_t CMD_MBOARD_KEY;
+      static const pmt::pmt_t CMD_ANTENNA_KEY;
+      static const pmt::pmt_t CMD_DIRECTION_KEY;
+
+
+      static const pmt::pmt_t ANT_DIRECTION_RX;
+      static const pmt::pmt_t ANT_DIRECTION_TX;
 #ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
       static const std::string ALL_LOS = ::uhd::usrp::multi_usrp::ALL_LOS;
 #else

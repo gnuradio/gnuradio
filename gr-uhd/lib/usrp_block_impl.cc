@@ -41,6 +41,8 @@ const pmt::pmt_t CMD_MBOARD_KEY = pmt::mp("mboard");
 const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("antenna");
 const pmt::pmt_t CMD_DIRECTION_KEY = pmt::mp("direction");
 
+const pmt::pmt_t ANT_DIRECTION_RX = pmt::mp("RX");
+const pmt::pmt_t ANT_DIRECTION_TX = pmt::mp("TX");
 
 /**********************************************************************
  * Structors
@@ -471,7 +473,7 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
     pmt::pmt_t new_msg = pmt::make_dict();
     new_msg = pmt::dict_add(new_msg, pmt::tuple_ref(msg, 0), pmt::tuple_ref(msg, 1));
     if (pmt::length(msg) == 3) {
-      new_msg = pmt::dict_add(new_msg, pmt::mp("chan"), pmt::tuple_ref(msg, 2));
+      new_msg = pmt::dict_add(new_msg, CMD_CHAN_KEY, pmt::tuple_ref(msg, 2));
     }
     GR_LOG_WARN(d_debug_logger, boost::format("Using legacy message format (tuples): %s") % msg);
     return msg_handler_command(new_msg);
