@@ -55,6 +55,8 @@ namespace gr {
       std::vector<pmt::pmt_t> d_special_tags; //!< List of special tags
       std::vector<pmt::pmt_t> d_special_tags_last_value; //!< The current value of the special tags
 
+      static const pmt::pmt_t s_msg_port_id; //!< Message Port Id
+
       // Helper functions to make the state machine more readable
 
       //! Checks if there are enough items on the inputs and enough space on the output buffers to copy \p n_symbols symbols
