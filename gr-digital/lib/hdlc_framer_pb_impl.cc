@@ -45,9 +45,10 @@ namespace gr {
     hdlc_framer_pb_impl::hdlc_framer_pb_impl(const std::string frame_tag_name)
       : gr::sync_block("hdlc_framer_pb",
               gr::io_signature::make(0, 0, 0),
-              gr::io_signature::make(1, 1, sizeof(unsigned char)))
+              gr::io_signature::make(1, 1, sizeof(unsigned char))),
+      d_port(pmt::mp("in"))
     {
-        message_port_register_in(pmt::mp("in"));
+        message_port_register_in(d_port);
         d_frame_tag = pmt::string_to_symbol(frame_tag_name);
         std::stringstream str;
         str << name() << unique_id();
@@ -129,7 +130,7 @@ namespace gr {
         }
 
         //get PDU
-        pmt::pmt_t msg(delete_head_nowait(pmt::mp("in")));
+        pmt::pmt_t msg(delete_head_nowait(d_port));
         if(msg.get() == NULL) return oidx;
 
         pmt::pmt_t len(pmt::car(msg)); //TODO for non-mult-8 nbits
