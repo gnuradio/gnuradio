@@ -36,6 +36,7 @@ namespace gr {
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
       boost::thread   *d_thread;
+      const pmt::pmt_t d_port;
 
       void readloop();
 

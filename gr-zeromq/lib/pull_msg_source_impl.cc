@@ -44,7 +44,8 @@ namespace gr {
       : gr::block("pull_msg_source",
                   gr::io_signature::make(0, 0, 0),
                   gr::io_signature::make(0, 0, 0)),
-        d_timeout(timeout)
+      d_timeout(timeout),
+      d_port(pmt::mp("out"))
     {
       int major, minor, patch;
       zmq::version (&major, &minor, &patch);
@@ -60,7 +61,7 @@ namespace gr {
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->connect (address);
 
-      message_port_register_out(pmt::mp("out"));
+      message_port_register_out(d_port);
     }
 
     pull_msg_source_impl::~pull_msg_source_impl()
@@ -101,7 +102,7 @@ namespace gr {
           std::string buf(static_cast<char*>(msg.data()), msg.size());
           std::stringbuf sb(buf);
           pmt::pmt_t m = pmt::deserialize(sb);
-          message_port_pub(pmt::mp("out"), m);
+          message_port_pub(d_port, m);
 
         } else {
           boost::this_thread::sleep(boost::posix_time::microseconds(100));
