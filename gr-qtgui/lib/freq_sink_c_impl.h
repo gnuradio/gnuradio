@@ -47,6 +47,8 @@ namespace gr {
       std::string d_name;
       int d_nconnections;
 
+      const pmt::pmt_t d_port;
+
       bool d_shift;
       fft::fft_complex *d_fft;
 

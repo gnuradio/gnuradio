@@ -40,6 +40,8 @@ namespace gr {
       std::string d_name;
       int d_nconnections;
 
+      const pmt::pmt_t d_tag_key;
+
       int d_index, d_start, d_end;
       std::vector<gr_complex*> d_cbuffers;
       std::vector<double*> d_buffers;

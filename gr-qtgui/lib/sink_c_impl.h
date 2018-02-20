@@ -48,6 +48,8 @@ namespace gr {
       gr::high_res_timer_type  d_last_update;
       bool d_update_active;
 
+      const pmt::pmt_t d_port;
+
       bool d_shift;
       fft::fft_complex *d_fft;
 
