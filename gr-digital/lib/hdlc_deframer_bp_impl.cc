@@ -48,10 +48,11 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(0, 0, 0)),
         d_length_min(length_min),
-        d_length_max(length_max)
+        d_length_max(length_max),
+        d_port(pmt::mp("out"))
     {
         set_output_multiple(length_max*2);
-        message_port_register_out(pmt::mp("out"));
+        message_port_register_out(d_port);
         d_bytectr=0;
         d_bitctr=0;
         d_ones=0;
@@ -101,7 +102,7 @@ namespace gr {
                         if (crc==calc_crc) {
                             pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL,
                                                      pmt::make_blob(d_pktbuf, len)));
-                            message_port_pub(pmt::mp("out"), pdu);
+                            message_port_pub(d_port, pdu);
                         }
                         else {
                         }
