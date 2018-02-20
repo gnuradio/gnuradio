@@ -51,9 +51,10 @@ namespace gr {
               io_signature::make(0, 0, 0)),
         d_finished(false),
         d_period_ms(period_ms),
-        d_msg(msg)
+        d_msg(msg),
+        d_port(pmt::mp("strobe"))
     {
-      message_port_register_out(pmt::mp("strobe"));
+      message_port_register_out(d_port);
 
       message_port_register_in(pmt::mp("set_msg"));
       set_msg_handler(pmt::mp("set_msg"),
@@ -95,7 +96,7 @@ namespace gr {
           return;
         }
 
-        message_port_pub(pmt::mp("strobe"), d_msg);
+        message_port_pub(d_port, d_msg);
       }
     }
 

@@ -41,11 +41,11 @@ namespace gr {
       :	block("pdu_set",
 		 io_signature::make (0, 0, 0),
 		 io_signature::make (0, 0, 0)),
-    d_k(k), d_v(v)
+        d_k(k), d_v(v)
     {
-      message_port_register_out(pmt::mp("pdus"));
-      message_port_register_in(pmt::mp("pdus"));
-      set_msg_handler(pmt::mp("pdus"), boost::bind(&pdu_set_impl::handle_msg, this, _1));
+      message_port_register_out(pdu::s_pdu_port_id);
+      message_port_register_in(pdu::s_pdu_port_id);
+      set_msg_handler(pdu::s_pdu_port_id, boost::bind(&pdu_set_impl::handle_msg, this, _1));
     }
 
     void
@@ -59,7 +59,7 @@ namespace gr {
         throw std::runtime_error("pdu_set received non PDU input");
         }
       meta = pmt::dict_add(meta, d_k, d_v);
-      message_port_pub(pmt::mp("pdus"), pmt::cons(meta, pmt::cdr(pdu)));
+      message_port_pub(pdu::s_pdu_port_id, pmt::cons(meta, pmt::cdr(pdu)));
     }
 
   } /* namespace blocks */

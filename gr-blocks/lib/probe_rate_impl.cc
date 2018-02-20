@@ -46,9 +46,12 @@ namespace gr {
         d_avg(0),
         d_min_update_time(update_rate_ms),
         d_lastthru(0),
-        d_itemsize(itemsize)
+        d_itemsize(itemsize),
+        d_port(pmt::mp("rate")),
+        d_dict_avg(pmt::mp("rate_avg")),
+        d_dict_now(pmt::mp("rate_now"))
         {
-            message_port_register_out(pmt::mp("rate"));
+            message_port_register_out(d_port);
         }
 
     probe_rate_impl::~probe_rate_impl(){}
@@ -70,9 +73,9 @@ namespace gr {
                 d_avg = rate_this_update*d_alpha + d_avg*d_beta;
             }
             pmt::pmt_t d = pmt::make_dict();
-            d = pmt::dict_add(d, pmt::mp("rate_avg"), pmt::mp(d_avg));
-            d = pmt::dict_add(d, pmt::mp("rate_now"), pmt::mp(rate_this_update));
-            message_port_pub(pmt::mp("rate"), pmt::cons(d, pmt::PMT_NIL));
+            d = pmt::dict_add(d, d_dict_avg, pmt::mp(d_avg));
+            d = pmt::dict_add(d, d_dict_now, pmt::mp(rate_this_update));
+            message_port_pub(d_port, pmt::cons(d, pmt::PMT_NIL));
         }
         return noutput_items;
       }

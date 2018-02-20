@@ -38,6 +38,9 @@ namespace gr {
       size_t d_itemsize;
       void setup_rpc();
 
+      const pmt::pmt_t d_port;
+      const pmt::pmt_t d_dict_avg, d_dict_now;
+
     public:
       probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha = 0.0001);
       ~probe_rate_impl();

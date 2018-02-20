@@ -35,6 +35,7 @@ namespace gr {
       bool d_finished;
       float d_period_ms;
       pmt::pmt_t d_msg;
+      const pmt::pmt_t d_port;
 
       void run();
 
