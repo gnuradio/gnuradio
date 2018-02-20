@@ -34,6 +34,9 @@
 
 namespace gr {
 
+  const pmt::pmt_t block::d_system_port = pmt::intern("system");
+  const pmt::pmt_t block::d_pmt_done = pmt::intern("done");
+
   block::block(const std::string &name,
                io_signature::sptr input_signature,
                io_signature::sptr output_signature)
@@ -57,8 +60,8 @@ namespace gr {
       d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
   {
     global_block_registry.register_primitive(alias(), this);
-    message_port_register_in(pmt::mp("system"));
-    set_msg_handler(pmt::mp("system"), boost::bind(&block::system_handler, this, _1));
+    message_port_register_in(d_system_port);
+    set_msg_handler(d_system_port, boost::bind(&block::system_handler, this, _1));
 
     configure_default_loggers(d_logger, d_debug_logger, symbol_name());
   }
@@ -706,7 +709,7 @@ namespace gr {
   {
     //std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
-    if(pmt::eqv(op, pmt::mp("done"))){
+    if(pmt::eqv(op, d_pmt_done)){
         d_finished = pmt::to_long(pmt::cdr(msg));
         global_block_registry.notify_blk(alias());
     } else {
@@ -733,16 +736,10 @@ namespace gr {
         pmt::pmt_t target = pmt::car(currlist);
 
         pmt::pmt_t block = pmt::car(target);
-        pmt::pmt_t port = pmt::mp("system");
 
         currlist = pmt::cdr(currlist);
         basic_block_sptr blk = global_block_registry.block_lookup(block);
-        blk->post(port, pmt::cons(pmt::mp("done"), pmt::mp(true)));
-
-        //std::cout << "notify finished --> ";
-        //pmt::print(pmt::cons(block,port));
-        //std::cout << "\n";
-
+        blk->post(d_system_port, pmt::cons(d_pmt_done, pmt::mp(true)));
         }
     }
   }

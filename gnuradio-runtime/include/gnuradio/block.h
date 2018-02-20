@@ -684,6 +684,8 @@ namespace gr {
     bool                  d_update_rate;           // should sched update rel rate?
     bool d_finished;    // true if msg ports think we are finished
 
+    static const pmt::pmt_t d_pmt_done;
+
   protected:
     block(void) {} // allows pure virtual interface sub-classes
     block(const std::string &name,
@@ -860,6 +862,10 @@ namespace gr {
 
     // These are really only for internal use, but leaving them public avoids
     // having to work up an ever-varying list of friend GR_RUNTIME_APIs
+
+    /*! PMT Symbol of the system port, `pmt::mp("system")`
+     */
+    static const pmt::pmt_t d_system_port;
 
   public:
     block_detail_sptr detail() const { return d_detail; }
