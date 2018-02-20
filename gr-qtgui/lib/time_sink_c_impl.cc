@@ -53,7 +53,8 @@ namespace gr {
                    io_signature::make(0, nconnections, sizeof(gr_complex)),
                    io_signature::make(0, 0, 0)),
 	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
-	d_nconnections(2*nconnections), d_parent(parent)
+  d_nconnections(2*nconnections), d_parent(parent),
+  d_tag_key(pmt::mp("tags"))
     {
       if(nconnections > 12)
         throw std::runtime_error("time_sink_c only supports up to 12 inputs");
@@ -719,9 +720,9 @@ namespace gr {
 
       // add tag info if it is present in metadata
       if(pmt::is_dict(dict)){
-        if(pmt::dict_has_key(dict, pmt::mp("tags"))){
+        if(pmt::dict_has_key(dict, d_tag_key)){
             d_tags.clear();
-            pmt::pmt_t tags = pmt::dict_ref(dict, pmt::mp("tags"), pmt::PMT_NIL);
+            pmt::pmt_t tags = pmt::dict_ref(dict, d_tag_key, pmt::PMT_NIL);
             int len = pmt::length(tags);
             for(int i=0; i<len; i++){
                 // get tag info from list
@@ -729,7 +730,7 @@ namespace gr {
                 int tagval = pmt::to_long(pmt::tuple_ref(tup,0));
                 pmt::pmt_t k = pmt::tuple_ref(tup,1);
                 pmt::pmt_t v = pmt::tuple_ref(tup,2);
-                
+
                 // add the tag
                 t[0].push_back( gr::tag_t() );
                 t[0][t[0].size()-1].offset = tagval;

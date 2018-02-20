@@ -51,7 +51,8 @@ namespace gr {
       : block("edit_box_msg",
               io_signature::make(0, 0, 0),
               io_signature::make(0, 0, 0)),
-        QObject(parent)
+        QObject(parent),
+        d_port(pmt::mp("msg"))
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
@@ -156,7 +157,7 @@ namespace gr {
 
       d_msg = pmt::PMT_NIL;
 
-      message_port_register_out(pmt::mp("msg"));
+      message_port_register_out(d_port);
       message_port_register_in(pmt::mp("val"));
 
       set_msg_handler(pmt::mp("val"),
@@ -404,7 +405,7 @@ namespace gr {
 
       // Emit the new message to pass updates downstream.
       // Loops are prevented by the early exit if d_msg == val.
-      message_port_pub(pmt::mp("msg"), d_msg);
+      message_port_pub(d_port, d_msg);
     }
 
     void
@@ -560,7 +561,7 @@ namespace gr {
         d_msg = pmt::cons(pmt::intern(key), d_msg);
       }
 
-      message_port_pub(pmt::mp("msg"), d_msg);
+      message_port_pub(d_port, d_msg);
     }
 
   } /* namespace qtgui */

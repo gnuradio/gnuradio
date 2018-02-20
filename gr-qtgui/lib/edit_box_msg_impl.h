@@ -55,6 +55,7 @@ namespace gr {
       QComboBox *d_type_box;
 
       pmt::pmt_t d_msg;
+      const pmt::pmt_t d_port;
 
     public:
       edit_box_msg_impl(gr::qtgui::data_type_t type,
