@@ -27,12 +27,11 @@
 #include <gnuradio/gr_complex.h>
 #include <pmt/pmt.h>
 
-#define PDU_PORT_ID    pmt::mp("pdus")
 
 namespace gr {
   namespace blocks {
     namespace pdu {
-
+      static const pmt::pmt_t s_pdu_port_id = pmt::mp("pdus");
       enum vector_type { byte_t, float_t, complex_t };
 
       BLOCKS_API size_t itemsize(vector_type type);

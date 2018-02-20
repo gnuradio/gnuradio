@@ -92,12 +92,12 @@ namespace gr {
         ) % dev % dev << std::endl;
 
       // set up output message port
-      message_port_register_out(PDU_PORT_ID);
-      start_rxthread(this, PDU_PORT_ID);
+      message_port_register_out(pdu::s_pdu_port_id);
+      start_rxthread(this, pdu::s_pdu_port_id);
 
       // set up input message port
-      message_port_register_in(PDU_PORT_ID);
-      set_msg_handler(PDU_PORT_ID, boost::bind(&tuntap_pdu_impl::send, this, _1));
+      message_port_register_in(pdu::s_pdu_port_id);
+      set_msg_handler(pdu::s_pdu_port_id, boost::bind(&tuntap_pdu_impl::send, this, _1));
     }
 
     int
