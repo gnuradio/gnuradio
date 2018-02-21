@@ -31,7 +31,6 @@ namespace gr {
     class BLOCKS_API interleaved_short_to_complex_impl : public interleaved_short_to_complex
     {
     private:
-      bool d_vector_input;
       bool d_swap;
     public:
       interleaved_short_to_complex_impl(bool vector_input=false, bool swap=false);

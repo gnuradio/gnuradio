@@ -37,7 +37,6 @@ namespace gr {
       gr::filter::single_pole_iir<float,float,float> d_loop; // ``VCO'' loop filter
       gr::filter::mmse_fir_interpolator_ff d_interp;
 
-      unsigned long long d_next_input;
       double             d_rx_clock_to_symbol_freq;
       int                d_si;
       double             d_w;	// ratio of PERIOD of Tx to Rx clocks

@@ -31,7 +31,6 @@ namespace gr {
     class BLOCKS_API pdu_to_tagged_stream_impl : public pdu_to_tagged_stream
     {
       size_t               d_itemsize;
-      pdu::vector_type     d_type;
       pmt::pmt_t           d_curr_meta;
       pmt::pmt_t           d_curr_vect;
       size_t               d_curr_len;

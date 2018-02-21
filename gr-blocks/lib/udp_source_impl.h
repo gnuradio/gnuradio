@@ -42,7 +42,6 @@ namespace gr {
       char   *d_residbuf;     // hold buffer between calls
       ssize_t d_residual;     // hold information about number of bytes stored in residbuf
       ssize_t d_sent;         // track how much of d_residbuf we've outputted
-      size_t  d_offset;       // point to residbuf location offset
 
       static const int BUF_SIZE_PAYLOADS; //!< The d_residbuf size in multiples of d_payload_size
 

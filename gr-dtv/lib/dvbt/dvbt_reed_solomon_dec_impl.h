@@ -41,7 +41,6 @@ namespace gr {
       int d_nerrors_corrected_count;
       int d_bad_packet_count;
       int d_total_packets;
-      int d_total_bits;
 
       void *d_rs;    /* Reed-Solomon characteristics structure */
       int decode(unsigned char &out, const unsigned char &in);

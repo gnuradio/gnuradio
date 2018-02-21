@@ -42,7 +42,7 @@ namespace gr {
       : block("crc32_async_bb",
               io_signature::make(0, 0, 0),
               io_signature::make(0, 0, 0)),
-	d_check(check), d_npass(0), d_nfail(0)
+	d_npass(0), d_nfail(0)
     {
       d_in_port = pmt::mp("in");
       d_out_port = pmt::mp("out");

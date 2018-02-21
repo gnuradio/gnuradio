@@ -32,7 +32,6 @@ namespace gr {
     {
     private:
       int d_seqno;
-      int d_payload_bytesize;
       int d_input_block_size;	// bytes
       int d_output_block_size;	// bytes
 

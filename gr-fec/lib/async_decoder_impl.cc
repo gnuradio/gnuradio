@@ -46,8 +46,7 @@ namespace gr {
                                            int mtu)
       : block("async_decoder",
               io_signature::make(0,0,0),
-              io_signature::make(0,0,0)),
-        d_input_item_size(sizeof(float)), d_output_item_size(sizeof(char))
+              io_signature::make(0,0,0))
     {
       d_in_port = pmt::mp("in");
       d_out_port = pmt::mp("out");
