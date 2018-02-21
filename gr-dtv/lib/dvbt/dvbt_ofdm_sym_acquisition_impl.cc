@@ -235,7 +235,7 @@ namespace gr {
       : block("dvbt_ofdm_sym_acquisition",
           io_signature::make(1, 1, sizeof (gr_complex) * blocks),
           io_signature::make(1, 1, sizeof (gr_complex) * blocks * fft_length)),
-      d_blocks(blocks), d_fft_length(fft_length), d_cp_length(cp_length), d_snr(snr), \
+      d_fft_length(fft_length), d_cp_length(cp_length), d_snr(snr), \
         d_phase(0.0), d_phaseinc(0.0), d_cp_found(0), d_nextphaseinc(0), d_nextpos(0), \
         d_initial_acquisition(0), d_cp_start(0), \
         d_to_consume(0), d_to_out(0), d_consumed(0), d_out(0)

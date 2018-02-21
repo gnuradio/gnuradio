@@ -1,4 +1,8 @@
 *~
 *.pyc
 *.pyo
+cscope.files
+cscope.in.out
+cscope.out
+cscope.po.out
 build/

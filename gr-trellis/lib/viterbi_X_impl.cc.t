@@ -33,8 +33,6 @@
 namespace gr {
   namespace trellis {
 
-    static const float INF = 1.0e9;
-
     @BASE_NAME@::sptr
     @BASE_NAME@::make(const fsm &FSM, int K,
 		      int S0, int SK)

@@ -33,7 +33,6 @@ namespace gr {
     private:
       float d_threshold_factor_rise;
       int d_look_ahead;
-      int d_look_ahead_remaining;
       int d_peak_ind;
       float d_peak_val;
       float d_alpha;

@@ -51,7 +51,6 @@ namespace gr {
 
     private:
       constellation_sptr d_constellation;
-      unsigned int d_current_const_point;
 
       //! Set the phase and the frequency.
       //! Typically used when we receive a tag with values for these.
@@ -82,8 +81,6 @@ namespace gr {
       //! delay line plus some length for overflow protection
       __GR_ATTR_ALIGNED(8) gr_complex d_dl[2*DLLEN];
 
-      //! index to delay line
-      unsigned int d_dl_idx;
     };
 
   } /* namespace digital */

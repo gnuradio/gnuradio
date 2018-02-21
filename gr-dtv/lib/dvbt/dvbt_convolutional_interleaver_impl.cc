@@ -43,7 +43,7 @@ namespace gr {
       : sync_interpolator("dvbt_convolutional_interleaver",
           io_signature::make(1, 1, sizeof (unsigned char) * I * blocks),
           io_signature::make(1, 1, sizeof (unsigned char)), I * blocks),
-      d_blocks(blocks), d_I(I), d_M(M)
+      d_I(I), d_M(M)
     {
       //Positions are shift registers (FIFOs)
       //of length i*M

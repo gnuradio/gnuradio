@@ -49,7 +49,7 @@ namespace gr {
 		      io_signature::make(1, 1, fft_size * sizeof(gr_complex))),
 	d_fft_size(fft_size), d_forward(forward)
     {
-      d_fft = new fft_complex(d_fft_size, forward, nthreads);
+      d_fft = new fft_complex(d_fft_size, d_forward, nthreads);
       if(!set_window(window))
         throw std::runtime_error("fft_vfc: window not the same length as fft_size\n");
     }
