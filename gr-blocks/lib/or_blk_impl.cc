@@ -26,40 +26,43 @@
 #include "config.h"
 #endif
 
-#include <@NAME_IMPL@.h>
+#include <or_blk_impl.h>
 #include <gnuradio/io_signature.h>
 
 namespace gr {
   namespace blocks {
 
-    @NAME@::sptr @NAME@::make(size_t vlen)
+    template<class T>
+    or_blk::sptr or_blk<T>::make(size_t vlen)
     {
-      return gnuradio::get_initial_sptr(new @NAME_IMPL@(vlen));
+      return gnuradio::get_initial_sptr(new or_blk_impl<T>(vlen));
     }
 
-    @NAME_IMPL@::@NAME_IMPL@(size_t vlen)
-      : sync_block ("@NAME@",
-		       io_signature::make (1, -1, sizeof (@I_TYPE@)*vlen),
-		       io_signature::make (1,  1, sizeof (@O_TYPE@)*vlen)),
+    template<class T>
+    or_blk_impl<T>::or_blk_impl(size_t vlen)
+      : sync_block ("or_blk",
+		       io_signature::make (1, -1, sizeof (T)*vlen),
+		       io_signature::make (1,  1, sizeof (T)*vlen)),
       d_vlen(vlen)
     {
     }
 
+    template<class T>
     int
-    @NAME_IMPL@::work(int noutput_items,
+    or_blk_impl<T>::work(int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
-      @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
+      T *optr = (T *) output_items[0];
 
       int ninputs = input_items.size ();
 
       for (size_t i = 0; i < noutput_items*d_vlen; i++){
-	@I_TYPE@ acc = ((@I_TYPE@ *) input_items[0])[i];
+	T acc = ((T *) input_items[0])[i];
 	for (int j = 1; j < ninputs; j++)
-	  acc |= ((@I_TYPE@ *) input_items[j])[i];
+	  acc |= ((T *) input_items[j])[i];
 
-	*optr++ = (@O_TYPE@) acc;
+	*optr++ = (T) acc;
       }
 
       return noutput_items;

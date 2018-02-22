@@ -20,22 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef OR_BLK_IMPL_H
+#define OR_BLK_IMPL_H
 
-#ifndef @GUARD_NAME_IMPL@
-#define @GUARD_NAME_IMPL@
-
-#include <gnuradio/blocks/@NAME@.h>
+#include <gnuradio/blocks/or_blk.h>
 
 namespace gr {
   namespace blocks {
 
-    class BLOCKS_API @NAME_IMPL@ : public @NAME@
+    template<class T>
+    class BLOCKS_API or_blk_impl : public or_blk
     {
       size_t d_vlen;
 
     public:
-      @NAME_IMPL@(size_t vlen);
+      or_blk_impl(size_t vlen);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
@@ -45,4 +44,4 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME_IMPL@ */
+#endif /* OR_BLK_IMPL_H */

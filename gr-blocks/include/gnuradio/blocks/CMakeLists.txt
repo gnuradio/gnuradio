@@ -38,7 +38,7 @@ GR_EXPAND_X_H(blocks multiply_const_vXX ss ii)
 GR_EXPAND_X_H(blocks multiply_matrix_XX ff cc)
 GR_EXPAND_X_H(blocks mute_XX            ss ii ff cc)
 GR_EXPAND_X_H(blocks not_XX             bb ss ii)
-GR_EXPAND_X_H(blocks or_XX              bb ss ii)
+# GR_EXPAND_X_H(blocks or_XX              bb ss ii)
 GR_EXPAND_X_H(blocks peak_detector_XX   fb ib sb)
 GR_EXPAND_X_H(blocks probe_signal_X     b s i f c)
 GR_EXPAND_X_H(blocks probe_signal_vX    b s i f c)
@@ -135,6 +135,7 @@ install(FILES
     nop.h
     null_sink.h
     null_source.h
+    or_blk.h
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
