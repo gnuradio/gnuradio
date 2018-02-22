@@ -39,9 +39,7 @@
 #include "gnuradio/blocks/not_bb.h"
 #include "gnuradio/blocks/not_ss.h"
 #include "gnuradio/blocks/not_ii.h"
-#include "gnuradio/blocks/or_bb.h"
-#include "gnuradio/blocks/or_ss.h"
-#include "gnuradio/blocks/or_ii.h"
+#include "gnuradio/blocks/or_blk.h"
 #include "gnuradio/blocks/patterned_interleaver.h"
 #include "gnuradio/blocks/pack_k_bits_bb.h"
 #include "gnuradio/blocks/packed_to_unpacked_bb.h"
@@ -60,9 +58,7 @@
 %include "gnuradio/blocks/not_bb.h"
 %include "gnuradio/blocks/not_ss.h"
 %include "gnuradio/blocks/not_ii.h"
-%include "gnuradio/blocks/or_bb.h"
-%include "gnuradio/blocks/or_ss.h"
-%include "gnuradio/blocks/or_ii.h"
+%include "gnuradio/blocks/or_blk.h"
 %include "gnuradio/blocks/patterned_interleaver.h"
 %include "gnuradio/blocks/pack_k_bits_bb.h"
 %include "gnuradio/blocks/packed_to_unpacked_bb.h"
@@ -80,9 +76,12 @@ GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
 GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
+// GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
+// GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
+// GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, or_blk, char, bb);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, or_blk, short, ss);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, or_blk, int, ii);
 GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
 GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
 GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
