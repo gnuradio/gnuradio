@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -32,7 +30,7 @@
 namespace gr {
 namespace blocks {
 
-template <class T> or_blk::sptr or_blk<T>::make(size_t vlen) {
+template <class T> typename or_blk<T>::sptr or_blk<T>::make(size_t vlen) {
     return gnuradio::get_initial_sptr(new or_blk_impl<T>(vlen));
 }
 
@@ -60,6 +58,10 @@ int or_blk_impl<T>::work(int noutput_items,
 
     return noutput_items;
 }
+
+template class or_blk<short>;
+template class or_blk<int>;
+template class or_blk<char>;
 
 } /* namespace blocks */
 } /* namespace gr */

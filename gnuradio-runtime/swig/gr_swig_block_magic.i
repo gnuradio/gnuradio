@@ -50,8 +50,8 @@ BASE_NAME = BASE_NAME.make;
 %enddef
 
 %define GR_SWIG_BLOCK_MAGIC2_TMPL(PKG, BASE_NAME, TYPE, NAME_EXT)
-%template(BASE_NAME ## _ ## NAME_EXT) gr:: ## PKG ## :: ## BASE_NAME ## < ## TYPE>;
-%template(BASE_NAME ## _ ## NAME_EXT ## _sptr) boost::shared<gr:: ## PKG ## :: ## BASE_NAME ## < ## TYPE> >;
+%template(BASE_NAME ## _ ## NAME_EXT) gr:: ## PKG ## :: ## BASE_NAME ## <## TYPE >;
+%template(BASE_NAME ## _ ## NAME_EXT ## _sptr) boost::shared_ptr<gr:: ## PKG ## :: ## BASE_NAME ## < ## TYPE> >;
 %pythoncode %{
 BASE_NAME ## _ ## NAME_EXT ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id())
 BASE_NAME ## _ ## NAME_EXT = BASE_NAME ## _ ## NAME_EXT.make;
