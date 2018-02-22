@@ -18,8 +18,10 @@ $win = Qt.QPushButton($label)
 self._$(id)_choices = {'Pressed': $pressed, 'Released': $released}
 $(win).pressed.connect(lambda: self.set_$(id)(self._$(id)_choices['Pressed']))
 $(win).released.connect(lambda: self.set_$(id)(self._$(id)_choices['Released']))
-$(gui_hint()($win))</make>
+$(gui_hint() % $win)</make>
+
 	<callback>self.set_$(id)($value)</callback>
+
 	<param>
 		<name>Label</name>
 		<key>label</key>
