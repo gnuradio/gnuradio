@@ -30,7 +30,7 @@
 #include <gnuradio/analog/fastnoise_source_c.h>
 #include <gnuradio/channels/channel_model.h>
 #include <gnuradio/filter/mmse_resampler_cc.h>
-#include <gnuradio/filter/fir_filter_ccc.h>
+#include <gnuradio/filter/fir_filter_blk.h>
 
 namespace gr {
   namespace channels {

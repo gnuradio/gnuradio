@@ -48,14 +48,10 @@
 #include "gnuradio/blocks/udp_source.h"
 #include "gnuradio/blocks/unpack_k_bits.h"
 #include "gnuradio/blocks/unpack_k_bits_bb.h"
-#include "gnuradio/blocks/unpacked_to_packed_bb.h"
-#include "gnuradio/blocks/unpacked_to_packed_ss.h"
-#include "gnuradio/blocks/unpacked_to_packed_ii.h"
+#include "gnuradio/blocks/unpacked_to_packed.h"
 #include "gnuradio/blocks/vco_f.h"
 #include "gnuradio/blocks/vco_c.h"
-#include "gnuradio/blocks/xor_bb.h"
-#include "gnuradio/blocks/xor_ss.h"
-#include "gnuradio/blocks/xor_ii.h"
+#include "gnuradio/blocks/xor_blk.h"
 %}
 
 %include "gnuradio/blocks/tag_gate.h"
@@ -75,14 +71,10 @@
 %include "gnuradio/blocks/udp_source.h"
 %include "gnuradio/blocks/unpack_k_bits.h"
 %include "gnuradio/blocks/unpack_k_bits_bb.h"
-%include "gnuradio/blocks/unpacked_to_packed_bb.h"
-%include "gnuradio/blocks/unpacked_to_packed_ss.h"
-%include "gnuradio/blocks/unpacked_to_packed_ii.h"
+%include "gnuradio/blocks/unpacked_to_packed.h"
 %include "gnuradio/blocks/vco_f.h"
 %include "gnuradio/blocks/vco_c.h"
-%include "gnuradio/blocks/xor_bb.h"
-%include "gnuradio/blocks/xor_ss.h"
-%include "gnuradio/blocks/xor_ii.h"
+%include "gnuradio/blocks/xor_blk.h"
 
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_gate);
 GR_SWIG_BLOCK_MAGIC2(blocks, tag_share);
@@ -100,11 +92,11 @@ GR_SWIG_BLOCK_MAGIC2(blocks, uchar_to_float);
 GR_SWIG_BLOCK_MAGIC2(blocks, udp_sink);
 GR_SWIG_BLOCK_MAGIC2(blocks, udp_source);
 GR_SWIG_BLOCK_MAGIC2(blocks, unpack_k_bits_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, unpacked_to_packed_ii);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, unpacked_to_packed_bb, unpacked_to_packed<std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, unpacked_to_packed_ss, unpacked_to_packed<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, unpacked_to_packed_ii, unpacked_to_packed<std::int32_t>);
 GR_SWIG_BLOCK_MAGIC2(blocks, vco_f);
 GR_SWIG_BLOCK_MAGIC2(blocks, vco_c);
-GR_SWIG_BLOCK_MAGIC2(blocks, xor_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, xor_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, xor_ii);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, xor_bb, xor_blk<std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, xor_ss, xor_blk<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, xor_ii, xor_blk<std::int32_t>);

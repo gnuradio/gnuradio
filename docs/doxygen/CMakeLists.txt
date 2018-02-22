@@ -45,14 +45,6 @@ if(ENABLE_GNURADIO_RUNTIME)
   list(APPEND GENERATED_DEPS pmt_generated)
 endif(ENABLE_GNURADIO_RUNTIME)
 
-if(ENABLE_GR_BLOCKS)
-  list(APPEND GENERATED_DEPS blocks_generated_includes)
-endif(ENABLE_GR_BLOCKS)
-
-if(ENABLE_GR_ANALOG)
-  list(APPEND GENERATED_DEPS analog_generated_includes)
-endif(ENABLE_GR_ANALOG)
-
 if(ENABLE_GR_DIGITAL)
   list(APPEND GENERATED_DEPS digital_generated_includes)
 endif(ENABLE_GR_DIGITAL)

@@ -28,63 +28,41 @@
 %include "blocks_swig10_doc.i"
 
 %{
-#include "gnuradio/blocks/min_ff.h"
-#include "gnuradio/blocks/min_ii.h"
-#include "gnuradio/blocks/min_ss.h"
-#include "gnuradio/blocks/moving_average_cc.h"
-#include "gnuradio/blocks/moving_average_ff.h"
-#include "gnuradio/blocks/moving_average_ii.h"
-#include "gnuradio/blocks/moving_average_ss.h"
+#include "gnuradio/blocks/min_blk.h"
+#include "gnuradio/blocks/moving_average.h"
 #include "gnuradio/blocks/nlog10_ff.h"
-#include "gnuradio/blocks/not_bb.h"
-#include "gnuradio/blocks/not_ss.h"
-#include "gnuradio/blocks/not_ii.h"
-#include "gnuradio/blocks/or_bb.h"
-#include "gnuradio/blocks/or_ss.h"
-#include "gnuradio/blocks/or_ii.h"
+#include "gnuradio/blocks/not_blk.h"
+#include "gnuradio/blocks/or_blk.h"
 #include "gnuradio/blocks/patterned_interleaver.h"
 #include "gnuradio/blocks/pack_k_bits_bb.h"
-#include "gnuradio/blocks/packed_to_unpacked_bb.h"
-#include "gnuradio/blocks/packed_to_unpacked_ss.h"
-#include "gnuradio/blocks/packed_to_unpacked_ii.h"
+#include "gnuradio/blocks/packed_to_unpacked.h"
 %}
 
-%include "gnuradio/blocks/min_ff.h"
-%include "gnuradio/blocks/min_ii.h"
-%include "gnuradio/blocks/min_ss.h"
-%include "gnuradio/blocks/moving_average_cc.h"
-%include "gnuradio/blocks/moving_average_ff.h"
-%include "gnuradio/blocks/moving_average_ii.h"
-%include "gnuradio/blocks/moving_average_ss.h"
+%include "gnuradio/blocks/min_blk.h"
+%include "gnuradio/blocks/moving_average.h"
 %include "gnuradio/blocks/nlog10_ff.h"
-%include "gnuradio/blocks/not_bb.h"
-%include "gnuradio/blocks/not_ss.h"
-%include "gnuradio/blocks/not_ii.h"
-%include "gnuradio/blocks/or_bb.h"
-%include "gnuradio/blocks/or_ss.h"
-%include "gnuradio/blocks/or_ii.h"
+%include "gnuradio/blocks/not_blk.h"
+%include "gnuradio/blocks/or_blk.h"
 %include "gnuradio/blocks/patterned_interleaver.h"
 %include "gnuradio/blocks/pack_k_bits_bb.h"
-%include "gnuradio/blocks/packed_to_unpacked_bb.h"
-%include "gnuradio/blocks/packed_to_unpacked_ss.h"
-%include "gnuradio/blocks/packed_to_unpacked_ii.h"
+%include "gnuradio/blocks/packed_to_unpacked.h"
 
-GR_SWIG_BLOCK_MAGIC2(blocks, min_ff);
-GR_SWIG_BLOCK_MAGIC2(blocks, min_ii);
-GR_SWIG_BLOCK_MAGIC2(blocks, min_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_cc);
-GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ff);
-GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ii);
-GR_SWIG_BLOCK_MAGIC2(blocks, moving_average_ss);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, min_ff, min_blk<float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, min_ii, min_blk<std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, min_ss, min_blk<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, moving_average_cc, moving_average<gr_complex>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, moving_average_ff, moving_average<float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, moving_average_ii, moving_average<std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, moving_average_ss, moving_average<std::int16_t>);
 GR_SWIG_BLOCK_MAGIC2(blocks, nlog10_ff);
-GR_SWIG_BLOCK_MAGIC2(blocks, not_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, not_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, not_ii);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, or_ii);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, not_bb, not_blk<std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, not_ss, not_blk<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, not_ii, not_blk<std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, or_bb, or_blk<char>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, or_ss, or_blk<short>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, or_ii, or_blk<int>);
 GR_SWIG_BLOCK_MAGIC2(blocks, patterned_interleaver);
 GR_SWIG_BLOCK_MAGIC2(blocks, pack_k_bits_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_bb);
-GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ss);
-GR_SWIG_BLOCK_MAGIC2(blocks, packed_to_unpacked_ii);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, packed_to_unpacked_bb, packed_to_unpacked<std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, packed_to_unpacked_ss, packed_to_unpacked<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(blocks, packed_to_unpacked_ii, packed_to_unpacked<std::int32_t>);
