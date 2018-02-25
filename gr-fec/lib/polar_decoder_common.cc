@@ -125,7 +125,7 @@ namespace gr {
       polar_decoder_common::butterfly_volk(float* llrs, unsigned char* u, const int stage,
                                            const int u_num, const int row)
       {
-        volk_32f_8u_polarbutterfly_32f(llrs, u, block_size(), block_power(), stage, u_num, row);
+        volk_32f_8u_polarbutterfly_32f(llrs, u, block_power(), stage, u_num, row);
       }
 
 
