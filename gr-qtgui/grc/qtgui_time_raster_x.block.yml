@@ -97,111 +97,111 @@ parameters:
     hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
 -   id: label2
     label: Line 2 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
 -   id: color2
     label: Line 2 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
 -   id: alpha2
     label: Line 2 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 2 else 'all') }
 -   id: label3
     label: Line 3 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
 -   id: color3
     label: Line 3 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
 -   id: alpha3
     label: Line 3 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 3 else 'all') }
 -   id: label4
     label: Line 4 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
 -   id: color4
     label: Line 4 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
 -   id: alpha4
     label: Line 4 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 4 else 'all') }
 -   id: label5
     label: Line 5 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
 -   id: color5
     label: Line 5 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
 -   id: alpha5
     label: Line 5 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 5 else 'all') }
 -   id: label6
     label: Line 6 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
 -   id: color6
     label: Line 6 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
 -   id: alpha6
     label: Line 6 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 6 else 'all') }
 -   id: label7
     label: Line 7 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
 -   id: color7
     label: Line 7 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
 -   id: alpha7
     label: Line 7 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 7 else 'all') }
 -   id: label8
     label: Line 8 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
 -   id: color8
     label: Line 8 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
 -   id: alpha8
     label: Line 8 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 8 else 'all') }
 -   id: label9
     label: Line 9 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
 -   id: color9
     label: Line 9 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
 -   id: alpha9
     label: Line 9 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 9 else 'all') }
 -   id: label10
     label: Line 10 Label
-    dtype: ''
+    base_key: label1
     hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
 -   id: color10
     label: Line 10 Color
-    dtype: ''
+    base_key: color1
     hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
 -   id: alpha10
     label: Line 10 Alpha
-    dtype: ''
+    base_key: alpha1
     hide: ${ ('part' if int(nconnections) >= 10 else 'all') }
 
 inputs:
