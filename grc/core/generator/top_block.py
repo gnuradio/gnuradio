@@ -145,7 +145,7 @@ class TopBlockGenerator(object):
             imports.append('import threading')
 
         def is_duplicate(l):
-            if l.startswith('import') or l.startswith('from') and l in seen:
+            if (l.startswith('import') or l.startswith('from')) and l in seen:
                 return True
             seen.add(line)
             return False
