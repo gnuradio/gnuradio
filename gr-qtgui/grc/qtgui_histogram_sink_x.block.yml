@@ -21,7 +21,7 @@ parameters:
     label: Number of Points
     dtype: int
     default: '1024'
-    hide: ${ ('all' if type.startwith('msg') else 'none') }
+    hide: ${ ('all' if type.startswith('msg') else 'none') }
 -   id: bins
     label: Number of Bins
     dtype: int
@@ -57,7 +57,7 @@ parameters:
     label: Number of Inputs
     dtype: int
     default: '1'
-    hide: ${ ('all' if type.startwith('msg') else 'part') }
+    hide: ${ ('all' if type.startswith('msg') else 'part') }
 -   id: update_time
     label: Update Period
     dtype: float
@@ -366,18 +366,17 @@ templates:
     - set_title(${which}, ${title})
     - set_color(${which}, ${color})
     - set_bins(${bins})
-    - set_bins(${bins})
     - set_x_axis(${xmin}, ${xmax})
     make: |-
         <%
             win = 'self._%s_win'%id
         %>\
         qtgui.histogram_sink_f(
-            $size,
-            $bins,
-            $xmin,
-            $xmax,
-            $name,
+            ${size},
+            ${bins},
+            ${xmin},
+            ${xmax},
+            ${name},
             ${ 0 if type.startswith('msg') else nconnections}
         )
 

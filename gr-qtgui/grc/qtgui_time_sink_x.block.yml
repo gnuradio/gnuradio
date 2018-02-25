@@ -552,11 +552,11 @@ templates:
                     self.${id}.set_line_label(i, "Im{{Data {0}}}".format(i/2))
             else:
                 self.${id}.set_line_label(i, labels[i])
-            self.${id].set_line_width(i, widths[i])
-            self.${id].set_line_color(i, colors[i])
-            self.${id].set_line_style(i, styles[i])
-            self.${id].set_line_marker(i, markers[i])
-            self.${id].set_line_alpha(i, alphas[i])
+            self.${id}.set_line_width(i, widths[i])
+            self.${id}.set_line_color(i, colors[i])
+            self.${id}.set_line_style(i, styles[i])
+            self.${id}.set_line_marker(i, markers[i])
+            self.${id}.set_line_alpha(i, alphas[i])
         % endif
 
         ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)

@@ -132,7 +132,7 @@ templates:
         self.${id}.set_update_time(1.0/${rate})
         ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
 
-        self.${id}.enable_rf_freq($showrf)
+        self.${id}.enable_rf_freq(${showrf})
 
         % if freqchangevar is not None:
         def ${id}_callback(p, num):
