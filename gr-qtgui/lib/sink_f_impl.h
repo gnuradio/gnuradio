@@ -46,6 +46,8 @@ namespace gr {
       double d_bandwidth;
       std::string d_name;
 
+      const pmt::pmt_t d_port;
+
       bool d_shift;
       fft::fft_complex *d_fft;
 

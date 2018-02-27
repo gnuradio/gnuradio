@@ -154,7 +154,7 @@ namespace gr {
     usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direction)
     {
       _chans_to_tune.reset(chan);
-      if (pmt::eqv(direction, pmt::mp("TX"))) {
+      if (pmt::eqv(direction, ANT_DIRECTION_TX)) {
         // TODO: what happens if the TX device is not instantiated? Catch error?
         return _dev->set_tx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
       } else {

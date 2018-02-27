@@ -42,7 +42,8 @@ namespace gr {
       : gr::block("rep_msg_sink",
                   gr::io_signature::make(0, 0, 0),
                   gr::io_signature::make(0, 0, 0)),
-        d_timeout(timeout)
+      d_timeout(timeout),
+      d_port(pmt::mp("in"))
     {
       int major, minor, patch;
       zmq::version(&major, &minor, &patch);
@@ -58,7 +59,7 @@ namespace gr {
       d_socket->setsockopt(ZMQ_LINGER, &time, sizeof(time));
       d_socket->bind (address);
 
-      message_port_register_in(pmt::mp("in"));
+      message_port_register_in(d_port);
     }
 
     rep_msg_sink_impl::~rep_msg_sink_impl()
@@ -87,7 +88,7 @@ namespace gr {
       while(!d_finished) {
 
         // while we have data, wait for query...
-        while(!empty_p(pmt::mp("in"))) {
+        while(!empty_p(d_port)) {
 
           // wait for query...
           zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
@@ -105,7 +106,7 @@ namespace gr {
               throw std::runtime_error("Request was not 1 msg for rep/req request!!");
 
             // create message copy and send
-            pmt::pmt_t msg = delete_head_nowait(pmt::mp("in"));
+            pmt::pmt_t msg = delete_head_nowait(d_port);
             std::stringbuf sb("");
             pmt::serialize( msg, sb );
             std::string s = sb.str();

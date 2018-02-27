@@ -46,7 +46,9 @@ namespace gr {
 
       std::string d_name; //!< Initial title of the plot
       int d_nconnections; //!< Number of connected streaming ports on input
-      std::string d_msg_key; //!< Key of outgoing messages
+
+      const pmt::pmt_t d_port;
+      const pmt::pmt_t d_msg; //< Key of outgoing messages
 
       std::vector<double*> d_magbufs;
 

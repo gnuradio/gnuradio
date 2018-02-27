@@ -46,7 +46,7 @@ namespace gr {
         d_type(type),
         d_curr_len(0)
     {
-      message_port_register_in(PDU_PORT_ID);
+      message_port_register_in(pdu::s_pdu_port_id);
     }
 
     int pdu_to_tagged_stream_impl::calculate_output_stream_length(const gr_vector_int &)
@@ -55,7 +55,7 @@ namespace gr {
           /* FIXME: This blocking call is far from ideal but is the best we
 	   *        can do at the moment
 	   */
-        pmt::pmt_t msg(delete_head_blocking(PDU_PORT_ID, 100));
+        pmt::pmt_t msg(delete_head_blocking(pdu::s_pdu_port_id, 100));
         if (msg.get() == NULL) {
           return 0;
         }

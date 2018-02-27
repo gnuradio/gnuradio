@@ -58,8 +58,9 @@ namespace gr {
                    io_signature::make(0, 0, 0)),
 	d_fftsize(fftsize), d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
-	d_center_freq(fc), d_bandwidth(bw), d_name(name),
-	d_nconnections(nconnections), d_parent(parent)
+  d_center_freq(fc), d_bandwidth(bw), d_name(name),
+  d_nconnections(nconnections), d_parent(parent),
+  d_port(pmt::mp("freq"))
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
@@ -71,9 +72,9 @@ namespace gr {
 
       // setup output message port to post frequency when display is
       // double-clicked
-      message_port_register_out(pmt::mp("freq"));
-      message_port_register_in(pmt::mp("freq"));
-      set_msg_handler(pmt::mp("freq"),
+      message_port_register_out(d_port);
+      message_port_register_in(d_port);
+      set_msg_handler(d_port,
                       boost::bind(&freq_sink_c_impl::handle_set_freq, this, _1));
 
       // setup PDU handling input port
@@ -585,8 +586,8 @@ namespace gr {
     {
       if(d_main_gui->checkClicked()) {
         double freq = d_main_gui->getClickedFreq();
-        message_port_pub(pmt::mp("freq"),
-                         pmt::cons(pmt::mp("freq"),
+        message_port_pub(d_port,
+                         pmt::cons(d_port,
                                    pmt::from_double(freq)));
       }
     }

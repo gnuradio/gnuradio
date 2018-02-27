@@ -45,6 +45,7 @@ namespace gr {
         (new message_strobe_random_impl(msg, dist, mean_ms, std_ms));
     }
 
+
     message_strobe_random_impl::message_strobe_random_impl(pmt::pmt_t msg, message_strobe_random_distribution_t dist, float mean_ms, float std_ms)
       : block("message_strobe_random",
                  io_signature::make(0, 0, 0),
@@ -54,13 +55,14 @@ namespace gr {
         d_std_ms(std_ms),
         d_dist(dist),
         d_msg(msg),
-        d_rng()
+        d_rng(),
+        d_port(pmt::mp("strobe"))
     {
       // allocate RNGs
       update_dist();
 
       // set up ports
-      message_port_register_out(pmt::mp("strobe"));
+      message_port_register_out(d_port);
       d_thread = boost::shared_ptr<gr::thread::thread>
         (new gr::thread::thread(boost::bind(&message_strobe_random_impl::run, this)));
 
@@ -113,7 +115,7 @@ namespace gr {
           return;
         }
 
-        message_port_pub(pmt::mp("strobe"), d_msg);
+        message_port_pub(d_port, d_msg);
       }
     }
 

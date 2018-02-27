@@ -170,7 +170,8 @@ namespace gr {
         }
       }
 
-      meta = pmt::dict_add(meta, pmt::mp("iterations"), pmt::mp(d_decoder->get_iterations()) );
+      static const pmt::pmt_t iterations_key = pmt::mp("iterations");
+      meta = pmt::dict_add(meta, iterations_key, pmt::mp(d_decoder->get_iterations()) );
       message_port_pub(d_out_port, pmt::cons(meta, outvec));
     }
 

@@ -77,8 +77,9 @@ namespace gr {
         d_vecavg(1.0),
         d_name(name),
         d_nconnections(nconnections),
-        d_msg_key("x"),
-        d_parent(parent)
+        d_msg(pmt::mp("x")),
+        d_parent(parent),
+        d_port(pmt::mp(MSG_PORT_OUT_XVAL))
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
@@ -90,7 +91,7 @@ namespace gr {
 
       // setup output message port to post frequency when display is
       // double-clicked
-      message_port_register_out(pmt::mp(MSG_PORT_OUT_XVAL));
+      message_port_register_out(d_port);
 
       d_main_gui = NULL;
 
@@ -397,8 +398,8 @@ namespace gr {
       if(d_main_gui->checkClicked()) {
         double xval = d_main_gui->getClickedXVal();
         message_port_pub(
-            pmt::mp(MSG_PORT_OUT_XVAL),
-            pmt::cons(pmt::mp(d_msg_key), pmt::from_double(xval))
+                         d_port,
+                         pmt::cons(d_msg, pmt::from_double(xval))
         );
       }
     }

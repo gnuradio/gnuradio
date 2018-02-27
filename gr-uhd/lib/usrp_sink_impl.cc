@@ -139,7 +139,7 @@ namespace gr {
     usrp_sink_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direction)
     {
       _chans_to_tune.reset(chan);
-      if (pmt::eqv(direction, pmt::mp("RX"))) {
+      if (pmt::eqv(direction, ANT_DIRECTION_RX)) {
         // TODO: what happens if the RX device is not instantiated? Catch error?
         return _dev->set_rx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
       } else {
@@ -518,14 +518,14 @@ namespace gr {
           // If it's on the first sample, immediately do the tune:
           GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq on start of burst."));
           pmt::pmt_t freq_cmd = pmt::make_dict();
-          freq_cmd = pmt::dict_add(freq_cmd, pmt::mp("freq"), value);
+          freq_cmd = pmt::dict_add(freq_cmd, CMD_FREQ_KEY, value);
           msg_handler_command(freq_cmd);
         }
         else if(pmt::equal(key, FREQ_KEY)) {
           // If it's not on the first sample, queue this command and only tx until here:
           GR_LOG_DEBUG(d_debug_logger, boost::format("Received tx_freq mid-burst."));
           pmt::pmt_t freq_cmd = pmt::make_dict();
-          freq_cmd = pmt::dict_add(freq_cmd, pmt::mp("freq"), value);
+          freq_cmd = pmt::dict_add(freq_cmd, CMD_FREQ_KEY, value);
           commands_in_burst.push_back(freq_cmd);
           max_count = my_tag_count + 1;
           in_burst_cmd_offset = my_tag_count;

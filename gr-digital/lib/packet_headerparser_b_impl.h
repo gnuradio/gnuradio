@@ -32,6 +32,8 @@ namespace gr {
     private:
       packet_header_default::sptr d_header_formatter;
 
+      const pmt::pmt_t d_port;
+
     public:
       packet_headerparser_b_impl(const gr::digital::packet_header_default::sptr &header_formatter);
       ~packet_headerparser_b_impl();
