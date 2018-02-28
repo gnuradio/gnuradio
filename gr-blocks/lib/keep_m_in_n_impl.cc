@@ -39,12 +39,12 @@ namespace gr {
 
     keep_m_in_n_impl::keep_m_in_n_impl(size_t itemsize, int m, int n, int offset)
       : block("keep_m_in_n",
-              io_signature::make (1, 1, itemsize),
-              io_signature::make (1, 1, itemsize)),
-	d_m(m),
-	d_n(n),
-	d_offset(offset),
-	d_itemsize(itemsize)
+          io_signature::make (1, 1, itemsize),
+          io_signature::make (1, 1, itemsize)),
+              d_m(m),
+              d_n(n),
+              d_offset(offset),
+              d_itemsize(itemsize)
     {
       // sanity checking
       if(d_m <= 0) {
@@ -98,9 +98,9 @@ namespace gr {
 
     int
     keep_m_in_n_impl::general_work(int noutput_items,
-				   gr_vector_int &ninput_items,
-				   gr_vector_const_void_star &input_items,
-				   gr_vector_void_star &output_items)
+        gr_vector_int &ninput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items)
     {
       uint8_t* out = (uint8_t*)output_items[0];
       const uint8_t* in = (const uint8_t*)input_items[0];
@@ -109,11 +109,11 @@ namespace gr {
       int blks = std::min(noutput_items/d_m, ninput_items[0]/d_n);
 
       for(int i=0; i<blks; i++) {
-	// set up copy pointers
-	const uint8_t* iptr = &in[(i*d_n + d_offset)*d_itemsize];
-	uint8_t* optr = &out[i*d_m*d_itemsize];
-	// perform copy
-	memcpy( optr, iptr, d_m*d_itemsize );
+        // set up copy pointers
+        const uint8_t* iptr = &in[(i*d_n + d_offset)*d_itemsize];
+        uint8_t* optr = &out[i*d_m*d_itemsize];
+        // perform copy
+        memcpy( optr, iptr, d_m*d_itemsize );
       }
 
       consume_each(blks*d_n);
