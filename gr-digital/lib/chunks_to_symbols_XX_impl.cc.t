@@ -62,37 +62,29 @@ namespace gr {
 
     void
     @IMPL_NAME@::set_vector_from_pmt(std::vector<gr_complex> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
-      symbol_table.resize(0);
-      for (unsigned int i=0; i<pmt::length(symbol_table_pmt); i++) {
-        symbol_table.push_back(pmt::c32vector_ref(symbol_table_pmt, i));
-      }      
+      size_t length;
+      const gr_complex *elements = pmt::c32vector_elements(symbol_table_pmt, length);
+      symbol_table.assign(elements, elements + length);
     }
 
     void
     @IMPL_NAME@::set_vector_from_pmt(std::vector<float> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
-      symbol_table.resize(0);
-      for (unsigned int i=0; i<pmt::length(symbol_table_pmt); i++) {
-        float f = pmt::f32vector_ref(symbol_table_pmt, i);
-        symbol_table.push_back(f);
-      }
+      size_t length;
+      const float *elements = pmt::f32vector_elements(symbol_table_pmt, length);
+      symbol_table.assign(elements, elements + length);
     }
-    
+
     void
     @IMPL_NAME@::handle_set_symbol_table(pmt::pmt_t symbol_table_pmt)
     {
-      std::vector<@O_TYPE@> symbol_table;
-      set_vector_from_pmt(symbol_table, symbol_table_pmt);
-      set_symbol_table(symbol_table);
+      set_vector_from_pmt(d_symbol_table, symbol_table_pmt);
     }
 
-    
     void
     @IMPL_NAME@::set_symbol_table(const std::vector<@O_TYPE@> &symbol_table)
     {
-      d_symbol_table.resize(0);
-      for (unsigned int i=0; i<symbol_table.size(); i++) {
-        d_symbol_table.push_back(symbol_table[i]);
-      }
+      gr::thread::scoped_lock lock(d_setlock);
+      d_symbol_table = symbol_table;
     }
 
     int
@@ -100,6 +92,7 @@ namespace gr {
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
+      gr::thread::scoped_lock lock(d_setlock);
       assert(noutput_items % d_D == 0);
       assert(input_items.size() == output_items.size());
       int nstreams = input_items.size();
@@ -114,7 +107,6 @@ namespace gr {
 
         // per stream processing
         for(int i = 0; i < noutput_items / d_D; i++) {
-          
           std::vector<tag_t> tags_now;
           tchecker.get_tags(tags_now, i+nitems_read(m));
           for (unsigned int j=0; j<tags_now.size(); j++) {
