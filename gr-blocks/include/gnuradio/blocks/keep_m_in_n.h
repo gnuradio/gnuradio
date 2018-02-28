@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief decimate a stream, keeping \p m items out of every \p n.
+     * \brief decimate a stream, keeping the first \p m items out of every \p n starting after \p offset items.
      * \ingroup stream_operators_blk
      */
     class BLOCKS_API keep_m_in_n : virtual public block
