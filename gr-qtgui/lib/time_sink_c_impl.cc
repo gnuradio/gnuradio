@@ -53,8 +53,9 @@ namespace gr {
                    io_signature::make(0, nconnections, sizeof(gr_complex)),
                    io_signature::make(0, 0, 0)),
 	d_size(size), d_buffer_size(2*size), d_samp_rate(samp_rate), d_name(name),
-  d_nconnections(2*nconnections), d_parent(parent),
-  d_tag_key(pmt::mp("tags"))
+    d_nconnections(2*nconnections),
+    d_tag_key(pmt::mp("tags")),
+    d_parent(parent)
     {
       if(nconnections > 12)
         throw std::runtime_error("time_sink_c only supports up to 12 inputs");

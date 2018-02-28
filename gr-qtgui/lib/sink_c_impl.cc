@@ -58,13 +58,13 @@ namespace gr {
       : block("sink_c",
 		 io_signature::make(1, -1, sizeof(gr_complex)),
 		 io_signature::make(0, 0, 0)),
-	d_fftsize(fftsize),
-	d_wintype((filter::firdes::win_type)(wintype)),
-	d_center_freq(fc), d_bandwidth(bw), d_name(name),
-	d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
-	d_plottime(plottime), d_plotconst(plotconst),
-  d_parent(parent),
-  d_port(pmt::mp("freq"))
+    d_fftsize(fftsize),
+    d_wintype((filter::firdes::win_type)(wintype)),
+    d_center_freq(fc), d_bandwidth(bw), d_name(name),
+    d_port(pmt::mp("freq")),
+    d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
+    d_plottime(plottime), d_plotconst(plotconst),
+    d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
