@@ -31,7 +31,7 @@ from helper_functions import *
 try:
     from channel_construction_awgn import tal_vardy_tpm_algorithm
 except ImportError:
-    print "SciPy missing. Overwrite Tal-Vardy algorithm with BEC approximation"
+    print("SciPy missing. Overwrite Tal-Vardy algorithm with BEC approximation")
     def tal_vardy_tpm_algorithm(block_size, design_snr, mu):
         return bhattacharyya_bounds(design_snr, block_size)
 
@@ -123,7 +123,7 @@ def load_z_parameters(block_size, design_snr, mu):
 
 def main():
     np.set_printoptions(precision=3, linewidth=150)
-    print 'channel construction Bhattacharyya bounds by Arikan'
+    print('channel construction Bhattacharyya bounds by Arikan')
     n = 10
     m = 2 ** n
     k = m // 2
