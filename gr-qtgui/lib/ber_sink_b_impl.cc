@@ -22,11 +22,11 @@
 
 #include "ber_sink_b_impl.h"
 
-#include <boost/math/special_functions/erf.hpp>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
+#include <cmath>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -91,7 +91,7 @@ namespace gr {
       for(size_t i = 0; i < esnos.size(); i++) {
         double e = pow(10.0, esnos[i]/10.0);
         d_esno_buffers[curves][i] = esnos[i];
-        d_ber_buffers[curves][i] = log10(0.5*boost::math::erfc(sqrt(e)));
+        d_ber_buffers[curves][i] = log10(0.5*erfc(sqrt(e)));
       }
 
 
