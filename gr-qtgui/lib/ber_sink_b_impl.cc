@@ -22,11 +22,11 @@
 
 #include "ber_sink_b_impl.h"
 
-#include <boost/math/special_functions/erf.hpp>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
+#include <cmath>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -91,7 +91,7 @@ namespace gr {
       for(size_t i = 0; i < esnos.size(); i++) {
         double e = pow(10.0, esnos[i]/10.0);
         d_esno_buffers[curves][i] = esnos[i];
-        d_ber_buffers[curves][i] = log10(0.5*boost::math::erfc(sqrt(e)));
+        d_ber_buffers[curves][i] = std::log10(0.5*std::erf(std::sqrt(e)));
       }
 
 
@@ -337,7 +337,7 @@ namespace gr {
           if(d_total_errors[j * d_nconnections + i] >= d_ber_min_errors) {
             done++;
           }
-          else if(log10(((double)d_ber_min_errors)/(d_total[j * d_nconnections + i] * 8.0)) < d_ber_limit) {
+          else if(std::log10(((double)d_ber_min_errors)/(d_total[j * d_nconnections + i] * 8.0)) < d_ber_limit) {
             maxed++;
           }
         }
@@ -355,7 +355,7 @@ namespace gr {
       for(unsigned int i = 0; i < ninput_items.size(); i += 2) {
 
         if((d_total_errors[i >> 1] < d_ber_min_errors) && \
-           (log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) >= d_ber_limit)) {
+           (std::log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) >= d_ber_limit)) {
 
           int items = ninput_items[i] <= ninput_items[i+1] ? ninput_items[i] : ninput_items[i+1];
 
@@ -371,7 +371,7 @@ namespace gr {
 
             d_total[i >> 1] += items;
 
-            ber = log10(((double)d_total_errors[i >> 1])/(d_total[i >> 1] * 8.0));
+            ber = std::log10(((double)d_total_errors[i >> 1])/(d_total[i >> 1] * 8.0));
             d_ber_buffers[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = ber;
 
           }
@@ -382,7 +382,7 @@ namespace gr {
             GR_LOG_INFO(d_logger, boost::format("    %1% over %2%  -->  %3%") \
                         % d_total_errors[i >> 1] % (d_total[i >> 1] * 8) % ber);
           }
-          else if(log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) < d_ber_limit) {
+          else if(std::log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) < d_ber_limit) {
             GR_LOG_INFO(d_logger, "BER Limit Reached");
             d_ber_buffers[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = d_ber_limit;
             d_total_errors[i >> 1] = d_ber_min_errors + 1;
