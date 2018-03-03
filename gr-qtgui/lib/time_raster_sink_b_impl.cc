@@ -25,10 +25,13 @@
 #endif
 
 #include "time_raster_sink_b_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <string.h>
+
 #include <volk/volk.h>
+
+#include <string.h>
 
 namespace gr {
   namespace qtgui {

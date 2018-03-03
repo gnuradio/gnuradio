@@ -20,10 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cmath>
+#include <gnuradio/qtgui/timerasterdisplayform.h>
+
 #include <QColorDialog>
 #include <QMessageBox>
-#include <gnuradio/qtgui/timerasterdisplayform.h>
+
+#include <cmath>
 #include <iostream>
 
 TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,

@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_TIME_SINK_F_IMPL_H
 
 #include <gnuradio/qtgui/time_sink_f.h>
+
 #include <gnuradio/qtgui/timedisplayform.h>
 #include <gnuradio/high_res_timer.h>
 

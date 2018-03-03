@@ -25,10 +25,13 @@
 #endif
 
 #include "sink_f_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <string.h>
+
 #include <volk/volk.h>
+
+#include <string.h>
 
 namespace gr {
   namespace qtgui {

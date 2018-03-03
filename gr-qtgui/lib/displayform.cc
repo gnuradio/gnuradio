@@ -21,6 +21,7 @@
  */
 
 #include <gnuradio/qtgui/displayform.h>
+
 #include <iostream>
 #include <QPixmap>
 #include <QFileDialog>

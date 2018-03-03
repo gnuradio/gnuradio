@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_CONST_SINK_C_IMPL_H
 
 #include <gnuradio/qtgui/const_sink_c.h>
+
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/constellationdisplayform.h>
 
