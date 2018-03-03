@@ -24,6 +24,7 @@
 #define SPECTRUM_GUI_CLASS_CPP
 
 #include <gnuradio/qtgui/SpectrumGUIClass.h>
+
 //Added by qt3to4:
 #include <QEvent>
 #include <volk/volk.h>

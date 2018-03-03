@@ -21,6 +21,7 @@
  */
 
 #include "ber_sink_b_impl.h"
+
 #include <boost/math/special_functions/erf.hpp>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>

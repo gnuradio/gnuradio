@@ -25,6 +25,7 @@
 #endif
 
 #include "const_sink_c_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <string.h>
