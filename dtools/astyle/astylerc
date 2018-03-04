@@ -1,0 +1,22 @@
+# Indent style: 1TBS, 4 spaces per indent
+--style=1tbs
+--indent=spaces=4
+# Attach brackets to namespace statements and classes
+--attach-namespaces
+--attach-classes
+# Don't unnecessarily pad parens...
+--unpad-paren
+# ...except:
+# Pad around operators (i+1 => i + 1)
+--pad-oper
+# Pad between header and follow-up paren (if(x) => if (x))
+--pad-header
+# Don't leave if statements unfollowed by {}
+--add-brackets
+# Keep complex statements on one line, the author probably had a reason
+--keep-one-line-statements
+# Templates: vector< vector<int> > => vector<vector<int>>
+# Not using for now, requires C++11
+#--close-templates
+# Force line breaks
+--max-code-length=100
