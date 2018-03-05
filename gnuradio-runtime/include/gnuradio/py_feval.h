@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_PY_FEVAL_H
 #define INCLUDED_GR_PY_FEVAL_H
 
+#include <Python.h>
 #include <pmt/pmt.h>
 #include <gnuradio/feval.h>
 
