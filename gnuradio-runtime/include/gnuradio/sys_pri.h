@@ -23,7 +23,7 @@
 #define INCLUDED_GNURADIO_SYS_PRI_H
 
 #include <gnuradio/api.h>
-#include <realtime.h>
+#include <gnuradio/realtime.h>
 
 /*
  * A single place to define real-time priorities used by the system itself
@@ -31,10 +31,10 @@
 namespace gr {
 
   struct GR_RUNTIME_API sys_pri {
-    static rt_sched_param python();		  // python code
-    static rt_sched_param normal();		  // normal blocks
-    static rt_sched_param gcell_event_handler();
-    static rt_sched_param usrp2_backend();	  // thread that services the ethernet
+    static struct GR_RUNTIME_API rt_sched_param python();		  // python code
+    static struct GR_RUNTIME_API rt_sched_param normal();		  // normal blocks
+    static struct GR_RUNTIME_API rt_sched_param gcell_event_handler();
+    static struct GR_RUNTIME_API rt_sched_param usrp2_backend();	  // thread that services the ethernet
   };
 
 } /* namespace gr */
