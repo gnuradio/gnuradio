@@ -81,36 +81,42 @@ class msg_handler(gr.feval_p):
 # io_signature for Python
 ########################################################################
 class py_io_signature(object):
-    """Describes the type/number of ports for block input or output.
-
-    Args:
-
-    min_ports (int): mininum number of connected ports.
-
-    max_ports (int): maximum number of connected ports. -1 indicates
-    no limit.
-
-    type_list (list[str]): numpy type names for each port. If the
-    number of connected ports is greater than the number of types
-    provided, the last type in the list is repeated.
+    """
+    Describes the type/number of ports for block input or output.
     """
 
     # Minimum and maximum number of ports, and a list of numpy types.
     def __init__(self, min_ports, max_ports, type_list):
+        """
+        Args:
+
+        min_ports (int): mininum number of connected ports.
+
+        max_ports (int): maximum number of connected ports. -1 indicates
+        no limit.
+
+        type_list (list[str]): numpy type names for each port. If the
+        number of connected ports is greater than the number of types
+        provided, the last type in the list is repeated.
+        """
         self.__min_ports = min_ports
         self.__max_ports = max_ports
         self.__types = map(numpy.dtype, type_list)
 
-    # Make/return a gr.io_signature. A non-empty list of sizes is
-    # required, even if there are no ports.
     def gr_io_signature(self):
+        """
+        Make/return a gr.io_signature. A non-empty list of sizes is
+        required, even if there are no ports.
+        """
         return io_signaturev(self.__min_ports, self.__max_ports,
                              [t.itemsize for t in self.__types] or [0])
 
-    # Return data types for the first nports ports. If nports is
-    # smaller than the provided type list, return a truncated list. If
-    # larger, fill with the last type.
     def port_types(self, nports):
+        """
+        Return data types for the first nports ports. If nports is
+        smaller than the provided type list, return a truncated list. If
+        larger, fill with the last type.
+        """
         ntypes = len(self.__types)
         if ntypes == 0:
             return ()
