@@ -101,7 +101,7 @@ class py_io_signature(object):
         """
         self.__min_ports = min_ports
         self.__max_ports = max_ports
-        self.__types = map(numpy.dtype, type_list)
+        self.__types = tuple( numpy.dtype(t) for t in type_list )
 
     def gr_io_signature(self):
         """
@@ -123,6 +123,15 @@ class py_io_signature(object):
         if nports <= ntypes:
             return self.__types[:nports]
         return self.__types + [self.__types[-1]]*(nports-ntypes)
+
+    def __iter__(self):
+        """
+        Return the iterator over the maximum ports type list.
+        """
+        return iter(self.port_types(self.__max_ports))
+
+    def __hash__(self):
+        return hash((self.__min_ports, self.__max_ports, self.__types))
 
 ########################################################################
 # The guts that make this into a gr block
