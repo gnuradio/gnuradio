@@ -48,7 +48,7 @@ class ModToolRemove(ModTool):
         else:
             with SequenceCompleter():
                 self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
-        if len(self._info['pattern']) == 0:
+        if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
     def run(self):
