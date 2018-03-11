@@ -21,6 +21,29 @@ class iqbal_gen(gr.hier_block2):
         Developed from source (2014):
         "In-Phase and Quadrature Imbalance:
           Modeling, Estimation, and Compensation"
+
+        TX Impairment:
+
+                                  {R}--|Multiply: 10**(mag/20)|--+--|Multiply: cos(pi*degree/180)|--X1
+        Input ---|Complex2Float|---|                             +--|Multiply: sin(pi*degree/180)|--X2
+                                  {I}--|  Adder  |
+                                   X2--|   (+)   |--X3
+
+                          X1--{R}--| Float 2 |--- Output
+                          X3--{I}--| Complex |
+
+        RX Impairment:
+
+                                  {R}--|Multiply: cos(pi*degree/180)|-------|       |
+        Input ---|Complex2Float|---|                                        | Adder |--X1
+                                  {I}--+--|Multiply: sin(pi*degree/180)|----|  (+)  |
+                                       |
+                                       +--X2
+
+                        X1--|Multply: 10**(mag/20)|--{R}--| Float 2 |--- Output
+                        X2---------------------------{I}--| Complex |
+
+        (ASCII ART monospace viewing)
         '''
         gr.hier_block2.__init__(
             self, "IQ Imbalance Generator",
