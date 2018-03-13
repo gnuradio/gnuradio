@@ -19,13 +19,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 MAIN_TMPL = """\
-id: uhd_usrp_sink
+id: uhd_usrp_${sourk}
 label: 'UHD: USRP ${sourk.title()}'
 flags: throttle
 
 parameters:
 -   id: type
-    label: ${'$'}{direction.title()}put Type
+    label: ${direction.title()}put Type
     dtype: enum
     options: [fc32, sc16, item32]
     option_labels: [Complex float32, Complex int16, VITA word32]
@@ -84,17 +84,17 @@ parameters:
     dtype: string
     options: ['', internal, external, mimo, gpsdo]
     option_labels: [Default, Internal, External, MIMO Cable, O/B GPSDO]
-    hide: ${'$'}{ 'all' if not (num_mboards > ${m}) else ( 'none' if clock_source${m}) else 'part')}
+    hide: ${'$'}{ 'all' if not (num_mboards > ${m}) else ( 'none' if clock_source${m} else 'part')}
 -   id: time_source${m}
     label: 'Mb${m}: Time Source'
     dtype: string
     options: ['', external, mimo, gpsdo]
     option_labels: [Default, External, MIMO Cable, O/B GPSDO]
-    hide: ${'$'}{ 'all' if not (num_mboards > ${m}) else ('none' if time_source${m}) else 'part')}
+    hide: ${'$'}{ 'all' if not (num_mboards > ${m}) else ('none' if time_source${m} else 'part')}
 -   id: sd_spec${m}
     label: 'Mb${m}: Subdev Spec'
     dtype: string
-    hide: ${'$'}{ 'all' if not (num_mboards > ${m}) else ('none' if sd_spec${m}) else 'part')}
+    hide: ${'$'}{ 'all' if not (num_mboards > ${m}) else ('none' if sd_spec${m} else 'part')}
 % endfor
 -   id: nchan
     label: Num Channels
@@ -129,7 +129,7 @@ templates:
         from gnuradio import uhd
         import time
     make: |
-        uhd.usrp_sink(
+        uhd.usrp_${sourk}(
                 ",".join((${'$'}{dev_addr}, ${'$'}{dev_args})),
                 uhd.stream_args(
                         cpu_format="${'$'}{type}",
@@ -155,16 +155,16 @@ templates:
         self.${'$'}{id}.set_samp_rate(${'$'}{samp_rate})
         ${'%'} if sync == 'sync':
         self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec())
-        #elif ${'$'}{sync} == 'pc_clock'
+        ${'%'} elif sync == 'pc_clock':
         self.${'$'}{id}.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
         ${'%'} endif
     callbacks:
     -   set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
     -   set_center_freq(${'center_freq' + str(n)}, ${n})
-    -   self.${'$'}{id}.set_${'$'}{'normalized_' if eval('norm_gain' + str(n))}gain(gain${n}, ${n})
-    -   ${'$'}{'set_lo_source(lo_source${n}, uhd.ALL_LOS, ${n})' if not hide_lo_controls()}
-    -   ${'$'}{'set_lo_export_enabled(lo_export${n}, uhd.ALL_LOS, ${n})' if not hide_lo_controls()}
+    -   self.${'$'}{id}.set_${'$'}{'normalized_' if norm_gain${n} else ''}gain(gain${n}, ${n})
+    -   ${'$'}{'set_lo_source(lo_source${n}, uhd.ALL_LOS, ${n})' if not hide_lo_controls else ''}
+    -   ${'$'}{'set_lo_export_enabled(lo_export${n}, uhd.ALL_LOS, ${n})' if not hide_lo_controls else ''}
     -   set_antenna(${'ant' + str(n)}, ${n})
     -   set_bandwidth(${'bw' + str(n)}, ${n})
     % endfor
@@ -269,7 +269,7 @@ PARAMS_TMPL = """
     default: 'False'
     options: ['False', 'True']
     option_labels: [Absolute (dB), Normalized]
-    hide: ${'$'}{ 'all' if nchan <= ${n} else ('none' if bool(eval('norm_gain' + str(n))) else 'part')}
+    hide: ${'$'}{ 'all' if nchan <= ${n} else ('none' if bool(eval('norm_gain' + str(${n}))) else 'part')}
 -   id: ant${n}
     label: 'Ch${n}: Antenna'
     category: RF Options
@@ -281,13 +281,13 @@ PARAMS_TMPL = """
     options: [TX/RX]
     option_labels: [TX/RX]
 % endif
-    hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('ant' + str(n)) else 'part')}
+    hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('ant' + str(${n})) else 'part')}
 -   id: bw${n}
     label: 'Ch${n}: Bandwidth (Hz)'
     category: RF Options
     dtype: real
     default: '0'
-    hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('bw' + str(n)) else 'part')}
+    hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('bw' + str(${n})) else 'part')}
 % if sourk == 'source':
 -   id: lo_source${n}
     label: 'Ch${n}: LO Source'
@@ -296,7 +296,7 @@ PARAMS_TMPL = """
     default: internal
     options: [internal, external, companion]
     hide: ${'$'}{ 'all' if not nchan > ${n} else ('all' if hide_lo_controls else 'none')}
--   id: lo_export
+-   id: lo_export${n}
     label: 'Ch${n}: LO Export'
     category: RF Options
     dtype: bool
