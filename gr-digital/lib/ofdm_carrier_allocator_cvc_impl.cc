@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
- * Copyright 2013 Free Software Foundation, Inc.
- * 
+/*
+ * Copyright 2013-2018 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -73,6 +73,12 @@ namespace gr {
 	d_symbols_per_set(0),
 	d_output_is_shifted(output_is_shifted)
     {
+      // Sanity checks
+      // Since C++11: Get pointer to underlying array
+      // If that is is null, the input is wrong -> force user to use ((),) in python
+      if (d_occupied_carriers.data() == nullptr) {
+        throw std::invalid_argument("Occupied carriers must be of type vector of vector i.e. ((),).");
+      }
       for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
 	for (unsigned j = 0; j < d_occupied_carriers[i].size(); j++) {
 	  if (occupied_carriers[i][j] < 0) {
@@ -86,6 +92,9 @@ namespace gr {
 	  }
 	}
       }
+      if (d_pilot_carriers.data() == nullptr) {
+        throw std::invalid_argument("Pilot carriers must be of type vector of vector i.e. ((),).");
+      }
       for (unsigned i = 0; i < d_pilot_carriers.size(); i++) {
 	for (unsigned j = 0; j < d_pilot_carriers[i].size(); j++) {
 	  if (d_pilot_carriers[i][j] < 0) {
@@ -98,6 +107,9 @@ namespace gr {
 	    d_pilot_carriers[i][j] = (d_pilot_carriers[i][j] + fft_len/2) % fft_len;
 	  }
 	}
+      }
+      if (d_pilot_symbols.data() == nullptr) {
+        throw std::invalid_argument("Pilot symbols must be of type vector of vector i.e. ((),).");
       }
       for (unsigned i = 0; i < std::max(d_pilot_carriers.size(), d_pilot_symbols.size()); i++) {
 	if (d_pilot_carriers[i % d_pilot_carriers.size()].size() != d_pilot_symbols[i % d_pilot_symbols.size()].size()) {
@@ -191,6 +203,6 @@ namespace gr {
       return n_ofdm_symbols + d_sync_words.size();
     }
 
-  } /* namespace digital */
-} /* namespace gr */
+  } // namespace digital
+} // namespace gr
 
