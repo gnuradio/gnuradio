@@ -524,7 +524,7 @@ namespace gr {
      * \brief Digital constellation for QPSK
      * \ingroup digital
      *
-     * \details
+     * \details Constellation diagram assumes little endian format e.g. top, left means 2 not 1.
      * \verbatim
        01 | 11
        -------
@@ -626,7 +626,7 @@ namespace gr {
     /*                                                          */
     /************************************************************/
 
-    /*! 
+    /*!
      * \brief Digital constellation for natually mapped 8PSK.
      * \ingroup digital
      *
@@ -662,18 +662,18 @@ namespace gr {
     /*                                                          */
     /************************************************************/
 
-    /*! 
+    /*!
      * \brief Digital constellation for 16qam.
      * \ingroup digital
      *
      * \details
      * \verbatim
    1000   1101 | 1100   1001
-               |     
+               |
    1111   1010 | 1011   1110
        -----------------
    0100   0001 | 0000   0101
-               | 
+               |
    0011   0110 | 0111   0010
        \endverbatim
      */
