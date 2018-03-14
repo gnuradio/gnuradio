@@ -18,13 +18,13 @@
   <param>
     <name>Pilot Carriers</name>
     <key>pilot_carriers</key>
-    <value>()</value>
+    <value>((),)</value>
     <type>raw</type>
   </param>
   <param>
     <name>Pilot Symbols</name>
     <key>pilot_symbols</key>
-    <value>()</value>
+    <value>((),)</value>
     <type>raw</type>
   </param>
   <param>
