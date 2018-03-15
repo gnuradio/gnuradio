@@ -30,7 +30,7 @@ class test_fastnoise_source(gr_unittest.TestCase):
 
         self.num = 2**22
         self.num_items = 10**6
-        self.default_args = {"samples": self.num, "seed": 43, "ampl": 1}
+        self.default_args = {"samples": self.num, "seed": int(43), "ampl": 1}
 
     def tearDown (self):
         pass
@@ -102,13 +102,14 @@ class test_fastnoise_source(gr_unittest.TestCase):
         self.assertAlmostEqual(data.imag.mean(), 0, places=2)
         self.assertAlmostEqual(data.imag.var(), 0.5, places=2)
 
-    def test_002_reproducibility(self):
+    def test_002_real_uniform_reproducibility(self):
         data1 = self.run_test_real(analog.GR_UNIFORM)
         data2 = self.run_test_real(analog.GR_UNIFORM)
 
         # It's pseudoramdo thus must be equal
         self.assertTrue(numpy.array_equal(data1, data2))
 
+    def test_002_real_gaussian_reproducibility(self):
         data1 = self.run_test_real(analog.GR_GAUSSIAN)
         data2 = self.run_test_real(analog.GR_GAUSSIAN)
 
