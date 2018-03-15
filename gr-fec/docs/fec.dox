@@ -502,7 +502,7 @@ the matrix that they work with. The gr::fec::code::ldpc_par_mtrx_encoder takes a
 parity check matrix, H, which is in upper triangular form. The
 gr::fec::code::ldpc_gen_mtrx_encoder takes in a generator matrix, G.
 
-A third coder exsits, gr::fec::ldpc_encoder, but this is deprecated
+A third coder exists, gr::fec::ldpc_encoder, but this is deprecated
 and should not be used. It's functionally equivalent to
 gr::fec::code::ldpc_par_mtrx_encoder and still exists for
 compatibility reasons.
