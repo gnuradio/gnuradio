@@ -23,67 +23,96 @@
 from gnuradio import gr, gr_unittest, analog, blocks
 import numpy
 
+
 class test_fastnoise_source(gr_unittest.TestCase):
 
     def setUp (self):
-        self.tb = gr.top_block ()
+
+        self.num = 2**22
+        self.num_items = 10**6
+        self.default_args = {"samples": self.num, "seed": 43, "ampl": 1}
 
     def tearDown (self):
-        self.tb = None
+        pass
 
-    def test_001_test_moments(self):
-        tb = self.tb
-
-        NUM = 2**22
-        NUM_ITEMS = 10**6
-        DEFAULTARGS = {"samples": NUM, "seed": 43, "ampl": 1}
-        self.uni_real_src = analog.fastnoise_source_f(type = analog.GR_UNIFORM, **DEFAULTARGS)
-        self.uni_cplx_src = analog.fastnoise_source_c(type = analog.GR_UNIFORM, **DEFAULTARGS)
-
-        self.norm_real_src = analog.fastnoise_source_f(type = analog.GR_GAUSSIAN, **DEFAULTARGS)
-        self.norm_cplx_src = analog.fastnoise_source_c(type = analog.GR_GAUSSIAN, **DEFAULTARGS)
-
-        self.lapl_real_src = analog.fastnoise_source_f(type = analog.GR_LAPLACIAN, **DEFAULTARGS)
-
-        types = {
-            self.uni_real_src: "uniform", self.uni_cplx_src: "uniform",
-            self.norm_cplx_src: "norm", self.norm_cplx_src: "norm",
-            self.lapl_real_src: "laplace"
-        }
-
-        real_srcs = [self.uni_real_src, self.norm_real_src, self.lapl_real_src]
-        cplx_srcs = [self.uni_cplx_src, self.norm_cplx_src]
-
-        paths = {}
-        for src in real_srcs:
-            head = blocks.head(nitems=NUM_ITEMS, sizeof_stream_item=gr.sizeof_float)
-            sink = blocks.vector_sink_f()
-            paths[src] = (src, head, sink)
-
-        for src in cplx_srcs:
-            head = blocks.head(nitems=NUM_ITEMS, sizeof_stream_item=gr.sizeof_gr_complex)
-            sink = blocks.vector_sink_c()
-            paths[src] = (src, head, sink)
-        for path in paths.itervalues():
-            tb.connect(*path)
-
+    def run_test_real(self, form):
+        """ Run test case with float input/output
+        """
+        tb = gr.top_block()
+        src = analog.fastnoise_source_f(type=form, **self.default_args)
+        head = blocks.head(nitems=self.num_items, sizeof_stream_item=gr.sizeof_float)
+        sink = blocks.vector_sink_f()
+        tb.connect(src, head, sink)
         tb.run()
-        self.data = {src: path[2].data() for src, path in paths.iteritems()}
-        data = self.data
-        # min, max
-        self.assertAlmostEqual(min(data[self.uni_real_src]), -1, places=4)
-        self.assertAlmostEqual(max(data[self.uni_real_src]), 1, places=4)
+        return numpy.array(sink.data())
+
+    def run_test_complex(self, form):
+        """ Run test case with complex input/output
+        """
+        tb = gr.top_block()
+        src = analog.fastnoise_source_c(type=form, **self.default_args)
+        head = blocks.head(nitems=self.num_items, sizeof_stream_item=gr.sizeof_gr_complex)
+        sink = blocks.vector_sink_c()
+        tb.connect(src, head, sink)
+        tb.run()
+        return numpy.array(sink.data())
+
+    def test_001_real_uniform_moments(self):
+
+        data = self.run_test_real(analog.GR_UNIFORM)
+
+        self.assertAlmostEqual(min(data), -1, places=4)
+        self.assertAlmostEqual(max(data), 1, places=4)
+
         # mean, variance
-        data = numpy.array(data[self.uni_real_src])
-        self.assertAlmostEqual(data.mean(), 0, places = 2)
-        self.assertAlmostEqual(data.var(), (1-(-1))**2./12, places = 3)
-        data = numpy.array(self.data[self.norm_real_src])
+        self.assertAlmostEqual(data.mean(), 0, places=2)
+        self.assertAlmostEqual(data.var(), (1-(-1))**2./12, places=3)
+
+    def test_001_real_gaussian_moments(self):
+        data = self.run_test_real(analog.GR_GAUSSIAN)
+
+        # mean, variance
         self.assertAlmostEqual(data.mean(), 0, places=2)
         self.assertAlmostEqual(data.var(), 1, places=2)
-        data = numpy.array(self.data[self.lapl_real_src])
+
+    def test_001_real_laplacian_moments(self):
+        data = self.run_test_real(analog.GR_LAPLACIAN)
+
+        # mean, variance
         self.assertAlmostEqual(data.mean(), 0, places=2)
         self.assertAlmostEqual(data.var(), 2, places=2)
 
+    def test_001_complex_uniform_moments(self):
+        data = self.run_test_complex(analog.GR_UNIFORM)
+
+        # mean, variance
+        self.assertAlmostEqual(data.real.mean(), 0, places=2)
+        self.assertAlmostEqual(data.real.var(), 0.5*(1-(-1))**2./12, places=3)
+
+        self.assertAlmostEqual(data.imag.mean(), 0, places=2)
+        self.assertAlmostEqual(data.imag.var(), 0.5*(1-(-1))**2./12, places=3)
+
+    def test_001_complex_gaussian_moments(self):
+        data = self.run_test_complex(analog.GR_GAUSSIAN)
+
+        # mean, variance
+        self.assertAlmostEqual(data.real.mean(), 0, places=2)
+        self.assertAlmostEqual(data.real.var(), 0.5, places=2)
+
+        self.assertAlmostEqual(data.imag.mean(), 0, places=2)
+        self.assertAlmostEqual(data.imag.var(), 0.5, places=2)
+
+    def test_002_reproducibility(self):
+        data1 = self.run_test_real(analog.GR_UNIFORM)
+        data2 = self.run_test_real(analog.GR_UNIFORM)
+
+        # It's pseudoramdo thus must be equal
+        self.assertTrue(numpy.array_equal(data1, data2))
+
+        data1 = self.run_test_real(analog.GR_GAUSSIAN)
+        data2 = self.run_test_real(analog.GR_GAUSSIAN)
+
+        self.assertTrue(numpy.array_equal(data1, data2))
+
 if __name__ == '__main__':
     gr_unittest.run(test_fastnoise_source, "test_fastnoise_source.xml")
-
