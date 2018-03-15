@@ -89,10 +89,3 @@ CHECK_CXX_SOURCE_COMPILES("
     " HAVE_COSF
 )
 GR_ADD_COND_DEF(HAVE_COSF)
-
-CHECK_CXX_SOURCE_COMPILES("
-    #include <stdlib.h>
-	int main(){srand48(0); drand48(); lrand48(); return 0;}
-	" HAVE_RAND48
-)
-GR_ADD_COND_DEF(HAVE_RAND48)
