@@ -42,8 +42,8 @@ namespace gr {
      * <EM>fs</EM> divided by the number of channels, <EM>M</EM>.
      *
      * The PFB channelizer code takes the taps generated above and builds
-     * a set of filters. The set contains <EM>M</EM> number of filters
-     * and each filter contains ceil(taps.size()/decim) number of taps.
+     * a set of filters. The set contains <EM>M</EM>filters
+     * and each filter contains ceil(taps.size()/decim) taps.
      * Each tap from the filter prototype is sequentially inserted into
      * the next filter. When all of the input taps are used, the remaining
      * filters in the filterbank are filled out with 0's to make sure each
@@ -77,12 +77,12 @@ namespace gr {
      * bandwidth of <EM>TB</EM>. We can also specify the out-of-band
      * attenuation to use, <EM>ATT</EM>, and the filter window
      * function (a Blackman-harris window in this case). The first input
-     *  is the gain of the filter, which we specify here as unity.
+     * is the gain of the filter, which we specify here as unity.
      *
-     *      <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
-     *           attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
+     *    <B><EM>self._taps = filter.firdes.low_pass_2(1, fs, BW, TB,
+     *       attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
      *
-     * The filter output can also be overs ampled. The over sampling rate
+     * The filter output can also be oversampled. The oversampling rate
      * is the ratio of the the actual output sampling rate to the normal
      * output sampling rate. It must be rationally related to the number
      * of channels as N/i for i in [1,N], which gives an outputsample rate
@@ -96,7 +96,7 @@ namespace gr {
      * so the output rate would be 1200 Hz.
      *
      * The theory behind this block can be found in Chapter 6 of
-     * the following book.
+     * the following book:
      *
      *    <B><EM>f. harris, "Multirate Signal Processing for Communication
      *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
@@ -121,7 +121,7 @@ namespace gr {
        *                 channels <EM>M</EM>
        * \param taps (vector/list of floats) The prototype filter to
        *             populate the filterbank.
-       * \param oversample_rate (float) The over sampling rate is the
+       * \param oversample_rate (float) The oversampling rate is the
        *                                ratio of the the actual output
        *                                sampling rate to the normal
        *                                output sampling rate.  It must
@@ -135,7 +135,7 @@ namespace gr {
        *
        *				For example, for 6 channels
        *				with fs = 6000 Hz, the normal
-       *				rateis 6000/6 = 1000
+       *				rate is 6000/6 = 1000
        *				Hz. Allowable oversampling
        *				rates are 6/6, 6/5, 6/4, 6/3,
        *				6/2, and 6/1 where the output
