@@ -86,7 +86,7 @@ namespace gr {
      *      attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
      *
      * The theory behind this block can be found in Chapter 7.5 of the
-     * following book.
+     * following book:
      *
      *   <B><EM>f. harris, "Multirate Signal Processing for Communication
      *      Systems", Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
