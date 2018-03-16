@@ -51,6 +51,7 @@ if( WIN32 AND NOT CYGWIN AND NOT MSYS )
     endif( GSL_CBLAS_LIBRARY )
 
     set( GSL_LIBRARIES ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} )
+    set( GSL_LDFLAGS ${GSL_LIBRARIES} )
   endif( GSL_INCLUDE_DIRS )
 
   mark_as_advanced(
