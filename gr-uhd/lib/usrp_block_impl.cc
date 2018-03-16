@@ -27,23 +27,6 @@ using namespace gr::uhd;
 
 const double usrp_block_impl::LOCK_TIMEOUT = 1.5;
 
-const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
-const pmt::pmt_t CMD_GAIN_KEY = pmt::mp("gain");
-const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
-const pmt::pmt_t CMD_LO_OFFSET_KEY = pmt::mp("lo_offset");
-const pmt::pmt_t CMD_TUNE_KEY = pmt::mp("tune");
-const pmt::pmt_t CMD_LO_FREQ_KEY = pmt::mp("lo_freq");
-const pmt::pmt_t CMD_DSP_FREQ_KEY = pmt::mp("dsp_freq");
-const pmt::pmt_t CMD_RATE_KEY = pmt::mp("rate");
-const pmt::pmt_t CMD_BANDWIDTH_KEY = pmt::mp("bandwidth");
-const pmt::pmt_t CMD_TIME_KEY = pmt::mp("time");
-const pmt::pmt_t CMD_MBOARD_KEY = pmt::mp("mboard");
-const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("antenna");
-const pmt::pmt_t CMD_DIRECTION_KEY = pmt::mp("direction");
-
-const pmt::pmt_t ANT_DIRECTION_RX = pmt::mp("RX");
-const pmt::pmt_t ANT_DIRECTION_TX = pmt::mp("TX");
-
 /**********************************************************************
  * Structors
  *********************************************************************/
