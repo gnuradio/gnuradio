@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2012-2018 Free Software Foundation, Inc.
+# Copyright 2012, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -208,32 +208,44 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
                 self.assertEqual(correct_offsets[key], tag.offset)
         self.assertTrue(all(tags_found.values()))
 
-    @gr_unittest.unittest.skip("Skipping test with wrong input (caused SIGFPE earlier, now throws a simple std::invalid_argument with useful message)")
     def test_004_t (self):
         """
-        Provoking exception (earlier SIGFPE).
+        Provoking RuntimeError exceptions providing wrong user input (earlier invisible SIGFPE).
         """
         fft_len = 6
-        tx_symbols = (1, 2, 3)
-        pilot_symbols = ()
-        occupied_carriers = ((-1, 1, 2),)
-        pilot_carriers = ()
-        expected_result = (0, 0, 1, 0, 2, 3)
-        src = blocks.vector_source_c(tx_symbols, False, 1)
-        alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
-                       occupied_carriers,
-                       pilot_carriers,
-                       pilot_symbols, (),
-                       self.tsb_key)
-        sink = blocks.tsb_vector_sink_c(fft_len)
-        self.tb.connect(
-                src,
-                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, len(tx_symbols), self.tsb_key),
-                alloc,
-                sink
-        )
-        self.tb.run ()
-        self.assertEqual(sink.data()[0], expected_result)
+
+        # Occupied carriers
+        with self.assertRaises(RuntimeError) as oc:
+          alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
+                        (),
+                        ((),),
+                        ((),),
+                        (),
+                        self.tsb_key)
+
+        # Pilot carriers
+        with self.assertRaises(RuntimeError) as pc:
+          alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
+                        ((),),
+                        (),
+                        ((),),
+                        (),
+                        self.tsb_key)
+
+        # Pilot carrier symbols
+        with self.assertRaises(RuntimeError) as ps:
+          alloc = digital.ofdm_carrier_allocator_cvc(fft_len,
+                        ((),),
+                        ((),),
+                        (),
+                        (),
+                        self.tsb_key)
+
+
+        self.assertEqual(str(oc.exception), "Occupied carriers must be of type vector of vector i.e. ((),).")
+        self.assertEqual(str(pc.exception), "Pilot carriers must be of type vector of vector i.e. ((),).")
+        self.assertEqual(str(ps.exception), "Pilot symbols must be of type vector of vector i.e. ((),).")
+
 
 if __name__ == '__main__':
     gr_unittest.run(qa_digital_carrier_allocator_cvc, "qa_digital_carrier_allocator_cvc.xml")
