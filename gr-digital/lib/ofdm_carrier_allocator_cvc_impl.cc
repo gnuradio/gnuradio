@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013-2018 Free Software Foundation, Inc.
+ * Copyright 2013, 2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -74,9 +74,8 @@ namespace gr {
 	d_output_is_shifted(output_is_shifted)
     {
       // Sanity checks
-      // Since C++11: Get pointer to underlying array
       // If that is is null, the input is wrong -> force user to use ((),) in python
-      if (d_occupied_carriers.data() == nullptr) {
+      if (d_occupied_carriers.empty()) {
         throw std::invalid_argument("Occupied carriers must be of type vector of vector i.e. ((),).");
       }
       for (unsigned i = 0; i < d_occupied_carriers.size(); i++) {
@@ -92,7 +91,7 @@ namespace gr {
 	  }
 	}
       }
-      if (d_pilot_carriers.data() == nullptr) {
+      if (d_pilot_carriers.empty()) {
         throw std::invalid_argument("Pilot carriers must be of type vector of vector i.e. ((),).");
       }
       for (unsigned i = 0; i < d_pilot_carriers.size(); i++) {
@@ -108,7 +107,7 @@ namespace gr {
 	  }
 	}
       }
-      if (d_pilot_symbols.data() == nullptr) {
+      if (d_pilot_symbols.empty()) {
         throw std::invalid_argument("Pilot symbols must be of type vector of vector i.e. ((),).");
       }
       for (unsigned i = 0; i < std::max(d_pilot_carriers.size(), d_pilot_symbols.size()); i++) {
