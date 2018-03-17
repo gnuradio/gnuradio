@@ -243,45 +243,34 @@ class FlowGraph(CoreFlowgraph, Drawable):
         v_adj = scroll_pane.get_vadjustment()
         x_off = h_adj.get_value() - x_min + h_adj.get_page_size() / 4
         y_off = v_adj.get_value() - y_min + v_adj.get_page_size() / 4
+
         if len(self.get_elements()) <= 1:
             x_off, y_off = 0, 0
-        #create blocks
+
+        # create blocks
         for block_n in blocks_n:
-            block_key = block_n.get('key')
+            block_key = block_n.get('id')
             if block_key == 'options':
                 continue
             block = self.new_block(block_key)
             if not block:
                 continue  # unknown block was pasted (e.g. dummy block)
+
             selected.add(block)
-            #set params
-            param_data = {n['key']: n['value'] for n in block_n.get('param', [])}
-            for key in block.states:
-                try:
-                    block.states[key] = ast.literal_eval(param_data.pop(key))
-                except (KeyError, SyntaxError, ValueError):
-                    pass
-            if block_key == 'epy_block':
-                block.params['_io_cache'].set_value(param_data.pop('_io_cache'))
-                block.params['_source_code'].set_value(param_data.pop('_source_code'))
-                block.rewrite()  # this creates the other params
-            for param_key, param_value in six.iteritems(param_data):
-                #setup id parameter
-                if param_key == 'id':
-                    old_id2block[param_value] = block
-                    #if the block id is not unique, get a new block id
-                    if param_value in (blk.name for blk in self.blocks):
-                        param_value = self._get_unique_id(param_value)
-                #set value to key
-                block.params[param_key].set_value(param_value)
-            #move block to offset coordinate
+            block.import_data(**block_n)
+            old_id2block[block.params['id'].value] = block
+            # move block to offset coordinate
             block.move((x_off, y_off))
-        #update before creating connections
+
+            if block.params['id'].value in (blk.name for blk in self.blocks):
+                block.params['id'].value = self._get_unique_id(block_key)
+
+        # update before creating connections
         self.update()
-        #create connections
+        # create connections
         for connection_n in connections_n:
-            source = old_id2block[connection_n.get('source_block_id')].get_source(connection_n.get('source_key'))
-            sink = old_id2block[connection_n.get('sink_block_id')].get_sink(connection_n.get('sink_key'))
+            source = old_id2block[connection_n[0]].get_source(connection_n[1])
+            sink = old_id2block[connection_n[2]].get_sink(connection_n[3])
             connection = self.connect(source, sink)
             selected.add(connection)
         self.selected_elements = selected
