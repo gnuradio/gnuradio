@@ -141,11 +141,12 @@ namespace gr {
   float
   random::laplacian()
   {
-    float z = ran1()-0.5;
-    if(z>0) return -logf(1-2*z);
-    else return logf(1+2*z);
+          float z = ran1();
+          if (z > 0.5f){
+                  return -logf(2.0f * (1.0f - z) );
+          }
+          return logf(2 * z);
   }
-
   /*
    * Copied from The KC7WW / OH2BNS Channel Simulator
    * FIXME Need to check how good this is at some point
