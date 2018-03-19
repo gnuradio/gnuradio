@@ -56,7 +56,8 @@ namespace fs = boost::filesystem;
 namespace gr {
   namespace fft {
     static boost::mutex wisdom_thread_mutex;
-	boost::interprocess::file_lock wisdom_lock;
+    boost::interprocess::file_lock wisdom_lock;
+    static bool wisdom_lock_init_done = false; // Modify while holding 'wisdom_thread_mutex'
 
     gr_complex *
     malloc_complex(int size)
@@ -99,15 +100,36 @@ namespace gr {
     }
 
     static void
+    wisdom_lock_init()
+    {
+      if (wisdom_lock_init_done)
+        return;
+
+      const std::string wisdom_lock_file = wisdom_filename() + ".lock";
+      // std::cerr << "Creating FFTW wisdom lockfile: " << wisdom_lock_file << std::endl;
+      int fd = open(wisdom_lock_file.c_str(),
+        O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
+        0666);
+      if (fd < 0) {
+        throw std::runtime_error("Failed to create FFTW wisdom lockfile: " + wisdom_lock_file);
+      }
+      close(fd);
+      wisdom_lock = boost::interprocess::file_lock(wisdom_lock_file.c_str());
+      wisdom_lock_init_done = true;
+    }
+
+    static void
     lock_wisdom()
     {
-	  wisdom_thread_mutex.lock(); 
-	  wisdom_lock.lock();
+      wisdom_thread_mutex.lock();
+      wisdom_lock_init();
+      wisdom_lock.lock();
     }
 
     static void
     unlock_wisdom()
     {
+      // Assumes 'lock_wisdom' has already been called (i.e. this file_lock is valid)
       wisdom_lock.unlock();
       wisdom_thread_mutex.unlock();
     }
@@ -163,15 +185,6 @@ namespace gr {
     {
       // Hold global mutex during plan construction and destruction.
       planner::scoped_lock lock(planner::mutex());
-	  const std::string wisdom_lock_file = wisdom_filename() + ".lock";
-	  int fd = open(wisdom_lock_file.c_str(),
-		  O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK,
-		  0666);
-	  if (fd < 0) {
-		  throw std::exception();
-	  }
-	  close(fd);
-	  wisdom_lock = boost::interprocess::file_lock(wisdom_lock_file.c_str());
 
       assert (sizeof (fftwf_complex) == sizeof (gr_complex));
 
