@@ -141,9 +141,12 @@ namespace gr {
   float
   random::laplacian()
   {
-    float z = ran1()-0.5;
-    if(z>0) return -logf(1-2*z);
-    else return logf(1+2*z);
+    float z = ran1();
+    if (z > 0.5){
+      return -logf(2*(1-z));
+    }else{
+      return logf(2*z);
+    }
   }
 
   /*
