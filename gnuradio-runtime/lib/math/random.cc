@@ -73,9 +73,12 @@ namespace gr {
   void
   random::reseed(unsigned int seed)
   {
-    if(seed==0) d_seed = static_cast<unsigned int>(std::time(0));
-    else d_seed = seed;
-    d_rng->seed(d_seed);
+    d_seed = seed;
+    if (d_seed == 0){
+      d_rng->seed();
+    } else {
+      d_rng->seed(d_seed);
+    }
     // reinstantiate generators. Otherwise reseed doesn't take effect.
     delete d_generator;
     d_generator = new boost::variate_generator<boost::mt19937&, boost::uniform_real<float> > (*d_rng,*d_uniform); // create number generator in [0,1) from boost.random
