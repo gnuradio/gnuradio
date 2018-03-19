@@ -29,6 +29,8 @@
 #include <gnuradio/analog/noise_type.h>
 #include <gnuradio/sync_block.h>
 
+#include <vector>
+
 namespace gr {
   namespace analog {
 
@@ -62,6 +64,7 @@ namespace gr {
 		       long seed = 0, long samples=1024*16);
       virtual @TYPE@ sample() = 0;
       virtual @TYPE@ sample_unbiased() = 0;
+      virtual const std::vector<@TYPE@>& samples() const = 0;
 
       /*!
        * Set the noise type. Nominally from the
