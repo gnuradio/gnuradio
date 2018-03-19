@@ -30,7 +30,7 @@ class test_fastnoise_source(gr_unittest.TestCase):
 
         self.num = 2**22
         self.num_items = 10**6
-        self.default_args = {"samples": self.num, "seed": int(43), "ampl": 1}
+        self.default_args = {"samples": self.num, "seed": 43, "ampl": 1}
 
     def tearDown (self):
         pass
@@ -115,5 +115,25 @@ class test_fastnoise_source(gr_unittest.TestCase):
 
         self.assertTrue(numpy.array_equal(data1, data2))
 
+    def test_003_real_uniform_pool(self):
+        src = analog.fastnoise_source_f(type=analog.GR_UNIFORM, **self.default_args)
+        src2 = analog.fastnoise_source_f(type=analog.GR_UNIFORM, **self.default_args)
+        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+    def test_003_real_gaussian_pool(self):
+        src = analog.fastnoise_source_f(type=analog.GR_GAUSSIAN, **self.default_args)
+        src2 = analog.fastnoise_source_f(type=analog.GR_GAUSSIAN, **self.default_args)
+        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+    def test_003_cmplx_gaussian_pool(self):
+        src = analog.fastnoise_source_c(type=analog.GR_GAUSSIAN, **self.default_args)
+        src2 = analog.fastnoise_source_c(type=analog.GR_GAUSSIAN, **self.default_args)
+        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+    def test_003_cmplx_uniform_pool(self):
+        src = analog.fastnoise_source_c(type=analog.GR_UNIFORM, **self.default_args)
+        src2 = analog.fastnoise_source_c(type=analog.GR_UNIFORM, **self.default_args)
+        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
+    def test_003_real_laplacian_pool(self):
+        src = analog.fastnoise_source_f(type=analog.GR_LAPLACIAN, **self.default_args)
+        src2 = analog.fastnoise_source_f(type=analog.GR_LAPLACIAN, **self.default_args)
+        self.assertTrue(numpy.array_equal(numpy.array(src.samples()), numpy.array(src2.samples())))
 if __name__ == '__main__':
     gr_unittest.run(test_fastnoise_source, "test_fastnoise_source.xml")
