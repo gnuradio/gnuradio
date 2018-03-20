@@ -410,7 +410,7 @@ class GrTimeRasterB(GrDataPlotParent):
 class GrDataPlotterValueTable:
     def __init__(self, uid, parent, x, y, xsize, ysize,
                  headers=['Statistic Key ( Source Block :: Stat Name )  ',
-                          'Curent Value', 'Units', 'Description']):
+                          'Current Value', 'Units', 'Description']):
 	# must encapsulate, cuz Qt's bases are not classes
         self.uid = uid
         self.treeWidget = QtGui.QTreeWidget(parent)

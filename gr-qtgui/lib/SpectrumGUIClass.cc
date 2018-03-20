@@ -150,7 +150,7 @@ SpectrumGUIClass::reset()
     qApp->postEvent(_spectrumDisplayForm, new SpectrumWindowResetEvent());
   }
   _droppedEntriesCount = 0;
-  // Call the following function the the Spectrum Window Reset Event window
+  // Call the following function from the Spectrum Window Reset Event window
   // ResetPendingGUIUpdateEvents();
 }
 
