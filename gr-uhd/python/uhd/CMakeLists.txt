@@ -37,6 +37,8 @@ if(ENABLE_TESTING)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gr-uhd/python
     ${CMAKE_BINARY_DIR}/gr-uhd/swig
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/python 	
 )
 
 list(APPEND GR_TEST_TARGET_DEPS gnuradio-uhd)

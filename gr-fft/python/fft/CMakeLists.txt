@@ -36,6 +36,9 @@ if(ENABLE_TESTING)
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig	
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig		
+    ${CMAKE_BINARY_DIR}/gr-fft/swig		
     )
   include(GrTest)
   file(GLOB py_qa_test_files "qa_*.py")
