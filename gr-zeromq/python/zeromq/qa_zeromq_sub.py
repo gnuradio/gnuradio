@@ -50,6 +50,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
         self.tb.connect(zeromq_sub_source, sink)
 
         self.tb.start()
+        time.sleep(0.05)
         self.pub_socket.send(src_data.tostring())
         time.sleep(0.25)
         self.tb.stop()
@@ -67,6 +68,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
         self.tb.connect(zeromq_sub_source, sink)
 
         self.tb.start()
+        time.sleep(0.05)
         self.pub_socket.send_multipart(src_data)
         time.sleep(0.25)
         self.tb.stop()
