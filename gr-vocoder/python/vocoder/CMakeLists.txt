@@ -39,6 +39,11 @@ if(ENABLE_TESTING)
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig	
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig	
+    ${CMAKE_BINARY_DIR}/gr-fft/swig	
+    ${CMAKE_BINARY_DIR}/gr-filter/swig	
+    ${CMAKE_BINARY_DIR}/gr-vocoder/swig	
     )
 
   include(GrTest)
