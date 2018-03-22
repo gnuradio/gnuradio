@@ -27,9 +27,7 @@
 #include "encode_ccsds_27_bb_impl.h"
 #include <gnuradio/io_signature.h>
 
-extern "C" {
 #include <gnuradio/fec/viterbi.h>
-}
 
 namespace gr {
   namespace fec {

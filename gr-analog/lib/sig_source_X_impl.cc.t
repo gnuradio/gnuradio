@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,11 +27,12 @@
 #endif
 
 #include "@IMPL_NAME@.h"
-#include <algorithm>
 #include <gnuradio/io_signature.h>
+#include <gnuradio/gr_complex.h>
+#include <gnuradio/math.h>
+
 #include <stdexcept>
 #include <algorithm>
-#include <gnuradio/gr_complex.h>
 
 namespace gr {
   namespace analog {
@@ -125,11 +126,11 @@ namespace gr {
 	 */
       case GR_SQR_WAVE:
 	for(int i = 0; i < noutput_items; i++) {
-	  if(d_nco.get_phase() < -1*M_PI/2)
+	  if(d_nco.get_phase() < -1*GR_M_PI/2)
 	    optr[i] = gr_complex(d_ampl, 0) + d_offset;
 	  else if(d_nco.get_phase() < 0)
 	    optr[i] = gr_complex(d_ampl, d_ampl) + d_offset;
-	  else if(d_nco.get_phase() < M_PI/2)
+	  else if(d_nco.get_phase() < GR_M_PI/2)
 	    optr[i] = gr_complex(0, d_ampl) + d_offset;
 	  else
 	    optr[i] = d_offset;
@@ -143,21 +144,21 @@ namespace gr {
 	 */
       case GR_TRI_WAVE:
 	for(int i = 0; i < noutput_items; i++) {
-	  if(d_nco.get_phase() < -1*M_PI/2){
-	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/M_PI + d_ampl,
-		 -1*d_ampl*d_nco.get_phase()/M_PI - d_ampl/2) + d_offset;
+	  if(d_nco.get_phase() < -1*GR_M_PI/2){
+	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/GR_M_PI + d_ampl,
+		 -1*d_ampl*d_nco.get_phase()/GR_M_PI - d_ampl/2) + d_offset;
 	  }
 	  else if(d_nco.get_phase() < 0) {
-	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/M_PI + d_ampl,
-		 d_ampl*d_nco.get_phase()/M_PI + d_ampl/2) + d_offset;
+	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/GR_M_PI + d_ampl,
+		 d_ampl*d_nco.get_phase()/GR_M_PI + d_ampl/2) + d_offset;
 	  }
-	  else if(d_nco.get_phase() < M_PI/2) {
-	    optr[i] = gr_complex(-1*d_ampl*d_nco.get_phase()/M_PI + d_ampl,
-		 d_ampl*d_nco.get_phase()/M_PI + d_ampl/2) + d_offset;
+	  else if(d_nco.get_phase() < GR_M_PI/2) {
+	    optr[i] = gr_complex(-1*d_ampl*d_nco.get_phase()/GR_M_PI + d_ampl,
+		 d_ampl*d_nco.get_phase()/GR_M_PI + d_ampl/2) + d_offset;
 	  }
 	  else {
-	    optr[i] = gr_complex(-1*d_ampl*d_nco.get_phase()/M_PI + d_ampl,
-		 -1*d_ampl*d_nco.get_phase()/M_PI + 3*d_ampl/2) + d_offset;
+	    optr[i] = gr_complex(-1*d_ampl*d_nco.get_phase()/GR_M_PI + d_ampl,
+		 -1*d_ampl*d_nco.get_phase()/GR_M_PI + 3*d_ampl/2) + d_offset;
 	  }
 	  d_nco.step();
 	}
@@ -168,13 +169,13 @@ namespace gr {
 	 */
       case GR_SAW_WAVE:
 	for(int i = 0; i < noutput_items; i++) {
-	  if(d_nco.get_phase() < -1*M_PI/2) {
-	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/(2*M_PI) + d_ampl/2,
-		 d_ampl*d_nco.get_phase()/(2*M_PI) + 5*d_ampl/4) + d_offset;
+	  if(d_nco.get_phase() < -1*GR_M_PI/2) {
+	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/(2*GR_M_PI) + d_ampl/2,
+		 d_ampl*d_nco.get_phase()/(2*GR_M_PI) + 5*d_ampl/4) + d_offset;
 	  }
 	  else {
-	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/(2*M_PI) + d_ampl/2,
-		 d_ampl*d_nco.get_phase()/(2*M_PI) + d_ampl/4) + d_offset;
+	    optr[i] = gr_complex(d_ampl*d_nco.get_phase()/(2*GR_M_PI) + d_ampl/2,
+		 d_ampl*d_nco.get_phase()/(2*GR_M_PI) + d_ampl/4) + d_offset;
 	  }
 	  d_nco.step();
 	}
@@ -222,7 +223,7 @@ namespace gr {
 	/* The triangle wave rises from -PI to 0 and falls from 0 to PI. */
       case GR_TRI_WAVE:
 	for(int i = 0; i < noutput_items; i++) {
-	  double t = d_ampl*d_nco.get_phase()/M_PI;
+	  double t = d_ampl*d_nco.get_phase()/GR_M_PI;
 	  if (d_nco.get_phase() < 0)
 	    optr[i] = static_cast<@TYPE@>(t + d_ampl + d_offset);
 	  else
@@ -234,7 +235,7 @@ namespace gr {
 	/* The saw tooth wave rises from -PI to PI. */
       case GR_SAW_WAVE:
 	for(int i = 0; i < noutput_items; i++) {
-	  t = static_cast<@TYPE@>(d_ampl*d_nco.get_phase()/(2*M_PI)
+	  t = static_cast<@TYPE@>(d_ampl*d_nco.get_phase()/(2*GR_M_PI)
 				  + d_ampl/2 + d_offset);
 	  optr[i] = t;
 	  d_nco.step();
@@ -254,7 +255,7 @@ namespace gr {
     @NAME@::set_sampling_freq(double sampling_freq)
     {
       d_sampling_freq = sampling_freq;
-      d_nco.set_freq (2 * M_PI * d_frequency / d_sampling_freq);
+      d_nco.set_freq (2 * GR_M_PI * d_frequency / d_sampling_freq);
     }
 
     void
@@ -267,7 +268,7 @@ namespace gr {
     @NAME@::set_frequency(double frequency)
     {
       d_frequency = frequency;
-      d_nco.set_freq(2 * M_PI * d_frequency / d_sampling_freq);
+      d_nco.set_freq(2 * GR_M_PI * d_frequency / d_sampling_freq);
     }
 
     void

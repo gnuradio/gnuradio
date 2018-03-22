@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbs2_physical_cc_impl.h"
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace dtv {
@@ -129,14 +130,14 @@ namespace gr {
           break;
       }
 
-      m_bpsk[0][0] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
-      m_bpsk[0][1] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(5.0 * M_PI / 4.0)));
-      m_bpsk[1][0] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
-      m_bpsk[1][1] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(5.0 * M_PI /4.0)));
-      m_bpsk[2][0] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
-      m_bpsk[2][1] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(5.0 * M_PI /4.0)));
-      m_bpsk[3][0] = gr_complex((r0 * cos(5.0 * M_PI / 4.0)), (r0 * sin(5.0 * M_PI / 4.0)));
-      m_bpsk[3][1] = gr_complex((r0 * cos(M_PI / 4.0)), (r0 * sin(M_PI / 4.0)));
+      m_bpsk[0][0] = gr_complex((r0 * cos(GR_M_PI / 4.0)), (r0 * sin(GR_M_PI / 4.0)));
+      m_bpsk[0][1] = gr_complex((r0 * cos(5.0 * GR_M_PI / 4.0)), (r0 * sin(5.0 * GR_M_PI / 4.0)));
+      m_bpsk[1][0] = gr_complex((r0 * cos(5.0 * GR_M_PI / 4.0)), (r0 * sin(GR_M_PI / 4.0)));
+      m_bpsk[1][1] = gr_complex((r0 * cos(GR_M_PI / 4.0)), (r0 * sin(5.0 * GR_M_PI /4.0)));
+      m_bpsk[2][0] = gr_complex((r0 * cos(5.0 * GR_M_PI / 4.0)), (r0 * sin(GR_M_PI / 4.0)));
+      m_bpsk[2][1] = gr_complex((r0 * cos(GR_M_PI / 4.0)), (r0 * sin(5.0 * GR_M_PI /4.0)));
+      m_bpsk[3][0] = gr_complex((r0 * cos(5.0 * GR_M_PI / 4.0)), (r0 * sin(5.0 * GR_M_PI / 4.0)));
+      m_bpsk[3][1] = gr_complex((r0 * cos(GR_M_PI / 4.0)), (r0 * sin(GR_M_PI / 4.0)));
 
       m_zero = gr_complex(0.0, 0.0);
 

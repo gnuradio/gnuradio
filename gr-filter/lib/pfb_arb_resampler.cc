@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,9 +26,10 @@
 
 #include <gnuradio/filter/pfb_arb_resampler.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/math.h>
+#include <boost/math/special_functions/round.hpp>
 #include <cstdio>
 #include <stdexcept>
-#include <boost/math/special_functions/round.hpp>
 
 namespace gr {
   namespace filter {
@@ -183,18 +184,18 @@ namespace gr {
       void
       pfb_arb_resampler_ccf::set_phase(float ph)
       {
-        if((ph < 0) || (ph >= 2.0*M_PI)) {
+        if((ph < 0) || (ph >= 2.0*GR_M_PI)) {
           throw std::runtime_error("pfb_arb_resampler_ccf: set_phase value out of bounds [0, 2pi).\n");
         }
 
-        float ph_diff = 2.0*M_PI / (float)d_filters.size();
+        float ph_diff = 2.0*GR_M_PI / (float)d_filters.size();
         d_last_filter = static_cast<int>(ph / ph_diff);
       }
 
       float
       pfb_arb_resampler_ccf::phase() const
       {
-        float ph_diff = 2.0*M_PI / static_cast<float>(d_filters.size());
+        float ph_diff = 2.0*GR_M_PI / static_cast<float>(d_filters.size());
         return d_last_filter * ph_diff;
       }
 
@@ -207,7 +208,7 @@ namespace gr {
       float
       pfb_arb_resampler_ccf::phase_offset(float freq, float fs)
       {
-        float adj = (2.0*M_PI)*(freq/fs)/static_cast<float>(d_int_rate);
+        float adj = (2.0*GR_M_PI)*(freq/fs)/static_cast<float>(d_int_rate);
         return -adj * d_est_phase_change;
       }
 
@@ -394,18 +395,18 @@ namespace gr {
       void
       pfb_arb_resampler_ccc::set_phase(float ph)
       {
-        if((ph < 0) || (ph >= 2.0*M_PI)) {
+        if((ph < 0) || (ph >= 2.0*GR_M_PI)) {
           throw std::runtime_error("pfb_arb_resampler_ccc: set_phase value out of bounds [0, 2pi).\n");
         }
 
-        float ph_diff = 2.0*M_PI / (float)d_filters.size();
+        float ph_diff = 2.0*GR_M_PI / (float)d_filters.size();
         d_last_filter = static_cast<int>(ph / ph_diff);
       }
 
       float
       pfb_arb_resampler_ccc::phase() const
       {
-        float ph_diff = 2.0*M_PI / static_cast<float>(d_filters.size());
+        float ph_diff = 2.0*GR_M_PI / static_cast<float>(d_filters.size());
         return d_last_filter * ph_diff;
       }
 
@@ -418,7 +419,7 @@ namespace gr {
       float
       pfb_arb_resampler_ccc::phase_offset(float freq, float fs)
       {
-        float adj = (2.0*M_PI)*(freq/fs)/static_cast<float>(d_int_rate);
+        float adj = (2.0*GR_M_PI)*(freq/fs)/static_cast<float>(d_int_rate);
         return -adj * d_est_phase_change;
       }
 
@@ -605,18 +606,18 @@ namespace gr {
       void
       pfb_arb_resampler_fff::set_phase(float ph)
       {
-        if((ph < 0) || (ph >= 2.0*M_PI)) {
+        if((ph < 0) || (ph >= 2.0*GR_M_PI)) {
           throw std::runtime_error("pfb_arb_resampler_fff: set_phase value out of bounds [0, 2pi).\n");
         }
 
-        float ph_diff = 2.0*M_PI / (float)d_filters.size();
+        float ph_diff = 2.0*GR_M_PI / (float)d_filters.size();
         d_last_filter = static_cast<int>(ph / ph_diff);
       }
 
       float
       pfb_arb_resampler_fff::phase() const
       {
-        float ph_diff = 2.0*M_PI / static_cast<float>(d_filters.size());
+        float ph_diff = 2.0*GR_M_PI / static_cast<float>(d_filters.size());
         return d_last_filter * ph_diff;
       }
 
@@ -629,7 +630,7 @@ namespace gr {
       float
       pfb_arb_resampler_fff::phase_offset(float freq, float fs)
       {
-        float adj = (2.0*M_PI)*(freq/fs)/static_cast<float>(d_int_rate);
+        float adj = (2.0*GR_M_PI)*(freq/fs)/static_cast<float>(d_int_rate);
         return -adj * d_est_phase_change;
       }
 

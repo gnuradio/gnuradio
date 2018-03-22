@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,6 +25,8 @@
 
 #include <gnuradio/sincos.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/math.h>
+
 #include <vector>
 #include <cmath>
 
@@ -49,13 +51,13 @@ namespace gr {
 
     void adjust_phase(double delta_phase) {
       d_phase += delta_phase;
-      if(fabs (d_phase) > M_PI){
+      if(fabs (d_phase) > GR_M_PI){
 
-        while(d_phase > M_PI)
-          d_phase -= 2*M_PI;
+        while(d_phase > GR_M_PI)
+          d_phase -= 2*GR_M_PI;
 
-        while(d_phase < -M_PI)
-          d_phase += 2*M_PI;
+        while(d_phase < -GR_M_PI)
+          d_phase += 2*GR_M_PI;
       }
     }
 

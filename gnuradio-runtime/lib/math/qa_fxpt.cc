@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,7 @@
 
 #include <qa_fxpt.h>
 #include <gnuradio/fxpt.h>
+#include <gnuradio/math.h>
 #include <cppunit/TestAssert.h>
 #include <iostream>
 #include <stdio.h>
@@ -37,9 +38,9 @@ static const float SIN_COS_TOLERANCE = 1e-5;
 void
 qa_fxpt::t0()
 {
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(M_PI/2, gr::fxpt::fixed_to_float(0x40000000), SIN_COS_TOLERANCE);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(GR_M_PI/2, gr::fxpt::fixed_to_float(0x40000000), SIN_COS_TOLERANCE);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0,    gr::fxpt::fixed_to_float(0x00000000), SIN_COS_TOLERANCE);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(-M_PI,  gr::fxpt::fixed_to_float(0x80000000), SIN_COS_TOLERANCE);
+  CPPUNIT_ASSERT_DOUBLES_EQUAL(-GR_M_PI,  gr::fxpt::fixed_to_float(0x80000000), SIN_COS_TOLERANCE);
 
   if(0) {
     /*
@@ -51,9 +52,9 @@ qa_fxpt::t0()
      * sometimes the answer is off by a few bits at the bottom.
      * Hence, the disabled check.
      */
-    CPPUNIT_ASSERT_EQUAL((int32_t)0x40000000, gr::fxpt::float_to_fixed(M_PI/2));
+    CPPUNIT_ASSERT_EQUAL((int32_t)0x40000000, gr::fxpt::float_to_fixed(GR_M_PI/2));
     CPPUNIT_ASSERT_EQUAL((int32_t)0,          gr::fxpt::float_to_fixed(0));
-    CPPUNIT_ASSERT_EQUAL((int32_t)0x80000000, gr::fxpt::float_to_fixed(-M_PI));
+    CPPUNIT_ASSERT_EQUAL((int32_t)0x80000000, gr::fxpt::float_to_fixed(-GR_M_PI));
   }
 }
 
@@ -70,7 +71,7 @@ qa_fxpt::t1()
   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1,           gr::fxpt::sin(-0x40000000), SIN_COS_TOLERANCE);
   CPPUNIT_ASSERT_DOUBLES_EQUAL(-0.707106781, gr::fxpt::sin(-0x20000000), SIN_COS_TOLERANCE);
 
-  for(float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600) {
+  for(float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
     float expected = sin(p);
     float actual = gr::fxpt::sin(gr::fxpt::float_to_fixed (p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(expected, actual, SIN_COS_TOLERANCE);
@@ -80,7 +81,7 @@ qa_fxpt::t1()
 void
 qa_fxpt::t2()
 {
-  for(float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600) {
+  for(float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
     float expected = cos(p);
     float actual = gr::fxpt::cos(gr::fxpt::float_to_fixed(p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(expected, actual, SIN_COS_TOLERANCE);
@@ -90,7 +91,7 @@ qa_fxpt::t2()
 void
 qa_fxpt::t3()
 {
-  for(float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600) {
+  for(float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
     float expected_sin = sin(p);
     float expected_cos = cos(p);
     float actual_sin;

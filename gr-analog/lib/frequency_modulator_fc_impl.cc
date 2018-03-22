@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010-2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010-2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 #include "frequency_modulator_fc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/fxpt.h>
+#include <gnuradio/math.h>
 #include <cmath>
 
 namespace gr {
@@ -63,7 +64,7 @@ namespace gr {
 	d_phase = d_phase + d_sensitivity * in[i];
 
 	//place phase in [-pi, +pi[
-	#define F_PI ((float)(M_PI))
+	#define F_PI ((float)(GR_M_PI))
 	d_phase   = std::fmod(d_phase + F_PI, 2.0f * F_PI) - F_PI;
 
 	float oi, oq;

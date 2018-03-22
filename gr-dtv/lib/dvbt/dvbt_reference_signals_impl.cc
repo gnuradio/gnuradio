@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,11 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt_reference_signals_impl.h"
-#include <complex>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
 #include <gnuradio/math.h>
+#include <complex>
 
 namespace gr {
   namespace dtv {
@@ -725,8 +725,8 @@ namespace gr {
       int half_size = (d_cpilot_carriers_size - 1) / 2;
 
       // TODO init this in constructor
-      float carrier_coeff = 1.0 / (2 * M_PI * (1 + float (d_cp_length) / float (d_fft_length)) * 2);
-      float sampling_coeff = 1.0 / (2 * M_PI * ((1 + float (d_cp_length) / float (d_fft_length)) * ((float)d_cpilot_carriers_size / 2.0)));
+      float carrier_coeff = 1.0 / (2 * GR_M_PI * (1 + float (d_cp_length) / float (d_fft_length)) * 2);
+      float sampling_coeff = 1.0 / (2 * GR_M_PI * ((1 + float (d_cp_length) / float (d_fft_length)) * ((float)d_cpilot_carriers_size / 2.0)));
 
       float left_angle, right_angle;
 
@@ -764,7 +764,7 @@ namespace gr {
 
         float correction = (float)d_freq_offset + d_carrier_freq_correction;
 
-        gr_complex c = gr_expj(-2 * M_PI * correction * \
+        gr_complex c = gr_expj(-2 * GR_M_PI * correction * \
           (d_fft_length + d_cp_length) / d_fft_length * symbol_count);
 
         // TODO - vectorize this operation
