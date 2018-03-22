@@ -20,34 +20,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef OR_BLK_IMPL_H
+#define OR_BLK_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <gnuradio/blocks/api.h>
-#include <gnuradio/sync_block.h>
+#include <gnuradio/blocks/or_blk.h>
 
 namespace gr {
   namespace blocks {
 
-    /*!
-     * \brief output = input_0 | input_1 | , ... | input_N)
-     * \ingroup boolean_operators_blk
-     *
-     * Bitwise boolean or across all input streams.
-     */
-    class BLOCKS_API @NAME@ : virtual public sync_block
+    template<class T>
+    class BLOCKS_API or_blk_impl : public or_blk<T>
     {
+      size_t d_vlen;
+
     public:
+      or_blk_impl(size_t vlen);
 
-      // gr::blocks::@NAME@::sptr
-      typedef boost::shared_ptr<@NAME@> sptr;
-
-      static sptr make(size_t vlen=1);
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } /* namespace blocks */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* OR_BLK_IMPL_H */

@@ -8,7 +8,7 @@
 	<name>Or</name>
 	<key>blocks_or_xx</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.or_$(type.fcn)()</make>
+	<make>blocks.or_blk_$(type.fcn)()</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>
