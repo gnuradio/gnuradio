@@ -81,6 +81,13 @@ class SCMRepository(object):
         """ Returns true if this repository manager is operating on an active, source-controlled directory. """
         return self.is_empty
 
+    def get_gituser(self):
+        """ Gets the git user """
+        try:
+            return subprocess.check_output('git config --global user.name', shell=True).strip()
+        except (OSError, subprocess.CalledProcessError):
+            return None
+
 
 ### Git #####################################################################
 class GitManagerGitPython(object):

@@ -24,6 +24,7 @@ import os
 import re
 from optparse import OptionGroup
 import readline
+import getpass
 
 from util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from cmakefile_editor import CMakeFileEditor
@@ -113,7 +114,16 @@ class ModToolAdd(ModTool):
         if not options.license_file:
             self._info['copyrightholder'] = options.copyright
             if self._info['copyrightholder'] is None:
-                self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+                user = getpass.getuser()
+                git_user = self.scm.get_gituser()
+                if git_user:
+                    copyright_candidates = (user, git_user, 'GNU Radio')
+                else:
+                    copyright_candidates = (user, 'GNU Radio')
+                with SequenceCompleter(copyright_candidates):
+                    self._info['copyrightholder'] = raw_input("Please specify the copyright holder: ")
+                    if not self._info['copyrightholder'] or self._info['copyrightholder'].isspace():
+                        self._info['copyrightholder'] = "gr-"+self._info['modname']+" author"
             elif self._info['is_component']:
                 print "For GNU Radio components the FSF is added as copyright holder"
         self._license_file = options.license_file
