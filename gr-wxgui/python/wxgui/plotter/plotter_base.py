@@ -158,7 +158,7 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		Resize the view port if the width or height changed.
 		Redraw the screen, calling the draw functions.
 		"""
-		if not self.IsShownOnScreen():	# Cannot realise a GL context on OS X if window is not yet shown
+		if not self.IsShownOnScreen():	# Cannot realize a GL context on OS X if window is not yet shown
 			return
 		# create device context (needed on Windows, noop on X)
 		dc = None

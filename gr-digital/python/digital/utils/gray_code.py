@@ -31,7 +31,7 @@ class GrayCodeGenerator(object):
         self.lp2 = 2
         # The next power of two that will be passed through.
         self.np2 = 4
-        # Curent index
+        # Current index
         self.i = 2
 
     def get_gray_code(self, length):

@@ -158,7 +158,7 @@ namespace gr {
       int M = rint(filter_size / samps_per_sym);
       float power = 0;
 
-      // Create the baseband filter by adding two sincs together
+      // Create the baseband filter by adding two syncs together
       std::vector<float> bb_taps;
       for(int i = 0; i < filter_size; i++) {
 	float k = -M + i*2.0/samps_per_sym;

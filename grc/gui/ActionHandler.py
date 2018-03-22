@@ -77,7 +77,7 @@ class ActionHandler:
         This handler bypasses built in accelerator key handling when in focus because
         * some keys are ignored by the accelerators like the direction keys,
         * some keys are not registered to any accelerators but are still used.
-        When not in focus, gtk and the accelerators handle the the key press.
+        When not in focus, gtk and the accelerators handle the key press.
 
         Returns:
             false to let gtk handle the key action

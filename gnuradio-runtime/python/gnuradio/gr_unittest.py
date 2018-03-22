@@ -147,7 +147,7 @@ def run(PUT, filename=None):
         # FIXME: make xmlrunner output to screen so we don't have to do run and main
         suite = TestLoader().loadTestsFromTestCase(PUT)
 
-        # use the xmlrunner if we can write the the directory
+        # use the xmlrunner if we can write the directory
         if(xmlrunner is not None):
             xmlrunner.run(suite)
 

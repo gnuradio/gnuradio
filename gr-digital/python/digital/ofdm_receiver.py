@@ -45,7 +45,7 @@ class ofdm_receiver(gr.hier_block2):
 
     The receiver performs channel filtering as well as symbol, frequency, and phase synchronization.
     The synchronization routines are available in three flavors: preamble correlator (Schmidl and Cox),
-    modifid preamble correlator with autocorrelation (not yet working), and cyclic prefix correlator
+    modified preamble correlator with autocorrelation (not yet working), and cyclic prefix correlator
     (Van de Beeks).
     """
 

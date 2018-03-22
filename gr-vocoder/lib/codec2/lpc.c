@@ -218,7 +218,7 @@ void inverse_filter(
  synthesis_filter()
 
  C version of the Speech Synthesis Filter, 1/A(z).  Given an array of
- residual or excitation samples, and the the LP filter coefficients, this
+ residual or excitation samples, and the LP filter coefficients, this
  function will produce an array of speech samples.  This filter structure is
  IIR.
 

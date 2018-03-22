@@ -65,7 +65,7 @@ namespace gr {
      * derivative of a cosine is a sine).  Extend this sine by another
      * quarter wave to make a half wave around the band-edges is
      * equivalent in time to the sum of two sinc functions. The
-     * baseband filter fot the band edges is therefore derived from
+     * baseband filter for the band edges is therefore derived from
      * this sum of sincs. The band edge filters are then just the
      * baseband signal modulated to the correct place in
      * frequency. All of these calculations are done in the
