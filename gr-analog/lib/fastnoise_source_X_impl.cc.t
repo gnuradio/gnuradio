@@ -163,5 +163,9 @@ namespace gr {
 #endif
     }
 
+    const std::vector<@TYPE@>& @IMPL_NAME@::samples() const
+    {
+            return d_samples;
+    }
   } /* namespace analog */
 } /* namespace gr */
