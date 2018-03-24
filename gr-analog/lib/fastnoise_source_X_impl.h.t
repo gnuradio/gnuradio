@@ -50,7 +50,7 @@ namespace gr {
       void set_type(noise_type_t type);
       void set_amplitude(float ampl);
       void generate();
-      const std::vector<@TYPE@>& samples() const { return d_samples; };
+      const std::vector<@TYPE@>& samples() const;
 
       noise_type_t type() const { return d_type; }
       float amplitude() const { return d_ampl; }
