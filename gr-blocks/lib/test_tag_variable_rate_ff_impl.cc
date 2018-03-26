@@ -31,7 +31,11 @@
 #include <iostream>
 #include <iomanip>
 #include <stdexcept>
+#if __cplusplus>=201103L
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 using namespace pmt;
 
