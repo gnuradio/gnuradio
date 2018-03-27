@@ -148,7 +148,7 @@ IF(HAVE_WINDOWS_H)
 ENDIF(HAVE_WINDOWS_H)
 
 #need to link with librt on ubuntu 11.10 for shm_*
-if(LINUX)
+if((LINUX) OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD"))
     list(APPEND gnuradio_runtime_libs rt)
 endif()
 
