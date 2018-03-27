@@ -1,29 +1,32 @@
 <?xml version="1.0"?>
+<!--
+###################################################
+##File Taps Loader
+###################################################
+ -->
 <block>
-  <name>file_taps_loader</name>
+  <name>File Taps Loader</name>
   <key>blocks_file_taps_loader</key>
-  <category>[blocks]</category>
-  <import>import blocks</import>
-  <make>blocks.file_taps_loader($path, $verbose)</make>
+  <category>[File Operators]</category>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.file_taps_loader($file, $verbose)</make>
   <param>
-    <name>Path</name>
-    <key>path</key>
-    <type>string</type>
+    <name>File</name>
+    <key>file</key>
+    <value></value>
+    <type>file_open</type>
   </param>
   <param>
     <name>Verbose Output</name>
-    <key>path</key>
-    <value>True</value>
+    <key>verbose</key>
     <type>bool</type>
     <option>
-      <name>YES</name>
-      <key>True</key>
+            <name>YES</name>
+            <key>True</key>
     </option>
     <option>
-      <name>NO</name>
-      <key>False</key>
+            <name>NO</name>
+            <key>False</key>
     </option>
-
   </param>
-
 </block>
