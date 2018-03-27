@@ -166,7 +166,7 @@ namespace gr {
 
 
 #elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__) || \
-    defined(__FreeBSD__)
+  defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__GNU__)
 
 namespace gr {
   namespace thread {
