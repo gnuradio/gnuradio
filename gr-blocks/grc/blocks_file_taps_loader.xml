@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<block>
+  <name>file_taps_loader</name>
+  <key>blocks_file_taps_loader</key>
+  <category>[blocks]</category>
+  <import>import blocks</import>
+  <make>blocks.file_taps_loader($path, $verbose)</make>
+  <param>
+    <name>Path</name>
+    <key>path</key>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Verbose Output</name>
+    <key>path</key>
+    <value>True</value>
+    <type>bool</type>
+    <option>
+      <name>YES</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>NO</name>
+      <key>False</key>
+    </option>
+
+  </param>
+
+</block>

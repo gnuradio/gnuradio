@@ -25,7 +25,7 @@ GR_PYTHON_INSTALL(
     __init__.py
     parse_file_metadata.py
     stream_to_vector_decimator.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks
+    file_taps_loader.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocks
     COMPONENT "blocks_python"
 )
 
