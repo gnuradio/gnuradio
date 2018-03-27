@@ -7,5 +7,5 @@ Name: gnuradio-qtgui
 Description: GNU Radio blocks for QT GUI
 Requires: gnuradio-runtime
 Version: @LIBVER@
-Libs: -L${libdir} -lgnuradio-qtgui
-Cflags: -I${includedir}
+Libs: -L${libdir} -lgnuradio-qtgui ${PC_LIBS_STR}
+Cflags: -I${includedir} -I${QWT_INCLUDE_DIRS} -I${QT_HEADERS_DIR}
