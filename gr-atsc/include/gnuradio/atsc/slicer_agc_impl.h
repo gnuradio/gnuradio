@@ -63,7 +63,7 @@ class ATSC_API atsci_slicer_agc {
   static const float			REFERENCE = 1.25;	// pilot reference value
   static const float 			RATE = 1.0e-5;		// adjustment rate
   float					_gain;			// current gain
-  gr_single_pole_iir<float,float,float>	dc;
+  gr::filter::single_pole_iir<float,float,float>	dc;
 };
 
 #endif /* _ATSC_SLICER_AGC_H_ */
