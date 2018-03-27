@@ -507,7 +507,7 @@ namespace gr {
           }
           continue;  // try again
         }
-
+#ifdef ESTRPIPE
         else if(r == -ESTRPIPE) {  // h/w is suspended (whatever that means)
 				   // This is apparently related to power management
           d_nsuspends++;
@@ -517,7 +517,7 @@ namespace gr {
           }
           continue;  // try again
         }
-
+#endif
         else if (r < 0) {
           output_error_msg("snd_pcm_writei failed", r);
           return false;

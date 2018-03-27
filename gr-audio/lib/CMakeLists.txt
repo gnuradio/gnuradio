@@ -44,7 +44,7 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 find_package(ALSA)
 
-if(ALSA_FOUND)
+if((ALSA_FOUND) AND NOT (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD") AND NOT (CMAKE_SYSTEM_NAME STREQUAL GNU))
 
     add_definitions(-DALSA_FOUND)
     GR_APPEND_SUBCOMPONENT("alsa")
@@ -59,7 +59,7 @@ if(ALSA_FOUND)
     )
     list(APPEND gr_audio_confs ${CMAKE_CURRENT_SOURCE_DIR}/alsa/gr-audio-alsa.conf)
 
-endif(ALSA_FOUND)
+endif((ALSA_FOUND) AND NOT (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD") AND NOT (CMAKE_SYSTEM_NAME STREQUAL GNU))
 
 ########################################################################
 ## OSS Support
