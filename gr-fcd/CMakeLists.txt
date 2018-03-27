@@ -30,8 +30,7 @@ endif()
 ########################################################################
 include(GrComponent)
 
-# FIXME make better conditionalization
-if (LINUX)
+if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME MATCHES kFreeBSD OR CMAKE_SYSTEM_NAME STREQUAL GNU)
     GR_REGISTER_COMPONENT("gr-fcd" ENABLE_GR_FCD
         Boost_FOUND
         ENABLE_GNURADIO_RUNTIME
