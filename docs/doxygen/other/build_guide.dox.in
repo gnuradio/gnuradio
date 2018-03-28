@@ -55,7 +55,6 @@ Other compilers may work, but are not supported.
 
 \subsection dep_docs docs: Building the documentation
 \li doxygen     (>= 1.5)     http://www.stack.nl/~dimitri/doxygen/download.html
-\li latex*      (>= 2.0)     http://www.latex-project.org/
 
 \subsection dep_grc grc: The GNU Radio Companion
 \li Cheetah     (>= 2.0)     http://www.cheetahtemplate.org/
@@ -63,6 +62,12 @@ Other compilers may work, but are not supported.
 
 \subsection dep_fft gr-fft: Fast Frequency Transform
 \li fftw3f      (>= 3.0.1)   http://www.fftw.org/download.html
+
+\subsection dep_zeromq gr-zeromq: ZeroMQ Network layer
+\li ZeroMQ      (>= 3.2.5)       http://www.zeromq.org/
+\li cppzmq      (>= git 6c17af2) https://github.com/zeromq/cppzmq
+
+cppzmq is included (undocumentedly) in the debian and Ubuntu libzmq3-dev packages.
 
 \subsection dep_wavelet gr-wavelet: Collection of wavelet blocks
 \li gsl         (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
@@ -84,7 +89,7 @@ Other compilers may work, but are not supported.
 \li audio-osx
 \li audio-windows
 
-<b>Optional but recommended dependencies.</b>
+<b>Optional</b>
 
 It is not necessary to satisfy all of these dependencies; just the
 one(s) that are right for your system. On Linux, don't expect
@@ -93,13 +98,14 @@ audio-osx and audio-windows to be either satisfied or built.
 \subsection dep_uhd uhd: The Ettus USRP Hardware Driver Interface
 \li uhd         (>= 3.5.5)   https://www.ettus.com/downloads
 
+\subsection dep_gr_fdc gr-fcd: The FunCube Dongle hardware interface (only if you want to use one)
+\li libUSB(x)   (version platform-dependent)   http://www.libusb.info/
+
 \subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display (rarely used)
 \li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
 
 \subsection dep_gr_comedi gr-comedi: Comedi hardware interface (only if you know what this is)
 \li comedilib   (>= 0.8.1)   http://www.comedi.org/
-
-<b>Optional</b>
 
 \ref page_ctrlport may use various backends to perform the RPC
 process, and each is its own dependency.
@@ -108,6 +114,10 @@ Currently, ControlPort only supports the Apache Thrift backend.
 
 \li thrift       (>= 0.9.2)   https://thrift.apache.org/
 
+To have nice formula formatting in doxygen, you'll need LaTeX; for python docs, sphinx:
+
+\li latex        (>= 2.0)     http://www.latex-project.org/
+\li sphinx       (>= 1.2.2)   http://www.sphinx-doc.org/
 
 \section build_gr_cmake Building GNU Radio
 
