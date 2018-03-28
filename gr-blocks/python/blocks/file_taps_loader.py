@@ -31,6 +31,7 @@ import sys
 class file_taps_loader(gr.basic_block):
     """
     Block to make filter taps created by the filter design tool available.
+    Simply use the name of the ID of this block as the taps variable.
     """
     def __init__(self, fpath, verbose):
         gr.basic_block.__init__(self,
@@ -54,11 +55,11 @@ class file_taps_loader(gr.basic_block):
               self.taps = np.array(row[1:], dtype=float)
             else:
               self.params.append(row)
-        self.print_if("Loaded a filter with the following parameters (gr_filter_design format)\n")
+        self.print_if(self.name() + ": Loaded a filter with the following parameters (gr_filter_design format)\n")
         for param in self.params:
           self.print_if(param[0], ' ', param[1], '\n')
       else:
-        raise RuntimeError("Can not open " + "\"" + fpath + "\"" + ".")
+        raise RuntimeError(self.name() + ": Can not open " + "\"" + fpath + "\"" + ".")
 
     def print_if(self, *tbps):
       if self.verbose:

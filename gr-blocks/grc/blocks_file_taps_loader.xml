@@ -6,10 +6,12 @@
  -->
 <block>
   <name>File Taps Loader</name>
-  <key>blocks_file_taps_loader</key>
+  <key>variable_file_taps_loader</key>
   <category>[File Operators]</category>
   <import>from gnuradio import blocks</import>
-  <make>blocks.file_taps_loader($file, $verbose)</make>
+  <var_make>self.$(id) = $(id) = blocks.file_taps_loader($file, $verbose).get_taps()</var_make>
+  <var_value>blocks.file_taps_loader($file, $verbose).get_taps()</var_value>
+  <make></make>
   <param>
     <name>File</name>
     <key>file</key>
@@ -19,14 +21,15 @@
   <param>
     <name>Verbose Output</name>
     <key>verbose</key>
+    <value>True</value>
     <type>bool</type>
     <option>
-            <name>YES</name>
-            <key>True</key>
+      <name>YES</name>
+      <key>True</key>
     </option>
     <option>
-            <name>NO</name>
-            <key>False</key>
+      <name>NO</name>
+      <key>False</key>
     </option>
   </param>
 </block>
