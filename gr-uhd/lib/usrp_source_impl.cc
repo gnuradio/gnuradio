@@ -31,7 +31,6 @@
 namespace gr {
   namespace uhd {
 
-    const pmt::pmt_t CMD_TAG_KEY = pmt::mp("tag");
 
     usrp_source::sptr
     usrp_source::make(const ::uhd::device_addr_t &device_addr,
@@ -83,7 +82,7 @@ namespace gr {
 #ifdef GR_UHD_USE_STREAM_API
       _samps_per_packet = 1;
 #endif
-      register_msg_cmd_handler(CMD_TAG_KEY, boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
+      register_msg_cmd_handler(cmd_tag_key(), boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
     }
 
     usrp_source_impl::~usrp_source_impl()
@@ -154,7 +153,7 @@ namespace gr {
     usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direction)
     {
       _chans_to_tune.reset(chan);
-      if (pmt::eqv(direction, ANT_DIRECTION_TX)) {
+      if (pmt::eqv(direction, ant_direction_tx())) {
         // TODO: what happens if the TX device is not instantiated? Catch error?
         return _dev->set_tx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
       } else {

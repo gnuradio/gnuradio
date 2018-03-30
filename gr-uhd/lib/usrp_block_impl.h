@@ -37,23 +37,6 @@ namespace gr {
       static const size_t ALL_CHANS = ::uhd::usrp::multi_usrp::ALL_CHANS;
       static const std::string ALL_GAINS = ::uhd::usrp::multi_usrp::ALL_GAINS;
 
-      static const pmt::pmt_t CMD_CHAN_KEY = pmt::mp("chan");
-      static const pmt::pmt_t CMD_GAIN_KEY = pmt::mp("gain");
-      static const pmt::pmt_t CMD_FREQ_KEY = pmt::mp("freq");
-      static const pmt::pmt_t CMD_LO_OFFSET_KEY = pmt::mp("lo_offset");
-      static const pmt::pmt_t CMD_TUNE_KEY = pmt::mp("tune");
-      static const pmt::pmt_t CMD_LO_FREQ_KEY = pmt::mp("lo_freq");
-      static const pmt::pmt_t CMD_DSP_FREQ_KEY = pmt::mp("dsp_freq");
-      static const pmt::pmt_t CMD_RATE_KEY = pmt::mp("rate");
-      static const pmt::pmt_t CMD_BANDWIDTH_KEY = pmt::mp("bandwidth");
-      static const pmt::pmt_t CMD_TIME_KEY = pmt::mp("time");
-      static const pmt::pmt_t CMD_MBOARD_KEY = pmt::mp("mboard");
-      static const pmt::pmt_t CMD_ANTENNA_KEY = pmt::mp("antenna");
-      static const pmt::pmt_t CMD_DIRECTION_KEY = pmt::mp("direction");
-
-      static const pmt::pmt_t ANT_DIRECTION_RX = pmt::mp("RX");
-      static const pmt::pmt_t ANT_DIRECTION_TX = pmt::mp("TX");
-
 #ifdef UHD_USRP_MULTI_USRP_LO_CONFIG_API
       static const std::string ALL_LOS = ::uhd::usrp::multi_usrp::ALL_LOS;
 #else
