@@ -45,7 +45,7 @@ namespace gr {
 	d_pdu_meta(pmt::PMT_NIL),
 	d_pdu_vector(pmt::PMT_NIL)
     {
-      message_port_register_out(pdu::s_pdu_port_id);
+      message_port_register_out(pdu::pdu_port_id());
     }
 
     int
@@ -71,7 +71,7 @@ namespace gr {
 
       // Send msg
       pmt::pmt_t msg = pmt::cons(d_pdu_meta, d_pdu_vector);
-      message_port_pub(pdu::s_pdu_port_id, msg);
+      message_port_pub(pdu::pdu_port_id(), msg);
 
       return ninput_items[0];
     }

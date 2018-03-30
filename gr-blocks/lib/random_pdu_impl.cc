@@ -48,7 +48,7 @@ namespace gr {
     d_mask(byte_mask),
     d_length_modulo(length_modulo)
     {
-      message_port_register_out(pdu::s_pdu_port_id);
+      message_port_register_out(pdu::pdu_port_id());
       message_port_register_in(pmt::mp("generate"));
       set_msg_handler(pmt::mp("generate"), boost::bind(&random_pdu_impl::generate_pdu, this, _1));
       if(length_modulo < 1)
@@ -80,7 +80,7 @@ namespace gr {
       pmt::pmt_t vecpmt(pmt::make_blob(&vec[0], len));
       pmt::pmt_t pdu(pmt::cons(pmt::PMT_NIL, vecpmt));
 
-      message_port_pub(pdu::s_pdu_port_id, pdu);
+      message_port_pub(pdu::pdu_port_id(), pdu);
     }
 
   } /* namespace blocks */

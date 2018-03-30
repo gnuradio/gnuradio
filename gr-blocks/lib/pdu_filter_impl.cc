@@ -43,9 +43,9 @@ namespace gr {
 		 io_signature::make (0, 0, 0)),
     d_k(k), d_v(v), d_invert(invert)
     {
-      message_port_register_out(pdu::s_pdu_port_id);
-      message_port_register_in(pdu::s_pdu_port_id);
-      set_msg_handler(pdu::s_pdu_port_id, boost::bind(&pdu_filter_impl::handle_msg, this, _1));
+      message_port_register_out(pdu::pdu_port_id());
+      message_port_register_in(pdu::pdu_port_id());
+      set_msg_handler(pdu::pdu_port_id(), boost::bind(&pdu_filter_impl::handle_msg, this, _1));
     }
 
     void
@@ -63,7 +63,7 @@ namespace gr {
 
       // if all tests pass, propagate the pdu
       if(output){
-        message_port_pub(pdu::s_pdu_port_id, pdu);
+        message_port_pub(pdu::pdu_port_id(), pdu);
         }
     }
 
