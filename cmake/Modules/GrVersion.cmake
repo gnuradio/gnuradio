@@ -83,11 +83,7 @@ else()
     # VERSION: 3.3.1{.x}
     # DOCVER:  3.3.1{.x}
     # LIBVER:  3.3.1{.x}
-    if("${MAINT_VERSION}" STREQUAL "0")
-        set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}")
-    else()
-        set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}.${MAINT_VERSION}")
-    endif()
+    set(VERSION "${MAJOR_VERSION}.${API_COMPAT}.${MINOR_VERSION}.${MAINT_VERSION}")
     set(DOCVER "${VERSION}")
     set(LIBVER "${VERSION}")
     set(RC_MINOR_VERSION ${MINOR_VERSION})
