@@ -34,9 +34,6 @@
 
 namespace gr {
 
-  const pmt::pmt_t block::d_system_port = pmt::intern("system");
-  const pmt::pmt_t block::d_pmt_done = pmt::intern("done");
-
   block::block(const std::string &name,
                io_signature::sptr input_signature,
                io_signature::sptr output_signature)
@@ -57,7 +54,9 @@ namespace gr {
       d_pc_rpc_set(false),
       d_update_rate(false),
       d_max_output_buffer(std::max(output_signature->max_streams(),1), -1),
-      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1)
+      d_min_output_buffer(std::max(output_signature->max_streams(),1), -1),
+      d_pmt_done(pmt::intern("done")),
+      d_system_port(pmt::intern("system"))
   {
     global_block_registry.register_primitive(alias(), this);
     message_port_register_in(d_system_port);
