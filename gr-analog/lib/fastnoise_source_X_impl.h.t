@@ -38,6 +38,7 @@ namespace gr {
       float d_ampl;
       gr::random d_rng;
       std::vector<@TYPE@> d_samples;
+      uint64_t d_state[2];
 
     public:
       @IMPL_NAME@(noise_type_t type, float ampl, long seed, long samples);
@@ -49,6 +50,7 @@ namespace gr {
       void set_type(noise_type_t type);
       void set_amplitude(float ampl);
       void generate();
+      const std::vector<@TYPE@>& samples() const;
 
       noise_type_t type() const { return d_type; }
       float amplitude() const { return d_ampl; }

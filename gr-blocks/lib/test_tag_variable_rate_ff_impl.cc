@@ -26,10 +26,12 @@
 
 #include "test_tag_variable_rate_ff_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/xoroshiro128p.h>
 #include <string.h>
 #include <iostream>
 #include <iomanip>
 #include <stdexcept>
+#include <stdint.h>
 
 using namespace pmt;
 
@@ -57,11 +59,7 @@ namespace gr {
       d_new_in = 0;
       d_last_out = 0;
 
-#ifdef HAVE_RAND48
-      srand48(time(NULL));
-#else
-      srand(time(NULL));
-#endif
+      xoroshiro128p_seed(d_rng_state, 4 /* chosen by fair dice roll */);
     }
 
     test_tag_variable_rate_ff_impl::~test_tag_variable_rate_ff_impl()
@@ -82,11 +80,7 @@ namespace gr {
       GR_LOG_DEBUG(d_logger, boost::format("noutput_items: %1%") % noutput_items);
 
       if(d_update_once) {
-#ifdef HAVE_RAND48
-        if(drand48() > 0.5) {
-#else
-        if (rand() > RAND_MAX / 2) {
-#endif
+        if (xoroshiro128p_next(d_rng_state) > (UINT64_MAX / 2)){
           d_rrate += d_update_step;
         }
         else {
@@ -103,11 +97,7 @@ namespace gr {
       while(i < ninput_items[0]) {
 
         if(!d_update_once) {
-#ifdef HAVE_RAND48
-          if(drand48() > 0.5) {
-#else
-          if (rand() > RAND_MAX / 2) {
-#endif
+          if (xoroshiro128p_next(d_rng_state) > (UINT64_MAX / 2)){
             d_rrate += d_update_step;
           }
           else {

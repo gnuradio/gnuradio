@@ -33,7 +33,7 @@ self.$(id).declare_sample_delay($samp_delay)
 		<type>real_vector</type>
 	</param>
 	<param>
-		<name>Over Sample Ratio</name>
+		<name>Oversampling Ratio</name>
 		<key>osr</key>
 		<value>1.0</value>
 		<type>real</type>

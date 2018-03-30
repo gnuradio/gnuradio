@@ -27,6 +27,7 @@
 #endif
 
 #include "@IMPL_NAME@.h"
+#include <gnuradio/xoroshiro128p.h>
 #include <gnuradio/io_signature.h>
 #include <stdexcept>
 
@@ -46,13 +47,13 @@ namespace gr {
 		    io_signature::make(1, 1, sizeof(@TYPE@))),
       d_type(type),
 #if @IS_COMPLEX@	// complex?
-      d_ampl(ampl/sqrtf(2.0f)),
+      d_ampl(ampl/sqrtf(2.0f))
 #else
-      d_ampl(ampl),
+      d_ampl(ampl)
 #endif
-      d_rng(seed)
     {
       d_samples.resize(samples);
+      xoroshiro128p_seed(d_state, (uint64_t) seed);
       generate();
     }
 
@@ -144,32 +145,27 @@ namespace gr {
 
     @TYPE@ @IMPL_NAME@::sample()
     {
-#ifdef HAVE_RAND48
-        size_t idx = lrand48() % d_samples.size();
-#else
-        size_t idx = rand() % d_samples.size();
-#endif
+        size_t idx = xoroshiro128p_next(d_state) % d_samples.size();
         return d_samples[idx];
     }
 
-#ifndef FASTNOISE_RANDOM_SIGN
-#ifndef HAVE_RAND48
-#define FASTNOISE_RANDOM_SIGN       ((rand()%2==0)?1:-1)
-#else
-#define FASTNOISE_RANDOM_SIGN       ((lrand48()%2==0)?1:-1)
-#endif
-#endif
-
     @TYPE@ @IMPL_NAME@::sample_unbiased()
     {
+        uint64_t random_int = xoroshiro128p_next(d_state);
 #if @IS_COMPLEX@
         gr_complex s(sample());
-        return gr_complex(FASTNOISE_RANDOM_SIGN * s.real(),
-                          FASTNOISE_RANDOM_SIGN * s.imag());
+        float re = (random_int & (UINT64_C(1)<<23)) ? (- s.real()) : (s.real());
+        float im = (random_int & (UINT64_C(1)<<42)) ? (- s.real()) : (s.real());
+        return gr_complex(re, im);
 #else
-        return FASTNOISE_RANDOM_SIGN * sample();
+        float s = sample();
+        return (random_int & (1<<23)) ? (-s) : s;
 #endif
     }
 
+    const std::vector<@TYPE@>& @IMPL_NAME@::samples() const
+    {
+            return d_samples;
+    }
   } /* namespace analog */
 } /* namespace gr */
