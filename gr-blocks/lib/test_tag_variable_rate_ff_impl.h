@@ -36,6 +36,7 @@ namespace gr {
       double d_accum;
       double d_rrate;
       uint64_t d_old_in, d_new_in, d_last_out;
+      uint64_t d_rng_state[2];
 
     public:
       test_tag_variable_rate_ff_impl(bool update_once=false,

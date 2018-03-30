@@ -1158,12 +1158,12 @@ equal(const pmt_t& x, const pmt_t& y)
       return false;
 
     size_t len_x, len_y;
-    if (memcmp(xv->uniform_elements(len_x),
-	       yv->uniform_elements(len_y),
-	       len_x) == 0)
+    const void *x_m = xv->uniform_elements(len_x);
+    const void *y_m = yv->uniform_elements(len_y);
+    if (memcmp(x_m, y_m, len_x) == 0)
       return true;
 
-    return true;
+    return false;
   }
 
   // FIXME add other cases here...

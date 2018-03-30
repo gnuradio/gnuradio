@@ -73,16 +73,16 @@ namespace gr {
      *      attenuation_dB=ATT, window=filter.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
      *
      * The PFB decimator code takes the taps generated above and
-     * builds a set of filters. The set contains <EM>decim</EM> number
-     * of filters and each filter contains ceil(taps.size()/decim)
-     * number of taps.  Each tap from the filter prototype is
+     * builds a set of filters. The set contains <EM>decim</EM>
+     * filters and each filter contains ceil(taps.size()/decim)
+     * taps.  Each tap from the filter prototype is
      * sequentially inserted into the next filter. When all of the
      * input taps are used, the remaining filters in the filterbank
      * are filled out with 0's to make sure each filter has the same
      * number of taps.
      *
      * The theory behind this block can be found in Chapter 6 of
-     * the following book.
+     * the following book:
      *
      *   <B><EM>f. harris, "Multirate Signal Processing for Communication
      *      Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
