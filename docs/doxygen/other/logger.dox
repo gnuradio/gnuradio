@@ -212,6 +212,24 @@ This creates a pointer called LOG (which is instantiated as a
 log4cpp:LoggerPtr in the macro) that we can now use locally as the
 input to our logging macros like 'GR_LOG_INFO(LOG, "message")'.
 
+\subsection using_logging Using Logging in Out of Tree Modules
+
+In order to use the logging interface in an out of tree module based on a
+gr_modtool template module, several CMake modifications are required.
+Without these changes, logging will be disabled.
+
+GrMiscUtils.cmake module must be included in the OOT module top level
+CMakeLists.Texts file, and the GR_LOGGING() function provided by GrMiscUtils
+must be called from the same top level CMakeLists.txt file. This will
+set the appropriate build environment and during that process, attempt
+to find the log4cpp package using the FindLog4Cpp.cmake module.
+This module is not included in the module by gr_modtool, but is part of
+the GNU Radio codebase and can be copied directly into the cmake/Modules/
+directory of the OOT module.
+
+Once these CMake changes are made, the  GR logging interface will function
+as documented on this page.
+
 \section logPy Logging from Python
 
 The logging capability has been brought out python via swig. The configuration

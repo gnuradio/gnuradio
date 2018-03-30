@@ -95,7 +95,7 @@ namespace gr {
                 gr_complex ff_H(d_faders[j]->next_sample());
                 for(size_t k=0; k<d_taps.size(); k++){
                     float dist = k-d_delays[j];
-                    float interpmag = d_sintable.sinc(2*M_PI*dist);
+                    float interpmag = d_sintable.sinc(M_PI*dist);
                     d_taps[k] += ff_H * interpmag * d_mags[j];
                 }
             }

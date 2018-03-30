@@ -58,7 +58,8 @@ undocumented#slurp
 CAT_MARKUP_TMPL = """
 #set $name = $cat[-1]
 #if len($cat) > 1
-Category: $cat[-1]
+#silent from xml.sax.saxutils import escape
+Category: #echo escape($cat[-1])
 ##
 #elif $name == 'Core'
 Module: Core
