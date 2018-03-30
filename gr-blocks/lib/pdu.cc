@@ -30,6 +30,12 @@ namespace gr {
   namespace blocks {
     namespace pdu {
 
+      const
+      pmt::pmt_t pdu_port_id(){
+        static const pmt::pmt_t pdu_port_id = pmt::mp("pdus");
+        return pdu_port_id;
+      }
+
       size_t
       itemsize(vector_type type)
       {
