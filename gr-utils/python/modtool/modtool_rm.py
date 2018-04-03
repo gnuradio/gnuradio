@@ -38,6 +38,17 @@ class ModToolRemove(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
+    def get_block_candidates(self):
+        cpp_blocks = filter(lambda x: not (x.startswith('qa_') or
+                            x.startswith('test_')),
+                            glob.glob1("lib", "*.cc"))
+        python_blocks = filter(lambda x: not (x.startswith('qa_') or
+                               x.startswith('build') or
+                               x.startswith('__init__')),
+                               glob.glob1("python", "*.py"))
+        block_candidates = [x.split('_impl')[0] for x in cpp_blocks] + [x.split('.')[0] for x in python_blocks]
+        return block_candidates
+
     def setup(self, options, args):
         ModTool.setup(self, options, args)
 
@@ -46,7 +57,8 @@ class ModToolRemove(ModTool):
         elif len(args) >= 2:
             self._info['pattern'] = args[1]
         else:
-            with SequenceCompleter():
+            block_candidates = self.get_block_candidates()
+            with SequenceCompleter(block_candidates):
                 self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
         if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
