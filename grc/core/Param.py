@@ -552,6 +552,7 @@ class Param(Element):
         # Grid Position Type
         #########################
         elif t == 'grid_pos':
+            self.hostage_cells.clear()
             if not v:
                 # Allow for empty grid pos
                 return ''
@@ -571,15 +572,18 @@ class Param(Element):
             except:
                 my_parent = ''
             # Calculate hostage cells
-            for r in range(row_span):
-                for c in range(col_span):
-                    self.hostage_cells.append((my_parent, (row + r, col + c)))
-            # Avoid collisions
-            params = filter(lambda p: p is not self, self.get_all_params('grid_pos'))
-            for param in params:
-                for parent, cell in param._hostage_cells:
-                    if (parent, cell) in self.hostage_cells:
-                        raise Exception('Another graphical element is using parent "{0}", cell "{1}".'.format(str(parent), str(cell)))
+            for r in range(row, row + row_span):
+                for c in range(col, col + col_span):
+                    self.hostage_cells.add((my_parent, (r, c)))
+
+            for other in self.get_all_params('grid_pos'):
+                if other is self:
+                    continue
+                collision = next(iter(self.hostage_cells & other.hostage_cells), None)
+                if collision:
+                    raise Exception('Block {block!r} is also using parent {parent!r}, cell {cell!r}.'.format(
+                        block=other.get_parent().get_id(), parent=collision[0] or 'main', cell=collision[1]
+                    ))
             return e
         #########################
         # Notebook Page Type
