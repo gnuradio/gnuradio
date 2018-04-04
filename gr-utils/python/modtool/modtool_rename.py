@@ -23,13 +23,7 @@
 import os
 import re
 from optparse import OptionGroup
-
-from util_functions import append_re_line_sequence, ask_yes_no
-from cmakefile_editor import CMakeFileEditor
 from modtool_base import ModTool, ModToolException
-from templates import Templates
-from code_generator import get_template
-import Cheetah.Template
 
 
 class ModToolRename(ModTool):
@@ -47,8 +41,10 @@ class ModToolRename(ModTool):
     def setup_parser(self):
         parser = ModTool.setup_parser(self)
         ogroup = OptionGroup(parser, "Rename module options")
-        ogroup.add_option("-o", "--old-name", type="string", default=None, help="Current name of the block to rename.")
-        ogroup.add_option("-u", "--new-name", type="string", default=None, help="New name of the block.")
+        ogroup.add_option("-o", "--old-name", type="string", default=None,
+                          help="Current name of the block to rename.")
+        ogroup.add_option("-u", "--new-name", type="string", default=None,
+                          help="New name of the block.")
         parser.add_option_group(ogroup)
         return parser
 
@@ -56,7 +52,7 @@ class ModToolRename(ModTool):
         ModTool.setup(self, options, args)
 
         if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
-             or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
+                or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
             raise ModToolException('Missing or skipping relevant subdir.')
 
         # first make sure the old block name is provided

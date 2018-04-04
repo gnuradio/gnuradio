@@ -44,9 +44,9 @@ class ModToolInfo(ModTool):
         parser.usage = '%prog info [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "Info options")
         ogroup.add_option("--python-readable", action="store_true", default=None,
-                help="Return the output in a format that's easier to read for Python scripts.")
+                          help="Return the output in a format that's easier to read for Python scripts.")
         ogroup.add_option("--suggested-dirs", default=None, type="string",
-                help="Suggest typical include dirs if nothing better can be detected.")
+                          help="Suggest typical include dirs if nothing better can be detected.")
         parser.add_option_group(ogroup)
         return parser
 
@@ -69,7 +69,7 @@ class ModToolInfo(ModTool):
         if self._info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', mod_info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname']))
-                ):
+            ):
             self._info['version'] = '37'
         mod_info['version'] = self._info['version']
         if 'is_component' in self._info.keys() and self._info['is_component']:
@@ -110,7 +110,7 @@ class ModToolInfo(ModTool):
         base_build_dir = mod_info['base_dir']
         if 'is_component' in mod_info.keys():
             (base_build_dir, rest_dir) = os.path.split(base_build_dir)
-        has_build_dir = os.path.isdir(os.path.join(base_build_dir , 'build'))
+        has_build_dir = os.path.isdir(os.path.join(base_build_dir, 'build'))
         if (has_build_dir and os.path.isfile(os.path.join(base_build_dir, 'CMakeCache.txt'))):
             return os.path.join(base_build_dir, 'build')
         else:
@@ -130,10 +130,11 @@ class ModToolInfo(ModTool):
             cmakecache_fid = open(os.path.join(mod_info['build_dir'], 'CMakeCache.txt'))
             for line in cmakecache_fid:
                 if line.find('GNURADIO_RUNTIME_INCLUDE_DIRS:%s' % path_or_internal) != -1:
-                    inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:%s=' % path_or_internal, '').strip().split(';')
+                    inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:%s='
+                                             % path_or_internal, '').strip().split(';')
         except IOError:
             pass
-        if len(inc_dirs) == 0 and self._suggested_dirs is not None:
+        if (not inc_dirs or inc_dirs.isspace) and self._suggested_dirs is not None:
             inc_dirs = [os.path.normpath(path) for path in self._suggested_dirs.split(':') if os.path.isdir(path)]
         return inc_dirs
 
@@ -147,9 +148,9 @@ class ModToolInfo(ModTool):
         for key in mod_info.keys():
             if key == 'version':
                 print "        API version: %s" % {
-                        '36': 'pre-3.7',
-                        '37': 'post-3.7',
-                        'autofoo': 'Autotools (pre-3.5)'
-                        }[mod_info['version']]
+                    '36': 'pre-3.7',
+                    '37': 'post-3.7',
+                    'autofoo': 'Autotools (pre-3.5)'
+                    }[mod_info['version']]
             else:
                 print '%19s: %s' % (index_names[key], mod_info[key])

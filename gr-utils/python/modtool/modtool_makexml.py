@@ -57,7 +57,7 @@ class ModToolMakeXML(ModTool):
             self._info['pattern'] = args[1]
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to parse? (Regex): ')
-        if len(self._info['pattern']) == 0:
+        if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
     def run(self):
@@ -85,7 +85,7 @@ class ModToolMakeXML(ModTool):
         for f in files:
             if re.search(self._info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
-        if len(files_filt) == 0:
+        if not files_filt:
             print "None found."
         return files_filt
 
@@ -113,10 +113,10 @@ class ModToolMakeXML(ModTool):
                 file_exists = True
                 print "Warning: Overwriting existing GRC file."
         grc_generator = GRCXMLGenerator(
-                modname=self._info['modname'],
-                blockname=blockname,
-                params=params,
-                iosig=iosig
+            modname=self._info['modname'],
+            blockname=blockname,
+            params=params,
+            iosig=iosig
         )
         grc_generator.save(path_to_xml)
         if file_exists:
@@ -145,7 +145,7 @@ class ModToolMakeXML(ModTool):
                               'std::vector<int>': 'int_vector',
                               'std::vector<float>': 'real_vector',
                               'std::vector<gr_complex>': 'complex_vector',
-                              }
+                             }
             if p_type in ('int',) and default_v is not None and len(default_v) > 1 and default_v[:2].lower() == '0x':
                 return 'hex'
             try:
@@ -172,4 +172,3 @@ class ModToolMakeXML(ModTool):
             raise ModToolException("Can't open some of the files necessary to parse {}.".format(fname_cc))
 
         return (parser.read_params(), parser.read_io_signature(), blockname)
-
