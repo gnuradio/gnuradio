@@ -46,6 +46,7 @@ class ModTool(object):
             self._skip_subdirs[subdir] = False
         self.parser = self.setup_parser()
         self._dir = None
+        self.scm = None
 
     def setup_parser(self):
         """ Init the option parser. If derived classes need to add options,
@@ -56,24 +57,24 @@ class ModTool(object):
         ogroup = OptionGroup(parser, "General options")
         ogroup.add_option("-h", "--help", action="help", help="Displays this help message.")
         ogroup.add_option("-d", "--directory", type="string", default=".",
-                help="Base directory of the module. Defaults to the cwd.")
+                          help="Base directory of the module. Defaults to the cwd.")
         ogroup.add_option("-n", "--module-name", type="string", default=None,
-                help="Use this to override the current module's name (is normally autodetected).")
+                          help="Use this to override the current module's name (is normally autodetected).")
         ogroup.add_option("-N", "--block-name", type="string", default=None,
-                help="Name of the block, where applicable.")
+                          help="Name of the block, where applicable.")
         ogroup.add_option("--skip-lib", action="store_true", default=False,
-                help="Don't do anything in the lib/ subdirectory.")
+                          help="Don't do anything in the lib/ subdirectory.")
         ogroup.add_option("--skip-swig", action="store_true", default=False,
-                help="Don't do anything in the swig/ subdirectory.")
+                          help="Don't do anything in the swig/ subdirectory.")
         ogroup.add_option("--skip-python", action="store_true", default=False,
-                help="Don't do anything in the python/ subdirectory.")
+                          help="Don't do anything in the python/ subdirectory.")
         ogroup.add_option("--skip-grc", action="store_true", default=False,
-                help="Don't do anything in the grc/ subdirectory.")
+                          help="Don't do anything in the grc/ subdirectory.")
         ogroup.add_option("--scm-mode", type="choice", choices=('yes', 'no', 'auto'),
-                default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
-                help="Use source control management (yes, no or auto).")
+                          default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
+                          help="Use source control management (yes, no or auto).")
         ogroup.add_option("-y", "--yes", action="store_true", default=False,
-                help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
+                          help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
         parser.add_option_group(ogroup)
         return parser
 
@@ -92,7 +93,7 @@ class ModTool(object):
         if self._info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self._info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
-                ):
+            ):
             self._info['version'] = '37'
         if options.skip_lib or not self._has_subdirs['lib']:
             self._skip_subdirs['lib'] = True
@@ -111,14 +112,14 @@ class ModTool(object):
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
         if not self._skip_subdirs['swig']:
-            self._file['swig'] = os.path.join('swig',   self._get_mainswigfile())
+            self._file['swig'] = os.path.join('swig', self._get_mainswigfile())
         self._info['pydir'] = 'python'
         if os.path.isdir(os.path.join('python', self._info['modname'])):
             self._info['pydir'] = os.path.join('python', self._info['modname'])
-        self._file['qalib']    = os.path.join('lib',    'qa_%s.cc' % self._info['modname'])
-        self._file['pyinit']   = os.path.join(self._info['pydir'], '__init__.py')
-        self._file['cmlib']    = os.path.join('lib',    'CMakeLists.txt')
-        self._file['cmgrc']    = os.path.join('grc',    'CMakeLists.txt')
+        self._file['qalib'] = os.path.join('lib', 'qa_%s.cc' % self._info['modname'])
+        self._file['pyinit'] = os.path.join(self._info['pydir'], '__init__.py')
+        self._file['cmlib'] = os.path.join('lib', 'CMakeLists.txt')
+        self._file['cmgrc'] = os.path.join('grc', 'CMakeLists.txt')
         self._file['cmpython'] = os.path.join(self._info['pydir'], 'CMakeLists.txt')
         if self._info['is_component']:
             self._info['includedir'] = os.path.join('include', 'gnuradio', self._info['modname'])
@@ -155,7 +156,7 @@ class ModTool(object):
         self._info['is_component'] = False
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
-                if re.search('find_package\(Gnuradio', open(f).read()) is not None:
+                if re.search(r'find_package\(Gnuradio', open(f).read()) is not None:
                     self._info['version'] = '36' # Might be 37, check that later
                     has_makefile = True
                 elif re.search('GR_REGISTER_COMPONENT', open(f).read()) is not None:
@@ -164,7 +165,7 @@ class ModTool(object):
                     has_makefile = True
             # TODO search for autofoo
             elif os.path.isdir(f):
-                if (f in self._has_subdirs.keys()):
+                if f in self._has_subdirs.keys():
                     self._has_subdirs[f] = True
                 else:
                     self._skip_subdirs[f] = True
@@ -193,9 +194,8 @@ def get_class_dict(the_globals):
         try:
             if issubclass(g, ModTool):
                 classdict[g.name] = g
-                for a in g.aliases:
-                    classdict[a] = g
+                for alias in g.aliases:
+                    classdict[alias] = g
         except (TypeError, AttributeError):
             pass
     return classdict
-

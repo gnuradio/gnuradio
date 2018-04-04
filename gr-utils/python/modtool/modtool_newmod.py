@@ -26,7 +26,6 @@ import re
 from optparse import OptionGroup
 from gnuradio import gr
 from modtool_base import ModTool, ModToolException
-from scm import SCMRepoFactory
 
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
@@ -41,7 +40,7 @@ class ModToolNewModule(ModTool):
         parser.usage = '%prog nm [options]. \n Call %prog without any options to run it interactively.'
         ogroup = OptionGroup(parser, "New out-of-tree module options")
         ogroup.add_option("--srcdir", type="string",
-                help="Source directory for the module template.")
+                          help="Source directory for the module template.")
         parser.add_option_group(ogroup)
         return parser
 
@@ -99,4 +98,3 @@ class ModToolNewModule(ModTool):
         if self.scm.init_repo(path_to_repo="."):
             print "Created repository... you might want to commit before continuing."
         print "Use 'gr_modtool add' to add a new block to this currently empty module."
-

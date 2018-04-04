@@ -65,4 +65,3 @@ class ModToolHelp(ModTool):
             print_class_descriptions()
             return
         cmd_dict[help_requested_for]().setup_parser().print_help()
-
