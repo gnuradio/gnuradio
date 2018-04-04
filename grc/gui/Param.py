@@ -368,9 +368,9 @@ PARAM_LABEL_MARKUP_TMPL="""\
 
 TIP_MARKUP_TMPL="""\
 ########################################
-#def truncate(string)
+#def truncate(value)
     #set $max_len = 100
-    #set $string = str($string)
+    #set $string = str(value)
     #if len($string) > $max_len
 $('%s...%s'%($string[:$max_len/2], $string[-$max_len/2:]))#slurp
     #else
