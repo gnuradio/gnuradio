@@ -39,21 +39,25 @@ namespace gr {
     corr_est_cc::sptr
     corr_est_cc::make(const std::vector<gr_complex> &symbols,
                       float sps, unsigned int mark_delay,
-                      float threshold)
+                      float threshold,
+                      tm_type threshold_method)
     {
       return gnuradio::get_initial_sptr
-        (new corr_est_cc_impl(symbols, sps, mark_delay, threshold));
+        (new corr_est_cc_impl(symbols, sps, mark_delay, threshold,
+                              threshold_method));
     }
 
     corr_est_cc_impl::corr_est_cc_impl(const std::vector<gr_complex> &symbols,
                                        float sps, unsigned int mark_delay,
-                                       float threshold)
+                                       float threshold,
+                                       tm_type threshold_method)
       : sync_block("corr_est_cc",
                    io_signature::make(1, 1, sizeof(gr_complex)),
                    io_signature::make(1, 2, sizeof(gr_complex))),
         d_src_id(pmt::intern(alias()))
     {
       d_sps = sps;
+      d_threshold_method = threshold_method;
 
       // In order to easily support the optional second output,
       // don't deal with an unbounded max number of output items.
@@ -195,7 +199,23 @@ namespace gr {
     corr_est_cc_impl::_set_threshold(float threshold)
     {
       d_stashed_threshold = threshold;
-      d_pfa = -logf(1.0f-threshold);
+
+      // TODO: Right now two methods are computed this should be conditional
+      switch (d_threshold_method) {
+        case THRESHOLD_DYNAMIC:
+            d_pfa = -logf(1.0f-threshold);
+          break;
+        case THRESHOLD_ABSOLUTE:
+        default:
+          // Compute a correlation threshold.
+          // Compute the value of the discrete autocorrelation of the matched
+          // filter with offset 0 (aka the autocorrelation peak).
+          float corr = 0;
+          for(size_t i = 0; i < d_symbols.size(); i++)
+            corr += abs(d_symbols[i]*conj(d_symbols[i]));
+          d_thresh = threshold*corr*corr;
+          break;
+      }
     }
 
     void
@@ -231,21 +251,35 @@ namespace gr {
       volk_32fc_magnitude_squared_32f(&d_corr_mag[0], corr, noutput_items);
 
       float detection = 0;
-      for(int i = 0; i < noutput_items; i++) {
-        detection += d_corr_mag[i];
+      if(d_threshold_method == THRESHOLD_DYNAMIC)
+      {
+        for(int i = 0; i < noutput_items; i++) {
+          detection += d_corr_mag[i];
+        }
+        detection /= static_cast<float>(noutput_items);
+        detection *= d_pfa;
       }
-      detection /= static_cast<float>(noutput_items);
-      detection *= d_pfa;
 
       int isps = (int)(d_sps + 0.5f);
       int i = 0;
       while(i < noutput_items) {
-        // Look for the correlator output to cross the threshold.
-        // Sum power over two consecutive symbols in case we're offset
-        // in time. If off by 1/2 a symbol, the peak of any one point
-        // is much lower.
-        float corr_mag = d_corr_mag[i] + d_corr_mag[i+1];
-        if(corr_mag <= 4*detection) {
+        float corr_mag;
+        switch (d_threshold_method) {
+          case THRESHOLD_DYNAMIC:
+            // Look for the correlator output to cross the threshold.
+            // Sum power over two consecutive symbols in case we're offset
+            // in time. If off by 1/2 a symbol, the peak of any one point
+            // is much lower.
+            corr_mag = (d_corr_mag[i] + d_corr_mag[i+1]) * 0.5f;
+            d_thresh = 2 * detection;
+            break;
+          case THRESHOLD_ABSOLUTE:
+          default:
+            corr_mag = d_corr_mag[i];
+            break;
+        }
+
+        if (corr_mag <= d_thresh) {
           i++;
           continue;
         }

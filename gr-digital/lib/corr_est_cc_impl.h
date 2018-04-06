@@ -47,13 +47,16 @@ namespace gr {
       float d_scale;
       float d_pfa; // probability of false alarm
 
+      tm_type d_threshold_method;
+
       void _set_mark_delay(unsigned int mark_delay);
       void _set_threshold(float threshold);
 
     public:
       corr_est_cc_impl(const std::vector<gr_complex> &symbols,
                        float sps, unsigned int mark_delay,
-                       float threshold=0.9);
+                       float threshold=0.9,
+                       tm_type threshold_method=THRESHOLD_ABSOLUTE);
       ~corr_est_cc_impl();
 
       std::vector<gr_complex> symbols() const;
