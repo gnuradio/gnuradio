@@ -32,6 +32,20 @@
     <type>float</type>
   </param>
 
+  <param>
+    <name>Threshold Method</name>
+    <key>threshold_method</key>
+    <type>enum</type>
+    <option>
+      <name>Absolute</name>
+      <key>digital.corr_est_cc.THRESHOLD_ABSOLUTE</key>
+    </option>
+    <option>
+      <name>Dynamic</name>
+      <key>digital.corr_est_cc.THRESHOLD_DYNAMIC</key>
+    </option>
+  </param>
+
   <sink>
     <name>in</name>
     <type>complex</type>

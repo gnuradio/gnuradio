@@ -87,20 +87,28 @@ namespace gr {
     public:
       typedef boost::shared_ptr<corr_est_cc> sptr;
 
+      enum tm_type {
+        THRESHOLD_DYNAMIC,
+        THRESHOLD_ABSOLUTE,
+      };
+
       /*!
        * Make a block that correlates against the \p symbols vector
        * and outputs a phase and symbol timing estimate.
        *
-       * \param symbols    Set of symbols to correlate against (e.g., a
-       *                   sync word).
-       * \param sps        Samples per symbol
-       * \param mark_delay tag marking delay in samples after the
-       *                   corr_start tag
-       * \param threshold  Threshold of correlator, relative to a 100%
-       *                   correlation (1.0). Default is 0.9.
+       * \param symbols           Set of symbols to correlate against (e.g., a
+       *                          sync word).
+       * \param sps               Samples per symbol
+       * \param mark_delay        tag marking delay in samples after the
+       *                          corr_start tag
+       * \param threshold         Threshold of correlator, relative to a 100%
+       *                          correlation (1.0). Default is 0.9.
+       * \param threshold_method  Method for computing threshold.
+       *
        */
       static sptr make(const std::vector<gr_complex> &symbols,
-                       float sps, unsigned int mark_delay, float threshold=0.9);
+                       float sps, unsigned int mark_delay, float threshold=0.9,
+                       tm_type threshold_method=THRESHOLD_ABSOLUTE);
 
       virtual std::vector<gr_complex> symbols() const = 0;
       virtual void set_symbols(const std::vector<gr_complex> &symbols) = 0;
