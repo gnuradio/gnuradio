@@ -17,15 +17,18 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-if(ENABLE_GR_CTRLPORT)
-
 # Keep track of the number of backends ControlPort supports
 SET(CTRLPORT_BACKENDS 0)
+
+if(ENABLE_GR_CTRLPORT)
 
 # Add definition so we can compile in ControlPort to the blocks.
 add_definitions(-DGR_CTRLPORT)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcmanager.cc
@@ -33,7 +36,6 @@ list(APPEND gnuradio_ctrlport_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_booter_aggregator.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/rpcserver_selector.cc
 )
-
 
 OPTION(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ON)
 
@@ -89,17 +91,10 @@ install(
 
 endif(THRIFT_FOUND)
 endif(ENABLE_CTRLPORT_THRIFT)
-
-########################################################################
-# Add controlport stuff to gnuradio-runtime
-########################################################################
-
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+endif(ENABLE_GR_CTRLPORT)
 
 # Save the number of backends for testing against later
 set(
   CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
   CACHE INTERNAL "Number of ControlPort backends available"
 )
-
-endif(ENABLE_GR_CTRLPORT)
