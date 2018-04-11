@@ -44,7 +44,7 @@ configure_file(
 list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 
 ########################################################################
-# Setup the include and linker paths
+# Setup globally used include paths
 ########################################################################
 include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -52,12 +52,6 @@ include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
                     ${MPLIB_INCLUDE_DIRS}
 )
-
-if(ENABLE_CTRLPORT_THRIFT)
-    list(APPEND include_directories
-        ${THRIFT_INCLUDE_DIRS}
-    )
-endif(ENABLE_CTRLPORT_THRIFT)
 
 ########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -67,6 +61,13 @@ GR_INCLUDE_SUBDIRECTORY(messages)
 GR_INCLUDE_SUBDIRECTORY(thread)
 GR_INCLUDE_SUBDIRECTORY(math)
 GR_INCLUDE_SUBDIRECTORY(controlport)
+
+########################################################################
+# Setup CTRLPORT include path, if using
+########################################################################
+if(ENABLE_CTRLPORT_THRIFT)
+    include_directories(${THRIFT_INCLUDE_DIRS})
+endif(ENABLE_CTRLPORT_THRIFT)
 
 ########################################################################
 # Setup library
