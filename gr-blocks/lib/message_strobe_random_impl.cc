@@ -110,7 +110,7 @@ namespace gr {
     void message_strobe_random_impl::run()
     {
       while(!d_finished) {
-        boost::this_thread::sleep(boost::posix_time::milliseconds(std::max(0.0f,next_delay())));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(static_cast<long>(std::max(0.0f,next_delay()))));
         if(d_finished) {
           return;
         }
