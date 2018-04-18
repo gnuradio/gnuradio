@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## unreleased
+
+### Fixed
+#### Project Scope
+- `boost::posix_time::[milli]second` takes integer numbers, and we now at least cast the floats to integers, as Boost 1.67 forced us to realize we're (incorrectly) using floating point her
+- CMake: using regex to match compiler against "Clang" now enables correct build on OS X
+#### GRC
+- Fixed GRC bug which made broke WX and Qt (by altering the template code)
+
 ## [3.7.12.0] - 2018-04-01
 
 ### Software Engineering
