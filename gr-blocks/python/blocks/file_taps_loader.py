@@ -30,7 +30,7 @@ import sys
 
 class file_taps_loader(gr.basic_block):
     """
-    Block to make filter taps created by the filter design tool available.
+    Block to make filter taps created by the filter design tool available in grc.
     Simply use the name of the ID of this block as the taps variable.
     """
     def __init__(self, fpath, verbose):
