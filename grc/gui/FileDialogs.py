@@ -140,6 +140,7 @@ class FileDialog(FileDialogHelper):
             self.set_select_multiple(False)
         self.set_current_folder(path.dirname(current_file_path)) #current directory
 
+
     def add_and_set_filter(self, filter):
         """
         Add the gtk file filter to the list of filters and set it as the default file filter.
@@ -176,8 +177,9 @@ class FileDialog(FileDialogHelper):
             self.set_current_name(path.basename(filename)) #show the filename with extension
             if path.exists(filename): #ask the user to confirm overwrite
                 if MessageDialogHelper(
-                    gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, 'Confirm Overwrite!',
-                    Utils.parse_template(FILE_OVERWRITE_MARKUP_TMPL, filename=filename),
+                    gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, self.parent,
+                    title='Confirm Overwrite!',
+                    markup=Utils.parse_template(FILE_OVERWRITE_MARKUP_TMPL, filename=filename),
                 ) == gtk.RESPONSE_NO: return self.get_rectified_filename()
             return filename
         #############################################
@@ -188,8 +190,9 @@ class FileDialog(FileDialogHelper):
             for filename in filenames:
                 if not path.exists(filename): #show a warning and re-run
                     MessageDialogHelper(
-                        gtk.MESSAGE_WARNING, gtk.BUTTONS_CLOSE, 'Cannot Open!',
-                        Utils.parse_template(FILE_DNE_MARKUP_TMPL, filename=filename),
+                        gtk.MESSAGE_WARNING, gtk.BUTTONS_CLOSE, self.parent,
+                        title='Cannot Open!',
+                        markup=Utils.parse_template(FILE_DNE_MARKUP_TMPL, filename=filename),
                     )
                     return self.get_rectified_filename()
             return filenames
