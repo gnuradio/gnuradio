@@ -76,6 +76,17 @@ def num_to_str(num):
         return str(num)
 
 
+class CallableString(str):
+    """A string that perform old-style formatting when called
+
+    Used as an adaptor for templates with gui_hint params
+    ToDo: remove this in the YAML/Mako format
+    """
+
+    def __call__(self, *args):
+        return self % args
+
+
 class Option(Element):
 
     def __init__(self, param, n):
@@ -533,10 +544,10 @@ class Param(Element):
         # GUI Position/Hint
         #########################
         elif t == 'gui_hint':
-            if (self.get_parent().get_state() == Constants.BLOCK_DISABLED):
+            if self.get_parent().get_state() == Constants.BLOCK_DISABLED:
                 return ''
             else:
-                return self.parse_gui_hint(v)
+                return CallableString(self.parse_gui_hint(v))
         #########################
         # Grid Position Type
         #########################
@@ -813,7 +824,7 @@ class Param(Element):
         else:
             layout = 'top_grid_layout'
 
-        widget = '%s'  # to be fill-out in the mail template
+        widget = '%s'  # to be fill-out in the main template
 
         if pos:
             row, col, row_span, col_span = parse_pos()
