@@ -49,6 +49,13 @@ else: self.stop(); self.wait()</callback>
 		<hide>#if $author() then 'none' else 'part'#</hide>
 	</param>
 	<param>
+		<name>Copyright</name>
+		<key>copyright</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $copyright() then 'none' else 'part'#</hide>
+	</param>
+	<param>
 		<name>Description</name>
 		<key>description</key>
 		<value></value>

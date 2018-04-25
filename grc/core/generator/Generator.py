@@ -123,6 +123,7 @@ class TopBlockGenerator(object):
         output = list()
 
         fg = self._flow_graph
+        platform = fg.get_parent()
         title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
         imports = fg.get_imports()
         variables = fg.get_variables()
@@ -246,6 +247,7 @@ class TopBlockGenerator(object):
             'msgs': msgs,
             'generate_options': self._generate_options,
             'callbacks': callbacks,
+            'version': platform.config.version
         }
         # Build the template
         t = Template(open(FLOW_GRAPH_TEMPLATE, 'r').read(), namespace)
