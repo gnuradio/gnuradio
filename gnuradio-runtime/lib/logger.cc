@@ -379,12 +379,13 @@ namespace gr {
 
     GR_LOG_GETLOGGER(LOG, "gr_log." + name);
     GR_LOG_SET_LEVEL(LOG, log_level);
+
     if(log_file.size() > 0) {
       if(log_file == "stdout") {
-        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout","gr::log :%p: %c{1} - %m%n");
       }
       else if(log_file == "stderr") {
-        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "stderr","gr::log :%p: %c{1} - %m%n");
       }
       else {
         GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
@@ -396,10 +397,10 @@ namespace gr {
     GR_LOG_SET_LEVEL(DLOG, debug_level);
     if(debug_file.size() > 0) {
       if(debug_file == "stdout") {
-        GR_LOG_SET_CONSOLE_APPENDER(DLOG, "cout","gr::debug :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(DLOG, "stdout","gr::debug :%p: %c{1} - %m%n");
       }
       else if(debug_file == "stderr") {
-        GR_LOG_SET_CONSOLE_APPENDER(DLOG, "cerr", "gr::debug :%p: %c{1} - %m%n");
+        GR_LOG_SET_CONSOLE_APPENDER(DLOG, "stderr", "gr::debug :%p: %c{1} - %m%n");
       }
       else {
         GR_LOG_SET_FILE_APPENDER(DLOG, debug_file, true, "%r :%p: %c{1} - %m%n");
@@ -430,11 +431,11 @@ namespace gr {
     if(log_file.size() > 0) {
       if(log_file == "stdout") {
         boost::format str("gr::log :%%p: %1% - %%m%%n");
-        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout", boost::str(str % alias));
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout", boost::str(str % alias));
       }
       else if(log_file == "stderr") {
         boost::format str("gr::log :%%p: %1% - %%m%%n");
-        GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr", boost::str(str % alias));
+        GR_LOG_SET_CONSOLE_APPENDER(LOG, "stderr", boost::str(str % alias));
       }
       else {
         boost::format str("%%r :%%p: %1% - %%m%%n");
