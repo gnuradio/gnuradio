@@ -15,22 +15,31 @@
 ##@param generate_options the type of flow graph
 ##@param callbacks variable id map to callback strings
 ########################################################
+#set $SINGLE_HASH = '#'
+#set $DIVIDER = $SINGLE_HASH*50
 #def indent($code)
 #set $code = '\n        '.join(str($code).splitlines())
 $code#slurp
 #end def
 #import time
-#set $DIVIDER = '#'*50
+$SINGLE_HASH
+# SPDX-License-Identifier: GPL-3.0
+$SINGLE_HASH
 $DIVIDER
 # GNU Radio Python Flow Graph
 # Title: $title
 #if $flow_graph.get_option('author')
 # Author: $flow_graph.get_option('author')
 #end if
+#if $flow_graph.get_option('copyright')
+# Copyright: $flow_graph.get_option('copyright')
+#end if
 #if $flow_graph.get_option('description')
 # Description: $flow_graph.get_option('description')
+$SINGLE_HASH
 #end if
 # Generated: $time.ctime()
+# GNU Radio version: $version
 $DIVIDER
 #if $flow_graph.get_option('thread_safe_setters')
 import threading
