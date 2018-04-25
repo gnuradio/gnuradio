@@ -49,10 +49,10 @@ namespace gr {
       GR_LOG_SET_LEVEL(LOG, log_level);
       if(log_file.size() > 0) {
         if(log_file == "stdout") {
-          GR_LOG_SET_CONSOLE_APPENDER(LOG, "cout","gr::log :%p: %c{1} - %m%n");
+          GR_LOG_SET_CONSOLE_APPENDER(LOG, "stdout","gr::log :%p: %c{1} - %m%n");
         }
         else if(log_file == "stderr") {
-          GR_LOG_SET_CONSOLE_APPENDER(LOG, "cerr","gr::log :%p: %c{1} - %m%n");
+          GR_LOG_SET_CONSOLE_APPENDER(LOG, "stderr","gr::log :%p: %c{1} - %m%n");
         }
         else {
           GR_LOG_SET_FILE_APPENDER(LOG, log_file , true,"%r :%p: %c{1} - %m%n");
