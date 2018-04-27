@@ -30,7 +30,7 @@ namespace gr {
   namespace digital {
 
     /*!
-     * \brief Adds a cyclic prefix and performs pulse shaping on OFDM symbols.
+     * \brief Adds a cyclic prefix and performs optional pulse shaping on OFDM symbols.
      * \ingroup ofdm_blk
      *
      * \details
@@ -46,10 +46,13 @@ namespace gr {
      *
      * The pulse shape is a raised cosine in the time domain.
      *
-     * Up to two CP lengths as for instance needed in LTE are supported. In
-     * that case an interval has to be specified, e.g. an interval of 3
-     * implies, that every third symbol uses CP 1 instead of CP 2. CP 1 is
-     * always the one to start with as required by LTE for instance.
+     * Different CP lengths as for instance needed in LTE are supported. This
+     * is why one of the inputs is std::vector<int>. After every CP given has
+     * been prepended to symbols, each with the length of the IFFT operation,
+     * the mechanism will wrap arround and start over. To give an example, the
+     * input tuple for LTE with an FFT length of 2048 would be (160,) +
+     * (144,)*6, which is equal to (160, 144, 144, 144, 144, 144, 144). A
+     * uniform CP would be indicated by (uniform_cp_length, ).
      */
 
     class DIGITAL_API ofdm_cyclic_prefixer : virtual public tagged_stream_block
@@ -58,25 +61,20 @@ namespace gr {
       typedef boost::shared_ptr<ofdm_cyclic_prefixer> sptr;
 
       /*!
-       * \param input_size FFT length (i.e. length of the OFDM symbols)
-       * \param output_size_1 FFT length + cyclic prefix length 1 (in samples)
-       * \param rolloff_len Length of the rolloff flank in samples
-       * \param len_tag_key For framed processing the key of the length tag
-       * \param output_size_2 FFT length + cyclic prefix length 2 (in samples)
-       * \param interval Interval, with which cyclic prefix length 1 is used instead of cyclic prefix length 2
-      */
+       * \param fft_len IFFT length (i.e. length of the OFDM symbols).
+       * \param cp_lengths CP lengths. Wraps arround after reaching the end.
+       * \param rolloff_len Length of the rolloff flank in samples.
+       * \param len_tag_key For framed processing the key of the length tag.
+       */
 
       static sptr make
       (
-        size_t input_size,
-        size_t output_size_1,
+        int fft_len,
+        std::vector<int> cp_lengths,
         int rolloff_len=0,
-        const std::string &len_tag_key="",
-        size_t output_size_2=0,
-        int interval=0
+        const std::string &len_tag_key=""
       );
     };
-
   } // namespace digital
 } // namespace gr
 

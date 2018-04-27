@@ -32,42 +32,30 @@ namespace gr {
     class ofdm_cyclic_prefixer_impl : public ofdm_cyclic_prefixer
     {
      private:
-      size_t d_fft_len;
-      //! FFT length + CP length in samples
-      size_t d_output_size;
-      //!  First output length.
-      size_t d_output_size_1;
-      //!  Second output length.
-      size_t d_output_size_2;
-      //!  Interval to switch between the two output lengths.
-      int d_interval;
-      //! Length of the cyclic prefix in samples
-      int d_cp_size;
-      //! Length of pulse rolloff in samples
-      int d_rolloff_len;
+      //! FFT length
+      int d_fft_len;
       //!  State, that determines the current output length used.
       int d_state;
+      //! Variable being initialized with the largest CP.
+      int d_cp_max;
+      //! Length of pulse rolloff in samples
+      int d_rolloff_len;
+      //! Vector, that holds different CP lengths
+      std::vector<int> d_cp_lengths;
       //! Buffers the up-flank (at the beginning of the cyclic prefix)
       std::vector<float> d_up_flank;
       //! Buffers the down-flank (which trails the symbol)
       std::vector<float> d_down_flank;
       //! Vector, that holds tail of the predecessor symbol.
       std::vector<gr_complex> d_delay_line; // We do this explicitly to avoid outputting zeroes (i.e. no history!)
+      //! Holds the length tag key.
+      const std::string d_len_tag_key;
 
      protected:
       int calculate_output_stream_length(const gr_vector_int &ninput_items);
 
      public:
-      ofdm_cyclic_prefixer_impl
-      (
-        size_t input_size,
-        size_t output_size_1,
-        int rolloff_len,
-        const std::string &len_tag_key,
-        size_t output_size_2,
-        int interval
-      );
-
+      ofdm_cyclic_prefixer_impl(int fft_len, std::vector<int> cp_lengths, int rolloff_len, const std::string &len_tag_key);
       ~ofdm_cyclic_prefixer_impl();
 
       int work
@@ -78,7 +66,6 @@ namespace gr {
 	gr_vector_void_star &output_items
       );
     };
-
   } // namespace digital
 } // namespace gr
 
