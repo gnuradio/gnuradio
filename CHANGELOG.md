@@ -13,7 +13,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - `boost::posix_time::[milli]second` takes integer numbers, and we now at least cast the floats to integers, as Boost 1.67 forced us to realize we're (incorrectly) using floating point her
 - CMake: using regex to match compiler against "Clang" now enables correct build on OS X
 #### GRC
-- Fixed GRC bug which made broke WX and Qt (by altering the template code)
+- Fixed GRC bug which broke WX and Qt (by altering the template code), in multiple (less than awesome) steps
 
 ## [3.7.12.0] - 2018-04-01
 
