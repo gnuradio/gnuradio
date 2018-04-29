@@ -9,7 +9,7 @@
 	<name>Fast Multiply Const</name>
 	<key>blocks_multiply_const_xx</key>
 	<import>from gnuradio import blocks</import>
-	<make>blocks.multiply_const_$(type.fcn)($const)</make>
+	<make>blocks.multiply_const_$(type.fcn)($const, $vlen)</make>
 	<callback>set_k($const)</callback>
 	<param>
 		<name>IO Type</name>
