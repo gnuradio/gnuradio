@@ -34,7 +34,7 @@ namespace gr {
 
     @NAME@::sptr @NAME@::make(@O_TYPE@ k, size_t vlen)
     {
-        return gnuradio::get_initial_sptr(new @NAME_IMPL@(k, vlen));
+      return gnuradio::get_initial_sptr(new @NAME_IMPL@(k, vlen));
     }
 
     @NAME_IMPL@::@NAME_IMPL@(@O_TYPE@ k, size_t vlen)
