@@ -40,11 +40,11 @@ namespace gr {
       : sync_block("nlog10_ff",
 		      io_signature::make (1, 1, sizeof(float)*vlen),
 		      io_signature::make (1, 1, sizeof(float)*vlen)),
-        d_vlen(vlen)
+        d_n(n), d_vlen(vlen), d_k(k)
     {
-      setk(k);
-      setn(n);
-      //TODO message handlers
+      const int alignment_multiple =
+        volk_get_alignment() / sizeof(float);
+      set_alignment(std::max(1,alignment_multiple));
     }
 
     void
@@ -68,8 +68,17 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
-      for (int i = 0; i < noi; i++)
-        out[i] = n * log10f(std::max(in[i], (float) 1e-18)) + k;
+      volk_32f_log2_32f(out, in, noi);
+      volk_32f_s32f_multiply_32f(out, out, n/log2f(10.0f), noi);
+      if (k != 0.0f) {
+        for (int i = 0; i < noi; i++) {
+          out[i] += k + 1e-18;
+        }
+      } else {
+        for (int i = 0; i < noi; i++) {
+          out[i] += 1e-18;
+        }
+      }
 
       return noutput_items;
     }
