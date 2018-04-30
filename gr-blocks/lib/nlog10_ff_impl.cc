@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 #include "nlog10_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
+#include <limits>
 
 namespace gr {
   namespace blocks {
@@ -40,23 +41,11 @@ namespace gr {
       : sync_block("nlog10_ff",
 		      io_signature::make (1, 1, sizeof(float)*vlen),
 		      io_signature::make (1, 1, sizeof(float)*vlen)),
-        d_vlen(vlen)
+        d_n_log2_10(n/log2f(10.0f)), d_10_k_n(std::pow(10.0f, k/n)), d_vlen(vlen)
     {
-      setk(k);
-      setn(n);
-      //TODO message handlers
-    }
-
-    void
-    nlog10_ff_impl::setk(float k)
-    {
-      d_k = k;
-    }
-
-    void
-    nlog10_ff_impl::setn(float n)
-    {
-      d_prefactor = n / log2f(10.0f);
+      const int alignment_multiple =
+        volk_get_alignment() / sizeof(float);
+      set_alignment(std::max(1,alignment_multiple));
     }
 
     int
@@ -68,13 +57,18 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
-      volk_32f_log2_32f(out, in, noi);
-      volk_32f_s32f_multiply_32f(out, out, d_prefactor, noi);
-      if(d_k != 0.0f) {
-        for(int i = 0; i < noi; ++i) {
-          out[i] += d_k;
-        }
+      constexpr float float_min = std::numeric_limits<float>::min();
+
+      for (int i = 0; i < noi; i++) {
+          out[i] = std::max(in[i], float_min);
       }
+
+      if (d_10_k_n != 1.0f) {
+          volk_32f_s32f_multiply_32f(out, out, d_10_k_n, noi);
+      }
+      volk_32f_log2_32f(out, out, noi);
+      volk_32f_s32f_multiply_32f(out, out, d_n_log2_10, noi);
+
       return noutput_items;
     }
 
