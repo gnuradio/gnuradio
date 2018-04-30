@@ -33,9 +33,10 @@ namespace gr {
     class BLOCKS_API @NAME_IMPL@ : public @NAME@
     {
       @O_TYPE@ d_k;
+      size_t d_vlen;
 
     public:
-      @NAME_IMPL@(@O_TYPE@ k);
+      @NAME_IMPL@(@O_TYPE@ k, size_t vlen);
 
       @O_TYPE@ k() const { return d_k; }
       void set_k(@O_TYPE@ k) { d_k = k; }

@@ -46,8 +46,9 @@ namespace gr {
       /*!
        * \brief Create an instance of @NAME@
        * \param k multiplicative constant
+       * \param vlen number of items in vector
        */
-      static sptr make(@O_TYPE@ k);
+      static sptr make(@O_TYPE@ k, size_t vlen=1);
 
       /*!
        * \brief Return multiplicative constant
