@@ -28,6 +28,7 @@ GR_PYTHON_INSTALL(
     optfir.py
     pfb.py
     rational_resampler.py
+    file_taps_loader.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
     COMPONENT "filter_python"
 )
@@ -41,11 +42,11 @@ if(ENABLE_TESTING)
   set(GR_TEST_LIBRARY_DIRS "")
   set(GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig	
-    ${CMAKE_BINARY_DIR}/gr-blocks/swig	
-    ${CMAKE_BINARY_DIR}/gr-fft/swig	
-    ${CMAKE_BINARY_DIR}/gr-analog/swig	
-    ${CMAKE_BINARY_DIR}/gr-filter/swig		
+    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
+    ${CMAKE_BINARY_DIR}/gr-blocks/swig
+    ${CMAKE_BINARY_DIR}/gr-fft/swig
+    ${CMAKE_BINARY_DIR}/gr-analog/swig
+    ${CMAKE_BINARY_DIR}/gr-filter/swig
     )
 
   include(GrTest)

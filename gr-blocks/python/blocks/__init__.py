@@ -32,7 +32,6 @@ except ImportError:
     from blocks_swig import *
 
 from stream_to_vector_decimator import *
-from file_taps_loader import file_taps_loader
 
 #alias old add_vXX and multiply_vXX
 add_vcc = add_cc

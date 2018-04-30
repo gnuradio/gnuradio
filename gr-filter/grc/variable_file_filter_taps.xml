@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##File Taps Loader
+##File Filter Taps
 ###################################################
  -->
 <block>
-  <name>File Taps Loader</name>
-  <key>variable_file_taps_loader</key>
-  <category>[File Operators]</category>
-  <import>from gnuradio import blocks</import>
-  <var_make>self.$(id) = $(id) = blocks.file_taps_loader($file, $verbose).get_taps()</var_make>
-  <var_value>blocks.file_taps_loader($file, $verbose).get_taps()</var_value>
+  <name>File Filter Taps</name>
+  <key>variable_file_filter_taps</key>
+  <category>[Filters]</category>
+  <import>from gnuradio import filter</import>
+  <var_make>self.$(id) = $(id) = filter.file_taps_loader($file, $verbose).get_taps()</var_make>
+  <var_value>filter.file_taps_loader($file, $verbose).get_taps()</var_value>
   <make></make>
   <param>
     <name>File</name>
@@ -32,4 +32,8 @@
       <key>False</key>
     </option>
   </param>
+  <doc>
+This block maps filter taps created with gr_filter_design to a variable. \
+Simply insert the ID of this block into the taps field of the block you want to import the file taps to.
+</doc>
 </block>

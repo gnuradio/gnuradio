@@ -31,7 +31,6 @@ import sys
 class file_taps_loader(gr.basic_block):
     """
     Block to make filter taps created by the filter design tool available in grc.
-    Simply use the name of the ID of this block as the taps variable.
     """
     def __init__(self, fpath, verbose):
         gr.basic_block.__init__(self,
@@ -43,19 +42,27 @@ class file_taps_loader(gr.basic_block):
         self.fpath = fpath
         self.verbose = verbose
         # Load taps
-        self.taps_from_grc(fpath)
+        self.taps_from_design_tool(fpath)
 
-    def taps_from_grc(self, fpath):
+    def taps_from_design_tool(self, fpath):
       tfile = Path(fpath)
       if tfile.is_file():
         with open(fpath) as csvfile:
           readcsv = csv.reader(csvfile, delimiter=',')
           for row in readcsv:
             if row[0] == "taps":
-              self.taps = np.array(row[1:], dtype=float)
+              # Try with "normal" float taps first; if it fails, assume complex taps.
+              try:
+                self.taps = np.array(row[1:], dtype=float)
+                self.print_if(self.name() + ": Found real taps in the file provided.\n")
+              except ValueError:
+                # Simple preprocessing is required, that numpy eats our complex taps.
+                row_stripped = map( (lambda cpx_str: complex( cpx_str.strip("()") ) ), row[1:] )
+                self.taps = np.array(row_stripped, dtype=np.complex64)
+                self.print_if(self.name() + ": Found complex taps in the file provided.\n")
             else:
               self.params.append(row)
-        self.print_if(self.name() + ": Loaded a filter with the following parameters (gr_filter_design format)\n")
+        self.print_if(self.name() + ": Loaded a filter with the following parameters (gr_filter_design format): \n")
         for param in self.params:
           self.print_if(param[0], ' ', param[1], '\n')
       else:
@@ -73,3 +80,7 @@ class file_taps_loader(gr.basic_block):
     def get_params(self):
       params = self.params
       return params
+
+    def get_path(self):
+      path = self.fpath
+      return path

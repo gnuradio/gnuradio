@@ -36,6 +36,7 @@
       <block>variable_band_pass_filter_taps</block>
       <block>variable_band_reject_filter_taps</block>
       <block>variable_rrc_filter_taps</block>
+      <block>variable_file_filter_taps</block>
       <!-- FIR convenience filters -->
       <block>low_pass_filter</block>
       <block>high_pass_filter</block>
