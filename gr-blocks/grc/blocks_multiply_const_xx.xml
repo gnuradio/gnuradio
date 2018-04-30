@@ -19,28 +19,32 @@
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>fcn:cc</opt>
+      <opt>const_type:complex</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
 			<opt>fcn:ff</opt>
+      <opt>const_type:float</opt>
 		</option>
 		<option>
 			<name>Int</name>
 			<key>int</key>
 			<opt>fcn:ii</opt>
+      <opt>const_type:int</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
 			<opt>fcn:ss</opt>
+      <opt>const_type:int</opt>
 		</option>
 	</param>
 	<param>
 		<name>Constant</name>
 		<key>const</key>
 		<value>0</value>
-		<type>$type</type>
+		<type>$(type.const_type)</type>
 	</param>
 	<param>
 		<name>Vec Length</name>
