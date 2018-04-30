@@ -68,13 +68,9 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
-      volk_32f_log2_32f(out, in, noi);
-      volk_32f_s32f_multiply_32f(out, out, d_prefactor, noi);
-      if(d_k != 0.0f) {
-        for(int i = 0; i < noi; ++i) {
-          out[i] += d_k;
-        }
-      }
+      for (int i = 0; i < noi; i++)
+        out[i] = n * log10f(std::max(in[i], (float) 1e-18)) + k;
+
       return noutput_items;
     }
 
