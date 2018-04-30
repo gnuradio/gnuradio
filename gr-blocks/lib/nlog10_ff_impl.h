@@ -30,7 +30,7 @@ namespace gr {
 
     class BLOCKS_API nlog10_ff_impl : public nlog10_ff
     {
-      float  d_prefactor;
+      float  d_n_log2_10;
       size_t d_vlen;
       float  d_k;
 
