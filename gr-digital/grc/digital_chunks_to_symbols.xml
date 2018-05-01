@@ -70,6 +70,11 @@
 		<type>$in_type</type>
 		<nports>$num_ports</nports>
 	</sink>
+	<sink>
+		<name>set_symbol_table</name>
+		<type>message</type>
+        	<optional>1</optional>
+	</sink>
 	<source>
 		<name>out</name>
 		<type>$out_type</type>
