@@ -24,6 +24,7 @@
 from gnuradio import gr, gr_unittest, filter
 from file_taps_loader import file_taps_loader
 import inspect, os
+import numpy as np
 
 class qa_file_taps_loader (gr_unittest.TestCase):
 
@@ -43,9 +44,13 @@ class qa_file_taps_loader (gr_unittest.TestCase):
         c_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + "/" + path
         verbose = False
         ftl = filter.file_taps_loader(c_path, verbose)
-        expected_taps = [ -0.01015755, -0.01920645, 0.01674679, 0.2039666, 0.49091557, 0.63547009,
-                          0.49091557, 0.2039666, 0.01674679, -0.01920645, -0.01015755]
-        self.assertFloatTuplesAlmostEqual(tuple(expected_taps), tuple(ftl.get_taps()), 6)
+        expected_taps = tuple( np.array( (-0.01015755, -0.01920645, 0.01674679, 0.2039666, 0.49091557, 0.63547009,
+                                          0.49091557, 0.2039666, 0.01674679, -0.01920645, -0.01015755), dtype=float) )
+        # Verify types
+        self.assertEqual(type(ftl.get_taps()), type(expected_taps))
+        self.assertEqual(type(ftl.get_taps()[0]), type(expected_taps[0]))
+        # Look for data
+        self.assertFloatTuplesAlmostEqual(expected_taps, ftl.get_taps(), 6)
 
     def test_complex_taps (self):
         """
@@ -57,22 +62,26 @@ class qa_file_taps_loader (gr_unittest.TestCase):
         c_path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))) + "/" + path
         verbose = False
         ftl = filter.file_taps_loader(c_path, verbose)
-        expected_taps = [ (0.0015183225041255355-0.0018500800943002105j),
-                          (-0.002448790241032839-0.0016362317837774754j),
-                          (0.010924949310719967-0.020439114421606064j),
-                          (0.06737165153026581+0.02790628932416439j),
-                          (-0.04462461918592453+0.14710748195648193j),
-                          (-0.24321076273918152-0.048377688974142075j),
-                          (0.03181486576795578-0.3230209946632385j),
-                          (0.35412707924842834+8.44304750557967e-08j),
-                          (0.03181471303105354+0.3230209946632385j),
-                          (-0.2432107925415039+0.04837757349014282j),
-                          (-0.04462455213069916-0.14710749685764313j),
-                          (0.067371666431427-0.027906255796551704j),
-                          (0.01092493999749422+0.02043912000954151j),
-                          (-0.0024487916380167007+0.0016362294554710388j),
-                          (0.001518320757895708+0.0018500816076993942j)]
-        self.assertComplexTuplesAlmostEqual(tuple(expected_taps), tuple(ftl.get_taps()), 6)
+        expected_taps = tuple( np.array( (  (0.0015183225041255355-0.0018500800943002105j),
+                                            (-0.002448790241032839-0.0016362317837774754j),
+                                            (0.010924949310719967-0.020439114421606064j),
+                                            (0.06737165153026581+0.02790628932416439j),
+                                            (-0.04462461918592453+0.14710748195648193j),
+                                            (-0.24321076273918152-0.048377688974142075j),
+                                            (0.03181486576795578-0.3230209946632385j),
+                                            (0.35412707924842834+8.44304750557967e-08j),
+                                            (0.03181471303105354+0.3230209946632385j),
+                                            (-0.2432107925415039+0.04837757349014282j),
+                                            (-0.04462455213069916-0.14710749685764313j),
+                                            (0.067371666431427-0.027906255796551704j),
+                                            (0.01092493999749422+0.02043912000954151j),
+                                            (-0.0024487916380167007+0.0016362294554710388j),
+                                            (0.001518320757895708+0.0018500816076993942j) ), dtype=complex ) )
+        # Verify types
+        self.assertEqual(type(ftl.get_taps()), type(expected_taps))
+        self.assertEqual(type(ftl.get_taps()[0]), type(expected_taps[0]))
+        # Look for data
+        self.assertComplexTuplesAlmostEqual(expected_taps, ftl.get_taps(), 6)
 
     def test_raises_file_missing (self):
         """
@@ -84,6 +93,7 @@ class qa_file_taps_loader (gr_unittest.TestCase):
         # Check if the right exception is raised.
         with self.assertRaises(RuntimeError) as re:
           ftl = filter.file_taps_loader(path, verbose)
+        # Is the correct exception raised?
         self.assertEqual(str(re.exception), "file_taps_loader: Can not open " + "\"" + path + "\"" + ".")
 
 if __name__ == '__main__':

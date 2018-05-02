@@ -25,8 +25,7 @@ import numpy
 from gnuradio import gr
 from pathlib import Path
 import numpy as np
-import csv
-import sys
+import csv, sys, re
 
 class file_taps_loader(gr.basic_block):
     """
@@ -51,17 +50,26 @@ class file_taps_loader(gr.basic_block):
           readcsv = csv.reader(csvfile, delimiter=',')
           for row in readcsv:
             if row[0] == "taps":
-              # Try with "normal" float taps first; if it fails, assume complex taps.
-              try:
-                self.taps = np.array(row[1:], dtype=float)
-                self.print_if(self.name() + ": Found real taps in the file provided.\n")
-              except ValueError:
-                # Simple preprocessing is required, that numpy eats our complex taps.
-                row_stripped = map( (lambda cpx_str: complex( cpx_str.strip("()") ) ), row[1:] )
-                self.taps = np.array(row_stripped, dtype=np.complex64)
-                self.print_if(self.name() + ": Found complex taps in the file provided.\n")
+                regex = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                if(len(regex) > 0): # it's a complex
+                  cpx_row = map(lambda cpx_str: complex(cpx_str), row[1:]) # string to complex so numpy eats the taps
+                  self.taps = tuple(np.array(cpx_row, dtype=complex))
+                  self.print_if(self.name() + ": Found complex taps in the file provided.\n")
+                else:
+                  self.taps = tuple(np.array(row[1:], dtype=float))
+                  self.print_if(self.name() + ": Found real taps in the file provided.\n")
             else:
-              self.params.append(row)
+              regex = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[0])
+              if(len(regex) > 0): # it's a complex
+                cpx_row = map(lambda cpx_str: complex(cpx_str), row[1:]) # string to complex so numpy eats the taps
+                self.taps = tuple(np.array(cpx_row, dtype=complex))
+                self.print_if(self.name() + ": Found complex taps in the file provided.\n")
+              else:
+                try:
+                  self.taps = tuple(np.array(row[0:], dtype=float))
+                  self.print_if(self.name() + ": Found real taps in the file provided.\n")
+                except ValueError:
+                  self.params.append(row)
         self.print_if(self.name() + ": Loaded a filter with the following parameters (gr_filter_design format): \n")
         for param in self.params:
           self.print_if(param[0], ' ', param[1], '\n')
