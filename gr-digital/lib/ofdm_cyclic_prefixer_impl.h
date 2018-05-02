@@ -35,9 +35,11 @@ namespace gr {
       //! FFT length
       int d_fft_len;
       //!  State, that determines the current output length used.
-      int d_state;
+      unsigned d_state;
       //! Variable being initialized with the largest CP.
       int d_cp_max;
+      //! Variable being initialized with the smallest CP.
+      int d_cp_min;
       //! Length of pulse rolloff in samples
       int d_rolloff_len;
       //! Vector, that holds different CP lengths

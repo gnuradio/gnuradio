@@ -84,7 +84,7 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         self.assertEqual(tags, expected_tags)
 
     def test_wo_tags_no_rolloff_multiple_cps(self):
-        "Test with an interval and different CPs."
+        "Two CP lengths, no rolloff and no tags."
         fft_len = 8
         cp_lengths = (3, 2, 2)
         expected_result = ( 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, # 1
@@ -101,7 +101,7 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         self.assertEqual(sink.data(), expected_result)
 
     def test_wo_tags_2s_rolloff_multiple_cps(self):
-        "Test with an interval, rolloff and different CPs."
+        "Two CP lengths, 2-sample rolloff and no tags."
         fft_len = 8
         cp_lengths = (3, 2, 2)
         rolloff = 2
@@ -119,7 +119,7 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
         self.assertEqual(sink.data(), expected_result)
 
     def test_with_tags_2s_rolloff_multiples_cps(self):
-        "Test with tags, 2-sample rolloff and two CP lengths."
+        "Two CP lengths, 2-sample rolloff and tags."
         fft_len = 8
         cp_lengths = (3, 2, 2)
         rolloff = 2
@@ -150,6 +150,19 @@ class test_ofdm_cyclic_prefixer (gr_unittest.TestCase):
             (fft_len + cp_lengths[0], "second_tag", 42)
         ]
         self.assertEqual(tags, expected_tags)
+
+    def test_wo_tags_no_rolloff_old_api(self):
+        "Test the old API."
+        fft_len = 8
+        cp_len = 2
+        expected_result = (6, 7, 0, 1, 2, 3, 4, 5, 6, 7,
+                           6, 7, 0, 1, 2, 3, 4, 5, 6, 7)
+        src = blocks.vector_source_c(range(fft_len) * 2, False, fft_len)
+        cp = digital.ofdm_cyclic_prefixer(fft_len, fft_len + cp_len)
+        sink = blocks.vector_sink_c()
+        self.tb.connect(src, cp, sink)
+        self.tb.run()
+        self.assertEqual(sink.data(), expected_result)
 
 if __name__ == '__main__':
     gr_unittest.run(test_ofdm_cyclic_prefixer, "test_ofdm_cyclic_prefixer.xml")

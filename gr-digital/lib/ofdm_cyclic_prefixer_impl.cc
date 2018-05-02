@@ -30,6 +30,15 @@
 namespace gr {
   namespace digital {
 
+    // Do not break backwards compatibility and overload the make function.
+    ofdm_cyclic_prefixer::sptr
+    ofdm_cyclic_prefixer::make(size_t input_size, size_t output_size, int rolloff_len, const std::string &len_tag_key)
+    {
+      int fft_len = input_size;
+      std::vector<int> cp_lengths = {static_cast<int>(output_size - input_size)}; // Cast to silence compiler :(
+      return gnuradio::get_initial_sptr(new ofdm_cyclic_prefixer_impl(fft_len, cp_lengths, rolloff_len, len_tag_key));
+    }
+
     ofdm_cyclic_prefixer::sptr
     ofdm_cyclic_prefixer::make(int fft_len, std::vector<int> cp_lengths, int rolloff_len, const std::string &len_tag_key)
     {
@@ -46,6 +55,7 @@ namespace gr {
         d_fft_len(fft_len),
         d_state(0),
         d_cp_max(0),
+        d_cp_min(std::numeric_limits<int>::max()),
         d_rolloff_len(rolloff_len),
         d_cp_lengths(cp_lengths),
         d_up_flank((rolloff_len ? rolloff_len-1 : 0), 0),
@@ -53,33 +63,38 @@ namespace gr {
         d_delay_line(0, 0),
         d_len_tag_key(len_tag_key)
     {
-      for(const int& cp_len : d_cp_lengths) {
-        d_cp_max = std::max(d_cp_max, cp_len);
-      }
       // Sanity
+      if (d_cp_lengths.empty()) {
+        throw std::invalid_argument(this->alias() + std::string(": CP lengths vector can not be empty."));
+      }
       for(unsigned i=0; i<d_cp_lengths.size(); i++) {
         if (d_cp_lengths[i] != 0) {
           break;
         }
         if (i == d_cp_lengths.size()-1) {
-          throw std::invalid_argument(this->alias() + std::string(": It does not make sense to only have one or a couple of CPs with length 0."));
+          throw std::invalid_argument(this->alias() + std::string(": Please provide at least one CP which is != 0."));
         }
       }
-      if (d_cp_lengths.empty()) {
-        throw std::invalid_argument(this->alias() + std::string(": CP lengths vector can not be empty. Please enter at least (d,) (a single Python tuple) with d being a integer CP length."));
+      for(unsigned i=0; i<d_cp_lengths.size(); i++) {
+        d_cp_max = std::max(d_cp_max, d_cp_lengths[i]);
+        d_cp_min = std::min(d_cp_min, d_cp_lengths[i]);
+      }
+      if (d_cp_min < 0) {
+        throw std::invalid_argument(this->alias() + std::string(": The minimum CP allowed is 0."));
       }
       // Give the buffer allcoator and scheduler a hint about the ratio between input and output.
       set_relative_rate(d_cp_max + d_fft_len);
       // Flank of length 1 would just be rectangular.
       if(d_rolloff_len == 1) {
-        throw std::invalid_argument(this->alias() + std::string(": A rolloff length of 1 does not make sense, as it results in a boxcar function."));
+        d_rolloff_len = 0;
+        GR_LOG_WARN(d_logger, "Set rolloff to 0, because 1 would result in a boxcar function.");
       }
       if(d_rolloff_len) {
         d_delay_line.resize(d_rolloff_len-1, 0);
         // More sanity
         for(const int& cp_len : d_cp_lengths) {
           if(d_rolloff_len > cp_len) {
-            throw std::invalid_argument(this->alias() + std::string(": Rolloff length must be smaller than the cyclic prefix."));
+            throw std::invalid_argument(this->alias() + std::string(": Rolloff length must be smaller than any of the cyclic prefix lengths."));
           }
         }
         /* The actual flanks are one sample shorter than d_rolloff_len, because the
@@ -137,7 +152,7 @@ namespace gr {
         if(d_rolloff_len) {
           for(int i = 0; i < d_rolloff_len-1; i++) {
             out[i] = out[i] * d_up_flank[i] + d_delay_line[i];
-            /* This basically a cyclic suffix, but completely shifted into the next symbol.
+            /* This is basically a cyclic suffix, but completely shifted into the next symbol.
                The data rate does not change. */
             d_delay_line[i] = in[i] * d_down_flank[i];
           }
