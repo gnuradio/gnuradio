@@ -61,7 +61,7 @@ class file_taps_loader(gr.basic_block):
             else:
               regex = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[0])
               if(len(regex) > 0): # it's a complex
-                cpx_row = map(lambda cpx_str: complex(cpx_str), row[1:]) # string to complex so numpy eats the taps
+                cpx_row = map(lambda cpx_str: complex(cpx_str), row[0:]) # string to complex so numpy eats the taps
                 self.taps = tuple(np.array(cpx_row, dtype=complex))
                 self.print_if(self.name() + ": Found complex taps in the file provided.\n")
               else:
