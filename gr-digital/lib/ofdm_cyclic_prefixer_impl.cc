@@ -142,7 +142,7 @@ namespace gr {
       if(!d_len_tag_key.empty()) {
         symbols_to_read = ninput_items[0];
       } else {
-        symbols_to_read = std::min(noutput_items / d_cp_max, ninput_items[0]);
+        symbols_to_read = std::min(noutput_items / (d_fft_len + d_cp_max), ninput_items[0]);
       }
       noutput_items = 0;
       // 2) Do the cyclic prefixing and, optionally, the pulse shaping.
