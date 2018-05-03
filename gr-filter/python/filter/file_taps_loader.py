@@ -23,9 +23,8 @@
 
 import numpy
 from gnuradio import gr
-from pathlib import Path
 import numpy as np
-import csv, sys, re
+import csv, sys, re, os
 
 class file_taps_loader(gr.basic_block):
     """
@@ -44,8 +43,7 @@ class file_taps_loader(gr.basic_block):
         self.taps_from_design_tool(fpath)
 
     def taps_from_design_tool(self, fpath):
-      tfile = Path(fpath)
-      if tfile.is_file():
+      if os.path.isfile(self.fpath):
         with open(fpath) as csvfile:
           readcsv = csv.reader(csvfile, delimiter=',')
           for row in readcsv:
