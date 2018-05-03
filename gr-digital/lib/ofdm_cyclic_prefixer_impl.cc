@@ -35,7 +35,7 @@ namespace gr {
     ofdm_cyclic_prefixer::make(size_t input_size, size_t output_size, int rolloff_len, const std::string &len_tag_key)
     {
       int fft_len = input_size;
-      std::vector<int> cp_lengths = {static_cast<int>(output_size - input_size)}; // Cast to silence compiler :(
+      std::vector<int> cp_lengths(1, static_cast<int>(output_size - input_size)); // Cast to silence compiler :(
       return gnuradio::get_initial_sptr(new ofdm_cyclic_prefixer_impl(fft_len, cp_lengths, rolloff_len, len_tag_key));
     }
 
@@ -82,7 +82,7 @@ namespace gr {
       if (d_cp_min < 0) {
         throw std::invalid_argument(this->alias() + std::string(": The minimum CP allowed is 0."));
       }
-      // Give the buffer allcoator and scheduler a hint about the ratio between input and output.
+      // Give the buffer allocator and scheduler a hint about the ratio between input and output.
       set_relative_rate(d_cp_max + d_fft_len);
       // Flank of length 1 would just be rectangular.
       if(d_rolloff_len == 1) {
@@ -92,10 +92,8 @@ namespace gr {
       if(d_rolloff_len) {
         d_delay_line.resize(d_rolloff_len-1, 0);
         // More sanity
-        for(const int& cp_len : d_cp_lengths) {
-          if(d_rolloff_len > cp_len) {
-            throw std::invalid_argument(this->alias() + std::string(": Rolloff length must be smaller than any of the cyclic prefix lengths."));
-          }
+        if(d_rolloff_len > d_cp_min) {
+          throw std::invalid_argument(this->alias() + std::string(": Rolloff length must be smaller than any of the cyclic prefix lengths."));
         }
         /* The actual flanks are one sample shorter than d_rolloff_len, because the
            first sample of the up- and down flank is always zero and one, respectively.*/
@@ -107,7 +105,7 @@ namespace gr {
       if(d_len_tag_key.empty()) {
         // noutput_items is set to be a multiple of the largest possible output size.
         // It is always OK to return less (in case of the shorter CP).
-        set_output_multiple(d_cp_max);
+        set_output_multiple(d_fft_len + d_cp_max);
       }
       else {
         // Avoid automatic tag propagation and propagate them manually.
@@ -142,7 +140,7 @@ namespace gr {
       if(!d_len_tag_key.empty()) {
         symbols_to_read = ninput_items[0];
       } else {
-        symbols_to_read = std::min(noutput_items / (d_fft_len + d_cp_max), ninput_items[0]);
+        symbols_to_read = std::min(noutput_items / (int)(d_fft_len + d_cp_max), ninput_items[0]);
       }
       noutput_items = 0;
       // 2) Do the cyclic prefixing and, optionally, the pulse shaping.
@@ -162,7 +160,7 @@ namespace gr {
         // Raise the number of noutput_items depending on how long the current output was.
         noutput_items += d_fft_len + d_cp_lengths[d_state];
         // Propagate tags.
-        auto last_state = d_state > 0 ? d_state-1 : d_cp_lengths.size()-1;
+        unsigned last_state = d_state > 0 ? d_state-1 : d_cp_lengths.size()-1;
         std::vector<tag_t> tags;
         get_tags_in_range(tags, 0, nitems_read(0) + sym_idx, nitems_read(0) + sym_idx + 1);
         for(unsigned i = 0; i < tags.size(); i++) {

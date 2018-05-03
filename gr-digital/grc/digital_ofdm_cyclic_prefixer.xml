@@ -54,7 +54,7 @@
     <key>len_tag_key</key>
     <value>"frame_len"</value>
     <type>string</type>
-    <hide>#if $tagname() == "" then "part" else "none"#</hide>
+    <hide>#if $len_tag_key() == "" then "part" else "none"#</hide>
   </param>
   <sink>
     <name>in</name>
