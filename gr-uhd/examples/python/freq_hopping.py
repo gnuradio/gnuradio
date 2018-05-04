@@ -128,6 +128,10 @@ class FrequencyHopperSrc(gr.hier_block2):
         gain_tag.value = pmt.to_pmt({'gain': tx_gain})
         tag_list = [gain_tag,]
         for i in range(len(self.hop_sequence)):
+            time = pmt.cons(
+                pmt.from_uint64(int(base_time + i * hop_time+0.01)),
+                pmt.from_double((base_time + i * hop_time+0.01) % 1),
+            )
             tune_tag = gr.tag_t()
             tune_tag.offset = i * burst_length
             # TODO dsp_tuning should also be able to do post_tuning
@@ -136,9 +140,11 @@ class FrequencyHopperSrc(gr.hier_block2):
             if dsp_tuning:
                 tune_tag.key = pmt.string_to_symbol('tx_command')
                 tune_tag.value = pmt.to_pmt({'lo_freq': base_freq, 'dsp_freq': base_freq - self.hop_sequence[i]})
+                tune_tag.value = pmt.dict_add(tune_tag.value, pmt.intern("time"),time)
             else:
-                tune_tag.key = pmt.string_to_symbol('tx_freq')
-                tune_tag.value = pmt.to_pmt(self.hop_sequence[i])
+                tune_tag.key = pmt.string_to_symbol('tx_command')
+                tune_tag.value = pmt.to_pmt({'freq': self.hop_sequence[i]})
+                tune_tag.value = pmt.dict_add(tune_tag.value, pmt.intern('time'), time)
             tag_list.append(tune_tag)
             length_tag = gr.tag_t()
             length_tag.offset = i * burst_length
@@ -149,8 +155,8 @@ class FrequencyHopperSrc(gr.hier_block2):
             time_tag.offset = i * burst_length
             time_tag.key = pmt.string_to_symbol('tx_time')
             time_tag.value = pmt.make_tuple(
-                    pmt.from_uint64(int(base_time + i * hop_time)),
-                    pmt.from_double((base_time + i * hop_time) % 1),
+                    pmt.car(time),
+                    pmt.cdr(time)
             )
             tag_list.append(time_tag)
         tag_source = blocks.vector_source_c((1.0,) * n_samples_total, repeat=False, tags=tag_list)
@@ -239,4 +245,3 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         pass
-
