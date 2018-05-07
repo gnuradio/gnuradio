@@ -24,26 +24,26 @@
 #include <config.h>
 #endif
 
-#include <qa_gr_top_block.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/blocks/head.h>
 #include <gnuradio/blocks/nop.h>
 #include <gnuradio/blocks/null_source.h>
 #include <gnuradio/blocks/null_sink.h>
+#include <boost/test/unit_test.hpp>
 #include <iostream>
 
 #define VERBOSE 0
 
-void qa_top_block::t0()
+BOOST_AUTO_TEST_CASE(t0)
 {
   if (VERBOSE) std::cout << "qa_top_block::t0()\n";
 
   gr::top_block_sptr tb = gr::make_top_block("top");
 
-  CPPUNIT_ASSERT(tb);
+  BOOST_REQUIRE(tb);
 }
 
-void qa_top_block::t1_run()
+BOOST_AUTO_TEST_CASE(t1_run)
 {
   if (VERBOSE) std::cout << "qa_top_block::t1()\n";
 
@@ -58,7 +58,7 @@ void qa_top_block::t1_run()
   tb->run();
 }
 
-void qa_top_block::t2_start_stop_wait()
+BOOST_AUTO_TEST_CASE(t2_start_stop_wait)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t2()\n";
@@ -77,7 +77,7 @@ void qa_top_block::t2_start_stop_wait()
   tb->wait();
 }
 
-void qa_top_block::t3_lock_unlock()
+BOOST_AUTO_TEST_CASE(t3_lock_unlock)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t3()\n";
@@ -98,7 +98,7 @@ void qa_top_block::t3_lock_unlock()
   tb->wait();
 }
 
-void qa_top_block::t4_reconfigure()
+BOOST_AUTO_TEST_CASE(t4_reconfigure)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t4()\n";
@@ -125,7 +125,7 @@ void qa_top_block::t4_reconfigure()
 }
 
 
-void qa_top_block::t5_max_noutputs()
+BOOST_AUTO_TEST_CASE(t5_max_noutputs)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t5()\n";
@@ -143,7 +143,7 @@ void qa_top_block::t5_max_noutputs()
   tb->wait();
 }
 
-void qa_top_block::t6_reconfig_max_noutputs()
+BOOST_AUTO_TEST_CASE(t6_reconfig_max_noutputs)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t6()\n";
@@ -171,7 +171,7 @@ void qa_top_block::t6_reconfig_max_noutputs()
   tb->wait();
 }
 
-void qa_top_block::t7_max_noutputs_per_block()
+BOOST_AUTO_TEST_CASE(t7_max_noutputs_per_block)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t7()\n";
@@ -191,7 +191,7 @@ void qa_top_block::t7_max_noutputs_per_block()
   tb->wait();
 }
 
-void qa_top_block::t8_reconfig_max_noutputs_per_block()
+BOOST_AUTO_TEST_CASE(t8_reconfig_max_noutputs_per_block)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t8()\n";
@@ -221,7 +221,7 @@ void qa_top_block::t8_reconfig_max_noutputs_per_block()
   tb->wait();
 }
 
-void qa_top_block::t9_max_output_buffer()
+BOOST_AUTO_TEST_CASE(t9_max_output_buffer)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t9()\n";
@@ -241,7 +241,7 @@ void qa_top_block::t9_max_output_buffer()
   tb->wait();
 }
 
-void qa_top_block::t10_reconfig_max_output_buffer()
+BOOST_AUTO_TEST_CASE(t10_reconfig_max_output_buffer)
 {
   if(VERBOSE)
     std::cout << "qa_top_block::t10()\n";
@@ -272,7 +272,7 @@ void qa_top_block::t10_reconfig_max_output_buffer()
   tb->wait();
 }
 
-void qa_top_block::t11_set_block_affinity()
+BOOST_AUTO_TEST_CASE(t11_set_block_affinity)
 {
   gr::top_block_sptr tb = gr::make_top_block("top");
   gr::block_sptr src (gr::blocks::null_source::make(sizeof(float)));
@@ -290,5 +290,5 @@ void qa_top_block::t11_set_block_affinity()
 
   // We only set the core affinity to 0 because we always know at
   // least one thread core exists to use.
-  CPPUNIT_ASSERT_EQUAL(set[0], ret[0]);
+  BOOST_CHECK_EQUAL(set[0], ret[0]);
 }

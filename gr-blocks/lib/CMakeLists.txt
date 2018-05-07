@@ -302,33 +302,24 @@ if(ENABLE_TESTING)
   include_directories(
     ${GR_BLOCKS_INCLUDE_DIRS}
     ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${CPPUNIT_INCLUDE_DIRS})
-  link_directories(${CPPUNIT_LIBRARY_DIRS})
-
-  list(APPEND test_gr_blocks_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_blocks.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_flowgraph.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_set_msg_handler.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_block.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_top_block.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_gr_hier_block2_derived.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_blocks.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_block_tags.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_rotator.cc
-    )
-
-  add_executable(test-gr-blocks ${test_gr_blocks_sources})
-
-  list(APPEND GR_TEST_TARGET_DEPS test-gr-blocks gnuradio-blocks)
-
-  target_link_libraries(
-    test-gr-blocks
-    gnuradio-runtime
-    gnuradio-blocks
-    ${Boost_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
   )
 
-  GR_ADD_TEST(test_gr_blocks test-gr-blocks)
+  list(APPEND test_gr_blocks_sources
+    qa_block_tags.cc
+    qa_gr_block.cc
+    qa_gr_flowgraph.cc
+    qa_gr_hier_block2.cc
+    qa_gr_hier_block2_derived.cc
+    qa_gr_top_block.cc
+    qa_rotator.cc
+    qa_set_msg_handler.cc
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks)
+
+  foreach(qa_file ${test_gr_blocks_sources})
+    GR_ADD_CPP_TEST("blocks_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
+
 endif(ENABLE_TESTING)
