@@ -211,27 +211,18 @@ if(ENABLE_TESTING)
 
   include_directories(
     ${GR_DIGITAL_INCLUDE_DIRS}
-    ${CPPUNIT_INCLUDE_DIRS})
-  link_directories(${CPPUNIT_LIBRARY_DIRS})
-
-  list(APPEND test_gr_digital_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_digital.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_digital.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_header_format.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_header_buffer.cc
-    )
-
-  add_executable(test-gr-digital ${test_gr_digital_sources})
-
-  list(APPEND GR_TEST_TARGET_DEPS test-gr-digital gnuradio-digital)
-
-  target_link_libraries(
-    test-gr-digital
-    gnuradio-runtime
-    gnuradio-digital
-    ${Boost_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
   )
 
-  GR_ADD_TEST(test_gr_digital test-gr-digital)
+  list(APPEND test_gr_digital_sources
+    qa_header_format.cc
+    qa_header_buffer.cc
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-digital)
+
+  foreach(qa_file ${test_gr_digital_sources})
+    GR_ADD_CPP_TEST("digital_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
 endif(ENABLE_TESTING)

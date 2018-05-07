@@ -25,20 +25,16 @@
 #endif
 
 #include <gnuradio/attributes.h>
-
-#include <stdio.h>
-#include <cmath>
-#include <volk/volk.h>
-#include <gnuradio/expj.h>
-#include <cppunit/TestAssert.h>
-
-#include "qa_header_format.h"
 #include <gnuradio/digital/header_format_counter.h>
 #include <gnuradio/digital/header_format_default.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
+#include <gnuradio/expj.h>
+#include <volk/volk.h>
+#include <boost/test/unit_test.hpp>
+#include <stdio.h>
+#include <cmath>
 
-void
-qa_header_format::test_default_format()
+BOOST_AUTO_TEST_CASE(test_default_format)
 {
   static const int N = 4800;
   int upper8 = (N >> 8) & 0xFF;
@@ -61,32 +57,31 @@ qa_header_format::test_default_format()
   bool ret = hdr_format->format(N, data, output, info);
   size_t length = pmt::length(output);
 
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT_EQUAL(length, hdr_format->header_nbytes());
-  CPPUNIT_ASSERT_EQUAL(8*length, hdr_format->header_nbits());
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE_EQUAL(length, hdr_format->header_nbytes());
+  BOOST_REQUIRE_EQUAL(8*length, hdr_format->header_nbits());
 
   // Test access code formatted correctly
   unsigned char h0 = pmt::u8vector_ref(output, 0);
   unsigned char h1 = pmt::u8vector_ref(output, 1);
-  CPPUNIT_ASSERT_EQUAL(0xAA, (int)h0);
-  CPPUNIT_ASSERT_EQUAL(0xAA, (int)h1);
+  BOOST_REQUIRE_EQUAL(0xAA, (int)h0);
+  BOOST_REQUIRE_EQUAL(0xAA, (int)h1);
 
   // Test upper and lower portion of length field, repeated twice
   unsigned char h2 = pmt::u8vector_ref(output, 2);
   unsigned char h3 = pmt::u8vector_ref(output, 3);
   unsigned char h4 = pmt::u8vector_ref(output, 4);
   unsigned char h5 = pmt::u8vector_ref(output, 5);
-  CPPUNIT_ASSERT_EQUAL(upper8, (int)h2);
-  CPPUNIT_ASSERT_EQUAL(lower8, (int)h3);
-  CPPUNIT_ASSERT_EQUAL(upper8, (int)h4);
-  CPPUNIT_ASSERT_EQUAL(lower8, (int)h5);
+  BOOST_REQUIRE_EQUAL(upper8, (int)h2);
+  BOOST_REQUIRE_EQUAL(lower8, (int)h3);
+  BOOST_REQUIRE_EQUAL(upper8, (int)h4);
+  BOOST_REQUIRE_EQUAL(lower8, (int)h5);
 
   volk_free(data);
 }
 
 
-void
-qa_header_format::test_default_parse()
+BOOST_AUTO_TEST_CASE(test_default_parse)
 {
   static const int nbytes = 106;
   static const int nbits = 8*nbytes;
@@ -121,8 +116,8 @@ qa_header_format::test_default_parse()
   std::vector<pmt::pmt_t> info;
   bool ret = hdr_format->parse(nbits, bits, info, count);
 
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT_EQUAL((size_t)1, info.size());
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE_EQUAL((size_t)1, info.size());
 
   pmt::pmt_t dict = info[0];
   int payload_bits = pmt::to_long(pmt::dict_ref(dict, pmt::intern("payload symbols"),
@@ -130,14 +125,13 @@ qa_header_format::test_default_parse()
 
   int hdr_bits = (int)hdr_format->header_nbits();
   int expected_bits = nbits - hdr_bits;
-  CPPUNIT_ASSERT_EQUAL(expected_bits, payload_bits);
+  BOOST_REQUIRE_EQUAL(expected_bits, payload_bits);
 
   volk_free(bytes);
   volk_free(bits);
 }
 
-void
-qa_header_format::test_counter_format()
+BOOST_AUTO_TEST_CASE(test_counter_format)
 {
   static const int N = 4800;
   int upper8 = (N >> 8) & 0xFF;
@@ -161,49 +155,48 @@ qa_header_format::test_counter_format()
   bool ret = hdr_format->format(N, data, output, info);
   size_t length = pmt::length(output);
 
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT_EQUAL(length, hdr_format->header_nbytes());
-  CPPUNIT_ASSERT_EQUAL(8*length, hdr_format->header_nbits());
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE_EQUAL(length, hdr_format->header_nbytes());
+  BOOST_REQUIRE_EQUAL(8*length, hdr_format->header_nbits());
 
   // Test access code formatted correctly
   unsigned char h0 = pmt::u8vector_ref(output, 0);
   unsigned char h1 = pmt::u8vector_ref(output, 1);
-  CPPUNIT_ASSERT_EQUAL(0xAA, (int)h0);
-  CPPUNIT_ASSERT_EQUAL(0xAA, (int)h1);
+  BOOST_REQUIRE_EQUAL(0xAA, (int)h0);
+  BOOST_REQUIRE_EQUAL(0xAA, (int)h1);
 
   // Test upper and lower portion of length field, repeated twice
   unsigned char h2 = pmt::u8vector_ref(output, 2);
   unsigned char h3 = pmt::u8vector_ref(output, 3);
   unsigned char h4 = pmt::u8vector_ref(output, 4);
   unsigned char h5 = pmt::u8vector_ref(output, 5);
-  CPPUNIT_ASSERT_EQUAL(upper8, (int)h2);
-  CPPUNIT_ASSERT_EQUAL(lower8, (int)h3);
-  CPPUNIT_ASSERT_EQUAL(upper8, (int)h4);
-  CPPUNIT_ASSERT_EQUAL(lower8, (int)h5);
+  BOOST_REQUIRE_EQUAL(upper8, (int)h2);
+  BOOST_REQUIRE_EQUAL(lower8, (int)h3);
+  BOOST_REQUIRE_EQUAL(upper8, (int)h4);
+  BOOST_REQUIRE_EQUAL(lower8, (int)h5);
 
   uint16_t h6 = (uint16_t)pmt::u8vector_ref(output, 6);
   uint16_t h7 = (uint16_t)pmt::u8vector_ref(output, 7);
   uint16_t bps = ((h6 << 8) & 0xFF00) | (h7 & 0x00FF);
-  CPPUNIT_ASSERT_EQUAL(expected_bps, bps);
+  BOOST_REQUIRE_EQUAL(expected_bps, bps);
 
   uint16_t h8 = pmt::u8vector_ref(output, 8);
   uint16_t h9 = pmt::u8vector_ref(output, 9);
   uint16_t counter = ((h8 << 8) & 0xFF00) | (h9 & 0x00FF);
-  CPPUNIT_ASSERT_EQUAL((uint16_t)0, counter);
+  BOOST_REQUIRE_EQUAL((uint16_t)0, counter);
 
   // Run another format to increment the counter to 1 and test.
   ret = hdr_format->format(N, data, output, info);
   h8 = pmt::u8vector_ref(output, 8);
   h9 = pmt::u8vector_ref(output, 9);
   counter = ((h8 << 8) & 0xFF00) | (h9 & 0x00FF);
-  CPPUNIT_ASSERT_EQUAL((uint16_t)1, counter);
+  BOOST_REQUIRE_EQUAL((uint16_t)1, counter);
 
   volk_free(data);
 }
 
 
-void
-qa_header_format::test_counter_parse()
+BOOST_AUTO_TEST_CASE(test_counter_parse)
 {
   static const int nbytes = 110;
   static const int nbits = 8*nbytes;
@@ -243,8 +236,8 @@ qa_header_format::test_counter_parse()
   std::vector<pmt::pmt_t> info;
   bool ret = hdr_format->parse(nbits, bits, info, count);
 
-  CPPUNIT_ASSERT(ret);
-  CPPUNIT_ASSERT_EQUAL((size_t)1, info.size());
+  BOOST_REQUIRE(ret);
+  BOOST_REQUIRE_EQUAL((size_t)1, info.size());
 
   pmt::pmt_t dict = info[0];
   int payload_syms = pmt::to_long(pmt::dict_ref(dict, pmt::intern("payload symbols"),
@@ -256,9 +249,9 @@ qa_header_format::test_counter_parse()
 
   int hdr_bits = (int)hdr_format->header_nbits();
   int expected_bits = nbits - hdr_bits;
-  CPPUNIT_ASSERT_EQUAL(expected_bits, payload_syms * bps);
-  CPPUNIT_ASSERT_EQUAL(expected_bps, (uint16_t)bps);
-  CPPUNIT_ASSERT_EQUAL(0, counter);
+  BOOST_REQUIRE_EQUAL(expected_bits, payload_syms * bps);
+  BOOST_REQUIRE_EQUAL(expected_bps, (uint16_t)bps);
+  BOOST_REQUIRE_EQUAL(0, counter);
 
   volk_free(bytes);
   volk_free(bits);
