@@ -132,25 +132,18 @@ endif(ENABLE_STATIC_LIBS)
 if(ENABLE_TESTING)
   include(GrTest)
 
-  include_directories(${CPPUNIT_INCLUDE_DIRS})
-  link_directories(${CPPUNIT_LIBRARY_DIRS})
-
-  list(APPEND test_gr_analog_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_analog.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_analog.cc
-    )
-
-  add_executable(test-gr-analog ${test_gr_analog_sources})
-
-  target_link_libraries(
-    test-gr-analog
-    gnuradio-runtime
-    gnuradio-analog
-    ${Boost_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
+  include_directories(
+    ${GR_ANALOG_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
   )
 
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog gnuradio-filter gnuradio-fft)
+  list(APPEND test_gr_analog_sources
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-analog)
 
-  GR_ADD_TEST(test_gr_analog test-gr-analog)
+  foreach(qa_file ${test_gr_analog_sources})
+    GR_ADD_CPP_TEST("analog_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
 endif(ENABLE_TESTING)
