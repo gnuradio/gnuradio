@@ -24,23 +24,22 @@
 #include <config.h>
 #endif
 
-#include <qa_set_msg_handler.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/blocks/head.h>
 #include <gnuradio/blocks/null_source.h>
 #include <gnuradio/blocks/null_sink.h>
 #include <gnuradio/blocks/nop.h>
 #include <gnuradio/messages/msg_passing.h>
-#include <iostream>
 #include <boost/thread/thread.hpp>
+#include <boost/test/unit_test.hpp>
+#include <iostream>
 
 /*
  * The gr::block::nop block has been instrumented so that it counts
  * the number of messages sent to it. We use this feature to confirm
  * that gr::blocks::nop's call to set_msg_handler is working correctly.
  */
-
-void qa_set_msg_handler::t0()
+BOOST_AUTO_TEST_CASE(t0)
 {
   static const int NMSGS = 10;
 
@@ -68,5 +67,5 @@ void qa_set_msg_handler::t0()
   tb->wait();
 
   // Confirm that the nop block received the right number of messages.
-  CPPUNIT_ASSERT_EQUAL(NMSGS, nop->nmsgs_received());
+  BOOST_CHECK_EQUAL(NMSGS, nop->nmsgs_received());
 }

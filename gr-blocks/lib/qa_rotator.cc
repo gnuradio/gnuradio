@@ -24,13 +24,12 @@
 #include <config.h>
 #endif
 
+#include <boost/test/unit_test.hpp>
 #include <gnuradio/attributes.h>
-#include <cppunit/TestAssert.h>
-#include <qa_rotator.h>
 #include <gnuradio/blocks/rotator.h>
+#include <gnuradio/expj.h>
 #include <stdio.h>
 #include <cmath>
-#include <gnuradio/expj.h>
 
 // error vector magnitude
 __GR_ATTR_UNUSED static float
@@ -39,8 +38,7 @@ error_vector_mag(gr_complex a, gr_complex b)
   return abs(a-b);
 }
 
-void
-qa_rotator::t1()
+BOOST_AUTO_TEST_CASE(t1)
 {
   static const unsigned	int N = 100000;
 
@@ -66,7 +64,8 @@ qa_rotator::t1()
 	   i, expected.real(), expected.imag(), actual.real(), actual.imag(), evm);
 #endif
 
-    CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
+    BOOST_CHECK(std::abs(expected - actual) <= 0.0001);
+    //CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
 
     phase += phase_incr;
     if(phase >= 2*M_PI)
@@ -74,8 +73,7 @@ qa_rotator::t1()
   }
 }
 
-void
-qa_rotator::t2()
+BOOST_AUTO_TEST_CASE(t2)
 {
   static const unsigned	int N = 100000;
 
@@ -107,7 +105,8 @@ qa_rotator::t2()
 	   i, expected.real(), expected.imag(), actual.real(), actual.imag(), evm);
 #endif
 
-    CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
+    BOOST_CHECK(std::abs(expected - actual) <= 0.0001);
+    //CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
 
     phase += phase_incr;
     if(phase >= 2*M_PI)

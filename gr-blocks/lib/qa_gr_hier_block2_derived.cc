@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008,2013 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,13 +24,13 @@
 #include <config.h>
 #endif
 
-#include <qa_gr_hier_block2_derived.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/null_source.h>
 #include <gnuradio/blocks/null_sink.h>
 #include <gnuradio/blocks/head.h>
 #include <gnuradio/blocks/copy.h>
+#include <boost/test/unit_test.hpp>
 
 // Declare a test C++ hierarchical block
 
@@ -70,7 +70,7 @@ gr_derived_block::~gr_derived_block()
 {
 }
 
-void qa_hier_block2_derived::test_1()
+BOOST_AUTO_TEST_CASE(test_1)
 {
   gr::top_block_sptr tb(gr::make_top_block("test"));
 

@@ -24,7 +24,6 @@
 #include <config.h>
 #endif
 
-#include <qa_block_tags.h>
 #include <gnuradio/block.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/blocks/null_source.h>
@@ -33,6 +32,7 @@
 #include <gnuradio/blocks/annotator_alltoall.h>
 #include <gnuradio/blocks/annotator_1to1.h>
 #include <gnuradio/blocks/keep_one_in_n.h>
+#include <boost/test/unit_test.hpp>
 
 
 // ----------------------------------------------------------------
@@ -59,8 +59,8 @@ std::ostream&
 operator << (std::ostream& os, const gr::tag_t &t) {
   return os;
 }
-void
-qa_block_tags::t0()
+
+BOOST_AUTO_TEST_CASE(t0)
 {
   unsigned int N = 1000;
   gr::top_block_sptr tb = gr::make_top_block("top");
@@ -71,20 +71,19 @@ qa_block_tags::t0()
   tb->connect(src, 0, head, 0);
   tb->connect(head, 0, snk, 0);
 
-  CPPUNIT_ASSERT_EQUAL(src->nitems_read(0), (uint64_t)0);
-  CPPUNIT_ASSERT_EQUAL(src->nitems_written(0), (uint64_t)0);
+  BOOST_REQUIRE_EQUAL(src->nitems_read(0), (uint64_t)0);
+  BOOST_REQUIRE_EQUAL(src->nitems_written(0), (uint64_t)0);
 
   tb->run();
 
-  CPPUNIT_ASSERT_THROW(src->nitems_read(0), std::invalid_argument);
-  CPPUNIT_ASSERT(src->nitems_written(0) >= N);
-  CPPUNIT_ASSERT_EQUAL(snk->nitems_read(0), (uint64_t)1000);
-  CPPUNIT_ASSERT_THROW(snk->nitems_written(0), std::invalid_argument);
+  BOOST_REQUIRE_THROW(src->nitems_read(0), std::invalid_argument);
+  BOOST_REQUIRE(src->nitems_written(0) >= N);
+  BOOST_REQUIRE_EQUAL(snk->nitems_read(0), (uint64_t)1000);
+  BOOST_REQUIRE_THROW(snk->nitems_written(0), std::invalid_argument);
 }
 
 
-void
-qa_block_tags::t1()
+BOOST_AUTO_TEST_CASE(t1)
 {
   int N = 40000;
   gr::top_block_sptr tb = gr::make_top_block("top");
@@ -116,9 +115,9 @@ qa_block_tags::t1()
   std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)8);
-  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)8);
+  BOOST_REQUIRE_EQUAL(tags0.size(), (size_t)0);
+  BOOST_REQUIRE_EQUAL(tags3.size(), (size_t)8);
+  BOOST_REQUIRE_EQUAL(tags4.size(), (size_t)8);
 
 #if QA_TAGS_DEBUG
   // Kludge together the tags that we know should result from the above graph
@@ -152,20 +151,19 @@ qa_block_tags::t1()
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags3[i], expected_tags3[i]);
+    BOOST_REQUIRE_EQUAL(tags3[i], expected_tags3[i]);
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags4[i], expected_tags4[i]);
+    BOOST_REQUIRE_EQUAL(tags4[i], expected_tags4[i]);
   }
 #endif
 }
 
-void
-qa_block_tags::t2 ()
+BOOST_AUTO_TEST_CASE(t2)
 {
   int N = 40000;
   gr::top_block_sptr tb = gr::make_top_block("top");
@@ -202,13 +200,13 @@ qa_block_tags::t2 ()
   std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)8);
+  BOOST_REQUIRE_EQUAL(tags0.size(), (size_t)0);
+  BOOST_REQUIRE_EQUAL(tags1.size(), (size_t)8);
 
   // Make sure the rest all have 12 tags
-  CPPUNIT_ASSERT_EQUAL(tags2.size(), (size_t)12);
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)12);
-  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)12);
+  BOOST_REQUIRE_EQUAL(tags2.size(), (size_t)12);
+  BOOST_REQUIRE_EQUAL(tags3.size(), (size_t)12);
+  BOOST_REQUIRE_EQUAL(tags4.size(), (size_t)12);
 
 
 #if QA_TAGS_DEBUG
@@ -253,20 +251,19 @@ qa_block_tags::t2 ()
   // inconceivable for ann3 to have it wrong.
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags2[i], expected_tags2[i]);
+    BOOST_REQUIRE_EQUAL(tags2[i], expected_tags2[i]);
   }
 
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags4[i], expected_tags4[i]);
+    BOOST_REQUIRE_EQUAL(tags4[i], expected_tags4[i]);
   }
 #endif
 }
 
 
-void
-qa_block_tags::t3()
+BOOST_AUTO_TEST_CASE(t3)
 {
   int N = 40000;
   gr::top_block_sptr tb = gr::make_top_block("top");
@@ -300,9 +297,9 @@ qa_block_tags::t3()
   std::vector<gr::tag_t> tags4 = ann4->data();
 
   // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-  CPPUNIT_ASSERT_EQUAL(tags3.size(), (size_t)8);
-  CPPUNIT_ASSERT_EQUAL(tags4.size(), (size_t)8);
+  BOOST_REQUIRE_EQUAL(tags0.size(), (size_t)0);
+  BOOST_REQUIRE_EQUAL(tags3.size(), (size_t)8);
+  BOOST_REQUIRE_EQUAL(tags4.size(), (size_t)8);
 
 #if QA_TAGS_DEBUG
   // Kludge together the tags that we know should result from the above graph
@@ -336,21 +333,20 @@ qa_block_tags::t3()
   // For annotator 3, we know it gets tags from ann0 and ann1, test this
   for(size_t i = 0; i < tags3.size(); i++) {
     std::cout << "tags3[" << i << "] = " << tags3[i] << "\t\t" << expected_tags3[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags3[i], expected_tags3[i]);
+    BOOST_REQUIRE_EQUAL(tags3[i], expected_tags3[i]);
   }
 
   // For annotator 4, we know it gets tags from ann0 and ann2, test this
   std::cout << std::endl;
   for(size_t i = 0; i < tags4.size(); i++) {
     std::cout << "tags4[" << i << "] = " << tags4[i] << "\t\t" << expected_tags4[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags4[i], expected_tags4[i]);
+    BOOST_REQUIRE_EQUAL(tags4[i], expected_tags4[i]);
   }
 #endif
 }
 
 
-void
-qa_block_tags::t4()
+BOOST_AUTO_TEST_CASE(t4)
 {
   int N = 40000;
   gr::top_block_sptr tb = gr::make_top_block("top");
@@ -378,8 +374,7 @@ qa_block_tags::t4()
 }
 
 
-void
-qa_block_tags::t5()
+BOOST_AUTO_TEST_CASE(t5)
 {
   int N = 40000;
   gr::top_block_sptr tb = gr::make_top_block("top");
@@ -407,9 +402,9 @@ qa_block_tags::t5()
   std::vector<gr::tag_t> tags2 = ann2->data();
 
   // The first annotator does not receive any tags from the null sink upstream
-  CPPUNIT_ASSERT_EQUAL(tags0.size(), (size_t)0);
-  CPPUNIT_ASSERT_EQUAL(tags1.size(), (size_t)4);
-  CPPUNIT_ASSERT_EQUAL(tags2.size(), (size_t)8);
+  BOOST_REQUIRE_EQUAL(tags0.size(), (size_t)0);
+  BOOST_REQUIRE_EQUAL(tags1.size(), (size_t)4);
+  BOOST_REQUIRE_EQUAL(tags2.size(), (size_t)8);
 
 
 #if QA_TAGS_DEBUG
@@ -443,7 +438,7 @@ qa_block_tags::t5()
   std::cout << "tags1.size(): " << tags1.size() << std::endl;
   for(size_t i = 0; i < tags1.size(); i++) {
     std::cout << "tags1[" << i << "] = " << tags1[i] << "\t\t" << expected_tags1[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags1[i], expected_tags1[i]);
+    BOOST_REQUIRE_EQUAL(tags1[i], expected_tags1[i]);
   }
 
   // annotator 2 gets tags from annotators 0 and 1
@@ -451,7 +446,7 @@ qa_block_tags::t5()
   std::cout << "tags2.size(): " << tags2.size() << std::endl;
   for(size_t i = 0; i < tags2.size(); i++) {
     std::cout << "tags2[" << i << "] = " << tags2[i] << "\t\t" << expected_tags2[i] << std::endl;
-    CPPUNIT_ASSERT_EQUAL(tags2[i], expected_tags2[i]);
+    BOOST_REQUIRE_EQUAL(tags2[i], expected_tags2[i]);
   }
 #endif
 }

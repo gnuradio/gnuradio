@@ -24,11 +24,11 @@
 #include <config.h>
 #endif
 
-#include <qa_gr_flowgraph.h>
 #include <gnuradio/flowgraph.h>
 #include <gnuradio/blocks/nop.h>
 #include <gnuradio/blocks/null_source.h>
 #include <gnuradio/blocks/null_sink.h>
+#include <boost/test/unit_test.hpp>
 
 namespace gr {
   namespace blocks {
@@ -78,14 +78,14 @@ namespace gr {
   } /* namespace blocks */
 } /* namespace gr */
 
-void qa_gr_flowgraph::t0()
+BOOST_AUTO_TEST_CASE(t0)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
-  CPPUNIT_ASSERT(fg);
+  BOOST_REQUIRE(fg);
 }
 
-void qa_gr_flowgraph::t1_connect()
+BOOST_AUTO_TEST_CASE(t1_connect)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -95,47 +95,47 @@ void qa_gr_flowgraph::t1_connect()
   fg->connect(nop1, 0, nop2, 0);
 }
 
-void qa_gr_flowgraph::t2_connect_invalid_src_port_neg()
+BOOST_AUTO_TEST_CASE(t2_connect_invalid_src_port_neg)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
   gr::block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
   gr::block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
-  CPPUNIT_ASSERT_THROW(fg->connect(nop1, -1, nop2, 0), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->connect(nop1, -1, nop2, 0), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t3_connect_src_port_exceeds()
+BOOST_AUTO_TEST_CASE(t3_connect_src_port_exceeds)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
   gr::block_sptr src = gr::blocks::null_qa_source::make(sizeof(int));
   gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
-  CPPUNIT_ASSERT_THROW(fg->connect(src, 1, dst, 0), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->connect(src, 1, dst, 0), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t4_connect_invalid_dst_port_neg()
+BOOST_AUTO_TEST_CASE(t4_connect_invalid_dst_port_neg)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
   gr::block_sptr nop1 = gr::blocks::nop::make(sizeof(int));
   gr::block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
-  CPPUNIT_ASSERT_THROW(fg->connect(nop1, 0, nop2, -1), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->connect(nop1, 0, nop2, -1), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t5_connect_dst_port_exceeds()
+BOOST_AUTO_TEST_CASE(t5_connect_dst_port_exceeds)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
   gr::block_sptr src = gr::blocks::null_source::make(sizeof(int));
   gr::block_sptr dst = gr::blocks::null_qa_sink::make(sizeof(int));
 
-  CPPUNIT_ASSERT_THROW(fg->connect(src, 0, dst, 1), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->connect(src, 0, dst, 1), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t6_connect_dst_in_use()
+BOOST_AUTO_TEST_CASE(t6_connect_dst_in_use)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -144,10 +144,10 @@ void qa_gr_flowgraph::t6_connect_dst_in_use()
   gr::block_sptr dst = gr::blocks::null_sink::make(sizeof(int));
 
   fg->connect(src1, 0, dst, 0);
-  CPPUNIT_ASSERT_THROW(fg->connect(src2, 0, dst, 0), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->connect(src2, 0, dst, 0), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t7_connect_one_src_two_dst()
+BOOST_AUTO_TEST_CASE(t7_connect_one_src_two_dst)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -159,17 +159,17 @@ void qa_gr_flowgraph::t7_connect_one_src_two_dst()
   fg->connect(src, 0, dst2, 0);
 }
 
-void qa_gr_flowgraph::t8_connect_type_mismatch()
+BOOST_AUTO_TEST_CASE(t8_connect_type_mismatch)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
   gr::block_sptr nop1 = gr::blocks::nop::make(sizeof(char));
   gr::block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
-  CPPUNIT_ASSERT_THROW(fg->connect(nop1, 0, nop2, 0), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->connect(nop1, 0, nop2, 0), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t9_disconnect()
+BOOST_AUTO_TEST_CASE(t9_disconnect)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -180,7 +180,7 @@ void qa_gr_flowgraph::t9_disconnect()
   fg->disconnect(nop1, 0, nop2, 0);
 }
 
-void qa_gr_flowgraph::t10_disconnect_unconnected_block()
+BOOST_AUTO_TEST_CASE(t10_disconnect_unconnected_block)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -189,10 +189,10 @@ void qa_gr_flowgraph::t10_disconnect_unconnected_block()
   gr::block_sptr nop3 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
-  CPPUNIT_ASSERT_THROW(fg->disconnect(nop1, 0, nop3, 0), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->disconnect(nop1, 0, nop3, 0), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t11_disconnect_unconnected_port()
+BOOST_AUTO_TEST_CASE(t11_disconnect_unconnected_port)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -200,10 +200,10 @@ void qa_gr_flowgraph::t11_disconnect_unconnected_port()
   gr::block_sptr nop2 = gr::blocks::nop::make(sizeof(int));
 
   fg->connect(nop1, 0, nop2, 0);
-  CPPUNIT_ASSERT_THROW(fg->disconnect(nop1, 0, nop2, 1), std::invalid_argument);
+  BOOST_REQUIRE_THROW(fg->disconnect(nop1, 0, nop2, 1), std::invalid_argument);
 }
 
-void qa_gr_flowgraph::t12_validate()
+BOOST_AUTO_TEST_CASE(t12_validate)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -214,7 +214,7 @@ void qa_gr_flowgraph::t12_validate()
   fg->validate();
 }
 
-void qa_gr_flowgraph::t13_validate_missing_input_assignment()
+BOOST_AUTO_TEST_CASE(t13_validate_missing_input_assignment)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -223,10 +223,10 @@ void qa_gr_flowgraph::t13_validate_missing_input_assignment()
 
   fg->connect(nop1, 0, nop2, 0);
   fg->connect(nop1, 0, nop2, 2);
-  CPPUNIT_ASSERT_THROW(fg->validate(), std::runtime_error);
+  BOOST_REQUIRE_THROW(fg->validate(), std::runtime_error);
 }
 
-void qa_gr_flowgraph::t14_validate_missing_output_assignment()
+BOOST_AUTO_TEST_CASE(t14_validate_missing_output_assignment)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -235,10 +235,10 @@ void qa_gr_flowgraph::t14_validate_missing_output_assignment()
 
   fg->connect(nop1, 0, nop2, 0);
   fg->connect(nop1, 2, nop2, 1);
-  CPPUNIT_ASSERT_THROW(fg->validate(), std::runtime_error);
+  BOOST_REQUIRE_THROW(fg->validate(), std::runtime_error);
 }
 
-void qa_gr_flowgraph::t15_clear()
+BOOST_AUTO_TEST_CASE(t15_clear)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -247,16 +247,16 @@ void qa_gr_flowgraph::t15_clear()
 
   fg->connect(nop1, 0, nop2, 0);
 
-  CPPUNIT_ASSERT(fg->edges().size() == 1);
-  CPPUNIT_ASSERT(fg->calc_used_blocks().size() == 2);
+  BOOST_REQUIRE(fg->edges().size() == 1);
+  BOOST_REQUIRE(fg->calc_used_blocks().size() == 2);
 
   fg->clear();
 
-  CPPUNIT_ASSERT(fg->edges().size() == 0);
-  CPPUNIT_ASSERT(fg->calc_used_blocks().size() == 0);
+  BOOST_REQUIRE(fg->edges().size() == 0);
+  BOOST_REQUIRE(fg->calc_used_blocks().size() == 0);
 }
 
-void qa_gr_flowgraph::t16_partition()
+BOOST_AUTO_TEST_CASE(t16_partition)
 {
   gr::flowgraph_sptr fg = gr::make_flowgraph();
 
@@ -286,8 +286,8 @@ void qa_gr_flowgraph::t16_partition()
 
   std::vector<gr::basic_block_vector_t> graphs = fg->partition();
 
-  CPPUNIT_ASSERT(graphs.size() == 3);
-  CPPUNIT_ASSERT(graphs[0].size() == 4);
-  CPPUNIT_ASSERT(graphs[1].size() == 3);
-  CPPUNIT_ASSERT(graphs[2].size() == 2);
+  BOOST_REQUIRE(graphs.size() == 3);
+  BOOST_REQUIRE(graphs[0].size() == 4);
+  BOOST_REQUIRE(graphs[1].size() == 3);
+  BOOST_REQUIRE(graphs[2].size() == 2);
 }
