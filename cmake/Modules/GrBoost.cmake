@@ -33,6 +33,7 @@ set(BOOST_REQUIRED_COMPONENTS
     system
     regex
     thread
+    unit_test_framework
 )
 
 if(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
