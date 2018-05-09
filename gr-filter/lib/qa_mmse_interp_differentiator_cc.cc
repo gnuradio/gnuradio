@@ -24,11 +24,10 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include <qa_mmse_interp_differentiator_cc.h>
 #include <gnuradio/filter/mmse_interp_differentiator_cc.h>
 #include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
+#include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include <cmath>
 #include <stdexcept>
@@ -100,8 +99,7 @@ namespace gr {
       return gr_complex(test_fcn_dcos(index), test_fcn_dsin(index));
     }
 
-    void
-    qa_mmse_interp_differentiator_cc::t1()
+    BOOST_AUTO_TEST_CASE(t1)
     {
       static const unsigned N = 100;
       gr_complex *input = (gr_complex*)volk_malloc((N + 10)*sizeof(gr_complex),
@@ -118,7 +116,8 @@ namespace gr {
 	  gr_complex expected = test_fcn_d((i + 3) + imu * inv_nsteps);
 	  gr_complex actual = diffr.differentiate(&input[i], imu * inv_nsteps);
 
-	  CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0103);
+	  BOOST_CHECK(std::abs(expected.real() - actual.real()) <= 0.0103);
+	  BOOST_CHECK(std::abs(expected.imag() - actual.imag()) <= 0.0103);
 	  // printf ("%9.6f  %9.6f  %9.6f \n", expected.real(), actual.real(), expected.real() - actual.real());
 	  // printf ("%9.6f  %9.6f  %9.6f \n", expected.imag(), actual.imag(), expected.imag() - actual.imag());
 	}

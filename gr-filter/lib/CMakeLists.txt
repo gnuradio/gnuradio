@@ -159,31 +159,24 @@ endif(ENABLE_STATIC_LIBS)
 if(ENABLE_TESTING)
   include(GrTest)
 
-  include_directories(${CPPUNIT_INCLUDE_DIRS})
-  link_directories(${CPPUNIT_LIBRARY_DIRS})
-
-  list(APPEND test_gr_filter_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_gr_filter.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_filter.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_firdes.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_fir_filter_with_buffer.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_cc.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_fir_interpolator_ff.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_interp_differentiator_cc.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_mmse_interp_differentiator_ff.cc
-    )
-
-  add_executable(test-gr-filter ${test_gr_filter_sources})
-
-  list(APPEND GR_TEST_TARGET_DEPS test-gr-filter gnuradio-filter gnuradio-fft)
-
-  target_link_libraries(
-    test-gr-filter
-    gnuradio-runtime
-    gnuradio-filter
-    ${Boost_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
+  include_directories(
+    ${GR_BLOCKS_INCLUDE_DIRS}
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
   )
 
-  GR_ADD_TEST(test_gr_filter test-gr-filter)
+  list(APPEND test_gr_filter_sources
+    qa_firdes.cc
+    qa_fir_filter_with_buffer.cc
+    qa_mmse_fir_interpolator_cc.cc
+    qa_mmse_fir_interpolator_ff.cc
+    qa_mmse_interp_differentiator_cc.cc
+    qa_mmse_interp_differentiator_ff.cc
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-filter gnuradio-fft)
+
+  foreach(qa_file ${test_gr_filter_sources})
+    GR_ADD_CPP_TEST("filter_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
 endif(ENABLE_TESTING)

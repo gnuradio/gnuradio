@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2012 Free Software Foundation, Inc.
+ * Copyright 2002,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <qa_firdes.h>
 #include <gnuradio/filter/firdes.h>
-#include <cppunit/TestAssert.h>
 #include <gnuradio/gr_complex.h>
+#include <boost/test/unit_test.hpp>
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -54,7 +53,7 @@ namespace gr {
       int m = n / 2;
 
       for(int i = 0; i < m; i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(v[i], v[n - i - 1], 1e-9);
+	BOOST_CHECK(std::abs(v[i] - v[n - i - 1]) <= 1e-9);
     }
 
     const static float t1_exp[39] = {
@@ -147,8 +146,7 @@ namespace gr {
       -0.00104732765, 0.000280927314
     };
 
-    void
-    qa_firdes::t1()
+    BOOST_AUTO_TEST_CASE(t1)
     {
       vector<float> taps =
 	firdes::low_pass(1.0,
@@ -160,15 +158,14 @@ namespace gr {
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
-      CPPUNIT_ASSERT_EQUAL(NELEM(t1_exp), taps.size());
+      BOOST_REQUIRE_EQUAL(NELEM(t1_exp), taps.size());
       for(unsigned int i = 0; i < taps.size(); i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(t1_exp[i], taps[i], 1e-9);
+	BOOST_CHECK(std::abs(t1_exp[i] - taps[i]) <= 1e-9);
 
       check_symmetry(taps);
     }
 
-    void
-    qa_firdes::t2()
+    BOOST_AUTO_TEST_CASE(t2)
     {
       vector<float> taps =
 	firdes::high_pass(1.0,
@@ -180,16 +177,15 @@ namespace gr {
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
-      CPPUNIT_ASSERT_EQUAL(NELEM(t2_exp), taps.size());
+      BOOST_REQUIRE_EQUAL(NELEM(t2_exp), taps.size());
 
       for(unsigned int i = 0; i < taps.size(); i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(t2_exp[i], taps[i], 1e-9);
+	BOOST_CHECK(std::abs(t2_exp[i] - taps[i]) <= 1e-9);
 
       check_symmetry(taps);
     }
 
-    void
-    qa_firdes::t3()
+    BOOST_AUTO_TEST_CASE(t3)
     {
       vector<float> taps =
 	firdes::band_pass(1.0,
@@ -202,16 +198,15 @@ namespace gr {
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
-      CPPUNIT_ASSERT_EQUAL(NELEM(t3_exp), taps.size());
+      BOOST_REQUIRE_EQUAL(NELEM(t3_exp), taps.size());
 
       for(unsigned int i = 0; i < taps.size(); i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(t3_exp[i], taps[i], 1e-7);
+	BOOST_CHECK(std::abs(t3_exp[i] - taps[i]) <= 1e-7);
 
       check_symmetry(taps);
     }
 
-    void
-    qa_firdes::t4()
+    BOOST_AUTO_TEST_CASE(t4)
     {
       vector<float> taps =
 	firdes::low_pass_2(1.0,
@@ -224,15 +219,14 @@ namespace gr {
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
-      CPPUNIT_ASSERT_EQUAL(NELEM(t4_exp), taps.size());
+      BOOST_REQUIRE_EQUAL(NELEM(t4_exp), taps.size());
       for(unsigned int i = 0; i < taps.size(); i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(t4_exp[i], taps[i], 1e-9);
+	BOOST_CHECK(std::abs(t4_exp[i] - taps[i]) <= 1e-9);
 
       check_symmetry(taps);
     }
 
-    void
-    qa_firdes::t5()
+    BOOST_AUTO_TEST_CASE(t5)
     {
       vector<float> taps =
 	firdes::high_pass_2(1.0,
@@ -245,16 +239,15 @@ namespace gr {
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
-      CPPUNIT_ASSERT_EQUAL(NELEM(t5_exp), taps.size());
+      BOOST_REQUIRE_EQUAL(NELEM(t5_exp), taps.size());
 
       for(unsigned int i = 0; i < taps.size(); i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(t5_exp[i], taps[i], 1e-9);
+	BOOST_CHECK(std::abs(t5_exp[i] - taps[i]) <= 1e-9);
 
       check_symmetry(taps);
 }
 
-    void
-    qa_firdes::t6()
+    BOOST_AUTO_TEST_CASE(t6)
     {
       vector<float> taps =
 	firdes::band_pass_2(1.0,
@@ -268,17 +261,12 @@ namespace gr {
       // std::cout << "ntaps: " << taps.size() << std::endl;
       // print_taps(std::cout, taps);
 
-      CPPUNIT_ASSERT_EQUAL(NELEM(t6_exp), taps.size());
+      BOOST_REQUIRE_EQUAL(NELEM(t6_exp), taps.size());
 
       for(unsigned int i = 0; i < taps.size(); i++)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(t6_exp[i], taps[i], 1e-7);
+	BOOST_CHECK(std::abs(t6_exp[i] - taps[i]) <= 1e-7);
 
       check_symmetry(taps);
-    }
-
-    void
-    qa_firdes::t7()
-    {
     }
 
   } /* namespace filter */

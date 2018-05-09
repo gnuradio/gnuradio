@@ -24,11 +24,10 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include <qa_mmse_interp_differentiator_ff.h>
 #include <gnuradio/filter/mmse_interp_differentiator_ff.h>
 #include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
+#include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include <cmath>
 #include <stdexcept>
@@ -70,8 +69,7 @@ namespace gr {
       return (k1 * 2 * cos (arg1) + k3 * 3 * cos (arg2));
     }
 
-    void
-    qa_mmse_interp_differentiator_ff::t1()
+    BOOST_AUTO_TEST_CASE(t1)
     {
       static const unsigned N = 100;
       float *input = (float*)volk_malloc((N + 10)*sizeof(float),
@@ -88,7 +86,7 @@ namespace gr {
 	  float expected = test_fcn_d((i + 3) + imu * inv_nsteps);
 	  float actual = diffr.differentiate(&input[i], imu * inv_nsteps);
 
-	  CPPUNIT_ASSERT_DOUBLES_EQUAL(expected, actual, 0.0103);
+	  BOOST_CHECK(std::abs(expected - actual) <= 0.0103);
 	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
 	}
       }
