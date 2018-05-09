@@ -86,7 +86,7 @@ class $(class_name)(grc_wxgui.top_block_gui):
     def __init__($param_str):
         grc_wxgui.top_block_gui.__init__(self, title="$title")
         icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
-        if icon
+        if icon:
             _icon_path = icon.get_filename()
             self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 #elif $generate_options == 'qt_gui'
