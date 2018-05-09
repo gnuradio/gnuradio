@@ -24,11 +24,10 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include <qa_mmse_fir_interpolator_ff.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 #include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
+#include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include <cmath>
 
@@ -42,8 +41,7 @@ namespace gr {
 	      + 3 * sin(index * 0.077 * 2 * M_PI + 0.3 * M_PI));
     }
 
-    void
-    qa_mmse_fir_interpolator_ff::t1()
+    BOOST_AUTO_TEST_CASE(t1)
     {
       // use aligned malloc and make sure that everything in this
       // buffer is properly initialized.
@@ -61,7 +59,7 @@ namespace gr {
 	  float expected = test_fcn((i + 3) + imu * inv_nsteps);
 	  float actual = intr.interpolate(&input[i], imu * inv_nsteps);
 
-	  CPPUNIT_ASSERT_DOUBLES_EQUAL(expected, actual, 0.004);
+	  BOOST_CHECK(std::abs(expected - actual) <= 0.004);
 	  // printf ("%9.6f  %9.6f  %9.6f\n", expected, actual, expected - actual);
 	}
       }
