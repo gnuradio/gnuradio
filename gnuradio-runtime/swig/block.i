@@ -48,6 +48,7 @@ class gr::block : public gr::basic_block
   void declare_sample_delay(unsigned int delay);
   unsigned sample_delay(int which) const;
 
+  void set_output_multiple(int multiple);
   int  output_multiple () const;
   double relative_rate () const;
 
