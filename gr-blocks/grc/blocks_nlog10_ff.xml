@@ -39,4 +39,19 @@
 		<type>float</type>
 		<vlen>$vlen</vlen>
 	</source>
+    <doc>
+        Computes this formula on each input sample:
+output = n*log10(input) + k
+
+Actual formula is output = n*log10( max(input, 1e-18) ) + k to ensure things do not break when input <= 0.
+
+vlen is used if the input samples are a vector and corresponds to the length of that vector. The formula is applied independently on each vector element.
+
+There is no get or set function for the parameters so they are not dynamically accessible.
+
+Implementation file:
+gr-blocks/lib/nlog10_ff_impl.cc
+GRC file:
+gr-blocks/grc/blocks_nlog10_ff.xml
+    </doc>
 </block>
