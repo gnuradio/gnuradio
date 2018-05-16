@@ -181,8 +181,10 @@ namespace gr {
 	  dec_ctr = (j - d_nsamples);
 
 	  // stash the tail
-	  memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
-		 tailsize() * sizeof(float));
+    if(d_tail.size()) {
+      memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
+             tailsize() * sizeof(float));
+    }
 	}
 
 	return nitems;
@@ -338,8 +340,10 @@ namespace gr {
 	  dec_ctr = (j - d_nsamples);
 
 	  // stash the tail
-	  memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
-		 tailsize() * sizeof(gr_complex));
+    if(d_tail.size()) {
+      memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
+             tailsize() * sizeof(gr_complex));
+    }
 	}
 
 	return nitems;
@@ -501,8 +505,10 @@ namespace gr {
 	  dec_ctr = (j - d_nsamples);
 
 	  // stash the tail
-	  memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
-		 tailsize() * sizeof(gr_complex));
+    if(d_tail.size()) {
+      memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
+             tailsize() * sizeof(gr_complex));
+    }
 	}
 
 	return nitems;
