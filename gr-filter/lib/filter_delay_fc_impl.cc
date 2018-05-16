@@ -76,7 +76,7 @@ namespace gr {
 			       gr_vector_void_star &output_items)
     {
       float *in0 = (float *)input_items[0];
-      float *in1 = (float *)input_items[1];
+      float *in1;
       gr_complex *out = (gr_complex *)output_items[0];
 
       if(d_update) {
@@ -95,6 +95,7 @@ namespace gr {
 	break;
 
       case 2:
+        in1 = (float *)input_items[1];
 	for(int j = 0; j < noutput_items; j++) {
 	  out[j] = gr_complex(in0[j + d_delay],
 			      d_fir->filter(&in1[j]));
