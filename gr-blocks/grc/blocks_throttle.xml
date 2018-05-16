@@ -71,4 +71,24 @@
 		<type>$type</type>
 		<vlen>$vlen</vlen>
 	</source>
+	<doc>
+Limits the average sample rate to a maximum rate.
+
+Sample Rate:
+Maximum average sample rate wanted.
+
+Ignore rx_rate tag:
+If set to False, the block will set its sample rate to the value of recieved tags with the key rx_rate. It will ignore other tags.
+
+vlen:
+vlen (for Vector length) is useful if the input samples are vectors and it corresponds to the length of that vector.
+
+The sample_rate() and get_sample_rate() functions are available to interact with the sample rate parameter dynamically. (but not the other parameters)
+A Controlport interface is also available to get and set the sample rate value.
+
+Implementation file:
+gr-blocks/lib/throttle_impl.cc
+GRC file:
+gr-blocks/grc/blocks_throttle.xml
+	</doc>
 </block>
