@@ -74,4 +74,31 @@
 		<type>$type</type>
 		<vlen>$vlen</vlen>
 	</source>
+	<doc>
+Computes a moving average of the input:
+Output[i] = scale * sum(input[i-length: i])
+
+In its default parameters, the block actually computes a moving sum.
+
+Length:
+The size of the moving average window to used.
+
+Scale:
+Factor to scale the sum of the last (Length) samples.
+To get an actual moving average, the scale should then be set to 1/Length.
+
+Max Iter:
+The maximum number of samples the block will treat in one call of its work function.
+
+vlen:
+Used if the input samples are vectors and correspond to the length of those vectors.
+When operating on vectors, the average is done using only the numbers from the same vector index
+Output[i][vector_index] = scale * sum(Input[i-length: i][vector_index])
+
+
+Implementation file:
+gr-blocks/lib/moving_average_XX_impl.cc.t
+GRC file:
+gr-blocks/grc/blocks_moving_average_xx.xml
+	</doc>
 </block>
