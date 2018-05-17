@@ -37,4 +37,24 @@
 		<name>out</name>
 		<type>float</type>
 	</source>
+	<doc>
+Output a 1 or zero based on a threshold value.
+
+Test the incoming signal against a threshold. If the signal
+excedes the High value, it will change its output to 1, and if the signal
+falls below the Low value, it will change its output to 0.
+
+Dynamically reacts to changes in the High and Low variables.
+
+Get/Set functions:
+lo(), set_lo(float) to access the Low parameter
+hi(), set_hi(floar) to access the High parameter
+last_state(), set_last_state(float) to access the value that is being output.
+
+
+Implementation file:
+gr-blocks/lib/threshold_ff_impl.cc
+GRC file:
+gr-blocks/grc/blocks_threshold_ff.xml
+	</doc>
 </block>
