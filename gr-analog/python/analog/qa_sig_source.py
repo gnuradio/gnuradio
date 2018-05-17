@@ -82,6 +82,20 @@ class test_sig_source(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
 
+    def test_cosine_c(self):
+        tb = self.tb
+        sqrt2 = math.sqrt(2) / 2
+        sqrt2j = 1j * math.sqrt(2) / 2
+        expected_result = (1, sqrt2 + sqrt2j, 1j, -sqrt2 + sqrt2j, -1, -sqrt2 - sqrt2j, -1j, sqrt2 - sqrt2j, 1)
+        src1 = analog.sig_source_c(8, analog.GR_COS_WAVE, 1.0, 1.0)
+        op = blocks.head(gr.sizeof_gr_complex, 9)
+        dst1 = blocks.vector_sink_c()
+        tb.connect(src1, op)
+        tb.connect(op, dst1)
+        tb.run()
+        dst_data = dst1.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
+
     def test_sqr_c(self):
         tb = self.tb			#arg6 is a bit before -PI/2
         expected_result = (1j, 1j, 0, 0, 1, 1, 1+0j, 1+1j, 1j)

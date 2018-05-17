@@ -38,6 +38,17 @@ class ModToolRemove(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
+    def get_block_candidates(self):
+        cpp_blocks = filter(lambda x: not (x.startswith('qa_') or
+                            x.startswith('test_')),
+                            glob.glob1("lib", "*.cc"))
+        python_blocks = filter(lambda x: not (x.startswith('qa_') or
+                               x.startswith('build') or
+                               x.startswith('__init__')),
+                               glob.glob1("python", "*.py"))
+        block_candidates = [x.split('_impl')[0] for x in cpp_blocks] + [x.split('.')[0] for x in python_blocks]
+        return block_candidates
+
     def setup(self, options, args):
         ModTool.setup(self, options, args)
 
@@ -46,7 +57,8 @@ class ModToolRemove(ModTool):
         elif len(args) >= 2:
             self._info['pattern'] = args[1]
         else:
-            with SequenceCompleter():
+            block_candidates = self.get_block_candidates()
+            with SequenceCompleter(block_candidates):
                 self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
         if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
@@ -62,15 +74,15 @@ class ModToolRemove(ModTool):
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.h':
                     remove_pattern_from_file(self._file['qalib'],
-                                             '^#include "%s"\s*$' % filename)
+                                             r'^#include "%s"\s*$' % filename)
                     remove_pattern_from_file(self._file['qalib'],
-                                             '^\s*s->addTest\(gr::%s::%s::suite\(\)\);\s*$' % (
-                                                    self._info['modname'], base)
+                                             r'^\s*s->addTest\(gr::%s::%s::suite\(\)\);\s*$' % (
+                                                 self._info['modname'], base)
                                             )
                     self.scm.mark_file_updated(self._file['qalib'])
                 elif ext == '.cc':
                     ed.remove_value('list',
-                                    '\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
+                                    r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
                                     to_ignore_start='APPEND test_%s_sources' % self._info['modname'])
                     self.scm.mark_file_updated(ed.filename)
             else:
@@ -112,8 +124,8 @@ class ModToolRemove(ModTool):
             py_files_deleted = self._run_subdir('python', ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
             for f in py_files_deleted:
-                remove_pattern_from_file(self._file['pyinit'], '.*import\s+%s.*' % f[:-3])
-                remove_pattern_from_file(self._file['pyinit'], '.*from\s+%s\s+import.*\n' % f[:-3])
+                remove_pattern_from_file(self._file['pyinit'], r'.*import\s+%s.*' % f[:-3])
+                remove_pattern_from_file(self._file['pyinit'], r'.*from\s+%s\s+import.*\n' % f[:-3])
         if not self._skip_subdirs['grc']:
             self._run_subdir('grc', ('*.xml',), ('install',))
 
@@ -134,7 +146,7 @@ class ModToolRemove(ModTool):
         for f in files:
             if re.search(self._info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
-        if len(files_filt) == 0:
+        if not files_filt:
             print "None found."
             return []
         # 2. Delete files, Makefile entries and other occurrences

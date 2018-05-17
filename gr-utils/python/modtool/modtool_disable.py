@@ -45,7 +45,7 @@ class ModToolDisable(ModTool):
             self._info['pattern'] = args[1]
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to disable? (Regex): ')
-        if len(self._info['pattern']) == 0:
+        if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
     def run(self):
@@ -70,11 +70,11 @@ class ModToolDisable(ModTool):
         def _handle_cc_qa(cmake, fname):
             """ Do stuff for cc qa """
             if self._info['version'] == '37':
-                cmake.comment_out_lines('\$\{CMAKE_CURRENT_SOURCE_DIR\}/'+fname)
+                cmake.comment_out_lines(r'\$\{CMAKE_CURRENT_SOURCE_DIR\}/'+fname)
                 fname_base = os.path.splitext(fname)[0]
                 ed = CMakeFileEditor(self._file['qalib']) # Abusing the CMakeFileEditor...
-                ed.comment_out_lines('#include\s+"%s.h"' % fname_base, comment_str='//')
-                ed.comment_out_lines('%s::suite\(\)' % fname_base, comment_str='//')
+                ed.comment_out_lines(r'#include\s+"%s.h"' % fname_base, comment_str='//')
+                ed.comment_out_lines(r'%s::suite\(\)' % fname_base, comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
             elif self._info['version'] == '36':
@@ -87,9 +87,8 @@ class ModToolDisable(ModTool):
             """ Comment out include files from the SWIG file,
             as well as the block magic """
             swigfile = open(self._file['swig']).read()
-            (swigfile, nsubs) = re.subn('(.include\s+"(%s/)?%s")' % (
-                                        self._info['modname'], fname),
-                                        r'//\1', swigfile)
+            (swigfile, nsubs) = re.subn(r'(.include\s+"(%s/)?%s")' % (
+                self._info['modname'], fname), r'//\1', swigfile)
             if nsubs > 0:
                 print "Changing %s..." % self._file['swig']
             if nsubs > 1: # Need to find a single BLOCK_MAGIC
@@ -109,7 +108,7 @@ class ModToolDisable(ModTool):
             blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
             if self._info['version'] == '37':
                 blockname = os.path.splitext(fname)[0]
-            swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
+            swigfile = re.sub(r'(%include\s+"'+fname+'")', r'//\1', swigfile)
             print "Changing %s..." % self._file['swig']
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             open(self._file['swig'], 'w').write(swigfile)
@@ -117,15 +116,16 @@ class ModToolDisable(ModTool):
             return False
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
-                ('python', 'qa.+py$', _handle_py_qa),
-                ('python', '^(?!qa).+py$', _handle_py_mod),
-                ('lib', 'qa.+\.cc$', _handle_cc_qa),
-                ('include/%s' % self._info['modname'], '.+\.h$', _handle_h_swig),
-                ('include', '.+\.h$', _handle_h_swig),
-                ('swig', '.+\.i$', _handle_i_swig)
+            ('python', r'qa.+py$', _handle_py_qa),
+            ('python', r'^(?!qa).+py$', _handle_py_mod),
+            ('lib', r'qa.+\.cc$', _handle_cc_qa),
+            ('include/%s' % self._info['modname'], r'.+\.h$', _handle_h_swig),
+            ('include', r'.+\.h$', _handle_h_swig),
+            ('swig', r'.+\.i$', _handle_i_swig)
         )
         for subdir in self._subdirs:
-            if self._skip_subdirs[subdir]: continue
+            if self._skip_subdirs[subdir]:
+                continue
             if self._info['version'] == '37' and subdir == 'include':
                 subdir = 'include/%s' % self._info['modname']
             try:
@@ -153,4 +153,3 @@ class ModToolDisable(ModTool):
             cmake.write()
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
         print "Careful: 'gr_modtool disable' does not resolve dependencies."
-
