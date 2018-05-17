@@ -67,5 +67,21 @@
 		<nports>$num_inputs</nports>
 	</sink>
         <bus_structure_sink>$bus_conns</bus_structure_sink>
-</block>
 
+<doc>
+A nice way to bin your samples:
+This block simply consumes samples from its input without doing anything.
+
+Vec Length:
+Vector length of the incoming data streams. The streams must have the same vector length.
+
+Bus Connections:
+
+
+
+Implementation file:
+gr-blocks/lib/null_sink_impl.cc
+GRC file:
+gr-blocks/grc/blocks_null_sink.xml
+</doc>
+</block>

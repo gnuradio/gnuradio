@@ -67,4 +67,15 @@
 		<nports>$num_outputs</nports>
 	</source>
         <bus_structure_source>$bus_conns</bus_structure_source>
+	<doc>
+Output zeros as needed.
+
+Vec Length:
+Vector length of the output data streams. The streams will have the same vector length.
+
+Implementation file:
+gr-blocks/lib/null_source_impl.cc
+GRC file:
+gr-blocks/grc/blocks_null_source.xml
+	</doc>
 </block>
