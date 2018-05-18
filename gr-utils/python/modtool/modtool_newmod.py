@@ -38,14 +38,6 @@ class ModToolNewModule(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    @staticmethod
-    def setup_parser(parser):
-        " Initialise the option parser for 'gr_modtool newmod' "
-        parser.add_argument("--srcdir",
-                help="Source directory for the module template.")
-        parser.add_argument("module_name", metavar='MODULE-NAME', nargs='?',
-                help="Override the current module's name (normally is autodetected).")
-
     def setup(self, options):
         # Don't call ModTool.setup(), that assumes an existing module.
         self._info['modname'] = options.module_name

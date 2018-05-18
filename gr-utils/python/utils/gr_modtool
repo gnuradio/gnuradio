@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,37 +23,179 @@
 
 from __future__ import print_function
 
+import click
+import functools
+from collections import namedtuple
+
 from gnuradio.modtool import *
+from gnuradio import gr
 
 
-def setup_parser():
-    modules = get_modtool_modules(ModTool.__subclasses__())
-    parser = ModTool.get_parser()
-    subparsers = parser.add_subparsers(title="Commands")
-    epilog = []
-    for module in modules:
-        subparser = subparsers.add_parser(module.name,
-                description=module.description)
-        module.setup_parser(subparser)
-        subparser.set_defaults(module=module)
-        epilog.append("  {:<22}{}".format(module.name, module.description))
-    parser.epilog = '\n'.join(epilog)
-    return parser
+def convertDictToObject(**kwargs):
+    return namedtuple("Arguments", kwargs.keys())(*kwargs.values())
 
-def main():
-    """ Here we go. Parse command, choose class and run. """
-    parser = setup_parser()
-    args = parser.parse_args()
 
+@click.group(epilog='Manipulate with GNU Radio modules source code tree. ' + \
+             'Call it without options to run specified command interactively')
+def modtool():
+    """ A tool for editing GNU Radio out-of-tree modules. """
+    pass
+
+block_name = click.argument('blockname', nargs=1, required=False, metavar="BLOCK_NAME")
+
+
+def common_params(func):
+    '''These are the common parameters'''
+    @click.option('-d', '--directory', default='.',
+                  help="Base directory of the module. Defaults to the cwd.")
+    @click.option('--skip-lib', is_flag=True,
+                  help="Don't do anything in the lib/ subdirectory.")
+    @click.option('--skip-swig', is_flag=True,
+                  help="Don't do anything in the swig/ subdirectory.")
+    @click.option('--skip-python', is_flag=True,
+                  help="Don't do anything in the python/ subdirectory.")
+    @click.option('--skip-grc', is_flag=True,
+                  help="Don't do anything in the grc/ subdirectory.")
+    @click.option('--scm-mode', type=click.Choice(['yes', 'no', 'auto']),
+                  default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
+                  help="Use source control management [ yes | no | auto ]).")
+    @click.option('-y', '--yes', is_flag=True,
+                  help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+
+
+@modtool.command('add')
+@click.option('-t', '--block-type', type=click.Choice(ModToolAdd._block_types),
+              help="One of %s." % ', '.join(ModToolAdd._block_types))
+@common_params
+@click.option('--license-file',
+              help="File containing the license header for every source code file.")
+@click.option('--copyright',
+              help="Name of the copyright holder (you or your company) MUST be a quoted string.")
+@click.option('--argument-list',
+              help="The argument list for the constructor and make functions.")
+@click.option('--add-python-qa', is_flag=True, default=None,
+              help="If given, Python QA code is automatically added if possible.")
+@click.option('--add-cpp-qa', is_flag=True, default=None,
+              help="If given, C++ QA code is automatically added if possible.")
+@click.option('--skip-cmakefiles', is_flag=True,
+              help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
+@click.option('-l', '--lang', type=click.Choice(['cpp', 'c++', 'python']),
+              help="Programming Language")
+@block_name
+def ModtoolAdd(**kwargs):
+    """Adds a block to the out-of-tree module."""
+    args = convertDictToObject(**kwargs)
     try:
-        args.module().run(args)
+        ModToolAdd().run(args)
+    except ModToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)
+
+
+@modtool.command('disable')
+@common_params
+@block_name
+def ModtoolDisable(**kwargs):
+    """Disable a block (comments out CMake entries for files)"""
+    args = convertDictToObject(**kwargs)
+    try:
+        ModToolDisable().run(args)
+    except ModToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)
+
+
+@modtool.command('info')
+@click.option('--python-readable', is_flag=True,
+              help="Return the output in a format that's easier to read for Python scripts.")
+@click.option('--suggested-dirs',
+              help="Suggest typical include dirs if nothing better can be detected.")
+def ModtoolInfo(**kwargs):
+    """ Return information about a given module """
+    args = convertDictToObject(**kwargs)
+    try:
+        ModToolInfo().run(args)
     except ModToolException as err:
         print(err, file=sys.stderr)
         exit(1)
 
+
+@modtool.command('makexml')
+@common_params
+@block_name
+def ModtoolMakeXML(**kwargs):
+    """
+    \b
+    Make an XML file for GRC block bindings
+
+    Note: This does not work on python blocks
+    """
+    args = convertDictToObject(**kwargs)
+    try:
+        ModToolMakeXML().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
+
+
+@modtool.command('newmod')
+@common_params
+@click.option('--srcdir',
+              help="Source directory for the module template.")
+@click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)
+def ModtoolNewmod(**kwargs):
+    """
+    \b
+    Create a new out-of-tree module
+
+    The argument MODULE-NAME overrides the current module's name (normally is autodetected).
+    """
+    args = convertDictToObject(**kwargs)
+    try:
+        ModToolNewModule().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
+
+
+@modtool.command('remove')
+@common_params
+@block_name
+def ModtoolRemove(**kwargs):
+    """ Remove block (delete files and remove Makefile entries) """
+    args = convertDictToObject(**kwargs)
+    try:
+        ModToolRemove().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
+
+
+@modtool.command('rename')
+@common_params
+@block_name
+@click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
+def ModtoolRename(**kwargs):
+    """
+    \b
+    Rename block inside module.
+
+    The argument NEW-BLOCK-NAME is the new name of the block.
+    """
+    args = convertDictToObject(**kwargs)
+    try:
+        ModToolRename().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
+
+
 if __name__ == '__main__':
     try:
-        main()
+        modtool()
     except KeyboardInterrupt:
         pass
-

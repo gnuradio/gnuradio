@@ -52,41 +52,6 @@ class ModTool(object):
             self._skip_subdirs[subdir] = False
         self._dir = None
 
-    @staticmethod
-    def setup_parser(parser):
-        """Override in child class."""
-        pass
-
-    @staticmethod
-    def setup_parser_block(parser):
-        """Setup options specific for block manipulating modules."""
-        parser.add_argument("blockname", nargs="?", metavar="BLOCK_NAME",
-                help="Name of the block/module")
-
-    @staticmethod
-    def get_parser():
-        """Init the option parser."""
-        parser = ArgumentParser(
-                description='Manipulate with GNU Radio modules source code tree. ' + \
-                        'Call it withou options to run specified command interactively',
-                        formatter_class=RawDescriptionHelpFormatter)
-        parser.add_argument("-d", "--directory", default=".",
-                help="Base directory of the module. Defaults to the cwd.")
-        parser.add_argument("--skip-lib", action="store_true",
-                help="Don't do anything in the lib/ subdirectory.")
-        parser.add_argument("--skip-swig", action="store_true",
-                help="Don't do anything in the swig/ subdirectory.")
-        parser.add_argument("--skip-python", action="store_true",
-                help="Don't do anything in the python/ subdirectory.")
-        parser.add_argument("--skip-grc", action="store_true",
-                help="Don't do anything in the grc/ subdirectory.")
-        parser.add_argument("--scm-mode", choices=('yes', 'no', 'auto'),
-                default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
-                help="Use source control management [ yes | no | auto ]).")
-        parser.add_argument("-y", "--yes", action="store_true",
-                help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
-        return parser
-
     def setup(self, options):
         """ Initialise all internal variables, such as the module name etc. """
         self._dir = options.directory

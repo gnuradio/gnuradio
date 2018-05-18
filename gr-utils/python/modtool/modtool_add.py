@@ -47,27 +47,6 @@ class ModToolAdd(ModTool):
         self._skip_cmakefiles = False
         self._license_file = None
 
-    @staticmethod
-    def setup_parser(parser):
-        parser.add_argument("-t", "--block-type", choices=ModToolAdd._block_types,
-                help="One of %s." % ', '.join(ModToolAdd._block_types))
-        parser.add_argument("--license-file",
-                help="File containing the license header for every source code file.")
-        parser.add_argument("--copyright",
-                help="Name of the copyright holder (you or your company) MUST be a quoted string.")
-        parser.add_argument("--argument-list",
-                help="The argument list for the constructor and make functions.")
-        parser.add_argument("--add-python-qa", action="store_true", default=None,
-                help="If given, Python QA code is automatically added if possible.")
-        parser.add_argument("--add-cpp-qa", action="store_true", default=None,
-                help="If given, C++ QA code is automatically added if possible.")
-        parser.add_argument("--skip-cmakefiles", action="store_true",
-                help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-        parser.add_argument("-l", "--lang", choices=('cpp', 'c++', 'python'),
-                help="Programing language")
-        ModTool.setup_parser_block(parser)
-        return parser
-
     def setup(self, options):
         ModTool.setup(self, options)
 

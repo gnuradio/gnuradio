@@ -43,15 +43,6 @@ class ModToolMakeXML(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    @staticmethod
-    def setup_parser(parser):
-        """ Initialise the option parser for 'gr_modtool makexml' """
-        parser.usage = """%s
-
-        Note: This does not work on Python blocks!
-        """ % parser.usage
-        ModTool.setup_parser_block(parser)
-
     def setup(self, options):
         ModTool.setup(self, options)
 

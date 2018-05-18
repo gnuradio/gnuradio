@@ -44,14 +44,6 @@ class ModToolRename(ModTool):
         self._skip_cmakefiles = False
         self._license_file = None
 
-    @staticmethod
-    def setup_parser(parser):
-         #parser = parser.add_argument_group(title="Rename module options")
-        ModTool.setup_parser_block(parser)
-        parser.add_argument("new_name", nargs="?", metavar='NEW-BLOCK-NAME',
-                help="New name of the block.")
-        return parser
-
     def setup(self, options):
         ModTool.setup(self, options)
 

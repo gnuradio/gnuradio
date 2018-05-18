@@ -40,16 +40,6 @@ class ModToolInfo(ModTool):
         self._python_readable = False
         self._suggested_dirs = None
 
-    @staticmethod
-    def setup_parser(parser):
-        """ Initialise the option parser for 'gr_modtool info' """
-        #args_group = parser.add_argument_group(title="Info options")
-        parser.add_argument("--python-readable", action="store_true",
-                help="Return the output in a format that's easier to read for Python scripts.")
-        parser.add_argument("--suggested-dirs",
-                help="Suggest typical include dirs if nothing better can be detected.")
-        return parser
-
     def setup(self, options):
         # Won't call parent's setup(), because that's too chatty
         self._directory = options.directory
