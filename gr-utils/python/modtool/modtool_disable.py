@@ -40,10 +40,6 @@ class ModToolDisable(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    @staticmethod
-    def setup_parser(parser):
-        ModTool.setup_parser_block(parser)
-
     def setup(self, options):
         ModTool.setup(self, options)
 
