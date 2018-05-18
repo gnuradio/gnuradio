@@ -21,8 +21,6 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
-from __future__ import print_function
-
 import click
 import functools
 from collections import namedtuple
@@ -32,7 +30,7 @@ from gnuradio import gr
 
 
 def convertDictToObject(**kwargs):
-    return namedtuple("Arguments", kwargs.keys())(*kwargs.values())
+    return namedtuple("Namespace", kwargs.keys())(*kwargs.values())
 
 
 @click.group(epilog='Manipulate with GNU Radio modules source code tree. ' + \
