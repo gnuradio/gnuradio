@@ -167,8 +167,8 @@ class uhd_siggen_gui(Qt.QWidget):
         ### Signal frequencies
         self._freq1_enable_on = (analog.GR_SIN_WAVE, "2tone", "sweep")
         self._freq1_offset_range = Range(
-                -self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
-                self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
+                -self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
+                self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
                 100,
                 self._sg.args.waveform_freq,
                 200
@@ -184,8 +184,8 @@ class uhd_siggen_gui(Qt.QWidget):
         self.top_grid_layout.addWidget(self._freq1_offset_win, 4,0,1,3)
         self._freq2_enable_on = ("2tone", "sweep")
         self._freq2_offset_range = Range(
-                -self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
-                self._sg[uhd_siggen.SAMP_RATE_KEY]/4,
+                -self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
+                self._sg[uhd_siggen.SAMP_RATE_KEY]/2,
                 100,
                 self._sg.args.waveform2_freq,
                 200
