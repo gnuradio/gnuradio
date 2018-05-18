@@ -28,7 +28,6 @@ import os
 import re
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
-from gnuradio import gr
 from .util_functions import get_modname
 from .scm import SCMRepoFactory
 
@@ -159,16 +158,3 @@ class ModTool(object):
     def run(self, options):
         """ Override this. """
         raise NotImplementedError('Module implementation missing')
-
-
-def get_modtool_modules(all_objects):
-    """Return list with all modtool modules."""
-    modules = []
-    for o in all_objects:
-        try:
-            if issubclass(o, ModTool) and o != ModTool:
-                modules.append(o)
-        except (TypeError, AttributeError):
-            pass
-    return modules
-
