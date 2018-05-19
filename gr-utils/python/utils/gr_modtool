@@ -29,8 +29,9 @@ from gnuradio.modtool import *
 from gnuradio import gr
 
 
-def convertDictToObject(**kwargs):
-    return namedtuple("Namespace", kwargs.keys())(*kwargs.values())
+class DictToObject(object):
+  def __init__(self, adict):
+    self.__dict__.update(adict)
 
 
 @click.group(epilog='Manipulate with GNU Radio modules source code tree. ' + \
@@ -86,7 +87,7 @@ def common_params(func):
 @block_name
 def ModtoolAdd(**kwargs):
     """Adds a block to the out-of-tree module."""
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolAdd().run(args)
     except ModToolException as err:
@@ -99,7 +100,7 @@ def ModtoolAdd(**kwargs):
 @block_name
 def ModtoolDisable(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolDisable().run(args)
     except ModToolException as err:
@@ -114,7 +115,7 @@ def ModtoolDisable(**kwargs):
               help="Suggest typical include dirs if nothing better can be detected.")
 def ModtoolInfo(**kwargs):
     """ Return information about a given module """
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolInfo().run(args)
     except ModToolException as err:
@@ -132,7 +133,7 @@ def ModtoolMakeXML(**kwargs):
 
     Note: This does not work on python blocks
     """
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolMakeXML().run(args)
     except ModToolException as err:
@@ -152,7 +153,7 @@ def ModtoolNewmod(**kwargs):
 
     The argument MODULE-NAME overrides the current module's name (normally is autodetected).
     """
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolNewModule().run(args)
     except ModToolException as err:
@@ -165,7 +166,7 @@ def ModtoolNewmod(**kwargs):
 @block_name
 def ModtoolRemove(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolRemove().run(args)
     except ModToolException as err:
@@ -184,7 +185,7 @@ def ModtoolRename(**kwargs):
 
     The argument NEW-BLOCK-NAME is the new name of the block.
     """
-    args = convertDictToObject(**kwargs)
+    args = DictToObject(kwargs)
     try:
         ModToolRename().run(args)
     except ModToolException as err:
