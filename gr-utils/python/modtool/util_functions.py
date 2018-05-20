@@ -153,7 +153,7 @@ class SequenceCompleter(object):
         if not text and state < len(self._seq):
             return self._seq[state]
         if not state:
-            self._tmp_matches = filter(lambda candidate: candidate.startswith(text), self._seq)
+            self._tmp_matches = [candidate for candidate in self._seq if candidate.startswith(text)]
         if state < len(self._tmp_matches):
             return self._tmp_matches[state]
 
@@ -162,5 +162,5 @@ class SequenceCompleter(object):
         readline.set_completer(self.completefunc)
         readline.parse_and_bind("tab: complete")
 
-    def __exit__(self):
+    def __exit__(self, exception_type, exception_value, traceback):
         readline.set_completer(self._old_completer)
