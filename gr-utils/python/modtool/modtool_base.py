@@ -26,10 +26,17 @@ from __future__ import unicode_literals
 
 import os
 import re
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
+import click
+import functools
 
+from gnuradio import gr
 from .util_functions import get_modname
 from .scm import SCMRepoFactory
+
+class DictToObject(object):
+    """ Convert a dictionary to object """
+    def __init__(self, adict):
+        self.__dict__.update(adict)
 
 class ModToolException(BaseException):
     """ Standard exception for modtool classes. """
@@ -50,6 +57,31 @@ class ModTool(object):
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
         self._dir = None
+
+    block_name = click.argument('blockname', nargs=1, required=False, metavar="BLOCK_NAME")
+
+    @staticmethod
+    def common_params(func):
+        '''These are the common parameters'''
+        @click.option('-d', '--directory', default='.',
+                      help="Base directory of the module. Defaults to the cwd.")
+        @click.option('--skip-lib', is_flag=True,
+                      help="Don't do anything in the lib/ subdirectory.")
+        @click.option('--skip-swig', is_flag=True,
+                      help="Don't do anything in the swig/ subdirectory.")
+        @click.option('--skip-python', is_flag=True,
+                      help="Don't do anything in the python/ subdirectory.")
+        @click.option('--skip-grc', is_flag=True,
+                      help="Don't do anything in the grc/ subdirectory.")
+        @click.option('--scm-mode', type=click.Choice(['yes', 'no', 'auto']),
+                      default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
+                      help="Use source control management [ yes | no | auto ]).")
+        @click.option('-y', '--yes', is_flag=True,
+                      help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+        return wrapper
 
     def setup(self, options):
         """ Initialise all internal variables, such as the module name etc. """

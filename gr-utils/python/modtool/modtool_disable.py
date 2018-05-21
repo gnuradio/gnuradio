@@ -27,8 +27,9 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+import click
 
-from .modtool_base import ModTool
+from .modtool_base import ModTool, DictToObject
 from .cmakefile_editor import CMakeFileEditor
 
 
@@ -39,6 +40,18 @@ class ModToolDisable(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
+
+    @click.command('disable')
+    @ModTool.common_params
+    @ModTool.block_name
+    def parser(self, **kwargs):
+        """Disable a block (comments out CMake entries for files)"""
+        args = DictToObject(kwargs)
+        try:
+            self.run(args)
+        except ModToolException as err:
+            click.echo(err, file=sys.stderr)
+            exit(1)
 
     def setup(self, options):
         ModTool.setup(self, options)

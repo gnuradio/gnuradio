@@ -24,8 +24,9 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
+import click
 
-from .modtool_base import ModTool, ModToolException
+from .modtool_base import ModTool, ModToolException, DictToObject
 from .util_functions import get_modname
 
 
@@ -39,6 +40,20 @@ class ModToolInfo(ModTool):
         self._directory = None
         self._python_readable = False
         self._suggested_dirs = None
+
+    @click.command('info')
+    @click.option('--python-readable', is_flag=True,
+                  help="Return the output in a format that's easier to read for Python scripts.")
+    @click.option('--suggested-dirs',
+                  help="Suggest typical include dirs if nothing better can be detected.")
+    def parser(self, **kwargs):
+        """ Return information about a given module """
+        args = DictToObject(kwargs)
+        try:
+            self.run(args)
+        except ModToolException as err:
+            print(err, file=sys.stderr)
+            exit(1)
 
     def setup(self, options):
         # Won't call parent's setup(), because that's too chatty
