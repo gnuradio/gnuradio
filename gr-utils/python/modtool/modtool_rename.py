@@ -22,8 +22,11 @@
 
 import os
 import re
+import glob
+
 from optparse import OptionGroup
 from modtool_base import ModTool, ModToolException
+from util_functions import SequenceCompleter
 
 
 class ModToolRename(ModTool):
@@ -37,6 +40,20 @@ class ModToolRename(ModTool):
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
+
+    def get_block_candidates(self):
+        cpp_filters = ["*.cc", "*.cpp"]
+        cpp_blocks = []
+        for ftr in cpp_filters:
+            cpp_blocks += filter(lambda x: not (x.startswith('qa_') or
+                                 x.startswith('test_')),
+                                 glob.glob1("lib", ftr))
+        python_blocks = filter(lambda x: not (x.startswith('qa_') or
+                               x.startswith('build') or
+                               x.startswith('__init__')),
+                               glob.glob1("python", "*.py"))
+        block_candidates = [x.split('_impl')[0] for x in cpp_blocks] + [x.split('.')[0] for x in python_blocks]
+        return block_candidates
 
     def setup_parser(self):
         parser = ModTool.setup_parser(self)
@@ -61,7 +78,9 @@ class ModToolRename(ModTool):
             if len(args) >= 2:
                 self._info['oldname'] = args[1]
             else:
-                self._info['oldname'] = raw_input("Enter name of block/code to rename (without module name prefix): ")
+                block_candidates = self.get_block_candidates()
+                with SequenceCompleter(block_candidates):
+                    self._info['oldname'] = raw_input("Enter name of block/code to rename (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
             raise ModToolException('Invalid block name.')
         print "Block/code to rename identifier: " + self._info['oldname']
