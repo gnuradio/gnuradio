@@ -28,6 +28,8 @@ import shutil
 import os
 import re
 import click
+import sys
+
 from gnuradio import gr
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .scm import SCMRepoFactory
@@ -44,7 +46,7 @@ class ModToolNewModule(ModTool):
                   help="Source directory for the module template.")
     @ModTool.common_params
     @click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """
         \b
         Create a new out-of-tree module
@@ -53,7 +55,7 @@ class ModToolNewModule(ModTool):
         """
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolNewModule().run(args)
         except ModToolException as err:
             print(err, file=sys.stderr)
             exit(1)

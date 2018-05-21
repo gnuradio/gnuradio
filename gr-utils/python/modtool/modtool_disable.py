@@ -29,7 +29,7 @@ import re
 import sys
 import click
 
-from .modtool_base import ModTool, DictToObject
+from .modtool_base import ModTool, ModToolException, DictToObject
 from .cmakefile_editor import CMakeFileEditor
 
 
@@ -44,11 +44,11 @@ class ModToolDisable(ModTool):
     @click.command('disable')
     @ModTool.common_params
     @ModTool.block_name
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """Disable a block (comments out CMake entries for files)"""
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolDisable().run(args)
         except ModToolException as err:
             click.echo(err, file=sys.stderr)
             exit(1)

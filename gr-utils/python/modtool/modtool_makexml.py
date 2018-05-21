@@ -28,6 +28,7 @@ import os
 import re
 import glob
 import click
+import sys
 
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .parser_cc_block import ParserCCBlock
@@ -47,7 +48,7 @@ class ModToolMakeXML(ModTool):
     @click.command('makexml')
     @ModTool.common_params
     @ModTool.block_name
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """
         \b
         Make an XML file for GRC block bindings
@@ -56,7 +57,7 @@ class ModToolMakeXML(ModTool):
         """
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolMakeXML().run(args)
         except ModToolException as err:
             print(err, file=sys.stderr)
             exit(1)

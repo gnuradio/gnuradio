@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 import click
+import sys
 
 from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
@@ -49,7 +50,7 @@ class ModToolRename(ModTool):
     @ModTool.common_params
     @ModTool.block_name
     @click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """
         \b
         Rename block inside module.
@@ -58,7 +59,7 @@ class ModToolRename(ModTool):
         """
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolRename().run(args)
         except ModToolException as err:
             print(err, file=sys.stderr)
             exit(1)
