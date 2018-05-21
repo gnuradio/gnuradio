@@ -27,8 +27,9 @@ from __future__ import unicode_literals
 import os
 import re
 import glob
+import click
 
-from .modtool_base import ModTool, ModToolException
+from .modtool_base import ModTool, ModToolException, DictToObject
 from .parser_cc_block import ParserCCBlock
 from .grc_xml_generator import GRCXMLGenerator
 from .cmakefile_editor import CMakeFileEditor
@@ -42,6 +43,23 @@ class ModToolMakeXML(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
+
+    @click.command('makexml')
+    @ModTool.common_params
+    @ModTool.block_name
+    def parser(self, **kwargs):
+        """
+        \b
+        Make an XML file for GRC block bindings
+
+        Note: This does not work on python blocks
+        """
+        args = DictToObject(kwargs)
+        try:
+            self.run(args)
+        except ModToolException as err:
+            print(err, file=sys.stderr)
+            exit(1)
 
     def setup(self, options):
         ModTool.setup(self, options)

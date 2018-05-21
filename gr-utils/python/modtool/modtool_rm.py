@@ -28,9 +28,10 @@ import os
 import re
 import sys
 import glob
+import click
 
 from .util_functions import remove_pattern_from_file, SequenceCompleter
-from .modtool_base import ModTool
+from .modtool_base import ModTool, ModToolException, DictToObject
 from .cmakefile_editor import CMakeFileEditor
 
 
@@ -41,6 +42,18 @@ class ModToolRemove(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
+
+    @click.command('remove')
+    @ModTool.common_params
+    @ModTool.block_name
+    def parser(self, **kwargs):
+        """ Remove block (delete files and remove Makefile entries) """
+        args = DictToObject(kwargs)
+        try:
+            self.run(args)
+        except ModToolException as err:
+            print(err, file=sys.stderr)
+            exit(1)
 
     def setup(self, options):
         ModTool.setup(self, options)
