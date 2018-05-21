@@ -46,11 +46,11 @@ class ModToolRemove(ModTool):
     @click.command('remove')
     @ModTool.common_params
     @ModTool.block_name
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """ Remove block (delete files and remove Makefile entries) """
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolRemove().run(args)
         except ModToolException as err:
             print(err, file=sys.stderr)
             exit(1)

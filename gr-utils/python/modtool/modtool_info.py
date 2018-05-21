@@ -25,6 +25,7 @@ from __future__ import unicode_literals
 
 import os
 import click
+import sys
 
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .util_functions import get_modname
@@ -46,11 +47,11 @@ class ModToolInfo(ModTool):
                   help="Return the output in a format that's easier to read for Python scripts.")
     @click.option('--suggested-dirs',
                   help="Suggest typical include dirs if nothing better can be detected.")
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """ Return information about a given module """
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolInfo().run(args)
         except ModToolException as err:
             print(err, file=sys.stderr)
             exit(1)

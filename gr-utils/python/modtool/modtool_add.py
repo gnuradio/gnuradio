@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 import click
+import sys
 
 from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
@@ -34,7 +35,7 @@ from .modtool_base import ModTool, ModToolException, DictToObject
 from .templates import Templates
 from .code_generator import render_template
 
-class ModToolAdd(ModTool):
+class ModToolAdd(ModTool, click.Group):
     """ Add block to the out-of-tree module. """
     name = 'add'
     description = 'Add new block into module.'
@@ -67,11 +68,11 @@ class ModToolAdd(ModTool):
                   help="Programming Language")
     @ModTool.common_params
     @ModTool.block_name
-    def parser(self, **kwargs):
+    def parser(**kwargs):
         """Adds a block to the out-of-tree module."""
         args = DictToObject(kwargs)
         try:
-            self.run(args)
+            ModToolAdd().run(args)
         except ModToolException as err:
             click.echo(err, file=sys.stderr)
             exit(1)
