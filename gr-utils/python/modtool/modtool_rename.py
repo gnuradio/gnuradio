@@ -26,11 +26,28 @@ from __future__ import unicode_literals
 
 import os
 import re
+import glob
 
 from .util_functions import append_re_line_sequence, ask_yes_no
+from .util_functions import SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
+
+def get_block_candidates():
+    cpp_filters = ["*.cc", "*.cpp"]
+    cpp_blocks = []
+    for ftr in cpp_filters:
+        cpp_blocks += filter(lambda x: not (x.startswith('qa_') or
+                             x.startswith('test_')),
+                             glob.glob1("lib", ftr))
+    python_blocks = filter(lambda x: not (x.startswith('qa_') or
+                           x.startswith('build') or
+                           x.startswith('__init__')),
+                           glob.glob1("python", "*.py"))
+    block_candidates = [x.split('_impl')[0] for x in cpp_blocks] + [x.split('.')[0] for x in python_blocks]
+    return block_candidates
+
 
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
@@ -63,6 +80,11 @@ class ModToolRename(ModTool):
         self._info['oldname'] = options.blockname
         if self._info['oldname'] is None:
             self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
+        else:
+            block_candidates = get_block_candidates()
+            with SequenceCompleter(block_candidates):
+                self._info['oldname'] = \
+                    raw_input("Enter name of block/code to rename (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
             raise ModToolException('Invalid block name.')
         print("Block/code to rename identifier: " + self._info['oldname'])
