@@ -29,7 +29,8 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/math.h>
 #include <stdexcept>
-#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 namespace gr {
   namespace digital {
@@ -211,12 +212,8 @@ namespace gr {
       }
 
       if(ii > 0) {
-	if(ii > ninput_items[0]) {
-	  std::cerr << "clock_recovery_mm_cc: ii > ninput_items[0] ("
-		    << ii << " > " << ninput_items[0] << std::endl;
-	  assert(0);
-	}
-	consume_each(ii);
+        assert(ii <= ninput_items[0]);
+        consume_each(ii);
       }
 
       return oo;
