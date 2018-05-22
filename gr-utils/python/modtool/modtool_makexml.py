@@ -45,23 +45,6 @@ class ModToolMakeXML(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    @click.command('makexml')
-    @ModTool.common_params
-    @ModTool.block_name
-    def parser(**kwargs):
-        """
-        \b
-        Make an XML file for GRC block bindings
-
-        Note: This does not work on python blocks
-        """
-        args = DictToObject(kwargs)
-        try:
-            ModToolMakeXML().run(args)
-        except ModToolException as err:
-            print(err, file=sys.stderr)
-            exit(1)
-
     def setup(self, options):
         ModTool.setup(self, options)
 
@@ -186,3 +169,21 @@ class ModToolMakeXML(ModTool):
 
         return (parser.read_params(), parser.read_io_signature(), blockname)
 
+
+### COMMAND LINE INTERFACE ###
+@click.command('makexml')
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """
+    \b
+    Make an XML file for GRC block bindings
+
+    Note: This does not work on python blocks
+    """
+    args = DictToObject(kwargs)
+    try:
+        ModToolMakeXML().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
