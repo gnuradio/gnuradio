@@ -40,6 +40,7 @@ enum pst_tags {
     PST_UNIFORM_VECTOR = 0x0a,
     PST_UINT64 = 0x0b,
     PST_TUPLE = 0x0c,
+    PST_INT64 = 0x0d,
     UVI_ENDIAN_MASK = 0x80,
     UVI_SUBTYPE_MASK = 0x7f,
     UVI_LITTLE_ENDIAN = 0x00,
