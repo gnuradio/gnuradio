@@ -35,7 +35,8 @@ from .modtool_base import ModTool, ModToolException, DictToObject
 from .templates import Templates
 from .code_generator import render_template
 
-class ModToolAdd(ModTool, click.Group):
+
+class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
     name = 'add'
     description = 'Add new block into module.'
@@ -48,34 +49,6 @@ class ModToolAdd(ModTool, click.Group):
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
-
-    @click.command('add')
-    @click.option('-t', '--block-type', type=click.Choice(_block_types),
-                  help="One of %s." % ', '.join(_block_types))
-    @click.option('--license-file',
-                  help="File containing the license header for every source code file.")
-    @click.option('--copyright',
-                  help="Name of the copyright holder (you or your company) MUST be a quoted string.")
-    @click.option('--argument-list',
-                  help="The argument list for the constructor and make functions.")
-    @click.option('--add-python-qa', is_flag=True, default=None,
-                  help="If given, Python QA code is automatically added if possible.")
-    @click.option('--add-cpp-qa', is_flag=True, default=None,
-                  help="If given, C++ QA code is automatically added if possible.")
-    @click.option('--skip-cmakefiles', is_flag=True,
-                  help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-    @click.option('-l', '--lang', type=click.Choice(['cpp', 'c++', 'python']),
-                  help="Programming Language")
-    @ModTool.common_params
-    @ModTool.block_name
-    def parser(**kwargs):
-        """Adds a block to the out-of-tree module."""
-        args = DictToObject(kwargs)
-        try:
-            ModToolAdd().run(args)
-        except ModToolException as err:
-            click.echo(err, file=sys.stderr)
-            exit(1)
 
     def setup(self, options):
         ModTool.setup(self, options)
@@ -328,3 +301,33 @@ class ModToolAdd(ModTool, click.Group):
         ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
         ed.write()
         self.scm.mark_files_updated((self._file['cmgrc'],))
+
+
+### COMMAND LINE INTERFACE ###
+@click.command('add')
+@click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),
+              help="One of %s." % ', '.join(ModToolAdd()._block_types))
+@click.option('--license-file',
+              help="File containing the license header for every source code file.")
+@click.option('--copyright',
+              help="Name of the copyright holder (you or your company) MUST be a quoted string.")
+@click.option('--argument-list',
+              help="The argument list for the constructor and make functions.")
+@click.option('--add-python-qa', is_flag=True, default=None,
+              help="If given, Python QA code is automatically added if possible.")
+@click.option('--add-cpp-qa', is_flag=True, default=None,
+              help="If given, C++ QA code is automatically added if possible.")
+@click.option('--skip-cmakefiles', is_flag=True,
+              help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
+@click.option('-l', '--lang', type=click.Choice(['cpp', 'c++', 'python']),
+              help="Programming Language")
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """Adds a block to the out-of-tree module."""
+    args = DictToObject(kwargs)
+    try:
+        ModToolAdd().run(args)
+    except ModToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)

@@ -41,18 +41,6 @@ class ModToolDisable(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    @click.command('disable')
-    @ModTool.common_params
-    @ModTool.block_name
-    def parser(**kwargs):
-        """Disable a block (comments out CMake entries for files)"""
-        args = DictToObject(kwargs)
-        try:
-            ModToolDisable().run(args)
-        except ModToolException as err:
-            click.echo(err, file=sys.stderr)
-            exit(1)
-
     def setup(self, options):
         ModTool.setup(self, options)
 
@@ -170,3 +158,16 @@ class ModToolDisable(ModTool):
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
         print("Careful: 'gr_modtool disable' does not resolve dependencies.")
 
+
+### COMMAND LINE INTERFACE ###
+@click.command('disable')
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """Disable a block (comments out CMake entries for files)"""
+    args = DictToObject(kwargs)
+    try:
+        ModToolDisable().run(args)
+    except ModToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)

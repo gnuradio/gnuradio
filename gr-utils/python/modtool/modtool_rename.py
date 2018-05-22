@@ -34,6 +34,7 @@ from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .templates import Templates
 
+
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
     name = 'rename'
@@ -45,24 +46,6 @@ class ModToolRename(ModTool):
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
-
-    @click.command('rename')
-    @ModTool.common_params
-    @ModTool.block_name
-    @click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
-    def parser(**kwargs):
-        """
-        \b
-        Rename block inside module.
-
-        The argument NEW-BLOCK-NAME is the new name of the block.
-        """
-        args = DictToObject(kwargs)
-        try:
-            ModToolRename().run(args)
-        except ModToolException as err:
-            print(err, file=sys.stderr)
-            exit(1)
 
     def setup(self, options):
         ModTool.setup(self, options)
@@ -206,3 +189,23 @@ class ModToolRename(ModTool):
         open(filename, 'w').write(cfile)
         self.scm.mark_file_updated(filename)
         return nsubs
+
+
+### COMMAND LINE INTERFACE ###
+@click.command('rename')
+@ModTool.common_params
+@ModTool.block_name
+@click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
+def cli(**kwargs):
+    """
+    \b
+    Rename block inside module.
+
+    The argument NEW-BLOCK-NAME is the new name of the block.
+    """
+    args = DictToObject(kwargs)
+    try:
+        ModToolRename().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)

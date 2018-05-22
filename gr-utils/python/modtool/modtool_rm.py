@@ -43,18 +43,6 @@ class ModToolRemove(ModTool):
     def __init__(self):
         ModTool.__init__(self)
 
-    @click.command('remove')
-    @ModTool.common_params
-    @ModTool.block_name
-    def parser(**kwargs):
-        """ Remove block (delete files and remove Makefile entries) """
-        args = DictToObject(kwargs)
-        try:
-            ModToolRemove().run(args)
-        except ModToolException as err:
-            print(err, file=sys.stderr)
-            exit(1)
-
     def setup(self, options):
         ModTool.setup(self, options)
 
@@ -179,3 +167,17 @@ class ModToolRemove(ModTool):
         ed.write()
         self.scm.mark_files_updated(('%s/CMakeLists.txt' % path,))
         return files_deleted
+
+
+### COMMAND LINE INTERFACE ###
+@click.command('remove')
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """ Remove block (delete files and remove Makefile entries) """
+    args = DictToObject(kwargs)
+    try:
+        ModToolRemove().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
