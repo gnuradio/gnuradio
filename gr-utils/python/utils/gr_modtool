@@ -26,7 +26,9 @@ import sys
 import os
 from importlib import import_module
 
-cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/gnuradio/gr-utils/python/modtool'))
+cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                          '../src/gnuradio/gr-utils/python/modtool'))
+
 
 class CommandCLI(click.MultiCommand):
 
@@ -34,8 +36,8 @@ class CommandCLI(click.MultiCommand):
         cmds = []
         for filename in os.listdir(cmd_folder):
             if filename.endswith('.py') and filename.startswith('modtool_'):
-               cmds.append(filename[8:-3])
-		cmds.remove('base')
+                cmds.append(filename[8:-3])
+        cmds.remove('base')
         cmds.sort()
         return cmds
 
@@ -43,14 +45,15 @@ class CommandCLI(click.MultiCommand):
         try:
             if sys.version_info[0] == 2:
                 name = name.encode('ascii', 'replace')
-				mod = import_module('gnuradio.modtool.modtool_' + name)
+            mod = import_module('gnuradio.modtool.modtool_' + name)
         except ImportError:
-			click.echo('Error:', err)
+            click.echo('Error:', err)
+            return
         return mod.cli
 
 
 @click.command(cls=CommandCLI,
-			   epilog='Manipulate with GNU Radio modules source code tree. ' + \
+               epilog='Manipulate with GNU Radio modules source code tree. ' +
                'Call it without options to run specified command interactively')
 def cli():
     """A tool for editing GNU Radio out-of-tree modules."""

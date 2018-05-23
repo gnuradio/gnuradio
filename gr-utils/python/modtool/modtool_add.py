@@ -39,7 +39,7 @@ from .code_generator import render_template
 class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
     name = 'add'
-    description = 'Add new block into module.'
+    description = 'Add new block into a module.'
     _block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
                     'general', 'tagged_stream', 'hier', 'noblock')
 

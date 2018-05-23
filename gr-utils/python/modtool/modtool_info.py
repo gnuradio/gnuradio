@@ -34,7 +34,7 @@ from .util_functions import get_modname
 class ModToolInfo(ModTool):
     """ Return information about a given module """
     name = 'info'
-    description = 'Return informations about module.'
+    description = 'Return information about a given module.'
 
     def __init__(self):
         ModTool.__init__(self)
@@ -154,6 +154,7 @@ class ModToolInfo(ModTool):
               help="Return the output in a format that's easier to read for Python scripts.")
 @click.option('--suggested-dirs',
               help="Suggest typical include dirs if nothing better can be detected.")
+@ModTool.common_params
 def cli(**kwargs):
     """ Return information about a given module """
     args = DictToObject(kwargs)
