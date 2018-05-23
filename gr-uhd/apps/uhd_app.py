@@ -205,6 +205,7 @@ class UHDApp(object):
         if (args.lo_export is not None) and (args.lo_source is not None):
             self.lo_source = self.normalize_sel("channels", "lo-source", len(self.channels), args.lo_source)
             self.lo_export = self.normalize_sel("channels", "lo-export", len(self.channels), args.lo_export)
+            self.lo_source_channel = None
             for chan, lo_source, lo_export in zip(self.channels, self.lo_source, self.lo_export):
                 if (lo_source == "None") or (lo_export == "None"):
                     continue
@@ -216,14 +217,15 @@ class UHDApp(object):
                     tune_resp = self.usrp.set_center_freq(treq,chan)
                 self.usrp.set_lo_source(lo_source, uhd.ALL_LOS,chan)
             # Use lo source tune response to tune dsp_freq on remaining channels
-            if getattr(args, 'lo_offset', None) is not None:
-                treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freq+args.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
-                                        dsp_freq=tune_resp.actual_dsp_freq,
-                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
-            else:
-                treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freg, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
-                                        dsp_freq=tune_resp.actual_dsp_freq,
-                                        dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+            if self.lo_source_channel is not None:
+                if getattr(args, 'lo_offset', None) is not None:
+                    treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freq+args.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                            dsp_freq=tune_resp.actual_dsp_freq,
+                                            dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+                else:
+                    treq = uhd.tune_request(target_freq=args.freq, rf_freq=args.freg, rf_freq_policy=uhd.tune_request.POLICY_MANUAL,
+                                            dsp_freq=tune_resp.actual_dsp_freq,
+                                            dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
             for chan in args.channels:
                 if chan == self.lo_source_channel:
                     continue
