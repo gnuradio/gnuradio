@@ -24,6 +24,7 @@
 #endif
 
 #include <vector>
+#include <limits>
 #include <pmt/pmt.h>
 #include "pmt_int.h"
 #include "pmt/pmt_serial_tags.h"
@@ -286,7 +287,7 @@ serialize(pmt_t obj, std::streambuf &sb)
     else {
       if(is_integer(obj)) {
         long i = to_long(obj);
-        if((sizeof(long) > 4) && ((i < -2147483647 || i > 2147483647))) {
+        if((sizeof(long) > 4) && ((i < std::numeric_limits<std::int32_t>::min() || i > std::numeric_limits<std::int32_t>::max()))) {
           // Serializing as 4 bytes won't work for this value, serialize as 8 bytes
           ok = serialize_untagged_u8(PST_INT64, sb);
           ok &= serialize_untagged_u64(i, sb);
