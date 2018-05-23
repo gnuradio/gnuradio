@@ -171,7 +171,7 @@ class ModToolMakeXML(ModTool):
 
 
 ### COMMAND LINE INTERFACE ###
-@click.command('makexml')
+@click.command('makexml', short_help=ModToolMakeXML().description)
 @ModTool.common_params
 @ModTool.block_name
 def cli(**kwargs):

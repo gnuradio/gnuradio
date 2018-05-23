@@ -38,7 +38,7 @@ from .cmakefile_editor import CMakeFileEditor
 class ModToolRemove(ModTool):
     """ Remove block (delete files and remove Makefile entries) """
     name = 'remove'
-    description = 'Remove block from module.'
+    description = 'Remove a block from a module.'
 
     def __init__(self):
         ModTool.__init__(self)
@@ -170,7 +170,7 @@ class ModToolRemove(ModTool):
 
 
 ### COMMAND LINE INTERFACE ###
-@click.command('remove')
+@click.command('remove', short_help=ModToolRemove().description)
 @ModTool.common_params
 @ModTool.block_name
 def cli(**kwargs):

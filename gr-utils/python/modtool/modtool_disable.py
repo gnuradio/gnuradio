@@ -160,7 +160,7 @@ class ModToolDisable(ModTool):
 
 
 ### COMMAND LINE INTERFACE ###
-@click.command('disable')
+@click.command('disable', short_help=ModToolDisable().description)
 @ModTool.common_params
 @ModTool.block_name
 def cli(**kwargs):

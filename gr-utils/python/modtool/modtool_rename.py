@@ -38,7 +38,7 @@ from .templates import Templates
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
     name = 'rename'
-    description = 'Rename block inside module.'
+    description = 'Rename a block inside a module.'
 
     def __init__(self):
         ModTool.__init__(self)
@@ -192,14 +192,14 @@ class ModToolRename(ModTool):
 
 
 ### COMMAND LINE INTERFACE ###
-@click.command('rename')
+@click.command('rename', short_help=ModToolRename().description)
 @ModTool.common_params
 @ModTool.block_name
 @click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
 def cli(**kwargs):
     """
     \b
-    Rename block inside module.
+    Rename a block inside a module.
 
     The argument NEW-BLOCK-NAME is the new name of the block.
     """

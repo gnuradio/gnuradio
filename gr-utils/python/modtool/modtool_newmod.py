@@ -100,7 +100,7 @@ class ModToolNewModule(ModTool):
 
 
 ### COMMAND LINE INTERFACE ###
-@click.command('newmod')
+@click.command('newmod', short_help=ModToolNewModule().description)
 @click.option('--srcdir',
               help="Source directory for the module template.")
 @ModTool.common_params
