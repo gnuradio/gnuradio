@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 
 from .cmakefile_editor import CMakeFileEditor
 from .grc_xml_generator import GRCXMLGenerator
-from .modtool_base import ModTool, ModToolException
+from .modtool_base import ModTool, ModToolException, cli
 from .modtool_add import ModToolAdd
 from .modtool_disable import ModToolDisable
 from .modtool_info import ModToolInfo
