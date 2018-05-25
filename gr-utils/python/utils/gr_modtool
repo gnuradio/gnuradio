@@ -21,47 +21,8 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
-import click
-import sys
-import os
-from importlib import import_module
-from pkg_resources import iter_entry_points
-from click_plugins import with_plugins
 
-
-cmd_folder = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                          '../lib/python3.6/dist-packages/gnuradio/modtool'))
-
-
-class CommandCLI(click.Group):
-
-    def list_commands(self, ctx):
-        cmds = []
-        for filename in os.listdir(cmd_folder):
-            if filename.endswith('.py') and filename.startswith('modtool_'):
-                cmds.append(filename[8:-3])
-        cmds.remove('base')
-        cmds.sort()
-        return cmds
-
-    def get_command(self, ctx, name):
-        try:
-            if sys.version_info[0] == 2:
-                name = name.encode('ascii', 'replace')
-            mod = import_module('gnuradio.modtool.modtool_' + name)
-        except ImportError:
-            click.echo('Error:', err)
-            return
-        return mod.cli
-
-
-@with_plugins(iter_entry_points('gr_modtool.plugins'))
-@click.command(cls=CommandCLI,
-               epilog='Manipulate with GNU Radio modules source code tree. ' +
-               'Call it without options to run specified command interactively')
-def cli():
-    """A tool for editing GNU Radio out-of-tree modules."""
-    pass
+from gnuradio.modtool import *
 
 
 if __name__ == '__main__':

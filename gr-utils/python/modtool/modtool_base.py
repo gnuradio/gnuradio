@@ -25,22 +25,89 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
+import sys
 import re
 import click
+from click import *
+from click.core import _check_multicommand
 import functools
+from importlib import import_module
+from pkg_resources import iter_entry_points
+from click_plugins import with_plugins
 
 from gnuradio import gr
 from .util_functions import get_modname
 from .scm import SCMRepoFactory
+
+
+cmd_folder = os.path.abspath(os.path.dirname(__file__))
+
+
+class CommandCLI(click.Group):
+
+    def __init__(self, name=None, commands=None, **attrs):
+        MultiCommand.__init__(self, name, **attrs)
+        self.commands = commands or {}
+
+    def add_command(self, cmd, name=None):
+        name = name or cmd.name
+        if name is None:
+            raise TypeError('Command has no name.')
+        _check_multicommand(self, name, cmd, register=True)
+        self.commands[name] = cmd
+
+    def command(self, *args, **kwargs):
+        def decorator(f):
+            cmd = command(*args, **kwargs)(f)
+            self.add_command(cmd)
+            return cmd
+        return decorator
+
+    def group(self, *args, **kwargs):
+        def decorator(f):
+            cmd = group(*args, **kwargs)(f)
+            self.add_command(cmd)
+            return cmd
+        return decorator
+
+    def list_commands(self, ctx):
+        cmds = []
+        for filename in os.listdir(cmd_folder):
+            if filename.endswith('.py') and filename.startswith('modtool_'):
+                cmds.append(filename[8:-3])
+        cmds.remove('base')
+        cmds += self.commands
+        return sorted(cmds)
+
+    def get_command(self, ctx, name):
+        try:
+            if sys.version_info[0] == 2:
+                name = name.encode('ascii', 'replace')
+            mod = import_module('gnuradio.modtool.modtool_' + name)
+        except ImportError:
+            return self.commands.get(name)
+        return mod.cli
+
+
+@with_plugins(iter_entry_points('gnuradio.plugins'))
+@click.command(cls=CommandCLI,
+               epilog='Manipulate with GNU Radio modules source code tree. ' +
+               'Call it without options to run specified command interactively')
+def cli():
+    """A tool for editing GNU Radio out-of-tree modules."""
+    pass
+
 
 class DictToObject(object):
     """ Convert a dictionary to object """
     def __init__(self, adict):
         self.__dict__.update(adict)
 
+
 class ModToolException(BaseException):
     """ Standard exception for modtool classes. """
     pass
+
 
 class ModTool(object):
     """ Base class for all modtool command classes. """
