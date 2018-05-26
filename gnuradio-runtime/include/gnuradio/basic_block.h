@@ -377,7 +377,8 @@ namespace gr {
     }
 
     virtual void set_processor_affinity(const std::vector<int> &mask)
-    { throw std::runtime_error("set_processor_affinity not overloaded in child class."); }
+    { (void) mask;
+      throw std::runtime_error("set_processor_affinity not overloaded in child class."); }
 
     virtual void unset_processor_affinity()
     { throw std::runtime_error("unset_processor_affinity not overloaded in child class."); }
