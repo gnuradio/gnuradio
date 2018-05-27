@@ -73,7 +73,6 @@ class ModToolAdd(ModTool):
 
         self._info['blocktype'] = options.block_type
         if self._info['blocktype'] is None:
-            # Print list out of blocktypes to user for reference
             print(str(self._block_types))
             with SequenceCompleter(sorted(self._block_types)):
                 while self._info['blocktype'] not in self._block_types:
@@ -84,7 +83,7 @@ class ModToolAdd(ModTool):
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
-            language_candidates = ('cpp', 'python')
+            language_candidates = ('cpp', 'python', 'c++')
             with SequenceCompleter(language_candidates):
                 while self._info['lang'] not in language_candidates:
                     self._info['lang'] = input("Language (python/cpp): ")
