@@ -27,10 +27,10 @@
 #define _ISOC9X_SOURCE
 #include <float_array_to_int.h>
 #include <math.h>
-#include <stdint.h>
+#include <cstdint>
 
-static const int64_t MAX_INT =  2147483647; //  (2^31)-1
-static const int64_t MIN_INT = -2147483648; // -(2^31)
+static const int64_t MAX_INT =  INT32_MAX;
+static const int64_t MIN_INT =  INT32_MIN;
 
 void
 float_array_to_int(const float *in, int *out, float scale, int nsamples)
