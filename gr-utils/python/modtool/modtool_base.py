@@ -28,9 +28,9 @@ import os
 import sys
 import re
 import click
+import functools
 from click import *
 from click.core import _check_multicommand
-import functools
 from importlib import import_module
 from pkg_resources import iter_entry_points
 from click_plugins import with_plugins
@@ -40,14 +40,12 @@ from .util_functions import get_modname
 from .scm import SCMRepoFactory
 
 
-cmd_folder = os.path.abspath(os.path.dirname(__file__))
-
-
 class CommandCLI(click.Group):
 
     def __init__(self, name=None, commands=None, **attrs):
         MultiCommand.__init__(self, name, **attrs)
         self.commands = commands or {}
+        self.cmd_folder = os.path.abspath(os.path.dirname(__file__))
 
     def add_command(self, cmd, name=None):
         name = name or cmd.name
@@ -72,7 +70,7 @@ class CommandCLI(click.Group):
 
     def list_commands(self, ctx):
         cmds = []
-        for filename in os.listdir(cmd_folder):
+        for filename in os.listdir(self.cmd_folder):
             if filename.endswith('.py') and filename.startswith('modtool_'):
                 cmds.append(filename[8:-3])
         cmds.remove('base')
@@ -87,15 +85,6 @@ class CommandCLI(click.Group):
         except ImportError:
             return self.commands.get(name)
         return mod.cli
-
-
-@with_plugins(iter_entry_points('gnuradio.modtool.plugins'))
-@click.command(cls=CommandCLI,
-               epilog='Manipulate with GNU Radio modules source code tree. ' +
-               'Call it without options to run specified command interactively')
-def cli():
-    """A tool for editing GNU Radio out-of-tree modules."""
-    pass
 
 
 class DictToObject(object):
@@ -257,3 +246,13 @@ class ModTool(object):
     def run(self, options):
         """ Override this. """
         raise NotImplementedError('Module implementation missing')
+
+
+### COMMAND LINE INTERFACE ###
+@with_plugins(iter_entry_points('gnuradio.modtool.plugins'))
+@click.command(cls=CommandCLI,
+               epilog='Manipulate with GNU Radio modules source code tree. ' +
+               'Call it without options to run specified command interactively')
+def cli():
+    """A tool for editing GNU Radio out-of-tree modules."""
+    pass
