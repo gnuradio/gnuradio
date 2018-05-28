@@ -306,7 +306,7 @@ class ModToolAdd(ModTool):
 ### COMMAND LINE INTERFACE ###
 @click.command('add')
 @click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),
-              help="One of %s." % ', '.join(ModToolAdd()._block_types))
+              help="One of {}.".format(', '.join(ModToolAdd()._block_types)))
 @click.option('--license-file',
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
