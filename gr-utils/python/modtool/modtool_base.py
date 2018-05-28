@@ -89,7 +89,7 @@ class CommandCLI(click.Group):
         return mod.cli
 
 
-@with_plugins(iter_entry_points('gnuradio.plugins'))
+@with_plugins(iter_entry_points('gnuradio.modtool.plugins'))
 @click.command(cls=CommandCLI,
                epilog='Manipulate with GNU Radio modules source code tree. ' +
                'Call it without options to run specified command interactively')
