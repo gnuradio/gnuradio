@@ -27,8 +27,8 @@ from __future__ import unicode_literals
 import os
 import re
 import glob
-import click
 import sys
+import click
 
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .parser_cc_block import ParserCCBlock

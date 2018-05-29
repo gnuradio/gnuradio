@@ -24,8 +24,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
-import click
 import sys
+import click
 
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .util_functions import get_modname
