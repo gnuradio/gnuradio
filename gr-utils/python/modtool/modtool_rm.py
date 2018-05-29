@@ -30,7 +30,7 @@ import sys
 import glob
 import click
 
-from .util_functions import remove_pattern_from_file, SequenceCompleter
+from .util_functions import remove_pattern_from_file
 from .modtool_base import ModTool, ModToolException, DictToObject
 from .cmakefile_editor import CMakeFileEditor
 

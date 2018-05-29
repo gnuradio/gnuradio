@@ -27,11 +27,9 @@ from __future__ import unicode_literals
 import os
 import sys
 import re
-import click
 import functools
-from click import *
-from click.core import _check_multicommand
 from importlib import import_module
+import click
 from pkg_resources import iter_entry_points
 from click_plugins import with_plugins
 
@@ -41,34 +39,18 @@ from .scm import SCMRepoFactory
 
 
 class CommandCLI(click.Group):
-
-    def __init__(self, name=None, commands=None, **attrs):
-        MultiCommand.__init__(self, name, **attrs)
-        self.commands = commands or {}
-        self.cmd_folder = os.path.abspath(os.path.dirname(__file__))
-
-    def add_command(self, cmd, name=None):
-        name = name or cmd.name
-        if name is None:
-            raise TypeError('Command has no name.')
-        _check_multicommand(self, name, cmd, register=True)
-        self.commands[name] = cmd
-
-    def command(self, *args, **kwargs):
-        def decorator(f):
-            cmd = command(*args, **kwargs)(f)
-            self.add_command(cmd)
-            return cmd
-        return decorator
-
-    def group(self, *args, **kwargs):
-        def decorator(f):
-            cmd = group(*args, **kwargs)(f)
-            self.add_command(cmd)
-            return cmd
-        return decorator
+    """
+    This is derived class of the implemented click class
+    which overrides some of the functional definitions for external
+    plug-in support
+    """
+    cmd_folder = os.path.abspath(os.path.dirname(__file__))
 
     def list_commands(self, ctx):
+        """
+        Lists all the commands available in the modtool directory
+        as well as the commands from external plug-ins.
+        """
         cmds = []
         for filename in os.listdir(self.cmd_folder):
             if filename.endswith('.py') and filename.startswith('modtool_'):
@@ -77,18 +59,22 @@ class CommandCLI(click.Group):
         cmds += self.commands
         return sorted(cmds)
 
-    def get_command(self, ctx, name):
+    def get_command(self, ctx, cmd_name):
+        """
+        Returns a command object if it exists. The existing in-tree ModTool
+        command is the priority over the same external plug-in command.
+        """
         try:
             if sys.version_info[0] == 2:
-                name = name.encode('ascii', 'replace')
-            mod = import_module('gnuradio.modtool.modtool_' + name)
+                cmd_name = cmd_name.encode('ascii', 'replace')
+            mod = import_module('gnuradio.modtool.modtool_' + cmd_name)
         except ImportError:
-            return self.commands.get(name)
+            return self.commands.get(cmd_name)
         return mod.cli
 
 
 class DictToObject(object):
-    """ Convert a dictionary to object """
+    """ Convert a dictionary to object. """
     def __init__(self, adict):
         self.__dict__.update(adict)
 
@@ -118,7 +104,7 @@ class ModTool(object):
 
     @staticmethod
     def common_params(func):
-        '''These are the common parameters'''
+        """ Common parameters for various modules"""
         @click.option('-d', '--directory', default='.',
                       help="Base directory of the module. Defaults to the cwd.")
         @click.option('--skip-lib', is_flag=True,
@@ -133,9 +119,11 @@ class ModTool(object):
                       default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
                       help="Use source control management [ yes | no | auto ]).")
         @click.option('-y', '--yes', is_flag=True,
-                      help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
+                      help="Answer all questions with 'yes'. " +
+                      "This can overwrite and delete your files, so be careful.")
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            """ Decorator that wraps common options """
             return func(*args, **kwargs)
         return wrapper
 
