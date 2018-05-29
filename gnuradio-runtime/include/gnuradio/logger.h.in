@@ -763,7 +763,8 @@ namespace gr {
   {
   private:
     /*! \brief logger pointer to logger associated wiith this wrapper class */
-    logger_ptr d_logger;
+    GR_LOG_DECLARE_LOGPTR(d_logger);
+
   public:
     /*!
      * \brief constructor Provide name of logger to associate with this class
