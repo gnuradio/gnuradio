@@ -44,6 +44,12 @@ namespace gr {
                  io_signature::make(1, 1, itemsize)),
         d_nitems_to_skip(nitems_to_skip), d_nitems(0)
     {
+      // Reserve space for a few tags to avoid constant re-allocation
+      // in the call to get_tags_in_window
+      d_tags.reserve(8);
+
+      // We'll handle propagating tags our selves to handle shifting offsets of tags
+      set_tag_propagation_policy(TPP_DONT);
     }
 
     skiphead_impl::~skiphead_impl()
@@ -71,7 +77,13 @@ namespace gr {
           ii += n_to_skip;
         }
 
-        else {		// nothing left to skip.  copy away
+        else { // nothing left to skip. copy away
+          // Grab all tags in the window and shift their offsets appropriately
+          get_tags_in_window(d_tags, 0, ii, ninput_items);
+          for(std::vector<tag_t>::iterator it = d_tags.begin(); it != d_tags.end(); it++) {
+            (*it).offset -= d_nitems_to_skip;
+            add_item_tag(0, *it);
+          }
           int n_to_copy = ninput_items - ii;
           if(n_to_copy > 0) {
             size_t itemsize = output_signature()->sizeof_stream_item(0);
