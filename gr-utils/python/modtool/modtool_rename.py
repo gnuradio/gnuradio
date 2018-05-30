@@ -26,16 +26,20 @@ from __future__ import unicode_literals
 
 import os
 import re
+import sys
+from types import SimpleNamespace
+import click
 
 from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
 
+
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
     name = 'rename'
-    description = 'Rename block inside module.'
+    description = 'Rename a block inside a module.'
 
     def __init__(self):
         ModTool.__init__(self)
@@ -43,14 +47,6 @@ class ModToolRename(ModTool):
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
-
-    @staticmethod
-    def setup_parser(parser):
-         #parser = parser.add_argument_group(title="Rename module options")
-        ModTool.setup_parser_block(parser)
-        parser.add_argument("new_name", nargs="?", metavar='NEW-BLOCK-NAME',
-                help="New name of the block.")
-        return parser
 
     def setup(self, options):
         ModTool.setup(self, options)
@@ -194,3 +190,23 @@ class ModToolRename(ModTool):
         open(filename, 'w').write(cfile)
         self.scm.mark_file_updated(filename)
         return nsubs
+
+
+### COMMAND LINE INTERFACE ###
+@click.command('rename', short_help=ModToolRename().description)
+@ModTool.common_params
+@ModTool.block_name
+@click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
+def cli(**kwargs):
+    """
+    \b
+    Rename a block inside a module.
+
+    The argument NEW-BLOCK-NAME is the new name of the block.
+    """
+    args = SimpleNamespace(**kwargs)
+    try:
+        ModToolRename().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)

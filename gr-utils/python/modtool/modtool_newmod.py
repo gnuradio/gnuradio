@@ -27,9 +27,14 @@ from __future__ import unicode_literals
 import shutil
 import os
 import re
+import sys
+from types import SimpleNamespace
+import click
+
 from gnuradio import gr
 from .modtool_base import ModTool, ModToolException
 from .scm import SCMRepoFactory
+
 
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
@@ -37,14 +42,6 @@ class ModToolNewModule(ModTool):
     description = 'Create new empty module, use add to add blocks.'
     def __init__(self):
         ModTool.__init__(self)
-
-    @staticmethod
-    def setup_parser(parser):
-        " Initialise the option parser for 'gr_modtool newmod' "
-        parser.add_argument("--srcdir",
-                help="Source directory for the module template.")
-        parser.add_argument("module_name", metavar='MODULE-NAME', nargs='?',
-                help="Override the current module's name (normally is autodetected).")
 
     def setup(self, options):
         # Don't call ModTool.setup(), that assumes an existing module.
@@ -102,3 +99,23 @@ class ModToolNewModule(ModTool):
             print("Created repository... you might want to commit before continuing.")
         print("Use 'gr_modtool add' to add a new block to this currently empty module.")
 
+
+### COMMAND LINE INTERFACE ###
+@click.command('newmod', short_help=ModToolNewModule().description)
+@click.option('--srcdir',
+              help="Source directory for the module template.")
+@ModTool.common_params
+@click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)
+def cli(**kwargs):
+    """
+    \b
+    Create a new out-of-tree module
+
+    The argument MODULE-NAME overrides the current module's name (normally is autodetected).
+    """
+    args = SimpleNamespace(**kwargs)
+    try:
+        ModToolNewModule().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)

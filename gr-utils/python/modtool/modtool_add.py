@@ -26,19 +26,24 @@ from __future__ import unicode_literals
 
 import os
 import re
+import sys
+from types import SimpleNamespace
+import click
 
-from .util_functions import append_re_line_sequence, ask_yes_no
+from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
 from .code_generator import render_template
 
+
 class ModToolAdd(ModTool):
     """ Add block to the out-of-tree module. """
     name = 'add'
-    description = 'Add new block into module.'
+    description = 'Add new block into a module.'
     _block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
                     'general', 'tagged_stream', 'hier', 'noblock')
+    language_candidates = ('cpp', 'python', 'c++')
 
     def __init__(self):
         ModTool.__init__(self)
@@ -47,43 +52,24 @@ class ModToolAdd(ModTool):
         self._skip_cmakefiles = False
         self._license_file = None
 
-    @staticmethod
-    def setup_parser(parser):
-        parser.add_argument("-t", "--block-type", choices=ModToolAdd._block_types,
-                help="One of %s." % ', '.join(ModToolAdd._block_types))
-        parser.add_argument("--license-file",
-                help="File containing the license header for every source code file.")
-        parser.add_argument("--copyright",
-                help="Name of the copyright holder (you or your company) MUST be a quoted string.")
-        parser.add_argument("--argument-list",
-                help="The argument list for the constructor and make functions.")
-        parser.add_argument("--add-python-qa", action="store_true", default=None,
-                help="If given, Python QA code is automatically added if possible.")
-        parser.add_argument("--add-cpp-qa", action="store_true", default=None,
-                help="If given, C++ QA code is automatically added if possible.")
-        parser.add_argument("--skip-cmakefiles", action="store_true",
-                help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-        parser.add_argument("-l", "--lang", choices=('cpp', 'c++', 'python'),
-                help="Programing language")
-        ModTool.setup_parser_block(parser)
-        return parser
-
     def setup(self, options):
         ModTool.setup(self, options)
 
         self._info['blocktype'] = options.block_type
         if self._info['blocktype'] is None:
-            # Print(list out of blocktypes to user for reference)
-            print(str(self._block_types))
-            while self._info['blocktype'] not in self._block_types:
-                self._info['blocktype'] = input("Enter block type: ")
-                if self._info['blocktype'] not in self._block_types:
-                    print('Must be one of ' + str(self._block_types))
+            print (str(self._block_types))
+            with SequenceCompleter(sorted(self._block_types)):
+                while self._info['blocktype'] not in self._block_types:
+                    self._info['blocktype'] = input("Enter block type: ")
+                    if self._info['blocktype'] not in self._block_types:
+                        print ('Must be one of ' + str(self._block_types))
+
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
-            while self._info['lang'] not in ['c++', 'cpp', 'python']:
-                self._info['lang'] = input("Language (python/cpp): ")
+            with SequenceCompleter(self.language_candidates):
+                while self._info['lang'] not in self.language_candidates:
+                    self._info['lang'] = input("Language (python/cpp): ")
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
 
@@ -316,3 +302,32 @@ class ModToolAdd(ModTool):
         ed.write()
         self.scm.mark_files_updated((self._file['cmgrc'],))
 
+
+### COMMAND LINE INTERFACE ###
+@click.command('add')
+@click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),
+              help="One of {}.".format(', '.join(ModToolAdd()._block_types)))
+@click.option('--license-file',
+              help="File containing the license header for every source code file.")
+@click.option('--copyright',
+              help="Name of the copyright holder (you or your company) MUST be a quoted string.")
+@click.option('--argument-list',
+              help="The argument list for the constructor and make functions.")
+@click.option('--add-python-qa', is_flag=True, default=None,
+              help="If given, Python QA code is automatically added if possible.")
+@click.option('--add-cpp-qa', is_flag=True, default=None,
+              help="If given, C++ QA code is automatically added if possible.")
+@click.option('--skip-cmakefiles', is_flag=True,
+              help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
+@click.option('-l', '--lang', type=click.Choice(ModToolAdd().language_candidates),
+              help="Programming Language")
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """Adds a block to the out-of-tree module."""
+    args = SimpleNamespace(**kwargs)
+    try:
+        ModToolAdd().run(args)
+    except ModToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)

@@ -28,23 +28,21 @@ import os
 import re
 import sys
 import glob
+from types import SimpleNamespace
+import click
 
 from .util_functions import remove_pattern_from_file
-from .modtool_base import ModTool
+from .modtool_base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
 
 
 class ModToolRemove(ModTool):
     """ Remove block (delete files and remove Makefile entries) """
     name = 'remove'
-    description = 'Remove block from module.'
+    description = 'Remove a block from a module.'
 
     def __init__(self):
         ModTool.__init__(self)
-
-    @staticmethod
-    def setup_parser(parser):
-        ModTool.setup_parser_block(parser)
 
     def setup(self, options):
         ModTool.setup(self, options)
@@ -169,3 +167,17 @@ class ModToolRemove(ModTool):
         ed.write()
         self.scm.mark_files_updated(('%s/CMakeLists.txt' % path,))
         return files_deleted
+
+
+### COMMAND LINE INTERFACE ###
+@click.command('remove', short_help=ModToolRemove().description)
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """ Remove block (delete files and remove Makefile entries) """
+    args = SimpleNamespace(**kwargs)
+    try:
+        ModToolRemove().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)

@@ -24,6 +24,9 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
+import sys
+from types import SimpleNamespace
+import click
 
 from .modtool_base import ModTool, ModToolException
 from .util_functions import get_modname
@@ -32,23 +35,13 @@ from .util_functions import get_modname
 class ModToolInfo(ModTool):
     """ Return information about a given module """
     name = 'info'
-    description = 'Return informations about module.'
+    description = 'Return information about a given module.'
 
     def __init__(self):
         ModTool.__init__(self)
         self._directory = None
         self._python_readable = False
         self._suggested_dirs = None
-
-    @staticmethod
-    def setup_parser(parser):
-        """ Initialise the option parser for 'gr_modtool info' """
-        #args_group = parser.add_argument_group(title="Info options")
-        parser.add_argument("--python-readable", action="store_true",
-                help="Return the output in a format that's easier to read for Python scripts.")
-        parser.add_argument("--suggested-dirs",
-                help="Suggest typical include dirs if nothing better can be detected.")
-        return parser
 
     def setup(self, options):
         # Won't call parent's setup(), because that's too chatty
@@ -154,3 +147,20 @@ class ModToolInfo(ModTool):
                         }[mod_info['version']])
             else:
                 print('%19s: %s' % (index_names[key], mod_info[key]))
+
+
+### COMMAND LINE INTERFACE ###
+@click.command('info')
+@click.option('--python-readable', is_flag=True,
+              help="Return the output in a format that's easier to read for Python scripts.")
+@click.option('--suggested-dirs',
+              help="Suggest typical include dirs if nothing better can be detected.")
+@ModTool.common_params
+def cli(**kwargs):
+    """ Return information about a given module """
+    args = SimpleNamespace(**kwargs)
+    try:
+        ModToolInfo().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)

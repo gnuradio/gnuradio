@@ -27,6 +27,9 @@ from __future__ import unicode_literals
 import os
 import re
 import glob
+import sys
+from types import SimpleNamespace
+import click
 
 from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
@@ -42,15 +45,6 @@ class ModToolMakeXML(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
-
-    @staticmethod
-    def setup_parser(parser):
-        """ Initialise the option parser for 'gr_modtool makexml' """
-        parser.usage = """%s
-
-        Note: This does not work on Python blocks!
-        """ % parser.usage
-        ModTool.setup_parser_block(parser)
 
     def setup(self, options):
         ModTool.setup(self, options)
@@ -176,3 +170,21 @@ class ModToolMakeXML(ModTool):
 
         return (parser.read_params(), parser.read_io_signature(), blockname)
 
+
+### COMMAND LINE INTERFACE ###
+@click.command('makexml', short_help=ModToolMakeXML().description)
+@ModTool.common_params
+@ModTool.block_name
+def cli(**kwargs):
+    """
+    \b
+    Make an XML file for GRC block bindings
+
+    Note: This does not work on python blocks
+    """
+    args = SimpleNamespace(**kwargs)
+    try:
+        ModToolMakeXML().run(args)
+    except ModToolException as err:
+        print(err, file=sys.stderr)
+        exit(1)
