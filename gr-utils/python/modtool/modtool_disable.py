@@ -27,9 +27,10 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+from types import SimpleNamespace
 import click
 
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
 
 
@@ -165,7 +166,7 @@ class ModToolDisable(ModTool):
 @ModTool.block_name
 def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolDisable().run(args)
     except ModToolException as err:

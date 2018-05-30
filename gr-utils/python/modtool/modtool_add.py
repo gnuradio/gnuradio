@@ -27,11 +27,12 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+from types import SimpleNamespace
 import click
 
 from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .templates import Templates
 from .code_generator import render_template
 
@@ -42,6 +43,7 @@ class ModToolAdd(ModTool):
     description = 'Add new block into a module.'
     _block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
                     'general', 'tagged_stream', 'hier', 'noblock')
+    language_candidates = ('cpp', 'python', 'c++')
 
     def __init__(self):
         ModTool.__init__(self)
@@ -66,9 +68,8 @@ class ModToolAdd(ModTool):
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
-            language_candidates = ('c++', 'cpp', 'python')
-            with SequenceCompleter(language_candidates):
-                while self._info['lang'] not in language_candidates:
+            with SequenceCompleter(self.language_candidates):
+                while self._info['lang'] not in self.language_candidates:
                     self._info['lang'] = input("Language (python/cpp): ")
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
@@ -319,13 +320,13 @@ class ModToolAdd(ModTool):
               help="If given, C++ QA code is automatically added if possible.")
 @click.option('--skip-cmakefiles', is_flag=True,
               help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-@click.option('-l', '--lang', type=click.Choice(['cpp', 'c++', 'python']),
+@click.option('-l', '--lang', type=click.Choice(ModToolAdd().language_candidates),
               help="Programming Language")
 @ModTool.common_params
 @ModTool.block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolAdd().run(args)
     except ModToolException as err:
