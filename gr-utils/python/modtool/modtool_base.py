@@ -29,8 +29,8 @@ import sys
 import re
 import functools
 from importlib import import_module
-import click
 from pkg_resources import iter_entry_points
+import click
 from click_plugins import with_plugins
 
 from gnuradio import gr
@@ -73,12 +73,6 @@ class CommandCLI(click.Group):
         return mod.cli
 
 
-class DictToObject(object):
-    """ Convert a dictionary to object. """
-    def __init__(self, adict):
-        self.__dict__.update(adict)
-
-
 class ModToolException(BaseException):
     """ Standard exception for modtool classes. """
     pass
@@ -102,7 +96,6 @@ class ModTool(object):
 
     block_name = click.argument('blockname', nargs=1, required=False, metavar="BLOCK_NAME")
 
-    @staticmethod
     def common_params(func):
         """ Common parameters for various modules"""
         @click.option('-d', '--directory', default='.',

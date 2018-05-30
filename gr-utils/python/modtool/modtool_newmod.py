@@ -28,10 +28,11 @@ import shutil
 import os
 import re
 import sys
+from types import SimpleNamespace
 import click
 
 from gnuradio import gr
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .scm import SCMRepoFactory
 
 
@@ -112,7 +113,7 @@ def cli(**kwargs):
 
     The argument MODULE-NAME overrides the current module's name (normally is autodetected).
     """
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolNewModule().run(args)
     except ModToolException as err:

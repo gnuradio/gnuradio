@@ -25,9 +25,10 @@ from __future__ import unicode_literals
 
 import os
 import sys
+from types import SimpleNamespace
 import click
 
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .util_functions import get_modname
 
 
@@ -157,7 +158,7 @@ class ModToolInfo(ModTool):
 @ModTool.common_params
 def cli(**kwargs):
     """ Return information about a given module """
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolInfo().run(args)
     except ModToolException as err:

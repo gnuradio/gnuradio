@@ -27,11 +27,12 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+from types import SimpleNamespace
 import click
 
 from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .templates import Templates
 
 
@@ -203,7 +204,7 @@ def cli(**kwargs):
 
     The argument NEW-BLOCK-NAME is the new name of the block.
     """
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolRename().run(args)
     except ModToolException as err:

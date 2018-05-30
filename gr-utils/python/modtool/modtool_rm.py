@@ -28,10 +28,11 @@ import os
 import re
 import sys
 import glob
+from types import SimpleNamespace
 import click
 
 from .util_functions import remove_pattern_from_file
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
 
 
@@ -174,7 +175,7 @@ class ModToolRemove(ModTool):
 @ModTool.block_name
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolRemove().run(args)
     except ModToolException as err:

@@ -28,9 +28,10 @@ import os
 import re
 import glob
 import sys
+from types import SimpleNamespace
 import click
 
-from .modtool_base import ModTool, ModToolException, DictToObject
+from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
 from .grc_xml_generator import GRCXMLGenerator
 from .cmakefile_editor import CMakeFileEditor
@@ -181,7 +182,7 @@ def cli(**kwargs):
 
     Note: This does not work on python blocks
     """
-    args = DictToObject(kwargs)
+    args = SimpleNamespace(**kwargs)
     try:
         ModToolMakeXML().run(args)
     except ModToolException as err:
