@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## [3.7.13.0] - 2018-05-31
+## [3.7.14.0] - 2018-05-31
 
 ### Fixed
 #### Project Scope
