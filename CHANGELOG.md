@@ -14,6 +14,15 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 - CMake: using regex to match compiler against "Clang" now enables correct build on OS X
 #### GRC
 - Fixed GRC bug which broke WX and Qt (by altering the template code), in multiple (less than awesome) steps
+#### gr-blocks
+- `float_array_to_int`: int32 limits were wrongly hardcoded. 
+- Fixed the undefined behaviour happening in `float_to_complex` when accessing the second input_items element in the single-input case
+
+### Added
+#### gr-analog
+- QA for complex cosine
+#### gr-utils
+- `gr_modtool` now with autocompletion candidates for `rm`
 
 ## [3.7.12.0] - 2018-04-01
 
