@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
-## unreleased
+## [3.7.13.0] - 2018-05-31
 
 ### Fixed
 #### Project Scope
@@ -17,6 +17,7 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 #### gr-blocks
 - `float_array_to_int`: int32 limits were wrongly hardcoded. 
 - Fixed the undefined behaviour happening in `float_to_complex` when accessing the second input_items element in the single-input case
+
 ## [3.7.12.0] - 2018-04-01
 
 ### Software Engineering
