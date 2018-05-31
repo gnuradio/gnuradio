@@ -36,10 +36,10 @@ GR_PYTHON_INSTALL(FILES
     scm.py
     templates.py
     util_functions.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/core
 )
 
-set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool)
+set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/core)
 install(DIRECTORY gr-newmod
     DESTINATION ${GR_PKG_MODTOOL_DATA_DIR}
 )
