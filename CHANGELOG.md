@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.7.13.1] - 2018-05-31
+
+### Fixed
+#### Project Scope
+- Actually bumped version in CMakeLists.txt 
+
 ## [3.7.13.0] - 2018-05-31
 
 ### Fixed
