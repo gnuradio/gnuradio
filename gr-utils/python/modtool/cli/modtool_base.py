@@ -61,7 +61,7 @@ class CommandCLI(click.Group):
         try:
             if sys.version_info[0] == 2:
                 cmd_name = cmd_name.encode('ascii', 'replace')
-            mod = import_module('gnuradio.modtool.modtool_' + cmd_name)
+            mod = import_module('gnuradio.modtool.cli.modtool_' + cmd_name)
         except ImportError:
             return self.commands.get(cmd_name)
         return mod.cli

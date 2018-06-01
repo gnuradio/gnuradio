@@ -1,4 +1,3 @@
-#
 # Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -17,6 +16,18 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-from .modtool_base import cli, common_params, block_name
+include(GrPython)
+
+GR_PYTHON_INSTALL(FILES
+    __init__.py
+    modtool_add.py
+    modtool_base.py
+    modtool_disable.py
+    modtool_info.py
+    modtool_makexml.py
+    modtool_newmod.py
+    modtool_rm.py
+    modtool_rename.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/cli
+)
