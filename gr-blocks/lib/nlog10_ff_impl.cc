@@ -27,6 +27,7 @@
 #include "nlog10_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
+#include <limits>
 
 namespace gr {
   namespace blocks {
@@ -40,7 +41,8 @@ namespace gr {
       : sync_block("nlog10_ff",
 		      io_signature::make (1, 1, sizeof(float)*vlen),
 		      io_signature::make (1, 1, sizeof(float)*vlen)),
-        d_n_log2_10(n/log2f(10.0f)), d_vlen(vlen), d_k(k)
+        d_n_log2_10(n/log2f(10.0f)), d_float_min(std::numeric_limits<float>::min()),
+        d_vlen(vlen), d_k(k)
     {
       const int alignment_multiple =
         volk_get_alignment() / sizeof(float);
@@ -69,7 +71,7 @@ namespace gr {
       int noi = noutput_items * d_vlen;
 
       for (int i = 0; i < noi; i++) {
-          out[i] = in[i] + 1e-18;
+          out[i] = in[i] + d_float_min;
       }
 
       volk_32f_log2_32f(out, out, noi);
