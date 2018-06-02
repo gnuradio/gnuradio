@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011-2012 Free Software Foundation, Inc.
+ * Copyright 2011-2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,7 +27,11 @@
 #define _ISOC9X_SOURCE
 #include <float_array_to_int.h>
 #include <math.h>
+#if __cplusplus >= 201103L
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 static const int64_t MAX_INT =  INT32_MAX;
 static const int64_t MIN_INT =  INT32_MIN;
