@@ -35,7 +35,7 @@ from gnuradio.modtool.core.modtool_base import ModToolException
               help="Return the output in a format that's easier to read for Python scripts.")
 @click.option('--suggested-dirs',
               help="Suggest typical include dirs if nothing better can be detected.")
-@ModTool.common_params
+@common_params
 def cli(**kwargs):
     """ Return information about a given module """
     args = SimpleNamespace(**kwargs)

@@ -28,8 +28,6 @@ import os
 import re
 import glob
 import sys
-from types import SimpleNamespace
-import click
 
 from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
@@ -169,22 +167,3 @@ class ModToolMakeXML(ModTool):
             raise ModToolException("Can't open some of the files necessary to parse {}.".format(fname_cc))
 
         return (parser.read_params(), parser.read_io_signature(), blockname)
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('makexml', short_help=ModToolMakeXML().description)
-@ModTool.common_params
-@ModTool.block_name
-def cli(**kwargs):
-    """
-    \b
-    Make an XML file for GRC block bindings
-
-    Note: This does not work on python blocks
-    """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolMakeXML().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)

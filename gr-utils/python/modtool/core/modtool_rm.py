@@ -28,8 +28,6 @@ import os
 import re
 import sys
 import glob
-from types import SimpleNamespace
-import click
 
 from .util_functions import remove_pattern_from_file
 from .modtool_base import ModTool, ModToolException
@@ -167,17 +165,3 @@ class ModToolRemove(ModTool):
         ed.write()
         self.scm.mark_files_updated(('%s/CMakeLists.txt' % path,))
         return files_deleted
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('remove', short_help=ModToolRemove().description)
-@ModTool.common_params
-@ModTool.block_name
-def cli(**kwargs):
-    """ Remove block (delete files and remove Makefile entries) """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolRemove().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)

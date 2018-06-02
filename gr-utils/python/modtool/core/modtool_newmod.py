@@ -28,8 +28,6 @@ import shutil
 import os
 import re
 import sys
-from types import SimpleNamespace
-import click
 
 from gnuradio import gr
 from .modtool_base import ModTool, ModToolException
@@ -98,24 +96,3 @@ class ModToolNewModule(ModTool):
         if self.scm.init_repo(path_to_repo="."):
             print("Created repository... you might want to commit before continuing.")
         print("Use 'gr_modtool add' to add a new block to this currently empty module.")
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('newmod', short_help=ModToolNewModule().description)
-@click.option('--srcdir',
-              help="Source directory for the module template.")
-@ModTool.common_params
-@click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)
-def cli(**kwargs):
-    """
-    \b
-    Create a new out-of-tree module
-
-    The argument MODULE-NAME overrides the current module's name (normally is autodetected).
-    """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolNewModule().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)

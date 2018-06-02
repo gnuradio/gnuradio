@@ -26,13 +26,13 @@ from types import SimpleNamespace
 import click
 
 from .modtool_base import common_params, block_name
-from gnuradio.modtool.core.modtool_remove import ModToolRemove
+from gnuradio.modtool.core.modtool_rm import ModToolRemove
 from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('remove', short_help=ModToolRemove().description)
-@ModTool.common_params
-@ModTool.block_name
+@common_params
+@block_name
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
     args = SimpleNamespace(**kwargs)

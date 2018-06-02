@@ -27,8 +27,6 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
-from types import SimpleNamespace
-import click
 
 from .modtool_base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
@@ -158,17 +156,3 @@ class ModToolDisable(ModTool):
             cmake.write()
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
         print("Careful: 'gr_modtool disable' does not resolve dependencies.")
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('disable', short_help=ModToolDisable().description)
-@ModTool.common_params
-@ModTool.block_name
-def cli(**kwargs):
-    """Disable a block (comments out CMake entries for files)"""
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolDisable().run(args)
-    except ModToolException as err:
-        click.echo(err, file=sys.stderr)
-        exit(1)

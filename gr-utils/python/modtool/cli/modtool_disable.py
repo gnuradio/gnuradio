@@ -30,8 +30,8 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('disable', short_help=ModToolDisable().description)
-@ModTool.common_params
-@ModTool.block_name
+@common_params
+@block_name
 def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
     args = SimpleNamespace(**kwargs)

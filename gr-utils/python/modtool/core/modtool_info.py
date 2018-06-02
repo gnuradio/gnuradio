@@ -25,8 +25,6 @@ from __future__ import unicode_literals
 
 import os
 import sys
-from types import SimpleNamespace
-import click
 
 from .modtool_base import ModTool, ModToolException
 from .util_functions import get_modname
@@ -147,20 +145,3 @@ class ModToolInfo(ModTool):
                         }[mod_info['version']])
             else:
                 print('%19s: %s' % (index_names[key], mod_info[key]))
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('info')
-@click.option('--python-readable', is_flag=True,
-              help="Return the output in a format that's easier to read for Python scripts.")
-@click.option('--suggested-dirs',
-              help="Suggest typical include dirs if nothing better can be detected.")
-@ModTool.common_params
-def cli(**kwargs):
-    """ Return information about a given module """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolInfo().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)

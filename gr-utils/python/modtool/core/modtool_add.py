@@ -27,8 +27,6 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
-from types import SimpleNamespace
-import click
 
 from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
@@ -302,33 +300,3 @@ class ModToolAdd(ModTool):
         ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
         ed.write()
         self.scm.mark_files_updated((self._file['cmgrc'],))
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('add')
-@click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),
-              help="One of {}.".format(', '.join(ModToolAdd()._block_types)))
-@click.option('--license-file',
-              help="File containing the license header for every source code file.")
-@click.option('--copyright',
-              help="Name of the copyright holder (you or your company) MUST be a quoted string.")
-@click.option('--argument-list',
-              help="The argument list for the constructor and make functions.")
-@click.option('--add-python-qa', is_flag=True, default=None,
-              help="If given, Python QA code is automatically added if possible.")
-@click.option('--add-cpp-qa', is_flag=True, default=None,
-              help="If given, C++ QA code is automatically added if possible.")
-@click.option('--skip-cmakefiles', is_flag=True,
-              help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-@click.option('-l', '--lang', type=click.Choice(ModToolAdd().language_candidates),
-              help="Programming Language")
-@ModTool.common_params
-@ModTool.block_name
-def cli(**kwargs):
-    """Adds a block to the out-of-tree module."""
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolAdd().run(args)
-    except ModToolException as err:
-        click.echo(err, file=sys.stderr)
-        exit(1)

@@ -20,9 +20,7 @@
 #
 """ Module to add new blocks """
 
-import os
 import sys
-import re
 from types import SimpleNamespace
 
 import click
@@ -49,8 +47,8 @@ from gnuradio.modtool.core.modtool_base import ModToolException
               help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
 @click.option('-l', '--lang', type=click.Choice(ModToolAdd().language_candidates),
               help="Programming Language")
-@ModTool.common_params
-@ModTool.block_name
+@common_params
+@block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
     args = SimpleNamespace(**kwargs)

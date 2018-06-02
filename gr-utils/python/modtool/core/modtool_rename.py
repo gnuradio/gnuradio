@@ -27,8 +27,6 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
-from types import SimpleNamespace
-import click
 
 from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
@@ -190,23 +188,3 @@ class ModToolRename(ModTool):
         open(filename, 'w').write(cfile)
         self.scm.mark_file_updated(filename)
         return nsubs
-
-
-### COMMAND LINE INTERFACE ###
-@click.command('rename', short_help=ModToolRename().description)
-@ModTool.common_params
-@ModTool.block_name
-@click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
-def cli(**kwargs):
-    """
-    \b
-    Rename a block inside a module.
-
-    The argument NEW-BLOCK-NAME is the new name of the block.
-    """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolRename().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)

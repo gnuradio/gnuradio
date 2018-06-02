@@ -30,8 +30,8 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('makexml', short_help=ModToolMakeXML().description)
-@ModTool.common_params
-@ModTool.block_name
+@common_params
+@block_name
 def cli(**kwargs):
     """
     \b

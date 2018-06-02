@@ -32,8 +32,8 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('rename', short_help=ModToolRename().description)
-@ModTool.common_params
-@ModTool.block_name
+@common_params
+@block_name
 @click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)
 def cli(**kwargs):
     """
