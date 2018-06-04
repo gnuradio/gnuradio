@@ -21,12 +21,11 @@
 """ Disable blocks module """
 
 import sys
-from types import SimpleNamespace
+
 import click
 
-from .modtool_base import common_params, block_name
+from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_disable import ModToolDisable
-from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('disable', short_help=ModToolDisable().description)
@@ -34,9 +33,4 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 @block_name
 def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolDisable().run(args)
-    except ModToolException as err:
-        click.echo(err, file=sys.stderr)
-        exit(1)
+    run(ModToolDisable, **kwargs)

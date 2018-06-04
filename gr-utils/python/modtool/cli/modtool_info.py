@@ -22,12 +22,11 @@
 
 import os
 import sys
-from types import SimpleNamespace
+
 import click
 
-from .modtool_base import common_params
+from .modtool_base import common_params, run
 from gnuradio.modtool.core.modtool_info import ModToolInfo
-from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('info')
@@ -38,9 +37,4 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 @common_params
 def cli(**kwargs):
     """ Return information about a given module """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolInfo().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)
+    run(ModToolInfo, **kwargs)

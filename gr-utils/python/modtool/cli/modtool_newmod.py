@@ -21,13 +21,11 @@
 """ Create a whole new out-of-tree module """
 
 import sys
-from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name
+from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_newmod import ModToolNewModule
-from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('newmod', short_help=ModToolNewModule().description)
@@ -42,9 +40,4 @@ def cli(**kwargs):
 
     The argument MODULE-NAME overrides the current module's name (normally is autodetected).
     """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolNewModule().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)
+    run(ModToolNewModule, **kwargs)

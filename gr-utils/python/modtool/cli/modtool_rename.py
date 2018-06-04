@@ -22,13 +22,11 @@
 
 import re
 import sys
-from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name
+from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_rename import ModToolRename
-from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('rename', short_help=ModToolRename().description)
@@ -42,9 +40,4 @@ def cli(**kwargs):
 
     The argument NEW-BLOCK-NAME is the new name of the block.
     """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolRename().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)
+    run(ModToolRename, **kwargs)

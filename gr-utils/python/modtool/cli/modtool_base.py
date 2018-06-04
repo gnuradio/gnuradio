@@ -23,6 +23,7 @@
 import os
 import functools
 import sys
+from types import SimpleNamespace
 from importlib import import_module
 from pkg_resources import iter_entry_points
 
@@ -30,6 +31,8 @@ import click
 from click_plugins import with_plugins
 
 from gnuradio import gr
+from gnuradio.modtool.core import *
+from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 class CommandCLI(click.Group):
@@ -102,3 +105,12 @@ block_name = click.argument('blockname', nargs=1, required=False, metavar="BLOCK
 def cli():
     """A tool for editing GNU Radio out-of-tree modules."""
     pass
+
+def run(module, **kwargs):
+    """Call the run function of the core modules."""
+    args = SimpleNamespace(**kwargs)
+    try:
+        module().run(args)
+    except ModToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)

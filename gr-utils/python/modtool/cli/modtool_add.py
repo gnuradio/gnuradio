@@ -21,13 +21,11 @@
 """ Module to add new blocks """
 
 import sys
-from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name
+from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_add import ModToolAdd
-from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('add')
@@ -51,9 +49,4 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 @block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolAdd().run(args)
-    except ModToolException as err:
-        click.echo(err, file=sys.stderr)
-        exit(1)
+    run(ModToolAdd, **kwargs)

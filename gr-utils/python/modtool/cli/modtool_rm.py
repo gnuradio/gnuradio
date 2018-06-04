@@ -21,13 +21,11 @@
 """ Remove blocks module """
 
 import sys
-from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name
+from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_rm import ModToolRemove
-from gnuradio.modtool.core.modtool_base import ModToolException
 
 
 @click.command('remove', short_help=ModToolRemove().description)
@@ -35,9 +33,4 @@ from gnuradio.modtool.core.modtool_base import ModToolException
 @block_name
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
-    args = SimpleNamespace(**kwargs)
-    try:
-        ModToolRemove().run(args)
-    except ModToolException as err:
-        print(err, file=sys.stderr)
-        exit(1)
+    run(ModToolRemove, **kwargs)
