@@ -23,7 +23,6 @@ GR_PYTHON_INSTALL(
     PROGRAMS
     atsc_ctrlport_monitor.py
     DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
-    COMPONENT "dtv_python"
 )
 
 install(
@@ -76,5 +75,4 @@ install(
     germany-g10.grc
     catv_tx_64qam.grc
     DESTINATION ${GR_PKG_DTV_EXAMPLES_DIR}
-    COMPONENT "dtv_python"
 )

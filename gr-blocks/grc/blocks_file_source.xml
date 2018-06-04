@@ -9,7 +9,7 @@
 	<key>blocks_file_source</key>
 	<import>from gnuradio import blocks</import>
 	<import>import pmt</import>
-	<make>blocks.file_source($type.size*$vlen, $file, $repeat)
+	<make>blocks.file_source($type.size*$vlen, $file, $repeat, $offset, $length)
 self.$(id).set_begin_tag($begin_tag)</make>
 	<callback>open($file, $repeat)</callback>
     <callback>self.$(id).set_begin_tag($begin_tag)</callback>
@@ -75,6 +75,18 @@ self.$(id).set_begin_tag($begin_tag)</make>
 		<key>begin_tag</key>
 		<value>pmt.PMT_NIL</value>
 		<type>raw</type>
+	</param>
+	<param>
+		<name>Offset</name>
+		<key>offset</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Length</name>
+		<key>length</key>
+		<value>0</value>
+		<type>int</type>
 	</param>
 	<check>$vlen &gt; 0</check>
 	<source>

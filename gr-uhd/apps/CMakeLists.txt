@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(
     uhd_siggen_base.py
     uhd_app.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd
-    COMPONENT "uhd_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -38,55 +37,4 @@ GR_PYTHON_INSTALL(
     uhd_siggen_gui
     uhd_rx_nogui
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "uhd_python"
-)
-
-########################################################################
-# Install hf radio apps
-########################################################################
-install(
-    FILES
-    hf_radio/hfir.sci
-    hf_radio/radio.xml
-    hf_radio/README.TXT
-    hf_radio/ssb_taps
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_radio
-    COMPONENT "uhd_python"
-)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    hf_radio/input.py
-    hf_radio/output.py
-    hf_radio/ssbagc.py
-    hf_radio/ssbdemod.py
-    hf_radio/startup.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_radio
-    COMPONENT "uhd_python"
-)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    hf_radio/radio.py
-    hf_radio/ui.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_radio
-    COMPONENT "uhd_python"
-)
-
-########################################################################
-# Install hf explorer
-########################################################################
-install(
-    FILES
-    hf_explorer/README
-    hf_explorer/hfx_help
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_explorer
-    COMPONENT "uhd_python"
-)
-
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    hf_explorer/hfx.py
-    DESTINATION ${GR_PKG_DATA_DIR}/examples/hf_explorer
-    COMPONENT "uhd_python"
 )

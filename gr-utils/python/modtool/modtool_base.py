@@ -59,9 +59,9 @@ class ModTool(object):
         ogroup.add_option("-d", "--directory", type="string", default=".",
                           help="Base directory of the module. Defaults to the cwd.")
         ogroup.add_option("-n", "--module-name", type="string", default=None,
-                          help="Use this to override the current module's name (is normally autodetected).")
+                help="Use this to override the current module's name (is normally autodetected).")
         ogroup.add_option("-N", "--block-name", type="string", default=None,
-                          help="Name of the block, where applicable.")
+                help="Name of the block, where applicable.")
         ogroup.add_option("--skip-lib", action="store_true", default=False,
                           help="Don't do anything in the lib/ subdirectory.")
         ogroup.add_option("--skip-swig", action="store_true", default=False,
@@ -71,8 +71,8 @@ class ModTool(object):
         ogroup.add_option("--skip-grc", action="store_true", default=False,
                           help="Don't do anything in the grc/ subdirectory.")
         ogroup.add_option("--scm-mode", type="choice", choices=('yes', 'no', 'auto'),
-                          default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
-                          help="Use source control management (yes, no or auto).")
+                default=gr.prefs().get_string('modtool', 'scm_mode', 'no'),
+                help="Use source control management (yes, no or auto).")
         ogroup.add_option("-y", "--yes", action="store_true", default=False,
                           help="Answer all questions with 'yes'. This can overwrite and delete your files, so be careful.")
         parser.add_option_group(ogroup)
@@ -194,8 +194,8 @@ def get_class_dict(the_globals):
         try:
             if issubclass(g, ModTool):
                 classdict[g.name] = g
-                for alias in g.aliases:
-                    classdict[alias] = g
+                for a in g.aliases:
+                    classdict[a] = g
         except (TypeError, AttributeError):
             pass
     return classdict

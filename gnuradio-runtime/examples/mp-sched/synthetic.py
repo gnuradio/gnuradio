@@ -21,8 +21,8 @@
 
 from gnuradio import gr, eng_notation
 from gnuradio import blocks, filter
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import os
 
 
@@ -50,38 +50,35 @@ class top(gr.top_block):
         gr.top_block.__init__(self)
 
         default_nsamples = 10e6
-        parser=OptionParser(option_class=eng_option)
-        parser.add_option("-p", "--npipelines", type="intx", default=1,
-                          metavar="NPIPES", help="the number of pipelines to create (default=%default)")
-        parser.add_option("-s", "--nstages", type="intx", default=1,
-                          metavar="NSTAGES", help="the number of stages in each pipeline (default=%default)")
-        parser.add_option("-N", "--nsamples", type="eng_float", default=default_nsamples,
+        parser = ArgumentParser()
+        parser.add_argument("-p", "--npipelines", type=intx, default=1,
+                          metavar="NPIPES", help="the number of pipelines to create (default=%(default)s)")
+        parser.add_argument("-s", "--nstages", type=intx, default=1, metavar="NSTAGES",
+                          help="the number of stages in each pipeline (default=%(default)s)")
+        parser.add_argument("-N", "--nsamples", type=eng_float, default=default_nsamples,
                           help=("the number of samples to run through the graph (default=%s)" %
                                 (eng_notation.num_to_str(default_nsamples))))
-        parser.add_option("-m", "--machine-readable", action="store_true", default=False,
+        parser.add_argument("-m", "--machine-readable", action="store_true", default=False,
                           help="enable machine readable output")
 
-        (options, args) = parser.parse_args()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
+        args = parser.parse_args()
 
-        self.npipes = options.npipelines
-        self.nstages = options.nstages
-        self.nsamples = options.nsamples
-        self.machine_readable = options.machine_readable
+        self.npipes = args.npipelines
+        self.nstages = args.nstages
+        self.nsamples = args.nsamples
+        self.machine_readable = args.machine_readable
 
         ntaps = 256
 
         # Something vaguely like floating point ops
-        self.flop = 2 * ntaps * options.npipelines * options.nstages * options.nsamples
+        self.flop = 2 * ntaps * args.npipelines * args.nstages * args.nsamples
 
         src = blocks.null_source(gr.sizeof_float)
-        head = blocks.head(gr.sizeof_float, int(options.nsamples))
+        head = blocks.head(gr.sizeof_float, int(args.nsamples))
         self.connect(src, head)
 
-        for n in range(options.npipelines):
-            self.connect(head, pipeline(options.nstages, ntaps))
+        for n in range(args.npipelines):
+            self.connect(head, pipeline(args.nstages, ntaps))
 
 
 def time_it(tb):

@@ -66,7 +66,7 @@ foreach(swigfile ${GR_SWIG_TRELLIS_IFILES})
   GR_SWIG_INSTALL(
     TARGETS ${swigfile}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/trellis
-    COMPONENT "trellis_python")
+  )
 
   list(APPEND SWIGFILES ${swigfile}.i)
   list(APPEND SWIGDOCFILES ${CMAKE_CURRENT_BINARY_DIR}/${swigfile}_doc.i)
@@ -77,7 +77,6 @@ install(
     ${SWIGFILES}
     ${SWIGDOCFILES}
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "trellis_swig"
 )
 
 # Install the Python file that pulls in the swig built files.

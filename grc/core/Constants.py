@@ -48,7 +48,6 @@ DEFAULT_DOMAIN = GR_STREAM_DOMAIN
 BLOCK_FLAG_THROTTLE = 'throttle'
 BLOCK_FLAG_DISABLE_BYPASS = 'disable_bypass'
 BLOCK_FLAG_NEED_QT_GUI = 'need_qt_gui'
-BLOCK_FLAG_NEED_WX_GUI = 'need_wx_gui'
 BLOCK_FLAG_DEPRECATED = 'deprecated'
 
 # Block States
@@ -109,7 +108,6 @@ CORE_TYPES = (  # name, key, sizeof, color
     ('Integer 16', 's16', 2, GRC_COLOR_YELLOW),
     ('Integer 8', 's8', 1, GRC_COLOR_PURPLE_A400),
     ('Bits (unpacked byte)', 'bit', 1, GRC_COLOR_PURPLE_A100),
-    ('Message Queue', 'msg', 0, GRC_COLOR_DARK_GREY),
     ('Async Message', 'message', 0, GRC_COLOR_GREY),
     ('Bus Connection', 'bus', 0, GRC_COLOR_WHITE),
     ('Wildcard', '', 0, GRC_COLOR_WHITE),
@@ -148,4 +146,3 @@ SHORT_VECTOR_COLOR_SPEC = '#CCCC33'
 BYTE_VECTOR_COLOR_SPEC = '#CC66CC'
 ID_COLOR_SPEC = '#DDDDDD'
 WILDCARD_COLOR_SPEC = '#FFFFFF'
-MSG_COLOR_SPEC = '#777777'

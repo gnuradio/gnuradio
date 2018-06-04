@@ -45,8 +45,14 @@ set(qtgui_moc_hdrs
     ${qtgui_mod_includedir}/VectorDisplayPlot.h
     edit_box_msg_impl.h
 )
-QT4_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
-QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
+
+if (${DESIRED_QT_VERSION} MATCHES 4)
+    QT4_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
+    QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
+else()
+    QT5_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
+    QT5_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
+endif()
 
 #FIXME the sources expect <foo>.ui.h, but the macros generate ui_foo.h
 #avoid changing the sources by generating the header with the include
@@ -174,7 +180,7 @@ endif(ENABLE_PYTHON)
 add_definitions(-DQWT_DLL) #setup QWT library linkage
 add_library(gnuradio-qtgui SHARED ${qtgui_sources})
 target_link_libraries(gnuradio-qtgui ${qtgui_libs})
-GR_LIBRARY_FOO(gnuradio-qtgui RUNTIME_COMPONENT "qtgui_runtime" DEVEL_COMPONENT "qtgui_devel")
+GR_LIBRARY_FOO(gnuradio-qtgui)
 
 if(ENABLE_STATIC_LIBS)
   if(ENABLE_GR_CTRLPORT)
@@ -196,6 +202,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-qtgui_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "qtgui_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

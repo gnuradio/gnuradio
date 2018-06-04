@@ -31,24 +31,26 @@ from cmakefile_editor import CMakeFileEditor
 class ModToolDisable(ModTool):
     """ Disable block (comments out CMake entries for files) """
     name = 'disable'
-    aliases = ('dis',)
+    description = 'Disable selected block in module.'
 
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup(self, options, args):
-        ModTool.setup(self, options, args)
+    @staticmethod
+    def setup_parser(parser):
+        ModTool.setup_parser_block(parser)
 
-        if options.block_name is not None:
-            self._info['pattern'] = options.block_name
-        elif len(args) >= 2:
-            self._info['pattern'] = args[1]
+    def setup(self, options):
+        ModTool.setup(self, options)
+
+        if options.blockname is not None:
+            self._info['pattern'] = options.blockname
         else:
             self._info['pattern'] = raw_input('Which blocks do you want to disable? (Regex): ')
         if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
-    def run(self):
+    def run(self, options):
         """ Go, go, go! """
         def _handle_py_qa(cmake, fname):
             """ Do stuff for py qa """
@@ -114,6 +116,7 @@ class ModToolDisable(ModTool):
             open(self._file['swig'], 'w').write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
+        self.setup(options)
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
             ('python', r'qa.+py$', _handle_py_qa),

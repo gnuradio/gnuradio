@@ -49,7 +49,7 @@ namespace gr {
       : gr::block("dtv_atsc_sync",
                   io_signature::make(1, 1, sizeof(float)),
                   io_signature::make(1, 1, sizeof(atsc_soft_data_segment))),
-	d_next_input(0), d_rx_clock_to_symbol_freq(rate/ATSC_SYMBOL_RATE),
+	d_rx_clock_to_symbol_freq(rate/ATSC_SYMBOL_RATE),
 	d_si(0)
     {
       d_loop.set_taps(LOOP_FILTER_TAP);

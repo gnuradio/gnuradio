@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2005,2008,2013 Free Software Foundation, Inc.
+ * Copyright 2003,2005,2008,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -30,6 +30,22 @@
 #include <cmath>
 #include <gnuradio/api.h>
 #include <gnuradio/gr_complex.h>
+
+/*
+ * \brief Define commonly used mathematical constants
+ * \ingroup misc
+ *
+ * Mathematical constants are neither defined in the C standard
+ * nor the C++ standard. For -std=c{++}11 M_LOG2E and M_SQRT2 won't
+ * compile. GR_M_PI actually works with C++ but is defined here for the sake
+ * of consistency.
+ */
+#define GR_M_LOG2E  1.4426950408889634074   /* log_2 e */
+#define GR_M_PI     3.14159265358979323846  /* pi */
+#define GR_M_PI_4   0.78539816339744830961566084582     /* pi/4 */
+#define GR_M_TWOPI  (2*GR_M_PI)             /* 2*pi */
+#define GR_M_SQRT2	1.41421356237309504880	/* sqrt(2) */
+
 
 namespace gr {
 

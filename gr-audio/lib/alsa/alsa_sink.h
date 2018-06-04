@@ -71,7 +71,7 @@ namespace gr {
       bool d_ok_to_block; // defaults to "true", controls blocking/non-block I/O
 
       void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err) throw (std::runtime_error);
+      void bail(const char *msg, int err);
 
     public:
       alsa_sink(int sampling_rate,

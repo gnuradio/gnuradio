@@ -66,7 +66,6 @@ list(APPEND digital_sources
     correlate_access_code_tag_ff_impl.cc
     correlate_access_code_bb_ts_impl.cc
     correlate_access_code_ff_ts_impl.cc
-    correlate_and_sync_cc_impl.cc
     costas_loop_cc_impl.cc
     cpmmod_bc_impl.cc
     crc32.cc
@@ -89,7 +88,6 @@ list(APPEND digital_sources
     lms_dd_equalizer_cc_impl.cc
     map_bb_impl.cc
     modulate_vector.cc
-    mpsk_receiver_cc_impl.cc
     mpsk_snr_est.cc
     mpsk_snr_est_cc_impl.cc
     msk_timing_recovery_cc_impl.cc
@@ -99,12 +97,7 @@ list(APPEND digital_sources
     ofdm_equalizer_base.cc
     ofdm_equalizer_simpledfe.cc
     ofdm_equalizer_static.cc
-    ofdm_frame_acquisition_impl.cc
     ofdm_frame_equalizer_vcvc_impl.cc
-    ofdm_frame_sink_impl.cc
-    ofdm_insert_preamble_impl.cc
-    ofdm_mapper_bcv_impl.cc
-    ofdm_sampler_impl.cc
     ofdm_serializer_vcc_impl.cc
     ofdm_sync_sc_cfb_impl.cc
     header_format_base.cc
@@ -159,7 +152,7 @@ list(APPEND digital_libs
 
 add_library(gnuradio-digital SHARED ${digital_sources})
 target_link_libraries(gnuradio-digital ${digital_libs})
-GR_LIBRARY_FOO(gnuradio-digital RUNTIME_COMPONENT "digital_runtime" DEVEL_COMPONENT "digital_devel")
+GR_LIBRARY_FOO(gnuradio-digital)
 
 add_dependencies(
     gnuradio-digital
@@ -198,7 +191,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-digital_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "digital_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

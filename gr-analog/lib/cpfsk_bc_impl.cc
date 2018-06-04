@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2008,2010,2012,2018 Free Software Foundation, Inc.
  *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,11 +25,10 @@
 #include "cpfsk_bc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace analog {
-
-#define M_TWOPI (2*M_PI)
 
     cpfsk_bc::sptr
     cpfsk_bc::make(float k, float ampl, int samples_per_sym)
@@ -45,7 +44,7 @@ namespace gr {
 			     samples_per_sym)
     {
       d_samples_per_sym = samples_per_sym;
-      d_freq = k*M_PI/samples_per_sym;
+      d_freq = k*GR_M_PI/samples_per_sym;
       d_ampl = ampl;
       d_phase = 0.0;
     }
@@ -69,10 +68,10 @@ namespace gr {
 	  else
 	    d_phase -= d_freq;
 
-	  while(d_phase > M_TWOPI)
-	    d_phase -= M_TWOPI;
-	  while(d_phase < -M_TWOPI)
-	    d_phase += M_TWOPI;
+	  while(d_phase > GR_M_TWOPI)
+	    d_phase -= GR_M_TWOPI;
+	  while(d_phase < -GR_M_TWOPI)
+	    d_phase += GR_M_TWOPI;
 
 	  *out++ = gr_expj(d_phase)*d_ampl;
 	}

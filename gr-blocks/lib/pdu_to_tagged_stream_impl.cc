@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013, 2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -52,10 +52,7 @@ namespace gr {
     int pdu_to_tagged_stream_impl::calculate_output_stream_length(const gr_vector_int &)
     {
       if (d_curr_len == 0) {
-          /* FIXME: This blocking call is far from ideal but is the best we
-	   *        can do at the moment
-	   */
-        pmt::pmt_t msg(delete_head_blocking(pdu::pdu_port_id(), 100));
+        pmt::pmt_t msg(delete_head_nowait(pdu::pdu_port_id()));
         if (msg.get() == NULL) {
           return 0;
         }

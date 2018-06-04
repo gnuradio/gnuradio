@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018 Free Software Foundation, Inc.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt_ofdm_sym_acquisition_impl.h"
-#include <complex>
-#include <limits>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/expj.h>
 #include <volk/volk.h>
+#include <complex>
+#include <limits>
 
 namespace gr {
   namespace dtv {
@@ -170,11 +170,11 @@ namespace gr {
           // We are interested only in fft_length
           d_phase += d_phaseinc;
 
-          while (d_phase > (float)M_PI) {
-            d_phase -= (float)(2.0 * M_PI);
+          while (d_phase > (float)GR_M_PI) {
+            d_phase -= (float)(2.0 * GR_M_PI);
           }
-          while (d_phase < (float)(-M_PI)) {
-            d_phase += (float)(2.0 * M_PI);
+          while (d_phase < (float)(-GR_M_PI)) {
+            d_phase += (float)(2.0 * GR_M_PI);
           }
 
           derot[i] = gr_expj(d_phase);
@@ -190,11 +190,11 @@ namespace gr {
         for (int i = 0; i < (d_cp_length + d_fft_length); i++) {
           d_phase += d_phaseinc;
 
-          while (d_phase > (float)M_PI) {
-            d_phase -= (float)(2.0 * M_PI);
+          while (d_phase > (float)GR_M_PI) {
+            d_phase -= (float)(2.0 * GR_M_PI);
           }
-          while (d_phase < (float)(-M_PI)) {
-            d_phase += (float)(2.0 * M_PI);
+          while (d_phase < (float)(-GR_M_PI)) {
+            d_phase += (float)(2.0 * GR_M_PI);
           }
         }
 
@@ -235,7 +235,7 @@ namespace gr {
       : block("dvbt_ofdm_sym_acquisition",
           io_signature::make(1, 1, sizeof (gr_complex) * blocks),
           io_signature::make(1, 1, sizeof (gr_complex) * blocks * fft_length)),
-      d_blocks(blocks), d_fft_length(fft_length), d_cp_length(cp_length), d_snr(snr), \
+      d_fft_length(fft_length), d_cp_length(cp_length), d_snr(snr), \
         d_phase(0.0), d_phaseinc(0.0), d_cp_found(0), d_nextphaseinc(0), d_nextpos(0), \
         d_initial_acquisition(0), d_cp_start(0), \
         d_to_consume(0), d_to_out(0), d_consumed(0), d_out(0)

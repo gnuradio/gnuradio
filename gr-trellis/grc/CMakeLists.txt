@@ -32,5 +32,4 @@ install(FILES
     trellis_pccc_decoder_x.xml
     trellis_pccc_decoder_combined_xx.xml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "trellis_python"
 )

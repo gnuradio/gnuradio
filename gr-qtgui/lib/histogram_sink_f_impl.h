@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_HISTOGRAM_SINK_F_IMPL_H
 
 #include <gnuradio/qtgui/histogram_sink_f.h>
+
 #include <gnuradio/qtgui/histogramdisplayform.h>
 #include <gnuradio/high_res_timer.h>
 

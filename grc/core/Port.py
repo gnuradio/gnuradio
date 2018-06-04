@@ -150,8 +150,6 @@ class Port(Element):
         elif n['domain'] == GR_MESSAGE_DOMAIN:
             n['key'] = n['name']
             n['type'] = 'message'  # For port color
-        if n['type'] == 'msg':
-            n['key'] = 'msg'
         if not n.find('key'):
             n['key'] = str(next(block.port_counters[dir == 'source']))
 
@@ -174,9 +172,9 @@ class Port(Element):
 
     def __str__(self):
         if self.is_source:
-            return 'Source - {0}({1})'.format(self.get_name(), self.get_key())
+            return 'Source - {}({})'.format(self.get_name(), self.get_key())
         if self.is_sink:
-            return 'Sink - {0}({1})'.format(self.get_name(), self.get_key())
+            return 'Sink - {}({})'.format(self.get_name(), self.get_key())
 
     def get_types(self):
         return Constants.TYPE_TO_SIZEOF.keys()
@@ -186,18 +184,12 @@ class Port(Element):
 
     def validate(self):
         if self.get_type() not in self.get_types():
-            self.add_error_message('Type "{0}" is not a possible type.'.format(self.get_type()))
+            self.add_error_message('Type "{}" is not a possible type.'.format(self.get_type()))
         platform = self.get_parent().get_parent().get_parent()
         if self.get_domain() not in platform.domains:
-            self.add_error_message('Domain key "{0}" is not registered.'.format(self.get_domain()))
+            self.add_error_message('Domain key "{}" is not registered.'.format(self.get_domain()))
         if not self.get_enabled_connections() and not self.get_optional():
             self.add_error_message('Port is not connected.')
-        # Message port logic
-        if self.get_type() == 'msg':
-            if self.get_nports():
-                self.add_error_message('A port of type "msg" cannot have "nports" set.')
-            if self.get_vlen() != 1:
-                self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
 
     def rewrite(self):
         """

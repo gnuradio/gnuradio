@@ -43,6 +43,7 @@ endif(MSVC)
 ########################################################################
 # Append gnuradio-runtime library sources
 ########################################################################
+SET_SOURCE_FILES_PROPERTIES( ${viterbi_sources} PROPERTIES LANGUAGE CXX )
 list(APPEND gnuradio_fec_sources ${viterbi_sources})
 
 ########################################################################
@@ -51,7 +52,6 @@ list(APPEND gnuradio_fec_sources ${viterbi_sources})
 #install(
 #    FILES ${CMAKE_CURRENT_SOURCE_DIR}/viterbi.h
 #    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
-#    COMPONENT "fec_devel"
 #)
 
 ########################################################################

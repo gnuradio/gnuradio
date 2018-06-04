@@ -11,7 +11,6 @@
 ##@param parameters the parameter blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
-##@param msgs the msg type connections
 ##@param generate_options the type of flow graph
 ##@param callbacks variable id map to callback strings
 ########################################################
@@ -36,9 +35,13 @@ $DIVIDER
 import threading
 #end if
 
+#if $generate_options == 'qt_gui'
+from distutils.version import StrictVersion
+#end if
+
 ## Call XInitThreads as the _very_ first thing.
 ## After some Qt import, it's too late
-#if $generate_options in ('wx_gui', 'qt_gui', 'bokeh_gui')
+#if $generate_options == 'qt_gui'
 if __name__ == '__main__':
     import ctypes
     import sys
@@ -72,27 +75,12 @@ $imp
 ##Create Class
 ##  Write the class declaration for a top or hier block.
 ##  The parameter names are the arguments to __init__.
-##  Determine the absolute icon path (wx gui only).
 ##  Setup the IO signature (hier block only).
 ########################################################
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
-#if $generate_options == 'wx_gui'
-    #import gtk
-    #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
-
-
-class $(class_name)(grc_wxgui.top_block_gui):
-
-    def __init__($param_str):
-        grc_wxgui.top_block_gui.__init__(self, title="$title")
-    #if $icon
-        _icon_path = "$icon.get_filename()"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
-    #end if
-#elif $generate_options == 'qt_gui'
+#if $generate_options == 'qt_gui'
 from gnuradio import qtgui
-
 
 class $(class_name)(gr.top_block, Qt.QWidget):
 
@@ -118,8 +106,14 @@ class $(class_name)(gr.top_block, Qt.QWidget):
         self.top_layout.addLayout(self.top_grid_layout)
 
         self.settings = Qt.QSettings("GNU Radio", "$class_name")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
+        try:
+            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+                self.restoreGeometry(self.settings.value("geometry").toByteArray())
+            else:
+                self.restoreGeometry(self.settings.value("geometry"))
+        except:
+            pass
 #elif $generate_options == 'bokeh_gui'
 
 class $(class_name)(gr.top_block):
@@ -205,18 +199,6 @@ gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])
 #end if
 #for $var in $variables
         $indent($var.get_var_make())
-#end for
-########################################################
-##Create Message Queues
-########################################################
-#if $msgs
-
-        $DIVIDER
-        # Message Queues
-        $DIVIDER
-#end if
-#for $msg in $msgs
-        $(msg.get_source().get_parent().get_id())_msgq_out = $(msg.get_sink().get_parent().get_id())_msgq_in = gr.msg_queue(2)
 #end for
 ########################################################
 ##Create Blocks
@@ -363,19 +345,22 @@ $short_id#slurp
 
 
 def argument_parser():
-    #set $desc_args = 'usage="%prog: [options]", option_class=eng_option'
+    #set $arg_parser_args = ''
     #if $flow_graph.get_option('description')
-        #set $desc_args += ', description=description'
+        #set $arg_parser_args = 'description=description'
     description = $repr($flow_graph.get_option('description'))
     #end if
-    parser = OptionParser($desc_args)
+    parser = ArgumentParser($arg_parser_args)
     #for $param in $parameters
         #set $type = $param.get_param('type').get_value()
         #if $type
             #silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-    parser.add_option(
-        "$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
-        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
+    parser.add_argument(
+        #if $make_short_id($param)
+        "$make_short_id($param)", #slurp
+        #end if
+        "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type=$type, default=$make_default($type, $param),
+        help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%(default)r]")
         #end if
     #end for
     return parser
@@ -385,24 +370,44 @@ def argument_parser():
 def main(top_block_cls=$(class_name), options=None):
     #if $parameters
     if options is None:
-        options, _ = argument_parser().parse_args()
+        options = argument_parser().parse_args()
     #end if
     #if $flow_graph.get_option('realtime_scheduling')
     if gr.enable_realtime_scheduling() != gr.RT_OK:
         print "Error: failed to enable real-time scheduling."
     #end if
 
-    #if $generate_options == 'wx_gui'
+    #if $generate_options == 'qt_gui'
+    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
+    qapp = Qt.QApplication(sys.argv)
+
     tb = top_block_cls($(', '.join($params_eq_list)))
+    #if $flow_graph.get_option('run')
         #if $flow_graph.get_option('max_nouts')
-    tb.Run($flow_graph.get_option('run'), $flow_graph.get_option('max_nouts'))
+    tb.start($flow_graph.get_option('max_nouts'))
         #else
-    tb.Start($flow_graph.get_option('run'))
-        #for $m in $monitors
-    (tb.$m.get_id()).start()
-        #end for
-    tb.Wait()
+    tb.start()
         #end if
+    #end if
+    #if $flow_graph.get_option('qt_qss_theme')
+    tb.setStyleSheetFromFile($repr($flow_graph.get_option('qt_qss_theme')))
+    #end if
+    tb.show()
+
+    def quitting():
+        tb.stop()
+        tb.wait()
+    qapp.aboutToQuit.connect(quitting)
+        #for $m in $monitors
+    if $m.has_param('en'):
+        if $m.get_param('en').get_value():
+            (tb.$m.get_id()).start()
+    else:
+        sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
+        #end for
+    qapp.exec_()
     #elif $generate_options == 'bokeh_gui'
     serverProc, port = bokehgui.utils.create_server()
     def killProc(signum, frame, tb):
@@ -434,38 +439,6 @@ def main(top_block_cls=$(class_name), options=None):
     finally:
         serverProc.terminate()
         serverProc.kill()
-    #elif $generate_options == 'qt_gui'
-    from distutils.version import StrictVersion
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
-    qapp = Qt.QApplication(sys.argv)
-
-    tb = top_block_cls($(', '.join($params_eq_list)))
-    #if $flow_graph.get_option('run')
-        #if $flow_graph.get_option('max_nouts')
-    tb.start($flow_graph.get_option('max_nouts'))
-        #else
-    tb.start()
-        #end if
-    #end if
-    #if $flow_graph.get_option('qt_qss_theme')
-    tb.setStyleSheetFromFile($repr($flow_graph.get_option('qt_qss_theme')))
-    #end if
-    tb.show()
-
-    def quitting():
-        tb.stop()
-        tb.wait()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
-        #for $m in $monitors
-    if $m.has_param('en'):
-        if $m.get_param('en').get_value():
-            (tb.$m.get_id()).start()
-    else:
-        sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.$m.get_id()"))
-        #end for
-    qapp.exec_()
     #elif $generate_options == 'no_gui'
     tb = top_block_cls($(', '.join($params_eq_list)))
         #set $run_options = $flow_graph.get_option('run_options')

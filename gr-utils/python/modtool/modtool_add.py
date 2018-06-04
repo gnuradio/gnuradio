@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2017 Free Software Foundation, Inc.
+# Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,7 +23,6 @@
 import os
 import re
 from optparse import OptionGroup
-import getpass
 import readline
 import Cheetah.Template
 
@@ -32,6 +31,7 @@ from cmakefile_editor import CMakeFileEditor
 from modtool_base import ModTool, ModToolException
 from templates import Templates
 from code_generator import get_template
+import Cheetah.Template
 
 
 class ModToolAdd(ModTool):
@@ -52,8 +52,7 @@ class ModToolAdd(ModTool):
         parser = ModTool.setup_parser(self)
         ogroup = OptionGroup(parser, "Add module options")
         ogroup.add_option("-t", "--block-type", type="choice",
-                          choices=self._block_types, default=None,
-                          help="One of %s." % ', '.join(self._block_types))
+                choices=self._block_types, default=None, help="One of %s." % ', '.join(self._block_types))
         ogroup.add_option("--license-file", type="string", default=None,
                           help="File containing the license header for every source code file.")
         ogroup.add_option("--copyright", type="string", default=None,
@@ -67,7 +66,7 @@ class ModToolAdd(ModTool):
         ogroup.add_option("--skip-cmakefiles", action="store_true", default=False,
                           help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
         ogroup.add_option("-l", "--lang", type="choice", choices=('cpp', 'c++', 'python'),
-                          default=None, help="Language (cpp or python)")
+                default=None, help="Language (cpp or python)")
         parser.add_option_group(ogroup)
         return parser
 
@@ -112,6 +111,15 @@ class ModToolAdd(ModTool):
                 or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
             raise ModToolException('Missing or skipping relevant subdir.')
 
+        if self._info['blockname'] is None:
+            if len(args) >= 2:
+                self._info['blockname'] = args[1]
+            else:
+                self._info['blockname'] = raw_input("Enter name of block/code (without module name prefix): ")
+        if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
+            raise ModToolException('Invalid block name.')
+        print "Block/code identifier: " + self._info['blockname']
+        self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
         if not options.license_file:
             self._info['copyrightholder'] = options.copyright
             if self._info['copyrightholder'] is None:
@@ -163,7 +171,8 @@ class ModToolAdd(ModTool):
             return open('LICENCE').read()
         elif self._info['is_component']:
             return Templates['grlicense']
-        return get_template('defaultlicense', **self._info)
+        else:
+            return get_template('defaultlicense', **self._info)
 
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
@@ -236,8 +245,8 @@ class ModToolAdd(ModTool):
                                         'filename': fname_qa_cc,
                                         'modname': self._info['modname']
                                        }
-                            )
                         )
+                     )
                 )
                 ed = CMakeFileEditor(self._file['cmlib'])
                 ed.remove_double_newlines()

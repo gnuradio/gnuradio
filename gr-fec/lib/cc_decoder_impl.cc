@@ -54,7 +54,6 @@ namespace gr {
         : generic_decoder("cc_decoder"),
           d_k(k),
           d_rate(rate),
-          d_partial_rate(rate),
           d_polys(polys),
           d_mode(mode),
           d_padding(0),

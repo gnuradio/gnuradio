@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2018 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,8 +24,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "ofdm_cyclic_prefixer_impl.h"
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace digital {
@@ -64,8 +65,8 @@ namespace gr {
 	// The actual flanks are one sample shorter than d_rolloff_len, because the
 	// first sample of the up- and down flank is always zero and one, respectively
 	for (int i = 1; i < d_rolloff_len; i++) {
-	  d_up_flank[i-1]   = 0.5 * (1 + cos(M_PI * i/rolloff_len - M_PI));
-	  d_down_flank[i-1] = 0.5 * (1 + cos(M_PI * (rolloff_len-i)/rolloff_len - M_PI));
+	  d_up_flank[i-1]   = 0.5 * (1 + cos(GR_M_PI * i/rolloff_len - GR_M_PI));
+	  d_down_flank[i-1] = 0.5 * (1 + cos(GR_M_PI * (rolloff_len-i)/rolloff_len - GR_M_PI));
 	}
       }
 

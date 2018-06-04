@@ -22,5 +22,4 @@ file(GLOB py_files "*.py")
 GR_PYTHON_INSTALL(
     FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core/utils
-    COMPONENT "grc"
 )

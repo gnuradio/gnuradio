@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2007,2008,2012,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2008,2012,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,6 +25,7 @@
 #endif
 
 #include <gnuradio/fft/window.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 
 namespace gr {
@@ -66,7 +67,7 @@ namespace gr {
 
     double freq(int ntaps)
     {
-      return 2.0*M_PI/ntaps;
+      return 2.0*GR_M_PI/ntaps;
     }
 
     double rate(int ntaps)
@@ -98,7 +99,7 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = c0 - c1*cosf((2.0f*M_PI*n)/M) + c2*cosf((4.0f*M_PI*n)/M);
+        taps[n] = c0 - c1*cosf((2.0f*GR_M_PI*n)/M) + c2*cosf((4.0f*GR_M_PI*n)/M);
       return taps;
     }
 
@@ -109,8 +110,8 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = c0 - c1*cosf((2.0f*M_PI*n)/M) + c2*cosf((4.0f*M_PI*n)/M) \
-          - c3*cosf((6.0f*M_PI*n)/M);
+        taps[n] = c0 - c1*cosf((2.0f*GR_M_PI*n)/M) + c2*cosf((4.0f*GR_M_PI*n)/M) \
+          - c3*cosf((6.0f*GR_M_PI*n)/M);
       return taps;
     }
 
@@ -121,8 +122,8 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = c0 - c1*cosf((2.0f*M_PI*n)/M) + c2*cosf((4.0f*M_PI*n)/M) \
-          - c3*cosf((6.0f*M_PI*n)/M) + c4*cosf((8.0f*M_PI*n)/M);
+        taps[n] = c0 - c1*cosf((2.0f*GR_M_PI*n)/M) + c2*cosf((4.0f*GR_M_PI*n)/M) \
+          - c3*cosf((6.0f*GR_M_PI*n)/M) + c4*cosf((8.0f*GR_M_PI*n)/M);
       return taps;
     }
 
@@ -142,7 +143,7 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = 0.54 - 0.46 * cos((2 * M_PI * n) / M);
+        taps[n] = 0.54 - 0.46 * cos((2 * GR_M_PI * n) / M);
       return taps;
     }
 
@@ -153,7 +154,7 @@ namespace gr {
       float M = static_cast<float>(ntaps - 1);
 
       for(int n = 0; n < ntaps; n++)
-        taps[n] = 0.5 - 0.5 * cos((2 * M_PI * n) / M);
+        taps[n] = 0.5 - 0.5 * cos((2 * GR_M_PI * n) / M);
       return taps;
     }
 

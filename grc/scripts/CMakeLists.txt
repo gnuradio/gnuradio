@@ -19,9 +19,8 @@
 
 ########################################################################
 GR_PYTHON_INSTALL(
-    PROGRAMS gnuradio-companion
+    PROGRAMS gnuradio-companion grcc
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "grc"
 )
 
 add_subdirectory(freedesktop)

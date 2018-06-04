@@ -21,7 +21,9 @@
  */
 
 #include <gnuradio/qtgui/utils.h>
+
 #include <gnuradio/prefs.h>
+
 #include <QDebug>
 #include <QFile>
 #include <QCoreApplication>

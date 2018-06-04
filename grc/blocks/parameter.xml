@@ -55,9 +55,11 @@
 		</option>
 		<option>
 			<name>String</name>
-			<key>string</key>
+			<key>str</key>
 			<opt>type:string</opt>
-		</option>
+        </option>
+        <!-- Do not forget to add option value type handler import into
+            grc/python/flow_graph.tmpl for each new type. -->
 		<!-- not supported yet in tmpl
 		<option>
 			<name>Boolean</name>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2012,2013 Free Software Foundation, Inc.
+ * Copyright 2009,2012,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
- #define _USE_MATH_DEFINES
-
 #include "channel_model2_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <iostream>
 
 namespace gr {
@@ -59,14 +58,14 @@ namespace gr {
 	d_taps.push_back(0);
       }
 
-      d_timing_offset = filter::fractional_resampler_cc::make(0, epsilon);
+      d_timing_offset = filter::mmse_resampler_cc::make(0, epsilon);
 
       d_multipath = filter::fir_filter_ccc::make(1, d_taps);
 
       d_noise_adder = blocks::add_cc::make();
       d_noise = analog::fastnoise_source_c::make(analog::GR_GAUSSIAN,
 						 noise_voltage, noise_seed);
-      d_freq_gen = blocks::vco_c::make(1.0, 2*M_PI, 1.0);
+      d_freq_gen = blocks::vco_c::make(1.0, 2*GR_M_PI, 1.0);
 
       d_mixer_offset = blocks::multiply_cc::make();
 

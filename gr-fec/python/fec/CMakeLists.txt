@@ -36,7 +36,6 @@ GR_PYTHON_INSTALL(
     fec_test.py
     bercurve_generator.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec
-    COMPONENT "fec_python"
 )
 
 add_subdirectory(polar)

@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(
     __init__.py
     fsm_utils.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/trellis
-    COMPONENT "trellis_python"
 )
 
 ########################################################################

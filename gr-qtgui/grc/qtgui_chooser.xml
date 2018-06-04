@@ -8,8 +8,8 @@
 <block>
 	<name>QT GUI Chooser</name>
 	<key>variable_qtgui_chooser</key>
-	<import>from PyQt4 import Qt</import>
-	<import>from PyQt4.QtCore import QObject, pyqtSlot</import>
+	<import>from PyQt5 import Qt</import>
+	<import>from PyQt5.QtCore import QObject, pyqtSlot</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#slurp
 #set $all_options = [$option0, $option1, $option2, $option3, $option4][:int($num_opts())]

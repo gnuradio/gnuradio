@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -31,7 +31,7 @@
 namespace gr {
   namespace blocks {
 
-#define M_TWOPI (2.0f*M_PI)
+#define M_TWOPI (2.0f*GR_M_PI)
 
     control_loop::control_loop(float loop_bw,
                                float max_freq, float min_freq)

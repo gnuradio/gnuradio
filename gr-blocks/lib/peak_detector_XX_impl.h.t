@@ -38,7 +38,6 @@ namespace gr {
       int d_look_ahead;
       float d_avg_alpha;
       float d_avg;
-      unsigned char d_found;
 
     public:
       @NAME_IMPL@(float threshold_factor_rise,

@@ -32,7 +32,6 @@ GR_PYTHON_INSTALL(FILES
     top_block.py
     pubsub.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
-    COMPONENT "runtime_python"
 )
 
 ########################################################################
