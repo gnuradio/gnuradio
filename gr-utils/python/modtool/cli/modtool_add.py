@@ -21,11 +21,14 @@
 """ Module to add new blocks """
 
 import sys
+import re
 
 import click
 
 from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_add import ModToolAdd
+from gnuradio.modtool.core.modtool_base import ModToolException
+from gnuradio.modtool.core.util_functions import SequenceCompleter
 
 
 @click.command('add')
@@ -49,4 +52,37 @@ from gnuradio.modtool.core.modtool_add import ModToolAdd
 @block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
+    setup(**kwargs)
+
+
+def setup(**kwargs):
+    if kwargs['block_type'] is None:
+        print (str(ModToolAdd()._block_types))
+        with SequenceCompleter(sorted(ModToolAdd()._block_types)):
+            while kwargs['block_type'] not in ModToolAdd()._block_types:
+                kwargs['block_type'] = click.prompt("Enter block type")
+                if kwargs['block_type'] not in ModToolAdd()._block_types:
+                    print ('Must be one of ' + str(ModToolAdd()._block_types))
+
+    # Allow user to specify language interactively if not set
+    if kwargs['lang'] is None:
+        with SequenceCompleter(ModToolAdd().language_candidates):
+            while kwargs['lang'] not in ModToolAdd().language_candidates:
+                kwargs['lang'] = click.prompt("Language (python/cpp)")
+    if kwargs['lang'] == 'c++':
+        kwargs['lang'] = 'cpp'
+
+    click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[kwargs['lang']]))
+
+    if kwargs['blockname'] is None:
+        kwargs['blockname'] = click.prompt("Enter name of block/code (without module name prefix)")
+    if not re.match('[a-zA-Z0-9_]+', kwargs['blockname']):
+        raise ModToolException('Invalid block name.')
+    click.echo("Block/code identifier: " + kwargs['blockname'])
+
+    if kwargs['argument_list'] is not None:
+        kwargs['arglist'] = kwargs['argument_list']
+    else:
+        kwargs['arglist'] = input('Enter valid argument list, including default arguments: ')
+
     run(ModToolAdd, **kwargs)

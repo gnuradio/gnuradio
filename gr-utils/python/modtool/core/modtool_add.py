@@ -28,7 +28,7 @@ import os
 import re
 import sys
 
-from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
+from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
@@ -54,36 +54,14 @@ class ModToolAdd(ModTool):
         ModTool.setup(self, options)
 
         self._info['blocktype'] = options.block_type
-        if self._info['blocktype'] is None:
-            # Print list out of blocktypes to user for reference
-            print(str(self._block_types))
-            with SequenceCompleter(sorted(self._block_types)):
-                while self._info['blocktype'] not in self._block_types:
-                    self._info['blocktype'] = input("Enter block type: ")
-                    if self._info['blocktype'] not in self._block_types:
-                        print('Must be one of ' + str(self._block_types))
-
-        # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
-        if self._info['lang'] is None:
-            with SequenceCompleter(self.language_candidates):
-                while self._info['lang'] not in self.language_candidates:
-                    self._info['lang'] = input("Language (python/cpp): ")
-        if self._info['lang'] == 'c++':
-            self._info['lang'] = 'cpp'
-
-        print("Language: %s" % {'cpp': 'C++', 'python': 'Python'}[self._info['lang']])
 
         if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
              or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
             raise ModToolException('Missing or skipping relevant subdir.')
 
-        if self._info['blockname'] is None:
-            self._info['blockname'] = input("Enter name of block/code (without module name prefix): ")
-        if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
-            raise ModToolException('Invalid block name.')
-        print("Block/code identifier: " + self._info['blockname'])
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
+
         if not options.license_file:
             self._info['copyrightholder'] = options.copyright
             if self._info['copyrightholder'] is None:
@@ -92,10 +70,8 @@ class ModToolAdd(ModTool):
                 print("For GNU Radio components the FSF is added as copyright holder")
         self._license_file = options.license_file
         self._info['license'] = self.setup_choose_license()
-        if options.argument_list is not None:
-            self._info['arglist'] = options.argument_list
-        else:
-            self._info['arglist'] = input('Enter valid argument list, including default arguments: ')
+
+        self._info['arglist'] = options.arglist
 
         if not (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
             self._add_py_qa = options.add_python_qa
