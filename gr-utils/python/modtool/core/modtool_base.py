@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import sys
 import re
+import click
 
 from gnuradio import gr
 from .util_functions import get_modname
@@ -53,6 +54,18 @@ class ModTool(object):
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
         self._dir = None
+
+    def setup_args(options, args):
+        options.directory = args.get('directory', '.')
+        options.skip_lib = args.get('skip_lib', False)
+        options.skip_swig = args.get('skip_swig', False)
+        options.skip_python = args.get('skip_python', False)
+        options.skip_grc = args.get('skip_grc', False)
+        options.scm_mode = args.get('scm_mode', 
+                                    gr.prefs().get_string('modtool', 'scm_mode', 'no'))
+        options.yes = args.get('yes', False)
+        options.blockname = args.get('blockname', None)
+        return options
 
     def setup(self, options):
         """ Initialise all internal variables, such as the module name etc. """

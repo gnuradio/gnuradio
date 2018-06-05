@@ -22,13 +22,16 @@
 
 import sys
 import re
+from types import SimpleNamespace
 
 import click
 
 from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_add import ModToolAdd
-from gnuradio.modtool.core.modtool_base import ModToolException
-from gnuradio.modtool.core.util_functions import SequenceCompleter
+from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
+from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
+
+sys.tracebacklimit = 0
 
 
 @click.command('add')
@@ -56,33 +59,74 @@ def cli(**kwargs):
 
 
 def setup(**kwargs):
-    if kwargs['block_type'] is None:
-        print (str(ModToolAdd()._block_types))
-        with SequenceCompleter(sorted(ModToolAdd()._block_types)):
-            while kwargs['block_type'] not in ModToolAdd()._block_types:
-                kwargs['block_type'] = click.prompt("Enter block type")
-                if kwargs['block_type'] not in ModToolAdd()._block_types:
-                    print ('Must be one of ' + str(ModToolAdd()._block_types))
+    options = SimpleNamespace(**kwargs)
+    self = ModToolAdd()
+    
+    ModTool.setup(self, options)
 
-    # Allow user to specify language interactively if not set
-    if kwargs['lang'] is None:
-        with SequenceCompleter(ModToolAdd().language_candidates):
-            while kwargs['lang'] not in ModToolAdd().language_candidates:
-                kwargs['lang'] = click.prompt("Language (python/cpp)")
-    if kwargs['lang'] == 'c++':
-        kwargs['lang'] = 'cpp'
+    self._info['blocktype'] = options.block_type
+    if self._info['blocktype'] is None:
+        click.echo(str(self._block_types))
+        with SequenceCompleter(self._block_types):
+            while self._info['blocktype'] not in self._block_types:
+                self._info['blocktype'] = print("Enter block type: ")
+                if self._info['blocktype'] not in self._block_types:
+                    click.echo('Must be one of ' + str(self._block_types))
 
-    click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[kwargs['lang']]))
+    self._info['lang'] = options.lang
+    if self._info['lang'] is None:
+        with SequenceCompleter(self.language_candidates):
+            while self._info['lang'] not in self.language_candidates:
+                self._info['lang'] = print("Language (python/cpp): ")
+    if self._info['lang'] == 'c++':
+        self._info['lang'] = 'cpp'
 
-    if kwargs['blockname'] is None:
-        kwargs['blockname'] = click.prompt("Enter name of block/code (without module name prefix)")
-    if not re.match('[a-zA-Z0-9_]+', kwargs['blockname']):
+    click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self._info['lang']]))
+
+    if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
+         or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
+        raise ModToolException('Missing or skipping relevant subdir.')
+
+    if self._info['blockname'] is None:
+        self._info['blockname'] = print("Enter name of block/code (without module name prefix): ")
+    if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
         raise ModToolException('Invalid block name.')
-    click.echo("Block/code identifier: " + kwargs['blockname'])
+    click.echo("Block/code identifier: " + self._info['blockname'])
 
-    if kwargs['argument_list'] is not None:
-        kwargs['arglist'] = kwargs['argument_list']
+    self._info['fullblockname'] = self.self._li_info['modname'] + '_' + self._info['blockname']
+    
+    if not options.license_file:
+        self._info['copyrightholder'] = options.copyright
+        if self._info['copyrightholder'] is None:
+            self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+        elif self._info['is_component']:
+            click.echo("For GNU Radio components the FSF is added as copyright holder")
+
+    self._license_file = options.license_file
+    self._info['license'] = self.setup_choose_license()
+
+    if options.argument_list is not None:
+        self._info['arglist'] = options.argument_list
     else:
-        kwargs['arglist'] = input('Enter valid argument list, including default arguments: ')
+        self._info['arglist'] = input('Enter valid argument list, including default arguments: ')
 
-    run(ModToolAdd, **kwargs)
+    if not (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
+        self._add_py_qa = options.add_python_qa
+        if self._add_py_qa is None:
+            self._add_py_qa = ask_yes_no('Add Python QA code?', True)
+    
+    if self._info['lang'] == 'cpp':
+        self._add_cc_qa = options.add_cpp_qa
+        if self._add_cc_qa is None:
+            self._add_cc_qa = ask_yes_no('Add C++ QA code?', not self._add_py_qa)
+    
+    self._skip_cmakefiles = options.skip_cmakefiles
+    
+    if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
+        click.echo("Warning: Autotools modules are not supported. ",
+              "Files will be created, but Makefiles will not be edited.")
+        self._skip_cmakefiles = True
+
+    self._cli = True
+
+    run(self, options)

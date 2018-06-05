@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+from types import SimpleNamespace
 
 from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
@@ -49,42 +50,35 @@ class ModToolAdd(ModTool):
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
+        self._cli = False
 
-    def setup(self, options):
+    def setup(self, args):
+        options = SimpleNamespace()
+        options = ModTool.setup_args(options, args)
         ModTool.setup(self, options)
 
-        self._info['blocktype'] = options.block_type
-        self._info['lang'] = options.lang
-
-        if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
-             or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
-            raise ModToolException('Missing or skipping relevant subdir.')
-
+        self._info['blocktype'] = args.get('block_type', None)
+        if self._info['blocktype'] is None:
+            raise ModToolException('Blocktype not specified')
+        self._info['lang'] = args.get('lang', None)
+        if self._info['lang'] is None:
+            raise ModToolException('Programming language not specified')
+        if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
+            raise ModToolException('Invalid block name.')
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
-
-        if not options.license_file:
-            self._info['copyrightholder'] = options.copyright
+        self._license_file = args.get('license_file', None)
+        if not self._license_file:
+            self._info['copyrightholder'] = args.get('copyright', None)
             if self._info['copyrightholder'] is None:
                 self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
-            elif self._info['is_component']:
-                print("For GNU Radio components the FSF is added as copyright holder")
-        self._license_file = options.license_file
         self._info['license'] = self.setup_choose_license()
-
-        self._info['arglist'] = options.arglist
-
+        self._info['arglist'] = args.get('argument_list', None)
         if not (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
-            self._add_py_qa = options.add_python_qa
-            if self._add_py_qa is None:
-                self._add_py_qa = ask_yes_no('Add Python QA code?', True)
+            self._add_py_qa = args.get('add_python_qa', False)
         if self._info['lang'] == 'cpp':
-            self._add_cc_qa = options.add_cpp_qa
-            if self._add_cc_qa is None:
-                self._add_cc_qa = ask_yes_no('Add C++ QA code?', not self._add_py_qa)
-        self._skip_cmakefiles = options.skip_cmakefiles
+            self._add_cc_qa = args.get('add_cpp_qa', False)
+        self._skip_cmakefiles = args.get('skip_cmakefiles', False)
         if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
-            print("Warning: Autotools modules are not supported. ",
-                  "Files will be created, but Makefiles will not be edited.")
             self._skip_cmakefiles = True
 
     def setup_choose_license(self):
@@ -114,7 +108,8 @@ class ModToolAdd(ModTool):
 
     def run(self, options):
         """ Go, go, go. """
-        self.setup(options)
+        if not self._cli:
+            self.setup(options)
         has_swig = (
                 self._info['lang'] == 'cpp'
                 and not self._skip_subdirs['swig']
