@@ -76,6 +76,12 @@ namespace gr {
       ::uhd::sensor_value_t get_sensor(const std::string &name, size_t chan);
       std::vector<std::string> get_sensor_names(size_t chan);
       ::uhd::usrp::dboard_iface::sptr get_dboard_iface(size_t chan);
+      std::vector<std::string> get_lo_names(size_t chan);
+      const std::string get_lo_source(const std::string &name, size_t chan);
+      std::vector<std::string> get_lo_sources(const std::string &name, size_t chan);
+      bool get_lo_export_enabled(const std::string &name, size_t chan);
+      double get_lo_freq(const std::string &name, size_t chan);
+      ::uhd::freq_range_t get_lo_freq_range(const std::string &name, size_t chan);
 
       void set_subdev_spec(const std::string &spec, size_t mboard);
       std::string get_subdev_spec(size_t mboard);
@@ -93,6 +99,9 @@ namespace gr {
       void set_iq_balance(const std::complex<double> &correction, size_t chan);
       void set_stream_args(const ::uhd::stream_args_t &stream_args);
       void set_start_time(const ::uhd::time_spec_t &time);
+      void set_lo_source(const std::string &src, const std::string &name = ALL_LOS, size_t chan = 0);
+      void set_lo_export_enabled(bool enabled, const std::string &name = ALL_LOS, size_t chan = 0);
+      double set_lo_freq(double freq, const std::string &name, size_t chan);
 
       bool start(void);
       bool stop(void);

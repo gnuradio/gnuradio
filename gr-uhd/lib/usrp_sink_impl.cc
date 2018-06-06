@@ -286,6 +286,103 @@ namespace gr {
         chan = _stream_args.channels[chan];
         return _dev->get_tx_bandwidth_range(chan);
     }
+    std::vector<std::string>
+    usrp_sink_impl::get_lo_names(size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_tx_lo_names(chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    const std::string
+    usrp_sink_impl::get_lo_source(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_tx_lo_source(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    std::vector<std::string>
+    usrp_sink_impl::get_lo_sources(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_tx_lo_sources(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    void
+    usrp_sink_impl::set_lo_source(const std::string &src, const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->set_tx_lo_source(src, name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    bool
+    usrp_sink_impl::get_lo_export_enabled(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_tx_lo_export_enabled(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    void
+    usrp_sink_impl::set_lo_export_enabled(bool enabled, const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->set_tx_lo_export_enabled(enabled, name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    ::uhd::freq_range_t
+    usrp_sink_impl::get_lo_freq_range(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_tx_lo_freq_range(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    double
+    usrp_sink_impl::get_lo_freq(const std::string &name, size_t chan)
+    {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->get_tx_lo_freq(name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
+    double
+    usrp_sink_impl::set_lo_freq(double freq, const std::string &name, size_t chan) {
+#ifdef UHD_USRP_MULTI_USRP_TX_LO_CONFIG_API
+        chan = _stream_args.channels[chan];
+        return _dev->set_tx_lo_freq(freq, name, chan);
+#else
+        throw std::runtime_error("not implemented in this version");
+#endif
+    }
 
     void
     usrp_sink_impl::set_dc_offset(const std::complex<double> &offset,
