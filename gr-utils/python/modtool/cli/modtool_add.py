@@ -33,7 +33,6 @@ from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
 
 sys.tracebacklimit = 0
 
-
 @click.command('add')
 @click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),
               help="One of {}.".format(', '.join(ModToolAdd()._block_types)))
@@ -61,6 +60,7 @@ def cli(**kwargs):
 def setup(**kwargs):
     options = SimpleNamespace(**kwargs)
     self = ModToolAdd()
+    self._cli = True
     
     ModTool.setup(self, options)
 
@@ -69,7 +69,7 @@ def setup(**kwargs):
         click.echo(str(self._block_types))
         with SequenceCompleter(self._block_types):
             while self._info['blocktype'] not in self._block_types:
-                self._info['blocktype'] = print("Enter block type: ")
+                self._info['blocktype'] = input("Enter block type: ")
                 if self._info['blocktype'] not in self._block_types:
                     click.echo('Must be one of ' + str(self._block_types))
 
@@ -77,7 +77,7 @@ def setup(**kwargs):
     if self._info['lang'] is None:
         with SequenceCompleter(self.language_candidates):
             while self._info['lang'] not in self.language_candidates:
-                self._info['lang'] = print("Language (python/cpp): ")
+                self._info['lang'] = input("Language (python/cpp): ")
     if self._info['lang'] == 'c++':
         self._info['lang'] = 'cpp'
 
@@ -88,12 +88,12 @@ def setup(**kwargs):
         raise ModToolException('Missing or skipping relevant subdir.')
 
     if self._info['blockname'] is None:
-        self._info['blockname'] = print("Enter name of block/code (without module name prefix): ")
+        self._info['blockname'] = input("Enter name of block/code (without module name prefix): ")
     if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
         raise ModToolException('Invalid block name.')
     click.echo("Block/code identifier: " + self._info['blockname'])
 
-    self._info['fullblockname'] = self.self._li_info['modname'] + '_' + self._info['blockname']
+    self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
     
     if not options.license_file:
         self._info['copyrightholder'] = options.copyright
@@ -126,7 +126,5 @@ def setup(**kwargs):
         click.echo("Warning: Autotools modules are not supported. ",
               "Files will be created, but Makefiles will not be edited.")
         self._skip_cmakefiles = True
-
-    self._cli = True
 
     run(self, options)

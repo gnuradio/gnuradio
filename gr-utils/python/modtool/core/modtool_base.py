@@ -78,7 +78,8 @@ class ModTool(object):
             self._info['modname'] = get_modname()
         if self._info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
-        print("GNU Radio module name identified: " + self._info['modname'])
+        if self._cli:
+            print("GNU Radio module name identified: " + self._info['modname'])
         if self._info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self._info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
