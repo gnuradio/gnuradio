@@ -21,11 +21,13 @@
 """ Automatically create XML bindings for GRC from block code """
 
 import sys
+from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name, run
+from gnuradio.modtool.core.modtool_base import ModTool
 from gnuradio.modtool.core.modtool_makexml import ModToolMakeXML
+from .modtool_base import common_params, block_name, run
 
 
 @click.command('makexml', short_help=ModToolMakeXML().description)
@@ -38,4 +40,21 @@ def cli(**kwargs):
 
     Note: This does not work on python blocks
     """
-    run(ModToolMakeXML, **kwargs)
+    setup(**kwargs)
+
+
+def setup(**kwargs):
+	options = SimpleNamespace(**kwargs)
+	self = ModToolMakeXML()
+	self._cli = True
+
+	ModTool.setup(self, options)
+
+	if options.blockname is not None:
+		self._info['pattern'] = options.blockname
+	else:
+		self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
+	if not self._info['pattern'] or self._info['pattern'].isspace():
+		self._info['pattern'] = '.'
+
+	run(self, options)

@@ -28,6 +28,7 @@ import os
 import re
 import glob
 import sys
+from types import SimpleNamespace
 
 from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
@@ -43,21 +44,23 @@ class ModToolMakeXML(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
+        self._cli = False
 
     def setup(self, options):
+        options = SimpleNamespace()
+        options = ModTool.setup_args(options, args)
         ModTool.setup(self, options)
 
-        if options.blockname is not None:
-            self._info['pattern'] = options.blockname
-        else:
-            self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
-        if len(self._info['pattern']) == 0:
-            self._info['pattern'] = '.'
+        self._info['pattern'] = args.get('blockname', "")
+        if not self._info['pattern'] or self._info['pattern'].isspace():
+            raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self, options):
         """ Go, go, go! """
-        print("Warning: This is an experimental feature. Don't expect any magic.")
-        self.setup(options)
+        if self._cli:
+            print("Warning: This is an experimental feature. Don't expect any magic.")
+        if not self._cli:
+            self.setup(options)
         # 1) Go through lib/
         if not self._skip_subdirs['lib']:
             if self._info['version'] == '37':
@@ -76,12 +79,14 @@ class ModToolMakeXML(ModTool):
         """ Search for files matching pattern in the given path. """
         files = sorted(glob.glob("%s/%s"% (path, path_glob)))
         files_filt = []
-        print("Searching for matching files in %s/:" % path)
+        if self._cli:
+            print("Searching for matching files in %s/:" % path)
         for f in files:
             if re.search(self._info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
         if len(files_filt) == 0:
-            print("None found.")
+            if self._cli:
+                print("None found.")
         return files_filt
 
     def _make_grc_xml_from_block_data(self, params, iosig, blockname):
@@ -106,7 +111,8 @@ class ModToolMakeXML(ModTool):
                     return
             else:
                 file_exists = True
-                print("Warning: Overwriting existing GRC file.")
+                if self._cli:
+                    print("Warning: Overwriting existing GRC file.")
         grc_generator = GRCXMLGenerator(
                 modname=self._info['modname'],
                 blockname=blockname,
@@ -121,7 +127,8 @@ class ModToolMakeXML(ModTool):
         if not self._skip_subdirs['grc']:
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_xml, ed.cfile) is None and not ed.check_for_glob('*.xml'):
-                print("Adding GRC bindings to grc/CMakeLists.txt...")
+                if self._cli:
+                    print("Adding GRC bindings to grc/CMakeLists.txt...")
                 ed.append_value('install', fname_xml, to_ignore_end='DESTINATION[^()]+')
                 ed.write()
                 self.scm.mark_files_updated(self._file['cmgrc'])
@@ -154,7 +161,8 @@ class ModToolMakeXML(ModTool):
             blockname = blockname.replace(self._info['modname']+'_', '', 1)
             return (blockname, fname_h)
         # Go, go, go
-        print("Making GRC bindings for %s..." % fname_cc)
+        if self._cli:
+            print("Making GRC bindings for %s..." % fname_cc)
         (blockname, fname_h) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
