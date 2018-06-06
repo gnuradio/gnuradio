@@ -22,11 +22,13 @@
 
 import re
 import sys
+from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name, run
+from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
 from gnuradio.modtool.core.modtool_rename import ModToolRename
+from .modtool_base import common_params, block_name, run
 
 
 @click.command('rename', short_help=ModToolRename().description)
@@ -40,4 +42,37 @@ def cli(**kwargs):
 
     The argument NEW-BLOCK-NAME is the new name of the block.
     """
-    run(ModToolRename, **kwargs)
+    setup(**kwargs)
+
+
+def setup(**kwargs):
+    options = SimpleNamespace(**kwargs)
+    self = ModToolRename()
+    self._cli = True
+
+    ModTool.setup(self, options)
+
+    if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
+    		or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
+        raise ModToolException('Missing or skipping relevant subdir.')
+
+    # first make sure the old block name is provided
+    self._info['oldname'] = options.blockname
+    if self._info['oldname'] is None:
+        self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
+    if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
+        raise ModToolException('Invalid block name.')
+    print("Block/code to rename identifier: " + self._info['oldname'])
+    self._info['fulloldname'] = self._info['modname'] + '_' + self._info['oldname']
+
+    # now get the new block name
+    if options.new_name is None:
+        self._info['newname'] = input("Enter name of block/code (without module name prefix): ")
+    else:
+        self._info['newname'] = options.new_name
+    if not re.match('[a-zA-Z0-9_]+', self._info['newname']):
+        raise ModToolException('Invalid block name.')
+    print("Block/code identifier: " + self._info['newname'])
+    self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
+
+    run(self, options)
