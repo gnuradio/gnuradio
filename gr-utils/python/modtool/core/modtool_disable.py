@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+from types import SimpleNamespace
 
 from .modtool_base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
@@ -39,16 +40,16 @@ class ModToolDisable(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
+        self._cli = False
 
-    def setup(self, options):
+    def setup(self, args):
+        options = SimpleNamespace()
+        options = ModTool.setup_args(options, args)
         ModTool.setup(self, options)
 
-        if options.blockname is not None:
-            self._info['pattern'] = options.blockname
-        else:
-            self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
-        if len(self._info['pattern']) == 0:
-            self._info['pattern'] = '.'
+        self._info['pattern'] = args.get('blockname', None)
+        if not self._info['pattern'] or self._info['pattern'].isspace():
+            raise ModToolException("Invalid pattern!")
 
     def run(self, options):
         """ Go, go, go! """
@@ -62,7 +63,8 @@ class ModToolDisable(ModTool):
             try:
                 initfile = open(self._file['pyinit']).read()
             except IOError:
-                print("Could not edit __init__.py, that might be a problem.")
+                if self._cli:
+                    print("Could not edit __init__.py, that might be a problem.")
                 return False
             pymodname = os.path.splitext(fname)[0]
             initfile = re.sub(r'((from|import)\s+\b'+pymodname+r'\b)', r'#\1', initfile)
@@ -93,14 +95,16 @@ class ModToolDisable(ModTool):
                                         self._info['modname'], fname),
                                         r'//\1', swigfile)
             if nsubs > 0:
-                print("Changing %s..." % self._file['swig'])
+                if self._cli:
+                    print("Changing %s..." % self._file['swig'])
             if nsubs > 1: # Need to find a single BLOCK_MAGIC
                 blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
                 if self._info['version'] == '37':
                     blockname = os.path.splitext(fname)[0]
                 (swigfile, nsubs) = re.subn('(GR_SWIG_BLOCK_MAGIC2?.+%s.+;)' % blockname, r'//\1', swigfile)
                 if nsubs > 1:
-                    print("Hm, changed more then expected while editing %s." % self._file['swig'])
+                    if self._cli:
+                        print("Hm, changed more then expected while editing %s." % self._file['swig'])
             open(self._file['swig'], 'w').write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
@@ -112,12 +116,14 @@ class ModToolDisable(ModTool):
             if self._info['version'] == '37':
                 blockname = os.path.splitext(fname)[0]
             swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
-            print("Changing %s..." % self._file['swig'])
+            if self._cli:
+                print("Changing %s..." % self._file['swig'])
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             open(self._file['swig'], 'w').write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
-        self.setup(options)
+        if not self._cli:
+            self.setup(options)
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
                 ('python', 'qa.+py$', _handle_py_qa),
@@ -135,9 +141,13 @@ class ModToolDisable(ModTool):
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:
                 continue
-            print("Traversing %s..." % subdir)
+            if self._cli:
+                print("Traversing %s..." % subdir)
             filenames = cmake.find_filenames_match(self._info['pattern'])
-            yes = self._info['yes']
+            if self._cli:
+                yes = self._info['yes']
+            else:
+                yes = True
             for fname in filenames:
                 file_disabled = False
                 if not yes:
@@ -155,4 +165,5 @@ class ModToolDisable(ModTool):
                     cmake.disable_file(fname)
             cmake.write()
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
-        print("Careful: 'gr_modtool disable' does not resolve dependencies.")
+        if self._cli:
+            print("Careful: 'gr_modtool disable' does not resolve dependencies.")

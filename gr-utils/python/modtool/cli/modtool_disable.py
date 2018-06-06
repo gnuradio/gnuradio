@@ -21,16 +21,35 @@
 """ Disable blocks module """
 
 import sys
+from types import SimpleNamespace
 
 import click
 
 from .modtool_base import common_params, block_name, run
+from gnuradio.modtool.core.modtool_base import ModTool
 from gnuradio.modtool.core.modtool_disable import ModToolDisable
 
+sys.tracebacklimit = 0
 
 @click.command('disable', short_help=ModToolDisable().description)
 @common_params
 @block_name
 def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
-    run(ModToolDisable, **kwargs)
+    setup(**kwargs)
+
+def setup(**kwargs):
+	""" Setup the necessary parameters """
+	options = SimpleNamespace(**kwargs)
+	self = ModToolDisable()
+	self._cli = True
+	ModTool.setup(self, options)
+
+	if options.blockname is not None:
+		self._info['pattern'] = options.blockname
+	else:
+		self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
+	if len(self._info['pattern']) == 0:
+		self._info['pattern'] = '.'
+
+	run(self, options)

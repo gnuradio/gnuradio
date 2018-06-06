@@ -23,7 +23,6 @@
 import os
 import functools
 import sys
-from types import SimpleNamespace
 from importlib import import_module
 from pkg_resources import iter_entry_points
 
