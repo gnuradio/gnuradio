@@ -167,6 +167,82 @@ namespace gr {
       virtual ::uhd::dict<std::string, std::string> get_usrp_info(size_t chan = 0) = 0;
 
       /*!
+       * Get a list of possible LO stage names
+       * \param chan the channel index 0 to N-1
+       * \return a vector of strings for possible LO names
+       */
+      virtual std::vector<std::string> get_lo_names(size_t chan = 0) = 0;
+
+      /*!
+       * Set the LO source for the usrp device.
+       * For usrps that support selectable LOs, this function
+       * allows switching between them.
+       * Typical options for source: internal, external.
+       * \param src a string representing the LO source
+       * \param name the name of the LO stage to update
+       * \param chan the channel index 0 to N-1
+       */
+      virtual void set_lo_source(const std::string &src, const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Get the currently set LO source.
+       * \param name the name of the LO stage to query
+       * \param chan the channel index 0 to N-1
+       * \return the configured LO source
+       */
+      virtual const std::string get_lo_source(const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Get a list of possible LO sources.
+       * \param name the name of the LO stage to query
+       * \param chan the channel index 0 to N-1
+       * \return a vector of strings for possible settings
+       */
+      virtual std::vector<std::string> get_lo_sources(const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Set whether the LO used by the usrp device is exported
+       * For usrps that support exportable LOs, this function
+       * configures if the LO used by chan is exported or not.
+       * \param enabled if true then export the LO
+       * \param name the name of the LO stage to update
+       * \param chan the channel index 0 to N-1 for the source channel
+       */
+      virtual void set_lo_export_enabled(bool enabled, const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Returns true if the currently selected LO is being exported.
+       * \param name the name of the LO stage to query
+       * \param chan the channel index 0 to N-1
+       */
+      virtual bool get_lo_export_enabled(const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Set the RX LO frequency (Advanced).
+       * \param freq the frequency to set the LO to
+       * \param name the name of the LO stage to update
+       * \param chan the channel index 0 to N-1
+       * \return a coerced LO frequency
+       */
+      virtual double set_lo_freq(double freq, const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Get the current RX LO frequency (Advanced).
+       * \param name the name of the LO stage to query
+       * \param chan the channel index 0 to N-1
+       * \return the configured LO frequency
+       */
+      virtual double get_lo_freq(const std::string &name, size_t chan = 0) = 0;
+
+      /*!
+       * Get the LO frequency range of the RX LO.
+       * \param name the name of the LO stage to query
+       * \param chan the channel index 0 to N-1
+       * \return a frequency range object
+       */
+      virtual ::uhd::freq_range_t get_lo_freq_range(const std::string &name, size_t chan = 0) = 0;
+
+      /*!
        * Set a constant DC offset value.
        * The value is complex to control both I and Q.
        * \param offset the dc offset (1.0 is full-scale)
