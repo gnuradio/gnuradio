@@ -63,7 +63,7 @@ class ModTool(object):
         options.skip_grc = args.get('skip_grc', False)
         options.scm_mode = args.get('scm_mode', 
                                     gr.prefs().get_string('modtool', 'scm_mode', 'no'))
-        options.yes = args.get('yes', False)
+        options.yes = args.get('yes', True)
         options.blockname = args.get('blockname', None)
         return options
 

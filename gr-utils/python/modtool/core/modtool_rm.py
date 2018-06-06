@@ -28,6 +28,7 @@ import os
 import re
 import sys
 import glob
+from types import SimpleNamespace
 
 from .util_functions import remove_pattern_from_file
 from .modtool_base import ModTool, ModToolException
@@ -41,16 +42,16 @@ class ModToolRemove(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
+        self._cli = False
 
-    def setup(self, options):
+    def setup(self, args):
+        options = SimpleNamespace()
+        options = ModTool.setup_args(options, args)
         ModTool.setup(self, options)
 
-        if options.blockname is not None:
-            self._info['pattern'] = options.blockname
-        else:
-            self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
-        if len(self._info['pattern']) == 0:
-            self._info['pattern'] = '.'
+        self._info['pattern'] = args.get('blockname', "")
+        if not self._info['pattern'] or self._info['pattern'].isspace():
+            raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self, options):
         """ Go, go, go! """
@@ -98,7 +99,8 @@ class ModToolRemove(ModTool):
                     (self._info['modname'], pyblockname, self._info['modname'], filename)
             return regexp
         # Go, go, go!
-        self.setup(options)
+        if not self._cli:
+            self.setup(options)
         if not self._skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
@@ -132,12 +134,14 @@ class ModToolRemove(ModTool):
         for g in globs:
             files = files + sorted(glob.glob("%s/%s"% (path, g)))
         files_filt = []
-        print("Searching for matching files in %s/:" % path)
+        if self._cli:
+            print("Searching for matching files in %s/:" % path)
         for f in files:
             if re.search(self._info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
         if len(files_filt) == 0:
-            print("None found.")
+            if self._cli:
+                print("None found.")
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
@@ -154,10 +158,12 @@ class ModToolRemove(ModTool):
                 if ans == 'n':
                     continue
             files_deleted.append(b)
-            print("Deleting %s." % f)
+            if self._cli:
+                print("Deleting %s." % f)
             self.scm.remove_file(f)
             os.unlink(f)
-            print("Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path))
+            if self._cli:
+                print("Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path))
             for var in makefile_vars:
                 ed.remove_value(var, b)
             if cmakeedit_func is not None:

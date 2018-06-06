@@ -144,10 +144,7 @@ class ModToolDisable(ModTool):
             if self._cli:
                 print("Traversing %s..." % subdir)
             filenames = cmake.find_filenames_match(self._info['pattern'])
-            if self._cli:
-                yes = self._info['yes']
-            else:
-                yes = True
+            yes = self._info['yes']
             for fname in filenames:
                 file_disabled = False
                 if not yes:

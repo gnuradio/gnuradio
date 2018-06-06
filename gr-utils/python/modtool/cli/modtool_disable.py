@@ -49,7 +49,7 @@ def setup(**kwargs):
 		self._info['pattern'] = options.blockname
 	else:
 		self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
-	if len(self._info['pattern']) == 0:
+	if not self._info['pattern'] or self._info['pattern'].isspace():
 		self._info['pattern'] = '.'
 
 	run(self, options)
