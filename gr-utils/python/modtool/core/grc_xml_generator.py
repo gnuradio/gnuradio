@@ -101,5 +101,5 @@ class GRCXMLGenerator(object):
     def save(self, filename):
         """ Write the XML file """
         self.make_xml()
-        open(filename, 'w').write(self._prettyprint())
+        open(filename, 'wb').write(self._prettyprint())
 
