@@ -20,7 +20,6 @@
 #
 """ Automatically create XML bindings for GRC from block code """
 
-import sys
 from types import SimpleNamespace
 
 import click
@@ -34,23 +33,23 @@ from .modtool_base import common_params, block_name, run
 @common_params
 @block_name
 def cli(**kwargs):
-	"""
-	\b
-	Make an XML file for GRC block bindings
+    """
+    \b
+    Make an XML file for GRC block bindings
 
-	Note: This does not work on python blocks
-	"""
-	options = SimpleNamespace(**kwargs)
-	self = ModToolMakeXML()
-	self._cli = True
+    Note: This does not work on python blocks
+    """
+    options = SimpleNamespace(**kwargs)
+    self = ModToolMakeXML()
+    self._cli = True
 
-	ModTool.setup(self, options)
+    ModTool.setup(self, options)
 
-	if options.blockname is not None:
-		self._info['pattern'] = options.blockname
-	else:
-		self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
-	if not self._info['pattern'] or self._info['pattern'].isspace():
-		self._info['pattern'] = '.'
+    if options.blockname is not None:
+        self._info['pattern'] = options.blockname
+    else:
+        self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
+    if not self._info['pattern'] or self._info['pattern'].isspace():
+        self._info['pattern'] = '.'
 
-	run(self, options)
+    run(self, options)

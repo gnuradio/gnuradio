@@ -21,7 +21,6 @@
 """ Module to rename blocks """
 
 import re
-import sys
 from types import SimpleNamespace
 
 import click
@@ -49,7 +48,7 @@ def cli(**kwargs):
     ModTool.setup(self, options)
 
     if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
-    		or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
+            or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
 
     # first make sure the old block name is provided

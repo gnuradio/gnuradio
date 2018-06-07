@@ -27,7 +27,6 @@ from __future__ import unicode_literals
 import os
 import re
 import glob
-import sys
 
 from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
@@ -45,7 +44,7 @@ class ModToolMakeXML(ModTool):
         ModTool.__init__(self)
         self._cli = False
 
-    def setup(self, options):
+    def setup(self, args):
         options = ModTool.setup_args(args)
         ModTool.setup(self, options)
 

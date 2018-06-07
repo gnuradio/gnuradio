@@ -26,10 +26,10 @@ from types import SimpleNamespace
 
 import click
 
-from .modtool_base import common_params, block_name, run
 from gnuradio.modtool.core.modtool_add import ModToolAdd
 from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
 from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
+from .modtool_base import common_params, block_name, run
 
 sys.tracebacklimit = 0
 
@@ -57,7 +57,7 @@ def cli(**kwargs):
     options = SimpleNamespace(**kwargs)
     self = ModToolAdd()
     self._cli = True
-    
+
     ModTool.setup(self, options)
 
     self._info['blocktype'] = options.block_type
@@ -80,7 +80,7 @@ def cli(**kwargs):
     click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self._info['lang']]))
 
     if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
-         or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
+            or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
 
     if self._info['blockname'] is None:
@@ -90,7 +90,7 @@ def cli(**kwargs):
     click.echo("Block/code identifier: " + self._info['blockname'])
 
     self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
-    
+
     if not options.license_file:
         self._info['copyrightholder'] = options.copyright
         if self._info['copyrightholder'] is None:
@@ -110,17 +110,17 @@ def cli(**kwargs):
         self._add_py_qa = options.add_python_qa
         if self._add_py_qa is None:
             self._add_py_qa = ask_yes_no('Add Python QA code?', True)
-    
+
     if self._info['lang'] == 'cpp':
         self._add_cc_qa = options.add_cpp_qa
         if self._add_cc_qa is None:
             self._add_cc_qa = ask_yes_no('Add C++ QA code?', not self._add_py_qa)
-    
+
     self._skip_cmakefiles = options.skip_cmakefiles
-    
+
     if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
         click.echo("Warning: Autotools modules are not supported. ",
-              "Files will be created, but Makefiles will not be edited.")
+                   "Files will be created, but Makefiles will not be edited.")
         self._skip_cmakefiles = True
 
     run(self, options)

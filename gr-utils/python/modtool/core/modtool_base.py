@@ -25,11 +25,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
-import sys
 import re
 from types import SimpleNamespace
-
-import click
 
 from gnuradio import gr
 from .util_functions import get_modname

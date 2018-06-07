@@ -30,7 +30,6 @@ import click
 from click_plugins import with_plugins
 
 from gnuradio import gr
-from gnuradio.modtool.core import *
 from gnuradio.modtool.core.modtool_base import ModToolException
 
 

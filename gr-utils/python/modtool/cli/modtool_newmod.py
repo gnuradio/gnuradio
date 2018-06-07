@@ -20,7 +20,6 @@
 #
 """ Create a whole new out-of-tree module """
 
-import sys
 import re
 import os
 from types import SimpleNamespace
@@ -28,9 +27,9 @@ from types import SimpleNamespace
 import click
 
 from gnuradio import gr
-from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
+from gnuradio.modtool.core.modtool_base import ModToolException
 from gnuradio.modtool.core.modtool_newmod import ModToolNewModule
-from .modtool_base import common_params, block_name, run
+from .modtool_base import common_params, run
 
 
 @click.command('newmod', short_help=ModToolNewModule().description)
@@ -39,41 +38,41 @@ from .modtool_base import common_params, block_name, run
 @common_params
 @click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)
 def cli(**kwargs):
-	"""
-	\b
-	Create a new out-of-tree module
+    """
+    \b
+    Create a new out-of-tree module
 
-	The argument MODULE-NAME overrides the current module's name (normally is autodetected).
-	"""
-	options = SimpleNamespace(**kwargs)
-	self = ModToolNewModule()
-	self._cli = True
+    The argument MODULE-NAME overrides the current module's name (normally is autodetected).
+    """
+    options = SimpleNamespace(**kwargs)
+    self = ModToolNewModule()
+    self._cli = True
 
-	self._info['modname'] = options.module_name
-	if self._info['modname'] is None:
-		if options.module_name:
-			self._info['modname'] = options.module_name
-		else:
-			self._info['modname'] = input('Name of the new module: ')
-	if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
-		raise ModToolException('Invalid module name.')
-	self._dir = options.directory
-	if self._dir == '.':
-		self._dir = './gr-{}'.format(self._info['modname'])
-	else:
-		self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
-	try:
-		os.stat(self._dir)
-	except OSError:
-		pass # This is what should happen
-	else:
-		raise ModToolException('The given directory exists.')
-	if options.srcdir is None:
-		options.srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod'
-	self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', options.srcdir)
-	if not os.path.isdir(self._srcdir):
-		raise ModToolException('Could not find gr-newmod source dir.')
-	self.options = options
-	self._setup_scm(mode='new')
+    self._info['modname'] = options.module_name
+    if self._info['modname'] is None:
+        if options.module_name:
+            self._info['modname'] = options.module_name
+        else:
+            self._info['modname'] = input('Name of the new module: ')
+    if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
+        raise ModToolException('Invalid module name.')
+    self._dir = options.directory
+    if self._dir == '.':
+        self._dir = './gr-{}'.format(self._info['modname'])
+    else:
+        self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
+    try:
+        os.stat(self._dir)
+    except OSError:
+        pass # This is what should happen
+    else:
+        raise ModToolException('The given directory exists.')
+    if options.srcdir is None:
+        options.srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod'
+    self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', options.srcdir)
+    if not os.path.isdir(self._srcdir):
+        raise ModToolException('Could not find gr-newmod source dir.')
+    self.options = options
+    self._setup_scm(mode='new')
 
-	run(self, options)
+    run(self, options)

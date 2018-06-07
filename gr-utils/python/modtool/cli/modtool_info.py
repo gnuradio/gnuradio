@@ -25,8 +25,8 @@ import sys
 
 import click
 
-from .modtool_base import common_params, run
 from gnuradio.modtool.core.modtool_info import ModToolInfo
+from .modtool_base import common_params, run
 
 
 @click.command('info')

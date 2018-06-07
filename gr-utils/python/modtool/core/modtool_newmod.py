@@ -27,7 +27,6 @@ from __future__ import unicode_literals
 import shutil
 import os
 import re
-import sys
 
 from gnuradio import gr
 from .modtool_base import ModTool, ModToolException
