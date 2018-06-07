@@ -27,7 +27,6 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
-from types import SimpleNamespace
 
 from .modtool_base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
@@ -43,8 +42,7 @@ class ModToolDisable(ModTool):
         self._cli = False
 
     def setup(self, args):
-        options = SimpleNamespace()
-        options = ModTool.setup_args(options, args)
+        options = ModTool.setup_args(args)
         ModTool.setup(self, options)
 
         self._info['pattern'] = args.get('blockname', None)

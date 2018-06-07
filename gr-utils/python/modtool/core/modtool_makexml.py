@@ -28,7 +28,6 @@ import os
 import re
 import glob
 import sys
-from types import SimpleNamespace
 
 from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
@@ -47,8 +46,7 @@ class ModToolMakeXML(ModTool):
         self._cli = False
 
     def setup(self, options):
-        options = SimpleNamespace()
-        options = ModTool.setup_args(options, args)
+        options = ModTool.setup_args(args)
         ModTool.setup(self, options)
 
         self._info['pattern'] = args.get('blockname', "")

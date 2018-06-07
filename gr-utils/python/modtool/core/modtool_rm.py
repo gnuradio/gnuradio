@@ -28,7 +28,6 @@ import os
 import re
 import sys
 import glob
-from types import SimpleNamespace
 
 from .util_functions import remove_pattern_from_file
 from .modtool_base import ModTool, ModToolException
@@ -45,8 +44,7 @@ class ModToolRemove(ModTool):
         self._cli = False
 
     def setup(self, args):
-        options = SimpleNamespace()
-        options = ModTool.setup_args(options, args)
+        options = ModTool.setup_args(args)
         ModTool.setup(self, options)
 
         self._info['pattern'] = args.get('blockname', "")

@@ -42,10 +42,6 @@ def cli(**kwargs):
 
     The argument NEW-BLOCK-NAME is the new name of the block.
     """
-    setup(**kwargs)
-
-
-def setup(**kwargs):
     options = SimpleNamespace(**kwargs)
     self = ModToolRename()
     self._cli = True

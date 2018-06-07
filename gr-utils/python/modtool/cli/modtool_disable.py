@@ -35,11 +35,7 @@ sys.tracebacklimit = 0
 @common_params
 @block_name
 def cli(**kwargs):
-    """Disable a block (comments out CMake entries for files)"""
-    setup(**kwargs)
-
-def setup(**kwargs):
-	""" Setup the necessary parameters """
+	"""Disable a block (comments out CMake entries for files)"""
 	options = SimpleNamespace(**kwargs)
 	self = ModToolDisable()
 	self._cli = True

@@ -27,6 +27,8 @@ from __future__ import unicode_literals
 import os
 import sys
 import re
+from types import SimpleNamespace
+
 import click
 
 from gnuradio import gr
@@ -55,7 +57,8 @@ class ModTool(object):
             self._skip_subdirs[subdir] = False
         self._dir = None
 
-    def setup_args(options, args):
+    def setup_args(args):
+        options = SimpleNamespace()
         options.directory = args.get('directory', '.')
         options.skip_lib = args.get('skip_lib', False)
         options.skip_swig = args.get('skip_swig', False)

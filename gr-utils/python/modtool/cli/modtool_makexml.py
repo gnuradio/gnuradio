@@ -34,16 +34,12 @@ from .modtool_base import common_params, block_name, run
 @common_params
 @block_name
 def cli(**kwargs):
-    """
-    \b
-    Make an XML file for GRC block bindings
+	"""
+	\b
+	Make an XML file for GRC block bindings
 
-    Note: This does not work on python blocks
-    """
-    setup(**kwargs)
-
-
-def setup(**kwargs):
+	Note: This does not work on python blocks
+	"""
 	options = SimpleNamespace(**kwargs)
 	self = ModToolMakeXML()
 	self._cli = True

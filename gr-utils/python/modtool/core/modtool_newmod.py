@@ -28,7 +28,6 @@ import shutil
 import os
 import re
 import sys
-from types import SimpleNamespace
 
 from gnuradio import gr
 from .modtool_base import ModTool, ModToolException
@@ -44,8 +43,7 @@ class ModToolNewModule(ModTool):
         self._cli = False
 
     def setup(self, args):
-        options = SimpleNamespace()
-        options = ModTool.setup_args(options, args)
+        options = ModTool.setup_args(args)
         # Don't call ModTool.setup(), that assumes an existing module.
         self._info['modname'] = args.get('module_name', '')
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):

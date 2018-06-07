@@ -107,7 +107,6 @@ def cli():
 
 def run(module, args):
     """Call the run function of the core modules."""
-    args = vars(args)
     try:
         module.run(args)
     except ModToolException as err:

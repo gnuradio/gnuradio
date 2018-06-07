@@ -34,11 +34,7 @@ from .modtool_base import common_params, block_name, run
 @common_params
 @block_name
 def cli(**kwargs):
-    """ Remove block (delete files and remove Makefile entries) """
-    setup(**kwargs)
-
-
-def setup(**kwargs):
+	""" Remove block (delete files and remove Makefile entries) """
 	options = SimpleNamespace(**kwargs)
 	self = ModToolRemove()
 	self._cli = True

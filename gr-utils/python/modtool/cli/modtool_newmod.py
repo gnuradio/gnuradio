@@ -39,15 +39,12 @@ from .modtool_base import common_params, block_name, run
 @common_params
 @click.argument('module_name', metavar="MODULE-NAME", nargs=1, required=False)
 def cli(**kwargs):
-    """
-    \b
-    Create a new out-of-tree module
+	"""
+	\b
+	Create a new out-of-tree module
 
-    The argument MODULE-NAME overrides the current module's name (normally is autodetected).
-    """
-    setup(**kwargs)
-
-def setup(**kwargs):
+	The argument MODULE-NAME overrides the current module's name (normally is autodetected).
+	"""
 	options = SimpleNamespace(**kwargs)
 	self = ModToolNewModule()
 	self._cli = True

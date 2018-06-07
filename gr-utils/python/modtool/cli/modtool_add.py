@@ -54,10 +54,6 @@ sys.tracebacklimit = 0
 @block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
-    setup(**kwargs)
-
-
-def setup(**kwargs):
     options = SimpleNamespace(**kwargs)
     self = ModToolAdd()
     self._cli = True

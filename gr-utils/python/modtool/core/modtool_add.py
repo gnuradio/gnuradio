@@ -27,9 +27,8 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
-from types import SimpleNamespace
 
-from .util_functions import append_re_line_sequence, ask_yes_no
+from .util_functions import append_re_line_sequence
 from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
@@ -53,8 +52,7 @@ class ModToolAdd(ModTool):
         self._cli = False
 
     def setup(self, args):
-        options = SimpleNamespace()
-        options = ModTool.setup_args(options, args)
+        options = ModTool.setup_args(args)
         ModTool.setup(self, options)
 
         self._info['blocktype'] = args.get('block_type', None)
