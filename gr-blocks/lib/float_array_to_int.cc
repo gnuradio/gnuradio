@@ -27,7 +27,7 @@
 #define _ISOC9X_SOURCE
 #include <float_array_to_int.h>
 #include <math.h>
-#include <cstdint>
+#include <stdint.h>
 
 static const int64_t MAX_INT =  INT32_MAX;
 static const int64_t MIN_INT =  INT32_MIN;
