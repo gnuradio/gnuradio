@@ -48,10 +48,7 @@ class ModToolNewModule(ModTool):
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
             raise ModToolException('Invalid module name.')
         self._dir = args.get('directory', '.')
-        if self._dir == '.':
-            self._dir = './gr-{}'.format(self._info['modname'])
-        else:
-            self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
+        self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
         try:
             os.stat(self._dir)
         except OSError:

@@ -42,7 +42,7 @@ def cli(**kwargs):
     \b
     Create a new out-of-tree module
 
-    The argument MODULE-NAME overrides the current module's name (normally is autodetected).
+    The argument MODULE-NAME is the name of the module to be added.
     """
     options = SimpleNamespace(**kwargs)
     self = ModToolNewModule()
