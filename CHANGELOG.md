@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [UNRELEASED]
+
+### Fixed
+#### gr-analog
+- `fmdet_cf`'s derivative coefficients were wrong.
+
 ## [3.7.13.3] - 2018-06-13
 
 ### Fixed
