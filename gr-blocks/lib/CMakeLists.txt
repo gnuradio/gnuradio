@@ -320,7 +320,11 @@ if(ENABLE_TESTING)
 
   add_executable(test-gr-blocks ${test_gr_blocks_sources})
 
-  list(APPEND GR_TEST_TARGET_DEPS test-gr-blocks gnuradio-blocks)
+  list(APPEND GR_TEST_TARGET_DEPS test-gr-blocks gnuradio-blocks
+    ${Boost_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CPPUNIT_LIBRARIES}
+  )
 
   target_link_libraries(
     test-gr-blocks

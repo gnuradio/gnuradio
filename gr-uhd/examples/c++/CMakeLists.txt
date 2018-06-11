@@ -35,7 +35,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 # Build executable
 ########################################################################
 add_executable(tags_demo tags_demo.cc)
-target_link_libraries(tags_demo gnuradio-uhd)
+target_link_libraries(tags_demo gnuradio-uhd ${CMAKE_THREAD_LIBS_INIT})
 
 INSTALL(TARGETS
     tags_demo
