@@ -314,7 +314,11 @@ if(ENABLE_TESTING)
     qa_rotator.cc
     qa_set_msg_handler.cc
   )
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks)
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks
+    ${Boost_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CPPUNIT_LIBRARIES}
+  )
 
   foreach(qa_file ${test_gr_blocks_sources})
     GR_ADD_CPP_TEST("blocks_${qa_file}"
