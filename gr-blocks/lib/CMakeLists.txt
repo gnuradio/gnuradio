@@ -327,6 +327,7 @@ if(ENABLE_TESTING)
     gnuradio-runtime
     gnuradio-blocks
     ${Boost_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
     ${CPPUNIT_LIBRARIES}
   )
 
