@@ -57,9 +57,17 @@ class ModToolAdd(ModTool):
         self._info['blocktype'] = args.get('block_type', None)
         if self._info['blocktype'] is None:
             raise ModToolException('Blocktype not specified')
+        if self._info['blocktype'] not in self._block_types:
+            raise ModToolException('Invalid blocktype')
         self._info['lang'] = args.get('lang', None)
         if self._info['lang'] is None:
             raise ModToolException('Programming language not specified')
+        if self._info['lang'] not in self.language_candidates:
+            raise ModToolException('Invalid programming language')
+        if self._info['lang'] == 'c++':
+            self._info['lang'] = 'cpp'
+        if self._info['blockname'] is None:
+            raise ModToolException('Blockname not specified')
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             raise ModToolException('Invalid block name.')
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
@@ -70,11 +78,17 @@ class ModToolAdd(ModTool):
                 self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
         self._info['license'] = self.setup_choose_license()
         self._info['arglist'] = args.get('argument_list', "")
-        if not (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
+        if not(self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
             self._add_py_qa = args.get('add_python_qa', False)
+        if not isinstance(self._add_py_qa, bool):
+            raise ModToolException('Expected a boolean value for add_python_qa')
         if self._info['lang'] == 'cpp':
             self._add_cc_qa = args.get('add_cpp_qa', False)
+        if not isinstance(self._add_cc_qa, bool):
+            raise ModToolException('Expected a boolean value for add_cpp_qa')
         self._skip_cmakefiles = args.get('skip_cmakefiles', False)
+        if not isinstance(self._skip_cmakefiles, bool):
+            raise ModToolException('Expected a boolean value for skip_cmakefiles')
         if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
             self._skip_cmakefiles = True
 

@@ -31,7 +31,6 @@ from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
 from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
 from .modtool_base import common_params, block_name, run
 
-sys.tracebacklimit = 0
 
 @click.command('add')
 @click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),

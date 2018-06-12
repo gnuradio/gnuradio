@@ -33,7 +33,7 @@ from .util_functions import get_modname
 from .scm import SCMRepoFactory
 
 
-class ModToolException(BaseException):
+class ModToolException(Exception):
     """ Standard exception for modtool classes. """
     pass
 
@@ -58,12 +58,20 @@ class ModTool(object):
         options = SimpleNamespace()
         options.directory = args.get('directory', '.')
         options.skip_lib = args.get('skip_lib', False)
+        if not isinstance(options.skip_lib, bool):
+            raise ModToolException('Expected a boolean value for skip_lib')
         options.skip_swig = args.get('skip_swig', False)
+        if not isinstance(options.skip_swig, bool):
+            raise ModToolException('Expected a boolean value for skip_swig')
         options.skip_python = args.get('skip_python', False)
+        if not isinstance(options.skip_python, bool):
+            raise ModToolException('Expected a boolean value for skip_python')
         options.skip_grc = args.get('skip_grc', False)
+        if not isinstance(options.skip_grc, bool):
+            raise ModToolException('Expected a boolean value for skip_grc')
         options.scm_mode = args.get('scm_mode', 
                                     gr.prefs().get_string('modtool', 'scm_mode', 'no'))
-        options.yes = args.get('yes', True)
+        options.yes = True
         options.blockname = args.get('blockname', None)
         return options
 

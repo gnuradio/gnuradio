@@ -47,10 +47,14 @@ class ModToolRename(ModTool):
         options = ModTool.setup_args(args)
         ModTool.setup(self, options)
 
-        self._info['oldname'] = args.get('blockname', "")
+        self._info['oldname'] = args.get('blockname', None)
+        if not self._info['oldname']:
+            raise ModToolException('Old block name (blockname) not specified.')
         if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
             raise ModToolException('Invalid block name.')
-        self._info['newname'] = args.get('new_name', "")
+        self._info['newname'] = args.get('new_name', None)
+        if not self._info['newname']:
+            raise ModToolException('New blockname (new_name) not specified.')
         if not re.match('[a-zA-Z0-9_]+', self._info['newname']):
             raise ModToolException('Invalid new block name')
         self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']

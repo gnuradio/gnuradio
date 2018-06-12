@@ -44,7 +44,9 @@ class ModToolNewModule(ModTool):
     def setup(self, args):
         options = ModTool.setup_args(args)
         # Don't call ModTool.setup(), that assumes an existing module.
-        self._info['modname'] = args.get('module_name', '')
+        self._info['modname'] = args.get('module_name', None)
+        if self._info['modname'] is None:
+            raise ModToolException('Module name not specified')
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
             raise ModToolException('Invalid module name.')
         self._dir = args.get('directory', '.')
