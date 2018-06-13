@@ -84,7 +84,7 @@ class ModToolAdd(ModTool):
             self._skip_cmakefiles = True
 
     def validate(self):
-
+        """ Validates the arguments """
         if self._info['blocktype'] is None:
             raise ModToolException('Blocktype not specified')
         if self._info['blocktype'] not in self._block_types:

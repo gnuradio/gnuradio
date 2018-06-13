@@ -37,19 +37,24 @@ class ModToolDisable(ModTool):
     name = 'disable'
     description = 'Disable selected block in module.'
 
-    def __init__(self):
-        ModTool.__init__(self)
-        self._cli = False
+    def __init__(self, *args, **kwargs):
+        ModTool.__init__(self, *args, **kwargs)
+        for dictionary in args:
+            self._info['pattern'] = dictionary.get('blockname', None)
 
-    def setup(self, args):
-        options = ModTool.setup_args(args)
-        ModTool.setup(self, options)
+        #This portion will be covered by the CLI
+        if self._cli:
+            return
 
-        self._info['pattern'] = args.get('blockname', None)
+        #kwargs portions will be implemented later
+        self.validate()
+
+    def validate(self):
+        """ Validates the arguments """
         if not self._info['pattern'] or self._info['pattern'].isspace():
             raise ModToolException("Invalid pattern!")
 
-    def run(self, options):
+    def run(self):
         """ Go, go, go! """
         def _handle_py_qa(cmake, fname):
             """ Do stuff for py qa """
@@ -120,8 +125,6 @@ class ModToolDisable(ModTool):
             open(self._file['swig'], 'w').write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
-        if not self._cli:
-            self.setup(options)
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
                 ('python', 'qa.+py$', _handle_py_qa),

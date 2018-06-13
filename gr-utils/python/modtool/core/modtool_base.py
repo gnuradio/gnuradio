@@ -73,7 +73,8 @@ class ModTool(object):
                 self._info['yes'] = dictionary['yes']
 
         #kwargs portion will be implemented later
-        self._validate()
+        if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
+            return
 
         if not self._check_directory(self._dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
@@ -101,7 +102,7 @@ class ModTool(object):
         self._setup_scm()
 
     def _validate(self):
-        """ Validates the set arguments """
+        """ Validates the arguments """
         if not isinstance(self._skip_subdirs['lib'], bool):
             raise ModToolException('Expected a boolean value for skip_lib')
         if not isinstance(self._skip_subdirs['swig'], bool):

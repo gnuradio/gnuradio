@@ -35,21 +35,14 @@ class ModToolInfo(ModTool):
     name = 'info'
     description = 'Return information about a given module.'
 
-    def __init__(self):
-        ModTool.__init__(self)
-        self._directory = None
-        self._python_readable = False
-        self._suggested_dirs = None
+    def __init__(self, *args, **kwargs):
+        ModTool.__init__(self, *args, **kwargs)
+        self._directory = args[0]['directory']
+        self._python_readable = args[0]['python_readable']
+        self._suggested_dirs = args[0]['suggested_dirs']
 
-    def setup(self, options):
-        # Won't call parent's setup(), because that's too chatty
-        self._directory = options.directory
-        self._python_readable = options.python_readable
-        self._suggested_dirs = options.suggested_dirs
-
-    def run(self, options):
+    def run(self):
         """ Go, go, go! """
-        self.setup(options)
         mod_info = dict()
         mod_info['base_dir'] = self._get_base_dir(self._directory)
         if mod_info['base_dir'] is None:
