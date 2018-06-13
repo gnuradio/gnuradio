@@ -1,0 +1,25 @@
+/*! \page page_releasing Release Process Documentation
+
+\section Preparation
+
+\li make sure a clean build works
+\li Check whether all significant changes are in CHANGELOG
+\li List of contributors `git log --format="* %aN <%aE>" vLASTRELEASE..HEAD | sort -u > /tmp/authors.txt`
+\li Check for ABI / API break, determine Version (MAJOR.MINOR.ABI.PATCH)
+\li Change [unreleased] to [MAJOR.MINOR.ABI.PATCH] in CHANGELOG
+\li Update version in CMakeList
+\li Commit with message: `git commit -m "Release MAJOR.MINOR.ABI.PATCH" CMakeLists.txt CHANGELOG.md
+\li prepare release statement / tag annotation file: copy last Tag's annotation format (basically, contributors top, new Changelog bottom
+
+\section Release Tagging
+
+\li `git tag --annotate --sign -F /path/to/release_statement.md vMAJOR.MINOR.ABI.PATCH`
+\li `git push yourrepo vMAJOR.MINOR.ABI.PATCH && hub pull-request -b {master|maint-MAJOR.MINOR}`
+\li let CI do its thing; if that's OK:
+\li `git push origin {master|maint-MAJOR.MINOR} vMAJOR.MINOR.ABI.PATCH`
+\li on github, mark release
+
+\section Creation Of Archives
+
+\li `git checkout vMAJOR.MINOR.ABI.PATCH; git submodule update` should be clean
+\li `gnuradio/dtools/bin/roll-tarball.sh`
