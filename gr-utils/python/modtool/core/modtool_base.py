@@ -43,7 +43,7 @@ class ModTool(object):
     name = 'base'
     description = None
 
-    def __init__(self):
+    def __init__(self, cli=False, *args, **kwargs):
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc'] # List subdirs where stuff happens
         self._has_subdirs = {}
         self._skip_subdirs = {}
@@ -53,36 +53,29 @@ class ModTool(object):
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
         self._dir = None
+        self._scm = None
 
-    def setup_args(args):
-        options = SimpleNamespace()
-        options.directory = args.get('directory', '.')
-        options.skip_lib = args.get('skip_lib', False)
-        if not isinstance(options.skip_lib, bool):
-            raise ModToolException('Expected a boolean value for skip_lib')
-        options.skip_swig = args.get('skip_swig', False)
-        if not isinstance(options.skip_swig, bool):
-            raise ModToolException('Expected a boolean value for skip_swig')
-        options.skip_python = args.get('skip_python', False)
-        if not isinstance(options.skip_python, bool):
-            raise ModToolException('Expected a boolean value for skip_python')
-        options.skip_grc = args.get('skip_grc', False)
-        if not isinstance(options.skip_grc, bool):
-            raise ModToolException('Expected a boolean value for skip_grc')
-        options.scm_mode = args.get('scm_mode', 
-                                    gr.prefs().get_string('modtool', 'scm_mode', 'no'))
-        options.yes = True
-        options.blockname = args.get('blockname', None)
-        return options
+        for dictionary in args:
+            self._dir = dictionary.get('directory', '.')
+            self._info['modname'] = dictionary.get('module_name', None)
+            self._skip_subdirs['lib'] = dictionary.get('skip_lib', False)
+            self._skip_subdirs['python'] = dictionary.get('skip_python', False)
+            self._skip_subdirs['swig'] = dictionary.get('skip_swig', False)
+            self._skip_subdirs['grc'] = dictionary.get('skip_grc', False)
+            self._scm = dictionary.get('scm_mode',
+                                       gr.prefs().get_string('modtool', 'scm_mode', 'no'))
+            self._info['blockname'] = dictionary.get('blockname', None)
+            if not cli:
+                self._info['yes'] = True
+            else:
+                self._info['yes'] = dictionary['yes']
 
-    def setup(self, options):
-        """ Initialise all internal variables, such as the module name etc. """
-        self._dir = options.directory
+        #kwargs portion will be implemented later
+        self.validate()
+
         if not self._check_directory(self._dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
-        if hasattr(options, 'module_name') and options.module_name is not None:
-            self._info['modname'] = options.module_name
-        else:
+        if self._info['modname'] is None:
             self._info['modname'] = get_modname()
         if self._info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
@@ -93,19 +86,28 @@ class ModTool(object):
                 os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
                 ):
             self._info['version'] = '37'
-        if options.skip_lib or not self._has_subdirs['lib']:
+        if not self._has_subdirs['lib']:
             self._skip_subdirs['lib'] = True
-        if options.skip_python or not self._has_subdirs['python']:
+        if not self._has_subdirs['python']:
             self._skip_subdirs['python'] = True
-        if options.skip_swig or self._get_mainswigfile() is None or not self._has_subdirs['swig']:
+        if self._get_mainswigfile() is None or not self._has_subdirs['swig']:
             self._skip_subdirs['swig'] = True
-        if options.skip_grc or not self._has_subdirs['grc']:
+        if not self._has_subdirs['grc']:
             self._skip_subdirs['grc'] = True
-        self._info['blockname'] = options.blockname
+
         self._setup_files()
-        self._info['yes'] = options.yes
-        self.options = options
         self._setup_scm()
+
+    def validate(self):
+        """ Validates the set arguments """
+        if not isinstance(self._skip_subdirs['lib'], bool):
+            raise ModToolException('Expected a boolean value for skip_lib')
+        if not isinstance(self._skip_subdirs['swig'], bool):
+            raise ModToolException('Expected a boolean value for skip_swig')
+        if not isinstance(self._skip_subdirs['python'], bool):
+            raise ModToolException('Expected a boolean value for skip_python')
+        if not isinstance(self._skip_subdirs['grc'], bool):
+            raise ModToolException('Expected a boolean value for skip_grc')
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
@@ -132,6 +134,7 @@ class ModTool(object):
 
     def _setup_scm(self, mode='active'):
         """ Initialize source control management. """
+        self.options = SimpleNamespace(scm_mode = self._scm)
         if mode == 'active':
             self.scm = SCMRepoFactory(self.options, '.').make_active_scm_manager()
         else:

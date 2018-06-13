@@ -42,58 +42,69 @@ class ModToolAdd(ModTool):
                     'general', 'tagged_stream', 'hier', 'noblock')
     language_candidates = ('cpp', 'python', 'c++')
 
-    def __init__(self):
-        ModTool.__init__(self)
+    def __init__(self, cli=False, *args, **kwargs):
+        ModTool.__init__(self, cli, *args, **kwargs)
         self._add_cc_qa = False
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
-        self._cli = False
 
-    def setup(self, args):
-        options = ModTool.setup_args(args)
-        ModTool.setup(self, options)
+        for dictionary in args:
+            self._info['blocktype'] = dictionary.get('block_type', None)
+            self._info['lang'] = dictionary.get('lang', None)
+            self._license_file = dictionary.get('license_file', None)
+            self._info['copyrightholder'] = dictionary.get('copyright', None)
+            self._info['arglist'] = dictionary.get('argument_list', "")
+            self._add_py_qa = dictionary.get('add_python_qa', False)
+            self._add_cc_qa = dictionary.get('add_cpp_qa', False)
+            self._skip_cmakefiles = dictionary.get('skip_cmakefiles', False)
 
-        self._info['blocktype'] = args.get('block_type', None)
-        if self._info['blocktype'] is None:
-            raise ModToolException('Blocktype not specified')
-        if self._info['blocktype'] not in self._block_types:
-            raise ModToolException('Invalid blocktype')
-        self._info['lang'] = args.get('lang', None)
-        if self._info['lang'] is None:
-            raise ModToolException('Programming language not specified')
-        if self._info['lang'] not in self.language_candidates:
-            raise ModToolException('Invalid programming language')
+        #This portion will be covered by the CLI
+        if cli:
+            return
+
+        #kwargs portions will be implemented later
+        self.validate_args()
+
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
         if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
                 or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
             raise ModToolException('Missing or skipping relevant subdir.')
+        self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
+        if not self._license_file:
+            if self._info['copyrightholder'] is None:
+                self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+        self._info['license'] = self.setup_choose_license()
+        if (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
+            self._add_py_qa = False
+        if not self._info[lang] == 'cpp':
+            self._add_cc_qa = False
+        if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
+            self._skip_cmakefiles = True
+
+        self.run()
+
+    def validate(self):
+
+        if self._info['blocktype'] is None:
+            raise ModToolException('Blocktype not specified')
+        if self._info['blocktype'] not in self._block_types:
+            raise ModToolException('Invalid blocktype')
+        if self._info['lang'] is None:
+            raise ModToolException('Programming language not specified')
+        if self._info['lang'] not in self.language_candidates:
+            raise ModToolException('Invalid programming language')
         if self._info['blockname'] is None:
             raise ModToolException('Blockname not specified')
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             raise ModToolException('Invalid block name.')
-        self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
-        self._license_file = args.get('license_file', None)
-        if not self._license_file:
-            self._info['copyrightholder'] = args.get('copyright', None)
-            if self._info['copyrightholder'] is None:
-                self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
-        self._info['license'] = self.setup_choose_license()
-        self._info['arglist'] = args.get('argument_list', "")
-        if not(self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
-            self._add_py_qa = args.get('add_python_qa', False)
         if not isinstance(self._add_py_qa, bool):
             raise ModToolException('Expected a boolean value for add_python_qa')
-        if self._info['lang'] == 'cpp':
-            self._add_cc_qa = args.get('add_cpp_qa', False)
         if not isinstance(self._add_cc_qa, bool):
             raise ModToolException('Expected a boolean value for add_cpp_qa')
-        self._skip_cmakefiles = args.get('skip_cmakefiles', False)
         if not isinstance(self._skip_cmakefiles, bool):
             raise ModToolException('Expected a boolean value for skip_cmakefiles')
-        if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
-            self._skip_cmakefiles = True
 
     def setup_choose_license(self):
         """ Select a license by the following rules, in this order:
@@ -121,10 +132,8 @@ class ModToolAdd(ModTool):
         open(path_to_file, 'w').write(render_template(tpl, **self._info))
         self.scm.add_files((path_to_file,))
 
-    def run(self, options):
+    def run(self):
         """ Go, go, go. """
-        if not self._cli:
-            self.setup(options)
         has_swig = (
                 self._info['lang'] == 'cpp'
                 and not self._skip_subdirs['swig']

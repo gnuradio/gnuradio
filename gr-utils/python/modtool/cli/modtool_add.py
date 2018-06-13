@@ -31,10 +31,14 @@ from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
 from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
 from .modtool_base import common_params, block_name, run
 
+block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
+                'general', 'tagged_stream', 'hier', 'noblock')
+language_candidates = ('cpp', 'python', 'c++')
+
 
 @click.command('add')
-@click.option('-t', '--block-type', type=click.Choice(ModToolAdd()._block_types),
-              help="One of {}.".format(', '.join(ModToolAdd()._block_types)))
+@click.option('-t', '--block-type', type=click.Choice(block_types),
+              help="One of {}.".format(', '.join(block_types)))
 @click.option('--license-file',
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
@@ -47,17 +51,13 @@ from .modtool_base import common_params, block_name, run
               help="If given, C++ QA code is automatically added if possible.")
 @click.option('--skip-cmakefiles', is_flag=True,
               help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-@click.option('-l', '--lang', type=click.Choice(ModToolAdd().language_candidates),
+@click.option('-l', '--lang', type=click.Choice(language_candidates),
               help="Programming Language")
 @common_params
 @block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
-    options = SimpleNamespace(**kwargs)
-    self = ModToolAdd()
-    self._cli = True
-
-    ModTool.setup(self, options)
+    self = ModToolAdd(True, kwargs)
 
     self._info['blocktype'] = options.block_type
     if self._info['blocktype'] is None:
@@ -122,4 +122,4 @@ def cli(**kwargs):
                    "Files will be created, but Makefiles will not be edited.")
         self._skip_cmakefiles = True
 
-    run(self, options)
+    run(self)

@@ -104,10 +104,10 @@ def cli():
     """A tool for editing GNU Radio out-of-tree modules."""
     pass
 
-def run(module, args):
+def run(module):
     """Call the run function of the core modules."""
     try:
-        module.run(args)
+        module.run()
     except ModToolException as err:
         click.echo(err, file=sys.stderr)
         exit(1)
