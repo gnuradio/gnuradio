@@ -32,7 +32,7 @@ from gnuradio.modtool.core.modtool_newmod import ModToolNewModule
 from .modtool_base import common_params, run
 
 
-@click.command('newmod', short_help=ModToolNewModule().description)
+@click.command('newmod', short_help=ModToolNewModule.description)
 @click.option('--srcdir',
               help="Source directory for the module template.")
 @common_params

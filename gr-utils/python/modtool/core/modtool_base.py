@@ -43,7 +43,7 @@ class ModTool(object):
     name = 'base'
     description = None
 
-    def __init__(self, cli=False, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc'] # List subdirs where stuff happens
         self._has_subdirs = {}
         self._skip_subdirs = {}
@@ -54,8 +54,10 @@ class ModTool(object):
             self._skip_subdirs[subdir] = False
         self._dir = None
         self._scm = None
+        self._cli = False
 
         for dictionary in args:
+            self._cli = dictionary.get('cli', False)
             self._dir = dictionary.get('directory', '.')
             self._info['modname'] = dictionary.get('module_name', None)
             self._skip_subdirs['lib'] = dictionary.get('skip_lib', False)
@@ -65,13 +67,13 @@ class ModTool(object):
             self._scm = dictionary.get('scm_mode',
                                        gr.prefs().get_string('modtool', 'scm_mode', 'no'))
             self._info['blockname'] = dictionary.get('blockname', None)
-            if not cli:
+            if not self._cli:
                 self._info['yes'] = True
             else:
                 self._info['yes'] = dictionary['yes']
 
         #kwargs portion will be implemented later
-        self.validate()
+        self._validate()
 
         if not self._check_directory(self._dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
@@ -98,7 +100,7 @@ class ModTool(object):
         self._setup_files()
         self._setup_scm()
 
-    def validate(self):
+    def _validate(self):
         """ Validates the set arguments """
         if not isinstance(self._skip_subdirs['lib'], bool):
             raise ModToolException('Expected a boolean value for skip_lib')

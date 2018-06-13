@@ -30,7 +30,7 @@ from gnuradio.modtool.core.modtool_rename import ModToolRename
 from .modtool_base import common_params, block_name, run
 
 
-@click.command('rename', short_help=ModToolRename().description)
+@click.command('rename', short_help=ModToolRename.description)
 @common_params
 @block_name
 @click.argument('new-name', metavar="NEW-BLOCK-NAME", nargs=1, required=False)

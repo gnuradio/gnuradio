@@ -31,7 +31,7 @@ from .modtool_base import common_params, block_name, run
 
 sys.tracebacklimit = 0
 
-@click.command('disable', short_help=ModToolDisable().description)
+@click.command('disable', short_help=ModToolDisable.description)
 @common_params
 @block_name
 def cli(**kwargs):

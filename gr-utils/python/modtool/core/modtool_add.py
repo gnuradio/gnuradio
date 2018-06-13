@@ -42,8 +42,8 @@ class ModToolAdd(ModTool):
                     'general', 'tagged_stream', 'hier', 'noblock')
     language_candidates = ('cpp', 'python', 'c++')
 
-    def __init__(self, cli=False, *args, **kwargs):
-        ModTool.__init__(self, cli, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        ModTool.__init__(self, *args, **kwargs)
         self._add_cc_qa = False
         self._add_py_qa = False
         self._skip_cmakefiles = False
@@ -60,11 +60,11 @@ class ModToolAdd(ModTool):
             self._skip_cmakefiles = dictionary.get('skip_cmakefiles', False)
 
         #This portion will be covered by the CLI
-        if cli:
+        if self._cli:
             return
 
         #kwargs portions will be implemented later
-        self.validate_args()
+        self.validate()
 
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
@@ -78,12 +78,10 @@ class ModToolAdd(ModTool):
         self._info['license'] = self.setup_choose_license()
         if (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
             self._add_py_qa = False
-        if not self._info[lang] == 'cpp':
+        if not self._info['lang'] == 'cpp':
             self._add_cc_qa = False
         if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
             self._skip_cmakefiles = True
-
-        self.run()
 
     def validate(self):
 

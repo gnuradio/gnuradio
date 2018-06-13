@@ -29,7 +29,7 @@ from gnuradio.modtool.core.modtool_makexml import ModToolMakeXML
 from .modtool_base import common_params, block_name, run
 
 
-@click.command('makexml', short_help=ModToolMakeXML().description)
+@click.command('makexml', short_help=ModToolMakeXML.description)
 @common_params
 @block_name
 def cli(**kwargs):

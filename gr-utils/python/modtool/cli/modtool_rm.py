@@ -29,7 +29,7 @@ from gnuradio.modtool.core.modtool_rm import ModToolRemove
 from .modtool_base import common_params, block_name, run
 
 
-@click.command('remove', short_help=ModToolRemove().description)
+@click.command('remove', short_help=ModToolRemove.description)
 @common_params
 @block_name
 def cli(**kwargs):

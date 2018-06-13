@@ -31,14 +31,10 @@ from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
 from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
 from .modtool_base import common_params, block_name, run
 
-block_types = ('sink', 'source', 'sync', 'decimator', 'interpolator',
-                'general', 'tagged_stream', 'hier', 'noblock')
-language_candidates = ('cpp', 'python', 'c++')
-
 
 @click.command('add')
-@click.option('-t', '--block-type', type=click.Choice(block_types),
-              help="One of {}.".format(', '.join(block_types)))
+@click.option('-t', '--block-type', type=click.Choice(ModToolAdd._block_types),
+              help="One of {}.".format(', '.join(ModToolAdd._block_types)))
 @click.option('--license-file',
               help="File containing the license header for every source code file.")
 @click.option('--copyright',
@@ -51,15 +47,16 @@ language_candidates = ('cpp', 'python', 'c++')
               help="If given, C++ QA code is automatically added if possible.")
 @click.option('--skip-cmakefiles', is_flag=True,
               help="If given, only source files are written, but CMakeLists.txt files are left unchanged.")
-@click.option('-l', '--lang', type=click.Choice(language_candidates),
+@click.option('-l', '--lang', type=click.Choice(ModToolAdd.language_candidates),
               help="Programming Language")
 @common_params
 @block_name
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
-    self = ModToolAdd(True, kwargs)
+    kwargs['cli'] = True
+    self = ModToolAdd(kwargs)
 
-    self._info['blocktype'] = options.block_type
+    self._info['blocktype'] = kwargs['block_type']
     if self._info['blocktype'] is None:
         click.echo(str(self._block_types))
         with SequenceCompleter(self._block_types):
@@ -68,7 +65,7 @@ def cli(**kwargs):
                 if self._info['blocktype'] not in self._block_types:
                     click.echo('Must be one of ' + str(self._block_types))
 
-    self._info['lang'] = options.lang
+    self._info['lang'] = kwargs['lang']
     if self._info['lang'] is None:
         with SequenceCompleter(self.language_candidates):
             while self._info['lang'] not in self.language_candidates:
@@ -90,32 +87,32 @@ def cli(**kwargs):
 
     self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
 
-    if not options.license_file:
-        self._info['copyrightholder'] = options.copyright
+    if not kwargs['license_file']:
+        self._info['copyrightholder'] = kwargs['copyright']
         if self._info['copyrightholder'] is None:
             self._info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
         elif self._info['is_component']:
             click.echo("For GNU Radio components the FSF is added as copyright holder")
 
-    self._license_file = options.license_file
+    self._license_file = kwargs['license_file']
     self._info['license'] = self.setup_choose_license()
 
-    if options.argument_list is not None:
-        self._info['arglist'] = options.argument_list
+    if kwargs['argument_list'] is not None:
+        self._info['arglist'] = kwargs['argument_list']
     else:
         self._info['arglist'] = input('Enter valid argument list, including default arguments: ')
 
     if not (self._info['blocktype'] in ('noblock') or self._skip_subdirs['python']):
-        self._add_py_qa = options.add_python_qa
+        self._add_py_qa = kwargs['add_python_qa']
         if self._add_py_qa is None:
             self._add_py_qa = ask_yes_no('Add Python QA code?', True)
 
     if self._info['lang'] == 'cpp':
-        self._add_cc_qa = options.add_cpp_qa
+        self._add_cc_qa = kwargs['add_cpp_qa']
         if self._add_cc_qa is None:
             self._add_cc_qa = ask_yes_no('Add C++ QA code?', not self._add_py_qa)
 
-    self._skip_cmakefiles = options.skip_cmakefiles
+    self._skip_cmakefiles = kwargs['skip_cmakefiles']
 
     if self._info['version'] == 'autofoo' and not self._skip_cmakefiles:
         click.echo("Warning: Autotools modules are not supported. ",
