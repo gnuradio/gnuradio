@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.7.13.3] - 2018-06-13
+
+### Fixed
+#### Project Scope
+- For non-C++11 compilers, the new cstdint include doesn't work out; conditionalized it.
 
 ## [3.7.13.2] - 2018-05-31
 
