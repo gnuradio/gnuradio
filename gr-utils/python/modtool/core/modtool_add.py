@@ -66,6 +66,9 @@ class ModToolAdd(ModTool):
             raise ModToolException('Invalid programming language')
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
+        if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
+                or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
+            raise ModToolException('Missing or skipping relevant subdir.')
         if self._info['blockname'] is None:
             raise ModToolException('Blockname not specified')
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
