@@ -53,9 +53,11 @@ class ModTool(object):
         for subdir in self._subdirs:
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
-        self._dir = None
         self._scm = None
         self._cli = False
+
+        if len(args) == 0:
+            raise ModToolException('No arguments to instantiate the class object')
 
         for dictionary in args:
             self._cli = dictionary.get('cli', False)

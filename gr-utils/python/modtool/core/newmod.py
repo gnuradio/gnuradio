@@ -39,6 +39,7 @@ class ModToolNewModule(ModTool):
     description = 'Create new empty module, use add to add blocks.'
     def __init__(self, *args, **kwargs):
         ModTool.__init__(self, *args, **kwargs)
+        self._srcdir = None
         # Don't call ModTool._validate(), that assumes an existing module.
         # ModTool.__init__ has initialized most of variables so no need for repetition
         for dictionary in args:
