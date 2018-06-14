@@ -39,17 +39,12 @@ def cli(**kwargs):
 
     Note: This does not work on python blocks
     """
-    options = SimpleNamespace(**kwargs)
-    self = ModToolMakeXML()
-    self._cli = True
+    kwargs['cli'] = True
+    self = ModToolMakeXML(kwargs)
 
-    ModTool.setup(self, options)
-
-    if options.blockname is not None:
-        self._info['pattern'] = options.blockname
-    else:
+    if self._info['pattern'] is None:
         self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
     if not self._info['pattern'] or self._info['pattern'].isspace():
         self._info['pattern'] = '.'
 
-    run(self, options)
+    run(self)

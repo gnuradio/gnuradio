@@ -41,11 +41,9 @@ class ModToolDisable(ModTool):
         ModTool.__init__(self, *args, **kwargs)
         for dictionary in args:
             self._info['pattern'] = dictionary.get('blockname', None)
-
         #This portion will be covered by the CLI
         if self._cli:
             return
-
         #kwargs portions will be implemented later
         self.validate()
 

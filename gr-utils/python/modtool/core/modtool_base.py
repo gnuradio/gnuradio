@@ -75,6 +75,7 @@ class ModTool(object):
         #kwargs portion will be implemented later
         if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             return
+        self._validate()
 
         if not self._check_directory(self._dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
