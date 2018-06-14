@@ -24,8 +24,8 @@ import re
 
 import click
 
-from gnuradio.modtool.core.modtool_base import ModToolException
-from gnuradio.modtool.core.modtool_rename import ModToolRename
+from ..core import ModToolException
+from ..core import ModToolRename
 from .modtool_base import common_params, block_name, run
 
 

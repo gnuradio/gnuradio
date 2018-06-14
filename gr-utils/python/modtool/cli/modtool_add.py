@@ -24,9 +24,9 @@ import re
 
 import click
 
-from gnuradio.modtool.core.modtool_add import ModToolAdd
-from gnuradio.modtool.core.modtool_base import ModToolException
-from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
+from ..core import ModToolAdd
+from ..core import ModToolException
+from ..core import SequenceCompleter, ask_yes_no
 from .modtool_base import common_params, block_name, run
 
 

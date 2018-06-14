@@ -25,8 +25,8 @@ import os
 
 import click
 
-from gnuradio.modtool.core.modtool_base import ModToolException
-from gnuradio.modtool.core.modtool_newmod import ModToolNewModule
+from ..core import ModToolException
+from ..core import ModToolNewModule
 from .modtool_base import common_params, run
 
 

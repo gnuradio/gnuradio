@@ -22,7 +22,7 @@
 
 import click
 
-from gnuradio.modtool.core.modtool_rm import ModToolRemove
+from ..core import ModToolRemove
 from .modtool_base import common_params, block_name, run
 
 

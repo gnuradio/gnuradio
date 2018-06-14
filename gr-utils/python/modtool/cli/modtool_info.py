@@ -22,7 +22,7 @@
 
 import click
 
-from gnuradio.modtool.core.modtool_info import ModToolInfo
+from ..core import ModToolInfo
 from .modtool_base import common_params, run
 
 

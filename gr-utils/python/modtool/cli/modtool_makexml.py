@@ -22,7 +22,7 @@
 
 import click
 
-from gnuradio.modtool.core.modtool_makexml import ModToolMakeXML
+from ..core import ModToolMakeXML
 from .modtool_base import common_params, block_name, run
 
 
