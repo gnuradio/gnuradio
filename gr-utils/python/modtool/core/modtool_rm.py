@@ -50,6 +50,7 @@ class ModToolRemove(ModTool):
         self.validate()
 
     def validate(self):
+        """ Validates the arguments """
         if not self._info['pattern'] or self._info['pattern'].isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 

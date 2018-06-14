@@ -21,11 +21,10 @@
 """ Module to rename blocks """
 
 import re
-from types import SimpleNamespace
 
 import click
 
-from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
+from gnuradio.modtool.core.modtool_base import ModToolException
 from gnuradio.modtool.core.modtool_rename import ModToolRename
 from .modtool_base import common_params, block_name, run
 

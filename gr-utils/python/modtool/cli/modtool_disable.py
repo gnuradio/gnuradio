@@ -20,16 +20,10 @@
 #
 """ Disable blocks module """
 
-import sys
-from types import SimpleNamespace
-
 import click
 
-from gnuradio.modtool.core.modtool_base import ModTool
 from gnuradio.modtool.core.modtool_disable import ModToolDisable
 from .modtool_base import common_params, block_name, run
-
-sys.tracebacklimit = 0
 
 @click.command('disable', short_help=ModToolDisable.description)
 @common_params

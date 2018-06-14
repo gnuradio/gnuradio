@@ -44,7 +44,8 @@ class ModTool(object):
     description = None
 
     def __init__(self, *args, **kwargs):
-        self._subdirs = ['lib', 'include', 'python', 'swig', 'grc'] # List subdirs where stuff happens
+        # List subdirs where stuff happens
+        self._subdirs = ['lib', 'include', 'python', 'swig', 'grc']
         self._has_subdirs = {}
         self._skip_subdirs = {}
         self._info = {}
@@ -187,6 +188,6 @@ class ModTool(object):
                 return fname
         return None
 
-    def run(self, options):
+    def run(self):
         """ Override this. """
         raise NotImplementedError('Module implementation missing')

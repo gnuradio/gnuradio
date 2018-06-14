@@ -20,9 +20,6 @@
 #
 """ Returns information about a module """
 
-import os
-import sys
-
 import click
 
 from gnuradio.modtool.core.modtool_info import ModToolInfo

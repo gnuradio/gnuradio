@@ -22,11 +22,9 @@
 
 import re
 import os
-from types import SimpleNamespace
 
 import click
 
-from gnuradio import gr
 from gnuradio.modtool.core.modtool_base import ModToolException
 from gnuradio.modtool.core.modtool_newmod import ModToolNewModule
 from .modtool_base import common_params, run

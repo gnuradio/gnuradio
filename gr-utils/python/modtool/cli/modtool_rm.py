@@ -20,11 +20,8 @@
 #
 """ Remove blocks module """
 
-from types import SimpleNamespace
-
 import click
 
-from gnuradio.modtool.core.modtool_base import ModTool
 from gnuradio.modtool.core.modtool_rm import ModToolRemove
 from .modtool_base import common_params, block_name, run
 

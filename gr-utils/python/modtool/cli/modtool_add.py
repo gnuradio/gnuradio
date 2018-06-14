@@ -20,14 +20,12 @@
 #
 """ Module to add new blocks """
 
-import sys
 import re
-from types import SimpleNamespace
 
 import click
 
 from gnuradio.modtool.core.modtool_add import ModToolAdd
-from gnuradio.modtool.core.modtool_base import ModTool, ModToolException
+from gnuradio.modtool.core.modtool_base import ModToolException
 from gnuradio.modtool.core.util_functions import SequenceCompleter, ask_yes_no
 from .modtool_base import common_params, block_name, run
 
