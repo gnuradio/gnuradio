@@ -72,7 +72,7 @@ class ModTool(object):
             else:
                 self._info['yes'] = dictionary['yes']
 
-        #kwargs portion will be implemented later
+        # kwargs portion will be implemented later
         if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             return
         self._validate()

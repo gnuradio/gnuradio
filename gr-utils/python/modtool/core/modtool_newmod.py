@@ -37,19 +37,19 @@ class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
     description = 'Create new empty module, use add to add blocks.'
-    def __init__(self):
-        ModTool.__init__(self)
-        self._cli = False
-
-    def setup(self, args):
-        options = ModTool.setup_args(args)
-        # Don't call ModTool.setup(), that assumes an existing module.
-        self._info['modname'] = args.get('module_name', None)
-        if self._info['modname'] is None:
-            raise ModToolException('Module name not specified')
-        if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
-            raise ModToolException('Invalid module name.')
-        self._dir = args.get('directory', '.')
+    def __init__(self, *args, **kwargs):
+        ModTool.__init__(self, *args, **kwargs)
+        # Don't call ModTool._validate(), that assumes an existing module.
+        # ModTool.__init__ has initialized most of variables so no need for repetition
+        for dictionary in args:
+            self._srcdir = dictionary.get('srcdir', None)
+        if self._srcdir is None:
+            self._srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod'
+        self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', self._srcdir)
+        # This portion will be covered by the CLI
+        if self._cli:
+            return
+        self.validate()
         self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
         try:
             os.stat(self._dir)
@@ -57,21 +57,24 @@ class ModToolNewModule(ModTool):
             pass # This is what should happen
         else:
             raise ModToolException('The given directory exists.')
-        options.srcdir = args.get('srcdir', '/usr/local/share/gnuradio/modtool/gr-newmod')
-        self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', options.srcdir)
         if not os.path.isdir(self._srcdir):
             raise ModToolException('Could not find gr-newmod source dir.')
-        self.options = options
+
         self._setup_scm(mode='new')
 
-    def run(self, options):
+    def validate(self):
+        """ Validates the arguments """
+        if self._info['modname'] is None:
+            raise ModToolException('Module name not specified')
+        if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
+            raise ModToolException('Invalid module name.')
+
+    def run(self):
         """
         * Copy the example dir recursively
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
-        if not self._cli:
-            self.setup(options)
         if self._cli:
             print("Creating out-of-tree module in %s..." % (self._dir,))
         try:

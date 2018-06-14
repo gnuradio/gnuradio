@@ -59,11 +59,11 @@ class ModToolAdd(ModTool):
             self._add_cc_qa = dictionary.get('add_cpp_qa', False)
             self._skip_cmakefiles = dictionary.get('skip_cmakefiles', False)
 
-        #This portion will be covered by the CLI
+        # This portion will be covered by the CLI
         if self._cli:
             return
 
-        #kwargs portions will be implemented later
+        # kwargs portions will be implemented later
         self.validate()
 
         if self._info['lang'] == 'c++':

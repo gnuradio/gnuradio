@@ -37,6 +37,7 @@ class ModToolInfo(ModTool):
 
     def __init__(self, *args, **kwargs):
         ModTool.__init__(self, *args, **kwargs)
+        # Don't call ModTool._validate(), is is too chatty!
         self._directory = args[0]['directory']
         self._python_readable = args[0]['python_readable']
         self._suggested_dirs = args[0]['suggested_dirs']
