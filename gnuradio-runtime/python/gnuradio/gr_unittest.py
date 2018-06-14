@@ -27,6 +27,7 @@ import unittest
 import gr_xmlrunner
 import sys, os, stat
 
+
 class TestCase(unittest.TestCase):
     """A subclass of unittest.TestCase that adds additional assertions
 
@@ -110,7 +111,8 @@ TextTestRunner = unittest.TextTestRunner
 TestProgram = unittest.TestProgram
 main = TestProgram
 
-def run(PUT, filename=None):
+
+def run(PUT, filename=None, verbosity=1):
     '''
     Runs the unittest on a TestCase and produces an optional XML report
     PUT:      the program under test and should be a gr_unittest.TestCase
@@ -138,10 +140,10 @@ def run(PUT, filename=None):
             st = os.stat(path)[stat.ST_MODE]
             if(st & stat.S_IWUSR > 0):
                 # Create an XML runner to filename
-                fout = file(path+"/"+filename, "w")
+                fout = file(path + "/" + filename, "w")
                 xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
 
-        txtrunner = TextTestRunner(verbosity=1)
+        txtrunner = TextTestRunner(verbosity=verbosity)
 
         # Run the test; runner also creates XML output file
         # FIXME: make xmlrunner output to screen so we don't have to do run and main
@@ -151,7 +153,7 @@ def run(PUT, filename=None):
         if(xmlrunner is not None):
             xmlrunner.run(suite)
 
-        main()
+        main(verbosity=verbosity)
 
         # This will run and fail make check if problem
         # but does not output to screen.
@@ -159,7 +161,7 @@ def run(PUT, filename=None):
 
     else:
         # If no filename is given, just run the test
-        main()
+        main(verbosity=verbosity)
 
 
 ##############################################################################
