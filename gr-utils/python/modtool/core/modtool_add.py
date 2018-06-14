@@ -62,7 +62,6 @@ class ModToolAdd(ModTool):
         # This portion will be covered by the CLI
         if self._cli:
             return
-
         # kwargs portions will be implemented later
         self.validate()
 
@@ -86,23 +85,23 @@ class ModToolAdd(ModTool):
     def validate(self):
         """ Validates the arguments """
         if self._info['blocktype'] is None:
-            raise ModToolException('Blocktype not specified')
+            raise ModToolException('Blocktype not specified.')
         if self._info['blocktype'] not in self._block_types:
             raise ModToolException('Invalid blocktype')
         if self._info['lang'] is None:
-            raise ModToolException('Programming language not specified')
+            raise ModToolException('Programming language not specified.')
         if self._info['lang'] not in self.language_candidates:
-            raise ModToolException('Invalid programming language')
+            raise ModToolException('Invalid programming language.')
         if self._info['blockname'] is None:
-            raise ModToolException('Blockname not specified')
+            raise ModToolException('Blockname not specified.')
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             raise ModToolException('Invalid block name.')
         if not isinstance(self._add_py_qa, bool):
-            raise ModToolException('Expected a boolean value for add_python_qa')
+            raise ModToolException('Expected a boolean value for add_python_qa.')
         if not isinstance(self._add_cc_qa, bool):
-            raise ModToolException('Expected a boolean value for add_cpp_qa')
+            raise ModToolException('Expected a boolean value for add_cpp_qa.')
         if not isinstance(self._skip_cmakefiles, bool):
-            raise ModToolException('Expected a boolean value for skip_cmakefiles')
+            raise ModToolException('Expected a boolean value for skip_cmakefiles.')
 
     def setup_choose_license(self):
         """ Select a license by the following rules, in this order:

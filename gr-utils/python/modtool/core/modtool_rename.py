@@ -35,34 +35,40 @@ class ModToolRename(ModTool):
     name = 'rename'
     description = 'Rename a block inside a module.'
 
-    def __init__(self):
-        ModTool.__init__(self)
+    def __init__(self, *args, **kwargs):
+        ModTool.__init__(self, *args, **kwargs)
         self._add_cc_qa = False
         self._add_py_qa = False
         self._skip_cmakefiles = False
         self._license_file = None
-        self._cli = False
 
-    def setup(self, args):
-        options = ModTool.setup_args(args)
-        ModTool.setup(self, options)
+        for dictionary in args:
+            self._info['oldname'] = dictionary.get('blockname', None)
+            self._info['newname'] = dictionary.get('new_name', None)
 
-        self._info['oldname'] = args.get('blockname', None)
+        # This portion will be covered by the CLI
+        if self._cli:
+            return
+        # kwargs portions will be implemented later
+        self.validate()
+        # This portion will be covered by the CLI
+        if self._cli:
+            return
+        self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
+
+    def validate(self):
+        """ Validates the arguments """
         if not self._info['oldname']:
             raise ModToolException('Old block name (blockname) not specified.')
         if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
             raise ModToolException('Invalid block name.')
-        self._info['newname'] = args.get('new_name', None)
         if not self._info['newname']:
             raise ModToolException('New blockname (new_name) not specified.')
         if not re.match('[a-zA-Z0-9_]+', self._info['newname']):
-            raise ModToolException('Invalid new block name')
-        self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
+            raise ModToolException('Invalid new block name.')
 
-    def run(self, options):
+    def run(self):
         """ Go, go, go. """
-        if not self._cli:
-            self.setup(options)
         module = self._info['modname']
         oldname = self._info['oldname']
         newname = self._info['newname']
