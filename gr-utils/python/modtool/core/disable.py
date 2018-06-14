@@ -28,7 +28,7 @@ import os
 import re
 import sys
 
-from .modtool_base import ModTool, ModToolException
+from .base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
 
 

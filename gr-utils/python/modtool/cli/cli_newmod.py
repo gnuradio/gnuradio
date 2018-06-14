@@ -27,7 +27,7 @@ import click
 
 from ..core import ModToolException
 from ..core import ModToolNewModule
-from .modtool_base import common_params, run
+from .cli_base import common_params, run
 
 
 @click.command('newmod', short_help=ModToolNewModule.description)

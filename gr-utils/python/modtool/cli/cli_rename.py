@@ -26,7 +26,7 @@ import click
 
 from ..core import ModToolException
 from ..core import ModToolRename
-from .modtool_base import common_params, block_name, run
+from .cli_base import common_params, block_name, run
 
 
 @click.command('rename', short_help=ModToolRename.description)

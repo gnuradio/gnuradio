@@ -18,25 +18,21 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Remove blocks module """
+""" Returns information about a module """
 
 import click
 
-from ..core import ModToolRemove
-from .modtool_base import common_params, block_name, run
+from ..core import ModToolInfo
+from .cli_base import common_params, run
 
 
-@click.command('remove', short_help=ModToolRemove.description)
+@click.command('info')
+@click.option('--python-readable', is_flag=True,
+              help="Return the output in a format that's easier to read for Python scripts.")
+@click.option('--suggested-dirs',
+              help="Suggest typical include dirs if nothing better can be detected.")
 @common_params
-@block_name
 def cli(**kwargs):
-    """ Remove block (delete files and remove Makefile entries) """
-    kwargs['cli'] = True
-    self = ModToolRemove(kwargs)
-
-    if self._info['pattern'] is None:
-        self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
-    if not self._info['pattern'] or self._info['pattern'].isspace():
-        self._info['pattern'] = '.'
-
+    """ Return information about a given module """
+    self = ModToolInfo(kwargs)
     run(self)

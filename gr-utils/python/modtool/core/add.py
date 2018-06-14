@@ -29,7 +29,7 @@ import re
 
 from .util_functions import append_re_line_sequence
 from .cmakefile_editor import CMakeFileEditor
-from .modtool_base import ModTool, ModToolException
+from .base import ModTool, ModToolException
 from .templates import Templates
 from .code_generator import render_template
 

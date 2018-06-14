@@ -24,14 +24,14 @@ GR_PYTHON_INSTALL(FILES
     cmakefile_editor.py
     code_generator.py
     grc_xml_generator.py
-    modtool_add.py
-    modtool_base.py
-    modtool_disable.py
-    modtool_info.py
-    modtool_makexml.py
-    modtool_newmod.py
-    modtool_rm.py
-    modtool_rename.py
+    add.py
+    base.py
+    disable.py
+    info.py
+    makexml.py
+    newmod.py
+    rm.py
+    rename.py
     parser_cc_block.py
     scm.py
     templates.py

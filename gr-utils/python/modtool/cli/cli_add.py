@@ -27,7 +27,7 @@ import click
 from ..core import ModToolAdd
 from ..core import ModToolException
 from ..core import SequenceCompleter, ask_yes_no
-from .modtool_base import common_params, block_name, run
+from .cli_base import common_params, block_name, run
 
 
 @click.command('add')
@@ -53,7 +53,6 @@ def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
     kwargs['cli'] = True
     self = ModToolAdd(kwargs)
-
     if self._info['blocktype'] is None:
         click.echo(str(self._block_types))
         with SequenceCompleter(self._block_types):

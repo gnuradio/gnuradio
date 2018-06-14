@@ -29,7 +29,7 @@ import os
 import re
 
 from gnuradio import gr
-from .modtool_base import ModTool, ModToolException
+from .base import ModTool, ModToolException
 from .scm import SCMRepoFactory
 
 

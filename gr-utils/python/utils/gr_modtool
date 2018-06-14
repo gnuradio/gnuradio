@@ -22,7 +22,7 @@
 """ A tool for editing GNU Radio out-of-tree modules. """
 
 
-from gnuradio.modtool.cli.modtool_base import cli
+from gnuradio.modtool.cli.cli_base import cli
 
 
 if __name__ == '__main__':

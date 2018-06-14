@@ -18,23 +18,29 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Disable blocks module """
+""" Automatically create XML bindings for GRC from block code """
 
 import click
 
-from ..core import ModToolDisable
-from .modtool_base import common_params, block_name, run
+from ..core import ModToolMakeXML
+from .cli_base import common_params, block_name, run
 
-@click.command('disable', short_help=ModToolDisable.description)
+
+@click.command('makexml', short_help=ModToolMakeXML.description)
 @common_params
 @block_name
 def cli(**kwargs):
-    """Disable a block (comments out CMake entries for files)"""
+    """
+    \b
+    Make an XML file for GRC block bindings
+
+    Note: This does not work on python blocks
+    """
     kwargs['cli'] = True
-    self = ModToolDisable(kwargs)
+    self = ModToolMakeXML(kwargs)
 
     if self._info['pattern'] is None:
-        self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
+        self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
     if not self._info['pattern'] or self._info['pattern'].isspace():
         self._info['pattern'] = '.'
 

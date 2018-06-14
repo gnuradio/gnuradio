@@ -23,14 +23,14 @@ from __future__ import unicode_literals
 
 from .cmakefile_editor import CMakeFileEditor
 from .grc_xml_generator import GRCXMLGenerator
-from .modtool_base import ModTool, ModToolException
-from .modtool_add import ModToolAdd
-from .modtool_disable import ModToolDisable
-from .modtool_info import ModToolInfo
-from .modtool_makexml import ModToolMakeXML
-from .modtool_newmod import ModToolNewModule
-from .modtool_rm import ModToolRemove
-from .modtool_rename import ModToolRename
+from .base import ModTool, ModToolException
+from .add import ModToolAdd
+from .disable import ModToolDisable
+from .info import ModToolInfo
+from .makexml import ModToolMakeXML
+from .newmod import ModToolNewModule
+from .rm import ModToolRemove
+from .rename import ModToolRename
 from .templates import Templates
 # Leave this at the end
 from .parser_cc_block import ParserCCBlock

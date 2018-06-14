@@ -28,7 +28,7 @@ import os
 import re
 import glob
 
-from .modtool_base import ModTool, ModToolException
+from .base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
 from .grc_xml_generator import GRCXMLGenerator
 from .cmakefile_editor import CMakeFileEditor

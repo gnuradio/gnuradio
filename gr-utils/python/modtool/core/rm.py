@@ -30,7 +30,7 @@ import sys
 import glob
 
 from .util_functions import remove_pattern_from_file
-from .modtool_base import ModTool, ModToolException
+from .base import ModTool, ModToolException
 from .cmakefile_editor import CMakeFileEditor
 
 

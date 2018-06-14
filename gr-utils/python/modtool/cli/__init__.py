@@ -19,4 +19,4 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from .modtool_base import cli, common_params, block_name
+from .cli_base import cli, common_params, block_name

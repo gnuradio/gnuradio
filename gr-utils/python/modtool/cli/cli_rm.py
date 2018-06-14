@@ -18,29 +18,24 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Automatically create XML bindings for GRC from block code """
+""" Remove blocks module """
 
 import click
 
-from ..core import ModToolMakeXML
-from .modtool_base import common_params, block_name, run
+from ..core import ModToolRemove
+from .cli_base import common_params, block_name, run
 
 
-@click.command('makexml', short_help=ModToolMakeXML.description)
+@click.command('remove', short_help=ModToolRemove.description)
 @common_params
 @block_name
 def cli(**kwargs):
-    """
-    \b
-    Make an XML file for GRC block bindings
-
-    Note: This does not work on python blocks
-    """
+    """ Remove block (delete files and remove Makefile entries) """
     kwargs['cli'] = True
-    self = ModToolMakeXML(kwargs)
+    self = ModToolRemove(kwargs)
 
     if self._info['pattern'] is None:
-        self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
+        self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
     if not self._info['pattern'] or self._info['pattern'].isspace():
         self._info['pattern'] = '.'
 

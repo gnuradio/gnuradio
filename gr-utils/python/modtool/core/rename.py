@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 
-from .modtool_base import ModTool, ModToolException
+from .base import ModTool, ModToolException
 
 
 class ModToolRename(ModTool):
