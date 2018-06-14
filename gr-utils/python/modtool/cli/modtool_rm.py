@@ -34,17 +34,12 @@ from .modtool_base import common_params, block_name, run
 @block_name
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
-    options = SimpleNamespace(**kwargs)
-    self = ModToolRemove()
-    self._cli = True
+    kwargs['cli'] = True
+    self = ModToolRemove(kwargs)
 
-    ModTool.setup(self, options)
-
-    if options.blockname is not None:
-        self._info['pattern'] = options.blockname
-    else:
+    if self._info['pattern'] is None:
         self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
     if not self._info['pattern'] or self._info['pattern'].isspace():
         self._info['pattern'] = '.'
 
-    run(self, options)
+    run(self)

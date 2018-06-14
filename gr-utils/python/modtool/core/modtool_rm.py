@@ -39,19 +39,21 @@ class ModToolRemove(ModTool):
     name = 'remove'
     description = 'Remove a block from a module.'
 
-    def __init__(self):
-        ModTool.__init__(self)
-        self._cli = False
+    def __init__(self, *args, **kwargs):
+        ModTool.__init__(self, *args, **kwargs)
+        for dictionary in args:
+            self._info['pattern'] = dictionary.get('blockname', None)
+        # This portion will be covered by the CLI
+        if self._cli:
+            return
+        # kwargs portions will be implemented later
+        self.validate()
 
-    def setup(self, args):
-        options = ModTool.setup_args(args)
-        ModTool.setup(self, options)
-
-        self._info['pattern'] = args.get('blockname', "")
+    def validate(self):
         if not self._info['pattern'] or self._info['pattern'].isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 
-    def run(self, options):
+    def run(self):
         """ Go, go, go! """
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
@@ -97,8 +99,6 @@ class ModToolRemove(ModTool):
                     (self._info['modname'], pyblockname, self._info['modname'], filename)
             return regexp
         # Go, go, go!
-        if not self._cli:
-            self.setup(options)
         if not self._skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)

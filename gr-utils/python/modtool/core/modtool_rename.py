@@ -51,9 +51,6 @@ class ModToolRename(ModTool):
             return
         # kwargs portions will be implemented later
         self.validate()
-        # This portion will be covered by the CLI
-        if self._cli:
-            return
         self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
 
     def validate(self):
