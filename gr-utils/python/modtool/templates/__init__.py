@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 #
 # Copyright 2013-2014 Free Software Foundation, Inc.
 #
@@ -21,11 +19,4 @@ from __future__ import unicode_literals
 # Boston, MA 02110-1301, USA.
 #
 
-from .base import ModTool, ModToolException
-from .add import ModToolAdd
-from .disable import ModToolDisable
-from .info import ModToolInfo
-from .makexml import ModToolMakeXML
-from .newmod import ModToolNewModule
-from .rm import ModToolRemove
-from .rename import ModToolRename
+from .templates import Templates

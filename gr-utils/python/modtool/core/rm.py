@@ -29,9 +29,9 @@ import re
 import sys
 import glob
 
-from .util_functions import remove_pattern_from_file
+from ..tools import remove_pattern_from_file
+from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
-from .cmakefile_editor import CMakeFileEditor
 
 
 class ModToolRemove(ModTool):

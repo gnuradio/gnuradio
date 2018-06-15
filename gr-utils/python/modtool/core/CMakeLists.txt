@@ -21,9 +21,6 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
-    cmakefile_editor.py
-    code_generator.py
-    grc_xml_generator.py
     add.py
     base.py
     disable.py
@@ -32,17 +29,10 @@ GR_PYTHON_INSTALL(FILES
     newmod.py
     rm.py
     rename.py
-    parser_cc_block.py
-    scm.py
-    templates.py
-    util_functions.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/core
 )
 
 set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/core)
-install(DIRECTORY gr-newmod
-    DESTINATION ${GR_PKG_MODTOOL_DATA_DIR}
-)
 
 
 ########################################################################

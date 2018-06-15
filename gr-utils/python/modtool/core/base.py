@@ -29,8 +29,8 @@ import re
 from types import SimpleNamespace
 
 from gnuradio import gr
-from .util_functions import get_modname
-from .scm import SCMRepoFactory
+from ..tools import get_modname
+from ..tools import SCMRepoFactory
 
 
 class ModToolException(Exception):

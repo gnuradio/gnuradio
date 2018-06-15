@@ -27,11 +27,11 @@ from __future__ import unicode_literals
 import os
 import re
 
-from .util_functions import append_re_line_sequence
-from .cmakefile_editor import CMakeFileEditor
+from ..tools import append_re_line_sequence
+from ..tools import CMakeFileEditor
+from ..tools import render_template
+from ..templates import Templates
 from .base import ModTool, ModToolException
-from .templates import Templates
-from .code_generator import render_template
 
 
 class ModToolAdd(ModTool):

@@ -51,5 +51,7 @@ if(ENABLE_GR_UTILS)
 add_subdirectory(python/utils)
 add_subdirectory(python/modtool/core)
 add_subdirectory(python/modtool/cli)
+add_subdirectory(python/modtool/tools)
+add_subdirectory(python/modtool/templates)
 
 endif(ENABLE_GR_UTILS)

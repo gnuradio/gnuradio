@@ -28,11 +28,11 @@ import os
 import re
 import glob
 
+from ..tools import ParserCCBlock
+from ..tools import GRCXMLGenerator
+from ..tools import CMakeFileEditor
+from ..tools import ask_yes_no
 from .base import ModTool, ModToolException
-from .parser_cc_block import ParserCCBlock
-from .grc_xml_generator import GRCXMLGenerator
-from .cmakefile_editor import CMakeFileEditor
-from .util_functions import ask_yes_no
 
 
 class ModToolMakeXML(ModTool):

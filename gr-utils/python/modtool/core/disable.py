@@ -28,8 +28,8 @@ import os
 import re
 import sys
 
+from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
-from .cmakefile_editor import CMakeFileEditor
 
 
 class ModToolDisable(ModTool):

@@ -23,7 +23,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from mako.template import Template
-from .templates import Templates
+from ..templates import Templates
 from .util_functions import str_to_fancyc_comment
 from .util_functions import str_to_python_comment
 from .util_functions import strip_default_values

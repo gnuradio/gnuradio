@@ -1,7 +1,4 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-#
-# Copyright 2013-2014 Free Software Foundation, Inc.
+# Copyright 2011 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,13 +16,16 @@ from __future__ import unicode_literals
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-#
 
-from .base import ModTool, ModToolException
-from .add import ModToolAdd
-from .disable import ModToolDisable
-from .info import ModToolInfo
-from .makexml import ModToolMakeXML
-from .newmod import ModToolNewModule
-from .rm import ModToolRemove
-from .rename import ModToolRename
+include(GrPython)
+
+GR_PYTHON_INSTALL(FILES
+    __init__.py
+    templates.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/templates
+)
+
+set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/templates)
+install(DIRECTORY gr-newmod
+    DESTINATION ${GR_PKG_MODTOOL_DATA_DIR}
+)

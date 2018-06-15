@@ -25,8 +25,8 @@ from __future__ import unicode_literals
 
 import os
 
+from ..tools import get_modname
 from .base import ModTool, ModToolException
-from .util_functions import get_modname
 
 
 class ModToolInfo(ModTool):

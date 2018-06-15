@@ -29,8 +29,8 @@ import os
 import re
 
 from gnuradio import gr
+from ..tools import SCMRepoFactory
 from .base import ModTool, ModToolException
-from .scm import SCMRepoFactory
 
 
 class ModToolNewModule(ModTool):
@@ -45,7 +45,7 @@ class ModToolNewModule(ModTool):
         for dictionary in args:
             self._srcdir = dictionary.get('srcdir', None)
         if self._srcdir is None:
-            self._srcdir = '/usr/local/share/gnuradio/modtool/gr-newmod'
+            self._srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
         self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', self._srcdir)
         # This portion will be covered by the CLI
         if self._cli:
