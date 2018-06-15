@@ -18,21 +18,24 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Returns information about a module """
+""" Disable blocks module """
 
 import click
 
-from ..core import ModToolInfo
-from .cli_base import common_params, run
+from ..core import ModToolDisable
+from .base import common_params, block_name, run
 
-
-@click.command('info')
-@click.option('--python-readable', is_flag=True,
-              help="Return the output in a format that's easier to read for Python scripts.")
-@click.option('--suggested-dirs',
-              help="Suggest typical include dirs if nothing better can be detected.")
+@click.command('disable', short_help=ModToolDisable.description)
 @common_params
+@block_name
 def cli(**kwargs):
-    """ Return information about a given module """
-    self = ModToolInfo(kwargs)
+    """Disable a block (comments out CMake entries for files)"""
+    kwargs['cli'] = True
+    self = ModToolDisable(kwargs)
+
+    if self._info['pattern'] is None:
+        self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
+    if not self._info['pattern'] or self._info['pattern'].isspace():
+        self._info['pattern'] = '.'
+
     run(self)
