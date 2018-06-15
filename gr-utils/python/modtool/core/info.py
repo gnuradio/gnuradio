@@ -37,7 +37,7 @@ class ModToolInfo(ModTool):
     def __init__(self, python_readable=False, suggested_dirs=None, **kwargs):
         ModTool.__init__(self, **kwargs)
         # Don't call ModTool._validate(), is is too chatty!
-        self._directory = self._dir
+        self._directory = self.dir
         self._python_readable = python_readable
         self._suggested_dirs = suggested_dirs
 
@@ -51,13 +51,13 @@ class ModToolInfo(ModTool):
         mod_info['modname'] = get_modname()
         if mod_info['modname'] is None:
             raise ModToolException('{}' if self._python_readable else "No module found.")
-        if self._info['version'] == '36' and (
+        if self.info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', mod_info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', mod_info['modname']))
                 ):
-            self._info['version'] = '37'
-        mod_info['version'] = self._info['version']
-        if 'is_component' in list(self._info.keys()) and self._info['is_component']:
+            self.info['version'] = '37'
+        mod_info['version'] = self.info['version']
+        if 'is_component' in list(self.info.keys()) and self.info['is_component']:
             mod_info['is_component'] = True
         mod_info['incdirs'] = []
         mod_incl_dir = os.path.join(mod_info['base_dir'], 'include')

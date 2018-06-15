@@ -43,19 +43,19 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolRename(**kwargs)
     # first make sure the old block name is provided
-    if self._info['oldname'] is None:
-        self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
-    if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
+    if self.info['oldname'] is None:
+        self.info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
+    if not re.match('[a-zA-Z0-9_]+', self.info['oldname']):
         raise ModToolException('Invalid block name.')
-    print("Block/code to rename identifier: " + self._info['oldname'])
-    self._info['fulloldname'] = self._info['modname'] + '_' + self._info['oldname']
+    print("Block/code to rename identifier: " + self.info['oldname'])
+    self.info['fulloldname'] = self.info['modname'] + '_' + self.info['oldname']
 
     # now get the new block name
-    if self._info['newname'] is None:
-        self._info['newname'] = input("Enter name of block/code (without module name prefix): ")
-    if not re.match('[a-zA-Z0-9_]+', self._info['newname']):
+    if self.info['newname'] is None:
+        self.info['newname'] = input("Enter name of block/code (without module name prefix): ")
+    if not re.match('[a-zA-Z0-9_]+', self.info['newname']):
         raise ModToolException('Invalid block name.')
-    print("Block/code identifier: " + self._info['newname'])
-    self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
+    print("Block/code identifier: " + self.info['newname'])
+    self.info['fullnewname'] = self.info['modname'] + '_' + self.info['newname']
 
     run(self)

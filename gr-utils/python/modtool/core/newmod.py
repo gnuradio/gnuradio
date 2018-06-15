@@ -41,31 +41,31 @@ class ModToolNewModule(ModTool):
         ModTool.__init__(self, module_name, **kwargs)
         # Don't call ModTool._validate(), that assumes an existing module.
         # ModTool.__init__ has initialized most of variables so no need for repetition
-        self._srcdir = srcdir
-        if self._srcdir is None:
-            self._srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
-        self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', self._srcdir)
+        self.srcdir = srcdir
+        if self.srcdir is None:
+            self.srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
+        self.srcdir = gr.prefs().get_string('modtool', 'newmod_path', self.srcdir)
         # This portion will be covered by the CLI
-        if self._cli:
+        if self.cli:
             return
         self.validate()
-        self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
+        self.dir = self.dir + '/gr-{}'.format(self.info['modname'])
         try:
-            os.stat(self._dir)
+            os.stat(self.dir)
         except OSError:
             pass # This is what should happen
         else:
             raise ModToolException('The given directory exists.')
-        if not os.path.isdir(self._srcdir):
+        if not os.path.isdir(self.srcdir):
             raise ModToolException('Could not find gr-newmod source dir.')
 
         self._setup_scm(mode='new')
 
     def validate(self):
         """ Validates the arguments """
-        if self._info['modname'] is None:
+        if self.info['modname'] is None:
             raise ModToolException('Module name not specified.')
-        if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
+        if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
             raise ModToolException('Invalid module name.')
 
     def run(self):
@@ -74,28 +74,28 @@ class ModToolNewModule(ModTool):
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
-        if self._cli:
-            print("Creating out-of-tree module in %s..." % (self._dir,))
+        if self.cli:
+            print("Creating out-of-tree module in %s..." % (self.dir,))
         try:
-            shutil.copytree(self._srcdir, self._dir)
-            os.chdir(self._dir)
+            shutil.copytree(self.srcdir, self.dir)
+            os.chdir(self.dir)
         except OSError:
-            raise ModToolException('Could not create directory %s.' % self._dir)
+            raise ModToolException('Could not create directory %s.' % self.dir)
         for root, dirs, files in os.walk('.'):
             for filename in files:
                 f = os.path.join(root, filename)
                 s = open(f, 'r').read()
-                s = s.replace('howto', self._info['modname'])
-                s = s.replace('HOWTO', self._info['modname'].upper())
+                s = s.replace('howto', self.info['modname'])
+                s = s.replace('HOWTO', self.info['modname'].upper())
                 open(f, 'w').write(s)
                 if filename.find('howto') != -1:
-                    os.rename(f, os.path.join(root, filename.replace('howto', self._info['modname'])))
+                    os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
             if os.path.basename(root) == 'howto':
-                os.rename(root, os.path.join(os.path.dirname(root), self._info['modname']))
-        if self._cli:
+                os.rename(root, os.path.join(os.path.dirname(root), self.info['modname']))
+        if self.cli:
             print("Done.")
         if self.scm.init_repo(path_to_repo="."):
-            if self._cli:
+            if self.cli:
                 print("Created repository... you might want to commit before continuing.")
-        if self._cli:
+        if self.cli:
             print("Use 'gr_modtool add' to add a new block to this currently empty module.")

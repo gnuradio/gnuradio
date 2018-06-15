@@ -39,15 +39,15 @@ class ModToolDisable(ModTool):
 
     def __init__(self, blockname, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self._info['pattern'] = blockname
+        self.info['pattern'] = blockname
         # This portion will be covered by the CLI
-        if self._cli:
+        if self.cli:
             return
         self.validate()
 
     def validate(self):
         """ Validates the arguments """
-        if not self._info['pattern'] or self._info['pattern'].isspace():
+        if not self.info['pattern'] or self.info['pattern'].isspace():
             raise ModToolException("Invalid pattern!")
 
     def run(self):
@@ -62,7 +62,7 @@ class ModToolDisable(ModTool):
             try:
                 initfile = open(self._file['pyinit']).read()
             except IOError:
-                if self._cli:
+                if self.cli:
                     print("Could not edit __init__.py, that might be a problem.")
                 return False
             pymodname = os.path.splitext(fname)[0]
@@ -72,7 +72,7 @@ class ModToolDisable(ModTool):
             return False
         def _handle_cc_qa(cmake, fname):
             """ Do stuff for cc qa """
-            if self._info['version'] == '37':
+            if self.info['version'] == '37':
                 cmake.comment_out_lines('\$\{CMAKE_CURRENT_SOURCE_DIR\}/'+fname)
                 fname_base = os.path.splitext(fname)[0]
                 ed = CMakeFileEditor(self._file['qalib']) # Abusing the CMakeFileEditor...
@@ -80,7 +80,7 @@ class ModToolDisable(ModTool):
                 ed.comment_out_lines('%s::suite\(\)' % fname_base, comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
-            elif self._info['version'] == '36':
+            elif self.info['version'] == '36':
                 cmake.comment_out_lines('add_executable.*'+fname)
                 cmake.comment_out_lines('target_link_libraries.*'+os.path.splitext(fname)[0])
                 cmake.comment_out_lines('GR_ADD_TEST.*'+os.path.splitext(fname)[0])
@@ -91,18 +91,18 @@ class ModToolDisable(ModTool):
             as well as the block magic """
             swigfile = open(self._file['swig']).read()
             (swigfile, nsubs) = re.subn('(.include\s+"(%s/)?%s")' % (
-                                        self._info['modname'], fname),
+                                        self.info['modname'], fname),
                                         r'//\1', swigfile)
             if nsubs > 0:
-                if self._cli:
+                if self.cli:
                     print("Changing %s..." % self._file['swig'])
             if nsubs > 1: # Need to find a single BLOCK_MAGIC
-                blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
-                if self._info['version'] == '37':
+                blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
+                if self.info['version'] == '37':
                     blockname = os.path.splitext(fname)[0]
                 (swigfile, nsubs) = re.subn('(GR_SWIG_BLOCK_MAGIC2?.+%s.+;)' % blockname, r'//\1', swigfile)
                 if nsubs > 1:
-                    if self._cli:
+                    if self.cli:
                         print("Hm, changed more then expected while editing %s." % self._file['swig'])
             open(self._file['swig'], 'w').write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
@@ -111,11 +111,11 @@ class ModToolDisable(ModTool):
             """ Comment out include files from the SWIG file,
             as well as the block magic """
             swigfile = open(self._file['swig']).read()
-            blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
-            if self._info['version'] == '37':
+            blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
+            if self.info['version'] == '37':
                 blockname = os.path.splitext(fname)[0]
             swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
-            if self._cli:
+            if self.cli:
                 print("Changing %s..." % self._file['swig'])
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             open(self._file['swig'], 'w').write(swigfile)
@@ -126,22 +126,22 @@ class ModToolDisable(ModTool):
                 ('python', 'qa.+py$', _handle_py_qa),
                 ('python', '^(?!qa).+py$', _handle_py_mod),
                 ('lib', 'qa.+\.cc$', _handle_cc_qa),
-                ('include/%s' % self._info['modname'], '.+\.h$', _handle_h_swig),
+                ('include/%s' % self.info['modname'], '.+\.h$', _handle_h_swig),
                 ('include', '.+\.h$', _handle_h_swig),
                 ('swig', '.+\.i$', _handle_i_swig)
         )
         for subdir in self._subdirs:
-            if self._skip_subdirs[subdir]: continue
-            if self._info['version'] == '37' and subdir == 'include':
-                subdir = 'include/%s' % self._info['modname']
+            if self.skip_subdirs[subdir]: continue
+            if self.info['version'] == '37' and subdir == 'include':
+                subdir = 'include/%s' % self.info['modname']
             try:
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:
                 continue
-            if self._cli:
+            if self.cli:
                 print("Traversing %s..." % subdir)
-            filenames = cmake.find_filenames_match(self._info['pattern'])
-            yes = self._info['yes']
+            filenames = cmake.find_filenames_match(self.info['pattern'])
+            yes = self.info['yes']
             for fname in filenames:
                 file_disabled = False
                 if not yes:
@@ -159,5 +159,5 @@ class ModToolDisable(ModTool):
                     cmake.disable_file(fname)
             cmake.write()
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
-        if self._cli:
+        if self.cli:
             print("Careful: 'gr_modtool disable' does not resolve dependencies.")

@@ -41,15 +41,15 @@ class ModToolRemove(ModTool):
 
     def __init__(self, blockname, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self._info['pattern'] = blockname
+        self.info['pattern'] = blockname
         # This portion will be covered by the CLI
-        if self._cli:
+        if self.cli:
             return
         self.validate()
 
     def validate(self):
         """ Validates the arguments """
-        if not self._info['pattern'] or self._info['pattern'].isspace():
+        if not self.info['pattern'] or self.info['pattern'].isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self):
@@ -59,20 +59,20 @@ class ModToolRemove(ModTool):
             from the CMakeLists.txt. """
             if filename[:2] != 'qa':
                 return
-            if self._info['version'] == '37':
+            if self.info['version'] == '37':
                 (base, ext) = os.path.splitext(filename)
                 if ext == '.h':
                     remove_pattern_from_file(self._file['qalib'],
                                              '^#include "%s"\s*$' % filename)
                     remove_pattern_from_file(self._file['qalib'],
                                              '^\s*s->addTest\(gr::%s::%s::suite\(\)\);\s*$' % (
-                                                    self._info['modname'], base)
+                                                    self.info['modname'], base)
                                             )
                     self.scm.mark_file_updated(self._file['qalib'])
                 elif ext == '.cc':
                     ed.remove_value('list',
                                     '\$\{CMAKE_CURRENT_SOURCE_DIR\}/%s' % filename,
-                                    to_ignore_start='APPEND test_%s_sources' % self._info['modname'])
+                                    to_ignore_start='APPEND test_%s_sources' % self.info['modname'])
                     self.scm.mark_file_updated(ed.filename)
             else:
                 filebase = os.path.splitext(filename)[0]
@@ -93,29 +93,29 @@ class ModToolRemove(ModTool):
 
         def _make_swig_regex(filename):
             filebase = os.path.splitext(filename)[0]
-            pyblockname = filebase.replace(self._info['modname'] + '_', '')
+            pyblockname = filebase.replace(self.info['modname'] + '_', '')
             regexp = r'(^\s*GR_SWIG_BLOCK_MAGIC2?\(%s,\s*%s\);|^\s*.include\s*"(%s/)?%s"\s*)' % \
-                    (self._info['modname'], pyblockname, self._info['modname'], filename)
+                    (self.info['modname'], pyblockname, self.info['modname'], filename)
             return regexp
         # Go, go, go!
-        if not self._skip_subdirs['lib']:
+        if not self.skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
-        if not self._skip_subdirs['include']:
-            incl_files_deleted = self._run_subdir(self._info['includedir'], ('*.h',), ('install',))
-        if not self._skip_subdirs['swig']:
+        if not self.skip_subdirs['include']:
+            incl_files_deleted = self._run_subdir(self.info['includedir'], ('*.h',), ('install',))
+        if not self.skip_subdirs['swig']:
             swig_files_deleted = self._run_subdir('swig', ('*.i',), ('install',))
             for f in incl_files_deleted + swig_files_deleted:
                 # TODO do this on all *.i files
                 remove_pattern_from_file(self._file['swig'], _make_swig_regex(f))
                 self.scm.mark_file_updated(self._file['swig'])
-        if not self._skip_subdirs['python']:
+        if not self.skip_subdirs['python']:
             py_files_deleted = self._run_subdir('python', ('*.py',), ('GR_PYTHON_INSTALL',),
                                                 cmakeedit_func=_remove_py_test_case)
             for f in py_files_deleted:
                 remove_pattern_from_file(self._file['pyinit'], '.*import\s+%s.*' % f[:-3])
                 remove_pattern_from_file(self._file['pyinit'], '.*from\s+%s\s+import.*\n' % f[:-3])
-        if not self._skip_subdirs['grc']:
+        if not self.skip_subdirs['grc']:
             self._run_subdir('grc', ('*.xml',), ('install',))
 
     def _run_subdir(self, path, globs, makefile_vars, cmakeedit_func=None):
@@ -131,19 +131,19 @@ class ModToolRemove(ModTool):
         for g in globs:
             files = files + sorted(glob.glob("%s/%s"% (path, g)))
         files_filt = []
-        if self._cli:
+        if self.cli:
             print("Searching for matching files in %s/:" % path)
         for f in files:
-            if re.search(self._info['pattern'], os.path.basename(f)) is not None:
+            if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
         if len(files_filt) == 0:
-            if self._cli:
+            if self.cli:
                 print("None found.")
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
         ed = CMakeFileEditor('%s/CMakeLists.txt' % path)
-        yes = self._info['yes']
+        yes = self.info['yes']
         for f in files_filt:
             b = os.path.basename(f)
             if not yes:
@@ -155,11 +155,11 @@ class ModToolRemove(ModTool):
                 if ans == 'n':
                     continue
             files_deleted.append(b)
-            if self._cli:
+            if self.cli:
                 print("Deleting %s." % f)
             self.scm.remove_file(f)
             os.unlink(f)
-            if self._cli:
+            if self.cli:
                 print("Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path))
             for var in makefile_vars:
                 ed.remove_value(var, b)

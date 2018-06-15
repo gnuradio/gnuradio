@@ -37,44 +37,44 @@ class ModToolRename(ModTool):
 
     def __init__(self, blockname, new_name, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self._info['oldname'] = blockname
-        self._info['newname'] = new_name
+        self.info['oldname'] = blockname
+        self.info['newname'] = new_name
         # This portion will be covered by the CLI
-        if self._cli:
+        if self.cli:
             return
         self.validate()
-        self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
+        self.info['fullnewname'] = self.info['modname'] + '_' + self.info['newname']
 
     def validate(self):
         """ Validates the arguments """
-        if not self._info['oldname']:
+        if not self.info['oldname']:
             raise ModToolException('Old block name (blockname) not specified.')
-        if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
+        if not re.match('[a-zA-Z0-9_]+', self.info['oldname']):
             raise ModToolException('Invalid block name.')
-        if not self._info['newname']:
+        if not self.info['newname']:
             raise ModToolException('New blockname (new_name) not specified.')
-        if not re.match('[a-zA-Z0-9_]+', self._info['newname']):
+        if not re.match('[a-zA-Z0-9_]+', self.info['newname']):
             raise ModToolException('Invalid new block name.')
 
     def run(self):
         """ Go, go, go. """
-        module = self._info['modname']
-        oldname = self._info['oldname']
-        newname = self._info['newname']
-        if self._cli:
+        module = self.info['modname']
+        oldname = self.info['oldname']
+        newname = self.info['newname']
+        if self.cli:
             print("In module '%s' rename block '%s' to '%s'" % (module, oldname, newname))
         self._run_swig_rename(self._file['swig'], oldname, newname)
-        self._run_grc_rename(self._info['modname'], oldname, newname)
-        self._run_python_qa(self._info['modname'], oldname, newname)
-        self._run_python(self._info['modname'], oldname, newname)
-        self._run_lib(self._info['modname'], oldname, newname)
-        self._run_include(self._info['modname'], oldname, newname)
+        self._run_grc_rename(self.info['modname'], oldname, newname)
+        self._run_python_qa(self.info['modname'], oldname, newname)
+        self._run_python(self.info['modname'], oldname, newname)
+        self._run_lib(self.info['modname'], oldname, newname)
+        self._run_include(self.info['modname'], oldname, newname)
         return
 
     def _run_swig_rename(self, swigfilename, old, new):
         """ Rename SWIG includes and block_magic """
         nsubs = self._run_file_replace(swigfilename, old, new)
-        if self._cli:
+        if self.cli:
             if nsubs < 1:
                 print("Couldn't find '%s' in file '%s'." % (old, swigfilename))
             if nsubs == 2:
@@ -100,7 +100,7 @@ class ModToolRename(ModTool):
         filename = 'qa_' + module + '.cc'
         nsubs = self._run_file_replace(path + filename, old, new)
         if nsubs > 0:
-            if self._cli:
+            if self.cli:
                 print("C++ QA code detected, renaming...")
             filename = 'qa_' + old + '.cc'
             self._run_file_replace(path + filename, old, new)
@@ -109,7 +109,7 @@ class ModToolRename(ModTool):
             self._run_file_replace(path + filename, old.upper(), new.upper())
             self._run_file_rename(path, 'qa_' + old, 'qa_' + new)
         else:
-            if self._cli:
+            if self.cli:
                 print("No C++ QA code detected, skipping...")
 
     def _run_include(self, module, old, new):
@@ -125,14 +125,14 @@ class ModToolRename(ModTool):
         filename = '__init__.py'
         nsubs = self._run_file_replace(path + filename, old, new)
         if nsubs > 0:
-            if self._cli:
+            if self.cli:
                 print("Python block detected, renaming...")
             filename = old + '.py'
             self._run_file_replace(path + filename, old, new)
             self._run_cmakelists(path, old, new)
             self._run_file_rename(path, old, new)
         else:
-            if self._cli:
+            if self.cli:
                 print("Not a Python block, nothing to do here...")
 
     def _run_python_qa(self, module, old, new):
@@ -153,7 +153,7 @@ class ModToolRename(ModTool):
         filename = path + 'CMakeLists.txt'
         nsubs = self._run_file_replace(filename, first, second)
         if nsubs < 1:
-            if self._cli:
+            if self.cli:
                 print("'%s' wasn't in '%s'." % (first, filename))
 
     def _run_file_rename(self, path, old, new):
@@ -163,7 +163,7 @@ class ModToolRename(ModTool):
                 nl = file.replace(old, new)
                 src = path + file
                 dst = path + nl
-                if self._cli:
+                if self.cli:
                     print("Renaming file '%s' to '%s'." % (src, dst))
                 os.rename(src, dst)
 
@@ -171,7 +171,7 @@ class ModToolRename(ModTool):
         if not os.path.isfile(filename):
             return False
         else:
-            if self._cli:
+            if self.cli:
                 print("In '%s' renaming occurences of '%s' to '%s'" % (filename, old, new))
 
         cfile = open(filename).read()

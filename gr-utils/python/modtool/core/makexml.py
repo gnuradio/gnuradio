@@ -42,24 +42,24 @@ class ModToolMakeXML(ModTool):
 
     def __init__(self, blockname, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
-        self._info['pattern'] = blockname
+        self.info['pattern'] = blockname
         # This portion will be covered by the CLI
-        if self._cli:
+        if self.cli:
             return
         self.validate()
 
     def validate(self):
         """ Validates the arguments """
-        if not self._info['pattern'] or self._info['pattern'].isspace():
+        if not self.info['pattern'] or self.info['pattern'].isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self):
         """ Go, go, go! """
-        if self._cli:
+        if self.cli:
             print("Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
-        if not self._skip_subdirs['lib']:
-            if self._info['version'] == '37':
+        if not self.skip_subdirs['lib']:
+            if self.info['version'] == '37':
                 files = self._search_files('lib', '*_impl.cc')
             else:
                 files = self._search_files('lib', '*.cc')
@@ -75,13 +75,13 @@ class ModToolMakeXML(ModTool):
         """ Search for files matching pattern in the given path. """
         files = sorted(glob.glob("%s/%s"% (path, path_glob)))
         files_filt = []
-        if self._cli:
+        if self.cli:
             print("Searching for matching files in %s/:" % path)
         for f in files:
-            if re.search(self._info['pattern'], os.path.basename(f)) is not None:
+            if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
         if len(files_filt) == 0:
-            if self._cli:
+            if self.cli:
                 print("None found.")
         return files_filt
 
@@ -89,7 +89,7 @@ class ModToolMakeXML(ModTool):
         """ Take the return values from the parser and call the XML
         generator. Also, check the makefile if the .xml file is in there.
         If necessary, add. """
-        fname_xml = '%s_%s.xml' % (self._info['modname'], blockname)
+        fname_xml = '%s_%s.xml' % (self.info['modname'], blockname)
         path_to_xml = os.path.join('grc', fname_xml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
@@ -102,15 +102,15 @@ class ModToolMakeXML(ModTool):
                                'in_constructor': False})
         file_exists = False
         if os.path.isfile(path_to_xml):
-            if not self._info['yes']:
+            if not self.info['yes']:
                 if not ask_yes_no('Overwrite existing GRC file?', False):
                     return
             else:
                 file_exists = True
-                if self._cli:
+                if self.cli:
                     print("Warning: Overwriting existing GRC file.")
         grc_generator = GRCXMLGenerator(
-                modname=self._info['modname'],
+                modname=self.info['modname'],
                 blockname=blockname,
                 params=params,
                 iosig=iosig
@@ -120,10 +120,10 @@ class ModToolMakeXML(ModTool):
             self.scm.mark_files_updated((path_to_xml,))
         else:
             self.scm.add_files((path_to_xml,))
-        if not self._skip_subdirs['grc']:
+        if not self.skip_subdirs['grc']:
             ed = CMakeFileEditor(self._file['cmgrc'])
             if re.search(fname_xml, ed.cfile) is None and not ed.check_for_glob('*.xml'):
-                if self._cli:
+                if self.cli:
                     print("Adding GRC bindings to grc/CMakeLists.txt...")
                 ed.append_value('install', fname_xml, to_ignore_end='DESTINATION[^()]+')
                 ed.write()
@@ -154,17 +154,17 @@ class ModToolMakeXML(ModTool):
             """ Return the block name and the header file name from the .cc file name """
             blockname = os.path.splitext(os.path.basename(fname_cc.replace('_impl.', '.')))[0]
             fname_h = (blockname + '.h').replace('_impl.', '.')
-            blockname = blockname.replace(self._info['modname']+'_', '', 1)
+            blockname = blockname.replace(self.info['modname']+'_', '', 1)
             return (blockname, fname_h)
         # Go, go, go
-        if self._cli:
+        if self.cli:
             print("Making GRC bindings for %s..." % fname_cc)
         (blockname, fname_h) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
-                                   os.path.join(self._info['includedir'], fname_h),
+                                   os.path.join(self.info['includedir'], fname_h),
                                    blockname,
-                                   self._info['version'],
+                                   self.info['version'],
                                    _type_translate
                                   )
         except IOError:

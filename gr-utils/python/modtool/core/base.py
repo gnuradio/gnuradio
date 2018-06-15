@@ -46,87 +46,87 @@ class ModTool(object):
     def __init__(self, blockname=None, module_name=None, **kwargs):
         # List subdirs where stuff happens
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc']
-        self._has_subdirs = {}
-        self._skip_subdirs = {}
-        self._info = {}
+        self.has_subdirs = {}
+        self.skip_subdirs = {}
+        self.info = {}
         self._file = {}
         for subdir in self._subdirs:
-            self._has_subdirs[subdir] = False
-            self._skip_subdirs[subdir] = False
-        self._info['blockname'] = blockname
-        self._cli = kwargs.get('cli', False)
-        self._dir = kwargs.get('directory', '.')
-        self._info['modname'] = kwargs.get('module_name', None)
-        self._skip_subdirs['lib'] = kwargs.get('skip_lib', False)
-        self._skip_subdirs['python'] = kwargs.get('skip_python', False)
-        self._skip_subdirs['swig'] = kwargs.get('skip_swig', False)
-        self._skip_subdirs['grc'] = kwargs.get('skip_grc', False)
+            self.has_subdirs[subdir] = False
+            self.skip_subdirs[subdir] = False
+        self.info['blockname'] = blockname
+        self.cli = kwargs.get('cli', False)
+        self.dir = kwargs.get('directory', '.')
+        self.info['modname'] = kwargs.get('module_name', None)
+        self.skip_subdirs['lib'] = kwargs.get('skip_lib', False)
+        self.skip_subdirs['python'] = kwargs.get('skip_python', False)
+        self.skip_subdirs['swig'] = kwargs.get('skip_swig', False)
+        self.skip_subdirs['grc'] = kwargs.get('skip_grc', False)
         self._scm = kwargs.get('scm_mode',
                                gr.prefs().get_string('modtool', 'scm_mode', 'no'))
-        if not self._cli:
-            self._info['yes'] = True
+        if not self.cli:
+            self.info['yes'] = True
         else:
-            self._info['yes'] = kwargs['yes']
+            self.info['yes'] = kwargs['yes']
 
         if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             return
         self._validate()
 
-        if not self._check_directory(self._dir):
+        if not self._check_directory(self.dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
-        if self._info['modname'] is None:
-            self._info['modname'] = get_modname()
-        if self._info['modname'] is None:
+        if self.info['modname'] is None:
+            self.info['modname'] = get_modname()
+        if self.info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
-        if self._cli:
-            print("GNU Radio module name identified: " + self._info['modname'])
-        if self._info['version'] == '36' and (
-                os.path.isdir(os.path.join('include', self._info['modname'])) or
-                os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
+        if self.cli:
+            print("GNU Radio module name identified: " + self.info['modname'])
+        if self.info['version'] == '36' and (
+                os.path.isdir(os.path.join('include', self.info['modname'])) or
+                os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname']))
                 ):
-            self._info['version'] = '37'
-        if not self._has_subdirs['lib']:
-            self._skip_subdirs['lib'] = True
-        if not self._has_subdirs['python']:
-            self._skip_subdirs['python'] = True
-        if self._get_mainswigfile() is None or not self._has_subdirs['swig']:
-            self._skip_subdirs['swig'] = True
-        if not self._has_subdirs['grc']:
-            self._skip_subdirs['grc'] = True
+            self.info['version'] = '37'
+        if not self.has_subdirs['lib']:
+            self.skip_subdirs['lib'] = True
+        if not self.has_subdirs['python']:
+            self.skip_subdirs['python'] = True
+        if self._get_mainswigfile() is None or not self.has_subdirs['swig']:
+            self.skip_subdirs['swig'] = True
+        if not self.has_subdirs['grc']:
+            self.skip_subdirs['grc'] = True
 
         self._setup_files()
         self._setup_scm()
 
     def _validate(self):
         """ Validates the arguments """
-        if not isinstance(self._skip_subdirs['lib'], bool):
+        if not isinstance(self.skip_subdirs['lib'], bool):
             raise ModToolException('Expected a boolean value for skip_lib')
-        if not isinstance(self._skip_subdirs['swig'], bool):
+        if not isinstance(self.skip_subdirs['swig'], bool):
             raise ModToolException('Expected a boolean value for skip_swig')
-        if not isinstance(self._skip_subdirs['python'], bool):
+        if not isinstance(self.skip_subdirs['python'], bool):
             raise ModToolException('Expected a boolean value for skip_python')
-        if not isinstance(self._skip_subdirs['grc'], bool):
+        if not isinstance(self.skip_subdirs['grc'], bool):
             raise ModToolException('Expected a boolean value for skip_grc')
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
-        if not self._skip_subdirs['swig']:
+        if not self.skip_subdirs['swig']:
             self._file['swig'] = os.path.join('swig',   self._get_mainswigfile())
-        self._info['pydir'] = 'python'
-        if os.path.isdir(os.path.join('python', self._info['modname'])):
-            self._info['pydir'] = os.path.join('python', self._info['modname'])
-        self._file['qalib']    = os.path.join('lib',    'qa_%s.cc' % self._info['modname'])
-        self._file['pyinit']   = os.path.join(self._info['pydir'], '__init__.py')
+        self.info['pydir'] = 'python'
+        if os.path.isdir(os.path.join('python', self.info['modname'])):
+            self.info['pydir'] = os.path.join('python', self.info['modname'])
+        self._file['qalib']    = os.path.join('lib',    'qa_%s.cc' % self.info['modname'])
+        self._file['pyinit']   = os.path.join(self.info['pydir'], '__init__.py')
         self._file['cmlib']    = os.path.join('lib',    'CMakeLists.txt')
         self._file['cmgrc']    = os.path.join('grc',    'CMakeLists.txt')
-        self._file['cmpython'] = os.path.join(self._info['pydir'], 'CMakeLists.txt')
-        if self._info['is_component']:
-            self._info['includedir'] = os.path.join('include', 'gnuradio', self._info['modname'])
-        elif self._info['version'] == '37':
-            self._info['includedir'] = os.path.join('include', self._info['modname'])
+        self._file['cmpython'] = os.path.join(self.info['pydir'], 'CMakeLists.txt')
+        if self.info['is_component']:
+            self.info['includedir'] = os.path.join('include', 'gnuradio', self.info['modname'])
+        elif self.info['version'] == '37':
+            self.info['includedir'] = os.path.join('include', self.info['modname'])
         else:
-            self._info['includedir'] = 'include'
-        self._file['cminclude'] = os.path.join(self._info['includedir'], 'CMakeLists.txt')
+            self.info['includedir'] = 'include'
+        self._file['cminclude'] = os.path.join(self.info['includedir'], 'CMakeLists.txt')
         self._file['cmswig'] = os.path.join('swig', 'CMakeLists.txt')
         self._file['cmfind'] = os.path.join('cmake', 'Modules', 'howtoConfig.cmake')
 
@@ -153,32 +153,32 @@ class ModTool(object):
         except OSError:
             print("Can't read or chdir to directory %s." % directory)
             return False
-        self._info['is_component'] = False
+        self.info['is_component'] = False
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
                 if re.search('find_package\(Gnuradio', open(f).read()) is not None:
-                    self._info['version'] = '36' # Might be 37, check that later
+                    self.info['version'] = '36' # Might be 37, check that later
                     has_makefile = True
                 elif re.search('GR_REGISTER_COMPONENT', open(f).read()) is not None:
-                    self._info['version'] = '36' # Might be 37, check that later
-                    self._info['is_component'] = True
+                    self.info['version'] = '36' # Might be 37, check that later
+                    self.info['is_component'] = True
                     has_makefile = True
             # TODO search for autofoo
             elif os.path.isdir(f):
-                if (f in list(self._has_subdirs.keys())):
-                    self._has_subdirs[f] = True
+                if (f in list(self.has_subdirs.keys())):
+                    self.has_subdirs[f] = True
                 else:
-                    self._skip_subdirs[f] = True
-        return bool(has_makefile and (list(self._has_subdirs.values())))
+                    self.skip_subdirs[f] = True
+        return bool(has_makefile and (list(self.has_subdirs.values())))
 
     def _get_mainswigfile(self):
         """ Find out which name the main SWIG file has. In particular, is it
             a MODNAME.i or a MODNAME_swig.i? Returns None if none is found. """
-        modname = self._info['modname']
+        modname = self.info['modname']
         swig_files = (modname + '.i',
                       modname + '_swig.i')
         for fname in swig_files:
-            if os.path.isfile(os.path.join(self._dir, 'swig', fname)):
+            if os.path.isfile(os.path.join(self.dir, 'swig', fname)):
                 return fname
         return None
 

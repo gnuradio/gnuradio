@@ -34,9 +34,9 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolRemove(**kwargs)
 
-    if self._info['pattern'] is None:
-        self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
-    if not self._info['pattern'] or self._info['pattern'].isspace():
-        self._info['pattern'] = '.'
+    if self.info['pattern'] is None:
+        self.info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
+    if not self.info['pattern'] or self.info['pattern'].isspace():
+        self.info['pattern'] = '.'
 
     run(self)

@@ -45,18 +45,18 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolNewModule(**kwargs)
 
-    if self._info['modname'] is None:
-        self._info['modname'] = input('Name of the new module: ')
-    if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
+    if self.info['modname'] is None:
+        self.info['modname'] = input('Name of the new module: ')
+    if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
         raise ModToolException('Invalid module name.')
-    self._dir = self._dir + '/gr-{}'.format(self._info['modname'])
+    self.dir = self.dir + '/gr-{}'.format(self.info['modname'])
     try:
-        os.stat(self._dir)
+        os.stat(self.dir)
     except OSError:
         pass # This is what should happen
     else:
         raise ModToolException('The given directory exists.')
-    if not os.path.isdir(self._srcdir):
+    if not os.path.isdir(self.srcdir):
         raise ModToolException('Could not find gr-newmod source dir.')
     self._setup_scm(mode='new')
 
