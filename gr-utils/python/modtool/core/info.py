@@ -34,12 +34,12 @@ class ModToolInfo(ModTool):
     name = 'info'
     description = 'Return information about a given module.'
 
-    def __init__(self, *args, **kwargs):
-        ModTool.__init__(self, *args, **kwargs)
+    def __init__(self, python_readable=False, suggested_dirs=None, **kwargs):
+        ModTool.__init__(self, **kwargs)
         # Don't call ModTool._validate(), is is too chatty!
-        self._directory = args[0]['directory']
-        self._python_readable = args[0]['python_readable']
-        self._suggested_dirs = args[0]['suggested_dirs']
+        self._directory = self._dir
+        self._python_readable = python_readable
+        self._suggested_dirs = suggested_dirs
 
     def run(self):
         """ Go, go, go! """

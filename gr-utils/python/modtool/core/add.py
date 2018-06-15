@@ -42,29 +42,22 @@ class ModToolAdd(ModTool):
                     'general', 'tagged_stream', 'hier', 'noblock')
     language_candidates = ('cpp', 'python', 'c++')
 
-    def __init__(self, *args, **kwargs):
-        ModTool.__init__(self, *args, **kwargs)
-        self._add_cc_qa = False
-        self._add_py_qa = False
-        self._skip_cmakefiles = False
-        self._license_file = None
-
-        for dictionary in args:
-            self._info['blocktype'] = dictionary.get('block_type', None)
-            self._info['lang'] = dictionary.get('lang', None)
-            self._license_file = dictionary.get('license_file', None)
-            self._info['copyrightholder'] = dictionary.get('copyright', None)
-            self._info['arglist'] = dictionary.get('argument_list', "")
-            self._add_py_qa = dictionary.get('add_python_qa', False)
-            self._add_cc_qa = dictionary.get('add_cpp_qa', False)
-            self._skip_cmakefiles = dictionary.get('skip_cmakefiles', False)
-
+    def __init__(self, blockname, block_type, lang, copyright=None,
+                 license_file=None, argument_list="", add_python_qa=False,
+                 add_cpp_qa=False, skip_cmakefiles=False, **kwargs):
+        ModTool.__init__(self, blockname, **kwargs)
+        self._info['blocktype'] = block_type
+        self._info['lang'] = lang
+        self._license_file = license_file
+        self._info['copyrightholder'] = copyright
+        self._info['arglist'] = argument_list
+        self._add_py_qa = add_python_qa
+        self._add_cc_qa = add_cpp_qa
+        self._skip_cmakefiles = skip_cmakefiles
         # This portion will be covered by the CLI
         if self._cli:
             return
-        # kwargs portions will be implemented later
         self.validate()
-
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
         if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')

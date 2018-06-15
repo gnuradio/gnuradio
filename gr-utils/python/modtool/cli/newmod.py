@@ -43,7 +43,7 @@ def cli(**kwargs):
     The argument MODULE-NAME is the name of the module to be added.
     """
     kwargs['cli'] = True
-    self = ModToolNewModule(kwargs)
+    self = ModToolNewModule(**kwargs)
 
     if self._info['modname'] is None:
         self._info['modname'] = input('Name of the new module: ')

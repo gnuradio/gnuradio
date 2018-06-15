@@ -31,7 +31,7 @@ from .base import common_params, block_name, run
 def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
     kwargs['cli'] = True
-    self = ModToolDisable(kwargs)
+    self = ModToolDisable(**kwargs)
 
     if self._info['pattern'] is None:
         self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')

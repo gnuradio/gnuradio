@@ -52,7 +52,7 @@ from .base import common_params, block_name, run
 def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
     kwargs['cli'] = True
-    self = ModToolAdd(kwargs)
+    self = ModToolAdd(**kwargs)
     if self._info['blocktype'] is None:
         click.echo(str(self._block_types))
         with SequenceCompleter(self._block_types):

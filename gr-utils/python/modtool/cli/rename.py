@@ -41,7 +41,7 @@ def cli(**kwargs):
     The argument NEW-BLOCK-NAME is the new name of the block.
     """
     kwargs['cli'] = True
-    self = ModToolRename(kwargs)
+    self = ModToolRename(**kwargs)
     # first make sure the old block name is provided
     if self._info['oldname'] is None:
         self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")

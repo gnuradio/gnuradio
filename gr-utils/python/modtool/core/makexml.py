@@ -40,14 +40,12 @@ class ModToolMakeXML(ModTool):
     name = 'makexml'
     description = 'Generate XML files for GRC block bindings.'
 
-    def __init__(self, *args, **kwargs):
-        ModTool.__init__(self, *args, **kwargs)
-        for dictionary in args:
-            self._info['pattern'] = dictionary.get('blockname', None)
+    def __init__(self, blockname, **kwargs):
+        ModTool.__init__(self, blockname, **kwargs)
+        self._info['pattern'] = blockname
         # This portion will be covered by the CLI
         if self._cli:
             return
-        # kwargs portions will be implemented later
         self.validate()
 
     def validate(self):

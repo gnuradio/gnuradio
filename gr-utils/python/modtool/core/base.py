@@ -43,7 +43,7 @@ class ModTool(object):
     name = 'base'
     description = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, blockname=None, module_name=None, **kwargs):
         # List subdirs where stuff happens
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc']
         self._has_subdirs = {}
@@ -53,29 +53,21 @@ class ModTool(object):
         for subdir in self._subdirs:
             self._has_subdirs[subdir] = False
             self._skip_subdirs[subdir] = False
-        self._scm = None
-        self._cli = False
+        self._info['blockname'] = blockname
+        self._cli = kwargs.get('cli', False)
+        self._dir = kwargs.get('directory', '.')
+        self._info['modname'] = kwargs.get('module_name', None)
+        self._skip_subdirs['lib'] = kwargs.get('skip_lib', False)
+        self._skip_subdirs['python'] = kwargs.get('skip_python', False)
+        self._skip_subdirs['swig'] = kwargs.get('skip_swig', False)
+        self._skip_subdirs['grc'] = kwargs.get('skip_grc', False)
+        self._scm = kwargs.get('scm_mode',
+                               gr.prefs().get_string('modtool', 'scm_mode', 'no'))
+        if not self._cli:
+            self._info['yes'] = True
+        else:
+            self._info['yes'] = kwargs['yes']
 
-        if len(args) == 0:
-            raise ModToolException('No arguments to instantiate the class object')
-
-        for dictionary in args:
-            self._cli = dictionary.get('cli', False)
-            self._dir = dictionary.get('directory', '.')
-            self._info['modname'] = dictionary.get('module_name', None)
-            self._skip_subdirs['lib'] = dictionary.get('skip_lib', False)
-            self._skip_subdirs['python'] = dictionary.get('skip_python', False)
-            self._skip_subdirs['swig'] = dictionary.get('skip_swig', False)
-            self._skip_subdirs['grc'] = dictionary.get('skip_grc', False)
-            self._scm = dictionary.get('scm_mode',
-                                       gr.prefs().get_string('modtool', 'scm_mode', 'no'))
-            self._info['blockname'] = dictionary.get('blockname', None)
-            if not self._cli:
-                self._info['yes'] = True
-            else:
-                self._info['yes'] = dictionary['yes']
-
-        # kwargs portion will be implemented later
         if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             return
         self._validate()

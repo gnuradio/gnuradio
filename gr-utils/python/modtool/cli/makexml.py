@@ -37,7 +37,7 @@ def cli(**kwargs):
     Note: This does not work on python blocks
     """
     kwargs['cli'] = True
-    self = ModToolMakeXML(kwargs)
+    self = ModToolMakeXML(**kwargs)
 
     if self._info['pattern'] is None:
         self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')

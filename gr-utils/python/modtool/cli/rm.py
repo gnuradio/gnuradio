@@ -32,7 +32,7 @@ from .base import common_params, block_name, run
 def cli(**kwargs):
     """ Remove block (delete files and remove Makefile entries) """
     kwargs['cli'] = True
-    self = ModToolRemove(kwargs)
+    self = ModToolRemove(**kwargs)
 
     if self._info['pattern'] is None:
         self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')

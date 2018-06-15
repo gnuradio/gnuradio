@@ -37,13 +37,11 @@ class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
     description = 'Create new empty module, use add to add blocks.'
-    def __init__(self, *args, **kwargs):
-        ModTool.__init__(self, *args, **kwargs)
-        self._srcdir = None
+    def __init__(self, module_name, srcdir=None, **kwargs):
+        ModTool.__init__(self, module_name, **kwargs)
         # Don't call ModTool._validate(), that assumes an existing module.
         # ModTool.__init__ has initialized most of variables so no need for repetition
-        for dictionary in args:
-            self._srcdir = dictionary.get('srcdir', None)
+        self._srcdir = srcdir
         if self._srcdir is None:
             self._srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
         self._srcdir = gr.prefs().get_string('modtool', 'newmod_path', self._srcdir)

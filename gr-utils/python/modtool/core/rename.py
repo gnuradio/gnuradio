@@ -35,21 +35,13 @@ class ModToolRename(ModTool):
     name = 'rename'
     description = 'Rename a block inside a module.'
 
-    def __init__(self, *args, **kwargs):
-        ModTool.__init__(self, *args, **kwargs)
-        self._add_cc_qa = False
-        self._add_py_qa = False
-        self._skip_cmakefiles = False
-        self._license_file = None
-
-        for dictionary in args:
-            self._info['oldname'] = dictionary.get('blockname', None)
-            self._info['newname'] = dictionary.get('new_name', None)
-
+    def __init__(self, blockname, new_name, **kwargs):
+        ModTool.__init__(self, blockname, **kwargs)
+        self._info['oldname'] = blockname
+        self._info['newname'] = new_name
         # This portion will be covered by the CLI
         if self._cli:
             return
-        # kwargs portions will be implemented later
         self.validate()
         self._info['fullnewname'] = self._info['modname'] + '_' + self._info['newname']
 

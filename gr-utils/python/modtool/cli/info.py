@@ -34,5 +34,5 @@ from .base import common_params, run
 @common_params
 def cli(**kwargs):
     """ Return information about a given module """
-    self = ModToolInfo(kwargs)
+    self = ModToolInfo(**kwargs)
     run(self)
