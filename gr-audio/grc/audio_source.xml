@@ -17,27 +17,27 @@
 		<value>samp_rate</value>
 		<type>int</type>
 		<option>
-			<name>16KHz</name>
+			<name>16 kHz</name>
 			<key>16000</key>
 		</option>
 		<option>
-			<name>22.05KHz</name>
+			<name>22.05 kHz</name>
 			<key>22050</key>
 		</option>
 		<option>
-			<name>24KHz</name>
+			<name>24 kHz</name>
 			<key>24000</key>
 		</option>
 		<option>
-			<name>32KHz</name>
+			<name>32 kHz</name>
 			<key>32000</key>
 		</option>
 		<option>
-			<name>44.1KHz</name>
+			<name>44.1 kHz</name>
 			<key>44100</key>
 		</option>
 		<option>
-			<name>48KHz</name>
+			<name>48 kHz</name>
 			<key>48000</key>
 		</option>
 	</param>
