@@ -57,7 +57,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         formatter.to_basic_block()._post(port, msg)
 
         self.tb.start()
-        while (snk_hdr.num_messages() < 1) and (snk_pld.num_messages() < 1):
+        while (snk_hdr.num_messages() < 1) or (snk_pld.num_messages() < 1):
             time.sleep(0.1)
 
         self.tb.stop()
@@ -109,7 +109,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         self.tb.msg_connect(parser_4bps, 'info', snk_hdr_4bps, 'store')
 
         self.tb.start()
-        while (snk_hdr_1bps.num_messages() < 1) and (snk_hdr_4bps.num_messages() < 1):
+        while (snk_hdr_1bps.num_messages() < 1) or (snk_hdr_4bps.num_messages() < 1):
             time.sleep(0.1)
         self.tb.stop()
         self.tb.wait()
@@ -151,7 +151,7 @@ class test_packet_format_fb(gr_unittest.TestCase):
         formatter.to_basic_block()._post(port, msg)
 
         self.tb.start()
-        while (snk_hdr.num_messages() < 1) and (snk_pld.num_messages() < 1):
+        while (snk_hdr.num_messages() < 1) or (snk_pld.num_messages() < 1):
             time.sleep(0.1)
         self.tb.stop()
         self.tb.wait()
