@@ -60,14 +60,16 @@ class ModToolDisable(ModTool):
         def _handle_py_mod(cmake, fname):
             """ Do stuff for py extra files """
             try:
-                initfile = open(self._file['pyinit']).read()
+                with open(self._file['pyinit']) as f:
+                    initfile = f.read()
             except IOError:
                 if self.cli:
                     print("Could not edit __init__.py, that might be a problem.")
                 return False
             pymodname = os.path.splitext(fname)[0]
             initfile = re.sub(r'((from|import)\s+\b'+pymodname+r'\b)', r'#\1', initfile)
-            open(self._file['pyinit'], 'w').write(initfile)
+            with open(self._file['pyinit'], 'w') as f:
+                f.write(initfile)
             self.scm.mark_file_updated(self._file['pyinit'])
             return False
         def _handle_cc_qa(cmake, fname):
@@ -89,7 +91,8 @@ class ModToolDisable(ModTool):
         def _handle_h_swig(cmake, fname):
             """ Comment out include files from the SWIG file,
             as well as the block magic """
-            swigfile = open(self._file['swig']).read()
+            with open(self._file['swig']) as f:
+                swigfile = f.read()
             (swigfile, nsubs) = re.subn('(.include\s+"(%s/)?%s")' % (
                                         self.info['modname'], fname),
                                         r'//\1', swigfile)
@@ -104,13 +107,15 @@ class ModToolDisable(ModTool):
                 if nsubs > 1:
                     if self.cli:
                         print("Hm, changed more then expected while editing %s." % self._file['swig'])
-            open(self._file['swig'], 'w').write(swigfile)
+            with open(self._file['swig'], 'w') as f:
+                f.write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
         def _handle_i_swig(cmake, fname):
             """ Comment out include files from the SWIG file,
             as well as the block magic """
-            swigfile = open(self._file['swig']).read()
+            with open(self._file['swig']) as f:
+                swigfile = f.read()
             blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
             if self.info['version'] == '37':
                 blockname = os.path.splitext(fname)[0]
@@ -118,7 +123,8 @@ class ModToolDisable(ModTool):
             if self.cli:
                 print("Changing %s..." % self._file['swig'])
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
-            open(self._file['swig'], 'w').write(swigfile)
+            with open(self._file['swig'], 'w') as f:
+                f.write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
         # List of special rules: 0: subdir, 1: filename re match, 2: callback

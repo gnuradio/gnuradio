@@ -32,20 +32,25 @@ def append_re_line_sequence(filename, linepattern, newline):
     """ Detects the re 'linepattern' in the file. After its last occurrence,
     paste 'newline'. If the pattern does not exist, append the new line
     to the file. Then, write. """
-    oldfile = open(filename, 'r').read()
+    with open(filename, 'r') as f:
+        oldfile = f.read()
     lines = re.findall(linepattern, oldfile, flags=re.MULTILINE)
     if len(lines) == 0:
-        open(filename, 'a').write(newline)
+        with open(filename, 'a') as f:
+            f.write(newline)
         return
     last_line = lines[-1]
     newfile = oldfile.replace(last_line, last_line + newline + '\n')
-    open(filename, 'w').write(newfile)
+    with open(filename, 'w') as f:
+        f.write(newfile)
 
 def remove_pattern_from_file(filename, pattern):
     """ Remove all occurrences of a given pattern from a file. """
-    oldfile = open(filename, 'r').read()
+    with open(filename, 'r') as f:
+        oldfile = f.read()
     pattern = re.compile(pattern, re.MULTILINE)
-    open(filename, 'w').write(pattern.sub('', oldfile))
+    with open(filename, 'w') as f:
+        f.write(pattern.sub('', oldfile))
 
 def str_to_fancyc_comment(text):
     """ Return a string as a C formatted comment. """
@@ -90,13 +95,15 @@ def get_modname():
     """ Grep the current module's name from gnuradio.project or CMakeLists.txt """
     modname_trans = {'howto-write-a-block': 'howto'}
     try:
-        prfile = open('gnuradio.project', 'r').read()
+        with open('gnuradio.project', 'r') as f:
+            prfile = f.read()
         regexp = r'projectname\s*=\s*([a-zA-Z0-9-_]+)$'
         return re.search(regexp, prfile, flags=re.MULTILINE).group(1).strip()
     except IOError:
         pass
     # OK, there's no gnuradio.project. So, we need to guess.
-    cmfile = open('CMakeLists.txt', 'r').read()
+    with open('CMakeLists.txt', 'r') as f:
+        cmfile = f.read()
     regexp = r'(project\s*\(\s*|GR_REGISTER_COMPONENT\(")gr-(?P<modname>[a-zA-Z0-9-_]+)(\s*(CXX)?|" ENABLE)'
     try:
         modname = re.search(regexp, cmfile, flags=re.MULTILINE).group('modname').strip()

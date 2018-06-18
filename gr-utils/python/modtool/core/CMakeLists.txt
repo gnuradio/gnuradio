@@ -32,7 +32,7 @@ GR_PYTHON_INSTALL(FILES
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/core
 )
 
-set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/core)
+set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/templates)
 
 
 ########################################################################
@@ -49,4 +49,3 @@ install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
     DESTINATION ${GR_PREFSDIR}
 )
-

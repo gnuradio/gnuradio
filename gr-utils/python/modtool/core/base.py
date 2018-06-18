@@ -54,9 +54,9 @@ class ModTool(object):
             self.has_subdirs[subdir] = False
             self.skip_subdirs[subdir] = False
         self.info['blockname'] = blockname
+        self.info['modname'] = module_name
         self.cli = kwargs.get('cli', False)
         self.dir = kwargs.get('directory', '.')
-        self.info['modname'] = kwargs.get('module_name', None)
         self.skip_subdirs['lib'] = kwargs.get('skip_lib', False)
         self.skip_subdirs['python'] = kwargs.get('skip_python', False)
         self.skip_subdirs['swig'] = kwargs.get('skip_swig', False)
@@ -156,13 +156,14 @@ class ModTool(object):
         self.info['is_component'] = False
         for f in files:
             if os.path.isfile(f) and f == 'CMakeLists.txt':
-                if re.search('find_package\(Gnuradio', open(f).read()) is not None:
-                    self.info['version'] = '36' # Might be 37, check that later
-                    has_makefile = True
-                elif re.search('GR_REGISTER_COMPONENT', open(f).read()) is not None:
-                    self.info['version'] = '36' # Might be 37, check that later
-                    self.info['is_component'] = True
-                    has_makefile = True
+                with open(f) as filetext:
+                    if re.search('find_package\(Gnuradio', filetext.read()) is not None:
+                        self.info['version'] = '36' # Might be 37, check that later
+                        has_makefile = True
+                    elif re.search('GR_REGISTER_COMPONENT', filetext.read()) is not None:
+                        self.info['version'] = '36' # Might be 37, check that later
+                        self.info['is_component'] = True
+                        has_makefile = True
             # TODO search for autofoo
             elif os.path.isdir(f):
                 if (f in list(self.has_subdirs.keys())):

@@ -29,7 +29,8 @@ class CMakeFileEditor(object):
     """A tool for editing CMakeLists.txt files. """
     def __init__(self, filename, separator='\n    ', indent='    '):
         self.filename = filename
-        self.cfile = open(filename, 'r').read()
+        with open(filename, 'r') as f:
+            self.cfile = f.read()
         self.separator = separator
         self.indent = indent
 
@@ -87,7 +88,8 @@ class CMakeFileEditor(object):
 
     def write(self):
         """ Write the changes back to the file. """
-        open(self.filename, 'w').write(self.cfile)
+        with open(self.filename, 'w') as f:
+            f.write(self.cfile)
 
     def remove_double_newlines(self):
         """Simply clear double newlines from the file buffer."""

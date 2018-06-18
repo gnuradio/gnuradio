@@ -38,9 +38,8 @@ class ModToolNewModule(ModTool):
     name = 'newmod'
     description = 'Create new empty module, use add to add blocks.'
     def __init__(self, module_name, srcdir=None, **kwargs):
-        ModTool.__init__(self, **kwargs)
+        ModTool.__init__(self, None, module_name, **kwargs)
         # Don't call ModTool._validate(), that assumes an existing module.
-        self.info['modname'] = module_name
         self.srcdir = srcdir
         if self.srcdir is None:
             self.srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
@@ -84,10 +83,12 @@ class ModToolNewModule(ModTool):
         for root, dirs, files in os.walk('.'):
             for filename in files:
                 f = os.path.join(root, filename)
-                s = open(f, 'r').read()
+                with open(f, 'r') as filetext:
+                    s = filetext.read()
                 s = s.replace('howto', self.info['modname'])
                 s = s.replace('HOWTO', self.info['modname'].upper())
-                open(f, 'w').write(s)
+                with open(f, 'w') as filetext:
+                    filetext.write(s)
                 if filename.find('howto') != -1:
                     os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
             if os.path.basename(root) == 'howto':

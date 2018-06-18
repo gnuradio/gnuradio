@@ -33,8 +33,10 @@ def dummy_translator(the_type, default_v=None):
 class ParserCCBlock(object):
     """ Class to read blocks written in C++ """
     def __init__(self, filename_cc, filename_h, blockname, version, type_trans=dummy_translator):
-        self.code_cc = open(filename_cc).read()
-        self.code_h  = open(filename_h).read()
+        with open(filename_cc) as f:
+            self.code_cc = f.read()
+        with open(filename_h) as f:
+            self.code_h  = f.read()
         self.blockname = blockname
         self.type_trans = type_trans
         self.version = version

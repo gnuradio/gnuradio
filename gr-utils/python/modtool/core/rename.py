@@ -174,9 +174,11 @@ class ModToolRename(ModTool):
             if self.cli:
                 print("In '%s' renaming occurences of '%s' to '%s'" % (filename, old, new))
 
-        cfile = open(filename).read()
+        with open(filename) as f:
+            cfile = f.read()
         (cfile, nsubs) = re.subn(old, new, cfile)
 
-        open(filename, 'w').write(cfile)
+        with open(filename, 'w') as f:
+            f.write(cfile)
         self.scm.mark_file_updated(filename)
         return nsubs

@@ -104,11 +104,14 @@ class ModToolAdd(ModTool):
         3) The default license. """
         if self.license_file is not None \
             and os.path.isfile(self.license_file):
-            return open(self.license_file).read()
+            with open(self.license_file) as f:
+                return f.read()
         elif os.path.isfile('LICENSE'):
-            return open('LICENSE').read()
+            with open('LICENSE') as f:
+                return f.read()
         elif os.path.isfile('LICENCE'):
-            return open('LICENCE').read()
+            with open('LICENCE') as f:
+                return f.read()
         elif self.info['is_component']:
             return Templates['grlicense']
         else:
@@ -119,7 +122,8 @@ class ModToolAdd(ModTool):
         path_to_file = os.path.join(path, fname)
         if self.cli:
             print("Adding file '%s'..." % path_to_file)
-        open(path_to_file, 'w').write(render_template(tpl, **self.info))
+        with open(path_to_file, 'w') as f:
+            f.write(render_template(tpl, **self.info))
         self.scm.add_files((path_to_file,))
 
     def run(self):
@@ -223,18 +227,21 @@ class ModToolAdd(ModTool):
         if self.info['version'] == '36':
             mod_block_sep = '_'
         swig_block_magic_str = render_template('swig_block_magic', **self.info)
-        open(self._file['swig'], 'a').write(swig_block_magic_str)
+        with open(self._file['swig'], 'a') as f:
+            f.write(swig_block_magic_str)
         include_str = '#include "%s%s%s.h"' % (
                 {True: 'gnuradio/' + self.info['modname'], False: self.info['modname']}[self.info['is_component']],
                 mod_block_sep,
                 self.info['blockname'])
-        if re.search('#include', open(self._file['swig'], 'r').read()):
+        with open(self._file['swig'], 'r') as f:
+            oldfile = f.read()
+        if re.search('#include', oldfile):
             append_re_line_sequence(self._file['swig'], '^#include.*\n', include_str)
         else: # I.e., if the swig file is empty
-            oldfile = open(self._file['swig'], 'r').read()
             regexp = re.compile('^%\{\n', re.MULTILINE)
             oldfile = regexp.sub('%%{\n%s\n' % include_str, oldfile, count=1)
-            open(self._file['swig'], 'w').write(oldfile)
+            with open(self._file['swig'], 'w') as f:
+                f.write(oldfile)
         self.scm.mark_files_updated((self._file['swig'],))
 
     def _run_python_qa(self):
@@ -251,9 +258,10 @@ class ModToolAdd(ModTool):
             return
         if self.cli:
             print("Editing %s/CMakeLists.txt..." % self.info['pydir'])
-        open(self._file['cmpython'], 'a').write(
+        with open(self._file['cmpython'], 'a') as f:
+            f.write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
-                  (self.info['blockname'], fname_py_qa))
+                (self.info['blockname'], fname_py_qa))
         self.scm.mark_files_updated((self._file['cmpython'],))
 
     def _run_python(self):
