@@ -492,7 +492,11 @@ namespace gr {
       const int STATE_LABEL_X_OFFSET = 5;
       const int STAGE_STATE_OFFSETS = 10;
       //   std::cout << "################## BEGIN SVG TRELLIS PIC #####################" << std::endl;
-      trellis_fname << "<svg viewBox = \"0 0 200 200\" version = \"1.1\">" << std::endl;
+      trellis_fname <<
+        "<?xml version=\"1.0\" standalone=\"no\"?>"
+        "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">"
+        "<svg viewBox=\"0 0 200 200\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">"
+                    << std::endl;
 
       for(int stage_num = 0;stage_num < number_stages;stage_num ++) {
 	// draw states
