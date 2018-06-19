@@ -20,7 +20,6 @@
 #
 """ Module to add new blocks """
 
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -120,8 +119,7 @@ class ModToolAdd(ModTool):
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
-        if self.cli:
-            print("Adding file '%s'..." % path_to_file)
+        self.logger.info("Adding file '%s'..." % path_to_file)
         with open(path_to_file, 'w') as f:
             f.write(render_template(tpl, **self.info))
         self.scm.add_files((path_to_file,))
@@ -175,8 +173,7 @@ class ModToolAdd(ModTool):
                                             )
                     self.scm.mark_files_updated((self._file['qalib'],))
                 except IOError:
-                    if self.cli:
-                        print("Can't add C++ QA files.")
+                    self.logger.warning("Can't add C++ QA files.")
         fname_cc = None
         fname_h  = None
         if self.info['version']  == '37':
@@ -197,11 +194,9 @@ class ModToolAdd(ModTool):
             if self.info['version'] == '37':
                 _add_qa()
             elif self.info['version'] == '36':
-                if self.cli:
-                    print("Warning: C++ QA files not supported for 3.6-style OOTs.")
+                self.logger.warning("Warning: C++ QA files not supported for 3.6-style OOTs.")
             elif self.info['version'] == 'autofoo':
-                if self.cli:
-                    print("Warning: C++ QA files not supported for autotools.")
+                self.logger.warning("Warning: C++ QA files not supported for autotools.")
         if not self.skip_cmakefiles:
             ed = CMakeFileEditor(self._file['cmlib'])
             cmake_list_var = '[a-z]*_?' + self.info['modname'] + '_sources'
@@ -218,11 +213,9 @@ class ModToolAdd(ModTool):
         - Edit main *.i file
         """
         if self._get_mainswigfile() is None:
-            if self.cli:
-                print('Warning: No main swig file found.')
+            self.logger.warning('Warning: No main swig file found.')
             return
-        if self.cli:
-            print("Editing %s..." % self._file['swig'])
+        self.logger.info("Editing %s..." % self._file['swig'])
         mod_block_sep = '/'
         if self.info['version'] == '36':
             mod_block_sep = '_'
@@ -256,8 +249,7 @@ class ModToolAdd(ModTool):
         self.scm.mark_files_updated((os.path.join(self.info['pydir'], fname_py_qa),))
         if self.skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
-        if self.cli:
-            print("Editing %s/CMakeLists.txt..." % self.info['pydir'])
+        self.logger.info("Editing %s/CMakeLists.txt..." % self.info['pydir'])
         with open(self._file['cmpython'], 'a') as f:
             f.write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
@@ -295,8 +287,7 @@ class ModToolAdd(ModTool):
         ed = CMakeFileEditor(self._file['cmgrc'], '\n    ')
         if self.skip_cmakefiles or ed.check_for_glob('*.xml'):
             return
-        if self.cli:
-            print("Editing grc/CMakeLists.txt...")
+        self.logger.info("Editing grc/CMakeLists.txt...")
         ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
         ed.write()
         self.scm.mark_files_updated((self._file['cmgrc'],))

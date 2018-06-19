@@ -20,12 +20,12 @@
 #
 """ Base class for the modules """
 
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
 import re
+import logging
 from types import SimpleNamespace
 
 from gnuradio import gr
@@ -45,6 +45,7 @@ class ModTool(object):
 
     def __init__(self, blockname=None, module_name=None, **kwargs):
         # List subdirs where stuff happens
+        self.logger = logging.getLogger('modtool')
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc']
         self.has_subdirs = {}
         self.skip_subdirs = {}
@@ -64,8 +65,10 @@ class ModTool(object):
         self._scm = kwargs.get('scm_mode',
                                gr.prefs().get_string('modtool', 'scm_mode', 'no'))
         if not self.cli:
+            logging.basicConfig(level=logging.ERROR, format='%(message)s')
             self.info['yes'] = True
         else:
+            logging.basicConfig(level=logging.INFO, format='%(message)s')
             self.info['yes'] = kwargs['yes']
 
         if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
@@ -78,8 +81,7 @@ class ModTool(object):
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
-        if self.cli:
-            print("GNU Radio module name identified: " + self.info['modname'])
+        self.logger.info("GNU Radio module name identified: " + self.info['modname'])
         if self.info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self.info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname']))
@@ -139,7 +141,7 @@ class ModTool(object):
         else:
             self.scm = SCMRepoFactory(self.options, '.').make_empty_scm_manager()
         if self.scm is None:
-            print("Error: Can't set up SCM.")
+            self.logger.error("Error: Can't set up SCM.")
             exit(1)
 
     def _check_directory(self, directory):
@@ -151,7 +153,7 @@ class ModTool(object):
             files = os.listdir(directory)
             os.chdir(directory)
         except OSError:
-            print("Can't read or chdir to directory %s." % directory)
+            self.logger.error("Can't read or chdir to directory {}.".format(directory))
             return False
         self.info['is_component'] = False
         for f in files:

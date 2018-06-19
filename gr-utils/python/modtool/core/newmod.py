@@ -20,7 +20,6 @@
 #
 """ Create a whole new out-of-tree module """
 
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -73,8 +72,7 @@ class ModToolNewModule(ModTool):
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
-        if self.cli:
-            print("Creating out-of-tree module in %s..." % (self.dir,))
+        self.logger.info("Creating out-of-tree module in %s..." % (self.dir,))
         try:
             shutil.copytree(self.srcdir, self.dir)
             os.chdir(self.dir)
@@ -93,10 +91,7 @@ class ModToolNewModule(ModTool):
                     os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(os.path.dirname(root), self.info['modname']))
-        if self.cli:
-            print("Done.")
+        self.logger.info("Done.")
         if self.scm.init_repo(path_to_repo="."):
-            if self.cli:
-                print("Created repository... you might want to commit before continuing.")
-        if self.cli:
-            print("Use 'gr_modtool add' to add a new block to this currently empty module.")
+            self.logger.info("Created repository... you might want to commit before continuing.")
+        self.logger.info("Use 'gr_modtool add' to add a new block to this currently empty module.")
