@@ -41,6 +41,7 @@ class ModToolRename(ModTool):
 
     def validate(self):
         """ Validates the arguments """
+        ModTool._validate(self)
         if not self.info['oldname']:
             raise ModToolException('Old block name (blockname) not specified.')
         if not re.match('[a-zA-Z0-9_]+', self.info['oldname']):

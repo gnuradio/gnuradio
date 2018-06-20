@@ -45,6 +45,7 @@ class ModToolMakeXML(ModTool):
 
     def validate(self):
         """ Validates the arguments """
+        ModTool._validate(self)
         if not self.info['pattern'] or self.info['pattern'].isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 

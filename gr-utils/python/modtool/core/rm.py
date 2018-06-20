@@ -44,13 +44,14 @@ class ModToolRemove(ModTool):
 
     def validate(self):
         """ Validates the arguments """
+        ModTool._validate(self)
         if not self.info['pattern'] or self.info['pattern'].isspace():
             raise ModToolException("Incorrect blockname (Regex)!")
 
     def run(self):
         """ Go, go, go! """
         if not self.cli:
-            validate()
+            self.validate()
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
             from the CMakeLists.txt. """

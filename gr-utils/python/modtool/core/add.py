@@ -56,6 +56,7 @@ class ModToolAdd(ModTool):
 
     def validate(self):
         """ Validates the arguments """
+        ModTool._validate(self)
         if self.info['blocktype'] is None:
             raise ModToolException('Blocktype not specified.')
         if self.info['blocktype'] not in self.block_types:
@@ -126,8 +127,8 @@ class ModToolAdd(ModTool):
         """ Go, go, go. """
         # This portion will be covered by the CLI
         if not self.cli:
-            self.assign()
             self.validate()
+            self.assign()
 
         has_swig = (
                 self.info['lang'] == 'cpp'

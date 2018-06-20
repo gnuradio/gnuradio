@@ -45,7 +45,7 @@ class ModTool(object):
 
     def __init__(self, blockname=None, module_name=None, **kwargs):
         # List subdirs where stuff happens
-        self.logger = logging.getLogger('modtool')
+        self.logger = logging.getLogger('gnuradio.modtool')
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc']
         self.has_subdirs = {}
         self.skip_subdirs = {}
@@ -71,10 +71,19 @@ class ModTool(object):
             logging.basicConfig(level=logging.INFO, format='%(message)s')
             self.info['yes'] = kwargs['yes']
 
-        if type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
-            return
-        self._validate()
+    def _validate(self):
+        """ Validates the arguments """
+        if not isinstance(self.skip_subdirs['lib'], bool):
+            raise ModToolException('Expected a boolean value for skip_lib')
+        if not isinstance(self.skip_subdirs['swig'], bool):
+            raise ModToolException('Expected a boolean value for skip_swig')
+        if not isinstance(self.skip_subdirs['python'], bool):
+            raise ModToolException('Expected a boolean value for skip_python')
+        if not isinstance(self.skip_subdirs['grc'], bool):
+            raise ModToolException('Expected a boolean value for skip_grc')
+        self._assign()
 
+    def _assign(self):
         if not self._check_directory(self.dir):
             raise ModToolException('No GNU Radio module found in the given directory.')
         if self.info['modname'] is None:
@@ -98,17 +107,6 @@ class ModTool(object):
 
         self._setup_files()
         self._setup_scm()
-
-    def _validate(self):
-        """ Validates the arguments """
-        if not isinstance(self.skip_subdirs['lib'], bool):
-            raise ModToolException('Expected a boolean value for skip_lib')
-        if not isinstance(self.skip_subdirs['swig'], bool):
-            raise ModToolException('Expected a boolean value for skip_swig')
-        if not isinstance(self.skip_subdirs['python'], bool):
-            raise ModToolException('Expected a boolean value for skip_python')
-        if not isinstance(self.skip_subdirs['grc'], bool):
-            raise ModToolException('Expected a boolean value for skip_grc')
 
     def _setup_files(self):
         """ Initialise the self._file[] dictionary """
