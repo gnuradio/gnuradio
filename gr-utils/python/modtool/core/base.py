@@ -32,6 +32,8 @@ from gnuradio import gr
 from ..tools import get_modname
 from ..tools import SCMRepoFactory
 
+logger = logging.getLogger('gnuradio.modtool')
+
 
 class ModToolException(Exception):
     """ Standard exception for modtool classes. """
@@ -45,7 +47,6 @@ class ModTool(object):
 
     def __init__(self, blockname=None, module_name=None, **kwargs):
         # List subdirs where stuff happens
-        self.logger = logging.getLogger('gnuradio.modtool')
         self._subdirs = ['lib', 'include', 'python', 'swig', 'grc']
         self.has_subdirs = {}
         self.skip_subdirs = {}
@@ -94,7 +95,7 @@ class ModTool(object):
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
-        self.logger.info("GNU Radio module name identified: " + self.info['modname'])
+        logger.info("GNU Radio module name identified: " + self.info['modname'])
         if self.info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self.info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname']))
@@ -143,7 +144,7 @@ class ModTool(object):
         else:
             self.scm = SCMRepoFactory(self.options, '.').make_empty_scm_manager()
         if self.scm is None:
-            self.logger.error("Error: Can't set up SCM.")
+            logger.error("Error: Can't set up SCM.")
             exit(1)
 
     def _check_directory(self, directory):
@@ -155,7 +156,7 @@ class ModTool(object):
             files = os.listdir(directory)
             os.chdir(directory)
         except OSError:
-            self.logger.error("Can't read or chdir to directory {}.".format(directory))
+            logger.error("Can't read or chdir to directory {}.".format(directory))
             return False
         self.info['is_component'] = False
         for f in files:

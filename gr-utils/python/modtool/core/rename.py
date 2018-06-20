@@ -25,8 +25,11 @@ from __future__ import unicode_literals
 
 import os
 import re
+import logging
 
 from .base import ModTool, ModToolException
+
+logger = logging.getLogger('gnuradio.modtool.rename')
 
 
 class ModToolRename(ModTool):
@@ -62,7 +65,7 @@ class ModToolRename(ModTool):
         module = self.info['modname']
         oldname = self.info['oldname']
         newname = self.info['newname']
-        self.logger.info("In module '%s' rename block '%s' to '%s'" % (module, oldname, newname))
+        logger.info("In module '%s' rename block '%s' to '%s'" % (module, oldname, newname))
         self._run_swig_rename(self._file['swig'], oldname, newname)
         self._run_grc_rename(self.info['modname'], oldname, newname)
         self._run_python_qa(self.info['modname'], oldname, newname)
@@ -75,11 +78,11 @@ class ModToolRename(ModTool):
         """ Rename SWIG includes and block_magic """
         nsubs = self._run_file_replace(swigfilename, old, new)
         if nsubs < 1:
-            self.logger.info("Couldn't find '%s' in file '%s'." % (old, swigfilename))
+            logger.info("Couldn't find '%s' in file '%s'." % (old, swigfilename))
         if nsubs == 2:
-            self.logger.info("Changing 'noblock' type file")
+            logger.info("Changing 'noblock' type file")
         if nsubs > 3:
-            self.logger.warning("Hm, changed more then expected while editing %s." % swigfilename)
+            logger.warning("Hm, changed more then expected while editing %s." % swigfilename)
         return False
 
     def _run_lib(self, module, old, new):
@@ -99,7 +102,7 @@ class ModToolRename(ModTool):
         filename = 'qa_' + module + '.cc'
         nsubs = self._run_file_replace(path + filename, old, new)
         if nsubs > 0:
-            self.logger.info("C++ QA code detected, renaming...")
+            logger.info("C++ QA code detected, renaming...")
             filename = 'qa_' + old + '.cc'
             self._run_file_replace(path + filename, old, new)
             filename = 'qa_' + old + '.h'
@@ -107,7 +110,7 @@ class ModToolRename(ModTool):
             self._run_file_replace(path + filename, old.upper(), new.upper())
             self._run_file_rename(path, 'qa_' + old, 'qa_' + new)
         else:
-            self.logger.info("No C++ QA code detected, skipping...")
+            logger.info("No C++ QA code detected, skipping...")
 
     def _run_include(self, module, old, new):
         path = './include/' + module + '/'
@@ -122,13 +125,13 @@ class ModToolRename(ModTool):
         filename = '__init__.py'
         nsubs = self._run_file_replace(path + filename, old, new)
         if nsubs > 0:
-            self.logger.info("Python block detected, renaming...")
+            logger.info("Python block detected, renaming...")
             filename = old + '.py'
             self._run_file_replace(path + filename, old, new)
             self._run_cmakelists(path, old, new)
             self._run_file_rename(path, old, new)
         else:
-            self.logger.info("Not a Python block, nothing to do here...")
+            logger.info("Not a Python block, nothing to do here...")
 
     def _run_python_qa(self, module, old, new):
         new = 'qa_' + new
@@ -148,7 +151,7 @@ class ModToolRename(ModTool):
         filename = path + 'CMakeLists.txt'
         nsubs = self._run_file_replace(filename, first, second)
         if nsubs < 1:
-            self.logger.info("'%s' wasn't in '%s'." % (first, filename))
+            logger.info("'%s' wasn't in '%s'." % (first, filename))
 
     def _run_file_rename(self, path, old, new):
         files = os.listdir(path)
@@ -157,14 +160,14 @@ class ModToolRename(ModTool):
                 nl = file.replace(old, new)
                 src = path + file
                 dst = path + nl
-                self.logger.info("Renaming file '%s' to '%s'." % (src, dst))
+                logger.info("Renaming file '%s' to '%s'." % (src, dst))
                 os.rename(src, dst)
 
     def _run_file_replace(self, filename, old, new):
         if not os.path.isfile(filename):
             return False
         else:
-            self.logger.info("In '%s' renaming occurences of '%s' to '%s'" % (filename, old, new))
+            logger.info("In '%s' renaming occurences of '%s' to '%s'" % (filename, old, new))
 
         with open(filename) as f:
             cfile = f.read()

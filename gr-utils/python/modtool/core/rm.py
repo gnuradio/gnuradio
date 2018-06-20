@@ -27,10 +27,13 @@ import os
 import re
 import sys
 import glob
+import logging
 
 from ..tools import remove_pattern_from_file
 from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
+
+logger = logging.getLogger('gnuradio.modtool.rm')
 
 
 class ModToolRemove(ModTool):
@@ -129,12 +132,12 @@ class ModToolRemove(ModTool):
         for g in globs:
             files = files + sorted(glob.glob("%s/%s"% (path, g)))
         files_filt = []
-        self.logger.info("Searching for matching files in %s/:" % path)
+        logger.info("Searching for matching files in %s/:" % path)
         for f in files:
             if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
         if len(files_filt) == 0:
-            self.logger.info("None found.")
+            logger.info("None found.")
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
@@ -151,10 +154,10 @@ class ModToolRemove(ModTool):
                 if ans == 'n':
                     continue
             files_deleted.append(b)
-            self.logger.info("Deleting %s." % f)
+            logger.info("Deleting %s." % f)
             self.scm.remove_file(f)
             os.unlink(f)
-            self.logger.info("Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path))
+            logger.info("Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path))
             for var in makefile_vars:
                 ed.remove_value(var, b)
             if cmakeedit_func is not None:

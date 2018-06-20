@@ -26,9 +26,12 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+import logging
 
 from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
+
+logger = logging.getLogger('gnuradio.modtool.disable')
 
 
 class ModToolDisable(ModTool):
@@ -59,7 +62,7 @@ class ModToolDisable(ModTool):
                 with open(self._file['pyinit']) as f:
                     initfile = f.read()
             except IOError:
-                self.logger.warning("Could not edit __init__.py, that might be a problem.")
+                logger.warning("Could not edit __init__.py, that might be a problem.")
                 return False
             pymodname = os.path.splitext(fname)[0]
             initfile = re.sub(r'((from|import)\s+\b'+pymodname+r'\b)', r'#\1', initfile)
@@ -92,14 +95,14 @@ class ModToolDisable(ModTool):
                                         self.info['modname'], fname),
                                         r'//\1', swigfile)
             if nsubs > 0:
-                self.logger.info("Changing %s..." % self._file['swig'])
+                logger.info("Changing %s..." % self._file['swig'])
             if nsubs > 1: # Need to find a single BLOCK_MAGIC
                 blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
                 if self.info['version'] == '37':
                     blockname = os.path.splitext(fname)[0]
                 (swigfile, nsubs) = re.subn('(GR_SWIG_BLOCK_MAGIC2?.+%s.+;)' % blockname, r'//\1', swigfile)
                 if nsubs > 1:
-                    self.logger.warning("Hm, changed more then expected while editing %s." % self._file['swig'])
+                    logger.warning("Hm, changed more then expected while editing %s." % self._file['swig'])
             with open(self._file['swig'], 'w') as f:
                 f.write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
@@ -113,7 +116,7 @@ class ModToolDisable(ModTool):
             if self.info['version'] == '37':
                 blockname = os.path.splitext(fname)[0]
             swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
-            self.logger.info("Changing %s..." % self._file['swig'])
+            logger.info("Changing %s..." % self._file['swig'])
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             with open(self._file['swig'], 'w') as f:
                 f.write(swigfile)
@@ -139,7 +142,7 @@ class ModToolDisable(ModTool):
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:
                 continue
-            self.logger.info("Traversing %s..." % subdir)
+            logger.info("Traversing %s..." % subdir)
             filenames = cmake.find_filenames_match(self.info['pattern'])
             yes = self.info['yes']
             for fname in filenames:
@@ -159,4 +162,4 @@ class ModToolDisable(ModTool):
                     cmake.disable_file(fname)
             cmake.write()
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
-        self.logger.warning("Careful: 'gr_modtool disable' does not resolve dependencies.")
+        logger.warning("Careful: 'gr_modtool disable' does not resolve dependencies.")

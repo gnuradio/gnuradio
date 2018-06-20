@@ -26,10 +26,13 @@ from __future__ import unicode_literals
 import shutil
 import os
 import re
+import logging
 
 from gnuradio import gr
 from ..tools import SCMRepoFactory
 from .base import ModTool, ModToolException
+
+logger = logging.getLogger('gnuradio.modtool.newmod')
 
 
 class ModToolNewModule(ModTool):
@@ -73,7 +76,7 @@ class ModToolNewModule(ModTool):
             self.assign()
             self.validate()
             self._setup_scm(mode='new')
-        self.logger.info("Creating out-of-tree module in %s..." % (self.dir,))
+        logger.info("Creating out-of-tree module in %s..." % (self.dir,))
         try:
             shutil.copytree(self.srcdir, self.dir)
             os.chdir(self.dir)
@@ -92,7 +95,7 @@ class ModToolNewModule(ModTool):
                     os.rename(f, os.path.join(root, filename.replace('howto', self.info['modname'])))
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(os.path.dirname(root), self.info['modname']))
-        self.logger.info("Done.")
+        logger.info("Done.")
         if self.scm.init_repo(path_to_repo="."):
-            self.logger.info("Created repository... you might want to commit before continuing.")
-        self.logger.info("Use 'gr_modtool add' to add a new block to this currently empty module.")
+            logger.info("Created repository... you might want to commit before continuing.")
+        logger.info("Use 'gr_modtool add' to add a new block to this currently empty module.")
