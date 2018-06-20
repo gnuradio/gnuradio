@@ -71,6 +71,10 @@ class ModTool(object):
             logging.basicConfig(level=logging.INFO, format='%(message)s')
             self.info['yes'] = kwargs['yes']
 
+        if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
+            if self.cli:
+                self._validate()
+
     def _validate(self):
         """ Validates the arguments """
         if not isinstance(self.skip_subdirs['lib'], bool):
