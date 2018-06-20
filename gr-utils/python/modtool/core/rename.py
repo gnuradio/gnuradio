@@ -34,15 +34,10 @@ class ModToolRename(ModTool):
     name = 'rename'
     description = 'Rename a block inside a module.'
 
-    def __init__(self, blockname, new_name, **kwargs):
+    def __init__(self, blockname=None, new_name=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
         self.info['oldname'] = blockname
         self.info['newname'] = new_name
-        # This portion will be covered by the CLI
-        if self.cli:
-            return
-        self.validate()
-        self.info['fullnewname'] = self.info['modname'] + '_' + self.info['newname']
 
     def validate(self):
         """ Validates the arguments """
@@ -55,8 +50,14 @@ class ModToolRename(ModTool):
         if not re.match('[a-zA-Z0-9_]+', self.info['newname']):
             raise ModToolException('Invalid new block name.')
 
+    def assign(self):
+        self.info['fullnewname'] = self.info['modname'] + '_' + self.info['newname']
+
     def run(self):
         """ Go, go, go. """
+        if not self.cli:
+            self.validate()
+            self.assign()
         module = self.info['modname']
         oldname = self.info['oldname']
         newname = self.info['newname']

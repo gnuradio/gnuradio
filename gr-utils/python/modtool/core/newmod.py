@@ -36,18 +36,24 @@ class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
     description = 'Create new empty module, use add to add blocks.'
-    def __init__(self, module_name, srcdir=None, **kwargs):
+    def __init__(self, module_name=None, srcdir=None, **kwargs):
         ModTool.__init__(self, None, module_name, **kwargs)
         # Don't call ModTool._validate(), that assumes an existing module.
         self.srcdir = srcdir
+        self.directory = self.dir
+
+    def assign(self):
+        self.dir = self.directory + '/gr-{}'.format(self.info['modname'])
         if self.srcdir is None:
             self.srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
         self.srcdir = gr.prefs().get_string('modtool', 'newmod_path', self.srcdir)
-        # This portion will be covered by the CLI
-        if self.cli:
-            return
-        self.validate()
-        self.dir = self.dir + '/gr-{}'.format(self.info['modname'])
+
+    def validate(self):
+        """ Validates the arguments """
+        if self.info['modname'] is None:
+            raise ModToolException('Module name not specified.')
+        if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
+            raise ModToolException('Invalid module name.')
         try:
             os.stat(self.dir)
         except OSError:
@@ -57,21 +63,16 @@ class ModToolNewModule(ModTool):
         if not os.path.isdir(self.srcdir):
             raise ModToolException('Could not find gr-newmod source dir.')
 
-        self._setup_scm(mode='new')
-
-    def validate(self):
-        """ Validates the arguments """
-        if self.info['modname'] is None:
-            raise ModToolException('Module name not specified.')
-        if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
-            raise ModToolException('Invalid module name.')
-
     def run(self):
         """
         * Copy the example dir recursively
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
+        if not self.cli:
+            self.assign()
+            self.validate()
+            self._setup_scm(mode='new')
         self.logger.info("Creating out-of-tree module in %s..." % (self.dir,))
         try:
             shutil.copytree(self.srcdir, self.dir)

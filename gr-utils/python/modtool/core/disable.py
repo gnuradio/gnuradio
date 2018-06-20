@@ -36,13 +36,9 @@ class ModToolDisable(ModTool):
     name = 'disable'
     description = 'Disable selected block in module.'
 
-    def __init__(self, blockname, **kwargs):
+    def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
         self.info['pattern'] = blockname
-        # This portion will be covered by the CLI
-        if self.cli:
-            return
-        self.validate()
 
     def validate(self):
         """ Validates the arguments """
@@ -122,6 +118,9 @@ class ModToolDisable(ModTool):
                 f.write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
             return False
+
+        if not self.cli:
+            self.validate()
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
                 ('python', 'qa.+py$', _handle_py_qa),

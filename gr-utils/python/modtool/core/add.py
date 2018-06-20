@@ -41,7 +41,7 @@ class ModToolAdd(ModTool):
                     'general', 'tagged_stream', 'hier', 'noblock')
     language_candidates = ('cpp', 'python', 'c++')
 
-    def __init__(self, blockname, block_type, lang, copyright=None,
+    def __init__(self, blockname=None, block_type=None, lang=None, copyright=None,
                  license_file=None, argument_list="", add_python_qa=False,
                  add_cpp_qa=False, skip_cmakefiles=False, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
@@ -53,26 +53,6 @@ class ModToolAdd(ModTool):
         self.add_py_qa = add_python_qa
         self.add_cc_qa = add_cpp_qa
         self.skip_cmakefiles = skip_cmakefiles
-        # This portion will be covered by the CLI
-        if self.cli:
-            return
-        self.validate()
-        if self.info['lang'] == 'c++':
-            self.info['lang'] = 'cpp'
-        if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
-                or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
-            raise ModToolException('Missing or skipping relevant subdir.')
-        self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
-        if not self.license_file:
-            if self.info['copyrightholder'] is None:
-                self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
-        self.info['license'] = self.setup_choose_license()
-        if (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
-            self.add_py_qa = False
-        if not self.info['lang'] == 'cpp':
-            self.add_cc_qa = False
-        if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
-            self.skip_cmakefiles = True
 
     def validate(self):
         """ Validates the arguments """
@@ -94,6 +74,24 @@ class ModToolAdd(ModTool):
             raise ModToolException('Expected a boolean value for add_cpp_qa.')
         if not isinstance(self.skip_cmakefiles, bool):
             raise ModToolException('Expected a boolean value for skip_cmakefiles.')
+
+    def assign(self):
+        if self.info['lang'] == 'c++':
+            self.info['lang'] = 'cpp'
+        if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
+                or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
+            raise ModToolException('Missing or skipping relevant subdir.')
+        self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
+        if not self.license_file:
+            if self.info['copyrightholder'] is None:
+                self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+        self.info['license'] = self.setup_choose_license()
+        if (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
+            self.add_py_qa = False
+        if not self.info['lang'] == 'cpp':
+            self.add_cc_qa = False
+        if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
+            self.skip_cmakefiles = True
 
     def setup_choose_license(self):
         """ Select a license by the following rules, in this order:
@@ -126,6 +124,11 @@ class ModToolAdd(ModTool):
 
     def run(self):
         """ Go, go, go. """
+        # This portion will be covered by the CLI
+        if not self.cli:
+            self.assign()
+            self.validate()
+
         has_swig = (
                 self.info['lang'] == 'cpp'
                 and not self.skip_subdirs['swig']

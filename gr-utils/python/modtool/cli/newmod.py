@@ -25,6 +25,7 @@ import os
 
 import click
 
+from gnuradio import gr
 from ..core import ModToolException
 from ..core import ModToolNewModule
 from .base import common_params, run
@@ -56,6 +57,9 @@ def cli(**kwargs):
         pass # This is what should happen
     else:
         raise ModToolException('The given directory exists.')
+    if self.srcdir is None:
+        self.srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
+    self.srcdir = gr.prefs().get_string('modtool', 'newmod_path', self.srcdir)
     if not os.path.isdir(self.srcdir):
         raise ModToolException('Could not find gr-newmod source dir.')
     self._setup_scm(mode='new')

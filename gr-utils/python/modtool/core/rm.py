@@ -38,13 +38,9 @@ class ModToolRemove(ModTool):
     name = 'remove'
     description = 'Remove a block from a module.'
 
-    def __init__(self, blockname, **kwargs):
+    def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
         self.info['pattern'] = blockname
-        # This portion will be covered by the CLI
-        if self.cli:
-            return
-        self.validate()
 
     def validate(self):
         """ Validates the arguments """
@@ -53,6 +49,8 @@ class ModToolRemove(ModTool):
 
     def run(self):
         """ Go, go, go! """
+        if not self.cli:
+            validate()
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
             from the CMakeLists.txt. """

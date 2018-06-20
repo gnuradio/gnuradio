@@ -39,13 +39,9 @@ class ModToolMakeXML(ModTool):
     name = 'makexml'
     description = 'Generate XML files for GRC block bindings.'
 
-    def __init__(self, blockname, **kwargs):
+    def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
         self.info['pattern'] = blockname
-        # This portion will be covered by the CLI
-        if self.cli:
-            return
-        self.validate()
 
     def validate(self):
         """ Validates the arguments """
@@ -54,6 +50,8 @@ class ModToolMakeXML(ModTool):
 
     def run(self):
         """ Go, go, go! """
+        if not self.cli:
+            self.validate()
         self.logger.warning("Warning: This is an experimental feature. Don't expect any magic.")
         # 1) Go through lib/
         if not self.skip_subdirs['lib']:
