@@ -494,22 +494,22 @@ ${str_to_python_comment($license)}
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 #if $lang == 'cpp'
-import ${modname}_swig as ${modname}
+import ${modname}.${modname}_swig as ${modname}
 #else
 from ${blockname} import ${blockname}
 #end if
 
-class qa_$blockname (gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+class qa_${blockname}(gr_unittest.TestCase):
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_001_t (self):
+    def test_001_t(self):
         # set up fg
-        self.tb.run ()
+        self.tb.run()
         # check data
 
 
