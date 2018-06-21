@@ -25,6 +25,7 @@
 #include <gnuradio/digital/api.h>
 #include <vector>
 #include <stdint.h>
+#include <stdlib.h>
 
 namespace gr {
   namespace digital {
