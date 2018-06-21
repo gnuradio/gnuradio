@@ -24,8 +24,8 @@ from gnuradio import gr, gru, eng_notation, filter
 from gnuradio import audio
 from gnuradio import analog
 from gnuradio import blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import sys
 import math
 
@@ -33,24 +33,20 @@ class wfm_rx_block (gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        usage = "usage: %prog [options] input-samples-320kS.dat output.wav"
-        parser=OptionParser(option_class=eng_option, usage=usage)
-        parser.add_option("-V", "--volume", type="eng_float", default=None,
-                          help="set volume (default is midpoint)")
+        parser = ArgumentParser(description="Decode WFM signal into WAV file.")
+        parser.add_argument("-V", "--volume", type=eng_float,
+                help="Volume (dB) <%r, %r> (default is midpoint)" % \
+                        self.volume_range()[:2])
+        parser.add_argument("input_file", help="Input file (complex samples)")
+        parser.add_argument("output_file", help="Output WAV file")
 
-        (options, args) = parser.parse_args()
-        if len(args) != 2:
-            parser.print_help()
-            sys.exit(1)
-
-        input_filename = args[0]
-        output_filename = args[1]
+        args = parser.parse_args()
 
         self.vol = 0
 
         # build graph
 
-        self.src = blocks.file_source(gr.sizeof_gr_complex, input_filename, False)
+        self.src = blocks.file_source(gr.sizeof_gr_complex, args.input_file, False)
 
         adc_rate = 64e6                             # 64 MS/s
         usrp_decim = 200
@@ -80,10 +76,10 @@ class wfm_rx_block (gr.top_block):
 
         # wave file as final sink
         if 1:
-            sink = blocks.wavfile_sink(output_filename, 2, int(audio_rate), 16)
+            sink = blocks.wavfile_sink(args.output_file, 2, int(audio_rate), 16)
         else:
             sink = audio.sink (int (audio_rate),
-                               options.audio_output,
+                               args.audio_output,
                                False)   # ok_to_block
 
         # now wire it all together
@@ -96,15 +92,15 @@ class wfm_rx_block (gr.top_block):
           pass
           #print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
 
-        if options.volume is None:
+        if args.volume is None:
             g = self.volume_range()
-            options.volume = float(g[0]+g[1])/2
+            args.volume = float(g[0]+g[1])/2
 
         # set initial values
 
-        self.set_vol(options.volume)
+        self.set_vol(args.volume)
         try:
-          self.guts.stereo_carrier_pll_recovery.set_lock_threshold(options.squelch)
+          self.guts.stereo_carrier_pll_recovery.set_lock_threshold(args.squelch)
         except:
           pass
           #print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"

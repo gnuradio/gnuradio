@@ -22,7 +22,6 @@ file(GLOB py_files "*.py")
 GR_PYTHON_INSTALL(
     FILES ${py_files}
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
-    COMPONENT "grc"
 )
 
 file(GLOB dtd_files "*.dtd")
@@ -30,7 +29,6 @@ file(GLOB dtd_files "*.dtd")
 install(
     FILES ${dtd_files} default_flow_graph.grc
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/grc/core
-    COMPONENT "grc"
 )
 
 add_subdirectory(generator)

@@ -51,7 +51,6 @@ namespace gr {
         int chainback_viterbi(unsigned char* data, unsigned int nbits,
                               unsigned int endstate, unsigned int tailsize);
         int find_endstate();
-        int tester[12];
 
         unsigned char *Branchtab;
         unsigned char Partab[256];
@@ -64,7 +63,6 @@ namespace gr {
         unsigned int d_frame_size;
         unsigned int d_k;
         unsigned int d_rate;
-        unsigned int d_partial_rate;
         std::vector<int> d_polys;
         cc_mode_t d_mode;
         int d_padding;

@@ -8,7 +8,7 @@
 <block>
 	<name>QT GUI Push Button</name>
 	<key>variable_qtgui_push_button</key>
-	<import>from PyQt4 import Qt</import>
+	<import>from PyQt5 import Qt</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>#set $win = '_%s_push_button'%$id
 #if not $label()

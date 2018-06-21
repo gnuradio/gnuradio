@@ -71,7 +71,7 @@ class test_hier_block2(gr_unittest.TestCase):
 	nop1 = blocks.nop(gr.sizeof_int)
 	nop2 = blocks.nop(gr.sizeof_int)
 	hblock.connect(nop1, hblock)
-	self.assertRaises(ValueError,
+	self.assertRaises(RuntimeError,
 	    lambda: hblock.connect(nop2, hblock))
 
     def test_006_connect_invalid_src_port_neg(self):
@@ -79,7 +79,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int),
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
-	self.assertRaises(ValueError,
+	self.assertRaises(RuntimeError,
 	    lambda: hblock.connect((hblock, -1), nop1))
 
     def test_005_connect_invalid_src_port_exceeds(self):
@@ -87,7 +87,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int),
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
-	self.assertRaises(ValueError,
+	self.assertRaises(RuntimeError,
 	    lambda: hblock.connect((hblock, 1), nop1))
 
     def test_007_connect_invalid_dst_port_neg(self):
@@ -96,7 +96,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
 	nop2 = blocks.nop(gr.sizeof_int)
-	self.assertRaises(ValueError,
+	self.assertRaises(RuntimeError,
 	    lambda: hblock.connect(nop1, (nop2, -1)))
 
     def test_008_connect_invalid_dst_port_exceeds(self):
@@ -105,7 +105,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.null_sink(gr.sizeof_int)
 	nop2 = blocks.null_sink(gr.sizeof_int)
-	self.assertRaises(ValueError,
+	self.assertRaises(RuntimeError,
 	    lambda: hblock.connect(nop1, (nop2, 1)))
 
     def test_009_check_topology(self):
@@ -141,7 +141,7 @@ class test_hier_block2(gr_unittest.TestCase):
 	nop1 = blocks.nop(gr.sizeof_int)
         nop2 = blocks.nop(gr.sizeof_int)
 	hblock.connect(hblock, nop1)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect(hblock, nop2))
 
     def test_014_disconnect_input_neg(self):
@@ -150,7 +150,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
 	hblock.connect(hblock, nop1)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect((hblock, -1), nop1))
 
     def test_015_disconnect_input_exceeds(self):
@@ -159,7 +159,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
 	hblock.connect(hblock, nop1)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect((hblock, 1), nop1))
 
     def test_016_disconnect_output(self):
@@ -177,7 +177,7 @@ class test_hier_block2(gr_unittest.TestCase):
 	nop1 = blocks.nop(gr.sizeof_int)
         nop2 = blocks.nop(gr.sizeof_int)
 	hblock.connect(nop1, hblock)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect(nop2, hblock))
 
     def test_018_disconnect_output_neg(self):
@@ -186,7 +186,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
 	hblock.connect(hblock, nop1)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect(nop1, (hblock, -1)))
 
     def test_019_disconnect_output_exceeds(self):
@@ -195,7 +195,7 @@ class test_hier_block2(gr_unittest.TestCase):
 				gr.io_signature(1,1,gr.sizeof_int))
 	nop1 = blocks.nop(gr.sizeof_int)
 	hblock.connect(nop1, hblock)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect(nop1, (hblock, 1)))
 
     def test_020_run(self):
@@ -219,7 +219,7 @@ class test_hier_block2(gr_unittest.TestCase):
         blk = gr.hier_block2("block",
                              gr.io_signature(1, 1, 1),
                              gr.io_signature(1, 1, 1))
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
                           lambda: hblock.connect(blk))
 
     def test_023_connect_single_twice(self):
@@ -228,7 +228,7 @@ class test_hier_block2(gr_unittest.TestCase):
                              gr.io_signature(0, 0, 0),
                              gr.io_signature(0, 0, 0))
         hblock.connect(blk)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
                           lambda: hblock.connect(blk))
 
     def test_024_disconnect_single(self):
@@ -244,7 +244,7 @@ class test_hier_block2(gr_unittest.TestCase):
         blk = gr.hier_block2("block",
                              gr.io_signature(0, 0, 0),
                              gr.io_signature(0, 0, 0))
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
                           lambda: hblock.disconnect(blk))
 
     def test_026_run_single(self):

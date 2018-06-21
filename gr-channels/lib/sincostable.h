@@ -1,8 +1,8 @@
 #ifndef SINCOSTABLE_H
 #define SINCOSTABLE_H
 
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <gnuradio/math.h>
+#include <cmath>
 
 class sincostable {
     std::vector<float> d_cos;
@@ -12,10 +12,10 @@ class sincostable {
     sincostable(size_t tbl_size) :
         d_cos(tbl_size,1),
         d_sz(tbl_size),
-        d_scale(tbl_size/(M_PI*2))
+        d_scale(tbl_size/(GR_M_PI*2))
         {
         for(size_t i=0; i<tbl_size; i++){
-            d_cos[i] = ::cos(2*M_PI*i/tbl_size);
+            d_cos[i] = ::cos(2*GR_M_PI*i/tbl_size);
             }
         }
     const float sin(float x){

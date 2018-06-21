@@ -20,9 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <gnuradio/qtgui/constellationdisplayform.h>
+
 #include <cmath>
 #include <QMessageBox>
-#include <gnuradio/qtgui/constellationdisplayform.h>
 #include <iostream>
 
 ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)

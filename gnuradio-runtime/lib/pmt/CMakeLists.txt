@@ -44,7 +44,6 @@ add_custom_command(
 install(
     FILES ${PMT_SERIAL_TAGS_H}
     DESTINATION ${GR_INCLUDE_DIR}/pmt
-    COMPONENT "runtime_devel"
 )
 
 include(AddFileDependencies)
@@ -108,7 +107,7 @@ endif(MSVC)
 add_library(gnuradio-pmt SHARED ${pmt_sources})
 target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
 
-GR_LIBRARY_FOO(gnuradio-pmt RUNTIME_COMPONENT "runtime_runtime" DEVEL_COMPONENT "runtime_devel")
+GR_LIBRARY_FOO(gnuradio-pmt)
 
 add_dependencies(gnuradio-pmt
   pmt_generated
@@ -125,7 +124,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-pmt_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "runtime_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

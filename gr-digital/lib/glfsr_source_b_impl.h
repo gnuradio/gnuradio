@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2012 Free Software Foundation, Inc.
+ * Copyright 2007,2012,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -35,20 +35,20 @@ namespace gr {
       glfsr *d_glfsr;
 
       bool d_repeat;
-      unsigned int d_index;
-      unsigned int d_length;
+      uint32_t d_index;
+      uint32_t d_length;
 
     public:
-      glfsr_source_b_impl(int degree, bool repeat=true,
-			  int mask=0, int seed=1);
+      glfsr_source_b_impl(unsigned int degree, bool repeat=true,
+			  uint32_t mask=0, uint32_t seed=0x1);
       ~glfsr_source_b_impl();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
 
-      unsigned int period() const { return d_length; }
-      int mask() const;
+      uint32_t period() const { return d_length; }
+      uint32_t mask() const;
     };
 
   } /* namespace digital */

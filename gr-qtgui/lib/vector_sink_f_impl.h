@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_VECTOR_SINK_F_IMPL_H
 
 #include <gnuradio/qtgui/vector_sink_f.h>
+
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/vectordisplayform.h>
 

@@ -46,9 +46,6 @@ namespace gr {
         unsigned int d_rate;
         unsigned int d_k;
         std::vector<int> d_polys;
-        struct v* d_vp;
-        int d_numstates;
-        int d_decision_t_size;
         int d_start_state;
         cc_mode_t d_mode;
         int d_padding;

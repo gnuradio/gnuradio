@@ -120,7 +120,7 @@ namespace gr {
 	iir_filter(const std::vector<tap_type>& fftaps,
 		   const std::vector<tap_type>& fbtaps,
 		   bool oldstyle=true)
-	  throw (std::invalid_argument)
+    noexcept(false)
 	{
 	  d_oldstyle = oldstyle;
 	  set_taps(fftaps, fbtaps);
@@ -153,7 +153,6 @@ namespace gr {
 	 */
 	void set_taps(const std::vector<tap_type> &fftaps,
 		      const std::vector<tap_type> &fbtaps)
-	  throw (std::invalid_argument)
 	{
 	  d_latest_n = 0;
 	  d_latest_m = 0;

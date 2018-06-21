@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2011,2012,2014 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2011,2012,2014,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_SINK_C_IMPL_H
 
 #include <gnuradio/qtgui/sink_c.h>
+
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>

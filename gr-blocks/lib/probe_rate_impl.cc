@@ -46,7 +46,6 @@ namespace gr {
         d_avg(0),
         d_min_update_time(update_rate_ms),
         d_lastthru(0),
-        d_itemsize(itemsize),
         d_port(pmt::mp("rate")),
         d_dict_avg(pmt::mp("rate_avg")),
         d_dict_now(pmt::mp("rate_now"))

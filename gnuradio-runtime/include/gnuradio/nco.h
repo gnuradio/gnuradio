@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,6 +25,8 @@
 
 #include <gnuradio/sincos.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/math.h>
+
 #include <vector>
 #include <cmath>
 
@@ -69,24 +71,24 @@ namespace gr {
     void step()
     {
       phase += phase_inc;
-      if(fabs(phase) > M_PI) {
-        while(phase > M_PI)
-          phase -= 2*M_PI;
+      if(fabs(phase) > GR_M_PI) {
+        while(phase > GR_M_PI)
+          phase -= 2*GR_M_PI;
 
-        while(phase < -M_PI)
-          phase += 2*M_PI;
+        while(phase < -GR_M_PI)
+          phase += 2*GR_M_PI;
       }
     }
 
     void step(int n)
     {
       phase += phase_inc * n;
-      if(fabs(phase) > M_PI){
-        while(phase > M_PI)
-          phase -= 2*M_PI;
+      if(fabs(phase) > GR_M_PI){
+        while(phase > GR_M_PI)
+          phase -= 2*GR_M_PI;
 
-        while(phase < -M_PI)
-          phase += 2*M_PI;
+        while(phase < -GR_M_PI)
+          phase += 2*GR_M_PI;
       }
     }
 

@@ -33,7 +33,7 @@ except ImportError:
     print "Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and Python TkInter https://wiki.python.org/moin/TkInter to run this script"
     raise SystemExit, 1
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 class plot_fft_base:
     def __init__(self, datatype, filename, options):
@@ -209,18 +209,21 @@ class plot_fft_base:
 
     @staticmethod
     def setup_options():
-        usage="%prog: [options] input_filename"
         description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time as well as the frequency domain (FFT) plot. The y-axis values are plotted assuming volts as the amplitude of the I&Q streams and converted into dBm in the frequency domain (the 1/N power adjustment out of the FFT is performed internally). The script plots a certain block of data at a time, specified on the command line as -B or --block. This value defaults to 1000. The start position in the file can be set by specifying -s or --start and defaults to 0 (the start of the file). By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time and frequency axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
 
-        parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
-        parser.add_option("-d", "--data-type", type="string", default="complex64",
-                          help="Specify the data type (complex64, float32, (u)int32, (u)int16, (u)int8) [default=%default]")
-        parser.add_option("-B", "--block", type="int", default=1000,
-                          help="Specify the block size [default=%default]")
-        parser.add_option("-s", "--start", type="int", default=0,
-                          help="Specify where to start in the file [default=%default]")
-        parser.add_option("-R", "--sample-rate", type="float", default=1.0,
-                          help="Set the sampler rate of the data [default=%default]")
+        parser = ArgumentParser(conflict_handler="resolve", description=description)
+        parser.add_argument("-d", "--data-type", default="complex64",
+                choices=("complex64", "float32", "uint32", "int32", "uint16",
+                    "int16", "uint8", "int8"),
+                help="Specify the data type [default=%(default)r]")
+        parser.add_argument("-B", "--block", type=int, default=1000,
+                help="Specify the block size [default=%(default)r]")
+        parser.add_argument("-s", "--start", type=int, default=0,
+                help="Specify where to start in the file [default=%(default)r]")
+        parser.add_argument("-R", "--sample-rate", type=float, default=1.0,
+                help="Set the sampler rate of the data [default=%(default)r]")
+        parser.add_argument("file", metavar="FILE",
+                help="Input file with samples")
         return parser
 
 def find(item_in, list_search):
@@ -231,13 +234,9 @@ def find(item_in, list_search):
 
 def main():
     parser = plot_fft_base.setup_options()
-    (options, args) = parser.parse_args ()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filename = args[0]
+    args = parser.parse_args()
 
-    dc = plot_fft_base(options.data_type, filename, options)
+    dc = plot_fft_base(args.data_type, args.file, args)
 
 if __name__ == "__main__":
     try:

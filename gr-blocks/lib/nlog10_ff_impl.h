@@ -30,12 +30,14 @@ namespace gr {
 
     class BLOCKS_API nlog10_ff_impl : public nlog10_ff
     {
-      float  d_n;
+      float  d_prefactor;
       size_t d_vlen;
       float  d_k;
 
     public:
       nlog10_ff_impl(float n, size_t vlen, float k);
+      void setn(float n);
+      void setk(float k);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

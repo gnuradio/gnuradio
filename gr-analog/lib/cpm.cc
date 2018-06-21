@@ -24,29 +24,23 @@
 #include "config.h"
 #endif
 
+#include <gnuradio/analog/cpm.h>
+#include <gnuradio/math.h>
+
 #include <cmath>
 #include <cfloat>
-#include <gnuradio/analog/cpm.h>
-
-//gives us erf on compilers without it
-#include <boost/math/special_functions/erf.hpp>
-namespace bm = boost::math;
 
 namespace gr {
   namespace analog {
 
-#ifndef M_TWOPI
-#  define M_TWOPI (2*M_PI)
-#endif
-
-    //! Normalised sinc function, sinc(x)=sin(pi*x)/pi*x
+    //! Normalised sinc function, sinc(x)=std::sin(pi*x)/pi*x
     inline double
     sinc(double x)
     {
       if(x == 0) {
 	return 1.0;
       }
-      return sin(M_PI * x) / (M_PI * x);
+      return std::sin(GR_M_PI * x) / (GR_M_PI * x);
     }
 
 
@@ -56,7 +50,7 @@ namespace gr {
     {
       std::vector<float> taps(samples_per_sym * L, 1.0/L/samples_per_sym);
       for(unsigned i = 0; i < samples_per_sym * L; i++) {
-	taps[i] *= 1 - cos(M_TWOPI * i / L / samples_per_sym);
+	taps[i] *= 1 - std::cos(GR_M_TWOPI * i / L / samples_per_sym);
       }
 
       return taps;
@@ -67,7 +61,7 @@ namespace gr {
      *
      * L-SRC has a time-continuous phase response function of
      *
-     * g(t) = 1/LT * sinc(2t/LT) * cos(beta * 2pi t / LT) / (1 - (4beta / LT * t)^2)
+     * g(t) = 1/LT * sinc(2t/LT) * std::cos(beta * 2pi t / LT) / (1 - (4beta / LT * t)^2)
      *
      * which is the Fourier transform of a cos-rolloff function with rolloff
      * beta, and looks like a sinc-function, multiplied with a rolloff term.
@@ -75,7 +69,7 @@ namespace gr {
      * zero crossings.
      * The time-discrete IR is thus
      *
-     * g(k) = 1/Ls * sinc(2k/Ls) * cos(beta * pi k / Ls) / (1 - (4beta / Ls * k)^2)
+     * g(k) = 1/Ls * sinc(2k/Ls) * std::cos(beta * pi k / Ls) / (1 - (4beta / Ls * k)^2)
      * where k = 0...Ls-1
      * and s = samples per symbol.
      */
@@ -100,7 +94,7 @@ namespace gr {
 	}
 	else {
 	  double tmp = 4.0 * beta * k / Ls;
-	  taps_d[i] *= cos(beta * M_TWOPI * k / Ls) / (1 - tmp * tmp);
+	  taps_d[i] *= std::cos(beta * GR_M_TWOPI * k / Ls) / (1 - tmp * tmp);
 	}
 	sum += taps_d[i];
       }
@@ -127,8 +121,8 @@ namespace gr {
       }
 
       const double pi2_24 = 0.411233516712057; // pi^2/24
-      double f = M_PI * k / sps;
-      return sinc(k/sps) - pi2_24 * (2 * sin(f) - 2*f*cos(f) - f*f*sin(f)) / (f*f*f);
+      double f = GR_M_PI * k / sps;
+      return sinc(k/sps) - pi2_24 * (2 * std::sin(f) - 2*f*std::cos(f) - f*f*std::sin(f)) / (f*f*f);
     }
 
     //! Taps for TFM CPM (Tamed frequency modulation)
@@ -183,8 +177,8 @@ namespace gr {
       double alpha = 5.336446256636997 * bt;
       for(unsigned i = 0; i < samples_per_sym * L; i++) {
 	double k =  i - Ls/2; // Causal to acausal
-	taps_d[i] = (bm::erf(alpha * (k / samples_per_sym + 0.5)) -
-		     bm::erf(alpha * (k / samples_per_sym - 0.5)))
+  taps_d[i] = (std::erf(alpha * (k / samples_per_sym + 0.5)) -
+               std::erf(alpha * (k / samples_per_sym - 0.5)))
 	  * 0.5 / samples_per_sym;
 	taps[i] = (float) taps_d[i];
       }

@@ -256,7 +256,7 @@ namespace gr {
     }
 
     void
-    jack_sink::bail(const char *msg, int err) throw (std::runtime_error)
+    jack_sink::bail(const char *msg, int err)
     {
       output_error_msg(msg, err);
       throw std::runtime_error("audio_jack_sink");

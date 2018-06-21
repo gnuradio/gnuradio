@@ -54,12 +54,6 @@ namespace gr {
     {
     }
 
-    inline static float
-    mag_squared(gr_complex x)
-    {
-      return x.real() * x.real() + x.imag() * x.imag();
-    }
-
     // approximate sqrt(x^2 + y^2)
     inline static float
     envelope(gr_complex x)

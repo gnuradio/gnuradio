@@ -67,7 +67,7 @@ namespace gr {
       int d_nunderuns;    // count of underruns
 
       void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err) throw (std::runtime_error);
+      void bail(const char *msg, int err);
 
     public:
       jack_sink(int sampling_rate,

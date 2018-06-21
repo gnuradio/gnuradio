@@ -7,7 +7,7 @@
 <block>
 	<name>QT GUI Tab Widget</name>
 	<key>qtgui_tab_widget</key>
-	<import>from PyQt4 import Qt</import>
+	<import>from PyQt5 import Qt</import>
 	<make>#set $win = 'self.%s'%$id
 Qt.QTabWidget()
 #set $all_labels = [$label0, $label1, $label2, $label3, $label4,

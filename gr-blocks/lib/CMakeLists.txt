@@ -140,11 +140,8 @@ list(APPEND gr_blocks_sources
     keep_one_in_n_impl.cc
     lfsr_32k_source_s_impl.cc
     message_debug_impl.cc
-    message_sink_impl.cc
-    message_source_impl.cc
     message_strobe_impl.cc
     message_strobe_random_impl.cc
-    message_burst_source_impl.cc
     multiply_cc_impl.cc
     multiply_ff_impl.cc
     multiply_conjugate_cc_impl.cc
@@ -258,7 +255,7 @@ add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
 add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
-GR_LIBRARY_FOO(gnuradio-blocks RUNTIME_COMPONENT "blocks_runtime" DEVEL_COMPONENT "blocks_devel")
+GR_LIBRARY_FOO(gnuradio-blocks)
 
 if(ENABLE_STATIC_LIBS)
   # Remove controlport-specific source files from staticlibs build
@@ -289,7 +286,7 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-blocks_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "blocks_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)
 

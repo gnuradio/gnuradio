@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_EDIT_BOX_MSG_IMPL_H
 
 #include <gnuradio/qtgui/edit_box_msg.h>
+
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>

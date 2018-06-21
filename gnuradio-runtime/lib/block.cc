@@ -709,12 +709,26 @@ namespace gr {
     //std::cout << "system_handler " << msg << "\n";
     pmt::pmt_t op = pmt::car(msg);
     if(pmt::eqv(op, d_pmt_done)){
-        d_finished = pmt::to_long(pmt::cdr(msg));
+        d_finished = pmt::to_bool(pmt::cdr(msg));
         global_block_registry.notify_blk(alias());
     } else {
         std::cout << "WARNING: bad message op on system port!\n";
         pmt::print(msg);
     }
+  }
+
+  void
+  block::set_log_level(std::string level)
+  {
+    logger_set_level(d_logger, level);
+  }
+
+  std::string
+  block::log_level()
+  {
+    std::string level;
+    logger_get_level(d_logger, level);
+    return level;
   }
 
   void
@@ -746,7 +760,7 @@ namespace gr {
   bool
   block::finished()
   {
-    if((detail()->ninputs() != 0) || (detail()->noutputs() != 0))
+    if(detail()->ninputs() != 0)
       return false;
     else
       return d_finished;

@@ -53,8 +53,7 @@ namespace gr {
       d_repeat(repeat),
       d_offset(0),
       d_vlen(vlen),
-      d_tags(tags),
-      d_tagpos(0)
+      d_tags(tags)
     {
       if(tags.size() == 0) {
         d_settags = 0;

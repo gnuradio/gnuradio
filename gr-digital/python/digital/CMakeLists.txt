@@ -51,7 +51,6 @@ GR_PYTHON_INSTALL(
     qpsk.py
     soft_dec_lut_gen.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital
-    COMPONENT "digital_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -62,7 +61,6 @@ GR_PYTHON_INSTALL(
     utils/alignment.py
     utils/tagged_streams.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/digital/utils
-    COMPONENT "digital_python"
 )
 
 ########################################################################

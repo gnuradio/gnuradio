@@ -79,8 +79,7 @@ namespace gr {
                                       bool needs_lookahead,
                                       bool needs_derivative,
                                       constellation_sptr constellation)
-      : d_type(type),
-        d_constellation(constellation),
+        : d_constellation(constellation),
         d_error(0.0f),
         d_prev_error(0.0f),
         d_inputs_per_symbol(inputs_per_symbol),

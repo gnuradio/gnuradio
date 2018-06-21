@@ -23,7 +23,7 @@
 #ifndef INCLUDED_CHANNELS_SRO_MODEL_CC_IMPL_H
 #define	INCLUDED_CHANNELS_SRO_MODEL_CC_IMPL_H
 
-#include <gnuradio/filter/fractional_interpolator_cc.h>
+#include <gnuradio/filter/mmse_interpolator_cc.h>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/analog/fastnoise_source_f.h>
 #include <gnuradio/channels/sro_model.h>

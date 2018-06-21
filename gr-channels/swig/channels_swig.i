@@ -34,6 +34,7 @@
 #include "gnuradio/channels/dynamic_channel_model.h"
 #include "gnuradio/channels/fading_model.h"
 #include "gnuradio/channels/selective_fading_model.h"
+#include "gnuradio/channels/selective_fading_model2.h"
 #include "gnuradio/channels/sro_model.h"
 %}
 
@@ -43,6 +44,7 @@
 %include "gnuradio/channels/dynamic_channel_model.h"
 %include "gnuradio/channels/fading_model.h"
 %include "gnuradio/channels/selective_fading_model.h"
+%include "gnuradio/channels/selective_fading_model2.h"
 %include "gnuradio/channels/sro_model.h"
 
 GR_SWIG_BLOCK_MAGIC2(channels, channel_model);
@@ -51,4 +53,5 @@ GR_SWIG_BLOCK_MAGIC2(channels, cfo_model);
 GR_SWIG_BLOCK_MAGIC2(channels, dynamic_channel_model);
 GR_SWIG_BLOCK_MAGIC2(channels, fading_model);
 GR_SWIG_BLOCK_MAGIC2(channels, selective_fading_model);
+GR_SWIG_BLOCK_MAGIC2(channels, selective_fading_model2);
 GR_SWIG_BLOCK_MAGIC2(channels, sro_model);

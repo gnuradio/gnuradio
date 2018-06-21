@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012 Free Software Foundation, Inc.
+ * Copyright 2011,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,7 @@
 #include <gnuradio/digital/constellation_receiver_cb.h>
 #include <gnuradio/attributes.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace digital {
@@ -51,7 +52,6 @@ namespace gr {
 
     private:
       constellation_sptr d_constellation;
-      unsigned int d_current_const_point;
 
       //! Set the phase and the frequency.
       //! Typically used when we receive a tag with values for these.
@@ -68,7 +68,7 @@ namespace gr {
        * Message handler port to update the phase of the rotator. The
        * phase should be a real number (float or double) that is added
        * to the current phase. So we can rotate the constellation by
-       * 90 degress by passing a value of pmt::from_double(M_PI/2).
+       * 90 degress by passing a value of pmt::from_double(GR_M_PI/2).
        */
       void handle_rotate_phase(pmt::pmt_t rotation);
 
@@ -82,8 +82,6 @@ namespace gr {
       //! delay line plus some length for overflow protection
       __GR_ATTR_ALIGNED(8) gr_complex d_dl[2*DLLEN];
 
-      //! index to delay line
-      unsigned int d_dl_idx;
     };
 
   } /* namespace digital */

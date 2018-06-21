@@ -74,7 +74,7 @@ namespace gr {
       int d_nsuspends;  // count of suspends
 
       void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err) throw (std::runtime_error);
+      void bail(const char *msg, int err);
 
     public:
       alsa_source(int sampling_rate,

@@ -19,13 +19,15 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#include <gnuradio/qtgui/timecontrolpanel.h>
 
-#include <cmath>
+#include <gnuradio/qtgui/timedisplayform.h>
+
 #include <QMessageBox>
 #include <QSpacerItem>
 #include <QGroupBox>
-#include <gnuradio/qtgui/timedisplayform.h>
-#include <gnuradio/qtgui/timecontrolpanel.h>
+
+#include <cmath>
 #include <iostream>
 
 

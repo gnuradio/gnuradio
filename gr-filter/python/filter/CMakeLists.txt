@@ -29,7 +29,6 @@ GR_PYTHON_INSTALL(
     pfb.py
     rational_resampler.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
-    COMPONENT "filter_python"
 )
 
 ########################################################################

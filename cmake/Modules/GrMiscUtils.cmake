@@ -108,7 +108,6 @@ endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 # Generates the .la libtool file
 # This appears to generate libtool files that cannot be used by auto*.
 # Usage GR_LIBTOOL(TARGET [target] DESTINATION [dest])
-# Notice: there is not COMPONENT option, these will not get distributed.
 ########################################################################
 function(GR_LIBTOOL)
     if(NOT DEFINED GENERATE_LIBTOOL)
@@ -135,18 +134,14 @@ endfunction(GR_LIBTOOL)
 # Also handle gnuradio custom naming conventions w/ extras mode.
 ########################################################################
 function(GR_LIBRARY_FOO target)
-    #parse the arguments for component names
-    include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_LIBRARY "" "RUNTIME_COMPONENT;DEVEL_COMPONENT" "" ${ARGN})
-
     #set additional target properties
     set_target_properties(${target} PROPERTIES SOVERSION ${LIBVER})
 
     #install the generated files like so...
     install(TARGETS ${target}
-        LIBRARY DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .so/.dylib file
-        ARCHIVE DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_DEVEL_COMPONENT}   # .lib file
-        RUNTIME DESTINATION ${GR_RUNTIME_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT} # .dll file
+        LIBRARY DESTINATION ${GR_LIBRARY_DIR} # .so/.dylib file
+        ARCHIVE DESTINATION ${GR_LIBRARY_DIR} # .lib file
+        RUNTIME DESTINATION ${GR_RUNTIME_DIR} # .dll file
     )
 
     #extras mode enabled automatically on linux
@@ -178,7 +173,7 @@ function(GR_LIBRARY_FOO target)
             FILES
             ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
             ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
-            DESTINATION ${GR_LIBRARY_DIR} COMPONENT ${GR_LIBRARY_RUNTIME_COMPONENT}
+            DESTINATION ${GR_LIBRARY_DIR}
         )
 
     endif(LIBRARY_EXTRAS)
@@ -214,49 +209,6 @@ function(GR_GEN_TARGET_DEPS name var)
         set(${var} "DEPENDS;${name};COMMAND;${name}" PARENT_SCOPE)
     endif()
 endfunction(GR_GEN_TARGET_DEPS)
-
-########################################################################
-# Control use of gr_logger
-# Usage:
-#   GR_LOGGING()
-#
-# Will set ENABLE_GR_LOG to 1 by default.
-# Can manually set with -DENABLE_GR_LOG=0|1
-########################################################################
-function(GR_LOGGING)
-  find_package(Log4cpp)
-
-  OPTION(ENABLE_GR_LOG "Use gr_logger" ON)
-  if(ENABLE_GR_LOG)
-    # If gr_logger is enabled, make it usable
-    add_definitions( -DENABLE_GR_LOG )
-
-    # also test LOG4CPP; if we have it, use this version of the logger
-    # otherwise, default to the stdout/stderr model.
-    if(LOG4CPP_FOUND)
-      SET(HAVE_LOG4CPP True CACHE INTERNAL "" FORCE)
-      add_definitions( -DHAVE_LOG4CPP )
-    else(not LOG4CPP_FOUND)
-      SET(HAVE_LOG4CPP False CACHE INTERNAL "" FORCE)
-      SET(LOG4CPP_INCLUDE_DIRS "" CACHE INTERNAL "" FORCE)
-      SET(LOG4CPP_LIBRARY_DIRS "" CACHE INTERNAL "" FORCE)
-      SET(LOG4CPP_LIBRARIES "" CACHE INTERNAL "" FORCE)
-    endif(LOG4CPP_FOUND)
-
-    SET(ENABLE_GR_LOG ${ENABLE_GR_LOG} CACHE INTERNAL "" FORCE)
-
-  else(ENABLE_GR_LOG)
-    SET(HAVE_LOG4CPP False CACHE INTERNAL "" FORCE)
-    SET(LOG4CPP_INCLUDE_DIRS "" CACHE INTERNAL "" FORCE)
-    SET(LOG4CPP_LIBRARY_DIRS "" CACHE INTERNAL "" FORCE)
-    SET(LOG4CPP_LIBRARIES "" CACHE INTERNAL "" FORCE)
-  endif(ENABLE_GR_LOG)
-
-  message(STATUS "ENABLE_GR_LOG set to ${ENABLE_GR_LOG}.")
-  message(STATUS "HAVE_LOG4CPP set to ${HAVE_LOG4CPP}.")
-  message(STATUS "LOG4CPP_LIBRARIES set to ${LOG4CPP_LIBRARIES}.")
-
-endfunction(GR_LOGGING)
 
 ########################################################################
 # Run GRCC to compile .grc files into .py files.

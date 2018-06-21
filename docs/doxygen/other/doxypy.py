@@ -15,7 +15,7 @@ add the following lines to your Doxyfile:
 	INPUT_FILTER = "python /path/to/doxypy.py"
 """
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 __date__ = "5th December 2008"
 __website__ = "http://code.foosel.org/doxypy"
 
@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sys
 import re
 
-from optparse import OptionParser, OptionGroup
+from argparse import ArgumentParser
 
 class FSM(object):
 	"""Implements a finite state machine.
@@ -85,7 +85,7 @@ class FSM(object):
 					self.current_state = to_state
 					self.current_input = input
 					self.current_transition = transition
-					if options.debug:
+					if args.debug:
 						print >>sys.stderr, "# FSM: executing (%s -> %s) for line '%s'" % (from_state, to_state, input)
 					callback(match)
 					return
@@ -179,7 +179,7 @@ class Doxypy(object):
 	def __closeComment(self):
 		"""Appends any open comment block and triggering block to the output."""
 
-		if options.autobrief:
+		if args.autobrief:
 			if len(self.comment) == 1 \
 			or (len(self.comment) > 2 and self.comment[1].strip() == ''):
 				self.comment[0] = self.__docstringSummaryToBrief(self.comment[0])
@@ -207,7 +207,7 @@ class Doxypy(object):
 		"""Flushes the current outputbuffer to the outstream."""
 		if self.output:
 			try:
-				if options.debug:
+				if args.debug:
 					print >>sys.stderr, "# OUTPUT: ", self.output
 				print >>self.outstream, "\n".join(self.output)
 				self.outstream.flush()
@@ -227,7 +227,7 @@ class Doxypy(object):
 
 		Closes the current commentblock and starts a new comment search.
 		"""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: resetCommentSearch"
 		self.__closeComment()
 		self.startCommentSearch(match)
@@ -238,7 +238,7 @@ class Doxypy(object):
 		Saves the triggering line, resets the current comment and saves
 		the current indentation.
 		"""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: startCommentSearch"
 		self.defclass = [self.fsm.current_input]
 		self.comment = []
@@ -250,7 +250,7 @@ class Doxypy(object):
 		Closes the current commentblock, resets	the triggering line and
 		appends the current line to the output.
 		"""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: stopCommentSearch"
 		self.__closeComment()
 
@@ -262,7 +262,7 @@ class Doxypy(object):
 
 		Closes the open comment	block, resets it and appends the current line.
 		"""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: appendFileheadLine"
 		self.__closeComment()
 		self.comment = []
@@ -274,7 +274,7 @@ class Doxypy(object):
 		The comment delimiter is removed from multiline start and ends as
 		well as singleline comments.
 		"""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: appendCommentLine"
 		(from_state, to_state, condition, callback) = self.fsm.current_transition
 
@@ -311,13 +311,13 @@ class Doxypy(object):
 
 	def appendNormalLine(self, match):
 		"""Appends a line to the output."""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: appendNormalLine"
 		self.output.append(self.fsm.current_input)
 
 	def appendDefclassLine(self, match):
 		"""Appends a line to the triggering block."""
-		if options.debug:
+		if args.debug:
 			print >>sys.stderr, "# CALLBACK: appendDefclassLine"
 		self.defclass.append(self.fsm.current_input)
 
@@ -378,37 +378,31 @@ class Doxypy(object):
 		self.fsm.makeTransition(line)
 		self.__flushBuffer()
 
-def optParse():
-	"""Parses commandline options."""
-	parser = OptionParser(prog=__applicationName__, version="%prog " + __version__)
+def argParse():
+	"""Parses commandline args."""
+	parser = ArgumentParser(prog=__applicationName__)
 
-	parser.set_usage("%prog [options] filename")
-	parser.add_option("--autobrief",
-		action="store_true", dest="autobrief",
+	parser.add_argument("--version", action="version",
+		version="%(prog)s " + __version__
+	)
+	parser.add_argument("--autobrief", action="store_true",
 		help="use the docstring summary line as \\brief description"
 	)
-	parser.add_option("--debug",
-		action="store_true", dest="debug",
+	parser.add_argument("--debug", action="store_true",
 		help="enable debug output on stderr"
 	)
+	parser.add_argument("filename", metavar="FILENAME")
 
-	## parse options
-	global options
-	(options, filename) = parser.parse_args()
-
-	if not filename:
-		print >>sys.stderr, "No filename given."
-		sys.exit(-1)
-
-	return filename[0]
+	return parser.parse_args()
 
 def main():
 	"""Starts the parser on the file given by the filename as the first
 	argument on the commandline.
 	"""
-	filename = optParse()
+	global args
+	args = argParse()
 	fsm = Doxypy()
-	fsm.parseFile(filename)
+	fsm.parseFile(args.filename)
 
 if __name__ == "__main__":
 	main()

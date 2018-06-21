@@ -43,7 +43,6 @@ gnuradio.digital
 .. autoblock:: gnuradio.digital.kurtotic_equalizer_cc
 .. autoblock:: gnuradio.digital.lms_dd_equalizer_cc
 .. autoblock:: gnuradio.digital.map_bb
-.. autoblock:: gnuradio.digital.mpsk_receiver_cc
 .. autoblock:: gnuradio.digital.mpsk_snr_est_cc
 .. autoblock:: gnuradio.digital.msk_timing_recovery_cc
 .. autoblock:: gnuradio.digital.ofdm_carrier_allocator_cvc

@@ -28,9 +28,7 @@
 #include <gnuradio/fec/generic_encoder.h>
 #include <cstdio>
 
-extern "C" {
 #include <gnuradio/fec/viterbi.h>
-}
 
 namespace gr {
   namespace fec {

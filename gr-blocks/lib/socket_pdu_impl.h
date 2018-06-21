@@ -37,7 +37,6 @@ namespace gr {
       void run_io_service() { d_io_service.run(); }
       gr::thread::thread d_thread;
       bool d_started;
-      bool d_finished;
 
       // TCP specific
       boost::asio::ip::tcp::endpoint d_tcp_endpoint;

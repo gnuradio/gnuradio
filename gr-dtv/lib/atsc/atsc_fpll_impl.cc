@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -45,7 +45,7 @@ namespace gr {
                    io_signature::make(1, 1, sizeof(float)))
     {
       d_afc.set_taps(1.0-exp(-1.0/rate/5e-6));
-      d_nco.set_freq((-3e6 + 0.309e6)/rate*2*M_PI);
+      d_nco.set_freq((-3e6 + 0.309e6)/rate*2*GR_M_PI);
       d_nco.set_phase(0.0);
     }
 
@@ -76,7 +76,7 @@ namespace gr {
         float x = gr::fast_atan2f(filtered.imag(), filtered.real());
 
         // avoid slamming filter with big transitions
-        static const float limit = M_PI/2.0;
+        static const float limit = GR_M_PI/2.0;
         if (x > limit)
           x = limit;
         else if (x < -limit)

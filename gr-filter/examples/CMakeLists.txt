@@ -37,7 +37,6 @@ GR_PYTHON_INSTALL(PROGRAMS
     gr_filtdes_restrict.py
     gr_filtdes_live_upd.py
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
-    COMPONENT "filter_python"
 )
 
 install(
@@ -45,5 +44,4 @@ install(
     filter_taps.grc
     resampler_demo.grc
     DESTINATION ${GR_PKG_FILTER_EXAMPLES_DIR}
-    COMPONENT "filter_python"
 )

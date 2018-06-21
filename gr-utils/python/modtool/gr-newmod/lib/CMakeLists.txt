@@ -49,7 +49,7 @@ endif(APPLE)
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-howto RUNTIME_COMPONENT "howto_runtime" DEVEL_COMPONENT "howto_devel")
+GR_LIBRARY_FOO(gnuradio-howto)
 
 ########################################################################
 # Build and register unit test
@@ -80,4 +80,3 @@ GR_ADD_TEST(test_howto test-howto)
 ########################################################################
 message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
-

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2015 Free Software Foundation, Inc.
+ * Copyright 2010-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,28 +24,6 @@
 #define INCLUDED_GR_UHD_USRP_SINK_H
 
 #include <gnuradio/uhd/usrp_block.h>
-
-// TODO In 3.8, UHD 3.4 will be required and we can remove all these ifdefs
-#ifndef INCLUDED_UHD_STREAM_HPP
-namespace uhd {
-  struct GR_UHD_API stream_args_t
-  {
-    stream_args_t(const std::string &cpu = "",
-                  const std::string &otw = "")
-      {
-        cpu_format = cpu;
-        otw_format = otw;
-      }
-    std::string cpu_format;
-    std::string otw_format;
-    device_addr_t args;
-    std::vector<size_t> channels;
-  };
-}
-#  define INCLUDED_UHD_STREAM_HPP
-#else
-#  define GR_UHD_USE_STREAM_API
-#endif
 
 namespace gr {
   namespace uhd {
@@ -122,17 +100,6 @@ namespace gr {
     public:
       // gr::uhd::usrp_sink::sptr
       typedef boost::shared_ptr<usrp_sink> sptr;
-
-      /*!
-       * \brief DEPRECATED Make a new USRP sink block using the deprecated io_type_t.
-       * \ingroup uhd_blk
-       *
-       * This function will be removed in the future. Please use the other make function,
-       * gr::uhd::usrp_sink::make(const ::uhd::device_addr_t, const ::uhd::stream_args_t, const std::string).
-       */
-      static sptr make(const ::uhd::device_addr_t &device_addr,
-                       const ::uhd::io_type_t &io_type,
-                       size_t num_channels);
 
       /*!
        * \param device_addr the address to identify the hardware

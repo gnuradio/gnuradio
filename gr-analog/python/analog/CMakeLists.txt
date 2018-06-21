@@ -36,7 +36,6 @@ GR_PYTHON_INSTALL(
     wfm_rcv_pll.py
     wfm_tx.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/analog
-    COMPONENT "analog_python"
 )
 
 ########################################################################
