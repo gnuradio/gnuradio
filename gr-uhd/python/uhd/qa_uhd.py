@@ -38,10 +38,12 @@ class test_uhd(gr_unittest.TestCase):
     def test_time_spec_t (self):
         seconds = 42.0
         time = uhd.time_spec_t(seconds)
-        twice_time = time + time;
-        zero_time = time - time;
-        self.assertEqual(time.get_real_secs() * 2,  seconds * 2 )
-        self.assertEqual(time.get_real_secs() - time.get_real_secs() , 0.0)
+        self.assertEqual(time.get_real_secs() * 2, seconds * 2)
+        self.assertEqual(time.get_real_secs() - time.get_real_secs(), 0.0)
+        twice_time = time + time
+        zero_time = time - time
+        self.assertEqual(twice_time.get_real_secs(), seconds * 2)
+        self.assertEqual(zero_time.get_real_secs(), 0.0)
 
     def test_stream_args_channel_foo(self):
         """
