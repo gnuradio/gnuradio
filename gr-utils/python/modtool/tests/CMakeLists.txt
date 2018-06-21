@@ -21,13 +21,7 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(FILES
     __init__.py
-    add.py
-    base.py
-    disable.py
-    info.py
-    makexml.py
-    newmod.py
-    rm.py
-    rename.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/cli
+    test_modtool.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/tests
 )
+
