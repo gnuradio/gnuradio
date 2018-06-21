@@ -20,13 +20,11 @@
  */
 
 #include <gnuradio/math.h>
-#include <qa_math.h>
-#include <cppunit/TestAssert.h>
+#include <boost/test/unit_test.hpp>
 #include <stdio.h>
+#include <cmath>
 
-void
-qa_math::test_binary_slicer1()
-{
+BOOST_AUTO_TEST_CASE(test_binary_slicer1) {
   float x[5] = {-1, -0.5, 0, 0.5, 1.0};
   unsigned int z[5] = {0, 0, 1, 1, 1};
   unsigned int y;
@@ -36,7 +34,7 @@ qa_math::test_binary_slicer1()
     y = gr::binary_slicer(x[i]);
     //printf("in: %f   out: %d   desired: %d\n", x[i], y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
+    BOOST_CHECK_EQUAL(y, z[i]);
   }
 
   //printf("\nBranchless Binary\n");
@@ -44,13 +42,11 @@ qa_math::test_binary_slicer1()
     y = gr::branchless_binary_slicer(x[i]);
     //printf("in: %f   out: %d   desired: %d\n", x[i], y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
+    BOOST_CHECK_EQUAL(y, z[i]);
   }
 }
 
-void
-qa_math::test_quad_0deg_slicer1()
-{
+BOOST_AUTO_TEST_CASE(test_quad_0deg_slicer1) {
   gr_complex x[4] = {gr_complex(1, 0),
 		     gr_complex(0, 1),
 		     gr_complex(-1, 0),
@@ -64,7 +60,7 @@ qa_math::test_quad_0deg_slicer1()
     y = gr::quad_0deg_slicer(x[i]);
     //printf("in: %.4f+j%.4f   out: %d   desired: %d\n", x[i].real(), x[i].imag(), y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
+    BOOST_CHECK_EQUAL(y, z[i]);
   }
 
   //printf("\nBranchless Quad0\n");
@@ -72,13 +68,11 @@ qa_math::test_quad_0deg_slicer1()
     y = gr::branchless_quad_0deg_slicer(x[i]);
     //printf("in: %.4f+j%.4f   out: %d   desired: %d\n", x[i].real(), x[i].imag(), y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
+    BOOST_CHECK_EQUAL(y, z[i]);
   }
 }
 
-void
-qa_math::test_quad_45deg_slicer1()
-{
+BOOST_AUTO_TEST_CASE(test_quad_45deg_slicer1) {
   gr_complex x[4] = {gr_complex(0.707, 0.707),
 		     gr_complex(-0.707, 0.707),
 		     gr_complex(-0.707, -0.707),
@@ -92,7 +86,7 @@ qa_math::test_quad_45deg_slicer1()
     y = gr::quad_45deg_slicer(x[i]);
     //printf("in: %.4f+j%.4f   out: %d   desired: %d\n", x[i].real(), x[i].imag(), y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
+    BOOST_CHECK_EQUAL(y, z[i]);
   }
 
   //printf("\nBranchless Quad45\n");
@@ -100,6 +94,6 @@ qa_math::test_quad_45deg_slicer1()
     y = gr::branchless_quad_45deg_slicer(x[i]);
     //printf("in: %.4f+j%.4f   out: %d   desired: %d\n", x[i].real(), x[i].imag(), y, z[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(y, z[i], 1e-9);
+    BOOST_CHECK_EQUAL(y, z[i]);
   }
 }

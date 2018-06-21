@@ -24,10 +24,9 @@
 #include <config.h>
 #endif
 
-#include <qa_fxpt_vco.h>
+#include "vco.h"
 #include <gnuradio/fxpt_vco.h>
-#include <vco.h>
-#include <cppunit/TestAssert.h>
+#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <stdio.h>
 #include <unistd.h>
@@ -45,9 +44,7 @@ static double max_d(double a, double b)
   return fabs(a) > fabs(b) ? a : b;
 }
 
-void
-qa_fxpt_vco::t0()
-{
+BOOST_AUTO_TEST_CASE(t0) {
   gr::vco<float,float>	ref_vco;
   gr::fxpt_vco		new_vco;
   double max_error = 0, max_phase_error = 0;
@@ -60,23 +57,21 @@ qa_fxpt_vco::t0()
   for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
     float ref_cos = ref_vco.cos();
     float new_cos = new_vco.cos();
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_cos, new_cos, SIN_COS_TOLERANCE);
+    BOOST_CHECK(std::abs(ref_cos - new_cos) <= SIN_COS_TOLERANCE);
 
     max_error = max_d(max_error, ref_cos-new_cos);
 
     ref_vco.adjust_phase(input[i]);
     new_vco.adjust_phase(input[i]);
 
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_vco.get_phase(), new_vco.get_phase(), SIN_COS_TOLERANCE);
+    BOOST_CHECK(std::abs(ref_vco.get_phase() - new_vco.get_phase()) <= SIN_COS_TOLERANCE);
 
     max_phase_error = max_d(max_phase_error, ref_vco.get_phase()-new_vco.get_phase());
   }
   // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, max_phase_error);
 }
 
-void
-qa_fxpt_vco::t1()
-{
+BOOST_AUTO_TEST_CASE(t1) {
   gr::vco<float,float>	ref_vco;
   gr::fxpt_vco		new_vco;
   float		*ref_block = new float[SIN_COS_BLOCK_SIZE];
@@ -92,19 +87,18 @@ qa_fxpt_vco::t1()
   new_vco.cos(new_block, input, SIN_COS_BLOCK_SIZE, SIN_COS_K, SIN_COS_AMPL);
 
   for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_block[i], new_block[i], SIN_COS_TOLERANCE);
+    BOOST_CHECK(std::abs(ref_block[i] - new_block[i]) <= SIN_COS_TOLERANCE);
     max_error = max_d(max_error, ref_block[i]-new_block[i]);
   }
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_vco.get_phase(), new_vco.get_phase(), SIN_COS_TOLERANCE);
+  BOOST_CHECK(std::abs(ref_vco.get_phase() - new_vco.get_phase()) <= SIN_COS_TOLERANCE);
   // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, ref_vco.get_phase()-new_vco.get_phase());
   delete[] ref_block;
   delete[] new_block;
   delete[] input;
 }
 
-void
-qa_fxpt_vco::t2()
-{
+
+BOOST_AUTO_TEST_CASE(t2) {
   gr::vco<gr_complex,float> ref_vco;
   gr::fxpt_vco		new_vco;
   gr_complex		*ref_block = new gr_complex[SIN_COS_BLOCK_SIZE];
@@ -120,17 +114,15 @@ qa_fxpt_vco::t2()
   new_vco.sincos(new_block, input, SIN_COS_BLOCK_SIZE, SIN_COS_K, SIN_COS_AMPL);
 
   for(int i = 0; i < SIN_COS_BLOCK_SIZE; i++) {
-    CPPUNIT_ASSERT_COMPLEXES_EQUAL(ref_block[i], new_block[i], SIN_COS_TOLERANCE);
+    BOOST_CHECK(std::abs(ref_block[i] - new_block[i]) <= SIN_COS_TOLERANCE);
     max_error = max_d(max_error, abs(ref_block[i]-new_block[i]));
   }
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_vco.get_phase(), new_vco.get_phase(), SIN_COS_TOLERANCE);
+  BOOST_CHECK(
+      std::abs(ref_vco.get_phase() - new_vco.get_phase()) <= SIN_COS_TOLERANCE
+  );
   // printf ("Fxpt  max error %.9f, max phase error %.9f\n", max_error, ref_vco.get_phase()-new_vco.get_phase());
   delete[] ref_block;
   delete[] new_block;
   delete[] input;
 }
 
-void
-qa_fxpt_vco::t3()
-{
-}

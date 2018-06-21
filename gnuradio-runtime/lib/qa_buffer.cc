@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,22 +24,26 @@
 #include <config.h>
 #endif
 
-#include <qa_buffer.h>
-#include <gnuradio/buffer.h>
-#include <cppunit/TestAssert.h>
-#include <stdlib.h>
+
 #include <gnuradio/random.h>
+#include <gnuradio/buffer.h>
+#include <boost/test/unit_test.hpp>
+#include <stdlib.h>
+
 
 static void
 leak_check(void f())
 {
-  long	buffer_count = gr::buffer_ncurrently_allocated();
-  long	buffer_reader_count = gr::buffer_reader_ncurrently_allocated();
+  long buffer_count = gr::buffer_ncurrently_allocated();
+  long buffer_reader_count = gr::buffer_reader_ncurrently_allocated();
 
   f();
 
-  CPPUNIT_ASSERT_EQUAL(buffer_reader_count, gr::buffer_reader_ncurrently_allocated());
-  CPPUNIT_ASSERT_EQUAL(buffer_count, gr::buffer_ncurrently_allocated());
+  BOOST_CHECK_EQUAL(
+      buffer_reader_count,
+      gr::buffer_reader_ncurrently_allocated()
+  );
+  BOOST_CHECK_EQUAL(buffer_count, gr::buffer_ncurrently_allocated());
 }
 
 
@@ -59,16 +63,16 @@ t0_body()
   int sa;
 
   sa = buf->space_available();
-  CPPUNIT_ASSERT(sa > 0);
+  BOOST_CHECK(sa > 0);
   last_sa = sa;
 
   for(int i = 0; i < 5; i++) {
     sa = buf->space_available();
-    CPPUNIT_ASSERT_EQUAL(last_sa, sa);
+    BOOST_CHECK_EQUAL(last_sa, sa);
     last_sa = sa;
 
     int *p = (int*)buf->write_pointer();
-    CPPUNIT_ASSERT(p != 0);
+    BOOST_CHECK(p != 0);
 
     for(int j = 0; j < sa; j++)
       *p++ = counter++;
@@ -96,10 +100,10 @@ t1_body()
   // write 1/3 of buffer
 
   sa = buf->space_available();
-  CPPUNIT_ASSERT(sa > 0);
+  BOOST_CHECK(sa > 0);
 
   int *p = (int*)buf->write_pointer();
-  CPPUNIT_ASSERT(p != 0);
+  BOOST_CHECK(p != 0);
 
   for(int j = 0; j < sa/3; j++) {
     *p++ = write_counter++;
@@ -109,10 +113,10 @@ t1_body()
   // write the next 1/3 (1/2 of what's left)
 
   sa = buf->space_available();
-  CPPUNIT_ASSERT(sa > 0);
+  BOOST_CHECK(sa > 0);
 
   p = (int*)buf->write_pointer();
-  CPPUNIT_ASSERT(p != 0);
+  BOOST_CHECK(p != 0);
 
   for(int j = 0; j < sa/2; j++) {
     *p++ = write_counter++;
@@ -122,13 +126,13 @@ t1_body()
   // check that we can read it OK
 
   int ia = r1->items_available();
-  CPPUNIT_ASSERT_EQUAL(write_counter, ia);
+  BOOST_CHECK_EQUAL(write_counter, ia);
 
   int *rp = (int*)r1->read_pointer();
-  CPPUNIT_ASSERT(rp != 0);
+  BOOST_CHECK(rp != 0);
 
   for(int i = 0; i < ia/2; i++) {
-    CPPUNIT_ASSERT_EQUAL(read_counter, *rp);
+    BOOST_CHECK_EQUAL(read_counter, *rp);
     read_counter++;
     rp++;
   }
@@ -138,10 +142,10 @@ t1_body()
 
   ia = r1->items_available();
   rp = (int *) r1->read_pointer();
-  CPPUNIT_ASSERT(rp != 0);
+  BOOST_CHECK(rp != 0);
 
   for(int i = 0; i < ia; i++) {
-    CPPUNIT_ASSERT_EQUAL(read_counter, *rp);
+    BOOST_CHECK_EQUAL(read_counter, *rp);
     read_counter++;
     rp++;
   }
@@ -181,11 +185,11 @@ t2_body()
   // Now read it all
 
   int m = r1->items_available();
-  CPPUNIT_ASSERT_EQUAL(n, m);
+  BOOST_CHECK_EQUAL(n, m);
   rp = (int*)r1->read_pointer();
 
   for(int i = 0; i < m; i++) {
-    CPPUNIT_ASSERT_EQUAL(read_counter, *rp);
+    BOOST_CHECK_EQUAL(read_counter, *rp);
     read_counter++;
     rp++;
   }
@@ -195,7 +199,7 @@ t2_body()
   // This will wrap around the buffer
 
   n = buf->space_available();
-  CPPUNIT_ASSERT_EQUAL(nitems - 1, n);    // white box test
+  BOOST_CHECK_EQUAL(nitems - 1, n);    // white box test
   wp = (int*)buf->write_pointer();
 
   for(int i = 0; i < n; i++)
@@ -205,11 +209,11 @@ t2_body()
   // now read it all
 
   m = r1->items_available();
-  CPPUNIT_ASSERT_EQUAL(n, m);
+  BOOST_CHECK_EQUAL(n, m);
   rp = (int*)r1->read_pointer();
 
   for(int i = 0; i < m; i++) {
-    CPPUNIT_ASSERT_EQUAL(read_counter, *rp);
+    BOOST_CHECK_EQUAL(read_counter, *rp);
     read_counter++;
     rp++;
   }
@@ -252,13 +256,13 @@ t3_body()
     // pick a random reader and read some
 
     int r = (int)(N * random.ran1());
-    CPPUNIT_ASSERT(0 <= r && r < N);
+    BOOST_CHECK(0 <= r && r < N);
 
     int m = reader[r]->items_available();
     int *rp = (int*)reader[r]->read_pointer();
 
     for(int i = 0; i < m; i++) {
-      CPPUNIT_ASSERT_EQUAL(read_counter[r], *rp);
+      BOOST_CHECK_EQUAL(read_counter[r], *rp);
       read_counter[r]++;
       rp++;
     }
@@ -268,37 +272,19 @@ t3_body()
 
 
 // ----------------------------------------------------------------------------
-
-void
-qa_buffer::t0()
-{
+BOOST_AUTO_TEST_CASE(t0) {
   leak_check(t0_body);
 }
 
-void
-qa_buffer::t1()
-{
+BOOST_AUTO_TEST_CASE(t1) {
   leak_check(t1_body);
 }
 
-void
-qa_buffer::t2()
-{
+BOOST_AUTO_TEST_CASE(t2) {
   leak_check(t2_body);
 }
 
-void
-qa_buffer::t3()
-{
+BOOST_AUTO_TEST_CASE(t3) {
   leak_check(t3_body);
 }
 
-void
-qa_buffer::t4()
-{
-}
-
-void
-qa_buffer::t5()
-{
-}
