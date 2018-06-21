@@ -32,7 +32,7 @@ from gnuradio import gr
 from ..tools import SCMRepoFactory
 from .base import ModTool, ModToolException
 
-logger = logging.getLogger('gnuradio.modtool.newmod')
+logger = logging.getLogger(__name__)
 
 
 class ModToolNewModule(ModTool):

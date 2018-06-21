@@ -33,7 +33,7 @@ from ..tools import remove_pattern_from_file
 from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
 
-logger = logging.getLogger('gnuradio.modtool.rm')
+logger = logging.getLogger(__name__)
 
 
 class ModToolRemove(ModTool):

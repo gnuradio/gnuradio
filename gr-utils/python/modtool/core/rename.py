@@ -29,7 +29,7 @@ import logging
 
 from .base import ModTool, ModToolException
 
-logger = logging.getLogger('gnuradio.modtool.rename')
+logger = logging.getLogger(__name__)
 
 
 class ModToolRename(ModTool):

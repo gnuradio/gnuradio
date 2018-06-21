@@ -31,7 +31,7 @@ import logging
 from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
 
-logger = logging.getLogger('gnuradio.modtool.disable')
+logger = logging.getLogger(__name__)
 
 
 class ModToolDisable(ModTool):

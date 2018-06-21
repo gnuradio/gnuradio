@@ -34,7 +34,7 @@ from ..tools import CMakeFileEditor
 from ..tools import ask_yes_no
 from .base import ModTool, ModToolException
 
-logger = logging.getLogger('gnuradio.modtool.makexml')
+logger = logging.getLogger(__name__)
 
 
 class ModToolMakeXML(ModTool):

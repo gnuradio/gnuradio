@@ -33,7 +33,7 @@ from ..tools import render_template
 from ..templates import Templates
 from .base import ModTool, ModToolException
 
-logger = logging.getLogger('gnuradio.modtool.add')
+logger = logging.getLogger(__name__)
 
 
 class ModToolAdd(ModTool):

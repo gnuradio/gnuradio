@@ -20,10 +20,13 @@
 #
 """ Edit CMakeLists.txt files """
 
-from __future__ import print_function
 from __future__ import unicode_literals
 
 import re
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CMakeFileEditor(object):
     """A tool for editing CMakeLists.txt files. """
@@ -131,9 +134,9 @@ class CMakeFileEditor(object):
             comment_out_re = r'\n' + self.indent + comment_out_re
         (self.cfile, nsubs) = re.subn(r'(\b'+fname+r'\b)\s*', comment_out_re, self.cfile)
         if nsubs == 0:
-            print("Warning: A replacement failed when commenting out %s. Check the CMakeFile.txt manually." % fname)
+            logger.warning("Warning: A replacement failed when commenting out %s. Check the CMakeFile.txt manually." % fname)
         elif nsubs > 1:
-            print("Warning: Replaced %s %d times (instead of once). Check the CMakeFile.txt manually." % (fname, nsubs))
+            logger.warning("Warning: Replaced %s %d times (instead of once). Check the CMakeFile.txt manually." % (fname, nsubs))
 
     def comment_out_lines(self, pattern, comment_str='#'):
         """ Comments out all lines that match with pattern """

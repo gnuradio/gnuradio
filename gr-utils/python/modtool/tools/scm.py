@@ -20,10 +20,12 @@
 #
 """ Class to handle source code management repositories. """
 
-from __future__ import print_function
 from __future__ import unicode_literals
 
+import logging
 import subprocess
+
+logger = logging.getLogger(__name__)
 
 try:
     import git
@@ -199,7 +201,7 @@ class SCMRepoFactory(object):
                 if issubclass(glbl, SCMRepository):
                     the_scm = glbl(self.path_to_repo)
                     if the_scm.is_active():
-                        print('Found SCM of type:', the_scm.handles_scm_type)
+                        logger.info('Found SCM of type:', the_scm.handles_scm_type)
                         return the_scm
             except (TypeError, AttributeError, InvalidSCMError):
                 pass
