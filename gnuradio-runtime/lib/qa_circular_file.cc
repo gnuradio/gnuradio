@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,20 +24,15 @@
 #include "config.h"
 #endif
 
-#include "qa_circular_file.h"
 #include "circular_file.h"
-#include <cppunit/TestAssert.h>
-#include <iostream>
-#include <stdio.h>
+#include <boost/test/unit_test.hpp>
 #include <unistd.h>
 
 static const char *test_file = "qa_gr_circular_file.data";
 static const int BUFFER_SIZE = 8192;
 static const int NWRITE = 8192 * 9 / 8;
 
-void
-qa_circular_file::t1()
-{
+BOOST_AUTO_TEST_CASE(t1) {
 #ifdef HAVE_MMAP
   gr::circular_file *cf_writer;
   gr::circular_file *cf_reader;
@@ -58,12 +53,12 @@ qa_circular_file::t1()
   cf_reader = new gr::circular_file(test_file);
   for(int i = 0; i < BUFFER_SIZE; i++) {
     int n = cf_reader->read (&sd, sizeof(sd));
-    CPPUNIT_ASSERT_EQUAL((int) sizeof (sd), n);
-    CPPUNIT_ASSERT_EQUAL(NWRITE - BUFFER_SIZE + i, (int)sd);
+    BOOST_CHECK_EQUAL((int) sizeof (sd), n);
+    BOOST_CHECK_EQUAL(NWRITE - BUFFER_SIZE + i, (int)sd);
   }
 
   int n = cf_reader->read(&sd, sizeof(sd));
-  CPPUNIT_ASSERT_EQUAL(0, n);
+  BOOST_CHECK_EQUAL(0, n);
 
   delete cf_reader;
   unlink(test_file);

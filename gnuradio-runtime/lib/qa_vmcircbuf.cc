@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,17 +24,11 @@
 #include <config.h>
 #endif
 
-#include <qa_vmcircbuf.h>
-#include <cppunit/TestAssert.h>
 #include "vmcircbuf.h"
-#include <stdio.h>
+#include <boost/test/unit_test.hpp>
 
-void
-qa_vmcircbuf::test_all()
-{
+BOOST_AUTO_TEST_CASE(test_all) {
   int verbose = 1; // summary
 
-  bool ok = gr::vmcircbuf_sysconfig::test_all_factories(verbose);
-
-  CPPUNIT_ASSERT_EQUAL(true, ok);
+  BOOST_REQUIRE(gr::vmcircbuf_sysconfig::test_all_factories(verbose));
 }

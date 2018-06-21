@@ -29,12 +29,10 @@
 #include <config.h>
 #endif
 
-#include <qa_logger.h>
 #include <gnuradio/logger.h>
+#include <boost/test/unit_test.hpp>
 
-void
-qa_logger::t1()
-{
+BOOST_AUTO_TEST_CASE(t1) {
 #ifdef ENABLE_GR_LOG
   // This doesn't really test anything, more just
   // making sure nothing's gone horribly wrong.
@@ -47,6 +45,6 @@ qa_logger::t1()
   GR_LOG_WARN(LOG,"test from c++ WARN");
   GR_LOG_ERROR(LOG,"test from c++ ERROR");
   GR_LOG_FATAL(LOG,"test from c++ FATAL");
-  CPPUNIT_ASSERT(true);
+  BOOST_CHECK(true);
 #endif
 }

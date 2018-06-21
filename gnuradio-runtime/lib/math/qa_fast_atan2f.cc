@@ -24,9 +24,8 @@
 #include <config.h>
 #endif
 
-#include <qa_fast_atan2f.h>
 #include <gnuradio/math.h>
-#include <cppunit/TestAssert.h>
+#include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <limits>
 
@@ -36,9 +35,7 @@
 #define ISNAN std::isnan
 #endif
 
-void
-qa_fast_atan2f::t1()
-{
+BOOST_AUTO_TEST_CASE(t1) {
   static const unsigned int N = 100;
   float c_atan2;
   float gr_atan2f;
@@ -51,14 +48,12 @@ qa_fast_atan2f::t1()
 
       gr_atan2f = gr::fast_atan2f(y, x);
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0);
+      BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
     }
   }
 }
 
-void
-qa_fast_atan2f::t2()
-{
+BOOST_AUTO_TEST_CASE(t2) {
   float c_atan2;
   float gr_atan2f;
   float x, y;
@@ -71,13 +66,13 @@ qa_fast_atan2f::t2()
   y = 0;
   c_atan2 = atan2(y, x);
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0);
+  BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
   x = -inf;
   y = 0;
   c_atan2 = atan2(y, x);
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0);
+  BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
 
   /* Test y as INF */
@@ -85,53 +80,53 @@ qa_fast_atan2f::t2()
   y = inf;
   c_atan2 = atan2(y, x);
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0);
+  BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
   x = 0;
   y = -inf;
   c_atan2 = atan2(y, x);
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(c_atan2, gr_atan2f, 0.0);
+  BOOST_CHECK_CLOSE(c_atan2, gr_atan2f, 0.0);
 
 
   /* Test x and y as INF */
   x = inf;
   y = inf;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(ISNAN(gr_atan2f));
+  BOOST_CHECK(ISNAN(gr_atan2f));
 
 
   /* Test x as NAN */
   x = nan;
   y = 0;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  BOOST_CHECK_CLOSE(0.0f, gr_atan2f, 0.0001);
 
   x = -nan;
   y = 0;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  BOOST_CHECK_CLOSE(0.0f, gr_atan2f, 0.0001);
 
 
   /* Test y as NAN */
   x = 0;
   y = nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  BOOST_CHECK_CLOSE(0.0f, gr_atan2f, 0.0001);
 
   x = 0;
   y = -nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0f, gr_atan2f, 0.0001);
+  BOOST_CHECK_CLOSE(0.0f, gr_atan2f, 0.0001);
 
   /* Test mixed NAN and INF */
   x = inf;
   y = nan;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(ISNAN(gr_atan2f));
+  BOOST_CHECK(ISNAN(gr_atan2f));
 
   x = nan;
   y = inf;
   gr_atan2f = gr::fast_atan2f(y, x);
-  CPPUNIT_ASSERT(ISNAN(gr_atan2f));
+  BOOST_CHECK(ISNAN(gr_atan2f));
 }

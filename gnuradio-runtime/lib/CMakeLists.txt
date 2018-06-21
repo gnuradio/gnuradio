@@ -244,40 +244,41 @@ endif(ENABLE_STATIC_LIBS)
 # Setup tests
 ########################################################################
 if(ENABLE_TESTING)
-include(GrTest)
+  include(GrTest)
 
-########################################################################
-# Append gnuradio-runtime test sources
-########################################################################
-list(APPEND test_gnuradio_runtime_sources
-  math/qa_fxpt.cc
-  math/qa_fxpt_nco.cc
-  math/qa_fxpt_vco.cc
-  math/qa_math.cc
-  math/qa_sincos.cc
-  math/qa_fast_atan2f.cc
-  qa_buffer.cc
-  qa_io_signature.cc
-  qa_circular_file.cc
-  qa_logger.cc
-  qa_vmcircbuf.cc
-  qa_runtime.cc
-)
+  # Regular runtime tests:
+  list(APPEND test_gnuradio_runtime_sources
+    qa_buffer.cc
+    qa_io_signature.cc
+    qa_circular_file.cc
+    qa_logger.cc
+    qa_vmcircbuf.cc
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/math)
-include_directories(${CPPUNIT_INCLUDE_DIRS})
-link_directories(${CPPUNIT_LIBRARY_DIRS})
+  foreach(qa_file ${test_gnuradio_runtime_sources})
+    GR_ADD_CPP_TEST("runtime_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
 
-add_library(test-gnuradio-runtime SHARED ${test_gnuradio_runtime_sources})
-target_link_libraries(test-gnuradio-runtime gnuradio-runtime gnuradio-pmt ${CPPUNIT_LIBRARIES} ${Boost_LIBRARIES} ${LOG4CPP_LIBRARIES})
+  # Math tests:
+  include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/math)
+  list(APPEND test_gnuradio_math_sources
+    qa_fxpt.cc
+    qa_fxpt_nco.cc
+    qa_fxpt_vco.cc
+    qa_math.cc
+    qa_sincos.cc
+    qa_fast_atan2f.cc
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
-########################################################################
-# Build the test executable
-# Set the test environment so the build libs will be found under MSVC.
-########################################################################
-list(APPEND GR_TEST_TARGET_DEPS test-gnuradio-runtime)
-add_executable(gr_runtime_test test_runtime.cc)
-target_link_libraries(gr_runtime_test test-gnuradio-runtime)
-GR_ADD_TEST(gr-runtime-test gr_runtime_test)
+  foreach(qa_file ${test_gnuradio_math_sources})
+    GR_ADD_CPP_TEST("math_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/math/${qa_file}
+    )
+  endforeach(qa_file)
 
 endif(ENABLE_TESTING)
+
