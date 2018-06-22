@@ -48,7 +48,6 @@ list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
 ########################################################################
 include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
                     ${CMAKE_CURRENT_SOURCE_DIR}
-            ${CMAKE_CURRENT_BINARY_DIR}/../include/
             ${VOLK_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIRS}
                     ${MPLIB_INCLUDE_DIRS}
@@ -270,4 +269,3 @@ if(ENABLE_TESTING)
   GR_ADD_CPP_TEST("pmt_unv" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_unv.cc)
 
 endif(ENABLE_TESTING)
-
