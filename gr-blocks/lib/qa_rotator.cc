@@ -65,7 +65,6 @@ BOOST_AUTO_TEST_CASE(t1)
 #endif
 
     BOOST_CHECK(std::abs(expected - actual) <= 0.0001);
-    //CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
 
     phase += phase_incr;
     if(phase >= 2*M_PI)
@@ -106,7 +105,6 @@ BOOST_AUTO_TEST_CASE(t2)
 #endif
 
     BOOST_CHECK(std::abs(expected - actual) <= 0.0001);
-    //CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected, actual, 0.0001);
 
     phase += phase_incr;
     if(phase >= 2*M_PI)
