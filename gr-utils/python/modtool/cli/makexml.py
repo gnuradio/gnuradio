@@ -38,10 +38,11 @@ def cli(**kwargs):
     """
     kwargs['cli'] = True
     self = ModToolMakeXML(**kwargs)
+    get_pattern(self)
+    run(self)
 
+def get_pattern(self):
     if self.info['pattern'] is None:
         self.info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
     if not self.info['pattern'] or self.info['pattern'].isspace():
         self.info['pattern'] = '.'
-
-    run(self)

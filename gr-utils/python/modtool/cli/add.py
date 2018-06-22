@@ -53,6 +53,28 @@ def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
     kwargs['cli'] = True
     self = ModToolAdd(**kwargs)
+    get_blocktype(self)
+    get_lang(self)
+    click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self.info['lang']]))
+    if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
+            or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
+        raise ModToolException('Missing or skipping relevant subdir.')
+    get_blockname(self)
+    click.echo("Block/code identifier: " + self.info['blockname'])
+    self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
+    if not self.license_file:
+        get_copyrightholder(self)
+    self.info['license'] = self.setup_choose_license()
+    get_arglist(self)
+    get_py_qa(self)
+    get_cpp_qa(self)
+    if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
+        click.echo("Warning: Autotools modules are not supported. ",
+                   "Files will be created, but Makefiles will not be edited.")
+        self.skip_cmakefiles = True
+    run(self)
+
+def get_blocktype(self):
     if self.info['blocktype'] is None:
         click.echo(str(self.block_types))
         with SequenceCompleter(self.block_types):
@@ -61,6 +83,7 @@ def cli(**kwargs):
                 if self.info['blocktype'] not in self.block_types:
                     click.echo('Must be one of ' + str(self.block_types))
 
+def get_lang(self):
     if self.info['lang'] is None:
         with SequenceCompleter(self.language_candidates):
             while self.info['lang'] not in self.language_candidates:
@@ -68,43 +91,29 @@ def cli(**kwargs):
     if self.info['lang'] == 'c++':
         self.info['lang'] = 'cpp'
 
-    click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self.info['lang']]))
-
-    if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
-            or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
-        raise ModToolException('Missing or skipping relevant subdir.')
-
+def get_blockname(self):
     if self.info['blockname'] is None:
         while not self.info['blockname'] or self.info['blockname'].isspace():
             self.info['blockname'] = input("Enter name of block/code (without module name prefix): ")
     if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
         raise ModToolException('Invalid block name.')
-    click.echo("Block/code identifier: " + self.info['blockname'])
 
-    self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
+def get_copyrightholder(self):
+    if self.info['copyrightholder'] is None:
+        self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+    elif self.info['is_component']:
+        click.echo("For GNU Radio components the FSF is added as copyright holder")
 
-    if not self.license_file:
-        if self.info['copyrightholder'] is None:
-            self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
-        elif self.info['is_component']:
-            click.echo("For GNU Radio components the FSF is added as copyright holder")
-
-    self.info['license'] = self.setup_choose_license()
-
+def get_arglist(self):
     if self.info['arglist'] is not None:
         self.info['arglist'] = input('Enter valid argument list, including default arguments: ')
 
+def get_py_qa(self):
     if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
         if self.add_py_qa is None:
             self.add_py_qa = ask_yes_no('Add Python QA code?', True)
 
+def get_cpp_qa(self):
     if self.info['lang'] == 'cpp':
         if self.add_cc_qa is None:
             self.add_cc_qa = ask_yes_no('Add C++ QA code?', not self.add_py_qa)
-
-    if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
-        click.echo("Warning: Autotools modules are not supported. ",
-                   "Files will be created, but Makefiles will not be edited.")
-        self.skip_cmakefiles = True
-
-    run(self)

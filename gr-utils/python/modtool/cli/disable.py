@@ -32,10 +32,11 @@ def cli(**kwargs):
     """Disable a block (comments out CMake entries for files)"""
     kwargs['cli'] = True
     self = ModToolDisable(**kwargs)
+    get_pattern(self)
+    run(self)
 
+def get_pattern(self):
     if self.info['pattern'] is None:
         self.info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
     if not self.info['pattern'] or self.info['pattern'].isspace():
         self.info['pattern'] = '.'
-
-    run(self)
