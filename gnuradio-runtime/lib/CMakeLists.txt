@@ -272,13 +272,17 @@ if(ENABLE_TESTING)
     qa_sincos.cc
     qa_fast_atan2f.cc
   )
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
   foreach(qa_file ${test_gnuradio_math_sources})
     GR_ADD_CPP_TEST("math_${qa_file}"
       ${CMAKE_CURRENT_SOURCE_DIR}/math/${qa_file}
     )
   endforeach(qa_file)
+
+  # PMT tests:
+  include_directories(${CMAKE_CURRENT_BINARY_DIR}/pmt)
+  GR_ADD_CPP_TEST("pmt_prims" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_prims.cc)
+  GR_ADD_CPP_TEST("pmt_unv" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_unv.cc)
 
 endif(ENABLE_TESTING)
 

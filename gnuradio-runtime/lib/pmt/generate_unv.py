@@ -81,8 +81,6 @@ includes = """
 """
 
 qa_includes = """
-#include <qa_pmt_unv.h>
-#include <cppunit/TestAssert.h>
 #include <pmt/pmt.h>
 #include <stdio.h>
 
@@ -146,34 +144,8 @@ def generate_cc():
 
 
 def generate_qa_h():
-    output_filename = 'qa_pmt_unv.h'
-    output = open(output_filename, 'w')
-    output.write(header)
-    output.write(guard_head(output_filename))
-
-    output.write('''
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
-
-class qa_pmt_unv : public CppUnit::TestCase {
-
-  CPPUNIT_TEST_SUITE(qa_pmt_unv);
-''')
-    for tag, typ in unv_types:
-        output.write('  CPPUNIT_TEST(test_%svector);\n' % (tag,))
-    output.write('''\
-  CPPUNIT_TEST_SUITE_END();
-
- private:
-''')
-    for tag, typ in unv_types:
-        output.write('  void test_%svector();\n' % (tag,))
-    output.write('};\n')
-    output.write(guard_tail)
-
-def generate_qa_cc():
-    template = open_src('unv_qa_template.cc.t', 'r').read()
-    output = open('qa_pmt_unv.cc', 'w')
+    template = open_src('unv_qa_template.h.t', 'r').read()
+    output = open('qa_pmt_unv.h', 'w')
     output.write(header)
     output.write(qa_includes)
     for tag, typ in unv_types:
@@ -185,7 +157,6 @@ def main():
     generate_h()
     generate_cc()
     generate_qa_h()
-    generate_qa_cc()
 
 if __name__ == '__main__':
     main()
