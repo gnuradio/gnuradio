@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,8 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TestAssert.h>
-#include "qa_convolutional_interleaver.h"
+#include <gnuradio/atsc/convolutional_interleaver.h>
+#include <boost/test/unit_test.hpp>
+
+class qa_convolutional_interleaver
+{
+ public:
+
+  void t0 ();
+  void t1 ();
+  void t2 ();
+  void t3 ();
+  void t4 ();
+
+  void setUp (){
+    intl = 0;
+    deintl = 0;
+  }
+
+  void tearDown (){
+    delete intl;
+    intl = 0;
+    delete deintl;
+    deintl = 0;
+  }
+
+ private:
+  convolutional_interleaver<int> *intl;
+  convolutional_interleaver<int> *deintl;
+};
 
 void
 qa_convolutional_interleaver::t0 ()
@@ -44,7 +71,7 @@ qa_convolutional_interleaver::t0 ()
   intl = new convolutional_interleaver<int>(true, 4, 1);
 
   for (int i = 0; i < 16; i++)
-    CPPUNIT_ASSERT_EQUAL (output[i], intl->transform (input[i]));
+    BOOST_REQUIRE_EQUAL (output[i], intl->transform (input[i]));
 }
 
 void
@@ -68,7 +95,7 @@ qa_convolutional_interleaver::t1 ()
   intl = new convolutional_interleaver<int>(false, 4, 1);
 
   for (int i = 0; i < 16; i++)
-    CPPUNIT_ASSERT_EQUAL (output[i], intl->transform (input[i]));
+    BOOST_REQUIRE_EQUAL (output[i], intl->transform (input[i]));
 }
 
 void
@@ -82,11 +109,11 @@ qa_convolutional_interleaver::t2 ()
 
   int	end_to_end_delay = intl->end_to_end_delay ();
   for (int i = 0; i < end_to_end_delay; i++){
-    CPPUNIT_ASSERT_EQUAL (0, deintl->transform (intl->transform (icount++)));
+    BOOST_REQUIRE_EQUAL (0, deintl->transform (intl->transform (icount++)));
   }
 
   for (int i = 0; i < 3 * end_to_end_delay; i++){
-    CPPUNIT_ASSERT_EQUAL (dcount++, deintl->transform (intl->transform (icount++)));
+    BOOST_REQUIRE_EQUAL (dcount++, deintl->transform (intl->transform (icount++)));
   }
 }
 
@@ -101,11 +128,11 @@ qa_convolutional_interleaver::t3 ()
 
   int	end_to_end_delay = intl->end_to_end_delay ();
   for (int i = 0; i < end_to_end_delay; i++){
-    CPPUNIT_ASSERT_EQUAL (0, deintl->transform (intl->transform (icount++)));
+    BOOST_REQUIRE_EQUAL (0, deintl->transform (intl->transform (icount++)));
   }
 
   for (int i = 0; i < 3 * end_to_end_delay; i++){
-    CPPUNIT_ASSERT_EQUAL (dcount++, deintl->transform (intl->transform (icount++)));
+    BOOST_REQUIRE_EQUAL (dcount++, deintl->transform (intl->transform (icount++)));
   }
 }
 
@@ -119,13 +146,24 @@ qa_convolutional_interleaver::t4 ()
   int	dcount = 6000;
 
   int	end_to_end_delay = intl->end_to_end_delay ();
-  CPPUNIT_ASSERT_EQUAL (10608, end_to_end_delay);
+  BOOST_REQUIRE_EQUAL (10608, end_to_end_delay);
 
   for (int i = 0; i < end_to_end_delay; i++){
-    CPPUNIT_ASSERT_EQUAL (0, deintl->transform (intl->transform (icount++)));
+    BOOST_REQUIRE_EQUAL (0, deintl->transform (intl->transform (icount++)));
   }
 
   for (int i = 0; i < 3 * end_to_end_delay; i++){
-    CPPUNIT_ASSERT_EQUAL (dcount++, deintl->transform (intl->transform (icount++)));
+    BOOST_REQUIRE_EQUAL (dcount++, deintl->transform (intl->transform (icount++)));
   }
+}
+
+BOOST_AUTO_TEST_CASE(run_qa_convolutional_interleaver) {
+  qa_convolutional_interleaver qa_runner;
+  qa_runner.setUp();
+  qa_runner.t0();
+  qa_runner.t1();
+  qa_runner.t2();
+  qa_runner.t3();
+  qa_runner.t4();
+  qa_runner.tearDown();
 }

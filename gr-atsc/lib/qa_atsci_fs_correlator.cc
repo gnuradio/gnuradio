@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,17 +24,16 @@
 #include <config.h>
 #endif
 
-#include "qa_atsci_fs_correlator.h"
 #include <gnuradio/atsc/fs_correlator_impl.h>
 #include <gnuradio/atsc/create_atsci_fs_correlator.h>
 #include <gnuradio/atsc/sync_tag_impl.h>
-#include <stdlib.h>
-#include <algorithm>
 #include <gnuradio/atsc/pnXXX_impl.h>
 #include <gnuradio/atsc/types.h>
-#include <cppunit/TestAssert.h>
-#include <assert.h>
 #include <gnuradio/random.h>
+#include <boost/test/unit_test.hpp>
+#include <assert.h>
+#include <stdlib.h>
+#include <algorithm>
 
 static gr::random rndm;
 
@@ -144,6 +143,28 @@ cause_errors (float *p, int nerrs1, int nerrs2)
   }
 }
 
+// Remnant of CppUnit style testing
+class qa_atsci_fs_correlator
+{
+ public:
+
+  void setUp ();
+  void tearDown ();
+
+  void t0 ();
+  void t1 ();
+  void t2 ();
+  void t3 ();
+  void t4 ();
+
+ private:
+
+  atsci_fs_correlator *fsc;
+
+  void util (int which_field, int nerr1, int nerr2);
+
+};
+
 
 void
 qa_atsci_fs_correlator::setUp ()
@@ -170,14 +191,14 @@ qa_atsci_fs_correlator::t0 ()
 
   for (i = 0; i < delay; i++){
     fsc->filter ((float) i, &output_sample, &output_tag);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL (0.0, output_sample, 1e-6);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL (atsc_sync_tag::NORMAL, output_tag, 1e-6);
+    BOOST_REQUIRE(std::abs(0.0 - output_sample) <= 1e-6);
+    BOOST_REQUIRE(std::abs(atsc_sync_tag::NORMAL - output_tag) <= 1e-6);
   }
 
   for (; i < delay + 5000; i++){
     fsc->filter ((float) i, &output_sample, &output_tag);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL ((float) (i - delay), output_sample, 1e-6);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL (atsc_sync_tag::NORMAL, output_tag, 1e-6);
+    BOOST_REQUIRE(std::abs((float) (i - delay) - output_sample) <= 1e-6);
+    BOOST_REQUIRE(std::abs(atsc_sync_tag::NORMAL - output_tag) <= 1e-6);
   }
 }
 
@@ -211,12 +232,12 @@ qa_atsci_fs_correlator::util (int which_field, int nerrs1, int nerrs2)
     fsc->filter (input[i], &output_sample, &output_tag);
     if (i == delay + PAD){	// should be field sync
       if (which_field == 0)
-	CPPUNIT_ASSERT_DOUBLES_EQUAL (atsc_sync_tag::START_FIELD_SYNC_1, output_tag, 1e-6);
+        BOOST_REQUIRE(std::abs(atsc_sync_tag::START_FIELD_SYNC_1 - output_tag) <= 1e-6);
       else
-	CPPUNIT_ASSERT_DOUBLES_EQUAL (atsc_sync_tag::START_FIELD_SYNC_2, output_tag, 1e-6);
+        BOOST_REQUIRE(std::abs(atsc_sync_tag::START_FIELD_SYNC_2 - output_tag) <= 1e-6);
     }
     else {
-      CPPUNIT_ASSERT_DOUBLES_EQUAL (atsc_sync_tag::NORMAL, output_tag, 1e-6);
+      BOOST_REQUIRE(std::abs(atsc_sync_tag::NORMAL - output_tag) <= 1e-6);
     }
   }
 }
@@ -252,5 +273,45 @@ qa_atsci_fs_correlator::t4 ()
       util (1, nerrs1, nerrs2);
     }
   }
+}
+
+BOOST_AUTO_TEST_CASE(run_t0)
+{
+  qa_atsci_fs_correlator Q;
+  Q.setUp();
+  Q.t0();
+  Q.tearDown();
+}
+
+BOOST_AUTO_TEST_CASE(run_t1)
+{
+  qa_atsci_fs_correlator Q;
+  Q.setUp();
+  Q.t1();
+  Q.tearDown();
+}
+
+BOOST_AUTO_TEST_CASE(run_t2)
+{
+  qa_atsci_fs_correlator Q;
+  Q.setUp();
+  Q.t2();
+  Q.tearDown();
+}
+
+BOOST_AUTO_TEST_CASE(run_t3)
+{
+  qa_atsci_fs_correlator Q;
+  Q.setUp();
+  Q.t3();
+  Q.tearDown();
+}
+
+BOOST_AUTO_TEST_CASE(run_t4)
+{
+  qa_atsci_fs_correlator Q;
+  Q.setUp();
+  Q.t4();
+  Q.tearDown();
 }
 

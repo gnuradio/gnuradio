@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,86 +20,111 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TestAssert.h>
-#include "qa_atsci_data_interleaver.h"
+#include <gnuradio/atsc/data_interleaver_impl.h>
+#include <boost/test/unit_test.hpp>
 #include <string.h>
+#include <stdio.h>
 
 
-/*!
- * write an easy to identify pattern into the packet
- */
-void
-qa_atsci_data_interleaver::init_test_packet (int counter,
-					    atsc_mpeg_packet_rs_encoded &out)
+// This class is a remnant of the CppUnit style testing
+class qa_atsci_data_interleaver
 {
-  out.data[0] = 0xf0;
-  out.data[1] = 0xff;
-  out.data[2] = (counter >> 8) & 0xff;
-  out.data[3] = counter & 0xff;
+ public:
+  qa_atsci_data_interleaver() { setUp(); }
 
-  for (int i = 4; i < 205; i++)
-    out.data[i] = i;
+  void t0 ();
+  void t1 ();
 
-  out.data[205] = 0xa0;
-  out.data[206] = 0xaf;
-}
+ private:
+  atsci_data_interleaver   outbound;
+  atsci_data_deinterleaver inbound;
+
+  void setUp (){
+    outbound.reset();
+    inbound.reset();
+  }
+
+  /*!
+   * write an easy to identify pattern into the packet
+   */
+  void init_test_packet(
+      int counter, atsc_mpeg_packet_rs_encoded &out
+  ) {
+    atsci_data_interleaver   outbound;
+    atsci_data_deinterleaver inbound;
+
+    out.data[0] = 0xf0;
+    out.data[1] = 0xff;
+    out.data[2] = (counter >> 8) & 0xff;
+    out.data[3] = counter & 0xff;
+
+    for (int i = 4; i < 205; i++)
+      out.data[i] = i;
+
+    out.data[205] = 0xa0;
+    out.data[206] = 0xaf;
+  }
+
+
+
+
+  void print_packet (FILE *fp,
+                      int frame_number,
+                      int field_number,
+                      int segment_number,
+                      const atsc_mpeg_packet_rs_encoded &in
+  ) {
+    fprintf (fp, "%04d:%d:%03d  ", frame_number, field_number, segment_number);
+
+    const unsigned char *p = &in.data[0];
+    for (int i = 0; i < 8; i++)
+      fprintf (fp, "%02X", p[i]);
+
+    fprintf (fp, "  ");
+    p = &in.data[8];
+    for (int i = 0; i < 8; i++)
+      fprintf (fp, "%02X", p[i]);
+
+
+    fprintf (fp, "  ...  ");
+    p = &in.data[191];
+    for (int i = 0; i < 8; i++)
+      fprintf (fp, "%02X", p[i]);
+
+    fprintf (fp, "  ");
+    p = &in.data[199];
+    for (int i = 0; i < 8; i++)
+      fprintf (fp, "%02X", p[i]);
+
+    fprintf (fp, "\n");
+  }
+
+  void chk_assert(
+      const atsc_mpeg_packet_rs_encoded &expected,
+      const atsc_mpeg_packet_rs_encoded &actual
+  ) {
+    if (expected == actual)
+      return;
+
+    FILE *fp = stderr;
+
+    fprintf (fp, "Expected: ");
+    print_packet (fp, 0, 0, 0, expected);
+
+    fprintf (fp, "Actual:   ");
+    print_packet (fp, 0, 0, 0, actual);
+
+    BOOST_REQUIRE(expected == actual);
+  }
+
+};
 
 void
-qa_atsci_data_interleaver::print_packet (FILE *fp,
-					int frame_number,
-					int field_number,
-					int segment_number,
-					const atsc_mpeg_packet_rs_encoded &in)
-{
-  fprintf (fp, "%04d:%d:%03d  ", frame_number, field_number, segment_number);
-
-  const unsigned char *p = &in.data[0];
-  for (int i = 0; i < 8; i++)
-    fprintf (fp, "%02X", p[i]);
-
-  fprintf (fp, "  ");
-  p = &in.data[8];
-  for (int i = 0; i < 8; i++)
-    fprintf (fp, "%02X", p[i]);
-
-
-  fprintf (fp, "  ...  ");
-  p = &in.data[191];
-  for (int i = 0; i < 8; i++)
-    fprintf (fp, "%02X", p[i]);
-
-  fprintf (fp, "  ");
-  p = &in.data[199];
-  for (int i = 0; i < 8; i++)
-    fprintf (fp, "%02X", p[i]);
-
-  fprintf (fp, "\n");
-}
-
-void
-qa_atsci_data_interleaver::chk_assert (const atsc_mpeg_packet_rs_encoded &expected,
-				      const atsc_mpeg_packet_rs_encoded &actual)
-{
-  if (expected == actual)
-    return;
-
-  FILE *fp = stderr;
-
-  fprintf (fp, "Expected: ");
-  print_packet (fp, 0, 0, 0, expected);
-
-  fprintf (fp, "Actual:   ");
-  print_packet (fp, 0, 0, 0, actual);
-
-  CPPUNIT_ASSERT (expected == actual);
-}
-
-void
-qa_atsci_data_interleaver::t0 ()
+qa_atsci_data_interleaver::t0()
 {
   int	counter = 0;
-  atsc_mpeg_packet_rs_encoded	in, enc, out;
-  atsc_mpeg_packet_rs_encoded	zero;
+  atsc_mpeg_packet_rs_encoded in, enc, out;
+  atsc_mpeg_packet_rs_encoded zero;
 
   memset (&zero, 0, sizeof (zero));
 
@@ -118,13 +143,11 @@ qa_atsci_data_interleaver::t0 ()
 	inbound.deinterleave (out, enc);
 
 	if (counter < 52)
-	  // CPPUNIT_ASSERT (zero == out);
 	  chk_assert (zero, out);
 
 	else if (counter >= 52){
 	  atsc_mpeg_packet_rs_encoded expected;
 	  init_test_packet (counter - 52, expected);
-	  // CPPUNIT_ASSERT (expected == out);
 	  chk_assert (expected, out);
 	}
       }
@@ -140,9 +163,8 @@ qa_atsci_data_interleaver::t0 ()
 // the deinterleaver recovers.  This would be part of what you'd see
 // on a channel change.
 //
-
 void
-qa_atsci_data_interleaver::t1 ()
+qa_atsci_data_interleaver::t1()
 {
   int	counter = 0;
   atsc_mpeg_packet_rs_encoded	in, enc, out;
@@ -188,10 +210,17 @@ qa_atsci_data_interleaver::t1 ()
 	else if (counter >= starting_counter + 52 + NCRAP){
 	  atsc_mpeg_packet_rs_encoded expected;
 	  init_test_packet (counter - 52, expected);
-	  // CPPUNIT_ASSERT (expected == out);
 	  chk_assert (expected, out);
 	}
       }
     }
   }
 }
+
+BOOST_AUTO_TEST_CASE(run)
+{
+  qa_atsci_data_interleaver Q;
+  Q.t0();
+  Q.t1();
+}
+

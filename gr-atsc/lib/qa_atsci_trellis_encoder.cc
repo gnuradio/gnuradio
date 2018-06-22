@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,22 +24,24 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include "qa_atsci_trellis_encoder.h"
-#include <cstdio>
+#include <gnuradio/atsc/trellis_encoder_impl.h>
+#include <boost/test/unit_test.hpp>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdio.h>
+
 
 #define	NELEM(x) (sizeof (x) / sizeof (x[0]))
 
 
 static const int NCODERS = atsci_trellis_encoder::NCODERS;
 
-void
-qa_atsci_trellis_encoder::t0 ()
-{
+atsci_trellis_encoder enc;
+
+BOOST_AUTO_TEST_CASE(t0) {
+  enc.reset();
 #if 0		// generate i/o test data for t1
 
   atsc_mpeg_packet_rs_encoded	in[NCODERS];
@@ -72,9 +74,7 @@ qa_atsci_trellis_encoder::t0 ()
 #endif
 }
 
-void
-qa_atsci_trellis_encoder::t1 ()
-{
+BOOST_AUTO_TEST_CASE(t1) {
   atsc_mpeg_packet_rs_encoded	in[NCODERS];
   atsc_data_segment		expected_out[NCODERS];
   atsc_data_segment		actual_out[NCODERS];
@@ -110,7 +110,7 @@ qa_atsci_trellis_encoder::t1 ()
   enc.encode (actual_out, in);				// trellis code test data
 
   for (int i = 0; i < NCODERS; i++){			// check the result
-    CPPUNIT_ASSERT (expected_out[i] == actual_out[i]);
-    CPPUNIT_ASSERT (expected_out[i].pli == actual_out[i].pli);
+    BOOST_REQUIRE (expected_out[i] == actual_out[i]);
+    BOOST_REQUIRE (expected_out[i].pli == actual_out[i].pli);
   }
 }
