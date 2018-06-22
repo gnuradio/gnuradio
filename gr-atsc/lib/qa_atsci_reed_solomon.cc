@@ -24,21 +24,22 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
+#include <gnuradio/atsc/reed_solomon_impl.h>
+#include <boost/test/unit_test.hpp>
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <gnuradio/atsc/reed_solomon_impl.h>
-#include "qa_atsci_reed_solomon.h"
-#include <string.h>
 
 
 static const int NROOTS      =   20;
 static const int NTRIALS     =  100;
 static const int NN	     = ATSC_MPEG_RS_ENCODED_LENGTH;
 
-void
-qa_atsci_reed_solomon::t0_reed_solomon ()
+
+BOOST_AUTO_TEST_CASE(t0_reed_solomon)
 {
+  atsci_reed_solomon rs;
+
   atsc_mpeg_packet_no_sync	in;
   atsc_mpeg_packet_rs_encoded  	enc;
   atsc_mpeg_packet_no_sync	out;
@@ -111,5 +112,5 @@ qa_atsci_reed_solomon::t0_reed_solomon ()
     }
   }
 
-  CPPUNIT_ASSERT (decoder_errors == 0);
+  BOOST_REQUIRE(decoder_errors == 0);
 }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,13 +24,16 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
+#include <gnuradio/atsc/single_viterbi_impl.h>
+#include <gnuradio/atsc/single_viterbi_impl.h>
+#include <gnuradio/atsc/basic_trellis_encoder_impl.h>
+#include <gnuradio/atsc/single_viterbi_impl.h>
+#include <gnuradio/atsc/basic_trellis_encoder_impl.h>
+#include <gnuradio/random.h>
+#include <boost/test/unit_test.hpp>
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <gnuradio/atsc/single_viterbi_impl.h>
-#include "qa_atsci_single_viterbi.h"
-#include <gnuradio/random.h>
-#include <string.h>
 
 
 static const int NTRIALS     =   50;
@@ -41,9 +44,24 @@ static const int MAXDIBIT    = 3;
 
 static gr::random rndm;
 
+class qa_atsci_single_viterbi
+{
+ public:
+  void t0 ();
+  void t1 ();
+
+ private:
+  atsci_single_viterbi        decoder;
+  atsci_basic_trellis_encoder encoder;
+
+  void encode_block(unsigned char *out, unsigned char *in, unsigned n);
+  void decode_block(unsigned char *out, unsigned char *in, unsigned n, float noise_factor);
+  float noise ();
+};
+
 void
-qa_atsci_single_viterbi::encode_block (unsigned char *out, unsigned char *in,
-				      unsigned int n)
+qa_atsci_single_viterbi::encode_block(
+    unsigned char *out, unsigned char *in, unsigned int n)
 {
   for (unsigned int i = 0; i < n; i++) {
     out[i] = encoder.encode(in[i]);
@@ -52,8 +70,8 @@ qa_atsci_single_viterbi::encode_block (unsigned char *out, unsigned char *in,
 
 
 void
-qa_atsci_single_viterbi::decode_block (unsigned char *out, unsigned char *in,
-				      unsigned int n, float noise_factor)
+qa_atsci_single_viterbi::decode_block(
+    unsigned char *out, unsigned char *in, unsigned int n, float noise_factor)
 {
   for (unsigned int i = 0; i < n; i++) {
     out[i] = decoder.decode((2*in[i]-7) + noise () * noise_factor);
@@ -61,9 +79,9 @@ qa_atsci_single_viterbi::decode_block (unsigned char *out, unsigned char *in,
 }
 
 float
-qa_atsci_single_viterbi::noise ()
+qa_atsci_single_viterbi::noise()
 {
-  return 2.0 * (rndm.ran1() - 0.5);	// uniformly (-1, 1)
+  return 2.0 * (rndm.ran1() - 0.5); // uniformly (-1, 1)
 }
 
 void
@@ -138,7 +156,7 @@ qa_atsci_single_viterbi::t0 ()
   printf ("  Summary: %d decoder errors out of %d trials.\n",
 	  decoder_errors, NTRIALS);
 
-  CPPUNIT_ASSERT (decoder_errors == 0);
+  BOOST_REQUIRE (decoder_errors == 0);
 }
 
 void
@@ -282,5 +300,12 @@ qa_atsci_single_viterbi::t1 ()
   printf ("  Summary: %d decoder errors out of %d trials.\n",
 	  decoder_errors, (MAXERRORS*NTRIALS));
 
-  CPPUNIT_ASSERT (decoder_errors <= (MAXERRORS*NTRIALS) * .1);
+  BOOST_REQUIRE(decoder_errors <= (MAXERRORS*NTRIALS) * .1);
+}
+
+BOOST_AUTO_TEST_CASE(run_single_viterbi)
+{
+  qa_atsci_single_viterbi Q;
+  Q.t0();
+  Q.t1();
 }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,10 +24,9 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include "qa_atsci_viterbi_decoder.h"
-#include "qa_atsci_trellis_encoder.h"
-#include <cstdio>
+#include <gnuradio/atsc/viterbi_decoder_impl.h>
+#include <boost/test/unit_test.hpp>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -63,9 +62,10 @@ pad_decoder_input (atsc_soft_data_segment out[NCODERS])
   }
 }
 
-void
-qa_atsci_viterbi_decoder::t0 ()
-{
+atsci_viterbi_decoder viterbi;
+
+BOOST_AUTO_TEST_CASE(t0) {
+    viterbi.reset ();
 #if 0
   atsci_trellis_encoder		enc;
   atsc_mpeg_packet_rs_encoded	encoder_in[NCODERS];
@@ -129,9 +129,7 @@ qa_atsci_viterbi_decoder::t0 ()
 #endif
 }
 
-void
-qa_atsci_viterbi_decoder::t1 ()
-{
+BOOST_AUTO_TEST_CASE(t1) {
   atsc_soft_data_segment	decoder_in[NCODERS];
   atsc_soft_data_segment	decoder_in_pad[NCODERS];
   atsc_mpeg_packet_rs_encoded	decoder_out[NCODERS];
@@ -172,7 +170,8 @@ qa_atsci_viterbi_decoder::t1 ()
   pad_decoder_input (decoder_in_pad);
   viterbi.decode (decoder_out, decoder_in_pad);
 
-  for (int i = 0; i < NCODERS; i++){			// check the result
-    CPPUNIT_ASSERT (expected_out[i] == decoder_out[i]);
+  for (int i = 0; i < NCODERS; i++){
+    BOOST_REQUIRE (expected_out[i] == decoder_out[i]);
   }
 }
+

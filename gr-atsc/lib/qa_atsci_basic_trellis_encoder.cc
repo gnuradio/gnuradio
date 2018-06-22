@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,14 +24,15 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
-#include "qa_atsci_basic_trellis_encoder.h"
+#include <gnuradio/atsc/basic_trellis_encoder_impl.h>
+#include <boost/test/unit_test.hpp>
 #include <stdlib.h>
 #include <stdio.h>
 
-void
-qa_atsci_basic_trellis_encoder::t0 ()
+BOOST_AUTO_TEST_CASE(t0)
 {
+  atsci_basic_trellis_encoder enc;
+
   const static unsigned char in[14] = {
     0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 2, 3
   };
@@ -41,19 +42,19 @@ qa_atsci_basic_trellis_encoder::t0 ()
   };
 
   for (unsigned i = 0; i < sizeof (in); i++)
-    CPPUNIT_ASSERT_EQUAL ((int) expected_out[i], enc.encode (in[i]));
+    BOOST_REQUIRE_EQUAL((int) expected_out[i], enc.encode(in[i]));
 
   // reset encoder and test again.
 
   enc.reset ();
   for (unsigned i = 0; i < sizeof (in); i++)
-    CPPUNIT_ASSERT_EQUAL ((int) expected_out[i], enc.encode (in[i]));
+    BOOST_REQUIRE_EQUAL((int) expected_out[i], enc.encode(in[i]));
 }
 
 
-void
-qa_atsci_basic_trellis_encoder::t1 ()
+BOOST_AUTO_TEST_CASE(t1)
 {
+  atsci_basic_trellis_encoder enc;
   // Print data to externally check distribution.
   // looks OK.
 #if 0

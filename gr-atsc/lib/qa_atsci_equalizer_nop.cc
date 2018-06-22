@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,12 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "qa_atsci_equalizer_nop.h"
 #include <gnuradio/atsc/equalizer_impl.h>
 #include <gnuradio/atsc/equalizer_nop_impl.h>
 #include <gnuradio/atsc/pnXXX_impl.h>
 #include <gnuradio/atsc/types.h>
-#include <cppunit/TestAssert.h>
+#include <boost/test/unit_test.hpp>
+#include <cmath>
 #include <assert.h>
 #include <iostream>
 #include <string.h>
@@ -147,24 +147,11 @@ init_field_sync_common (float *p, int mask)
   assert (i == ATSC_DATA_SEGMENT_LENGTH);
 }
 
-void
-qa_atsci_equalizer_nop::setUp ()
-{
-  eq = new atsci_equalizer_nop ();
-}
-
-void
-qa_atsci_equalizer_nop::tearDown ()
-{
-  delete eq;
-  eq = 0;
-}
-
 static void
 setup_test_data (float *data, atsc::syminfo *tags)
 {
-  int	mask = 0;
-  int	i = 0;
+  int mask = 0;
+  int i = 0;
 
   for (i = 0; i < PAD; i++){
     data[i] = (float) i;
@@ -185,63 +172,84 @@ setup_test_data (float *data, atsc::syminfo *tags)
     }
     mask ^= 1;
   }
-  assert (i == INPUT_SIZE);
+  BOOST_REQUIRE(i == INPUT_SIZE);
 }
 
-void
-qa_atsci_equalizer_nop::t0 ()
+// This class is a remnant of the CppUnit testing style
+class qa_atsci_equalizer_nop
 {
-  // these are dynamically allocated because they are bigger
-  // than the default stack limit.
+public:
+  void setUp ()
+  {
+    eq = new atsci_equalizer_nop ();
+  }
 
-  float         *input_data = new float[INPUT_SIZE];
-  atsc::syminfo *input_tags = new atsc::syminfo[INPUT_SIZE];
-  float         *output_data = new float[INPUT_SIZE];
+  void tearDown()
+  {
+    delete eq;
+    eq = 0;
+  }
 
-  try {
+  void t0()
+  {
+    // these are dynamically allocated because they are bigger
+    // than the default stack limit.
 
-    memset (input_data, 0, sizeof(*input_data)*INPUT_SIZE);
-    memset (input_tags, 0, sizeof(*input_tags)*INPUT_SIZE);
-    memset (output_data, 0, sizeof(*output_data)*INPUT_SIZE);
+    float         *input_data = new float[INPUT_SIZE];
+    atsc::syminfo *input_tags = new atsc::syminfo[INPUT_SIZE];
+    float         *output_data = new float[INPUT_SIZE];
 
-    setup_test_data (input_data, input_tags);
+    try {
 
-    eq->filter (input_data, input_tags,
-		output_data, INPUT_SIZE);
+      memset (input_data, 0, sizeof(*input_data)*INPUT_SIZE);
+      memset (input_tags, 0, sizeof(*input_tags)*INPUT_SIZE);
+      memset (output_data, 0, sizeof(*output_data)*INPUT_SIZE);
+
+      setup_test_data (input_data, input_tags);
+
+      eq->filter (input_data, input_tags,
+		  output_data, INPUT_SIZE);
 
 
-    // now check that data values got copied correctly
+      // now check that data values got copied correctly
 
-    for (int i = 0; i < INPUT_SIZE; i++){
+      for (int i = 0; i < INPUT_SIZE; i++){
 
-      if (input_tags[i].segment_num == atsc::SI_FIELD_SYNC_SEGMENT_NUM){
-	// ignore entire field sync data segment
-      }
-      else if (input_tags[i].symbol_num <= 3){
-	// ignore 4 symbols of data segment sync (+5, -5, -5, +5)
-      }
-      else {
-	if (output_data[i] != (float) i){
-	  cerr << "output_data[" << i << "] == " << output_data[i] << endl;
-	  CPPUNIT_ASSERT_DOUBLES_EQUAL ((float) i, output_data[i], 1e-6);
+	if (input_tags[i].segment_num == atsc::SI_FIELD_SYNC_SEGMENT_NUM){
+	  // ignore entire field sync data segment
+	}
+	else if (input_tags[i].symbol_num <= 3){
+	  // ignore 4 symbols of data segment sync (+5, -5, -5, +5)
+	}
+	else {
+	  if (output_data[i] != (float) i){
+	    cerr << "output_data[" << i << "] == " << output_data[i] << endl;
+	    BOOST_CHECK(std::abs(float(i) - output_data[i]) <= 1e-6f);
+	  }
 	}
       }
+
+      delete [] input_data;
+      delete [] input_tags;
+      delete [] output_data;
     }
 
-    delete [] input_data;
-    delete [] input_tags;
-    delete [] output_data;
+    catch ( ... ){
+      delete [] input_data;
+      delete [] input_tags;
+      delete [] output_data;
+    }
   }
 
-  catch ( ... ){
-    delete [] input_data;
-    delete [] input_tags;
-    delete [] output_data;
-  }
-}
+private:
+  atsci_equalizer *eq;
+};
 
-void
-qa_atsci_equalizer_nop::t1 ()
+
+BOOST_AUTO_TEST_CASE(run_t0)
 {
-  // think of another test...
+  qa_atsci_equalizer_nop qa_runner;
+  qa_runner.setUp();
+  qa_runner.t0();
+  qa_runner.tearDown();
 }

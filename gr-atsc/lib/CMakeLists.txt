@@ -155,31 +155,39 @@ endif(ENABLE_STATIC_LIBS)
 # Build and register unit test
 ########################################################################
 if(ENABLE_TESTING)
+  include(GrTest)
 
-include_directories(${CPPUNIT_INCLUDE_DIRS})
-link_directories(${CPPUNIT_LIBRARY_DIRS})
+  include_directories(
+    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
+  )
 
-list(APPEND test_atsci_sources
-    qa_atsci_basic_trellis_encoder.cc
-    qa_atsci_data_interleaver.cc
-    qa_atsci_equalizer_nop.cc
-    qa_atsci_fake_single_viterbi.cc
-    qa_atsci_fs_correlator.cc
-    qa_atsci_single_viterbi.cc
-    qa_atsci_randomizer.cc
-    qa_atsci_reed_solomon.cc
-    qa_atsci_sliding_correlator.cc
-    qa_atsci_trellis_encoder.cc
-    qa_atsci_viterbi_decoder.cc
-    qa_convolutional_interleaver.cc
-    qa_atsci.cc
-    qa_interleaver_fifo.cc
-)
+  list(APPEND test_gr_atsc_source
+      qa_atsci_basic_trellis_encoder.cc
+      qa_atsci_data_interleaver.cc
+      qa_atsci_equalizer_nop.cc
+      qa_atsci_fake_single_viterbi.cc
+      qa_atsci_fs_correlator.cc
+      qa_atsci_single_viterbi.cc
+      qa_atsci_randomizer.cc
+      qa_atsci_reed_solomon.cc
+      qa_atsci_sliding_correlator.cc
+      qa_atsci_trellis_encoder.cc
+      qa_atsci_viterbi_decoder.cc
+      qa_convolutional_interleaver.cc
+      qa_interleaver_fifo.cc
+  )
+  list(APPEND GR_TEST_TARGET_DEPS
+    gnuradio-atsc
+    gnuradio-fec
+    gnuradio-filter
+    gnuradio-analog
+    gnuradio-fft
+  )
 
-include(GrTest)
-list(APPEND GR_TEST_TARGET_DEPS gnuradio-atsc gnuradio-fec gnuradio-filter gnuradio-analog gnuradio-fft)
-add_executable(test_atsci ${test_atsci_sources} test_atsci.cc)
-target_link_libraries(test_atsci gnuradio-atsc gnuradio-runtime ${CPPUNIT_LIBRARIES})
-GR_ADD_TEST(atsci-test test_atsci)
+  foreach(qa_file ${test_gr_atsc_source})
+    GR_ADD_CPP_TEST("atsc_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
 
 endif(ENABLE_TESTING)

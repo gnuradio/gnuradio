@@ -20,13 +20,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TestAssert.h>
-#include "qa_atsci_sliding_correlator.h"
+#include <gnuradio/atsc/sliding_correlator_impl.h>
+#include <boost/test/unit_test.hpp>
 #include <cstdio>
 
-void
-qa_atsci_sliding_correlator::t0 ()
+BOOST_AUTO_TEST_CASE(t0)
 {
+  atsci_sliding_correlator	corr;
+  corr.reset ();
 
 #if 0
   int	count = 0;
@@ -47,5 +48,4 @@ qa_atsci_sliding_correlator::t0 ()
     printf ("%6d: %3d\n", count++,
 	    corr.input_bit (atsc_pn511[i] ^ atsc_pn511[i+31]));
 #endif
-
 }

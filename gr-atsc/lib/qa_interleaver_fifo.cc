@@ -20,39 +20,36 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cppunit/TestAssert.h>
-#include "qa_interleaver_fifo.h"
+#include <gnuradio/atsc/interleaver_fifo.h>
+#include <boost/test/unit_test.hpp>
 
-void
-qa_interleaver_fifo::t0 ()
-{
-  fifo = new interleaver_fifo<int>(0);
+BOOST_AUTO_TEST_CASE(t0) {
+  interleaver_fifo<int>* fifo = new interleaver_fifo<int>(0);
 
   for (int i = 10; i < 20; i++)
-    CPPUNIT_ASSERT_EQUAL (i, fifo->stuff (i));
+    BOOST_REQUIRE_EQUAL(i, fifo->stuff(i));
+  delete fifo;
 }
 
-void
-qa_interleaver_fifo::t1 ()
-{
-  fifo = new interleaver_fifo<int>(1);
+BOOST_AUTO_TEST_CASE(t1) {
+  interleaver_fifo<int>* fifo = new interleaver_fifo<int>(1);
 
-  CPPUNIT_ASSERT_EQUAL (0, fifo->stuff (2));
+  BOOST_REQUIRE_EQUAL(0, fifo->stuff(2));
 
   for (int i = 1; i < 10; i++)
-    CPPUNIT_ASSERT_EQUAL (i * 2, fifo->stuff ((i + 1) * 2));
+    BOOST_REQUIRE_EQUAL(i * 2, fifo->stuff((i + 1) * 2));
+  delete fifo;
 }
 
-void
-qa_interleaver_fifo::t2 ()
-{
-  fifo = new interleaver_fifo<int>(4);
+BOOST_AUTO_TEST_CASE(t2) {
+  interleaver_fifo<int>* fifo = new interleaver_fifo<int>(4);
 
-  CPPUNIT_ASSERT_EQUAL (0, fifo->stuff (1));
-  CPPUNIT_ASSERT_EQUAL (0, fifo->stuff (2));
-  CPPUNIT_ASSERT_EQUAL (0, fifo->stuff (3));
-  CPPUNIT_ASSERT_EQUAL (0, fifo->stuff (4));
+  BOOST_REQUIRE_EQUAL(0, fifo->stuff (1));
+  BOOST_REQUIRE_EQUAL(0, fifo->stuff (2));
+  BOOST_REQUIRE_EQUAL(0, fifo->stuff (3));
+  BOOST_REQUIRE_EQUAL(0, fifo->stuff (4));
 
   for (int i = 5; i < 20; i++)
-    CPPUNIT_ASSERT_EQUAL (i - 4, fifo->stuff (i));
+    BOOST_REQUIRE_EQUAL(i - 4, fifo->stuff (i));
+  delete fifo;
 }
