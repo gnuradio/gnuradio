@@ -62,6 +62,5 @@ def cli(**kwargs):
     self.srcdir = gr.prefs().get_string('modtool', 'newmod_path', self.srcdir)
     if not os.path.isdir(self.srcdir):
         raise ModToolException('Could not find gr-newmod source dir.')
-    self._setup_scm(mode='new')
 
     run(self)

@@ -54,6 +54,7 @@ class ModToolMakeXML(ModTool):
 
     def run(self):
         """ Go, go, go! """
+        # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
         logger.warning("Warning: This is an experimental feature. Don't expect any magic.")

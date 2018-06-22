@@ -53,6 +53,7 @@ class ModToolRemove(ModTool):
 
     def run(self):
         """ Go, go, go! """
+        # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
         def _remove_cc_test_case(filename=None, ed=None):

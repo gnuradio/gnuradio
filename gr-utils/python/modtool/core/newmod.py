@@ -72,10 +72,11 @@ class ModToolNewModule(ModTool):
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
+        # This portion will be covered by the CLI
         if not self.cli:
             self.assign()
             self.validate()
-            self._setup_scm(mode='new')
+        self._setup_scm(mode='new')
         logger.info("Creating out-of-tree module in %s..." % (self.dir,))
         try:
             shutil.copytree(self.srcdir, self.dir)

@@ -59,6 +59,7 @@ class ModToolRename(ModTool):
 
     def run(self):
         """ Go, go, go. """
+        # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
             self.assign()

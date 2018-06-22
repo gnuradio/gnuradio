@@ -123,6 +123,7 @@ class ModToolDisable(ModTool):
             self.scm.mark_file_updated(self._file['swig'])
             return False
 
+        # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
         # List of special rules: 0: subdir, 1: filename re match, 2: callback

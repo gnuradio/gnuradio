@@ -75,7 +75,8 @@ def cli(**kwargs):
         raise ModToolException('Missing or skipping relevant subdir.')
 
     if self.info['blockname'] is None:
-        self.info['blockname'] = input("Enter name of block/code (without module name prefix): ")
+        while not self.info['blockname'] or self.info['blockname'].isspace():
+            self.info['blockname'] = input("Enter name of block/code (without module name prefix): ")
     if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
         raise ModToolException('Invalid block name.')
     click.echo("Block/code identifier: " + self.info['blockname'])
