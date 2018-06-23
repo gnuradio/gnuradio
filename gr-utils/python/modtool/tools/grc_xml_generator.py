@@ -54,12 +54,12 @@ class GRCXMLGenerator(object):
         return lxml.etree.tostring(
                    lxml.etree.fromstring(ET.tostring(self.root, encoding="UTF-8")),
                    pretty_print=True
-               )
+               ).decode()
 
     def _manual_prettyprint(self):
         """ XML pretty printer using xml_indent """
         xml_indent(self.root)
-        return ET.tostring(self.root, encoding="UTF-8")
+        return ET.tostring(self.root, encoding="UTF-8").decode()
 
     def make_xml(self):
         """ Create the actual tag tree """
@@ -101,6 +101,5 @@ class GRCXMLGenerator(object):
     def save(self, filename):
         """ Write the XML file """
         self.make_xml()
-        with open(filename, 'wb') as f:
+        with open(filename, 'w') as f:
             f.write(self._prettyprint())
-
