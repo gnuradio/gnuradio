@@ -1,0 +1,18 @@
+id: uhd_amsg_source
+label: 'UHD: USRP Async Msg Source'
+
+parameters:
+-   id: dev_addr
+    label: Device Addr
+    dtype: string
+    hide: ${ 'none' if dev_addr else 'part' }
+
+outputs:
+-   domain: stream
+    dtype: msg
+
+templates:
+    imports: from gnuradio import uhd
+    make: uhd.amsg_source(device_addr=${dev_addr}, msgq=${id}_msgq_out)
+
+file_format: 1

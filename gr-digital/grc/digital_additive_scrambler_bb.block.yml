@@ -1,0 +1,43 @@
+id: digital_additive_scrambler_bb
+label: Additive Scrambler
+
+parameters:
+-   id: mask
+    label: Mask
+    dtype: hex
+    default: '0x8A'
+-   id: seed
+    label: Seed
+    dtype: hex
+    default: '0x7F'
+-   id: len
+    label: Length
+    dtype: int
+    default: '7'
+-   id: count
+    label: Count
+    dtype: int
+    default: '0'
+-   id: bits_per_byte
+    label: Bits per byte
+    dtype: int
+    default: '1'
+-   id: reset_tag_key
+    label: Reset tag key
+    dtype: string
+    default: '""'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.additive_scrambler_bb(${mask}, ${seed}, ${len}, count=${count},
+        bits_per_byte=${bits_per_byte}, reset_tag_key=${reset_tag_key})
+
+file_format: 1

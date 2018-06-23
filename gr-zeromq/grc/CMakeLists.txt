@@ -18,18 +18,18 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    zeromq_pub_sink.xml
-    zeromq_pub_msg_sink.xml
-    zeromq_sub_source.xml
-    zeromq_sub_msg_source.xml
-    zeromq_push_sink.xml
-    zeromq_push_msg_sink.xml
-    zeromq_pull_source.xml
-    zeromq_pull_msg_source.xml
-    zeromq_rep_sink.xml
-    zeromq_rep_msg_sink.xml
-    zeromq_req_source.xml
-    zeromq_req_msg_source.xml
+    zeromq_pub_sink.block.yml
+    zeromq_pub_msg_sink.block.yml
+    zeromq_sub_source.block.yml
+    zeromq_sub_msg_source.block.yml
+    zeromq_push_sink.block.yml
+    zeromq_push_msg_sink.block.yml
+    zeromq_pull_source.block.yml
+    zeromq_pull_msg_source.block.yml
+    zeromq_rep_sink.block.yml
+    zeromq_rep_msg_sink.block.yml
+    zeromq_req_source.block.yml
+    zeromq_req_msg_source.block.yml
 
     DESTINATION share/gnuradio/grc/blocks
 )

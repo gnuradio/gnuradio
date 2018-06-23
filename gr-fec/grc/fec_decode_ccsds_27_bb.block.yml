@@ -1,0 +1,16 @@
+id: fec_encode_ccsds_27_bb
+label: Encode CCSDS 27
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.encode_ccsds_27_bb()
+
+file_format: 1

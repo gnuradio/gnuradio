@@ -1,0 +1,53 @@
+id: digital_ofdm_chanest_vcvc
+label: OFDM Channel Estimation
+
+parameters:
+-   id: sync_symbol1
+    label: Synch. symbol 1
+    dtype: complex_vector
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: sync_symbol2
+    label: Synch. symbol 2
+    dtype: complex_vector
+    default: ()
+-   id: n_data_symbols
+    label: Number of data symbols
+    dtype: int
+    default: '1'
+-   id: eq_noise_red_len
+    label: Channel taps noise reduction length
+    dtype: int
+    default: '0'
+    hide: all
+-   id: max_carr_offset
+    label: Maximum carrier offset
+    dtype: int
+    default: '-1'
+    hide: ${ ('part' if max_carr_offset < 0 else 'none') }
+-   id: force_one_symbol
+    label: Force One Synchronisation Symbol
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    hide: ${ ('part' if not force_one_symbol else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ len(sync_symbol1) }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ len(sync_symbol1) }
+
+asserts:
+- ${ len(sync_symbol1) }
+- ${ len(sync_symbol2) == 0 or len(sync_symbol2) == len(sync_symbol1) }
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.ofdm_chanest_vcvc(${sync_symbol1}, ${sync_symbol2}, ${n_data_symbols},
+        ${eq_noise_red_len}, ${max_carr_offset}, ${force_one_symbol})
+
+file_format: 1

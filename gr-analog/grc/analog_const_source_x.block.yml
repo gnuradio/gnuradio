@@ -1,0 +1,28 @@
+id: analog_const_source_x
+label: Constant Source
+
+parameters:
+-   id: type
+    label: Output Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        const_type: [complex, real, int, int]
+        fcn: [c, f, i, s]
+    hide: part
+-   id: const
+    label: Constant
+    dtype: ${ type.const_type }
+    default: '0'
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.sig_source_${type.fcn}(0, analog.GR_CONST_WAVE, 0, 0, ${const})
+    callbacks:
+    - set_offset(${const})
+
+file_format: 1

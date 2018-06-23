@@ -1,0 +1,24 @@
+id: dtv_atsc_rx
+label: ATSC Receive Pipeline
+
+parameters:
+-   id: rate
+    label: Input Rate
+    dtype: float
+-   id: sps
+    label: Oversampling Ratio
+    dtype: float
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_rx(${rate},${sps})
+
+file_format: 1

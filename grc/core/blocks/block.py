@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from __future__ import absolute_import
 
-import ast
 import collections
 import itertools
 
@@ -29,7 +28,6 @@ from six.moves import range
 from ._templates import MakoTemplates
 from ._flags import Flags
 
-from ..Constants import ADVANCED_PARAM_TAB
 from ..base import Element
 from ..utils.descriptors import lazy_property
 
@@ -63,82 +61,28 @@ class Block(Element):
     outputs_data = []
 
     extra_data = {}
+    loaded_from = '(unknown)'
 
-    # region Init
     def __init__(self, parent):
         """Make a new block from nested data."""
         super(Block, self).__init__(parent)
-        self.params = self._init_params()
-        self.sinks = self._init_ports(self.inputs_data, direction='sink')
-        self.sources = self._init_ports(self.outputs_data, direction='source')
+        param_factory = self.parent_platform.make_param
+        port_factory = self.parent_platform.make_port
+
+        self.params = collections.OrderedDict(
+            (data['id'], param_factory(parent=self, **data))
+            for data in self.parameters_data
+        )
+        if self.key == 'options' or self.is_variable:
+            self.params['id'].hide = 'part'
+
+        self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
+        self.sources = [port_factory(parent=self, **params) for params in self.outputs_data]
 
         self.active_sources = []  # on rewrite
         self.active_sinks = []  # on rewrite
 
         self.states = {'state': True}
-
-    def _init_params(self):
-        is_dsp_block = not self.flags.not_dsp
-        has_inputs = bool(self.inputs_data)
-        has_outputs = bool(self.outputs_data)
-
-        params = collections.OrderedDict()
-        param_factory = self.parent_platform.make_param
-
-        def add_param(id, **kwargs):
-            params[id] = param_factory(self, id=id, **kwargs)
-
-        add_param(id='id', name='ID', dtype='id',
-                  hide='none' if (self.key == 'options' or self.is_variable) else 'part')
-
-        if is_dsp_block:
-            add_param(id='alias', name='Block Alias', dtype='string',
-                      hide='part', category=ADVANCED_PARAM_TAB)
-
-            if has_outputs or has_inputs:
-                add_param(id='affinity', name='Core Affinity', dtype='int_vector',
-                          hide='part', category=ADVANCED_PARAM_TAB)
-
-            if has_outputs:
-                add_param(id='minoutbuf', name='Min Output Buffer', dtype='int',
-                          hide='part', value='0', category=ADVANCED_PARAM_TAB)
-                add_param(id='maxoutbuf', name='Max Output Buffer', dtype='int',
-                          hide='part', value='0', category=ADVANCED_PARAM_TAB)
-
-        base_params_n = {}
-        for param_data in self.parameters_data:
-            param_id = param_data['id']
-            if param_id in params:
-                raise Exception('Param id "{}" is not unique'.format(param_id))
-
-            base_key = param_data.get('base_key', None)
-            param_data_ext = base_params_n.get(base_key, {}).copy()
-            param_data_ext.update(param_data)
-
-            add_param(**param_data_ext)
-            base_params_n[param_id] = param_data_ext
-
-        add_param(id='comment', name='Comment', dtype='_multiline', hide='part',
-                  value='', category=ADVANCED_PARAM_TAB)
-        return params
-
-    def _init_ports(self, ports_n, direction):
-        ports = []
-        port_factory = self.parent_platform.make_port
-        port_ids = set()
-
-        stream_port_ids = itertools.count()
-
-        for i, port_data in enumerate(ports_n):
-            port_id = port_data.setdefault('id', str(next(stream_port_ids)))
-            if port_id in port_ids:
-                raise Exception('Port id "{}" already exists in {}s'.format(port_id, direction))
-            port_ids.add(port_id)
-
-            port = port_factory(parent=self, direction=direction, **port_data)
-            ports.append(port)
-        return ports
-    # endregion
 
     # region Rewrite_and_Validation
     def rewrite(self):

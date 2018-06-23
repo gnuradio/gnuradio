@@ -1,0 +1,16 @@
+id: blocks_conjugate_cc
+label: Complex Conjugate
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.conjugate_cc()
+
+file_format: 1

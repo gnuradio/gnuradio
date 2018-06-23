@@ -17,5 +17,17 @@
 
 from __future__ import absolute_import
 
+import six
+
 from . import epy_block_io, expr_utils, extract_docs, flow_graph_complexity
 from .hide_bokeh_gui_options_if_not_installed import hide_bokeh_gui_options_if_not_installed
+
+
+def to_list(value):
+    if not value:
+        return []
+    elif isinstance(value, six.string_types):
+        return [value]
+    else:
+        return list(value)
+

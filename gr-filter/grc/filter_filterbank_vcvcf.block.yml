@@ -1,0 +1,26 @@
+id: filterbank_vcvcf
+label: Generic Filterbank
+
+parameters:
+-   id: taps
+    label: Taps(list of lists)
+    dtype: raw
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ len(taps) }
+
+outputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ len(taps) }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.filterbank_vcvcf(${taps})
+    callbacks:
+    - set_taps(${taps})
+
+file_format: 1

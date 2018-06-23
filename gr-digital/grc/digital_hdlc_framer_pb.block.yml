@@ -1,0 +1,21 @@
+id: digital_hdlc_framer_pb
+label: HDLC Framer
+
+parameters:
+-   id: frame_tag_name
+    label: Frame tag name
+    dtype: string
+
+inputs:
+-   domain: message
+    id: in
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.hdlc_framer_pb(${frame_tag_name})
+
+file_format: 1

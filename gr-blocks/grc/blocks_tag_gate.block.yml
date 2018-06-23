@@ -1,0 +1,50 @@
+id: blocks_tag_gate
+label: Tag Gate
+
+parameters:
+-   id: type
+    label: Item Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: propagate_tags
+    label: Propagate Tags
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: single_key
+    label: Single Key
+    dtype: string
+    default: '""'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: |-
+        blocks.tag_gate(${type.size} * ${vlen}, ${propagate_tags})
+        self.${id}.set_single_key(${single_key})
+    callbacks:
+    - self.${id}.set_single_key(${single_key})
+
+file_format: 1

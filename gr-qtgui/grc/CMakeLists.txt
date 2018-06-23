@@ -18,30 +18,30 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-file(GLOB xml_files "*.xml")
+file(GLOB yml_files "*.yml")
 
-macro(REPLACE_IN_FILE _xml_block match replace)
-    set(xml_block_src "${CMAKE_CURRENT_SOURCE_DIR}/${_xml_block}")
-    set(xml_block     "${CMAKE_CURRENT_BINARY_DIR}/${_xml_block}")
+macro(REPLACE_IN_FILE _yml_block match replace)
+    set(yml_block_src "${CMAKE_CURRENT_SOURCE_DIR}/${_yml_block}")
+    set(yml_block     "${CMAKE_CURRENT_BINARY_DIR}/${_yml_block}")
 
-    list(REMOVE_ITEM xml_files "${xml_block_src}")
-    file(READ "${xml_block_src}" xml_block_src_text)
+    list(REMOVE_ITEM yml_files "${yml_block_src}")
+    file(READ "${yml_block_src}" yml_block_src_text)
     string(REPLACE "${match}" "${replace}"
-           xml_block_text "${xml_block_src_text}")
-    file(WRITE "${xml_block}" "${xml_block_text}")
+           yml_block_text "${yml_block_src_text}")
+    file(WRITE "${yml_block}" "${yml_block_text}")
 
-    list(APPEND generated_xml_files "${xml_block}")
+    list(APPEND generated_yml_files "${yml_block}")
 endmacro()
 
 
 if(DESIRED_QT_VERSION EQUAL 4)
-    foreach(xml_block_src ${xml_files})
-        get_filename_component(xml_block "${xml_block_src}" NAME)
-        REPLACE_IN_FILE("${xml_block}" "PyQt5" "PyQt4")
+    foreach(yml_block_src ${yml_files})
+        get_filename_component(yml_block "${yml_block_src}" NAME)
+        REPLACE_IN_FILE("${yml_block}" "PyQt5" "PyQt4")
     endforeach()
 endif()
 
 install(
-    FILES ${xml_files} ${generated_xml_files}
+    FILES ${yml_files} ${generated_yml_files}
     DESTINATION "${GRC_BLOCKS_DIR}"
 )

@@ -1,0 +1,66 @@
+id: variable_cc_encoder_def
+label: CC Encoder Definition
+
+parameters:
+-   id: ndim
+    label: Parallelism
+    dtype: enum
+    default: '0'
+    options: ['0', '1', '2']
+-   id: dim1
+    label: Dimension 1
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 1) else 'all') }
+-   id: dim2
+    label: Dimension 2
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if (int(ndim) >= 2) else 'all') }
+-   id: framebits
+    label: Frame Bits
+    dtype: int
+    default: '2048'
+-   id: k
+    label: Constraint Length (K)
+    dtype: int
+    default: '7'
+-   id: rate
+    label: Rate Inverse (1/R) (1/2) --> 2
+    dtype: int
+    default: '2'
+-   id: polys
+    label: Polynomials
+    dtype: int_vector
+    default: '[79,109]'
+-   id: state_start
+    label: Start State
+    dtype: int
+    default: '0'
+-   id: mode
+    label: Streaming Behavior
+    dtype: enum
+    options: [fec.CC_STREAMING, fec.CC_TERMINATED, fec.CC_TAILBITING, fec.CC_TRUNCATED]
+    option_labels: [Streaming, Terminated, Tailbiting, Truncated]
+-   id: padding
+    label: Byte Padding
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+value: ${ fec.cc_encoder_make(framebits, k, rate, polys, state_start, mode, padding)
+    }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: "\n% if int(ndim)==0 #:\nself.${id} = ${id} = fec.cc_encoder_make(${framebits},\
+        \ ${k}, ${rate}, ${polys}, ${state_start}, ${mode}, ${padding})\n% elif int(ndim)==1\
+        \ #:\nself.${id} = ${id} = map( (lambda a: fec.cc_encoder_make(${framebits},\
+        \ ${k}, ${rate}, ${polys}, ${state_start}, ${mode}, ${padding})), range(0,${dim1})\
+        \ ); \n% else:\nself.${id} = ${id} = map( (lambda b: map( ( lambda a: fec.cc_encoder_make(${framebits},\
+        \ ${k}, ${rate}, ${polys}, ${state_start}, ${mode}, ${padding})), range(0,${dim2})\
+        \ ) ), range(0,${dim1})); \n% endif\n    "
+
+documentation: ""
+
+file_format: 1
