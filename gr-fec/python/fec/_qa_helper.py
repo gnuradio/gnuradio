@@ -20,12 +20,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import blocks
-from gnuradio import gr
-import sys, numpy
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
-from extended_encoder import extended_encoder
-from extended_decoder import extended_decoder
+
+import numpy
+
+from gnuradio import gr, blocks
+# Must use absolute import here because this file is not installed as part
+# of the module
+from gnuradio.fec import extended_encoder
+from gnuradio.fec import extended_decoder
+
 
 class map_bb(gr.sync_block):
     def __init__(self, bitmap):
@@ -37,7 +44,7 @@ class map_bb(gr.sync_block):
         self.bitmap = bitmap
 
     def work(self, input_items, output_items):
-        output_items[0][:] = map(lambda x: self.bitmap[x], input_items[0])
+        output_items[0][:] = [self.bitmap[x] for x in input_items[0]]
         return len(output_items[0])
 
 
@@ -85,6 +92,6 @@ if __name__ == '__main__':
             errs += 1
 
     if errs == 0:
-        print "Decoded properly"
+        print("Decoded properly")
     else:
-        print "Problem Decoding"
+        print("Problem Decoding")

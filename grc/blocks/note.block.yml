@@ -1,0 +1,9 @@
+id: note
+label: Note
+
+parameters:
+-   id: note
+    label: Note
+    dtype: string
+
+file_format: 1

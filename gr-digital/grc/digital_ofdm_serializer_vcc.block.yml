@@ -1,0 +1,51 @@
+id: digital_ofdm_serializer_vcc
+label: OFDM Serializer
+
+parameters:
+-   id: fft_len
+    label: FFT length
+    dtype: int
+    default: fft_len
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: occupied_carriers
+    label: Occupied Carriers
+    dtype: raw
+-   id: len_tag_key
+    label: Length Tag Key
+    dtype: string
+-   id: packet_len_tag_key
+    label: Packet Length Tag Key
+    dtype: string
+    default: '""'
+    hide: ${ ('none' if packet_len_tag_key else 'part') }
+-   id: symbols_skipped
+    label: Symbols skipped
+    dtype: int
+    default: '0'
+    hide: ${ ('none' if symbols_skipped else 'part') }
+-   id: carr_offset_key
+    label: Carrier Offset Key
+    dtype: string
+    default: '""'
+    hide: ${ ('none' if carr_offset_key else 'part') }
+-   id: input_is_shifted
+    label: Input is shifted
+    dtype: bool
+    default: 'True'
+    hide: ${ ('part' if input_is_shifted else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ fft_len }
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.ofdm_serializer_vcc(${fft_len}, ${occupied_carriers}, ${len_tag_key},
+        ${packet_len_tag_key}, ${symbols_skipped}, ${carr_offset_key}, ${input_is_shifted})
+
+file_format: 1

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter
 import sys, math
 
@@ -28,11 +30,11 @@ import sys, math
 
 def stopband_atten_to_dev (atten_db):
     """Convert a stopband attenuation in dB to an absolute value"""
-    return 10**(-atten_db/20)
+    return 10**(-atten_db / 20)
 
 def passband_ripple_to_dev (ripple_db):
     """Convert passband ripple spec expressed in dB to an absolute value"""
-    return (10**(ripple_db/20)-1)/(10**(ripple_db/20)+1)
+    return (10**(ripple_db / 20)-1) / (10**(ripple_db / 20)+1)
 
 # ----------------------------------------------------------------
 
@@ -55,10 +57,10 @@ def remezord (fcuts, mags, devs, fsamp = 2):
     nbands = nm
 
     if nm != nd:
-        raise ValueError, "Length of mags and devs must be equal"
+        raise ValueError("Length of mags and devs must be equal")
 
     if nf != 2 * (nbands - 1):
-        raise ValueError, "Length of f must be 2 * len (mags) - 2"
+        raise ValueError("Length of f must be 2 * len (mags) - 2")
 
     for i in range (len (mags)):
         if mags[i] != 0:                        # if not stopband, get relative deviation
@@ -140,10 +142,10 @@ def lporder (freq1, freq2, delta_p, delta_s):
 class test_pm_remez(gr_unittest.TestCase):
 
     def setUp(self):
-	pass
+        pass
 
     def tearDown(self):
-	pass
+        pass
 
     def test_low_pass(self):
         gain = 1
@@ -184,4 +186,3 @@ class test_pm_remez(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_pm_remez, "test_pm_remez.xml")
-

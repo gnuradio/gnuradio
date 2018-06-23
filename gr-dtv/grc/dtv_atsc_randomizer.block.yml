@@ -1,0 +1,18 @@
+id: dtv_atsc_randomizer
+label: ATSC Randomizer
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_randomizer()
+
+file_format: 1

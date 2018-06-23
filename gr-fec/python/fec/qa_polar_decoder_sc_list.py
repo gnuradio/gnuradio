@@ -20,13 +20,17 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, blocks
-import fec_swig as fec
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
+
 import numpy as np
 
-from extended_decoder import extended_decoder
-from polar.encoder import PolarEncoder
-import polar.channel_construction as cc
+from gnuradio import gr, gr_unittest, blocks, fec
+from gnuradio.fec import extended_decoder
+from gnuradio.fec.polar.encoder import PolarEncoder
+from gnuradio.fec.polar import channel_construction as cc
 
 # import os
 # print('PID:', os.getpid())
@@ -56,7 +60,7 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
         self.assertFalse(polar_decoder.set_frame_size(10))
 
     def test_002_one_vector(self):
-        print "test_002_one_vector"
+        print("test_002_one_vector")
         expo = 6
         block_size = 2 ** expo
         num_info_bits = 2 ** (expo - 1)
@@ -89,7 +93,7 @@ class test_polar_decoder_sc_list(gr_unittest.TestCase):
         self.assertTupleEqual(tuple(res), tuple(bits))
 
     def test_003_stream(self):
-        print "test_003_stream"
+        print("test_003_stream")
         nframes = 5
         expo = 8
         block_size = 2 ** expo

@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import sys
 from gnuradio import filter
 
@@ -27,7 +31,7 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4."
+    print("Error: Program requires PyQt4.")
     sys.exit(1)
 
 try:
@@ -48,8 +52,8 @@ class plot_constellation_form(plot_form):
         # Set the bar to go from 0.001 to max
         self.ybar.setMinimum(1)
         self.ybar.setMaximum(self._pos_scale*self.top_block._y_max)
-        self.ybar.setSingleStep(self._pos_scale*(max(self.top_block._y_range/10, 0.010)))
-        self.ybar.setPageStep(self._pos_scale*(max(self.top_block._y_range/2, 0.010)))
+        self.ybar.setSingleStep(self._pos_scale*(max(self.top_block._y_range / 10, 0.010)))
+        self.ybar.setPageStep(self._pos_scale*(max(self.top_block._y_range / 2, 0.010)))
 
         self.auto_scale = QtGui.QCheckBox("Auto Scale", self)
         if(self.top_block._auto_scale):

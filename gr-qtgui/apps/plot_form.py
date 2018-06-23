@@ -20,11 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4."
+    print("Error: Program requires PyQt4.")
     sys.exit(1)
 
 import numpy
@@ -129,8 +133,8 @@ class plot_form(QtGui.QWidget):
         self.ybar = QtGui.QSlider(QtCore.Qt.Vertical, self)
         self.ybar.setMinimum(self._pos_scale*_ymin)
         self.ybar.setMaximum(self._pos_scale*_ymax)
-        self.ybar.setSingleStep(self._pos_scale*(_yrng/10))
-        self.ybar.setPageStep(self._pos_scale*(_yrng/2))
+        self.ybar.setSingleStep(self._pos_scale*(_yrng / 10))
+        self.ybar.setPageStep(self._pos_scale*(_yrng / 2))
         self.ybar.setValue(self._pos_scale*_ymax)
         self.connect(self.ybar, QtCore.SIGNAL("valueChanged(int)"),
                      self.update_yaxis_slider)
@@ -171,7 +175,7 @@ class plot_form(QtGui.QWidget):
         self._style_edit = []
         self._marker_edit = []
         self._alpha_edit = []
-        for n in xrange(self.top_block._nsigs):
+        for n in range(self.top_block._nsigs):
             self._line_pages.append(QtGui.QDialog())
             self._line_forms.append(QtGui.QFormLayout(self._line_pages[-1]))
 
@@ -341,7 +345,7 @@ class plot_form(QtGui.QWidget):
 
     def update_yaxis_slider(self, value):
         if(not self.top_block._auto_scale):
-            value = value/self._pos_scale
+            value = value / self._pos_scale
             self.top_block._y_value = value
             self._y_min = value - self.top_block._y_range
             self._y_max = value

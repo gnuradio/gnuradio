@@ -218,11 +218,10 @@ if(MSVC)
 endif(MSVC)
 
 if(WIN32)
-	add_definitions(-D_USE_MATH_DEFINES)
-
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		add_definitions(-DMS_WIN64)
-	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    add_definitions(-D_USE_MATH_DEFINES)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        add_definitions(-DMS_WIN64)
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(WIN32)
 
 # Record Compiler Info for record
@@ -355,7 +354,9 @@ include(GrBoost)
 ########################################################################
 # Enable python component
 ########################################################################
+include(GrPython)
 find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
+GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
 find_package(SWIG)
 
 if(SWIG_FOUND)
@@ -371,6 +372,7 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
     SWIG_FOUND
     SWIG_VERSION_CHECK
+    SIX_FOUND
 )
 
 find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})

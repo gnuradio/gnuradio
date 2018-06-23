@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import numpy
 import pmt
 from gnuradio import gr, gr_unittest, blocks
@@ -84,9 +85,9 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
         This will add a 'special' tag to item 0 on stream 1.
         It should be on item 0 of the output stream. """
         packet_len_0 = 5
-        data0 = range(packet_len_0)
+        data0 = list(range(packet_len_0))
         packet_len_1 = 3
-        data1 = range(packet_len_1)
+        data1 = list(range(packet_len_1))
         mux = blocks.tagged_stream_mux(
                 gr.sizeof_float,
                 self.tsb_key,
@@ -99,7 +100,7 @@ class qa_tagged_stream_mux (gr_unittest.TestCase):
             (mux, 0)
         )
         self.tb.connect(
-            blocks.vector_source_f(range(packet_len_1), tags=(make_tag('spam', 'eggs', 0),)),
+            blocks.vector_source_f(list(range(packet_len_1)), tags=(make_tag('spam', 'eggs', 0),)),
             blocks.stream_to_tagged_stream(gr.sizeof_float, 1, packet_len_1, self.tsb_key),
             (mux, 1)
         )

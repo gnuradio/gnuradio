@@ -1,0 +1,42 @@
+id: digital_probe_mpsk_snr_est_c
+label: MPSK SNR Estimator Probe
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: ['0', '1', '2', '3']
+    option_labels: [Simple, Skewness, 2nd and 4th Moment, SVR]
+-   id: msg_nsamples
+    label: Samples between SNR messages
+    dtype: int
+    default: '10000'
+-   id: alpha
+    label: Filter Alpha
+    dtype: real
+    default: '0.001'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: message
+    id: snr
+    optional: true
+-   domain: message
+    id: signal
+    optional: true
+-   domain: message
+    id: noise
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.probe_mpsk_snr_est_c(${type}, ${msg_nsamples}, ${alpha})
+    callbacks:
+    - set_type(${type})
+    - set_msg_nsample(${msg_nsamples})
+    - set_alpha(${alpha})
+
+file_format: 1

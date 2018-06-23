@@ -19,6 +19,9 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, eng_notation
 from gnuradio import blocks, filter
 from gnuradio.eng_arg import eng_float, intx
@@ -35,7 +38,7 @@ class pipeline(gr.hier_block2):
         gr.hier_block2.__init__(self, "pipeline",
                                 gr.io_signature(1, 1, gr.sizeof_float),
                                 gr.io_signature(0, 0, 0))
-        taps = ntaps*[1.0/ntaps]
+        taps = ntaps*[1.0 / ntaps]
         upstream = self
         for i in range(nstages):
             op = filter.fir_filter_fff(1, taps)
@@ -85,23 +88,23 @@ def time_it(tb):
     start = os.times()
     tb.run()
     stop = os.times()
-    delta = map((lambda a, b: a-b), stop, start)
+    delta = list(map((lambda a, b: a-b), stop, start))
     user, sys, childrens_user, childrens_sys, real = delta
     total_user = user + childrens_user
     total_sys  = sys + childrens_sys
     if tb.machine_readable:
-        print "%3d %3d %.3e %7.3f %7.3f %7.3f %7.3f %.6e %.3e" % (
-            tb.npipes, tb.nstages, tb.nsamples, real, total_user, total_sys, (total_user+total_sys)/real, tb.flop, tb.flop/real)
+        print("%3d %3d %.3e %7.3f %7.3f %7.3f %7.3f %.6e %.3e" % (
+            tb.npipes, tb.nstages, tb.nsamples, real, total_user, total_sys, (total_user+total_sys) / real, tb.flop, tb.flop / real))
     else:
-        print "npipes           %7d"   % (tb.npipes,)
-        print "nstages          %7d"   % (tb.nstages,)
-        print "nsamples         %s"    % (eng_notation.num_to_str(tb.nsamples),)
-        print "real             %7.3f" % (real,)
-        print "user             %7.3f" % (total_user,)
-        print "sys              %7.3f" % (total_sys,)
-        print "(user+sys)/real  %7.3f" % ((total_user + total_sys)/real,)
-        print "pseudo_flop      %s"    % (eng_notation.num_to_str(tb.flop),)
-        print "pseudo_flop/real %s"    % (eng_notation.num_to_str(tb.flop/real),)
+        print("npipes           %7d"   % (tb.npipes,))
+        print("nstages          %7d"   % (tb.nstages,))
+        print("nsamples         %s"    % (eng_notation.num_to_str(tb.nsamples),))
+        print("real             %7.3f" % (real,))
+        print("user             %7.3f" % (total_user,))
+        print("sys              %7.3f" % (total_sys,))
+        print("(user+sys)/real  %7.3f" % ((total_user + total_sys) / real,))
+        print("pseudo_flop      %s"    % (eng_notation.num_to_str(tb.flop),))
+        print("pseudo_flop/real %s"    % (eng_notation.num_to_str(tb.flop / real),))
 
 
 if __name__ == "__main__":
@@ -109,7 +112,7 @@ if __name__ == "__main__":
         tb = top()
         time_it(tb)
     except KeyboardInterrupt:
-        raise SystemExit, 128
+        raise SystemExit(128)
 
 
 

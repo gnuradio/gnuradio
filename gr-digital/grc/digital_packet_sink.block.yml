@@ -1,0 +1,24 @@
+id: digital_packet_sink
+label: Packet Sink
+
+parameters:
+-   id: sync_vector
+    label: Sync Vector
+    dtype: int_vector
+-   id: target_queue
+    label: Target Message Queue
+    dtype: raw
+-   id: threshold
+    label: Threshold
+    dtype: int
+    default: '-1'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.packet_sink(${sync_vector}, ${target_queue}, ${threshold})
+
+file_format: 1

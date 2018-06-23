@@ -20,14 +20,18 @@
 #
 
 from __future__ import print_function
+from __future__ import division
+
 import time
 import random
 import numpy
+
 from gnuradio import gr
 from gnuradio import gr_unittest
 from gnuradio import digital
 from gnuradio import blocks
 import pmt
+
 
 def make_tag(key, value, offset):
     tag = gr.tag_t()
@@ -55,7 +59,7 @@ class HeaderToMessageBlock(gr.sync_block):
         self.msg_count = 0
 
     def work(self, input_items, output_items):
-        for i in xrange(len(input_items[0])/self.header_len):
+        for i in range(len(input_items[0]) // self.header_len):
             msg = self.messages[self.msg_count] or False
             #print("Sending message: {0}".format(msg))
             self.message_port_pub(pmt.intern('header_data'), pmt.to_pmt(msg))
@@ -227,7 +231,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         header_padding = 1
         payload = tuple(range(5, 20))
         data_signal = (0,) * n_zeros + header + payload
-        trigger_signal = [0,] * len(data_signal)
+        trigger_signal = [0] * len(data_signal)
         trigger_signal[n_zeros] = 1
         # This is dropped:
         testtag1 = make_tag('tag1', 0, 0)
@@ -296,7 +300,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         payload_offset = -1
         payload = tuple(range(5, 20))
         data_signal = (0,) * n_zeros + header + payload + (0,) * 100
-        trigger_signal = [0,] * len(data_signal)
+        trigger_signal = [0] * len(data_signal)
         trigger_signal[n_zeros] = 1
         # This goes on output 1, item 3 + 1 (for payload offset)
         testtag4 = make_tag('tag4', 314, n_zeros + len(header) + 3)
@@ -379,13 +383,13 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         data_src = blocks.vector_source_f(data_signal, False, tags=(testtag1, testtag2, testtag3, testtag4))
         trigger_src = blocks.vector_source_b(trigger_signal, False)
         hpd = digital.header_payload_demux(
-            len(header) / items_per_symbol, # Header length (in symbols)
-            items_per_symbol,               # Items per symbols
-            gi,                             # Items per guard time
-            "frame_len",                    # Frame length tag key
-            "detect",                       # Trigger tag key
-            True,                           # Output symbols (not items)
-            gr.sizeof_float                 # Bytes per item
+            len(header) // items_per_symbol, # Header length (in symbols)
+            items_per_symbol,                # Items per symbols
+            gi,                              # Items per guard time
+            "frame_len",                     # Frame length tag key
+            "detect",                        # Trigger tag key
+            True,                            # Output symbols (not items)
+            gr.sizeof_float                  # Bytes per item
         )
         self.assertEqual(pmt.length(hpd.message_ports_in()), 2) #extra system port defined for you
         header_sink = blocks.vector_sink_f(items_per_symbol)
@@ -548,7 +552,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
             indexes = []
             burst_sizes = []
             total_payload_len = 0
-            for burst_count in xrange(n_bursts):
+            for burst_count in range(n_bursts):
                 gap_size = random.randint(0, max_gap)
                 signal += [0] * gap_size
                 is_failure = random.random() < fail_rate
@@ -577,7 +581,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
         ### Go, go, go
         # The divide-by-20 means we'll usually get the same random seed
         # between the first run and the XML run.
-        random_seed = int(time.time()/20)
+        random_seed = int(time.time() / 20)
         random.seed(random_seed)
         print("Random seed: {0}".format(random_seed))
         n_bursts = 400
@@ -621,4 +625,3 @@ class qa_header_payload_demux (gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(qa_header_payload_demux, "qa_header_payload_demux.xml")
-

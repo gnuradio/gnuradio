@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #
 # Copyright 2013 Free Software Foundation, Inc.
 #
@@ -20,10 +21,9 @@
 #
 
 import zmq
-import threading
 import numpy
 
-class probe_manager():
+class probe_manager(object):
     def __init__(self):
         self.zmq_context = zmq.Context()
         self.poller = zmq.Poller()
@@ -31,7 +31,7 @@ class probe_manager():
 
     def add_socket(self, address, data_type, callback_func):
         socket = self.zmq_context.socket(zmq.SUB)
-        socket.setsockopt(zmq.SUBSCRIBE, "")
+        socket.setsockopt(zmq.SUBSCRIBE, b"")
         socket.connect(address)
         # use a tuple to store interface elements
         self.interfaces.append((socket, data_type, callback_func))

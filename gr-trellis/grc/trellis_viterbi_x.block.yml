@@ -1,0 +1,53 @@
+id: trellis_viterbi_x
+label: Viterbi
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [i, s, b]
+    option_labels: [Int, Short, Byte]
+    option_attributes:
+        io: [int, short, byte]
+    hide: part
+-   id: fsm_args
+    label: FSM Args
+    dtype: raw
+-   id: block_size
+    label: Block Size
+    dtype: int
+-   id: init_state
+    label: Initial State
+    dtype: int
+    default: '0'
+-   id: final_state
+    label: Final State
+    dtype: int
+    default: '-1'
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: ${ type.io }
+
+asserts:
+- ${ (isinstance(eval(""" fsm_args """[1:-1], locals(),globals()), str) and open(fsm_args).close()) or True }
+
+templates:
+    imports: from gnuradio import trellis
+    make: trellis.viterbi_${type}(trellis.fsm(${fsm_args}), ${block_size}, ${init_state},
+        ${final_state})
+    callbacks:
+    - set_FSM(trellis.fsm(${fsm_args}))
+    - set_K(${block_size})
+    - set_S0(${init_state})
+    - set_SK(${final_state})
+
+documentation: |-
+    Viterbi Decoder. The fsm arguments are passed directly to the trellis.fsm() constructor.
+
+file_format: 1

@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, analog
 
 class test_noise_source(gr_unittest.TestCase):

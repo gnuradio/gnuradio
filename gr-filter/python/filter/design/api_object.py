@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -18,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-class ApiObject():
+class ApiObject(object):
     '''
         Filter count variable if the filter design tool has to
         return multiple filter parameters in future

@@ -1,0 +1,17 @@
+id: vocoder_gsm_fr_encode_sp
+label: GSM full-rate Audio Encoder
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 33
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.gsm_fr_encode_sp()
+
+file_format: 1

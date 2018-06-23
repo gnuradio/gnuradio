@@ -76,7 +76,7 @@ function(GR_SWIG_MAKE_DOCS output_file)
         add_custom_command(
             OUTPUT ${output_file}
             DEPENDS ${input_files} ${stamp-file} ${OUTPUT_DIRECTORY}/xml/index.xml
-            COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+            COMMAND ${PYTHON_EXECUTABLE} -B
                 ${CMAKE_SOURCE_DIR}/docs/doxygen/swig_doc.py
                 ${OUTPUT_DIRECTORY}/xml
                 ${output_file}

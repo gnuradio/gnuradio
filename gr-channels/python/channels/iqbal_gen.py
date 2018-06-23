@@ -6,6 +6,8 @@
 # Generated: Thu Aug  1 12:08:07 2013
 ##################################################
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import blocks
 from gnuradio import gr
 from gnuradio.filter import firdes
@@ -29,7 +31,7 @@ class iqbal_gen(gr.hier_block2):
         ##################################################
         # Blocks
         ##################################################
-        self.mag = blocks.multiply_const_vff((math.pow(10,magnitude/20.0), ))
+        self.mag = blocks.multiply_const_vff((math.pow(10,magnitude / 20.0), ))
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((math.sin(phase*math.pi/180.0), ))
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
@@ -55,7 +57,7 @@ class iqbal_gen(gr.hier_block2):
 
     def set_magnitude(self, magnitude):
         self.magnitude = magnitude
-        self.mag.set_k((math.pow(10,self.magnitude/20.0), ))
+        self.mag.set_k((math.pow(10,self.magnitude / 20.0), ))
 
     def get_phase(self):
         return self.phase

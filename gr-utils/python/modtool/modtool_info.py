@@ -1,4 +1,3 @@
-#
 # Copyright 2013 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -20,10 +19,14 @@
 #
 """ Returns information about a module """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import os
 
-from modtool_base import ModTool, ModToolException
-from util_functions import get_modname
+from .modtool_base import ModTool, ModToolException
+from .util_functions import get_modname
 
 
 class ModToolInfo(ModTool):
@@ -70,7 +73,7 @@ class ModToolInfo(ModTool):
                 ):
             self._info['version'] = '37'
         mod_info['version'] = self._info['version']
-        if 'is_component' in self._info.keys() and self._info['is_component']:
+        if 'is_component' in list(self._info.keys()) and self._info['is_component']:
             mod_info['is_component'] = True
         mod_info['incdirs'] = []
         mod_incl_dir = os.path.join(mod_info['base_dir'], 'include')
@@ -83,7 +86,7 @@ class ModToolInfo(ModTool):
             mod_info['build_dir'] = build_dir
             mod_info['incdirs'] += self._get_include_dirs(mod_info)
         if self._python_readable:
-            print str(mod_info)
+            print(str(mod_info))
         else:
             self._pretty_print(mod_info)
 
@@ -106,7 +109,7 @@ class ModToolInfo(ModTool):
         If that hasn't happened, the build dir cannot be detected, unless it's
         called 'build', which is then assumed to be the build dir. """
         base_build_dir = mod_info['base_dir']
-        if 'is_component' in mod_info.keys():
+        if 'is_component' in list(mod_info.keys()):
             (base_build_dir, rest_dir) = os.path.split(base_build_dir)
         has_build_dir = os.path.isdir(os.path.join(base_build_dir , 'build'))
         if (has_build_dir and os.path.isfile(os.path.join(base_build_dir, 'CMakeCache.txt'))):
@@ -123,7 +126,7 @@ class ModToolInfo(ModTool):
         """ Figure out include dirs for the make process. """
         inc_dirs = []
         path_or_internal = {True: 'INTERNAL',
-                            False: 'PATH'}['is_component' in mod_info.keys()]
+                            False: 'PATH'}['is_component' in list(mod_info.keys())]
         try:
             cmakecache_fid = open(os.path.join(mod_info['build_dir'], 'CMakeCache.txt'))
             for line in cmakecache_fid:
@@ -135,19 +138,19 @@ class ModToolInfo(ModTool):
             inc_dirs = [os.path.normpath(path) for path in self._suggested_dirs.split(':') if os.path.isdir(path)]
         return inc_dirs
 
-    def _pretty_print(self, mod_info):
+    def _pretty_print(elf, mod_info):
         """ Output the module info in human-readable format """
         index_names = {'base_dir': 'Base directory',
                        'modname':  'Module name',
                        'is_component':  'Is GR component',
                        'build_dir': 'Build directory',
                        'incdirs': 'Include directories'}
-        for key in mod_info.keys():
+        for key in list(mod_info.keys()):
             if key == 'version':
-                print "        API version: %s" % {
+                print("        API version: %s" % {
                         '36': 'pre-3.7',
                         '37': 'post-3.7',
                         'autofoo': 'Autotools (pre-3.5)'
-                        }[mod_info['version']]
+                        }[mod_info['version']])
             else:
-                print '%19s: %s' % (index_names[key], mod_info[key])
+                print('%19s: %s' % (index_names[key], mod_info[key]))

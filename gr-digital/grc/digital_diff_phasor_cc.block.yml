@@ -1,0 +1,16 @@
+id: digital_diff_phasor_cc
+label: Differential Phasor
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.diff_phasor_cc()
+
+file_format: 1

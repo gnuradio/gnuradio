@@ -20,14 +20,16 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter, blocks
 
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 class test_pfb_interpolator(gr_unittest.TestCase):
@@ -44,7 +46,7 @@ class test_pfb_interpolator(gr_unittest.TestCase):
         fs = 1000        # baseband sampling rate
         ofs = M*fs       # output samp rate of interpolator
 
-        taps = filter.firdes.low_pass_2(M, ofs, fs/4, fs/10,
+        taps = filter.firdes.low_pass_2(M, ofs, fs / 4, fs / 10,
                                         attenuation_dB=80,
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
@@ -66,12 +68,12 @@ class test_pfb_interpolator(gr_unittest.TestCase):
         phase = 4.8870112969978994
 
         # Create a time scale
-        t = map(lambda x: float(x)/ofs, xrange(0, L))
+        t = [float(x) / ofs for x in range(0, L)]
 
         # Create known data as complex sinusoids for the baseband freq
         # of the extracted channel is due to decimator output order.
-        expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
-                                1j*math.sin(2.*math.pi*freq*x+phase), t)
+        expected_data = [math.cos(2.*math.pi*freq*x+phase) + \
+                                1j*math.sin(2.*math.pi*freq*x+phase) for x in t]
 
         dst_data = snk.data()
 

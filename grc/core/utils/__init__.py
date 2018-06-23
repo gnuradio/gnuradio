@@ -1,4 +1,4 @@
-# Copyright 2008-2015 Free Software Foundation, Inc.
+# Copyright 2016 Free Software Foundation, Inc.
 # This file is part of GNU Radio
 #
 # GNU Radio Companion is free software; you can redistribute it and/or
@@ -15,9 +15,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-import expr_utils
-import epy_block_io
-import extract_docs
+from __future__ import absolute_import
 
-from odict import odict
-from hide_bokeh_gui_options_if_not_installed import hide_bokeh_gui_options_if_not_installed
+import six
+
+from . import epy_block_io, expr_utils, extract_docs, flow_graph_complexity
+from .hide_bokeh_gui_options_if_not_installed import hide_bokeh_gui_options_if_not_installed
+
+
+def to_list(value):
+    if not value:
+        return []
+    elif isinstance(value, six.string_types):
+        return [value]
+    else:
+        return list(value)
+

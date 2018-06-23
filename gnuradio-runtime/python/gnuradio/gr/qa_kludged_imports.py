@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest
 
 class test_kludged_imports (gr_unittest.TestCase):

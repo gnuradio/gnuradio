@@ -18,6 +18,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import numpy as np
 import time, sys
 import copy
@@ -33,7 +37,7 @@ def bsc_channel(p):
     p denotes an erroneous transition
     '''
     if not (p >= 0.0 and p <= 1.0):
-        print "given p is out of range!"
+        print("given p is out of range!")
         return np.array([], dtype=float)
 
     # 0 -> 0, 0 -> 1, 1 -> 0, 1 -> 1
@@ -99,7 +103,7 @@ def get_Fn(n):
 def get_Gn(n):
     # this matrix is called generator matrix
     if not is_power_of_two(n):
-        print "invalid input"
+        print("invalid input")
         return None
     if n == 1:
         return np.array([1, ])
@@ -177,7 +181,7 @@ def bhattacharyya_parameter(w):
 
 
 def main():
-    print 'helper functions'
+    print('helper functions')
 
     for i in range(9):
         print(i, 'is power of 2: ', is_power_of_two(i))

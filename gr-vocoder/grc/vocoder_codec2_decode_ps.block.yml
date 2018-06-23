@@ -1,0 +1,30 @@
+id: vocoder_codec2_decode_ps
+label: CODEC2 Audio Decoder
+
+parameters:
+-   id: mode
+    label: Bit rate
+    dtype: int
+    default: codec2.MODE_2400
+    options: [codec2.MODE_3200, codec2.MODE_2400, codec2.MODE_1600, codec2.MODE_1400,
+        codec2.MODE_1300, codec2.MODE_1200, codec2.MODE_700, codec2.MODE_700B]
+    option_labels: [3200 bps, 2400 bps, 1600 bps, 1400 bps, 1300 bps, 1200 bps, 700
+            bps, 700B bps]
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: '${ { 0: 64, 1: 48, 2: 64, 3: 56, 4: 52, 5: 48, 6: 28, 7: 28 }[mode] }'
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: |-
+        from gnuradio import vocoder
+        from gnuradio.vocoder import codec2
+    make: vocoder.codec2_decode_ps(${mode})
+
+file_format: 1

@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, digital, blocks
 from math import sqrt
 from numpy import random, vectorize
@@ -36,7 +37,7 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         cnst_pts, code = const_gen()
         Es = max([abs(c) for c in cnst_pts])
         lut = digital.soft_dec_table_generator(const_sd_gen, prec, Es)
-	expected_result = list()
+        expected_result = list()
         for s in src_data:
             res = digital.calc_soft_dec_from_table(s, lut, prec, sqrt(2.0))
             expected_result += res
@@ -52,14 +53,14 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         self.tb.run()
 
         actual_result = dst.data()  # fetch the contents of the sink
-	#print "actual result", actual_result
-	#print "expected result", expected_result
+        #print "actual result", actual_result
+        #print "expected result", expected_result
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 5)
 
     def helper_no_lut(self, prec, src_data, const_gen, const_sd_gen):
         cnst_pts, code = const_gen()
         cnst = digital.constellation_calcdist(cnst_pts, code, 2, 1)
-	expected_result = list()
+        expected_result = list()
         for s in src_data:
             res = digital.calc_soft_dec(s, cnst.points(), code)
             expected_result += res
@@ -73,8 +74,8 @@ class test_constellation_soft_decoder(gr_unittest.TestCase):
         self.tb.run()
 
         actual_result = dst.data()  # fetch the contents of the sink
-	#print "actual result", actual_result
-	#print "expected result", expected_result
+        #print "actual result", actual_result
+        #print "expected result", expected_result
 
         # Double vs. float precision issues between Python and C++, so
         # use only 4 decimals in comparisons.

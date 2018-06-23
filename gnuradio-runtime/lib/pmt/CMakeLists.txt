@@ -66,7 +66,7 @@ add_custom_command(
         ${CMAKE_CURRENT_SOURCE_DIR}/unv_template.h.t
         ${CMAKE_CURRENT_SOURCE_DIR}/unv_template.cc.t
         ${CMAKE_CURRENT_SOURCE_DIR}/unv_qa_template.cc.t
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B} -c
+    COMMAND ${PYTHON_EXECUTABLE} -B -c
     "import os, sys; srcdir='${CMAKE_CURRENT_SOURCE_DIR}'; sys.path.append(srcdir); os.environ['srcdir']=srcdir; from generate_unv import main; main()"
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM

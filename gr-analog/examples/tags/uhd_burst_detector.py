@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import filter, analog, blocks

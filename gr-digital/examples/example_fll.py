@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 from gnuradio import gr, digital, filter
 from gnuradio import blocks
 from gnuradio import channels
@@ -31,13 +35,13 @@ import sys
 try:
     import scipy
 except ImportError:
-    print "Error: could not import scipy (http://www.scipy.org/)"
+    print("Error: could not import scipy (http://www.scipy.org/)")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: could not import pylab (http://matplotlib.sourceforge.net/)"
+    print("Error: could not import pylab (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
 class example_fll(gr.top_block):

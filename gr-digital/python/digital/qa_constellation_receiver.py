@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 #
 # Copyright 2011,2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import absolute_import
+
 
 import random
 import math
@@ -53,12 +57,13 @@ TIMING_OFFSET = 1.0
 FREQ_BW = 2*math.pi/100.0
 PHASE_BW = 2*math.pi/100.0
 
+
 class channel_model(gr.hier_block2):
     def __init__(self, noise_voltage, freq, timing):
-	gr.hier_block2.__init__(self, "channel_model",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex),
+        gr.hier_block2.__init__(self, "channel_model",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex))
-        
+
 
         timing_offset = filter.mmse_resampler_cc(0, timing)
         noise_adder = blocks.add_cc()
@@ -74,16 +79,16 @@ class channel_model(gr.hier_block2):
         self.connect(mixer_offset, (noise_adder,1))
         self.connect(noise, (noise_adder,0))
         self.connect(noise_adder, self)
-        
+
 
 class test_constellation_receiver(gr_unittest.TestCase):
-    
+
     # We ignore the first half of the output data since often it takes
     # a while for the receiver to lock on.
     ignore_fraction = 0.8
     max_data_length = DATA_LENGTH * 6
     max_num_samples = 1000
-    
+
     def test_basic(self):
         """
         Tests a bunch of different constellations by using generic
@@ -172,7 +177,7 @@ class rec_test_tb(gr.top_block):
         super(rec_test_tb, self).__init__()
         # Transmission Blocks
         if src_data is None:
-            self.src_data = tuple([rndm.randint(0,1) for i in range(0, data_length)])
+            self.src_data = tuple([random.randint(0,1) for i in range(0, data_length)])
         else:
             self.src_data = src_data
         packer = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
@@ -182,7 +187,7 @@ class rec_test_tb(gr.top_block):
         if freq_offset:
             channel = channel_model(NOISE_VOLTAGE, FREQUENCY_OFFSET, TIMING_OFFSET)
         else:
-            channel = channel_model(NOISE_VOLTAGE, 0, TIMING_OFFSET)            
+            channel = channel_model(NOISE_VOLTAGE, 0, TIMING_OFFSET)
         # Receiver Blocks
         if freq_offset:
             demod = generic_demod(constellation, differential=differential,

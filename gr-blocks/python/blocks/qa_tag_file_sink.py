@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import os, struct
 
@@ -51,14 +52,14 @@ class test_tag_file_sink(gr_unittest.TestCase):
 
         # Open the files and read in the data, then remove the files
         # to clean up the directory.
-        outfile0 = file(file0, 'rb')
-	outfile1 = file(file1, 'rb')
-	data0 = outfile0.read(8)
-	data1 = outfile1.read(8)
+        outfile0 = open(file0, 'rb')
+        outfile1 = open(file1, 'rb')
+        data0 = outfile0.read(8)
+        data1 = outfile1.read(8)
         outfile0.close()
         outfile1.close()
-	os.remove(file0)
-	os.remove(file1)
+        os.remove(file0)
+        os.remove(file1)
 
         # Convert the 8 bytes from the files into a tuple of 2 ints.
         idata0 = struct.unpack('ii', data0)

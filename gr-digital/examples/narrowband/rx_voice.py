@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 #
 # Copyright 2005,2006,2009,2011,2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 
 from gnuradio import gr, audio, uhd
 from gnuradio import blocks
@@ -40,24 +44,24 @@ from receive_path import receive_path
 from uhd_interface import uhd_receiver
 
 #import os
-#print os.getpid()
+#print(os.getpid())
 #raw_input('Attach and press enter')
 
 
 class audio_tx(gr.hier_block2):
     def __init__(self, audio_output_dev):
-	gr.hier_block2.__init__(self, "audio_tx",
-				gr.io_signature(0, 0, 0), # Input signature
-				gr.io_signature(0, 0, 0)) # Output signature
-				
+        gr.hier_block2.__init__(self, "audio_tx",
+                                gr.io_signature(0, 0, 0), # Input signature
+                                gr.io_signature(0, 0, 0)) # Output signature
+
         self.sample_rate = sample_rate = 8000
         self.packet_src = blocks.message_source(33)
         voice_decoder = vocoder.gsm_fr_decode_ps()
         s2f = blocks.short_to_float()
-        sink_scale = blocks.multiply_const_ff(1.0/32767.)
+        sink_scale = blocks.multiply_const_ff(1.0 / 32767.)
         audio_sink = audio.sink(sample_rate, audio_output_dev)
         self.connect(self.packet_src, voice_decoder, s2f, sink_scale, audio_sink)
-        
+
     def msgq(self):
         return self.packet_src.msgq()
 
@@ -79,7 +83,7 @@ class my_top_block(gr.top_block):
             usrp_rate = self.source.get_sample_rate()
             rrate = audio_rate / usrp_rate
             self.resampler = filter.pfb.arb_resampler_ccf(rrate)
-            
+
             self.connect(self.source, self.resampler, self.rxpath)
 
         elif(options.from_file is not None):
@@ -92,7 +96,7 @@ class my_top_block(gr.top_block):
             self.source = blocks.null_source(gr.sizeof_gr_complex)
             self.connect(self.source, self.thr, self.rxpath)
 
-	self.connect(self.audio_tx)        
+        self.connect(self.audio_tx)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -105,7 +109,7 @@ def main():
 
     n_rcvd = 0
     n_right = 0
-    
+
     def rx_callback(ok, payload):
         global n_rcvd, n_right
         n_rcvd += 1
@@ -113,9 +117,8 @@ def main():
             n_right += 1
 
         tb.audio_tx.msgq().insert_tail(gr.message_from_string(payload))
-        
-        print "ok = %r  n_rcvd = %4d  n_right = %4d" % (
-            ok, n_rcvd, n_right)
+
+        print("ok = %r  n_rcvd = %4d  n_right = %4d" % (ok, n_rcvd, n_right))
 
     demods = digital.modulation_utils.type_1_demods()
 
@@ -123,10 +126,10 @@ def main():
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
 
-    parser.add_option("-m", "--modulation", type="choice", choices=demods.keys(), 
+    parser.add_option("-m", "--modulation", type="choice", choices=list(demods.keys()),
                       default='gmsk',
                       help="Select modulation from: %s [default=%%default]"
-                            % (', '.join(demods.keys()),))
+                            % (', '.join(list(demods.keys())),))
     parser.add_option("-O", "--audio-output", type="string", default="",
                       help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
     parser.add_option("","--from-file", default=None,
@@ -134,7 +137,7 @@ def main():
     receive_path.add_options(parser, expert_grp)
     uhd_receiver.add_options(parser)
 
-    for mod in demods.values():
+    for mod in list(demods.values()):
         mod.add_options(expert_grp)
 
     parser.set_defaults(bitrate=50e3)  # override default bitrate default
@@ -156,7 +159,7 @@ def main():
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
-        print "Warning: Failed to enable realtime scheduling."
+        print("Warning: Failed to enable realtime scheduling.")
 
     tb.run()
 

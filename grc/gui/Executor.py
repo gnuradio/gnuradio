@@ -15,14 +15,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
+from __future__ import absolute_import
+
+import os
+import shlex
 import subprocess
 import threading
 from distutils.spawn import find_executable
 
-import gobject
-import os
+from gi.repository import GLib
 
-from ..core.utils import shlex
 from ..core import Messages
 
 
@@ -32,20 +34,16 @@ class ExecFlowGraphThread(threading.Thread):
     def __init__(self, flow_graph_page, xterm_executable, callback):
         """
         ExecFlowGraphThread constructor.
-
-        Args:
-            action_handler: an instance of an ActionHandler
         """
         threading.Thread.__init__(self)
 
         self.page = flow_graph_page  # store page and don't use main window calls in run
-        self.flow_graph = self.page.get_flow_graph()
+        self.flow_graph = self.page.flow_graph
         self.xterm_executable = xterm_executable
         self.update_callback = callback
 
         try:
-            self.process = self._popen()
-            self.page.set_proc(self.process)
+            self.process = self.page.process = self._popen()
             self.update_callback()
             self.start()
         except Exception as e:
@@ -79,18 +77,18 @@ class ExecFlowGraphThread(threading.Thread):
     def run(self):
         """
         Wait on the executing process by reading from its stdout.
-        Use gobject.idle_add when calling functions that modify gtk objects.
+        Use GObject.idle_add when calling functions that modify gtk objects.
         """
         # handle completion
         r = "\n"
         while r:
-            gobject.idle_add(Messages.send_verbose_exec, r)
+            GLib.idle_add(Messages.send_verbose_exec, r)
             r = os.read(self.process.stdout.fileno(), 1024)
         self.process.poll()
-        gobject.idle_add(self.done)
+        GLib.idle_add(self.done)
 
     def done(self):
         """Perform end of execution tasks."""
         Messages.send_end_exec(self.process.returncode)
-        self.page.set_proc(None)
+        self.page.process = None
         self.update_callback()

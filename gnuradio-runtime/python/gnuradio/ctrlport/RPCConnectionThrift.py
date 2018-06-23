@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -30,7 +31,7 @@ from gnuradio import gr
 import pmt
 import sys
 
-class ThriftRadioClient:
+class ThriftRadioClient(object):
     def __init__(self, host, port):
         self.tsocket = TSocket.TSocket(host, port)
         self.transport = TTransport.TBufferedTransport(self.tsocket)
@@ -55,7 +56,7 @@ Args:
 """
 
 class RPCConnectionThrift(RPCConnection.RPCConnection):
-    class Knob():
+    class Knob(object):
         def __init__(self, key, value=None, ktype=0):
             (self.key, self.value, self.ktype) = (key, value, ktype)
 
@@ -144,7 +145,7 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
 
     def properties(self, *args):
         knobprops = self.thriftclient.radio.properties(*args)
-        for key, knobprop in knobprops.iteritems():
+        for key, knobprop in list(knobprops.items()):
             #print("key:", key, "value:", knobprop, "type:", knobprop.type)
             knobprops[key].min = self.unpackKnob(key, knobprop.min)
             knobprops[key].max = self.unpackKnob(key, knobprop.max)
@@ -153,28 +154,28 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
 
     def getKnobs(self, *args):
         result = {}
-        for key, knob in self.thriftclient.radio.getKnobs(*args).iteritems():
+        for key, knob in list(self.thriftclient.radio.getKnobs(*args).items()):
             #print("key:", key, "value:", knob, "type:", knob.type)
             result[key] = self.unpackKnob(key, knob)
 
             # If complex, convert to Python complex
             # FIXME: better list iterator way to handle this?
             if(knob.type == self.BaseTypes.C32VECTOR):
-                for i in xrange(len(result[key].value)):
+                for i in range(len(result[key].value)):
                     result[key].value[i] = complex(result[key].value[i].re,
                                                    result[key].value[i].im)
         return result
 
     def getKnobsRaw(self, *args):
         result = {}
-        for key, knob in self.thriftclient.radio.getKnobs(*args).iteritems():
+        for key, knob in list(self.thriftclient.radio.getKnobs(*args).items()):
             #print("key:", key, "value:", knob, "type:", knob.type)
             result[key] = knob
         return result
 
     def getRe(self,*args):
         result = {}
-        for key, knob in self.thriftclient.radio.getRe(*args).iteritems():
+        for key, knob in list(self.thriftclient.radio.getRe(*args).items()):
             result[key] = self.unpackKnob(key, knob)
         return result
 
@@ -182,7 +183,7 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
         if(type(*args) == dict):
             a = dict(*args)
             result = {}
-            for key, knob in a.iteritems():
+            for key, knob in list(a.items()):
                 result[key] = self.packKnob(knob)
             self.thriftclient.radio.setKnobs(result)
         elif(type(*args) == list or type(*args) == tuple):

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 import time
 import random
 from argparse import ArgumentParser
@@ -48,8 +50,8 @@ def benchmark(name, creator, dec, ntaps, total_test_size, block_size):
     tb.run()
     stop = time.time()
     delta = stop - start
-    print "%16s: taps: %4d  input: %4g, time: %6.3f  taps/sec: %10.4g" % (
-        name, ntaps, total_test_size, delta, ntaps*total_test_size/delta)
+    print("%16s: taps: %4d  input: %4g, time: %6.3f  taps/sec: %10.4g" % (
+        name, ntaps, total_test_size, delta, ntaps*total_test_size/delta))
 
 def main():
     parser = ArgumentParser()

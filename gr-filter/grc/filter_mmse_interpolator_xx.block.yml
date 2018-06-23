@@ -1,0 +1,33 @@
+id: mmse_interpolator_xx
+label: Fractional Interpolator
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [cc, ff]
+    hide: part
+-   id: phase_shift
+    label: Phase Shift
+    dtype: real
+-   id: interp_ratio
+    label: Interpolation Ratio
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.mmse_interpolator_${type.fcn}(${phase_shift}, ${interp_ratio})
+    callbacks:
+    - set_interp_ratio(${interp_ratio})
+
+file_format: 1

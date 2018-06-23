@@ -1,6 +1,11 @@
 
+from __future__ import absolute_import
+
 import inspect
 import collections
+
+import six
+from six.moves import zip
 
 
 TYPE_MAP = {
@@ -32,10 +37,10 @@ def _ports(sigs, msgs):
 def _find_block_class(source_code, cls):
     ns = {}
     try:
-        exec source_code in ns
+        exec(source_code, ns)
     except Exception as e:
         raise ValueError("Can't interpret source code: " + str(e))
-    for var in ns.itervalues():
+    for var in six.itervalues(ns):
         if inspect.isclass(var) and issubclass(var, cls):
             return var
     raise ValueError('No python block class found in code')
@@ -53,7 +58,7 @@ def extract(cls):
 
     spec = inspect.getargspec(cls.__init__)
     init_args = spec.args[1:]
-    defaults = map(repr, spec.defaults or ())
+    defaults = [repr(arg) for arg in (spec.defaults or ())]
     doc = cls.__doc__ or cls.__init__.__doc__ or ''
     cls_name = cls.__name__
 

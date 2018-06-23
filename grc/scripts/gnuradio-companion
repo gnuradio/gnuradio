@@ -37,11 +37,13 @@ Is the library path environment variable set correctly?
 def die(error, message):
     msg = "{0}\n\n({1})".format(message, error)
     try:
-        import gtk
-        d = gtk.MessageDialog(
-            type=gtk.MESSAGE_ERROR,
-            buttons=gtk.BUTTONS_CLOSE,
-            message_format=msg,
+        import gi
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gtk
+        d = Gtk.MessageDialog(
+            message_type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.CLOSE,
+            text=msg,
         )
         d.set_title(type(error).__name__)
         d.run()
@@ -53,10 +55,13 @@ def die(error, message):
 def check_gtk():
     try:
         warnings.filterwarnings("error")
-        import pygtk
-        pygtk.require('2.0')
-        import gtk
-        gtk.init_check()
+        import gi
+        gi.require_version('Gtk', '3.0')
+        gi.require_version('PangoCairo', '1.0')
+        gi.require_foreign('cairo', 'Context')
+
+        from gi.repository import Gtk
+        Gtk.init_check()
         warnings.filterwarnings("always")
     except Exception as err:
         die(err, "Failed to initialize GTK. If you are running over ssh, "

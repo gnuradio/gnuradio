@@ -22,23 +22,25 @@
 '''
 Blocks for channel models and related functions.
 '''
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import os
 
 try:
-    from channels_swig import *
+    from .channels_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from channels_swig import *
+    from .channels_swig import *
 
 # Blocks for Hardware Impairments
-from amp_bal import *
-from conj_fs_iqcorr import *
-from distortion_2_gen import *
-from distortion_3_gen import *
-from iqbal_gen import *
-from impairments import *
-from phase_bal import *
-from phase_noise_gen import *
-from quantizer import *
+from .amp_bal import *
+from .conj_fs_iqcorr import *
+from .distortion_2_gen import *
+from .distortion_3_gen import *
+from .iqbal_gen import *
+from .impairments import *
+from .phase_bal import *
+from .phase_noise_gen import *
+from .quantizer import *

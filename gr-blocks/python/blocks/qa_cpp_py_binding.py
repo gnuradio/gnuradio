@@ -24,6 +24,7 @@
 # This program tests mixed python and c++ ctrlport exports in a single app
 #
 
+
 import sys, time, random, numpy, re
 from gnuradio import gr, gr_unittest, blocks
 
@@ -37,7 +38,7 @@ def get1():
 def get2():
     return "failure"
 
-class inc_class:
+class inc_class(object):
     def __init__(self):
         self.val = 1
     def pp(self):
@@ -131,7 +132,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual(val, rval, 5)
 
     def test_002(self):
-        data = range(1,9)
+        data = list(range(1,9))
 
         self.src = blocks.vector_source_c(data)
         self.p1 = blocks.ctrlport_probe_c("aaa","C++ exported variable")
@@ -163,7 +164,7 @@ class test_cpp_py_binding(gr_unittest.TestCase):
 
         # Get all exported knobs
         ret = radio.getKnobs([probe_name + "::bbb"])
-        for name in ret.keys():
+        for name in list(ret.keys()):
             result = ret[name].value
             self.assertEqual(result, expected_result)
 

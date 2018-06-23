@@ -22,7 +22,7 @@
 ########################################################################
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE("Mako >= 0.4.2" mako "mako.__version__ >= '0.4.2'" MAKO_FOUND)
+GR_PYTHON_CHECK_MODULE("Mako >= ${GR_MAKO_MIN_VERSION}" mako "mako.__version__ >= '${GR_MAKO_MIN_VERSION}'" MAKO_FOUND)
 
 ########################################################################
 # Register component

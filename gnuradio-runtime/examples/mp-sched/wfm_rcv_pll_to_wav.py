@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, gru, eng_notation, filter
 from gnuradio import audio
 from gnuradio import analog
@@ -94,7 +96,7 @@ class wfm_rx_block (gr.top_block):
 
         if args.volume is None:
             g = self.volume_range()
-            args.volume = float(g[0]+g[1])/2
+            args.volume = float(g[0]+g[1]) / 2
 
         # set initial values
 
@@ -109,8 +111,8 @@ class wfm_rx_block (gr.top_block):
     def set_vol (self, vol):
         g = self.volume_range()
         self.vol = max(g[0], min(g[1], vol))
-        self.volume_control_l.set_k(10**(self.vol/10))
-        self.volume_control_r.set_k(10**(self.vol/10))
+        self.volume_control_l.set_k(10**(self.vol / 10))
+        self.volume_control_r.set_k(10**(self.vol / 10))
 
     def volume_range(self):
         return (-20.0, 0.0, 0.5)

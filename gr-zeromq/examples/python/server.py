@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import unicode_literals
 #
 # Copyright 2013 Free Software Foundation, Inc.
 #
@@ -78,14 +80,14 @@ class top_block(gr.top_block):
         self.rpc_manager.start_watcher()
 
     def start_fg(self):
-        print "Start Flowgraph"
+        print("Start Flowgraph")
         try:
             self.start()
         except RuntimeError:
-            print "Can't start, flowgraph already running!"
+            print("Can't start, flowgraph already running!")
 
     def stop_fg(self):
-        print "Stop Flowgraph"
+        print("Stop Flowgraph")
         self.stop()
         self.wait()
 
@@ -119,7 +121,7 @@ if __name__ == "__main__":
             time.sleep(1)
     except KeyboardInterrupt:
         pass
-    print "Shutting down flowgraph."
+    print("Shutting down flowgraph.")
     tb.rpc_manager.stop_watcher()
     tb.stop()
     tb.wait()

@@ -1,43 +1,32 @@
-<?xml version="1.0"?>
-<!--
 ###################################################
-##Default Flow Graph:
-##  include an options block and a variable for sample rate
+# Default Flow Graph:
+#   Include an options block and a variable for sample rate
 ###################################################
- -->
-<flow_graph>
-    <block>
-        <key>options</key>
-        <param>
-            <key>id</key>
-            <value>top_block</value>
-        </param>
-        <param>
-            <key>_coordinate</key>
-            <value>(8, 8)</value>
-        </param>
-        <param>
-            <key>_rotation</key>
-            <value>0</value>
-        </param>
-    </block>
-    <block>
-        <key>variable</key>
-        <param>
-            <key>id</key>
-            <value>samp_rate</value>
-        </param>
-        <param>
-            <key>value</key>
-            <value>32000</value>
-        </param>
-        <param>
-            <key>_coordinate</key>
-            <value>(8, 160)</value>
-        </param>
-        <param>
-            <key>_rotation</key>
-            <value>0</value>
-        </param>
-    </block>
-</flow_graph>
+
+options:
+  parameters:
+    id: 'top_block'
+    title: 'top_block'
+  states:
+    coordinate:
+    - 8
+    - 8
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    coordinate:
+    - 184
+    - 12
+    rotation: 0
+    state: enabled
+
+metadata:
+  file_format: 1
+  grc_version: 3.8.0

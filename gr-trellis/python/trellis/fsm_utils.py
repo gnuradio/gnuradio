@@ -20,11 +20,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 
-import re
 import math
 import sys
-import operator
+
 import numpy
 
 #from gnuradio import trellis
@@ -32,7 +34,7 @@ import numpy
 try:
     import scipy.linalg
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    print("Error: Program requires scipy (see: www.scipy.org).")
     sys.exit(1)
 
 
@@ -43,13 +45,13 @@ except ImportError:
 # to base 'base' (most significant symbol first).
 ######################################################################
 def dec2base(num,base,l):
-    s=range(l)
+    s=list(range(l))
     n=num
     for i in range(l):
         s[l-i-1]=n%base
-        n=int(n/base)
+        n=int(n / base)
     if n!=0:
-        print 'Number ', num, ' requires more than ', l, 'digits.'
+        print('Number ', num, ' requires more than ', l, 'digits.')
     return s
 
 
@@ -84,9 +86,9 @@ def make_isi_lookup(mod,channel,normalize):
         for i in range(len(channel)):
             p = p + channel[i]**2
         for i in range(len(channel)):
-            channel[i] = channel[i]/math.sqrt(p)
+            channel[i] = channel[i] / math.sqrt(p)
 
-    lookup=range(len(constellation)**len(channel))
+    lookup=list(range(len(constellation)**len(channel)))
     for o in range(len(constellation)**len(channel)):
         ss=dec2base(o,len(constellation),len(channel))
         ll=0
@@ -109,11 +111,11 @@ def make_isi_lookup(mod,channel,normalize):
 ######################################################################
 def make_cpm_signals(K,P,M,L,q,frac):
 
-    Q=numpy.size(q)/L
-    h=(1.0*K)/P
+    Q=numpy.size(q) / L
+    h=(1.0*K) / P
     f0=-h*(M-1)/2
     dt=0.0; # maybe start at t=0.5
-    t=(dt+numpy.arange(0,Q))/Q
+    t=(dt+numpy.arange(0 / Q),Q)
     qq=numpy.zeros(Q)
     for m in range(L):
        qq=qq + q[m*Q:m*Q+Q]
@@ -122,46 +124,46 @@ def make_cpm_signals(K,P,M,L,q,frac):
     X=(M**L)*P
     PSI=numpy.empty((X,Q))
     for x in range(X):
-       xv=dec2base(x/P,M,L)
+       xv=dec2base(x / P,M,L)
        xv=numpy.append(xv, x%P)
        qq1=numpy.zeros(Q)
        for m in range(L):
           qq1=qq1+xv[m]*q[m*Q:m*Q+Q]
        psi=2*math.pi*h*xv[-1]+4*math.pi*h*qq1+w
-       #print psi
+       #print(psi)
        PSI[x]=psi
     PSI = numpy.transpose(PSI)
     SS=numpy.exp(1j*PSI) # contains all signals as columns
-    #print SS
+    #print(SS)
 
 
     # Now we need to orthogonalize the signals
     F = scipy.linalg.orth(SS) # find an orthonormal basis for SS
-    #print numpy.dot(numpy.transpose(F.conjugate()),F) # check for orthonormality
+    #print(numpy.dot(numpy.transpose(F.conjugate()),F) # check for orthonormality)
     S = numpy.dot(numpy.transpose(F.conjugate()),SS)
-    #print F
-    #print S
+    #print(F)
+    #print(S)
 
     # We only want to keep those dimensions that contain most
     # of the energy of the overall constellation (eg, frac=0.9 ==> 90%)
     # evaluate mean energy in each dimension
-    E=numpy.sum(numpy.absolute(S)**2,axis=1)/Q
-    E=E/numpy.sum(E)
-    #print E
+    E=numpy.sum(numpy.absolute(S)**2, axis=1) / Q
+    E=E / numpy.sum(E)
+    #print(E)
     Es = -numpy.sort(-E)
     Esi = numpy.argsort(-E)
-    #print Es
-    #print Esi
+    #print(Es)
+    #print(Esi)
     Ecum=numpy.cumsum(Es)
-    #print Ecum
+    #print(Ecum)
     v0=numpy.searchsorted(Ecum,frac)
     N = v0+1
-    #print v0
-    #print Esi[0:v0+1]
+    #print(v0)
+    #print(Esi[0:v0+1])
     Ff=numpy.transpose(numpy.transpose(F)[Esi[0:v0+1]])
-    #print Ff
+    #print(Ff)
     Sf = S[Esi[0:v0+1]]
-    #print Sf
+    #print(Sf)
 
 
     return (f0,SS,S,F,Sf,Ff,N)

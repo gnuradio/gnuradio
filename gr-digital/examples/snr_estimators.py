@@ -20,19 +20,23 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import sys
 
 try:
     import scipy
     from scipy import stats
 except ImportError:
-    print "Error: Program requires scipy (www.scipy.org)."
+    print("Error: Program requires scipy (www.scipy.org).")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires Matplotlib (matplotlib.sourceforge.net)."
+    print("Error: Program requires Matplotlib (matplotlib.sourceforge.net).")
     sys.exit(1)
 
 from gnuradio import gr, digital, filter
@@ -55,7 +59,7 @@ def online_skewness(data):
     M2 = 0
     M3 = 0
 
-    for n in xrange(len(data)):
+    for n in range(len(data)):
         delta = data[n] - mean
         delta_n = delta / (n+1)
         term1 = delta * delta_n * n
@@ -63,12 +67,12 @@ def online_skewness(data):
         M3 = M3 + term1 * delta_n * (n - 1) - 3 * delta_n * M2
         M2 = M2 + term1
 
-    return scipy.sqrt(len(data))*M3 / scipy.power(M2, 3.0/2.0);
+    return scipy.sqrt(len(data))*M3 / scipy.power(M2, 3.0 / 2.0);
 
 def snr_est_simple(signal):
     s = scipy.mean(abs(signal)**2)
     n = 2*scipy.var(abs(signal))
-    snr_rat = s/n
+    snr_rat = s / n
     return 10.0*scipy.log10(snr_rat), snr_rat
 
 def snr_est_skew(signal):
@@ -94,11 +98,11 @@ def snr_est_svr(signal):
     N = len(signal)
     ssum = 0
     msum = 0
-    for i in xrange(1, N):
+    for i in range(1, N):
         ssum += (abs(signal[i])**2)*(abs(signal[i-1])**2)
         msum += (abs(signal[i])**4)
-    savg = (1.0/(float(N)-1.0))*ssum
-    mavg = (1.0/(float(N)-1.0))*msum
+    savg = (1.0 / (float(N-1.0)))*ssum
+    mavg = (1.0 / (float(N-1.0)))*msum
     beta = savg / (mavg - savg)
 
     snr_rat = ((beta - 1) + scipy.sqrt(beta*(beta-1)))
@@ -126,9 +130,9 @@ def main():
     parser.add_option("", "--snr-step", type="float", default=0.5,
                       help="SNR step amount [default=%default]")
     parser.add_option("-t", "--type", type="choice",
-                      choices=gr_estimators.keys(), default="simple",
+                      choices=list(gr_estimators.keys()), default="simple",
                       help="Estimator type {0} [default=%default]".format(
-                            gr_estimators.keys()))
+                            list(gr_estimators.keys())))
     (options, args) = parser.parse_args ()
 
     N = options.nsamples
@@ -155,14 +159,14 @@ def main():
     SNR_step = options.snr_step
     SNR_dB = scipy.arange(SNR_min, SNR_max+SNR_step, SNR_step)
     for snr in SNR_dB:
-        SNR = 10.0**(snr/10.0)
+        SNR = 10.0**(snr / 10.0)
         scale = scipy.sqrt(2*SNR)
-        yy = bits + n_cpx/scale
-        print "SNR: ", snr
+        yy = bits + n_cpx / scale
+        print("SNR: ", snr)
 
         Sknown = scipy.mean(yy**2)
-        Nknown = scipy.var(n_cpx/scale)
-        snr0 = Sknown/Nknown
+        Nknown = scipy.var(n_cpx / scale)
+        snr0 = Sknown / Nknown
         snr0dB = 10.0*scipy.log10(snr0)
         snr_known.append(float(snr0dB))
 
@@ -171,7 +175,7 @@ def main():
 
         gr_src = blocks.vector_source_c(bits.tolist(), False)
         gr_snr = digital.mpsk_snr_est_cc(gr_est, ntag, 0.001)
-        gr_chn = channels.channel_model(1.0/scale)
+        gr_chn = channels.channel_model(1.0 / scale)
         gr_snk = blocks.null_sink(gr.sizeof_gr_complex)
         tb = gr.top_block()
         tb.connect(gr_src, gr_chn, gr_snr, gr_snk)

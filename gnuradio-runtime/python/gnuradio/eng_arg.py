@@ -22,6 +22,7 @@
 '''
 Add support for engineering notation to argparse.ArgumentParser
 '''
+from __future__ import unicode_literals
 
 import argparse
 from gnuradio import eng_notation

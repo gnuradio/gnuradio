@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import string, sys
 from numpy import *
 from numpy.random import shuffle, randint
@@ -46,9 +50,9 @@ def read_alist_file(filename):
     indices = string.split(data[lineNumber])
     for index in indices:
       H[int(index)-1,lineNumber-4] = 1
-  # The subsequent lines in the file list the indices for where
-  # the 1s are in the rows, but this is redundant
-  # information.
+      # The subsequent lines in the file list the indices for where
+      # the 1s are in the rows, but this is redundant
+      # information.
 
   return H
 
@@ -68,7 +72,7 @@ def write_alist_file(filename, H, verbose=0):
   numRows = H.shape[0]
   numCols = H.shape[1]
 
-  tempstring = `numCols` + ' ' + `numRows` + '\n'
+  tempstring = repr(numCols) + ' ' + repr(numRows) + '\n'
   myfile.write(tempstring)
 
   tempstring1 = ''
@@ -79,12 +83,12 @@ def write_alist_file(filename, H, verbose=0):
     rowWeight = nonzeros.shape[1]
     if rowWeight > maxRowWeight:
       maxRowWeight = rowWeight
-    tempstring1 = tempstring1 + `rowWeight` + ' '
+      tempstring1 = tempstring1 + repr(rowWeight) + ' '
     for tempArray in nonzeros:
       for index in tempArray:
-        tempstring2 = tempstring2 + `index+1` + ' '
-      tempstring2 = tempstring2 + '\n'
-  tempstring1 = tempstring1 + '\n'
+        tempstring2 = tempstring2 + repr(index+1) + ' '
+        tempstring2 = tempstring2 + '\n'
+        tempstring1 = tempstring1 + '\n'
 
   tempstring3 = ''
   tempstring4 = ''
@@ -94,14 +98,14 @@ def write_alist_file(filename, H, verbose=0):
     colWeight = nonzeros.shape[1]
     if colWeight > maxColWeight:
       maxColWeight = colWeight
-    tempstring3 = tempstring3 + `colWeight` + ' '
+      tempstring3 = tempstring3 + repr(colWeight) + ' '
     for tempArray in nonzeros:
       for index in tempArray:
-        tempstring4 = tempstring4 + `index+1` + ' '
-      tempstring4 = tempstring4 + '\n'
-  tempstring3 = tempstring3 + '\n'
+        tempstring4 = tempstring4 + repr(index+1) + ' '
+        tempstring4 = tempstring4 + '\n'
+        tempstring3 = tempstring3 + '\n'
 
-  tempstring = `maxColWeight` + ' ' + `maxRowWeight` + '\n'
+  tempstring = repr(maxColWeight) + ' ' + repr(maxRowWeight) + '\n'
   # write out max column and row weights
   myfile.write(tempstring)
   # write out all of the column weights
@@ -116,11 +120,11 @@ def write_alist_file(filename, H, verbose=0):
   myfile.close()
 
 
-class LDPC_matrix:
+class LDPC_matrix(object):
   """ Class for a LDPC parity check matrix """
   def __init__(self, alist_filename = None,
-             n_p_q = None,
-             H_matrix = None):
+               n_p_q = None,
+               H_matrix = None):
     if (alist_filename != None):
       self.H = self.read_alist_file(alist_filename)
     elif (n_p_q != None):
@@ -128,9 +132,9 @@ class LDPC_matrix:
     elif (H_matrix != None):
       self.H = H_matrix
     else:
-      print 'Error: provide either an alist filename,',
-      print 'parameters for constructing regular LDPC parity',
-      print 'check matrix, or a numpy array.'
+      print('Error: provide either an alist filename, ', end='')
+      print('parameters for constructing regular LDPC parity, ', end='')
+      print('check matrix, or a numpy array.')
 
     self.rank = linalg.matrix_rank(self.H)
     self.numRows = self.H.shape[0]
@@ -159,31 +163,31 @@ class LDPC_matrix:
 
     # For this algorithm, n/p must be an integer, because the
     # number of rows in each submatrix must be a whole number.
-    ratioTest = (n*1.0)/q
+    ratioTest = (n*1.0) / q
     if ratioTest%1 != 0:
-      print '\nError in regular_LDPC_code_contructor: The'
-      print 'ratio of inputs n/q must be a whole number.\n'
+      print('\nError in regular_LDPC_code_contructor: The ', end='')
+      print('ratio of inputs n/q must be a whole number.\n')
       return
 
     # First submatrix first:
-    m = (n*p)/q  # number of rows in H matrix
-    submatrix1 = zeros((m/p,n))
-    for row in arange(m/p):
+    m = (n*p) / q  # number of rows in H matrix
+    submatrix1 = zeros((m / p,n))
+    for row in arange(m / p):
       range1 = row*q
       range2 = (row+1)*q
       submatrix1[row,range1:range2] = 1
-    H = submatrix1
+      H = submatrix1
 
     # Create the other submatrices and vertically stack them on.
     submatrixNum = 2
     newColumnOrder = arange(n)
     while submatrixNum <= p:
-      submatrix = zeros((m/p,n))
+      submatrix = zeros((m / p,n))
       shuffle(newColumnOrder)
 
       for columnNum in arange(n):
         submatrix[:,columnNum] = \
-                      submatrix1[:,newColumnOrder[columnNum]]
+                                 submatrix1[:,newColumnOrder[columnNum]]
 
       H = vstack((H,submatrix))
       submatrixNum = submatrixNum + 1
@@ -197,14 +201,14 @@ class LDPC_matrix:
     for rowNum in arange(rows):
       nonzeros = array(H[rowNum,:].nonzero())
       if nonzeros.shape[1] != q:
-        print 'Row', rowNum, 'has incorrect weight!'
+        print('Row', rowNum, 'has incorrect weight!')
         return
 
     # Check the column weights
     for columnNum in arange(cols):
       nonzeros = array(H[:,columnNum].nonzero())
       if nonzeros.shape[1] != p:
-        print 'Row', columnNum, 'has incorrect weight!'
+        print('Row', columnNum, 'has incorrect weight!')
         return
 
     return H
@@ -221,10 +225,10 @@ def greedy_upper_triangulation(H, verbose=0):
   # Per email from Dr. Urbanke, author of this textbook, this
   # algorithm requires H to be full rank
   if linalg.matrix_rank(H_t) != H_t.shape[0]:
-      print 'Rank of H:', linalg.matrix_rank(tempArray)
-      print 'H has', H_t.shape[0], 'rows'
-      print 'Error: H must be full rank.'
-      return
+    print('Rank of H:', linalg.matrix_rank(tempArray))
+    print('H has', H_t.shape[0], 'rows')
+    print('Error: H must be full rank.')
+    return
 
   size = H_t.shape
   n = size[1]
@@ -253,7 +257,7 @@ def greedy_upper_triangulation(H, verbose=0):
     # equal to the min positive residual degree, then pick a
     # random column c.
     indices = (minResidualDegrees == minimumResidualDegree)\
-                                     .nonzero()[1]
+              .nonzero()[1]
     indices = indices + t
     if indices.shape[0] == 1:
       columnC = indices[0]
@@ -282,7 +286,7 @@ def greedy_upper_triangulation(H, verbose=0):
     else:
       # This is the 'choose' case.
       rowsThatContainNonZeros = H_residual[:,columnC-t]\
-                                          .nonzero()[0]
+                                .nonzero()[0]
 
       # Swap column c with column t. (Book says t+1 but we
       # index from 0, not 1.)
@@ -315,8 +319,8 @@ def greedy_upper_triangulation(H, verbose=0):
         while sub_index < (m - rowInH_t):
           Htemp[m-sub_index-1,:] = H_t[m-sub_index,:]
           sub_index = sub_index+1
-        H_t = Htemp.copy()
-        Htemp = H_t.copy()
+          H_t = Htemp.copy()
+          Htemp = H_t.copy()
 
       # Save temp H as new H_t.
       H_t = Htemp.copy()
@@ -327,7 +331,7 @@ def greedy_upper_triangulation(H, verbose=0):
 
   if g == 0:
     if verbose:
-      print 'Error: gap is 0.'
+      print('Error: gap is 0.')
     return
 
   # We need to ensure phi is nonsingular.
@@ -348,22 +352,22 @@ def greedy_upper_triangulation(H, verbose=0):
     except linalg.linalg.LinAlgError:
       # Phi is singular
       if verbose > 1:
-        print 'Initial phi is singular'
+        print('Initial phi is singular')
     else:
       # Phi is nonsingular, so we need to use this version of H.
       if verbose > 1:
-        print 'Initial phi is nonsingular'
+        print('Initial phi is nonsingular')
       return [H_t, g, t]
   else:
     if verbose:
-      print 'Initial phi is all zeros:\n', phi
+      print('Initial phi is all zeros:\n', phi)
 
   # If the C and D submatrices are all zeros, there is no point in
   # shuffling them around in an attempt to find a good phi.
   if not (C.any() or D.any()):
     if verbose:
-      print 'C and D are all zeros. There is no hope in',
-      print 'finding a nonsingular phi matrix. '
+      print('C and D are all zeros. There is no hope in',)
+      print('finding a nonsingular phi matrix. ')
     return
 
   # We can't look at every row/column permutation possibility
@@ -378,8 +382,8 @@ def greedy_upper_triangulation(H, verbose=0):
 
   while iterationCount < maxIterations:
     if verbose > 1:
-      print 'iterationCount:', iterationCount
-    tempH = H_t.copy()
+      print('iterationCount:', iterationCount)
+      tempH = H_t.copy()
 
     shuffle(columnsToShuffle)
     shuffle(rowsToShuffle)
@@ -387,7 +391,7 @@ def greedy_upper_triangulation(H, verbose=0):
     for newDestinationColumnNumber in arange(t,n):
       oldColumnNumber = columnsToShuffle[index]
       tempH[:,newDestinationColumnNumber] = \
-                                         H_t[:,oldColumnNumber]
+                                            H_t[:,oldColumnNumber]
       index +=1
 
     tempH2 = tempH.copy()
@@ -414,23 +418,23 @@ def greedy_upper_triangulation(H, verbose=0):
       except linalg.linalg.LinAlgError:
         # Phi is singular
         if verbose > 1:
-          print 'Phi is still singular'
+          print('Phi is still singular')
       else:
         # Phi is nonsingular, so we're done.
         if verbose:
-          print 'Found a nonsingular phi on',
-          print 'iterationCount = ', iterationCount
+          print('Found a nonsingular phi on',)
+          print('iterationCount = ', iterationCount)
         return [H_t, g, t]
     else:
       if verbose > 1:
-        print 'phi is all zeros'
+        print('phi is all zeros')
 
     iterationCount +=1
 
   # If we've reached this point, then we haven't found a
   # version of H that has a nonsingular phi.
   if verbose:
-    print '--- Error: nonsingular phi matrix not found.'
+    print('--- Error: nonsingular phi matrix not found.')
 
 def inv_mod2(squareMatrix, verbose=0):
   """
@@ -468,16 +472,16 @@ def inv_mod2(squareMatrix, verbose=0):
         tempTest[rowNum,colNum] = 0
       else:
         if verbose > 1:
-          print 'In inv_mod2. Rounding error on this',
-          print 'value? Mod 2 has already been done.',
-          print 'value:', value
+          print('In inv_mod2. Rounding error on this',)
+          print('value? Mod 2 has already been done.',)
+          print('value:', value)
 
   test = tempTest.copy()
 
   if (test - eye(t,t) % 2).any():
     if verbose:
-      print 'Error in inv_mod2: did not find inverse.'
-    # TODO is this the most appropriate error to raise?
+      print('Error in inv_mod2: did not find inverse.')
+      # TODO is this the most appropriate error to raise?
     raise linalg.linalg.LinAlgError
   else:
     return C
@@ -520,7 +524,7 @@ def get_full_rank_H_matrix(H, verbose=False):
   tempArray = H.copy()
   if linalg.matrix_rank(tempArray) == tempArray.shape[0]:
     if verbose:
-      print 'Returning H; it is already full rank.'
+      print('Returning H; it is already full rank.')
     return tempArray
 
   numRows = tempArray.shape[0]
@@ -538,8 +542,8 @@ def get_full_rank_H_matrix(H, verbose=False):
 
   while i < limit:
     if verbose:
-      print 'In get_full_rank_H_matrix; i:', i
-    # Flag indicating that the row contains a non-zero entry
+      print('In get_full_rank_H_matrix; i:', i)
+      # Flag indicating that the row contains a non-zero entry
     found  = False
     for j in arange(i, numColumns):
       if tempArray[i, j] == 1:
@@ -588,8 +592,8 @@ def get_full_rank_H_matrix(H, verbose=False):
     newH[:,index] = tempHarray[:,columnOrder[0,index]]
 
   if verbose:
-    print 'original H.shape:', H.shape
-    print 'newH.shape:', newH.shape
+    print('original H.shape:', H.shape)
+    print('newH.shape:', newH.shape)
 
   return newH
 
@@ -604,13 +608,13 @@ def get_best_matrix(H, numIterations=100, verbose=False):
   index = 1
   while index <= numIterations:
     if verbose:
-      print '--- In get_best_matrix, iteration:', index
-    index += 1
+      print('--- In get_best_matrix, iteration:', index)
+      index += 1
     try:
       ret = greedy_upper_triangulation(H, verbose)
-    except ValueError, e:
+    except ValueError as e:
       if verbose > 1:
-        print 'greedy_upper_triangulation error: ', e
+        print('greedy_upper_triangulation error: ', e)
     else:
       if ret:
         [betterH, gap, t] = ret
@@ -632,8 +636,8 @@ def get_best_matrix(H, numIterations=100, verbose=False):
     return [bestH, bestGap]
   else:
     if verbose:
-      print 'Error: Could not find appropriate H form',
-      print 'for encoding.'
+      print('Error: Could not find appropriate H form',)
+      print('for encoding.')
     return
 
 def getSystematicGmatrix(GenMatrix):
@@ -643,7 +647,7 @@ def getSystematicGmatrix(GenMatrix):
   matrix and P is the parity submatrix. If the GenMatrix matrix
   provided is not full rank, then dependent rows will be deleted.
 
-  This function does not convert parity check (H) matrices to the 
+  This function does not convert parity check (H) matrices to the
   generator matrix format. Use the function getSystematicGmatrixFromH
   for that purpose.
   """
@@ -682,7 +686,7 @@ def getSystematicGmatrix(GenMatrix):
       tempArray = move_row_to_bottom(i,tempArray)
       # decrease limit since we just found a row of 0s
       limit -= 1
-  # the rows below i are the dependent rows, which we discard
+      # the rows below i are the dependent rows, which we discard
   G = tempArray[0:i,:]
   return G
 
@@ -696,7 +700,7 @@ def getSystematicGmatrixFromH(H, verbose=False):
   will be deleted first.
   """
   if verbose:
-    print 'received H with size: ', H.shape
+    print('received H with size: ', H.shape)
 
   # First, put the H matrix into the form H = [I|m] where:
   #   I is (n-k) x (n-k) identity matrix
@@ -716,5 +720,5 @@ def getSystematicGmatrixFromH(H, verbose=False):
   k = m.shape[1]
   G = concatenate((identity(k),m.T),axis=1)
   if verbose:
-    print 'returning G with size: ', G.shape
+    print('returning G with size: ', G.shape)
   return G
