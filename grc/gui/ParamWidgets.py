@@ -57,12 +57,13 @@ class InputParam(Gtk.HBox):
     """The base class for an input parameter inside the input parameters dialog."""
     expand = False
 
-    def __init__(self, param, changed_callback=None, editing_callback=None):
+    def __init__(self, param, changed_callback=None, editing_callback=None, transient_for=None):
         Gtk.HBox.__init__(self)
 
         self.param = param
         self._changed_callback = changed_callback
         self._editing_callback = editing_callback
+        self._transient_for = transient_for
 
         self.label = Gtk.Label()
         self.label.set_size_request(Utils.scale_scalar(150), -1)
@@ -199,7 +200,7 @@ class PythonEditorParam(InputParam):
         self.pack_start(button, True, True, True)
 
     def open_editor(self, widget=None):
-        self.param.parent_flowgraph.install_external_editor(self.param)
+        self.param.parent_flowgraph.install_external_editor(self.param, parent=self._transient_for)
 
     def get_text(self):
         pass  # we never update the value from here
@@ -289,7 +290,7 @@ class FileParam(EntryParam):
         If the button was clicked, open a file dialog in open/save format.
         Replace the text in the entry with the new filename from the file dialog.
         """
-        #get the paths
+        # get the paths
         file_path = self.param.is_valid() and self.param.get_evaluated() or ''
         (dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
         # check for qss theme default directory
@@ -301,22 +302,28 @@ class FileParam(EntryParam):
         if not os.path.exists(dirname):
             dirname = os.getcwd()  # fix bad paths
 
-        #build the dialog
+        # build the dialog
         if self.param.dtype == 'file_open':
-            file_dialog = Gtk.FileChooserDialog('Open a Data File...', None,
-                Gtk.FileChooserAction.OPEN, ('gtk-cancel',Gtk.ResponseType.CANCEL,'gtk-open',Gtk.ResponseType.OK))
+            file_dialog = Gtk.FileChooserDialog(
+                'Open a Data File...', None, Gtk.FileChooserAction.OPEN,
+                ('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-open', Gtk.ResponseType.OK),
+                transient_for=self._transient_for,
+            )
         elif self.param.dtype == 'file_save':
-            file_dialog = Gtk.FileChooserDialog('Save a Data File...', None,
-                Gtk.FileChooserAction.SAVE, ('gtk-cancel',Gtk.ResponseType.CANCEL, 'gtk-save',Gtk.ResponseType.OK))
+            file_dialog = Gtk.FileChooserDialog(
+                'Save a Data File...', None, Gtk.FileChooserAction.SAVE,
+                ('gtk-cancel', Gtk.ResponseType.CANCEL, 'gtk-save', Gtk.ResponseType.OK),
+                transient_for=self._transient_for,
+            )
             file_dialog.set_do_overwrite_confirmation(True)
-            file_dialog.set_current_name(basename) #show the current filename
+            file_dialog.set_current_name(basename)  # show the current filename
         else:
             raise ValueError("Can't open file chooser dialog for type " + repr(self.param.dtype))
-        file_dialog.set_current_folder(dirname) #current directory
+        file_dialog.set_current_folder(dirname)  # current directory
         file_dialog.set_select_multiple(False)
         file_dialog.set_local_only(True)
-        if Gtk.ResponseType.OK == file_dialog.run(): #run the dialog
-            file_path = file_dialog.get_filename() #get the file path
+        if Gtk.ResponseType.OK == file_dialog.run():  # run the dialog
+            file_path = file_dialog.get_filename()  # get the file path
             self._input.set_text(file_path)
             self._editing_callback()
             self._apply_change()

@@ -149,8 +149,8 @@ class QtHierBlockGenerator(HierBlockGenerator):
         block_n['param'].append(gui_hint_param)
 
         block_n['make'] += (
-            "\n#set $win = 'self.%s' % $id"
-            "\n${gui_hint()($win)}"
+            "\n<% win = 'self.' + id %>"
+            "\n${ gui_hint % win }"
         )
 
         return {'block': block_n}

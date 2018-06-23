@@ -185,12 +185,13 @@ class PropsDialog(Gtk.Dialog):
                         continue
                     box_all_valid = box_all_valid and param.is_valid()
 
-                    input_widget = param.get_input(self._handle_changed, self._activate_apply)
+                    input_widget = param.get_input(self._handle_changed, self._activate_apply,
+                                                   transient_for=self.get_transient_for())
                     input_widget.show_all()
                     vbox.pack_start(input_widget, input_widget.expand, True, 1)
 
-                label.set_markup('<span foreground="{color}">{name}</span>'.format(
-                    color='black' if box_all_valid else 'red', name=Utils.encode(category)
+                label.set_markup('<span {color}>{name}</span>'.format(
+                    color='foreground="red"' if not box_all_valid else '', name=Utils.encode(category)
                 ))
                 vbox.show()  # show params box with new params
 

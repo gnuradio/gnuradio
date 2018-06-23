@@ -93,7 +93,7 @@ class plot_fft_base(object):
             self.iq_fft = self.dofft(self.iq)
 
             tstep = 1.0 / self.sample_rate
-            #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+            #self.time = scipy.array([tstep*(self.position + i) for i in range(len(self.iq))])
             self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
 
             self.freq = self.calc_freq(self.time, self.sample_rate)

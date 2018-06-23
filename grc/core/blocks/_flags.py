@@ -17,10 +17,8 @@
 
 from __future__ import absolute_import
 
-import six
 
-
-class Flags(six.text_type):
+class Flags(object):
 
     THROTTLE = 'throttle'
     DISABLE_BYPASS = 'disable_bypass'
@@ -28,12 +26,14 @@ class Flags(six.text_type):
     DEPRECATED = 'deprecated'
     NOT_DSP = 'not_dsp'
 
+    def __init__(self, flags):
+        self.data = set(flags)
+
     def __getattr__(self, item):
         return item in self
 
-    def __add__(self, other):
-        if not isinstance(other, six.string_types):
-            return NotImplemented
-        return self.__class__(str(self) + other)
+    def __contains__(self, item):
+        return item in self.data
 
-    __iadd__ = __add__
+    def set(self, *flags):
+        self.data.update(flags)

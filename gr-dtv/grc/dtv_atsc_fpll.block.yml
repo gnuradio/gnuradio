@@ -1,0 +1,21 @@
+id: dtv_atsc_fpll
+label: ATSC Receiver FPLL
+
+parameters:
+-   id: rate
+    label: Sample Rate
+    dtype: float
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_fpll(${rate})
+
+file_format: 1

@@ -1,0 +1,40 @@
+id: variable_ldpc_H_matrix_def
+label: LDPC Parity Check Matrix
+
+parameters:
+-   id: value
+    label: Ignore Me
+    dtype: raw
+    default: '"ok"'
+    hide: all
+-   id: filename
+    label: File
+    dtype: file_open
+-   id: gap
+    label: Gap
+    dtype: int
+value: ${ value }
+
+templates:
+    imports: from gnuradio import fec
+    var_make: self.${id} = ${id} = fec.ldpc_H_matrix(${filename}, ${gap})
+
+documentation: |-
+    This block creates a FEC LDPC Parity Check Matrix variable.
+
+    This variable can be used by:
+      1) LDPC Encoder Definition (via Parity Check) block
+      2) LDPC Bit Flip Decoder Definition block
+
+    The format of alist files is described at:
+    http://www.inference.phy.cam.ac.uk/mackay/codes/alist.html
+
+    The specific format of this parity check matrix is described by Richardson and Urbanke in Appendix A of their book: Modern Coding Theory (ISBN 978-0-521-85229-6).
+
+    As an example, see the file {$target}/share/gnuradio/fec/ldpc/n_1800_k_0902_gap_28.alist, which is used by the FEC example flowgraph ber_curve_gen_ldpc.grc.
+
+    There is a small library of encoding-ready alist files at {$target}/share/gnuradio/fec/ldpc.
+
+    To convert a parity check matrix to the appropriate format required for this encoder, use the python functions in {$target}/lib/python2.7/dist-packages/gnuradio/fec/LDPC/Generate_LDPC_matrix.py.
+
+file_format: 1

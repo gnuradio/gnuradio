@@ -103,7 +103,7 @@ class plot_psd_base(object):
             # returns a zero-length array
             if(len(self.iq) > 0):
                 tstep = 1.0 / self.sample_rate
-                #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
+                #self.time = scipy.array([tstep*(self.position + i) for i in range(len(self.iq))])
                 self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
 
                 self.iq_psd, self.freq = self.dopsd(self.iq)

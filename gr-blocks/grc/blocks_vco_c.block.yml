@@ -1,0 +1,27 @@
+id: blocks_vco_c
+label: VCO (complex)
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+-   id: sensitivity
+    label: Sensitivity
+    dtype: real
+-   id: amplitude
+    label: Amplitude
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.vco_c(${samp_rate}, ${sensitivity}, ${amplitude})
+
+file_format: 1
