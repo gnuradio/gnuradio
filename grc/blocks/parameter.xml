@@ -55,11 +55,9 @@
 		</option>
 		<option>
 			<name>String</name>
-			<key>str</key>
+			<key>string</key>
 			<opt>type:string</opt>
-        </option>
-        <!-- Do not forget to add option value type handler import into
-            grc/python/flow_graph.tmpl for each new type. -->
+		</option>
 		<!-- not supported yet in tmpl
 		<option>
 			<name>Boolean</name>
@@ -103,7 +101,7 @@ This block represents a parameter to the flow graph. \
 A parameter can be used to pass command line arguments into a top block. \
 Or, parameters can pass arguments into an instantiated hierarchical block.
 
-The parameter value cannot depend on any variables.
+The paramater value cannot depend on any variables.
 
 Leave the label blank to use the parameter id as the label.
 

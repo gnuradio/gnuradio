@@ -13,7 +13,7 @@ self.$(id) = $(id) = map( (lambda b: map( ( lambda a: fec.tpc_encoder_make($row_
 #end if</var_make>
     <make></make>
 
-<!-- This definition below is weird, it seems required for the GRC to be happy, I'm confused. -->
+<!-- This definition below is wierd, it seems required for the GRC to be happy, im confused -->
     <param>
         <name>Ignore Me</name>
         <key>value</key>

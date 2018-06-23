@@ -76,6 +76,6 @@ self.$(id) = $(id) = firdes.band_reject($gain, $samp_rate, $low_cutoff_freq, $hi
   <doc>
     This is a convenience wrapper for calling firdes.band_reject().
 
-    The beta parameter only applies to the Kaiser window.
+    The beta paramater only applies to the Kaiser window.
   </doc>
 </block>
