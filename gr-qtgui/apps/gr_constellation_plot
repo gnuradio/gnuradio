@@ -168,7 +168,7 @@ def main():
     tb = my_top_block(filelist, args.start, nsamples, max_nsamples);
 
     main_box = plot_constellation_form(tb, 'GNU Radio Constellation Plot', 10000.0)
-    for n in xrange(tb._nsigs):
+    for n in range(tb._nsigs):
         main_box._style_edit[n].setCurrentIndex(0)
     main_box.show()
 

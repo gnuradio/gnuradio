@@ -79,7 +79,7 @@ class rx_cfile_block(gr.top_block):
         )
         # Set the subdevice spec:
         if options.spec:
-            for mb_idx in xrange(self._u.get_num_mboards()):
+            for mb_idx in range(self._u.get_num_mboards()):
                 self._u.set_subdev_spec(options.spec, mb_idx)
         # Set the antenna:
         if options.antenna is not None:
@@ -125,7 +125,7 @@ class rx_cfile_block(gr.top_block):
                 self._u.set_time_unknown_pps(uhd.time_spec())
             cmd_time = self._u.get_time_now() + uhd.time_spec(COMMAND_DELAY)
             try:
-                for mb_idx in xrange(self._u.get_num_mboards()):
+                for mb_idx in range(self._u.get_num_mboards()):
                     self._u.set_command_time(cmd_time, mb_idx)
                 command_time_set = True
             except RuntimeError:
@@ -136,7 +136,7 @@ class rx_cfile_block(gr.top_block):
                 sys.stderr.write('[UHD_RX] [ERROR] Failed to set center frequency on channel {chan}\n'.format(chan=chan))
                 exit(1)
         if command_time_set:
-            for mb_idx in xrange(self._u.get_num_mboards()):
+            for mb_idx in range(self._u.get_num_mboards()):
                 self._u.clear_command_time(mb_idx)
             print("[UHD_RX] Syncing channels...")
             time.sleep(COMMAND_DELAY)
