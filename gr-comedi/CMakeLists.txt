@@ -21,6 +21,7 @@
 # Setup dependencies
 ########################################################################
 include(GrBoost)
+include(FindPkgConfig)
 
 PKG_CHECK_MODULES(COMEDI comedilib)
 
