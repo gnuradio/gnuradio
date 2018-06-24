@@ -59,7 +59,6 @@ set(GR_CMAKE_MIN_VERSION "2.8.12")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "2.7")
 #set(GR_PYTHON3_MIN_VERSION "3.x") # Py3k not yet supported
-set(GR_CPPUNIT_MIN_VERSION "1.12.1")
 set(GCC_MIN_VERSION "4.4.0")
 set(CLANG_MIN_VERSION "3.3.0")
 set(APPLECLANG_MIN_VERSION "500")
@@ -369,23 +368,9 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     SWIG_VERSION_CHECK
 )
 
-find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})
 GR_REGISTER_COMPONENT("testing-support" ENABLE_TESTING
-    CPPUNIT_FOUND
+    Boost_FOUND
 )
-
-# check if CppUnit version is 1.14.0 or greater; requires c++11 ...
-
-if(CPPUNIT_FOUND AND NOT "${CPPUNIT_VERSION}" VERSION_LESS "1.14.0")
-    message(WARNING "\nWarning: CppUnit version is ${CPPUNIT_VERSION} which requires C++11 for building. Trying to set CMake internally to use C++11 ...")
-    SET(CMAKE_CXX_STANDARD 11)
-endif()
-
-# if cmake version is < 3.1, explicitly set C++ standard to use.
-
-if(${CMAKE_VERSION} VERSION_LESS "3.1")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
-endif()
 
 ########################################################################
 # Add optional dlls specified in DLL_PATHS
