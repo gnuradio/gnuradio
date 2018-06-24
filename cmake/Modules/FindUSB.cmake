@@ -1,4 +1,5 @@
 if(NOT LIBUSB_FOUND)
+  include(FindPkgConfig)
   pkg_check_modules (LIBUSB_PKG libusb-1.0)
   find_path(LIBUSB_INCLUDE_DIR NAMES libusb.h
     PATHS
