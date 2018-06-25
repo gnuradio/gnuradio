@@ -79,7 +79,7 @@ parameters:
     hide: part
 -   id: showports
     label: Show Msg Ports
-    dtype: enum
+    dtype: bool
     default: 'True'
     options: ['False', 'True']
     option_labels: ['Yes', 'No']

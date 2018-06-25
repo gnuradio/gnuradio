@@ -23,7 +23,7 @@ parameters:
     hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: showports
     label: Show Msg Ports
-    dtype: enum
+    dtype: bool
     default: 'True'
     options: ['False', 'True']
     option_labels: ['Yes', 'No']
