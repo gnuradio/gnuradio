@@ -54,7 +54,7 @@ include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
 set(GR_BOOST_MIN_VERSION "1.54")
-set(GR_SWIG_MIN_VERSION "2.0.11")
+set(GR_SWIG_MIN_VERSION "3.0.8")
 set(GR_CMAKE_MIN_VERSION "2.8.12")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "2.7")
