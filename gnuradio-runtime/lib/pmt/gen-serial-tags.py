@@ -32,11 +32,14 @@ enum pst_tags {
 #endif /* INCLUDED_PMT_SERIAL_TAGS_H */
 """
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sys, os, re
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print "Usage %s <input_scm_file> <output_hdr_file>"%__file__
+        print("Usage %s <input_scm_file> <output_hdr_file>"%__file__)
         exit()
     input_scm_file, output_hdr_file = sys.argv[1:]
     enums = list()

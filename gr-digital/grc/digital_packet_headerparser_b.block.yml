@@ -1,0 +1,21 @@
+id: digital_packet_headerparser_b
+label: Packet Header Parser
+
+parameters:
+-   id: header_formatter
+    label: Formatter Object
+    dtype: raw
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: message
+    id: header_data
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.packet_headerparser_b(${header_formatter})
+
+file_format: 1

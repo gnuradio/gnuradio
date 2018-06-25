@@ -53,16 +53,16 @@ SET(VERSION_INFO_MAINT_VERSION 0)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
-SET(GR_BOOST_MIN_VERSION "1.54")
-SET(GR_SWIG_MIN_VERSION "2.0.11")
-SET(GR_CMAKE_MIN_VERSION "2.8.12")
-SET(GR_MAKO_MIN_VERSION "0.4.2")
-SET(GR_PYTHON_MIN_VERSION "2.7")
-SET(GR_PYTHON3_MIN_VERSION "3.4")
-SET(GR_CPPUNIT_MIN_VERSION "1.12.1")
-SET(GCC_MIN_VERSION "4.8.4")
-SET(CLANG_MIN_VERSION "3.4.0")
-SET(APPLECLANG_MIN_VERSION "500")
+set(GR_BOOST_MIN_VERSION "1.54")
+set(GR_SWIG_MIN_VERSION "3.0.8")
+set(GR_CMAKE_MIN_VERSION "2.8.12")
+set(GR_MAKO_MIN_VERSION "0.4.2")
+set(GR_PYTHON_MIN_VERSION "2.7")
+set(GR_PYTHON3_MIN_VERSION "3.4")
+set(GR_CPPUNIT_MIN_VERSION "1.12.1")
+set(GCC_MIN_VERSION "4.8.4")
+set(CLANG_MIN_VERSION "3.4.0")
+set(APPLECLANG_MIN_VERSION "500")
 
 ########################################################################
 # Configure CMake policies
@@ -222,11 +222,10 @@ if(MSVC)
 endif(MSVC)
 
 if(WIN32)
-	add_definitions(-D_USE_MATH_DEFINES)
-
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		add_definitions(-DMS_WIN64)
-	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    add_definitions(-D_USE_MATH_DEFINES)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        add_definitions(-DMS_WIN64)
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif(WIN32)
 
 # Record Compiler Info for record
@@ -359,7 +358,9 @@ include(GrBoost)
 ########################################################################
 # Enable python component
 ########################################################################
+include(GrPython)
 find_package(PythonLibs ${GR_PYTHON_MIN_VERSION})
+GR_PYTHON_CHECK_MODULE("six - python 2 and 3 compatibility library" six "True" SIX_FOUND)
 find_package(SWIG)
 
 if(SWIG_FOUND)
@@ -375,6 +376,7 @@ GR_REGISTER_COMPONENT("python-support" ENABLE_PYTHON
     PYTHONLIBS_FOUND
     SWIG_FOUND
     SWIG_VERSION_CHECK
+    SIX_FOUND
 )
 
 find_package(CppUnit ${GR_CPPUNIT_MIN_VERSION})

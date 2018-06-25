@@ -17,14 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import, print_function
+
 import sys
 import re
 import subprocess
 import threading
 import json
-import Queue
 import random
 import itertools
+
+import six
+from six.moves import queue, filter, range
 
 
 ###############################################################################
@@ -94,8 +98,7 @@ def docstring_from_make(key, imports, make):
         if '$' in blk_cls:
             raise ValueError('Not an identifier')
         ns = dict()
-        for _import in imports:
-            exec(_import.strip(), ns)
+        exec(imports.strip(), ns)
         blk = eval(blk_cls, ns)
         doc_strings = {key: blk.__doc__}
 
@@ -124,7 +127,7 @@ class SubprocessLoader(object):
         self.callback_query_result = callback_query_result
         self.callback_finished = callback_finished or (lambda: None)
 
-        self._queue = Queue.Queue()
+        self._queue = queue.Queue()
         self._thread = None
         self._worker = None
         self._shutdown = threading.Event()
@@ -157,14 +160,15 @@ class SubprocessLoader(object):
                 cmd, args = self._last_cmd
                 if cmd == 'query':
                     msg += " (crashed while loading {0!r})".format(args[0])
-                print >> sys.stderr, msg
+                print(msg, file=sys.stderr)
                 continue  # restart
             else:
                 break  # normal termination, return
             finally:
-                self._worker.terminate()
+                if self._worker:
+                    self._worker.terminate()
         else:
-            print >> sys.stderr, "Warning: docstring loader crashed too often"
+            print("Warning: docstring loader crashed too often", file=sys.stderr)
         self._thread = None
         self._worker = None
         self.callback_finished()
@@ -203,9 +207,9 @@ class SubprocessLoader(object):
             key, docs = args
             self.callback_query_result(key, docs)
         elif cmd == 'error':
-            print args
+            print(args)
         else:
-            print >> sys.stderr, "Unknown response:", cmd, args
+            print("Unknown response:", cmd, args, file=sys.stderr)
 
     def query(self, key, imports=None, make=None):
         """ Request docstring extraction for a certain key """
@@ -270,12 +274,12 @@ if __name__ == '__worker__':
 
 elif __name__ == '__main__':
     def callback(key, docs):
-        print key
-        for match, doc in docs.iteritems():
-            print '-->', match
-            print doc.strip()
-            print
-        print
+        print(key)
+        for match, doc in six.iteritems(docs):
+            print('-->', match)
+            print(str(doc).strip())
+            print()
+        print()
 
     r = SubprocessLoader(callback)
 

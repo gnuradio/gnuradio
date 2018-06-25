@@ -26,7 +26,7 @@ import subprocess
 from gnuradio import gr
 
 from .core import Messages
-from .core.Platform import Platform
+from .core.platform import Platform
 
 
 def argument_parser():
@@ -49,10 +49,12 @@ def main(args=None):
 
     platform = Platform(
         name='GNU Radio Companion Compiler',
-        prefs_file=gr.prefs(),
+        prefs=gr.prefs(),
         version=gr.version(),
         version_parts=(gr.major_version(), gr.api_version(), gr.minor_version())
     )
+    platform.build_library()
+
     out_dir = args.output if not args.user_lib_dir else platform.config.hier_block_lib_dir
     if os.path.exists(out_dir):
         pass  # all is well

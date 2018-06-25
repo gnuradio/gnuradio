@@ -1,23 +1,25 @@
 #!/usr/bin/env python
 # Copyright 2012,2013 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import division
 
 import numpy
 
@@ -220,7 +222,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         eq = digital.ofdm_frame_equalizer_vcvc(equalizer.base(), 0, self.tsb_key, True)
         self.tb.connect(
                 src,
-                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data)/fft_len, self.tsb_key),
+                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data) // fft_len, self.tsb_key),
                 eq,
                 sink
         )
@@ -278,7 +280,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         sink = blocks.tsb_vector_sink_c(vlen=fft_len, tsb_key=self.tsb_key)
         self.tb.connect(
                 src,
-                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data)/fft_len, self.tsb_key),
+                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data) // fft_len, self.tsb_key),
                 eq,
                 sink
         )
@@ -360,7 +362,7 @@ class qa_ofdm_frame_equalizer_vcvc (gr_unittest.TestCase):
         sink = blocks.tsb_vector_sink_c(fft_len, tsb_key=self.tsb_key)
         self.tb.connect(
                 src,
-                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data)/fft_len, self.tsb_key),
+                blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, fft_len, len(tx_data) // fft_len, self.tsb_key),
                 eq,
                 sink
         )

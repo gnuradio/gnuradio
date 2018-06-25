@@ -1,0 +1,24 @@
+id: channels_distortion_3_gen
+label: Third Order Distortion
+
+parameters:
+-   id: beta
+    label: Distortion
+    dtype: float
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.distortion_3_gen(${beta})
+    callbacks:
+    - set_beta(${beta})
+
+file_format: 1

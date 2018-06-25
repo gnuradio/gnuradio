@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import gr, gru
 from gnuradio import audio
 from gnuradio.eng_arg import eng_float
@@ -54,5 +56,5 @@ class my_top_block(gr.top_block):
 
 if __name__ == '__main__':
     pid = gru.daemonize()
-    print "To stop this program, enter 'kill %d'" % pid
+    print("To stop this program, enter 'kill %d'" % pid)
     my_top_block().run()

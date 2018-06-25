@@ -19,15 +19,18 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from runtime_swig import top_block_swig, \
-    top_block_wait_unlocked, top_block_run_unlocked, \
-    top_block_start_unlocked, top_block_stop_unlocked, \
-    top_block_unlock_unlocked, dot_graph_tb
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
+from .runtime_swig import (top_block_swig,
+    top_block_wait_unlocked, top_block_run_unlocked,
+    top_block_start_unlocked, top_block_stop_unlocked,
+    top_block_unlock_unlocked, dot_graph_tb)
 
 #import gnuradio.gr.gr_threading as _threading
-import gr_threading as _threading
+from . import gr_threading as _threading
 
-from hier_block2 import hier_block2
+from .hier_block2 import hier_block2
 
 class _top_block_waiter(_threading.Thread):
     """

@@ -1,0 +1,24 @@
+id: channels_phase_bal
+label: Phase Balance
+
+parameters:
+-   id: alpha
+    label: Alpha
+    dtype: float
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.phase_bal(${alpha})
+    callbacks:
+    - set_alpha(${alpha})
+
+file_format: 1

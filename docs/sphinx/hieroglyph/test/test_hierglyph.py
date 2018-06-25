@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import unittest
 from hieroglyph.hieroglyph import first_paragraph_indent, gather_lines, unindent
 

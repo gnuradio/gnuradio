@@ -21,6 +21,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import pmt
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
@@ -36,7 +37,7 @@ class qa_tsb_vector_sink (gr_unittest.TestCase):
 
     def test_001_t (self):
         packet_len = 4
-        data = range(2 * packet_len)
+        data = list(range(2 * packet_len))
         tag = gr.tag_t()
         tag.key = pmt.intern("foo")
         tag.offset = 5

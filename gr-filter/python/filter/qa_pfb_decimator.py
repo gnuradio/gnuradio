@@ -20,13 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter, blocks
 import math
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 def run_test(tb, channel, fft_rotate, fft_filter):
@@ -35,16 +37,16 @@ def run_test(tb, channel, fft_rotate, fft_filter):
         fs = 5000.0      # baseband sampling rate
         ifs = M*fs       # input samp rate to decimator
 
-        taps = filter.firdes.low_pass_2(1, ifs, fs/2, fs/10,
+        taps = filter.firdes.low_pass_2(1, ifs, fs / 2, fs / 10,
                                         attenuation_dB=80,
                                         window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         signals = list()
         add = blocks.add_cc()
         freqs = [-230., 121., 110., -513., 203.]
-        Mch = ((len(freqs)-1)/2 + channel) % len(freqs)
-        for i in xrange(len(freqs)):
-            f = freqs[i] + (M/2-M+i+1)*fs
+        Mch = ((len(freqs)-1) // 2 + channel) % len(freqs)
+        for i in range(len(freqs)):
+            f = freqs[i] + (M // 2-M+i+1)*fs
             data = sig_source_c(ifs, f, 1, N)
             signals.append(blocks.vector_source_c(data))
             tb.connect(signals[i], (add,i))
@@ -54,7 +56,7 @@ def run_test(tb, channel, fft_rotate, fft_filter):
         snk = blocks.vector_sink_c()
 
         tb.connect(add, s2ss)
-        for i in xrange(M):
+        for i in range(M):
             tb.connect((s2ss,i), (pfb,i))
         tb.connect(pfb, snk)
         tb.run()
@@ -75,12 +77,12 @@ def run_test(tb, channel, fft_rotate, fft_filter):
         delay = int(delay)
 
         # Create a time scale that's delayed to match the filter delay
-        t = map(lambda x: float(x)/fs, xrange(delay, L+delay))
+        t = [float(x) / fs for x in range(delay, L+delay)]
 
         # Create known data as complex sinusoids for the baseband freq
         # of the extracted channel is due to decimator output order.
-        expected_data = map(lambda x: math.cos(2.*math.pi*freqs[Mch]*x+phase) + \
-                                1j*math.sin(2.*math.pi*freqs[Mch]*x+phase), t)
+        expected_data = [math.cos(2.*math.pi*freqs[Mch]*x+phase) + \
+                                1j*math.sin(2.*math.pi*freqs[Mch]*x+phase) for x in t]
         dst_data = snk.data()
 
         return (dst_data, expected_data)

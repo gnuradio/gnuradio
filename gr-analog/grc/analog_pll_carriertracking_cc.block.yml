@@ -1,0 +1,31 @@
+id: analog_pll_carriertracking_cc
+label: PLL Carrier Tracking
+
+parameters:
+-   id: w
+    label: Loop Bandwidth
+    dtype: real
+-   id: max_freq
+    label: Max Freq
+    dtype: real
+-   id: min_freq
+    label: Min Freq
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.pll_carriertracking_cc(${w}, ${max_freq}, ${min_freq})
+    callbacks:
+    - set_loop_bandwidth(${w})
+    - set_max_freq(${max_freq})
+    - set_min_freq(${min_freq})
+
+file_format: 1

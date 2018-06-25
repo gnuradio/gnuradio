@@ -1,0 +1,50 @@
+id: digital_burst_shaper_xx
+label: Burst Shaper
+category: '[Core]/Packet Operators'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [float, complex]
+    option_attributes:
+        fcn: [ff, cc]
+        taps: [float_vector, complex_vector]
+    hide: part
+-   id: window
+    label: Window Taps
+    dtype: ${ type.taps }
+    default: ([])
+-   id: pre_padding
+    label: Pre-padding Length
+    dtype: int
+    default: '0'
+-   id: post_padding
+    label: Post-padding Length
+    dtype: int
+    default: '0'
+-   id: insert_phasing
+    label: Insert phasing symbols
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+-   id: length_tag_name
+    label: Length Tag Name
+    dtype: string
+    default: '"packet_len"'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.burst_shaper_${type.fcn}(${window}, ${pre_padding}, ${post_padding},
+        ${insert_phasing}, ${length_tag_name})
+
+file_format: 1

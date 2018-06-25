@@ -20,12 +20,16 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 from gnuradio import gr, blocks
 
-import fec_swig as fec
-from threaded_encoder import threaded_encoder
-from capillary_threaded_encoder import capillary_threaded_encoder
-from bitflip import read_bitlist
+from . import fec_swig as fec
+from .threaded_encoder import threaded_encoder
+from .capillary_threaded_encoder import capillary_threaded_encoder
+from .bitflip import read_bitlist
+
 
 class extended_encoder(gr.hier_block2):
     def __init__(self, encoder_obj_list, threading, puncpat=None):

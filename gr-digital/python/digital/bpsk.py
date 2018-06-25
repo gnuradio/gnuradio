@@ -23,14 +23,17 @@
 BPSK modulation and demodulation.
 """
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 from math import pi, log
 from cmath import exp
 
 from gnuradio import gr
 from gnuradio.digital.generic_mod_demod import generic_mod, generic_demod
 from gnuradio.digital.generic_mod_demod import shared_mod_args, shared_demod_args
-import digital_swig
-import modulation_utils
+from . import digital_swig
+from . import modulation_utils
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           BPSK constellation

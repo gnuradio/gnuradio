@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
@@ -60,10 +63,10 @@ class pfb_top_block(gr.top_block):
                                               window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
-        tpc = scipy.ceil(float(len(self._taps)) /  float(self._decim))
-        print "Number of taps:     ", len(self._taps)
-        print "Number of filters:  ", self._decim
-        print "Taps per channel:   ", tpc
+        tpc = scipy.ceil(float(len(self._taps)) / float(self._decim))
+        print("Number of taps:     ", len(self._taps))
+        print("Number of filters:  ", self._decim)
+        print("Taps per channel:   ", tpc)
 
         # Build the input signal source
         # We create a list of freqs, and a sine wave is generated and added to the source
@@ -71,7 +74,7 @@ class pfb_top_block(gr.top_block):
         self.signals = list()
         self.add = blocks.add_cc()
         freqs = [10, 20, 2040]
-        for i in xrange(len(freqs)):
+        for i in range(len(freqs)):
             self.signals.append(analog.sig_source_c(self._fs, analog.GR_SIN_WAVE, freqs[i], 1))
             self.connect(self.signals[i], (self.add,i))
 
@@ -100,7 +103,7 @@ def main():
     tstart = time.time()
     tb.run()
     tend = time.time()
-    print "Run time: %f" % (tend - tstart)
+    print("Run time: %f" % (tend - tstart))
 
     if 1:
         fig1 = pylab.figure(1, figsize=(16,9))
@@ -118,11 +121,11 @@ def main():
         d = tb.snk_i.data()[Ns:Ns+Ne]
         sp1_f = fig1.add_subplot(2, 1, 1)
 
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
+        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
+        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
         sp1_f.set_xlim([min(f_in), max(f_in)+1])
         sp1_f.set_ylim([-200.0, 50.0])
@@ -131,7 +134,7 @@ def main():
         sp1_f.set_xlabel("Frequency (Hz)")
         sp1_f.set_ylabel("Power (dBW)")
 
-        Ts = 1.0/fs
+        Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
         t_in = scipy.arange(0, Tmax, Ts)
@@ -150,11 +153,11 @@ def main():
 
         sp2_f = fig2.add_subplot(2, 1, 1)
         d = tb.snk.data()[Ns:Ns+Ne]
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs_o,
+        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
         X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_o = scipy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
+        f_o = scipy.arange(-fs_o / 2.0, fs_o / 2.0, fs_o / float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
         sp2_f.set_xlim([min(f_o), max(f_o)+1])
         sp2_f.set_ylim([-200.0, 50.0])
@@ -164,7 +167,7 @@ def main():
         sp2_f.set_ylabel("Power (dBW)")
 
 
-        Ts_o = 1.0/fs_o
+        Ts_o = 1.0 / fs_o
         Tmax_o = len(d)*Ts_o
 
         x_o = scipy.array(d)

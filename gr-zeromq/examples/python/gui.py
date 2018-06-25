@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #
 # Copyright 2013 Free Software Foundation, Inc.
 #
@@ -112,7 +113,7 @@ class gui(QtGui.QMainWindow):
 
     # plot the data from the queues
     def plot_data(self, plot, samples):
-        self.x = range(0,len(samples),1)
+        self.x = list(range(0,len(samples),1))
         self.y = samples
         # clear the previous points from the plot
         plot.clear()

@@ -1,0 +1,148 @@
+id: qtgui_sink_x
+label: QT GUI Sink
+flags: has_python
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    default: complex
+    options: [complex, float]
+    option_attributes:
+        fcn: [sink_c, sink_f]
+    hide: part
+-   id: name
+    label: Name
+    dtype: string
+    default: '""'
+-   id: fftsize
+    label: FFT Size
+    dtype: int
+    default: '1024'
+-   id: wintype
+    label: Window Type
+    dtype: int
+    default: firdes.WIN_BLACKMAN_hARRIS
+    options: [firdes.WIN_BLACKMAN_hARRIS, firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN,
+        firdes.WIN_RECTANGULAR, firdes.WIN_KAISER]
+    option_labels: [Blackman-harris, Hamming, Hann, Blackman, Rectangular, Kaiser]
+    hide: part
+-   id: fc
+    label: Center Frequency (Hz)
+    dtype: real
+    default: '0'
+-   id: bw
+    label: Bandwidth (Hz)
+    dtype: real
+    default: samp_rate
+-   id: rate
+    label: Update Rate
+    dtype: real
+    default: '10'
+-   id: showrf
+    label: Show RF Freq
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: part
+-   id: plotfreq
+    label: Plot Frequency
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: part
+-   id: plotwaterfall
+    label: Plot Waterfall
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: part
+-   id: plottime
+    label: Plot Time
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: part
+-   id: plotconst
+    label: Plot Const
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: part
+-   id: gui_hint
+    label: GUI Hint
+    dtype: gui_hint
+    hide: part
+-   id: freqchangevar
+    label: Clicked freq variable
+    dtype: raw
+    default: None
+    hide: part
+-   id: showports
+    label: Show Msg Ports
+    dtype: enum
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['Yes', 'No']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    multiplicity: ${ num_inputs }
+-   domain: message
+    id: freq
+    optional: true
+    hide: ${ showports }
+
+outputs:
+-   domain: message
+    id: freq
+    optional: true
+    hide: ${ showports }
+
+templates:
+    imports: |-
+        from PyQt5 import Qt
+        from gnuradio import qtgui
+        from gnuradio.filter import firdes
+        import sip
+    callbacks:
+    - set_frequency_range(${fc}, ${bw})
+    make: |-
+        <%
+            win = 'self._%s_win'%id
+        %>\
+        qtgui.${type.fcn}(
+            ${fftsize}, #fftsize
+            ${wintype}, #wintype
+            ${fc}, #fc
+            ${bw}, #bw
+            ${name}, #name
+            ${plotfreq}, #plotfreq
+            ${plotwaterfall}, #plotwaterfall
+            ${plottime}, #plottime
+            ${plotconst} #plotconst
+        )
+        self.${id}.set_update_time(1.0/${rate})
+        ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
+
+        self.${id}.enable_rf_freq($showrf)
+
+        % if freqchangevar is not None:
+        def ${id}_callback(p, num):
+            if num == 1 or num == 2:
+                self.set_${freqchangevar}(p.x())
+
+        Qt.QObject.connect(self._${id}_win, Qt.SIGNAL("plotPointSelected(QPointF, int)"), ${id}_callback)
+        % endif
+
+documentation: |-
+    The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
+
+file_format: 1

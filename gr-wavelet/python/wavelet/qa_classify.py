@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import numpy
 from gnuradio import gr, gr_unittest, wavelet, analog, blocks
 import copy
@@ -79,14 +81,14 @@ class test_classify(gr_unittest.TestCase):
 
     def test_002_(self):
         src_data = numpy.array([-1.0,
-                                -1.0/2.0,
-                                -1.0/3.0,
-                                -1.0/4.0,
-                                -1.0/5.0])
+                                -1.0 / 2.0,
+                                -1.0 / 3.0,
+                                -1.0 / 4.0,
+                                -1.0 / 5.0])
         trg_data = copy.deepcopy(src_data)
 
         src = blocks.vector_source_f(src_data, False, len(src_data))
-        st = blocks.stretch_ff(-1.0/5.0, len(src_data))
+        st = blocks.stretch_ff(-1.0 / 5.0, len(src_data))
         dst = blocks.vector_sink_f(len(src_data))
         self.tb.connect(src, st)
         self.tb.connect(st, dst)
@@ -155,11 +157,11 @@ class test_classify(gr_unittest.TestCase):
         dwav = numpy.array(src_data)
         wvps = numpy.zeros(3)
         # wavelet power spectrum
-        scl = 1.0/sqr(dwav[0])
+        scl = 1.0 / sqr(dwav[0])
         k = 1
         for e in range(len(wvps)):
-            wvps[e] = scl*sqr(dwav[k:k+(01<<e)]).sum()
-            k += 01<<e
+            wvps[e] = scl*sqr(dwav[k:k+(0o1<<e)]).sum()
+            k += 0o1<<e
 
         src = blocks.vector_source_f(src_data, False, len(src_data))
         kon = wavelet.wvps_ff(len(src_data))

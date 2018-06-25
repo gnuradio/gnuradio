@@ -21,7 +21,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 @PY_QT_IMPORT@
+
 from gnuradio import gr
 
 def check_set_qss():
@@ -31,4 +34,4 @@ def check_set_qss():
         try:
             app.setStyleSheet(open(qssfile).read())
         except:
-            print "WARNING: bad QSS file, %s"%(qssfile)
+            print("WARNING: bad QSS file, %s"%(qssfile))

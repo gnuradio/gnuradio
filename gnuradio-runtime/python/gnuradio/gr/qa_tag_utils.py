@@ -20,12 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
+from __future__ import print_function
 
-try:
-    import pmt_swig as pmt
-except ImportError:
-    import pmt
+
+from gnuradio import gr, gr_unittest
+import pmt
+
 
 class test_tag_utils (gr_unittest.TestCase):
 
@@ -111,6 +111,6 @@ class test_tag_utils (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    print 'hi'
+    print('hi')
     gr_unittest.run(test_tag_utils, "test_tag_utils.xml")
 

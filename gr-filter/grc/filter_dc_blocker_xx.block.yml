@@ -1,0 +1,35 @@
+id: dc_blocker_xx
+label: DC Blocker
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [cc, ff]
+    option_labels: [Complex->Complex, Float->Float]
+    option_attributes:
+        input: [complex, float]
+        output: [complex, float]
+    hide: part
+-   id: length
+    label: Length
+    dtype: int
+    default: '32'
+-   id: long_form
+    label: Long Form
+    dtype: bool
+    default: 'True'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: from gnuradio import filter
+    make: filter.dc_blocker_${type}(${length}, ${long_form})
+
+file_format: 1

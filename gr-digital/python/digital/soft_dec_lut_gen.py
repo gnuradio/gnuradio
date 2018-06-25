@@ -20,6 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import numpy
 
 def soft_dec_table_generator(soft_dec_gen, prec, Es=1):
@@ -123,6 +127,7 @@ def soft_dec_table(constel, symbols, prec, npwr=1):
     xrng = numpy.linspace(re_min, re_max, npts)
 
     table = []
+
     for y in yrng:
         for x in xrng:
             pt = complex(x, y)
@@ -196,8 +201,8 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
 
     M = len(constel)
     k = int(numpy.log2(M))
-    tmp = 2*k*[0,]
-    s = k*[0,]
+    tmp = 2*k*[0]
+    s = k*[0]
 
     for i in range(M):
         # Calculate the distance between the sample and the current
@@ -206,7 +211,7 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
 
         # Calculate the probability factor from the distance and the
         # scaled noise power.
-        d = numpy.exp(-dist/npwr)
+        d = numpy.exp(-dist / npwr)
 
         for j in range(k):
             # Get the bit at the jth index
@@ -235,21 +240,21 @@ def show_table(table):
     pp = ""
     subi = 1
     subj = 0
-    for i in reversed(xrange(prec+1)):
+    for i in reversed(list(range(prec+1))):
         if(i == prec//2):
             pp += "-----" + prec*((nbits*8)+3)*"-" + "\n"
             subi = 0
             continue
-        for j in xrange(prec+1):
+        for j in range(prec+1):
             if(j == prec//2):
                 pp += "| "
                 subj = 1
             else:
                 item = table[prec*(i-subi) + (j-subj)]
                 pp += "( "
-                for t in xrange(nbits-1, -1, -1):
+                for t in range(nbits-1, -1, -1):
                     pp += "{0: .4f} ".format(item[t])
                 pp += ") "
         pp += "\n"
         subj = 0
-    print pp
+    print(pp)

@@ -102,4 +102,4 @@ namespace gnuradio {
     s_map.erase(pos);
     return sptr;
   }
-};
+}

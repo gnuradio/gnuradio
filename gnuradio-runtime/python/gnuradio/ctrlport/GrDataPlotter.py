@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
@@ -31,7 +34,7 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
 class GrDataPlotParent(gr.top_block, QtGui.QWidget):
@@ -62,7 +65,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
             self.layout.removeWidget(self.py_window)
             self.disconnect(self.thr, (self.snk, 0))
             self.disconnect(self.src[0], self.thr)
-            for n in xrange(1, self._ncons):
+            for n in range(1, self._ncons):
                 self.disconnect(self.src[n], (self.snk,n))
 
         self._ncons = nconnections
@@ -75,7 +78,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
 
         self._last_data = []
         self.src = []
-        for n in xrange(self._ncons):
+        for n in range(self._ncons):
             self.set_line_label(n, self.knobnames[n])
 
             self._last_data.append(int(self._npts)*[0,])
@@ -142,7 +145,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
         if(self._npts != npts):
 
             # Adjust buffers to accommodate new settings
-            for n in xrange(self._ncons):
+            for n in range(self._ncons):
                 if(npts < self._npts):
                     if(self._data_len[n] < npts):
                         self._last_data[n] = self._last_data[n][0:npts]
@@ -156,7 +159,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
 
         if(self._stripchart):
             # Update the plot data depending on type
-            for n in xrange(self._ncons):
+            for n in range(self._ncons):
                 if(type(data[n]) == list):
                     data[n] = self.data_to_complex(data[n])
                     if(len(data[n]) > self._npts):
@@ -179,7 +182,7 @@ class GrDataPlotParent(gr.top_block, QtGui.QWidget):
                         self._last_data[n].append(data[n])
                     self.src[n].set_data(self._last_data[n])
         else:
-            for n in xrange(self._ncons):
+            for n in range(self._ncons):
                 if(type(data[n]) != list):
                     data[n] = [data[n],]
                 data[n] = self.data_to_complex(data[n])
@@ -407,11 +410,11 @@ class GrTimeRasterB(GrDataPlotParent):
         self.snk.set_line_label(n, self.knobnames[n])
 
 
-class GrDataPlotterValueTable:
+class GrDataPlotterValueTable(object):
     def __init__(self, uid, parent, x, y, xsize, ysize,
                  headers=['Statistic Key ( Source Block :: Stat Name )  ',
                           'Curent Value', 'Units', 'Description']):
-	# must encapsulate, cuz Qt's bases are not classes
+        # must encapsulate, cuz Qt's bases are not classes
         self.uid = uid
         self.treeWidget = QtGui.QTreeWidget(parent)
         self.treeWidget.setColumnCount(len(headers))
@@ -434,7 +437,7 @@ class GrDataPlotterValueTable:
 
             # itemKey is the text in the first column of a QTreeWidgetItem
             itemKey = str(item.text(0))
-            if itemKey in knobs.keys():
+            if itemKey in list(knobs.keys()):
 
                 # This key was found in the tree, update its values.
                 foundKeys.append(itemKey)
@@ -465,7 +468,7 @@ class GrDataPlotterValueTable:
                 deleteKeys.append(itemKey)
 
         # Add items to tree that are not currently in the tree.
-        for k in knobs.keys():
+        for k in list(knobs.keys()):
             if k not in foundKeys:
                 v = knobs[k].value
                 if(type(v) == ControlPort.complex):

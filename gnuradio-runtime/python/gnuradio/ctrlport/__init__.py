@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 #
 # Copyright 2012 Free Software Foundation, Inc.
 #
@@ -22,7 +24,7 @@
 
 # import swig generated symbols into the ctrlport namespace
 #from ctrlport_swig import *
-from monitor import *
+from .monitor import *
 
 # import any pure python here
 #import GNURadio

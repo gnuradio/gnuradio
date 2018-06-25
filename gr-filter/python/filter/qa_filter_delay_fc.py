@@ -20,18 +20,20 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, filter, blocks
 
 import math
 
 def sin_source_f(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 def cos_source_f(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) for x in t]
     return y
 
 def fir_filter(x, taps, delay):
@@ -78,7 +80,7 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
         hd = filter.filter_delay_fc(taps)
 
-        expected_result = fir_filter(data, taps, (ntaps-1)/2)
+        expected_result = fir_filter(data, taps, (ntaps-1) // 2)
 
         tb.connect(src1, hd)
         tb.connect(hd, dst2)
@@ -106,7 +108,7 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
         hd = filter.filter_delay_fc(taps)
 
-        expected_result = fir_filter2(data, data, taps, (ntaps-1)/2)
+        expected_result = fir_filter2(data, data, taps, (ntaps-1) // 2)
 
         tb.connect(src1, (hd,0))
         tb.connect(src1, (hd,1))
@@ -135,7 +137,7 @@ class test_filter_delay_fc(gr_unittest.TestCase):
         taps = filter.firdes.hilbert(ntaps, filter.firdes.WIN_HAMMING)
         hd = filter.filter_delay_fc(taps)
 
-        expected_result = fir_filter2(data1, data2, taps, (ntaps-1)/2)
+        expected_result = fir_filter2(data1, data2, taps, (ntaps-1) // 2)
 
         dst2 = blocks.vector_sink_c()
 

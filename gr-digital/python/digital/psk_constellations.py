@@ -20,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import numpy
-from constellation_map_generator import constellation_map_generator
+from .constellation_map_generator import constellation_map_generator
 
 '''
 Note on the naming scheme. Each constellation is named using a prefix

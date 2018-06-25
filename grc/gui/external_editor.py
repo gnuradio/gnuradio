@@ -17,6 +17,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import, print_function
+
 import os
 import sys
 import time
@@ -67,7 +69,7 @@ class ExternalEditor(threading.Thread):
                 time.sleep(1)
 
         except Exception as e:
-            print >> sys.stderr, "file monitor crashed:", str(e)
+            print("file monitor crashed:", str(e), file=sys.stderr)
         finally:
             try:
                 os.remove(self.filename)
@@ -76,10 +78,7 @@ class ExternalEditor(threading.Thread):
 
 
 if __name__ == '__main__':
-    def p(data):
-        print data
-
-    e = ExternalEditor('/usr/bin/gedit', "test", "content", p)
+    e = ExternalEditor('/usr/bin/gedit', "test", "content", print)
     e.open_editor()
     e.start()
     time.sleep(15)

@@ -19,6 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 from gnuradio import gr, gr_unittest, blocks, digital
 import pmt
 
@@ -33,7 +34,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
 
     def test_001_crc_len (self):
         """ Make sure the output of a CRC set is 4 bytes longer than the input. """
-        data = range(16)
+        data = list(range(16))
         src = blocks.vector_source_b(data)
         crc = digital.crc32_bb(False, self.tsb_key)
         sink = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
@@ -69,7 +70,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
     def test_003_crc_correct_lentag (self):
         tag_name = "length"
         pack_len = 8
-        packets = range(pack_len*2)
+        packets = list(range(pack_len*2))
         tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tag_name)
@@ -107,7 +108,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
         tags_found = {'tag1': False, 'tag2': False, 'tag3': False}
         for tag in sink.tags():
             key = pmt.symbol_to_string(tag.key)
-            if key in correct_offsets.keys():
+            if key in list(correct_offsets.keys()):
                 tags_found[key] = True
                 self.assertEqual(correct_offsets[key], tag.offset)
         self.assertTrue(all(tags_found.values()))
@@ -160,7 +161,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
 
     def test_006_crc_len (self):
         """ Make sure the output of a CRC set is 32 (unpacked) bytes longer than the input. """
-        data = range(16)
+        data = list(range(16))
         src = blocks.vector_source_b(data)
         crc = digital.crc32_bb(False, self.tsb_key, False)
         sink = blocks.tsb_vector_sink_b(tsb_key=self.tsb_key)
@@ -196,7 +197,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
     def test_008_crc_correct_lentag (self):
         tag_name = "length"
         pack_len = 8
-        packets = range(pack_len*2)
+        packets = list(range(pack_len*2))
         tag1 = gr.tag_t()
         tag1.offset = 0
         tag1.key = pmt.string_to_symbol(tag_name)
@@ -234,7 +235,7 @@ class qa_crc32_bb (gr_unittest.TestCase):
         tags_found = {'tag1': False, 'tag2': False, 'tag3': False}
         for tag in sink.tags():
             key = pmt.symbol_to_string(tag.key)
-            if key in correct_offsets.keys():
+            if key in list(correct_offsets.keys()):
                 tags_found[key] = True
                 self.assertEqual(correct_offsets[key], tag.offset)
         self.assertTrue(all(tags_found.values()))

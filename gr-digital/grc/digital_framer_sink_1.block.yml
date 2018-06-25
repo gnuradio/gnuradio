@@ -1,0 +1,17 @@
+id: digital_framer_sink_1
+label: Framer Sink 1
+
+parameters:
+-   id: target_queue
+    label: Target Message Queue
+    dtype: raw
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.framer_sink_1(${target_queue})
+
+file_format: 1

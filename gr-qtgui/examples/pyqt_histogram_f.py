@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import sys
@@ -118,21 +120,21 @@ class control_box(QtWidgets.QWidget):
             newfreq = float(self.freq1Edit.text())
             self.signal1.set_frequency(newfreq)
         except ValueError:
-            print "Bad frequency value entered"
+            print("Bad frequency value entered")
 
     def amp1EditText(self):
         try:
             newamp = float(self.amp1Edit.text())
             self.signal1.set_amplitude(newamp)
         except ValueError:
-            print "Bad amplitude value entered"
+            print("Bad amplitude value entered")
 
     def amp2EditText(self):
         try:
             newamp = float(self.amp2Edit.text())
             self.signal2.set_amplitude(newamp)
         except ValueError:
-            print "Bad amplitude value entered"
+            print("Bad amplitude value entered")
 
     def set_nsamps(self):
         res = self.hist_npts.text().toInt()

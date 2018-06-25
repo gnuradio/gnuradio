@@ -25,24 +25,21 @@ For simple configurations, no need to connect all the relevant OFDM blocks
 to form an OFDM Tx/Rx--simply use these.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 # Reminder: All frequency-domain stuff is in shifted form, i.e. DC carrier
 # in the middle!
 
-import numpy
-from gnuradio import gr
-import digital_swig as digital
-from utils import tagged_streams
 
-try:
-    # This will work when feature #505 is added.
-    from gnuradio import fft
-    from gnuradio import blocks
-    from gnuradio import analog
-except ImportError:
-    # Until then this will work.
-    import fft_swig as fft
-    import blocks_swig as blocks
-    import analog_swig as analog
+import numpy
+
+from gnuradio import gr, blocks, fft, analog
+
+from . import digital_swig as digital
+
 
 _def_fft_len = 64
 _def_cp_len = 16
@@ -50,7 +47,7 @@ _def_frame_length_tag_key = "frame_length"
 _def_packet_length_tag_key = "packet_length"
 _def_packet_num_tag_key = "packet_num"
 # Data and pilot carriers are same as in 802.11a
-_def_occupied_carriers = (range(-26, -21) + range(-20, -7) + range(-6, 0) + range(1, 7) + range(8, 21) + range(22, 27),)
+_def_occupied_carriers = (list(range(-26, -21)) + list(range(-20, -7)) + list(range(-6, 0)) + list(range(1, 7)) + list(range(8, 21)) + list(range(22, 27)),)
 _def_pilot_carriers=((-21, -7, 7, 21,),)
 _pilot_sym_scramble_seq = (
         1,1,1,1, -1,-1,-1,1, -1,-1,-1,-1, 1,1,-1,1, -1,-1,1,1, -1,1,1,-1, 1,1,1,1, 1,1,-1,1,
@@ -112,7 +109,7 @@ def _get_constellation(bps):
     try:
         return constellation[bps]
     except KeyError:
-        print 'Modulation not supported.'
+        print('Modulation not supported.')
         exit(1)
 
 class ofdm_tx(gr.hier_block2):

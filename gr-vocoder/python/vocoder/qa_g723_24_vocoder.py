@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, vocoder, blocks
 
 class test_g723_24_vocoder (gr_unittest.TestCase):

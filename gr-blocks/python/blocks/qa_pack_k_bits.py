@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 import random
 
 from gnuradio import gr, gr_unittest, blocks
@@ -54,7 +55,7 @@ class test_pack(gr_unittest.TestCase):
         self.assertEqual(expected_results, dst.data())
 
     def test_003(self):
-        src_data = expected_results = map(lambda x: random.randint(0,3), range(10));
+        src_data = expected_results = [random.randint(0,3) for x in range(10)];
         src = blocks.vector_source_b( src_data );
         pack = blocks.pack_k_bits_bb(2);
         unpack = blocks.unpack_k_bits_bb(2);

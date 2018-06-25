@@ -19,6 +19,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+
 import random
 
 from gnuradio import gr, gr_unittest, digital, blocks
@@ -34,15 +35,15 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
 
         random.seed(0) # make repeatable
         N = 10000
-        self._noise = [get_n_cplx() for i in xrange(N)]
-        self._bits = [get_cplx() for i in xrange(N)]
+        self._noise = [get_n_cplx() for i in range(N)]
+        self._bits = [get_cplx() for i in range(N)]
 
     def tearDown(self):
         self.tb = None
 
     def mpsk_snr_est_setup(self, op):
         result = []
-        for i in xrange(1,6):
+        for i in range(1,6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
 
             src = blocks.vector_source_c(src_data)
@@ -57,7 +58,7 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         return result
 
     def test_mpsk_snr_est_simple(self):
-	expected_result = [8.20, 4.99, 3.23, 2.01, 1.03]
+        expected_result = [8.20, 4.99, 3.23, 2.01, 1.03]
 
         N = 10000
         alpha = 0.001
@@ -67,7 +68,7 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
     def test_mpsk_snr_est_skew(self):
-	expected_result = [8.31, 1.83, -1.68, -3.56, -4.68]
+        expected_result = [8.31, 1.83, -1.68, -3.56, -4.68]
 
         N = 10000
         alpha = 0.001
@@ -77,7 +78,7 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
     def test_mpsk_snr_est_m2m4(self):
-	expected_result = [8.01, 3.19, 1.97, 2.15, 2.65]
+        expected_result = [8.01, 3.19, 1.97, 2.15, 2.65]
 
         N = 10000
         alpha = 0.001
@@ -87,7 +88,7 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
     def test_mpsk_snr_est_svn(self):
-	expected_result = [7.91, 3.01, 1.77, 1.97, 2.49]
+        expected_result = [7.91, 3.01, 1.77, 1.97, 2.49]
 
         N = 10000
         alpha = 0.001
@@ -97,10 +98,10 @@ class test_mpsk_snr_est(gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual(expected_result, actual_result, 2)
 
     def test_probe_mpsk_snr_est_m2m4(self):
-	expected_result = [8.01, 3.19, 1.97, 2.15, 2.65]
+        expected_result = [8.01, 3.19, 1.97, 2.15, 2.65]
 
         actual_result = []
-        for i in xrange(1,6):
+        for i in range(1,6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
 
             src = blocks.vector_source_c(src_data)

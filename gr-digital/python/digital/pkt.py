@@ -1,34 +1,34 @@
 #
 # Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from math import pi
-from gnuradio import gr
+from gnuradio import gr, blocks
 import gnuradio.gr.gr_threading as _threading
-import packet_utils
-import digital_swig as digital
+from . import packet_utils
+from . import digital_swig as digital
 
-try:
-    from gnuradio import blocks
-except ImportError:
-    import blocks_swig as blocks
 
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
@@ -43,7 +43,7 @@ class mod_pkts(gr.hier_block2):
     def __init__(self, modulator, preamble=None, access_code=None, msgq_limit=2,
                  pad_for_usrp=True, use_whitener_offset=False, modulate=True):
         """
-	Hierarchical block for sending packets
+        Hierarchical block for sending packets
 
         Packets to be sent are enqueued by calling send_pkt.
         The output is the complex modulated signal at baseband.
@@ -54,29 +54,29 @@ class mod_pkts(gr.hier_block2):
             msgq_limit: maximum number of messages in message queue (int)
             pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
             use_whitener_offset: If true, start of whitener XOR string is incremented each packet
-        
+
         See gmsk_mod for remaining parameters
         """
 
-	gr.hier_block2.__init__(self, "mod_pkts",
-				gr.io_signature(0, 0, 0),                    # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+        gr.hier_block2.__init__(self, "mod_pkts",
+                                gr.io_signature(0, 0, 0),                    # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         self._modulator = modulator
         self._pad_for_usrp = pad_for_usrp
         self._use_whitener_offset = use_whitener_offset
         self._whitener_offset = 0
-        
+
         if access_code is None:
             access_code = packet_utils.default_access_code
         if not packet_utils.is_1_0_string(access_code):
-            raise ValueError, "Invalid access_code %r. Must be string of 1's and 0's" % (access_code,)
+            raise ValueError("Invalid access_code %r. Must be string of 1's and 0's" % (access_code,))
         self._access_code = access_code
-        
+
         if preamble is None:
             preamble = packet_utils.default_preamble
         if not packet_utils.is_1_0_string(preamble):
-            raise ValueError, "Invalid preamble %r. Must be string of 1's and 0's" % (preamble,)
+            raise ValueError("Invalid preamble %r. Must be string of 1's and 0's" % (preamble,))
         self._preamble = preamble
 
         # accepts messages from the outside world
@@ -93,7 +93,7 @@ class mod_pkts(gr.hier_block2):
         if eof:
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
-            # print "original_payload =", string_to_hex_list(payload)
+            # print("original_payload =", string_to_hex_list(payload))
             pkt = packet_utils.make_packet(payload,
                                            self._modulator.samples_per_symbol(),
                                            self._modulator.bits_per_symbol(),
@@ -101,11 +101,11 @@ class mod_pkts(gr.hier_block2):
                                            self._access_code,
                                            self._pad_for_usrp,
                                            self._whitener_offset)
-            #print "pkt =", string_to_hex_list(pkt)
+            #print("pkt =", string_to_hex_list(pkt))
             msg = gr.message_from_string(pkt)
             if self._use_whitener_offset is True:
                 self._whitener_offset = (self._whitener_offset + 1) % 16
-                
+
         self._pkt_input.msgq().insert_tail(msg)
 
 
@@ -120,9 +120,9 @@ class demod_pkts(gr.hier_block2):
 
     def __init__(self, demodulator, access_code=None, callback=None, threshold=-1):
         """
-	Hierarchical block for demodulating and deframing packets.
+        Hierarchical block for demodulating and deframing packets.
 
-	The input is the complex modulated signal at baseband.
+        The input is the complex modulated signal at baseband.
         Demodulated packets are sent to the handler.
 
         Args:
@@ -130,17 +130,17 @@ class demod_pkts(gr.hier_block2):
             access_code: AKA sync vector (string of 1's and 0's)
             callback: function of two args: ok, payload (ok: bool; payload: string)
             threshold: detect access_code with up to threshold bits wrong (-1 -> use default) (int)
-	"""
+        """
 
-	gr.hier_block2.__init__(self, "demod_pkts",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(0, 0, 0))                    # Output signature
+        gr.hier_block2.__init__(self, "demod_pkts",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(0, 0, 0))                    # Output signature
 
         self._demodulator = demodulator
         if access_code is None:
             access_code = packet_utils.default_access_code
         if not packet_utils.is_1_0_string(access_code):
-            raise ValueError, "Invalid access_code %r. Must be string of 1's and 0's" % (access_code,)
+            raise ValueError("Invalid access_code %r. Must be string of 1's and 0's" % (access_code,))
         self._access_code = access_code
 
         if threshold == -1:
@@ -151,7 +151,7 @@ class demod_pkts(gr.hier_block2):
 
         self.framer_sink = digital.framer_sink_1(self._rcvd_pktq)
         self.connect(self, self._demodulator, self.correlator, self.framer_sink)
-        
+
         self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
 
 

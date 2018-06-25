@@ -17,17 +17,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import gtk
+from __future__ import absolute_import
+
+from gi.repository import Gtk, Gdk
 
 from ..core.Constants import *
 
 
 # default path for the open/save dialogs
 DEFAULT_FILE_PATH = os.getcwd() if os.name != 'nt' else os.path.expanduser("~/Documents")
-
-# file extensions
-IMAGE_FILE_EXTENSION = '.png'
-TEXT_FILE_EXTENSION = '.txt'
+FILE_EXTENSION = '.grc'
 
 # name for new/unsaved flow graphs
 NEW_FLOGRAPH_TITLE = 'untitled'
@@ -36,7 +35,7 @@ NEW_FLOGRAPH_TITLE = 'untitled'
 MIN_WINDOW_WIDTH = 600
 MIN_WINDOW_HEIGHT = 400
 # dialog constraints
-MIN_DIALOG_WIDTH = 500
+MIN_DIALOG_WIDTH = 600
 MIN_DIALOG_HEIGHT = 500
 # default sizes
 DEFAULT_BLOCKS_WINDOW_WIDTH = 100
@@ -53,7 +52,7 @@ PARAM_FONT = "Sans 7.5"
 STATE_CACHE_SIZE = 42
 
 # Shared targets for drag and drop of blocks
-DND_TARGETS = [('STRING', gtk.TARGET_SAME_APP, 0)]
+DND_TARGETS = [('STRING', Gtk.TargetFlags.SAME_APP, 0)]
 
 # label constraint dimensions
 LABEL_SEPARATION = 3
@@ -70,6 +69,7 @@ PORT_SEPARATION = 32
 
 PORT_MIN_WIDTH = 20
 PORT_LABEL_HIDDEN_WIDTH = 10
+PORT_EXTRA_BUS_HEIGHT = 40
 
 # minimal length of connector
 CONNECTOR_EXTENSION_MINIMAL = 11
@@ -78,17 +78,14 @@ CONNECTOR_EXTENSION_MINIMAL = 11
 CONNECTOR_EXTENSION_INCREMENT = 11
 
 # connection arrow dimensions
-CONNECTOR_ARROW_BASE = 13
-CONNECTOR_ARROW_HEIGHT = 17
+CONNECTOR_ARROW_BASE = 10
+CONNECTOR_ARROW_HEIGHT = 13
 
 # possible rotations in degrees
 POSSIBLE_ROTATIONS = (0, 90, 180, 270)
 
-# How close can the mouse get to the window border before mouse events are ignored.
-BORDER_PROXIMITY_SENSITIVITY = 50
-
 # How close the mouse can get to the edge of the visible window before scrolling is invoked.
-SCROLL_PROXIMITY_SENSITIVITY = 30
+SCROLL_PROXIMITY_SENSITIVITY = 50
 
 # When the window has to be scrolled, move it this distance in the required direction.
 SCROLL_DISTANCE = 15
@@ -96,8 +93,18 @@ SCROLL_DISTANCE = 15
 # How close the mouse click can be to a line and register a connection select.
 LINE_SELECT_SENSITIVITY = 5
 
-_SCREEN_RESOLUTION = gtk.gdk.screen_get_default().get_resolution()
-DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
+DEFAULT_BLOCK_MODULE_TOOLTIP = """\
+This subtree holds all blocks (from OOT modules) that specify no module name. \
+The module name is the root category enclosed in square brackets.
+
+Please consider contacting OOT module maintainer for any block in here \
+and kindly ask to update their GRC Block Descriptions or Block Tree to include a module name."""
+
+
+# _SCREEN = Gdk.Screen.get_default()
+# _SCREEN_RESOLUTION = _SCREEN.get_resolution() if _SCREEN else -1
+# DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
+DPI_SCALING = 1.0  # todo: figure out the GTK3 way (maybe cairo does this for us
 
 
 def update_font_size(font_size):

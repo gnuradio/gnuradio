@@ -20,10 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
 from gnuradio import gr, blocks
 import numpy
 
-from fec_test import fec_test
+from .fec_test import fec_test
 
 class bercurve_generator(gr.hier_block2):
 
@@ -40,7 +42,7 @@ class bercurve_generator(gr.hier_block2):
         self.decoder_list = decoder_list
         self.puncpat = puncpat
 
-        self.random_gen_b_0 = blocks.vector_source_b(map(int, numpy.random.randint(0, 256, 100000)), True)
+        self.random_gen_b_0 = blocks.vector_source_b(list(map(int, numpy.random.randint(0, 256, 100000))), True)
         self.deinterleave = blocks.deinterleave(gr.sizeof_char*1)
         self.connect(self.random_gen_b_0, self.deinterleave)
         self.ber_generators = []

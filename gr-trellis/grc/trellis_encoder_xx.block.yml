@@ -1,0 +1,59 @@
+id: trellis_encoder_xx
+label: Trellis Encoder
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [bb, bs, bi, ss, si, ii]
+    option_labels: [Byte->Byte, Byte->Short, Byte->Int, Short->Short, Short->Int,
+        Int->Int]
+    option_attributes:
+        input: [byte, byte, byte, short, short, int]
+        output: [byte, short, int, short, int, int]
+    hide: part
+-   id: fsm_args
+    label: FSM Args
+    dtype: raw
+-   id: init_state
+    label: Initial State
+    dtype: int
+    default: '0'
+-   id: blockwise
+    label: Blockwise
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: part
+-   id: blocklength
+    label: Block length
+    dtype: int
+    default: '0'
+    hide: ${ ('none' if blockwise == 'True' else 'all') }
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+asserts:
+- ${ (isinstance(eval(""" fsm_args """[1:-1], locals(),globals()), str) and open(fsm_args).close()) or True }
+
+templates:
+    imports: from gnuradio import trellis
+    make: ' trellis.encoder_${type}(trellis.fsm(${fsm_args}), ${init_state}, ${blocklength})
+        if ${blockwise} else trellis.encoder_${type}(trellis.fsm(${fsm_args}), ${init_state}) '
+    callbacks:
+    - set_FSM(trellis.fsm(${fsm_args}))
+    - set_ST(${init_state})
+    - set_K(${blocklength})
+
+documentation: |-
+    The fsm arguments are passed directly to the trellis.fsm() constructor.
+
+file_format: 1

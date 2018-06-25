@@ -19,5 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from trellis_swig0 import *
-from trellis_swig1 import *
+from __future__ import absolute_import
+
+from .trellis_swig0 import *
+from .trellis_swig1 import *
