@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2011,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,15 +26,12 @@
 
 #include "pll_freqdet_cf_impl.h"
 #include <gnuradio/io_signature.h>
-#include <math.h>
 #include <gnuradio/math.h>
+
+#include <cmath>
 
 namespace gr {
   namespace analog {
-
-#ifndef M_TWOPI
-#define M_TWOPI (2.0f*M_PI)
-#endif
 
     pll_freqdet_cf::sptr
     pll_freqdet_cf::make(float loop_bw, float max_freq, float min_freq)
@@ -58,10 +55,10 @@ namespace gr {
     float
     pll_freqdet_cf_impl::mod_2pi(float in)
     {
-      if(in > M_PI)
-	return in - M_TWOPI;
-      else if(in < -M_PI)
-	return in + M_TWOPI;
+      if(in > GR_M_PI)
+	return in - GR_M_TWOPI;
+      else if(in < -GR_M_PI)
+	return in + GR_M_TWOPI;
       else
 	return in;
     }

@@ -2,6 +2,8 @@
 <img src="https://github.com/gnuradio/gnuradio/blob/master/docs/gnuradio.png" width="75%" />
 </p>
 
+[![Build](https://shield.lwan.ws/img/p5UKbS/weekly_runner)](https://ci.gnuradio.org/buildbot/#/)
+![Version](https://img.shields.io/github/tag/gnuradio/gnuradio.svg)
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)](https://github.com/gnuradio/gnuradio/blob/master/COPYING) 
 [![Docs](https://img.shields.io/badge/docs-doxygen-orange.svg)](https://gnuradio.org/doc/doxygen/)
 

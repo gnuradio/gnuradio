@@ -29,7 +29,6 @@ namespace gr {
     class dvbt_ofdm_sym_acquisition_impl : public dvbt_ofdm_sym_acquisition
     {
      private:
-      int d_blocks;
       int d_fft_length;
       int d_cp_length;
       float d_snr;

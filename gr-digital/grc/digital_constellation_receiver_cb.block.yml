@@ -1,0 +1,62 @@
+id: digital_constellation_receiver_cb
+label: Constellation Receiver
+
+parameters:
+-   id: constellation
+    label: Constellation Object
+    dtype: raw
+-   id: loop_bw
+    label: Loop Bandwidth
+    dtype: real
+-   id: fmin
+    label: Minimum Freq Deviation
+    dtype: real
+-   id: fmax
+    label: Maximum Freq Deviation
+    dtype: real
+-   id: showports
+    label: Show Msg Ports
+    dtype: bool
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['Yes', 'No']
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: set_constellation
+    optional: true
+    hide: ${ showports }
+-   domain: message
+    id: rotate_phase
+    optional: true
+    hide: ${ showports }
+
+outputs:
+-   domain: stream
+    dtype: byte
+-   label: error
+    domain: stream
+    dtype: float
+    optional: true
+-   label: phase
+    domain: stream
+    dtype: float
+    optional: true
+-   label: frequency
+    domain: stream
+    dtype: float
+    optional: true
+-   label: symbol
+    domain: stream
+    dtype: complex
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.constellation_receiver_cb(${constellation}, ${loop_bw}, ${fmin},
+        ${fmax})
+
+file_format: 1

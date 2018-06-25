@@ -166,7 +166,7 @@ namespace gr {
                     //samples and throwing off downstream blocks which depend
                     //on proper alignment -- for instance, a decimating FIR
                     //filter.
-//                    if(d_div == 0 and d_osps == 2) oidx++;
+//                    if(d_div == 0 && d_osps == 2) oidx++;
                     tags.erase(tags.begin());
                 }
             }

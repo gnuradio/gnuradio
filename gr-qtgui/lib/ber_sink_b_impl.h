@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_BER_SINK_B_IMPL_H
 
 #include <gnuradio/qtgui/ber_sink_b.h>
+
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/constellationdisplayform.h>
 

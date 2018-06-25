@@ -49,7 +49,7 @@ namespace gr {
       : gr::block("dtv_atsc_sync",
                   io_signature::make(1, 1, sizeof(float)),
                   io_signature::make(1, 1, sizeof(atsc_soft_data_segment))),
-	d_next_input(0), d_rx_clock_to_symbol_freq(rate/ATSC_SYMBOL_RATE),
+	d_rx_clock_to_symbol_freq(rate/ATSC_SYMBOL_RATE),
 	d_si(0)
     {
       d_loop.set_taps(LOOP_FILTER_TAP);
@@ -178,8 +178,8 @@ namespace gr {
 
           // If we are locked we can start filling and producing data packets
           // Due to the way we lock the first data packet will almost always be
-          // half full, this is OK becouse the fs_checker will not let packets though
-          // untill a non-corrupted field packet is found
+          // half full, this is OK because the fs_checker will not let packets though
+          // until a non-corrupted field packet is found
           if( d_seg_locked ) {
             d_data_mem[d_symbol_index] = interp_sample;
 

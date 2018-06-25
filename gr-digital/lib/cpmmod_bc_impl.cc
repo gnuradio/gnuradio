@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010,2012 Free Software Foundation, Inc.
+ * Copyright 2010,2012,2018 Free Software Foundation, Inc.
  * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include "cpmmod_bc_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace digital {
@@ -62,7 +63,7 @@ namespace gr {
 	d_taps(analog::cpm::phase_response(type, samples_per_sym, L, beta)),
 	d_char_to_float(blocks::char_to_float::make()),
 	d_pulse_shaper(filter::interp_fir_filter_fff::make(samples_per_sym, d_taps)),
-	d_fm(analog::frequency_modulator_fc::make(M_PI * h))
+	d_fm(analog::frequency_modulator_fc::make(GR_M_PI * h))
     {
       switch(type) {
       case analog::cpm::LRC:

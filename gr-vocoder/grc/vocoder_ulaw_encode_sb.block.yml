@@ -1,0 +1,16 @@
+id: vocoder_ulaw_encode_sb
+label: ulaw Audio Encoder
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import vocoder
+    make: vocoder.ulaw_encode_sb()
+
+file_format: 1

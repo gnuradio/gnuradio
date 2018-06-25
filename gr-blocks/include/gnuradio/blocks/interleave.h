@@ -38,7 +38,7 @@ namespace gr {
      * This block interleaves blocks of samples. For each input
      * connection, the samples are interleaved successively to the
      * output connection. By default, the block interleaves a single
-     * sample from eahc input to the output unless blocksize is given
+     * sample from each input to the output unless blocksize is given
      * in the constructor.
      *
      * \code

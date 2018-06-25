@@ -92,7 +92,7 @@ namespace gr {
 	// per stream processing
 	for(int i = 0; i < noutput_items/d_SYMS_PER_BLOCK; i++) {
 	  // Index i refers to blocks.
-	  // Begining of packet (in blocks)
+	  // Beginning of packet (in blocks)
 	  int i0 = d_K*(i/d_K);
 	  // position of block within packet (in blocks)
 	  int j0 = i%d_K;

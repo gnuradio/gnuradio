@@ -40,10 +40,6 @@ namespace gr {
 
       int d_reg;
 
-      //counts the bits in the bytes
-      //in input stream
-      int d_bitcount;
-
       // Code rate k/n
       int d_k;
       int d_n;

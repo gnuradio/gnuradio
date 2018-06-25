@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2017 Free Software Foundation, Inc.
+ * Copyright 2015,2017,2018 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt2_modulator_bc_impl.h"
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace dtv {
@@ -98,7 +99,7 @@ namespace gr {
           m_qpsk[3] = gr_complex(-1.0 / normalization, -1.0 / normalization);
           if (rotation == ROTATION_ON) {
             cyclic_delay = TRUE;
-            rotation_angle = (2.0 * M_PI * 29.0) / 360.0;
+            rotation_angle = (2.0 * GR_M_PI * 29.0) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
             for (int i = 0; i < 4; i++) {
               m_qpsk[i] *= temp;
@@ -114,7 +115,7 @@ namespace gr {
           }
           if (rotation == ROTATION_ON) {
             cyclic_delay = TRUE;
-            rotation_angle = (2.0 * M_PI * 16.8) / 360.0;
+            rotation_angle = (2.0 * GR_M_PI * 16.8) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
             for (int i = 0; i < 16; i++) {
               m_16qam[i] *= temp;
@@ -130,7 +131,7 @@ namespace gr {
           }
           if (rotation == ROTATION_ON) {
             cyclic_delay = TRUE;
-            rotation_angle = (2.0 * M_PI * 8.6) / 360.0;
+            rotation_angle = (2.0 * GR_M_PI * 8.6) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
             for (int i = 0; i < 64; i++) {
               m_64qam[i] *= temp;
@@ -146,7 +147,7 @@ namespace gr {
           }
           if (rotation == ROTATION_ON) {
             cyclic_delay = TRUE;
-            rotation_angle = (2.0 * M_PI * 3.576334375) / 360.0;
+            rotation_angle = (2.0 * GR_M_PI * 3.576334375) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
             for (int i = 0; i < 256; i++) {
               m_256qam[i] *= temp;
@@ -161,7 +162,7 @@ namespace gr {
           m_qpsk[3] = gr_complex(-1.0 / normalization, -1.0 / normalization);
           if (rotation == ROTATION_ON) {
             cyclic_delay = TRUE;
-            rotation_angle = (2.0 * M_PI * 29.0) / 360.0;
+            rotation_angle = (2.0 * GR_M_PI * 29.0) / 360.0;
             temp = std::exp(gr_complexd(0.0, rotation_angle));
             for (int i = 0; i < 4; i++) {
               m_qpsk[i] *= temp;

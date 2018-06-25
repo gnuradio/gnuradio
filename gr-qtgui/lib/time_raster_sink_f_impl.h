@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_TIME_RASTER_SINK_F_IMPL_H
 
 #include <gnuradio/qtgui/time_raster_sink_f.h>
+
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>

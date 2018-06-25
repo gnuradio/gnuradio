@@ -184,6 +184,15 @@ namespace gr {
     socket_pdu_impl::handle_tcp_accept(tcp_connection::sptr new_connection, const boost::system::error_code& error)
     {
       if (!error) {
+        // Garbage collect closed sockets
+        std::vector<tcp_connection::sptr>::iterator it = d_tcp_connections.begin();
+        while(it != d_tcp_connections.end()) {
+          if (! (**it).socket().is_open())
+            it = d_tcp_connections.erase(it);
+          else
+            ++it;
+        }
+
         new_connection->start(this);
         d_tcp_connections.push_back(new_connection);
         start_tcp_accept();

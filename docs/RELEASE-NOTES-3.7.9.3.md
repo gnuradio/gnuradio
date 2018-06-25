@@ -75,7 +75,7 @@ Bug fixes
 * gr-uhd: Fixed timing of set_sample_rate call during initialization
   (Marcus Mueller)
 
-* gr-zmq: Accomodate gcc 6.x changes to casting requirements (Philip
+* gr-zmq: Accommodate gcc 6.x changes to casting requirements (Philip
   Balister)
 
 Numerous MSVC/mingw incompatibilities that have crept in the last few

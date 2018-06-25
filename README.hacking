@@ -1,6 +1,6 @@
 # -*- Outline -*-
 #
-# Copyright 2004,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2007,2008,2009,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,6 +19,17 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+
+* Getting started with GNU Radio development.
+
+If you're new to developing software with GNU Radio, please refer to
+
+https://tutorials.gnuradio.org/
+
+Heaving read this will be very helpful when you're diving into the GNU Radio
+source code tree.
+
+* About this document
 
 Random notes on coding conventions, some explanations about why things
 aren't done differently, etc, etc,
@@ -112,7 +123,8 @@ you and later maintainers identify corner cases, regressions and other malfuncti
 of code.
 
 GNU Radio has integrated versatile, easy to use testing facilities. Please refer to
-http://gnuradio.org/redmine/projects/gnuradio/wiki/Coding_guide_impl#Unit-testing
+
+https://wiki.gnuradio.org/index.php/Coding_guide_impl#Unit-testing
 
 
 * Standard command line options

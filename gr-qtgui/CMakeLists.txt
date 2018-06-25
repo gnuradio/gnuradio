@@ -84,7 +84,7 @@ if(ENABLE_GR_QTGUI)
 ########################################################################
 add_subdirectory(include/gnuradio/qtgui)
 add_subdirectory(lib)
-add_subdirectory(doc)
+add_subdirectory(docs)
 add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
     add_subdirectory(grc)

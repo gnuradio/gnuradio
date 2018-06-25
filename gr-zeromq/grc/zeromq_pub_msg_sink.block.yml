@@ -1,0 +1,23 @@
+id: zeromq_pub_msg_sink
+label: ZMQ PUB Message Sink
+category: '[Core]/ZeroMQ Interfaces'
+
+parameters:
+-   id: address
+    label: Address
+    dtype: string
+-   id: timeout
+    label: Timeout (msec)
+    dtype: float
+    default: '100'
+
+inputs:
+-   domain: message
+    id: in
+    optional: true
+
+templates:
+    imports: from gnuradio import zeromq
+    make: zeromq.pub_msg_sink(${address}, ${timeout})
+    
+file_format: 1

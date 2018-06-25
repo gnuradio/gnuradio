@@ -102,6 +102,10 @@ namespace gr {
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
       }
+      else {
+        d_socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+        d_socket.close();
+      }
     }
   } /* namespace blocks */
 }/* namespace gr */

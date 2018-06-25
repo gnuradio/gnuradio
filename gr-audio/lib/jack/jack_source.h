@@ -67,7 +67,7 @@ namespace gr {
       int d_noverruns;  // count of overruns
 
       void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err) throw (std::runtime_error);
+      void bail(const char *msg, int err);
 
     public:
       jack_source(int sampling_rate,

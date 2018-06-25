@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2008,2010,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -31,7 +31,7 @@
 namespace gr {
   namespace analog {
 
-#define M_TWOPI (2*M_PI)
+#define M_TWOPI (2*GR_M_PI)
 
     fmdet_cf::sptr
     fmdet_cf::make(float samplerate, float freq_low,

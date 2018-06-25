@@ -1455,7 +1455,7 @@ namespace gr {
                 << ", mSC = " << This->d_buffer_sample_count << std::endl;
 #endif
 
-      // signal that data is available, if appropraite
+      // signal that data is available, if appropriate
 
       if (This->d_waiting_for_data) {
 	This->d_cond_data.notify_one();

@@ -27,6 +27,7 @@
 #include <vector>
 
 #include <gnuradio/fec/api.h>
+#include <vector>
 
 // Forward declaration for those objects. SWIG doesn't like them to be #include'd.
 namespace gr {
@@ -47,7 +48,7 @@ namespace gr {
        *
        * \details
        * Polar codes are based on this paper by Erdal Arikan "Channel
-       * Polarization: A Method for Contructing Capacity-Achieving Codes
+       * Polarization: A Method for Constructing Capacity-Achieving Codes
        * for Symmetric Binary-Input Memoryless Channels", 2009 block
        * holds common information for encoders and decoders. All polar
        * encoder/decoders inherit from polar_common.

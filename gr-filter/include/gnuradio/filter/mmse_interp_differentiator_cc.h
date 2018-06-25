@@ -36,7 +36,7 @@ namespace gr {
      * \ingroup filter_primitive
      *
      * \details
-     * This implements a Mininum Mean Squared Error interpolating
+     * This implements a Minimum Mean Squared Error interpolating
      * differentiator with 8 taps. It is suitable for signals where the
      * derivative of a signal has a bandwidth of interest in the range
      * (-Fs/4, Fs/4), where Fs is the samples rate.

@@ -338,7 +338,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
                 tstep = 1.0 / self.sample_rate
                 self.iq = iq
-                self.time = [tstep*(self.position + i) for i in xrange(len(self.iq))]
+                self.time = [tstep*(self.position + i) for i in range(len(self.iq))]
 
                 self.set_file_pos_box(start, end)
             except MemoryError:

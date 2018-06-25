@@ -43,7 +43,6 @@ namespace gr {
                             io_signature::make(1, 1, pdu::itemsize(type)),
                             tsb_tag_key),
         d_itemsize(pdu::itemsize(type)),
-        d_type(type),
         d_curr_len(0)
     {
       message_port_register_in(PDU_PORT_ID);

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt2_pilotgenerator_cc_impl.h"
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -1113,7 +1114,7 @@ namespace gr {
       }
       fstep = fs / vlength;
       for (int i = 0; i < vlength / 2; i++) {
-        x = M_PI * f / fs;
+        x = GR_M_PI * f / fs;
         if (i == 0) {
           sinc = 1.0;
         }

@@ -1,0 +1,60 @@
+id: channels_impairments
+label: HW Impairments
+
+parameters:
+-   id: phase_noise_mag
+    label: Phase Noise Mag.
+    dtype: float
+    default: '0'
+-   id: magbal
+    label: IQ Mag. Imbalance
+    dtype: float
+    default: '0'
+-   id: phasebal
+    label: IQ Phase. Imbalance
+    dtype: float
+    default: '0'
+-   id: q_ofs
+    label: Quadrature Offset
+    dtype: float
+    default: '0'
+-   id: i_ofs
+    label: Inphase Offset
+    dtype: float
+    default: '0'
+-   id: freq_offset
+    label: Frequency Offset
+    dtype: float
+    default: '0'
+-   id: gamma
+    label: Second Order Distortion
+    dtype: float
+    default: '0'
+-   id: beta
+    label: Third Order Distortion
+    dtype: float
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.impairments(${phase_noise_mag}, ${magbal}, ${phasebal}, ${q_ofs},
+        ${i_ofs}, ${freq_offset}, ${gamma}, ${beta})
+    callbacks:
+    - set_phase_noise_mag(${phase_noise_mag})
+    - set_magbal(${magbal})
+    - set_phasebal(${phasebal})
+    - set_q_ofs(${q_ofs})
+    - set_i_ofs(${i_ofs})
+    - set_freq_offset(${freq_offset})
+    - set_gamma(${gamma})
+    - set_beta(${beta})
+
+file_format: 1

@@ -1,0 +1,40 @@
+id: dtv_dvbt2_interleaver_bb
+label: Bit Interleaver
+
+parameters:
+-   id: framesize
+    label: FECFRAME size
+    dtype: enum
+    options: [FECFRAME_NORMAL, FECFRAME_SHORT]
+    option_labels: [Normal, Short]
+    option_attributes:
+        val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_SHORT]
+-   id: rate
+    label: Code rate
+    dtype: enum
+    options: [C1_3, C2_5, C1_2, C3_5, C2_3, C3_4, C4_5, C5_6]
+    option_labels: [1/3, 2/5, 1/2, 3/5, 2/3, 3/4, 4/5, 5/6]
+    option_attributes:
+        val: [dtv.C1_3, dtv.C2_5, dtv.C1_2, dtv.C3_5, dtv.C2_3, dtv.C3_4, dtv.C4_5,
+            dtv.C5_6]
+-   id: constellation
+    label: Constellation
+    dtype: enum
+    options: [MOD_QPSK, MOD_16QAM, MOD_64QAM, MOD_256QAM]
+    option_labels: [QPSK, 16QAM, 64QAM, 256QAM]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_16QAM, dtv.MOD_64QAM, dtv.MOD_256QAM]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt2_interleaver_bb(${framesize.val}, ${rate.val}, ${constellation.val})
+
+file_format: 1

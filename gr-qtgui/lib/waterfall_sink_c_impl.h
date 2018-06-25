@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_WATERFALL_SINK_C_IMPL_H
 
 #include <gnuradio/qtgui/waterfall_sink_c.h>
+
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>

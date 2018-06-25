@@ -282,7 +282,7 @@ namespace gr {
         // N.B. We assume in this class: NSTEPS == DNSTEPS and NTAPS == DNTAPS
 
         // Limit to the maximum number of precomputed MMSE tap sets
-        if (d_nfilters <= 0 or d_nfilters > NSTEPS)
+        if (d_nfilters <= 0 || d_nfilters > NSTEPS)
             d_nfilters = NSTEPS;
 
         // Create our polyphase filter arms for the steps from 0.0 to 1.0 from
@@ -328,7 +328,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_no_mf_cc: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -341,7 +341,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_no_mf_cc: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -376,7 +376,7 @@ namespace gr {
         // N.B. We assume in this class: NSTEPS == DNSTEPS and NTAPS == DNTAPS
 
         // Limit to the maximum number of precomputed MMSE tap sets
-        if (d_nfilters <= 0 or d_nfilters > NSTEPS)
+        if (d_nfilters <= 0 || d_nfilters > NSTEPS)
             d_nfilters = NSTEPS;
 
         // Create our polyphase filter arms for the steps from 0.0 to 1.0 from
@@ -422,7 +422,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_no_mf_ff: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -435,7 +435,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_no_mf_ff: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -498,7 +498,7 @@ namespace gr {
         for (i = 0; i < l; i++) {
             for (j = 0; j < m;  j++) {
                 k = i + j - (m - 1);
-                if (k < 0 or k >= n)
+                if (k < 0 || k >= n)
                     continue;
                 diff_taps[i] += ideal_diff_taps[(m - 1) - j] * taps[k];
             }
@@ -524,7 +524,7 @@ namespace gr {
             mag += fabsf(diff_taps[i]);
         for (i = 0; i < n; i++) {
             diff_taps[i] *= d_nfilters/mag;
-            if (d_derivative and std::isnan(diff_taps[i]))
+            if (d_derivative && std::isnan(diff_taps[i]))
                 throw std::runtime_error("interpolating_resampler_pfb_mf_ccf: "
                                          "NaN error creating derivative filter."
                                         ); 
@@ -555,7 +555,7 @@ namespace gr {
             if (d_filters[i] == NULL)
                 throw std::runtime_error("unable to create fir_filter_ccf");
 
-            if (not d_derivative)
+            if (!d_derivative)
                 continue;
 
             d_diff_taps[i] = std::vector<float>(d_taps_per_filter, 0.0f);
@@ -587,7 +587,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_mf_ccf: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -600,7 +600,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_mf_ccf: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -663,7 +663,7 @@ namespace gr {
         for (i = 0; i < l; i++) {
             for (j = 0; j < m;  j++) {
                 k = i + j - (m - 1);
-                if (k < 0 or k >= n)
+                if (k < 0 || k >= n)
                     continue;
                 diff_taps[i] += ideal_diff_taps[(m - 1) - j] * taps[k];
             }
@@ -689,7 +689,7 @@ namespace gr {
             mag += fabsf(diff_taps[i]);
         for (i = 0; i < n; i++) {
             diff_taps[i] *= d_nfilters/mag;
-            if (d_derivative and std::isnan(diff_taps[i]))
+            if (d_derivative && std::isnan(diff_taps[i]))
                 throw std::runtime_error("interpolating_resampler_pfb_mf_fff: "
                                          "NaN error creating derivative filter."
                                         ); 
@@ -720,7 +720,7 @@ namespace gr {
             if (d_filters[i] == NULL)
                 throw std::runtime_error("unable to create fir_filter_fff");
 
-            if (not d_derivative)
+            if (!d_derivative)
                 continue;
 
             d_diff_taps[i] = std::vector<float>(d_taps_per_filter, 0.0f);
@@ -752,7 +752,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_mf_fff: mu is not "
                                      "in the range [0.0, 1.0]");
 
@@ -765,7 +765,7 @@ namespace gr {
     {
         int arm = static_cast<int>(rint(mu * d_nfilters));
 
-        if (arm < 0 or arm > d_nfilters)
+        if (arm < 0 || arm > d_nfilters)
             throw std::runtime_error("interp_resampler_pfb_mf_fff: mu is not "
                                      "in the range [0.0, 1.0]");
 

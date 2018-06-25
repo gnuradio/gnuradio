@@ -63,8 +63,8 @@ class Platform(CorePlatform):
     FlowGraph = canvas.FlowGraph
     Connection = canvas.Connection
 
-    def new_block_class(self, block_id, **data):
-        cls = CorePlatform.new_block_class(self, block_id, **data)
+    def new_block_class(self, **data):
+        cls = CorePlatform.new_block_class(self, **data)
         return canvas.Block.make_cls_with_base(cls)
 
     block_classes_build_in = {key: canvas.Block.make_cls_with_base(cls)

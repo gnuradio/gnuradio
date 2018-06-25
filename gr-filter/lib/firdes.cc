@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2007,2008,2012,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2007,2008,2012,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,6 +25,7 @@
 #endif
 
 #include <gnuradio/filter/firdes.h>
+#include <gnuradio/math.h>
 #include <stdexcept>
 
 using std::vector;
@@ -64,13 +65,13 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
       for(int n = -M; n <= M; n++) {
 	if (n == 0)
-	  taps[n + M] = fwT0 / M_PI * w[n + M];
+	  taps[n + M] = fwT0 / GR_M_PI * w[n + M];
 	else {
 	  // a little algebra gets this into the more familiar sin(x)/x form
-	  taps[n + M] =  sin(n * fwT0) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  sin(n * fwT0) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -110,14 +111,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if(n == 0)
-	  taps[n + M] = fwT0 / M_PI * w[n + M];
+	  taps[n + M] = fwT0 / GR_M_PI * w[n + M];
 	else {
 	  // a little algebra gets this into the more familiar sin(x)/x form
-	  taps[n + M] =  sin(n * fwT0) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  sin(n * fwT0) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -162,14 +163,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if(n == 0)
-	  taps[n + M] = (1 - (fwT0 / M_PI)) * w[n + M];
+	  taps[n + M] = (1 - (fwT0 / GR_M_PI)) * w[n + M];
 	else {
 	  // a little algebra gets this into the more familiar sin(x)/x form
-	  taps[n + M] =  -sin(n * fwT0) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  -sin(n * fwT0) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -178,7 +179,7 @@ namespace gr {
 
       double fmax = taps[0 + M];
       for(int n = 1; n <= M; n++)
-	fmax += 2 * taps[n + M] * cos(n * M_PI);
+	fmax += 2 * taps[n + M] * cos(n * GR_M_PI);
 
       gain /= fmax; // normalize
 
@@ -209,14 +210,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if(n == 0)
-	  taps[n + M] = (1 - (fwT0 / M_PI)) * w[n + M];
+	  taps[n + M] = (1 - (fwT0 / GR_M_PI)) * w[n + M];
 	else {
 	  // a little algebra gets this into the more familiar sin(x)/x form
-	  taps[n + M] =  -sin(n * fwT0) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  -sin(n * fwT0) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -225,7 +226,7 @@ namespace gr {
 
       double fmax = taps[0 + M];
       for(int n = 1; n <= M; n++)
-	fmax += 2 * taps[n + M] * cos(n * M_PI);
+	fmax += 2 * taps[n + M] * cos(n * GR_M_PI);
 
       gain /= fmax; // normalize
 
@@ -261,14 +262,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
-      double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
+      double fwT1 = 2 * GR_M_PI * high_cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if (n == 0)
-	  taps[n + M] = (fwT1 - fwT0) / M_PI * w[n + M];
+	  taps[n + M] = (fwT1 - fwT0) / GR_M_PI * w[n + M];
 	else {
-	  taps[n + M] =  (sin(n * fwT1) - sin(n * fwT0)) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  (sin(n * fwT1) - sin(n * fwT0)) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -312,14 +313,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
-      double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
+      double fwT1 = 2 * GR_M_PI * high_cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if (n == 0)
-	  taps[n + M] = (fwT1 - fwT0) / M_PI * w[n + M];
+	  taps[n + M] = (fwT1 - fwT0) / GR_M_PI * w[n + M];
 	else {
-	  taps[n + M] =  (sin(n * fwT1) - sin(n * fwT0)) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  (sin(n * fwT1) - sin(n * fwT0)) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -372,7 +373,7 @@ namespace gr {
 
       gr_complex *optr = &taps[0];
       float *iptr = &lptaps[0];
-      float freq = M_PI * (high_cutoff_freq + low_cutoff_freq)/sampling_freq;
+      float freq = GR_M_PI * (high_cutoff_freq + low_cutoff_freq)/sampling_freq;
       float phase = 0;
       if (lptaps.size() & 01) {
 	phase = - freq * ( lptaps.size() >> 1 );
@@ -419,7 +420,7 @@ namespace gr {
 
       gr_complex *optr = &taps[0];
       float *iptr = &lptaps[0];
-      float freq = M_PI * (high_cutoff_freq + low_cutoff_freq)/sampling_freq;
+      float freq = GR_M_PI * (high_cutoff_freq + low_cutoff_freq)/sampling_freq;
       float phase = 0;
       if(lptaps.size() & 01) {
 	phase = - freq * ( lptaps.size() >> 1 );
@@ -464,14 +465,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
-      double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
+      double fwT1 = 2 * GR_M_PI * high_cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if (n == 0)
-	  taps[n + M] = 1.0 + ((fwT0 - fwT1) / M_PI * w[n + M]);
+	  taps[n + M] = 1.0 + ((fwT0 - fwT1) / GR_M_PI * w[n + M]);
 	else {
-	  taps[n + M] =  (sin(n * fwT0) - sin(n * fwT1)) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  (sin(n * fwT0) - sin(n * fwT1)) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -514,14 +515,14 @@ namespace gr {
       vector<float> w = window(window_type, ntaps, beta);
 
       int M = (ntaps - 1) / 2;
-      double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
-      double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
+      double fwT0 = 2 * GR_M_PI * low_cutoff_freq / sampling_freq;
+      double fwT1 = 2 * GR_M_PI * high_cutoff_freq / sampling_freq;
 
       for(int n = -M; n <= M; n++) {
 	if (n == 0)
-	  taps[n + M] = 1.0 + ((fwT0 - fwT1) / M_PI * w[n + M]);
+	  taps[n + M] = 1.0 + ((fwT0 - fwT1) / GR_M_PI * w[n + M]);
 	else {
-	  taps[n + M] =  (sin(n * fwT0) - sin(n * fwT1)) / (n * M_PI) * w[n + M];
+	  taps[n + M] =  (sin(n * fwT0) - sin(n * fwT1)) / (n * GR_M_PI) * w[n + M];
 	}
       }
 
@@ -586,7 +587,7 @@ namespace gr {
       vector<float> taps(ntaps);
       double scale = 0;
       double dt = 1.0/spb;
-      double s = 1.0/(sqrt(log(2.0)) / (2*M_PI*bt));
+      double s = 1.0/(sqrt(log(2.0)) / (2*GR_M_PI*bt));
       double t0 = -0.5 * ntaps;
       double ts;
       for(int i=0;i<ntaps;i++) {
@@ -621,7 +622,7 @@ namespace gr {
       for(int i = 0; i < ntaps; i++) {
 	double x1,x2,x3,num,den;
 	double xindx = i - ntaps/2;
-	x1 = M_PI * xindx/spb;
+	x1 = GR_M_PI * xindx/spb;
 	x2 = 4 * alpha * xindx / spb;
 	x3 = x2*x2 - 1;
 
@@ -629,8 +630,8 @@ namespace gr {
 	  if(i != ntaps/2)
 	    num = cos((1+alpha)*x1) + sin((1-alpha)*x1)/(4*alpha*xindx/spb);
 	  else
-	    num = cos((1+alpha)*x1) + (1-alpha) * M_PI / (4*alpha);
-	  den = x3 * M_PI;
+	    num = cos((1+alpha)*x1) + (1-alpha) * GR_M_PI / (4*alpha);
+	  den = x3 * GR_M_PI;
 	}
 	else {
 	  if(alpha==1) {
@@ -639,10 +640,10 @@ namespace gr {
 	  }
 	  x3 = (1-alpha)*x1;
 	  x2 = (1+alpha)*x1;
-	  num = (sin(x2)*(1+alpha)*M_PI
-		 - cos(x3)*((1-alpha)*M_PI*spb)/(4*alpha*xindx)
+	  num = (sin(x2)*(1+alpha)*GR_M_PI
+		 - cos(x3)*((1-alpha)*GR_M_PI*spb)/(4*alpha*xindx)
 		 + sin(x3)*spb*spb/(4*alpha*xindx*xindx));
-	  den = -32 * M_PI * alpha * alpha * xindx/spb;
+	  den = -32 * GR_M_PI * alpha * alpha * xindx/spb;
 	}
 	taps[i] = 4 * alpha * num / den;
 	scale += taps[i];

@@ -39,7 +39,7 @@ namespace gr {
    * \brief Base class for representing user preferences a la windows INI files.
    * \ingroup misc
    *
-   * The real implementation is in Python, and is accessable from C++
+   * The real implementation is in Python, and is accessible from C++
    * via the magic of SWIG directors.
    */
   class GR_RUNTIME_API prefs

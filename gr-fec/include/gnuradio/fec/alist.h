@@ -57,7 +57,7 @@ class FEC_API alist
     //! Write alist data to a file
     void write(const char * fname) const;
 
-    //! Retuns N, the number of variable nodes
+    //! Returns N, the number of variable nodes
     int get_N();
 
     //! Return M, the number of check nodes

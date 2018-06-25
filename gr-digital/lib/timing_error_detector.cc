@@ -79,8 +79,7 @@ namespace gr {
                                       bool needs_lookahead,
                                       bool needs_derivative,
                                       constellation_sptr constellation)
-      : d_type(type),
-        d_constellation(constellation),
+        : d_constellation(constellation),
         d_error(0.0f),
         d_prev_error(0.0f),
         d_inputs_per_symbol(inputs_per_symbol),
@@ -215,7 +214,7 @@ namespace gr {
     void
     timing_error_detector::revert(bool preserve_error)
     {
-        if (d_input_clock == 0 and preserve_error != true)
+        if (d_input_clock == 0 && preserve_error != true)
             d_error = d_prev_error;
         revert_input_clock();
 

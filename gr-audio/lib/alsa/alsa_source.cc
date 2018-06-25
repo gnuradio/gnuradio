@@ -503,7 +503,7 @@ namespace gr {
     }
 
     void
-    alsa_source::bail(const char *msg, int err) throw (std::runtime_error)
+    alsa_source::bail(const char *msg, int err)
     {
       output_error_msg(msg, err);
       throw std::runtime_error("audio_alsa_source");

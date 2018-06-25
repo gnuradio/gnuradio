@@ -45,8 +45,7 @@ namespace gr {
         d_beta(1.0-alpha),
         d_avg(0),
         d_min_update_time(update_rate_ms),
-        d_lastthru(0),
-        d_itemsize(itemsize)
+        d_lastthru(0)
         {
             message_port_register_out(pmt::mp("rate"));
         }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2004,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2004,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,18 +24,20 @@
 #include "config.h"
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <gnuradio/nco.h>
+#include <gnuradio/fxpt_nco.h>
+#include <gnuradio/math.h>
+
 #include <sys/time.h>
+#include <unistd.h>
 
 #ifdef HAVE_SYS_RESOURCE_H
 #include <sys/resource.h>
 #endif
 
-#include <unistd.h>
-#include <gnuradio/nco.h>
-#include <gnuradio/fxpt_nco.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define ITERATIONS 20000000
 #define BLOCK_SIZE (10 * 1000)	// fits in cache
@@ -114,7 +116,7 @@ void basic_sincos_vec(float *x, float *y)
 {
   gr::blocks::nco<float,float> nco;
 
-  nco.set_freq(2 * M_PI / FREQ);
+  nco.set_freq(2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS/BLOCK_SIZE; i++) {
     for(int j = 0; j < BLOCK_SIZE; j++) {
@@ -128,7 +130,7 @@ void native_sincos_vec(float *x, float *y)
 {
   gr::blocks::nco<float,float> nco;
 
-  nco.set_freq(2 * M_PI / FREQ);
+  nco.set_freq(2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS/BLOCK_SIZE; i++) {
     nco.sincos((gr_complex*)x, BLOCK_SIZE);
@@ -139,7 +141,7 @@ void fxpt_sincos_vec(float *x, float *y)
 {
   gr::blocks::fxpt_nco nco;
 
-  nco.set_freq (2 * M_PI / FREQ);
+  nco.set_freq (2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS/BLOCK_SIZE; i++) {
     nco.sincos((gr_complex*)x, BLOCK_SIZE);
@@ -152,7 +154,7 @@ void native_sincos(float *x, float *y)
 {
   gr::blocks::nco<float,float> nco;
 
-  nco.set_freq(2 * M_PI / FREQ);
+  nco.set_freq(2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS; i++) {
     nco.sincos(x, y);
@@ -164,7 +166,7 @@ void fxpt_sincos(float *x, float *y)
 {
   gr::blocks::fxpt_nco nco;
 
-  nco.set_freq(2 * M_PI / FREQ);
+  nco.set_freq(2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS; i++) {
     nco.sincos(x, y);
@@ -178,7 +180,7 @@ void native_sin(float *x, float *y)
 {
   gr::blocks::nco<float,float> nco;
 
-  nco.set_freq(2 * M_PI / FREQ);
+  nco.set_freq(2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS; i++) {
     *x = nco.sin();
@@ -190,7 +192,7 @@ void fxpt_sin(float *x, float *y)
 {
   gr::blocks::fxpt_nco nco;
 
-  nco.set_freq(2 * M_PI / FREQ);
+  nco.set_freq(2 * GR_M_PI / FREQ);
 
   for(int i = 0; i < ITERATIONS; i++) {
     *x = nco.sin();

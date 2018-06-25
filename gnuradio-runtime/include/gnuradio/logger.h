@@ -236,7 +236,7 @@ namespace gr {
 
   /*!
    * \brief Class to control configuration of logger.
-   * This is a singleton that cna launch a thread to wathc a config file for changes
+   * This is a singleton that can launch a thread to watch a config file for changes
    * \ingroup logging
    */
   class GR_RUNTIME_API logger_config
@@ -328,7 +328,7 @@ namespace gr {
   /*!
    * \brief Retrieve a pointer to a logger by name
    *
-   * Retrives a logger pointer
+   * Retrieves a logger pointer
    * \p name.
    *
    * \param name Name of the logger for which a pointer is requested
@@ -473,7 +473,7 @@ namespace gr {
    *
    * \param logger Logger to which appender will be added
    * \param target Std target to write 'cout' or 'cerr' (default is cout)
-   * \param pattern Formating pattern for log messages
+   * \param pattern Formatting pattern for log messages
    */
   GR_RUNTIME_API void logger_add_console_appender(logger_ptr logger,
                                                   std::string target,
@@ -486,7 +486,7 @@ namespace gr {
    *
    * \param logger Logger to which appender will be added
    * \param target Std target to write 'cout' or 'cerr' (default is cout)
-   * \param pattern Formating pattern for log messages
+   * \param pattern Formatting pattern for log messages
    */
   GR_RUNTIME_API void logger_set_console_appender(logger_ptr logger,
                                                   std::string target,
@@ -500,7 +500,7 @@ namespace gr {
    * \param logger Logger to which appender will be added
    * \param filename File to which log will be written
    * \param append Overwrite or append to log file
-   * \param pattern Formating pattern for log messages
+   * \param pattern Formatting pattern for log messages
    */
   GR_RUNTIME_API void logger_add_file_appender(logger_ptr logger,
                                                std::string filename,
@@ -513,7 +513,7 @@ namespace gr {
    * \param logger Logger to which appender will be added
    * \param filename File to which log will be written
    * \param append Overwrite or append to log file
-   * \param pattern Formating pattern for log messages
+   * \param pattern Formatting pattern for log messages
    */
   GR_RUNTIME_API void logger_set_file_appender(logger_ptr logger,
                                                std::string filename,
@@ -530,7 +530,7 @@ namespace gr {
    * \param bkup_index Number of files to write
    * \param append Overwrite or append to log file
    * \param mode Permissions to set on log file
-   * \param pattern Formating pattern for log messages
+   * \param pattern Formatting pattern for log messages
    */
   GR_RUNTIME_API void logger_add_rollingfile_appender(logger_ptr logger, std::string filename,
                                                       size_t filesize, int bkup_index, bool append,
@@ -565,7 +565,7 @@ namespace gr {
     logger_ptr d_logger;
   public:
     /*!
-     * \brief contructor Provide name of logger to associate with this class
+     * \brief constructor Provide name of logger to associate with this class
      * \param logger_name Name of logger associated with class
      */
     logger(std::string logger_name) {

@@ -1,0 +1,20 @@
+---
+BasedOnStyle: LLVM
+IndentWidth: 4
+---
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+AccessModifierOffset: 0
+AlignAfterOpenBracket: Align
+#AlignEscapedNewlines: Left
+AlignTrailingComments: true
+AlwaysBreakTemplateDeclarations: true
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 100
+#FixNamespaceComments: true
+MaxEmptyLinesToKeep: 2
+#CompactNamespaces: true
+NamespaceIndentation: None
+PointerAlignment: Left

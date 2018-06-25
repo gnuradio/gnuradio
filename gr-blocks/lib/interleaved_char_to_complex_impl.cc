@@ -40,8 +40,7 @@ namespace gr {
       : sync_decimator("interleaved_char_to_complex",
 		       gr::io_signature::make (1, 1, (vector_input?2:1)*sizeof(char)),
 		       gr::io_signature::make (1, 1, sizeof(gr_complex)),
-		       vector_input?1:2),
-        d_vector_input(vector_input)
+		       vector_input?1:2)
     {
     const int alignment_multiple =
     volk_get_alignment() / sizeof(gr_complex);

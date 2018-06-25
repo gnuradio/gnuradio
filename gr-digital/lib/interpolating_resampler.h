@@ -483,7 +483,7 @@ namespace gr {
      *
      * \details
      * This is the complex input, complex output, interpolating resampler
-     * object with a polyphase filter bank with a user provided protoype
+     * object with a polyphase filter bank with a user provided prototype
      * matched filter.  The prototype matched filter must be designed at a
      * rate of nfilts times the output rate.
      */
@@ -542,7 +542,7 @@ namespace gr {
      *
      * \details
      * This is the float input, float output, interpolating resampler
-     * object with a polyphase filter bank with a user provided protoype
+     * object with a polyphase filter bank with a user provided prototype
      * matched filter.  The prototype matched filter must be designed at a
      * rate of nfilts times the output rate.
      */

@@ -1,6 +1,6 @@
 // This file was borrowed from the SWIG project to allow use to
 // wrap PMTs that use intrusive pointers. This is only necessary
-// to support backwards compatability with older distributions of
+// to support backwards compatibility with older distributions of
 // Linux that do not natively support a new enough version of SWIG.
 // We do this to prevent having to update our dependency on a new
 // SWIG. Eventually, the need for this should go away.

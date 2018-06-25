@@ -33,8 +33,6 @@
 namespace gr {
   namespace trellis {
 
-    static const float INF = 1.0e9;
-
     siso_f::sptr
     siso_f::make(const fsm &FSM, int K,
 		 int S0, int SK,

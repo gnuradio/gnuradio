@@ -218,7 +218,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.qtgui_waterfall_sink_x_0.enable_grid(False)
         self.qtgui_waterfall_sink_x_0.disable_legend()
         alpha = 10.**(len(self.channels)-1)
-        for i in xrange(len(self.channels)):
+        for i in range(len(self.channels)):
             self.qtgui_waterfall_sink_x_0.set_line_label(i, "Channel {0}".format(i))
             self.qtgui_waterfall_sink_x_0.set_color_map(i, 0)
             self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alpha)
@@ -240,7 +240,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.qtgui_time_sink_x_0.enable_grid(False)
         self.qtgui_time_sink_x_0.enable_control_panel(True)
         self.qtgui_time_sink_x_0.disable_legend()
-        for i in xrange(2*len(self.channels)):
+        for i in range(2*len(self.channels)):
             if(i % 2 == 0):
                 self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Channel {0}}}".format(i/2))
             else:
@@ -268,7 +268,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.qtgui_freq_sink_x_0.set_fft_average(self.fft_average)
         self.qtgui_freq_sink_x_0.enable_control_panel(True)
         self.qtgui_freq_sink_x_0.disable_legend()
-        for i in xrange(len(self.channels)):
+        for i in range(len(self.channels)):
             self.qtgui_freq_sink_x_0.set_line_label(i, "Channel {0}".format(i))
             self.qtgui_freq_sink_x_0.set_line_width(i, widths[i])
             self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
@@ -305,7 +305,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
             self.qtgui_phase_plot.enable_grid(True)
             self.qtgui_phase_plot.enable_control_panel(True)
             self.qtgui_phase_plot.disable_legend()
-            for i in xrange(len(self.channels) - 1):
+            for i in range(len(self.channels) - 1):
                 self.qtgui_phase_plot.set_line_label(i, "Phase Delta Channels {0}/{1}".format(i, i+1))
                 self.qtgui_phase_plot.set_line_width(i, widths[i])
                 self.qtgui_phase_plot.set_line_color(i, colors[i])

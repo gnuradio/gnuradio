@@ -104,10 +104,10 @@ namespace gr {
 
         /* If this is the most probable state so far remember it, this
            only needs to be checked when we are about to output a path
-           so this test can be saved till later if needed, if perfomed
+           so this test can be saved till later if needed, if performed
            later it could also be optimized with SIMD instructions.
            Even better this check could be eliminated as we are
-           outputing the tail of our traceback not the head, for any
+           outputting the tail of our traceback not the head, for any
            head state path will tend towards the optimal path with a
            probability approaching 1 in just 8 or so transitions
         */

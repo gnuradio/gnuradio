@@ -126,7 +126,7 @@ tpc_decoder::tpc_decoder (std::vector<int> row_polys, std::vector<int> col_polys
     }
 
 	// declare the reverse sweep trellis
-	// the beta vector is logically layed out in memory as follows, assuming the
+	// the beta vector is logically laid out in memory as follows, assuming the
 	// following values (for educational purposes)
 	// defined: LL = 6, rowEncoder_K = 3, derived: mm_row=2, max_states_row=4, rowEncoder_n=1, num_symbols_row=2
 	// state_idx
@@ -301,7 +301,7 @@ void tpc_decoder::siso_decode_row() {
         num_llr_u = -MAXLOG;
         den_llr_u = -MAXLOG;
 
-        // intialize alpha_row
+        // initialize alpha_row
 //        for (state=0;state<max_states_row;state++) {
 //			alpha_row[state] = -MAXLOG;
 //		}
@@ -510,7 +510,7 @@ void tpc_decoder::siso_decode_col() {
         num_llr_u = -MAXLOG;
         den_llr_u = -MAXLOG;
 
-        // intialize alpha_col
+        // initialize alpha_col
 //        for (state=0;state<max_states_col;state++) {
 //			alpha_col[state] = -MAXLOG;
 //		}

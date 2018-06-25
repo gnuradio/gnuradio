@@ -25,9 +25,11 @@
 #endif
 
 #include "edit_box_msg_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/qtgui/utils.h>
+
 #include <boost/lexical_cast.hpp>
 
 namespace gr {

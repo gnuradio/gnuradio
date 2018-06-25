@@ -1,0 +1,261 @@
+/*! \page page_filter Filter Signal Processing Blocks
+
+\section filter_introduction Introduction
+
+This is the gr-filter package. It contains signal processing blocks to
+perform filtering operations.
+
+The Python namespace is in gnuradio.filter, which would be normally
+imported as:
+
+\code
+    from gnuradio import filter
+\endcode
+
+See the Doxygen documentation for details about the blocks available
+in this package. A quick listing of the details can be found in Python
+after importing by using:
+
+\code
+    help(filter)
+\endcode
+
+\section filter_dependencies Dependencies
+
+The filter blocks depend on \ref page_fft.
+
+
+\section filter_usage Usage
+
+There are many filter blocks and kernels in GNU Radio. Filter blocks
+are standard GNU Radio blocks that fit into a flowgraph. Filter
+kernels are the guts of the filtering operations that are C++ classes
+which are designed to be useful within other blocks. The filtering
+module also comes with a number of filter design tools.
+
+\subsection filter_kernels Kernels
+
+\li FIR filters (see fir_filter.h): filters that compute finite
+impulse response (FIR) filtering in the time domain.
+
+\li FFT filters (see fft_filter.h): filters that compute FIR filtering
+in the frequency domain (i.e., fast convolution).
+
+\li FIR filters with internal buffers (see fir_filter_with_buffer.h):
+filters that perform time-domain FIR filtering but keep an internal
+buffer so the input vectors are not affected or used. This is not as
+efficient as the normal FIR filters but can be necessary under certain
+conditions.
+
+\li IIR filters (see iir_filter.h): filters that compute infinite
+impulse response (IIR) filtering.
+
+\li Single-pole IIR filters (see single_pole_iir.h): a special case of
+an IIR filter with a single pole (also known as a moving average
+filter).
+
+\li PFB arbitrary resampler (see pfb_arb_resampler.h): performs
+arbitrary resampling (i.e., using any real number) using the polyphase
+filterbank method. \sa \ref pfb_arb_resampler
+
+\li Polyphase filterbank (see polyphase_filterbank.h): a set of base
+classes with standard functions for building many polyphase filterbank
+blocks.
+
+
+\subsection filter_blocks Blocks
+
+<ul>
+<li>FIR Filters</li>
+  <ul>
+  <li>gr::filter::fir_filter_ccc</li>
+  <li>gr::filter::fir_filter_ccf</li>
+  <li>gr::filter::fir_filter_fcc</li>
+  <li>gr::filter::fir_filter_fff</li>
+  <li>gr::filter::fir_filter_fsf</li>
+  <li>gr::filter::fir_filter_scc</li>
+  </ul>
+<li>FFT Filters</li>
+  <ul>
+  <li>gr::filter::fft_filter_ccc</li>
+  <li>gr::filter::fft_filter_fff</li>
+  </ul>
+<li>IIR Filters</li>
+  <ul>
+  <li>gr::filter::iir_filter_ffd</li>
+  </ul>
+<li>Single-Pole IIR Filters</li>
+  <ul>
+  <li>gr::filter::single_pole_iir_filter_cc</li>
+  <li>gr::filter::single_pole_iir_filter_ff</li>
+  </ul>
+<li>Polyphase Filterbanks</li>
+  <ul>
+  <li>gr::filter::pfb_arb_resampler_ccf</li>
+  <li>gr::filter::pfb_arb_resampler_fff</li>
+  <li>gr::filter::pfb_channelizer_ccf</li>
+  <li>gr::filter::pfb_decimator_ccf</li>
+  <li>gr::filter::pfb_interpolator_ccf</li>
+  <li>gr::filter::pfb_synthesizer_ccf</li>
+  <li>gr::digital::pfb_clock_sync_ccf</li>
+  <li>gr::digital::pfb_clock_sync_fff</li>
+  </ul>
+</ul>
+
+\subsection filter_design_tools Design Tools
+
+To help build filters, GNU Radio includes a number of design
+tools. These tools build standard filters like low pass, high pass,
+band pass, etc. There are two main flavors of the filter design tools:
+
+\li Windowed filters (see firdes.h): filters defined as sinc functions
+and a window function.
+
+\li Equiripple filters (see optfir.py): filters defined by using the
+Parks-McClellen algorithm given a set of conditions.
+
+The GNU Radio filter library also exports the Parks-McClellen
+algorithm in both C++ and Python as gr::filter::pm_remez.
+
+The firdes.h filter contains functions to design the following types
+of filters (see gr::filter::firdes):
+
+\li gr::filter::firdes::low_pass: defines a low pass filter based on a
+pass band bandwidth and transition bandwidth.
+
+\li gr::filter::firdes::low_pass_2: same as the low pass filter with
+added argument to set the out-of-band attenuation (in dB).
+
+\li gr::filter::firdes::high_pass: defines a high pass filter based on a
+pass band bandwidth and transition bandwidth.
+
+\li gr::filter::firdes::high_pass_2: same as the high pass filter with
+added argument to set the out-of-band attenuation (in dB).
+
+\li gr::filter::firdes::band_pass: defines a band pass filter based on the
+pass band start and stop frequencies and transition bandwidth.
+
+\li gr::filter::firdes::band_pass_2: same as the band pass filter with
+added argument to set the out-of-band attenuation (in dB).
+
+\li gr::filter::firdes::complex_band_pass: defines a complex band pass
+filter based on the pass band start and stop frequencies and transition
+bandwidth. Returns complex taps for one-sided spectrum.
+
+\li gr::filter::firdes::complex_band_pass_2: same as the complex band
+pass filter with added argument to set the out-of-band attenuation (in
+dB).
+
+\li gr::filter::firdes::band_reject: defines a band reject filter
+based on a stop band bandwidth and transition bandwidth.
+
+\li gr::filter::firdes::band_reject_2: same as the band reject filter
+with added argument to set the out-of-band attenuation (in dB).
+
+\li gr::filter::firdes::hilbert: creates a Hilbert transform filter.
+
+\li gr::filter::firdes::root_raised_cosine: creates a root raised
+cosine (RRC) pulse shaping filter.
+
+\li gr::filter::firdes::gaussian: creates a Gaussian pulse shaping
+filter.
+
+\li gr::filter::firdes::window: Returns the window function for the
+given window at the given number of taps.
+
+
+The optfir.py contains a set of Python-only functions that define
+equiripple filters using the Parks-McClellen algorithm:
+
+\li low_pass: defines a low pass filter based off the end of the pass
+band, the start of the stop band, the pass band ripple, and the stop
+band attenuation.
+
+\li band_pass: defines a band pass filter based the end of the first
+stop band, the start of the pass band, the end of the pass band, the
+start of the second stop band, the pass band ripple, and the stop band
+attenuation.
+
+\li complex_band_pass: defines a band pass filter based the end of the first
+stop band, the start of the pass band, the end of the pass band, the
+start of the second stop band, the pass band ripple, and the stop band
+attenuation. Returns complex taps for one-sided spectrum.
+
+\li band_reject: defines a band reject filter based the end of the
+first pass band, the start of the stop band, the end of the stop band,
+the start of the second pass band, the pass band ripple, and the stop
+band attenuation. Unlike the firdes.h band_reject filter, this filter
+does not have to be symmetrical.
+
+\li high_pass defines a high pass filter based off the end of the stop
+band, the start of the pass band, the pass band ripple, and the stop
+band attenuation.
+
+
+
+\subsection filter_design Filter Design GUI Tool
+
+GNU Radio has a filter design GUI tool called \b
+gr_filter_design. This tool allows us to build filters using the
+filter design methods above and look at the results immediately. The
+frequency and time domain along with other aspects of the filter like
+the phase profile, group delay, the filter taps as a list, impulse
+response, and step response. Also displayed is a pole-zero plot.
+
+The filter design tool is useful to provide immediate feedback on the
+shape, behavior, and complexity of the filter from the design
+parameters. The tool also includes a \b save capability to save the
+taps and parameters in a simple comma-separated value (CSV) format.
+
+Furthermore, the filter design program can be called and used for
+interaction within a Python program. There are a few ways in which we
+can interact with the tool programmatically.
+
+The tool can be simply launched from Python, and when closed, it
+returns an object filled with the filter parameters and taps. An
+example of this can be found in \b examples/filter/gr_filtdes_api.py.
+
+\code
+filtobj = filter_design.launch(sys.argv)
+print "Filter Count:", filtobj.get_filtercount()
+print "Filter type:", filtobj.get_restype()
+print "Filter params", filtobj.get_params()
+print "Filter Coefficients", filtobj.get_taps()
+\endcode
+
+Another way of using the filter design tool is to give it a callback
+function that is called whenever the "Design" button is pressed in the
+GUI. The following code comes from the \b
+examples/filter/gr_filtdes_callback.py example. Whenever "Design" is
+pressed, the "print_params" function is called with the filter
+parameters and taps inside of the "filtobj" object.
+
+\code
+def print_params(filtobj):
+    print "Filter Count:", filtobj.get_filtercount()
+    print "Filter type:", filtobj.get_restype()
+    print "Filter params", filtobj.get_params()
+    print "Filter Coefficients", filtobj.get_taps()
+
+app = Qt.QApplication(sys.argv)
+main_win = filter_design.launch(sys.argv, print_params)
+main_win.show()
+app.exec_()
+\endcode
+
+Changing one line in the above code allows us to set restrictions on
+what type of filter the design tool can build. This concept is shown
+in \b examples/filter/gr_filtdes_restrict.py. Here, the filter type is
+restricted to using IIR filters.
+
+\code
+main_win = filter_design.launch(sys.argv, callback = print_params, restype = "iir")
+\endcode
+
+An application running a full GNU Radio flowgraph can actually launch
+the filter design tool and have it update a filter while the system is
+running. This concept is an extension of the callback function and is
+shown in the example \b examples/filter/gr_filtdes_live_upd.py. The
+code is not shown here as the full code is quite long.
+
+*/

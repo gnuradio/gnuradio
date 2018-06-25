@@ -32,7 +32,6 @@ namespace gr {
     class crc32_async_bb_impl : public crc32_async_bb
     {
      private:
-      bool d_check;
       boost::crc_optimal<32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true> d_crc_impl;
 
       pmt::pmt_t d_in_port;

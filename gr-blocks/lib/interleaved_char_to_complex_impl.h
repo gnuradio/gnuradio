@@ -31,7 +31,6 @@ namespace gr {
     class BLOCKS_API interleaved_char_to_complex_impl : public interleaved_char_to_complex
     {
     private:
-      bool d_vector_input;
     public:
       interleaved_char_to_complex_impl(bool vector_input=false);
 

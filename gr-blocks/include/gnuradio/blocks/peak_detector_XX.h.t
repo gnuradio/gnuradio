@@ -48,12 +48,12 @@ namespace gr {
       /*!
        * Make a peak detector block.
        *
-       * \param threshold_factor_rise The threshold factor determins
+       * \param threshold_factor_rise The threshold factor determines
        *        when a peak has started. An average of the signal is
        *        calculated and when the value of the signal goes over
        *        threshold_factor_rise*average, we start looking for a
        *        peak.
-       * \param threshold_factor_fall The threshold factor determins
+       * \param threshold_factor_fall The threshold factor determines
        *        when a peak has ended. An average of the signal is
        *        calculated and when the value of the signal goes
        *        below threshold_factor_fall*average, we stop looking

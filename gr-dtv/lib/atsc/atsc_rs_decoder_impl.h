@@ -39,7 +39,6 @@ namespace gr {
       int d_nerrors_corrrected_count;
       int d_bad_packet_count;
       int d_total_packets;
-      int d_total_bits;
       void *d_rs;
 
     public:

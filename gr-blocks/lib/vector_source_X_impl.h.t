@@ -39,7 +39,6 @@ namespace gr {
       int d_vlen;
       bool d_settags;
       std::vector<tag_t> d_tags;
-      unsigned int d_tagpos;
 
     public:
       @NAME_IMPL@(const std::vector<@TYPE@> &data,

@@ -64,7 +64,7 @@ namespace gr {
     /*! \brief Get the current thread's ID as a gr_thread_t
      *
      * We use this when setting the thread affinity or any other
-     * low-level thread settings. Can be called withing a GNU Radio
+     * low-level thread settings. Can be called within a GNU Radio
      * block to get a reference to its current thread ID.
      */
     GR_RUNTIME_API gr_thread_t get_current_thread_id();

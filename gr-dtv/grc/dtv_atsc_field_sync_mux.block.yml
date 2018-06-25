@@ -1,0 +1,18 @@
+id: dtv_atsc_field_sync_mux
+label: ATSC Field Sync Mux
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: 256
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: 1024
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.atsc_field_sync_mux()
+
+file_format: 1

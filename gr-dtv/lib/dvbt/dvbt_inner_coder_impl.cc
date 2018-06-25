@@ -131,8 +131,7 @@ namespace gr {
           io_signature::make(1, 1, sizeof (unsigned char) * noutput)),
       config(constellation, hierarchy, coderate, coderate),
       d_ninput(ninput), d_noutput(noutput),
-      d_reg(0),
-      d_bitcount(0)
+      d_reg(0)
     {
       //Determine k - input of encoder
       d_k = config.d_cr_k;
@@ -141,7 +140,7 @@ namespace gr {
       //Determine m - constellation symbol size
       d_m = config.d_m;
 
-      // In order to accomodate all constalations (m=2,4,6)
+      // In order to accommodate all constalations (m=2,4,6)
       // and rates (1/2, 2/3, 3/4, 5/6, 7/8)
       // We need the following things to happen:
       // - output item size multiple of 1512bytes

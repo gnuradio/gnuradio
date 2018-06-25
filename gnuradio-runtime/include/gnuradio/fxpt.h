@@ -45,6 +45,7 @@ namespace gr {
     static const int NBITS = 10;
     static const float s_sine_table[1 << NBITS][2];
     static const float PI;
+    static const float TAU;
     static const float TWO_TO_THE_31;
 
   public:
@@ -52,8 +53,8 @@ namespace gr {
       float_to_fixed(float x)
     {
       // Fold x into -PI to PI.
-      int d = (int)floor(x/2/PI+0.5);
-      x -= d*2*PI;
+      int d = (int)std::floor(x/TAU+0.5);
+      x -= d*TAU;
       // And convert to an integer.
       return (int32_t) ((float) x * TWO_TO_THE_31 / PI);
     }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,8 @@
 #include <qa_fxpt_nco.h>
 #include <gnuradio/fxpt_nco.h>
 #include <gnuradio/nco.h>
+#include <gnuradio/math.h>
+
 #include <cppunit/TestAssert.h>
 #include <iostream>
 #include <stdio.h>
@@ -52,8 +54,8 @@ qa_fxpt_nco::t0()
   gr::fxpt_nco		new_nco;
   double max_error = 0, max_phase_error = 0;
 
-  ref_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
-  new_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
+  ref_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
+  new_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_nco.get_freq(), new_nco.get_freq(), SIN_COS_TOLERANCE);
 
@@ -90,8 +92,8 @@ qa_fxpt_nco::t1()
   gr_complex*		new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
   double max_error = 0;
 
-  ref_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
-  new_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
+  ref_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
+  new_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(ref_nco.get_freq(), new_nco.get_freq(), SIN_COS_TOLERANCE);
 

@@ -314,7 +314,7 @@ PMT_API pmt_t cadddr(pmt_t pair);
  * ------------------------------------------------------------------------
  */
 
-//! Return true if \p x is a tuple, othewise false.
+//! Return true if \p x is a tuple, otherwise false.
 PMT_API bool is_tuple(pmt_t x);
 
 PMT_API pmt_t make_tuple();
@@ -348,7 +348,7 @@ PMT_API pmt_t tuple_ref(const pmt_t &tuple, size_t k);
  * ------------------------------------------------------------------------
  */
 
-//! Return true if \p x is a vector, othewise false.
+//! Return true if \p x is a vector, otherwise false.
 PMT_API bool is_vector(pmt_t x);
 
 //! Make a vector of length \p k, with initial values set to \p fill
@@ -374,7 +374,7 @@ PMT_API void vector_fill(pmt_t vector, pmt_t fill);
  * ------------------------------------------------------------------------
  */
 
-//! Return true if \p x is a blob, othewise false.
+//! Return true if \p x is a blob, otherwise false.
 PMT_API bool is_blob(pmt_t x);
 
 /*!

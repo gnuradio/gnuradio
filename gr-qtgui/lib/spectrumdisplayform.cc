@@ -19,12 +19,14 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#include <gnuradio/qtgui/spectrumdisplayform.h>
 
-#include <cmath>
+#include <gnuradio/qtgui/qtgui_types.h>
+
 #include <QColorDialog>
 #include <QMessageBox>
-#include <gnuradio/qtgui/spectrumdisplayform.h>
-#include <gnuradio/qtgui/qtgui_types.h>
+
+#include <cmath>
 
 SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   : QWidget(parent)

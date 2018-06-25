@@ -31,7 +31,6 @@ namespace gr {
     class annotator_alltoall_impl : public annotator_alltoall
     {
     private:
-      size_t d_itemsize;
       uint64_t d_when;
       uint64_t d_tag_counter;
       std::vector<tag_t> d_stored_tags;

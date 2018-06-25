@@ -214,7 +214,7 @@ namespace gr {
 
         if(current_line > max_height) {
           //Start new frame
-          //TODO, do this all in a seperate thread
+          //TODO, do this all in a separate thread
           current_line = 0;
           dst_pixels = d_image->pixels[first_dst_plane];
           dst_pixels_2 = d_image->pixels[second_dst_plane];

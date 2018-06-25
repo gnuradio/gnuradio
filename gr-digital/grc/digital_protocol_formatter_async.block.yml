@@ -1,0 +1,26 @@
+id: digital_protocol_formatter_async
+label: Protocol Formatter (Async)
+
+parameters:
+-   id: format
+    label: Format Obj.
+    dtype: raw
+
+inputs:
+-   domain: message
+    id: in
+    optional: true
+
+outputs:
+-   domain: message
+    id: header
+    optional: true
+-   domain: message
+    id: payload
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.protocol_formatter_async(${format})
+
+file_format: 1

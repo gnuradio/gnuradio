@@ -1,0 +1,22 @@
+'[Core]':
+- Audio:
+  - vocoder_alaw_decode_bs
+  - vocoder_alaw_encode_sb
+  - vocoder_codec2_decode_ps
+  - vocoder_codec2_encode_sp
+  - vocoder_cvsd_decode_bs
+  - vocoder_cvsd_encode_sb
+  - vocoder_cvsd_decode_bf
+  - vocoder_cvsd_encode_fb
+  - vocoder_freedv_tx_ss
+  - vocoder_freedv_rx_ss
+  - vocoder_g721_decode_bs
+  - vocoder_g721_encode_sb
+  - vocoder_g723_24_decode_bs
+  - vocoder_g723_24_encode_sb
+  - vocoder_g723_40_decode_bs
+  - vocoder_g723_40_encode_sb
+  - vocoder_gsm_fr_decode_ps
+  - vocoder_gsm_fr_encode_sp
+  - vocoder_ulaw_decode_bs
+  - vocoder_ulaw_encode_sb

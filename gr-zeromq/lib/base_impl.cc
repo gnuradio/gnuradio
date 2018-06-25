@@ -193,7 +193,7 @@ namespace gr {
         }
       }
 
-      /* Each message must contain an integer mutliple of data vectors */
+      /* Each message must contain an integer multiple of data vectors */
       if ((d_msg.size() - d_consumed_bytes) % d_vsize != 0)
       {
         throw std::runtime_error(

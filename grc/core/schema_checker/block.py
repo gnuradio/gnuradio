@@ -37,7 +37,7 @@ TEMPLATES_SCHEME = expand(
 BLOCK_SCHEME = expand(
     id=Spec(types=str_, required=True, item_scheme=None),
     label=str_,
-    category=(list, str_),
+    category=str_,
     flags=(list, str_),
 
     parameters=Spec(types=list, required=False, item_scheme=PARAM_SCHEME),

@@ -65,7 +65,7 @@ import cmath
 #  The digital deemphasis filter design below, uses the
 #  "bilinear transformation" method of designing digital filters:
 #
-#  1. Convert digitial specifications into the analog domain, by prewarping
+#  1. Convert digital specifications into the analog domain, by prewarping
 #     digital frequency specifications into analog frequencies.
 #
 #     w_a = (2/T)tan(wT/2)
@@ -210,7 +210,7 @@ class fm_deemph(gr.hier_block2):
 #  The digital preemphasis filter design below, uses the
 #  "bilinear transformation" method of designing digital filters:
 #
-#  1. Convert digitial specifications into the analog domain, by prewarping
+#  1. Convert digital specifications into the analog domain, by prewarping
 #     digital frequency specifications into analog frequencies.
 #
 #     w_a = (2/T)tan(wT/2)

@@ -20,12 +20,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cmath>
+#include <gnuradio/qtgui/numberdisplayform.h>
+
+#include <qwt_color_map.h>
 #include <QMessageBox>
 #include <QFileDialog>
-#include <gnuradio/qtgui/numberdisplayform.h>
+
+#include <cmath>
 #include <iostream>
-#include <qwt_color_map.h>
 
 NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
                                      QWidget* parent)

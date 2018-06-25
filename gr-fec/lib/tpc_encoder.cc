@@ -249,7 +249,7 @@ void tpc_encoder::generic_work(void *inBuffer, void *outBuffer) {
     for(ii=0; ii<numCheckColsToEncode; ii++) {
         // populate colToEncode
         for(jj=0; jj<d_kcol; jj++) {
-            colToEncode[jj] = rowEncodedBits[jj][ii];       // indexing is wierd b/c of the way we declared the vector :(
+            colToEncode[jj] = rowEncodedBits[jj][ii];       // indexing is weird b/c of the way we declared the vector :(
         }
 
         //DEBUG_PRINT("Encoding col=[%d] -->\n",ii+numDataColsToEncode);

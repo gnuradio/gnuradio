@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,14 +21,16 @@
  */
 
 #include "selective_fading_model2_impl.h"
+#include <sincostable.h>
+
 #include <gnuradio/io_signature.h>
-#include <iostream>
+#include <gnuradio/fxpt.h>
+#include <gnuradio/math.h>
 
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gnuradio/fxpt.h>
-#include <sincostable.h>
+#include <iostream>
 
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
@@ -124,7 +126,7 @@ namespace gr {
                 //gr_complex ff_H(d_faders[j]->next_sample());
                 for(size_t k=0; k<d_taps.size(); k++){
                     float dist = k-d_delays[j];
-                    float interpmag = d_sintable.sinc(2*M_PI*dist);
+                    float interpmag = d_sintable.sinc(2*GR_M_PI*dist);
                     d_taps[k] += ff_H * interpmag * d_mags[j];
                 }
             }

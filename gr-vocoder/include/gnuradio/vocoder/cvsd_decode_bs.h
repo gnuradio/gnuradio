@@ -103,7 +103,7 @@ namespace gr {
        *                      Default: "1280"
        * \param step_decay    Decay factor applied to step size when there is not a run of J output 1s or 0s.
        *                      Default: "0.9990234375"  (i.e. 1-1/1024)
-       * \param accum_decay   Decay factor applied to the internal reference during every interation of the codec.
+       * \param accum_decay   Decay factor applied to the internal reference during every iteration of the codec.
        *                      Default: "0.96875"  (i.e. 1-1/32)
        * \param K             Size of shift register; the number of output bits remembered by codec (must be <= to 32).
        *                      Default: "32"

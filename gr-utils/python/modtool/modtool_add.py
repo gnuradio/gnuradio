@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 
-from .util_functions import append_re_line_sequence, ask_yes_no
+from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
@@ -73,17 +73,21 @@ class ModToolAdd(ModTool):
 
         self._info['blocktype'] = options.block_type
         if self._info['blocktype'] is None:
-            # Print(list out of blocktypes to user for reference)
+            # Print list out of blocktypes to user for reference
             print(str(self._block_types))
-            while self._info['blocktype'] not in self._block_types:
-                self._info['blocktype'] = input("Enter block type: ")
-                if self._info['blocktype'] not in self._block_types:
-                    print('Must be one of ' + str(self._block_types))
+            with SequenceCompleter(sorted(self._block_types)):
+                while self._info['blocktype'] not in self._block_types:
+                    self._info['blocktype'] = input("Enter block type: ")
+                    if self._info['blocktype'] not in self._block_types:
+                        print('Must be one of ' + str(self._block_types))
+
         # Allow user to specify language interactively if not set
         self._info['lang'] = options.lang
         if self._info['lang'] is None:
-            while self._info['lang'] not in ['c++', 'cpp', 'python']:
-                self._info['lang'] = input("Language (python/cpp): ")
+            language_candidates = ('c++', 'cpp', 'python')
+            with SequenceCompleter(language_candidates):
+                while self._info['lang'] not in language_candidates:
+                    self._info['lang'] = input("Language (python/cpp): ")
         if self._info['lang'] == 'c++':
             self._info['lang'] = 'cpp'
 
@@ -315,4 +319,3 @@ class ModToolAdd(ModTool):
         ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')
         ed.write()
         self.scm.mark_files_updated((self._file['cmgrc'],))
-

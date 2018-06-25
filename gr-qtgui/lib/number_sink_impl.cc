@@ -25,11 +25,14 @@
 #endif
 
 #include "number_sink_impl.h"
+
 #include <gnuradio/io_signature.h>
-#include <string.h>
-#include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
+
+#include <volk/volk.h>
 #include <qwt_symbol.h>
+
+#include <string.h>
 #include <cmath>
 
 #ifdef _MSC_VER

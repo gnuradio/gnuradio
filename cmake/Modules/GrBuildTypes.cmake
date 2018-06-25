@@ -29,7 +29,7 @@ set(__INCLUDED_GR_BUILD_TYPES_CMAKE TRUE)
 #  - RelWithDebInfo: -O3 -g
 #  - MinSizeRel: -Os
 
-# Addtional Build Types, defined below:
+# Additional Build Types, defined below:
 #  - NoOptWithASM: -O0 -g -save-temps
 #  - O2WithASM: -O2 -g -save-temps
 #  - O3WithASM: -O3 -g -save-temps

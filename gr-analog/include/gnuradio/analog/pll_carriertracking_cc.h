@@ -43,7 +43,7 @@ namespace gr {
      * input and outputs that signal, downconverted to DC
      *
      * All settings max_freq and min_freq are in terms of radians per
-     * sample, NOT HERTZ. The loop bandwidth determins the lock range
+     * sample, NOT HERTZ. The loop bandwidth determines the lock range
      * and should be set around pi/200 -- 2pi/100.  \sa
      * pll_freqdet_cf, pll_carriertracking_cc
      */

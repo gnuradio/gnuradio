@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2010-2012 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010-2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -171,10 +171,10 @@ namespace gr {
 
       d_freq = d_freq - d_freq_gain*angle;
       d_phase = d_phase + d_freq - d_phase_gain*angle;
-      if(d_phase >= 2*M_PI)
-	d_phase -= 2*M_PI;
+      if(d_phase >= 2*GR_M_PI)
+	d_phase -= 2*GR_M_PI;
       if(d_phase <0)
-	d_phase += 2*M_PI;
+	d_phase += 2*GR_M_PI;
 
       //if(VERBOSE)
       //  std::cerr << angle << "\t" << d_freq << "\t" << d_phase << "\t" << std::endl;

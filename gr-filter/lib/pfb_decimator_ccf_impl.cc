@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010,2012,2014 Free Software Foundation, Inc.
+ * Copyright 2009,2010,2012,2014,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 #include "pfb_decimator_ccf_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/math.h>
 #include <volk/volk.h>
 
 namespace gr {
@@ -61,7 +62,7 @@ namespace gr {
       d_rate = decim;
       d_rotator = new gr_complex[d_rate];
       for(unsigned int i = 0; i < d_rate; i++) {
-        d_rotator[i] = gr_expj(i*d_chan*2*M_PI/d_rate);
+        d_rotator[i] = gr_expj(i*d_chan*2*GR_M_PI/d_rate);
       }
 
       set_relative_rate(1.0/(float)decim);

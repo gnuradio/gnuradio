@@ -1,0 +1,27 @@
+id: analog_rail_ff
+label: Rail
+
+parameters:
+-   id: lo
+    label: Low clipping
+    dtype: real
+-   id: hi
+    label: Hi clipping
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.rail_ff(${lo}, ${hi})
+    callbacks:
+    - set_lo(${lo})
+    - set_hi(${hi})
+
+file_format: 1

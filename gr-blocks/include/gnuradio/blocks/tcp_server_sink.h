@@ -34,8 +34,8 @@ namespace gr {
      * \ingroup networking_tools_blk
      *
      * \details
-     * Listen for incomming TCP connection(s). Duplicate data for each
-     * opened connection. Optionaly can wait until first client connects
+     * Listen for incoming TCP connection(s). Duplicate data for each
+     * opened connection. Optionally can wait until first client connects
      * before streaming starts.
      */
     class BLOCKS_API tcp_server_sink : virtual public gr::sync_block

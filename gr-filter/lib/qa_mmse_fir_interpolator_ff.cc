@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2012 Free Software Foundation, Inc.
+ * Copyright 2002,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,11 +24,12 @@
 #include <config.h>
 #endif
 
-#include <cppunit/TestAssert.h>
 #include <qa_mmse_fir_interpolator_ff.h>
 #include <gnuradio/filter/mmse_fir_interpolator_ff.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/math.h>
 #include <volk/volk.h>
+#include <cppunit/TestAssert.h>
 #include <cstdio>
 #include <cmath>
 
@@ -38,8 +39,8 @@ namespace gr {
     static float
     test_fcn(double index)
     {
-      return (2 * sin(index * 0.25 * 2 * M_PI + 0.125 * M_PI)
-	      + 3 * sin(index * 0.077 * 2 * M_PI + 0.3 * M_PI));
+      return (2 * sin(index * 0.25 * 2 * GR_M_PI + 0.125 * GR_M_PI)
+	      + 3 * sin(index * 0.077 * 2 * GR_M_PI + 0.3 * GR_M_PI));
     }
 
     void

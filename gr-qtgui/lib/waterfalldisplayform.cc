@@ -20,10 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cmath>
+#include <gnuradio/qtgui/waterfalldisplayform.h>
+
 #include <QColorDialog>
 #include <QMessageBox>
-#include <gnuradio/qtgui/waterfalldisplayform.h>
+
+#include <cmath>
 #include <iostream>
 
 WaterfallDisplayForm::WaterfallDisplayForm(int nplots, QWidget* parent)
@@ -358,7 +360,7 @@ void
 WaterfallDisplayForm::setUpdateTime(double t)
 {
    d_update_time = t;
-   // Assume times are equal unless explictly told by setTimePerFFT()
+   // Assume times are equal unless explicitly told by setTimePerFFT()
    // This is the case when plotting using gr_spectrogram_plot
    d_time_per_fft = t;
 }

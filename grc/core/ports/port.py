@@ -39,7 +39,7 @@ class Port(Element):
     optional = EvaluatedFlag()
 
     def __init__(self, parent, direction, id, label='', domain=Constants.DEFAULT_DOMAIN, dtype='',
-                 vlen='', multiplicity=1, optional=False, hide='', **_):
+                 vlen='', multiplicity=1, optional=False, hide=False, **_):
         """Make a new port from nested data."""
         Element.__init__(self, parent)
 

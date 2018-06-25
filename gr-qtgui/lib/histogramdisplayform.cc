@@ -20,9 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cmath>
-#include <QMessageBox>
 #include <gnuradio/qtgui/histogramdisplayform.h>
+
+#include <QMessageBox>
+
+#include <cmath>
 #include <iostream>
 
 HistogramDisplayForm::HistogramDisplayForm(int nplots, QWidget* parent)

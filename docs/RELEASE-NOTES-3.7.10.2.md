@@ -21,7 +21,7 @@ release:
 * Darek Kawamoto <darek@he360.com>
 * Ethan Trewhitt <ethan.trewhitt@gtri.gatech.edu>
 * Geof Nieboer <gnieboer@corpcomm.net>
-* Hatsune Aru <email witheld>
+* Hatsune Aru <email withheld>
 * Jacob Gilbert <mrjacobagilbert@gmail.com>
 * Jiří Pinkava <j-pi@seznam.cz>
 * Johannes Demel <demel@ant.uni-bremen.de>
@@ -47,7 +47,7 @@ release:
 * Sylvain Munaut <tnt@246tNt.com>
 * Thomas Habets <habets@google.com>
 * Tim O'Shea <tim.oshea753@gmail.com>
-* Tobias Blomberg <email witheld>
+* Tobias Blomberg <email withheld>
 
 
 Bug Fixes

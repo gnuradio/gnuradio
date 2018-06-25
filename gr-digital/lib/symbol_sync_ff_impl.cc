@@ -255,8 +255,8 @@ namespace gr {
             if (t->offset < soffset) // tag is in the past of what we care about
                 continue;
 
-            if (not pmt::eq(t->key, d_time_est_key) and  // not a time_est tag
-                not pmt::eq(t->key, d_clock_est_key)   ) // not a clock_est tag
+            if (!pmt::eq(t->key, d_time_est_key) &&  // not a time_est tag
+                !pmt::eq(t->key, d_clock_est_key)   ) // not a clock_est tag
                 continue;
 
             found = true;
@@ -272,7 +272,7 @@ namespace gr {
                 for (t2 = ++t; t2 != d_new_tags.end(); ++t2) {
                     if (t2->offset > t->offset) // search finished
                         break;
-                    if (not pmt::eq(t->key, d_clock_est_key)) // not a clock_est
+                    if (!pmt::eq(t->key, d_clock_est_key)) // not a clock_est
                         continue;
                     // Found a clock_est tag at the same offset
                     tag_offset = t2->offset;
@@ -290,7 +290,7 @@ namespace gr {
                                    pmt::to_double(pmt::tuple_ref(t->value, 1)));
             }
 
-            if (not(timing_offset >= -1.0f and timing_offset <= 1.0f)) {
+            if (!(timing_offset >= -1.0f && timing_offset <= 1.0f)) {
                 // the time_est/clock_est tag's payload is invalid
                 GR_LOG_WARN(d_logger,
                             boost::format("ignoring time_est/clock_est tag with"
@@ -300,13 +300,13 @@ namespace gr {
                 continue;
             }
 
-            if (t->offset == soffset and timing_offset < 0.0f) {
+            if (t->offset == soffset && timing_offset < 0.0f) {
                 // already handled times earlier than this previously
                 found = false;
                 continue;
             }
 
-            if (t->offset == eoffset and timing_offset >= 0.0f) {
+            if (t->offset == eoffset && timing_offset >= 0.0f) {
                 // handle times greater than this later
                 found = false;
                 break;
@@ -341,7 +341,7 @@ namespace gr {
         int i;
         std::vector<tag_t>::iterator t;
         for (t = d_tags.begin();
-             t != d_tags.end() and t->offset <= mid_period_offset;
+             t != d_tags.end() && t->offset <= mid_period_offset;
              t = d_tags.erase(t)) {
             t->offset = output_offset;
             for (i = 0; i < d_noutputs; i++)
@@ -489,7 +489,7 @@ namespace gr {
                     d_interp->differentiate(&in[ii], d_interp->phase_wrapped());
             d_ted->input(interp_output, interp_derivative);
         }
-        if (symbol_clock() and d_ted->needs_lookahead()) {
+        if (symbol_clock() && d_ted->needs_lookahead()) {
             // N.B. symbol_clock() == true implies ted_input_clock() == true
             // N.B. symbol_clock() == true implies output_sample_clock() == true
 

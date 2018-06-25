@@ -1,0 +1,31 @@
+id: analog_cpfsk_bc
+label: CPFSK
+category: '[Core]/Deprecated'
+
+parameters:
+-   id: k
+    label: K
+    dtype: real
+-   id: amplitude
+    label: Amplitude
+    dtype: real
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '2'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.cpfsk_bc(${k}, ${amplitude}, ${samples_per_symbol})
+    callbacks:
+    - set_amplitude(${amplitude})
+
+file_format: 1

@@ -34,7 +34,7 @@ class DrawingArea(Gtk.DrawingArea):
 
     def __init__(self, flow_graph):
         """
-        DrawingArea contructor.
+        DrawingArea constructor.
         Connect event handlers.
 
         Args:

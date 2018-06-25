@@ -65,7 +65,7 @@ namespace gr {
         zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
         zmq::poll(&items[0], 1, first ? d_timeout : 0);
 
-          /* If we dont have anything, we're done */
+          /* If we don't have anything, we're done */
         if (!(items[0].revents & ZMQ_POLLIN))
           break;
 

@@ -52,12 +52,12 @@ namespace gr {
      *              x^6 + x^5 + x^0 = 0x61
      *
      * \param seed - the initialization vector placed into the
-     *             register durring initialization. Low order bit
+     *             register during initialization. Low order bit
      *             corresponds to x^0 coefficient -- the first to be
      *             shifted as output.
      *
      * \param reg_len - specifies the length of the feedback shift
-     *             register to be used. Durring each iteration, the
+     *             register to be used. During each iteration, the
      *             register is rightshifted one and the new bit is
      *             placed in bit reg_len. reg_len should generally be
      *             at least order(mask) + 1

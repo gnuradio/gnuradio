@@ -63,8 +63,8 @@ where blocks (such as the delay block) would drop tags. Paul David stepped in
 with his first contribution to GNU Radio with a fix.
 
 Fix an issue with flat\_flowgraph calculating alignment by
-misinterpreting units of write and read indeces. This was only apparent when these
-indeces are non-zero (a flowgraph has stopped and restarted).
+misinterpreting units of write and read indices. This was only apparent when these
+indices are non-zero (a flowgraph has stopped and restarted).
 
 Fix exceptions thrown in hier\_block2 constructors.
 
@@ -102,7 +102,7 @@ Maximum Deviation parameter for NBFM transmitter exposed to GRC
 ### gr-digital
 
 Change the constellation receiver to inherit from control\_loop
-publically
+publicly
 rather than the impl to better support the control port interface.
 (closed issue \#876)
 

@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_NUMBER_SINK_IMPL_H
 
 #include <gnuradio/qtgui/number_sink.h>
+
 #include <gnuradio/qtgui/numberdisplayform.h>
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/high_res_timer.h>
