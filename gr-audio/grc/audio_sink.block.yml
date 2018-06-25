@@ -9,7 +9,7 @@ parameters:
     dtype: int
     default: samp_rate
     options: ['16000', '22050', '24000', '32000', '44100', '48000']
-    option_labels: [16KHz, 22.05KHz, 24KHz, 32KHz, 44.1KHz, 48KHz]
+    option_labels: [16 kHz, 22.05 kHz, 24 kHz, 32 kHz, 44.1 kHz, 48 kHz]
 -   id: device_name
     label: Device Name
     dtype: string
