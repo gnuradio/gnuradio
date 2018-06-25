@@ -20,11 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, blocks
 import os
 import tempfile
-import pmt
 import array
+import pmt
+from gnuradio import gr, gr_unittest, blocks
 
 class test_file_source(gr_unittest.TestCase):
 
@@ -33,8 +33,8 @@ class test_file_source(gr_unittest.TestCase):
         os.environ['GR_CONF_CONTROLPORT_ON'] = 'False'
         cls._datafile = tempfile.NamedTemporaryFile()
         cls._datafilename = cls._datafile.name
-        cls._vector = range(1000)
-        with open(cls._datafilename, 'w') as f:
+        cls._vector = [x for x in range(1000)]
+        with open(cls._datafilename, 'wb') as f:
             array.array('f', cls._vector).tofile(f)
 
     @classmethod
@@ -44,14 +44,12 @@ class test_file_source(gr_unittest.TestCase):
         del cls._datafile
 
     def setUp (self):
-        self.tb = gr.top_block ()
+        self.tb = gr.top_block()
 
     def tearDown (self):
         self.tb = None
 
     def test_file_source(self):
-        expected_result = self._vector
-
         src = blocks.file_source(gr.sizeof_float, self._datafilename)
         snk = blocks.vector_sink_f()
         self.tb.connect(src, snk)
@@ -62,11 +60,13 @@ class test_file_source(gr_unittest.TestCase):
         self.assertEqual(len(snk.tags()), 0)
 
     def test_file_source_no_such_file(self):
-
+        """
+        Try to open a non-existant file and verify exception is thrown.
+        """
         try:
-            src = blocks.file_source(gr.sizeof_float, "___no_such_file___")
+            _ = blocks.file_source(gr.sizeof_float, "___no_such_file___")
             self.assertTrue(False)
-        except RuntimeError, e:
+        except RuntimeError:
             self.assertTrue(True)
 
     def test_file_source_with_offset(self):
@@ -112,7 +112,7 @@ class test_file_source(gr_unittest.TestCase):
         self.assertTrue(src.seek(0, os.SEEK_SET))
         self.assertTrue(src.seek(1, os.SEEK_CUR))
         # Seek past end of file - this will also log a warning
-        self.assertFalse(src.seek(len(self._vector), os.SEEK_CUR));
+        self.assertFalse(src.seek(len(self._vector), os.SEEK_CUR))
 
 
     def test_begin_tag(self):
@@ -133,9 +133,9 @@ class test_file_source(gr_unittest.TestCase):
 
         src = blocks.file_source(gr.sizeof_float, self._datafilename, True)
         src.set_begin_tag(pmt.string_to_symbol("file_begin"))
-        hd = blocks.head(gr.sizeof_float, 2 * len(self._vector))
+        head = blocks.head(gr.sizeof_float, 2 * len(self._vector))
         snk = blocks.vector_sink_f()
-        self.tb.connect(src, hd, snk)
+        self.tb.connect(src, head, snk)
         self.tb.run()
 
         result_data = snk.data()
