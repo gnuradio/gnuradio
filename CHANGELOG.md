@@ -24,6 +24,11 @@ Older Logs can be found in `docs/RELEASE-NOTES-*`.
 #### gr-utils
 - `gr_modtool` now with autocompletion candidates for `rm`
 
+### Changed
+#### Project Scope
+- Removed cppunit from all unit tests, replaced by Boost
+- Removed the cppunit dependency
+
 ## [3.7.12.0] - 2018-04-01
 
 ### Software Engineering

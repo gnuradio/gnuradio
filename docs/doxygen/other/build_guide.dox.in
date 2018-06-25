@@ -37,7 +37,6 @@ first. Most recent systems have these packages available.
 \li git                                        http://git-scm.com/downloads
 \li cmake       (>= @GR_CMAKE_MIN_VERSION@)    http://www.cmake.org/cmake/resources/software.html
 \li boost       (>= @GR_BOOST_MIN_VERSION@)    http://www.boost.org/users/download/
-\li cppunit     (>= @GR_CPPUNIT_MIN_VERSION@)  http://freedesktop.org/wiki/Software/cppunit/
 \li mako        (>= @GR_MAKO_MIN_VERSION@)     http://www.makotemplates.org/download.html
 \li log4cpp     (>= 1.0)                       http://log4cpp.sourceforge.net/
 
