@@ -20,11 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest, blocks
 import os
 import tempfile
-import pmt
 import array
+from gnuradio import gr, gr_unittest, blocks
 
 class test_file_sink(gr_unittest.TestCase):
 
@@ -47,11 +46,11 @@ class test_file_sink(gr_unittest.TestCase):
             self.tb.run()
 
             # Check file length (float: 4 * nsamples)
-            st = os.stat(temp.name)
-            self.assertEqual(st.st_size, 4 * len(data))
+            file_size = os.stat(temp.name).st_size
+            self.assertEqual(file_size, 4 * len(data))
 
             # Check file contents
-            datafile = open(temp.name, 'r')
+            datafile = open(temp.name, 'rb')
             result_data = array.array('f')
             result_data.fromfile(datafile, len(data))
             self.assertFloatTuplesAlmostEqual(expected_result, result_data)
