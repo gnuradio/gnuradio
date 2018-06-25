@@ -416,8 +416,8 @@ class ${blockname}(${parenttype}):
 
     def general_work(self, input_items, output_items):
         output_items[0][:] = input_items[0]
-        consume(0, len(input_items[0]))
-        \#self.consume_each(len(input_items[0]))
+        consume(0, len(input_items[0]))\
+        #self.consume_each(len(input_items[0]))
         return len(output_items[0])
 <% return %>
 % endif
@@ -510,17 +510,17 @@ import ${modname}_swig as ${modname}
 from ${blockname} import ${blockname}
 % endif
 
-class qa_${blockname} (gr_unittest.TestCase):
+class qa_${blockname}(gr_unittest.TestCase):
 
-    def setUp (self):
-        self.tb = gr.top_block ()
+    def setUp(self):
+        self.tb = gr.top_block()
 
-    def tearDown (self):
+    def tearDown(self):
         self.tb = None
 
-    def test_001_t (self):
+    def test_001_t(self):
         # set up fg
-        self.tb.run ()
+        self.tb.run()
         # check data
 
 
