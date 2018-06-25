@@ -305,7 +305,6 @@ if(ENABLE_TESTING)
   )
 
   list(APPEND test_gr_blocks_sources
-    qa_block_tags.cc
     qa_gr_block.cc
     qa_gr_flowgraph.cc
     qa_gr_hier_block2.cc
@@ -314,7 +313,10 @@ if(ENABLE_TESTING)
     qa_rotator.cc
     qa_set_msg_handler.cc
   )
-  list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks)
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks
+    ${Boost_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
+    )
 
   foreach(qa_file ${test_gr_blocks_sources})
     GR_ADD_CPP_TEST("blocks_${qa_file}"
