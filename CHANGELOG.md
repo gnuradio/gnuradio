@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html), starting with version 3.7.12.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
+## [Unreleased]
+
+###Fixed
+#### gr-filter
+- Accessing the `[0]` element of an empty vector is UB, even if you don't use the result afterwards.
 
 ## [3.7.13.3] - 2018-06-13
 
