@@ -111,7 +111,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_tags_oneway(self):
-        src_data = range(0, 10)
+        src_data = [x for x in range(0, 10)]
         reset_tag_key = 'reset_lfsr'
         reset_tag1 = gr.tag_t()
         reset_tag1.key = pmt.string_to_symbol(reset_tag_key)
@@ -122,7 +122,7 @@ class test_scrambler(gr_unittest.TestCase):
         reset_tag3 = gr.tag_t()
         reset_tag3.key = pmt.string_to_symbol(reset_tag_key)
         reset_tag3.offset = 20
-        src = blocks.vector_source_b([s * 3 for s in src_data], False, 1, (reset_tag1, reset_tag2, reset_tag3))
+        src = blocks.vector_source_b(src_data * 3, False, 1, (reset_tag1, reset_tag2, reset_tag3))
         scrambler = digital.additive_scrambler_bb(0x8a, 0x7f, 7, 0, 8, reset_tag_key)
         dst = blocks.vector_sink_b()
         self.tb.connect(src, scrambler, dst)
