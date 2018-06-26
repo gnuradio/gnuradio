@@ -31,6 +31,7 @@ import itertools
 from types import SimpleNamespace
 
 from gnuradio import gr
+from ..cli import ClickHandler, ColorFormatter
 from ..tools import get_modname
 from ..tools import SCMRepoFactory
 
@@ -51,6 +52,18 @@ def get_block_candidates():
         block = block.split('_impl')[0]
         block_candidates.append(block)
     return block_candidates
+
+
+def setup_cli_logger():
+    try:
+        import colorama
+        stream_handler = ClickHandler()
+        logger.addHandler(stream_handler)
+    except ImportError:
+        stream_handler = logging.StreamHandler()
+        formatter = ColorFormatter()
+        stream_handler.setFormatter(formatter)
+        logger.addHandler(stream_handler)
 
 
 class ModToolException(Exception):
@@ -87,8 +100,8 @@ class ModTool(object):
             logging.basicConfig(level=logging.ERROR, format='%(message)s')
             self.info['yes'] = True
         else:
-            logging.basicConfig(level=logging.INFO, format='%(message)s')
             self.info['yes'] = kwargs['yes']
+            setup_cli_logger()
 
         if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             if self.cli:
