@@ -44,7 +44,7 @@ class ModToolNewModule(ModTool):
         parser.add_argument("--srcdir",
                 help="Source directory for the module template.")
         parser.add_argument("module_name", metavar='MODULE-NAME', nargs='?',
-                help="Override the current module's name (normally is autodetected).")
+                help="Name of the module to be added.")
 
     def setup(self, options):
         # Don't call ModTool.setup(), that assumes an existing module.
@@ -57,8 +57,7 @@ class ModToolNewModule(ModTool):
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
             raise ModToolException('Invalid module name.')
         self._dir = options.directory
-        if self._dir == '.':
-            self._dir = './gr-%s' % self._info['modname']
+        self._dir = os.path.join(self._dir, 'gr-{}'.format(self._info['modname']))
         try:
             os.stat(self._dir)
         except OSError:
