@@ -32,6 +32,7 @@ from click_plugins import with_plugins
 from gnuradio import gr
 from ..core import ModToolException
 
+sys.tracebacklimit = 0
 
 class CommandCLI(click.Group):
     """

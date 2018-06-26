@@ -25,7 +25,9 @@ from __future__ import unicode_literals
 
 import os
 import re
+import glob
 import logging
+import itertools
 from types import SimpleNamespace
 
 from gnuradio import gr
@@ -33,6 +35,22 @@ from ..tools import get_modname
 from ..tools import SCMRepoFactory
 
 logger = logging.getLogger('gnuradio.modtool')
+
+
+def get_block_candidates():
+    block_candidates = []
+    cpp_filters = ["*.cc", "*.cpp"]
+    cpp_blocks = []
+    for ftr in cpp_filters:
+        cpp_blocks += [x for x in glob.glob1("lib", ftr) if not (x.startswith('qa_') or
+                       x.startswith('test_'))]
+    python_blocks = [x for x in glob.glob1("python", "*.py") if not (x.startswith('qa_') or
+                     x.startswith('build') or x.startswith('__init__'))]
+    for block in itertools.chain(cpp_blocks, python_blocks):
+        block = os.path.splitext(block)[0]
+        block = block.split('_impl')[0]
+        block_candidates.append(block)
+    return block_candidates
 
 
 class ModToolException(Exception):
