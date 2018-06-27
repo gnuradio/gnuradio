@@ -24,9 +24,10 @@ import re
 
 import click
 
-from ..core import ModToolException, ModToolRename
+from ..core import ModToolRename
 from ..core import get_block_candidates
 from ..tools import SequenceCompleter
+from .base import ModToolException
 from .base import common_params, block_name, run
 
 
@@ -55,26 +56,28 @@ def cli(**kwargs):
     run(self)
 
 def get_oldname(self):
+    """ Get the old block name to be replaced """
     block_candidates = get_block_candidates()
     if self.info['oldname'] is None:
         with SequenceCompleter(block_candidates):
             while not self.info['oldname'] or self.info['oldname'].isspace():
-                self.info['oldname'] = input(click.style(
-                                             "Enter name of block/code to rename (without module name prefix): ",
-                                             fg='blue'))
+                self.info['oldname'] = input(click.style("Enter name of block/code to rename "+
+                                                         "(without module name prefix): ",
+                                                         fg='blue'))
     if self.info['oldname'] not in block_candidates:
         choices = [x for x in block_candidates if self.info['oldname'] in x]
-        if len(choices)>0:
+        if len(choices) > 0:
             click.secho("Suggested alternatives: "+str(choices), fg='yellow')
         raise ModToolException("Blockname for renaming does not exists!")
     if not re.match('[a-zA-Z0-9_]+', self.info['oldname']):
         raise ModToolException('Invalid block name.')
 
 def get_newname(self):
+    """ Get the new block name """
     if self.info['newname'] is None:
         while not self.info['newname'] or self.info['newname'].isspace():
-            self.info['newname'] = input(click.style(
-                                         "Enter name of block/code (without module name prefix): ",
-                                         fg='blue'))
+            self.info['newname'] = input(click.style("Enter name of block/code "+
+                                                     "(without module name prefix): ",
+                                                     fg='blue'))
     if not re.match('[a-zA-Z0-9_]+', self.info['newname']):
         raise ModToolException('Invalid block name.')

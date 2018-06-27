@@ -21,18 +21,28 @@
 """ Base CLI module """
 
 import os
-import functools
 import sys
+import logging
+import functools
 from importlib import import_module
 from pkg_resources import iter_entry_points
+from logging import Formatter, StreamHandler
 
 import click
+from click import ClickException
 from click_plugins import with_plugins
 
 from gnuradio import gr
-from ..core import ModToolException
 
 sys.tracebacklimit = 0
+
+
+class ModToolException(ClickException):
+    """ Exception class for enhanced CLI interface """
+    def show(self, file = None):
+        """ displays the colored message """
+        click.secho('ModToolException: {}'.format(self.format_message()), fg='red')
+
 
 class CommandCLI(click.Group):
     """
@@ -67,6 +77,45 @@ class CommandCLI(click.Group):
         except ImportError:
             return self.commands.get(cmd_name)
         return mod.cli
+
+
+class ClickHandler(StreamHandler):
+    """
+    This is a derived class of implemented logging class
+    StreamHandler which overrides some of its functional
+    definitions to add colors to the stream output
+    """
+    def emit(self, record):
+        """ Writes message to the stream """
+        colormap = {
+            'DEBUG': ('white', 'black'),
+            'INFO': ('cyan', None),
+            'WARNING': ('yellow', None),
+            'ERROR': ('red', None),
+            'CRITICAL': ('white', 'red'),
+        }
+        try:
+            msg = self.format(record)
+            colors = colormap.get(record.levelname, (None, None))
+            fgcolor = colors[0]
+            bgcolor = colors[1]
+            click.secho(msg, fg=fgcolor, bg=bgcolor)
+            self.flush()
+        except Exception:
+            self.handleError(record)
+
+
+def setup_cli_logger(logger):
+    """ Sets up logger for CLI parsing """
+    try:
+        import colorama
+        stream_handler = ClickHandler()
+        logger.addHandler(stream_handler)
+    except ImportError:
+        stream_handler = logging.StreamHandler()
+        logger.addHandler(stream_handler)
+    finally:
+        logger.setLevel(logging.INFO)
 
 
 def common_params(func):
@@ -104,6 +153,7 @@ block_name = click.argument('blockname', nargs=1, required=False, metavar="BLOCK
 def cli():
     """A tool for editing GNU Radio out-of-tree modules."""
     pass
+
 
 def run(module):
     """Call the run function of the core modules."""

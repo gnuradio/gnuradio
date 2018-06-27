@@ -25,8 +25,8 @@ import re
 import click
 
 from ..core import ModToolAdd
-from ..core import ModToolException
 from ..tools import SequenceCompleter, ask_yes_no
+from .base import ModToolException
 from .base import common_params, block_name, run
 
 
@@ -77,6 +77,7 @@ def cli(**kwargs):
     run(self)
 
 def get_blocktype(self):
+    """ Get the blocktype of the block to be added """
     if self.info['blocktype'] is None:
         click.secho(str(self.block_types), fg='yellow')
         with SequenceCompleter(self.block_types):
@@ -86,6 +87,7 @@ def get_blocktype(self):
                     click.secho('Must be one of ' + str(self.block_types), fg='yellow')
 
 def get_lang(self):
+    """ Get the Programming Language of the block to be added """
     if self.info['lang'] is None:
         with SequenceCompleter(self.language_candidates):
             while self.info['lang'] not in self.language_candidates:
@@ -94,32 +96,36 @@ def get_lang(self):
         self.info['lang'] = 'cpp'
 
 def get_blockname(self):
+    """ Get the blockname"""
     if self.info['blockname'] is None:
         while not self.info['blockname'] or self.info['blockname'].isspace():
-            self.info['blockname'] = input(click.style(
-                                           "Enter name of block/code (without module name prefix): ",
-                                           fg='blue'))
+            self.info['blockname'] = input(click.style("Enter name of block/code (without module name prefix): ",
+                                                       fg='blue'))
     if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
         raise ModToolException('Invalid block name.')
 
 def get_copyrightholder(self):
+    """ Get the copyrightholder of the block to be added """
     if self.info['copyrightholder'] is None:
         self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
     elif self.info['is_component']:
-        click.info("For GNU Radio components the FSF is added as copyright holder")
+        click.secho("For GNU Radio components the FSF is added as copyright holder",
+                    fg='cyan')
 
 def get_arglist(self):
+    """ Get the argument list of the block to be added """
     if self.info['arglist'] is not None:
-        self.info['arglist'] = input(click.style(
-                                    'Enter valid argument list, including default arguments: ',
-                                    fg='blue'))
+        self.info['arglist'] = input(click.style('Enter valid argument list, including default arguments: ',
+                                                 fg='blue'))
 
 def get_py_qa(self):
+    """ Get a boolean value for addition of py_qa """
     if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
         if self.add_py_qa is None:
             self.add_py_qa = ask_yes_no(click.style('Add Python QA code?', fg='blue'), True)
 
 def get_cpp_qa(self):
+    """ Get a boolean value for addition of cpp_qa """
     if self.info['lang'] == 'cpp':
         if self.add_cc_qa is None:
             self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='blue'),

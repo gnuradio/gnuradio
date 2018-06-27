@@ -40,6 +40,7 @@ def cli(**kwargs):
     run(self)
 
 def get_pattern(self):
+    """ Get the regex pattern for block(s) to be disabled """
     if self.info['pattern'] is None:
         block_candidates = get_block_candidates()
         with SequenceCompleter(block_candidates):

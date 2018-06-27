@@ -29,13 +29,11 @@ import glob
 import logging
 import itertools
 from types import SimpleNamespace
-from logging import Formatter, StreamHandler
-
-import click
 
 from gnuradio import gr
 from ..tools import get_modname
 from ..tools import SCMRepoFactory
+from ..cli import setup_cli_logger
 
 logger = logging.getLogger('gnuradio.modtool')
 
@@ -55,45 +53,6 @@ def get_block_candidates():
         block = block.split('_impl')[0]
         block_candidates.append(block)
     return block_candidates
-
-
-def setup_cli_logger():
-    """ Sets up logger for CLI parsing """
-    try:
-        import colorama
-        stream_handler = ClickHandler()
-        logger.addHandler(stream_handler)
-    except ImportError:
-        stream_handler = logging.StreamHandler()
-        logger.addHandler(stream_handler)
-    finally:
-        logger.setLevel(logging.INFO)
-
-
-class ClickHandler(StreamHandler):
-    """
-    This is a derived class of implemented logging class
-    StreamHandler which overrides some of its functional
-    definitions to add colors to the stream output
-    """
-    def emit(self, record):
-        """ Writes message to the stream """
-        colormap = {
-            'DEBUG': ('white', 'black'),
-            'INFO': ('cyan', None),
-            'WARNING': ('yellow', None),
-            'ERROR': ('red', None),
-            'CRITICAL': ('white', 'red'),
-        }
-        try:
-            msg = self.format(record)
-            colors = colormap.get(record.levelname, (None, None))
-            fgcolor = colors[0]
-            bgcolor = colors[1]
-            click.secho(msg, fg=fgcolor, bg=bgcolor)
-            self.flush()
-        except Exception:
-            self.handleError(record)
 
 
 class ModToolException(Exception):
@@ -131,7 +90,7 @@ class ModTool(object):
             self.info['yes'] = True
         else:
             self.info['yes'] = kwargs['yes']
-            setup_cli_logger()
+            setup_cli_logger(logger)
 
         if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
             if self.cli:
