@@ -19,5 +19,4 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from .base import ClickHandler, ColorFormatter
 from .base import cli, common_params, block_name

@@ -25,7 +25,6 @@ import functools
 import sys
 from importlib import import_module
 from pkg_resources import iter_entry_points
-from logging import Formatter, StreamHandler
 
 import click
 from click_plugins import with_plugins
@@ -34,82 +33,6 @@ from gnuradio import gr
 from ..core import ModToolException
 
 sys.tracebacklimit = 0
-
-
-class ClickHandler(StreamHandler):
-    """
-    This is a derived class of implemented logging class
-    StreamHandler which overrides some of its functional
-    definitions to add colors to the stream output
-    """
-    def emit(self, record):
-        """ Writes message to the stream """
-        colormap = {
-            'DEBUG': ('white', 'black'),
-            'INFO': ('green', None),
-            'WARNING': ('yellow', None),
-            'ERROR': ('red', None),
-            'CRITICAL': ('white', 'red'),
-        }
-        try:
-            msg = self.format(record)
-            colors = colormap.get(record.levelname, (None, None))
-            fgcolor = colors[0]
-            bgcolor = colors[1]
-            click.secho(msg, fg=fgcolor, bg=bgcolor)
-            self.flush()
-        except Exception:
-            self.handleError(record)
-
-
-class Color(object):
-    """
-     Utility to return ansi colored text.
-    """
-    colors = {
-        'black': 30,
-        'red': 31,
-        'green': 32,
-        'yellow': 33,
-        'blue': 34,
-        'magenta': 35,
-        'cyan': 36,
-        'white': 37,
-        'bgred': 41,
-        'bggrey': 100
-    }
-    prefix = '\033['
-    suffix = '\033[0m'
-
-    def colored(self, text, color=None):
-        """ colors the text """
-        if color not in self.colors:
-            color = 'white'
-
-        clr = self.colors[color]
-        return (self.prefix+'%dm%s'+self.suffix) % (clr, text)
-
-
-class ColorFormatter(Formatter):
-    """
-    This is a derived class of implemented logging class
-    Formatter which overrides some of its functional
-    definitions to add colors to the stream output
-    """
-    def format(self, record):
-        """ format the specified record """
-        message = record.getMessage()
-        mapping = {
-            'INFO': 'cyan',
-            'WARNING': 'yellow',
-            'ERROR': 'red',
-            'CRITICAL': 'bgred',
-            'DEBUG': 'bggrey',
-            'SUCCESS': 'green'
-        }
-        clr = mapping.get(record.levelname, 'white')
-        return Color.colored(message, clr)
-
 
 class CommandCLI(click.Group):
     """

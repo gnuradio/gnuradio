@@ -29,9 +29,11 @@ import glob
 import logging
 import itertools
 from types import SimpleNamespace
+from logging import Formatter, StreamHandler
+
+import click
 
 from gnuradio import gr
-from ..cli import ClickHandler, ColorFormatter
 from ..tools import get_modname
 from ..tools import SCMRepoFactory
 
@@ -39,6 +41,7 @@ logger = logging.getLogger('gnuradio.modtool')
 
 
 def get_block_candidates():
+    """ Returns a list of all possible blocknames """
     block_candidates = []
     cpp_filters = ["*.cc", "*.cpp"]
     cpp_blocks = []
@@ -55,15 +58,42 @@ def get_block_candidates():
 
 
 def setup_cli_logger():
+    """ Sets up logger for CLI parsing """
     try:
         import colorama
         stream_handler = ClickHandler()
         logger.addHandler(stream_handler)
     except ImportError:
         stream_handler = logging.StreamHandler()
-        formatter = ColorFormatter()
-        stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
+    finally:
+        logger.setLevel(logging.INFO)
+
+
+class ClickHandler(StreamHandler):
+    """
+    This is a derived class of implemented logging class
+    StreamHandler which overrides some of its functional
+    definitions to add colors to the stream output
+    """
+    def emit(self, record):
+        """ Writes message to the stream """
+        colormap = {
+            'DEBUG': ('white', 'black'),
+            'INFO': ('cyan', None),
+            'WARNING': ('yellow', None),
+            'ERROR': ('red', None),
+            'CRITICAL': ('white', 'red'),
+        }
+        try:
+            msg = self.format(record)
+            colors = colormap.get(record.levelname, (None, None))
+            fgcolor = colors[0]
+            bgcolor = colors[1]
+            click.secho(msg, fg=fgcolor, bg=bgcolor)
+            self.flush()
+        except Exception:
+            self.handleError(record)
 
 
 class ModToolException(Exception):
@@ -126,7 +156,6 @@ class ModTool(object):
             self.info['modname'] = get_modname()
         if self.info['modname'] is None:
             raise ModToolException('No GNU Radio module found in the given directory.')
-        logger.info("GNU Radio module name identified: " + self.info['modname'])
         if self.info['version'] == '36' and (
                 os.path.isdir(os.path.join('include', self.info['modname'])) or
                 os.path.isdir(os.path.join('include', 'gnuradio', self.info['modname']))

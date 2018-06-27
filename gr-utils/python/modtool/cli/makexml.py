@@ -40,6 +40,7 @@ def cli(**kwargs):
     """
     kwargs['cli'] = True
     self = ModToolMakeXML(**kwargs)
+    click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
     get_pattern(self)
     run(self)
 
@@ -47,6 +48,8 @@ def get_pattern(self):
     if self.info['pattern'] is None:
         block_candidates = get_block_candidates()
         with SequenceCompleter(block_candidates):
-            self.info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
+            self.info['pattern'] = input(click.style(
+                                         'Which blocks do you want to parse? (Regex): ',
+                                         fg='blue'))
     if not self.info['pattern'] or self.info['pattern'].isspace():
         self.info['pattern'] = '.'

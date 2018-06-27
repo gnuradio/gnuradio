@@ -53,14 +53,15 @@ def cli(**kwargs):
     """Adds a block to the out-of-tree module."""
     kwargs['cli'] = True
     self = ModToolAdd(**kwargs)
+    click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
     get_blocktype(self)
     get_lang(self)
-    click.echo("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self.info['lang']]))
+    click.secho("Language: {}".format({'cpp': 'C++', 'python': 'Python'}[self.info['lang']]), fg='green')
     if ((self.skip_subdirs['lib'] and self.info['lang'] == 'cpp')
             or (self.skip_subdirs['python'] and self.info['lang'] == 'python')):
         raise ModToolException('Missing or skipping relevant subdir.')
     get_blockname(self)
-    click.echo("Block/code identifier: " + self.info['blockname'])
+    click.secho("Block/code identifier: " + self.info['blockname'], fg='green')
     self.info['fullblockname'] = self.info['modname'] + '_' + self.info['blockname']
     if not self.license_file:
         get_copyrightholder(self)
@@ -69,32 +70,35 @@ def cli(**kwargs):
     get_py_qa(self)
     get_cpp_qa(self)
     if self.info['version'] == 'autofoo' and not self.skip_cmakefiles:
-        click.echo("Warning: Autotools modules are not supported. ",
-                   "Files will be created, but Makefiles will not be edited.")
+        click.secho("Warning: Autotools modules are not supported. "+
+                    "Files will be created, but Makefiles will not be edited.",
+                    fg='yellow')
         self.skip_cmakefiles = True
     run(self)
 
 def get_blocktype(self):
     if self.info['blocktype'] is None:
-        click.echo(str(self.block_types))
+        click.secho(str(self.block_types), fg='yellow')
         with SequenceCompleter(self.block_types):
             while self.info['blocktype'] not in self.block_types:
-                self.info['blocktype'] = input("Enter block type: ")
+                self.info['blocktype'] = input(click.style("Enter block type: ", fg='blue'))
                 if self.info['blocktype'] not in self.block_types:
-                    click.echo('Must be one of ' + str(self.block_types))
+                    click.secho('Must be one of ' + str(self.block_types), fg='yellow')
 
 def get_lang(self):
     if self.info['lang'] is None:
         with SequenceCompleter(self.language_candidates):
             while self.info['lang'] not in self.language_candidates:
-                self.info['lang'] = input("Language (python/cpp): ")
+                self.info['lang'] = input(click.style("Language (python/cpp): ", fg='blue'))
     if self.info['lang'] == 'c++':
         self.info['lang'] = 'cpp'
 
 def get_blockname(self):
     if self.info['blockname'] is None:
         while not self.info['blockname'] or self.info['blockname'].isspace():
-            self.info['blockname'] = input("Enter name of block/code (without module name prefix): ")
+            self.info['blockname'] = input(click.style(
+                                           "Enter name of block/code (without module name prefix): ",
+                                           fg='blue'))
     if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
         raise ModToolException('Invalid block name.')
 
@@ -102,18 +106,21 @@ def get_copyrightholder(self):
     if self.info['copyrightholder'] is None:
         self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
     elif self.info['is_component']:
-        click.echo("For GNU Radio components the FSF is added as copyright holder")
+        click.info("For GNU Radio components the FSF is added as copyright holder")
 
 def get_arglist(self):
     if self.info['arglist'] is not None:
-        self.info['arglist'] = input('Enter valid argument list, including default arguments: ')
+        self.info['arglist'] = input(click.style(
+                                    'Enter valid argument list, including default arguments: ',
+                                    fg='blue'))
 
 def get_py_qa(self):
     if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
         if self.add_py_qa is None:
-            self.add_py_qa = ask_yes_no('Add Python QA code?', True)
+            self.add_py_qa = ask_yes_no(click.style('Add Python QA code?', fg='blue'), True)
 
 def get_cpp_qa(self):
     if self.info['lang'] == 'cpp':
         if self.add_cc_qa is None:
-            self.add_cc_qa = ask_yes_no('Add C++ QA code?', not self.add_py_qa)
+            self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='blue'),
+                                        not self.add_py_qa)

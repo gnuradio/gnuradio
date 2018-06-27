@@ -63,6 +63,7 @@ def cli(**kwargs):
 def get_modname(self):
     if self.info['modname'] is None:
         while not self.info['modname'] or self.info['modname'].isspace():
-            self.info['modname'] = input('Name of the new module: ')
+            self.info['modname'] = input(click.style(
+                                         'Name of the new module: ', fg='blue'))
     if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
         raise ModToolException('Invalid module name.')
