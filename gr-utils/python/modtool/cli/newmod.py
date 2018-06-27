@@ -28,7 +28,7 @@ import click
 from gnuradio import gr
 from ..core import ModToolNewModule
 from .base import ModToolException
-from .base import common_params, run
+from .base import common_params, run, cli_input
 
 
 @click.command('newmod', short_help=ModToolNewModule.description)
@@ -64,7 +64,6 @@ def get_modname(self):
     """ Get the name of the new module to be added """
     if self.info['modname'] is None:
         while not self.info['modname'] or self.info['modname'].isspace():
-            self.info['modname'] = input(click.style('Name of the new module: ',
-                                                     fg='blue'))
+            self.info['modname'] = cli_input('Name of the new module: ')
     if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
         raise ModToolException('Invalid module name.')

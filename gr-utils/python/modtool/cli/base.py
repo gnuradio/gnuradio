@@ -118,6 +118,11 @@ def setup_cli_logger(logger):
         logger.setLevel(logging.INFO)
 
 
+def cli_input(msg):
+    """ Returns enhanced input """
+    return input(click.style(msg, fg='blue'))
+
+
 def common_params(func):
     """ Common parameters for various modules"""
     @click.option('-d', '--directory', default='.',

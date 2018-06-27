@@ -31,6 +31,7 @@ import logging
 
 from ..tools import remove_pattern_from_file
 from ..tools import CMakeFileEditor
+from ..cli import cli_input
 from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
@@ -147,7 +148,7 @@ class ModToolRemove(ModTool):
         for f in files_filt:
             b = os.path.basename(f)
             if not yes:
-                ans = input("Really delete %s? [Y/n/a/q]: " % f).lower().strip()
+                ans = cli_input("Really delete %s? [Y/n/a/q]: " % f).lower().strip()
                 if ans == 'a':
                     yes = True
                 if ans == 'q':

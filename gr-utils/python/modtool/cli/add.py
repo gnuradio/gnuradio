@@ -27,7 +27,7 @@ import click
 from ..core import ModToolAdd
 from ..tools import SequenceCompleter, ask_yes_no
 from .base import ModToolException
-from .base import common_params, block_name, run
+from .base import common_params, block_name, run, cli_input
 
 
 @click.command('add')
@@ -82,7 +82,7 @@ def get_blocktype(self):
         click.secho(str(self.block_types), fg='yellow')
         with SequenceCompleter(self.block_types):
             while self.info['blocktype'] not in self.block_types:
-                self.info['blocktype'] = input(click.style("Enter block type: ", fg='blue'))
+                self.info['blocktype'] = cli_input("Enter block type: ")
                 if self.info['blocktype'] not in self.block_types:
                     click.secho('Must be one of ' + str(self.block_types), fg='yellow')
 
@@ -91,7 +91,7 @@ def get_lang(self):
     if self.info['lang'] is None:
         with SequenceCompleter(self.language_candidates):
             while self.info['lang'] not in self.language_candidates:
-                self.info['lang'] = input(click.style("Language (python/cpp): ", fg='blue'))
+                self.info['lang'] = cli_input("Language (python/cpp): ")
     if self.info['lang'] == 'c++':
         self.info['lang'] = 'cpp'
 
@@ -99,8 +99,7 @@ def get_blockname(self):
     """ Get the blockname"""
     if self.info['blockname'] is None:
         while not self.info['blockname'] or self.info['blockname'].isspace():
-            self.info['blockname'] = input(click.style("Enter name of block/code (without module name prefix): ",
-                                                       fg='blue'))
+            self.info['blockname'] = cli_input("Enter name of block/code (without module name prefix): ")
     if not re.match('[a-zA-Z0-9_]+', self.info['blockname']):
         raise ModToolException('Invalid block name.')
 
@@ -115,8 +114,7 @@ def get_copyrightholder(self):
 def get_arglist(self):
     """ Get the argument list of the block to be added """
     if self.info['arglist'] is not None:
-        self.info['arglist'] = input(click.style('Enter valid argument list, including default arguments: ',
-                                                 fg='blue'))
+        self.info['arglist'] = cli_input('Enter valid argument list, including default arguments: ')
 
 def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """

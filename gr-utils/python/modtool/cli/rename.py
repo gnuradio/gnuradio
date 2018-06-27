@@ -28,7 +28,7 @@ from ..core import ModToolRename
 from ..core import get_block_candidates
 from ..tools import SequenceCompleter
 from .base import ModToolException
-from .base import common_params, block_name, run
+from .base import common_params, block_name, run, cli_input
 
 
 @click.command('rename', short_help=ModToolRename.description)
@@ -61,9 +61,8 @@ def get_oldname(self):
     if self.info['oldname'] is None:
         with SequenceCompleter(block_candidates):
             while not self.info['oldname'] or self.info['oldname'].isspace():
-                self.info['oldname'] = input(click.style("Enter name of block/code to rename "+
-                                                         "(without module name prefix): ",
-                                                         fg='blue'))
+                self.info['oldname'] = cli_input("Enter name of block/code to rename "+
+                                                 "(without module name prefix): ")
     if self.info['oldname'] not in block_candidates:
         choices = [x for x in block_candidates if self.info['oldname'] in x]
         if len(choices) > 0:
@@ -76,8 +75,7 @@ def get_newname(self):
     """ Get the new block name """
     if self.info['newname'] is None:
         while not self.info['newname'] or self.info['newname'].isspace():
-            self.info['newname'] = input(click.style("Enter name of block/code "+
-                                                     "(without module name prefix): ",
-                                                     fg='blue'))
+            self.info['newname'] = cli_input("Enter name of block/code "+
+                                             "(without module name prefix): ")
     if not re.match('[a-zA-Z0-9_]+', self.info['newname']):
         raise ModToolException('Invalid block name.')

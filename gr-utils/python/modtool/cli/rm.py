@@ -25,7 +25,7 @@ import click
 from ..core import ModToolRemove
 from ..core import get_block_candidates
 from ..tools import SequenceCompleter
-from .base import common_params, block_name, run
+from .base import common_params, block_name, run, cli_input
 
 
 @click.command('remove', short_help=ModToolRemove.description)
@@ -44,7 +44,6 @@ def get_pattern(self):
     if self.info['pattern'] is None:
         block_candidates = get_block_candidates()
         with SequenceCompleter(block_candidates):
-            self.info['pattern'] = input(click.style('Which blocks do you want to delete? (Regex): ',
-                                                     fg='blue'))
+            self.info['pattern'] = cli_input('Which blocks do you want to delete? (Regex): ')
     if not self.info['pattern'] or self.info['pattern'].isspace():
         self.info['pattern'] = '.'

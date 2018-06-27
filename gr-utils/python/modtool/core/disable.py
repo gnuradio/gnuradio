@@ -28,6 +28,7 @@ import re
 import sys
 import logging
 
+from ..cli import cli_input
 from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
 
@@ -149,7 +150,7 @@ class ModToolDisable(ModTool):
             for fname in filenames:
                 file_disabled = False
                 if not yes:
-                    ans = input("Really disable %s? [Y/n/a/q]: " % fname).lower().strip()
+                    ans = cli_input("Really disable %s? [Y/n/a/q]: " % fname).lower().strip()
                     if ans == 'a':
                         yes = True
                     if ans == 'q':

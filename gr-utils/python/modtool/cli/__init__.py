@@ -20,4 +20,4 @@
 #
 
 from .base import cli, common_params, block_name, ModToolException
-from .base import setup_cli_logger
+from .base import setup_cli_logger, cli_input
