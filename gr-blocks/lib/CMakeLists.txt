@@ -317,7 +317,6 @@ if(ENABLE_TESTING)
   list(APPEND GR_TEST_TARGET_DEPS gnuradio-blocks
     ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${CPPUNIT_LIBRARIES}
   )
 
   foreach(qa_file ${test_gr_blocks_sources})
