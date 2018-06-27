@@ -120,11 +120,11 @@ def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """
     if not (self.info['blocktype'] in ('noblock') or self.skip_subdirs['python']):
         if self.add_py_qa is None:
-            self.add_py_qa = ask_yes_no(click.style('Add Python QA code?', fg='blue'), True)
+            self.add_py_qa = ask_yes_no(click.style('Add Python QA code?', fg='cyan'), True)
 
 def get_cpp_qa(self):
     """ Get a boolean value for addition of cpp_qa """
     if self.info['lang'] == 'cpp':
         if self.add_cc_qa is None:
-            self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='blue'),
+            self.add_cc_qa = ask_yes_no(click.style('Add C++ QA code?', fg='cyan'),
                                         not self.add_py_qa)

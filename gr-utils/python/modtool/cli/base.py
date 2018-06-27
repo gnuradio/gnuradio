@@ -89,7 +89,7 @@ class ClickHandler(StreamHandler):
         """ Writes message to the stream """
         colormap = {
             'DEBUG': ('white', 'black'),
-            'INFO': ('cyan', None),
+            'INFO': ('blue', None),
             'WARNING': ('yellow', None),
             'ERROR': ('red', None),
             'CRITICAL': ('white', 'red'),
@@ -120,7 +120,7 @@ def setup_cli_logger(logger):
 
 def cli_input(msg):
     """ Returns enhanced input """
-    return input(click.style(msg, fg='blue'))
+    return input(click.style(msg, fg='cyan'))
 
 
 def common_params(func):
