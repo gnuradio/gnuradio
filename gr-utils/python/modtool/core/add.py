@@ -152,6 +152,30 @@ class ModToolAdd(ModTool):
         if has_grc and not self.skip_subdirs['grc']:
             self._run_grc()
 
+    def _run_cc_qa(self):
+        " Add C++ QA files for 3.7 API if intructed from _run_lib"
+        fname_qa_h  = 'qa_%s.h'  % self.info['blockname']
+        fname_qa_cc = 'qa_%s.cc' % self.info['blockname']
+        self._write_tpl('qa_cpp', 'lib', fname_qa_cc)
+        self._write_tpl('qa_h',   'lib', fname_qa_h)
+        if self.skip_cmakefiles:
+            return
+        try:
+            append_re_line_sequence(self._file['cmlib'],
+                                    '\$\{CMAKE_CURRENT_SOURCE_DIR\}/qa_%s.cc.*\n' % self.info['modname'],
+                                    '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self.info['blockname'])
+            append_re_line_sequence(self._file['qalib'],
+                                    '#include.*\n',
+                                    '#include "%s"' % fname_qa_h)
+            append_re_line_sequence(self._file['qalib'],
+                                    '(addTest.*suite.*\n|new CppUnit.*TestSuite.*\n)',
+                                    '  s->addTest(gr::%s::qa_%s::suite());' % (self.info['modname'],
+                                                                               self.info['blockname'])
+                                    )
+            self.scm.mark_files_updated((self._file['qalib'],))
+        except IOError:
+            logger.warning("Can't add C++ QA files.")
+
     def _run_lib(self):
         """ Do everything that needs doing in the subdir 'lib' and 'include'.
         - add .cc and .h files
@@ -159,28 +183,6 @@ class ModToolAdd(ModTool):
         - check if C++ QA code is req'd
         - if yes, create qa_*.{cc,h} and add them to CMakeLists.txt
         """
-        def _add_qa():
-            " Add C++ QA files for 3.7 API "
-            fname_qa_h  = 'qa_%s.h'  % self.info['blockname']
-            fname_qa_cc = 'qa_%s.cc' % self.info['blockname']
-            self._write_tpl('qa_cpp', 'lib', fname_qa_cc)
-            self._write_tpl('qa_h',   'lib', fname_qa_h)
-            if not self.skip_cmakefiles:
-                try:
-                    append_re_line_sequence(self._file['cmlib'],
-                                            '\$\{CMAKE_CURRENT_SOURCE_DIR\}/qa_%s.cc.*\n' % self.info['modname'],
-                                            '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self.info['blockname'])
-                    append_re_line_sequence(self._file['qalib'],
-                                            '#include.*\n',
-                                            '#include "%s"' % fname_qa_h)
-                    append_re_line_sequence(self._file['qalib'],
-                                            '(addTest.*suite.*\n|new CppUnit.*TestSuite.*\n)',
-                                            '  s->addTest(gr::%s::qa_%s::suite());' % (self.info['modname'],
-                                                                                       self.info['blockname'])
-                                            )
-                    self.scm.mark_files_updated((self._file['qalib'],))
-                except IOError:
-                    logger.warning("Can't add C++ QA files.")
         fname_cc = None
         fname_h  = None
         if self.info['version']  == '37':
@@ -199,7 +201,7 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if self.add_cc_qa:
             if self.info['version'] == '37':
-                _add_qa()
+                self._run_cc_qa()
             elif self.info['version'] == '36':
                 logger.warning("Warning: C++ QA files not supported for 3.6-style OOTs.")
             elif self.info['version'] == 'autofoo':
