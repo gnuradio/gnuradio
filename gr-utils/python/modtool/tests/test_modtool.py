@@ -1,9 +1,30 @@
+#
+# Copyright 2018 Free Software Foundation, Inc.
+#
+# This file is part of GNU Radio
+#
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+#
 """ The file for testing the gr-modtool scripts """
 import shutil
 import tempfile
-from os import path
 import unittest
 import warnings
+from os import path
+from pylint.epylint import py_run
 
 from gnuradio.modtool.core import *
 
@@ -67,14 +88,24 @@ class TestModToolCore(unittest.TestCase):
         ## Some tests for checking the created directory, sub-directories and files ##
         test_dict['module_name'] = 'test'
         ModToolNewModule(**test_dict).run()
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test'))
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test/lib'))
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test/python'))
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test/include'))
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test/docs'))
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test/cmake'))
-        self.assertTrue(path.isdir(self.test_dir+'/gr-test/swig'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-test/CMakeLists.txt'))
+        module_dir = path.join(self.test_dir, 'gr-test')
+        self.assertTrue(path.isdir(module_dir))
+        self.assertTrue(path.isdir(path.join(module_dir, 'lib')))
+        self.assertTrue(path.isdir(path.join(module_dir, 'python')))
+        self.assertTrue(path.isdir(path.join(module_dir, 'include')))
+        self.assertTrue(path.isdir(path.join(module_dir, 'docs')))
+        self.assertTrue(path.isdir(path.join(module_dir, 'cmake')))
+        self.assertTrue(path.isdir(path.join(module_dir, 'swig')))
+        self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
+
+        ## pylint tests ##
+        # python_dir = path.join(module_dir, 'python')
+        # py_module = path.join(python_dir, 'build_utils.py')
+        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        # print(pylint_stdout.getvalue(), end='')
+        # py_module = path.join(python_dir, 'build_utils_codes.py')
+        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        # print(pylint_stdout.getvalue(), end='')
 
         ## The check for object instantiation ##
         test_obj = ModToolNewModule()
@@ -95,10 +126,10 @@ class TestModToolCore(unittest.TestCase):
         ## skip tests if newmod command wasn't successful
         if self.f_newmod:
             raise unittest.SkipTest("setUp for API function 'add' failed")
-
+        module_dir = path.join(self.test_dir, 'gr-howto')
         ## Tests for proper exceptions ##
         test_dict = {}
-        test_dict['directory'] = self.test_dir + '/gr-howto'
+        test_dict['directory'] = module_dir
         # missing blockname, block_type, lang
         self.assertRaises(ModToolException, ModToolAdd(**test_dict).run)
         test_dict['blockname'] = 'add_ff'
@@ -129,34 +160,44 @@ class TestModToolCore(unittest.TestCase):
         ## Some tests for checking the created directory, sub-directories and files ##
         test_dict['skip_lib'] = False
         ModToolAdd(**test_dict).run()
-
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/qa_add_ff.cc'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/add_ff_impl.cc'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/grc/howto_add_ff.xml'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/include/howto/add_ff.h'))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'qa_add_ff.cc')))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'add_ff_impl.cc')))
+        self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_add_ff.xml')))
+        self.assertTrue(path.exists(path.join(module_dir, 'include', 'howto', 'add_ff.h')))
 
         ## The check for object instantiation ##
         test_obj = ModToolAdd()
-        test_obj.dir = self.test_dir + '/gr-howto'
+        test_obj.dir = module_dir
         # missing blocktype, lang, blockname
         self.assertRaises(ModToolException, test_obj.run)
         test_obj.info['blocktype'] = 'general'
         # missing lang, blockname
         self.assertRaises(ModToolException, test_obj.run)
-        test_obj.info['lang'] = 'cpp'
+        test_obj.info['lang'] = 'python'
         test_obj.info['blockname'] = 'mul_ff'
+        test_obj.add_py_qa = True
         test_obj.run()
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/mul_ff_impl.cc'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/mul_ff_impl.h'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/grc/howto_mul_ff.xml'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/include/howto/mul_ff.h'))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_mul_ff.xml')))
+
+        ## pylint tests ##
+        # python_dir = path.join(module_dir, 'python')
+        # py_module = path.join(python_dir, 'mul_ff.py')
+        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
+        # print(pylint_stdout.getvalue(), end='')
+        # py_module = path.join(python_dir, 'qa_mul_ff.py')
+        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        # print(pylint_stdout.getvalue(), end='')
 
     def test_rename(self):
         """ Tests for the API function rename """
         if self.f_newmod or self.f_add:
             raise unittest.SkipTest("setUp for API function 'rename' failed")
+
+        module_dir = path.join(self.test_dir, 'gr-howto')
         test_dict = {}
-        test_dict['directory'] = self.test_dir+'/gr-howto'
+        test_dict['directory'] = module_dir
         # Missing 2 arguments blockname, new_name
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)
         test_dict['blockname'] = 'square_ff'
@@ -172,55 +213,57 @@ class TestModToolCore(unittest.TestCase):
         ## Some tests for checking the renamed files ##
         test_dict['new_name'] = 'div_ff'
         ModToolRename(**test_dict).run()
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/div_ff_impl.h'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/div_ff_impl.cc'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/python/qa_div_ff.py'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/grc/howto_div_ff.xml'))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'div_ff_impl.h')))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'div_ff_impl.cc')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_div_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_div_ff.xml')))
 
         ## The check for object instantiation ##
         test_obj = ModToolRename()
         test_obj.info['oldname'] = 'div_ff'
         test_obj.info['newname'] = 'sub_ff'
         test_obj.run()
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/sub_ff_impl.h'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/sub_ff_impl.cc'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/python/qa_sub_ff.py'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/grc/howto_sub_ff.xml'))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'sub_ff_impl.h')))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'sub_ff_impl.cc')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_sub_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_sub_ff.xml')))
 
     def test_remove(self):
         """ Tests for the API function remove """
         if self.f_newmod or self.f_add:
             raise unittest.SkipTest("setUp for API function 'remove' failed")
+        module_dir = path.join(self.test_dir, 'gr-howto')
         test_dict = {}
         # missing argument blockname
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)
-        test_dict['directory'] = self.test_dir+'/gr-howto'
+        test_dict['directory'] = module_dir
         self.assertRaises(ModToolException, ModToolRename(**test_dict).run)
 
         ## Some tests to check blocks are not removed with different blocknames ##
         test_dict['blockname'] = 'div_ff'
         ModToolRemove(**test_dict).run()
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/square_ff_impl.h'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/lib/square_ff_impl.cc'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/python/qa_square_ff.py'))
-        self.assertTrue(path.exists(self.test_dir+'/gr-howto/grc/howto_square_ff.xml'))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'square_ff_impl.h')))
+        self.assertTrue(path.exists(path.join(module_dir, 'lib', 'square_ff_impl.cc')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_square_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_square_ff.xml')))
 
         ## Some tests for checking the non-existence of removed files ##
         test_dict['blockname'] = 'square_ff'
         ModToolRemove(**test_dict).run()
-        self.assertTrue(not path.exists(self.test_dir+'/gr-howto/lib/square_ff_impl.h'))
-        self.assertTrue(not path.exists(self.test_dir+'/gr-howto/lib/square_ff_impl.cc'))
-        self.assertTrue(not path.exists(self.test_dir+'/gr-howto/python/qa_square_ff.py'))
-        self.assertTrue(not path.exists(self.test_dir+'/gr-howto/grc/howto_square_ff.xml'))
+        self.assertTrue(not path.exists(path.join(module_dir, 'lib', 'square_ff_impl.h')))
+        self.assertTrue(not path.exists(path.join(module_dir, 'lib', 'square_ff_impl.cc')))
+        self.assertTrue(not path.exists(path.join(module_dir, 'python', 'qa_square_ff.py')))
+        self.assertTrue(not path.exists(path.join(module_dir, 'grc', 'howto_square_ff.xml')))
 
     def test_makexml(self):
         """ Tests for the API function makexml """
         if self.f_newmod or self.f_add:
             raise unittest.SkipTest("setUp for API function 'makexml' failed")
+        module_dir = path.join(self.test_dir, 'gr-howto')
         test_dict = {}
         # missing argument blockname
         self.assertRaises(ModToolException, ModToolMakeXML(**test_dict).run)
-        test_dict['directory'] = self.test_dir+'/gr-howto'
+        test_dict['directory'] = module_dir
         self.assertRaises(ModToolException, ModToolMakeXML(**test_dict).run)
 
         ## Some tests to check if the command reuns ##
@@ -231,10 +274,11 @@ class TestModToolCore(unittest.TestCase):
         """ Tests for the API function disable """
         if self.f_newmod or self.f_add:
             raise unittest.SkipTest("setUp for API function 'disable' failed")
+        module_dir = path.join(self.test_dir, 'gr-howto')
         test_dict = {}
         # missing argument blockname
         self.assertRaises(ModToolException, ModToolDisable(**test_dict).run)
-        test_dict['directory'] = self.test_dir+'/gr-howto'
+        test_dict['directory'] = module_dir
         self.assertRaises(ModToolException, ModToolDisable(**test_dict).run)
 
         ## Some tests to check if the command reuns ##
