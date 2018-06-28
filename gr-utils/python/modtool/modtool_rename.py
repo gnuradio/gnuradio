@@ -39,10 +39,6 @@ class ModToolRename(ModTool):
 
     def __init__(self):
         ModTool.__init__(self)
-        self._add_cc_qa = False
-        self._add_py_qa = False
-        self._skip_cmakefiles = False
-        self._license_file = None
 
     @staticmethod
     def setup_parser(parser):
@@ -54,11 +50,6 @@ class ModToolRename(ModTool):
 
     def setup(self, options):
         ModTool.setup(self, options)
-
-        if ((self._skip_subdirs['lib'] and self._info['lang'] == 'cpp')
-             or (self._skip_subdirs['python'] and self._info['lang'] == 'python')):
-            raise ModToolException('Missing or skipping relevant subdir.')
-
         # first make sure the old block name is provided
         self._info['oldname'] = options.blockname
         if self._info['oldname'] is None:
