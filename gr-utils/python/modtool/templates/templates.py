@@ -396,16 +396,16 @@ class ${blockname}(${parenttype}):
         ${parenttype}.__init__(self,
 % if blocktype == 'hier':
             "${blockname}",
-            gr.io_signature(${inputsig}),  # Input signature
-            gr.io_signature(${outputsig})) # Output signature
+            "gr.io_signature(${inputsig})",  # Input signature
+            "gr.io_signature(${outputsig})") # Output signature
 
             # Define blocks and connect them
             self.connect()
 <% return %>
 % else:
             name="${blockname}",
-            in_sig=${inputsig},
-            out_sig=${outputsig}${deciminterp})
+            in_sig="${inputsig}",
+            out_sig="${outputsig}${deciminterp}")
 % endif
 
 % if blocktype == 'general':
@@ -505,9 +505,9 @@ ${str_to_python_comment(license)}
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 % if lang == 'cpp':
-import ${modname}_swig as ${modname}
+import .${modname}_swig as ${modname}
 % else:
-from ${blockname} import ${blockname}
+from .${blockname} import ${blockname}
 % endif
 
 class qa_${blockname}(gr_unittest.TestCase):

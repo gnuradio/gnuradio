@@ -276,7 +276,7 @@ class ModToolAdd(ModTool):
         self._write_tpl('block_python', self.info['pydir'], fname_py)
         append_re_line_sequence(self._file['pyinit'],
                                 '(^from.*import.*\n|# import any pure.*\n)',
-                                'from %s import %s' % (self.info['blockname'], self.info['blockname']))
+                                'from .%s import %s' % (self.info['blockname'], self.info['blockname']))
         self.scm.mark_files_updated((self._file['pyinit'],))
         if self.skip_cmakefiles:
             return
