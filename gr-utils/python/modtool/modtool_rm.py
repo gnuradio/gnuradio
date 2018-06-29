@@ -29,9 +29,9 @@ import re
 import sys
 import glob
 
-from .util_functions import remove_pattern_from_file, SequenceCompleter
-from .modtool_base import ModTool
+from .modtool_base import get_block_candidates, ModTool
 from .cmakefile_editor import CMakeFileEditor
+from .util_functions import remove_pattern_from_file, SequenceCompleter
 
 
 class ModToolRemove(ModTool):
@@ -52,9 +52,10 @@ class ModToolRemove(ModTool):
         if options.blockname is not None:
             self._info['pattern'] = options.blockname
         else:
-            with SequenceCompleter():
+            block_candidates = get_block_candidates()
+            with SequenceCompleter(block_candidates):
                 self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
-        if len(self._info['pattern']) == 0:
+        if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
     def run(self, options):

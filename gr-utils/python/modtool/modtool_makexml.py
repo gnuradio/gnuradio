@@ -28,11 +28,12 @@ import os
 import re
 import glob
 
+from .modtool_base import get_block_candidates
 from .modtool_base import ModTool, ModToolException
 from .parser_cc_block import ParserCCBlock
 from .grc_xml_generator import GRCXMLGenerator
 from .cmakefile_editor import CMakeFileEditor
-from .util_functions import ask_yes_no
+from .util_functions import ask_yes_no, SequenceCompleter
 
 
 class ModToolMakeXML(ModTool):
@@ -58,8 +59,10 @@ class ModToolMakeXML(ModTool):
         if options.blockname is not None:
             self._info['pattern'] = options.blockname
         else:
-            self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
-        if len(self._info['pattern']) == 0:
+            block_candidates = get_block_candidates()
+            with SequenceCompleter(block_candidates):
+                self._info['pattern'] = input('Which blocks do you want to parse? (Regex): ')
+        if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
     def run(self, options):

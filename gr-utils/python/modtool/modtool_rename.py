@@ -27,10 +27,13 @@ from __future__ import unicode_literals
 import os
 import re
 
-from .util_functions import append_re_line_sequence, ask_yes_no
 from .cmakefile_editor import CMakeFileEditor
+from .modtool_base import get_block_candidates
 from .modtool_base import ModTool, ModToolException
 from .templates import Templates
+from .util_functions import SequenceCompleter
+from .util_functions import append_re_line_sequence, ask_yes_no
+
 
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
@@ -61,10 +64,17 @@ class ModToolRename(ModTool):
 
         # first make sure the old block name is provided
         self._info['oldname'] = options.blockname
+        block_candidates = get_block_candidates()
         if self._info['oldname'] is None:
-            self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
+            with SequenceCompleter(block_candidates):
+                self._info['oldname'] = input("Enter name of block/code to rename (without module name prefix): ")
         if not re.match('[a-zA-Z0-9_]+', self._info['oldname']):
             raise ModToolException('Invalid block name.')
+        if self._info['oldname'] not in block_candidates:
+            choices = [x for x in block_candidates if self._info['oldname'] in x]
+            if len(choices)>0:
+                print("Suggested alternatives: "+str(choices))
+            raise ModToolException("Blockname for renaming does not exists!")
         print("Block/code to rename identifier: " + self._info['oldname'])
         self._info['fulloldname'] = self._info['modname'] + '_' + self._info['oldname']
 
@@ -72,7 +82,7 @@ class ModToolRename(ModTool):
         if options.new_name is None:
             self._info['newname'] = input("Enter name of block/code (without module name prefix): ")
         else:
-            self._info['newname'] = options.new_name[0]
+            self._info['newname'] = options.new_name
         if not re.match('[a-zA-Z0-9_]+', self._info['newname']):
             raise ModToolException('Invalid block name.')
         print("Block/code identifier: " + self._info['newname'])

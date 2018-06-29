@@ -26,11 +26,31 @@ from __future__ import unicode_literals
 
 import os
 import re
+import glob
+import itertools
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from gnuradio import gr
 from .util_functions import get_modname
 from .scm import SCMRepoFactory
+
+
+def get_block_candidates():
+    """ Returns a list of all possible blocknames """
+    block_candidates = []
+    cpp_filters = ["*.cc", "*.cpp"]
+    cpp_blocks = []
+    for ftr in cpp_filters:
+        cpp_blocks += [x for x in glob.glob1("lib", ftr) if not (x.startswith('qa_') or
+                       x.startswith('test_'))]
+    python_blocks = [x for x in glob.glob1("python", "*.py") if not (x.startswith('qa_') or
+                     x.startswith('build') or x.startswith('__init__'))]
+    for block in itertools.chain(cpp_blocks, python_blocks):
+        block = os.path.splitext(block)[0]
+        block = block.split('_impl')[0]
+        block_candidates.append(block)
+    return block_candidates
+
 
 class ModToolException(BaseException):
     """ Standard exception for modtool classes. """

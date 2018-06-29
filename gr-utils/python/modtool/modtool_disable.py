@@ -28,8 +28,9 @@ import os
 import re
 import sys
 
-from .modtool_base import ModTool
+from .modtool_base import get_block_candidates, ModTool
 from .cmakefile_editor import CMakeFileEditor
+from .util_functions import SequenceCompleter
 
 
 class ModToolDisable(ModTool):
@@ -50,8 +51,10 @@ class ModToolDisable(ModTool):
         if options.blockname is not None:
             self._info['pattern'] = options.blockname
         else:
-            self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
-        if len(self._info['pattern']) == 0:
+            block_candidates = get_block_candidates()
+            with SequenceCompleter(block_candidates):
+                self._info['pattern'] = input('Which blocks do you want to disable? (Regex): ')
+        if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
     def run(self, options):
