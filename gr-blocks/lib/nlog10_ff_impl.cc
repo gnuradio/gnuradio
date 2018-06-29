@@ -41,8 +41,7 @@ namespace gr {
       : sync_block("nlog10_ff",
 		      io_signature::make (1, 1, sizeof(float)*vlen),
 		      io_signature::make (1, 1, sizeof(float)*vlen)),
-        d_n_log2_10(n/log2f(10.0f)), d_float_min(std::numeric_limits<float>::min()),
-        d_vlen(vlen), d_k(k)
+        d_n_log2_10(n/log2f(10.0f)), d_10_k_n(std::pow(10.0f, k/n)), d_vlen(vlen)
     {
       const int alignment_multiple =
         volk_get_alignment() / sizeof(float);
@@ -70,17 +69,17 @@ namespace gr {
       float *out = (float *) output_items[0];
       int noi = noutput_items * d_vlen;
 
+      float float_min = std::numeric_limits<float>::min();
+
       for (int i = 0; i < noi; i++) {
-          out[i] = in[i] + d_float_min;
+          out[i] = std::max(in[i], float_min);
       }
 
+      if (d_10_k_n != 1.0f) {
+          volk_32f_s32f_multiply_32f(out, out, d_10_k_n, noi);
+      }
       volk_32f_log2_32f(out, out, noi);
       volk_32f_s32f_multiply_32f(out, out, d_n_log2_10, noi);
-      if (d_k != 0.0f) {
-        for (int i = 0; i < noi; i++) {
-          out[i] += d_k;
-        }
-      }
 
       return noutput_items;
     }

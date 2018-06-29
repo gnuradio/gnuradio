@@ -31,9 +31,8 @@ namespace gr {
     class BLOCKS_API nlog10_ff_impl : public nlog10_ff
     {
       float  d_n_log2_10;
-      float  d_float_min;
+      float  d_10_k_n;
       size_t d_vlen;
-      float  d_k;
 
     public:
       nlog10_ff_impl(float n, size_t vlen, float k);
