@@ -8,7 +8,7 @@ parameters:
     default: pmt.intern("TEST")
 -   id: period
     label: Period (ms)
-    dtype: real
+    dtype: int
     default: '1000'
 
 inputs:

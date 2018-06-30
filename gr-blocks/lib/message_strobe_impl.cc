@@ -39,13 +39,13 @@ namespace gr {
   namespace blocks {
 
     message_strobe::sptr
-    message_strobe::make(pmt::pmt_t msg, float period_ms)
+    message_strobe::make(pmt::pmt_t msg, long period_ms)
     {
       return gnuradio::get_initial_sptr
         (new message_strobe_impl(msg, period_ms));
     }
 
-    message_strobe_impl::message_strobe_impl(pmt::pmt_t msg, float period_ms)
+    message_strobe_impl::message_strobe_impl(pmt::pmt_t msg, long period_ms)
       : block("message_strobe",
               io_signature::make(0, 0, 0),
               io_signature::make(0, 0, 0)),
