@@ -45,10 +45,8 @@ templates:
     make: |-
         <%
             win = '_%s_check_box'%id
-            if not label:
-                label = id
         %>
-        ${win} = Qt.QCheckBox(${label})
+        ${win} = Qt.QCheckBox(${(label if (len(label) - 2 > 0) else repr(id))})
         self._${id}_choices = {True: ${true}, False: ${false}}
         self._${id}_choices_inv = dict((v,k) for k,v in self._${id}_choices.iteritems())
         self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(${win}, "setChecked", Qt.Q_ARG("bool", self._${id}_choices_inv[i]))

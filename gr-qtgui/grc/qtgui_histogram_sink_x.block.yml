@@ -395,6 +395,10 @@ templates:
             ${width6}, ${width7}, ${width8}, ${width9}, ${width10}]
         colors = [${color1}, ${color2}, ${color3}, ${color4}, ${color5},
             ${color6}, ${color7}, ${color8}, ${color9}, ${color10}]
+        styles = [${style1}, ${style2}, ${style3}, ${style4}, ${style5},
+            ${style6}, ${style7}, ${style8}, ${style9}, ${style10}]
+        markers= [${marker1}, ${marker2}, ${marker3}, ${marker4}, ${marker5},
+            ${marker6}, ${marker7}, ${marker8}, ${marker9}, ${marker10}]
         alphas = [${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
             ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}]
 
