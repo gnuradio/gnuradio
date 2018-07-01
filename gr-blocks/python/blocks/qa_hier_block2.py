@@ -153,7 +153,7 @@ class test_hier_block2(gr_unittest.TestCase):
                                 gr.io_signature(1,1,gr.sizeof_int))
         nop1 = blocks.nop(gr.sizeof_int)
         hblock.connect(hblock, nop1)
-        self.assertRaises(ValueError,
+        self.assertRaises(RuntimeError,
             lambda: hblock.disconnect((hblock, -1), nop1))
 
     def test_015_disconnect_input_exceeds(self):
