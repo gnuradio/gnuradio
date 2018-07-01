@@ -41,10 +41,9 @@ templates:
     make: |-
         <%
             win = '_%s_push_button'%id
-            if not label:
-                label = '"%s"'%id
         %>\
         ${win} = Qt.QPushButton(${label})
+        ${win} = Qt.QPushButton(${(label if (len(label) - 2 > 0) else repr(id))})
         self._${id}_choices = {'Pressed': ${pressed}, 'Released': ${released}}
         ${win}.pressed.connect(lambda: self.set_${id}(self._${id}_choices['Pressed']))
         ${win}.released.connect(lambda: self.set_${id}(self._${id}_choices['Released']))

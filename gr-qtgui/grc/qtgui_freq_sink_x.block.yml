@@ -439,7 +439,7 @@ templates:
             self.${id}.set_line_alpha(i, alphas[i])
 
         ${win} = sip.wrapinstance(self.${id}.pyqwidget(), Qt.QWidget)
-        ${ gui_hint()(win)}
+        ${gui_hint() % win}
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
