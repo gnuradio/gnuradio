@@ -20,10 +20,6 @@ parameters:
     default: '3'
     options: ['0', '1', '2', '3', '4', '5']
     option_labels: [List, '1', '2', '3', '4', '5']
--   id: value
-    label: Default Value
-    dtype: ${ type }
-    default: '0'
 -   id: options
     label: Options
     dtype: raw
@@ -34,8 +30,8 @@ parameters:
     dtype: raw
     default: '[]'
     hide: ${ ('all' if int(num_opts) else 'none') }
--   id: option0
-    label: Option 0
+-   id: value
+    label: Option 0 (Default)
     dtype: ${ type }
     default: '0'
     hide: ${ ('none' if int(num_opts) > 0 else 'all') }
@@ -109,34 +105,32 @@ templates:
     - self._${id}_callback(${id})
     make: |-
         <%
-            all_options = [ option0, option1, option2, option3, option4 ][:int(num_opts)]
+            all_options = [ value, option1, option2, option3, option4 ][:int(num_opts)]
             all_labels = [ label0, label1, label2, label3, label4 ][:int(num_opts)]
-            if not label:
-                label = id
         %>\
         # Create the options list
         % if int(num_opts):
         self._${id}_options = (\
-            % for ch in all_options:
-                ${ch}, \
-            % endfor
+        % for ch in all_options:
+        ${ch}, \
+        % endfor
         )
         % else:
-        self._${id]_options = ${options}
+        self._${id}_options = ${options}
         % endif
         # Create the labels list
         % if int(num_opts):
         self._${id}_labels = (\
-            % for i, lbl in all_labels:
-                % if lbl:
-                ${lbl}, \
-                % else:
-                str(self._${id}_options[${i}], \
-                % endif
-            % endfor
+        % for lbl in all_labels:
+        % if lbl:
+        ${lbl}, \
+        % else:
+        self._${id}_options[${i}], \
+        % endif
+        % endfor
         )
         % elif labels:
-        self._${id]_labels = ${labels}
+        self._${id}_labels = ${labels}
         % else:
         self._${id}_map(str, self._${id}_options)
         % endif
@@ -146,10 +140,10 @@ templates:
             win = 'self._%s_tool_bar'%id
         %>\
         ${win} = Qt.QToolBar(self)
-        ${win}.addWidget(Qt.QLabel(${label} + ": "))
+        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
         self._${id}_combo_box = Qt.QComboBox()
         ${win}.addWidget(self._${id}_combo_box)
-        for label in self._${id}_labels: self._${id}_combo_box.addItem(label)
+        for _label in self._${id}_labels: self._${id}_combo_box.addItem(_label)
         self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._${id}_options.index(i)))
         self._${id}_callback(self.${id})
         self._${id}_combo_box.currentIndexChanged.connect(
@@ -160,7 +154,7 @@ templates:
         <%
             win = 'self._%s_group_box'%id
         %>\
-        ${win} = QtQGroupBox(${label})
+        ${win} = Qt.QGroupBox(${(label if (len(label) - 2 > 0) else repr(id))} + ": ")
         self._${id}_box = ${orient}()
         class variable_chooser_button_group(Qt.QButtonGroup):
             def __init__(self, parent=None):
@@ -170,8 +164,8 @@ templates:
                 self.button(button_id).setChecked(True)
         self._${id}_button_group = variable_chooser_button_group()
         ${win}.setLayout(self._${id}_box)
-        for i, label in enumerate(self._${id}_labels):
-            radio_button = Qt.QRadioButton(label)
+        for i, _label in enumerate(self._${id}_labels):
+            radio_button = Qt.QRadioButton(_label)
             self._${id}_box.addWidget(radio_button)
             self._${id}_button_group.addButton(radio_button, i)
         self._${id}_callback = lambda i: Qt.QMetaObject.invokeMethod(self._${id}_button_group, "updateButtonChecked", Qt.Q_ARG("int", self._${id}_options.index(i)))
