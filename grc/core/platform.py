@@ -357,9 +357,9 @@ class Platform(Element):
         out = yaml.dump(data, indent=2)
 
         replace = [
-            ('blocks:', '\nblocks:'),
-            ('connections:', '\nconnections:'),
-            ('metadata:', '\nmetadata:'),
+            ('blocks:\n', '\nblocks:\n'),
+            ('connections:\n', '\nconnections:\n'),
+            ('metadata:\n', '\nmetadata:\n'),
         ]
         for r in replace:
             out = out.replace(*r)
