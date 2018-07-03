@@ -121,22 +121,6 @@ def is_number(s):
     except ValueError:
         return False
 
-def xml_indent(elem, level=0):
-    """ Adds indents to XML for pretty printing """
-    i = "\n" + level*"    "
-    if len(elem):
-        if not elem.text or not elem.text.strip():
-            elem.text = i + "    "
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
-        for elem in elem:
-            xml_indent(elem, level+1)
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = i
-
 def ask_yes_no(question, default):
     """ Asks a binary question. Returns True for yes, False for no.
     default is given as a boolean. """

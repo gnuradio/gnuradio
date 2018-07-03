@@ -18,28 +18,28 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Automatically create XML bindings for GRC from block code """
+""" Automatically create YAML bindings for GRC from block code """
 
 import click
 
-from ..core import ModToolMakeXML
+from ..core import ModToolMakeYAML
 from ..core import get_block_candidates
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input
 
 
-@click.command('makexml', short_help=ModToolMakeXML.description)
+@click.command('makeyaml', short_help=ModToolMakeYAML.description)
 @common_params
 @block_name
 def cli(**kwargs):
     """
     \b
-    Make an XML file for GRC block bindings
+    Make an YAML file for GRC block bindings
 
     Note: This does not work on python blocks
     """
     kwargs['cli'] = True
-    self = ModToolMakeXML(**kwargs)
+    self = ModToolMakeYAML(**kwargs)
     click.secho("GNU Radio module name identified: " + self.info['modname'], fg='green')
     get_pattern(self)
     run(self)

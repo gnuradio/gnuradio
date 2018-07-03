@@ -150,7 +150,7 @@ class ModToolRename(ModTool):
         self._run_file_rename('./python/', old, new)
 
     def _run_grc_rename(self, module, old, new):
-        grcfile = './grc/' + module + '_' + old + '.xml'
+        grcfile = './grc/' + module + '_' + old + '.yml'
         self._run_file_replace(grcfile, old, new)
         self._run_cmakelists('./grc/', old, new)
         self._run_file_rename('./grc/', module + '_' + old, module + '_' + new)

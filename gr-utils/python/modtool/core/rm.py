@@ -119,12 +119,12 @@ class ModToolRemove(ModTool):
                 remove_pattern_from_file(self._file['pyinit'], '.*import\s+%s.*' % f[:-3])
                 remove_pattern_from_file(self._file['pyinit'], '.*from\s+%s\s+import.*\n' % f[:-3])
         if not self.skip_subdirs['grc']:
-            self._run_subdir('grc', ('*.xml',), ('install',))
+            self._run_subdir('grc', ('*.yml',), ('install',))
 
     def _run_subdir(self, path, globs, makefile_vars, cmakeedit_func=None):
         """ Delete all files that match a certain pattern in path.
         path - The directory in which this will take place
-        globs - A tuple of standard UNIX globs of files to delete (e.g. *.xml)
+        globs - A tuple of standard UNIX globs of files to delete (e.g. *.yml)
         makefile_vars - A tuple with a list of CMakeLists.txt-variables which
                         may contain references to the globbed files
         cmakeedit_func - If the CMakeLists.txt needs special editing, use this

@@ -525,10 +525,10 @@ class qa_${blockname}(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_${blockname}, "qa_${blockname}.xml")
+    gr_unittest.run(qa_${blockname}, "qa_${blockname}.yml")
 '''
 
-Templates['grc_xml'] = '''<?xml version="1.0"?>
+Templates['grc_yml'] = '''<?yml version="1.0"?>
 <block>
   <name>${blockname}</name>
   <key>${modname}_${blockname}</key>

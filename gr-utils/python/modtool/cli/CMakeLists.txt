@@ -25,7 +25,7 @@ GR_PYTHON_INSTALL(FILES
     base.py
     disable.py
     info.py
-    makexml.py
+    makeyaml.py
     newmod.py
     rm.py
     rename.py

@@ -18,7 +18,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Automatically create XML bindings for GRC from block code """
+""" Automatically create YAML bindings for GRC from block code """
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
@@ -29,7 +29,7 @@ import glob
 import logging
 
 from ..tools import ParserCCBlock
-from ..tools import GRCXMLGenerator
+from ..tools import GRCYAMLGenerator
 from ..tools import CMakeFileEditor
 from ..tools import ask_yes_no
 from .base import ModTool, ModToolException
@@ -37,10 +37,10 @@ from .base import ModTool, ModToolException
 logger = logging.getLogger(__name__)
 
 
-class ModToolMakeXML(ModTool):
-    """ Make XML file for GRC block bindings """
-    name = 'makexml'
-    description = 'Generate XML files for GRC block bindings.'
+class ModToolMakeYAML(ModTool):
+    """ Make YAML file for GRC block bindings """
+    name = 'makeyaml'
+    description = 'Generate YAML files for GRC block bindings.'
 
     def __init__(self, blockname=None, **kwargs):
         ModTool.__init__(self, blockname, **kwargs)
@@ -68,7 +68,7 @@ class ModToolMakeXML(ModTool):
                 if os.path.basename(f)[0:2] == 'qa':
                     continue
                 (params, iosig, blockname) = self._parse_cc_h(f)
-                self._make_grc_xml_from_block_data(params, iosig, blockname)
+                self._make_grc_yaml_from_block_data(params, iosig, blockname)
         # 2) Go through python/
         # TODO
 
@@ -84,12 +84,12 @@ class ModToolMakeXML(ModTool):
             logger.info("None found.")
         return files_filt
 
-    def _make_grc_xml_from_block_data(self, params, iosig, blockname):
-        """ Take the return values from the parser and call the XML
-        generator. Also, check the makefile if the .xml file is in there.
+    def _make_grc_yaml_from_block_data(self, params, iosig, blockname):
+        """ Take the return values from the parser and call the YAML
+        generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        fname_xml = '%s_%s.xml' % (self.info['modname'], blockname)
-        path_to_xml = os.path.join('grc', fname_xml)
+        fname_yml = '%s_%s.yml' % (self.info['modname'], blockname)
+        path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
             if iosig[inout]['max_ports'] == '-1':
@@ -100,29 +100,29 @@ class ModToolMakeXML(ModTool):
                                'default': '2',
                                'in_constructor': False})
         file_exists = False
-        if os.path.isfile(path_to_xml):
+        if os.path.isfile(path_to_yml):
             if not self.info['yes']:
                 if not ask_yes_no('Overwrite existing GRC file?', False):
                     return
             else:
                 file_exists = True
                 logger.warning("Warning: Overwriting existing GRC file.")
-        grc_generator = GRCXMLGenerator(
+        grc_generator = GRCYAMLGenerator(
                 modname=self.info['modname'],
                 blockname=blockname,
                 params=params,
                 iosig=iosig
         )
-        grc_generator.save(path_to_xml)
+        grc_generator.save(path_to_yml)
         if file_exists:
-            self.scm.mark_files_updated((path_to_xml,))
+            self.scm.mark_files_updated((path_to_yml,))
         else:
-            self.scm.add_files((path_to_xml,))
+            self.scm.add_files((path_to_yml,))
         if not self.skip_subdirs['grc']:
             ed = CMakeFileEditor(self._file['cmgrc'])
-            if re.search(fname_xml, ed.cfile) is None and not ed.check_for_glob('*.xml'):
+            if re.search(fname_yml, ed.cfile) is None and not ed.check_for_glob('*.yml'):
                 logger.info("Adding GRC bindings to grc/CMakeLists.txt...")
-                ed.append_value('install', fname_xml, to_ignore_end='DESTINATION[^()]+')
+                ed.append_value('install', fname_yml, to_ignore_end='DESTINATION[^()]+')
                 ed.write()
                 self.scm.mark_files_updated(self._file['cmgrc'])
 

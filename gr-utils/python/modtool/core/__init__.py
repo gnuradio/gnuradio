@@ -25,7 +25,7 @@ from .base import ModTool, ModToolException, get_block_candidates
 from .add import ModToolAdd
 from .disable import ModToolDisable
 from .info import ModToolInfo
-from .makexml import ModToolMakeXML
+from .makeyaml import ModToolMakeYAML
 from .newmod import ModToolNewModule
 from .rm import ModToolRemove
 from .rename import ModToolRename

@@ -287,14 +287,14 @@ class ModToolAdd(ModTool):
 
     def _run_grc(self):
         """ Do everything that needs doing in the subdir 'grc' to add
-        a GRC bindings XML file.
-        - add .xml file
+        a GRC bindings YAML file.
+        - add .yml file
         - include in CMakeLists.txt
         """
-        fname_grc = self.info['fullblockname'] + '.xml'
-        self._write_tpl('grc_xml', 'grc', fname_grc)
+        fname_grc = self.info['fullblockname'] + '.yml'
+        self._write_tpl('grc_yml', 'grc', fname_grc)
         ed = CMakeFileEditor(self._file['cmgrc'], '\n    ')
-        if self.skip_cmakefiles or ed.check_for_glob('*.xml'):
+        if self.skip_cmakefiles or ed.check_for_glob('*.yml'):
             return
         logger.info("Editing grc/CMakeLists.txt...")
         ed.append_value('install', fname_grc, to_ignore_end='DESTINATION[^()]+')

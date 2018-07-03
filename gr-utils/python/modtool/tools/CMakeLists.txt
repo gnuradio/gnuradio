@@ -23,7 +23,7 @@ GR_PYTHON_INSTALL(FILES
     __init__.py
     cmakefile_editor.py
     code_generator.py
-    grc_xml_generator.py
+    grc_yaml_generator.py
     parser_cc_block.py
     scm.py
     util_functions.py
