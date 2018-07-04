@@ -7,7 +7,7 @@
 <block>
   <name>Constellation Rect. Object</name>
   <key>variable_constellation_rect</key>
-  <category>Modulators</category>
+  <category>[Core]/Modulators</category>
   <import>from gnuradio import digital</import>
   <var_make>self.$(id) = $(id) = digital.constellation_rect($const_points, $sym_map, $rot_sym, $real_sect, $imag_sect, $w_real_sect, $w_imag_sect).base()
 #if str($soft_dec_lut).lower() == '"auto"' or str($soft_dec_lut).lower() == "'auto'"
