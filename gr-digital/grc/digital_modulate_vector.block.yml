@@ -1,6 +1,6 @@
 id: variable_modulate_vector
 label: Modulate Vector
-category: Modulators
+category: [Core]/Modulators
 
 parameters:
 -   id: mod

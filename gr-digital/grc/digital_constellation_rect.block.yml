@@ -1,6 +1,6 @@
 id: variable_constellation_rect
 label: Constellation Rect. Object
-category: Modulators
+category: [Core]/Modulators
 
 parameters:
 -   id: sym_map

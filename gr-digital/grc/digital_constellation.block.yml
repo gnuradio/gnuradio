@@ -1,6 +1,6 @@
 id: variable_constellation
 label: Constellation Object
-category: Modulators
+category: [Core]/Modulators
 
 parameters:
 -   id: type
