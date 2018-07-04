@@ -7,7 +7,7 @@
 <block>
   <name>Constellation Object</name>
   <key>variable_constellation</key>
-  <category>Modulators</category>
+  <category>[Core]/Modulators</category>
   <import>from gnuradio import digital</import>
   <var_make>
 #if str($type) == "calcdist"

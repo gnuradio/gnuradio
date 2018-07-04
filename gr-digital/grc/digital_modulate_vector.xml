@@ -7,7 +7,7 @@
 <block>
   <name>Modulate Vector</name>
   <key>variable_modulate_vector</key>
-  <category>Modulators</category>
+  <category>[Core]/Modulators</category>
   <import>from gnuradio import digital</import>
   <var_make>self.$(id) = $(id) = digital.modulate_vector_bc($mod .to_basic_block(), $data, $taps)</var_make>
   <var_value>digital.modulate_vector_bc($mod .to_basic_block(), $data, $taps)</var_value>
