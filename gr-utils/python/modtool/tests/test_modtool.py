@@ -19,6 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 """ The file for testing the gr-modtool scripts """
+
 import shutil
 import tempfile
 import unittest

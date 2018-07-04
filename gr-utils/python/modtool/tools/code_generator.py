@@ -19,8 +19,6 @@
 # Boston, MA 02110-1301, USA.
 #
 """ A code generator (needed by ModToolAdd) """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 
 from mako.template import Template
 from ..templates import Templates

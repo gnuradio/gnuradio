@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,8 +19,6 @@
 # Boston, MA 02110-1301, USA.
 #
 ''' A parser for blocks written in C++ '''
-
-from __future__ import unicode_literals
 
 import re
 import sys

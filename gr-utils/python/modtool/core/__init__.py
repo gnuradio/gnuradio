@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 #
-# Copyright 2013-2014 Free Software Foundation, Inc.
+# Copyright 2013-2014, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #

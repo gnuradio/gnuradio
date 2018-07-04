@@ -20,8 +20,6 @@
 #
 """ Class to handle source code management repositories. """
 
-from __future__ import unicode_literals
-
 import logging
 import subprocess
 

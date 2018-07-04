@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2014 Free Software Foundation, Inc.
+# Copyright 2013-2014, 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,7 +19,6 @@
 # Boston, MA 02110-1301, USA.
 #
 ''' All the templates for skeleton files (needed by ModToolAdd) '''
-from __future__ import unicode_literals
 
 from datetime import datetime
 
