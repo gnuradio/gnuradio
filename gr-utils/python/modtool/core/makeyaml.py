@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -88,7 +88,7 @@ class ModToolMakeYAML(ModTool):
         """ Take the return values from the parser and call the YAML
         generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        fname_yml = '%s_%s.yml' % (self.info['modname'], blockname)
+        fname_yml = '%s_%s.block.yml' % (self.info['modname'], blockname)
         path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):

@@ -291,7 +291,7 @@ class ModToolAdd(ModTool):
         - add .yml file
         - include in CMakeLists.txt
         """
-        fname_grc = self.info['fullblockname'] + '.yml'
+        fname_grc = self.info['fullblockname'] + '.block.yml'
         self._write_tpl('grc_yml', 'grc', fname_grc)
         ed = CMakeFileEditor(self._file['cmgrc'], '\n    ')
         if self.skip_cmakefiles or ed.check_for_glob('*.yml'):

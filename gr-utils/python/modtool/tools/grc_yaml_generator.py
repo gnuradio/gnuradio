@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #
 # Copyright 2018 Free Software Foundation, Inc.
 #
@@ -19,23 +18,26 @@ from __future__ import absolute_import
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+""" A tool for generating YAML bindings """
+
 from collections import OrderedDict
 
 import yaml
 from yaml import CLoader as Loader, CDumper as Dumper
-from yaml.representer import SafeRepresenter
 
 from .util_functions import is_number
 
 
-## setup dumper for dumping OrderedDict
+## setup dumper for dumping OrderedDict ##
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 def dict_representer(dumper, data):
+    """ Representer to represent special OrderedDict """
     return dumper.represent_dict(data.items())
 
 
 def dict_constructor(loader, node):
+    """ Construct an OrderedDict for dumping """
     return OrderedDict(loader.construct_pairs(node))
 
 Dumper.add_representer(OrderedDict, dict_representer)
@@ -48,8 +50,8 @@ class GRCYAMLGenerator(object):
         """docstring for __init__"""
         params_list = ['$'+s['key'] for s in params if s['in_constructor']]
         # Can't make a dict 'cause order matters
-        self._header = (('label', blockname.replace('_', ' ').capitalize()),
-                        ('id', '%s_%s' % (modname, blockname)),
+        self._header = (('id', '%s_%s' % (modname, blockname)),
+                        ('label', blockname.replace('_', ' ').capitalize()),
                         ('category', '[%s]' % modname.upper())
                        )
         self._templates = (('imports', 'import %s' % modname),
@@ -58,6 +60,7 @@ class GRCYAMLGenerator(object):
         self.params = params
         self.iosig = iosig
         self.doc = doc
+        self.data = None
 
     def make_yaml(self):
         """ Create the actual tag tree """
@@ -76,7 +79,7 @@ class GRCYAMLGenerator(object):
             parameter = {}
             parameter['id'] = param['key'].capitalize()
             parameter['label'] = param['key'].capitalize()
-            if len(param['default']):
+            if param['default']:
                 parameter['default'] = param['default']
             parameter['dtype'] = param['type']
             parameters.append(parameter)
@@ -121,6 +124,7 @@ class GRCYAMLGenerator(object):
         if self.doc is not None:
             data['documentation'] = self.doc
         self.data = data
+        data['file_format'] = 1
 
     def save(self, filename):
         """ Write the YAML file """
