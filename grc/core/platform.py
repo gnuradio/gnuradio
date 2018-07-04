@@ -177,7 +177,17 @@ class Platform(Element):
                     raise
 
         for key, block in six.iteritems(self.blocks):
-            category = self._block_categories.get(key, block.category)
+            category = block.category
+            if len(category) == 0:
+                category = self._block_categories.get(key, block.category)
+            elif key in self._block_categories and self._block_categories[key] != category:
+                logger.warning(
+                    'conflicting categories on {:s}:\n\t"{:s}" (block file) vs "{:s}" (block tree)'.format(
+                        key,
+                        '/'.join(category),
+                        '/'.join(self._block_categories[key])
+                    )
+                )
             if not category:
                 continue
             root = category[0]
