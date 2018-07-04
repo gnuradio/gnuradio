@@ -528,44 +528,49 @@ if __name__ == '__main__':
     gr_unittest.run(qa_${blockname}, "qa_${blockname}.yml")
 '''
 
-Templates['grc_yml'] = '''<?yml version="1.0"?>
-<block>
-  <name>${blockname}</name>
-  <key>${modname}_${blockname}</key>
-  <category>[${modname}]</category>
-  <import>import ${modname}</import>
-  <make>${modname}.${blockname}(${strip_arg_types_grc(arglist)})</make>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as \$keyname, e.g. in the make node)
-       * type -->
-  <param>
-    <name>...</name>
-    <key>...</key>
-    <type>...</type>
-  </param>
+Templates['grc_yml'] = '''id: ${modname}_${blockname}
+label: ${blockname}
+category: [${modname}]
 
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
-  <sink>
-    <name>in</name>
-    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
-  </sink>
+templates:
+  imports: import ${modname}
+  make: ${modname}.${blockname}(${strip_arg_types_grc(arglist)})
 
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
-  <source>
-    <name>out</name>
-    <type><!-- e.g. int, float, complex, byte, short, xxx_vector, ...--></type>
-  </source>
-</block>
+<!-- Make one 'parameters' list entry for every Parameter you want settable from the GUI.
+     Sub-entries of dictionary:
+     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+     * label
+     * dtype -->
+parameters:
+- id: ...
+  label: ...
+  dtype: ...
+- id: ...
+  label: ...
+  dtype: ...
+
+<!-- Make one 'inputs' list entry per input. Sub-entries of dictionary:
+     * label (an identifier for the GUI)
+     * domain
+     * dtype
+     * vlen
+     * optional (set to 1 for optional inputs) -->
+inputs:
+- label: ...
+  domain: ...
+  dtype: ...
+  vlen: ...
+
+<!-- Make one 'outputs' list entry per output. Sub-entries of dictionary:
+     * label (an identifier for the GUI)
+     * dtype
+     * vlen
+     * optional (set to 1 for optional inputs) -->
+- label: ...
+  domain: ...
+  dtype: !-- e.g. int, float, complex, byte, short, xxx_vector, ...--
+
+file_format: 1
 '''
 
 # SWIG string

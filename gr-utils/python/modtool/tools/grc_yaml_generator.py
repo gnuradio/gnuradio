@@ -68,7 +68,7 @@ class GRCYAMLGenerator(object):
         for tag, value in self._header:
             data[tag] = value
 
-        templates = {}
+        templates = OrderedDict()
         for tag, value in self._templates:
             templates[tag] = value
 
@@ -76,8 +76,8 @@ class GRCYAMLGenerator(object):
 
         parameters = []
         for param in self.params:
-            parameter = {}
-            parameter['id'] = param['key'].capitalize()
+            parameter = OrderedDict()
+            parameter['id'] = param['key']
             parameter['label'] = param['key'].capitalize()
             if param['default']:
                 parameter['default'] = param['default']
@@ -95,9 +95,10 @@ class GRCYAMLGenerator(object):
                 continue
             for i in range(len(iosig[inout]['type'])):
                 s_type = {'in': 'input', 'out': 'output'}[inout]
-                s_obj = {}
-                s_obj['name'] = inout
-                s_obj['domain'] = iosig[inout]['type'][i]
+                s_obj = OrderedDict()
+                s_obj['label'] = inout
+                s_obj['domain'] = 'stream'
+                s_obj['dtype'] = iosig[inout]['type'][i]
                 if iosig[inout]['vlen'][i] != '1':
                     vlen = iosig[inout]['vlen'][i]
                     if is_number(vlen):
