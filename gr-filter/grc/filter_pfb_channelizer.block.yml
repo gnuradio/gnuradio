@@ -11,7 +11,7 @@ parameters:
     label: Taps
     dtype: real_vector
 -   id: osr
-    label: Over Sample Ratio
+    label: Oversampling Ratio
     dtype: real
     default: '1.0'
 -   id: atten
