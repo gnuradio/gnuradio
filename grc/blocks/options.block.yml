@@ -10,6 +10,10 @@ parameters:
     label: Author
     dtype: string
     hide: ${ ('none' if author else 'part') }
+-   id: copyright
+    label: Copyright
+    dtype: string
+    hide: ${ ('none' if copyright else 'part') }
 -   id: description
     label: Description
     dtype: string

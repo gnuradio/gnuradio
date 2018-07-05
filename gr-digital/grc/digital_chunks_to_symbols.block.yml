@@ -39,6 +39,9 @@ outputs:
 -   domain: stream
     dtype: ${ out_type }
     multiplicity: ${ num_ports }
+-   domain: message
+    id: set_symbol_table
+    optional: true
 
 asserts:
 - ${ num_ports > 0 }

@@ -14,6 +14,11 @@ parameters:
     dtype: int
     default: '1'
     hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: reserve_items
+    label: Reserve memory for items
+    default: '1024'
+    dtype: int
+    hide: part
 
 inputs:
 -   domain: stream
@@ -25,6 +30,6 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.vector_sink_${type.fcn}(${vlen})
+    make: blocks.vector_sink_${type.fcn}(${vlen}, ${reserve_items})
 
 file_format: 1
