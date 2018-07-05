@@ -1,4 +1,4 @@
-# Copyright 2011,2012 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,38 +17,36 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Setup dependencies
-########################################################################
 include(GrPython)
 
-GR_PYTHON_CHECK_MODULE("Mako >= ${GR_MAKO_MIN_VERSION}" mako "mako.__version__ >= '${GR_MAKO_MIN_VERSION}'" MAKO_FOUND)
-
-########################################################################
-# Register component
-########################################################################
-include(GrComponent)
-if(NOT CMAKE_CROSSCOMPILING)
-    set(utils_python_deps
-        MAKO_FOUND
-    )
-endif(NOT CMAKE_CROSSCOMPILING)
-
-GR_REGISTER_COMPONENT("gr-utils" ENABLE_GR_UTILS
-    ENABLE_GNURADIO_RUNTIME
-    ENABLE_PYTHON
-    ${utils_python_deps}
+GR_PYTHON_INSTALL(FILES
+    __init__.py
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool
 )
 
+set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool/templates)
+
+
 ########################################################################
-# Begin conditional configuration
+# Create and install the modtool conf file
 ########################################################################
-if(ENABLE_GR_UTILS)
+file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GR_PKG_MODTOOL_DATA_DIR}/gr-newmod newmoddir)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/modtool.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
+    DESTINATION ${GR_PREFSDIR}
+)
 
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(python/utils)
-add_subdirectory(python/modtool)
-
-endif(ENABLE_GR_UTILS)
+add_subdirectory(core)
+add_subdirectory(cli)
+add_subdirectory(tools)
+add_subdirectory(templates)
+add_subdirectory(tests)
