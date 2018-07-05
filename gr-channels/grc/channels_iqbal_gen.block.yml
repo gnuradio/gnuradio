@@ -14,9 +14,8 @@ parameters:
     label: Origin
     dtype: enum
     default: '0'
-    options: [Receiver, Transmitter]
-    options_attributes:
-      fcn: [0, 1]
+    options: ['0', '1']
+    option_labels: [Transmitter, Receiver]
 
 inputs:
 -   domain: stream
