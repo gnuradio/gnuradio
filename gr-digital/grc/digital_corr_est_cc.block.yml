@@ -18,9 +18,8 @@ parameters:
 -   id: threshold_method
     label: Threshold Method
     dtype: enum
-    options: [Absolute, Dynamic]
-    option_attributes:
-      fcn: [digital.corr_est_cc.THRESHOLD_ABSOLUTE, digital.corr_est_cc.THRESHOLD_DYNAMIC]
+    options: [digital.corr_est_cc.THRESHOLD_ABSOLUTE, digital.corr_est_cc.THRESHOLD_DYNAMIC]
+    option_labels: [Absolute, Dynamic]
 
 inputs:
 -   domain: stream
@@ -36,7 +35,7 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: digital.corr_est_cc(${symbols}, ${sps}, ${mark_delay}, ${threshold})
+    make: digital.corr_est_cc(${symbols}, ${sps}, ${mark_delay}, ${threshold}, ${threshold_method})
     callbacks:
     - set_mark_delay(${mark_delay})
     - set_threshold(${threshold})
