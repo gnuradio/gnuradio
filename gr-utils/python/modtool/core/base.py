@@ -28,8 +28,7 @@ import itertools
 from types import SimpleNamespace
 
 from gnuradio import gr
-from ..tools import get_modname
-from ..tools import SCMRepoFactory
+from ..tools import get_modname, SCMRepoFactory
 from ..cli import setup_cli_logger
 
 logger = logging.getLogger('gnuradio.modtool')
@@ -136,7 +135,7 @@ class ModTool(object):
         self.info['pydir'] = 'python'
         if os.path.isdir(os.path.join('python', self.info['modname'])):
             self.info['pydir'] = os.path.join('python', self.info['modname'])
-        self._file['qalib']    = os.path.join('lib',    'qa_%s.cc' % self.info['modname'])
+        self._file['qalib']    = os.path.join('lib',    'qa_{}.cc'.format(self.info['modname']))
         self._file['pyinit']   = os.path.join(self.info['pydir'], '__init__.py')
         self._file['cmlib']    = os.path.join('lib',    'CMakeLists.txt')
         self._file['cmgrc']    = os.path.join('grc',    'CMakeLists.txt')

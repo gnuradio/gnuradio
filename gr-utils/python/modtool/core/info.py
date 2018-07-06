@@ -111,8 +111,8 @@ class ModToolInfo(ModTool):
         try:
             cmakecache_fid = open(os.path.join(mod_info['build_dir'], 'CMakeCache.txt'))
             for line in cmakecache_fid:
-                if line.find('GNURADIO_RUNTIME_INCLUDE_DIRS:%s' % path_or_internal) != -1:
-                    inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:%s=' % path_or_internal, '').strip().split(';')
+                if line.find('GNURADIO_RUNTIME_INCLUDE_DIRS:{}'.format(path_or_internal)) != -1:
+                    inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:{}='.format(path_or_internal), '').strip().split(';')
         except IOError:
             pass
         if len(inc_dirs) == 0 and self._suggested_dirs is not None:
@@ -128,10 +128,10 @@ class ModToolInfo(ModTool):
                        'incdirs': 'Include directories'}
         for key in list(mod_info.keys()):
             if key == 'version':
-                print("        API version: %s" % {
+                print("        API version: {}".format({
                         '36': 'pre-3.7',
                         '37': 'post-3.7',
                         'autofoo': 'Autotools (pre-3.5)'
-                        }[mod_info['version']])
+                        }[mod_info['version']]))
             else:
                 print('%19s: %s' % (index_names[key], mod_info[key]))

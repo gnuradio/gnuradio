@@ -24,11 +24,9 @@ import re
 
 import click
 
-from ..core import ModToolRename
-from ..core import get_block_candidates
+from ..core import get_block_candidates, ModToolRename
 from ..tools import SequenceCompleter
-from .base import ModToolException
-from .base import common_params, block_name, run, cli_input
+from .base import common_params, block_name, run, cli_input, ModToolException
 
 
 @click.command('rename', short_help=ModToolRename.description)

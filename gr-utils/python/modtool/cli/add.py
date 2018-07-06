@@ -26,8 +26,7 @@ import click
 
 from ..core import ModToolAdd
 from ..tools import SequenceCompleter, ask_yes_no
-from .base import ModToolException
-from .base import common_params, block_name, run, cli_input
+from .base import common_params, block_name, run, cli_input, ModToolException
 
 
 @click.command('add')

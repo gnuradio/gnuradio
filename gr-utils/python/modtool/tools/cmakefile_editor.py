@@ -37,7 +37,7 @@ class CMakeFileEditor(object):
 
     def append_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
         """ Add a value to an entry. """
-        regexp = re.compile('(%s\(%s[^()]*?)\s*?(\s?%s)\)' % (entry, to_ignore_start, to_ignore_end),
+        regexp = re.compile('({}\({}[^()]*?)\s*?(\s?{})\)'.format(entry, to_ignore_start, to_ignore_end),
                             re.MULTILINE)
         substi = r'\1' + self.separator + value + r'\2)'
         (self.cfile, nsubs) = regexp.subn(substi, self.cfile, count=1)
@@ -82,7 +82,7 @@ class CMakeFileEditor(object):
 
     def delete_entry(self, entry, value_pattern=''):
         """Remove an entry from the current buffer."""
-        regexp = '%s\s*\([^()]*%s[^()]*\)[^\n]*\n' % (entry, value_pattern)
+        regexp = '{}\s*\([^()]*{}[^()]*\)[^\n]*\n'.format(entry, value_pattern)
         regexp = re.compile(regexp, re.MULTILINE)
         (self.cfile, nsubs) = re.subn(regexp, '', self.cfile, count=1)
         return nsubs
@@ -132,9 +132,9 @@ class CMakeFileEditor(object):
             comment_out_re = r'\n' + self.indent + comment_out_re
         (self.cfile, nsubs) = re.subn(r'(\b'+fname+r'\b)\s*', comment_out_re, self.cfile)
         if nsubs == 0:
-            logger.warning("Warning: A replacement failed when commenting out %s. Check the CMakeFile.txt manually." % fname)
+            logger.warning("Warning: A replacement failed when commenting out {}. Check the CMakeFile.txt manually.".format(fname))
         elif nsubs > 1:
-            logger.warning("Warning: Replaced %s %d times (instead of once). Check the CMakeFile.txt manually." % (fname, nsubs))
+            logger.warning("Warning: Replaced {} {} times (instead of once). Check the CMakeFile.txt manually.".format(fname, nsubs))
 
     def comment_out_lines(self, pattern, comment_str='#'):
         """ Comments out all lines that match with pattern """
@@ -144,6 +144,5 @@ class CMakeFileEditor(object):
 
     def check_for_glob(self, globstr):
         """ Returns true if a glob as in globstr is found in the cmake file """
-        glob_re = r'GLOB\s[a-z_]+\s"%s"' % globstr.replace('*', '\*')
+        glob_re = r'GLOB\s[a-z_]+\s"{}"'.format(globstr.replace('*', '\*'))
         return re.search(glob_re, self.cfile, flags=re.MULTILINE|re.IGNORECASE) is not None
-

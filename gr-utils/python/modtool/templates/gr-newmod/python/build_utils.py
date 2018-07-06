@@ -26,7 +26,6 @@ from __future__ import unicode_literals
 
 import re
 import os
-import os.path
 from .build_utils_codes import *
 
 

@@ -34,8 +34,6 @@ from click_plugins import with_plugins
 
 from gnuradio import gr
 
-sys.tracebacklimit = 0
-
 
 class ModToolException(ClickException):
     """ Exception class for enhanced CLI interface """

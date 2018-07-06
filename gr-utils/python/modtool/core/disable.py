@@ -74,8 +74,8 @@ class ModToolDisable(ModTool):
                 cmake.comment_out_lines('\$\{CMAKE_CURRENT_SOURCE_DIR\}/'+fname)
                 fname_base = os.path.splitext(fname)[0]
                 ed = CMakeFileEditor(self._file['qalib']) # Abusing the CMakeFileEditor...
-                ed.comment_out_lines('#include\s+"%s.h"' % fname_base, comment_str='//')
-                ed.comment_out_lines('%s::suite\(\)' % fname_base, comment_str='//')
+                ed.comment_out_lines('#include\s+"{}.h"'.format(fname_base), comment_str='//')
+                ed.comment_out_lines('{}::suite\(\)'.format(fname_base), comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
             elif self.info['version'] == '36':
@@ -89,18 +89,18 @@ class ModToolDisable(ModTool):
             as well as the block magic """
             with open(self._file['swig']) as f:
                 swigfile = f.read()
-            (swigfile, nsubs) = re.subn('(.include\s+"(%s/)?%s")' % (
+            (swigfile, nsubs) = re.subn('(.include\s+"({}/)?{}")'.format(
                                         self.info['modname'], fname),
                                         r'//\1', swigfile)
             if nsubs > 0:
-                logger.info("Changing %s..." % self._file['swig'])
+                logger.info("Changing {}...".format(self._file['swig']))
             if nsubs > 1: # Need to find a single BLOCK_MAGIC
                 blockname = os.path.splitext(fname[len(self.info['modname'])+1:])[0]
                 if self.info['version'] == '37':
                     blockname = os.path.splitext(fname)[0]
-                (swigfile, nsubs) = re.subn('(GR_SWIG_BLOCK_MAGIC2?.+%s.+;)' % blockname, r'//\1', swigfile)
+                (swigfile, nsubs) = re.subn('(GR_SWIG_BLOCK_MAGIC2?.+{}.+;)'.format(blockname), r'//\1', swigfile)
                 if nsubs > 1:
-                    logger.warning("Hm, changed more then expected while editing %s." % self._file['swig'])
+                    logger.warning("Hm, changed more then expected while editing {}.".format(self._file['swig']))
             with open(self._file['swig'], 'w') as f:
                 f.write(swigfile)
             self.scm.mark_file_updated(self._file['swig'])
@@ -114,7 +114,7 @@ class ModToolDisable(ModTool):
             if self.info['version'] == '37':
                 blockname = os.path.splitext(fname)[0]
             swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
-            logger.info("Changing %s..." % self._file['swig'])
+            logger.info("Changing {}...".format(self._file['swig']))
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             with open(self._file['swig'], 'w') as f:
                 f.write(swigfile)
@@ -129,25 +129,25 @@ class ModToolDisable(ModTool):
                 ('python', 'qa.+py$', _handle_py_qa),
                 ('python', '^(?!qa).+py$', _handle_py_mod),
                 ('lib', 'qa.+\.cc$', _handle_cc_qa),
-                ('include/%s' % self.info['modname'], '.+\.h$', _handle_h_swig),
+                ('include/{}'.format(self.info['modname']), '.+\.h$', _handle_h_swig),
                 ('include', '.+\.h$', _handle_h_swig),
                 ('swig', '.+\.i$', _handle_i_swig)
         )
         for subdir in self._subdirs:
             if self.skip_subdirs[subdir]: continue
             if self.info['version'] == '37' and subdir == 'include':
-                subdir = 'include/%s' % self.info['modname']
+                subdir = 'include/{}'.format(self.info['modname'])
             try:
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))
             except IOError:
                 continue
-            logger.info("Traversing %s..." % subdir)
+            logger.info("Traversing {}...".format(subdir))
             filenames = cmake.find_filenames_match(self.info['pattern'])
             yes = self.info['yes']
             for fname in filenames:
                 file_disabled = False
                 if not yes:
-                    ans = cli_input("Really disable %s? [Y/n/a/q]: " % fname).lower().strip()
+                    ans = cli_input("Really disable {}? [Y/n/a/q]: ".format(fname)).lower().strip()
                     if ans == 'a':
                         yes = True
                     if ans == 'q':

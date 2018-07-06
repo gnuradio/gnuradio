@@ -129,8 +129,9 @@ class ParserCCBlock(object):
                         if parens_count == 0:
                             if read_state == 'type' and len(this_type):
                                 raise ValueError(
-                                        'Found closing parentheses before finishing last argument (this is how far I got: %s)'
-                                        % str(param_list)
+                                        'Found closing parentheses before finishing '
+                                        'last argument (this is how far I got: {})'.format \
+                                        (str(param_list))
                                 )
                             if len(this_type):
                                 param_list.append((this_type, this_name, this_defv))
@@ -171,16 +172,16 @@ class ParserCCBlock(object):
                     elif c[i] == '=':
                         if parens_count != 0:
                             raise ValueError(
-                                    'While parsing argument %d (%s): name finished but no closing parentheses.'
-                                    % (len(param_list)+1, this_type + ' ' + this_name)
+                                    'While parsing argument {} ({}): name finished but no closing parentheses.'.format \
+                                    (len(param_list)+1, this_type + ' ' + this_name)
                             )
                         read_state = 'defv'
                         i += 1
                     elif c[i] == ',':
                         if parens_count:
                             raise ValueError(
-                                    'While parsing argument %d (%s): name finished but no closing parentheses.'
-                                    % (len(param_list)+1, this_type + ' ' + this_name)
+                                    'While parsing argument {} ({}): name finished but no closing parentheses.'.format \
+                                    (len(param_list)+1, this_type + ' ' + this_name)
                             )
                         read_state = 'defv'
                     else:
@@ -197,8 +198,8 @@ class ParserCCBlock(object):
                     elif c[i] == ',':
                         if parens_count:
                             raise ValueError(
-                                    'While parsing argument %d (%s): default value finished but no closing parentheses.'
-                                    % (len(param_list)+1, this_type + ' ' + this_name)
+                                    'While parsing argument {} ({}): default value finished but no closing parentheses.'.format \
+                                    (len(param_list)+1, this_type + ' ' + this_name)
                             )
                         read_state = 'type'
                         param_list.append((this_type, this_name, this_defv))

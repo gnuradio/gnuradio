@@ -100,13 +100,13 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
 
         ## pylint tests ##
-        # python_dir = path.join(module_dir, 'python')
-        # py_module = path.join(python_dir, 'build_utils.py')
-        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        # print(pylint_stdout.getvalue(), end='')
-        # py_module = path.join(python_dir, 'build_utils_codes.py')
-        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        # print(pylint_stdout.getvalue(), end='')
+        python_dir = path.join(module_dir, 'python')
+        py_module = path.join(python_dir, 'build_utils.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
+        py_module = path.join(python_dir, 'build_utils_codes.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
 
         ## The check for object instantiation ##
         test_obj = ModToolNewModule()
@@ -183,13 +183,13 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_mul_ff.block.yml')))
 
         ## pylint tests ##
-        # python_dir = path.join(module_dir, 'python')
-        # py_module = path.join(python_dir, 'mul_ff.py')
-        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
-        # print(pylint_stdout.getvalue(), end='')
-        # py_module = path.join(python_dir, 'qa_mul_ff.py')
-        # (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        # print(pylint_stdout.getvalue(), end='')
+        python_dir = path.join(module_dir, 'python')
+        py_module = path.join(python_dir, 'mul_ff.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
+        py_module = path.join(python_dir, 'qa_mul_ff.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
 
     def test_rename(self):
         """ Tests for the API function rename """

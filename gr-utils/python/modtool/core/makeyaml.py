@@ -25,10 +25,7 @@ import re
 import glob
 import logging
 
-from ..tools import ParserCCBlock
-from ..tools import GRCYAMLGenerator
-from ..tools import CMakeFileEditor
-from ..tools import ask_yes_no
+from ..tools import ParserCCBlock, CMakeFileEditor, ask_yes_no, GRCYAMLGenerator
 from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
@@ -71,9 +68,9 @@ class ModToolMakeYAML(ModTool):
 
     def _search_files(self, path, path_glob):
         """ Search for files matching pattern in the given path. """
-        files = sorted(glob.glob("%s/%s"% (path, path_glob)))
+        files = sorted(glob.glob("{}/{}".format(path, path_glob)))
         files_filt = []
-        logger.info("Searching for matching files in %s/:" % path)
+        logger.info("Searching for matching files in {}/:".format(path))
         for f in files:
             if re.search(self.info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
@@ -85,15 +82,15 @@ class ModToolMakeYAML(ModTool):
         """ Take the return values from the parser and call the YAML
         generator. Also, check the makefile if the .yml file is in there.
         If necessary, add. """
-        fname_yml = '%s_%s.block.yml' % (self.info['modname'], blockname)
+        fname_yml = '{}_{}.block.yml'.format(self.info['modname'], blockname)
         path_to_yml = os.path.join('grc', fname_yml)
         # Some adaptions for the GRC
         for inout in ('in', 'out'):
             if iosig[inout]['max_ports'] == '-1':
-                iosig[inout]['max_ports'] = '$num_%sputs' % inout
-                params.append({'key': 'num_%sputs' % inout,
+                iosig[inout]['max_ports'] = '$num_{}puts'.format(inout)
+                params.append({'key': 'num_{}puts'.format(inout),
                                'type': 'int',
-                               'name': 'Num %sputs' % inout,
+                               'name': 'Num {}puts'.format(inout),
                                'default': '2',
                                'in_constructor': False})
         file_exists = False
@@ -151,7 +148,7 @@ class ModToolMakeYAML(ModTool):
             blockname = blockname.replace(self.info['modname']+'_', '', 1)
             return (blockname, fname_h)
         # Go, go, go
-        logger.info("Making GRC bindings for %s..." % fname_cc)
+        logger.info("Making GRC bindings for {}...".format(fname_cc))
         (blockname, fname_h) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,

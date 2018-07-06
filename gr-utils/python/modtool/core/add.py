@@ -24,9 +24,7 @@ import os
 import re
 import logging
 
-from ..tools import append_re_line_sequence
-from ..tools import CMakeFileEditor
-from ..tools import render_template
+from ..tools import render_template, append_re_line_sequence, CMakeFileEditor
 from ..templates import Templates
 from .base import ModTool, ModToolException
 
@@ -118,7 +116,7 @@ class ModToolAdd(ModTool):
     def _write_tpl(self, tpl, path, fname):
         """ Shorthand for writing a substituted template to a file"""
         path_to_file = os.path.join(path, fname)
-        logger.info("Adding file '%s'..." % path_to_file)
+        logger.info("Adding file '{}'...".format(path_to_file))
         with open(path_to_file, 'w') as f:
             f.write(render_template(tpl, **self.info))
         self.scm.add_files((path_to_file,))
@@ -151,8 +149,8 @@ class ModToolAdd(ModTool):
 
     def _run_cc_qa(self):
         " Add C++ QA files for 3.7 API if intructed from _run_lib"
-        fname_qa_h  = 'qa_%s.h'  % self.info['blockname']
-        fname_qa_cc = 'qa_%s.cc' % self.info['blockname']
+        fname_qa_h  = 'qa_{}.h'.format(self.info['blockname'])
+        fname_qa_cc = 'qa_{}.cc'.format(self.info['blockname'])
         self._write_tpl('qa_cpp', 'lib', fname_qa_cc)
         self._write_tpl('qa_h',   'lib', fname_qa_h)
         if self.skip_cmakefiles:
@@ -163,11 +161,11 @@ class ModToolAdd(ModTool):
                                     '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self.info['blockname'])
             append_re_line_sequence(self._file['qalib'],
                                     '#include.*\n',
-                                    '#include "%s"' % fname_qa_h)
+                                    '#include "{}"'.format(fname_qa_h))
             append_re_line_sequence(self._file['qalib'],
                                     '(addTest.*suite.*\n|new CppUnit.*TestSuite.*\n)',
-                                    '  s->addTest(gr::%s::qa_%s::suite());' % (self.info['modname'],
-                                                                               self.info['blockname'])
+                                    '  s->addTest(gr::{}::qa_{}::suite());'.format(self.info['modname'],
+                                                                                   self.info['blockname'])
                                     )
             self.scm.mark_files_updated((self._file['qalib'],))
         except IOError:
@@ -221,14 +219,14 @@ class ModToolAdd(ModTool):
         if self._get_mainswigfile() is None:
             logger.warning('Warning: No main swig file found.')
             return
-        logger.info("Editing %s..." % self._file['swig'])
+        logger.info("Editing {}...".format(self._file['swig']))
         mod_block_sep = '/'
         if self.info['version'] == '36':
             mod_block_sep = '_'
         swig_block_magic_str = render_template('swig_block_magic', **self.info)
         with open(self._file['swig'], 'a') as f:
             f.write(swig_block_magic_str)
-        include_str = '#include "%s%s%s.h"' % (
+        include_str = '#include "{}{}{}.h"'.format(
                 {True: 'gnuradio/' + self.info['modname'], False: self.info['modname']}[self.info['is_component']],
                 mod_block_sep,
                 self.info['blockname'])
@@ -255,7 +253,7 @@ class ModToolAdd(ModTool):
         self.scm.mark_files_updated((os.path.join(self.info['pydir'], fname_py_qa),))
         if self.skip_cmakefiles or CMakeFileEditor(self._file['cmpython']).check_for_glob('qa_*.py'):
             return
-        logger.info("Editing %s/CMakeLists.txt..." % self.info['pydir'])
+        logger.info("Editing {}/CMakeLists.txt...".format(self.info['pydir']))
         with open(self._file['cmpython'], 'a') as f:
             f.write(
                 'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
@@ -273,7 +271,7 @@ class ModToolAdd(ModTool):
         self._write_tpl('block_python', self.info['pydir'], fname_py)
         append_re_line_sequence(self._file['pyinit'],
                                 '(^from.*import.*\n|# import any pure.*\n)',
-                                'from .%s import %s' % (self.info['blockname'], self.info['blockname']))
+                                'from .{} import {}'.format(self.info['blockname'], self.info['blockname']))
         self.scm.mark_files_updated((self._file['pyinit'],))
         if self.skip_cmakefiles:
             return

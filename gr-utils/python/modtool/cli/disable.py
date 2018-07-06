@@ -22,8 +22,7 @@
 
 import click
 
-from ..core import ModToolDisable
-from ..core import get_block_candidates
+from ..core import get_block_candidates, ModToolDisable
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input
 

@@ -22,8 +22,7 @@
 
 import click
 
-from ..core import ModToolMakeYAML
-from ..core import get_block_candidates
+from ..core import get_block_candidates, ModToolMakeYAML
 from ..tools import SequenceCompleter
 from .base import common_params, block_name, run, cli_input
 

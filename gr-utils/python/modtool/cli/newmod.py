@@ -27,8 +27,7 @@ import click
 
 from gnuradio import gr
 from ..core import ModToolNewModule
-from .base import ModToolException
-from .base import common_params, run, cli_input
+from .base import common_params, run, cli_input, ModToolException
 
 
 @click.command('newmod', short_help=ModToolNewModule.description)
