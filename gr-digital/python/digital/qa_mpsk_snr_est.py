@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011-2013 Free Software Foundation, Inc.
+# Copyright 2011-2013,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,40 +19,44 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+""" Test digital.mpsk_snr_est_cc """
 
 import random
 
 from gnuradio import gr, gr_unittest, digital, blocks
 
+def random_bit():
+    """Create random bits using random() rather than randint(). The latter
+    changed for Python 3.2."""
+    return random.random() > .5
 def get_cplx():
-    return complex(2*random.randint(0,1) - 1, 0)
+    "Return a BPSK symbol (complex)"
+    return complex(2*random_bit() - 1, 0)
 def get_n_cplx():
+    "Return random, normal-distributed complex number"
     return complex(random.random()-0.5, random.random()-0.5)
 
 class test_mpsk_snr_est(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
-
         random.seed(0) # make repeatable
         N = 10000
-        self._noise = [get_n_cplx() for i in range(N)]
-        self._bits = [get_cplx() for i in range(N)]
+        self._noise = [get_n_cplx() for _ in range(N)]
+        self._bits = [get_cplx() for _ in range(N)]
 
     def tearDown(self):
         self.tb = None
 
     def mpsk_snr_est_setup(self, op):
         result = []
-        for i in range(1,6):
+        for i in range(1, 6):
             src_data = [b+(i*n) for b,n in zip(self._bits, self._noise)]
-
             src = blocks.vector_source_c(src_data)
             dst = blocks.null_sink(gr.sizeof_gr_complex)
-
             tb = gr.top_block()
             tb.connect(src, op)
             tb.connect(op, dst)
-            tb.run()               # run the graph and wait for it to finish
+            tb.run() # run the graph and wait for it to finish
 
             result.append(op.snr())
         return result
