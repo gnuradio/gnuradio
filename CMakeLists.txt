@@ -300,6 +300,8 @@ endif(ENABLE_PERFORMANCE_COUNTERS)
 OPTION(ENABLE_STATIC_LIBS "Enable building of static libraries" OFF)
 message(STATUS "Building Static Libraries: ${ENABLE_STATIC_LIBS}")
 
+OPTION(ENABLE_GLIBCXX_ASSERTIONS "GCC/libstdc++ cheap assertions (_GLIBCXX_ASSERTIONS)" OFF)
+
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################
