@@ -72,7 +72,7 @@ namespace gr {
         if (n_packed_length > d_buffer.size()){
           d_buffer.resize(n_packed_length);
           }
-        d_buffer.clear();
+        std::fill(d_buffer.begin(), d_buffer.begin() + n_packed_length, 0);
         for (size_t bit = 0; bit < packet_length; bit++){
           d_buffer[bit/8] |= (in[bit] << (bit % 8));
         }
