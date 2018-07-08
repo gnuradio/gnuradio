@@ -60,3 +60,11 @@ if (CMAKE_INSTALL_LIBDIR MATCHES lib64)
 endif()
 
 set(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")
+
+########################################################################
+# Allow GNU libstdc++ assertion checks
+########################################################################
+
+if (ENABLE_GLIBCXX_ASSERTIONS)
+  add_definitions(-D_GLIBCXX_ASSERTIONS)
+endif()
