@@ -14,6 +14,7 @@
 
 #include "flat_flowgraph.h"
 #include "scheduler_tpb.h"
+#include "terminate_handler.h"
 #include "top_block_impl.h"
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
@@ -79,6 +80,7 @@ top_block_impl::top_block_impl(top_block* owner, bool catch_exceptions = true)
       d_retry_wait(false),
       d_catch_exceptions(catch_exceptions)
 {
+    install_terminate_handler();
     gr::configure_default_loggers(d_logger, d_debug_logger, "top_block_impl");
 }
 
