@@ -51,18 +51,8 @@ namespace gr {
           d_f();
         }
         catch(boost::thread_interrupted const &)
-          {
-          }
-        catch(std::exception const &e)
-          {
-            std::cerr << "thread[" << d_name << "]: "
-                      << e.what() << std::endl;
-          }
-        catch(...)
-          {
-            std::cerr << "thread[" << d_name << "]: "
-                      << "caught unrecognized exception\n";
-          }
+        {
+        }
       }
     };
 
