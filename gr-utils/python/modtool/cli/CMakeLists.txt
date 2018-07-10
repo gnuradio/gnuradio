@@ -29,5 +29,6 @@ GR_PYTHON_INSTALL(FILES
     newmod.py
     rm.py
     rename.py
+    update.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool/cli
 )

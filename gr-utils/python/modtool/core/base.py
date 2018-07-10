@@ -85,7 +85,7 @@ class ModTool(object):
             logging.basicConfig(level=logging.ERROR, format='%(message)s')
             self.info['yes'] = True
         else:
-            self.info['yes'] = kwargs['yes']
+            self.info['yes'] = kwargs.get('yes', False)
             setup_cli_logger(logger)
 
         if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:

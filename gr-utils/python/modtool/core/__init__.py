@@ -27,3 +27,4 @@ from .makeyaml import ModToolMakeYAML
 from .newmod import ModToolNewModule
 from .rm import ModToolRemove
 from .rename import ModToolRename
+from .update import ModToolUpdate, get_xml_candidates
