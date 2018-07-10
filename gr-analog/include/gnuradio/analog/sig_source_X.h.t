@@ -50,6 +50,7 @@ namespace gr {
        * \param wave_freq Frequency of waveform (relative to sampling_freq).
        * \param ampl Signal amplitude.
        * \param offset offset of signal.
+       * \param phase phase of signal
        */
       static sptr make(double sampling_freq,
 		       gr::analog::gr_waveform_t waveform,
@@ -68,6 +69,10 @@ namespace gr {
       virtual void set_frequency(double frequency) = 0;
       virtual void set_amplitude(double ampl) = 0;
       virtual void set_offset(@TYPE@ offset) = 0;
+      /*!
+      * Sets the phase of a periodic signal.
+      * \param phase phase of the signal
+      */
       virtual void set_phase(float phase) = 0;
     };
 
