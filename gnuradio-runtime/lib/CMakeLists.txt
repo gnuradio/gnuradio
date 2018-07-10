@@ -9,6 +9,14 @@ include(GrMiscUtils)
 gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 
 ########################################################################
+# Look for libunwind
+########################################################################
+find_package(libunwind)
+if(libunwind_FOUND)
+    add_definitions(-DHAVE_LIBUNWIND)
+endif(libunwind_FOUND)
+
+########################################################################
 # Handle the generated constants
 ########################################################################
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c
@@ -22,7 +30,6 @@ message(STATUS "Loading version ${VERSION} into constants...")
 string(REPLACE "\\" "\\\\" prefix "${prefix}")
 string(REPLACE "\\" "\\\\" SYSCONFDIR "${SYSCONFDIR}")
 string(REPLACE "\\" "\\\\" GR_PREFSDIR "${GR_PREFSDIR}")
-
 
 #########################################################################
 # Include subdirs rather to populate to the sources lists.
@@ -72,6 +79,7 @@ add_library(gnuradio-runtime
   sync_interpolator.cc
   sys_paths.cc
   tagged_stream_block.cc
+  terminate_handler.cc
   test.cc
   top_block.cc
   top_block_impl.cc
@@ -196,12 +204,13 @@ target_link_libraries(gnuradio-runtime PUBLIC
   Log4Cpp::log4cpp
   MPLib::mplib
   ${PYTHON_LIBRARIES}
+  ${libunwind_LIBRARIES}
   )
 
 target_include_directories(gnuradio-runtime
   PUBLIC
-    ${PYTHON_INCLUDE_DIR} 
-    ${PYTHON_NUMPY_INCLUDE_DIR} 
+    ${PYTHON_INCLUDE_DIR}
+    ${PYTHON_NUMPY_INCLUDE_DIR}
     ${pybind11_INCLUDE_DIR}
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
