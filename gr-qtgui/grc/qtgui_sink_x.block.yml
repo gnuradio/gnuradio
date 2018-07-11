@@ -140,6 +140,7 @@ templates:
 
         Qt.QObject.connect(self._${id}_win, Qt.SIGNAL("plotPointSelected(QPointF, int)"), ${id}_callback)
         % endif
+        ${gui_hint() % win}
 
 documentation: |-
     The GUI hint can be used to position the widget within the application. The hint is of the form [tab_id@tab_index]: [row, col, row_span, col_span]. Both the tab specification and the grid position are optional.
