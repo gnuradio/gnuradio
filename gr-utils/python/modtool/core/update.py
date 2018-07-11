@@ -47,12 +47,16 @@ class ModToolUpdate(ModTool):
     name = 'update'
     description = 'Update the grc bindings for a block'
 
-    def __init__(self, blockname=None, **kwargs):
-        ModTool.__init__(self, **kwargs)
+    def __init__(self, blockname=None, complete=False, **kwargs):
+        ModTool.__init__(self, blockname, **kwargs)
+        self.info['complete'] = complete
+
 
     def validate(self):
         """ Validates the arguments """
         ModTool._validate(self)
+        if self.info['complete']:
+            return
         if not self.info['blockname'] or self.info['blockname'].isspace():
             raise ModToolException('Block name not specified!')
         block_candidates = get_xml_candidates()
@@ -69,20 +73,25 @@ class ModToolUpdate(ModTool):
         module_name = self.info['modname']
         path = './grc/'
         conv = Converter(path, path)
-        blockname = self.info['blockname']
-        xml_file = "{}_{}.xml".format(module_name, blockname)
-        yml_file = "{}_{}.block.yml".format(module_name, blockname)
-        conv.load_block_xml(path+xml_file)
-        os.remove(path+xml_file)
-        nsubs = self._run_cmakelists(xml_file, yml_file)
-        if nsubs > 1:
-            logger.warning("Changed more than expected for the block '%s'. "
-                           "Please verify the CMakeLists manually.", blockname)
-        elif nsubs == 0:
-            logger.warning("No entry found for the block '%s'. "
-                           'Please verify the CMakeLists manually.', blockname)
+        if self.info['complete']:
+            blocks = get_xml_candidates()
         else:
-            logger.info('Updated the CMakeLists.txt')
+            blocks = [self.info['blockname']]
+        for blockname in blocks:
+            xml_file = "{}_{}.xml".format(module_name, blockname)
+            yml_file = "{}_{}.block.yml".format(module_name, blockname)
+            conv.load_block_xml(path+xml_file)
+            logger.info("Converted {} to {}".format(xml_file, yml_file))
+            os.remove(path+xml_file)
+            nsubs = self._run_cmakelists(xml_file, yml_file)
+            if nsubs > 1:
+                logger.warning("Changed more than expected for the block '%s' in the CMakeLists.txt. "
+                               "Please verify the CMakeLists manually.", blockname)
+            elif nsubs == 0:
+                logger.warning("No entry found for the block '%s' in the CMakeLists.txt. "
+                               'Please verify the CMakeLists manually.', blockname)
+            else:
+                logger.info('Updated the CMakeLists.txt')
 
     def _run_cmakelists(self, to_remove, to_add):
         """ Changes in the CMakeLists """

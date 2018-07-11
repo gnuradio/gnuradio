@@ -28,6 +28,8 @@ from .base import block_name, run, cli_input, ModToolException
 
 
 @click.command('update', short_help=ModToolUpdate.description)
+@click.option('--complete', is_flag=True, default=None,
+              help="Convert all the XML bindings to YAML.")
 @block_name
 def cli(**kwargs):
     """ Update the XML bindings to YAML bindings """
@@ -39,6 +41,8 @@ def cli(**kwargs):
 
 def get_blockname(self):
     """ Returns the blockname for block to be updated """
+    if self.info['complete']:
+        return
     if self.info['blockname'] is None:
         block_candidates = get_xml_candidates()
         with SequenceCompleter(block_candidates):
