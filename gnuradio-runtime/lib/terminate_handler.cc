@@ -74,7 +74,7 @@ namespace gr {
 #endif
 
     void terminate_handler_impl() {
-        std::cerr << "terminate reached from: " << boost::this_thread::get_id();
+        std::cerr << "terminate reached from thread id: " << boost::this_thread::get_id();
         try {
             std::exception_ptr eptr = std::current_exception();
             if (eptr) {
