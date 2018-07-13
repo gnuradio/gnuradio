@@ -87,17 +87,20 @@ namespace gr {
        * \param complex (bool): If data stream is complex
        * \param max_segment_size (size_t): Length of a single segment
        *    before the header is repeated (in items).
-       * \param extra_dict (string): a serialized PMT dictionary of extra
-       *    information. Currently not supported.
+       * \param extra_dict: a PMT dictionary of extra
+       *    information.
        * \param detached_header (bool): Set to true to store the header
        *    info in a separate file (named filename.hdr)
        */
-      static sptr make(size_t itemsize, const std::string &filename,
-		       double samp_rate=1, double relative_rate=1,
-		       gr_file_types type=GR_FILE_FLOAT, bool complex=true,
-		       size_t max_segment_size=1000000,
-		       const std::string &extra_dict="",
-		       bool detached_header=false);
+      static sptr make(size_t itemsize,
+                       const std::string &filename,
+                       double samp_rate=1,
+                       double relative_rate=1,
+                       gr_file_types type=GR_FILE_FLOAT,
+                       bool complex=true,
+                       size_t max_segment_size=1000000,
+                       pmt::pmt_t extra_dict=pmt::make_dict(),
+                       bool detached_header=false);
 
       virtual bool open(const std::string &filename) = 0;
       virtual void close() = 0;

@@ -66,12 +66,14 @@ namespace gr {
       bool _open(FILE **fp, const char *filename);
 
     public:
-      file_meta_sink_impl(size_t itemsize, const std::string &filename,
-			  double samp_rate=1, double relative_rate=1,
-			  gr_file_types type=GR_FILE_FLOAT, bool complex=true,
-			  size_t max_segment_size=1000000,
-			  const std::string &extra_dict="",
-			  bool detached_header=false);
+            file_meta_sink_impl(size_t itemsize, const std::string &filename,
+                                double samp_rate=1,
+                                double relative_rate=1,
+                                gr_file_types type=GR_FILE_FLOAT,
+                                bool complex=true,
+                                size_t max_segment_size=1000000,
+                                pmt::pmt_t extra_dict=pmt::make_dict(),
+                                bool detached_header=false);
       ~file_meta_sink_impl();
 
       bool open(const std::string &filename);

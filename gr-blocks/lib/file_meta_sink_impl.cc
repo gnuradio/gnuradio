@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -56,12 +56,15 @@ namespace gr {
 
 
     file_meta_sink::sptr
-    file_meta_sink::make(size_t itemsize, const std::string &filename,
-			 double samp_rate, double relative_rate,
-			 gr_file_types type, bool complex,
-			 size_t max_segment_size,
-			 const std::string &extra_dict,
-			 bool detached_header)
+    file_meta_sink::make(size_t itemsize,
+                         const std::string &filename,
+                         double samp_rate,
+                         double relative_rate,
+                         gr_file_types type,
+                         bool complex,
+                         size_t max_segment_size,
+                         pmt::pmt_t extra_dict,
+                         bool detached_header)
     {
       return gnuradio::get_initial_sptr
 	(new file_meta_sink_impl(itemsize, filename,
@@ -73,19 +76,19 @@ namespace gr {
     }
 
     file_meta_sink_impl::file_meta_sink_impl(size_t itemsize,
-					     const std::string &filename,
-					     double samp_rate, double relative_rate,
-					     gr_file_types type, bool complex,
-					     size_t max_segment_size,
-					     const std::string &extra_dict,
-					     bool detached_header)
+                                             const std::string &filename,
+                                             double samp_rate, double relative_rate,
+                                             gr_file_types type, bool complex,
+                                             size_t max_segment_size,
+                                             pmt::pmt_t extra_dict,
+                                             bool detached_header)
       : sync_block("file_meta_sink",
-		      io_signature::make(1, 1, itemsize),
-		      io_signature::make(0, 0, 0)),
-	d_itemsize(itemsize),
-	d_samp_rate(samp_rate), d_relative_rate(relative_rate),
-	d_max_seg_size(max_segment_size), d_total_seg_size(0),
-	d_updated(false), d_unbuffered(false)
+                   io_signature::make(1, 1, itemsize),
+                   io_signature::make(0, 0, 0)),
+        d_itemsize(itemsize),
+        d_samp_rate(samp_rate), d_relative_rate(relative_rate),
+        d_max_seg_size(max_segment_size), d_total_seg_size(0),
+        d_updated(false), d_unbuffered(false)
     {
       d_fp = 0;
       d_new_fp = 0;
@@ -105,16 +108,13 @@ namespace gr {
 
       // handle extra dictionary
       d_extra = pmt::make_dict();
-      if(extra_dict.size() > 0) {
-	pmt::pmt_t extras = pmt::deserialize_str(extra_dict);
-	pmt::pmt_t keys = pmt::dict_keys(extras);
-	pmt::pmt_t vals = pmt::dict_values(extras);
-	size_t nitems = pmt::length(keys);
-	for(size_t i = 0; i < nitems; i++) {
-	  d_extra = pmt::dict_add(d_extra,
-				  pmt::nth(i, keys),
-				  pmt::nth(i, vals));
-	}
+      pmt::pmt_t keys = pmt::dict_keys(extra_dict);
+      pmt::pmt_t vals = pmt::dict_values(extra_dict);
+      size_t nitems = pmt::length(keys);
+      for(size_t i = 0; i < nitems; i++) {
+              d_extra = pmt::dict_add(d_extra,
+                                      pmt::nth(i, keys),
+                                      pmt::nth(i, vals));
       }
 
       d_extra_size = pmt::serialize_str(d_extra).size();
@@ -248,7 +248,7 @@ namespace gr {
       std::string extra_str = pmt::serialize_str(extra);
 
       if((header_str.size() != METADATA_HEADER_SIZE) && (extra_str.size() != d_extra_size))
-	throw std::runtime_error("file_meta_sink: header or extras is wrong size.\n");
+	throw std::runtime_error("file_meta_sink: header or extra_dict is wrong size.\n");
 
       size_t nwritten = 0;
       while(nwritten < header_str.size()) {
