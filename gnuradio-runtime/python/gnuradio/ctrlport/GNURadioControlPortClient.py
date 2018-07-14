@@ -30,8 +30,6 @@ is currently the only supported transport.
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import exceptions
-
 """
 GNURadioControlPortClient is the main class for creating a GNU Radio
 ControlPort client application for all transports.
@@ -131,4 +129,4 @@ class GNURadioControlPortClient(object):
                     blockingcallback()
         else:
             print(("Unsupported RPC method: ", rpcmethod))
-            raise exceptions.ValueError()
+            raise ValueError()
