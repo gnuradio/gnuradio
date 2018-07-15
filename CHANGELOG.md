@@ -7,15 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 ## [Unreleased]
 
-###Fixed
-#### gr-filter
-- Accessing the `[0]` element of an empty vector is UB, even if you don't use the result afterwards.
-
-## [UNRELEASED]
-
 ### Fixed
+#### Project Scope
+- Fix Boost 1.67 linking issue
+#### gnuradio-runtime
+- Logging: fixed issues where messages weren't properly written to stdout/stderr due to incorrect strings
 #### gr-analog
 - `fmdet_cf`'s derivative coefficients were wrong.
+#### gr-blocks
+- `skiphead` used to incorrectly handle tags, now properly shifts
+#### gr-digital
+- `qa_packet_format`: Unit test used to potentially lock up due to incorrect conditionals
+- `clock_recovery_cc`, `crc32_bb`: Accessing the `[0]` element of an empty vector is UB, even if you don't use the result afterwards.
+#### gr-fec
+- `polar_encoder`/`_common`: Fixed multiple out-of-bound accesses due to insufficient vector length checks
+#### gr-filter
+- `fft_filter`, `filter_delay`: Accessing the `[0]` element of an empty vector is UB, even if you don't use the result afterwards.
 
 ## [3.7.13.3] - 2018-06-13
 
