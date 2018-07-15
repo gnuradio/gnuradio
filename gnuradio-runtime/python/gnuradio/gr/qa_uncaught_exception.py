@@ -46,38 +46,50 @@ class except_block(gr.sync_block):
         return len(output_items[0])
 
 
+def process_func(catch_exceptions):
+    tb = gr.top_block(catch_exceptions=catch_exceptions)
+    # some test data
+    src_data = [complex(x, x + 1) for x in range(65536)]
+    src = blocks.vector_source_c(src_data)
+    src.set_repeat(True)
+
+    e_block_1 = except_block(False)
+    e_block_2 = except_block(True)
+
+    sink_1 = blocks.null_sink(gr.sizeof_gr_complex)
+    sink_2 = blocks.null_sink(gr.sizeof_gr_complex)
+
+    tb.connect(src, e_block_1)
+    tb.connect(src, e_block_2)
+    tb.connect(e_block_1, sink_1)
+    tb.connect(e_block_2, sink_2)
+    tb.run()
+
+
 class test_uncaught_exception(gr_unittest.TestCase):
 
-    def test_exception_throw(self):
+    def test_exception_throw_uncaught(self):
         # Test to ensure that throwing an exception causes the
         # process running top_block to exit
-
-        def process_func():
-            tb = gr.top_block()
-            # some test data
-            src_data = [complex(x, x + 1) for x in range(65536)]
-            src = blocks.vector_source_c(src_data)
-            src.set_repeat(True)
-
-            e_block_1 = except_block(False)
-            e_block_2 = except_block(True)
-
-            sink_1 = blocks.null_sink(gr.sizeof_gr_complex)
-            sink_2 = blocks.null_sink(gr.sizeof_gr_complex)
-
-            tb.connect(src, e_block_1)
-            tb.connect(src, e_block_2)
-            tb.connect(e_block_1, sink_1)
-            tb.connect(e_block_2, sink_2)
-            tb.run()
-
-        p = Process(target=process_func)
+        p = Process(target=process_func, args=(False,))
         p.daemon = True
         p.start()
-        p.join(1)
+        p.join(0.5)
         exit_code = p.exitcode
         self.assertIsNotNone(
             exit_code, "exception did not cause flowgraph exit")
+
+    def test_exception_throw_caught(self):
+        # Test to ensure that throwing an exception does not cause the process
+        # running top_block to exit (in catch_exceptions mode)
+        p = Process(target=process_func, args=(True,))
+        p.daemon = True
+        p.start()
+        p.join(0.5)
+        exit_code = p.exitcode
+        self.assertIsNone(
+            exit_code, "exception caused flowgraph exit")
+
 
 if __name__ == '__main__':
     gr_unittest.run(test_uncaught_exception, "test_uncaught_exception.xml")
