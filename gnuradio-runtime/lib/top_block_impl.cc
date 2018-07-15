@@ -42,7 +42,8 @@ namespace gr {
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
 
   typedef scheduler_sptr(*scheduler_maker)(flat_flowgraph_sptr ffg,
-                                           int max_noutput_items);
+                                           int max_noutput_items,
+                                           bool catch_exceptions);
 
   static struct scheduler_table {
     const char *name;
@@ -53,7 +54,7 @@ namespace gr {
   };
 
   static scheduler_sptr
-  make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items)
+  make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
   {
     static scheduler_maker factory = 0;
 
@@ -75,12 +76,12 @@ namespace gr {
         }
       }
     }
-    return factory(ffg, max_noutput_items);
+    return factory(ffg, max_noutput_items, catch_exceptions);
   }
 
-  top_block_impl::top_block_impl(top_block *owner)
+  top_block_impl::top_block_impl(top_block *owner, bool catch_exceptions=true)
     : d_owner(owner), d_ffg(),
-      d_state(IDLE), d_lock_count(0), d_retry_wait(false)
+      d_state(IDLE), d_lock_count(0), d_retry_wait(false), d_catch_exceptions(catch_exceptions)
   {
   }
 
@@ -118,7 +119,7 @@ namespace gr {
     if(p->get_bool("ControlPort", "on", false) && p->get_bool("PerfCounters", "export", false))
       d_ffg->enable_pc_rpc();
 
-    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items, d_catch_exceptions);
     d_state = RUNNING;
   }
 
@@ -204,7 +205,7 @@ namespace gr {
     d_ffg = new_ffg;
 
     // Create a new scheduler to execute it
-    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items, d_catch_exceptions);
     d_retry_wait = true;
   }
 

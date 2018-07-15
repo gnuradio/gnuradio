@@ -28,7 +28,8 @@
 namespace gr {
 
   scheduler::scheduler(flat_flowgraph_sptr ffg,
-                       int max_noutput_items)
+                       int max_noutput_items,
+                       bool catch_exceptions)
   {
   }
 

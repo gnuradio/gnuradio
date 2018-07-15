@@ -44,13 +44,13 @@ namespace gr {
   };
 
   scheduler_sptr
-  scheduler_sts::make(flat_flowgraph_sptr ffg, int max_noutput_items)
+  scheduler_sts::make(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
   {
-    return scheduler_sptr(new scheduler_sts(ffg, max_noutput_items));
+    return scheduler_sptr(new scheduler_sts(ffg, max_noutput_items, catch_exceptions));
   }
 
-  scheduler_sts::scheduler_sts(flat_flowgraph_sptr ffg, int max_noutput_items)
-    : scheduler(ffg, max_noutput_items)
+  scheduler_sts::scheduler_sts(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
+    : scheduler(ffg, max_noutput_items, catch_exceptions)
   {
     // Split the flattened flow graph into discrete partitions, each
     // of which is topologically sorted.
@@ -66,7 +66,7 @@ namespace gr {
       block_vector_t blocks = flat_flowgraph::make_block_vector(*p);
       d_threads.create_thread(
         gr::thread::thread_body_wrapper<sts_container>(sts_container(blocks),
-						  "single-threaded-scheduler"));
+						  "single-threaded-scheduler", catch_exceptions));
     }
   }
 

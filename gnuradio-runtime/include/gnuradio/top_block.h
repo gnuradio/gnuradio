@@ -30,7 +30,7 @@ namespace gr {
 
   class top_block_impl;
 
-  GR_RUNTIME_API top_block_sptr make_top_block(const std::string &name);
+  GR_RUNTIME_API top_block_sptr make_top_block(const std::string &name, bool catch_exceptions=true);
 
   /*!
    *\brief Top-level hierarchical block representing a flowgraph
@@ -40,12 +40,12 @@ namespace gr {
   {
   private:
     friend GR_RUNTIME_API top_block_sptr
-      make_top_block(const std::string &name);
+      make_top_block(const std::string &name, bool catch_exceptions);
 
     top_block_impl *d_impl;
 
   protected:
-    top_block(const std::string &name);
+    top_block(const std::string &name, bool catch_exceptions=true);
 
   public:
     ~top_block();
