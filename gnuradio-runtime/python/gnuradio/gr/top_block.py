@@ -96,12 +96,12 @@ class top_block(hier_block2):
     python subclassing.
     """
 
-    def __init__(self, name="top_block"):
+    def __init__(self, name="top_block", catch_exceptions=True):
         """
         Create a top block with a given name.
         """
         # not calling hier_block2.__init__, we set our own _impl
-        self._impl = top_block_swig(name)
+        self._impl = top_block_swig(name, catch_exceptions)
         self.handle_sigint = True
 
     def start(self, max_noutput_items=10000000):

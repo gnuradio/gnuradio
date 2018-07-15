@@ -48,7 +48,7 @@ public:
      * The scheduler will continue running until all blocks
      * report that they are done or the stop method is called.
      */
-    scheduler(flat_flowgraph_sptr ffg, int max_noutput_items);
+    scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions);
 
     virtual ~scheduler();
 

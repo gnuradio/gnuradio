@@ -40,7 +40,9 @@ namespace gr {
 
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
 
-typedef scheduler_sptr (*scheduler_maker)(flat_flowgraph_sptr ffg, int max_noutput_items);
+typedef scheduler_sptr (*scheduler_maker)(flat_flowgraph_sptr ffg,
+                                          int max_noutput_items,
+                                          bool catch_exceptions);
 
 static struct scheduler_table {
     const char* name;
@@ -49,7 +51,8 @@ static struct scheduler_table {
     { "TPB", scheduler_tpb::make } // first entry is default
 };
 
-static scheduler_sptr make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items)
+static scheduler_sptr
+make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
 {
     static scheduler_maker factory = 0;
 
@@ -72,11 +75,16 @@ static scheduler_sptr make_scheduler(flat_flowgraph_sptr ffg, int max_noutput_it
             }
         }
     }
-    return factory(ffg, max_noutput_items);
+    return factory(ffg, max_noutput_items, catch_exceptions);
 }
 
-top_block_impl::top_block_impl(top_block* owner)
-    : d_owner(owner), d_ffg(), d_state(IDLE), d_lock_count(0), d_retry_wait(false)
+top_block_impl::top_block_impl(top_block* owner, bool catch_exceptions = true)
+    : d_owner(owner),
+      d_ffg(),
+      d_state(IDLE),
+      d_lock_count(0),
+      d_retry_wait(false),
+      d_catch_exceptions(catch_exceptions)
 {
 }
 
@@ -115,7 +123,7 @@ void top_block_impl::start(int max_noutput_items)
         p->get_bool("PerfCounters", "export", false))
         d_ffg->enable_pc_rpc();
 
-    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items, d_catch_exceptions);
     d_state = RUNNING;
 }
 
@@ -195,7 +203,7 @@ void top_block_impl::restart()
     d_ffg = new_ffg;
 
     // Create a new scheduler to execute it
-    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items);
+    d_scheduler = make_scheduler(d_ffg, d_max_noutput_items, d_catch_exceptions);
     d_retry_wait = true;
 }
 
