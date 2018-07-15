@@ -39,7 +39,7 @@ namespace gr {
 class GR_RUNTIME_API top_block_impl
 {
 public:
-    top_block_impl(top_block* owner);
+    top_block_impl(top_block* owner, bool catch_exceptions);
     ~top_block_impl();
 
     // Create and start scheduler threads
@@ -85,6 +85,7 @@ protected:
     bool d_retry_wait;
     boost::condition_variable d_lock_cond;
     int d_max_noutput_items;
+    bool d_catch_exceptions;
 
 private:
     void restart();

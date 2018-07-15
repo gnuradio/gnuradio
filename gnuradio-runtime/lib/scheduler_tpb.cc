@@ -51,13 +51,16 @@ public:
     }
 };
 
-scheduler_sptr scheduler_tpb::make(flat_flowgraph_sptr ffg, int max_noutput_items)
+scheduler_sptr
+scheduler_tpb::make(flat_flowgraph_sptr ffg, int max_noutput_items, bool catch_exceptions)
 {
-    return scheduler_sptr(new scheduler_tpb(ffg, max_noutput_items));
+    return scheduler_sptr(new scheduler_tpb(ffg, max_noutput_items, catch_exceptions));
 }
 
-scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg, int max_noutput_items)
-    : scheduler(ffg, max_noutput_items)
+scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg,
+                             int max_noutput_items,
+                             bool catch_exceptions)
+    : scheduler(ffg, max_noutput_items, catch_exceptions)
 {
     int block_max_noutput_items;
 
@@ -91,7 +94,9 @@ scheduler_tpb::scheduler_tpb(flat_flowgraph_sptr ffg, int max_noutput_items)
             block_max_noutput_items = max_noutput_items;
         }
         d_threads.create_thread(thread::thread_body_wrapper<tpb_container>(
-            tpb_container(blocks[i], block_max_noutput_items, start_sync), name.str()));
+            tpb_container(blocks[i], block_max_noutput_items, start_sync),
+            name.str(),
+            catch_exceptions));
     }
     start_sync->wait();
 }
