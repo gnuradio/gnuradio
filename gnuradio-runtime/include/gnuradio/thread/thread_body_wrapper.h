@@ -38,9 +38,13 @@ class thread_body_wrapper
 private:
     F d_f;
     std::string d_name;
+    bool d_catch_exceptions;
 
 public:
-    explicit thread_body_wrapper(F f, const std::string& name = "") : d_f(f), d_name(name)
+    explicit thread_body_wrapper(F f,
+                                 const std::string& name = "",
+                                 bool catch_exceptions = true)
+        : d_f(f), d_name(name), d_catch_exceptions(catch_exceptions)
     {
     }
 
@@ -48,14 +52,25 @@ public:
     {
         mask_signals();
 
-        try {
-          d_f();
+        if (d_catch_exceptions) {
+            try {
+                d_f();
+            } catch (boost::thread_interrupted const&) {
+            } catch (std::exception const& e) {
+                std::cerr << "thread[" << d_name << "]: " << e.what() << std::endl;
+            } catch (...) {
+                std::cerr << "thread[" << d_name << "]: "
+                          << "caught unrecognized exception\n";
+            }
+
+        } else {
+            try {
+                d_f();
+            } catch (boost::thread_interrupted const&) {
+            }
         }
-        catch(boost::thread_interrupted const &)
-        {
-        }
-      }
-    };
+    }
+};
 
 } /* namespace thread */
 } /* namespace gr */
