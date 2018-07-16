@@ -241,6 +241,22 @@ part#slurp
 		<tab>Advanced</tab>
 	</param>
 	<param>
+		<name>Catch Block Exceptions</name>
+		<key>catch_exceptions</key>
+		<value>1</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Off</name>
+			<key></key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>1</key>
+		</option>
+		<tab>Advanced</tab>
+	</param>
+	<param>
 		<name>Run Command</name>
 		<key>run_command</key>
 		<value>{python} -u {filename}</value>

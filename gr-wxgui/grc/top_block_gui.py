@@ -27,7 +27,8 @@ default_gui_size = (200, 100)
 class top_block_gui(gr.top_block):
 	"""gr top block with wx gui app and grid sizer."""
 
-	def __init__(self, title='', size=default_gui_size):
+	def __init__(self, title='', size=default_gui_size,
+			catch_exceptions=True):
 		"""
 		Initialize the gr top block.
 		Create the wx gui elements.
@@ -38,7 +39,7 @@ class top_block_gui(gr.top_block):
 		    icon: the file path to an icon or None
 		"""
 		#initialize
-		gr.top_block.__init__(self)
+		gr.top_block.__init__(self, catch_exceptions=catch_exceptions)
 		self._size = size
 		#create gui elements
 		self._app = wx.App()
