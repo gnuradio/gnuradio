@@ -58,7 +58,7 @@ from gnuradio import qtgui
 class ${class_name}(gr.top_block, Qt.QWidget):
 
     def __init__(${param_str}):
-        gr.top_block.__init__(self, "${title}")
+        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
         Qt.QWidget.__init__(self)
         self.setWindowTitle("${title}")
         qtgui.util.check_set_qss()
@@ -91,7 +91,7 @@ class ${class_name}(gr.top_block, Qt.QWidget):
 
 class ${class_name}(gr.top_block):
     def __init__(self, doc):
-        gr.top_block.__init__(self, "${title}")
+        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
         self.doc = doc
         self.plot_lst = []
         self.widget_lst = []
@@ -100,7 +100,7 @@ class ${class_name}(gr.top_block):
 class ${class_name}(gr.top_block):
 
     def __init__(${param_str}):
-        gr.top_block.__init__(self, "${title}")
+        gr.top_block.__init__(self, "${title}", catch_exceptions=${catch_exceptions})
 % elif generate_options.startswith('hb'):
     <% in_sigs = flow_graph.get_hier_block_stream_io('in') %>
     <% out_sigs = flow_graph.get_hier_block_stream_io('out') %>
