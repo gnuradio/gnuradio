@@ -110,6 +110,12 @@ parameters:
     options: ['', '1']
     option_labels: ['Off', 'On']
     hide: part
+-   id: catch_exceptions
+    label: Catch Block Exceptions
+    category: Advanced
+    dtype: bool
+    default: 'True'
+    hide: part
 -   id: run_command
     label: Run Command
     category: Advanced
