@@ -118,7 +118,8 @@ class TopBlockGenerator(object):
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
-            'version': platform.config.version
+            'version': platform.config.version,
+            'catch_exceptions': fg.get_option('catch_exceptions')
         }
         flow_graph_code = python_template.render(
             title=title,
