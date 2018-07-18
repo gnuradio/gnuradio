@@ -43,7 +43,7 @@ class ModToolNewModule(ModTool):
         self.directory = self.dir
 
     def assign(self):
-        self.dir = self.directory + '/gr-{}'.format(self.info['modname'])
+        self.dir = os.path.join(self.directory, 'gr-{}'.format(self.info['modname']))
         if self.srcdir is None:
             self.srcdir = '/usr/local/share/gnuradio/modtool/templates/gr-newmod'
         self.srcdir = gr.prefs().get_string('modtool', 'newmod_path', self.srcdir)

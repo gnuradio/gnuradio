@@ -66,7 +66,7 @@ class TestModToolCore(unittest.TestCase):
     def tearDown(self):
         """ removes the created module """
         # Required, else the new-module directory command
-        # in setup with throw exception after first test
+        # in setup will throw exception after first test
         ## cannot remove if directory is not created
         if not self.f_newmod:
             rmdir = self.test_dir + '/gr-howto'

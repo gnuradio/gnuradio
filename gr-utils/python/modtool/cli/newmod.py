@@ -45,7 +45,7 @@ def cli(**kwargs):
     kwargs['cli'] = True
     self = ModToolNewModule(**kwargs)
     get_modname(self)
-    self.dir = self.dir + '/gr-{}'.format(self.info['modname'])
+    self.dir = os.path.join(self.dir, 'gr-{}'.format(self.info['modname']))
     try:
         os.stat(self.dir)
     except OSError:
