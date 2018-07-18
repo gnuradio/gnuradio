@@ -21,7 +21,8 @@ pmt_@TAG@vector::pmt_@TAG@vector(size_t k, @TYPE@ fill)
 pmt_@TAG@vector::pmt_@TAG@vector(size_t k, const @TYPE@ *data)
   : d_v(k)
 {
-  memcpy( &d_v[0], data, k * sizeof(@TYPE@) );
+  if(k)
+    memcpy( &d_v[0], data, k * sizeof(@TYPE@) );
 }
 
 @TYPE@
@@ -44,28 +45,28 @@ const @TYPE@ *
 pmt_@TAG@vector::elements(size_t &len)
 {
   len = length();
-  return &d_v[0];
+  return len ?  &d_v[0] : nullptr;
 }
 
 @TYPE@ *
 pmt_@TAG@vector::writable_elements(size_t &len)
 {
   len = length();
-  return &d_v[0];
+  return len ? &d_v[0] : nullptr;
 }
 
 const void*
 pmt_@TAG@vector::uniform_elements(size_t &len)
 {
   len = length() * sizeof(@TYPE@);
-  return &d_v[0];
+  return len ? &d_v[0] : nullptr;
 }
 
 void*
 pmt_@TAG@vector::uniform_writable_elements(size_t &len)
 {
   len = length() * sizeof(@TYPE@);
-  return &d_v[0];
+  return len ? (&d_v[0]) : nullptr;
 }
 
 bool
@@ -89,8 +90,10 @@ init_@TAG@vector(size_t k, const @TYPE@ *data)
 pmt_t
 init_@TAG@vector(size_t k, const std::vector< @TYPE@ > &data)
 {
-
-  return pmt_t(new pmt_@TAG@vector(k, &data[0]));
+  if(k) {
+    return pmt_t(new pmt_@TAG@vector(k, &data[0]));
+  }
+  return pmt_t(new pmt_@TAG@vector(k, static_cast< @TYPE@ >(0))); // fills an empty vector with 0
 }
 
 @TYPE@
