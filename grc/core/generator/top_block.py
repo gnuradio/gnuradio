@@ -226,7 +226,7 @@ class TopBlockGenerator(object):
                 key = port.key
 
             if not key.isdigit():
-                key.repr(key)
+                key = repr(key)
 
             return '({block}, {key})'.format(block=block, key=key)
 
