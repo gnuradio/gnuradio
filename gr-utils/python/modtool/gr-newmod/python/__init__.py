@@ -26,10 +26,10 @@ from __future__ import unicode_literals
 
 # import swig generated symbols into the howto namespace
 try:
-	# this might fail if the module is python-only
-	from howto_swig import *
+    # this might fail if the module is python-only
+    from howto_swig import *
 except ImportError:
-	pass
+    pass
 
 # import any pure python here
 #
