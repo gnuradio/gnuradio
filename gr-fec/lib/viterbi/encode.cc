@@ -29,9 +29,7 @@
  *
  */
 
-extern "C" {
 #include <gnuradio/fec/viterbi.h>
-}
 
 #include <cstdio>
 
@@ -46,7 +44,7 @@ int main()
 
   while (!feof(stdin)) {
     unsigned int n = fread(data, 1, MAXCHUNKSIZE, stdin);
-    encoder_state = encode(syms, data, n, encoder_state);
+    encoder_state = gr::fec::encode(syms, data, n, encoder_state);
     fwrite(syms, 1, n*16, stdout);
   }
 

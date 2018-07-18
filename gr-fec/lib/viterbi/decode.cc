@@ -27,9 +27,7 @@
  *
  */
 
-extern "C" {
 #include <gnuradio/fec/viterbi.h>
-}
 
 #include <cstdio>
 #include <cmath>
@@ -52,10 +50,10 @@ int main()
   gen_met(mettab, amp, esn0, 0.0, 4);
 
   // Initialize decoder state
-  struct viterbi_state state0[64];
-  struct viterbi_state state1[64];
+  struct gr::fec::viterbi_state state0[64];
+  struct gr::fec::viterbi_state state1[64];
   unsigned char viterbi_in[16];
-  viterbi_chunks_init(state0);
+  gr::fec::viterbi_chunks_init(state0);
 
   while (!feof(stdin)) {
     unsigned int n = fread(syms, 1, MAXENCSIZE, stdin);
@@ -71,11 +69,11 @@ int main()
 
       // Every four symbols, perform the butterfly2 operation
       if ((count % 4) == 3) {
-        viterbi_butterfly2(viterbi_in, mettab, state0, state1);
+        gr::fec::viterbi_butterfly2(viterbi_in, mettab, state0, state1);
 
 	// Every sixteen symbols, perform the readback operation
         if ((count > 64) && (count % 16) == 11) {
-          viterbi_get_output(state0, out);
+          gr::fec::viterbi_get_output(state0, out);
 	  fwrite(out++, 1, 1, stdout);
 	}
       }

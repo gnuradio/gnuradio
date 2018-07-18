@@ -134,25 +134,35 @@ ENDIF()
 # set after CppUnit check below). Use the variable CMAKE_CXX_STANDARD
 # since it will actually be used for this purposes starting in CMake 3.1.
 
+SET(CMAKE_C_EXTENSIONS OFF)
+SET(CMAKE_CXX_EXTENSIONS OFF)
+
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_CXX_STANDARD 98)
+    SET(CMAKE_CXX_STANDARD 11)
 ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    SET(CMAKE_CXX_STANDARD 98)
+    SET(CMAKE_CXX_STANDARD 11)
 ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_CXX_STANDARD 98)
+    SET(CMAKE_CXX_STANDARD 11)
 ELSE()
     message(warning "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
 
 IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+    SET(CMAKE_C_STANDARD 11)
 ELSEIF(CMAKE_C_COMPILER_ID MATCHES "Clang")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+    SET(CMAKE_C_STANDARD 11)
 ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+    SET(CMAKE_C_STANDARD 11)
 ELSE()
     message(warning "C standard could not be set because compiler is not GNU, Clang or MSVC.")
 ENDIF()
+
+# if cmake version is < 3.1, explicitly set C standard to use.
+IF(${CMAKE_VERSION} VERSION_LESS "3.1")
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c${CMAKE_C_STANDARD}")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${CMAKE_CXX_STANDARD}")
+ENDIF()
+
 
 
 ########################################################################
