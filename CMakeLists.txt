@@ -1,4 +1,4 @@
-# Copyright 2010-2017 Free Software Foundation, Inc.
+# Copyright 2010-2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -553,6 +553,52 @@ CPACK_FINALIZE()
 GR_PRINT_COMPONENT_SUMMARY()
 message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Building for version: ${VERSION} / ${LIBVER}")
+message("\
+ ___________________________________________________________________\n\
+/              _   _    _              _    _             _         \\\n\
+|             /_\\ | |_ | |_  ___  _ _ | |_ (_) ___  _ _  | |        |\n\
+|            / _ \\|  _||  _|/ -_)| ' \\|  _|| |/ _ \\| ' \\ |_|        |\n\
+|           /_/ \\_\\\\__| \\__|\\___||_||_|\\__||_|\\___/|_||_|(_)        |\n\
+|                                                                   |\n\
+|    __   __           _                      _                     |\n\
+|    \\ \\ / /___  _  _ ( )_ _  ___   _  _  ___(_) _ _   __ _   __ _  |\n\
+|     \\ V // _ \\| || ||/| '_|/ -_) | || |(_-<| || ' \\ / _` | / _` | |\n\
+|      |_| \\___/ \\_,_|  |_|  \\___|  \\_,_|/__/|_||_||_|\\__, | \\__,_| |\n\
+|                                                     |___/         |\n\
+|        _                _   _                          _          |\n\
+|     __| | ___  __ _  __| | | |__  _ _  __ _  _ _   __ | |_        |\n\
+|    / _` |/ -_)/ _` |/ _` | | '_ \\| '_|/ _` || ' \\ / _|| ' \\  _    |\n\
+|    \\__,_|\\___|\\__,_|\\__,_| |_.__/|_|  \\__,_||_||_|\\__||_||_|(_)   |\n\
+\\                                                                   /\n\
+ -------------------------------------------------------------------\n\
+              \\                    ^    /^\n\
+               \\                  / \\  // \\\n\
+                \\   |\\___/|      /   \\//  .\\\n\
+                 \\  /O  O  \\__  /    //  | \\ \\           *----*\n\
+                   /     /  \\/_/    //   |  \\  \\          \\   |\n\
+                   @___@`    \\/_   //    |   \\   \\         \\/\\ \\\n\
+                  0/0/|       \\/_ //     |    \\    \\         \\  \\\n\
+              0/0/0/0/|        \\///      |     \\     \\       |  |\n\
+           0/0/0/0/0/_|_ /   (  //       |      \\     _\\     |  /\n\
+        0/0/0/0/0/0/`/,_ _ _/  ) ; -.    |    _ _\\.-~       /   /\n\
+                    ,-}        _      *-.|.-~-.           .~    ~\n\
+GNU Radio has changed`/\\      /                 ~-. _ .-~      /\n\
+development models:     *.   }            {                   /\n\
+The maintenance branch .----~-.\\        \\-`                 .~\n\
+is now called          ///.----..<        \\             _ -~\n\
+maint-X.Y.               ///-._ _ _ _ _ _ _{^ - - - - ~\n\
+\n\
+\n\
+`maint-3.7` is now the maintenance branch of the 3.7.x.x release series.\n\
+\n\
+If you're looking for the branch from which future versions are derived, please\n\
+use the `master` branch.\n\
+\n\
+")
+message(WARNING "\
+YOU SHOULD NOT BE USING THIS GIT BRANCH ANYMORE.\n\
+IT ONLY EXISTS FOR HISTORICAL REASONS.\n\
+")
 
 # Create a config.h with some definitions to export to other projects.
 CONFIGURE_FILE(
