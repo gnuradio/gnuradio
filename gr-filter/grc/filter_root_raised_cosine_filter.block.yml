@@ -55,7 +55,7 @@ templates:
     imports: |-
         from gnuradio import filter
         from gnuradio.filter import firdes
-    make: "filter.$(type)(% if str(type).startswith('interp') then interp else decim#,\
+    make: "filter.${type}(${ 'interp' if str(type).startswith('interp') else 'decim' },\
         \ firdes.root_raised_cosine(:\n\t${gain}, ${samp_rate}, ${sym_rate}, ${alpha},\
         \ ${ntaps}))"
     callbacks:

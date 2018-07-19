@@ -63,9 +63,17 @@ templates:
     imports: |-
         from gnuradio import filter
         from gnuradio.filter import firdes
-    make: "filter.$(type)(% if str(type).startswith('interp') then interp else decim#,\
-        \ firdes.band_reject(:\n\t${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},\
-        \ ${width}, ${win}, ${beta}))"
+    make: |-
+        filter.${type}(
+            ${ 'interp' if str(type).startswith('interp') else 'decim' },
+            firdes.band_reject(
+                ${gain},
+                ${samp_rate},
+                ${low_cutoff_freq},
+                ${high_cutoff_freq},
+                ${width},
+                ${win},
+                ${beta}))
     callbacks:
     - set_taps(firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
         ${width}, ${win}, ${beta}))

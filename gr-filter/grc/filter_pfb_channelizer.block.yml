@@ -46,9 +46,13 @@ templates:
     imports: |-
         from gnuradio.filter import pfb
         from gnuradio.filter import firdes
-    make: "pfb.channelizer_ccf(\n\t  ${nchans},\n\t  ${taps},\n\t  ${osr},\n\t  ${atten})\n\
-        self.${id}.set_channel_map(${ch_map})\nself.${id}.declare_sample_delay(${samp_delay})\n\
-        \t"
+    make: |-
+        pfb.channelizer_ccf(
+            ${nchans},
+            ${taps},
+            ${osr},
+            ${atten})
+        self.${id}.set_channel_map(${ch_map})\nself.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
     - set_channel_map(${ch_map})
