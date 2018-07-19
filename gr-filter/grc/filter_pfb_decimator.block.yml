@@ -46,9 +46,15 @@ templates:
     imports: |-
         from gnuradio.filter import pfb
         from gnuradio.filter import firdes
-    make: "pfb.decimator_ccf(\n\t  ${decim},\n\t  ${taps},\n\t  ${channel},\n\t  ${atten},\n\
-        \          ${fft_rot},\n          ${fft_filts})\nself.${id}.declare_sample_delay(${samp_delay})\n\
-        \t"
+    make: |-
+        pfb.decimator_ccf(
+            ${decim},
+            ${taps},
+            ${channel},
+            ${atten},
+            ${fft_rot},
+            ${fft_filts})
+        self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
     - set_channel(int(${channel}))

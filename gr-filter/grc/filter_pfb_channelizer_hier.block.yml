@@ -47,8 +47,16 @@ outputs:
 
 templates:
     imports: from gnuradio.filter import pfb
-    make: "pfb.channelizer_hier_ccf(\n\t${nchans},\n\t${n_filterbanks},\n\t${taps},\n\
-        \t${outchans},\n  ${atten},\n  ${bw},\n  ${tb},\n  ${ripple}\n  )\n\t"
+    make: |-
+        pfb.channelizer_hier_ccf(
+            ${nchans},
+            ${n_filterbanks},
+            ${taps},
+            ${outchans},
+            ${atten},
+            ${bw},
+            ${tb},
+            ${ripple})
     callbacks:
     - set_taps(${taps})
 

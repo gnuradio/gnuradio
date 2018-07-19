@@ -42,7 +42,7 @@ templates:
     imports: |-
         from gnuradio import filter
         from gnuradio.filter import firdes
-    make: |
+    make: |-
         filter.fft_filter_${type}(${decim}, ${taps}, ${nthreads})
         self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
