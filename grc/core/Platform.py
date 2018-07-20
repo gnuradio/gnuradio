@@ -159,11 +159,12 @@ class Platform(Element):
         # Add blocks to block tree
         for key, block in self.blocks.iteritems():
             category = block.category
-            if len(category) == 0:
+            if not len(category):
                 category = self._block_categories.get(key, block.category)
-            elif key in self._block_categories and self._block_categories[key] != category:
+            elif category != self._block_categories.get(key, category):
                 print >> sys.stderr, 'conflicting categories on %s:\n\t"%s" (block file) vs "%s" (block tree)' % \
                 (key, '/'.join(category), '/'.join(self._block_categories[key]))
+                category = self._block_categories[key]
             # Blocks with empty categories are hidden
             if not category:
                 continue
