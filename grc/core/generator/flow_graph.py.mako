@@ -11,18 +11,24 @@ python_version = version_info.major
 % endif
 # -*- coding: utf-8 -*-
 <%def name="indent(code)">${ '\n        '.join(str(code).splitlines()) }</%def>
-"""
-GNU Radio Python Flow Graph
-
-Title: ${title}
+#
+# SPDX-License-Identifier: GPL-3.0
+#
+##################################################
+# GNU Radio Python Flow Graph
+# Title: ${title}
 % if flow_graph.get_option('author'):
-Author: ${flow_graph.get_option('author')}
+# Author: ${flow_graph.get_option('author')}
+% endif
+% if flow_graph.get_option('copyright'):
+# Copyright: ${flow_graph.get_option('copyright')}
 % endif
 % if flow_graph.get_option('description'):
-Description: ${flow_graph.get_option('description')}
+# Description: ${flow_graph.get_option('description')}
 % endif
-Generated: ${ generated_time }
-"""
+# Generated: ${generated_time}
+# GNU Radio version: ${version}
+##################################################
 
 % if generate_options == 'qt_gui':
 from distutils.version import StrictVersion

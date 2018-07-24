@@ -13,15 +13,15 @@ parameters:
 -   id: pilot_carriers
     label: Pilot Carriers
     dtype: raw
-    default: ()
+    default: ((),)
 -   id: pilot_symbols
     label: Pilot Symbols
     dtype: raw
-    default: ()
+    default: ((),)
 -   id: sync_words
     label: Sync Words
     dtype: raw
-    default: ()
+    default: ((),)
 -   id: len_tag_key
     label: Length tag key
     dtype: string
