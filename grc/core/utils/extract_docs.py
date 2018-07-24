@@ -175,7 +175,7 @@ class SubprocessLoader(object):
 
     def _handle_worker(self):
         """ Send commands and responses back from worker. """
-        assert '1' == self._worker.stdout.read(1)
+        assert '1' == self._worker.stdout.read(1).decode('utf-8')
         for cmd, args in iter(self._queue.get, self.DONE):
             self._last_cmd = cmd, args
             self._send(cmd, args)
@@ -185,14 +185,16 @@ class SubprocessLoader(object):
     def _send(self, cmd, args):
         """ Send a command to worker's stdin """
         fd = self._worker.stdin
-        json.dump((self.AUTH_CODE, cmd, args), fd)
-        fd.write('\n'.encode())
+        query = json.dumps((self.AUTH_CODE, cmd, args))
+        fd.write(query.encode('utf-8'))
+        fd.write(b'\n')
+        fd.flush()
 
     def _receive(self):
         """ Receive response from worker's stdout """
         for line in iter(self._worker.stdout.readline, ''):
             try:
-                key, cmd, args = json.loads(line, encoding='utf-8')
+                key, cmd, args = json.loads(line.decode('utf-8'), encoding='utf-8')
                 if key != self.AUTH_CODE:
                     raise ValueError('Got wrong auth code')
                 return cmd, args
@@ -246,27 +248,31 @@ class SubprocessLoader(object):
 def worker_main():
     """
     Main entry point for the docstring extraction process.
-    Manages RPC with main process through.
+    Manages RPC with main process through stdin/stdout.
     Runs a docstring extraction for each key it read on stdin.
     """
-    def send(cmd, args):
+    def send(code, cmd, args):
         json.dump((code, cmd, args), sys.stdout)
-        sys.stdout.write('\n'.encode())
+        sys.stdout.write('\n')
+        # fluh out to get new commands from the queue into stdin
+        sys.stdout.flush()
 
     sys.stdout.write('1')
+    # flush out to signal the main process we are ready for new commands
+    sys.stdout.flush()
     for line in iter(sys.stdin.readline, ''):
         code, cmd, args = json.loads(line, encoding='utf-8')
         try:
             if cmd == 'query':
                 key, imports, make = args
-                send('result', (key, docstring_from_make(key, imports, make)))
+                send(code, 'result', (key, docstring_from_make(key, imports, make)))
             elif cmd == 'query_key_only':
                 key, = args
-                send('result', (key, docstring_guess_from_key(key)))
+                send(code, 'result', (key, docstring_guess_from_key(key)))
             elif cmd == 'exit':
                 break
         except Exception as e:
-            send('error', repr(e))
+            send(code, 'error', repr(e))
 
 
 if __name__ == '__worker__':
