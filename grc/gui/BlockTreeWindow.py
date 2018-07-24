@@ -31,7 +31,7 @@ NAME_INDEX, KEY_INDEX, DOC_INDEX = range(3)
 def _format_doc(doc):
     docs = []
     if doc.get(''):
-        docs += doc.pop('').splitlines() + ['']
+        docs += doc.get('').splitlines() + ['']
     for block_name, docstring in six.iteritems(doc):
         docs.append('--- {0} ---'.format(block_name))
         docs += docstring.splitlines()

@@ -211,18 +211,18 @@ class PropsDialog(Gtk.Dialog):
         buf.delete(buf.get_start_iter(), buf.get_end_iter())
         pos = buf.get_end_iter()
 
-        docstrings = self._block.documentation
+        docstrings = self._block.documentation.copy()
         if not docstrings:
             return
 
-        # show documentation string from block xml
-        from_xml = docstrings.pop('', '')
-        for line in from_xml.splitlines():
+        # show documentation string from block yaml
+        from_yaml = docstrings.pop('', '')
+        for line in from_yaml.splitlines():
             if line.lstrip() == line and line.endswith(':'):
                 buf.insert_with_tags_by_name(pos, line + '\n', 'b')
             else:
                 buf.insert(pos, line + '\n')
-        if from_xml:
+        if from_yaml:
             buf.insert(pos, '\n')
 
         # if given the current parameters an exact match can be made
