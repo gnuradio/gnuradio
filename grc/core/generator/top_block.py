@@ -84,6 +84,7 @@ class TopBlockGenerator(object):
         output = []
 
         fg = self._flow_graph
+        platform = fg.parent
         title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
         variables = fg.get_variables()
         parameters = fg.get_parameters()
@@ -106,6 +107,7 @@ class TopBlockGenerator(object):
             'monitors': monitors,
             'generate_options': self._generate_options,
             'generated_time': time.ctime(),
+            'version': platform.config.version
         }
         flow_graph_code = flow_graph_template.render(
             title=title,
