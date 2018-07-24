@@ -45,9 +45,12 @@ templates:
     imports: |-
         from gnuradio.filter import pfb
         from gnuradio.filter import firdes
-    make: "pfb.arb_resampler_${type}(\n\t  ${rrate},\n% if taps:\n          taps=${taps},\n\
-        % else:\n          taps=None,\n% endif\n\t  flt_size=${nfilts})\nself.${id}.declare_sample_delay(${samp_delay})\n\
-        \t"
+    make: |-
+        pfb.arb_resampler_${type}(
+            ${rrate},
+            taps=${ taps if taps else 'None' },
+            flt_size=${nfilts})
+        self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
     - set_rate(${rrate})

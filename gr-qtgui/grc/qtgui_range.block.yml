@@ -71,11 +71,9 @@ templates:
         <%
             win = 'self._%s_win'%id
             range = 'self._%s_range'%id
-            if not label:
-                label = '"%s"'%id
         %>\
         ${range} = Range(${start}, ${stop}, ${step}, ${value}, ${min_len})
-        ${win} = RangeWidget(${range}, self.set_${id}, ${label}, "${widget}", ${rangeType})
+        ${win} = RangeWidget(${range}, self.set_${id}, ${(label if (len(label) - 2 > 0) else repr(id))}, "${widget}", ${rangeType})
         ${gui_hint() % win}
 
 documentation: |-

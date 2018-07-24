@@ -42,9 +42,7 @@ templates:
         ${id}))
     make: |-
         <%
-            win = 'self._%s_win'%id
-            if not label:
-                label = 'self._%s_tool_bar'%id
+            win = 'self._%s_tool_bar'%id
         %>\
         ${win} = Qt.QToolBar(self)
 
@@ -53,7 +51,7 @@ templates:
         else:
             self._${id}_formatter = lambda x: ${type.str}(x)
 
-        ${win}.addWidget(Qt.QLabel(${label}+": "))
+        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
         self._${id}_label = Qt.QLabel(str(self._${id}_formatter(self.${id})))
         self._${id}_tool_bar.addWidget(self._${id}_label)
         ${gui_hint() % win}

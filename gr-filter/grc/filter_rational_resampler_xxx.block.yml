@@ -51,11 +51,10 @@ templates:
                 taps=None,
         % endif
         % if fbw != 0:
-                fractional_bw=${fbw},
+                fractional_bw=${fbw})
         % else:
-                fractional_bw=None,
+                fractional_bw=None)
         % endif
-        )
     callbacks:
     - set_taps(${taps})
 
