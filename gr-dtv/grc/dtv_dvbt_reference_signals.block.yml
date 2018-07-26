@@ -78,9 +78,18 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: dtv.dvbt_reference_signals(${type.size}, ${transmission_mode.payload_length},
-        ${transmission_mode.fft_length}, ${constellation.val}, ${hierarchy.val}, ${code_rate_hp.val},
-        ${code_rate_lp.val}, ${guard_interval.val}, ${transmission_mode.val}, ${include_cell_id.val},
-        ${cell_id})
+    make: |-
+        dtv.dvbt_reference_signals(
+            ${type.size},
+            ${transmission_mode.payload_length},
+            ${transmission_mode.fft_length},
+            ${constellation.val},
+            ${hierarchy.val},
+            ${code_rate_hp.val},
+            ${code_rate_lp.val},
+            ${guard_interval.val},
+            ${transmission_mode.val},
+            ${include_cell_id.val},
+            ${cell_id})
 
 file_format: 1

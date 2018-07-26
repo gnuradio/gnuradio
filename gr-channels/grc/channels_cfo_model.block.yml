@@ -34,8 +34,7 @@ templates:
                 ${srate},
                 ${stdev},
                 ${maxdev},
-                ${seed}
-        )
+                ${seed})
     callbacks:
     - set_std_dev(${stdev})
     - set_max_dev(${maxdev})

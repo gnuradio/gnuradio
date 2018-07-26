@@ -60,14 +60,14 @@ value: ${ value }
 
 templates:
     imports: from gnuradio import fec
-    var_make: "\n% if int(ndim)==0 #:\nself.${id} = ${id} = fec.tpc_decoder_make(${row_poly},\
-        \ ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, ${max_iter}, ${decoder_type});\
-        \ \n% elif int(ndim)==1 #:\nself.${id} = ${id} = map( (lambda a: fec.tpc_decoder_make(${row_poly},\
-        \ ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, ${max_iter}, ${decoder_type})),\
-        \ range(0,${dim1}) ); \n% else:\nself.${id} = ${id} = map( (lambda b: map(\
-        \ ( lambda a: fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol},\
-        \ ${bval}, ${qval}, ${max_iter}, ${decoder_type})), range(0,${dim2}) ) ),\
-        \ range(0,${dim1})); \n% endif"
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, ${max_iter}, ${decoder_type})
+        % elif int(ndim)==1:
+        self.${id} = ${id} = map( (lambda a: fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, ${max_iter}, ${decoder_type})), range(0,${dim1}) )
+        % else:
+        self.${id} = ${id} = map( (lambda b: map( ( lambda a: fec.tpc_decoder_make(${row_poly}, ${col_poly}, ${krow}, ${kcol}, ${bval}, ${qval}, ${max_iter}, ${decoder_type})), range(0,${dim2}) ) ), range(0,${dim1}))
+        % endif
 
 documentation: |-
     This instantiates a 1-dim array or 2-dim array fo Turbo Product Encoders (TPC).

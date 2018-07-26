@@ -44,10 +44,15 @@ templates:
     imports: |-
         from gnuradio import fec
         import numpy
-    make: "fec.bercurve_generator(\n\t${encoder_list}, \\#size\n\t${decoder_list},\
-        \ \\#name\n\t${esno}, \\#range of esnos\n\t${samp_rate}, \\#throttle\n   \
-        \     ${threadtype}, \\#threading mode\n\t${puncpat}, \\#puncture pattern\n\
-        \        ${seed} \\# noise gen. seed\n)\n  "
+    make: |-
+        fec.bercurve_generator(
+            ${encoder_list}, #size
+            ${decoder_list}, #name
+            ${esno}, #range of esnos
+            ${samp_rate}, #throttle
+            ${threadtype}, #threading mode
+            ${puncpat}, #puncture pattern
+            ${seed}) # noise gen. seed
 
 documentation: |-
     Note that this block tries to launch many parallel codes to run simultaneously. Thus, it requires that the definitions for each encoder and decoder (specified in the "Encoder list" and "Decoder list") be configured with a parallelism > 0. If the parallelism for one of the encoder or decoder definition blocks is configured to 0, you will likely see an error like:

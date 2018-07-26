@@ -39,7 +39,12 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: "digital.gfsk_mod(\n\tsamples_per_symbol=${samples_per_symbol},\n\tsensitivity=${sensitivity},\n\
-        \tbt=${bt},\n\tverbose=${verbose},\n\tlog=${log},\n)"
+    make: |-
+        digital.gfsk_mod(
+            samples_per_symbol=${samples_per_symbol},
+            sensitivity=${sensitivity},
+            bt=${bt},
+            verbose=${verbose},
+            log=${log})
 
 file_format: 1

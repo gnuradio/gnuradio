@@ -79,8 +79,16 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvbs2_interleaver_bb(${framesize.val}, \n% if str(framesize) == 'FECFRAME_NORMAL':\n\
-        ${rate1.val}, \n% elif str(framesize) == 'FECFRAME_MEDIUM':\n${rate2.val},\
-        \ \n% else:\n${rate3.val}, \n% endif\n${constellation.val})"
+    make: |-
+        dtv.dvbs2_interleaver_bb(
+            ${framesize.val},
+            % if str(framesize) == 'FECFRAME_NORMAL':
+            ${rate1.val},
+            % elif str(framesize) == 'FECFRAME_MEDIUM':
+            ${rate2.val},
+            % else:
+            ${rate3.val},
+            % endif
+            ${constellation.val})
 
 file_format: 1

@@ -65,16 +65,15 @@ templates:
     imports: from gnuradio import digital
     make: |-
         digital.qam.qam_demod(
-          constellation_points=${constellation_points},
-          differential=${differential},
-          samples_per_symbol=${samples_per_symbol},
-          excess_bw=${excess_bw},
-          freq_bw=${freq_bw},
-          timing_bw=${timing_bw},
-          phase_bw=${phase_bw},
-          mod_code=${mod_code},
-          verbose=${verbose},
-          log=${log},
-          )
+            constellation_points=${constellation_points},
+            differential=${differential},
+            samples_per_symbol=${samples_per_symbol},
+            excess_bw=${excess_bw},
+            freq_bw=${freq_bw},
+            timing_bw=${timing_bw},
+            phase_bw=${phase_bw},
+            mod_code=${mod_code},
+            verbose=${verbose},
+            log=${log})
 
 file_format: 1

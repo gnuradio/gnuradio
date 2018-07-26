@@ -97,9 +97,19 @@ templates:
     imports: |-
         from gnuradio import digital
         from gnuradio import filter
-    make: digital.symbol_sync_${type}(${ted_type}, ${sps}, ${loop_bw}, ${damping},
-        ${ted_gain}, ${max_dev}, ${osps}, ${constellation}, ${resamp_type}, ${nfilters},
-        ${pfb_mf_taps})
+    make: |-
+        digital.symbol_sync_${type}(
+            ${ted_type}, 
+            ${sps}, 
+            ${loop_bw}, 
+            ${damping},
+            ${ted_gain}, 
+            ${max_dev}, 
+            ${osps}, 
+            ${constellation}, 
+            ${resamp_type}, 
+            ${nfilters},
+            ${pfb_mf_taps})
     callbacks:
     - set_loop_bandwidth(${loop_bw})
     - set_damping_factor(${damping})

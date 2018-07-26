@@ -108,11 +108,29 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvb_bbscrambler_bb(${standard.val}, \n% if str(standard) == 'STANDARD_DVBT2':\n\
-        ${framesize1.val}, \n% else:\n${framesize2.val}, \n% endif\n% if str(standard)\
-        \ == 'STANDARD_DVBT2':\n% if str(framesize1) == 'FECFRAME_NORMAL':\n${rate1.val}\n\
-        % else:\n${rate2.val}\n% endif\n% else:\n% if str(framesize2) == 'FECFRAME_NORMAL':\n\
-        ${rate3.val}\n% elif str(framesize2) == 'FECFRAME_MEDIUM':\n${rate4.val}\n\
-        % else:\n${rate5.val}\n% endif\n% endif\n)"
+    make: |-
+        dtv.dvb_bbscrambler_bb(
+            ${standard.val},
+            % if str(standard) == 'STANDARD_DVBT2':
+            ${framesize1.val},
+            % else:
+            ${framesize2.val},
+            % endif
+            % if str(standard) == 'STANDARD_DVBT2':
+            % if str(framesize1) == 'FECFRAME_NORMAL':
+            ${rate1.val}
+            % else:
+            ${rate2.val}
+            % endif
+            % else:
+            % if str(framesize2) == 'FECFRAME_NORMAL':
+            ${rate3.val}
+            % elif str(framesize2) == 'FECFRAME_MEDIUM':
+            ${rate4.val}
+            % else:
+            ${rate5.val}
+            % endif
+            % endif
+            )
 
 file_format: 1

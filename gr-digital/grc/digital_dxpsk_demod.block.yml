@@ -64,10 +64,16 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: "digital.${type}_demod(\n\tsamples_per_symbol=${samples_per_symbol},\n\t\
-        excess_bw=${excess_bw},\n\tfreq_bw=${freq_bw},\n\tphase_bw=${phase_bw},\n\t\
-        timing_bw=${timing_bw},\n\tmod_code=${mod_code},\n\tverbose=${verbose},\n\t\
-        log=${log}\n)"
+    make: |-
+        digital.${type}_demod(
+            samples_per_symbol=${samples_per_symbol},
+            excess_bw=${excess_bw},
+            freq_bw=${freq_bw},
+            phase_bw=${phase_bw},
+            timing_bw=${timing_bw},
+            mod_code=${mod_code},
+            verbose=${verbose},
+            log=${log})
     callbacks:
     - clock_recov.set_loop_bandwidth(${phase_bw})
     - time_recov.set_loop_bandwidth(${timing_bw})

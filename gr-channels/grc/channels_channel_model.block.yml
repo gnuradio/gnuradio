@@ -44,9 +44,14 @@ templates:
     imports: |-
         from gnuradio import channels
         from gnuradio.filter import firdes
-    make: "channels.channel_model(\n\tnoise_voltage=${noise_voltage},\n\tfrequency_offset=${freq_offset},\n\
-        \tepsilon=${epsilon},\n\ttaps=${taps},\n\tnoise_seed=${seed},\n\tblock_tags=${block_tags}\n\
-        )"
+    make: |-
+        channels.channel_model(
+            noise_voltage=${noise_voltage},
+            frequency_offset=${freq_offset},
+            epsilon=${epsilon},
+            taps=${taps},
+            noise_seed=${seed},
+            block_tags=${block_tags})
     callbacks:
     - set_noise_voltage(${noise_voltage})
     - set_frequency_offset(${freq_offset})
