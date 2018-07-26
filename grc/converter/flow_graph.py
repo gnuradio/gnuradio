@@ -82,6 +82,8 @@ def convert_block(data):
         (param.findtext('key'), param.findtext('value'))
         for param in data.findall('param')
     ))
+    if block_id == "import":
+        params["imports"] = params.pop("import")
     states = OrderedDict()
     x, y = ast.literal_eval(params.pop('_coordinate', '(10, 10)'))
     states['coordinate'] = yaml.ListFlowing([x, y])
