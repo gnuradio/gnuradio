@@ -1,7 +1,7 @@
 INCLUDE(FindPkgConfig)
 PKG_CHECK_MODULES(PC_THRIFT thrift)
 
-set(THRIFT_REQ_VERSION "0.9.2")
+set(THRIFT_REQ_VERSION "0.10.0")
 
 # If pkg-config found Thrift and it doesn't meet our version
 # requirement, warn and exit -- does not cause an error; just doesn't
