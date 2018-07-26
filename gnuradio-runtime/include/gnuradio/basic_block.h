@@ -161,17 +161,17 @@ namespace gr {
     /*!
      * True if the block has an alias (see set_block_alias).
      */
-    bool alias_set() { return !d_symbol_alias.empty(); }
+    bool alias_set() const { return !d_symbol_alias.empty(); }
 
     /*!
      * Returns the block's alias as a string.
      */
-    std::string alias(){ return alias_set()?d_symbol_alias:symbol_name(); }
+    std::string alias() const { return alias_set()?d_symbol_alias:symbol_name(); }
 
     /*!
      * Returns the block's alias as PMT.
      */
-    pmt::pmt_t alias_pmt(){ return pmt::intern(alias()); }
+    pmt::pmt_t alias_pmt() const { return pmt::intern(alias()); }
 
     /*!
      * Set's a new alias for the block; also adds an entry into the
