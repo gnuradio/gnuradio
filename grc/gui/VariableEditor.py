@@ -174,7 +174,7 @@ class VariableEditor(Gtk.VBox):
         # Block specific values
         if block:
             if block.key == 'import':
-                value = block.params['import'].get_value()
+                value = block.params['imports'].get_value()
             elif block.key != "variable":
                 value = "<Open Properties>"
                 sp('editable', False)
