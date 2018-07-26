@@ -51,8 +51,15 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: "digital.gfsk_demod(\n\tsamples_per_symbol=${samples_per_symbol},\n\tsensitivity=${sensitivity},\n\
-        \tgain_mu=${gain_mu},\n\tmu=${mu},\n\tomega_relative_limit=${omega_relative_limit},\n\
-        \tfreq_error=${freq_error},\n\tverbose=${verbose},\n\tlog=${log},\n)"
+    make: |-
+        digital.gfsk_demod(
+            samples_per_symbol=${samples_per_symbol},
+            sensitivity=${sensitivity},
+            gain_mu=${gain_mu},
+            mu=${mu},
+            omega_relative_limit=${omega_relative_limit},
+            freq_error=${freq_error},
+            verbose=${verbose},
+            log=${log})
 
 file_format: 1

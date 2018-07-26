@@ -96,11 +96,27 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvbt2_p1insertion_cc(${carriermode.val}, \n% if str(version) == 'VERSION_111':\n\
-        ${fftsize1.val}, \n% else:\n% if str(preamble2) == 'PREAMBLE_T2_SISO' or str(preamble2)\
-        \ == 'PREAMBLE_T2_MISO':\n${fftsize1.val}, \n% else:\n${fftsize2.val}, \n\
-        % endif\n% endif\n${guardinterval.val}, ${numdatasyms}, \n% if str(version)\
-        \ == 'VERSION_111':\n${preamble1.val}, \n% else:\n${preamble2.val}, \n% endif\n\
-        ${showlevels.val}, ${vclip})"
+    make: |-
+        dtv.dvbt2_p1insertion_cc(
+            ${carriermode.val},
+            % if str(version) == 'VERSION_111':
+            ${fftsize1.val},
+            % else:
+            % if str(preamble2) == 'PREAMBLE_T2_SISO' or str(preamble2) == 'PREAMBLE_T2_MISO':
+            ${fftsize1.val},
+            % else:
+            ${fftsize2.val},
+            % endif
+            % endif
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val},
+            % else:
+            ${preamble2.val},
+            % endif
+            ${showlevels.val},
+            ${vclip}
+            )
 
 file_format: 1

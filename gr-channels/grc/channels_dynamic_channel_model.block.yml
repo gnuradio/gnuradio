@@ -73,9 +73,22 @@ outputs:
 
 templates:
     imports: from gnuradio import channels
-    make: channels.dynamic_channel_model( ${samp_rate}, ${sro_stdev}, ${sro_maxdev},
-        ${cfo_stdev}, ${cfo_maxdev}, ${N}, ${fD}, ${LOS}, ${K}, ${delays}, ${mags},
-        ${ntaps}, ${noise_amp}, ${seed} )
+    make: |-
+        channels.dynamic_channel_model(
+            ${samp_rate}, 
+            ${sro_stdev}, 
+            ${sro_maxdev},
+            ${cfo_stdev}, 
+            ${cfo_maxdev}, 
+            ${N}, 
+            ${fD}, 
+            ${LOS}, 
+            ${K}, 
+            ${delays}, 
+            ${mags},
+            ${ntaps}, 
+            ${noise_amp}, 
+            ${seed})
     callbacks:
     - set_samp_rate(${samp_rate})
     - set_sro_dev_std(${sro_stdev})

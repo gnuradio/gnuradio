@@ -95,10 +95,24 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvbt2_freqinterleaver_cc(${carriermode.val}, ${fftsize.val}, ${pilotpattern.val},\
-        \ ${guardinterval.val}, ${numdatasyms}, \n% if str(version) == 'VERSION_111':\n\
-        ${paprmode1.val}, \n% else:\n${paprmode2.val}, \n% endif\n${version.val},\
-        \ \n% if str(version) == 'VERSION_111':\n${preamble1.val}\n% else:\n${preamble2.val}\n\
-        % endif\n)"
+    make: |-
+        dtv.dvbt2_freqinterleaver_cc(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val}
+            % else:
+            ${preamble2.val}
+            % endif
+            )
 
 file_format: 1

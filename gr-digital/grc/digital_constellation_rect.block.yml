@@ -46,20 +46,13 @@ value: ${ digital.constellation_rect(const_points, sym_map, rot_sym, real_sect, 
 
 templates:
     imports: from gnuradio import digital
-    var_make: 'self.${id} = ${id} = digital.constellation_rect(${const_points}, ${sym_map},
+    var_make: |-
+        self.${id} = ${id} = digital.constellation_rect(${const_points}, ${sym_map},
         ${rot_sym}, ${real_sect}, ${imag_sect}, ${w_real_sect}, ${w_imag_sect}).base()
-
-        % if str(soft_dec_lut).lower() == ''"auto"'' or str(soft_dec_lut).lower()
-        == "''auto''":
-
+        % if str(soft_dec_lut).lower() == ''"auto"'' or str(soft_dec_lut).lower() == "''auto''":
         self.${id}.gen_soft_dec_lut(${precision})
-
         % elif str(soft_dec_lut) != ''None'':
-
         self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
-
         % endif
-
-        '
 
 file_format: 1

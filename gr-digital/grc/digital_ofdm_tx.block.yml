@@ -88,13 +88,30 @@ asserts:
 
 templates:
     imports: from gnuradio import digital
-    make: "digital.ofdm_tx(\n\t  fft_len=${fft_len}, cp_len=${cp_len},\n\t  packet_length_tag_key=${packet_len_key},\n\
-        \t  % if occupied_carriers:\n\t  occupied_carriers=${occupied_carriers},\n\
-        \t  % endif\n\t  % if pilot_carriers:\n\t  pilot_carriers=${pilot_carriers},\n\
-        \t  % endif\n\t  % if pilot_carriers:\n\t  pilot_symbols=${pilot_symbols},\n\
-        \t  % endif\n\t  % if sync_word1:\n\t  sync_word1=${sync_word1},\n\t  % endif\n\
-        \t  % if sync_word2:\n\t  sync_word2=${sync_word2},\n\t  % endif\n\t  bps_header=${header_mod.bps},\n\
-        \t  bps_payload=${payload_mod.bps},\n\t  rolloff=${rolloff},\n\t  debug_log=${log},\n\
-        \t  scramble_bits=${scramble_bits}\n\t )"
+    make: |-
+        digital.ofdm_tx(
+            fft_len=${fft_len}, 
+            cp_len=${cp_len},
+            packet_length_tag_key=${packet_len_key},
+            % if occupied_carriers:
+            occupied_carriers=${occupied_carriers},
+            % endif
+            % if pilot_carriers:
+            pilot_carriers=${pilot_carriers},
+            % endif
+            % if pilot_carriers:
+            pilot_symbols=${pilot_symbols},
+            % endif
+            % if sync_word1:
+            sync_word1=${sync_word1},
+            % endif
+            % if sync_word2:
+            sync_word2=${sync_word2},
+            % endif
+            bps_header=${header_mod.bps},
+            bps_payload=${payload_mod.bps},
+            rolloff=${rolloff}, 
+            debug_log=${log},
+            scramble_bits=${scramble_bits})
 
 file_format: 1

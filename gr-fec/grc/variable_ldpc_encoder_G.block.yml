@@ -28,11 +28,16 @@ value: ${ value }
 
 templates:
     imports: from gnuradio import fec
-    var_make: "\n% if int(ndim)==0 #:\nself.${id} = ${id} = fec.ldpc_gen_mtrx_encoder_make(${G})\n\
-        % elif int(ndim)==1 #:\nself.${id} = ${id} = map((lambda a: fec.ldpc_gen_mtrx_encoder_make(${G})),\
-        \ range(0,${dim1})) \n% else:\nself.${id} = ${id} = map((lambda b: map((lambda\
-        \ a: fec.ldpc_gen_mtrx_encoder_make(${G})), range(0,${dim2}))), range(0,${dim1}))\
-        \ \n% endif"
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.ldpc_gen_mtrx_encoder_make(${G})\
+        % elif int(ndim)==1:
+        self.${id} = ${id} = map((lambda a: fec.ldpc_gen_mtrx_encoder_make(${G})),\
+        range(0,${dim1}))
+        % else:
+        self.${id} = ${id} = map((lambda b: map((lambda\
+        a: fec.ldpc_gen_mtrx_encoder_make(${G})), range(0,${dim2}))), range(0,${dim1}))\
+        % endif
 
 documentation: |-
     Given a generator matrix in systematic form, G = [I|P], where I is the identity matrix and P is the parity submatrix, the information word s is encoded into a codeword x via:

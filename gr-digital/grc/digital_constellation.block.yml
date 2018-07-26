@@ -42,31 +42,17 @@ value: ${ digital.constellation_calcdist(const_points, sym_map, rot_sym, dims) i
 
 templates:
     imports: from gnuradio import digital
-    var_make: '
-
+    var_make: |-
         % if str(type) == "calcdist":
-
         self.${id} = ${id} = digital.constellation_calcdist(${const_points}, ${sym_map},
         ${rot_sym}, ${dims}).base()
-
         % else:
-
         self.${id} = ${id} = digital.constellation_${type}().base()
-
         % endif
-
-
-        % if str(soft_dec_lut).lower() == ''"auto"'' or str(soft_dec_lut).lower()
-        == "''auto''":
-
+        % if str(soft_dec_lut).lower() == ''"auto"'' or str(soft_dec_lut).lower() == "''auto''":
         self.${id}.gen_soft_dec_lut(${precision})
-
         % elif str(soft_dec_lut) != ''None'':
-
         self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
-
         % endif
-
-        '
 
 file_format: 1
