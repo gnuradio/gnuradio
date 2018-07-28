@@ -35,8 +35,9 @@ value: ${ firdes.band_reject(gain, samp_rate, low_cutoff_freq, high_cutoff_freq,
 
 templates:
     imports: from gnuradio.filter import firdes
-    var_make: "\nself.${id} = ${id} = firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq},\
-        \ ${high_cutoff_freq}, ${width}, ${win}, ${beta})\n  "
+    var_make: |-
+        self.${id} = ${id} = firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq},\
+        ${high_cutoff_freq}, ${width}, ${win}, ${beta})
 
 documentation: |-
     This is a convenience wrapper for calling firdes.band_reject().

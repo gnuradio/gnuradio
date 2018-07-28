@@ -42,8 +42,9 @@ value: ${ firdes.type.fcn(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, wi
 
 templates:
     imports: from gnuradio.filter import firdes
-    var_make: "\nself.${id} = ${id} = firdes.${type.fcn}(${gain}, ${samp_rate}, ${low_cutoff_freq},\
-        \ ${high_cutoff_freq}, ${width}, ${win}, ${beta})\n  "
+    var_make: |-
+        self.${id} = ${id} = firdes.${type.fcn}(${gain}, ${samp_rate}, ${low_cutoff_freq},\
+        ${high_cutoff_freq}, ${width}, ${win}, ${beta})
 
 documentation: |-
     This is a convenience wrapper for calling firdes.band_pass() or firdes.complex_band_pass()

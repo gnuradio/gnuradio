@@ -25,8 +25,9 @@ value: ${ firdes.root_raised_cosine(gain, samp_rate, sym_rate, alpha, ntaps) }
 
 templates:
     imports: from gnuradio.filter import firdes
-    var_make: "\nself.${id} = ${id} = firdes.root_raised_cosine(${gain}, ${samp_rate},\
-        \ ${sym_rate}, ${alpha}, ${ntaps})\n  "
+    var_make: |-
+        self.${id} = ${id} = firdes.root_raised_cosine(${gain}, ${samp_rate},\
+        ${sym_rate}, ${alpha}, ${ntaps})
 
 documentation: |-
     This is a convenience wrapper for calling firdes.root_raised_cosine(...).
