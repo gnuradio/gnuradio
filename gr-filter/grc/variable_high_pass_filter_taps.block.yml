@@ -31,8 +31,9 @@ value: ${ firdes.high_pass(gain, samp_rate, cutoff_freq, width, win, beta) }
 
 templates:
     imports: from gnuradio.filter import firdes
-    var_make: "\nself.${id} = ${id} = firdes.high_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
-        \ ${width}, ${win}, ${beta})\n  "
+    var_make: |-
+        self.${id} = ${id} = firdes.high_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
+        ${width}, ${win}, ${beta})
 
 documentation: |-
     This variable is a convenience wrapper around a call to firdes.high_pass(...).

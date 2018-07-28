@@ -65,7 +65,7 @@ templates:
         from gnuradio.filter import firdes
     make: |-
         filter.${type}(
-            ${ 'interp' if str(type).startswith('interp') else 'decim' },
+            ${ interp if str(type).startswith('interp') else decim },
             firdes.band_reject(
                 ${gain},
                 ${samp_rate},
