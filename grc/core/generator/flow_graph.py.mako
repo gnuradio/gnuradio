@@ -247,7 +247,7 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
             with open(filename) as ss:
                 self.setStyleSheet(ss.read())
         except Exception as e:
-            print >> sys.stderr, e
+            print(e, file=sys.stderr)
     % endif
 % endif
 ##
@@ -334,7 +334,7 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     % if flow_graph.get_option('realtime_scheduling'):
     if gr.enable_realtime_scheduling() != gr.RT_OK:
-        print "Error: failed to enable real-time scheduling."
+        print("Error: failed to enable real-time scheduling.")
     % endif
     % if generate_options == 'qt_gui':
 
