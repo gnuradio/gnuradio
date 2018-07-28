@@ -38,11 +38,9 @@ templates:
     make: |-
         <%
             win = 'self._%s_tool_bar'%id
-            if not label:
-                label = '"%s"'%id
         %>
         ${win} = Qt.QToolBar(self)
-        ${win}.addWidget(Qt.QLabel(${label}+": "))
+        ${win}.addWidget(Qt.QLabel(${(label if (len(label) - 2 > 0) else repr(id))} + ": "))
         self._${id}_line_edit = Qt.QLineEdit(str(self.${id}))
         self._${id}_tool_bar.addWidget(self._${id}_line_edit)
         self._${id}_line_edit.returnPressed.connect(

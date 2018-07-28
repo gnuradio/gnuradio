@@ -30,8 +30,12 @@ templates:
     imports: |-
         from gnuradio.filter import pfb
         from gnuradio.filter import firdes
-    make: "pfb.interpolator_ccf(\n\t  ${interp},\n\t  ${taps},\n\t  ${atten})\nself.${id}.declare_sample_delay(${samp_delay})\n\
-        \t"
+    make: |-
+        pfb.interpolator_ccf(
+            ${interp},
+            ${taps},
+            ${atten})
+        self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
 
