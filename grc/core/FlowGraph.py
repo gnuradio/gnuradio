@@ -230,7 +230,7 @@ class FlowGraph(Element):
         if namespace is not None:
             return eval(expr, namespace, local_namespace)
         else:
-            return self._eval_cache.setdefault(expr, eval(expr, self.namespace))
+            return self._eval_cache.setdefault(expr, eval(expr, self.namespace, local_namespace))
 
     ##############################################
     # Add/remove stuff
