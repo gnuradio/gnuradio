@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 from io import open
 import json
@@ -73,8 +73,9 @@ class Cache(object):
             return
 
         logger.info('Saving %d entries to json cache', len(self.cache))
+        # Dumping to binary file is only supported for Python3 >= 3.6
         with open(self.cache_file, 'w', encoding='utf8') as cache_file:
-            json.dump(self.cache, cache_file)
+            cache_file.write(json.dumps(self.cache, ensure_ascii=False))
 
     def prune(self):
         for filename in (set(self.cache) - self._accessed_items):
