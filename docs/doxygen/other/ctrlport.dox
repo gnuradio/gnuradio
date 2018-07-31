@@ -65,7 +65,7 @@ Thrift project.
 
 \subsection ctrlport_thrift Apache Thrift
 
-Current version support: >= 0.9.2
+Current version support: >= 0.10.0
 
 Apache Thrift is a middleware layer that defines interfaces of a
 program using its own Thrift language. GNU Radio's interface file is:
@@ -77,7 +77,7 @@ also defines a set of data structure Knobs to allow us to pass any
 type of data over the interfaces.
 
 To use Thrift in ControlPort requires a minimum Thrift version of
-0.9.0. If a Thrift version greater than or equal to this version is
+0.10.0. If a Thrift version greater than or equal to this version is
 not found, the Thrift backend to ControlPort will not be installed,
 through ControlPort itself still will be. During cmake configuration
 time, it prints out information about finding Thrift and requires:
