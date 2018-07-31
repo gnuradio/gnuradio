@@ -156,7 +156,7 @@ class Param(Element):
             try:
                 validator(self)
             except dtypes.ValidateError as e:
-                self.add_error_message(e.message)
+                self.add_error_message(str(e))
 
     def get_evaluated(self):
         return self._evaluated
