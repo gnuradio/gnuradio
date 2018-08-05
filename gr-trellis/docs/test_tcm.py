@@ -82,8 +82,8 @@ def main(args):
     Es = 0
     for i in range(len(constellation)):
         Es = Es + constellation[i]**2
-    Es = Es / (old_div(len(constellation,dimensionality)))
-    N0=Es / pow(10.0,old_div(esn0_db,10.0)); # noise variance
+    Es = Es / (len(constellation)//dimensionality)
+    N0=Es / pow(10.0,esn0_db/10.0); # noise variance
 
     tot_s=0
     terr_s=0

@@ -41,7 +41,7 @@ def gen_approx_table (f, nentries, min_x, max_x):
         a = (i * incx) + min_x
         b = ((i + 1) * incx) + min_x
         m = (f(b)-f(a)) / (b-a)
-        c = (3*a+b)*(f(a)-f(b))/(4*(b-a)) + (f(old_div((a+b) / 2) + f(a)),2)
+        c = (3*a+b)*(f(a)-f(b))/(4*(b-a)) + (f((a+b)/2) + f(a))//2
         abs_error = c+m*a-f(a)
         r.append ((m, c, abs_error))
     return r

@@ -73,9 +73,8 @@ class example_timing(gr.top_block):
             self.taps = self.clk.taps()
             self.dtaps = self.clk.diff_taps()
 
-            self.delay = int(scipy.ceil((old_div((len(rrc_taps)-1) / 2 +
-                                         (len(self.taps[0])-1) / 2),float(sps)))) + 1
-
+            self.delay = int(scipy.ceil(((len(rrc_taps)-1)//2 +
+                                         (len(self.taps[0])-1)//2 )//float(sps))) + 1
 
             self.vsnk_err = blocks.vector_sink_f()
             self.vsnk_rat = blocks.vector_sink_f()

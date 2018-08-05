@@ -99,8 +99,8 @@ def main():
     Es = 0
     for i in range(len(constellation)):
         Es = Es + constellation[i]**2
-    Es = Es / (old_div(len(constellation,dimensionality)))
-    N0=Es / pow(10.0,old_div(esn0_db,10.0)); # calculate noise variance
+    Es = Es / (len(constellation)//dimensionality)
+    N0=Es / pow(10.0,esn0_db/10.0); # calculate noise variance
 
     tot_b=0 # total number of transmitted bits
     terr_b=0 # total number of bits in error
@@ -112,7 +112,7 @@ def main():
         terr_p=terr_p+(e!=0)
         if ((i+1)%100==0) : # display progress
             print(i+1,terr_p, '%.2e' % ((1.0*terr_p) / (i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b) / tot_b))
-	if e!=0:
+        if e!=0:
             print("rep=",i, e)
             for k in range(Kb):
                 if pattern[k]!=0:
