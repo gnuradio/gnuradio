@@ -30,8 +30,6 @@ from __future__ import print_function
 
 import struct
 
-import six
-
 from gnuradio import gr, gr_unittest, blocks
 
 
@@ -93,7 +91,7 @@ class parse_msg(object):
         self.center_freq = msg.arg1()
         self.vlen = int(msg.arg2())
         assert(msg.length() == self.vlen * gr.sizeof_float)
-        self.data = struct.unpack(b'%df' % self.vlen, six.b(msg.to_string()))
+        self.data = struct.unpack(b'%df' % self.vlen, msg.to_string())
 
 
 class test_bin_statistics(gr_unittest.TestCase):
