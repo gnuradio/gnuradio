@@ -52,7 +52,7 @@ class test_framker_sink(gr_unittest.TestCase):
         header = tuple(2*[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]) # len=1
         pad = (0,) * 100
         src_data = code + header + (0,1,0,0,0,0,0,1) + pad
-        expected_data = 'A'
+        expected_data = b'A'
 
         rcvd_pktq = gr.msg_queue()
 
@@ -76,7 +76,7 @@ class test_framker_sink(gr_unittest.TestCase):
         header = tuple(2*[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0]) # len=2
         pad = (0,) * 100
         src_data = code + header + (0,1,0,0,1,0,0,0) + (0,1,0,0,1,0,0,1) + pad
-        expected_data = 'HI'
+        expected_data = b'HI'
 
         rcvd_pktq = gr.msg_queue()
 
