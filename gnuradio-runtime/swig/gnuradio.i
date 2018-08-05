@@ -83,6 +83,7 @@
 
 %begin %{
 #define SWIG_PYTHON_2_UNICODE
+#define SWIG_PYTHON_CAST_MODE
 %}
 
 #ifdef SWIGPYTHON
