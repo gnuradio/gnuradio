@@ -58,8 +58,8 @@ class test_message(gr_unittest.TestCase):
         self.assertEquals(0, msg.length())
 
     def test_101(self):
-        s = 'This is a test'
-        msg = gr.message_from_string(s)
+        s = b'This is a test'
+        msg = gr.message_from_string(s.decode('utf8'))
         self.assertEquals(s, msg.to_string())
 
     def test_200(self):
