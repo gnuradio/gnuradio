@@ -67,7 +67,7 @@ class fec_test(gr.hier_block2):
                                         ann=None, puncpat=puncpat,
                                         integration_period=10000, rotator=None)
 
-        noise = math.sqrt((10.0**(old_div(-esno / 10.0)),2.0))
+        noise = math.sqrt((10.0**(-esno / 10.0))/2.0)
         #self.fastnoise = analog.fastnoise_source_f(analog.GR_GAUSSIAN, noise, seed, 8192)
         self.fastnoise = analog.noise_source_f(analog.GR_GAUSSIAN, noise, seed)
         self.addnoise = blocks.add_ff(1)

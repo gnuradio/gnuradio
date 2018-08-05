@@ -69,7 +69,7 @@ class ofdm_receiver(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_gr_complex*occupied_tones, gr.sizeof_char)) # Output signature
 
-        bw = (old_div(float(occupied_tones) / float(fft_length)), 2.0)
+        bw = (float(occupied_tones) / float(fft_length)) / 2.0
         tb = bw*0.08
         chan_coeffs = filter.firdes.low_pass (1.0,                     # gain
                                               1.0,                     # sampling rate

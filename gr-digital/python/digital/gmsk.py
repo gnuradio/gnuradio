@@ -93,7 +93,7 @@ class gmsk_mod(gr.hier_block2):
             raise TypeError("samples_per_symbol must be an integer >= 2, is %r" % (samples_per_symbol,))
 
         ntaps = 4 * samples_per_symbol                        # up to 3 bits in filter at once
-        sensitivity = (old_div(pi / 2), samples_per_symbol)        # phase change per bit = pi / 2
+        sensitivity = (pi / 2) / samples_per_symbol        # phase change per bit = pi / 2
 
         # Turn it into NRZ data.
         #self.nrz = digital.bytes_to_syms()
@@ -216,7 +216,7 @@ class gmsk_demod(gr.hier_block2):
         self._gain_omega = .25 * self._gain_mu * self._gain_mu        # critically damped
 
         # Demodulate FM
-        sensitivity = (old_div(pi / 2), samples_per_symbol)
+        sensitivity = (pi / 2) / samples_per_symbol
         self.fmdemod = analog.quadrature_demod_cf(1.0 / sensitivity)
 
         # the clock recovery block tracks the symbol clock and resamples as needed.

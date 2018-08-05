@@ -185,7 +185,7 @@ def stopband_atten_to_dev (atten_db):
 
 def passband_ripple_to_dev (ripple_db):
     """Convert passband ripple spec expressed in dB to an absolute value"""
-    return (10**(old_div(ripple_db / 20)-1),(10**(ripple_db / 20)+1))
+    return (10**(ripple_db / 20)-1)/(10**(ripple_db / 20)+1)
 
 # ----------------------------------------------------------------
 
