@@ -897,6 +897,8 @@ namespace gr {
 	*/
    void clear_finished(){ d_finished = false; }
 
+   std::string identifier() const;
+
   };
 
   typedef std::vector<block_sptr> block_vector_t;
