@@ -45,8 +45,11 @@ namespace gr {
     endpoint(basic_block_sptr block, int port) { d_basic_block = block; d_port = port; }
     basic_block_sptr block() const { return d_basic_block; }
     int port() const { return d_port; }
+    std::string identifier() const {
+      return d_basic_block->alias() + ":" + std::to_string(d_port);
+    };
 
-    bool operator==(const endpoint &other) const;
+    bool operator==(const endpoint& other) const;
   };
 
   inline bool endpoint::operator==(const endpoint &other) const
@@ -71,6 +74,9 @@ namespace gr {
     pmt::pmt_t port() const { return d_port; }
     bool is_hier() const { return d_is_hier; }
     void set_hier(bool h) { d_is_hier = h; }
+    std::string identifier() const {
+      return d_basic_block->alias() + ":" + pmt::symbol_to_string(d_port);
+    }
 
     bool operator==(const msg_endpoint &other) const;
   };
@@ -99,6 +105,7 @@ namespace gr {
 
     const endpoint &src() const { return d_src; }
     const endpoint &dst() const { return d_dst; }
+    std::string identifier() const { return d_src.identifier() + "->" + d_dst.identifier(); }
 
   private:
     endpoint d_src;
@@ -123,6 +130,7 @@ namespace gr {
 
     const msg_endpoint &src() const { return d_src; }
     const msg_endpoint &dst() const { return d_dst; }
+    std::string identifier() const { return d_src.identifier() + "->" + d_dst.identifier(); }
 
   private:
     msg_endpoint d_src;
@@ -286,28 +294,28 @@ namespace gr {
   inline std::ostream&
   operator <<(std::ostream &os, const endpoint endp)
   {
-    os << endp.block()->alias() << ":" << endp.port();
+    os << endp.identifier();
     return os;
   }
 
   inline std::ostream&
   operator <<(std::ostream &os, const edge edge)
   {
-    os << edge.src() << "->" << edge.dst();
+    os << edge.identifier();
     return os;
   }
 
   inline std::ostream&
   operator <<(std::ostream &os, const msg_endpoint endp)
   {
-    os << endp.block()->alias() << ":" << pmt::symbol_to_string(endp.port());
+    os << endp.identifier();
     return os;
   }
 
   inline std::ostream&
   operator <<(std::ostream &os, const msg_edge edge)
   {
-    os << edge.src() << "->" << edge.dst();
+    os << edge.identifier();
     return os;
   }
 

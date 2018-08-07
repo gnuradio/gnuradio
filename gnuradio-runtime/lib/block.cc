@@ -903,10 +903,14 @@ namespace gr {
 #endif /* defined(GR_CTRLPORT) && defined(GR_PERFORMANCE_COUNTERS) */
   }
 
+  std::string block::identifier() const {
+    return d_name + "(" + std::to_string(d_unique_id) + ")";
+  }
+
   std::ostream&
   operator << (std::ostream& os, const block *m)
   {
-    os << "<block " << m->name() << " (" << m->unique_id() << ")>";
+    os << "<block " << m->identifier() << ">";
     return os;
   }
 

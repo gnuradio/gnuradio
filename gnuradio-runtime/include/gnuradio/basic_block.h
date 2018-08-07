@@ -153,6 +153,7 @@ namespace gr {
      * and never changes during the life of the block.
      */
     std::string symbol_name() const { return d_symbol_name; }
+    std::string identifier() const { return this->name() + "(" + std::to_string(this->unique_id()) + ")"; }
 
     gr::io_signature::sptr input_signature() const  { return d_input_signature; }
     gr::io_signature::sptr output_signature() const { return d_output_signature; }
@@ -392,7 +393,7 @@ namespace gr {
 
   inline std::ostream &operator << (std::ostream &os, basic_block_sptr basic_block)
   {
-    os << basic_block->name() << "(" << basic_block->unique_id() << ")";
+    os << basic_block->identifier();
     return os;
   }
 
