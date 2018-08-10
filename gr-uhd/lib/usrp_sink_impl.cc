@@ -690,28 +690,33 @@ namespace gr {
       if (not _tx_stream)
         _tx_stream = _dev->get_tx_stream(_stream_args);
 #endif
-
-      _metadata.start_of_burst = true;
-      _metadata.end_of_burst = false;
-      // Bursty tx will need to send a tx_time to activate time spec
-      _metadata.has_time_spec = !_stream_now && pmt::is_null(_length_tag_key);
       _nitems_to_send = 0;
-      if(_start_time_set) {
-        _start_time_set = false; //cleared for next run
-        _metadata.time_spec = _start_time;
-      }
-      else {
-        _metadata.time_spec = get_time_now() + ::uhd::time_spec_t(0.15);
-      }
+
+      if(pmt::is_null(_length_tag_key)){ //don't execute this part in burst mode
+        _metadata.start_of_burst = true;
+        _metadata.end_of_burst = false;
+        _metadata.has_time_spec = false;
+
+        if(!_stream_now){
+          _metadata.has_time_spec = true;
+          if(_start_time_set) {
+            _start_time_set = false; //cleared for next run
+            _metadata.time_spec = _start_time;
+          }
+          else {
+            _metadata.time_spec = get_time_now() + ::uhd::time_spec_t(0.15);
+          }
+        }
 
 #ifdef GR_UHD_USE_STREAM_API
-      _tx_stream->send
-        (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
+        _tx_stream->send
+          (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
 #else
-      _dev->get_device()->send
-        (gr_vector_const_void_star(_nchan), 0, _metadata,
-         *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
+        _dev->get_device()->send
+          (gr_vector_const_void_star(_nchan), 0, _metadata,
+           *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
 #endif
+      }
       return true;
     }
 
