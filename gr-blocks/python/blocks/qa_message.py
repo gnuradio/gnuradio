@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # Copyright 2004,2010,2013,2016 Free Software Foundation, Inc.
 #
@@ -20,11 +21,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 
 import time
 
 from gnuradio import gr, gr_unittest, blocks
 import pmt
+
 
 def all_counts():
     return (gr.block_ncurrently_allocated(),
@@ -61,6 +64,11 @@ class test_message(gr_unittest.TestCase):
         s = b'This is a test'
         msg = gr.message_from_string(s.decode('utf8'))
         self.assertEquals(s, msg.to_string())
+
+    def test_102_unicodechars(self):
+        s = "(╯°□°)╯︵ ┻━┻"
+        msg = gr.message_from_string(s)
+        self.assertEquals(s.encode('utf8'), msg.to_string())
 
     def test_200(self):
         self.leak_check(self.body_200)
