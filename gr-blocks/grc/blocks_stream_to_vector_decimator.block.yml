@@ -38,8 +38,12 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: "blocks.stream_to_vector_decimator(\n\titem_size=${type.size},\n\tsample_rate=${sample_rate},\n\
-        \tvec_rate=${vec_rate},\n\tvec_len=${vlen},\n)"
+    make: |-
+        blocks.stream_to_vector_decimator(
+            item_size=${type.size},
+            sample_rate=${sample_rate},
+            vec_rate=${vec_rate},
+            vec_len=${vlen})
     callbacks:
     - set_sample_rate(${sample_rate})
     - set_vec_rate(${vec_rate})

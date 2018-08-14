@@ -25,6 +25,6 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.transcendental(${name}, "$type")
+    make: blocks.transcendental(${name}, "${type}")
 
 file_format: 1
