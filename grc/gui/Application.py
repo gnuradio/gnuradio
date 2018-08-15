@@ -663,7 +663,7 @@ class Application(Gtk.Application):
             flow_graph_update(new_flow_graph)
             page.saved = False
         elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
-            file_path, background_transparent = SaveScreenShotDialog(main, page.get_file_path()).run()
+            file_path, background_transparent = FileDialogs.SaveScreenShot(main, page.file_path).run()
             if file_path is not None:
                 try:
                     Utils.make_screenshot(flow_graph, file_path, background_transparent)
@@ -689,7 +689,6 @@ class Application(Gtk.Application):
             if not page.process:
                 Actions.FLOW_GRAPH_GEN()
                 xterm = self.platform.config.xterm_executable
-                Dialogs.show_missing_xterm(main, xterm)
                 if self.config.xterm_missing() != xterm:
                     if not os.path.exists(xterm):
                         Dialogs.show_missing_xterm(main, xterm)
