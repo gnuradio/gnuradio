@@ -21,8 +21,6 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from __future__ import unicode_literals
-
 import time
 
 from gnuradio import gr, gr_unittest, blocks
@@ -66,7 +64,7 @@ class test_message(gr_unittest.TestCase):
         self.assertEquals(s, msg.to_string())
 
     def test_102_unicodechars(self):
-        s = "(╯°□°)╯︵ ┻━┻"
+        s = u"(╯°□°)╯︵ ┻━┻"
         msg = gr.message_from_string(s)
         self.assertEquals(s.encode('utf8'), msg.to_string())
 
