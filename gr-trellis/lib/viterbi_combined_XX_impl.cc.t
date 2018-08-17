@@ -56,7 +56,7 @@ namespace gr {
       d_TABLE(TABLE), d_TYPE(TYPE)//,
       //d_trace(FSM.S()*K)
     {
-      set_relative_rate(1.0 / ((double)d_D));
+      set_relative_rate(1, (uint64_t)d_D);
       set_output_multiple(d_K);
     }
 
@@ -73,7 +73,7 @@ namespace gr {
     {
       gr::thread::scoped_lock guard(d_setlock);
       d_D = D;
-      set_relative_rate(1.0 / ((double)d_D));
+      set_relative_rate(1, (uint64_t)d_D);
     }
    
     void @IMPL_NAME@::set_FSM(const fsm &FSM)

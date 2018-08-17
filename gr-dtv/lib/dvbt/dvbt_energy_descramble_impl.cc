@@ -72,7 +72,7 @@ namespace gr {
           io_signature::make(1, 1, sizeof (unsigned char))),
       d_reg(0xa9), d_index(0), d_search(0)
     {
-      set_relative_rate((double) (d_nblocks * d_bsize));
+      set_relative_rate((uint64_t) (d_nblocks * d_bsize), 1);
 
       // Set output multiple of (2 search + 1 data = 3) at least (4 for now)
       set_output_multiple(4 * d_nblocks * d_bsize);

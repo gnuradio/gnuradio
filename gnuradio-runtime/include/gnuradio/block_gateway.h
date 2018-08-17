@@ -177,8 +177,24 @@ namespace gr {
       return gr::block::set_relative_rate(relative_rate);
     }
 
+    void block__set_inverse_relative_rate(double inverse_relative_rate) {
+      return gr::block::set_inverse_relative_rate(inverse_relative_rate);
+    }
+
+    void block__set_relative_rate(uint64_t interpolation, uint64_t decimation) {
+      return gr::block::set_relative_rate(interpolation, decimation);
+    }
+
     double block__relative_rate(void) const {
       return gr::block::relative_rate();
+    }
+
+    uint64_t block__relative_rate_i(void) const {
+      return gr::block::relative_rate_i();
+    }
+
+    uint64_t block__relative_rate_d(void) const {
+      return gr::block::relative_rate_d();
     }
 
     uint64_t block__nitems_read(unsigned int which_input) {

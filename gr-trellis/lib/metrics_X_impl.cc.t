@@ -50,7 +50,7 @@ namespace gr {
 	       io_signature::make(1, -1, sizeof (float))),
       d_O(O), d_D(D), d_TYPE(TYPE), d_TABLE(TABLE)
     {
-      set_relative_rate (1.0 * d_O / ((double) d_D));
+      set_relative_rate ((uint64_t)d_O, (uint64_t)d_D);
       set_output_multiple ((int)d_O);
     }
 
@@ -58,7 +58,7 @@ namespace gr {
     { 
       gr::thread::scoped_lock guard(d_setlock);
       d_O = O; 
-      set_relative_rate (1.0 * d_O / ((double) d_D));
+      set_relative_rate ((uint64_t)d_O, (uint64_t)d_D);
       set_output_multiple ((int)d_O);
     }
 
@@ -66,7 +66,7 @@ namespace gr {
     { 
       gr::thread::scoped_lock guard(d_setlock);
       d_D = D; 
-      set_relative_rate (1.0 * d_O / ((double) d_D));
+      set_relative_rate ((uint64_t)d_O, (uint64_t)d_D);
     }
 
     void

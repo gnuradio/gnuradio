@@ -55,7 +55,7 @@ namespace gr {
 	throw std::invalid_argument("k and l must be in [1, 8]");
       }
 
-      set_relative_rate((double) d_k / d_l);
+      set_relative_rate((uint64_t) d_k, (uint64_t) d_l);
     }
 
     void 
@@ -64,7 +64,7 @@ namespace gr {
       gr::thread::scoped_lock guard(d_setlock);
       d_k = k;
       d_l = l;
-      set_relative_rate((double) d_k / d_l);
+      set_relative_rate((uint64_t) d_k, (uint64_t) d_l);
       }
 
     repack_bits_bb_impl::~repack_bits_bb_impl()

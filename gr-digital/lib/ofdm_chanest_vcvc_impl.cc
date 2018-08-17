@@ -128,7 +128,8 @@ namespace gr {
       }
 
       set_output_multiple(d_n_data_syms);
-      set_relative_rate((double) d_n_data_syms / (d_n_data_syms + d_n_sync_syms));
+      set_relative_rate((uint64_t) d_n_data_syms,
+                        (uint64_t) (d_n_data_syms + d_n_sync_syms));
       set_tag_propagation_policy(TPP_DONT);
     }
 
