@@ -200,6 +200,9 @@ def get_options(demods):
 
 
 if __name__ == "__main__":
+    print ("Warning: this example in its current shape is deprecated and
+            will be removed or fundamentally reworked in a coming GNU Radio
+            release.")
     demods = digital.modulation_utils.type_1_demods()
 
     (options, args) = get_options(demods)

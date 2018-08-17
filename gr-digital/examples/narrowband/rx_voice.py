@@ -165,6 +165,9 @@ def main():
 
 if __name__ == '__main__':
     try:
+        print ("Warning: this example in its current shape is deprecated and
+                will be removed or fundamentally reworked in a coming GNU Radio
+                release.")
         main()
     except KeyboardInterrupt:
         pass

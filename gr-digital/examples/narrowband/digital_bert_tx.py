@@ -129,6 +129,9 @@ def get_options(mods):
     return (options, args)
 
 if __name__ == "__main__":
+    print ("Warning: this example in its current shape is deprecated and
+            will be removed or fundamentally reworked in a coming GNU Radio
+            release.")
     mods = digital.modulation_utils.type_1_mods()
 
     (options, args) = get_options(mods)
