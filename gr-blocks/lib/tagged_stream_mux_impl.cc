@@ -74,7 +74,7 @@ namespace gr {
       unsigned char *out = (unsigned char *) output_items[0];
       int n_produced = 0;
 
-      set_relative_rate(ninput_items.size());
+      set_relative_rate((uint64_t)ninput_items.size(), 1);
 
       for (unsigned int i = 0; i < input_items.size(); i++) {
 	const unsigned char *in = (const unsigned char *) input_items[i];

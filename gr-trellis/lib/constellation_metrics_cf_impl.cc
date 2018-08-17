@@ -51,7 +51,7 @@ namespace gr {
 	d_O(constellation->arity()),
 	d_D(constellation->dimensionality())
     {
-      set_relative_rate(1.0 * d_O / ((double) d_D));
+      set_relative_rate((uint64_t)d_O, (uint64_t)d_D);
       set_output_multiple((int)d_O);
     }
 

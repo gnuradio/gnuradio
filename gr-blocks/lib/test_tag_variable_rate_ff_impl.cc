@@ -52,7 +52,7 @@ namespace gr {
       d_update_once(update_once), d_update_step(update_step)
     {
       set_tag_propagation_policy(TPP_DONT);
-      set_relative_rate(0.5);
+      set_relative_rate(1, 2);
       d_accum = 0;
       d_rrate = 0.5;
       d_old_in = 0;

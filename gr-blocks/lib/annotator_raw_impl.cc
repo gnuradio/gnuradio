@@ -50,7 +50,7 @@ namespace gr {
         d_itemsize(sizeof_stream_item)
     {
       set_tag_propagation_policy(TPP_ONE_TO_ONE);
-      set_relative_rate(1.0);
+      set_relative_rate(1, 1);
     }
 
     annotator_raw_impl::~annotator_raw_impl()

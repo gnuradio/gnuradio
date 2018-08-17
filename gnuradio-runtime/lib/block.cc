@@ -43,6 +43,7 @@ namespace gr {
       d_unaligned(0),
       d_is_unaligned(false),
       d_relative_rate (1.0),
+      d_mp_relative_rate(1.0),
       d_history(1),
       d_attr_delay(0),
       d_fixed_rate(false),
@@ -172,10 +173,36 @@ namespace gr {
   void
   block::set_relative_rate(double relative_rate)
   {
-    if(relative_rate < 0.0)
-      throw std::invalid_argument("block::set_relative_rate");
+    if(relative_rate <= 0.0)
+      throw std::invalid_argument("block::set_relative_rate: relative rate must be > 0.0");
 
     d_relative_rate = relative_rate;
+    d_mp_relative_rate = mpq_class(relative_rate);
+  }
+
+  void
+  block::set_inverse_relative_rate(double inverse_relative_rate)
+  {
+    if(inverse_relative_rate <= 0.0)
+      throw std::invalid_argument("block::set_inverse_relative_rate: inverse relative rate must be > 0.0");
+
+    mpq_class inv_rr_q(inverse_relative_rate);
+    set_relative_rate((uint64_t) inv_rr_q.get_den().get_ui(),
+                      (uint64_t) inv_rr_q.get_num().get_ui());
+  }
+
+  void
+  block::set_relative_rate(uint64_t interpolation, uint64_t decimation)
+  {
+    if (interpolation < 1)
+      throw std::invalid_argument("block::set_relative_rate: interpolation rate cannot be 0");
+
+    if (decimation < 1)
+      throw std::invalid_argument("block::set_relative_rate: decimation rate cannot be 0");
+
+    d_mp_relative_rate = mpq_class(interpolation, decimation);
+    d_mp_relative_rate.canonicalize();
+    d_relative_rate = d_mp_relative_rate.get_d();
   }
 
   void

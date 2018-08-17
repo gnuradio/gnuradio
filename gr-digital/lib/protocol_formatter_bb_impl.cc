@@ -51,7 +51,7 @@ namespace gr {
       set_output_multiple(d_format->header_nbytes());
 
       // This is the worst case rate, because we don't know the true value, of course
-      set_relative_rate(d_format->header_nbytes());
+      set_relative_rate((uint64_t)d_format->header_nbytes(), 1);
       set_tag_propagation_policy(TPP_DONT);
     }
 

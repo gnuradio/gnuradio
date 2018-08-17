@@ -49,7 +49,7 @@ namespace gr {
       set_tag_propagation_policy(TPP_ONE_TO_ONE);
 
       d_tag_counter = 0;
-      set_relative_rate(1.0);
+      set_relative_rate(1, 1);
     }
 
     annotator_1to1_impl::~annotator_1to1_impl()

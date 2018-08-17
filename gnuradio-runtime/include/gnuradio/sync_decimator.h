@@ -51,7 +51,7 @@ namespace gr {
     void set_decimation(unsigned decimation)
     {
       d_decimation = decimation;
-      set_relative_rate(1.0 / decimation);
+      set_relative_rate(1, (uint64_t) decimation);
     }
 
     // gr::sync_decimator overrides these to assist work
