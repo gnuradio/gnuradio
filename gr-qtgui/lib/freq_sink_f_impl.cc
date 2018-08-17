@@ -60,7 +60,8 @@ namespace gr {
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
   d_nconnections(nconnections), d_parent(parent),
-  d_port(pmt::mp("freq"))
+  d_port(pmt::mp("freq")),
+  d_port_bw(pmt::mp("bw"))
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
@@ -69,6 +70,11 @@ namespace gr {
       d_argc = 1;
       d_argv = new char;
       d_argv[0] = '\0';
+
+      // setup bw input port
+      message_port_register_in(d_port_bw);
+      set_msg_handler(d_port_bw,
+                      boost::bind(&freq_sink_f_impl::handle_set_bw, this, _1));      
 
       // setup output message port to post frequency when display is
       // double-clicked
@@ -609,6 +615,19 @@ namespace gr {
         }
       }
     }
+
+    void
+    freq_sink_f_impl::handle_set_bw(pmt::pmt_t msg)
+    {
+      if(pmt::is_pair(msg)) {
+        pmt::pmt_t x = pmt::cdr(msg);
+        if(pmt::is_real(x)) {
+          d_bandwidth = pmt::to_double(x);
+          d_qApplication->postEvent(d_main_gui,
+                                    new SetFreqEvent(d_center_freq, d_bandwidth));
+        }
+      }
+    }    
 
     void
     freq_sink_f_impl::_gui_update_trigger()

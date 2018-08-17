@@ -543,6 +543,13 @@ $(gui_hint() % $win)</make>
     <hide>$showports</hide>
   </sink>
 
+  <sink>
+    <name>bw</name>
+    <type>message</type>
+    <optional>1</optional>
+    <hide>$showports</hide>
+  </sink>  
+
   <source>
     <name>freq</name>
     <type>message</type>
