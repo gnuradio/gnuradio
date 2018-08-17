@@ -51,6 +51,7 @@ namespace gr {
       int d_nrows;
 
       const pmt::pmt_t d_port;
+      const pmt::pmt_t d_port_bw;      
 
       bool d_shift;
       fft::fft_complex *d_fft;
@@ -74,6 +75,10 @@ namespace gr {
       void fftresize();
       void check_clicked();
       void fft(float *data_out, const float *data_in, int size);
+
+      // Handles message input port for setting new bandwidth
+      // The message is a PMT pair (intern('bw'), double(bw))
+      void handle_set_bw(pmt::pmt_t msg);
 
       // Handles message input port for setting new center frequency.
       // The message is a PMT pair (intern('freq'), double(frequency)).
