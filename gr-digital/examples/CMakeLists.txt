@@ -38,16 +38,10 @@ install(
 
 # Narrowband
 GR_PYTHON_INSTALL(PROGRAMS
-    narrowband/transmit_path.py
-    narrowband/receive_path.py
     narrowband/uhd_interface.py
-    narrowband/benchmark_tx.py
-    narrowband/benchmark_rx.py
-    narrowband/tx_voice.py
-    narrowband/rx_voice.py
     narrowband/digital_bert_rx.py
     narrowband/digital_bert_tx.py
-    narrowband/tunnel.py
+    narrowband/benchmark_add_channel.py
     DESTINATION ${GR_PKG_DIGITAL_EXAMPLES_DIR}/narrowband
 )
 
