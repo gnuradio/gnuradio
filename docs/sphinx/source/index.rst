@@ -1282,8 +1282,6 @@ Helper Classes: Digital
    gnuradio.digital.sd_psk_4_0x2_1_0
    gnuradio.digital.sd_psk_4_0x3_1_0
    gnuradio.digital.psk_constellation
-   gnuradio.digital.psk_mod
-   gnuradio.digital.psk_demod
    gnuradio.digital.qam_16_0x0_0_1_2_3
    gnuradio.digital.qam_16_0x1_0_1_2_3
    gnuradio.digital.qam_16_0x2_0_1_2_3
@@ -1304,14 +1302,8 @@ Helper Classes: Digital
    gnuradio.digital.make_differential_constellation
    gnuradio.digital.make_non_differential_constellation
    gnuradio.digital.qam_constellation
-   gnuradio.digital.qam_mod
-   gnuradio.digital.qam_demod
    gnuradio.digital.qpsk_constellation
-   gnuradio.digital.qpsk_mod
-   gnuradio.digital.qpsk_demod
    gnuradio.digital.dqpsk_constellation
-   gnuradio.digital.dqpsk_mod
-   gnuradio.digital.dqpsk_demod
    gnuradio.digital.soft_dec_table_generator
    gnuradio.digital.soft_dec_table
    gnuradio.digital.calc_soft_dec_from_table
