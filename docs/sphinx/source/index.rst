@@ -773,8 +773,6 @@ Message Tool Blocks
 
    gnuradio.blocks.message_burst_source
    gnuradio.blocks.message_debug
-   gnuradio.blocks.message_sink
-   gnuradio.blocks.message_source
    gnuradio.blocks.message_strobe
    gnuradio.blocks.message_strobe_random
    gnuradio.blocks.pdu_filter
