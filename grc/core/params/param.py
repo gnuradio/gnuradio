@@ -359,7 +359,10 @@ class Param(Element):
         # Code Generation
         if tab:
             validate_tab()
-            layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
+            if not pos:
+                layout = '{tab}_layout_{index}'.format(tab=tab, index=index)
+            else:
+                layout = '{tab}_grid_layout_{index}'.format(tab=tab, index=index)
         else:
             layout = 'top_grid_layout'
 
