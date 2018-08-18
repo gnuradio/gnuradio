@@ -62,6 +62,7 @@ set(GR_PYTHON3_MIN_VERSION "3.4")
 set(GCC_MIN_VERSION "4.8.4")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
+set(MSVC_MIN_VERSION "1800")
 
 ########################################################################
 # Configure CMake policies
@@ -232,21 +233,8 @@ endif(WIN32)
 STRING(TOUPPER ${CMAKE_BUILD_TYPE} GRCBTU)
 SET(COMPILER_INFO "")
 IF(MSVC)
-    IF(MSVC90)   #Visual Studio 9
-        SET(cmake_c_compiler_version "Microsoft Visual Studio 9.0")
-        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 9.0")
-    ELSEIF(MSVC10) #Visual Studio 10
-        SET(cmake_c_compiler_version "Microsoft Visual Studio 10.0")
-        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 10.0")
-    ELSEIF(MSVC11) #Visual Studio 11
-        SET(cmake_c_compiler_version "Microsoft Visual Studio 11.0")
-        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 11.0")
-    ELSEIF(MSVC12) #Visual Studio 12
-        SET(cmake_c_compiler_version "Microsoft Visual Studio 12.0")
-        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 12.0")
-    ELSEIF(MSVC14) #Visual Studio 14
-        SET(cmake_c_compiler_version "Microsoft Visual Studio 14.0")
-        SET(cmake_cxx_compiler_version "Microsoft Visual Studio 14.0")
+    IF(MSVC_VERSION LESS "${MSVC_MIN_VERSION}")
+        MESSAGE(FATAL_ERROR "MSVC Versions < minimum version ${MSVC_MIN_VERSION}")
     ENDIF()
 ELSE()
     execute_process(COMMAND ${CMAKE_C_COMPILER} --version

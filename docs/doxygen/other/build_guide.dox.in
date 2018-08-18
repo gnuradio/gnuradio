@@ -44,6 +44,7 @@ A C/C++ compiler is also required. These are known to work:
 
 \li gcc/g++     (>= @GCC_MIN_VERSION@)         https://gcc.gnu.org/install/download.html
 \li clang/clang++ (>= @CLANG_MIN_VERSION@)     http://releases.llvm.org/download.html
+\li Microsoft Visual Studio (>= @MSVC_MIN_VERSION@)
 
 Other compilers may work, but are not supported.
 
