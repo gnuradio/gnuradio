@@ -20,7 +20,7 @@ parameters:
 
 templates:
     imports: import xmlrpclib
-    make: xmlrpclib.Server('http://$(addr):$(port)')
+    make: xmlrpclib.Server('http://${addr}:${port}')
     callbacks:
     - ${callback}(${variable})
 
