@@ -71,7 +71,7 @@ templates:
     make: |-
         filter.${type}(
             ${ interp if str(type).startswith('interp') else decim },
-            firdes.type.fcn(
+            firdes.${type.fcn}(
                 ${gain},
                 ${samp_rate},
                 ${low_cutoff_freq},
