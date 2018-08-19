@@ -83,7 +83,7 @@ class ExecFlowGraphThread(threading.Thread):
         r = "\n"
         while r:
             GLib.idle_add(Messages.send_verbose_exec, r)
-            r = os.read(self.process.stdout.fileno(), 1024)
+            r = self.process.stdout.read(1024).decode('utf-8','ignore')
         self.process.poll()
         GLib.idle_add(self.done)
 
