@@ -18,23 +18,9 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(analog noise_source_X     s i f c)
-GR_EXPAND_X_H(analog fastnoise_source_X s i f c)
-GR_EXPAND_X_H(analog sig_source_X       s i f c)
-GR_EXPAND_X_H(analog random_uniform_source_X b s i)
-
-add_custom_target(analog_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
     api.h
     cpm.h
     noise_type.h
@@ -51,9 +37,11 @@ install(FILES
     cpfsk_bc.h
     ctcss_squelch_ff.h
     dpll_bb.h
+    fastnoise_source.h
     feedforward_agc_cc.h
     fmdet_cf.h
     frequency_modulator_fc.h
+    noise_source.h
     phase_modulator_fc.h
     pll_carriertracking_cc.h
     pll_freqdet_cf.h
@@ -65,6 +53,8 @@ install(FILES
     pwr_squelch_ff.h
     quadrature_demod_cf.h
     rail_ff.h
+    random_uniform_source.h
+    sig_source.h
     sig_source_waveform.h
     simple_squelch_cc.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/analog

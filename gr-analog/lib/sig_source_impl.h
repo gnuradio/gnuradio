@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,32 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef SIG_SOURCE_IMPL_H
+#define SIG_SOURCE_IMPL_H
 
-#include <gnuradio/analog/@BASE_NAME@.h>
+#include <gnuradio/analog/sig_source.h>
 #include <gnuradio/sync_block.h>
 #include <gnuradio/fxpt_nco.h>
 
 namespace gr {
   namespace analog {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+template<class T>
+    class sig_source_impl : public  sig_source<T>
     {
     private:
       double		d_sampling_freq;
       gr_waveform_t	d_waveform;
       double		d_frequency;
       double		d_ampl;
-      @TYPE@		d_offset;
+      T		d_offset;
       gr::fxpt_nco	d_nco;
 
     public:
-      @IMPL_NAME@(double sampling_freq, gr_waveform_t waveform,
-		  double wave_freq, double ampl, @TYPE@ offset = 0);
-      ~@IMPL_NAME@();
+      sig_source_impl(double sampling_freq, gr_waveform_t waveform,
+		  double wave_freq, double ampl, T offset = 0);
+      ~sig_source_impl();
 
       virtual int work(int noutput_items,
 		       gr_vector_const_void_star &input_items,
@@ -55,17 +55,17 @@ namespace gr {
       gr_waveform_t waveform() const { return d_waveform; }
       double frequency() const { return d_frequency; }
       double amplitude() const { return d_ampl; }
-      @TYPE@ offset() const { return d_offset; }
+      T offset() const { return d_offset; }
 
       void set_sampling_freq(double sampling_freq);
       void set_waveform(gr_waveform_t waveform);
       void set_frequency_msg(pmt::pmt_t msg);
       void set_frequency(double frequency);
       void set_amplitude(double ampl);
-      void set_offset(@TYPE@ offset);
+      void set_offset(T offset);
     };
 
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* SIG_SOURCE_IMPL_H */

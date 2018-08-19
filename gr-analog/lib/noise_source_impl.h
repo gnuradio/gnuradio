@@ -20,26 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef NOISE_SOURCE_IMPL_H
+#define NOISE_SOURCE_IMPL_H
 
-#include <gnuradio/analog/@BASE_NAME@.h>
+#include <gnuradio/analog/noise_source.h>
 #include <gnuradio/random.h>
 
 namespace gr {
   namespace analog {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+template<class T>
+    class noise_source_impl : public  noise_source<T>
     {
       noise_type_t d_type;
       float d_ampl;
       gr::random d_rng;
 
     public:
-      @IMPL_NAME@(noise_type_t type, float ampl, long seed = 0);
-      ~@IMPL_NAME@();
+      noise_source_impl(noise_type_t type, float ampl, long seed = 0);
+      ~noise_source_impl();
 
       void set_type(noise_type_t type);
       void set_amplitude(float ampl);
@@ -55,4 +55,4 @@ namespace gr {
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* NOISE_SOURCE_IMPL_H */

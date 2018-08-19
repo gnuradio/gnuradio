@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2015 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,45 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef RANDOM_UNIFORM_SOURCE_IMPL_H
+#define RANDOM_UNIFORM_SOURCE_IMPL_H
 
-#include <gnuradio/analog/@BASE_NAME@.h>
+#include <gnuradio/analog/random_uniform_source.h>
 #include <gnuradio/random.h>
 
 namespace gr {
   namespace analog {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+template<class T>
+    class random_uniform_source_impl : public  random_uniform_source<T>
     {
     private:
-      noise_type_t d_type;
-      float d_ampl;
-      gr::random d_rng;
-      std::vector<@TYPE@> d_samples;
+      gr::random *d_rng;
 
     public:
-      @IMPL_NAME@(noise_type_t type, float ampl, long seed, long samples);
-      ~@IMPL_NAME@();
+      random_uniform_source_impl(int minimum, int maximum, int seed);
+      ~random_uniform_source_impl();
 
-      @TYPE@ sample();
-      @TYPE@ sample_unbiased();
-
-      void set_type(noise_type_t type);
-      void set_amplitude(float ampl);
-      void generate();
-
-      noise_type_t type() const { return d_type; }
-      float amplitude() const { return d_ampl; }
-
+      // Where all the action really happens
       int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+           gr_vector_const_void_star &input_items,
+           gr_vector_void_star &output_items);
+
+      int random_value();
     };
 
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* RANDOM_UNIFORM_SOURCE_IMPL_H */

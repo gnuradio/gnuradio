@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef NOISE_SOURCE_H
+#define NOISE_SOURCE_H
 
 #include <gnuradio/analog/api.h>
 #include <gnuradio/analog/noise_type.h>
@@ -34,19 +33,20 @@ namespace gr {
 
     /*!
      * \brief Random number source
-     * \ingroup source_blk
+     * \ingroup waveform_generators_blk
      *
      * \details
      * Generate random values from different distributions.
      * Currently, only Gaussian and uniform are enabled.
      */
-    class ANALOG_API @BASE_NAME@ : virtual public sync_block
+template<class T>
+    class ANALOG_API noise_source : virtual public sync_block
     {
     public:
-      // gr::analog::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      // gr::analog::noise_source::sptr
+      typedef boost::shared_ptr< noise_source<T> > sptr;
 
-      /*! \brief Make a fast noise source
+      /*! Build a noise source
        * \param type the random distribution to use (see
        *        gnuradio/analog/noise_type.h)
        * \param ampl the standard deviation of a 1-d noise process. If
@@ -56,12 +56,8 @@ namespace gr {
        * \param seed seed for random generators. Note that for uniform
        *        and Gaussian distributions, this should be a negative
        *        number.
-       * \param samples Number of samples to pre-generate
        */
-      static sptr make(noise_type_t type, float ampl,
-		       long seed = 0, long samples=1024*16);
-      virtual @TYPE@ sample() = 0;
-      virtual @TYPE@ sample_unbiased() = 0;
+      static sptr make(noise_type_t type, float ampl, long seed=0);
 
       /*!
        * Set the noise type. Nominally from the
@@ -80,8 +76,12 @@ namespace gr {
       virtual float amplitude() const = 0;
     };
 
+    typedef noise_source<std::int16_t> noise_source_s;
+    typedef noise_source<std::int32_t> noise_source_i;
+    typedef noise_source<float> noise_source_f;
+    typedef noise_source<gr_complex> noise_source_c;
+
   } /* namespace analog */
 } /* namespace gr */
 
-
-#endif /* @GUARD_NAME@ */
+#endif /* NOISE_SOURCE_H */

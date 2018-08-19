@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,33 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef FASTNOISE_SOURCE_H
+#define FASTNOISE_SOURCE_H
 
 #include <gnuradio/analog/api.h>
 #include <gnuradio/analog/noise_type.h>
 #include <gnuradio/sync_block.h>
+#include <cstdint>
 
 namespace gr {
   namespace analog {
 
     /*!
      * \brief Random number source
-     * \ingroup waveform_generators_blk
+     * \ingroup source_blk
      *
      * \details
      * Generate random values from different distributions.
      * Currently, only Gaussian and uniform are enabled.
      */
-    class ANALOG_API @BASE_NAME@ : virtual public sync_block
+template<class T>
+    class ANALOG_API fastnoise_source : virtual public sync_block
     {
     public:
-      // gr::analog::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      // gr::analog::fastnoise_source::sptr
+      typedef boost::shared_ptr< fastnoise_source<T> > sptr;
 
-      /*! Build a noise source
+      /*! \brief Make a fast noise source
        * \param type the random distribution to use (see
        *        gnuradio/analog/noise_type.h)
        * \param ampl the standard deviation of a 1-d noise process. If
@@ -56,8 +57,12 @@ namespace gr {
        * \param seed seed for random generators. Note that for uniform
        *        and Gaussian distributions, this should be a negative
        *        number.
+       * \param samples Number of samples to pre-generate
        */
-      static sptr make(noise_type_t type, float ampl, long seed=0);
+      static sptr make(noise_type_t type, float ampl,
+		       long seed = 0, long samples=1024*16);
+      virtual T sample() = 0;
+      virtual T sample_unbiased() = 0;
 
       /*!
        * Set the noise type. Nominally from the
@@ -76,7 +81,12 @@ namespace gr {
       virtual float amplitude() const = 0;
     };
 
+    typedef fastnoise_source<float> fastnoise_source_f;
+    typedef fastnoise_source<std::int32_t> fastnoise_source_i;
+    typedef fastnoise_source<std::int16_t> fastnoise_source_s;
+    typedef fastnoise_source<gr_complex> fastnoise_source_c;
   } /* namespace analog */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+
+#endif /* FASTNOISE_SOURCE_H */
