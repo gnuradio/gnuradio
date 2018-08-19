@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -45,9 +45,10 @@ def tap_type (code3):
     return char_to_type[tap_code (code3)]
 
 
-char_to_type = {}
-char_to_type['s'] = 'short'
-char_to_type['i'] = 'int'
-char_to_type['f'] = 'float'
-char_to_type['c'] = 'gr_complex'
-char_to_type['b'] = 'unsigned char'
+char_to_type = {
+    's': 'int16_t',
+    'i': 'int32_t',
+    'f': 'float',
+    'c': 'gr_complex',
+    'b': 'uint8_t'
+}
