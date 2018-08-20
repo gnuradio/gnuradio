@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,40 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef SCCC_ENCODER_IMPL_H
+#define SCCC_ENCODER_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <gnuradio/trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/sccc_encoder.h>
 
 namespace gr {
   namespace trellis {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+    template <class IN_T, class OUT_T>
+    class sccc_encoder_impl : public sccc_encoder<IN_T,OUT_T>
     {
     private:
-      fsm d_FSM;
-      int d_ST;
-      int d_K;
-      bool d_B;
- 
+      fsm d_FSMo;
+      int d_STo;
+      fsm d_FSMi;
+      int d_STi;
+      interleaver d_INTERLEAVER;
+      int d_blocklength;
+      std::vector<int> d_buffer;
 
     public:
-      @IMPL_NAME@(const fsm &FSM, int ST, int K, bool B);
-      ~@IMPL_NAME@();
+      sccc_encoder_impl(const fsm &FSMo, int STo,
+		  const fsm &FSMi, int STi,
+		  const interleaver &INTERLEAVER,
+		  int blocklength);
+      ~sccc_encoder_impl();
 
-      fsm FSM() const { return d_FSM;; }
-      int ST() const {  return d_ST; }
-      int K() const {  return d_K; }
-      void set_FSM(const fsm &FSM);
-      void set_ST(int ST);
-      void set_K(int K);
+      fsm FSMo() const { return d_FSMo; }
+      int STo() const { return d_STo; }
+      fsm FSMi() const { return d_FSMi; }
+      int STi() const { return d_STi; }
+      interleaver INTERLEAVER() const { return d_INTERLEAVER; }
+      int blocklength() const { return d_blocklength; }
+
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);
@@ -57,4 +62,4 @@ namespace gr {
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* SCCC_ENCODER_IMPL_H */

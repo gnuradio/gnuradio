@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,13 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "@NAME@.h"
+#include "pccc_decoder_combined_blk_impl.h"
 #include <gnuradio/io_signature.h>
 #include <iostream>
 #include <gnuradio/trellis/core_algorithms.h>
@@ -34,37 +32,39 @@
 namespace gr {
   namespace trellis {
 
-    @BASE_NAME@::sptr
-    @BASE_NAME@::make(const fsm &FSMo, int STo0, int SToK,
+    template <class IN_T,class OUT_T>
+    typename pccc_decoder_combined_blk<IN_T,OUT_T>::sptr
+    pccc_decoder_combined_blk<IN_T,OUT_T>::make(const fsm &FSMo, int STo0, int SToK,
 		      const fsm &FSMi, int STi0, int STiK,
 		      const interleaver &INTERLEAVER,
 		      int blocklength,
 		      int repetitions,
 		      siso_type_t SISO_TYPE,
 		      int D,
-		      const std::vector<@I_TYPE@> &TABLE,
+		      const std::vector<IN_T> &TABLE,
 		      digital::trellis_metric_type_t METRIC_TYPE,
 		      float scaling)
     {
       return gnuradio::get_initial_sptr
-	(new @NAME@(FSMo, STo0, SToK, FSMi, STi0, STiK,
+	(new pccc_decoder_combined_blk_impl<IN_T,OUT_T>(FSMo, STo0, SToK, FSMi, STi0, STiK,
 		    INTERLEAVER, blocklength, repetitions,
 		    SISO_TYPE, D, TABLE,METRIC_TYPE, scaling));
     }
 
-    @IMPL_NAME@::@IMPL_NAME@(const fsm &FSMo, int STo0, int SToK,
+    template <class IN_T,class OUT_T>
+    pccc_decoder_combined_blk_impl<IN_T,OUT_T>::pccc_decoder_combined_blk_impl(const fsm &FSMo, int STo0, int SToK,
 			     const fsm &FSMi, int STi0, int STiK,
 			     const interleaver &INTERLEAVER,
 			     int blocklength,
 			     int repetitions,
 			     siso_type_t SISO_TYPE,
 			     int D,
-			     const std::vector<@I_TYPE@> &TABLE,
+			     const std::vector<IN_T> &TABLE,
 			     digital::trellis_metric_type_t METRIC_TYPE,
 			     float scaling)
-    : block("@BASE_NAME@",
-	       io_signature::make(1, 1, sizeof(@I_TYPE@)),
-	       io_signature::make(1, 1, sizeof(@O_TYPE@))),
+    : block("pccc_decoder_combined_blk<IN_T,OUT_T>",
+	       io_signature::make(1, 1, sizeof(IN_T)),
+	       io_signature::make(1, 1, sizeof(OUT_T))),
       d_FSMo(FSMo), d_STo0(STo0), d_SToK(SToK),
       d_FSMi(FSMi), d_STi0(STi0), d_STiK(STiK),
       d_INTERLEAVER(INTERLEAVER),
@@ -77,23 +77,26 @@ namespace gr {
       d_scaling(scaling)
     {
       assert(d_FSMo.I() == d_FSMi.I());
-      set_relative_rate (1.0 / ((double) d_D));
-      set_output_multiple (d_blocklength);
+      this->set_relative_rate (1.0 / ((double) d_D));
+      this->set_output_multiple (d_blocklength);
     }
 
-    @IMPL_NAME@::~@IMPL_NAME@()
+    template <class IN_T,class OUT_T>
+    pccc_decoder_combined_blk_impl<IN_T,OUT_T>::~pccc_decoder_combined_blk_impl()
     {
     }
 
+    template <class IN_T,class OUT_T>
     void
-    @IMPL_NAME@::set_scaling(float scaling)
+    pccc_decoder_combined_blk_impl<IN_T,OUT_T>::set_scaling(float scaling)
     {
-      gr::thread::scoped_lock guard(d_setlock);
+      gr::thread::scoped_lock guard(this->d_setlock);
       d_scaling = scaling;
     }
 
+    template <class IN_T,class OUT_T>
     void
-    @IMPL_NAME@::forecast(int noutput_items,
+    pccc_decoder_combined_blk_impl<IN_T,OUT_T>::forecast(int noutput_items,
 			  gr_vector_int &ninput_items_required)
     {
       int input_required = d_D * noutput_items;
@@ -102,13 +105,14 @@ namespace gr {
 
     //===========================================================
 
+    template <class IN_T,class OUT_T>
     int
-    @IMPL_NAME@::general_work(int noutput_items,
+    pccc_decoder_combined_blk_impl<IN_T,OUT_T>::general_work(int noutput_items,
 			      gr_vector_int &ninput_items,
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
-      gr::thread::scoped_lock guard(d_setlock);
+      gr::thread::scoped_lock guard(this->d_setlock);
       int nblocks = noutput_items / d_blocklength;
 
       float (*p2min)(float, float) = NULL;
@@ -117,8 +121,8 @@ namespace gr {
       else if(d_SISO_TYPE == TRELLIS_SUM_PRODUCT)
 	p2min = &min_star;
 
-      const @I_TYPE@ *in = (const @I_TYPE@ *) input_items[0];
-      @O_TYPE@ *out = (@O_TYPE@ *) output_items[0];
+      const IN_T *in = (const IN_T *) input_items[0];
+      OUT_T *out = (OUT_T *) output_items[0];
       for (int n=0;n<nblocks;n++) {
 	pccc_decoder_combined(d_FSMo, d_STo0, d_SToK,
 			      d_FSMi, d_STi0, d_STiK,
@@ -131,9 +135,16 @@ namespace gr {
 			      &(out[n*d_blocklength]));
       }
 
-      consume_each(d_D * noutput_items);
+      this->consume_each(d_D * noutput_items);
       return noutput_items;
     }
+    template class pccc_decoder_combined_blk<float, std::uint8_t>;
+    template class pccc_decoder_combined_blk<float, std::int16_t>;
+    template class pccc_decoder_combined_blk<float, std::int32_t>;
+    template class pccc_decoder_combined_blk<gr_complex, std::uint8_t>;
+    template class pccc_decoder_combined_blk<gr_complex, std::int16_t>;
+    template class pccc_decoder_combined_blk<gr_complex, std::int32_t>;
+
 
   } /* namespace trellis */
 } /* namespace gr */

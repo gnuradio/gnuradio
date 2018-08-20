@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,16 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef VITERBI_COMBINED_H
+#define VITERBI_COMBINED_H
 
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/calc_metric.h>
 #include <gnuradio/trellis/core_algorithms.h>
 #include <gnuradio/block.h>
+#include <cstdint>
 
 namespace gr {
   namespace trellis {
@@ -37,15 +36,15 @@ namespace gr {
     /*!
      *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public block
+    template <class IN_T,class OUT_T>
+    class TRELLIS_API viterbi_combined : virtual public block
     {
     public:
-      // gr::trellis::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      typedef boost::shared_ptr< viterbi_combined<IN_T,OUT_T> > sptr;
 
       static sptr make(const fsm &FSM, int K,
 		       int S0, int SK, int D,
-		       const std::vector<@I_TYPE@> &TABLE,
+		       const std::vector<IN_T> &TABLE,
 		       digital::trellis_metric_type_t TYPE);
 
       virtual fsm FSM() const = 0;
@@ -53,7 +52,7 @@ namespace gr {
       virtual int S0() const  = 0;
       virtual int SK() const = 0;
       virtual int D() const = 0;
-      virtual std::vector<@I_TYPE@> TABLE() const = 0;
+      virtual std::vector<IN_T> TABLE() const = 0;
       virtual digital::trellis_metric_type_t TYPE() const = 0;
 
       virtual void set_FSM(const fsm &FSM) =0;
@@ -61,11 +60,24 @@ namespace gr {
       virtual void set_S0(int S0) =0;
       virtual void set_SK(int SK) =0;
       virtual void set_D(int D) =0;
-      virtual void set_TABLE (const std::vector<@I_TYPE@> &table) = 0;
+      virtual void set_TABLE (const std::vector<IN_T> &table) = 0;
       virtual void set_TYPE(digital::trellis_metric_type_t type) = 0;
     };
+
+    typedef viterbi_combined<std::int16_t, std::uint8_t> viterbi_combined_sb;
+    typedef viterbi_combined<std::int16_t, std::int16_t> viterbi_combined_ss;
+    typedef viterbi_combined<std::int16_t, std::int32_t> viterbi_combined_si;
+    typedef viterbi_combined<std::int32_t, std::uint8_t> viterbi_combined_ib;
+    typedef viterbi_combined<std::int32_t, std::int16_t> viterbi_combined_is;
+    typedef viterbi_combined<std::int32_t, std::int32_t> viterbi_combined_ii;
+    typedef viterbi_combined<float, std::uint8_t> viterbi_combined_fb;
+    typedef viterbi_combined<float, std::int16_t> viterbi_combined_fs;
+    typedef viterbi_combined<float, std::int32_t> viterbi_combined_fi;
+    typedef viterbi_combined<gr_complex, std::uint8_t> viterbi_combined_cb;
+    typedef viterbi_combined<gr_complex, std::int16_t> viterbi_combined_cs;
+    typedef viterbi_combined<gr_complex, std::int32_t> viterbi_combined_ci;
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* VITERBI_COMBINED_H */

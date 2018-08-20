@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef SCCC_ENCODER_H
+#define SCCC_ENCODER_H
 
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
@@ -35,29 +33,35 @@ namespace gr {
   namespace trellis {
 
     /*!
-     * \brief PCCC encoder.
+     * \brief SCCC encoder.
      * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public sync_block
+    template <class IN_T, class OUT_T>
+    class TRELLIS_API sccc_encoder : virtual public sync_block
     {
     public:
-      // gr::trellis::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      typedef boost::shared_ptr< sccc_encoder<IN_T,OUT_T> > sptr;
 
-      static sptr make(const fsm &FSM1, int ST1,
-		       const fsm &FSM2, int ST2,
+      static sptr make(const fsm &FSMo, int STo,
+		       const fsm &FSMi, int STi,
 		       const interleaver &INTERLEAVER,
 		       int blocklength);
 
-      virtual fsm FSM1() const = 0;
-      virtual int ST1() const = 0;
-      virtual fsm FSM2() const = 0;
-      virtual int ST2() const = 0;
+      virtual fsm FSMo() const = 0;
+      virtual int STo() const = 0;
+      virtual fsm FSMi() const = 0;
+      virtual int STi() const = 0;
       virtual interleaver INTERLEAVER() const = 0;
       virtual int blocklength() const = 0;
     };
+    typedef sccc_encoder<std::uint8_t, std::uint8_t> sccc_encoder_bb;
+    typedef sccc_encoder<std::uint8_t, std::int16_t> sccc_encoder_bs;
+    typedef sccc_encoder<std::uint8_t, std::int32_t> sccc_encoder_bi;
+    typedef sccc_encoder<std::int16_t, std::int16_t> sccc_encoder_ss;
+    typedef sccc_encoder<std::uint8_t, std::int32_t> sccc_encoder_si;
+    typedef sccc_encoder<std::int32_t, std::int32_t> sccc_encoder_ii;
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* SCCC_ENCODER_H */

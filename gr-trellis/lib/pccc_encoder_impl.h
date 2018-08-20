@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,17 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef PCCC_ENCODER_IMPL_H
+#define PCCC_ENCODER_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <gnuradio/trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/pccc_encoder.h>
 
 namespace gr {
   namespace trellis {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+    template <class IN_T, class OUT_T>
+    class pccc_encoder_impl : public pccc_encoder<IN_T,OUT_T>
     {
     private:
       fsm d_FSM1;
@@ -42,11 +41,11 @@ namespace gr {
       std::vector<int> d_buffer;
 
     public:
-      @IMPL_NAME@(const fsm &FSM1, int ST1,
+      pccc_encoder_impl(const fsm &FSM1, int ST1,
 		  const fsm &FSM2, int ST2,
 		  const interleaver &INTERLEAVER,
 		  int blocklength);
-      ~@IMPL_NAME@();
+      ~pccc_encoder_impl();
 
       fsm FSM1() const { return d_FSM1; }
       int ST1() const { return d_ST1; }
@@ -63,4 +62,4 @@ namespace gr {
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* PCCC_ENCODER_IMPL_H */

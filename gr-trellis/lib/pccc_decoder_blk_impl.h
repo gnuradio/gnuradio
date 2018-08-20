@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,25 +20,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef PCCC_DECODER_BLK_IMPL_H
+#define PCCC_DECODER_BLK_IMPL_H
 
-#include <gnuradio/trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/pccc_decoder_blk.h>
 
 namespace gr {
   namespace trellis {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+template<class T>
+    class pccc_decoder_blk_impl  : public  pccc_decoder_blk<T>
     {
     private:
-      fsm d_FSMo;
-      int d_STo0;
-      int d_SToK;
-      fsm d_FSMi;
-      int d_STi0;
-      int d_STiK;
+      fsm d_FSM1;
+      int d_ST10;
+      int d_ST1K;
+      fsm d_FSM2;
+      int d_ST20;
+      int d_ST2K;
       interleaver d_INTERLEAVER;
       int d_blocklength;
       int d_repetitions;
@@ -46,20 +46,20 @@ namespace gr {
       std::vector<float> d_buffer;
 
     public:
-      @IMPL_NAME@(const fsm &FSMo, int STo0, int SToK,
-		  const fsm &FSMi, int STi0, int STiK,
+      pccc_decoder_blk_impl(const fsm &FSM1, int ST10, int ST1K,
+		  const fsm &FSM2, int ST20, int ST2K,
 		  const interleaver &INTERLEAVER,
 		  int blocklength,
 		  int repetitions,
 		  siso_type_t SISO_TYPE);
-      ~@IMPL_NAME@();
+      ~pccc_decoder_blk_impl();
 
-      fsm FSMo() const { return d_FSMo; }
-      fsm FSMi() const { return d_FSMi; }
-      int STo0() const { return d_STo0; }
-      int SToK() const { return d_SToK; }
-      int STi0() const { return d_STi0; }
-      int STiK() const { return d_STiK; }
+      fsm FSM1() const { return d_FSM1; }
+      fsm FSM2() const { return d_FSM2; }
+      int ST10() const { return d_ST10; }
+      int ST1K() const { return d_ST1K; }
+      int ST20() const { return d_ST20; }
+      int ST2K() const { return d_ST2K; }
       interleaver INTERLEAVER() const { return d_INTERLEAVER; }
       int blocklength() const { return d_blocklength; }
       int repetitions() const { return d_repetitions; }
@@ -77,4 +77,4 @@ namespace gr {
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* PCCC_DECODER_BLK_IMPL_H */

@@ -59,7 +59,6 @@ foreach(swigfile ${GR_SWIG_TRELLIS_IFILES})
     ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/trellis
   )
   set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-  set(GR_SWIG_TARGET_DEPS trellis_generated_includes)
   set(GR_SWIG_LIBRARIES gnuradio-trellis gnuradio-digital)
   GR_SWIG_MAKE(${swigfile} ${swigfile}.i)
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,71 +20,78 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "@NAME@.h"
+#include "viterbi_impl.h"
 #include <gnuradio/io_signature.h>
 #include <iostream>
 
 namespace gr {
   namespace trellis {
 
-    @BASE_NAME@::sptr
-    @BASE_NAME@::make(const fsm &FSM, int K,
+    template <class T>
+    typename viterbi<T>::sptr
+    viterbi<T>::make(const fsm &FSM, int K,
 		      int S0, int SK)
     {
       return gnuradio::get_initial_sptr
-	(new @IMPL_NAME@(FSM, K, S0, SK));
+	(new viterbi_impl<T>(FSM, K, S0, SK));
     }
 
-    @IMPL_NAME@::@IMPL_NAME@(const fsm &FSM, int K,
+    template <class T>
+    viterbi_impl<T>::viterbi_impl(const fsm &FSM, int K,
 			     int S0, int SK)
-    : block("@BASE_NAME@",
+    : block("viterbi",
 	       io_signature::make(1, -1, sizeof(float)),
-	       io_signature::make(1, -1, sizeof(@TYPE@))),
+	       io_signature::make(1, -1, sizeof(T))),
       d_FSM(FSM), d_K(K), d_S0(S0), d_SK(SK)//,
       //d_trace(FSM.S()*K)
     {
-      set_relative_rate(1.0 / ((double)d_FSM.O()));
-      set_output_multiple(d_K);
+      this->set_relative_rate(1.0 / ((double)d_FSM.O()));
+      this->set_output_multiple(d_K);
     }
 
-    void @IMPL_NAME@::set_FSM(const fsm &FSM) 
+    template <class T>
+    void viterbi_impl<T>::set_FSM(const fsm &FSM) 
     { 
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(this->d_setlock);
       d_FSM = FSM; 
-      set_relative_rate(1.0 / ((double)d_FSM.O()));
+      this->set_relative_rate(1.0 / ((double)d_FSM.O()));
     }
 
-    void @IMPL_NAME@::set_K(int K) 
+    template <class T>
+    void viterbi_impl<T>::set_K(int K) 
     { 
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(this->d_setlock);
       d_K = K; 
-      set_output_multiple(d_K);
+      this->set_output_multiple(d_K);
     }
 
-    void @IMPL_NAME@::set_S0(int S0) 
+    template <class T>
+    void viterbi_impl<T>::set_S0(int S0) 
     { 
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(this->d_setlock);
       d_S0 = S0; 
     }
 
-    void @IMPL_NAME@::set_SK(int SK) 
+    template <class T>
+    void viterbi_impl<T>::set_SK(int SK) 
     { 
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(this->d_setlock);
       d_SK = SK; 
     }
 
-    @IMPL_NAME@::~@IMPL_NAME@()
+    template <class T>
+    viterbi_impl<T>::~viterbi_impl()
     {
     }
 
+    template <class T>
     void
-    @IMPL_NAME@::forecast(int noutput_items,
+    viterbi_impl<T>::forecast(int noutput_items,
 			  gr_vector_int &ninput_items_required)
     {
       int input_required =  d_FSM.O() * noutput_items;
@@ -94,19 +101,20 @@ namespace gr {
       }
     }
 
+    template <class T>
     int
-    @IMPL_NAME@::general_work(int noutput_items,
+    viterbi_impl<T>::general_work(int noutput_items,
 			      gr_vector_int &ninput_items,
 			      gr_vector_const_void_star &input_items,
 			      gr_vector_void_star &output_items)
     {
-      gr::thread::scoped_lock guard(d_setlock);
+      gr::thread::scoped_lock guard(this->d_setlock);
       int nstreams = input_items.size();
       int nblocks = noutput_items / d_K;
 
       for(int m = 0; m < nstreams; m++) {
 	const float *in = (const float*)input_items[m];
-	@TYPE@ *out = (@TYPE@*)output_items[m];
+	T *out = (T*)output_items[m];
 
 	for(int n = 0; n < nblocks; n++) {
 	  viterbi_algorithm(d_FSM.I(), d_FSM.S(), d_FSM.O(),
@@ -116,9 +124,12 @@ namespace gr {
 	}
       }
 
-      consume_each(d_FSM.O() * noutput_items);
+      this->consume_each(d_FSM.O() * noutput_items);
       return noutput_items;
     }
 
+template class viterbi<std::uint8_t>;
+template class viterbi<std::int16_t>;
+template class viterbi<std::int32_t>;
   } /* namespace trellis */
 } /* namespace gr */

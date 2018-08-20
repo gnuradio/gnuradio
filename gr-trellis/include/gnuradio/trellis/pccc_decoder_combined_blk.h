@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,10 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef PCCC_DECODER_COMBINED_BLK_H
+#define PCCC_DECODER_COMBINED_BLK_H
 
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
@@ -32,6 +30,7 @@
 #include <gnuradio/trellis/siso_type.h>
 #include <gnuradio/block.h>
 #include <vector>
+#include <cstdint>
 
 namespace gr {
   namespace trellis {
@@ -39,11 +38,11 @@ namespace gr {
     /*!
      *  \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public block
+    template <class IN_T,class OUT_T>
+    class TRELLIS_API pccc_decoder_combined_blk : virtual public block
     {
     public:
-      // gr::trellis::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      typedef boost::shared_ptr< pccc_decoder_combined_blk<IN_T,OUT_T> > sptr;
 
       static sptr make(const fsm &FSMo, int STo0, int SToK,
 		       const fsm &FSMi, int STi0, int STiK,
@@ -52,29 +51,35 @@ namespace gr {
 		       int repetitions,
 		       siso_type_t SISO_TYPE,
 		       int D,
-		       const std::vector<@I_TYPE@> &TABLE,
+		       const std::vector<IN_T> &TABLE,
 		       digital::trellis_metric_type_t METRIC_TYPE,
 		       float scaling);
 
-      virtual fsm FSMo() const = 0;
-      virtual fsm FSMi() const = 0;
-      virtual int STo0() const = 0;
-      virtual int SToK() const = 0;
-      virtual int STi0() const = 0;
-      virtual int STiK() const = 0;
+      virtual fsm FSM1() const = 0;
+      virtual fsm FSM2() const = 0;
+      virtual int ST10() const = 0;
+      virtual int ST1K() const = 0;
+      virtual int ST20() const = 0;
+      virtual int ST2K() const = 0;
       virtual interleaver INTERLEAVER() const = 0;
       virtual int blocklength() const = 0;
       virtual int repetitions() const = 0;
       virtual int D() const = 0;
-      virtual std::vector<@I_TYPE@> TABLE() const = 0;
+      virtual std::vector<IN_T> TABLE() const = 0;
       virtual digital::trellis_metric_type_t METRIC_TYPE() const = 0;
       virtual siso_type_t SISO_TYPE() const = 0;
-      virtual float scaling() const  = 0;
-
+      virtual float scaling() const = 0;
       virtual void set_scaling(float scaling) = 0;
     };
+
+    typedef pccc_decoder_combined_blk<float, std::uint8_t> pccc_decoder_combined_fb;
+    typedef pccc_decoder_combined_blk<float, std::int16_t> pccc_decoder_combined_fs;
+    typedef pccc_decoder_combined_blk<float, std::int32_t> pccc_decoder_combined_fi;
+    typedef pccc_decoder_combined_blk<gr_complex, std::uint8_t> pccc_decoder_combined_cb;
+    typedef pccc_decoder_combined_blk<gr_complex, std::int16_t> pccc_decoder_combined_cs;
+    typedef pccc_decoder_combined_blk<gr_complex, std::int32_t> pccc_decoder_combined_ci;
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* PCCC_DECODER_COMBINED_BLK_H */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,42 +20,43 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef VITERBI_IMPL_H
+#define VITERBI_IMPL_H
 
-#include <gnuradio/trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/viterbi.h>
 
 namespace gr {
   namespace trellis {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+template<class T>
+    class viterbi_impl : public  viterbi<T>
     {
     private:
-      int d_O;
-      int d_D;
-      digital::trellis_metric_type_t d_TYPE;
-      std::vector<@I_TYPE@> d_TABLE;
+      fsm d_FSM;
+      int d_K;
+      int d_S0;
+      int d_SK;
+      //std::vector<int> d_trace;
 
     public:
-      @IMPL_NAME@(int O, int D,  const std::vector<@I_TYPE@> &TABLE,
-		  digital::trellis_metric_type_t TYPE);
-      ~@IMPL_NAME@();
+      viterbi_impl(const fsm &FSM, int K,
+		  int S0, int SK);
+      ~viterbi_impl();
 
-      int O() const { return d_O; }
-      int D() const { return d_D; }
-      digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
-      std::vector<@I_TYPE@> TABLE() const { return d_TABLE; }
+      fsm FSM() const  { return d_FSM; }
+      int K()  const { return d_K; }
+      int S0()  const { return d_S0; }
+      int SK()  const { return d_SK; }
 
-      void set_O(int O);
-      void set_D(int D);
-      void set_TYPE(digital::trellis_metric_type_t type);
-      void set_TABLE(const std::vector<@I_TYPE@> &table);
+      void set_FSM(const fsm &FSM);
+      void set_K(int K);
+      void set_S0(int S0);
+      void set_SK(int SK);
+      //std::vector<int> trace () const { return d_trace; }
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);
-
       int general_work(int noutput_items,
 		       gr_vector_int &ninput_items,
 		       gr_vector_const_void_star &input_items,
@@ -65,4 +66,4 @@ namespace gr {
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* VITERBI_IMPL_H */

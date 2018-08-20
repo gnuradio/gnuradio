@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,43 +20,46 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef ENCODER_H
+#define ENCODER_H
 
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
-#include <gnuradio/trellis/core_algorithms.h>
-#include <gnuradio/block.h>
+#include <gnuradio/sync_block.h>
+#include <cstdint>
 
 namespace gr {
   namespace trellis {
 
     /*!
-     *  \ingroup trellis_coding_blk
+     * \brief Convolutional encoder.
+     * \ingroup trellis_coding_blk
      */
-    class TRELLIS_API @NAME@ : virtual public block
+    template <class IN_T, class OUT_T>
+    class TRELLIS_API encoder : virtual public sync_block
     {
     public:
-      // gr::trellis::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      typedef boost::shared_ptr< encoder<IN_T,OUT_T> > sptr;
 
-      static sptr make(const fsm &FSM, int K,
-		       int S0, int SK);
+      static sptr make(const fsm &FSM, int ST);
 
-      virtual fsm FSM() const  = 0;
-      virtual int K()  const = 0;
-      virtual int S0()  const = 0;
-      virtual int SK()  const = 0;
+      static sptr make(const fsm &FSM, int ST, int K);
 
+      virtual fsm FSM() const = 0;
+      virtual int ST() const = 0;
+      virtual int K() const = 0;
       virtual void set_FSM(const fsm &FSM) =0;
+      virtual void set_ST(int ST) =0;
       virtual void set_K(int K) =0;
-      virtual void set_S0(int S0) =0;
-      virtual void set_SK(int SK) =0;
     };
+    typedef encoder<std::uint8_t, std::uint8_t> encoder_bb;
+    typedef encoder<std::uint8_t, std::int16_t> encoder_bs;
+    typedef encoder<std::uint8_t, std::int32_t> encoder_bi;
+    typedef encoder<std::int16_t, std::int16_t> encoder_ss;
+    typedef encoder<std::int16_t, std::int32_t> encoder_si;
+    typedef encoder<std::int32_t, std::int32_t> encoder_ii;
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* ENCODER_H */

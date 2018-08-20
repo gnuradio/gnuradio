@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,51 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef METRICS_IMPL_H
+#define METRICS_IMPL_H
 
-#include <gnuradio/trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/metrics.h>
 
 namespace gr {
   namespace trellis {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+template<class T>
+    class metrics_impl : public  metrics<T>
     {
     private:
-      fsm d_FSM;
-      int d_K;
-      int d_S0;
-      int d_SK;
+      int d_O;
       int d_D;
-      std::vector<@I_TYPE@> d_TABLE;
       digital::trellis_metric_type_t d_TYPE;
-      //std::vector<int> d_trace;
+      std::vector<T> d_TABLE;
 
     public:
-      @IMPL_NAME@(const fsm &FSM, int K,
-		  int S0, int SK, int D,
-		  const std::vector<@I_TYPE@> &TABLE,
+      metrics_impl(int O, int D,  const std::vector<T> &TABLE,
 		  digital::trellis_metric_type_t TYPE);
-      ~@IMPL_NAME@();
+      ~metrics_impl();
 
-      fsm FSM() const  { return d_FSM; }
-      int K()  const { return d_K; }
-      int S0()  const { return d_S0; }
-      int SK()  const { return d_SK; }
-      int D()  const { return d_D; }
-      std::vector<@I_TYPE@> TABLE() const { return d_TABLE; }
+      int O() const { return d_O; }
+      int D() const { return d_D; }
       digital::trellis_metric_type_t TYPE() const { return d_TYPE; }
-      //std::vector<int> trace() const { return d_trace; }
+      std::vector<T> TABLE() const { return d_TABLE; }
 
-      void set_FSM(const fsm &FSM);
-      void set_K(int K);
-      void set_S0(int S0);
-      void set_SK(int SK);
+      void set_O(int O);
       void set_D(int D);
-      void set_TABLE(const std::vector<@I_TYPE@> &table);
       void set_TYPE(digital::trellis_metric_type_t type);
+      void set_TABLE(const std::vector<T> &table);
 
       void forecast(int noutput_items,
 		    gr_vector_int &ninput_items_required);
@@ -78,4 +65,4 @@ namespace gr {
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* METRICS_IMPL_H */

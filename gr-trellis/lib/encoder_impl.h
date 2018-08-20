@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,50 +20,40 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// @WARNING@
+#ifndef ENCODER_IMPL_H
+#define ENCODER_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <gnuradio/trellis/@BASE_NAME@.h>
+#include <gnuradio/trellis/encoder.h>
 
 namespace gr {
   namespace trellis {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+    template <class IN_T, class OUT_T>
+    class encoder_impl : public encoder<IN_T,OUT_T>
     {
     private:
       fsm d_FSM;
+      int d_ST;
       int d_K;
-      int d_S0;
-      int d_SK;
-      //std::vector<int> d_trace;
+      bool d_B;
+
 
     public:
-      @IMPL_NAME@(const fsm &FSM, int K,
-		  int S0, int SK);
-      ~@IMPL_NAME@();
+      encoder_impl(const fsm &FSM, int ST, int K, bool B);
+      ~encoder_impl();
 
-      fsm FSM() const  { return d_FSM; }
-      int K()  const { return d_K; }
-      int S0()  const { return d_S0; }
-      int SK()  const { return d_SK; }
-
+      fsm FSM() const { return d_FSM;; }
+      int ST() const {  return d_ST; }
+      int K() const {  return d_K; }
       void set_FSM(const fsm &FSM);
+      void set_ST(int ST);
       void set_K(int K);
-      void set_S0(int S0);
-      void set_SK(int SK);
-      //std::vector<int> trace () const { return d_trace; }
-
-      void forecast(int noutput_items,
-		    gr_vector_int &ninput_items_required);
-      int general_work(int noutput_items,
-		       gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } /* namespace trellis */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* ENCODER_IMPL_H */
