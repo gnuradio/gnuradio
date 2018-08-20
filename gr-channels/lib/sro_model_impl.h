@@ -25,7 +25,7 @@
 
 #include <gnuradio/filter/mmse_interpolator_cc.h>
 #include <gnuradio/filter/mmse_fir_interpolator_cc.h>
-#include <gnuradio/analog/fastnoise_source_f.h>
+#include <gnuradio/analog/fastnoise_source.h>
 #include <gnuradio/channels/sro_model.h>
 
 namespace gr {
