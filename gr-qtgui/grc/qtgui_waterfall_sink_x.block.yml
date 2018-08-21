@@ -252,8 +252,6 @@ templates:
     callbacks:
     - set_frequency_range(${fc}, ${bw})
     - set_update_time(${update_time})
-    - set_title(${which}, ${title})
-    - set_color(${which}, ${color})
     - set_intensity_range(${int_min}, ${int_max})
     make: |-
         <%
