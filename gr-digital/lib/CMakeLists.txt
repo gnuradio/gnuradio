@@ -39,19 +39,13 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 ########################################################################
-# Invoke macro to generate various sources
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_CC_H(digital chunks_to_symbols_XX_impl     bf bc sf sc if ic)
-GR_EXPAND_X_CC_H(digital burst_shaper_XX_impl     cc ff)
-
-########################################################################
 # Setup library
 ########################################################################
 list(APPEND digital_sources
-    ${generated_sources}
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
+    burst_shaper_impl.cc
+    chunks_to_symbols_impl.cc
     clock_recovery_mm_cc_impl.cc
     clock_recovery_mm_ff_impl.cc
     clock_tracking_loop.cc
@@ -156,7 +150,6 @@ GR_LIBRARY_FOO(gnuradio-digital)
 
 add_dependencies(
     gnuradio-digital
-    digital_generated_includes
     digital_generated_swigs
     gnuradio-runtime
     gnuradio-filter
@@ -179,7 +172,6 @@ if(ENABLE_STATIC_LIBS)
   add_library(gnuradio-digital_static STATIC ${digital_sources})
 
   add_dependencies(gnuradio-digital_static
-    digital_generated_includes
     gnuradio-runtime_static
     gnuradio-filter_static
     gnuradio-analog_static

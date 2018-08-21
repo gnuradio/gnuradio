@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,13 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "@NAME@.h"
+#include "chunks_to_symbols_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/tag_checker.h>
 #include <assert.h>
@@ -34,60 +32,67 @@
 namespace gr {
   namespace digital {
 
-    @BASE_NAME@::sptr
-    @BASE_NAME@::make(const std::vector<@O_TYPE@> &symbol_table, const int D)
+    template <class IN_T, class OUT_T>
+    typename chunks_to_symbols<IN_T,OUT_T>::sptr
+    chunks_to_symbols<IN_T,OUT_T>::make(const std::vector<OUT_T> &symbol_table, const int D)
     {
       return gnuradio::get_initial_sptr
-        (new @IMPL_NAME@(symbol_table, D));
+        (new chunks_to_symbols_impl<IN_T,OUT_T>(symbol_table, D));
     }
 
-    @IMPL_NAME@::@IMPL_NAME@(const std::vector<@O_TYPE@> &symbol_table, const int D)
-    : sync_interpolator("@BASE_NAME@",
-			   io_signature::make(1, -1, sizeof(@I_TYPE@)),
-			   io_signature::make(1, -1, sizeof(@O_TYPE@)),
+    template <class IN_T, class OUT_T>
+    chunks_to_symbols_impl<IN_T,OUT_T>::chunks_to_symbols_impl(const std::vector<OUT_T> &symbol_table, const int D)
+    : sync_interpolator("chunks_to_symbols",
+			   io_signature::make(1, -1, sizeof(IN_T)),
+			   io_signature::make(1, -1, sizeof(OUT_T)),
 			   D),
       d_D(D), d_symbol_table(symbol_table)
     {
-      message_port_register_in(pmt::mp("set_symbol_table"));
-      set_msg_handler(
+      this->message_port_register_in(pmt::mp("set_symbol_table"));
+      this->set_msg_handler(
         pmt::mp("set_symbol_table"),
-        boost::bind(&@IMPL_NAME@::handle_set_symbol_table,
+        boost::bind(&chunks_to_symbols_impl<IN_T,OUT_T>::handle_set_symbol_table,
                     this, _1));
     }
 
-    @IMPL_NAME@::~@IMPL_NAME@()
+    template <class IN_T, class OUT_T>
+    chunks_to_symbols_impl<IN_T,OUT_T>::~chunks_to_symbols_impl()
     {
     }
 
 
+    template <class IN_T, class OUT_T>
     void
-    @IMPL_NAME@::set_vector_from_pmt(std::vector<gr_complex> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
+    chunks_to_symbols_impl<IN_T,OUT_T>::set_vector_from_pmt(std::vector<gr_complex> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
       symbol_table.resize(0);
       for (unsigned int i=0; i<pmt::length(symbol_table_pmt); i++) {
         symbol_table.push_back(pmt::c32vector_ref(symbol_table_pmt, i));
-      }      
+      }
     }
 
+    template <class IN_T, class OUT_T>
     void
-    @IMPL_NAME@::set_vector_from_pmt(std::vector<float> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
+    chunks_to_symbols_impl<IN_T,OUT_T>::set_vector_from_pmt(std::vector<float> &symbol_table, pmt::pmt_t &symbol_table_pmt) {
       symbol_table.resize(0);
       for (unsigned int i=0; i<pmt::length(symbol_table_pmt); i++) {
         float f = pmt::f32vector_ref(symbol_table_pmt, i);
         symbol_table.push_back(f);
       }
     }
-    
+
+    template <class IN_T, class OUT_T>
     void
-    @IMPL_NAME@::handle_set_symbol_table(pmt::pmt_t symbol_table_pmt)
+    chunks_to_symbols_impl<IN_T,OUT_T>::handle_set_symbol_table(pmt::pmt_t symbol_table_pmt)
     {
-      std::vector<@O_TYPE@> symbol_table;
+      std::vector<OUT_T> symbol_table;
       set_vector_from_pmt(symbol_table, symbol_table_pmt);
       set_symbol_table(symbol_table);
     }
 
-    
+
+    template <class IN_T, class OUT_T>
     void
-    @IMPL_NAME@::set_symbol_table(const std::vector<@O_TYPE@> &symbol_table)
+    chunks_to_symbols_impl<IN_T,OUT_T>::set_symbol_table(const std::vector<OUT_T> &symbol_table)
     {
       d_symbol_table.resize(0);
       for (unsigned int i=0; i<symbol_table.size(); i++) {
@@ -95,8 +100,9 @@ namespace gr {
       }
     }
 
+    template <class IN_T, class OUT_T>
     int
-    @IMPL_NAME@::work(int noutput_items,
+    chunks_to_symbols_impl<IN_T,OUT_T>::work(int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
@@ -105,29 +111,35 @@ namespace gr {
       int nstreams = input_items.size();
 
       for(int m = 0; m < nstreams; m++) {
-        const @I_TYPE@ *in = (@I_TYPE@*)input_items[m];
-        @O_TYPE@ *out = (@O_TYPE@*)output_items[m];
+        const IN_T *in = (IN_T*)input_items[m];
+        OUT_T *out = (OUT_T*)output_items[m];
 
         std::vector<tag_t> tags;
-        get_tags_in_range(tags, m, nitems_read(m), nitems_read(m)+noutput_items/d_D);
+        this->get_tags_in_range(tags, m, this->nitems_read(m), this->nitems_read(m)+noutput_items/d_D);
         tag_checker tchecker(tags);
 
         // per stream processing
         for(int i = 0; i < noutput_items / d_D; i++) {
-          
+
           std::vector<tag_t> tags_now;
-          tchecker.get_tags(tags_now, i+nitems_read(m));
+          tchecker.get_tags(tags_now, i+this->nitems_read(m));
           for (unsigned int j=0; j<tags_now.size(); j++) {
             tag_t tag = tags_now[j];
-            dispatch_msg(tag.key, tag.value);
+            this->dispatch_msg(tag.key, tag.value);
           }
           assert(((unsigned int)in[i]*d_D+d_D) <= d_symbol_table.size());
-          memcpy(out, &d_symbol_table[(unsigned int)in[i]*d_D], d_D*sizeof(@O_TYPE@));
+          memcpy(out, &d_symbol_table[(unsigned int)in[i]*d_D], d_D*sizeof(OUT_T));
           out+=d_D;
         }
       }
       return noutput_items;
     }
+    template class chunks_to_symbols<std::uint8_t, float>;
+    template class chunks_to_symbols<std::uint8_t, gr_complex>;
+    template class chunks_to_symbols<std::int16_t, float>;
+    template class chunks_to_symbols<std::int16_t, gr_complex>;
+    template class chunks_to_symbols<std::int32_t, float>;
+    template class chunks_to_symbols<std::int32_t, gr_complex>;
 
   } /* namespace digital */
 } /* namespace gr */

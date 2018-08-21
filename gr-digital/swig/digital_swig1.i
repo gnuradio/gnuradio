@@ -38,14 +38,8 @@
 
 %{
 #include "gnuradio/digital/additive_scrambler_bb.h"
-#include "gnuradio/digital/burst_shaper_cc.h"
-#include "gnuradio/digital/burst_shaper_ff.h"
-#include "gnuradio/digital/chunks_to_symbols_bc.h"
-#include "gnuradio/digital/chunks_to_symbols_bf.h"
-#include "gnuradio/digital/chunks_to_symbols_ic.h"
-#include "gnuradio/digital/chunks_to_symbols_if.h"
-#include "gnuradio/digital/chunks_to_symbols_sc.h"
-#include "gnuradio/digital/chunks_to_symbols_sf.h"
+#include "gnuradio/digital/burst_shaper.h"
+#include "gnuradio/digital/chunks_to_symbols.h"
 #include "gnuradio/digital/clock_recovery_mm_cc.h"
 #include "gnuradio/digital/clock_recovery_mm_ff.h"
 #include "gnuradio/digital/diff_decoder_bb.h"
@@ -68,14 +62,8 @@
 %}
 
 %include "gnuradio/digital/additive_scrambler_bb.h"
-%include "gnuradio/digital/burst_shaper_cc.h"
-%include "gnuradio/digital/burst_shaper_ff.h"
-%include "gnuradio/digital/chunks_to_symbols_bc.h"
-%include "gnuradio/digital/chunks_to_symbols_bf.h"
-%include "gnuradio/digital/chunks_to_symbols_ic.h"
-%include "gnuradio/digital/chunks_to_symbols_if.h"
-%include "gnuradio/digital/chunks_to_symbols_sc.h"
-%include "gnuradio/digital/chunks_to_symbols_sf.h"
+%include "gnuradio/digital/burst_shaper.h"
+%include "gnuradio/digital/chunks_to_symbols.h"
 %include "gnuradio/digital/clock_recovery_mm_cc.h"
 %include "gnuradio/digital/clock_recovery_mm_ff.h"
 %include "gnuradio/digital/diff_decoder_bb.h"
@@ -97,14 +85,14 @@
 %include "gnuradio/digital/msk_timing_recovery_cc.h"
 
 GR_SWIG_BLOCK_MAGIC2(digital, additive_scrambler_bb);
-GR_SWIG_BLOCK_MAGIC2(digital, burst_shaper_cc);
-GR_SWIG_BLOCK_MAGIC2(digital, burst_shaper_ff);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bc);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_bf);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_ic);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_if);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sc);
-GR_SWIG_BLOCK_MAGIC2(digital, chunks_to_symbols_sf);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, burst_shaper_cc, burst_shaper<gr_complex>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, burst_shaper_ff, burst_shaper<float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, chunks_to_symbols_bc, chunks_to_symbols<std::uint8_t,gr_complex>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, chunks_to_symbols_bf, chunks_to_symbols<std::uint8_t,float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, chunks_to_symbols_ic, chunks_to_symbols<std::int32_t,gr_complex>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, chunks_to_symbols_if, chunks_to_symbols<std::int32_t,float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, chunks_to_symbols_sc, chunks_to_symbols<std::int16_t,gr_complex>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(digital, chunks_to_symbols_sf, chunks_to_symbols<std::int16_t,float>);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, clock_recovery_mm_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, diff_decoder_bb);

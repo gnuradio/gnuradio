@@ -1,29 +1,27 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2015 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
-
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
+#ifndef BURST_SHAPER_H
+#define BURST_SHAPER_H
 
 #include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
@@ -59,14 +57,14 @@ namespace gr {
      * burst's length tags. Tags at other offsets will be placed with
      * the samples on which they were found.
      *
-     * \li input: stream of @I_TYPE@
-     * \li output: stream of @O_TYPE@
+     * \li input: stream of T
+     * \li output: stream of T
      */
-    class DIGITAL_API @NAME@ : virtual public block
+    template <class T>
+    class DIGITAL_API burst_shaper : virtual public block
     {
     public:
-      // gr::digital::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      typedef boost::shared_ptr< burst_shaper<T> > sptr;
 
       /*!
        * Make a burst shaper block.
@@ -89,7 +87,7 @@ namespace gr {
        * \param length_tag_name: the name of the tagged stream length
        *                         tag key.
        */
-      static sptr make(const std::vector<@O_TYPE@> &taps,
+      static sptr make(const std::vector<T> &taps,
                        int pre_padding=0, int post_padding=0,
                        bool insert_phasing=false,
                        const std::string &length_tag_name="packet_len");
@@ -117,7 +115,9 @@ namespace gr {
       virtual int suffix_length() const = 0;
     };
 
+    typedef burst_shaper<float> burst_shaper_ff;
+    typedef burst_shaper<gr_complex> burst_shaper_cc;
   } // namespace digital
 } // namespace gr
 
-#endif /* @GUARD_NAME@ */
+#endif /* BURST_SHAPER_H */

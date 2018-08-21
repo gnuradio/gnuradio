@@ -45,10 +45,6 @@ if(ENABLE_GNURADIO_RUNTIME)
   list(APPEND GENERATED_DEPS pmt_generated)
 endif(ENABLE_GNURADIO_RUNTIME)
 
-if(ENABLE_GR_DIGITAL)
-  list(APPEND GENERATED_DEPS digital_generated_includes)
-endif(ENABLE_GR_DIGITAL)
-
 if(ENABLE_GR_FILTER)
   list(APPEND GENERATED_DEPS filter_generated_includes)
 endif(ENABLE_GR_FILTER)

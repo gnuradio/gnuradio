@@ -1,50 +1,49 @@
 /* -*- c++ -*- */
-/* 
- * Copyright 2015 Free Software Foundation, Inc.
- * 
+/*
+ * Copyright 2015,2018 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
+#ifndef BURST_SHAPER_IMPL_H
+#define BURST_SHAPER_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define @GUARD_NAME@
-
-#include <gnuradio/digital/@BASE_NAME@.h>
+#include <gnuradio/digital/burst_shaper.h>
 
 namespace gr {
   namespace digital {
 
-    class @IMPL_NAME@ : public @BASE_NAME@
+    template <class T>
+    class burst_shaper_impl : public burst_shaper<T>
     {
     protected:
       enum state_t {STATE_WAIT, STATE_PREPAD, STATE_RAMPUP,
                     STATE_COPY, STATE_RAMPDOWN, STATE_POSTPAD};
 
     private:
-      const std::vector<@O_TYPE@> d_up_ramp;
-      const std::vector<@O_TYPE@> d_down_ramp;
+      const std::vector<T> d_up_ramp;
+      const std::vector<T> d_down_ramp;
       const int d_nprepad;
       const int d_npostpad;
       const bool d_insert_phasing;
       const pmt::pmt_t d_length_tag_key;
-      std::vector<@O_TYPE@> d_up_phasing;
-      std::vector<@O_TYPE@> d_down_phasing;
+      std::vector<T> d_up_phasing;
+      std::vector<T> d_down_phasing;
       int d_ncopy;
       int d_limit;
       int d_index;
@@ -52,10 +51,10 @@ namespace gr {
       bool d_finished;
       state_t d_state;
 
-      void write_padding(@O_TYPE@ *&dst, int &nwritten, int nspace);
-      void copy_items(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
+      void write_padding(T *&dst, int &nwritten, int nspace);
+      void copy_items(T *&dst, const T *&src, int &nwritten,
                       int &nread, int nspace);
-      void apply_ramp(@O_TYPE@ *&dst, const @I_TYPE@ *&src, int &nwritten,
+      void apply_ramp(T *&dst, const T *&src, int &nwritten,
                       int &nread, int nspace);
       void add_length_tag(int offset);
       void propagate_tags(int in_offset, int out_offset, int count, bool skip=true);
@@ -67,10 +66,10 @@ namespace gr {
       void enter_postpad();
 
     public:
-      @IMPL_NAME@(const std::vector<@O_TYPE@> &taps, int pre_padding,
+      burst_shaper_impl(const std::vector<T> &taps, int pre_padding,
                   int post_padding, bool insert_phasing,
                   const std::string &length_tag_name);
-      ~@IMPL_NAME@();
+      ~burst_shaper_impl();
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 
@@ -87,4 +86,4 @@ namespace gr {
   } // namespace digital
 } // namespace gr
 
-#endif /* @GUARD_NAME@ */
+#endif /* BURST_SHAPER_IMPL_H */
