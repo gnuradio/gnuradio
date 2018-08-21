@@ -190,14 +190,43 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvbt2_framemapper_cc(${framesize.val}, ${rate.val}, ${constellation.val},\
-        \ ${rotation.val}, ${fecblocks}, ${tiblocks}, ${carriermode.val}, \n% if str(version)\
-        \ == 'VERSION_111':\n${fftsize1.val}, \n% else:\n% if str(preamble2) == 'PREAMBLE_T2_SISO'\
-        \ or str(preamble2) == 'PREAMBLE_T2_MISO':\n${fftsize1.val}, \n% else:\n${fftsize2.val},\
-        \ \n% endif\n% endif\n${guardinterval.val}, ${l1constellation.val}, ${pilotpattern.val},\
-        \ ${t2frames}, ${numdatasyms}, \n% if str(version) == 'VERSION_111':\n${paprmode1.val},\
-        \ \n% else:\n${paprmode2.val}, \n% endif\n${version.val}, \n% if str(version)\
-        \ == 'VERSION_111':\n${preamble1.val}, \n% else:\n${preamble2.val}, \n% endif\n\
-        ${inputmode.val}, ${reservedbiasbits.val}, ${l1scrambled.val}, ${inband.val})"
+    make: |-
+        dtv.dvbt2_framemapper_cc(
+            ${framesize.val},
+            ${rate.val},
+            ${constellation.val},
+            ${rotation.val},
+            ${fecblocks},
+            ${tiblocks},
+            ${carriermode.val},
+            % if str(version) == 'VERSION_111':
+            ${fftsize1.val},
+            % else:
+            % if str(preamble2) == 'PREAMBLE_T2_SISO' or str(preamble2) == 'PREAMBLE_T2_MISO':
+            ${fftsize1.val},
+            % else:
+            ${fftsize2.val},
+            % endif
+            % endif
+            ${guardinterval.val},
+            ${l1constellation.val},
+            ${pilotpattern.val},
+            ${t2frames},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            % if str(version) == 'VERSION_111':
+            ${preamble1.val},
+            % else:
+            ${preamble2.val},
+            % endif
+            ${inputmode.val},
+            ${reservedbiasbits.val},
+            ${l1scrambled.val},
+            ${inband.val})
 
 file_format: 1

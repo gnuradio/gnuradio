@@ -48,9 +48,14 @@ outputs:
 
 templates:
     imports: from gnuradio.fft import logpwrfft
-    make: "logpwrfft.logpwrfft_${type.fcn}(\n\tsample_rate=${sample_rate},\n\tfft_size=${fft_size},\n\
-        \tref_scale=${ref_scale},\n\tframe_rate=${frame_rate},\n\tavg_alpha=${avg_alpha},\n\
-        \taverage=${average},\n)"
+    make: |-
+        logpwrfft.logpwrfft_${type.fcn}(
+            sample_rate=${sample_rate},
+            fft_size=${fft_size},
+            ref_scale=${ref_scale},
+            frame_rate=${frame_rate},
+            avg_alpha=${avg_alpha},
+            average=${average})
     callbacks:
     - set_sample_rate(${sample_rate})
     - set_avg_alpha(${avg_alpha})

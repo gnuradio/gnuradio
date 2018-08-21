@@ -62,8 +62,17 @@ templates:
         from gnuradio import filter
         from gnuradio.filter import firdes
     make: |-
-        filter.freq_xlating_fir_filter_${type}(${decim}, firdes.low_pass(
-            ${gain}, 2*${samp_rate}, ${cutoff_freq}, ${width}, ${win}, ${beta}), ${center_freq}, ${samp_rate})
+        filter.freq_xlating_fir_filter_${type}(
+            ${decim}, 
+            firdes.low_pass(
+                ${gain}, 
+                2*${samp_rate}, 
+                ${cutoff_freq}, 
+                ${width}, 
+                ${win}, 
+                ${beta}), 
+            ${center_freq}, 
+            ${samp_rate})
     callbacks:
     - set_taps(firdes.low_pass(${gain}, 2*${samp_rate}, ${cutoff_freq}, ${width},
         ${win}, ${beta}))

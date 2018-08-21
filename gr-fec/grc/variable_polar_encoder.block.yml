@@ -40,13 +40,18 @@ value: ${ fec.polar_encoder.make(block_size, num_info_bits, frozen_bit_positions
 
 templates:
     imports: from gnuradio import fec
-    var_make: "% if int(ndim)==0 #:\nself.${id} = ${id} = fec.polar_encoder.make(${block_size},\
-        \ ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values}, ${is_packed})\
-        \ \n% elif int(ndim)==1 #:\nself.${id} = ${id} = map((lambda a: fec.polar_encoder.make(${block_size},\
-        \ ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values}, ${is_packed})),\
-        \ range(0, ${dim1})) \n% else:\nself.${id} = ${id} = map((lambda b: map((lambda\
-        \ a: fec.polar_encoder.make(${block_size}, ${num_info_bits}, ${frozen_bit_positions},\
-        \ ${frozen_bit_values}, ${is_packed})), range(0, ${dim2}))), range(0, ${dim1}))\
-        \ \n% endif"
+    var_make: |-
+        % if int(ndim)==0:
+        self.${id} = ${id} = fec.polar_encoder.make(${block_size},\
+        ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values}, ${is_packed})\
+        % elif int(ndim)==1:
+        self.${id} = ${id} = map((lambda a: fec.polar_encoder.make(${block_size},\
+        ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values}, ${is_packed})),\
+        range(0, ${dim1}))
+        % else:
+        self.${id} = ${id} = map((lambda b: map((lambda\
+        a: fec.polar_encoder.make(${block_size}, ${num_info_bits}, ${frozen_bit_positions},\
+        ${frozen_bit_values}, ${is_packed})), range(0, ${dim2}))), range(0, ${dim1}))\
+        % endif
 
 file_format: 1

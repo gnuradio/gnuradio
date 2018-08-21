@@ -76,10 +76,18 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: "digital.header_payload_demux(\n\t  ${header_len},\n\t  ${items_per_symbol},\n\
-        \t  ${guard_interval},\n\t  ${length_tag_key},\n\t  ${trigger_tag_key},\n\t\
-        \  ${output_symbols},\n\t  ${type.itemsize},\n\t  ${timing_tag_key},\n   \
-        \       ${samp_rate},\n          ${special_tags},\n          ${header_padding},\n\
-        \    )"
+    make: |-
+        digital.header_payload_demux(
+            ${header_len},
+            ${items_per_symbol},
+            ${guard_interval},
+            ${length_tag_key},
+            ${trigger_tag_key},
+            ${output_symbols},
+            ${type.itemsize},
+            ${timing_tag_key},
+            ${samp_rate},
+            ${special_tags},
+            ${header_padding})
 
 file_format: 1

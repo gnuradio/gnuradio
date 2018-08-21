@@ -18,8 +18,13 @@ value: ${ digital.header_format_default(access_code, threshold, bps) }
 
 templates:
     imports: from gnuradio import digital
-    var_make: "\n% if int(access_code)==0 #:\nself.${id} = ${id} = digital.header_format_default(digital.packet_utils.default_access_code,\
-        \ ${threshold}, ${bps})\n% else:\nself.${id} = ${id} = digital.header_format_default(${access_code},\
-        \ ${threshold}, ${bps})\n% endif\n  "
+    var_make: |-
+        % if int(access_code)==0:
+        self.${id} = ${id} = digital.header_format_default(digital.packet_utils.default_access_code,\
+        ${threshold}, ${bps})
+        % else:
+        self.${id} = ${id} = digital.header_format_default(${access_code},\
+        ${threshold}, ${bps})
+        % endif
 
 file_format: 1

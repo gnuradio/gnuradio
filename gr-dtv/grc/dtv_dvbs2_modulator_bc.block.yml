@@ -95,8 +95,17 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvbs2_modulator_bc(${framesize.val},\n% if str(framesize) == 'FECFRAME_NORMAL':\n\
-        ${rate1.val}, \n% elif str(framesize) == 'FECFRAME_MEDIUM':\n${rate2.val},\
-        \ \n% else:\n${rate3.val}, \n% endif\n${constellation.val}, ${interpolation.val})"
+    make: |-
+        dtv.dvbs2_modulator_bc(
+            ${framesize.val},
+            % if str(framesize) == 'FECFRAME_NORMAL':
+            ${rate1.val},
+            % elif str(framesize) == 'FECFRAME_MEDIUM':
+            ${rate2.val},
+            % else:
+            ${rate3.val},
+            % endif
+            ${constellation.val},
+            ${interpolation.val})
 
 file_format: 1

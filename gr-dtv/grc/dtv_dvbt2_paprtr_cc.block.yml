@@ -97,9 +97,22 @@ outputs:
 
 templates:
     imports: from gnuradio import dtv
-    make: "dtv.dvbt2_paprtr_cc(${carriermode.val}, ${fftsize.val}, ${pilotpattern.val},\
-        \ ${guardinterval.val}, ${numdatasyms}, \n% if str(version) == 'VERSION_111':\n\
-        ${paprmode1.val}, \n% else:\n${paprmode2.val}, \n% endif\n${version.val},\
-        \ ${vclip}, ${iterations}, ${fftsize.vlength})"
+    make: |-
+        dtv.dvbt2_paprtr_cc(
+            ${carriermode.val},
+            ${fftsize.val},
+            ${pilotpattern.val},
+            ${guardinterval.val},
+            ${numdatasyms},
+            % if str(version) == 'VERSION_111':
+            ${paprmode1.val},
+            % else:
+            ${paprmode2.val},
+            % endif
+            ${version.val},
+            ${vclip},
+            ${iterations},
+            ${fftsize.vlength}
+            )
 
 file_format: 1

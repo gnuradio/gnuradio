@@ -46,7 +46,9 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.tag_debug(${type.size}*${vlen}, ${name}, ${filter}); self.${id}.set_display(${display})
+    make: |-
+        blocks.tag_debug(${type.size}*${vlen}, ${name}, ${filter})
+        self.${id}.set_display(${display})
     callbacks:
     - set_display(${display})
 

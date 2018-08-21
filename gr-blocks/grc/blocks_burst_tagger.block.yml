@@ -43,8 +43,10 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: "blocks.burst_tagger(${type.size})\nself.${id}.set_true_tag(${true_key},${true_value})\n\
-        self.${id}.set_false_tag(${false_key},${false_value})\n\t"
+    make: |-
+        blocks.burst_tagger(${type.size})
+        self.${id}.set_true_tag(${true_key},${true_value})
+        self.${id}.set_false_tag(${false_key},${false_value})
     callbacks:
     - set_true_tag(${true_key},${true_value})
     - set_false_tag(${false_key},${false_value})

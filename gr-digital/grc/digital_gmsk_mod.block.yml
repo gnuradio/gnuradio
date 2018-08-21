@@ -35,7 +35,11 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: "digital.gmsk_mod(\n\tsamples_per_symbol=${samples_per_symbol},\n\tbt=${bt},\n\
-        \tverbose=${verbose},\n\tlog=${log},\n)"
+    make: |-
+        digital.gmsk_mod(
+            samples_per_symbol=${samples_per_symbol},
+            bt=${bt},
+            verbose=${verbose},
+            log=${log})
 
 file_format: 1
