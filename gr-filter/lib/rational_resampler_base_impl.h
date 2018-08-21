@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2012 Free Software Foundation, Inc.
+ * Copyright 2005,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,35 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
-
-#ifndef @GUARD_NAME@
-#define	@GUARD_NAME@
+#ifndef RATIONAL_RESAMPLER_IMPL_BASE_H
+#define	RATIONAL_RESAMPLER_IMPL_BASE_H
 
 #include <gnuradio/filter/fir_filter.h>
-#include <gnuradio/filter/@BASE_NAME@.h>
+#include <gnuradio/filter/rational_resampler_base.h>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API @IMPL_NAME@ : public @BASE_NAME@
+    template <class IN_T, class OUT_T, class TAP_T>
+    class FILTER_API rational_resampler_base_impl : public rational_resampler_base<IN_T,OUT_T,TAP_T>
     {
     private:
       unsigned d_history;
       unsigned d_interpolation;
       unsigned d_decimation;
       unsigned d_ctr;
-      std::vector<@TAP_TYPE@> d_new_taps;
-      std::vector<kernel::@FIR_TYPE@ *> d_firs;
+      std::vector<TAP_T> d_new_taps;
+      std::vector<kernel::fir_filter<IN_T,OUT_T,TAP_T> *> d_firs;
       bool d_updated;
 
-      void install_taps(const std::vector<@TAP_TYPE@> &taps);
+      void install_taps(const std::vector<TAP_T> &taps);
 
     public:
-      @IMPL_NAME@(unsigned interpolation, unsigned decimation,
-		  const std::vector<@TAP_TYPE@> &taps);
+      rational_resampler_base_impl(unsigned interpolation, unsigned decimation,
+		  const std::vector<TAP_T> &taps);
 
-      ~@IMPL_NAME@();
+      ~rational_resampler_base_impl();
 
       unsigned history() const { return d_history; }
       void set_history(unsigned history) { d_history = history; }
@@ -56,8 +55,8 @@ namespace gr {
       unsigned interpolation() const { return d_interpolation; }
       unsigned decimation() const { return d_decimation; }
 
-      void set_taps(const std::vector<@TAP_TYPE@> &taps);
-      std::vector<@TAP_TYPE@> taps() const;
+      void set_taps(const std::vector<TAP_T> &taps);
+      std::vector<TAP_T> taps() const;
 
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
       int  general_work(int noutput_items,
@@ -69,4 +68,4 @@ namespace gr {
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* RATIONAL_RESAMPLER_IMPL_BASE_H */

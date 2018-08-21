@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,30 +20,35 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
+#ifndef INTERP_FIR_FILTER_IMPL_H
+#define	INTERP_FIR_FILTER_IMPL_H
 
-#ifndef @GUARD_NAME@
-#define	@GUARD_NAME@
-
+#include <gnuradio/filter/api.h>
 #include <gnuradio/filter/fir_filter.h>
-#include <gnuradio/filter/@BASE_NAME@.h>
+#include <gnuradio/filter/interp_fir_filter.h>
+#include <vector>
 
 namespace gr {
   namespace filter {
 
-    class FILTER_API @IMPL_NAME@ : public @BASE_NAME@
+    template <class IN_T, class OUT_T, class TAP_T>
+    class FILTER_API interp_fir_filter_impl : public interp_fir_filter<IN_T,OUT_T,TAP_T>
     {
     private:
-      kernel::@BASE_NAME@ *d_fir;
       bool d_updated;
+      std::vector< kernel::fir_filter<IN_T,OUT_T,TAP_T> *> d_firs;
+      std::vector<TAP_T> d_new_taps;
+
+      void install_taps(const std::vector<TAP_T> &taps);
 
     public:
-      @IMPL_NAME@(int decimation, const std::vector<@TAP_TYPE@> &taps);
+      interp_fir_filter_impl(unsigned interpolation,
+		  const std::vector<TAP_T> &taps);
 
-      ~@IMPL_NAME@();
+      ~interp_fir_filter_impl();
 
-      void set_taps(const std::vector<@TAP_TYPE@> &taps);
-      std::vector<@TAP_TYPE@> taps() const;
+      void set_taps(const std::vector<TAP_T> &taps);
+      std::vector<TAP_T> taps() const;
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
@@ -53,4 +58,4 @@ namespace gr {
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* INTERP_FIR_FILTER_IMPL_H */

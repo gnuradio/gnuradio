@@ -42,7 +42,7 @@
 
 #include <gnuradio/blocks/vector_source.h>
 #include <gnuradio/blocks/vector_sink.h>
-#include <gnuradio/filter/fir_filter_ccf.h>
+#include <gnuradio/filter/fir_filter_blk.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/digital/modulate_vector.h>
 

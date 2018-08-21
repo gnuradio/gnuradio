@@ -42,7 +42,6 @@ set(GR_SWIG_DOC_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/filter
 )
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-set(GR_SWIG_TARGET_DEPS filter_generated_includes)
 set(GR_SWIG_LIBRARIES gnuradio-filter gnuradio-fft)
 
 GR_SWIG_MAKE(filter_swig filter_swig.i)

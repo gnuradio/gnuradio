@@ -35,8 +35,7 @@
 #include <gnuradio/blocks/divide.h>
 #include <gnuradio/blocks/multiply.h>
 #include <gnuradio/blocks/sample_and_hold.h>
-#include <gnuradio/filter/fir_filter_ccf.h>
-#include <gnuradio/filter/fir_filter_fff.h>
+#include <gnuradio/filter/fir_filter_blk.h>
 
 namespace gr {
   namespace digital {

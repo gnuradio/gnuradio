@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,19 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/* @WARNING@ */
-
-#ifndef @GUARD_NAME@
-#define	@GUARD_NAME@
+#ifndef INTERP_FIR_FILTER_H
+#define	INTERP_FIR_FILTER_H
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/sync_interpolator.h>
+#include <cstdint>
 
 namespace gr {
   namespace filter {
 
     /*!
-     * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
+     * \brief Interpolating FIR filter with IN_T input, OUT_T output and TAP_T taps
      * \ingroup filter_blk
      *
      * \details
@@ -48,7 +47,7 @@ namespace gr {
      *
      * The taps are a C++ vector (or Python list) of values of the
      * type specified by the third letter in the block's suffix. For
-     * this block, the value is of type @TAP_TYPE@. Taps can be
+     * this block, the value is of type TAP_T. Taps can be
      * created using the firdes or optfir tools.
      *
      * These versions of the filter can also act as up-samplers
@@ -56,26 +55,33 @@ namespace gr {
      * interpolation.
      *
      */
-    class FILTER_API @BASE_NAME@ : virtual public sync_interpolator
+    template <class IN_T, class OUT_T, class TAP_T>
+    class FILTER_API interp_fir_filter : virtual public sync_interpolator
     {
     public:
-      // gr::filter::@BASE_NAME@::sptr
-      typedef boost::shared_ptr<@BASE_NAME@> sptr;
+      // gr::filter::interp_fir_filter::sptr
+      typedef boost::shared_ptr<interp_fir_filter> sptr;
 
       /*!
-       * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output, and @TAP_TYPE@ taps
+       * \brief Interpolating FIR filter with IN_T input, OUT_T output, and TAP_T taps
        *
        * \param interpolation set the integer interpolation rate
-       * \param taps a vector/list of taps of type @TAP_TYPE@
+       * \param taps a vector/list of taps of type TAP_T
        */
       static sptr make(unsigned interpolation,
-				  const std::vector<@TAP_TYPE@> &taps);
+				  const std::vector<TAP_T> &taps);
 
-      virtual void set_taps(const std::vector<@TAP_TYPE@> &taps) = 0;
-      virtual std::vector<@TAP_TYPE@> taps() const = 0;
+      virtual void set_taps(const std::vector<TAP_T> &taps) = 0;
+      virtual std::vector<TAP_T> taps() const = 0;
     };
+    typedef interp_fir_filter<gr_complex, gr_complex, gr_complex> interp_fir_filter_ccc;
+    typedef interp_fir_filter<gr_complex, gr_complex, float> interp_fir_filter_ccf;
+    typedef interp_fir_filter<float, gr_complex, gr_complex> interp_fir_filter_fcc;
+    typedef interp_fir_filter<float, float, float> interp_fir_filter_fff;
+    typedef interp_fir_filter<float, std::int16_t, float> interp_fir_filter_fsf;
+    typedef interp_fir_filter<std::int16_t, gr_complex, gr_complex> interp_fir_filter_scc;
 
   } /* namespace filter */
 } /* namespace gr */
 
-#endif /* @GUARD_NAME@ */
+#endif /* INTERP_FIR_FILTER_H */

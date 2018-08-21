@@ -45,10 +45,6 @@ if(ENABLE_GNURADIO_RUNTIME)
   list(APPEND GENERATED_DEPS pmt_generated)
 endif(ENABLE_GNURADIO_RUNTIME)
 
-if(ENABLE_GR_FILTER)
-  list(APPEND GENERATED_DEPS filter_generated_includes)
-endif(ENABLE_GR_FILTER)
-
 if(ENABLE_GR_TRELLIS)
   list(APPEND GENERATED_DEPS trellis_generated_includes)
 endif(ENABLE_GR_TRELLIS)
