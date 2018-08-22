@@ -34,7 +34,6 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 # Setup swig docs to depend on includes and pull in from build directory
-set(GR_SWIG_TARGET_DEPS comedi_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/comedi)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
