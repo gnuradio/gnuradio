@@ -41,10 +41,6 @@ configure_file(
 
 set(BUILT_DIRS ${CMAKE_CURRENT_BINARY_DIR}/xml ${CMAKE_CURRENT_BINARY_DIR}/html)
 
-if(ENABLE_GNURADIO_RUNTIME)
-  list(APPEND GENERATED_DEPS pmt_generated)
-endif(ENABLE_GNURADIO_RUNTIME)
-
 ########################################################################
 # Make and install doxygen docs
 ########################################################################
