@@ -70,7 +70,7 @@ namespace gr {
       d_nblocks(nblocks),
       d_reg(0xa9)
     {
-      set_relative_rate(1.0/(double) (d_nblocks * d_npacks * d_psize));
+      set_relative_rate(1, (uint64_t) (d_nblocks * d_npacks * d_psize));
     }
 
     /*

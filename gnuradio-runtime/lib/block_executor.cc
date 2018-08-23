@@ -94,8 +94,11 @@ namespace gr {
   static bool
   propagate_tags(block::tag_propagation_policy_t policy, block_detail *d,
                  const std::vector<uint64_t> &start_nitems_read, double rrate,
+                 mpq_class &mp_rrate, bool use_fp_rrate,
                  std::vector<tag_t> &rtags, long block_id)
   {
+    static const mpq_class one_half(1, 2);
+
     // Move tags downstream
     // if a sink, we don't need to move downstream
     if(d->sink_p()) {
@@ -131,10 +134,20 @@ namespace gr {
               out_buf[o]->add_item_tag(*t);
           }
         }
-        else {
+        else if(use_fp_rrate) {
           for(t = rtags.begin(); t != rtags.end(); t++) {
             tag_t new_tag = *t;
             new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
+            for(int o = 0; o < d->noutputs(); o++)
+              out_buf[o]->add_item_tag(new_tag);
+          }
+        }
+        else {
+          mpz_class offset;
+          for(t = rtags.begin(); t != rtags.end(); t++) {
+            tag_t new_tag = *t;
+            offset = new_tag.offset * mp_rrate + one_half;
+            new_tag.offset = offset.get_ui();
             for(int o = 0; o < d->noutputs(); o++)
               out_buf[o]->add_item_tag(new_tag);
           }
@@ -159,10 +172,26 @@ namespace gr {
           out_buf = d->output(i);
 
           std::vector<tag_t>::iterator t;
-          for(t = rtags.begin(); t != rtags.end(); t++) {
-            tag_t new_tag = *t;
-            new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
-            out_buf->add_item_tag(new_tag);
+          if(rrate == 1.0) {
+            for(t = rtags.begin(); t != rtags.end(); t++) {
+                out_buf->add_item_tag(*t);
+            }
+          }
+          else if(use_fp_rrate) {
+            for(t = rtags.begin(); t != rtags.end(); t++) {
+              tag_t new_tag = *t;
+              new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
+              out_buf->add_item_tag(new_tag);
+            }
+          }
+          else {
+            mpz_class offset;
+            for(t = rtags.begin(); t != rtags.end(); t++) {
+              tag_t new_tag = *t;
+              offset = new_tag.offset * mp_rrate + one_half;
+              new_tag.offset = offset.get_ui();
+              out_buf->add_item_tag(new_tag);
+            }
           }
         }
       }
@@ -212,7 +241,6 @@ namespace gr {
     int max_noutput_items;
     int new_alignment = 0;
     int alignment_state = -1;
-    double rrate;
 
     block        *m = d_block.get();
     block_detail *d = m->detail().get();
@@ -321,10 +349,8 @@ namespace gr {
       noutput_items = min_available_space(d, m->output_multiple(), m->min_noutput_items());
       if(ENABLE_LOGGING) {
         *d_log << " regular ";
-        if(m->relative_rate() >= 1.0)
-          *d_log << "1:" << m->relative_rate() << std::endl;
-        else
-          *d_log << 1.0/m->relative_rate() << ":1\n";
+        *d_log << m->relative_rate_i() << ":"
+               << m->relative_rate_d() << std::endl;
         *d_log << "  max_items_avail = " << max_items_avail << std::endl;
         *d_log << "  noutput_items = " << noutput_items << std::endl;
       }
@@ -490,6 +516,7 @@ namespace gr {
       // Now propagate the tags based on the new relative rate
       if(!propagate_tags(m->tag_propagation_policy(), d,
                          d_start_nitems_read, m->relative_rate(),
+                         m->mp_relative_rate(), m->update_rate(),
                          d_returned_tags, m->unique_id()))
         goto were_done;
 
@@ -505,9 +532,10 @@ namespace gr {
       // In the block constructor, use enable_update_rate(true).
       if(m->update_rate()) {
         //rrate = ((double)(m->nitems_written(0))) / ((double)m->nitems_read(0));
-        rrate = (double)n / (double)d->consumed();
-        if(rrate > 0)
-          m->set_relative_rate(rrate);
+        //if(rrate > 0.0)
+        //  m->set_relative_rate(rrate);
+        if((n > 0) && (d->consumed() > 0))
+          m->set_relative_rate((uint64_t)n, (uint64_t)d->consumed());
       }
 
       if(d->d_produce_or > 0)   // block produced something

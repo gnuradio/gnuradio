@@ -33,8 +33,8 @@ namespace gr {
       : public fractional_resampler_cc
     {
     private:
-      float d_mu;
-      float d_mu_inc;
+      double d_mu;
+      double d_mu_inc;
       mmse_fir_interpolator_cc *d_resamp;
 
     public:

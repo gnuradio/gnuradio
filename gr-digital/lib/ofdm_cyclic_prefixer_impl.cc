@@ -50,7 +50,7 @@ namespace gr {
 	d_down_flank((rolloff_len ? rolloff_len-1 : 0), 0),
 	d_delay_line(0, 0)
     {
-      set_relative_rate(d_output_size);
+      set_relative_rate((uint64_t)d_output_size, 1);
 
       // Flank of length 1 would just be rectangular
       if (d_rolloff_len == 1) {

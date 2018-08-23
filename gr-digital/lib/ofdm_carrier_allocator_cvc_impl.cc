@@ -125,7 +125,8 @@ namespace gr {
 	d_symbols_per_set += d_occupied_carriers[i].size();
       }
       set_tag_propagation_policy(TPP_DONT);
-      set_relative_rate((double) d_symbols_per_set / d_occupied_carriers.size());
+      set_relative_rate((uint64_t) d_symbols_per_set,
+                        (uint64_t) d_occupied_carriers.size());
     }
 
     ofdm_carrier_allocator_cvc_impl::~ofdm_carrier_allocator_cvc_impl()

@@ -23,10 +23,16 @@
 #ifndef INCLUDED_GR_RUNTIME_BLOCK_H
 #define INCLUDED_GR_RUNTIME_BLOCK_H
 
+#include <gnuradio/config.h>
 #include <gnuradio/api.h>
 #include <gnuradio/basic_block.h>
 #include <gnuradio/tags.h>
 #include <gnuradio/logger.h>
+#ifdef GR_MPLIB_MPIR
+#include <mpirxx.h>
+#else
+#include <gmpxx.h>
+#endif
 
 namespace gr {
 
@@ -281,9 +287,50 @@ namespace gr {
     void set_relative_rate(double relative_rate);
 
     /*!
+     * \brief Set the approximate output rate / input rate
+     * using its reciprocal
+     *
+     * This is a convenience function to avoid
+     * numerical problems with tag propagation that calling
+     * set_relative_rate(1.0/relative_rate) might introduce.
+     */
+    void set_inverse_relative_rate(double inverse_relative_rate);
+
+    /*!
+     * \brief Set the approximate output rate / input rate as an integer ratio
+     *
+     * Provide a hint to the buffer allocator and scheduler.
+     * The default relative_rate is interpolation / decimation = 1 / 1
+     *
+     * decimators have relative_rates < 1.0
+     * interpolators have relative_rates > 1.0
+     */
+    void set_relative_rate(uint64_t interpolation, uint64_t decimation);
+
+    /*!
      * \brief return the approximate output rate / input rate
      */
     double relative_rate() const { return d_relative_rate; }
+
+    /*!
+     * \brief return the numerator, or interpolation rate, of the
+     * approximate output rate / input rate
+     */
+    uint64_t relative_rate_i() const {
+      return (uint64_t) d_mp_relative_rate.get_num().get_ui(); }
+
+    /*!
+     * \brief return the denominator, or decimation rate, of the
+     * approximate output rate / input rate
+     */
+    uint64_t relative_rate_d() const {
+      return (uint64_t) d_mp_relative_rate.get_den().get_ui(); }
+
+    /*!
+     * \brief return a reference to the multiple precision rational
+     * represntation of the approximate output rate / input rate
+     */
+    mpq_class &mp_relative_rate() { return d_mp_relative_rate; }
 
     /*
      * The following two methods provide special case info to the
@@ -670,6 +717,7 @@ namespace gr {
     int                   d_unaligned;
     bool                  d_is_unaligned;
     double                d_relative_rate;	// approx output_rate / input_rate
+    mpq_class             d_mp_relative_rate;
     block_detail_sptr     d_detail;		// implementation details
     unsigned              d_history;
     unsigned              d_attr_delay;         // the block's sample delay
