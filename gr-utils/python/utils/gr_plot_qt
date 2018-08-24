@@ -1,11 +1,5 @@
 #!/usr/bin/env python
-
-try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
+import numpy
 
 try:
     from matplotlib import mlab
@@ -42,7 +36,7 @@ class SpectrogramData(Qwt.QwtRasterData):
 
     def __init__(self, f, t):
         Qwt.QwtArrayData.__init__(self, Qt.QRectF(0, 0, 0, 0))
-        self.sp = scipy.array([[0], [0]])
+        self.sp = numpy.array([[0], [0]])
 
     def set_data(self, xfreq, ytime, data):
         self.sp = data
@@ -84,9 +78,9 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.sample_rate = options.sample_rate
         self.psdfftsize = options.psd_size
         self.specfftsize = options.spec_size
-        self.winfunc = scipy.blackman
+        self.winfunc = numpy.blackman
         self.sizeof_data = 8
-        self.datatype = scipy.complex64
+        self.datatype = numpy.complex64
         self.pen_width = 1
         self.iq = list()
         self.time = list()
@@ -328,7 +322,7 @@ class gr_plot_qt(QtGui.QMainWindow):
             self.hfile.seek(start*self.sizeof_data, os.SEEK_SET)
             self.position = start
             try:
-                iq = scipy.fromfile(self.hfile, dtype=self.datatype,
+                iq = numpy.fromfile(self.hfile, dtype=self.datatype,
                                     count=end-start)
 
                 if(len(iq) < (end-start)):
@@ -355,7 +349,7 @@ class gr_plot_qt(QtGui.QMainWindow):
                                 window=winpoints,
                                 scale_by_freq=False)
 
-        self.iq_psd = 10.0*scipy.log10(abs(fftpack.fftshift(iq_psd)))
+        self.iq_psd = 10.0*numpy.log10(abs(numpy.fft.fftshift(iq_psd)))
         self.freq = freq - self.sample_rate/2.0
 
     def get_specgram(self):
@@ -366,7 +360,7 @@ class gr_plot_qt(QtGui.QMainWindow):
                                       window=winpoints,
                                       scale_by_freq=False)
 
-        self.iq_spec = 10.0*scipy.log10(abs(iq_spec))
+        self.iq_spec = 10.0*numpy.log10(abs(iq_spec))
         self.spec_f = f
         self.spec_t = t
 

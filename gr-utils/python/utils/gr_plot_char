@@ -22,14 +22,10 @@
 
 from __future__ import print_function
 
-try:
-    import scipy
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
-
 from argparse import ArgumentParser
 from gnuradio.plot_data import plot_data
+
+import numpy
 
 def main():
     description = "Takes a GNU Radio byte/char binary file and displays the samples versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
@@ -46,7 +42,7 @@ def main():
 
     args = parser.parse_args()
 
-    datatype = scipy.int8
+    datatype = numpy.int8
     dc = plot_data(datatype, args.files, args)
 
 if __name__ == "__main__":
