@@ -96,7 +96,7 @@ Hz. The code then plots the PSD of the original signal to see the
 signals in the origina spectrum and then makes 9 plots for each of the
 channels.
 
-NOTE: you need the Scipy and Matplotlib Python modules installed to
+NOTE: you need the Matplotlib Python module installed to
 run this example.
 
 \include gr-filter/examples/channelize.py
