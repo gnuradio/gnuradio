@@ -25,7 +25,6 @@ from gnuradio import blocks
 from gnuradio import filter
 import pmt
 from gnuradio.blocks import parse_file_metadata
-import scipy
 import sys
 import os
 
