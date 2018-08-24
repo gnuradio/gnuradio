@@ -37,11 +37,7 @@ except ImportError:
     print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
-try:
-    import scipy
-except ImportError:
-    print("Error: Scipy required (www.scipy.org).")
-    sys.exit(1)
+import numpy
 
 try:
     from gnuradio.qtgui.plot_constellation_form import *
@@ -60,7 +56,7 @@ def read_samples(filename, start, in_size, min_size, dtype, dtype_size):
     # Read in_size number of samples from file
     fhandle = open(filename, 'r')
     fhandle.seek(start*dtype_size, 0)
-    data = scipy.fromfile(fhandle, dtype=dtype, count=in_size)
+    data = numpy.fromfile(fhandle, dtype=dtype, count=in_size)
     data_min = 1.1*data.min()
     data_max = 1.1*data.max()
     data = data.tolist()
@@ -80,31 +76,31 @@ def read_samples(filename, start, in_size, min_size, dtype, dtype_size):
 
 def read_samples_f(filename, start, in_size, min_size=0):
     return read_samples(filename, start, in_size, min_size,
-                        scipy.float32, gr.sizeof_float)
+                        numpy.float32, gr.sizeof_float)
 
 def read_samples_i(filename, start, in_size, min_size=0):
     return read_samples(filename, start, in_size, min_size,
-                        scipy.int32, gr.sizeof_int)
+                        numpy.int32, gr.sizeof_int)
 
 def read_samples_s(filename, start, in_size, min_size=0):
     return read_samples(filename, start, in_size, min_size,
-                        scipy.int16, gr.sizeof_short)
+                        numpy.int16, gr.sizeof_short)
 
 def read_samples_b(filename, start, in_size, min_size=0):
     d,mn,mx = read_samples(filename, start, in_size, min_size,
-                           scipy.int8, gr.sizeof_char)
+                           numpy.int8, gr.sizeof_char)
 
     # Bit of a hack since we want to read the data as signed ints, but
     # the blocks.vector_source_b will only accept unsigned. We read in as
     # signed, do our min/max and things on that, then convert here.
-    d = scipy.array(d, dtype=scipy.uint8).tolist()
+    d = numpy.array(d, dtype=numpy.uint8).tolist()
     return d,mn,mx
 
 def read_samples_c(filename, start, in_size, min_size=0):
     # Complex samples are handled differently
     fhandle = open(filename, 'r')
     fhandle.seek(start*gr.sizeof_gr_complex, 0)
-    data = scipy.fromfile(fhandle, dtype=scipy.complex64, count=in_size)
+    data = numpy.fromfile(fhandle, dtype=numpy.complex64, count=in_size)
     data_min = 1.1*float(min(data.real.min(), data.imag.min()))
     data_max = 1.1*float(max(data.real.max(), data.imag.max()))
     data = data.tolist()

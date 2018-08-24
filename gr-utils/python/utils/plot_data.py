@@ -26,18 +26,7 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
 
-try:
-    import scipy
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
-
-try:
-    from pylab import *
-except ImportError:
-    print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)")
-    raise SystemExit(1)
-
+import numpy
 
 class plot_data(object):
     def __init__(self, datatype, filenames, options):
@@ -88,12 +77,12 @@ class plot_data(object):
     def get_data(self, hfile):
         self.text_file_pos.set_text("File Position: %d" % (hfile.tell()//self.sizeof_data))
         try:
-            f = scipy.fromfile(hfile, dtype=self.datatype, count=self.block_length)
+            f = numpy.fromfile(hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
             print("End of File")
         else:
-            self.f = scipy.array(f)
-            self.time = scipy.array([i*(1 / self.sample_rate) for i in range(len(self.f))])
+            self.f = numpy.array(f)
+            self.time = numpy.array([i*(1 / self.sample_rate) for i in range(len(self.f))])
 
     def make_plots(self):
         self.sp_f = self.fig.add_subplot(2,1,1, position=[0.075, 0.2, 0.875, 0.6])

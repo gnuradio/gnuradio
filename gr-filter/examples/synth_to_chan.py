@@ -27,6 +27,7 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 import sys
+import numpy
 
 try:
     from gnuradio import analog
@@ -35,13 +36,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import scipy
-except ImportError:
-    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
-    sys.exit(1)
-
-try:
-    import pylab
+    from matplotlib import pyplot
 except ImportError:
     sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
@@ -97,16 +92,16 @@ def main():
         channel = 1
         data = snk[channel].data()[1000:]
 
-        f1 = pylab.figure(1)
+        f1 = pyplot.figure(1)
         s1 = f1.add_subplot(1,1,1)
         s1.plot(data[10000:10200] )
         s1.set_title(("Output Signal from Channel %d" % channel))
 
         fftlen = 2048
-        winfunc = scipy.blackman
-        #winfunc = scipy.hamming
+        winfunc = numpy.blackman
+        #winfunc = numpy.hamming
 
-        f2 = pylab.figure(2)
+        f2 = pyplot.figure(2)
         s2 = f2.add_subplot(1,1,1)
         s2.psd(data, NFFT=fftlen,
                Fs = nchans*fs,
@@ -114,7 +109,7 @@ def main():
                window = lambda d: d*winfunc(fftlen))
         s2.set_title(("Output PSD from Channel %d" % channel))
 
-        f3 = pylab.figure(3)
+        f3 = pyplot.figure(3)
         s3 = f3.add_subplot(1,1,1)
         s3.psd(snk_synth.data()[1000:], NFFT=fftlen,
                Fs = nchans*fs,
@@ -122,7 +117,7 @@ def main():
                window = lambda d: d*winfunc(fftlen))
         s3.set_title("Output of Synthesis Filter")
 
-        pylab.show()
+        pyplot.show()
 
 if __name__ == "__main__":
     main()

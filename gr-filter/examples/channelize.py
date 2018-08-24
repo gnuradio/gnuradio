@@ -27,18 +27,12 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 import sys, time
+import numpy
 
 try:
     from gnuradio import analog
 except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
-    sys.exit(1)
-
-try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
@@ -63,7 +57,7 @@ class pfb_top_block(gr.top_block):
                                               window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
-        tpc = scipy.ceil(float(len(self._taps)) / float(self._M))
+        tpc = numpy.ceil(float(len(self._taps)) / float(self._M))
         print("Number of taps:     ", len(self._taps))
         print("Number of channels: ", self._M)
         print("Taps per channel:   ", tpc)
@@ -119,7 +113,7 @@ def main():
         Ne = 10000
 
         fftlen = 8192
-        winfunc = scipy.blackman
+        winfunc = numpy.blackman
         fs = tb._ifs
 
         # Plot the input signal on its own figure
@@ -129,8 +123,8 @@ def main():
         X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
-        X_in = 10.0*scipy.log10(abs(X))
-        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
+        X_in = 10.0*numpy.log10(abs(X))
+        f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         pin_f = spin_f.plot(f_in, X_in, "b")
         spin_f.set_xlim([min(f_in), max(f_in)+1])
         spin_f.set_ylim([-200.0, 50.0])
@@ -143,8 +137,8 @@ def main():
         Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
-        t_in = scipy.arange(0, Tmax, Ts)
-        x_in = scipy.array(d)
+        t_in = numpy.arange(0, Tmax, Ts)
+        x_in = numpy.array(d)
         spin_t = fig_in.add_subplot(2, 1, 2)
         pin_t = spin_t.plot(t_in, x_in.real, "b")
         pin_t = spin_t.plot(t_in, x_in.imag, "r")
@@ -152,8 +146,8 @@ def main():
         spin_t.set_xlabel("Time (s)")
         spin_t.set_ylabel("Amplitude")
 
-        Ncols = int(scipy.floor(scipy.sqrt(tb._M)))
-        Nrows = int(scipy.floor(tb._M / Ncols))
+        Ncols = int(numpy.floor(numpy.sqrt(tb._M)))
+        Nrows = int(numpy.floor(tb._M / Ncols))
         if(tb._M % Ncols != 0):
             Nrows += 1
 
@@ -172,8 +166,8 @@ def main():
             X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
                               window = lambda d: d*winfunc(fftlen),
                               scale_by_freq=True)
-            X_o = 10.0*scipy.log10(abs(X))
-            f_o = scipy.arange(-fs_o / 2.0, fs_o / 2.0, fs_o / float(X_o.size))
+            X_o = 10.0*numpy.log10(abs(X))
+            f_o = numpy.arange(-fs_o / 2.0, fs_o / 2.0, fs_o / float(X_o.size))
             p2_f = sp1_f.plot(f_o, X_o, "b")
             sp1_f.set_xlim([min(f_o), max(f_o)+1])
             sp1_f.set_ylim([-200.0, 50.0])
@@ -182,8 +176,8 @@ def main():
             sp1_f.set_xlabel("Frequency (Hz)")
             sp1_f.set_ylabel("Power (dBW)")
 
-            x_o = scipy.array(d)
-            t_o = scipy.arange(0, Tmax_o, Ts_o)
+            x_o = numpy.array(d)
+            t_o = numpy.arange(0, Tmax_o, Ts_o)
             sp2_o = fig2.add_subplot(Nrows, Ncols, 1+i)
             p2_o = sp2_o.plot(t_o, x_o.real, "b")
             p2_o = sp2_o.plot(t_o, x_o.imag, "r")

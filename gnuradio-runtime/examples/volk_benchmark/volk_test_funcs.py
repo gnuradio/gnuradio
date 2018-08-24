@@ -5,12 +5,7 @@ from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import math, sys, os, time
-
-try:
-    import scipy
-except ImportError:
-    sys.stderr.write("Unable to import Scipy (www.scipy.org)\n")
-    sys.exit(1)
+import numpy
 
 try:
     import sqlite3
@@ -165,8 +160,8 @@ def format_results(kernel, times):
     '''
     res = dict()
     res["kernel"] = kernel
-    res["avg"] = scipy.mean(times)
-    res["var"] = scipy.var(times)
+    res["avg"] = numpy.mean(times)
+    res["var"] = numpy.var(times)
     res["max"] = max(times)
     res["min"] = min(times)
     return res

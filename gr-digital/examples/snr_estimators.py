@@ -34,7 +34,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import pylab
+    from matplotlib import pyplot
 except ImportError:
     print("Error: Program requires Matplotlib (matplotlib.sourceforge.net).")
     sys.exit(1)
@@ -183,7 +183,7 @@ def main():
 
         snr_gr.append(gr_snr.snr())
 
-    f1 = pylab.figure(1)
+    f1 = pyplot.figure(1)
     s1 = f1.add_subplot(1,1,1)
     s1.plot(SNR_dB, snr_known, "k-o", linewidth=2, label="Known")
     s1.plot(SNR_dB, snr_python, "b-o", linewidth=2, label="Python")
@@ -194,11 +194,11 @@ def main():
     s1.set_ylabel('Estimated SNR')
     s1.legend()
 
-    f2 = pylab.figure(2)
+    f2 = pyplot.figure(2)
     s2 = f2.add_subplot(1,1,1)
     s2.plot(yy.real, yy.imag, 'o')
 
-    pylab.show()
+    pyplot.show()
 
 
 if __name__ == "__main__":
