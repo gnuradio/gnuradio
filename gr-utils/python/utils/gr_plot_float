@@ -22,11 +22,7 @@
 
 from __future__ import print_function
 
-try:
-    import scipy
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
+import numpy
 
 from argparse import ArgumentParser
 from gnuradio.plot_data import plot_data
@@ -46,7 +42,7 @@ def main():
 
     args = parser.parse_args()
 
-    datatype=scipy.float32
+    datatype=numpy.float32
     dc = plot_data(datatype, args.file, args)
 
 if __name__ == "__main__":

@@ -22,11 +22,7 @@
 
 from __future__ import print_function
 
-try:
-    import scipy
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
+import numpy
 
 try:
     from pylab import *
@@ -43,7 +39,7 @@ class draw_iq:
         self.start = options.start
         self.sample_rate = options.sample_rate
 
-        self.datatype = scipy.complex64
+        self.datatype = numpy.complex64
         self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
 
         self.axis_font_size = 16
@@ -81,13 +77,13 @@ class draw_iq:
     def get_data(self):
         self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//self.sizeof_data))
         try:
-            self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+            self.iq = numpy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
             print("End of File")
         else:
-            self.reals = scipy.array([r.real for r in self.iq])
-            self.imags = scipy.array([i.imag for i in self.iq])
-            self.time = scipy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
+            self.reals = numpy.array([r.real for r in self.iq])
+            self.imags = numpy.array([i.imag for i in self.iq])
+            self.time = numpy.array([i*(1/self.sample_rate) for i in range(len(self.reals))])
 
     def make_plots(self):
         # if specified on the command-line, set file pointer
