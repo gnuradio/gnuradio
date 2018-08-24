@@ -26,6 +26,7 @@ from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import sys
+import numpy
 
 def main():
     data = numpy.arange(0, 32000, 1).tolist()
