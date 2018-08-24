@@ -29,12 +29,7 @@ from gnuradio import filter
 from gnuradio import analog
 from gnuradio import channels
 import sys, math, time
-
-try:
-    import numpy
-except ImportError:
-    print("Error: Program requires numpy (see: www.scipy.org).")
-    sys.exit(1)
+import numpy
 
 try:
     import pylab
