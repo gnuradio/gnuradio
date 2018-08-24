@@ -24,7 +24,7 @@ from __future__ import unicode_literals
 
 from PyQt4 import QtGui, QtCore, Qt
 import PyQt4.Qwt5 as Qwt
-import scipy
+import numpy
 
 class IdealBandItems(object):
     def __init__(self):
@@ -46,11 +46,11 @@ class IdealBandItems(object):
             if (ftype == "Low Pass"):
                 self.detach_unwantedcurves(plot)
                 x=[0, self.params["pbend"]]
-                y=[20.0*scipy.log10(self.params["gain"])]*2
+                y=[20.0*numpy.log10(self.params["gain"])]*2
                 self.idealbandhcurves[0].setData(x, y)
 
                 x=[self.params["pbend"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[0].setData(x, y)
 
@@ -66,11 +66,11 @@ class IdealBandItems(object):
             elif ftype == "High Pass":
                 self.detach_unwantedcurves(plot)
                 x=[self.params["pbstart"],self.params["fs"] / 2.0]
-                y=[20.0*scipy.log10(self.params["gain"])]*2
+                y=[20.0*numpy.log10(self.params["gain"])]*2
                 self.idealbandhcurves[0].setData(x, y)
 
                 x=[self.params["pbstart"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[0].setData(x, y)
 
@@ -99,35 +99,35 @@ class IdealBandItems(object):
                 self.idealbandvcurves[1].setData(x, y)
 
                 x=[0,self.params["sbstart"]-self.params["tb"]]
-                y=[20.0*scipy.log10(self.params["gain"])]*2
+                y=[20.0*numpy.log10(self.params["gain"])]*2
                 self.idealbandhcurves[1].setData(x, y)
 
                 x=[self.params["sbstart"]-self.params["tb"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[2].setData(x, y)
 
                 x=[self.params["sbend"]+self.params["tb"],self.params["fs"] / 2.0]
-                y=[20.0*scipy.log10(self.params["gain"])]*2
+                y=[20.0*numpy.log10(self.params["gain"])]*2
                 self.idealbandhcurves[2].setData(x, y)
 
                 x=[self.params["sbend"]+self.params["tb"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[3].setData(x, y)
 
             elif ftype == "Band Pass":
                 x=[self.params["pbstart"],self.params["pbend"]]
-                y=[20.0*scipy.log10(self.params["gain"])]*2
+                y=[20.0*numpy.log10(self.params["gain"])]*2
                 self.idealbandhcurves[0].setData(x, y)
 
                 x=[self.params["pbstart"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[0].setData(x, y)
 
                 x=[self.params["pbend"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[1].setData(x, y)
 
@@ -151,16 +151,16 @@ class IdealBandItems(object):
 
             elif ftype == "Complex Band Pass":
                 x=[self.params["pbstart"],self.params["pbend"]]
-                y=[20.0*scipy.log10(self.params["gain"])]*2
+                y=[20.0*numpy.log10(self.params["gain"])]*2
                 self.idealbandhcurves[0].setData(x, y)
 
                 x=[self.params["pbstart"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[0].setData(x, y)
 
                 x=[self.params["pbend"]]*2
-                y=[20.0*scipy.log10(self.params["gain"]),
+                y=[20.0*numpy.log10(self.params["gain"]),
                    plot.axisScaleDiv(Qwt.QwtPlot.yLeft).lowerBound()]
                 self.idealbandvcurves[1].setData(x, y)
 

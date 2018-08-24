@@ -23,13 +23,7 @@
 from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
-
-try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
+import numpy
 
 try:
     from pylab import *
@@ -38,7 +32,6 @@ except ImportError:
     raise SystemExit(1)
 
 from argparse import ArgumentParser
-from scipy import log10
 from gnuradio.eng_arg import eng_float, intx
 
 class plot_psd_base(object):
@@ -52,7 +45,7 @@ class plot_psd_base(object):
 
         self.dospec = options.enable_spec  # if we want to plot the spectrogram
 
-        self.datatype = getattr(scipy, datatype) #scipy.complex64
+        self.datatype = numpy.complex64
         self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
 
         self.axis_font_size = 16
@@ -83,7 +76,7 @@ class plot_psd_base(object):
         self.button_right = Button(self.button_right_axes, ">")
         self.button_right_callback = self.button_right.on_clicked(self.button_right_click)
 
-        self.xlim = scipy.array(self.sp_iq.get_xlim())
+        self.xlim = numpy.array(self.sp_iq.get_xlim())
 
         self.manager = get_current_fig_manager()
         connect('draw_event', self.zoom)
@@ -94,17 +87,17 @@ class plot_psd_base(object):
         self.position = self.hfile.tell() / self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % self.position)
         try:
-            self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+            self.iq = numpy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
             print("End of File")
             return False
         else:
-            # retesting length here as newer version of scipy does not throw a MemoryError, just
+            # retesting length here as newer version of numpy does not throw a MemoryError, just
             # returns a zero-length array
             if(len(self.iq) > 0):
                 tstep = 1.0 / self.sample_rate
-                #self.time = scipy.array([tstep*(self.position + i) for i in range(len(self.iq))])
-                self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
+                #self.time = numpy.array([tstep*(self.position + i) for i in range(len(self.iq))])
+                self.time = numpy.array([tstep*(i) for i in range(len(self.iq))])
 
                 self.iq_psd, self.freq = self.dopsd(self.iq)
                 return True
@@ -115,11 +108,11 @@ class plot_psd_base(object):
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
         overlap = self.psdfftsize / 4
-        winfunc = scipy.blackman
+        winfunc = numpy.blackman
         psd,freq = mlab.psd(iq, self.psdfftsize, self.sample_rate,
                             window = lambda d: d*winfunc(self.psdfftsize),
                             noverlap = overlap)
-        psd = 10.0*log10(abs(psd))
+        psd = 10.0*numpy.log10(abs(psd))
         return (psd, freq)
 
     def make_plots(self):
@@ -179,7 +172,7 @@ class plot_psd_base(object):
 
     def draw_spec(self, t, s):
         overlap = self.specfftsize / 4
-        winfunc = scipy.blackman
+        winfunc = numpy.blackman
         self.sp_spec.clear()
         self.sp_spec.specgram(s, self.specfftsize, self.sample_rate,
                               window = lambda d: d*winfunc(self.specfftsize),
@@ -192,26 +185,26 @@ class plot_psd_base(object):
         if self.dospec:
             self.draw_spec(self.time, self.iq)
 
-        self.xlim = scipy.array(self.sp_iq.get_xlim()) # so zoom doesn't get called
+        self.xlim = numpy.array(self.sp_iq.get_xlim()) # so zoom doesn't get called
 
         draw()
 
     def zoom(self, event):
-        newxlim = scipy.array(self.sp_iq.get_xlim())
-        curxlim = scipy.array(self.xlim)
+        newxlim = numpy.array(self.sp_iq.get_xlim())
+        curxlim = numpy.array(self.xlim)
         if(newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]):
             #xmin = max(0, int(ceil(self.sample_rate*(newxlim[0] - self.position))))
             #xmax = min(int(ceil(self.sample_rate*(newxlim[1] - self.position))), len(self.iq))
             xmin = max(0, int(ceil(self.sample_rate*(newxlim[0]))))
             xmax = min(int(ceil(self.sample_rate*(newxlim[1]))), len(self.iq))
 
-            iq = scipy.array(self.iq[xmin : xmax])
-            time = scipy.array(self.time[xmin : xmax])
+            iq = numpy.array(self.iq[xmin : xmax])
+            time = numpy.array(self.time[xmin : xmax])
 
             iq_psd, freq = self.dopsd(iq)
 
             self.draw_psd(freq, iq_psd)
-            self.xlim = scipy.array(self.sp_iq.get_xlim())
+            self.xlim = numpy.array(self.sp_iq.get_xlim())
 
             draw()
 

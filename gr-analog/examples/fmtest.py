@@ -29,13 +29,7 @@ from gnuradio import filter
 from gnuradio import analog
 from gnuradio import channels
 import sys, math, time
-
-try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    print("Error: Program requires scipy (see: www.scipy.org).")
-    sys.exit(1)
+import numpy
 
 try:
     import pylab
@@ -147,7 +141,7 @@ def main():
         Ne = 100000
 
         fftlen = 8192
-        winfunc = scipy.blackman
+        winfunc = numpy.blackman
 
         # Plot transmitted signal
         fs = fm._if_rate
@@ -158,8 +152,8 @@ def main():
         X,freq = sp1_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                            window = lambda d: d*winfunc(fftlen),
                            visible=False)
-        X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
+        X_in = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
         sp1_f.set_xlim([min(f_in), max(f_in)+1])
         sp1_f.set_ylim([-120.0, 20.0])
@@ -171,16 +165,16 @@ def main():
         Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
-        t_in = scipy.arange(0, Tmax, Ts)
-        x_in = scipy.array(d)
+        t_in = numpy.arange(0, Tmax, Ts)
+        x_in = numpy.array(d)
         sp1_t = fig1.add_subplot(2, 1, 2)
         p1_t = sp1_t.plot(t_in, x_in.real, "b-o")
         #p1_t = sp1_t.plot(t_in, x_in.imag, "r-o")
         sp1_t.set_ylim([-5, 5])
 
         # Set up the number of rows and columns for plotting the subfigures
-        Ncols = int(scipy.floor(scipy.sqrt(fm.num_rx_channels())))
-        Nrows = int(scipy.floor(fm.num_rx_channels() / Ncols))
+        Ncols = int(numpy.floor(numpy.sqrt(fm.num_rx_channels())))
+        Nrows = int(numpy.floor(fm.num_rx_channels() / Ncols))
         if(fm.num_rx_channels() % Ncols != 0):
             Nrows += 1
 
@@ -197,10 +191,10 @@ def main():
             X,freq = sp2_f.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
                                window = lambda d: d*winfunc(fftlen),
                                visible=False)
-            #X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-            X_o = 10.0*scipy.log10(abs(X))
-            #f_o = scipy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
-            f_o = scipy.arange(0, fs_o / 2.0, fs_o/2.0/float(X_o.size))
+            #X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+            X_o = 10.0*numpy.log10(abs(X))
+            #f_o = numpy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
+            f_o = numpy.arange(0, fs_o / 2.0, fs_o/2.0/float(X_o.size))
             p2_f = sp2_f.plot(f_o, X_o, "b")
             sp2_f.set_xlim([min(f_o), max(f_o)+0.1])
             sp2_f.set_ylim([-120.0, 20.0])
@@ -213,9 +207,9 @@ def main():
 
             Ts = 1.0 / fs_o
             Tmax = len(d)*Ts
-            t_o = scipy.arange(0, Tmax, Ts)
+            t_o = numpy.arange(0, Tmax, Ts)
 
-            x_t = scipy.array(d)
+            x_t = numpy.array(d)
             sp2_t = fig3.add_subplot(Nrows, Ncols, 1+i)
             p2_t = sp2_t.plot(t_o, x_t.real, "b")
             p2_t = sp2_t.plot(t_o, x_t.imag, "r")

@@ -25,7 +25,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
 
-import numpy, pylab, sys
+import numpy, sys
+from matplotlib import pyplot
 from gnuradio import digital
 from .soft_dec_lut_gen import soft_dec_table, calc_soft_dec_from_table, calc_soft_dec
 from .psk_constellations import psk_4_0, psk_4_1, psk_4_2, psk_4_3, psk_4_4, psk_4_5, psk_4_6, psk_4_7, sd_psk_4_0, sd_psk_4_1, sd_psk_4_2, sd_psk_4_3, sd_psk_4_4, sd_psk_4_5, sd_psk_4_6, sd_psk_4_7
@@ -126,7 +127,7 @@ if __name__ == "__main__":
     print("C++ Table calc:              ", (y_cpp_table))
     print("C++ Raw calc:                ", (y_cpp_raw_calc))
 
-    fig = pylab.figure(1)
+    fig = pyplot.figure(1)
     sp1 = fig.add_subplot(1,1,1)
     sp1.plot([c.real for c in constel],
              [c.imag for c in constel], 'bo')
@@ -137,4 +138,4 @@ if __name__ == "__main__":
     for i,c in enumerate(constel):
         sp1.text(1.2*c.real, 1.2*c.imag, bin(code[i])[2:].zfill(fill),
                  ha='center', va='center', size=18)
-    pylab.show()
+    pyplot.show()
