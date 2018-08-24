@@ -301,7 +301,7 @@
     </param>
     <param>
       <key>vector</key>
-      <value>scipy.arange(-1, 1, 0.01)</value>
+      <value>numpy.arange(-1, 1, 0.01)</value>
     </param>
   </block>
   <block>
@@ -360,7 +360,7 @@
     </param>
     <param>
       <key>vector</key>
-      <value>scipy.arange(-1, 1, 0.1)</value>
+      <value>numpy.arange(-1, 1, 0.1)</value>
     </param>
   </block>
   <block>
@@ -387,11 +387,11 @@
     </param>
     <param>
       <key>id</key>
-      <value>import_scipy</value>
+      <value>import_numpy</value>
     </param>
     <param>
       <key>import</key>
-      <value>import scipy</value>
+      <value>import numpy</value>
     </param>
   </block>
   <block>
