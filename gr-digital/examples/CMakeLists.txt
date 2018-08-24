@@ -73,7 +73,6 @@ install(
     FILES
     demod/constellation_soft_decoder.grc
     demod/digital_freq_lock.grc
-    demod/mpsk_demod.grc
     demod/pam_sync.grc
     demod/pam_timing.grc
     demod/symbol_sync_test_complex.grc
