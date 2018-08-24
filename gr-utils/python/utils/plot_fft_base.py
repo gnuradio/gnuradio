@@ -24,12 +24,8 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import unicode_literals
 
-try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    print("Please install SciPy to run this script (http://www.scipy.org/)")
-    raise SystemExit(1)
+import numpy
+from numpy.fft import fftpack
 
 try:
     from pylab import *
@@ -46,7 +42,7 @@ class plot_fft_base(object):
         self.start = options.start
         self.sample_rate = options.sample_rate
 
-        self.datatype = getattr(scipy, datatype)
+        self.datatype = numpy.complex64
         self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
 
         self.axis_font_size = 16
@@ -86,22 +82,22 @@ class plot_fft_base(object):
         self.position = self.hfile.tell() / self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % (self.position))
         try:
-            self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
+            self.iq = numpy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
             print("End of File")
         else:
             self.iq_fft = self.dofft(self.iq)
 
             tstep = 1.0 / self.sample_rate
-            #self.time = scipy.array([tstep*(self.position + i) for i in range(len(self.iq))])
-            self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
+            #self.time = numpy.array([tstep*(self.position + i) for i in range(len(self.iq))])
+            self.time = numpy.array([tstep*(i) for i in range(len(self.iq))])
 
             self.freq = self.calc_freq(self.time, self.sample_rate)
 
     def dofft(self, iq):
         N = len(iq)
-        iq_fft = scipy.fftpack.fftshift(scipy.fft(iq))       # fft and shift axis
-        iq_fft = 20*scipy.log10(abs((iq_fft+1e-15) / N)) # convert to decibels, adjust power
+        iq_fft = numpy.fft.fftshift(fftpack.fft(iq))       # fft and shift axis
+        iq_fft = 20*numpy.log10(abs((iq_fft+1e-15) / N)) # convert to decibels, adjust power
         # adding 1e-15 (-300 dB) to protect against value errors if an item in iq_fft is 0
         return iq_fft
 
@@ -109,7 +105,7 @@ class plot_fft_base(object):
         N = len(time)
         Fs = 1.0 / (time.max( - time.min()))
         Fn = 0.5 * sample_rate
-        freq = scipy.array([-Fn + i*Fs for i in range(N)])
+        freq = numpy.array([-Fn + i*Fs for i in range(N)])
         return freq
 
     def make_plots(self):
@@ -161,8 +157,8 @@ class plot_fft_base(object):
         draw()
 
     def zoom(self, event):
-        newxlim = scipy.array(self.sp_iq.get_xlim())
-        curxlim = scipy.array(self.xlim)
+        newxlim = numpy.array(self.sp_iq.get_xlim())
+        curxlim = numpy.array(self.xlim)
         if(newxlim[0] != curxlim[0] or newxlim[1] != curxlim[1]):
             self.xlim = newxlim
             #xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))

@@ -31,17 +31,12 @@ from gnuradio import eng_notation
 from gnuradio.eng_arg import eng_float, intx
 from argparse import ArgumentParser
 import sys
+import numpy
 
 try:
-    import scipy
+    from matplotlib import pyplot
 except ImportError:
-    print("Error: could not import scipy (http://www.scipy.org/)")
-    sys.exit(1)
-
-try:
-    import pylab
-except ImportError:
-    print("Error: could not import pylab (http://matplotlib.sourceforge.net/)")
+    print("Error: could not from matplotlib import pyplot (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
 class example_fll(gr.top_block):
@@ -51,8 +46,8 @@ class example_fll(gr.top_block):
         rrc_taps = filter.firdes.root_raised_cosine(
             sps, sps, 1.0, rolloff, ntaps)
 
-        data = 2.0*scipy.random.randint(0, 2, N) - 1.0
-        data = scipy.exp(1j*poffset) * data
+        data = 2.0*numpy.random.randint(0, 2, N) - 1.0
+        data = numpy.exp(1j*poffset) * data
 
         self.src = blocks.vector_source_c(data.tolist(), False)
         self.rrc = filter.interp_fir_filter_ccf(sps, rrc_taps)
@@ -79,7 +74,7 @@ def main():
                       help="Set the samples per symbol [default=%(default)r]")
     parser.add_argument("-r", "--rolloff", type=eng_float, default=0.35,
                       help="Set the rolloff factor [default=%(default)r]")
-    parser.add_argument("-W", "--bandwidth", type=eng_float, default=2*scipy.pi/100.0,
+    parser.add_argument("-W", "--bandwidth", type=eng_float, default=2*numpy.pi/100.0,
                       help="Set the loop bandwidth [default=%(default)r]")
     parser.add_argument("-n", "--ntaps", type=int, default=45,
                       help="Set the number of taps in the filters [default=%(default)r]")
@@ -102,18 +97,18 @@ def main():
                       args.foffset, args.toffset, args.poffset)
     put.run()
 
-    data_src = scipy.array(put.vsnk_src.data())
-    data_err = scipy.array(put.vsnk_err.data())
+    data_src = numpy.array(put.vsnk_src.data())
+    data_err = numpy.array(put.vsnk_err.data())
 
     # Convert the FLL's LO frequency from rads/sec to Hz
-    data_frq = scipy.array(put.vsnk_frq.data()) / (2.0*scipy.pi)
+    data_frq = numpy.array(put.vsnk_frq.data()) / (2.0*numpy.pi)
 
     # adjust this to align with the data. There are 2 filters of
     # ntaps long and the channel introduces another 4 sample delay.
-    data_fll = scipy.array(put.vsnk_fll.data()[2*args.ntaps-4:])
+    data_fll = numpy.array(put.vsnk_fll.data()[2*args.ntaps-4:])
 
     # Plot the FLL's LO frequency
-    f1 = pylab.figure(1, figsize=(12,10))
+    f1 = pyplot.figure(1, figsize=(12,10))
     s1 = f1.add_subplot(2,2,1)
     s1.plot(data_frq)
     s1.set_title("FLL LO")
@@ -143,7 +138,7 @@ def main():
     s4.set_xlabel("Samples")
     s4.set_ylabel("Real Part of Signals")
 
-    pylab.show()
+    pyplot.show()
 
 if __name__ == "__main__":
     try:

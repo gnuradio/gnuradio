@@ -38,12 +38,6 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import scipy
-except ImportError:
-    print("Error: Scipy required (www.scipy.org).")
-    sys.exit(1)
-
-try:
     from gnuradio.qtgui.plot_form import *
     from gnuradio.qtgui.plot_base import *
 except ImportError:

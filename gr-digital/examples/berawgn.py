@@ -51,9 +51,9 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import pylab
+    from matplotlib import pyplot
 except ImportError:
-    print("Error: could not import pylab (http://matplotlib.sourceforge.net/)")
+    print("Error: could not from matplotlib import pyplot (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
 # Best to choose powers of 10
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     print("Simulating...")
     ber_simu   = [simulate_ber(x) for x in EbN0_range]
 
-    f = pylab.figure()
+    f = pyplot.figure()
     s = f.add_subplot(1,1,1)
     s.semilogy(EbN0_range, ber_theory, 'g-.', label="Theoretical")
     s.semilogy(EbN0_range, ber_simu, 'b-o', label="Simulated")
@@ -138,4 +138,4 @@ if __name__ == "__main__":
     s.set_ylabel('BER')
     s.legend()
     s.grid()
-    pylab.show()
+    pyplot.show()
