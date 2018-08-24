@@ -31,26 +31,7 @@
 namespace gr {
   namespace uhd {
 
-
-    usrp_source::sptr
-    usrp_source::make(const ::uhd::device_addr_t &device_addr,
-                      const ::uhd::io_type_t &io_type,
-                      size_t num_channels)
-    {
-      //fill in the streamer args
-      ::uhd::stream_args_t stream_args;
-      switch(io_type.tid) {
-      case ::uhd::io_type_t::COMPLEX_FLOAT32: stream_args.cpu_format = "fc32"; break;
-      case ::uhd::io_type_t::COMPLEX_INT16: stream_args.cpu_format = "sc16"; break;
-      default: throw std::runtime_error("only complex float and shorts known to work");
-      }
-
-      stream_args.otw_format = "sc16"; //only sc16 known to work
-      for(size_t chan = 0; chan < num_channels; chan++)
-        stream_args.channels.push_back(chan); //linear mapping
-
-      return usrp_source::make(device_addr, stream_args);
-    }
+    const pmt::pmt_t CMD_TAG_KEY = pmt::mp("tag");
 
     usrp_source::sptr
     usrp_source::make(const ::uhd::device_addr_t &device_addr,
@@ -65,9 +46,9 @@ namespace gr {
     usrp_source_impl::usrp_source_impl(const ::uhd::device_addr_t &device_addr,
                                        const ::uhd::stream_args_t &stream_args,
                                        const bool issue_stream_cmd_on_start):
-      usrp_block("gr uhd usrp source",
-                    io_signature::make(0, 0, 0),
-                    args_to_io_sig(stream_args)),
+      usrp_block("usrp_source",
+                 io_signature::make(0, 0, 0),
+                 args_to_io_sig(stream_args)),
       usrp_block_impl(device_addr, stream_args, ""),
       _recv_timeout(0.1), // seconds
       _recv_one_packet(true),
@@ -79,10 +60,8 @@ namespace gr {
       _id = pmt::string_to_symbol(str.str());
 
       _samp_rate = this->get_samp_rate();
-#ifdef GR_UHD_USE_STREAM_API
       _samps_per_packet = 1;
-#endif
-      register_msg_cmd_handler(cmd_tag_key(), boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
+      register_msg_cmd_handler(CMD_TAG_KEY, boost::bind(&usrp_source_impl::_cmd_handler_tag, this, _1));
     }
 
     usrp_source_impl::~usrp_source_impl()
@@ -93,11 +72,7 @@ namespace gr {
     usrp_source_impl::get_usrp_info(size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_GET_USRP_INFO_API
       return _dev->get_usrp_rx_info(chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     void
@@ -132,11 +107,7 @@ namespace gr {
     ::uhd::meta_range_t
     usrp_source_impl::get_samp_rates(void)
     {
-#ifdef UHD_USRP_MULTI_USRP_GET_RATES_API
       return _dev->get_rx_rates(_stream_args.channels[0]);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     ::uhd::tune_result_t
@@ -153,7 +124,7 @@ namespace gr {
     usrp_source_impl::_set_center_freq_from_internals(size_t chan, pmt::pmt_t direction)
     {
       _chans_to_tune.reset(chan);
-      if (pmt::eqv(direction, ant_direction_tx())) {
+      if (pmt::eqv(direction, pmt::mp("TX"))) {
         // TODO: what happens if the TX device is not instantiated? Catch error?
         return _dev->set_tx_freq(_curr_tune_req[chan], _stream_args.channels[chan]);
       } else {
@@ -399,11 +370,7 @@ namespace gr {
     usrp_source_impl::set_auto_dc_offset(const bool enable, size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_rx_dc_offset(enable, chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     void
@@ -411,11 +378,7 @@ namespace gr {
                                     size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_rx_dc_offset(offset, chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     void
@@ -435,11 +398,7 @@ namespace gr {
                                      size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_rx_iq_balance(correction, chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     ::uhd::sensor_value_t
@@ -467,12 +426,9 @@ namespace gr {
     usrp_source_impl::set_stream_args(const ::uhd::stream_args_t &stream_args)
     {
       _update_stream_args(stream_args);
-#ifdef GR_UHD_USE_STREAM_API
-      if(_rx_stream)
+      if (_rx_stream) {
         _rx_stream.reset();
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
+      }
     }
 
     void
@@ -492,10 +448,15 @@ namespace gr {
     void
     usrp_source_impl::issue_stream_cmd(const ::uhd::stream_cmd_t &cmd)
     {
+// This is a new define in UHD 3.6 which is used to separate 3.6 and pre 3.6
+#ifdef INCLUDED_UHD_UTILS_MSG_TASK_HPP
+        _rx_stream->issue_stream_cmd(cmd);
+#else
         for (size_t i = 0; i < _stream_args.channels.size(); i++)
         {
             _dev->issue_stream_cmd(cmd, _stream_args.channels[i]);
         }
+#endif
         _tag_now = true;
     }
 
@@ -512,12 +473,10 @@ namespace gr {
     usrp_source_impl::start(void)
     {
       boost::recursive_mutex::scoped_lock lock(d_mutex);
-#ifdef GR_UHD_USE_STREAM_API
-      if(not _rx_stream){
+      if (not _rx_stream) {
         _rx_stream = _dev->get_rx_stream(_stream_args);
         _samps_per_packet = _rx_stream->get_max_num_samps();
       }
-#endif
       if(_issue_stream_cmd_on_start){
         //setup a stream command that starts streaming slightly in the future
         static const double reasonable_delay = 0.1; //order of magnitude over RTT
@@ -546,7 +505,6 @@ namespace gr {
         outputs.push_back(&buffs[i].front());
       }
       while(true) {
-#ifdef GR_UHD_USE_STREAM_API
         const size_t bpi = ::uhd::convert::get_bytes_per_item(_stream_args.cpu_format);
         if(_rx_stream)
           // get the remaining samples out of the buffers
@@ -554,11 +512,7 @@ namespace gr {
         else
           // no rx streamer -- nothing to flush
           break;
-#else
-        _dev->get_device()->recv
-          (outputs, nbytes/_type->size, _metadata, *_type,
-           ::uhd::device::RECV_MODE_FULL_BUFF, 0.0);
-#endif
+
         if(_metadata.error_code == ::uhd::rx_metadata_t::ERROR_CODE_TIMEOUT)
           break;
       }
@@ -585,7 +539,6 @@ namespace gr {
     std::vector<std::vector<std::complex<float> > >
     usrp_source_impl::finite_acquisition_v(const size_t nsamps)
     {
-#ifdef GR_UHD_USE_STREAM_API
       //kludgy way to ensure rx streamer exsists
       if(!_rx_stream) {
         this->start();
@@ -623,9 +576,6 @@ namespace gr {
       }
 
       return samps;
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     int
@@ -635,7 +585,6 @@ namespace gr {
     {
       boost::recursive_mutex::scoped_lock lock(d_mutex);
       boost::this_thread::disable_interruption disable_interrupt;
-#ifdef GR_UHD_USE_STREAM_API
       //In order to allow for low-latency:
       //We receive all available packets without timeout.
       //This call can timeout under regular operation...
@@ -646,19 +595,9 @@ namespace gr {
           _recv_timeout,
           _recv_one_packet
       );
-#else
-      size_t num_samps = _dev->get_device()->recv
-        (output_items, noutput_items, _metadata,
-         *_type, ::uhd::device::RECV_MODE_FULL_BUFF, 0.0);
-
-      if(_metadata.error_code == ::uhd::rx_metadata_t::ERROR_CODE_TIMEOUT) {
-        num_samps = _dev->get_device()->recv
-          (output_items, noutput_items, _metadata, *_type,
-           ::uhd::device::RECV_MODE_ONE_PACKET, 1.0);
-      }
-#endif
       boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
-      // handle possible errors conditions
+
+      //handle possible errors conditions
       switch(_metadata.error_code) {
       case ::uhd::rx_metadata_t::ERROR_CODE_NONE:
         if(_tag_now) {
