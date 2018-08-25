@@ -221,8 +221,6 @@ templates:
     - set_multiplier(${mult})
     - set_offset(${offset})
     - set_update_time(${update_time})
-    - set_title(${which}, ${title})
-    - set_color(${which}, ${color})
     make: |-
         <%
             win = 'self._%s_win'%id

@@ -297,8 +297,6 @@ templates:
         import sip
     callbacks:
     - set_update_time(${update_time})
-    - set_title(${title})
-    - set_color(${which}, ${color})
     - set_x_axis(${x_start}, ${x_step})
     - set_y_axis(${ymin}, ${ymax})
     - set_ref_level(${ref_level})
