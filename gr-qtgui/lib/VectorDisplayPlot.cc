@@ -124,7 +124,7 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
 
   // Create a curve for each input
   // Automatically deleted when parent is deleted
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_ydata.push_back(new double[d_numPoints]);
     memset(d_ydata[i], 0x0, d_numPoints*sizeof(double));
 
@@ -235,7 +235,7 @@ VectorDisplayPlot::VectorDisplayPlot(int nplots, QWidget* parent)
 
 VectorDisplayPlot::~VectorDisplayPlot()
 {
-  for(int i = 0; i < d_nplots; i++)
+  for(unsigned int i = 0; i < d_nplots; ++i)
     delete [] d_ydata[i];
   delete[] d_max_vec_data;
   delete[] d_min_vec_data;
@@ -340,7 +340,7 @@ VectorDisplayPlot::plotNewData(
         d_min_vec_data = new double[d_numPoints];
         d_max_vec_data = new double[d_numPoints];
 
-        for(int i = 0; i < d_nplots; i++) {
+        for(unsigned int i = 0; i < d_nplots; ++i) {
           delete[] d_ydata[i];
           d_ydata[i] = new double[d_numPoints];
 
@@ -363,7 +363,7 @@ VectorDisplayPlot::plotNewData(
       }
 
       double bottom=1e20, top=-1e20;
-      for(int n = 0; n < d_nplots; n++) {
+      for(unsigned int n = 0; n < d_nplots; ++n) {
 
         memcpy(d_ydata[n], dataPoints[n], numDataPoints*sizeof(double));
 

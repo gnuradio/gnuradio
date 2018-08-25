@@ -136,25 +136,25 @@ TimeRasterDisplayForm::numCols()
 }
 
 int
-TimeRasterDisplayForm::getColorMap(int which)
+TimeRasterDisplayForm::getColorMap(unsigned int which)
 {
   return getPlot()->getIntensityColorMapType(which);
 }
 
 int
-TimeRasterDisplayForm::getAlpha(int which)
+TimeRasterDisplayForm::getAlpha(unsigned int which)
 {
   return getPlot()->getAlpha(which);
 }
 
 double
-TimeRasterDisplayForm::getMinIntensity(int which)
+TimeRasterDisplayForm::getMinIntensity(unsigned int which)
 {
   return getPlot()->getMinIntensity(which);
 }
 
 double
-TimeRasterDisplayForm::getMaxIntensity(int which)
+TimeRasterDisplayForm::getMaxIntensity(unsigned int which)
 {
   return getPlot()->getMaxIntensity(which);
 }
@@ -237,7 +237,7 @@ TimeRasterDisplayForm::setSampleRate(const QString &rate)
 }
 
 void
-TimeRasterDisplayForm::setColorMap(int which,
+TimeRasterDisplayForm::setColorMap(unsigned int which,
 				   const int newType,
 				   const QColor lowColor,
 				   const QColor highColor)
@@ -248,7 +248,7 @@ TimeRasterDisplayForm::setColorMap(int which,
 }
 
 void
-TimeRasterDisplayForm::setAlpha(int which, int alpha)
+TimeRasterDisplayForm::setAlpha(unsigned int which, int alpha)
 {
   getPlot()->setAlpha(which, alpha);
   getPlot()->replot();

@@ -74,7 +74,7 @@ namespace gr {
        */
       static sptr make(int size, double samp_rate,
 		       const std::string &name,
-		       int nconnections=1,
+		       unsigned int nconnections=1,
 		       QWidget *parent=NULL);
 
       virtual void exec_() = 0;
@@ -91,14 +91,14 @@ namespace gr {
                                const std::string &unit="") = 0;
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
-      virtual void set_line_label(int which, const std::string &line) = 0;
-      virtual void set_line_color(int which, const std::string &color) = 0;
-      virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, int style) = 0;
-      virtual void set_line_marker(int which, int marker) = 0;
+      virtual void set_line_label(unsigned int which, const std::string &line) = 0;
+      virtual void set_line_color(unsigned int which, const std::string &color) = 0;
+      virtual void set_line_width(unsigned int which, int width) = 0;
+      virtual void set_line_style(unsigned int which, int style) = 0;
+      virtual void set_line_marker(unsigned int which, int marker) = 0;
       virtual void set_nsamps(const int newsize) = 0;
       virtual void set_samp_rate(const double samp_rate) = 0;
-      virtual void set_line_alpha(int which, double alpha) = 0;
+      virtual void set_line_alpha(unsigned int which, double alpha) = 0;
 
       /*!
        * Set up a trigger for the sink to know when to start
@@ -143,12 +143,12 @@ namespace gr {
                                     const std::string &tag_key="") = 0;
 
       virtual std::string title() = 0;
-      virtual std::string line_label(int which) = 0;
-      virtual std::string line_color(int which) = 0;
-      virtual int line_width(int which) = 0;
-      virtual int line_style(int which) = 0;
-      virtual int line_marker(int which) = 0;
-      virtual double line_alpha(int which) = 0;
+      virtual std::string line_label(unsigned int which) = 0;
+      virtual std::string line_color(unsigned int which) = 0;
+      virtual int line_width(unsigned int which) = 0;
+      virtual int line_style(unsigned int which) = 0;
+      virtual int line_marker(unsigned int which) = 0;
+      virtual double line_alpha(unsigned int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
@@ -159,7 +159,8 @@ namespace gr {
       virtual void enable_semilogx(bool en=true) = 0;
       virtual void enable_semilogy(bool en=true) = 0;
       virtual void enable_control_panel(bool en=true) = 0;
-      virtual void enable_tags(int which, bool en) = 0;
+      virtual void enable_tags(unsigned int which, bool en) = 0;
+      virtual void enable_tags(bool en) = 0;
       virtual void enable_axis_labels(bool en=true) = 0;
       virtual void disable_legend() = 0;
 

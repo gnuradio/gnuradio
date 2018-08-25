@@ -96,27 +96,27 @@ namespace gr {
       virtual void set_update_time(double t) = 0;
       virtual void set_average(const float avg) = 0;
       virtual void set_graph_type(const graph_t type) = 0;
-      virtual void set_color(int which,
+      virtual void set_color(unsigned int which,
                              const std::string &min,
                              const std::string &max) = 0;
-      virtual void set_color(int which, int min, int max) = 0;
-      virtual void set_label(int which, const std::string &label) = 0;
-      virtual void set_min(int which, float min) = 0;
-      virtual void set_max(int which, float max) = 0;
+      virtual void set_color(unsigned int which, int min, int max) = 0;
+      virtual void set_label(unsigned int which, const std::string &label) = 0;
+      virtual void set_min(unsigned int which, float min) = 0;
+      virtual void set_max(unsigned int which, float max) = 0;
       virtual void set_title(const std::string &title) = 0;
-      virtual void set_unit(int which, const std::string &unit) = 0;
-      virtual void set_factor(int which, float factor) = 0;
+      virtual void set_unit(unsigned int which, const std::string &unit) = 0;
+      virtual void set_factor(unsigned int which, float factor) = 0;
 
       virtual float average() const = 0;
       virtual graph_t graph_type() const = 0;
-      virtual std::string color_min(int which) const = 0;
-      virtual std::string color_max(int which) const = 0;
-      virtual std::string label(int which) const = 0;
-      virtual float min(int which) const = 0;
-      virtual float max(int which) const = 0;
+      virtual std::string color_min(unsigned int which) const = 0;
+      virtual std::string color_max(unsigned int which) const = 0;
+      virtual std::string label(unsigned int which) const = 0;
+      virtual float min(unsigned int which) const = 0;
+      virtual float max(unsigned int which) const = 0;
       virtual std::string title() const = 0;
-      virtual std::string unit(int which) const = 0;
-      virtual float factor(int which) const = 0;
+      virtual std::string unit(unsigned int which) const = 0;
+      virtual float factor(unsigned int which) const = 0;
 
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_autoscale(bool en=true) = 0;

@@ -85,7 +85,7 @@ TimeDisplayForm::TimeDisplayForm(int nplots, QWidget* parent)
   connect(d_semilogymenu, SIGNAL(triggered(bool)),
 	  this, SLOT(setSemilogy(bool)));
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_tagsmenu.push_back(new QAction("Show Tag Makers", this));
     d_tagsmenu[i]->setCheckable(true);
     d_tagsmenu[i]->setChecked(true);
@@ -346,7 +346,7 @@ TimeDisplayForm::setSemilogy(bool en)
 }
 
 void
-TimeDisplayForm::setTagMenu(int which, bool en)
+TimeDisplayForm::setTagMenu(unsigned int which, bool en)
 {
   getPlot()->enableTagMarker(which, en);
   d_tagsmenu[which]->setChecked(en);

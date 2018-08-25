@@ -72,7 +72,7 @@ public slots:
   void legendEntryChecked(QwtPlotItem *plotItem, bool on);
   void legendEntryChecked(const QVariant &plotItem, bool on, int index);
 
-  void enableTagMarker(int which, bool en);
+  void enableTagMarker(unsigned int which, bool en);
 
   void setYLabel(const std::string &label,
                  const std::string &unit="");

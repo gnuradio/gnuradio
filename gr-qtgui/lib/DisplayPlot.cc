@@ -125,19 +125,23 @@ DisplayPlot::setXaxis(double min, double max)
 }
 
 void
-DisplayPlot::setLineLabel(int which, QString label)
+DisplayPlot::setLineLabel(unsigned int which, QString label)
 {
-  d_plot_curve[which]->setTitle(label);
+        if(which >= d_plot_curve.size())
+                throw std::runtime_error("DisplayPlot::setLineLabel: index out of bounds");
+        d_plot_curve[which]->setTitle(label);
 }
 
 QString
-DisplayPlot::getLineLabel(int which)
+DisplayPlot::getLineLabel(unsigned int which)
 {
-  return d_plot_curve[which]->title().text();
+        if(which >= d_plot_curve.size())
+                throw std::runtime_error("DisplayPlot::getLineLabel: index out of bounds");
+        return d_plot_curve[which]->title().text();
 }
 
 void
-DisplayPlot::setLineColor(int which, QColor color)
+DisplayPlot::setLineColor(unsigned int which, QColor color)
 {
   if (which < d_nplots) {
     // Set the color of the pen
@@ -162,7 +166,7 @@ DisplayPlot::setLineColor(int which, QColor color)
 }
 
 QColor
-DisplayPlot::getLineColor(int which) const
+DisplayPlot::getLineColor(unsigned int which) const
 {
   // If that plot doesn't exist then return black.
   if (which < d_nplots)
@@ -267,7 +271,7 @@ DisplayPlot::getAxesLabelFontSize() const {
 }
 
 void
-DisplayPlot::setLineWidth(int which, int width)
+DisplayPlot::setLineWidth(unsigned int which, int width)
 {
   if(which < d_nplots) {
     // Set the new line width
@@ -291,7 +295,7 @@ DisplayPlot::setLineWidth(int which, int width)
 }
 
 int
-DisplayPlot::getLineWidth(int which) const {
+DisplayPlot::getLineWidth(unsigned int which) const {
   if (which < d_nplots) {
     return d_plot_curve[which]->pen().width();
   }
@@ -301,7 +305,7 @@ DisplayPlot::getLineWidth(int which) const {
 }
 
 void
-DisplayPlot::setLineStyle(int which, Qt::PenStyle style)
+DisplayPlot::setLineStyle(unsigned int which, Qt::PenStyle style)
 {
   if(which < d_nplots) {
     QPen pen(d_plot_curve[which]->pen());
@@ -311,7 +315,7 @@ DisplayPlot::setLineStyle(int which, Qt::PenStyle style)
 }
 
 const Qt::PenStyle
-DisplayPlot::getLineStyle(int which) const
+DisplayPlot::getLineStyle(unsigned int which) const
 {
   if(which < d_nplots) {
     return d_plot_curve[which]->pen().style();
@@ -322,7 +326,7 @@ DisplayPlot::getLineStyle(int which) const
 }
 
 void
-DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
+DisplayPlot::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
   if(which < d_nplots) {
 #if QWT_VERSION < 0x060000
@@ -344,7 +348,7 @@ DisplayPlot::setLineMarker(int which, QwtSymbol::Style marker)
 }
 
 const QwtSymbol::Style
-DisplayPlot::getLineMarker(int which) const
+DisplayPlot::getLineMarker(unsigned int which) const
 {
   if(which < d_nplots) {
 #if QWT_VERSION < 0x060000
@@ -361,7 +365,7 @@ DisplayPlot::getLineMarker(int which) const
 }
 
 void
-DisplayPlot::setMarkerAlpha(int which, int alpha)
+DisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
 {
   if (which < d_nplots) {
     // Get the pen color
@@ -389,7 +393,7 @@ DisplayPlot::setMarkerAlpha(int which, int alpha)
 }
 
 int
-DisplayPlot::getMarkerAlpha(int which) const
+DisplayPlot::getMarkerAlpha(unsigned int which) const
 {
   if(which < d_nplots) {
     return d_plot_curve[which]->pen().color().alpha();

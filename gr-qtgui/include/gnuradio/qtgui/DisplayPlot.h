@@ -193,18 +193,18 @@ public slots:
   virtual void setAxisLabels(bool en);
   virtual void setYaxis(double min, double max);
   virtual void setXaxis(double min, double max);
-  virtual void setLineLabel(int which, QString label);
-  virtual QString getLineLabel(int which);
-  virtual void setLineColor(int which, QColor color);
-  virtual QColor getLineColor(int which) const;
-  virtual void setLineWidth(int which, int width);
-  virtual int getLineWidth(int which) const;
-  virtual void setLineStyle(int which, Qt::PenStyle style);
-  virtual const Qt::PenStyle getLineStyle(int which) const;
-  virtual void setLineMarker(int which, QwtSymbol::Style marker);
-  virtual const QwtSymbol::Style getLineMarker(int which) const;
-  virtual void setMarkerAlpha(int which, int alpha);
-  virtual int getMarkerAlpha(int which) const;
+  virtual void setLineLabel(unsigned int which, QString label);
+  virtual QString getLineLabel(unsigned int which);
+  virtual void setLineColor(unsigned int which, QColor color);
+  virtual QColor getLineColor(unsigned int which) const;
+  virtual void setLineWidth(unsigned int which, int width);
+  virtual int getLineWidth(unsigned int which) const;
+  virtual void setLineStyle(unsigned int which, Qt::PenStyle style);
+  virtual const Qt::PenStyle getLineStyle(unsigned int which) const;
+  virtual void setLineMarker(unsigned int which, QwtSymbol::Style marker);
+  virtual const QwtSymbol::Style getLineMarker(unsigned int which) const;
+  virtual void setMarkerAlpha(unsigned int which, int alpha);
+  virtual int getMarkerAlpha(unsigned int which) const;
 
   // Need a function for each curve for setting via stylesheet.
   // Can't use preprocessor directives because we're inside a Q_OBJECT.
@@ -283,7 +283,7 @@ protected slots:
   virtual void legendEntryChecked(const QVariant &plotItem, bool on, int index);
 
 protected:
-  int d_nplots;
+  unsigned int d_nplots;
   std::vector<QwtPlotCurve*> d_plot_curve;
 
   QwtPlotPanner* d_panner;

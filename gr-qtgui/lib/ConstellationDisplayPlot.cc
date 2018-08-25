@@ -105,7 +105,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
 
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_real_data.push_back(new double[d_numPoints]);
     d_imag_data.push_back(new double[d_numPoints]);
     memset(d_real_data[i], 0x0, d_numPoints*sizeof(double));
@@ -133,7 +133,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(int nplots, QWidget* parent)
 
 ConstellationDisplayPlot::~ConstellationDisplayPlot()
 {
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     delete [] d_real_data[i];
     delete [] d_imag_data[i];
   }
@@ -167,7 +167,7 @@ ConstellationDisplayPlot::set_pen_size(int size)
 {
   if(size > 0 && size < 30){
     d_pen_size = size;
-    for(int i = 0; i < d_nplots; i++) {
+    for(unsigned int i = 0; i < d_nplots; ++i) {
       d_plot_curve[i]->setPen(QPen(Qt::blue, d_pen_size, Qt::SolidLine,
                                    Qt::RoundCap, Qt::RoundJoin));
     }
@@ -192,7 +192,7 @@ ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
       if(numDataPoints != d_numPoints) {
 	d_numPoints = numDataPoints;
 
-	for(int i = 0; i < d_nplots; i++) {
+	for(unsigned int i = 0; i < d_nplots; ++i) {
 	  delete [] d_real_data[i];
 	  delete [] d_imag_data[i];
 	  d_real_data[i] = new double[d_numPoints];
@@ -206,14 +206,14 @@ ConstellationDisplayPlot::plotNewData(const std::vector<double*> realDataPoints,
 	}
       }
 
-      for(int i = 0; i < d_nplots; i++) {
+      for(unsigned int i = 0; i < d_nplots; ++i) {
 	memcpy(d_real_data[i], realDataPoints[i], numDataPoints*sizeof(double));
 	memcpy(d_imag_data[i], imagDataPoints[i], numDataPoints*sizeof(double));
       }
 
       if(d_autoscale_state) {
 	double bottom=1e20, top=-1e20;
-	for(int n = 0; n < d_nplots; n++) {
+	for(unsigned int n = 0; n < d_nplots; ++n) {
 	  for(int64_t point = 0; point < numDataPoints; point++) {
             double b = std::min(realDataPoints[n][point], imagDataPoints[n][point]);
             double t = std::max(realDataPoints[n][point], imagDataPoints[n][point]);

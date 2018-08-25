@@ -214,37 +214,37 @@ namespace gr {
     }
 
     void
-    ber_sink_b_impl::set_line_label(int which, const std::string &label)
+    ber_sink_b_impl::set_line_label(unsigned int which, const std::string &label)
     {
       d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    ber_sink_b_impl::set_line_color(int which, const std::string &color)
+    ber_sink_b_impl::set_line_color(unsigned int which, const std::string &color)
     {
       d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
-    ber_sink_b_impl::set_line_width(int which, int width)
+    ber_sink_b_impl::set_line_width(unsigned int which, int width)
     {
       d_main_gui->setLineWidth(which, width);
     }
 
     void
-    ber_sink_b_impl::set_line_style(int which, int style)
+    ber_sink_b_impl::set_line_style(unsigned int which, int style)
     {
       d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
     }
 
     void
-    ber_sink_b_impl::set_line_marker(int which, int marker)
+    ber_sink_b_impl::set_line_marker(unsigned int which, int marker)
     {
       d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
     }
 
     void
-    ber_sink_b_impl::set_line_alpha(int which, double alpha)
+    ber_sink_b_impl::set_line_alpha(unsigned int which, double alpha)
     {
       d_main_gui->setMarkerAlpha(which, (int)(255.0*alpha));
     }
@@ -262,37 +262,37 @@ namespace gr {
     }
 
     std::string
-    ber_sink_b_impl::line_label(int which)
+    ber_sink_b_impl::line_label(unsigned int which)
     {
       return d_main_gui->lineLabel(which).toStdString();
     }
 
     std::string
-    ber_sink_b_impl::line_color(int which)
+    ber_sink_b_impl::line_color(unsigned int which)
     {
       return d_main_gui->lineColor(which).toStdString();
     }
 
     int
-    ber_sink_b_impl::line_width(int which)
+    ber_sink_b_impl::line_width(unsigned int which)
     {
       return d_main_gui->lineWidth(which);
     }
 
     int
-    ber_sink_b_impl::line_style(int which)
+    ber_sink_b_impl::line_style(unsigned int which)
     {
       return d_main_gui->lineStyle(which);
     }
 
     int
-    ber_sink_b_impl::line_marker(int which)
+    ber_sink_b_impl::line_marker(unsigned int which)
     {
       return d_main_gui->lineMarker(which);
     }
 
     double
-    ber_sink_b_impl::line_alpha(int which)
+    ber_sink_b_impl::line_alpha(unsigned int which)
     {
       return (double)(d_main_gui->markerAlpha(which))/255.0;
     }
