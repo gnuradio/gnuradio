@@ -86,7 +86,6 @@ install(
     block_detail.i
     block_gateway.i
     buffer.i
-    complex_vec_test.i
     constants.i
     feval.i
     gnuradio.i

@@ -80,7 +80,6 @@ list(APPEND gnuradio_runtime_sources
   block_registry.cc
   buffer.cc
   circular_file.cc
-  complex_vec_test.cc
   feval.cc
   flat_flowgraph.cc
   flowgraph.cc
