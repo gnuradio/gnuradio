@@ -150,7 +150,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(int nplots, QWidget* parent)
   setAxisTitle(QwtPlot::yLeft, "Time (s)");
   setAxisScaleDraw(QwtPlot::yLeft, new QwtTimeScaleDraw());
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_data.push_back(new WaterfallData(d_start_frequency, d_stop_frequency,
 				       d_numPoints, d_nrows));
 
@@ -209,7 +209,7 @@ WaterfallDisplayPlot::~WaterfallDisplayPlot()
 void
 WaterfallDisplayPlot::resetAxis()
 {
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_data[i]->resizeData(d_start_frequency, d_stop_frequency,
                           d_numPoints, d_nrows);
     d_data[i]->reset();
@@ -295,7 +295,7 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       // If not displaying just the positive half of the spectrum,
       // plot the full thing now.
       if(!d_half_freq) {
-        for(int i = 0; i < d_nplots; i++) {
+        for(unsigned int i = 0; i < d_nplots; ++i) {
           d_data[i]->setSpectrumDataBuffer(dataPoints[i]);
           d_data[i]->setNumLinesToUpdate(0);
           d_spectrogram[i]->invalidateCache();
@@ -306,7 +306,7 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       // Otherwise, loop through our input data vector and only plot
       // the second half of each row.
       else {
-        for(int i = 0; i < d_nplots; i++) {
+        for(unsigned int i = 0; i < d_nplots; ++i) {
           d_data[i]->setSpectrumDataBuffer(&(dataPoints[i][d_numPoints]));
           for(int n = 1; n < d_nrows; n++) {
             d_data[i]->addFFTData(&(dataPoints[i][d_numPoints + 2*n*d_numPoints]),
@@ -333,7 +333,7 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         d_numPoints = _npoints_in;
         resetAxis();
 
-        for(int i = 0; i < d_nplots; i++) {
+        for(unsigned int i = 0; i < d_nplots; ++i) {
           d_spectrogram[i]->invalidateCache();
           d_spectrogram[i]->itemChanged();
         }
@@ -350,7 +350,7 @@ WaterfallDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       ((WaterfallZoomer*)d_zoomer)->setSecondsPerLine(timePerFFT);
       ((WaterfallZoomer*)d_zoomer)->setZeroTime(timestamp);
 
-      for(int i = 0; i < d_nplots; i++) {
+      for(unsigned int i = 0; i < d_nplots; ++i) {
         d_data[i]->addFFTData(&(dataPoints[i][_in_index]),
                               _npoints_in, droppedFrames);
         d_data[i]->incrementNumLinesToUpdate();
@@ -380,7 +380,7 @@ void
 WaterfallDisplayPlot::setIntensityRange(const double minIntensity,
 					const double maxIntensity)
 {
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
 #if QWT_VERSION < 0x060000
     d_data[i]->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
 #else
@@ -395,7 +395,7 @@ WaterfallDisplayPlot::setIntensityRange(const double minIntensity,
 }
 
 double
-WaterfallDisplayPlot::getMinIntensity(int which) const
+WaterfallDisplayPlot::getMinIntensity(unsigned int which) const
 {
 #if QWT_VERSION < 0x060000
   QwtDoubleInterval r = d_data[which]->range();
@@ -407,7 +407,7 @@ WaterfallDisplayPlot::getMinIntensity(int which) const
 }
 
 double
-WaterfallDisplayPlot::getMaxIntensity(int which) const
+WaterfallDisplayPlot::getMaxIntensity(unsigned int which) const
 {
 #if QWT_VERSION < 0x060000
   QwtDoubleInterval r = d_data[which]->range();
@@ -460,20 +460,20 @@ WaterfallDisplayPlot::replot()
 void
 WaterfallDisplayPlot::clearData()
 {
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_data[i]->reset();
   }
 }
 
 
 int
-WaterfallDisplayPlot::getIntensityColorMapType(int which) const
+WaterfallDisplayPlot::getIntensityColorMapType(unsigned int which) const
 {
   return d_intensity_color_map_type[which];
 }
 
 void
-WaterfallDisplayPlot::setIntensityColorMapType(const int which,
+WaterfallDisplayPlot::setIntensityColorMapType(const unsigned int which,
 					       const int newType,
 					       const QColor lowColor,
 					       const QColor highColor)
@@ -599,13 +599,13 @@ WaterfallDisplayPlot::getUserDefinedHighIntensityColor() const
 }
 
 int
-WaterfallDisplayPlot::getAlpha(int which)
+WaterfallDisplayPlot::getAlpha(unsigned int which)
 {
   return d_spectrogram[which]->alpha();
 }
 
 void
-WaterfallDisplayPlot::setAlpha(int which, int alpha)
+WaterfallDisplayPlot::setAlpha(unsigned int which, int alpha)
 {
   d_spectrogram[which]->setAlpha(alpha);
 }
@@ -625,7 +625,7 @@ WaterfallDisplayPlot::_updateIntensityRangeDisplay()
   rightAxis->setTitle(colorBarTitle);
   rightAxis->setColorBarEnabled(true);
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
 #if QWT_VERSION < 0x060000
     rightAxis->setColorMap(d_spectrogram[i]->data()->range(),
                            d_spectrogram[i]->colorMap());

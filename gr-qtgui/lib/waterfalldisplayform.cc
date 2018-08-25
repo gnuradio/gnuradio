@@ -174,25 +174,25 @@ WaterfallDisplayForm::getFFTWindowType() const
 }
 
 int
-WaterfallDisplayForm::getColorMap(int which)
+WaterfallDisplayForm::getColorMap(unsigned int which)
 {
   return getPlot()->getIntensityColorMapType(which);
 }
 
 int
-WaterfallDisplayForm::getAlpha(int which)
+WaterfallDisplayForm::getAlpha(unsigned int which)
 {
   return getPlot()->getAlpha(which);
 }
 
 double
-WaterfallDisplayForm::getMinIntensity(int which)
+WaterfallDisplayForm::getMinIntensity(unsigned int which)
 {
   return getPlot()->getMinIntensity(which);
 }
 
 double
-WaterfallDisplayForm::getMaxIntensity(int which)
+WaterfallDisplayForm::getMaxIntensity(unsigned int which)
 {
   return getPlot()->getMaxIntensity(which);
 }
@@ -246,7 +246,7 @@ WaterfallDisplayForm::setFrequencyRange(const double centerfreq,
 }
 
 void
-WaterfallDisplayForm::setColorMap(int which,
+WaterfallDisplayForm::setColorMap(unsigned int which,
 				  const int newType,
 				  const QColor lowColor,
 				  const QColor highColor)
@@ -257,7 +257,7 @@ WaterfallDisplayForm::setColorMap(int which,
 }
 
 void
-WaterfallDisplayForm::setAlpha(int which, int alpha)
+WaterfallDisplayForm::setAlpha(unsigned int which, int alpha)
 {
   getPlot()->setAlpha(which, alpha);
   getPlot()->replot();

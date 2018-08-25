@@ -68,7 +68,7 @@ DisplayForm::DisplayForm(int nplots, QWidget* parent)
   d_menu->addAction(d_grid_act);
   d_menu->addAction(d_axislabelsmenu);
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_line_title_act.push_back(new LineTitleAction(i, this));
     d_line_color_menu.push_back(new LineColorMenu(i, this));
     d_line_width_menu.push_back(new LineWidthMenu(i, this));
@@ -162,7 +162,7 @@ DisplayForm::mousePressEvent( QMouseEvent * e)
       d_stop_act->setText(tr("Start"));
 
     // Update the line titles if changed externally
-    for(int i = 0; i < d_nplots; i++) {
+    for(unsigned int i = 0; i < d_nplots; ++i) {
       d_lines_menu[i]->setTitle(d_display_plot->getLineLabel(i));
     }
     d_menu->exec(e->globalPos());
@@ -219,13 +219,13 @@ DisplayForm::setTitle(const QString &title)
 }
 
 void
-DisplayForm::setLineLabel(int which, const QString &label)
+DisplayForm::setLineLabel(unsigned int which, const QString &label)
 {
   d_display_plot->setLineLabel(which, label);
 }
 
 void
-DisplayForm::setLineColor(int which, const QString &color)
+DisplayForm::setLineColor(unsigned int which, const QString &color)
 {
   QColor c = QColor(color);
   d_display_plot->setLineColor(which, c);
@@ -233,28 +233,28 @@ DisplayForm::setLineColor(int which, const QString &color)
 }
 
 void
-DisplayForm::setLineWidth(int which, int width)
+DisplayForm::setLineWidth(unsigned int which, int width)
 {
   d_display_plot->setLineWidth(which, width);
   d_display_plot->replot();
 }
 
 void
-DisplayForm::setLineStyle(int which, Qt::PenStyle style)
+DisplayForm::setLineStyle(unsigned int which, Qt::PenStyle style)
 {
   d_display_plot->setLineStyle(which, style);
   d_display_plot->replot();
 }
 
 void
-DisplayForm::setLineMarker(int which, QwtSymbol::Style marker)
+DisplayForm::setLineMarker(unsigned int which, QwtSymbol::Style marker)
 {
   d_display_plot->setLineMarker(which, marker);
   d_display_plot->replot();
 }
 
 void
-DisplayForm::setMarkerAlpha(int which, int alpha)
+DisplayForm::setMarkerAlpha(unsigned int which, int alpha)
 {
   d_display_plot->setMarkerAlpha(which, alpha);
   d_display_plot->replot();
@@ -267,37 +267,37 @@ DisplayForm::title()
 }
 
 QString
-DisplayForm::lineLabel(int which)
+DisplayForm::lineLabel(unsigned int which)
 {
   return d_display_plot->getLineLabel(which);
 }
 
 QString
-DisplayForm::lineColor(int which)
+DisplayForm::lineColor(unsigned int which)
 {
   return d_display_plot->getLineColor(which).name();
 }
 
 int
-DisplayForm::lineWidth(int which)
+DisplayForm::lineWidth(unsigned int which)
 {
   return d_display_plot->getLineWidth(which);
 }
 
 Qt::PenStyle
-DisplayForm::lineStyle(int which)
+DisplayForm::lineStyle(unsigned int which)
 {
   return d_display_plot->getLineStyle(which);
 }
 
 QwtSymbol::Style
-DisplayForm::lineMarker(int which)
+DisplayForm::lineMarker(unsigned int which)
 {
   return d_display_plot->getLineMarker(which);
 }
 
 int
-DisplayForm::markerAlpha(int which)
+DisplayForm::markerAlpha(unsigned int which)
 {
   return d_display_plot->getMarkerAlpha(which);
 }

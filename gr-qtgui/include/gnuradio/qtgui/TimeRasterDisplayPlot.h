@@ -60,39 +60,39 @@ public:
 
   void setNumRows(double rows);
   void setNumCols(double cols);
-  void setAlpha(int which, int alpha);
+  void setAlpha(unsigned int which, int alpha);
   void setSampleRate(double samprate);
 
   double numRows() const;
   double numCols() const;
 
-  int getAlpha(int which);
+  int getAlpha(unsigned int which);
 
   void setPlotDimensions(const double rows, const double cols,
 			 const double units, const std::string &strunits);
 
   void plotNewData(const std::vector<double*> dataPoints,
-		   const int64_t numDataPoints);
+		   const uint64_t numDataPoints);
 
   void plotNewData(const double* dataPoints,
-		   const int64_t numDataPoints);
+		   const uint64_t numDataPoints);
 
   void setIntensityRange(const double minIntensity,
 			 const double maxIntensity);
 
   void replot(void);
 
-  int getIntensityColorMapType(int) const;
+  int getIntensityColorMapType(unsigned int) const;
   int getIntensityColorMapType1() const;
-  void setIntensityColorMapType(const int, const int, const QColor, const QColor);
+  void setIntensityColorMapType(const unsigned int, const int, const QColor, const QColor);
   void setIntensityColorMapType1(int);
   int getColorMapTitleFontSize() const;
   void setColorMapTitleFontSize(int tfs);
   const QColor getUserDefinedLowIntensityColor() const;
   const QColor getUserDefinedHighIntensityColor() const;
 
-  double getMinIntensity(int which) const;
-  double getMaxIntensity(int which) const;
+  double getMinIntensity(unsigned int which) const;
+  double getMaxIntensity(unsigned int which) const;
 
 signals:
   void updatedLowerIntensityLevel(const double);

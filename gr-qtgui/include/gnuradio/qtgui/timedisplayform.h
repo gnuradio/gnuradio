@@ -68,7 +68,7 @@ public slots:
   void setSemilogx(bool en);
   void setSemilogy(bool en);
   void tagMenuSlot(bool en);
-  void setTagMenu(int which, bool en);
+  void setTagMenu(unsigned int which, bool en);
 
   void updateTrigger(gr::qtgui::trigger_mode mode);
   void setTriggerMode(gr::qtgui::trigger_mode mode);

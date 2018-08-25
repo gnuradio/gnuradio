@@ -37,7 +37,7 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
   d_graph_type = type;
   d_title = new QLabel(QString(""));
   d_layout = new QGridLayout(this);
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_min.push_back(+1e32);
     d_max.push_back(-1e32);
     d_label.push_back(new QLabel(QString("Data %1").arg(i)));
@@ -98,7 +98,7 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
   d_menu->addAction(d_stop_act);
 
   // Menu items for each number line
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_label_act.push_back(new LineTitleAction(i, this));
     connect(d_label_act[i], SIGNAL(whichTrigger(int, const QString&)),
 	    this, SLOT(setLabel(int, const QString&)));
@@ -169,7 +169,7 @@ NumberDisplayForm::mousePressEvent(QMouseEvent * e)
       d_stop_act->setText(tr("Start"));
 
     // Update the line titles if changed externally
-    for(int i = 0; i < d_nplots; i++) {
+    for(unsigned int i = 0; i < d_nplots; ++i) {
       d_label_menu[i]->setTitle(label(i).c_str());
     }
     d_menu->exec(e->globalPos());
@@ -240,7 +240,7 @@ NumberDisplayForm::newData(const QEvent* updateEvent)
     NumberUpdateEvent *tevent = (NumberUpdateEvent*)updateEvent;
     const std::vector<float> samples = tevent->getSamples();
 
-    for(int i = 0; i < d_nplots; i++) {
+    for(unsigned int i = 0; i < d_nplots; ++i) {
       float f = d_factor[i]*samples[i];
       d_text_box[i]->setText(QString("%1 %2").arg(f, 4, ' ').\
                              arg(QString(d_unit[i].c_str())));
@@ -283,7 +283,7 @@ NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
   }
 
   d_graph_type = type;
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     switch(d_graph_type) {
     case(gr::qtgui::NUM_GRAPH_HORIZ):
 #if QWT_VERSION < 0x060100
@@ -319,7 +319,7 @@ NumberDisplayForm::setGraphType(const gr::qtgui::graph_t type)
 }
 
 void
-NumberDisplayForm::setColor(int which, const QColor &min, const QColor &max)
+NumberDisplayForm::setColor(unsigned int which, const QColor &min, const QColor &max)
 {
   QwtLinearColorMap *map = new QwtLinearColorMap();
   map->setColorInterval(min, max);
@@ -332,25 +332,25 @@ NumberDisplayForm::setColor(int which, const QColor &min, const QColor &max)
 }
 
 void
-NumberDisplayForm::setColorMin(int which, QString min)
+NumberDisplayForm::setColorMin(unsigned int which, QString min)
 {
   setColor(which, QColor(min), colorMax(which));
 }
 
 void
-NumberDisplayForm::setColorMax(int which, QString max)
+NumberDisplayForm::setColorMax(unsigned int which, QString max)
 {
   setColor(which, colorMin(which), QColor(max));
 }
 
 void
-NumberDisplayForm::setLabel(int which, const std::string &label)
+NumberDisplayForm::setLabel(unsigned int which, const std::string &label)
 {
   d_label[which]->setText(label.c_str());
 }
 
 void
-NumberDisplayForm::setLabel(int which, QString label)
+NumberDisplayForm::setLabel(unsigned int which, QString label)
 {
   d_label[which]->setText(label);
 }
@@ -374,7 +374,7 @@ NumberDisplayForm::setUpdateTime(QString time)
 }
 
 void
-NumberDisplayForm::setScale(int which, int min, int max)
+NumberDisplayForm::setScale(unsigned int which, int min, int max)
 {
   d_min[which] = min;
   d_max[which] = max;
@@ -385,13 +385,13 @@ NumberDisplayForm::setScale(int which, int min, int max)
 }
 
 void
-NumberDisplayForm::setScaleMin(int which, int min)
+NumberDisplayForm::setScaleMin(unsigned int which, int min)
 {
   setScale(which, min, d_max[which]);
 }
 
 void
-NumberDisplayForm::setScaleMax(int which, int max)
+NumberDisplayForm::setScaleMax(unsigned int which, int max)
 {
   setScale(which, d_min[which], max);
 }
@@ -403,7 +403,7 @@ NumberDisplayForm::graphType() const
 }
 
 QColor
-NumberDisplayForm::colorMin(int which) const
+NumberDisplayForm::colorMin(unsigned int which) const
 {
 #if QWT_VERSION < 0x060000
   return d_indicator[which]->fillColor();
@@ -414,7 +414,7 @@ NumberDisplayForm::colorMin(int which) const
 }
 
 QColor
-NumberDisplayForm::colorMax(int which) const
+NumberDisplayForm::colorMax(unsigned int which) const
 {
 #if QWT_VERSION < 0x060000
   return d_indicator[which]->fillColor();
@@ -425,7 +425,7 @@ NumberDisplayForm::colorMax(int which) const
 }
 
 std::string
-NumberDisplayForm::label(int which) const
+NumberDisplayForm::label(unsigned int which) const
 {
   return d_label[which]->text().toStdString();
 }
@@ -443,13 +443,13 @@ NumberDisplayForm::updateTime() const
 }
 
 int
-NumberDisplayForm::scaleMin(int which)
+NumberDisplayForm::scaleMin(unsigned int which)
 {
   return d_min[which];
 }
 
 int
-NumberDisplayForm::scaleMax(int which)
+NumberDisplayForm::scaleMax(unsigned int which)
 {
   return d_max[which];
 }
@@ -461,7 +461,7 @@ NumberDisplayForm::autoScale(bool on)
   d_autoscale_act->setChecked(on);
 
   // Reset the autoscale limits
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_min[i] = +1e32;
     d_max[i] = -1e32;
   }
@@ -484,7 +484,7 @@ NumberDisplayForm::setTitle(const std::string &title)
 }
 
 std::string
-NumberDisplayForm::unit(int which) const
+NumberDisplayForm::unit(unsigned int which) const
 {
   if(static_cast<size_t>(which) >= d_unit.size())
     throw std::runtime_error("NumberDisplayForm::units: invalid 'which'.\n");
@@ -493,7 +493,7 @@ NumberDisplayForm::unit(int which) const
 }
 
 void
-NumberDisplayForm::setUnit(int which, const std::string &unit)
+NumberDisplayForm::setUnit(unsigned int which, const std::string &unit)
 {
   if(static_cast<size_t>(which) >= d_unit.size())
     throw std::runtime_error("NumberDisplayForm::setUnits: invalid 'which'.\n");
@@ -502,7 +502,7 @@ NumberDisplayForm::setUnit(int which, const std::string &unit)
 }
 
 float
-NumberDisplayForm::factor(int which) const
+NumberDisplayForm::factor(unsigned int which) const
 {
   if(static_cast<size_t>(which) >= d_factor.size())
     throw std::runtime_error("NumberDisplayForm::factor: invalid 'which'.\n");
@@ -511,7 +511,7 @@ NumberDisplayForm::factor(int which) const
 }
 
 void
-NumberDisplayForm::setFactor(int which, float factor)
+NumberDisplayForm::setFactor(unsigned int which, float factor)
 {
   if(static_cast<size_t>(which) >= d_factor.size())
     throw std::runtime_error("NumberDisplayForm::setFactor: invalid 'which'.\n");

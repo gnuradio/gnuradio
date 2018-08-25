@@ -119,7 +119,7 @@ private:
 /***********************************************************************
  * Main Time domain plotter widget
  **********************************************************************/
-HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
+HistogramDisplayPlot::HistogramDisplayPlot(unsigned int nplots, QWidget* parent)
   : DisplayPlot(nplots, parent)
 {
   d_bins = 100;
@@ -165,7 +165,7 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
 
   // Setup dataPoints and plot vectors
   // Automatically deleted when parent is deleted
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_ydata.push_back(new double[d_bins]);
     memset(d_ydata[i], 0, d_bins*sizeof(double));
 
@@ -196,7 +196,7 @@ HistogramDisplayPlot::HistogramDisplayPlot(int nplots, QWidget* parent)
 
 HistogramDisplayPlot::~HistogramDisplayPlot()
 {
-  for(int i = 0; i < d_nplots; i++)
+  for(unsigned int i = 0; i < d_nplots; ++i)
     delete[] d_ydata[i];
   delete[] d_xdata;
 
@@ -211,7 +211,7 @@ HistogramDisplayPlot::replot()
 
 void
 HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
-				   const int64_t numDataPoints,
+				   const uint64_t numDataPoints,
 				   const double timeInterval)
 {
   if(!d_stop) {
@@ -220,7 +220,7 @@ HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       // keep track of the min/max values for when autoscaleX is called.
       d_xmin = 1e20;
       d_xmax = -1e20;
-      for(int n = 0; n < d_nplots; n++) {
+      for(unsigned int n = 0; n < d_nplots; ++n) {
         d_xmin = std::min(d_xmin, *std::min_element(dataPoints[n], dataPoints[n]+numDataPoints));
         d_xmax = std::max(d_xmax, *std::max_element(dataPoints[n], dataPoints[n]+numDataPoints));
       }
@@ -237,17 +237,17 @@ HistogramDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         clear();
       }
 
-      int index;
-      for(int n = 0; n < d_nplots; n++) {
-        for(int64_t point = 0; point < numDataPoints; point++) {
+      unsigned int index;
+      for(unsigned int n = 0; n < d_nplots; ++n) {
+        for(uint64_t point = 0; point < numDataPoints; point++) {
           index = boost::math::iround(1e-20 + (dataPoints[n][point] - d_left)/d_width);
           if((index >= 0) && (index < d_bins))
-            d_ydata[n][static_cast<int>(index)] += 1;
+            d_ydata[n][static_cast<unsigned int>(index)] += 1;
         }
       }
 
       double height = *std::max_element(d_ydata[0], d_ydata[0]+d_bins);
-      for(int n = 1; n < d_nplots; n++) {
+      for(unsigned int n = 1; n < d_nplots; ++n) {
         height = std::max(height, *std::max_element(d_ydata[n], d_ydata[n]+d_bins));
       }
 
@@ -275,7 +275,7 @@ HistogramDisplayPlot::_resetXAxisPoints(double left, double right)
   d_left  = left *(1 - copysign(0.1, left));
   d_right = right*(1 + copysign(0.1, right));
   d_width = (d_right - d_left)/(d_bins);
-  for(long loc = 0; loc < d_bins; loc++){
+  for(unsigned int loc = 0; loc < d_bins; loc++){
     d_xdata[loc] = d_left + loc*d_width;
   }
 #if QWT_VERSION < 0x060100
@@ -391,7 +391,7 @@ HistogramDisplayPlot::getAccumulate() const
 }
 
 void
-HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
+HistogramDisplayPlot::setMarkerAlpha(unsigned int which, int alpha)
 {
   if(which < d_nplots) {
     // Get the pen color
@@ -423,7 +423,7 @@ HistogramDisplayPlot::setMarkerAlpha(int which, int alpha)
 }
 
 int
-HistogramDisplayPlot::getMarkerAlpha(int which) const
+HistogramDisplayPlot::getMarkerAlpha(unsigned int which) const
 {
   if(which < d_nplots) {
     return d_plot_curve[which]->brush().color().alpha();
@@ -434,7 +434,7 @@ HistogramDisplayPlot::getMarkerAlpha(int which) const
 }
 
 void
-HistogramDisplayPlot::setLineColor(int which, QColor color)
+HistogramDisplayPlot::setLineColor(unsigned int which, QColor color)
 {
   if(which < d_nplots) {
     // Adjust color's transparency for the brush
@@ -467,7 +467,7 @@ HistogramDisplayPlot::setLineColor(int which, QColor color)
 }
 
 void
-HistogramDisplayPlot::setNumBins(int bins)
+HistogramDisplayPlot::setNumBins(unsigned int bins)
 {
   d_bins = bins;
 
@@ -475,7 +475,7 @@ HistogramDisplayPlot::setNumBins(int bins)
   d_xdata = new double[d_bins];
   _resetXAxisPoints(d_left, d_right);
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     delete [] d_ydata[i];
     d_ydata[i] = new double[d_bins];
     memset(d_ydata[i], 0, d_bins*sizeof(double));
@@ -493,7 +493,7 @@ void
 HistogramDisplayPlot::clear()
 {
   if(!d_stop) {
-    for(int n = 0; n < d_nplots; n++) {
+    for(unsigned int n = 0; n < d_nplots; ++n) {
       memset(d_ydata[n], 0, d_bins*sizeof(double));
     }
   }
