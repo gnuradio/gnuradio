@@ -90,7 +90,6 @@ list(APPEND gnuradio_runtime_sources
   io_signature.cc
   local_sighandler.cc
   logger.cc
-  malloc16.c
   message.cc
   misc.cc
   msg_accepter.cc
