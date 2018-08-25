@@ -207,7 +207,7 @@ bool usrp_block_impl::_wait_for_locked_sensor(
     else {
       first_lock_time = boost::system_time(); //reset to 'not a date time'
 
-      if (boost::get_system_time() > (start + boost::posix_time::seconds(static_cast<long>(LOCK_TIMEOUT)))){
+      if (boost::get_system_time() > (start + boost::posix_time::seconds(static_cast<long>(LOCK_TIMEOUT)))) {
         return false;
       }
     }
