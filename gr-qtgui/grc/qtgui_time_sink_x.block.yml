@@ -542,7 +542,7 @@ templates:
 
 
         % if type.endswith('complex'):
-        for i in range(${2 if type.startswith('msg') else 2*nconnections}):
+        for i in range(${2 if type.startswith('msg') else 2*int(nconnections)}):
             if len(labels[i]) == 0:
                 if (i % 2 == 0):
                     self.${id}.set_line_label(i, "Re{{Data {0}}}".format(i/2))
