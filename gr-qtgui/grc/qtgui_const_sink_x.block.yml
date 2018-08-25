@@ -398,10 +398,7 @@ templates:
         from gnuradio import qtgui
         import sip
     callbacks:
-    - set_resize(${width}, ${height})
     - set_update_time(${update_time})
-    - set_title(${which}, ${title})
-    - set_color(${which}, ${color})
     - self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_chan},
         ${tr_tag})
     make: |-
