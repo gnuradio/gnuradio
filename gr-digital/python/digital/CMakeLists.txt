@@ -42,7 +42,6 @@ GR_PYTHON_INSTALL(
     ofdm_sync_pn.py
     ofdm_txrx.py
     packet_utils.py
-    pkt.py
     psk.py
     psk_constellations.py
     qam.py

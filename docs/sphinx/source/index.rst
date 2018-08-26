@@ -1257,8 +1257,6 @@ Helper Classes: Digital
    gnuradio.digital.packet_utils.make_header
    gnuradio.digital.packet_utils.make_packet
    gnuradio.digital.packet_utils.unmake_packet
-   gnuradio.digital.mod_pkts
-   gnuradio.digital.demod_pkts
    gnuradio.digital.psk_2_0x0
    gnuradio.digital.psk_2_0x1
    gnuradio.digital.sd_psk_2_0x0
