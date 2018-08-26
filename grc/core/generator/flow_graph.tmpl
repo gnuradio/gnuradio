@@ -87,18 +87,17 @@ $imp
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'wx_gui'
-    #import gtk
-    #set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
+import gtk
 
 
 class $(class_name)(grc_wxgui.top_block_gui):
 
     def __init__($param_str):
         grc_wxgui.top_block_gui.__init__(self, title="$title")
-    #if $icon
-        _icon_path = "$icon.get_filename()"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
-    #end if
+        icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
+        if icon:
+            _icon_path = icon.get_filename()
+            self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 #elif $generate_options == 'qt_gui'
 from gnuradio import qtgui
 
