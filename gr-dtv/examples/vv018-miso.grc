@@ -73,12 +73,20 @@
       <value>True</value>
     </param>
     <param>
+      <key>sizing_mode</key>
+      <value>fixed</value>
+    </param>
+    <param>
       <key>thread_safe_setters</key>
       <value></value>
     </param>
     <param>
       <key>title</key>
       <value></value>
+    </param>
+    <param>
+      <key>placement</key>
+      <value>(0,0)</value>
     </param>
   </block>
   <block>
@@ -303,6 +311,10 @@
   <block>
     <key>blocks_file_source</key>
     <param>
+      <key>begin_tag</key>
+      <value>pmt.PMT_NIL</value>
+    </param>
+    <param>
       <key>alias</key>
       <value></value>
     </param>
@@ -464,8 +476,8 @@
       <value></value>
     </param>
     <param>
-      <key>cp_len</key>
-      <value>32768/16</value>
+      <key>cp_lengths</key>
+      <value>(32768/16,)</value>
     </param>
     <param>
       <key>comment</key>
@@ -480,12 +492,12 @@
       <value>True</value>
     </param>
     <param>
-      <key>input_size</key>
+      <key>fft_len</key>
       <value>32768</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 528)</value>
+      <value>(56, 540)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -496,7 +508,7 @@
       <value>digital_ofdm_cyclic_prefixer_0</value>
     </param>
     <param>
-      <key>tagname</key>
+      <key>len_tag_key</key>
       <value></value>
     </param>
     <param>
@@ -519,8 +531,8 @@
       <value></value>
     </param>
     <param>
-      <key>cp_len</key>
-      <value>32768/16</value>
+      <key>cp_lengths</key>
+      <value>(32768/16,)</value>
     </param>
     <param>
       <key>comment</key>
@@ -535,12 +547,12 @@
       <value>True</value>
     </param>
     <param>
-      <key>input_size</key>
+      <key>fft_len</key>
       <value>32768</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 408)</value>
+      <value>(56, 404)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -551,7 +563,7 @@
       <value>digital_ofdm_cyclic_prefixer_0_0</value>
     </param>
     <param>
-      <key>tagname</key>
+      <key>len_tag_key</key>
       <value></value>
     </param>
     <param>
