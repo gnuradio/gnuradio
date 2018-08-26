@@ -56,8 +56,6 @@ gnuradio.digital
 .. autofunction:: gnuradio.digital.packet_utils.make_header
 .. autofunction:: gnuradio.digital.packet_utils.make_packet
 .. autofunction:: gnuradio.digital.packet_utils.unmake_packet
-.. autoclass:: gnuradio.digital.mod_pkts
-.. autoclass:: gnuradio.digital.demod_pkts
 .. autofunction:: gnuradio.digital.psk_2_0x0
 .. autofunction:: gnuradio.digital.psk_2_0x1
 .. autofunction:: gnuradio.digital.sd_psk_2_0x0
