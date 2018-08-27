@@ -615,6 +615,10 @@ class Application(Gtk.Application):
                 self.platform.config.default_qss_theme = file_paths[0]
         elif action == Actions.FLOW_GRAPH_CLOSE:
             main.close_page()
+        elif action == Actions.FLOW_GRAPH_OPEN_RECENT:
+            file_path = str(args[0])[1:-1]
+            main.new_page(file_path, show=True)
+            main.tool_bar.refresh_submenus()  
         elif action == Actions.FLOW_GRAPH_SAVE:
             #read-only or undefined file path, do save-as
             if page.get_read_only() or not page.file_path:
