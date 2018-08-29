@@ -42,7 +42,6 @@ set(GR_SWIG_DOC_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/analog
 )
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-set(GR_SWIG_TARGET_DEPS analog_generated_includes)
 set(GR_SWIG_LIBRARIES gnuradio-analog gnuradio-filter)
 
 GR_SWIG_MAKE(analog_swig analog_swig.i)

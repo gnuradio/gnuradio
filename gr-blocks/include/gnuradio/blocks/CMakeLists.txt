@@ -18,61 +18,47 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(blocks abs_XX             ss ii ff)
-GR_EXPAND_X_H(blocks add_XX             ss ii cc)
-GR_EXPAND_X_H(blocks add_const_vXX      bb ss ii ff cc)
-GR_EXPAND_X_H(blocks and_XX             bb ss ii)
-GR_EXPAND_X_H(blocks and_const_XX       bb ss ii)
-GR_EXPAND_X_H(blocks argmax_XX          fs is ss)
-GR_EXPAND_X_H(blocks divide_XX          ss ii ff cc)
-GR_EXPAND_X_H(blocks integrate_XX       ss ii ff cc)
-GR_EXPAND_X_H(blocks max_XX             ss ii ff)
-GR_EXPAND_X_H(blocks min_XX             ss ii ff)
-GR_EXPAND_X_H(blocks moving_average_XX  ss ii ff cc)
-GR_EXPAND_X_H(blocks multiply_XX        ss ii)
-GR_EXPAND_X_H(blocks multiply_const_XX  ss ii)
-GR_EXPAND_X_H(blocks multiply_const_vXX ss ii)
-GR_EXPAND_X_H(blocks multiply_matrix_XX ff cc)
-GR_EXPAND_X_H(blocks mute_XX            ss ii ff cc)
-GR_EXPAND_X_H(blocks not_XX             bb ss ii)
-GR_EXPAND_X_H(blocks or_XX              bb ss ii)
-GR_EXPAND_X_H(blocks peak_detector_XX   fb ib sb)
-GR_EXPAND_X_H(blocks probe_signal_X     b s i f c)
-GR_EXPAND_X_H(blocks probe_signal_vX    b s i f c)
-GR_EXPAND_X_H(blocks sample_and_hold_XX bb ss ii ff)
-GR_EXPAND_X_H(blocks sub_XX             ss ii cc)
-GR_EXPAND_X_H(blocks tsb_vector_sink_X  b s i f c)
-GR_EXPAND_X_H(blocks xor_XX             bb ss ii)
-GR_EXPAND_X_H(blocks packed_to_unpacked_XX bb ss ii)
-GR_EXPAND_X_H(blocks unpacked_to_packed_XX bb ss ii)
-GR_EXPAND_X_H(blocks vector_insert_X    b s i f c)
-GR_EXPAND_X_H(blocks vector_sink_X      b s i f c)
-GR_EXPAND_X_H(blocks vector_source_X    b s i f c)
-
-add_custom_target(blocks_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
+    abs_blk.h
+    add_blk.h
+    add_const_v.h
+    and_blk.h
     api.h
+    argmax.h
     control_loop.h
     count_bits.h
+    divide.h
     file_sink_base.h
+    integrate.h
     lfsr_15_1_0.h
     lfsr_32k.h
     log2_const.h
+    max_blk.h
+    min_blk.h
+    moving_average.h
+    multiply.h
+    multiply_const.h
+    multiply_matrix.h
+    mute.h
+    not_blk.h
     pack_k_bits.h
+    packed_to_unpacked.h
+    peak_detector.h
+    probe_signal.h
+    probe_signal_v.h
     rotator.h
+    sample_and_hold.h
+    sub.h
+    tsb_vector_sink.h
     unpack_k_bits.h
+    unpacked_to_packed.h
+    vector_insert.h
+    vector_sink.h
+    vector_source.h
     wavfile.h
-    add_ff.h
+    xor_blk.h
     add_const_bb.h
     add_const_ss.h
     add_const_ii.h
@@ -123,18 +109,14 @@ install(FILES
     message_debug.h
     message_strobe.h
     message_strobe_random.h
-    multiply_cc.h
-    multiply_ff.h
     multiply_conjugate_cc.h
-    multiply_const_cc.h
-    multiply_const_vcc.h
-    multiply_const_ff.h
-    multiply_const_vff.h
+    multiply_const_v.h
     multiply_by_tag_value_cc.h
     nlog10_ff.h
     nop.h
     null_sink.h
     null_source.h
+    or_blk.h
     pack_k_bits_bb.h
     patterned_interleaver.h
     pdu.h
@@ -163,7 +145,6 @@ install(FILES
     streams_to_stream.h
     streams_to_vector.h
     stretch_ff.h
-    sub_ff.h
     tag_debug.h
     tag_gate.h
     tag_share.h

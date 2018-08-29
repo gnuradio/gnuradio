@@ -23,40 +23,6 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/ConfigChecks.cmake)
 
 ########################################################################
-# Invoke macro to generate various sources
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_CC_H_IMPL(blocks abs_XX             ss ii ff)
-GR_EXPAND_X_CC_H_IMPL(blocks add_XX             ss ii cc)
-GR_EXPAND_X_CC_H_IMPL(blocks add_const_vXX      bb ss ii ff cc)
-GR_EXPAND_X_CC_H_IMPL(blocks and_XX             bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks and_const_XX       bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks argmax_XX          fs is ss)
-GR_EXPAND_X_CC_H_IMPL(blocks divide_XX          ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks integrate_XX       ss ii ff cc)
-GR_EXPAND_X_CC_H_IMPL(blocks max_XX             ss ii ff)
-GR_EXPAND_X_CC_H_IMPL(blocks min_XX             ss ii ff)
-GR_EXPAND_X_CC_H_IMPL(blocks moving_average_XX  ss ii ff cc)
-GR_EXPAND_X_CC_H_IMPL(blocks multiply_XX        ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks multiply_const_XX  ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks multiply_const_vXX ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks mute_XX            ss ii ff cc)
-GR_EXPAND_X_CC_H_IMPL(blocks not_XX             bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks or_XX              bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks peak_detector_XX   fb ib sb)
-GR_EXPAND_X_CC_H_IMPL(blocks probe_signal_X     b s i f c)
-GR_EXPAND_X_CC_H_IMPL(blocks probe_signal_vX    b s i f c)
-GR_EXPAND_X_CC_H_IMPL(blocks sample_and_hold_XX bb ss ii ff)
-GR_EXPAND_X_CC_H_IMPL(blocks sub_XX             ss ii cc)
-GR_EXPAND_X_CC_H_IMPL(blocks tsb_vector_sink_X  b s i f c)
-GR_EXPAND_X_CC_H_IMPL(blocks xor_XX             bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks packed_to_unpacked_XX bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks unpacked_to_packed_XX bb ss ii)
-GR_EXPAND_X_CC_H_IMPL(blocks vector_insert_X    b s i f c)
-GR_EXPAND_X_CC_H_IMPL(blocks vector_sink_X      b s i f c)
-GR_EXPAND_X_CC_H_IMPL(blocks vector_source_X    b s i f c)
-
-########################################################################
 # Setup the include and linker paths
 ########################################################################
 include_directories(
@@ -78,14 +44,40 @@ endif(ENABLE_GR_CTRLPORT)
 # Setup library
 ########################################################################
 list(APPEND gr_blocks_sources
-    ${generated_sources}
+    abs_blk_impl.cc
+    add_blk_impl.cc
+    add_const_v_impl.cc
+    and_blk_impl.cc
+    and_const_impl.cc
+    argmax_impl.cc
+    divide_impl.cc
+    integrate_impl.cc
+    max_blk_impl.cc
+    min_blk_impl.cc
+    moving_average_impl.cc
+    multiply_const_impl.cc
+    multiply_impl.cc
+    mute_impl.cc
+    not_blk_impl.cc
+    packed_to_unpacked_impl.cc
+    peak_detector_impl.cc
+    probe_signal_impl.cc
+    probe_signal_v_impl.cc
+    sample_and_hold_impl.cc
+    sub_impl.cc
+    tsb_vector_sink_impl.cc
+    unpacked_to_packed_impl.cc
+    vector_insert_impl.cc
+    vector_sink_impl.cc
+    vector_source_impl.cc
+    xor_blk_impl.cc
+    or_blk_impl.cc
     control_loop.cc
     count_bits.cc
     file_sink_base.cc
     pack_k_bits.cc
     unpack_k_bits.cc
     wavfile.cc
-    add_ff_impl.cc
     add_const_bb_impl.cc
     add_const_ss_impl.cc
     add_const_ii_impl.cc
@@ -111,8 +103,6 @@ list(APPEND gr_blocks_sources
     conjugate_cc_impl.cc
     copy_impl.cc
     deinterleave_impl.cc
-    divide_cc_impl.cc
-    divide_ff_impl.cc
     delay_impl.cc
     endian_swap_impl.cc
     exponentiate_const_cci_impl.cc
@@ -142,15 +132,9 @@ list(APPEND gr_blocks_sources
     message_debug_impl.cc
     message_strobe_impl.cc
     message_strobe_random_impl.cc
-    multiply_cc_impl.cc
-    multiply_ff_impl.cc
     multiply_conjugate_cc_impl.cc
-    multiply_const_cc_impl.cc
-    multiply_const_vcc_impl.cc
-    multiply_const_ff_impl.cc
-    multiply_const_vff_impl.cc
-    multiply_matrix_cc_impl.cc
-    multiply_matrix_ff_impl.cc
+    multiply_const_v_impl.cc
+    multiply_matrix_impl.cc
     multiply_by_tag_value_cc_impl.cc
     nlog10_ff_impl.cc
     nop_impl.cc
@@ -186,7 +170,6 @@ list(APPEND gr_blocks_sources
     streams_to_stream_impl.cc
     streams_to_vector_impl.cc
     stretch_ff_impl.cc
-    sub_ff_impl.cc
     tag_share_impl.cc
     tagged_file_sink_impl.cc
     tagged_stream_to_pdu_impl.cc
@@ -252,7 +235,6 @@ list(APPEND blocks_libs
 )
 
 add_library(gnuradio-blocks SHARED ${gr_blocks_sources})
-add_dependencies(gnuradio-blocks blocks_generated_includes)
 
 target_link_libraries(gnuradio-blocks ${blocks_libs})
 GR_LIBRARY_FOO(gnuradio-blocks)
@@ -278,7 +260,7 @@ if(ENABLE_STATIC_LIBS)
 
   add_library(gnuradio-blocks_static STATIC ${gr_blocks_sources})
 
-  add_dependencies(gnuradio-blocks_static blocks_generated_includes)
+  add_dependencies(gnuradio-blocks_static)
 
   if(NOT WIN32)
     set_target_properties(gnuradio-blocks_static

@@ -62,7 +62,6 @@ foreach(swigfile ${GR_SWIG_BLOCK_IFILES})
     ${CMAKE_CURRENT_BINARY_DIR}/../include/gnuradio/digital
   )
   set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
-  set(GR_SWIG_TARGET_DEPS digital_generated_includes)
   set(GR_SWIG_LIBRARIES gnuradio-digital
     gnuradio-filter gnuradio-analog gnuradio-blocks)
   GR_SWIG_MAKE(${swigfile} ${swigfile}.i)

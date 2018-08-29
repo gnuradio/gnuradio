@@ -738,8 +738,6 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/dtools \
                          @abs_top_builddir@/gnuradio-runtime/lib/runtime/gr_error_handler.cc \
                          @abs_top_builddir@/gnuradio-runtime/swig \
-                         @abs_top_builddir@/gnuradio-runtime/python/build_utils.py \
-                         @abs_top_builddir@/gnuradio-runtime/python/build_utils_codes.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \

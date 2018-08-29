@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2014,2017 Free Software Foundation, Inc.
+# Copyright (C) 2012-2014,2017-2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -16,15 +16,6 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
-########################################################################
-# Invoke macro to generate various sources and headers
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_CC_H(filter fir_filter_XXX_impl              ccc ccf fcc fff fsf scc)
-GR_EXPAND_X_CC_H(filter freq_xlating_fir_filter_XXX_impl ccc ccf fcc fcf scf scc)
-GR_EXPAND_X_CC_H(filter interp_fir_filter_XXX_impl       ccc ccf fcc fff fsf scc)
-GR_EXPAND_X_CC_H(filter rational_resampler_base_XXX_impl ccc ccf fcc fff fsf scc)
 
 ########################################################################
 # Setup the include and linker paths
@@ -53,17 +44,19 @@ endif(ENABLE_GR_CTRLPORT)
 ########################################################################
 list(APPEND filter_sources
   fir_filter.cc
+  fir_filter_blk_impl.cc
   fir_filter_with_buffer.cc
   fft_filter.cc
   firdes.cc
+  freq_xlating_fir_filter_impl.cc
   iir_filter.cc
+  interp_fir_filter_impl.cc
   mmse_fir_interpolator_cc.cc
   mmse_fir_interpolator_ff.cc
   mmse_interp_differentiator_cc.cc
   mmse_interp_differentiator_ff.cc
   pm_remez.cc
   polyphase_filterbank.cc
-  ${generated_sources}
   dc_blocker_cc_impl.cc
   dc_blocker_ff_impl.cc
   filter_delay_fc_impl.cc
@@ -90,6 +83,7 @@ list(APPEND filter_sources
   pfb_decimator_ccf_impl.cc
   pfb_interpolator_ccf_impl.cc
   pfb_synthesizer_ccf_impl.cc
+  rational_resampler_base_impl.cc
   single_pole_iir_filter_cc_impl.cc
   single_pole_iir_filter_ff_impl.cc
 )
@@ -121,7 +115,7 @@ add_library(gnuradio-filter SHARED ${filter_sources})
 target_link_libraries(gnuradio-filter ${filter_libs})
 GR_LIBRARY_FOO(gnuradio-filter)
 add_dependencies(gnuradio-filter
-  filter_generated_includes filter_generated_swigs
+  filter_generated_swigs
   gnuradio-runtime gnuradio-fft)
 
 if(ENABLE_STATIC_LIBS)
@@ -139,7 +133,6 @@ if(ENABLE_STATIC_LIBS)
   add_library(gnuradio-filter_static STATIC ${filter_sources})
 
   add_dependencies(gnuradio-filter_static
-    filter_generated_includes
     gnuradio-runtime_static gnuradio-fft_static)
 
   if(NOT WIN32)

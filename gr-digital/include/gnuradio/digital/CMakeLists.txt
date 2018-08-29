@@ -18,24 +18,14 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-#######################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(digital chunks_to_symbols_XX     bf bc sf sc if ic)
-GR_EXPAND_X_H(digital burst_shaper_XX     cc ff)
-
-add_custom_target(digital_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
     additive_scrambler_bb.h
     api.h
     binary_slicer_fb.h
+    burst_shaper.h
+    chunks_to_symbols.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h

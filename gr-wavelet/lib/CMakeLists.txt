@@ -80,7 +80,7 @@ endif()
 
 GR_LIBRARY_FOO(gnuradio-wavelet)
 add_dependencies(gnuradio-wavelet
-  wavelet_generated_includes wavelet_generated_swigs
+  wavelet_generated_swigs
   gnuradio-runtime)
 
 if(ENABLE_STATIC_LIBS)
@@ -97,7 +97,7 @@ if(ENABLE_STATIC_LIBS)
 
   add_library(gnuradio-wavelet_static STATIC ${gr_wavelet_sources})
 
-  add_dependencies(gnuradio-wavelet_static wavelet_generated_includes
+  add_dependencies(gnuradio-wavelet_static
     gnuradio-runtime_static)
 
   if(NOT WIN32)
