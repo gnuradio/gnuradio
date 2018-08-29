@@ -45,7 +45,7 @@ class VirtualSink(Block):
         self.inputs_data = _build_ports(self.inputs, 'sink') if self.inputs else []
         self.outputs_data = _build_ports(self.outputs, 'source') if self.outputs else []
         self.parameters_data = _build_params(self.parameters or [],
-                                bool(self.inputs), bool(self.outputs), self.flags)
+                                bool(self.inputs), bool(self.outputs), self.flags, self.key)
 
         super(VirtualSink, self).__init__(parent, **kwargs)
         self.params['id'].hide = 'all'
@@ -78,7 +78,7 @@ class VirtualSource(Block):
         self.inputs_data = _build_ports(self.inputs, 'sink') if self.inputs else []
         self.outputs_data = _build_ports(self.outputs, 'source') if self.outputs else []
         self.parameters_data = _build_params(self.parameters or [],
-                                bool(self.inputs), bool(self.outputs), self.flags)
+                                bool(self.inputs), bool(self.outputs), self.flags, self.key)
 
         super(VirtualSource, self).__init__(parent, **kwargs)
         self.params['id'].hide = 'all'

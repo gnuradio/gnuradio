@@ -22,6 +22,7 @@ from collections import OrderedDict
 import six
 import yaml
 
+from ..params.param import attributed_str
 
 class GRCDumper(yaml.SafeDumper):
     @classmethod
@@ -79,6 +80,7 @@ GRCDumper.add_representer(ListFlowing, GRCDumper.represent_list_flowing)
 GRCDumper.add_representer(tuple, GRCDumper.represent_list)
 GRCDumper.add_representer(MultiLineString, GRCDumper.represent_ml_string)
 GRCDumper.add_representer(yaml.nodes.ScalarNode, lambda r, n: n)
+GRCDumper.add_representer(attributed_str, GRCDumper.represent_str)
 
 
 def dump(data, stream=None, **kwargs):
