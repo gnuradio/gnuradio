@@ -31,6 +31,7 @@ from ..utils.descriptors import Evaluated, EvaluatedEnum, setup_names
 from . import dtypes
 from .template_arg import TemplateArg
 
+attributed_str = type('attributed_str', (str,), {})
 
 @setup_names
 class Param(Element):
@@ -178,6 +179,10 @@ class Param(Element):
         # ID and Enum types (not evaled)
         #########################
         if dtype in ('id', 'stream_id') or self.is_enum():
+            if self.options.attributes:
+                expr = attributed_str(expr)
+                for key, value in self.options.attributes[expr].items():
+                    setattr(expr, key, value)
             return expr
 
         #########################

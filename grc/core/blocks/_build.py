@@ -20,9 +20,11 @@ from __future__ import absolute_import
 import collections
 import itertools
 import re
+import six
 
 from ..Constants import ADVANCED_PARAM_TAB
 from ..utils import to_list
+from ..Messages import send_warning
 
 from .block import Block
 from ._flags import Flags
@@ -51,7 +53,7 @@ def build(id, label='', category='', flags='', documentation='',
     cls.inputs_data = _build_ports(inputs, 'sink') if inputs else []
     cls.outputs_data = _build_ports(outputs, 'source') if outputs else []
     cls.parameters_data = _build_params(parameters or [],
-                                        bool(cls.inputs_data), bool(cls.outputs_data), cls.flags)
+                                        bool(cls.inputs_data), bool(cls.outputs_data), cls.flags, block_id)
     cls.extra_data = kwargs
 
     templates = templates or {}
@@ -86,7 +88,7 @@ def _build_ports(ports_raw, direction):
     return ports
 
 
-def _build_params(params_raw, have_inputs, have_outputs, flags):
+def _build_params(params_raw, have_inputs, have_outputs, flags, block_id):
     params = []
 
     def add_param(**data):
@@ -114,6 +116,9 @@ def _build_params(params_raw, have_inputs, have_outputs, flags):
         if param_id in params:
             raise Exception('Param id "{}" is not unique'.format(param_id))
 
+        if 'option_attributes' in param_data:
+            _validate_option_attributes(param_data, block_id)
+
         base_key = param_data.get('base_key', None)
         param_data_ext = base_params_n.get(base_key, {}).copy()
         param_data_ext.update(param_data)
@@ -133,3 +138,15 @@ def _single_mako_expr(value, block_id):
     if not (value.startswith('${') and value.endswith('}')):
         raise ValueError('{} is not a mako substitution in {}'.format(value, block_id))
     return value[2:-1].strip()
+
+
+def _validate_option_attributes(param_data, block_id):
+    if param_data['dtype'] != 'enum':
+        send_warning('{} - option_attributes are for enums only, ignoring'.format(block_id))
+        del param_data['option_attributes']
+    else:
+        for key in list(param_data['option_attributes'].keys()):
+            if key in dir(str):
+                del param_data['option_attributes'][key]
+                send_warning('{} - option_attribute "{}" overrides str, ignoring'.format(block_id, key))
+
