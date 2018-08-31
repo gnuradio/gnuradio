@@ -26,5 +26,4 @@ GR_PYTHON_INSTALL(
     Generate_LDPC_matrix_functions.py
     Generate_LDPC_matrix.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec/LDPC
-    COMPONENT "fec_python"
 )

@@ -20,20 +20,13 @@
 #
 """ Utility functions for gr_modtool """
 
+from __future__ import unicode_literals
+
 import re
 import sys
 import readline
 
 # None of these must depend on other modtool stuff!
-
-def get_command_from_argv(possible_cmds):
-    """ Read the requested command from argv. This can't be done with optparse,
-    since the option parser isn't defined before the command is known, and
-    optparse throws an error."""
-    for arg in sys.argv:
-        if arg[0] != "-" and arg in possible_cmds:
-            return arg
-    return None
 
 def append_re_line_sequence(filename, linepattern, newline):
     """ Detects the re 'linepattern' in the file. After its last occurrence,
@@ -82,7 +75,7 @@ def strip_arg_types(string):
     string = strip_default_values(string)
     return ", ".join(
                 [part.strip().split(' ')[-1] for part in string.split(',')]
-            ).translate(None, '*&')
+            ).translate(str.maketrans('','','*&'))
 
 def strip_arg_types_grc(string):
     """" Strip the argument types from a list of arguments for GRC make tag.
@@ -107,7 +100,7 @@ def get_modname():
     regexp = r'(project\s*\(\s*|GR_REGISTER_COMPONENT\(")gr-(?P<modname>[a-zA-Z0-9-_]+)(\s*(CXX)?|" ENABLE)'
     try:
         modname = re.search(regexp, cmfile, flags=re.MULTILINE).group('modname').strip()
-        if modname in modname_trans.keys():
+        if modname in list(modname_trans.keys()):
             modname = modname_trans[modname]
         return modname
     except AttributeError:
@@ -141,7 +134,7 @@ def ask_yes_no(question, default):
     """ Asks a binary question. Returns True for yes, False for no.
     default is given as a boolean. """
     question += {True: ' [Y/n] ', False: ' [y/N] '}[default]
-    if raw_input(question).lower() != {True: 'n', False: 'y'}[default]:
+    if input(question).lower() != {True: 'n', False: 'y'}[default]:
         return default
     else:
         return not default

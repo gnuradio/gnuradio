@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_NUMBER_SINK_IMPL_H
 
 #include <gnuradio/qtgui/number_sink.h>
+
 #include <gnuradio/qtgui/numberdisplayform.h>
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/high_res_timer.h>
@@ -84,27 +85,27 @@ namespace gr {
       void set_update_time(double t);
       void set_average(const float avg);
       void set_graph_type(const graph_t type);
-      void set_color(int which,
+      void set_color(unsigned int which,
                      const std::string &min,
                      const std::string &max);
-      void set_color(int which, int min, int max);
-      void set_label(int which, const std::string &label);
-      void set_min(int which, float min);
-      void set_max(int which, float max);
+      void set_color(unsigned int which, int min, int max);
+      void set_label(unsigned int which, const std::string &label);
+      void set_min(unsigned int which, float min);
+      void set_max(unsigned int which, float max);
       void set_title(const std::string &title);
-      void set_unit(int which, const std::string &unit);
-      void set_factor(int which, float factor);
+      void set_unit(unsigned int which, const std::string &unit);
+      void set_factor(unsigned int which, float factor);
 
       float average() const;
       graph_t graph_type() const;
-      std::string color_min(int which) const;
-      std::string color_max(int which) const;
-      std::string label(int which) const;
-      float min(int which) const;
-      float max(int which) const;
+      std::string color_min(unsigned int which) const;
+      std::string color_max(unsigned int which) const;
+      std::string label(unsigned int which) const;
+      float min(unsigned int which) const;
+      float max(unsigned int which) const;
       std::string title() const;
-      std::string unit(int which) const;
-      float factor(int which) const;
+      std::string unit(unsigned int which) const;
+      float factor(unsigned int which) const;
 
       void enable_menu(bool en);
       void enable_autoscale(bool en=true);

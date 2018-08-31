@@ -1,3 +1,5 @@
+from __future__ import division
+
 #
 # Copyright 2011-2013 Free Software Foundation, Inc.
 #
@@ -126,7 +128,7 @@ class tag_source(gr.sync_block):
         #put code here to fill the output items...
 
         #make a new tag on the middle element every time work is called
-        count = self.nitems_written(0) + num_output_items/2
+        count = self.nitems_written(0) + num_output_items // 2
         key = pmt.string_to_symbol("example_key")
         value = pmt.string_to_symbol("example_value")
         self.add_item_tag(0, count, key, value)
@@ -200,8 +202,8 @@ class vector_to_stream(gr.interp_block):
 
     def work(self, input_items, output_items):
         n = 0
-        for i in xrange(len(input_items[0])):
-            for j in xrange(self.block_size):
+        for i in range(len(input_items[0])):
+            for j in range(self.block_size):
                 output_items[0][n] = input_items[0][i][j]
                 n += 1
 

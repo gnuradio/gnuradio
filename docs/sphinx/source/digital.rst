@@ -56,8 +56,6 @@ gnuradio.digital
 .. autofunction:: gnuradio.digital.packet_utils.make_header
 .. autofunction:: gnuradio.digital.packet_utils.make_packet
 .. autofunction:: gnuradio.digital.packet_utils.unmake_packet
-.. autoclass:: gnuradio.digital.mod_pkts
-.. autoclass:: gnuradio.digital.demod_pkts
 .. autofunction:: gnuradio.digital.psk_2_0x0
 .. autofunction:: gnuradio.digital.psk_2_0x1
 .. autofunction:: gnuradio.digital.sd_psk_2_0x0
@@ -79,8 +77,6 @@ gnuradio.digital
 .. autofunction:: gnuradio.digital.sd_psk_4_0x2_1_0
 .. autofunction:: gnuradio.digital.sd_psk_4_0x3_1_0
 .. autofunction:: gnuradio.digital.psk_constellation
-.. autoclass:: gnuradio.digital.psk_mod
-.. autoclass:: gnuradio.digital.psk_demod
 .. autofunction:: gnuradio.digital.qam_16_0x0_0_1_2_3
 .. autofunction:: gnuradio.digital.qam_16_0x1_0_1_2_3
 .. autofunction:: gnuradio.digital.qam_16_0x2_0_1_2_3
@@ -101,14 +97,8 @@ gnuradio.digital
 .. autofunction:: gnuradio.digital.make_differential_constellation
 .. autofunction:: gnuradio.digital.make_non_differential_constellation
 .. autofunction:: gnuradio.digital.qam_constellation
-.. autoclass:: gnuradio.digital.qam_mod
-.. autoclass:: gnuradio.digital.qam_demod
 .. autofunction:: gnuradio.digital.qpsk_constellation
-.. autoclass:: gnuradio.digital.qpsk_mod
-.. autoclass:: gnuradio.digital.qpsk_demod
 .. autofunction:: gnuradio.digital.dqpsk_constellation
-.. autoclass:: gnuradio.digital.dqpsk_mod
-.. autoclass:: gnuradio.digital.dqpsk_demod
 .. autofunction:: gnuradio.digital.soft_dec_table_generator
 .. autofunction:: gnuradio.digital.soft_dec_table
 .. autofunction:: gnuradio.digital.calc_soft_dec_from_table

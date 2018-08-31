@@ -1,0 +1,28 @@
+id: blocks_complex_to_interleaved_char
+label: Complex To IChar
+
+parameters:
+-   id: vector_output
+    label: Vector Output
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    option_attributes:
+        vlen: ['1', '2']
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ vector_output.vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.complex_to_interleaved_char(${vector_output})
+
+file_format: 1

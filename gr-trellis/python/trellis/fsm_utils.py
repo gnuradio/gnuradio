@@ -20,18 +20,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import re
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 import math
 import sys
-import operator
-import numpy
 
-#from gnuradio import trellis
+import numpy
 
 try:
     import scipy.linalg
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    print("Error: Program requires scipy (see: www.scipy.org).")
     sys.exit(1)
 
 
@@ -41,13 +42,13 @@ def dec2base(num, base, l):
     Convert 'num' to a list of 'l' numbers representing 'num'
     to base 'base' (most significant symbol first).
     """
-    s = range(l)
+    s = list(range(l))
     n = num
     for i in range(l):
-        s[l - i - 1] = n % base
-        n = int(n / base)
-    if n != 0:
-        print 'Number ', num, ' requires more than ', l, 'digits.'
+        s[l-i-1]=n%base
+        n=int(n / base)
+    if n!=0:
+        print('Number ', num, ' requires more than ', l, 'digits.')
     return s
 
 
@@ -82,14 +83,14 @@ def make_isi_lookup(mod, channel, normalize):
         for i in range(len(channel)):
             channel[i] = channel[i] / math.sqrt(p)
 
-    lookup = range(len(constellation)**len(channel))
+    lookup=list(range(len(constellation)**len(channel)))
     for o in range(len(constellation)**len(channel)):
         ss = dec2base(o, len(constellation), len(channel))
         ll = 0
         for i in range(len(channel)):
-            ll = ll + constellation[ss[i]] * channel[i]
-            lookup[o] = ll
-    return (1, lookup)
+            ll=ll+constellation[ss[i]]*channel[i]
+        lookup[o]=ll
+    return (1,lookup)
 
 
 def make_cpm_signals(K, P, M, L, q, frac):
@@ -115,43 +116,46 @@ def make_cpm_signals(K, P, M, L, q, frac):
     X = (M**L) * P
     PSI = numpy.empty((X, Q))
     for x in range(X):
-        xv = dec2base(x / P, M, L)
-        xv = numpy.append(xv, x % P)
-        qq1 = numpy.zeros(Q)
-        for m in range(L):
-            qq1 = qq1 + xv[m] * q[m * Q:m * Q + Q]
-            psi = 2 * math.pi * h * xv[-1] + 4 * math.pi * h * qq1 + w
-        PSI[x] = psi
-        PSI = numpy.transpose(PSI)
-        SS = numpy.exp(1j * PSI)  # contains all signals as columns
+       xv=dec2base(x / P,M,L)
+       xv=numpy.append(xv, x%P)
+       qq1=numpy.zeros(Q)
+       for m in range(L):
+          qq1=qq1+xv[m]*q[m*Q:m*Q+Q]
+       psi=2*math.pi*h*xv[-1]+4*math.pi*h*qq1+w
+       #print(psi)
+       PSI[x]=psi
+    PSI = numpy.transpose(PSI)
+    SS=numpy.exp(1j*PSI) # contains all signals as columns
+    #print(SS)
+
 
     # Now we need to orthogonalize the signals
-    F = scipy.linalg.orth(SS)  # find an orthonormal basis for SS
-    #print numpy.dot(numpy.transpose(F.conjugate()),F) # check for orthonormality
-    S = numpy.dot(numpy.transpose(F.conjugate()), SS)
-    #print F
-    #print S
+    F = scipy.linalg.orth(SS) # find an orthonormal basis for SS
+    #print(numpy.dot(numpy.transpose(F.conjugate()),F) # check for orthonormality)
+    S = numpy.dot(numpy.transpose(F.conjugate()),SS)
+    #print(F)
+    #print(S)
 
     # We only want to keep those dimensions that contain most
     # of the energy of the overall constellation (eg, frac=0.9 ==> 90%)
     # evaluate mean energy in each dimension
-    E = numpy.sum(numpy.absolute(S)**2, axis=1) / Q
-    E = E / numpy.sum(E)
-    #print E
+    E=numpy.sum(numpy.absolute(S)**2, axis=1) / Q
+    E=E / numpy.sum(E)
+    #print(E)
     Es = -numpy.sort(-E)
     Esi = numpy.argsort(-E)
-    #print Es
-    #print Esi
-    Ecum = numpy.cumsum(Es)
-    #print Ecum
-    v0 = numpy.searchsorted(Ecum, frac)
-    N = v0 + 1
-    #print v0
-    #print Esi[0:v0+1]
-    Ff = numpy.transpose(numpy.transpose(F)[Esi[0:v0 + 1]])
-    #print Ff
-    Sf = S[Esi[0:v0 + 1]]
-    #print Sf
+    #print(Es)
+    #print(Esi)
+    Ecum=numpy.cumsum(Es)
+    #print(Ecum)
+    v0=numpy.searchsorted(Ecum,frac)
+    N = v0+1
+    #print(v0)
+    #print(Esi[0:v0+1])
+    Ff=numpy.transpose(numpy.transpose(F)[Esi[0:v0+1]])
+    #print(Ff)
+    Sf = S[Esi[0:v0+1]]
+    #print(Sf)
 
     return (f0, SS, S, F, Sf, Ff, N)
 

@@ -25,9 +25,11 @@
 #endif
 
 #include "edit_box_msg_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/qtgui/utils.h>
+
 #include <boost/lexical_cast.hpp>
 
 namespace gr {
@@ -66,10 +68,6 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-#if QT_VERSION >= 0x040500
-        std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
-        QApplication::setGraphicsSystem(QString(style.c_str()));
-#endif
 	d_qApplication = new QApplication(d_argc, &d_argv);
       }
 

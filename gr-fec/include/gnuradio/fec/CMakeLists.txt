@@ -64,8 +64,8 @@ install(FILES
     maxstar.h
     tpc_common.h
     tpc_decoder.h
-    tpc_encoder.h DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
-    COMPONENT "fec_devel"
+    tpc_encoder.h
+    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
 )
 
 if(GSL_FOUND)
@@ -77,6 +77,5 @@ if(GSL_FOUND)
     ldpc_par_mtrx_encoder.h
     ldpc_gen_mtrx_encoder.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
-    COMPONENT "fec_devel"
   )
 endif(GSL_FOUND)

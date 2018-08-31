@@ -1,0 +1,48 @@
+id: blocks_throttle
+label: Throttle
+flags: throttle
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: samples_per_second
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: ignoretag
+    label: Ignore rx_rate tag
+    dtype: bool
+    default: 'True'
+    hide: ${ ('part' if str(ignoretag) == 'True' else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.throttle(${type.size}*${vlen}, ${samples_per_second},${ignoretag})
+    callbacks:
+    - set_sample_rate(${samples_per_second})
+
+file_format: 1

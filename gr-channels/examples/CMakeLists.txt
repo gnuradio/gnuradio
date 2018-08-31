@@ -29,5 +29,4 @@ install(
   demo_qam.grc
   demo_ofdm.grc
   DESTINATION ${GR_PKG_CHANNELS_EXAMPLES_DIR}
-  COMPONENT "channels_python"
 )

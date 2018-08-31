@@ -50,40 +50,6 @@ SET(GR_PKG_CHANNELS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/channels)
 if(ENABLE_GR_CHANNELS)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_CHANNELS_DESCRIPTION "GNU Radio Channel Model Blocks")
-
-CPACK_COMPONENT("channels_runtime"
-    GROUP        "Channel Models"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("channels_devel"
-    GROUP        "Channel Models"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("channels_python"
-    GROUP        "Channel Models"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;channels_runtime"
-)
-
-CPACK_COMPONENT("channels_swig"
-    GROUP        "Channel Models"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;channels_python;channels_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/channels)
@@ -107,7 +73,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-channels.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "channels_devel"
 )
 
 endif(ENABLE_GR_CHANNELS)

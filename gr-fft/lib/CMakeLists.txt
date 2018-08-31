@@ -83,7 +83,7 @@ endif()
 
 add_library(gnuradio-fft SHARED ${fft_sources})
 target_link_libraries(gnuradio-fft ${fft_libs})
-GR_LIBRARY_FOO(gnuradio-fft RUNTIME_COMPONENT "fft_runtime" DEVEL_COMPONENT "fft_devel")
+GR_LIBRARY_FOO(gnuradio-fft)
 
 if(ENABLE_STATIC_LIBS)
   if(ENABLE_GR_CTRLPORT)
@@ -105,6 +105,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-fft_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "fft_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

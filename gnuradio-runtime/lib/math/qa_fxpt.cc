@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2013 Free Software Foundation, Inc.
+ * Copyright 2004,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,9 +34,9 @@
 static const float SIN_COS_TOLERANCE = 1e-5;
 
 BOOST_AUTO_TEST_CASE(t0) {
-  BOOST_CHECK(std::abs(M_PI/2 - gr::fxpt::fixed_to_float(0x40000000)) <= SIN_COS_TOLERANCE);
+  BOOST_CHECK(std::abs(GR_M_PI/2 - gr::fxpt::fixed_to_float(0x40000000)) <= SIN_COS_TOLERANCE);
   BOOST_CHECK(std::abs(0.0 -    gr::fxpt::fixed_to_float(0x00000000)) <= SIN_COS_TOLERANCE);
-  BOOST_CHECK(std::abs(-M_PI -  gr::fxpt::fixed_to_float(0x80000000)) <= SIN_COS_TOLERANCE);
+  BOOST_CHECK(std::abs(-GR_M_PI -  gr::fxpt::fixed_to_float(0x80000000)) <= SIN_COS_TOLERANCE);
 
   if(0) {
     /*
@@ -48,9 +48,9 @@ BOOST_AUTO_TEST_CASE(t0) {
      * sometimes the answer is off by a few bits at the bottom.
      * Hence, the disabled check.
      */
-    BOOST_CHECK_EQUAL((int32_t)0x40000000, gr::fxpt::float_to_fixed(M_PI/2));
+    BOOST_CHECK_EQUAL((int32_t)0x40000000, gr::fxpt::float_to_fixed(GR_M_PI/2));
     BOOST_CHECK_EQUAL((int32_t)0,          gr::fxpt::float_to_fixed(0));
-    BOOST_CHECK_EQUAL((int32_t)0x80000000, gr::fxpt::float_to_fixed(-M_PI));
+    BOOST_CHECK_EQUAL((int32_t)0x80000000, gr::fxpt::float_to_fixed(-GR_M_PI));
   }
 }
 
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(t1) {
   BOOST_CHECK(std::abs(-1 -           gr::fxpt::sin(-0x40000000)) <= SIN_COS_TOLERANCE);
   BOOST_CHECK(std::abs(-0.707106781 - gr::fxpt::sin(-0x20000000)) <= SIN_COS_TOLERANCE);
 
-  for(float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600) {
+  for(float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
     float expected = sin(p);
     float actual = gr::fxpt::sin(gr::fxpt::float_to_fixed (p));
     BOOST_CHECK(std::abs(expected - actual) <= SIN_COS_TOLERANCE);
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(t1) {
 }
 
 BOOST_AUTO_TEST_CASE(t2) {
-  for(float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600) {
+  for(float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
     float expected = cos(p);
     float actual = gr::fxpt::cos(gr::fxpt::float_to_fixed(p));
     BOOST_CHECK(std::abs(expected - actual) <= SIN_COS_TOLERANCE);
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(t2) {
 }
 
 BOOST_AUTO_TEST_CASE(t3) {
-  for(float p = -M_PI; p < M_PI; p += 2 * M_PI / 3600) {
+  for(float p = -GR_M_PI; p < GR_M_PI; p += 2 * GR_M_PI / 3600) {
     float expected_sin = sin(p);
     float expected_cos = cos(p);
     float actual_sin;

@@ -20,38 +20,40 @@
 #
 """ Create a whole new out-of-tree module """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import shutil
 import os
 import re
-from optparse import OptionGroup
 from gnuradio import gr
-from modtool_base import ModTool, ModToolException
+from .modtool_base import ModTool, ModToolException
+from .scm import SCMRepoFactory
 
 class ModToolNewModule(ModTool):
     """ Create a new out-of-tree module """
     name = 'newmod'
-    aliases = ('nm', 'create')
+    description = 'Create new empty module, use add to add blocks.'
     def __init__(self):
         ModTool.__init__(self)
 
-    def setup_parser(self):
+    @staticmethod
+    def setup_parser(parser):
         " Initialise the option parser for 'gr_modtool newmod' "
-        parser = ModTool.setup_parser(self)
-        parser.usage = '%prog nm [options]. \n Call %prog without any options to run it interactively.'
-        ogroup = OptionGroup(parser, "New out-of-tree module options")
-        ogroup.add_option("--srcdir", type="string",
-                          help="Source directory for the module template.")
-        parser.add_option_group(ogroup)
-        return parser
+        parser.add_argument("--srcdir",
+                help="Source directory for the module template.")
+        parser.add_argument("module_name", metavar='MODULE-NAME', nargs='?',
+                help="Override the current module's name (normally is autodetected).")
 
-    def setup(self, options, args):
+    def setup(self, options):
         # Don't call ModTool.setup(), that assumes an existing module.
         self._info['modname'] = options.module_name
         if self._info['modname'] is None:
-            if len(args) >= 2:
-                self._info['modname'] = args[1]
+            if options.module_name:
+                self._info['modname'] = options.module_name
             else:
-                self._info['modname'] = raw_input('Name of the new module: ')
+                self._info['modname'] = input('Name of the new module: ')
         if not re.match('[a-zA-Z0-9_]+$', self._info['modname']):
             raise ModToolException('Invalid module name.')
         self._dir = options.directory
@@ -71,13 +73,14 @@ class ModToolNewModule(ModTool):
         self.options = options
         self._setup_scm(mode='new')
 
-    def run(self):
+    def run(self, options):
         """
         * Copy the example dir recursively
         * Open all files, rename howto and HOWTO to the module name
         * Rename files and directories that contain the word howto
         """
-        print "Creating out-of-tree module in %s..." % self._dir,
+        self.setup(options)
+        print("Creating out-of-tree module in %s..." % (self._dir,))
         try:
             shutil.copytree(self._srcdir, self._dir)
             os.chdir(self._dir)
@@ -94,7 +97,8 @@ class ModToolNewModule(ModTool):
                     os.rename(f, os.path.join(root, filename.replace('howto', self._info['modname'])))
             if os.path.basename(root) == 'howto':
                 os.rename(root, os.path.join(os.path.dirname(root), self._info['modname']))
-        print "Done."
+        print("Done.")
         if self.scm.init_repo(path_to_repo="."):
-            print "Created repository... you might want to commit before continuing."
-        print "Use 'gr_modtool add' to add a new block to this currently empty module."
+            print("Created repository... you might want to commit before continuing.")
+        print("Use 'gr_modtool add' to add a new block to this currently empty module.")
+

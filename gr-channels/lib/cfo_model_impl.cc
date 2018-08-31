@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2012 Free Software Foundation, Inc.
+ * Copyright 2009,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -22,6 +22,7 @@
 
 #include "cfo_model_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <iostream>
 
 namespace gr {
@@ -77,9 +78,9 @@ namespace gr {
             d_cfo = std::min( d_cfo, d_max_dev_hz );
             d_cfo = std::max( d_cfo, -d_max_dev_hz );
             // update and wrap angle
-            d_angle += 2*M_PI*d_cfo/d_samp_rate;
-            d_angle = d_angle > 2*M_PI ? d_angle - 2*M_PI : d_angle;
-            d_angle = d_angle < -2*M_PI ? d_angle + 2*M_PI : d_angle;
+            d_angle += 2*GR_M_PI*d_cfo/d_samp_rate;
+            d_angle = d_angle > 2*GR_M_PI ? d_angle - 2*GR_M_PI : d_angle;
+            d_angle = d_angle < -2*GR_M_PI ? d_angle + 2*GR_M_PI : d_angle;
             out[i] = in[i] * gr_complex(d_table.cos(d_angle), d_table.sin(d_angle));
         }
         return noutput_items;

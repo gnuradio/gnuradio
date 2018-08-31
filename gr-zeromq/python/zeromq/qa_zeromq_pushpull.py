@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks, zeromq
 import time
 
@@ -35,7 +36,7 @@ class qa_zeromq_pushpull (gr_unittest.TestCase):
 
     def test_001 (self):
         vlen = 10
-        src_data = range(vlen)*100
+        src_data = list(range(vlen))*100
         src = blocks.vector_source_f(src_data, False, vlen)
         zeromq_push_sink = zeromq.push_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5557")
         zeromq_pull_source = zeromq.pull_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5557", 0)

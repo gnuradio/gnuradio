@@ -1,0 +1,23 @@
+id: analog_phase_modulator_fc
+label: Phase Mod
+
+parameters:
+-   id: sensitivity
+    label: Sensitivity
+    dtype: real
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import analog
+    make: analog.phase_modulator_fc(${sensitivity})
+    callbacks:
+    - set_sensitivity(${sensitivity})
+
+file_format: 1

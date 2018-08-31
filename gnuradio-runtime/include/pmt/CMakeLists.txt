@@ -25,5 +25,6 @@ install(FILES
   pmt.h
   pmt_pool.h
   pmt_sugar.h
+  pmt_serial_tags.h
   DESTINATION ${GR_INCLUDE_DIR}/pmt
-  COMPONENT "runtime_devel")
+)

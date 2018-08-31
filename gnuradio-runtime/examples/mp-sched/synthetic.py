@@ -19,10 +19,13 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, eng_notation
 from gnuradio import blocks, filter
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import os
 
 
@@ -35,7 +38,7 @@ class pipeline(gr.hier_block2):
         gr.hier_block2.__init__(self, "pipeline",
                                 gr.io_signature(1, 1, gr.sizeof_float),
                                 gr.io_signature(0, 0, 0))
-        taps = ntaps*[1.0/ntaps]
+        taps = ntaps*[1.0 / ntaps]
         upstream = self
         for i in range(nstages):
             op = filter.fir_filter_fff(1, taps)
@@ -50,61 +53,58 @@ class top(gr.top_block):
         gr.top_block.__init__(self)
 
         default_nsamples = 10e6
-        parser=OptionParser(option_class=eng_option)
-        parser.add_option("-p", "--npipelines", type="intx", default=1,
-                          metavar="NPIPES", help="the number of pipelines to create (default=%default)")
-        parser.add_option("-s", "--nstages", type="intx", default=1,
-                          metavar="NSTAGES", help="the number of stages in each pipeline (default=%default)")
-        parser.add_option("-N", "--nsamples", type="eng_float", default=default_nsamples,
+        parser = ArgumentParser()
+        parser.add_argument("-p", "--npipelines", type=intx, default=1,
+                          metavar="NPIPES", help="the number of pipelines to create (default=%(default)s)")
+        parser.add_argument("-s", "--nstages", type=intx, default=1, metavar="NSTAGES",
+                          help="the number of stages in each pipeline (default=%(default)s)")
+        parser.add_argument("-N", "--nsamples", type=eng_float, default=default_nsamples,
                           help=("the number of samples to run through the graph (default=%s)" %
                                 (eng_notation.num_to_str(default_nsamples))))
-        parser.add_option("-m", "--machine-readable", action="store_true", default=False,
+        parser.add_argument("-m", "--machine-readable", action="store_true", default=False,
                           help="enable machine readable output")
 
-        (options, args) = parser.parse_args()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
+        args = parser.parse_args()
 
-        self.npipes = options.npipelines
-        self.nstages = options.nstages
-        self.nsamples = options.nsamples
-        self.machine_readable = options.machine_readable
+        self.npipes = args.npipelines
+        self.nstages = args.nstages
+        self.nsamples = args.nsamples
+        self.machine_readable = args.machine_readable
 
         ntaps = 256
 
         # Something vaguely like floating point ops
-        self.flop = 2 * ntaps * options.npipelines * options.nstages * options.nsamples
+        self.flop = 2 * ntaps * args.npipelines * args.nstages * args.nsamples
 
         src = blocks.null_source(gr.sizeof_float)
-        head = blocks.head(gr.sizeof_float, int(options.nsamples))
+        head = blocks.head(gr.sizeof_float, int(args.nsamples))
         self.connect(src, head)
 
-        for n in range(options.npipelines):
-            self.connect(head, pipeline(options.nstages, ntaps))
+        for n in range(args.npipelines):
+            self.connect(head, pipeline(args.nstages, ntaps))
 
 
 def time_it(tb):
     start = os.times()
     tb.run()
     stop = os.times()
-    delta = map((lambda a, b: a-b), stop, start)
+    delta = list(map((lambda a, b: a-b), stop, start))
     user, sys, childrens_user, childrens_sys, real = delta
     total_user = user + childrens_user
     total_sys  = sys + childrens_sys
     if tb.machine_readable:
-        print "%3d %3d %.3e %7.3f %7.3f %7.3f %7.3f %.6e %.3e" % (
-            tb.npipes, tb.nstages, tb.nsamples, real, total_user, total_sys, (total_user+total_sys)/real, tb.flop, tb.flop/real)
+        print("%3d %3d %.3e %7.3f %7.3f %7.3f %7.3f %.6e %.3e" % (
+            tb.npipes, tb.nstages, tb.nsamples, real, total_user, total_sys, (total_user+total_sys) / real, tb.flop, tb.flop / real))
     else:
-        print "npipes           %7d"   % (tb.npipes,)
-        print "nstages          %7d"   % (tb.nstages,)
-        print "nsamples         %s"    % (eng_notation.num_to_str(tb.nsamples),)
-        print "real             %7.3f" % (real,)
-        print "user             %7.3f" % (total_user,)
-        print "sys              %7.3f" % (total_sys,)
-        print "(user+sys)/real  %7.3f" % ((total_user + total_sys)/real,)
-        print "pseudo_flop      %s"    % (eng_notation.num_to_str(tb.flop),)
-        print "pseudo_flop/real %s"    % (eng_notation.num_to_str(tb.flop/real),)
+        print("npipes           %7d"   % (tb.npipes,))
+        print("nstages          %7d"   % (tb.nstages,))
+        print("nsamples         %s"    % (eng_notation.num_to_str(tb.nsamples),))
+        print("real             %7.3f" % (real,))
+        print("user             %7.3f" % (total_user,))
+        print("sys              %7.3f" % (total_sys,))
+        print("(user+sys)/real  %7.3f" % ((total_user + total_sys) / real,))
+        print("pseudo_flop      %s"    % (eng_notation.num_to_str(tb.flop),))
+        print("pseudo_flop/real %s"    % (eng_notation.num_to_str(tb.flop / real),))
 
 
 if __name__ == "__main__":
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         tb = top()
         time_it(tb)
     except KeyboardInterrupt:
-        raise SystemExit, 128
+        raise SystemExit(128)
 
 
 

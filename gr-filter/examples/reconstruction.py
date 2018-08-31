@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, digital
 from gnuradio import filter
 from gnuradio import blocks
@@ -28,20 +31,20 @@ import sys
 try:
     from gnuradio import channels
 except ImportError:
-    print "Error: Program requires gr-channels."
+    print("Error: Program requires gr-channels.")
     sys.exit(1)
 
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Error: Program requires scipy (see: www.scipy.org)."
+    print("Error: Program requires scipy (see: www.scipy.org).")
     sys.exit(1)
 
 try:
     import pylab
 except ImportError:
-    print "Error: Program requires matplotlib (see: matplotlib.sourceforge.net)."
+    print("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).")
     sys.exit(1)
 
 fftlen = 8192
@@ -49,7 +52,7 @@ fftlen = 8192
 def main():
     N = 10000
     fs = 2000.0
-    Ts = 1.0/fs
+    Ts = 1.0 / fs
     t = scipy.arange(0, N*Ts, Ts)
 
     # When playing with the number of channels, be careful about the filter
@@ -62,7 +65,7 @@ def main():
     proto_taps = filter.firdes.low_pass_2(1, nchans*fs,
                                           bw, tb, 80,
                                           filter.firdes.WIN_BLACKMAN_hARRIS)
-    print "Filter length: ", len(proto_taps)
+    print("Filter length: ", len(proto_taps))
 
 
     # Create a modulated signal
@@ -95,7 +98,7 @@ def main():
     tb.connect(rrc, src_snk)
 
     vsnk = []
-    for i in xrange(nchans):
+    for i in range(nchans):
         tb.connect((channelizer,i), (synthesizer, i))
 
         vsnk.append(blocks.vector_sink_c())
@@ -131,10 +134,10 @@ def main():
 
     # Plot channels
     nrows = int(scipy.sqrt(nchans))
-    ncols = int(scipy.ceil(float(nchans)/float(nrows)))
+    ncols = int(scipy.ceil(float(nchans) / float(nrows)))
 
     f2 = pylab.figure(2, figsize=(16,12), facecolor='w')
-    for n in xrange(nchans):
+    for n in range(nchans):
         s = f2.add_subplot(nrows, ncols, n+1)
         s.psd(vsnk[n].data(), NFFT=fftlen, Fs=fs_in)
         s.set_title("Channel {0}".format(n))

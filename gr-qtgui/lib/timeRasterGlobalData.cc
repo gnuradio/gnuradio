@@ -24,6 +24,7 @@
 #define TIMERASTER_GLOBAL_DATA_CPP
 
 #include <gnuradio/qtgui/timeRasterGlobalData.h>
+
 #include <cstdio>
 #include <cmath>
 #include <iostream>

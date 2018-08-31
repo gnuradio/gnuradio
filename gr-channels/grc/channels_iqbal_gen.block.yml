@@ -1,0 +1,64 @@
+id: channels_iqbal_gen
+label: IQ Imbalance Generator
+
+parameters:
+-   id: mag
+    label: Magnitude
+    dtype: float
+    default: '0'
+-   id: phase
+    label: Phase
+    dtype: float
+    default: '0'
+-   id: mode
+    label: Origin
+    dtype: enum
+    default: '0'
+    options: ['0', '1']
+    option_labels: [Transmitter, Receiver]
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: channels.iqbal_gen(${mag}, ${phase}, ${mode})
+    callbacks:
+    - set_magnitude(${mag})
+    - set_phase(${phase})
+
+documentation: |-
+ This block implements the single branch IQ imbalance
+ transmitter and receiver models.
+
+ Developed from source (2014):
+ "In-Phase and Quadrature Imbalance: Modeling, Estimation, and Compensation"
+     TX Impairment:
+
+                                                        {R}--|Multiply: 10**(mag/20)|--+--|Multiply: cos(pi*degree/180)|--X1
+ Input ---|Complex2Float|---|                                                               |--|Multiply: sin(pi*degree/180)|--X2
+                                                        {I}--|   Adder  |
+                                                       X2--|       (+)      |--X3
+
+                          X1--{R}--| Float 2     |--- Output
+                          X3---{I}--| Complex |
+
+    RX Impairment:
+
+                                                        {R}--|Multiply: cos(pi*degree/180)|-------|               |
+ Input ---|Complex2Float|---|                                                                                  | Adder |--X1
+                                                         {I}--+--|Multiply: sin(pi*degree/180)|----|     (+)      |
+                                                                 |
+                                                                 +--X2
+
+                        X1--|Multply: 10**(mag/20)|--{R}--| Float 2     |--- Output
+                        X2--------------------------------------------{I}--| Complex |
+
+    (ASCII ART adjusted for GRC viewing)
+
+file_format: 1

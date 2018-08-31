@@ -22,6 +22,12 @@
 
 namespace gr {
 
+  %pythonappend message::to_string %{
+    import sys
+    if sys.version_info[0] > 2:
+      val =  val.encode("utf8", errors="surrogateescape")
+  %}
+
   /*!
    * \brief Message.
    *
@@ -62,6 +68,8 @@ namespace gr {
   %rename(message_ncurrently_allocated) message_ncurrently_allocated;
   long message_ncurrently_allocated();
 }
+
+
 
 %template(message_sptr) boost::shared_ptr<gr::message>;
 %pythoncode %{

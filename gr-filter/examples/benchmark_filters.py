@@ -20,12 +20,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 import time
 import random
-from optparse import OptionParser
+from argparse import ArgumentParser
 from gnuradio import gr
 from gnuradio import blocks, filter
-from gnuradio.eng_option import eng_option
+from gnuradio.eng_arg import eng_float, intx
 
 def make_random_complex_tuple(L):
     result = []
@@ -48,29 +50,21 @@ def benchmark(name, creator, dec, ntaps, total_test_size, block_size):
     tb.run()
     stop = time.time()
     delta = stop - start
-    print "%16s: taps: %4d  input: %4g, time: %6.3f  taps/sec: %10.4g" % (
-        name, ntaps, total_test_size, delta, ntaps*total_test_size/delta)
+    print("%16s: taps: %4d  input: %4g, time: %6.3f  taps/sec: %10.4g" % (
+        name, ntaps, total_test_size, delta, ntaps*total_test_size/delta))
 
 def main():
-    parser = OptionParser(option_class=eng_option)
-    parser.add_option("-n", "--ntaps", type="int", default=256)
-    parser.add_option("-t", "--total-input-size", type="eng_float", default=40e6)
-    parser.add_option("-b", "--block-size", type="intx", default=50000)
-    parser.add_option("-d", "--decimation", type="int", default=1)
-    (options, args) = parser.parse_args()
-    if len(args) != 0:
-        parser.print_help()
-        sys.exit(1)
+    parser = ArgumentParser()
+    parser.add_argument("-n", "--ntaps", type=int, default=256)
+    parser.add_argument("-t", "--total-input-size", type=eng_float, default=40e6)
+    parser.add_argument("-b", "--block-size", type=intx, default=50000)
+    parser.add_argument("-d", "--decimation", type=int, default=1)
+    args = parser.parse_args()
 
-    ntaps = options.ntaps
-    total_input_size = options.total_input_size
-    block_size = options.block_size
-    dec = options.decimation
-
-    benchmark("filter.fir_filter_ccc", filter.fir_filter_ccc,
-              dec, ntaps, total_input_size, block_size)
-    benchmark("filter.fft_filter_ccc", filter.fft_filter_ccc,
-              dec, ntaps, total_input_size, block_size)
+    benchmark("filter.fir_filter_ccc", filter.fir_filter_ccc, args.decimation,
+              args.ntaps, args.total_input_size, args.block_size)
+    benchmark("filter.fft_filter_ccc", filter.fft_filter_ccc, args.decimation,
+              args.ntaps, args.total_input_size, args.block_size)
 
 if __name__ == '__main__':
     main()

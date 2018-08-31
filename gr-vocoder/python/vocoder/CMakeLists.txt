@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(
     __init__.py
     cvsd.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/vocoder
-    COMPONENT "vocoder_python"
 )
 
 ########################################################################
@@ -47,9 +46,26 @@ if(ENABLE_TESTING)
     )
 
   include(GrTest)
-  file(GLOB py_qa_test_files "qa_*.py")
+  list(APPEND py_qa_test_files
+    qa_alaw_vocoder.py
+    qa_cvsd_vocoder.py
+    qa_g721_vocoder.py
+    qa_g723_24_vocoder.py
+    qa_g723_40_vocoder.py
+    qa_ulaw_vocoder.py
+    )
+  if(LIBCODEC2_FOUND)
+    list(APPEND py_qa_test_files
+      qa_codec2_vocoder.py
+      )
+  endif()
+  if(LIBGSM_FOUND)
+    list(APPEND py_qa_test_files
+      qa_gsm_full_rate.py
+      )
+  endif()
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${CMAKE_CURRENT_SOURCE_DIR}/${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

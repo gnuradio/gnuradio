@@ -21,8 +21,12 @@
 
 # misc utilities
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 import types
-import exceptions
+
 
 class seq_with_cursor (object):
     __slots__ = [ 'items', 'index' ]
@@ -40,7 +44,7 @@ class seq_with_cursor (object):
         elif initial_index >= 0 and initial_index < len (self.items):
             self.index = initial_index
         else:
-            raise exceptions.ValueError
+            raise ValueError
 
     def set_index_by_value(self, v):
         """
@@ -51,9 +55,9 @@ class seq_with_cursor (object):
         cv = self.current()
         more = True
         while cv < v and more:
-            cv, more = self.next()      # side effect!
+            cv, more = next(self)      # side effect!
 
-    def next (self):
+    def __next__ (self):
         new_index = self.index + 1
         if new_index < len (self.items):
             self.index = new_index
@@ -74,4 +78,3 @@ class seq_with_cursor (object):
 
     def get_seq (self):
         return self.items[:]            # copy of items
-

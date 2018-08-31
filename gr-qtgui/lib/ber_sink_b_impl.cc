@@ -21,11 +21,12 @@
  */
 
 #include "ber_sink_b_impl.h"
-#include <boost/math/special_functions/erf.hpp>
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <gnuradio/fft/fft.h>
 #include <volk/volk.h>
+#include <cmath>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -90,7 +91,7 @@ namespace gr {
       for(size_t i = 0; i < esnos.size(); i++) {
         double e = pow(10.0, esnos[i]/10.0);
         d_esno_buffers[curves][i] = esnos[i];
-        d_ber_buffers[curves][i] = log10(0.5*boost::math::erfc(sqrt(e)));
+        d_ber_buffers[curves][i] = std::log10(0.5*std::erf(std::sqrt(e)));
       }
 
 
@@ -213,37 +214,37 @@ namespace gr {
     }
 
     void
-    ber_sink_b_impl::set_line_label(int which, const std::string &label)
+    ber_sink_b_impl::set_line_label(unsigned int which, const std::string &label)
     {
       d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    ber_sink_b_impl::set_line_color(int which, const std::string &color)
+    ber_sink_b_impl::set_line_color(unsigned int which, const std::string &color)
     {
       d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
-    ber_sink_b_impl::set_line_width(int which, int width)
+    ber_sink_b_impl::set_line_width(unsigned int which, int width)
     {
       d_main_gui->setLineWidth(which, width);
     }
 
     void
-    ber_sink_b_impl::set_line_style(int which, int style)
+    ber_sink_b_impl::set_line_style(unsigned int which, int style)
     {
       d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
     }
 
     void
-    ber_sink_b_impl::set_line_marker(int which, int marker)
+    ber_sink_b_impl::set_line_marker(unsigned int which, int marker)
     {
       d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
     }
 
     void
-    ber_sink_b_impl::set_line_alpha(int which, double alpha)
+    ber_sink_b_impl::set_line_alpha(unsigned int which, double alpha)
     {
       d_main_gui->setMarkerAlpha(which, (int)(255.0*alpha));
     }
@@ -261,37 +262,37 @@ namespace gr {
     }
 
     std::string
-    ber_sink_b_impl::line_label(int which)
+    ber_sink_b_impl::line_label(unsigned int which)
     {
       return d_main_gui->lineLabel(which).toStdString();
     }
 
     std::string
-    ber_sink_b_impl::line_color(int which)
+    ber_sink_b_impl::line_color(unsigned int which)
     {
       return d_main_gui->lineColor(which).toStdString();
     }
 
     int
-    ber_sink_b_impl::line_width(int which)
+    ber_sink_b_impl::line_width(unsigned int which)
     {
       return d_main_gui->lineWidth(which);
     }
 
     int
-    ber_sink_b_impl::line_style(int which)
+    ber_sink_b_impl::line_style(unsigned int which)
     {
       return d_main_gui->lineStyle(which);
     }
 
     int
-    ber_sink_b_impl::line_marker(int which)
+    ber_sink_b_impl::line_marker(unsigned int which)
     {
       return d_main_gui->lineMarker(which);
     }
 
     double
-    ber_sink_b_impl::line_alpha(int which)
+    ber_sink_b_impl::line_alpha(unsigned int which)
     {
       return (double)(d_main_gui->markerAlpha(which))/255.0;
     }
@@ -336,7 +337,7 @@ namespace gr {
           if(d_total_errors[j * d_nconnections + i] >= d_ber_min_errors) {
             done++;
           }
-          else if(log10(((double)d_ber_min_errors)/(d_total[j * d_nconnections + i] * 8.0)) < d_ber_limit) {
+          else if(std::log10(((double)d_ber_min_errors)/(d_total[j * d_nconnections + i] * 8.0)) < d_ber_limit) {
             maxed++;
           }
         }
@@ -354,7 +355,7 @@ namespace gr {
       for(unsigned int i = 0; i < ninput_items.size(); i += 2) {
 
         if((d_total_errors[i >> 1] < d_ber_min_errors) && \
-           (log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) >= d_ber_limit)) {
+           (std::log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) >= d_ber_limit)) {
 
           int items = ninput_items[i] <= ninput_items[i+1] ? ninput_items[i] : ninput_items[i+1];
 
@@ -370,7 +371,7 @@ namespace gr {
 
             d_total[i >> 1] += items;
 
-            ber = log10(((double)d_total_errors[i >> 1])/(d_total[i >> 1] * 8.0));
+            ber = std::log10(((double)d_total_errors[i >> 1])/(d_total[i >> 1] * 8.0));
             d_ber_buffers[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = ber;
 
           }
@@ -381,7 +382,7 @@ namespace gr {
             GR_LOG_INFO(d_logger, boost::format("    %1% over %2%  -->  %3%") \
                         % d_total_errors[i >> 1] % (d_total[i >> 1] * 8) % ber);
           }
-          else if(log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) < d_ber_limit) {
+          else if(std::log10(((double)d_ber_min_errors)/(d_total[i >> 1] * 8.0)) < d_ber_limit) {
             GR_LOG_INFO(d_logger, "BER Limit Reached");
             d_ber_buffers[i/(d_nconnections * 2)][(i%(d_nconnections * 2)) >> 1] = d_ber_limit;
             d_total_errors[i >> 1] = d_ber_min_errors + 1;

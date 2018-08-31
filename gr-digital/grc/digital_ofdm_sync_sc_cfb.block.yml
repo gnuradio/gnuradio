@@ -1,0 +1,45 @@
+id: digital_ofdm_sync_sc_cfb
+label: Schmidl & Cox OFDM synch.
+
+parameters:
+-   id: fft_len
+    label: FFT length
+    dtype: int
+-   id: cp_len
+    label: Cyclic Prefix length
+    dtype: int
+-   id: use_even_carriers
+    label: Preamble Carriers
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: [Odd, Even]
+    hide: part
+-   id: threshold
+    label: Threshold
+    dtype: real
+    default: '0.9'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   label: freq_offset
+    domain: stream
+    dtype: float
+-   label: detect
+    domain: stream
+    dtype: byte
+
+asserts:
+  - ${ fft_len > 0}
+  - ${ cp_len >= 0}
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.ofdm_sync_sc_cfb(${fft_len}, ${cp_len}, ${use_even_carriers}, ${threshold})
+    callbacks:
+      - set_treshold(${threshold})
+
+file_format: 1

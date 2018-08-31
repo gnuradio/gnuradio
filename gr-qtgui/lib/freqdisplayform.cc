@@ -20,10 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include <gnuradio/qtgui/freqdisplayform.h>
+
 #include <cmath>
 #include <QMessageBox>
 #include <QSpacerItem>
-#include <gnuradio/qtgui/freqdisplayform.h>
 #include <gnuradio/qtgui/freqcontrolpanel.h>
 #include <iostream>
 

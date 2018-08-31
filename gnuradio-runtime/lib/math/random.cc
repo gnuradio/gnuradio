@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002, 2015 Free Software Foundation, Inc.
+ * Copyright 2002,2015,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,8 +39,10 @@
 #include <config.h>
 #endif
 
-#include <math.h>
 #include <gnuradio/random.h>
+#include <gnuradio/math.h>
+
+#include <cmath>
 
 namespace gr {
 
@@ -155,7 +157,7 @@ namespace gr {
   float
   random::impulse(float factor = 5)
   {
-    float z = -M_SQRT2 * logf(ran1());
+    float z = -GR_M_SQRT2 * logf(ran1());
     if(fabsf(z) <= factor)
       return 0.0;
     else

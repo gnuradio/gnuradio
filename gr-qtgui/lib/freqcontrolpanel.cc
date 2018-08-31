@@ -21,6 +21,7 @@
  */
 
 #include <gnuradio/qtgui/freqcontrolpanel.h>
+
 #include <cmath>
 
 FreqControlPanel::FreqControlPanel(FreqDisplayForm *form)

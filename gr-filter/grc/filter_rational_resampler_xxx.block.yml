@@ -1,0 +1,61 @@
+id: rational_resampler_xxx
+label: Rational Resampler
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fcc, fff]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Complex (Complex Taps), Float->Float (Real Taps)]
+    option_attributes:
+        input: [complex, complex, float, float]
+        output: [complex, complex, complex, float]
+        taps: [complex_vector, real_vector, complex_vector, real_vector]
+    hide: part
+-   id: interp
+    label: Interpolation
+    dtype: int
+    default: '1'
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: ${ type.taps }
+-   id: fbw
+    label: Fractional BW
+    dtype: real
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.rational_resampler_${type}(
+                interpolation=${interp},
+                decimation=${decim},
+        % if taps:
+                taps=${taps},
+        % else:
+                taps=None,
+        % endif
+        % if fbw != 0:
+                fractional_bw=${fbw})
+        % else:
+                fractional_bw=None)
+        % endif
+    callbacks:
+    - set_taps(${taps})
+
+file_format: 1

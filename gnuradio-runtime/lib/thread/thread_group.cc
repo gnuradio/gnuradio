@@ -37,7 +37,7 @@ namespace gr {
     {
       // No scoped_lock required here since the only "shared data" that's
       // modified here occurs inside add_thread which does scoped_lock.
-      std::auto_ptr<boost::thread> thrd(new boost::thread(threadfunc));
+      std::unique_ptr<boost::thread> thrd(new boost::thread(threadfunc));
       add_thread(thrd.get());
       return thrd.release();
     }

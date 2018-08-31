@@ -145,8 +145,6 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gnuradio-runtime/include \
                          @CMAKE_SOURCE_DIR@/gr-analog/include \
                          @CMAKE_BINARY_DIR@/gr-analog/include \
-                         @CMAKE_SOURCE_DIR@/gr-atsc/include \
-                         @CMAKE_BINARY_DIR@/gr-atsc/include \
                          @CMAKE_SOURCE_DIR@/gr-audio/include \
                          @CMAKE_BINARY_DIR@/gr-audio/include \
                          @CMAKE_SOURCE_DIR@/gr-blocks/include \
@@ -159,18 +157,12 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gr-digital/include \
                          @CMAKE_SOURCE_DIR@/gr-dtv/include \
                          @CMAKE_BINARY_DIR@/gr-dtv/include \
-                         @CMAKE_SOURCE_DIR@/gr-fcd/include \
-                         @CMAKE_BINARY_DIR@/gr-fcd/include \
                          @CMAKE_SOURCE_DIR@/gr-fec/include \
                          @CMAKE_BINARY_DIR@/gr-fec/include \
                          @CMAKE_SOURCE_DIR@/gr-fft/include \
                          @CMAKE_BINARY_DIR@/gr-fft/include \
                          @CMAKE_SOURCE_DIR@/gr-filter/include \
                          @CMAKE_BINARY_DIR@/gr-filter/include \
-                         @CMAKE_SOURCE_DIR@/gr-noaa/include \
-                         @CMAKE_BINARY_DIR@/gr-noaa/include \
-                         @CMAKE_SOURCE_DIR@/gr-pager/include \
-                         @CMAKE_BINARY_DIR@/gr-pager/include \
                          @CMAKE_SOURCE_DIR@/gr-qtgui/include \
                          @CMAKE_BINARY_DIR@/gr-qtgui/include \
                          @CMAKE_SOURCE_DIR@/gr-trellis/include \
@@ -183,8 +175,6 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gr-vocoder/include \
                          @CMAKE_SOURCE_DIR@/gr-wavelet/include \
                          @CMAKE_BINARY_DIR@/gr-wavelet/include \
-                         @CMAKE_SOURCE_DIR@/gr-wxgui/include \
-                         @CMAKE_BINARY_DIR@/gr-wxgui/include \
                          @CMAKE_SOURCE_DIR@/gr-zeromq/include \
                          @CMAKE_BINARY_DIR@/gr-zeromq/include \
                          @CMAKE_SOURCE_DIR@/volk/include \
@@ -748,19 +738,12 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/dtools \
                          @abs_top_builddir@/gnuradio-runtime/lib/runtime/gr_error_handler.cc \
                          @abs_top_builddir@/gnuradio-runtime/swig \
-                         @abs_top_builddir@/gnuradio-runtime/python/build_utils.py \
-                         @abs_top_builddir@/gnuradio-runtime/python/build_utils_codes.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_23.py \
                          @abs_top_builddir@/gnuradio-runtime/python/gnuradio/gr/gr_threading_24.py \
-                         @abs_top_builddir@/gr-atsc/swig/atsc_swig.py \
-                         @abs_top_builddir@/gr-atsc/lib/gen_encoder.py \
-                         @abs_top_builddir@/gr-atsc/python \
-                         @abs_top_builddir@/gr-pager/swig/pager_swig.py \
                          @abs_top_builddir@/gr-trellis/doc \
                          @abs_top_builddir@/gr-trellis/swig/trellis_swig.py \
                          @abs_top_builddir@/gr-video-sdl/swig/video_sdl_swig.py \
-                         @abs_top_builddir@/gr-wxgui/python \
                          @abs_top_builddir@/grc \
                          @abs_top_builddir@/_CPack_Packages \
                          @abs_top_srcdir@/cmake \
@@ -771,8 +754,6 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/gnuradio-runtime/lib \
                          @abs_top_srcdir@/gr-analog/lib \
                          @abs_top_builddir@/gr-analog/lib \
-                         @abs_top_srcdir@/gr-atsc/lib \
-                         @abs_top_builddir@/gr-atsc/lib \
                          @abs_top_srcdir@/gr-audio/lib \
                          @abs_top_builddir@/gr-audio/lib \
                          @abs_top_srcdir@/gr-blocks/lib \
@@ -793,18 +774,12 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/gr-dtv/lib/dvbs2 \
                          @abs_top_srcdir@/gr-dtv/lib/dvbt2 \
                          @abs_top_builddir@/gr-dtv/lib/dvbr2 \
-                         @abs_top_srcdir@/gr-fcd/lib \
-                         @abs_top_builddir@/gr-fcd/lib \
                          @abs_top_srcdir@/gr-fec/lib \
                          @abs_top_builddir@/gr-fec/lib \
                          @abs_top_srcdir@/gr-filter/lib \
                          @abs_top_builddir@/gr-filter/lib \
                          @abs_top_srcdir@/gr-fft/lib \
                          @abs_top_builddir@/gr-fft/lib \
-                         @abs_top_srcdir@/gr-noaa/lib \
-                         @abs_top_builddir@/gr-noaa/lib \
-                         @abs_top_srcdir@/gr-pager/lib \
-                         @abs_top_builddir@/gr-pager/lib \
                          @abs_top_srcdir@/gr-qtgui/lib \
                          @abs_top_builddir@/gr-qtgui/lib \
                          @abs_top_srcdir@/gr-trellis/lib \
@@ -821,8 +796,6 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/gr-vocoder/lib \
                          @abs_top_srcdir@/gr-wavelet/lib \
                          @abs_top_builddir@/gr-wavelet/lib \
-                         @abs_top_srcdir@/gr-wxgui/lib \
-                         @abs_top_builddir@/gr-wxgui/lib \
                          @abs_top_srcdir@/gr-zeromq/lib \
                          @abs_top_builddir@/gr-zeromq/lib \
                          @abs_top_srcdir@/volk/cmake/msvc \
@@ -846,7 +819,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
                          */.svn/* \
                          */CVS/* \
                          */__init__.py \
-                         */gr-atsc/src/lib/Gr* \
                          */moc_*.cc \
                          */qa_*.cc \
                          */qa_*.h \

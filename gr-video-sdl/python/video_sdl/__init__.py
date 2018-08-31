@@ -21,13 +21,14 @@
 '''
 Blocks and utilities for Video SDL module
 '''
+from __future__ import unicode_literals
 
 # The presence of this file turns this directory into a Python package
 import os
 
 try:
-    from video_sdl_swig import *
+    from .video_sdl_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "swig"))
-    from video_sdl_swig import *
+    from .video_sdl_swig import *

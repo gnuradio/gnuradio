@@ -1,0 +1,69 @@
+id: digital_pfb_clock_sync_xxx
+label: Polyphase Clock Sync
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccf, fff]
+    option_labels: [Complex->Complex (Real Taps), Float->Float (Real Taps)]
+    option_attributes:
+        input: [complex, float]
+        output: [complex, float]
+        taps: [real_vector, real_vector]
+    hide: part
+-   id: sps
+    label: Samples/Symbol
+    dtype: real
+-   id: loop_bw
+    label: Loop Bandwidth
+    dtype: real
+-   id: taps
+    label: Taps
+    dtype: real_vector
+-   id: filter_size
+    label: Filter Size
+    dtype: int
+    default: '32'
+-   id: init_phase
+    label: Initial Phase
+    dtype: real
+    default: '16'
+-   id: max_dev
+    label: Maximum Rate Deviation
+    dtype: real
+    default: '1.5'
+-   id: osps
+    label: Output SPS
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+-   label: err
+    domain: stream
+    dtype: float
+    optional: true
+-   label: rate
+    domain: stream
+    dtype: float
+    optional: true
+-   label: phase
+    domain: stream
+    dtype: float
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.pfb_clock_sync_${type}(${sps}, ${loop_bw}, ${taps}, ${filter_size},
+        ${init_phase}, ${max_dev}, ${osps})
+    callbacks:
+    - update_taps(${taps})
+    - set_loop_bandwidth(${loop_bw})
+
+file_format: 1

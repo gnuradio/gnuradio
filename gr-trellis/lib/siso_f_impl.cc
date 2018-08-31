@@ -33,8 +33,6 @@
 namespace gr {
   namespace trellis {
 
-    static const float INF = 1.0e9;
-
     siso_f::sptr
     siso_f::make(const fsm &FSM, int K,
 		 int S0, int SK,
@@ -104,35 +102,35 @@ namespace gr {
     }
 
     void siso_f_impl::set_POSTI(bool POSTI)
-    { 
+    {
       gr::thread::scoped_lock guard(d_setlock);
-      d_POSTI = POSTI; 
+      d_POSTI = POSTI;
       recalculate();
     }
 
     void siso_f_impl::set_POSTO(bool POSTO)
-    { 
+    {
       gr::thread::scoped_lock guard(d_setlock);
-      d_POSTO = POSTO; 
+      d_POSTO = POSTO;
       recalculate();
     }
 
     void siso_f_impl::set_S0(int S0)
-    { 
+    {
       gr::thread::scoped_lock guard(d_setlock);
-      d_S0 = S0; 
+      d_S0 = S0;
     }
 
     void siso_f_impl::set_SK(int SK)
-    { 
+    {
       gr::thread::scoped_lock guard(d_setlock);
-      d_SK = SK; 
+      d_SK = SK;
     }
 
-    void siso_f_impl::set_SISO_TYPE(trellis::siso_type_t type) 
-    { 
+    void siso_f_impl::set_SISO_TYPE(trellis::siso_type_t type)
+    {
       gr::thread::scoped_lock guard(d_setlock);
-      d_SISO_TYPE = type; 
+      d_SISO_TYPE = type;
     }
 
     siso_f_impl::~siso_f_impl()

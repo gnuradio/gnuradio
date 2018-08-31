@@ -21,6 +21,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 
@@ -34,7 +35,7 @@ class qa_stream_to_tagged_stream (gr_unittest.TestCase):
 
     def test_001_t (self):
         src_data = (1, ) * 50
-        packet_len = 10L
+        packet_len = 10
         len_tag_key = 'packet_len'
         src = blocks.vector_source_f(src_data, False, 1)
         tagger = blocks.stream_to_tagged_stream(gr.sizeof_float, 1, packet_len, len_tag_key)
@@ -44,7 +45,7 @@ class qa_stream_to_tagged_stream (gr_unittest.TestCase):
         self.assertEqual(sink.data(), src_data)
         tags = [gr.tag_to_python(x) for x in sink.tags()]
         tags = sorted([(x.offset, x.key, x.value) for x in tags])
-        expected_tags = [(long(pos), 'packet_len', packet_len) for pos in range(0, 50, 10) ]
+        expected_tags = [(int(pos), 'packet_len', packet_len) for pos in range(0, 50, 10) ]
         self.assertEqual(tags, expected_tags)
 
 

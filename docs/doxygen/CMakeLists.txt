@@ -41,30 +41,6 @@ configure_file(
 
 set(BUILT_DIRS ${CMAKE_CURRENT_BINARY_DIR}/xml ${CMAKE_CURRENT_BINARY_DIR}/html)
 
-if(ENABLE_GNURADIO_RUNTIME)
-  list(APPEND GENERATED_DEPS pmt_generated)
-endif(ENABLE_GNURADIO_RUNTIME)
-
-if(ENABLE_GR_BLOCKS)
-  list(APPEND GENERATED_DEPS blocks_generated_includes)
-endif(ENABLE_GR_BLOCKS)
-
-if(ENABLE_GR_ANALOG)
-  list(APPEND GENERATED_DEPS analog_generated_includes)
-endif(ENABLE_GR_ANALOG)
-
-if(ENABLE_GR_DIGITAL)
-  list(APPEND GENERATED_DEPS digital_generated_includes)
-endif(ENABLE_GR_DIGITAL)
-
-if(ENABLE_GR_FILTER)
-  list(APPEND GENERATED_DEPS filter_generated_includes)
-endif(ENABLE_GR_FILTER)
-
-if(ENABLE_GR_TRELLIS)
-  list(APPEND GENERATED_DEPS trellis_generated_includes)
-endif(ENABLE_GR_TRELLIS)
-
 ########################################################################
 # Make and install doxygen docs
 ########################################################################
@@ -78,4 +54,4 @@ add_custom_command(
 
 add_custom_target(doxygen_target ALL DEPENDS ${BUILT_DIRS})
 
-install(DIRECTORY ${BUILT_DIRS} DESTINATION ${GR_PKG_DOC_DIR} COMPONENT "docs")
+install(DIRECTORY ${BUILT_DIRS} DESTINATION ${GR_PKG_DOC_DIR})

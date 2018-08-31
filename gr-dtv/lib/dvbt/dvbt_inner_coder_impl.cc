@@ -131,8 +131,7 @@ namespace gr {
           io_signature::make(1, 1, sizeof (unsigned char) * noutput)),
       config(constellation, hierarchy, coderate, coderate),
       d_ninput(ninput), d_noutput(noutput),
-      d_reg(0),
-      d_bitcount(0)
+      d_reg(0)
     {
       //Determine k - input of encoder
       d_k = config.d_cr_k;

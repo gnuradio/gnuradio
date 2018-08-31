@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import cmath
 
 from gnuradio import gr, gr_unittest, analog, blocks
@@ -37,13 +39,13 @@ class test_quadrature_demod(gr_unittest.TestCase):
         fs = 8000.0
 
         src_data = []
-        for i in xrange(200):
-            ti = i/fs
+        for i in range(200):
+            ti = i / fs
             src_data.append(cmath.exp(2j*cmath.pi*f*ti))
 
         # f/fs is a quarter turn per sample.
         # Set the gain based on this to get 1 out.
-        gain = 1.0/(cmath.pi/4)
+        gain = 1.0 / (cmath.pi / 4)
 
         expected_result = [0,] + 199*[1.0]
 

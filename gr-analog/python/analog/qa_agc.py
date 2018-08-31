@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, analog, blocks
 
 class test_agc(gr_unittest.TestCase):
@@ -33,10 +34,10 @@ class test_agc(gr_unittest.TestCase):
     def test_001_sets(self):
         agc = analog.agc_cc(1e-3, 1, 1)
 
-	agc.set_rate(1)
-	agc.set_reference(1.1)
-	agc.set_gain(1.1)
-	agc.set_max_gain(100)
+        agc.set_rate(1)
+        agc.set_reference(1.1)
+        agc.set_gain(1.1)
+        agc.set_max_gain(100)
 
         self.assertAlmostEqual(agc.rate(), 1)
         self.assertAlmostEqual(agc.reference(), 1.1)
@@ -118,10 +119,10 @@ class test_agc(gr_unittest.TestCase):
     def test_002_sets(self):
         agc = analog.agc_ff(1e-3, 1, 1)
 
-	agc.set_rate(1)
-	agc.set_reference(1.1)
-	agc.set_gain(1.1)
-	agc.set_max_gain(100)
+        agc.set_rate(1)
+        agc.set_reference(1.1)
+        agc.set_gain(1.1)
+        agc.set_max_gain(100)
 
         self.assertAlmostEqual(agc.rate(), 1)
         self.assertAlmostEqual(agc.reference(), 1.1)
@@ -203,11 +204,11 @@ class test_agc(gr_unittest.TestCase):
     def test_003_sets(self):
         agc = analog.agc2_cc(1e-3, 1e-1, 1, 1)
 
-	agc.set_attack_rate(1)
-	agc.set_decay_rate(2)
-	agc.set_reference(1.1)
-	agc.set_gain(1.1)
-	agc.set_max_gain(100)
+        agc.set_attack_rate(1)
+        agc.set_decay_rate(2)
+        agc.set_reference(1.1)
+        agc.set_gain(1.1)
+        agc.set_max_gain(100)
 
         self.assertAlmostEqual(agc.attack_rate(), 1)
         self.assertAlmostEqual(agc.decay_rate(), 2)
@@ -290,11 +291,11 @@ class test_agc(gr_unittest.TestCase):
     def test_004_sets(self):
         agc = analog.agc2_ff(1e-3, 1e-1, 1, 1)
 
-	agc.set_attack_rate(1)
-	agc.set_decay_rate(2)
-	agc.set_reference(1.1)
-	agc.set_gain(1.1)
-	agc.set_max_gain(100)
+        agc.set_attack_rate(1)
+        agc.set_decay_rate(2)
+        agc.set_reference(1.1)
+        agc.set_gain(1.1)
+        agc.set_max_gain(100)
 
         self.assertAlmostEqual(agc.attack_rate(), 1)
         self.assertAlmostEqual(agc.decay_rate(), 2)
@@ -450,10 +451,10 @@ class test_agc(gr_unittest.TestCase):
     def test_006_sets(self):
         agc = analog.agc3_cc(1e-3, 1e-1, 1)
 
-	agc.set_attack_rate(1)
-	agc.set_decay_rate(2)
-	agc.set_reference(1.1)
-	agc.set_gain(1.1)
+        agc.set_attack_rate(1)
+        agc.set_decay_rate(2)
+        agc.set_reference(1.1)
+        agc.set_gain(1.1)
 
         self.assertAlmostEqual(agc.attack_rate(), 1)
         self.assertAlmostEqual(agc.decay_rate(), 2)
@@ -481,7 +482,7 @@ class test_agc(gr_unittest.TestCase):
         tb.run()
         dst_data = dst1.data()
         M = 100
-        result = map(lambda x: abs(x), dst_data[N-M:])
+        result = [abs(x) for x in dst_data[N-M:]]
         self.assertFloatTuplesAlmostEqual(result, M*[ref,], 4)
 
     def test_100(self):

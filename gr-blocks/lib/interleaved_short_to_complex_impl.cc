@@ -41,7 +41,7 @@ namespace gr {
 		       gr::io_signature::make (1, 1, (vector_input?2:1)*sizeof(short)),
 		       gr::io_signature::make (1, 1, sizeof(gr_complex)),
 		       vector_input?1:2),
-        d_vector_input(vector_input), d_swap(swap)
+        d_swap(swap)
     {
     }
 

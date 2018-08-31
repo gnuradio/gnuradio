@@ -34,7 +34,7 @@ namespace gr {
   make_hier_block2(const std::string name,
                    gr::io_signature::sptr input_signature,
                    gr::io_signature::sptr output_signature)
-  throw (std::runtime_error);
+    noexcept(false);
 }
 
 // Rename connect and disconnect so that we can more easily build a
@@ -58,28 +58,28 @@ namespace gr {
     ~hier_block2 ();
 
     void connect(gr::basic_block_sptr block)
-      throw (std::invalid_argument);
+      noexcept(false);
     void connect(gr::basic_block_sptr src, int src_port,
                  gr::basic_block_sptr dst, int dst_port)
-      throw (std::invalid_argument);
+      noexcept(false);
     void msg_connect(gr::basic_block_sptr src, pmt::pmt_t srcport,
                      gr::basic_block_sptr dst, pmt::pmt_t dstport)
-      throw (std::runtime_error);
+      noexcept(false);
     void msg_connect(gr::basic_block_sptr src, std::string srcport,
                      gr::basic_block_sptr dst,  std::string dstport)
-      throw (std::runtime_error);
+      noexcept(false);
     void msg_disconnect(gr::basic_block_sptr src, pmt::pmt_t srcport,
                         gr::basic_block_sptr dst, pmt::pmt_t dstport)
-      throw (std::runtime_error);
+      noexcept(false);
     void msg_disconnect(gr::basic_block_sptr src, std::string srcport,
                         gr::basic_block_sptr dst, std::string dstport)
-      throw (std::runtime_error);
+      noexcept(false);
 
     void disconnect(gr::basic_block_sptr block)
-      throw (std::invalid_argument);
+      noexcept(false);
     void disconnect(gr::basic_block_sptr src, int src_port,
                     gr::basic_block_sptr dst, int dst_port)
-      throw (std::invalid_argument);
+      noexcept(false);
     void disconnect_all();
     void lock();
     void unlock();
@@ -90,6 +90,9 @@ namespace gr {
     void set_processor_affinity(const std::vector<int> &mask);
     void unset_processor_affinity();
     std::vector<int> processor_affinity();
+
+    void set_log_level(std::string level);
+    std::string log_level();
 
     // Methods to manage block's min/max buffer sizes.
     size_t max_output_buffer(int i);

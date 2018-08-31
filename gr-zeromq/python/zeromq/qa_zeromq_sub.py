@@ -44,7 +44,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
 
     def test_001 (self):
         vlen = 10
-        src_data = numpy.array(range(vlen)*100, 'float32')
+        src_data = numpy.array(list(range(vlen))*100, 'float32')
         zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5559")
         sink = blocks.vector_sink_f(vlen)
         self.tb.connect(zeromq_sub_source, sink)
@@ -61,7 +61,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
         vlen = 10
 
         # Construct multipart source data to publish
-        raw_data = [numpy.array(range(vlen)*100, 'float32'), numpy.array(range(vlen, 2*vlen)*100, 'float32')]
+        raw_data = [numpy.array(range(vlen), 'float32')*100, numpy.array(range(vlen, 2*vlen), 'float32')*100]
         src_data = [a.tostring() for a in raw_data]
         zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, "tcp://127.0.0.1:5559")
         sink = blocks.vector_sink_f(vlen)

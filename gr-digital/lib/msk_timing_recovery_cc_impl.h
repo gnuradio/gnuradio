@@ -38,12 +38,10 @@ namespace gr {
         float d_gain;
         float d_limit;
         filter::mmse_fir_interpolator_cc *d_interp;
-        filter::kernel::fir_filter_with_buffer_fff *d_decim;
         gr_complex d_dly_conj_1, d_dly_conj_2, d_dly_diff_1;
         float d_mu, d_omega, d_gain_omega;
         int d_div;
         int d_osps;
-        int d_loop_rate;
 
      public:
       msk_timing_recovery_cc_impl(float sps, float gain, float limit, int osps);

@@ -18,11 +18,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 try:
     from PyQt4 import Qt, QtCore, QtGui
 except ImportError:
-    print "Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)"
-    raise SystemExit, 1
+    print("Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    raise SystemExit(1)
 
 #Movable solid line for filter ideal-band diagram
 #Enable split to cut the line into two (for bpf)

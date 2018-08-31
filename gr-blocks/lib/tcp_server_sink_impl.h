@@ -39,7 +39,7 @@ namespace gr {
       boost::asio::io_service d_io_service;
       gr::thread::thread d_io_serv_thread;
       boost::asio::ip::tcp::endpoint d_endpoint;
-      std::auto_ptr<boost::asio::ip::tcp::socket> d_socket;
+      std::unique_ptr<boost::asio::ip::tcp::socket> d_socket;
       std::set<boost::asio::ip::tcp::socket *> d_sockets;
       boost::asio::ip::tcp::acceptor d_acceptor;
 

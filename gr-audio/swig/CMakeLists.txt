@@ -44,12 +44,10 @@ GR_SWIG_MAKE(audio_swig audio_swig.i)
 GR_SWIG_INSTALL(
     TARGETS audio_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/audio
-    COMPONENT "audio_python"
 )
 
 install(
     FILES audio_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/audio_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "audio_swig"
 )

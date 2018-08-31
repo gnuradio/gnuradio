@@ -27,8 +27,13 @@ For a great intro to how all this stuff works, see section 6.6 of
 and Barrie W. Jervis, Adison-Wesley, 1993.  ISBN 0-201-54413-X.
 '''
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
+
 import math, cmath
-import filter_swig as filter
+from . import filter_swig as filter
 
 # ----------------------------------------------------------------
 
@@ -102,11 +107,11 @@ def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
         nextra_taps: Extra taps to use in the filter (default=2)
     """
     center_freq = (freq_pb2 + freq_pb1) / 2.0
-    lp_pb = (freq_pb2 - center_freq)/1.0
+    lp_pb = (freq_pb2 - center_freq) / 1.0
     lp_sb = freq_sb2 - center_freq
     lptaps = low_pass(gain, Fs, lp_pb, lp_sb, passband_ripple_db,
                       stopband_atten_db, nextra_taps)
-    spinner = [cmath.exp(2j*cmath.pi*center_freq/Fs*i) for i in xrange(len(lptaps))]
+    spinner = [cmath.exp(2j*cmath.pi*center_freq/Fs*i) for i in range(len(lptaps))]
     taps = [s*t for s,t in zip(spinner, lptaps)]
     return taps
 
@@ -176,11 +181,11 @@ def high_pass (gain, Fs, freq1, freq2, passband_ripple_db, stopband_atten_db,
 
 def stopband_atten_to_dev (atten_db):
     """Convert a stopband attenuation in dB to an absolute value"""
-    return 10**(-atten_db/20)
+    return 10**(-atten_db / 20)
 
 def passband_ripple_to_dev (ripple_db):
     """Convert passband ripple spec expressed in dB to an absolute value"""
-    return (10**(ripple_db/20)-1)/(10**(ripple_db/20)+1)
+    return (10**(ripple_db / 20)-1)/(10**(ripple_db / 20)+1)
 
 # ----------------------------------------------------------------
 
@@ -237,10 +242,10 @@ def remezord (fcuts, mags, devs, fsamp = 2):
     nbands = nm
 
     if nm != nd:
-        raise ValueError, "Length of mags and devs must be equal"
+        raise ValueError("Length of mags and devs must be equal")
 
     if nf != 2 * (nbands - 1):
-        raise ValueError, "Length of f must be 2 * len (mags) - 2"
+        raise ValueError("Length of f must be 2 * len (mags) - 2")
 
     for i in range (len (mags)):
         if mags[i] != 0:                        # if not stopband, get relative deviation
@@ -355,4 +360,3 @@ def bporder (freq1, freq2, delta_p, delta_s):
     ginf = -14.6 * math.log10 (delta_p / delta_s) - 16.9
     n = cinf / df + ginf * df + 1
     return n
-

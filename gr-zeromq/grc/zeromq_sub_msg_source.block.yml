@@ -1,0 +1,23 @@
+id: zeromq_sub_msg_source
+label: ZMQ SUB Message Source
+category: '[Core]/ZeroMQ Interfaces'
+
+parameters:
+-   id: address
+    label: Address
+    dtype: string
+-   id: timeout
+    label: Timeout (msec)
+    dtype: float
+    default: '100'
+
+outputs:
+-   domain: message
+    id: out
+    optional: true
+
+templates:
+    imports: from gnuradio import zeromq
+    make: zeromq.sub_msg_source(${address}, ${timeout})
+
+file_format: 1

@@ -21,7 +21,6 @@ include(GrPython)
 
 GR_PYTHON_INSTALL(PROGRAMS
     audio_copy.py
-    audio_fft.py
     audio_play.py
     audio_to_file.py
     dial_tone.py
@@ -33,5 +32,4 @@ GR_PYTHON_INSTALL(PROGRAMS
     spectrum_inversion.py
     test_resampler.py
     DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
-    COMPONENT "audio_python"
 )

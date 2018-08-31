@@ -18,29 +18,28 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Rules for generating the source and sink xml wrappers
+# Rules for generating the source and sink yml wrappers
 ########################################################################
 include(GrPython)
 
-macro(GEN_BLOCK_XML _generator _xml_block)
+macro(GEN_BLOCK_YML _generator _yml_block)
     set(generator ${CMAKE_CURRENT_SOURCE_DIR}/${_generator})
-    set(xml_block ${CMAKE_CURRENT_BINARY_DIR}/${_xml_block})
-    list(APPEND xml_blocks ${xml_block})
+    set(yml_block ${CMAKE_CURRENT_BINARY_DIR}/${_yml_block})
+    list(APPEND yml_blocks ${yml_block})
     add_custom_command(
-        DEPENDS ${generator} OUTPUT ${xml_block}
-        COMMAND ${PYTHON_EXECUTABLE} ${generator} ${xml_block}
+        DEPENDS ${generator} OUTPUT ${yml_block}
+        COMMAND ${PYTHON_EXECUTABLE} ${generator} ${yml_block}
     )
-endmacro(GEN_BLOCK_XML)
+endmacro(GEN_BLOCK_YML)
 
-GEN_BLOCK_XML(gen_uhd_usrp_blocks.py    uhd_usrp_source.xml)
-GEN_BLOCK_XML(gen_uhd_usrp_blocks.py    uhd_usrp_sink.xml)
+GEN_BLOCK_YML(gen_uhd_usrp_blocks.py    uhd_usrp_source.block.yml)
+GEN_BLOCK_YML(gen_uhd_usrp_blocks.py    uhd_usrp_sink.block.yml)
 
-add_custom_target(uhd_grc_xml_blocks ALL DEPENDS ${xml_blocks})
+add_custom_target(uhd_grc_yml_blocks ALL DEPENDS ${yml_blocks})
 
 install(FILES
-    ${xml_blocks}
-    uhd_amsg_source.xml
-    uhd_block_tree.xml
+    ${yml_blocks}
+    uhd_amsg_source.block.yml
+    uhd.tree.yml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "uhd_python"
 )

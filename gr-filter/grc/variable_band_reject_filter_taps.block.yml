@@ -1,0 +1,47 @@
+id: variable_band_reject_filter_taps
+label: Band-reject Filter Taps
+
+parameters:
+-   id: gain
+    label: Gain
+    dtype: float
+    default: '1.0'
+-   id: samp_rate
+    label: Sample Rate (Hz)
+    dtype: float
+    default: samp_rate
+-   id: low_cutoff_freq
+    label: Low Cutoff Freq (Hz)
+    dtype: float
+-   id: high_cutoff_freq
+    label: High Cutoff Freq (Hz)
+    dtype: float
+-   id: width
+    label: Transition Width (Hz)
+    dtype: float
+-   id: win
+    label: Window
+    dtype: int
+    default: firdes.WIN_HAMMING
+    options: [firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN, firdes.WIN_RECTANGULAR,
+        firdes.WIN_KAISER]
+    option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+-   id: beta
+    label: Beta
+    dtype: float
+    default: '6.76'
+value: ${ firdes.band_reject(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width,
+    win, beta) }
+
+templates:
+    imports: from gnuradio.filter import firdes
+    var_make: |-
+        self.${id} = ${id} = firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq},\
+        ${high_cutoff_freq}, ${width}, ${win}, ${beta})
+
+documentation: |-
+    This is a convenience wrapper for calling firdes.band_reject().
+
+        The beta paramater only applies to the Kaiser window.
+
+file_format: 1

@@ -1,0 +1,21 @@
+id: blocks_unpack_k_bits_bb
+label: Unpack K Bits
+
+parameters:
+-   id: k
+    label: K
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.unpack_k_bits_bb(${k})
+
+file_format: 1

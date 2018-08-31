@@ -20,10 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float
+from argparse import ArgumentParser
 
 try:
     from gnuradio import analog
@@ -40,27 +41,23 @@ class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        parser = OptionParser(option_class=eng_option)
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser = ArgumentParser()
+        parser.add_argument("-O", "--audio-output", default="",
                           help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
-        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
-                          help="set sample rate to RATE (48000)")
-        parser.add_option("-D", "--dont-block", action="store_false", default=True,
+        parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
+                          help="set sample rate to RATE %(default)r)")
+        parser.add_argument("-D", "--dont-block", action="store_false", default=True,
                           dest="ok_to_block")
 
-        (options, args) = parser.parse_args ()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
-
-        sample_rate = int(options.sample_rate)
-        ampl = 0.1
+        args = parser.parse_args()
+        sample_rate = int(args.sample_rate)
+        ampl = 0.5
 
         src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 650, ampl)
 
         dst = audio.sink(sample_rate,
-                         options.audio_output,
-                         options.ok_to_block)
+                         args.audio_output,
+                         args.ok_to_block)
 
         self.connect (src0, (dst, 0))
 

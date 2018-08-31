@@ -20,26 +20,28 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import math
 
 from gnuradio import gr, gr_unittest, filter, blocks
 
 def sig_source_f(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 def const_source_f(amp, N):
     y = N*[amp,]
     return y
 
-class test_fractional_resampler(gr_unittest.TestCase):
+class test_mmse_resampler(gr_unittest.TestCase):
 
     def setUp(self):
         self.tb = gr.top_block()
@@ -55,7 +57,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         freq = 10
         data = sig_source_f(fs, freq, 1, N)
         signal = blocks.vector_source_f(data)
-        op = filter.fractional_resampler_ff(0, rrate)
+        op = filter.mmse_resampler_ff(0, rrate)
         snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, op, snk)
@@ -63,10 +65,10 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         Ntest = 5000
         L = len(snk.data())
-        t = map(lambda x: float(x)/(fs/rrate), xrange(L))
+        t = [float(x) / (fs / rrate) for x in range(L)]
 
         phase = 0.1884
-        expected_data = map(lambda x: math.sin(2.*math.pi*freq*x+phase), t)
+        expected_data = [math.sin(2.*math.pi*freq*x+phase) for x in t]
 
         dst_data = snk.data()
 
@@ -80,7 +82,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         freq = 10
         data = sig_source_c(fs, freq, 1, N)
         signal = blocks.vector_source_c(data)
-        op = filter.fractional_resampler_cc(0.0, rrate)
+        op = filter.mmse_resampler_cc(0.0, rrate)
         snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, op, snk)
@@ -88,11 +90,11 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         Ntest = 5000
         L = len(snk.data())
-        t = map(lambda x: float(x)/(fs/rrate), xrange(L))
+        t = [float(x) / (fs / rrate) for x in range(L)]
 
         phase = 0.1884
-        expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
-                                1j*math.sin(2.*math.pi*freq*x+phase), t)
+        expected_data = [math.cos(2.*math.pi*freq*x+phase) + \
+                                1j*math.sin(2.*math.pi*freq*x+phase) for x in t]
 
         dst_data = snk.data()
 
@@ -108,7 +110,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         ctrl = const_source_f(rrate, N)
         signal = blocks.vector_source_f(data)
         control = blocks.vector_source_f(ctrl)
-        op = filter.fractional_resampler_ff(0, 1)
+        op = filter.mmse_resampler_ff(0, 1)
         snk = blocks.vector_sink_f()
 
         self.tb.connect(signal, op, snk)
@@ -117,10 +119,10 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         Ntest = 5000
         L = len(snk.data())
-        t = map(lambda x: float(x)/(fs/rrate), xrange(L))
+        t = [float(x) / (fs / rrate) for x in range(L)]
 
         phase = 0.1884
-        expected_data = map(lambda x: math.sin(2.*math.pi*freq*x+phase), t)
+        expected_data = [math.sin(2.*math.pi*freq*x+phase) for x in t]
 
         dst_data = snk.data()
 
@@ -136,7 +138,7 @@ class test_fractional_resampler(gr_unittest.TestCase):
         ctrl = const_source_f(rrate, N)
         signal = blocks.vector_source_c(data)
         control = blocks.vector_source_f(ctrl)
-        op = filter.fractional_resampler_cc(0.0, 1)
+        op = filter.mmse_resampler_cc(0.0, 1)
         snk = blocks.vector_sink_c()
 
         self.tb.connect(signal, op, snk)
@@ -145,15 +147,15 @@ class test_fractional_resampler(gr_unittest.TestCase):
 
         Ntest = 5000
         L = len(snk.data())
-        t = map(lambda x: float(x)/(fs/rrate), xrange(L))
+        t = [float(x) / (fs / rrate) for x in range(L)]
 
         phase = 0.1884
-        expected_data = map(lambda x: math.cos(2.*math.pi*freq*x+phase) + \
-                                1j*math.sin(2.*math.pi*freq*x+phase), t)
+        expected_data = [math.cos(2.*math.pi*freq*x+phase) + \
+                                1j*math.sin(2.*math.pi*freq*x+phase) for x in t]
 
         dst_data = snk.data()
 
         self.assertComplexTuplesAlmostEqual(expected_data[-Ntest:], dst_data[-Ntest:], 3)
 
 if __name__ == '__main__':
-    gr_unittest.run(test_fractional_resampler, "test_fractional_resampler.xml")
+    gr_unittest.run(test_mmse_resampler, "test_mmse_resampler.xml")

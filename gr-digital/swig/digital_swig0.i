@@ -49,7 +49,6 @@
 #include "gnuradio/digital/correlate_access_code_tag_ff.h"
 #include "gnuradio/digital/correlate_access_code_bb_ts.h"
 #include "gnuradio/digital/correlate_access_code_ff_ts.h"
-#include "gnuradio/digital/correlate_and_sync_cc.h"
 #include "gnuradio/digital/costas_loop_cc.h"
 #include "gnuradio/digital/cpmmod_bc.h"
 #include "gnuradio/digital/crc32.h"
@@ -63,12 +62,7 @@
 #include "gnuradio/digital/ofdm_equalizer_base.h"
 #include "gnuradio/digital/ofdm_equalizer_simpledfe.h"
 #include "gnuradio/digital/ofdm_equalizer_static.h"
-#include "gnuradio/digital/ofdm_frame_acquisition.h"
 #include "gnuradio/digital/ofdm_frame_equalizer_vcvc.h"
-#include "gnuradio/digital/ofdm_frame_sink.h"
-#include "gnuradio/digital/ofdm_insert_preamble.h"
-#include "gnuradio/digital/ofdm_mapper_bcv.h"
-#include "gnuradio/digital/ofdm_sampler.h"
 #include "gnuradio/digital/ofdm_serializer_vcc.h"
 #include "gnuradio/digital/ofdm_sync_sc_cfb.h"
 %}
@@ -85,7 +79,6 @@
 %include "gnuradio/digital/correlate_access_code_tag_ff.h"
 %include "gnuradio/digital/correlate_access_code_bb_ts.h"
 %include "gnuradio/digital/correlate_access_code_ff_ts.h"
-%include "gnuradio/digital/correlate_and_sync_cc.h"
 %include "gnuradio/digital/costas_loop_cc.h"
 %include "gnuradio/digital/cpmmod_bc.h"
 %include "gnuradio/digital/crc32.h"
@@ -99,12 +92,7 @@
 %include "gnuradio/digital/ofdm_equalizer_base.h"
 %include "gnuradio/digital/ofdm_equalizer_simpledfe.h"
 %include "gnuradio/digital/ofdm_equalizer_static.h"
-%include "gnuradio/digital/ofdm_frame_acquisition.h"
 %include "gnuradio/digital/ofdm_frame_equalizer_vcvc.h"
-%include "gnuradio/digital/ofdm_frame_sink.h"
-%include "gnuradio/digital/ofdm_insert_preamble.h"
-%include "gnuradio/digital/ofdm_mapper_bcv.h"
-%include "gnuradio/digital/ofdm_sampler.h"
 %include "gnuradio/digital/ofdm_serializer_vcc.h"
 %include "gnuradio/digital/ofdm_sync_sc_cfb.h"
 
@@ -119,7 +107,6 @@ GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_tag_ff);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_bb_ts);
 GR_SWIG_BLOCK_MAGIC2(digital, correlate_access_code_ff_ts);
-GR_SWIG_BLOCK_MAGIC2(digital, correlate_and_sync_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, costas_loop_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, crc32_bb);
 GR_SWIG_BLOCK_MAGIC2(digital, crc32_async_bb);
@@ -129,12 +116,7 @@ GR_SWIG_BLOCK_MAGIC2(digital, lms_dd_equalizer_cc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_carrier_allocator_cvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_chanest_vcvc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_cyclic_prefixer);
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_acquisition);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_equalizer_vcvc);
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_frame_sink);
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_insert_preamble);
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_mapper_bcv);
-GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sampler);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_serializer_vcc);
 GR_SWIG_BLOCK_MAGIC2(digital, ofdm_sync_sc_cfb);
 

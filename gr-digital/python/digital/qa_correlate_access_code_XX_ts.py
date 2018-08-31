@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
 
@@ -35,7 +36,7 @@ def string_to_1_0_list(s):
     return r
 
 def to_1_0_string(L):
-    return ''.join(map(lambda x: chr(x + ord('0')), L))
+    return ''.join([chr(x + ord('0')) for x in L])
 
 class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
 
@@ -51,7 +52,7 @@ class test_correlate_access_code_XX_ts(gr_unittest.TestCase):
         packet = header + payload
         pad = (0,) * 64
         src_data = (0, 0, 1, 1, 1, 1, 0, 1, 1) + tuple(string_to_1_0_list(packet)) + pad
-        expected = tuple(map(long, src_data[9+32:-len(pad)]))
+        expected = tuple(map(int, src_data[9+32:-len(pad)]))
         src = blocks.vector_source_b(src_data)
         op = digital.correlate_access_code_bb_ts("1011", 0, "sync")
         dst = blocks.vector_sink_b()

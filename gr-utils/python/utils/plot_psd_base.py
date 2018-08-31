@@ -20,24 +20,28 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Please install SciPy to run this script (http://www.scipy.org/)"
-    raise SystemExit, 1
+    print("Please install SciPy to run this script (http://www.scipy.org/)")
+    raise SystemExit(1)
 
 try:
     from pylab import *
 except ImportError:
-    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
-    raise SystemExit, 1
+    print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)")
+    raise SystemExit(1)
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 from scipy import log10
-from gnuradio.eng_option import eng_option
+from gnuradio.eng_arg import eng_float, intx
 
-class plot_psd_base:
+class plot_psd_base(object):
     def __init__(self, datatype, filename, options):
         self.hfile = open(filename, "r")
         self.block_length = options.block
@@ -87,30 +91,30 @@ class plot_psd_base:
         show()
 
     def get_data(self):
-        self.position = self.hfile.tell()/self.sizeof_data
+        self.position = self.hfile.tell() / self.sizeof_data
         self.text_file_pos.set_text("File Position: %d" % self.position)
         try:
             self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         except MemoryError:
-            print "End of File"
+            print("End of File")
             return False
         else:
             # retesting length here as newer version of scipy does not throw a MemoryError, just
             # returns a zero-length array
             if(len(self.iq) > 0):
                 tstep = 1.0 / self.sample_rate
-                #self.time = scipy.array([tstep*(self.position + i) for i in xrange(len(self.iq))])
-                self.time = scipy.array([tstep*(i) for i in xrange(len(self.iq))])
+                #self.time = scipy.array([tstep*(self.position + i) for i in range(len(self.iq))])
+                self.time = scipy.array([tstep*(i) for i in range(len(self.iq))])
 
                 self.iq_psd, self.freq = self.dopsd(self.iq)
                 return True
             else:
-                print "End of File"
+                print("End of File")
                 return False
 
     def dopsd(self, iq):
         ''' Need to do this here and plot later so we can do the fftshift '''
-        overlap = self.psdfftsize/4
+        overlap = self.psdfftsize / 4
         winfunc = scipy.blackman
         psd,freq = mlab.psd(iq, self.psdfftsize, self.sample_rate,
                             window = lambda d: d*winfunc(self.psdfftsize),
@@ -174,7 +178,7 @@ class plot_psd_base:
         self.sp_psd.set_xlim([f.min(), f.max()])
 
     def draw_spec(self, t, s):
-        overlap = self.specfftsize/4
+        overlap = self.specfftsize / 4
         winfunc = scipy.blackman
         self.sp_spec.clear()
         self.sp_spec.specgram(s, self.specfftsize, self.sample_rate,
@@ -244,49 +248,44 @@ class plot_psd_base:
 
     @staticmethod
     def setup_options():
-        usage="%prog: [options] input_filename"
         description = "Takes a GNU Radio binary file (with specified data type using --data-type) and displays the I&Q data versus time as well as the power spectral density (PSD) plot. The y-axis values are plotted assuming volts as the amplitude of the I&Q streams and converted into dBm in the frequency domain (the 1/N power adjustment out of the FFT is performed internally). The script plots a certain block of data at a time, specified on the command line as -B or --block. The start position in the file can be set by specifying -s or --start and defaults to 0 (the start of the file). By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time and frequency axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples. Finally, the size of the FFT to use for the PSD and spectrogram plots can be set independently with --psd-size and --spec-size, respectively. The spectrogram plot does not display by default and is turned on with -S or --enable-spec."
 
-        parser = OptionParser(option_class=eng_option, conflict_handler="resolve",
-                              usage=usage, description=description)
-        parser.add_option("-d", "--data-type", type="string", default="complex64",
-                          help="Specify the data type (complex64, float32, (u)int32, (u)int16, (u)int8) [default=%default]")
-        parser.add_option("-B", "--block", type="int", default=8192,
-                          help="Specify the block size [default=%default]")
-        parser.add_option("-s", "--start", type="int", default=0,
-                          help="Specify where to start in the file [default=%default]")
-        parser.add_option("-R", "--sample-rate", type="eng_float", default=1.0,
-                          help="Set the sampler rate of the data [default=%default]")
-        parser.add_option("", "--psd-size", type="int", default=1024,
-                          help="Set the size of the PSD FFT [default=%default]")
-        parser.add_option("", "--spec-size", type="int", default=256,
-                          help="Set the size of the spectrogram FFT [default=%default]")
-        parser.add_option("-S", "--enable-spec", action="store_true", default=False,
-                          help="Turn on plotting the spectrogram [default=%default]")
+        parser = ArgumentParser(conflict_handler="resolve", description=description)
+        parser.add_argument("-d", "--data-type", default="complex64",
+                choices=("complex64", "float32", "int32", "uint32", "int16",
+                    "uint16", "int8", "uint8" ),
+                help="Specify the data type [default=%(default)r]")
+        parser.add_argument("-B", "--block", type=int, default=8192,
+                help="Specify the block size [default=%(default)r]")
+        parser.add_argument("-s", "--start", type=int, default=0,
+                help="Specify where to start in the file [default=%(default)r]")
+        parser.add_argument("-R", "--sample-rate", type=eng_float, default=1.0,
+                help="Set the sampler rate of the data [default=%(default)r]")
+        parser.add_argument("--psd-size", type=int, default=1024,
+                help="Set the size of the PSD FFT [default=%(default)r]")
+        parser.add_argument("--spec-size", type=int, default=256,
+                help="Set the size of the spectrogram FFT [default=%(default)r]")
+        parser.add_argument("-S", "--enable-spec", action="store_true",
+                help="Turn on plotting the spectrogram [default=%(default)r]")
+        parser.add_argument("file", metavar="FILE",
+                help="Input file with samples")
 
         return parser
 
 def find(item_in, list_search):
     try:
-	return list_search.index(item_in) != None
+        return list_search.index(item_in) != None
     except ValueError:
-	return False
+        return False
 
 def main():
     parser = plot_psd_base.setup_options()
-    (options, args) = parser.parse_args ()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filename = args[0]
+    args = parser.parse_args()
 
-    dc = plot_psd_base(options.data_type, filename, options)
+    dc = plot_psd_base(args.data_type, args.file, args)
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         pass
-
-
-

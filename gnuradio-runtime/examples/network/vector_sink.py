@@ -20,10 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 
 class vector_sink(gr.top_block):
     def __init__(self, host, port, pkt_size, eof):
@@ -34,24 +35,20 @@ class vector_sink(gr.top_block):
         self.connect(udp, sink)
 
 if __name__ == "__main__":
-    parser = OptionParser(option_class=eng_option)
-    parser.add_option("", "--host", type="string", default="0.0.0.0",
+    parser = ArgumentParser()
+    parser.add_argument("-H", "--host", default="0.0.0.0",
                       help="local host name (domain name or IP address)")
-    parser.add_option("", "--port", type="int", default=65500,
+    parser.add_argument("-p", "--port", type=int, default=65500,
                       help="port value to listen to for connection")
-    parser.add_option("", "--packet-size", type="int", default=1471,
+    parser.add_argument("-s", "--packet-size", type=int, default=1471,
                       help="packet size.")
-    parser.add_option("", "--no-eof", action="store_true", default=False,
+    parser.add_argument("--no-eof", action="store_true", default=False,
                       help="don't send EOF on disconnect")
-    (options, args) = parser.parse_args()
-    if len(args) != 0:
-        parser.print_help()
-        raise SystemExit, 1
-
+    args = parser.parse_args()
     # Create an instance of a hierarchical block
-    top_block = vector_sink(options.host, options.port,
-                            options.packet_size,
-                            not options.no_eof)
+    top_block = vector_sink(args.host, args.port,
+                            args.packet_size,
+                            not args.no_eof)
 
     try:
         # Run forever

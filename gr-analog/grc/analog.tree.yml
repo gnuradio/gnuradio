@@ -1,0 +1,39 @@
+'[Core]':
+- Level Controllers:
+  - analog_agc_xx
+  - analog_agc2_xx
+  - analog_agc3_xx
+  - analog_feedforward_agc_cc
+  - analog_ctcss_squelch_ff
+  - analog_pwr_squelch_xx
+  - analog_simple_squelch_cc
+  - analog_standard_squelch
+  - analog_rail_ff
+- Modulators:
+  - analog_frequency_modulator_fc
+  - analog_phase_modulator_fc
+  - analog_quadrature_demod_cf
+  - analog_nbfm_tx
+  - analog_nbfm_rx
+  - analog_wfm_tx
+  - analog_wfm_rcv
+  - analog_wfm_rcv_pll
+  - analog_am_demod_cf
+  - analog_fm_demod_cf
+  - analog_fm_deemph
+  - analog_fm_preemph
+- Waveform Generators:
+  - analog_sig_source_x
+  - analog_const_source_x
+  - analog_noise_source_x
+  - analog_fastnoise_source_x
+  - analog_random_source_x
+  - analog_random_uniform_source_x
+- Synchronizers:
+  - analog_pll_carriertracking_cc
+  - analog_pll_freqdet_cf
+  - analog_pll_refout_cc
+- Peak Detectors:
+  - analog_dpll_bb
+- Measurement Tools:
+  - analog_probe_avg_mag_sqrd_x

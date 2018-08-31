@@ -20,14 +20,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import filter, analog, blocks
 from gnuradio import uhd
 from gnuradio.fft import window
-from gnuradio.eng_option import eng_option
+from gnuradio.eng_arg import eng_float
 from gnuradio.filter import firdes
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 class uhd_burst_detector(gr.top_block):
     def __init__(self, uhd_address, options):
@@ -94,24 +95,24 @@ class uhd_burst_detector(gr.top_block):
         self.uhd_src_0.set_samp_rate(self.samp_rate)
 
 if __name__ == '__main__':
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    parser.add_option("-a", "--address", type="string", default="addr=192.168.10.2",
-                      help="select address of the device [default=%default]")
-    #parser.add_option("-A", "--antenna", default=None,
+    parser = ArgumentParser()
+    parser.add_argument("-a", "--address", default="addr=192.168.10.2",
+                      help="select address of the device [default=%(default)r]")
+    #parser.add_argument("-A", "--antenna", default=None,
     #                  help="select Rx Antenna (only on RFX-series boards)")
-    parser.add_option("-f", "--freq", type="eng_float", default=450e6,
+    parser.add_argument("-f", "--freq", type=eng_float, default=450e6,
                       help="set frequency to FREQ", metavar="FREQ")
-    parser.add_option("-g", "--gain", type="eng_float", default=0,
-                      help="set gain in dB [default=%default]")
-    parser.add_option("-R", "--samp-rate", type="eng_float", default=200000,
-                      help="set USRP sample rate [default=%default]")
-    parser.add_option("-t", "--threshold", type="float", default=-60,
-                      help="Set the detection power threshold (dBm) [default=%default")
-    parser.add_option("-T", "--trigger", action="store_true", default=False,
-                      help="Use internal trigger instead of detector [default=%default]")
-    (options, args) = parser.parse_args()
+    parser.add_argument("-g", "--gain", type=eng_float, default=0,
+                      help="set gain in dB [default=%(default)r]")
+    parser.add_argument("-R", "--samp-rate", type=eng_float, default=200000,
+                      help="set USRP sample rate [default=%(default)r]")
+    parser.add_argument("-t", "--threshold", type=float, default=-60,
+                      help="Set the detection power threshold (dBm) [default=%(default)r")
+    parser.add_argument("-T", "--trigger", action="store_true", default=False,
+                      help="Use internal trigger instead of detector [default=%(default)r]")
+    args = parser.parse_args()
 
-    uhd_addr = options.address
+    uhd_addr = args.address
 
-    tb = uhd_burst_detector(uhd_addr, options)
+    tb = uhd_burst_detector(uhd_addr, args)
     tb.run()

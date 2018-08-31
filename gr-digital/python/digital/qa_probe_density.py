@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+from __future__ import print_function
+
 from gnuradio import gr, gr_unittest, digital, blocks
 
 class test_probe_density(gr_unittest.TestCase):
@@ -62,7 +64,7 @@ class test_probe_density(gr_unittest.TestCase):
         self.tb.run()
 
         result_data = op.density()
-        print result_data
+        print(result_data)
         self.assertAlmostEqual(expected_data, result_data, 5)
 
 if __name__ == '__main__':

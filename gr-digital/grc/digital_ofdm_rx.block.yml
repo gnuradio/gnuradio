@@ -1,0 +1,111 @@
+id: digital_ofdm_rx
+label: OFDM Receiver
+
+parameters:
+-   id: fft_len
+    label: FFT Length
+    dtype: int
+    default: '64'
+-   id: cp_len
+    label: Cyclic Prefix Length
+    dtype: int
+    default: '16'
+-   id: packet_len_key
+    label: Packet Length Tag Key
+    dtype: string
+    default: '"length"'
+-   id: occupied_carriers
+    label: Occupied Carriers
+    dtype: raw
+    default: ()
+    hide: ${ 'none' if occupied_carriers else 'part' }
+-   id: pilot_carriers
+    label: Pilot Carriers
+    dtype: raw
+    default: ()
+    hide: ${ 'none' if pilot_carriers else 'part' }
+-   id: pilot_symbols
+    label: Pilot Symbols
+    dtype: raw
+    default: ()
+    hide: ${ 'none' if pilot_symbols else 'part' }
+-   id: sync_word1
+    label: Sync Word 1
+    dtype: raw
+    default: ()
+    hide: ${ 'none' if sync_word1 else 'part' }
+-   id: sync_word2
+    label: Sync Word 2
+    dtype: raw
+    default: ()
+    hide: ${ 'none' if sync_word2 else 'part' }
+-   id: header_mod
+    label: Header Modulation
+    dtype: enum
+    options: ['"BPSK"', '"QPSK"']
+    option_labels: [BPSK, QPSK]
+    option_attributes:
+        bps: ['1', '2']
+-   id: payload_mod
+    label: Payload Modulation
+    dtype: enum
+    options: ['"BPSK"', '"QPSK"', '"8-PSK"']
+    option_labels: [BPSK, QPSK, 8-PSK]
+    option_attributes:
+        bps: ['1', '2', '3']
+-   id: scramble_bits
+    label: Scramble Bits
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    hide: ${ ('part' if scramble_bits else 'none') }
+-   id: log
+    label: Log Debug Info
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    hide: ${ ('none' if log else 'part') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+asserts:
+- ${ fft_len > 0 }
+- ${ cp_len > 0 }
+- ${ cp_len < fft_len }
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.ofdm_rx(
+            fft_len=${fft_len}, cp_len=${cp_len},
+            frame_length_tag_key='frame_'+${packet_len_key},
+            packet_length_tag_key=${packet_len_key},
+            % if occupied_carriers:
+            occupied_carriers=${occupied_carriers},
+            % endif
+            % if pilot_carriers:
+            pilot_carriers=${pilot_carriers},
+            % endif
+            % if pilot_symbols:
+            pilot_symbols=${pilot_symbols},
+            % endif
+            % if sync_word1:
+            sync_word1=${sync_word1},
+            % endif
+            % if sync_word2:
+            sync_word2=${sync_word2},
+            % endif
+            bps_header=${header_mod.bps},
+            bps_payload=${payload_mod.bps},
+            debug_log=${log},
+            scramble_bits=${scramble_bits})
+
+file_format: 1

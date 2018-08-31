@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 import math
 import sys
 
@@ -38,8 +40,8 @@ def gen_approx_table (f, nentries, min_x, max_x):
     for i in range (nentries):
         a = (i * incx) + min_x
         b = ((i + 1) * incx) + min_x
-        m = (f(b)-f(a))/(b-a)
-        c = (3*a+b)*(f(a)-f(b))/(4*(b-a)) + (f((a+b)/2) + f(a))/2
+        m = (f(b)-f(a)) / (b-a)
+        c = (3*a+b)*(f(a)-f(b))/(4*(b-a)) + (f((a+b)/2) + f(a))//2
         abs_error = c+m*a-f(a)
         r.append ((m, c, abs_error))
     return r

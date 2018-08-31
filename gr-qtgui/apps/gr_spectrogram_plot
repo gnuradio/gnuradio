@@ -142,55 +142,54 @@ def read_header(filelist):
 def main():
    description = 'Plots the spectrogram (waterfall) of a file with detached header.'
    description += ' Assumes header is <input_filename>.hdr'
-   (options, args) = plot_base.setup_options(description)
-   filelist = list(args)
+   args = plot_base.setup_options(description)
    # Attempt to read the header information
-   info = read_header(filelist)
+   info = read_header(args.files)
    # If no header, quit
    if not info:
       sys.stderr.write('Header not found\n')
       sys.exit(1)
 
-   max_nsamples = plot_base.find_max_nsamples(filelist)
+   max_nsamples = plot_base.find_max_nsamples(args.files)
    srate = info["rx_rate"]
 
    # Dispatch the proper function
    # Complex Types
    if(info["cplx"] == True):
       if( info["type"] == "float" ):
-         tb = spectrogram_plot_c(filelist,
-                            options.center_frequency,srate,
-                            options.psd_size,
-                            options.start, options.nsamples, max_nsamples,
-                            options.average);
+         tb = spectrogram_plot_c(args.files,
+                            args.center_frequency,srate,
+                            args.psd_size,
+                            args.start, args.nsamples, max_nsamples,
+                            args.average);
       else:
          sys.stderr.write("Complex File Type " + info["type"]+ " not supported.\n")
    # Real Types
    else:
       if( info["type"] == "bytes" ):
-         tb = spectrogram_plot_b(filelist,
-                            options.center_frequency,srate,
-                            options.psd_size,
-                            options.start, options.nsamples, max_nsamples,
-                            options.average);
+         tb = spectrogram_plot_b(args.files,
+                            args.center_frequency,srate,
+                            args.psd_size,
+                            args.start, args.nsamples, max_nsamples,
+                            args.average);
       elif( info["type"] == "int" ):
-         tb = spectrogram_plot_i(filelist,
-                            options.center_frequency,srate,
-                            options.psd_size,
-                            options.start, options.nsamples, max_nsamples,
-                            options.average);
+         tb = spectrogram_plot_i(args.files,
+                            args.center_frequency,srate,
+                            args.psd_size,
+                            args.start, args.nsamples, max_nsamples,
+                            args.average);
       elif( info["type"] == "float" ):
-         tb = spectrogram_plot_f(filelist,
-                            options.center_frequency,srate,
-                            options.psd_size,
-                            options.start, options.nsamples, max_nsamples,
-                            options.average);
+         tb = spectrogram_plot_f(args.files,
+                            args.center_frequency,srate,
+                            args.psd_size,
+                            args.start, args.nsamples, max_nsamples,
+                            args.average);
       elif( info["type"] == "short" ):
-         tb = spectrogram_plot_s(filelist,
-                            options.center_frequency,srate,
-                            options.psd_size,
-                            options.start, options.nsamples, max_nsamples,
-                            options.average);
+         tb = spectrogram_plot_s(args.files,
+                            args.center_frequency,srate,
+                            args.psd_size,
+                            args.start, args.nsamples, max_nsamples,
+                            args.average);
       else:
         sys.stderr.write("Real File Type " + info["type"] + " not supported\n")
    main_box = plot_base.plot_spectrogram_form(tb, 'GNU Radio Spectrogram Plot')

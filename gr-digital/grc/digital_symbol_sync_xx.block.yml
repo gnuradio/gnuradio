@@ -1,0 +1,118 @@
+id: digital_symbol_sync_xx
+label: Symbol Sync
+category: '[Core]/Synchronizers'
+
+parameters:
+-   id: type
+    label: I/O Type
+    dtype: enum
+    options: [cc, ff]
+    option_labels: [Complex, Float]
+    option_attributes:
+        input: [complex, float]
+        output: [complex, float]
+    hide: part
+-   id: ted_type
+    label: Timing Error Detector
+    dtype: enum
+    options: [digital.TED_MUELLER_AND_MULLER, digital.TED_MOD_MUELLER_AND_MULLER,
+        digital.TED_ZERO_CROSSING, digital.TED_GARDNER, digital.TED_EARLY_LATE, digital.TED_DANDREA_AND_MENGALI_GEN_MSK,
+        digital.TED_MENGALI_AND_DANDREA_GMSK, digital.TED_SIGNAL_TIMES_SLOPE_ML, digital.TED_SIGNUM_TIMES_SLOPE_ML]
+    option_labels: ["Mueller and M\xFCller", "Modified Mueller and M\xFCller", Zero
+            Crossing, Gardner, Early-Late, D'Andrea and Mengali Gen MSK, Mengali and
+            D'Andrea GMSK, 'y[n]y''[n] Maximum Likelyhood', 'sgn(y[n])y''[n] Maximum
+            Likelyhood']
+    option_attributes:
+        hide_constellation: [part, part, part, all, all, all, all, all, all]
+-   id: constellation
+    label: TED Slicer Constellation
+    dtype: raw
+    default: digital.constellation_bpsk().base()
+    hide: ${ ted_type.hide_constellation }
+-   id: sps
+    label: Samples per Symbol
+    dtype: real
+    default: sps
+-   id: ted_gain
+    label: Expected TED Gain
+    dtype: real
+    default: '1.0'
+-   id: loop_bw
+    label: Loop Bandwidth
+    dtype: real
+    default: '0.045'
+-   id: damping
+    label: Damping Factor
+    dtype: real
+    default: '1.0'
+-   id: max_dev
+    label: Maximum Deviation
+    dtype: real
+    default: '1.5'
+-   id: osps
+    label: Output Samples/Symbol
+    dtype: int
+    default: '1'
+-   id: resamp_type
+    label: Interpolating Resampler
+    dtype: enum
+    options: [digital.IR_MMSE_8TAP, digital.IR_PFB_NO_MF, digital.IR_PFB_MF]
+    option_labels: ['MMSE, 8 tap FIR', 'Polyphase Filterbank, MMSE', 'Polyphase Filterbank,
+            MF']
+    option_attributes:
+        hide_nfilters: [all, '', '']
+        hide_pfb_mf_taps: [all, all, '']
+-   id: nfilters
+    label: Filterbank Arms
+    dtype: int
+    default: '128'
+    hide: ${ resamp_type.hide_nfilters }
+-   id: pfb_mf_taps
+    label: PFB MF Taps
+    dtype: real_vector
+    default: '[]'
+    hide: ${ resamp_type.hide_pfb_mf_taps }
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+-   label: error
+    domain: stream
+    dtype: float
+    optional: true
+-   label: T_inst
+    domain: stream
+    dtype: float
+    optional: true
+-   label: T_avg
+    domain: stream
+    dtype: float
+    optional: true
+
+templates:
+    imports: |-
+        from gnuradio import digital
+        from gnuradio import filter
+    make: |-
+        digital.symbol_sync_${type}(
+            ${ted_type}, 
+            ${sps}, 
+            ${loop_bw}, 
+            ${damping},
+            ${ted_gain}, 
+            ${max_dev}, 
+            ${osps}, 
+            ${constellation}, 
+            ${resamp_type}, 
+            ${nfilters},
+            ${pfb_mf_taps})
+    callbacks:
+    - set_loop_bandwidth(${loop_bw})
+    - set_damping_factor(${damping})
+    - set_ted_gain(${ted_gain})
+
+file_format: 1

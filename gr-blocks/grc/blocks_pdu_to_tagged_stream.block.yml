@@ -1,0 +1,29 @@
+id: blocks_pdu_to_tagged_stream
+label: PDU to Tagged Stream
+
+parameters:
+-   id: type
+    label: Item Type
+    dtype: enum
+    options: [byte, complex, float]
+    option_attributes:
+        tv: [blocks.byte_t, blocks.complex_t, blocks.float_t]
+    hide: part
+-   id: tag
+    label: Length tag name
+    dtype: string
+    default: packet_len
+
+inputs:
+-   domain: message
+    id: pdus
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.pdu_to_tagged_stream(${type.tv}, ${tag})
+
+file_format: 1

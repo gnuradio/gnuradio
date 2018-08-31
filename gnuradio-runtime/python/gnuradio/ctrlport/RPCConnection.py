@@ -17,9 +17,6 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-
-import exceptions
-
 """
 RPCMethods is a dictionary listing RPC transports currently supported
 by this client.
@@ -29,6 +26,8 @@ Args:
     excluded_args: function arguments that are NOT to be added to the dictionary (sequence of strings)
     options: result of command argument parsing (optparse.Values)
 """
+
+from __future__ import unicode_literals
 
 RPCMethods = {'thrift': 'Apache Thrift',
              #'ice': 'Zeroc ICE'
@@ -94,25 +93,25 @@ class RPCConnection(object):
         return self.port
 
     def newConnection(self, host=None, port=None):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def properties(self, *args):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def getKnobs(self, *args):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def getRe(self,*args):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def postMessage(self,*args):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def setKnobs(self,*args):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def shutdown(self):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()
 
     def printProperties(self, props):
-        raise exceptions.NotImplementedError()
+        raise NotImplementedError()

@@ -1,0 +1,30 @@
+id: blocks_transcendental
+label: Transcendental
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [complex_double, float]
+    option_labels: [Complex, Float]
+    option_attributes:
+        type: [complex, float]
+    hide: part
+-   id: name
+    label: Function Name
+    dtype: string
+    default: cos
+
+inputs:
+-   domain: stream
+    dtype: ${ type.type }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.type }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.transcendental(${name}, "${type}")
+
+file_format: 1

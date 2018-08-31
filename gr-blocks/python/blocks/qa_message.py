@@ -1,6 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
-# Copyright 2004,2010,2013 Free Software Foundation, Inc.
+# Copyright 2004,2010,2013,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,6 +25,7 @@ import time
 
 from gnuradio import gr, gr_unittest, blocks
 import pmt
+
 
 def all_counts():
     return (gr.block_ncurrently_allocated(),
@@ -57,9 +59,14 @@ class test_message(gr_unittest.TestCase):
         self.assertEquals(0, msg.length())
 
     def test_101(self):
-        s = 'This is a test'
-        msg = gr.message_from_string(s)
+        s = b'This is a test'
+        msg = gr.message_from_string(s.decode('utf8'))
         self.assertEquals(s, msg.to_string())
+
+    def test_102_unicodechars(self):
+        s = u"(╯°□°)╯︵ ┻━┻"
+        msg = gr.message_from_string(s)
+        self.assertEquals(s.encode('utf8'), msg.to_string())
 
     def test_200(self):
         self.leak_check(self.body_200)
@@ -95,46 +102,17 @@ class test_message(gr_unittest.TestCase):
         input_data = (0,1,2,3,4,5,6,7,8,9)
         src = blocks.vector_source_b(input_data)
         dst = blocks.vector_sink_b()
-	tb = gr.top_block()
+        tb = gr.top_block()
         tb.connect(src, dst)
         tb.run()
         self.assertEquals(input_data, dst.data())
-
-    def test_301(self):
-        # Use itemsize, limit constructor
-        src = blocks.message_source(gr.sizeof_char)
-        dst = blocks.vector_sink_b()
-	tb = gr.top_block()
-        tb.connect(src, dst)
-        src.msgq().insert_tail(gr.message_from_string('01234'))
-        src.msgq().insert_tail(gr.message_from_string('5'))
-        src.msgq().insert_tail(gr.message_from_string(''))
-        src.msgq().insert_tail(gr.message_from_string('6789'))
-        src.msgq().insert_tail(gr.message(1))                  # send EOF
-        tb.run()
-        self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
-
-    def test_302(self):
-        # Use itemsize, msgq constructor
-        msgq = gr.msg_queue()
-        src = blocks.message_source(gr.sizeof_char, msgq)
-        dst = blocks.vector_sink_b()
-	tb = gr.top_block()
-        tb.connect(src, dst)
-        src.msgq().insert_tail(gr.message_from_string('01234'))
-        src.msgq().insert_tail(gr.message_from_string('5'))
-        src.msgq().insert_tail(gr.message_from_string(''))
-        src.msgq().insert_tail(gr.message_from_string('6789'))
-        src.msgq().insert_tail(gr.message(1))                  # send EOF
-        tb.run()
-        self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
 
     def test_debug_401(self):
         msg = pmt.intern("TESTING")
         src = blocks.message_strobe(msg, 500)
         snk = blocks.message_debug()
 
-	tb = gr.top_block()
+        tb = gr.top_block()
         tb.msg_connect(src, "strobe", snk, "store")
         tb.start()
         time.sleep(1)

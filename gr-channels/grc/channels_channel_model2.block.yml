@@ -1,0 +1,61 @@
+id: channels_channel_model2
+label: Channel Model 2
+
+parameters:
+-   id: noise_voltage
+    label: Noise Voltage
+    dtype: real
+    default: '0.0'
+-   id: epsilon
+    label: Time Offset
+    dtype: real
+    default: '1.0'
+-   id: taps
+    label: Taps
+    dtype: complex_vector
+    default: 1.0 + 1.0j
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+-   id: block_tags
+    label: Block Tag Propagation
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    option_attributes:
+        hide_block: ['', part]
+    hide: ${ block_tags.hide_block }
+
+inputs:
+-   domain: stream
+    dtype: complex
+-   label: freq
+    domain: stream
+    dtype: float
+-   label: time
+    domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: |-
+        from gnuradio import channels
+        from gnuradio.filter import firdes
+    make: |-
+        channels.channel_model2(
+            noise_voltage=${noise_voltage},
+            epsilon=${epsilon},
+            taps=${taps},
+            noise_seed=${seed},
+            block_tags=${block_tags})
+    callbacks:
+    - set_noise_voltage(${noise_voltage})
+    - set_taps(${taps})
+    - set_timing_offset(${epsilon})
+
+file_format: 1

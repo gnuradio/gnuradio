@@ -1,0 +1,79 @@
+id: digital_qam_demod
+label: QAM Demod
+category: '[Core]/Deprecated'
+
+parameters:
+-   id: constellation_points
+    label: Number of Constellation Points
+    dtype: int
+    default: '16'
+-   id: differential
+    label: Differential Encoding
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '2'
+-   id: excess_bw
+    label: Excess BW
+    dtype: real
+    default: '0.35'
+-   id: freq_bw
+    label: Frequency BW
+    dtype: real
+    default: 6.28/100.0
+-   id: timing_bw
+    label: Timing BW
+    dtype: real
+    default: 6.28/100.0
+-   id: phase_bw
+    label: Phase BW
+    dtype: real
+    default: 6.28/100.0
+-   id: mod_code
+    label: Gray Code
+    dtype: enum
+    options: ['"gray"', '"none"']
+    option_labels: ['Yes', 'No']
+-   id: verbose
+    label: Verbose
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(verbose) == 'False' else 'none') }
+-   id: log
+    label: Log
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(log) == 'False' else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.qam.qam_demod(
+            constellation_points=${constellation_points},
+            differential=${differential},
+            samples_per_symbol=${samples_per_symbol},
+            excess_bw=${excess_bw},
+            freq_bw=${freq_bw},
+            timing_bw=${timing_bw},
+            phase_bw=${phase_bw},
+            mod_code=${mod_code},
+            verbose=${verbose},
+            log=${log})
+
+file_format: 1

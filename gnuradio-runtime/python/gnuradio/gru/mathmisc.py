@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import unicode_literals
 #
 # Copyright 2005 Free Software Foundation, Inc.
 #
@@ -30,4 +32,4 @@ def lcm(a,b):
     return a * b / gcd(a, b)
 
 def log2(x):
-    return math.log(x)/math.log(2)
+    return math.log(x) / math.log(2)

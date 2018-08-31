@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 from gnuradio import gr, gr_unittest, digital, blocks
 
 class test_map(gr_unittest.TestCase):
@@ -32,7 +33,7 @@ class test_map(gr_unittest.TestCase):
 
     def helper(self, symbols):
         src_data = [0, 1, 2, 3, 0, 1, 2, 3]
-        expected_data = map(lambda x: symbols[x], src_data)
+        expected_data = [symbols[x] for x in src_data]
         src = blocks.vector_source_b(src_data)
         op = digital.map_bb(symbols)
         dst = blocks.vector_sink_b()

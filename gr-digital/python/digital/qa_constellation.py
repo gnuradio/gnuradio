@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import random, math
 from cmath import exp, pi, log, sqrt
 
@@ -51,7 +53,7 @@ def twod_constell():
 def threed_constell():
     oned_points = ((1+0j), (0+1j), (-1+0j), (0-1j))
     points = []
-    r4 = range(0, 4)
+    r4 = list(range(0, 4))
     for ia in r4:
         for ib in r4:
             for ic in r4:
@@ -143,7 +145,7 @@ def tested_constellations(easy=True, medium=True, difficult=True):
             diff_poss = (True, False)
         else:
             diff_poss = (False,)
-        poss_args = [[argname, argvalues, 0] for argname, argvalues in poss_args.items()]
+        poss_args = [[argname, argvalues, 0] for argname, argvalues in list(poss_args.items())]
         for current_diff in diff_poss:
             # Add an index into args to keep track of current position in argvalues
             while True:
@@ -211,7 +213,7 @@ class test_constellation(gr_unittest.TestCase):
         table = digital.soft_dec_table_generator(digital.sd_psk_4_0, prec, Es)
         c.set_soft_dec_lut(table, prec)
 
-        x = sqrt(2.0)/2.0
+        x = sqrt(2.0) / 2.0
         step = (x.real+x.real) / (2**prec - 1)
         samples = [ -x-x*1j, -x+x*1j,
                      x+x*1j,  x-x*1j,
@@ -253,7 +255,7 @@ class test_constellation(gr_unittest.TestCase):
         table = digital.soft_dec_table(constel, code, prec)
         c.gen_soft_dec_lut(prec)
 
-        x = sqrt(2.0)/2.0
+        x = sqrt(2.0) / 2.0
         step = (x.real+x.real) / (2**prec - 1)
         samples = [ -x-x*1j, -x+x*1j,
                      x+x*1j,  x-x*1j,
@@ -293,7 +295,7 @@ class test_constellation(gr_unittest.TestCase):
         table = digital.soft_dec_table(constel, code, prec)
         c.gen_soft_dec_lut(prec)
 
-        x = sqrt(2.0)/2.0
+        x = sqrt(2.0) / 2.0
         step = (x.real+x.real) / (2**prec - 1)
         samples = [ -x-x*1j, -x+x*1j,
                      x+x*1j,  x-x*1j,
@@ -322,9 +324,9 @@ class mod_demod(gr.hier_block2):
             # that they can work with shorts and ints as well as chars.
             raise ValueError("Constellation cannot contain more than 256 points.")
 
-	gr.hier_block2.__init__(self, "mod_demod",
-				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
-				gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
+        gr.hier_block2.__init__(self, "mod_demod",
+                                gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 
         arity = constellation.arity()
 

@@ -17,25 +17,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import os
+from __future__ import absolute_import, print_function
+
 import sys
+import os
 
-from ..core.Platform import Platform as _Platform
-
-from .Config import Config as _Config
-from .Block import Block as _Block
-from .Connection import Connection as _Connection
-from .Element import Element
-from .FlowGraph import FlowGraph as _FlowGraph
-from .Param import Param as _Param
-from .Port import Port as _Port
+from .Config import Config
+from . import canvas
+from ..core.platform import Platform as CorePlatform
+from ..core.utils.backports import ChainMap
 
 
-class Platform(Element, _Platform):
+class Platform(CorePlatform):
 
     def __init__(self, *args, **kwargs):
-        Element.__init__(self)
-        _Platform.__init__(self, *args, **kwargs)
+        CorePlatform.__init__(self, *args, **kwargs)
 
         # Ensure conf directories
         gui_prefs_file = self.config.gui_prefs_file
@@ -58,14 +54,24 @@ class Platform(Element, _Platform):
                 import shutil
                 shutil.move(old_gui_prefs_file, gui_prefs_file)
             except Exception as e:
-                print >> sys.stderr, e
+                print(e, file=sys.stderr)
 
     ##############################################
-    # Constructors
+    # Factories
     ##############################################
-    FlowGraph = _FlowGraph
-    Connection = _Connection
-    Block = _Block
-    Port = _Port
-    Param = _Param
-    Config = _Config
+    Config = Config
+    FlowGraph = canvas.FlowGraph
+    Connection = canvas.Connection
+
+    def new_block_class(self, **data):
+        cls = CorePlatform.new_block_class(self, **data)
+        return canvas.Block.make_cls_with_base(cls)
+
+    block_classes_build_in = {key: canvas.Block.make_cls_with_base(cls)
+                              for key, cls in CorePlatform.block_classes_build_in.items()}
+    block_classes = ChainMap({}, block_classes_build_in)
+
+    port_classes = {key: canvas.Port.make_cls_with_base(cls)
+                    for key, cls in CorePlatform.port_classes.items()}
+    param_classes = {key: canvas.Param.make_cls_with_base(cls)
+                     for key, cls in CorePlatform.param_classes.items()}

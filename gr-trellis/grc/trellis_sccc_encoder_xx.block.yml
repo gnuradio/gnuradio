@@ -1,0 +1,58 @@
+id: trellis_sccc_encoder_xx
+label: SCCC Encoder
+category: '[Core]/Trellis Coding'
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [bb, bs, bi, ss, si, ii]
+    option_labels: [Byte->Byte, Byte->Short, Byte->Int, Short->Short, Short->Int,
+        Int->Int]
+    option_attributes:
+        input: [byte, byte, byte, short, short, int]
+        output: [byte, short, int, short, int, int]
+    hide: part
+-   id: o_fsm_args
+    label: Outer FSM
+    dtype: raw
+-   id: o_init_state
+    label: Outer Initial State
+    dtype: int
+    default: '0'
+-   id: i_fsm_args
+    label: Inner FSM
+    dtype: raw
+-   id: i_init_state
+    label: Inner Initial State
+    dtype: int
+    default: '0'
+-   id: interleaver_args
+    label: Interleaver
+    dtype: raw
+-   id: bl
+    label: Blocklength
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+asserts:
+- ${ (isinstance(eval(""" o_fsm_args """[1:-1], locals(),globals()), str) and open(o_fsm_args).close()) or True }
+- ${ (isinstance(eval(""" i_fsm_args """[1:-1], locals(),globals()), str) and open(i_fsm_args).close()) or True }
+
+templates:
+    imports: from gnuradio import trellis
+    make: trellis.sccc_encoder_${type}(trellis.fsm(${o_fsm_args}), ${o_init_state},
+        trellis.fsm(${i_fsm_args}), ${i_init_state}, trellis.interleaver(${interleaver_args}),
+        ${bl})
+
+documentation: |-
+    The fsm and interleaver arguments are passed directly to the trellis.fsm() and trellis.interleaver() constructors.
+
+file_format: 1

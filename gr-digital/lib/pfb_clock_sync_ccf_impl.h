@@ -35,7 +35,6 @@ namespace gr {
     private:
       bool   d_updated;
       double d_sps;
-      double d_sample_num;
       float  d_loop_bw;
       float  d_damping;
       float  d_alpha;

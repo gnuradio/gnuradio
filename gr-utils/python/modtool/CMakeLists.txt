@@ -27,7 +27,6 @@ GR_PYTHON_INSTALL(FILES
     modtool_add.py
     modtool_base.py
     modtool_disable.py
-    modtool_help.py
     modtool_info.py
     modtool_makexml.py
     modtool_newmod.py
@@ -38,13 +37,11 @@ GR_PYTHON_INSTALL(FILES
     templates.py
     util_functions.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool
-    COMPONENT "utils"
 )
 
 set(GR_PKG_MODTOOL_DATA_DIR ${GR_PKG_DATA_DIR}/modtool)
 install(DIRECTORY gr-newmod
     DESTINATION ${GR_PKG_MODTOOL_DATA_DIR}
-    COMPONENT "utils"
 )
 
 
@@ -61,6 +58,5 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/modtool.conf
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "utils"
 )
 

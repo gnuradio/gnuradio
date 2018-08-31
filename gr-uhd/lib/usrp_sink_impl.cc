@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2015 Free Software Foundation, Inc.
+ * Copyright 2010-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -31,26 +31,6 @@ namespace gr {
 
     usrp_sink::sptr
     usrp_sink::make(const ::uhd::device_addr_t &device_addr,
-		    const ::uhd::io_type_t &io_type,
-		    size_t num_channels)
-    {
-      //fill in the streamer args
-      ::uhd::stream_args_t stream_args;
-      switch(io_type.tid) {
-      case ::uhd::io_type_t::COMPLEX_FLOAT32: stream_args.cpu_format = "fc32"; break;
-      case ::uhd::io_type_t::COMPLEX_INT16: stream_args.cpu_format = "sc16"; break;
-      default: throw std::runtime_error("only complex float and shorts known to work");
-      }
-
-      stream_args.otw_format = "sc16"; //only sc16 known to work
-      for(size_t chan = 0; chan < num_channels; chan++)
-	stream_args.channels.push_back(chan); //linear mapping
-
-      return usrp_sink::make(device_addr, stream_args, "");
-    }
-
-    usrp_sink::sptr
-    usrp_sink::make(const ::uhd::device_addr_t &device_addr,
                     const ::uhd::stream_args_t &stream_args,
                     const std::string &length_tag_name)
     {
@@ -62,9 +42,9 @@ namespace gr {
     usrp_sink_impl::usrp_sink_impl(const ::uhd::device_addr_t &device_addr,
                                    const ::uhd::stream_args_t &stream_args,
                                    const std::string &length_tag_name)
-      : usrp_block("gr uhd usrp sink",
-                      args_to_io_sig(stream_args),
-                      io_signature::make(0, 0, 0)),
+      : usrp_block("usrp_sink",
+                   args_to_io_sig(stream_args),
+                   io_signature::make(0, 0, 0)),
         usrp_block_impl(device_addr, stream_args, length_tag_name),
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
         _nitems_to_send(0)
@@ -80,11 +60,7 @@ namespace gr {
     usrp_sink_impl::get_usrp_info(size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_GET_USRP_INFO_API
       return _dev->get_usrp_tx_info(chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     void
@@ -119,11 +95,7 @@ namespace gr {
     ::uhd::meta_range_t
     usrp_sink_impl::get_samp_rates(void)
     {
-#ifdef UHD_USRP_MULTI_USRP_GET_RATES_API
       return _dev->get_tx_rates(_stream_args.channels[0]);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     ::uhd::tune_result_t
@@ -389,11 +361,7 @@ namespace gr {
                                   size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_tx_dc_offset(offset, chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     void
@@ -401,11 +369,7 @@ namespace gr {
                                    size_t chan)
     {
       chan = _stream_args.channels[chan];
-#ifdef UHD_USRP_MULTI_USRP_FRONTEND_CAL_API
       return _dev->set_tx_iq_balance(correction, chan);
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
     }
 
     ::uhd::sensor_value_t
@@ -433,12 +397,9 @@ namespace gr {
     usrp_sink_impl::set_stream_args(const ::uhd::stream_args_t &stream_args)
     {
       _update_stream_args(stream_args);
-#ifdef GR_UHD_USE_STREAM_API
-      if(_tx_stream)
+      if (_tx_stream) {
         _tx_stream.reset();
-#else
-      throw std::runtime_error("not implemented in this version");
-#endif
+      }
     }
 
     /***********************************************************************
@@ -482,16 +443,11 @@ namespace gr {
         }
       }
 
-      boost::this_thread::disable_interruption disable_interrupt;
-#ifdef GR_UHD_USE_STREAM_API
       //send all ninput_items with metadata
-      const size_t num_sent = _tx_stream->send
-        (input_items, ninput_items, _metadata, 1.0);
-#else
-      const size_t num_sent = _dev->get_device()->send
-        (input_items, ninput_items, _metadata,
-         *_type, ::uhd::device::SEND_MODE_FULL_BUFF, 1.0);
-#endif
+      boost::this_thread::disable_interruption disable_interrupt;
+      const size_t num_sent = _tx_stream->send(
+              input_items, ninput_items, _metadata, 1.0
+      );
       boost::this_thread::restore_interruption restore_interrupt(disable_interrupt);
 
       //if using length_tags, decrement items left to send by the number of samples sent
@@ -686,10 +642,13 @@ namespace gr {
     bool
     usrp_sink_impl::start(void)
     {
-#ifdef GR_UHD_USE_STREAM_API
       if (not _tx_stream)
         _tx_stream = _dev->get_tx_stream(_stream_args);
-#endif
+
+      _metadata.start_of_burst = true;
+      _metadata.end_of_burst = false;
+      // Bursty tx will need to send a tx_time to activate time spec
+      _metadata.has_time_spec = !_stream_now && pmt::is_null(_length_tag_key);
       _nitems_to_send = 0;
 
       if(pmt::is_null(_length_tag_key)){ //don't execute this part in burst mode
@@ -708,15 +667,8 @@ namespace gr {
           }
         }
 
-#ifdef GR_UHD_USE_STREAM_API
-        _tx_stream->send
-          (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
-#else
-        _dev->get_device()->send
-          (gr_vector_const_void_star(_nchan), 0, _metadata,
-           *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
-#endif
-      }
+      _tx_stream->send
+        (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
       return true;
     }
 
@@ -730,14 +682,9 @@ namespace gr {
       _metadata.has_time_spec = false;
       _nitems_to_send = 0;
 
-#ifdef GR_UHD_USE_STREAM_API
-      if(_tx_stream)
+      if (_tx_stream) {
         _tx_stream->send(gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
-#else
-      _dev->get_device()->send
-        (gr_vector_const_void_star(_nchan), 0, _metadata,
-         *_type, ::uhd::device::SEND_MODE_ONE_PACKET, 1.0);
-#endif
+      }
       return true;
     }
 

@@ -1,0 +1,16 @@
+id: dtv_catv_reed_solomon_enc_bb
+label: Reed-Solomon Encoder
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.catv_reed_solomon_enc_bb()
+
+file_format: 1

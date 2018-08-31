@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+
 from gnuradio import gr, gr_unittest, digital, blocks
 
 default_access_code = '\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC'
@@ -34,7 +35,7 @@ def string_to_1_0_list(s):
     return r
 
 def to_1_0_string(L):
-    return ''.join(map(lambda x: chr(x + ord('0')), L))
+    return ''.join([chr(x + ord('0')) for x in L])
 
 class test_framker_sink(gr_unittest.TestCase):
 
@@ -51,7 +52,7 @@ class test_framker_sink(gr_unittest.TestCase):
         header = tuple(2*[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]) # len=1
         pad = (0,) * 100
         src_data = code + header + (0,1,0,0,0,0,0,1) + pad
-        expected_data = 'A'
+        expected_data = b'A'
 
         rcvd_pktq = gr.msg_queue()
 
@@ -75,7 +76,7 @@ class test_framker_sink(gr_unittest.TestCase):
         header = tuple(2*[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0]) # len=2
         pad = (0,) * 100
         src_data = code + header + (0,1,0,0,1,0,0,0) + (0,1,0,0,1,0,0,1) + pad
-        expected_data = 'HI'
+        expected_data = b'HI'
 
         rcvd_pktq = gr.msg_queue()
 

@@ -19,14 +19,16 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from blocks_swig0 import *
-from blocks_swig1 import *
-from blocks_swig2 import *
-from blocks_swig3 import *
-from blocks_swig4 import *
-from blocks_swig5 import *
-from blocks_swig6 import *
-from blocks_swig7 import *
-from blocks_swig8 import *
-from blocks_swig9 import *
-from blocks_swig10 import *
+from __future__ import absolute_import
+
+from .blocks_swig0 import *
+from .blocks_swig1 import *
+from .blocks_swig2 import *
+from .blocks_swig3 import *
+from .blocks_swig4 import *
+from .blocks_swig5 import *
+from .blocks_swig6 import *
+from .blocks_swig7 import *
+from .blocks_swig8 import *
+from .blocks_swig9 import *
+from .blocks_swig10 import *

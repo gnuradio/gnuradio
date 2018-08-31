@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2013 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -31,12 +31,10 @@
 #include <gnuradio/blocks/complex_to_mag_squared.h>
 #include <gnuradio/blocks/conjugate_cc.h>
 #include <gnuradio/blocks/delay.h>
-#include <gnuradio/blocks/divide_ff.h>
-#include <gnuradio/blocks/multiply_cc.h>
-#include <gnuradio/blocks/multiply_ff.h>
-#include <gnuradio/blocks/sample_and_hold_ff.h>
-#include <gnuradio/filter/fir_filter_ccf.h>
-#include <gnuradio/filter/fir_filter_fff.h>
+#include <gnuradio/blocks/divide.h>
+#include <gnuradio/blocks/multiply.h>
+#include <gnuradio/blocks/sample_and_hold.h>
+#include <gnuradio/filter/fir_filter_blk.h>
 
 namespace gr {
   namespace digital {

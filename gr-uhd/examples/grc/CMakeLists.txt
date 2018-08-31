@@ -20,12 +20,8 @@
 install(
     FILES
     uhd_const_wave.grc
-    uhd_dpsk_mod.grc
     uhd_fft.grc
-    uhd_rx_dpsk.grc
     uhd_two_tone_loopback.grc
-    uhd_tx_dpsk.grc
     uhd_wbfm_receive.grc
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-    COMPONENT "uhd_python"
 )

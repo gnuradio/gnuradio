@@ -22,6 +22,4 @@ include(GrPython)
 GR_PYTHON_INSTALL(PROGRAMS
   test_file_tags.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
-  COMPONENT "blocks_python"
 )
-

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import blocks
@@ -43,7 +45,7 @@ def build_graph():
     s2f = blocks.short_to_float()
     decim = filter.rational_resampler_fff(1, 8)
 
-    sink_scale = blocks.multiply_const_ff(1.0/scale_factor)
+    sink_scale = blocks.multiply_const_ff(1.0 / scale_factor)
     sink = audio.sink(sample_rate, "plughw:0,0")
 
     tb.connect(src, src_scale, interp, f2s, enc)
@@ -65,6 +67,6 @@ def build_graph():
 if __name__ == '__main__':
     tb = build_graph()
     tb.start()
-    raw_input ('Press Enter to exit: ')
+    input ('Press Enter to exit: ')
     tb.stop()
     tb.wait()

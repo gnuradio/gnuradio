@@ -24,6 +24,7 @@
 # This program tests mixed python and c++ GRCP sets in a single app
 #
 
+
 import sys, time, random, numpy, re
 from gnuradio import gr, gr_unittest, blocks
 
@@ -31,7 +32,7 @@ from gnuradio.ctrlport import GNURadio
 from gnuradio import ctrlport
 import os
 
-class inc_class:
+class inc_class(object):
     def __init__(self,val):
         self.val = val;
 
@@ -108,7 +109,7 @@ class test_cpp_py_binding_set(gr_unittest.TestCase):
 
 
     def test_002(self):
-        data = range(1, 10)
+        data = list(range(1, 10))
 
         self.src = blocks.vector_source_c(data, True)
         self.p = blocks.nop(gr.sizeof_gr_complex)

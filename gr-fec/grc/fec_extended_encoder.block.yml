@@ -1,0 +1,35 @@
+id: fec_extended_encoder
+label: FEC Extended Encoder
+
+parameters:
+-   id: encoder_list
+    label: Encoder Objects
+    dtype: raw
+    default: encoder_variable
+-   id: threadtype
+    label: Threading Type
+    dtype: enum
+    options: [capillary, ordinary, none]
+    option_attributes:
+        arg: ['''capillary''', '''ordinary''', ' None']
+-   id: puncpat
+    label: Puncture Pattern
+    dtype: string
+    default: '''11'''
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import fec
+    make: fec.extended_encoder(encoder_obj_list=${encoder_list}, threading=${threadtype.arg},
+        puncpat=${puncpat})
+
+documentation: ""
+
+file_format: 1

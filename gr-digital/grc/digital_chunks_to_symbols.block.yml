@@ -1,0 +1,59 @@
+id: digital_chunks_to_symbols_xx
+label: Chunks to Symbols
+
+parameters:
+-   id: in_type
+    label: Input Type
+    dtype: enum
+    options: [int, short, byte]
+    option_attributes:
+        fcn: [i, s, b]
+    hide: part
+-   id: out_type
+    label: Output Type
+    dtype: enum
+    options: [complex, float]
+    option_attributes:
+        fcn: [c, f]
+        table: [complex_vector, real_vector]
+    hide: part
+-   id: symbol_table
+    label: Symbol Table
+    dtype: ${ out_type.table }
+-   id: dimension
+    label: Dimension
+    dtype: int
+    default: '2'
+-   id: num_ports
+    label: Num Ports
+    dtype: int
+    default: '1'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: ${ in_type }
+    multiplicity: ${ num_ports }
+-   domain: message
+    id: set_symbol_table
+    optional: true
+
+outputs:
+-   domain: stream
+    dtype: ${ out_type }
+    multiplicity: ${ num_ports }
+-   domain: message
+    id: set_symbol_table
+    optional: true
+
+asserts:
+- ${ num_ports > 0 }
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.chunks_to_symbols_${in_type.fcn}${out_type.fcn}(${symbol_table},
+        ${dimension})
+    callbacks:
+    - set_symbol_table(${symbol_table})
+
+file_format: 1

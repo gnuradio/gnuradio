@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_HISTOGRAM_SINK_F_IMPL_H
 
 #include <gnuradio/qtgui/histogram_sink_f.h>
+
 #include <gnuradio/qtgui/histogramdisplayform.h>
 #include <gnuradio/high_res_timer.h>
 
@@ -80,23 +81,23 @@ namespace gr {
       void set_x_axis(double min, double max);
       void set_update_time(double t);
       void set_title(const std::string &title);
-      void set_line_label(int which, const std::string &label);
-      void set_line_color(int which, const std::string &color);
-      void set_line_width(int which, int width);
-      void set_line_style(int which, int style);
-      void set_line_marker(int which, int marker);
-      void set_line_alpha(int which, double alpha);
+      void set_line_label(unsigned int which, const std::string &label);
+      void set_line_color(unsigned int which, const std::string &color);
+      void set_line_width(unsigned int which, int width);
+      void set_line_style(unsigned int which, int style);
+      void set_line_marker(unsigned int which, int marker);
+      void set_line_alpha(unsigned int which, double alpha);
       void set_nsamps(const int newsize);
       void set_bins(const int bins);
       void enable_axis_labels(bool en);
 
       std::string title();
-      std::string line_label(int which);
-      std::string line_color(int which);
-      int line_width(int which);
-      int line_style(int which);
-      int line_marker(int which);
-      double line_alpha(int which);
+      std::string line_label(unsigned int which);
+      std::string line_color(unsigned int which);
+      int line_width(unsigned int which);
+      int line_style(unsigned int which);
+      int line_marker(unsigned int which);
+      double line_alpha(unsigned int which);
 
       void set_size(int width, int height);
 

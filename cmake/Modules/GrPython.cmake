@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,26 +27,21 @@ set(__INCLUDED_GR_PYTHON_CMAKE TRUE)
 # This allows the user to specify a specific interpreter,
 # or finds the interpreter via the built-in cmake module.
 ########################################################################
-#this allows the user to override PYTHON_EXECUTABLE
-if(PYTHON_EXECUTABLE)
 
-    set(PYTHONINTERP_FOUND TRUE)
+if (PYTHON_EXECUTABLE)
+    message(STATUS "User set python executable ${PYTHON_EXECUTABLE}")
+    find_package(PythonInterp ${GR_PYTHON_MIN_VERSION} REQUIRED)
+else (PYTHON_EXECUTABLE)
+    message(STATUS "PYTHON_EXECUTABLE not set - using default python3")
+    message(STATUS "Use -DPYTHON_EXECUTABLE=/path/to/python2 to build for python2.")
+    find_package(PythonInterp ${GR_PYTHON3_MIN_VERSION} REQUIRED)
+endif (PYTHON_EXECUTABLE)
 
-#otherwise if not set, try to automatically find it
-else(PYTHON_EXECUTABLE)
+if (${PYTHON_VERSION_MAJOR} VERSION_EQUAL 3)
+    set(PYTHON3 TRUE)
+endif ()
 
-    #use the built-in find script
-    find_package(PythonInterp 2)
-
-    #and if that fails use the find program routine
-    if(NOT PYTHONINTERP_FOUND)
-        find_program(PYTHON_EXECUTABLE NAMES python python2 python2.7 python2.6 python2.5)
-        if(PYTHON_EXECUTABLE)
-            set(PYTHONINTERP_FOUND TRUE)
-        endif(PYTHON_EXECUTABLE)
-    endif(NOT PYTHONINTERP_FOUND)
-
-endif(PYTHON_EXECUTABLE)
+find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} EXACT)
 
 if (CMAKE_CROSSCOMPILING)
     set(QA_PYTHON_EXECUTABLE "/usr/bin/python")
@@ -58,18 +53,6 @@ endif(CMAKE_CROSSCOMPILING)
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter for QA tests")
 
-#make sure we can use -B with python (introduced in 2.6)
-if(PYTHON_EXECUTABLE)
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -B -c ""
-        OUTPUT_QUIET ERROR_QUIET
-        RESULT_VARIABLE PYTHON_HAS_DASH_B_RESULT
-    )
-    if(PYTHON_HAS_DASH_B_RESULT EQUAL 0)
-        set(PYTHON_DASH_B "-B")
-    endif()
-endif(PYTHON_EXECUTABLE)
-
 ########################################################################
 # Check for the existence of a python module:
 # - desc a string description of the check
@@ -77,27 +60,32 @@ endif(PYTHON_EXECUTABLE)
 # - cmd an additional command to run
 # - have the result variable to set
 ########################################################################
-macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
-    message(STATUS "")
-    message(STATUS "Python checking for ${desc}")
+macro(GR_PYTHON_CHECK_MODULE_RAW desc python_code have)
     execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c "
+        COMMAND ${PYTHON_EXECUTABLE} -c "${python_code}"
+        OUTPUT_QUIET ERROR_QUIET
+        RESULT_VARIABLE return_code
+    )
+    if(return_code EQUAL 0)
+        message(STATUS "Python checking for ${desc} - found")
+        set(${have} TRUE)
+    else()
+        message(STATUS "Python checking for ${desc} - not found")
+        set(${have} FALSE)
+    endif()
+endmacro(GR_PYTHON_CHECK_MODULE_RAW)
+
+macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
+    GR_PYTHON_CHECK_MODULE_RAW(
+        "${desc}" "
 #########################################
 try:
     import ${mod}
     assert ${cmd}
-except ImportError, AssertionError: exit(-1)
+except (ImportError, AssertionError): exit(-1)
 except: pass
 #########################################"
-        RESULT_VARIABLE ${have}
-    )
-    if(${have} EQUAL 0)
-        message(STATUS "Python checking for ${desc} - found")
-        set(${have} TRUE)
-    else(${have} EQUAL 0)
-        message(STATUS "Python checking for ${desc} - not found")
-        set(${have} FALSE)
-    endif(${have} EQUAL 0)
+    "${have}")
 endmacro(GR_PYTHON_CHECK_MODULE)
 
 ########################################################################
@@ -105,8 +93,12 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 ########################################################################
 if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
-from distutils import sysconfig
-print sysconfig.get_python_lib(plat_specific=True, prefix='')
+import os
+import sys
+if os.name == 'posix':
+    print(os.path.join('lib', 'python' + sys.version[:3], 'dist-packages'))
+if os.name == 'nt':
+    print(os.path.join('Lib', 'site-packages'))
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 endif()
@@ -119,7 +111,7 @@ file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
 function(GR_UNIQUE_TARGET desc)
     file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
-unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
+unique = hashlib.md5(b'${reldir}${ARGN}').hexdigest()[:5]
 print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
     add_custom_target(${_target} ALL DEPENDS ${ARGN})
@@ -130,7 +122,7 @@ endfunction(GR_UNIQUE_TARGET)
 ########################################################################
 function(GR_PYTHON_INSTALL)
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION;COMPONENT" "FILES;PROGRAMS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS;DIRECTORY" ${ARGN})
 
     ####################################################################
     if(GR_PYTHON_INSTALL_FILES)
@@ -182,8 +174,81 @@ function(GR_PYTHON_INSTALL)
         set(python_install_gen_targets ${pycfiles} ${pyofiles})
         install(FILES ${python_install_gen_targets}
             DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-            COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
         )
+
+    ####################################################################
+    elseif(GR_PYTHON_INSTALL_DIRECTORY)
+    ####################################################################
+        install(${ARGN}) #installs regular python files
+
+        # collect all python files in given directories
+        # #############################################
+        unset(pysrcfiles)
+        foreach(pydir ${GR_PYTHON_INSTALL_DIRECTORY})
+            file(GLOB_RECURSE pysrcfiles_tmp "${pydir}/*.py")
+            list(APPEND pysrcfiles ${pysrcfiles_tmp})
+        endforeach(pydir)
+
+        # build target lists
+        # ##################
+        unset(pycfiles)  # pyc targets
+        unset(pyofiles)  # pyo targets
+        unset(pygen_paths)  # all paths of py[oc] targets
+        foreach(pyfile ${pysrcfiles})
+            # determine if this file is in the source or binary directory
+            file(RELATIVE_PATH source_rel_path ${CMAKE_CURRENT_SOURCE_DIR} ${pyfile})
+            string(LENGTH "${source_rel_path}" source_rel_path_len)
+            file(RELATIVE_PATH binary_rel_path ${CMAKE_CURRENT_BINARY_DIR} ${pyfile})
+            string(LENGTH "${binary_rel_path}" binary_rel_path_len)
+
+            # and set the generated path appropriately
+            if(${source_rel_path_len} GREATER ${binary_rel_path_len})
+                set(pygenfile ${CMAKE_CURRENT_BINARY_DIR}/${binary_rel_path})
+            else()
+                set(pygenfile ${CMAKE_CURRENT_BINARY_DIR}/${source_rel_path})
+            endif()
+            list(APPEND pycfiles "${pygenfile}c")
+            list(APPEND pyofiles "${pygenfile}o")
+
+            get_filename_component(pygen_path "${pygenfile}" DIRECTORY)
+            list(APPEND pygen_paths "${pygen_path}")
+            file(MAKE_DIRECTORY "${pygen_path}")
+        endforeach(pyfile)
+        list(REMOVE_DUPLICATES pygen_paths)
+        list(SORT pygen_paths)
+
+        # generate the py[oc] files
+        # #########################
+        add_custom_command(
+            DEPENDS ${pysrcfiles} OUTPUT ${pycfiles}
+            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/python_compile_helper.py ${pysrcfiles} ${pycfiles}
+        )
+        add_custom_command(
+            DEPENDS ${pysrcfiles} OUTPUT ${pyofiles}
+            COMMAND ${PYTHON_EXECUTABLE} -O ${CMAKE_BINARY_DIR}/python_compile_helper.py ${pysrcfiles} ${pyofiles}
+        )
+        set(python_install_gen_targets ${pycfiles} ${pyofiles})
+
+        # per-directory install rules
+        # ###########################
+        foreach(pygen_path ${pygen_paths})
+            # find all targets in that directory (no "list(FILTER ...)")
+            unset(pygen_path_targets)
+            foreach(pyget_target ${python_install_gen_targets})
+                get_filename_component(pyget_target_path "${pyget_target}" PATH)
+                if(pygen_path STREQUAL pyget_target_path)
+                    list(APPEND pygen_path_targets "${pyget_target}")
+                endif()
+            endforeach(pyget_target)
+
+            # install relative to current binary dir
+            file(RELATIVE_PATH pygen_path_rel "${CMAKE_CURRENT_BINARY_DIR}" "${pygen_path}")
+            list(SORT pygen_path_targets)
+            install(
+                FILES ${pygen_path_targets}
+                DESTINATION "${GR_PYTHON_INSTALL_DESTINATION}/${pygen_path_rel}"
+            )
+        endforeach(pygen_path)
 
     ####################################################################
     elseif(GR_PYTHON_INSTALL_PROGRAMS)
@@ -219,7 +284,6 @@ function(GR_PYTHON_INSTALL)
 
             install(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
                 DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-                COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
             )
         endforeach(pyfile)
 
@@ -235,7 +299,7 @@ endfunction(GR_PYTHON_INSTALL)
 file(WRITE ${CMAKE_BINARY_DIR}/python_compile_helper.py "
 import sys, py_compile
 files = sys.argv[1:]
-srcs, gens = files[:len(files)/2], files[len(files)/2:]
+srcs, gens = files[:len(files)//2], files[len(files)//2:]
 for src, gen in zip(srcs, gens):
     py_compile.compile(file=src, cfile=gen, doraise=True)
 ")

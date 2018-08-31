@@ -1,0 +1,38 @@
+id: block_key
+label: testname
+
+parameters:
+-   id: vlen
+    label: Vec Length
+    category: test
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: out_type
+    label: Vec Length
+    dtype: string
+    default: complex
+    hide: part
+-   id: a
+    label: Alpha
+    dtype: ${ (out_type) }
+    default: '0'
+
+inputs:
+-   domain: stream
+    dtype: complex
+    vlen: ${ 2 * vlen }
+-   domain: message
+    id: in2
+
+outputs:
+-   domain: stream
+    dtype: ${ out_type }
+    vlen: ${ vlen }
+asserts:
+- ${ vlen > 0 }
+
+templates:
+    make: blocks.complex_to_mag_squared(${vlen})
+
+file_format: 1

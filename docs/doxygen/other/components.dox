@@ -32,7 +32,6 @@ All our in-tree components have their own top-level documentation:
 \li \subpage page_ctrlport
 \li \subpage page_digital
 \li \subpage page_packet_comms
-\li \subpage page_fcd
 \li \subpage page_fec
 \li \subpage page_fft
 \li \subpage page_filter

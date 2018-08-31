@@ -29,6 +29,5 @@ GR_PYTHON_INSTALL(
 	polezero_plot.py
 	pyqt_filter_stacked.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
-    COMPONENT "filter_python"
 )
 

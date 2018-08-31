@@ -56,7 +56,7 @@ namespace gr {
                       io_signature::make(0, 0, 0),
                       io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_payload_size(payload_size),
-        d_eof(eof), d_connected(false), d_residual(0), d_sent(0), d_offset(0)
+        d_eof(eof), d_connected(false), d_residual(0), d_sent(0)
     {
       // Give us some more room to play.
       d_rxbuf = new char[4*d_payload_size];

@@ -25,6 +25,10 @@
 %include "std_string.i"
 %include "stdint.i"
 
+%begin %{
+#define SWIG_PYTHON_2_UNICODE
+%}
+
 %{
 #include <boost/intrusive_ptr.hpp>
 #include <boost/shared_ptr.hpp>
@@ -36,6 +40,23 @@
 #include <iosfwd>
 #include <stdexcept>
 #include <pmt/pmt.h>
+
+namespace pmt {
+  // Wrapper for serialize_str(), so we always have raw byte strings
+  std::vector<uint8_t> _serialize_str_u8(pmt_t obj)
+  {
+    std::string serialized_str(serialize_str(obj));
+    return std::vector<uint8_t>(serialized_str.begin(), serialized_str.end());
+  }
+
+  // Wrapper for deserialize_str(), so we always have raw byte strings
+  pmt_t _deserialize_str_u8(std::vector<uint8_t> py_str)
+  {
+    std::string cpp_str(py_str.begin(), py_str.end());
+    return deserialize_str(cpp_str);
+  }
+} /* namespace pmt */
+
 %}
 
 %feature("autodoc","1");
@@ -57,6 +78,8 @@
 %template(pmt_vector_double) std::vector<double>;
 %template(pmt_vector_cfloat) std::vector< std::complex<float> >;
 %template(pmt_vector_cdouble) std::vector< std::complex<double> >;
+
+%import py3compat.i
 
 ////////////////////////////////////////////////////////////////////////
 // Language independent exception handler
@@ -296,7 +319,31 @@ namespace pmt{
   bool serialize(pmt_t obj, std::streambuf &sink);
   pmt_t deserialize(std::streambuf &source);
   void dump_sizeof();
+
+  std::vector<uint8_t> _serialize_str_u8(pmt_t obj);
+  pmt_t _deserialize_str_u8(std::vector<uint8_t> py_str);
+
+  %rename(_serialize_str) serialize_str;
   std::string serialize_str(pmt_t obj);
+
+  %rename(_deserialize_str) deserialize_str;
   pmt_t deserialize_str(std::string str);
 
 } //namespace pmt
+
+%pythoncode %{
+  def serialize_str(pmt_obj):
+    import sys
+    if sys.version_info.major == 2:
+      return _serialize_str(pmt_obj)
+    import array
+    return array.array('B', _serialize_str_u8(pmt_obj)).tobytes()
+
+  def deserialize_str(pmt_str):
+    import sys
+    if sys.version_info.major == 2:
+      return _deserialize_str(pmt_str)
+    return _deserialize_str_u8(tuple(x for x in pmt_str))
+
+%}
+

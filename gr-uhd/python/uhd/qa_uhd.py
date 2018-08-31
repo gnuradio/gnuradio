@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 from gnuradio import gr, gr_unittest, uhd
 
 class test_uhd(gr_unittest.TestCase):
@@ -50,7 +52,7 @@ class test_uhd(gr_unittest.TestCase):
         sa = uhd.stream_args_t()
         sa.channels.append(1)
         sa.channels.append(0)
-        print sa.channels
+        print(sa.channels)
         self.assertEqual(len(sa.channels), 2)
         self.assertEqual(sa.channels[0], 1)
         self.assertEqual(sa.channels[1], 0)

@@ -50,8 +50,8 @@ BOOST_AUTO_TEST_CASE(t0) {
   gr::fxpt_nco		new_nco;
   double max_error = 0, max_phase_error = 0;
 
-  ref_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
-  new_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
+  ref_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
+  new_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
 
   BOOST_CHECK(std::abs(ref_nco.get_freq() - new_nco.get_freq()) <= SIN_COS_TOLERANCE);
 
@@ -86,8 +86,8 @@ BOOST_AUTO_TEST_CASE(t1) {
   gr_complex*		new_block = new gr_complex[SIN_COS_BLOCK_SIZE];
   double max_error = 0;
 
-  ref_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
-  new_nco.set_freq((float)(2 * M_PI / SIN_COS_FREQ));
+  ref_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
+  new_nco.set_freq((float)(2 * GR_M_PI / SIN_COS_FREQ));
 
   BOOST_CHECK(std::abs(ref_nco.get_freq() - new_nco.get_freq()) <= SIN_COS_TOLERANCE);
 

@@ -18,16 +18,20 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 
 import numpy as np
-from helper_functions import *
+from .helper_functions import *
 
 '''
 PolarCommon holds value checks and common initializer code for both Encoder and Decoder.
 '''
 
 
-class PolarCommon:
+class PolarCommon(object):
     def __init__(self, n, k, frozen_bit_position, frozenbits=None):
         if not is_power_of_two(n):
             raise ValueError("n={0} is not a power of 2!".format(n))
@@ -81,4 +85,4 @@ class PolarCommon:
         return self._encode_efficient(vec)
 
     def info_print(self):
-        print "POLAR code ({0}, {1})".format(self.N, self.K)
+        print("POLAR code ({0}, {1})".format(self.N, self.K))

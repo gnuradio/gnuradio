@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sys
 from gnuradio import filter
 
@@ -27,7 +30,7 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4."
+    print("Error: Program requires PyQt4.")
     sys.exit(1)
 
 try:
@@ -70,7 +73,7 @@ class plot_time_form(plot_form):
             index = self._qwtmarkers['Circle']+1
         else:
             index = self._qwtmarkers['None']+1
-        for n in xrange(self.top_block._nsigs):
+        for n in range(self.top_block._nsigs):
             self._marker_edit[n].setCurrentIndex(index)
 
     def update_samp_rate(self):

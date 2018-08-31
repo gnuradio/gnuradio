@@ -110,7 +110,7 @@ list(APPEND dtv_libs
 
 include (CheckCCompilerFlag)
 if (MSVC)
-	# 64-bit MSVC always supports SSE2 
+	# 64-bit MSVC always supports SSE2
 	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 		set(SSE2_SUPPORTED true)
 	else ()
@@ -147,4 +147,4 @@ endif(MSVC)
 
 add_library(gnuradio-dtv SHARED ${dtv_sources})
 target_link_libraries(gnuradio-dtv ${dtv_libs})
-GR_LIBRARY_FOO(gnuradio-dtv RUNTIME_COMPONENT "dtv_runtime" DEVEL_COMPONENT "dtv_devel")
+GR_LIBRARY_FOO(gnuradio-dtv)

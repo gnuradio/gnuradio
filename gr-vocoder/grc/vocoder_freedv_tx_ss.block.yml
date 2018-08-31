@@ -1,0 +1,31 @@
+id: vocoder_freedv_tx_ss
+label: FreeDV modulator
+
+parameters:
+-   id: mode
+    label: Operating Mode
+    dtype: int
+    default: freedv_api.MODE_1600
+    options: [freedv_api.MODE_1600, freedv_api.MODE_700, freedv_api.MODE_700B, freedv_api.MODE_2400A,
+        freedv_api.MODE_2400B, freedv_api.MODE_800XA]
+    option_labels: ['1600', '700', 700B, 2400A, 2400B, 800XA]
+-   id: txt_msg
+    label: Text Message
+    dtype: string
+    default: '''GNU Radio'''
+
+inputs:
+-   domain: stream
+    dtype: short
+
+outputs:
+-   domain: stream
+    dtype: short
+
+templates:
+    imports: |-
+        from gnuradio import vocoder
+        from gnuradio.vocoder import freedv_api
+    make: vocoder.freedv_tx_ss(${mode},${txt_msg})
+
+file_format: 1

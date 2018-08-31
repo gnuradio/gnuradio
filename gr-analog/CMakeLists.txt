@@ -52,40 +52,6 @@ SET(GR_PKG_ANALOG_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/analog)
 if(ENABLE_GR_ANALOG)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_ANALOG_DESCRIPTION "GNU Radio Analog Blocks")
-
-CPACK_COMPONENT("analog_runtime"
-    GROUP        "Analog"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("analog_devel"
-    GROUP        "Analog"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("analog_python"
-    GROUP        "Analog"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;analog_runtime"
-)
-
-CPACK_COMPONENT("analog_swig"
-    GROUP        "Analog"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;analog_python;analog_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/analog)
@@ -110,7 +76,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-analog.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "analog_devel"
 )
 
 endif(ENABLE_GR_ANALOG)

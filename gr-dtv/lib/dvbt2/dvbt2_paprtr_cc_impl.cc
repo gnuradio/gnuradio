@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015-2017 Free Software Foundation, Inc.
+ * Copyright 2015-2018 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt2_paprtr_cc_impl.h"
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 #include <volk/volk.h>
 
 /* An early exit from the iteration loop is a very effective optimization */
@@ -774,7 +775,7 @@ namespace gr {
                 u = (in[m] + c[m]) / y;
                 alpha = y - v_clip;
                 for (int n = 0; n < N_TR; n++) {
-                  vtemp = (-2.0 * M_PI * m * ((papr_map[n] + shift) - center)) / papr_fft_size;
+                  vtemp = (-2.0 * GR_M_PI * m * ((papr_map[n] + shift) - center)) / papr_fft_size;
                   ctemp[n] = std::exp(gr_complexd(0.0, vtemp));
                 }
                 volk_32fc_s32fc_multiply_32fc(v, ctemp, u, N_TR);

@@ -1,38 +1,31 @@
 #!/usr/bin/env python
 #
 # Copyright 2007,2008 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
 
-import math
-from numpy import fft
-from gnuradio import gr
+from __future__ import division
+from __future__ import unicode_literals
 
-try:
-    from gnuradio import filter
-except ImportError:
-    import filter_swig as filter
 
-try:
-    from gnuradio import blocks
-except ImportError:
-    import blocks_swig as blocks
+from gnuradio import gr, blocks, filter
+
 
 class ofdm_sync_pn(gr.hier_block2):
     def __init__(self, fft_length, cp_length, logging=False):
@@ -52,7 +45,7 @@ class ofdm_sync_pn(gr.hier_block2):
         # PN Sync
 
         # Create a delay line
-        self.delay = blocks.delay(gr.sizeof_gr_complex, fft_length/2)
+        self.delay = blocks.delay(gr.sizeof_gr_complex, fft_length / 2)
 
         # Correlation from ML Sync
         self.conjg = blocks.conjugate_cc();
@@ -98,10 +91,10 @@ class ofdm_sync_pn(gr.hier_block2):
         self.connect(self.c2mag, (self.normalize,0))
 
         # Create a moving sum filter for the corr output
-        matched_filter_taps = [1.0/cp_length for i in range(cp_length)]
+        matched_filter_taps = [1.0 / cp_length for i in range(cp_length)]
         self.matched_filter = filter.fir_filter_fff(1,matched_filter_taps)
         self.connect(self.normalize, self.matched_filter)
-        
+
         self.connect(self.matched_filter, self.sub1, self.pk_detect)
         #self.connect(self.matched_filter, self.pk_detect)
         self.connect(self.pk_detect, (self.sample_and_hold,1))

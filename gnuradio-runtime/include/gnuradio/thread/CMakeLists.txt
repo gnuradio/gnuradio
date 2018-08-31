@@ -25,5 +25,4 @@ install(FILES
   thread_body_wrapper.h
   thread_group.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/thread
-  COMPONENT "runtime_devel"
 )

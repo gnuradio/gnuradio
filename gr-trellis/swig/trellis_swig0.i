@@ -38,80 +38,44 @@
 #include "gnuradio/trellis/permutation.h"
 #include "gnuradio/trellis/siso_combined_f.h"
 #include "gnuradio/trellis/siso_f.h"
-#include "gnuradio/trellis/encoder_bb.h"
-#include "gnuradio/trellis/encoder_bs.h"
-#include "gnuradio/trellis/encoder_bi.h"
-#include "gnuradio/trellis/encoder_ss.h"
-#include "gnuradio/trellis/encoder_si.h"
-#include "gnuradio/trellis/encoder_ii.h"
-#include "gnuradio/trellis/sccc_encoder_bb.h"
-#include "gnuradio/trellis/sccc_encoder_bs.h"
-#include "gnuradio/trellis/sccc_encoder_bi.h"
-#include "gnuradio/trellis/sccc_encoder_ss.h"
-#include "gnuradio/trellis/sccc_encoder_si.h"
-#include "gnuradio/trellis/sccc_encoder_ii.h"
-#include "gnuradio/trellis/pccc_encoder_bb.h"
-#include "gnuradio/trellis/pccc_encoder_bs.h"
-#include "gnuradio/trellis/pccc_encoder_bi.h"
-#include "gnuradio/trellis/pccc_encoder_ss.h"
-#include "gnuradio/trellis/pccc_encoder_si.h"
-#include "gnuradio/trellis/pccc_encoder_ii.h"
-#include "gnuradio/trellis/metrics_s.h"
-#include "gnuradio/trellis/metrics_i.h"
-#include "gnuradio/trellis/metrics_f.h"
-#include "gnuradio/trellis/metrics_c.h"
+#include "gnuradio/trellis/encoder.h"
+#include "gnuradio/trellis/sccc_encoder.h"
+#include "gnuradio/trellis/pccc_encoder.h"
+#include "gnuradio/trellis/metrics.h"
 %}
 
 %include "gnuradio/trellis/constellation_metrics_cf.h"
 %include "gnuradio/trellis/permutation.h"
 %include "gnuradio/trellis/siso_combined_f.h"
 %include "gnuradio/trellis/siso_f.h"
-%include "gnuradio/trellis/encoder_bb.h"
-%include "gnuradio/trellis/encoder_bs.h"
-%include "gnuradio/trellis/encoder_bi.h"
-%include "gnuradio/trellis/encoder_ss.h"
-%include "gnuradio/trellis/encoder_si.h"
-%include "gnuradio/trellis/encoder_ii.h"
-%include "gnuradio/trellis/sccc_encoder_bb.h"
-%include "gnuradio/trellis/sccc_encoder_bs.h"
-%include "gnuradio/trellis/sccc_encoder_bi.h"
-%include "gnuradio/trellis/sccc_encoder_ss.h"
-%include "gnuradio/trellis/sccc_encoder_si.h"
-%include "gnuradio/trellis/sccc_encoder_ii.h"
-%include "gnuradio/trellis/pccc_encoder_bb.h"
-%include "gnuradio/trellis/pccc_encoder_bs.h"
-%include "gnuradio/trellis/pccc_encoder_bi.h"
-%include "gnuradio/trellis/pccc_encoder_ss.h"
-%include "gnuradio/trellis/pccc_encoder_si.h"
-%include "gnuradio/trellis/pccc_encoder_ii.h"
-%include "gnuradio/trellis/metrics_s.h"
-%include "gnuradio/trellis/metrics_i.h"
-%include "gnuradio/trellis/metrics_f.h"
-%include "gnuradio/trellis/metrics_c.h"
+%include "gnuradio/trellis/encoder.h"
+%include "gnuradio/trellis/sccc_encoder.h"
+%include "gnuradio/trellis/pccc_encoder.h"
+%include "gnuradio/trellis/metrics.h"
 
 GR_SWIG_BLOCK_MAGIC2(trellis, constellation_metrics_cf);
 GR_SWIG_BLOCK_MAGIC2(trellis, permutation);
 GR_SWIG_BLOCK_MAGIC2(trellis, siso_combined_f);
 GR_SWIG_BLOCK_MAGIC2(trellis, siso_f);
-GR_SWIG_BLOCK_MAGIC2(trellis, encoder_bb);
-GR_SWIG_BLOCK_MAGIC2(trellis, encoder_bs);
-GR_SWIG_BLOCK_MAGIC2(trellis, encoder_bi);
-GR_SWIG_BLOCK_MAGIC2(trellis, encoder_ss);
-GR_SWIG_BLOCK_MAGIC2(trellis, encoder_si);
-GR_SWIG_BLOCK_MAGIC2(trellis, encoder_ii);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_encoder_bb);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_encoder_bs);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_encoder_bi);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_encoder_ss);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_encoder_si);
-GR_SWIG_BLOCK_MAGIC2(trellis, sccc_encoder_ii);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_encoder_bb);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_encoder_bs);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_encoder_bi);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_encoder_ss);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_encoder_si);
-GR_SWIG_BLOCK_MAGIC2(trellis, pccc_encoder_ii);
-GR_SWIG_BLOCK_MAGIC2(trellis, metrics_s);
-GR_SWIG_BLOCK_MAGIC2(trellis, metrics_i);
-GR_SWIG_BLOCK_MAGIC2(trellis, metrics_f);
-GR_SWIG_BLOCK_MAGIC2(trellis, metrics_c);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, encoder_bb, encoder<std::uint8_t,std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, encoder_bs, encoder<std::uint8_t,std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, encoder_bi, encoder<std::uint8_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, encoder_ss, encoder<std::int16_t,std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, encoder_si, encoder<std::int16_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, encoder_ii, encoder<std::int32_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, sccc_encoder_bb, sccc_encoder<std::uint8_t,std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, sccc_encoder_bs, sccc_encoder<std::uint8_t,std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, sccc_encoder_bi, sccc_encoder<std::uint8_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, sccc_encoder_ss, sccc_encoder<std::int16_t,std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, sccc_encoder_si, sccc_encoder<std::int16_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, sccc_encoder_ii, sccc_encoder<std::int32_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, pccc_encoder_bb, pccc_encoder<std::uint8_t,std::uint8_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, pccc_encoder_bs, pccc_encoder<std::uint8_t,std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, pccc_encoder_bi, pccc_encoder<std::uint8_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, pccc_encoder_ss, pccc_encoder<std::int16_t,std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, pccc_encoder_si, pccc_encoder<std::int16_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, pccc_encoder_ii, pccc_encoder<std::int32_t,std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, metrics_s, metrics<std::int16_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, metrics_i, metrics<std::int32_t>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, metrics_f, metrics<float>);
+GR_SWIG_BLOCK_MAGIC2_TMPL(trellis, metrics_c, metrics<gr_complex>);

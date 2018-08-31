@@ -25,6 +25,4 @@ GR_PYTHON_INSTALL(PROGRAMS
   vector_sink.py
   vector_source.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/network
-  COMPONENT "runtime_python"
 )
-

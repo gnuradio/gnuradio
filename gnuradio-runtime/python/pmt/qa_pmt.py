@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 import unittest
 import pmt
 
@@ -30,7 +32,7 @@ class test_pmt(unittest.TestCase):
         b = pmt.from_double(123765)
         d1 = pmt.make_dict()
         d2 = pmt.dict_add(d1, a, b)
-        print d2
+        print(d2)
 
     def test02(self):
         const = 123765

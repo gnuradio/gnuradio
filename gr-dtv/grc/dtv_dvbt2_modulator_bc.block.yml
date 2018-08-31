@@ -1,0 +1,39 @@
+id: dtv_dvbt2_modulator_bc
+label: DVB-T2 Modulator
+
+parameters:
+-   id: framesize
+    label: FECFRAME size
+    dtype: enum
+    options: [FECFRAME_NORMAL, FECFRAME_SHORT]
+    option_labels: [Normal, Short]
+    option_attributes:
+        val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_SHORT]
+-   id: constellation
+    label: Constellation
+    dtype: enum
+    options: [MOD_QPSK, MOD_16QAM, MOD_64QAM, MOD_256QAM]
+    option_labels: [QPSK, 16QAM, 64QAM, 256QAM]
+    option_attributes:
+        val: [dtv.MOD_QPSK, dtv.MOD_16QAM, dtv.MOD_64QAM, dtv.MOD_256QAM]
+-   id: rotation
+    label: Constellation rotation
+    dtype: enum
+    options: [ROTATION_OFF, ROTATION_ON]
+    option_labels: ['Off', 'On']
+    option_attributes:
+        val: [dtv.ROTATION_OFF, dtv.ROTATION_ON]
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import dtv
+    make: dtv.dvbt2_modulator_bc(${framesize.val}, ${constellation.val}, ${rotation.val})
+
+file_format: 1

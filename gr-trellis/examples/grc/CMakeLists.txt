@@ -59,5 +59,4 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/interference_cancellation.grc
     readme.txt
     DESTINATION ${GR_PKG_TRELLIS_EXAMPLES_DIR}
-    COMPONENT "trellis-examples"
 )

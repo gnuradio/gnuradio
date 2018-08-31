@@ -24,6 +24,8 @@
 """
 Core contents.
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 # This is the main GNU Radio python module.
 # We pull the swig output and the other modules into the gnuradio.gr namespace
@@ -31,20 +33,20 @@ Core contents.
 # If gnuradio is installed then the swig output will be in this directory.
 # Otherwise it will reside in ../../../swig.
 
-import os
+import os, sys
 
 try:
-    from runtime_swig import *
+    from .runtime_swig import *
 except ImportError:
     dirname, filename = os.path.split(os.path.abspath(__file__))
     __path__.append(os.path.join(dirname, "..", "..", "..", "swig"))
-    from runtime_swig import *
+    from .runtime_swig import *
 
-from exceptions import *
-from top_block import *
-from hier_block2 import *
-from tag_utils import *
-from gateway import basic_block, sync_block, decim_block, interp_block, py_io_signature
+from .exceptions import *
+from .top_block import *
+from .hier_block2 import *
+from .tag_utils import *
+from .gateway import basic_block, sync_block, decim_block, interp_block, py_io_signature
 
 # Force the preference database to be initialized
 prefs = prefs.singleton

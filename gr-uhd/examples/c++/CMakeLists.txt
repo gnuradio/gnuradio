@@ -40,5 +40,4 @@ target_link_libraries(tags_demo gnuradio-uhd ${CMAKE_THREAD_LIBS_INIT})
 INSTALL(TARGETS
     tags_demo
     DESTINATION ${GR_PKG_UHD_EXAMPLES_DIR}
-    COMPONENT "uhd_examples"
 )

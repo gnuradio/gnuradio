@@ -44,7 +44,7 @@ namespace gr {
       : block("simple_framer",
 		 io_signature::make(1, 1, sizeof(unsigned char)),
 		 io_signature::make(1, 1, sizeof(unsigned char))),
-	d_seqno (0), d_payload_bytesize (payload_bytesize),
+	d_seqno (0), 
 	d_input_block_size (payload_bytesize),
 	d_output_block_size (payload_bytesize + GRSF_OVERHEAD)
     {

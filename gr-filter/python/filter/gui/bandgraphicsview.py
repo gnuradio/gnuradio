@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio

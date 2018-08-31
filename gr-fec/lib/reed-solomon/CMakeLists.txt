@@ -46,7 +46,6 @@ list(APPEND gnuradio_fec_sources ${gr_fec_rs_sources})
 #install(
 #    FILES ${CMAKE_CURRENT_SOURCE_DIR}/rs.h
 #    DESTINATION ${GR_INCLUDE_DIR}/gnuradio/fec
-#    COMPONENT "fec_devel"
 #)
 
 ########################################################################

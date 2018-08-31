@@ -1,0 +1,19 @@
+id: blocks_message_debug
+label: Message Debug
+
+inputs:
+-   domain: message
+    id: print
+    optional: true
+-   domain: message
+    id: store
+    optional: true
+-   domain: message
+    id: print_pdu
+    optional: true
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.message_debug()
+
+file_format: 1

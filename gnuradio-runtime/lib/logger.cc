@@ -35,10 +35,6 @@
 #include <stdexcept>
 #include <algorithm>
 
-
-#ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CPP
-
 namespace gr {
 
   bool logger_config::logger_configured(false);
@@ -311,8 +307,6 @@ namespace gr {
 
 } /* namespace gr */
 
-#endif /* HAVE_LOG4CPP */
-
 /****** Start Methods to provide Python the capabilities of the macros ********/
 void
 gr_logger_config(const std::string config_filename, unsigned int watch_period)
@@ -336,38 +330,12 @@ gr_logger_reset_config(void)
 
 // Remaining capability provided by gr::logger class in gnuradio/logger.h
 
-#else /* ENABLE_GR_LOG */
-
-/****** Start Methods to provide Python the capabilities of the macros ********/
-void
-gr_logger_config(const std::string config_filename, unsigned int watch_period)
-{
-  //NOP
-}
-
-std::vector<std::string>
-gr_logger_get_logger_names(void)
-{
-  return std::vector<std::string>(1, "");
-}
-
-void
-gr_logger_reset_config(void)
-{
-  //NOP
-}
-
-#endif /* ENABLE_GR_LOG */
-
-
 namespace gr {
 
   bool
   configure_default_loggers(gr::logger_ptr &l, gr::logger_ptr &d,
                             const std::string name)
   {
-#ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CPP
     prefs *p = prefs::singleton();
     std::string config_file = p->get_string("LOG", "log_config", "");
     std::string log_level = p->get_string("LOG", "log_level", "off");
@@ -408,21 +376,11 @@ namespace gr {
     }
     d = DLOG;
     return true;
-#endif /* HAVE_LOG4CPP */
-
-#else /* ENABLE_GR_LOG */
-    l = NULL;
-    d = NULL;
-    return false;
-#endif /* ENABLE_GR_LOG */
-    return false;
   }
 
   bool
   update_logger_alias(const std::string &name, const std::string &alias)
   {
-#ifdef ENABLE_GR_LOG
-#ifdef HAVE_LOG4CPP
     prefs *p = prefs::singleton();
     std::string log_file = p->get_string("LOG", "log_file", "");
     std::string debug_file = p->get_string("LOG", "debug_file", "");
@@ -443,10 +401,6 @@ namespace gr {
       }
     }
     return true;
-#endif /* HAVE_LOG4CPP */
-#endif /* ENABLE_GR_LOG */
-
-    return false;
   }
 
 } /* namespace gr */

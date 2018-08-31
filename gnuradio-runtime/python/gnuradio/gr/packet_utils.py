@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 import pmt
 
@@ -28,9 +31,9 @@ def make_lengthtags(lengths, offsets, tagname='length', vlen=1):
     assert(len(offsets) == len(lengths))
     for offset, length in zip(offsets, lengths):
         tag = gr.tag_t()
-        tag.offset = offset/vlen
+        tag.offset = offset // vlen
         tag.key = pmt.string_to_symbol(tagname)
-        tag.value = pmt.from_long(length/vlen)
+        tag.value = pmt.from_long(length // vlen)
         tags.append(tag)
     return tags
 
@@ -73,7 +76,7 @@ def count_bursts(data, tags, tsb_tag_key, vlen=1):
         if pos in lengths:
             if in_packet:
                 print("Got tag at pos {0} current packet_pos is {1}".format(pos, packet_pos))
-                raise StandardError("Received packet tag while in packet.")
+                raise Exception("Received packet tag while in packet.")
             packet_pos = -1
             packet_length = lengths[pos]
             in_packet = True
@@ -128,9 +131,9 @@ def packets_to_vectors(packets, tsb_tag_key, vlen=1):
     for packet in packets:
         data.extend(packet)
         tag = gr.tag_t()
-        tag.offset = offset/vlen
+        tag.offset = offset // vlen
         tag.key = pmt.string_to_symbol(tsb_tag_key)
-        tag.value = pmt.from_long(len(packet)/vlen)
+        tag.value = pmt.from_long(len(packet) // vlen)
         tags.append(tag)
         offset = offset + len(packet)
     return data, tags

@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2016 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -48,45 +48,28 @@ SET(GR_PKG_VOCODER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/vocoder)
 if(ENABLE_GR_VOCODER)
 
 ########################################################################
-# Setup CPack components
+## CODEC2 Support
 ########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_VOCODER_DESCRIPTION "GNU Radio Vocoder Blocks")
+find_package(Codec2)
+if(LIBCODEC2_FOUND)
+  GR_APPEND_SUBCOMPONENT("codec2")
+  #message(STATUS "libcodec2 modes: ${CODEC2_MODES}")
+  if(LIBCODEC2_HAS_CODEC2_MODE_700)
+    #message(STATUS "libcodec2 has 700bps mode")
+  endif()
+  if (LIBCODEC2_HAS_FREEDV_API)
+    GR_APPEND_SUBCOMPONENT("freedv")
+    #message(STATUS "libcodec2 had FreeDV api modes: ${FREEDV_MODES}")
+  endif()
+endif(LIBCODEC2_FOUND)
 
-CPACK_COMPONENT("vocoder_runtime"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("vocoder_devel"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("vocoder_python"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;vocoder_runtime"
-)
-
-CPACK_COMPONENT("vocoder_examples"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "Examples"
-    DESCRIPTION  "Python examples for vocoder"
-    DEPENDS      "vocoder_python"
-)
-
-CPACK_COMPONENT("vocoder_swig"
-    GROUP        "Vocoder"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;vocoder_python;vocoder_devel"
-)
+########################################################################
+## GSM Support
+########################################################################
+find_package(GSM)
+if(LIBGSM_FOUND)
+  GR_APPEND_SUBCOMPONENT("gsm")
+endif(LIBGSM_FOUND)
 
 ########################################################################
 # Add subdirectories
@@ -112,7 +95,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-vocoder.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "vocoder_devel"
 )
 
 endif(ENABLE_GR_VOCODER)

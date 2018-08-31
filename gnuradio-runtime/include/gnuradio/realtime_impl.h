@@ -28,8 +28,6 @@
 
 /*!
  * \brief System independent way to ask for realtime scheduling
- *
- * \sa sys_pri.h
  */
 namespace gr {
 

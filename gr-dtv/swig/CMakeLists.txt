@@ -43,7 +43,6 @@ GR_SWIG_MAKE(dtv_swig dtv_swig.i)
 GR_SWIG_INSTALL(
     TARGETS dtv_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/dtv
-    COMPONENT "dtv_python"
 )
 
 install(
@@ -51,5 +50,4 @@ install(
     dtv_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/dtv_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "dtv_swig"
 )

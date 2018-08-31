@@ -77,7 +77,7 @@ function(GR_SWIG_MAKE_DOCS output_file)
         add_custom_command(
             OUTPUT ${output_file}
             DEPENDS ${input_files} ${stamp-file} ${OUTPUT_DIRECTORY}/xml/index.xml
-            COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_DASH_B}
+            COMMAND ${PYTHON_EXECUTABLE} -B
                 ${CMAKE_SOURCE_DIR}/docs/doxygen/swig_doc.py
                 ${OUTPUT_DIRECTORY}/xml
                 ${output_file}
@@ -189,24 +189,21 @@ endmacro(GR_SWIG_MAKE)
 # GR_SWIG_INSTALL(
 #   TARGETS target target target...
 #   [DESTINATION destination]
-#   [COMPONENT component]
 # )
 ########################################################################
 macro(GR_SWIG_INSTALL)
 
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_SWIG_INSTALL "" "DESTINATION;COMPONENT" "TARGETS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(GR_SWIG_INSTALL "" "DESTINATION" "TARGETS" ${ARGN})
 
     foreach(name ${GR_SWIG_INSTALL_TARGETS})
         install(TARGETS ${SWIG_MODULE_${name}_REAL_NAME}
             DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
-            COMPONENT ${GR_SWIG_INSTALL_COMPONENT}
         )
 
         include(GrPython)
         GR_PYTHON_INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${name}.py
             DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
-            COMPONENT ${GR_SWIG_INSTALL_COMPONENT}
         )
 
         GR_LIBTOOL(

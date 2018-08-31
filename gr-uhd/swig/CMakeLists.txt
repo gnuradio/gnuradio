@@ -48,12 +48,10 @@ GR_SWIG_MAKE(uhd_swig uhd_swig.i)
 GR_SWIG_INSTALL(
     TARGETS uhd_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/uhd
-    COMPONENT "uhd_python"
 )
 
 install(
     FILES uhd_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "uhd_swig"
 )

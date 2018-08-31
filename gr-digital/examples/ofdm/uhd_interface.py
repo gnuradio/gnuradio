@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 #
 # Copyright 2010,2011 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 
 from gnuradio import gr, uhd
 from gnuradio import eng_notation
@@ -41,17 +45,17 @@ def add_freq_option(parser):
                           help="set Tx and/or Rx frequency to FREQ [default=%default]",
                           metavar="FREQ")
 
-class uhd_interface:
+class uhd_interface(object):
     def __init__(self, istx, args, bandwidth, freq=None, lo_offset=None,
                  gain=None, spec=None, antenna=None, clock_source=None):
-        
+
         if(istx):
             self.u = uhd.usrp_sink(device_addr=args, stream_args=uhd.stream_args('fc32'))
         else:
             self.u = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
         # Set clock source to external.
-        if(clock_source):        
+        if(clock_source):
             self.u.set_clock_source(clock_source, 0)
 
         # Set the subdevice spec
@@ -61,7 +65,7 @@ class uhd_interface:
         # Set the antenna
         if(antenna):
             self.u.set_antenna(antenna, 0)
-        
+
         self._args = args
         self._ant  = antenna
         self._spec = spec
@@ -74,21 +78,21 @@ class uhd_interface:
     def set_sample_rate(self, bandwidth):
         self.u.set_samp_rate(bandwidth)
         actual_bw = self.u.get_samp_rate()
-        
+
         return actual_bw
 
     def get_sample_rate(self):
         return self.u.get_samp_rate()
-    
+
     def set_gain(self, gain=None):
         if gain is None:
             # if no gain was specified, use the mid-point in dB
             g = self.u.get_gain_range()
-            gain = float(g.start()+g.stop())/2
-            print "\nNo gain specified."
-            print "Setting gain to %f (from [%f, %f])" % \
-                (gain, g.start(), g.stop())
-        
+            gain = float(g.start()+g.stop()) / 2
+            print("\nNo gain specified.")
+            print("Setting gain to %f (from [%f, %f])" %
+                (gain, g.start(), g.stop()))
+
         self.u.set_gain(gain, 0)
         return gain
 
@@ -96,7 +100,7 @@ class uhd_interface:
         if(freq is None):
             sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
             sys.exit(1)
-        
+
         r = self.u.set_center_freq(uhd.tune_request(freq, lo_offset))
 
         if r:
@@ -151,15 +155,15 @@ class uhd_transmitter(uhd_interface, gr.hier_block2):
         """
         Prints information about the UHD transmitter
         """
-        print "\nUHD Transmitter:"
-        print "UHD Args:     %s"    % (self._args)
-        print "Freq:         %sHz"  % (eng_notation.num_to_str(self._freq))
-        print "LO Offset:    %sHz"  % (eng_notation.num_to_str(self._lo_offset))
-        print "Gain:         %f dB" % (self._gain)
-        print "Sample Rate:  %ssps" % (eng_notation.num_to_str(self._rate))
-        print "Antenna:      %s"    % (self._ant)
-        print "Subdev Sec:   %s"    % (self._spec)
-        print "Clock Source: %s"    % (self._clock_source)
+        print("\nUHD Transmitter:")
+        print("UHD Args:     %s"    % (self._args))
+        print("Freq:         %sHz"  % (eng_notation.num_to_str(self._freq)))
+        print("LO Offset:    %sHz"  % (eng_notation.num_to_str(self._lo_offset)))
+        print("Gain:         %f dB" % (self._gain))
+        print("Sample Rate:  %ssps" % (eng_notation.num_to_str(self._rate)))
+        print("Antenna:      %s"    % (self._ant))
+        print("Subdev Sec:   %s"    % (self._spec))
+        print("Clock Source: %s"    % (self._clock_source))
 
 
 
@@ -174,7 +178,7 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         gr.hier_block2.__init__(self, "uhd_receiver",
                                 gr.io_signature(0,0,0),
                                 gr.io_signature(1,1,gr.sizeof_gr_complex))
-      
+
         # Set up the UHD interface as a receiver
         uhd_interface.__init__(self, False, args, bandwidth,
                                freq, lo_offset, gain, spec, antenna, clock_source)
@@ -209,13 +213,13 @@ class uhd_receiver(uhd_interface, gr.hier_block2):
         """
         Prints information about the UHD transmitter
         """
-        print "\nUHD Receiver:"
-        print "UHD Args:     %s"    % (self._args)
-        print "Freq:         %sHz"  % (eng_notation.num_to_str(self._freq))
-        print "LO Offset:    %sHz"  % (eng_notation.num_to_str(self._lo_offset))
-        print "Gain:         %f dB" % (self._gain)
-        print "Sample Rate:  %ssps" % (eng_notation.num_to_str(self._rate))
-        print "Antenna:      %s"    % (self._ant)
-        print "Subdev Sec:   %s"    % (self._spec)
-        print "Clock Source: %s"    % (self._clock_source)
+        print("\nUHD Receiver:")
+        print("UHD Args:     %s"    % (self._args))
+        print("Freq:         %sHz"  % (eng_notation.num_to_str(self._freq)))
+        print("LO Offset:    %sHz"  % (eng_notation.num_to_str(self._lo_offset)))
+        print("Gain:         %f dB" % (self._gain))
+        print("Sample Rate:  %ssps" % (eng_notation.num_to_str(self._rate)))
+        print("Antenna:      %s"    % (self._ant))
+        print("Subdev Sec:   %s"    % (self._spec))
+        print("Clock Source: %s"    % (self._clock_source))
 

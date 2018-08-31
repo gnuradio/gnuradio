@@ -35,7 +35,6 @@ namespace gr {
       double d_min_update_time;
       boost::posix_time::ptime d_last_update;
       uint64_t d_lastthru;
-      size_t d_itemsize;
       void setup_rpc();
 
       const pmt::pmt_t d_port;

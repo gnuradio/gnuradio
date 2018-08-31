@@ -1,0 +1,43 @@
+id: variable_low_pass_filter_taps
+label: Low-pass Filter Taps
+
+parameters:
+-   id: gain
+    label: Gain
+    dtype: float
+    default: '1.0'
+-   id: samp_rate
+    label: Sample Rate (Hz)
+    dtype: float
+    default: samp_rate
+-   id: cutoff_freq
+    label: Cutoff Freq (Hz)
+    dtype: float
+-   id: width
+    label: Transition Width (Hz)
+    dtype: float
+-   id: win
+    label: Window
+    dtype: int
+    default: firdes.WIN_HAMMING
+    options: [firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN, firdes.WIN_RECTANGULAR,
+        firdes.WIN_KAISER]
+    option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+-   id: beta
+    label: Beta
+    dtype: float
+    default: '6.76'
+value: ${ firdes.low_pass(gain, samp_rate, cutoff_freq, width, win, beta) }
+
+templates:
+    imports: from gnuradio.filter import firdes
+    var_make: |-
+        self.${id} = ${id} = firdes.low_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
+        ${width}, ${win}, ${beta})
+
+documentation: |-
+    This variable is a convenience wrapper around a call to firdes.low_pass(...).
+
+        The beta paramater only applies to the Kaiser window.
+
+file_format: 1

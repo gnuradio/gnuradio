@@ -52,14 +52,13 @@ class plot_time_b(plot_base.plot_base):
 
 def main():
     description = "Plots a list of files on a scope plot. Files are a binary list of chars."
-    (options, args) = plot_base.setup_options(description)
+    args = plot_base.setup_options(description)
 
-    filelist = list(args)
-    max_nsamples = plot_base.find_max_nsamples(filelist)
+    max_nsamples = plot_base.find_max_nsamples(args.files)
 
-    tb = plot_time_b(filelist, options.sample_rate,
-                     options.start, options.nsamples, max_nsamples,
-                     not options.no_auto_scale)
+    tb = plot_time_b(args.files, args.sample_rate,
+                     args.start, args.nsamples, max_nsamples,
+                     not args.no_auto_scale)
 
     main_box = plot_base.plot_time_form(tb, 'GNU Radio Time Plot')
     main_box.show()

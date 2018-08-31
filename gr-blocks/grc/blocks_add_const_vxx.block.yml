@@ -1,0 +1,43 @@
+id: blocks_add_const_vxx
+label: Add Const
+
+parameters:
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short]
+    option_attributes:
+        const_type: [complex_vector, real_vector, int_vector, int_vector]
+        fcn: [cc, ff, ii, ss]
+    hide: part
+-   id: const
+    label: Constant
+    dtype: ${ type.const_type }
+    default: '0'
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: ${ vlen }
+
+asserts:
+- ${ len(const) == vlen }
+- ${ vlen > 0 }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.add_const_v${type.fcn}(${const})
+    callbacks:
+    - set_k(${const})
+
+file_format: 1

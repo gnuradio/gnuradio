@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006-2008,2010,2011 Free Software Foundation, Inc.
+ * Copyright 2006-2008,2010,2011,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,7 +34,6 @@ namespace gr {
   namespace digital {
 
 #define VERBOSE 0
-#define M_TWOPI (2*M_PI)
 #define MAX_NUM_SYMBOLS 1000
 
     ofdm_frame_acquisition::sptr
@@ -81,7 +80,7 @@ namespace gr {
       d_phase_lut = new gr_complex[(2*d_freq_shift_len+1) * MAX_NUM_SYMBOLS];
       for(i = 0; i <= 2*d_freq_shift_len; i++) {
 	for(j = 0; j < MAX_NUM_SYMBOLS; j++) {
-	  d_phase_lut[j + i*MAX_NUM_SYMBOLS] =  gr_expj(-M_TWOPI*d_cplen/d_fft_length*(i-d_freq_shift_len)*j);
+	  d_phase_lut[j + i*MAX_NUM_SYMBOLS] =  gr_expj(-GR_M_TWOPI*d_cplen/d_fft_length*(i-d_freq_shift_len)*j);
 	}
       }
     }
@@ -102,10 +101,10 @@ namespace gr {
     gr_complex
     ofdm_frame_acquisition_impl::coarse_freq_comp(int freq_delta, int symbol_count)
     {
-      //  return gr_complex(cos(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count),
-      //	    sin(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count));
+      //  return gr_complex(cos(-GR_M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count),
+      //	    sin(-GR_M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count));
 
-      return gr_expj(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
+      return gr_expj(-GR_M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
 
       //return d_phase_lut[MAX_NUM_SYMBOLS * (d_freq_shift_len + freq_delta) + symbol_count];
     }
