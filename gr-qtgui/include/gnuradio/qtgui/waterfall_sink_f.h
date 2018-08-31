@@ -68,12 +68,17 @@ namespace gr {
      * Message Ports:
      *
      * - freq (input):
-     *        Receives a PMT pair: (intern("freq"), double(frequency).
+     *        Receives a PMT pair: (intern("freq"), double(frequency)).
      *        This is used to retune the center frequency of the
      *        display's x-axis.
+     * 
+     * - bw (input):
+     *        Receives a PMT pair: (intern("bw"), double(bandwidth)).
+     *        This is used to programmatically change the bandwidth of
+     *        of the display's x-axis.
      *
      * - freq (output):
-     *        Produces a PMT pair with (intern("freq"), double(frequency).
+     *        Produces a PMT pair with (intern("freq"), double(frequency)).
      *        When a user double-clicks on the display, the block
      *        produces and emits a message containing the frequency of
      *        where on the x-axis the user clicked. This value can be
