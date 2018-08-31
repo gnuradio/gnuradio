@@ -24,6 +24,7 @@ install(FILES
     api.h
     firdes.h
     fir_filter.h
+    fir_filter_blk.h
     fir_filter_with_buffer.h
     fft_filter.h
     iir_filter.h
