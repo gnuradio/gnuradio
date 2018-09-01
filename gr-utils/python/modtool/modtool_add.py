@@ -24,8 +24,11 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+from builtins import input
+
 import os
 import re
+import getpass
 
 from .util_functions import append_re_line_sequence, ask_yes_no, SequenceCompleter
 from .cmakefile_editor import CMakeFileEditor
@@ -72,15 +75,15 @@ class ModToolAdd(ModTool):
         ModTool.setup(self, options)
 
         if self._info['blockname'] is None:
-            if len(args) >= 2:
-                self._info['blockname'] = args[1]
+            if len(options) >= 2:
+                self._info['blockname'] = options[1]
             else:
-                self._info['blockname'] = raw_input("Enter name of block/code (without module name prefix): ")
+                self._info['blockname'] = input("Enter name of block/code (without module name prefix): ")
         if os.path.isfile("./lib/"+self._info['blockname']+"_impl.cc") or os.path.isfile("./python/"+self._info['blockname']+".py"):
             raise ModToolException('The given blockname already exists!')
         if not re.match('[a-zA-Z0-9_]+', self._info['blockname']):
             raise ModToolException('Invalid block name.')
-        print "Block/code identifier: " + self._info['blockname']
+        print("Block/code identifier: " + self._info['blockname'])
         self._info['fullblockname'] = self._info['modname'] + '_' + self._info['blockname']
 
         self._info['blocktype'] = options.block_type
@@ -125,7 +128,7 @@ class ModToolAdd(ModTool):
                 else:
                     copyright_candidates = (user, 'GNU Radio')
                 with SequenceCompleter(copyright_candidates):
-                    self._info['copyrightholder'] = raw_input("Please specify the copyright holder: ")
+                    self._info['copyrightholder'] = input("Please specify the copyright holder: ")
                     if not self._info['copyrightholder'] or self._info['copyrightholder'].isspace():
                         self._info['copyrightholder'] = "gr-"+self._info['modname']+" author"
             elif self._info['is_component']:
