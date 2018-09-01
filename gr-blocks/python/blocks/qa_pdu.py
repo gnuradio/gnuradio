@@ -64,7 +64,7 @@ class test_pdu(gr_unittest.TestCase):
         # post the message
         src.to_basic_block()._post(port, msg)
         src.to_basic_block()._post(pmt.intern("system"),
-                pmt.cons(pmt.intern("done"), pmt.PMT_T))
+                pmt.cons(pmt.intern("done"), pmt.from_long(1)))
 
         self.tb.start()
         self.tb.wait()
@@ -99,7 +99,7 @@ class test_pdu(gr_unittest.TestCase):
         msg = pmt.cons( pmt.PMT_NIL, pmt.init_f32vector(10, src_data))
         src.to_basic_block()._post(port, msg)
         src.to_basic_block()._post(pmt.intern("system"),
-                pmt.cons(pmt.intern("done"), pmt.PMT_T))
+                pmt.cons(pmt.intern("done"), pmt.from_long(1)))
 
         self.tb.start()
         self.tb.wait()
