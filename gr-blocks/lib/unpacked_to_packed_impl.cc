@@ -53,7 +53,7 @@ namespace gr {
       assert(bits_per_chunk <= d_bits_per_type);
       assert(bits_per_chunk > 0);
 
-      this->set_relative_rate((uint64_t)bits_per_chunk, (uint64_t)BITS_PER_TYPE);
+      this->set_relative_rate((uint64_t)bits_per_chunk, (uint64_t)this->d_bits_per_type);
     }
 
     template <class T>
