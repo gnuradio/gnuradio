@@ -25,6 +25,7 @@
 #endif
 
 #include <gnuradio/fxpt.h>
+#include <gnuradio/math.h>
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <stdio.h>
