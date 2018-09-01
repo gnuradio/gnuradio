@@ -29,6 +29,7 @@
 #include <gnuradio/xoroshiro128p.h>
 #include <gnuradio/io_signature.h>
 #include <stdexcept>
+#include <vector>
 
 namespace gr {
 namespace analog {
@@ -172,13 +173,14 @@ T fastnoise_source_impl<T>::sample_unbiased() {
 template <>
 gr_complex fastnoise_source_impl<gr_complex>::sample_unbiased() {
     uint64_t random_int = xoroshiro128p_next(d_state);
+    gr_complex s(sample());
     float re = (random_int & (UINT64_C(1)<<23)) ? (- s.real()) : (s.real());
     float im = (random_int & (UINT64_C(1)<<42)) ? (- s.real()) : (s.real());
     return gr_complex(re, im);
 }
 
 template <class T>
-const std::vector<T>& fast_noise_source_impl<T>::samples() const {
+const std::vector<T>& fastnoise_source_impl<T>::samples() const {
     return d_samples;
 }
 
