@@ -669,6 +669,7 @@ namespace gr {
 
       _tx_stream->send
         (gr_vector_const_void_star(_nchan), 0, _metadata, 1.0);
+      }
       return true;
     }
 
