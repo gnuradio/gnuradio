@@ -90,7 +90,7 @@ namespace gr {
     void
     chunks_to_symbols_impl<IN_T,OUT_T>::set_symbol_table(const std::vector<OUT_T> &symbol_table)
     {
-      gr::thread::scoped_lock lock(d_setlock);
+      gr::thread::scoped_lock lock(this->d_setlock);
       d_symbol_table = symbol_table;
     }
 
@@ -100,7 +100,7 @@ namespace gr {
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
     {
-      gr::thread::scoped_lock lock(d_setlock);
+      gr::thread::scoped_lock lock(this->d_setlock);
       assert(noutput_items % d_D == 0);
       assert(input_items.size() == output_items.size());
       int nstreams = input_items.size();
