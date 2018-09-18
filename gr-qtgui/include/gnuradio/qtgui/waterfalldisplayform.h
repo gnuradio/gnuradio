@@ -79,7 +79,7 @@ public slots:
   void setMaxIntensity(const QString &m);
   void setMinIntensity(const QString &m);
 
-  void setAlpha(unsigned int which, int alpha);
+  void setAlpha(unsigned int which, unsigned int alpha);
 
   void setColorMap(unsigned int which,
 		   const int newType,

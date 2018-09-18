@@ -64,10 +64,10 @@ public slots:
   void setTitle(const QString &title);
   void setLineLabel(unsigned int which, const QString &label);
   void setLineColor(unsigned int which, const QString &color);
-  void setLineWidth(unsigned int which, int width);
+  void setLineWidth(unsigned int which, unsigned int width);
   void setLineStyle(unsigned int which, Qt::PenStyle style);
   void setLineMarker(unsigned int which, QwtSymbol::Style style);
-  void setMarkerAlpha(unsigned int which, int alpha);
+  void setMarkerAlpha(unsigned int which, unsigned int alpha);
 
   QString title();
   QString lineLabel(unsigned int which);
