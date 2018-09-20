@@ -51,53 +51,6 @@ SET(GR_PKG_TRELLIS_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/trellis)
 if(ENABLE_GR_TRELLIS)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_TRELLIS_DESCRIPTION "GNU Radio Trellis Blocks")
-
-CPACK_COMPONENT("trellis_docs"
-    GROUP        "Trellis"
-    DISPLAY_NAME "Documentation"
-    DESCRIPTION  "Doxygen HTML and XML"
-)
-
-CPACK_COMPONENT("trellis_runtime"
-    GROUP        "Trellis"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("trellis_devel"
-    GROUP        "Trellis"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("trellis_python"
-    GROUP        "Trellis"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;trellis_runtime"
-)
-
-CPACK_COMPONENT("trellis_examples"
-    GROUP        "Trellis"
-    DISPLAY_NAME "Examples"
-    DESCRIPTION  "Python examples for trellis"
-    DEPENDS      "trellis_python"
-)
-
-CPACK_COMPONENT("trellis_swig"
-    GROUP        "Trellis"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;trellis_python;trellis_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/trellis)
@@ -122,7 +75,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "trellis_devel"
 )
 
 endif(ENABLE_GR_TRELLIS)

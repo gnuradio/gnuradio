@@ -20,10 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+
 from gnuradio import gr
 from gnuradio import blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import os, sys
 
 try:
@@ -31,13 +33,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Scipy required (www.scipy.org)."
+    print("Error: Scipy required (www.scipy.org).")
     sys.exit(1)
 
 try:
@@ -143,35 +145,30 @@ class my_top_block(gr.top_block):
 
 def main():
     description = "Plots the constellations of a list of files."
-    parser = OptionParser(option_class=eng_option, description=description,
+    parser = ArgumentParser(description=description,
                           conflict_handler="resolve")
-    parser.add_option("-N", "--nsamples", type="int", default=1000000,
-                      help="Set the number of samples to display [default=%default]")
-    parser.add_option("-S", "--start", type="int", default=0,
-                      help="Starting sample number [default=%default]")
-    (options, args) = parser.parse_args()
+    parser.add_argument("-N", "--nsamples", type=int, default=1000000,
+                      help="Set the number of samples to display [default=%(default)r]")
+    parser.add_argument("-S", "--start", type=int, default=0,
+                      help="Starting sample number [default=%(default)r]")
+    parser.add_argument("files", nargs="+", metavar='FILE')
+    args = parser.parse_args()
 
-    if(len(args) < 1):
-        parser.print_help()
-        sys.exit(0)
-
-    filelist = list(args)
-
-    nsamples = options.nsamples
+    filelist = args.files
+    nsamples = args.nsamples
 
     # Find the smallest number of samples in all files and use that as
     # a maximum value possible.
     filesizes = []
     for f in filelist:
         if(os.path.exists(f)):
-            filesizes.append(os.path.getsize(f) / gr.sizeof_gr_complex)
+            filesizes.append(os.path.getsize(f) // gr.sizeof_gr_complex)
     max_nsamples = min(filesizes)
 
-    tb = my_top_block(filelist,
-                      options.start, nsamples, max_nsamples);
+    tb = my_top_block(filelist, args.start, nsamples, max_nsamples);
 
     main_box = plot_constellation_form(tb, 'GNU Radio Constellation Plot', 10000.0)
-    for n in xrange(tb._nsigs):
+    for n in range(tb._nsigs):
         main_box._style_edit[n].setCurrentIndex(0)
     main_box.show()
 

@@ -27,8 +27,8 @@
 bool rpcmanager::make_aggregator(false);
 bool rpcmanager::booter_registered(false);
 bool rpcmanager::aggregator_registered(false);
-std::auto_ptr<rpcserver_booter_base> rpcmanager::boot(0);
-std::auto_ptr<rpcserver_booter_aggregator> rpcmanager::aggregator(0);
+std::unique_ptr<rpcserver_booter_base> rpcmanager::boot;
+std::unique_ptr<rpcserver_booter_aggregator> rpcmanager::aggregator;
 
 #ifdef GR_RPCSERVER_ENABLED
 rpcmanager manager_instance;

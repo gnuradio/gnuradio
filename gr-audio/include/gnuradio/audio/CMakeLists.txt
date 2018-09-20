@@ -29,5 +29,4 @@ endif(OSX_AUDIO_VALID)
 
 install(FILES ${gr_audio_install_files}
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/audio
-    COMPONENT "audio_devel"
 )

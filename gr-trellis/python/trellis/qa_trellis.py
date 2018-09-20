@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import math
 import os
 
@@ -71,7 +73,7 @@ class test_trellis (gr_unittest.TestCase):
         Runs some coding/decoding tests with a few different FSM
         specs.
         """
-        for name, args in fsm_args.items():
+        for name, args in list(fsm_args.items()):
             constellation = constells[args[2]]
             fsms = trellis.fsm(*args)
             noise = 0.1
@@ -85,7 +87,7 @@ class trellis_tb(gr.top_block):
     """
     A simple top block for use testing gr-trellis.
     """
-    def __init__(self, constellation, f, N0=0.25, seed=-666L):
+    def __init__(self, constellation, f, N0=0.25, seed=-666):
         """
         constellation - a constellation object used for modulation.
         f - a finite state machine specification used for coding.
@@ -96,14 +98,14 @@ class trellis_tb(gr.top_block):
         # packet size in bits (make it multiple of 16 so it can be packed in a short)
         packet_size = 1024*16
         # bits per FSM input symbol
-        bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+        bitspersymbol = int(round(math.log(f.I()) / math.log(2))) # bits per FSM input symbol
         # packet size in trellis steps
-        K = packet_size/bitspersymbol
+        K = packet_size // bitspersymbol
 
         # TX
         src = blocks.lfsr_32k_source_s()
         # packet size in shorts
-        src_head = blocks.head(gr.sizeof_short, packet_size/16)
+        src_head = blocks.head(gr.sizeof_short, packet_size // 16)
         # unpack shorts to symbols compatible with the FSM input cardinality
         s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol, gr.GR_MSB_FIRST)
         # initial FSM state = 0
@@ -112,7 +114,7 @@ class trellis_tb(gr.top_block):
 
         # CHANNEL
         add = blocks.add_cc()
-        noise = analog.noise_source_c(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+        noise = analog.noise_source_c(analog.GR_GAUSSIAN,math.sqrt(N0 / 2),seed)
 
         # RX
         # data preprocessing to generate metrics for Viterbi

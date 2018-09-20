@@ -76,8 +76,6 @@ cppzmq is included (undocumentedly) in the debian and Ubuntu libzmq3-dev package
 \li qwt         (>= 5.2.0)   http://sourceforge.net/projects/qwt/
 \li pyqt        (>= 4.10.0)  http://www.riverbankcomputing.co.uk/software/pyqt/download
 
-\subsection dep_gr_wxgui gr-wxgui: The WX-based Graphical User Interface
-\li wxpython    (>= 2.8)     http://www.wxpython.org/
 \li python-lxml (>= 1.3.6)   http://lxml.de/
 
 \subsection dep_gr_audio gr-audio: Audio Subsystems (system/OS dependent)

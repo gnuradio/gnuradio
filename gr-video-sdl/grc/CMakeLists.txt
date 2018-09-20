@@ -18,10 +18,8 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    video_sdl_sink.xml
-    video_block_tree.xml
+    video_sdl_sink.block.yml
+    video.tree.yml
 
     DESTINATION share/gnuradio/grc/blocks
 )
-
-

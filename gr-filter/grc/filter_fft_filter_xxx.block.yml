@@ -1,0 +1,52 @@
+id: fft_filter_xxx
+label: FFT Filter
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fff]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Float (Real Taps)]
+    option_attributes:
+        input: [complex, complex, float]
+        output: [complex, complex, float]
+        taps: [complex_vector, float_vector, float_vector]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: taps
+    label: Taps
+    dtype: ${ type.taps }
+-   id: samp_delay
+    label: Sample Delay
+    dtype: int
+    default: '0'
+    hide: part
+-   id: nthreads
+    label: Num. Threads
+    dtype: int
+    default: '1'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.fft_filter_${type}(${decim}, ${taps}, ${nthreads})
+        self.${id}.declare_sample_delay(${samp_delay})
+    callbacks:
+    - set_taps(${taps})
+    - set_nthreads(${nthreads})
+
+file_format: 1

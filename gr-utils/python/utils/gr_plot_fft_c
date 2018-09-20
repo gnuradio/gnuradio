@@ -26,15 +26,12 @@ from gnuradio.plot_fft_base import plot_fft_base
 
 def main():
     parser = plot_fft_base.setup_options()
-    parser.remove_option("--data-type")
+    parser.add_argument("-d", "--data-type", default="complex64",
+            choices=("complex64", ))
 
-    (options, args) = parser.parse_args ()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filename = args[0]
+    args = parser.parse_args()
 
-    dc = plot_fft_base("complex64", filename, options)
+    dc = plot_fft_base("complex64", args.file, args)
 
 if __name__ == "__main__":
     try:

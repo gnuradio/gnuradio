@@ -132,8 +132,8 @@ https://wiki.gnuradio.org/index.php/Coding_guide_impl#Unit-testing
 When writing programs that are executable from the command line,
 please follow these guidelines for command line argument names (short
 and long) and types of the arguments.  We list them below using the
-Python optparse syntax.  In general, the default value should be coded
-into the help string using the "... [default=%default]" syntax.
+Python argparse syntax.  In general, the default value should be coded
+into the help string using the "... [default=%(default)r]" syntax.
 
 ** Mandatory options by gr::block
 
@@ -144,7 +144,7 @@ option parsing will automatically be set up for you.
 
 Any program using an audio source shall include:
 
-  add_option("-I", "--audio-input", type="string", default="",
+  add_argument("-I", "--audio-input", default="",
              help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
 
 The default must be "".  This allows an audio module-dependent default
@@ -153,7 +153,7 @@ to be specified in the user preferences file.
 
 *** Audio sink
 
-  add_option("-O", "--audio-output", type="string", default="",
+  add_argument("-O", "--audio-output", default="",
              help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
 
 The default must be "".  This allows an audio module-dependent default
@@ -174,69 +174,69 @@ following parameters, please use these options to specify them:
 
 To specify a frequency (typically an RF center frequency) use:
 
-  add_option("-f", "--freq", type="eng_float", default=<your-default-here>,
-             help="set frequency to FREQ [default=%default]")
+  add_argument("-f", "--freq", type=eng_float, default=<your-default-here>,
+             help="set frequency to FREQ [default=%(default)r]")
 
 
 To specify a decimation factor use:
 
-  add_option("-d", "--decim", type="intx", default=<your-default-here>,
-             help="set decimation rate to DECIM [default=%default]")
+  add_argument("-d", "--decim", type=intx, default=<your-default-here>,
+             help="set decimation rate to DECIM [default=%(default)r]")
 
 
 To specify an interpolation factor use:
 
-  add_option("-i", "--interp", type="intx", default=<your-default-here>,
-             help="set interpolation rate to INTERP [default=%default]")
+  add_argument("-i", "--interp", type=intx, default=<your-default-here>,
+             help="set interpolation rate to INTERP [default=%(default)r]")
 
 
 To specify a gain setting use:
 
-  add_option("-g", "--gain", type="eng_float", default=<your-default-here>,
-	     help="set gain in dB [default=%default]")
+  add_argument("-g", "--gain", type=eng_float, default=<your-default-here>,
+             help="set gain in dB [default=%(default)r]")
 
 
 If your application specifies both a tx and an rx gain, use:
 
-  add_option("", "--rx-gain", type="eng_float", default=<your-default-here>,
-	     help="set receive gain in dB [default=%default]")
+  add_argument("--rx-gain", type=eng_float, default=<your-default-here>,
+            help="set receive gain in dB [default=%(default)r]")
 
-  add_option("", "--tx-gain", type="eng_float", default=<your-default-here>,
-	     help="set transmit gain in dB [default=%default]")
+  add_argument("--tx-gain", type=eng_float, default=<your-default-here>,
+             help="set transmit gain in dB [default=%(default)r]")
 
 
 To specify the number of channels of something use:
 
-  add_option("-n", "--nchannels", type="intx", default=1,
-             help="specify number of channels [default=%default]")
+  add_argument("-n", "--nchannels", type=intx, default=1,
+             help="specify number of channels [default=%(default)r]")
 
 
 To specify an output filename use:
 
-  add_option("-o", "--output-filename", type="string", default=<your-default-here>,
-             help="specify output-filename [default=%default]")
+  add_argument("-o", "--output-filename", default=<your-default-here>,
+             help="specify output-filename [default=%(default)r]")
 
 
 To specify a rate use:
 
-  add_option("-r", "--bit-rate", type="eng_float", default=<your-default-here>,
-             help="specify bit-rate [default=%default]")
+  add_argument("-r", "--bit-rate", type=eng_float, default=<your-default-here>,
+             help="specify bit-rate [default=%(default)r]")
      or
 
-  add_option("-r", "--sample-rate", type="eng_float", default=<your-default-here>,
-             help="specify sample-rate [default=%default]")
+  add_argument("-r", "--sample-rate", type=eng_float, default=<your-default-here>,
+             help="specify sample-rate [default=%(default)r]")
 
 
 If your application has a verbose option, use:
 
-  add_option('-v', '--verbose', action="store_true", default=False,
-	     help="verbose output")
+  add_argument('-v', '--verbose', action="store_true",
+             help="verbose output")
 
 
 If your application allows the user to specify the "fast USB" options, use:
 
-  add_option("", "--fusb-block-size", type="intx", default=0,
-             help="specify fast USB block size [default=%default]")
+  add_argument("--fusb-block-size", type=intx, default=0,
+             help="specify fast USB block size [default=%(default)r]")
 
-  add_option("", "--fusb-nblocks", type="intx", default=0,
-             help="specify number of fast USB blocks [default=%default]")
+  add_argument("--fusb-nblocks", type=intx, default=0,
+             help="specify number of fast USB blocks [default=%(default)r]")

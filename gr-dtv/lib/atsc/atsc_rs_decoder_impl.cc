@@ -38,7 +38,6 @@ namespace gr {
     static const int rs_init_nroots  =    20;
 
     static const int N = (1 << rs_init_symsize) - 1;	// 255
-    static const int K = N - rs_init_nroots;		// 235
 
     static const int amount_of_pad = N - ATSC_MPEG_RS_ENCODED_LENGTH;	  // 48
 

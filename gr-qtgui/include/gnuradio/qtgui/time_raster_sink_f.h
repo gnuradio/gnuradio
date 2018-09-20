@@ -93,22 +93,22 @@ namespace gr {
 
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
-      virtual void set_line_label(int which, const std::string &lable) = 0;
-      virtual void set_line_color(int which, const std::string &color) = 0;
-      virtual void set_line_width(int which, int width) = 0;
-      virtual void set_line_style(int which, Qt::PenStyle style) = 0;
-      virtual void set_line_marker(int which, QwtSymbol::Style marker) = 0;
-      virtual void set_line_alpha(int which, double alpha) = 0;
-      virtual void set_color_map(int which, const int color) = 0;
+      virtual void set_line_label(unsigned int which, const std::string &lable) = 0;
+      virtual void set_line_color(unsigned int which, const std::string &color) = 0;
+      virtual void set_line_width(unsigned int which, int width) = 0;
+      virtual void set_line_style(unsigned int which, Qt::PenStyle style) = 0;
+      virtual void set_line_marker(unsigned int which, QwtSymbol::Style marker) = 0;
+      virtual void set_line_alpha(unsigned int which, double alpha) = 0;
+      virtual void set_color_map(unsigned int which, const int color) = 0;
 
       virtual std::string title() = 0;
-      virtual std::string line_label(int which) = 0;
-      virtual std::string line_color(int which) = 0;
-      virtual int line_width(int which) = 0;
-      virtual int line_style(int which) = 0;
-      virtual int line_marker(int which) = 0;
-      virtual double line_alpha(int which) = 0;
-      virtual int color_map(int which) = 0;
+      virtual std::string line_label(unsigned int which) = 0;
+      virtual std::string line_color(unsigned int which) = 0;
+      virtual int line_width(unsigned int which) = 0;
+      virtual int line_style(unsigned int which) = 0;
+      virtual int line_marker(unsigned int which) = 0;
+      virtual double line_alpha(unsigned int which) = 0;
+      virtual int color_map(unsigned int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 

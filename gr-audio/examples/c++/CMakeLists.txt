@@ -31,5 +31,4 @@ target_link_libraries(dial_tone
 INSTALL(TARGETS
     dial_tone
     DESTINATION ${GR_PKG_AUDIO_EXAMPLES_DIR}
-    COMPONENT "audio_examples"
 )

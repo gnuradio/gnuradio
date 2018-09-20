@@ -37,11 +37,12 @@ if(PYTHON_EXECUTABLE)
 else(PYTHON_EXECUTABLE)
 
     #use the built-in find script
+    set(Python_ADDITIONAL_VERSIONS 3.4 3.5 3.6)
     find_package(PythonInterp 2)
 
     #and if that fails use the find program routine
     if(NOT PYTHONINTERP_FOUND)
-        find_program(PYTHON_EXECUTABLE NAMES python python2 python2.7 python2.6 python2.5)
+        find_program(PYTHON_EXECUTABLE NAMES python python2 python2.7)
         if(PYTHON_EXECUTABLE)
             set(PYTHONINTERP_FOUND TRUE)
         endif(PYTHON_EXECUTABLE)
@@ -87,7 +88,7 @@ macro(GR_PYTHON_CHECK_MODULE desc mod cmd have)
 try:
     import ${mod}
     assert ${cmd}
-except ImportError, AssertionError: exit(-1)
+except (ImportError, AssertionError): exit(-1)
 except: pass
 #########################################"
         RESULT_VARIABLE ${have}
@@ -107,7 +108,7 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
 from distutils import sysconfig
-print sysconfig.get_python_lib(plat_specific=True, prefix='')
+print(sysconfig.get_python_lib(plat_specific=True, prefix=''))
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 endif()
@@ -120,7 +121,7 @@ file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
 function(GR_UNIQUE_TARGET desc)
     file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
-unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
+unique = hashlib.md5(b'${reldir}${ARGN}').hexdigest()[:5]
 print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
     add_custom_target(${_target} ALL DEPENDS ${ARGN})
@@ -131,7 +132,7 @@ endfunction(GR_UNIQUE_TARGET)
 ########################################################################
 function(GR_PYTHON_INSTALL)
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION;COMPONENT" "FILES;PROGRAMS" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS" ${ARGN})
 
     ####################################################################
     if(GR_PYTHON_INSTALL_FILES)
@@ -183,7 +184,6 @@ function(GR_PYTHON_INSTALL)
         set(python_install_gen_targets ${pycfiles} ${pyofiles})
         install(FILES ${python_install_gen_targets}
             DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-            COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
         )
 
     ####################################################################
@@ -220,7 +220,6 @@ function(GR_PYTHON_INSTALL)
 
             install(PROGRAMS ${pyexefile} RENAME ${pyfile_name}
                 DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
-                COMPONENT ${GR_PYTHON_INSTALL_COMPONENT}
             )
         endforeach(pyfile)
 
@@ -236,7 +235,7 @@ endfunction(GR_PYTHON_INSTALL)
 file(WRITE ${CMAKE_BINARY_DIR}/python_compile_helper.py "
 import sys, py_compile
 files = sys.argv[1:]
-srcs, gens = files[:len(files)/2], files[len(files)/2:]
+srcs, gens = files[:len(files)//2], files[len(files)//2:]
 for src, gen in zip(srcs, gens):
     py_compile.compile(file=src, cfile=gen, doraise=True)
 ")

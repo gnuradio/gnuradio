@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,7 +26,7 @@
 #include <gnuradio/vocoder/api.h>
 
 extern "C" {
-#include "../lib/codec2/codec2.h"
+#include <codec2/codec2.h>
 }
 
 namespace gr {
@@ -42,6 +42,12 @@ namespace gr {
 	MODE_1400 = CODEC2_MODE_1400,
 	MODE_1300 = CODEC2_MODE_1300,
 	MODE_1200 = CODEC2_MODE_1200,
+#ifdef CODEC2_MODE_700
+	MODE_700 = CODEC2_MODE_700,
+#endif
+#ifdef CODEC2_MODE_700B
+	MODE_700B = CODEC2_MODE_700B,
+#endif
       };
 
     private:

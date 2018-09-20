@@ -44,16 +44,16 @@ class NumberDisplayForm : public QWidget
   ~NumberDisplayForm();
 
   gr::qtgui::graph_t graphType() const;
-  QColor colorMin(int which) const;
-  QColor colorMax(int which) const;
-  std::string label(int which) const;
+  QColor colorMin(unsigned int which) const;
+  QColor colorMax(unsigned int which) const;
+  std::string label(unsigned int which) const;
   float average() const;
   float updateTime() const;
-  int scaleMin(int which);
-  int scaleMax(int which);
+  int scaleMin(unsigned int which);
+  int scaleMax(unsigned int which);
   std::string title() const;
-  std::string unit(int which) const;
-  float factor(int which) const;
+  std::string unit(unsigned int which) const;
+  float factor(unsigned int which) const;
 
 public slots:
   void mousePressEvent(QMouseEvent * e);
@@ -61,28 +61,28 @@ public slots:
   void setStop(bool on);
   void setStop();
   void setGraphType(const gr::qtgui::graph_t type);
-  void setColor(int which, const QColor &min, const QColor &max);
-  void setColorMin(int which, QString min);
-  void setColorMax(int which, QString max);
-  void setLabel(int which, const std::string &label);
-  void setLabel(int which, QString label);
+  void setColor(unsigned int which, const QColor &min, const QColor &max);
+  void setColorMin(unsigned int which, QString min);
+  void setColorMax(unsigned int which, QString max);
+  void setLabel(unsigned int which, const std::string &label);
+  void setLabel(unsigned int which, QString label);
   void setAverage(const float avg);
   void setUpdateTime(const float time);
   void setUpdateTime(QString time);
   void saveFigure();
-  void setScale(int which, int min, int max);
-  void setScaleMin(int which, int min);
-  void setScaleMax(int which, int max);
+  void setScale(unsigned int which, int min, int max);
+  void setScaleMin(unsigned int which, int min);
+  void setScaleMax(unsigned int which, int max);
   void autoScale(bool on);
   void setTitle(const std::string &title);
-  void setUnit(int which, const std::string &unit);
-  void setFactor(int which, float factor);
+  void setUnit(unsigned int which, const std::string &unit);
+  void setFactor(unsigned int which, float factor);
 
 private slots:
   void newData(const QEvent*);
 
 private:
-  int d_nplots;
+  unsigned int d_nplots;
   QGridLayout *d_layout;
   std::vector<QLabel*> d_label;
   std::vector<QLabel*> d_text_box;

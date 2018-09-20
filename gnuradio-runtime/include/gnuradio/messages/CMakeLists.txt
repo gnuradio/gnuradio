@@ -27,5 +27,4 @@ install(FILES
   msg_producer.h
   msg_queue.h
   DESTINATION ${GR_INCLUDE_DIR}/gnuradio/messages
-  COMPONENT "runtime_devel"
 )

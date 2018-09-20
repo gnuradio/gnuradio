@@ -69,7 +69,7 @@ list(APPEND uhd_libs
 
 add_library(gnuradio-uhd SHARED ${gr_uhd_sources})
 target_link_libraries(gnuradio-uhd ${uhd_libs})
-GR_LIBRARY_FOO(gnuradio-uhd RUNTIME_COMPONENT "uhd_runtime" DEVEL_COMPONENT "uhd_devel")
+GR_LIBRARY_FOO(gnuradio-uhd)
 
 ########################################################################
 # Build static libraries if enabled
@@ -85,7 +85,7 @@ if(ENABLE_STATIC_LIBS)
     endif(NOT WIN32)
 
     install(TARGETS gnuradio-uhd_static
-      ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "uhd_devel"   # .lib file
+      ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
   else(UHD_VERSION VERSION_GREATER "3.8.1")
     message(STATUS "Not building gr-uhd static library; requires UHD >= 3.8.2")

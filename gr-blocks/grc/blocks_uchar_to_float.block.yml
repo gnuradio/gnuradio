@@ -1,0 +1,16 @@
+id: blocks_uchar_to_float
+label: UChar To Float
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: float
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.uchar_to_float()
+
+file_format: 1

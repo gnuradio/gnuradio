@@ -4,34 +4,34 @@ try:
     import scipy
     from scipy import fftpack
 except ImportError:
-    print "Please install SciPy to run this script (http://www.scipy.org/)"
-    raise SystemExit, 1
+    print("Please install SciPy to run this script (http://www.scipy.org/)")
+    raise SystemExit(1)
 
 try:
     from matplotlib import mlab
 except ImportError:
-    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net)"
-    raise SystemExit, 1
+    print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net)")
+    raise SystemExit(1)
 
 try:
     from PyQt4 import Qt, QtCore, QtGui
 except ImportError:
-    print "Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)"
-    raise SystemExit, 1
+    print("Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)")
+    raise SystemExit(1)
 
 try:
     import PyQt4.Qwt5 as Qwt
 except ImportError:
-    print "Please install PyQwt5 to run this script (http://pyqwt.sourceforge.net/)"
-    raise SystemExit, 1
+    print("Please install PyQwt5 to run this script (http://pyqwt.sourceforge.net/)")
+    raise SystemExit(1)
 
 try:
     # FIXME: re-enable this before committing
     #from gnuradio.pyqt_plot import Ui_MainWindow
     from gnuradio.pyqt_plot import Ui_MainWindow
 except ImportError:
-    print "Could not import from pyqt_plot. Please build with \"pyuic4 pyqt_plot.ui -o pyqt_plot.py\""
-    raise SystemExit, 1
+    print("Could not import from pyqt_plot. Please build with \"pyuic4 pyqt_plot.ui -o pyqt_plot.py\"")
+    raise SystemExit(1)
 
 import sys, os
 from optparse import OptionParser
@@ -284,7 +284,7 @@ class gr_plot_qt(QtGui.QMainWindow):
     def open_file(self):
         filename = Qt.QFileDialog.getOpenFileName(self, "Open", ".")
         if(filename != ""):
-            #print filename
+            #print(filename)
             self.initialize(filename)
 
     def reload_file(self):
@@ -320,7 +320,7 @@ class gr_plot_qt(QtGui.QMainWindow):
     def init_data_input(self):
         self.hfile.seek(0, os.SEEK_END)
         self.signal_size = self.hfile.tell()/self.sizeof_data
-        #print "Sizeof File: ", self.signal_size
+        #print("Sizeof File: ", self.signal_size)
         self.hfile.seek(0, os.SEEK_SET)
 
     def get_data(self, start, end):
@@ -338,7 +338,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
                 tstep = 1.0 / self.sample_rate
                 self.iq = iq
-                self.time = [tstep*(self.position + i) for i in xrange(len(self.iq))]
+                self.time = [tstep*(self.position + i) for i in range(len(self.iq))]
 
                 self.set_file_pos_box(start, end)
             except MemoryError:

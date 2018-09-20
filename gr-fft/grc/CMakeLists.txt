@@ -18,11 +18,10 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    fft_block_tree.xml
-    fft_fft_vxx.xml
-    fft_goertzel_fc.xml
-    fft_logpwrfft_x.xml
-    fft_ctrlport_probe_psd.xml
+    fft.tree.yml
+    fft_fft_vxx.block.yml
+    fft_goertzel_fc.block.yml
+    fft_logpwrfft_x.block.yml
+    fft_ctrlport_probe_psd.block.yml
     DESTINATION ${GRC_BLOCKS_DIR}
-    COMPONENT "fft_python"
 )

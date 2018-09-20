@@ -35,5 +35,4 @@ GR_PYTHON_INSTALL(FILES
     gr_unittest.py
     gr_xmlrunner.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
-    COMPONENT "runtime_python"
 )

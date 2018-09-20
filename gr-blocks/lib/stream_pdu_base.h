@@ -24,6 +24,7 @@
 #define INCLUDED_STREAM_PDU_BASE_H
 
 #include <gnuradio/thread/thread.h>
+#include <gnuradio/basic_block.h>
 #include <pmt/pmt.h>
 
 class basic_block;

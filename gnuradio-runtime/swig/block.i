@@ -60,6 +60,9 @@ class gr::block : public gr::basic_block
   uint64_t nitems_read(unsigned int which_input);
   uint64_t nitems_written(unsigned int which_output);
 
+  void set_log_level(std::string level);
+  std::string log_level();
+
   // Methods to manage the block's max_noutput_items size.
   int max_noutput_items();
   void set_max_noutput_items(int m);

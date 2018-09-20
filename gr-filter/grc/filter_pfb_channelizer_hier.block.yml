@@ -1,0 +1,63 @@
+id: pfb_channelizer_hier_ccf
+label: Hierarchical Polyphase Channelizer
+
+parameters:
+-   id: nchans
+    label: Number of Channels
+    dtype: int
+    default: '3'
+    hide: part
+-   id: n_filterbanks
+    label: Number of Filterbanks
+    dtype: int
+    default: '4'
+-   id: taps
+    label: Taps
+    dtype: raw
+    default: None
+-   id: outchans
+    label: Output Channels
+    dtype: raw
+    default: None
+-   id: atten
+    label: Attenuation
+    dtype: real
+    default: '100'
+-   id: bw
+    label: Fraction of Channel to Keep
+    dtype: real
+    default: '1.0'
+-   id: tb
+    label: Transition Band (as a fraction of channel width)
+    dtype: real
+    default: '0.2'
+-   id: ripple
+    label: Passband Ripple in dB
+    dtype: real
+    default: '0.1'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+    multiplicity: ${ nchans }
+
+templates:
+    imports: from gnuradio.filter import pfb
+    make: |-
+        pfb.channelizer_hier_ccf(
+            ${nchans},
+            ${n_filterbanks},
+            ${taps},
+            ${outchans},
+            ${atten},
+            ${bw},
+            ${tb},
+            ${ripple})
+    callbacks:
+    - set_taps(${taps})
+
+file_format: 1

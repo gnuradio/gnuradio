@@ -18,8 +18,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 import numpy as np
-import helper_functions as hf
+from . import helper_functions as hf
 
 
 def bec_channel(eta):
@@ -220,7 +225,7 @@ def plot_capacity_histogram(design_snr, save_file=None):
 
 
 def main():
-    print 'channel construction main'
+    print('channel construction main')
     n = 11
     block_size = int(2 ** n)
     design_snr = -1.59

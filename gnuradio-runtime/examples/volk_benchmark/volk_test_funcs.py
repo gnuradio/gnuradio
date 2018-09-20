@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 import math, sys, os, time
@@ -122,18 +124,18 @@ class helper(gr.top_block):
         self.snks = []
         self.head = blocks.head(isizeof, N)
 
-        for n in xrange(nsrcs):
+        for n in range(nsrcs):
             self.srcs.append(blocks.null_source(isizeof))
 
-        for n in xrange(nsnks):
+        for n in range(nsnks):
             self.snks.append(blocks.null_sink(osizeof))
 
         self.connect(self.srcs[0], self.head, (self.op,0))
 
-        for n in xrange(1, nsrcs):
+        for n in range(1, nsrcs):
             self.connect(self.srcs[n], (self.op,n))
 
-        for n in xrange(nsnks):
+        for n in range(nsnks):
             self.connect((self.op,n), self.snks[n])
 
 def timeit(tb, iterations):
@@ -143,10 +145,10 @@ def timeit(tb, iterations):
     '''
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
-        print "Warning: failed to enable realtime scheduling"
+        print("Warning: failed to enable realtime scheduling")
 
     times = []
-    for i in xrange(iterations):
+    for i in range(iterations):
         start_time = time.time()
         tb.run()
         end_time = time.time()

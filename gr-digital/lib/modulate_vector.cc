@@ -23,8 +23,8 @@
 /*
 * Generate a modulated transmit vector corresponding to a particular
 * data sequence, resampling rate, and shaping filter. The output is
-* suitable for use as a candidate filter for the correlate_and_sync
-* block, or just for prototyping.
+* suitable for use as a candidate filter for the corr_est block, or
+* just for prototyping.
 *
 * It accepts a sptr to a modulator block as an argument; given
 * suitable data vectors and arguments you should be able to use any of
@@ -40,9 +40,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/blocks/vector_source_b.h>
-#include <gnuradio/blocks/vector_sink_c.h>
-#include <gnuradio/filter/fir_filter_ccf.h>
+#include <gnuradio/blocks/vector_source.h>
+#include <gnuradio/blocks/vector_sink.h>
+#include <gnuradio/filter/fir_filter_blk.h>
 #include <gnuradio/top_block.h>
 #include <gnuradio/digital/modulate_vector.h>
 

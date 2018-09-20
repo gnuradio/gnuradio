@@ -28,6 +28,11 @@
 #include <QtGui/QtGui>
 #include <QtGui/QIntValidator>
 #include <QtGui/QDoubleValidator>
+
+#if QT_VERSION >= 0x050000
+#include <QtWidgets/QtWidgets>
+#endif
+
 #include <qwt_symbol.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
@@ -38,7 +43,7 @@ class LineColorMenu: public QMenu
   Q_OBJECT
 
 public:
-  LineColorMenu(int which, QWidget *parent)
+  LineColorMenu(unsigned int which, QWidget *parent)
     : QMenu("Line Color", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -86,16 +91,16 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("LineColorMenu::getAction: which out of range.\n");
   }
 
 signals:
-  void whichTrigger(int which, const QString &name);
+  void whichTrigger(unsigned int which, const QString &name);
 
 public slots:
   void getBlue() { emit whichTrigger(d_which, "blue"); }
@@ -126,7 +131,7 @@ class LineWidthMenu: public QMenu
   Q_OBJECT
 
 public:
-  LineWidthMenu(int which, QWidget *parent)
+  LineWidthMenu(unsigned int which, QWidget *parent)
     : QMenu("Line Width", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -170,16 +175,16 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("LineWidthMenu::getAction: which out of range.\n");
   }
 
 signals:
-  void whichTrigger(int which, int width);
+  void whichTrigger(unsigned int which, int width);
 
 public slots:
   void getOne()   { emit whichTrigger(d_which, 1); }
@@ -208,7 +213,7 @@ class LineStyleMenu: public QMenu
   Q_OBJECT
 
 public:
-  LineStyleMenu(int which, QWidget *parent)
+  LineStyleMenu(unsigned int which, QWidget *parent)
     : QMenu("Line Style", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -244,16 +249,16 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("LineStyleMenu::getAction: which out of range.\n");
   }
 
 signals:
-  void whichTrigger(int which, Qt::PenStyle);
+  void whichTrigger(unsigned int which, Qt::PenStyle);
 
 public slots:
   void getNone()      { emit whichTrigger(d_which, Qt::NoPen); }
@@ -278,7 +283,7 @@ class LineMarkerMenu: public QMenu
   Q_OBJECT
 
 public:
-  LineMarkerMenu(int which, QWidget *parent)
+  LineMarkerMenu(unsigned int which, QWidget *parent)
     : QMenu("Line Marker", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -332,16 +337,16 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("LineMarkerMenu::getAction: which out of range.\n");
   }
 
 signals:
-  void whichTrigger(int which, QwtSymbol::Style);
+  void whichTrigger(unsigned int which, QwtSymbol::Style);
 
 public slots:
   void getNone()      { emit whichTrigger(d_which, QwtSymbol::NoSymbol); }
@@ -375,7 +380,7 @@ class MarkerAlphaMenu: public QMenu
   Q_OBJECT
 
 public:
-  MarkerAlphaMenu(int which, QWidget *parent)
+  MarkerAlphaMenu(unsigned int which, QWidget *parent)
     : QMenu("Line Transparency", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -409,16 +414,16 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("MarkerAlphaMenu::getAction: which out of range.\n");
   }
 
 signals:
-  void whichTrigger(int which, int);
+  void whichTrigger(unsigned int which, int);
 
 public slots:
   void getNone()   { emit whichTrigger(d_which, 255); }
@@ -442,7 +447,7 @@ class LineTitleAction: public QAction
   Q_OBJECT
 
 public:
-  LineTitleAction(int which, QWidget *parent)
+  LineTitleAction(unsigned int which, QWidget *parent)
     : QAction("Line Title", parent), d_which(which)
   {
     d_diag = new QDialog(parent);
@@ -468,7 +473,7 @@ public:
   {}
 
 signals:
-  void whichTrigger(int which, const QString &text);
+  void whichTrigger(unsigned int which, const QString &text);
 
 public slots:
   void getTextDiag()
@@ -687,9 +692,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("FFTSizeMenu::getAction: which out of range.\n");
@@ -701,7 +706,7 @@ public:
     float which = std::log(static_cast<float>(size))/std::log(2.0f) - 5;
     // If we're a predefined value
     if(std::modf(which,&ipt) == 0) {
-      if(which < d_act.size()-1)
+      if(which < static_cast<unsigned int>(d_act.size())-1)
         return d_act[static_cast<int>(which)];
       else
         throw std::runtime_error("FFTSizeMenu::getActionFromString: which out of range.\n");
@@ -797,9 +802,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("FFTSizeMenu::getAction: which out of range.\n");
@@ -922,9 +927,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("FFTWindowMenu::getAction: which out of range.\n");
@@ -1035,7 +1040,7 @@ class ColorMapMenu: public QMenu
   Q_OBJECT
 
 public:
-  ColorMapMenu(int which, QWidget *parent)
+  ColorMapMenu(unsigned int which, QWidget *parent)
     : QMenu("Color Map", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -1077,16 +1082,16 @@ public:
      return d_act.size();
    }
 
-   QAction * getAction(int which)
+   QAction * getAction(unsigned int which)
    {
-     if(which < d_act.size())
+     if(which < static_cast<unsigned int>(d_act.size()))
        return d_act[which];
      else
        throw std::runtime_error("ColorMapMenu::getAction: which out of range.\n");
    }
 
  signals:
-  void whichTrigger(int which, const int type,
+  void whichTrigger(unsigned int which, const int type,
 		    const QColor &min_color=QColor(),
 		    const QColor &max_color=QColor());
 
@@ -1158,9 +1163,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("TriggerModeMenu::getAction: which out of range.\n");
@@ -1236,9 +1241,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("TriggerSlopeMenu::getAction: which out of range.\n");
@@ -1301,9 +1306,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("TriggerChannelMenu::getAction: which out of range.\n");
@@ -1364,9 +1369,9 @@ public:
     return d_act.size();
   }
 
-  QAction * getAction(int which)
+  QAction * getAction(unsigned int which)
   {
-    if(which < d_act.size())
+    if(which < static_cast<unsigned int>(d_act.size()))
       return d_act[which];
     else
       throw std::runtime_error("NumberLayoutMenu::getAction: which out of range.\n");
@@ -1411,7 +1416,7 @@ class NumberColorMapMenu: public QMenu
   Q_OBJECT
 
 public:
-  NumberColorMapMenu(int which, QWidget *parent)
+  NumberColorMapMenu(unsigned int which, QWidget *parent)
     : QMenu("Color Map", parent), d_which(which)
   {
     d_grp = new QActionGroup(this);
@@ -1450,16 +1455,16 @@ public:
      return d_act.size();
    }
 
-   QAction * getAction(int which)
+   QAction * getAction(unsigned int which)
    {
-     if(which < d_act.size())
+     if(which < static_cast<unsigned int>(d_act.size()))
        return d_act[which];
      else
        throw std::runtime_error("ColorMapMenu::getAction: which out of range.\n");
    }
 
  signals:
-  void whichTrigger(int which,
+  void whichTrigger(unsigned int which,
 		    const QColor &min_color,
 		    const QColor &max_color);
 
@@ -1557,7 +1562,7 @@ class ItemFloatAct: public QAction
   Q_OBJECT
 
 public:
-  ItemFloatAct(int which, QString title, QWidget *parent)
+  ItemFloatAct(unsigned int which, QString title, QWidget *parent)
     : QAction(title, parent), d_which(which)
   {
     d_diag = new QDialog(parent);
@@ -1590,7 +1595,7 @@ public:
 
 
 signals:
-  void whichTrigger(int which, float data);
+  void whichTrigger(unsigned int which, float data);
 
 public slots:
   void getTextDiag()

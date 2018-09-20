@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2012,2013 Free Software Foundation, Inc.
+ * Copyright 2011,2012,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -34,7 +34,6 @@
 namespace gr {
   namespace digital {
 
-#define M_TWOPI (2*M_PI)
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
 #define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
 
@@ -55,8 +54,7 @@ namespace gr {
               io_signature::make(1, 1, sizeof(gr_complex)),
               io_signature::makev(1, 5, iosig)),
         blocks::control_loop(loop_bw, fmax, fmin),
-        d_constellation(constellation),
-        d_current_const_point(0)
+        d_constellation(constellation)
     {
       if(d_constellation->dimensionality() != 1)
         throw std::runtime_error("This receiver only works with constellations of dimension 1.");

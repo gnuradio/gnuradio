@@ -17,52 +17,32 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import
+
 import os
+import logging
 
-import gtk
+from gi.repository import Gtk, Gdk, GObject
 
-from . import Bars, Actions, Preferences, Utils
+from . import Bars, Actions, Utils
 from .BlockTreeWindow import BlockTreeWindow
+from .Console import Console
 from .VariableEditor import VariableEditor
 from .Constants import \
     NEW_FLOGRAPH_TITLE, DEFAULT_CONSOLE_WINDOW_WIDTH
-from .Dialogs import TextDisplay, MessageDialogHelper
-from .NotebookPage import NotebookPage
+from .Dialogs import TextDisplay, MessageDialogWrapper
+from .Notebook import Notebook, Page
 
 from ..core import Messages
 
-MAIN_WINDOW_TITLE_TMPL = """\
-#if not $saved
-*#slurp
-#end if
-#if $basename
-$basename#slurp
-#else
-$new_flowgraph_title#slurp
-#end if
-#if $read_only
- (read only)#slurp
-#end if
-#if $dirname
- - $dirname#slurp
-#end if
- - $platform_name#slurp
-"""
 
-PAGE_TITLE_MARKUP_TMPL = """\
-#set $foreground = $saved and 'black' or 'red'
-<span foreground="$foreground">$encode($title or $new_flowgraph_title)</span>#slurp
-#if $read_only
- (ro)#slurp
-#end if
-"""
+log = logging.getLogger(__name__)
 
 
 ############################################################
 # Main window
 ############################################################
-
-class MainWindow(gtk.Window):
+class MainWindow(Gtk.ApplicationWindow):
     """The topmost window with menus, the tool bar, and other major windows."""
 
     # Constants the action handler can use to indicate which panel visibility to change.
@@ -70,104 +50,113 @@ class MainWindow(gtk.Window):
     CONSOLE = 1
     VARIABLES = 2
 
-    def __init__(self, platform, action_handler_callback):
+    def __init__(self, app, platform):
         """
         MainWindow constructor
         Setup the menu, toolbar, flow graph editor notebook, block selection window...
         """
+        Gtk.ApplicationWindow.__init__(self, title="GNU Radio Companion", application=app)
+        log.debug("__init__()")
+
         self._platform = platform
+        self.app = app
+        self.config = platform.config
 
-        gen_opts = platform.blocks['options'].get_param('generate_options')
-        generate_mode_default = gen_opts.get_value()
-        generate_modes = [
-            (o.get_key(), o.get_name(), o.get_key() == generate_mode_default)
-            for o in gen_opts.get_options()]
-
-        # Load preferences
-        Preferences.load(platform)
+        # Add all "win" actions to the local
+        for x in Actions.get_actions():
+            if x.startswith("win."):
+                self.add_action(Actions.actions[x])
 
         # Setup window
-        gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.add(vbox)
 
-        icon_theme = gtk.icon_theme_get_default()
+        icon_theme = Gtk.IconTheme.get_default()
         icon = icon_theme.lookup_icon("gnuradio-grc", 48, 0)
         if not icon:
             # Set window icon
             self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
 
         # Create the menu bar and toolbar
-        self.add_accel_group(Actions.get_accel_group())
-        self.menu_bar = Bars.MenuBar(generate_modes, action_handler_callback)
-        vbox.pack_start(self.menu_bar, False)
-        self.tool_bar = Bars.Toolbar(generate_modes, action_handler_callback)
-        vbox.pack_start(self.tool_bar, False)
+        generate_modes = platform.get_generate_options()
+
+        # This needs to be replaced
+        # Have an option for either the application menu or this menu
+        self.menu_bar = Gtk.MenuBar.new_from_model(Bars.Menu())
+        vbox.pack_start(self.menu_bar, False, False, 0)
+
+        self.tool_bar = Bars.Toolbar()
+        self.tool_bar.set_hexpand(True)
+        # Show the toolbar
+        self.tool_bar.show()
+        vbox.pack_start(self.tool_bar, False, False, 0)
 
         # Main parent container for the different panels
-        self.container = gtk.HPaned()
-        vbox.pack_start(self.container)
+        self.main = Gtk.HPaned() #(orientation=Gtk.Orientation.HORIZONTAL)
+        vbox.pack_start(self.main, True, True, 0)
 
         # Create the notebook
-        self.notebook = gtk.Notebook()
+        self.notebook = Notebook()
         self.page_to_be_closed = None
-        self.current_page = None
-        self.notebook.set_show_border(False)
-        self.notebook.set_scrollable(True)  # scroll arrows for page tabs
-        self.notebook.connect('switch-page', self._handle_page_change)
+
+        self.current_page = None  # type: Page
 
         # Create the console window
-        self.text_display = TextDisplay()
-        self.console_window = gtk.ScrolledWindow()
-        self.console_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.console_window.add(self.text_display)
-        self.console_window.set_size_request(-1, DEFAULT_CONSOLE_WINDOW_WIDTH)
+        self.console = Console()
 
         # Create the block tree and variable panels
-        self.btwin = BlockTreeWindow(platform, self.get_flow_graph)
-        self.vars = VariableEditor(platform, self.get_flow_graph)
+        self.btwin = BlockTreeWindow(platform)
+        self.btwin.connect('create_new_block', self._add_block_to_current_flow_graph)
+        self.vars = VariableEditor()
+        self.vars.connect('create_new_block', self._add_block_to_current_flow_graph)
+        self.vars.connect('remove_block', self._remove_block_from_current_flow_graph)
 
         # Figure out which place to put the variable editor
-        self.left = gtk.VPaned()
-        self.right = gtk.VPaned()
-        self.left_subpanel = gtk.HPaned()
+        self.left = Gtk.VPaned() #orientation=Gtk.Orientation.VERTICAL)
+        self.right = Gtk.VPaned() #orientation=Gtk.Orientation.VERTICAL)
+        self.left_subpanel = Gtk.HPaned() #orientation=Gtk.Orientation.HORIZONTAL)
 
-        self.variable_panel_sidebar = Preferences.variable_editor_sidebar()
+        self.variable_panel_sidebar = self.config.variable_editor_sidebar()
         if self.variable_panel_sidebar:
             self.left.pack1(self.notebook)
-            self.left.pack2(self.console_window, False)
+            self.left.pack2(self.console, False)
             self.right.pack1(self.btwin)
             self.right.pack2(self.vars, False)
         else:
             # Put the variable editor in a panel with the console
             self.left.pack1(self.notebook)
-            self.left_subpanel.pack1(self.console_window, shrink=False)
+            self.left_subpanel.pack1(self.console, shrink=False)
             self.left_subpanel.pack2(self.vars, resize=False, shrink=True)
             self.left.pack2(self.left_subpanel, False)
 
             # Create the right panel
             self.right.pack1(self.btwin)
 
-        self.container.pack1(self.left)
-        self.container.pack2(self.right, False)
+        self.main.pack1(self.left)
+        self.main.pack2(self.right, False)
 
-        # load preferences and show the main window
-        self.resize(*Preferences.main_window_size())
-        self.container.set_position(Preferences.blocks_window_position())
-        self.left.set_position(Preferences.console_window_position())
+        # Load preferences and show the main window
+        self.resize(*self.config.main_window_size())
+        self.main.set_position(self.config.blocks_window_position())
+        self.left.set_position(self.config.console_window_position())
         if self.variable_panel_sidebar:
-            self.right.set_position(Preferences.variable_editor_position(sidebar=True))
+            self.right.set_position(self.config.variable_editor_position(sidebar=True))
         else:
-            self.left_subpanel.set_position(Preferences.variable_editor_position())
+            self.left_subpanel.set_position(self.config.variable_editor_position())
 
         self.show_all()
-        self.console_window.hide()
-        self.vars.hide()
-        self.btwin.hide()
+        log.debug("Main window ready")
 
     ############################################################
     # Event Handlers
     ############################################################
+
+    def _add_block_to_current_flow_graph(self, widget, key):
+        self.current_flow_graph.add_new_block(key)
+
+    def _remove_block_from_current_flow_graph(self, widget, key):
+        block = self.current_flow_graph.get_block(key)
+        self.current_flow_graph.remove_element(block)
 
     def _quit(self, window, event):
         """
@@ -181,20 +170,6 @@ class MainWindow(gtk.Window):
         Actions.APPLICATION_QUIT()
         return True
 
-    def _handle_page_change(self, notebook, page, page_num):
-        """
-        Handle a page change. When the user clicks on a new tab,
-        reload the flow graph to update the vars window and
-        call handle states (select nothing) to update the buttons.
-
-        Args:
-            notebook: the notebook
-            page: new page
-            page_num: new page number
-        """
-        self.current_page = self.notebook.get_nth_page(page_num)
-        Actions.PAGE_CHANGE()
-
     def update_panel_visibility(self, panel, visibility=True):
         """
         Handles changing visibility of panels.
@@ -204,19 +179,19 @@ class MainWindow(gtk.Window):
 
         if panel == self.BLOCKS:
             if visibility:
-	        self.btwin.show()
+                self.btwin.show()
             else:
-	        self.btwin.hide()
+                self.btwin.hide()
         elif panel == self.CONSOLE:
             if visibility:
-	        self.console_window.show()
+                self.console.show()
             else:
-	        self.console_window.hide()
+                self.console.hide()
         elif panel == self.VARIABLES:
             if visibility:
-	        self.vars.show()
+                self.vars.show()
             else:
-	        self.vars.hide()
+                self.vars.hide()
         else:
             return
 
@@ -231,7 +206,7 @@ class MainWindow(gtk.Window):
                 self.right.hide()
             else:
                 self.right.show()
-            if not (self.vars.get_property('visible')) and not (self.console_window.get_property('visible')):
+            if not (self.vars.get_property('visible')) and not (self.console.get_property('visible')):
                 self.left_subpanel.hide()
             else:
                 self.left_subpanel.show()
@@ -240,6 +215,14 @@ class MainWindow(gtk.Window):
     # Console Window
     ############################################################
 
+    @property
+    def current_page(self):
+        return self.notebook.current_page
+
+    @current_page.setter
+    def current_page(self, page):
+        self.notebook.current_page = page
+
     def add_console_line(self, line):
         """
         Place line at the end of the text buffer, then scroll its window all the way down.
@@ -247,7 +230,7 @@ class MainWindow(gtk.Window):
         Args:
             line: the new text
         """
-        self.text_display.insert(line)
+        self.console.add_line(line)
 
     ############################################################
     # Pages: create and close
@@ -269,26 +252,24 @@ class MainWindow(gtk.Window):
             return
         try: #try to load from file
             if file_path: Messages.send_start_load(file_path)
-            flow_graph = self._platform.get_new_flow_graph()
+            flow_graph = self._platform.make_flow_graph()
             flow_graph.grc_file_path = file_path
             #print flow_graph
-            page = NotebookPage(
+            page = Page(
                 self,
                 flow_graph=flow_graph,
                 file_path=file_path,
             )
             if file_path: Messages.send_end_load()
-        except Exception, e: #return on failure
+        except Exception as e: #return on failure
             Messages.send_fail_load(e)
             if isinstance(e, KeyError) and str(e) == "'options'":
                 # This error is unrecoverable, so crash gracefully
                 exit(-1)
             return
         #add this page to the notebook
-        self.notebook.append_page(page, page.get_tab())
-        try: self.notebook.set_tab_reorderable(page, True)
-        except: pass #gtk too old
-        self.notebook.set_tab_label_packing(page, False, False, gtk.PACK_START)
+        self.notebook.append_page(page, page.tab)
+        self.notebook.set_tab_reorderable(page, True)
         #only show if blank or manual
         if not file_path or show: self._set_page(page)
 
@@ -299,26 +280,26 @@ class MainWindow(gtk.Window):
         Returns:
             true if all closed
         """
-        open_files = filter(lambda file: file, self._get_files()) #filter blank files
-        open_file = self.get_page().get_file_path()
+        open_files = [file for file in self._get_files() if file] #filter blank files
+        open_file = self.current_page.file_path
         #close each page
-        for page in sorted(self.get_pages(), key=lambda p: p.get_saved()):
+        for page in sorted(self.get_pages(), key=lambda p: p.saved):
             self.page_to_be_closed = page
             closed = self.close_page(False)
             if not closed:
                 break
         if self.notebook.get_n_pages(): return False
         #save state before closing
-        Preferences.set_open_files(open_files)
-        Preferences.file_open(open_file)
-        Preferences.main_window_size(self.get_size())
-        Preferences.console_window_position(self.left.get_position())
-        Preferences.blocks_window_position(self.container.get_position())
+        self.config.set_open_files(open_files)
+        self.config.file_open(open_file)
+        self.config.main_window_size(self.get_size())
+        self.config.console_window_position(self.left.get_position())
+        self.config.blocks_window_position(self.main.get_position())
         if self.variable_panel_sidebar:
-            Preferences.variable_editor_position(self.right.get_position(), sidebar=True)
+            self.config.variable_editor_position(self.right.get_position(), sidebar=True)
         else:
-            Preferences.variable_editor_position(self.left_subpanel.get_position())
-        Preferences.save()
+            self.config.variable_editor_position(self.left_subpanel.get_position())
+        self.config.save()
         return True
 
     def close_page(self, ensure=True):
@@ -330,23 +311,24 @@ class MainWindow(gtk.Window):
         Args:
             ensure: boolean
         """
-        if not self.page_to_be_closed: self.page_to_be_closed = self.get_page()
+        if not self.page_to_be_closed: self.page_to_be_closed = self.current_page
         #show the page if it has an executing flow graph or is unsaved
-        if self.page_to_be_closed.get_proc() or not self.page_to_be_closed.get_saved():
+        if self.page_to_be_closed.process or not self.page_to_be_closed.saved:
             self._set_page(self.page_to_be_closed)
         #unsaved? ask the user
-        if not self.page_to_be_closed.get_saved():
+        if not self.page_to_be_closed.saved:
             response = self._save_changes() # return value is either OK, CLOSE, or CANCEL
-            if response == gtk.RESPONSE_OK:
+            if response == Gtk.ResponseType.OK:
                 Actions.FLOW_GRAPH_SAVE() #try to save
-                if not self.page_to_be_closed.get_saved(): #still unsaved?
+                if not self.page_to_be_closed.saved: #still unsaved?
                     self.page_to_be_closed = None #set the page to be closed back to None
                     return False
-            elif response == gtk.RESPONSE_CANCEL:
+            elif response == Gtk.ResponseType.CANCEL:
                 self.page_to_be_closed = None
                 return False
         #stop the flow graph if executing
-        if self.page_to_be_closed.get_proc(): Actions.FLOW_GRAPH_KILL()
+        if self.page_to_be_closed.process:
+            Actions.FLOW_GRAPH_KILL()
         #remove the page
         self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
         if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
@@ -362,69 +344,49 @@ class MainWindow(gtk.Window):
         Set the title of the main window.
         Set the titles on the page tabs.
         Show/hide the console window.
-
-        Args:
-            title: the window title
         """
-        gtk.Window.set_title(self, Utils.parse_template(MAIN_WINDOW_TITLE_TMPL,
-                basename=os.path.basename(self.get_page().get_file_path()),
-                dirname=os.path.dirname(self.get_page().get_file_path()),
-                new_flowgraph_title=NEW_FLOGRAPH_TITLE,
-                read_only=self.get_page().get_read_only(),
-                saved=self.get_page().get_saved(),
-                platform_name=self._platform.config.name,
-            )
-        )
-        #set tab titles
-        for page in self.get_pages(): page.set_markup(
-            Utils.parse_template(PAGE_TITLE_MARKUP_TMPL,
-                #get filename and strip out file extension
-                title=os.path.splitext(os.path.basename(page.get_file_path()))[0],
-                read_only=page.get_read_only(), saved=page.get_saved(),
-                new_flowgraph_title=NEW_FLOGRAPH_TITLE,
-            )
-        )
-        #show/hide notebook tabs
+        page = self.current_page
+
+        basename = os.path.basename(page.file_path)
+        dirname = os.path.dirname(page.file_path)
+        Gtk.Window.set_title(self, ''.join((
+            '*' if not page.saved else '', basename if basename else NEW_FLOGRAPH_TITLE,
+            '(read only)' if page.get_read_only() else '', ' - ',
+            dirname if dirname else self._platform.config.name,
+        )))
+        # set tab titles
+        for page in self.get_pages():
+            file_name = os.path.splitext(os.path.basename(page.file_path))[0]
+            page.set_markup('<span foreground="{foreground}">{title}{ro}</span>'.format(
+                foreground='black' if page.saved else 'red', ro=' (ro)' if page.get_read_only() else '',
+                title=Utils.encode(file_name or NEW_FLOGRAPH_TITLE),
+            ))
+        # show/hide notebook tabs
         self.notebook.set_show_tabs(len(self.get_pages()) > 1)
 
-         # Need to update the variable window when changing
-        self.vars.update_gui()
+        # Need to update the variable window when changing
+        self.vars.update_gui(self.current_flow_graph.blocks)
 
     def update_pages(self):
         """
         Forces a reload of all the pages in this notebook.
         """
         for page in self.get_pages():
-            success = page.get_flow_graph().reload()
+            success = page.flow_graph.reload()
             if success:  # Only set saved if errors occurred during import
-                page.set_saved(False)
+                page.saved = False
 
-    def get_page(self):
-        """
-        Get the selected page.
-
-        Returns:
-            the selected page
-        """
-        return self.current_page
-
-    def get_flow_graph(self):
-        """
-        Get the selected flow graph.
-
-        Returns:
-            the selected flow graph
-        """
-        return self.get_page().get_flow_graph()
+    @property
+    def current_flow_graph(self):
+        return self.current_page.flow_graph
 
     def get_focus_flag(self):
         """
         Get the focus flag from the current page.
-
         Returns:
             the focus flag
         """
-        return self.get_page().get_drawing_area().get_focus_flag()
+        return self.current_page.drawing_area.get_focus_flag()
 
     ############################################################
     # Helpers
@@ -448,14 +410,14 @@ class MainWindow(gtk.Window):
             the response_id (see buttons variable below)
         """
         buttons = (
-            'Close without saving', gtk.RESPONSE_CLOSE,
-            gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-            gtk.STOCK_SAVE, gtk.RESPONSE_OK
+            'Close without saving', Gtk.ResponseType.CLOSE,
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_SAVE, Gtk.ResponseType.OK
         )
-        return MessageDialogHelper(
-            gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, self, 'Unsaved Changes!',
-            'Would you like to save changes before closing?', gtk.RESPONSE_OK, buttons
-        )
+        return MessageDialogWrapper(
+            self, Gtk.MessageType.QUESTION, Gtk.ButtonsType.NONE, 'Unsaved Changes!',
+            'Would you like to save changes before closing?', Gtk.ResponseType.OK, buttons
+        ).run_and_destroy()
 
     def _get_files(self):
         """
@@ -464,7 +426,7 @@ class MainWindow(gtk.Window):
         Returns:
             list of file paths
         """
-        return map(lambda page: page.get_file_path(), self.get_pages())
+        return [page.file_path for page in self.get_pages()]
 
     def get_pages(self):
         """
@@ -473,4 +435,5 @@ class MainWindow(gtk.Window):
         Returns:
             list of pages
         """
-        return [self.notebook.get_nth_page(page_num) for page_num in range(self.notebook.get_n_pages())]
+        return [self.notebook.get_nth_page(page_num)
+                for page_num in range(self.notebook.get_n_pages())]

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2012 Free Software Foundation, Inc.
+ * Copyright 2007,2012,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -50,11 +50,11 @@ namespace gr {
        *               register to feed back.
        * \param seed   Initial setting for values in shift register.
        */
-      static sptr make(int degree, bool repeat=true,
-		       int mask=0, int seed=1);
+      static sptr make(unsigned int degree, bool repeat=true,
+		       uint32_t mask=0, uint32_t seed=1);
 
-      virtual unsigned int period() const = 0;
-      virtual int mask() const = 0;
+      virtual uint32_t period() const = 0;
+      virtual uint32_t mask() const = 0;
     };
 
   } /* namespace digital */

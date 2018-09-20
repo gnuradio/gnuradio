@@ -19,6 +19,10 @@
 # Boston, MA 02110-1301, USA.
 #
 ''' A parser for blocks written in C++ '''
+
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import re
 import sys
 
@@ -42,7 +46,7 @@ class ParserCCBlock(object):
             E.g., for sizeof(int), it will return 'int'.
             Returns a list! """
             if 'gr::io_signature::makev' in iosigcall:
-                print 'tbi'
+                print('tbi')
                 raise ValueError
             return {'type': [_typestr_to_iotype(x) for x in typestr.split(',')],
                     'vlen': [_typestr_to_vlen(x)   for x in typestr.split(',')]
@@ -82,15 +86,15 @@ class ParserCCBlock(object):
                                                       iosig_match.group('intype'))
             iosig['in']['min_ports'] = iosig_match.group('inmin')
             iosig['in']['max_ports'] = iosig_match.group('inmax')
-        except ValueError, Exception:
-            print "Error: Can't parse input signature."
+        except Exception:
+            print("Error: Can't parse input signature.")
         try:
             iosig['out'] = _figure_out_iotype_and_vlen(iosig_match.group('outcall'),
                                                        iosig_match.group('outtype'))
             iosig['out']['min_ports'] = iosig_match.group('outmin')
             iosig['out']['max_ports'] = iosig_match.group('outmax')
-        except ValueError, Exception:
-            print "Error: Can't parse output signature."
+        except Exception:
+            print("Error: Can't parse output signature.")
         return iosig
 
 
@@ -213,7 +217,7 @@ class ParserCCBlock(object):
         try:
             params_list = _scan_param_list(make_match.end(0))
         except ValueError as ve:
-            print "Can't parse the argument list: ", ve.args[0]
+            print("Can't parse the argument list: ", ve.args[0])
             sys.exit(0)
         params = []
         for plist in params_list:

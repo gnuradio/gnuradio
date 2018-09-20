@@ -1,0 +1,7 @@
+'[Core]':
+- Fourier Analysis:
+  - fft_vxx
+  - goertzel_fc
+  - logpwrfft_x
+- Control Port:
+  - fft_ctrlport_probe_psd

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2015 Free Software Foundation, Inc.
+ * Copyright 2010-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,15 +37,7 @@ namespace gr {
     args_to_io_sig(const ::uhd::stream_args_t &args)
     {
       const size_t nchan = std::max<size_t>(args.channels.size(), 1);
-#ifdef GR_UHD_USE_STREAM_API
       const size_t size = ::uhd::convert::get_bytes_per_item(args.cpu_format);
-#else
-      size_t size = 0;
-      if(args.cpu_format == "fc32")
-        size = 8;
-      if(args.cpu_format == "sc16")
-        size = 4;
-#endif
       return io_signature::make(nchan, nchan, size);
     }
 
@@ -118,9 +110,7 @@ namespace gr {
       //! Like set_center_freq(), but uses _curr_freq and _curr_lo_offset
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction);
 
-#ifdef GR_UHD_USE_STREAM_API
       ::uhd::tx_streamer::sptr _tx_stream;
-#endif
       ::uhd::tx_metadata_t _metadata;
       double _sample_rate;
 

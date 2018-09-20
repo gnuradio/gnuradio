@@ -17,12 +17,6 @@ from log4cpp (http://log4cpp.sourceforge.net/) which is readily
 available in most Linux distributions. This is an optional dependency
 and GNU Radio will work without it.
 
-When configuring GNU Radio, the -DENABLE_GR_LOG=On|Off option to cmake
-will allow the user to toggle use of the logger on and off. The logger
-defaults to "on" and will use log4cpp if it is available. If log4cpp
-is not found, the default logging will output to standard output or
-standard error, depending on the level of the log message.
-
 Logging is useful for blocks to print out certain amounts of data at
 different levels. These levels are:
 

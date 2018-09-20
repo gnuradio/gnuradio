@@ -1,0 +1,43 @@
+id: digital_corr_est_cc
+label: Correlation Estimator
+
+parameters:
+-   id: symbols
+    label: Symbols
+    dtype: complex_vector
+-   id: sps
+    label: Samples per Symbol
+    dtype: float
+-   id: mark_delay
+    label: Tag marking delay
+    dtype: int
+-   id: threshold
+    label: Threshold
+    dtype: float
+    default: '0.9'
+-   id: threshold_method
+    label: Threshold Method
+    dtype: enum
+    options: [digital.corr_est_cc.THRESHOLD_ABSOLUTE, digital.corr_est_cc.THRESHOLD_DYNAMIC]
+    option_labels: [Absolute, Dynamic]
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   label: corr
+    domain: stream
+    dtype: complex
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.corr_est_cc(${symbols}, ${sps}, ${mark_delay}, ${threshold}, ${threshold_method})
+    callbacks:
+    - set_mark_delay(${mark_delay})
+    - set_threshold(${threshold})
+
+file_format: 1

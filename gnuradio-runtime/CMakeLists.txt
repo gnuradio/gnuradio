@@ -83,39 +83,6 @@ get_filename_component(GR_RUNTIME_PYTHONPATH
 )
 GR_SET_GLOBAL(GR_RUNTIME_PYTHONPATH ${GR_RUNTIME_PYTHONPATH})
 
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_RUNTIME_DESCRIPTION "GNU Radio Runtime")
-
-CPACK_COMPONENT("runtime_runtime"
-    GROUP        "Runtime"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("runtime_devel"
-    GROUP        "Runtime"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("runtime_python"
-    GROUP        "Runtime"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;runtime_runtime"
-)
-
-CPACK_COMPONENT("runtime_swig"
-    GROUP        "Runtime"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;runtime_python;runtime_devel"
-)
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.conf.in
     ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.conf
@@ -124,17 +91,12 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.conf
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "runtime_runtime"
 )
 
-if(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gr_log_default.conf
     DESTINATION ${GR_PREFSDIR}
-    COMPONENT "runtime_runtime"
 )
-set(PC_ADD_LIBS -llog4cpp)
-endif(ENABLE_GR_LOG AND HAVE_LOG4CPP)
 
 set(PC_ADD_LIBS "${MPLIB_PC_ADD_LIBS} ${PC_ADD_LIBS}")
 set(PC_ADD_CFLAGS ${MPLIB_PC_ADD_CFLAGS})
@@ -162,7 +124,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "runtime_devel"
 )
 
 endif(ENABLE_GNURADIO_RUNTIME)

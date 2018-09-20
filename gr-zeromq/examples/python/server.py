@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import unicode_literals
 #
 # Copyright 2013 Free Software Foundation, Inc.
 #
@@ -27,8 +29,8 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import analog
 from gnuradio import eng_notation
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import numpy
 import sys
 from threading import Thread
@@ -78,14 +80,14 @@ class top_block(gr.top_block):
         self.rpc_manager.start_watcher()
 
     def start_fg(self):
-        print "Start Flowgraph"
+        print("Start Flowgraph")
         try:
             self.start()
         except RuntimeError:
-            print "Can't start, flowgraph already running!"
+            print("Can't start, flowgraph already running!")
 
     def stop_fg(self):
-        print "Stop Flowgraph"
+        print("Stop Flowgraph")
         self.stop()
         self.wait()
 
@@ -101,25 +103,25 @@ class top_block(gr.top_block):
 ###############################################################################
 # Options Parser
 ###############################################################################
-def parse_options():
-    """ Options parser. """
-    parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    (options, args) = parser.parse_args()
-    return options
+def parse_args():
+    """Argument parser."""
+    parser = ArgumentParser()
+    args = parser.parse_args()
+    return args
 
 ###############################################################################
 # Main
 ###############################################################################
 if __name__ == "__main__":
-    options = parse_options()
-    tb = top_block(options)
+    args = parse_args()
+    tb = top_block(args)
     try:
         # keep the program running when flowgraph is stopped
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         pass
-    print "Shutting down flowgraph."
+    print("Shutting down flowgraph.")
     tb.rpc_manager.stop_watcher()
     tb.stop()
     tb.wait()

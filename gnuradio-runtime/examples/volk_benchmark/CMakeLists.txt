@@ -25,11 +25,9 @@ GR_PYTHON_INSTALL(PROGRAMS
   volk_test_funcs.py
   volk_types.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/volk_benchmark
-  COMPONENT "runtime_python"
 )
 
 install(
     FILES README
     DESTINATION ${GR_PKG_DATA_DIR}/examples/volk_benchmark
-    COMPONENT "runtime_python"
 )

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, blocks
 import pmt
 import math
@@ -55,7 +57,7 @@ class test_tags_strobe(gr_unittest.TestCase):
     def test_002(self):
         N = 10000
         nsamps = 123
-        ntags = N / nsamps
+        ntags = N // nsamps
 
         src = blocks.tags_strobe(gr.sizeof_float,
                                  pmt.intern("TEST"), nsamps)

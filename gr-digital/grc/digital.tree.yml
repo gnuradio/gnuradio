@@ -1,0 +1,85 @@
+'[Core]':
+- Coding:
+  - digital_additive_scrambler_bb
+  - digital_descrambler_bb
+  - digital_scrambler_bb
+- Equalizers:
+  - digital_cma_equalizer_cc
+  - digital_lms_dd_equalizer_cc
+  - digital_kurtotic_equalizer_cc
+- Measurement Tools:
+  - digital_mpsk_snr_est_cc
+  - digital_probe_density_b
+  - digital_probe_mpsk_snr_est_c
+- Modulators:
+  - digital_cpmmod_bc
+  - digital_gfsk_mod
+  - digital_gfsk_demod
+  - digital_gmskmod_bc
+  - digital_gmsk_mod
+  - digital_gmsk_demod
+  - digital_constellation_modulator
+  - digital_constellation_receiver_cb
+  - variable_constellation
+  - variable_constellation_rect
+  - variable_modulate_vector
+- Packet Operators:
+  - digital_correlate_access_code_tag_bb
+  - digital_correlate_access_code_xx_ts
+  - digital_crc32_bb
+  - digital_crc32_async_bb
+  - digital_framer_sink_1
+  - variable_header_format_default
+  - digital_protocol_formatter_async
+  - digital_protocol_formatter_bb
+  - digital_protocol_parser_b
+  - digital_header_payload_demux
+  - digital_packet_headergenerator_bb
+  - digital_packet_headergenerator_bb_default
+  - digital_packet_headerparser_b
+  - digital_packet_headerparser_b_default
+  - digital_packet_sink
+  - digital_hdlc_framer_pb
+  - digital_hdlc_deframer_bp
+  - digital_simple_framer
+  - digital_simple_correlator
+- OFDM:
+  - digital_ofdm_mod
+  - digital_ofdm_demod
+  - digital_ofdm_carrier_allocator_cvc
+  - digital_ofdm_chanest_vcvc
+  - digital_ofdm_cyclic_prefixer
+  - digital_ofdm_frame_acquisition
+  - digital_ofdm_frame_equalizer_vcvc
+  - digital_ofdm_frame_sink
+  - digital_ofdm_insert_preamble
+  - digital_ofdm_rx
+  - digital_ofdm_sampler
+  - digital_ofdm_serializer_vcc
+  - digital_ofdm_sync_pn
+  - digital_ofdm_sync_sc_cfb
+  - digital_ofdm_tx
+- Symbol Coding:
+  - digital_binary_slicer_fb
+  - digital_chunks_to_symbols_xx
+  - digital_constellation_decoder_cb
+  - digital_constellation_receiver_cb
+  - digital_constellation_soft_decoder_cf
+  - digital_diff_decoder_bb
+  - digital_diff_encoder_bb
+  - digital_diff_phasor_cc
+  - digital_map_bb
+- Synchronizers:
+  - digital_clock_recovery_mm_xx
+  - digital_costas_loop_cc
+  - digital_fll_band_edge_cc
+  - digital_pfb_clock_sync_xxx
+  - digital_pn_correlator_cc
+  - digital_symbol_sync_xx
+  - digital_corr_est_cc
+- Waveform Generators:
+  - digital_glfsr_source_x
+- Deprecated:
+  - digital_correlate_access_code_bb
+  - digital_simple_framer
+  - digital_simple_correlator

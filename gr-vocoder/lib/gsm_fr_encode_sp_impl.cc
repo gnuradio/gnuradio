@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2010,2013 Free Software Foundation, Inc.
+ * Copyright 2005,2010,2013,2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#define GSM_SAMPLES_PER_FRAME  160
 #include "gsm_fr_encode_sp_impl.h"
 #include <gnuradio/io_signature.h>
 #include <stdexcept>

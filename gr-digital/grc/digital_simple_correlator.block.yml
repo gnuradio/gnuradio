@@ -1,0 +1,21 @@
+id: digital_simple_correlator
+label: Simple Correlator
+
+parameters:
+-   id: payload_bytesize
+    label: Payload Byte Size
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: float
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.simple_correlator(${payload_bytesize})
+
+file_format: 1

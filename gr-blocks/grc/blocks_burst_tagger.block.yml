@@ -1,0 +1,54 @@
+id: blocks_burst_tagger
+label: Burst Tagger
+
+parameters:
+-   id: type
+    label: Stream Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: true_key
+    label: True KeyID
+    dtype: string
+    default: burst
+-   id: true_value
+    label: True Value
+    dtype: bool
+    default: 'True'
+-   id: false_key
+    label: False KeyID
+    dtype: string
+    default: burst
+-   id: false_value
+    label: False Value
+    dtype: bool
+    default: 'False'
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: 1
+-   label: trigger
+    domain: stream
+    dtype: short
+    vlen: 1
+
+outputs:
+-   domain: stream
+    dtype: ${ type }
+    vlen: 1
+
+templates:
+    imports: from gnuradio import blocks
+    make: |-
+        blocks.burst_tagger(${type.size})
+        self.${id}.set_true_tag(${true_key},${true_value})
+        self.${id}.set_false_tag(${false_key},${false_value})
+    callbacks:
+    - set_true_tag(${true_key},${true_value})
+    - set_false_tag(${false_key},${false_value})
+
+file_format: 1

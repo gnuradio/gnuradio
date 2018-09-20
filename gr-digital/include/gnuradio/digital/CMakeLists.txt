@@ -18,24 +18,14 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-#######################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(digital chunks_to_symbols_XX     bf bc sf sc if ic)
-GR_EXPAND_X_H(digital burst_shaper_XX     cc ff)
-
-add_custom_target(digital_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
     additive_scrambler_bb.h
     api.h
     binary_slicer_fb.h
+    burst_shaper.h
+    chunks_to_symbols.h
     clock_recovery_mm_cc.h
     clock_recovery_mm_ff.h
     cma_equalizer_cc.h
@@ -49,7 +39,6 @@ install(FILES
     correlate_access_code_tag_ff.h
     correlate_access_code_bb_ts.h
     correlate_access_code_ff_ts.h
-    correlate_and_sync_cc.h
     costas_loop_cc.h
     cpmmod_bc.h
     crc32.h
@@ -74,7 +63,6 @@ install(FILES
     map_bb.h
     metric_type.h
     modulate_vector.h
-    mpsk_receiver_cc.h
     mpsk_snr_est.h
     mpsk_snr_est_cc.h
     msk_timing_recovery_cc.h
@@ -84,12 +72,7 @@ install(FILES
     ofdm_equalizer_base.h
     ofdm_equalizer_simpledfe.h
     ofdm_equalizer_static.h
-    ofdm_frame_acquisition.h
     ofdm_frame_equalizer_vcvc.h
-    ofdm_frame_sink.h
-    ofdm_insert_preamble.h
-    ofdm_mapper_bcv.h
-    ofdm_sampler.h
     ofdm_serializer_vcc.h
     ofdm_sync_sc_cfb.h
     header_format_base.h
@@ -120,5 +103,4 @@ install(FILES
     timing_error_detector_type.h
     header_payload_demux.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
-    COMPONENT "digital_devel"
 )

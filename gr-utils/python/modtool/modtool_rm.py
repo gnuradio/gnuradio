@@ -20,50 +20,45 @@
 #
 """ Remove blocks module """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import os
 import re
 import sys
 import glob
 
-from util_functions import remove_pattern_from_file, SequenceCompleter
-from modtool_base import ModTool
-from cmakefile_editor import CMakeFileEditor
+from .util_functions import remove_pattern_from_file, SequenceCompleter
+from .modtool_base import ModTool
+from .cmakefile_editor import CMakeFileEditor
 
 
 class ModToolRemove(ModTool):
     """ Remove block (delete files and remove Makefile entries) """
     name = 'remove'
-    aliases = ('rm', 'del')
+    description = 'Remove block from module.'
 
     def __init__(self):
         ModTool.__init__(self)
 
-    def get_block_candidates(self):
-        cpp_blocks = filter(lambda x: not (x.startswith('qa_') or
-                            x.startswith('test_')),
-                            glob.glob1("lib", "*.cc"))
-        python_blocks = filter(lambda x: not (x.startswith('qa_') or
-                               x.startswith('build') or
-                               x.startswith('__init__')),
-                               glob.glob1("python", "*.py"))
-        block_candidates = [x.split('_impl')[0] for x in cpp_blocks] + [x.split('.')[0] for x in python_blocks]
-        return block_candidates
+    @staticmethod
+    def setup_parser(parser):
+        ModTool.setup_parser_block(parser)
 
-    def setup(self, options, args):
-        ModTool.setup(self, options, args)
+    def setup(self, options):
+        ModTool.setup(self, options)
 
-        if options.block_name is not None:
-            self._info['pattern'] = options.block_name
-        elif len(args) >= 2:
-            self._info['pattern'] = args[1]
+        if options.blockname is not None:
+            self._info['pattern'] = options.blockname
         else:
             block_candidates = self.get_block_candidates()
             with SequenceCompleter(block_candidates):
-                self._info['pattern'] = raw_input('Which blocks do you want to delete? (Regex): ')
+                self._info['pattern'] = input('Which blocks do you want to delete? (Regex): ')
         if not self._info['pattern'] or self._info['pattern'].isspace():
             self._info['pattern'] = '.'
 
-    def run(self):
+    def run(self, options):
         """ Go, go, go! """
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
@@ -109,6 +104,7 @@ class ModToolRemove(ModTool):
                     (self._info['modname'], pyblockname, self._info['modname'], filename)
             return regexp
         # Go, go, go!
+        self.setup(options)
         if not self._skip_subdirs['lib']:
             self._run_subdir('lib', ('*.cc', '*.h'), ('add_library', 'list'),
                              cmakeedit_func=_remove_cc_test_case)
@@ -142,12 +138,12 @@ class ModToolRemove(ModTool):
         for g in globs:
             files = files + sorted(glob.glob("%s/%s"% (path, g)))
         files_filt = []
-        print "Searching for matching files in %s/:" % path
+        print("Searching for matching files in %s/:" % path)
         for f in files:
             if re.search(self._info['pattern'], os.path.basename(f)) is not None:
                 files_filt.append(f)
-        if not files_filt:
-            print "None found."
+        if len(files_filt) == 0:
+            print("None found.")
             return []
         # 2. Delete files, Makefile entries and other occurrences
         files_deleted = []
@@ -156,7 +152,7 @@ class ModToolRemove(ModTool):
         for f in files_filt:
             b = os.path.basename(f)
             if not yes:
-                ans = raw_input("Really delete %s? [Y/n/a/q]: " % f).lower().strip()
+                ans = input("Really delete %s? [Y/n/a/q]: " % f).lower().strip()
                 if ans == 'a':
                     yes = True
                 if ans == 'q':
@@ -164,10 +160,10 @@ class ModToolRemove(ModTool):
                 if ans == 'n':
                     continue
             files_deleted.append(b)
-            print "Deleting %s." % f
+            print("Deleting %s." % f)
             self.scm.remove_file(f)
             os.unlink(f)
-            print "Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path)
+            print("Deleting occurrences of %s from %s/CMakeLists.txt..." % (b, path))
             for var in makefile_vars:
                 ed.remove_value(var, b)
             if cmakeedit_func is not None:

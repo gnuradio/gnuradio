@@ -210,7 +210,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(int nplots,
   setAxisScaleDraw(QwtPlot::xBottom, new QwtXScaleDraw());
   setAxisScaleDraw(QwtPlot::yLeft, new QwtYScaleDraw());
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_data.push_back(new TimeRasterData(d_rows, d_cols));
     d_raster.push_back(new PlotTimeRaster("Raster"));
     d_raster[i]->setData(d_data[i]);
@@ -248,7 +248,7 @@ TimeRasterDisplayPlot::TimeRasterDisplayPlot(int nplots,
   // Set intensity color now (needed d_zoomer before we could do this).
   // We've made sure the old type is different than here so we'll
   // force and update.
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     setIntensityColorMapType(i, INTENSITY_COLOR_MAP_TYPE_WHITE_HOT,
 			     QColor("white"), QColor("white"));
   }
@@ -265,7 +265,7 @@ TimeRasterDisplayPlot::~TimeRasterDisplayPlot()
 void
 TimeRasterDisplayPlot::reset()
 {
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_data[i]->resizeData(d_rows, d_cols);
     d_data[i]->reset();
   }
@@ -324,7 +324,7 @@ TimeRasterDisplayPlot::setNumCols(double cols)
 }
 
 void
-TimeRasterDisplayPlot::setAlpha(int which, int alpha)
+TimeRasterDisplayPlot::setAlpha(unsigned int which, int alpha)
 {
   d_raster[which]->setAlpha(alpha);
 }
@@ -349,7 +349,7 @@ TimeRasterDisplayPlot::numCols() const
 }
 
 int
-TimeRasterDisplayPlot::getAlpha(int which)
+TimeRasterDisplayPlot::getAlpha(unsigned int which)
 {
   return d_raster[which]->alpha();
 }
@@ -374,11 +374,11 @@ TimeRasterDisplayPlot::setPlotDimensions(const double rows, const double cols,
 
 void
 TimeRasterDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
-				   const int64_t numDataPoints)
+				   const uint64_t numDataPoints)
 {
   if(!d_stop) {
     if(numDataPoints > 0) {
-      for(int i = 0; i < d_nplots; i++) {
+      for(unsigned int i = 0; i < d_nplots; ++i) {
 	d_data[i]->addData(dataPoints[i], numDataPoints);
 	d_raster[i]->invalidateCache();
 	d_raster[i]->itemChanged();
@@ -391,7 +391,7 @@ TimeRasterDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
 
 void
 TimeRasterDisplayPlot::plotNewData(const double* dataPoints,
-				   const int64_t numDataPoints)
+				   const uint64_t numDataPoints)
 {
   std::vector<double*> vecDataPoints;
   vecDataPoints.push_back((double*)dataPoints);
@@ -402,7 +402,7 @@ void
 TimeRasterDisplayPlot::setIntensityRange(const double minIntensity,
 					 const double maxIntensity)
 {
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
 #if QWT_VERSION < 0x060000
     d_data[i]->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
 #else
@@ -417,7 +417,7 @@ TimeRasterDisplayPlot::setIntensityRange(const double minIntensity,
 }
 
 double
-TimeRasterDisplayPlot::getMinIntensity(int which) const
+TimeRasterDisplayPlot::getMinIntensity(unsigned int which) const
 {
 #if QWT_VERSION < 0x060000
   QwtDoubleInterval r = d_data[which]->range();
@@ -429,7 +429,7 @@ TimeRasterDisplayPlot::getMinIntensity(int which) const
 }
 
 double
-TimeRasterDisplayPlot::getMaxIntensity(int which) const
+TimeRasterDisplayPlot::getMaxIntensity(unsigned int which) const
 {
 #if QWT_VERSION < 0x060000
   QwtDoubleInterval r = d_data[which]->range();
@@ -463,9 +463,9 @@ TimeRasterDisplayPlot::replot()
 }
 
 int
-TimeRasterDisplayPlot::getIntensityColorMapType(int which) const
+TimeRasterDisplayPlot::getIntensityColorMapType(unsigned int which) const
 {
-  if(which >= (int)d_color_map_type.size())
+  if(which >= d_color_map_type.size())
     throw std::runtime_error("TimerasterDisplayPlot::GetIntesityColorMap: invalid which.\n");
 
   return d_color_map_type[which];
@@ -490,12 +490,12 @@ TimeRasterDisplayPlot::setColorMapTitleFontSize(int tfs)
 }
 
 void
-TimeRasterDisplayPlot::setIntensityColorMapType(const int which,
+TimeRasterDisplayPlot::setIntensityColorMapType(const unsigned int which,
 						const int newType,
 						const QColor lowColor,
 						const QColor highColor)
 {
-  if(which >= (int)d_color_map_type.size())
+  if(which >= d_color_map_type.size())
     throw std::runtime_error("TimerasterDisplayPlot::setIntesityColorMap: invalid which.\n");
 
   if((d_color_map_type[which] != newType) ||
@@ -576,7 +576,7 @@ TimeRasterDisplayPlot::_updateIntensityRangeDisplay()
   rightAxis->setTitle(colorBarTitle);
   rightAxis->setColorBarEnabled(true);
 
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
 #if QWT_VERSION < 0x060000
     rightAxis->setColorMap(d_raster[i]->data()->range(),
 			   d_raster[i]->colorMap());

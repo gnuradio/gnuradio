@@ -1,0 +1,88 @@
+id: band_reject_filter
+label: Band Reject Filter
+
+parameters:
+-   id: type
+    label: FIR Type
+    dtype: enum
+    options: [fir_filter_ccf, interp_fir_filter_ccf, fir_filter_fff, interp_fir_filter_fff]
+    option_labels: [Complex->Complex (Decimating), Complex->Complex (Interpolating),
+        Float->Float (Decimating), Float->Float (Interpolating)]
+    option_attributes:
+        input: [complex, complex, float, float]
+        output: [complex, complex, float, float]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+    hide: ${ ('all' if str(type).startswith('interp') else 'none') }
+-   id: interp
+    label: Interpolation
+    dtype: int
+    default: '1'
+    hide: ${ ('none' if str(type).startswith('interp') else 'all') }
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1'
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: low_cutoff_freq
+    label: Low Cutoff Freq
+    dtype: real
+-   id: high_cutoff_freq
+    label: High Cutoff Freq
+    dtype: real
+-   id: width
+    label: Transition Width
+    dtype: real
+-   id: win
+    label: Window
+    dtype: int
+    default: firdes.WIN_HAMMING
+    options: [firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN, firdes.WIN_RECTANGULAR,
+        firdes.WIN_KAISER]
+    option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+-   id: beta
+    label: Beta
+    dtype: real
+    default: '6.76'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.${type}(
+            ${ interp if str(type).startswith('interp') else decim },
+            firdes.band_reject(
+                ${gain},
+                ${samp_rate},
+                ${low_cutoff_freq},
+                ${high_cutoff_freq},
+                ${width},
+                ${win},
+                ${beta}))
+    callbacks:
+    - set_taps(firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
+        ${width}, ${win}, ${beta}))
+
+documentation: |-
+    This filter is a convenience wrapper for an fir filter and a firdes taps generating function.
+
+    Sample rate, cutoff frequency, and transition width are in Hertz.
+
+    The beta paramater only applies to the Kaiser window.
+
+file_format: 1

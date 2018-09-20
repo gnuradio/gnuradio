@@ -33,8 +33,6 @@
 namespace gr {
   namespace trellis {
 
-    static const float INF = 1.0e9;
-
     siso_combined_f::sptr
     siso_combined_f::make(const fsm &FSM, int K,
 			  int S0, int SK,
@@ -50,7 +48,7 @@ namespace gr {
 
     void siso_combined_f_impl::recalculate()
     {
-      int multiple; 
+      int multiple;
       if(d_POSTI && d_POSTO)
         multiple = d_FSM.I()+d_FSM.O();
       else if(d_POSTI)
@@ -96,67 +94,67 @@ namespace gr {
 
     void siso_combined_f_impl::set_FSM(const fsm &FSM)
     {
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(d_setlock);
       d_FSM=FSM;
       recalculate();
     }
 
     void siso_combined_f_impl::set_K(int K)
     {
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(d_setlock);
       d_K=K;
       recalculate();
     }
 
     void siso_combined_f_impl::set_POSTI(bool POSTI)
     {
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(d_setlock);
       d_POSTI = POSTI;
       recalculate();
     }
 
     void siso_combined_f_impl::set_POSTO(bool POSTO)
     {
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(d_setlock);
       d_POSTO = POSTO;
       recalculate();
     }
 
     void siso_combined_f_impl::set_D(int D)
     {
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(d_setlock);
       d_D=D;
       recalculate();
     }
 
     void siso_combined_f_impl::set_S0(int S0)
-    { 
-      gr::thread::scoped_lock guard(d_setlock); 
-      d_S0 = S0; 
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_S0 = S0;
     }
 
     void siso_combined_f_impl::set_SK(int SK)
-    { 
-      gr::thread::scoped_lock guard(d_setlock); 
-      d_SK = SK; 
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_SK = SK;
     }
 
-    void siso_combined_f_impl::set_SISO_TYPE(trellis::siso_type_t type) 
-    { 
-      gr::thread::scoped_lock guard(d_setlock); 
-      d_SISO_TYPE = type; 
+    void siso_combined_f_impl::set_SISO_TYPE(trellis::siso_type_t type)
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_SISO_TYPE = type;
     }
 
     void siso_combined_f_impl::set_TABLE(const std::vector<float> &table)
-    { 
-      gr::thread::scoped_lock guard(d_setlock); 
-      d_TABLE = table; 
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_TABLE = table;
     }
 
     void siso_combined_f_impl::set_TYPE(digital::trellis_metric_type_t type)
-    { 
-      gr::thread::scoped_lock guard(d_setlock); 
-      d_TYPE = type; 
+    {
+      gr::thread::scoped_lock guard(d_setlock);
+      d_TYPE = type;
     }
 
     siso_combined_f_impl::~siso_combined_f_impl()
@@ -196,7 +194,7 @@ namespace gr {
 				       gr_vector_const_void_star &input_items,
 				       gr_vector_void_star &output_items)
     {
-      gr::thread::scoped_lock guard(d_setlock); 
+      gr::thread::scoped_lock guard(d_setlock);
       int nstreams = output_items.size();
       //printf("general_work:Streams:  %d\n",nstreams);
 

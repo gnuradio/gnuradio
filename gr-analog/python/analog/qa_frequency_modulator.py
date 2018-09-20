@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 import math
 
 from gnuradio import gr, gr_unittest, analog, blocks
@@ -38,9 +40,9 @@ class test_frequency_modulator(gr_unittest.TestCase):
 
     def test_fm_001(self):
         pi = math.pi
-        sensitivity = pi/4
-        src_data = (1.0/4, 1.0/2, 1.0/4, -1.0/4, -1.0/2, -1/4.0)
-        running_sum = (pi/16, 3*pi/16, pi/4, 3*pi/16, pi/16, 0)
+        sensitivity = pi / 4
+        src_data = (1.0 / 4, 1.0 / 2, 1.0 / 4, -1.0 / 4, -1.0 / 2, -1 / 4.0)
+        running_sum = (pi / 16, 3*pi/16, pi / 4, 3*pi/16, pi / 16, 0)
         expected_result = tuple([sincos(x) for x in running_sum])
         src = blocks.vector_source_f(src_data)
         op = analog.frequency_modulator_fc(sensitivity)

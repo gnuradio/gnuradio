@@ -24,10 +24,10 @@
 #define INCLUDED_CHANNELS_CFO_MODEL_IMPL_H
 
 #include <gnuradio/top_block.h>
-#include <gnuradio/blocks/integrate_ff.h>
+#include <gnuradio/blocks/integrate.h>
 #include <gnuradio/blocks/vco_c.h>
-#include <gnuradio/blocks/multiply_cc.h>
-#include <gnuradio/analog/fastnoise_source_f.h>
+#include <gnuradio/blocks/multiply.h>
+#include <gnuradio/analog/fastnoise_source.h>
 #include <gnuradio/channels/cfo_model.h>
 #include <sincostable.h>
 

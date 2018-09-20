@@ -33,7 +33,6 @@ GR_PYTHON_INSTALL(
     plot_time_form.py
     plot_time_raster_form.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
-    COMPONENT "qtgui_python"
 )
 
 GR_PYTHON_INSTALL(
@@ -58,5 +57,4 @@ GR_PYTHON_INSTALL(
     gr_spectrogram_plot
     gr_constellation_plot
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "qtgui_python"
 )

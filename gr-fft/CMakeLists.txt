@@ -48,40 +48,6 @@ GR_SET_GLOBAL(GR_FFT_INCLUDE_DIRS
 if(ENABLE_GR_FFT)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_FFT_DESCRIPTION "GNU Radio FFT Blocks")
-
-CPACK_COMPONENT("fft_runtime"
-    GROUP        "FFT"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("fft_devel"
-    GROUP        "FFT"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("fft_python"
-    GROUP        "FFT"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;fft_runtime"
-)
-
-CPACK_COMPONENT("fft_swig"
-    GROUP        "FFT"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;fft_python;fft_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/fft)
@@ -104,7 +70,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-fft.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "fft_devel"
 )
 
 endif(ENABLE_GR_FFT)

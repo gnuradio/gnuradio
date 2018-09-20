@@ -20,18 +20,20 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, blocks
 import math
 
 def sig_source_f(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: amp*math.cos(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [amp*math.cos(2.*math.pi*freq*x) for x in t]
     return y
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: math.cos(2.*math.pi*freq*x) + \
-                1j*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [math.cos(2.*math.pi*freq*x) + \
+                1j*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 class test_vco(gr_unittest.TestCase):
@@ -49,7 +51,7 @@ class test_vco(gr_unittest.TestCase):
             sig_source_f(1, 0.25, 1, 200)
 
         src = blocks.vector_source_f(src_data)
-        op = blocks.vco_f(1, math.pi/2.0, 1)
+        op = blocks.vco_f(1, math.pi / 2.0, 1)
         dst = blocks.vector_sink_f()
 
         self.tb.connect(src, op, dst)
@@ -66,7 +68,7 @@ class test_vco(gr_unittest.TestCase):
             sig_source_c(1, 0.25, 1, 200)
 
         src = blocks.vector_source_f(src_data)
-        op = blocks.vco_c(1, math.pi/2.0, 1)
+        op = blocks.vco_c(1, math.pi / 2.0, 1)
         dst = blocks.vector_sink_c()
 
         self.tb.connect(src, op, dst)

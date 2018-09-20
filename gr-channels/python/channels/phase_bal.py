@@ -6,6 +6,7 @@
 # Generated: Thu Aug  1 11:49:41 2013
 ##################################################
 
+from __future__ import unicode_literals
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import gr

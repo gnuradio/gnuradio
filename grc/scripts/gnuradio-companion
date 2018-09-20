@@ -1,22 +1,20 @@
 #!/usr/bin/env python
-"""
-Copyright 2016 Free Software Foundation, Inc.
-This file is part of GNU Radio
-
-GNU Radio Companion is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-GNU Radio Companion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-"""
+# Copyright 2016 Free Software Foundation, Inc.
+# This file is part of GNU Radio
+#
+# GNU Radio Companion is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# GNU Radio Companion is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import sys
@@ -39,11 +37,13 @@ Is the library path environment variable set correctly?
 def die(error, message):
     msg = "{0}\n\n({1})".format(message, error)
     try:
-        import gtk
-        d = gtk.MessageDialog(
-            type=gtk.MESSAGE_ERROR,
-            buttons=gtk.BUTTONS_CLOSE,
-            message_format=msg,
+        import gi
+        gi.require_version('Gtk', '3.0')
+        from gi.repository import Gtk
+        d = Gtk.MessageDialog(
+            message_type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.CLOSE,
+            text=msg,
         )
         d.set_title(type(error).__name__)
         d.run()
@@ -55,10 +55,13 @@ def die(error, message):
 def check_gtk():
     try:
         warnings.filterwarnings("error")
-        import pygtk
-        pygtk.require('2.0')
-        import gtk
-        gtk.init_check()
+        import gi
+        gi.require_version('Gtk', '3.0')
+        gi.require_version('PangoCairo', '1.0')
+        gi.require_foreign('cairo', 'Context')
+
+        from gi.repository import Gtk
+        Gtk.init_check()
         warnings.filterwarnings("always")
     except Exception as err:
         die(err, "Failed to initialize GTK. If you are running over ssh, "

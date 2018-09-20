@@ -139,9 +139,9 @@ namespace gr {
       virtual void set_update_time(double t) = 0;
       virtual void set_title(const std::string &title) = 0;
       virtual void set_time_title(const std::string &title) = 0;
-      virtual void set_line_label(int which, const std::string &line) = 0;
-      virtual void set_line_alpha(int which, double alpha) = 0;
-      virtual void set_color_map(int which, const int color) = 0;
+      virtual void set_line_label(unsigned int which, const std::string &line) = 0;
+      virtual void set_line_alpha(unsigned int which, double alpha) = 0;
+      virtual void set_color_map(unsigned int which, const int color) = 0;
 
       /*!
        *  Pass "true" to this function to only show the positive half
@@ -151,15 +151,15 @@ namespace gr {
       virtual void set_plot_pos_half(bool half) = 0;
 
       virtual std::string title() = 0;
-      virtual std::string line_label(int which) = 0;
-      virtual double line_alpha(int which) = 0;
-      virtual int color_map(int which) = 0;
+      virtual std::string line_label(unsigned int which) = 0;
+      virtual double line_alpha(unsigned int which) = 0;
+      virtual int color_map(unsigned int which) = 0;
 
       virtual void set_size(int width, int height) = 0;
 
       virtual void auto_scale() = 0;
-      virtual double min_intensity(int which) = 0;
-      virtual double max_intensity(int which) = 0;
+      virtual double min_intensity(unsigned int which) = 0;
+      virtual double max_intensity(unsigned int which) = 0;
 
       virtual void enable_menu(bool en=true) = 0;
       virtual void enable_grid(bool en=true) = 0;

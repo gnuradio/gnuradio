@@ -51,7 +51,7 @@ namespace gr {
        * \param period_ms the time period in milliseconds in which to
        *                  send \p msg.
        */
-      static sptr make(pmt::pmt_t msg, float period_ms);
+      static sptr make(pmt::pmt_t msg, long period_ms);
 
       /*!
        * Reset the message being sent.
@@ -68,12 +68,12 @@ namespace gr {
        * Reset the sending interval.
        * \param period_ms the time period in milliseconds.
        */
-      virtual void set_period(float period_ms) = 0;
+      virtual void set_period(long period_ms) = 0;
 
       /*!
        * Get the time interval of the strobe.
        */
-      virtual float period() const = 0;
+      virtual long period() const = 0;
     };
 
   } /* namespace blocks */

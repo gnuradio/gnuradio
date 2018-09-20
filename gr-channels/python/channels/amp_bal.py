@@ -7,6 +7,7 @@
 # Generated: Thu Aug  1 11:47:46 2013
 ##################################################
 
+from __future__ import unicode_literals
 from gnuradio import blocks
 from gnuradio import gr
 from gnuradio.filter import firdes

@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr, eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -97,10 +99,10 @@ class tx_psk_block(gr.top_block):
 
 def get_options(mods):
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
-    parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
+    parser.add_option("-m", "--modulation", type="choice", choices=list(mods.keys()),
                       default='psk',
                       help="Select modulation from: %s [default=%%default]"
-                            % (', '.join(mods.keys()),))
+                            % (', '.join(list(mods.keys())),))
     parser.add_option("", "--amplitude", type="eng_float", default=0.2,
                       help="set Tx amplitude (0-1) (default=%default)")
     parser.add_option("-r", "--bitrate", type="eng_float", default=250e3,
@@ -116,7 +118,7 @@ def get_options(mods):
 
     uhd_transmitter.add_options(parser)
 
-    for mod in mods.values():
+    for mod in list(mods.values()):
         mod.add_options(parser)
 		      
     (options, args) = parser.parse_args()
@@ -127,6 +129,9 @@ def get_options(mods):
     return (options, args)
 
 if __name__ == "__main__":
+    print ("Warning: this example in its current shape is deprecated and
+            will be removed or fundamentally reworked in a coming GNU Radio
+            release.")
     mods = digital.modulation_utils.type_1_mods()
 
     (options, args) = get_options(mods)

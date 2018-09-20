@@ -1,0 +1,42 @@
+id: pfb_interpolator_ccf
+label: Polyphase Interpolator
+
+parameters:
+-   id: interp
+    label: Interpolation
+    dtype: int
+-   id: taps
+    label: Taps
+    dtype: real_vector
+-   id: atten
+    label: Attenuation
+    dtype: real
+    default: '100'
+-   id: samp_delay
+    label: Sample Delay
+    dtype: int
+    default: '0'
+    hide: part
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: |-
+        from gnuradio.filter import pfb
+        from gnuradio.filter import firdes
+    make: |-
+        pfb.interpolator_ccf(
+            ${interp},
+            ${taps},
+            ${atten})
+        self.${id}.declare_sample_delay(${samp_delay})
+    callbacks:
+    - set_taps(${taps})
+
+file_format: 1

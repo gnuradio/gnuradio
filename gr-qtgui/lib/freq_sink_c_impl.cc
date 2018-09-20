@@ -25,11 +25,14 @@
 #endif
 
 #include "freq_sink_c_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
-#include <string.h>
+
 #include <volk/volk.h>
 #include <qwt_symbol.h>
+
+#include <string.h>
 
 namespace gr {
   namespace qtgui {
@@ -156,7 +159,7 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-#if QT_VERSION >= 0x040500
+#if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000
         std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
         QApplication::setGraphicsSystem(QString(style.c_str()));
 #endif
@@ -287,37 +290,37 @@ namespace gr {
     }
 
     void
-    freq_sink_c_impl::set_line_label(int which, const std::string &label)
+    freq_sink_c_impl::set_line_label(unsigned int which, const std::string &label)
     {
       d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    freq_sink_c_impl::set_line_color(int which, const std::string &color)
+    freq_sink_c_impl::set_line_color(unsigned int which, const std::string &color)
     {
       d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
-    freq_sink_c_impl::set_line_width(int which, int width)
+    freq_sink_c_impl::set_line_width(unsigned int which, int width)
     {
       d_main_gui->setLineWidth(which, width);
     }
 
     void
-    freq_sink_c_impl::set_line_style(int which, int style)
+    freq_sink_c_impl::set_line_style(unsigned int which, int style)
     {
       d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
     }
 
     void
-    freq_sink_c_impl::set_line_marker(int which, int marker)
+    freq_sink_c_impl::set_line_marker(unsigned int which, int marker)
     {
       d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
     }
 
     void
-    freq_sink_c_impl::set_line_alpha(int which, double alpha)
+    freq_sink_c_impl::set_line_alpha(unsigned int which, double alpha)
     {
       d_main_gui->setMarkerAlpha(which, (int)(255.0*alpha));
     }
@@ -358,37 +361,37 @@ namespace gr {
     }
 
     std::string
-    freq_sink_c_impl::line_label(int which)
+    freq_sink_c_impl::line_label(unsigned int which)
     {
       return d_main_gui->lineLabel(which).toStdString();
     }
 
     std::string
-    freq_sink_c_impl::line_color(int which)
+    freq_sink_c_impl::line_color(unsigned int which)
     {
       return d_main_gui->lineColor(which).toStdString();
     }
 
     int
-    freq_sink_c_impl::line_width(int which)
+    freq_sink_c_impl::line_width(unsigned int which)
     {
       return d_main_gui->lineWidth(which);
     }
 
     int
-    freq_sink_c_impl::line_style(int which)
+    freq_sink_c_impl::line_style(unsigned int which)
     {
       return d_main_gui->lineStyle(which);
     }
 
     int
-    freq_sink_c_impl::line_marker(int which)
+    freq_sink_c_impl::line_marker(unsigned int which)
     {
       return d_main_gui->lineMarker(which);
     }
 
     double
-    freq_sink_c_impl::line_alpha(int which)
+    freq_sink_c_impl::line_alpha(unsigned int which)
     {
       return (double)(d_main_gui->markerAlpha(which))/255.0;
     }

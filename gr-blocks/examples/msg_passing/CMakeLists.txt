@@ -23,5 +23,4 @@ install(
   FILES
   strobe.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/msg_passing
-  COMPONENT "runtime_python"
 )

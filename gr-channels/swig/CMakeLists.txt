@@ -44,7 +44,6 @@ GR_SWIG_MAKE(channels_swig channels_swig.i)
 GR_SWIG_INSTALL(
     TARGETS channels_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/channels
-    COMPONENT "channels_python"
 )
 
 install(
@@ -52,5 +51,4 @@ install(
     channels_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/channels_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "channels_swig"
 )

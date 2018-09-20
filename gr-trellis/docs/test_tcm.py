@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import trellis, digital, blocks
@@ -20,14 +23,14 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
 
     # TX
     src = blocks.lfsr_32k_source_s()
-    src_head = blocks.head (gr.sizeof_short,Kb/16) # packet size in shorts
+    src_head = blocks.head (gr.sizeof_short,Kb / 16) # packet size in shorts
     s2fsmi = blocks.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
     enc = trellis.encoder_ss(f,0) # initial state = 0
     mod = digital.chunks_to_symbols_sf(constellation,dimensionality)
 
     # CHANNEL
     add = blocks.add_ff()
-    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0 / 2),seed)
 
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
@@ -67,31 +70,31 @@ def main(args):
     # system parameters
     f=trellis.fsm(fname) # get the FSM specification from a file
     Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
-    bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
-    K=Kb/bitspersymbol # packet size in trellis steps
+    bitspersymbol = int(round(math.log(f.I()) / math.log(2))) # bits per FSM input symbol
+    K=Kb / bitspersymbol # packet size in trellis steps
     modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
     constellation = modulation[1]
-    if len(constellation)/dimensionality != f.O():
+    if len(constellation) / dimensionality != f.O():
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
     # calculate average symbol energy
     Es = 0
     for i in range(len(constellation)):
         Es = Es + constellation[i]**2
-    Es = Es / (len(constellation)/dimensionality)
-    N0=Es/pow(10.0,esn0_db/10.0); # noise variance
+    Es = Es / (len(constellation)//dimensionality)
+    N0=Es / pow(10.0,esn0_db/10.0); # noise variance
 
     tot_s=0
     terr_s=0
     for i in range(rep):
-        (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
+        (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-int(666+i)) # run experiment with different seed to get different noise realizations
         tot_s=tot_s+s
         terr_s=terr_s+e
         if (i%100==0):
-            print i,s,e,tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+            print(i,s,e,tot_s,terr_s, '%e' % ((1.0*terr_s) / tot_s))
     # estimate of the (short) error rate
-    print tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+    print(tot_s,terr_s, '%e' % ((1.0*terr_s) / tot_s))
 
 
 if __name__ == '__main__':

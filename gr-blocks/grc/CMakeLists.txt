@@ -18,14 +18,14 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-file(GLOB xml_files "*.xml")
+file(GLOB yml_files "*.yml")
 
 # Force out the controlport GRC blocks if we've disabled it.
 if(NOT ENABLE_GR_CTRLPORT)
-  list(REMOVE_ITEM xml_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_probe_c.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_probe2_c.xml
+  list(REMOVE_ITEM yml_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_probe_c.block.yml
+    ${CMAKE_CURRENT_SOURCE_DIR}/ctrlport_probe2_c.block.yml
     )
 endif(NOT ENABLE_GR_CTRLPORT)
 
-install(FILES ${xml_files} DESTINATION ${GRC_BLOCKS_DIR} COMPONENT "blocks_python")
+install(FILES ${yml_files} DESTINATION ${GRC_BLOCKS_DIR})

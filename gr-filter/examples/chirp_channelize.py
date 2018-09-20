@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
@@ -59,17 +62,17 @@ class pfb_top_block(gr.top_block):
                                               window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
-        tpc = scipy.ceil(float(len(self._taps)) /  float(self._M))
-        print "Number of taps:     ", len(self._taps)
-        print "Number of channels: ", self._M
-        print "Taps per channel:   ", tpc
+        tpc = scipy.ceil(float(len(self._taps)) / float(self._M))
+        print("Number of taps:     ", len(self._taps))
+        print("Number of channels: ", self._M)
+        print("Taps per channel:   ", tpc)
 
         repeated = True
         if(repeated):
             self.vco_input = analog.sig_source_f(self._fs, analog.GR_SIN_WAVE, 0.25, 110)
         else:
             amp = 100
-            data = scipy.arange(0, amp, amp/float(self._N))
+            data = scipy.arange(0, amp, amp / float(self._N))
             self.vco_input = blocks.vector_source_f(data, False)
 
         # Build a VCO controlled by either the sinusoid or single chirp tone
@@ -92,7 +95,7 @@ class pfb_top_block(gr.top_block):
 
         # Create a vector sink for each of M output channels of the filter and connect it
         self.snks = list()
-        for i in xrange(self._M):
+        for i in range(self._M):
             self.snks.append(blocks.vector_sink_c())
             self.connect((self.pfb, i), self.snks[i])
 
@@ -104,7 +107,7 @@ def main():
     tb.run()
 
     tend = time.time()
-    print "Run time: %f" % (tend - tstart)
+    print("Run time: %f" % (tend - tstart))
 
     if 1:
         fig_in = pylab.figure(1, figsize=(16,9), facecolor="w")
@@ -123,11 +126,11 @@ def main():
         d = tb.snk_i.data()[Ns:Ne]
         spin_f = fig_in.add_subplot(2, 1, 1)
 
-        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
+        X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
         X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
+        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         pin_f = spin_f.plot(f_in, X_in, "b")
         spin_f.set_xlim([min(f_in), max(f_in)+1])
         spin_f.set_ylim([-200.0, 50.0])
@@ -137,7 +140,7 @@ def main():
         spin_f.set_ylabel("Power (dBW)")
 
 
-        Ts = 1.0/fs
+        Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
         t_in = scipy.arange(0, Tmax, Ts)
@@ -157,16 +160,16 @@ def main():
         # Plot each of the channels outputs. Frequencies on Figure 2 and
         # time signals on Figure 3
         fs_o = tb._fs / tb._M
-        Ts_o = 1.0/fs_o
+        Ts_o = 1.0 / fs_o
         Tmax_o = len(d)*Ts_o
-        for i in xrange(len(tb.snks)):
+        for i in range(len(tb.snks)):
             # remove issues with the transients at the beginning
             # also remove some corruption at the end of the stream
             #    this is a bug, probably due to the corner cases
             d = tb.snks[i].data()[Ns:Ne]
 
             sp1_f = fig1.add_subplot(Nrows, Ncols, 1+i)
-            X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs_o,
+            X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs_o,
                               window = lambda d: d*winfunc(fftlen),
                               scale_by_freq=True)
             X_o = 10.0*scipy.log10(abs(X))

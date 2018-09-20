@@ -1,0 +1,42 @@
+id: digital_msk_timing_recovery_cc
+label: MSK Timing Recovery
+
+parameters:
+-   id: gain
+    label: Gain
+    dtype: float
+-   id: sps
+    label: Samples per symbol
+    dtype: float
+-   id: limit
+    label: Error limit
+    dtype: float
+-   id: osps
+    label: Output samples per symbol
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   label: err
+    domain: stream
+    dtype: float
+    optional: true
+-   label: omega
+    domain: stream
+    dtype: float
+    optional: true
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.msk_timing_recovery_cc(${sps}, ${gain}, ${limit}, ${osps})
+    callbacks:
+    - set_gain(${gain})
+    - set_sps(${sps})
+    - set_limit(${limit})
+
+file_format: 1

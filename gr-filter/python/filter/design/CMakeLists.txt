@@ -26,6 +26,5 @@ GR_PYTHON_INSTALL(
 	filter_design.py
 	fir_design.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
-    COMPONENT "filter_python"
 )
 

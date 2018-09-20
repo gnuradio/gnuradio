@@ -21,6 +21,7 @@
 # 
 
 # Constants used to represent what coding to use.
+from __future__ import unicode_literals
 GRAY_CODE = 'gray'
 SET_PARTITION_CODE = 'set-partition'
 NO_CODE = 'none'

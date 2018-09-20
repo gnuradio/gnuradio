@@ -22,9 +22,9 @@
 // Q_MOC_RUN is a workaround for a QT4 + Boost version issue
 #ifndef Q_MOC_RUN
 #include <gnuradio/top_block.h>
-#include <gnuradio/analog/sig_source_f.h>
-#include <gnuradio/analog/noise_source_f.h>
-#include <gnuradio/blocks/add_ff.h>
+#include <gnuradio/analog/sig_source.h>
+#include <gnuradio/analog/noise_source.h>
+#include <gnuradio/blocks/add_blk.h>
 #include <gnuradio/blocks/throttle.h>
 #include <gnuradio/qtgui/time_sink_f.h>
 #include <gnuradio/qtgui/freq_sink_f.h>

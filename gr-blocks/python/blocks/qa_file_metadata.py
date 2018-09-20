@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import division
+
 import os, math
 
 from gnuradio import gr, gr_unittest, blocks
@@ -28,9 +31,9 @@ import pmt
 import parse_file_metadata
 
 def sig_source_c(samp_rate, freq, amp, N):
-    t = map(lambda x: float(x)/samp_rate, xrange(N))
-    y = map(lambda x: amp*math.cos(2.*math.pi*freq*x) + \
-                1j*amp*math.sin(2.*math.pi*freq*x), t)
+    t = [float(x) / samp_rate for x in range(N)]
+    y = [amp*math.cos(2.*math.pi*freq*x) + \
+                1j*amp*math.sin(2.*math.pi*freq*x) for x in t]
     return y
 
 class test_file_metadata(gr_unittest.TestCase):
@@ -44,7 +47,7 @@ class test_file_metadata(gr_unittest.TestCase):
 
     def test_001(self):
         N = 1000
-	outfile = "test_out.dat"
+        outfile = "test_out.dat"
 
         detached = False
         samp_rate = 200000
@@ -52,18 +55,17 @@ class test_file_metadata(gr_unittest.TestCase):
         val = pmt.from_double(samp_rate)
         extras = pmt.make_dict()
         extras = pmt.dict_add(extras, key, val)
-        extras_str = pmt.serialize_str(extras)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
         src  = blocks.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1,
                                      blocks.GR_FILE_FLOAT, True,
-                                     1000000, extras_str, detached)
+                                     1000000, extras, detached)
         fsnk.set_unbuffered(True)
 
-	self.tb.connect(src, fsnk)
-	self.tb.run()
+        self.tb.connect(src, fsnk)
+        self.tb.run()
         fsnk.close()
 
         handle = open(outfile, "rb")
@@ -119,12 +121,12 @@ class test_file_metadata(gr_unittest.TestCase):
         # Test that the data portion was extracted and received correctly.
         self.assertComplexTuplesAlmostEqual(vsnk.data(), ssnk.data(), 5)
 
-	os.remove(outfile)
+        os.remove(outfile)
 
     def test_002(self):
         N = 1000
-	outfile = "test_out.dat"
-	outfile_hdr = "test_out.dat.hdr"
+        outfile = "test_out.dat"
+        outfile_hdr = "test_out.dat.hdr"
 
         detached = True
         samp_rate = 200000
@@ -132,18 +134,17 @@ class test_file_metadata(gr_unittest.TestCase):
         val = pmt.from_double(samp_rate)
         extras = pmt.make_dict()
         extras = pmt.dict_add(extras, key, val)
-        extras_str = pmt.serialize_str(extras)
 
         data = sig_source_c(samp_rate, 1000, 1, N)
         src  = blocks.vector_source_c(data)
         fsnk = blocks.file_meta_sink(gr.sizeof_gr_complex, outfile,
                                      samp_rate, 1,
                                      blocks.GR_FILE_FLOAT, True,
-                                     1000000, extras_str, detached)
+                                     1000000, extras, detached)
         fsnk.set_unbuffered(True)
 
-	self.tb.connect(src, fsnk)
-	self.tb.run()
+        self.tb.connect(src, fsnk)
+        self.tb.run()
         fsnk.close()
 
         # Open detached header for reading
@@ -201,8 +202,8 @@ class test_file_metadata(gr_unittest.TestCase):
         # Test that the data portion was extracted and received correctly.
         self.assertComplexTuplesAlmostEqual(vsnk.data(), ssnk.data(), 5)
 
-	os.remove(outfile)
-	os.remove(outfile_hdr)
+        os.remove(outfile)
+        os.remove(outfile_hdr)
 
 if __name__ == '__main__':
     gr_unittest.run(test_file_metadata, "test_file_metadata.xml")

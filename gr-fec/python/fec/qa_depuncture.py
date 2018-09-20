@@ -20,10 +20,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, gr_unittest
-import fec_swig as fec
-import blocks_swig as blocks
+from __future__ import division
+
 from collections import deque
+
+from gnuradio import gr, gr_unittest, blocks
+from gnuradio import fec
+
 
 class test_depuncture (gr_unittest.TestCase):
 
@@ -37,7 +40,7 @@ class test_depuncture (gr_unittest.TestCase):
 
         k = 0
         self.expected = []
-        for n in range(len(self.src_data)/(self.puncsize - self.puncholes)):
+        for n in range(len(self.src_data) // (self.puncsize - self.puncholes)):
             for i in range(self.puncsize):
                 if _puncpat[i] == 1:
                     self.expected.append(self.src_data[k]);
@@ -46,7 +49,7 @@ class test_depuncture (gr_unittest.TestCase):
                     self.expected.append(self.sym)
 
     def setUp(self):
-        self.src_data = 2000*range(64)
+        self.src_data = 2000*list(range(64))
         self.tb = gr.top_block ()
 
     def tearDown(self):
@@ -64,15 +67,15 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-	op  = fec.depuncture_bb(self.puncsize, self.puncpat,
+        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
                                 self.delay, self.sym)
-	dst = blocks.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
-	self.tb.connect(src, op, dst)
-	self.tb.run()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
 
-	dst_data = list(dst.data())
-        for i in xrange(len(dst_data)):
+        dst_data = list(dst.data())
+        for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
         self.assertEqual(self.expected, dst_data)
@@ -89,15 +92,15 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-	op  = fec.depuncture_bb(self.puncsize, self.puncpat,
+        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
                                 self.delay, self.sym)
-	dst = blocks.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
-	self.tb.connect(src, op, dst)
-	self.tb.run()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
 
-	dst_data = list(dst.data())
-        for i in xrange(len(dst_data)):
+        dst_data = list(dst.data())
+        for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
         self.assertEqual(self.expected, dst_data)
@@ -115,15 +118,15 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-	op  = fec.depuncture_bb(self.puncsize, self.puncpat,
+        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
                                 self.delay, self.sym)
-	dst = blocks.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
-	self.tb.connect(src, op, dst)
-	self.tb.run()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
 
-	dst_data = list(dst.data())
-        for i in xrange(len(dst_data)):
+        dst_data = list(dst.data())
+        for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
         self.assertEqual(self.expected, dst_data)
@@ -141,23 +144,23 @@ class test_depuncture (gr_unittest.TestCase):
         self.sym = 0
 
         src = blocks.vector_source_b(self.src_data)
-	op0  = fec.depuncture_bb(self.puncsize, self.puncpat0,
+        op0  = fec.depuncture_bb(self.puncsize, self.puncpat0,
                                  self.delay, self.sym)
-	op1  = fec.depuncture_bb(self.puncsize, self.puncpat1,
+        op1  = fec.depuncture_bb(self.puncsize, self.puncpat1,
                                  self.delay, self.sym)
-	dst0 = blocks.vector_sink_b()
-	dst1 = blocks.vector_sink_b()
+        dst0 = blocks.vector_sink_b()
+        dst1 = blocks.vector_sink_b()
 
-	self.tb.connect(src, op0, dst0)
-	self.tb.connect(src, op1, dst1)
-	self.tb.run()
+        self.tb.connect(src, op0, dst0)
+        self.tb.connect(src, op1, dst1)
+        self.tb.run()
 
-	dst_data0 = list(dst0.data())
-        for i in xrange(len(dst_data0)):
+        dst_data0 = list(dst0.data())
+        for i in range(len(dst_data0)):
             dst_data0[i] = int(dst_data0[i])
 
-	dst_data1 = list(dst1.data())
-        for i in xrange(len(dst_data1)):
+        dst_data1 = list(dst1.data())
+        for i in range(len(dst_data1)):
             dst_data1[i] = int(dst_data1[i])
 
         self.assertEqual(dst_data1, dst_data0)
@@ -175,15 +178,15 @@ class test_depuncture (gr_unittest.TestCase):
         self.depuncture_setup()
 
         src = blocks.vector_source_b(self.src_data)
-	op  = fec.depuncture_bb(self.puncsize, self.puncpat,
+        op  = fec.depuncture_bb(self.puncsize, self.puncpat,
                                 self.delay)
-	dst = blocks.vector_sink_b()
+        dst = blocks.vector_sink_b()
 
-	self.tb.connect(src, op, dst)
-	self.tb.run()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
 
-	dst_data = list(dst.data())
-        for i in xrange(len(dst_data)):
+        dst_data = list(dst.data())
+        for i in range(len(dst_data)):
             dst_data[i] = int(dst_data[i])
 
         self.assertEqual(self.expected, dst_data)

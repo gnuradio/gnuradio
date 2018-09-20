@@ -20,18 +20,21 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio.fec.bitflip import read_bitlist
 from gnuradio import gr, blocks, analog
 import math
 import sys
 
-if sys.modules.has_key("gnuradio.digital"):
+if "gnuradio.digital" in sys.modules:
     digital = sys.modules["gnuradio.digital"]
 else:
     from gnuradio import digital
 
-from extended_encoder import extended_encoder
-from extended_decoder import extended_decoder
+from .extended_encoder import extended_encoder
+from .extended_decoder import extended_decoder
 
 class fec_test(gr.hier_block2):
 
@@ -64,7 +67,7 @@ class fec_test(gr.hier_block2):
                                         ann=None, puncpat=puncpat,
                                         integration_period=10000, rotator=None)
 
-        noise = math.sqrt((10.0**(-esno/10.0))/2.0)
+        noise = math.sqrt((10.0**(-esno / 10.0))/2.0)
         #self.fastnoise = analog.fastnoise_source_f(analog.GR_GAUSSIAN, noise, seed, 8192)
         self.fastnoise = analog.noise_source_f(analog.GR_GAUSSIAN, noise, seed)
         self.addnoise = blocks.add_ff(1)

@@ -62,20 +62,20 @@ public slots:
   void setUpdateTime(double t);
 
   void setTitle(const QString &title);
-  void setLineLabel(int which, const QString &label);
-  void setLineColor(int which, const QString &color);
-  void setLineWidth(int which, int width);
-  void setLineStyle(int which, Qt::PenStyle style);
-  void setLineMarker(int which, QwtSymbol::Style style);
-  void setMarkerAlpha(int which, int alpha);
+  void setLineLabel(unsigned int which, const QString &label);
+  void setLineColor(unsigned int which, const QString &color);
+  void setLineWidth(unsigned int which, int width);
+  void setLineStyle(unsigned int which, Qt::PenStyle style);
+  void setLineMarker(unsigned int which, QwtSymbol::Style style);
+  void setMarkerAlpha(unsigned int which, int alpha);
 
   QString title();
-  QString lineLabel(int which);
-  QString lineColor(int which);
-  int lineWidth(int which);
-  Qt::PenStyle lineStyle(int which);
-  QwtSymbol::Style lineMarker(int which);
-  int markerAlpha(int which);
+  QString lineLabel(unsigned int which);
+  QString lineColor(unsigned int which);
+  int lineWidth(unsigned int which);
+  Qt::PenStyle lineStyle(unsigned int which);
+  QwtSymbol::Style lineMarker(unsigned int which);
+  int markerAlpha(unsigned int which);
 
   virtual void setSampleRate(const QString &rate);
 
@@ -103,7 +103,7 @@ signals:
 protected:
   bool d_isclosed;
 
-  int d_nplots;
+  unsigned int d_nplots;
 
   QGridLayout *d_layout;
   DisplayPlot* d_display_plot;

@@ -82,5 +82,4 @@ install(FILES
     catv_trellis_enc_bb.h
 
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/dtv
-    COMPONENT "dtv_devel"
 )

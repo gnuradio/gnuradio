@@ -33,20 +33,20 @@ namespace gr {
     private:
       boost::shared_ptr<gr::thread::thread> d_thread;
       bool d_finished;
-      float d_period_ms;
+      long d_period_ms;
       pmt::pmt_t d_msg;
       const pmt::pmt_t d_port;
 
       void run();
 
     public:
-      message_strobe_impl(pmt::pmt_t msg, float period_ms);
+      message_strobe_impl(pmt::pmt_t msg, long period_ms);
       ~message_strobe_impl();
 
       void set_msg(pmt::pmt_t msg) { d_msg = msg; }
       pmt::pmt_t msg() const { return d_msg; }
-      void set_period(float period_ms) { d_period_ms = period_ms; }
-      float period() const { return d_period_ms; }
+      void set_period(long period_ms) { d_period_ms = period_ms; }
+      long period() const { return d_period_ms; }
 
       // Overloading these to start and stop the internal thread that
       // periodically produces the message.

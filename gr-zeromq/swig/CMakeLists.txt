@@ -44,7 +44,6 @@ GR_SWIG_MAKE(zeromq_swig zeromq_swig.i)
 GR_SWIG_INSTALL(
     TARGETS zeromq_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/zeromq
-    COMPONENT "zeromq_python"
 )
 
 install(
@@ -52,5 +51,4 @@ install(
     zeromq_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/zeromq_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "zeromq_swig"
 )

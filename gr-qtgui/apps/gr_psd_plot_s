@@ -54,16 +54,15 @@ class psd_plot_s(plot_base.plot_base):
 
 def main():
     description = "Plots the PSDs of a list of files. Files are a binary list of shorts."
-    (options, args) = plot_base.setup_options(description)
+    args = plot_base.setup_options(description)
 
-    filelist = list(args)
-    max_nsamples = plot_base.find_max_nsamples(filelist)
+    max_nsamples = plot_base.find_max_nsamples(args.files)
 
-    tb = psd_plot_s(filelist,
-                    options.center_frequency, options.sample_rate,
-                    options.psd_size,
-                    options.start, options.nsamples, max_nsamples,
-                    options.average)
+    tb = psd_plot_s(args.files,
+                    args.center_frequency, args.sample_rate,
+                    args.psd_size,
+                    args.start, args.nsamples, max_nsamples,
+                    args.average)
 
     main_box = plot_base.plot_psd_form(tb, 'GNU Radio PSD Plot')
     main_box.show()

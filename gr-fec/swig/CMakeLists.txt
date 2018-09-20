@@ -48,7 +48,6 @@ GR_SWIG_MAKE(fec_swig fec_swig.i)
 GR_SWIG_INSTALL(
     TARGETS fec_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fec
-    COMPONENT "fec_python"
 )
 
 install(
@@ -56,5 +55,4 @@ install(
     fec_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/fec_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "fec_swig"
 )

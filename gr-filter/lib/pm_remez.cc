@@ -776,7 +776,8 @@ namespace gr {
 	     const std::vector<double> &arg_weight,
 	     const std::string filter_type,
 	     int grid_density
-	     ) throw (std::runtime_error)
+	     )
+      noexcept(false)
     {
       int numtaps = order + 1;
       if(numtaps < 4)

@@ -19,14 +19,17 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr, filter
-from fm_emph import fm_deemph
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 import math
 
-try:
-    from gnuradio import analog
-except ImportError:
-    import analog_swig as analog
+from gnuradio import gr, filter
+
+from . import analog_swig as analog
+from .fm_emph import fm_deemph
+
 
 class wfm_rcv(gr.hier_block2):
     def __init__ (self, quad_rate, audio_decimation):
@@ -40,14 +43,14 @@ class wfm_rcv(gr.hier_block2):
             quad_rate: input sample rate of complex baseband input. (float)
             audio_decimation: how much to decimate quad_rate to get to audio. (integer)
         """
-	gr.hier_block2.__init__(self, "wfm_rcv",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
+        gr.hier_block2.__init__(self, "wfm_rcv",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
 
         volume = 20.
 
         max_dev = 75e3
-        fm_demod_gain = quad_rate/(2*math.pi*max_dev)
+        fm_demod_gain = quad_rate / (2*math.pi*max_dev)
         audio_rate = quad_rate / audio_decimation
 
 
@@ -64,7 +67,7 @@ class wfm_rcv(gr.hier_block2):
         width_of_transition_band = audio_rate / 32
         audio_coeffs = filter.firdes.low_pass(1.0,            # gain
                                               quad_rate,      # sampling rate
-                                              audio_rate/2 - width_of_transition_band,
+                                              audio_rate / 2 - width_of_transition_band,
                                               width_of_transition_band,
                                               filter.firdes.WIN_HAMMING)
         # input: float; output: float

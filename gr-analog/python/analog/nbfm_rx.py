@@ -19,15 +19,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 import math
+
 from gnuradio import gr
 from gnuradio import filter
-from fm_emph import fm_deemph
 
-try:
-    from gnuradio import analog
-except ImportError:
-    import analog_swig as analog
+from . import analog_swig as analog
+from .fm_emph import fm_deemph
+
 
 class nbfm_rx(gr.hier_block2):
     def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3):
@@ -52,22 +56,22 @@ class nbfm_rx(gr.hier_block2):
           audio_filter
         """
 
-	gr.hier_block2.__init__(self, "nbfm_rx",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
+        gr.hier_block2.__init__(self, "nbfm_rx",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
 
         # FIXME audio_rate and quad_rate ought to be exact rationals
         self._audio_rate = audio_rate = int(audio_rate)
         self._quad_rate = quad_rate = int(quad_rate)
 
         if quad_rate % audio_rate != 0:
-            raise ValueError, "quad_rate is not an integer multiple of audio_rate"
+            raise ValueError("quad_rate is not an integer multiple of audio_rate")
 
-        squelch_threshold = 20		# dB
+        squelch_threshold = 20        # dB
         #self.squelch = analog.simple_squelch_cc(squelch_threshold, 0.001)
 
         # FM Demodulator  input: complex; output: float
-        k = quad_rate/(2*math.pi*max_dev)
+        k = quad_rate / (2*math.pi*max_dev)
         self.quad_demod = analog.quadrature_demod_cf(k)
 
         # FM Deemphasis IIR filter
@@ -81,7 +85,7 @@ class nbfm_rx(gr.hier_block2):
                                             0.5e3,          # Transition band
                                             filter.firdes.WIN_HAMMING)  # filter type
 
-        print "len(audio_taps) =", len(audio_taps)
+        print("len(audio_taps) =", len(audio_taps))
 
         # Decimating audio filter
         # input: float; output: float; taps: float
@@ -90,5 +94,5 @@ class nbfm_rx(gr.hier_block2):
         self.connect(self, self.quad_demod, self.deemph, self.audio_filter, self)
 
     def set_max_deviation(self, max_dev):
-        k = self._quad_rate/(2*math.pi*max_dev)
+        k = self._quad_rate / (2*math.pi*max_dev)
         self.quad_demod.set_gain(k)

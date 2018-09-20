@@ -20,10 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import unicode_literals
 from gnuradio import gr, gru
 from gnuradio import audio
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float
+from argparse import ArgumentParser
 import os
 
 try:
@@ -37,26 +39,22 @@ class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        parser = OptionParser(option_class=eng_option)
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser = ArgumentParser()
+        parser.add_argument("-O", "--audio-output", default="",
                           help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
-        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
-                          help="set sample rate to RATE (48000)")
-        (options, args) = parser.parse_args()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
-
-        sample_rate = int(options.sample_rate)
+        parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
+                          help="set sample rate to RATE (%(default)r)")
+        args = parser.parse_args()
+        sample_rate = int(args.sample_rate)
         ampl = 0.1
 
         src0 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 350, ampl)
         src1 = analog.sig_source_f(sample_rate, analog.GR_SIN_WAVE, 440, ampl)
-        dst = audio.sink(sample_rate, options.audio_output)
+        dst = audio.sink(sample_rate, args.audio_output)
         self.connect(src0, (dst, 0))
         self.connect(src1, (dst, 1))
 
 if __name__ == '__main__':
     pid = gru.daemonize()
-    print "To stop this program, enter 'kill %d'" % pid
+    print("To stop this program, enter 'kill %d'" % pid)
     my_top_block().run()

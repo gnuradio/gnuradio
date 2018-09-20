@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import filter
 from gnuradio import blocks
@@ -57,8 +60,8 @@ def main():
 
     taps = filter.firdes.low_pass_2(len(freqs), fs,
                                     fs/float(nchans)/2, 100, 100)
-    print "Num. Taps = %d (taps per filter = %d)" % (len(taps),
-                                                     len(taps)/nchans)
+    print("Num. Taps = %d (taps per filter = %d)" % (len(taps),
+                                                     len(taps) / nchans))
     filtbank = filter.pfb_synthesizer_ccf(nchans, taps)
 
     head = blocks.head(gr.sizeof_gr_complex, N)
@@ -83,7 +86,7 @@ def main():
         winfunc = scipy.blackman
         s2.psd(snk.data()[10000:], NFFT=fftlen,
                Fs = nchans*fs,
-               noverlap=fftlen/4,
+               noverlap=fftlen / 4,
                window = lambda d: d*winfunc(fftlen))
 
         pylab.show()

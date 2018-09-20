@@ -24,9 +24,9 @@
 #define SPECTRUM_GUI_CLASS_CPP
 
 #include <gnuradio/qtgui/SpectrumGUIClass.h>
+
 //Added by qt3to4:
 #include <QEvent>
-#include <QCustomEvent>
 #include <volk/volk.h>
 
 const long SpectrumGUIClass::MAX_FFT_SIZE = 32768;

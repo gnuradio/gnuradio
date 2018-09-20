@@ -1,0 +1,26 @@
+id: digital_hdlc_deframer_bp
+label: HDLC Deframer
+
+parameters:
+-   id: min
+    label: Min length
+    dtype: int
+    default: '32'
+-   id: max
+    label: Max length
+    dtype: int
+    default: '500'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: message
+    id: out
+
+templates:
+    imports: from gnuradio import digital
+    make: digital.hdlc_deframer_bp(${min}, ${max})
+
+file_format: 1

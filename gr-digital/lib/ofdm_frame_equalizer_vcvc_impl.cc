@@ -1,5 +1,5 @@
 /* -*- c++ -*- */
-/* Copyright 2012 Free Software Foundation, Inc.
+/* Copyright 2012,2018 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,11 +23,10 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/expj.h>
-#include <gnuradio/io_signature.h>
 #include "ofdm_frame_equalizer_vcvc_impl.h"
-
-#define M_TWOPI (2*M_PI)
+#include <gnuradio/io_signature.h>
+#include <gnuradio/expj.h>
+#include <gnuradio/math.h>
 
 static const pmt::pmt_t CARR_OFFSET_KEY = pmt::mp("ofdm_sync_carr_offset");
 static const pmt::pmt_t CHAN_TAPS_KEY = pmt::mp("ofdm_sync_chan_taps");
@@ -146,7 +145,7 @@ namespace gr {
       // Correct the frequency shift on the symbols
       gr_complex phase_correction;
       for (int i = 0; i < frame_len; i++) {
-	phase_correction = gr_expj(-M_TWOPI * carrier_offset * d_cp_len / d_fft_len * (i+1));
+	phase_correction = gr_expj(-GR_M_TWOPI * carrier_offset * d_cp_len / d_fft_len * (i+1));
 	for (int k = 0; k < d_fft_len; k++) {
 	  out[i*d_fft_len+k] *= phase_correction;
 	}
@@ -158,7 +157,7 @@ namespace gr {
       d_eq->get_channel_state(d_channel_state);
 
       // Update the channel state regarding the frequency offset
-      phase_correction = gr_expj(M_TWOPI * carrier_offset * d_cp_len / d_fft_len * frame_len);
+      phase_correction = gr_expj(GR_M_TWOPI * carrier_offset * d_cp_len / d_fft_len * frame_len);
       for (int k = 0; k < d_fft_len; k++) {
         d_channel_state[k] *= phase_correction;
       }

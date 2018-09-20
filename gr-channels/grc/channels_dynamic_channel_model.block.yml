@@ -1,0 +1,111 @@
+id: channels_dynamic_channel_model
+label: Dynamic Channel Model
+
+parameters:
+-   id: samp_rate
+    label: Sample Rate Hz
+    dtype: real
+    default: samp_rate
+-   id: cfo_stdev
+    label: CFO Standard Deviation Hz per sample
+    dtype: real
+    default: '0.01'
+-   id: cfo_maxdev
+    label: Max CFO Bound Hz
+    dtype: real
+    default: 1e3
+-   id: sro_stdev
+    label: SRO Standard Deviation Hz per sample
+    dtype: real
+    default: '0.01'
+-   id: sro_maxdev
+    label: Max SRO Bound Hz
+    dtype: real
+    default: 1e3
+-   id: noise_amp
+    label: White Noise Amplitude
+    dtype: real
+    default: '1.0'
+-   id: N
+    label: Num Sinusoids (SoS model)
+    dtype: int
+    default: '8'
+-   id: fD
+    label: Max Doppler Freq (Hz)
+    dtype: real
+    default: '2.0'
+-   id: LOS
+    label: LOS Model
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Rayleigh/NLOS, Rician/LOS]
+    option_attributes:
+        hide_K: [all, '']
+-   id: K
+    label: Rician factor (K)
+    dtype: real
+    default: '4.0'
+    hide: ${ LOS.hide_K }
+-   id: seed
+    label: Seed
+    dtype: int
+    default: '0'
+-   id: delays
+    label: PDP Delays (samp)
+    dtype: real_vector
+    default: 0.0,0.1,1.3
+-   id: mags
+    label: PDP Magnitudes
+    dtype: real_vector
+    default: 1,0.99,0.97
+-   id: ntaps
+    label: Num Taps
+    dtype: int
+    default: '8'
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import channels
+    make: |-
+        channels.dynamic_channel_model(
+            ${samp_rate}, 
+            ${sro_stdev}, 
+            ${sro_maxdev},
+            ${cfo_stdev}, 
+            ${cfo_maxdev}, 
+            ${N}, 
+            ${fD}, 
+            ${LOS}, 
+            ${K}, 
+            ${delays}, 
+            ${mags},
+            ${ntaps}, 
+            ${noise_amp}, 
+            ${seed})
+    callbacks:
+    - set_samp_rate(${samp_rate})
+    - set_sro_dev_std(${sro_stdev})
+    - set_sro_dev_max(${sro_maxdev})
+    - set_cfo_dev_std(${cfo_stdev})
+    - set_cfo_dev_max(${cfo_maxdev})
+    - set_noise_amp(${noise_amp})
+    - set_doppler_freq(${fD})
+    - set_K(${K})
+
+documentation: |-
+    The dynamic channel model is a hier block consisting of the following effects:
+            - Dynamic Frequency Selective Fading Channel
+            - Dynamic Center Frequency Offset Model
+            - Dynamic Sample Rate Offset Model
+            - Additive White Gaussian Noise
+
+        The desired power delay profile and max doppler frequency may be provided to achieve the desired Ricean or Rayleigh fading scenario.   For center frequency and sample rate offset models, a gaussian random walk process is conducted for each.   The single sample step variance and maximum deviation for these two processes is specified and may be modified to simulate various desired stability effects.  Lastly AWGN is added to simulate a typical receiver/thermal noise floor after propagation, and the variance may be modified here as desired.
+
+file_format: 1

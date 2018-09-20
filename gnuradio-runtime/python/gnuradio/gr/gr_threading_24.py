@@ -4,10 +4,13 @@
 # It's been patched to fix a problem with join, where a KeyboardInterrupt
 # caused a lock to be left in the acquired state.
 
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import sys as _sys
 
 try:
-    import thread
+    import _thread
 except ImportError:
     del _sys.modules[__name__]
     raise
@@ -21,11 +24,11 @@ __all__ = ['activeCount', 'Condition', 'currentThread', 'enumerate', 'Event',
            'Lock', 'RLock', 'Semaphore', 'BoundedSemaphore', 'Thread',
            'Timer', 'setprofile', 'settrace', 'local']
 
-_start_new_thread = thread.start_new_thread
-_allocate_lock = thread.allocate_lock
-_get_ident = thread.get_ident
-ThreadError = thread.error
-del thread
+_start_new_thread = _thread.start_new_thread
+_allocate_lock = _thread.allocate_lock
+_get_ident = _thread.get_ident
+ThreadError = _thread.error
+del _thread
 
 
 # Debug support (adapted from ihooks.py).
@@ -127,8 +130,9 @@ class _RLock(_Verbose):
 
     # Internal methods used by condition variables
 
-    def _acquire_restore(self, (count, owner)):
+    def _acquire_restore(self, lock):
         self.__block.acquire()
+        count, owner = lock
         self.__count = count
         self.__owner = owner
         if __debug__:
@@ -311,7 +315,7 @@ class _BoundedSemaphore(_Semaphore):
 
     def release(self):
         if self._Semaphore__value >= self._initial_value:
-            raise ValueError, "Semaphore released too many times"
+            raise ValueError("Semaphore released too many times")
         return _Semaphore.release(self)
 
 
@@ -688,7 +692,7 @@ def activeCount():
 
 def enumerate():
     _active_limbo_lock.acquire()
-    active = _active.values() + _limbo.values()
+    active = list(_active.values()) + list(_limbo.values())
     _active_limbo_lock.release()
     return active
 
@@ -700,7 +704,7 @@ _MainThread()
 # module, or from the python fallback
 
 try:
-    from thread import _local as local
+    from _thread import _local as local
 except ImportError:
     from _threading_local import local
 
@@ -767,7 +771,7 @@ def _test():
         def run(self):
             while self.count > 0:
                 item = self.queue.get()
-                print item
+                print(item)
                 self.count = self.count - 1
 
     NP = 3

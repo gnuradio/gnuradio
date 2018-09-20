@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,6 +26,7 @@
 
 #include "squelch_base_cc_impl.h"
 #include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
   namespace analog {
@@ -120,7 +121,7 @@ namespace gr {
             break;
 
           case ST_ATTACK:
-            d_envelope = 0.5-std::cos(M_PI*(++d_ramped)/d_ramp)/2.0; // FIXME: precalculate window for speed
+            d_envelope = 0.5-std::cos(GR_M_PI*(++d_ramped)/d_ramp)/2.0; // FIXME: precalculate window for speed
             if(d_ramped >= d_ramp) { // use >= in case d_ramp is set to lower value elsewhere
               d_state = ST_UNMUTED;
               d_tag_next_unmuted = true;
@@ -129,7 +130,7 @@ namespace gr {
             break;
 
           case ST_DECAY:
-            d_envelope = 0.5-std::cos(M_PI*(--d_ramped)/d_ramp)/2.0; // FIXME: precalculate window for speed
+            d_envelope = 0.5-std::cos(GR_M_PI*(--d_ramped)/d_ramp)/2.0; // FIXME: precalculate window for speed
             if(d_ramped == 0.0) {
               d_state = ST_MUTED;
               add_item_tag(0, nitems_written(0) + j, d_eob_key, pmt::PMT_NIL);

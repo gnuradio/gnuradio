@@ -46,6 +46,7 @@ list(APPEND channels_sources
   dynamic_channel_model_impl.cc
   fading_model_impl.cc
   selective_fading_model_impl.cc
+  selective_fading_model2_impl.cc
   flat_fader_impl.cc
   cfo_model_impl.cc
   sro_model_impl.cc
@@ -76,9 +77,9 @@ list(APPEND channels_libs
 
 add_library(gnuradio-channels SHARED ${channels_sources})
 target_link_libraries(gnuradio-channels ${channels_libs})
-GR_LIBRARY_FOO(gnuradio-channels RUNTIME_COMPONENT "channels_runtime" DEVEL_COMPONENT "channels_devel")
+GR_LIBRARY_FOO(gnuradio-channels)
 add_dependencies(gnuradio-channels
-  channels_generated_includes channels_generated_swigs
+  channels_generated_swigs
   gnuradio-runtime gnuradio-filter gnuradio-analog gnuradio-blocks)
 
 if(ENABLE_STATIC_LIBS)
@@ -96,7 +97,6 @@ if(ENABLE_STATIC_LIBS)
   add_library(gnuradio-channels_static STATIC ${channels_sources})
 
   add_dependencies(gnuradio-channels_static
-    channels_generated_includes
     gnuradio-runtime_static
     gnuradio-filter_static
     gnuradio-analog_static
@@ -108,6 +108,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-channels_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "channels_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

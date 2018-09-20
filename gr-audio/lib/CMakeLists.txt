@@ -199,9 +199,9 @@ endif(WIN32)
 ########################################################################
 add_library(gnuradio-audio SHARED ${gr_audio_sources})
 target_link_libraries(gnuradio-audio ${gr_audio_libs})
-GR_LIBRARY_FOO(gnuradio-audio RUNTIME_COMPONENT "audio_runtime" DEVEL_COMPONENT "audio_devel")
+GR_LIBRARY_FOO(gnuradio-audio)
 
-install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR} COMPONENT "audio_runtime")
+install(FILES ${gr_audio_confs} DESTINATION ${GR_PREFSDIR})
 
 if(ENABLE_STATIC_LIBS)
   if(ENABLE_GR_CTRLPORT)
@@ -223,6 +223,6 @@ if(ENABLE_STATIC_LIBS)
   endif(NOT WIN32)
 
   install(TARGETS gnuradio-audio_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT "audio_devel"   # .lib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
     )
 endif(ENABLE_STATIC_LIBS)

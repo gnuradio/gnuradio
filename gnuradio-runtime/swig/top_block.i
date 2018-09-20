@@ -37,12 +37,12 @@ namespace gr {
   public:
     ~top_block();
 
-    void start(int max_noutput_items=100000000) throw (std::runtime_error);
+    void start(int max_noutput_items=100000000) noexcept(false);
     void stop();
     //void wait();
     //void run() throw (std::runtime_error);
     void lock();
-    void unlock() throw (std::runtime_error);
+    void unlock() noexcept(false);
     std::string edge_list();
     std::string msg_edge_list();
     void dump();
@@ -57,7 +57,7 @@ namespace gr {
 #ifdef SWIGPYTHON
 
 %inline %{
-void top_block_run_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
+void top_block_run_unlocked(gr::top_block_sptr r) noexcept(false)
 {
     GR_PYTHON_BLOCKING_CODE
     (
@@ -65,7 +65,7 @@ void top_block_run_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
     )
 }
 
-void top_block_start_unlocked(gr::top_block_sptr r, int max_noutput_items) throw (std::runtime_error)
+void top_block_start_unlocked(gr::top_block_sptr r, int max_noutput_items) noexcept(false)
 {
     GR_PYTHON_BLOCKING_CODE
     (
@@ -73,7 +73,7 @@ void top_block_start_unlocked(gr::top_block_sptr r, int max_noutput_items) throw
     )
 }
 
-void top_block_wait_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
+void top_block_wait_unlocked(gr::top_block_sptr r) noexcept(false)
 {
     GR_PYTHON_BLOCKING_CODE
     (
@@ -81,7 +81,7 @@ void top_block_wait_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
     )
 }
 
-void top_block_stop_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
+void top_block_stop_unlocked(gr::top_block_sptr r) noexcept(false)
 {
     GR_PYTHON_BLOCKING_CODE
     (
@@ -89,7 +89,7 @@ void top_block_stop_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
     )
 }
 
-void top_block_unlock_unlocked(gr::top_block_sptr r) throw (std::runtime_error)
+void top_block_unlock_unlocked(gr::top_block_sptr r) noexcept(false)
 {
     GR_PYTHON_BLOCKING_CODE
     (

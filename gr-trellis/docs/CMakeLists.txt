@@ -35,7 +35,6 @@ add_custom_target(gr_trellis_html ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gr-tre
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gr-trellis.html
     DESTINATION ${GR_PKG_DOC_DIR}/html
-    COMPONENT "trellis_docs"
 
 )
 endif(XMLTO_EXECUTABLE)
@@ -69,5 +68,4 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/test_tcm.py.xml
     ${CMAKE_CURRENT_BINARY_DIR}/test_viterbi_equalization1.py.xml
     DESTINATION ${GR_PKG_DOC_DIR}/xml
-    COMPONENT "trellis_docs"
 )

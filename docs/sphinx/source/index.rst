@@ -13,19 +13,15 @@ gnuradio
    blocks_comedi <comedi_blocks>
    blocks_digital <digital_blocks>
    blocks_dtv <dtv_blocks>
-   blocks_fcd <fcd_blocks>
    blocks_fec <fec_blocks>
    blocks_fft <fft_blocks>
    blocks_filter <filter_blocks>
-   blocks_noaa <noaa_blocks>
-   blocks_pager <pager_blocks>
    blocks_qtgui <qtgui_blocks>
    blocks_trellis <trellis_blocks>
    blocks_uhd <uhd_blocks>
    blocks_video_sdl <video_sdl_blocks>
    blocks_vocoder <vocoder_blocks>
    blocks_wavelet <wavelet_blocks>
-   blocks_wxgui <wxgui_blocks>
    blocks_zeromq <zeromq_blocks>
    analog <analog>
    channels <channels>
@@ -37,7 +33,6 @@ gnuradio
    trellis <trellis>
    uhd <uhd>
    vocoder <vocoder>
-   wxgui <wxgui>
 
 .. automodule:: gnuradio
 .. automodule:: pmt
@@ -524,15 +519,6 @@ Error Coding Blocks
    gnuradio.fec.tagged_encoder
 
 
-FCD Blocks
-----------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.fcd.source_c
-
-
 File Operator Blocks
 --------------------
 
@@ -567,10 +553,10 @@ Filter Blocks
    gnuradio.filter.fir_filter_fff
    gnuradio.filter.fir_filter_fsf
    gnuradio.filter.fir_filter_scc
-   gnuradio.filter.fractional_interpolator_cc
-   gnuradio.filter.fractional_interpolator_ff
-   gnuradio.filter.fractional_resampler_cc
-   gnuradio.filter.fractional_resampler_ff
+   gnuradio.filter.mmse_interpolator_cc
+   gnuradio.filter.mmse_interpolator_ff
+   gnuradio.filter.mmse_resampler_cc
+   gnuradio.filter.mmse_resampler_ff
    gnuradio.filter.freq_xlating_fir_filter_ccc
    gnuradio.filter.freq_xlating_fir_filter_ccf
    gnuradio.filter.freq_xlating_fir_filter_fcc
@@ -656,8 +642,6 @@ Instrumentation Blocks
    gnuradio.qtgui.vector_sink_f
    gnuradio.qtgui.waterfall_sink_c
    gnuradio.qtgui.waterfall_sink_f
-   gnuradio.wxgui.histo_sink_f
-   gnuradio.wxgui.oscope_sink_f
 
 
 
@@ -789,8 +773,6 @@ Message Tool Blocks
 
    gnuradio.blocks.message_burst_source
    gnuradio.blocks.message_debug
-   gnuradio.blocks.message_sink
-   gnuradio.blocks.message_source
    gnuradio.blocks.message_strobe
    gnuradio.blocks.message_strobe_random
    gnuradio.blocks.pdu_filter
@@ -859,17 +841,6 @@ Networking Tools Blocks
    gnuradio.blocks.udp_source
 
 
-NOAA Blocks
------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.noaa.hrpt_decoder
-   gnuradio.noaa.hrpt_deframer
-   gnuradio.noaa.hrpt_pll_cf
-
-
 OFDM Blocks
 -----------
 
@@ -913,20 +884,7 @@ Packet Operator Blocks
    gnuradio.digital.simple_correlator
    gnuradio.digital.simple_framer
 
-
-Pager Blocks
-------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.pager.flex_deinterleave
-   gnuradio.pager.flex_frame
-   gnuradio.pager.flex_parse
-   gnuradio.pager.flex_sync
-   gnuradio.pager.slicer_fb
-
-
+   
 Peak Detector Blocks
 --------------------
 
@@ -947,8 +905,8 @@ Resampler Blocks
 .. autosummary::
    :nosignatures:
 
-   gnuradio.filter.fractional_resampler_cc
-   gnuradio.filter.fractional_resampler_ff
+   gnuradio.filter.mmse_resampler_cc
+   gnuradio.filter.mmse_resampler_ff
    gnuradio.filter.pfb.arb_resampler_ccf
    gnuradio.filter.pfb.arb_resampler_fff
    gnuradio.filter.pfb.arb_resampler_ccc
@@ -1042,7 +1000,6 @@ Synchronizer Blocks
    gnuradio.digital.corr_est_cc
    gnuradio.digital.costas_loop_cc
    gnuradio.digital.fll_band_edge_cc
-   gnuradio.digital.mpsk_receiver_cc
    gnuradio.digital.msk_timing_recovery_cc
    gnuradio.analog.pll_carriertracking_cc
    gnuradio.analog.pll_freqdet_cf
@@ -1300,8 +1257,6 @@ Helper Classes: Digital
    gnuradio.digital.packet_utils.make_header
    gnuradio.digital.packet_utils.make_packet
    gnuradio.digital.packet_utils.unmake_packet
-   gnuradio.digital.mod_pkts
-   gnuradio.digital.demod_pkts
    gnuradio.digital.psk_2_0x0
    gnuradio.digital.psk_2_0x1
    gnuradio.digital.sd_psk_2_0x0
@@ -1323,8 +1278,6 @@ Helper Classes: Digital
    gnuradio.digital.sd_psk_4_0x2_1_0
    gnuradio.digital.sd_psk_4_0x3_1_0
    gnuradio.digital.psk_constellation
-   gnuradio.digital.psk_mod
-   gnuradio.digital.psk_demod
    gnuradio.digital.qam_16_0x0_0_1_2_3
    gnuradio.digital.qam_16_0x1_0_1_2_3
    gnuradio.digital.qam_16_0x2_0_1_2_3
@@ -1345,14 +1298,8 @@ Helper Classes: Digital
    gnuradio.digital.make_differential_constellation
    gnuradio.digital.make_non_differential_constellation
    gnuradio.digital.qam_constellation
-   gnuradio.digital.qam_mod
-   gnuradio.digital.qam_demod
    gnuradio.digital.qpsk_constellation
-   gnuradio.digital.qpsk_mod
-   gnuradio.digital.qpsk_demod
    gnuradio.digital.dqpsk_constellation
-   gnuradio.digital.dqpsk_mod
-   gnuradio.digital.dqpsk_demod
    gnuradio.digital.soft_dec_table_generator
    gnuradio.digital.soft_dec_table
    gnuradio.digital.calc_soft_dec_from_table
@@ -1464,13 +1411,3 @@ Helper Classes: Vocoder
    gnuradio.vocoder.codec2
    gnuradio.vocoder.cvsd_encode_fb
    gnuradio.vocoder.cvsd_decode_bf
-
-
-Helper Classes: WXGUI
----------------------
-
-.. autosummary::
-   :nosignatures:
-
-   gnuradio.wxgui.oscope_sink_x
-   gnuradio.wxgui.histo_sink_f

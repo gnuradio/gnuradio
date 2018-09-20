@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 #
 # Copyright 2006-2008 Free Software Foundation, Inc.
-# 
+#
 # This file is part of GNU Radio
-# 
+#
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3, or (at your option)
 # any later version.
-# 
+#
 # GNU Radio is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-# 
+#
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
 
 import math
 from numpy import fft
@@ -28,16 +32,12 @@ from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import filter
 
-import digital_swig as digital
-from ofdm_sync_pn import ofdm_sync_pn
-from ofdm_sync_fixed import ofdm_sync_fixed
-from ofdm_sync_pnac import ofdm_sync_pnac
-from ofdm_sync_ml import ofdm_sync_ml
+from . import digital_swig as digital
+from .ofdm_sync_pn import ofdm_sync_pn
+from .ofdm_sync_fixed import ofdm_sync_fixed
+from .ofdm_sync_pnac import ofdm_sync_pnac
+from .ofdm_sync_ml import ofdm_sync_ml
 
-try:
-    from gnuradio import filter
-except ImportError:
-    import filter_swig as filter
 
 class ofdm_receiver(gr.hier_block2):
     """
@@ -51,9 +51,9 @@ class ofdm_receiver(gr.hier_block2):
 
     def __init__(self, fft_length, cp_length, occupied_tones, snr, ks, logging=False):
         """
-	Hierarchical block for receiving OFDM symbols.
+        Hierarchical block for receiving OFDM symbols.
 
-	The input is the complex modulated signal at baseband.
+        The input is the complex modulated signal at baseband.
         Synchronized packets are sent back to the demodulator.
 
         Args:
@@ -63,12 +63,12 @@ class ofdm_receiver(gr.hier_block2):
             snr: estimated signal to noise ratio used to guide cyclic prefix synchronizer (float)
             ks: known symbols used as preambles to each packet (list of lists)
             logging: turn file logging on or off (bool)
-	"""
+        """
 
-	gr.hier_block2.__init__(self, "ofdm_receiver",
-				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+        gr.hier_block2.__init__(self, "ofdm_receiver",
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_gr_complex*occupied_tones, gr.sizeof_char)) # Output signature
-        
+
         bw = (float(occupied_tones) / float(fft_length)) / 2.0
         tb = bw*0.08
         chan_coeffs = filter.firdes.low_pass (1.0,                     # gain
@@ -77,13 +77,13 @@ class ofdm_receiver(gr.hier_block2):
                                               tb,                      # width of trans. band
                                               filter.firdes.WIN_HAMMING)   # filter type
         self.chan_filt = filter.fft_filter_ccc(1, chan_coeffs)
-        
+
         win = [1 for i in range(fft_length)]
 
-        zeros_on_left = int(math.ceil((fft_length - occupied_tones)/2.0))
+        zeros_on_left = int(math.ceil((fft_length - occupied_tones) / 2.0))
         ks0 = fft_length*[0,]
         ks0[zeros_on_left : zeros_on_left + occupied_tones] = ks[0]
-        
+
         ks0 = fft.ifftshift(ks0)
         ks0time = fft.ifft(ks0)
         # ADD SCALING FACTOR
@@ -91,19 +91,19 @@ class ofdm_receiver(gr.hier_block2):
 
         SYNC = "pn"
         if SYNC == "ml":
-            nco_sensitivity = -1.0/fft_length   # correct for fine frequency
+            nco_sensitivity = -1.0 / fft_length   # correct for fine frequency
             self.ofdm_sync = ofdm_sync_ml(fft_length,
                                           cp_length,
                                           snr,
                                           ks0time,
                                           logging)
         elif SYNC == "pn":
-            nco_sensitivity = -2.0/fft_length   # correct for fine frequency
+            nco_sensitivity = -2.0 / fft_length   # correct for fine frequency
             self.ofdm_sync = ofdm_sync_pn(fft_length,
                                           cp_length,
                                           logging)
         elif SYNC == "pnac":
-            nco_sensitivity = -2.0/fft_length   # correct for fine frequency
+            nco_sensitivity = -2.0 / fft_length   # correct for fine frequency
             self.ofdm_sync = ofdm_sync_pnac(fft_length,
                                             cp_length,
                                             ks0time,
@@ -111,10 +111,10 @@ class ofdm_receiver(gr.hier_block2):
         # for testing only; do not user over the air
         # remove filter and filter delay for this
         elif SYNC == "fixed":
-            self.chan_filt = blocks.multiply_const_cc(1.0) 
+            self.chan_filt = blocks.multiply_const_cc(1.0)
             nsymbols = 18      # enter the number of symbols per packet
             freq_offset = 0.0  # if you use a frequency offset, enter it here
-            nco_sensitivity = -2.0/fft_length   # correct for fine frequency
+            nco_sensitivity = -2.0 / fft_length   # correct for fine frequency
             self.ofdm_sync = ofdm_sync_fixed(fft_length,
                                              cp_length,
                                              nsymbols,

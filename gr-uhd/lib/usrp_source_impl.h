@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2016 Software Foundation, Inc.
+ * Copyright 2010-2016 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -36,15 +36,7 @@ namespace gr {
     args_to_io_sig(const ::uhd::stream_args_t &args)
     {
       const size_t nchan = std::max<size_t>(args.channels.size(), 1);
-#ifdef GR_UHD_USE_STREAM_API
       const size_t size = ::uhd::convert::get_bytes_per_item(args.cpu_format);
-#else
-      size_t size = 0;
-      if(args.cpu_format == "fc32")
-        size = 8;
-      if(args.cpu_format == "sc16")
-        size = 4;
-#endif
       return io_signature::make(nchan, nchan, size);
     }
 
@@ -124,14 +116,13 @@ namespace gr {
       ::uhd::tune_result_t _set_center_freq_from_internals(size_t chan, pmt::pmt_t direction);
       void _cmd_handler_tag(const pmt::pmt_t &tag);
 
-#ifdef GR_UHD_USE_STREAM_API
       ::uhd::rx_streamer::sptr _rx_stream;
       size_t _samps_per_packet;
       //! Timeout value for UHD's recv() call. Lower values mean lower latency.
       double _recv_timeout;
       //! one_packet value for UHD's recv() call. 'true' is lower latency.
       bool _recv_one_packet;
-#endif
+
       bool _tag_now;
       ::uhd::rx_metadata_t _metadata;
       pmt::pmt_t _id;

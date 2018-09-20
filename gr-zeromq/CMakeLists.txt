@@ -47,41 +47,6 @@ SET(GR_PKG_ZEROMQ_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/zeromq)
 ########################################################################
 if(ENABLE_GR_ZEROMQ)
 
-
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_ZEROMQ_DESCRIPTION "GNU Radio ZeromMQ Interface Blocks")
-
-CPACK_COMPONENT("zeromq_runtime"
-    GROUP        "ZeroMQ Blocks"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Runtime"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("zeromq_devel"
-    GROUP        "ZeroMQ Blocks"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("zeromq_python"
-    GROUP        "ZeroMQ Blocks"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime; GRC xml files"
-    DEPENDS      "runtime_python;zeromq_runtime"
-)
-
-CPACK_COMPONENT("zeromq_swig"
-    GROUP        "ZeroMQ Blocks"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;zeromq_python;zeromq_devel"
-)
-
 ########################################################################
 # Add subdirectories
 ########################################################################
@@ -105,7 +70,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-zeromq.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "zeromq_devel"
 )
 
 endif(ENABLE_GR_ZEROMQ)

@@ -27,6 +27,7 @@ The file instructs SWIG to transfer the doxygen comments into the
 python docstrings.
 
 """
+from __future__ import unicode_literals
 
 import sys, time
 
@@ -310,7 +311,7 @@ if __name__ == "__main__":
     # Parse command line options and set up doxyxml.
     err_msg = "Execute using: python swig_doc.py xml_path outputfilename"
     if len(sys.argv) != 3:
-        raise StandardError(err_msg)
+        raise Exception(err_msg)
     xml_path = sys.argv[1]
     swigdocfilename = sys.argv[2]
     di = DoxyIndex(xml_path)

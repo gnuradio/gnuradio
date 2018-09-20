@@ -52,6 +52,8 @@
 # DAMAGE.
 #
 
+from __future__ import division
+from __future__ import unicode_literals
 __all__ = ['freqz']
 
 import numpy
@@ -106,7 +108,7 @@ def polyval(p,x):
         y = x * y + p[i]
     return y
 
-class poly1d:
+class poly1d(object):
     """A one-dimensional polynomial class.
 
     p = poly1d([1,2,3]) constructs the polynomial x**2 + 2 x + 3
@@ -125,14 +127,14 @@ class poly1d:
     """
     def __init__(self, c_or_r, r=0):
         if isinstance(c_or_r,poly1d):
-            for key in c_or_r.__dict__.keys():
+            for key in list(c_or_r.__dict__.keys()):
                 self.__dict__[key] = c_or_r.__dict__[key]
             return
         if r:
             c_or_r = poly(c_or_r)
         c_or_r = atleast_1d(c_or_r)
         if len(c_or_r.shape) > 1:
-            raise ValueError, "Polynomial must be 1d only."
+            raise ValueError("Polynomial must be 1d only.")
         c_or_r = trim_zeros(c_or_r, trim='f')
         if len(c_or_r) == 0:
             c_or_r = numpy.array([0])
@@ -227,7 +229,7 @@ class poly1d:
 
     def __pow__(self, val):
         if not isscalar(val) or int(val) != val or val < 0:
-            raise ValueError, "Power to non-negative integers only."
+            raise ValueError("Power to non-negative integers only.")
         res = [1]
         for k in range(val):
             res = polymul(self.coeffs, res)
@@ -243,20 +245,20 @@ class poly1d:
 
     def __div__(self, other):
         if isscalar(other):
-            return poly1d(self.coeffs/other)
+            return poly1d(self.coeffs / other)
         else:
             other = poly1d(other)
-            return map(poly1d,polydiv(self.coeffs, other.coeffs))
+            return list(map(poly1d,polydiv(self.coeffs, other.coeffs)))
 
     def __rdiv__(self, other):
         if isscalar(other):
-            return poly1d(other/self.coeffs)
+            return poly1d(other / self.coeffs)
         else:
             other = poly1d(other)
-            return map(poly1d,polydiv(other.coeffs, self.coeffs))
+            return list(map(poly1d,polydiv(other.coeffs, self.coeffs)))
 
     def __setattr__(self, key, val):
-        raise ValueError, "Attributes cannot be changed this way."
+        raise ValueError("Attributes cannot be changed this way.")
 
     def __getattr__(self, key):
         if key in ['r','roots']:
@@ -279,7 +281,7 @@ class poly1d:
     def __setitem__(self, key, val):
         ind = self.order - key
         if key < 0:
-            raise ValueError, "Does not support negative powers."
+            raise ValueError("Does not support negative powers.")
         if key > self.order:
             zr = numpy.zeros(key-self.order,self.coeffs.typecode())
             self.__dict__['coeffs'] = numpy.concatenate((zr,self.coeffs))
@@ -323,22 +325,22 @@ def freqz(b, a, worN=None, whole=0, plot=None):
        h -- The frequency response.
        w -- The frequencies at which h was computed.
     """
-    b, a = map(atleast_1d, (b,a))
+    b, a = list(map(atleast_1d, (b,a)))
     if whole:
         lastpoint = 2*pi
     else:
         lastpoint = pi
     if worN is None:
         N = 512
-        w = Num.arange(0,lastpoint,lastpoint/N)
-    elif isinstance(worN, types.IntType):
+        w = Num.arange(0,lastpoint,lastpoint / N)
+    elif isinstance(worN, int):
         N = worN
-        w = Num.arange(0,lastpoint,lastpoint/N)
+        w = Num.arange(0,lastpoint,lastpoint / N)
     else:
         w = worN
     w = atleast_1d(w)
     zm1 = exp(-1j*w)
-    h = polyval(b[::-1], zm1) / polyval(a[::-1], zm1)
+    h = polyval(b[::-1] / zm1, polyval(a[::-1], zm1))
     # if not plot is None:
     #    plot(w, h)
     return h, w

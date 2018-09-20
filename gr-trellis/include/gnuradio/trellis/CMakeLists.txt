@@ -1,4 +1,4 @@
-# Copyright 2012,2014 Free Software Foundation, Inc.
+# Copyright 2012,2014,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,42 +18,30 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-########################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(trellis encoder_XX                 bb bs bi ss si ii)
-GR_EXPAND_X_H(trellis sccc_encoder_XX            bb bs bi ss si ii)
-GR_EXPAND_X_H(trellis pccc_encoder_XX            bb bs bi ss si ii)
-GR_EXPAND_X_H(trellis metrics_X                  s i f c)
-GR_EXPAND_X_H(trellis viterbi_X                  b s i)
-GR_EXPAND_X_H(trellis viterbi_combined_XX        sb ss si ib is ii fb fs fi cb cs ci)
-GR_EXPAND_X_H(trellis sccc_decoder_X             b s i)
-GR_EXPAND_X_H(trellis sccc_decoder_combined_XX   fb fs fi cb cs ci)
-GR_EXPAND_X_H(trellis pccc_decoder_X             b s i)
-GR_EXPAND_X_H(trellis pccc_decoder_combined_XX   fb fs fi cb cs ci)
-
-add_custom_target(trellis_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
     api.h
     base.h
     calc_metric.h
     constellation_metrics_cf.h
     core_algorithms.h
+    encoder.h
     fsm.h
     interleaver.h
+    metrics.h
+    pccc_decoder_blk.h
+    pccc_decoder_combined_blk.h
+    pccc_encoder.h
     permutation.h
     quicksort_index.h
+    sccc_encoder.h
+    sccc_decoder_blk.h
+    sccc_decoder_combined_blk.h
     siso_type.h
     siso_combined_f.h
     siso_f.h
+    viterbi.h
+    viterbi_combined.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/trellis
-    COMPONENT "trellis_devel"
 )
-

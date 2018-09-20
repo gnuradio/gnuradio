@@ -25,14 +25,17 @@
 #endif
 
 #include "time_sink_f_impl.h"
+
 #include <gnuradio/io_signature.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/prefs.h>
-#include <string.h>
-#include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
+
+#include <volk/volk.h>
 #include <qwt_symbol.h>
+
+#include <string.h>
 
 namespace gr {
   namespace qtgui {
@@ -40,7 +43,7 @@ namespace gr {
     time_sink_f::sptr
     time_sink_f::make(int size, double samp_rate,
 		      const std::string &name,
-		      int nconnections,
+		      unsigned int nconnections,
 		      QWidget *parent)
     {
       return gnuradio::get_initial_sptr
@@ -49,7 +52,7 @@ namespace gr {
 
     time_sink_f_impl::time_sink_f_impl(int size, double samp_rate,
 				       const std::string &name,
-				       int nconnections,
+				       unsigned int nconnections,
 				       QWidget *parent)
       : sync_block("time_sink_f",
                    io_signature::make(0, nconnections, sizeof(float)),
@@ -76,7 +79,7 @@ namespace gr {
                       boost::bind(&time_sink_f_impl::handle_pdus, this, _1));
 
       // +1 for the PDU buffer
-      for(int n = 0; n < d_nconnections+1; n++) {
+      for(unsigned int n = 0; n < d_nconnections+1; n++) {
 	d_buffers.push_back((double*)volk_malloc(d_buffer_size*sizeof(double),
                                                  volk_get_alignment()));
 	memset(d_buffers[n], 0, d_buffer_size*sizeof(double));
@@ -108,7 +111,7 @@ namespace gr {
         d_main_gui->close();
 
       // d_main_gui is a qwidget destroyed with its parent
-      for(int n = 0; n < d_nconnections+1; n++) {
+      for(unsigned int n = 0; n < d_nconnections+1; n++) {
 	volk_free(d_buffers[n]);
 	volk_free(d_fbuffers[n]);
       }
@@ -129,7 +132,7 @@ namespace gr {
 	d_qApplication = qApp;
       }
       else {
-#if QT_VERSION >= 0x040500
+#if QT_VERSION >= 0x040500 && QT_VERSION < 0x050000
         std::string style = prefs::singleton()->get_string("qtgui", "style", "raster");
         QApplication::setGraphicsSystem(QString(style.c_str()));
 #endif
@@ -139,7 +142,7 @@ namespace gr {
       // If a style sheet is set in the prefs file, enable it here.
       check_set_qss(d_qApplication);
 
-      int numplots = (d_nconnections > 0) ? d_nconnections : 1;
+      unsigned int numplots = (d_nconnections > 0) ? d_nconnections : 1;
       d_main_gui = new TimeDisplayForm(numplots, d_parent);
       d_main_gui->setNPoints(d_size);
       d_main_gui->setSampleRate(d_samp_rate);
@@ -209,37 +212,37 @@ namespace gr {
     }
 
     void
-    time_sink_f_impl::set_line_label(int which, const std::string &label)
+    time_sink_f_impl::set_line_label(unsigned int which, const std::string &label)
     {
       d_main_gui->setLineLabel(which, label.c_str());
     }
 
     void
-    time_sink_f_impl::set_line_color(int which, const std::string &color)
+    time_sink_f_impl::set_line_color(unsigned int which, const std::string &color)
     {
       d_main_gui->setLineColor(which, color.c_str());
     }
 
     void
-    time_sink_f_impl::set_line_width(int which, int width)
+    time_sink_f_impl::set_line_width(unsigned int which, int width)
     {
       d_main_gui->setLineWidth(which, width);
     }
 
     void
-    time_sink_f_impl::set_line_style(int which, int style)
+    time_sink_f_impl::set_line_style(unsigned int which, int style)
     {
       d_main_gui->setLineStyle(which, (Qt::PenStyle)style);
     }
 
     void
-    time_sink_f_impl::set_line_marker(int which, int marker)
+    time_sink_f_impl::set_line_marker(unsigned int which, int marker)
     {
       d_main_gui->setLineMarker(which, (QwtSymbol::Style)marker);
     }
 
     void
-    time_sink_f_impl::set_line_alpha(int which, double alpha)
+    time_sink_f_impl::set_line_alpha(unsigned int which, double alpha)
     {
       d_main_gui->setMarkerAlpha(which, (int)(255.0*alpha));
     }
@@ -292,37 +295,37 @@ namespace gr {
     }
 
     std::string
-    time_sink_f_impl::line_label(int which)
+    time_sink_f_impl::line_label(unsigned int which)
     {
       return d_main_gui->lineLabel(which).toStdString();
     }
 
     std::string
-    time_sink_f_impl::line_color(int which)
+    time_sink_f_impl::line_color(unsigned int which)
     {
       return d_main_gui->lineColor(which).toStdString();
     }
 
     int
-    time_sink_f_impl::line_width(int which)
+    time_sink_f_impl::line_width(unsigned int which)
     {
       return d_main_gui->lineWidth(which);
     }
 
     int
-    time_sink_f_impl::line_style(int which)
+    time_sink_f_impl::line_style(unsigned int which)
     {
       return d_main_gui->lineStyle(which);
     }
 
     int
-    time_sink_f_impl::line_marker(int which)
+    time_sink_f_impl::line_marker(unsigned int which)
     {
       return d_main_gui->lineMarker(which);
     }
 
     double
-    time_sink_f_impl::line_alpha(int which)
+    time_sink_f_impl::line_alpha(unsigned int which)
     {
       return (double)(d_main_gui->markerAlpha(which))/255.0;
     }
@@ -339,7 +342,7 @@ namespace gr {
         d_buffer_size = 2*d_size;
 
 	// Resize buffers and replace data
-	for(int n = 0; n < d_nconnections+1; n++) {
+	for(unsigned int n = 0; n < d_nconnections+1; n++) {
 	  volk_free(d_buffers[n]);
 	  d_buffers[n] = (double*)volk_malloc(d_buffer_size*sizeof(double),
                                               volk_get_alignment());
@@ -424,15 +427,17 @@ namespace gr {
     }
 
     void
-    time_sink_f_impl::enable_tags(int which, bool en)
+    time_sink_f_impl::enable_tags(unsigned int which, bool en)
     {
-      if(which == -1) {
-        for(int n = 0; n < d_nconnections; n++) {
-          d_main_gui->setTagMenu(n, en);
-        }
-      }
-      else
-        d_main_gui->setTagMenu(which, en);
+            d_main_gui->setTagMenu(which, en);
+    }
+
+    void
+    time_sink_f_impl::enable_tags(bool en)
+    {
+            for(unsigned int n = 0; n < d_nconnections; ++n) {
+                    d_main_gui->setTagMenu(n, en);
+            }
     }
 
     void
@@ -457,7 +462,7 @@ namespace gr {
     void
     time_sink_f_impl::_reset()
     {
-      int n;
+      unsigned int n;
       if(d_trigger_delay) {
         for(n = 0; n < d_nconnections; n++) {
           // Move the tail of the buffers to the front. This section
@@ -619,7 +624,7 @@ namespace gr {
 			   gr_vector_const_void_star &input_items,
 			   gr_vector_void_star &output_items)
     {
-      int n=0, idx=0;
+      unsigned int n=0, idx=0;
       const float *in;
 
       _npoints_resize();

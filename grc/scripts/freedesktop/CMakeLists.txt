@@ -31,7 +31,6 @@ install(FILES
     gnuradio-grc.xml
     gnuradio-grc.desktop
     DESTINATION ${grc_freedesktop_path}
-    COMPONENT "grc"
 )
 
 find_program(HAVE_XDG_UTILS xdg-desktop-menu)
@@ -44,6 +43,6 @@ if(UNIX AND HAVE_XDG_UTILS)
     @ONLY)
     install(
         PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
-        DESTINATION ${GR_PKG_LIBEXEC_DIR} COMPONENT "grc"
+        DESTINATION ${GR_PKG_LIBEXEC_DIR}
     )
 endif(UNIX AND HAVE_XDG_UTILS)

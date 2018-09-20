@@ -18,23 +18,9 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Invoke macro to generate various headers
-#######################################################################
-include(GrMiscUtils)
-GR_EXPAND_X_H(filter fir_filter_XXX              ccc ccf fcc fff fsf scc)
-GR_EXPAND_X_H(filter freq_xlating_fir_filter_XXX ccc ccf fcc fcf scf scc)
-GR_EXPAND_X_H(filter interp_fir_filter_XXX       ccc ccf fcc fff fsf scc)
-GR_EXPAND_X_H(filter rational_resampler_base_XXX ccc ccf fcc fff fsf scc)
-
-add_custom_target(filter_generated_includes DEPENDS
-    ${generated_includes}
-)
-
-########################################################################
 # Install header files
 ########################################################################
 install(FILES
-    ${generated_includes}
     api.h
     firdes.h
     fir_filter.h
@@ -57,10 +43,11 @@ install(FILES
     fft_filter_ccc.h
     fft_filter_ccf.h
     fft_filter_fff.h
-    fractional_interpolator_cc.h
-    fractional_interpolator_ff.h
-    fractional_resampler_cc.h
-    fractional_resampler_ff.h
+    freq_xlating_fir_filter.h
+    mmse_interpolator_cc.h
+    mmse_interpolator_ff.h
+    mmse_resampler_cc.h
+    mmse_resampler_ff.h
     hilbert_fc.h
     iir_filter_ffd.h
     iir_filter_ccc.h
@@ -75,9 +62,8 @@ install(FILES
     pfb_decimator_ccf.h
     pfb_interpolator_ccf.h
     pfb_synthesizer_ccf.h
+    rational_resampler_base.h
     single_pole_iir_filter_cc.h
     single_pole_iir_filter_ff.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/filter
-    COMPONENT "filter_devel"
 )
-

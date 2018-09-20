@@ -29,7 +29,6 @@ GR_PYTHON_INSTALL(
     pfb.py
     rational_resampler.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
-    COMPONENT "filter_python"
 )
 
 ########################################################################
@@ -52,6 +51,6 @@ if(ENABLE_TESTING)
   file(GLOB py_qa_test_files "qa_*.py")
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

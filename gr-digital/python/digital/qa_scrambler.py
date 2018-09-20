@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, digital, blocks
 import pmt
 
@@ -29,7 +30,7 @@ def additive_scramble_lfsr(mask, seed, reglen, bpb, data):
     out = []
     for d in data:
         scramble_word = 0
-        for i in xrange(0,bpb):
+        for i in range(0,bpb):
             scramble_word ^= l.next_bit() << i
         out.append(d ^ scramble_word)
     return tuple(out)
@@ -110,7 +111,7 @@ class test_scrambler(gr_unittest.TestCase):
         self.assertEqual(src_data, dst.data())
 
     def test_additive_scrambler_tags_oneway(self):
-        src_data = range(0, 10)
+        src_data = [x for x in range(0, 10)]
         reset_tag_key = 'reset_lfsr'
         reset_tag1 = gr.tag_t()
         reset_tag1.key = pmt.string_to_symbol(reset_tag_key)

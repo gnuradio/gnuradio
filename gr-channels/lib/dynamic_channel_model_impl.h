@@ -24,16 +24,16 @@
 #define INCLUDED_CHANNELS_CHANNEL_MODEL_IMPL_H
 
 #include <gnuradio/top_block.h>
-#include <gnuradio/blocks/add_cc.h>
-#include <gnuradio/blocks/multiply_cc.h>
-#include <gnuradio/analog/sig_source_c.h>
-#include <gnuradio/analog/fastnoise_source_c.h>
+#include <gnuradio/blocks/add_blk.h>
+#include <gnuradio/blocks/multiply.h>
+#include <gnuradio/analog/sig_source.h>
+#include <gnuradio/analog/fastnoise_source.h>
 #include <gnuradio/channels/dynamic_channel_model.h>
 #include <gnuradio/channels/selective_fading_model.h>
 #include <gnuradio/channels/sro_model.h>
 #include <gnuradio/channels/cfo_model.h>
-#include <gnuradio/filter/fractional_resampler_cc.h>
-#include <gnuradio/filter/fir_filter_ccc.h>
+#include <gnuradio/filter/mmse_resampler_cc.h>
+#include <gnuradio/filter/fir_filter_blk.h>
 
 namespace gr {
   namespace channels {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2012, 2017 Free Software Foundation, Inc.
+# Copyright 2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,24 +21,34 @@
 #
 """ A tool for editing GNU Radio out-of-tree modules. """
 
+from __future__ import print_function
+
 from gnuradio.modtool import *
 
 
+def setup_parser():
+    modules = get_modtool_modules(ModTool.__subclasses__())
+    parser = ModTool.get_parser()
+    subparsers = parser.add_subparsers(title="Commands")
+    epilog = []
+    for module in modules:
+        subparser = subparsers.add_parser(module.name,
+                description=module.description)
+        module.setup_parser(subparser)
+        subparser.set_defaults(module=module)
+        epilog.append("  {:<22}{}".format(module.name, module.description))
+    parser.epilog = '\n'.join(epilog)
+    return parser
+
 def main():
     """ Here we go. Parse command, choose class and run. """
-    cmd_dict = get_class_dict(ModTool.__subclasses__())
-    command = get_command_from_argv(cmd_dict.keys())
-    if command is None:
-        print 'Usage:' + Templates['usage']
-        exit(2)
-    modtool = cmd_dict[command]()
-    try:
-        (options, args) = modtool.parser.parse_args()
-        modtool.setup(options, args)
-        modtool.run()
+    parser = setup_parser()
+    args = parser.parse_args()
 
+    try:
+        args.module().run(args)
     except ModToolException as err:
-        print >> sys.stderr, err
+        print(err, file=sys.stderr)
         exit(1)
 
 if __name__ == '__main__':

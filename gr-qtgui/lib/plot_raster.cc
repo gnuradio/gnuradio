@@ -20,14 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <iostream>
+#include <gnuradio/qtgui/plot_raster.h>
+
 #include <qimage.h>
 #include <qpen.h>
 #include <qpainter.h>
 #include "qwt_painter.h"
 #include "qwt_scale_map.h"
 #include "qwt_color_map.h"
-#include <gnuradio/qtgui/plot_raster.h>
+
+#include <iostream>
 
 #if QWT_VERSION < 0x060000
 #include "qwt_double_interval.h"

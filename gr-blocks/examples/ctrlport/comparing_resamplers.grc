@@ -290,10 +290,10 @@
     </param>
   </block>
   <block>
-    <key>fractional_resampler_xx</key>
+    <key>mmse_resampler_xx</key>
     <param>
       <key>id</key>
-      <value>fractional_resampler_xx_0</value>
+      <value>mmse_resampler_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -332,7 +332,7 @@
     </param>
     <param>
       <key>name</key>
-      <value>fractional_resamp</value>
+      <value>mmse_resamp</value>
     </param>
     <param>
       <key>desc</key>
@@ -371,7 +371,7 @@
   </connection>
   <connection>
     <source_block_id>channels_channel_model_0</source_block_id>
-    <sink_block_id>fractional_resampler_xx_0</sink_block_id>
+    <sink_block_id>mmse_resampler_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -382,7 +382,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>fractional_resampler_xx_0</source_block_id>
+    <source_block_id>mmse_resampler_xx_0</source_block_id>
     <sink_block_id>probe_frac_resamp</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

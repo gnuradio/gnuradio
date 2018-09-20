@@ -36,7 +36,6 @@ if(ENABLE_GR_CTRLPORT)
 endif(ENABLE_GR_CTRLPORT)
 
 # Setup swig docs to depend on includes and pull in from build directory
-set(GR_SWIG_TARGET_DEPS video_sdl_generated_includes)
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/video_sdl)
 set(GR_SWIG_DOCS_TARGET_DEPS runtime_swig_swig_doc)
@@ -48,7 +47,6 @@ GR_SWIG_MAKE(video_sdl_swig video_sdl_swig.i)
 GR_SWIG_INSTALL(
     TARGETS video_sdl_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/video_sdl
-    COMPONENT "video_sdl_python"
 )
 
 install(
@@ -56,5 +54,4 @@ install(
     video_sdl_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/video_sdl_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "video_sdl_swig"
 )

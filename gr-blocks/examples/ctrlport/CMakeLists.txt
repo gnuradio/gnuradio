@@ -26,12 +26,10 @@ install(
   simple_copy.grc
   usrp_source_control.grc
   DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
-  COMPONENT "runtime_python"
 )
 
 GR_PYTHON_INSTALL(PROGRAMS
   simple_copy_controller.py
   usrp_source_controller.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/ctrlport
-  COMPONENT "runtime_python"
 )

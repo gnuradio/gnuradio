@@ -7,6 +7,7 @@ While not primarily a simulation tool, GNU Radio does support development of sig
 
 GNU Radio is licensed under the GNU General Public License (GPL) version 3. All of the code is copyright of the Free Software Foundation.
 """
+from __future__ import unicode_literals
 
 # This file makes gnuradio a package
 # The docstring will be associated with the top level of the package.
@@ -37,13 +38,8 @@ if path.endswith(path_ending):
     __path__.append(os.path.join(build_path, 'gr-wavelet', 'python'))
     __path__.append(os.path.join(build_path, 'gr-audio', 'python'))
     __path__.append(os.path.join(build_path, 'gr-qtgui', 'python'))
-    __path__.append(os.path.join(build_path, 'gr-wxgui', 'python'))
-    __path__.append(os.path.join(build_path, 'gr-atsc', 'python'))
-    __path__.append(os.path.join(build_path, 'gr-noaa', 'python'))
-    __path__.append(os.path.join(build_path, 'gr-pager', 'python'))
     __path__.append(os.path.join(build_path, 'gr-video-sdl', 'python'))
     __path__.append(os.path.join(build_path, 'gr-vocoder', 'python'))
-    __path__.append(os.path.join(build_path, 'gr-fcd', 'python'))
     __path__.append(os.path.join(build_path, 'gr-comedi', 'python'))
     __path__.append(os.path.join(build_path, 'gr-channels', 'python'))
     __path__.append(os.path.join(build_path, 'gr-fec', 'python'))

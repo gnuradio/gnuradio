@@ -20,9 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cmath>
-#include <QMessageBox>
 #include <gnuradio/qtgui/vectordisplayform.h>
+
+#include <QMessageBox>
+
+#include <cmath>
 #include <iostream>
 
 VectorDisplayForm::VectorDisplayForm(int nplots, QWidget* parent)

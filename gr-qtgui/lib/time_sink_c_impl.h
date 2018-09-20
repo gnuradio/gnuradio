@@ -24,6 +24,7 @@
 #define INCLUDED_QTGUI_TIME_SINK_C_IMPL_H
 
 #include <gnuradio/qtgui/time_sink_c.h>
+
 #include <gnuradio/qtgui/timedisplayform.h>
 #include <gnuradio/high_res_timer.h>
 
@@ -38,7 +39,7 @@ namespace gr {
       int d_size, d_buffer_size;
       double d_samp_rate;
       std::string d_name;
-      int d_nconnections;
+      unsigned int d_nconnections;
 
       const pmt::pmt_t d_tag_key;
 
@@ -80,7 +81,7 @@ namespace gr {
     public:
       time_sink_c_impl(int size, double samp_rate,
 		       const std::string &name,
-		       int nconnections,
+		       unsigned int nconnections,
 		       QWidget *parent=NULL);
       ~time_sink_c_impl();
 
@@ -100,25 +101,25 @@ namespace gr {
                        const std::string &unit="");
       void set_update_time(double t);
       void set_title(const std::string &title);
-      void set_line_label(int which, const std::string &label);
-      void set_line_color(int which, const std::string &color);
-      void set_line_width(int which, int width);
-      void set_line_style(int which, int style);
-      void set_line_marker(int which, int marker);
+      void set_line_label(unsigned int which, const std::string &label);
+      void set_line_color(unsigned int which, const std::string &color);
+      void set_line_width(unsigned int which, int width);
+      void set_line_style(unsigned int which, int style);
+      void set_line_marker(unsigned int which, int marker);
       void set_nsamps(const int size);
       void set_samp_rate(const double samp_rate);
-      void set_line_alpha(int which, double alpha);
+      void set_line_alpha(unsigned int which, double alpha);
       void set_trigger_mode(trigger_mode mode, trigger_slope slope,
                             float level, float delay, int channel,
                             const std::string &tag_key="");
 
       std::string title();
-      std::string line_label(int which);
-      std::string line_color(int which);
-      int line_width(int which);
-      int line_style(int which);
-      int line_marker(int which);
-      double line_alpha(int which);
+      std::string line_label(unsigned int which);
+      std::string line_color(unsigned int which);
+      int line_width(unsigned int which);
+      int line_style(unsigned int which);
+      int line_marker(unsigned int which);
+      double line_alpha(unsigned int which);
 
       void set_size(int width, int height);
 
@@ -131,7 +132,8 @@ namespace gr {
       void enable_semilogx(bool en);
       void enable_semilogy(bool en);
       void enable_control_panel(bool en);
-      void enable_tags(int which, bool en);
+      void enable_tags(unsigned int which, bool en);
+      void enable_tags(bool en);
       void enable_axis_labels(bool en);
       void disable_legend();
 

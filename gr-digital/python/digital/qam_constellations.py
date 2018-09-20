@@ -20,8 +20,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
 import numpy
-from constellation_map_generator import constellation_map_generator
+from .constellation_map_generator import constellation_map_generator
 
 '''
 Note on the naming scheme. Each constellation is named using a prefix
@@ -242,8 +245,8 @@ def sd_qam_16_0x0_0_1_2_3(x, Es=1):
     '''
 
     dist = Es*numpy.sqrt(2)
-    boundary = dist/3.0
-    dist0 = dist/6.0
+    boundary = dist / 3.0
+    dist0 = dist / 6.0
 #    print "Sample:    ", x
 #    print "Es:        ", Es
 #    print "Distance:  ", dist
@@ -270,7 +273,7 @@ def sd_qam_16_0x0_0_1_2_3(x, Es=1):
     b2 = -abs(x_re) + boundary
     b0 = -abs(x_im) + boundary
 
-    return [(Es/2.0)*b3, (Es/2.0)*b2, (Es/2.0)*b1, (Es/2.0)*b0]
+    return [(Es / 2.0)*b3, (Es / 2.0)*b2, (Es / 2.0)*b1, (Es / 2.0)*b0]
 sd_qam_16 = sd_qam_16_0x0_0_1_2_3
 sd_qam_16_0 = sd_qam_16
 

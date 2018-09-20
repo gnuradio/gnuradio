@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -21,14 +21,16 @@
  */
 
 #include "selective_fading_model_impl.h"
+#include <sincostable.h>
+
 #include <gnuradio/io_signature.h>
-#include <iostream>
+#include <gnuradio/fxpt.h>
+#include <gnuradio/math.h>
 
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gnuradio/fxpt.h>
-#include <sincostable.h>
+#include <iostream>
 
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
@@ -82,6 +84,13 @@ namespace gr {
         const gr_complex* in = (const gr_complex*) input_items[0];
         gr_complex* out = (gr_complex*) output_items[0];
 
+        // pregenerate fading components
+        std::vector<std::vector<gr_complex> > fading_taps;
+        for(size_t j=0; j<d_faders.size(); j++){
+            fading_taps.push_back( std::vector<gr_complex>() );
+            d_faders[j]->next_samples(fading_taps[j], noutput_items);
+            }
+
         // loop over each output sample
         for(int i=0; i<noutput_items; i++){
 
@@ -92,10 +101,11 @@ namespace gr {
 
             // add each flat fading component to the taps
             for(size_t j=0; j<d_faders.size(); j++){
-                gr_complex ff_H(d_faders[j]->next_sample());
+                gr_complex ff_H(fading_taps[j][i]);
+                //gr_complex ff_H(d_faders[j]->next_sample());
                 for(size_t k=0; k<d_taps.size(); k++){
                     float dist = k-d_delays[j];
-                    float interpmag = d_sintable.sinc(M_PI*dist);
+                    float interpmag = d_sintable.sinc(GR_M_PI * dist);
                     d_taps[k] += ff_H * interpmag * d_mags[j];
                 }
             }

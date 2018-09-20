@@ -1,0 +1,64 @@
+id: digital_psk_mod
+label: PSK Mod
+category: '[Core]/Deprecated'
+
+parameters:
+-   id: constellation_points
+    label: Number of Constellation Points
+    dtype: int
+    default: '8'
+-   id: mod_code
+    label: Gray Code
+    dtype: enum
+    options: ['"gray"', '"none"']
+    option_labels: ['Yes', 'No']
+-   id: differential
+    label: Differential Encoding
+    dtype: bool
+    default: 'True'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '2'
+-   id: excess_bw
+    label: Excess BW
+    dtype: real
+    default: '0.35'
+-   id: verbose
+    label: Verbose
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(verbose) == 'False' else 'none') }
+-   id: log
+    label: Log
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(log) == 'False' else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.psk.psk_mod(
+            constellation_points=${constellation_points},
+            mod_code=${mod_code},
+            differential=${differential},
+            samples_per_symbol=${samples_per_symbol},
+            excess_bw=${excess_bw},
+            verbose=${verbose},
+            log=${log})
+
+file_format: 1

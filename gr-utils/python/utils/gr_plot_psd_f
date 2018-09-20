@@ -20,22 +20,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 from gnuradio.plot_psd_base import plot_psd_base
 
 # This is a wrapper program for gr_plot_psd specifically for floating point data
 
 def main():
     parser = plot_psd_base.setup_options()
-    parser.remove_option("--data-type")
+    parser.add_argument("-d", "--data-type", default="complex64",
+            choices=("float32", ))
 
-    (options, args) = parser.parse_args ()
-    if len(args) != 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filename = args[0]
+    args = parser.parse_args()
 
-    dc = plot_psd_base("float32", filename, options)
+    dc = plot_psd_base("float32", args.file, args)
 
 if __name__ == "__main__":
     try:

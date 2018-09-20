@@ -30,7 +30,6 @@ GR_PYTHON_INSTALL(
     pyqt_plot.py
     pyqt_filter.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio
-    COMPONENT "utils"
 )
 
 GR_PYTHON_INSTALL(
@@ -50,7 +49,5 @@ GR_PYTHON_INSTALL(
     gr_plot_short
     gr_plot_qt
     gr_read_file_metadata
-    grcc
     DESTINATION ${GR_RUNTIME_DIR}
-    COMPONENT "utils"
 )

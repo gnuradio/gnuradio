@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import trellis, digital, blocks
 from gnuradio import eng_notation
@@ -33,7 +36,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
 
     # CHANNEL
     add = blocks.add_ff()
-    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0/2),long(seed))
+    noise = analog.noise_source_f(analog.GR_GAUSSIAN,math.sqrt(N0 / 2),int(seed))
 
     # RX
     va = trellis.viterbi_combined_fs(f,K,0,0,dimensionality,constellation,digital.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
@@ -56,7 +59,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     #print "final state = " , enc.ST()
 
     if len(dst.data()) != len(packet):
-        print "Error: not enough data:", len(dst.data()), len(packet)
+        print("Error: not enough data:", len(dst.data()), len(packet))
     ntotal=len(packet)
     nwrong = sum(abs(packet-numpy.array(dst.data())));
     return (ntotal,nwrong,abs(packet-numpy.array(dst.data())))
@@ -73,7 +76,7 @@ def main():
     (options, args) = parser.parse_args ()
     if len(args) != 0:
         parser.print_help()
-        raise SystemExit, 1
+        raise SystemExit(1)
 
     fname=options.fsm_file
     esn0_db=float(options.esn0)
@@ -84,20 +87,20 @@ def main():
     # alternatively you can specify the fsm from its generator matrix
     #f=trellis.fsm(1,2,[5,7])
     Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
-    bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
-    K=Kb/bitspersymbol # packet size in trellis steps
+    bitspersymbol = int(round(math.log(f.I()) / math.log(2))) # bits per FSM input symbol
+    K=Kb / bitspersymbol # packet size in trellis steps
     modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
     dimensionality = modulation[0]
     constellation = modulation[1]
-    if len(constellation)/dimensionality != f.O():
+    if len(constellation) / dimensionality != f.O():
         sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
         sys.exit (1)
     # calculate average symbol energy
     Es = 0
     for i in range(len(constellation)):
         Es = Es + constellation[i]**2
-    Es = Es / (len(constellation)/dimensionality)
-    N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
+    Es = Es / (len(constellation)//dimensionality)
+    N0=Es / pow(10.0,esn0_db/10.0); # calculate noise variance
 
     tot_b=0 # total number of transmitted bits
     terr_b=0 # total number of bits in error
@@ -108,14 +111,14 @@ def main():
         terr_b=terr_b+e
         terr_p=terr_p+(e!=0)
         if ((i+1)%100==0) : # display progress
-            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
-	if e!=0:
-            print "rep=",i, e
+            print(i+1,terr_p, '%.2e' % ((1.0*terr_p) / (i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b) / tot_b))
+        if e!=0:
+            print("rep=",i, e)
             for k in range(Kb):
                 if pattern[k]!=0:
-                    print k
+                    print(k)
     # estimate of the bit error rate
-    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b)/tot_b)
+    print(rep,terr_p, '%.2e' % ((1.0*terr_p) / (i+1)),tot_b,terr_b, '%.2e' % ((1.0*terr_b) / tot_b))
 
 
 

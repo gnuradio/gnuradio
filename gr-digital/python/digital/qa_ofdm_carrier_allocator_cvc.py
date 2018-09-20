@@ -41,7 +41,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         pilot_symbols = ((1j,),)
         occupied_carriers = ((0, 1, 2),)
         pilot_carriers = ((3,),)
-        sync_word = (range(fft_len),)
+        sync_word = (list(range(fft_len)),)
         expected_result = tuple(sync_word[0] + [1j, 0, 0, 1, 2, 3])
         #                                                 ^ DC carrier
         src = blocks.vector_source_c(tx_symbols, False, 1)
@@ -164,7 +164,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         - add some random tags
         - don't shift
         """
-        tx_symbols = range(1, 16); # 15 symbols
+        tx_symbols = list(range(1, 16)); # 15 symbols
         pilot_symbols = ((1j, 2j), (3j, 4j))
         occupied_carriers = ((1, 3, 4, 11, 12, 14), (1, 2, 4, 11, 13, 14),)
         pilot_carriers = ((2, 13), (3, 12))
@@ -203,7 +203,7 @@ class qa_digital_carrier_allocator_cvc (gr_unittest.TestCase):
         correct_offsets = {'tag1': 0, 'tag2': 1, 'tag3': 3, 'tag4': 5}
         for tag in sink.tags():
             key = pmt.symbol_to_string(tag.key)
-            if key in tags_found.keys():
+            if key in list(tags_found.keys()):
                 tags_found[key] = True
                 self.assertEqual(correct_offsets[key], tag.offset)
         self.assertTrue(all(tags_found.values()))

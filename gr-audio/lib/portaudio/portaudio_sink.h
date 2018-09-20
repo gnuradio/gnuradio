@@ -67,7 +67,7 @@ namespace gr {
       //gri_logger_sptr d_log;  // handle to non-blocking logging instance
 
       void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err) throw (std::runtime_error);
+      void bail(const char *msg, int err);
       void create_ringbuffer();
 
     public:

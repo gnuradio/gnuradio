@@ -52,40 +52,6 @@ SET(GR_PKG_COMEDI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/comedi)
 if(ENABLE_GR_COMEDI)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_SET(CPACK_COMPONENT_GROUP_COMEDI_DESCRIPTION "GNU Radio Comedi Blocks")
-
-CPACK_COMPONENT("comedi_runtime"
-    GROUP        "Comedi"
-    DISPLAY_NAME "Runtime"
-    DESCRIPTION  "Dynamic link libraries"
-    DEPENDS      "runtime_runtime"
-)
-
-CPACK_COMPONENT("comedi_devel"
-    GROUP        "Comedi"
-    DISPLAY_NAME "Development"
-    DESCRIPTION  "C++ headers, package config, import libraries"
-    DEPENDS      "runtime_devel"
-)
-
-CPACK_COMPONENT("comedi_python"
-    GROUP        "Comedi"
-    DISPLAY_NAME "Python"
-    DESCRIPTION  "Python modules for runtime"
-    DEPENDS      "runtime_python;comedi_runtime"
-)
-
-CPACK_COMPONENT("comedi_swig"
-    GROUP        "Comedi"
-    DISPLAY_NAME "SWIG"
-    DESCRIPTION  "SWIG development .i files"
-    DEPENDS      "runtime_swig;comedi_python;comedi_devel"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(include/gnuradio/comedi)
@@ -106,7 +72,6 @@ configure_file(
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-comedi.pc
     DESTINATION ${GR_LIBRARY_DIR}/pkgconfig
-    COMPONENT "comedi_devel"
 )
 
 endif(ENABLE_GR_COMEDI)

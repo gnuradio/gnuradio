@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright (C) 2002,2007,2012,2017 Free Software Foundation, Inc.
+ * Copyright (C) 2002,2007,2012,2017,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -26,28 +26,29 @@
 
 #include <gnuradio/filter/mmse_interp_differentiator_ff.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/math.h>
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include <cmath>
 #include <stdexcept>
-#include <stdint.h>
+#include <cstdint>
 
 namespace gr {
   namespace filter {
 
-    static const double k1 = 0.25 * 2 * M_PI;
-    static const double k2 = 0.125 * M_PI;
-    static const double k3 = 0.077 * 2 * M_PI;
-    static const double k4 = 0.3 * M_PI;
+    static const double k1 = 0.25 * 2 * GR_M_PI;
+    static const double k2 = 0.125 * GR_M_PI;
+    static const double k3 = 0.077 * 2 * GR_M_PI;
+    static const double k4 = 0.3 * GR_M_PI;
 
     static double
     phase_wrap(double arg)
     {
-      while (arg >= 2.0*M_PI)
-        arg -= 2.0*M_PI;
-      while (arg <= 2.0*M_PI)
-        arg += 2.0*M_PI;
+      while (arg >= 2.0*GR_M_PI)
+        arg -= 2.0*GR_M_PI;
+      while (arg <= 2.0*GR_M_PI)
+        arg += 2.0*GR_M_PI;
       return arg;
     }
 

@@ -20,12 +20,20 @@
 ########################################################################
 include(GrPython)
 
+if (DESIRED_QT_VERSION MATCHES 4)
+	set(PY_QT_IMPORT "from PyQt4 import Qt, QtCore, QtGui as QtWidgets")
+else()
+	set(PY_QT_IMPORT "from PyQt5 import Qt, QtCore, QtWidgets")
+endif()
+
+configure_file(range.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/range.py" @ONLY)
+configure_file(util.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/util.py" @ONLY)
+
 GR_PYTHON_INSTALL(
     FILES __init__.py
-          range.py
-          util.py
+          "${CMAKE_CURRENT_BINARY_DIR}/range.py"
+          "${CMAKE_CURRENT_BINARY_DIR}/util.py"
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
-    COMPONENT "qtgui_python"
 )
 
 ########################################################################
@@ -45,6 +53,6 @@ if(ENABLE_TESTING)
   file(GLOB py_qa_test_files "qa_*.py")
   foreach(py_qa_test_file ${py_qa_test_files})
     get_filename_component(py_qa_test_name ${py_qa_test_file} NAME_WE)
-    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} ${PYTHON_DASH_B} ${py_qa_test_file})
+    GR_ADD_TEST(${py_qa_test_name} ${QA_PYTHON_EXECUTABLE} -B ${py_qa_test_file})
   endforeach(py_qa_test_file)
 endif(ENABLE_TESTING)

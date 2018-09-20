@@ -36,15 +36,6 @@ GR_REGISTER_COMPONENT("sphinx"  ENABLE_SPHINX  SPHINX_FOUND)
 if(ENABLE_DOXYGEN)
 
 ########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("docs"
-    DISPLAY_NAME "Documentation"
-    DESCRIPTION  "Doxygen generated documentation"
-)
-
-########################################################################
 # Add subdirectories
 ########################################################################
 add_subdirectory(doxygen)
@@ -58,14 +49,6 @@ endif(ENABLE_DOXYGEN)
 ########################################################################
 if(ENABLE_SPHINX)
 
-########################################################################
-# Setup CPack components
-########################################################################
-include(GrPackage)
-CPACK_COMPONENT("docs"
-    DISPLAY_NAME "Documentation"
-    DESCRIPTION  "Sphinx generated documentation"
-)
 
 ########################################################################
 # Add subdirectories

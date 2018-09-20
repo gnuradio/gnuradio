@@ -25,11 +25,14 @@
 #endif
 
 #include "number_sink_impl.h"
+
 #include <gnuradio/io_signature.h>
-#include <string.h>
-#include <volk/volk.h>
 #include <gnuradio/fft/fft.h>
+
+#include <volk/volk.h>
 #include <qwt_symbol.h>
+
+#include <string.h>
 #include <cmath>
 
 #ifdef _MSC_VER
@@ -176,7 +179,7 @@ namespace gr {
     }
 
     void
-    number_sink_impl::set_color(int which,
+    number_sink_impl::set_color(unsigned int which,
                                 const std::string &min,
                                 const std::string &max)
     {
@@ -186,25 +189,25 @@ namespace gr {
     }
 
     void
-    number_sink_impl::set_color(int which, int min, int max)
+    number_sink_impl::set_color(unsigned int which, int min, int max)
     {
       d_main_gui->setColor(which, QColor(min), QColor(max));
     }
 
     void
-    number_sink_impl::set_label(int which, const std::string &label)
+    number_sink_impl::set_label(unsigned int which, const std::string &label)
     {
       d_main_gui->setLabel(which, label);
     }
 
     void
-    number_sink_impl::set_min(int which, float min)
+    number_sink_impl::set_min(unsigned int which, float min)
     {
       d_main_gui->setScaleMin(which, min);
     }
 
     void
-    number_sink_impl::set_max(int which, float max)
+    number_sink_impl::set_max(unsigned int which, float max)
     {
       d_main_gui->setScaleMax(which, max);
     }
@@ -216,13 +219,13 @@ namespace gr {
     }
 
     void
-    number_sink_impl::set_unit(int which, const std::string &unit)
+    number_sink_impl::set_unit(unsigned int which, const std::string &unit)
     {
       d_main_gui->setUnit(which, unit);
     }
 
     void
-    number_sink_impl::set_factor(int which, float factor)
+    number_sink_impl::set_factor(unsigned int which, float factor)
     {
       d_main_gui->setFactor(which, factor);
     }
@@ -240,31 +243,31 @@ namespace gr {
     }
 
     std::string
-    number_sink_impl::color_min(int which) const
+    number_sink_impl::color_min(unsigned int which) const
     {
       return d_main_gui->colorMin(which).name().toStdString();
     }
 
     std::string
-    number_sink_impl::color_max(int which) const
+    number_sink_impl::color_max(unsigned int which) const
     {
       return d_main_gui->colorMax(which).name().toStdString();
     }
 
     std::string
-    number_sink_impl::label(int which) const
+    number_sink_impl::label(unsigned int which) const
     {
       return d_main_gui->label(which);
     }
 
     float
-    number_sink_impl::min(int which) const
+    number_sink_impl::min(unsigned int which) const
     {
       return d_main_gui->scaleMin(which);
     }
 
     float
-    number_sink_impl::max(int which) const
+    number_sink_impl::max(unsigned int which) const
     {
       return d_main_gui->scaleMax(which);
     }
@@ -276,13 +279,13 @@ namespace gr {
     }
 
     std::string
-    number_sink_impl::unit(int which) const
+    number_sink_impl::unit(unsigned int which) const
     {
       return d_main_gui->unit(which);
     }
 
     float
-    number_sink_impl::factor(int which) const
+    number_sink_impl::factor(unsigned int which) const
     {
       return d_main_gui->factor(which);
     }

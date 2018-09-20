@@ -20,9 +20,13 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+
 from gnuradio import gr, blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float, intx
+from argparse import ArgumentParser
 import os, sys
 
 try:
@@ -30,13 +34,13 @@ try:
     from PyQt4 import QtGui, QtCore
     import sip
 except ImportError:
-    print "Error: Program requires PyQt4 and gr-qtgui."
+    print("Error: Program requires PyQt4 and gr-qtgui.")
     sys.exit(1)
 
 try:
     import scipy
 except ImportError:
-    print "Error: Scipy required (www.scipy.org)."
+    print("Error: Scipy required (www.scipy.org).")
     sys.exit(1)
 
 try:
@@ -76,8 +80,8 @@ class plot_base(gr.top_block):
 
         n = 0
         self.srcs = list()
-        self._data_min = sys.maxint
-        self._data_max = -sys.maxint - 1
+        self._data_min = sys.maxsize
+        self._data_max = -sys.maxsize - 1
         for f in self._filelist:
             data,_min,_max = self.read_samples(f, self._start,
                                                self._nsamps, self._psd_size)
@@ -100,7 +104,7 @@ class plot_base(gr.top_block):
             self.connect(s, (self.gui_snk, i+1))
 
         self.gui_snk.set_update_time(0);
-        self.gui_snk.set_time_per_fft(self._psd_size/self._samp_rate)
+        self.gui_snk.set_time_per_fft(self._psd_size / self._samp_rate)
         self.gui_snk.enable_menu(False)
         self.gui_snk.set_fft_average(self._avg)
 
@@ -127,13 +131,13 @@ class plot_base(gr.top_block):
         self.stop()
         self.wait()
         self.gui_snk.clear_data()
-        self.gui_snk.set_time_per_fft(self._psd_size/self._samp_rate)
+        self.gui_snk.set_time_per_fft(self._psd_size / self._samp_rate)
 
         self._start = newstart
         self._nsamps = newnsamps
 
-        self._data_min = sys.maxint
-        self._data_max = -sys.maxint - 1
+        self._data_min = sys.maxsize
+        self._data_max = -sys.maxsize - 1
         for s,f in zip(self.srcs, self._filelist):
             data,_min,_max = self.read_samples(f, self._start, newnsamps, self._psd_size)
             if(_min < self._data_min):
@@ -146,25 +150,22 @@ class plot_base(gr.top_block):
         self.start()
 
 def setup_options(desc):
-    parser = OptionParser(option_class=eng_option, description=desc,
-                          conflict_handler="resolve")
-    parser.add_option("-N", "--nsamples", type="int", default=1000000,
-                      help="Set the number of samples to display [default=%default]")
-    parser.add_option("-S", "--start", type="int", default=0,
-                      help="Starting sample number [default=%default]")
-    parser.add_option("-L", "--psd-size", type="int", default=2048,
-                      help="Set the FFT size of the PSD [default=%default]")
-    parser.add_option("-f", "--center-frequency", type="eng_float", default=0.0,
-                      help="Set the center frequency of the signal [default=%default]")
-    parser.add_option("-r", "--sample-rate", type="eng_float", default=1.0,
-                      help="Set the sample rate of the signal [default=%default]")
-    parser.add_option("-a", "--average", type="float", default=1.0,
-                      help="Set amount of averaging (smaller=more averaging) [default=%default]")
-    (options, args) = parser.parse_args()
+    parser = ArgumentParser(description=desc, conflict_handler="resolve")
+    parser.add_argument("-N", "--nsamples", type=int, default=1000000,
+                      help="Set the number of samples to display [default=%(default)r]")
+    parser.add_argument("-S", "--start", type=int, default=0,
+                      help="Starting sample number [default=%(default)r]")
+    parser.add_argument("-L", "--psd-size", type=int, default=2048,
+                      help="Set the FFT size of the PSD [default=%(default)r]")
+    parser.add_argument("-f", "--center-frequency", type=eng_float, default=0.0,
+                      help="Set the center frequency of the signal [default=%(default)r]")
+    parser.add_argument("-r", "--sample-rate", type=eng_float, default=1.0,
+                      help="Set the sample rate of the signal [default=%(default)r]")
+    parser.add_argument("-a", "--average", type=float, default=1.0,
+                      help="Set amount of averaging (smaller=more averaging) [default=%(default)r]")
+    parser.add_argument('files', nargs='+', metavar='FILE',
+                      help="File with complex samples")
+    args = parser.parse_args()
 
-    if(len(args) < 1):
-        parser.print_help()
-        sys.exit(0)
-
-    return (options, args)
+    return args
 

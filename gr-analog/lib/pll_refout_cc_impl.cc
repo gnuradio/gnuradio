@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010-2013 Free Software Foundation, Inc.
+ * Copyright 2004,2010-2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -33,10 +33,6 @@
 namespace gr {
   namespace analog {
 
-#ifndef M_TWOPI
-#define M_TWOPI (2.0f*M_PI)
-#endif
-
     pll_refout_cc::sptr
     pll_refout_cc::make(float loop_bw, float max_freq, float min_freq)
     {
@@ -59,10 +55,10 @@ namespace gr {
     float
     pll_refout_cc_impl::mod_2pi(float in)
     {
-      if(in > M_PI)
-	return in - M_TWOPI;
-      else if(in < -M_PI)
-	return in+ M_TWOPI;
+      if(in > GR_M_PI)
+	return in - GR_M_TWOPI;
+      else if(in < -GR_M_PI)
+	return in+ GR_M_TWOPI;
       else
 	return in;
     }

@@ -39,5 +39,4 @@ typedef std::vector<double>			gr_vector_double;
 typedef std::vector<void *>			gr_vector_void_star;
 typedef std::vector<const void *>		gr_vector_const_void_star;
 
-
 #endif /* INCLUDED_GR_TYPES_H */

@@ -1,0 +1,65 @@
+id: digital_gfsk_demod
+label: GFSK Demod
+
+parameters:
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '2'
+-   id: sensitivity
+    label: Sensitivity
+    dtype: real
+    default: '1.0'
+-   id: gain_mu
+    label: Gain Mu
+    dtype: real
+    default: '0.175'
+-   id: mu
+    label: Mu
+    dtype: real
+    default: '0.5'
+-   id: omega_relative_limit
+    label: Omega Relative Limit
+    dtype: real
+    default: '0.005'
+-   id: freq_error
+    label: Freq Error
+    dtype: real
+    default: '0.0'
+-   id: verbose
+    label: Verbose
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(verbose) == 'False' else 'none') }
+-   id: log
+    label: Log
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(log) == 'False' else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: byte
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.gfsk_demod(
+            samples_per_symbol=${samples_per_symbol},
+            sensitivity=${sensitivity},
+            gain_mu=${gain_mu},
+            mu=${mu},
+            omega_relative_limit=${omega_relative_limit},
+            freq_error=${freq_error},
+            verbose=${verbose},
+            log=${log})
+
+file_format: 1

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2004,2005,2013 Free Software Foundation, Inc.
+ * Copyright 2002,2004,2005,2013,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,18 +24,20 @@
 #include "config.h"
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <gnuradio/vco.h>
+#include <gnuradio/fxpt_vco.h>
+#include <gnuradio/math.h>
+
 #include <sys/time.h>
+#include <unistd.h>
 
 #ifdef HAVE_SYS_RESOURCE_H
 #include <sys/resource.h>
 #endif
 
-#include <unistd.h>
-#include <gnuradio/vco.h>
-#include <gnuradio/fxpt_vco.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #define ITERATIONS 5000000
 #define BLOCK_SIZE (10 * 1000)	// fits in cache
@@ -122,11 +124,11 @@ void basic_vco(float *output, const float *input)
       output[i] = cos(phase) * AMPLITUDE;
       phase += input[i] * K;
 
-      while(phase > 2 * M_PI)
-	phase -= 2 * M_PI;
+      while(phase > 2 * GR_M_PI)
+	phase -= 2 * GR_M_PI;
 
-      while(phase < -2 * M_PI)
-	phase += 2 * M_PI;
+      while(phase < -2 * GR_M_PI)
+	phase += 2 * GR_M_PI;
     }
   }
 }

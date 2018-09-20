@@ -44,7 +44,6 @@ GR_SWIG_MAKE(fft_swig fft_swig.i)
 GR_SWIG_INSTALL(
     TARGETS fft_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/fft
-    COMPONENT "fft_python"
 )
 
 install(
@@ -52,5 +51,4 @@ install(
     fft_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/fft_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "fft_swig"
 )

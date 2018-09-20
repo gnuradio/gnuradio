@@ -20,11 +20,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import unicode_literals
 from gnuradio import gr
 from gnuradio import audio
 from gnuradio import blocks
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
+from gnuradio.eng_arg import eng_float
+from argparse import ArgumentParser
 
 
 class my_top_block(gr.top_block):
@@ -32,22 +33,18 @@ class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
-        parser = OptionParser(option_class=eng_option)
-        parser.add_option("-F", "--filename", type="string", default="audio.dat",
-                          help="read input from FILE")
-        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
-                          help="set sample rate to RATE (48000)")
-        parser.add_option("-R", "--repeat", action="store_true", default=False)
-        parser.add_option("-O", "--audio-output", type="string", default="",
+        parser = ArgumentParser()
+        parser.add_argument("-F", "--filename", default="audio.dat",
+                          help="read input from FILENAME default=%(default)r")
+        parser.add_argument("-r", "--sample-rate", type=eng_float, default=48000,
+                          help="set sample rate (default=%(default)r)")
+        parser.add_argument("-R", "--repeat", action="store_true")
+        parser.add_argument("-O", "--audio-output", default="",
                           help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
-        (options, args) = parser.parse_args()
-        if len(args) != 0:
-            parser.print_help()
-            raise SystemExit, 1
-
-        sample_rate = int(options.sample_rate)
-        src = blocks.file_source (gr.sizeof_float, options.filename, options.repeat)
-        dst = audio.sink (sample_rate, options.audio_output)
+        args = parser.parse_args()
+        sample_rate = int(args.sample_rate)
+        src = blocks.file_source(gr.sizeof_float, args.filename, args.repeat)
+        dst = audio.sink(sample_rate, args.audio_output)
         self.connect(src, dst)
 
 

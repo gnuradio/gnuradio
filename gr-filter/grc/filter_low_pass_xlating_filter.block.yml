@@ -1,0 +1,88 @@
+id: xlating_low_pass_filter
+label: Xlating Low Pass Filter
+
+parameters:
+-   id: type
+    label: Type
+    dtype: enum
+    options: [ccc, ccf, fcc, fcf, scc, scf]
+    option_labels: [Complex->Complex (Complex Taps), Complex->Complex (Real Taps),
+        Float->Complex (Complex Taps), Float->Complex (Real Taps), Short->Complex
+            (Complex Taps), Short->Complex (Real Taps)]
+    option_attributes:
+        input: [complex, complex, float, float, short, short]
+        output: [complex, complex, complex, complex, complex, complex]
+        taps: [complex_vector, real_vector, complex_vector, real_vector, complex_vector,
+            real_vector]
+    hide: part
+-   id: decim
+    label: Decimation
+    dtype: int
+    default: '1'
+-   id: gain
+    label: Gain
+    dtype: real
+    default: '1'
+-   id: samp_rate
+    label: Sample Rate
+    dtype: real
+    default: samp_rate
+-   id: center_freq
+    label: Center Frequency
+    dtype: real
+    default: '0'
+-   id: cutoff_freq
+    label: Cutoff Freq
+    dtype: real
+-   id: width
+    label: Transition Width
+    dtype: real
+-   id: win
+    label: Window
+    dtype: int
+    default: firdes.WIN_HAMMING
+    options: [firdes.WIN_HAMMING, firdes.WIN_HANN, firdes.WIN_BLACKMAN, firdes.WIN_RECTANGULAR,
+        firdes.WIN_KAISER]
+    option_labels: [Hamming, Hann, Blackman, Rectangular, Kaiser]
+-   id: beta
+    label: Beta
+    dtype: real
+    default: '6.76'
+
+inputs:
+-   domain: stream
+    dtype: ${ type.input }
+
+outputs:
+-   domain: stream
+    dtype: ${ type.output }
+
+templates:
+    imports: |-
+        from gnuradio import filter
+        from gnuradio.filter import firdes
+    make: |-
+        filter.freq_xlating_fir_filter_${type}(
+            ${decim}, 
+            firdes.low_pass(
+                ${gain}, 
+                2*${samp_rate}, 
+                ${cutoff_freq}, 
+                ${width}, 
+                ${win}, 
+                ${beta}), 
+            ${center_freq}, 
+            ${samp_rate})
+    callbacks:
+    - set_taps(firdes.low_pass(${gain}, 2*${samp_rate}, ${cutoff_freq}, ${width},
+        ${win}, ${beta}))
+    - set_center_freq(${center_freq})
+
+documentation: |-
+    This filter is a convenience wrapper for an xlating fir filter and a firdes taps generating function.
+
+    Sample rate, cutoff frequency, and transition width are in Hertz.
+
+    The beta paramater only applies to the Kaiser window.
+
+file_format: 1

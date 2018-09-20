@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 
 class test_nlog10(gr_unittest.TestCase):
@@ -31,15 +32,15 @@ class test_nlog10(gr_unittest.TestCase):
         self.tb = None
 
     def test_001(self):
-        src_data = (-10, 0, 10, 100, 1000, 10000, 100000)
-        expected_result = (-180, -180, 10, 20, 30, 40, 50)
+        src_data = (1, 10, 100, 1000, 10000, 100000)
+        expected_result = (0, 10, 20, 30, 40, 50)
         src = blocks.vector_source_f(src_data)
         op = blocks.nlog10_ff(10)
         dst = blocks.vector_sink_f()
         self.tb.connect (src, op, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data, 5)
 
 
 if __name__ == '__main__':

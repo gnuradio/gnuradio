@@ -35,14 +35,19 @@ list(APPEND QTGUI_LIBRARIES
   gnuradio-blocks
   gnuradio-fft
   gnuradio-runtime
+  ${QT_LIBRARIES}
 )
 
-QT4_WRAP_CPP(qtgui_moc_sources display_qt.h)
+if (${DESIRED_QT_VERSION} MATCHES 4)
+    QT4_WRAP_CPP(qtgui_moc_sources display_qt.h)
+else()
+    QT5_WRAP_CPP(qtgui_moc_sources display_qt.h)
+endif()
+
 add_executable(display_qt display_qt.cc ${qtgui_moc_sources})
 target_link_libraries(display_qt ${QTGUI_LIBRARIES})
 
 INSTALL(TARGETS
   display_qt
   DESTINATION ${GR_PKG_QTGUI_EXAMPLES_DIR}
-  COMPONENT "qtgui_examples"
 )

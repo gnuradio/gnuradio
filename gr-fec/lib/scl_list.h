@@ -46,8 +46,6 @@ namespace gr {
          */
         class scl_list{
           const unsigned int d_list_size;
-          const unsigned int d_block_size;
-          const unsigned int d_block_power;
           const unsigned int d_num_buff_elements;
           std::vector<path*> d_path_list;
           unsigned int d_active_path_counter;

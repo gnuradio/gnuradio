@@ -51,12 +51,10 @@ GR_SWIG_MAKE(qtgui_swig qtgui_swig.i)
 GR_SWIG_INSTALL(
     TARGETS qtgui_swig
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
-    COMPONENT "qtgui_python"
 )
 
 install(FILES
     qtgui_swig.i
     ${CMAKE_CURRENT_BINARY_DIR}/qtgui_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/swig
-    COMPONENT "qtgui_swig"
 )

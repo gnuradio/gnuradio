@@ -20,6 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
+
 from gnuradio import gr, gr_unittest, blocks
 import random
 import pmt
@@ -67,7 +68,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         received = self.dbg.get_message(0)
         received_data = pmt.cdr(received)
         msg_data = []
-        for i in xrange(4):
+        for i in range(4):
             msg_data.append(pmt.u8vector_ref(received_data, i))
         self.assertEqual(srcdata, tuple(msg_data))
 
@@ -104,7 +105,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         # Test that the TCP server can stream PDUs <= the MTU size.
         port = str(random.Random().randint(0, 30000) + 10000)
         mtu = 10000
-        srcdata = tuple([x % 256 for x in xrange(mtu)])
+        srcdata = tuple(x % 256 for x in range(mtu))
         data = pmt.init_u8vector(srcdata.__len__(), srcdata)
         pdu_msg = pmt.cons(pmt.PMT_NIL, data)
 
@@ -124,7 +125,7 @@ class qa_socket_pdu (gr_unittest.TestCase):
         received = self.pdu_sink.get_message(0)
         received_data = pmt.cdr(received)
         msg_data = []
-        for i in xrange(mtu):
+        for i in range(mtu):
             msg_data.append(pmt.u8vector_ref(received_data, i))
         self.assertEqual(srcdata, tuple(msg_data))
 

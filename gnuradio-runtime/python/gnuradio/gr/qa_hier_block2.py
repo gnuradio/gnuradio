@@ -19,9 +19,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import pmt, time
+import time
+
 from gnuradio import gr_unittest, blocks, gr, analog
 from gnuradio.gr.hier_block2 import _multiple_endpoints, _optional_endpoints
+import pmt
+
 
 class test_hblk(gr.hier_block2):
     def __init__(self, io_sig=1*[gr.sizeof_gr_complex], ndebug=2):
@@ -126,7 +129,7 @@ class test_hier_block2(gr_unittest.TestCase):
         time.sleep(1)
         tb.stop()
         tb.wait()
-    
+
     def test_012(self):
         s, st, h, k = analog.sig_source_c(44100, analog.GR_COS_WAVE, 440, 1.0, 0.0), blocks.message_strobe(pmt.PMT_NIL, 100), blocks.head(gr.sizeof_gr_complex, 1000), test_hblk([gr.sizeof_gr_complex], 16)
         tb = gr.top_block()
@@ -139,4 +142,3 @@ class test_hier_block2(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_hier_block2, "test_hier_block2.xml")
-

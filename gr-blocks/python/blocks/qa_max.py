@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import division
+
 from gnuradio import gr, gr_unittest, blocks
 
 import math
@@ -47,18 +49,18 @@ class test_max(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def stest_002(self):
-	src_data=(-100,-99,-98,-97,-96,-1)
-	expected_result = (float(max(src_data)),)
+        src_data=(-100,-99,-98,-97,-96,-1)
+        expected_result = (float(max(src_data)),)
 
-	src = blocks.vector_source_f(src_data)
-	s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
-	op = blocks.max_ff(len(src_data))
-	dst = blocks.vector_sink_f()
+        src = blocks.vector_source_f(src_data)
+        s2v = blocks.stream_to_vector(gr.sizeof_float, len(src_data))
+        op = blocks.max_ff(len(src_data))
+        dst = blocks.vector_sink_f()
 
-	self.tb.connect(src, s2v, op, dst)
-	self.tb.run()
-	result_data = dst.data()
-	self.assertEqual(expected_result, result_data)
+        self.tb.connect(src, s2v, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
 
     def stest_003(self):
         src_data0 = (0, 2, -3, 0, 12, 0)
@@ -85,7 +87,7 @@ class test_max(gr_unittest.TestCase):
 
         expected_data = []
         tmp = [float(max(x,y)) for x,y in zip(src_data0, src_data1)]
-        for i in xrange(len(tmp)/dim):
+        for i in range(len(tmp) / dim):
             expected_data.append(float(max(tmp[i*dim:(i+1)*dim])))
 
         src0 = blocks.vector_source_f(src_data0)
@@ -118,18 +120,18 @@ class test_max(gr_unittest.TestCase):
         self.assertEqual(expected_result, result_data)
 
     def stest_s002(self):
-	src_data=(-100,-99,-98,-97,-96,-1)
-	expected_result = (max(src_data),)
+        src_data=(-100,-99,-98,-97,-96,-1)
+        expected_result = (max(src_data),)
 
-	src = blocks.vector_source_s(src_data)
-	s2v = blocks.stream_to_vector(gr.sizeof_short, len(src_data))
-	op = blocks.max_ss(len(src_data))
-	dst = blocks.vector_sink_s()
+        src = blocks.vector_source_s(src_data)
+        s2v = blocks.stream_to_vector(gr.sizeof_short, len(src_data))
+        op = blocks.max_ss(len(src_data))
+        dst = blocks.vector_sink_s()
 
-	self.tb.connect(src, s2v, op, dst)
-	self.tb.run()
-	result_data = dst.data()
-	self.assertEqual(expected_result, result_data)
+        self.tb.connect(src, s2v, op, dst)
+        self.tb.run()
+        result_data = dst.data()
+        self.assertEqual(expected_result, result_data)
 
 
     def stest_s003(self):
@@ -157,7 +159,7 @@ class test_max(gr_unittest.TestCase):
 
         expected_data = []
         tmp = [max(x,y) for x,y in zip(src_data0, src_data1)]
-        for i in xrange(len(tmp)/dim):
+        for i in range(len(tmp) / dim):
             expected_data.append(max(tmp[i*dim:(i+1)*dim]))
 
         src0 = blocks.vector_source_s(src_data0)

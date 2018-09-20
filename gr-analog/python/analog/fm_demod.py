@@ -19,14 +19,15 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import unicode_literals
+
 from gnuradio import gr, filter
-from fm_emph import fm_deemph
+from .fm_emph import fm_deemph
 from math import pi
 
-try:
-    from gnuradio import analog
-except ImportError:
-    import analog_swig as analog
+from . import analog_swig as analog
 
 
 class fm_demod_cf(gr.hier_block2):
@@ -54,7 +55,7 @@ class fm_demod_cf(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),  # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_float))       # Output signature
 
-        k = channel_rate/(2*pi*deviation)
+        k = channel_rate / (2*pi*deviation)
         QUAD = analog.quadrature_demod_cf(k)
 
         audio_taps = filter.optfir.low_pass(

@@ -17,14 +17,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+from __future__ import absolute_import, print_function
+
 import sys
 import re
 import subprocess
 import threading
 import json
-import Queue
 import random
 import itertools
+
+import six
+from six.moves import queue, filter, range
 
 
 ###############################################################################
@@ -94,8 +98,7 @@ def docstring_from_make(key, imports, make):
         if '$' in blk_cls:
             raise ValueError('Not an identifier')
         ns = dict()
-        for _import in imports:
-            exec(_import.strip(), ns)
+        exec(imports.strip(), ns)
         blk = eval(blk_cls, ns)
         doc_strings = {key: blk.__doc__}
 
@@ -124,7 +127,7 @@ class SubprocessLoader(object):
         self.callback_query_result = callback_query_result
         self.callback_finished = callback_finished or (lambda: None)
 
-        self._queue = Queue.Queue()
+        self._queue = queue.Queue()
         self._thread = None
         self._worker = None
         self._shutdown = threading.Event()
@@ -157,21 +160,22 @@ class SubprocessLoader(object):
                 cmd, args = self._last_cmd
                 if cmd == 'query':
                     msg += " (crashed while loading {0!r})".format(args[0])
-                print >> sys.stderr, msg
+                print(msg, file=sys.stderr)
                 continue  # restart
             else:
                 break  # normal termination, return
             finally:
-                self._worker.terminate()
+                if self._worker:
+                    self._worker.terminate()
         else:
-            print >> sys.stderr, "Warning: docstring loader crashed too often"
+            print("Warning: docstring loader crashed too often", file=sys.stderr)
         self._thread = None
         self._worker = None
         self.callback_finished()
 
     def _handle_worker(self):
         """ Send commands and responses back from worker. """
-        assert '1' == self._worker.stdout.read(1)
+        assert '1' == self._worker.stdout.read(1).decode('utf-8')
         for cmd, args in iter(self._queue.get, self.DONE):
             self._last_cmd = cmd, args
             self._send(cmd, args)
@@ -181,14 +185,16 @@ class SubprocessLoader(object):
     def _send(self, cmd, args):
         """ Send a command to worker's stdin """
         fd = self._worker.stdin
-        json.dump((self.AUTH_CODE, cmd, args), fd)
-        fd.write('\n'.encode())
+        query = json.dumps((self.AUTH_CODE, cmd, args))
+        fd.write(query.encode('utf-8'))
+        fd.write(b'\n')
+        fd.flush()
 
     def _receive(self):
         """ Receive response from worker's stdout """
         for line in iter(self._worker.stdout.readline, ''):
             try:
-                key, cmd, args = json.loads(line, encoding='utf-8')
+                key, cmd, args = json.loads(line.decode('utf-8'), encoding='utf-8')
                 if key != self.AUTH_CODE:
                     raise ValueError('Got wrong auth code')
                 return cmd, args
@@ -203,9 +209,9 @@ class SubprocessLoader(object):
             key, docs = args
             self.callback_query_result(key, docs)
         elif cmd == 'error':
-            print args
+            print(args)
         else:
-            print >> sys.stderr, "Unknown response:", cmd, args
+            print("Unknown response:", cmd, args, file=sys.stderr)
 
     def query(self, key, imports=None, make=None):
         """ Request docstring extraction for a certain key """
@@ -242,27 +248,31 @@ class SubprocessLoader(object):
 def worker_main():
     """
     Main entry point for the docstring extraction process.
-    Manages RPC with main process through.
+    Manages RPC with main process through stdin/stdout.
     Runs a docstring extraction for each key it read on stdin.
     """
-    def send(cmd, args):
+    def send(code, cmd, args):
         json.dump((code, cmd, args), sys.stdout)
-        sys.stdout.write('\n'.encode())
+        sys.stdout.write('\n')
+        # fluh out to get new commands from the queue into stdin
+        sys.stdout.flush()
 
     sys.stdout.write('1')
+    # flush out to signal the main process we are ready for new commands
+    sys.stdout.flush()
     for line in iter(sys.stdin.readline, ''):
         code, cmd, args = json.loads(line, encoding='utf-8')
         try:
             if cmd == 'query':
                 key, imports, make = args
-                send('result', (key, docstring_from_make(key, imports, make)))
+                send(code, 'result', (key, docstring_from_make(key, imports, make)))
             elif cmd == 'query_key_only':
                 key, = args
-                send('result', (key, docstring_guess_from_key(key)))
+                send(code, 'result', (key, docstring_guess_from_key(key)))
             elif cmd == 'exit':
                 break
         except Exception as e:
-            send('error', repr(e))
+            send(code, 'error', repr(e))
 
 
 if __name__ == '__worker__':
@@ -270,12 +280,12 @@ if __name__ == '__worker__':
 
 elif __name__ == '__main__':
     def callback(key, docs):
-        print key
-        for match, doc in docs.iteritems():
-            print '-->', match
-            print doc.strip()
-            print
-        print
+        print(key)
+        for match, doc in six.iteritems(docs):
+            print('-->', match)
+            print(str(doc).strip())
+            print()
+        print()
 
     r = SubprocessLoader(callback)
 

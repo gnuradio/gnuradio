@@ -584,17 +584,17 @@ namespace gr {
     std::vector<float> pc_input_buffers_full_var();
 
     /*!
-     * \brief Gets instantaneous fullness of \p which input buffer.
+     * \brief Gets instantaneous fullness of \p which output buffer.
      */
     float pc_output_buffers_full(int which);
 
     /*!
-     * \brief Gets average fullness of \p which input buffer.
+     * \brief Gets average fullness of \p which output buffer.
      */
     float pc_output_buffers_full_avg(int which);
 
     /*!
-     * \brief Gets variance of fullness of \p which input buffer.
+     * \brief Gets variance of fullness of \p which output buffer.
      */
     float pc_output_buffers_full_var(int which);
 
@@ -705,6 +705,30 @@ namespace gr {
 	 * \brief the system message handler
      */
     void system_handler(pmt::pmt_t msg);
+
+    /*!
+     * \brief Set the logger's output level.
+     *
+     * Sets the level of the logger. This takes a string that is
+     * translated to the standard levels and can be (case insensitive):
+     *
+     * \li off , notset
+     * \li debug
+     * \li info
+     * \li notice
+     * \li warn
+     * \li error
+     * \li crit
+     * \li alert
+     * \li fatal
+     * \li emerg
+     */
+    void set_log_level(std::string level);
+
+    /*!
+     * \brief Get the logger's output level
+     */
+    std::string log_level();
 
 	/*!
      * \brief returns true when execution has completed due to a message connection
@@ -928,6 +952,8 @@ namespace gr {
    /*! \brief Make sure we don't think we are finished
 	*/
    void clear_finished(){ d_finished = false; }
+
+   std::string identifier() const;
 
   };
 

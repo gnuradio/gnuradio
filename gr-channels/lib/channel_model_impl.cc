@@ -61,7 +61,7 @@ namespace gr {
 	d_taps.push_back(0);
       }
 
-      d_timing_offset = filter::fractional_resampler_cc::make(0, epsilon);
+      d_timing_offset = filter::mmse_resampler_cc::make(0, epsilon);
 
       d_multipath = filter::fir_filter_ccc::make(1, d_taps);
 

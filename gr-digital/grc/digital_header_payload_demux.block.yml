@@ -1,0 +1,93 @@
+id: digital_header_payload_demux
+label: Header/Payload Demux
+
+parameters:
+-   id: header_len
+    label: Header Length (Symbols)
+    dtype: int
+-   id: header_padding
+    label: Header Padding (Uncertainty / Symbols)
+    dtype: int
+    default: '0'
+-   id: items_per_symbol
+    label: Items per symbol
+    dtype: int
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: guard_interval
+    label: Guard Interval (items)
+    dtype: int
+    default: '0'
+    hide: ${ ('none' if guard_interval else 'part') }
+-   id: length_tag_key
+    label: Length tag key
+    dtype: string
+    default: '"frame_len"'
+-   id: trigger_tag_key
+    label: Trigger tag key
+    dtype: string
+    default: '""'
+    hide: ${ ('none' if trigger_tag_key else 'part') }
+-   id: output_symbols
+    label: Output Format
+    dtype: enum
+    options: ['False', 'True']
+    option_labels: [Items, Symbols]
+    hide: ${ 'part' if vlen == 1 else 'none' }
+-   id: type
+    label: IO Type
+    dtype: enum
+    options: [complex, float, int, short, byte]
+    option_attributes:
+        itemsize: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+            gr.sizeof_char]
+    hide: part
+-   id: timing_tag_key
+    label: Timing tag key
+    dtype: string
+    default: '"rx_time"'
+-   id: samp_rate
+    label: Sampling Rate
+    dtype: int
+    default: samp_rate
+-   id: special_tags
+    label: Special Tag Keys
+    dtype: raw
+    default: (,)
+
+inputs:
+-   domain: stream
+    dtype: ${ type }
+-   label: trigger
+    domain: stream
+    dtype: byte
+    optional: true
+-   domain: message
+    id: header_data
+
+outputs:
+-   label: out_hdr
+    domain: stream
+    dtype: ${ type }
+    vlen: '${ {True: items_per_symbol, False: 1}[output_symbols] }'
+-   label: out_payload
+    domain: stream
+    dtype: ${ type }
+    vlen: '${ {True: items_per_symbol, False: 1}[output_symbols] }'
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.header_payload_demux(
+            ${header_len},
+            ${items_per_symbol},
+            ${guard_interval},
+            ${length_tag_key},
+            ${trigger_tag_key},
+            ${output_symbols},
+            ${type.itemsize},
+            ${timing_tag_key},
+            ${samp_rate},
+            ${special_tags},
+            ${header_padding})
+
+file_format: 1

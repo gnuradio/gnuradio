@@ -22,5 +22,4 @@ include(GrPython)
 GR_PYTHON_INSTALL(PROGRAMS
   uhd_burst_detector.py
   DESTINATION ${GR_PKG_DATA_DIR}/examples/tags
-  COMPONENT "runtime_python"
 )

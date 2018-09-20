@@ -1,0 +1,50 @@
+id: digital_gfsk_mod
+label: GFSK Mod
+
+parameters:
+-   id: samples_per_symbol
+    label: Samples/Symbol
+    dtype: int
+    default: '2'
+-   id: sensitivity
+    label: Sensitivity
+    dtype: real
+    default: '1.0'
+-   id: bt
+    label: BT
+    dtype: real
+    default: '0.35'
+-   id: verbose
+    label: Verbose
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(verbose) == 'False' else 'none') }
+-   id: log
+    label: Log
+    dtype: bool
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['On', 'Off']
+    hide: ${ ('part' if str(log) == 'False' else 'none') }
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: complex
+
+templates:
+    imports: from gnuradio import digital
+    make: |-
+        digital.gfsk_mod(
+            samples_per_symbol=${samples_per_symbol},
+            sensitivity=${sensitivity},
+            bt=${bt},
+            verbose=${verbose},
+            log=${log})
+
+file_format: 1

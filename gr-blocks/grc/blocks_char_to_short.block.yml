@@ -1,0 +1,25 @@
+id: blocks_char_to_short
+label: Char To Short
+
+parameters:
+-   id: vlen
+    label: Vec Length
+    dtype: int
+    default: '1'
+    hide: ${ 'part' if vlen == 1 else 'none' }
+
+inputs:
+-   domain: stream
+    dtype: byte
+    vlen: ${ vlen }
+
+outputs:
+-   domain: stream
+    dtype: short
+    vlen: ${ vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.char_to_short(${vlen})
+
+file_format: 1

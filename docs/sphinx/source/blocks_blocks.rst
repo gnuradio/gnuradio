@@ -87,8 +87,6 @@ gnuradio.blocks
 .. autoblock:: gnuradio.blocks.max_ss
 .. autoblock:: gnuradio.blocks.message_burst_source
 .. autoblock:: gnuradio.blocks.message_debug
-.. autoblock:: gnuradio.blocks.message_sink
-.. autoblock:: gnuradio.blocks.message_source
 .. autoblock:: gnuradio.blocks.message_strobe
 .. autoblock:: gnuradio.blocks.message_strobe_random
 .. autoblock:: gnuradio.blocks.min_ff

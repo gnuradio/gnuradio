@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #
 # Copyright 2008 Free Software Foundation, Inc.
 #
@@ -19,8 +20,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import blocks_swig as blocks
 from gnuradio import gr
+
+from . import blocks_swig as blocks
+
 
 class stream_to_vector_decimator(gr.hier_block2):
     """

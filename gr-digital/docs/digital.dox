@@ -159,18 +159,9 @@ gr::digital::constellation_receiver_cb,
 gr::digital::constellation_soft_decoder_cf, or
 gr::digital::lms_dd_equalizer_cc).
 
-The gr-digital/python/digital/psk.py module also holds functions
-similar to digital.psk_constellation but that create a full modulator
-and demodulator chain derived from digital.generic_mod_demod.
+The gr-digital/python/digital/psk.py module  holds functions
+similar to digital.psk_constellation.
 
-<pre>
-    psk_mod(constellation_points, mod_code, differential, *args, **kwargs)
-    psk_demod(constellation_points, mod_code, differential, *args, **kwargs)
-</pre>
-
-The args and kwargs are parameters of the generic_mod or generic_demod
-passed directly to them. See \ref digital_generic_mod_demod for
-details of this interface.
 
 There is another Python file full of helper functions to create
 different constellations. This is found in the
@@ -235,9 +226,6 @@ what has been described for PSK exist here:
 <pre>
     qam_constellation(constellation_points, differential, mod_code,
                       large_ampls_to_corners)
-    qam_mod(constellation_points, differential, mod_code, *args, **kwargs)
-    qam_demod(constellation_points, differential, mod_code,
-              large_ampls_to_corner, *args, **kwargs)
 </pre>
 
 The parameters to these functions is the same as for the PSK
@@ -266,6 +254,8 @@ modulation.
 
 \section digital_generic_mod_demod The Generic Modulator/Demodulator
 Hierarchical Blocks
+
+This module is deprecated and will be removed in GNU Radio 3.9.
 
 Since digital modulation and demodulation are complex functions, the
 different parts can be done by different existing GNU Radio blocks. We

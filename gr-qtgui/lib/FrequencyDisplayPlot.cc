@@ -107,7 +107,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 
   // Create a curve for each input
   // Automatically deleted when parent is deleted
-  for(int i = 0; i < d_nplots; i++) {
+  for(unsigned int i = 0; i < d_nplots; ++i) {
     d_ydata.push_back(new double[d_numPoints]);
     memset(d_ydata[i], 0x0, d_numPoints*sizeof(double));
 
@@ -247,7 +247,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(int nplots, QWidget* parent)
 
 FrequencyDisplayPlot::~FrequencyDisplayPlot()
 {
-  for(int i = 0; i < d_nplots; i++)
+  for(unsigned int i = 0; i < d_nplots; ++i)
     delete [] d_ydata[i];
   delete[] d_max_fft_data;
   delete[] d_min_fft_data;
@@ -374,7 +374,7 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
         d_min_fft_data = new double[d_numPoints];
         d_max_fft_data = new double[d_numPoints];
 
-        for(int i = 0; i < d_nplots; i++) {
+        for(unsigned int i = 0; i < d_nplots; ++i) {
           delete[] d_ydata[i];
           d_ydata[i] = new double[d_numPoints];
 
@@ -397,7 +397,7 @@ FrequencyDisplayPlot::plotNewData(const std::vector<double*> dataPoints,
       }
 
       double bottom=1e20, top=-1e20;
-      for(int n = 0; n < d_nplots; n++) {
+      for(unsigned int n = 0; n < d_nplots; ++n) {
 
         memcpy(d_ydata[n], &(dataPoints[n][_in_index]), _npoints_in*sizeof(double));
 

@@ -143,7 +143,6 @@ namespace gr {
         virtual void sync_reset();
 
       private:
-        enum ted_type d_type;
 
       protected:
         /*!

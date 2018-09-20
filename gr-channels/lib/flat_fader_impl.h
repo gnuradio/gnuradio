@@ -48,7 +48,7 @@ namespace gr {
 
         // random walk variate
         boost::mt19937 seed_2;
-        boost::uniform_real<> dist_2; // U(-pi,pi)
+        boost::uniform_real<> dist_2; // U(0,1)
         boost::variate_generator<boost::mt19937&, boost::uniform_real<> > rv_2;
 
       public:
@@ -75,6 +75,7 @@ namespace gr {
 
         flat_fader_impl(unsigned int N, float fDTs, bool LOS, float K, int seed);
         gr_complex next_sample();
+        void next_samples(std::vector<gr_complex> &HVec, int n_samples);
 
     }; /* class flat_fader_impl */
   } /* namespace channels */
