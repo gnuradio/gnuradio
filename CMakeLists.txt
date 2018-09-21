@@ -69,7 +69,7 @@ set(APPLECLANG_MIN_VERSION "500")
 # This will suppress developer warnings during the cmake process that can occur
 # if a newer cmake version than the minimum is used.
 if(POLICY CMP0026)
-    cmake_policy(SET CMP0026 OLD)
+    cmake_policy(SET CMP0026 NEW)
 endif()
 if(POLICY CMP0043)
     cmake_policy(SET CMP0043 OLD)
