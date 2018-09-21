@@ -230,6 +230,23 @@ class EnumParam(InputParam):
     def set_tooltip_text(self, text):
         self._input.set_tooltip_text(text)
 
+class BoolParam(InputParam):
+    """Provide a switch button for Bool types."""
+
+    def __init__(self, *args, **kwargs):
+        InputParam.__init__(self, *args, **kwargs)
+        self._input = Gtk.Switch()
+        self._input.connect('state-set', self._apply_change)
+        self._input.connect('state-set', self._editing_callback)
+        self.pack_start(self._input, False, False, 0)
+        value = self.param.get_value()
+        self._input.set_active(eval(value))
+
+    def get_text(self):
+        return self._input.get_active()
+
+    def set_tooltip_text(self, text):
+        self._input.set_tooltip_text(text)
 
 class EnumEntryParam(InputParam):
     """Provide an entry box and drop down menu for Raw Enum types."""
