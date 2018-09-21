@@ -134,8 +134,8 @@ class Config(CoreConfig):
     def main_window_size(self, size=None):
         if size is None:
             size = [None, None]
-        w = self.entry('main_window_width', size[0], default=1)
-        h = self.entry('main_window_height', size[1], default=1)
+        w = self.entry('main_window_width', size[0], default=800)
+        h = self.entry('main_window_height', size[1], default=600)
         return w, h
 
     def file_open(self, filename=None):
