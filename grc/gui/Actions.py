@@ -455,7 +455,8 @@ TOGGLE_CONSOLE_WINDOW = actions.register("win.toggle_console_window",
     label='Show _Console Panel',
     tooltip='Toggle visibility of the console',
     keypresses=["<Ctrl>r"],
-    preference_name='console_window_visible'
+    preference_name='console_window_visible',
+    default=True
 )
 # TODO: Might be able to convert this to a Gio.PropertyAction eventually.
 #       actions would need to be defined in the correct class and not globally
@@ -463,7 +464,8 @@ TOGGLE_BLOCKS_WINDOW = actions.register("win.toggle_blocks_window",
     label='Show _Block Tree Panel',
     tooltip='Toggle visibility of the block tree widget',
     keypresses=["<Ctrl>b"],
-    preference_name='blocks_window_visible'
+    preference_name='blocks_window_visible',
+    default=True
 )
 TOGGLE_SCROLL_LOCK = actions.register("win.console.scroll_lock",
     label='Console Scroll _Lock',
