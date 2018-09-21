@@ -199,7 +199,10 @@ class SubprocessLoader(object):
                     raise ValueError('Got wrong auth code')
                 return cmd, args
             except ValueError:
-                continue  # ignore invalid output from worker
+                if self._worker.poll():
+                    raise IOError("Worker died")
+                else:
+                    continue  # ignore invalid output from worker
         else:
             raise IOError("Can't read worker response")
 
