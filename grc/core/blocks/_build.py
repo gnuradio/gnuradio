@@ -17,7 +17,6 @@
 
 from __future__ import absolute_import
 
-import collections
 import itertools
 import re
 
@@ -41,7 +40,7 @@ def build(id, label='', category='', flags='', documentation='',
     cls.label = label or block_id.title()
     cls.category = [cat.strip() for cat in category.split('/') if cat.strip()]
 
-    cls.flags = Flags(to_list(flags))
+    cls.flags = Flags(flags)
     if re.match(r'options$|variable|virtual', block_id):
         cls.flags.set(Flags.NOT_DSP, Flags.DISABLE_BYPASS)
 

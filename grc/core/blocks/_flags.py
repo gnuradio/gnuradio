@@ -17,6 +17,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 
 class Flags(object):
 
@@ -28,7 +30,11 @@ class Flags(object):
     HAS_PYTHON = 'python'
     HAS_CPP = 'cpp'
 
-    def __init__(self, flags):
+    def __init__(self, flags=None):
+        if flags is None:
+            flags = set()
+        if isinstance(flags, six.string_types):
+            flags = (f.strip() for f in flags.replace(',', '').split())
         self.data = set(flags)
 
     def __getattr__(self, item):
@@ -36,6 +42,9 @@ class Flags(object):
 
     def __contains__(self, item):
         return item in self.data
+
+    def __str__(self):
+        return ', '.join(self.data)
 
     def set(self, *flags):
         self.data.update(flags)
