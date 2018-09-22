@@ -2,8 +2,11 @@
 from grc.core.blocks._flags import Flags
 
 
-def test_simple():
-    assert 'test' in Flags('_test_')
+def test_simple_init():
+    assert 'test' not in Flags()
+    assert 'test' in Flags(' test')
+    assert 'test' in Flags('test, foo')
+    assert 'test' in Flags({'test', 'foo'})
 
 
 def test_deprecated():
@@ -13,14 +16,14 @@ def test_deprecated():
 
 def test_extend():
     f = Flags('a')
-    f += 'b'
+    f.set('b')
     assert isinstance(f, Flags)
-    f += u'b'
+    f.set(u'b')
     assert isinstance(f, Flags)
     f = Flags(u'a')
-    f += 'b'
+    f.set('b')
     assert isinstance(f, Flags)
-    f += u'b'
+    f.set(u'b')
     assert isinstance(f, Flags)
 
-    assert str(f) == 'abb'
+    assert str(f) == 'a, b'
