@@ -66,8 +66,9 @@ class Evaluated(object):
     def __set__(self, instance, value):
         attribs = instance.__dict__
         value = value or self.default
-        if isinstance(value, six.text_type) and value.startswith('${') and value.endswith('}'):
+        if isinstance(value, six.string_types) and value.startswith('${') and value.endswith('}'):
             attribs[self.name_raw] = value[2:-1].strip()
+            attribs.pop(self.name, None)  # reset previous eval result
         else:
             attribs[self.name] = type(self.default)(value)
 
