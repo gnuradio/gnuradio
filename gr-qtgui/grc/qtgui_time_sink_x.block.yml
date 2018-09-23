@@ -516,7 +516,7 @@ templates:
 
         self.${id}.set_y_label(${ylabel}, ${yunit})
 
-        self.${id}.enable_tags(0, ${entags})
+        self.${id}.enable_tags(${entags})
         self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_delay}, ${tr_chan}, ${tr_tag})
         self.${id}.enable_autoscale(${autoscale})
         self.${id}.enable_grid(${grid})
@@ -524,8 +524,9 @@ templates:
         self.${id}.enable_control_panel(${ctrlpanel})
         self.${id}.enable_stem_plot(${stemplot})
 
-        if not ${legend}:
-            self.${id}.disable_legend()
+        % if legend == "False":
+        self.${id}.disable_legend()
+        % endif
 
         labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
             ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
@@ -548,6 +549,17 @@ templates:
                     self.${id}.set_line_label(i, "Re{{Data {0}}}".format(i/2))
                 else:
                     self.${id}.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+            else:
+                self.${id}.set_line_label(i, labels[i])
+            self.${id}.set_line_width(i, widths[i])
+            self.${id}.set_line_color(i, colors[i])
+            self.${id}.set_line_style(i, styles[i])
+            self.${id}.set_line_marker(i, markers[i])
+            self.${id}.set_line_alpha(i, alphas[i])
+        % else:
+        for i in range(${1 if type.startswith('msg') else int(nconnections)}):
+            if len(labels[i]) == 0:
+                self.${id}.set_line_label(i, "Data {0}".format(i))
             else:
                 self.${id}.set_line_label(i, labels[i])
             self.${id}.set_line_width(i, widths[i])
