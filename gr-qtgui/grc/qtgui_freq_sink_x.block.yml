@@ -414,11 +414,13 @@ templates:
         self.${id}.enable_axis_labels(${axislabels})
         self.${id}.enable_control_panel(${ctrlpanel})
 
-        if not ${legend}:
-            self.${id}.disable_legend()
+        % if legend == "False":
+        self.${id}.disable_legend()
+        % endif
 
-        if ${type} == "float" or ${type} == "msg_float":
-            self.${id}.set_plot_pos_half(not ${freqhalf})
+        % if type == "float" or type == "msg_float":
+        self.${id}.set_plot_pos_half(not ${freqhalf})
+        % endif 
 
         labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
             ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]

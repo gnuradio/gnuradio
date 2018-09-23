@@ -418,8 +418,9 @@ templates:
         self.${id}.enable_grid(${grid})
         self.${id}.enable_axis_labels(${axislabels})
 
-        if not ${legend}:
-            self.${id}.disable_legend()
+        % if legend == "False":
+        self.${id}.disable_legend()
+        % endif
 
         labels = [${label1}, ${label2}, ${label3}, ${label4}, ${label5},
             ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
