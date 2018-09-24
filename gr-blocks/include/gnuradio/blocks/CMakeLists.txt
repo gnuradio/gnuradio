@@ -25,6 +25,7 @@ install(FILES
     add_blk.h
     add_const_v.h
     and_blk.h
+    and_const.h
     api.h
     argmax.h
     control_loop.h
@@ -73,6 +74,7 @@ install(FILES
     char_to_short.h
     check_lfsr_32k_s.h
     complex_to_interleaved_short.h
+    complex_to_interleaved_char.h
     complex_to_float.h
     complex_to_magphase.h
     complex_to_imag.h
