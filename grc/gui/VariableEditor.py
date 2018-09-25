@@ -116,7 +116,7 @@ class VariableEditor(Gtk.VBox):
         id_column.set_resizable(True)
         id_column.set_max_width(Utils.scale_scalar(300))
         id_column.set_min_width(Utils.scale_scalar(80))
-        id_column.set_fixed_width(Utils.scale_scalar(100))
+        id_column.set_fixed_width(Utils.scale_scalar(120))
         id_column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
         id_column.set_cell_data_func(self.id_cell, self.set_properties)
         self.id_column = id_column
