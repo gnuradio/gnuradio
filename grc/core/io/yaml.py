@@ -22,6 +22,7 @@ from collections import OrderedDict
 import six
 import yaml
 
+from ..params.param import attributed_str
 
 class GRCDumper(yaml.SafeDumper):
     @classmethod
@@ -39,6 +40,8 @@ class GRCDumper(yaml.SafeDumper):
             self.represented_objects[self.alias_key] = node
 
         for item_key, item_value in six.iteritems(data):
+            if type(item_value) == attributed_str:
+                item_value = str(attributed_str)
             node_key = self.represent_data(item_key)
             node_value = self.represent_data(item_value)
             value.append((node_key, node_value))
