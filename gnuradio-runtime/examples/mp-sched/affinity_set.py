@@ -21,30 +21,30 @@ class affinity_set(gr.top_block):
         gr.top_block.__init__(self, "Affinity Set Test")
 
         ##################################################
-	# Variables
-	##################################################
-	self.samp_rate = samp_rate = 32000
+        # Variables
+        ##################################################
+        self.samp_rate = samp_rate = 32000
 
-	##################################################
-	# Blocks
-	##################################################
+        ##################################################
+        # Blocks
+        ##################################################
         vec_len = 1
-	self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*vec_len, samp_rate)
-	self.blocks_null_source_0 = blocks.null_source(gr.sizeof_gr_complex*vec_len)
-	self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_gr_complex*vec_len)
-	self.filter_filt_0 = filter.fir_filter_ccc(1, 40000*[0.2+0.3j,])
-	self.filter_filt_1 = filter.fir_filter_ccc(1, 40000*[0.2+0.3j,])
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*vec_len, samp_rate)
+        self.blocks_null_source_0 = blocks.null_source(gr.sizeof_gr_complex*vec_len)
+        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_gr_complex*vec_len)
+        self.filter_filt_0 = filter.fir_filter_ccc(1, 40000*[0.2+0.3j,])
+        self.filter_filt_1 = filter.fir_filter_ccc(1, 40000*[0.2+0.3j,])
 
-	self.filter_filt_0.set_processor_affinity([0,])
-	self.filter_filt_1.set_processor_affinity([0,1])
+        self.filter_filt_0.set_processor_affinity([0,])
+        self.filter_filt_1.set_processor_affinity([0,1])
 
-	##################################################
-	# Connections
-	##################################################
-	self.connect((self.blocks_null_source_0, 0), (self.blocks_throttle_0, 0))
-	self.connect((self.blocks_throttle_0, 0), (self.filter_filt_0, 0))
-	self.connect((self.filter_filt_0, 0), (self.filter_filt_1, 0))
-	self.connect((self.filter_filt_1, 0), (self.blocks_null_sink_0, 0))
+        ##################################################
+        # Connections
+        ##################################################
+        self.connect((self.blocks_null_source_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.filter_filt_0, 0))
+        self.connect((self.filter_filt_0, 0), (self.filter_filt_1, 0))
+        self.connect((self.filter_filt_1, 0), (self.blocks_null_sink_0, 0))
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -60,15 +60,15 @@ if __name__ == '__main__':
 
     while(1):
         ret = input('Enter a new Core # or Press Enter to quit: ')
-	if(len(ret) == 0):
+        if(len(ret) == 0):
             tb.stop()
-	    sys.exit(0)
+            sys.exit(0)
         elif(ret.lower() == "none"):
             tb.filter_filt_0.unset_processor_affinity()
-	else:
+        else:
             try:
                 n = int(ret)
-	    except ValueError:
+            except ValueError:
                 print("Invalid number")
-	    else:
+            else:
                 tb.filter_filt_0.set_processor_affinity([n,])
