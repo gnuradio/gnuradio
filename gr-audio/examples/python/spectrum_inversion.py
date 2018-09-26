@@ -50,13 +50,13 @@ class my_top_block(gr.top_block):
         src = audio.source (sample_rate, args.audio_input)
         dst = audio.sink (sample_rate, args.audio_output)
 
-	vec1 = [1, -1]
-	vsource = blocks.vector_source_f(vec1, True)
-	multiply = blocks.multiply_ff()
+        vec1 = [1, -1]
+        vsource = blocks.vector_source_f(vec1, True)
+        multiply = blocks.multiply_ff()
 
-	self.connect(src, (multiply, 0))
-	self.connect(vsource, (multiply, 1))
-	self.connect(multiply, dst)
+        self.connect(src, (multiply, 0))
+        self.connect(vsource, (multiply, 1))
+        self.connect(multiply, dst)
 
 
 if __name__ == '__main__':
