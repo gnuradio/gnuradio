@@ -4,6 +4,7 @@
   - pad_sink
   - virtual_source
   - virtual_sink
+  - epy_block
   - epy_module
   - note
   - import
