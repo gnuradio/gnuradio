@@ -35,7 +35,7 @@ class CMakeFileEditor(object):
 
     def append_value(self, entry, value, to_ignore_start='', to_ignore_end=''):
         """ Add a value to an entry. """
-        regexp = re.compile('(%s\(%s[^()]*?)\s*?(\s?%s)\)' % (entry, to_ignore_start, to_ignore_end),
+        regexp = re.compile(r'(%s\(%s[^()]*?)\s*?(\s?%s)\)' % (entry, to_ignore_start, to_ignore_end),
                             re.MULTILINE)
         substi = r'\1' + self.separator + value + r'\2)'
         (self.cfile, nsubs) = regexp.subn(substi, self.cfile, count=1)
@@ -80,7 +80,7 @@ class CMakeFileEditor(object):
 
     def delete_entry(self, entry, value_pattern=''):
         """Remove an entry from the current buffer."""
-        regexp = '%s\s*\([^()]*%s[^()]*\)[^\n]*\n' % (entry, value_pattern)
+        regexp = r'%s\s*\([^()]*%s[^()]*\)[^\n]*\n' % (entry, value_pattern)
         regexp = re.compile(regexp, re.MULTILINE)
         (self.cfile, nsubs) = re.subn(regexp, '', self.cfile, count=1)
         return nsubs
@@ -98,7 +98,7 @@ class CMakeFileEditor(object):
         on lines that aren't comments """
         filenames = []
         reg = re.compile(regex)
-        fname_re = re.compile('[a-zA-Z]\w+\.\w{1,5}$')
+        fname_re = re.compile(r'[a-zA-Z]\w+\.\w{1,5}$')
         for line in self.cfile.splitlines():
             if len(line.strip()) == 0 or line.strip()[0] == '#':
                 continue
@@ -141,6 +141,5 @@ class CMakeFileEditor(object):
 
     def check_for_glob(self, globstr):
         """ Returns true if a glob as in globstr is found in the cmake file """
-        glob_re = r'GLOB\s[a-z_]+\s"%s"' % globstr.replace('*', '\*')
+        glob_re = r'GLOB\s[a-z_]+\s"%s"' % globstr.replace('*', r'\*')
         return re.search(glob_re, self.cfile, flags=re.MULTILINE|re.IGNORECASE) is not None
-

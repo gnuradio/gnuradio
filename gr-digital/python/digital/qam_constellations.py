@@ -73,7 +73,7 @@ rotations are based off of.
 For 16QAM:
  - n = 4
  - (2^n)*(n!) = 384
- - k \in [0x0, 0xF]
+ - k \\in [0x0, 0xF]
  - pi = 0, 1, 2, 3
         0, 1, 3, 2
         0, 2, 1, 3

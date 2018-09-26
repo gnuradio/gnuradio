@@ -53,7 +53,7 @@ class ParserCCBlock(object):
                    }
         def _typestr_to_iotype(typestr):
             """ Convert a type string (e.g. sizeof(int) * vlen) to the type (e.g. 'int'). """
-            type_match = re.search('sizeof\s*\(([^)]*)\)', typestr)
+            type_match = re.search(r'sizeof\s*\(([^)]*)\)', typestr)
             if type_match is None:
                 return self.type_trans('char')
             return self.type_trans(type_match.group(1))
@@ -76,10 +76,10 @@ class ParserCCBlock(object):
             elif len(vlen_parts) > 1:
                 return '*'.join(vlen_parts).strip()
         iosig = {}
-        iosig_regex = '(?P<incall>gr::io_signature::make[23v]?)\s*\(\s*(?P<inmin>[^,]+),\s*(?P<inmax>[^,]+),' + \
-                      '\s*(?P<intype>(\([^\)]*\)|[^)])+)\),\s*' + \
-                      '(?P<outcall>gr::io_signature::make[23v]?)\s*\(\s*(?P<outmin>[^,]+),\s*(?P<outmax>[^,]+),' + \
-                      '\s*(?P<outtype>(\([^\)]*\)|[^)])+)\)'
+        iosig_regex = r'(?P<incall>gr::io_signature::make[23v]?)\s*\(\s*(?P<inmin>[^,]+),\s*(?P<inmax>[^,]+),' + \
+                      r'\s*(?P<intype>(\([^\)]*\)|[^)])+)\),\s*' + \
+                      r'(?P<outcall>gr::io_signature::make[23v]?)\s*\(\s*(?P<outmin>[^,]+),\s*(?P<outmax>[^,]+),' + \
+                      r'\s*(?P<outtype>(\([^\)]*\)|[^)])+)\)'
         iosig_match = re.compile(iosig_regex, re.MULTILINE).search(self.code_cc)
         try:
             iosig['in'] = _figure_out_iotype_and_vlen(iosig_match.group('incall'),
@@ -210,9 +210,9 @@ class ParserCCBlock(object):
             return param_list
         # Go, go, go!
         if self.version in ('37', '38'):
-            make_regex = 'static\s+sptr\s+make\s*'
+            make_regex = r'static\s+sptr\s+make\s*'
         else:
-            make_regex = '(?<=_API)\s+\w+_sptr\s+\w+_make_\w+\s*'
+            make_regex = r'(?<=_API)\s+\w+_sptr\s+\w+_make_\w+\s*'
         make_match = re.compile(make_regex, re.MULTILINE).search(self.code_h)
         try:
             params_list = _scan_param_list(make_match.end(0))
@@ -226,4 +226,3 @@ class ParserCCBlock(object):
                            'default': plist[2],
                            'in_constructor': True})
         return params
-

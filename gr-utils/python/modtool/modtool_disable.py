@@ -117,7 +117,7 @@ class ModToolDisable(ModTool):
             blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
             if self._info['version'] in ('37', '38'):
                 blockname = os.path.splitext(fname)[0]
-            swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
+            swigfile = re.sub(r'(%include\s+"'+fname+r'")', r'//\1', swigfile)
             print("Changing %s..." % self._file['swig'])
             swigfile = re.sub('(GR_SWIG_BLOCK_MAGIC2?.+'+blockname+'.+;)', r'//\1', swigfile)
             open(self._file['swig'], 'w').write(swigfile)
@@ -163,4 +163,3 @@ class ModToolDisable(ModTool):
             cmake.write()
             self.scm.mark_files_updated((os.path.join(subdir, 'CMakeLists.txt'),))
         print("Careful: 'gr_modtool disable' does not resolve dependencies.")
-
