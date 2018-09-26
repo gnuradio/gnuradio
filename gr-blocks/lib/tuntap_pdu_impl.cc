@@ -168,9 +168,12 @@ namespace gr {
       ifr.ifr_mtu = MTU;
 
       /* try to set MTU */
-      if ((err = ioctl(sfd, SIOCSIFMTU, (void *) &ifr)) < 0)
-        return err;
+      if ((err = ioctl(sfd, SIOCSIFMTU, (void *) &ifr)) < 0) {
+          close(sfd);
+          return err;
+      }
 
+      close(sfd);
       return MTU;
     }
 #endif
