@@ -8,8 +8,8 @@ template_keywords = [
     "GR_EXPAND_X_H", "GR_EXPAND_CC_H", "GR_EXPAND_X_CC_H_IMPL", "GR_EXPAND_X_CC_H"
 ]
 template_regex = re.compile(
-    "^(?P<template_type>" + "|".join(template_keywords) + ")\(" +
-    "(?P<category>\w+)\s+(?P<name>\w+_XX?X?)(_impl)?\s+(?P<types>[\w\s]+)" + "\)$")
+    r"^(?P<template_type>" + "|".join(template_keywords) + r")\(" +
+    r"(?P<category>\w+)\s+(?P<name>\w+_XX?X?)(_impl)?\s+(?P<types>[\w\s]+)" + r"\)$")
 
 cpp_keywords = ["abs", "add", "and", "max", "min" "not" "xor"]
 types = {"s": "std::int16_t", "i": "std::int32_t", "b": "std::uint8_t", "c": "gr_complex", "f": "float"}

@@ -269,7 +269,7 @@ All of the source sequence will be consumed.
                         u'    A Record which has a named attribute for each of the keyword arguments.',
                         u'']
 
-        expected = """A convenience factory for creating Records.
+        expected = r"""A convenience factory for creating Records.
 
 :param \*\*kwargs: Each keyword argument will be used to initialise an
    attribute with the same name as the argument and the given
@@ -382,7 +382,7 @@ All of the source sequence will be consumed.
             A Record which has a named attribute for each of the keyword arguments.
         """
 
-        expected = """A convenience factory for creating Records.
+        expected = r"""A convenience factory for creating Records.
 
         :param \*\*kwargs: Each keyword argument will be used to initialise an
             attribute with the same name as the argument and the given
@@ -584,4 +584,3 @@ All of the source sequence will be consumed.
 
         source_lines = source.splitlines()
         self.assertRaises(HieroglyphError, lambda: parse_hieroglyph_text(source_lines))
-

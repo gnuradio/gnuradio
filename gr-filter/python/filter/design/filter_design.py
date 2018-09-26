@@ -2094,19 +2094,19 @@ class gr_plot_filter(QtGui.QMainWindow):
             if (row[0] == "restype"):
                 restype = row[1]
             elif(row[0] == "taps"):
-                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                testcpx = re.findall(r"[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
                 if(len(testcpx) > 0): # it's a complex
                     taps = [complex(r) for r in row[1:]]
                 else:
                     taps = [float(r) for r in row[1:]]
             elif(row[0] == "b" or row[0] == "a"):
-                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                testcpx = re.findall(r"[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
                 if(len(testcpx) > 0): # it's a complex
                     b_a[row[0]] = [complex(r) for r in row[1:]]
                 else:
                     b_a[row[0]]= [float(r) for r in row[1:]]
             else:
-                testcpx = re.findall("[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
+                testcpx = re.findall(r"[+-]?\d+\.*\d*[Ee]?[-+]?\d+j", row[1])
                 if(len(testcpx) > 0): # it's a complex
                     params[row[0]] = complex(row[1])
                 else: # assume it's a float
