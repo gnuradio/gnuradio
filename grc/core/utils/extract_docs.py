@@ -166,7 +166,11 @@ class SubprocessLoader(object):
                 break  # normal termination, return
             finally:
                 if self._worker:
+                    self._worker.stdin.close()
+                    self._worker.stdout.close()
+                    self._worker.stderr.close()
                     self._worker.terminate()
+                    self._worker.wait()
         else:
             print("Warning: docstring loader crashed too often", file=sys.stderr)
         self._thread = None
