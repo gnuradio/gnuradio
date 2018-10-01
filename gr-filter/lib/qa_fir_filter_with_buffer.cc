@@ -102,7 +102,6 @@ namespace gr {
 	o_type   *actual_output = (float*)volk_malloc(OUTPUT_LEN*sizeof(float), align);
 	tap_type *taps = (float*)volk_malloc(MAX_TAPS*sizeof(float), align);
 
-	srandom(0);	// we want reproducibility
 	memset(dline, 0, INPUT_LEN*sizeof(i_type));
 
 	for(int n = 0; n <= MAX_TAPS; n++) {
@@ -215,7 +214,6 @@ namespace gr {
 	o_type   *actual_output = (gr_complex*)volk_malloc(OUTPUT_LEN*sizeof(gr_complex), align);
 	tap_type *taps = (gr_complex*)volk_malloc(MAX_TAPS*sizeof(gr_complex), align);
 
-	srandom(0);	// we want reproducibility
 	memset(dline, 0, INPUT_LEN*sizeof(i_type));
 
 	for(int n = 0; n <= MAX_TAPS; n++) {
@@ -325,7 +323,6 @@ namespace gr {
 	o_type   *actual_output = (gr_complex*)volk_malloc(OUTPUT_LEN*sizeof(gr_complex), align);
 	tap_type *taps = (float*)volk_malloc(MAX_TAPS*sizeof(float), align);
 
-	srandom(0);	// we want reproducibility
 	memset(dline, 0, INPUT_LEN*sizeof(i_type));
 
 	for(int n = 0; n <= MAX_TAPS; n++) {
