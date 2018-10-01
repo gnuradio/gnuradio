@@ -29,25 +29,40 @@
 #include <gnuradio/digital/header_format_default.h>
 #include <gnuradio/blocks/unpack_k_bits.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/xoroshiro128p.h>
 #include <volk/volk.h>
 #include <boost/test/unit_test.hpp>
 #include <stdio.h>
 #include <cmath>
 
+static void xoroshiro_fill_buffer(uint8_t *buffer, unsigned int length, uint64_t seed = 42) {
+  uint64_t rng_state[2];
+  xoroshiro128p_seed(rng_state, seed);
+  uint64_t *data_ptr = reinterpret_cast<uint64_t*>(buffer);
+  for(unsigned int i = 0; i < length / 8; ++i) {
+    *data_ptr = xoroshiro128p_next(rng_state);
+    data_ptr++;
+  }
+  if(length % 8) {
+    uint64_t tmp = xoroshiro128p_next(rng_state);
+    uint8_t *tmpptr = reinterpret_cast<uint8_t*>(&tmp);
+    for(unsigned int counter = length - length % 8; counter < length; ++counter) {
+      buffer[counter] = *tmpptr;
+      ++tmpptr;
+    }
+  }
+}
+
 BOOST_AUTO_TEST_CASE(test_default_format)
 {
-  static const int N = 4800;
+  static const int N = 4800; /* multiple of 8 for easy random generation */
   int upper8 = (N >> 8) & 0xFF;
   int lower8 = N & 0xFF;
 
   std::string ac = "1010101010101010"; //0xAAAA
   unsigned char *data = (unsigned char*)volk_malloc(N*sizeof(unsigned char),
                                                     volk_get_alignment());
-  srand (time(NULL));
-  for(unsigned int i = 0; i < N; i++) {
-    data[i] = rand() % 256;
-  }
-
+  xoroshiro_fill_buffer(data, N);
   gr::digital::header_format_default::sptr hdr_format;
   hdr_format = gr::digital::header_format_default::make(ac, 0);
 
@@ -90,12 +105,7 @@ BOOST_AUTO_TEST_CASE(test_default_parse)
   unsigned char *bits = (unsigned char*)volk_malloc(nbits*sizeof(unsigned char),
                                                     volk_get_alignment());
 
-  srand(time(NULL));
-
-  // Fill bytes with random values
-  for(unsigned int i = 0; i < nbytes; i++) {
-    bytes[i] = rand() % 256;
-  }
+  xoroshiro_fill_buffer(bytes, nbytes);
 
   int index = 0;
   bytes[index+0] = 0xAA;
@@ -140,10 +150,7 @@ BOOST_AUTO_TEST_CASE(test_counter_format)
   std::string ac = "1010101010101010"; //0xAAAA
   unsigned char *data = (unsigned char*)volk_malloc(N*sizeof(unsigned char),
                                                     volk_get_alignment());
-  srand (time(NULL));
-  for(unsigned int i = 0; i < N; i++) {
-    data[i] = rand() % 256;
-  }
+  xoroshiro_fill_buffer(data, N);
 
   uint16_t expected_bps = 2;
   gr::digital::header_format_counter::sptr hdr_format;
@@ -204,14 +211,7 @@ BOOST_AUTO_TEST_CASE(test_counter_parse)
                                                      volk_get_alignment());
   unsigned char *bits = (unsigned char*)volk_malloc(nbits*sizeof(unsigned char),
                                                     volk_get_alignment());
-
-  srand(time(NULL));
-
-  // Fill bytes with random values
-  for(unsigned int i = 0; i < nbytes; i++) {
-    bytes[i] = rand() % 256;
-  }
-
+  xoroshiro_fill_buffer(bytes, nbytes);
   int index = 0;
   bytes[index+0] = 0xAA;
   bytes[index+1] = 0xAA;
