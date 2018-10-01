@@ -6,7 +6,7 @@ parameters:
     label: Type
     dtype: enum
     default: TCP_SERVER
-    options: ['"TCP_SERVER"', '"TCP_CLIENT"', '"UDP_SERVER"', '"UDP_CLIENT"']
+    options: ["TCP_SERVER", "TCP_CLIENT", "UDP_SERVER", "UDP_CLIENT"]
     option_labels: [TCP Server, TCP Client, UDP Server, UDP Client]
 -   id: host
     label: Host
@@ -25,23 +25,7 @@ parameters:
     default: 'False'
     options: ['True', 'False']
     option_labels: [Enabled, Disabled]
-    hide: '${ #if ((type == ''"TCP_CLIENT"'') or (type == ''"TCP_SERVER"''))
-
-        #if (str(tcp_no_delay) == ''False'')
-
-        part
-
-        #else
-
-        none
-
-        #end if
-
-        #else
-
-        all
-
-        #end if }'
+    hide: ${ (( 'part' if (str(tcp_no_delay) == 'False') else 'none') if ((type == 'TCP_CLIENT') or (type == 'TCP_SERVER')) else 'all') }
 
 inputs:
 -   domain: message
@@ -55,7 +39,7 @@ outputs:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.socket_pdu(${type}, ${host}, ${port}, ${mtu}, ${tcp_no_delay})
+    make: blocks.socket_pdu(${repr(type)}, ${host}, ${port}, ${mtu}, ${tcp_no_delay})
 
 documentation: |-
     For server modes, leave Host blank to bind to all interfaces (equivalent to 0.0.0.0).
