@@ -29,6 +29,7 @@
 #include <cmath>
 #include <gnuradio/trellis/quicksort_index.h>
 #include <gnuradio/trellis/interleaver.h>
+#include <gnuradio/xoroshiro128p.h>
 
 namespace gr {
   namespace trellis {
@@ -107,18 +108,29 @@ namespace gr {
       d_INTER.resize(d_K);
       d_DEINTER.resize(d_K);
 
-      if(seed>=0)
-	srand((unsigned int)seed);
+      uint64_t rng_state[2];
+      xoroshiro128p_seed(rng_state, seed);
       std::vector<int> tmp(d_K);
+      unsigned char *bytes = reinterpret_cast<unsigned char*>(&tmp[0]);
+
+      for(unsigned int i = 0; i < d_K; i += 8) {
+              *(reinterpret_cast<uint64_t*>(bytes + i)) = xoroshiro128p_next(rng_state);
+      }
+      if(d_K % 8) {
+              uint64_t randval = xoroshiro128p_next(rng_state);
+              unsigned char *valptr = reinterpret_cast<unsigned char*>(&randval);
+              for(unsigned int idx = (d_K / 8)*8; idx < d_K; ++idx) {
+                      bytes[idx] = *valptr++;
+              }
+      }
       for(int i=0;i<d_K;i++) {
-	d_INTER[i]=i;
-	tmp[i] = rand();
+              d_INTER[i]=i;
       }
       quicksort_index <int> (tmp,d_INTER,0,d_K-1);
 
       // generate DEINTER table
       for(int i=0;i<d_K;i++) {
-	d_DEINTER[d_INTER[i]]=i;
+              d_DEINTER[d_INTER[i]]=i;
       }
     }
 
