@@ -54,6 +54,9 @@ namespace gr {
 
       polar_decoder_sc_systematic::~polar_decoder_sc_systematic()
       {
+          volk_free(d_llr_vec);
+          volk_free(d_u_hat_vec);
+          volk_free(d_frame_vec);
       }
 
       void
