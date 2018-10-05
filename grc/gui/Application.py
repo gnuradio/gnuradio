@@ -596,6 +596,12 @@ class Application(Gtk.Application):
         ##################################################
         elif action == Actions.FLOW_GRAPH_NEW:
             main.new_page()
+            args = (GLib.Variant('s', 'qt_gui'),)
+            flow_graph = main.current_page.flow_graph
+            flow_graph._options_block.params['generate_options'].set_value(str(args[0])[1:-1])
+            flow_graph_update(flow_graph)
+        elif action == Actions.FLOW_GRAPH_NEW_TYPE:
+            main.new_page()
             if args:
                 flow_graph = main.current_page.flow_graph
                 flow_graph._options_block.params['generate_options'].set_value(str(args[0])[1:-1])
