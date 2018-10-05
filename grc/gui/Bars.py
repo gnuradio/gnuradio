@@ -50,7 +50,7 @@ LIST_NAME = [
 
 # The list of actions for the toolbar.
 TOOLBAR_LIST = [
-    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new'), Actions.FLOW_GRAPH_OPEN,
+    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'), Actions.FLOW_GRAPH_OPEN,
     (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent'), Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_CLOSE],
     [Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.FLOW_GRAPH_SCREEN_CAPTURE],
     [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
@@ -65,7 +65,7 @@ TOOLBAR_LIST = [
 # The list of actions and categories for the menu bar.
 MENU_BAR_LIST = [
   ('_File', [
-    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new'), Actions.FLOW_GRAPH_DUPLICATE,
+    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'), Actions.FLOW_GRAPH_DUPLICATE,
      Actions.FLOW_GRAPH_OPEN, (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent')],
     [Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_SAVE_AS, Actions.FLOW_GRAPH_SAVE_COPY],
     [Actions.FLOW_GRAPH_SCREEN_CAPTURE],
@@ -131,13 +131,13 @@ class SubMenuHelper(object):
             print ("refresh", create_func, obj, set_func)
             set_func(obj, create_func())
 
-    def create_flow_graph_new(self):
+    def create_flow_graph_new_type(self):
         """ Different flowgraph types """
         menu = Gio.Menu()
         platform = Gtk.Application.get_default().platform
         generate_modes = platform.get_generate_options()
         for key, name, default in generate_modes:
-            target = "app.flowgraph.new::{}".format(key)
+            target = "app.flowgraph.new_type::{}".format(key)
             menu.append(name, target)
         return menu
 

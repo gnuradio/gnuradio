@@ -227,6 +227,8 @@ FLOW_GRAPH_NEW = actions.register("app.flowgraph.new",
     tooltip='Create a new flow graph',
     icon_name='document-new',
     keypresses=["<Ctrl>n"],
+)
+FLOW_GRAPH_NEW_TYPE = actions.register("app.flowgraph.new_type",
     parameter="s",
 )
 FLOW_GRAPH_OPEN = actions.register("app.flowgraph.open",
