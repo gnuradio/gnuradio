@@ -40,8 +40,6 @@ class GRCDumper(yaml.SafeDumper):
             self.represented_objects[self.alias_key] = node
 
         for item_key, item_value in six.iteritems(data):
-            if type(item_value) == attributed_str:
-                item_value = str(attributed_str)
             node_key = self.represent_data(item_key)
             node_value = self.represent_data(item_value)
             value.append((node_key, node_value))
@@ -82,6 +80,7 @@ GRCDumper.add_representer(ListFlowing, GRCDumper.represent_list_flowing)
 GRCDumper.add_representer(tuple, GRCDumper.represent_list)
 GRCDumper.add_representer(MultiLineString, GRCDumper.represent_ml_string)
 GRCDumper.add_representer(yaml.nodes.ScalarNode, lambda r, n: n)
+GRCDumper.add_representer(attributed_str, GRCDumper.represent_str)
 
 
 def dump(data, stream=None, **kwargs):
