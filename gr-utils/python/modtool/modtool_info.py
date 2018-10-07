@@ -151,6 +151,7 @@ class ModToolInfo(ModTool):
                 print("        API version: %s" % {
                         '36': 'pre-3.7',
                         '37': 'post-3.7',
+                        '38': 'post-3.8',
                         'autofoo': 'Autotools (pre-3.5)'
                         }[mod_info['version']])
             else:

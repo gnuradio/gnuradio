@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2017 Free Software Foundation, Inc.
+# Copyright 2013, 2017-2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -230,9 +230,27 @@ class ModToolAdd(ModTool):
                     self.scm.mark_files_updated((self._file['qalib'],))
                 except IOError:
                     print("Can't add C++ QA files.")
+        def _add_qa_boostutf():
+            " Add C++ QA files for 3.8 API "
+            fname_qa_cc = 'qa_%s.cc' % self._info['blockname']
+            self._write_tpl('qa_cpp_boostutf', 'lib', fname_qa_cc)
+            if not self._skip_cmakefiles:
+                try:
+                    ed = CMakeFileEditor(self._file['cmlib'])
+                    cmake_list_var = \
+                        'test_{}_source'.format(self._info['modname'])
+                    if not ed.append_value(
+                            'list',
+                            fname_qa_cc,
+                            to_ignore_start='APPEND ' + cmake_list_var):
+                        print("Couldn't add C++ QA files.")
+                    ed.write()
+                    self.scm.mark_files_updated((self._file['cmlib'],))
+                except IOError:
+                    print("Can't add C++ QA files.")
         fname_cc = None
         fname_h = None
-        if self._info['version'] == '37':
+        if self._info['version'] in ('37', '38'):
             fname_h = self._info['blockname'] + '.h'
             fname_cc = self._info['blockname'] + '.cc'
             if self._info['blocktype'] in ('source', 'sink', 'sync', 'decimator',
@@ -249,6 +267,8 @@ class ModToolAdd(ModTool):
         if self._add_cc_qa:
             if self._info['version'] == '37':
                 _add_qa()
+            if self._info['version'] == '38':
+                _add_qa_boostutf()
             elif self._info['version'] == '36':
                 print("Warning: C++ QA files not supported for 3.6-style OOTs.")
             elif self._info['version'] == 'autofoo':
