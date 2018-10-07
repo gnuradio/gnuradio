@@ -68,7 +68,7 @@ class ModToolMakeXML(ModTool):
         self.setup(options)
         # 1) Go through lib/
         if not self._skip_subdirs['lib']:
-            if self._info['version'] == '37':
+            if self._info['version'] in ('37', '38'):
                 files = self._search_files('lib', '*_impl.cc')
             else:
                 files = self._search_files('lib', '*.cc')

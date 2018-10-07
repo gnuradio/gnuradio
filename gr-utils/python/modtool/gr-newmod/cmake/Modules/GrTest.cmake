@@ -46,7 +46,7 @@ function(GR_ADD_TEST test_name)
             get_target_property(location ${target} LOCATION)
             if(location)
                 get_filename_component(path ${location} PATH)
-                string(REGEX REPLACE "\\$\\(.*\\)" ${CMAKE_BUILD_TYPE} path ${path})
+                string(REGEX REPLACE "\\$\\(.*\\)" "${CMAKE_BUILD_TYPE}" path "${path}")
                 list(APPEND GR_TEST_LIBRARY_DIRS ${path})
             endif(location)
         endforeach(target)
@@ -113,7 +113,6 @@ function(GR_ADD_TEST test_name)
         execute_process(COMMAND chmod +x ${sh_file})
 
         add_test(${test_name} ${SHELL} ${sh_file})
-
     endif(UNIX)
 
     if(WIN32)
@@ -142,3 +141,26 @@ function(GR_ADD_TEST test_name)
     endif(WIN32)
 
 endfunction(GR_ADD_TEST)
+
+########################################################################
+# Add a C++ unit test and setup the environment for a unit test.
+# Takes the same arguments as the ADD_TEST function.
+#
+# test_name -- An identifier for your test, for usage with ctest -R
+# test_source -- Path to the .cc file
+#
+# Before calling set the following variables:
+# GR_TEST_TARGET_DEPS  - built targets for the library path
+########################################################################
+function(GR_ADD_CPP_TEST test_name test_source)
+    add_executable(${test_name} ${test_source})
+    target_link_libraries(
+        ${test_name}
+        ${GR_TEST_TARGET_DEPS}
+    )
+    set_target_properties(${test_name}
+        PROPERTIES COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN"
+    )
+    GR_ADD_TEST(${test_name} ${test_name})
+endfunction(GR_ADD_CPP_TEST)
+
