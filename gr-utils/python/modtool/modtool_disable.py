@@ -83,6 +83,9 @@ class ModToolDisable(ModTool):
                 ed.comment_out_lines(r'%s::suite\(\)' % fname_base, comment_str='//')
                 ed.write()
                 self.scm.mark_file_updated(self._file['qalib'])
+            elif self._info['version'] == '38':
+                fname_qa_cc = 'qa_{}.cc'.format(self._info['blockname'])
+                cmake.comment_out_lines(fname_qa_cc)
             elif self._info['version'] == '36':
                 cmake.comment_out_lines('add_executable.*'+fname)
                 cmake.comment_out_lines('target_link_libraries.*'+os.path.splitext(fname)[0])
@@ -99,7 +102,7 @@ class ModToolDisable(ModTool):
                 print("Changing %s..." % self._file['swig'])
             if nsubs > 1: # Need to find a single BLOCK_MAGIC
                 blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
-                if self._info['version'] == '37':
+                if self._info['version'] in ('37', '38'):
                     blockname = os.path.splitext(fname)[0]
                 (swigfile, nsubs) = re.subn('(GR_SWIG_BLOCK_MAGIC2?.+%s.+;)' % blockname, r'//\1', swigfile)
                 if nsubs > 1:
@@ -112,7 +115,7 @@ class ModToolDisable(ModTool):
             as well as the block magic """
             swigfile = open(self._file['swig']).read()
             blockname = os.path.splitext(fname[len(self._info['modname'])+1:])[0]
-            if self._info['version'] == '37':
+            if self._info['version'] in ('37', '38'):
                 blockname = os.path.splitext(fname)[0]
             swigfile = re.sub('(%include\s+"'+fname+'")', r'//\1', swigfile)
             print("Changing %s..." % self._file['swig'])
@@ -133,7 +136,7 @@ class ModToolDisable(ModTool):
         for subdir in self._subdirs:
             if self._skip_subdirs[subdir]:
                 continue
-            if self._info['version'] == '37' and subdir == 'include':
+            if self._info['version'] in ('37', '38') and subdir == 'include':
                 subdir = 'include/%s' % self._info['modname']
             try:
                 cmake = CMakeFileEditor(os.path.join(subdir, 'CMakeLists.txt'))

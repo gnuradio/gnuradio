@@ -209,7 +209,7 @@ class ParserCCBlock(object):
                     continue
             return param_list
         # Go, go, go!
-        if self.version == '37':
+        if self.version in ('37', '38'):
             make_regex = 'static\s+sptr\s+make\s*'
         else:
             make_regex = '(?<=_API)\s+\w+_sptr\s+\w+_make_\w+\s*'
