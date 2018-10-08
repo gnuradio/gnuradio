@@ -184,7 +184,7 @@ public:
   }
 
 signals:
-  void whichTrigger(unsigned int which, int width);
+  void whichTrigger(unsigned int which, unsigned int width);
 
 public slots:
   void getOne()   { emit whichTrigger(d_which, 1); }
@@ -423,7 +423,7 @@ public:
   }
 
 signals:
-  void whichTrigger(unsigned int which, int);
+  void whichTrigger(unsigned int which, unsigned int);
 
 public slots:
   void getNone()   { emit whichTrigger(d_which, 255); }
