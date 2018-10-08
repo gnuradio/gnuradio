@@ -83,12 +83,13 @@ class ExecFlowGraphThread(threading.Thread):
         r = "\n"
         while r:
             GLib.idle_add(Messages.send_verbose_exec, r)
-            r = self.process.stdout.read(1024).decode('utf-8','ignore')
+            r = self.process.stdout.read(1)
         self.process.poll()
         GLib.idle_add(self.done)
 
     def done(self):
         """Perform end of execution tasks."""
         Messages.send_end_exec(self.process.returncode)
+        self.page.process.wait()
         self.page.process = None
         self.update_callback()
