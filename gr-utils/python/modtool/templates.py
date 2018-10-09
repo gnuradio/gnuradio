@@ -731,7 +731,7 @@ ${str_to_fancyc_comment(license)}
 #define INCLUDED_${modname.upper()}_${blockname.upper()}_H
 
 #include <${modname}_api.h>
-% if blocktype == 'noblock'
+% if blocktype == 'noblock':
 class ${modname.upper()}_API ${blockname}
 {
   ${blockname}(${arglist});
