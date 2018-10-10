@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2014 Free Software Foundation, Inc.
+# Copyright 2013-2014,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -442,6 +442,25 @@ class ${blockname}(${parenttype}):
 
 '''
 
+# C++ file for QA (Boost UTF style)
+Templates['qa_cpp_boostutf'] = '''/* -*- c++ -*- */
+${str_to_fancyc_comment(license)}
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <${include_dir_prefix}/${blockname}.h>
+#include <gnuradio/attributes.h>
+#include <boost/test/unit_test.hpp>
+
+BOOST_AUTO_TEST_CASE(test_${blockname}_t1)
+{
+    // Put test here
+}
+
+'''
+
 # C++ file for QA
 Templates['qa_cpp'] = '''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}
@@ -712,7 +731,7 @@ ${str_to_fancyc_comment(license)}
 #define INCLUDED_${modname.upper()}_${blockname.upper()}_H
 
 #include <${modname}_api.h>
-% if blocktype == 'noblock'
+% if blocktype == 'noblock':
 class ${modname.upper()}_API ${blockname}
 {
   ${blockname}(${arglist});

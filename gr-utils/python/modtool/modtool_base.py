@@ -1,5 +1,5 @@
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -105,6 +105,8 @@ class ModTool(object):
                 os.path.isdir(os.path.join('include', 'gnuradio', self._info['modname']))
             ):
             self._info['version'] = '37'
+        if not os.path.isfile(os.path.join('cmake', 'Modules', 'FindCppUnit.cmake')):
+            self._info['version'] = '38'
         if options.skip_lib or not self._has_subdirs['lib']:
             self._skip_subdirs['lib'] = True
         if options.skip_python or not self._has_subdirs['python']:
@@ -133,7 +135,7 @@ class ModTool(object):
         self._file['cmpython'] = os.path.join(self._info['pydir'], 'CMakeLists.txt')
         if self._info['is_component']:
             self._info['includedir'] = os.path.join('include', 'gnuradio', self._info['modname'])
-        elif self._info['version'] == '37':
+        elif self._info['version'] in ('37', '38'):
             self._info['includedir'] = os.path.join('include', self._info['modname'])
         else:
             self._info['includedir'] = 'include'
