@@ -1,5 +1,5 @@
 """
-Copyright 2010-2011,2014 Free Software Foundation, Inc.
+Copyright 2010-2011,2014,2018 Free Software Foundation, Inc.
 
 This file is part of GNU Radio
 
@@ -41,8 +41,8 @@ parameters:
 -   id: stream_args
     label: Stream args
     dtype: string
-    options: [peak=0.003906]
-    option_labels: [peak=0.003906]
+    options: ['', peak=0.003906]
+    option_labels: ['', peak=0.003906]
     hide: ${'$'}{ 'none' if stream_args else 'part'}
 -   id: stream_chans
     label: Stream channels
@@ -103,11 +103,9 @@ parameters:
     options: [ ${", ".join([str(n) for n in range(1, max_nchan+1)])} ]
     hide: part
 -   id: samp_rate
-    label: Smp rate (Sps)
+    label: Samp rate (Sps)
     dtype: real
 ${params}
-
-
 
 inputs:
 -   domain: message
@@ -130,24 +128,24 @@ templates:
         import time
     make: |
         uhd.usrp_${sourk}(
-                ",".join((${'$'}{dev_addr}, ${'$'}{dev_args})),
-                uhd.stream_args(
-                        cpu_format="${'$'}{type}",
-                        ${'%'} if otw:
-                        otw_format=${'$'}{otw},
-                        ${'%'} endif
-                        ${'%'} if stream_args:
-                        args=${'$'}{stream_args},
-                        ${'%'} endif
-                        ${'%'} if stream_chans:
-                        channels=${'$'}{stream_chans},
-                        ${'%'} else:
-                        channels=range(${'$'}{nchan}),
-                        ${'%'} endif
-                ),
-                ${'%'} if len_tag_name:
-                ${'$'}{len_tag_name},
+            ",".join((${'$'}{dev_addr}, ${'$'}{dev_args})),
+            uhd.stream_args(
+                cpu_format="${'$'}{type}",
+                ${'%'} if otw:
+                otw_format=${'$'}{otw},
                 ${'%'} endif
+                ${'%'} if stream_args:
+                args=${'$'}{stream_args},
+                ${'%'} endif
+                ${'%'} if stream_chans:
+                channels=${'$'}{stream_chans},
+                ${'%'} else:
+                channels=range(${'$'}{nchan}),
+                ${'%'} endif
+            ),
+            ${'%'} if len_tag_name:
+            ${'$'}{len_tag_name},
+            ${'%'} endif
         )
         ${'%'} if clock_rate:
         self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
@@ -163,8 +161,8 @@ templates:
     % for n in range(max_nchan):
     -   set_center_freq(${'center_freq' + str(n)}, ${n})
     -   self.${'$'}{id}.set_${'$'}{'normalized_' if norm_gain${n} else ''}gain(gain${n}, ${n})
-    -   ${'$'}{'set_lo_source(lo_source${n}, uhd.ALL_LOS, ${n})' if not hide_lo_controls else ''}
-    -   ${'$'}{'set_lo_export_enabled(lo_export${n}, uhd.ALL_LOS, ${n})' if not hide_lo_controls else ''}
+    -   ${'$'}{'set_lo_source(lo_source${n}, uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
+    -   ${'$'}{'set_lo_export_enabled(lo_export${n}, uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
     -   set_antenna(${'ant' + str(n)}, ${n})
     -   set_bandwidth(${'bw' + str(n)}, ${n})
     % endfor
@@ -224,10 +222,10 @@ documentation: |-
     Center frequency:
     The center frequency is the overall frequency of the RF chain. \\
     For greater control of how the UHD tunes elements in the RF chain, \\
-pass a tune_request object rather than a simple target frequency.
+    pass a tune_request object rather than a simple target frequency.
     Tuning with an LO offset example: uhd.tune_request(freq, lo_off)
     Tuning without DSP: uhd.tune_request(target_freq, dsp_freq=0, \\
-dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
+    dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
 
     Antenna:
     For subdevices with only one antenna, this may be left blank. \\
@@ -240,7 +238,7 @@ dsp_freq_policy=uhd.tune_request.POLICY_MANUAL)
     See the daughterboard application notes for possible configurations.
 
     Length tag key (Sink only):
-    When a nonempty string is given, the USRP sink will look for length    tags \\
+    When a nonempty string is given, the USRP sink will look for length tags \\
     to determine transmit burst lengths.
 
     See the UHD manual for more detailed documentation:
@@ -265,7 +263,7 @@ PARAMS_TMPL = """
 -   id: norm_gain${n}
     label: 'Ch${n}: Gain Type'
     category: RF Options
-    dtype: bool
+    dtype: enum
     default: 'False'
     options: ['False', 'True']
     option_labels: [Absolute (dB), Normalized]
@@ -295,14 +293,14 @@ PARAMS_TMPL = """
     dtype: string
     default: internal
     options: [internal, external, companion]
-    hide: ${'$'}{ 'all' if not nchan > ${n} else ('all' if hide_lo_controls else 'none')}
+    hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if show_lo_controls else 'all')}
 -   id: lo_export${n}
     label: 'Ch${n}: LO Export'
     category: RF Options
     dtype: bool
     default: 'False'
     options: ['True', 'False']
-    hide: ${'$'}{ 'all' if not nchan > ${n} else ('all' if hide_lo_controls else 'none')}
+    hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if show_lo_controls else 'all')}
 -   id: dc_offs_enb${n}
     label: 'Ch${n}: Enable DC Offset Correction'
     category: FE Corrections
@@ -330,13 +328,11 @@ SHOW_CMD_PORT_PARAM = """
 """
 
 SHOW_LO_CONTROLS_PARAM = """
--   id: hide_lo_controls
+-   id: show_lo_controls
     label: Show LO Controls
     category: Advanced
     dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['Yes', 'No']
+    default: 'False'
     hide: part
 """
 
@@ -354,37 +350,44 @@ ${'%'} endif
 """
 
 def parse_tmpl(_tmpl, **kwargs):
-        from mako.template import Template
-        block_template = Template(_tmpl)
-        return str(block_template.render(**kwargs))
+    """ Render _tmpl using the kwargs. """
+    from mako.template import Template
+    block_template = Template(_tmpl)
+    return str(block_template.render(**kwargs))
 
-max_num_mboards = 8
-max_num_channels = max_num_mboards*4
+MAX_NUM_MBOARDS = 8
+MAX_NUM_CHANNELS = MAX_NUM_MBOARDS*4
 
 if __name__ == '__main__':
-        import sys
-        for file in sys.argv[1:]:
-                if file.endswith ('source.block.yml'):
-                        sourk = 'source'
-                        direction = 'out'
-                elif file.endswith ('sink.block.yml'):
-                        sourk = 'sink'
-                        direction = 'in'
-                else: raise Exception('is % a source or sink?'%file)
-
-                params = ''.join([parse_tmpl(PARAMS_TMPL, n=n, sourk=sourk) for n in range(max_num_channels)])
-                params += SHOW_CMD_PORT_PARAM
-                params += SHOW_LO_CONTROLS_PARAM
-                if sourk == 'sink':
-                        params += TSBTAG_PARAM
-                        lentag_arg = TSBTAG_ARG
-                else: lentag_arg = ''
-
-                open(file, 'w').write(parse_tmpl(MAIN_TMPL,
-                        lentag_arg=lentag_arg,
-                        max_nchan=max_num_channels,
-                        max_mboards=max_num_mboards,
-                        params=params,
-                        sourk=sourk,
-                        direction=direction,
-                ))
+    import sys
+    for file in sys.argv[1:]:
+        if file.endswith('source.block.yml'):
+            sourk = 'source'
+            direction = 'out'
+        elif file.endswith('sink.block.yml'):
+            sourk = 'sink'
+            direction = 'in'
+        else:
+            raise Exception('is % a source or sink?'%file)
+        params = ''.join([
+            parse_tmpl(PARAMS_TMPL, n=n, sourk=sourk)
+            for n in range(MAX_NUM_CHANNELS)
+        ])
+        params += SHOW_CMD_PORT_PARAM
+        params += SHOW_LO_CONTROLS_PARAM
+        if sourk == 'sink':
+            params += TSBTAG_PARAM
+            lentag_arg = TSBTAG_ARG
+        else:
+            lentag_arg = ''
+        open(file, 'w').write(
+            parse_tmpl(
+                MAIN_TMPL,
+                lentag_arg=lentag_arg,
+                max_nchan=MAX_NUM_CHANNELS,
+                max_mboards=MAX_NUM_MBOARDS,
+                params=params,
+                sourk=sourk,
+                direction=direction,
+            )
+        )
