@@ -155,6 +155,7 @@ macro(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   endif(HAVE_WNO_UNUSED_BUT_SET_VARIABLE)
 
   get_directory_property(cmake_include_directories INCLUDE_DIRECTORIES)
+  list(REMOVE_DUPLICATES cmake_include_directories)
   set(swig_include_dirs)
   foreach(it ${cmake_include_directories})
     set(swig_include_dirs ${swig_include_dirs} "-I${it}")
@@ -175,7 +176,7 @@ macro(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
   file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
   execute_process(
     COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
-unique = hashlib.md5('${reldir}${ARGN}').hexdigest()[:5]
+unique = hashlib.md5(b'${reldir}${ARGN}').hexdigest()[:5]
 print(re.sub('\\W', '_', '${name} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE
   )
