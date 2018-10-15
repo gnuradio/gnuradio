@@ -20,6 +20,10 @@
 #
 """ A code generator (needed by ModToolAdd) """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 from mako.template import Template
 from ..templates import Templates
 from .util_functions import str_to_fancyc_comment

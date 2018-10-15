@@ -20,6 +20,10 @@
 #
 """ Base class for the modules """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 import os
 import re
 import glob

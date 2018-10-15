@@ -19,6 +19,10 @@
 # Boston, MA 02110-1301, USA.
 #
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
 from .base import ModTool, ModToolException, get_block_candidates
 from .add import ModToolAdd
 from .disable import ModToolDisable
