@@ -194,13 +194,16 @@ namespace gr {
   void
   block::set_relative_rate(uint64_t interpolation, uint64_t decimation)
   {
+    mpz_class interp, decim;
     if (interpolation < 1)
       throw std::invalid_argument("block::set_relative_rate: interpolation rate cannot be 0");
 
     if (decimation < 1)
       throw std::invalid_argument("block::set_relative_rate: decimation rate cannot be 0");
 
-    d_mp_relative_rate = mpq_class(interpolation, decimation);
+    mpz_import(interp.get_mpz_t(), 1, 1, sizeof(interpolation), 0, 0, &interpolation);
+    mpz_import(decim.get_mpz_t(), 1, 1, sizeof(decimation), 0, 0, &decimation);
+    d_mp_relative_rate = mpq_class(interp, decim);
     d_mp_relative_rate.canonicalize();
     d_relative_rate = d_mp_relative_rate.get_d();
   }
