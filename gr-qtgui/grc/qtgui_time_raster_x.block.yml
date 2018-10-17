@@ -24,10 +24,12 @@ parameters:
 -   id: nrows
     label: Num. Rows
     dtype: int
+    default: 256
     hide: ${ ('all' if type.startswith('msg') else 'none') }
 -   id: ncols
     label: Num. Cols
     dtype: int
+    default: 256
 -   id: grid
     label: Grid
     dtype: enum
