@@ -36,8 +36,8 @@ templates:
     imports: |-
         from gnuradio import blocks
         import numpy
-    make: blocks.vector_source_${type.fcn}(map(int, numpy.random.randint(${min}, ${max},
-        ${num_samps})), ${repeat})
+    make: blocks.vector_source_${type.fcn}(list(map(int, numpy.random.randint(${min}, ${max},
+        ${num_samps})), ${repeat}))
 
 documentation: |-
     Generate num samples of random numbers of [min, max). Repeat samples if specified.
