@@ -68,15 +68,15 @@ parameters:
 -   id: clock_rate
     label: Clock Rate (Hz)
     dtype: real
-    default: '0.0'
-    options: ['0.0', 200e6, 184.32e6, 120e6, 30.72e6]
+    default: 0e0
+    options: [0e0, 200e6, 184.32e6, 120e6, 30.72e6]
     option_labels: [Default, 200 MHz, 184.32 MHz, 120 MHz, 30.72 MHz]
     hide: ${'$'}{ 'none' if clock_rate else 'part' }
 -   id: num_mboards
     label: Num Mboards
     dtype: int
-    default: '1'
-    options: ['1', '2', '3', '4', '5', '6', '7', '8']
+    default: 1
+    options: [1, 2, 3, 4, 5, 6, 7, 8]
     hide: part
 % for m in range(max_mboards):
 -   id: clock_source${m}
@@ -105,6 +105,7 @@ parameters:
 -   id: samp_rate
     label: Samp rate (Sps)
     dtype: real
+    default: samp_rate
 ${params}
 
 inputs:
@@ -147,7 +148,7 @@ templates:
             ${'$'}{len_tag_name},
             ${'%'} endif
         )
-        ${'%'} if clock_rate:
+        ${'%'} if clock_rate():
         self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
         ${'%'} endif
         self.${'$'}{id}.set_samp_rate(${'$'}{samp_rate})
@@ -263,7 +264,7 @@ PARAMS_TMPL = """
 -   id: norm_gain${n}
     label: 'Ch${n}: Gain Type'
     category: RF Options
-    dtype: enum
+    dtype: string
     default: 'False'
     options: ['False', 'True']
     option_labels: [Absolute (dB), Normalized]
@@ -275,6 +276,7 @@ PARAMS_TMPL = """
 % if sourk == 'source':
     options: [TX/RX, RX2, RX1]
     option_labels: [TX/RX, RX2, RX1]
+    default: RX2
 % else:
     options: [TX/RX]
     option_labels: [TX/RX]
