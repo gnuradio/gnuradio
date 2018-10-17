@@ -516,7 +516,7 @@ templates:
 
         self.${id}.set_y_label(${ylabel}, ${yunit})
 
-        self.${id}.enable_tags(-1, ${entags})
+        self.${id}.enable_tags(0, ${entags})
         self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_delay}, ${tr_chan}, ${tr_tag})
         self.${id}.enable_autoscale(${autoscale})
         self.${id}.enable_grid(${grid})
