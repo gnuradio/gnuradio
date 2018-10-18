@@ -42,11 +42,11 @@ templates:
         self.${id} = ${id} = fec.repetition_decoder.make(${framebits},\
         ${rep}, ${prob})
         % elif int(ndim)==1:
-        self.${id} = ${id} = map( (lambda\
-        a: fec.repetition_decoder.make(${framebits}, ${rep}, ${prob})), range(0,${dim1}))
+        self.${id} = ${id} = list(map( (lambda\
+        a: fec.repetition_decoder.make(${framebits}, ${rep}, ${prob})), range(0,${dim1})))
         % else:
-        self.${id} = ${id} = map( (lambda b: map( ( lambda a: fec.repetition_decoder.make(${framebits},\
-        ${rep}, ${prob})), range(0,${dim2}) ) ), range(0,${dim1}))
+        self.${id} = ${id} = list(map( (lambda b: map( ( lambda a: fec.repetition_decoder.make(${framebits},\
+        ${rep}, ${prob})), range(0,${dim2}) ) ), range(0,${dim1})))
         % endif
 
 documentation: ""
