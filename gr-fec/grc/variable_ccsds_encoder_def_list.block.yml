@@ -39,13 +39,13 @@ templates:
         self.${id} = ${id} = fec.ccsds_encoder_make(${framebits},\
         ${state_start}, ${mode})
         % elif int(ndim)==1:
-        self.${id} = ${id} = map(\
+        self.${id} = ${id} = list(map(\
         (lambda a: fec.ccsds_encoder_make(${framebits}, ${state_start}, ${mode})),\
-        range(0,${dim1}) )
+        range(0,${dim1}) ))
         % else:
-        self.${id} = ${id} = map( (lambda b: map(\
+        self.${id} = ${id} = list(map( (lambda b: map(\
         ( lambda a: fec.ccsds_encoder_make(${framebits}, ${state_start}, ${mode})),\
-        range(0,${dim2}) ) ), range(0,${dim1}))
+        range(0,${dim2}) ) ), range(0,${dim1})))
         % endif
 
 documentation: ""

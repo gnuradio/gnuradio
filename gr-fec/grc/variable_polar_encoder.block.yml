@@ -45,13 +45,13 @@ templates:
         self.${id} = ${id} = fec.polar_encoder.make(${block_size},\
         ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values}, ${is_packed})\
         % elif int(ndim)==1:
-        self.${id} = ${id} = map((lambda a: fec.polar_encoder.make(${block_size},\
+        self.${id} = ${id} = list(map((lambda a: fec.polar_encoder.make(${block_size},\
         ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values}, ${is_packed})),\
-        range(0, ${dim1}))
+        range(0, ${dim1})))
         % else:
-        self.${id} = ${id} = map((lambda b: map((lambda\
+        self.${id} = ${id} = list(map((lambda b: map((lambda\
         a: fec.polar_encoder.make(${block_size}, ${num_info_bits}, ${frozen_bit_positions},\
-        ${frozen_bit_values}, ${is_packed})), range(0, ${dim2}))), range(0, ${dim1}))\
+        ${frozen_bit_values}, ${is_packed})), range(0, ${dim2}))), range(0, ${dim1}))\)
         % endif
 
 file_format: 1
