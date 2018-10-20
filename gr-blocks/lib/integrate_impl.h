@@ -33,10 +33,10 @@ template<class T>
 class BLOCKS_API integrate_impl  : public  integrate<T>
     {
       int d_decim;
-      int d_vlen;
+      unsigned int d_vlen;
 
     public:
-      integrate_impl (int decim, int vlen);
+      integrate_impl (int decim, unsigned int vlen);
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,

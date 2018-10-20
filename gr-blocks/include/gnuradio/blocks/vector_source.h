@@ -71,7 +71,7 @@ template<class T>
       typedef boost::shared_ptr< vector_source<T> > sptr;
 
       static sptr make(const std::vector<T> &data,
-                       bool repeat=false, int vlen=1,
+                       bool repeat=false, unsigned int vlen=1,
                        const std::vector<tag_t> &tags=std::vector<tag_t>());
 
       virtual void rewind() = 0;

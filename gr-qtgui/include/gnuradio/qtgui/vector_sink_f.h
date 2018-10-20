@@ -69,7 +69,7 @@ namespace gr {
        * \param parent a QWidget parent object, if any
        */
       static sptr make(
-          int vlen,
+          unsigned int vlen,
           double x_start,
           double x_step,
           const std::string &x_axis_label,
@@ -88,7 +88,7 @@ namespace gr {
       virtual void* pyqwidget() = 0;
 #endif
 
-      virtual int vlen() const = 0;
+      virtual unsigned int vlen() const = 0;
       virtual void set_vec_average(const float avg) = 0;
       virtual float vec_average() const = 0;
 

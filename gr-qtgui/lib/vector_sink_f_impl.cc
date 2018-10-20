@@ -41,7 +41,7 @@ namespace gr {
 
     vector_sink_f::sptr
     vector_sink_f::make(
-          int vlen,
+          unsigned int vlen,
           double x_start,
           double x_step,
           const std::string &x_axis_label,
@@ -65,7 +65,7 @@ namespace gr {
   }
 
     vector_sink_f_impl::vector_sink_f_impl(
-          int vlen,
+          unsigned int vlen,
           double x_start,
           double x_step,
           const std::string &x_axis_label,
@@ -194,7 +194,7 @@ namespace gr {
     }
 #endif
 
-    int
+    unsigned int
     vector_sink_f_impl::vlen() const
     {
       return d_vlen;

@@ -32,13 +32,13 @@ namespace gr {
   namespace blocks {
 
     stream_to_tagged_stream::sptr
-    stream_to_tagged_stream::make(size_t itemsize, int vlen, unsigned packet_len, const std::string &len_tag_key)
+    stream_to_tagged_stream::make(size_t itemsize, unsigned int vlen, unsigned packet_len, const std::string &len_tag_key)
     {
       return gnuradio::get_initial_sptr
         (new stream_to_tagged_stream_impl(itemsize, vlen, packet_len, len_tag_key));
     }
 
-    stream_to_tagged_stream_impl::stream_to_tagged_stream_impl(size_t itemsize, int vlen, unsigned packet_len, const std::string &len_tag_key)
+    stream_to_tagged_stream_impl::stream_to_tagged_stream_impl(size_t itemsize, unsigned int vlen, unsigned packet_len, const std::string &len_tag_key)
       : gr::sync_block("stream_to_tagged_stream",
               gr::io_signature::make(1, 1, itemsize * vlen),
               gr::io_signature::make(1, 1, itemsize * vlen)),

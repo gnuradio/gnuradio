@@ -35,10 +35,10 @@ template<class T>
      private:
       std::vector<std::vector<T> > d_data;
       std::vector<tag_t> d_tags;
-      int d_vlen;
+      unsigned int d_vlen;
 
      public:
-      tsb_vector_sink_impl (int vlen, const std::string &tsb_key);
+      tsb_vector_sink_impl (unsigned int vlen, const std::string &tsb_key);
       ~tsb_vector_sink_impl ();
 
       void reset() { d_data.clear(); }

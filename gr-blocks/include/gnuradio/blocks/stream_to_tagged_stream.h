@@ -55,7 +55,7 @@ namespace gr {
        */
       static sptr make(
 	  size_t itemsize,
-	  int vlen,
+	  unsigned int vlen,
 	  unsigned packet_len,
 	  const std::string &len_tag_key
       );
