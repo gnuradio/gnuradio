@@ -88,8 +88,8 @@ class HierBlockGenerator(TopBlockGenerator):
             p = collections.OrderedDict()
             p['id'] = param_block.name
             p['label'] = param_block.params['label'].get_value() or param_block.name
-            p['dtype'] = 'raw'
-            p['value'] = param_block.params['value'].get_value()
+            p['dtype'] = param_block.params['value'].dtype
+            p['default'] = param_block.params['value'].get_value()
             p['hide'] = param_block.params['hide'].get_value()
             data['parameters'].append(p)
 
@@ -150,25 +150,24 @@ class QtHierBlockGenerator(HierBlockGenerator):
         block_n = collections.OrderedDict()
 
         # insert flags after category
-        for key, value in six.iteritems(n['block']):
+        for key, value in six.iteritems(n):
             block_n[key] = value
             if key == 'category':
                 block_n['flags'] = 'need_qt_gui'
 
-        if not block_n['name'].upper().startswith('QT GUI'):
-            block_n['name'] = 'QT GUI ' + block_n['name']
+        if not block_n['label'].upper().startswith('QT GUI'):
+            block_n['label'] = 'QT GUI ' + block_n['label']
 
         gui_hint_param = collections.OrderedDict()
-        gui_hint_param['name'] = 'GUI Hint'
-        gui_hint_param['key'] = 'gui_hint'
-        gui_hint_param['value'] = ''
-        gui_hint_param['type'] = 'gui_hint'
+        gui_hint_param['id'] = 'gui_hint'
+        gui_hint_param['label'] = 'GUI Hint'
+        gui_hint_param['dtype'] = 'gui_hint'
         gui_hint_param['hide'] = 'part'
-        block_n['param'].append(gui_hint_param)
+        block_n['parameters'].append(gui_hint_param)
 
-        block_n['make'] += (
-            "\n<% win = 'self.' + id %>"
-            "\n${ gui_hint % win }"
+        block_n['templates']['make'] += (
+            "\n<% win = 'self.%s'%id %>"
+            "\n${ gui_hint() % win }"
         )
 
         return block_n
