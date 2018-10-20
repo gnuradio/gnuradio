@@ -36,7 +36,7 @@ namespace gr {
     template <class T>
     typename vector_source<T>::sptr
     vector_source<T>::make(const std::vector<T> &data,
-                 bool repeat, int vlen,
+                 bool repeat, unsigned int vlen,
                  const std::vector<tag_t> &tags)
     {
       return gnuradio::get_initial_sptr
@@ -45,7 +45,7 @@ namespace gr {
 
     template <class T>
     vector_source_impl<T> ::vector_source_impl(const std::vector<T> &data,
-                             bool repeat, int vlen,
+                             bool repeat, unsigned int vlen,
                              const std::vector<tag_t> &tags)
     : sync_block("vector_source",
                     io_signature::make(0, 0, 0),

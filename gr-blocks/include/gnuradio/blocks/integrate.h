@@ -43,7 +43,7 @@ template<class T>
       // gr::blocks::integrate::sptr
       typedef boost::shared_ptr< integrate<T> > sptr;
 
-      static sptr make(int decim, int vlen = 1);
+      static sptr make(int decim, unsigned int vlen = 1);
     };
 
 typedef integrate<std::int16_t> integrate_ss;

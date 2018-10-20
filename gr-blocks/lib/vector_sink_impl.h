@@ -37,10 +37,10 @@ template<class T>
       std::vector<T> d_data;
       std::vector<tag_t> d_tags;
       mutable gr::thread::mutex d_data_mutex; // protects internal data access.
-      int d_vlen;
+      unsigned int d_vlen;
 
     public:
-      vector_sink_impl (int vlen, const int reserve_items);
+      vector_sink_impl (unsigned int vlen, const int reserve_items);
       ~vector_sink_impl ();
 
       void reset();
