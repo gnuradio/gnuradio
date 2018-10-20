@@ -46,6 +46,7 @@ class HierBlockGenerator(TopBlockGenerator):
             ('templates:', '\ntemplates:'),
             ('documentation:', '\ndocumentation:'),
             ('file_format:', '\nfile_format:'),
+            ('grc_source:','\ngrc_source:'),
         ]
         for r in replace:
             data = data.replace(*r)
@@ -106,8 +107,8 @@ class HierBlockGenerator(TopBlockGenerator):
                 p['dtype'] = port.dtype
                 if port.domain != Constants.GR_MESSAGE_DOMAIN:
                     p['vlen'] = var_or_value(port.vlen)
-                if port.optional:
-                    p['optional'] = True
+                #if port.optional:
+                p['optional'] = port.optional
                 data[direction].append(p)
 
         t = data['templates'] = collections.OrderedDict()

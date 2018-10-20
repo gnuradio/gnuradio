@@ -741,7 +741,7 @@ class Application(Gtk.Application):
             for b in flow_graph.selected_blocks():
                 grc_source = b.extra_data.get('grc_source', '')
                 if grc_source:
-                    main.new_page(b.grc_source, show=True)
+                    main.new_page(grc_source, show=True)
         elif action == Actions.BUSSIFY_SOURCES:
             for b in flow_graph.selected_blocks():
                 b.bussify('source')

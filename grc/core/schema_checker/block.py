@@ -51,6 +51,8 @@ BLOCK_SCHEME = expand(
 
     documentation=str_,
 
+    grc_source=Spec(types=str_, required=False, item_scheme=None),
+
     file_format=Spec(types=int, required=True, item_scheme=None),
 
     block_wrapper_path=str_,  # todo: rename/remove
