@@ -48,18 +48,6 @@ namespace gr {
       set_alignment(std::max(1,alignment_multiple));
     }
 
-    void
-    nlog10_ff_impl::setk(float k)
-    {
-      d_k = k;
-    }
-
-    void
-    nlog10_ff_impl::setn(float n)
-    {
-      d_prefactor = n / log2f(10.0f);
-    }
-
     int
     nlog10_ff_impl::work(int noutput_items,
 			      gr_vector_const_void_star &input_items,
