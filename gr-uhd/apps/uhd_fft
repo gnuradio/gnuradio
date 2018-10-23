@@ -352,8 +352,14 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         ##################################################
         # Connections
         ##################################################
+        # allows double clicking in the freq plot
         self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.qtgui_freq_sink_x_0, 'freq'))
+        self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.qtgui_waterfall_sink_x_0, 'freq'))
         self.msg_connect((self.qtgui_freq_sink_x_0, 'freq'), (self.usrp, 'command'))
+        # allows double clicking in the waterfall plot
+        self.msg_connect((self.qtgui_waterfall_sink_x_0, 'freq'), (self.qtgui_waterfall_sink_x_0, 'freq'))
+        self.msg_connect((self.qtgui_waterfall_sink_x_0, 'freq'), (self.qtgui_freq_sink_x_0, 'freq'))
+        self.msg_connect((self.qtgui_waterfall_sink_x_0, 'freq'), (self.usrp, 'command'))
         for idx in range(len(self.channels)):
             self.connect((self.usrp, idx), (self.qtgui_freq_sink_x_0, idx))
             self.connect((self.usrp, idx), (self.qtgui_time_sink_x_0, idx))
