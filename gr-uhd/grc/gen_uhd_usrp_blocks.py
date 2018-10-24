@@ -88,12 +88,8 @@ self.\$(id).set_lo_export_enabled(\$lo_export$(n), uhd.ALL_LOS, $n)
     \#if \$lo_source$(n)() and not \$hide_lo_controls()
 self.\$(id).set_lo_source(\$lo_source$(n), uhd.ALL_LOS, $n)
 	\#end if
-	\#if \$dc_offs_enb$(n)()
 self.\$(id).set_auto_dc_offset(\$dc_offs_enb$(n), $n)
-	\#end if
-	\#if \$iq_imbal_enb$(n)()
 self.\$(id).set_auto_iq_balance(\$iq_imbal_enb$(n), $n)
-	\#end if
 #end if
 \#end if
 #end for
@@ -540,7 +536,6 @@ PARAMS_TMPL = """	<param>
 		</hide>
 		<tab>RF Options</tab>
 	</param>
-#if $sourk == 'source'
 	<param>
 		<name>Ch$(n): LO Source</name>
 		<key>lo_source$(n)</key>
@@ -569,8 +564,6 @@ PARAMS_TMPL = """	<param>
 		</option>
 		<tab>RF Options</tab>
 	</param>
-#end if
-#if $sourk == 'source'
 	<param>
 		<name>Ch$(n): LO Export</name>
 		<key>lo_export$(n)</key>
@@ -595,12 +588,11 @@ PARAMS_TMPL = """	<param>
 		</option>
 		<tab>RF Options</tab>
 	</param>
-#end if
 #if $sourk == 'source'
 	<param>
 		<name>Ch$(n): Enable DC Offset Correction</name>
 		<key>dc_offs_enb$(n)</key>
-		<value>""</value>
+		<value>True</value>
 		<type>raw</type>
 		<hide>
 			\#if not \$nchan() > $n
@@ -614,7 +606,7 @@ PARAMS_TMPL = """	<param>
 	<param>
 		<name>Ch$(n): Enable IQ Imbalance Correction</name>
 		<key>iq_imbal_enb$(n)</key>
-		<value>""</value>
+		<value>True</value>
 		<type>raw</type>
 		<hide>
 			\#if not \$nchan() > $n
