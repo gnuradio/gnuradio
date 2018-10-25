@@ -536,6 +536,7 @@ PARAMS_TMPL = """	<param>
 		</hide>
 		<tab>RF Options</tab>
 	</param>
+#if $sourk == 'source'
 	<param>
 		<name>Ch$(n): LO Source</name>
 		<key>lo_source$(n)</key>
@@ -564,6 +565,8 @@ PARAMS_TMPL = """	<param>
 		</option>
 		<tab>RF Options</tab>
 	</param>
+#end if
+#if $sourk == 'source'
 	<param>
 		<name>Ch$(n): LO Export</name>
 		<key>lo_export$(n)</key>
@@ -588,6 +591,7 @@ PARAMS_TMPL = """	<param>
 		</option>
 		<tab>RF Options</tab>
 	</param>
+#end if
 #if $sourk == 'source'
 	<param>
 		<name>Ch$(n): Enable DC Offset Correction</name>
