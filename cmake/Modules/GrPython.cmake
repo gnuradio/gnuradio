@@ -98,7 +98,7 @@ try:
     print(getsitepackages()[0])
 except ImportError:
     from distutils.sysconfig import get_python_lib
-    print(get_python_lib(prefix=''))
+    print(get_python_lib())
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 endif()
