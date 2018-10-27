@@ -33,23 +33,22 @@ from . import analog_swig as analog
 
 
 class nbfm_tx(gr.hier_block2):
+    """
+    Narrow Band FM Transmitter.
+
+    Takes a single float input stream of audio samples in the range [-1,+1]
+    and produces a single FM modulated complex baseband output.
+
+    Args:
+        audio_rate: sample rate of audio stream, >= 16k (integer)
+        quad_rate: sample rate of output stream (integer)
+        tau: preemphasis time constant (default 75e-6) (float)
+        max_dev: maximum deviation in Hz (default 5e3) (float)
+        fh: high frequency at which to flatten preemphasis; < 0 means default of 0.925*quad_rate/2.0 (float)
+
+    quad_rate must be an integer multiple of audio_rate.
+    """
     def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3, fh=-1.0):
-        """
-        Narrow Band FM Transmitter.
-
-        Takes a single float input stream of audio samples in the range [-1,+1]
-        and produces a single FM modulated complex baseband output.
-
-        Args:
-            audio_rate: sample rate of audio stream, >= 16k (integer)
-            quad_rate: sample rate of output stream (integer)
-            tau: preemphasis time constant (default 75e-6) (float)
-            max_dev: maximum deviation in Hz (default 5e3) (float)
-            fh: high frequency at which to flatten preemphasis; < 0 means default of 0.925*quad_rate/2.0 (float)
-
-        quad_rate must be an integer multiple of audio_rate.
-        """
-
         gr.hier_block2.__init__(self, "nbfm_tx",
                                 gr.io_signature(1, 1, gr.sizeof_float),      # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
