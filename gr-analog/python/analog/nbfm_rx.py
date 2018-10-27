@@ -34,28 +34,27 @@ from .fm_emph import fm_deemph
 
 
 class nbfm_rx(gr.hier_block2):
+    """
+    Narrow Band FM Receiver.
+
+    Takes a single complex baseband input stream and produces a single
+    float output stream of audio sample in the range [-1, +1].
+
+    Args:
+        audio_rate: sample rate of audio stream, >= 16k (integer)
+        quad_rate: sample rate of output stream (integer)
+        tau: preemphasis time constant (default 75e-6) (float)
+        max_dev: maximum deviation in Hz (default 5e3) (float)
+
+    quad_rate must be an integer multiple of audio_rate.
+
+    Exported sub-blocks (attributes):
+      squelch
+      quad_demod
+      deemph
+      audio_filter
+    """
     def __init__(self, audio_rate, quad_rate, tau=75e-6, max_dev=5e3):
-        """
-        Narrow Band FM Receiver.
-
-        Takes a single complex baseband input stream and produces a single
-        float output stream of audio sample in the range [-1, +1].
-
-        Args:
-            audio_rate: sample rate of audio stream, >= 16k (integer)
-            quad_rate: sample rate of output stream (integer)
-            tau: preemphasis time constant (default 75e-6) (float)
-            max_dev: maximum deviation in Hz (default 5e3) (float)
-
-        quad_rate must be an integer multiple of audio_rate.
-
-        Exported sub-blocks (attributes):
-          squelch
-          quad_demod
-          deemph
-          audio_filter
-        """
-
         gr.hier_block2.__init__(self, "nbfm_rx",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature(1, 1, gr.sizeof_float))      # Output signature
