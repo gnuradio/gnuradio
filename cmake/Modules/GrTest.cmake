@@ -42,12 +42,9 @@ function(GR_ADD_TEST test_name)
         #we must manually set them in the PATH to run tests.
         #The following appends the path of a target dependency.
         foreach(target ${GR_TEST_TARGET_DEPS})
-            get_target_property(location ${target} LOCATION)
-            if(location)
-                get_filename_component(path ${location} PATH)
-                string(REGEX REPLACE "\\$\\(.*\\)" "${CMAKE_BUILD_TYPE}" path "${path}")
-                list(APPEND GR_TEST_LIBRARY_DIRS ${path})
-            endif(location)
+            get_filename_component(path $<TARGET_FILE:$target> PATH)
+            string(REGEX REPLACE "\\$\\(.*\\)" "${CMAKE_BUILD_TYPE}" path "${path}")
+            list(APPEND GR_TEST_LIBRARY_DIRS ${path})
         endforeach(target)
 
     if(WIN32)
@@ -163,4 +160,3 @@ function(GR_ADD_CPP_TEST test_name test_source)
     )
     GR_ADD_TEST(${test_name} ${test_name})
 endfunction(GR_ADD_CPP_TEST)
-
