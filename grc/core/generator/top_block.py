@@ -236,12 +236,15 @@ class TopBlockGenerator(object):
 
         # Get the virtual blocks and resolve their connections
         connection_factory = fg.parent_platform.Connection
-        virtual = [c for c in connections if isinstance(c.source_block, blocks.VirtualSource)]
-        for connection in virtual:
+        virtual_source_connections = [c for c in connections if isinstance(c.source_block, blocks.VirtualSource)]
+        for connection in virtual_source_connections:
             sink = connection.sink_port
             for source in connection.source_port.resolve_virtual_source():
                 resolved = connection_factory(fg.orignal_flowgraph, source, sink)
                 connections.append(resolved)
+
+        virtual_connections = [c for c in connections if (isinstance(c.source_block, blocks.VirtualSource) or isinstance(c.sink_block, blocks.VirtualSink))]
+        for connection in virtual_connections:
             # Remove the virtual connection
             connections.remove(connection)
 
