@@ -26,16 +26,34 @@ from distutils.spawn import find_executable
 from itertools import count
 
 import six
-from gi.repository import GLib
+from gi.repository import GLib, Gtk
 from six.moves import filter
 
 from . import colors
 from .drawable import Drawable
 from .connection import DummyConnection
-from .. import Actions, Constants, Utils, Bars, Dialogs
+from .. import Actions, Constants, Utils, Bars, Dialogs, MainWindow
 from ..external_editor import ExternalEditor
 from ...core import Messages
 from ...core.FlowGraph import FlowGraph as CoreFlowgraph
+
+
+class _ContextMenu(object):
+    """
+    Help with drawing the right click context menu
+    """
+
+    def __init__(self, main_window):
+        self._menu = Gtk.Menu.new_from_model(Bars.ContextMenu())
+        self._menu.attach_to_widget(main_window)
+
+        # In GTK 3.22 Menu.popup was deprecated, we want to popup at the
+        # pointer, so use that new function instead if we can.
+        if Gtk.check_version(3,22,0) is None:
+            self.popup = self._menu.popup_at_pointer
+
+    def popup(self, event):
+        self._menu.popup(None, None, None, None, event.button, event.time)
 
 
 class FlowGraph(CoreFlowgraph, Drawable):
@@ -52,6 +70,16 @@ class FlowGraph(CoreFlowgraph, Drawable):
         """
         super(self.__class__, self).__init__(parent, **kwargs)
         Drawable.__init__(self)
+
+        # We need to get the main window object so the context menu can be to the
+        # registered actions
+        app = Gtk.Application.get_default()
+        main_window = None
+        for window in app.get_windows():
+            if isinstance(window, MainWindow.MainWindow):
+                main_window = window
+                break
+
         self.drawing_area = None
         # important vars dealing with mouse event tracking
         self.element_moved = False
@@ -64,7 +92,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         # current mouse hover element
         self.element_under_mouse = None
         # context menu
-        self._context_menu = Bars.ContextMenu()
+        self._context_menu = _ContextMenu(main_window)
         self.get_context_menu = lambda: self._context_menu
 
         self._new_connection = None
@@ -661,7 +689,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
         if self._new_connection:
             self._new_connection = None
             self.drawing_area.queue_draw()
-        self._context_menu.popup(None, None, None, None, event.button, event.time)
+        self._context_menu.popup(event)
 
     def handle_mouse_selector_press(self, double_click, coordinate):
         """
