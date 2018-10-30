@@ -80,11 +80,13 @@ class Block2(object):
 
 def utoascii(text):
     """
-    Convert unicode text into ascii and escape quotes.
+    Convert unicode text into ascii and escape quotes and backslashes.
     """
     if text is None:
         return ''
     out = text.encode('ascii', 'replace')
+    # swig will require us to replace blackslash with 4 backslashes
+    out = out.replace(b'\\', b'\\\\\\\\')
     out = out.replace(b'"', b'\\"').decode('ascii')
     return str(out)
 
