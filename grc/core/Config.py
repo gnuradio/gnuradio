@@ -27,7 +27,7 @@ from . import Constants
 class Config(object):
     name = 'GNU Radio Companion (no gui)'
     license = __doc__.strip()
-    website = 'http://gnuradio.org'
+    website = 'https://www.gnuradio.org/'
 
     hier_block_lib_dir = os.environ.get('GRC_HIER_PATH', Constants.DEFAULT_HIER_BLOCK_LIB_DIR)
 
