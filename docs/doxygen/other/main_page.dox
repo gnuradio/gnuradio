@@ -14,11 +14,11 @@
 <H1> Welcome to GNU Radio! </H1>
 
 For details about GNU Radio and using it, please see the
-<a href="http://gnuradio.org" target="_blank"><b>main project page</b></a>.
+<a href="https://www.gnuradio.org/" target="_blank"><b>main project page</b></a>.
 
 Other information about the project and discussion about GNU Radio,
 software radio, and communication theory in general can be found at
-the <a href="http://www.gnuradio.org/blog" target="_blank"><b>GNU Radio blog</b></a>.
+the <a href="https://www.gnuradio.org/blog/" target="_blank"><b>GNU Radio blog</b></a>.
 
 This manual is split into two parts: A usage manual and a reference. The usage manual
 deals with concepts of GNU Radio, introductions, how to build GNU Radio etc.
