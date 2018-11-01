@@ -93,12 +93,12 @@ endmacro(GR_PYTHON_CHECK_MODULE)
 ########################################################################
 if(NOT DEFINED GR_PYTHON_DIR)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "
-try:
-    from site import getsitepackages
-    print(getsitepackages()[0])
-except ImportError:
-    from distutils.sysconfig import get_python_lib
-    print(get_python_lib())
+import os
+import sys
+if os.name == 'posix':
+    print(os.path.join('lib', 'python' + sys.version[:3], 'dist-packages'))
+if os.name == 'nt':
+    print(os.path.join('Lib', 'site-packages'))
 " OUTPUT_VARIABLE GR_PYTHON_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 endif()
