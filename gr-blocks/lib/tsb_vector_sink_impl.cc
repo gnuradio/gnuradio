@@ -33,14 +33,14 @@ namespace gr {
 
     template <class T>
     typename tsb_vector_sink<T>::sptr
-    tsb_vector_sink<T>::make(int vlen, const std::string &tsb_key)
+    tsb_vector_sink<T>::make(unsigned int vlen, const std::string &tsb_key)
     {
       return gnuradio::get_initial_sptr
         (new tsb_vector_sink_impl<T> (vlen, tsb_key));
     }
 
     template <class T>
-    tsb_vector_sink_impl<T> ::tsb_vector_sink_impl(int vlen, const std::string &tsb_key)
+    tsb_vector_sink_impl<T> ::tsb_vector_sink_impl(unsigned int vlen, const std::string &tsb_key)
       : gr::tagged_stream_block("tsb_vector_sink",
               gr::io_signature::make(1, 1, vlen * sizeof(T)),
               gr::io_signature::make(0, 0, 0), tsb_key),

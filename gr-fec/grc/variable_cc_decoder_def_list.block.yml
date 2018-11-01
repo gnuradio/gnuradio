@@ -67,13 +67,13 @@ templates:
         self.${id} = ${id} = fec.cc_decoder.make(${framebits},\
         ${k}, ${rate}, ${polys}, ${state_start}, ${state_end}, ${mode}, ${padding})\
         % elif int(ndim)==1:
-        self.${id} = ${id} = map( (lambda a: fec.cc_decoder.make(${framebits},\
+        self.${id} = ${id} = list(map( (lambda a: fec.cc_decoder.make(${framebits},\
         ${k}, ${rate}, ${polys}, ${state_start}, ${state_end}, ${mode}, ${padding})),\
-        range(0,${dim1}))
+        range(0,${dim1})))
         % else:
-        self.${id} = ${id} = map( (lambda b: map(\
+        self.${id} = ${id} = list(map( (lambda b: map(\
         ( lambda a: fec.cc_decoder.make(${framebits}, ${k}, ${rate}, ${polys}, ${state_start},\
-        ${state_end}, ${mode}, ${padding})), range(0,${dim2}) ) ), range(0,${dim1}))
+        ${state_end}, ${mode}, ${padding})), range(0,${dim2}) ) ), range(0,${dim1})))
         % endif
 
 documentation: ""

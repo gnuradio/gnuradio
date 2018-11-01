@@ -51,7 +51,7 @@ template<class T>
        *                      memory allocations during runtime, especially if you know a
        *                      priori how many items you're going to store.
        */
-      static sptr make(const int vlen = 1, const int reserve_items = 1024);
+      static sptr make(const unsigned int vlen = 1, const int reserve_items = 1024);
 
       //! Clear the data and tags containers.
       virtual void reset() = 0;

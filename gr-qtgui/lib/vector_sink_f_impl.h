@@ -42,7 +42,7 @@ namespace gr {
           double x_step
       );
 
-      const int d_vlen; //!< Vector length at input
+      const unsigned int d_vlen; //!< Vector length at input
       float d_vecavg;
 
       std::string d_name; //!< Initial title of the plot
@@ -71,7 +71,7 @@ namespace gr {
 
     public:
       vector_sink_f_impl(
-          int vlen,
+          unsigned int vlen,
           double x_start,
           double x_step,
           const std::string &x_axis_label,
@@ -93,7 +93,7 @@ namespace gr {
       void* pyqwidget();
 #endif
 
-      int vlen() const;
+      unsigned int vlen() const;
       void set_vec_average(const float avg);
       float vec_average() const;
 

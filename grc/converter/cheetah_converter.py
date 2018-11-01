@@ -247,7 +247,7 @@ class Converter(object):
 
         out = ''.join(out)
         # fix: eval stuff
-        out = re.sub(r'(?P<arg>' + r'|'.join(self.extended) + r')\(\)', '\g<arg>', out)
+        out = re.sub(r'(?P<arg>' + r'|'.join(self.extended) + r')\(\)', r'\g<arg>', out)
 
         self.stats['hard'] += 1
         return spec.type(out)

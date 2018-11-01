@@ -50,8 +50,9 @@ LIST_NAME = [
 
 # The list of actions for the toolbar.
 TOOLBAR_LIST = [
-    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'), Actions.FLOW_GRAPH_OPEN,
-    (Actions.FLOW_GRAPH_OPEN_RECENT, 'flow_graph_recent'), Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_CLOSE],
+    [(Actions.FLOW_GRAPH_NEW, 'flow_graph_new_type'),
+     (Actions.FLOW_GRAPH_OPEN, 'flow_graph_recent'),
+     Actions.FLOW_GRAPH_SAVE, Actions.FLOW_GRAPH_CLOSE],
     [Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR, Actions.FLOW_GRAPH_SCREEN_CAPTURE],
     [Actions.BLOCK_CUT, Actions.BLOCK_COPY, Actions.BLOCK_PASTE, Actions.ELEMENT_DELETE],
     [Actions.FLOW_GRAPH_UNDO, Actions.FLOW_GRAPH_REDO],

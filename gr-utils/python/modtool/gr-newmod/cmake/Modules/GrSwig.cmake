@@ -106,17 +106,6 @@ endfunction(GR_SWIG_MAKE_DOCS)
 macro(GR_SWIG_MAKE name)
     set(ifiles ${ARGN})
 
-    # Shimming this in here to take care of a SWIG bug with handling
-    # vector<size_t> and vector<unsigned int> (on 32-bit machines) and
-    # vector<long unsigned int> (on 64-bit machines). Use this to test
-    # the size of size_t, then set SIZE_T_32 if it's a 32-bit machine
-    # or not if it's 64-bit. The logic in gr_type.i handles the rest.
-    INCLUDE(CheckTypeSize)
-    CHECK_TYPE_SIZE("size_t" SIZEOF_SIZE_T)
-    CHECK_TYPE_SIZE("unsigned int" SIZEOF_UINT)
-    if(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
-      list(APPEND GR_SWIG_FLAGS -DSIZE_T_32)
-    endif(${SIZEOF_SIZE_T} EQUAL ${SIZEOF_UINT})
 
     #do swig doc generation if specified
     if(GR_SWIG_DOC_FILE)
@@ -160,8 +149,12 @@ macro(GR_SWIG_MAKE name)
     include_directories(${GR_SWIG_INCLUDE_DIRS})
     list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${tag_file})
 
+    if (PYTHON3)
+        set(py3 "-py3")
+    endif (PYTHON3)
+
     #setup the swig flags with flags and include directories
-    set(CMAKE_SWIG_FLAGS -fvirtual -modern -keyword -w511 -module ${name} ${GR_SWIG_FLAGS})
+    set(CMAKE_SWIG_FLAGS -fvirtual -modern -keyword -w511 -w314 -relativeimport ${py3} -module ${name} ${GR_SWIG_FLAGS})
     foreach(dir ${GR_SWIG_INCLUDE_DIRS})
         list(APPEND CMAKE_SWIG_FLAGS "-I${dir}")
     endforeach(dir)
@@ -223,7 +216,7 @@ endmacro(GR_SWIG_INSTALL)
 ########################################################################
 file(WRITE ${CMAKE_BINARY_DIR}/get_swig_deps.py "
 
-import os, sys, re
+import os, sys, re, io
 
 i_include_matcher = re.compile('%(include|import)\\s*[<|\"](.*)[>|\"]')
 h_include_matcher = re.compile('#(include)\\s*[<|\"](.*)[>|\"]')
@@ -232,7 +225,7 @@ include_dirs = sys.argv[2].split(';')
 def get_swig_incs(file_path):
     if file_path.endswith('.i'): matcher = i_include_matcher
     else: matcher = h_include_matcher
-    file_contents = open(file_path, 'r').read()
+    file_contents = io.open(file_path, 'r', encoding='utf-8').read()
     return matcher.findall(file_contents, re.MULTILINE)
 
 def get_swig_deps(file_path, level):

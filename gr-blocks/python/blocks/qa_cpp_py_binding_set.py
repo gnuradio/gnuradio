@@ -120,8 +120,8 @@ class test_cpp_py_binding_set(gr_unittest.TestCase):
 
         # Get available endpoint
         ep = gr.rpcmanager_get().endpoints()[0]
-        hostname = re.search("-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
-        portnum = re.search("-p (\d+)", ep).group(1)
+        hostname = re.search(r"-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
+        portnum = re.search(r"-p (\d+)", ep).group(1)
         argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint

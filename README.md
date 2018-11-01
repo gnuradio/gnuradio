@@ -5,7 +5,7 @@
 [![Build](https://shield.lwan.ws/img/p5UKbS/weekly_runner)](https://ci.gnuradio.org/buildbot/#/)
 ![Version](https://img.shields.io/github/tag/gnuradio/gnuradio.svg)
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)](https://github.com/gnuradio/gnuradio/blob/master/COPYING) 
-[![Docs](https://img.shields.io/badge/docs-doxygen-orange.svg)](https://gnuradio.org/doc/doxygen/)
+[![Docs](https://img.shields.io/badge/docs-doxygen-orange.svg)](https://www.gnuradio.org/doc/doxygen/)
 
 GNU Radio is a free & open-source software development toolkit that 
 provides signal processing blocks to implement software radios. It can 
@@ -15,7 +15,7 @@ environment. It is widely used in hobbyist, academic, and commercial
 environments to support both wireless communications research and real-world 
 radio systems.
 
-Please visit the GNU Radio website at https://gnuradio.org/ and the 
+Please visit the GNU Radio website at https://www.gnuradio.org/ and the 
 wiki at https://wiki.gnuradio.org/. Bugs and feature requests are 
 tracked on GitHub's [Issue Tracker](https://github.com/gnuradio/gnuradio/issues). 
 If you have questions about GNU Radio, please search the **discuss-gnuradio** 
@@ -72,11 +72,11 @@ instructions are duplicated below.
 
 ### Manual Source Build
 Complete build instructions are detailed in the 
-[GNU Radio Build Guide](https://gnuradio.org/doc/doxygen/build_guide.html). 
+[GNU Radio Build Guide](https://www.gnuradio.org/doc/doxygen/build_guide.html). 
 Abbreviated instructions are duplicated below.
 
 1. Ensure that you have satisfied the external dependencies, see 
-[GNU Radio Dependencies](https://gnuradio.org/doc/doxygen/build_guide.html).
+[GNU Radio Dependencies](https://www.gnuradio.org/doc/doxygen/build_guide.html).
 
 2. Checkout the latest code:
     ```

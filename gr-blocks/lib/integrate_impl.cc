@@ -32,13 +32,13 @@ namespace gr {
   namespace blocks {
 
     template <class T>
-    typename integrate<T>::sptr integrate<T>::make(int decim, int vlen)
+    typename integrate<T>::sptr integrate<T>::make(int decim, unsigned int vlen)
     {
       return gnuradio::get_initial_sptr(new integrate_impl<T> (decim, vlen));
     }
 
     template <class T>
-    integrate_impl<T> ::integrate_impl(int decim, int vlen)
+    integrate_impl<T> ::integrate_impl(int decim, unsigned int vlen)
       : sync_decimator("integrate",
 			  io_signature::make(1, 1, sizeof (T) * vlen),
 			  io_signature::make(1, 1, sizeof (T) * vlen),

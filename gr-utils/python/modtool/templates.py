@@ -276,7 +276,7 @@ namespace gr {
 '''
 
 # Block definition header file (for include/)
-Templates['block_def_h'] = '''/* -*- c++ -*- */
+Templates['block_def_h'] = r'''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}
 
 #ifndef INCLUDED_${modname.upper()}_${blockname.upper()}_H
@@ -292,7 +292,7 @@ namespace gr {
 
 % if blocktype == 'noblock':
     /*!
-     * \\brief <+description+>
+     * \brief <+description+>
      *
      */
     class ${modname.upper()}_API ${blockname}
@@ -304,7 +304,7 @@ namespace gr {
     };
 % else:
     /*!
-     * \\brief <+description of block+>
+     * \brief <+description of block+>
      * \ingroup ${modname}
      *
      */
@@ -314,7 +314,7 @@ namespace gr {
       typedef boost::shared_ptr<${blockname}> sptr;
 
       /*!
-       * \\brief Return a shared_ptr to a new instance of ${modname}::${blockname}.
+       * \brief Return a shared_ptr to a new instance of ${modname}::${blockname}.
        *
        * To avoid accidental use of raw pointers, ${modname}::${blockname}'s
        * constructor is in a private implementation
@@ -417,7 +417,7 @@ class ${blockname}(${parenttype}):
     def general_work(self, input_items, output_items):
         output_items[0][:] = input_items[0]
         consume(0, len(input_items[0]))
-        \#self.consume_each(len(input_items[0]))
+        \\#self.consume_each(len(input_items[0]))
         return len(output_items[0])
 <% return %>
 % endif
@@ -547,7 +547,7 @@ if __name__ == '__main__':
     gr_unittest.run(qa_${blockname}, "qa_${blockname}.xml")
 '''
 
-Templates['grc_xml'] = '''<?xml version="1.0"?>
+Templates['grc_xml'] = r'''<?xml version="1.0"?>
 <block>
   <name>${blockname}</name>
   <key>${modname}_${blockname}</key>
@@ -724,7 +724,7 @@ ${modname}_${blockname}::work(int noutput_items,
 '''
 
 # Block definition header file (for include/)
-Templates['block_h36'] = '''/* -*- c++ -*- */
+Templates['block_h36'] = r'''/* -*- c++ -*- */
 ${str_to_fancyc_comment(license)}
 
 #ifndef INCLUDED_${modname.upper()}_${blockname.upper()}_H
@@ -749,7 +749,7 @@ typedef boost::shared_ptr<${modname}_${blockname}> ${modname}_${blockname}_sptr;
 ${modname.upper()}_API ${modname}_${blockname}_sptr ${modname}_make_${blockname} (${arglist});
 
 /*!
- * \\brief <+description+>
+ * \brief <+description+>
  * \ingroup ${modname}
  *
  */

@@ -1,6 +1,6 @@
 Here we have several test programs for use with the gr-trellis implementation.
 Documentation can be found in
-http://gnuradio.org/doc/doxygen/group__trellis__coding__blk.html
+https://www.gnuradio.org/doc/doxygen/group__trellis__coding__blk.html
 
 fsm_files is a directory with some FSM definitions
 

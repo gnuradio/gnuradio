@@ -36,13 +36,13 @@ template<class T>
       std::vector<T> d_data;
       bool d_repeat;
       unsigned int d_offset;
-      int d_vlen;
+      unsigned int d_vlen;
       bool d_settags;
       std::vector<tag_t> d_tags;
 
     public:
       vector_source_impl (const std::vector<T> &data,
-                  bool repeat, int vlen,
+                  bool repeat, unsigned int vlen,
                   const std::vector<tag_t> &tags);
       ~vector_source_impl ();
 

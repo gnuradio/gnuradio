@@ -158,7 +158,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         frame_size = 30
         dims = 5
         enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,dims))))
-        #dec = map((lambda a: fec.dummy_decoder.make(frame_size*8)), range(0,dims))
+        #dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), range(0,dims)))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))
@@ -166,7 +166,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
     def test_parallelism1_06(self):
         frame_size = 30
         dims = 5
-        #enc = map((lambda a: fec.dummy_encoder_make(frame_size*8)), range(0,dims))
+        #enc = list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), range(0,dims)))
         dec = list(map((lambda a: fec.dummy_decoder.make(frame_size*8)), list(range(0,dims))))
         threading = 'capillary'
 
@@ -177,7 +177,7 @@ class test_fecapi_dummy(gr_unittest.TestCase):
         dims1 = 16
         dims2 = 16
         enc = list(map((lambda b: list(map((lambda a: fec.dummy_encoder_make(frame_size*8)), list(range(0,dims1))))), list(range(0,dims2))))
-        #dec = map((lambda b: map((lambda a: fec.dummy_decoder_make(frame_size*8)), range(0,dims1))), range(0,dims2))
+        #dec = list(map((lambda b: map((lambda a: fec.dummy_decoder_make(frame_size*8)), range(0,dims1))), range(0,dims2)))
         threading = 'capillary'
 
         self.assertRaises(AttributeError, lambda: extended_encoder(enc, threading=threading, puncpat="11"))

@@ -54,7 +54,8 @@ template<class T>
        * \param vlen Vector length
        * \param tsb_key Tagged Stream Key
        */
-      static sptr make(int vlen=1, const std::string &tsb_key="ts_last");
+      static sptr make(unsigned int vlen=1,
+                       const std::string &tsb_key="ts_last");
     };
     typedef tsb_vector_sink<std::uint8_t> tsb_vector_sink_b;
     typedef tsb_vector_sink<std::uint32_t> tsb_vector_sink_i;
