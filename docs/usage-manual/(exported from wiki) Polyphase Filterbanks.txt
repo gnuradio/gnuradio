@@ -1,47 +1,54 @@
-# Copyright (C) 2017 Free Software Foundation, Inc.
-#
-# Permission is granted to copy, distribute and/or modify this document
-# under the terms of the GNU Free Documentation License, Version 1.3
-# or any later version published by the Free Software Foundation;
-# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-# A copy of the license is included in the section entitled "GNU
-# Free Documentation License".
-
-/*! \page page_pfb Polyphase Filterbanks
-
-\section pfb_introduction Introduction
+<page>
+    <title>Polyphase Filterbanks</title>
+    <ns>0</ns>
+    <id>3496</id>
+    <revision>
+      <id>4513</id>
+      <parentid>4318</parentid>
+      <timestamp>2018-11-02T02:03:09Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="7339">== Introduction ==
 
 Polyphase filterbanks (PFB) are a very powerful set of filtering tools
 that can efficiently perform many multi-rate signal processing
 tasks. GNU Radio has a set of polyphase filterbank blocks to be used
-in all sorts of applications.
+in all sorts of applications. See the documentation for the individual blocks for details about what
+they can do and how they should be used.  Furthermore, there are
+examples for these blocks in <b>gr-filter/examples</b>:
 
-\section pfb_Usage
+# '''channelize.py''' creates an appropriate filter to channelizer 9 channels out of an original signal that is 9000 Hz wide, so each output channel is now 1000 Hz. The code then plots the PSD of the original signal to see the signals in the origina spectrum and then makes 9 plots for each of the channels.  
+# '''chirp_channelize.py''' is similar to channelize.py but includes a VCO to create a chirp signal
+# '''decimate.py''' shows an example of using the PFB decimator
+# '''interpolate.py''' shows an example of using the PFB interpolator
+# '''reconstruction.py''' includes a PFB channelizer and PFB synthesizer
+# '''resampler.py''' demonstrates how to use the PFB resampler
+# '''synth_filter.py''' is a simple example of using the PFB synthesizer
+NOTE: you need the Matplotlib Python module installed to run these examples
 
-See the documentation for the individual blocks for details about what
-they can do and how they should be used. Furthermore, there are
-examples for these blocks in <b>gr-filter/examples</b>.
+== PFB Usage ==
 
 The main issue when using the PFB blocks is defining the prototype
-filter, which is passed to all of the blocks as a vector of \p
+filter, which is passed to all of the blocks as a vector of
 taps. The taps from the prototype filter which get partitioned among
-the \p N channels of the channelizer.
+the N channels of the channelizer.
 
 An example of creating a set of filter taps for a PFB channelizer is
 found on line 49 of <b>gr-filter/examples/channelizer.py</b>
 and reproduced below. Notice that the sample rate is the sample rate
 at the input to the channelizer while the bandwidth and transition
 width are defined for the channel bandwidths. This makes a fairly long
-filter that is then split up between the \p N channels of the PFB.
+filter that is then split up between the N channels of the PFB.
 
-\code
     self._fs = 9000          # input sample rate
     self._M = 9              # Number of channels to channelize
-
     self._taps = filter.firdes.low_pass_2(1, self._fs, 475.50, 50,
                                           attenuation_dB=100,
-			                  window=filter.firdes.WIN_BLACKMAN_hARRIS)
-\endcode
+                                          window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
 In this example, the signal into the channelizer is sampled at 9 ksps
 (complex, so 9 kHz of bandwidth). The filter uses 9 channels, so each
@@ -63,19 +70,19 @@ but in other PFB blocks, this is not so obvious.
 Two very useful blocks to use are the arbitrary resampler and the
 clock synchronizer (for PAM signals). These PFBs are defined with a
 set number of filters based on the fidelity required from them, not
-the rate changes. By default, the \p filter_size is set to 32 for
+the rate changes. By default, the filter_size is set to 32 for
 these blocks, which is a reasonable default for most tasks. Because
 the PFB uses this number of filters in the filterbank, the maximum
 rate of the bank is defined from this (see the theory of a polyphase
 interpolator for a justification of this). So the prototype filter is
-defined to use a sample rate of \p filter_size times the signal's
+defined to use a sample rate of filter_size times the signal's
 sampling rate.
 
 A helpful wrapper for the arbitrary resampler is found in
 <b>gr-filter/python/pfb.py</b>,
 which is exposed in Python as <b>filter.pfb.arb_resampler_ccf</b> and
 <b>filter.pfb.arb_resampler_fff</b>. This block is set up so that the
-user only needs to pass it the real number \p rate as the resampling
+user only needs to pass it the real number rate as the resampling
 rate. With just this information, this hierarchical block
 automatically creates a filter that fully passes the signal bandwidth
 being resampled but does not pass any out-of-band noise. See the code
@@ -87,22 +94,7 @@ examples (<b>gr-uhd/examples</b>) use this ability to create a
 received matched filter or channel filter that also resamples the
 signal.
 
-\section pfb_examples Examples
-
-The following is an example of the using the channelizer. It creates
-the appropriate filter to channelizer 9 channels out of an original
-signal that is 9000 Hz wide, so each output channel is now 1000
-Hz. The code then plots the PSD of the original signal to see the
-signals in the origina spectrum and then makes 9 plots for each of the
-channels.
-
-NOTE: you need the Matplotlib Python module installed to
-run this example.
-
-\include gr-filter/examples/channelize.py
-
-
-\section pfb_arb_resampler The PFB Arbitrary Resampler Kernel
+== The PFB Arbitrary Resampler Kernel ==
 
 GNU Radio has a PFB arbitrary resampler block that can be used to
 resample a signal to any arbitrary and real resampling rate. The
@@ -113,24 +105,23 @@ class that can be used as such.
 The PFB arbitrary resampler is defined in pfb_arb_resampler.h and has
 the following constructor:
 
-\code
-namespace gr {
-  namespace filter {
-    namespace kernel {
+ namespace gr {
+   namespace filter {
+     namespace kernel {
+ 
+         pfb_arb_resampler_XXX(float rate,
+                               const std::vector<float> &taps,
+                               unsigned int filter_size);
+ 
+     } /* namespace kernel */
+   } /* namespace filter */
+ } /* namespace gr */
 
-        pfb_arb_resampler_XXX(float rate,
-                              const std::vector<float> &taps,
-                              unsigned int filter_size);
-
-    } /* namespace kernel */
-  } /* namespace filter */
-} /* namespace gr */
-\endcode
 
 Currently, only a 'ccf' and 'fff' version are defined. This kernel,
-like the block itself, takes in the resampling \p rate as a floating
-point number. The \p taps are passed as the baseband prototype filter,
-and the quantization error of the filter is determined by the \p
+like the block itself, takes in the resampling rate as a floating
+point number. The taps are passed as the baseband prototype filter,
+and the quantization error of the filter is determined by the
 filter_size parameter.
 
 The prototype taps are generated like all other PFB filter
@@ -153,15 +144,15 @@ total number of taps small. A stopband attenuation of 60 dB was used
 here, and again, this is a parameter we can adjust to alter the
 performance and size of the filter.
 
-\code
   firdes.low_pass_2(filter_size, filter_size, 0.5, 0.1, 60)
-\endcode
 
 As is typical with the PFB filters, a filter size of 32 is generally
 an appropriate trade-off of accuracy, performance, and memory. This
 should provide an error roughly equivalent to the quanization error of
 using 16-bit fixed point representation. Generally, increasing over 32
 provides some accuracy benefits without a huge increase in
-computational demands.
-
-*/
+computational demands.</text>
+      <sha1>qgfvtgmqeoxutntovjunwzowmz49fvh</sha1>
+    </revision>
+  </page>
+</mediawiki>
