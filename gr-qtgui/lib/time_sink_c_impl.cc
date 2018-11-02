@@ -590,7 +590,7 @@ namespace gr {
     {
       int trigger_index;
       const gr_complex *in = (const gr_complex*)inputs[d_trigger_channel/2];
-      for(trigger_index = 0; trigger_index < nitems; trigger_index++) {
+      for(trigger_index = 0; trigger_index < nitems - 1; trigger_index++) {
         d_trigger_count++;
 
         // Test if trigger has occurred based on the input stream,
