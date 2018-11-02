@@ -29,7 +29,7 @@ import cmath
 
 
 class fm_deemph(gr.hier_block2):
-    """
+    r"""
     FM Deemphasis IIR filter
     
     Args:
@@ -143,7 +143,7 @@ class fm_deemph(gr.hier_block2):
 
 
 class fm_preemph(gr.hier_block2):
-    """
+    r"""
     FM Preemphasis IIR filter.
     
     Args:

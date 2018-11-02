@@ -212,8 +212,8 @@ file(WRITE ${CMAKE_BINARY_DIR}/get_swig_deps.py "
 
 import os, sys, re, io
 
-i_include_matcher = re.compile('%(include|import)\\s*[<|\"](.*)[>|\"]')
-h_include_matcher = re.compile('#(include)\\s*[<|\"](.*)[>|\"]')
+i_include_matcher = re.compile(r'%(include|import)\\s*[<|\"](.*)[>|\"]')
+h_include_matcher = re.compile(r'#(include)\\s*[<|\"](.*)[>|\"]')
 include_dirs = sys.argv[2].split(';')
 
 def get_swig_incs(file_path):
