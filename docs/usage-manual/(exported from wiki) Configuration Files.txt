@@ -1,15 +1,18 @@
-# Copyright (C) 2017 Free Software Foundation, Inc.
-#
-# Permission is granted to copy, distribute and/or modify this document
-# under the terms of the GNU Free Documentation License, Version 1.3
-# or any later version published by the Free Software Foundation;
-# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-# A copy of the license is included in the section entitled "GNU
-# Free Documentation License".
-
-/*! \page page_prefs Configuration files
-
-\section prefs Configuration / Preference Files
+<page>
+    <title>Configuration Files</title>
+    <ns>0</ns>
+    <id>3490</id>
+    <revision>
+      <id>4228</id>
+      <timestamp>2018-06-11T05:11:22Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <comment>Created page with "== Configuration / Preference Files ==  GNU Radio defines some of its basic behavior through a set of configuration files located in ${prefix}/etc/gnuradio/conf.d. Different c..."</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="2711">== Configuration / Preference Files ==
 
 GNU Radio defines some of its basic behavior through a set of
 configuration files located in
@@ -20,16 +23,14 @@ will not affect them.
 
 The configuration files use the following format:
 
-\code
-# Stuff from section 1
-[section1]
-var1 = value1
-var2 = value2 # value of 2
-
-# Stuff from section 2
-[section2]
-var3 = value3
-\endcode
+ # Stuff from section 1
+ [section1]
+ var1 = value1
+ var2 = value2 # value of 2
+ 
+ # Stuff from section 2
+ [section2]
+ var3 = value3
 
 In this file, the hash mark ('#') indicates a comment and blank lines
 are ignored. Section labels are defined inside square brackets as a
@@ -43,10 +44,8 @@ value will have its white space preserved and the quotes internally
 will be stripped. As an example, on Apple desktops, an output device
 of "Display Audio" is a possible output device and can be set as:
 
-\code
-[audio_osx]
-default_output_device = "Display Audio"
-\endcode
+ [audio_osx]
+ default_output_device = "Display Audio"
 
 The result will pass Display Audio to the audio setup.
 
@@ -55,42 +54,35 @@ a few different interfaces. There is a single preference object
 created when GNU Radio is launched. In Python, you can get this by
 making a new variable:
 
-\code
-p = gr.prefs()
-\endcode
+ p = gr.prefs()
 
 Similarly, in C++, we get a reference to the object by explicitly
 calling for the singleton of the object:
 
-\code
-  prefs *p = prefs::singleton();
-\endcode
+ prefs *p = prefs::singleton();
 
 The methods associated with this preferences object are (from class gr::prefs):
 
-\code
   bool has_section(string section)
   bool has_option(string section, string option)
   string get_string(string section, string option, string default_val)
   bool get_bool(string section, string option, bool default_val)
   long get_long(string section, string option, long default_val)
   double get_double(string section, string option, double default_val)
-\endcode
 
-When setting a Boolean value, we can use 0, 1, "True", "true",
-"False", "false", "On", "on", "Off", and "off".
+When setting a Boolean value, we can use 0, 1, "True", "true", "False", "false", "On", "on", "Off", and "off".
 
 All configuration preferences in these files can also be overloaded by
 an environmental variable. The environmental variable is named based
 on the section and option name from the configuration file as:
 
-\code
-  GR_CONF_<SECTION>_<OPTION> = <value>
-\endcode
+ GR_CONF_<SECTION>_<OPTION> = <value>
 
 The "GR_CONF_" is a prefix to identify this as a GNU Radio
 configuration variable and the section and option names are in
 uppercase. The value is the same format that would be used in the
-config file itself.
-
-*/
+config file itself.</text>
+      <sha1>3tjlcfewvu2log4t9s6q45upgqh8rwo</sha1>
+    </revision>
+  </page>
+</mediawiki>
