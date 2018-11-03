@@ -256,11 +256,12 @@ namespace gr {
     timing_error_detector::slice(const gr_complex &x)
     {
         unsigned int index;
-        gr_complex z(0.0f, 0.0f);
+        /* Passing a length 1 array is OK since we only accept 1D constellations */
+        gr_complex z[1];
 
         index = d_constellation->decision_maker(&x);
-        d_constellation->map_to_points(index, &z);
-        return z;
+        d_constellation->map_to_points(index, z);
+        return z[0];
     }
 
     /*************************************************************************/
