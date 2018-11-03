@@ -40,10 +40,11 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         self.rx_data = None
         src_data = list(range(vlen))*100
         src = blocks.vector_source_f(src_data, False, vlen)
-        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:5555")
+        zeromq_pub_sink = zeromq.pub_sink(gr.sizeof_float, vlen, "tcp://127.0.0.1:0")
+        address = zeromq_pub_sink.last_endpoint()
         self.tb.connect(src, zeromq_pub_sink)
         self.probe_manager = zeromq.probe_manager()
-        self.probe_manager.add_socket("tcp://127.0.0.1:5555", 'float32', self.recv_data)
+        self.probe_manager.add_socket(address, 'float32', self.recv_data)
         zmq_pull_t = threading.Thread(target=self.probe_manager.watcher)
         zmq_pull_t.daemon = True
         zmq_pull_t.start()
