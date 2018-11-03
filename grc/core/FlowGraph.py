@@ -18,7 +18,6 @@
 from __future__ import absolute_import, print_function
 
 import collections
-import imp
 import itertools
 import sys
 from operator import methodcaller, attrgetter
@@ -28,6 +27,16 @@ from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .base import Element
 from .utils import expr_utils
 from .utils.backports import shlex
+
+
+if sys.version_info[0] < 3:
+    import imp
+    def _new_module_helper(name):
+        return imp.new_module(name)
+else:
+    import types
+    def _new_module_helper(name):
+        return types.ModuleType(name)
 
 
 class FlowGraph(Element):
@@ -192,7 +201,7 @@ class FlowGraph(Element):
 
         for id, expr in self.get_python_modules():
             try:
-                module = imp.new_module(id)
+                module = _new_module_helper(id)
                 exec(expr, module.__dict__)
                 namespace[id] = module
             except:
