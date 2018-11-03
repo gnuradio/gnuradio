@@ -52,6 +52,11 @@ namespace gr {
        *
        */
       static sptr make(char *address, int timeout=100);
+
+      /*!
+       * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.
+       */
+      virtual std::string last_endpoint() = 0;
     };
 
   } // namespace zeromq

@@ -37,6 +37,7 @@ namespace gr {
       virtual ~base_impl();
 
     protected:
+      std::string last_endpoint();
       zmq::context_t  *d_context;
       zmq::socket_t   *d_socket;
       size_t          d_vsize;

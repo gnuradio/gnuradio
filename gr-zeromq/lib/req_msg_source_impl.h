@@ -48,6 +48,13 @@ namespace gr {
 
       bool start();
       bool stop();
+
+      std::string last_endpoint() override {
+        size_t addr_len = 256;
+        char addr[addr_len];
+        d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
+        return std::string(addr, addr_len-1);
+      }
     };
 
   } // namespace zeromq
