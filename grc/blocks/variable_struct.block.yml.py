@@ -17,10 +17,11 @@ templates:
         self.${{id}} = ${{id}} = struct({{
             % for i in range({0}):
             <%
-                field = getVar('field' + str(i))
+                field = context.get('field' + str(i))
+                value = context.get('value' + str(i))
             %>
             % if len(str(field)) > 2:
-            ${{field}}: getVar('value' + str(i)),
+            ${{field}}: ${{value}},
             % endif
             % endfor
         }})
@@ -28,10 +29,10 @@ templates:
         struct({{
             % for i in range({0}):
             <%
-                field = getVar('field' + str(i))
+                field = context.get('field' + str(i))
             %>
             % if len(str(field)) > 2:
-            ${{field}}: getVar('field' + str(i)),
+            ${{field}}: ${{field}},
             % endif
             % endfor
         }})
@@ -42,7 +43,7 @@ FIELD0 = """\
     label: Field 0
     category: Fields
     dtype: string
-    default: ${field0}
+    default: field0
     hide: part
 """
 
