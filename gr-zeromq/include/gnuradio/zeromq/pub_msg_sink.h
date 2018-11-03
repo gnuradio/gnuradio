@@ -52,6 +52,11 @@ namespace gr {
        * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments
        */
       static sptr make(char *address, int timeout=100);
+
+      /*!
+       * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.
+       */
+      virtual std::string last_endpoint() = 0;
     };
 
   } // namespace zeromq

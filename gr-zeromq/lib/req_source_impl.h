@@ -40,6 +40,7 @@ namespace gr {
                gr_vector_const_void_star &input_items,
                gr_vector_void_star &output_items);
 
+      std::string last_endpoint() override {return base_source_impl::last_endpoint();}
     private:
       bool d_req_pending;
     };

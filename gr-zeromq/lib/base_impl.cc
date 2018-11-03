@@ -54,6 +54,15 @@ namespace gr {
         delete d_context;
     }
 
+    std::string
+    base_impl::last_endpoint()
+    {
+      size_t addr_len = 256;
+      char addr[addr_len];
+      d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
+      return std::string(addr, addr_len-1);
+    }
+
 
     base_sink_impl::base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
         : base_impl(type, itemsize, vlen, timeout, pass_tags)

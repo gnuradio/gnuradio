@@ -39,6 +39,8 @@ namespace gr {
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,
                gr_vector_void_star &output_items);
+
+      std::string last_endpoint() override {return base_sink_impl::last_endpoint();}
     };
 
   } // namespace zeromq
