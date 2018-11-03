@@ -256,7 +256,6 @@ t3_body()
     // pick a random reader and read some
 
     int r = (int)(N * random.ran1());
-    BOOST_CHECK(0 <= r && r < N);
 
     int m = reader[r]->items_available();
     int *rp = (int*)reader[r]->read_pointer();
