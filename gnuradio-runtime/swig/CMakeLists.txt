@@ -87,7 +87,6 @@ install(
     buffer.i
     constants.i
     feval.i
-    gnuradio.i
     gr_ctrlport.i
     gr_extras.i
     gr_intrusive_ptr.i
