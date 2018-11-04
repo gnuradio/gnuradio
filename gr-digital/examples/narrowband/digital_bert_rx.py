@@ -27,7 +27,7 @@ from __future__ import unicode_literals
 from gnuradio import gr, eng_notation
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
-import gnuradio.gr.gr_threading as _threading
+import threading
 import sys, time, math
 
 from gnuradio import digital
@@ -38,9 +38,9 @@ from uhd_interface import uhd_receiver
 
 n2s = eng_notation.num_to_str
 
-class status_thread(_threading.Thread):
+class status_thread(threading.Thread):
     def __init__(self, tb):
-        _threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.setDaemon(1)
         self.tb = tb
         self.done = False

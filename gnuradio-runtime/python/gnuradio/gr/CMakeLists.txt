@@ -26,9 +26,6 @@ GR_PYTHON_INSTALL(FILES
     tag_utils.py
     packet_utils.py
     gateway.py
-    gr_threading.py
-    gr_threading_23.py
-    gr_threading_24.py
     hier_block2.py
     top_block.py
     pubsub.py
