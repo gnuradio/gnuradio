@@ -31,6 +31,7 @@ PORT_SCHEME = expand(
 TEMPLATES_SCHEME = expand(
     imports=str_,
     var_make=str_,
+    var_value=str_,
     make=str_,
     callbacks=list,
 )
@@ -50,6 +51,7 @@ BLOCK_SCHEME = expand(
     templates=Spec(types=dict, required=False, item_scheme=TEMPLATES_SCHEME),
 
     documentation=str_,
+    grc_source=str_,
 
     grc_source=Spec(types=str_, required=False, item_scheme=None),
 

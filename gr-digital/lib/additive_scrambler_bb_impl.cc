@@ -100,7 +100,7 @@ namespace gr {
 	  int reset_pos = tags[i].offset - nitems_read(0);
 	  if (reset_pos < reset_index && reset_pos > last_reset_index) {
 	    reset_index = reset_pos;
-	  };
+	  }
 	}
       } else {
 	if (last_reset_index == -1) {

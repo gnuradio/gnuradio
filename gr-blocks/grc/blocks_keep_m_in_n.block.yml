@@ -37,6 +37,8 @@ asserts:
 - ${ n > 0 }
 - ${ m > 0 }
 - ${ m <= n }
+- ${ offset >= 0 }
+- ${ offset < n }
 
 templates:
     imports: from gnuradio import blocks

@@ -27,6 +27,7 @@ from gnuradio import gr, digital
 from gnuradio import filter
 from gnuradio import blocks
 import sys
+import numpy
 
 try:
     from gnuradio import channels
@@ -35,14 +36,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    print("Error: Program requires scipy (see: www.scipy.org).")
-    sys.exit(1)
-
-try:
-    import pylab
+    from matplotlib import pyplot
 except ImportError:
     print("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).")
     sys.exit(1)
@@ -53,7 +47,7 @@ def main():
     N = 10000
     fs = 2000.0
     Ts = 1.0 / fs
-    t = scipy.arange(0, N*Ts, Ts)
+    t = numpy.arange(0, N*Ts, Ts)
 
     # When playing with the number of channels, be careful about the filter
     # specs and the channel map of the synthesizer set below.
@@ -70,10 +64,10 @@ def main():
 
     # Create a modulated signal
     npwr = 0.01
-    data = scipy.random.randint(0, 256, N)
+    data = numpy.random.randint(0, 256, N)
     rrc_taps = filter.firdes.root_raised_cosine(1, 2, 1, 0.35, 41)
 
-    src = blocks.vector_source_b(data.astype(scipy.uint8).tolist(), False)
+    src = blocks.vector_source_b(data.astype(numpy.uint8).tolist(), False)
     mod = digital.bpsk_mod(samples_per_symbol=2)
     chan = channels.channel_model(npwr)
     rrc = filter.fft_filter_ccc(1, rrc_taps)
@@ -107,13 +101,13 @@ def main():
     tb.connect(synthesizer, snk)
     tb.run()
 
-    sin  = scipy.array(src_snk.data()[1000:])
-    sout = scipy.array(snk.data()[1000:])
+    sin  = numpy.array(src_snk.data()[1000:])
+    sout = numpy.array(snk.data()[1000:])
 
 
     # Plot original signal
     fs_in = nchans*fs
-    f1 = pylab.figure(1, figsize=(16,12), facecolor='w')
+    f1 = pyplot.figure(1, figsize=(16,12), facecolor='w')
     s11 = f1.add_subplot(2,2,1)
     s11.psd(sin, NFFT=fftlen, Fs=fs_in)
     s11.set_title("PSD of Original Signal")
@@ -133,10 +127,10 @@ def main():
     s13.set_ylim([-2, 2])
 
     # Plot channels
-    nrows = int(scipy.sqrt(nchans))
-    ncols = int(scipy.ceil(float(nchans) / float(nrows)))
+    nrows = int(numpy.sqrt(nchans))
+    ncols = int(numpy.ceil(float(nchans) / float(nrows)))
 
-    f2 = pylab.figure(2, figsize=(16,12), facecolor='w')
+    f2 = pyplot.figure(2, figsize=(16,12), facecolor='w')
     for n in range(nchans):
         s = f2.add_subplot(nrows, ncols, n+1)
         s.psd(vsnk[n].data(), NFFT=fftlen, Fs=fs_in)
@@ -145,7 +139,7 @@ def main():
 
     # Plot reconstructed signal
     fs_out = 2*nchans*fs
-    f3 = pylab.figure(3, figsize=(16,12), facecolor='w')
+    f3 = pyplot.figure(3, figsize=(16,12), facecolor='w')
     s31 = f3.add_subplot(2,2,1)
     s31.psd(sout, NFFT=fftlen, Fs=fs_out)
     s31.set_title("PSD of Reconstructed Signal")
@@ -164,7 +158,7 @@ def main():
     s33.set_xlim([-2, 2])
     s33.set_ylim([-2, 2])
 
-    pylab.show()
+    pyplot.show()
 
 
 if __name__ == "__main__":

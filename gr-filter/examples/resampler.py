@@ -27,6 +27,7 @@ from gnuradio import gr
 from gnuradio import filter
 from gnuradio import blocks
 import sys
+import numpy
 
 try:
     from gnuradio import analog
@@ -35,13 +36,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import scipy
-except ImportError:
-    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
-    sys.exit(1)
-
-try:
-    import pylab
+    from matplotlib import pyplot
 except ImportError:
     sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
@@ -91,7 +86,7 @@ def main():
 
     # Plot PSD of signals
     nfftsize = 2048
-    fig1 = pylab.figure(1, figsize=(10,10), facecolor="w")
+    fig1 = pyplot.figure(1, figsize=(10,10), facecolor="w")
     sp1 = fig1.add_subplot(2,1,1)
     sp1.psd(tb.snk_in.data(), NFFT=nfftsize,
             noverlap=nfftsize / 4, Fs = fs_in)
@@ -112,10 +107,10 @@ def main():
     # Plot signals in time
     Ts_in = 1.0 / fs_in
     Ts_out = 1.0 / fs_out
-    t_in = scipy.arange(0, len(tb.snk_in.data())*Ts_in, Ts_in)
-    t_out = scipy.arange(0, len(tb.snk_0.data())*Ts_out, Ts_out)
+    t_in = numpy.arange(0, len(tb.snk_in.data())*Ts_in, Ts_in)
+    t_out = numpy.arange(0, len(tb.snk_0.data())*Ts_out, Ts_out)
 
-    fig2 = pylab.figure(2, figsize=(10,10), facecolor="w")
+    fig2 = pyplot.figure(2, figsize=(10,10), facecolor="w")
     sp21 = fig2.add_subplot(2,1,1)
     sp21.plot(t_in, tb.snk_in.data())
     sp21.set_title(("Input Signal at f_s=%.2f kHz" % (fs_in / 1000.0)))
@@ -131,7 +126,7 @@ def main():
     sp22.set_xlim([t_out[r * 100], t_out[r * 200]])
     sp22.legend()
 
-    pylab.show()
+    pyplot.show()
 
 if __name__ == "__main__":
     main()

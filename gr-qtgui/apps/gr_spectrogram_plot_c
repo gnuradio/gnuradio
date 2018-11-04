@@ -23,7 +23,6 @@
 from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
-import scipy
 
 try:
     import gnuradio.qtgui.plot_spectrogram_base as plot_base

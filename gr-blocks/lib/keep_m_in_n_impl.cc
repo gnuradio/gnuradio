@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012 Free Software Foundation, Inc.
+ * Copyright 2012,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -59,9 +59,14 @@ namespace gr {
         std::string s = boost::str(boost::format("keep_m_in_n: m (%1%) <= n %2%") % d_m % d_n);
         throw std::runtime_error(s);
       }
-      if(d_offset > (d_n - d_m)) {
-        std::string s = boost::str(boost::format("keep_m_in_n: offset (%1%) <= n (%2%) - m (%3%)") \
-                                   % d_offset % d_n % d_m);
+      if(d_offset < 0) {
+        std::string s = boost::str(boost::format("keep_m_in_n: offset (%1%) must be >= 0") \
+                                   % d_offset);
+        throw std::runtime_error(s);
+      }
+      if(d_offset >= d_n) {
+        std::string s = boost::str(boost::format("keep_m_in_n: offset (%1%) < n (%2%)") \
+                                   % d_offset % d_n);
         throw std::runtime_error(s);
       }
 
@@ -107,13 +112,19 @@ namespace gr {
 
       // iterate over data blocks of size {n, input : m, output}
       int blks = std::min(noutput_items/d_m, ninput_items[0]/d_n);
+      int excess = (d_offset + d_m - d_n) * d_itemsize;
 
       for(int i=0; i<blks; i++) {
         // set up copy pointers
         const uint8_t* iptr = &in[(i*d_n + d_offset)*d_itemsize];
         uint8_t* optr = &out[i*d_m*d_itemsize];
         // perform copy
-        memcpy( optr, iptr, d_m*d_itemsize );
+        if(excess <= 0) {
+          memcpy( optr, iptr, d_m*d_itemsize );
+        } else {
+          memcpy( optr, &in[i*d_n*d_itemsize], excess);
+          memcpy( optr + excess, iptr, d_m*d_itemsize - excess);
+        }
       }
 
       consume_each(blks*d_n);

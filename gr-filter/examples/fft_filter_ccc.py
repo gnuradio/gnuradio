@@ -30,17 +30,12 @@ from gnuradio import eng_notation
 from gnuradio.eng_arg import eng_float, intx
 from argparse import ArgumentParser
 import sys
+import numpy
 
 try:
-    import scipy
+    from matplotlib import pyplot
 except ImportError:
-    print("Error: could not import scipy (http://www.scipy.org/)")
-    sys.exit(1)
-
-try:
-    import pylab
-except ImportError:
-    print("Error: could not import pylab (http://matplotlib.sourceforge.net/)")
+    print("Error: could not from matplotlib import pyplot (http://matplotlib.sourceforge.net/)")
     sys.exit(1)
 
 class example_fft_filter_ccc(gr.top_block):
@@ -97,24 +92,24 @@ def main():
                                  args.decimation)
     put.run()
 
-    data_src = scipy.array(put.vsnk_src.data())
-    data_snk = scipy.array(put.vsnk_out.data())
+    data_src = numpy.array(put.vsnk_src.data())
+    data_snk = numpy.array(put.vsnk_out.data())
 
     # Plot the signals PSDs
     nfft = 1024
-    f1 = pylab.figure(1, figsize=(12,10))
+    f1 = pyplot.figure(1, figsize=(12,10))
     s1 = f1.add_subplot(1,1,1)
     s1.psd(data_src, NFFT=nfft, noverlap=nfft / 4,
            Fs=args.samplerate)
     s1.psd(data_snk, NFFT=nfft, noverlap=nfft / 4,
            Fs=args.samplerate)
 
-    f2 = pylab.figure(2, figsize=(12,10))
+    f2 = pyplot.figure(2, figsize=(12,10))
     s2 = f2.add_subplot(1,1,1)
     s2.plot(data_src)
     s2.plot(data_snk.real, 'g')
 
-    pylab.show()
+    pyplot.show()
 
 if __name__ == "__main__":
     try:

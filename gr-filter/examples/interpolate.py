@@ -27,18 +27,12 @@ from gnuradio import gr
 from gnuradio import blocks
 from gnuradio import filter
 import sys, time
+import numpy
 
 try:
     from gnuradio import analog
 except ImportError:
     sys.stderr.write("Error: Program requires gr-analog.\n")
-    sys.exit(1)
-
-try:
-    import scipy
-    from scipy import fftpack
-except ImportError:
-    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
     sys.exit(1)
 
 try:
@@ -82,7 +76,7 @@ class pfb_top_block(gr.top_block):
                                                window=filter.firdes.WIN_BLACKMAN_hARRIS)
 
         # Calculate the number of taps per channel for our own information
-        tpc = scipy.ceil(float(len(self._taps)) / float(self._interp))
+        tpc = numpy.ceil(float(len(self._taps)) / float(self._interp))
         print("Number of taps:     ", len(self._taps))
         print("Number of filters:  ", self._interp)
         print("Taps per channel:   ", tpc)
@@ -136,7 +130,7 @@ def main():
         Ne = 10000
 
         fftlen = 8192
-        winfunc = scipy.blackman
+        winfunc = numpy.blackman
 
         # Plot input signal
         fs = tb._fs
@@ -147,8 +141,8 @@ def main():
         X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
-        X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_in = scipy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
+        X_in = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        f_in = numpy.arange(-fs / 2.0, fs / 2.0, fs / float(X_in.size))
         p1_f = sp1_f.plot(f_in, X_in, "b")
         sp1_f.set_xlim([min(f_in), max(f_in)+1])
         sp1_f.set_ylim([-200.0, 50.0])
@@ -161,8 +155,8 @@ def main():
         Ts = 1.0 / fs
         Tmax = len(d)*Ts
 
-        t_in = scipy.arange(0, Tmax, Ts)
-        x_in = scipy.array(d)
+        t_in = numpy.arange(0, Tmax, Ts)
+        x_in = numpy.array(d)
         sp1_t = fig1.add_subplot(2, 1, 2)
         p1_t = sp1_t.plot(t_in, x_in.real, "b-o")
         #p1_t = sp1_t.plot(t_in, x_in.imag, "r-o")
@@ -181,8 +175,8 @@ def main():
         X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
-        X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_o = scipy.arange(-fs_int / 2.0, fs_int / 2.0, fs_int / float(X_o.size))
+        X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        f_o = numpy.arange(-fs_int / 2.0, fs_int / 2.0, fs_int / float(X_o.size))
         p2_f = sp2_f.plot(f_o, X_o, "b")
         sp2_f.set_xlim([min(f_o), max(f_o)+1])
         sp2_f.set_ylim([-200.0, 50.0])
@@ -194,8 +188,8 @@ def main():
         Ts_int = 1.0 / fs_int
         Tmax = len(d)*Ts_int
 
-        t_o = scipy.arange(0, Tmax, Ts_int)
-        x_o1 = scipy.array(d)
+        t_o = numpy.arange(0, Tmax, Ts_int)
+        x_o1 = numpy.array(d)
         sp2_t = fig2.add_subplot(2, 1, 2)
         p2_t = sp2_t.plot(t_o, x_o1.real, "b-o")
         #p2_t = sp2_t.plot(t_o, x_o.imag, "r-o")
@@ -214,8 +208,8 @@ def main():
         X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen / 4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
-        X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
-        f_o = scipy.arange(-fs_aint / 2.0, fs_aint / 2.0, fs_aint / float(X_o.size))
+        X_o = 10.0*numpy.log10(abs(numpy.fft.fftshift(X)))
+        f_o = numpy.arange(-fs_aint / 2.0, fs_aint / 2.0, fs_aint / float(X_o.size))
         p3_f = sp3_f.plot(f_o, X_o, "b")
         sp3_f.set_xlim([min(f_o), max(f_o)+1])
         sp3_f.set_ylim([-200.0, 50.0])
@@ -227,8 +221,8 @@ def main():
         Ts_aint = 1.0 / fs_aint
         Tmax = len(d)*Ts_aint
 
-        t_o = scipy.arange(0, Tmax, Ts_aint)
-        x_o2 = scipy.array(d)
+        t_o = numpy.arange(0, Tmax, Ts_aint)
+        x_o2 = numpy.array(d)
         sp3_f = fig3.add_subplot(2, 1, 2)
         p3_f = sp3_f.plot(t_o, x_o2.real, "b-o")
         p3_f = sp3_f.plot(t_o, x_o1.real, "m-o")

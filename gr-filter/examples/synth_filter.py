@@ -27,6 +27,7 @@ from gnuradio import gr
 from gnuradio import filter
 from gnuradio import blocks
 import sys
+import numpy
 
 try:
     from gnuradio import analog
@@ -35,13 +36,7 @@ except ImportError:
     sys.exit(1)
 
 try:
-    import scipy
-except ImportError:
-    sys.stderr.write("Error: Program requires scipy (see: www.scipy.org).\n")
-    sys.exit(1)
-
-try:
-    import pylab
+    from matplotlib import pyplot
 except ImportError:
     sys.stderr.write("Error: Program requires matplotlib (see: matplotlib.sourceforge.net).\n")
     sys.exit(1)
@@ -76,20 +71,20 @@ def main():
     tb.run()
 
     if 1:
-        f1 = pylab.figure(1)
+        f1 = pyplot.figure(1)
         s1 = f1.add_subplot(1,1,1)
         s1.plot(snk.data()[1000:])
 
         fftlen = 2048
-        f2 = pylab.figure(2)
+        f2 = pyplot.figure(2)
         s2 = f2.add_subplot(1,1,1)
-        winfunc = scipy.blackman
+        winfunc = numpy.blackman
         s2.psd(snk.data()[10000:], NFFT=fftlen,
                Fs = nchans*fs,
                noverlap=fftlen / 4,
                window = lambda d: d*winfunc(fftlen))
 
-        pylab.show()
+        pyplot.show()
 
 if __name__ == "__main__":
     main()
