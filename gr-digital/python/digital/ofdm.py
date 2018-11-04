@@ -31,7 +31,7 @@ from gnuradio import blocks
 from . import digital_swig as digital
 from . import ofdm_packet_utils
 from .ofdm_receiver import ofdm_receiver
-import gnuradio.gr.gr_threading as _threading
+import threading
 from . import psk, qam
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -299,9 +299,9 @@ class ofdm_demod(gr.hier_block2):
 
 
 
-class _queue_watcher_thread(_threading.Thread):
+class _queue_watcher_thread(threading.Thread):
     def __init__(self, rcvd_pktq, callback):
-        _threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.setDaemon(1)
         self.rcvd_pktq = rcvd_pktq
         self.callback = callback
