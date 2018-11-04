@@ -23,7 +23,6 @@
 install(FILES
     api.h
     cpm.h
-    noise_type.h
     agc.h
     agc2.h
     noise_type.h

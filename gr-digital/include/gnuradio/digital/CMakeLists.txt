@@ -101,6 +101,5 @@ install(FILES
     symbol_sync_cc.h
     symbol_sync_ff.h
     timing_error_detector_type.h
-    header_payload_demux.h
     DESTINATION ${GR_INCLUDE_DIR}/gnuradio/digital
 )
