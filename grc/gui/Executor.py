@@ -21,6 +21,7 @@ import os
 import shlex
 import subprocess
 import threading
+import time
 from distutils.spawn import find_executable
 
 from gi.repository import GLib
@@ -83,11 +84,14 @@ class ExecFlowGraphThread(threading.Thread):
         r = "\n"
         while r:
             GLib.idle_add(Messages.send_verbose_exec, r)
-            r = self.process.stdout.read(1024)
-            if not isinstance(r, str):
-                r = r.decode('utf-8','ignore')
+            r = self.process.stdout.read(1)
 
-        self.process.poll()
+        # Properly close pipe before thread is terminated
+        self.process.stdout.close()
+        while self.process.poll() is None:
+            # Wait for the process to fully terminate
+            time.sleep(0.05)
+
         GLib.idle_add(self.done)
 
     def done(self):
