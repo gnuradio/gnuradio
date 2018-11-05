@@ -716,9 +716,9 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
                 try:
-                    page.term_proc()
-                except:
-                    print("could not terminate process: %d" % page.get_proc().pid)
+                    page.process.kill()
+                except OSError:
+                    print("could not terminate process: %d" % page.process.pid)
 
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
             pass
