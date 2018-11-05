@@ -74,10 +74,10 @@ namespace gr {
 
   /* Macros for Programmatic Configuration */
 #define GR_LOG_DECLARE_LOGPTR(logger)           \
-  gr::logger_ptr logger;
+  gr::logger_ptr logger
 
 #define GR_LOG_ASSIGN_LOGPTR(logger,name)       \
-  logger = gr::logger_get_logger(name);
+  logger = gr::logger_get_logger(name)
 
 #define GR_CONFIG_LOGGER(config)                \
   gr::logger_config::load_config(config)
@@ -86,21 +86,21 @@ namespace gr {
   gr::logger_config::load_config(config,period)
 
 #define GR_LOG_GETLOGGER(logger, name)                  \
-  gr::logger_ptr logger = gr::logger_get_logger(name);
+  gr::logger_ptr logger = gr::logger_get_logger(name)
 
 #define GR_SET_LEVEL(name, level) {                             \
     gr::logger_ptr logger = gr::logger_get_logger(name);        \
     gr::logger_set_level(logger,level);}
 
 #define GR_LOG_SET_LEVEL(logger, level)         \
-  gr::logger_set_level(logger, level);
+  gr::logger_set_level(logger, level)
 
 #define GR_GET_LEVEL(name, level) {                             \
     gr::logger_ptr logger = gr::logger_get_logger(name);        \
     gr::logger_get_level(logger,level);}
 
 #define GR_LOG_GET_LEVEL(logger, level)         \
-  gr::logger_get_level(logger,level);
+  gr::logger_get_level(logger,level)
 
 #define GR_ADD_CONSOLE_APPENDER(name, target, pattern) {        \
     gr::logger_ptr logger = gr::logger_get_logger(name);        \
