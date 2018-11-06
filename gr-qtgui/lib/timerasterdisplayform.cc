@@ -64,18 +64,18 @@ TimeRasterDisplayForm::TimeRasterDisplayForm(int nplots,
   // Now create our own menus
   for(int i = 0; i < nplots; i++) {
     d_line_title_act.push_back(new LineTitleAction(i, this));
-    connect(d_line_title_act[i], SIGNAL(whichTrigger(int, const QString&)),
-	    this, SLOT(setLineLabel(int, const QString&)));
+    connect(d_line_title_act[i], SIGNAL(whichTrigger(unsigned int, const QString&)),
+	    this, SLOT(setLineLabel(unsigned int, const QString&)));
     d_lines_menu[i]->addAction(d_line_title_act[i]);
 
     ColorMapMenu *colormap = new ColorMapMenu(i, this);
-    connect(colormap, SIGNAL(whichTrigger(int, const int, const QColor&, const QColor&)),
-	    this, SLOT(setColorMap(int, const int, const QColor&, const QColor&)));
+    connect(colormap, SIGNAL(whichTrigger(unsigned int, const int, const QColor&, const QColor&)),
+	    this, SLOT(setColorMap(unsigned int, const int, const QColor&, const QColor&)));
     d_lines_menu[i]->addMenu(colormap);
 
     d_marker_alpha_menu.push_back(new MarkerAlphaMenu(i, this));
-    connect(d_marker_alpha_menu[i], SIGNAL(whichTrigger(int, int)),
-	    this, SLOT(setAlpha(int, int)));
+    connect(d_marker_alpha_menu[i], SIGNAL(whichTrigger(unsigned int, unsigned int)),
+	    this, SLOT(setAlpha(unsigned int, unsigned int)));
     d_lines_menu[i]->addMenu(d_marker_alpha_menu[i]);
   }
 
@@ -248,7 +248,7 @@ TimeRasterDisplayForm::setColorMap(unsigned int which,
 }
 
 void
-TimeRasterDisplayForm::setAlpha(unsigned int which, int alpha)
+TimeRasterDisplayForm::setAlpha(unsigned int which, unsigned int alpha)
 {
   getPlot()->setAlpha(which, alpha);
   getPlot()->replot();

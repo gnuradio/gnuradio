@@ -80,7 +80,7 @@ public slots:
 		   const QColor lowColor=QColor("white"),
 		   const QColor highColor=QColor("white"));
 
-  void setAlpha(unsigned int which, int alpha);
+  void setAlpha(unsigned int which, unsigned int alpha);
 
   void autoScale(bool en=false);
 

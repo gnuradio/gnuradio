@@ -100,20 +100,20 @@ NumberDisplayForm::NumberDisplayForm(int nplots, gr::qtgui::graph_t type,
   // Menu items for each number line
   for(unsigned int i = 0; i < d_nplots; ++i) {
     d_label_act.push_back(new LineTitleAction(i, this));
-    connect(d_label_act[i], SIGNAL(whichTrigger(int, const QString&)),
-	    this, SLOT(setLabel(int, const QString&)));
+    connect(d_label_act[i], SIGNAL(whichTrigger(unsigned int, const QString&)),
+            this, SLOT(setLabel(unsigned int, const QString&)));
 
     d_label_menu.push_back(new QMenu(tr(""), this));
     d_label_menu[i]->addAction(d_label_act[i]);
 
     d_color_menu.push_back(new NumberColorMapMenu(i, this));
-    connect(d_color_menu[i], SIGNAL(whichTrigger(int, const QColor&, const QColor&)),
-            this, SLOT(setColor(int, const QColor&, const QColor&)));
+    connect(d_color_menu[i], SIGNAL(whichTrigger(unsigned int, const QColor&, const QColor&)),
+            this, SLOT(setColor(unsigned int, const QColor&, const QColor&)));
     d_label_menu[i]->addMenu(d_color_menu[i]);
 
     d_factor_act.push_back(new ItemFloatAct(i, "Factor", this));
-    connect(d_factor_act[i], SIGNAL(whichTrigger(int, float)),
-            this, SLOT(setFactor(int, float)));
+    connect(d_factor_act[i], SIGNAL(whichTrigger(unsigned int, float)),
+            this, SLOT(setFactor(unsigned int, float)));
     d_label_menu[i]->addAction(d_factor_act[i]);
 
     d_menu->addMenu(d_label_menu[i]);
