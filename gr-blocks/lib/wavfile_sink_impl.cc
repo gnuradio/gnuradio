@@ -97,9 +97,6 @@ namespace gr {
 	d_min_sample_val = -0x7FFF;
 	d_normalize_fac  = d_max_sample_val;
 	d_normalize_shift = 0;
-	if(bits_per_sample != 16) {
-	  fprintf(stderr, "Invalid bits per sample value requested, using 16");
-	}
       }
     }
 

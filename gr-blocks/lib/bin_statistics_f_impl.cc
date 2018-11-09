@@ -114,7 +114,6 @@ namespace gr {
             t = std::min(noutput_items - n, int(d_delay));
             n += t;
             d_delay -= t;
-            assert(d_delay >= 0);
             if(d_delay == 0)
               enter_dwell_delay();
             break;
@@ -126,7 +125,6 @@ namespace gr {
               n++;
             }
             d_delay -= t;
-            assert(d_delay >= 0);
             if(d_delay == 0) {
               leave_dwell_delay();
               enter_tune_delay();

@@ -64,7 +64,7 @@ namespace gr {
     int
     interleave_impl::fixed_rate_noutput_to_ninput(int noutput)
     {
-      return (int) ((noutput / d_ninputs) + .5);
+      return (noutput / d_ninputs);
     }
 
     void
@@ -72,7 +72,7 @@ namespace gr {
                               gr_vector_int& ninput_items_required)
     {
       for(unsigned int i = 0; i < ninput_items_required.size(); ++i) {
-        ninput_items_required[i] = (int) ((noutput_items / ninput_items_required.size()) + .5);
+        ninput_items_required[i] = noutput_items / ninput_items_required.size();
       }
     }
 
@@ -82,7 +82,7 @@ namespace gr {
                                   gr_vector_const_void_star &input_items,
                                   gr_vector_void_star &output_items)
     {
-      size_t noutput_blocks = (size_t) ((noutput_items/d_blocksize) + .5);
+      size_t noutput_blocks = (size_t) (noutput_items/d_blocksize);
       const char **in = (const char**)&input_items[0];
       char *out = (char*)output_items[0];
 
@@ -93,7 +93,7 @@ namespace gr {
           in[n] += d_itemsize * d_blocksize;
         }
       }
-      consume_each((int)((noutput_items/d_ninputs) + .5));
+      consume_each(noutput_items/d_ninputs);
       return noutput_items;
     }
 
