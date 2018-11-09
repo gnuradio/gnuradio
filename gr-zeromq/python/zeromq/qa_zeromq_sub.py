@@ -52,7 +52,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
         self.tb.start()
         time.sleep(0.05)
         self.pub_socket.send(src_data.tostring())
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.tb.stop()
         self.tb.wait()
         self.assertFloatTuplesAlmostEqual(sink.data(), src_data)
@@ -70,7 +70,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
         self.tb.start()
         time.sleep(0.05)
         self.pub_socket.send_multipart(src_data)
-        time.sleep(0.25)
+        time.sleep(0.5)
         self.tb.stop()
         self.tb.wait()
 

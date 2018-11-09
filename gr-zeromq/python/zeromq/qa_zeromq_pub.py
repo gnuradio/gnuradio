@@ -48,7 +48,9 @@ class qa_zeromq_pub (gr_unittest.TestCase):
         zmq_pull_t.daemon = True
         zmq_pull_t.start()
         self.tb.run()
-        zmq_pull_t.join()
+        zmq_pull_t.join(6.0)
+        # Check to see if we timed out
+        self.assertFalse(zmq_pull_t.is_alive())
         self.assertFloatTuplesAlmostEqual(self.rx_data, src_data)
 
     def recv_data (self, data):
