@@ -23,6 +23,7 @@
 #ifndef INCLUDED_GR_UHD_COMMON_H
 #define INCLUDED_GR_UHD_COMMON_H
 
+#include <uhd/stream.hpp>
 #include <uhd/version.hpp>
 #include <boost/format.hpp>
 #include <stdexcept>
