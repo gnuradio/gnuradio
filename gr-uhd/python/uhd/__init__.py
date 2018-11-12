@@ -120,7 +120,8 @@ def _prepare_uhd_swig():
                         if key in kwargs: kwargs[key] = cast(kwargs[key])
                     except: pass
                 #don't pass kwargs, it confuses swig, map into args list:
-                for key in ('device_addr', 'stream_args', 'io_type', 'num_channels', 'msgq'):
+                for key in ('device_addr', 'stream_args',
+                        'issue_stream_cmd_on_start', 'tsb_tag_name', 'msgq'):
                     if key in kwargs: args.append(kwargs[key])
                 return old_constructor(*args)
             return constructor_interceptor
