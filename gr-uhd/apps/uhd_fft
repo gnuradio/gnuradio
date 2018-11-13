@@ -40,7 +40,7 @@ import sip
 import threading
 import time
 from distutils.version import StrictVersion
-from PyQt4 import Qt
+from PyQt5 import Qt
 from gnuradio import eng_notation
 from gnuradio import eng_arg
 from gnuradio import gr
@@ -54,7 +54,7 @@ except ImportError:
     from gnuradio.uhd.uhd_app import UHDApp
 
 
-class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
+class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
     """
     Simple UHD Spectrum Analyzer / Scope App.
     """
@@ -82,7 +82,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
         self.settings = Qt.QSettings("GNU Radio", "uhd_fft")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+        self.restoreGeometry(self.settings.value("geometry"))
 
         ##################################################
         # Parameters
@@ -139,7 +139,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self._samp_rate__line_edit = Qt.QLineEdit(eng_notation.num_to_str(self.samp_rate))
         self._samp_rate__tool_bar.addWidget(self._samp_rate__line_edit)
         self._samp_rate__line_edit.returnPressed.connect(
-            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate__line_edit.text().toAscii()))))
+            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate__line_edit.text()))))
         self.top_grid_layout.addWidget(self._samp_rate__tool_bar, 3, 2, 1, 2)
         # Gain:
         self._gain__range = Range(
@@ -157,7 +157,7 @@ class uhd_fft(gr.top_block, Qt.QWidget, UHDApp):
         self._freq_line_edit = Qt.QLineEdit(eng_notation.num_to_str(self.freq))
         self._freq_tool_bar.addWidget(self._freq_line_edit)
         self._freq_line_edit.returnPressed.connect(
-            lambda: self.set_freq_qt(eng_notation.str_to_num(str(self._freq_line_edit.text().toAscii()))))
+            lambda: self.set_freq_qt(eng_notation.str_to_num(str(self._freq_line_edit.text()))))
         self.top_grid_layout.addWidget(self._freq_tool_bar, 3,0,1,2)
         # Antenna Selection:
         self._ant_labels = self._ant_options
@@ -484,16 +484,19 @@ def main():
     Go, go, go!
     """
     args = setup_argparser().parse_args()
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui','style','raster'))
     qapp = Qt.QApplication(sys.argv)
     tb = uhd_fft(args)
     tb.start()
     tb.show()
     def quitting():
+        """
+        Action ('Slot' in Qt lingo) to close the flow graph when the Qt window
+        is closed.
+        """
+        print("\nStopping flowgraph...")
         tb.stop()
         tb.wait()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.aboutToQuit.connect(quitting)
     qapp.exec_()
     tb = None #to clean up Qt widgets
 
