@@ -1,4 +1,4 @@
-# Copyright 2016 Free Software Foundation, Inc.
+# Copyright 2016,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -38,11 +38,7 @@ list(APPEND QTGUI_LIBRARIES
   ${QT_LIBRARIES}
 )
 
-if (${DESIRED_QT_VERSION} MATCHES 4)
-    QT4_WRAP_CPP(qtgui_moc_sources display_qt.h)
-else()
-    QT5_WRAP_CPP(qtgui_moc_sources display_qt.h)
-endif()
+QT5_WRAP_CPP(qtgui_moc_sources display_qt.h)
 
 add_executable(display_qt display_qt.cc ${qtgui_moc_sources})
 target_link_libraries(display_qt ${QTGUI_LIBRARIES})

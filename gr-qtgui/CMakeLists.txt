@@ -1,4 +1,4 @@
-# Copyright 2010-2011,2013 Free Software Foundation, Inc.
+# Copyright 2010-2011,2013,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -26,21 +26,14 @@ find_package(PythonLibs 2)
 
 include(GrPython)
 
-set(DESIRED_QT_VERSION 5 CACHE STRING "The Qt version to use (4 or 5)")
-set_property(CACHE DESIRED_QT_VERSION PROPERTY STRINGS 4 5)
+# Note: gr-qtgui requires Qt5.
 
-if (DESIRED_QT_VERSION MATCHES 4)
-    find_package(Qt4 COMPONENTS QtCore QtGui)
-    set(QT_FOUND ${Qt4_FOUND})
-    include(GrSetupQt4)
-else()
-    find_package(Qt5Widgets QUIET)
-    set(QT_FOUND ${Qt5Widgets_FOUND})
-    set(QT_LIBRARIES ${Qt5Widgets_LIBRARIES})
-    set(QT_INCLUDE_DIRS ${Qt5Widgets_INCLUDE_DIRS})
-endif()
+find_package(Qt5Widgets QUIET)
+set(QT_FOUND ${Qt5Widgets_FOUND})
+set(QT_LIBRARIES ${Qt5Widgets_LIBRARIES})
+set(QT_INCLUDE_DIRS ${Qt5Widgets_INCLUDE_DIRS})
 
-GR_PYTHON_CHECK_MODULE("PyQt${DESIRED_QT_VERSION}" PyQt${DESIRED_QT_VERSION} True PYQT${DESIRED_QT_VERSION}_FOUND)
+GR_PYTHON_CHECK_MODULE("PyQt5" PyQt5 True PYQT5_FOUND)
 
 find_package(Qwt)
 
@@ -50,7 +43,7 @@ find_package(Qwt)
 include(GrComponent)
 if(NOT CMAKE_CROSSCOMPILING)
     set(qt_gui_python_deps
-        PYQT${DESIRED_QT_VERSION}_FOUND
+        PYQT5_FOUND
     )
 endif(NOT CMAKE_CROSSCOMPILING)
 

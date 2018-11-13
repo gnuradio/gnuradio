@@ -129,7 +129,7 @@ The QT GUI blocks require the following dependencies.
 \li QtCore (version >= 4.4)
 \li QtGui (version >= 4.4)
 \li QtOpenGL (version >= 4.4)
-\li PyQt4 for Qt4 (version >= 4.4)
+\li PyQt5 for Qt5 (version >= 5.0)
 \li Qwt (version >= 5.2)
 
 \section qtgui_usage Usage

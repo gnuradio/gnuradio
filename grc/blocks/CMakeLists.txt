@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -46,10 +46,6 @@ macro(GEN_BLOCK_YML _generator _yml_block)
 endmacro()
 
 GEN_BLOCK_YML(variable_struct.block.yml.py variable_struct.block.yml)
-
-if(DESIRED_QT_VERSION EQUAL 4)
-    REPLACE_IN_FILE(options.yml PyQt5 PyQt4)
-endif()
 
 add_custom_target(grc_generated_yml ALL DEPENDS ${generated_yml_files})
 
