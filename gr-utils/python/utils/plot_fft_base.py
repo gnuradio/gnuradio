@@ -103,7 +103,7 @@ class plot_fft_base(object):
 
     def calc_freq(self, time, sample_rate):
         N = len(time)
-        Fs = 1.0 / (time.max( - time.min()))
+        Fs = 1.0 / (max(time) - min(time))
         Fn = 0.5 * sample_rate
         freq = numpy.array([-Fn + i*Fs for i in range(N)])
         return freq
