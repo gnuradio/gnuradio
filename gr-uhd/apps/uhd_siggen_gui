@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015-2016 Free Software Foundation, Inc.
+# Copyright 2015-2016,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -91,8 +91,8 @@ class uhd_siggen_gui(Qt.QWidget):
         # Widgets + Controls
         ##################################################
         ### Waveform Selector
-        self._waveform_options = uhd_siggen.WAVEFORMS.keys()
-        self._waveform_labels = uhd_siggen.WAVEFORMS.values()
+        self._waveform_options = list(uhd_siggen.WAVEFORMS.keys())
+        self._waveform_labels = list(uhd_siggen.WAVEFORMS.values())
         self._waveform_group_box = Qt.QGroupBox("Waveform")
         self._waveform_box = Qt.QHBoxLayout()
         class variable_chooser_button_group(Qt.QButtonGroup):
