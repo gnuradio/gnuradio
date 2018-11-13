@@ -20,6 +20,7 @@ find_path(QWT_INCLUDE_DIRS
   /usr/local/include/qwt-${QWT_QT_VERSION}
   /usr/local/include/qwt
   /usr/include/qwt6
+  /usr/include/qt5/qwt
   /usr/include/qwt-${QWT_QT_VERSION}
   /usr/include/qwt
   /usr/include/${QWT_QT_VERSION}/qwt
