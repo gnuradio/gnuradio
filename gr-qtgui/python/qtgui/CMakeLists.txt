@@ -1,4 +1,4 @@
-# Copyright 2010-2012 Free Software Foundation, Inc.
+# Copyright 2010-2012,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,11 +20,7 @@
 ########################################################################
 include(GrPython)
 
-if (DESIRED_QT_VERSION MATCHES 4)
-	set(PY_QT_IMPORT "from PyQt4 import Qt, QtCore, QtGui as QtWidgets")
-else()
-	set(PY_QT_IMPORT "from PyQt5 import Qt, QtCore, QtWidgets")
-endif()
+set(PY_QT_IMPORT "from PyQt5 import Qt, QtCore, QtWidgets")
 
 configure_file(range.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/range.py" @ONLY)
 configure_file(util.py.cmakein "${CMAKE_CURRENT_BINARY_DIR}/util.py" @ONLY)

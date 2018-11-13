@@ -1,4 +1,4 @@
-# Copyright 2010-2011,2013 Free Software Foundation, Inc.
+# Copyright 2010-2011,2013,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -46,13 +46,8 @@ set(qtgui_moc_hdrs
     edit_box_msg_impl.h
 )
 
-if (${DESIRED_QT_VERSION} MATCHES 4)
-    QT4_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
-    QT4_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
-else()
-    QT5_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
-    QT5_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
-endif()
+QT5_WRAP_CPP(qtgui_moc_sources ${qtgui_moc_hdrs})
+QT5_WRAP_UI(qtgui_ui_hdrs spectrumdisplayform.ui)
 
 #FIXME the sources expect <foo>.ui.h, but the macros generate ui_foo.h
 #avoid changing the sources by generating the header with the include

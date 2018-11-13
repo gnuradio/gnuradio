@@ -72,7 +72,7 @@ cppzmq is included (undocumentedly) in the debian and Ubuntu libzmq3-dev package
 \li gsl         (>= 1.10)    http://gnuwin32.sourceforge.net/packages/gsl.htm
 
 \subsection dep_gr_qtgui gr-qtgui: The QT-based Graphical User Interface
-\li qt4         (>= 4.4.0)   http://qt.nokia.com/downloads/
+\li qt5         (>= 5.0.0)   http://qt.nokia.com/downloads/
 \li qwt         (>= 5.2.0)   http://sourceforge.net/projects/qwt/
 \li pyqt        (>= 4.10.0)  http://www.riverbankcomputing.co.uk/software/pyqt/download
 

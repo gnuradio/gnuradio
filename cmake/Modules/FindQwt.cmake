@@ -5,12 +5,8 @@
 # qwt_global.h holds a string with the QWT version;
 #   test to make sure it's at least 5.2
 
-if (${DESIRED_QT_VERSION} MATCHES 5)
-  set(QWT_QT_VERSION qt5)
-  pkg_check_modules(PC_QWT "Qt5Qwt6")
-else()
-  set(QWT_QT_VERSION qt4)
-endif()
+pkg_check_modules(PC_QWT "Qt5Qwt6")
+set(QWT_QT_VERSION qt5)
 
 find_path(QWT_INCLUDE_DIRS
   NAMES qwt_global.h
