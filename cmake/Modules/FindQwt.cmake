@@ -7,6 +7,7 @@
 
 if (${DESIRED_QT_VERSION} MATCHES 5)
   set(QWT_QT_VERSION qt5)
+  pkg_check_modules(PC_QWT "Qt5Qwt6")
 else()
   set(QWT_QT_VERSION qt4)
 endif()
@@ -14,6 +15,7 @@ endif()
 find_path(QWT_INCLUDE_DIRS
   NAMES qwt_global.h
   HINTS
+  ${PC_QWT_INCLUDEDIR}
   ${CMAKE_INSTALL_PREFIX}/include/qwt
   ${CMAKE_PREFIX_PATH}/include/qwt
   PATHS
@@ -33,6 +35,7 @@ find_path(QWT_INCLUDE_DIRS
 find_library (QWT_LIBRARIES
   NAMES qwt6-${QWT_QT_VERSION} qwt-${QWT_QT_VERSION} qwt6 qwt qwt5 qwtd5
   HINTS
+  ${PC_QWT_LIBDIR}
   ${CMAKE_INSTALL_PREFIX}/lib
   ${CMAKE_INSTALL_PREFIX}/lib64
   ${CMAKE_PREFIX_PATH}/lib
