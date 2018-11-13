@@ -403,7 +403,7 @@ class DataTableBuffers(DataTable):
 
         else:
             if(self._sort):
-                sorted_fullness = sorted(blockport_fullness.iteritems(),
+                sorted_fullness = sorted(blockport_fullness.items(),
                                          key=operator.itemgetter(1))
                 self._keymap = map(operator.itemgetter(0), sorted_fullness)
             else:
@@ -457,7 +457,7 @@ class DataTableRuntimes(DataTable):
 
         else:
             if(self._sort):
-                sorted_work = sorted(work_times.iteritems(), key=operator.itemgetter(1))
+                sorted_work = sorted(work_times.items(), key=operator.itemgetter(1))
                 self._keymap = map(operator.itemgetter(0), sorted_work)
             else:
                 if self._keymap:
