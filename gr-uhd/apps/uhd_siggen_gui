@@ -38,8 +38,8 @@ import sys
 import threading
 import time
 from distutils.version import StrictVersion
-from PyQt4 import Qt
-from PyQt4.QtCore import pyqtSlot
+from PyQt5 import Qt
+from PyQt5.QtCore import pyqtSlot
 from gnuradio import analog
 from gnuradio import eng_notation
 from gnuradio import gr
@@ -85,7 +85,7 @@ class uhd_siggen_gui(Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
         self.settings = Qt.QSettings("GNU Radio", "uhd_siggen_gui")
-        self.restoreGeometry(self.settings.value("geometry").toByteArray())
+        self.restoreGeometry(self.settings.value("geometry"))
 
         ##################################################
         # Widgets + Controls
@@ -230,7 +230,7 @@ class uhd_siggen_gui(Qt.QWidget):
         self._samp_rate_line_edit = Qt.QLineEdit(eng_notation.num_to_str(self._sg[uhd_siggen.SAMP_RATE_KEY]))
         self._samp_rate_tool_bar.addWidget(self._samp_rate_line_edit)
         self._samp_rate_line_edit.returnPressed.connect(
-            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate_line_edit.text().toAscii())))
+            lambda: self.set_samp_rate(eng_notation.str_to_num(str(self._samp_rate_line_edit.text())))
         )
         self.top_grid_layout.addWidget(self._samp_rate_tool_bar, 7,0,1,2)
         _sync_phases_push_button = Qt.QPushButton("Sync LOs")
@@ -448,14 +448,13 @@ def main():
     """ Go, go, go! """
     parser = setup_parser()
     args = parser.parse_args()
-    if StrictVersion(Qt.qVersion()) >= StrictVersion("4.5.0"):
-        Qt.QApplication.setGraphicsSystem(gr.prefs().get_string('qtgui', 'style', 'raster'))
     qapp = Qt.QApplication(sys.argv)
     siggen_gui = uhd_siggen_gui(args)
     siggen_gui.show()
     def quitting():
+        print("\nStopping flowgraph...")
         siggen_gui.stop()
-    qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    qapp.aboutToQuit.connect(quitting)
     qapp.exec_()
     siggen_gui = None #to clean up Qt widgets
 
