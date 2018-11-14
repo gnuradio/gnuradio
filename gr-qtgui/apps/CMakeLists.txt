@@ -19,42 +19,12 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    FILES
-    plot_base.py
-    plot_psd_base.py
-    plot_spectrogram_base.py
-    plot_time_base.py
-    plot_time_raster_base.py
-    plot_form.py
-    plot_constellation_form.py
-    plot_psd_form.py
-    plot_spectrogram_form.py
-    plot_time_form.py
-    plot_time_raster_form.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
-)
+#GR_PYTHON_INSTALL(
+    #FILES
+    #DESTINATION ${GR_PYTHON_DIR}/gnuradio/qtgui
+#)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    gr_time_plot_c
-    gr_time_plot_f
-    gr_time_plot_i
-    gr_time_plot_s
-    gr_time_plot_b
-    gr_time_raster_f
-    gr_time_raster_b
-    gr_psd_plot_c
-    gr_psd_plot_f
-    gr_psd_plot_i
-    gr_psd_plot_s
-    gr_psd_plot_b
-    gr_spectrogram_plot_c
-    gr_spectrogram_plot_f
-    gr_spectrogram_plot_i
-    gr_spectrogram_plot_s
-    gr_spectrogram_plot_b
-    gr_spectrogram_plot
-    gr_constellation_plot
-    DESTINATION ${GR_RUNTIME_DIR}
-)
+#GR_PYTHON_INSTALL(
+    #PROGRAMS
+    #DESTINATION ${GR_RUNTIME_DIR}
+#)
