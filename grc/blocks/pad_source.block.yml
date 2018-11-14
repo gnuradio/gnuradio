@@ -38,6 +38,8 @@ outputs:
     dtype: ${ type }
     vlen: ${ vlen }
     multiplicity: ${ num_streams }
+    optional: ${optional}
+
 
 asserts:
 - ${ vlen > 0 }
