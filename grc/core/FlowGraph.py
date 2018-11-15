@@ -21,6 +21,8 @@ import collections
 import itertools
 import sys
 import types
+import logging
+
 from operator import methodcaller, attrgetter
 
 from . import Messages, blocks
@@ -28,6 +30,8 @@ from .Constants import FLOW_GRAPH_FILE_FORMAT_VERSION
 from .base import Element
 from .utils import expr_utils
 from .utils.backports import shlex
+
+log = logging.getLogger(__name__)
 
 
 class FlowGraph(Element):
@@ -187,7 +191,8 @@ class FlowGraph(Element):
         for expr in self.imports():
             try:
                 exec(expr, namespace)
-            except:
+            except Exception:
+                log.exception('Failed to evaluate expression in namespace', exc_info=True)
                 pass
 
         for id, expr in self.get_python_modules():
@@ -195,7 +200,8 @@ class FlowGraph(Element):
                 module = types.ModuleType(id)
                 exec(expr, module.__dict__)
                 namespace[id] = module
-            except:
+            except Exception:
+                log.exception('Failed to evaluate expression in module {0}'.format(id), exc_info=True)
                 pass
 
         # Load parameters
@@ -204,7 +210,8 @@ class FlowGraph(Element):
             try:
                 value = eval(parameter_block.params['value'].to_code(), namespace)
                 np[parameter_block.name] = value
-            except:
+            except Exception:
+                log.exception('Failed to evaluate parameter block {0}'.format(parameter_block.name), exc_info=True)
                 pass
         namespace.update(np)  # Merge param namespace
 
@@ -213,7 +220,8 @@ class FlowGraph(Element):
             try:
                 value = eval(variable_block.value, namespace, variable_block.namespace)
                 namespace[variable_block.name] = value
-            except:
+            except Exception:
+                log.exception('Failed to evaluate variable block {0}'.format(variable_block.name), exc_info=True)
                 pass
 
         self.namespace.clear()
