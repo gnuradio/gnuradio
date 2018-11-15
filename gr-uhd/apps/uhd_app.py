@@ -85,7 +85,9 @@ class UHDApp(object):
         """
         Return a nice textual description of the USRP we're using.
         """
-        assert tx_or_rx == 'rx' or tx_or_rx == 'tx'
+        if tx_or_rx not in ['rx', 'tx']:
+            raise ValueError("tx_or_rx argument must be one of ['rx', 'tx']")
+
         try:
             info_pp = {}
             if self.prefix is None:
@@ -110,7 +112,7 @@ class UHDApp(object):
             if compact:
                 tpl = COMPACT_TPL
             return tpl.format(**info_pp)
-        except:
+        except Exception:
             return "Can't establish USRP info."
 
     def normalize_sel(self, num_name, arg_name, num, arg):
@@ -351,7 +353,7 @@ class UHDApp(object):
             """
             try:
                 return [int(x.strip()) for x in string.split(",")]
-            except:
+            except ValueError:
                 raise argparse.ArgumentTypeError("Not a comma-separated list: {string}".format(string=string))
         if parser is None:
             parser = argparse.ArgumentParser(
