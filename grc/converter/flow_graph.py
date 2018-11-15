@@ -128,6 +128,6 @@ def _guess_file_format_1(data):
     try:
         if any(not has_numeric_port_ids(*con) for con in data['connections']):
             return 1
-    except:
+    except (TypeError, KeyError):
         pass
     return 0

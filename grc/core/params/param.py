@@ -220,7 +220,7 @@ class Param(Element):
                 value = self.parent_flowgraph.evaluate(expr)
                 if not isinstance(value, str):
                     raise Exception()
-            except:
+            except Exception:
                 self._stringify_flag = True
                 value = str(expr)
             if dtype == '_multiline_python_external':

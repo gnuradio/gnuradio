@@ -102,9 +102,9 @@ class Config(CoreConfig):
             raw = self._gr_prefs.get_string('grc', 'canvas_default_size', '1280, 1024')
             value = tuple(int(x.strip('() ')) for x in raw.split(','))
             if len(value) != 2 or not all(300 < x < 4096 for x in value):
-                raise Exception()
+                raise ValueError
             return value
-        except:
+        except (ValueError, TypeError):
             print("Error: invalid 'canvas_default_size' setting.", file=sys.stderr)
             return Constants.DEFAULT_CANVAS_SIZE_DEFAULT
 
@@ -114,8 +114,8 @@ class Config(CoreConfig):
             font_size = self._gr_prefs.get_long('grc', 'canvas_font_size',
                                                 Constants.DEFAULT_FONT_SIZE)
             if font_size <= 0:
-                raise Exception()
-        except:
+                raise ValueError
+        except (ValueError, TypeError):
             font_size = Constants.DEFAULT_FONT_SIZE
             print("Error: invalid 'canvas_font_size' setting.", file=sys.stderr)
 

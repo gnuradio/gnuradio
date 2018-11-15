@@ -21,7 +21,7 @@ import sys
 import textwrap
 from distutils.spawn import find_executable
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 from . import Utils, Actions, Constants
 from ..core import Messages
@@ -272,8 +272,8 @@ def show_about(parent, config):
 
     try:
         ad.set_logo(Gtk.IconTheme().load_icon('gnuradio-grc', 64, 0))
-    except:
-        pass
+    except GLib.Error:
+        log.debug("Failed to set window logo")
 
     #ad.set_comments("")
     ad.set_copyright(config.license.splitlines()[0])

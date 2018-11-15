@@ -69,10 +69,7 @@ class TopBlockGenerator(object):
             with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
             if filename == self.file_path:
-                try:
-                    os.chmod(filename, self._mode)
-                except:
-                    pass
+                os.chmod(filename, self._mode)
 
     def _build_python_code_from_template(self):
         """
@@ -172,7 +169,8 @@ class TopBlockGenerator(object):
             code = block.templates.render('make').replace(block.name, ' ')
             try:
                 code += block.params['gui_hint'].get_value()  # Newer gui markup w/ qtgui
-            except:
+            except KeyError:
+                # No gui hint
                 pass
             return code
 

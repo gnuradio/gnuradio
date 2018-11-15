@@ -144,7 +144,7 @@ class Block(Element):
             try:
                 if not self.evaluate(expr):
                     self.add_error_message('Assertion "{}" failed.'.format(expr))
-            except:
+            except Exception:
                 self.add_error_message('Assertion "{}" did not evaluate.'.format(expr))
 
     def _validate_generate_mode_compat(self):
