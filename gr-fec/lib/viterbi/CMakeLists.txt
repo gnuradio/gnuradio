@@ -28,19 +28,6 @@ set(viterbi_sources
 )
 
 ########################################################################
-# define missing erf function with C linkage (hack for metrics.c)
-########################################################################
-if(MSVC)
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc "
-#include <boost/math/special_functions/erf.hpp>
-extern \"C\" double erf(double x){
-    return boost::math::erf(x);
-}
-")
-list(APPEND viterbi_sources ${CMAKE_CURRENT_BINARY_DIR}/boost_math_erf.cc)
-endif(MSVC)
-
-########################################################################
 # Append gnuradio-runtime library sources
 ########################################################################
 SET_SOURCE_FILES_PROPERTIES( ${viterbi_sources} PROPERTIES LANGUAGE CXX )
