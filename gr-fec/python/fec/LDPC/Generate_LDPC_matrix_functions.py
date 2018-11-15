@@ -65,7 +65,9 @@ def write_alist_file(filename, H, verbose=0):
 
   try:
     myfile = open(filename,'w')
-  except:
+  except EnvironmentError:
+    # This is an api, we should be using a logging interface and not
+    # terminating the application directly.
     sys.stderr.write("Could not open output file '{0}'".format(filename))
     sys.exit(1)
 
