@@ -33,7 +33,7 @@ find_path(QWT_INCLUDE_DIRS
 )
 
 find_library (QWT_LIBRARIES
-  NAMES qwt6-${QWT_QT_VERSION} qwt-${QWT_QT_VERSION} qwt6 qwt qwt5 qwtd5
+  NAMES qwt6-${QWT_QT_VERSION} qwt-${QWT_QT_VERSION}
   HINTS
   ${PC_QWT_LIBDIR}
   ${CMAKE_INSTALL_PREFIX}/lib
