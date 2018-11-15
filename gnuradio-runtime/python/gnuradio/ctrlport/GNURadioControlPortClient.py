@@ -30,6 +30,15 @@ is currently the only supported transport.
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from gnuradio.ctrlport.RPCConnection import RPCMethods
+try:
+    from gnuradio.ctrlport.RPCConnectionThrift import RPCConnectionThrift
+    from thrift.transport.TTransport import TTransportException
+except ImportError:
+    # Thrift support not provided we should remove it from RPCMethods
+    pass
+
+
 """
 GNURadioControlPortClient is the main class for creating a GNU Radio
 ControlPort client application for all transports.
@@ -112,9 +121,7 @@ class GNURadioControlPortClient(object):
 
         self.client = None
 
-        from gnuradio.ctrlport.RPCConnection import RPCMethods
         if rpcmethod in RPCMethods:
-            from gnuradio.ctrlport.RPCConnectionThrift import RPCConnectionThrift
             if rpcmethod == 'thrift':
                 #print("making RPCConnectionThrift")
                 self.client = RPCConnectionThrift(host, port)

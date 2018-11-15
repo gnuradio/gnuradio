@@ -27,7 +27,9 @@ import matplotlib
 matplotlib.use("QT4Agg")
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
+from gnuradio.ctrlport.GNURadioControlPortClient import (
+    GNURadioControlPortClient, TTransportException,
+)
 import numpy
 from numpy.fft import fftpack
 
@@ -106,7 +108,7 @@ class atsc_ctrlport_monitor(object):
             self._viterbi_metric.pop()
             self._viterbi_metric.insert(0, vt_decoder_metrics)
 
-        except:
+        except TTransportException:
             sys.stderr.write("Lost connection, exiting")
             sys.exit(1)
 
