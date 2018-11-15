@@ -124,7 +124,8 @@ def pmt_to_python(p):
         if pmt_check(p):
             try:
                 return to_python(p)
-            except:
+            except (TypeError, ValueError):
+                # This exception will be handled by the general failure case
                 pass
     raise ValueError("can't convert %s type to pmt (%s)"%(type(p),p))
 

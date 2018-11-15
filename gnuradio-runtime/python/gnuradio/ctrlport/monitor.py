@@ -33,15 +33,12 @@ class monitor(object):
         self.tool = tool
         atexit.register(self.shutdown)
 
-        try:
-            # setup export prefs
-            gr.prefs().singleton().set_bool("ControlPort","on",True);
-            if(tool == "gr-perf-monitorx"):
-                gr.prefs().singleton().set_bool("ControlPort","edges_list",True);
-                gr.prefs().singleton().set_bool("PerfCounters","on",True);
-                gr.prefs().singleton().set_bool("PerfCounters","export",True);
-        except:
-            print("no support for gr.prefs setting")
+        # setup export prefs
+        gr.prefs().singleton().set_bool("ControlPort","on",True);
+        if(tool == "gr-perf-monitorx"):
+            gr.prefs().singleton().set_bool("ControlPort","edges_list",True);
+            gr.prefs().singleton().set_bool("PerfCounters","on",True);
+            gr.prefs().singleton().set_bool("PerfCounters","export",True);
 
     def __del__(self):
         if(self.started):
@@ -57,7 +54,7 @@ class monitor(object):
             print("running: %s"%(str(cmd)))
             self.proc = subprocess.Popen(cmd);
             self.started = True
-        except:
+        except (ValueError, OSError):
             self.proc = None
             print("failed to to start ControlPort Monitor on specified port")
 
