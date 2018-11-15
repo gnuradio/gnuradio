@@ -88,11 +88,6 @@ class wfm_rx_block (gr.top_block):
         self.connect (self.src, chan_filt, self.guts)
         self.connect ((self.guts, 0), self.volume_control_l, (sink, 0))
         self.connect ((self.guts, 1), self.volume_control_r, (sink, 1))
-        try:
-          self.guts.stereo_carrier_pll_recovery.squelch_enable(True)
-        except:
-          pass
-          #print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
 
         if args.volume is None:
             g = self.volume_range()
@@ -101,12 +96,6 @@ class wfm_rx_block (gr.top_block):
         # set initial values
 
         self.set_vol(args.volume)
-        try:
-          self.guts.stereo_carrier_pll_recovery.set_lock_threshold(args.squelch)
-        except:
-          pass
-          #print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
-
 
     def set_vol (self, vol):
         g = self.volume_range()
