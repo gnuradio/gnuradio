@@ -44,7 +44,7 @@ template<class T>
 
     public:
       sig_source_impl(double sampling_freq, gr_waveform_t waveform,
-		  double wave_freq, double ampl, T offset = 0);
+		  double wave_freq, double ampl, T offset = 0, float phase = 0);
       ~sig_source_impl();
 
       virtual int work(int noutput_items,
@@ -56,6 +56,7 @@ template<class T>
       double frequency() const { return d_frequency; }
       double amplitude() const { return d_ampl; }
       T offset() const { return d_offset; }
+      float phase() const { return d_nco.get_phase(); }
 
       void set_sampling_freq(double sampling_freq);
       void set_waveform(gr_waveform_t waveform);
@@ -63,6 +64,8 @@ template<class T>
       void set_frequency(double frequency);
       void set_amplitude(double ampl);
       void set_offset(T offset);
+      void set_phase(float phase);
+
     };
 
   } /* namespace analog */
