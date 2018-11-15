@@ -253,7 +253,7 @@ class my_top_block(gr.top_block):
 
         try:
             self.snk.set_frequency_range(self._freq, self._bandwidth)
-        except:
+        except RuntimeError:
             pass
 
     def set_bandwidth(self, bw):
@@ -262,7 +262,7 @@ class my_top_block(gr.top_block):
 
         try:
             self.snk.set_frequency_range(self._freq, self._bandwidth)
-        except:
+        except RuntimeError:
             pass
 
     def set_amplifier_gain(self, amp):
