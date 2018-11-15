@@ -48,11 +48,6 @@ def main():
     parser.add_argument('--log', choices=['debug', 'info', 'warning', 'error', 'critical'], default='warning')
     args = parser.parse_args()
 
-    try:
-        Gtk.window_set_default_icon(Gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
-    except:
-        pass
-
     # Enable logging
     # Note: All other modules need to use the 'grc.<module>' convention
     log = logging.getLogger('grc')
