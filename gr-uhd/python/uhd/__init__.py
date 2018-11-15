@@ -115,10 +115,10 @@ def _prepare_uhd_swig():
                     (0, 'device_addr', device_addr),
                     (1, 'io_type', io_type),
                 ):
-                    try:
-                        if len(args) > index: args[index] = cast(args[index])
-                        if key in kwargs: kwargs[key] = cast(kwargs[key])
-                    except: pass
+                    if len(args) > index:
+                        args[index] = cast(args[index])
+                    if key in kwargs:
+                        kwargs[key] = cast(kwargs[key])
                 #don't pass kwargs, it confuses swig, map into args list:
                 for key in ('device_addr', 'stream_args',
                         'issue_stream_cmd_on_start', 'tsb_tag_name', 'msgq'):
