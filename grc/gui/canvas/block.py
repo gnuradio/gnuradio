@@ -368,7 +368,7 @@ class Block(CoreBlock, Drawable):
             new_index = (old_index + direction + len(values)) % len(values)
             type_param.set_value(values[new_index])
             return True
-        except:
+        except IndexError:
             return False
 
     def port_controller_modify(self, direction):
@@ -394,7 +394,8 @@ class Block(CoreBlock, Drawable):
                 if value > 0:
                     param.set_value(value)
                     changed = True
-            except:
+            except ValueError:
+                # Should we be logging something here
                 pass
         return changed
 

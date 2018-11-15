@@ -52,10 +52,9 @@ class HierBlockGenerator(TopBlockGenerator):
 
         with codecs.open(self.file_path_yml, 'w', encoding='utf-8') as fp:
             fp.write(data)
-        try:
-            os.chmod(self.file_path_yml, self._mode)
-        except:
-            pass
+
+        # Windows only supports S_IREAD and S_IWRITE, other flags are ignored
+        os.chmod(self.file_path_yml, self._mode)
 
     def _build_block_n_from_flow_graph_io(self):
         """
