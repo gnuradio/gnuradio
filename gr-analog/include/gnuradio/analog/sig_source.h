@@ -54,19 +54,50 @@ template<class T>
       static sptr make(double sampling_freq,
 		       gr::analog::gr_waveform_t waveform,
 		       double wave_freq,
-		       double ampl, T offset = 0);
+		       double ampl, T offset = 0, float phase = 0);
 
       virtual double sampling_freq() const = 0;
       virtual gr::analog::gr_waveform_t waveform() const = 0;
       virtual double frequency() const = 0;
       virtual double amplitude() const = 0;
       virtual T offset() const = 0;
+      virtual float phase() const = 0;
 
+      /*!
+      * Sets the sampling frequency of the signal.
+      * \param sampling_freq sampling frequency
+      */
       virtual void set_sampling_freq(double sampling_freq) = 0;
+
+      /*!
+      * Sets the waveform type of signal.
+      * \param waveform waveform type
+      */
       virtual void set_waveform(gr::analog::gr_waveform_t waveform) = 0;
+
+      /*!
+      * Sets the frequency of a periodic signal.
+      * \param frequency frequency of the signal
+      */
       virtual void set_frequency(double frequency) = 0;
+
+      /*!
+      * Sets the amplitude of a signal.
+      * \param amplitude of the signal
+      */
       virtual void set_amplitude(double ampl) = 0;
+
+      /*!
+      * Sets the DC offset of a signal.
+      * \param offset DC offset of the signal
+      */
       virtual void set_offset(T offset) = 0;
+
+      /*!
+      * Sets the phase of a periodic signal.
+      * \param phase phase of the signal
+      */
+      virtual void set_phase(float phase) = 0;
     };
 
     typedef sig_source<std::int16_t> sig_source_s;
