@@ -1,6 +1,6 @@
 /*
  * Copyright 1995 Phil Karn, KA9Q
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -41,11 +41,8 @@
 
 #include<gnuradio/math.h>
 
-#include <stdlib.h>
-#include <math.h>
-
-//declare erf in case it was missing in math.h and provided for by the build system
-extern double erf(double x);
+#include <cstdlib>
+#include <cmath>
 
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define	normal(x)	(0.5 + 0.5*erf((x)/GR_M_SQRT2))
