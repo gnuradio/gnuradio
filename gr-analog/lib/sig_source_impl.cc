@@ -38,19 +38,19 @@ namespace analog {
 
 template <class T>
 typename sig_source<T>::sptr sig_source<T>::make(
-    double sampling_freq, gr_waveform_t waveform, double frequency, double ampl, T offset) {
+    double sampling_freq, gr_waveform_t waveform, double frequency, double ampl, T offset, float phase) {
     return gnuradio::get_initial_sptr(
-        new sig_source_impl<T>(sampling_freq, waveform, frequency, ampl, offset));
+        new sig_source_impl<T>(sampling_freq, waveform, frequency, ampl, offset, phase));
 }
 
 template <class T>
 sig_source_impl<T>::sig_source_impl(
-    double sampling_freq, gr_waveform_t waveform, double frequency, double ampl, T offset)
+    double sampling_freq, gr_waveform_t waveform, double frequency, double ampl, T offset, float phase)
     : sync_block("sig_source", io_signature::make(0, 0, 0), io_signature::make(1, 1, sizeof(T))),
       d_sampling_freq(sampling_freq), d_waveform(waveform), d_frequency(frequency), d_ampl(ampl),
       d_offset(offset) {
     this->set_frequency(frequency);
-
+    this->set_phase(phase);
     this->message_port_register_in(pmt::mp("freq"));
     this->set_msg_handler(pmt::mp("freq"), boost::bind(&sig_source_impl<T>::set_frequency_msg, this, _1));
 }
@@ -92,6 +92,7 @@ int sig_source_impl<T>::work(int noutput_items,
                              gr_vector_void_star& output_items) {
     T* optr = (T*)output_items[0];
     T t;
+    gr::thread::scoped_lock l(this->d_setlock);
 
     switch (d_waveform) {
     case GR_CONST_WAVE:
@@ -165,6 +166,7 @@ int sig_source_impl<gr_complex>::work(int noutput_items,
                                       gr_vector_void_star& output_items) {
     gr_complex* optr = (gr_complex*)output_items[0];
     gr_complex t;
+    gr::thread::scoped_lock l(this->d_setlock);
 
     switch (d_waveform) {
     case GR_CONST_WAVE:
@@ -278,6 +280,13 @@ template <class T>
 void sig_source_impl<T>::set_offset(T offset) {
     d_offset = offset;
 }
+
+template <class T>
+void sig_source_impl<T>::set_phase(float phase) {
+    gr::thread::scoped_lock l(this->d_setlock);
+    d_nco.set_phase(phase);
+}
+
 
 template class sig_source<std::int16_t>;
 template class sig_source<std::int32_t>;
