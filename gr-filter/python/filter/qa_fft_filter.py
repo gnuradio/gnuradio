@@ -409,7 +409,7 @@ class test_fft_filter(gr_unittest.TestCase):
             #print "src_len =", src_len, " ntaps =", ntaps
             try:
                 self.assert_fft_float_ok2(expected_result, result_data, abs_eps=1.0)
-            except:
+            except AssertionError:
                 expected = open('expected', 'w')
                 for x in expected_result:
                     expected.write(repr(x) + '\n')
