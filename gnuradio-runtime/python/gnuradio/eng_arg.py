@@ -34,7 +34,7 @@ def intx(string):
     """
     try:
         return int(string, 0)
-    except:
+    except (ValueError, TypeError):
         raise argparse.ArgumentTypeError(
             "Invalid integer value: {}".format(string)
         )
@@ -47,7 +47,7 @@ def eng_float(string):
     """
     try:
         return eng_notation.str_to_num(string)
-    except:
+    except (TypeError, ValueError):
         raise argparse.ArgumentTypeError(
             "Invalid engineering notation value: {}".format(string)
         )
