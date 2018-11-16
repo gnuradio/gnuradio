@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import numpy
+import pyqtgraph as pg
 
 try:
     from matplotlib import mlab
@@ -24,6 +25,7 @@ try:
     #from gnuradio.pyqt_plot import Ui_MainWindow
     from gnuradio.pyqt_plot import Ui_MainWindow
 except ImportError:
+    raise
     print("Could not import from pyqt_plot. Please build with \"pyuic4 pyqt_plot.ui -o pyqt_plot.py\"")
     raise SystemExit(1)
 
@@ -86,8 +88,9 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.time = list()
 
         # Set up basic plot attributes
-        self.gui.timePlot.setAxisTitle(self.gui.timePlot.xBottom, "Time (sec)")
-        self.gui.timePlot.setAxisTitle(self.gui.timePlot.yLeft, "Amplitude (V)")
+        time_plot_viewbox = self.gui.timePlot.plotItem.getViewBox()
+        time_plot_viewbox.setMouseMode(time_plot_viewbox.RectMode)
+        self.gui.timePlot.plotItem.setLabels(bottom="Time (sec)", left="Amplitude (V)")
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.xBottom, "Frequency (Hz)")
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.yLeft, "Magnitude (dB)")
         self.gui.specPlot.setAxisTitle(self.gui.specPlot.xBottom, "Frequency (Hz)")
@@ -124,23 +127,18 @@ class gr_plot_qt(QtGui.QMainWindow):
 
 
         # Set up line style combo box
-        self.line_styles = {"None" : Qwt.QwtSymbol.NoSymbol,
-                            "Circle" : Qwt.QwtSymbol.Ellipse,
-                            "Diamond"  : Qwt.QwtSymbol.Rect,
-                            "Triangle" : Qwt.QwtSymbol.Triangle}
+        self.line_styles = {
+            "None" : None,
+            "Circle" : 'o',
+            "Diamond"  : 'd',
+            "Triangle" : 't',
+        }
         self.gui.lineStyleComboBox.addItems(self.line_styles.keys())
         pos = self.gui.lineStyleComboBox.findText("None")
         self.gui.lineStyleComboBox.setCurrentIndex(pos)
         self.connect(self.gui.lineStyleComboBox,
                      Qt.SIGNAL("activated (const QString&)"),
                      self.lineStyleComboBoxEdit)
-
-        # Create zoom functionality for the plots
-        self.timeZoomer = Qwt.QwtPlotZoomer(self.gui.timePlot.xBottom,
-                                            self.gui.timePlot.yLeft,
-                                            Qwt.QwtPicker.PointSelection,
-                                            Qwt.QwtPicker.AlwaysOn,
-                                            self.gui.timePlot.canvas())
 
         self.freqZoomer = Qwt.QwtPlotZoomer(self.gui.freqPlot.xBottom,
                                             self.gui.freqPlot.yLeft,
@@ -160,8 +158,7 @@ class gr_plot_qt(QtGui.QMainWindow):
                      self.tabChanged)
 
         # Add a legend to the Time plot
-        legend_real = Qwt.QwtLegend()
-        self.gui.timePlot.insertLegend(legend_real)
+        self.gui.timePlot.plotItem.addLegend()
 
         # Set up slider
         self.gui.plotHBar.setSingleStep(1)
@@ -208,20 +205,12 @@ class gr_plot_qt(QtGui.QMainWindow):
         stylestr = str(self.gui.lineStyleComboBox.currentText().toAscii())
         style = self.line_styles[stylestr]
 
-        self.rcurve = Qwt.QwtPlotCurve("Real")
-        self.icurve = Qwt.QwtPlotCurve("Imaginary")
-        self.rsym = Qwt.QwtSymbol()
-        self.rsym.setStyle(style)
-        self.rsym.setSize(10)
-        self.isym = Qwt.QwtSymbol()
-        self.isym.setStyle(style)
-        self.isym.setSize(10)
-        self.rcurve.setSymbol(self.rsym)
-        self.icurve.setSymbol(self.isym)
-
-
-        self.icurve.attach(self.gui.timePlot)
-        self.rcurve.attach(self.gui.timePlot)
+        self.rcurve = self.gui.timePlot.plot()
+        self.icurve = self.gui.timePlot.plot()
+        self.rcurve.setSymbol(style)
+        self.icurve.setSymbol(style)
+        self.rcurve.setSymbolSize(10)
+        self.icurve.setSymbolSize(10)
 
         self.psdcurve = Qwt.QwtPlotCurve("PSD")
         self.psdcurve.attach(self.gui.freqPlot)
@@ -324,7 +313,6 @@ class gr_plot_qt(QtGui.QMainWindow):
             try:
                 iq = numpy.fromfile(self.hfile, dtype=self.datatype,
                                     count=end-start)
-
                 if(len(iq) < (end-start)):
                     end = start + len(iq)
                     self.gui.filePosLengthLineEdit.setText(Qt.QString("%1").arg(len(iq)))
@@ -381,11 +369,8 @@ class gr_plot_qt(QtGui.QMainWindow):
 
     def lineStyleComboBoxEdit(self, styleSelection):
         stylestr = str(styleSelection.toAscii())
-        self.rsym.setStyle(self.line_styles[stylestr])
-        self.isym.setStyle(self.line_styles[stylestr])
-        self.rcurve.setSymbol(self.rsym)
-        self.icurve.setSymbol(self.isym)
-        self.gui.timePlot.replot()
+        self.rcurve.setSymbol(self.line_styles[stylestr])
+        self.icurve.setSymbol(self.line_styles[stylestr])
 
     def sliderMoved(self, value):
         pos_start = value
@@ -533,17 +518,17 @@ class gr_plot_qt(QtGui.QMainWindow):
         # Reset the x-axis to the new time scale
         iqmax = 1.5 * max(max(self.iq.real), max(self.iq.imag))
         iqmin = 1.5 * min(min(self.iq.real), min(self.iq.imag))
-        self.gui.timePlot.setAxisScale(self.gui.timePlot.xBottom,
-                                       min(self.time),
-                                       max(self.time))
-        self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
-                                       iqmin,
-                                       iqmax)
+        #self.gui.timePlot.setAxisScale(self.gui.timePlot.xBottom,
+        #                               min(self.time),
+        #                               max(self.time))
+        #self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
+        #                               iqmin,
+        #                               iqmax)
 
         # Set the zoomer base to unzoom to the new axis
-        self.timeZoomer.setZoomBase()
+        #self.timeZoomer.setZoomBase()
 
-        self.gui.timePlot.replot()
+        #self.gui.timePlot.replot()
 
     def update_psd_curves(self):
         self.psdcurve.setData(self.freq, self.iq_psd)
@@ -593,11 +578,8 @@ class gr_plot_qt(QtGui.QMainWindow):
         color_func = self.color_modes[colormode]()
 
     def change_style_size(self, size):
-        self.rsym.setSize(size)
-        self.isym.setSize(size)
-        self.rcurve.setSymbol(self.rsym)
-        self.icurve.setSymbol(self.isym)
-        self.gui.timePlot.replot()
+        self.rcurve.setSymbolSize(size)
+        self.icurve.setSymbolSize(size)
 
     def color_black_on_white(self):
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
@@ -607,20 +589,18 @@ class gr_plot_qt(QtGui.QMainWindow):
         bluePen = Qt.QPen(Qt.QBrush(Qt.QColor(blue)), self.pen_width)
         redPen = Qt.QPen(Qt.QBrush(Qt.QColor(red)), self.pen_width)
 
-        self.gui.timePlot.setCanvasBackground(Qt.QColor("white"))
+        self.gui.timePlot.setBackground(Qt.QColor("white"))
+        self.rcurve.setPen(pg.mkPen(Qt.QColor(blue), width=self.pen_width))
+        self.icurve.setPen(pg.mkPen(Qt.QColor(red), width=self.pen_width))
+        self.rcurve.setSymbolPen(bluePen)
+        self.icurve.setSymbolPen(redPen)
+
         self.gui.freqPlot.setCanvasBackground(Qt.QColor("white"))
-        self.timeZoomer.setTrackerPen(blackPen)
-        self.timeZoomer.setRubberBandPen(blackPen)
         self.freqZoomer.setTrackerPen(blackPen)
         self.freqZoomer.setRubberBandPen(blackPen)
         self.psdcurve.setPen(bluePen)
-        self.rcurve.setPen(bluePen)
-        self.icurve.setPen(redPen)
 
-        self.rsym.setPen(bluePen)
-        self.isym.setPen(redPen)
 
-        self.gui.timePlot.replot()
         self.gui.freqPlot.replot()
 
     def color_white_on_black(self):
@@ -631,17 +611,20 @@ class gr_plot_qt(QtGui.QMainWindow):
         whiteBrush = Qt.QBrush(Qt.QColor(white))
         redBrush = Qt.QBrush(Qt.QColor(red))
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.rcurve.setPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.icurve.setPen(Qt.QPen(redBrush, self.pen_width))
+        whitePen = Qt.QPen(whiteBrush, self.pen_width)
+        redPen = Qt.QPen(redBrush, self.pen_width)
 
-        self.gui.timePlot.replot()
+        self.gui.timePlot.setBackground(Qt.QColor("black"))
+        self.rcurve.setPen(pg.mkPen(Qt.QColor(white), width=self.pen_width))
+        self.icurve.setPen(pg.mkPen(Qt.QColor(red), width=self.pen_width))
+        self.rcurve.setSymbolPen(whitePen)
+        self.icurve.setSymbolPen(redPen)
+
+        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
+        self.freqZoomer.setTrackerPen(whitePen)
+        self.freqZoomer.setRubberBandPen(whitePen)
+        self.psdcurve.setPen(whitePen)
+
         self.gui.freqPlot.replot()
 
 
@@ -653,17 +636,21 @@ class gr_plot_qt(QtGui.QMainWindow):
         greenBrush = Qt.QBrush(Qt.QColor(green))
         redBrush = Qt.QBrush(Qt.QColor(red))
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(Qt.QPen(greenBrush, self.pen_width))
-        self.rcurve.setPen(Qt.QPen(greenBrush, self.pen_width))
-        self.icurve.setPen(Qt.QPen(redBrush, self.pen_width))
+        greenPen = Qt.QPen(greenBrush, self.pen_width)
+        redPen = Qt.QPen(redBrush, self.pen_width)
+        whitePen = Qt.QPen(whiteBrush, self.pen_width)
 
-        self.gui.timePlot.replot()
+        self.gui.timePlot.setBackground(Qt.QColor("black"))
+        self.rcurve.setPen(pg.mkPen(Qt.QColor(green), width=self.pen_width))
+        self.icurve.setPen(pg.mkPen(Qt.QColor(red), width=self.pen_width))
+        self.rcurve.setSymbolPen(greenPen)
+        self.icurve.setSymbolPen(redPen)
+
+        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
+        self.freqZoomer.setTrackerPen(whitePen)
+        self.freqZoomer.setRubberBandPen(whitePen)
+        self.psdcurve.setPen(greenPen)
+
         self.gui.freqPlot.replot()
 
     def color_blue_on_black(self):
@@ -674,17 +661,21 @@ class gr_plot_qt(QtGui.QMainWindow):
         blueBrush = Qt.QBrush(Qt.QColor(blue))
         redBrush = Qt.QBrush(Qt.QColor(red))
 
-        self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
-        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.freqZoomer.setRubberBandPen(Qt.QPen(whiteBrush, self.pen_width))
-        self.psdcurve.setPen(Qt.QPen(blueBrush, self.pen_width))
-        self.rcurve.setPen(Qt.QPen(blueBrush, self.pen_width))
-        self.icurve.setPen(Qt.QPen(redBrush, self.pen_width))
+        bluePen = Qt.QPen(blueBrush, self.pen_width)
+        redPen = Qt.QPen(redBrush, self.pen_width)
+        whitePen = Qt.QPen(whiteBrush, self.pen_width)
 
-        self.gui.timePlot.replot()
+        self.gui.timePlot.setBackground(Qt.QColor("black"))
+        self.rcurve.setPen(pg.mkPen(Qt.QColor(blue), width=self.pen_width))
+        self.icurve.setPen(pg.mkPen(Qt.QColor(red), width=self.pen_width))
+        self.rcurve.setSymbolPen(bluePen)
+        self.icurve.setSymbolPen(redPen)
+
+        self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
+        self.freqZoomer.setTrackerPen(whitePen)
+        self.freqZoomer.setRubberBandPen(whitePen)
+        self.psdcurve.setPen(bluePen)
+
         self.gui.freqPlot.replot()
 
 def setup_options():
