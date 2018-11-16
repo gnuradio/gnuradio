@@ -97,6 +97,9 @@ def validate_scalar(param):
 def validate_vector(param):
     # todo: check vector types
 
+    if param.get_evaluated() is None:
+        raise ValidateError('Expression {!r} is invalid for type{!r}.'.format(param.get_evaluated(), param.dtype))
+
     valid_types = Constants.PARAM_TYPE_MAP[param.dtype.split('_', 1)[0]]
     if not all(isinstance(item, valid_types) for item in param.get_evaluated()):
         raise ValidateError('Expression {!r} is invalid for type {!r}.'.format(
