@@ -101,6 +101,7 @@ namespace gr {
        *                   sub-carrier being idle). Is a vector of complex vectors of length
        *                   \p fft_len
        * \param len_tag_key The key of the tag identifying the length of the input packet.
+       * \param output_is_shifted whether to 'fftshift' the output OFDM symbols. If used, the followup FFT should be instantaited such that it knows that the input is shifted. Default is true.
        */
       static sptr make(
 	  int fft_len,
@@ -116,4 +117,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_DIGITAL_OFDM_CARRIER_ALLOCATOR_CVC_H */
-

@@ -26,6 +26,12 @@ parameters:
     label: Length tag key
     dtype: string
     default: '"packet_len"'
+-   id: output_is_shifted
+    label: Shift Output
+    dtype: enum
+    default: 'True'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
 
 inputs:
 -   domain: stream
@@ -38,7 +44,8 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: digital.ofdm_carrier_allocator_cvc(${fft_len}, ${occupied_carriers}, ${pilot_carriers},
-        ${pilot_symbols}, ${sync_words}, ${len_tag_key})
+    make: digital.ofdm_carrier_allocator_cvc(
+        ${fft_len}, ${occupied_carriers}, ${pilot_carriers},
+        ${pilot_symbols}, ${sync_words}, ${len_tag_key}, ${output_is_shifted})
 
 file_format: 1
