@@ -26,13 +26,15 @@ from __future__ import unicode_literals
 import numpy
 
 try:
-    from pylab import *
+    from pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, mlab, show, rcParams, ceil
 except ImportError:
     print("Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)")
     raise SystemExit(1)
 
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
+from gnuradio.plot_data import datatype_lookup
+
 
 class plot_psd_base(object):
     def __init__(self, datatype, filename, options):
@@ -45,7 +47,9 @@ class plot_psd_base(object):
 
         self.dospec = options.enable_spec  # if we want to plot the spectrogram
 
-        self.datatype = numpy.complex64
+        self.datatype = datatype
+        if self.datatype is None:
+            self.datatype = datatype_lookup[options.data_type]
         self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
 
         self.axis_font_size = 16
@@ -275,7 +279,7 @@ def main():
     parser = plot_psd_base.setup_options()
     args = parser.parse_args()
 
-    dc = plot_psd_base(args.data_type, args.file, args)
+    plot_psd_base(None, args.file, args)
 
 if __name__ == "__main__":
     try:
