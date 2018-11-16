@@ -146,7 +146,7 @@ namespace gr {
     }
 
     void
-    usrp_source_impl::set_gain(double gain, size_t chan)
+    usrp_source_impl::set_gain(double gain, size_t chan, pmt::pmt_t direction)
     {
       chan = _stream_args.channels[chan];
       return _dev->set_rx_gain(gain, chan);

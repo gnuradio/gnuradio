@@ -141,10 +141,15 @@ namespace gr {
     }
 
     void
-    usrp_sink_impl::set_gain(double gain, size_t chan)
+    usrp_sink_impl::set_gain(double gain, size_t chan, pmt::pmt_t direction)
     {
-      chan = _stream_args.channels[chan];
-      return _dev->set_tx_gain(gain, chan);
+      if (pmt::eqv(direction, ant_direction_rx())) {
+        chan = _stream_args.channels[chan];
+        return _dev->set_rx_gain(gain, chan);
+      } else {
+        chan = _stream_args.channels[chan];
+        return _dev->set_tx_gain(gain, chan);
+      }
     }
 
     void
