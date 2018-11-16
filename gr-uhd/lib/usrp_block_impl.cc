@@ -638,15 +638,23 @@ void usrp_block_impl::_cmd_handler_gain(const pmt::pmt_t& gain_,
                                         int chan,
                                         const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+
     double gain = pmt::to_double(gain_);
     if (chan == -1) {
         for (size_t i = 0; i < _nchan; i++) {
-            set_gain(gain, i);
+            set_gain(gain, i, direction);
         }
         return;
     }
 
-    set_gain(gain, chan);
+    set_gain(gain, chan, direction);
 }
 
 void usrp_block_impl::_cmd_handler_antenna(const pmt::pmt_t& ant,

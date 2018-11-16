@@ -113,10 +113,14 @@ double usrp_sink_impl::get_center_freq(size_t chan)
     return _dev->get_tx_freq_range(chan);
 }
 
-void usrp_sink_impl::set_gain(double gain, size_t chan)
+void usrp_sink_impl::set_gain(double gain, size_t chan, pmt::pmt_t direction)
 {
     chan = _stream_args.channels[chan];
-    return _dev->set_tx_gain(gain, chan);
+    if (pmt::eqv(direction, ant_direction_rx())) {
+        return _dev->set_rx_gain(gain, chan);
+    } else {
+        return _dev->set_tx_gain(gain, chan);
+    }
 }
 
 void usrp_sink_impl::set_gain(double gain, const std::string& name, size_t chan)
