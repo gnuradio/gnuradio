@@ -28,12 +28,14 @@ import numpy
 from numpy.fft import fftpack
 
 try:
-    from pylab import *
+    from pylab import Button, connect, draw, figure, figtext, get_current_fig_manager, show, rcParams, ceil
 except ImportError:
     print("Please install Python Matplotlib (http://matplotlib.sourceforge.net/) and Python TkInter https://wiki.python.org/moin/TkInter to run this script")
     raise SystemExit(1)
 
 from argparse import ArgumentParser
+from gnuradio.plot_data import datatype_lookup
+
 
 class plot_fft_base(object):
     def __init__(self, datatype, filename, options):
@@ -42,7 +44,9 @@ class plot_fft_base(object):
         self.start = options.start
         self.sample_rate = options.sample_rate
 
-        self.datatype = numpy.complex64
+        self.datatype = datatype
+        if self.datatype is None:
+            self.datatype = datatype_lookup[options.data_type]
         self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
 
         self.axis_font_size = 16
@@ -236,7 +240,7 @@ def main():
     parser = plot_fft_base.setup_options()
     args = parser.parse_args()
 
-    dc = plot_fft_base(args.data_type, args.file, args)
+    plot_fft_base(None, args.file, args)
 
 if __name__ == "__main__":
     try:

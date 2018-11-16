@@ -29,7 +29,7 @@ def main():
     parser = plot_fft_base.setup_options()
     args = parser.parse_args()
 
-    dc = plot_fft_base(args.data_type, args.file, args)
+    plot_fft_base(None, args.file, args)
 
 if __name__ == "__main__":
     try:

@@ -29,7 +29,7 @@ def main():
     parser = plot_psd_base.setup_options()
     args = parser.parse_args()
 
-    dc = plot_psd_base(args.data_type, args.file, args)
+    plot_psd_base(None, args.file, args)
 
 if __name__ == "__main__":
     try:
