@@ -31,7 +31,16 @@
 #include <iostream>
 #include <assert.h>
 #include <algorithm>
+
+// the following header is deprecated as of Boost 1.66.0, and the
+// other API was introduced in Boost 1.58.0. Since we still support
+// Boost back to 1.54.0, use the older API if pre-1.5.80 and otherwise
+// use the newer API.
+#if (BOOST_VERSION < 105800)
 #include <boost/math/common_factor_rt.hpp>
+#else
+#include <boost/integer/common_factor_rt.hpp>
+#endif
 
 namespace gr {
 
@@ -75,7 +84,11 @@ namespace gr {
   static long
   minimum_buffer_items(long type_size, long page_size)
   {
+#if (BOOST_VERSION < 105800)
     return page_size / boost::math::gcd (type_size, page_size);
+#else
+    return page_size / boost::integer::gcd (type_size, page_size);
+#endif
   }
 
 
