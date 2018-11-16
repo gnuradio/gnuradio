@@ -115,8 +115,10 @@ usrp_block_impl::usrp_block_impl(const ::uhd::device_addr_t& device_addr,
       _nchan(stream_args.channels.size()),
       _stream_now(_nchan == 1 and ts_tag_name.empty()),
       _start_time_set(false),
-      _curr_tune_req(stream_args.channels.size(), ::uhd::tune_request_t()),
-      _chans_to_tune(stream_args.channels.size())
+      _curr_tx_tune_req(stream_args.channels.size(), ::uhd::tune_request_t()),
+      _curr_rx_tune_req(stream_args.channels.size(), ::uhd::tune_request_t()),
+      _tx_chans_to_tune(stream_args.channels.size()),
+      _rx_chans_to_tune(stream_args.channels.size())
 {
     _dev = ::uhd::usrp::multi_usrp::make(device_addr);
 
@@ -262,11 +264,22 @@ bool usrp_block_impl::_check_mboard_sensors_locked()
     return clocks_locked;
 }
 
-void usrp_block_impl::_set_center_freq_from_internals_allchans(pmt::pmt_t direction)
+void usrp_block_impl::_set_center_freq_from_internals_allchans()
 {
-    while (_chans_to_tune.any()) {
+    unsigned int chan;
+    while (_rx_chans_to_tune.any()) {
         // This resets() bits, so this loop should not run indefinitely
-        _set_center_freq_from_internals(_chans_to_tune.find_first(), direction);
+        chan = _rx_chans_to_tune.find_first();
+        _set_center_freq_from_internals(chan, ant_direction_rx());
+        _rx_chans_to_tune.reset(chan);
+    }
+
+    while (_tx_chans_to_tune.any()) {
+        // This resets() bits, so this loop should not run indefinitely
+        chan = _tx_chans_to_tune.find_first();
+        _set_center_freq_from_internals(_tx_chans_to_tune.find_first(),
+                                        ant_direction_tx());
+        _tx_chans_to_tune.reset(chan);
     }
 }
 
@@ -552,16 +565,8 @@ void usrp_block_impl::msg_handler_command(pmt::pmt_t msg)
         }
     }
 
-    /// 4) See if a direction was specified
-    pmt::pmt_t direction =
-        pmt::dict_ref(msg,
-                      cmd_direction_key(),
-                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
-                                   // messaged block direction"
-        );
-
-    /// 5) Check if we need to re-tune
-    _set_center_freq_from_internals_allchans(direction);
+    /// 4) Check if we need to re-tune
+    _set_center_freq_from_internals_allchans();
 }
 
 
@@ -581,22 +586,35 @@ void usrp_block_impl::register_msg_cmd_handler(const pmt::pmt_t& cmd,
     _msg_cmd_handlers[cmd] = handler;
 }
 
-void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req, int chan)
+void usrp_block_impl::_update_curr_tune_req(::uhd::tune_request_t& tune_req,
+                                            int chan,
+                                            pmt::pmt_t direction)
 {
     if (chan == -1) {
         for (size_t i = 0; i < _nchan; i++) {
-            _update_curr_tune_req(tune_req, int(i));
+            _update_curr_tune_req(tune_req, int(i), direction);
         }
         return;
     }
 
-    if (tune_req.target_freq != _curr_tune_req[chan].target_freq ||
-        tune_req.rf_freq_policy != _curr_tune_req[chan].rf_freq_policy ||
-        tune_req.rf_freq != _curr_tune_req[chan].rf_freq ||
-        tune_req.dsp_freq != _curr_tune_req[chan].dsp_freq ||
-        tune_req.dsp_freq_policy != _curr_tune_req[chan].dsp_freq_policy) {
-        _curr_tune_req[chan] = tune_req;
-        _chans_to_tune.set(chan);
+    if (pmt::eqv(direction, ant_direction_rx())) {
+        if (tune_req.target_freq != _curr_rx_tune_req[chan].target_freq ||
+            tune_req.rf_freq_policy != _curr_rx_tune_req[chan].rf_freq_policy ||
+            tune_req.rf_freq != _curr_rx_tune_req[chan].rf_freq ||
+            tune_req.dsp_freq != _curr_rx_tune_req[chan].dsp_freq ||
+            tune_req.dsp_freq_policy != _curr_rx_tune_req[chan].dsp_freq_policy) {
+            _curr_rx_tune_req[chan] = tune_req;
+            _rx_chans_to_tune.set(chan);
+        }
+    } else {
+        if (tune_req.target_freq != _curr_tx_tune_req[chan].target_freq ||
+            tune_req.rf_freq_policy != _curr_tx_tune_req[chan].rf_freq_policy ||
+            tune_req.rf_freq != _curr_tx_tune_req[chan].rf_freq ||
+            tune_req.dsp_freq != _curr_tx_tune_req[chan].dsp_freq ||
+            tune_req.dsp_freq_policy != _curr_tx_tune_req[chan].dsp_freq_policy) {
+            _curr_tx_tune_req[chan] = tune_req;
+            _tx_chans_to_tune.set(chan);
+        }
     }
 }
 
@@ -605,33 +623,55 @@ void usrp_block_impl::_cmd_handler_freq(const pmt::pmt_t& freq_,
                                         int chan,
                                         const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+
     double freq = pmt::to_double(freq_);
-    ::uhd::tune_request_t new_tune_reqest(freq);
+    ::uhd::tune_request_t new_tune_request(freq);
     if (pmt::dict_has_key(msg, cmd_lo_offset_key())) {
         double lo_offset =
             pmt::to_double(pmt::dict_ref(msg, cmd_lo_offset_key(), pmt::PMT_NIL));
-        new_tune_reqest = ::uhd::tune_request_t(freq, lo_offset);
+        new_tune_request = ::uhd::tune_request_t(freq, lo_offset);
     }
 
-    _update_curr_tune_req(new_tune_reqest, chan);
+    _update_curr_tune_req(new_tune_request, chan, direction);
 }
 
 void usrp_block_impl::_cmd_handler_looffset(const pmt::pmt_t& lo_offset,
                                             int chan,
                                             const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+
     if (pmt::dict_has_key(msg, cmd_freq_key())) {
         // Then it's already taken care of
         return;
     }
 
     double lo_offs = pmt::to_double(lo_offset);
-    ::uhd::tune_request_t new_tune_request = _curr_tune_req[chan];
+    ::uhd::tune_request_t new_tune_request;
+    if (pmt::eqv(direction, ant_direction_rx())) {
+        new_tune_request = _curr_rx_tune_req[chan];
+    } else {
+        new_tune_request = _curr_tx_tune_req[chan];
+    }
+
     new_tune_request.rf_freq = new_tune_request.target_freq + lo_offs;
     new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
     new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_AUTO;
 
-    _update_curr_tune_req(new_tune_request, chan);
+    _update_curr_tune_req(new_tune_request, chan, direction);
 }
 
 void usrp_block_impl::_cmd_handler_gain(const pmt::pmt_t& gain_,
@@ -682,10 +722,18 @@ void usrp_block_impl::_cmd_handler_tune(const pmt::pmt_t& tune,
                                         int chan,
                                         const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+
     double freq = pmt::to_double(pmt::car(tune));
     double lo_offset = pmt::to_double(pmt::cdr(tune));
-    ::uhd::tune_request_t new_tune_reqest(freq, lo_offset);
-    _update_curr_tune_req(new_tune_reqest, chan);
+    ::uhd::tune_request_t new_tune_request(freq, lo_offset);
+    _update_curr_tune_req(new_tune_request, chan, direction);
 }
 
 void usrp_block_impl::_cmd_handler_bw(const pmt::pmt_t& bw,
@@ -707,6 +755,14 @@ void usrp_block_impl::_cmd_handler_lofreq(const pmt::pmt_t& lofreq,
                                           int chan,
                                           const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+
     if (chan == -1) {
         for (size_t i = 0; i < _nchan; i++) {
             _cmd_handler_lofreq(lofreq, int(i), msg);
@@ -714,7 +770,13 @@ void usrp_block_impl::_cmd_handler_lofreq(const pmt::pmt_t& lofreq,
         return;
     }
 
-    ::uhd::tune_request_t new_tune_request = _curr_tune_req[chan];
+    ::uhd::tune_request_t new_tune_request;
+    if (pmt::eqv(direction, ant_direction_rx())) {
+        new_tune_request = _curr_rx_tune_req[chan];
+    } else {
+        new_tune_request = _curr_tx_tune_req[chan];
+    }
+
     new_tune_request.rf_freq = pmt::to_double(lofreq);
     if (pmt::dict_has_key(msg, cmd_dsp_freq_key())) {
         new_tune_request.dsp_freq =
@@ -723,13 +785,21 @@ void usrp_block_impl::_cmd_handler_lofreq(const pmt::pmt_t& lofreq,
     new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
     new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
 
-    _update_curr_tune_req(new_tune_request, chan);
+    _update_curr_tune_req(new_tune_request, chan, direction);
 }
 
 void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t& dspfreq,
                                            int chan,
                                            const pmt::pmt_t& msg)
 {
+    // See if a direction was specified
+    pmt::pmt_t direction =
+        pmt::dict_ref(msg,
+                      cmd_direction_key(),
+                      pmt::PMT_NIL // Anything except "TX" or "RX will default to the
+                                   // messaged block direction"
+        );
+
     if (pmt::dict_has_key(msg, cmd_lo_freq_key())) {
         // Then it's already dealt with
         return;
@@ -742,10 +812,16 @@ void usrp_block_impl::_cmd_handler_dspfreq(const pmt::pmt_t& dspfreq,
         return;
     }
 
-    ::uhd::tune_request_t new_tune_request = _curr_tune_req[chan];
+    ::uhd::tune_request_t new_tune_request;
+    if (pmt::eqv(direction, ant_direction_rx())) {
+        new_tune_request = _curr_rx_tune_req[chan];
+    } else {
+        new_tune_request = _curr_tx_tune_req[chan];
+    }
+
     new_tune_request.dsp_freq = pmt::to_double(dspfreq);
     new_tune_request.rf_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
     new_tune_request.dsp_freq_policy = ::uhd::tune_request_t::POLICY_MANUAL;
 
-    _update_curr_tune_req(new_tune_request, chan);
+    _update_curr_tune_req(new_tune_request, chan, direction);
 }
