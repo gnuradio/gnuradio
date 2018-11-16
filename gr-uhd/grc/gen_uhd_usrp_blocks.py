@@ -113,15 +113,20 @@ inputs:
     id: command
     optional: true
     hide: ${'$'}{hide_cmd_port}
-% if sourk == 'sink':
--   domain: stream
-% else:
+% if sourk == 'source':
 
 outputs:
--   domain: stream
 % endif
+-   domain: stream
     dtype: ${'$'}{type.type}
     multiplicity: ${'$'}{nchan}
+% if sourk == 'sink':
+
+outputs:
+-   domain: message
+    id: async_msgs
+    optional: true
+% endif
 
 templates:
     imports: |-

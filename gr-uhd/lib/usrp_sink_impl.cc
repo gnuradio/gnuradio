@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2010-2016 Free Software Foundation, Inc.
+ * Copyright 2010-2016,2018 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -47,13 +47,20 @@ namespace gr {
                    io_signature::make(0, 0, 0)),
         usrp_block_impl(device_addr, stream_args, length_tag_name),
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name)),
-        _nitems_to_send(0)
+        _nitems_to_send(0),
+        _async_event_loop_running(true)
     {
+      message_port_register_out(ASYNC_MSGS_PORT_KEY);
+      _async_event_thread = gr::thread::thread([this](){
+          this->async_event_loop();
+        });
       _sample_rate = get_samp_rate();
     }
 
     usrp_sink_impl::~usrp_sink_impl()
     {
+      _async_event_loop_running = false;
+      _async_event_thread.join();
     }
 
     ::uhd::dict<std::string, std::string>
@@ -700,6 +707,56 @@ namespace gr {
           "", "UHD Commands",
           RPC_PRIVLVL_MIN, DISPNULL)));
 #endif /* GR_CTRLPORT */
+    }
+
+    void
+    usrp_sink_impl::async_event_loop()
+    {
+      typedef ::uhd::async_metadata_t md_t;
+      md_t metadata;
+
+      while(_async_event_loop_running) {
+        while(!_dev->get_device()->recv_async_msg(metadata, 0.1)) {
+          if(!_async_event_loop_running){
+            return;
+          }
+        }
+
+        pmt::pmt_t event_list = pmt::PMT_NIL;
+
+        if(metadata.event_code & md_t::EVENT_CODE_BURST_ACK){
+          event_list = pmt::list_add(event_list, BURST_ACK_KEY);
+        }
+        if(metadata.event_code & md_t::EVENT_CODE_UNDERFLOW){
+          event_list = pmt::list_add(event_list, UNDERFLOW_KEY);
+        }
+        if(metadata.event_code & md_t::EVENT_CODE_UNDERFLOW_IN_PACKET){
+          event_list = pmt::list_add(event_list, UNDERFLOW_IN_PACKET_KEY);
+        }
+        if(metadata.event_code & md_t::EVENT_CODE_SEQ_ERROR){
+          event_list = pmt::list_add(event_list, SEQ_ERROR_KEY);
+        }
+        if(metadata.event_code & md_t::EVENT_CODE_SEQ_ERROR_IN_BURST){
+          event_list = pmt::list_add(event_list, SEQ_ERROR_IN_BURST_KEY);
+        }
+        if(metadata.event_code & md_t::EVENT_CODE_TIME_ERROR){
+          event_list = pmt::list_add(event_list, TIME_ERROR_KEY);
+        }
+
+        if(!pmt::eq(event_list, pmt::PMT_NIL)){
+          pmt::pmt_t value = pmt::dict_add(pmt::make_dict(), EVENT_CODE_KEY, event_list);
+          if(metadata.has_time_spec){
+            pmt::pmt_t time_spec = pmt::cons(
+              pmt::from_long(metadata.time_spec.get_full_secs()),
+              pmt::from_double(metadata.time_spec.get_frac_secs())
+            );
+            value = pmt::dict_add(value, TIME_SPEC_KEY, time_spec);
+          }
+          value = pmt::dict_add(value, CHANNEL_KEY, pmt::from_uint64(metadata.channel));
+          pmt::pmt_t msg = pmt::cons(ASYNC_MSG_KEY, value);
+          message_port_pub(ASYNC_MSGS_PORT_KEY, msg);
+        }
+      }
     }
 
   } /* namespace uhd */

@@ -30,6 +30,20 @@ static const pmt::pmt_t TIME_KEY = pmt::string_to_symbol("tx_time");
 static const pmt::pmt_t FREQ_KEY = pmt::string_to_symbol("tx_freq");
 static const pmt::pmt_t COMMAND_KEY = pmt::string_to_symbol("tx_command");
 
+//Asynchronous message handling related PMTs
+static const pmt::pmt_t ASYNC_MSG_KEY = pmt::string_to_symbol("uhd_async_msg");
+static const pmt::pmt_t CHANNEL_KEY = pmt::string_to_symbol("channel");
+static const pmt::pmt_t TIME_SPEC_KEY = pmt::string_to_symbol("time_spec");
+static const pmt::pmt_t EVENT_CODE_KEY = pmt::string_to_symbol("event_code");
+static const pmt::pmt_t BURST_ACK_KEY = pmt::string_to_symbol("burst_ack");
+static const pmt::pmt_t UNDERFLOW_KEY = pmt::string_to_symbol("underflow");
+static const pmt::pmt_t UNDERFLOW_IN_PACKET_KEY = pmt::string_to_symbol("underflow_in_packet");
+static const pmt::pmt_t SEQ_ERROR_KEY = pmt::string_to_symbol("seq_error");
+static const pmt::pmt_t SEQ_ERROR_IN_BURST_KEY = pmt::string_to_symbol("seq_error_in_burst");
+static const pmt::pmt_t TIME_ERROR_KEY = pmt::string_to_symbol("time_error");
+static const pmt::pmt_t ASYNC_MSGS_PORT_KEY = pmt::string_to_symbol("async_msgs");
+
+
 namespace gr {
   namespace uhd {
 
@@ -119,6 +133,10 @@ namespace gr {
       const pmt::pmt_t _length_tag_key;
       long _nitems_to_send;
 
+      //asynchronous messages related stuff
+      bool _async_event_loop_running;
+      void async_event_loop();
+      gr::thread::thread _async_event_thread;
     };
 
   } /* namespace uhd */
