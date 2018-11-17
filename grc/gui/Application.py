@@ -203,6 +203,7 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
                 Actions.TOGGLE_HIDE_VARIABLES,
+                Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
             ):
                 action.set_enabled(True)
                 if hasattr(action, 'load_from_preferences'):
@@ -479,6 +480,9 @@ class Application(Gtk.Application):
                 main.console.text_display.save(file_path)
         elif action == Actions.TOGGLE_HIDE_DISABLED_BLOCKS:
             action.set_active(not action.get_active())
+            flow_graph_update()
+            action.save_to_preferences()
+            page.state_cache.save_new_state(flow_graph.export_data())
             Actions.NOTHING_SELECT()
         elif action == Actions.TOGGLE_AUTO_HIDE_PORT_LABELS:
             action.set_active(not action.get_active())
@@ -721,7 +725,7 @@ class Application(Gtk.Application):
                     print("could not terminate process: %d" % page.process.pid)
 
         elif action == Actions.PAGE_CHANGE:  # pass and run the global actions
-            pass
+            flow_graph_update()
         elif action == Actions.RELOAD_BLOCKS:
             self.platform.build_library()
             main.btwin.repopulate()
