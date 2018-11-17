@@ -20,6 +20,7 @@ from __future__ import absolute_import, print_function
 import collections
 import itertools
 import sys
+import os
 import types
 import logging
 
@@ -188,7 +189,17 @@ class FlowGraph(Element):
     def renew_namespace(self):
         namespace = {}
         # Load imports
-        for expr in self.imports():
+        imports = self.imports()
+
+        # Import the hier_block path only once
+        platform = self.parent
+        hier_block_lib_dir = platform.config.hier_block_lib_dir
+        if os.path.exists(hier_block_lib_dir):
+            hier_block_lib_dir = os.path.expanduser(hier_block_lib_dir)
+            if not hier_block_lib_dir in sys.path:
+                exec('import sys;  sys.path.append(\'{0}\')'.format(hier_block_lib_dir), namespace)
+
+        for expr in imports:
             try:
                 exec(expr, namespace)
             except Exception:
