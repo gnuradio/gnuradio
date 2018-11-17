@@ -123,7 +123,7 @@ def _guess_file_format_1(data):
     """Try to guess the file format for flow-graph files without version tag"""
 
     def has_numeric_port_ids(src_id, src_port_id, snk_id, snk_port_id):
-        return src_port_id.isdigit() and snk_port_id.is_digit()
+        return src_port_id.isdigit() and snk_port_id.isdigit()
 
     try:
         if any(not has_numeric_port_ids(*con) for con in data['connections']):
