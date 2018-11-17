@@ -203,7 +203,6 @@ class Application(Gtk.Application):
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR,
                 Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR_SIDEBAR,
                 Actions.TOGGLE_HIDE_VARIABLES,
-                Actions.TOGGLE_HIDE_DISABLED_BLOCKS,
             ):
                 action.set_enabled(True)
                 if hasattr(action, 'load_from_preferences'):
