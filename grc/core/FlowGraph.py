@@ -191,8 +191,13 @@ class FlowGraph(Element):
         for expr in self.imports():
             try:
                 exec(expr, namespace)
+            except ImportError:
+                # We do not have a good way right now to determine if an import is for a
+                # hier block, these imports will fail as they are not in the search path
+                # this is ok behavior, unfortunately we could be hiding other import bugs
+                pass
             except Exception:
-                log.exception('Failed to evaluate expression in namespace', exc_info=True)
+                log.exception('Failed to evaluate import expression "{0}"'.format(expr), exc_info=True)
                 pass
 
         for id, expr in self.get_python_modules():
