@@ -66,7 +66,8 @@ namespace gr {
       constellation(std::vector<gr_complex> constell,
 		    std::vector<int> pre_diff_code,
 		    unsigned int rotational_symmetry,
-		    unsigned int dimensionality);
+		    unsigned int dimensionality,
+		    bool normalize_points=true);
       constellation();
       virtual ~constellation();
 
@@ -253,11 +254,13 @@ namespace gr {
        *                      coding) (order of list matches constell)
        * \param rotational_symmetry Number of rotations around unit circle that have the same representation.
        * \param dimensionality Number of dimensions to the constellation.
+       * \param normalize_points Normalize constellation points to mean(abs(points))=1 (default is true)
        */
       static sptr make(std::vector<gr_complex> constell,
 		       std::vector<int> pre_diff_code,
 		       unsigned int rotational_symmetry,
-		       unsigned int dimensionality);
+		       unsigned int dimensionality,
+		       bool normalize_points=true);
 
       unsigned int decision_maker(const gr_complex *sample);
       // void calc_metric(gr_complex *sample, float *metric, trellis_metric_type_t type);
@@ -268,7 +271,8 @@ namespace gr {
       constellation_calcdist(std::vector<gr_complex> constell,
 			     std::vector<int> pre_diff_code,
 			     unsigned int rotational_symmetry,
-			     unsigned int dimensionality);
+			     unsigned int dimensionality,
+			     bool nomalize_points=true);
     };
 
 
