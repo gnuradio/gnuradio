@@ -7,12 +7,13 @@ parameters:
     dtype: enum
     options: [complex, float, int, short]
     option_attributes:
-        const_type: [complex_vector, real_vector, int_vector, int_vector]
+        vconst_type: [complex_vector, real_vector, int_vector, int_vector]
+        const_type:  [complex, real, int, int]
         fcn: [cc, ff, ii, ss]
     hide: part
 -   id: const
     label: Constant
-    dtype: ${ type.const_type }
+    dtype: ${ type.const_type if vlen == 1 else type.vconst_type }
     default: '0'
 -   id: vlen
     label: Vec Length
@@ -31,12 +32,12 @@ outputs:
     vlen: ${ vlen }
 
 asserts:
-- ${ len(const) == vlen }
 - ${ vlen > 0 }
+- ${ (vlen > 1 and len(const) == vlen) or (vlen == 1) }
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.add_const_v${type.fcn}(${const})
+    make: blocks.add_const_${ 'v' if context.get('vlen')() > 1 else '' }${type.fcn}(${const})
     callbacks:
     - set_k(${const})
 
