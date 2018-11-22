@@ -154,330 +154,657 @@ parameters:
     hide: part
 -   id: label1
     label: Line 1 Label
-    category: Config
     dtype: string
-    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+    default: 'Signal 1'
+    hide: ${ ('part' if (
+            int(nconnections) >= 1
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width1
     label: Line 1 Width
-    category: Config
-    dtype: int
-    default: '1'
-    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+    default: 1
+    hide: ${ ('part' if (
+            int(nconnections) >= 1
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color1
     label: Line 1 Color
-    category: Config
-    dtype: enum
-    options: ['"blue"', '"red"', '"green"', '"black"', '"cyan"', '"magenta"', '"yellow"',
-        '"dark red"', '"dark green"', '"Dark Blue"']
-    option_labels: [Blue, Red, Green, Black, Cyan, Magenta, Yellow, Dark Red, Dark
-            Green, Dark Blue]
-    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+    dtype: string
+    default: 'blue'
+    hide: ${ ('part' if (
+            int(nconnections) >= 1
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style1
     label: Line 1 Style
-    category: Config
-    dtype: enum
-    options: ['1', '2', '3', '4', '5', '0']
-    option_labels: [Solid, Dash, Dots, Dash-Dot, Dash-Dot-Dot, None]
-    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+    dtype: int
+    default: 1
+    hide: ${ ('part' if (
+            int(nconnections) >= 1
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker1
     label: Line 1 Marker
-    category: Config
-    dtype: enum
-    options: ['-1', '0', '1', '2', '3', '4', '6', '7', '8', '9']
-    option_labels: [None, Circle, Rectangle, Diamond, Triangle, Down Triangle, Left
-            Triangle, Right Triangle, Cross, X-Cross]
-    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+    dtype: int
+    default: 1
+    hide: ${ ('part' if (
+            int(nconnections) >= 1
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha1
     label: Line 1 Alpha
-    category: Config
-    dtype: float
-    default: '1.0'
-    hide: ${ ('part' if int(nconnections) >= 1 else 'all') }
+    dtype: real
+    default: 1.0
+    hide: ${ ('part' if (
+            int(nconnections) >= 1
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label2
     label: Line 2 Label
+    dtype: string
+    default: 'Signal 2'
     base_key: label1
-    hide: ${ ('part' if (int(nconnections) >= 2 or (type == "complex" and int(nconnections)
-        >= 1) or (type == "msg_complex")) and (not type == "msg_float") else 'all')
+    hide: ${ ('part' if (
+            int(nconnections) >= 2
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
         }
 -   id: width2
     label: Line 2 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if (int(nconnections) >= 2 or (type == "complex" and int(nconnections)
-        >= 1) or (type == "msg_complex")) and (not type == "msg_float") else 'all')
+    hide: ${ ('part' if (
+            int(nconnections) >= 2
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
         }
 -   id: color2
     label: Line 2 Color
+    dtype: string
+    default: 'green'
     base_key: color1
-    default: '"red"'
-    hide: ${ ('part' if (int(nconnections) >= 2 or (type == "complex" and int(nconnections)
-        >= 1) or (type == "msg_complex")) and (not type == "msg_float") else 'all')
+    hide: ${ ('part' if (
+            int(nconnections) >= 2
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
         }
 -   id: style2
     label: Line 2 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if (int(nconnections) >= 2 or (type == "complex" and int(nconnections)
-        >= 1) or (type == "msg_complex")) and (not type == "msg_float") else 'all')
+    hide: ${ ('part' if (
+            int(nconnections) >= 2
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
         }
 -   id: marker2
     label: Line 2 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if (int(nconnections) >= 2 or (type == "complex" and int(nconnections)
-        >= 1) or (type == "msg_complex")) and (not type == "msg_float") else 'all')
+    hide: ${ ('part' if (
+            int(nconnections) >= 2
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
         }
 -   id: alpha2
     label: Line 2 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if (int(nconnections) >= 2 or (type == "complex" and int(nconnections)
-        >= 1) or (type == "msg_complex")) and (not type == "msg_float") else 'all')
+    hide: ${ ('part' if (
+            int(nconnections) >= 2
+            or (type == "complex" and int(nconnections) >= 1)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
         }
+
 -   id: label3
     label: Line 3 Label
+    dtype: string
+    default: 'Signal 3'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 3 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 3
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width3
     label: Line 3 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 3 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 3
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color3
     label: Line 3 Color
+    dtype: string
+    default: 'black'
     base_key: color1
-    default: '"green"'
-    hide: ${ ('part' if ((int(nconnections) >= 3 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 3
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style3
     label: Line 3 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 3 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 3
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker3
     label: Line 3 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 3 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 3
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha3
     label: Line 3 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 3 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 3
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label4
     label: Line 4 Label
+    dtype: string
+    default: 'Signal 4'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 4 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 4
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width4
     label: Line 4 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 4 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 4
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color4
     label: Line 4 Color
+    dtype: string
+    default: 'cyan'
     base_key: color1
-    default: '"black"'
-    hide: ${ ('part' if ((int(nconnections) >= 4 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 4
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style4
     label: Line 4 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 4 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 4
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker4
     label: Line 4 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 4 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 4
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha4
     label: Line 4 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 4 or (type == "complex" and int(nconnections)
-        >= 2)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 4
+            or (type == "complex" and int(nconnections) >= 2)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label5
     label: Line 5 Label
+    dtype: string
+    default: 'Signal 5'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 5 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 5
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width5
     label: Line 5 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 5 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 5
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color5
     label: Line 5 Color
+    dtype: string
+    default: 'magenta'
     base_key: color1
-    default: '"cyan"'
-    hide: ${ ('part' if ((int(nconnections) >= 5 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 5
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style5
     label: Line 5 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 5 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 5
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker5
     label: Line 5 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 5 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 5
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha5
     label: Line 5 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 5 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 5
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label6
     label: Line 6 Label
+    dtype: string
+    default: 'Signal 6'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 6 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 6
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width6
     label: Line 6 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 6 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 6
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color6
     label: Line 6 Color
+    dtype: string
+    default: 'yellow'
     base_key: color1
-    default: '"magenta"'
-    hide: ${ ('part' if ((int(nconnections) >= 6 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 6
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style6
     label: Line 6 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 6 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 6
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker6
     label: Line 6 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 6 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 6
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha6
     label: Line 6 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 6 or (type == "complex" and int(nconnections)
-        >= 3)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 6
+            or (type == "complex" and int(nconnections) >= 3)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label7
     label: Line 7 Label
+    dtype: string
+    default: 'Signal 7'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 7 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 7
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width7
     label: Line 7 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 7 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 7
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color7
     label: Line 7 Color
+    dtype: string
+    default: 'dark red'
     base_key: color1
-    default: '"yellow"'
-    hide: ${ ('part' if ((int(nconnections) >= 7 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 7
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style7
     label: Line 7 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 7 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 7
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker7
     label: Line 7 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 7 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 7
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha7
     label: Line 7 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 7 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 7
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label8
     label: Line 8 Label
+    dtype: string
+    default: 'Signal 8'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 8 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 8
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width8
     label: Line 8 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 8 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 8
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color8
     label: Line 8 Color
+    dtype: string
+    default: 'dark green'
     base_key: color1
-    default: '"dark red"'
-    hide: ${ ('part' if ((int(nconnections) >= 8 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 8
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style8
     label: Line 8 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 8 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 8
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker8
     label: Line 8 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 8 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 8
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha8
     label: Line 8 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 8 or (type == "complex" and int(nconnections)
-        >= 4)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 8
+            or (type == "complex" and int(nconnections) >= 4)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label9
     label: Line 9 Label
+    dtype: string
+    default: 'Signal 9'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 9 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 9
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width9
     label: Line 9 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 9 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 9
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color9
     label: Line 9 Color
+    dtype: string
+    default: 'Dark Blue'
     base_key: color1
-    default: '"dark green"'
-    hide: ${ ('part' if ((int(nconnections) >= 9 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 9
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style9
     label: Line 9 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 9 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 9
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker9
     label: Line 9 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 9 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 9
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha9
     label: Line 9 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 9 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 9
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
+
 -   id: label10
     label: Line 10 Label
+    dtype: string
+    default: 'Signal 10'
     base_key: label1
-    hide: ${ ('part' if ((int(nconnections) >= 10 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 10
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: width10
     label: Line 10 Width
+    default: 1
     base_key: width1
-    hide: ${ ('part' if ((int(nconnections) >= 10 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 10
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: color10
     label: Line 10 Color
+    dtype: string
+    default: 'blue'
     base_key: color1
-    default: '"dark blue"'
-    hide: ${ ('part' if ((int(nconnections) >= 10 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 10
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: style10
     label: Line 10 Style
+    dtype: int
+    default: 1
     base_key: style1
-    hide: ${ ('part' if ((int(nconnections) >= 10 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 10
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: marker10
     label: Line 10 Marker
+    dtype: int
+    default: 1
     base_key: marker1
-    hide: ${ ('part' if ((int(nconnections) >= 10 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 10
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 -   id: alpha10
     label: Line 10 Alpha
+    dtype: real
+    default: 1.0
     base_key: alpha1
-    hide: ${ ('part' if ((int(nconnections) >= 10 or (type == "complex" and int(nconnections)
-        >= 5)) and not type.t == "message") else 'all') }
+    hide: ${ ('part' if (
+            int(nconnections) >= 10
+            or (type == "complex" and int(nconnections) >= 5)
+            or (type == "msg_complex")) and (not type == "msg_float")
+        else 'all')
+        }
 
 asserts:
 - ${nconnections <= (5 if type == 'complex' else 10)}
