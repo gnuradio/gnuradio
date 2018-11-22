@@ -28,9 +28,7 @@ parameters:
     default: 'False'
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
-    option_attributes:
-        hide_block: ['', part]
-    hide: ${ block_tags.hide_block }
+    hide: ${ 'none' if block_tags == 'False' else 'part' }
 
 inputs:
 -   domain: stream
