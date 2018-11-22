@@ -6,14 +6,11 @@ parameters:
     label: Input Type
     dtype: enum
     options: [complex, float]
-    option_attributes:
-        hide_shift: ['', all]
     hide: part
 -   id: fft_size
     label: FFT Size
     dtype: int
     default: '1024'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: forward
     label: Forward/Reverse
     dtype: enum
@@ -28,7 +25,7 @@ parameters:
     dtype: enum
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
-    hide: ${ type.hide_shift }
+    hide: ${ 'all' if type == 'float' else 'none' }
 -   id: nthreads
     label: Num. Threads
     dtype: int
