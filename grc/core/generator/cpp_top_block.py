@@ -1,4 +1,5 @@
 import codecs
+import yaml
 import operator
 import os
 import tempfile
@@ -224,13 +225,16 @@ class CppTopBlockGenerator(TopBlockGenerator):
             translations = block.cpp_templates.render('translations')
             make = block.cpp_templates.render('make')
             declarations = block.cpp_templates.render('declarations')
-
             if translations:
-                # TODO: Would be nice to avoid using eval() here
-                translations_dict = eval(translations)
-                for key in translations_dict:
-                    make = make.replace(key, translations_dict[key])
-                    declarations = declarations.replace(key, translations_dict[key])
+                translations = yaml.load(translations)
+            else:
+                translations = {}
+            translations.update(
+                {r"gr\.sizeof_([\w_]+)": r"sizeof(\1)"}
+            )
+            for key in translations:
+                make = re.sub(key.replace("\\\\", "\\"), translations[key],make)
+                declarations = declarations.replace(key, translations[key])
             if make:
                 blocks_make.append((block, make, declarations))
             elif 'qt' in block.key:

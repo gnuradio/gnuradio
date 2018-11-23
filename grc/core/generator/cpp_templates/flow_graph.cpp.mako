@@ -157,14 +157,14 @@ int main (int argc, char **argv) {
     % endfor
     std::cout << "Press Enter to quit: ";
     std::cin.ignore();
-    top_block->stop();
+    top_block->tb->stop();
     % elif flow_graph.get_option('run_options') == 'run':
     top_block->tb->start();
     % endif
     % for m in monitors:
     (top_block->${m.name}).start();
     % endfor
-    top_block->wait();
+    top_block->tb->wait();
     % elif generate_options == 'qt_gui':
     QApplication app(argc, argv);
 
