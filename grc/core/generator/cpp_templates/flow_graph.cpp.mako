@@ -21,7 +21,8 @@ namespace po = boost::program_options;
 using namespace gr;
 
 <%
-class_name = flow_graph.get_option('id')
+class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') == 'top_block' else '')
+
 param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 param_str_without_types = ", ".join(param.name for param in parameters)
 %>\
@@ -63,7 +64,7 @@ ${class_name}::${class_name} (${param_str}) : QWidget() {
 % endif
 
 % if not generate_options.startswith('hb'):
-    this->tb = make_top_block("${title}");
+    this->tb = gr::make_top_block("${title}");
 % endif
 
 % if blocks:
@@ -168,7 +169,7 @@ int main (int argc, char **argv) {
     % elif generate_options == 'qt_gui':
     QApplication app(argc, argv);
 
-    ${class_name} *top_block = new ${class_name}(${param_str_without_types});
+    ${class_name}* top_block = new ${class_name}(${param_str_without_types});
 
     top_block->tb->start();
     top_block->show();

@@ -2,12 +2,12 @@
 # GNU Radio C++ Flow Graph CMakeLists.txt
 #
 # Title: ${title}
-# % if flow_graph.get_option('author'):
+% if flow_graph.get_option('author'):
 # Author: ${flow_graph.get_option('author')}
-# % endif
-# % if flow_graph.get_option('description'):
+% endif
+% if flow_graph.get_option('description'):
 # Description: ${flow_graph.get_option('description')}
-# % endif
+% endif
 # Generated: ${generated_time}
 #####################
 
@@ -56,6 +56,7 @@ set(GR_LIBRARIES
     gnuradio-blocks
     gnuradio-runtime
     gnuradio-pmt
+    log4cpp
     % for link in links:
     % if link:
     ${link}

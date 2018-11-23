@@ -27,6 +27,8 @@ import six
 from six.moves import range
 import re
 
+import ast
+
 from ._templates import MakoTemplates
 from ._flags import Flags
 

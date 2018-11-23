@@ -37,7 +37,7 @@ ${inc}
 using namespace gr;
 
 <%
-class_name = flow_graph.get_option('id')
+class_name = flow_graph.get_option('id') + ('_' if flow_graph.get_option('id') == 'top_block' else '')
 param_str = ", ".join((param.vtype + " " + param.name) for param in parameters)
 %>\
 
@@ -84,7 +84,7 @@ ${indent(declarations)}
 
 public:
 % if not generate_options.startswith('hb'):
-    top_block_sptr tb;
+    gr::top_block_sptr tb;
 % endif
 	${class_name}(${param_str});
 	~${class_name}();
