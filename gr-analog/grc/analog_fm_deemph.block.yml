@@ -1,6 +1,6 @@
 id: analog_fm_deemph
 label: FM Deemphasis
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: samp_rate

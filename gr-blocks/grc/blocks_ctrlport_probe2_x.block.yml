@@ -1,6 +1,6 @@
 id: blocks_ctrlport_probe2_x
 label: Ctrlport Probe
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

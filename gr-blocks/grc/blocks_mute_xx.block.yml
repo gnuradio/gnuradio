@@ -1,6 +1,6 @@
 id: blocks_mute_xx
 label: Mute
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

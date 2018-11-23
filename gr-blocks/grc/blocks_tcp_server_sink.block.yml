@@ -1,6 +1,6 @@
 id: blocks_tcp_server_sink
 label: TCP Server Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

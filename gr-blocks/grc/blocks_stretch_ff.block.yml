@@ -1,6 +1,6 @@
 id: blocks_stretch_ff
 label: Stretch
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: lo

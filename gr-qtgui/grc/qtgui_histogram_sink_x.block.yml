@@ -1,6 +1,6 @@
 id: qtgui_histogram_sink_x
 label: QT GUI Histogram Sink
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: type

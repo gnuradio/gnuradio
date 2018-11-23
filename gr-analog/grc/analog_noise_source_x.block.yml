@@ -1,6 +1,6 @@
 id: analog_noise_source_x
 label: Noise Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

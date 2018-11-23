@@ -1,6 +1,6 @@
 id: blocks_float_to_char
 label: Float To Char
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

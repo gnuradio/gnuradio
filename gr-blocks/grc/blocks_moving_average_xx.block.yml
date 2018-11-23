@@ -1,6 +1,6 @@
 id: blocks_moving_average_xx
 label: Moving Average
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

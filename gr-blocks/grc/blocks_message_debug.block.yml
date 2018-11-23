@@ -1,6 +1,6 @@
 id: blocks_message_debug
 label: Message Debug
-flags: python, cpp
+flags: [ python, cpp ]
 
 inputs:
 -   domain: message

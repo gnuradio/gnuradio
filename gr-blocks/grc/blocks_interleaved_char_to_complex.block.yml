@@ -1,6 +1,6 @@
 id: blocks_interleaved_char_to_complex
 label: IChar To Complex
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vector_input

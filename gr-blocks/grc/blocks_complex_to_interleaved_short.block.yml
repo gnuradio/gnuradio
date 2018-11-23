@@ -1,6 +1,6 @@
 id: blocks_complex_to_interleaved_short
 label: Complex To IShort
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vector_output

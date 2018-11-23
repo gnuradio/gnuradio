@@ -1,6 +1,6 @@
 id: blocks_skiphead
 label: Skip Head
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

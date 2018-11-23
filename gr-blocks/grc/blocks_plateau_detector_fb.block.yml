@@ -1,6 +1,6 @@
 id: blocks_plateau_detector_fb
 label: Plateau Detector
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: max_len

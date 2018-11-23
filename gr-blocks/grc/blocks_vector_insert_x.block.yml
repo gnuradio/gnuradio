@@ -1,6 +1,6 @@
 id: blocks_vector_insert_x
 label: Vector Insert
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

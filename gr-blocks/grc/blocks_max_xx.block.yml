@@ -1,6 +1,6 @@
 id: blocks_max_xx
 label: Max
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

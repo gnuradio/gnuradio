@@ -1,6 +1,6 @@
 id: blocks_float_to_uchar
 label: Float To UChar
-flags: python, cpp
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream

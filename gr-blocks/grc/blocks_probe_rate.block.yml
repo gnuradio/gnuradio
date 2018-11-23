@@ -1,6 +1,6 @@
 id: blocks_probe_rate
 label: Probe Rate
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

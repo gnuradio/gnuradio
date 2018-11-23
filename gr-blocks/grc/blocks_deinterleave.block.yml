@@ -1,6 +1,6 @@
 id: blocks_deinterleave
 label: Deinterleave
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

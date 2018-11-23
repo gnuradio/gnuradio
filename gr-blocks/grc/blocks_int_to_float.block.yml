@@ -1,6 +1,6 @@
 id: blocks_int_to_float
 label: Int To Float
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

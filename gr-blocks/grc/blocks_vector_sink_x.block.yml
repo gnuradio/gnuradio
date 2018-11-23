@@ -1,6 +1,6 @@
 id: blocks_vector_sink_x
 label: Vector Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

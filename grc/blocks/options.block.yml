@@ -1,6 +1,6 @@
 id: options
 label: Options
-flags: python, cpp
+flags: ['python', 'cpp']
 
 parameters:
 -   id: title

@@ -1,6 +1,6 @@
 id: blocks_complex_to_magphase
 label: Complex To Mag Phase
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

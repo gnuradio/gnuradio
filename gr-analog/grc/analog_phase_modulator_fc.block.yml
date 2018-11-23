@@ -1,6 +1,6 @@
 id: analog_phase_modulator_fc
 label: Phase Mod
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: sensitivity

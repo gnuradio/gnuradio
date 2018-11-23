@@ -1,6 +1,6 @@
 id: analog_feedforward_agc_cc
 label: Feed Forward AGC
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: num_samples

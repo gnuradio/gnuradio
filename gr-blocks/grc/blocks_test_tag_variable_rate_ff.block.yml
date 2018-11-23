@@ -1,6 +1,6 @@
 id: blocks_test_tag_variable_rate_ff
 label: Test Tag Variable Rate
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: once

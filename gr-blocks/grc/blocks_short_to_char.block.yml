@@ -1,6 +1,6 @@
 id: blocks_short_to_char
 label: Short To Char
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

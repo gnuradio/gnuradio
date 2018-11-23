@@ -1,6 +1,6 @@
 id: analog_rail_ff
 label: Rail
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: lo

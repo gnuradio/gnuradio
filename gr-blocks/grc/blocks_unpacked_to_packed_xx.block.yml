@@ -1,6 +1,6 @@
 id: blocks_unpacked_to_packed_xx
 label: Unpacked to Packed
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: type

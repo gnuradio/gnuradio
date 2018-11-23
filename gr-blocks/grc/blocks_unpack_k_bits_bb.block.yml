@@ -1,6 +1,6 @@
 id: blocks_unpack_k_bits_bb
 label: Unpack K Bits
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: k

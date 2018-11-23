@@ -1,6 +1,6 @@
 id: blocks_interleaved_short_to_complex
 label: IShort To Complex
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vector_input

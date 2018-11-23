@@ -1,6 +1,6 @@
 id: blocks_nop
 label: Nop
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

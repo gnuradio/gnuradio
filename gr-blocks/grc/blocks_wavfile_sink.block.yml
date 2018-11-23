@@ -1,6 +1,6 @@
 id: blocks_wavfile_sink
 label: Wav File Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: file

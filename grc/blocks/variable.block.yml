@@ -1,6 +1,6 @@
 id: variable
 label: Variable
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: value

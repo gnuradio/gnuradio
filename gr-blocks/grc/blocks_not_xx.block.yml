@@ -1,6 +1,6 @@
 id: blocks_not_xx
 label: Not
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

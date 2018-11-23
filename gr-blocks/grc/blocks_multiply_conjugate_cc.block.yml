@@ -1,6 +1,6 @@
 id: blocks_multiply_conjugate_cc
 label: Multiply Conjugate
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

@@ -1,6 +1,6 @@
 id: analog_sig_source_x
 label: Signal Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -56,7 +56,7 @@ templates:
     - set_offset(${offset})
 
 cpp_templates:
-    includes: ['#include <gnuradio/analog/sig_source_${type.fcn}.h>']
+    includes: ['#include <gnuradio/analog/sig_source.h>']
     declarations: 'analog::sig_source_${type.fcn}::sptr ${id};'
     make: 'this->${id} = analog::sig_source_${type.fcn}::make(${samp_rate}, ${waveform}, ${freq}, ${amp}, ${offset});'
     callbacks:
@@ -67,6 +67,6 @@ cpp_templates:
     - set_offset(${offset})
     link: ['gnuradio-analog']
     translations:
-        analog.: 'analog::'
+        analog\.: 'analog::'
 
 file_format: 1

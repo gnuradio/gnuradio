@@ -1,6 +1,6 @@
 id: blocks_tagged_stream_multiply_length
 label: Tagged Stream Multiply Length Tag
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

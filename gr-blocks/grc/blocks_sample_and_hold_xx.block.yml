@@ -1,6 +1,6 @@
 id: blocks_sample_and_hold_xx
 label: Sample and Hold
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

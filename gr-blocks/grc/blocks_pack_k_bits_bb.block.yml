@@ -1,6 +1,6 @@
 id: blocks_pack_k_bits_bb
 label: Pack K Bits
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: k

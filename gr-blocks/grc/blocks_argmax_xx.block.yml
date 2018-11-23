@@ -1,6 +1,6 @@
 id: blocks_argmax_xx
 label: Argmax
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

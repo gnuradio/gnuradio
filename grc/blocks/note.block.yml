@@ -1,6 +1,6 @@
 id: note
 label: Note
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: note

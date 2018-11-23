@@ -1,6 +1,6 @@
 id: blocks_rotator_cc
 label: Rotator
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: phase_inc

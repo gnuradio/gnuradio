@@ -1,6 +1,6 @@
 id: blocks_threshold_ff
 label: Threshold
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: low

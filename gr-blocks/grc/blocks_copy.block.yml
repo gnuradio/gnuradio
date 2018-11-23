@@ -1,6 +1,6 @@
 id: blocks_copy
 label: Copy
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

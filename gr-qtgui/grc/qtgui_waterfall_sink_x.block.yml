@@ -1,6 +1,6 @@
 id: qtgui_waterfall_sink_x
 label: QT GUI Waterfall Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

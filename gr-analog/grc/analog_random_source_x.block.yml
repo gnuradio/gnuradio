@@ -1,6 +1,6 @@
 id: analog_random_source_x
 label: Random Source
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: type

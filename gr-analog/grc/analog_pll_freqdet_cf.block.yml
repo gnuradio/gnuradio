@@ -1,6 +1,6 @@
 id: analog_pll_freqdet_cf
 label: PLL Freq Det
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: w

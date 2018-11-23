@@ -1,6 +1,6 @@
 id: blocks_tagged_file_sink
 label: Tagged File Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

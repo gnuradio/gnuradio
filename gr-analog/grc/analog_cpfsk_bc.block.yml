@@ -1,7 +1,7 @@
 id: analog_cpfsk_bc
 label: CPFSK
 category: '[Core]/Deprecated'
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: k

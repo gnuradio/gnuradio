@@ -1,6 +1,6 @@
 id: blocks_abs_xx
 label: Abs
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

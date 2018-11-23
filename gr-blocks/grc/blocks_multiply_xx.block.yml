@@ -1,6 +1,6 @@
 id: blocks_multiply_xx
 label: Multiply
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

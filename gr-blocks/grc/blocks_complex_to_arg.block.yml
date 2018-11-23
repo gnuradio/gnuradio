@@ -1,6 +1,6 @@
 id: blocks_complex_to_arg
 label: Complex to Arg
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

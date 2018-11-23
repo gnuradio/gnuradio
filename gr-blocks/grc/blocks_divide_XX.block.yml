@@ -1,6 +1,6 @@
 id: blocks_divide_xx
 label: Divide
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

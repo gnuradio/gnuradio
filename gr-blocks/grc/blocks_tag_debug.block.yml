@@ -1,6 +1,6 @@
 id: blocks_tag_debug
 label: Tag Debug
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

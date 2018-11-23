@@ -1,6 +1,6 @@
 id: analog_frequency_modulator_fc
 label: Frequency Mod
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: sensitivity

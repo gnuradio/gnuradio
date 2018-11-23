@@ -1,6 +1,6 @@
 id: blocks_head
 label: Head
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

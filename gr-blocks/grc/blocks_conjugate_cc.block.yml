@@ -1,6 +1,6 @@
 id: blocks_conjugate_cc
 label: Complex Conjugate
-flags: python, cpp
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream

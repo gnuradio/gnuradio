@@ -1,6 +1,6 @@
 id: blocks_tagged_stream_align
 label: Tagged Stream Align
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

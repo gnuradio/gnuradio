@@ -1,6 +1,6 @@
 id: analog_fm_preemph
 label: FM Preemphasis
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: samp_rate

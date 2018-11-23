@@ -1,6 +1,6 @@
 id: analog_random_uniform_source_x
 label: Random Uniform Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

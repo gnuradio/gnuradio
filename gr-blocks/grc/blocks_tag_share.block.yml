@@ -1,6 +1,6 @@
 id: blocks_tag_share
 label: Tag Share
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: io_type

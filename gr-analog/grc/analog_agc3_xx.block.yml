@@ -1,6 +1,6 @@
 id: analog_agc3_xx
 label: AGC3
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

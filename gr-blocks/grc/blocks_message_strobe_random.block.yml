@@ -1,6 +1,6 @@
 id: blocks_message_strobe_random
 label: Message Strobe Random-Delay
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: msg

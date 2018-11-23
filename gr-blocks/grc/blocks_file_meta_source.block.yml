@@ -1,6 +1,6 @@
 id: blocks_file_meta_source
 label: File Meta Source
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: type

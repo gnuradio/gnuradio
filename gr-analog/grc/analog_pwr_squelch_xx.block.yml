@@ -1,6 +1,6 @@
 id: analog_pwr_squelch_xx
 label: Power Squelch
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

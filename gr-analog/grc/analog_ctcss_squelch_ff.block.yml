@@ -1,6 +1,6 @@
 id: analog_ctcss_squelch_ff
 label: CTCSS Squelch
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: rate

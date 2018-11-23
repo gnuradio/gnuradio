@@ -1,6 +1,6 @@
 id: blocks_multiply_by_tag_value_cc
 label: Multiply by Tag Value
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: tagname

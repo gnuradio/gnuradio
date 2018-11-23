@@ -1,6 +1,6 @@
 id: blocks_peak_detector2_fb
 label: Peak Detector2
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: threshold_factor_rise

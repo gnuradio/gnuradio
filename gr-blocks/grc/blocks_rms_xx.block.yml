@@ -1,6 +1,6 @@
 id: blocks_rms_xx
 label: RMS
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

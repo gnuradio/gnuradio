@@ -1,6 +1,6 @@
 id: blocks_and_xx
 label: And
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

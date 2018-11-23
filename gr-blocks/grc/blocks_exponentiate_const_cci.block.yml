@@ -1,6 +1,6 @@
 id: blocks_exponentiate_const_cci
 label: Exponentiate Const Int
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: num_ports

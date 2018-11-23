@@ -1,6 +1,6 @@
 id: blocks_tags_strobe
 label: Tags Strobe
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: type

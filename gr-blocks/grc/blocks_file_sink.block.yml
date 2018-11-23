@@ -1,6 +1,6 @@
 id: blocks_file_sink
 label: File Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: file

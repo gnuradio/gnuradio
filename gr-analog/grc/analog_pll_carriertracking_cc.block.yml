@@ -1,6 +1,6 @@
 id: analog_pll_carriertracking_cc
 label: PLL Carrier Tracking
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: w

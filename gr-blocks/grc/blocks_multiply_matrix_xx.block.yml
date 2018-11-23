@@ -1,6 +1,6 @@
 id: blocks_multiply_matrix_xx
 label: Multiply by Matrix
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: type

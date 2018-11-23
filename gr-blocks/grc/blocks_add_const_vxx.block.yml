@@ -1,6 +1,6 @@
 id: blocks_add_const_vxx
 label: Add Const
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

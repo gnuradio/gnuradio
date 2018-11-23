@@ -1,6 +1,6 @@
 id: blocks_sub_xx
 label: Subtract
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

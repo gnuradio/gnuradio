@@ -1,6 +1,6 @@
 id: blocks_wavfile_source
 label: Wav File Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: file

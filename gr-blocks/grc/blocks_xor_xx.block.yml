@@ -1,6 +1,6 @@
 id: blocks_xor_xx
 label: Xor
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

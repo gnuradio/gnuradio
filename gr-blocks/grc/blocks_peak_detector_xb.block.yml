@@ -1,6 +1,6 @@
 id: blocks_peak_detector_xb
 label: Peak Detector
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

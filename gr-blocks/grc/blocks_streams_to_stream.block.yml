@@ -1,6 +1,6 @@
 id: blocks_streams_to_stream
 label: Streams to Stream
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

@@ -1,6 +1,6 @@
 id: blocks_nlog10_ff
 label: Log10
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: n

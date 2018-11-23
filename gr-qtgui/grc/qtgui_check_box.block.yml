@@ -1,6 +1,6 @@
 id: variable_qtgui_check_box
 label: QT GUI Check Box
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: label

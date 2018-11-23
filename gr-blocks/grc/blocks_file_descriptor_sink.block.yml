@@ -1,6 +1,6 @@
 id: blocks_file_descriptor_sink
 label: File Descriptor Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: fd

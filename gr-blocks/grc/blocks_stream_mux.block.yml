@@ -1,6 +1,6 @@
 id: blocks_stream_mux
 label: Stream Mux
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

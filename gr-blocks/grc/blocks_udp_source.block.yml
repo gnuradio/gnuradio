@@ -1,6 +1,6 @@
 id: blocks_udp_source
 label: UDP Source
-flags: throttle, python, cpp
+flags: [ throttle, python, cpp ]
 
 parameters:
 -   id: type

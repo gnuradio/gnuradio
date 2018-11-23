@@ -1,6 +1,6 @@
 id: variable_qtgui_entry
 label: QT GUI Entry
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: label

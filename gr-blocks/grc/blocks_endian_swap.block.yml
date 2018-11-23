@@ -1,6 +1,6 @@
 id: blocks_endian_swap
 label: Endian Swap
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

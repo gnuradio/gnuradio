@@ -1,6 +1,6 @@
 id: blocks_and_const_xx
 label: And Const
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

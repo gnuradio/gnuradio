@@ -1,6 +1,6 @@
 id: blocks_udp_sink
 label: UDP Sink
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

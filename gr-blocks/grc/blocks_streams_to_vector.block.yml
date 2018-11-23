@@ -1,6 +1,6 @@
 id: blocks_streams_to_vector
 label: Streams to Vector
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

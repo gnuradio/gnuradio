@@ -1,6 +1,6 @@
 id: blocks_complex_to_real
 label: Complex To Real
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

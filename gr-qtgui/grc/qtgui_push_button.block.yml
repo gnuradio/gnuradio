@@ -1,6 +1,6 @@
 id: variable_qtgui_push_button
 label: QT GUI Push Button
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: label

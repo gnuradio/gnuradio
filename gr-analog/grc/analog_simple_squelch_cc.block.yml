@@ -1,6 +1,6 @@
 id: analog_simple_squelch_cc
 label: Simple Squelch
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: threshold

@@ -1,6 +1,6 @@
 id: blocks_socket_pdu
 label: Socket PDU
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

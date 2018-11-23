@@ -1,6 +1,6 @@
 id: blocks_throttle
 label: Throttle
-flags: throttle, python, cpp
+flags: [ throttle, python, cpp ]
 
 parameters:
 -   id: type

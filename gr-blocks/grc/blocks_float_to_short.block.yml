@@ -1,6 +1,6 @@
 id: blocks_float_to_short
 label: Float To Short
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

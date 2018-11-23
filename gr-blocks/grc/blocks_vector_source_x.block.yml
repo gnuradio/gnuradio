@@ -1,6 +1,6 @@
 id: blocks_vector_source_x
 label: Vector Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

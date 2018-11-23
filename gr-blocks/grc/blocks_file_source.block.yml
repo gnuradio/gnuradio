@@ -1,6 +1,6 @@
 id: blocks_file_source
 label: File Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: file

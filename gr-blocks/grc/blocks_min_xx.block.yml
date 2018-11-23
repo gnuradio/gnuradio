@@ -1,6 +1,6 @@
 id: blocks_min_xx
 label: Min
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

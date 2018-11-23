@@ -1,6 +1,6 @@
 id: blocks_burst_tagger
 label: Burst Tagger
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

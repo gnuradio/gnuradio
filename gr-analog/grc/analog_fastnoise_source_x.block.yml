@@ -1,6 +1,6 @@
 id: analog_fastnoise_source_x
 label: Fast Noise Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

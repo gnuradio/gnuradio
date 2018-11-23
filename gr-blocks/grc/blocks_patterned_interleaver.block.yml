@@ -1,6 +1,6 @@
 id: blocks_patterned_interleaver
 label: Patterned Interleaver
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

@@ -1,6 +1,6 @@
 id: blocks_pdu_to_tagged_stream
 label: PDU to Tagged Stream
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

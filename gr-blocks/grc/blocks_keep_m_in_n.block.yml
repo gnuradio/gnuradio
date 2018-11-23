@@ -1,6 +1,6 @@
 id: blocks_keep_m_in_n
 label: Keep M in N
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

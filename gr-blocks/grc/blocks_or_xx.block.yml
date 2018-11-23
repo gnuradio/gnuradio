@@ -1,6 +1,6 @@
 id: blocks_or_xx
 label: Or
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

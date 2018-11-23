@@ -1,6 +1,6 @@
 id: blocks_complex_to_imag
 label: Complex to Imag
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen

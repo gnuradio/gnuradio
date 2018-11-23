@@ -1,6 +1,6 @@
 id: blocks_null_source
 label: Null Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

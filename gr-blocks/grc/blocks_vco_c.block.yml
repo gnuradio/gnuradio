@@ -1,6 +1,6 @@
 id: blocks_vco_c
 label: VCO (complex)
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: samp_rate

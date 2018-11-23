@@ -1,6 +1,6 @@
 id: blocks_integrate_xx
 label: Integrate
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

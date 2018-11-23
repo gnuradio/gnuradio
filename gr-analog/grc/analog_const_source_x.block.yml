@@ -1,6 +1,6 @@
 id: analog_const_source_x
 label: Constant Source
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

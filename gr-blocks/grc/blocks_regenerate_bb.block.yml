@@ -1,6 +1,6 @@
 id: blocks_regenerate_bb
 label: Regenerate
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: period

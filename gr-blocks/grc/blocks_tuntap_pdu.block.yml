@@ -1,6 +1,6 @@
 id: blocks_tuntap_pdu
 label: TUNTAP PDU
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: ifn

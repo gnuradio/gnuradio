@@ -1,6 +1,6 @@
 id: blocks_tag_gate
 label: Tag Gate
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

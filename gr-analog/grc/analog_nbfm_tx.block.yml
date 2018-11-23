@@ -1,6 +1,6 @@
 id: analog_nbfm_tx
 label: NBFM Transmit
-flags: python
+flags: [ python ]
 
 parameters:
 -   id: audio_rate

@@ -1,6 +1,6 @@
 id: blocks_stream_to_tagged_stream
 label: Stream to Tagged Stream
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: type

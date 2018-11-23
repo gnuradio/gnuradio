@@ -1,6 +1,6 @@
 id: analog_pll_refout_cc
 label: PLL Ref Out
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: w

@@ -1,6 +1,6 @@
 id: blocks_float_to_complex
 label: Float To Complex
-flags: python, cpp
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
