@@ -376,7 +376,7 @@ class FlowGraph(Element):
             )
 
             if isinstance(block, blocks.DummyBlock):
-                print('Block id "%s" not found' % block_id)
+                block.add_error_message('Block id "{}" not found.'.format(block_id))
 
             block.import_data(**block_data)
 
