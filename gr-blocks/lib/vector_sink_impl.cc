@@ -94,7 +94,7 @@ namespace gr {
       // can't touch this (as long as work() is working, the accessors shall not
       // read the data
       gr::thread::scoped_lock guard(d_data_mutex);
-      for(int i = 0; i < noutput_items * d_vlen; i++)
+      for(unsigned int i = 0; i < noutput_items * d_vlen; i++)
         d_data.push_back (iptr[i]);
       std::vector<tag_t> tags;
       this->get_tags_in_range(tags, 0, this->nitems_read(0), this->nitems_read(0) + noutput_items);

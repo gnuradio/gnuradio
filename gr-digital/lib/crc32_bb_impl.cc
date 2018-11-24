@@ -108,7 +108,7 @@ namespace gr {
           }
         }
         else{
-          for(int i=0; i < d_crc_length; i++){
+          for(unsigned int i=0; i < d_crc_length; i++){
             if(((crc >> i) & 0x1) != *(in + packet_length - d_crc_length + i)) { // Drop package
               return 0;
             }
@@ -122,7 +122,7 @@ namespace gr {
           memcpy((void *) (out + packet_length), &crc, d_crc_length); // FIXME big-endian/little-endian, this might be wrong
         }
         else {
-          for (int i = 0; i < d_crc_length; i++) { // unpack CRC and store in buffer
+          for (unsigned int i = 0; i < d_crc_length; i++) { // unpack CRC and store in buffer
             d_buffer[i] = (crc >> i) & 0x1;
           }
           memcpy((void *) (out + packet_length), (void *) &d_buffer[0], d_crc_length);

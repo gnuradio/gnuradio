@@ -58,11 +58,11 @@ namespace gr {
       T *out = (T *)output_items[0];
 
       for (int i = 0; i < noutput_items; i++) {
-        for (int j = 0; j < d_vlen; ++j) {
+        for (unsigned int j = 0; j < d_vlen; ++j) {
           out[i*d_vlen + j] = (T)0;
         }
         for (int j = 0; j < d_decim; j++) {
-          for (int k = 0; k < d_vlen; ++k) {
+          for (unsigned int k = 0; k < d_vlen; ++k) {
             out[i*d_vlen + k] += in[i*d_decim*d_vlen + j*d_vlen + k];
           }
         }
