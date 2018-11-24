@@ -48,7 +48,7 @@ templates:
     - set_length_and_scale(${length}, ${scale})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/moving_average_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/moving_average.h>']
     declarations: 'blocks::moving_average_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::moving_average_${type.fcn}::make(${length}, ${scale}, ${max_iter}, ${vlen});'
     callbacks:

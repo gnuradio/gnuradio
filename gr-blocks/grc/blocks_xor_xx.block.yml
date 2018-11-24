@@ -33,7 +33,7 @@ templates:
     make: blocks.xor_${type.fcn}()
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/xor_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/xor_blk.h>']
     declarations: 'blocks::xor_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::xor_${type.fcn}::make();'
 

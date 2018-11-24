@@ -27,7 +27,7 @@ templates:
     make: blocks.sample_and_hold_${type.fcn}()
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/sample_and_hold_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/sample_and_hold.h>']
     declarations: 'blocks::sample_and_hold_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::sample_and_hold_${type.fcn}::make();'
 

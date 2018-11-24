@@ -46,7 +46,7 @@ templates:
     make: blocks.min_${type.fcn}(${vlen},${vlen_out})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/min_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/min_blk.h>']
     declarations: 'blocks::min_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::min_${type.fcn}::make(${vlen},${vlen_out});'
 

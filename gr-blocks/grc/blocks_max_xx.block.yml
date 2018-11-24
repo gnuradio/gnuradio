@@ -46,7 +46,7 @@ templates:
     make: blocks.max_${type.fcn}(${vlen}, ${vlen_out})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/max_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/max_blk.h>']
     declarations: 'blocks::max_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::make_${type.fcn}::make(${vlen}, ${vlen_out});'
 

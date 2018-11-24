@@ -41,7 +41,7 @@ templates:
     make: blocks.divide_${type.fcn}(${vlen})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/divide_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/divide.h>']
     declarations: 'blocks::divide_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::divide_${type.fcn}::make(${vlen});'
 

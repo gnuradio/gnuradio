@@ -20,7 +20,7 @@ templates:
     make: blocks.probe_signal_${type.fcn}()
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/probe_signal_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/probe_signal.h>']
     declarations: 'blocks::probe_signal_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::probe_signal_${type.fcn}::make();'
 

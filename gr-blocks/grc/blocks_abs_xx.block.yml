@@ -31,7 +31,7 @@ templates:
     make: blocks.abs_${type.fcn}(${vlen})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/abs_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/abs_blk.h>']
     declarations: 'blocks::abs_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::abs_${type.fcn}::make(${vlen});'
 

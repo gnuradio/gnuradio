@@ -46,7 +46,7 @@ templates:
     - set_A(${A})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/multiply_matrix_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/multiply_matrix.h>']
     declarations: 'blocks::multiply_matrix_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::multiply_matrix_${type.fcn}::make(${A}, ${tag_propagation_policy});'
     callbacks:

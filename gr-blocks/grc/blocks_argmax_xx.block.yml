@@ -44,7 +44,7 @@ templates:
     make: blocks.argmax_${type.fcn}(${vlen})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/argmax_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/argmax.h>']
     declarations: 'blocks::argmax_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::argmax_${type.fcn}::make(${vlen});'
 

@@ -33,7 +33,7 @@ templates:
     make: blocks.or_${type.fcn}()
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/or_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/or_blk.h>']
     declarations: 'blocks::or_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::or_${type.fcn}::make();'
 

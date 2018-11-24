@@ -34,7 +34,7 @@ templates:
     make: blocks.vector_sink_${type.fcn}(${vlen}, ${reserve_items})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/vector_sink_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/vector_sink.h>']
     declarations: 'blocks::vector_sink_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::vector_sink_${type.fcn}::make(${vlen}, ${reserve_items});'
 

@@ -34,7 +34,7 @@ templates:
     make: blocks.integrate_${type.fcn}(${decim}, ${vlen})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/integrate_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/integrate.h>']
     declarations: 'blocks::integrate_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::integrate_${type.fcn}::make(${decim}, ${vlen});'
 

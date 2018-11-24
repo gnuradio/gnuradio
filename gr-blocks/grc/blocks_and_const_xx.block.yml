@@ -30,7 +30,7 @@ templates:
     - set_k(${const})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/and_const_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/and_const.h>']
     declarations: 'blocks::and_const_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::and_const_${type.fcn}::make(${const});'
     callbacks:

@@ -41,7 +41,7 @@ templates:
     make: blocks.sub_${type.fcn}(${vlen})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/sub_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/sub.h>']
     declarations: 'blocks::sub_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::sub_${type.fcn}::make(${vlen});'
 

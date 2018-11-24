@@ -41,7 +41,7 @@ templates:
     - set_k(${const})
 
 cpp_templates:
-    includes: ['#include <gnuradio/multiply_const_${type.fcn}.h>']
+    includes: ['#include <gnuradio/multiply_const.h>']
     declarations: 'blocks::multiply_const_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::multiply_const_${type.fcn}::make(${const}, ${vlen});'
     callbacks:

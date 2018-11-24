@@ -37,7 +37,7 @@ templates:
     make: blocks.vector_insert_${type.fcn}(${vector}, ${period}, ${offset})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/vector_insert_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/vector_insert.h>']
     declarations: 'blocks::vector_insert_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::vector_insert_${type.fcn}::make(${vector}, ${period}, ${offset});'
 

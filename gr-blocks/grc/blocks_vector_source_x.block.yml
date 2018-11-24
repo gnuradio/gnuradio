@@ -46,7 +46,7 @@ templates:
     - set_data(${vector}, ${tags})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/vector_source_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/vector_source.h>']
     declarations: 'blocks::vector_source_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::vector_source_${type.fcn}::make(${vector}, ${repeat}, ${vlen}, ${tags});'
     callbacks:

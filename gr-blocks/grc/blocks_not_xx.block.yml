@@ -24,7 +24,7 @@ templates:
     make: blocks.not_${type.fcn}()
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/not_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/not_blk.h>']
     declarations: 'blocks::not_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::not_${type.fcn}::make();'
 

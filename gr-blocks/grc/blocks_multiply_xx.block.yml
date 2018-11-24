@@ -41,8 +41,8 @@ templates:
     make: blocks.multiply_v${type.fcn}(${vlen})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/multiply_v.h>']
-    declarations: 'blocks::multiply_v::sptr ${id};'
-    make: 'this->${id} = blocks::multiply_v${type.fcn}::make(${vlen});'
+    includes: ['#include <gnuradio/blocks/multiply.h>']
+    declarations: 'blocks::multiply_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_${type.fcn}::make(${vlen});'
 
 file_format: 1

@@ -43,7 +43,7 @@ templates:
     make: blocks.unpacked_to_packed_${type.fcn}(${bits_per_chunk}, ${endianness})
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/unpacked_to_packed_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/unpacked_to_packed.h>']
     declarations: 'blocks::unpacked_to_packed_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::unpacked_to_packed_${type.fcn}::make(${bits_per_chunk}, ${endianness});'
 

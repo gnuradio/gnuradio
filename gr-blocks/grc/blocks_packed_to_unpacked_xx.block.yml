@@ -44,7 +44,7 @@ templates:
 
 
 cpp_templates:
-    includes: ['#include <gnuradio/blocks/packed_to_unpacked_${type.fcn}.h>']
+    includes: ['#include <gnuradio/blocks/packed_to_unpacked.h>']
     declarations: 'blocks::packed_to_unpacked_${type.fcn}::sptr ${id};'
     make: 'this->${id} = blocks::packed_to_unpacked_${type.fcn}::make(${bits_per_chunk}, ${endianness});'
     translations:
