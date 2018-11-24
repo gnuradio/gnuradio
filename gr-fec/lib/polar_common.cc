@@ -111,7 +111,7 @@ namespace gr {
         std::copy(d_frozen_bit_values.begin(), d_frozen_bit_values.end(), d_volk_frozen_bits);
         std::fill(d_volk_frozen_bits + d_frozen_bit_values.size(), d_volk_frozen_bits + nfrozen, 0);
 
-        int nfbit = 0;
+        unsigned int nfbit = 0;
         for(int i = 0; i < block_size(); i++){
           unsigned char m = 0x00;
           if(nfbit < d_frozen_bit_positions.size() && d_frozen_bit_positions[nfbit] == i){

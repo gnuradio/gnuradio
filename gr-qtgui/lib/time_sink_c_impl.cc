@@ -127,7 +127,7 @@ namespace gr {
     bool
     time_sink_c_impl::check_topology(int ninputs, int noutputs)
     {
-      return 2*ninputs == d_nconnections;
+      return (unsigned int) (2*ninputs) == d_nconnections;
     }
 
     void

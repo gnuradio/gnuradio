@@ -1113,7 +1113,7 @@ namespace gr {
           break;
       }
       fstep = fs / vlength;
-      for (int i = 0; i < vlength / 2; i++) {
+      for (unsigned int i = 0; i < vlength / 2; i++) {
         x = GR_M_PI * f / fs;
         if (i == 0) {
           sinc = 1.0;
@@ -1127,7 +1127,7 @@ namespace gr {
         f = f + fstep;
       }
       sincrms = std::sqrt(sincrms / (vlength / 2));
-      for (int i = 0; i < vlength; i++) {
+      for (unsigned int i = 0; i < vlength; i++) {
         inverse_sinc[i] *= sincrms;
       }
       equalization_enable = equalization;
