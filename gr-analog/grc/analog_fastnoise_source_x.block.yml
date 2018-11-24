@@ -41,7 +41,7 @@ templates:
     - set_amplitude(${amp})
 
 cpp_templates:
-    includes: ['#include <gnuradio/analog/fastnoise_source_${type.fcn}.h>']
+    includes: ['#include <gnuradio/analog/fastnoise_source.h>']
     make: 'this->${id} = analog::fastnoise_source_${type.fcn}::make(${noise_type}, ${amp}, ${seed}, ${samples});'
     callbacks:
     - set_type(${noise_type})
