@@ -68,6 +68,8 @@ public:
                                   const std::string& attr,
                                   const size_t mboard = 0);
     size_t get_num_mboards();
+    std::vector<std::string> get_filter_names(const std::string& search_mask);
+    ::uhd::filter_info_base::sptr get_filter(const std::string& path);
 
     // Setters
     void set_time_source(const std::string& source, const size_t mboard);
@@ -84,6 +86,7 @@ public:
                        const boost::uint32_t value,
                        const boost::uint32_t mask,
                        const size_t mboard);
+    void set_filter(const std::string& path, ::uhd::filter_info_base::sptr filter);
 
     // RPC
     void setup_rpc();
