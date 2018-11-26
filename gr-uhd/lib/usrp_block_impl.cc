@@ -367,6 +367,34 @@ boost::uint32_t usrp_block_impl::get_gpio_attr(const std::string& bank,
 #endif
 }
 
+std::vector<std::string> usrp_block_impl::get_filter_names(const std::string& search_mask)
+{
+#ifdef UHD_USRP_MULTI_FILTER_API
+    return _dev->get_filter_names(search_mask);
+#else
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+::uhd::filter_info_base::sptr usrp_block_impl::get_filter(const std::string& path)
+{
+#ifdef UHD_USRP_MULTI_FILTER_API
+    return _dev->get_filter(path);
+#else
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
+void usrp_block_impl::set_filter(const std::string& path,
+                                 ::uhd::filter_info_base::sptr filter)
+{
+#ifdef UHD_USRP_MULTI_FILTER_API
+    _dev->set_filter(path, filter);
+#else
+    throw std::runtime_error("not implemented in this version");
+#endif
+}
+
 void usrp_block_impl::set_time_now(const ::uhd::time_spec_t& time_spec, size_t mboard)
 {
     return _dev->set_time_now(time_spec, mboard);
