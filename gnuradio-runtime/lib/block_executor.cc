@@ -147,7 +147,7 @@ namespace gr {
           for(t = rtags.begin(); t != rtags.end(); t++) {
             tag_t new_tag = *t;
             mpz_import(offset.get_mpz_t(), 1, 1, sizeof(new_tag.offset), 0, 0, &new_tag.offset);
-            offset *= mp_rrate + one_half;
+            offset = offset * mp_rrate + one_half;
             new_tag.offset = offset.get_ui();
             for(int o = 0; o < d->noutputs(); o++)
               out_buf[o]->add_item_tag(new_tag);
@@ -190,7 +190,7 @@ namespace gr {
             for(t = rtags.begin(); t != rtags.end(); t++) {
               tag_t new_tag = *t;
               mpz_import(offset.get_mpz_t(), 1, 1, sizeof(new_tag.offset), 0, 0, &new_tag.offset);
-              offset *= mp_rrate + one_half;
+              offset = offset * mp_rrate + one_half;
               new_tag.offset = offset.get_ui();
               out_buf->add_item_tag(new_tag);
             }
