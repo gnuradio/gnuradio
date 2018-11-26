@@ -77,6 +77,10 @@ add_library(gnuradio-uhd SHARED ${gr_uhd_sources})
 target_link_libraries(gnuradio-uhd ${uhd_libs})
 GR_LIBRARY_FOO(gnuradio-uhd RUNTIME_COMPONENT "uhd_runtime" DEVEL_COMPONENT "uhd_devel")
 
+if(UHD_VERSION VERSION_GREATER_EQUAL "3.9.0")
+  add_compile_definitions(UHD_USRP_MULTI_FILTER_API)
+endif(UHD_VERSION VERSION_GREATER_EQUAL "3.9.0")
+
 ########################################################################
 # Build static libraries if enabled
 ########################################################################

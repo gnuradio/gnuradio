@@ -69,6 +69,8 @@ namespace gr {
           const size_t mboard = 0
       );
       size_t get_num_mboards();
+      std::vector<std::string> get_filter_names (const std::string &search_mask);
+      ::uhd::filter_info_base::sptr get_filter(const std::string &path);
 
       // Setters
       void set_clock_config(const ::uhd::clock_config_t &clock_config, size_t mboard);
@@ -88,6 +90,7 @@ namespace gr {
           const boost::uint32_t mask,
           const size_t mboard
       );
+      void set_filter(const std::string &path, ::uhd::filter_info_base::sptr filter);
 
       // RPC
       void setup_rpc();
