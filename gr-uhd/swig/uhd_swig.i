@@ -119,10 +119,40 @@
 
 %include <uhd/stream.hpp>
 
+%include <uhd/types/filters.hpp>
+
+%include stdint.i
+
+// Used for lists of filter taps
+%template(uhd_vector_int16_t) std::vector<int16_t>;
+
+%template(filter_info_base_sptr) boost::shared_ptr<uhd::filter_info_base>;
+%template(analog_filter_base_stpr) boost::shared_ptr<uhd::analog_filter_base>;
+%template(analog_filter_lp_stpr) boost::shared_ptr<uhd::analog_filter_lp>;
+%template(digital_filter_base_int16_t_sptr) boost::shared_ptr<uhd::digital_filter_base<int16_t>>;
+%template(digital_filter_fir_int16_t_sptr) boost::shared_ptr<uhd::digital_filter_fir<int16_t>>;
+
+%extend uhd::filter_info_base{
+    boost::shared_ptr<uhd::analog_filter_base> to_analog_info_base(boost::shared_ptr<uhd::filter_info_base> ptr) {
+       return boost::dynamic_pointer_cast<uhd::analog_filter_base>(ptr);
+    }
+
+    boost::shared_ptr<uhd::analog_filter_lp> to_analog_filter_lp(boost::shared_ptr<uhd::filter_info_base> ptr) {
+       return boost::dynamic_pointer_cast<uhd::analog_filter_lp>(ptr);
+    }
+
+    boost::shared_ptr<uhd::digital_filter_base<int16_t>> to_digital_filter_base_int16(boost::shared_ptr<uhd::filter_info_base> ptr) {
+       return boost::dynamic_pointer_cast<uhd::digital_filter_base<int16_t>>(ptr);
+    }
+
+    boost::shared_ptr<uhd::digital_filter_fir<int16_t>> to_digital_filter_fir_int16(boost::shared_ptr<uhd::filter_info_base> ptr) {
+       return boost::dynamic_pointer_cast<uhd::digital_filter_fir<int16_t>>(ptr);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////
 // swig dboard_iface for python access
 ////////////////////////////////////////////////////////////////////////
-%include stdint.i
 %include <uhd/types/serial.hpp>
 %include <uhd/usrp/dboard_iface.hpp>
 
