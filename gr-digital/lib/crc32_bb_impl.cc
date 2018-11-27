@@ -86,14 +86,14 @@ namespace gr {
     }
 
     int
-    crc32_bb_impl::work(int noutput_items,
+    crc32_bb_impl::work(size_t noutput_items,
                         gr_vector_int &ninput_items,
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items) {
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
-      size_t packet_length = ninput_items[0];
-      int packet_size_diff = d_check ? -d_crc_length : d_crc_length;
+      size_t packet_length = static_cast<size_t>(ninput_items[0]);
+      int packet_size_diff = d_check ? - static_cast<int>(d_crc_length) : static_cast<int>(d_crc_length);
       unsigned int crc;
 
       if (d_check) {

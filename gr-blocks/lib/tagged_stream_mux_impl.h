@@ -42,7 +42,7 @@ namespace gr {
       tagged_stream_mux_impl(size_t itemsize, const std::string &lengthtagname, unsigned int d_tag_preserve_head_pos);
       ~tagged_stream_mux_impl();
 
-      int work(int noutput_items,
+      int work(size_t noutput_items,
 	       gr_vector_int &ninput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

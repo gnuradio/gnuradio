@@ -39,7 +39,7 @@ namespace gr {
     public:
       tagged_stream_to_pdu_impl(pdu::vector_type type, const std::string& lengthtagname);
 
-      int work(int noutput_items,
+      int work(size_t noutput_items,
                gr_vector_int &ninput_items,
 	       gr_vector_const_void_star &input_items,
 	       gr_vector_void_star &output_items);

@@ -99,7 +99,7 @@ namespace gr {
     //   are space for in the output buffer. The delay line is never flushed.
     //   Tags are propagated by the scheduler.
     int
-    ofdm_cyclic_prefixer_impl::work (int noutput_items,
+    ofdm_cyclic_prefixer_impl::work (size_t noutput_items,
                        gr_vector_int &ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
@@ -113,7 +113,7 @@ namespace gr {
 	symbols_to_read = ninput_items[0];
 	noutput_items = symbols_to_read * d_output_size + d_delay_line.size();
       } else {
-	symbols_to_read = std::min(noutput_items / (int) d_output_size, ninput_items[0]);
+    symbols_to_read = std::min(static_cast<int>(noutput_items / d_output_size), ninput_items[0]);
 	noutput_items = symbols_to_read * d_output_size;
       }
 

@@ -86,7 +86,7 @@ namespace gr {
                        const std::string &lengthtagname="packet_len",
                        int mtu=1500);
 
-      virtual int work(int noutput_items,
+      virtual int work(size_t noutput_items,
                        gr_vector_int& ninput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items) = 0;

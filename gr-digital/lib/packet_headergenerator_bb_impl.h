@@ -44,10 +44,10 @@ namespace gr {
       void remove_length_tags(const std::vector<std::vector<tag_t> > &tags) {};
       int calculate_output_stream_length(const gr_vector_int &ninput_items) { return d_formatter->header_len(); };
 
-      int work(int noutput_items,
-	  gr_vector_int &ninput_items,
-	  gr_vector_const_void_star &input_items,
-	  gr_vector_void_star &output_items);
+      int work(size_t noutput_items,
+      gr_vector_int &ninput_items,
+      gr_vector_const_void_star &input_items,
+      gr_vector_void_star &output_items);
     };
 
   } // namespace digital

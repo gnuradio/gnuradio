@@ -103,7 +103,7 @@ namespace gr {
 
 
     int
-    ofdm_frame_equalizer_vcvc_impl::work(int noutput_items,
+    ofdm_frame_equalizer_vcvc_impl::work(size_t noutput_items,
 	  gr_vector_int &ninput_items, gr_vector_const_void_star &input_items, gr_vector_void_star &output_items)
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
