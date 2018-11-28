@@ -63,7 +63,7 @@ namespace gr {
                                gr_vector_const_void_star &input_items,
                                gr_vector_void_star &output_items)
   {
-    int r = work(noutput_items, input_items, output_items);
+    int r = work(static_cast<size_t>(noutput_items), input_items, output_items);
     if(r > 0)
       consume_each(r * decimation ());
     return r;

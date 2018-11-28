@@ -43,13 +43,24 @@ namespace gr {
                gr::io_signature::sptr output_signature);
 
   public:
+
     /*!
      * \brief just like gr::block::general_work, only this arranges to
      * call consume_each for you
      *
      * The user must override work to define the signal processing code
      */
-    virtual int work(int noutput_items,
+    virtual int work(size_t noutput_items,
+                    gr_vector_const_void_star &input_items,
+                    gr_vector_void_star &output_items);
+
+    /*!
+     * \brief just like gr::block::general_work, only this arranges to
+     * call consume_each for you
+     *
+     * The user must override work to define the signal processing code
+     */
+    virtual int __GR_ATTR_DEPRECATED work(int noutput_items,
                      gr_vector_const_void_star &input_items,
                      gr_vector_void_star &output_items) = 0;
 

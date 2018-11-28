@@ -68,6 +68,17 @@ namespace gr {
       return d_curr_len;
     }
 
+
+    int
+    pdu_to_tagged_stream_impl::work (int noutput_items,
+                                     gr_vector_int &ninput_items,
+                                     gr_vector_const_void_star &input_items,
+                                     gr_vector_void_star &output_items)
+    {
+        return this->work(static_cast<size_t>(noutput_items),
+                   ninput_items, input_items, output_items);
+    }
+
     int
     pdu_to_tagged_stream_impl::work (size_t noutput_items,
                                      gr_vector_int &ninput_items,
