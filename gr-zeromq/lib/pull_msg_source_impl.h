@@ -50,8 +50,8 @@ namespace gr {
       bool stop();
 
       std::string last_endpoint() override {
-        size_t addr_len = 256;
-        char addr[addr_len];
+        char addr[256];
+        size_t addr_len = sizeof(addr);
         d_socket->getsockopt(ZMQ_LAST_ENDPOINT, addr, &addr_len);
         return std::string(addr, addr_len-1);
       }
