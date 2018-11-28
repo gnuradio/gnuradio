@@ -19,7 +19,7 @@ from __future__ import absolute_import
 
 from . import Block, register_build_in
 
-from ._build import _build_params, _build_ports
+from ._build import _build_params as build_core_params
 
 @register_build_in
 class DummyBlock(Block):
@@ -29,12 +29,11 @@ class DummyBlock(Block):
     label = 'Missing Block'
     key = '_dummy'
 
-    def __init__(self, parent, missing_block_id, parameters,**kwargs):
+    def __init__(self, parent, missing_block_id, parameters,**_):
 
         self.key = missing_block_id
-        self.parameters_data = _build_params([kwargs],False, False,self.flags, self.key)
+        self.parameters_data = build_core_params([],False, False,self.flags, self.key)
         super(DummyBlock, self).__init__(parent=parent)
-        del self.params[self.key] # Remove missing keys from parameter list
 
         param_factory = self.parent_platform.make_param
         for param_id in parameters:
@@ -46,7 +45,7 @@ class DummyBlock(Block):
     @property
     def enabled(self):
         return False
-        
+
     def add_missing_port(self, port_id, direction):
         port = self.parent_platform.make_port(
             parent=self, direction=direction, id=port_id, name='?', dtype='',
@@ -55,6 +54,4 @@ class DummyBlock(Block):
             self.sources.append(port)
         else:
             self.sinks.append(port)
-        self.rewrite()     # Make port visible
-        self.validate()    # Generate appropriate error messages     
         return port

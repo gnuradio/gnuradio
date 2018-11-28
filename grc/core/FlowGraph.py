@@ -375,9 +375,6 @@ class FlowGraph(Element):
                 self.new_block(block_id='_dummy', missing_block_id=block_id, **block_data)
             )
 
-            if isinstance(block, blocks.DummyBlock):
-                block.add_error_message('Block id "{}" not found.'.format(block_id))
-
             block.import_data(**block_data)
 
         self.rewrite()  # evaluate stuff like nports before adding connections
@@ -422,6 +419,14 @@ class FlowGraph(Element):
                 'Connection between {}({}) and {}({}) could not be made.\n\t{}'.format(
                     src_blk_id, src_port_id, snk_blk_id, snk_port_id, e))
             had_connect_errors = True
+
+        for block in self.blocks:
+            if block.is_dummy_block :
+                block.rewrite()      # Make ports visible
+                # Flowgraph errors depending on disabled blocks are not displayed
+                # in the error dialog box
+                # So put a messsage into the Property window of the dummy block
+                block.add_error_message('Block id "{}" not found.'.format(block.key))
 
         self.rewrite()  # global rewrite
         return had_connect_errors
