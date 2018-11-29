@@ -23,6 +23,7 @@
 
 from gnuradio import gr, gr_unittest, blocks
 import os
+import time
 
 from threading import Timer
 
@@ -71,6 +72,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
         self.tb_rcv.connect(udp_rcv, dst)
 
         self.tb_rcv.start()
+        time.sleep(0.1)
         self.tb_snd.run()
         udp_snd.disconnect()
         self.timeout = False
@@ -102,6 +104,7 @@ class test_udp_sink_source(gr_unittest.TestCase):
         self.tb_rcv.connect(udp_rcv, dst)
 
         self.tb_rcv.start()
+        time.sleep(0.1)
         self.tb_snd.run()
         udp_snd.disconnect()
         self.timeout = False
