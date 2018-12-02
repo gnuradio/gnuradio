@@ -498,8 +498,6 @@ templates:
     callbacks:
     - set_time_domain_axis(${min}, ${max})
     - set_update_time(${update_time})
-    - set_title(${which}, ${title})
-    - set_color(${which}, ${color})
     - set_y_axis(${ymin}, ${ymax})
     - set_samp_rate(${srate})
     - self.${id}.set_trigger_mode(${tr_mode}, ${tr_slope}, ${tr_level}, ${tr_delay},

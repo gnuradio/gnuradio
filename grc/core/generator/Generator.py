@@ -25,6 +25,7 @@ from mako.template import Template
 from .hier_block import HierBlockGenerator, QtHierBlockGenerator
 from .top_block import TopBlockGenerator
 from .cpp_top_block import CppTopBlockGenerator
+from .cpp_hier_block import CppHierBlockGenerator
 
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
@@ -58,7 +59,7 @@ class Generator(object):
         elif self.output_language == 'cpp':
 
             if self.generate_options == 'hb':
-                pass
+                generator_cls = CppHierBlockGenerator
             elif self.generate_options == 'hb_qt_gui':
                 pass
             else:

@@ -67,7 +67,7 @@ cpp_templates:
         this->_${id}_line_edit = new QLineEdit(QString::number(this->${id}));
         this->_${id}_tool_bar->addWidget(this->_${id}_line_edit);
         QObject::connect(this->_${id}_line_edit, &QLineEdit::returnPressed, this, [this] () {this->set_${id}(this->_${id}_line_edit->text().toInt());});
-        // FIXME
+
         this->top_layout->addWidget(this->_${id}_tool_bar);
 
 documentation: |-

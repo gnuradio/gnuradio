@@ -16,7 +16,7 @@ class_name = flow_graph.get_option('id')
 cmake_opt_list = flow_graph.get_option('cmake_opt').split(";")
 %>\
 
-cmake_minimum_required(VERSION 3.8) # Which version?
+cmake_minimum_required(VERSION 3.8)
 
 % if generate_options == 'qt_gui':
 find_package(Qt5Widgets REQUIRED)
@@ -28,6 +28,7 @@ include_directories(
     % if generate_options == 'qt_gui':
     ${'$'}{Qt5Widgets_INCLUDES}
     % endif
+    $ENV{HOME}/.grc_gnuradio
 )
 
 % if generate_options == 'qt_gui':

@@ -506,7 +506,6 @@ cpp_templates:
 
         _${id}_win = this->${id}->qwidget();
         this->top_layout->addWidget(_${id}_win);
-        // FIXME
     translations:
         firdes.: 'filter::firdes::'
         'True': 'true'

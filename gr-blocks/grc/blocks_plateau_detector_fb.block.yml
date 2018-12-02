@@ -22,6 +22,8 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.plateau_detector_fb(${max_len}, ${threshold})
+    callbacks:
+      - set_threshold(${threshold})
 
 cpp_templates:
     includes: ['#include <gnuradio/blocks/plateau_detector_fb.h>']

@@ -72,21 +72,25 @@ class CppTopBlockGenerator(TopBlockGenerator):
             'generated_time': time.ctime(),
         }
 
-        if not os.path.exists(os.path.join(self.file_path, 'build')):
-            os.makedirs(os.path.join(self.file_path, 'build'))
+        if not os.path.exists(self.file_path):
+            os.makedirs(self.file_path)
 
         for filename, data in self._build_cpp_header_code_from_template():
             with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
 
-        for filename, data in self._build_cpp_source_code_from_template():
-            with codecs.open(filename, 'w', encoding='utf-8') as fp:
-                fp.write(data)
+        if not self._generate_options.startswith('hb'):
+            if not os.path.exists(os.path.join(self.file_path, 'build')):
+                os.makedirs(os.path.join(self.file_path, 'build'))
 
-        if fg.get_option('gen_cmake') == 'On':
-            for filename, data in self._build_cmake_code_from_template():
+            for filename, data in self._build_cpp_source_code_from_template():
                 with codecs.open(filename, 'w', encoding='utf-8') as fp:
                     fp.write(data)
+
+            if fg.get_option('gen_cmake') == 'On':
+                for filename, data in self._build_cmake_code_from_template():
+                    with codecs.open(filename, 'w', encoding='utf-8') as fp:
+                        fp.write(data)
 
     def _build_cpp_source_code_from_template(self):
         """
@@ -289,9 +293,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
                      for key, text in fg.parent_platform.cpp_connection_templates.items()}
 
         def make_port_sig(port):
-            # TODO: make sense of this
             if port.parent.key in ('pad_source', 'pad_sink'):
-                block = 'self'
+                block = 'self()'
                 key = fg.get_pad_port_global_key(port)
             else:
                 block = 'this->' + port.parent_block.name
@@ -351,7 +354,8 @@ class CppTopBlockGenerator(TopBlockGenerator):
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
             code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
-            code = 'this->tb->' + code
+            if not self._generate_options.startswith('hb'):
+                code = 'this->tb->' + code
             rendered.append(code)
 
         return rendered

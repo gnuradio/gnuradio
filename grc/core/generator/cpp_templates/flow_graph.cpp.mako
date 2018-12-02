@@ -29,15 +29,6 @@ param_str_without_types = ", ".join(param.name for param in parameters)
 
 % if generate_options == 'no_gui':
 ${class_name}::${class_name} (${param_str}) {
-% elif generate_options.startswith('hb'):
-## TODO: make_io_sig
-${class_name}::${class_name} (${param_str}) : hier_block2("${title}") {
-% for pad in flow_graph.get_hier_block_message_io('in'):
-    message_port_register_hier_in("${pad['label']}")
-% endfor
-% for pad in flow_graph.get_hier_block_message_io('out'):
-    message_port_register_hier_out("${pad['label']}")
-% endfor
 % elif generate_options == 'qt_gui':
 ${class_name}::${class_name} (${param_str}) : QWidget() {
     this->setWindowTitle("${title}");
@@ -63,9 +54,9 @@ ${class_name}::${class_name} (${param_str}) : QWidget() {
 ## self._lock = threading.RLock()
 % endif
 
-% if not generate_options.startswith('hb'):
+
     this->tb = gr::make_top_block("${title}");
-% endif
+
 
 % if blocks:
 // Blocks:

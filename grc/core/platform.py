@@ -366,10 +366,7 @@ class Platform(Element):
             ('metadata:\n', '\nmetadata:\n'),
         ]
         for r in replace:
-            # the purpose of using re.sub() here is to avoid corrupting the .grc file
-            out = re.sub(r'(nconnections)(?<!\\)', 'NCONNECTIONS', out)
             out = out.replace(*r)
-            out = re.sub(r'(NCONNECTIONS)(?<!\\)', 'nconnections', out)
 
         with open(filename, 'w', encoding='utf-8') as fp:
             fp.write(out)

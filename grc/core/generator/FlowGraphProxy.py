@@ -74,6 +74,7 @@ class FlowGraphProxy(object):  # TODO: move this in a refactored Generator
                 'type': str(pad.params['type'].get_evaluated()),
                 'vlen': str(pad.params['vlen'].get_value()),
                 'size':  type_param.options.attributes[type_param.get_value()]['size'],
+                'cpp_size':  type_param.options.attributes[type_param.get_value()]['cpp_size'],
                 'optional': bool(pad.params['optional'].get_evaluated()),
             }
             num_ports = pad.params['num_streams'].get_evaluated()
