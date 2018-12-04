@@ -56,22 +56,18 @@ namespace gr {
                       io_signature::make(0, 0, 0),
                       io_signature::make(1, 1, itemsize)),
         d_itemsize(itemsize), d_payload_size(payload_size),
-        d_eof(eof), d_connected(false), d_residual(0), d_sent(0)
+        d_eof(eof), d_connected(false)
     {
       // Give us some more room to play.
-      d_rxbuf = new char[4*d_payload_size];
-      d_residbuf = new char[BUF_SIZE_PAYLOADS*d_payload_size];
-
       connect(host, port);
     }
 
     udp_source_impl::~udp_source_impl()
     {
       if(d_connected)
-        disconnect();
-
-      delete [] d_rxbuf;
-      delete [] d_residbuf;
+        {
+          this->disconnect();
+        }
     }
 
     void
@@ -90,16 +86,26 @@ namespace gr {
         boost::asio::ip::udp::resolver resolver(d_io_service);
         boost::asio::ip::udp::resolver::query query(d_host, s_port,
                                                     boost::asio::ip::resolver_query_base::passive);
-        d_endpoint = *resolver.resolve(query);
 
-        d_socket = new boost::asio::ip::udp::socket(d_io_service);
-        d_socket->open(d_endpoint.protocol());
-
-        boost::asio::socket_base::reuse_address roption(true);
-        d_socket->set_option(roption);
-
-        d_socket->bind(d_endpoint);
-
+        boost::asio::ip::udp::resolver::iterator results(resolver.resolve(query)), end;
+        while (results != end){
+          d_endpoints.emplace_back(*results);
+          results++;
+        }
+        for (const auto& ep: d_endpoints){
+          auto sock = std::unique_ptr<boost::asio::ip::udp::socket>(new boost::asio::ip::udp::socket(d_io_service, ep.protocol()));
+          if (ep.protocol() == boost::asio::ip::udp::v6()){
+            sock->set_option(boost::asio::ip::v6_only(true));
+          }
+          sock->set_option(boost::asio::socket_base::reuse_address(true));
+          sock->bind(ep);
+          d_sockets.push_back(std::move(sock));
+          d_rxbufs.emplace_back(std::unique_ptr<char[]>(new char[4*d_payload_size]));
+          d_residbufs.emplace_back(std::unique_ptr<char[]>(new char[BUF_SIZE_PAYLOADS*d_payload_size]));
+          d_endpoints_rcvd.emplace_back();
+          d_residuals.emplace_back(0);
+          d_sents.emplace_back(0);
+        }
         start_receive();
         d_udp_thread = gr::thread::thread(boost::bind(&udp_source_impl::run_io_service, this));
         d_connected = true;
@@ -111,16 +117,17 @@ namespace gr {
     {
       gr::thread::scoped_lock lock(d_setlock);
 
-      if(!d_connected)
+      if(!d_connected){
         return;
+      }
 
       d_io_service.reset();
       d_io_service.stop();
       d_udp_thread.join();
 
-      d_socket->close();
-      delete d_socket;
-
+      for (const auto& sock : this->d_sockets){
+        sock->close();
+      }
       d_connected = false;
     }
 
@@ -129,20 +136,24 @@ namespace gr {
     udp_source_impl::get_port(void)
     {
       //return d_endpoint.port();
-      return d_socket->local_endpoint().port();
+      return d_sockets.front()->local_endpoint().port();
     }
 
     void
     udp_source_impl::start_receive()
     {
-      d_socket->async_receive_from(boost::asio::buffer((void*)d_rxbuf, d_payload_size), d_endpoint_rcvd,
-                                   boost::bind(&udp_source_impl::handle_read, this,
-                                               boost::asio::placeholders::error,
-                                               boost::asio::placeholders::bytes_transferred));
+      for (size_t sock_id = 0; sock_id < this->d_sockets.size(); sock_id++){
+        d_sockets[sock_id]->async_receive_from(boost::asio::buffer((void*)&d_rxbufs[sock_id][0], d_payload_size), d_endpoints_rcvd[sock_id],
+                                 boost::bind(&udp_source_impl::handle_read, this,
+                                             sock_id,
+                                             boost::asio::placeholders::error,
+                                             boost::asio::placeholders::bytes_transferred));
+      }
     }
 
     void
-    udp_source_impl::handle_read(const boost::system::error_code& error,
+    udp_source_impl::handle_read(size_t socket_id,
+                                 const boost::system::error_code& error,
                                  size_t bytes_transferred)
     {
       if(!error) {
@@ -151,7 +162,7 @@ namespace gr {
           if(d_eof && (bytes_transferred == 0)) {
             // If we are using EOF notification, test for it and don't
             // add anything to the output.
-            d_residual = WORK_DONE;
+            d_residuals[socket_id] = WORK_DONE;
             d_cond_wait.notify_one();
             return;
           }
@@ -159,14 +170,14 @@ namespace gr {
             // Make sure we never go beyond the boundary of the
             // residual buffer.  This will just drop the last bit of
             // data in the buffer if we've run out of room.
-            if((int)(d_residual + bytes_transferred) >= (BUF_SIZE_PAYLOADS*d_payload_size)) {
+            if((int)(d_residuals[socket_id] + bytes_transferred) >= (BUF_SIZE_PAYLOADS*d_payload_size)) {
               GR_LOG_WARN(d_logger, "Too much data; dropping packet.");
             }
             else {
               // otherwise, copy received data into local buffer for
               // copying later.
-              memcpy(d_residbuf+d_residual, d_rxbuf, bytes_transferred);
-              d_residual += bytes_transferred;
+              memcpy(&d_residbufs[socket_id][0]+d_residuals[socket_id], &d_rxbufs[socket_id][0], bytes_transferred);
+              d_residuals[socket_id] += bytes_transferred;
             }
           }
           d_cond_wait.notify_one();
@@ -193,25 +204,32 @@ namespace gr {
       //use timed_wait to avoid permanent blocking in the work function
       d_cond_wait.timed_wait(lock, boost::posix_time::milliseconds(10));
 
-      if (d_residual < 0) {
-        return d_residual;
-      }
+      for (const auto& res : d_residuals)
+        {
+          if (res < 0) {
+            return res;
+          }
+        }
 
-      int bytes_left_in_buffer = (int)(d_residual - d_sent);
-      int bytes_to_send        = std::min<int>(d_itemsize * noutput_items, bytes_left_in_buffer);
+      int nitems = 0;
+      for (size_t sock_id = 0; sock_id < d_sockets.size(); sock_id++){
+        int bytes_left_in_buffer = (int)(d_residuals[sock_id] - d_sents[sock_id]);
+        int bytes_to_send        = std::min<int>(d_itemsize * noutput_items, bytes_left_in_buffer);
 
-      // Copy the received data in the residual buffer to the output stream
-      memcpy(out, d_residbuf+d_sent, bytes_to_send);
-      int nitems = bytes_to_send/d_itemsize;
+        // Copy the received data in the residual buffer to the output stream
+        memcpy(out, &d_residbufs[sock_id][0]+d_sents[sock_id], bytes_to_send);
+        nitems += bytes_to_send/d_itemsize;
+        noutput_items -= bytes_to_send/d_itemsize;
 
-      // Keep track of where we are if we don't have enough output
-      // space to send all the data in the residbuf.
-      if (bytes_to_send == bytes_left_in_buffer) {
-        d_residual = 0;
-        d_sent = 0;
-      }
-      else {
-        d_sent += bytes_to_send;
+        // Keep track of where we are if we don't have enough output
+        // space to send all the data in the residbuf.
+        if (bytes_to_send == bytes_left_in_buffer) {
+          d_residuals[sock_id] = 0;
+          d_sents[sock_id] = 0;
+        }
+        else {
+          d_sents[sock_id] += bytes_to_send;
+        }
       }
 
       return nitems;
