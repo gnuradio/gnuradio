@@ -81,8 +81,8 @@ namespace gr {
         d_name(name),
         d_nconnections(nconnections),
         d_msg(pmt::mp("x")),
-        d_parent(parent),
-        d_port(pmt::mp(MSG_PORT_OUT_XVAL))
+        d_port(pmt::mp(MSG_PORT_OUT_XVAL)),
+        d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through
