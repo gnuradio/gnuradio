@@ -114,7 +114,7 @@ namespace gr {
           }
         }
         else {
-          for(int i = 0; i < noutput_items*d_vlen; i++) {
+          for(int i = 0; i < static_cast<int>(noutput_items*d_vlen); i++) {
             optr[i] = d_data[offset++];
             if(offset >= size) {
               offset = 0;
