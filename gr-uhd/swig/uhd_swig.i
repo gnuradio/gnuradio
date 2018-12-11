@@ -79,16 +79,12 @@
 
 %include <uhd/types/device_addr.hpp>
 
-%include <uhd/types/io_type.hpp>
-
 %template(range_vector_t) std::vector<uhd::range_t>; //define before range
 %include <uhd/types/ranges.hpp>
 
 %include <uhd/types/tune_request.hpp>
 
 %include <uhd/types/tune_result.hpp>
-
-%include <uhd/types/io_type.hpp>
 
 %include <uhd/types/time_spec.hpp>
 
