@@ -50,6 +50,7 @@ template<class T>
        * \param wave_freq Frequency of waveform (relative to sampling_freq).
        * \param ampl Signal amplitude.
        * \param offset offset of signal.
+       * \param phase Initial phase of the signal
        */
       static sptr make(double sampling_freq,
 		       gr::analog::gr_waveform_t waveform,
@@ -83,7 +84,7 @@ template<class T>
 
       /*!
       * Sets the amplitude of a signal.
-      * \param amplitude of the signal
+      * \param ampl amplitude of the signal
       */
       virtual void set_amplitude(double ampl) = 0;
 

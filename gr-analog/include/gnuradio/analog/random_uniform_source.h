@@ -31,7 +31,7 @@ namespace gr {
   namespace analog {
 
     /*!
-     * \brief Uniform Random Number Generator with @TYPE@ output.
+     * \brief Uniform Random Number Generator
      * \ingroup waveform_generators_blk
      */
 template<class T>
