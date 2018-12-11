@@ -132,11 +132,6 @@ usrp_block_impl::usrp_block_impl(
     _curr_tune_req(stream_args.channels.size(), ::uhd::tune_request_t()),
     _chans_to_tune(stream_args.channels.size())
 {
-  // TODO remove this when we update UHD
-  if(stream_args.cpu_format == "fc32")
-    _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_FLOAT32);
-  if(stream_args.cpu_format == "sc16")
-    _type = boost::make_shared< ::uhd::io_type_t >(::uhd::io_type_t::COMPLEX_INT16);
   _dev = ::uhd::usrp::multi_usrp::make(device_addr);
 
   _check_mboard_sensors_locked();
