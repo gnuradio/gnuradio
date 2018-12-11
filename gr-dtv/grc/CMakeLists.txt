@@ -72,5 +72,6 @@ install(FILES
     dtv_catv_randomizer_bb.block.yml
     dtv_catv_frame_sync_enc_bb.block.yml
     dtv_catv_trellis_enc_bb.block.yml
+    dtv.tree.yml
     DESTINATION ${GRC_BLOCKS_DIR}
 )

@@ -8,9 +8,9 @@ parameters:
     options: [FECFRAME_NORMAL, FECFRAME_MEDIUM, FECFRAME_SHORT]
     option_labels: [Normal, Medium, Short]
     option_attributes:
-        hide_medium: [all, '', all]
-        hide_normal: ['', all, all]
-        hide_short: [all, all, '']
+        hide_medium: [all, none, all]
+        hide_normal: [none, all, all]
+        hide_short: [all, all, none]
         val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_MEDIUM, dtv.FECFRAME_SHORT]
     hide: ${ constellation.hide_dvb }
 -   id: rate1
@@ -71,8 +71,8 @@ parameters:
         64APSK, 8+16+20+20APSK, 4+12+20+28APSK, 128APSK, 256APSK, 64QAM (ITU-T J.83B),
         256QAM (ITU-T J.83B), PI/2 BPSK, PI/2 BPSK-SF2, 8VSB (ATSC)]
     option_attributes:
-        hide_dvb: ['', '', '', '', '', '', '', '', '', '', '', '', '', all, all, '',
-            '', all]
+        hide_dvb: [none, none, none, none, none, none, none, none, none, none, none, none, none, all, all, none,
+            none, all]
         val: [dtv.MOD_QPSK, dtv.MOD_8PSK, dtv.MOD_8APSK, dtv.MOD_16APSK, dtv.MOD_8_8APSK,
             dtv.MOD_32APSK, dtv.MOD_4_12_16APSK, dtv.MOD_4_8_4_16APSK, dtv.MOD_64APSK,
             dtv.MOD_8_16_20_20APSK, dtv.MOD_4_12_20_28APSK, dtv.MOD_128APSK, dtv.MOD_256APSK,

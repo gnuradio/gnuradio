@@ -64,8 +64,8 @@ parameters:
     options: [VERSION_111, VERSION_131]
     option_labels: [1.1.1, 1.3.1]
     option_attributes:
-        hide_111: ['', all]
-        hide_131: [all, '']
+        hide_111: [none, all]
+        hide_131: [all, none]
         val: [dtv.VERSION_111, dtv.VERSION_131]
 
 inputs:

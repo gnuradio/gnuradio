@@ -8,9 +8,9 @@ parameters:
     options: [FECFRAME_NORMAL, FECFRAME_MEDIUM, FECFRAME_SHORT]
     option_labels: [Normal, Medium, Short]
     option_attributes:
-        hide_medium: [all, '', all]
-        hide_normal: ['', all, all]
-        hide_short: [all, all, '']
+        hide_medium: [all, none, all]
+        hide_normal: [none, all, all]
+        hide_short: [all, all, none]
         val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_MEDIUM, dtv.FECFRAME_SHORT]
 -   id: rate1
     label: Code rate

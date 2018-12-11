@@ -6,7 +6,6 @@ parameters:
     label: FFT Length
     dtype: int
     default: fft_len
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: cp_len
     label: CP Length
     dtype: int
@@ -32,7 +31,7 @@ outputs:
 
 templates:
     imports: from gnuradio import digital
-    make: digital.ofdm_cyclic_prefixer(${input_size}, ${input_size+cp_len}, ${rolloff},
+    make: digital.ofdm_cyclic_prefixer(${input_size}, ${input_size} + ${cp_len}, ${rolloff},
         ${tagname})
 
 file_format: 1
