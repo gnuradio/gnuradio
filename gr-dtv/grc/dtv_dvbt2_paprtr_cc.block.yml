@@ -50,7 +50,7 @@ parameters:
     option_labels: ['Off', Active Constellation Extension, Tone Reservation, Both
             ACE and TR]
     option_attributes:
-        hide_vclip: [all, all, '', '']
+        hide_vclip: [all, all, none, none]
         val: [dtv.PAPR_OFF, dtv.PAPR_ACE, dtv.PAPR_TR, dtv.PAPR_BOTH]
     hide: ${ version.hide_111 }
 -   id: paprmode2
@@ -60,7 +60,7 @@ parameters:
     option_labels: [P2 Only, Active Constellation Extension, Tone Reservation, Both
             ACE and TR]
     option_attributes:
-        hide_vclip: [all, all, '', '']
+        hide_vclip: [all, all, none, none]
         val: [dtv.PAPR_OFF, dtv.PAPR_ACE, dtv.PAPR_TR, dtv.PAPR_BOTH]
     hide: ${ version.hide_131 }
 -   id: version
@@ -69,8 +69,8 @@ parameters:
     options: [VERSION_111, VERSION_131]
     option_labels: [1.1.1, 1.3.1]
     option_attributes:
-        hide_111: ['', all]
-        hide_131: [all, '']
+        hide_111: [none, all]
+        hide_131: [all, none]
         val: [dtv.VERSION_111, dtv.VERSION_131]
 -   id: vclip
     label: Vclip

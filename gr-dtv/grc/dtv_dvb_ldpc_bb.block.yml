@@ -8,8 +8,8 @@ parameters:
     options: [STANDARD_DVBS2, STANDARD_DVBT2]
     option_labels: [DVB-S2, DVB-T2]
     option_attributes:
-        hide_dvbs2: ['', all]
-        hide_dvbt2: [all, '']
+        hide_dvbs2: [none, all]
+        hide_dvbt2: [all, none]
         val: [dtv.STANDARD_DVBS2, dtv.STANDARD_DVBT2]
 -   id: framesize1
     label: FECFRAME size
@@ -18,8 +18,8 @@ parameters:
     option_labels: [Normal, Short]
     option_attributes:
         hide_medium: [all, all]
-        hide_normal: ['', all]
-        hide_short: [all, '']
+        hide_normal: [none, all]
+        hide_short: [all, none]
         val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_SHORT]
     hide: ${ standard.hide_dvbt2 }
 -   id: framesize2
@@ -28,9 +28,9 @@ parameters:
     options: [FECFRAME_NORMAL, FECFRAME_MEDIUM, FECFRAME_SHORT]
     option_labels: [Normal, Medium, Short]
     option_attributes:
-        hide_medium: [all, '', all]
-        hide_normal: ['', all, all]
-        hide_short: [all, all, '']
+        hide_medium: [all, none, all]
+        hide_normal: [none, all, all]
+        hide_short: [all, all, none]
         val: [dtv.FECFRAME_NORMAL, dtv.FECFRAME_MEDIUM, dtv.FECFRAME_SHORT]
     hide: ${ standard.hide_dvbs2 }
 -   id: rate1
@@ -119,7 +119,7 @@ templates:
     make: |-
         dtv.dvb_ldpc_bb(
             ${standard.val},
-            if str(standard) == 'STANDARD_DVBT2':
+            % if str(standard) == 'STANDARD_DVBT2':
             ${framesize1.val},
             % else:
             ${framesize2.val},
