@@ -27,7 +27,7 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 ########################################################################
 # Make sure this version matches ${GR_CMAKE_MIN_VERSION} (a variable can't be
 # used here).
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5.1)
 project(gnuradio CXX C)
 enable_testing()
 
@@ -55,7 +55,7 @@ include(GrVersion) #setup version info
 # Minimum dependency versions for central dependencies:
 set(GR_BOOST_MIN_VERSION "1.54")
 set(GR_SWIG_MIN_VERSION "3.0.8")
-set(GR_CMAKE_MIN_VERSION "2.8.12")
+set(GR_CMAKE_MIN_VERSION "3.5.1")
 set(GR_MAKO_MIN_VERSION "0.4.2")
 set(GR_PYTHON_MIN_VERSION "2.7")
 set(GR_PYTHON3_MIN_VERSION "3.4")
