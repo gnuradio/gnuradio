@@ -67,7 +67,6 @@ namespace gr {
        * \param[in] fft_size N.
        * \param[in] forward True performs FFT, False performs IFFT.
        * \param[in] window Window function to be used.
-       * \param[in] shifted True moves DC carrier to the middle.
        * \param[in] nthreads Number of underlying threads.
        */
       static sptr make(int fft_size, bool forward,
