@@ -63,8 +63,8 @@ namespace gr {
 	d_wintype((filter::firdes::win_type)(wintype)),
 	d_center_freq(fc), d_bandwidth(bw), d_name(name),
 	d_nconnections(nconnections), d_nrows(200),
-        d_parent(parent),
-        d_port(pmt::mp("freq"))
+        d_port(pmt::mp("freq")),
+        d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
       // must have at least one valid character. Must be valid through

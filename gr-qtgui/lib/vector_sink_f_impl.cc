@@ -80,8 +80,8 @@ namespace gr {
         d_vecavg(1.0),
         d_name(name),
         d_nconnections(nconnections),
-        d_msg(pmt::mp("x")),
         d_port(pmt::mp(MSG_PORT_OUT_XVAL)),
+        d_msg(pmt::mp("x")),
         d_parent(parent)
     {
       // Required now for Qt; argc must be greater than 0 and argv
@@ -421,7 +421,7 @@ namespace gr {
           if(gr::high_res_timer_now() - d_last_time > d_update_time) {
             for(int n = 0; n < d_nconnections; n++) {
               in = ((const float*)input_items[n]) + d_vlen;
-              for(int x = 0; x < d_vlen; x++) {
+              for(unsigned int x = 0; x < d_vlen; x++) {
                 d_magbufs[n][x] = (double)((1.0-d_vecavg)*d_magbufs[n][x] + (d_vecavg)*in[x]);
               }
             }
