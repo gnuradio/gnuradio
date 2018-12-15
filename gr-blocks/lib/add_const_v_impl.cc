@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <add_const_v_impl.h>
+#include "add_const_v_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {

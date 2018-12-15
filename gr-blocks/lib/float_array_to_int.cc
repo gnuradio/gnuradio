@@ -25,7 +25,7 @@
 #endif
 
 #define _ISOC9X_SOURCE
-#include <float_array_to_int.h>
+#include "float_array_to_int.h"
 #include <math.h>
 #if __cplusplus >= 201103L
 #include <cstdint>

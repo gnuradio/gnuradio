@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uchar_array_to_float.h>
+#include "uchar_array_to_float.h"
 
 void
 uchar_array_to_float (const unsigned char *in, float *out, int nsamples)

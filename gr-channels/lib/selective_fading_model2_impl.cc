@@ -21,7 +21,7 @@
  */
 
 #include "selective_fading_model2_impl.h"
-#include <sincostable.h>
+#include "sincostable.h"
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/fxpt.h>
