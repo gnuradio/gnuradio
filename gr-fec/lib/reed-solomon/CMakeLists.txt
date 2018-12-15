@@ -37,6 +37,12 @@ set(gr_fec_rs_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/decode_rs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/init_rs.c
 )
+add_library(gr_fec_rs OBJECT ${gr_fec_rs_sources})
+target_include_directories(gr_fec_rs
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+  PRIVATE $<TARGET_PROPERTY:gnuradio-runtime,INCLUDE_DIRECTORIES>
+  )
+set_target_properties(gr_fec_rs PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 ########################################################################
 # Setup sources and includes
