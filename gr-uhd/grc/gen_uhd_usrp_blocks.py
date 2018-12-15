@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import sys
+
 MAIN_TMPL = """\
 id: uhd_usrp_${sourk}
 label: 'UHD: USRP ${sourk.title()}'
@@ -153,6 +155,22 @@ templates:
             ${'$'}{len_tag_name},
             ${'%'} endif
         )
+        % for n in range(max_nchan):
+        ${'%'} if context.get('nchan')() > ${n}:
+        self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
+        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
+        self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
+        self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
+        ${'%'} if context.get('show_lo_controls')():
+        self.${'$'}{id}.set_lo_source(${'$'}{${'lo_source' + str(n)}}, uhd.ALL_LOS, ${n})
+        self.${'$'}{id}.set_lo_export_enabled(${'$'}{${'lo_export' + str(n)}}, uhd.ALL_LOS, ${n})
+        ${'%'} endif
+        ${'%'} endif
+        % endfor
         ${'%'} if clock_rate():
         self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
         ${'%'} endif
@@ -165,12 +183,12 @@ templates:
     callbacks:
     -   set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
-    -   set_center_freq(${'center_freq' + str(n)}, ${n})
-    -   self.${'$'}{id}.set_${'$'}{'normalized_' if norm_gain${n} else ''}gain(gain${n}, ${n})
-    -   ${'$'}{'set_lo_source(lo_source${n}, uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
-    -   ${'$'}{'set_lo_export_enabled(lo_export${n}, uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
-    -   set_antenna(${'ant' + str(n)}, ${n})
-    -   set_bandwidth(${'bw' + str(n)}, ${n})
+    -   set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
+    -   self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(norm_gain${n})) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
+    -   ${'$'}{'set_lo_source(' + lo_source${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
+    -   ${'$'}{'set_lo_export_enabled(' + lo_export${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
+    -   set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
+    -   set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
     % endfor
 
 
@@ -293,7 +311,6 @@ PARAMS_TMPL = """
     dtype: real
     default: '0'
     hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if eval('bw' + str(${n})) else 'part')}
-% if sourk == 'source':
 -   id: lo_source${n}
     label: 'Ch${n}: LO Source'
     category: RF Options
@@ -308,6 +325,7 @@ PARAMS_TMPL = """
     default: 'False'
     options: ['True', 'False']
     hide: ${'$'}{ 'all' if not nchan > ${n} else ('none' if show_lo_controls else 'all')}
+% if sourk == 'source':
 -   id: dc_offs_enb${n}
     label: 'Ch${n}: Enable DC Offset Correction'
     category: FE Corrections
@@ -366,7 +384,6 @@ MAX_NUM_MBOARDS = 8
 MAX_NUM_CHANNELS = MAX_NUM_MBOARDS*4
 
 if __name__ == '__main__':
-    import sys
     for file in sys.argv[1:]:
         if file.endswith('source.block.yml'):
             sourk = 'source'
