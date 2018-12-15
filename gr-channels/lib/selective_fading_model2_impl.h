@@ -32,7 +32,7 @@
 #include <boost/random.hpp>
 
 #include <gnuradio/fxpt.h>
-#include <sincostable.h>
+#include "sincostable.h"
 
 namespace gr {
   namespace channels {

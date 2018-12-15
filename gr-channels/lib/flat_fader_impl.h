@@ -31,7 +31,7 @@
 #include <boost/random.hpp>
 
 #include <gnuradio/fxpt.h>
-#include <sincostable.h>
+#include "sincostable.h"
 
 // FASTSINCOS:  0 = slow native,  1 = gr::fxpt impl,  2 = sincostable.h
 #define FASTSINCOS  2

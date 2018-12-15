@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <multiply_conjugate_cc_impl.h>
+#include "multiply_conjugate_cc_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 

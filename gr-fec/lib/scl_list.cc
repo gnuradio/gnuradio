@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <scl_list.h>
+#include "scl_list.h"
 #include <cstring>
 #include <iostream>
 #include <algorithm>
@@ -34,7 +34,7 @@ namespace gr {
         scl_list::scl_list(const unsigned int size,
                            const unsigned int block_size,
                            const unsigned int block_power):
-          d_list_size(size), 
+          d_list_size(size),
           d_num_buff_elements(block_size * (block_power + 1))
         {
           for(unsigned int i = 0; i < 2 * size; i++){

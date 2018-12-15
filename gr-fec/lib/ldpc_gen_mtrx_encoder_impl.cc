@@ -22,7 +22,7 @@
 #include "config.h"
 #endif
 
-#include <ldpc_gen_mtrx_encoder_impl.h>
+#include "ldpc_gen_mtrx_encoder_impl.h"
 #include <sstream>
 
 namespace gr {

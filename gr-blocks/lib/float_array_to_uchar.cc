@@ -25,7 +25,7 @@
 #endif
 
 #define _ISOC9X_SOURCE
-#include <float_array_to_uchar.h>
+#include "float_array_to_uchar.h"
 #include <math.h>
 
 static const int MIN_UCHAR = 0;

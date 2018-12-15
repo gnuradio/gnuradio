@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
+#include "or_blk_impl.h"
 #include <gnuradio/io_signature.h>
-#include <or_blk_impl.h>
 
 namespace gr {
 namespace blocks {

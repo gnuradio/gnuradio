@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <flat_fader_impl.h>
+#include "flat_fader_impl.h"
 #include <gnuradio/math.h>
 
 namespace gr {
@@ -83,18 +83,18 @@ namespace gr {
                 float s_q = scale_sin*_GRFASTSIN(d_phi[n]);
                 H += gr_complex(s_i, s_q);
                 }
-    
+
             if(d_LOS){
                 d_psi[0] = fmod(d_psi[0] + 2*GR_M_PI*d_fDTs*_GRFASTCOS(d_theta_los), 2*GR_M_PI);
                 float los_i = scale_los*_GRFASTCOS(d_psi[0]);
                 float los_q = scale_los*_GRFASTSIN(d_psi[0]);
                 H = H*scale_nlos + gr_complex(los_i,los_q);
                 }
-    
+
             update_theta();
             Hvec[i] = H;
         }
-        
+
     }
 
     gr_complex flat_fader_impl::next_sample(){

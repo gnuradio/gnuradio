@@ -25,7 +25,7 @@
 #endif
 
 
-#include <probe_signal_v_impl.h>
+#include "probe_signal_v_impl.h"
 #include <gnuradio/io_signature.h>
 
 namespace gr {

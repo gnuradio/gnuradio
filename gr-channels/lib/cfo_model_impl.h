@@ -29,7 +29,7 @@
 #include <gnuradio/blocks/multiply.h>
 #include <gnuradio/analog/fastnoise_source.h>
 #include <gnuradio/channels/cfo_model.h>
-#include <sincostable.h>
+#include "sincostable.h"
 
 namespace gr {
   namespace channels {

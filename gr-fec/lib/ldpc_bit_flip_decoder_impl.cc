@@ -22,7 +22,7 @@
 #include "config.h"
 #endif
 
-#include <ldpc_bit_flip_decoder_impl.h>
+#include "ldpc_bit_flip_decoder_impl.h"
 #include <math.h>
 #include <boost/assign/list_of.hpp>
 #include <volk/volk.h>
