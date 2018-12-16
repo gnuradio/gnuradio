@@ -61,6 +61,7 @@ class qa_zeromq_sub (gr_unittest.TestCase):
     def test_002 (self):
         vlen = 10
 
+
         # Construct multipart source data to publish
         raw_data = [numpy.array(range(vlen), 'float32')*100, numpy.array(range(vlen, 2*vlen), 'float32')*100]
         src_data = [a.tostring() for a in raw_data]
@@ -79,6 +80,55 @@ class qa_zeromq_sub (gr_unittest.TestCase):
         expected_data = numpy.concatenate(raw_data)
         self.assertFloatTuplesAlmostEqual(sink.data(), expected_data)
 
+
+    def test_003 (self):
+
+        #append filter_key to sent message and check that message is correctly received (obv. without key)
+
+        # Construct multipart source data to publish
+        vlen = 10
+        raw_data = [numpy.array(range(vlen), 'float32')*100, numpy.array(range(vlen, 2*vlen), 'float32')*100]
+        src_data = [a.tostring() for a in raw_data]
+
+        src_data = [b"filter_key"] + src_data
+
+        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, self._address, key="filter_key")
+        sink = blocks.vector_sink_f(vlen)
+        self.tb.connect(zeromq_sub_source, sink)
+
+        self.tb.start()
+        time.sleep(0.05)
+        self.pub_socket.send_multipart(src_data)
+        time.sleep(0.5)
+        self.tb.stop()
+        self.tb.wait()
+
+        # Source block will concatenate everything together
+        expected_data = numpy.concatenate(raw_data)
+        self.assertFloatTuplesAlmostEqual(sink.data(), expected_data)
+
+    def test_004 (self):
+
+        #test that no message is received with wrong key
+        vlen = 10
+        raw_data = [numpy.array(range(vlen), 'float32')*100, numpy.array(range(vlen, 2*vlen), 'float32')*100]
+        src_data = [a.tostring() for a in raw_data]
+
+        src_data = [b"filter_key"] + src_data
+
+        zeromq_sub_source = zeromq.sub_source(gr.sizeof_float, vlen, self._address, key="wrong_filter_key")
+        sink = blocks.vector_sink_f(vlen)
+        self.tb.connect(zeromq_sub_source, sink)
+
+        self.tb.start()
+        time.sleep(0.05)
+        self.pub_socket.send_multipart(src_data)
+        time.sleep(0.5)
+        self.tb.stop()
+        self.tb.wait()
+
+        #no signal received with wrong key
+        assert( len(sink.data()) == 0 )
 
 if __name__ == '__main__':
     gr_unittest.run(qa_zeromq_sub)
