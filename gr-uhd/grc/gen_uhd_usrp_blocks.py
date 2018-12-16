@@ -114,7 +114,6 @@ inputs:
 -   domain: message
     id: command
     optional: true
-    hide: ${'$'}{hide_cmd_port}
 % if sourk == 'source':
 
 outputs:
@@ -201,7 +200,7 @@ templates:
     -   set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
     -   set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
-    -   self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(norm_gain${n})) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
+    -   self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
     -   ${'$'}{'set_lo_source(' + lo_source${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
     -   ${'$'}{'set_lo_export_enabled(' + lo_export${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
     -   set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
@@ -358,17 +357,6 @@ PARAMS_TMPL = """
 % endif
 """
 
-SHOW_CMD_PORT_PARAM = """
--   id: hide_cmd_port
-    label: Show Command Port
-    category: Advanced
-    dtype: enum
-    default: 'False'
-    options: ['False', 'True']
-    option_labels: ['Yes', 'No']
-    hide: part
-"""
-
 SHOW_LO_CONTROLS_PARAM = """
 -   id: show_lo_controls
     label: Show LO Controls
@@ -414,7 +402,6 @@ if __name__ == '__main__':
             parse_tmpl(PARAMS_TMPL, n=n, sourk=sourk)
             for n in range(MAX_NUM_CHANNELS)
         ])
-        params += SHOW_CMD_PORT_PARAM
         params += SHOW_LO_CONTROLS_PARAM
         if sourk == 'sink':
             params += TSBTAG_PARAM
