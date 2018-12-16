@@ -74,6 +74,7 @@ class qa_header_payload_demux (gr_unittest.TestCase):
     def setUp (self):
         """Runs before every test."""
         self.tb = gr.top_block ()
+        random.seed(0)
 
     def tearDown (self):
         """Runs after every test."""
