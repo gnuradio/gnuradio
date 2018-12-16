@@ -41,6 +41,7 @@ def make_random_float_tuple(L, scale=1):
 class test_moving_average(gr_unittest.TestCase):
 
     def setUp(self):
+        random.seed(0)
         self.tb = gr.top_block()
 
     def tearDown(self):
@@ -54,7 +55,6 @@ class test_moving_average(gr_unittest.TestCase):
         tb = self.tb
 
         N = 10000
-        seed = 0
         data = make_random_float_tuple(N, 1)
         expected_result = N*[0,]
 
@@ -75,7 +75,6 @@ class test_moving_average(gr_unittest.TestCase):
         tb = self.tb
 
         N = 10000
-        seed = 0
         data = make_random_complex_tuple(N, 1)
         expected_result = N*[0,]
 
@@ -99,7 +98,6 @@ class test_moving_average(gr_unittest.TestCase):
 
         vlen = 5
         N = 10*vlen
-        seed = 0
         data = make_random_float_tuple(N, 2**10)
         data = [int(d*1000) for d in data]
         src = blocks.vector_source_i(data, False)
