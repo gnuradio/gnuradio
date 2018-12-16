@@ -64,8 +64,8 @@ parameters:
 -   id: sync
     label: Sync
     dtype: enum
-    options: [sync, pc_clock, '']
-    option_labels: [unknown PPS, PC Clock, don't sync]
+    options: [sync, pc_clock, none]
+    option_labels: [Unknown PPS, PC Clock, No Sync]
     hide: ${'$'}{ 'none' if sync else 'part'}
 -   id: clock_rate
     label: Clock Rate (Hz)
@@ -140,7 +140,7 @@ templates:
             uhd.stream_args(
                 cpu_format="${'$'}{type}",
                 ${'%'} if otw:
-                otw_format=${'$'}{otw},
+                otw_format="${'$'}{otw}",
                 ${'%'} endif
                 ${'%'} if stream_args:
                 args=${'$'}{stream_args},
@@ -155,6 +155,19 @@ templates:
             ${'$'}{len_tag_name},
             ${'%'} endif
         )
+        % for m in range(max_mboards):
+        ${'%'} if context.get('num_mboards')() > ${m}:
+        ${'%'} if context.get('sd_spec${m}')():
+        self.${'$'}{id}.set_subdev_spec(${'$'}{${'sd_spec' + str(m)}}, ${m})
+        ${'%'} endif
+        ${'%'} if context.get('time_source${m}')():
+        self.${'$'}{id}.set_time_source(${'$'}{${'time_source' + str(m)}}, ${m})
+        ${'%'} endif
+        ${'%'} if context.get('clock_source${m}')():
+        self.${'$'}{id}.set_clock_source(${'$'}{${'clock_source' + str(m)}}, ${m})
+        ${'%'} endif
+        ${'%'} endif
+        % endfor
         % for n in range(max_nchan):
         ${'%'} if context.get('nchan')() > ${n}:
         self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
@@ -164,7 +177,9 @@ templates:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
         self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
+        ${'%'} if context.get('bw${n}')():
         self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
+        ${'%'} endif
         ${'%'} if context.get('show_lo_controls')():
         self.${'$'}{id}.set_lo_source(${'$'}{${'lo_source' + str(n)}}, uhd.ALL_LOS, ${n})
         self.${'$'}{id}.set_lo_export_enabled(${'$'}{${'lo_export' + str(n)}}, uhd.ALL_LOS, ${n})
@@ -179,6 +194,8 @@ templates:
         self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec())
         ${'%'} elif sync == 'pc_clock':
         self.${'$'}{id}.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
+        ${'%'} else:
+        # No synchronization enforced.
         ${'%'} endif
     callbacks:
     -   set_samp_rate(${'$'}{samp_rate})
