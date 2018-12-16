@@ -27,6 +27,11 @@ find_package(UHD "3.5.5")
 ########################################################################
 # Register component
 ########################################################################
+GR_PYTHON_CHECK_MODULE_RAW(
+    "mako >= 0.9.1"
+    "import mako; assert mako.__version__ >= '0.9.1'"
+    MAKO_FOUND
+)
 include(GrComponent)
 GR_REGISTER_COMPONENT("gr-uhd" ENABLE_GR_UHD
     Boost_FOUND
@@ -35,6 +40,7 @@ GR_REGISTER_COMPONENT("gr-uhd" ENABLE_GR_UHD
     ENABLE_GR_FILTER
     ENABLE_GR_BLOCKS
     ENABLE_GR_ANALOG
+    MAKO_FOUND
 )
 message(STATUS "  UHD Version: ${UHD_VERSION}")
 
