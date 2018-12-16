@@ -31,8 +31,8 @@
 namespace gr {
   namespace zeromq {
 
-    base_impl::base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags)
-      : d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags)
+    base_impl::base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags, std::string key)
+      : d_vsize(itemsize * vlen), d_timeout(timeout), d_pass_tags(pass_tags), d_key(key)
     {
       /* "Fix" timeout value (ms for new API, us for old API) */
       int major, minor, patch;
@@ -111,8 +111,8 @@ namespace gr {
       return in_nitems;
     }
 
-    base_source_impl::base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
-        : base_impl(type, itemsize, vlen, timeout, pass_tags),
+    base_source_impl::base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, std::string key)
+        : base_impl(type, itemsize, vlen, timeout, pass_tags, key),
           d_consumed_bytes(0), d_consumed_items(0)
     {
       /* Set high watermark */
@@ -188,7 +188,13 @@ namespace gr {
       /* Get the message */
       d_socket->recv(&d_msg);
 
-      /* Parse header from the first (or only) message of a multi-part message */
+      //key has been received. throw away key and continue to payload
+      if (!more & (d_key.size() > 0)) {
+        d_msg.rebuild();
+        return false;
+      }
+
+      /* Parse header of payload*/
       if (d_pass_tags && !more)
       {
         uint64_t rcv_offset;

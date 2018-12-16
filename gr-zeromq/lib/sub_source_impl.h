@@ -34,7 +34,7 @@ namespace gr {
     class sub_source_impl : public sub_source,  public base_source_impl
     {
     public:
-      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      sub_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, std::string key);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

@@ -33,7 +33,7 @@ namespace gr {
     class base_impl : public virtual gr::sync_block
     {
     public:
-      base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags);
+      base_impl(int type, size_t itemsize, size_t vlen, int timeout, bool pass_tags, std::string key="");
       virtual ~base_impl();
 
     protected:
@@ -43,6 +43,7 @@ namespace gr {
       size_t          d_vsize;
       int             d_timeout;
       bool            d_pass_tags;
+      std::string     d_key;
     };
 
     class base_sink_impl : public base_impl
@@ -57,7 +58,7 @@ namespace gr {
     class base_source_impl : public base_impl
     {
     public:
-      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, std::string key="");
 
     protected:
       zmq::message_t d_msg;
