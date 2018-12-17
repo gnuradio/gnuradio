@@ -80,12 +80,14 @@ add_subdirectory(lib)
 add_subdirectory(docs)
 add_subdirectory(examples/c++)
 if(ENABLE_PYTHON)
-    add_subdirectory(grc)
     add_subdirectory(swig)
     add_subdirectory(python/qtgui)
     add_subdirectory(examples)
     add_subdirectory(apps)
 endif(ENABLE_PYTHON)
+if(ENABLE_GRC)
+    add_subdirectory(grc)
+endif(ENABLE_GRC)
 
 ########################################################################
 # Create Pkg Config File
