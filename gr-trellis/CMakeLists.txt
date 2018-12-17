@@ -61,8 +61,10 @@ if(ENABLE_PYTHON)
     add_subdirectory(python/trellis)
     add_subdirectory(examples/python)
     add_subdirectory(examples/grc)
-    add_subdirectory(grc)
 endif(ENABLE_PYTHON)
+if(ENABLE_GRC)
+    add_subdirectory(grc)
+endif(ENABLE_GRC)
 
 ########################################################################
 # Create Pkg Config File

@@ -55,8 +55,10 @@ add_subdirectory(lib)
 if(ENABLE_PYTHON)
     add_subdirectory(swig)
     add_subdirectory(python/fft)
-    add_subdirectory(grc)
 endif(ENABLE_PYTHON)
+if(ENABLE_GRC)
+    add_subdirectory(grc)
+endif(ENABLE_GRC)
 add_subdirectory(docs)
 
 ########################################################################
