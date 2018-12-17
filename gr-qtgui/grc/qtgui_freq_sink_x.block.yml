@@ -374,6 +374,10 @@ inputs:
     id: freq
     optional: true
     hide: ${ showports }
+-   domain: message
+    id: bw
+    optional: true
+    hide: ${ showports }
 
 outputs:
 -   domain: message
