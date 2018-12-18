@@ -41,7 +41,7 @@ class TestCase(unittest.TestCase):
     assertComplexTuplesAlmostEqual and assertFloatTuplesAlmostEqual
     """
 
-    def assertComplexAlmostEqual (self, first, second, places=7, msg=None):
+    def assertComplexAlmostEqual(self, first, second, places=7, msg=None):
         """Fail if the two complex objects are unequal as determined by their
            difference rounded to the given number of decimal places
            (default 7) and comparing to zero.
@@ -57,9 +57,11 @@ class TestCase(unittest.TestCase):
                 msg or '%r != %r within %r places' % (first, second, places)
             )
 
-    def assertComplexAlmostEqual2 (self, ref, x, abs_eps=1e-12, rel_eps=1e-6, msg=None):
+
+    def assertComplexAlmostEqual2(self, ref, x, abs_eps=1e-12, rel_eps=1e-6, msg=None):
         """
-        Fail if the two complex objects are unequal as determined by...
+        Fail if the two complex objects are unequal as determined by both
+        absolute delta (abs_eps) and relative delta (rel_eps).
         """
         if abs(ref - x) < abs_eps:
             return
@@ -79,40 +81,52 @@ class TestCase(unittest.TestCase):
             )
 
 
-
-    def assertComplexTuplesAlmostEqual (self, a, b, places=7, msg=None):
-        self.assertEqual (len(a), len(b))
-        for i in range (len(a)):
-            self.assertComplexAlmostEqual (a[i], b[i], places, msg)
-
-    def assertComplexTuplesAlmostEqual2 (self, ref, x,
-                                         abs_eps=1e-12, rel_eps=1e-6, msg=None):
-        self.assertEqual (len(ref), len(x))
-        for i in range (len(ref)):
-            try:
-                self.assertComplexAlmostEqual2 (ref[i], x[i], abs_eps, rel_eps, msg)
-            except self.failureException as e:
-                #sys.stderr.write("index = %d " % (i,))
-                #sys.stderr.write("%r\n" % (e,))
-                raise
-
-    def assertFloatTuplesAlmostEqual (self, a, b, places=7, msg=None):
-        self.assertEqual (len(a), len(b))
-        for i in range (len(a)):
-            self.assertAlmostEqual (a[i], b[i], places, msg)
+    def assertComplexTuplesAlmostEqual(self, a, b, places=7, msg=None):
+        """
+        Fail if the two complex tuples are not approximately equal.
+        Approximate equality is determined by specifying the number of decimal
+        places.0
+        """
+        self.assertEqual(len(a), len(b))
+        return all((
+            self.assertComplexAlmostEqual(x, y, places, msg)
+            for (x, y) in zip(a, b)
+        ))
 
 
-    def assertFloatTuplesAlmostEqual2 (self, ref, x,
-                                       abs_eps=1e-12, rel_eps=1e-6, msg=None):
-        self.assertEqual (len(ref), len(x))
-        for i in range (len(ref)):
-            try:
-                self.assertComplexAlmostEqual2 (ref[i], x[i], abs_eps, rel_eps, msg)
-            except self.failureException as e:
-                #sys.stderr.write("index = %d " % (i,))
-                #sys.stderr.write("%r\n" % (e,))
-                raise
+    def assertComplexTuplesAlmostEqual2(self, a, b,
+                                        abs_eps=1e-12, rel_eps=1e-6, msg=None):
+        """
+        Fail if the two complex tuples are not approximately equal.
+        Approximate equality is determined by calling assertComplexAlmostEqual().
+        """
+        self.assertEqual(len(a), len(b))
+        return all((
+            self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
+            for (x, y) in zip(a, b)
+        ))
 
+
+    def assertFloatTuplesAlmostEqual(self, a, b, places=7, msg=None):
+        """
+        Fail if the two real-valued tuples are not approximately equal.
+        Approximate equality is determined by specifying the number of decimal
+        places.
+        """
+        self.assertEqual(len(a), len(b))
+        return all((
+            self.assertAlmostEqual(x, y, places, msg)
+            for (x, y) in zip(a, b)
+        ))
+
+
+    def assertFloatTuplesAlmostEqual2(self, a, b,
+                                      abs_eps=1e-12, rel_eps=1e-6, msg=None):
+        self.assertEqual(len(a), len(b))
+        return all((
+            self.assertComplexAlmostEqual2(x, y, abs_eps, rel_eps, msg)
+            for (x, y) in zip(a, b)
+        ))
 
 TestResult = unittest.TestResult
 TestSuite = unittest.TestSuite
@@ -130,9 +144,8 @@ def run(PUT, filename=None, verbosity=1):
     filename: an optional filename to save the XML report of the tests
               this will live in ./.unittests/python
     '''
-
     # Run this is given a file name
-    if(filename is not None):
+    if filename:
         basepath = "./.unittests"
         path = basepath + "/python"
 
@@ -142,22 +155,19 @@ def run(PUT, filename=None, verbosity=1):
         xmlrunner = None
         # only proceed if .unittests is writable
         st = os.stat(basepath)[stat.ST_MODE]
-        if(st & stat.S_IWUSR > 0):
+        if st & stat.S_IWUSR > 0:
             # Test if path exists; if not, build it
             if not os.path.exists(path):
                 os.makedirs(path, mode=0o750)
 
             # Just for safety: make sure we can write here, too
             st = os.stat(path)[stat.ST_MODE]
-            if(st & stat.S_IWUSR > 0):
+            if st & stat.S_IWUSR > 0:
                 # Create an XML runner to filename
                 fout = open(path+"/"+filename, "w")
                 xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
 
-        txtrunner = TextTestRunner(verbosity=verbosity)
-
         # Run the test; runner also creates XML output file
-        # FIXME: make xmlrunner output to screen so we don't have to do run and main
         suite = TestLoader().loadTestsFromTestCase(PUT)
 
         # use the xmlrunner if we can write the the directory
@@ -165,11 +175,6 @@ def run(PUT, filename=None, verbosity=1):
             xmlrunner.run(suite)
 
         main(verbosity=verbosity)
-
-        # This will run and fail make check if problem
-        # but does not output to screen.
-        #main(testRunner = xmlrunner)
-
     else:
         # If no filename is given, just run the test
         main(verbosity=verbosity)
