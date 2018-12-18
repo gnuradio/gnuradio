@@ -353,7 +353,7 @@ usrp_block_impl::get_gpio_attr(
 std::vector<std::string>
 usrp_block_impl::get_filter_names(const std::string &search_mask)
 {
-#if UHD_USRP_MULTI_FILTER_API
+#ifdef UHD_USRP_MULTI_FILTER_API
     return _dev->get_filter_names(search_mask);
 #else
   throw std::runtime_error("not implemented in this version");
@@ -363,7 +363,7 @@ usrp_block_impl::get_filter_names(const std::string &search_mask)
 ::uhd::filter_info_base::sptr
 usrp_block_impl::get_filter(const std::string &path)
 {
-#if UHD_USRP_MULTI_FILTER_API
+#ifdef UHD_USRP_MULTI_FILTER_API
   return _dev->get_filter(path);
 #else
   throw std::runtime_error("not implemented in this version");
@@ -373,7 +373,7 @@ usrp_block_impl::get_filter(const std::string &path)
 void
 usrp_block_impl::set_filter(const std::string &path, ::uhd::filter_info_base::sptr filter)
 {
-#if UHD_USRP_MULTI_FILTER_API
+#ifdef UHD_USRP_MULTI_FILTER_API
   _dev->set_filter(path, filter);
 #else
   throw std::runtime_error("not implemented in this version");
