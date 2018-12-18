@@ -579,14 +579,14 @@ for (unsigned int i = 0; i < num_parity_bits; i ++) {\
     {
       const unsigned char *in = (const unsigned char *) input_items[0];
       unsigned char *out = (unsigned char *) output_items[0];
-      unsigned char b, temp;
+      unsigned char b, temp, msb;
 
       // We can use a 192 bits long bitset, all higher bits not used by the bch will just be ignored
       std::bitset<MAX_BCH_PARITY_BITS> parity_bits;
       int consumed = 0;
 
       for (int i = 0; i < noutput_items; i += nbch) {
-        for (int j = 0; j < (int)kbch/8; j++) {
+        for (int j = 0; j < (int)kbch / 8; j++) {
           b = 0;
 
           // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
@@ -598,9 +598,13 @@ for (unsigned int i = 0; i < num_parity_bits; i ++) {\
             b |= temp << (7 - e);
           }
 
-          unsigned long msB_CRC = (parity_bits >> (num_parity_bits - 8)).to_ulong();
+          msb = 0;
+          for (int n = 1; n <= 8; n++) {
+            temp = parity_bits[num_parity_bits - n];
+            msb |= temp << (8 - n);
+          }
           /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
-          unsigned char pos = (unsigned char)(msB_CRC ^ b);
+          unsigned char pos = (msb ^ b);
           /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
           parity_bits = (parity_bits << 8) ^ crc_table[pos];
         }
