@@ -43,7 +43,7 @@ namespace gr {
       std::set<boost::asio::ip::tcp::socket *> d_sockets;
       boost::asio::ip::tcp::acceptor d_acceptor;
 
-      boost::shared_ptr<uint8_t> d_buf;
+      boost::shared_ptr<uint8_t[]> d_buf;
       enum {
           BUF_SIZE = 256 * 1024,
       };
