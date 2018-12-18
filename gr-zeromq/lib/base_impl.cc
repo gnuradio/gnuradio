@@ -188,10 +188,10 @@ namespace gr {
       /* Get the message */
       d_socket->recv(&d_msg);
 
-      //key has been received. throw away key and continue to payload
+      //key has been received. throw away key and get next payload
       if (!more & (d_key.size() > 0)) {
         d_msg.rebuild();
-        return false;
+        d_socket->recv(&d_msg);
       }
 
       /* Parse header of payload*/
