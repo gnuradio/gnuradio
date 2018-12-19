@@ -28,6 +28,7 @@ from numpy import random, vectorize
 class test_constellation_soft_decoder(gr_unittest.TestCase):
 
     def setUp(self):
+        random.seed(0)
         self.tb = gr.top_block()
 
     def tearDown(self):

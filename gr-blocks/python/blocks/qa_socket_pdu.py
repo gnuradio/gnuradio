@@ -29,6 +29,7 @@ import time
 class qa_socket_pdu (gr_unittest.TestCase):
 
     def setUp (self):
+        random.seed(0)
         self.tb = gr.top_block ()
 
     def tearDown (self):

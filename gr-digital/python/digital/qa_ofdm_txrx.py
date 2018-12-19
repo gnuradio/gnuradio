@@ -67,6 +67,7 @@ class ofdm_rx_fg (gr.top_block):
 class test_ofdm_txrx (gr_unittest.TestCase):
 
     def setUp (self):
+        random.seed(0)
         self.tb = gr.top_block ()
 
     def tearDown (self):

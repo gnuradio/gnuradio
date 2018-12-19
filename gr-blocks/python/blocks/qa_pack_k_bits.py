@@ -28,6 +28,7 @@ from gnuradio import gr, gr_unittest, blocks
 class test_pack(gr_unittest.TestCase):
 
     def setUp(self):
+        random.seed(0)
         self.tb = gr.top_block()
 
     def tearDown(self):
