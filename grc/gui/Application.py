@@ -213,10 +213,6 @@ class Application(Gtk.Application):
             main.update_panel_visibility(main.CONSOLE, Actions.TOGGLE_CONSOLE_WINDOW.get_active())
             main.update_panel_visibility(main.VARIABLES, Actions.TOGGLE_FLOW_GRAPH_VAR_EDITOR.get_active())
 
-            #if ParseXML.xml_failures:
-            #    Messages.send_xml_errors_if_any(ParseXML.xml_failures)
-            #    Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(True)
-
             # Force an update on the current page to match loaded preferences.
             # In the future, change the __init__ order to load preferences first
             page = main.current_page
@@ -584,7 +580,6 @@ class Application(Gtk.Application):
         # View Parser Errors
         ##################################################
         elif action == Actions.XML_PARSER_ERRORS_DISPLAY:
-            # ParserErrorsDialog(ParseXML.xml_failures).run()
             pass
         ##################################################
         # Undo/Redo
@@ -739,8 +734,6 @@ class Application(Gtk.Application):
             main.btwin.repopulate()
 
             #todo: implement parser error dialog for YAML
-            #Actions.XML_PARSER_ERRORS_DISPLAY.set_enabled(bool(ParseXML.xml_failures))
-            #Messages.send_xml_errors_if_any(ParseXML.xml_failures)
 
             # Force a redraw of the graph, by getting the current state and re-importing it
             main.update_pages()
