@@ -26,13 +26,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from __future__ import division
 
-import os
-import stat
-
 import unittest
-from . import gr_xmlrunner
-
-
 
 class TestCase(unittest.TestCase):
     """A subclass of unittest.TestCase that adds additional assertions
@@ -139,45 +133,14 @@ main = TestProgram
 
 def run(PUT, filename=None, verbosity=1):
     '''
-    Runs the unittest on a TestCase and produces an optional XML report
+    Runs the unittest on a TestCase
     PUT:      the program under test and should be a gr_unittest.TestCase
-    filename: an optional filename to save the XML report of the tests
-              this will live in ./.unittests/python
+    filename: This argument is here for historical reasons.
     '''
-    # Run this is given a file name
     if filename:
-        basepath = "./.unittests"
-        path = basepath + "/python"
-
-        if not os.path.exists(basepath):
-            os.makedirs(basepath, mode=0o750)
-
-        xmlrunner = None
-        # only proceed if .unittests is writable
-        st = os.stat(basepath)[stat.ST_MODE]
-        if st & stat.S_IWUSR > 0:
-            # Test if path exists; if not, build it
-            if not os.path.exists(path):
-                os.makedirs(path, mode=0o750)
-
-            # Just for safety: make sure we can write here, too
-            st = os.stat(path)[stat.ST_MODE]
-            if st & stat.S_IWUSR > 0:
-                # Create an XML runner to filename
-                fout = open(path+"/"+filename, "w")
-                xmlrunner = gr_xmlrunner.XMLTestRunner(fout)
-
-        # Run the test; runner also creates XML output file
-        suite = TestLoader().loadTestsFromTestCase(PUT)
-
-        # use the xmlrunner if we can write the the directory
-        if xmlrunner is not None:
-            xmlrunner.run(suite)
-
-        main(verbosity=verbosity)
-    else:
-        # If no filename is given, just run the test
-        main(verbosity=verbosity)
+        print("DEPRECATED: Using filename with gr_unittest does no longer "
+              "have any effect.")
+    main(verbosity=verbosity)
 
 
 ##############################################################################
