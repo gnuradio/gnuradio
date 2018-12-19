@@ -27,28 +27,9 @@
 #include <gnuradio/thread/thread.h>
 #include "file_source_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <stdexcept>
-#include <stdio.h>
-
-// win32 (mingw/msvc) specific
-#ifdef HAVE_IO_H
-#include <io.h>
-#endif
-#ifdef O_BINARY
-#define OUR_O_BINARY O_BINARY
-#else
-#define OUR_O_BINARY 0
-#endif
-// should be handled via configure
-#ifdef O_LARGEFILE
-#define OUR_O_LARGEFILE O_LARGEFILE
-#else
-#define OUR_O_LARGEFILE 0
-#endif
+#include <fstream>
+#include <limits>
 
 namespace gr {
   namespace blocks {
@@ -60,30 +41,43 @@ namespace gr {
         (new file_source_impl(itemsize, filename, repeat, start_offset_items, length_items));
     }
 
-    file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat,
-                                       uint64_t start_offset_items, uint64_t length_items)
-      : sync_block("file_source",
-                   io_signature::make(0, 0, 0),
-                   io_signature::make(1, 1, itemsize)),
-        d_itemsize(itemsize),
-        d_start_offset_items(start_offset_items), d_length_items(length_items),
-        d_fp(0), d_new_fp(0), d_repeat(repeat), d_updated(false),
-        d_file_begin(true), d_repeat_cnt(0), d_add_begin_tag(pmt::PMT_NIL)
+    file_source_impl::file_source_impl(size_t itemsize,
+                                       const char* filename,
+                                       bool repeat,
+                                       uint64_t start_offset_items,
+                                       uint64_t length_items)
+        : sync_block("file_source",
+                     io_signature::make(0, 0, 0),
+                     io_signature::make(1, 1, itemsize)),
+          d_itemsize(itemsize),
+          d_start_offset_items(start_offset_items),
+          d_length_items(length_items),
+          d_fstream(nullptr),
+          d_new_fstream(nullptr),
+          d_repeat(repeat),
+          d_updated(false),
+          d_file_begin(true),
+          d_repeat_cnt(0),
+          d_add_begin_tag(pmt::PMT_NIL)
     {
-      open(filename, repeat, start_offset_items, length_items);
-      do_update();
+        open(filename, repeat, start_offset_items, length_items);
+        do_update();
 
-      std::stringstream str;
-      str << name() << unique_id();
-      _id = pmt::string_to_symbol(str.str());
+        std::stringstream str;
+        str << name() << unique_id();
+        _id = pmt::string_to_symbol(str.str());
     }
 
     file_source_impl::~file_source_impl()
     {
-      if(d_fp)
-        fclose ((FILE*)d_fp);
-      if(d_new_fp)
-        fclose ((FILE*)d_new_fp);
+        if (d_fstream != nullptr) {
+            close_conditionally(d_fstream);
+            delete d_fstream;
+        }
+        if (d_new_fstream != nullptr) {
+            close_conditionally(d_new_fstream);
+            delete d_fstream;
+        }
     }
 
     bool
@@ -110,8 +104,8 @@ namespace gr {
         GR_LOG_WARN(d_logger, "bad seek point");
         return 0;
       }
-
-      return fseek((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
+      d_fstream->seekg(seek_point * d_itemsize, std::ios_base::beg);
+      return d_fstream->good();
     }
 
 
@@ -122,28 +116,17 @@ namespace gr {
       // obtain exclusive access for duration of this function
       gr::thread::scoped_lock lock(fp_mutex);
 
-      int fd;
-
-      // we use "open" to use to the O_LARGEFILE flag
-      if((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
-        throw std::runtime_error("can't open file");
-      }
-
-      if(d_new_fp) {
-        fclose(d_new_fp);
-        d_new_fp = 0;
-      }
-
-      if((d_new_fp = fdopen (fd, "rb")) == NULL) {
-        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
-        ::close(fd);    // don't leak file descriptor if fdopen fails
-        throw std::runtime_error("can't open file");
-      }
-
-      //Check to ensure the file will be consumed according to item size
-      fseek(d_new_fp, 0, SEEK_END);
-      uint64_t file_size = ftell(d_new_fp);
+      using ios = std::ios_base;
+      d_new_fstream = new std::ifstream();
+      d_new_fstream->open(filename, ios::in | ios::binary);
+      // definitely seek to end of file
+      d_new_fstream->ignore( std::numeric_limits<std::streamsize>::max() );
+      //how many bytes did the ignore() ignore?
+      uint64_t file_size = d_new_fstream->gcount();
+      //reset eof flag
+      d_new_fstream->clear();
+      //seek back to start
+      d_new_fstream->seekg(start_offset_items * d_itemsize, ios::beg);
 
       // Make sure there will be at least one item available
       if ((file_size / d_itemsize) < (start_offset_items+1)) {
@@ -153,7 +136,11 @@ namespace gr {
         else {
           GR_LOG_WARN(d_logger, "file is too small");
         }
-        fclose(d_new_fp);
+        if (d_new_fstream->is_open()) {
+            d_new_fstream->close();
+        }
+        delete d_new_fstream;
+        d_new_fstream = nullptr;
         throw std::runtime_error("file is too small");
       }
 
@@ -173,9 +160,6 @@ namespace gr {
         GR_LOG_WARN(d_logger, "file too short, will read fewer than requested items");
       }
 
-      // Rewind to start offset
-      fseek(d_new_fp, start_offset_items * d_itemsize, SEEK_SET);
-
       d_updated = true;
       d_repeat = repeat;
       d_start_offset_items = start_offset_items;
@@ -188,25 +172,29 @@ namespace gr {
     {
       // obtain exclusive access for duration of this function
       gr::thread::scoped_lock lock(fp_mutex);
-
-      if(d_new_fp != NULL) {
-        fclose(d_new_fp);
-        d_new_fp = NULL;
-      }
+      close_conditionally(d_new_fstream);
+      close_conditionally(d_fstream);
       d_updated = true;
     }
 
-    void
-    file_source_impl::do_update()
+    void file_source_impl::close_conditionally(std::ifstream* fstream)
+    {
+        if (fstream->is_open()) {
+            fstream->close();
+        }
+    }
+
+    void file_source_impl::do_update()
     {
       if(d_updated) {
         gr::thread::scoped_lock lock(fp_mutex); // hold while in scope
 
-        if(d_fp)
-          fclose(d_fp);
-
-        d_fp = d_new_fp;    // install new file pointer
-        d_new_fp = 0;
+        if (d_fstream != nullptr) {
+            file_source_impl::close_conditionally(d_fstream);
+            delete d_fstream;
+        }
+        d_fstream = d_new_fstream;
+        d_new_fstream = nullptr;
         d_updated = false;
         d_file_begin = true;
       }
@@ -223,12 +211,12 @@ namespace gr {
                            gr_vector_const_void_star &input_items,
                            gr_vector_void_star &output_items)
     {
-      char *o = (char*)output_items[0];
       uint64_t size = noutput_items;
 
-      do_update();       // update d_fp is reqd
-      if(d_fp == NULL)
+      do_update();       // update d_fstream if necessary
+      if(d_fstream == nullptr || !d_fstream->is_open()) {
         throw std::runtime_error("work with file not open");
+      }
 
       gr::thread::scoped_lock lock(fp_mutex); // hold for the rest of this function
 
@@ -247,9 +235,15 @@ namespace gr {
 
         uint64_t nitems_to_read = std::min(size, d_items_remaining);
 
-        // Since the bounds of the file are known, unexpected nitems is an error
-        if (nitems_to_read != fread(o, d_itemsize, nitems_to_read, (FILE*)d_fp))
-          throw std::runtime_error("fread error");
+        auto o = reinterpret_cast<char*>(output_items[0]);
+        d_fstream->read(o, d_itemsize * nitems_to_read);
+        // Trying to read beyond end of file sets failbit
+        // and since we know how long the file is, that's an error.
+        if (d_fstream->fail()) {
+          GR_LOG_ERROR(d_logger, "file reading error");
+          close();
+          return WORK_DONE;
+        }
 
         size -= nitems_to_read;
         d_items_remaining -= nitems_to_read;
@@ -260,7 +254,7 @@ namespace gr {
 
           // Repeat: rewind and request tag
           if (d_repeat) {
-            fseek(d_fp, d_start_offset_items * d_itemsize, SEEK_SET);
+            d_fstream->seekg(d_start_offset_items * d_itemsize, std::ios_base::beg);
             d_items_remaining = d_length_items;
             if (d_add_begin_tag != pmt::PMT_NIL) {
               d_file_begin = true;

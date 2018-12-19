@@ -25,6 +25,7 @@
 
 #include <gnuradio/blocks/file_source.h>
 #include <boost/thread/mutex.hpp>
+#include <fstream>
 
 namespace gr {
   namespace blocks {
@@ -36,8 +37,9 @@ namespace gr {
       uint64_t d_start_offset_items;
       uint64_t d_length_items;
       uint64_t d_items_remaining;
-      FILE *d_fp;
-      FILE *d_new_fp;
+
+      std::ifstream* d_fstream;
+      std::ifstream* d_new_fstream;
       bool d_repeat;
       bool d_updated;
       bool d_file_begin;
@@ -48,6 +50,7 @@ namespace gr {
       pmt::pmt_t _id;
 
       void do_update();
+      void close_conditionally(std::ifstream* fstream);
 
     public:
       file_source_impl(size_t itemsize, const char *filename, bool repeat,
