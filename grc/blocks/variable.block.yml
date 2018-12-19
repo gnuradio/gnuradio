@@ -1,5 +1,6 @@
 id: variable
 label: Variable
+flags: variable
 
 parameters:
 -   id: value

@@ -160,12 +160,22 @@ class Block(CoreBlock, Drawable):
             PangoCairo.update_layout(cr, title_layout)
             PangoCairo.update_layout(cr, params_layout)
 
-        title_layout.set_markup(
-            '<span {foreground} font_desc="{font}"><b>{label}</b></span>'.format(
-                foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
-                label=Utils.encode(self.label)
+        if not "variable" in self.flags:
+            title_layout.set_markup(
+                '<span {foreground} font_desc="{font}"><b>{label}</b></span>'.format(
+                    foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
+                    label=Utils.encode(self.label)
+                )
             )
-        )
+        else:
+            title_layout.set_markup(
+                '<span {foreground} font_desc="{font}"><b>{label}:</b> {id}</span>'.format(
+                    foreground='foreground="red"' if not self.is_valid() else '', font=BLOCK_FONT,
+                    label=Utils.encode(self.label),
+                    id=self.name
+                )
+            )
+
         title_width, title_height = title_layout.get_size()
 
         # update the params layout
