@@ -38,8 +38,6 @@
 #include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
 
-#include "boost/lexical_cast.hpp"
-
 
 namespace gr {
 	namespace audio {

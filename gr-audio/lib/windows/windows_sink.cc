@@ -38,7 +38,6 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
-#include "boost/lexical_cast.hpp"
 
 namespace gr {
   namespace audio {

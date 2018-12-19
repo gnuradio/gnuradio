@@ -474,7 +474,7 @@ u16vector_writable_elements(pmt_t vector, size_t &len)
 const std::string
 pmt_u16vector::string_ref(size_t k) const
 {
-  return boost::lexical_cast< std::string, uint16_t > (ref(k));
+  return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -623,7 +623,7 @@ s16vector_writable_elements(pmt_t vector, size_t &len)
 const std::string
 pmt_s16vector::string_ref(size_t k) const
 {
-  return boost::lexical_cast< std::string, int16_t > (ref(k));
+  return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -772,7 +772,7 @@ u32vector_writable_elements(pmt_t vector, size_t &len)
 const std::string
 pmt_u32vector::string_ref(size_t k) const
 {
-  return boost::lexical_cast< std::string, uint32_t > (ref(k));
+  return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -921,7 +921,7 @@ s32vector_writable_elements(pmt_t vector, size_t &len)
 const std::string
 pmt_s32vector::string_ref(size_t k) const
 {
-  return boost::lexical_cast< std::string, int32_t > (ref(k));
+  return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -1070,7 +1070,7 @@ u64vector_writable_elements(pmt_t vector, size_t &len)
 const std::string
 pmt_u64vector::string_ref(size_t k) const
 {
-  return boost::lexical_cast< std::string, uint64_t > (ref(k));
+  return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
@@ -1219,7 +1219,7 @@ s64vector_writable_elements(pmt_t vector, size_t &len)
 const std::string
 pmt_s64vector::string_ref(size_t k) const
 {
-  return boost::lexical_cast< std::string, int64_t > (ref(k));
+  return std::to_string(ref(k));
 }
 
 } /* namespace pmt */
