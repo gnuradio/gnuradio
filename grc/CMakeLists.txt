@@ -45,12 +45,6 @@ GR_PYTHON_CHECK_MODULE_RAW(
 )
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "lxml >= 1.3.6"
-    "import lxml.etree; assert lxml.etree.LXML_VERSION >= (1, 3, 6, 0)"
-    LXML_FOUND
-)
-
-GR_PYTHON_CHECK_MODULE_RAW(
     "pygobject >= 2.28.6"
     "import gi; assert gi.version_info >= (2, 28, 6)"
     PYGI_FOUND
@@ -90,7 +84,6 @@ if(NOT CMAKE_CROSSCOMPILING)
         PYTHON_MIN_VER_FOUND
         PYYAML_FOUND
         MAKO_FOUND
-        LXML_FOUND
         PYGI_FOUND
         GTK_GI_FOUND
         CAIRO_GI_FOUND
