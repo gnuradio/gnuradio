@@ -29,7 +29,7 @@ import random
 class test_keep_m_in_n(gr_unittest.TestCase):
 
     def setUp(self):
-        pass
+        random.seed(0)
 
     def tearDown(self):
         pass

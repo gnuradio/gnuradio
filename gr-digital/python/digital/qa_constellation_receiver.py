@@ -89,6 +89,9 @@ class test_constellation_receiver(gr_unittest.TestCase):
     max_data_length = DATA_LENGTH * 6
     max_num_samples = 1000
 
+    def setUp(self):
+        random.seed(0)
+
     def test_basic(self):
         """
         Tests a bunch of different constellations by using generic

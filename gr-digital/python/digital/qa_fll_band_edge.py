@@ -30,6 +30,7 @@ from gnuradio import gr, gr_unittest, digital, filter, blocks, analog
 class test_fll_band_edge_cc(gr_unittest.TestCase):
 
     def setUp(self):
+        random.seed(0)
         self.tb = gr.top_block()
 
     def tearDown(self):

@@ -45,6 +45,7 @@ def rand_range(min_val, max_val):
 class qa_ofdm_chanest_vcvc (gr_unittest.TestCase):
 
     def setUp (self):
+        random.seed(0)
         self.tb = gr.top_block ()
 
     def tearDown (self):

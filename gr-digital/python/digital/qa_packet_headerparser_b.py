@@ -30,6 +30,7 @@ import pmt
 class qa_packet_headerparser_b (gr_unittest.TestCase):
 
     def setUp (self):
+        random.seed(0)
         self.tb = gr.top_block ()
 
     def tearDown (self):

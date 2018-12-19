@@ -31,6 +31,7 @@ from gnuradio.digital import psk
 class test_costas_loop_cc(gr_unittest.TestCase):
 
     def setUp(self):
+        random.seed(0)
         self.tb = gr.top_block()
 
     def tearDown(self):

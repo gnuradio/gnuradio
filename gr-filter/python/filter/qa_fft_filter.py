@@ -89,7 +89,7 @@ def print_complex(x):
 class test_fft_filter(gr_unittest.TestCase):
 
     def setUp(self):
-        pass
+        random.seed(0)
 
     def tearDown(self):
         pass

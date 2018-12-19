@@ -35,6 +35,7 @@ def make_random_int_tuple(L, min, max):
 class test_diff_encoder(gr_unittest.TestCase):
 
     def setUp(self):
+        random.seed(0)
         self.tb = gr.top_block()
 
     def tearDown(self):

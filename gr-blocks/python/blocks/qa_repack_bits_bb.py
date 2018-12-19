@@ -28,6 +28,7 @@ import pmt
 class qa_repack_bits_bb (gr_unittest.TestCase):
 
     def setUp (self):
+        random.seed(0)
         self.tb = gr.top_block ()
         self.tsb_key = "length"
 
