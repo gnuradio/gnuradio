@@ -264,132 +264,141 @@ class Application(Gtk.Application):
                 flow_graph_update()
                 page.state_cache.save_new_state(flow_graph.export_data())
                 page.saved = False
-                ##################################################
-                # Create heir block
-                ##################################################
+        ##################################################
+        # Create hier block
+        ##################################################
         elif action == Actions.BLOCK_CREATE_HIER:
 
-                        # keeping track of coordinates for pasting later
-                        coords = flow_graph.selected_blocks()[0].coordinate
-                        x,y = coords
-                        x_min = x
-                        y_min = y
+            # keeping track of coordinates for pasting later
+            coords = flow_graph.selected_blocks()[0].coordinate
+            x,y = coords
+            x_min = x
+            y_min = y
 
-                        pads = [];
-                        params = [];
+            pads = []
+            params = []
 
-                        # Save the state of the leaf blocks
-                        for block in flow_graph.selected_blocks():
+            # Save the state of the leaf blocks
+            for block in flow_graph.selected_blocks():
 
-                            # Check for string variables within the blocks
-                            for param in block.params.values():
-                                for variable in flow_graph.get_variables():
-                                    # If a block parameter exists that is a variable, create a parameter for it
-                                    if param.get_value() == variable.name:
-                                        params.append(param.get_value())
-                                for flow_param in flow_graph.get_parameters():
-                                    # If a block parameter exists that is a parameter, create a parameter for it
-                                    if param.get_value() == flow_param.name:
-                                        params.append(param.get_value())
+                # Check for string variables within the blocks
+                for param in block.params.values():
+                    for variable in flow_graph.get_variables():
+                        # If a block parameter exists that is a variable, create a parameter for it
+                        if param.get_value() == variable.name:
+                            params.append(param.get_value())
+                    for flow_param in flow_graph.get_parameters():
+                        # If a block parameter exists that is a parameter, create a parameter for it
+                        if param.get_value() == flow_param.name:
+                            params.append(param.get_value())
 
+                # keep track of x,y mins for pasting later
+                (x,y) = block.coordinate
+                if x < x_min:
+                    x_min = x
+                if y < y_min:
+                    y_min = y
 
-                            # keep track of x,y mins for pasting later
-                            (x,y) = block.coordinate
-                            if x < x_min:
-                                x_min = x
-                            if y < y_min:
-                                y_min = y
+                for connection in block.connections:
 
-                            for connection in block.connections:
+                    # Get id of connected blocks
+                    source_id = connection.source_block.name
+                    sink_id = connection.sink_block.name
 
-                                # Get id of connected blocks
-                                source_id = connection.source_block.name
-                                sink_id = connection.sink_block.name
+                    # If connected block is not in the list of selected blocks create a pad for it
+                    if flow_graph.get_block(
+                            source_id) not in flow_graph.selected_blocks():
+                        pads.append({
+                            'key':
+                            connection.sink_port.key,
+                            'coord':
+                            connection.source_port.coordinate,
+                            'block_id':
+                            block.name,
+                            'direction':
+                            'source'
+                        })
 
-                                # If connected block is not in the list of selected blocks create a pad for it
-                                if flow_graph.get_block(source_id) not in flow_graph.selected_blocks():
-                                    pads.append({'key': connection.sink_port.key, 'coord': connection.source_port.coordinate, 'block_id' : block.name, 'direction': 'source'})
-
-                                if flow_graph.get_block(sink_id) not in flow_graph.selected_blocks():
-                                    pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.coordinate, 'block_id' : block.name, 'direction': 'sink'})
-
-
-                        # Copy the selected blocks and paste them into a new page
-                        #   then move the flowgraph to a reasonable position
-                        Actions.BLOCK_COPY()
-                        main.new_page()
-                        Actions.BLOCK_PASTE()
-                        coords = (x_min,y_min)
-                        flow_graph.move_selected(coords)
-
-
-                        # Set flow graph to heir block type
-                        top_block  = flow_graph.get_block("top_block")
-                        top_block.params['generate_options'].set_value('hb')
-
-                        # this needs to be a unique name
-                        top_block.params['id'].set_value('new_heir')
-
-                        # Remove the default samp_rate variable block that is created
-                        remove_me  = flow_graph.get_block("samp_rate")
-                        flow_graph.remove_element(remove_me)
+                    if flow_graph.get_block(sink_id) not in flow_graph.selected_blocks():
+                        pads.append({'key': connection.source_port.key, 'coord': connection.sink_port.coordinate, 'block_id' : block.name, 'direction': 'sink'})
 
 
-                        # Add the param blocks along the top of the window
-                        x_pos = 150
-                        for param in params:
-                            param_id = flow_graph.add_new_block('parameter',(x_pos,10))
-                            param_block = flow_graph.get_block(param_id)
-                            param_block.params['id'].set_value(param)
-                            x_pos = x_pos + 100
+            # Copy the selected blocks and paste them into a new page
+            #   then move the flowgraph to a reasonable position
+            Actions.BLOCK_COPY()
+            main.new_page()
+            Actions.BLOCK_PASTE()
+            coords = (x_min,y_min)
+            flow_graph.move_selected(coords)
 
-                        for pad in pads:
-                            # Add the pad sources and sinks within the new heir block
-                            if pad['direction'] == 'sink':
 
-                                # Add new PAD_SINK block to the canvas
-                                pad_id = flow_graph.add_new_block('pad_sink', pad['coord'])
+            # Set flow graph to heir block type
+            top_block  = flow_graph.get_block("top_block")
+            top_block.params['generate_options'].set_value('hb')
 
-                                # setup the references to the sink and source
-                                pad_block = flow_graph.get_block(pad_id)
-                                pad_sink = pad_block.sinks[0]
+            # this needs to be a unique name
+            top_block.params['id'].set_value('new_heir')
 
-                                source_block = flow_graph.get_block(pad['block_id'])
-                                source = source_block.get_source(pad['key'])
+            # Remove the default samp_rate variable block that is created
+            remove_me  = flow_graph.get_block("samp_rate")
+            flow_graph.remove_element(remove_me)
 
-                                # Ensure the port types match
-                                while pad_sink.dtype != source.dtype:
 
-                                    # Special case for some blocks that have non-standard type names, e.g. uhd
-                                    if pad_sink.dtype == 'complex' and source.dtype == 'fc32':
-                                        break;
-                                    pad_block.type_controller_modify(1)
+            # Add the param blocks along the top of the window
+            x_pos = 150
+            for param in params:
+                param_id = flow_graph.add_new_block('parameter',(x_pos,10))
+                param_block = flow_graph.get_block(param_id)
+                param_block.params['id'].set_value(param)
+                x_pos = x_pos + 100
 
-                                # Connect the pad to the proper sinks
-                                new_connection = flow_graph.connect(source,pad_sink)
+            for pad in pads:
+                # Add the pad sources and sinks within the new heir block
+                if pad['direction'] == 'sink':
 
-                            elif pad['direction'] == 'source':
-                                pad_id = flow_graph.add_new_block('pad_source', pad['coord'])
+                    # Add new PAD_SINK block to the canvas
+                    pad_id = flow_graph.add_new_block('pad_sink', pad['coord'])
 
-                                # setup the references to the sink and source
-                                pad_block = flow_graph.get_block(pad_id)
-                                pad_source = pad_block.sources[0]
+                    # setup the references to the sink and source
+                    pad_block = flow_graph.get_block(pad_id)
+                    pad_sink = pad_block.sinks[0]
 
-                                sink_block = flow_graph.get_block(pad['block_id'])
-                                sink = sink_block.get_sink(pad['key'])
+                    source_block = flow_graph.get_block(pad['block_id'])
+                    source = source_block.get_source(pad['key'])
 
-                                # Ensure the port types match
-                                while sink.dtype != pad_source.dtype:
-                                    # Special case for some blocks that have non-standard type names, e.g. uhd
-                                    if pad_source.dtype == 'complex' and sink.dtype == 'fc32':
-                                        break;
-                                    pad_block.type_controller_modify(1)
+                    # Ensure the port types match
+                    while pad_sink.dtype != source.dtype:
 
-                                # Connect the pad to the proper sinks
-                                new_connection = flow_graph.connect(pad_source,sink)
+                        # Special case for some blocks that have non-standard type names, e.g. uhd
+                        if pad_sink.dtype == 'complex' and source.dtype == 'fc32':
+                            break;
+                        pad_block.type_controller_modify(1)
 
-                        # update the new heir block flow graph
-                        flow_graph_update()
+                    # Connect the pad to the proper sinks
+                    new_connection = flow_graph.connect(source,pad_sink)
+
+                elif pad['direction'] == 'source':
+                    pad_id = flow_graph.add_new_block('pad_source', pad['coord'])
+
+                    # setup the references to the sink and source
+                    pad_block = flow_graph.get_block(pad_id)
+                    pad_source = pad_block.sources[0]
+
+                    sink_block = flow_graph.get_block(pad['block_id'])
+                    sink = sink_block.get_sink(pad['key'])
+
+                    # Ensure the port types match
+                    while sink.dtype != pad_source.dtype:
+                        # Special case for some blocks that have non-standard type names, e.g. uhd
+                        if pad_source.dtype == 'complex' and sink.dtype == 'fc32':
+                            break
+                        pad_block.type_controller_modify(1)
+
+                    # Connect the pad to the proper sinks
+                    new_connection = flow_graph.connect(pad_source, sink)
+
+            # update the new heir block flow graph
+            flow_graph_update()
 
 
         ##################################################
@@ -627,7 +636,7 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_OPEN_RECENT:
             file_path = str(args[0])[1:-1]
             main.new_page(file_path, show=True)
-            main.tool_bar.refresh_submenus()  
+            main.tool_bar.refresh_submenus()
         elif action == Actions.FLOW_GRAPH_SAVE:
             #read-only or undefined file path, do save-as
             if page.get_read_only() or not page.file_path:
