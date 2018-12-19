@@ -352,9 +352,6 @@ class Platform(Element):
         try:
             for d in chain([data['options']], data['blocks']):
                 d['states']['coordinate'] = yaml.ListFlowing(d['states']['coordinate'])
-                for param_id, value in list(d['parameters'].items()):
-                    if value == '':
-                        d['parameters'].pop(param_id)
         except KeyError:
             pass
 
