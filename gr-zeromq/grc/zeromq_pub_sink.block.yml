@@ -38,6 +38,7 @@ parameters:
     label: Filter Key 
     dtype: string
     default: ''
+    hide: ${ ('part' if key == '' else 'none') }
 
 inputs:
 -   domain: stream
