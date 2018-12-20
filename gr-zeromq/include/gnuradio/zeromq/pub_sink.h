@@ -56,7 +56,7 @@ namespace gr {
        * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
        */
       static sptr make(size_t itemsize, size_t vlen, char *address,
-                       int timeout=100, bool pass_tags=false, int hwm=-1);
+                       int timeout=100, bool pass_tags=false, int hwm=-1, std::string key="");
 
       /*!
        * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.

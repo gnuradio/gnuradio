@@ -49,7 +49,7 @@ namespace gr {
     class base_sink_impl : public base_impl
     {
     public:
-      base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, std::string key="");
 
     protected:
       int send_message(const void *in_buf, const int in_nitems, const uint64_t in_offset);

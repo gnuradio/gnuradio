@@ -34,7 +34,7 @@ namespace gr {
     class pub_sink_impl : public pub_sink, public base_sink_impl
     {
     public:
-      pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      pub_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, std::string key);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

@@ -64,8 +64,8 @@ namespace gr {
     }
 
 
-    base_sink_impl::base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
-        : base_impl(type, itemsize, vlen, timeout, pass_tags)
+    base_sink_impl::base_sink_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, std::string key)
+        : base_impl(type, itemsize, vlen, timeout, pass_tags, key)
     {
       /* Set high watermark */
       if (hwm >= 0) {
@@ -84,6 +84,14 @@ namespace gr {
     int
     base_sink_impl::send_message(const void *in_buf, const int in_nitems, const uint64_t in_offset)
     {
+
+      /*Send key if it exists */
+      if (d_key.size() > 0) {
+        zmq::message_t key_message (d_key.size());
+        memcpy(key_message.data(), d_key.data(), d_key.size());
+        d_socket->send(key_message, ZMQ_SNDMORE);
+      }
+
       /* Meta-data header */
       std::string header("");
       if(d_pass_tags){
