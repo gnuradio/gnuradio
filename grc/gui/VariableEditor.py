@@ -175,12 +175,15 @@ class VariableEditor(Gtk.VBox):
         if block:
             if block.key == 'import':
                 value = block.params['imports'].get_value()
-            elif not "variable" in block.flags:
+            elif not block.is_variable:
                 value = "<Open Properties>"
                 sp('editable', False)
                 sp('foreground', '#0D47A1')
-            else:
+            elif 'value' in block.params:
                 value = block.params['value'].get_value()
+            else:
+                value = block.value + " (Open Properties)"
+                sp('editable', False)
 
             # Check if there are errors in the blocks.
             # Show the block error as a tooltip
@@ -191,9 +194,11 @@ class VariableEditor(Gtk.VBox):
                 self.set_tooltip_text(error_message[-1])
             else:
                 # Evaluate and show the value (if it is a variable)
-                if "variable" in block.flags:
-                    evaluated = str(block.params['value'].evaluate())
-                    self.set_tooltip_text(evaluated)
+                if block.is_variable:
+                    if 'value' in block.params:
+                        self.set_tooltip_text(str(block.params['value'].evaluate()))
+                    else:
+                        self.set_tooltip_text(block.value)
         # Always set the text value.
         sp('text', value)
 
@@ -241,7 +246,8 @@ class VariableEditor(Gtk.VBox):
         if block.is_import:
             block.params['import'].set_value(new_text)
         else:
-            block.params['value'].set_value(new_text)
+            if 'value' in block.params:
+                block.params['value'].set_value(new_text)
         Actions.VARIABLE_EDITOR_UPDATE()
 
     def handle_action(self, item, key, event=None):

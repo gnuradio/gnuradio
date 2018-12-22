@@ -192,7 +192,7 @@ class Block(Element):
 
     @lazy_property
     def is_variable(self):
-        return bool(self.value)
+        return 'variable' in self.flags or bool(self.value)
 
     @lazy_property
     def is_import(self):
