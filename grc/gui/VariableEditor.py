@@ -175,7 +175,7 @@ class VariableEditor(Gtk.VBox):
         if block:
             if block.key == 'import':
                 value = block.params['imports'].get_value()
-            elif block.key != "variable":
+            elif not "variable" in block.flags:
                 value = "<Open Properties>"
                 sp('editable', False)
                 sp('foreground', '#0D47A1')
@@ -191,7 +191,7 @@ class VariableEditor(Gtk.VBox):
                 self.set_tooltip_text(error_message[-1])
             else:
                 # Evaluate and show the value (if it is a variable)
-                if block.key == "variable":
+                if "variable" in block.flags:
                     evaluated = str(block.params['value'].evaluate())
                     self.set_tooltip_text(evaluated)
         # Always set the text value.
