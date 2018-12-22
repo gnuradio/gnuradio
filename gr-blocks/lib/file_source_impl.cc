@@ -34,34 +34,26 @@
 #include <stdexcept>
 #include <stdio.h>
 
-// win32 (mingw/msvc) specific
-#ifdef HAVE_IO_H
-#include <io.h>
-#endif
-#ifdef O_BINARY
-#define OUR_O_BINARY O_BINARY
+#ifdef _MSC_VER
+#define GR_FSEEK _fseeki64
+#define GR_FTELL _ftelli64
 #else
-#define OUR_O_BINARY 0
-#endif
-// should be handled via configure
-#ifdef O_LARGEFILE
-#define OUR_O_LARGEFILE O_LARGEFILE
-#else
-#define OUR_O_LARGEFILE 0
+#define GR_FSEEK fseeko
+#define GR_FTELL ftello
 #endif
 
 namespace gr {
   namespace blocks {
 
     file_source::sptr file_source::make(size_t itemsize, const char *filename, bool repeat,
-                                        size_t start_offset_items, size_t length_items)
+                                        uint64_t start_offset_items, uint64_t length_items)
     {
       return gnuradio::get_initial_sptr
         (new file_source_impl(itemsize, filename, repeat, start_offset_items, length_items));
     }
 
     file_source_impl::file_source_impl(size_t itemsize, const char *filename, bool repeat,
-                                       size_t start_offset_items, size_t length_items)
+                                       uint64_t start_offset_items, uint64_t length_items)
       : sync_block("file_source",
                    io_signature::make(0, 0, 0),
                    io_signature::make(1, 1, itemsize)),
@@ -87,7 +79,7 @@ namespace gr {
     }
 
     bool
-    file_source_impl::seek(long seek_point, int whence)
+    file_source_impl::seek(int64_t seek_point, int whence)
     {
       seek_point += d_start_offset_items;
 
@@ -105,45 +97,35 @@ namespace gr {
         return 0;
       }
 
-      if ((seek_point < (long)d_start_offset_items)
-          || (seek_point > (long)(d_start_offset_items+d_length_items-1))) {
+      if ((seek_point < (int64_t)d_start_offset_items)
+          || (seek_point > (int64_t)(d_start_offset_items+d_length_items-1))) {
         GR_LOG_WARN(d_logger, "bad seek point");
         return 0;
       }
-
-      return fseek((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
+      return GR_FSEEK((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
     }
 
 
     void
     file_source_impl::open(const char *filename, bool repeat,
-                           size_t start_offset_items, size_t length_items)
+                           uint64_t start_offset_items, uint64_t length_items)
     {
       // obtain exclusive access for duration of this function
       gr::thread::scoped_lock lock(fp_mutex);
-
-      int fd;
-
-      // we use "open" to use to the O_LARGEFILE flag
-      if((fd = ::open(filename, O_RDONLY | OUR_O_LARGEFILE | OUR_O_BINARY)) < 0) {
-        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
-        throw std::runtime_error("can't open file");
-      }
 
       if(d_new_fp) {
         fclose(d_new_fp);
         d_new_fp = 0;
       }
 
-      if((d_new_fp = fdopen (fd, "rb")) == NULL) {
+      if((d_new_fp = fopen (filename, "rb")) == NULL) {
         GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
-        ::close(fd);    // don't leak file descriptor if fdopen fails
         throw std::runtime_error("can't open file");
       }
 
       //Check to ensure the file will be consumed according to item size
-      fseek(d_new_fp, 0, SEEK_END);
-      int file_size = ftell(d_new_fp);
+      GR_FSEEK(d_new_fp, 0, SEEK_END);
+      uint64_t file_size = GR_FTELL(d_new_fp);
 
       // Make sure there will be at least one item available
       if ((file_size / d_itemsize) < (start_offset_items+1)) {
@@ -157,7 +139,7 @@ namespace gr {
         throw std::runtime_error("file is too small");
       }
 
-      size_t items_available = (file_size / d_itemsize - start_offset_items);
+      uint64_t items_available = (file_size / d_itemsize - start_offset_items);
 
       // If length is not specified, use the remainder of the file. Check alignment at end.
       if (length_items == 0) {
@@ -174,7 +156,7 @@ namespace gr {
       }
 
       // Rewind to start offset
-      fseek(d_new_fp, start_offset_items * d_itemsize, SEEK_SET);
+      GR_FSEEK(d_new_fp, start_offset_items * d_itemsize, SEEK_SET);
 
       d_updated = true;
       d_repeat = repeat;
@@ -224,7 +206,7 @@ namespace gr {
                            gr_vector_void_star &output_items)
     {
       char *o = (char*)output_items[0];
-      int size = noutput_items;
+      uint64_t size = noutput_items;
 
       do_update();       // update d_fp is reqd
       if(d_fp == NULL)
@@ -245,7 +227,7 @@ namespace gr {
           d_file_begin = false;
         }
 
-        size_t nitems_to_read = std::min((size_t)size, d_items_remaining);
+        uint64_t nitems_to_read = std::min(size, d_items_remaining);
 
         // Since the bounds of the file are known, unexpected nitems is an error
         if (nitems_to_read != fread(o, d_itemsize, nitems_to_read, (FILE*)d_fp))
@@ -260,7 +242,7 @@ namespace gr {
 
           // Repeat: rewind and request tag
           if (d_repeat) {
-            fseek(d_fp, d_start_offset_items * d_itemsize, SEEK_SET);
+            GR_FSEEK(d_fp, d_start_offset_items * d_itemsize, SEEK_SET);
             d_items_remaining = d_length_items;
             if (d_add_begin_tag != pmt::PMT_NIL) {
               d_file_begin = true;

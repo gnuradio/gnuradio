@@ -62,7 +62,7 @@ namespace gr {
        * \param len     produce only items [offset, offset+len)
        */
       static sptr make(size_t itemsize, const char *filename, bool repeat = false,
-                       size_t offset = 0, size_t len = 0);
+                       uint64_t offset = 0, uint64_t len = 0);
 
       /*!
        * \brief seek file to \p seek_point relative to \p whence
@@ -70,7 +70,7 @@ namespace gr {
        * \param seek_point      sample offset in file
        * \param whence  one of SEEK_SET, SEEK_CUR, SEEK_END (man fseek)
        */
-      virtual bool seek(long seek_point, int whence) = 0;
+      virtual bool seek(int64_t seek_point, int whence) = 0;
 
       /*!
        * \brief Opens a new file.
@@ -80,7 +80,7 @@ namespace gr {
        * \param offset  begin this many items into file
        * \param len     produce only items [offset, offset+len)
        */
-      virtual void open(const char *filename, bool repeat, size_t offset = 0, size_t len = 0) = 0;
+      virtual void open(const char *filename, bool repeat, uint64_t offset = 0, uint64_t len = 0) = 0;
 
       /*!
        * \brief Close the file handle.
