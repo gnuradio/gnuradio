@@ -84,7 +84,10 @@ def convert_block_xml(node):
     data['id'] = block_id
     data['label'] = node.findtext('name') or no_value
     data['category'] = node.findtext('category') or no_value
-    data['flags'] = node.findtext('flags') or no_value
+    data['flags'] = [n.text for n in node.findall('flags')]
+    data['flags'] += ['variable'] if block_id.startswith('variable') else []
+    if not data['flags']:
+        data['flags'] = no_value
 
     data['parameters'] = [convert_param_xml(param_node, converter.to_python_dec)
                           for param_node in node.iterfind('param')] or no_value
@@ -96,6 +99,8 @@ def convert_block_xml(node):
     data['outputs'] = [convert_port_xml(port_node, converter.to_python_dec)
                        for port_node in node.iterfind('source')] or no_value
     data['value'] = (
+        # old GRC used to treat blocks starting with "variable" specially (magically);
+        # we're now wiser and have "flags: variable" for that
         converter.to_python_dec(node.findtext('var_value')) or
         ('${ value }' if block_id.startswith('variable') else no_value)
     )
