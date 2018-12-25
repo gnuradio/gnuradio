@@ -4,10 +4,8 @@ label: POLAR Encoder Definition
 parameters:
 -   id: is_packed
     label: Packed Bits
-    dtype: enum
+    dtype: bool
     default: 'False'
-    options: ['False', 'True']
-    option_labels: ['No', 'Yes']
 -   id: ndim
     label: Parallelism
     dtype: enum
