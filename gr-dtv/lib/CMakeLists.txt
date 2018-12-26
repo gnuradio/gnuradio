@@ -117,7 +117,7 @@ if (MSVC)
 		CHECK_C_COMPILER_FLAG ("/arch:SSE2" SSE2_SUPPORTED)
 	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 else ()
-	check_c_source_compiles("#include <emmintrin.h>\nint main(){__m128i m0, m1, m2; m0 = _mm_add_epi8(m1, m2);}"
+	check_c_source_compiles("#include <emmintrin.h>\nint main(){__m128i m0, m1, m2; m0 = _mm_add_epi8(m1, m2);}" SSE2_SUPPORTED)
 endif(MSVC)
 
 if(SSE2_SUPPORTED)
