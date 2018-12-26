@@ -1,5 +1,6 @@
 id: variable_header_format_default
 label: Default Header Format Obj.
+flags: variable
 
 parameters:
 -   id: access_code

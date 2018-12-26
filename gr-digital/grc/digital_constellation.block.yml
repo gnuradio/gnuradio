@@ -1,5 +1,6 @@
 id: variable_constellation
 label: Constellation Object
+flags: variable
 category: Modulators
 
 parameters:

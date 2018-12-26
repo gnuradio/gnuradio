@@ -1,5 +1,6 @@
 id: variable_ldpc_G_matrix_def
 label: LDPC Generator Matrix
+flags: variable
 
 parameters:
 -   id: value
