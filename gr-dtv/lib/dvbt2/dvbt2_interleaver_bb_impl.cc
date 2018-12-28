@@ -349,7 +349,7 @@ namespace gr {
       }
 
       //tempu now has the input indices interleaved correctly, so save it
-      memcpy(lookup_table, tempu, FRAME_SIZE_NORMAL * sizeof(int));
+      memcpy(lookup_table, tempu, frame_size * sizeof(int));
     }
 
     /*
