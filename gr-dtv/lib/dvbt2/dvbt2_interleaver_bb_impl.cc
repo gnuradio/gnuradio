@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -189,95 +189,58 @@ namespace gr {
       const int *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
       const int *c9, *c10, *c11, *c12, *c13, *c14, *c15, *c16;
 
-      for(int i=0; i<FRAME_SIZE_NORMAL; i++) {
+      for(int i = 0; i < FRAME_SIZE_NORMAL; i++) {
         lookup_table[i] = i;
       }
 
       const int *in = &lookup_table[0];
 
       switch (signal_constellation) {
-      //ignore QPSK, not worth it, as there is no column interleaving
-      case MOD_16QAM:
-        rows = frame_size / (mod * 2);
-
-        if (frame_size == FRAME_SIZE_NORMAL) {
-          twist = &twist16n[0];
-        }
-        else {
-          twist = &twist16s[0];
-        }
-
-        interleave_parity_bits(tempu, in);
-
-        c1 = &tempv[0];
-        c2 = &tempv[rows];
-        c3 = &tempv[rows * 2];
-        c4 = &tempv[rows * 3];
-        c5 = &tempv[rows * 4];
-        c6 = &tempv[rows * 5];
-        c7 = &tempv[rows * 6];
-        c8 = &tempv[rows * 7];
-
-        twist_interleave_columns(tempv, tempu, rows, twist);
-
-        for (int j = 0; j < rows; j++) {
-          tempu[index++] = c1[j];
-          tempu[index++] = c2[j];
-          tempu[index++] = c3[j];
-          tempu[index++] = c4[j];
-          tempu[index++] = c5[j];
-          tempu[index++] = c6[j];
-          tempu[index++] = c7[j];
-          tempu[index++] = c8[j];
-        }
-        break;
-
-      case MOD_64QAM:
-        rows = frame_size / (mod * 2);
-
-        if (frame_size == FRAME_SIZE_NORMAL) {
-          twist = twist64n;
-        }
-        else {
-          twist = twist64s;
-        }
-
-        interleave_parity_bits(tempu, in);
-
-        c1 = &tempv[0];
-        c2 = &tempv[rows];
-        c3 = &tempv[rows * 2];
-        c4 = &tempv[rows * 3];
-        c5 = &tempv[rows * 4];
-        c6 = &tempv[rows * 5];
-        c7 = &tempv[rows * 6];
-        c8 = &tempv[rows * 7];
-        c9 = &tempv[rows * 8];
-        c10 = &tempv[rows * 9];
-        c11 = &tempv[rows * 10];
-        c12 = &tempv[rows * 11];
-
-        twist_interleave_columns(tempv, tempu, rows, twist);
-
-        for (int j = 0; j < rows; j++) {
-          tempu[index++] = c1[j];
-          tempu[index++] = c2[j];
-          tempu[index++] = c3[j];
-          tempu[index++] = c4[j];
-          tempu[index++] = c5[j];
-          tempu[index++] = c6[j];
-          tempu[index++] = c7[j];
-          tempu[index++] = c8[j];
-          tempu[index++] = c9[j];
-          tempu[index++] = c10[j];
-          tempu[index++] = c11[j];
-          tempu[index++] = c12[j];
-        }
-        break;
-
-      case MOD_256QAM:
-        if (frame_size == FRAME_SIZE_NORMAL) {
+          //ignore QPSK, not worth it, as there is no column interleaving
+        case MOD_16QAM:
           rows = frame_size / (mod * 2);
+
+          if (frame_size == FRAME_SIZE_NORMAL) {
+            twist = &twist16n[0];
+          }
+          else {
+            twist = &twist16s[0];
+          }
+
+          interleave_parity_bits(tempu, in);
+
+          c1 = &tempv[0];
+          c2 = &tempv[rows];
+          c3 = &tempv[rows * 2];
+          c4 = &tempv[rows * 3];
+          c5 = &tempv[rows * 4];
+          c6 = &tempv[rows * 5];
+          c7 = &tempv[rows * 6];
+          c8 = &tempv[rows * 7];
+
+          twist_interleave_columns(tempv, tempu, rows, twist);
+
+          for (int j = 0; j < rows; j++) {
+            tempu[index++] = c1[j];
+            tempu[index++] = c2[j];
+            tempu[index++] = c3[j];
+            tempu[index++] = c4[j];
+            tempu[index++] = c5[j];
+            tempu[index++] = c6[j];
+            tempu[index++] = c7[j];
+            tempu[index++] = c8[j];
+          }
+          break;
+
+        case MOD_64QAM:
+          rows = frame_size / (mod * 2);
+
+          if (frame_size == FRAME_SIZE_NORMAL) {
+            twist = twist64n;
+          }
+          else {
+            twist = twist64s;
+          }
 
           interleave_parity_bits(tempu, in);
 
@@ -293,12 +256,8 @@ namespace gr {
           c10 = &tempv[rows * 9];
           c11 = &tempv[rows * 10];
           c12 = &tempv[rows * 11];
-          c13 = &tempv[rows * 12];
-          c14 = &tempv[rows * 13];
-          c15 = &tempv[rows * 14];
-          c16 = &tempv[rows * 15];
 
-          twist_interleave_columns(tempv, tempu, rows, twist256n);
+          twist_interleave_columns(tempv, tempu, rows, twist);
 
           for (int j = 0; j < rows; j++) {
             tempu[index++] = c1[j];
@@ -313,39 +272,80 @@ namespace gr {
             tempu[index++] = c10[j];
             tempu[index++] = c11[j];
             tempu[index++] = c12[j];
-            tempu[index++] = c13[j];
-            tempu[index++] = c14[j];
-            tempu[index++] = c15[j];
-            tempu[index++] = c16[j];
           }
-        }
-        else { //frame_size == FRAME_SIZE_SHORT
-          rows = frame_size / mod;
+          break;
 
-          interleave_parity_bits(tempu, in);
+        case MOD_256QAM:
+          if (frame_size == FRAME_SIZE_NORMAL) {
+            rows = frame_size / (mod * 2);
 
-          c1 = &tempv[0];
-          c2 = &tempv[rows];
-          c3 = &tempv[rows * 2];
-          c4 = &tempv[rows * 3];
-          c5 = &tempv[rows * 4];
-          c6 = &tempv[rows * 5];
-          c7 = &tempv[rows * 6];
-          c8 = &tempv[rows * 7];
+            interleave_parity_bits(tempu, in);
 
-          twist_interleave_columns(tempv, tempu, rows, twist256s);
+            c1 = &tempv[0];
+            c2 = &tempv[rows];
+            c3 = &tempv[rows * 2];
+            c4 = &tempv[rows * 3];
+            c5 = &tempv[rows * 4];
+            c6 = &tempv[rows * 5];
+            c7 = &tempv[rows * 6];
+            c8 = &tempv[rows * 7];
+            c9 = &tempv[rows * 8];
+            c10 = &tempv[rows * 9];
+            c11 = &tempv[rows * 10];
+            c12 = &tempv[rows * 11];
+            c13 = &tempv[rows * 12];
+            c14 = &tempv[rows * 13];
+            c15 = &tempv[rows * 14];
+            c16 = &tempv[rows * 15];
 
-          for (int j = 0; j < rows; j++) {
-            tempu[index++] = c1[j];
-            tempu[index++] = c2[j];
-            tempu[index++] = c3[j];
-            tempu[index++] = c4[j];
-            tempu[index++] = c5[j];
-            tempu[index++] = c6[j];
-            tempu[index++] = c7[j];
-            tempu[index++] = c8[j];
+            twist_interleave_columns(tempv, tempu, rows, twist256n);
+
+            for (int j = 0; j < rows; j++) {
+              tempu[index++] = c1[j];
+              tempu[index++] = c2[j];
+              tempu[index++] = c3[j];
+              tempu[index++] = c4[j];
+              tempu[index++] = c5[j];
+              tempu[index++] = c6[j];
+              tempu[index++] = c7[j];
+              tempu[index++] = c8[j];
+              tempu[index++] = c9[j];
+              tempu[index++] = c10[j];
+              tempu[index++] = c11[j];
+              tempu[index++] = c12[j];
+              tempu[index++] = c13[j];
+              tempu[index++] = c14[j];
+              tempu[index++] = c15[j];
+              tempu[index++] = c16[j];
+            }
           }
-        }
+          else { //frame_size == FRAME_SIZE_SHORT
+            rows = frame_size / mod;
+
+            interleave_parity_bits(tempu, in);
+
+            c1 = &tempv[0];
+            c2 = &tempv[rows];
+            c3 = &tempv[rows * 2];
+            c4 = &tempv[rows * 3];
+            c5 = &tempv[rows * 4];
+            c6 = &tempv[rows * 5];
+            c7 = &tempv[rows * 6];
+            c8 = &tempv[rows * 7];
+
+            twist_interleave_columns(tempv, tempu, rows, twist256s);
+
+            for (int j = 0; j < rows; j++) {
+              tempu[index++] = c1[j];
+              tempu[index++] = c2[j];
+              tempu[index++] = c3[j];
+              tempu[index++] = c4[j];
+              tempu[index++] = c5[j];
+              tempu[index++] = c6[j];
+              tempu[index++] = c7[j];
+              tempu[index++] = c8[j];
+            }
+          }
       }
 
       //tempu now has the input indices interleaved correctly, so save it
