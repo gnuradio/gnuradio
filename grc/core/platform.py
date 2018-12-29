@@ -22,6 +22,7 @@ from collections import namedtuple
 import os
 import logging
 from itertools import chain
+import re
 
 import six
 from six.moves import range
@@ -61,6 +62,7 @@ class Platform(Element):
         self.blocks = self.block_classes
         self.domains = {}
         self.connection_templates = {}
+        self.cpp_connection_templates = {}
 
         self._block_categories = {}
         self._auto_hier_block_generate_chain = set()
@@ -138,6 +140,7 @@ class Platform(Element):
         self.blocks.clear()
         self.domains.clear()
         self.connection_templates.clear()
+        self.cpp_connection_templates.clear()
         self._block_categories.clear()
 
         # # FIXME: remove this as soon as converter is stable
@@ -277,6 +280,7 @@ class Platform(Element):
                 continue
             connection_id = str(source_id), str(sink_id)
             self.connection_templates[connection_id] = connection.get('connect', '')
+            self.cpp_connection_templates[connection_id] = connection.get('cpp_connect', '')
 
     def load_category_tree_description(self, data, file_path):
         """Parse category tree file and add it to list"""
@@ -375,6 +379,16 @@ class Platform(Element):
             return []
         generate_mode_default = param.get('default')
         return [(value, name, value == generate_mode_default)
+                for value, name in zip(param['options'], param['option_labels'])]
+
+    def get_output_language(self):
+        for param in self.block_classes['options'].parameters_data:
+            if param.get('id') == 'output_language':
+                break
+        else:
+            return []
+        output_language_default = param.get('default')
+        return [(value, name, value == output_language_default)
                 for value, name in zip(param['options'], param['option_labels'])]
 
     ##############################################

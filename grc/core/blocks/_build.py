@@ -33,7 +33,7 @@ from ._templates import MakoTemplates
 
 def build(id, label='', category='', flags='', documentation='',
           value=None, asserts=None,
-          parameters=None, inputs=None, outputs=None, templates=None, **kwargs):
+          parameters=None, inputs=None, outputs=None, templates=None, cpp_templates=None, **kwargs):
     block_id = id
 
     cls = type(str(block_id), (Block,), {})
@@ -62,6 +62,17 @@ def build(id, label='', category='', flags='', documentation='',
         make=templates.get('make', ''),
         callbacks=templates.get('callbacks', []),
         var_make=templates.get('var_make', ''),
+    )
+
+    cpp_templates = cpp_templates or {}
+    cls.cpp_templates = MakoTemplates(
+        includes=cpp_templates.get('includes', ''),
+        make=cpp_templates.get('make', ''),
+        callbacks=cpp_templates.get('callbacks', []),
+        var_make=cpp_templates.get('var_make', ''),
+        link=cpp_templates.get('link', []),
+        translations=cpp_templates.get('translations', []),
+        declarations=cpp_templates.get('declarations', ''),
     )
     # todo: MakoTemplates.compile() to check for errors
 
@@ -149,4 +160,3 @@ def _validate_option_attributes(param_data, block_id):
             if key in dir(str):
                 del param_data['option_attributes'][key]
                 send_warning('{} - option_attribute "{}" overrides str, ignoring'.format(block_id, key))
-

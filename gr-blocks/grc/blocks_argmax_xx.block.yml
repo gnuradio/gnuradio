@@ -1,5 +1,6 @@
 id: blocks_argmax_xx
 label: Argmax
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -41,5 +42,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.argmax_${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/argmax.h>']
+    declarations: 'blocks::argmax_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::argmax_${type.fcn}::make(${vlen});'
 
 file_format: 1

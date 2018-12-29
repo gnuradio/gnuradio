@@ -1,5 +1,6 @@
 id: blocks_repeat
 label: Repeat
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -37,5 +38,14 @@ templates:
     make: blocks.repeat(${type.size}*${vlen}, ${interp})
     callbacks:
     - set_interpolation(${interp})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/repeat.h>']
+    declarations: 'blocks::repeat::sptr ${id};'
+    make: 'this->${id} = blocks::repeat::make(${type.size}*${vlen}, ${interp});'
+    callbacks:
+    - set_interpolation(${interp})
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

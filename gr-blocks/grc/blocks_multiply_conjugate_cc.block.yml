@@ -1,5 +1,6 @@
 id: blocks_multiply_conjugate_cc
 label: Multiply Conjugate
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -29,5 +30,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.multiply_conjugate_cc(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/multiply_conjugate_cc.h>']
+    declarations: 'blocks::multiply_conjugate_cc::sptr ${id};'
+    make: 'this->${id} = blocks::multiply_conjugate_cc::make(${vlen});'
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: blocks_repack_bits_bb
 label: Repack Bits
+flags: [ python, cpp ]
 
 parameters:
 -   id: k
@@ -44,4 +45,14 @@ templates:
     callbacks:
     - set_k_and_l(${k},${l})
 
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/repack_bits_bb.h>']
+    declarations: 'blocks::repack_bits_bb::sptr ${id};'
+    make: 'this->${id} = blocks::repack_bits_bb::make(${k}, ${l}, ${len_tag_key}, ${align_output}, ${endianness});'
+    callbacks:
+    - set_k_and_l(${k},${l})
+    translations:
+        gr.: ''
+        'True': 'true'
+        'False': 'false'
 file_format: 1

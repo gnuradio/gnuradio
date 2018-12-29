@@ -1,5 +1,6 @@
 id: blocks_complex_to_mag
 label: Complex to Mag
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -24,5 +25,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.complex_to_mag(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_mag.h>']
+    declarations: 'blocks::complex_to_mag::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_mag::make(${vlen});'
 
 file_format: 1

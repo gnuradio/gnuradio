@@ -1,5 +1,6 @@
 id: blocks_copy
 label: Copy
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -53,5 +54,18 @@ templates:
         self.${id}.set_enabled(${enabled})
     callbacks:
     - set_enabled(${enabled})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/copy.h>']
+    declarations: 'blocks::copy::sptr ${id};'
+    make: |-
+        this->${id} = blocks::copy::make(${type.size}*${vlen});
+        self->${id}.set_enabled(${enabled});
+    callbacks:
+    - set_enabled(${enabled})
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

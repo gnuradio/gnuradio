@@ -1,5 +1,6 @@
 id: blocks_sample_and_hold_xx
 label: Sample and Hold
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -24,5 +25,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.sample_and_hold_${type.fcn}()
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/sample_and_hold.h>']
+    declarations: 'blocks::sample_and_hold_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::sample_and_hold_${type.fcn}::make();'
 
 file_format: 1

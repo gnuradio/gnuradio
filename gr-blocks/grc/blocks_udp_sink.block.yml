@@ -1,5 +1,6 @@
 id: blocks_udp_sink
 label: UDP Sink
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -41,5 +42,14 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.udp_sink(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/udp_sink.h>']
+    declarations: 'blocks::udp_sink::sptr ${id};'
+    make: 'this->${id} = blocks::udp_sink::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${psize}, ${eof});'
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

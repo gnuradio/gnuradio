@@ -1,5 +1,6 @@
 id: blocks_tcp_server_sink
 label: TCP Server Sink
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -38,5 +39,14 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.tcp_server_sink(${type.size}*${vlen}, ${ipaddr}, ${port}, ${noblock})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tcp_server_sink.h>']
+    declarations: 'blocks::tcp_server_sink::sptr ${id};'
+    make: 'this->${id} = blocks::tcp_server_sink::make(${type.size}*${vlen}, ${ipaddr}, ${port}, ${noblock});'
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

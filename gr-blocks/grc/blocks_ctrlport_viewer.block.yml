@@ -1,5 +1,6 @@
 id: blocks_ctrlport_monitor
 label: CtrlPort Monitor
+flags: [ python ]
 
 parameters:
 -   id: en

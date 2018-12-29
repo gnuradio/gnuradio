@@ -1,5 +1,6 @@
 id: blocks_vector_insert_x
 label: Vector Insert
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -34,6 +35,11 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.vector_insert_${type.fcn}(${vector}, ${period}, ${offset})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vector_insert.h>']
+    declarations: 'blocks::vector_insert_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::vector_insert_${type.fcn}::make(${vector}, ${period}, ${offset});'
 
 documentation: |-
     Periodicity, the length of the periodicity at which the vector should be inserted at the output.

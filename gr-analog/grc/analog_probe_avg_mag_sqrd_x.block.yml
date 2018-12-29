@@ -1,5 +1,6 @@
 id: analog_probe_avg_mag_sqrd_x
 label: Probe Avg Mag^2
+flags: [ python ]
 
 parameters:
 -   id: type

@@ -1,5 +1,6 @@
 id: blocks_wavfile_source
 label: Wav File Source
+flags: [ python, cpp ]
 
 parameters:
 -   id: file
@@ -28,5 +29,13 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.wavfile_source(${file}, ${repeat})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/wavfile_source.h>']
+    declarations: 'blocks::wavfile_source::sptr ${id};'
+    make: 'this->${id} = blocks::wavfile_source::make(${file}, ${repeat});'
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

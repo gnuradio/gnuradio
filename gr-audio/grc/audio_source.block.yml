@@ -1,7 +1,7 @@
 id: audio_source
 label: Audio Source
 category: '[Core]/Audio'
-flags: throttle
+flags: [ throttle ]
 
 parameters:
 -   id: samp_rate

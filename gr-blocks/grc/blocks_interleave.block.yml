@@ -1,5 +1,6 @@
 id: blocks_interleave
 label: Interleave
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -44,5 +45,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.interleave(${type.size}*${vlen}, ${blocksize})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/interleave.h>']
+    declarations: 'blocks::interleave::sptr ${id};'
+    make: 'this->${id} = blocks::interleave::make(${type.size}*${vlen}, ${blocksize});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

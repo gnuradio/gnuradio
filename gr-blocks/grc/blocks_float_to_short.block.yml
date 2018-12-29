@@ -1,5 +1,6 @@
 id: blocks_float_to_short
 label: Float To Short
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -25,6 +26,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.float_to_short(${vlen}, ${scale})
+    callbacks:
+    - set_scale(${scale})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/float_to_short.h>']
+    declarations: 'blocks::float_to_short::sptr ${id};'
+    make: 'this->${id} = blocks::float_to_short::make(${vlen}, ${scale});'
     callbacks:
     - set_scale(${scale})
 

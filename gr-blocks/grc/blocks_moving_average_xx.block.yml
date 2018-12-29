@@ -1,5 +1,6 @@
 id: blocks_moving_average_xx
 label: Moving Average
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -43,6 +44,13 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.moving_average_${type.fcn}(${length}, ${scale}, ${max_iter}, ${vlen})
+    callbacks:
+    - set_length_and_scale(${length}, ${scale})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/moving_average.h>']
+    declarations: 'blocks::moving_average_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::moving_average_${type.fcn}::make(${length}, ${scale}, ${max_iter}, ${vlen});'
     callbacks:
     - set_length_and_scale(${length}, ${scale})
 

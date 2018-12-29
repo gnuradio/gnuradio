@@ -1,5 +1,6 @@
 id: analog_frequency_modulator_fc
 label: Frequency Mod
+flags: [ python, cpp ]
 
 parameters:
 -   id: sensitivity
@@ -19,5 +20,12 @@ templates:
     make: analog.frequency_modulator_fc(${sensitivity})
     callbacks:
     - set_sensitivity(${sensitivity})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/frequency_modulator_fc.h>']
+    make: 'this->${id} = analog::frequency_modulator_fc::make(${sensitivity});'
+    callbacks:
+    - set_sensitivity(${sensitivity})
+    link: ['gnuradio-analog']
 
 file_format: 1

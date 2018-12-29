@@ -1,5 +1,6 @@
 id: analog_agc3_xx
 label: AGC3
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -53,5 +54,19 @@ templates:
     - set_reference(${reference})
     - set_gain(${gain})
     - set_max_gain(${max_gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/agc3_${type.fcn}.h>']
+    declarations: 'analog::agc3_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = analog::agc3_${type.fcn}::make(${attack_rate}, ${decay_rate}, ${reference}, ${gain}, ${iir_update_decim});
+        this->${id}.set_max_gain(${max_gain});
+    callbacks:
+    - set_attack_rate(${attack_rate})
+    - set_decay_rate(${decay_rate})
+    - set_reference(${reference})
+    - set_gain(${gain})
+    - set_max_gain(${max_gain})
+    link: ['gnuradio-analog']
 
 file_format: 1

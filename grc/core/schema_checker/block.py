@@ -35,6 +35,15 @@ TEMPLATES_SCHEME = expand(
     make=str_,
     callbacks=list,
 )
+CPP_TEMPLATES_SCHEME = expand(
+    includes=list,
+    declarations=str_,
+    make=str_,
+    var_make=str_,
+    callbacks=list,
+    link=list,
+    translations=dict,
+)
 BLOCK_SCHEME = expand(
     id=Spec(types=str_, required=True, item_scheme=None),
     label=str_,
@@ -49,6 +58,7 @@ BLOCK_SCHEME = expand(
     value=str_,
 
     templates=Spec(types=dict, required=False, item_scheme=TEMPLATES_SCHEME),
+    cpp_templates=Spec(types=dict, required=False, item_scheme=CPP_TEMPLATES_SCHEME),
 
     documentation=str_,
     grc_source=str_,

@@ -1,5 +1,6 @@
 id: blocks_endian_swap
 label: Endian Swap
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -22,5 +23,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.endian_swap(${type.size})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/endian_swap.h>']
+    declarations: 'blocks::endian_swap::sptr ${id};'
+    make: 'this->${id} = blocks::endian_swap::make(${type.size});'
 
 file_format: 1

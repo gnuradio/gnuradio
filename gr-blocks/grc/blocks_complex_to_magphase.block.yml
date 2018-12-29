@@ -1,5 +1,6 @@
 id: blocks_complex_to_magphase
 label: Complex To Mag Phase
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -30,5 +31,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.complex_to_magphase(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_magphase.h>']
+    declarations: 'blocks::complex_to_magphase::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_magphase::make(${vlen});'
 
 file_format: 1

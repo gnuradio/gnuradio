@@ -1,5 +1,6 @@
 id: blocks_wavfile_sink
 label: Wav File Sink
+flags: [ python, cpp ]
 
 parameters:
 -   id: file
@@ -30,6 +31,13 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.wavfile_sink(${file}, ${nchan}, ${samp_rate}, ${bits_per_sample})
+    callbacks:
+    - open(${file})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/wavfile_sink.h>']
+    declarations: 'blocks::wavfile_sink::sptr ${id};'
+    make: 'this->${id} = blocks::wavfile_sink::make(${file}, ${nchan}, ${samp_rate}, ${bits_per_sample});'
     callbacks:
     - open(${file})
 

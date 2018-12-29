@@ -1,5 +1,6 @@
 id: blocks_float_to_complex
 label: Float To Complex
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -30,5 +31,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.float_to_complex(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/float_to_complex.h>']
+    declarations: 'blocks::float_to_complex::sptr ${id};'
+    make: 'this->${id} = blocks::float_to_complex::make(${vlen});'
 
 file_format: 1

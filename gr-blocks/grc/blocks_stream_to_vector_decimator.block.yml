@@ -1,5 +1,6 @@
 id: blocks_stream_to_vector_decimator
 label: Stream to Vec Decim
+flags: [ python ]
 
 parameters:
 -   id: type

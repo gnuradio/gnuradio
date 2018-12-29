@@ -64,7 +64,7 @@ class FlowGraph(Element):
 
     def imports(self):
         """
-        Get a set of all import statements in this flow graph namespace.
+        Get a set of all import statements (Python) in this flow graph namespace.
 
         Returns:
             a list of import statements
@@ -73,7 +73,7 @@ class FlowGraph(Element):
 
     def get_variables(self):
         """
-        Get a list of all variables in this flow graph namespace.
+        Get a list of all variables (Python) in this flow graph namespace.
         Exclude parameterized variables.
 
         Returns:

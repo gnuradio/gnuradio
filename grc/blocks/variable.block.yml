@@ -1,5 +1,6 @@
 id: variable
 label: Variable
+flags: [ python, cpp ]
 
 parameters:
 -   id: value
@@ -12,6 +13,11 @@ templates:
     var_make: self.${id} = ${id} = ${value}
     callbacks:
     - self.set_${id}(${value})
+
+cpp_templates:
+    var_make: ${id} = ${value};
+    callbacks:
+    - this->set_${id}(${value})
 
 documentation: |-
     This block maps a value to a unique variable. This variable block has no graphical representation.

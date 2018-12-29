@@ -1,5 +1,6 @@
 id: blocks_float_to_char
 label: Float To Char
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -25,6 +26,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.float_to_char(${vlen}, ${scale})
+    callbacks:
+    - set_scale(${scale})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/float_to_char.h>']
+    declarations: 'blocks::float_to_char::sptr ${id};'
+    make: 'this->${id} = blocks::float_to_char::make(${vlen}, ${scale});'
     callbacks:
     - set_scale(${scale})
 

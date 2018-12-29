@@ -1,5 +1,6 @@
 id: blocks_skiphead
 label: Skip Head
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -36,5 +37,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.skiphead(${type.size}*${vlen}, ${num_items})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/skiphead.h>']
+    declarations: 'blocks::skiphead::sptr ${id};'
+    make: 'this->${id} = blocks::skiphead::make(${type.size}*${vlen}, ${num_items});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

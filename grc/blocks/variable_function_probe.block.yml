@@ -1,5 +1,6 @@
 id: variable_function_probe
 label: Function Probe
+flags: [ python ]
 
 parameters:
 -   id: block_id

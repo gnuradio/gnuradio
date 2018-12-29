@@ -1,5 +1,6 @@
 id: analog_simple_squelch_cc
 label: Simple Squelch
+flags: [ python, cpp ]
 
 parameters:
 -   id: threshold
@@ -23,5 +24,13 @@ templates:
     callbacks:
     - set_threshold(${threshold})
     - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/simple_squelch_cc.h>']
+    make: 'this->${id} = analog::simple_squelch_cc::make(${threshold}, ${alpha});'
+    callbacks:
+    - set_threshold(${threshold})
+    - set_alpha(${alpha})
+    link: ['gnuradio-analog']
 
 file_format: 1

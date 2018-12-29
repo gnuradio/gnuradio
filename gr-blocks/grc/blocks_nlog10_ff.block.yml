@@ -1,5 +1,6 @@
 id: blocks_nlog10_ff
 label: Log10
+flags: [ python, cpp ]
 
 parameters:
 -   id: n
@@ -33,5 +34,11 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.nlog10_ff(${n}, ${vlen}, ${k})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/nlog10_ff.h>']
+    declarations: 'blocks::nlog10_ff::sptr ${id};'
+    make: 'this->${id} = blocks::nlog10_ff::make(${n}, ${vlen}, ${k});'
+
 
 file_format: 1

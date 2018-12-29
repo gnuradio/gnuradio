@@ -1,5 +1,6 @@
 id: blocks_file_source
 label: File Source
+flags: [ python, cpp ]
 
 parameters:
 -   id: file
@@ -55,5 +56,16 @@ templates:
     callbacks:
     - open(${file}, ${repeat})
     - self.${id}.set_begin_tag(${begin_tag})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/file_source.h>']
+    declarations: 'blocks::file_source::sptr ${id};'
+    make: 'this->${id} =blocks::file_source::make(${type.size})*${vlen}, "${file[1:-1]}", ${repeat}, ${offset}, ${length});'
+    callbacks:
+    - open(${file}, ${repeat})
+    translations:
+        'True': 'true'
+        'False': 'false'
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

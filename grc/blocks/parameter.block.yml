@@ -1,5 +1,6 @@
 id: parameter
 label: Parameter
+flags: [ python, cpp ]
 
 parameters:
 -   id: label
@@ -35,6 +36,10 @@ asserts:
 
 templates:
     var_make: self.${id} = ${id}
+    make: ${value}
+
+cpp_templates:
+    var_make: ${type.type} ${id} = ${id};
     make: ${value}
 
 documentation: |-

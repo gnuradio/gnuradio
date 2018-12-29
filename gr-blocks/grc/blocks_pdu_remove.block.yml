@@ -1,5 +1,6 @@
 id: blocks_pdu_remove
 label: PDU Remove
+flags: [ python ]
 
 parameters:
 -   id: k

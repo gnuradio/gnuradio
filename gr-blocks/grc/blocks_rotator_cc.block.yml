@@ -1,5 +1,6 @@
 id: blocks_rotator_cc
 label: Rotator
+flags: [ python, cpp ]
 
 parameters:
 -   id: phase_inc
@@ -18,6 +19,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.rotator_cc(${phase_inc})
+    callbacks:
+    - set_phase_inc(${phase_inc})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/rotator_cc.h>']
+    declarations: 'blocks::rotator_cc::sptr ${id};'
+    make: 'this->${id} = blocks::rotator_cc::make(${phase_inc});'
     callbacks:
     - set_phase_inc(${phase_inc})
 

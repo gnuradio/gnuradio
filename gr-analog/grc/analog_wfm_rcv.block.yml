@@ -1,5 +1,6 @@
 id: analog_wfm_rcv
 label: WBFM Receive
+flags: [ python ]
 
 parameters:
 -   id: quad_rate

@@ -1,6 +1,6 @@
 id: blocks_throttle
 label: Throttle
-flags: throttle
+flags: [ throttle, python, cpp ]
 
 parameters:
 -   id: type
@@ -44,5 +44,17 @@ templates:
     make: blocks.throttle(${type.size}*${vlen}, ${samples_per_second},${ignoretag})
     callbacks:
     - set_sample_rate(${samples_per_second})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/throttle.h>']
+    declarations: 'blocks::throttle::sptr ${id};'
+    make: 'this->${id} = blocks::throttle::make(${type.size})*${vlen}, ${samples_per_second}, ${ignoretag});'
+    callbacks:
+    - set_sample_rate(${samples_per_second})
+    translations:
+        gr.sizeof_: 'sizeof('
+        'True': 'true'
+        'False': 'false'
+
 
 file_format: 1

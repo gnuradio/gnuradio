@@ -1,5 +1,6 @@
 id: blocks_complex_to_interleaved_char
 label: Complex To IChar
+flags: [ python, cpp ]
 
 parameters:
 -   id: vector_output
@@ -24,5 +25,13 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.complex_to_interleaved_char(${vector_output})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_interleaved_char.h>']
+    declarations: 'blocks::complex_to_interleaved_char::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_interleaved_char::make(${vector_output});'
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

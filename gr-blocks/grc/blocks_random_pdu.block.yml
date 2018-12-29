@@ -1,5 +1,6 @@
 id: blocks_random_pdu
 label: Random PDU Generator
+flags: [ python ]
 
 parameters:
 -   id: minsize

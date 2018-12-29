@@ -1,5 +1,6 @@
 id: blocks_vector_source_x
 label: Vector Source
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -43,5 +44,15 @@ templates:
     make: blocks.vector_source_${type.fcn}(${vector}, ${repeat}, ${vlen}, ${tags})
     callbacks:
     - set_data(${vector}, ${tags})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/vector_source.h>']
+    declarations: 'blocks::vector_source_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::vector_source_${type.fcn}::make(${vector}, ${repeat}, ${vlen}, ${tags});'
+    callbacks:
+    - set_data(${vector}, ${tags})
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

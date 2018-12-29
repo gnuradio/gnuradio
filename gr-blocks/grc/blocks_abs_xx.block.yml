@@ -1,5 +1,6 @@
 id: blocks_abs_xx
 label: Abs
+flags: [ python, cpp ]
 
 parameters:
 -   id: vlen
@@ -28,5 +29,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.abs_${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/abs_blk.h>']
+    declarations: 'blocks::abs_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::abs_${type.fcn}::make(${vlen});'
 
 file_format: 1

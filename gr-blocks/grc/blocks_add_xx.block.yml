@@ -1,5 +1,6 @@
 id: blocks_add_xx
 label: Add
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -38,5 +39,10 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.add_v${type.fcn}(${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/add_blk.h>']
+    declarations: 'blocks::add_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::add_${type.fcn}::make(${vlen});'
 
 file_format: 1

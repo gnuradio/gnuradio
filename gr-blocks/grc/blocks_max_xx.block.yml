@@ -1,5 +1,6 @@
 id: blocks_max_xx
 label: Max
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -42,6 +43,11 @@ asserts:
 
 templates:
     imports: from gnuradio import blocks
-    make: blocks.max_${type.fcn}(${vlen},${vlen_out})
+    make: blocks.max_${type.fcn}(${vlen}, ${vlen_out})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/max_blk.h>']
+    declarations: 'blocks::max_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::make_${type.fcn}::make(${vlen}, ${vlen_out});'
 
 file_format: 1

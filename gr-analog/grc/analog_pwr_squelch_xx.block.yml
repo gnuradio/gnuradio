@@ -1,5 +1,6 @@
 id: analog_pwr_squelch_xx
 label: Power Squelch
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -40,5 +41,16 @@ templates:
     callbacks:
     - set_threshold(${threshold})
     - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/analog/pwr_squelch_${type.fcn}.h>']
+    make: 'this->${id} = analog::pwr_squelch_${type.fcn}::make(${threshold}, ${alpha}, ${ramp}, ${gate});'
+    callbacks:
+    - set_threshold(${threshold})
+    - set_alpha(${alpha})
+    link: ['gnuradio-analog']
+    translations:
+        True: true
+        False: false
 
 file_format: 1

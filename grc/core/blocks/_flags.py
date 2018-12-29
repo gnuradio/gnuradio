@@ -25,6 +25,8 @@ class Flags(object):
     NEED_QT_GUI = 'need_qt_gui'
     DEPRECATED = 'deprecated'
     NOT_DSP = 'not_dsp'
+    HAS_PYTHON = 'python'
+    HAS_CPP = 'cpp'
 
     def __init__(self, flags):
         self.data = set(flags)

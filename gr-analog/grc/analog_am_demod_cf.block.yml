@@ -1,5 +1,6 @@
 id: analog_am_demod_cf
 label: AM Demod
+flags: [ python ]
 
 parameters:
 -   id: chan_rate

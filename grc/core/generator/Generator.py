@@ -24,6 +24,8 @@ from mako.template import Template
 
 from .hier_block import HierBlockGenerator, QtHierBlockGenerator
 from .top_block import TopBlockGenerator
+from .cpp_top_block import CppTopBlockGenerator
+from .cpp_hier_block import CppHierBlockGenerator
 
 DATA_DIR = os.path.dirname(__file__)
 FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
@@ -43,12 +45,25 @@ class Generator(object):
             file_path: the path to the grc file
         """
         self.generate_options = flow_graph.get_option('generate_options')
-        if self.generate_options == 'hb':
-            generator_cls = HierBlockGenerator
-        elif self.generate_options == 'hb_qt_gui':
-            generator_cls = QtHierBlockGenerator
-        else:
-            generator_cls = TopBlockGenerator
+        self.output_language = flow_graph.get_option('output_language')
+
+        if self.output_language == 'python':
+
+            if self.generate_options == 'hb':
+                generator_cls = HierBlockGenerator
+            elif self.generate_options == 'hb_qt_gui':
+                generator_cls = QtHierBlockGenerator
+            else:
+                generator_cls = TopBlockGenerator
+
+        elif self.output_language == 'cpp':
+
+            if self.generate_options == 'hb':
+                generator_cls = CppHierBlockGenerator
+            elif self.generate_options == 'hb_qt_gui':
+                pass
+            else:
+                generator_cls = CppTopBlockGenerator
 
         self._generator = generator_cls(flow_graph, file_path)
 

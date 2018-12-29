@@ -13,8 +13,10 @@ from .FlowGraphProxy import FlowGraphProxy
 from ..utils import expr_utils
 
 DATA_DIR = os.path.dirname(__file__)
-FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
-flow_graph_template = Template(filename=FLOW_GRAPH_TEMPLATE)
+
+PYTHON_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.py.mako')
+
+python_template = Template(filename=PYTHON_TEMPLATE)
 
 
 class TopBlockGenerator(object):
@@ -65,6 +67,21 @@ class TopBlockGenerator(object):
         """generate output and write it to files"""
         self._warnings()
 
+        fg = self._flow_graph
+        self.title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
+        variables = fg.get_variables()
+        parameters = fg.get_parameters()
+        monitors = fg.get_monitors()
+
+        self.namespace = {
+            'flow_graph': fg,
+            'variables': variables,
+            'parameters': parameters,
+            'monitors': monitors,
+            'generate_options': self._generate_options,
+            'generated_time': time.ctime(),
+        }
+
         for filename, data in self._build_python_code_from_template():
             with codecs.open(filename, 'w', encoding='utf-8') as fp:
                 fp.write(data)
@@ -106,13 +123,13 @@ class TopBlockGenerator(object):
             'generated_time': time.ctime(),
             'version': platform.config.version
         }
-        flow_graph_code = flow_graph_template.render(
+        flow_graph_code = python_template.render(
             title=title,
             imports=self._imports(),
             blocks=self._blocks(),
             callbacks=self._callbacks(),
             connections=self._connections(),
-            **namespace
+            **self.namespace
         )
         # strip trailing white-space
         flow_graph_code = "\n".join(line.rstrip() for line in flow_graph_code.split("\n"))
@@ -196,7 +213,9 @@ class TopBlockGenerator(object):
 
         # List of variable names
         var_ids = [var.name for var in parameters + variables]
+
         replace_dict = dict((var_id, 'self.' + var_id) for var_id in var_ids)
+
         callbacks_all = []
         for block in fg.iter_enabled_blocks():
             callbacks_all.extend(expr_utils.expr_replace(cb, replace_dict) for cb in block.get_callbacks())
@@ -204,7 +223,7 @@ class TopBlockGenerator(object):
         # Map var id to callbacks
         def uses_var_id(callback):
             used = expr_utils.get_variable_dependencies(callback, [var_id])
-            return used and 'self.' + var_id in callback  # callback might contain var_id itself
+            return used and (('self.' + var_id in callback) or ('this->' + var_id in callback))  # callback might contain var_id itself
 
         callbacks = {}
         for var_id in var_ids:
@@ -218,6 +237,7 @@ class TopBlockGenerator(object):
                      for key, text in fg.parent_platform.connection_templates.items()}
 
         def make_port_sig(port):
+            # TODO: make sense of this
             if port.parent.key in ('pad_source', 'pad_sink'):
                 block = 'self'
                 key = fg.get_pad_port_global_key(port)
@@ -282,6 +302,7 @@ class TopBlockGenerator(object):
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
             code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
+            code = 'self.' + code
             rendered.append(code)
 
         return rendered

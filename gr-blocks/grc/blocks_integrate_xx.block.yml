@@ -1,5 +1,6 @@
 id: blocks_integrate_xx
 label: Integrate
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -31,5 +32,10 @@ outputs:
 templates:
     imports: from gnuradio import blocks
     make: blocks.integrate_${type.fcn}(${decim}, ${vlen})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/integrate.h>']
+    declarations: 'blocks::integrate_${type.fcn}::sptr ${id};'
+    make: 'this->${id} = blocks::integrate_${type.fcn}::make(${decim}, ${vlen});'
 
 file_format: 1

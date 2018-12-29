@@ -1,5 +1,6 @@
 id: analog_standard_squelch
 label: Standard Squelch
+flags: [ python ]
 
 parameters:
 -   id: audio_rate

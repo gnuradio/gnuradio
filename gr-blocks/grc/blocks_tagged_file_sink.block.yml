@@ -1,5 +1,6 @@
 id: blocks_tagged_file_sink
 label: Tagged File Sink
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -31,5 +32,12 @@ asserts:
 templates:
     imports: from gnuradio import blocks
     make: blocks.tagged_file_sink(${type.size}*${vlen}, ${samp_rate})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/tagged_file_sink.h>']
+    declarations: 'blocks::tagged_file_sink::sptr ${id};'
+    make: 'this->${id} = blocks::tagged_file_sink::make(${type.size}*${vlen}, ${samp_rate});'
+    translations:
+        gr.sizeof_: 'sizeof('
 
 file_format: 1

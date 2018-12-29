@@ -1,5 +1,6 @@
 id: qtgui_bercurve_sink
 label: QT GUI Bercurve Sink
+flags: [ python ]
 
 parameters:
 -   id: esno
