@@ -114,7 +114,7 @@ class TopBlockGenerator(object):
                 src = block.params['source_code'].get_value()
                 output.append((file_path, src))
 
-        namespace = {
+        self.namespace = {
             'flow_graph': fg,
             'variables': variables,
             'parameters': parameters,
