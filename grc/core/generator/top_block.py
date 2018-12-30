@@ -302,7 +302,6 @@ class TopBlockGenerator(object):
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
             code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
-            code = 'self.' + code
             rendered.append(code)
 
         return rendered
