@@ -87,7 +87,8 @@ class Block(Element):
         self.active_sinks = []  # on rewrite
 
         self.states = {'state': True}
-        self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
+        if 'cpp' in self.flags:
+            self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
 
     # region Rewrite_and_Validation
     def rewrite(self):
