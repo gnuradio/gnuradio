@@ -48,15 +48,13 @@ parameters:
     default: '-1'
 -   id: mode
     label: Streaming Behavior
-    dtype: enum
-    options: [fec.CC_STREAMING, fec.CC_TERMINATED, fec.CC_TAILBITING, fec.CC_TRUNCATED]
+    dtype: raw
+    options: ['fec.CC_STREAMING', 'fec.CC_TERMINATED', 'fec.CC_TAILBITING', 'fec.CC_TRUNCATED']
     option_labels: [Streaming, Terminated, Tailbiting, Truncated]
 -   id: padding
     label: Byte Padding
-    dtype: enum
+    dtype: bool
     default: 'False'
-    options: ['False', 'True']
-    option_labels: ['No', 'Yes']
 value: ${ fec.cc_decoder.make(framebits, k, rate, polys, state_start, state_end, mode,
     padding) }
 
