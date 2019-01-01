@@ -319,7 +319,7 @@ inputs:
 
 templates:
     imports: |-
-        from PyQt5import Qt
+        from PyQt5 import Qt
         from gnuradio import qtgui
         import sip
         import numpy
