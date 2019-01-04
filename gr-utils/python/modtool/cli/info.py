@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 #
-# Copyright 2012, 2018 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,14 +18,25 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" A tool for editing GNU Radio out-of-tree modules. """
+""" Returns information about a module """
+
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
+
+import click
+
+from ..core import ModToolInfo
+from .base import common_params, run
 
 
-from gnuradio.modtool.cli.base import cli
-
-
-if __name__ == '__main__':
-    try:
-        cli()
-    except KeyboardInterrupt:
-        pass
+@click.command('info')
+@click.option('--python-readable', is_flag=True,
+              help="Return the output in a format that's easier to read for Python scripts.")
+@click.option('--suggested-dirs',
+              help="Suggest typical include dirs if nothing better can be detected.")
+@common_params
+def cli(**kwargs):
+    """ Return information about a given module """
+    self = ModToolInfo(**kwargs)
+    run(self)
