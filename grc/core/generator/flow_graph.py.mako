@@ -1,6 +1,7 @@
 % if not generate_options.startswith('hb'):
 <%
 from sys import version_info
+from gnuradio import eng_notation
 python_version = version_info.major
 %>\
 % if python_version == 2:
@@ -282,7 +283,7 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
 ########################################################
 <%def name="make_default(type_, param)">
     % if type_ == 'eng_float':
-eng_notation.num_to_str(${param.templates.render('make')})
+eng_notation.num_to_str(float(${param.templates.render('make')}))
     % else:
 ${param.templates.render('make')}
     % endif
@@ -312,7 +313,7 @@ def argument_parser():
 
         default = param.templates.render('make')
         if type_ == 'eng_float':
-            default = eng_notation.num_to_str(default)
+            default = '"' + eng_notation.num_to_str(float(default)) + '"'
         # FIXME:
         if type_ == 'string':
             type_ = 'str'
