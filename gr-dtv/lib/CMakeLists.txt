@@ -110,29 +110,32 @@ list(APPEND dtv_libs
 
 include (CheckCCompilerFlag)
 if (MSVC)
-	# 64-bit MSVC always supports SSE2
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-		set(SSE2_SUPPORTED true)
-	else ()
-		CHECK_C_COMPILER_FLAG ("/arch:SSE2" SSE2_SUPPORTED)
-	endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # 64-bit MSVC always supports SSE2
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(SSE2_SUPPORTED true)
+    else()
+        check_c_compiler_flag("/arch:SSE2" SSE2_SUPPORTED)
+    endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 else ()
-	# The "correct" way to test this would be to run
-	# check_c_compiler_flag("-msse2")
-	# ...but that's not reliable, in particular, on Clang and ARM, it will
-	# return TRUE when it shouldn't. Hence, we compile this snippet
-	# manually.
-	check_c_source_compiles("#include <emmintrin.h>\nint main(){__m128i m0, m1, m2; m0 = _mm_add_epi8(m1, m2);}" SSE2_SUPPORTED)
+    # The "correct" way to test this would be to run
+    # check_c_compiler_flag("-msse2")
+    # ...but that's not reliable, in particular, on Clang and ARM, it will
+    # return TRUE when it shouldn't. Hence, we compile this snippet
+    # manually.
+    check_c_source_compiles(
+        "#include <emmintrin.h>\nint main(){__m128i m0, m1, m2; m0 = _mm_add_epi8(m1, m2);}"
+        SSE2_SUPPORTED
+    )
 endif(MSVC)
 
 if(SSE2_SUPPORTED)
-	if (NOT MSVC)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
-	else ()
-		if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
-		endif ()
-	endif ()
+    if(NOT MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2")
+    else()
+        if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:SSE2")
+        endif ()
+    endif()
     ADD_DEFINITIONS(-DDTV_SSE2)
 endif(SSE2_SUPPORTED)
 
