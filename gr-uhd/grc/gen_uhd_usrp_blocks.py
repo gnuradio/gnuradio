@@ -175,7 +175,9 @@ templates:
         ${'%'} else:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
+        ${'%'} if context.get('ant${n}')():
         self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
+        ${'%'} endif
         ${'%'} if context.get('bw${n}')():
         self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
         ${'%'} endif
