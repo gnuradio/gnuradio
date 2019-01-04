@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 #
-# Copyright 2012, 2018 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,14 +18,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" A tool for editing GNU Radio out-of-tree modules. """
 
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
-from gnuradio.modtool.cli.base import cli
-
-
-if __name__ == '__main__':
-    try:
-        cli()
-    except KeyboardInterrupt:
-        pass
+from .base import cli, common_params, block_name, ModToolException
+from .base import setup_cli_logger, cli_input

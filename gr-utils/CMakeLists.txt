@@ -51,5 +51,4 @@ if(ENABLE_GR_UTILS)
 add_subdirectory(python/utils)
 add_subdirectory(python/modtool)
 
-
 endif(ENABLE_GR_UTILS)
