@@ -26,7 +26,7 @@
 #include <gnuradio/vocoder/gsm_fr_decode_ps.h>
 
 extern "C"{
-#include "gsm/gsm.h"
+#include "gsm.h"
 }
 
 namespace gr {
