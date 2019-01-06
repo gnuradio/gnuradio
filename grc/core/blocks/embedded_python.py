@@ -26,6 +26,7 @@ from ._templates import MakoTemplates
 from .. import utils
 from ..base import Element
 
+from ._build import _build_params as build_core_params
 
 DEFAULT_CODE = '''\
 """
@@ -229,7 +230,7 @@ class EPyModule(Block):
         to set parameters of other blocks in your flowgraph.
     """)}
 
-    parameters_data = [dict(
+    parameters = [dict(
         label='Code',
         id='source_code',
         dtype='_multiline_python_external',
@@ -240,3 +241,7 @@ class EPyModule(Block):
     templates = MakoTemplates(
         imports='import ${ id }  # embedded python module',
     )
+
+    def __init__(self, flow_graph, **kwargs):
+        self.parameters_data = build_core_params(self.parameters, False, False, self.flags, self.key)
+        super(EPyModule, self).__init__(flow_graph, **kwargs)
