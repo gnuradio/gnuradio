@@ -80,7 +80,6 @@ endif()
 
 GR_LIBRARY_FOO(gnuradio-wavelet)
 add_dependencies(gnuradio-wavelet
-  wavelet_generated_swigs
   gnuradio-runtime)
 
 if(ENABLE_STATIC_LIBS)

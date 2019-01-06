@@ -150,7 +150,6 @@ GR_LIBRARY_FOO(gnuradio-digital)
 
 add_dependencies(
     gnuradio-digital
-    digital_generated_swigs
     gnuradio-runtime
     gnuradio-filter
     gnuradio-analog
