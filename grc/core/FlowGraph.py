@@ -103,7 +103,7 @@ class FlowGraph(Element):
         """Iterate over custom code block ID and Source"""
         for block in self.iter_enabled_blocks():
             if block.key == 'epy_module':
-                yield block.name, block.params[1].get_value()
+                yield block.name, block.params['source_code'].get_value()
 
     def iter_enabled_blocks(self):
         """
