@@ -79,7 +79,6 @@ add_library(gnuradio-channels SHARED ${channels_sources})
 target_link_libraries(gnuradio-channels ${channels_libs})
 GR_LIBRARY_FOO(gnuradio-channels)
 add_dependencies(gnuradio-channels
-  channels_generated_swigs
   gnuradio-runtime gnuradio-filter gnuradio-analog gnuradio-blocks)
 
 if(ENABLE_STATIC_LIBS)

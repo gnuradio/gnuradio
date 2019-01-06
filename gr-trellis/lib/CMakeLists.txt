@@ -84,7 +84,6 @@ add_library(gnuradio-trellis SHARED ${trellis_sources})
 target_link_libraries(gnuradio-trellis ${trellis_libs})
 GR_LIBRARY_FOO(gnuradio-trellis)
 add_dependencies(gnuradio-trellis
-  trellis_generated_swigs
   gnuradio-runtime gnuradio-digital)
 
 if(ENABLE_STATIC_LIBS)
@@ -102,7 +101,6 @@ if(ENABLE_STATIC_LIBS)
   add_library(gnuradio-trellis_static STATIC ${trellis_sources})
 
   add_dependencies(gnuradio-trellis_static
-    trellis_generated_swigs
     gnuradio-runtime_static gnuradio-digital_static
     )
 
