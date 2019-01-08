@@ -104,6 +104,9 @@ endif(LIBGSM_LIBRARIES)
 
 add_library(gnuradio-vocoder SHARED ${gr_vocoder_sources})
 target_link_libraries(gnuradio-vocoder ${vocoder_libs})
+if(LIBGSM_INCLUDE_DIR)
+    target_include_directories(gnuradio-vocoder PUBLIC ${LIBGSM_INCLUDE_DIR})
+endif(LIBGSM_INCLUDE_DIR)
 GR_LIBRARY_FOO(gnuradio-vocoder)
 
 if(ENABLE_STATIC_LIBS)
