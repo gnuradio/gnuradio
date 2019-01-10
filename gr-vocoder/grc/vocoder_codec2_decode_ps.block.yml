@@ -1,5 +1,6 @@
 id: vocoder_codec2_decode_ps
 label: CODEC2 Audio Decoder
+flags: [ python, cpp ]
 
 parameters:
 -   id: mode
@@ -26,5 +27,13 @@ templates:
         from gnuradio import vocoder
         from gnuradio.vocoder import codec2
     make: vocoder.codec2_decode_ps(${mode})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/codec2_decode_ps.h>' ]
+    declarations: 'vocoder::codec2_decode_ps::sptr ${id};'
+    make: 'this->${id} = vocoder::codec2_decode_ps::make();'
+    link: ['gnuradio-vocoder']
+    translations:
+        'codec2.': 'codec2::'
 
 file_format: 1

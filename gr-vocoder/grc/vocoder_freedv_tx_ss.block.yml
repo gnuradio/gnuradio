@@ -1,5 +1,6 @@
 id: vocoder_freedv_tx_ss
 label: FreeDV modulator
+flags: [ python, cpp ]
 
 parameters:
 -   id: mode
@@ -27,5 +28,15 @@ templates:
         from gnuradio import vocoder
         from gnuradio.vocoder import freedv_api
     make: vocoder.freedv_tx_ss(${mode},${txt_msg})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/freedv_tx_ss.h>' ]
+    declarations: 'vocoder::freedv_tx_ss::sptr ${id};'
+    make: 'this->${id} = vocoder::freedv_tx_ss::make(${mode}, ${txt_msg});'
+    link: ['gnuradio-vocoder']
+    callbacks:
+    - set_squelch_thresh(${squelch_thresh})
+    translations:
+        'freedv_api.': 'freedv_api::'
 
 file_format: 1

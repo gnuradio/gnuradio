@@ -1,5 +1,6 @@
 id: vocoder_cvsd_decode_bs
 label: CVSD Audio Decoder (Raw Bit-Level)
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -12,5 +13,11 @@ outputs:
 templates:
     imports: from gnuradio import vocoder
     make: vocoder.cvsd_decode_bs()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/vocoder/cvsd_decode_bs.h>' ]
+    declarations: 'vocoder::cvsd_decode_bs::sptr ${id};'
+    make: 'this->${id} = vocoder::cvsd_decode_bs::make();'
+    link: ['gnuradio-vocoder']
 
 file_format: 1
