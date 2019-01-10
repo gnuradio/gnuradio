@@ -1,7 +1,7 @@
 id: audio_sink
 label: Audio Sink
 category: '[Core]/Audio'
-flags: [ throttle ]
+flags: [ throttle, python, cpp ]
 
 parameters:
 -   id: samp_rate
@@ -38,6 +38,16 @@ asserts:
 templates:
     imports: from gnuradio import audio
     make: audio.sink(${samp_rate}, ${device_name}, ${ok_to_block})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/audio/sink.h>' ]
+    declarations: 'audio::sink::sptr ${id};'
+    make: 'this->${id} = audio::sink::make(${samp_rate}, ${device_name}, ${ok_to_block});'
+    link: ['gnuradio-audio']
+    translations:
+        "'": '"'
+        'True': 'true'
+        'False': 'false'
 
 documentation: |-
     Not all sampling rates will be supported by your hardware.
