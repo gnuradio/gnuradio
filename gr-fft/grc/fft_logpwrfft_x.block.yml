@@ -1,5 +1,6 @@
 id: logpwrfft_x
 label: Log Power FFT
+flags: [ python ]
 
 parameters:
 -   id: type

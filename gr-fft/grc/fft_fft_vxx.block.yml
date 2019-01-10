@@ -1,11 +1,14 @@
 id: fft_vxx
 label: FFT
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
     label: Input Type
     dtype: enum
     options: [complex, float]
+    option_attributes:
+        fcn: [vcc, vfc]
     hide: part
 -   id: fft_size
     label: FFT Size
@@ -53,5 +56,22 @@ templates:
         % endif
     callbacks:
     - set_nthreads(${nthreads})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/fft/fft.h>', '#include <gnuradio/fft/fft_${type.fcn}.h>', '#include <gnuradio/fft/window.h>' ]
+    declarations: 'fft::fft_${type.fcn}::sptr ${id};'
+    make: |-
+        % if type == "complex":
+        this->${id} = fft::fft_vcc::make(${fft_size}, ${forward}, ${window}, ${shift}, ${nthreads});
+        % else:
+        this->${id} = fft::fft_vfc::make(${fft_size}, ${forward}, ${window}, ${nthreads});
+        % endif
+    link: ['gnuradio-fft']
+    callbacks:
+    - set_nthreads(${nthreads})
+    translations:
+        'True': 'true'
+        'False': 'false'
+        'window.': 'fft::window::'
 
 file_format: 1
