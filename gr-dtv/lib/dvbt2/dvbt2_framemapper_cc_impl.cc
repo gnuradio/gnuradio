@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015-2017 Free Software Foundation, Inc.
+ * Copyright 2015-2017,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "dvbt2_framemapper_cc_impl.h"
+#include <algorithm>
 
 namespace gr {
   namespace dtv {
@@ -1608,7 +1609,7 @@ namespace gr {
     {
       int sr = 0x4A80;
       int num = mapped_items - stream_items - 1840 - (N_post / eta_mod) - (N_FC - C_FC);
-      memset(&dummy_randomize[0], 0, sizeof(gr_complex) * num);
+      std::fill_n(&dummy_randomize[0], num, 0);
       for (int i = 0; i < num; i++) {
         int b = ((sr) ^ (sr >> 1)) & 1;
         dummy_randomize[i] = (b ? -1.0 : 1.0);
