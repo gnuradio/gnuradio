@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016,2018 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include <gnuradio/expj.h>
 #include <gnuradio/math.h>
 #include <complex>
+#include <algorithm>
 
 namespace gr {
   namespace dtv {
@@ -273,7 +274,7 @@ namespace gr {
         delete [] d_wk;
         throw std::bad_alloc();
       }
-      memset(d_prev_tps_symbol, 0, d_tps_carriers_size * sizeof(gr_complex));
+      std::fill_n(d_prev_tps_symbol, d_tps_carriers_size, 0);
 
       d_tps_symbol = new (std::nothrow) gr_complex[d_tps_carriers_size];
       if (d_tps_symbol == NULL) {
@@ -289,7 +290,7 @@ namespace gr {
         delete [] d_wk;
         throw std::bad_alloc();
       }
-      memset(d_tps_symbol, 0, d_tps_carriers_size * sizeof(gr_complex));
+      std::fill_n(d_tps_symbol, d_tps_carriers_size, 0);
 
       // Init receive TPS data vector
       for (int i = 0; i < d_symbols_per_frame; i++) {

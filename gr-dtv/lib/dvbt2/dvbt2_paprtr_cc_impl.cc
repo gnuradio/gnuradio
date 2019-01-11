@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015-2018 Free Software Foundation, Inc.
+ * Copyright 2015-2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <volk/volk.h>
+#include <algorithm>
 
 /* An early exit from the iteration loop is a very effective optimization */
 /* Change this line to #undef for validation testing with BBC V&V streams */
@@ -698,7 +699,7 @@ namespace gr {
             valid = FALSE;
             if (j < N_P2) {
               index = 0;
-              memset(&ones_freq[index], 0, sizeof(gr_complex) * left_nulls);
+              std::fill_n(&ones_freq[index], left_nulls, 0);
               index = left_nulls;
               for (int n = 0; n < C_PS; n++) {
                 if (p2_carrier_map[n] == P2PAPR_CARRIER) {
@@ -708,13 +709,13 @@ namespace gr {
                   ones_freq[index++] = zero;
                 }
               }
-              memset(&ones_freq[index], 0, sizeof(gr_complex) * right_nulls);
+              std::fill_n(&ones_freq[index], right_nulls, 0);
               papr_map = p2_papr_map;
               valid = TRUE;
             }
             else if (j == (num_symbols - L_FC) && (papr_mode == PAPR_TR || papr_mode == PAPR_BOTH)) {
               index = 0;
-              memset(&ones_freq[index], 0, sizeof(gr_complex) * left_nulls);
+              std::fill_n(&ones_freq[index], left_nulls, 0);
               index = left_nulls;
               for (int n = 0; n < C_PS; n++) {
                 if (fc_carrier_map[n] == TRPAPR_CARRIER) {
@@ -724,13 +725,13 @@ namespace gr {
                   ones_freq[index++] = zero;
                 }
               }
-              memset(&ones_freq[index], 0, sizeof(gr_complex) * right_nulls);
+              std::fill_n(&ones_freq[index], right_nulls, 0);
               papr_map = p2_papr_map;
               valid = TRUE;
             }
             else if (papr_mode == PAPR_TR || papr_mode == PAPR_BOTH) {
               index = 0;
-              memset(&ones_freq[index], 0, sizeof(gr_complex) * left_nulls);
+              std::fill_n(&ones_freq[index], left_nulls, 0);
               index = left_nulls;
               for (int n = 0; n < C_PS; n++) {
                 if (data_carrier_map[n] == TRPAPR_CARRIER) {
@@ -740,7 +741,7 @@ namespace gr {
                   ones_freq[index++] = zero;
                 }
               }
-              memset(&ones_freq[index], 0, sizeof(gr_complex) * right_nulls);
+              std::fill_n(&ones_freq[index], right_nulls, 0);
               papr_map = tr_papr_map;
               valid = TRUE;
             }
@@ -751,8 +752,8 @@ namespace gr {
               papr_fft->execute();
               memcpy(ones_time, papr_fft->get_outbuf(), sizeof(gr_complex) * papr_fft_size);
               volk_32fc_s32fc_multiply_32fc(ones_time, ones_time, normalization, papr_fft_size);
-              memset(&r[0], 0, sizeof(gr_complex) * N_TR);
-              memset(&c[0], 0, sizeof(gr_complex) * papr_fft_size);
+              std::fill_n(&r[0], N_TR, 0);
+              std::fill_n(&c[0], papr_fft_size, 0);
               for (int k = 1; k <= num_iterations; k++) {
                 y = 0.0;
                 volk_32f_x2_add_32f((float*)ctemp, (float*)in, (float*)c, papr_fft_size * 2);
