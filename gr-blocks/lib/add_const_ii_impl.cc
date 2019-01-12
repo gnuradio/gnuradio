@@ -81,8 +81,8 @@ namespace gr {
         rpcbasic_sptr(new rpcbasic_register_get<add_const_ii, int>(
 	  alias(), "Constant",
 	  &add_const_ii::k,
-	  pmt::from_long(-4.29e9),
-          pmt::from_long(4.29e9),
+	  pmt::from_long(-2147483648),
+          pmt::from_long(2147483647),
           pmt::from_long(0),
 	  "", "Constant to add", RPC_PRIVLVL_MIN,
           DISPTIME | DISPOPTCPLX | DISPOPTSTRIP)));
@@ -91,8 +91,8 @@ namespace gr {
         rpcbasic_sptr(new rpcbasic_register_set<add_const_ii, int>(
 	  alias(), "Constant",
 	  &add_const_ii::set_k,
-	  pmt::from_long(-4.29e9),
-          pmt::from_long(4.29e9),
+	  pmt::from_long(-2147483648),
+          pmt::from_long(2147483647),
           pmt::from_long(0),
 	  "", "Constant to add",
 	  RPC_PRIVLVL_MIN, DISPNULL)));
