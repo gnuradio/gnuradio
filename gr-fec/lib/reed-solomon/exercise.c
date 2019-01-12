@@ -70,7 +70,7 @@ int trials){
 
       /* Load block with random data and encode */
       for(i=0;i<NN-NROOTS;i++)
-	block[i] = random() & NN;
+	block[i] = rand() & NN;
 
 #if defined(CCSDS) || defined(FIXED)
       ENCODE_RS(&block[0],&block[NN-NROOTS]);
@@ -85,17 +85,17 @@ int trials){
       erasures=0;
       for(i=0;i<(unsigned int)errors;i++){
 	do {
-	  errval = random() & NN;
+	  errval = rand() & NN;
 	} while(errval == 0); /* Error value must be nonzero */
 
 	do {
-	  errloc = random() % NN;
+	  errloc = rand() % NN;
 	} while(errlocs[errloc] != 0); /* Must not choose the same location twice */
 
 	errlocs[errloc] = 1;
 
 #if FLAG_ERASURE
-	if(random() & 1) /* 50-50 chance */
+	if(rand() & 1) /* 50-50 chance */
 	  derrlocs[erasures++] = errloc;
 #endif
 	tblock[errloc] ^= errval;
