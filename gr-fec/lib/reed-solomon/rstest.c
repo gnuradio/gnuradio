@@ -57,7 +57,7 @@ int main(){
   int i;
 
   terrs = 0;
-  srandom(time(NULL));
+  srand(time(NULL));
 
 #ifdef ALL_VERSIONS
   printf("Testing fixed (255,223) RS codec...");
