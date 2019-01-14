@@ -10,8 +10,7 @@ parameters:
     options: ['False', 'True']
     option_labels: ['No', 'Yes']
     option_attributes:
-        vlen: ['1', '2']
-    hide: ${ 'part' if vlen == 1 else 'none' }
+        vlen: [1, 2]
 -   id: swap
     label: Swap
     dtype: enum
