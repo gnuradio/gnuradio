@@ -1,3318 +1,747 @@
-<?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.12'?>
-<flow_graph>
-  <timestamp>Sun Dec 28 23:36:42 2014</timestamp>
-  <block>
-    <key>options</key>
-    <param>
-      <key>author</key>
-      <value></value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>description</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 11)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>qt_gui</value>
-    </param>
-    <param>
-      <key>hier_block_src_path</key>
-      <value>.:</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>vv011_1kfft</value>
-    </param>
-    <param>
-      <key>max_nouts</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>qt_qss_theme</key>
-      <value></value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>run_command</key>
-      <value>{python} -u {filename}</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>thread_safe_setters</key>
-      <value></value>
-    </param>
-    <param>
-      <key>title</key>
-      <value></value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(176, 12)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>center_freq</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>429e6</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 76)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>(8000000.0 * 8) / 7</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(240, 144)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>tx_gain</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value></value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.5</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>89</value>
-    </param>
-    <param>
-      <key>rangeType</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>-8</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 144)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>vga1_gain</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value></value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-35</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>-4</value>
-    </param>
-    <param>
-      <key>rangeType</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(120, 144)</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>vga2_gain</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value></value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>25</value>
-    </param>
-    <param>
-      <key>rangeType</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_file_sink</key>
-    <param>
-      <key>append</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>vv.cfile</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(848, 420)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_file_sink_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>unbuffered</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_file_source</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>/run/shm/vv011-1kfft.ts</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(120, 75)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_file_source_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_multiply_const_xx</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>0.2</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(848, 540)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_multiply_const_xx_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>digital_ofdm_cyclic_prefixer</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>cp_len</key>
-      <value>1024 / 8</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>input_size</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(344, 464)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>digital_ofdm_cyclic_prefixer_0</value>
-    </param>
-    <param>
-      <key>tagname</key>
-      <value></value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>rolloff</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvb_bbheader_bb</key>
-    <param>
-      <key>mode</key>
-      <value>INPUTMODE_NORMAL</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rate1</key>
-      <value>C1_2</value>
-    </param>
-    <param>
-      <key>rate2</key>
-      <value>C1_3</value>
-    </param>
-    <param>
-      <key>rate3</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>rate4</key>
-      <value>C1_5_MEDIUM</value>
-    </param>
-    <param>
-      <key>rate5</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fecblocks</key>
-      <value>168</value>
-    </param>
-    <param>
-      <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>framesize2</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(360, 24)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvb_bbheader_bb_0</value>
-    </param>
-    <param>
-      <key>inband</key>
-      <value>INBAND_OFF</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>rolloff</key>
-      <value>RO_0_35</value>
-    </param>
-    <param>
-      <key>standard</key>
-      <value>STANDARD_DVBT2</value>
-    </param>
-    <param>
-      <key>tsrate</key>
-      <value>4000000</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvb_bbscrambler_bb</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rate1</key>
-      <value>C1_2</value>
-    </param>
-    <param>
-      <key>rate2</key>
-      <value>C1_3</value>
-    </param>
-    <param>
-      <key>rate3</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>rate4</key>
-      <value>C1_5_MEDIUM</value>
-    </param>
-    <param>
-      <key>rate5</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>framesize2</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(656, 36)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvb_bbscrambler_bb_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>standard</key>
-      <value>STANDARD_DVBT2</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvb_bch_bb</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rate1</key>
-      <value>C1_2</value>
-    </param>
-    <param>
-      <key>rate2</key>
-      <value>C1_3</value>
-    </param>
-    <param>
-      <key>rate3</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>rate4</key>
-      <value>C1_5_MEDIUM</value>
-    </param>
-    <param>
-      <key>rate5</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>framesize2</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(864, 36)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvb_bch_bb_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>standard</key>
-      <value>STANDARD_DVBT2</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvb_ldpc_bb</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rate1</key>
-      <value>C1_2</value>
-    </param>
-    <param>
-      <key>rate2</key>
-      <value>C1_3</value>
-    </param>
-    <param>
-      <key>rate3</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>rate4</key>
-      <value>C1_5_MEDIUM</value>
-    </param>
-    <param>
-      <key>rate5</key>
-      <value>C1_4</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>constellation</key>
-      <value>MOD_OTHER</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>framesize1</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>framesize2</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1072, 36)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvb_ldpc_bb_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>standard</key>
-      <value>STANDARD_DVBT2</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_cellinterleaver_cc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>constellation</key>
-      <value>MOD_QPSK</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fecblocks</key>
-      <value>48</value>
-    </param>
-    <param>
-      <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(504, 224)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_cellinterleaver_cc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>tiblocks</key>
-      <value>3</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_framemapper_cc</key>
-    <param>
-      <key>inputmode</key>
-      <value>INPUTMODE_NORMAL</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>C1_2</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rotation</key>
-      <value>ROTATION_ON</value>
-    </param>
-    <param>
-      <key>constellation</key>
-      <value>MOD_QPSK</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
-    </param>
-    <param>
-      <key>fecblocks</key>
-      <value>48</value>
-    </param>
-    <param>
-      <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>fftsize1</key>
-      <value>FFTSIZE_1K</value>
-    </param>
-    <param>
-      <key>fftsize2</key>
-      <value>FFTSIZE_2K</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(736, 140)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>guardinterval</key>
-      <value>GI_1_8</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_framemapper_cc_0</value>
-    </param>
-    <param>
-      <key>inband</key>
-      <value>INBAND_OFF</value>
-    </param>
-    <param>
-      <key>l1constellation</key>
-      <value>L1_MOD_BPSK</value>
-    </param>
-    <param>
-      <key>l1scrambled</key>
-      <value>L1_SCRAMBLED_OFF</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>numdatasyms</key>
-      <value>1966</value>
-    </param>
-    <param>
-      <key>paprmode1</key>
-      <value>PAPR_OFF</value>
-    </param>
-    <param>
-      <key>paprmode2</key>
-      <value>PAPR_OFF</value>
-    </param>
-    <param>
-      <key>pilotpattern</key>
-      <value>PILOT_PP3</value>
-    </param>
-    <param>
-      <key>preamble1</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>preamble2</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>reservedbiasbits</key>
-      <value>RESERVED_OFF</value>
-    </param>
-    <param>
-      <key>version</key>
-      <value>VERSION_111</value>
-    </param>
-    <param>
-      <key>t2frames</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>tiblocks</key>
-      <value>3</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_freqinterleaver_cc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
-    </param>
-    <param>
-      <key>fftsize</key>
-      <value>FFTSIZE_1K</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1016, 196)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>guardinterval</key>
-      <value>GI_1_8</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_freqinterleaver_cc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>numdatasyms</key>
-      <value>1966</value>
-    </param>
-    <param>
-      <key>paprmode1</key>
-      <value>PAPR_OFF</value>
-    </param>
-    <param>
-      <key>paprmode2</key>
-      <value>PAPR_OFF</value>
-    </param>
-    <param>
-      <key>pilotpattern</key>
-      <value>PILOT_PP3</value>
-    </param>
-    <param>
-      <key>preamble1</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>preamble2</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>version</key>
-      <value>VERSION_111</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_interleaver_bb</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>C1_2</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>constellation</key>
-      <value>MOD_QPSK</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(56, 276)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_interleaver_bb_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_modulator_bc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>rotation</key>
-      <value>ROTATION_ON</value>
-    </param>
-    <param>
-      <key>constellation</key>
-      <value>MOD_QPSK</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>framesize</key>
-      <value>FECFRAME_NORMAL</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(272, 276)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_modulator_bc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_p1insertion_cc</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>carriermode</key>
-      <value>CARRIERS_EXTENDED</value>
-    </param>
-    <param>
-      <key>fftsize1</key>
-      <value>FFTSIZE_1K</value>
-    </param>
-    <param>
-      <key>fftsize2</key>
-      <value>FFTSIZE_2K</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(560, 440)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>guardinterval</key>
-      <value>GI_1_8</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_p1insertion_cc_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>numdatasyms</key>
-      <value>1966</value>
-    </param>
-    <param>
-      <key>preamble1</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>preamble2</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>showlevels</key>
-      <value>SHOWLEVELS_OFF</value>
-    </param>
-    <param>
-      <key>version</key>
-      <value>VERSION_111</value>
-    </param>
-    <param>
-      <key>vclip</key>
-      <value>3.3</value>
-    </param>
-  </block>
-  <block>
-    <key>dtv_dvbt2_pilotgenerator_cc</key>
-    <param>
-      <key>bandwidth</key>
-      <value>BANDWIDTH_8_0_MHZ</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>carriermode</key>
-      <value>CARRIERS_NORMAL</value>
-    </param>
-    <param>
-      <key>fftsize</key>
-      <value>FFTSIZE_1K</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(56, 428)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>guardinterval</key>
-      <value>GI_1_8</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>dtv_dvbt2_pilotgenerator_cc_0</value>
-    </param>
-    <param>
-      <key>misogroup</key>
-      <value>MISO_TX1</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>numdatasyms</key>
-      <value>1966</value>
-    </param>
-    <param>
-      <key>paprmode1</key>
-      <value>PAPR_OFF</value>
-    </param>
-    <param>
-      <key>paprmode2</key>
-      <value>PAPR_OFF</value>
-    </param>
-    <param>
-      <key>pilotpattern</key>
-      <value>PILOT_PP3</value>
-    </param>
-    <param>
-      <key>preamble1</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>preamble2</key>
-      <value>PREAMBLE_T2_SISO</value>
-    </param>
-    <param>
-      <key>equalization</key>
-      <value>EQUALIZATION_OFF</value>
-    </param>
-    <param>
-      <key>version</key>
-      <value>VERSION_111</value>
-    </param>
-  </block>
-  <block>
-    <key>osmosdr_sink</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>ant0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain0</key>
-      <value>vga1_gain</value>
-    </param>
-    <param>
-      <key>bw0</key>
-      <value>8750000</value>
-    </param>
-    <param>
-      <key>corr0</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq0</key>
-      <value>center_freq</value>
-    </param>
-    <param>
-      <key>if_gain0</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>gain0</key>
-      <value>vga2_gain</value>
-    </param>
-    <param>
-      <key>ant10</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain10</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw10</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr10</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq10</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain10</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain10</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant11</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain11</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw11</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr11</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq11</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain11</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain11</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant12</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain12</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw12</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr12</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq12</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain12</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain12</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant13</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain13</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw13</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr13</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq13</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain13</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain13</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant14</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain14</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw14</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr14</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq14</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain14</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain14</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant15</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain15</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw15</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr15</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq15</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain15</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain15</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant16</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain16</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw16</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr16</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq16</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain16</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain16</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant17</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain17</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw17</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr17</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq17</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain17</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain17</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant18</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain18</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw18</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr18</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq18</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain18</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain18</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant19</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain19</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw19</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr19</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq19</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain19</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain19</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain1</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq1</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain1</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain1</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant20</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain20</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw20</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr20</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq20</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain20</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain20</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant21</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain21</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw21</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr21</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq21</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain21</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain21</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant22</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain22</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw22</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr22</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq22</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain22</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain22</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant23</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain23</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw23</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr23</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq23</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain23</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain23</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant24</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain24</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw24</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr24</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq24</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain24</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain24</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant25</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain25</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw25</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr25</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq25</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain25</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain25</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant26</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain26</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw26</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr26</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq26</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain26</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain26</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant27</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain27</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw27</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr27</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq27</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain27</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain27</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant28</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain28</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw28</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr28</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq28</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain28</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain28</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant29</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain29</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw29</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr29</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq29</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain29</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain29</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain2</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq2</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain2</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain2</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant30</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain30</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw30</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr30</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq30</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain30</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain30</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant31</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain31</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw31</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr31</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq31</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain31</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain31</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain3</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq3</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain3</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain3</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain4</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq4</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain4</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain4</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain5</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw5</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr5</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq5</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain5</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain5</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain6</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw6</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr6</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq6</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain6</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain6</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain7</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw7</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr7</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq7</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain7</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain7</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant8</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain8</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw8</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr8</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq8</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain8</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain8</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>ant9</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bb_gain9</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>bw9</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>corr9</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>freq9</key>
-      <value>100e6</value>
-    </param>
-    <param>
-      <key>if_gain9</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>gain9</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>args</key>
-      <value>bladerf=0,buffers=128,buflen=32768</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1056, 492)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>osmosdr_sink_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fc32</value>
-    </param>
-    <param>
-      <key>clock_source0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>nchan</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>num_mboards</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>sample_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>sync</key>
-      <value></value>
-    </param>
-  </block>
-  <block>
-    <key>uhd_usrp_sink</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>ant0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw0</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq0</key>
-      <value>uhd.tune_request(center_freq, 4000000)</value>
-    </param>
-    <param>
-      <key>norm_gain0</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain0</key>
-      <value>tx_gain</value>
-    </param>
-    <param>
-      <key>ant10</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw10</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq10</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain10</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain10</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant11</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw11</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq11</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain11</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain11</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant12</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw12</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq12</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain12</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain12</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant13</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw13</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq13</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain13</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain13</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant14</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw14</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq14</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain14</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain14</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant15</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw15</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq15</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain15</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain15</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant16</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw16</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq16</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain16</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain16</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant17</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw17</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq17</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain17</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain17</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant18</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw18</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq18</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain18</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain18</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant19</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw19</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq19</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain19</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain19</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain1</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain1</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant20</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw20</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq20</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain20</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain20</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant21</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw21</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq21</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain21</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain21</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant22</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw22</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq22</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain22</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain22</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant23</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw23</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq23</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain23</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain23</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant24</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw24</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq24</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain24</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain24</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant25</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw25</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq25</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain25</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain25</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant26</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw26</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq26</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain26</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain26</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant27</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw27</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq27</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain27</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain27</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant28</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw28</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq28</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain28</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain28</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant29</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw29</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq29</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain29</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain29</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain2</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain2</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant30</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw30</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq30</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain30</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain30</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant31</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw31</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq31</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain31</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain31</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain3</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain3</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain4</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain4</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw5</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq5</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain5</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain5</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw6</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq6</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain6</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain6</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw7</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq7</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain7</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain7</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant8</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw8</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq8</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain8</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain8</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ant9</key>
-      <value></value>
-    </param>
-    <param>
-      <key>bw9</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>center_freq9</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>norm_gain9</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>gain9</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>clock_rate</key>
-      <value>0.0</value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>dev_addr</key>
-      <value>"send_frame_size=65536,num_send_frames=128,master_clock_rate=" + str(samp_rate*4)</value>
-    </param>
-    <param>
-      <key>dev_args</key>
-      <value>""</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1056, 392)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>uhd_usrp_sink_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>fc32</value>
-    </param>
-    <param>
-      <key>clock_source0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source0</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source1</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source2</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source3</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source4</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source5</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source6</key>
-      <value></value>
-    </param>
-    <param>
-      <key>clock_source7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>sd_spec7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>time_source7</key>
-      <value></value>
-    </param>
-    <param>
-      <key>nchan</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>num_mboards</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>hide_cmd_port</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>hide_lo_controls</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_args</key>
-      <value></value>
-    </param>
-    <param>
-      <key>stream_chans</key>
-      <value>[]</value>
-    </param>
-    <param>
-      <key>sync</key>
-      <value></value>
-    </param>
-    <param>
-      <key>len_tag_name</key>
-      <value></value>
-    </param>
-    <param>
-      <key>otw</key>
-      <value></value>
-    </param>
-  </block>
-  <connection>
-    <source_block_id>blocks_file_source_0</source_block_id>
-    <sink_block_id>dtv_dvb_bbheader_bb_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_const_xx_0</source_block_id>
-    <sink_block_id>osmosdr_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_const_xx_0</source_block_id>
-    <sink_block_id>uhd_usrp_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>digital_ofdm_cyclic_prefixer_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_p1insertion_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvb_bbheader_bb_0</source_block_id>
-    <sink_block_id>dtv_dvb_bbscrambler_bb_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvb_bbscrambler_bb_0</source_block_id>
-    <sink_block_id>dtv_dvb_bch_bb_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvb_bch_bb_0</source_block_id>
-    <sink_block_id>dtv_dvb_ldpc_bb_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvb_ldpc_bb_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_interleaver_bb_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_cellinterleaver_cc_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_framemapper_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_framemapper_cc_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_freqinterleaver_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_freqinterleaver_cc_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_pilotgenerator_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_interleaver_bb_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_modulator_bc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_modulator_bc_0</source_block_id>
-    <sink_block_id>dtv_dvbt2_cellinterleaver_cc_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_p1insertion_cc_0</source_block_id>
-    <sink_block_id>blocks_file_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_p1insertion_cc_0</source_block_id>
-    <sink_block_id>blocks_multiply_const_xx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>dtv_dvbt2_pilotgenerator_cc_0</source_block_id>
-    <sink_block_id>digital_ofdm_cyclic_prefixer_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-</flow_graph>
+options:
+  parameters:
+    author: ''
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: vv011_1kfft
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [8, 11]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: center_freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 429e6
+  states:
+    coordinate: [176, 12]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: (8000000.0 * 8) / 7
+  states:
+    coordinate: [8, 76]
+    rotation: 0
+    state: enabled
+- name: tx_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.5'
+    stop: '89'
+    value: '50'
+    widget: counter_slider
+  states:
+    coordinate: [504, 332.0]
+    rotation: 0
+    state: enabled
+- name: vga1_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: int
+    start: '-35'
+    step: '1'
+    stop: '-4'
+    value: '-8'
+    widget: counter_slider
+  states:
+    coordinate: [272, 332.0]
+    rotation: 0
+    state: enabled
+- name: vga2_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: int
+    start: '0'
+    step: '1'
+    stop: '25'
+    value: '10'
+    widget: counter_slider
+  states:
+    coordinate: [384, 332.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: vv.cfile
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    coordinate: [872, 420.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_source_0
+  id: blocks_file_source
+  parameters:
+    affinity: ''
+    alias: ''
+    begin_tag: pmt.PMT_NIL
+    comment: ''
+    file: /run/shm/vv011-1kfft.ts
+    length: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    repeat: 'True'
+    type: byte
+    vlen: '1'
+  states:
+    coordinate: [120, 75]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_xx_0
+  id: blocks_multiply_const_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '0.2'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [872, 540.0]
+    rotation: 0
+    state: enabled
+- name: digital_ofdm_cyclic_prefixer_0
+  id: digital_ofdm_cyclic_prefixer
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    cp_len: 1024 // 8
+    input_size: '1024'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: '0'
+    tagname: ''
+  states:
+    coordinate: [344, 476.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvb_bbheader_bb_0
+  id: dtv_dvb_bbheader_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fecblocks: '168'
+    framesize1: FECFRAME_NORMAL
+    framesize2: FECFRAME_NORMAL
+    inband: INBAND_OFF
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mode: INPUTMODE_NORMAL
+    rate1: C1_2
+    rate2: C1_3
+    rate3: C1_4
+    rate4: C1_5_MEDIUM
+    rate5: C1_4
+    rolloff: RO_0_35
+    standard: STANDARD_DVBT2
+    tsrate: '4000000'
+  states:
+    coordinate: [360, 20.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvb_bbscrambler_bb_0
+  id: dtv_dvb_bbscrambler_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    framesize1: FECFRAME_NORMAL
+    framesize2: FECFRAME_NORMAL
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate1: C1_2
+    rate2: C1_3
+    rate3: C1_4
+    rate4: C1_5_MEDIUM
+    rate5: C1_4
+    standard: STANDARD_DVBT2
+  states:
+    coordinate: [680, 36.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvb_bch_bb_0
+  id: dtv_dvb_bch_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    framesize1: FECFRAME_NORMAL
+    framesize2: FECFRAME_NORMAL
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate1: C1_2
+    rate2: C1_3
+    rate3: C1_4
+    rate4: C1_5_MEDIUM
+    rate5: C1_4
+    standard: STANDARD_DVBT2
+  states:
+    coordinate: [896, 36.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvb_ldpc_bb_0
+  id: dtv_dvb_ldpc_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: MOD_OTHER
+    framesize1: FECFRAME_NORMAL
+    framesize2: FECFRAME_NORMAL
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate1: C1_2
+    rate2: C1_3
+    rate3: C1_4
+    rate4: C1_5_MEDIUM
+    rate5: C1_4
+    standard: STANDARD_DVBT2
+  states:
+    coordinate: [1112, 36.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_cellinterleaver_cc_0
+  id: dtv_dvbt2_cellinterleaver_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: MOD_QPSK
+    fecblocks: '48'
+    framesize: FECFRAME_NORMAL
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tiblocks: '3'
+  states:
+    coordinate: [528, 228.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_framemapper_cc_0
+  id: dtv_dvbt2_framemapper_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    carriermode: CARRIERS_NORMAL
+    comment: ''
+    constellation: MOD_QPSK
+    fecblocks: '48'
+    fftsize1: FFTSIZE_1K
+    fftsize2: FFTSIZE_2K
+    framesize: FECFRAME_NORMAL
+    guardinterval: GI_1_8
+    inband: INBAND_OFF
+    inputmode: INPUTMODE_NORMAL
+    l1constellation: L1_MOD_BPSK
+    l1scrambled: L1_SCRAMBLED_OFF
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    numdatasyms: '1966'
+    paprmode1: PAPR_OFF
+    paprmode2: PAPR_OFF
+    pilotpattern: PILOT_PP3
+    preamble1: PREAMBLE_T2_SISO
+    preamble2: PREAMBLE_T2_SISO
+    rate: C1_2
+    reservedbiasbits: RESERVED_OFF
+    rotation: ROTATION_ON
+    t2frames: '2'
+    tiblocks: '3'
+    version: VERSION_111
+  states:
+    coordinate: [768, 132.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_freqinterleaver_cc_0
+  id: dtv_dvbt2_freqinterleaver_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    carriermode: CARRIERS_NORMAL
+    comment: ''
+    fftsize: FFTSIZE_1K
+    guardinterval: GI_1_8
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    numdatasyms: '1966'
+    paprmode1: PAPR_OFF
+    paprmode2: PAPR_OFF
+    pilotpattern: PILOT_PP3
+    preamble1: PREAMBLE_T2_SISO
+    preamble2: PREAMBLE_T2_SISO
+    version: VERSION_111
+  states:
+    coordinate: [1040, 196.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_interleaver_bb_0
+  id: dtv_dvbt2_interleaver_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: MOD_QPSK
+    framesize: FECFRAME_NORMAL
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rate: C1_2
+  states:
+    coordinate: [56, 236.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_modulator_bc_0
+  id: dtv_dvbt2_modulator_bc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: MOD_QPSK
+    framesize: FECFRAME_NORMAL
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rotation: ROTATION_ON
+  states:
+    coordinate: [288, 236.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_p1insertion_cc_0
+  id: dtv_dvbt2_p1insertion_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    carriermode: CARRIERS_EXTENDED
+    comment: ''
+    fftsize1: FFTSIZE_1K
+    fftsize2: FFTSIZE_2K
+    guardinterval: GI_1_8
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    numdatasyms: '1966'
+    preamble1: PREAMBLE_T2_SISO
+    preamble2: PREAMBLE_T2_SISO
+    showlevels: SHOWLEVELS_OFF
+    vclip: '3.3'
+    version: VERSION_111
+  states:
+    coordinate: [576, 444.0]
+    rotation: 0
+    state: enabled
+- name: dtv_dvbt2_pilotgenerator_cc_0
+  id: dtv_dvbt2_pilotgenerator_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    bandwidth: BANDWIDTH_8_0_MHZ
+    carriermode: CARRIERS_NORMAL
+    comment: ''
+    equalization: EQUALIZATION_OFF
+    fftsize: FFTSIZE_1K
+    guardinterval: GI_1_8
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    misogroup: MISO_TX1
+    numdatasyms: '1966'
+    paprmode1: PAPR_OFF
+    paprmode2: PAPR_OFF
+    pilotpattern: PILOT_PP3
+    preamble1: PREAMBLE_T2_SISO
+    preamble2: PREAMBLE_T2_SISO
+    version: VERSION_111
+  states:
+    coordinate: [56, 428]
+    rotation: 0
+    state: enabled
+- name: uhd_usrp_sink_0
+  id: uhd_usrp_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    ant0: ''
+    ant1: ''
+    ant10: ''
+    ant11: ''
+    ant12: ''
+    ant13: ''
+    ant14: ''
+    ant15: ''
+    ant16: ''
+    ant17: ''
+    ant18: ''
+    ant19: ''
+    ant2: ''
+    ant20: ''
+    ant21: ''
+    ant22: ''
+    ant23: ''
+    ant24: ''
+    ant25: ''
+    ant26: ''
+    ant27: ''
+    ant28: ''
+    ant29: ''
+    ant3: ''
+    ant30: ''
+    ant31: ''
+    ant4: ''
+    ant5: ''
+    ant6: ''
+    ant7: ''
+    ant8: ''
+    ant9: ''
+    bw0: '0'
+    bw1: '0'
+    bw10: '0'
+    bw11: '0'
+    bw12: '0'
+    bw13: '0'
+    bw14: '0'
+    bw15: '0'
+    bw16: '0'
+    bw17: '0'
+    bw18: '0'
+    bw19: '0'
+    bw2: '0'
+    bw20: '0'
+    bw21: '0'
+    bw22: '0'
+    bw23: '0'
+    bw24: '0'
+    bw25: '0'
+    bw26: '0'
+    bw27: '0'
+    bw28: '0'
+    bw29: '0'
+    bw3: '0'
+    bw30: '0'
+    bw31: '0'
+    bw4: '0'
+    bw5: '0'
+    bw6: '0'
+    bw7: '0'
+    bw8: '0'
+    bw9: '0'
+    center_freq0: uhd.tune_request(center_freq, 4000000)
+    center_freq1: '0'
+    center_freq10: '0'
+    center_freq11: '0'
+    center_freq12: '0'
+    center_freq13: '0'
+    center_freq14: '0'
+    center_freq15: '0'
+    center_freq16: '0'
+    center_freq17: '0'
+    center_freq18: '0'
+    center_freq19: '0'
+    center_freq2: '0'
+    center_freq20: '0'
+    center_freq21: '0'
+    center_freq22: '0'
+    center_freq23: '0'
+    center_freq24: '0'
+    center_freq25: '0'
+    center_freq26: '0'
+    center_freq27: '0'
+    center_freq28: '0'
+    center_freq29: '0'
+    center_freq3: '0'
+    center_freq30: '0'
+    center_freq31: '0'
+    center_freq4: '0'
+    center_freq5: '0'
+    center_freq6: '0'
+    center_freq7: '0'
+    center_freq8: '0'
+    center_freq9: '0'
+    clock_rate: '0.0'
+    clock_source0: ''
+    clock_source1: ''
+    clock_source2: ''
+    clock_source3: ''
+    clock_source4: ''
+    clock_source5: ''
+    clock_source6: ''
+    clock_source7: ''
+    comment: ''
+    dev_addr: '"send_frame_size=65536,num_send_frames=128,master_clock_rate=" + str(samp_rate*4)'
+    dev_args: '""'
+    gain0: tx_gain
+    gain1: '0'
+    gain10: '0'
+    gain11: '0'
+    gain12: '0'
+    gain13: '0'
+    gain14: '0'
+    gain15: '0'
+    gain16: '0'
+    gain17: '0'
+    gain18: '0'
+    gain19: '0'
+    gain2: '0'
+    gain20: '0'
+    gain21: '0'
+    gain22: '0'
+    gain23: '0'
+    gain24: '0'
+    gain25: '0'
+    gain26: '0'
+    gain27: '0'
+    gain28: '0'
+    gain29: '0'
+    gain3: '0'
+    gain30: '0'
+    gain31: '0'
+    gain4: '0'
+    gain5: '0'
+    gain6: '0'
+    gain7: '0'
+    gain8: '0'
+    gain9: '0'
+    len_tag_name: ''
+    lo_export0: 'False'
+    lo_export1: 'False'
+    lo_export10: 'False'
+    lo_export11: 'False'
+    lo_export12: 'False'
+    lo_export13: 'False'
+    lo_export14: 'False'
+    lo_export15: 'False'
+    lo_export16: 'False'
+    lo_export17: 'False'
+    lo_export18: 'False'
+    lo_export19: 'False'
+    lo_export2: 'False'
+    lo_export20: 'False'
+    lo_export21: 'False'
+    lo_export22: 'False'
+    lo_export23: 'False'
+    lo_export24: 'False'
+    lo_export25: 'False'
+    lo_export26: 'False'
+    lo_export27: 'False'
+    lo_export28: 'False'
+    lo_export29: 'False'
+    lo_export3: 'False'
+    lo_export30: 'False'
+    lo_export31: 'False'
+    lo_export4: 'False'
+    lo_export5: 'False'
+    lo_export6: 'False'
+    lo_export7: 'False'
+    lo_export8: 'False'
+    lo_export9: 'False'
+    lo_source0: internal
+    lo_source1: internal
+    lo_source10: internal
+    lo_source11: internal
+    lo_source12: internal
+    lo_source13: internal
+    lo_source14: internal
+    lo_source15: internal
+    lo_source16: internal
+    lo_source17: internal
+    lo_source18: internal
+    lo_source19: internal
+    lo_source2: internal
+    lo_source20: internal
+    lo_source21: internal
+    lo_source22: internal
+    lo_source23: internal
+    lo_source24: internal
+    lo_source25: internal
+    lo_source26: internal
+    lo_source27: internal
+    lo_source28: internal
+    lo_source29: internal
+    lo_source3: internal
+    lo_source30: internal
+    lo_source31: internal
+    lo_source4: internal
+    lo_source5: internal
+    lo_source6: internal
+    lo_source7: internal
+    lo_source8: internal
+    lo_source9: internal
+    maxoutbuf: ''
+    minoutbuf: ''
+    nchan: '1'
+    norm_gain0: 'False'
+    norm_gain1: 'False'
+    norm_gain10: 'False'
+    norm_gain11: 'False'
+    norm_gain12: 'False'
+    norm_gain13: 'False'
+    norm_gain14: 'False'
+    norm_gain15: 'False'
+    norm_gain16: 'False'
+    norm_gain17: 'False'
+    norm_gain18: 'False'
+    norm_gain19: 'False'
+    norm_gain2: 'False'
+    norm_gain20: 'False'
+    norm_gain21: 'False'
+    norm_gain22: 'False'
+    norm_gain23: 'False'
+    norm_gain24: 'False'
+    norm_gain25: 'False'
+    norm_gain26: 'False'
+    norm_gain27: 'False'
+    norm_gain28: 'False'
+    norm_gain29: 'False'
+    norm_gain3: 'False'
+    norm_gain30: 'False'
+    norm_gain31: 'False'
+    norm_gain4: 'False'
+    norm_gain5: 'False'
+    norm_gain6: 'False'
+    norm_gain7: 'False'
+    norm_gain8: 'False'
+    norm_gain9: 'False'
+    num_mboards: '1'
+    otw: ''
+    samp_rate: samp_rate
+    sd_spec0: ''
+    sd_spec1: ''
+    sd_spec2: ''
+    sd_spec3: ''
+    sd_spec4: ''
+    sd_spec5: ''
+    sd_spec6: ''
+    sd_spec7: ''
+    show_lo_controls: 'False'
+    stream_args: ''
+    stream_chans: '[]'
+    sync: none
+    time_source0: ''
+    time_source1: ''
+    time_source2: ''
+    time_source3: ''
+    time_source4: ''
+    time_source5: ''
+    time_source6: ''
+    time_source7: ''
+    type: fc32
+  states:
+    coordinate: [1080, 420.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    stream_id: freqint-pilotgen
+  states:
+    coordinate: [1104, 356.0]
+    rotation: 180
+    state: true
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    stream_id: ldpc-bitint
+  states:
+    coordinate: [1128, 116.0]
+    rotation: 180
+    state: true
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: ''
+    stream_id: freqint-pilotgen
+  states:
+    coordinate: [56, 380.0]
+    rotation: 180
+    state: true
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: ''
+    stream_id: ldpc-bitint
+  states:
+    coordinate: [56, 188.0]
+    rotation: 180
+    state: true
+
+connections:
+- [blocks_file_source_0, '0', dtv_dvb_bbheader_bb_0, '0']
+- [blocks_multiply_const_xx_0, '0', uhd_usrp_sink_0, '0']
+- [digital_ofdm_cyclic_prefixer_0, '0', dtv_dvbt2_p1insertion_cc_0, '0']
+- [dtv_dvb_bbheader_bb_0, '0', dtv_dvb_bbscrambler_bb_0, '0']
+- [dtv_dvb_bbscrambler_bb_0, '0', dtv_dvb_bch_bb_0, '0']
+- [dtv_dvb_bch_bb_0, '0', dtv_dvb_ldpc_bb_0, '0']
+- [dtv_dvb_ldpc_bb_0, '0', virtual_sink_1, '0']
+- [dtv_dvbt2_cellinterleaver_cc_0, '0', dtv_dvbt2_framemapper_cc_0, '0']
+- [dtv_dvbt2_framemapper_cc_0, '0', dtv_dvbt2_freqinterleaver_cc_0, '0']
+- [dtv_dvbt2_freqinterleaver_cc_0, '0', virtual_sink_0, '0']
+- [dtv_dvbt2_interleaver_bb_0, '0', dtv_dvbt2_modulator_bc_0, '0']
+- [dtv_dvbt2_modulator_bc_0, '0', dtv_dvbt2_cellinterleaver_cc_0, '0']
+- [dtv_dvbt2_p1insertion_cc_0, '0', blocks_file_sink_0, '0']
+- [dtv_dvbt2_p1insertion_cc_0, '0', blocks_multiply_const_xx_0, '0']
+- [dtv_dvbt2_pilotgenerator_cc_0, '0', digital_ofdm_cyclic_prefixer_0, '0']
+- [virtual_source_0, '0', dtv_dvbt2_pilotgenerator_cc_0, '0']
+- [virtual_source_1, '0', dtv_dvbt2_interleaver_bb_0, '0']
+
+metadata:
+  file_format: 1
