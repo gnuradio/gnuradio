@@ -197,10 +197,10 @@ class TopBlockGenerator(object):
         blocks_make = []
         for block in blocks:
             make = block.templates.render('make')
-            if not (block.is_variable or block.is_virtual_or_pad):
-                if make:
+            if make:
+                if not (block.is_variable or block.is_virtual_or_pad):
                     make = 'self.' + block.name + ' = ' + make
-                    blocks_make.append((block, make))
+                blocks_make.append((block, make))
         return blocks_make
 
     def _callbacks(self):
