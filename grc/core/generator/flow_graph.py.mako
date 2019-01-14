@@ -27,7 +27,6 @@ python_version = version_info.major
 % if flow_graph.get_option('description'):
 # Description: ${flow_graph.get_option('description')}
 % endif
-# Generated: ${generated_time}
 # GNU Radio version: ${version}
 ##################################################
 
