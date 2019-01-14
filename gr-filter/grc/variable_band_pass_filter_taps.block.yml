@@ -5,10 +5,8 @@ parameters:
 -   id: type
     label: Tap Type
     dtype: enum
-    options: [taps_real, taps_complex]
+    options: [band_pass, complex_band_pass]
     option_labels: [Real, Complex]
-    option_attributes:
-        fcn: [band_pass, complex_band_pass]
 -   id: gain
     label: Gain
     dtype: float
@@ -37,18 +35,17 @@ parameters:
     label: Beta
     dtype: float
     default: '6.76'
-value: ${ firdes.type.fcn(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width,
-    win, beta) }
+value: ${ firdes.band_pass(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width,win, beta) }
 
 templates:
     imports: from gnuradio.filter import firdes
     var_make: |-
-        self.${id} = ${id} = firdes.${type.fcn}(${gain}, ${samp_rate}, ${low_cutoff_freq},\
+        self.${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
         ${high_cutoff_freq}, ${width}, ${win}, ${beta})
 
 documentation: |-
     This is a convenience wrapper for calling firdes.band_pass() or firdes.complex_band_pass()
 
-        The beta paramater only applies to the Kaiser window.
+        The beta parameter only applies to the Kaiser window.
 
 file_format: 1
