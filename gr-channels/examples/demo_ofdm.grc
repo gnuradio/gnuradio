@@ -1,1410 +1,628 @@
-<?xml version='1.0' encoding='ASCII'?>
-<flow_graph>
-  <timestamp>Thu Aug  1 15:11:44 2013</timestamp>
-  <block>
-    <key>options</key>
-    <param>
-      <key>id</key>
-      <value>demo_ofdm</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value></value>
-    </param>
-    <param>
-      <key>author</key>
-      <value>mettus</value>
-    </param>
-    <param>
-      <key>description</key>
-      <value></value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>qt_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>run_options</key>
-      <value>prompt</value>
-    </param>
-    <param>
-      <key>run</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>max_nouts</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>realtime_scheduling</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>const_size</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>64</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(11, 89)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(99, 89)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>32000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(11, 151)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>k</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>math.log(const_size)/math.log(2)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(100, 151)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>import</key>
-    <param>
-      <key>id</key>
-      <value>import_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>import</key>
-      <value>import math</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(168, 153)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>q_ofs</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Q offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.001</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>2,1,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(936, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>i_ofs</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>I offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.001</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>2,0,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(829, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>phasebal</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>IQ Phase Imbalance</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>45</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.1</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>1,1,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(675, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>magbal</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>IQ Magnitude Imbalance</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.1</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>1,0,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(497, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Frequency Offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-0.5</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>0.5</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.001</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>0,1,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(357, 8)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>phase_noise_mag</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Phase Noise Mag (dB)</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>-100</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-100</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>0, 0, 1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(194, 7)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_time_sink_x</key>
-    <param>
-      <key>id</key>
-      <value>qtgui_time_sink_x_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value></value>
-    </param>
-    <param>
-      <key>size</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>srate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>ymin</key>
-      <value>-1</value>
-    </param>
-    <param>
-      <key>ymax</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>nconnections</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>update_time</key>
-      <value>0.10</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>4,1,1,1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1102, 249)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_qtgui_range</key>
-    <param>
-      <key>id</key>
-      <value>beta</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>k3 (IP3)</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>start</key>
-      <value>-10</value>
-    </param>
-    <param>
-      <key>stop</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>step</key>
-      <value>0.01</value>
-    </param>
-    <param>
-      <key>widget</key>
-      <value>counter_slider</value>
-    </param>
-    <param>
-      <key>orient</key>
-      <value>Qt.Horizontal</value>
-    </param>
-    <param>
-      <key>min_len</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>3,0,1,1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1042, 8)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_float_to_complex</key>
-    <param>
-      <key>id</key>
-      <value>blocks_float_to_complex_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(237, 424)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>fft_vxx</key>
-    <param>
-      <key>id</key>
-      <value>fft_fft_vxx_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>fft_size</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>forward</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>window</key>
-      <value>fft_size*[1.0/math.sqrt(fft_size)]</value>
-    </param>
-    <param>
-      <key>shift</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(689, 150)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>fft_vxx</key>
-    <param>
-      <key>id</key>
-      <value>fft_fft_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>fft_size</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>forward</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>window</key>
-      <value>fft_size*[1.0/math.sqrt(fft_size)]</value>
-    </param>
-    <param>
-      <key>shift</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>nthreads</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(565, 485)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_multiply_const_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>1.0/fft_size</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(854, 571)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_vector_to_stream</key>
-    <param>
-      <key>id</key>
-      <value>blocks_vector_to_stream_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_items</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(833, 468)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>channels_impairments</key>
-    <param>
-      <key>id</key>
-      <value>channels_impairments_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>phase_noise_mag</key>
-      <value>phase_noise_mag</value>
-    </param>
-    <param>
-      <key>magbal</key>
-      <value>magbal</value>
-    </param>
-    <param>
-      <key>phasebal</key>
-      <value>phasebal</value>
-    </param>
-    <param>
-      <key>q_ofs</key>
-      <value>q_ofs</value>
-    </param>
-    <param>
-      <key>i_ofs</key>
-      <value>i_ofs</value>
-    </param>
-    <param>
-      <key>freq_offset</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>gamma</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>beta</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1074, 460)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_stream_to_vector</key>
-    <param>
-      <key>id</key>
-      <value>blocks_stream_to_vector_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_items</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(889, 400)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_vector_to_stream</key>
-    <param>
-      <key>id</key>
-      <value>blocks_vector_to_stream_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_items</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(806, 315)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_stream_to_vector</key>
-    <param>
-      <key>id</key>
-      <value>blocks_stream_to_vector_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_items</key>
-      <value>fft_size</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(449, 343)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_add_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>blocks_add_const_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>(-1-1j)/2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(337, 175)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_throttle</key>
-    <param>
-      <key>id</key>
-      <value>blocks_throttle_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>samples_per_second</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(438, 243)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-  </block>
-  <block>
-    <key>qtgui_const_sink_x</key>
-    <param>
-      <key>id</key>
-      <value>qtgui_const_sink_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>name</key>
-      <value></value>
-    </param>
-    <param>
-      <key>size</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>ymin</key>
-      <value>-2</value>
-    </param>
-    <param>
-      <key>ymax</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>xmin</key>
-      <value>-2</value>
-    </param>
-    <param>
-      <key>xmax</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>nconnections</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>update_time</key>
-      <value>0.10</value>
-    </param>
-    <param>
-      <key>gui_hint</key>
-      <value>4,0,1,1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1102, 175)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_int_to_float</key>
-    <param>
-      <key>id</key>
-      <value>blocks_int_to_float_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>scale</key>
-      <value>k-1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(63, 412)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_int_to_float</key>
-    <param>
-      <key>id</key>
-      <value>blocks_int_to_float_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>scale</key>
-      <value>k-1</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(63, 462)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_random_source_x</key>
-    <param>
-      <key>id</key>
-      <value>analog_random_source_x_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>int(k)</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>10000</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(22, 271)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>analog_random_source_x</key>
-    <param>
-      <key>id</key>
-      <value>analog_random_source_x_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>int</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>int(k)</value>
-    </param>
-    <param>
-      <key>num_samps</key>
-      <value>10000</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(36, 543)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <connection>
-    <source_block_id>blocks_stream_to_vector_0_0</source_block_id>
-    <sink_block_id>fft_fft_vxx_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>channels_impairments_0</source_block_id>
-    <sink_block_id>blocks_stream_to_vector_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_throttle_0</source_block_id>
-    <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>fft_fft_vxx_0_0</source_block_id>
-    <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_add_const_vxx_0</source_block_id>
-    <sink_block_id>blocks_throttle_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_float_to_complex_0</source_block_id>
-    <sink_block_id>blocks_add_const_vxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_random_source_x_0</source_block_id>
-    <sink_block_id>blocks_int_to_float_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_int_to_float_0</source_block_id>
-    <sink_block_id>blocks_float_to_complex_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_int_to_float_0_0</source_block_id>
-    <sink_block_id>blocks_float_to_complex_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>analog_random_source_x_0_0</source_block_id>
-    <sink_block_id>blocks_int_to_float_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_vector_to_stream_0</source_block_id>
-    <sink_block_id>qtgui_time_sink_x_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_vector_to_stream_0</source_block_id>
-    <sink_block_id>qtgui_const_sink_x_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>fft_fft_vxx_0</source_block_id>
-    <sink_block_id>blocks_vector_to_stream_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_vector_to_stream_0_0</source_block_id>
-    <sink_block_id>blocks_multiply_const_vxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>channels_impairments_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_stream_to_vector_0</source_block_id>
-    <sink_block_id>fft_fft_vxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-</flow_graph>
+options:
+  parameters:
+    author: mettus
+    category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: demo_ofdm
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: ''
+    window_size: 1280, 1024
+  states:
+    coordinate: [10, 10]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: beta
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 3,0,1,1
+    label: k3 (IP3)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-10'
+    step: '0.01'
+    stop: '0'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [1042, 8]
+    rotation: 0
+    state: enabled
+- name: const_size
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    coordinate: [11, 89]
+    rotation: 0
+    state: enabled
+- name: fft_size
+  id: variable
+  parameters:
+    comment: ''
+    value: '1024'
+  states:
+    coordinate: [99, 89]
+    rotation: 0
+    state: enabled
+- name: freq_offset
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 0,1,1,1
+    label: Frequency Offset
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-0.5'
+    step: '0.001'
+    stop: '0.5'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [357, 8]
+    rotation: 0
+    state: enabled
+- name: i_ofs
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 2,0,1,1
+    label: I offset
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-1'
+    step: '0.001'
+    stop: '1'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [829, 9]
+    rotation: 0
+    state: enabled
+- name: k
+  id: variable
+  parameters:
+    comment: ''
+    value: math.log(const_size)/math.log(2)
+  states:
+    coordinate: [100, 151]
+    rotation: 0
+    state: enabled
+- name: magbal
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1,0,1,1
+    label: IQ Magnitude Imbalance
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.1'
+    stop: '10'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [497, 9]
+    rotation: 0
+    state: enabled
+- name: phase_noise_mag
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 0, 0, 1,1
+    label: Phase Noise Mag (dB)
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-100'
+    step: '1'
+    stop: '0'
+    value: '-100'
+    widget: counter_slider
+  states:
+    coordinate: [194, 7]
+    rotation: 0
+    state: enabled
+- name: phasebal
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 1,1,1,1
+    label: IQ Phase Imbalance
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '0.1'
+    stop: '45'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [675, 9]
+    rotation: 0
+    state: enabled
+- name: q_ofs
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 2,1,1,1
+    label: Q offset
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-1'
+    step: '0.001'
+    stop: '1'
+    value: '0'
+    widget: counter_slider
+  states:
+    coordinate: [936, 9]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    coordinate: [11, 151]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: int(k)
+    maxoutbuf: ''
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '10000'
+    repeat: 'True'
+    type: int
+  states:
+    coordinate: [16, 220.0]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: int(k)
+    maxoutbuf: ''
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '10000'
+    repeat: 'True'
+    type: int
+  states:
+    coordinate: [16, 324.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_const_vxx_0
+  id: blocks_add_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: (-1-1j)/2
+    maxoutbuf: ''
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [536, 260.0]
+    rotation: 0
+    state: enabled
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    coordinate: [368, 248.0]
+    rotation: 0
+    state: enabled
+- name: blocks_int_to_float_0
+  id: blocks_int_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    scale: k-1
+    vlen: '1'
+  states:
+    coordinate: [192, 244.0]
+    rotation: 0
+    state: enabled
+- name: blocks_int_to_float_0_0
+  id: blocks_int_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    scale: k-1
+    vlen: '1'
+  states:
+    coordinate: [192, 292.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_vector_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    num_items: fft_size
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [392, 344.0]
+    rotation: 180
+    state: enabled
+- name: blocks_stream_to_vector_0_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    num_items: fft_size
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [808, 336.0]
+    rotation: 180
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: ''
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [552, 340.0]
+    rotation: 180
+    state: enabled
+- name: blocks_vector_to_stream_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    num_items: fft_size
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [1008, 232.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_0_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: ''
+    minoutbuf: '0'
+    num_items: fft_size
+    type: complex
+    vlen: '1'
+  states:
+    coordinate: [584, 456.0]
+    rotation: 0
+    state: enabled
+- name: channels_impairments_0
+  id: channels_impairments
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: beta
+    comment: ''
+    freq_offset: freq_offset
+    gamma: '0'
+    i_ofs: i_ofs
+    magbal: magbal
+    maxoutbuf: ''
+    minoutbuf: '0'
+    phase_noise_mag: phase_noise_mag
+    phasebal: phasebal
+    q_ofs: q_ofs
+  states:
+    coordinate: [808, 396.0]
+    rotation: 0
+    state: enabled
+- name: fft_fft_vxx_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_size
+    forward: 'False'
+    maxoutbuf: ''
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'False'
+    type: complex
+    window: fft_size*[1.0/math.sqrt(fft_size)]
+  states:
+    coordinate: [376, 420.0]
+    rotation: 0
+    state: enabled
+- name: fft_fft_vxx_0_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_size
+    forward: 'True'
+    maxoutbuf: ''
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'False'
+    type: complex
+    window: fft_size*[1.0/math.sqrt(fft_size)]
+  states:
+    coordinate: [800, 196.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math
+  states:
+    coordinate: [168, 153]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"red"'
+    color2: '"red"'
+    color3: '"red"'
+    color4: '"red"'
+    color5: '"red"'
+    color6: '"red"'
+    color7: '"red"'
+    color8: '"red"'
+    color9: '"red"'
+    comment: ''
+    grid: 'False'
+    gui_hint: 4,0,1,1
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: ''
+    nconnections: '1'
+    size: '1024'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    coordinate: [1200, 220.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: green
+    color3: black
+    color4: cyan
+    color5: magenta
+    color6: yellow
+    color7: dark red
+    color8: dark green
+    color9: Dark Blue
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: 4,1,1,1
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '1'
+    marker10: '1'
+    marker2: '1'
+    marker3: '1'
+    marker4: '1'
+    marker5: '1'
+    marker6: '1'
+    marker7: '1'
+    marker8: '1'
+    marker9: '1'
+    name: ''
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    coordinate: [1200, 292.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_random_source_x_0, '0', blocks_int_to_float_0, '0']
+- [analog_random_source_x_0_0, '0', blocks_int_to_float_0_0, '0']
+- [blocks_add_const_vxx_0, '0', blocks_throttle_0, '0']
+- [blocks_float_to_complex_0, '0', blocks_add_const_vxx_0, '0']
+- [blocks_int_to_float_0, '0', blocks_float_to_complex_0, '0']
+- [blocks_int_to_float_0_0, '0', blocks_float_to_complex_0, '1']
+- [blocks_stream_to_vector_0, '0', fft_fft_vxx_0, '0']
+- [blocks_stream_to_vector_0_0, '0', fft_fft_vxx_0_0, '0']
+- [blocks_throttle_0, '0', blocks_stream_to_vector_0, '0']
+- [blocks_vector_to_stream_0, '0', qtgui_const_sink_x_0, '0']
+- [blocks_vector_to_stream_0, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_vector_to_stream_0_0, '0', channels_impairments_0, '0']
+- [channels_impairments_0, '0', blocks_stream_to_vector_0_0, '0']
+- [fft_fft_vxx_0, '0', blocks_vector_to_stream_0_0, '0']
+- [fft_fft_vxx_0_0, '0', blocks_vector_to_stream_0, '0']
+
+metadata:
+  file_format: 1
