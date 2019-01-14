@@ -3,7 +3,6 @@ import operator
 import os
 import tempfile
 import textwrap
-import time
 
 from mako.template import Template
 
@@ -79,7 +78,6 @@ class TopBlockGenerator(object):
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
-            'generated_time': time.ctime(),
         }
 
         for filename, data in self._build_python_code_from_template():
@@ -120,7 +118,6 @@ class TopBlockGenerator(object):
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
-            'generated_time': time.ctime(),
             'version': platform.config.version
         }
         flow_graph_code = python_template.render(
