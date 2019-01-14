@@ -18,12 +18,10 @@ parameters:
     label: N
     dtype: int
     default: '255'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: k
     label: K
     dtype: int
     default: '239'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: t
     label: t
     dtype: int
@@ -32,12 +30,10 @@ parameters:
     label: Shortening size
     dtype: int
     default: '51'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: blocks
     label: Blocks
     dtype: int
     default: '8'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 
 inputs:
 -   domain: stream

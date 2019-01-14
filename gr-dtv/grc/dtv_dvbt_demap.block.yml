@@ -22,9 +22,8 @@ parameters:
     options: [T2k, T8k]
     option_labels: [2K, 8K]
     option_attributes:
-        payload_length: ['1512', '6048']
+        payload_length: [1512, 6048]
         val: [dtv.T2k, dtv.T8k]
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: gain
     label: Gain
     dtype: complex

@@ -6,12 +6,10 @@ parameters:
     label: Input length
     dtype: int
     default: '1'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: noutput
     label: Output length
     dtype: int
     default: '1512'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: constellation
     label: Constellation Type
     dtype: enum
