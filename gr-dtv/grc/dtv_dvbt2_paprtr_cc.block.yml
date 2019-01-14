@@ -19,9 +19,8 @@ parameters:
     option_attributes:
         val: [dtv.FFTSIZE_1K, dtv.FFTSIZE_2K, dtv.FFTSIZE_4K, dtv.FFTSIZE_8K, dtv.FFTSIZE_8K_T2GI,
             dtv.FFTSIZE_16K, dtv.FFTSIZE_16K_T2GI, dtv.FFTSIZE_32K, dtv.FFTSIZE_32K_T2GI]
-        vlength: ['1024', '2048', '4096', '8192', '8192', '16384', '16384', '32768',
-            '32768']
-    hide: ${ 'part' if vlen == 1 else 'none' }
+        vlength: [1024, 2048, 4096, 8192, 8192, 16384, 16384, 32768,
+            32768]
 -   id: pilotpattern
     label: Pilot Pattern
     dtype: enum

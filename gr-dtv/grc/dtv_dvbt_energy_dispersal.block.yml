@@ -6,7 +6,6 @@ parameters:
     label: Blocks(1504 Bytes)
     dtype: int
     default: '8'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 
 inputs:
 -   domain: stream

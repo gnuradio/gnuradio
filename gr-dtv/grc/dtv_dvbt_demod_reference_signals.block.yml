@@ -50,10 +50,9 @@ parameters:
     options: [T2k, T8k]
     option_labels: [2K, 8K]
     option_attributes:
-        fft_length: ['2048', '8192']
-        payload_length: ['1512', '6048']
+        fft_length: [2048, 8192]
+        payload_length: [1512, 6048]
         val: [dtv.T2k, dtv.T8k]
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: include_cell_id
     label: Include Cell ID
     dtype: enum

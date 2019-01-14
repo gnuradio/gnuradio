@@ -10,7 +10,7 @@ parameters:
 inputs:
 -   domain: stream
     dtype: byte
-    vlen: 188*8
+    vlen: ${ nsize*188 }
 
 outputs:
 -   domain: stream

@@ -6,12 +6,10 @@ parameters:
     label: Blocks (12 Bytes)
     dtype: int
     default: '136'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: I
     label: Number of Shift registers
     dtype: int
     default: '12'
-    hide: ${ 'part' if vlen == 1 else 'none' }
 -   id: M
     label: Depth of shift registers
     dtype: int
