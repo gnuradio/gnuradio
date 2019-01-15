@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,9 +33,9 @@ def make_lengthtags(lengths, offsets, tagname='length', vlen=1):
     assert(len(offsets) == len(lengths))
     for offset, length in zip(offsets, lengths):
         tag = gr.tag_t()
-        tag.offset = offset / vlen
+        tag.offset = offset // vlen
         tag.key = pmt.string_to_symbol(tagname)
-        tag.value = pmt.from_long(length / vlen)
+        tag.value = pmt.from_long(length // vlen)
         tags.append(tag)
     return tags
 
