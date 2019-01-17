@@ -313,7 +313,7 @@ blocks:
     minoutbuf: '0'
     nthreads: '1'
     samp_delay: '0'
-    taps: firdes.root_raised_cosine(1.0, samp_rate, samp_rate/2, rolloff, taps)
+    taps: firdes.root_raised_cosine(0.9, samp_rate, samp_rate/2, rolloff, taps)
     type: ccc
   states:
     coordinate: [456, 348.0]
