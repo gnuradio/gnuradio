@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -662,6 +662,9 @@ for (int row = 0; row < ROWS; row++) { \
           p[i_p] = pbit;
         }
 
+        for (int j = 1; j < (plen - Xp); j++) {
+          p[j] ^= p[j-1];
+        }
         if (P != 0) {
           puncture = 0;
           for (int j = 0; j < plen; j += P) {
@@ -677,10 +680,7 @@ for (int row = 0; row < ROWS; row++) { \
               b[index++] = p[j];
             }
           }
-          p = &out[nbch];
-        }
-        for (int j = 1; j < (plen - Xp); j++) {
-          p[j] ^= p[j-1];
+          p = &out[i + nbch];
         }
         if (signal_constellation == MOD_128APSK) {
           for (int j = 0; j < 6; j++) {
