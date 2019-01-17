@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015-2018 Free Software Foundation, Inc.
+ * Copyright 2015-2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(unsigned char)),
               gr::io_signature::make(1, 1, sizeof(gr_complex)))
     {
-      double r1, r2, r3, r4, r5, r6, r7, r8;
+      double r0, r1, r2, r3, r4, r5, r6, r7, r8;
       double m = 1.0;
       r1 = m;
       switch (constellation) {
@@ -178,6 +178,9 @@ namespace gr {
                 break;
             }
           }
+          r0 = sqrt(4.0 / ((r1 * r1) + 3.0 * (r2 * r2)));
+          r1 *= r0;
+          r2 *= r0;
           m_16apsk[0] = gr_complex((r2 * cos(GR_M_PI / 4.0)), (r2 * sin(GR_M_PI / 4.0)));
           m_16apsk[1] = gr_complex((r2 * cos(-GR_M_PI / 4.0)), (r2 * sin(-GR_M_PI / 4.0)));
           m_16apsk[2] = gr_complex((r2 * cos(3 * GR_M_PI / 4.0)), (r2 * sin(3 * GR_M_PI / 4.0)));
@@ -290,6 +293,10 @@ namespace gr {
               r2 = 0;
               break;
           }
+          r0 = sqrt(8.0 / ((r1 * r1) + 3.0 * (r2 * r2) + 4.0 * (r3 * r3)));
+          r1 *= r0;
+          r2 *= r0;
+          r3 *= r0;
           m_32apsk[0] = gr_complex((r2 * cos(GR_M_PI / 4.0)), (r2 * sin(GR_M_PI / 4.0)));
           m_32apsk[1] = gr_complex((r2 * cos(5 * GR_M_PI / 12.0)), (r2 * sin(5 * GR_M_PI / 12.0)));
           m_32apsk[2] = gr_complex((r2 * cos(-GR_M_PI / 4.0)), (r2 * sin(-GR_M_PI / 4.0)));
