@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ namespace gr {
     class dvbt_convolutional_interleaver_impl : public dvbt_convolutional_interleaver
     {
      private:
-      int d_blocks;
       int d_I;
       int d_M;
       std::vector< std::deque<unsigned char> * > d_shift;

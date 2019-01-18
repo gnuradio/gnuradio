@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014,2016 Free Software Foundation, Inc.
+ * Copyright 2014,2016,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -35,8 +35,8 @@ namespace gr {
     static const double ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
     static const int	SYMBOL_INDEX_OFFSET = 3;
     static const int	MIN_SEG_LOCK_CORRELATION_VALUE = 5;
-    static const char   SSI_MIN = -16;
-    static const char   SSI_MAX =  15;
+    static const signed char   SSI_MIN = -16;
+    static const signed char   SSI_MAX =  15;
 
     atsc_sync::sptr
     atsc_sync::make(float rate)
@@ -49,7 +49,7 @@ namespace gr {
       : gr::block("dtv_atsc_sync",
                   io_signature::make(1, 1, sizeof(float)),
                   io_signature::make(1, 1, sizeof(atsc_soft_data_segment))),
-	d_next_input(0), d_rx_clock_to_symbol_freq(rate/ATSC_SYMBOL_RATE),
+	d_rx_clock_to_symbol_freq(rate/ATSC_SYMBOL_RATE),
 	d_si(0)
     {
       d_loop.set_taps(LOOP_FILTER_TAP);

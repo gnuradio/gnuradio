@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include <gnuradio/io_signature.h>
 #include "dvbt2_p1insertion_cc_impl.h"
 #include <stdio.h>
+#include <algorithm>
 
 namespace gr {
   namespace dtv {
@@ -132,7 +133,7 @@ namespace gr {
       for (int i = 0; i < 384; i++) {
         dbpsk_modulation_sequence[i] = dbpsk_modulation_sequence[i + 1] * p1_randomize[i];
       }
-      memset(&p1_freq[0], 0, sizeof(gr_complex) * 1024);
+      std::fill_n(&p1_freq[0], 1024, 0);
       for (int i = 0; i < 384; i++) {
         p1_freq[p1_active_carriers[i] + 86] = float(dbpsk_modulation_sequence[i]);
       }

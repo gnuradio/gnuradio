@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,7 +49,6 @@ namespace gr {
     class atsc_viterbi_decoder_impl : public atsc_viterbi_decoder
     {
     private:
-      int last_start;
       typedef interleaver_fifo<unsigned char> fifo_t;
 
       static const int SEGMENT_SIZE = ATSC_MPEG_RS_ENCODED_LENGTH;	// 207

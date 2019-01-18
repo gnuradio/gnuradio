@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,10 +39,6 @@ namespace gr {
       int d_noutput;
 
       int d_reg;
-
-      //counts the bits in the bytes
-      //in input stream
-      int d_bitcount;
 
       // Code rate k/n
       int d_k;
