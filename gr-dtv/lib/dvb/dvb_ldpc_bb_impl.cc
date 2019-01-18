@@ -662,7 +662,7 @@ for (int row = 0; row < ROWS; row++) { \
           p[i_p] = pbit;
         }
 
-        for (int j = 1; j < (plen - Xp); j++) {
+        for (int j = 1; j < plen; j++) {
           p[j] ^= p[j-1];
         }
         if (P != 0) {
