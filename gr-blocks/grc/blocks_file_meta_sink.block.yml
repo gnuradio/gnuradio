@@ -36,7 +36,7 @@ parameters:
     default: '1000000'
 -   id: extra_dict
     label: Extra Dict.
-    dtype: string
+    dtype: raw
     default: '""'
 -   id: detached
     label: Detached
