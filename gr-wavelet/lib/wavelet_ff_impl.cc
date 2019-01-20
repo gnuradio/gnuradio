@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2008,2010,2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
+#include "wavelet_ff_impl.h"
 #include <stdexcept>
-#include <wavelet_ff_impl.h>
 #include <gnuradio/io_signature.h>
 
 #include <stdio.h>
