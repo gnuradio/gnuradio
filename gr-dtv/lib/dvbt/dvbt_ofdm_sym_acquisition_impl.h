@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2019 Free Software Foundation, Inc.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ namespace gr {
     class dvbt_ofdm_sym_acquisition_impl : public dvbt_ofdm_sym_acquisition
     {
      private:
-      int d_blocks;
       int d_fft_length;
       int d_cp_length;
       float d_snr;
