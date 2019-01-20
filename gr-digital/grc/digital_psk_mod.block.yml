@@ -1,6 +1,7 @@
 id: digital_psk_mod
 label: PSK Mod
 category: '[Core]/Deprecated'
+flags: [ python ]
 
 parameters:
 -   id: constellation_points

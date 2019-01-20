@@ -1,5 +1,6 @@
 id: digital_gmskmod_bc
 label: GMSK Modulator
+flags: [ python ]
 
 parameters:
 -   id: samples_per_symbol

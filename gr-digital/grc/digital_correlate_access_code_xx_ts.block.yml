@@ -1,5 +1,6 @@
 id: digital_correlate_access_code_xx_ts
 label: Correlate Access Code - Tag Stream
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -33,5 +34,15 @@ templates:
     make: |-
         digital.correlate_access_code_${type.fcn}_ts(${access_code},
           ${threshold}, ${tagname})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/correlate_access_code_${type.fcn}_ts.h>']
+    declarations: 'digital::correlate_access_code_${type.fcn}_ts::sptr ${id};'
+    make: |-
+        this->${id} = digital::correlate_access_code_${type.fcn}_ts::make(
+            ${access_code},
+            ${threshold},
+            ${tagname});
+    link: ['gnuradio-digital']
 
 file_format: 1

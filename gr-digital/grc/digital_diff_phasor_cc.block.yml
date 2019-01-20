@@ -1,5 +1,6 @@
 id: digital_diff_phasor_cc
 label: Differential Phasor
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -12,5 +13,12 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.diff_phasor_cc()
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/diff_phasor_cc.h>']
+    declarations: 'digital::diff_phasor_cc::sptr ${id};'
+    make: |-
+        this->${id} = digital::diff_phasor_cc::make();
+    link: ['gnuradio-digital']
 
 file_format: 1

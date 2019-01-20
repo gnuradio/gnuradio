@@ -1,5 +1,6 @@
 id: digital_glfsr_source_x
 label: GLFSR Source
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -33,5 +34,19 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.glfsr_source_${type.fcn}(${degree}, ${repeat}, ${mask}, ${seed})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/glfsr_source_${type.fcn}.h>']
+    declarations: 'digital::glfsr_source_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = digital::glfsr_source_${type.fcn}::make(
+            ${degree},
+            ${repeat},
+            ${mask},
+            ${seed});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: digital_packet_sink
 label: Packet Sink
+flags: [ python, cpp ]
 
 parameters:
 -   id: sync_vector
@@ -20,5 +21,16 @@ inputs:
 templates:
     imports: from gnuradio import digital
     make: digital.packet_sink(${sync_vector}, ${target_queue}, ${threshold})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/packet_sink.h>']
+    declarations: 'digital::packet_sink::sptr ${id};'
+    make: |-
+        std::vector<int> sync_vector = {${str(sync_vector)[1:-1]}};
+        this->${id} = digital::packet_sink::make(
+            sync_vector,
+            ${target_queue},
+            ${threshold});
+    link: ['gnuradio-digital']
 
 file_format: 1

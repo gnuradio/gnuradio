@@ -1,5 +1,6 @@
 id: digital_cma_equalizer_cc
 label: CMA Equalizer
+flags: [ python, cpp ]
 
 parameters:
 -   id: num_taps
@@ -26,6 +27,15 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.cma_equalizer_cc(${num_taps}, ${modulus}, ${mu}, ${sps})
+    callbacks:
+    - set_gain(${mu})
+    - set_modulus(${modulus})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/digital/cma_equalizer_cc.h>' ]
+    declarations: 'digital::cma_equalizer_cc::sptr ${id};'
+    make: 'this->${id} = digital::cma_equalizer_cc::make(${num_taps}, ${modulus}, ${mu}, ${sps});'
+    link: ['gnuradio-digital']
     callbacks:
     - set_gain(${mu})
     - set_modulus(${modulus})

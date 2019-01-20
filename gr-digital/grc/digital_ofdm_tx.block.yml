@@ -1,5 +1,6 @@
 id: digital_ofdm_tx
 label: OFDM Transmitter
+flags: [ python ]
 
 parameters:
 -   id: fft_len

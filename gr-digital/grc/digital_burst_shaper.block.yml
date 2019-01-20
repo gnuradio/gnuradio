@@ -1,6 +1,7 @@
 id: digital_burst_shaper_xx
 label: Burst Shaper
 category: '[Core]/Packet Operators'
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -46,5 +47,25 @@ templates:
     imports: from gnuradio import digital
     make: digital.burst_shaper_${type.fcn}(${window}, ${pre_padding}, ${post_padding},
         ${insert_phasing}, ${length_tag_name})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/burst_shaper.h>']
+    declarations: 'digital::burst_shaper_${type.fcn}::sptr ${id};'
+    make: |-
+        % if str(type.taps)=="float_vector":
+        std::vector<float> window = {${str(window)[1:-1]}};
+        % else:
+        std::vector<gr_complex> window = {${str(window)[1:-1]}};
+        % endif
+        this->${id} = digital::burst_shaper_${type.fcn}::make(
+            window,
+            ${pre_padding},
+            ${post_padding},
+            ${insert_phasing},
+            ${length_tag_name});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

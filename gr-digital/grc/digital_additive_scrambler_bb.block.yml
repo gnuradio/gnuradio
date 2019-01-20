@@ -1,5 +1,6 @@
 id: digital_additive_scrambler_bb
 label: Additive Scrambler
+flags: [ python, cpp ]
 
 parameters:
 -   id: mask
@@ -39,5 +40,18 @@ templates:
     imports: from gnuradio import digital
     make: digital.additive_scrambler_bb(${mask}, ${seed}, ${len}, count=${count},
         bits_per_byte=${bits_per_byte}, reset_tag_key=${reset_tag_key})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/additive_scrambler_bb.h>']
+    declarations: 'digital::additive_scrambler_bb::sptr ${id};'
+    make: |-
+        this->${id} = digital::additive_scrambler_bb::make(
+            ${mask},
+            ${seed},
+            ${len},
+            count=${count},
+            bits_per_byte=${bits_per_byte},
+            reset_tag_key=${reset_tag_key});
+    link: ['gnuradio-digital']
 
 file_format: 1

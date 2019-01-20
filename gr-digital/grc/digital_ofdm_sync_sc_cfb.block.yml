@@ -1,5 +1,6 @@
 id: digital_ofdm_sync_sc_cfb
 label: Schmidl & Cox OFDM synch.
+flags: [ python, cpp ]
 
 parameters:
 -   id: fft_len
@@ -40,6 +41,22 @@ templates:
     imports: from gnuradio import digital
     make: digital.ofdm_sync_sc_cfb(${fft_len}, ${cp_len}, ${use_even_carriers}, ${threshold})
     callbacks:
-      - set_treshold(${threshold})
+    - set_threshold(${threshold})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/ofdm_sync_sc_cfb.h>']
+    declarations: 'digital::ofdm_sync_sc_cfb::sptr ${id};'
+    make: |-
+        this->${id} = digital::ofdm_sync_sc_cfb::make(
+            ${fft_len},
+            ${cp_len},
+            ${use_even_carriers},
+            ${threshold});
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_threshold(${threshold})
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

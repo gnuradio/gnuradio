@@ -1,5 +1,6 @@
 id: digital_gmsk_demod
 label: GMSK Demod
+flags: [ python ]
 
 parameters:
 -   id: samples_per_symbol

@@ -1,6 +1,7 @@
 id: digital_symbol_sync_xx
 label: Symbol Sync
 category: '[Core]/Synchronizers'
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -114,5 +115,30 @@ templates:
     - set_loop_bandwidth(${loop_bw})
     - set_damping_factor(${damping})
     - set_ted_gain(${ted_gain})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/symbol_sync_${type}.h>']
+    declarations: 'digital::symbol_sync_${type}::sptr ${id};'
+    make: |-
+        std::vector<float> pfb_mf_taps = {${str(pfb_mf_taps)[1:-1]}};
+        this->${id} = digital::symbol_sync_${type}::make(
+            ${ted_type}, 
+            ${sps}, 
+            ${loop_bw}, 
+            ${damping},
+            ${ted_gain}, 
+            ${max_dev}, 
+            ${osps}, 
+            ${constellation}, 
+            ${resamp_type}, 
+            ${nfilters},
+            pfb_mf_taps);
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_loop_bandwidth(${loop_bw})
+    - set_damping_factor(${damping})
+    - set_ted_gain(${ted_gain})
+    translations:
+        digital.: 'digital::'
 
 file_format: 1

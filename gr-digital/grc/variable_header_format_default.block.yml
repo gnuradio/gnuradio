@@ -1,5 +1,6 @@
 id: variable_header_format_default
 label: Default Header Format Obj.
+flags: [ python, cpp ]
 
 parameters:
 -   id: access_code
@@ -26,5 +27,18 @@ templates:
         self.${id} = ${id} = digital.header_format_default(${access_code},\
         ${threshold}, ${bps})
         % endif
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/header_format_default.h>']
+    declarations: 'digital::header_format_default::sptr ${id};'
+    var_make: |-
+        % if int(access_code)==0:
+        this->${id} = ${id} = digital::header_format_default(digital.packet_utils.default_access_code,\
+        ${threshold}, ${bps});
+        % else:
+        this->${id} = ${id} = digital::header_format_default(${access_code},\
+        ${threshold}, ${bps});
+        % endif
+    link: ['gnuradio-digital']
 
 file_format: 1

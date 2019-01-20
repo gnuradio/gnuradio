@@ -1,5 +1,6 @@
 id: digital_costas_loop_cc
 label: Costas Loop
+flags: [ python, cpp ]
 
 parameters:
 -   id: w
@@ -44,5 +45,20 @@ templates:
     make: digital.costas_loop_cc(${w}, ${order}, ${use_snr})
     callbacks:
     - set_loop_bandwidth(${w})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/costas_loop_cc.h>']
+    declarations: 'digital::costas_loop_cc::sptr ${id};'
+    make: |-
+        this->${id} = digital::costas_loop_cc::make(
+            ${w},
+            ${order},
+            ${use_snr});
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_loop_bandwidth(${w})
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: digital_simple_framer
 label: Simple Framer
+flags: [ python, cpp ]
 
 parameters:
 -   id: payload_bytesize
@@ -17,5 +18,11 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.simple_framer(${payload_bytesize})
+
+cpp_templates:
+    includes: [ '#include <gnuradio/digital/simple_framer.h>' ]
+    declarations: 'digital::simple_framer::sptr ${id};'
+    make: 'this->${id} = digital::simple_framer::make(${payload_bytesize});'
+    link: ['gnuradio-digital']
 
 file_format: 1

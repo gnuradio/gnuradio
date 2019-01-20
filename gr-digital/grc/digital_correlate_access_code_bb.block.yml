@@ -1,5 +1,6 @@
 id: digital_correlate_access_code_bb
 label: Correlate Access Code
+flags: [ python, cpp ]
 
 parameters:
 -   id: access_code
@@ -21,5 +22,11 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.correlate_access_code_bb(${access_code}, ${threshold})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/correlate_access_code_bb.h>']
+    declarations: 'digital::correlate_access_code_bb::sptr ${id};'
+    make: 'this->${id} = digital::correlate_access_code_bb::make(${access_code}, ${threshold});'
+    link: ['gnuradio-digital']
 
 file_format: 1

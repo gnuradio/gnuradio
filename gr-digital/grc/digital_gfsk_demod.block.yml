@@ -1,5 +1,6 @@
 id: digital_gfsk_demod
 label: GFSK Demod
+flags: [ python ]
 
 parameters:
 -   id: samples_per_symbol

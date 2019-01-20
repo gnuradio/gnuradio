@@ -1,6 +1,7 @@
 id: variable_constellation
 label: Constellation Object
 category: Modulators
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -54,5 +55,24 @@ templates:
         % elif str(soft_dec_lut) != "None":
         self.${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision})
         % endif
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/constellation.h>']
+    declarations: 'digital::constellation::sptr ${id};'
+    var_make: |-
+        std::vector<int> sym_map = {${str(sym_map)[1:-1]}};
+        std::vector<gr_complex> const_points = {${str(const_points)[1:-1]}};
+        % if str(type) == "calcdist":
+        this->${id} = digital::constellation_calcdist(const_points, sym_map,
+        ${rot_sym}, ${dims}).base();
+        % else:
+        this->${id} = ${id} = digital::constellation_${type}().base();
+        % endif
+        % if str(soft_dec_lut).lower() == '"auto"' or str(soft_dec_lut).lower() == "'auto'":
+        this->${id}.gen_soft_dec_lut(${precision});
+        % elif str(soft_dec_lut) != "None":
+        this->${id}.set_soft_dec_lut(${soft_dec_lut}, ${precision});
+        % endif
+    link: ['gnuradio-digital']
 
 file_format: 1
