@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -268,6 +268,7 @@ namespace gr {
           sr |= 0x4000;
         }
       }
+      bb_randomize64 = (uint64_t*)&bb_randomise[0];
     }
 
     int
@@ -275,12 +276,13 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
-      const unsigned char *in = (const unsigned char *) input_items[0];
-      unsigned char *out = (unsigned char *) output_items[0];
+      // noutput_items is multiple of kbch and kbch is always divisible by 8
+      const uint64_t *in = (const uint64_t *) input_items[0];
+      uint64_t *out = (uint64_t *) output_items[0];
 
       for (int i = 0; i < noutput_items; i += kbch) {
-        for (int j = 0; j < (int)kbch; ++j) {
-          out[i + j] = in[i + j] ^ bb_randomise[j];
+        for (int j = 0; j < kbch / 8; ++j) {
+          *out++ = *in++ ^ bb_randomize64[j];
         }
       }
 
