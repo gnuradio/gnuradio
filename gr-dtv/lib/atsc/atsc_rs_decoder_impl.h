@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -39,7 +39,6 @@ namespace gr {
       int d_nerrors_corrrected_count;
       int d_bad_packet_count;
       int d_total_packets;
-      int d_total_bits;
       void *d_rs;
 
     public:

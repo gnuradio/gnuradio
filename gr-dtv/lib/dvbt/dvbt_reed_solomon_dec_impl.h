@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ namespace gr {
       int d_nerrors_corrected_count;
       int d_bad_packet_count;
       int d_total_packets;
-      int d_total_bits;
 
       void *d_rs;    /* Reed-Solomon characteristics structure */
       int decode(unsigned char &out, const unsigned char &in);
