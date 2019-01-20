@@ -1,5 +1,6 @@
 id: digital_gmsk_mod
 label: GMSK Mod
+flags: [ python ]
 
 parameters:
 -   id: samples_per_symbol

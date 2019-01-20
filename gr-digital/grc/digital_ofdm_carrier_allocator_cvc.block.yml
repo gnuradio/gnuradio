@@ -1,5 +1,6 @@
 id: digital_ofdm_carrier_allocator_cvc
 label: OFDM Carrier Allocator
+flags: [ python, cpp ]
 
 parameters:
 -   id: fft_len
@@ -47,5 +48,22 @@ templates:
     make: digital.ofdm_carrier_allocator_cvc(
         ${fft_len}, ${occupied_carriers}, ${pilot_carriers},
         ${pilot_symbols}, ${sync_words}, ${len_tag_key}, ${output_is_shifted})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/ofdm_carrier_allocator_cvc.h>']
+    declarations: 'digital::ofdm_carrier_allocator_cvc::sptr ${id};'
+    make: |-
+        this->${id} = digital::ofdm_carrier_allocator_cvc::make(
+            ${fft_len},
+            ${occupied_carriers},
+            ${pilot_carriers},
+            ${pilot_symbols},
+            ${sync_words},
+            ${len_tag_key},
+            ${output_is_shifted});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

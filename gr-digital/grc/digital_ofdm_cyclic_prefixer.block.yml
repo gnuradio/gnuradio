@@ -1,5 +1,6 @@
 id: digital_ofdm_cyclic_prefixer
 label: OFDM Cyclic Prefixer
+flags: [ python, cpp ]
 
 parameters:
 -   id: input_size
@@ -33,5 +34,16 @@ templates:
     imports: from gnuradio import digital
     make: digital.ofdm_cyclic_prefixer(${input_size}, ${input_size} + ${cp_len}, ${rolloff},
         ${tagname})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/ofdm_cyclic_prefixer.h>']
+    declarations: 'digital::ofdm_cyclic_prefixer::sptr ${id};'
+    make: |-
+        this->${id} = digital::ofdm_cyclic_prefixer::make(
+            ${input_size},
+            ${input_size} + ${cp_len},
+            ${rolloff},
+            ${tagname});
+    link: ['gnuradio-digital']
 
 file_format: 1

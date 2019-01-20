@@ -1,5 +1,6 @@
 id: digital_scrambler_bb
 label: Scrambler
+flags: [ python, cpp ]
 
 parameters:
 -   id: mask
@@ -26,5 +27,11 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.scrambler_bb(${mask}, ${seed}, ${len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/scrambler_bb.h>']
+    declarations: 'digital::scrambler_bb::sptr ${id};'
+    make: 'this->${id} = digital::scrambler_bb::make(${mask}, ${seed}, ${len});'
+    link: ['gnuradio-digital']
 
 file_format: 1

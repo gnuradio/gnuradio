@@ -1,5 +1,6 @@
 id: digital_pn_correlator_cc
 label: PN Correlator
+flags: [ python, cpp ]
 
 parameters:
 -   id: degree
@@ -25,5 +26,15 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.pn_correlator_cc(${degree}, ${mask}, ${seed})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/pn_correlator_cc.h>']
+    declarations: 'digital::pn_correlator_cc::sptr ${id};'
+    make: |-
+        this->${id} = digital::pn_correlator_cc::make(
+            ${degree},
+            ${mask},
+            ${seed});
+    link: ['gnuradio-digital']
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: digital_constellation_decoder_cb
 label: Constellation Decoder
+flags: [ python, cpp ]
 
 parameters:
 -   id: constellation
@@ -17,5 +18,11 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.constellation_decoder_cb(${constellation})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/constellation_decoder_cb.h>']
+    declarations: 'digital::constellation_decoder_cb::sptr ${id};'
+    make: 'this->${id} = digital::constellation_decoder_cb::make(${constellation});'
+    link: ['gnuradio-digital']
 
 file_format: 1

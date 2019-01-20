@@ -1,5 +1,6 @@
 id: digital_crc32_async_bb
 label: Async CRC32
+flags: [ python, cpp ]
 
 parameters:
 -   id: check
@@ -21,5 +22,16 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.crc32_async_bb(${check})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/crc32_async_bb.h>']
+    declarations: 'digital::crc32_async_bb::sptr ${id};'
+    make: |-
+        this->${id} = digital::crc32_async_bb::make(
+            ${check});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

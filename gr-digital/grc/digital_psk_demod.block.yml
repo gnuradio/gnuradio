@@ -1,6 +1,7 @@
 id: digital_psk_demod
 label: PSK Demod
 category: '[Core]/Deprecated'
+flags: [ python ]
 
 parameters:
 -   id: constellation_points

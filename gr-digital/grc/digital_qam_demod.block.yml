@@ -1,6 +1,7 @@
 id: digital_qam_demod
 label: QAM Demod
 category: '[Core]/Deprecated'
+flags: [ python ]
 
 parameters:
 -   id: constellation_points

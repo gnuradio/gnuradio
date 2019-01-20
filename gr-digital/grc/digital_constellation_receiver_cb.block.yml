@@ -1,5 +1,6 @@
 id: digital_constellation_receiver_cb
 label: Constellation Receiver
+flags: [ python, cpp ]
 
 parameters:
 -   id: constellation
@@ -58,5 +59,16 @@ templates:
     imports: from gnuradio import digital
     make: digital.constellation_receiver_cb(${constellation}, ${loop_bw}, ${fmin},
         ${fmax})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/constellation_receiver_cb.h>']
+    declarations: 'digital::constellation_receiver_cb::sptr ${id};'
+    make: |-
+        this->${id} = digital::constellation_receiver_cb::make(
+            ${constellation},
+            ${loop_bw},
+            ${fmin},
+            ${fmax}));
+    link: ['gnuradio-digital']
 
 file_format: 1

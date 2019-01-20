@@ -1,5 +1,6 @@
 id: digital_ofdm_rx
 label: OFDM Receiver
+flags: [ python ]
 
 parameters:
 -   id: fft_len

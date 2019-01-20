@@ -1,5 +1,6 @@
 id: digital_chunks_to_symbols_xx
 label: Chunks to Symbols
+flags: [ python, cpp ]
 
 parameters:
 -   id: in_type
@@ -55,5 +56,21 @@ templates:
         ${dimension})
     callbacks:
     - set_symbol_table(${symbol_table})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/chunks_to_symbols.h>']
+    declarations: 'digital::chunks_to_symbols_${in_type.fcn}${out_type.fcn}::sptr ${id};'
+    make: |-
+        % if str(out_type.table)=="float_vector":
+        std::vector<float> symbol_table = {${str(symbol_table)[1:-1]}};
+        % else:
+        std::vector<gr_complex> symbol_table = {${str(symbol_table)[1:-1]}};
+        % endif
+        this->${id} = digital::chunks_to_symbols_${in_type.fcn}${out_type.fcn}::make(
+            symbol_table,
+            ${dimension});
+    link: ['gnuradio-digital']
+    callbacks:
+    - set_symbol_table(symbol_table)
 
 file_format: 1

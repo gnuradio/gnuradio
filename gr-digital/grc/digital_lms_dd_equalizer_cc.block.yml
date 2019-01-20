@@ -1,5 +1,6 @@
 id: digital_lms_dd_equalizer_cc
 label: LMS DD Equalizer
+flags: [ python, cpp ]
 
 parameters:
 -   id: mu
@@ -26,6 +27,19 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.lms_dd_equalizer_cc(${num_taps}, ${mu}, ${sps}, ${cnst})
+    callbacks:
+    - set_gain(${mu})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/lms_dd_equalizer_cc.h>']
+    declarations: 'digital::lms_dd_equalizer_cc::sptr ${id};'
+    make: |-
+        this->${id} = digital::lms_dd_equalizer_cc::make(
+            ${num_taps},
+            ${mu},
+            ${sps},
+            ${cnst});
+    link: ['gnuradio-digital']
     callbacks:
     - set_gain(${mu})
 

@@ -1,5 +1,6 @@
 id: digital_binary_slicer_fb
 label: Binary Slicer
+flags: [ python, cpp ]
 
 inputs:
 -   domain: stream
@@ -12,5 +13,12 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.binary_slicer_fb()
+
+cpp_templates:
+    includes: [ '#include <gnuradio/digital/binary_slicer_fb.h>' ]
+    declarations: 'digital::binary_slicer_fb::sptr ${id};'
+    make: |-
+        this->${id} = digital::binary_slicer_fb::make();
+    link: ['gnuradio-digital']
 
 file_format: 1

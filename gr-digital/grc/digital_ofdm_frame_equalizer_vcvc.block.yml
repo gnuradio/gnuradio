@@ -1,5 +1,6 @@
 id: digital_ofdm_frame_equalizer_vcvc
 label: OFDM Frame Equalizer
+flags: [ python, cpp ]
 
 parameters:
 -   id: fft_len
@@ -42,5 +43,20 @@ templates:
     imports: from gnuradio import digital
     make: digital.ofdm_frame_equalizer_vcvc(${equalizer}, ${cp_len}, ${len_tag_key},
         ${propagate_channel_state}, ${fixed_frame_len})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/ofdm_frame_equalizer_vcvc.h>']
+    declarations: 'digital::ofdm_frame_equalizer_vcvc::sptr ${id};'
+    make: |-
+        this->${id} = digital::ofdm_frame_equalizer_vcvc::make(
+            ${equalizer},
+            ${cp_len},
+            ${len_tag_key},
+            ${propagate_channel_state},
+            ${fixed_frame_len});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

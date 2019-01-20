@@ -1,5 +1,6 @@
 id: digital_constellation_modulator
 label: Constellation Modulator
+flags: [ python ]
 
 parameters:
 -   id: constellation

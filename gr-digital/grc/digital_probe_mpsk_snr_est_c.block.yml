@@ -1,5 +1,6 @@
 id: digital_probe_mpsk_snr_est_c
 label: MPSK SNR Estimator Probe
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -34,6 +35,20 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.probe_mpsk_snr_est_c(${type}, ${msg_nsamples}, ${alpha})
+    callbacks:
+    - set_type(${type})
+    - set_msg_nsample(${msg_nsamples})
+    - set_alpha(${alpha})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/probe_mpsk_snr_est_c.h>']
+    declarations: 'digital::probe_mpsk_snr_est_c::sptr ${id};'
+    make: |-
+        this->${id} = digital::probe_mpsk_snr_est_c::make(
+            ${type},
+            ${msg_nsamples},
+            ${alpha});
+    link: ['gnuradio-digital']
     callbacks:
     - set_type(${type})
     - set_msg_nsample(${msg_nsamples})

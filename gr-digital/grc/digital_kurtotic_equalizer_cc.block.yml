@@ -1,5 +1,6 @@
 id: digital_kurtotic_equalizer_cc
 label: Kurtotic Equalizer
+flags: [ python, cpp ]
 
 parameters:
 -   id: num_taps
@@ -20,6 +21,14 @@ outputs:
 templates:
     imports: from gnuradio import digital
     make: digital.kurtotic_equalizer_cc(${num_taps}, ${mu})
+    callbacks:
+    - set_gain(${mu})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/kurtotic_equalizer_cc.h>']
+    declarations: 'digital::kurtotic_equalizer_cc::sptr ${id};'
+    make: 'this->${id} = digital::kurtotic_equalizer_cc::make(${num_taps}, ${mu});'
+    link: ['gnuradio-digital']
     callbacks:
     - set_gain(${mu})
 

@@ -1,5 +1,6 @@
 id: digital_header_payload_demux
 label: Header/Payload Demux
+flags: [ python, cpp ]
 
 parameters:
 -   id: header_len
@@ -40,6 +41,8 @@ parameters:
     option_attributes:
         itemsize: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
             gr.sizeof_char]
+        cpp_itemsize: [sizeof(gr_complex), sizeof(gr_float), sizeof(gr_int), sizeof(gr_short),
+            sizeof(gr_char)]
     hide: part
 -   id: timing_tag_key
     label: Timing tag key
@@ -89,5 +92,26 @@ templates:
             ${samp_rate},
             ${special_tags},
             ${header_padding})
+
+cpp_templates:
+    includes: ['#include <gnuradio/digital/header_payload_demux.h>']
+    declarations: 'digital::header_payload_demux::sptr ${id};'
+    make: |-
+        this->${id} = digital::header_payload_demux::make(
+            ${header_len},
+            ${items_per_symbol},
+            ${guard_interval},
+            ${length_tag_key},
+            ${trigger_tag_key},
+            ${output_symbols},
+            ${type.cpp_itemsize},
+            ${timing_tag_key},
+            ${samp_rate},
+            ${special_tags},
+            ${header_padding});
+    link: ['gnuradio-digital']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1
