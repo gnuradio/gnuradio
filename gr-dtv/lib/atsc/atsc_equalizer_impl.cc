@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 Free Software Foundation, Inc.
+ * Copyright 2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -153,6 +153,8 @@ namespace gr {
       int i = 0;
 
       if(d_buff_not_filled) {
+        memset(&data_mem[0], 0,
+               NPRETAPS*sizeof(float));
         memcpy(&data_mem[NPRETAPS], in[i].data,
                ATSC_DATA_SEGMENT_LENGTH*sizeof(float));
         d_flags = in[i].pli._flags;
