@@ -230,6 +230,8 @@ IF(MSVC)
     IF(MSVC_VERSION LESS "${MSVC_MIN_VERSION}")
         MESSAGE(FATAL_ERROR "MSVC Versions < minimum version ${MSVC_MIN_VERSION}")
     ENDIF()
+    SET(cmake_c_compiler_version ${MSVC_VERSION})
+    SET(cmake_cxx_compiler_version ${MSVC_VERSION})
 ELSE()
     execute_process(COMMAND ${CMAKE_C_COMPILER} --version
             OUTPUT_VARIABLE cmake_c_compiler_version)
