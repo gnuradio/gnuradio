@@ -4,7 +4,6 @@ import operator
 import os
 import tempfile
 import textwrap
-import time
 import re
 
 from mako.template import Template
@@ -56,6 +55,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
         self._warnings()
 
         fg = self._flow_graph
+        platform = fg.parent
         self.title = fg.get_option('title') or fg.get_option('id').replace('_', ' ').title()
         variables = fg.get_cpp_variables()
         parameters = fg.get_parameters()
@@ -69,7 +69,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             'parameters': parameters,
             'monitors': monitors,
             'generate_options': self._generate_options,
-            'generated_time': time.ctime(),
+            'version': platform.config.version
         }
 
         if not os.path.exists(self.file_path):
