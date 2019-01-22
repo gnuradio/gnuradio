@@ -538,7 +538,6 @@ namespace gr {
             d_inst_clock_period = d_clock->get_inst_period();
             d_avg_clock_period = d_clock->get_avg_period();
             d_clock->phase_wrap();
-            d_clock->period_limit();
 
             // Symbol Clock and Interpolator Positioning & Alignment
             d_inst_interp_period = d_inst_clock_period / d_interps_per_symbol;
