@@ -126,8 +126,20 @@ namespace gr {
 
         // Integral arm of PI filter
         d_avg_period = d_avg_period + d_beta * error;
+        // Limit the integral arm output here, as a large negative
+        // error input can lead to a negative d_avg_period, which
+        // will cause an infitine loop in the phase wrap method.
+        period_limit();
+
         // Proportional arm of PI filter and final sum of PI filter arms
         d_inst_period = d_avg_period + d_alpha * error;
+        // Limit the filter output here, for the errant case of a large
+        // negative error input, that can lead to a negative d_inst_period,
+        // which results in an incorrect phase increment, as it is assumed
+        // to be moving forward to the next symbol.
+        if (d_inst_period <= 0.f)
+            d_inst_period = d_avg_period;
+
         // Compute the new, unwrapped clock phase
         d_phase = d_phase + d_inst_period;
     }
