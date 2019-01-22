@@ -415,12 +415,12 @@ namespace gr {
        * integrator portion of an IIR filter, so T_avg could potentially
        * wander very far during periods of noise/nonsense input.
        *
-       * This function should be called after advance_loop to keep the
+       * This function is called in advance_loop to keep the
        * estimated average clock period, T_avg, in the specified range.
-       * It is set as a separate method in case another way is desired as
-       * this is fairly heavy-handed.
+       * It is set as a separate virtual method in case another way is desired
+       * as this is fairly heavy-handed.
        */
-      void period_limit();
+      virtual void period_limit();
 
       /*******************************************************************
        * SET FUNCTIONS
