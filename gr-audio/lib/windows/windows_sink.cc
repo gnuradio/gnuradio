@@ -134,81 +134,87 @@ namespace gr {
     {
       const float *f0, *f1;
 
-      // Pick the first available wave header (buffer)
-      // If none available, then wait until the processing event if fired and check again
-      // Not all events free up a buffer, so it could take more than one loop to get one
-      // however, to avoid a lock, only wait 1 second for a freed up buffer then abort.
-      LPWAVEHDR chosen_header = NULL;
-      int c = 0;
-      while (!chosen_header)
-      {
-        ResetEvent(d_wave_write_event);
-        for (int i = 0; i < nPeriods; i++)
-        {
-          if (d_buffers[i]->dwFlags & WHDR_DONE) {
-            // uncomment the below to see which buffers are being consumed
-            // printf("%d ", i);
-            chosen_header = d_buffers[i];
-            break;
-          }
-        }
-        if (!chosen_header) {
-          if (!d_ok_to_block)
-          {
-            // drop the input data, print warning, and return control.
-            printf("aO");
-            return noutput_items;
-          }
-          else {
-            WaitForSingleObject(d_wave_write_event, 100);
-          }
-        }
-        if (c++ > 10) {
-          // After waiting for 1 second, then something else is seriously wrong so let's
-          // just fail and give some debugging information about the status
-          // of the buffers.
-          for (int i = 0; i < nPeriods; i++) {
-            printf("%d: %d\n", i, d_buffers[i]->dwFlags);
-          }
-          perror("audio_windows_sink: no audio buffers available");
-          return -1;
-        }
-      }
-
-      short *d_buffer = (short *)chosen_header->lpData;
-
+      int samples_sent = 0;
+      int samples_tosend = 0;
       switch (input_items.size()) {
       case 1:         // mono input
         f0 = (const float*)input_items[0];
-
-        for (int i = 0; i < noutput_items; i += d_chunk_size) {
-          for (int j = 0; j < d_chunk_size; j++) {
-            d_buffer[2 * j + 0] = (short)(f0[j] * 32767);
-            d_buffer[2 * j + 1] = (short)(f0[j] * 32767);
-          }
-          f0 += d_chunk_size;
-        }
         break;
       case 2:           // stereo input
         f0 = (const float*)input_items[0];
         f1 = (const float*)input_items[1];
+        break;
+      }
 
-        for (int i = 0; i < noutput_items; i += d_chunk_size) {
-          for (int j = 0; j < d_chunk_size; j++) {
+      while (samples_sent < noutput_items) {
+        // Pick the first available wave header (buffer)
+        // If none available, then wait until the processing event if fired and check again
+        // Not all events free up a buffer, so it could take more than one loop to get one
+        // however, to avoid a lock, only wait 1 second for a freed up buffer then abort.
+        LPWAVEHDR chosen_header = NULL;
+        int c = 0;
+        while (!chosen_header)
+        {
+          ResetEvent(d_wave_write_event);
+          for (int i = 0; i < nPeriods; i++)
+          {
+            if (d_buffers[i]->dwFlags & WHDR_DONE) {
+              // uncomment the below to see which buffers are being consumed
+              // printf("%d ", i);
+              chosen_header = d_buffers[i];
+              break;
+            }
+          }
+          if (!chosen_header) {
+            if (!d_ok_to_block)
+            {
+              // drop the input data, print warning, and return control.
+              printf("aO");
+              return noutput_items;
+            }
+            else {
+              WaitForSingleObject(d_wave_write_event, 100);
+            }
+          }
+          if (c++ > 10) {
+            // After waiting for 1 second, then something else is seriously wrong so let's 
+            // just fail and give some debugging information about the status
+            // of the buffers.
+            for (int i = 0; i < nPeriods; i++) {
+              printf("%d: %d\n", i, d_buffers[i]->dwFlags);
+            }
+            perror("audio_windows_sink: no audio buffers available");
+            return -1;
+          }
+        }
+
+        short *d_buffer = (short *)chosen_header->lpData;
+        samples_tosend = noutput_items - samples_sent >= d_chunk_size ? d_chunk_size : noutput_items - samples_sent;
+
+
+        switch (input_items.size()) {
+        case 1:         // mono input
+          for (int j = 0; j < samples_tosend; j++) {
+            d_buffer[2 * j + 0] = (short)(f0[j] * 32767);
+            d_buffer[2 * j + 1] = (short)(f0[j] * 32767);
+          }
+          f0 += samples_tosend;
+          break;
+        case 2:           // stereo input
+          for (int j = 0; j < samples_tosend; j++) {
             d_buffer[2 * j + 0] = (short)(f0[j] * 32767);
             d_buffer[2 * j + 1] = (short)(f1[j] * 32767);
           }
-          f0 += d_chunk_size;
-          f1 += d_chunk_size;
+          f0 += samples_tosend;
+          f1 += samples_tosend;
+          break;
         }
-        break;
+        if (write_waveout(chosen_header) < 0) {
+          perror("audio_windows_sink: write failed");
+        }
+        samples_sent += samples_tosend;
       }
-      if (write_waveout
-        (chosen_header) < 0) {
-        perror("audio_windows_sink: write failed");
-      }
-
-      return noutput_items;
+      return samples_sent;
     }
 
     int
@@ -331,7 +337,7 @@ namespace gr {
     }
 
     int
-    windows_sink::write_waveout(LPWAVEHDR lp_wave_hdr)
+      windows_sink::write_waveout(LPWAVEHDR lp_wave_hdr)
     {
       UINT w_result;
 
@@ -351,22 +357,22 @@ namespace gr {
       if (w_result != 0) {
         perror("audio_windows_sink: Failed to write block to device");
         switch (w_result) {
-       case MMSYSERR_INVALHANDLE:
-         fprintf(stderr, "Specified device handle is invalid.\n");
-         break;
-       case MMSYSERR_NODRIVER:
-         fprintf(stderr, " No device driver is present.\n");
-         break;
-       case MMSYSERR_NOMEM:
-         fprintf(stderr, " Unable to allocate or lock memory.\n");
-         break;
-       case WAVERR_UNPREPARED:
-         fprintf(stderr,
-           " The data block pointed to by the pwh parameter hasn't been prepared.\n");
-         break;
-       default:
-         fprintf(stderr, "Unknown error %i\n", w_result);
-       }
+        case MMSYSERR_INVALHANDLE:
+          fprintf(stderr, "Specified device handle is invalid.\n");
+          break;
+        case MMSYSERR_NODRIVER:
+          fprintf(stderr, " No device driver is present.\n");
+          break;
+        case MMSYSERR_NOMEM:
+          fprintf(stderr, " Unable to allocate or lock memory.\n");
+          break;
+        case WAVERR_UNPREPARED:
+          fprintf(stderr,
+            " The data block pointed to by the pwh parameter hasn't been prepared.\n");
+          break;
+        default:
+          fprintf(stderr, "Unknown error %i\n", w_result);
+        }
         waveOutUnprepareHeader(d_h_waveout, lp_wave_hdr, sizeof(WAVEHDR));
         return -1;
       }
