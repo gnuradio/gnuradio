@@ -32,20 +32,6 @@ from .base import get_block_candidates, ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
 
-def get_block_candidates():
-    cpp_filters = ["*.cc", "*.cpp"]
-    cpp_blocks = []
-    for ftr in cpp_filters:
-        cpp_blocks += filter(lambda x: not (x.startswith('qa_') or
-                             x.startswith('test_')),
-                             glob.glob1("lib", ftr))
-    python_blocks = filter(lambda x: not (x.startswith('qa_') or
-                           x.startswith('build') or
-                           x.startswith('__init__')),
-                           glob.glob1("python", "*.py"))
-    block_candidates = [x.split('_impl')[0] for x in cpp_blocks] + [x.split('.')[0] for x in python_blocks]
-    return block_candidates
-
 
 class ModToolRename(ModTool):
     """ Rename a block in the out-of-tree module. """
