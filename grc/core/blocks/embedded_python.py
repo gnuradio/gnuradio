@@ -81,7 +81,7 @@ class EPyBlock(Block):
     label = 'Python Block'
     documentation = {'': DOC}
 
-    parameters_data = [dict(
+    parameters = [dict(
         label='Code',
         id='_source_code',
         dtype='_multiline_python_external',
@@ -92,6 +92,8 @@ class EPyBlock(Block):
     outputs_data = []
 
     def __init__(self, flow_graph, **kwargs):
+        self.parameters_data = build_core_params(self.parameters, False, False, self.flags, self.key)
+
         super(EPyBlock, self).__init__(flow_graph, **kwargs)
         self.states['_io_cache'] = ''
 
