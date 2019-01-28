@@ -1,5 +1,6 @@
 id: hilbert_fc
 label: Hilbert
+flagss: [ python, cpp ]
 
 parameters:
 -   id: num_taps
@@ -31,5 +32,15 @@ outputs:
 templates:
     imports: from gnuradio import filter
     make: filter.hilbert_fc(${num_taps}, ${win}, ${beta})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/hilbert_fc.h>']
+    declarations: 'filter::hilbert_fc::sptr ${id};'
+    make: |-
+        this->${id} = filter::hilbert_fc::make(
+            ${num_taps},
+            ${win},
+            ${beta});
+    link: ['gnuradio-filter']
 
 file_format: 1

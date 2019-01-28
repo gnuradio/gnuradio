@@ -1,5 +1,6 @@
 id: band_reject_filter
 label: Band Reject Filter
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -76,6 +77,25 @@ templates:
                 ${beta}))
     callbacks:
     - set_taps(firdes.band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
+        ${width}, ${win}, ${beta}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    make: |-
+        this->${id} = filter::${type}::make(
+            ${ interp if str(type).startswith('interp') else decim },
+            firdes.band_reject(
+                ${gain},
+                ${samp_rate},
+                ${low_cutoff_freq},
+                ${high_cutoff_freq},
+                ${width},
+                ${win},
+                ${beta}));
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(firdes::band_reject(${gain}, ${samp_rate}, ${low_cutoff_freq}, ${high_cutoff_freq},
         ${width}, ${win}, ${beta}))
 
 documentation: |-

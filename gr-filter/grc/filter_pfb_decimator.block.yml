@@ -1,5 +1,6 @@
 id: pfb_decimator_ccf
 label: Polyphase Decimator
+flags: [ python, cpp ]
 
 parameters:
 -   id: decim
@@ -58,5 +59,26 @@ templates:
     callbacks:
     - set_taps(${taps})
     - set_channel(int(${channel}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/pfb_decimator_ccf.h>']
+    declarations: 'pfb::decimator_ccf::sptr ${id};'
+    make: |-
+        std::vector<float> taps = {${str(taps)[1:-1]}};
+        this->${id} = pfb::decimator_ccf::make(
+            ${decim},
+            taps,
+            ${channel},
+            ${atten},
+            ${fft_rot},
+            ${fft_filts});
+        this->${id}.declare_sample_delay(${samp_delay});
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(taps)
+    - set_channel(int(${channel}))
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

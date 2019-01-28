@@ -1,5 +1,6 @@
 id: mmse_interpolator_xx
 label: Fractional Interpolator
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -27,6 +28,17 @@ outputs:
 templates:
     imports: from gnuradio import filter
     make: filter.mmse_interpolator_${type.fcn}(${phase_shift}, ${interp_ratio})
+    callbacks:
+    - set_interp_ratio(${interp_ratio})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/mmse_interpolator_${type.fcn}.h>']
+    declarations: 'filter::mmse_interpolator_${type.fcn}::sptr ${id};'
+    make: |-
+        this->${id} = filter::mmse_interpolator_${type.fcn}::make(
+            ${phase_shift},
+            ${interp_ratio});
+    link: ['gnuradio-filter']
     callbacks:
     - set_interp_ratio(${interp_ratio})
 

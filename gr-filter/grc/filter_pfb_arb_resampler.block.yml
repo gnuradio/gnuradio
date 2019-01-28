@@ -1,5 +1,6 @@
 id: pfb_arb_resampler_xxx
 label: Polyphase Arbitrary Resampler
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -53,6 +54,25 @@ templates:
         self.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
+    - set_rate(${rrate})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/pfb.arb_resampler_${type}.h>']
+    declarations: 'pfb::arb_resampler_${type}::sptr ${id};'
+    make: |-
+        % if str(type.taps) == "complex_vector":
+        std::vector<gr_complex> taps = {${str(taps)[1:-1]}};
+        % else:
+        std::vector<float> taps = {${str(taps)[1:-1]}};
+        % endif
+        this->${id} =pfb::arb_resampler_${type}::make(
+            ${rrate},
+            taps=${ taps if taps else 'None' },
+            flt_size=${nfilts});
+        this->${id}.declare_sample_delay(${samp_delay});
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(taps)
     - set_rate(${rrate})
 
 file_format: 1

@@ -1,5 +1,6 @@
 id: pfb_channelizer_ccf
 label: Polyphase Channelizer
+flags: [ python, cpp ]
 
 parameters:
 -   id: nchans
@@ -55,6 +56,23 @@ templates:
         self.${id}.set_channel_map(${ch_map})\nself.${id}.declare_sample_delay(${samp_delay})
     callbacks:
     - set_taps(${taps})
+    - set_channel_map(${ch_map})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/pfb_channelizer_ccf.h>']
+    declarations: 'pfb::channelizer_ccf::sptr ${id};'
+    make: |-
+        std::vector<float> taps = {${str(taps)[1:-1]}};
+        this->${id} = pfb::channelizer_ccf::make(
+            ${nchans},
+            taps,
+            ${osr},
+            ${atten});
+        this->${id}.set_channel_map(${ch_map});
+        this->${id}.declare_sample_delay(${samp_delay});
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(taps)
     - set_channel_map(${ch_map})
 
 file_format: 1

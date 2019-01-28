@@ -1,5 +1,6 @@
 id: variable_band_pass_filter_taps
 label: Band-pass Filter Taps
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -42,6 +43,14 @@ templates:
     var_make: |-
         self.${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
         ${high_cutoff_freq}, ${width}, ${win}, ${beta})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    var_make: |-
+        this->${id} = ${id} = firdes.${type}(${gain}, ${samp_rate}, ${low_cutoff_freq}, \
+        ${high_cutoff_freq}, ${width}, ${win}, ${beta});
+    link: ['gnuradio-filter']
 
 documentation: |-
     This is a convenience wrapper for calling firdes.band_pass() or firdes.complex_band_pass()

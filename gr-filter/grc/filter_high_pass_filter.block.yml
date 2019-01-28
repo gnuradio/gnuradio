@@ -1,5 +1,6 @@
 id: high_pass_filter
 label: High Pass Filter
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -72,6 +73,24 @@ templates:
                 ${beta}))
     callbacks:
     - set_taps(firdes.high_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win},
+        ${beta}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    make: |-
+        this->${id} = filter::${type}::make(
+            ${ interp if str(type).startswith('interp') else decim },
+            firdes.high_pass(
+                ${gain},
+                ${samp_rate},
+                ${cutoff_freq},
+                ${width},
+                ${win},
+                ${beta}));
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(firdes::high_pass(${gain}, ${samp_rate}, ${cutoff_freq}, ${width}, ${win},
         ${beta}))
 
 documentation: |-

@@ -1,5 +1,6 @@
 id: pfb_channelizer_hier_ccf
 label: Hierarchical Polyphase Channelizer
+flags: [ python ]
 
 parameters:
 -   id: nchans
