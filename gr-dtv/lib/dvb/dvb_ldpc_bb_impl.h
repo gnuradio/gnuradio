@@ -45,6 +45,7 @@ namespace gr {
       int Xp;
       unsigned char puncturing_buffer[FRAME_SIZE_NORMAL];
       unsigned char shortening_buffer[FRAME_SIZE_NORMAL];
+      int ldpc_lut_index[FRAME_SIZE_NORMAL];
       void ldpc_lookup_generate(void);
 
       int** ldpc_lut;
