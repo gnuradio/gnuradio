@@ -1,5 +1,6 @@
 id: freq_xlating_fft_filter_ccc
 label: Frequency Xlating FFT Filter
+flags: [ python ]
 
 parameters:
 -   id: decim

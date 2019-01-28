@@ -1,5 +1,6 @@
 id: freq_xlating_fir_filter_xxx
 label: Frequency Xlating FIR Filter
+flags: [ python ]
 
 parameters:
 -   id: type

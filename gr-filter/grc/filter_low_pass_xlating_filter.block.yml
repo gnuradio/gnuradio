@@ -1,5 +1,6 @@
 id: xlating_low_pass_filter
 label: Xlating Low Pass Filter
+flags: [ python ]
 
 parameters:
 -   id: type

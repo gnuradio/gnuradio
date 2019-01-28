@@ -1,5 +1,6 @@
 id: variable_low_pass_filter_taps
 label: Low-pass Filter Taps
+flags: [ python ]
 
 parameters:
 -   id: gain
@@ -34,6 +35,14 @@ templates:
     var_make: |-
         self.${id} = ${id} = firdes.low_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
         ${width}, ${win}, ${beta})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    var_make: |-
+        this->${id} = ${id} = firdes.low_pass(${gain}, ${samp_rate}, ${cutoff_freq},\
+        ${width}, ${win}, ${beta});
+    link: ['gnuradio-filter']
 
 documentation: |-
     This variable is a convenience wrapper around a call to firdes.low_pass(...).

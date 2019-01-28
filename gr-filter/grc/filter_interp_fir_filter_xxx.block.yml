@@ -1,5 +1,6 @@
 id: interp_fir_filter_xxx
 label: Interpolating FIR Filter
+flags: [ python ]
 
 parameters:
 -   id: type

@@ -1,5 +1,6 @@
 id: rational_resampler_xxx
 label: Rational Resampler
+flags: [ python ]
 
 parameters:
 -   id: type

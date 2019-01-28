@@ -1,5 +1,6 @@
 id: root_raised_cosine_filter
 label: Root Raised Cosine Filter
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -66,6 +67,23 @@ templates:
                 ${ntaps}))
     callbacks:
     - set_taps(firdes.root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha},
+        ${ntaps}))
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/firdes.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    make: |-
+        this->${id} = filter::${type}::make(
+            ${ interp if str(type).startswith('interp') else decim },
+            firdes.${type.fcn}(
+                ${gain},
+                ${samp_rate},
+                ${sym_rate},
+                ${alpha},
+                ${ntaps}));
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(firdes::root_raised_cosine(${gain}, ${samp_rate}, ${sym_rate}, ${alpha},
         ${ntaps}))
 
 documentation: |-

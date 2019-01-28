@@ -1,5 +1,6 @@
 id: dc_blocker_xx
 label: DC Blocker
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -31,5 +32,14 @@ outputs:
 templates:
     imports: from gnuradio import filter
     make: filter.dc_blocker_${type}(${length}, ${long_form})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/dc_blocker_${type}.h>']
+    declarations: 'filter::dc_blocker_${type}::sptr ${id};'
+    make: 'this->${id} = filter::dc_blocker_${type}::make(${length}, ${long_form});'
+    link: ['gnuradio-filter']
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1

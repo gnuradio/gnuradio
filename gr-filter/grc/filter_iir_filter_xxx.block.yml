@@ -1,5 +1,6 @@
 id: iir_filter_xxx
 label: IIR Filter
+flags: [ python, cpp ]
 
 parameters:
 -   id: type
@@ -40,5 +41,27 @@ templates:
     make: filter.iir_filter_${type}(${fftaps}, ${fbtaps}, ${oldstyle})
     callbacks:
     - set_taps(${fftaps}, ${fbtaps})
+
+cpp_templates:
+    includes: ['#include <gnuradio/filter/iir_filter_${type}.h>']
+    declarations: 'filter::firdes::sptr ${id};'
+    make: |-
+        % if str(type.taps) == "complex_vector":
+        std::vector<gr_complex> fftaps = {${str(fftaps)[1:-1]}};
+        std::vector<gr_complex> fbtaps = {${str(fbtaps)[1:-1]}};
+        % else:
+        std::vector<float> fftaps = {${str(fftaps)[1:-1]}};
+        std::vector<float> fbtaps = {${str(fbtaps)[1:-1]}};
+        % endif
+        this->${id} = filter::iir_filter_${type}::make(
+            fftaps,
+            fbtaps,
+            ${oldstyle});
+    link: ['gnuradio-filter']
+    callbacks:
+    - set_taps(fftaps, fbtaps)
+    translations:
+        'True': 'true'
+        'False': 'false'
 
 file_format: 1
