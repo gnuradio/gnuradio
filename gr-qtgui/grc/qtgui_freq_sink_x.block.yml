@@ -105,9 +105,7 @@ parameters:
 -   id: showports
     label: Show Msg Ports
     dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['Yes', 'No']
+    default: 'False'
     hide: part
 -   id: tr_mode
     label: Trigger Mode
@@ -374,17 +372,17 @@ inputs:
 -   domain: message
     id: freq
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 -   domain: message
     id: bw
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 outputs:
 -   domain: message
     id: freq
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 templates:
     imports: |-
