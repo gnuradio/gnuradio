@@ -81,9 +81,7 @@ parameters:
 -   id: showports
     label: Show Msg Ports
     dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['Yes', 'No']
+    default: 'False'
     hide: part
 
 inputs:
@@ -93,13 +91,13 @@ inputs:
 -   domain: message
     id: freq
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 outputs:
 -   domain: message
     id: freq
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 templates:
     imports: |-
