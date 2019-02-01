@@ -38,11 +38,11 @@ else(PYTHON_EXECUTABLE)
 
     #use the built-in find script
     set(Python_ADDITIONAL_VERSIONS 3.4 3.5 3.6)
-    find_package(PythonInterp 2)
+    find_package(PythonInterp 3)
 
     #and if that fails use the find program routine
     if(NOT PYTHONINTERP_FOUND)
-        find_program(PYTHON_EXECUTABLE NAMES python python2 python2.7)
+        find_program(PYTHON_EXECUTABLE NAMES python3 python3.4 python3.5 python3.6)
         if(PYTHON_EXECUTABLE)
             set(PYTHONINTERP_FOUND TRUE)
         endif(PYTHON_EXECUTABLE)
@@ -51,7 +51,7 @@ else(PYTHON_EXECUTABLE)
 endif(PYTHON_EXECUTABLE)
 
 if (CMAKE_CROSSCOMPILING)
-    set(QA_PYTHON_EXECUTABLE "/usr/bin/python")
+    set(QA_PYTHON_EXECUTABLE "/usr/bin/python3")
 else (CMAKE_CROSSCOMPILING)
     set(QA_PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE})
 endif(CMAKE_CROSSCOMPILING)

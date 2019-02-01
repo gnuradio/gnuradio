@@ -527,7 +527,7 @@ ${str_to_python_comment(license)}
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 % if lang == 'cpp':
-from . import ${modname}_swig as ${modname}
+import ${modname}_swig as ${modname}
 % else:
 from .${blockname} import ${blockname}
 % endif
