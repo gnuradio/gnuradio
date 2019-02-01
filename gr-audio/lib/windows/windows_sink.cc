@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include "audio_registry.h"
-#include <windows_sink.h>
+#include "../audio_registry.h"
+#include "windows_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
@@ -164,7 +164,7 @@ namespace gr {
           }
         }
         if (c++ > 10) {
-          // After waiting for 1 second, then something else is seriously wrong so let's 
+          // After waiting for 1 second, then something else is seriously wrong so let's
           // just fail and give some debugging information about the status
           // of the buffers.
           for (int i = 0; i < nPeriods; i++) {
@@ -222,11 +222,11 @@ namespace gr {
     MMRESULT windows_sink::is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID)
     {
       return (waveOutOpen(
-        NULL,                 // ptr can be NULL for query 
-        uDeviceID,            // the device identifier 
-        pwfx,                 // defines requested format 
-        NULL,                 // no callback 
-        NULL,                 // no instance data 
+        NULL,                 // ptr can be NULL for query
+        uDeviceID,            // the device identifier
+        pwfx,                 // defines requested format
+        NULL,                 // no callback
+        NULL,                 // no instance data
         WAVE_FORMAT_QUERY));  // query only, do not open device
     }
 

@@ -28,9 +28,9 @@
 #include <io.h>
 #endif
 
-#include "audio_registry.h"
-#include <portaudio_source.h>
-#include <portaudio_impl.h>
+#include "../audio_registry.h"
+#include "portaudio_source.h"
+#include "portaudio_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <stdio.h>
@@ -40,7 +40,7 @@
 #include <string.h>
 #ifdef _MSC_VER
 #include <io.h>
-#endif 
+#endif
 
 namespace gr {
   namespace audio {
