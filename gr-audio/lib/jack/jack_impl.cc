@@ -24,7 +24,5 @@
 #include "config.h"
 #endif
 
-#include <jack_impl.h>
+#include "jack_impl.h"
 #include <algorithm>
-
-

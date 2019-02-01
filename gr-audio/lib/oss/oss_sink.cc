@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include "audio_registry.h"
-#include <oss_sink.h>
+#include "../audio_registry.h"
+#include "oss_sink.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <sys/soundcard.h>

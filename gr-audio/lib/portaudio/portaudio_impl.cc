@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <portaudio_impl.h>
+#include "portaudio_impl.h"
 #include <portaudio.h>
 #include <string.h>
 

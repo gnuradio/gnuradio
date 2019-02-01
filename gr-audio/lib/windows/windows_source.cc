@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include "audio_registry.h"
-#include <windows_source.h>
+#include "../audio_registry.h"
+#include "windows_source.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -77,7 +77,7 @@ namespace gr {
 			wave_format.wFormatTag = WAVE_FORMAT_PCM;
 			wave_format.nChannels = 1;						  // changing this will require adjustments to the work routine.
 			wave_format.wBitsPerSample = 16;				// changing this will necessitate changing buffer type from short.
-			wave_format.nSamplesPerSec = d_sampling_freq;	// defined by flowgraph settings, but note that the microphone will likely have a native sample rate 
+			wave_format.nSamplesPerSec = d_sampling_freq;	// defined by flowgraph settings, but note that the microphone will likely have a native sample rate
 			                                              // that the audio system may upsample to you desired rate, so check where the cutoff ends up or check your control panel
 			wave_format.nBlockAlign =
 				wave_format.nChannels * (wave_format.wBitsPerSample / 8);
@@ -101,7 +101,7 @@ namespace gr {
 			for (int i = 0; i < nPeriods; i++)
 			{
 				lp_buffers[i] = new WAVEHDR;
-				LPWAVEHDR lp_buffer = lp_buffers[i]; 
+				LPWAVEHDR lp_buffer = lp_buffers[i];
 				lp_buffer->dwLoops = 0L;
 				lp_buffer->dwFlags = 0;
 				lp_buffer->dwBufferLength = d_buffer_size;
@@ -147,7 +147,7 @@ namespace gr {
 			float *f0, *f1;
 			DWORD dw_items = 0;
 
-			while (!buffer_queue.empty()) 
+			while (!buffer_queue.empty())
 			{
 				// Pull the next incoming buffer off the queue
 				LPWAVEHDR next_header = buffer_queue.front();
@@ -157,7 +157,7 @@ namespace gr {
 				DWORD buffer_length = next_header->dwBytesRecorded / sizeof(short);
 
 				if (buffer_length + dw_items > noutput_items * output_items.size()) {
-					// There's not enough output buffer space to send the whole input buffer 
+					// There's not enough output buffer space to send the whole input buffer
 					// so don't try, just leave it in the queue
 					// or else we'd have to track how much we sent etc
 					// In theory we should never reach this code because the buffers should all be
@@ -206,11 +206,11 @@ namespace gr {
 		MMRESULT windows_source::is_format_supported(LPWAVEFORMATEX pwfx, UINT uDeviceID)
 		{
 			return (waveInOpen(
-				NULL,                 // ptr can be NULL for query 
-				uDeviceID,            // the device identifier 
-				pwfx,                 // defines requested format 
-				NULL,                 // no callback 
-				NULL,                 // no instance data 
+				NULL,                 // ptr can be NULL for query
+				uDeviceID,            // the device identifier
+				pwfx,                 // defines requested format
+				NULL,                 // no callback
+				NULL,                 // no instance data
 				WAVE_FORMAT_QUERY));  // query only, do not open device
 		}
 
