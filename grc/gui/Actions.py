@@ -311,35 +311,43 @@ BLOCK_ROTATE_CCW = actions.register("win.block_rotate_ccw",
     label='Rotate Counterclockwise',
     tooltip='Rotate the selected blocks 90 degrees to the left',
     icon_name='object-rotate-left',
+    keypresses=["Left"],
 )
 BLOCK_ROTATE_CW = actions.register("win.block_rotate",
     label='Rotate Clockwise',
     tooltip='Rotate the selected blocks 90 degrees to the right',
     icon_name='object-rotate-right',
+    keypresses=["Right"],
 )
 BLOCK_VALIGN_TOP = actions.register("win.block_align_top",
     label='Vertical Align Top',
     tooltip='Align tops of selected blocks',
+    keypresses=["<Shift>t"],
 )
 BLOCK_VALIGN_MIDDLE = actions.register("win.block_align_middle",
     label='Vertical Align Middle',
     tooltip='Align centers of selected blocks vertically',
+    keypresses=["<Shift>m"],
 )
 BLOCK_VALIGN_BOTTOM = actions.register("win.block_align_bottom",
     label='Vertical Align Bottom',
     tooltip='Align bottoms of selected blocks',
+    keypresses=["<Shift>b"],
 )
 BLOCK_HALIGN_LEFT = actions.register("win.block_align_left",
     label='Horizontal Align Left',
     tooltip='Align left edges of blocks selected blocks',
+    keypresses=["<Shift>l"],
 )
 BLOCK_HALIGN_CENTER = actions.register("win.block_align_center",
     label='Horizontal Align Center',
     tooltip='Align centers of selected blocks horizontally',
+    keypresses=["<Shift>c"],
 )
 BLOCK_HALIGN_RIGHT = actions.register("win.block_align_right",
     label='Horizontal Align Right',
     tooltip='Align right edges of selected blocks',
+    keypresses=["<Shift>r"],
 )
 BLOCK_ALIGNMENTS = [
     BLOCK_VALIGN_TOP,
@@ -354,21 +362,25 @@ BLOCK_PARAM_MODIFY = actions.register("win.block_modify",
     label='_Properties',
     tooltip='Modify params for the selected block',
     icon_name='document-properties',
+    keypresses=["Return"],
 )
 BLOCK_ENABLE = actions.register("win.block_enable",
     label='E_nable',
     tooltip='Enable the selected blocks',
     icon_name='network-wired',
+    keypresses=["e"],
 )
 BLOCK_DISABLE = actions.register("win.block_disable",
     label='D_isable',
     tooltip='Disable the selected blocks',
     icon_name='network-wired-disconnected',
+    keypresses=["d"],
 )
 BLOCK_BYPASS = actions.register("win.block_bypass",
     label='_Bypass',
     tooltip='Bypass the selected block',
     icon_name='media-seek-forward',
+    keypresses=["b"],
 )
 TOGGLE_SNAP_TO_GRID = actions.register("win.snap_to_grid",
     label='_Snap to grid',
@@ -429,6 +441,7 @@ BLOCK_CREATE_HIER = actions.register("win.block_create_hier",
     label='C_reate Hier',
     tooltip='Create hier block from selected blocks',
     icon_name='document-new',
+    keypresses=["c"],
 )
 BLOCK_CUT = actions.register("win.block_cut",
     label='Cu_t',
@@ -514,10 +527,18 @@ FLOW_GRAPH_SCREEN_CAPTURE = actions.register("app.flowgraph.screen_capture",
     icon_name='printer',
     keypresses=["<Ctrl>p"],
 )
-PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec")
-PORT_CONTROLLER_INC = actions.register("win.port_controller_inc")
-BLOCK_INC_TYPE = actions.register("win.block_inc_type")
-BLOCK_DEC_TYPE = actions.register("win.block_dec_type")
+PORT_CONTROLLER_DEC = actions.register("win.port_controller_dec",
+    keypresses=["KP_Subtract", "minus"],
+)
+PORT_CONTROLLER_INC = actions.register("win.port_controller_inc",
+    keypresses=["KP_Add", "plus"],
+)
+BLOCK_INC_TYPE = actions.register("win.block_inc_type",
+    keypresses=["Down"],
+)
+BLOCK_DEC_TYPE = actions.register("win.block_dec_type",
+    keypresses=["Up"],
+)
 RELOAD_BLOCKS = actions.register("app.reload_blocks",
     label='Reload _Blocks',
     tooltip='Reload Blocks',
