@@ -86,7 +86,7 @@ class EPyBlock(Block):
         label='Code',
         id='_source_code',
         dtype='_multiline_python_external',
-        value=DEFAULT_CODE,
+        default=DEFAULT_CODE,
         hide='part',
     )]
     inputs_data = []
@@ -234,7 +234,7 @@ class EPyModule(Block):
         label='Code',
         id='source_code',
         dtype='_multiline_python_external',
-        value='# this module will be imported in the into your flowgraph',
+        default='# this module will be imported in the into your flowgraph',
         hide='part',
     )]
 
