@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -21,8 +21,9 @@
 #ifndef INCLUDED_DTV_DVBT2_INTERLEAVER_BB_IMPL_H
 #define INCLUDED_DTV_DVBT2_INTERLEAVER_BB_IMPL_H
 
+#include "../dvb/dvb_defines.h"
+
 #include <gnuradio/dtv/dvbt2_interleaver_bb.h>
-#include "dvb/dvb_defines.h"
 
 namespace gr {
   namespace dtv {
@@ -85,4 +86,3 @@ namespace gr {
 } // namespace gr
 
 #endif /* INCLUDED_DTV_DVBT2_INTERLEAVER_BB_IMPL_H */
-
