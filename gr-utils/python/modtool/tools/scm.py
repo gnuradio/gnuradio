@@ -91,7 +91,7 @@ class SCMRepository(object):
     def get_gituser(self):
         """ Gets the git user """
         try:
-            return subprocess.check_output('git config --global user.name', shell=True).strip()
+            return (subprocess.check_output('git config --global user.name', shell=True).strip()).decode('utf-8')
         except (OSError, subprocess.CalledProcessError):
             return None
 
