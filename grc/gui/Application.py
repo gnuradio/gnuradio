@@ -639,7 +639,13 @@ class Application(Gtk.Application):
             file_path = FileDialogs.SaveFlowGraph(main, page.file_path).run()
             if file_path is not None:
                 page.file_path = os.path.abspath(file_path)
-                Actions.FLOW_GRAPH_SAVE()
+                try:
+                    self.platform.save_flow_graph(page.file_path, flow_graph)
+                    flow_graph.grc_file_path = page.file_path
+                    page.saved = True
+                except IOError:
+                    Messages.send_fail_save(page.file_path)
+                    page.saved = False
                 self.config.add_recent_file(file_path)
                 main.tool_bar.refresh_submenus()
                 #TODO
