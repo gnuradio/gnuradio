@@ -41,7 +41,7 @@ style_provider.load_from_data(b"""
     #dtype_string          { background-color: #CC66CC; }
     #dtype_id              { background-color: #DDDDDD; }
     #dtype_stream_id       { background-color: #DDDDDD; }
-    #dtype_raw             { background-color: #FFFFFF; }
+    #dtype_raw             { background-color: #23272A; }
 
     #enum_custom           { background-color: #EEEEEE; }
 """)
