@@ -152,7 +152,7 @@ class SubMenuHelper(object):
             files = Gio.Menu()
             for i, file_name in enumerate(recent_files):
                 target = "app.flowgraph.open_recent::{}".format(file_name)
-                files.append(file_name, target)
+                files.append(file_name.replace("_", "__"), target)
             menu.append_section(None, files)
             #clear = Gio.Menu()
             #clear.append("Clear recent files", "app.flowgraph.clear_recent")
