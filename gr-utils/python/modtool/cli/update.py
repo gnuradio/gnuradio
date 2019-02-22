@@ -47,8 +47,8 @@ def get_blockname(self):
     """ Returns the blockname for block to be updated """
     if self.info['complete']:
         return
+    block_candidates = get_xml_candidates()
     if self.info['blockname'] is None:
-        block_candidates = get_xml_candidates()
         with SequenceCompleter(block_candidates):
             self.info['blockname'] = cli_input('Which block do you wish to update? : ')
     if not self.info['blockname'] or self.info['blockname'].isspace():
