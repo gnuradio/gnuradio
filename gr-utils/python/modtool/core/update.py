@@ -31,6 +31,7 @@ import logging
 
 from gnuradio.grc.converter import Converter
 from .base import ModTool, ModToolException
+from ..tools import get_modname
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +40,10 @@ def get_xml_candidates():
     """ Returns a list of XML candidates for update """
     xml_candidates = []
     xml_files = [x for x in glob.glob1("grc", "*.xml")]
+    mod_name = get_modname()
     for candidate in xml_files:
         candidate = os.path.splitext(candidate)[0]
-        candidate = candidate.split("_", 1)[-1]
+        candidate = candidate.split(mod_name + "_", 1)[-1]
         xml_candidates.append(candidate)
     return xml_candidates
 
