@@ -42,7 +42,7 @@ namespace gr {
 
       void generate_lookup();
       inline void interleave_parity_bits(int *tempu, const int *&in);
-      inline void twist_interleave_columns(int* tempv, int* tempu, int rows, const int *twist);
+      inline void twist_interleave_columns(int* tempv, int* tempu, int rows, int mod, const int *twist);
 
       const static int twist16n[8];
       const static int twist64n[12];
