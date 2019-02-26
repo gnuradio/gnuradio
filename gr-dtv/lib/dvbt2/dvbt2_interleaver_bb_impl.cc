@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016,2018 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -164,10 +164,10 @@ namespace gr {
     }
 
     inline void
-    dvbt2_interleaver_bb_impl::twist_interleave_columns(int* tempv, int* tempu, int rows, const int *twist)
+    dvbt2_interleaver_bb_impl::twist_interleave_columns(int* tempv, int* tempu, int rows, int mod, const int *twist)
     {
       int index = 0, offset;
-      for (int col = 0; col < (mod * 2); col++) {
+      for (int col = 0; col < mod; col++) {
         offset = twist[col];
         for (int row = 0; row < rows; row++) {
           tempv[offset + (rows * col)] = tempu[index++];
@@ -183,11 +183,14 @@ namespace gr {
     dvbt2_interleaver_bb_impl::generate_lookup()
     {
       int rows, index = 0;
-      int tempv[FRAME_SIZE_NORMAL];
-      int tempu[FRAME_SIZE_NORMAL];
+      int *tempv;
+      int *tempu;
       const int *twist;
       const int *c1, *c2, *c3, *c4, *c5, *c6, *c7, *c8;
       const int *c9, *c10, *c11, *c12, *c13, *c14, *c15, *c16;
+
+      tempv = new int[FRAME_SIZE_NORMAL];
+      tempu = new int[FRAME_SIZE_NORMAL];
 
       for(int i = 0; i < FRAME_SIZE_NORMAL; i++) {
         lookup_table[i] = i;
@@ -218,7 +221,7 @@ namespace gr {
           c7 = &tempv[rows * 6];
           c8 = &tempv[rows * 7];
 
-          twist_interleave_columns(tempv, tempu, rows, twist);
+          twist_interleave_columns(tempv, tempu, rows, mod * 2, twist);
 
           for (int j = 0; j < rows; j++) {
             tempu[index++] = c1[j];
@@ -257,7 +260,7 @@ namespace gr {
           c11 = &tempv[rows * 10];
           c12 = &tempv[rows * 11];
 
-          twist_interleave_columns(tempv, tempu, rows, twist);
+          twist_interleave_columns(tempv, tempu, rows, mod * 2, twist);
 
           for (int j = 0; j < rows; j++) {
             tempu[index++] = c1[j];
@@ -298,7 +301,7 @@ namespace gr {
             c15 = &tempv[rows * 14];
             c16 = &tempv[rows * 15];
 
-            twist_interleave_columns(tempv, tempu, rows, twist256n);
+            twist_interleave_columns(tempv, tempu, rows, mod * 2, twist256n);
 
             for (int j = 0; j < rows; j++) {
               tempu[index++] = c1[j];
@@ -333,7 +336,7 @@ namespace gr {
             c7 = &tempv[rows * 6];
             c8 = &tempv[rows * 7];
 
-            twist_interleave_columns(tempv, tempu, rows, twist256s);
+            twist_interleave_columns(tempv, tempu, rows, mod, twist256s);
 
             for (int j = 0; j < rows; j++) {
               tempu[index++] = c1[j];
@@ -350,6 +353,9 @@ namespace gr {
 
       //tempu now has the input indices interleaved correctly, so save it
       memcpy(lookup_table, tempu, frame_size * sizeof(int));
+
+      delete[] tempu;
+      delete[] tempv;
     }
 
     /*
