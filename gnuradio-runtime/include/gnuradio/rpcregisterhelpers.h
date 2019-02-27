@@ -495,6 +495,31 @@ public:
 };
 
 /*!
+ * \brief Specialized inserter class for vectors of int64_t data.
+ */
+template<typename T>
+class rpcbasic_inserter<T,std::vector< int64_t > >
+  : public virtual rpcinserter_base<T,std::vector< int64_t > >
+{
+public:
+  rpcbasic_inserter(T* source, std::vector<int64_t > (T::*func)() const)
+    : rpcinserter_base<T,std::vector<int64_t > >(source, func)
+  {;}
+
+  rpcbasic_inserter(T* source, std::vector<int64_t > (T::*func)())
+    : rpcinserter_base<T,std::vector<int64_t > >(source, func)
+  {;}
+
+  pmt::pmt_t retrieve()
+  {
+    std::vector< int64_t >
+      vec((rpcinserter_base<T,std::vector<int64_t > >::
+	   _source->*rpcinserter_base<T,std::vector< int64_t > >::_func)());
+    return pmt::init_s64vector(vec.size(), &vec[0]);
+  }
+};
+
+/*!
  * \brief Specialized inserter class for vectors of complex (float) data.
  */
 template<typename T>
