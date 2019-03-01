@@ -30,7 +30,7 @@ Templates = {}
 
 # Default licence
 Templates['defaultlicense'] = '''
-Copyright %d ${copyrightholder}.
+Copyright %d {copyrightholder}.
 
 This is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -339,7 +339,6 @@ namespace gr {
 Templates['block_python'] = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ${str_to_python_comment(license)}
-#\
 <%
     if blocktype == 'noblock':
         return
@@ -552,7 +551,7 @@ if __name__ == '__main__':
 
 Templates['grc_yml'] = '''id: ${modname}_${blockname}
 label: ${blockname}
-category: [${modname}]
+category: '[${modname}]'
 
 templates:
   imports: import ${modname}
