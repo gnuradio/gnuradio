@@ -255,9 +255,19 @@ string(REPLACE "\n" " \\n" COMPILER_INFO ${COMPILER_INFO})
 # Install directories
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
+
+# Install our Cmake modules into $prefix/lib/cmake/gnuradio
+# See "Package Configuration Files" on page:
+#    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
+
+if(NOT CMAKE_MODULES_DIR)
+  SET(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+endif(NOT CMAKE_MODULES_DIR)
+
 SET(GR_RUNTIME_DIR     bin CACHE PATH "Path to install all binaries")
 SET(GR_LIBRARY_DIR     lib${LIB_SUFFIX} CACHE PATH "Path to install libraries")
 SET(GR_INCLUDE_DIR     include CACHE PATH "Path to install header files")
+SET(GR_CMAKE_DIR       ${CMAKE_MODULES_DIR}/gnuradio)
 SET(GR_DATA_DIR        share CACHE PATH "Base location for data")
 SET(GR_PKG_DATA_DIR    ${GR_DATA_DIR}/${CMAKE_PROJECT_NAME} CACHE PATH "Path to install package data")
 SET(GR_DOC_DIR         ${GR_DATA_DIR}/doc CACHE PATH "Path to install documentation")
@@ -452,13 +462,6 @@ list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
 )
 
-# Install our Cmake modules into $prefix/lib/cmake/gnuradio
-# See "Package Configuration Files" on page:
-#    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
-
-if(NOT CMAKE_MODULES_DIR)
-  SET(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
-endif(NOT CMAKE_MODULES_DIR)
 
 
 # Note that above we put the binary gnuradio-runtime/python directory

@@ -85,7 +85,7 @@ function(GR_LIBRARY_FOO target)
     install(EXPORT ${target}-export
       FILE ${target}Targets.cmake
       NAMESPACE gnuradio::
-      DESTINATION ${GR_LIBRARY_DIR}/cmake/gnuradio
+      DESTINATION ${GR_CMAKE_DIR}
       )
 
     include(CMakePackageConfigHelpers)
@@ -95,11 +95,11 @@ function(GR_LIBRARY_FOO target)
     configure_package_config_file(
       ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
       ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
-      INSTALL_DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
+      INSTALL_DESTINATION ${GR_CMAKE_DIR}
       )
     install(
       FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
-      DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
+      DESTINATION ${GR_CMAKE_DIR}
       )
 
     #extras mode enabled automatically on linux
