@@ -47,6 +47,15 @@ else ()
   endif ()
 endif ()
 
+
+if (LOG4CPP_FOUND AND NOT TARGET log4cpp::log4cpp)
+  add_library(Log4Cpp::log4cpp INTERFACE IMPORTED)
+  set_target_properties(Log4Cpp::log4cpp PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LOG4CPP_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES "${LOG4CPP_LIBRARIES}"
+  )
+endif()
+
 mark_as_advanced(
   LOG4CPP_LIBRARIES
   LOG4CPP_INCLUDE_DIRS

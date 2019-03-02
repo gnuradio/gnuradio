@@ -18,22 +18,10 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-  ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(
-  ${Boost_LIBRARY_DIRS}
-)
-
-########################################################################
 # Setup executables
 ########################################################################
 add_executable(gnuradio-config-info gnuradio-config-info.cc)
-target_link_libraries(gnuradio-config-info gnuradio-runtime ${Boost_LIBRARIES})
+target_link_libraries(gnuradio-config-info gnuradio-runtime)
 install(
     TARGETS gnuradio-config-info
     DESTINATION ${GR_RUNTIME_DIR}

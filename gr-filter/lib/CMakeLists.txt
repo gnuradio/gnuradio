@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2014,2017-2018 Free Software Foundation, Inc.
+# Copyright (C) 2012-2014,2017-2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,31 +18,9 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${GR_FILTER_INCLUDE_DIRS}
-    ${GR_FFT_INCLUDE_DIRS}
-    ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${VOLK_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(
-  ${Boost_LIBRARY_DIRS}
-)
-
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-endif(ENABLE_GR_CTRLPORT)
-
-########################################################################
 # Setup library
 ########################################################################
-list(APPEND filter_sources
+add_library(gnuradio-filter
   fir_filter.cc
   fir_filter_blk_impl.cc
   fir_filter_with_buffer.cc
@@ -88,6 +66,19 @@ list(APPEND filter_sources
   single_pole_iir_filter_ff_impl.cc
 )
 
+target_link_libraries(gnuradio-filter PUBLIC
+    gnuradio-runtime
+    gnuradio-fft
+    gnuradio-blocks
+    ${GR_VOLK_LIB}
+)
+
+target_include_directories(gnuradio-filter
+  PUBLIC
+  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+  )
+
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
     include(${CMAKE_SOURCE_DIR}/cmake/Modules/GrVersion.cmake)
@@ -97,64 +88,18 @@ if(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-filter.rc
     @ONLY)
 
-    list(APPEND filter_sources
+    target_sources(gnuradio-filter PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-filter.rc
     )
 endif(MSVC)
 
-list(APPEND filter_libs
-    gnuradio-runtime
-    gnuradio-fft
-    gnuradio-blocks
-    ${VOLK_LIBRARIES}
-    ${Boost_LIBRARIES}
-)
-
-
-add_library(gnuradio-filter SHARED ${filter_sources})
-target_link_libraries(gnuradio-filter ${filter_libs})
 GR_LIBRARY_FOO(gnuradio-filter)
-add_dependencies(gnuradio-filter
-  gnuradio-runtime gnuradio-fft)
-
-if(ENABLE_STATIC_LIBS)
-  if(ENABLE_GR_CTRLPORT)
-    # Remove GR_CTRLPORT set this target's definitions.
-    # Makes sure we don't try to use ControlPort stuff in source files
-    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
-
-    # readd it to the target since we removed it from the directory-wide list.
-    SET_PROPERTY(TARGET gnuradio-filter APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
-  endif(ENABLE_GR_CTRLPORT)
-
-  add_library(gnuradio-filter_static STATIC ${filter_sources})
-
-  add_dependencies(gnuradio-filter_static
-    gnuradio-runtime_static gnuradio-fft_static)
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-filter_static
-      PROPERTIES OUTPUT_NAME gnuradio-filter)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-filter_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
-
 
 ########################################################################
 # QA C++ Code for gr-filter
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)
-
-  include_directories(
-    ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-  )
 
   list(APPEND test_gr_filter_sources
     qa_firdes.cc

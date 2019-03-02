@@ -1,4 +1,4 @@
-# Copyright 2011-2016 Free Software Foundation, Inc.
+# Copyright 2011-2016,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,20 +23,8 @@
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_INCLUDE_DIRS
-  ${GR_DIGITAL_INCLUDE_DIRS}
-  ${GR_BLOCKS_INCLUDE_DIRS}
-  ${GR_ANALOG_INCLUDE_DIRS}
-  ${GR_FFT_INCLUDE_DIRS}
-  ${GR_FILTER_INCLUDE_DIRS}
-  ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-  ${VOLK_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
-)
-
-if(ENABLE_GR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-endif(ENABLE_GR_CTRLPORT)
+set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:runtime_swig,INCLUDE_DIRECTORIES>)
+set(GR_SWIG_TARGET_DEPS runtime_swig)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/digital_swig.py.in

@@ -154,6 +154,7 @@ function(GR_ADD_CPP_TEST test_name test_source)
     target_link_libraries(
         ${test_name}
         ${GR_TEST_TARGET_DEPS}
+        Boost::unit_test_framework
     )
     set_target_properties(${test_name}
         PROPERTIES COMPILE_DEFINITIONS "BOOST_TEST_DYN_LINK;BOOST_TEST_MAIN"

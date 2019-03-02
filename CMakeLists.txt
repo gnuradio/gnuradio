@@ -27,9 +27,10 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 ########################################################################
 # Make sure this version matches ${GR_CMAKE_MIN_VERSION} (a variable can't be
 # used here).
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.8)
 project(gnuradio CXX C)
 enable_testing()
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 # Make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
@@ -73,13 +74,13 @@ if(POLICY CMP0026)
     cmake_policy(SET CMP0026 NEW)
 endif()
 if(POLICY CMP0043)
-    cmake_policy(SET CMP0043 OLD)
+    cmake_policy(SET CMP0043 NEW)
 endif()
 if(POLICY CMP0045)
-    cmake_policy(SET CMP0045 OLD)
+    cmake_policy(SET CMP0045 NEW)
 endif()
 if(POLICY CMP0046)
-    cmake_policy(SET CMP0046 OLD)
+    cmake_policy(SET CMP0046 NEW)
 endif()
 
 ########################################################################
@@ -289,9 +290,6 @@ else(ENABLE_PERFORMANCE_COUNTERS)
   message(STATUS "NO PERF COUNTERS")
 endif(ENABLE_PERFORMANCE_COUNTERS)
 
-OPTION(ENABLE_STATIC_LIBS "Enable building of static libraries" OFF)
-message(STATUS "Building Static Libraries: ${ENABLE_STATIC_LIBS}")
-
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################
@@ -380,14 +378,15 @@ message(STATUS "")
 message(STATUS "Configuring VOLK support...")
 
 OPTION(ENABLE_INTERNAL_VOLK "Enable internal VOLK only" ON)
-unSET(VOLK_FOUND)
+UNSET(Volk_FOUND)
 if(NOT ENABLE_INTERNAL_VOLK)
     find_package(Volk)
-    if(NOT VOLK_FOUND)
+    set(GR_VOLK_LIB "Volk::volk")
+    if(NOT Volk_FOUND)
         message(STATUS "  External VOLK not found; checking internal.")
     endif()
 endif()
-if(NOT VOLK_FOUND)
+if(NOT Volk_FOUND)
     find_file(INTREE_VOLK_FOUND
         volk/volk_common.h
         PATHS ${CMAKE_CURRENT_SOURCE_DIR}/volk/include
@@ -419,7 +418,7 @@ if(NOT VOLK_FOUND)
         ${CMAKE_CURRENT_BINARY_DIR}/volk/include
     )
 
-    SET(VOLK_LIBRARIES volk)
+    set(GR_VOLK_LIB "volk")
 
     SET(VOLK_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
     SET(VOLK_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include)
@@ -429,12 +428,12 @@ else()
 
     get_filename_component(VOLK_INSTALL_LIBRARY_DIR "${VOLK_LIBRARIES}" DIRECTORY)
     SET(VOLK_INSTALL_INCLUDE_DIR ${VOLK_INCLUDE_DIRS})
-endif(NOT VOLK_FOUND)
+endif(NOT Volk_FOUND)
 
 message(STATUS "  Override with -DENABLE_INTERNAL_VOLK=ON/OFF")
 
 # Handle logging
-find_package(Log4cpp REQUIRED)
+find_package(LOG4CPP REQUIRED)
 
 ########################################################################
 # Distribute the README file
@@ -447,12 +446,20 @@ install(
 ########################################################################
 # The following dependency libraries are needed by all gr modules:
 ########################################################################
-list(APPEND GR_TEST_TARGET_DEPS volk gnuradio-runtime)
 list(APPEND GR_TEST_PYTHON_DIRS
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/python
     ${CMAKE_SOURCE_DIR}/gnuradio-runtime/python
     ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
 )
+
+# Install our Cmake modules into $prefix/lib/cmake/gnuradio
+# See "Package Configuration Files" on page:
+#    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
+
+if(NOT CMAKE_MODULES_DIR)
+  SET(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
+endif(NOT CMAKE_MODULES_DIR)
+
 
 # Note that above we put the binary gnuradio-runtime/python directory
 # before the source directory. This is due to a quirk with ControlPort
@@ -504,14 +511,19 @@ if(ENABLE_GR_CTRLPORT)
   endif(CTRLPORT_BACKENDS GREATER 0)
 endif(ENABLE_GR_CTRLPORT)
 
-# Install our Cmake modules into $prefix/lib/cmake/gnuradio
-# See "Package Configuration Files" on page:
-#    http://www.cmake.org/Wiki/CMake/Tutorials/Packaging
 
-configure_file(
+# Install all other cmake files into same directory
+file(GLOB cmake_others "cmake/Modules/*.cmake")
+list(REMOVE_ITEM cmake_others
+    "${CMAKE_SOURCE_DIR}/cmake/Modules/FindGnuradio.cmake"
+)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfig.cmake.in
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfig.cmake
-@ONLY)
+  INSTALL_DESTINATION ${CMAKE_MODULES_DIR}/gnuradio
+  )
 
 configure_file(
   ${CMAKE_SOURCE_DIR}/cmake/Modules/GnuradioConfigVersion.cmake.in
@@ -523,15 +535,6 @@ SET(cmake_configs
   ${CMAKE_BINARY_DIR}/cmake/Modules/GnuradioConfigVersion.cmake
 )
 
-if(NOT CMAKE_MODULES_DIR)
-  SET(CMAKE_MODULES_DIR lib${LIB_SUFFIX}/cmake)
-endif(NOT CMAKE_MODULES_DIR)
-
-# Install all other cmake files into same directory
-file(GLOB cmake_others "cmake/Modules/*.cmake")
-list(REMOVE_ITEM cmake_others
-    "${CMAKE_SOURCE_DIR}/cmake/Modules/FindGnuradio.cmake"
-)
 
 install(
   FILES ${cmake_configs} ${cmake_others}

@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,16 +23,10 @@
 include(GrPython)
 include(GrSwig)
 
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_COMEDI_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
+set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:runtime_swig,INCLUDE_DIRECTORIES>)
+set(GR_SWIG_TARGET_DEPS runtime_swig)
 
-if(ENABLE_GR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-endif(ENABLE_GR_CTRLPORT)
-
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/analog_swig_doc.i)
 # Setup swig docs to depend on includes and pull in from build directory
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/comedi_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/comedi)

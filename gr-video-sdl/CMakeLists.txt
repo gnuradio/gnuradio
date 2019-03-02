@@ -34,11 +34,6 @@ GR_REGISTER_COMPONENT("gr-video-sdl" ENABLE_GR_VIDEO_SDL
     ENABLE_GNURADIO_RUNTIME
 )
 
-GR_SET_GLOBAL(GR_VIDEO_SDL_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/include
-)
-
 ########################################################################
 # Begin conditional configuration
 ########################################################################

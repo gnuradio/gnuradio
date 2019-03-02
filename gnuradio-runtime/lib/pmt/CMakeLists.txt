@@ -1,4 +1,4 @@
-# Copyright 2010-2013 Free Software Foundation, Inc.
+# Copyright 2010-2013,2018-2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,13 +17,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# This file included, use CMake directory variables
-########################################################################
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
-
-set(pmt_sources
+add_library(gnuradio-pmt
   ${CMAKE_CURRENT_SOURCE_DIR}/pmt_unv.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/pmt.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/pmt_io.cc
@@ -31,10 +25,18 @@ set(pmt_sources
   ${CMAKE_CURRENT_SOURCE_DIR}/pmt_serialize.cc
 )
 
-list(APPEND gnuradio_pmt_libs
-    ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
+target_link_libraries(gnuradio-pmt
+  Boost::boost
+  Log4Cpp::log4cpp
 )
+
+target_include_directories(gnuradio-pmt
+  PUBLIC
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+  )
+
 
 #Add Windows DLL resource file if using MSVC
 if(MSVC)
@@ -45,28 +47,11 @@ if(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pmt.rc
     @ONLY)
 
-    list(APPEND gr_pmt_sources
+    target_sources(gnuradio-pmt PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-pmt.rc
     )
 endif(MSVC)
 
-
-add_library(gnuradio-pmt SHARED ${pmt_sources})
-target_link_libraries(gnuradio-pmt ${gnuradio_pmt_libs})
-
-GR_LIBRARY_FOO(gnuradio-pmt)
-
-if(ENABLE_STATIC_LIBS)
-  add_library(gnuradio-pmt_static STATIC ${pmt_sources})
-
-  add_dependencies(gnuradio-pmt_static)
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-pmt_static
-      PROPERTIES OUTPUT_NAME gnuradio-pmt)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-pmt_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
+if(BUILD_SHARED_LIBS)
+  GR_LIBRARY_FOO(gnuradio-pmt)
+endif()

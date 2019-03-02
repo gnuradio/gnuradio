@@ -1,4 +1,4 @@
-# Copyright 2011,2016 Free Software Foundation, Inc.
+# Copyright 2011,2016,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,11 +33,6 @@ GR_REGISTER_COMPONENT("gr-vocoder" ENABLE_GR_VOCODER
     ENABLE_GR_BLOCKS
     ENABLE_GR_FILTER
     ENABLE_GR_ANALOG
-)
-
-GR_SET_GLOBAL(GR_VOCODER_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 SET(GR_PKG_VOCODER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/vocoder)
