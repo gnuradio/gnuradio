@@ -36,7 +36,7 @@ namespace gr {
      * \details
      * This can be used to demod FM, FSK, GMSK, etc.  The input is complex
      * baseband, output is the signal frequency in relation to the sample
-     * rated, multiplied with the gain.
+     * rate, multiplied with the gain.
      *
      * Mathematically, this block calculates the product of the one-sample
      * delayed input and the conjugate undelayed signal, and then calculates
