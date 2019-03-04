@@ -177,11 +177,11 @@ target_link_libraries(gnuradio-runtime PUBLIC
   Thrift::thrift
   )
 
-# Add install rule to move example Thrift configuration file into
-# $prefix/etc/gnuradio
+# Add install rule to move example Thrift configuration file into a
+# documentation directory
 install(
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/thrift/thrift.conf.example
-  DESTINATION ${SYSCONFDIR}/${CMAKE_PROJECT_NAME}
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
+  DESTINATION ${GR_PKG_DOC_DIR}/config
 )
 
 endif(THRIFT_FOUND)
