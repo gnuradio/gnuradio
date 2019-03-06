@@ -58,6 +58,18 @@ class test_sig_source(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertEqual(expected_result, dst_data)
 
+    def test_const_b(self):
+        tb = self.tb
+        expected_result = (1, 1, 1, 1)
+        src1 = analog.sig_source_b(1e6, analog.GR_CONST_WAVE, 0, 1)
+        op = blocks.head(gr.sizeof_char, 4)
+        dst1 = blocks.vector_sink_b()
+        tb.connect(src1, op)
+        tb.connect(op, dst1)
+        tb.run()
+        dst_data = dst1.data()
+        self.assertEqual(expected_result, dst_data)
+        
     def test_sine_f(self):
         tb = self.tb
         sqrt2 = math.sqrt(2) / 2
@@ -70,6 +82,22 @@ class test_sig_source(gr_unittest.TestCase):
         tb.run()
         dst_data = dst1.data()
         self.assertFloatTuplesAlmostEqual(expected_result, dst_data, 5)
+
+
+    def test_sine_b(self):
+        tb = self.tb
+        sqrt2 = math.sqrt(2) / 2
+        temp_result = (0, sqrt2, 1, sqrt2, 0, -sqrt2, -1, -sqrt2, 0)
+        amp = 8
+        expected_result = tuple([int(z * amp) for z in temp_result])
+        src1 = analog.sig_source_b(8, analog.GR_SIN_WAVE, 1.0, amp)
+        op = blocks.head(gr.sizeof_char, 9)
+        dst1 = blocks.vector_sink_b()
+        tb.connect(src1, op)
+        tb.connect(op, dst1)
+        tb.run()
+        dst_data = dst1.data()
+        self.assertFloatTuplesAlmostEqual(expected_result, dst_data)        
 
     def test_cosine_f(self):
         tb = self.tb

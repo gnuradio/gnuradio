@@ -113,6 +113,24 @@ namespace gr {
         step ();
       }
     }
+    
+    // compute sin for a block of phase angles
+    void sin(std::int8_t *output, int noutput_items, double ampl=1.0)
+    {
+      for(int i = 0; i < noutput_items; i++) {
+        output[i] = (std::int8_t)(gr::fxpt::sin(d_phase) * ampl);
+        step();
+      }
+    }
+
+    // compute cos for a block of phase angles
+    void cos(std::int8_t *output, int noutput_items, double ampl=1.0)
+    {
+      for(int i = 0; i < noutput_items; i++) {
+        output[i] = (std::int8_t)(gr::fxpt::cos(d_phase) * ampl);
+        step();
+      }
+    }
 
     // compute sin for a block of phase angles
     void sin(short *output, int noutput_items, double ampl=1.0)

@@ -131,6 +131,7 @@ GR_SWIG_BLOCK_MAGIC2(analog, pwr_squelch_cc);
 GR_SWIG_BLOCK_MAGIC2(analog, pwr_squelch_ff);
 GR_SWIG_BLOCK_MAGIC2(analog, quadrature_demod_cf);
 GR_SWIG_BLOCK_MAGIC2(analog, rail_ff);
+GR_SWIG_BLOCK_MAGIC2_TMPL(analog, sig_source_b, sig_source<std::int8_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(analog, sig_source_s, sig_source<std::int16_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(analog, sig_source_i, sig_source<std::int32_t>);
 GR_SWIG_BLOCK_MAGIC2_TMPL(analog, sig_source_f, sig_source<float>);

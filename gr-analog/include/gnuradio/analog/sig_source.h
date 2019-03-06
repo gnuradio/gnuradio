@@ -101,6 +101,7 @@ template<class T>
       virtual void set_phase(float phase) = 0;
     };
 
+    typedef sig_source<std::int8_t> sig_source_b;
     typedef sig_source<std::int16_t> sig_source_s;
     typedef sig_source<std::int32_t> sig_source_i;
     typedef sig_source<float> sig_source_f;
