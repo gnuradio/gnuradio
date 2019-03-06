@@ -119,7 +119,7 @@ class ModToolInfo(ModTool):
                     inc_dirs += line.replace('GNURADIO_RUNTIME_INCLUDE_DIRS:{}='.format(path_or_internal), '').strip().split(';')
         except IOError:
             pass
-        if (not inc_dirs or inc_dirs.isspace) and self._suggested_dirs is not None:
+        if not inc_dirs and self._suggested_dirs is not None:
             inc_dirs = [os.path.normpath(path) for path in self._suggested_dirs.split(':') if os.path.isdir(path)]
         return inc_dirs
 
