@@ -6,10 +6,10 @@ parameters:
 -   id: type
     label: Output Type
     dtype: enum
-    options: [complex, float, int, short]
+    options: [complex, float, int, short, byte]
     option_attributes:
-        fcn: [c, f, i, s]
-        offset_type: [complex, real, int, int]
+        fcn: [c, f, i, s, b]
+        offset_type: [complex, real, int, short, byte]
     hide: part
 -   id: samp_rate
     label: Sample Rate

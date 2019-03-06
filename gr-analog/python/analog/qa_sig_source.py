@@ -58,6 +58,18 @@ class test_sig_source(gr_unittest.TestCase):
         dst_data = dst1.data()
         self.assertEqual(expected_result, dst_data)
 
+    def test_const_b(self):
+        tb = self.tb
+        expected_result = (1, 1, 1, 1)
+        src1 = analog.sig_source_b(1e6, analog.GR_CONST_WAVE, 0, 1)
+        op = blocks.head(gr.sizeof_char, 4)
+        dst1 = blocks.vector_sink_b()
+        tb.connect(src1, op)
+        tb.connect(op, dst1)
+        tb.run()
+        dst_data = dst1.data()
+        self.assertEqual(expected_result, dst_data)
+        
     def test_sine_f(self):
         tb = self.tb
         sqrt2 = math.sqrt(2) / 2

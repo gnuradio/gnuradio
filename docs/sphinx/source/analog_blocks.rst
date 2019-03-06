@@ -37,4 +37,5 @@ gnuradio.analog
 .. autoblock:: gnuradio.analog.sig_source_f
 .. autoblock:: gnuradio.analog.sig_source_i
 .. autoblock:: gnuradio.analog.sig_source_s
+.. autoblock:: gnuradio.analog.sig_source_b
 .. autoblock:: gnuradio.analog.simple_squelch_cc

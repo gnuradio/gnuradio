@@ -287,7 +287,7 @@ void sig_source_impl<T>::set_phase(float phase) {
     d_nco.set_phase(phase);
 }
 
-
+template class sig_source<std::int8_t>;
 template class sig_source<std::int16_t>;
 template class sig_source<std::int32_t>;
 template class sig_source<float>;
