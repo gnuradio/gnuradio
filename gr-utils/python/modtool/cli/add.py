@@ -127,7 +127,7 @@ def get_copyrightholder(self):
 def get_arglist(self):
     """ Get the argument list of the block to be added """
     if self.info['arglist'] is not None:
-        self.info['arglist'] = cli_input('Enter valid argument list, including default arguments: ')
+        self.info['arglist'] = click.prompt(click.style('Enter valid argument list, including default arguments: \n', fg='cyan'), prompt_suffix='')
 
 def get_py_qa(self):
     """ Get a boolean value for addition of py_qa """
