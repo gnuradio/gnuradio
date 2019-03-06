@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -25,16 +25,8 @@ include(GrSwig)
 
 set(GR_SWIG_FLAGS -DGR_HAVE_UHD) #needed to parse uhd_swig.i
 
-set(GR_SWIG_INCLUDE_DIRS
-    ${GR_UHD_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS}
-    ${UHD_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-if(ENABLE_GR_CTRLPORT)
-  list(APPEND GR_SWIG_FLAGS "-DGR_CTRLPORT")
-endif(ENABLE_GR_CTRLPORT)
+set(GR_SWIG_INCLUDE_DIRS $<TARGET_PROPERTY:runtime_swig,INCLUDE_DIRECTORIES>)
+set(GR_SWIG_TARGET_DEPS runtime_swig)
 
 set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/uhd_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include/gnuradio/uhd)

@@ -4,7 +4,6 @@
 #  JACK_FOUND - system has jack
 #  JACK_INCLUDE_DIRS - the jack include directory
 #  JACK_LIBRARIES - Link these to use jack
-#  JACK_DEFINITIONS - Compiler switches required for using jack
 #
 #  Copyright (c) 2008 Andreas Schneider <mail@cynapses.org>
 #  Modified for other libraries by Lasse Kärkkäinen <tronic>
@@ -78,5 +77,13 @@ else (JACK_LIBRARIES AND JACK_INCLUDE_DIRS)
   # show the JACK_INCLUDE_DIRS and JACK_LIBRARIES variables only in the advanced view
   mark_as_advanced(JACK_INCLUDE_DIRS JACK_LIBRARIES)
 
-endif (JACK_LIBRARIES AND JACK_INCLUDE_DIRS)
+  if (JACK_FOUND AND NOT TARGET JACK::JACK)
+    add_library(JACK::JACK INTERFACE IMPORTED)
+    set_target_properties(JACK::JACK PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${JACK_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${JACK_LIBRARIES}"
+      )
+  endif()
 
+
+endif (JACK_LIBRARIES AND JACK_INCLUDE_DIRS)

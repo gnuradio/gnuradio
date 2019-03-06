@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2016,2017 Free Software Foundation, Inc.
+# Copyright (C) 2011-2016,2017,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,30 +18,10 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-    ${GR_DIGITAL_INCLUDE_DIRS}
-    ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GR_ANALOG_INCLUDE_DIRS}
-    ${GR_FFT_INCLUDE_DIRS}
-    ${GR_FILTER_INCLUDE_DIRS}
-    ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${VOLK_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(${Boost_LIBRARY_DIRS})
-
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-endif(ENABLE_GR_CTRLPORT)
-
-########################################################################
 # Setup library
 ########################################################################
-list(APPEND digital_sources
+
+add_library(gnuradio-digital
     additive_scrambler_bb_impl.cc
     binary_slicer_fb_impl.cc
     burst_shaper_impl.cc
@@ -119,7 +99,22 @@ list(APPEND digital_sources
     symbol_sync_cc_impl.cc
     symbol_sync_ff_impl.cc
     timing_error_detector.cc
+    )
+
+target_link_libraries(gnuradio-digital PUBLIC
+    gnuradio-runtime
+    gnuradio-filter
+    gnuradio-blocks
+    gnuradio-analog
+    Boost::boost
+    ${GR_VOLK_LIB}
 )
+
+
+target_include_directories(gnuradio-digital
+  PUBLIC $<INSTALL_INTERFACE:include>
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+  )
 
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
@@ -130,73 +125,20 @@ IF(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc
     @ONLY)
 
-    list(APPEND gr_digital_sources
+    target_sources(gnuradio-digital PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-digital.rc
     )
 ENDIF(MSVC)
 
-list(APPEND digital_libs
-    gnuradio-runtime
-    gnuradio-filter
-    gnuradio-blocks
-    gnuradio-analog
-    ${VOLK_LIBRARIES}
-    ${Boost_LIBRARIES}
-)
-
-add_library(gnuradio-digital SHARED ${digital_sources})
-target_link_libraries(gnuradio-digital ${digital_libs})
-GR_LIBRARY_FOO(gnuradio-digital)
-
-add_dependencies(
-    gnuradio-digital
-    gnuradio-runtime
-    gnuradio-filter
-    gnuradio-analog
-    gnuradio-blocks
-)
-
-if(ENABLE_STATIC_LIBS)
-  if(ENABLE_GR_CTRLPORT)
-    # Remove GR_CTRLPORT set this target's definitions.
-    # Makes sure we don't try to use ControlPort stuff in source files
-    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
-
-    # readd it to the target since we removed it from the directory-wide list.
-    SET_PROPERTY(TARGET gnuradio-digital APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
-  endif(ENABLE_GR_CTRLPORT)
-
-  add_library(gnuradio-digital_static STATIC ${digital_sources})
-
-  add_dependencies(gnuradio-digital_static
-    gnuradio-runtime_static
-    gnuradio-filter_static
-    gnuradio-analog_static
-    gnuradio-blocks_static)
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-digital_static
-      PROPERTIES OUTPUT_NAME gnuradio-digital)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-digital_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
-
+if(BUILD_SHARED_LIBS)
+    GR_LIBRARY_FOO(gnuradio-digital)
+endif()
 
 ########################################################################
 # QA C++ Code for gr-blocks
 ########################################################################
 if(ENABLE_TESTING)
   include(GrTest)
-
-  include_directories(
-    ${GR_DIGITAL_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-  )
 
   list(APPEND test_gr_digital_sources
     qa_header_format.cc

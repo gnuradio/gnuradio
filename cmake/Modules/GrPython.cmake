@@ -1,4 +1,4 @@
-# Copyright 2010-2016 Free Software Foundation, Inc.
+# Copyright 2010-2016,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -52,6 +52,12 @@ endif(CMAKE_CROSSCOMPILING)
 #make the path to the executable appear in the cmake gui
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter for QA tests")
+
+add_library(Python::Python INTERFACE IMPORTED)
+set_target_properties(Python::Python PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS}"
+  INTERFACE_LINK_LIBRARIES "${PYTHON_LIBRARIES}"
+  )
 
 ########################################################################
 # Check for the existence of a python module:
@@ -122,12 +128,15 @@ endfunction(GR_UNIQUE_TARGET)
 ########################################################################
 function(GR_PYTHON_INSTALL)
     include(CMakeParseArgumentsCopy)
-    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS;DIRECTORY" ${ARGN})
+    CMAKE_PARSE_ARGUMENTS(GR_PYTHON_INSTALL "" "DESTINATION" "FILES;PROGRAMS;DIRECTORY;DEPENDS" ${ARGN})
 
     ####################################################################
     if(GR_PYTHON_INSTALL_FILES)
     ####################################################################
-        install(${ARGN}) #installs regular python files
+    install(
+      FILES ${GR_PYTHON_INSTALL_FILES}
+      DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+    )
 
         #create a list of all generated files
         unset(pysrcfiles)
@@ -158,9 +167,14 @@ function(GR_PYTHON_INSTALL)
 
         endforeach(pyfile)
 
+        if(NOT GR_PYTHON_INSTALL_DEPENDS)
+          set(GR_PYTHON_INSTALL_DEPENDS ${pysrcfiles})
+        endif()
+
+
         #the command to generate the pyc files
         add_custom_command(
-            DEPENDS ${pysrcfiles} OUTPUT ${pycfiles}
+            DEPENDS ${GR_PYTHON_INSTALL_DEPENDS} OUTPUT ${pycfiles}
             COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_BINARY_DIR}/python_compile_helper.py ${pysrcfiles} ${pycfiles}
         )
 
@@ -179,7 +193,11 @@ function(GR_PYTHON_INSTALL)
     ####################################################################
     elseif(GR_PYTHON_INSTALL_DIRECTORY)
     ####################################################################
-        install(${ARGN}) #installs regular python files
+    install(
+      DIRECTORY ${GR_PYTHON_INSTALL_DIRECTORY}
+      DESTINATION ${GR_PYTHON_INSTALL_DESTINATION}
+    )
+
 
         # collect all python files in given directories
         # #############################################

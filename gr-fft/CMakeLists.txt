@@ -34,12 +34,7 @@ GR_REGISTER_COMPONENT("gr-fft" ENABLE_GR_FFT
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
     ENABLE_GR_BLOCKS
-    FFTW3F_FOUND
-)
-
-GR_SET_GLOBAL(GR_FFT_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    FFTW3f_FOUND
 )
 
 ########################################################################

@@ -1,4 +1,4 @@
-# Copyright 2010,2013 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,13 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# This file included, use CMake directory variables
-########################################################################
+include(CMakeFindDependencyMacro)
 
-list(APPEND gnuradio_runtime_sources
-  ${CMAKE_CURRENT_SOURCE_DIR}/msg_accepter.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/msg_accepter_msgq.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/msg_producer.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/msg_queue.cc
-)
+set(target_deps "@TARGET_DEPENDENCIES@")
+foreach(dep IN LISTS target_deps)
+    find_dependency(${dep})
+endforeach()
+include("${CMAKE_CURRENT_LIST_DIR}/@TARGET@Targets.cmake")

@@ -84,6 +84,14 @@ if(UHD_LIBRARIES AND UHD_INCLUDE_DIRS)
   find_package_handle_standard_args(UHD DEFAULT_MSG UHD_LIBRARIES UHD_INCLUDE_DIRS)
   mark_as_advanced(UHD_LIBRARIES UHD_INCLUDE_DIRS)
 
+  if (UHD_FOUND AND NOT TARGET UHD::UHD)
+    add_library(UHD::UHD INTERFACE IMPORTED)
+    set_target_properties(UHD::UHD PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${UHD_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${UHD_LIBRARIES}"
+      )
+  endif()
+
 elseif(UHD_FIND_REQUIRED)
   if($ENV{UHD_CONFIG_VERSION_USED} AND NOT $ENV{UHD_CONFIG_USED})
     message(FATAL_ERROR "The found UHD version ($ENV{UHD_PACKAGE_VERSION}) is not compatible with the version required (${UHD_FIND_VERSION}).")

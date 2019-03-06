@@ -1,4 +1,4 @@
-# Copyright 2010-2011 Free Software Foundation, Inc.
+# Copyright 2010-2011,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -111,40 +111,12 @@ macro(GR_SWIG_MAKE name)
         list(APPEND GR_SWIG_DOCS_TARGET_DEPS ${GR_SWIG_TARGET_DEPS})
         GR_SWIG_MAKE_DOCS(${GR_SWIG_DOC_FILE} ${GR_SWIG_DOC_DIRS})
         add_custom_target(${name}_swig_doc DEPENDS ${GR_SWIG_DOC_FILE})
-        list(APPEND GR_SWIG_TARGET_DEPS ${name}_swig_doc ${GR_RUNTIME_SWIG_DOC_FILE})
+        list(APPEND GR_SWIG_TARGET_DEPS ${name}_swig_doc)
     endif()
 
-    #append additional include directories
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_PATH}) #deprecated name (now dirs)
-    list(APPEND GR_SWIG_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-
     #prepend local swig directories
-    list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_SOURCE_DIR})
-    list(INSERT GR_SWIG_INCLUDE_DIRS 0 ${CMAKE_CURRENT_BINARY_DIR})
-
-    #determine include dependencies for swig file
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE}
-            ${CMAKE_BINARY_DIR}/get_swig_deps.py
-            "${ifiles}" "${GR_SWIG_INCLUDE_DIRS}"
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        OUTPUT_VARIABLE SWIG_MODULE_${name}_EXTRA_DEPS
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-    #Create a dummy custom command that depends on other targets
-    include(GrMiscUtils)
-    GR_GEN_TARGET_DEPS(_${name}_swig_tag tag_deps ${GR_SWIG_TARGET_DEPS})
-    set(tag_file ${CMAKE_CURRENT_BINARY_DIR}/${name}.tag)
-    add_custom_command(
-        OUTPUT ${tag_file}
-        DEPENDS ${GR_SWIG_SOURCE_DEPS} ${tag_deps}
-        COMMAND ${CMAKE_COMMAND} -E touch ${tag_file}
-    )
-
-    #append the specified include directories
-    include_directories(${GR_SWIG_INCLUDE_DIRS})
-    list(APPEND SWIG_MODULE_${name}_EXTRA_DEPS ${tag_file})
+    list(INSERT GR_SWIG_INCLUDE_DIRS 0 "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
+    list(INSERT GR_SWIG_INCLUDE_DIRS 0 "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 
     if (PYTHON3)
         set(py3 "-py3")
@@ -158,17 +130,16 @@ macro(GR_SWIG_MAKE name)
 
     #setup the actual swig library target to be built
     include(UseSWIG)
-    SWIG_ADD_MODULE(${name} python ${ifiles})
-    if(APPLE)
-      set(PYTHON_LINK_OPTIONS "-undefined dynamic_lookup")
-    else()
-      set(PYTHON_LINK_OPTIONS ${PYTHON_LIBRARIES})
-    endif(APPLE)
-    SWIG_LINK_LIBRARIES(${name} ${PYTHON_LINK_OPTIONS} ${GR_SWIG_LIBRARIES})
+    swig_add_library(${name} LANGUAGE python SOURCES ${ifiles})
     if(${name} STREQUAL "runtime_swig")
-        SET_TARGET_PROPERTIES(${SWIG_MODULE_runtime_swig_REAL_NAME} PROPERTIES DEFINE_SYMBOL "gnuradio_runtime_EXPORTS")
+      set_target_properties(runtime_swig PROPERTIES DEFINE_SYMBOL "gnuradio_runtime_EXPORTS")
     endif(${name} STREQUAL "runtime_swig")
-
+    set_target_properties(${name} PROPERTIES
+      SWIG_USE_TARGET_INCLUDE_DIRECTORIES TRUE
+      )
+    target_include_directories(${name} PUBLIC ${GR_SWIG_INCLUDE_DIRS})
+    set_property(TARGET ${name} PROPERTY SWIG_DEPENDS ${GR_SWIG_TARGET_DEPS})
+    target_link_libraries(${name} Python::Python ${GR_SWIG_LIBRARIES})
 endmacro(GR_SWIG_MAKE)
 
 ########################################################################
@@ -184,58 +155,16 @@ macro(GR_SWIG_INSTALL)
     CMAKE_PARSE_ARGUMENTS(GR_SWIG_INSTALL "" "DESTINATION" "TARGETS" ${ARGN})
 
     foreach(name ${GR_SWIG_INSTALL_TARGETS})
-        install(TARGETS ${SWIG_MODULE_${name}_REAL_NAME}
-            DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
+      install(TARGETS ${name}
+          DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
         )
 
         include(GrPython)
         GR_PYTHON_INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${name}.py
-            DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
-        )
-
-        GR_LIBTOOL(
-            TARGET ${SWIG_MODULE_${name}_REAL_NAME}
-            DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
+          DESTINATION ${GR_SWIG_INSTALL_DESTINATION}
+          DEPENDS ${name}
         )
 
     endforeach(name)
 
 endmacro(GR_SWIG_INSTALL)
-
-########################################################################
-# Generate a python file that can determine swig dependencies.
-# Used by the make macro above to determine extra dependencies.
-# When you build C++, CMake figures out the header dependencies.
-# This code essentially performs that logic for swig includes.
-########################################################################
-file(WRITE ${CMAKE_BINARY_DIR}/get_swig_deps.py "
-
-import os, sys, re, io
-
-i_include_matcher = re.compile(r'%(include|import)\\s*[<|\"](.*)[>|\"]')
-h_include_matcher = re.compile(r'#(include)\\s*[<|\"](.*)[>|\"]')
-include_dirs = sys.argv[2].split(';')
-
-def get_swig_incs(file_path):
-    if file_path.endswith('.i'): matcher = i_include_matcher
-    else: matcher = h_include_matcher
-    file_contents = io.open(file_path, 'r', encoding='utf-8').read()
-    return matcher.findall(file_contents, re.MULTILINE)
-
-def get_swig_deps(file_path, level):
-    deps = [file_path]
-    if level == 0: return deps
-    for keyword, inc_file in get_swig_incs(file_path):
-        for inc_dir in include_dirs:
-            inc_path = os.path.join(inc_dir, inc_file)
-            if not os.path.exists(inc_path): continue
-            deps.extend(get_swig_deps(inc_path, level-1))
-            break #found, we don't search in lower prio inc dirs
-    return deps
-
-if __name__ == '__main__':
-    ifiles = sys.argv[1].split(';')
-    deps = sum([get_swig_deps(ifile, 3) for ifile in ifiles], [])
-    #sys.stderr.write(';'.join(set(deps)) + '\\n\\n')
-    print(';'.join(set(deps)))
-")

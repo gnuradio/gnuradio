@@ -21,6 +21,14 @@ PKG_CHECK_MODULES(GSL "gsl >= 1.10")
 IF(GSL_FOUND)
     set(GSL_LIBRARY_DIRS ${GSL_LIBDIR})
     set(GSL_INCLUDE_DIRS ${GSL_INCLUDEDIR})
+    if( NOT TARGET gsl::gsl)
+      add_library(gsl::gsl INTERFACE IMPORTED)
+      set_target_properties(gsl::gsl PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${GSL_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${GSL_LIBRARIES}"
+        INTERFACE_COMPILE_DEFINITIONS "${GSL_DEFINITIONS}"
+        )
+    endif( NOT TARGET gsl::gsl)
 ELSE(GSL_FOUND)
 set( GSL_FOUND OFF )
 set( GSL_CBLAS_FOUND OFF )
@@ -130,19 +138,27 @@ else( WIN32 AND NOT CYGWIN AND NOT MSYS )
 		endif( GSL_CONFIG_EXECUTABLE )
 	endif( UNIX OR MSYS )
 endif( WIN32 AND NOT CYGWIN AND NOT MSYS )
+#needed for gsl windows port but safe to always define
+LIST(APPEND GSL_DEFINITIONS "-DGSL_DLL")
 
 if( GSL_FOUND )
   if( NOT GSL_FIND_QUIETLY )
     message( STATUS "FindGSL: Found both GSL headers and library" )
   endif( NOT GSL_FIND_QUIETLY )
+  if( NOT TARGET gsl::gsl)
+    add_library(gsl::gsl INTERFACE IMPORTED)
+    set_target_properties(gsl::gsl PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${GSL_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${GSL_LIBRARIES}"
+      INTERFACE_COMPILE_DEFINITIONS "${GSL_DEFINITIONS}"
+    )
+  endif( NOT TARGET gsl::gsl)
 else( GSL_FOUND )
   if( GSL_FIND_REQUIRED )
     message( FATAL_ERROR "FindGSL: Could not find GSL headers or library" )
   endif( GSL_FIND_REQUIRED )
 endif( GSL_FOUND )
 
-#needed for gsl windows port but safe to always define
-LIST(APPEND GSL_DEFINITIONS "-DGSL_DLL")
 
 ENDIF(GSL_FOUND)
 

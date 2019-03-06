@@ -68,4 +68,11 @@ if(QWT_FOUND)
   include ( FindPackageHandleStandardArgs )
   find_package_handle_standard_args( Qwt DEFAULT_MSG QWT_LIBRARIES QWT_INCLUDE_DIRS )
   MARK_AS_ADVANCED(QWT_LIBRARIES QWT_INCLUDE_DIRS)
+  if (Qwt_FOUND AND NOT TARGET qwt::qwt)
+    add_library(qwt::qwt INTERFACE IMPORTED)
+    set_target_properties(qwt::qwt PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${QWT_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${QWT_LIBRARIES}"
+      )
+  endif()
 endif(QWT_FOUND)

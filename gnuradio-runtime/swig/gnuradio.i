@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004,2009,2012 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2009,2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -37,10 +37,6 @@
 
 ////////////////////////////////////////////////////////////////////////
 // Headers
-
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-%}
 
 %feature("autodoc","1");
 

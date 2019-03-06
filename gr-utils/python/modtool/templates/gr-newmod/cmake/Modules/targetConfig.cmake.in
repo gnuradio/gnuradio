@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,14 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Append all sources in this dir
-########################################################################
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
-list(APPEND gr_vocoder_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/g711.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/g72x.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/g721.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/g723_24.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/g723_40.c
-)
+include(CMakeFindDependencyMacro)
+
+set(target_deps "@TARGET_DEPENDENCIES@")
+foreach(dep IN LISTS target_deps)
+    find_dependency(${dep})
+endforeach()
+include("${CMAKE_CURRENT_LIST_DIR}/@TARGET@Targets.cmake")

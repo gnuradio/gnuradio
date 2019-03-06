@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -43,23 +43,9 @@ GR_REGISTER_COMPONENT("gnuradio-runtime" ENABLE_GNURADIO_RUNTIME
     LOG4CPP_FOUND
 )
 
-GR_SET_GLOBAL(GNURADIO_RUNTIME_INCLUDE_DIRS
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/include
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/include
-    ${LOG4CPP_INCLUDE_DIRS}
-)
-
-GR_SET_GLOBAL(GNURADIO_RUNTIME_SWIG_INCLUDE_DIRS
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/gnuradio-runtime/swig
-    ${CMAKE_BINARY_DIR}/gnuradio-runtime/swig
-)
-
 get_filename_component(GNURADIO_RUNTIME_PYTHONPATH
     ${CMAKE_SOURCE_DIR}/python ABSOLUTE
 )
-GR_SET_GLOBAL(GNURADIO_RUNTIME_PYTHONPATH ${GNURADIO_RUNTIME_PYTHONPATH})
 
 ########################################################################
 # Register controlport component
@@ -82,7 +68,6 @@ if(ENABLE_GNURADIO_RUNTIME)
 get_filename_component(GR_RUNTIME_PYTHONPATH
     ${CMAKE_CURRENT_SOURCE_DIR}/python ABSOLUTE
 )
-GR_SET_GLOBAL(GR_RUNTIME_PYTHONPATH ${GR_RUNTIME_PYTHONPATH})
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/gnuradio-runtime.conf.in

@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -35,11 +35,6 @@ GR_REGISTER_COMPONENT("gr-wavelet" ENABLE_GR_WAVELET
     ENABLE_GR_BLOCKS
     ENABLE_GR_ANALOG
     GSL_FOUND
-)
-
-GR_SET_GLOBAL(GR_WAVELET_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 ########################################################################
