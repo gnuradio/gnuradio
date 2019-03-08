@@ -141,9 +141,7 @@ add_subdirectory(apps)
 add_subdirectory(docs)
 add_subdirectory(swig)
 add_subdirectory(python)
-if(ENABLE_GRC)
-    add_subdirectory(grc)
-endif(ENABLE_GRC)
+add_subdirectory(grc)
 
 ########################################################################
 # Install cmake search helper for this library
