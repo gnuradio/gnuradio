@@ -22,8 +22,8 @@
 # Check if there is C++ code at all
 ########################################################################
 if(NOT howto_sources)
-	MESSAGE(STATUS "No C++ sources... skipping swig/")
-	return()
+    MESSAGE(STATUS "No C++ sources... skipping swig/")
+    return()
 endif(NOT howto_sources)
 
 ########################################################################
