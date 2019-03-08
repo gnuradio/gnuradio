@@ -434,7 +434,7 @@ function(SWIG_ADD_SOURCE_TO_MODULE name outfiles infile)
     MAIN_DEPENDENCY "${swig_source_file_fullname}"
     DEPENDS ${swig_dependencies}
     IMPLICIT_DEPENDS CXX "${swig_source_file_fullname}"
-    COMMENT "Swig source"
+    COMMENT "Swig source ${infile}"
     COMMAND_EXPAND_LISTS)
   set_source_files_properties("${swig_generated_file_fullname}" ${swig_extra_generated_files}
     PROPERTIES GENERATED 1)
