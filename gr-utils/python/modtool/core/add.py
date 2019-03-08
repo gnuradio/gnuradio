@@ -199,7 +199,7 @@ class ModToolAdd(ModTool):
             self._write_tpl('block_h36',   self.info['includedir'], fname_h)
             self._write_tpl('block_cpp36', 'lib',                    fname_cc)
         if self.add_cc_qa:
-            if self.info['version'] == '37':
+            if self.info['version'] in ('37', '38') :
                 self._run_cc_qa()
             elif self.info['version'] == '36':
                 logger.warning("Warning: C++ QA files not supported for 3.6-style OOTs.")
