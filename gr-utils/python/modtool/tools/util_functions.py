@@ -1,5 +1,5 @@
 #
-# Copyright 2013, 2018 Free Software Foundation, Inc.
+# Copyright 2013, 2018, 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -57,15 +57,32 @@ def remove_pattern_from_file(filename, pattern):
 def str_to_fancyc_comment(text):
     """ Return a string as a C formatted comment. """
     l_lines = text.splitlines()
-    outstr = "/* " + l_lines[0] + "\n"
+    if len(l_lines[0]) == 0:
+        outstr = "/*\n"
+    else:
+        outstr = "/* " + l_lines[0] + "\n"
     for line in l_lines[1:]:
-        outstr += " * " + line + "\n"
+        if len(line) == 0:
+            outstr += " *\n"
+        else:
+            outstr += " * " + line + "\n"
     outstr += " */\n"
     return outstr
 
 def str_to_python_comment(text):
     """ Return a string as a Python formatted comment. """
-    return re.compile('^', re.MULTILINE).sub('# ', text)
+    l_lines = text.splitlines()
+    if len(l_lines[0]) == 0:
+        outstr = "#\n"
+    else:
+        outstr = "# " + l_lines[0] + "\n"
+    for line in l_lines[1:]:
+        if len(line) == 0:
+            outstr += "#\n"
+        else:
+            outstr += "# " + line + "\n"
+    outstr += "#\n"
+    return outstr
 
 def strip_default_values(string):
     """ Strip default values from a C++ argument list. """
