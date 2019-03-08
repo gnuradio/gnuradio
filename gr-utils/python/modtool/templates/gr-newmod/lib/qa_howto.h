@@ -27,12 +27,12 @@
 #include <gnuradio/attributes.h>
 #include <cppunit/TestSuite.h>
 
-//! collect all the tests for the gr-filter directory
+//! collect all the tests for the gr-howto directory
 
 class __GR_ATTR_EXPORT qa_howto
 {
  public:
-  //! return suite of tests for all of gr-filter directory
+  //! return suite of tests for all of gr-howto directory
   static CppUnit::TestSuite *suite();
 };
 
