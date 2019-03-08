@@ -39,10 +39,47 @@ include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-pmtTargets.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-runtimeTargets.cmake")
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0057 NEW)
+
+#Can't use Python if GNU Radio was built without support for it
+set(ENABLE_PYTHON @ENABLE_PYTHON@)
 if(@ENABLE_PYTHON@)
-include("${CMAKE_CURRENT_LIST_DIR}/runtime_swigTargets.cmake")
+  include("${CMAKE_CURRENT_LIST_DIR}/runtime_swigTargets.cmake")
+  set(PYTHON_EXECUTABLE @PYTHON_EXECUTABLE@)
+  set(GR_PYTHON_DIR @GR_PYTHON_DIR@)
 endif()
 
+# Propagate the enabledness of GRC:
+# Since GRC doesn't contain proper CMake targets (yet?), we need to do this
+# manually
+set(GR_ENABLE_GRC @GR_ENABLE_GRC@)
+if(@GR_ENABLE_GRC@)
+  set(GRC_BLOCKS_DIR        "@GRC_BLOCKS_DIR@")
+endif()
+# Same for a few "special" features.
+set(GR_PERFORMANCE_COUNTERS @GR_PERFORMANCE_COUNTERS@)
+set(GR_CTRLPORT             @GR_CTRLPORT@)
+set(GR_RPCSERVER_ENABLED    @GR_RPCSERVER_ENABLED@)
+set(ENABLE_CTRLPORT_THRIFT  @ENABLE_CTRLPORT_THRIFT@)
+set(THRIFT_FOUND            @THRIFT_FOUND@)
+set(GR_RPCSERVER_THRIFT     @GR_RPCSERVER_THRIFT@)
+
+# Propagate global options
+set(GR_RUNTIME_DIR          "@GR_RUNTIME_DIR@")
+set(GR_LIBRARY_DIR          "@GR_LIBRARY_DIR@")
+set(GR_DATA_DIR             "@GR_DATA_DIR@")
+set(GR_PKG_DATA_DIR         "@GR_PKG_DATA_DIR@")
+set(GR_DOC_DIR              "@GR_DOC_DIR@")
+set(GR_PKG_DOC_DIR          "@GR_PKG_DOC_DIR@")
+set(GR_LIBEXEC_DIR          "@GR_LIBEXEC_DIR@")
+set(GR_PKG_LIBEXEC_DIR      "@GR_PKG_LIBEXEC_DIR@")
+set(GR_THEMES_DIR           "@GR_THEMES_DIR@")
+set(GR_CONF_DIR             "@GR_CONF_DIR@")
+set(SYSCONFDIR              "@SYSCONFDIR@")
+set(GR_PREFSDIR             "@GR_PREFSDIR@")
+
+
+# We check the requested components in the order given by the list below –
+# ordering matters; we have module interdependencies.
 set(GR_COMPONENTS
   blocks
   fec
