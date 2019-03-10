@@ -142,6 +142,7 @@ if(ENABLE_CTRLPORT_THRIFT)
 FIND_PACKAGE(THRIFT)
 
 if(THRIFT_FOUND)
+list(APPEND EXTRA_DEPS "THRIFT")
 MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
 
 # Indicate thrift as an installed backend in the cmake summary.

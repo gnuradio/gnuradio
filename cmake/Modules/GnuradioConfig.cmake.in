@@ -35,8 +35,8 @@ find_dependency(Boost "@Boost_MAJOR_VERSION@.@Boost_MINOR_VERSION@.@Boost_SUBMIN
     )
 find_dependency(Volk)
 
-include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-pmtTargets.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-runtimeTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-pmtConfig.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/gnuradio-runtimeConfig.cmake")
 cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0057 NEW)
 
@@ -62,9 +62,6 @@ set(GR_RPCSERVER_ENABLED    @GR_RPCSERVER_ENABLED@)
 set(ENABLE_CTRLPORT_THRIFT  @ENABLE_CTRLPORT_THRIFT@)
 set(THRIFT_FOUND            @THRIFT_FOUND@)
 set(GR_RPCSERVER_THRIFT     @GR_RPCSERVER_THRIFT@)
-if(@THRIFT_FOUND@)
-  find_package(THRIFT)
-endif()
 
 # Propagate global options
 set(GR_RUNTIME_DIR          "@GR_RUNTIME_DIR@")
