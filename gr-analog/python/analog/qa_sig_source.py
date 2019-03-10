@@ -97,7 +97,7 @@ class test_sig_source(gr_unittest.TestCase):
         tb.connect(op, dst1)
         tb.run()
         dst_data = dst1.data()
-        self.assertEqual(expected_result, dst_data)        
+        self.assertFloatTuplesAlmostEqual(expected_result, dst_data)        
 
     def test_cosine_f(self):
         tb = self.tb
