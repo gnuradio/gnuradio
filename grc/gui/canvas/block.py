@@ -345,7 +345,7 @@ class Block(CoreBlock, Drawable):
         Returns:
             true for change
         """
-        type_templates = ' '.join(p._type for p in self.params.values())
+        type_templates = ' '.join(p.dtype for p in self.params.values()) + ' '
         type_templates += ' '.join(p.get_raw('dtype') for p in (self.sinks + self.sources))
         type_param = None
         for key, param in six.iteritems(self.params):

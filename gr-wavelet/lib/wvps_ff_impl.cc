@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2010,2012 Free Software Foundation, Inc.
+ * Copyright 2004,2010,2012,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <wvps_ff_impl.h>
+#include "wvps_ff_impl.h"
 #include <gnuradio/io_signature.h>
 #include <string.h>
 

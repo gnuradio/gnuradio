@@ -66,7 +66,7 @@ def convert_flow_graph_xml(node):
     connections = [
         convert_connection(connection)
         for connection in node.findall('connection')
-        ]
+    ]
 
     flow_graph = OrderedDict()
     flow_graph['options'] = options

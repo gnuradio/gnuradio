@@ -35,14 +35,6 @@ GR_REGISTER_COMPONENT("gr-filter" ENABLE_GR_FILTER
     ENABLE_GR_BLOCKS
 )
 
-GR_SET_GLOBAL(GR_FILTER_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/lib
-    ${CMAKE_CURRENT_BINARY_DIR}/include
-    ${GR_FFT_INCLUDE_DIRS}
-)
-
 SET(GR_PKG_FILTER_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/filter)
 
 ########################################################################

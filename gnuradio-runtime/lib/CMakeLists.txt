@@ -1,4 +1,4 @@
-# Copyright 2013 Free Software Foundation, Inc.
+# Copyright 2013,2018 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,7 +18,7 @@
 # Boston, MA 02110-1301, USA.
 
 include(GrMiscUtils)
-GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
+gr_check_hdr_n_def(sys/resource.h HAVE_SYS_RESOURCE_H)
 
 ########################################################################
 # Handle the generated constants
@@ -35,43 +35,23 @@ string(REPLACE "\\" "\\\\" prefix "${prefix}")
 string(REPLACE "\\" "\\\\" SYSCONFDIR "${SYSCONFDIR}")
 string(REPLACE "\\" "\\\\" GR_PREFSDIR "${GR_PREFSDIR}")
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
-    ESCAPE_QUOTES
-@ONLY)
 
-list(APPEND gnuradio_runtime_sources ${CMAKE_CURRENT_BINARY_DIR}/constants.cc)
-
-########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(${GNURADIO_RUNTIME_INCLUDE_DIRS}
-                    ${CMAKE_CURRENT_SOURCE_DIR}
-            ${VOLK_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS}
-                    ${MPLIB_INCLUDE_DIRS}
-)
-
-if(ENABLE_CTRLPORT_THRIFT)
-    list(APPEND include_directories
-        ${THRIFT_INCLUDE_DIRS}
-    )
-endif(ENABLE_CTRLPORT_THRIFT)
-
-########################################################################
+#########################################################################
 # Include subdirs rather to populate to the sources lists.
 ########################################################################
 add_subdirectory(pmt)
-GR_INCLUDE_SUBDIRECTORY(messages)
-GR_INCLUDE_SUBDIRECTORY(thread)
-GR_INCLUDE_SUBDIRECTORY(math)
-GR_INCLUDE_SUBDIRECTORY(controlport)
 
 ########################################################################
 # Setup library
 ########################################################################
-list(APPEND gnuradio_runtime_sources
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/constants.cc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
+    ESCAPE_QUOTES
+    @ONLY)
+
+add_library(gnuradio-runtime
+  ${CMAKE_CURRENT_BINARY_DIR}/constants.cc
   basic_block.cc
   block.cc
   block_detail.cc
@@ -117,28 +97,145 @@ list(APPEND gnuradio_runtime_sources
   vmcircbuf_mmap_tmpfile.cc
   vmcircbuf_prefs.cc
   vmcircbuf_sysv_shm.cc
-  ${gnuradio_ctrlport_sources}
+  )
+
+# Messages
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_accepter_msgq.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_producer.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/messages/msg_queue.cc
+  )
+
+# Thread
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread_body_wrapper.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/thread/thread_group.cc
+  )
+
+# Math
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/math/fast_atan2f.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/math/fxpt.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/math/random.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/math/sincos.cc
+  )
+
+# Controlport
+if(ENABLE_GR_CTRLPORT)
+
+# Keep track of the number of backends ControlPort supports
+SET(CTRLPORT_BACKENDS 0)
+
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcmanager.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_aggregator.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_booter_aggregator.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/rpcserver_selector.cc
 )
 
-list(APPEND gnuradio_runtime_libs
-    gnuradio-pmt
-    ${VOLK_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${LOG4CPP_LIBRARIES}
-    ${MPLIB_LIBRARIES}
+OPTION(ENABLE_CTRLPORT_THRIFT "Enable ControlPort Thrift support" ON)
+
+if(ENABLE_CTRLPORT_THRIFT)
+# Look if Thrift is installed and use it as a ControlPort backend.
+FIND_PACKAGE(THRIFT)
+
+if(THRIFT_FOUND)
+MATH(EXPR CTRLPORT_BACKENDS "${CTRLPORT_BACKENDS} + 1")
+
+# Indicate thrift as an installed backend in the cmake summary.
+message(STATUS "Found and enabling Thrift backend to ControlPort")
+GR_APPEND_SUBCOMPONENT("thrift")
+
+# Run Thrift To compile C++ and Python files
+message(STATUS "Running thrift to build C++ bindings")
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/)
+
+list(APPEND gnuradio_thrift_generated_sources
+  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_types.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/gnuradio_constants.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ControlPort.cpp
+  )
+add_custom_command(
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
+  OUTPUT ${gnuradio_thrift_generated_sources}
+  COMMAND ${THRIFT_BIN} --gen cpp -out ${CMAKE_CURRENT_BINARY_DIR}/controlport/thrift/ ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/gnuradio.thrift
+  )
+
+target_include_directories(gnuradio-runtime PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/controlport>)
+
+target_sources(gnuradio-runtime PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcpmtconverters_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/rpcserver_booter_thrift.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift_application_base.cc
+  # add files built by compiling gnuradio.thrift
+  ${gnuradio_thrift_generated_sources}
+  )
+target_link_libraries(gnuradio-runtime PUBLIC
+  Thrift::thrift
+  )
+
+# Add install rule to move example Thrift configuration file into a
+# documentation directory
+install(
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/controlport/thrift/thrift.conf.example
+  DESTINATION ${GR_PKG_DOC_DIR}/config
 )
+
+endif(THRIFT_FOUND)
+endif(ENABLE_CTRLPORT_THRIFT)
+
+########################################################################
+# Add controlport stuff to gnuradio-runtime
+########################################################################
+
+# Save the number of backends for testing against later
+set(
+  CTRLPORT_BACKENDS ${CTRLPORT_BACKENDS}
+  CACHE INTERNAL "Number of ControlPort backends available"
+)
+
+endif(ENABLE_GR_CTRLPORT)
+
+target_link_libraries(gnuradio-runtime PUBLIC
+  gnuradio-pmt
+  ${GR_VOLK_LIB}
+  Boost::program_options
+  Boost::filesystem
+  Boost::system
+  Boost::regex
+  Boost::thread
+  Log4Cpp::log4cpp
+  MPLib::mplib
+  )
+
+target_include_directories(gnuradio-runtime
+  PUBLIC
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
+  if(ENABLE_GR_CTRLPORT)
+    target_compile_definitions(gnuradio-runtime PUBLIC GR_CTRLPORT)
+  endif()
+
 
 #Add libraries for winsock2.h on Windows
-CHECK_INCLUDE_FILE_CXX(windows.h HAVE_WINDOWS_H)
-IF(HAVE_WINDOWS_H)
-    ADD_DEFINITIONS(-DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
-    MESSAGE(STATUS "Adding windows libs to gnuradio runtime libs...")
-    LIST(APPEND gnuradio_runtime_libs ws2_32 wsock32)
-ENDIF(HAVE_WINDOWS_H)
+check_include_file_cxx(windows.h HAVE_WINDOWS_H)
+if(HAVE_WINDOWS_H)
+    target_compile_definitions(gnuradio-runtime PUBLIC -DHAVE_WINDOWS_H -DUSING_WINSOCK -DWIN32_LEAN_AND_MEAN)
+    message(STATUS "Adding windows libs to gnuradio runtime libs...")
+    target_link_libraries(gnuradio-runtime PUBLIC ws2_32 wsock32)
+endif(HAVE_WINDOWS_H)
 
 #need to link with librt on ubuntu 11.10 for shm_*
 if((LINUX) OR (CMAKE_SYSTEM_NAME STREQUAL "kFreeBSD"))
-    list(APPEND gnuradio_runtime_libs rt)
+    target_link_libraries(gnuradio-runtime PUBLIC rt)
 endif()
 
 ########################################################################
@@ -153,7 +250,7 @@ if(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
     @ONLY)
 
-    list(APPEND gnuradio_runtime_sources
+    target_sources(gnuradio-runtime PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-runtime.rc
     )
 endif(MSVC)
@@ -170,59 +267,25 @@ endif(MSVC)
 ########################################################################
 
 if(WIN32)
-    OPTION(TRY_SHM_VMCIRCBUF "Try SHM VMCIRCBUF" OFF)
+    option(TRY_SHM_VMCIRCBUF "Try SHM VMCIRCBUF" OFF)
 else(WIN32)
-    OPTION(TRY_SHM_VMCIRCBUF "Try SHM VMCIRCBUF" ON)
+    option(TRY_SHM_VMCIRCBUF "Try SHM VMCIRCBUF" ON)
 endif(WIN32)
 
 message(STATUS "TRY_SHM_VMCIRCBUF set to ${TRY_SHM_VMCIRCBUF}.")
 
 if(TRY_SHM_VMCIRCBUF)
-    add_definitions( -DTRY_SHM_VMCIRCBUF )
+    target_compile_definitions(gnuradio-runtime PRIVATE -DTRY_SHM_VMCIRCBUF )
 endif(TRY_SHM_VMCIRCBUF)
 
+set(EXTRA_DEPS "")
+if(ENABLE_CTRLPORT_THRIFT)
+  if(THRIFT_FOUND)
+    list(APPEND EXTRA_DEPS THRIFT)
+  endif()
+endif()
+gr_library_foo(gnuradio-runtime ${EXTRA_DEPS})
 
-#######################################################
-# SHARED LIB BUILD
-#######################################################
-add_library(gnuradio-runtime SHARED ${gnuradio_runtime_sources})
-target_link_libraries(gnuradio-runtime ${gnuradio_runtime_libs})
-GR_LIBRARY_FOO(gnuradio-runtime)
-
-#######################################################
-# STATIC LIB BUILD
-#######################################################
-if(ENABLE_STATIC_LIBS)
-  # Remove controlport-specific source files from staticlibs build if
-  # ICE is the backend since it does not build statically.
-  if(ENABLE_GR_CTRLPORT)
-    if(ICE_FOUND)
-      list(REMOVE_ITEM gnuradio_runtime_sources
-        ${gnuradio_ctrlport_sources}
-        )
-
-      # Remove GR_CTRLPORT set this target's definitions.
-      # Makes sure we don't try to use ControlPort stuff in source files
-      GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-      list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-      SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
-
-      # readd it to the target since we removed it from the directory-wide list.
-      SET_PROPERTY(TARGET gnuradio-runtime APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
-    endif(ICE_FOUND)
-  endif(ENABLE_GR_CTRLPORT)
-
-  add_library(gnuradio-runtime_static STATIC ${gnuradio_runtime_sources})
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-runtime_static
-      PROPERTIES OUTPUT_NAME gnuradio-runtime)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-runtime_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
 
 ########################################################################
 # Setup tests
@@ -241,13 +304,13 @@ if(ENABLE_TESTING)
   list(APPEND GR_TEST_TARGET_DEPS gnuradio-runtime gnuradio-pmt)
 
   foreach(qa_file ${test_gnuradio_runtime_sources})
-    GR_ADD_CPP_TEST("runtime_${qa_file}"
+    gr_add_cpp_test("runtime_${qa_file}"
       ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
-    )
+      )
+
   endforeach(qa_file)
 
   # Math tests:
-  include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/math)
   list(APPEND test_gnuradio_math_sources
     qa_fxpt.cc
     qa_fxpt_nco.cc
@@ -258,14 +321,18 @@ if(ENABLE_TESTING)
   )
 
   foreach(qa_file ${test_gnuradio_math_sources})
-    GR_ADD_CPP_TEST("math_${qa_file}"
+    gr_add_cpp_test("math_${qa_file}"
       ${CMAKE_CURRENT_SOURCE_DIR}/math/${qa_file}
-    )
+      )
+    target_include_directories("math_${qa_file}"
+      PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/math
+      )
   endforeach(qa_file)
 
   # PMT tests:
-  include_directories(${CMAKE_CURRENT_BINARY_DIR}/pmt)
-  GR_ADD_CPP_TEST("pmt_prims" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_prims.cc)
-  GR_ADD_CPP_TEST("pmt_unv" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_unv.cc)
+  gr_add_cpp_test("pmt_prims" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_prims.cc)
+  gr_add_cpp_test("pmt_unv" ${CMAKE_CURRENT_SOURCE_DIR}/pmt/qa_pmt_unv.cc)
+  target_include_directories("pmt_prims" PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/pmt)
+  target_include_directories("pmt_unv" PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/pmt)
 
 endif(ENABLE_TESTING)

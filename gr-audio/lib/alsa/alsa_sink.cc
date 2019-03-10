@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include "audio_registry.h"
-#include <alsa_sink.h>
-#include <alsa_impl.h>
+#include "../audio_registry.h"
+#include "alsa_sink.h"
+#include "alsa_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/prefs.h>
 #include <stdio.h>

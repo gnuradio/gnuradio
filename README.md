@@ -100,6 +100,30 @@ Abbreviated instructions are duplicated below.
     and a `"Release"` type that builds with `-O3`, which is the default.
 
 
+### PyBOMBS with support of python 3.x
+PyBOMBS currently builds GNU Radio with support of python 2.7, so to make it work with python 3.x, instructions are given below.
+
+1. Change the PYTHONPATH line in setup_env.sh, to just 3.x paths.
+
+
+2.  Find the PyBOMBS recipe "gnuradio.lwr" in .pybombs directory, check this for reference
+    ```
+    https://github.com/gnuradio/gr-recipes/blob/master/gnuradio.lwr
+    ```
+
+
+3. Change the "gitbranch" to "master".
+
+
+4. In gnuradio.lwr recipe file, add "-DENABLE_CTRLPORT_THRIFT=OFF" in "config_opt".
+
+
+5. Clear out your prior GR PyBOMBS build(s) and tell PyBOMBS to install via this recipe.
+    ```
+    pybombs install gnuradio
+    ```
+
+
 ## Legal Matters
 
 Some files have been changed many times throughout the years. Copyright 

@@ -65,6 +65,22 @@ class Param(Element):
         self._lisitify_flag = False
         self.hostage_cells = set()
         self._init = False
+        self.scale = {
+            'E': 1e18,
+            'P': 1e15,
+            'T': 1e12,
+            'G': 1e9,
+            'M': 1e6,
+            'k': 1e3,
+            'm': 1e-3,
+            'u': 1e-6,
+            'n': 1e-9,
+            'p': 1e-12,
+            'f': 1e-15,
+            'a': 1e-18,
+        }
+        self.scale_factor = None
+        self.number = None
 
     def _init_options(self, values, labels, attributes):
         """parse option and option attributes"""
@@ -162,6 +178,19 @@ class Param(Element):
     def get_evaluated(self):
         return self._evaluated
 
+    def is_float(self, num):
+        """
+        Check if string can be converted to float.
+
+        Returns:
+            bool type
+        """
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
+
     def evaluate(self):
         """
         Evaluate the value.
@@ -174,6 +203,7 @@ class Param(Element):
         self._stringify_flag = False
         dtype = self.dtype
         expr = self.get_value()
+        scale_factor = self.scale_factor
 
         #########################
         # ID and Enum types (not evaled)
@@ -191,6 +221,10 @@ class Param(Element):
         elif dtype in ('raw', 'complex', 'real', 'float', 'int', 'hex', 'bool'):
             if expr:
                 try:
+                    if isinstance(expr, str) and self.is_float(expr[:-1]):
+                            scale_factor = expr[-1:]
+                            if scale_factor in self.scale:
+                                expr = str(float(expr[:-1])*self.scale[scale_factor])
                     value = self.parent_flowgraph.evaluate(expr)
                 except Exception as e:
                     raise Exception('Value "{}" cannot be evaluated:\n{}'.format(expr, e))

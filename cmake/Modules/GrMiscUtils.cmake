@@ -1,4 +1,4 @@
-# Copyright 2010-2011,2014 Free Software Foundation, Inc.
+# Copyright 2010-2011,2014,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,14 +22,6 @@ if(DEFINED __INCLUDED_GR_MISC_UTILS_CMAKE)
 endif()
 set(__INCLUDED_GR_MISC_UTILS_CMAKE TRUE)
 
-########################################################################
-# Set global variable macro.
-# Used for subdirectories to export settings.
-# Example: include and library paths.
-########################################################################
-function(GR_SET_GLOBAL var)
-    set(${var} ${ARGN} CACHE INTERNAL "" FORCE)
-endfunction(GR_SET_GLOBAL)
 
 ########################################################################
 # Set the pre-processor definition if the condition is true.
@@ -53,39 +45,6 @@ function(GR_CHECK_HDR_N_DEF hdr def)
 endfunction(GR_CHECK_HDR_N_DEF)
 
 ########################################################################
-# Include subdirectory macro.
-# Sets the CMake directory variables,
-# includes the subdirectory CMakeLists.txt,
-# resets the CMake directory variables.
-#
-# This macro includes subdirectories rather than adding them
-# so that the subdirectory can affect variables in the level above.
-# This provides a work-around for the lack of convenience libraries.
-# This way a subdirectory can append to the list of library sources.
-########################################################################
-macro(GR_INCLUDE_SUBDIRECTORY subdir)
-    #insert the current directories on the front of the list
-    list(INSERT _cmake_source_dirs 0 ${CMAKE_CURRENT_SOURCE_DIR})
-    list(INSERT _cmake_binary_dirs 0 ${CMAKE_CURRENT_BINARY_DIR})
-
-    #set the current directories to the names of the subdirs
-    set(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${subdir})
-    set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/${subdir})
-
-    #include the subdirectory CMakeLists to run it
-    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-    include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt)
-
-    #reset the value of the current directories
-    list(GET _cmake_source_dirs 0 CMAKE_CURRENT_SOURCE_DIR)
-    list(GET _cmake_binary_dirs 0 CMAKE_CURRENT_BINARY_DIR)
-
-    #pop the subdir names of the front of the list
-    list(REMOVE_AT _cmake_source_dirs 0)
-    list(REMOVE_AT _cmake_binary_dirs 0)
-endmacro(GR_INCLUDE_SUBDIRECTORY)
-
-########################################################################
 # Check if a compiler flag works and conditionally set a compile define.
 #  - flag the compiler flag to check for
 #  - have the variable to set with result
@@ -105,29 +64,6 @@ macro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
 endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 
 ########################################################################
-# Generates the .la libtool file
-# This appears to generate libtool files that cannot be used by auto*.
-# Usage GR_LIBTOOL(TARGET [target] DESTINATION [dest])
-########################################################################
-function(GR_LIBTOOL)
-    if(NOT DEFINED GENERATE_LIBTOOL)
-        set(GENERATE_LIBTOOL OFF) #disabled by default
-    endif()
-
-    if(GENERATE_LIBTOOL)
-        include(CMakeParseArgumentsCopy)
-        CMAKE_PARSE_ARGUMENTS(GR_LIBTOOL "" "TARGET;DESTINATION" "" ${ARGN})
-
-        find_program(LIBTOOL libtool)
-        if(LIBTOOL)
-            include(CMakeMacroLibtoolFile)
-            CREATE_LIBTOOL_FILE(${GR_LIBTOOL_TARGET} /${GR_LIBTOOL_DESTINATION})
-        endif(LIBTOOL)
-    endif(GENERATE_LIBTOOL)
-
-endfunction(GR_LIBTOOL)
-
-########################################################################
 # Do standard things to the library target
 # - set target properties
 # - make install rules
@@ -139,10 +75,32 @@ function(GR_LIBRARY_FOO target)
 
     #install the generated files like so...
     install(TARGETS ${target}
+        EXPORT ${target}-export
         LIBRARY DESTINATION ${GR_LIBRARY_DIR} # .so/.dylib file
         ARCHIVE DESTINATION ${GR_LIBRARY_DIR} # .lib file
         RUNTIME DESTINATION ${GR_RUNTIME_DIR} # .dll file
-    )
+        )
+
+    #install the exported target files
+    install(EXPORT ${target}-export
+      FILE ${target}Targets.cmake
+      NAMESPACE gnuradio::
+      DESTINATION ${GR_CMAKE_DIR}
+      )
+
+    include(CMakePackageConfigHelpers)
+    set(TARGET ${target})
+    set(TARGET_DEPENDENCIES ${ARGN})
+
+    configure_package_config_file(
+      ${PROJECT_SOURCE_DIR}/cmake/Modules/targetConfig.cmake.in
+      ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
+      INSTALL_DESTINATION ${GR_CMAKE_DIR}
+      )
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/Modules/${target}Config.cmake
+      DESTINATION ${GR_CMAKE_DIR}
+      )
 
     #extras mode enabled automatically on linux
     if(NOT DEFINED LIBRARY_EXTRAS)
@@ -151,9 +109,6 @@ function(GR_LIBRARY_FOO target)
 
     #special extras mode to enable alternative naming conventions
     if(LIBRARY_EXTRAS)
-
-        #create .la file before changing props
-        GR_LIBTOOL(TARGET ${target} DESTINATION ${GR_LIBRARY_DIR})
 
         #give the library a special name with ultra-zero soversion
         set_target_properties(${target} PROPERTIES OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")

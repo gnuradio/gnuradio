@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <alsa/alsa_impl.h>
+#include "alsa_impl.h"
 #include <algorithm>
 
 static snd_pcm_access_t access_types[] = {

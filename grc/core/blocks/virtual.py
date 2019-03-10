@@ -20,7 +20,8 @@ from __future__ import absolute_import
 import itertools
 
 from . import Block, register_build_in
-from ._build import _build_params, _build_ports
+from ._build import build_params
+
 
 @register_build_in
 class VirtualSink(Block):
@@ -28,25 +29,14 @@ class VirtualSink(Block):
 
     key = 'virtual_sink'
     label = 'Virtual Sink'
-    documentation = {'': ''}
 
-    parameters = [dict(
-        label='Stream ID',
-        id='stream_id',
-        dtype='stream_id',
-    )]
-    inputs = [dict(
-        domain='stream',
-        dtype=''
-    )]
-    outputs = []
+    parameters_data = build_params(
+        params_raw=[dict(label='Stream ID', id='stream_id', dtype='stream_id')],
+        have_inputs=False, have_outputs=False, flags=Block.flags, block_id=key
+    )
+    inputs_data = [dict(domain='stream', dtype='', direction='sink', id="0")]
 
     def __init__(self, parent, **kwargs):
-        self.inputs_data = _build_ports(self.inputs, 'sink') if self.inputs else []
-        self.outputs_data = _build_ports(self.outputs, 'source') if self.outputs else []
-        self.parameters_data = _build_params(self.parameters or [],
-                                bool(self.inputs), bool(self.outputs), self.flags, self.key)
-
         super(VirtualSink, self).__init__(parent, **kwargs)
         self.params['id'].hide = 'all'
 
@@ -61,25 +51,14 @@ class VirtualSource(Block):
 
     key = 'virtual_source'
     label = 'Virtual Source'
-    documentation = {'': ''}
 
-    parameters = [dict(
-        label='Stream ID',
-        id='stream_id',
-        dtype='stream_id',
-    )]
-    outputs = [dict(
-        domain='stream',
-        dtype=''
-    )]
-    inputs = []
+    parameters_data = build_params(
+        params_raw=[dict(label='Stream ID', id='stream_id', dtype='stream_id')],
+        have_inputs=False, have_outputs=False, flags=Block.flags, block_id=key
+    )
+    outputs_data = [dict(domain='stream', dtype='', direction='source', id="0")]
 
     def __init__(self, parent, **kwargs):
-        self.inputs_data = _build_ports(self.inputs, 'sink') if self.inputs else []
-        self.outputs_data = _build_ports(self.outputs, 'source') if self.outputs else []
-        self.parameters_data = _build_params(self.parameters or [],
-                                bool(self.inputs), bool(self.outputs), self.flags, self.key)
-
         super(VirtualSource, self).__init__(parent, **kwargs)
         self.params['id'].hide = 'all'
 

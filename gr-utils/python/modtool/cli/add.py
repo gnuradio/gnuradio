@@ -25,6 +25,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import re
+import getpass
 
 import click
 
@@ -109,7 +110,16 @@ def get_blockname(self):
 def get_copyrightholder(self):
     """ Get the copyrightholder of the block to be added """
     if self.info['copyrightholder'] is None:
-        self.info['copyrightholder'] = '<+YOU OR YOUR COMPANY+>'
+        user = getpass.getuser()
+        git_user = self.scm.get_gituser()
+        if git_user:
+            copyright_candidates = (user, git_user, 'GNU Radio')
+        else:
+            copyright_candidates = (user, 'GNU Radio')
+        with SequenceCompleter(copyright_candidates):
+            self.info['copyrightholder'] = cli_input("Please specify the copyright holder: ")
+            if not self.info['copyrightholder'] or self.info['copyrightholder'].isspace():
+                self.info['copyrightholder'] = "gr-{} author".format(self.info['modname'])
     elif self.info['is_component']:
         click.secho("For GNU Radio components the FSF is added as copyright holder",
                     fg='cyan')

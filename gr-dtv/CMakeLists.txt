@@ -36,12 +36,6 @@ GR_REGISTER_COMPONENT("gr-dtv" ENABLE_GR_DTV
     ENABLE_VOLK
 )
 
-GR_SET_GLOBAL(GR_DTV_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/lib
-)
-
 SET(GR_PKG_DTV_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/dtv)
 
 ########################################################################

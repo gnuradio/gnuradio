@@ -1,4 +1,4 @@
-# Copyright 2010-2013 Free Software Foundation, Inc.
+# Copyright 2010-2013,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,19 +20,6 @@
 ########################################################################
 include(GrMiscUtils) #check n def
 GR_CHECK_HDR_N_DEF(sys/resource.h HAVE_SYS_RESOURCE_H)
-
-########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-    ${GR_BLOCKS_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(
-    ${Boost_LIBRARY_DIRS}
-)
 
 ########################################################################
 # Build benchmarks and non-registered tests

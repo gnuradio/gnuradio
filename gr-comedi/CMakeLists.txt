@@ -1,4 +1,4 @@
-# Copyright 2012 Free Software Foundation, Inc.
+# Copyright 2012,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -33,15 +33,6 @@ GR_REGISTER_COMPONENT("gr-comedi" ENABLE_GR_COMEDI
     COMEDI_FOUND
     Boost_FOUND
     ENABLE_GNURADIO_RUNTIME
-)
-
-GR_SET_GLOBAL(GR_COMEDI_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_BINARY_DIR}/include
-)
-
-GR_SET_GLOBAL(GR_COMEDI_SWIG_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/swig
 )
 
 SET(GR_PKG_COMEDI_EXAMPLES_DIR ${GR_PKG_DATA_DIR}/examples/comedi)

@@ -1,4 +1,4 @@
-# Copyright 2012,2014,2018 Free Software Foundation, Inc.
+# Copyright 2012,2014,2018-2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,26 +18,9 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Setup the include and linker paths
-########################################################################
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}/../include
-    ${GR_TRELLIS_INCLUDE_DIRS}
-    ${GR_DIGITAL_INCLUDE_DIRS}
-    ${GNURADIO_RUNTIME_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-)
-
-link_directories(${Boost_LIBRARY_DIRS})
-
-if(ENABLE_GR_CTRLPORT)
-  ADD_DEFINITIONS(-DGR_CTRLPORT)
-endif(ENABLE_GR_CTRLPORT)
-
-########################################################################
 # Setup library
 ########################################################################
-list(APPEND trellis_sources
+add_library(gnuradio-trellis
     base.cc
     calc_metric.cc
     core_algorithms.cc
@@ -60,11 +43,16 @@ list(APPEND trellis_sources
     viterbi_combined_impl.cc
 )
 
-list(APPEND trellis_libs
+target_link_libraries(gnuradio-trellis PUBLIC
     gnuradio-runtime
     gnuradio-digital
-    ${Boost_LIBRARIES}
 )
+
+target_include_directories(gnuradio-trellis
+  PUBLIC
+  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+  )
 
 #Add Windows DLL resource file if using MSVC
 IF(MSVC)
@@ -75,41 +63,11 @@ IF(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
     @ONLY)
 
-    list(APPEND trellis_sources
+    target_sources(gnuradio-trellis PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-trellis.rc
     )
 ENDIF(MSVC)
 
-add_library(gnuradio-trellis SHARED ${trellis_sources})
-target_link_libraries(gnuradio-trellis ${trellis_libs})
-GR_LIBRARY_FOO(gnuradio-trellis)
-add_dependencies(gnuradio-trellis
-  gnuradio-runtime gnuradio-digital)
-
-if(ENABLE_STATIC_LIBS)
-  if(ENABLE_GR_CTRLPORT)
-    # Remove GR_CTRLPORT set this target's definitions.
-    # Makes sure we don't try to use ControlPort stuff in source files
-    GET_DIRECTORY_PROPERTY(STATIC_DEFS COMPILE_DEFINITIONS)
-    list(REMOVE_ITEM STATIC_DEFS "GR_CTRLPORT")
-    SET_PROPERTY(DIRECTORY PROPERTY COMPILE_DEFINITIONS "${STATIC_DEFS}")
-
-    # readd it to the target since we removed it from the directory-wide list.
-    SET_PROPERTY(TARGET gnuradio-trellis APPEND PROPERTY COMPILE_DEFINITIONS "GR_CTRLPORT")
-  endif(ENABLE_GR_CTRLPORT)
-
-  add_library(gnuradio-trellis_static STATIC ${trellis_sources})
-
-  add_dependencies(gnuradio-trellis_static
-    gnuradio-runtime_static gnuradio-digital_static
-    )
-
-  if(NOT WIN32)
-    set_target_properties(gnuradio-trellis_static
-      PROPERTIES OUTPUT_NAME gnuradio-trellis)
-  endif(NOT WIN32)
-
-  install(TARGETS gnuradio-trellis_static
-    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
-    )
-endif(ENABLE_STATIC_LIBS)
+if(BUILD_SHARED_LIBS)
+  GR_LIBRARY_FOO(gnuradio-trellis)
+endif()

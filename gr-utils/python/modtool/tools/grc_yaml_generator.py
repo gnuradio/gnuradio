@@ -27,7 +27,10 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 import yaml
-from yaml import CLoader as Loader, CDumper as Dumper
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except:
+    from yaml import Loader, Dumper
 
 from .util_functions import is_number
 

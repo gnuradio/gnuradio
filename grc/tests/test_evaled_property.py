@@ -56,6 +56,8 @@ def test_evaled():
     assert a.foo == 11 and a.foo == 11
     assert a.called['foo'] == 2
     assert not a.errors
+    a.foo = u'${ 10 + 2 }'
+    assert a.foo == 12
 
 
 def test_evaled_with_default():
