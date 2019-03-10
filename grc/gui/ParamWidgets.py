@@ -17,34 +17,77 @@
 
 from __future__ import absolute_import
 import os
+import configparser
+import subprocess
 
 from gi.repository import Gtk, Gdk
 
+from . import Constants
 from . import Utils
 
 
+config = configparser.ConfigParser()
+config.read(os.path.expanduser('~/.config/gtk-3.0/settings.ini'))
+theme = config.get('Settings', 'gtk-application-prefer-dark-theme')
 style_provider = Gtk.CssProvider()
+dark_theme_config = b"""
+                         #dtype_complex         { background-color: #3399FF; }
+                         #dtype_real            { background-color: #FF8C69; }
+                         #dtype_float           { background-color: #FF8C69; }
+                         #dtype_int             { background-color: #00FF99; }
 
-style_provider.load_from_data(b"""
-    #dtype_complex         { background-color: #3399FF; }
-    #dtype_real            { background-color: #FF8C69; }
-    #dtype_float           { background-color: #FF8C69; }
-    #dtype_int             { background-color: #00FF99; }
+                         #dtype_complex_vector  { background-color: #3399AA; }
+                         #dtype_real_vector     { background-color: #CC8C69; }
+                         #dtype_float_vector    { background-color: #CC8C69; }
+                         #dtype_int_vector      { background-color: #00CC99; }
 
-    #dtype_complex_vector  { background-color: #3399AA; }
-    #dtype_real_vector     { background-color: #CC8C69; }
-    #dtype_float_vector    { background-color: #CC8C69; }
-    #dtype_int_vector      { background-color: #00CC99; }
+                         #dtype_bool            { background-color: #00FF99; }
+                         #dtype_hex             { background-color: #00FF99; }
+                         #dtype_string          { background-color: #CC66CC; }
+                         #dtype_id              { background-color: #DDDDDD; }
+                         #dtype_stream_id       { background-color: #DDDDDD; }
+                         #dtype_raw             { background-color: #23272A; }
 
-    #dtype_bool            { background-color: #00FF99; }
-    #dtype_hex             { background-color: #00FF99; }
-    #dtype_string          { background-color: #CC66CC; }
-    #dtype_id              { background-color: #DDDDDD; }
-    #dtype_stream_id       { background-color: #DDDDDD; }
-    #dtype_raw             { background-color: #FFFFFF; }
+                         #enum_custom           { background-color: #EEEEEE; }
+                     """
+light_theme_config = b"""
+                        #dtype_complex         { background-color: #3399FF; }
+                        #dtype_real            { background-color: #FF8C69; }
+                        #dtype_float           { background-color: #FF8C69; }
+                        #dtype_int             { background-color: #00FF99; }
 
-    #enum_custom           { background-color: #EEEEEE; }
-""")
+                        #dtype_complex_vector  { background-color: #3399AA; }
+                        #dtype_real_vector     { background-color: #CC8C69; }
+                        #dtype_float_vector    { background-color: #CC8C69; }
+                        #dtype_int_vector      { background-color: #00CC99; }
+
+                        #dtype_bool            { background-color: #00FF99; }
+                        #dtype_hex             { background-color: #00FF99; }
+                        #dtype_string          { background-color: #CC66CC; }
+                        #dtype_id              { background-color: #DDDDDD; }
+                        #dtype_stream_id       { background-color: #DDDDDD; }
+                        #dtype_raw             { background-color: #FFFFFF; }
+
+                        #enum_custom           { background-color: #EEEEEE; }
+                    """
+if theme == '1' or theme == 'yes' or theme == 'true' or theme == 'on':
+    try:
+        gtk_theme_name = config.get('Settings', 'gtk-theme-name')
+        if gtk_theme_name in Constants.dark_themes:
+            style_provider.load_from_data(dark_theme_config)
+        else:
+            style_provider.load_from_data(light_theme_config)
+    except:
+        style_provider.load_from_data(light_theme_config)
+else:
+    bashCommand = "gsettings get org.gnome.desktop.interface gtk-theme"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    output_theme = output.decode('utf-8').strip().replace("'", "")
+    if output_theme in Constants.dark_themes:
+        style_provider.load_from_data(dark_theme_config)
+    else:
+        style_provider.load_from_data(light_theme_config)
 
 Gtk.StyleContext.add_provider_for_screen(
     Gdk.Screen.get_default(),

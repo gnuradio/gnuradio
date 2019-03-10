@@ -106,6 +106,12 @@ and kindly ask to update their GRC Block Descriptions or Block Tree to include a
 # DPI_SCALING = _SCREEN_RESOLUTION / 96.0 if _SCREEN_RESOLUTION > 0 else 1.0
 DPI_SCALING = 1.0  # todo: figure out the GTK3 way (maybe cairo does this for us
 
+# Gtk-themes classified as dark
+dark_themes = [
+    'Adwaita-dark',
+    'HighContrastInverse',
+]
+
 
 def update_font_size(font_size):
     global PORT_SEPARATION, BLOCK_FONT, PORT_FONT, PARAM_FONT, FONT_SIZE
