@@ -17,40 +17,53 @@
 
 from __future__ import absolute_import
 import os
+import configparser
+import subprocess
 
 from gi.repository import Gtk, Gdk
 
+from . import Constants
 from . import Utils
+from .canvas.colors import LIGHT_THEME_STYLES, DARK_THEME_STYLES
 
 
-style_provider = Gtk.CssProvider()
+def have_dark_theme():
+    """
+    Returns true if the currently selected theme is a dark one.
+    """
+    def is_dark_theme(theme_name):
+        """
+        Check if a theme is dark based on its name.
+        """
+        return theme_name in Constants.GTK_DARK_THEMES or "dark" in theme_name.lower()
+    # GoGoGo
+    config = configparser.ConfigParser()
+    config.read(os.path.expanduser(Constants.GTK_SETTINGS_INI_PATH))
+    prefer_dark = config.get(
+        'Settings', Constants.GTK_INI_PREFER_DARK_KEY, fallback=None)
+    if prefer_dark in ('1', 'yes', 'true', 'on'):
+        theme_name = config.get(
+            'Settings', Constants.GTK_INI_THEME_NAME_KEY, fallback=None)
+        return is_dark_theme(theme_name)
+    theme = subprocess.check_output(
+        ["gsettings", "get", "org.gnome.desktop.interface", "gtk-theme"]
+    ).decode('utf-8').strip().replace("'", "")
+    return is_dark_theme(theme)
 
-style_provider.load_from_data(b"""
-    #dtype_complex         { background-color: #3399FF; }
-    #dtype_real            { background-color: #FF8C69; }
-    #dtype_float           { background-color: #FF8C69; }
-    #dtype_int             { background-color: #00FF99; }
-
-    #dtype_complex_vector  { background-color: #3399AA; }
-    #dtype_real_vector     { background-color: #CC8C69; }
-    #dtype_float_vector    { background-color: #CC8C69; }
-    #dtype_int_vector      { background-color: #00CC99; }
-
-    #dtype_bool            { background-color: #00FF99; }
-    #dtype_hex             { background-color: #00FF99; }
-    #dtype_string          { background-color: #CC66CC; }
-    #dtype_id              { background-color: #DDDDDD; }
-    #dtype_stream_id       { background-color: #DDDDDD; }
-    #dtype_raw             { background-color: #FFFFFF; }
-
-    #enum_custom           { background-color: #EEEEEE; }
-""")
-
-Gtk.StyleContext.add_provider_for_screen(
-    Gdk.Screen.get_default(),
-    style_provider,
-    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-)
+def add_style_provider():
+    """
+    Load GTK styles
+    """
+    style_provider = Gtk.CssProvider()
+    dark_theme = have_dark_theme()
+    style_provider.load_from_data(
+        DARK_THEME_STYLES if dark_theme else LIGHT_THEME_STYLES)
+    Gtk.StyleContext.add_provider_for_screen(
+        Gdk.Screen.get_default(),
+        style_provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    )
+add_style_provider()
 
 
 class InputParam(Gtk.HBox):
