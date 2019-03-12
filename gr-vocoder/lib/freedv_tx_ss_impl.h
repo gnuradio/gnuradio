@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -48,17 +48,28 @@ namespace gr {
       struct freedv_tx_callback_state d_cb_state;
       struct freedv *d_freedv;
       int d_mode;
+      std::string d_msg_text;
+      int d_interleave_frames;
       float d_squelch_thresh;
       int d_speech_samples;
       int d_nom_modem_samples;
       int d_use_codectx;
       int d_use_datatx;
-      std::string d_msg_text;
+      int d_clip;
+      int d_tx_bpf;
+#ifdef FREEDV_MODE_700D
+      struct freedv_advanced d_adv;
+#endif
       struct CODEC2 *d_c2;
 
     public:
-      freedv_tx_ss_impl(int mode, const std::string txt_msg);
+      freedv_tx_ss_impl(int mode, const std::string txt_msg, int interleave_frames);
       ~freedv_tx_ss_impl();
+
+      void set_clip(bool val);
+      void set_clip(int val);
+      void set_tx_bpf(bool val);
+      void set_tx_bpf(int val);
 
       // Where all the action really happens
       int work(int noutput_items,

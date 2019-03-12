@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -50,11 +50,13 @@ namespace gr {
        *
        * \param mode Operating Mode designation
        * \param squelch_thresh FreeDV modem squelch threshold value
+       * \param interleave_frames FreeDV 700D mode number of frames to average error
        */
-      static sptr make(int mode=freedv_api::MODE_1600, float squelch_thresh=-100.0);
+      static sptr make(int mode=freedv_api::MODE_1600, float squelch_thresh=-100.0, int interleave_frames=1);
 
       virtual void set_squelch_thresh(float squelch_thresh) = 0;
       virtual float squelch_thresh() = 0;
+      virtual void set_squelch_en(bool squelch_enable) = 0;
     };
 
   } /* namespace vocoder */

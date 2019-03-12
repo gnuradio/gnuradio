@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -47,20 +47,31 @@ namespace gr {
   namespace vocoder {
 
     freedv_rx_ss::sptr
-    freedv_rx_ss::make(int mode, float squelch_thresh)
+    freedv_rx_ss::make(int mode, float squelch_thresh, int interleave_frames)
     {
       return gnuradio::get_initial_sptr
-        (new freedv_rx_ss_impl(mode, squelch_thresh));
+        (new freedv_rx_ss_impl(mode, squelch_thresh, interleave_frames));
     }
 
-    freedv_rx_ss_impl::freedv_rx_ss_impl (int mode, float squelch_thresh)
+    freedv_rx_ss_impl::freedv_rx_ss_impl (int mode, float squelch_thresh, int interleave_frames)
       : gr::block("vocoder_freedv_rx_ss",
               io_signature::make(1, 1, sizeof(short)),
               io_signature::make(1, 1, sizeof(short))),
-        d_mode(mode), d_squelch_thresh(squelch_thresh)
+        d_mode(mode), d_squelch_thresh(squelch_thresh), d_interleave_frames(interleave_frames)
     {
+#ifdef FREEDV_MODE_700D
+      if (mode == FREEDV_MODE_700D) {
+      d_adv.interleave_frames = interleave_frames;
+      if((d_freedv = freedv_open_advanced(mode, &d_adv)) ==NULL)
+	throw std::runtime_error("freedv_tx_ss_impl: freedv_open_advanced failed");
+      } else {
+	if((d_freedv = freedv_open(mode)) == NULL)
+	  throw std::runtime_error("freedv_tx_ss_impl: freedv_open failed");
+      }
+#else
       if((d_freedv = freedv_open(mode)) == NULL)
         throw std::runtime_error("freedv_rx_ss_impl: freedv_open failed");
+#endif
       freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
       freedv_set_squelch_en(d_freedv, 0);
       freedv_set_callback_txt(d_freedv, put_next_rx_char, NULL, (void *) &d_cb_state);
@@ -136,6 +147,16 @@ namespace gr {
       gr::thread::scoped_lock l(d_setlock);
       d_squelch_thresh = squelch_thresh;
       freedv_set_snr_squelch_thresh(d_freedv, d_squelch_thresh);
+    }
+
+    void freedv_rx_ss_impl::set_squelch_en(bool squelch_enabled)
+    {
+      gr::thread::scoped_lock l(d_setlock);
+      d_squelch_en = squelch_enabled;
+      if (squelch_enabled)
+	freedv_set_squelch_en(d_freedv, 1);
+      else
+	freedv_set_squelch_en(d_freedv, 0);
     }
 
     float freedv_rx_ss_impl::squelch_thresh() {

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2011,2013,2016 Free Software Foundation, Inc.
+ * Copyright 2011,2013,2016,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -93,8 +93,12 @@ GR_SWIG_BLOCK_MAGIC2(vocoder, codec2_encode_sp);
 #include "gnuradio/vocoder/freedv_tx_ss.h"
 %}
 
+#ifdef FREEDV_MODE_700D
+#else
 %ignore freedv_set_smooth_symbols;
 %ignore freedv_set_clip;
+#endif
+
 %include <codec2/freedv_api.h>
 %include "gnuradio/vocoder/freedv_api.h"
 %include "gnuradio/vocoder/freedv_rx_ss.h"
