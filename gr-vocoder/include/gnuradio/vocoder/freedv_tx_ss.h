@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -49,8 +49,9 @@ namespace gr {
        *
        * \param mode Operating Mode designation
        * \param msg_txt Low Rate message text (callsign, location)
+       * \param interleave_frames FreeDV 700D mode number of frames to average error
        */
-      static sptr make(int mode=freedv_api::MODE_1600,const std::string msg_txt="GNU Radio");
+      static sptr make(int mode=freedv_api::MODE_1600,const std::string msg_txt="GNU Radio",int interleave_frames=1);
     };
 
   } /* namespace vocoder */

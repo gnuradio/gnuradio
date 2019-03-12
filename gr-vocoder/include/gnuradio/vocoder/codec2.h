@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014,2016 Free Software Foundation, Inc.
+ * Copyright 2014,2016,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -47,6 +47,12 @@ namespace gr {
 #endif
 #ifdef CODEC2_MODE_700B
 	MODE_700B = CODEC2_MODE_700B,
+#endif
+#ifdef CODEC2_MODE_700C
+	MODE_700C = CODEC2_MODE_700C,
+#endif
+#ifdef CODEC2_MODE_WB
+	MODE_WB = CODEC2_MODE_WB,
 #endif
       };
 

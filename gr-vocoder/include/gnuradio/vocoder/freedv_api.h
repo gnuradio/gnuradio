@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -55,6 +55,15 @@ namespace gr {
 #endif
 #ifdef FREEDV_MODE_800XA
         MODE_800XA = FREEDV_MODE_800XA,
+#endif
+#ifdef FREEDV_MODE_700C
+        MODE_700C = FREEDV_MODE_700C,
+#endif
+#ifdef FREEDV_MODE_700D
+        MODE_700D = FREEDV_MODE_700D,
+	SYNC_UNSYNC = FREEDV_SYNC_UNSYNC,
+	SYNC_AUTO = FREEDV_SYNC_AUTO,
+	SYNC_MANUAL = FREEDV_SYNC_MANUAL,
 #endif
       };
 

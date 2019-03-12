@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016-2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -53,18 +53,24 @@ namespace gr {
       int d_total_bit_errors;
       float d_snr_est;
       float d_squelch_thresh;
+      bool d_squelch_en;
       int d_speech_samples;
       int d_max_modem_samples;
       float d_clock_offset;
       int d_use_codecrx;
+      int d_interleave_frames;
+#ifdef FREEDV_MODE_700D
+      struct freedv_advanced d_adv;
+#endif
       struct CODEC2 *d_c2 = NULL;
 
     public:
-      freedv_rx_ss_impl(int mode, float squelch_thresh);
+      freedv_rx_ss_impl(int mode, float squelch_thresh, int interleave_frames);
       ~freedv_rx_ss_impl();
 
       void set_squelch_thresh(float squelch_thresh);
       float squelch_thresh();
+      void set_squelch_en(bool squelch_enabled);
 
       // Where all the action really happens
       void forecast(int noutput_items, gr_vector_int &ninput_items_required);
