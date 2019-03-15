@@ -6,7 +6,7 @@ parameters:
     label: FFT length
     dtype: int
     default: fft_len
-    hide: ${ 'part' if vlen == 1 else 'none' }
+    hide: ${ 'part' if fft_len == 1 else 'none' }
 -   id: cp_len
     label: CP length
     dtype: int

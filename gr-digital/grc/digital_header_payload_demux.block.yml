@@ -12,7 +12,7 @@ parameters:
 -   id: items_per_symbol
     label: Items per symbol
     dtype: int
-    hide: ${ 'part' if vlen == 1 else 'none' }
+    hide: ${ 'none' if output_symbols else 'part' }
 -   id: guard_interval
     label: Guard Interval (items)
     dtype: int
@@ -32,7 +32,7 @@ parameters:
     dtype: enum
     options: ['False', 'True']
     option_labels: [Items, Symbols]
-    hide: ${ 'part' if vlen == 1 else 'none' }
+    hide: ${ 'none' if output_symbols else 'part' }
 -   id: type
     label: IO Type
     dtype: enum
@@ -68,11 +68,11 @@ outputs:
 -   label: out_hdr
     domain: stream
     dtype: ${ type }
-    vlen: '${ {True: items_per_symbol, False: 1}[output_symbols] }'
+    vlen: '${ items_per_symbol if output_symbols else 1 }'
 -   label: out_payload
     domain: stream
     dtype: ${ type }
-    vlen: '${ {True: items_per_symbol, False: 1}[output_symbols] }'
+    vlen: '${ items_per_symbol if output_symbols else 1 }'
 
 templates:
     imports: from gnuradio import digital
