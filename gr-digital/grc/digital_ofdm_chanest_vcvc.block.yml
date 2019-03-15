@@ -5,7 +5,7 @@ parameters:
 -   id: sync_symbol1
     label: Synch. symbol 1
     dtype: complex_vector
-    hide: ${ 'part' if vlen == 1 else 'none' }
+    hide: ${ 'part' if len(sync_symbol1) == 1 else 'none' }
 -   id: sync_symbol2
     label: Synch. symbol 2
     dtype: complex_vector
