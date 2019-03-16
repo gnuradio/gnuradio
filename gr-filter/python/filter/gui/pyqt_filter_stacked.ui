@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1128</width>
-    <height>649</height>
+    <width>1129</width>
+    <height>749</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,7 +56,7 @@
             <bool>true</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
              <horstretch>0</horstretch>
              <verstretch>1</verstretch>
             </sizepolicy>
@@ -74,41 +74,25 @@
             <attribute name="title">
              <string>Magnitude Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_9">
-             <item>
-              <widget class="QwtPlot" name="freqPlot"/>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_9"/>
            </widget>
            <widget class="QWidget" name="timeTab">
             <attribute name="title">
              <string>Filter Taps</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <item>
-              <widget class="QwtPlot" name="timePlot"/>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_10"/>
            </widget>
            <widget class="QWidget" name="phaseTab">
             <attribute name="title">
              <string>Phase Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <item>
-              <widget class="QwtPlot" name="phasePlot"/>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_11"/>
            </widget>
            <widget class="QWidget" name="groupTab">
             <attribute name="title">
              <string>Group Delay</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_12">
-             <item>
-              <widget class="QwtPlot" name="groupPlot"/>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_12"/>
            </widget>
            <widget class="QWidget" name="fcTab">
             <attribute name="title">
@@ -124,51 +108,32 @@
             <attribute name="title">
              <string>Impulse Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <widget class="QwtPlot" name="impresPlot">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_6"/>
            </widget>
            <widget class="QWidget" name="stepresTab">
             <attribute name="title">
              <string>Step Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
-             <item>
-              <widget class="QwtPlot" name="stepresPlot"/>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_8"/>
            </widget>
            <widget class="QWidget" name="pdelayTab">
             <attribute name="title">
              <string>Phase Delay</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_17">
-             <item>
-              <widget class="QwtPlot" name="pdelayPlot"/>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_17"/>
            </widget>
           </widget>
           <widget class="QTabWidget" name="filterspecView">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>100</height>
+             <width>613</width>
+             <height>250</height>
             </size>
            </property>
            <property name="baseSize">
@@ -223,17 +188,10 @@
              <string>Pole-Zero Plot</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="0">
-              <widget class="PzPlot" name="pzPlot">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
+             <item row="1" column="0" colspan="3">
+              <widget class="QStatusBar" name="pzstatusBar"/>
              </item>
-             <item row="0" column="1">
+             <item row="0" column="2">
               <widget class="QGroupBox" name="pzgroupBox">
                <property name="cursor">
                 <cursorShape>ArrowCursor</cursorShape>
@@ -331,8 +289,27 @@
                </layout>
               </widget>
              </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QStatusBar" name="pzstatusBar"/>
+             <item row="0" column="1">
+              <widget class="PzPlot" name="pzPlot">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="interactive">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -632,16 +609,6 @@
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
-               <widget class="QwtPlot" name="mfreqPlot">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QGroupBox" name="mfgroupBox">
                 <property name="cursor">
                  <cursorShape>ArrowCursor</cursorShape>
@@ -790,16 +757,6 @@
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QwtPlot" name="mtimePlot">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QGroupBox" name="mtgroupBox">
                 <property name="cursor">
                  <cursorShape>ArrowCursor</cursorShape>
@@ -910,7 +867,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>false</bool>
@@ -955,17 +912,7 @@
              <string>Pole-Zero Plot</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_3">
-             <item row="0" column="0">
-              <widget class="PzPlot" name="mpzPlot">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
+             <item row="0" column="2">
               <widget class="QGroupBox" name="mpzgroupBox">
                <property name="cursor">
                 <cursorShape>ArrowCursor</cursorShape>
@@ -1057,8 +1004,30 @@
                </layout>
               </widget>
              </item>
-             <item row="1" column="0" colspan="2">
+             <item row="1" column="0" colspan="3">
               <widget class="QStatusBar" name="mpzstatusBar"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="PzPlot" name="mpzPlot">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="interactive">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -2155,8 +2124,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1128</width>
-     <height>19</height>
+     <width>1129</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -2169,7 +2138,7 @@
    </widget>
    <widget class="QMenu" name="menu_Analysis">
     <property name="title">
-     <string>Analysis</string>
+     <string>A&amp;nalysis</string>
     </property>
     <addaction name="separator"/>
     <addaction name="actionMagnitude_Response"/>
@@ -2195,12 +2164,12 @@
      <rect>
       <x>408</x>
       <y>108</y>
-      <width>129</width>
-      <height>86</height>
+      <width>147</width>
+      <height>104</height>
      </rect>
     </property>
     <property name="title">
-     <string>View</string>
+     <string>V&amp;iew</string>
     </property>
     <addaction name="actionGridview"/>
     <addaction name="actionPlot_select"/>
@@ -2239,7 +2208,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Magnitude Response</string>
+    <string>&amp;Magnitude Response</string>
    </property>
   </action>
   <action name="actionPhase_Respone">
@@ -2250,7 +2219,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Phase Respone</string>
+    <string>&amp;Phase Respone</string>
    </property>
   </action>
   <action name="actionGroup_Delay">
@@ -2261,7 +2230,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Group Delay</string>
+    <string>&amp;Group Delay</string>
    </property>
   </action>
   <action name="actionPhase_Delay">
@@ -2272,7 +2241,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Phase Delay</string>
+    <string>P&amp;hase Delay</string>
    </property>
   </action>
   <action name="actionImpulse_Response">
@@ -2283,7 +2252,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Impulse Response</string>
+    <string>&amp;Impulse Response</string>
    </property>
   </action>
   <action name="actionStep_Response">
@@ -2294,7 +2263,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Step Response</string>
+    <string>&amp;Step Response</string>
    </property>
   </action>
   <action name="actionPole_Zero_Plot">
@@ -2315,7 +2284,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Pole Zero Plot</string>
+    <string>Pole &amp;Zero Plot</string>
    </property>
   </action>
   <action name="actionIdeal_Band">
@@ -2326,7 +2295,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Ideal Band</string>
+    <string>Id&amp;eal Band</string>
    </property>
   </action>
   <action name="actionGrid_2">
@@ -2402,7 +2371,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Filter Coefficients</string>
+    <string>&amp;Filter Coefficients</string>
    </property>
   </action>
   <action name="actionDesign_widget">
@@ -2426,7 +2395,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Gridview</string>
+    <string>&amp;Gridview</string>
    </property>
   </action>
   <action name="actionDesign_widget_2">
@@ -2460,7 +2429,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Design Widget</string>
+    <string>&amp;Design Widget</string>
    </property>
   </action>
   <action name="actionQuick_Access">
@@ -2471,7 +2440,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Quick Access</string>
+    <string>&amp;Quick Access</string>
    </property>
   </action>
   <action name="actionSpec_Widget">
@@ -2482,7 +2451,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Spec Widget</string>
+    <string>Spec &amp;Widget</string>
    </property>
   </action>
   <action name="actionResponse_Widget">
@@ -2493,7 +2462,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Response Widget</string>
+    <string>&amp;Response Widget</string>
    </property>
   </action>
   <action name="actionTabview_2">
@@ -2515,7 +2484,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Plot select</string>
+    <string>&amp;Plot select</string>
    </property>
   </action>
   <action name="actionBand_Diagram">
@@ -2526,7 +2495,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Band Diagram</string>
+    <string>&amp;Band Diagram</string>
    </property>
   </action>
   <action name="actionCheck">
@@ -2542,19 +2511,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BandGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>bandgraphicsview</header>
   </customwidget>
   <customwidget>
    <class>PzPlot</class>
-   <extends>QListView</extends>
+   <extends>QGraphicsView</extends>
    <header>polezero_plot</header>
   </customwidget>
  </customwidgets>
@@ -2593,7 +2556,7 @@
  <connections>
   <connection>
    <sender>action_exit</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>
    <hints>
