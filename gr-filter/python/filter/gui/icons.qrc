@@ -13,7 +13,5 @@
     <file>icons/phase_response.svg</file>
     <file>icons/remove_red.svg</file>
     <file>icons/step_response.svg</file>
-    <file>icons/add_zero.svg</file>
-    <file>icons/add_pole.svg</file>
   </qresource>
 </RCC>
