@@ -20,64 +20,66 @@ from __future__ import unicode_literals
 #
 
 import sys
-from PyQt4 import Qt, QtCore
+from PyQt5 import Qt, QtCore
 from math import sin, cos, pi
-import PyQt4.Qwt5 as Qwt
+import pyqtgraph as pg
 from numpy import zeros
 from numpy import float as Float
 from numpy import vectorize
 from numpy import delete
 
-class PzPlot(Qwt.QwtPlot):
+
+class PzPlot(pg.PlotWidget):
 
     def __init__(self, *args):
-        Qwt.QwtPlot.__init__(self, *args)
+        pg.PlotWidget.__init__(self, *args)
 
+        # Set Global pyqtgraph options
+        pg.setConfigOption('foreground', 'k')   # Default foreground color for text, lines, axes, etc.
+        pg.setConfigOption('background', None)  # Default background for GraphicsView.
+        pg.setConfigOptions(antialias=True)     # Draw lines with smooth edges at the cost of reduced performance.
 
-        self.ymax=0
-        self.xmax=0
-        self.ymin=0
-        self.xmin=0
-        self.setCanvasColor(Qt.Qt.darkCyan)
+        self.ymax = 0
+        self.xmax = 0
+        self.ymin = 0
+        self.xmin = 0
+        self.setBackground(Qt.QBrush(Qt.Qt.darkCyan))
 
-        grid = Qwt.QwtPlotGrid()
-        grid.attach(self)
-        grid.setMajPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.DotLine))
+        self.setRange(xRange=[-3, 3], yRange=[-2, 2])
 
-        self.setAxisScale(Qwt.QwtPlot.xBottom, -3, 3)
-        self.setAxisScale(Qwt.QwtPlot.yLeft, -2, 2)
+        axis = self.getAxis('bottom')
+        axis.setStyle(tickLength=-10)
+        axis.setPen(Qt.QPen(Qt.Qt.white, 0.025, Qt.Qt.DotLine))
+
+        axis = self.getAxis('left')
+        axis.setStyle(tickLength=-10)
+        axis.setPen(Qt.QPen(Qt.Qt.white, 0.025, Qt.Qt.DotLine))
+
+        self.showGrid(x=True, y=True)
+
         self.drawUnitcircle()
-
-
-
-    def setCanvasColor(self, color):
-        self.setCanvasBackground(color)
-        self.replot()
-
 
     def drawUnitcircle(self):
         radius = 1.0
         steps = 1024
 
         angleStep = 2 * pi / steps
-        x=[sin(a * angleStep) * radius for a in range(0, steps)]
-        y=[cos(a * angleStep) * radius for a in range(0, steps)]
+        x = [sin(a * angleStep) * radius for a in range(0, steps)]
+        y = [cos(a * angleStep) * radius for a in range(0, steps)]
 
-        curve = Qwt.QwtPlotCurve()
-        curve.attach(self)
-        curve.setPen(Qt.QPen(Qt.Qt.gray, 1, Qt.Qt.DotLine))
+        curve = self.plot(title="Unit Circle")
+        curve.setPen(Qt.QPen(Qt.Qt.gray, 0.025, Qt.Qt.DotLine))
         curve.setData(x, y)
-
 
     def insertZeros(self, roots):
         self.removeallCurves()
         if len(roots):
-            self.__insertZero(Qt.Qt.blue, roots.real,roots.imag)
-            self.ymax =  max(roots.imag)
-            self.ymin =  min(roots.imag)
-            self.xmax =  max(roots.real)
-            self.xmin =  min(roots.real)
-            #To make the plot look good
+            self.__insertZero(Qt.Qt.blue, roots.real, roots.imag)
+            self.ymax = max(roots.imag)
+            self.ymin = min(roots.imag)
+            self.xmax = max(roots.real)
+            self.xmin = min(roots.real)
+            # To make the plot look good.
             if self.xmax <= 1.3:
                 self.xmax = 2
             if self.xmin >= -1.3:
@@ -87,22 +89,21 @@ class PzPlot(Qwt.QwtPlot):
             if self.ymin >= -1:
                 self.ymin = -1.5
 
-            self.setAxisScale(Qwt.QwtPlot.xBottom, self.xmin, self.xmax)
-            self.setAxisScale(Qwt.QwtPlot.yLeft, self.ymin, self.ymax)
+            self.setRange(xRange=[self.xmin, self.xmax], yRange=[self.ymin, self.ymax])
 
     def insertPoles(self, roots):
             if len(roots):
-                self.__insertPole(Qt.Qt.black, roots.real,roots.imag)
+                self.__insertPole(Qt.Qt.black, roots.real, roots.imag)
                 ymax = max(roots.imag)
-                ymax = max(ymax,self.ymax)
+                ymax = max(ymax, self.ymax)
                 ymin = min(roots.imag)
-                ymin = min(ymin,self.ymin)
+                ymin = min(ymin, self.ymin)
                 xmax = max(roots.real)
-                xmax = max(xmax,self.xmax)
+                xmax = max(xmax, self.xmax)
                 xmin = min(roots.real)
-                xmin = min(xmin,self.xmin)
+                xmin = min(xmin, self.xmin)
 
-                #To make the plot look good
+                # To make the plot look good.
                 if xmax <= 1.3:
                     xmax = 2
                 else:
@@ -123,45 +124,39 @@ class PzPlot(Qwt.QwtPlot):
                 else:
                     ymin = 1.2 * ymin
 
-                self.setAxisScale(Qwt.QwtPlot.xBottom, xmin, xmax)
-                self.setAxisScale(Qwt.QwtPlot.yLeft, ymin, ymax)
+                self.setRange(xRange=[xmin, xmax], yRange=[ymin, ymax])
                 self.drawUnitcircle()
                 self.replot()
 
     def __insertZero(self, color, px, py):
-
-        curve = Qwt.QwtPlotCurve()
-        curve.attach(self)
-
-        curve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        curve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.Ellipse,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(color),
-                                      Qt.QSize(10, 10)))
+        curve = self.plot(name="Zero")
+        curve.setPen(None)
+        curve.setSymbol('o')
+        curve.setSymbolPen('b')
+        curve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        curve.setSymbolSize(10)
         curve.setData(px, py)
 
     def __insertPole(self, color, px, py):
-        curve = Qwt.QwtPlotCurve()
-        curve.attach(self)
-
-        curve.setPen(Qt.QPen(Qt.Qt.white, 0, Qt.Qt.NoPen))
-        curve.setSymbol(Qwt.QwtSymbol(Qwt.QwtSymbol.XCross,
-                                      Qt.QBrush(Qt.Qt.gray),
-                                      Qt.QPen(color),
-                                      Qt.QSize(7, 7)))
+        curve = self.plot(name="Pole")
+        curve.setPen(None)
+        curve.setSymbol('x')
+        curve.setSymbolPen('b')
+        curve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        curve.setSymbolSize(10)
         curve.setData(px, py)
 
     def removeallCurves(self):
-        for curve in self.itemList():
-            if isinstance(curve, Qwt.QwtPlotCurve):
-                curve.detach()
+        # TODO for curve in self.itemList():
+            # if isinstance(curve, Qwt.QwtPlotCurve):
+                # curve.detach()
         self.replot()
-
 
 
 class CanvasPicker(Qt.QObject):
     curveChanged = QtCore.pyqtSignal(tuple)
     mouseposChanged = QtCore.pyqtSignal(tuple)
+
     def __init__(self, plot):
         Qt.QObject.__init__(self, plot)
         self.__selectedCurve = None
@@ -170,12 +165,13 @@ class CanvasPicker(Qt.QObject):
         self.__addedZero = -1
         self.__addedcZero = -1
         self.changeConjugate = False
-        self.enableZeroadd= False
-        self.enablePoleadd= False
-        self.enablepzDelete= False
+        self.enableZeroadd = False
+        self.enablePoleadd = False
+        self.enablepzDelete = False
         self.iir = False
         self.__plot = plot
 
+        ''' TODO
         canvas = plot.canvas()
         canvas.installEventFilter(self)
 
@@ -197,7 +193,7 @@ class CanvasPicker(Qt.QObject):
             )
 
         self.__shiftCurveCursor(True)
-
+        '''
 
     def event(self, event):
         if event.type() == Qt.QEvent.User:
@@ -208,19 +204,17 @@ class CanvasPicker(Qt.QObject):
         except TypeError:
             return False
 
-
-
     def set_conjugate(self):
         self.changeConjugate = not(self.changeConjugate)
 
-    def set_iir(self,val=True):
+    def set_iir(self, val=True):
         self.iir = val
 
     def add_zero(self):
         self.enableZeroadd = not(self.enableZeroadd)
 
     def add_pole(self):
-        #Adding pole support only for iir
+        # Adding pole support only for IIR.
         if self.iir:
             self.enablePoleadd = not(self.enablePoleadd)
 
@@ -246,8 +240,8 @@ class CanvasPicker(Qt.QObject):
         elif event.type() == Qt.QEvent.MouseMove:
             curve = self.__selectedCurve
             if curve:
-                tp=(self.__plot.invTransform(curve.xAxis(), event.pos().x()),
-                    self.__plot.invTransform(curve.xAxis(), event.pos().y()))
+                tp = (self.__plot.invTransform(curve.xAxis(), event.pos().x()),
+                      self.__plot.invTransform(curve.xAxis(), event.pos().y()))
                 self.mouseposChanged.emit(tp)
             self.__move(event.pos())
             return True
@@ -293,7 +287,6 @@ class CanvasPicker(Qt.QObject):
 
         return Qwt.QwtPlot.eventFilter(self, object, event)
 
-
     def __select(self, pos):
         found, distance, point = None, 1e100, -1
 
@@ -314,16 +307,16 @@ class CanvasPicker(Qt.QObject):
         if found and distance < 10:
             self.__selectedCurve = found
             self.__selectedPoint = point
-            #search for conjugate point if enabled
+            # Search for conjugate point if enabled.
             if self.changeConjugate:
-                j=self.__searchConjugate(found.x(point),found.y(point))
+                j = self.__searchConjugate(found.x(point), found.y(point))
                 self.__selectedcPoint = j
-            #delete zero/pole if enabled
+            # Delete zero/pole if enabled.
             if self.enablepzDelete:
                 self.__deleteZero()
             self.__showCursor(True)
         else:
-            self.mouseposChanged.emit((None,None))
+            self.mouseposChanged.emit((None, None))
 
     def __deleteZero(self):
         curve = self.__selectedCurve
@@ -335,22 +328,22 @@ class CanvasPicker(Qt.QObject):
             yData[i] = curve.y(i)
 
         if(self.__selectedPoint != -1):
-            xData=delete(xData, self.__selectedPoint)
-            yData=delete(yData, self.__selectedPoint)
-        #one less to accommodate previous delete
+            xData = delete(xData, self.__selectedPoint)
+            yData = delete(yData, self.__selectedPoint)
+        # One less to accommodate previous delete.
         if(self.__selectedcPoint != -1):
-            xData=delete(xData, self.__selectedcPoint-1)
-            yData=delete(yData, self.__selectedcPoint-1)
+            xData = delete(xData, self.__selectedcPoint-1)
+            yData = delete(yData, self.__selectedcPoint-1)
 
         curve.setData(xData, yData)
         self.__plot.replot()
-        px=[]
-        py=[]
+        px = []
+        py = []
         for c in self.__plot.itemList():
             if isinstance(c, Qwt.QwtPlotCurve):
                 px.append([c.x(i) for i in range(c.dataSize())])
                 py.append([c.y(i) for i in range(c.dataSize())])
-        tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
+        tp = (vectorize(complex)(px[0], py[0]), vectorize(complex)(px[1], py[1]))
         self.curveChanged.emit(tp)
 
     def __moveBy(self, dx, dy):
@@ -367,7 +360,6 @@ class CanvasPicker(Qt.QObject):
             curve.yAxis(), curve.y(self.__selectedPoint)) + dy
         self.__move(Qt.QPoint(x, y))
 
-
     def __move(self, pos):
         curve = self.__selectedCurve
         if not curve:
@@ -376,11 +368,11 @@ class CanvasPicker(Qt.QObject):
         xData = zeros(curve.dataSize(), Float)
         yData = zeros(curve.dataSize(), Float)
 
-        #poles made unmovable when FIR design is active
-        move_enable=True
+        # Poles made unmovable when FIR design is active.
+        move_enable = True
         if not self.iir:
             if self.__selectedCurve.symbol().style() == Qwt.QwtSymbol.XCross:
-                move_enable=False
+                move_enable = False
         if move_enable:
             for i in range(curve.dataSize()):
                 if i == self.__selectedPoint:
@@ -394,41 +386,41 @@ class CanvasPicker(Qt.QObject):
                     yData[i] = curve.y(i)
             curve.setData(xData, yData)
             self.__plot.replot()
-            px=[]
-            py=[]
+            px = []
+            py = []
             for c in self.__plot.itemList():
                 if isinstance(c, Qwt.QwtPlotCurve):
                     px.append([c.x(i) for i in range(c.dataSize())])
                     py.append([c.y(i) for i in range(c.dataSize())])
-            tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
+            tp = (vectorize(complex)(px[0], py[0]), vectorize(complex)(px[1], py[1]))
             self.curveChanged.emit(tp)
             self.__showCursor(True)
 
     def __searchConjugate(self, x, y):
         curve = self.__selectedCurve
         for i in range(curve.dataSize()):
-            if (round(curve.x(i),8) == round(x,8) and round(curve.y(i),8) == -round(y,8)):
-                if (y !=0):
+            if (round(curve.x(i), 8) == round(x, 8) and round(curve.y(i), 8) == -round(y, 8)):
+                if (y != 0):
                     return i
         return -1
 
     def __drawAddedzero_pole(self, showIt, pos):
-        editcurve=''
+        editcurve = ''
         for curve in self.__plot.itemList():
             if isinstance(curve, Qwt.QwtPlotCurve):
                 if self.enableZeroadd:
                     if curve.symbol().style() == Qwt.QwtSymbol.Ellipse:
-                        editcurve=curve
+                        editcurve = curve
                 if self.enablePoleadd:
                     if curve.symbol().style() == Qwt.QwtSymbol.XCross:
-                        editcurve=curve
+                        editcurve = curve
         if not editcurve:
             return
 
         if self.changeConjugate:
-            extrapoints=2
+            extrapoints = 2
         else:
-            extrapoints=1
+            extrapoints = 1
 
         xData = zeros(editcurve.dataSize()+extrapoints, Float)
         yData = zeros(editcurve.dataSize()+extrapoints, Float)
@@ -442,11 +434,11 @@ class CanvasPicker(Qt.QObject):
         if self.changeConjugate:
             xData[i+2] = xData[i+1]
             yData[i+2] = -yData[i+1]
-            self.__addedcZero=i+2
+            self.__addedcZero = i+2
 
         editcurve.setData(xData, yData)
 
-        self.__addedZero=i+1
+        self.__addedZero = i+1
         symbol = Qwt.QwtSymbol(editcurve.symbol())
         newSymbol = Qwt.QwtSymbol(symbol)
         newSymbol.setPen(Qt.QPen(Qt.Qt.red))
@@ -461,13 +453,13 @@ class CanvasPicker(Qt.QObject):
 
         editcurve.setSymbol(symbol)
         self.__plot.setAutoReplot(doReplot)
-        px=[]
-        py=[]
+        px = []
+        py = []
         for c in self.__plot.itemList():
             if isinstance(c, Qwt.QwtPlotCurve):
                 px.append([c.x(i) for i in range(c.dataSize())])
                 py.append([c.y(i) for i in range(c.dataSize())])
-        tp=(vectorize(complex)(px[0],py[0]),vectorize(complex)(px[1],py[1]))
+        tp = (vectorize(complex)(px[0], py[0]), vectorize(complex)(px[1], py[1]))
         self.curveChanged.emit(tp)
         self.__showCursor(True)
 
@@ -507,7 +499,7 @@ class CanvasPicker(Qt.QObject):
                 index += 1
             else:
                 index -= 1
-            # keep index within [0, len(curves))
+            # Keep index within [0, len(curves)).
             index += len(curves)
             index %= len(curves)
         else:
@@ -518,7 +510,6 @@ class CanvasPicker(Qt.QObject):
         self.__selectedCurve = curves[index]
         self.__showCursor(True)
 
-
     def __shiftPointCursor(self, up):
         curve = self.__selectedCurve
         if not curve:
@@ -528,7 +519,7 @@ class CanvasPicker(Qt.QObject):
             index = self.__selectedPoint + 1
         else:
             index = self.__selectedPoint - 1
-        # keep index within [0, curve.dataSize())
+        # Keep index within [0, curve.dataSize()).
         index += curve.dataSize()
         index %= curve.dataSize()
         if index != self.__selectedPoint:
