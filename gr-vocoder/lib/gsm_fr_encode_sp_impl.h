@@ -26,7 +26,11 @@
 #include <gnuradio/vocoder/gsm_fr_encode_sp.h>
 
 extern "C"{
+#ifdef __FreeBSD__
+#include <gsm.h>
+#else
 #include "gsm/gsm.h"
+#endif
 }
 
 namespace gr {
