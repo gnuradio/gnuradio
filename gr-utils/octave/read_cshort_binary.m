@@ -42,5 +42,8 @@ function cv = read_cshort_binary (filename, count)
   else
     v = fread (f, count, 'short');
     fclose (f);
-    cv = v(1:2:end)+v(2:2:end)*j;
+    v_r = v(1:2:end);
+    v_i = v(2:2:end)*j;
+    clear v;
+    cv = v_r+v_i;
   end
