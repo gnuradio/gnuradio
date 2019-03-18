@@ -260,6 +260,13 @@ class MainWindow(Gtk.ApplicationWindow):
                 flow_graph=flow_graph,
                 file_path=file_path,
             )
+            if str(Messages.flowgraph_error) is not None:
+                Messages.send(
+                    ">>> Check: {}\n>>> FlowGraph Error: {}\n".format(
+                        str(Messages.flowgraph_error_file),
+                        str(Messages.flowgraph_error)
+                    )
+                )
             if file_path: Messages.send_end_load()
         except Exception as e: #return on failure
             Messages.send_fail_load(e)
