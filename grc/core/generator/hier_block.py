@@ -97,8 +97,6 @@ class HierBlockGenerator(TopBlockGenerator):
             data[direction] = []
             for port in get_hier_block_io(self._flow_graph, direction):
                 p = collections.OrderedDict()
-                if port.domain == Constants.GR_MESSAGE_DOMAIN:
-                    p['id'] = port.key
                 p['label'] = port.parent.params['label'].value
                 if port.domain != Constants.DEFAULT_DOMAIN:
                     p['domain'] = port.domain

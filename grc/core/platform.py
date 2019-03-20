@@ -177,7 +177,6 @@ class Platform(Element):
                 except Exception as error:
                     logger.exception('Error while loading %s', file_path)
                     logger.exception(error)
-                    raise
 
         for key, block in six.iteritems(self.blocks):
             category = self._block_categories.get(key, block.category)
