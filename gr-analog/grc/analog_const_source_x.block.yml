@@ -6,10 +6,10 @@ parameters:
 -   id: type
     label: Output Type
     dtype: enum
-    options: [complex, float, int, short]
+    options: [complex, float, int, short, byte]
     option_attributes:
-        const_type: [complex, real, int, int]
-        fcn: [c, f, i, s]
+        const_type: [complex, real, int, short, gr.sizeof_char]
+        fcn: [c, f, i, s, b]
     hide: part
 -   id: const
     label: Constant

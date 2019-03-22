@@ -1135,6 +1135,7 @@ Waveform Generator Blocks
    gnuradio.analog.sig_source_f
    gnuradio.analog.sig_source_i
    gnuradio.analog.sig_source_s
+   gnuradio.analog.sig_source_b
 
 
 ZeroMQ Interface Blocks
