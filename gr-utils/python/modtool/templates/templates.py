@@ -357,11 +357,11 @@ import numpy\
     if blocktype == 'source':
         inputsig = 'None'
     else:
-        inputsig = '[<+numpy.float32+>]'
+        inputsig = '[<+numpy.float32+>, ]'
     if blocktype == 'sink':
         outputsig = 'None'
     else:
-        outputsig = '[<+numpy.float32+>]'
+        outputsig = '[<+numpy.float32+>, ]'
 %>
 % else:
 <%
@@ -404,8 +404,8 @@ class ${blockname}(${parenttype}):
 <% return %>
 % else:
             name="${blockname}",
-            in_sig="${inputsig}",
-            out_sig="${outputsig}${deciminterp}")
+            in_sig=${inputsig},
+            out_sig=${outputsig}${deciminterp})
 % endif
 
 % if blocktype == 'general':
@@ -519,9 +519,9 @@ ${str_to_python_comment(license)}
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 % if lang == 'cpp':
-from . import ${modname}_swig as ${modname}
+import ${modname}_swig as ${modname}
 % else:
-from .${blockname} import ${blockname}
+from ${blockname} import ${blockname}
 % endif
 
 class qa_${blockname}(gr_unittest.TestCase):
@@ -539,7 +539,7 @@ class qa_${blockname}(gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_${blockname}, "qa_${blockname}.yml")
+    gr_unittest.run(qa_${blockname})
 '''
 
 Templates['grc_yml'] = '''id: ${modname}_${blockname}
