@@ -52,35 +52,30 @@ class test_udp_sink_source(gr_unittest.TestCase):
 
     def test_001(self):
         # Tests calling disconnect/reconnect.
-
         port = 65510
 
         n_data = 16
         src_data = [x for x in range(n_data)]
-        expected_result = tuple(src_data)
         src = blocks.vector_source_s(src_data, False)
         udp_snd = blocks.udp_sink(gr.sizeof_short, 'localhost', port)
         self.tb_snd.connect(src, udp_snd)
 
         self.tb_snd.run()
         udp_snd.disconnect()
-
-
-        udp_snd.connect('localhost', port+1)
+        udp_snd.connect('localhost', port)
         src.rewind()
         self.tb_snd.run()
 
 
     def test_sink_001(self):
-        port = 65520
-
         n_data = 100
         src_data = [float(x) for x in range(n_data)]
         expected_result = tuple(src_data)
 
         recvsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         recvsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        recvsock.bind(('127.0.0.1', port))
+        recvsock.bind(('127.0.0.1', 0))
+        port = recvsock.getsockname()[1]
 
         result = []
         t = Thread(target=recv_data, args=(recvsock, result))
@@ -165,4 +160,3 @@ class test_udp_sink_source(gr_unittest.TestCase):
 
 if __name__ == '__main__':
     gr_unittest.run(test_udp_sink_source, "test_udp_sink_source.xml")
-

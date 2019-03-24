@@ -51,7 +51,7 @@ namespace gr {
       std::string d_host;
       unsigned short d_port;
 
-      std::vector<std::unique_ptr<boost::asio::ip::udp::socket> > d_sockets;
+      std::vector<std::unique_ptr<boost::asio::ip::udp::socket>> d_sockets;
       std::vector<boost::asio::ip::udp::endpoint> d_endpoints;
       std::vector<boost::asio::ip::udp::endpoint> d_endpoints_rcvd;
       boost::asio::io_service d_io_service;

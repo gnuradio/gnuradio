@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007-2010,2013 Free Software Foundation, Inc.
+ * Copyright 2007-2010,2013,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -58,16 +58,15 @@ namespace gr {
         d_itemsize(itemsize), d_payload_size(payload_size),
         d_eof(eof), d_connected(false)
     {
-      // Give us some more room to play.
       connect(host, port);
     }
 
     udp_source_impl::~udp_source_impl()
     {
       if(d_connected)
-        {
+      {
           this->disconnect();
-        }
+      }
     }
 
     void
@@ -99,6 +98,15 @@ namespace gr {
           }
           sock->set_option(boost::asio::socket_base::reuse_address(true));
           sock->bind(ep);
+          if (d_port == 0){
+            auto real_endpoint = sock->local_endpoint();
+            d_port = static_cast<unsigned short>(real_endpoint.port());
+            s_port = (boost::format("%d")%d_port).str();
+            for (auto& my_ep: d_endpoints){
+              my_ep.port(d_port);
+            }
+
+          }
           d_sockets.push_back(std::move(sock));
           d_rxbufs.emplace_back(std::unique_ptr<char[]>(new char[4*d_payload_size]));
           d_residbufs.emplace_back(std::unique_ptr<char[]>(new char[BUF_SIZE_PAYLOADS*d_payload_size]));
