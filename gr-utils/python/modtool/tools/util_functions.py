@@ -108,7 +108,7 @@ def strip_arg_types_grc(string):
         return ""
     else:
         string = strip_default_values(string)
-        return ", ".join(['$' + part.strip().split(' ')[-1] for part in string.split(',')])
+        return ", ".join(['${' + part.strip().split(' ')[-1] + '}' for part in string.split(',')])
 
 def get_modname():
     """ Grep the current module's name from gnuradio.project or CMakeLists.txt """
