@@ -34,47 +34,6 @@
 
 namespace pmt {
 
-# if (PMT_LOCAL_ALLOCATOR)
-
-static const int
-get_cache_line_size()
-{
-  static const int CACHE_LINE_SIZE = 64;		// good guess
-  return CACHE_LINE_SIZE;
-}
-
-static pmt_pool global_pmt_pool(sizeof(pmt_pair), get_cache_line_size());
-
-void *
-pmt_base::operator new(size_t size)
-{
-  void *p = global_pmt_pool.malloc();
-
-  // fprintf(stderr, "pmt_base::new p = %p\n", p);
-  assert((reinterpret_cast<intptr_t>(p) & (get_cache_line_size() - 1)) == 0);
-  return p;
-}
-
-void
-pmt_base::operator delete(void *p, size_t size)
-{
-  global_pmt_pool.free(p);
-}
-
-#endif
-
-void intrusive_ptr_add_ref(pmt_base* p)
-{
-  p->refcount_.fetch_add(1, boost::memory_order_relaxed);
-}
-
-void intrusive_ptr_release(pmt_base* p) {
-  if (p->refcount_.fetch_sub(1, boost::memory_order_release) == 1) {
-    boost::atomic_thread_fence(boost::memory_order_acquire);
-    delete p;
-  }
-}
- 
 pmt_base::~pmt_base()
 {
   // nop -- out of line virtual destructor
@@ -290,7 +249,7 @@ string_to_symbol(const std::string &name)
     if (name == _symbol(sym)->name())
       return sym;		// Yes.  Return it
   }
-  
+
   // Lock the table on insert for thread safety:
   static boost::mutex thread_safety;
   boost::mutex::scoped_lock lock(thread_safety);
@@ -300,7 +259,7 @@ string_to_symbol(const std::string &name)
     if (name == _symbol(sym)->name())
       return sym;		// Yes.  Return it
   }
-  
+
   // Nope.  Make a new one.
   pmt_t sym = pmt_t(new pmt_symbol(name));
   _symbol(sym)->set_next((*get_symbol_hash_table())[hash]);
@@ -1088,27 +1047,6 @@ eqv(const pmt_t& x, const pmt_t& y)
 }
 
 bool
-eqv_raw(pmt_base *x, pmt_base *y)
-{
-  if (x == y)
-    return true;
-
-  if (x->is_integer() && y->is_integer())
-    return _integer(x)->value() == _integer(y)->value();
-
-  if (x->is_uint64() && y->is_uint64())
-    return _uint64(x)->value() == _uint64(y)->value();
-
-  if (x->is_real() && y->is_real())
-    return _real(x)->value() == _real(y)->value();
-
-  if (x->is_complex() && y->is_complex())
-    return _complex(x)->value() == _complex(y)->value();
-
-  return false;
-}
-
-bool
 equal(const pmt_t& x, const pmt_t& y)
 {
   if (eqv(x, y))
@@ -1213,35 +1151,6 @@ assq(pmt_t obj, pmt_t alist)
   return PMT_F;
 }
 
-/*
- * This avoids a bunch of shared_pointer reference count manipulation.
- */
-pmt_t
-assv_raw(pmt_base *obj, pmt_base *alist)
-{
-  while (alist->is_pair()){
-    pmt_base *p = ((pmt_pair *)alist)->d_car.get();
-    if (!p->is_pair())		// malformed alist
-      return PMT_F;
-
-    if (eqv_raw(obj, ((pmt_pair *)p)->d_car.get()))
-      return ((pmt_pair *)alist)->d_car;
-
-    alist = (((pmt_pair *)alist)->d_cdr).get();
-  }
-  return PMT_F;
-}
-
-#if 1
-
-pmt_t
-assv(pmt_t obj, pmt_t alist)
-{
-  return assv_raw(obj.get(), alist.get());
-}
-
-#else
-
 pmt_t
 assv(pmt_t obj, pmt_t alist)
 {
@@ -1257,8 +1166,6 @@ assv(pmt_t obj, pmt_t alist)
   }
   return PMT_F;
 }
-
-#endif
 
 
 pmt_t

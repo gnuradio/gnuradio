@@ -58,17 +58,17 @@ def python_to_tag(tag_struct):
                 good = True
 
         if('key' in tag_struct):
-            if(isinstance(tag_struct['key'], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct['key'], pmt.swig_pmt_ptr)):
                 tag.key = tag_struct['key']
                 good = True
 
         if('value' in tag_struct):
-            if(isinstance(tag_struct['value'], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct['value'], pmt.swig_pmt_ptr)):
                 tag.value = tag_struct['value']
                 good = True
 
         if('srcid' in tag_struct):
-            if(isinstance(tag_struct['srcid'], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct['srcid'], pmt.swig_pmt_ptr)):
                 tag.srcid = tag_struct['srcid']
                 good = True
 
@@ -78,15 +78,15 @@ def python_to_tag(tag_struct):
                 tag.offset = tag_struct[0]
                 good = True
 
-            if(isinstance(tag_struct[1], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct[1], pmt.swig_pmt_ptr)):
                 tag.key = tag_struct[1]
                 good = True
 
-            if(isinstance(tag_struct[2], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct[2], pmt.swig_pmt_ptr)):
                 tag.value = tag_struct[2]
                 good = True
 
-            if(isinstance(tag_struct[3], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct[3], pmt.swig_pmt_ptr)):
                 tag.srcid = tag_struct[3]
                 good = True
 
@@ -95,11 +95,11 @@ def python_to_tag(tag_struct):
                 tag.offset = tag_struct[0]
                 good = True
 
-            if(isinstance(tag_struct[1], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct[1], pmt.swig_pmt_ptr)):
                 tag.key = tag_struct[1]
                 good = True
 
-            if(isinstance(tag_struct[2], pmt.swig_int_ptr)):
+            if(isinstance(tag_struct[2], pmt.swig_pmt_ptr)):
                 tag.value = tag_struct[2]
                 good = True
 

@@ -33,53 +33,8 @@
  * See pmt.h for the public interface
  */
 
-#define PMT_LOCAL_ALLOCATOR 0		// define to 0 or 1
 namespace pmt {
 
-class PMT_API pmt_base : boost::noncopyable {
-  mutable boost::atomic<int> refcount_;
-
-protected:
-  pmt_base() : refcount_(0) {};
-  virtual ~pmt_base();
-
-public:
-  virtual bool is_bool()    const { return false; }
-  virtual bool is_symbol()  const { return false; }
-  virtual bool is_number()  const { return false; }
-  virtual bool is_integer() const { return false; }
-  virtual bool is_uint64()  const { return false; }
-  virtual bool is_real()    const { return false; }
-  virtual bool is_complex() const { return false; }
-  virtual bool is_null()    const { return false; }
-  virtual bool is_pair()    const { return false; }
-  virtual bool is_tuple()   const { return false; }
-  virtual bool is_vector()  const { return false; }
-  virtual bool is_dict()    const { return false; }
-  virtual bool is_any()     const { return false; }
-
-  virtual bool is_uniform_vector() const { return false; }
-  virtual bool is_u8vector()  const { return false; }
-  virtual bool is_s8vector()  const { return false; }
-  virtual bool is_u16vector() const { return false; }
-  virtual bool is_s16vector() const { return false; }
-  virtual bool is_u32vector() const { return false; }
-  virtual bool is_s32vector() const { return false; }
-  virtual bool is_u64vector() const { return false; }
-  virtual bool is_s64vector() const { return false; }
-  virtual bool is_f32vector() const { return false; }
-  virtual bool is_f64vector() const { return false; }
-  virtual bool is_c32vector() const { return false; }
-  virtual bool is_c64vector() const { return false; }
-
-  friend void intrusive_ptr_add_ref(pmt_base* p);
-  friend void intrusive_ptr_release(pmt_base* p);
-
-# if (PMT_LOCAL_ALLOCATOR)
-  void *operator new(size_t);
-  void operator delete(void *, size_t);
-#endif
-};
 
 class pmt_bool : public pmt_base
 {
