@@ -149,11 +149,12 @@ class ModToolMakeYAML(ModTool):
             """ Return the block name and the header file name from the .cc file name """
             blockname = os.path.splitext(os.path.basename(fname_cc.replace('_impl.', '.')))[0]
             fname_h = (blockname + '.h').replace('_impl.', '.')
+            contains_modulename =  blockname.startswith(self.info['modname']+'_')
             blockname = blockname.replace(self.info['modname']+'_', '', 1)
-            return (blockname, fname_h)
+            return (blockname, fname_h, contains_modulename)
         # Go, go, go
         logger.info("Making GRC bindings for {}...".format(fname_cc))
-        (blockname, fname_h) = _get_blockdata(fname_cc)
+        (blockname, fname_h, contains_modulename) = _get_blockdata(fname_cc)
         try:
             parser = ParserCCBlock(fname_cc,
                                    os.path.join(self.info['includedir'], fname_h),
@@ -164,4 +165,7 @@ class ModToolMakeYAML(ModTool):
         except IOError:
             raise ModToolException("Can't open some of the files necessary to parse {}.".format(fname_cc))
 
-        return (parser.read_params(), parser.read_io_signature(), blockname)
+        if contains_modulename:
+            return (parser.read_params(), parser.read_io_signature(), self.info['modname']+'_'+blockname)
+        else:
+            return (parser.read_params(), parser.read_io_signature(), blockname)
