@@ -123,13 +123,14 @@ class test_skiphead(gr_unittest.TestCase):
         self.tb.connect(src1, op, dst1)
         self.tb.run()
         dst_data = dst1.data()
+        dst_tags = dst1.tags()
         self.assertEqual(expected_result, dst_data)
-        self.assertEqual(dst1.tags()[0].offset, 25, "Tag offset is incorrect")
-        self.assertEqual(len(dst1.tags()), 1, "Wrong number of tags received")
+        self.assertEqual(dst_tags[0].offset, 25, "Tag offset is incorrect")
+        self.assertEqual(len(dst_tags), 1, "Wrong number of tags received")
         self.assertEqual(pmt.to_python(
-            dst1.tags()[0].key), "baz", "Tag key is incorrect")
+            dst_tags[0].key), "baz", "Tag key is incorrect")
         self.assertEqual(pmt.to_python(
-            dst1.tags()[0].value), "qux", "Tag value is incorrect")
+            dst_tags[0].value), "qux", "Tag value is incorrect")
 
 if __name__ == '__main__':
     gr_unittest.run(test_skiphead, "test_skiphead.xml")
