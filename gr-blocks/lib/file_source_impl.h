@@ -41,6 +41,7 @@ namespace gr {
       bool d_repeat;
       bool d_updated;
       bool d_file_begin;
+      bool d_seekable;
       long d_repeat_cnt;
       pmt::pmt_t d_add_begin_tag;
 

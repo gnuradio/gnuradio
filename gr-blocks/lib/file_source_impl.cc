@@ -37,9 +37,13 @@
 #ifdef _MSC_VER
 #define GR_FSEEK _fseeki64
 #define GR_FTELL _ftelli64
+#define GR_FSTAT _fstat
+#define GR_FILENO _fileno
 #else
 #define GR_FSEEK fseeko
 #define GR_FTELL ftello
+#define GR_FSTAT fstat
+#define GR_FILENO fileno
 #endif
 
 namespace gr {
@@ -81,28 +85,34 @@ namespace gr {
     bool
     file_source_impl::seek(int64_t seek_point, int whence)
     {
-      seek_point += d_start_offset_items;
+      if (d_seekable) {
+        seek_point += d_start_offset_items;
 
-      switch(whence) {
-      case SEEK_SET:
-        break;
-      case SEEK_CUR:
-        seek_point += (d_length_items - d_items_remaining);
-        break;
-      case SEEK_END:
-        seek_point = d_length_items - seek_point;
-        break;
-      default:
-        GR_LOG_WARN(d_logger, "bad seek mode");
+        switch(whence) {
+        case SEEK_SET:
+          break;
+        case SEEK_CUR:
+          seek_point += (d_length_items - d_items_remaining);
+          break;
+        case SEEK_END:
+          seek_point = d_length_items - seek_point;
+          break;
+        default:
+          GR_LOG_WARN(d_logger, "bad seek mode");
+          return 0;
+        }
+
+        if ((seek_point < (int64_t)d_start_offset_items)
+            || (seek_point > (int64_t)(d_start_offset_items+d_length_items-1))) {
+          GR_LOG_WARN(d_logger, "bad seek point");
+          return 0;
+        }
+        return GR_FSEEK((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
+      }
+      else {
+        GR_LOG_WARN(d_logger, "file not seekable");
         return 0;
       }
-
-      if ((seek_point < (int64_t)d_start_offset_items)
-          || (seek_point > (int64_t)(d_start_offset_items+d_length_items-1))) {
-        GR_LOG_WARN(d_logger, "bad seek point");
-        return 0;
-      }
-      return GR_FSEEK((FILE*)d_fp, seek_point * d_itemsize, SEEK_SET) == 0;
     }
 
 
@@ -123,20 +133,40 @@ namespace gr {
         throw std::runtime_error("can't open file");
       }
 
-      //Check to ensure the file will be consumed according to item size
-      GR_FSEEK(d_new_fp, 0, SEEK_END);
-      uint64_t file_size = GR_FTELL(d_new_fp);
+      struct stat st;
 
-      // Make sure there will be at least one item available
-      if ((file_size / d_itemsize) < (start_offset_items+1)) {
-        if (start_offset_items) {
-          GR_LOG_WARN(d_logger, "file is too small for start offset");
+      if(GR_FSTAT(GR_FILENO(d_new_fp), &st)) {
+        GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
+        throw std::runtime_error("can't fstat file");
+      }
+      if(S_ISREG(st.st_mode)) {
+        d_seekable = true;
+      }
+      else {
+        d_seekable = false;
+      }
+
+      uint64_t file_size;
+
+      if (d_seekable) {
+        //Check to ensure the file will be consumed according to item size
+        GR_FSEEK(d_new_fp, 0, SEEK_END);
+        file_size = GR_FTELL(d_new_fp);
+
+        // Make sure there will be at least one item available
+        if ((file_size / d_itemsize) < (start_offset_items+1)) {
+          if (start_offset_items) {
+            GR_LOG_WARN(d_logger, "file is too small for start offset");
+          }
+          else {
+            GR_LOG_WARN(d_logger, "file is too small");
+          }
+          fclose(d_new_fp);
+          throw std::runtime_error("file is too small");
         }
-        else {
-          GR_LOG_WARN(d_logger, "file is too small");
-        }
-        fclose(d_new_fp);
-        throw std::runtime_error("file is too small");
+      }
+      else {
+        file_size = INT64_MAX;
       }
 
       uint64_t items_available = (file_size / d_itemsize - start_offset_items);
@@ -156,7 +186,9 @@ namespace gr {
       }
 
       // Rewind to start offset
-      GR_FSEEK(d_new_fp, start_offset_items * d_itemsize, SEEK_SET);
+      if (d_seekable) {
+        GR_FSEEK(d_new_fp, start_offset_items * d_itemsize, SEEK_SET);
+      }
 
       d_updated = true;
       d_repeat = repeat;
@@ -241,7 +273,7 @@ namespace gr {
         if (d_items_remaining == 0) {
 
           // Repeat: rewind and request tag
-          if (d_repeat) {
+          if (d_repeat && d_seekable) {
             GR_FSEEK(d_fp, d_start_offset_items * d_itemsize, SEEK_SET);
             d_items_remaining = d_length_items;
             if (d_add_begin_tag != pmt::PMT_NIL) {
