@@ -52,14 +52,14 @@ namespace gr {
        * If \p repeat is turned on, the file will repeat the file after
        * it's reached the end.
        *
-       * If \p len is non-zero, only items [offset, offset+len) will
+       * If \p len is non-zero, only items (offset, offset+len) will
        * be produced.
        *
        * \param itemsize        the size of each item in the file, in bytes
        * \param filename        name of the file to source from
        * \param repeat  repeat file from start
        * \param offset  begin this many items into file
-       * \param len     produce only items [offset, offset+len)
+       * \param len     produce only items (offset, offset+len)
        */
       static sptr make(size_t itemsize, const char *filename, bool repeat = false,
                        uint64_t offset = 0, uint64_t len = 0);
