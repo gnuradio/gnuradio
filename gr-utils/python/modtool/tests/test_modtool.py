@@ -29,7 +29,11 @@ import tempfile
 import unittest
 import warnings
 from os import path
-from pylint.epylint import py_run
+try:
+    from pylint.epylint import py_run
+    skip_pylint_test = False
+except:
+    skip_pylint_test = True
 
 from gnuradio.modtool.core import *
 
@@ -103,15 +107,6 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.isdir(path.join(module_dir, 'swig')))
         self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
 
-        ## pylint tests ##
-        python_dir = path.join(module_dir, 'python')
-        py_module = path.join(python_dir, 'build_utils.py')
-        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        print(pylint_stdout.getvalue(), end='')
-        py_module = path.join(python_dir, 'build_utils_codes.py')
-        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        print(pylint_stdout.getvalue(), end='')
-
         ## The check for object instantiation ##
         test_obj = ModToolNewModule()
         # module name not specified
@@ -125,6 +120,19 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.isdir(self.test_dir+'/gr-test1'))
         self.assertTrue(path.isdir(self.test_dir+'/gr-test1/lib'))
         self.assertTrue(path.exists(self.test_dir+'/gr-test1/CMakeLists.txt'))
+
+    @unittest.skipIf(skip_pylint_test, 'pylint dependency missing, skip test')
+    def test_pylint_newmod(self):
+        """ Pylint tests for API function newmod """
+        module_dir = path.join(self.test_dir, 'gr-test')
+        ## pylint tests ##
+        python_dir = path.join(module_dir, 'python')
+        py_module = path.join(python_dir, 'mul_ff.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
+        py_module = path.join(python_dir, 'qa_mul_ff.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
 
     def test_add(self):
         """ Tests for the API function add """
@@ -185,6 +193,29 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_mul_ff.block.yml')))
+
+    @unittest.skipIf(skip_pylint_test, 'pylint dependency missing, skip test')
+    def test_pylint_add(self):
+        """ Pylint tests for API function add """
+        ## skip tests if newmod command wasn't successful
+        if self.f_newmod:
+            raise unittest.SkipTest("setUp for API function 'add' failed")
+        module_dir = path.join(self.test_dir, 'gr-howto')
+
+        ## The check for object instantiation ##
+        test_obj = ModToolAdd()
+        test_obj.dir = module_dir
+        # missing blocktype, lang, blockname
+        self.assertRaises(ModToolException, test_obj.run)
+        test_obj.info['blocktype'] = 'general'
+        # missing lang, blockname
+        self.assertRaises(ModToolException, test_obj.run)
+        test_obj.info['lang'] = 'python'
+        test_obj.info['blockname'] = 'mul_ff'
+        test_obj.add_py_qa = True
+        test_obj.run()
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
 
         ## pylint tests ##
         python_dir = path.join(module_dir, 'python')
