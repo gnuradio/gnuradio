@@ -1,6 +1,6 @@
 id: hilbert_fc
 label: Hilbert
-flagss: [ python, cpp ]
+flags: [ python, cpp ]
 
 parameters:
 -   id: num_taps
