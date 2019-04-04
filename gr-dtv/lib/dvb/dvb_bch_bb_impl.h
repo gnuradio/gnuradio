@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,12 +36,15 @@ namespace gr {
       unsigned int kbch;
       unsigned int nbch;
       unsigned int bch_code;
+      unsigned int frame_size;
 
       std::bitset<MAX_BCH_PARITY_BITS> crc_table[256];
+      std::bitset<MAX_BCH_PARITY_BITS> crc_medium_table[16];
       unsigned int num_parity_bits;
       std::bitset<MAX_BCH_PARITY_BITS> polynome;
 
       void calculate_crc_table();
+      void calculate_medium_crc_table();
       int poly_mult(const int*, int, const int*, int, int*);
       void bch_poly_build_tables(void);
 
