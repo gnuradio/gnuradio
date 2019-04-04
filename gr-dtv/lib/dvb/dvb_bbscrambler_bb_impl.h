@@ -31,7 +31,9 @@ namespace gr {
     {
      private:
       int kbch;
+      int frame_size;
       unsigned char bb_randomise[FRAME_SIZE_NORMAL];
+      uint32_t* bb_randomize32;
       uint64_t* bb_randomize64;
       void init_bb_randomiser(void);
 
