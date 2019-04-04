@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016,2018 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2018,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -390,6 +390,7 @@ namespace gr {
       }
 
       bch_poly_build_tables();
+      frame_size = framesize;
       set_output_multiple(nbch);
     }
 
@@ -451,6 +452,26 @@ namespace gr {
           }
         }
         crc_table[divident] = curByte;
+      }
+    }
+
+    void
+    dvb_bch_bb_impl::calculate_medium_crc_table(void)
+    {
+      for (int divident = 0; divident < 16; divident++) { /* iterate over all possible input byte values 0 - 15 */
+        std::bitset<MAX_BCH_PARITY_BITS> curByte(divident);
+        curByte <<= num_parity_bits - 4;
+
+        for (unsigned char bit = 0; bit < 4; bit++) {
+          if ((curByte[num_parity_bits - 1]) != 0) {
+            curByte <<= 1;
+            curByte ^= polynome;
+          }
+          else {
+            curByte <<= 1;
+          }
+        }
+        crc_medium_table[divident] = curByte;
       }
     }
 
@@ -569,6 +590,7 @@ for (unsigned int i = 0; i < num_parity_bits; i ++) {\
         break;
       }
       calculate_crc_table();
+      calculate_medium_crc_table();
     }
 
     int
@@ -585,34 +607,68 @@ for (unsigned int i = 0; i < num_parity_bits; i ++) {\
       std::bitset<MAX_BCH_PARITY_BITS> parity_bits;
       int consumed = 0;
 
-      for (int i = 0; i < noutput_items; i += nbch) {
-        for (int j = 0; j < (int)kbch / 8; j++) {
-          b = 0;
+      if (frame_size != FECFRAME_MEDIUM) {
+        for (int i = 0; i < noutput_items; i += nbch) {
+          for (int j = 0; j < (int)kbch / 8; j++) {
+            b = 0;
 
-          // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
-          for (int e = 0; e < 8; e++) {
-            temp = *in++;
-            *out++ = temp;
-            consumed++;
+            // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
+            for (int e = 0; e < 8; e++) {
+              temp = *in++;
+              *out++ = temp;
+              consumed++;
 
-            b |= temp << (7 - e);
+              b |= temp << (7 - e);
+            }
+
+            msb = 0;
+            for (int n = 1; n <= 8; n++) {
+              temp = parity_bits[num_parity_bits - n];
+              msb |= temp << (8 - n);
+            }
+            /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
+            unsigned char pos = (msb ^ b);
+            /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
+            parity_bits = (parity_bits << 8) ^ crc_table[pos];
           }
 
-          msb = 0;
-          for (int n = 1; n <= 8; n++) {
-            temp = parity_bits[num_parity_bits - n];
-            msb |= temp << (8 - n);
+          // Now add the parity bits to the output
+          for (unsigned int n = 0; n < num_parity_bits; n++) {
+            *out++ = (char) parity_bits[num_parity_bits - 1];
+            parity_bits <<= 1;
           }
-          /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
-          unsigned char pos = (msb ^ b);
-          /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
-          parity_bits = (parity_bits << 8) ^ crc_table[pos];
         }
+      }
+      else {
+        for (int i = 0; i < noutput_items; i += nbch) {
+          for (int j = 0; j < (int)kbch / 4; j++) {
+            b = 0;
 
-        // Now add the parity bits to the output
-        for (unsigned int n = 0; n < num_parity_bits; n++) {
-          *out++ = (char) parity_bits[num_parity_bits - 1];
-          parity_bits <<= 1;
+            // calculate the crc using the lookup table, cf. http://www.sunshine2k.de/articles/coding/crc/understanding_crc.html
+            for (int e = 0; e < 4; e++) {
+              temp = *in++;
+              *out++ = temp;
+              consumed++;
+
+              b |= temp << (3 - e);
+            }
+
+            msb = 0;
+            for (int n = 1; n <= 4; n++) {
+              temp = parity_bits[num_parity_bits - n];
+              msb |= temp << (4 - n);
+            }
+            /* XOR-in next input byte into MSB of crc and get this MSB, that's our new intermediate divident */
+            unsigned char pos = (msb ^ b);
+            /* Shift out the MSB used for division per lookuptable and XOR with the remainder */
+            parity_bits = (parity_bits << 4) ^ crc_medium_table[pos];
+          }
+
+          // Now add the parity bits to the output
+          for (unsigned int n = 0; n < num_parity_bits; n++) {
+            *out++ = (char) parity_bits[num_parity_bits - 1];
+            parity_bits <<= 1;
+          }
         }
       }
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -246,6 +246,7 @@ namespace gr {
       }
 
       init_bb_randomiser();
+      frame_size = framesize;
       set_output_multiple(kbch);
     }
 
@@ -268,8 +269,8 @@ namespace gr {
           sr |= 0x4000;
         }
       }
+      bb_randomize32 = (uint32_t*)&bb_randomise[0];
       bb_randomize64 = (uint64_t*)&bb_randomise[0];
-
     }
 
     int
@@ -277,13 +278,23 @@ namespace gr {
                           gr_vector_const_void_star &input_items,
                           gr_vector_void_star &output_items)
     {
-      // noutput_items is multiple of kbch and kbch is always divisible by 8
       const uint64_t *in = (const uint64_t *) input_items[0];
       uint64_t *out = (uint64_t *) output_items[0];
+      const uint32_t *inm = (const uint32_t *) input_items[0];
+      uint32_t *outm = (uint32_t *) output_items[0];
 
-      for (int i = 0; i < noutput_items; i += kbch) {
-        for (int j = 0; j < kbch/8; ++j) {
-          *out++ = *in++ ^ bb_randomize64[j];
+      if (frame_size != FECFRAME_MEDIUM) {
+        for (int i = 0; i < noutput_items; i += kbch) {
+          for (int j = 0; j < kbch / 8; ++j) {
+            *out++ = *in++ ^ bb_randomize64[j];
+          }
+        }
+      }
+      else {
+        for (int i = 0; i < noutput_items; i += kbch) {
+          for (int j = 0; j < kbch / 4; ++j) {
+            *outm++ = *inm++ ^ bb_randomize32[j];
+          }
         }
       }
 
