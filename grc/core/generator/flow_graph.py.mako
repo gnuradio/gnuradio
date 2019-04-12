@@ -348,7 +348,7 @@ def main(top_block_cls=${class_name}, options=None):
     tb.start(${flow_graph.get_option('max_nouts') or ''})
     % endif
     % if flow_graph.get_option('qt_qss_theme'):
-    tb.setStyleSheetFromFile(${ flow_graph.get_option('qt_qss_theme') })
+    tb.setStyleSheetFromFile("${ flow_graph.get_option('qt_qss_theme') }")
     % endif
     tb.show()
 
