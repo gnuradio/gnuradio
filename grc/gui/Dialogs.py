@@ -141,16 +141,16 @@ class TextDisplay(SimpleTextDisplay):
         """Create a popup menu for the scroll lock and clear functions"""
         menu.append(Gtk.SeparatorMenuItem())
 
-        lock = Gtk.CheckMenuItem("Scroll Lock")
+        lock = Gtk.CheckMenuItem(label = "Scroll Lock")
         menu.append(lock)
         lock.set_active(self.scroll_lock)
         lock.connect('activate', self.scroll_back_cb, view)
 
-        save = Gtk.ImageMenuItem(Gtk.STOCK_SAVE)
+        save = Gtk.ImageMenuItem(label = Gtk.STOCK_SAVE)
         menu.append(save)
         save.connect('activate', self.save_cb, view)
 
-        clear = Gtk.ImageMenuItem(Gtk.STOCK_CLEAR)
+        clear = Gtk.ImageMenuItem(label = Gtk.STOCK_CLEAR)
         menu.append(clear)
         clear.connect('activate', self.clear_cb, view)
         menu.show_all()
