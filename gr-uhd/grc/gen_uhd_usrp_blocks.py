@@ -170,11 +170,26 @@ templates:
         % for n in range(max_nchan):
         ${'%'} if context.get('nchan')() > ${n}:
         self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
+        % if sourk == 'source':
+        ${'%'} if context.get('rx_agc${n}')() == 'Enabled':
+        self.${'$'}{id}.set_rx_agc(True, ${n})
+        ${'%'} elif context.get('rx_agc${n}')() == 'Disabled':
+        self.${'$'}{id}.set_rx_agc(False, ${n})
+        ${'%'} endif
+        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
         ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
         self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} else:
         self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
         ${'%'} endif
+        ${'%'} endif
+        % else:
+        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
+        % endif
         ${'%'} if context.get('ant${n}')():
         self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
         ${'%'} endif
@@ -202,7 +217,14 @@ templates:
     -   set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
     -   set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
+    % if sourk == 'source':
+    -   ${'$'}{'set_rx_agc(True, ${n})' if context.get('rx_agc${n}')() == 'Enabled' else ''}
+    -   ${'$'}{'set_rx_agc(False, ${n})' if context.get('rx_agc${n}')() == 'Disabled' else ''}
+    -   ${'$'}{'set_gain(${'$'}{${'gain' + str(n)}}, ${n})' if not bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
+    -   ${'$'}{'set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})' if bool(eval(context.get('norm_gain${n}')())) and context.get('rx_agc${n}')() != 'Enabled' else ''}
+    % else:
     -   self.${'$'}{id}.set_${'$'}{'normalized_' if bool(eval(context.get('norm_gain${n}')())) else ''}gain(${'$'}{${'gain' + str(n)}}, ${n})
+    % endif
     -   ${'$'}{'set_lo_source(' + lo_source${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
     -   ${'$'}{'set_lo_export_enabled(' + lo_export${n} + ', uhd.ALL_LOS, ${n})' if show_lo_controls else ''}
     -   set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
@@ -296,12 +318,26 @@ PARAMS_TMPL = """
     dtype: real
     default: '0'
     hide: ${'$'}{ 'none' if (nchan > ${n}) else 'all' }
+% if sourk == 'source':
+-   id: rx_agc${n}
+    label: 'Ch${n}: AGC'
+    category: RF Options
+    dtype: string
+    default: 'Default'
+    options: ['Default', 'Disabled', 'Enabled']
+    option_labels: [Default, Disabled, Enabled]
+    hide: ${'$'}{ 'none' if (nchan > ${n}) else 'all' }
+% endif
 -   id: gain${n}
     label: 'Ch${n}: Gain Value'
     category: RF Options
     dtype: float
     default: '0'
+% if sourk == 'source':
+    hide: ${'$'}{ 'none' if nchan > ${n} and rx_agc${n} != 'Enabled' else 'all' }
+% else:
     hide: ${'$'}{ 'none' if nchan > ${n} else 'all' }
+% endif
 -   id: norm_gain${n}
     label: 'Ch${n}: Gain Type'
     category: RF Options
@@ -309,7 +345,11 @@ PARAMS_TMPL = """
     default: 'False'
     options: ['False', 'True']
     option_labels: [Absolute (dB), Normalized]
+% if sourk == 'source':
+    hide: ${'$'}{ 'all' if nchan <= ${n} or rx_agc${n} == 'Enabled' else ('none' if bool(eval('norm_gain' + str(${n}))) else 'part')}
+% else:
     hide: ${'$'}{ 'all' if nchan <= ${n} else ('none' if bool(eval('norm_gain' + str(${n}))) else 'part')}
+% endif
 -   id: ant${n}
     label: 'Ch${n}: Antenna'
     category: RF Options

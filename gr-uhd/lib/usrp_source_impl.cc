@@ -159,6 +159,17 @@ namespace gr {
       return _dev->set_rx_gain(gain, name, chan);
     }
 
+    void
+    usrp_source_impl::set_rx_agc(const bool enable, size_t chan)
+    {
+#if UHD_VERSION >= 30803
+      chan = _stream_args.channels[chan];
+      return _dev->set_rx_agc(enable, chan);
+#else
+      throw std::runtime_error("not implemented in this version");
+#endif
+    }
+
     void usrp_source_impl::set_normalized_gain(double norm_gain, size_t chan)
     {
 #ifdef UHD_USRP_MULTI_USRP_NORMALIZED_GAIN
