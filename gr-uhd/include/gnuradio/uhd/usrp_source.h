@@ -253,6 +253,15 @@ namespace gr {
                                   size_t chan = 0) = 0;
 
       /*!
+       * Enable/disable the RX AGC module.
+       * If AGC is turned on, all manual gain settings are ignored.
+       *
+       * \param enable true to enable the AGC
+       * \param chan the channel index 0 to N-1
+       */
+      virtual void set_rx_agc(const bool enable, size_t chan = 0) = 0;
+
+      /*!
        * Convenience function for finite data acquisition.
        * This is not to be used with the scheduler; rather,
        * one can request samples from the USRP in python.

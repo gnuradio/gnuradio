@@ -83,6 +83,7 @@ namespace gr {
                                          size_t chan);
       void set_gain(double gain, size_t chan);
       void set_gain(double gain, const std::string &name, size_t chan);
+      void set_rx_agc(const bool enable, size_t chan);
       void set_normalized_gain(double gain, size_t chan);
       void set_antenna(const std::string &ant, size_t chan);
       void set_bandwidth(double bandwidth, size_t chan);
