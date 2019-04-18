@@ -29,6 +29,12 @@
 #include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/pdu.h>
 
+#if BOOST_VERSION >= 107000
+#define GET_IO_SERVICE(s) ((boost::asio::io_context&)(s)->get_executor().context())
+#else
+#define GET_IO_SERVICE(s) ((s)->get_io_service())
+#endif
+
 namespace gr {
   namespace blocks {
 
@@ -165,7 +171,7 @@ namespace gr {
     void
     socket_pdu_impl::start_tcp_accept()
     {
-      tcp_connection::sptr new_connection = tcp_connection::make(d_acceptor_tcp->get_io_service(), d_rxbuf.size(), d_tcp_no_delay);
+      tcp_connection::sptr new_connection = tcp_connection::make(GET_IO_SERVICE(d_acceptor_tcp), d_rxbuf.size(), d_tcp_no_delay);
 
       d_acceptor_tcp->async_accept(new_connection->socket(),
         boost::bind(&socket_pdu_impl::handle_tcp_accept, this,
