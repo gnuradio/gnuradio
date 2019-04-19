@@ -24,7 +24,7 @@
 #define INCLUDED_PMT_H
 
 #include <pmt/api.h>
-#include <boost/intrusive_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
 #include <complex>
@@ -53,16 +53,47 @@ namespace pmt {
 /*!
  * \brief base class of all pmt types
  */
-class pmt_base;
+class pmt_base : boost::noncopyable {
+
+ public:
+  pmt_base(){};
+  virtual ~pmt_base();
+
+  virtual bool is_bool()    const { return false; }
+  virtual bool is_symbol()  const { return false; }
+  virtual bool is_number()  const { return false; }
+  virtual bool is_integer() const { return false; }
+  virtual bool is_uint64()  const { return false; }
+  virtual bool is_real()    const { return false; }
+  virtual bool is_complex() const { return false; }
+  virtual bool is_null()    const { return false; }
+  virtual bool is_pair()    const { return false; }
+  virtual bool is_tuple()   const { return false; }
+  virtual bool is_vector()  const { return false; }
+  virtual bool is_dict()    const { return false; }
+  virtual bool is_any()     const { return false; }
+
+  virtual bool is_uniform_vector() const { return false; }
+  virtual bool is_u8vector()  const { return false; }
+  virtual bool is_s8vector()  const { return false; }
+  virtual bool is_u16vector() const { return false; }
+  virtual bool is_s16vector() const { return false; }
+  virtual bool is_u32vector() const { return false; }
+  virtual bool is_s32vector() const { return false; }
+  virtual bool is_u64vector() const { return false; }
+  virtual bool is_s64vector() const { return false; }
+  virtual bool is_f32vector() const { return false; }
+  virtual bool is_f64vector() const { return false; }
+  virtual bool is_c32vector() const { return false; }
+  virtual bool is_c64vector() const { return false; }
+
+};
 
 /*!
  * \brief typedef for shared pointer (transparent reference counting).
  * See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
  */
-typedef boost::intrusive_ptr<pmt_base> pmt_t;
-
-extern PMT_API void intrusive_ptr_add_ref(pmt_base*);
-extern PMT_API void intrusive_ptr_release(pmt_base*);
+typedef boost::shared_ptr<pmt_base> pmt_t;
 
 class PMT_API exception : public std::logic_error
 {

@@ -30,7 +30,6 @@
 %}
 
 %{
-#include <boost/intrusive_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
 #include <complex>
@@ -68,6 +67,7 @@ namespace pmt {
 
 %include <std_complex.i>
 %include <std_vector.i>
+%include <gr_shared_ptr.i>
 %template(pmt_vector_int8) std::vector<int8_t>;
 %template(pmt_vector_uint8) std::vector<uint8_t>;
 %template(pmt_vector_int16) std::vector<int16_t>;
@@ -85,22 +85,15 @@ namespace pmt {
 // Language independent exception handler
 ////////////////////////////////////////////////////////////////////////
 
-// Template intrusive_ptr for Swig to avoid dereferencing issues
-namespace pmt{
-    class pmt_base;
-}
-//%import <intrusive_ptr.i>
-%import <gr_intrusive_ptr.i>
-%template(swig_int_ptr) boost::intrusive_ptr<pmt::pmt_base>;
+%template(swig_pmt_ptr) boost::shared_ptr<pmt::pmt_base>;
 
 namespace pmt{
+  class pmt_base;
+  typedef boost::shared_ptr<pmt::pmt_base> pmt_t;
 
-  typedef boost::intrusive_ptr<pmt_base> pmt_t;
-
-  // Allows Python to directly print a PMT object
   %pythoncode
   %{
-    swig_int_ptr.__repr__ = lambda self: write_string(self)
+    swig_pmt_ptr.__repr__ = lambda self: write_string(self)
   %}
 
   pmt_t get_PMT_NIL();
@@ -346,4 +339,3 @@ namespace pmt{
     return _deserialize_str_u8(tuple(x for x in pmt_str))
 
 %}
-

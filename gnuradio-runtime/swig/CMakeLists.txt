@@ -90,7 +90,6 @@ install(
     feval.i
     gr_ctrlport.i
     gr_extras.i
-    gr_intrusive_ptr.i
     gr_logger.i
     gr_shared_ptr.i
     gr_swig_block_magic.i
