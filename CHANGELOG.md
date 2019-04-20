@@ -6,6 +6,36 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.7.13.5] - 2019-04-20
+
+### Fixed
+#### Project Scope
+- PMT: in multiple places, we triggered undef. behaviour by accessing the first element of potentially empty uvectors
+#### gr-audio
+- Windows audio for higher output multiples broken
+#### gr-blocks
+- QA: `udp_source_sink` flakiness
+#### gr-dtv
+- Several broken optimizations
+- 64-APSK partially wrong ordering
+- OOB access in interleaver
+- uncovered worst case LDPC LUT generation
+#### gr-qtgui
+- Compiler Warnings
+
+#### gr-fec
+- `polar_encoder`/`_common`: Memory leak
+#### gr-uhd
+- GRC bindings: DC filter was could not be disabled with IQ imbalance correction disabled
+
+### Added
+#### gnuradio-runtime
+- ctrlport: int64 for `rpcbasic_inserter`
+
+### Changed
+#### GRC
+- Removed generation time from generated python code
+
 ## [3.7.13.4] - 2018-07-15
 
 ### Fixed
