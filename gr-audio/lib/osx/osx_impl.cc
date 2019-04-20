@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include "audio_registry.h"
+#include "../audio_registry.h"
 
 #include <gnuradio/audio/osx_impl.h>
 
