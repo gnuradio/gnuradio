@@ -33,7 +33,6 @@ from types import SimpleNamespace
 
 from gnuradio import gr
 from ..tools import get_modname, SCMRepoFactory
-from ..cli import setup_cli_logger
 
 logger = logging.getLogger('gnuradio.modtool')
 
@@ -90,6 +89,7 @@ class ModTool(object):
             self.info['yes'] = True
         else:
             self.info['yes'] = kwargs.get('yes', False)
+            from ..cli import setup_cli_logger
             setup_cli_logger(logger)
 
         if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:
