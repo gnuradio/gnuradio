@@ -31,7 +31,6 @@ import glob
 import logging
 
 from ..tools import remove_pattern_from_file, CMakeFileEditor
-from ..cli import cli_input
 from .base import ModTool, ModToolException
 
 logger = logging.getLogger(__name__)
@@ -57,6 +56,8 @@ class ModToolRemove(ModTool):
         # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
+        else:
+            from ..cli import cli_input
         def _remove_cc_test_case(filename=None, ed=None):
             """ Special function that removes the occurrences of a qa*.cc file
             from the CMakeLists.txt. """

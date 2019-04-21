@@ -29,7 +29,6 @@ import re
 import sys
 import logging
 
-from ..cli import cli_input
 from ..tools import CMakeFileEditor
 from .base import ModTool, ModToolException
 
@@ -131,6 +130,8 @@ class ModToolDisable(ModTool):
         # This portion will be covered by the CLI
         if not self.cli:
             self.validate()
+        else:
+            from ..cli import cli_input
         # List of special rules: 0: subdir, 1: filename re match, 2: callback
         special_treatments = (
                 ('python', r'qa.+py$', _handle_py_qa),
