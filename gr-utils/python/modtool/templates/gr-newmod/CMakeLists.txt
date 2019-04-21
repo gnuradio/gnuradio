@@ -59,6 +59,26 @@ if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
     add_definitions(-fvisibility=hidden)
 endif()
 
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_CXX_STANDARD 11)
+ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    SET(CMAKE_CXX_STANDARD 11)
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_CXX_STANDARD 11)
+ELSE()
+    message(WARNING "C++ standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
+IF(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    SET(CMAKE_C_STANDARD 11)
+ELSEIF(CMAKE_C_COMPILER_ID MATCHES "Clang")
+    SET(CMAKE_C_STANDARD 11)
+ELSEIF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    SET(CMAKE_C_STANDARD 11)
+ELSE()
+    message(WARNING "C standard could not be set because compiler is not GNU, Clang or MSVC.")
+ENDIF()
+
 ########################################################################
 # Install directories
 ########################################################################
