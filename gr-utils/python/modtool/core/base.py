@@ -29,11 +29,25 @@ import re
 import glob
 import logging
 import itertools
-from types import SimpleNamespace
+
+try:
+    from types import SimpleNamespace
+except:
+    # Py2.7 doesn't have SimpleNamespace, soooo use what Py3 docs say is roughly equivalent
+    class SimpleNamespace:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+        def __repr__(self):
+            keys = sorted(self.__dict__)
+            items = ("{}={!r}".format(k, self.__dict__[k]) for k in keys)
+            return "{}({})".format(type(self).__name__, ", ".join(items))
+
+        def __eq__(self, other):
+            return self.__dict__ == other.__dict__
 
 from gnuradio import gr
 from ..tools import get_modname, SCMRepoFactory
-from ..cli import setup_cli_logger
 
 logger = logging.getLogger('gnuradio.modtool')
 
@@ -90,6 +104,7 @@ class ModTool(object):
             self.info['yes'] = True
         else:
             self.info['yes'] = kwargs.get('yes', False)
+            from ..cli import setup_cli_logger
             setup_cli_logger(logger)
 
         if not type(self).__name__ in ['ModToolInfo', 'ModToolNewModule']:

@@ -54,7 +54,7 @@ class ModToolNewModule(ModTool):
 
     def validate(self):
         """ Validates the arguments """
-        if self.info['modname'] is None:
+        if not self.info['modname']:
             raise ModToolException('Module name not specified.')
         if not re.match('[a-zA-Z0-9_]+$', self.info['modname']):
             raise ModToolException('Invalid module name.')
@@ -65,7 +65,7 @@ class ModToolNewModule(ModTool):
         else:
             raise ModToolException('The given directory exists.')
         if not os.path.isdir(self.srcdir):
-            raise ModToolException('Could not find gr-newmod source dir.')
+            raise ModToolException('Could not find gr-newmod source dir \'' + self.srcdir + '\'')
 
     def run(self):
         """

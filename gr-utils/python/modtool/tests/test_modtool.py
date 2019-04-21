@@ -1,5 +1,5 @@
 #
-# Copyright 2018 Free Software Foundation, Inc.
+# Copyright 2018, 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -29,9 +29,19 @@ import tempfile
 import unittest
 import warnings
 from os import path
-from pylint.epylint import py_run
+try:
+    from pylint.epylint import py_run
+    skip_pylint_test = False
+except:
+    skip_pylint_test = True
 
-from gnuradio.modtool.core import *
+from modtool.core import ModToolNewModule
+from modtool.core import ModToolAdd
+from modtool.core import ModToolDisable
+from modtool.core import ModToolException
+from modtool.core import ModToolMakeYAML
+from modtool.core import ModToolRename
+from modtool.core import ModToolRemove
 
 class TestModToolCore(unittest.TestCase):
     """ The tests for the modtool core """
@@ -39,6 +49,7 @@ class TestModToolCore(unittest.TestCase):
         super(TestModToolCore, self).__init__(*args, **kwargs)
         self.f_add = False
         self.f_newmod = False
+        self.srcdir = path.abspath(path.join(path.dirname(path.realpath(__file__)),  '../templates/gr-newmod'))
 
     @classmethod
     def setUpClass(cls):
@@ -53,8 +64,14 @@ class TestModToolCore(unittest.TestCase):
     def setUp(self):
         """ create a new module and block before every test """
         try:
-            warnings.simplefilter("ignore", ResourceWarning)
-            args = {'module_name':'howto', 'directory': self.test_dir}
+            try:
+                warnings.simplefilter("ignore", ResourceWarning)
+            except (NameError):
+                # Python2 , Python3 < 3.2 don't know ResourceWarning
+                pass
+            args = {'module_name':'howto',
+                    'directory': self.test_dir,
+                    'srcdir': self.srcdir}
             ModToolNewModule(**args).run()
         except (TypeError, ModToolException):
             self.f_newmod = True
@@ -79,8 +96,8 @@ class TestModToolCore(unittest.TestCase):
     def test_newmod(self):
         """ Tests for the API function newmod """
         ## Tests for proper exceptions ##
-        test_dict = {}
-        test_dict['directory'] = self.test_dir
+        test_dict = { 'directory': self.test_dir,
+                      'srcdir': self.srcdir}
         # module name not specified
         self.assertRaises(ModToolException, ModToolNewModule(**test_dict).run)
         test_dict['module_name'] = 'howto'
@@ -103,19 +120,11 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.isdir(path.join(module_dir, 'swig')))
         self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
 
-        ## pylint tests ##
-        python_dir = path.join(module_dir, 'python')
-        py_module = path.join(python_dir, 'build_utils.py')
-        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        print(pylint_stdout.getvalue(), end='')
-        py_module = path.join(python_dir, 'build_utils_codes.py')
-        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
-        print(pylint_stdout.getvalue(), end='')
-
         ## The check for object instantiation ##
-        test_obj = ModToolNewModule()
+        test_obj = ModToolNewModule(srcdir = self.srcdir)
         # module name not specified
-        self.assertRaises(ModToolException, test_obj.run)
+        with self.assertRaises(ModToolException) as context_manager:
+            test_obj.run()
         test_obj.info['modname'] = 'howto'
         test_obj.directory = self.test_dir
         # directory already exists
@@ -125,6 +134,19 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.isdir(self.test_dir+'/gr-test1'))
         self.assertTrue(path.isdir(self.test_dir+'/gr-test1/lib'))
         self.assertTrue(path.exists(self.test_dir+'/gr-test1/CMakeLists.txt'))
+
+    @unittest.skipIf(skip_pylint_test, 'pylint dependency missing, skip test')
+    def test_pylint_newmod(self):
+        """ Pylint tests for API function newmod """
+        module_dir = path.join(self.test_dir, 'gr-test')
+        ## pylint tests ##
+        python_dir = path.join(module_dir, 'python')
+        py_module = path.join(python_dir, 'mul_ff.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only --disable=E0602', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
+        py_module = path.join(python_dir, 'qa_mul_ff.py')
+        (pylint_stdout, pylint_stderr) = py_run(py_module+' --errors-only', return_std=True)
+        print(pylint_stdout.getvalue(), end='')
 
     def test_add(self):
         """ Tests for the API function add """
@@ -185,6 +207,29 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
         self.assertTrue(path.exists(path.join(module_dir, 'grc', 'howto_mul_ff.block.yml')))
+
+    @unittest.skipIf(skip_pylint_test, 'pylint dependency missing, skip test')
+    def test_pylint_add(self):
+        """ Pylint tests for API function add """
+        ## skip tests if newmod command wasn't successful
+        if self.f_newmod:
+            raise unittest.SkipTest("setUp for API function 'add' failed")
+        module_dir = path.join(self.test_dir, 'gr-howto')
+
+        ## The check for object instantiation ##
+        test_obj = ModToolAdd()
+        test_obj.dir = module_dir
+        # missing blocktype, lang, blockname
+        self.assertRaises(ModToolException, test_obj.run)
+        test_obj.info['blocktype'] = 'general'
+        # missing lang, blockname
+        self.assertRaises(ModToolException, test_obj.run)
+        test_obj.info['lang'] = 'python'
+        test_obj.info['blockname'] = 'mul_ff'
+        test_obj.add_py_qa = True
+        test_obj.run()
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'mul_ff.py')))
+        self.assertTrue(path.exists(path.join(module_dir, 'python', 'qa_mul_ff.py')))
 
         ## pylint tests ##
         python_dir = path.join(module_dir, 'python')
