@@ -99,7 +99,7 @@ def strip_arg_types(string):
     string = strip_default_values(string)
     return ", ".join(
                 [part.strip().split(' ')[-1] for part in string.split(',')]
-            ).translate(str.maketrans('','','*&'))
+            ).replace('*','').replace('&','')
 
 def strip_arg_types_grc(string):
     """" Strip the argument types from a list of arguments for GRC make tag.
