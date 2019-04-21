@@ -29,7 +29,6 @@ import re
 import glob
 import logging
 
-from gnuradio.grc.converter import Converter
 from .base import ModTool, ModToolException
 from ..tools import get_modname
 
@@ -73,6 +72,7 @@ class ModToolUpdate(ModTool):
             raise ModToolException("The XML bindings does not exists!")
 
     def run(self):
+        from gnuradio.grc.converter import Converter
         if not self.cli:
             self.validate()
         logger.warning("Warning: This is an experimental feature. Please verify the bindings.")
