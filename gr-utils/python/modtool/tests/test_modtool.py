@@ -1,5 +1,5 @@
 #
-# Copyright 2018 Free Software Foundation, Inc.
+# Copyright 2018, 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -35,7 +35,13 @@ try:
 except:
     skip_pylint_test = True
 
-from gnuradio.modtool.core import *
+from modtool.core import ModToolNewModule
+from modtool.core import ModToolAdd
+from modtool.core import ModToolDisable
+from modtool.core import ModToolException
+from modtool.core import ModToolMakeYAML
+from modtool.core import ModToolRename
+from modtool.core import ModToolRemove
 
 class TestModToolCore(unittest.TestCase):
     """ The tests for the modtool core """
@@ -43,6 +49,7 @@ class TestModToolCore(unittest.TestCase):
         super(TestModToolCore, self).__init__(*args, **kwargs)
         self.f_add = False
         self.f_newmod = False
+        self.srcdir = path.abspath(path.join(path.dirname(path.realpath(__file__)),  '../templates/gr-newmod'))
 
     @classmethod
     def setUpClass(cls):
@@ -58,7 +65,9 @@ class TestModToolCore(unittest.TestCase):
         """ create a new module and block before every test """
         try:
             warnings.simplefilter("ignore", ResourceWarning)
-            args = {'module_name':'howto', 'directory': self.test_dir}
+            args = {'module_name':'howto',
+                    'directory': self.test_dir,
+                    'srcdir': self.srcdir}
             ModToolNewModule(**args).run()
         except (TypeError, ModToolException):
             self.f_newmod = True
@@ -83,8 +92,8 @@ class TestModToolCore(unittest.TestCase):
     def test_newmod(self):
         """ Tests for the API function newmod """
         ## Tests for proper exceptions ##
-        test_dict = {}
-        test_dict['directory'] = self.test_dir
+        test_dict = { 'directory': self.test_dir,
+                      'srcdir': self.srcdir}
         # module name not specified
         self.assertRaises(ModToolException, ModToolNewModule(**test_dict).run)
         test_dict['module_name'] = 'howto'
@@ -108,9 +117,10 @@ class TestModToolCore(unittest.TestCase):
         self.assertTrue(path.exists(path.join(module_dir, 'CMakeLists.txt')))
 
         ## The check for object instantiation ##
-        test_obj = ModToolNewModule()
+        test_obj = ModToolNewModule(srcdir = self.srcdir)
         # module name not specified
-        self.assertRaises(ModToolException, test_obj.run)
+        with self.assertRaises(ModToolException) as context_manager:
+            test_obj.run()
         test_obj.info['modname'] = 'howto'
         test_obj.directory = self.test_dir
         # directory already exists
