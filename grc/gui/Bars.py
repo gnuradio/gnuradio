@@ -129,7 +129,6 @@ class SubMenuHelper(object):
     def refresh_submenus(self):
         for name in self.submenus:
             create_func, obj, set_func = self.submenus[name]
-            print ("refresh", create_func, obj, set_func)
             set_func(obj, create_func())
 
     def create_flow_graph_new_type(self):

@@ -90,7 +90,7 @@ class Converter(object):
                 need_cache_write = True
 
         if need_cache_write:
-            logger.info('Saving %d entries to json cache', len(self.cache))
+            logger.debug('Saving %d entries to json cache', len(self.cache))
             with open(self.cache_file, 'w', encoding='utf-8') as cache_file:
                 json.dump(self.cache, cache_file)
 

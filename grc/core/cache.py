@@ -72,7 +72,7 @@ class Cache(object):
         if not self.need_cache_write:
             return
 
-        logger.info('Saving %d entries to json cache', len(self.cache))
+        logger.debug('Saving %d entries to json cache', len(self.cache))
         # Dumping to binary file is only supported for Python3 >= 3.6
         with open(self.cache_file, 'w', encoding='utf8') as cache_file:
             cache_file.write(json.dumps(self.cache, ensure_ascii=False))
