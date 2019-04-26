@@ -49,6 +49,9 @@ set(VERSION_INFO_MAINT_VERSION git)
 
 cmake_policy(SET CMP0011 NEW)
 
+# Enable generation of compile_commands.json for code completion engines
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 ########################################################################
 # Compiler specific setup
 ########################################################################

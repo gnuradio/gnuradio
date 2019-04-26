@@ -65,6 +65,9 @@ set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
 set(MSVC_MIN_VERSION "1800")
 
+# Enable generation of compile_commands.json for code completion engines
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 ########################################################################
 # Configure CMake policies
 ########################################################################
