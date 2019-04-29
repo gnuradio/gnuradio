@@ -34,6 +34,10 @@ parameters:
     label: Offset
     dtype: ${ type.offset_type }
     default: '0'
+-   id: phase
+    label: Initial Phase (Radians)
+    dtype: real
+    default: '0'
 
 inputs:
 -   domain: message
@@ -47,24 +51,26 @@ outputs:
 templates:
     imports: from gnuradio import analog
     make: analog.sig_source_${type.fcn}(${samp_rate}, ${waveform}, ${freq}, ${amp},
-        ${offset})
+        ${offset}, ${phase})
     callbacks:
     - set_sampling_freq(${samp_rate})
     - set_waveform(${waveform})
     - set_frequency(${freq})
     - set_amplitude(${amp})
     - set_offset(${offset})
+    - set_phase(${phase})
 
 cpp_templates:
     includes: ['#include <gnuradio/analog/sig_source.h>']
     declarations: 'analog::sig_source_${type.fcn}::sptr ${id};'
-    make: 'this->${id} = analog::sig_source_${type.fcn}::make(${samp_rate}, ${waveform}, ${freq}, ${amp}, ${offset});'
+    make: 'this->${id} = analog::sig_source_${type.fcn}::make(${samp_rate}, ${waveform}, ${freq}, ${amp}, ${offset},${phase});'
     callbacks:
     - set_sampling_freq(${samp_rate})
     - set_waveform(${waveform})
     - set_frequency(${freq})
     - set_amplitude(${amp})
     - set_offset(${offset})
+    - set_phase(${phase})
     link: ['gnuradio-analog']
     translations:
         analog\.: 'analog::'
