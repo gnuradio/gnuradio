@@ -48,7 +48,7 @@ if(ENABLE_GR_UTILS)
 ########################################################################
 # Add subdirectories
 ########################################################################
-add_subdirectory(python/utils)
-add_subdirectory(python/modtool)
+add_subdirectory(modtool)
+add_subdirectory(plot_tools)
 
 endif(ENABLE_GR_UTILS)
