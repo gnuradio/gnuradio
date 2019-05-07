@@ -25,6 +25,6 @@ GR_PYTHON_INSTALL(
     api_object.py
     filter_design.py
     fir_design.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio
+    DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
 )
 
