@@ -199,7 +199,7 @@ blocks:
     sps: sps
     symbols: modulated_sync_word
     threshold: '0.999'
-    threshold_method: digital.corr_est_cc.THRESHOLD_ABSOLUTE
+    threshold_method: digital.THRESHOLD_ABSOLUTE
   states:
     coordinate: [144, 308.0]
     rotation: 0
