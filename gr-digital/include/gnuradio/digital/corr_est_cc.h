@@ -82,15 +82,15 @@ namespace gr {
      * _on_Signal_Processing_, Volume 47, No. 9, September 1999
      *
      */
+      typedef enum {
+        THRESHOLD_DYNAMIC,
+        THRESHOLD_ABSOLUTE,
+      } tm_type;
+
     class DIGITAL_API corr_est_cc : virtual public sync_block
     {
     public:
       typedef boost::shared_ptr<corr_est_cc> sptr;
-
-      enum tm_type {
-        THRESHOLD_DYNAMIC,
-        THRESHOLD_ABSOLUTE,
-      };
 
       /*!
        * Make a block that correlates against the \p symbols vector

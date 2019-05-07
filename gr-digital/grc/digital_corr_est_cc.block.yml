@@ -19,7 +19,7 @@ parameters:
 -   id: threshold_method
     label: Threshold Method
     dtype: enum
-    options: [digital.corr_est_cc.THRESHOLD_ABSOLUTE, digital.corr_est_cc.THRESHOLD_DYNAMIC]
+    options: [digital.THRESHOLD_ABSOLUTE, digital.THRESHOLD_DYNAMIC]
     option_labels: [Absolute, Dynamic]
 
 inputs:
