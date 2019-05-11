@@ -30,10 +30,12 @@
 %{
 #include <gnuradio/audio/source.h>
 #include <gnuradio/audio/sink.h>
+#include <gnuradio/audio/arch_registry.h>
 %}
 
 %include <gnuradio/audio/source.h>
 %include <gnuradio/audio/sink.h>
+%include <gnuradio/audio/arch_registry.h>
 
 GR_SWIG_BLOCK_MAGIC2(audio, source)
 GR_SWIG_BLOCK_MAGIC2(audio, sink)

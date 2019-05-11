@@ -20,6 +20,7 @@
  */
 
 #include "audio_registry.h"
+#include "gnuradio/audio/arch_registry.h"
 #include <boost/foreach.hpp>
 #include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
@@ -210,5 +211,26 @@ namespace gr {
       return entry.sink(sampling_rate, device_name, ok_to_block);
     }
 
+    const std::vector<std::string>& arch_registry::get_source_archs()
+    {
+      static std::vector<std::string> s_arch_registry;
+      auto& sources = get_source_registry();
+      s_arch_registry.reserve(sources.size());
+      for(auto source: sources) {
+        s_arch_registry.push_back(source.arch);
+      }
+      return s_arch_registry;
+    }
+
+    const std::vector<std::string>& arch_registry::get_sink_archs()
+    {
+      static std::vector<std::string> s_arch_registry;
+      auto& sources = get_source_registry();
+      s_arch_registry.reserve(sources.size());
+      for(auto source: sources) {
+        s_arch_registry.push_back(source.arch);
+      }
+      return s_arch_registry;
+    }
   } /* namespace audio */
 } /* namespace gr */

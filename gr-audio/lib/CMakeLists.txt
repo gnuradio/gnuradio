@@ -22,7 +22,8 @@ include(GrComponent)
 ########################################################################
 # Setup library
 ########################################################################
-add_library(gnuradio-audio audio_registry.cc)
+add_library(gnuradio-audio)
+target_sources(gnuradio-audio PRIVATE audio_registry.cc)
 target_link_libraries(gnuradio-audio PUBLIC gnuradio-runtime)
 target_include_directories(gnuradio-audio
   PUBLIC
