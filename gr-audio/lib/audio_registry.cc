@@ -144,13 +144,15 @@ namespace gr {
       return prefs::singleton()->get_string("audio", "audio_module", "auto");
     }
 
-    static void do_arch_warning(const std::string &arch)
+    static void do_arch_warning(const std::string& arch, gr::logger_ptr& logger)
     {
-      if(arch == "auto")
-        return; //no warning when arch not specified
-      std::cerr << "Could not find audio architecture \"" << arch
-                << "\" in registry." << std::endl;
-      std::cerr << "    Defaulting to the first available architecture..." << std::endl;
+        if (arch == "auto")
+            return; // no warning when arch not specified
+        GR_LOG_WARN(
+            logger,
+            boost::format("Could not find audio architecture \"%1%\" in registry.\n    "
+                          "Defaulting to the first available architecture...") %
+                (arch));
     }
 
     source::sptr
@@ -203,7 +205,7 @@ namespace gr {
         return e.sink(sampling_rate, device_name, ok_to_block);
       }
 
-      do_arch_warning(arch);
+      do_arch_warning(arch, logger);
       GR_LOG_INFO(logger, boost::format("Audio sink arch: %1%") % (entry.arch));
       return entry.sink(sampling_rate, device_name, ok_to_block);
     }
