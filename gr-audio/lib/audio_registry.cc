@@ -38,74 +38,75 @@ namespace gr {
     get_source_registry(void)
     {
       static bool src_reg = false;
-      static std::vector<source_entry_t> d_registry;
+      static std::vector<source_entry_t> s_registry;
 
       if(!src_reg) {
 #ifdef ALSA_FOUND
-        d_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
+        s_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
 #endif /* ALSA_FOUND */
 
 #ifdef OSS_FOUND
-        d_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
+        s_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
 #endif /* OSS_FOUND */
 
 #ifdef PORTAUDIO_FOUND
-        d_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
+        s_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
 #endif /* PORTAUDIO_FOUND */
 
 #ifdef JACK_FOUND
-        d_registry.push_back(register_source(REG_PRIO_MED, "jack", jack_source_fcn));
+        s_registry.push_back(register_source(REG_PRIO_MED, "jack", jack_source_fcn));
 #endif /* JACK_FOUND */
 
 #ifdef OSX_FOUND
-        d_registry.push_back(register_source(REG_PRIO_HIGH, "osx", osx_source_fcn));
+        s_registry.push_back(register_source(REG_PRIO_HIGH, "osx", osx_source_fcn));
 #endif /* OSX_FOUND */
 
 #ifdef WIN32_FOUND
-        d_registry.push_back(register_source(REG_PRIO_HIGH, "windows", windows_source_fcn));
+        s_registry.push_back(register_source(REG_PRIO_HIGH, "windows", windows_source_fcn));
 #endif /* WIN32_FOUND */
 
         src_reg = true;
       }
 
-      return d_registry;
+
+      return s_registry;
     }
 
     static std::vector<sink_entry_t> &
     get_sink_registry(void)
     {
       static bool snk_reg = false;
-      static std::vector<sink_entry_t> d_registry;
+      static std::vector<sink_entry_t> s_registry;
 
       if(!snk_reg) {
 #if ALSA_FOUND
-        d_registry.push_back(register_sink(REG_PRIO_HIGH, "alsa", alsa_sink_fcn));
+        s_registry.push_back(register_sink(REG_PRIO_HIGH, "alsa", alsa_sink_fcn));
 #endif /* ALSA_FOUND */
 
 #if OSS_FOUND
-        d_registry.push_back(register_sink(REG_PRIO_LOW, "oss", oss_sink_fcn));
+        s_registry.push_back(register_sink(REG_PRIO_LOW, "oss", oss_sink_fcn));
 #endif /* OSS_FOUND */
 
 #if PORTAUDIO_FOUND
-        d_registry.push_back(register_sink(REG_PRIO_MED, "portaudio", portaudio_sink_fcn));
+        s_registry.push_back(register_sink(REG_PRIO_MED, "portaudio", portaudio_sink_fcn));
 #endif /* PORTAUDIO_FOUND */
 
 #if JACK_FOUND
-        d_registry.push_back(register_sink(REG_PRIO_MED, "jack", jack_sink_fcn));
+        s_registry.push_back(register_sink(REG_PRIO_MED, "jack", jack_sink_fcn));
 #endif /* JACK_FOUND */
 
 #ifdef OSX_FOUND
-        d_registry.push_back(register_sink(REG_PRIO_HIGH, "osx", osx_sink_fcn));
+        s_registry.push_back(register_sink(REG_PRIO_HIGH, "osx", osx_sink_fcn));
 #endif /* OSX_FOUND */
 
 #ifdef WIN32_FOUND
-        d_registry.push_back(register_sink(REG_PRIO_HIGH, "windows", windows_sink_fcn));
+        s_registry.push_back(register_sink(REG_PRIO_HIGH, "windows", windows_sink_fcn));
 #endif /* WIN32_FOUND */
 
         snk_reg = true;
       }
 
-      return d_registry;
+      return s_registry;
     }
 
     /***********************************************************************
