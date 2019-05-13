@@ -94,6 +94,7 @@
   - blocks_null_source
   - blocks_null_sink
   - blocks_copy
+  - blocks_selector
   - blocks_nop
   - xmlrpc_server
   - xmlrpc_client

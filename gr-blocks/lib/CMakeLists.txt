@@ -46,6 +46,7 @@ add_library(gnuradio-blocks
     probe_signal_impl.cc
     probe_signal_v_impl.cc
     sample_and_hold_impl.cc
+    selector_impl.cc
     sub_impl.cc
     tsb_vector_sink_impl.cc
     unpacked_to_packed_impl.cc

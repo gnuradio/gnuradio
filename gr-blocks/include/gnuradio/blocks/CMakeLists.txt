@@ -51,6 +51,7 @@ install(FILES
     probe_signal_v.h
     rotator.h
     sample_and_hold.h
+    selector.h
     sub.h
     tsb_vector_sink.h
     unpack_k_bits.h
