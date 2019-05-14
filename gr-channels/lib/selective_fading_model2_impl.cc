@@ -77,7 +77,7 @@ namespace gr {
 
         // set up tap history
         if(ntaps < 1){ throw std::runtime_error("ntaps must be >= 1"); }
-        set_history(1+ntaps);
+        set_history(ntaps);
         d_taps.resize(ntaps, gr_complex(0,0));
 
         // set up message port
