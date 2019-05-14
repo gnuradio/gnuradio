@@ -29,11 +29,11 @@ parameters:
 -   id: delays
     label: PDP Delays (samp)
     dtype: real_vector
-    default: 0.0,0.1,1.3
+    default: (0.0,0.1,1.3)
 -   id: mags
     label: PDP Magnitudes
     dtype: real_vector
-    default: 1,0.99,0.97
+    default: (1,0.99,0.97)
 -   id: ntaps
     label: Num Taps
     dtype: int
