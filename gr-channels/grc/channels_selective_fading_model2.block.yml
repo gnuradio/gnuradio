@@ -29,19 +29,19 @@ parameters:
 -   id: delays
     label: PDP Delays (in samps)
     dtype: real_vector
-    default: 1.0,1.9,2.7
+    default: (1.0,1.9,2.7)
 -   id: delay_std
     label: PDP Delay StdDev (per samp)
     dtype: real_vector
-    default: 1e-4,1e-4,1e-4
+    default: (1e-4,1e-4,1e-4)
 -   id: delay_maxdev
     label: PDP Delay Max-Dev (per samp)
     dtype: real_vector
-    default: 0.5,0.7,0.9
+    default: (0.5,0.7,0.9)
 -   id: mags
     label: PDP Magnitudes
     dtype: real_vector
-    default: 1,0.95,0.8
+    default: (1,0.95,0.8)
 -   id: ntaps
     label: Num Taps
     dtype: int
