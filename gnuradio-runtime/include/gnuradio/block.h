@@ -36,6 +36,12 @@
 
 namespace gr {
 
+    struct rate_change{
+        uint64_t input_offset;
+        uint64_t output_offset;
+        mpq_class relative_rate;
+    }
+
   /*!
    * \brief The abstract base class for all 'terminal' processing blocks.
    * \ingroup base_blk
@@ -741,6 +747,7 @@ namespace gr {
     int                   d_unaligned;
     bool                  d_is_unaligned;
     mpq_class             d_mp_relative_rate;
+    std::vector<rate_change> d_rate_changes;
     block_detail_sptr     d_detail;		// implementation details
     unsigned              d_history;
     unsigned              d_attr_delay;         // the block's sample delay
