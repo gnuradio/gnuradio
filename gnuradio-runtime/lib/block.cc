@@ -42,7 +42,6 @@ namespace gr {
       d_output_multiple_set(false),
       d_unaligned(0),
       d_is_unaligned(false),
-      d_relative_rate (1.0),
       d_mp_relative_rate(1.0),
       d_history(1),
       d_attr_delay(0),
@@ -176,7 +175,6 @@ namespace gr {
     if(relative_rate <= 0.0)
       throw std::invalid_argument("block::set_relative_rate: relative rate must be > 0.0");
 
-    d_relative_rate = relative_rate;
     d_mp_relative_rate = mpq_class(relative_rate);
   }
 
@@ -205,7 +203,6 @@ namespace gr {
     mpz_import(decim.get_mpz_t(), 1, 1, sizeof(decimation), 0, 0, &decimation);
     d_mp_relative_rate = mpq_class(interp, decim);
     d_mp_relative_rate.canonicalize();
-    d_relative_rate = d_mp_relative_rate.get_d();
   }
 
   void

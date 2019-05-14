@@ -310,7 +310,7 @@ namespace gr {
     /*!
      * \brief return the approximate output rate / input rate
      */
-    double relative_rate() const { return d_relative_rate; }
+    double relative_rate() const { return d_mp_relative_rate.get_d(); }
 
     /*!
      * \brief return the numerator, or interpolation rate, of the
@@ -740,7 +740,6 @@ namespace gr {
     bool                  d_output_multiple_set;
     int                   d_unaligned;
     bool                  d_is_unaligned;
-    double                d_relative_rate;	// approx output_rate / input_rate
     mpq_class             d_mp_relative_rate;
     block_detail_sptr     d_detail;		// implementation details
     unsigned              d_history;
