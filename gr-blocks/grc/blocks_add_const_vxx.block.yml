@@ -6,11 +6,11 @@ parameters:
 -   id: type
     label: IO Type
     dtype: enum
-    options: [complex, float, int, short]
+    options: [complex, float, int, short, byte]
     option_attributes:
-        vconst_type: [complex_vector, real_vector, int_vector, int_vector]
-        const_type:  [complex, real, int, int]
-        fcn: [cc, ff, ii, ss]
+        vconst_type: [complex_vector, real_vector, int_vector, int_vector, int_vector]
+        const_type:  [complex, real, int, int, int]
+        fcn: [cc, ff, ii, ss, bb]
     hide: part
 -   id: const
     label: Constant
