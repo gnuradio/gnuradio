@@ -93,9 +93,8 @@ namespace gr {
 
   static bool
   propagate_tags(block::tag_propagation_policy_t policy, block_detail *d,
-                 const std::vector<uint64_t> &start_nitems_read, double rrate,
-                 mpq_class &mp_rrate, bool use_fp_rrate,
-                 std::vector<tag_t> &rtags, long block_id)
+                 const std::vector<uint64_t> &start_nitems_read, std::vector<rate_change> rate_changes,
+                 mpq_class &mp_rrate, std::vector<tag_t> &rtags, long block_id)
   {
     static const mpq_class one_half(1, 2);
 
@@ -110,7 +109,7 @@ namespace gr {
     case block::TPP_CUSTOM:
       return true;
     case block::TPP_ALL_TO_ALL:
-    {
+      {
       // every tag on every input propagates to everyone downstream
       std::vector<buffer_sptr> out_buf;
 
@@ -126,35 +125,27 @@ namespace gr {
             for(int o = 0; o < d->noutputs(); o++)
                out_buf.push_back(d->output(o));
         }
-
+        // For each tag at any input create tags on all outputs
         std::vector<tag_t>::iterator t;
-        if(rrate == 1.0) {
-          for(t = rtags.begin(); t != rtags.end(); t++) {
-            for(int o = 0; o < d->noutputs(); o++)
-              out_buf[o]->add_item_tag(*t);
+        mpz_class offset;
+        for(t = rtags.begin(); t != rtags.end(); t++) {
+          tag_t new_tag = *t;
+          mpz_import(offset.get_mpz_t(), 1, 1, sizeof(new_tag.offset), 0, 0, &new_tag.offset);
+          // Find the rate change with largest input offset
+          // which is still smaller than the input tag offset
+          rate_change latest_change;
+          for(const auto& r : rate_changes){
+            if (r.input_offset <= t->offset){
+              latest_change = r;
+            }
           }
-        }
-        else if(use_fp_rrate) {
-          for(t = rtags.begin(); t != rtags.end(); t++) {
-            tag_t new_tag = *t;
-            new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
-            for(int o = 0; o < d->noutputs(); o++)
-              out_buf[o]->add_item_tag(new_tag);
-          }
-        }
-        else {
-          mpz_class offset;
-          for(t = rtags.begin(); t != rtags.end(); t++) {
-            tag_t new_tag = *t;
-            mpz_import(offset.get_mpz_t(), 1, 1, sizeof(new_tag.offset), 0, 0, &new_tag.offset);
-            offset = offset * mp_rrate + one_half;
-            new_tag.offset = offset.get_ui();
-            for(int o = 0; o < d->noutputs(); o++)
-              out_buf[o]->add_item_tag(new_tag);
-          }
+          offset = (offset - latest_change.input_offset) * latest_change.relative_rate + latest_change.output_offset + one_half;
+          new_tag.offset = offset.get_ui();
+          for(int o = 0; o < d->noutputs(); o++)
+            out_buf[o]->add_item_tag(new_tag);
         }
       }
-    }
+      }
       break;
     case block::TPP_ONE_TO_ONE:
       // tags from input i only go to output i
@@ -173,28 +164,21 @@ namespace gr {
           out_buf = d->output(i);
 
           std::vector<tag_t>::iterator t;
-          if(rrate == 1.0) {
-            for(t = rtags.begin(); t != rtags.end(); t++) {
-                out_buf->add_item_tag(*t);
-            }
-          }
-          else if(use_fp_rrate) {
-            for(t = rtags.begin(); t != rtags.end(); t++) {
-              tag_t new_tag = *t;
-              new_tag.offset = ((double)new_tag.offset * rrate) + 0.5;
-              out_buf->add_item_tag(new_tag);
-            }
-          }
-          else {
             mpz_class offset;
+
             for(t = rtags.begin(); t != rtags.end(); t++) {
               tag_t new_tag = *t;
               mpz_import(offset.get_mpz_t(), 1, 1, sizeof(new_tag.offset), 0, 0, &new_tag.offset);
-              offset = offset * mp_rrate + one_half;
+              rate_change latest_change;
+              for(const auto& r : rate_changes){
+                if (r.input_offset <= t->offset){
+                  latest_change = r;
+                }
+              }
+              offset = (offset - latest_change.input_offset) * latest_change.relative_rate + latest_change.output_offset + one_half;
               new_tag.offset = offset.get_ui();
               out_buf->add_item_tag(new_tag);
             }
-          }
         }
       }
       else  {
@@ -517,9 +501,8 @@ namespace gr {
 
       // Now propagate the tags based on the new relative rate
       if(!propagate_tags(m->tag_propagation_policy(), d,
-                         d_start_nitems_read, m->relative_rate(),
-                         m->mp_relative_rate(), m->update_rate(),
-                         d_returned_tags, m->unique_id()))
+                         d_start_nitems_read, m->rate_changes(),
+                         m->mp_relative_rate(), d_returned_tags, m->unique_id()))
         goto were_done;
 
       if(n == block::WORK_DONE)
@@ -542,19 +525,6 @@ namespace gr {
 
       if(d->d_produce_or > 0)   // block produced something
         return READY;
-
-      // We didn't produce any output even though we called general_work.
-      // We have (most likely) consumed some input.
-
-      /*
-      // If this is a source, it's broken.
-      if(d->source_p()) {
-        std::cerr << "block_executor: source " << m
-                  << " produced no output.  We're marking it DONE.\n";
-        // FIXME maybe we ought to raise an exception...
-        goto were_done;
-      }
-      */
 
       // Have the caller try again...
       return READY_NO_OUTPUT;

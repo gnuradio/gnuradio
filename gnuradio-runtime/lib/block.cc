@@ -203,6 +203,7 @@ namespace gr {
     mpz_import(decim.get_mpz_t(), 1, 1, sizeof(decimation), 0, 0, &decimation);
     d_mp_relative_rate = mpq_class(interp, decim);
     d_mp_relative_rate.canonicalize();
+    d_rate_changes.emplace_back(rate_change{this->nitems_read(0), this->nitems_written(0), d_mp_relative_rate});
   }
 
   void

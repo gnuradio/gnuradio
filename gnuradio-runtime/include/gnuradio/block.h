@@ -40,7 +40,7 @@ namespace gr {
         uint64_t input_offset;
         uint64_t output_offset;
         mpq_class relative_rate;
-    }
+    };
 
   /*!
    * \brief The abstract base class for all 'terminal' processing blocks.
@@ -337,6 +337,13 @@ namespace gr {
      * represntation of the approximate output rate / input rate
      */
     mpq_class &mp_relative_rate() { return d_mp_relative_rate; }
+
+
+    /*!
+     * \brief return a vector of rate changes
+     */
+
+    std::vector<rate_change> rate_changes() { return d_rate_changes; }
 
     /*
      * The following two methods provide special case info to the
