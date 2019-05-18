@@ -511,7 +511,7 @@ namespace gr {
       // Perform shift operation
       memcpy(d_tmpbuf, &data_out[0], sizeof(float)*(d_tmpbuflen + 1));
       memcpy(&data_out[0], &data_out[size - d_tmpbuflen], sizeof(float)*d_tmpbuflen);
-      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen + 1));
+      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen));
     }
 
     bool
