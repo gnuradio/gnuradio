@@ -28,6 +28,8 @@ GR_PYTHON_INSTALL(
 	idealbanditems.py
 	polezero_plot.py
 	pyqt_filter_stacked.py
+	CustomViewBox.py
+	GrFilterPlotWidget.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/filter
 )
 
