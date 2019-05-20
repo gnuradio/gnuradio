@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1129</width>
-    <height>749</height>
+    <width>1141</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,25 +74,41 @@
             <attribute name="title">
              <string>Magnitude Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_9"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="GrFilterPlotWidget" name="freqPlot"/>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="timeTab">
             <attribute name="title">
              <string>Filter Taps</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_10"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="GrFilterPlotWidget" name="timePlot"/>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="phaseTab">
             <attribute name="title">
              <string>Phase Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_11"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="GrFilterPlotWidget" name="phasePlot"/>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="groupTab">
             <attribute name="title">
              <string>Group Delay</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_12"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <item>
+              <widget class="GrFilterPlotWidget" name="groupPlot"/>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="fcTab">
             <attribute name="title">
@@ -108,19 +124,31 @@
             <attribute name="title">
              <string>Impulse Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_6"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="GrFilterPlotWidget" name="impresPlot"/>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="stepresTab">
             <attribute name="title">
              <string>Step Response</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_8"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="GrFilterPlotWidget" name="stepresPlot"/>
+             </item>
+            </layout>
            </widget>
            <widget class="QWidget" name="pdelayTab">
             <attribute name="title">
              <string>Phase Delay</string>
             </attribute>
-            <layout class="QHBoxLayout" name="horizontalLayout_17"/>
+            <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <widget class="GrFilterPlotWidget" name="pdelayPlot"/>
+             </item>
+            </layout>
            </widget>
           </widget>
           <widget class="QTabWidget" name="filterspecView">
@@ -609,6 +637,9 @@
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
+               <widget class="GrFilterPlotWidget" name="mfreqPlot"/>
+              </item>
+              <item>
                <widget class="QGroupBox" name="mfgroupBox">
                 <property name="cursor">
                  <cursorShape>ArrowCursor</cursorShape>
@@ -756,6 +787,9 @@
               <string>Time responses</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="GrFilterPlotWidget" name="mtimePlot"/>
+              </item>
               <item>
                <widget class="QGroupBox" name="mtgroupBox">
                 <property name="cursor">
@@ -2124,8 +2158,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1129</width>
-     <height>30</height>
+     <width>1141</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -2162,10 +2196,10 @@
    <widget class="QMenu" name="menuWidgets">
     <property name="geometry">
      <rect>
-      <x>408</x>
-      <y>108</y>
-      <width>147</width>
-      <height>104</height>
+      <x>2302</x>
+      <y>118</y>
+      <width>125</width>
+      <height>90</height>
      </rect>
     </property>
     <property name="title">
@@ -2519,6 +2553,11 @@
    <class>PzPlot</class>
    <extends>QGraphicsView</extends>
    <header>polezero_plot</header>
+  </customwidget>
+  <customwidget>
+   <class>GrFilterPlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>GrFilterPlotWidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

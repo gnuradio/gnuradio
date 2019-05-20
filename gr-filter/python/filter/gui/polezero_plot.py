@@ -49,13 +49,13 @@ class PzPlot(pg.PlotWidget):
 
         axis = self.getAxis('bottom')
         axis.setStyle(tickLength=-10)
-        axis.setPen(Qt.QPen(Qt.Qt.white, 0.025, Qt.Qt.DotLine))
+        axis.setPen(Qt.QPen(Qt.Qt.white, 1.025, Qt.Qt.DotLine))
 
         axis = self.getAxis('left')
         axis.setStyle(tickLength=-10)
-        axis.setPen(Qt.QPen(Qt.Qt.white, 0.025, Qt.Qt.DotLine))
+        axis.setPen(Qt.QPen(Qt.Qt.white, 1.025, Qt.Qt.DotLine))
 
-        self.showGrid(x=True, y=True)
+        self.plotItem.showGrid(x=True, y=True, alpha=100)
 
         self.drawUnitcircle()
 
