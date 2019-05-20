@@ -54,6 +54,7 @@ try:
 except ImportError:
     raise SystemExit('Please install pyqtgraph to run this script (http://www.pyqtgraph.org)')
 
+
 try:
     from gnuradio.filter.pyqt_filter_stacked import Ui_MainWindow
 except ImportError:
@@ -69,10 +70,11 @@ try:
 except ImportError:
     raise SystemExit('Could not import from polezero_plot. Please check whether polezero_plot.py is in the library path')
 
-try:
-    from gnuradio.filter.idealbanditems import *
-except ImportError:
-    raise SystemExit('Could not import from idealbanditems. Please check whether idealbanditems.py is in the library path')
+# Behavior is not quite working on 3.8 - TODO
+# try:
+#     from gnuradio.filter.idealbanditems import *
+# except ImportError:
+#     raise SystemExit('Could not import from idealbanditems. Please check whether idealbanditems.py is in the library path')
 
 try:
     from gnuradio.filter.api_object import *
@@ -109,7 +111,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             if ind != -1:
                 self.gui.fselectComboBox.removeItem(ind)
         elif restype == "fir":
-            ind = self.gui.fselectComboBox.findText("IIR(numpy)")
+            ind = self.gui.fselectComboBox.findText("IIR(scipy)")
             if ind != -1:
                 self.gui.fselectComboBox.removeItem(ind)
 
@@ -148,7 +150,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.gui.actionBand_Diagram.triggered.connect(self.set_actband)
 
-        self.gui.actionIdeal_Band.triggered.connect(self.set_drawideal)
+        # self.gui.actionIdeal_Band.triggered.connect(self.set_drawideal)
 
         self.gui.actionPole_Zero_Plot_2.triggered.connect(self.set_actpzplot)
 
@@ -221,6 +223,16 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.mtoverlay  = False
         self.iir        = False
 
+        self.mfmagresponse = True
+        self.mfphaseresponse = False
+        self.mfgroupdelay = False
+        self.mfphasedelay = False
+
+        self.mttaps = True
+        self.mtstep = False
+        self.mtimpulse = False
+
+        
         self.gui.designButton.setShortcut(QtCore.Qt.Key_Return)
 
         self.taps = []
@@ -252,25 +264,38 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         # Create plots.
         self.plots = {'FREQ': None, 'TIME': None, 'PHASE': None, 'GROUP': None,
-                      'IMPRES': None, 'STEPRES': None, 'PDELAY': ""}
+                      'IMPRES': None, 'STEPRES': None, 'PDELAY': None}
         self.mplots = {'mFREQ': None, 'mTIME': None}
 
-        for i in self.plots:
-            self.plots[i] = pg.PlotWidget(enableMenu=False, viewBox=CustomViewBox())
+        self.plots['FREQ'] = self.gui.freqPlot
+        self.plots['TIME'] = self.gui.timePlot
+        self.plots['PHASE'] = self.gui.phasePlot
+        self.plots['GROUP'] = self.gui.groupPlot
+        self.plots['IMPRES'] = self.gui.impresPlot
+        self.plots['STEPRES'] = self.gui.stepresPlot
+        self.plots['PDELAY'] = self.gui.pdelayPlot
 
-        for i in self.mplots:
-            self.mplots[i] = pg.PlotWidget(enableMenu=False, viewBox=CustomViewBox())
+        # for i in self.plots:
+            # self.plots[i] = pg.PlotWidget(enableMenu=False, viewBox=CustomViewBox())
+            # self.plots[i].plotItem.vb = CustomViewBox()
+        
+        self.mplots['mFREQ'] = self.gui.mfreqPlot
+        self.mplots['mTIME'] = self.gui.mtimePlot
 
-        # Add plots to layouts.
-        self.gui.freqTab.layout().addWidget(self.plots['FREQ'])
-        self.gui.timeTab.layout().addWidget(self.plots['TIME'])
-        self.gui.phaseTab.layout().addWidget(self.plots['PHASE'])
-        self.gui.groupTab.layout().addWidget(self.plots['GROUP'])
-        self.gui.impresTab.layout().addWidget(self.plots['IMPRES'])
-        self.gui.stepresTab.layout().addWidget(self.plots['STEPRES'])
-        self.gui.pdelayTab.layout().addWidget(self.plots['PDELAY'])
-        self.gui.mfreqTab.layout().addWidget(self.mplots['mFREQ'])
-        self.gui.mtimeTab.layout().addWidget(self.mplots['mTIME'])
+
+        # for i in self.mplots:
+        #     self.mplots[i] = pg.PlotWidget(enableMenu=False, viewBox=CustomViewBox())
+
+        # # Add plots to layouts.
+        # self.gui.freqTab.layout().addWidget(self.plots['FREQ'])
+        # self.gui.timeTab.layout().addWidget(self.plots['TIME'])
+        # self.gui.phaseTab.layout().addWidget(self.plots['PHASE'])
+        # self.gui.groupTab.layout().addWidget(self.plots['GROUP'])
+        # self.gui.impresTab.layout().addWidget(self.plots['IMPRES'])
+        # self.gui.stepresTab.layout().addWidget(self.plots['STEPRES'])
+        # self.gui.pdelayTab.layout().addWidget(self.plots['PDELAY'])
+        # self.gui.mfreqTab.layout().addWidget(self.mplots['mFREQ'])
+        # self.gui.mtimeTab.layout().addWidget(self.mplots['mTIME'])
 
         # Set Axis Labels.
         self.labelstyle11b = {'font-family': 'Helvetica', 'font-size': '11pt', 'font-weight': 'bold'}
@@ -317,9 +342,25 @@ class gr_plot_filter(QtGui.QMainWindow):
         # Set up plot curves.
         self.rcurve = self.plots['TIME'].plot(title="Real")
         self.icurve = self.plots['TIME'].plot(title="Imag")
+        self.mtimecurve = self.mplots['mTIME'].plot(title="PSD")
+        self.mtimecurve_stems = self.mplots['mTIME'].plot(connect='pairs', name='Stems')
+        self.mtimecurve_i_stems = self.mplots['mTIME'].plot(connect='pairs', name='Stems')
+        self.mtimecurve_i = self.mplots['mTIME'].plot(title="Impulse Response Imag")
 
         self.plots['FREQ'].enableAutoRange(enable=True)
         self.freqcurve = self.plots['FREQ'].plot(title="PSD")
+
+        # For the frequency view, set up linked x axes
+        self.primary_freq_overlay = self.mplots['mFREQ']
+        self.mfreqcurve = self.primary_freq_overlay.plot(title="PSD")
+        self.secondary_freq_overlay_vb = CustomViewBox()
+        self.primary_freq_overlay.scene().addItem(self.secondary_freq_overlay_vb)
+        self.primary_freq_overlay.getAxis('right').linkToView(self.secondary_freq_overlay_vb)
+        self.mfreqcurve2 = pg.PlotCurveItem()
+        # self.secondary_freq_overlay_vb.setGeometry(self.primary_freq_overlay.plotItem.vb.sceneBoundingRect())
+        self.secondary_freq_overlay_vb.setXLink(self.primary_freq_overlay)
+        self.secondary_freq_overlay_vb.addItem(self.mfreqcurve2)
+        self.primary_freq_overlay.plotItem.vb.sigResized.connect(self.updateViews)
 
         self.phasecurve = self.plots['PHASE'].plot(title="Phase")
 
@@ -343,7 +384,9 @@ class gr_plot_filter(QtGui.QMainWindow):
 
         self.pdelaycurve = self.plots['PDELAY'].plot(title="Phase Delay")
 
-        self.idbanditems = IdealBandItems()
+        # Disable Ideal Band for now
+        # self.idbanditems = IdealBandItems()
+        
 
         self.set_defaultpen()
 
@@ -459,7 +502,18 @@ class gr_plot_filter(QtGui.QMainWindow):
                               "Kaiser Window" : filter.firdes.WIN_KAISER,
                               "Blackman-harris Window" : filter.firdes.WIN_BLACKMAN_hARRIS}
         self.EQUIRIPPLE_FILT = 6 # const for equiripple filter window types.
+
+
+
+        # Disable functionality that is not quite working in 3.8
+        self.gui.checkKeepcur.setEnabled(False)
+        self.gui.actionIdeal_Band.setEnabled(False)
+
         self.show()
+
+    def updateViews(self):
+        # for linking overlay graphs on GridView freq plots
+        self.secondary_freq_overlay_vb.setGeometry(self.primary_freq_overlay.plotItem.vb.sceneBoundingRect())
 
     # Set up curve pens, lines, and symbols.
     def set_defaultpen(self):
@@ -517,7 +571,26 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.phasecurve.setPen(pg.mkPen('b', width=1.5))
         self.groupcurve.setPen(pg.mkPen('b', width=1.5))
         self.pdelaycurve.setPen(pg.mkPen('b', width=1.5))
-        self.idbanditems.setLinetype()
+        # self.idbanditems.setLinetype()
+
+        self.mfreqcurve.setPen(pg.mkPen('b', width=1.5))
+        self.mfreqcurve2.setPen(pg.mkPen('r', width=1.5))
+
+        self.mtimecurve.setPen(None)
+        self.mtimecurve.setSymbol('o')
+        self.mtimecurve.setSymbolPen('b')
+        self.mtimecurve.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.mtimecurve.setSymbolSize(8)
+
+        self.mtimecurve_stems.setPen(pg.mkPen('b', width=1.5))
+        self.mtimecurve_i_stems.setPen(pg.mkPen('b', width=1.5))
+
+        self.mtimecurve_i.setPen(None)
+        self.mtimecurve_i.setSymbol('o')
+        self.mtimecurve_i.setSymbolPen('r')
+        self.mtimecurve_i.setSymbolBrush(Qt.QBrush(Qt.Qt.gray))
+        self.mtimecurve_i.setSymbolSize(8)
+
 
     def changed_fselect(self, ftype):
         strftype = ftype
@@ -533,7 +606,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.mttapsPush.setEnabled(True)
             self.gui.addpolePush.setEnabled(False)
             self.gui.maddpolePush.setEnabled(False)
-        elif(ftype == "IIR(numpy)"):
+        elif(ftype.startswith("IIR")):
             self.gui.filterDesignTypeComboBox.hide()
             self.gui.globalParamsBox.hide()
             self.gui.filterTypeComboBox.hide()
@@ -675,7 +748,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         items = self.gui.filterTypeComboBox.count()
         for i in range(items):
             self.gui.filterTypeComboBox.removeItem(0)
-            self.gui.filterTypeComboBox.addItems(self.firFilters)
+        
+        self.gui.filterTypeComboBox.addItems(self.firFilters)
 
         # If the last filter type was valid for this window type,
         # go back to it; otherwise, reset.
@@ -703,7 +777,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.b, self.a = [],[]
             if(ret):
                 self.design_fir(ftype, fs, gain, winstr)
-        elif (fsel == "IIR(numpy)"):
+        elif (fsel.startswith("IIR")):
             with warnings.catch_warnings(record=True) as w:
                 # Cause all warnings to always be triggered.
                 warnings.simplefilter("always")
@@ -754,7 +828,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.mpzPlot.insertZeros(zeros)
         self.gui.mpzPlot.insertPoles(poles)
         self.update_fcoeff()
-        self.set_drawideal()
+        # self.set_drawideal()
         # Return taps if callback is enabled.
         if self.callback:
             retobj = ApiObject()
@@ -815,7 +889,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                    float(self.gui.iirBsfPassBandAttenEdit.text()),
                                    float(self.gui.iirBsfStopBandRippleEdit.text())]  }
         # Remove Ideal band-diagrams if IIR.
-        self.set_drawideal()
+        # self.set_drawideal()
 
         for i in range(len(iirboxes[iirbtype])):
             params.append(iirboxes[iirbtype][i])
@@ -938,6 +1012,32 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.rcurve.setData(scipy.arange(ntaps), self.taps)
             self.icurve.setData([],[]);
 
+        if self.mttaps:
+            if(type(self.taps[0]) == scipy.complex128):
+                self.mtimecurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(self.taps.real.shape[0], dtype=int),
+                                                        self.taps.real)).flatten())
+
+                self.mtimecurve.setData(numpy.arange(ntaps), self.taps.real)
+
+
+                self.mtimecurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(self.taps.imag.shape[0], dtype=int),
+                                                            self.taps.imag)).flatten())
+
+                self.mtimecurve_i.setData(scipy.arange(ntaps), self.taps.imag)
+
+            else:
+                self.mtimecurve.setData(scipy.arange(ntaps), self.taps)
+                self.mtimecurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(self.taps.shape[0], dtype=int),
+                                                        self.taps)).flatten())
+
+                self.mtimecurve_i_stems.setData([],[])
+                self.mtimecurve_i.setData([],[])
+
+
+
         # Configure plots.
         if self.mtoverlay:
             self.mplots['mTIME'].setMouseEnabled(x=True, y=True)
@@ -984,6 +1084,29 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.steprescurve_i_stems.setData([],[])
             self.steprescurve_i.setData([],[])
 
+        if self.mtstep:
+            if(type(stepres[0]) == numpy.complex128):
+                self.mtimecurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(stepres.real.shape[0], dtype=int),
+                                                        stepres.real)).flatten())
+
+                self.mtimecurve.setData(numpy.arange(ntaps), stepres.real)
+
+
+                self.mtimecurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(stepres.imag.shape[0], dtype=int),
+                                                            stepres.imag)).flatten())
+
+                self.mtimecurve_i.setData(scipy.arange(ntaps), stepres.imag)
+            else:
+                self.mtimecurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(stepres.shape[0], dtype=int),
+                                                        stepres)).flatten())
+
+                self.mtimecurve.setData(scipy.arange(ntaps), stepres)
+                self.mtimecurve_i_stems.setData([],[])
+                self.mtimecurve_i.setData([],[])
+
         # Configure plots.
         if self.mtoverlay:
             self.mplots['mTIME'].setMouseEnabled(x=True, y=True)
@@ -1026,9 +1149,28 @@ class gr_plot_filter(QtGui.QMainWindow):
                                            np.dstack((np.zeros(impres.shape[0], dtype=int),
                                                       impres)).flatten())
 
-            self.imprescurve.setData(scipy.arange(ntaps), impres)
-            self.imprescurve_i_stems.setData([],[])
-            self.imprescurve_i.setData([],[])
+        if self.mtimpulse:
+            if(type(impres[0]) == numpy.complex128):
+                self.mtimecurve_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                                            np.dstack((np.zeros(impres.real.shape[0], dtype=int),
+                                                        impres.real)).flatten())
+
+                self.mtimecurve.setData(numpy.arange(ntaps), impres.real)
+
+
+                self.mtimecurve_i_stems.setData(np.repeat(numpy.arange(ntaps), 2),
+                                                np.dstack((np.zeros(impres.imag.shape[0], dtype=int),
+                                                            impres.imag)).flatten())
+
+                self.mtimecurve_i.setData(scipy.arange(ntaps), impres.imag)
+            else:
+                self.mtimecurve_stems.setData(np.repeat(scipy.arange(ntaps), 2),
+                                            np.dstack((np.zeros(impres.shape[0], dtype=int),
+                                                        impres)).flatten())
+
+                self.mtimecurve.setData(scipy.arange(ntaps), impres)
+                self.mtimecurve_i_stems.setData([],[])
+                self.mtimecurve_i.setData([],[])
 
         # Configure plots.
         if self.mtoverlay:
@@ -1041,7 +1183,28 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.plot_auto_limit(self.plots['IMPRES'], xMin=0, xMax=ntaps)
         self.plot_auto_limit(self.mplots['mTIME'], xMin=0, xMax=ntaps)
 
-    def update_freq_curves(self):
+    def plot_secondary(self):
+        if (self.mfoverlay):
+            if self.last_mfreq_plot == "freq":
+                self.mfmagresponse = True
+                self.update_freq_curves(True)
+            elif self.last_mfreq_plot == "phase":
+                self.mfphaseresponse = True
+                self.update_phase_curves(True)
+            elif self.last_mfreq_plot == "group":
+                self.mfgroupdelay = True
+                self.update_group_curves(True)
+            elif self.last_mfreq_plot == "pdelay":
+                self.mfphasedelay = True
+                self.update_pdelay_curves(True)
+
+            self.mplots['mFREQ'].showAxis('right', True)  
+        else:
+            self.mplots['mFREQ'].setMouseEnabled(x=False, y=False)
+            self.mplots['mFREQ'].showAxis('right', False) 
+            self.mfreqcurve2.setData([],[])  
+
+    def update_freq_curves(self, secondary=False):
         npts = len(self.fftdB)
 
         if(npts < 1):
@@ -1053,12 +1216,16 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.freqcurve.setData(self.freq[:int(npts//2)], self.fftdB[:int(npts//2)])
 
-        # Configure plots.
-        if self.mtoverlay:
-            self.mplots['mFREQ'].setMouseEnabled(x=True, y=True)
-        else:
-            self.mplots['mFREQ'].setMouseEnabled(x=False, y=False)
-            self.mplots['mFREQ'].showAxis('right', False)
+        if self.mfmagresponse:
+            curve = self.mfreqcurve
+            if secondary: 
+                curve = self.mfreqcurve2
+
+            if self.iir:
+                curve.setData(self.freq[:npts-1], self.fftdB[:npts-1])
+            else:
+                curve.setData(self.freq[:int(npts//2)], self.fftdB[:int(npts//2)])
+
 
         # Set axes to new scales.
 
@@ -1073,7 +1240,17 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.plot_auto_limit(self.plots['FREQ'], xMin=xmin, xMax=xmax)
         self.plot_auto_limit(self.mplots['mFREQ'], xMin=xmin, xMax=xmax)
 
-    def update_phase_curves(self):
+        if secondary:
+            self.mplots['mFREQ'].setLabel('right', 'Magnitude', units='dB', **self.labelstyle9b)
+        else:
+            self.mplots['mFREQ'].setLabel('left', 'Magnitude', units='dB', **self.labelstyle9b)
+
+        if not secondary:
+            self.plot_secondary()
+            self.last_mfreq_plot = 'freq'
+
+
+    def update_phase_curves(self, secondary=False):
         npts = len(self.fftDeg)
 
         if(npts < 1):
@@ -1085,12 +1262,17 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.phasecurve.setData(self.freq[:int(npts//2)], self.fftDeg[:int(npts//2)])
 
-        # Configure plots.
-        if self.mtoverlay:
-            self.mplots['mFREQ'].setMouseEnabled(x=True, y=True)
-        else:
-            self.mplots['mFREQ'].setMouseEnabled(x=False, y=False)
-            self.mplots['mFREQ'].showAxis('right', False)
+        if self.mfphaseresponse:
+            curve = self.mfreqcurve
+            if secondary: 
+                curve = self.mfreqcurve2
+
+            if self.iir:
+                curve.setData(self.freq[:npts-1], self.fftDeg[:npts-1])
+            else:
+                curve.setData(self.freq[:int(npts//2)], self.fftDeg[:int(npts//2)])
+
+
 
         # Set plot limits and reset axis zoom.
         if self.iir:
@@ -1104,9 +1286,17 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.plot_auto_limit(self.mplots['mFREQ'], xMin=xmin, xMax=xmax)
 
         # Set Axis title.
-        self.mplots['mFREQ'].setLabel('left', 'Phase', units='Radians', **self.labelstyle9b)
+        if secondary:
+            self.mplots['mFREQ'].setLabel('right', 'Phase', units='Radians', **self.labelstyle9b)
+        else:
+            self.mplots['mFREQ'].setLabel('left', 'Phase', units='Radians', **self.labelstyle9b)
 
-    def update_group_curves(self):
+
+        if not secondary:
+            self.plot_secondary()
+            self.last_mfreq_plot = 'phase'
+
+    def update_group_curves(self, secondary=False):
         npts = len(self.groupDelay)
 
         if(npts < 1):
@@ -1117,6 +1307,17 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.groupcurve.setData(self.freq[:npts-1], self.groupDelay[:npts-1])
         else:
             self.groupcurve.setData(self.freq[:int(npts//2)], self.groupDelay[:int(npts//2)])
+
+        if self.mfgroupdelay:
+            curve = self.mfreqcurve
+            if secondary: 
+                curve = self.mfreqcurve2
+
+            if self.iir:
+                curve.setData(self.freq[:npts-1], self.groupDelay[:npts-1])
+            else:
+                curve.setData(self.freq[:int(npts//2)], self.groupDelay[:int(npts//2)])
+
 
         # Configure plots.
         if self.mtoverlay:
@@ -1137,9 +1338,18 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.plot_auto_limit(self.mplots['mFREQ'], xMin=xmin, xMax=xmax)
 
         # Set Axis title.
-        self.mplots['mFREQ'].setLabel('left', 'Delay', units='seconds', **self.labelstyle9b)
+        if secondary:
+            self.mplots['mFREQ'].setLabel('right', 'Delay', units='seconds', **self.labelstyle9b)
+        else:
+            self.mplots['mFREQ'].setLabel('left', 'Delay', units='seconds', **self.labelstyle9b)
 
-    def update_pdelay_curves(self):
+
+
+        if not secondary:
+            self.plot_secondary()
+            self.last_mfreq_plot = 'group'
+
+    def update_pdelay_curves(self, secondary=False):
         npts = len(self.phaseDelay)
 
         if(npts < 1):
@@ -1150,12 +1360,16 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.pdelaycurve.setData(self.freq[:npts-1], self.phaseDelay[:npts-1])
         else:
             self.pdelaycurve.setData(self.freq[:int(npts//2)], self.phaseDelay[:int(npts//2)])
+        
+        if self.mfphasedelay:
+            curve = self.mfreqcurve
+            if secondary: 
+                curve = self.mfreqcurve2
+            if self.iir:
+                curve.setData(self.freq[:npts-1], self.phaseDelay[:npts-1])
+            else:
+                curve.setData(self.freq[:int(npts//2)], self.phaseDelay[:int(npts//2)])
 
-        if self.mtoverlay:
-            self.mplots['mFREQ'].setMouseEnabled(x=True, y=True)
-        else:
-            self.mplots['mFREQ'].setMouseEnabled(x=False, y=False)
-            self.mplots['mFREQ'].showAxis('right', False)
 
         # Set plot limits and reset axis zoom.
         if self.iir:
@@ -1169,7 +1383,14 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.plot_auto_limit(self.mplots['mFREQ'], xMin=xmin, xMax=xmax)
 
         # Set Axis title.
-        self.mplots['mFREQ'].setLabel('left', 'Phase Delay', **self.labelstyle9b)
+        if secondary:
+            self.mplots['mFREQ'].setLabel('right', 'Phase Delay', **self.labelstyle9b)
+        else:
+            self.mplots['mFREQ'].setLabel('left', 'Phase Delay',  **self.labelstyle9b)
+
+        if not secondary:
+            self.plot_secondary()
+            self.last_mfreq_plot = 'pdelay'
 
     def plot_auto_limit(self, plot, xMin=None, xMax=None, yMin=None, yMax=None):
         plot.setLimits(xMin=None, xMax=None, yMin=None, yMax=None)
@@ -1310,7 +1531,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.stackedWindows.setCurrentIndex(1)
             self.update_freq_curves()
             self.update_time_curves()
-            self.set_drawideal()
+            # self.set_drawideal()
 
     def set_plotselect(self):
         if (self.gui.actionPlot_select.isChecked() == 0 ):
@@ -1341,60 +1562,53 @@ class gr_plot_filter(QtGui.QMainWindow):
 
     def set_mfmagresponse(self):
         if self.mfoverlay:
-            if not(self.ifinlist(self.freqcurve, self.mplots['mFREQ'].itemList())):
-                self.detach_allgrid()
-                self.detach_firstattached(self.mplots['mFREQ'])
-            self.update_freq_curves()
-            self.idbanditems.detach_allidealcurves(self.mplots['mFREQ'])
+            self.mfmagresponse = True
         else:
-            self.mplots['mFREQ'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.freqcurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
-            self.freqcurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_freq_curves()
-            self.set_drawideal()
+            self.mfmagresponse = not(self.mfmagresponse)
+        # if not self.mfoverlay:
+        self.mfphasedelay = False
+        self.mfgroupdelay = False
+        self.mfphaseresponse = False
+
+
+        self.update_freq_curves()
 
     def set_mfphaseresponse(self):
         if self.mfoverlay:
-            if not(self.ifinlist(self.phasecurve, self.mplots['mFREQ'].itemList())):
-                self.detach_allgrid()
-                self.detach_firstattached(self.mplots['mFREQ'])
-                self.update_phase_curves()
-            self.idbanditems.detach_allidealcurves(self.mplots['mFREQ'])
+            self.mfphaseresponse = True
         else:
-            self.mplots['mFREQ'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.phasecurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
-            self.phasecurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_phase_curves()
+            self.mfphaseresponse = not(self.mfphaseresponse)
+        # if not self.mfoverlay:
+        self.mfphasedelay = False
+        self.mfgroupdelay = False
+        self.mfmagresponse = False
+
+        self.update_phase_curves()
 
     def set_mfgroupdelay(self):
         if self.mfoverlay:
-            if not(self.ifinlist(self.groupcurve, self.mplots['mFREQ'].itemList())):
-                self.detach_allgrid()
-                self.detach_firstattached(self.mplots['mFREQ'])
-                self.update_group_curves()
-            self.idbanditems.detach_allidealcurves(self.mplots['mFREQ'])
+            self.mfgroupdelay = True
         else:
-            self.mplots['mFREQ'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.groupcurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
-            self.groupcurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_group_curves()
+            self.mfgroupdelay = not(self.mfgroupdelay)
+        # if not self.mfoverlay:
+        self.mfphasedelay = False
+        self.mfphaseresponse = False
+        self.mfmagresponse = False
+
+        self.update_group_curves()
 
     def set_mfphasedelay(self):
         if self.mfoverlay:
-            if not(self.ifinlist(self.pdelaycurve, self.mplots['mFREQ'].itemList())):
-                self.detach_allgrid()
-                self.detach_firstattached(self.mplots['mFREQ'])
-                self.update_pdelay_curves()
-            self.idbanditems.detach_allidealcurves(self.mplots['mFREQ'])
+            self.mfphasedelay = True
         else:
-            self.mplots['mFREQ'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.pdelaycurve.setPen(QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.SolidLine))
-            self.pdelaycurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_pdelay_curves()
+            self.mfphasedelay = not(self.mfphasedelay)
+
+        # if not self.mfoverlay:
+        self.mfgroupdelay = False
+        self.mfphaseresponse = False
+        self.mfmagresponse = False
+
+        self.update_pdelay_curves()
 
     def ifinlist(self,a,dlist):
         for d in dlist:
@@ -1456,38 +1670,33 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.cpicker2.delete_pz()
 
     def set_mttaps(self):
-        if self.mtoverlay:
-            if not(self.ifinlist(self.rcurve, self.mplots['mTIME'].itemList())):
-                self.detach_firstattached(self.mplots['mTIME'])
-                self.update_time_curves()
-        else:
-            self.mplots['mTIME'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.rcurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.icurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_time_curves()
+
+        self.mttaps = not(self.mttaps)
+        if not self.mfoverlay:
+            self.mtstep = False
+            self.mtimpulse = False
+
+        self.update_time_curves()
 
     def set_mtstep(self):
-        if self.mtoverlay:
-            if not(self.ifinlist(self.steprescurve, self.mplots['mTIME'].itemList())):
-                self.detach_firstattached(self.mplots['mTIME'])
-                self.update_step_curves()
-        else:
-            self.mplots['mTIME'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.steprescurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_step_curves()
+
+        self.mtstep = not(self.mtstep)
+        if not self.mfoverlay:
+            self.mttaps = False
+            self.mtimpulse = False
+
+        self.update_step_curves()
 
     def set_mtimpulse(self):
-        if self.mtoverlay:
-            if not(self.ifinlist(self.imprescurve, self.mplots['mTIME'].itemList())):
-                self.detach_firstattached(self.mplots['mTIME'])
-                self.update_imp_curves()
-        else:
-            self.mplots['mTIME'].detachItems(Qwt.QwtPlotItem.Rtti_PlotItem, False)
-            self.set_actgrid()
-            self.imprescurve.setYAxis(Qwt.QwtPlot.yLeft)
-            self.update_imp_curves()
+
+        self.mtimpulse = not(self.mtimpulse)
+        if not self.mfoverlay:
+            self.mttaps = False
+            self.mtstep = False
+
+
+        self.update_imp_curves()
+        
 
     def set_gdelay(self):
         if (self.gui.checkGdelay.checkState() == 0 ):
@@ -1543,20 +1752,20 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             self.gui.filterspecView.addTab(self.gui.bandDiagram, _fromUtf8("Band Diagram"))
 
-    def set_drawideal(self):
-        fsel = self.gui.fselectComboBox.currentText()
-        if self.gridview and not(self.mfoverlay):
-            plot = self.mplots['mFREQ']
-        else:
-            plot = self.plots['FREQ']
+    # def set_drawideal(self):
+    #     fsel = self.gui.fselectComboBox.currentText()
+    #     if self.gridview and not(self.mfoverlay):
+    #         plot = self.mplots['mFREQ']
+    #     else:
+    #         plot = self.plots['FREQ']
 
-        if (self.gui.actionIdeal_Band.isChecked() == 0 or fsel == "IIR(numpy)"):
-            self.idbanditems.detach_allidealcurves(plot)
-        elif(self.params):
-            ftype = self.gui.filterTypeComboBox.currentText()
-            self.idbanditems.attach_allidealcurves(plot)
-            self.idbanditems.plotIdealCurves(ftype, self.params, plot)
-            plot.replot()
+    #     if (self.gui.actionIdeal_Band.isChecked() == 0 or fsel == "IIR(scipy)"):
+    #         self.idbanditems.detach_allidealcurves(plot)
+    #     elif(self.params):
+    #         ftype = self.gui.filterTypeComboBox.currentText()
+    #         self.idbanditems.attach_allidealcurves(plot)
+    #         self.idbanditems.plotIdealCurves(ftype, self.params, plot)
+    #         plot.replot()
 
     def set_pzplot(self):
         if (self.gui.checkPzplot.checkState() == 0 ):
