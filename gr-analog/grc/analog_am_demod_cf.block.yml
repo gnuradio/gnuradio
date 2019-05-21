@@ -25,6 +25,10 @@ inputs:
 outputs:
 -   domain: stream
     dtype: float
+    
+asserts:
+- ${ audio_pass > 0 }
+- ${audio_pass < audio_stop }
 
 templates:
     imports: from gnuradio import analog
