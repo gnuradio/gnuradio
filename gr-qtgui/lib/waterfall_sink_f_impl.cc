@@ -410,12 +410,14 @@ namespace gr {
                                                    size, 1.0, size);
 
       // Perform shift operation
-      unsigned int len = (unsigned int)(floor(size/2.0));
-      float *tmp = (float*)malloc(sizeof(float)*len);
-      memcpy(tmp, &data_out[0], sizeof(float)*len);
-      memcpy(&data_out[0], &data_out[len], sizeof(float)*(size - len));
-      memcpy(&data_out[size - len], tmp, sizeof(float)*len);
-      free(tmp);
+      const int len = (int)(floor(size/2.0));
+      const int off = size%2;
+      assert(len+off +   len    == size);
+      //     | pos.|   |neg.| frequencies
+      const std::vector<float> tmp(data_out, data_out+len+off);
+      // std::copy_n(data_out,      len+off, tmp.begin());
+      std::copy_n(data_out+len+off, len,     data_out);
+      std::copy_n(tmp.begin(),      len+off, data_out+len);
     }
 
     void
