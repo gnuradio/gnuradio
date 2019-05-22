@@ -509,9 +509,13 @@ namespace gr {
                                                    size, 1.0, size);
 
       // Perform shift operation
-      memcpy(d_tmpbuf, &data_out[0], sizeof(float)*(d_tmpbuflen + 1));
-      memcpy(&data_out[0], &data_out[size - d_tmpbuflen], sizeof(float)*d_tmpbuflen);
-      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen + 1));
+      const int off = size%2;
+      const int len = d_tmpbuflen;
+      assert(len+off +  len == size);
+      //     | pos.|   |neg.| frequencies
+      std::copy_n(data_out,         len+off, d_tmpbuf);
+      std::copy_n(data_out+len+off, len,     data_out);
+      std::copy_n(d_tmpbuf,         len+off, data_out+len);
     }
 
     bool
