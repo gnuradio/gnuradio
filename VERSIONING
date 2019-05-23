@@ -1,0 +1,16 @@
+# Versioning
+
+For the 3.8 Release and going on, the following versioning scheme is to be used. For 3.7 and earlier, other schemes apply.
+
+GNU Radio uses a four-number versioning:
+
+```
+A.B.C.D
+```
+
+* A is the paradigm version. This has been 3 for more than a decade, meaning that
+> GNU Radio is a block-based flow graph framework that uses classes to represent blocks whose main feature is a `work()` function taking input samples from quasi-circular buffers and putting results in quasi-circular output buffers.
+It's encouraged that in the future, relevant modifications and extensions of that model will lead to changes to the paradigm version number.
+* A.B is the public API version. We'll only accept patches that don't change the public API on a `maint-A.B` branch. GNU Radio users  need not change their code to stay compatible with any future A.B.x.x version (barring bugs). Forward-going development should happen on the A.(B+1) branch, once A.B is released.
+* A.B.C is the ABI version. This includes C/C++, Python bindings and the interfaces of GRC blocks. Programmers need not recompile their code if A.B.C stays unchanged.
+* A.B.C.D is the patch level.
