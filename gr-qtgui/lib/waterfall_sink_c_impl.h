@@ -29,6 +29,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/waterfalldisplayform.h>
+#include "fft_shift.h"
 
 namespace gr {
   namespace qtgui {
@@ -41,6 +42,7 @@ namespace gr {
       void initialize();
 
       int d_fftsize;
+      fft_shift d_fft_shift;
       float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;

@@ -29,6 +29,7 @@
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/freqdisplayform.h>
+#include "fft_shift.h"
 
 namespace gr {
   namespace qtgui {
@@ -39,7 +40,7 @@ namespace gr {
       void initialize();
 
       int d_fftsize;
-      int d_tmpbuflen;
+      fft_shift d_fft_shift;
       float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;
@@ -59,7 +60,6 @@ namespace gr {
       std::vector<double*> d_magbufs;
       double* d_pdu_magbuf;
       float *d_fbuf;
-      float *d_tmpbuf;
 
       int d_argc;
       char *d_argv;
