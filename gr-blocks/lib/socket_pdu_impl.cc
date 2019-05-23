@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013 Free Software Foundation, Inc.
+ * Copyright 2013,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -165,7 +165,11 @@ namespace gr {
     void
     socket_pdu_impl::start_tcp_accept()
     {
+#if (BOOST_VERSION >= 107000)
+      tcp_connection::sptr new_connection = tcp_connection::make(d_io_service, d_rxbuf.size(), d_tcp_no_delay);
+#else
       tcp_connection::sptr new_connection = tcp_connection::make(d_acceptor_tcp->get_io_service(), d_rxbuf.size(), d_tcp_no_delay);
+#endif
 
       d_acceptor_tcp->async_accept(new_connection->socket(),
         boost::bind(&socket_pdu_impl::handle_tcp_accept, this,
