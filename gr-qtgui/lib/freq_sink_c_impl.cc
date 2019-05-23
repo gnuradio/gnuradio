@@ -103,8 +103,15 @@ namespace gr {
                                    volk_get_alignment());
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
-      d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
-      d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
+      // FFT Shift variables
+      // Left half of pre-shifted bins includes DC
+      d_fftshift_nr = (unsigned int)(floor(d_fftsize/2.0));  // number of bins in the right half of pre-shifted spectrum
+      d_fftshift_nl = d_fftsize - d_fftshift_nr; // number of bins in the left half of pre-shifted spectrum
+      d_tmpbuflen = d_fftshift_nl;    
+      assert(d_fftshift_nr <= (d_tmpbuflen));
+      assert(d_fftshift_nl <= (d_tmpbuflen));  
+      assert(d_fftshift_nr + d_fftshift_nl == d_fftsize);     
+      d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen),
                                      volk_get_alignment());
 
 
@@ -503,10 +510,11 @@ namespace gr {
       volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
                                                    size, 1.0, size);
 
-      // Perform shift operation
-      memcpy(d_tmpbuf, &data_out[0], sizeof(float)*(d_tmpbuflen + 1));
-      memcpy(&data_out[0], &data_out[size - d_tmpbuflen], sizeof(float)*(d_tmpbuflen));
-      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen));
+      // Perform shift operation 
+      // TODO: move this to fft_shift function
+      memcpy(d_tmpbuf, &data_out[0], sizeof(float)*d_fftshift_nl);
+      memcpy(&data_out[0], &data_out[d_fftshift_nl], sizeof(float)*d_fftshift_nr);
+      memcpy(&data_out[d_fftshift_nr], d_tmpbuf, sizeof(float)*d_fftshift_nl);
     }
 
     bool
@@ -578,9 +586,15 @@ namespace gr {
 	memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
 	volk_free(d_tmpbuf);
-        d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
-        d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
-                                       volk_get_alignment());
+
+        d_fftshift_nr = (unsigned int)(floor(d_fftsize/2.0));  // number of bins in the right half of pre-shifted spectrum
+        d_fftshift_nl = d_fftsize - d_fftshift_nr; // number of bins in the left half of pre-shifted spectrum
+        d_tmpbuflen = d_fftshift_nl;  
+        assert(d_fftshift_nr <= (d_tmpbuflen));
+        assert(d_fftshift_nl <= (d_tmpbuflen));  
+        assert(d_fftshift_nr + d_fftshift_nl == d_fftsize);   
+        d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen),
+                                        volk_get_alignment());
 
         d_last_time = 0;
 

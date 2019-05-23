@@ -60,6 +60,7 @@ namespace gr {
       double* d_pdu_magbuf;
       float *d_fbuf;
       float *d_tmpbuf;
+      unsigned int d_fftshift_nr, d_fftshift_nl;
 
       int d_argc;
       char *d_argv;
