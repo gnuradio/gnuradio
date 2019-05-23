@@ -23,6 +23,7 @@
 install(FILES
     api.h
     fft.h
+    fft_shift.h
     fft_vcc.h
     fft_vfc.h
     goertzel.h
