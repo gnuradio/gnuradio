@@ -65,3 +65,18 @@ endif(MSVC)
 if(BUILD_SHARED_LIBS)
   GR_LIBRARY_FOO(gnuradio-fft FFTW3f)
 endif()
+
+if(ENABLE_TESTING)
+  include(GrTest)
+
+  list(APPEND test_gr_fft_sources
+    qa_fft_shift
+  )
+  list(APPEND GR_TEST_TARGET_DEPS gnuradio-fft)
+
+  foreach(qa_file ${test_gr_fft_sources})
+    GR_ADD_CPP_TEST("fft_${qa_file}"
+      ${CMAKE_CURRENT_SOURCE_DIR}/${qa_file}
+    )
+  endforeach(qa_file)
+endif(ENABLE_TESTING)
