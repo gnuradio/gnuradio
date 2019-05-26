@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -23,9 +23,8 @@
 #ifndef INCLUDED_ZEROMQ_BASE_IMPL_H
 #define INCLUDED_ZEROMQ_BASE_IMPL_H
 
-#include <zmq.hpp>
-
 #include <gnuradio/sync_block.h>
+#include "zmq_common_impl.h"
 
 namespace gr {
   namespace zeromq {

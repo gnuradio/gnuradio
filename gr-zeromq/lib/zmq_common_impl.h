@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013,2014,2019 Free Software Foundation, Inc.
+ * Copyright 2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -20,27 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_ZEROMQ_REP_SINK_IMPL_H
-#define INCLUDED_ZEROMQ_REP_SINK_IMPL_H
+#ifndef INCLUDED_ZEROMQ_ZMQ_COMMON_IMPL_H
+#define INCLUDED_ZEROMQ_ZMQ_COMMON_IMPL_H
 
-#include <gnuradio/zeromq/rep_sink.h>
-#include "base_impl.h"
+#include <zmq.hpp>
 
-namespace gr {
-  namespace zeromq {
+#if defined (CPPZMQ_VERSION) && defined (ZMQ_MAKE_VERSION) && CPPZMQ_VERSION >= ZMQ_MAKE_VERSION(4, 3, 1)
+#define USE_NEW_CPPZMQ_SEND_RECV 1
+#else
+#define USE_NEW_CPPZMQ_SEND_RECV 0
+#endif
 
-    class rep_sink_impl : public rep_sink, public base_sink_impl
-    {
-    public:
-      rep_sink_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
-
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-      std::string last_endpoint() override {return base_sink_impl::last_endpoint();}
-    };
-
-  } // namespace zeromq
-} // namespace gr
-
-#endif /* INCLUDED_ZEROMQ_REP_SINK_IMPL_H */
+#endif /* INCLUDED_ZEROMQ_ZMQ_COMMON_IMPL_H */
