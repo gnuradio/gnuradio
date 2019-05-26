@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2016 Free Software Foundation, Inc.
+ * Copyright 2016,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -105,7 +105,11 @@ namespace gr {
       }
 
       /* Send */
+#if USE_NEW_CPPZMQ_SEND_RECV
+      d_socket->send(msg, zmq::send_flags::none);
+#else
       d_socket->send(msg);
+#endif
 
       /* Report back */
       return in_nitems;
@@ -186,7 +190,11 @@ namespace gr {
       d_consumed_bytes = 0;
 
       /* Get the message */
+#if USE_NEW_CPPZMQ_SEND_RECV
+      d_socket->recv(d_msg);
+#else
       d_socket->recv(&d_msg);
+#endif
 
       /* Parse header from the first (or only) message of a multi-part message */
       if (d_pass_tags && !more)
