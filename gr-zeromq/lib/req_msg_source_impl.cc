@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013,2014 Free Software Foundation, Inc.
+ * Copyright 2013,2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -99,7 +99,11 @@ namespace gr {
           int nmsg = 1;
           zmq::message_t request(sizeof(int));
           memcpy((void *) request.data (), &nmsg, sizeof(int));
+#if USE_NEW_CPPZMQ_SEND_RECV
+          d_socket->send(request, zmq::send_flags::none);
+#else
           d_socket->send(request);
+#endif
         }
 
         zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
@@ -109,7 +113,11 @@ namespace gr {
         if (items[0].revents & ZMQ_POLLIN) {
           // Receive data
           zmq::message_t msg;
+#if USE_NEW_CPPZMQ_SEND_RECV
+          d_socket->recv(msg);
+#else
           d_socket->recv(&msg);
+#endif
 
           std::string buf(static_cast<char*>(msg.data()), msg.size());
           std::stringbuf sb(buf);
