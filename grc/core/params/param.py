@@ -208,7 +208,7 @@ class Param(Element):
         #########################
         # ID and Enum types (not evaled)
         #########################
-        if dtype in ('id', 'stream_id') or self.is_enum():
+        if dtype in ('id', 'stream_id','name') or self.is_enum():
             if self.options.attributes:
                 expr = attributed_str(expr)
                 for key, value in self.options.attributes[expr].items():

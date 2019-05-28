@@ -5,15 +5,15 @@ flags: [ python ]
 parameters:
 -   id: block_id
     label: Block ID
-    dtype: string
+    dtype: id
     default: my_block_0
 -   id: function_name
     label: Function Name
-    dtype: string
+    dtype: name
     default: get_number
 -   id: function_args
     label: Function Args
-    dtype: string
+    dtype: raw
     hide: ${ ('none' if function_args else 'part') }
 -   id: poll_rate
     label: Poll Rate (Hz)
