@@ -10,17 +10,17 @@ parameters:
 -   id: threshold
     label: Threshold
     dtype: int
-    default: '0'
+    default: 0
 -   id: bps
     label: Payload Bits per Symbol
     dtype: int
-    default: '1'
+    default: 1
 value: ${ digital.header_format_default(access_code, threshold, bps) }
 
 templates:
     imports: from gnuradio import digital
     var_make: |-
-        % if int(access_code)==0:
+        % if int(eval(access_code))==0:
         self.${id} = ${id} = digital.header_format_default(digital.packet_utils.default_access_code,\
         ${threshold}, ${bps})
         % else:
@@ -32,7 +32,7 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/header_format_default.h>']
     declarations: 'digital::header_format_default::sptr ${id};'
     var_make: |-
-        % if int(access_code)==0:
+        % if int(eval(access_code))==0:
         this->${id} = ${id} = digital::header_format_default(digital.packet_utils.default_access_code,\
         ${threshold}, ${bps});
         % else:
