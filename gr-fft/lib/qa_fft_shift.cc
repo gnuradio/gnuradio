@@ -26,6 +26,7 @@
 
 #include <gnuradio/fft/fft_shift.h>
 #include <boost/test/unit_test.hpp>
+#include <vector>
 
 namespace gr {
 namespace fft {
@@ -34,27 +35,27 @@ BOOST_AUTO_TEST_CASE(t1)
 {
   fft::fft_shift<int> s(1023);
 
-  int x_even[8] = {  0,  1,  2,  3, -4, -3, -2, -1 };
-  int y_even[8] = { -4, -3, -2, -1,  0,  1,  2,  3 }; // expected result
+  std::vector<int> x_even{  0,  1,  2,  3, -4, -3, -2, -1 };
+  std::vector<int> y_even{ -4, -3, -2, -1,  0,  1,  2,  3 }; // expected result
 
-  s.shift(x_even, 8);
-  BOOST_TEST(x_even == y_even);
+  s.shift(x_even);
+  BOOST_TEST(x_even == y_even, boost::test_tools::per_element());
 
   // two shifts should not change the result
-  s.shift(x_even, 8);
-  s.shift(x_even, 8);
-  BOOST_TEST(x_even == y_even);
+  s.shift(x_even);
+  s.shift(x_even);
+  BOOST_TEST(x_even == y_even, boost::test_tools::per_element());
 }
 
 BOOST_AUTO_TEST_CASE(t2)
 {
   fft::fft_shift<int> s(7);
 
-  int x_odd[7] = {  0,  1,  2, 3, -3, -2, -1 };
-  int y_odd[7] = { -3, -2, -1, 0,  1,  2,  3 }; // expected result
+  std::vector<int> x_odd{  0,  1,  2, 3, -3, -2, -1 };
+  std::vector<int> y_odd{ -3, -2, -1, 0,  1,  2,  3 }; // expected result
 
-  s.shift(x_odd, 7);
-  BOOST_TEST(x_odd == y_odd);
+  s.shift(x_odd);
+  BOOST_TEST(x_odd == y_odd, boost::test_tools::per_element());
 }
 
 } /* namespace fft */
