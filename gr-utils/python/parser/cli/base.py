@@ -130,11 +130,11 @@ def cli_input(msg):
 @with_plugins(iter_entry_points('gnuradio.parser.cli.plugins'))
 @click.command(
     cls=CommandCLI,
-    epilog='Manipulate with GNU Radio modules source code tree. ' +
+    epilog='A tool to parse block header files. ' +
     'Call it without options to run specified command interactively'
 )
 def cli():
-    """A tool for editing GNU Radio out-of-tree modules."""
+    """Block header parsing tool."""
     pass
 
 

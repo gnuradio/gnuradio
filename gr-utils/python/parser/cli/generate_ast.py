@@ -1,5 +1,5 @@
 #
-# Copyright 2013-2014, 2018 Free Software Foundation, Inc.
+# Copyright 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,10 +18,25 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
+""" Module to add new blocks """
 
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from parser.cli.base import cli, ParserException, run
-from parser.cli.base import setup_cli_logger, cli_input
+import re
+import click
+
+from parser.core import ParserGenerateAst
+from parser.cli import run, cli_input, ParserException
+
+@click.command('generate_ast')
+@click.option('--module_type', type=click.Choice(ParserGenerateAst.module_types),
+              help="One of {}.".format(', '.join(ParserGenerateAst.module_types)))
+def cli(**kwargs):
+    """Select a GNU Radio Module."""
+    kwargs['cli'] = True
+    # self = ParserGenerateAst(**kwargs)
+
+if __name__ == '__main__':
+    cli()
