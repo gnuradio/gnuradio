@@ -39,11 +39,14 @@
 #define GR_FTELL _ftelli64
 #define GR_FSTAT _fstat
 #define GR_FILENO _fileno
+#define GR_STAT _stat
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #else
 #define GR_FSEEK fseeko
 #define GR_FTELL ftello
 #define GR_FSTAT fstat
 #define GR_FILENO fileno
+#define GR_STAT stat
 #endif
 
 namespace gr {
@@ -133,7 +136,7 @@ namespace gr {
         throw std::runtime_error("can't open file");
       }
 
-      struct stat st;
+      struct GR_STAT st;
 
       if(GR_FSTAT(GR_FILENO(d_new_fp), &st)) {
         GR_LOG_ERROR(d_logger, boost::format("%s: %s") % filename % strerror(errno));
