@@ -139,7 +139,7 @@ else( WIN32 AND NOT CYGWIN AND NOT MSYS )
 	endif( UNIX OR MSYS )
 endif( WIN32 AND NOT CYGWIN AND NOT MSYS )
 #needed for gsl windows port but safe to always define
-LIST(APPEND GSL_DEFINITIONS "-DGSL_DLL")
+LIST(APPEND GSL_DEFINITIONS "GSL_DLL")
 
 if( GSL_FOUND )
   if( NOT GSL_FIND_QUIETLY )
