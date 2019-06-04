@@ -32,29 +32,28 @@ from pygccxml import parser
 from pygccxml import declarations
 from pygccxml import utils
 
-from parser.core import ParserException, Parser
+from blocktool.core.base import BlockToolException, BlockTool
 
 logger = logging.getLogger(__name__)
 
 
-class ParserGenerateAst(Parser):
+class BlockToolGenerateAst(BlockTool):
     """ Select a GNU Radio module. """
     name = 'module'
-    description = 'Select a GNU Radio module'
-    module_types = ('gr-analog', 'gr-audio', 'gr-blocks', 'gr-channels', 'gr-comedi',
-                'gr-digital', 'gr-dtv', 'gr-fec', 'gr-fft', 'gr-filter', 'gr-qtgui',
-                'gr-trellis', 'gr-uhd', 'gr-video-sdl', 'gr-vocoder', 'gr-wavelet',
-                'gr-zeromq')
+    description = 'Select a GNU Radio header file to parse it'
+    module_types = ()
+    target_dir = os.path.join('.', '..', '..')
+    for list_dir in os.listdir(target_dir):
+        if list_dir.startswith('gr-'):
+            module_types+=(list_dir,)
 
-    def __init__(self, header_name=None, file_name=None,
-                **kwargs):
-        Parser.__init__(self, file_name, **kwargs)
-        self.info['filename'] = file_name
-        pass
+    def __init__(self, modname=None, filename=None, **kwargs):
+        """ __init__ """
+        BlockTool.__init__(self, **kwargs)
 
     def validate(self):
         """ Validates the arguments """
-        Parser._validate(self)
+        BlockTool._validate(self)
         pass
 
     def ast_generator(self):
@@ -62,14 +61,15 @@ class ParserGenerateAst(Parser):
         Abstract Syntax Tree text file generator
         magic happens here!
         """
+        print(str(self.info['modname'])+": "+str(self.info['filename']))
         generator_path, generator_name = utils.find_xml_generator()
         xml_generator_config = parser.xml_generator_configuration_t(
             xml_generator_path=generator_path,
             xml_generator=generator_name,
             compiler="gcc")
 
-        gr = self.info['module_name'].split("-")[0]
-        module = self.info['module_name'].split("-")[-1]
+        gr = self.info['modname'].split("-")[0]
+        module = self.info['modname'].split("-")[-1]
         decls = parser.parse([self.info['filename']], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
         ns = global_namespace.namespace(gr)
@@ -77,6 +77,7 @@ class ParserGenerateAst(Parser):
         return declarations.print_declarations(main_namespace)
 
     def run(self):
-        """ Go, go, go. """
-        pass
-        # self.ast_generator()
+        """ Run, run, run. """
+        print(self.info['modname'])
+        print(self.info['filename'])
+        self.validate()

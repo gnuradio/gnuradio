@@ -31,30 +31,34 @@ import logging
 import itertools
 
 from gnuradio import gr
+from blocktool.cli.base import setup_cli_logger
 
-logger = logging.getLogger('gnuradio.parser')
+logger = logging.getLogger('gnuradio.blocktool')
 
 
-class ParserException(Exception):
-    """ Standard exception for parser classes. """
+class BlockToolException(Exception):
+    """ Standard exception for blocktool classes. """
     pass
 
 
-class Parser(object):
-    """ Base class for all parser command classes. """
+class BlockTool(object):
+    """ Base class for all blocktool command classes. """
     name = 'base'
-    description  = None
+    description = None
 
-    def __init__(self, module_name=None, **kwargs):
-        """
-        __init__
-        """
+    def __init__(self, modname=None, filename=None, **kwargs):
+        """ __init__ """
         self.info = {}
-        self.info['modname'] = module_name
+        self.info['modname'] = modname
+        self.info['filename'] = filename
+        setup_cli_logger(logger)
 
     def _validate(self):
         """ Validates the arguments """
-        pass
+        if self.info['modname'] is None:
+            raise BlockToolException("Module name not specified")
+        if self.info['filename'] is None:
+            raise BlockToolException("File name not specified")
 
     def run(self):
         """ Override this. """

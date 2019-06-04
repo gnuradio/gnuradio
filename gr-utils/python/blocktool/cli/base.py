@@ -39,12 +39,12 @@ from click_plugins import with_plugins
 from gnuradio import gr
 
 
-class ParserException(ClickException):
+class BlockToolException(ClickException):
     """ Exception class for enhanced CLI interface """
 
     def show(self, file=None):
         """ displays the colored message """
-        click.secho('ParserException: {}'.format(
+        click.secho('BlockToolException: {}'.format(
             self.format_message()), fg='red')
 
 
@@ -85,7 +85,7 @@ class CommandCLI(click.Group):
 
     def list_commands(self, ctx):
         """
-        Lists all the commands available in the parser directory
+        Lists all the commands available in the blocktool directory
         """
         cmds = []
         for filename in os.listdir(self.cmd_folder):
@@ -97,13 +97,13 @@ class CommandCLI(click.Group):
 
     def get_command(self, ctx, cmd_name):
         """
-        Returns a command object if it exists. The existing in-tree Parser
+        Returns a command object if it exists. The existing in-tree BlockTool
         command is the priority over the same external plug-in command.
         """
         try:
             if sys.version_info[0] == 2:
                 cmd_name = cmd_name.encode('ascii', 'replace')
-            mod = import_module('gnuradio.parser.cli.' + cmd_name)
+            mod = import_module('gnuradio.blocktool.cli.' + cmd_name)
         except ImportError:
             return self.commands.get(cmd_name)
         return mod.cli
@@ -127,7 +127,7 @@ def cli_input(msg):
     return input(click.style(msg, fg='cyan'))
 
 
-@with_plugins(iter_entry_points('gnuradio.parser.cli.plugins'))
+@with_plugins(iter_entry_points('gnuradio.blocktool.cli.plugins'))
 @click.command(
     cls=CommandCLI,
     epilog='A tool to parse block header files. ' +
@@ -142,6 +142,6 @@ def run(module):
     """Call the run function of the core modules."""
     try:
         module.run()
-    except ParserException as err:
+    except BlockToolException as err:
         click.echo(err, file=sys.stderr)
         exit(1)
