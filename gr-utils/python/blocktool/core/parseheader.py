@@ -25,7 +25,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
-import re
+import sys
 import logging
 
 from pygccxml import parser
@@ -38,18 +38,25 @@ logger = logging.getLogger(__name__)
 
 
 class BlockToolGenerateAst(BlockTool):
-    """ Select a GNU Radio module. """
-    name = 'module'
-    description = 'Select a GNU Radio header file to parse it'
-    module_types = ()
+    """
+    Enter a header file from GNU Radio module
+    """
+    name = 'Generate Ast'
+    description = 'Create a parsed output from a block header file'
+    module_types = []
     target_dir = os.path.join('.', '..', '..')
     for list_dir in os.listdir(target_dir):
         if list_dir.startswith('gr-'):
-            module_types+=(list_dir,)
+            list_dir = list_dir.split('-')[-1]
+            module_types.append(list_dir)
+    module_types.remove('utils')
+    module_types = tuple(module_types)
+    
 
-    def __init__(self, modname=None, filename=None, **kwargs):
+    def __init__(self, module_name=None, file_name=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
+        self.info['modname'] = module_name
 
     def validate(self):
         """ Validates the arguments """
@@ -61,23 +68,22 @@ class BlockToolGenerateAst(BlockTool):
         Abstract Syntax Tree text file generator
         magic happens here!
         """
-        print(str(self.info['modname'])+": "+str(self.info['filename']))
         generator_path, generator_name = utils.find_xml_generator()
         xml_generator_config = parser.xml_generator_configuration_t(
             xml_generator_path=generator_path,
             xml_generator=generator_name,
             compiler="gcc")
-
         gr = self.info['modname'].split("-")[0]
         module = self.info['modname'].split("-")[-1]
-        decls = parser.parse([self.info['filename']], xml_generator_config)
+        decls = parser.parse([self.info['target_file']], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
         ns = global_namespace.namespace(gr)
         main_namespace = ns.namespace(module)
+        f = open('temp_ast.txt', 'w')
+        sys.stdout = f
         return declarations.print_declarations(main_namespace)
 
     def run(self):
         """ Run, run, run. """
-        print(self.info['modname'])
-        print(self.info['filename'])
         self.validate()
+        self.ast_generator()

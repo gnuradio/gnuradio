@@ -89,9 +89,10 @@ class CommandCLI(click.Group):
         """
         cmds = []
         for filename in os.listdir(self.cmd_folder):
-            if filename.endswith('.py') and '_' not in filename:
+            if filename.endswith('.py'):
                 cmds.append(filename[:-3])
         cmds.remove('base')
+        cmds.remove('__init__')
         cmds += self.commands
         return sorted(cmds)
 
@@ -145,3 +146,6 @@ def run(module):
     except BlockToolException as err:
         click.echo(err, file=sys.stderr)
         exit(1)
+
+if __name__ == '__main__':
+    cli()
