@@ -104,7 +104,7 @@ class CommandCLI(click.Group):
         try:
             if sys.version_info[0] == 2:
                 cmd_name = cmd_name.encode('ascii', 'replace')
-            mod = import_module('gnuradio.blocktool.cli.' + cmd_name)
+            mod = import_module('blocktool.cli.' + cmd_name)
         except ImportError:
             return self.commands.get(cmd_name)
         return mod.cli
@@ -128,7 +128,7 @@ def cli_input(msg):
     return input(click.style(msg, fg='cyan'))
 
 
-@with_plugins(iter_entry_points('gnuradio.blocktool.cli.plugins'))
+@with_plugins(iter_entry_points('blocktool.cli.plugins'))
 @click.command(
     cls=CommandCLI,
     epilog='A tool to parse block header files. ' +
@@ -146,6 +146,7 @@ def run(module):
     except BlockToolException as err:
         click.echo(err, file=sys.stderr)
         exit(1)
+
 
 if __name__ == '__main__':
     cli()

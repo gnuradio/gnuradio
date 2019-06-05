@@ -27,14 +27,21 @@ from __future__ import unicode_literals
 import os
 import click
 
-from blocktool.core.parseheader import BlockToolGenerateAst
-from blocktool.cli.base import run, cli_input, BlockToolException
 from modtool.tools.util_functions import SequenceCompleter
+
+from blocktool.cli.base import run, cli_input, BlockToolException
+from blocktool.core.parseheader import BlockToolGenerateAst
 
 
 @click.command('parseheader', short_help=BlockToolGenerateAst.description)
-@click.option('-m', '--module-name', type=click.Choice(BlockToolGenerateAst.module_types),
-              help="One of {}.".format(', '.join(BlockToolGenerateAst.module_types)))
+@click.option('-m', '--module-name',
+              type=click.Choice(BlockToolGenerateAst.module_types),
+                    help="One of {}.".format(
+                    ', '.join(BlockToolGenerateAst.module_types)))
+@click.option('-j', '--json-confirm', is_flag=True,
+              help="Get a JSON output for the header")
+@click.option('-y', '--yaml-confirm', is_flag=True,
+              help="Get a YAML output for the header")
 def cli(**kwargs):
     """
     \b
@@ -43,6 +50,7 @@ def cli(**kwargs):
     self = BlockToolGenerateAst(**kwargs)
     get_module_name(self)
     get_header_file(self)
+    get_json_file(self)
     get_yaml_file(self)
     run(self)
 
@@ -55,10 +63,11 @@ def get_module_name(self):
         click.secho(str(self.module_types), fg='yellow')
         with(SequenceCompleter(self.module_types)):
             while self.info['modname'] not in self.module_types:
-                self.info['modname'] = cli_input("Enter GNU Radio module name: ")
+                self.info['modname'] = cli_input(
+                    "Enter GNU Radio module name: ")
                 if self.info['modname'] not in self.module_types:
-                    click.secho('Must be one of '+
-                        str(self.module_types), fg='yellow')
+                    click.secho('Must be one of ' +
+                                str(self.module_types), fg='yellow')
 
 
 def get_header_file(self):
@@ -67,8 +76,10 @@ def get_header_file(self):
     """
     if 'gr' not in self.info['modname']:
         self.info['modname'] = 'gr-'+self.info['modname']
-    self.info['target_dir'] = os.path.join('.', '..', '..', self.info['modname'],
-                    'include', 'gnuradio', self.info['modname'].split('-')[-1])
+    self.info['target_dir'] = os.path.join('.', '..', '..',
+                                           self.info['modname'], 'include',
+                                           'gnuradio',
+                                           self.info['modname'].split('-')[-1])
     header_list = os.listdir(self.info['target_dir'])
     if 'CMakeLists.txt' in header_list:
         header_list.remove('CMakeLists.txt')
@@ -76,8 +87,9 @@ def get_header_file(self):
     if self.info['filename'] is None:
         click.secho("GNU Radio module: " + self.info['modname'], fg='green')
         with SequenceCompleter(header_list):
-            self.info['filename'] = cli_input("Enter public header file name from "+
-                                            self.info['modname']+" module: ")
+            self.info['filename'] = cli_input(
+                                        "Enter public header file name from " +
+                                        self.info['modname']+" module: ")
     if self.info['filename'] is "":
         raise BlockToolException('Enter a file name!')
     extension = self.info['filename'].split('.')[-1]
@@ -88,18 +100,42 @@ def get_header_file(self):
             'Please enter a header file from '+self.info['modname']+' only!')
     else:
         self.info['target_file'] = os.path.join(self.info['target_dir'],
-                                        self.info['filename'])
+                                                self.info['filename'])
+        click.secho("Header file: " + self.info['filename'], fg='green')
+
+
+def get_json_file(self):
+    """
+    Get confirmation for the JSON file output
+    """
+    header_file = self.info['filename'].split('.')[0]
+    block_module = self.info['modname'].split('-')[-1]
+    if self.info['json_confirm'] is False:
+        if click.confirm(click.style(
+                'Do you require a JSON file?', fg='cyan')):
+            self.info['json_confirm'] = True
+            click.secho("Generating "+block_module+"_"+header_file +
+                        ".json ...", fg='green')
+    else:
+        click.secho("Generating "+block_module+"_"+header_file +
+                    ".json ...", fg='green')
 
 
 def get_yaml_file(self):
     """
     Get confirmation for the YAML file output
     """
+    header_file = self.info['filename'].split('.')[0]
+    block_module = self.info['modname'].split('-')[-1]
     if self.info['yaml_confirm'] is False:
-        click.secho("Header file: " + self.info['filename'], fg='green')
         if click.confirm(click.style(
-            'Do you require a YAML along with a JSON file ?', fg='cyan')):
+                'Do you require a YAML file?', fg='cyan')):
             self.info['yaml_confirm'] = True
+            click.secho("Generating "+block_module+"_"+header_file +
+                        ".block.yml ...", fg='green')
+    else:
+        click.secho("Generating "+block_module+"_"+header_file +
+                    ".block.yml ...", fg='green')
 
 
 if __name__ == '__main__':
