@@ -30,7 +30,6 @@ import glob
 import logging
 import itertools
 
-from gnuradio import gr
 from blocktool.cli.base import setup_cli_logger
 
 logger = logging.getLogger('gnuradio.blocktool')

@@ -18,7 +18,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" Module to add new blocks """
+""" CLI module for the tool """
 
 from __future__ import print_function
 from __future__ import absolute_import
@@ -136,7 +136,3 @@ def get_yaml_file(self):
     else:
         click.secho("Generating "+block_module+"_"+header_file +
                     ".block.yml ...", fg='green')
-
-
-if __name__ == '__main__':
-    cli()

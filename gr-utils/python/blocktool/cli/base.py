@@ -36,8 +36,6 @@ import click
 from click import ClickException
 from click_plugins import with_plugins
 
-from gnuradio import gr
-
 
 class BlockToolException(ClickException):
     """ Exception class for enhanced CLI interface """
@@ -146,7 +144,3 @@ def run(module):
     except BlockToolException as err:
         click.echo(err, file=sys.stderr)
         exit(1)
-
-
-if __name__ == '__main__':
-    cli()

@@ -35,8 +35,8 @@ from pygccxml import declarations
 from pygccxml import utils
 
 from blocktool.core.base import BlockToolException, BlockTool
-from blocktool.core.yaml_generator import yaml_generator
-from blocktool.core.json_generator import json_generator
+from blocktool.core.makeyaml import yaml_generator
+from blocktool.core.makejson import json_generator
 
 logger = logging.getLogger(__name__)
 
