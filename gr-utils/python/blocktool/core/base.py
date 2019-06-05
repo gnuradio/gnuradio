@@ -47,14 +47,16 @@ class BlockTool(object):
     description = None
 
     def __init__(self, module_name=None, file_name=None, target_dir=None,
-                    target_file=None, **kwargs):
+                 target_file=None, yaml_confirm=False, json_confirm=False,
+                 **kwargs):
         """ __init__ """
         self.info = {}
         self.info['modname'] = module_name
         self.info['filename'] = file_name
         self.info['target_dir'] = target_dir
         self.info['target_file'] = target_file
-        self.info['yaml_confirm'] = False
+        self.info['json_confirm'] = json_confirm
+        self.info['yaml_confirm'] = yaml_confirm
         setup_cli_logger(logger)
 
     def _validate(self):
