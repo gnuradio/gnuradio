@@ -74,7 +74,7 @@ GR_PYTHON_INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/runtime_swig.py
 install(EXPORT runtime_swig-export
   FILE runtime_swigTargets.cmake
   NAMESPACE gnuradio::
-  DESTINATION ${GR_LIBRARY_DIR}/cmake/gnuradio
+  DESTINATION ${GR_CMAKE_DIR}
 )
 
 install(

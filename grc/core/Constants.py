@@ -61,7 +61,7 @@ PARAM_TYPE_NAMES = {
     'complex_vector', 'real_vector', 'float_vector', 'int_vector',
     'hex', 'string', 'bool',
     'file_open', 'file_save', '_multiline', '_multiline_python_external',
-    'id', 'stream_id',
+    'id', 'stream_id','name',
     'gui_hint',
     'import',
 }

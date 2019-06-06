@@ -47,7 +47,7 @@ IF(MSVC)
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
     @ONLY)
 
-    target_sources(gnuradio-videos-sdl PRIVATE
+    target_sources(gnuradio-video-sdl PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gnuradio-video-sdl.rc
     )
 ENDIF(MSVC)

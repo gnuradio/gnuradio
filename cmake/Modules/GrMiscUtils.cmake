@@ -53,13 +53,11 @@ macro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE flag have)
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG(${flag} ${have})
     if(${have})
-      if(${CMAKE_VERSION} VERSION_GREATER "2.8.4")
-        STRING(FIND "${CMAKE_CXX_FLAGS}" "${flag}" flag_dup)
-        if(${flag_dup} EQUAL -1)
-          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-          set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
-        endif(${flag_dup} EQUAL -1)
-      endif(${CMAKE_VERSION} VERSION_GREATER "2.8.4")
+      STRING(FIND "${CMAKE_CXX_FLAGS}" "${flag}" flag_dup)
+      if(${flag_dup} EQUAL -1)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
+      endif(${flag_dup} EQUAL -1)
     endif(${have})
 endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 
@@ -72,6 +70,7 @@ endmacro(GR_ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)
 function(GR_LIBRARY_FOO target)
     #set additional target properties
     set_target_properties(${target} PROPERTIES SOVERSION ${LIBVER})
+    set_target_properties(${target} PROPERTIES VERSION ${VERSION})
 
     #install the generated files like so...
     install(TARGETS ${target}
@@ -102,36 +101,6 @@ function(GR_LIBRARY_FOO target)
       DESTINATION ${GR_CMAKE_DIR}
       )
 
-    #extras mode enabled automatically on linux
-    if(NOT DEFINED LIBRARY_EXTRAS)
-        set(LIBRARY_EXTRAS ${LINUX})
-    endif()
-
-    #special extras mode to enable alternative naming conventions
-    if(LIBRARY_EXTRAS)
-
-        #give the library a special name with ultra-zero soversion
-        set_target_properties(${target} PROPERTIES OUTPUT_NAME ${target}-${LIBVER} SOVERSION "0.0.0")
-        set(target_name lib${target}-${LIBVER}.so.0.0.0)
-
-        #custom command to generate symlinks
-        add_custom_command(
-            TARGET ${target}
-            POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E create_symlink ${target_name} ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
-            COMMAND ${CMAKE_COMMAND} -E create_symlink ${target_name} ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
-            COMMAND ${CMAKE_COMMAND} -E touch ${target_name} #so the symlinks point to something valid so cmake 2.6 will install
-        )
-
-        #and install the extra symlinks
-        install(
-            FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/lib${target}.so
-            ${CMAKE_CURRENT_BINARY_DIR}/lib${target}-${LIBVER}.so.0
-            DESTINATION ${GR_LIBRARY_DIR}
-        )
-
-    endif(LIBRARY_EXTRAS)
 endfunction(GR_LIBRARY_FOO)
 
 ########################################################################

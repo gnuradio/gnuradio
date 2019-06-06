@@ -50,7 +50,7 @@ public:
         _cycle_duration(idle_duration + burst_duration),
         _samps_left_in_burst(1), //immediate EOB
         _do_new_burst(false),
-        _firstrun(not length_tag_name.empty()),
+        _firstrun(!length_tag_name.empty()),
         _length_tag_key(length_tag_name.empty() ? pmt::PMT_NIL : pmt::string_to_symbol(length_tag_name))
     {
         //NOP

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007,2011,2012 Free Software Foundation, Inc.
+# Copyright 2006,2007,2011,2012,2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,15 +19,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-
-from gnuradio import gr, gru, uhd, audio
-from gnuradio import filter
-from gnuradio import analog
-from gnuradio import eng_notation
-from gnuradio.eng_option import eng_option
-from optparse import OptionParser
-import sys
-
 """
 This example application demonstrates receiving and demodulating
 different types of signals using the USRP.
@@ -69,8 +60,18 @@ Please see fm_demod.py and am_demod.py for details of the demodulation
 blocks.
 """
 
+from __future__ import print_function
+import sys
+from argparse import ArgumentParser
+from gnuradio import gr, gru, uhd, audio
+from gnuradio import filter
+from gnuradio import analog
+from gnuradio import eng_notation, eng_arg
+from gnuradio.eng_option import eng_option
+
+
 # (device_rate, channel_rate, audio_rate, channel_pass, channel_stop, demod)
-demod_params = {
+DEMOD_PARAMS = {
 		'AM'  : (256e3,  16e3, 16e3,  5000,   8000, analog.demod_10k0a3e_cf),
 		'FM'  : (256e3,  32e3,  8e3,  8000,   9000, analog.demod_20k0f3e_cf),
 		'WFM' : (320e3, 320e3, 32e3, 80000, 115000, analog.demod_200kf3e_cf)
@@ -86,111 +87,117 @@ class uhd_src(gr.hier_block2):
     the actual frequency.
     """
     def __init__(self, args, spec, antenna, samp_rate, gain=None, calibration=0.0):
-	gr.hier_block2.__init__(self, "uhd_src",
-				gr.io_signature(0, 0, 0),                    # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+        gr.hier_block2.__init__(
+            self, "uhd_src",
+            gr.io_signature(0, 0, 0),                    # Input signature
+            gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
-        self._src = uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
+        self._src = \
+            uhd.usrp_source(device_addr=args, stream_args=uhd.stream_args('fc32'))
 
         # Set the subdevice spec
-        if(spec):
+        if spec:
             self._src.set_subdev_spec(spec, 0)
 
         # Set the antenna
-        if(antenna):
+        if antenna:
             self._src.set_antenna(antenna, 0)
 
         self._src.set_samp_rate(samp_rate)
-	dev_rate = self._src.get_samp_rate()
+        dev_rate = self._src.get_samp_rate()
         self._samp_rate = samp_rate
 
         # Resampler to get to exactly samp_rate no matter what dev_rate is
         self._rrate = samp_rate / dev_rate
         self._resamp = filter.pfb.arb_resampler_ccf(self._rrate)
 
-	# If no gain specified, set to midrange
+        # If no gain specified, set to midrange
         gain_range = self._src.get_gain_range()
-	if gain is None:
-	    gain = (gain_range.start()+gain_range.stop())/2.0
-            print "Using gain: ", gain
+        if gain is None:
+            gain = (gain_range.start()+gain_range.stop())/2.0
+            print("Using gain: ", gain)
         self._src.set_gain(gain)
 
         self._cal = calibration
-	self.connect(self._src, self._resamp, self)
+        self.connect(self._src, self._resamp, self)
 
     def tune(self, freq):
-        r = self._src.set_center_freq(freq+self._cal, 0)
+        """ Set center frequency """
+        self._src.set_center_freq(freq + self._cal, 0)
 
     def rate(self):
+        """ Set sampling rate """
         return self._samp_rate
 
 class app_top_block(gr.top_block):
     def __init__(self, options):
-	gr.top_block.__init__(self)
-	self.options = options
+        gr.top_block.__init__(self)
+        self.options = options
 
-	(dev_rate, channel_rate, audio_rate,
-	 channel_pass, channel_stop, demod) = demod_params[options.modulation]
+        (dev_rate, channel_rate, audio_rate, channel_pass, channel_stop, demod) = \
+            DEMOD_PARAMS[options.modulation]
 
-        DEV = uhd_src(options.args,             # UHD device address
+        dev = uhd_src(options.args,             # UHD device address
                       options.spec,             # device subdev spec
                       options.antenna,          # device antenna
                       dev_rate,         	# device sample rate
                       options.gain, 	    	# Receiver gain
                       options.calibration)      # Frequency offset
-	DEV.tune(options.frequency)
+        dev.tune(options.frequency)
 
-	if_rate = DEV.rate()
+        if_rate = dev.rate()
         channel_decim = int(if_rate // channel_rate)
-	audio_decim = int(channel_rate // audio_rate)
+        audio_decim = int(channel_rate // audio_rate)
 
-	CHAN_taps = filter.optfir.low_pass(1.0,          # Filter gain
+        chan_taps = filter.optfir.low_pass(1.0,          # Filter gain
                                            if_rate, 	 # Sample rate
                                            channel_pass, # One sided modulation bandwidth
                                            channel_stop, # One sided channel bandwidth
                                            0.1, 	 # Passband ripple
                                            60) 	         # Stopband attenuation
 
-	CHAN = filter.freq_xlating_fir_filter_ccf(channel_decim, # Decimation rate
-                                                  CHAN_taps,     # Filter taps
-                                                  0.0, 	         # Offset frequency
-                                                  if_rate)       # Sample rate
+        chan = filter.freq_xlating_fir_filter_ccf(
+            channel_decim, # Decimation rate
+            chan_taps,     # Filter taps
+            0.0, 	   # Offset frequency
+            if_rate)       # Sample rate
 
-	RFSQL = analog.pwr_squelch_cc(options.rf_squelch,    # Power threshold
-                                      125.0/channel_rate,    # Time constant
-                                      int(channel_rate/20),  # 50ms rise/fall
-                                      False)		     # Zero, not gate output
+        rfsql = analog.pwr_squelch_cc(
+            options.rf_squelch,    # Power threshold
+            125.0/channel_rate,    # Time constant
+            int(channel_rate/20),  # 50ms rise/fall
+            False)		   # Zero, not gate output
 
-	AGC = analog.agc_cc(1.0/channel_rate,  # Time constant
+        agc = analog.agc_cc(1.0/channel_rate,  # Time constant
                             1.0,     	       # Reference power
                             1.0)	       # Gain
 
-	DEMOD = demod(channel_rate, audio_decim)
+        demod = demod(channel_rate, audio_decim)
 
-	# From RF to audio
-        #self.connect(DEV, CHAN, RFSQL, AGC, DEMOD)
-        self.connect(DEV, CHAN, DEMOD)
+        # From RF to audio
+        #self.connect(dev, chan, rfsql, agc, demod)
+        self.connect(dev, chan, demod)
 
-	# Optionally add CTCSS and RSAMP if needed
-	tail = DEMOD
-	if options.ctcss != None and options.ctcss > 60.0:
-	    CTCSS = analog.ctcss_squelch_ff(audio_rate,    # Sample rate
+        # Optionally add CTCSS and RSAMP if needed
+        tail = demod
+        if options.ctcss != None and options.ctcss > 60.0:
+            ctcss = analog.ctcss_squelch_ff(audio_rate,    # Sample rate
                                             options.ctcss) # Squelch tone
-	    self.connect(DEMOD, CTCSS)
-	    tail = CTCSS
+            self.connect(demod, ctcss)
+            tail = ctcss
 
-	if options.output_rate != audio_rate:
-	    out_lcm = gru.lcm(audio_rate, options.output_rate)
-	    out_interp = int(out_lcm // audio_rate)
-	    out_decim = int(out_lcm // options.output_rate)
-	    RSAMP = filter.rational_resampler_fff(out_interp, out_decim)
-	    self.connect(tail, RSAMP)
-	    tail = RSAMP
+        if options.output_rate != audio_rate:
+            out_lcm = gru.lcm(audio_rate, options.output_rate)
+            out_interp = int(out_lcm // audio_rate)
+            out_decim = int(out_lcm // options.output_rate)
+            rsamp = filter.rational_resampler_fff(out_interp, out_decim)
+            self.connect(tail, rsamp)
+            tail = rsamp
 
-	# Send to audio output device
-        AUDIO = audio.sink(int(options.output_rate),
-                           options.audio_output)
-	self.connect(tail, AUDIO)
+        # Send to audio output device
+        audio_sink = audio.sink(int(options.output_rate),
+                                options.audio_output)
+        self.connect(tail, audio_sink)
 
         # Direct asynchronous notifications to callback function
         if self.options.show_async_msg:
@@ -199,54 +206,59 @@ class app_top_block(gr.top_block):
             self.async_rcv = gru.msgq_runner(self.async_msgq, self.async_callback)
 
     def async_callback(self, msg):
+        """ Callback for processing async messages """
         md = self.async_src.msg_to_async_metadata_t(msg)
-        print "Channel: %i Time: %f Event: %i" % (md.channel, md.time_spec.get_real_secs(), md.event_code)
+        print("Channel: {} Time: {} Event: {}".format(
+            md.channel,
+            md.time_spec.get_real_secs(),
+            md.event_code))
 
 
 def main():
-    parser = OptionParser(option_class=eng_option)
-    parser.add_option("-a", "--args", type="string", default="",
-                      help="UHD device address args , [default=%default]")
-    parser.add_option("", "--spec", type="string", default=None,
-                      help="Subdevice of UHD device where appropriate")
-    parser.add_option("-A", "--antenna", type="string", default=None,
-                      help="select Rx Antenna where appropriate [default=%default]")
-    parser.add_option("-f", "--frequency", type="eng_float",
-                      default=None, metavar="Hz",
-                      help="set receive frequency to Hz [default=%default]")
-    parser.add_option("-c",   "--calibration", type="eng_float",
-                      default=0.0, metavar="Hz",
-                      help="set frequency offset to Hz [default=%default]")
-    parser.add_option("-g", "--gain", type="eng_float",
-                      metavar="dB", default=None,
-                      help="set RF gain [default is midpoint]")
-    parser.add_option("-m", "--modulation", type="choice", choices=('AM','FM','WFM'),
-                      metavar="TYPE", default=None,
-                      help="set modulation type (AM,FM,WFM) [default=%default]")
-    parser.add_option("-o", "--output-rate", type="eng_float",
-                      default=32000, metavar="RATE",
-                      help="set audio output rate to RATE [default=%default]")
-    parser.add_option("-r", "--rf-squelch", type="eng_float",
-                      default=-50.0, metavar="dB",
-                      help="set RF squelch to dB [default=%default]")
-    parser.add_option("-p", "--ctcss", type="float",
-                      default=None, metavar="FREQ",
-		      help="set CTCSS squelch to FREQ [default=%default]")
-    parser.add_option("-O", "--audio-output", type="string", default="default",
-                      help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
-    parser.add_option("", "--show-async-msg", action="store_true", default=False,
-                      help="Show asynchronous message notifications from UHD [default=%default]")
-    (options, args) = parser.parse_args()
+    """ Go, Go, Go """
+    parser = ArgumentParser()
+    parser.add_argument("-a", "--args", default="",
+                        help="UHD device address args")
+    parser.add_argument("--spec",
+                        help="Subdevice of UHD device where appropriate")
+    parser.add_argument("-A", "--antenna",
+                        help="select Rx Antenna where appropriate")
+    parser.add_argument("-f", "--frequency", type=eng_arg.eng_float,
+                        default=None, metavar="Hz",
+                        help="set receive frequency to Hz")
+    parser.add_argument("-c", "--calibration", type=eng_arg.eng_float,
+                        default=0.0, metavar="Hz",
+                        help="set frequency offset to Hz")
+    parser.add_argument("-g", "--gain", type=eng_arg.eng_float,
+                        metavar="dB", default=None,
+                        help="set RF gain [default is midpoint]")
+    parser.add_argument("-m", "--modulation", choices=('AM', 'FM', 'WFM'),
+                        metavar="TYPE",
+                        help="set modulation type (AM,FM,WFM)")
+    parser.add_argument("-o", "--output-rate", type=eng_arg.eng_float,
+                        default=32000, metavar="RATE",
+                        help="set audio output rate to RATE")
+    parser.add_argument("-r", "--rf-squelch", type=eng_arg.eng_float,
+                        default=-50.0, metavar="dB",
+                        help="set RF squelch to dB [default=%(default)s]")
+    parser.add_argument("-p", "--ctcss", type=float,
+                        default=None, metavar="FREQ",
+                        help="set CTCSS squelch to FREQ")
+    parser.add_argument("-O", "--audio-output", default="default",
+                        help="pcm device name.  E.g., hw:0,0 or surround51 or /dev/dsp")
+    parser.add_argument("--show-async-msg", action="store_true",
+                        help="Show asynchronous message notifications from UHD")
+    args = parser.parse_args()
 
-    if options.frequency is None:
-	sys.stderr.write("Must supply receive frequency with -f.\n")
-	sys.exit(1)
+    if args.frequency is None:
+        sys.stderr.write("Must supply receive frequency with -f.\n")
+        sys.exit(1)
 
-    if options.modulation is None:
+    if args.modulation is None:
         sys.stderr.write("Must supply a modulation type (AM, FM, WFM).\n")
         sys.exit(1)
 
-    tb = app_top_block(options)
+    tb = app_top_block(args)
     try:
         tb.run()
     except KeyboardInterrupt:
