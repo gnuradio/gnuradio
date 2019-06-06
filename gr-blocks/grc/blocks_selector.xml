@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Copy
+###################################################
+ -->
+<block>
+  <name>Selector</name>
+  <key>blocks_selector</key>
+  <import>from gnuradio import blocks</import>
+  <make>blocks.selector($type.size*$vlen, $input_index, $output_index)
+self.$(id).set_enabled($enabled)</make>
+  <callback>set_enabled($enabled)</callback>
+  <callback>set_input_index($input_index)</callback>
+  <callback>set_output_index($output_index)</callback>
+
+  <param>
+    <name>Type</name>
+    <key>type</key>
+    <type>enum</type>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>size:gr.sizeof_gr_complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>size:gr.sizeof_float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>size:gr.sizeof_int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>size:gr.sizeof_short</opt>
+    </option>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>size:gr.sizeof_char</opt>
+    </option>
+  </param>
+
+  <param>
+    <name>Enabled</name>
+    <key>enabled</key>
+    <value>True</value>
+    <type>bool</type>
+    <option>
+      <name>Enabled</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>Disabled</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Number of Inputs</name>
+    <key>num_inputs</key>
+    <value>2</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Number of Outputs</name>
+    <key>num_outputs</key>
+    <value>2</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Input Index</name>
+    <key>input_index</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Output Index</name>
+    <key>output_index</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Vec Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+
+
+
+  <param>
+    <name>Show Msg Ports</name>
+    <key>showports</key>
+    <value>True</value>
+    <type>enum</type>
+    <hide>part</hide>
+    <option>
+      <name>Yes</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>No</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <check>$vlen &gt; 0</check>
+  <check>$num_inputs &gt; 0</check>
+  <check>$num_outputs &gt; 0</check>
+  <check>$input_index &gt;= 0</check>
+  <check>$output_index &gt;= 0</check>
+
+  <sink>
+    <name>in</name>
+    <type>$type</type>
+    <vlen>$vlen</vlen>
+    <nports>$num_inputs</nports>
+  </sink>
+
+  <sink>
+    <name>en</name>
+    <type>message</type>
+    <optional>1</optional>
+    <hide>$showports</hide>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>$type</type>
+    <vlen>$vlen</vlen>
+    <nports>$num_outputs</nports>
+  </source>
+</block>

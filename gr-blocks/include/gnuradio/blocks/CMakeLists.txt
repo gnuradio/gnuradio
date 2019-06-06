@@ -70,6 +70,7 @@ install(FILES
     log2_const.h
     pack_k_bits.h
     rotator.h
+    selector.h
     unpack_k_bits.h
     wavfile.h
     add_ff.h

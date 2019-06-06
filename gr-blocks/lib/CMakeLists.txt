@@ -177,6 +177,7 @@ list(APPEND gr_blocks_sources
     rms_cf_impl.cc
     rms_ff_impl.cc
     rotator_cc_impl.cc
+    selector_impl.cc
     short_to_char_impl.cc
     short_to_float_impl.cc
     skiphead_impl.cc

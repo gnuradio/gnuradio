@@ -144,6 +144,7 @@
       <block>blocks_null_source</block>
       <block>blocks_null_sink</block>
       <block>blocks_copy</block>
+      <block>blocks_selector</block>
       <block>blocks_nop</block>
       <block>xmlrpc_server</block>
       <block>xmlrpc_client</block>
