@@ -298,7 +298,28 @@ class TopBlockGenerator(object):
         rendered = []
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
-            code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
-            rendered.append(code)
+            if con.source_port.dtype != 'bus':
+                code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
+                rendered.append(code)
+            else:
+                # Bus ports need to iterate over the underlying connections and then render
+                # the code for each subconnection
+                porta = con.source_port
+                portb = con.sink_port
+                fg = self._flow_graph
+                             
+                if porta.dtype == 'bus' and portb.dtype == 'bus':
+                    # which bus port is this relative to the bus structure
+                    if len(porta.bus_structure) == len(portb.bus_structure):
+                        for port_num_a,port_num_b in zip(porta.bus_structure,portb.bus_structure):
+                            hidden_porta = porta.parent.sources[port_num_a]
+                            hidden_portb = portb.parent.sinks[port_num_b]
+                            connection = fg.parent_platform.Connection(
+                                parent=self, source=hidden_porta, sink=hidden_portb)
+                            code = template.render(make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
+                            rendered.append(code)
+                            
+
+            
 
         return rendered
