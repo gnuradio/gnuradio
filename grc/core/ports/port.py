@@ -46,7 +46,7 @@ class Port(Element):
         self._dir = direction
         self.key = id
         if not label:
-            label = id if not id.isdigit() else {'sink': 'in', 'source': 'out'}[direction] + id
+            label = id if not id.isdigit() else {'sink': 'in', 'source': 'out'}[direction]
         self.name = self._base_name = label
 
         self.domain = domain
