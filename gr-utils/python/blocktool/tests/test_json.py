@@ -34,7 +34,7 @@ from jsonschema import validate
 
 # Schema to be strictly followed be every output json file
 JSON_SCHEME = {
-    "title": "JSON SCHEMA",
+    "title": "JSON SCHEMA TO BE FOLLOWED BY BLOCK HEADER PARSING TOOL",
     "description": "Schema designed for the header file json output",
     "type": "object",
     "properties": {
@@ -78,7 +78,6 @@ JSON_SCHEME = {
                     "uniqueItems": True,
                     "items": {
                         "type": "object",
-                        "minProperties": 1,
                         "properties": {
                             "name": {
                                 "type": "string",
@@ -94,23 +93,92 @@ JSON_SCHEME = {
                         },
                         "required": ["name"],
                         "dependencies": {
-                            "name": ["dtype"],
-                            "dtype": ["default"]
-                        },
+                            "name": [
+                                "dtype",
+                                "default"
+                            ]
+                        }
                     }
                 }
             }
         },
         "properties": {
             "description": "Getters",
-            "type": "object"
+            "type": "array",
+            "uniqueItems": True,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "dtype": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "read_only": {
+                        "type": "boolean"
+                    }
+                },
+                "required": ["name"],
+                "dependencies": {
+                    "name": [
+                        "dtype",
+                        "read_only"
+                    ]
+                }
+            }
         },
         "methods": {
             "description": "Setters",
-            "type": "object"
+            "type": "array",
+            "minItems": 0,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "dtype": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "arguments_type": {
+                        "type": "array",
+                        "uniqueItems": True,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "dtype": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        },
+                        "required": ["name"],
+                        "dependencies": {
+                            "name": ["dtype"]
+                        }
+                    }
+                },
+                "required": ["name"],
+                "dependencies": {
+                    "name": ["dtype"]
+                }
+            }
         }
     },
-    "required": ["namespace", "class", "io_signature", "make"]
+    "required": [
+        "namespace",
+        "class",
+        "io_signature",
+        "make",
+        "properties",
+        "methods"
+    ]
 }
 
 

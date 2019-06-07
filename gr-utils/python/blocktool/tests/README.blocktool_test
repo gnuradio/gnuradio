@@ -9,4 +9,4 @@ Two sample response for header files are available in this directory:
 =====================================================================
 
 - sample_agc2_cc.json for public header file agc2_cc.h from gr-analog directory.
-- sample_additive_scrambler_bb.json for public header file additive_scrambler_bb.h from gr-analog directory.
+- sample_additive_scrambler_bb.json for public header file additive_scrambler_bb.h from gr-digital directory.

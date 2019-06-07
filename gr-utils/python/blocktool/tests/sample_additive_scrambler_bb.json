@@ -46,27 +46,32 @@
         }
       ]
     },
-  "properties": {
-    "bits_per_byte": {
+  "properties": [
+    {
+      "name": "bits_per_byte",
       "dtype": "int",
       "read_only": true
     },
-    "count": {
+    {
+      "name": "count",
       "dtype": "int",
       "read_only": true
     },
-    "len": {
+    {
+      "name": "len",
       "dtype": "int",
       "read_only": true
     },
-    "mask": {
+    {
+      "name": "mask",
       "dtype": "int",
       "read_only": true
     },
-    "seed": {
+    {
+      "name": "seed",
       "dtype": "int",
       "read_only": true
     }
-  },
-  "methods": {}
+  ],
+  "methods": []
 }
