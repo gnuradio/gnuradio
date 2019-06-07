@@ -311,6 +311,10 @@ parameters:
     label: Line 10 Alpha
     base_key: alpha1
     hide: ${ ('part' if int(num_curves) >= 10 else 'all') }
+-   id: bus_structure_sink
+    default: list(map(lambda b:list(map(lambda a:b * len(esno) * 2 + a, range(len(esno)*2))), range(num_curves))) 
+    dtype: raw
+    hide: all
 
 inputs:
 -   domain: stream
@@ -346,7 +350,11 @@ templates:
             ${color6}, ${color7}, ${color8}, ${color9}, ${color10}]
         alphas = [${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
             ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}]
-
+        styles = [${style1}, ${style2}, ${style3}, ${style4}, ${style5},
+            ${style6}, ${style7}, ${style8}, ${style9}, ${style10}]
+        markers = [${marker1}, ${marker2}, ${marker3}, ${marker4}, ${marker5},
+            ${marker6}, ${marker7}, ${marker8}, ${marker9}, ${marker10}]
+            
         for i in range(${num_curves}):
             if len(labels[i]) == 0:
                 self.${id}.set_line_label(i, "Data {0}".format(i))
