@@ -1,0 +1,72 @@
+{
+  "namespace": [
+    "gr",
+    "digital"
+  ],
+  "class": "additive_scrambler_bb",
+  "io_signature": {
+    "in_port": {
+      "in0": "char"
+    },
+    "out_port": {
+      "out0": "char"
+    }
+  },
+  "make": {
+      "arguments": [
+        {
+          "name": "mask",
+          "dtype": "int",
+          "default": ""
+        },
+        {
+          "name": "seed",
+          "dtype": "int",
+          "default": ""
+        },
+        {
+          "name": "len",
+          "dtype": "int",
+          "default": ""
+        },
+        {
+          "name": "count",
+          "dtype": "int",
+          "default": "0"
+        },
+        {
+          "name": "bits_per_byte",
+          "dtype": "int",
+          "default": "1"
+        },
+        {
+          "name": "reset_tag_key",
+          "dtype": "string",
+          "default": ""
+        }
+      ]
+    },
+  "properties": {
+    "bits_per_byte": {
+      "dtype": "int",
+      "read_only": true
+    },
+    "count": {
+      "dtype": "int",
+      "read_only": true
+    },
+    "len": {
+      "dtype": "int",
+      "read_only": true
+    },
+    "mask": {
+      "dtype": "int",
+      "read_only": true
+    },
+    "seed": {
+      "dtype": "int",
+      "read_only": true
+    }
+  },
+  "methods": {}
+}
