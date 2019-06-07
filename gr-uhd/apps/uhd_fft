@@ -473,7 +473,7 @@ def setup_argparser():
     group.add_argument("--avg-alpha", type=float, default=None,
         help="Specify FFT average alpha (overrides --fft-average)")
     group.add_argument("--update-rate", dest="update_rate", type=eng_arg.eng_float, default=eng_notation.num_to_str(.1),
-        help="Set GUI widget update rate")
+        help="Set GUI widget update period in seconds")
     group.add_argument("--phase-relations", action="store_true",
         help="Plot relative phases between multiple channels")
     return parser
