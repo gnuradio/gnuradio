@@ -1,6 +1,6 @@
 id: variable_config
 label: Variable Config
-flags: [ python ]
+flags: [ show_id, python ]
 
 parameters:
 -   id: value
