@@ -1,7 +1,7 @@
 id: variable_modulate_vector
 label: Modulate Vector
 category: Modulators
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: mod

@@ -1,5 +1,6 @@
 id: variable_ldpc_bit_flip_decoder_def
 label: LDPC Bit Flip Decoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: value

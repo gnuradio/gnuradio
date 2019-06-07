@@ -1,5 +1,6 @@
 id: variable_repetition_decoder_def
 label: Repetition Decoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: value
