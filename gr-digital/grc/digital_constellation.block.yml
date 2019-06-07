@@ -1,7 +1,7 @@
 id: variable_constellation
 label: Constellation Object
 category: Modulators
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: type

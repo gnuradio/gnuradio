@@ -1,6 +1,6 @@
 id: variable_rrc_filter_taps
 label: RRC Filter Taps
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: gain

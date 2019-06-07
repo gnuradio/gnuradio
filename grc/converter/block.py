@@ -84,7 +84,10 @@ def convert_block_xml(node):
     data['id'] = block_id
     data['label'] = node.findtext('name') or no_value
     data['category'] = node.findtext('category') or no_value
-    data['flags'] = node.findtext('flags') or no_value
+    data['flags'] = [n.text for n in node.findall('flags')]
+    data['flags'] += ['show_id'] if block_id.startswith('variable') else []
+    if not data['flags']:
+        data['flags'] = no_value
 
     data['parameters'] = [convert_param_xml(param_node, converter.to_python_dec)
                           for param_node in node.iterfind('param')] or no_value

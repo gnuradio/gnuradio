@@ -1,6 +1,6 @@
 id: variable_qtgui_range
 label: QT GUI Range
-flags: [ python ]
+flags: [ show_id, python ]
 
 parameters:
 -   id: label

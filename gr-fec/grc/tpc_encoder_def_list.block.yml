@@ -1,5 +1,6 @@
 id: variable_tpc_encoder_def
 label: TPC Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: value

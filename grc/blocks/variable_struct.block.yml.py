@@ -5,6 +5,7 @@ MAX_NUM_FIELDS = 20
 HEADER = """\
 id: variable_struct
 label: Struct Variable
+flags: [ show_id ]
 
 parameters:
 """

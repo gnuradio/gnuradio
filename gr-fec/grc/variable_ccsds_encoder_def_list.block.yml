@@ -1,5 +1,6 @@
 id: variable_ccsds_encoder_def
 label: CCSDS Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: ndim
