@@ -487,7 +487,13 @@ class FlowGraph(CoreFlowgraph, Drawable):
             element.create_labels(cr)
 
     def create_shapes(self):
-        for element in self._elements_to_draw:
+        #TODO - this is a workaround for bus ports not having a proper coordinate
+        # until the shape is drawn.  The workaround is to draw blocks before connections
+
+        for element in filter(lambda x: x.is_block, self._elements_to_draw) :
+            element.create_shapes()
+
+        for element in filter(lambda x: not x.is_block, self._elements_to_draw):
             element.create_shapes()
 
     def _drawables(self):

@@ -21,7 +21,7 @@ parameters:
     dtype: int
     default: '1'
     hide: part
--   id: bus_conns
+-   id: bus_structure_source
     label: Bus Connections
     dtype: raw
     default: '[[0,],]'

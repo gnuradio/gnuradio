@@ -284,6 +284,7 @@ class FlowGraph(Element):
         connection = self.parent_platform.Connection(
             parent=self, source=porta, sink=portb)
         self.connections.add(connection)
+            
         return connection
 
     def disconnect(self, *ports):
@@ -377,6 +378,7 @@ class FlowGraph(Element):
 
             block.import_data(**block_data)
 
+        self.rewrite()  # TODO: Figure out why this has to be called twice to populate bus ports correctly
         self.rewrite()  # evaluate stuff like nports before adding connections
 
         # build the connections
