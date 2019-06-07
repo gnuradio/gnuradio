@@ -128,16 +128,14 @@ class Block(CoreBlock, Drawable):
             self._area = (0, 0, self.height, self.width)
         self.bounds_from_area(self._area)
 
-        # bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
-        bussified = False, False
+        bussified = self.current_bus_structure['source'], self.current_bus_structure['sink']
         for ports, has_busses in zip((self.active_sources, self.active_sinks), bussified):
             if not ports:
                 continue
             port_separation = PORT_SEPARATION if not has_busses else ports[0].height + PORT_SPACING
             offset = (self.height - (len(ports) - 1) * port_separation - ports[0].height) / 2
             for port in ports:
-                port.create_shapes()
-
+                port.create_shapes()            
                 port.coordinate = {
                     0: (+self.width, offset),
                     90: (offset, -port.width),
@@ -193,23 +191,20 @@ class Block(CoreBlock, Drawable):
 
         def get_min_height_for_ports(ports):
             min_height = 2 * PORT_BORDER_SEPARATION + len(ports) * PORT_SEPARATION
-            if ports:
-                min_height -= ports[-1].height
+            # If any of the ports are bus ports - make the min height larger
+            if any([p.dtype == 'bus' for p in ports]):
+                min_height = 2 * PORT_BORDER_SEPARATION + sum(
+                    port.height + PORT_SPACING for port in ports if port.dtype == 'bus'
+                    ) - PORT_SPACING
+            
+            else:
+                if ports:
+                    min_height -= ports[-1].height
             return min_height
 
         height = max(height,
                      get_min_height_for_ports(self.active_sinks),
                      get_min_height_for_ports(self.active_sources))
-
-        # def get_min_height_for_bus_ports(ports):
-        #     return 2 * PORT_BORDER_SEPARATION + sum(
-        #         port.height + PORT_SPACING for port in ports if port.dtype == 'bus'
-        #     ) - PORT_SPACING
-        #
-        # if self.current_bus_structure['sink']:
-        #     height = max(height, get_min_height_for_bus_ports(self.active_sinks))
-        # if self.current_bus_structure['source']:
-        #     height = max(height, get_min_height_for_bus_ports(self.active_sources))
 
         self.width, self.height = width, height = Utils.align_to_grid((width, height))
 

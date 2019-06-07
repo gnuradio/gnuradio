@@ -113,7 +113,7 @@ class Connection(CoreConnection, Drawable):
             self._make_path()  # no cr set --> only sets bounding_points for extent
 
     def _make_path(self, cr=None):
-        x_pos, y_pos = self.coordinate  # is source connector coordinate
+        x_pos, y_pos = self.source_port.connector_coordinate_absolute
         # x_start, y_start = self.source_port.get_connector_coordinate()
         x_end, y_end = self.sink_port.connector_coordinate_absolute
 

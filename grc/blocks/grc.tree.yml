@@ -4,6 +4,10 @@
   - pad_sink
   - virtual_source
   - virtual_sink
+  - bus_sink
+  - bus_source
+  - bus_structure_sink
+  - bus_structure_source
   - epy_block
   - epy_module
   - note

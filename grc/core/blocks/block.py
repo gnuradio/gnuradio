@@ -86,9 +86,28 @@ class Block(Element):
         self.active_sources = []  # on rewrite
         self.active_sinks = []  # on rewrite
 
-        self.states = {'state': True}
+        self.states = {'state': True, 'bus_source': False, 'bus_sink': False, 'bus_structure': None}
+
         if 'cpp' in self.flags:
-            self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
+            self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++         
+
+        self.current_bus_structure = {'source': '', 'sink': ''}
+
+    def get_bus_structure(self, direction):
+        if direction == 'source':
+            bus_structure = self.bus_structure_source
+        else:
+            bus_structure = self.bus_structure_sink
+
+        if not bus_structure:
+            return ''  # TODO: Don't like empty strings. should change this to None eventually
+
+        try:
+            clean_bus_structure = self.evaluate(bus_structure)
+            return clean_bus_structure
+        except:
+            return ''
+
 
     # region Rewrite_and_Validation
     def rewrite(self):
@@ -112,11 +131,80 @@ class Block(Element):
             self._rewrite_nports(ports)
             rekey(ports)
 
+        self.update_bus_logic()
         # disconnect hidden ports
         self.parent_flowgraph.disconnect(*[p for p in self.ports() if p.hidden])
 
         self.active_sources = [p for p in self.sources if not p.hidden]
         self.active_sinks = [p for p in self.sinks if not p.hidden]
+
+    def update_bus_logic(self):
+        ###############################
+        ## Bus Logic
+        ###############################
+        
+        for direc in {'source','sink'}:
+            if direc == 'source':
+                ports = self.sources
+                ports_gui = self.filter_bus_port(self.sources)
+                bus_structure = self.get_bus_structure('source')
+                bus_state = self.bus_source
+            else:
+                ports = self.sinks
+                ports_gui = self.filter_bus_port(self.sinks)
+                bus_structure = self.get_bus_structure('sink')  
+                bus_state = self.bus_sink
+
+            # Remove the bus ports
+            removed_bus_ports = []
+            removed_bus_connections = []
+            if 'bus' in map(lambda a: a.dtype, ports):
+                for port in ports_gui:
+                    for c in self.parent_flowgraph.connections:
+                        if port is c.source_port or port is c.sink_port:
+                            removed_bus_ports.append(port)
+                            removed_bus_connections.append(c)
+                    ports.remove(port)
+
+
+            if (bus_state):
+                struct = self.form_bus_structure(direc)
+                self.current_bus_structure[direc] = struct
+
+                # Hide ports that are not part of the bus structure
+                #TODO: Blocks where it is desired to only have a subset 
+                # of ports included in the bus still has some issues
+                for idx, port in enumerate(ports):
+                    if any([idx in bus for bus in self.current_bus_structure[direc]]):
+                        if (port.stored_hidden_state is None):
+                            port.stored_hidden_state = port.hidden
+                            port.hidden = True
+
+                # Add the Bus Ports to the list of ports
+                for i in range(len(struct)):
+                    # self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]
+                    port = self.parent.parent.make_port(self,direction=direc,id=str(len(ports)),label='bus',dtype='bus',bus_struct=struct[i])
+                    ports.append(port)
+
+                    for (saved_port, connection) in zip(removed_bus_ports, removed_bus_connections):
+                        if port.key == saved_port.key:
+                            self.parent_flowgraph.connections.remove(connection)
+                            if saved_port.is_source:
+                                connection.source_port = port 
+                            if saved_port.is_sink:
+                                connection.sink_port = port 
+                            self.parent_flowgraph.connections.add(connection)
+
+                        
+            else:
+                self.current_bus_structure[direc] = None
+
+                # Re-enable the hidden property of the ports
+                for port in ports:
+                    port.hidden = port.stored_hidden_state
+                    port.stored_hidden_state = None
+
+
 
     def _rewrite_nports(self, ports):
         for port in ports:
@@ -237,6 +325,44 @@ class Block(Element):
     def enabled(self):
         """Get the enabled state of the block"""
         return self.state != 'disabled'
+
+    @property
+    def bus_sink(self):
+        """Gets the block's current Toggle Bus Sink state."""
+        return self.states['bus_sink']
+
+    @bus_sink.setter
+    def bus_sink(self, value):
+        """Sets the Toggle Bus Sink state for the block."""
+        self.states['bus_sink'] = value
+
+    @property
+    def bus_source(self):
+        """Gets the block's current Toggle Bus Sink state."""
+        return self.states['bus_source']
+
+    @bus_source.setter
+    def bus_source(self, value):
+        """Sets the Toggle Bus Source state for the block."""
+        self.states['bus_source'] = value
+
+    @property
+    def bus_structure_source(self):
+        """Gets the block's current source bus structure."""
+        try:  
+            bus_structure = self.params['bus_structure_source'].value or None
+        except:
+            bus_structure = None
+        return bus_structure
+
+    @property
+    def bus_structure_sink(self):
+        """Gets the block's current source bus structure."""
+        try:  
+            bus_structure = self.params['bus_structure_sink'].value or None
+        except:
+            bus_structure = None
+        return bus_structure
 
     # endregion
 
@@ -461,3 +587,96 @@ class Block(Element):
             # Store hash and call rewrite
             pre_rewrite_hash = get_hash()
             self.rewrite()
+            
+    ##############################################
+    # Controller Modify
+    ##############################################
+    def filter_bus_port(self, ports):
+        buslist = [p for p in ports if p.dtype == 'bus']
+        return buslist or ports
+
+    def type_controller_modify(self, direction):
+        """
+        Change the type controller.
+
+        Args:
+            direction: +1 or -1
+
+        Returns:
+            true for change
+        """
+        changed = False
+        type_param = None
+        for param in filter(lambda p: p.is_enum(), self.get_params()):
+            children = self.get_ports() + self.get_params()
+            # Priority to the type controller
+            if param.get_key() in ' '.join(map(lambda p: p._type, children)): type_param = param
+            # Use param if type param is unset
+            if not type_param:
+                type_param = param
+        if type_param:
+            # Try to increment the enum by direction
+            try:
+                keys = type_param.get_option_keys()
+                old_index = keys.index(type_param.get_value())
+                new_index = (old_index + direction + len(keys)) % len(keys)
+                type_param.set_value(keys[new_index])
+                changed = True
+            except:
+                pass
+        return changed
+
+    def form_bus_structure(self, direc):
+        if direc == 'source':
+            ports = self.sources
+            bus_structure = self.get_bus_structure('source')
+        else:
+            ports = self.sinks
+            bus_structure = self.get_bus_structure('sink')
+
+        struct = [range(len(ports))]
+        # struct = list(range(len(ports)))
+        #TODO for more complicated port structures, this code is needed but not working yet
+        if any([p.multiplicity for p in ports]):
+            structlet = []
+            last = 0
+            # group the ports with > n inputs together on the bus
+            cnt = 0
+            idx = 0
+            for p in ports:
+                if cnt > 0:
+                    cnt -= 1
+                    continue
+
+                if p.multiplicity > 1:
+                    cnt = p.multiplicity-1
+                    structlet.append([idx+j for j in range(p.multiplicity)])
+                else:
+                    structlet.append([idx])
+
+            struct = structlet
+        if bus_structure:
+            struct = bus_structure
+
+        self.current_bus_structure[direc] = struct
+        return struct
+
+    def bussify(self, direc):
+        if direc == 'source':
+            ports = self.sources
+            ports_gui = self.filter_bus_port(self.sources)
+            self.bus_structure = self.get_bus_structure('source')
+            self.bus_source = not self.bus_source
+        else:
+            ports = self.sinks
+            ports_gui = self.filter_bus_port(self.sinks)
+            self.bus_structure = self.get_bus_structure('sink')
+            self.bus_sink = not self.bus_sink
+
+        # Disconnect all the connections when toggling the bus state
+        for port in ports:
+            l_connections = list(port.connections())
+            for connect in l_connections:
+                self.parent.remove_element(connect)
+
+        self.update_bus_logic()
