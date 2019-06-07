@@ -353,9 +353,30 @@ class CppTopBlockGenerator(TopBlockGenerator):
         rendered = []
         for con in sorted(connections, key=by_domain_and_blocks):
             template = templates[con.type]
-            code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
-            if not self._generate_options.startswith('hb'):
-                code = 'this->tb->' + code
-            rendered.append(code)
+
+            if con.source_port.dtype != 'bus':
+                code = template.render(make_port_sig=make_port_sig, source=con.source_port, sink=con.sink_port)
+                if not self._generate_options.startswith('hb'):
+                    code = 'this->tb->' + code
+                rendered.append(code)
+            else:
+                # Bus ports need to iterate over the underlying connections and then render
+                # the code for each subconnection
+                porta = con.source_port
+                portb = con.sink_port
+                fg = self._flow_graph
+                             
+                if porta.dtype == 'bus' and portb.dtype == 'bus':
+                    # which bus port is this relative to the bus structure
+                    if len(porta.bus_structure) == len(portb.bus_structure):
+                        for port_num in porta.bus_structure:
+                            hidden_porta = porta.parent.sources[port_num]
+                            hidden_portb = portb.parent.sinks[port_num]
+                            connection = fg.parent_platform.Connection(
+                                parent=self, source=hidden_porta, sink=hidden_portb)
+                            code = template.render(make_port_sig=make_port_sig, source=hidden_porta, sink=hidden_portb)
+                            if not self._generate_options.startswith('hb'):
+                                code = 'this->tb->' + code
+                            rendered.append(code)
 
         return rendered

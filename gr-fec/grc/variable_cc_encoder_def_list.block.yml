@@ -60,9 +60,8 @@ templates:
         self.${id} = ${id} = list(map( (lambda a: fec.cc_encoder_make(${framebits},\
         ${k}, ${rate}, ${polys}, ${state_start}, ${mode}, ${padding})), range(0,${dim1})))
         % else:
-        self.${id} = ${id} = list(map( (lambda b: map( ( lambda a: fec.cc_encoder_make(${framebits},\
-        ${k}, ${rate}, ${polys}, ${state_start}, ${mode}, ${padding})), range(0,${dim2})\) ), 
-        range(0,${dim1})))
+        self.${id} = ${id} = list(map( (lambda b:list(map( ( lambda a:fec.cc_encoder_make(${framebits}, ${k}, ${rate}, ${polys}, \
+        ${state_start}, ${mode}, ${padding})), range(0,${dim2})))), range(0,${dim1})))
         % endif
 
 documentation: ""
