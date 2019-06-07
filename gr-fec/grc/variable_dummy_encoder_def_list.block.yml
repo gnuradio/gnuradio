@@ -1,5 +1,6 @@
 id: variable_dummy_encoder_def
 label: Dummy Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: ndim

@@ -1,5 +1,6 @@
 id: variable_cc_decoder_def
 label: CC Decoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: value

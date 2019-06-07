@@ -1,5 +1,6 @@
 id: variable_ldpc_decoder_def
 label: LDPC Decoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: value

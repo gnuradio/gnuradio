@@ -1,5 +1,6 @@
 id: variable_ldpc_H_matrix_def
 label: LDPC Parity Check Matrix
+flags: [ show_id ]
 
 parameters:
 -   id: value

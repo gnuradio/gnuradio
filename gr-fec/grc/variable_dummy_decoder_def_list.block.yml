@@ -1,5 +1,6 @@
 id: variable_dummy_decoder_def
 label: Dummy Decoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: value

@@ -27,6 +27,7 @@ class Flags(object):
     NEED_QT_GUI = 'need_qt_gui'
     DEPRECATED = 'deprecated'
     NOT_DSP = 'not_dsp'
+    SHOW_ID = 'show_id'
     HAS_PYTHON = 'python'
     HAS_CPP = 'cpp'
 

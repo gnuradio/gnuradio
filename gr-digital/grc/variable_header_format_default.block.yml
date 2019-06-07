@@ -1,6 +1,6 @@
 id: variable_header_format_default
 label: Default Header Format Obj.
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: access_code

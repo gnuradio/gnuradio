@@ -325,7 +325,7 @@ class FlowGraph(Element):
             a nested data odict
         """
         def block_order(b):
-            return not b.key.startswith('variable'), b.name  # todo: vars still first ?!?
+            return not b.is_variable, b.name  # todo: vars still first ?!?
 
         data = collections.OrderedDict()
         data['options'] = self._options_block.export_data()

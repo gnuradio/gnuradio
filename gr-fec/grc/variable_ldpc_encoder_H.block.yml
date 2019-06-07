@@ -1,5 +1,6 @@
 id: variable_ldpc_encoder_H_def
 label: LDPC Encoder Definition (via Parity Check)
+flags: [ show_id ]
 
 parameters:
 -   id: value
