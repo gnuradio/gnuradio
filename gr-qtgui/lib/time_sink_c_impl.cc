@@ -74,8 +74,8 @@ namespace gr {
       d_main_gui = NULL;
 
       // setup PDU handling input port
-      message_port_register_in(pmt::mp("in"));
-      set_msg_handler(pmt::mp("in"),
+      message_port_register_in(pmt::mp("in0"));
+      set_msg_handler(pmt::mp("in0"),
                       boost::bind(&time_sink_c_impl::handle_pdus, this, _1));
 
       // +2 for the PDU message buffers

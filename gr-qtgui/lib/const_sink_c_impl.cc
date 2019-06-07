@@ -68,8 +68,8 @@ namespace gr {
       d_index = 0;
 
       // setup PDU handling input port
-      message_port_register_in(pmt::mp("in"));
-      set_msg_handler(pmt::mp("in"),
+      message_port_register_in(pmt::mp("in0"));
+      set_msg_handler(pmt::mp("in0"),
                       boost::bind(&const_sink_c_impl::handle_pdus, this, _1));
 
       for(int i = 0; i < d_nconnections; i++) {
