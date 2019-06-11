@@ -77,26 +77,25 @@ def get_header_file(self):
     """
     if 'gr' not in self.info['modname']:
         self.info['modname'] = 'gr-'+self.info['modname']
-    self.info['target_dir'] = os.path.join('.', '..', '..',
+    self.info['target_dir'] = os.path.join(self.target_dir,
                                            self.info['modname'], 'include',
                                            'gnuradio',
                                            self.info['modname'].split('-')[-1])
-    header_list = os.listdir(self.info['target_dir'])
-    if 'CMakeLists.txt' in header_list:
-        header_list.remove('CMakeLists.txt')
+    for header in os.listdir(self.info['target_dir']):
+        if header.endswith('.h'):
+            self.header_list.append(header)
 
     if self.info['filename'] is None:
         click.secho("GNU Radio module: " + self.info['modname'], fg='green')
-        with SequenceCompleter(header_list):
+        with SequenceCompleter(self.header_list):
             self.info['filename'] = cli_input(
                                         "Enter public header file name from " +
                                         self.info['modname']+" module: ")
     if self.info['filename'] is "":
         raise BlockToolException('Enter a file name!')
-    extension = self.info['filename'].split('.')[-1]
-    if extension is not 'h':
+    if not self.info['filename'].endswith('.h'):
         raise BlockToolException('header files have extension .h only!')
-    if self.info['filename'] not in header_list:
+    if self.info['filename'] not in self.header_list:
         raise BlockToolException(
             'Please enter a header file from '+self.info['modname']+' only!')
     else:

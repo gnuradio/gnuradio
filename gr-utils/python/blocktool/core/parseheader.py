@@ -48,7 +48,10 @@ class BlockToolGenerateAst(BlockTool):
     name = 'Parse Header'
     description = 'Create a parsed output from a block header file'
     module_types = []
-    target_dir = os.path.join('.', '..', '..')
+    header_list = []
+    current_folder = os.path.abspath(os.path.dirname(__file__))
+    target_dir = os.path.abspath(os.path.join(current_folder,
+                            '..', '..', '..', '..'))
     for list_dir in os.listdir(target_dir):
         if list_dir.startswith('gr-'):
             list_dir = list_dir.split('-')[-1]
@@ -82,17 +85,18 @@ class BlockToolGenerateAst(BlockTool):
             if _module not in self.module_types:
                 raise BlockToolException('No module with name ' +
                                          self.info['modname']+' found')
-            _extension = self.info['filename'].split('.')[-1]
-            if _extension is not 'h':
+            if not self.info['filename'].endswith('.h'):
                 raise BlockToolException(
                     'header files have extension .h only!')
-            self.info['target_dir'] = os.path.join('.', '..', '..',
+            self.info['target_dir'] = os.path.join(self.target_dir,
                                                    self.info['modname'],
                                                    'include',
                                                    'gnuradio',
                                                    self.info['modname'].split('-')[-1])
-            _header_list = os.listdir(self.info['target_dir'])
-            if self.info['filename'] not in _header_list:
+            for header in os.listdir(self.info['target_dir']):
+                if header.endswith('.h'):
+                    self.header_list.append(header)
+            if self.info['filename'] not in self.header_list:
                 raise BlockToolException('Please enter a header file from '
                                          + self.info['modname'] +
                                          ' module only!')
