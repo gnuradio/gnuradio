@@ -47,7 +47,7 @@ class BlockTool(object):
 
     def __init__(self, module_name=None, file_name=None, target_dir=None,
                  target_file=None, yaml_confirm=False, json_confirm=False,
-                 **kwargs):
+                 cli_confirm=False, **kwargs):
         """ __init__ """
         self.info = {}
         self.info['modname'] = module_name
@@ -56,18 +56,12 @@ class BlockTool(object):
         self.info['target_file'] = target_file
         self.info['json_confirm'] = json_confirm
         self.info['yaml_confirm'] = yaml_confirm
+        self.info['cli'] = cli_confirm
         setup_cli_logger(logger)
 
     def _validate(self):
         """ Validates the arguments """
-        if self.info['modname'] is None:
-            raise BlockToolException("GNU Radio module name not specified")
-        if self.info['filename'] is None:
-            raise BlockToolException("File name not specified")
-        if self.info['target_dir'] is None:
-            raise BlockToolException("GNU Radio module not specified")
-        if self.info['target_file'] is None:
-            raise BlockToolException("File name not specified")
+        pass
 
     def run(self):
         """ Override this. """

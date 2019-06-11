@@ -47,6 +47,7 @@ def cli(**kwargs):
     \b
     Get parsed output for a header file from GNU Radio module
     """
+    kwargs['cli_confirm'] = True
     self = BlockToolGenerateAst(**kwargs)
     get_module_name(self)
     get_header_file(self)
