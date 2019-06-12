@@ -36,8 +36,6 @@ static const int NTRIALS     =   50;
 static const int MAXERRORS   =   10;
 static const int NN          =  200;
 
-static const int MAXDIBIT    = 3;
-
 static gr::random rndm;
 
 void
@@ -82,14 +80,14 @@ qa_atsci_fake_single_viterbi::t0 ()
 
   // printf ("  Delay is %d.\n", delay);
 
-  srandom (27);		// reproducible sequence of "random" values
+  gr::random rnd_dibit(3961094692, 0, 4);
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
     // load block with random data and encode
 
     for (i = 0; i < (blocklen-delay); i++)
-      in[i] = random () & MAXDIBIT;
+      in[i] = rnd_dibit.ran_int();
     for (     ; i < blocklen; i++)
       in[i] = 0;		/* To empty the delay buffers */
 
