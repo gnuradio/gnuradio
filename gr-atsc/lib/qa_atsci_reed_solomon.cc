@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <gnuradio/atsc/reed_solomon_impl.h>
+#include <gnuradio/random.h>
 #include "qa_atsci_reed_solomon.h"
 #include <string.h>
 
@@ -42,6 +43,9 @@ qa_atsci_reed_solomon::t0_reed_solomon ()
   atsc_mpeg_packet_no_sync	in;
   atsc_mpeg_packet_rs_encoded  	enc;
   atsc_mpeg_packet_no_sync	out;
+  gr::random rnd_byte(3311823649, 0, 256);
+  gr::random rnd_err(1594472664, 1, 256); // Error must not be 0.
+  gr::random rnd_err_loc(957498807, 0, NN);
   int			  derrors;
   int			  errlocs[NN];
   int			  errval;
@@ -56,7 +60,7 @@ qa_atsci_reed_solomon::t0_reed_solomon ()
       // load block with random data and encode
 
       for (int i = 0; i < ATSC_MPEG_DATA_LENGTH; i++)
-	in.data[i] = random () & 0xff;
+	in.data[i] = rnd_byte.ran_int();
 
       rs.encode (enc, in);
 
@@ -64,12 +68,10 @@ qa_atsci_reed_solomon::t0_reed_solomon ()
 
       for (int i = 0; i < errors; i++){
 
-	do {
-	  errval = random () & 0xff;
-	} while (errval == 0);	// error value must be non-zero
+	  errval = rnd_err.ran_int();
 
 	do {
-	  errloc = random () % NN;
+	  errloc = rnd_err_loc.ran_int();
 	} while (errlocs[errloc] != 0);		// must not choose the same location twice
 
 	errlocs[errloc] = 1;

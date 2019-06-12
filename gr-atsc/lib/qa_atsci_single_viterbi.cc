@@ -37,8 +37,6 @@ static const int NTRIALS     =   50;
 static const int MAXERRORS   =   10;
 static const int NN          =  200;
 
-static const int MAXDIBIT    = 3;
-
 static gr::random rndm;
 
 void
@@ -79,14 +77,14 @@ qa_atsci_single_viterbi::t0 ()
 
   // printf ("  Delay is %d.\n", delay);
 
-  srandom (27);		// reproducible sequence of "random" values
+  gr::random rnd_dibit(3489051638, 0, 4);
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
     // load block with random data and encode
 
     for (i = 0; i < (blocklen-delay); i++)
-      in[i] = random () & MAXDIBIT;
+      in[i] = rnd_dibit.ran_int();
     for (     ; i < blocklen; i++)
       in[i] = 0;		/* To empty the delay buffers */
 
@@ -157,7 +155,8 @@ qa_atsci_single_viterbi::t1 ()
 
   // printf ("  Delay is %d.\n", delay);
 
-  srandom (1);		// reproducible sequence of "random" values
+  gr::random rnd_dibit(3153023792, 0, 4);
+  gr::random rnd_err_loc(1136465838, 0, NN);
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
@@ -167,7 +166,7 @@ qa_atsci_single_viterbi::t1 ()
       // load block with random data and encode
 
       for (i = 0; i < (blocklen-delay); i++)
-	in[i] = random () & MAXDIBIT;
+	in[i] = rnd_dibit.ran_int();
       for (     ; i < blocklen; i++)
 	in[i] = 0;		/* To empty the delay buffers */
 
@@ -192,10 +191,13 @@ qa_atsci_single_viterbi::t1 ()
 
       for (int j = 0; j < errors; j++){
 
+	/*
 	do {
 	  // errval = random () & 3;  // FIXME:  1;   // FIXME: MAXSYM;
 	  errval = random () & 1;  // FIXME:  1;   // FIXME: MAXSYM;
 	} while (errval == 0);	// error value must be non-zero
+	*/
+	errval = 1;
 
 	// Don't insert errors in the first delay slot, since we
 	// don't have valid history to correct them.  Also, don't
@@ -204,7 +206,7 @@ qa_atsci_single_viterbi::t1 ()
 	// the same location twice when inserting an error.
 
 	do {
-	  errloc = random () % NN;
+	  errloc = rnd_err_loc.ran_int();
 	} while (errloc < delay || errlocs[errloc] != 0
 		 || (errloc > 0 && errlocs[errloc-1] != 0)
 		 || (errloc > 1 && errlocs[errloc-2] != 0)
