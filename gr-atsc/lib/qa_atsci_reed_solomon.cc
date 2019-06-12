@@ -45,7 +45,7 @@ qa_atsci_reed_solomon::t0_reed_solomon ()
   atsc_mpeg_packet_no_sync	out;
   gr::random rnd_byte(3311823649, 0, 256);
   gr::random rnd_err(1594472664, 1, 256); // Error must not be 0.
-  gr::random rnd_err_loc(957498807, 0, NN + 1);
+  gr::random rnd_err_loc(957498807, 0, NN);
   int			  derrors;
   int			  errlocs[NN];
   int			  errval;

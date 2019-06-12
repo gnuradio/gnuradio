@@ -156,7 +156,7 @@ qa_atsci_single_viterbi::t1 ()
   // printf ("  Delay is %d.\n", delay);
 
   gr::random rnd_dibit(3153023792, 0, 4);
-  gr::random rnd_err_loc(1136465838, 0, NN + 1);
+  gr::random rnd_err_loc(1136465838, 0, NN);
 
   for (int nt = 0; nt < NTRIALS; nt++){
 
