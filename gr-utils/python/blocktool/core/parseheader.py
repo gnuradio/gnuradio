@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 import sys
+import codecs
 import logging
 
 import click
@@ -45,6 +46,8 @@ logger = logging.getLogger(__name__)
 class BlockToolGenerateAst(BlockTool):
     """
     Enter a header file from GNU Radio module
+    : return parsed block header data
+    : Single argument required: file_path
     """
     name = 'Parse Header'
     description = 'Create a parsed output from a block header file'
@@ -62,12 +65,28 @@ class BlockToolGenerateAst(BlockTool):
     parsed_data = {}
 
     def __init__(self, module_name=None, file_name=None,
-                 cli_confirm=False, **kwargs):
+                 cli_confirm=False, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
-        self.info['modname'] = module_name
-        self.info['filename'] = file_name
         self.info['cli'] = cli_confirm
+        if self.info['cli']:
+            self.info['modname'] = module_name
+            self.info['filename'] = file_name
+        else:
+            if file_path is None:
+                raise BlockToolException(
+                    'please specify the file path of the header!')
+            else:
+                file_path = os.path.abspath(file_path)
+                try:
+                    open(file_path, 'r')
+                except OSError as e:
+                    raise e
+                self.info['target_file'] = file_path
+                self.info['modname'] = os.path.basename(os.path.dirname(
+                    os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
+                self.info['filename'] = os.path.basename(file_path)
+                self.info['target_dir'] = os.path.dirname(file_path)
 
     def validate(self):
         """ Override the Blocktool validate function """
@@ -85,16 +104,19 @@ class BlockToolGenerateAst(BlockTool):
                 _module = self.info['modname']
                 self.info['modname'] = 'gr-'+_module
             if _module not in self.module_types:
-                raise BlockToolException('No module with name ' +
-                                         self.info['modname']+' found')
+                raise BlockToolException("Module must be one of {}.".format(
+                    ', '.join(self.module_types)))
             if not self.info['filename'].endswith('.h'):
                 raise BlockToolException(
                     'header files have extension .h only!')
-            self.info['target_dir'] = os.path.join(self.target_dir,
-                                                   self.info['modname'],
-                                                   'include',
-                                                   'gnuradio',
-                                                   self.info['modname'].split('-')[-1])
+            _target_dir = os.path.join(self.target_dir,
+                                       self.info['modname'],
+                                       'include',
+                                       'gnuradio',
+                                       self.info['modname'].split('-')[-1])
+            print(_target_dir)
+            if _target_dir != self.info['target_dir']:
+                raise Exception("public header not in correct directory")
             for header in os.listdir(self.info['target_dir']):
                 if header.endswith('.h'):
                     self.header_list.append(header)
@@ -102,8 +124,6 @@ class BlockToolGenerateAst(BlockTool):
                 raise BlockToolException('Please enter a header file from '
                                          + self.info['modname'] +
                                          ' module only!')
-            self.info['target_file'] = os.path.join(self.info['target_dir'],
-                                                    self.info['filename'])
 
     def get_header_info(self):
         """
@@ -112,9 +132,6 @@ class BlockToolGenerateAst(BlockTool):
         : Parse the AST generated
         : Can be used as an CLI command or an extenal API
         """
-        # Create a data dict after parsing the text file
-        # pass the data dict to both yaml and json generator
-        # do delete the temporary ast file generated
 
         if not self.info['cli']:
             self.validate()
@@ -136,23 +153,33 @@ class BlockToolGenerateAst(BlockTool):
 
         # namespace
         try:
+            self.parsed_data['namespace'] = []
             ns = global_namespace.namespace(gr)
-            main_namespace = ns.namespace(module)
-            self.parsed_data['namespace'] = [gr, module]
+            if ns is None:
+                raise Exception
+            else:
+                main_namespace = ns.namespace(module)
+            if main_namespace is None:
+                raise Exception
+            else:
+                self.parsed_data['namespace'] = [gr, module]
         except Exception as e:
             raise Exception("Must be a header with block api!\n"+e)
 
         # class
         try:
+            self.parsed_data['class'] = None
             for _class in main_namespace.declarations:
                 if isinstance(_class, declarations.class_t):
                     main_class = _class
                     self.parsed_data['class'] = str(_class).split("::")[
                         2].split(" ")[0]
-        except Exception as e:
+            if self.parsed_data['class'] is None:
+                raise Exception
+        except:
             raise Exception(
                 "Block header must have a class in "
-                + main_namespace+" scope\n"+e)
+                + str(module)+" scope")
 
         # make
         try:
@@ -231,19 +258,28 @@ class BlockToolGenerateAst(BlockTool):
                             getter_args.copy())
         except:
             self.parsed_data['properties'] = []
-
-        # Debug
         print(self.parsed_data)
-
         if self.info['cli']:
             if self.info['yaml_confirm']:
                 yaml_generator(self.info['yaml_confirm'])
 
             if self.info['json_confirm']:
                 json_generator(self.info['json_confirm'])
+        return self.parsed_data
 
-        parse_data = "sample"
-        return parse_data
+    def get_documentation(self):
+        """
+        : Returns the documentation of the header file as python list
+        : arguments: file path of the header
+        """
+        if not self.info['cli']:
+            self.validate()
+            pattern = re.compile(r'//.*?$|/\*.*?\*/', re.DOTALL | re.MULTILINE)
+            header_file = codecs.open(self.info['target_file'], 'r', 'cp932')
+            lines = header_file.read()
+            header_file.close()
+            documentation = pattern.findall(lines)[2:]
+            return documentation
 
     def run(self):
         """ Run, run, run. """
