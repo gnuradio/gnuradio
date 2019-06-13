@@ -25,6 +25,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
+import re
 import sys
 import logging
 
@@ -51,13 +52,14 @@ class BlockToolGenerateAst(BlockTool):
     header_list = []
     current_folder = os.path.abspath(os.path.dirname(__file__))
     target_dir = os.path.abspath(os.path.join(current_folder,
-                            '..', '..', '..', '..'))
+                                              '..', '..', '..', '..'))
     for list_dir in os.listdir(target_dir):
         if list_dir.startswith('gr-'):
             list_dir = list_dir.split('-')[-1]
             module_types.append(list_dir)
     module_types.remove('utils')
     module_types = tuple(module_types)
+    parsed_data = {}
 
     def __init__(self, module_name=None, file_name=None,
                  cli_confirm=False, **kwargs):
@@ -131,15 +133,107 @@ class BlockToolGenerateAst(BlockTool):
         decls = parser.parse(
             [self.info['target_file']], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
-        ns = global_namespace.namespace(gr)
-        main_namespace = ns.namespace(module)
-        orig_stdout = sys.stdout
-        file_path = os.path.join('.', 'temp_ast.txt')
-        f = open(file_path, 'w')
-        sys.stdout = f
-        declarations.print_declarations(main_namespace)
-        sys.stdout = orig_stdout
-        f.close()
+
+        # namespace
+        try:
+            ns = global_namespace.namespace(gr)
+            main_namespace = ns.namespace(module)
+            self.parsed_data['namespace'] = [gr, module]
+        except Exception as e:
+            raise Exception("Must be a header with block api!\n"+e)
+
+        # class
+        try:
+            for _class in main_namespace.declarations:
+                if isinstance(_class, declarations.class_t):
+                    main_class = _class
+                    self.parsed_data['class'] = str(_class).split("::")[
+                        2].split(" ")[0]
+        except Exception as e:
+            raise Exception(
+                "Block header must have a class in "
+                + main_namespace+" scope\n"+e)
+
+        # make
+        try:
+            self.parsed_data['make'] = {}
+            self.parsed_data['make']['arguments'] = []
+            # criteria = declarations.calldef_matcher(name="make")
+            # make_f = declarations.matcher.get_single(criteria, main_class)
+            # need to work on default values
+            # default_values = re.findall(r"[-+]?\d*\.\d+|\d+", str(make_f).split("make")[-1])
+            # print(default_values, ", default")
+            query_m = declarations.custom_matcher_t(
+                lambda mem_fun: mem_fun.name.startswith('make'))
+            query_make = query_m & declarations.access_type_matcher_t('public')
+            make_func = main_class.member_functions(function=query_make,
+                                                    allow_empty=True,
+                                                    header_file=self.info['target_file'])
+            if len(make_func) != 0:
+                for make in make_func:
+                    for arg in make.arguments:
+                        make_arguments = {
+                            "name": str(arg.name),
+                            "dtype": str(arg.decl_type),
+                            "default": ""
+                        }
+                        self.parsed_data['make']['arguments'].append(
+                            make_arguments.copy())
+        except:
+            self.parsed_data['make'] = {}
+            self.parsed_data['make']['arguments'] = []
+
+        # setters
+        try:
+            self.parsed_data['methods'] = []
+            query_methods = declarations.access_type_matcher_t('public')
+            setters = main_class.member_functions(function=query_methods,
+                                                  return_type="void",
+                                                  allow_empty=True,
+                                                  header_file=self.info['target_file'])
+            getter_arguments = []
+            if len(setters) != 0:
+                for setter in setters:
+                    setter_args = {
+                        "name": str(setter.name),
+                        "arguments type": []
+                    }
+                    for argument in setter.arguments:
+                        args = {
+                            "name": str(argument.name),
+                            "dtype": str(argument.decl_type)
+                        }
+                        getter_arguments.append(args["name"])
+                        setter_args['arguments type'].append(args.copy())
+                    self.parsed_data['methods'].append(setter_args.copy())
+        except:
+            self.parsed_data['methods'] = []
+
+        # getters
+        try:
+            self.parsed_data['properties'] = []
+            query_properties = declarations.access_type_matcher_t('public')
+            getters = main_class.member_functions(function=query_properties,
+                                                  allow_empty=True,
+                                                  header_file=self.info['target_file'])
+            allowed_return_type = ["int", "float", "short", "bool"]
+            if len(getters) != 0:
+                for getter in getters:
+                    if str(getter.return_type) in allowed_return_type:
+                        getter_args = {
+                            "name": str(getter.name),
+                            "dtype": str(getter.return_type),
+                            "read_only": False
+                        }
+                        if getter_args["name"] in getter_arguments:
+                            getter_args["read_only"] = True
+                        self.parsed_data['properties'].append(
+                            getter_args.copy())
+        except:
+            self.parsed_data['properties'] = []
+
+        # Debug
+        print(self.parsed_data)
 
         if self.info['cli']:
             if self.info['yaml_confirm']:

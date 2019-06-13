@@ -141,10 +141,6 @@ JSON_SCHEME = {
                         "type": "string",
                         "minLength": 1
                     },
-                    "dtype": {
-                        "type": "string",
-                        "minLength": 1
-                    },
                     "arguments_type": {
                         "type": "array",
                         "uniqueItems": True,
@@ -164,10 +160,7 @@ JSON_SCHEME = {
                         }
                     }
                 },
-                "required": ["name"],
-                "dependencies": {
-                    "name": ["dtype"]
-                }
+                "required": ["name"]
             }
         }
     },
