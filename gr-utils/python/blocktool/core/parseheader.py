@@ -43,11 +43,15 @@ from blocktool.core.makejson import json_generator
 logger = logging.getLogger(__name__)
 
 
-class BlockToolGenerateAst(BlockTool):
+class BlockHeaderParser(BlockTool):
     """
-    Enter a header file from GNU Radio module
-    : return parsed block header data
     : Single argument required: file_path
+        PyGCCXML header code parser
+        magic happens here!
+        : returns the parsed header data in python dict
+        : return dict keys: namespace, class, io_signature, make, 
+                       properties, methods
+        : Can be used as an CLI command or an extenal API
     """
     name = 'Parse Header'
     description = 'Create a parsed output from a block header file'
@@ -127,12 +131,13 @@ class BlockToolGenerateAst(BlockTool):
 
     def get_header_info(self):
         """
-        Abstract Syntax Tree text file generator
+        PyGCCXML header code parser
         magic happens here!
-        : Parse the AST generated
+        : returns the parsed header data in python dict
+        : return dict keys: namespace, class, io_signature, make, 
+                       properties, methods
         : Can be used as an CLI command or an extenal API
         """
-
         if not self.info['cli']:
             self.validate()
         else:
@@ -168,18 +173,14 @@ class BlockToolGenerateAst(BlockTool):
 
         # class
         try:
-            self.parsed_data['class'] = None
+            self.parsed_data['class'] = ""
             for _class in main_namespace.declarations:
                 if isinstance(_class, declarations.class_t):
                     main_class = _class
                     self.parsed_data['class'] = str(_class).split("::")[
                         2].split(" ")[0]
-            if self.parsed_data['class'] is None:
-                raise Exception
         except:
-            raise Exception(
-                "Block header must have a class in "
-                + str(module)+" scope")
+            pass
 
         # make
         try:
@@ -187,6 +188,7 @@ class BlockToolGenerateAst(BlockTool):
             self.parsed_data['make']['arguments'] = []
             # criteria = declarations.calldef_matcher(name="make")
             # make_f = declarations.matcher.get_single(criteria, main_class)
+            # print(make_f)
             # need to work on default values
             # default_values = re.findall(r"[-+]?\d*\.\d+|\d+", str(make_f).split("make")[-1])
             # print(default_values, ", default")
@@ -198,6 +200,7 @@ class BlockToolGenerateAst(BlockTool):
                                                     header_file=self.info['target_file'])
             if len(make_func) != 0:
                 for make in make_func:
+                    # print((make.return_type))
                     for arg in make.arguments:
                         make_arguments = {
                             "name": str(arg.name),
@@ -258,7 +261,7 @@ class BlockToolGenerateAst(BlockTool):
                             getter_args.copy())
         except:
             self.parsed_data['properties'] = []
-        print(self.parsed_data)
+        # print(self.parsed_data)
         if self.info['cli']:
             if self.info['yaml_confirm']:
                 yaml_generator(self.info['yaml_confirm'])

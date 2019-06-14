@@ -30,14 +30,14 @@ import click
 from modtool.tools.util_functions import SequenceCompleter
 
 from blocktool.cli.base import run, cli_input, BlockToolException
-from blocktool.core.parseheader import BlockToolGenerateAst
+from blocktool.core.parseheader import BlockHeaderParser
 
 
-@click.command('parseheader', short_help=BlockToolGenerateAst.description)
+@click.command('parseheader', short_help=BlockHeaderParser.description)
 @click.option('-m', '--module-name',
-              type=click.Choice(BlockToolGenerateAst.module_types),
+              type=click.Choice(BlockHeaderParser.module_types),
                     help="One of {}.".format(
-                    ', '.join(BlockToolGenerateAst.module_types)))
+                    ', '.join(BlockHeaderParser.module_types)))
 @click.option('-j', '--json-confirm', is_flag=True,
               help="Get a JSON output for the header")
 @click.option('-y', '--yaml-confirm', is_flag=True,
@@ -48,7 +48,7 @@ def cli(**kwargs):
     Get parsed output for a header file from GNU Radio module
     """
     kwargs['cli_confirm'] = True
-    self = BlockToolGenerateAst(**kwargs)
+    self = BlockHeaderParser(**kwargs)
     get_module_name(self)
     get_header_file(self)
     get_json_file(self)

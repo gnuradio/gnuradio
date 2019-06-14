@@ -177,20 +177,17 @@ JSON_SCHEME = {
 
 def is_valid():
     """ Validate json file """
-    filename = sys.argv[1]
-    if(filename.split(".")[-1] != "json"):
-        raise Exception("Please input file with json format only")
+
+    with open(sys.argv[1], 'r') as f:
+        data = json.load(f)
+    try:
+        print("Validating...")
+        jsonschema.validate(data, JSON_SCHEME)
+    except jsonschema.ValidationError as ve:
+        print("Record JSON file # {}: NOT OK".format(sys.argv[1]))
+        raise Exception(ve+"\n")
     else:
-        with open(filename, 'r') as f:
-            data = json.load(f)
-        try:
-            print("Validating...")
-            jsonschema.validate(data, JSON_SCHEME)
-        except jsonschema.ValidationError as ve:
-            print("Record JSON file # {}: NOT OK".format(filename))
-            raise Exception(ve+"\n")
-        else:
-            print("Record JSON file # {}: OK".format(filename))
+        print("Record JSON file # {}: OK".format(sys.argv[1]))
 
 
 if __name__ == '__main__':
