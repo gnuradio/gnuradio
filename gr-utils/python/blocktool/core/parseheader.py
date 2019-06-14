@@ -26,7 +26,6 @@ from __future__ import unicode_literals
 
 import os
 import re
-import sys
 import codecs
 import logging
 
@@ -40,18 +39,18 @@ from blocktool.core.base import BlockToolException, BlockTool
 from blocktool.core.makeyaml import yaml_generator
 from blocktool.core.makejson import json_generator
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class BlockHeaderParser(BlockTool):
     """
     : Single argument required: file_path
-        PyGCCXML header code parser
-        magic happens here!
+    file_path: enter path for the header block in any of GNU Radio module
+    : cli_confirm to remain False if called as an API
         : returns the parsed header data in python dict
-        : return dict keys: namespace, class, io_signature, make, 
+        : return dict keys: namespace, class, io_signature, make,
                        properties, methods
-        : Can be used as an CLI command or an extenal API
+    : Can be used as an CLI command or an extenal API
     """
     name = 'Parse Header'
     description = 'Create a parsed output from a block header file'
@@ -68,15 +67,11 @@ class BlockHeaderParser(BlockTool):
     module_types = tuple(module_types)
     parsed_data = {}
 
-    def __init__(self, module_name=None, file_name=None,
-                 cli_confirm=False, file_path=None, **kwargs):
+    def __init__(self, cli_confirm=False, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         self.info['cli'] = cli_confirm
-        if self.info['cli']:
-            self.info['modname'] = module_name
-            self.info['filename'] = file_name
-        else:
+        if not self.info['cli']:
             if file_path is None:
                 raise BlockToolException(
                     'please specify the file path of the header!')
@@ -97,7 +92,6 @@ class BlockHeaderParser(BlockTool):
         BlockTool._validate(self)
         if not self.info['cli']:
             self._validate()
-            # Verify the arguments when called as an API
             if self.info['modname'] is None:
                 raise BlockToolException('module_name cannot be None')
             if self.info['filename'] is None:
@@ -118,7 +112,6 @@ class BlockHeaderParser(BlockTool):
                                        'include',
                                        'gnuradio',
                                        self.info['modname'].split('-')[-1])
-            print(_target_dir)
             if _target_dir != self.info['target_dir']:
                 raise Exception("public header not in correct directory")
             for header in os.listdir(self.info['target_dir']):
@@ -134,7 +127,7 @@ class BlockHeaderParser(BlockTool):
         PyGCCXML header code parser
         magic happens here!
         : returns the parsed header data in python dict
-        : return dict keys: namespace, class, io_signature, make, 
+        : return dict keys: namespace, class, io_signature, make,
                        properties, methods
         : Can be used as an CLI command or an extenal API
         """
@@ -198,7 +191,7 @@ class BlockHeaderParser(BlockTool):
             make_func = main_class.member_functions(function=query_make,
                                                     allow_empty=True,
                                                     header_file=self.info['target_file'])
-            if len(make_func) != 0:
+            if make_func:
                 for make in make_func:
                     # print((make.return_type))
                     for arg in make.arguments:
@@ -222,7 +215,7 @@ class BlockHeaderParser(BlockTool):
                                                   allow_empty=True,
                                                   header_file=self.info['target_file'])
             getter_arguments = []
-            if len(setters) != 0:
+            if setters:
                 for setter in setters:
                     setter_args = {
                         "name": str(setter.name),
@@ -247,7 +240,7 @@ class BlockHeaderParser(BlockTool):
                                                   allow_empty=True,
                                                   header_file=self.info['target_file'])
             allowed_return_type = ["int", "float", "short", "bool"]
-            if len(getters) != 0:
+            if getters:
                 for getter in getters:
                     if str(getter.return_type) in allowed_return_type:
                         getter_args = {
@@ -261,7 +254,7 @@ class BlockHeaderParser(BlockTool):
                             getter_args.copy())
         except:
             self.parsed_data['properties'] = []
-        # print(self.parsed_data)
+
         if self.info['cli']:
             if self.info['yaml_confirm']:
                 yaml_generator(self.info['yaml_confirm'])

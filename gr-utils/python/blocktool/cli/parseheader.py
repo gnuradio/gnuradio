@@ -36,8 +36,8 @@ from blocktool.core.parseheader import BlockHeaderParser
 @click.command('parseheader', short_help=BlockHeaderParser.description)
 @click.option('-m', '--module-name',
               type=click.Choice(BlockHeaderParser.module_types),
-                    help="One of {}.".format(
-                    ', '.join(BlockHeaderParser.module_types)))
+              help="One of {}.".format(
+                  ', '.join(BlockHeaderParser.module_types)))
 @click.option('-j', '--json-confirm', is_flag=True,
               help="Get a JSON output for the header")
 @click.option('-y', '--yaml-confirm', is_flag=True,
@@ -62,7 +62,7 @@ def get_module_name(self):
     """
     if self.info['modname'] is None:
         click.secho(str(self.module_types), fg='yellow')
-        with(SequenceCompleter(self.module_types)):
+        with SequenceCompleter(self.module_types):
             while self.info['modname'] not in self.module_types:
                 self.info['modname'] = cli_input(
                     "Enter GNU Radio module name: ")
@@ -89,8 +89,8 @@ def get_header_file(self):
         click.secho("GNU Radio module: " + self.info['modname'], fg='green')
         with SequenceCompleter(self.header_list):
             self.info['filename'] = cli_input(
-                                        "Enter public header file name from " +
-                                        self.info['modname']+" module: ")
+                "Enter public header file name from " +
+                self.info['modname']+" module: ")
     if self.info['filename'] is "":
         raise BlockToolException('Enter a file name!')
     if not self.info['filename'].endswith('.h'):

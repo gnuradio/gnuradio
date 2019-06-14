@@ -24,15 +24,11 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import os
-import re
-import glob
 import logging
-import itertools
 
 from blocktool.cli.base import setup_cli_logger
 
-logger = logging.getLogger('gnuradio.blocktool')
+LOGGER = logging.getLogger('gnuradio.blocktool')
 
 
 class BlockToolException(Exception):
@@ -57,7 +53,7 @@ class BlockTool(object):
         self.info['json_confirm'] = json_confirm
         self.info['yaml_confirm'] = yaml_confirm
         self.info['cli'] = cli_confirm
-        setup_cli_logger(logger)
+        setup_cli_logger(LOGGER)
 
     def _validate(self):
         """ Validates the arguments """

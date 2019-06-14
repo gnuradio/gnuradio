@@ -27,7 +27,6 @@ from __future__ import unicode_literals
 import os
 import sys
 import logging
-import functools
 from importlib import import_module
 from pkg_resources import iter_entry_points
 from logging import Formatter, StreamHandler
