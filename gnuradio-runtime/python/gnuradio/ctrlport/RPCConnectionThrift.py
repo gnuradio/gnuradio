@@ -41,10 +41,13 @@ class ThriftRadioClient(object):
         self.transport.open()
 
     def __del__(self):
-        self.radio.shutdown()
-        self.transport.close()
+        try:
+            self.transport.close()
+            self.radio.shutdown()
+        except:
+            pass
 
-    def getRadio(self, host, port):
+    def getRadio(self):
         return self.radio
 
 """
@@ -138,10 +141,10 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
 
     def newConnection(self, host=None, port=None):
         try:
-            self.thriftclient = ThriftRadioClient(self.getHost(), self.getPort())
-        except TTransport.TTransportException:
-            sys.stderr.write("Could not connect to ControlPort endpoint at {0}:{1}.\n\n".format(host, port))
-            sys.exit(1)
+            self.thriftclient = ThriftRadioClient(host, int(port))
+        except:
+            return None
+        return self
 
     def properties(self, *args):
         knobprops = self.thriftclient.radio.properties(*args)
