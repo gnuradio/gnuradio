@@ -357,11 +357,9 @@ def main(top_block_cls=${class_name}, options=None):
         tb.wait()
     qapp.aboutToQuit.connect(quitting)
     % for m in monitors:
-    if 'en' in m.params:
-        if m.params['en'].get_value():
-            (tb.${m.name}).start()
-    else:
-        sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.${m.name}"))
+    % if m.params['en'].get_value() == 'True':
+    tb.${m.name}.start()
+    % endif
     % endfor
     qapp.exec_()
     % elif generate_options == 'bokeh_gui':
@@ -400,7 +398,9 @@ def main(top_block_cls=${class_name}, options=None):
     % if flow_graph.get_option('run_options') == 'prompt':
     tb.start(${ flow_graph.get_option('max_nouts') or '' })
     % for m in monitors:
-    (tb.${m.name}).start()
+    % if m.params['en'].get_value() == 'True':
+    tb.${m.name}.start()
+    % endif
     % endfor
     try:
         input('Press Enter to quit: ')
@@ -411,7 +411,9 @@ def main(top_block_cls=${class_name}, options=None):
     tb.start(${flow_graph.get_option('max_nouts') or ''})
     % endif
     % for m in monitors:
-    (tb.${m.name}).start()
+    % if m.params['en'].get_value() == 'True':
+    tb.${m.name}.start()
+    % endif
     % endfor
     tb.wait()
     % endif

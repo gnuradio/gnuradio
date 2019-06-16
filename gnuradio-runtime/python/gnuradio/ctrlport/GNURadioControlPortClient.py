@@ -30,6 +30,8 @@ is currently the only supported transport.
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from argparse import ArgumentParser
+
 from gnuradio.ctrlport.RPCConnection import RPCMethods
 try:
     from gnuradio.ctrlport.RPCConnectionThrift import RPCConnectionThrift
@@ -113,18 +115,18 @@ class GNURadioControlPortClient(object):
     """
 
     def __init__(self, argv = [], rpcmethod = 'thrift', callback = None, blockingcallback = None):
-        if len(argv) > 1: host = argv[1]
-        else: host = None
 
-        if len(argv) > 2: port = argv[2]
-        else: port = None
+        parser = ArgumentParser(description="GNU Radio Control Port Monitor")
+        parser.add_argument("host", nargs="?", default="localhost", help="host name or IP")
+        parser.add_argument("port", help="port")
+        args = parser.parse_args()
 
         self.client = None
 
         if rpcmethod in RPCMethods:
             if rpcmethod == 'thrift':
                 #print("making RPCConnectionThrift")
-                self.client = RPCConnectionThrift(host, port)
+                self.client = RPCConnectionThrift(args.host, args.port)
                 #print("made %s" % self.client)
 
                 #print("making callback call")

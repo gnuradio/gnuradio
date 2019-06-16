@@ -47,10 +47,8 @@ class monitor(object):
     def start(self):
         print("monitor::endpoints() = %s" % (gr.rpcmanager_get().endpoints()))
         try:
-            cmd = map(lambda a: [self.tool,
-                                 re.search(r"-h (\S+|\d+\.\d+\.\d+\.\d+)",a).group(1),
-                                 re.search(r"-p (\d+)",a).group(1)],
-                      gr.rpcmanager_get().endpoints())[0]
+            ep = gr.rpcmanager_get().endpoints()[0]
+            cmd = [self.tool, re.search(r"-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1), re.search(r"-p (\d+)", ep).group(1)]
             print("running: %s"%(str(cmd)))
             self.proc = subprocess.Popen(cmd);
             self.started = True
