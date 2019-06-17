@@ -43,7 +43,7 @@ class BlockTool(object):
 
     def __init__(self, module_name=None, file_name=None, target_dir=None,
                  target_file=None, yaml_confirm=False, json_confirm=False,
-                 cli_confirm=False, **kwargs):
+                 **kwargs):
         """ __init__ """
         self.info = {}
         self.info['modname'] = module_name
@@ -52,7 +52,7 @@ class BlockTool(object):
         self.info['target_file'] = target_file
         self.info['json_confirm'] = json_confirm
         self.info['yaml_confirm'] = yaml_confirm
-        self.info['cli'] = cli_confirm
+        self.info['cli'] = False
         setup_cli_logger(LOGGER)
 
     def _validate(self):

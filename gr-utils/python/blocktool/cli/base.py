@@ -28,8 +28,8 @@ import os
 import sys
 import logging
 from importlib import import_module
-from pkg_resources import iter_entry_points
 from logging import Formatter, StreamHandler
+from pkg_resources import iter_entry_points
 
 import click
 from click import ClickException
@@ -110,7 +110,6 @@ class CommandCLI(click.Group):
 def setup_cli_logger(logger):
     """ Sets up logger for CLI parsing """
     try:
-        import colorama
         stream_handler = ClickHandler()
         logger.addHandler(stream_handler)
     except ImportError:
@@ -118,11 +117,6 @@ def setup_cli_logger(logger):
         logger.addHandler(stream_handler)
     finally:
         logger.setLevel(logging.INFO)
-
-
-def cli_input(msg):
-    """ Returns enhanced input """
-    return input(click.style(msg, fg='cyan'))
 
 
 @with_plugins(iter_entry_points('blocktool.cli.plugins'))

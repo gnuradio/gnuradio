@@ -46,7 +46,6 @@ class BlockHeaderParser(BlockTool):
     """
     : Single argument required: file_path
     file_path: enter path for the header block in any of GNU Radio module
-    : cli_confirm to remain False if called as an API
         : returns the parsed header data in python dict
         : return dict keys: namespace, class, io_signature, make,
                        properties, methods
@@ -67,60 +66,51 @@ class BlockHeaderParser(BlockTool):
     module_types = tuple(module_types)
     parsed_data = {}
 
-    def __init__(self, cli_confirm=False, file_path=None, **kwargs):
+    def __init__(self, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
-        self.info['cli'] = cli_confirm
-        if not self.info['cli']:
-            if file_path is None:
-                raise BlockToolException(
-                    'please specify the file path of the header!')
-            else:
-                file_path = os.path.abspath(file_path)
-                try:
-                    open(file_path, 'r')
-                except OSError as e:
-                    raise e
-                self.info['target_file'] = file_path
-                self.info['modname'] = os.path.basename(os.path.dirname(
-                    os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
-                self.info['filename'] = os.path.basename(file_path)
-                self.info['target_dir'] = os.path.dirname(file_path)
+        if file_path is None:
+            raise BlockToolException(
+                'please specify the file path of the header!')
+        else:
+            file_path = os.path.abspath(file_path)
+            try:
+                open(file_path, 'r')
+            except OSError as e:
+                raise e
+            self.info['target_file'] = file_path
+            self.info['modname'] = os.path.basename(os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
+            self.info['filename'] = os.path.basename(file_path)
+            self.info['target_dir'] = os.path.dirname(file_path)
+            self.validate()
 
     def validate(self):
         """ Override the Blocktool validate function """
         BlockTool._validate(self)
-        if not self.info['cli']:
-            self._validate()
-            if self.info['modname'] is None:
-                raise BlockToolException('module_name cannot be None')
-            if self.info['filename'] is None:
-                raise BlockToolException('file_name name cannot be None')
-            if self.info['modname'].startswith('gr-'):
-                _module = self.info['modname'].split('-')[-1]
-            else:
-                _module = self.info['modname']
-                self.info['modname'] = 'gr-'+_module
-            if _module not in self.module_types:
-                raise BlockToolException("Module must be one of {}.".format(
-                    ', '.join(self.module_types)))
-            if not self.info['filename'].endswith('.h'):
-                raise BlockToolException(
-                    'header files have extension .h only!')
-            _target_dir = os.path.join(self.target_dir,
-                                       self.info['modname'],
-                                       'include',
-                                       'gnuradio',
-                                       self.info['modname'].split('-')[-1])
-            if _target_dir != self.info['target_dir']:
-                raise Exception("public header not in correct directory")
-            for header in os.listdir(self.info['target_dir']):
-                if header.endswith('.h'):
-                    self.header_list.append(header)
-            if self.info['filename'] not in self.header_list:
-                raise BlockToolException('Please enter a header file from '
-                                         + self.info['modname'] +
-                                         ' module only!')
+        self._validate()
+        if self.info['modname'] is None:
+            raise BlockToolException('Please enter correct file path')
+        if self.info['filename'] is None:
+            raise BlockToolException('Please enter correct file path')
+        if self.info['modname'].startswith('gr-'):
+            _module = self.info['modname'].split('-')[-1]
+        else:
+            _module = self.info['modname']
+            self.info['modname'] = 'gr-'+_module
+        if _module not in self.module_types:
+            raise BlockToolException("Module must be one of {}.".format(
+                ', '.join(self.module_types)))
+        if not self.info['filename'].endswith('.h'):
+            raise BlockToolException(
+                'header files have extension .h only!')
+        _target_dir = os.path.join(self.target_dir,
+                                   self.info['modname'],
+                                   'include',
+                                   'gnuradio',
+                                   self.info['modname'].split('-')[-1])
+        if _target_dir != self.info['target_dir']:
+            raise Exception("public header not in correct directory")
 
     def get_header_info(self):
         """
@@ -131,9 +121,7 @@ class BlockHeaderParser(BlockTool):
                        properties, methods
         : Can be used as an CLI command or an extenal API
         """
-        if not self.info['cli']:
-            self.validate()
-        else:
+        if self.info['cli']:
             if not self.info['yaml_confirm'] and not self.info['json_confirm']:
                 click.secho("Won't do the hardwork unnecessarily!!", fg='blue')
                 exit(1)
@@ -175,33 +163,44 @@ class BlockHeaderParser(BlockTool):
         except:
             pass
 
+        # io_signature
+        # Underway
+
         # make
         try:
             self.parsed_data['make'] = {}
             self.parsed_data['make']['arguments'] = []
-            # criteria = declarations.calldef_matcher(name="make")
-            # make_f = declarations.matcher.get_single(criteria, main_class)
-            # print(make_f)
-            # need to work on default values
-            # default_values = re.findall(r"[-+]?\d*\.\d+|\d+", str(make_f).split("make")[-1])
-            # print(default_values, ", default")
             query_m = declarations.custom_matcher_t(
                 lambda mem_fun: mem_fun.name.startswith('make'))
             query_make = query_m & declarations.access_type_matcher_t('public')
             make_func = main_class.member_functions(function=query_make,
                                                     allow_empty=True,
                                                     header_file=self.info['target_file'])
+            criteria = declarations.calldef_matcher(name="make")
+            _make_fun = declarations.matcher.get_single(criteria, main_class)
+            _make_fun = str(_make_fun).split(
+                'make')[-1].split(')')[0].split('(')[1].lstrip().rstrip().split(',')
             if make_func:
-                for make in make_func:
-                    # print((make.return_type))
-                    for arg in make.arguments:
-                        make_arguments = {
-                            "name": str(arg.name),
-                            "dtype": str(arg.decl_type),
-                            "default": ""
-                        }
-                        self.parsed_data['make']['arguments'].append(
-                            make_arguments.copy())
+                for arg in make_func[0].arguments:
+                    for _arg in _make_fun:
+                        if str(arg.name) in _arg:
+                            make_arguments = {
+                                "name": str(arg.name),
+                                "dtype": str(arg.decl_type),
+                                "default": ""
+                            }
+                            if re.findall(r"[-+]?\d*\.\d+|\d+", _arg):
+                                make_arguments['default'] = re.findall(
+                                    r"[-+]?\d*\.\d+|\d+", _arg)[0]
+                            elif re.findall(r'\"(.+?)\"', _arg):
+                                make_arguments['default'] = re.findall(
+                                    r"[-+]?\d*\.\d+|\d+", _arg)[0]
+                            elif "true" in _arg:
+                                make_arguments['default'] = "True"
+                            elif "false" in _arg:
+                                make_arguments['default'] = "False"
+                    self.parsed_data['make']['arguments'].append(
+                        make_arguments.copy())
         except:
             self.parsed_data['make'] = {}
             self.parsed_data['make']['arguments'] = []
@@ -211,24 +210,24 @@ class BlockHeaderParser(BlockTool):
             self.parsed_data['methods'] = []
             query_methods = declarations.access_type_matcher_t('public')
             setters = main_class.member_functions(function=query_methods,
-                                                  return_type="void",
                                                   allow_empty=True,
                                                   header_file=self.info['target_file'])
             getter_arguments = []
             if setters:
                 for setter in setters:
-                    setter_args = {
-                        "name": str(setter.name),
-                        "arguments type": []
-                    }
-                    for argument in setter.arguments:
-                        args = {
-                            "name": str(argument.name),
-                            "dtype": str(argument.decl_type)
+                    if str(setter.name).startswith('set_'):
+                        setter_args = {
+                            "name": str(setter.name),
+                            "arguments type": []
                         }
-                        getter_arguments.append(args["name"])
-                        setter_args['arguments type'].append(args.copy())
-                    self.parsed_data['methods'].append(setter_args.copy())
+                        for argument in setter.arguments:
+                            args = {
+                                "name": str(argument.name),
+                                "dtype": str(argument.decl_type)
+                            }
+                            getter_arguments.append(args["name"])
+                            setter_args['arguments type'].append(args.copy())
+                        self.parsed_data['methods'].append(setter_args.copy())
         except:
             self.parsed_data['methods'] = []
 
@@ -239,10 +238,9 @@ class BlockHeaderParser(BlockTool):
             getters = main_class.member_functions(function=query_properties,
                                                   allow_empty=True,
                                                   header_file=self.info['target_file'])
-            allowed_return_type = ["int", "float", "short", "bool"]
             if getters:
                 for getter in getters:
-                    if str(getter.return_type) in allowed_return_type:
+                    if getter.has_const:
                         getter_args = {
                             "name": str(getter.name),
                             "dtype": str(getter.return_type),
@@ -255,6 +253,17 @@ class BlockHeaderParser(BlockTool):
         except:
             self.parsed_data['properties'] = []
 
+        # documentation
+        try:
+            header_file = codecs.open(self.info['target_file'], 'r', 'cp932')
+            self.parsed_data['docstring'] = re.compile(
+                r'//.*?$|/\*.*?\*/', re.DOTALL | re.MULTILINE).findall(
+                    header_file.read())[2:]
+            header_file.close()
+        except:
+            self.parsed_data['docstring'] = []
+
+        print(self.parsed_data)
         if self.info['cli']:
             if self.info['yaml_confirm']:
                 yaml_generator(self.info['yaml_confirm'])
@@ -262,20 +271,6 @@ class BlockHeaderParser(BlockTool):
             if self.info['json_confirm']:
                 json_generator(self.info['json_confirm'])
         return self.parsed_data
-
-    def get_documentation(self):
-        """
-        : Returns the documentation of the header file as python list
-        : arguments: file path of the header
-        """
-        if not self.info['cli']:
-            self.validate()
-            pattern = re.compile(r'//.*?$|/\*.*?\*/', re.DOTALL | re.MULTILINE)
-            header_file = codecs.open(self.info['target_file'], 'r', 'cp932')
-            lines = header_file.read()
-            header_file.close()
-            documentation = pattern.findall(lines)[2:]
-            return documentation
 
     def run(self):
         """ Run, run, run. """
