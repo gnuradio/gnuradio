@@ -145,10 +145,17 @@ class BlockHeaderParser(BlockTool):
                 raise Exception
             else:
                 main_namespace = ns.namespace(module)
-            if main_namespace is None:
-                raise Exception
-            else:
-                self.parsed_data['namespace'] = [gr, module]
+                if main_namespace is None:
+                    raise Exception
+                else:
+                    self.parsed_data['namespace'] = [gr, module]
+                if main_namespace.declarations:
+                    for _namespace in main_namespace.declarations:
+                        if(isinstance(_namespace, declarations.namespace_t)):
+                            if 'kernel' not in str(_namespace):
+                                main_namespace = _namespace
+                                self.parsed_data['namespace'].append(
+                                    str(_namespace).split('::')[-1].split(' ')[0])
         except Exception as e:
             raise Exception("Must be a header with block api!\n"+e)
 
@@ -158,8 +165,8 @@ class BlockHeaderParser(BlockTool):
             for _class in main_namespace.declarations:
                 if isinstance(_class, declarations.class_t):
                     main_class = _class
-                    self.parsed_data['class'] = str(_class).split("::")[
-                        2].split(" ")[0]
+                    self.parsed_data['class'] = str(_class).split('::')[
+                        2].split(' ')[0]
         except:
             pass
 
@@ -176,7 +183,7 @@ class BlockHeaderParser(BlockTool):
             make_func = main_class.member_functions(function=query_make,
                                                     allow_empty=True,
                                                     header_file=self.info['target_file'])
-            criteria = declarations.calldef_matcher(name="make")
+            criteria = declarations.calldef_matcher(name='make')
             _make_fun = declarations.matcher.get_single(criteria, main_class)
             _make_fun = str(_make_fun).split(
                 'make')[-1].split(')')[0].split('(')[1].lstrip().rstrip().split(',')
@@ -215,7 +222,7 @@ class BlockHeaderParser(BlockTool):
             getter_arguments = []
             if setters:
                 for setter in setters:
-                    if str(setter.name).startswith('set_'):
+                    if str(setter.name).startswith('set_') and setter.arguments:
                         setter_args = {
                             "name": str(setter.name),
                             "arguments type": []
@@ -225,7 +232,7 @@ class BlockHeaderParser(BlockTool):
                                 "name": str(argument.name),
                                 "dtype": str(argument.decl_type)
                             }
-                            getter_arguments.append(args["name"])
+                            getter_arguments.append(args['name'])
                             setter_args['arguments type'].append(args.copy())
                         self.parsed_data['methods'].append(setter_args.copy())
         except:
@@ -240,13 +247,13 @@ class BlockHeaderParser(BlockTool):
                                                   header_file=self.info['target_file'])
             if getters:
                 for getter in getters:
-                    if getter.has_const:
+                    if not getter.arguments or getter.has_const:
                         getter_args = {
                             "name": str(getter.name),
                             "dtype": str(getter.return_type),
                             "read_only": False
                         }
-                        if getter_args["name"] in getter_arguments:
+                        if getter_args['name'] in getter_arguments:
                             getter_args["read_only"] = True
                         self.parsed_data['properties'].append(
                             getter_args.copy())
