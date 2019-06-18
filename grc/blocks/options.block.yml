@@ -134,13 +134,13 @@ templates:
     imports: |-
         from gnuradio import gr
         from gnuradio.filter import firdes
+        import signal
         % if generate_options == 'qt_gui':
         from PyQt5 import Qt
         import sys
         % endif
         % if generate_options == 'bokeh_gui':
         import time
-        import signal
         import functools
         from bokeh.client import push_session
         from bokeh.plotting import curdoc
