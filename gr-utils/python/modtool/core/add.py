@@ -160,6 +160,7 @@ class ModToolAdd(ModTool):
         if self.skip_cmakefiles:
             return
         try:
+            #TODO: The following statement adds the C++ QA Test at the wrong part of the CMakeLists.txt
             append_re_line_sequence(self._file['cmlib'],
                                     '\$\{CMAKE_CURRENT_SOURCE_DIR\}/qa_%s.cc.*\n' % self.info['modname'],
                                     '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self.info['blockname'])
@@ -260,7 +261,7 @@ class ModToolAdd(ModTool):
         logger.info("Editing {}/CMakeLists.txt...".format(self.info['pydir']))
         with open(self._file['cmpython'], 'a') as f:
             f.write(
-                'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/%s)\n' % \
+                'GR_ADD_TEST(qa_%s ${PYTHON_EXECUTABLE} \\\"${CMAKE_CURRENT_SOURCE_DIR}\\\"/%s)\n' % \
                 (self.info['blockname'], fname_py_qa))
         self.scm.mark_files_updated((self._file['cmpython'],))
 
