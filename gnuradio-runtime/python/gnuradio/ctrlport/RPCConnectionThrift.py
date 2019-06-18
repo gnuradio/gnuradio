@@ -39,6 +39,8 @@ class ThriftRadioClient(object):
 
         self.radio = ControlPort.Client(self.protocol)
         self.transport.open()
+        self.host = host
+        self.port = port
 
     def __del__(self):
         try:
@@ -75,7 +77,7 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
         # config file, if one is set. Defaults to 9090 otherwise.
         if port is None:
             p = gr.prefs()
-            thrift_config_file = p.get_string("ControlPort", "config", "");
+            thrift_config_file = p.get_string("ControlPort", "config", "")
             if(len(thrift_config_file) > 0):
                 p.add_config_file(thrift_config_file)
                 port = p.get_long("thrift", "port", 9090)
@@ -123,6 +125,11 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
             self.BaseTypes.C32VECTOR: lambda k: ttypes.Knob(type=k.ktype, value=ttypes.KnobBase(a_c32vector = k.value)),
         }
 
+    def __str__(self):
+        return "Apache Thrift connection to {0}:{1}".format(
+            self.thriftclient.host,
+            self.thriftclient.port)
+
     def unpackKnob(self, key, knob):
         f = self.unpack_dict.get(knob.type, None)
         if(f):
@@ -140,11 +147,7 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
             raise exceptions.ValueError
 
     def newConnection(self, host=None, port=None):
-        try:
-            self.thriftclient = ThriftRadioClient(host, int(port))
-        except:
-            return None
-        return self
+        self.thriftclient = ThriftRadioClient(host, int(port))
 
     def properties(self, *args):
         knobprops = self.thriftclient.radio.properties(*args)
@@ -215,8 +218,7 @@ class RPCConnectionThrift(RPCConnection.RPCConnection):
         '''
         self.thriftclient.radio.postMessage(pmt.serialize_str(pmt.intern(blk_alias)),
                                             pmt.serialize_str(pmt.intern(port)),
-                                            pmt.serialize_str(msg));
-
+                                            pmt.serialize_str(msg))
     def printProperties(self, props):
         info = ""
         info += "Item:\t\t{0}\n".format(props.description)
