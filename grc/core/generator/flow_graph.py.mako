@@ -352,6 +352,16 @@ def main(top_block_cls=${class_name}, options=None):
     % endif
     tb.show()
 
+    def sig_handler(sig=None, frame=None):
+        Qt.QApplication.quit()
+
+    signal.signal(signal.SIGINT, sig_handler)
+    signal.signal(signal.SIGTERM, sig_handler)
+
+    timer = Qt.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
+
     def quitting():
         tb.stop()
         tb.wait()
@@ -395,6 +405,20 @@ def main(top_block_cls=${class_name}, options=None):
         serverProc.kill()
     % elif generate_options == 'no_gui':
     tb = top_block_cls(${ ', '.join(params_eq_list) })
+
+    def sig_handler(sig=None, frame=None):
+        % for m in monitors:
+        % if m.params['en'].get_value() == 'True':
+        tb.${m.name}.stop()
+        % endif
+        % endfor
+        tb.stop()
+        tb.wait()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, sig_handler)
+    signal.signal(signal.SIGTERM, sig_handler)
+
     % if flow_graph.get_option('run_options') == 'prompt':
     tb.start(${ flow_graph.get_option('max_nouts') or '' })
     % for m in monitors:
@@ -409,13 +433,18 @@ def main(top_block_cls=${class_name}, options=None):
     tb.stop()
     % elif flow_graph.get_option('run_options') == 'run':
     tb.start(${flow_graph.get_option('max_nouts') or ''})
-    % endif
     % for m in monitors:
     % if m.params['en'].get_value() == 'True':
     tb.${m.name}.start()
     % endif
     % endfor
+    % endif
     tb.wait()
+    % for m in monitors:
+    % if m.params['en'].get_value() == 'True':
+    tb.${m.name}.stop()
+    % endif
+    % endfor
     % endif
 
 
