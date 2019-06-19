@@ -1,77 +1,84 @@
 {
-  "namespace": [
-    "gr",
-    "digital"
-  ],
-  "class": "additive_scrambler_bb",
-  "io_signature": {
-    "in_port": {
-      "in0": "char"
-    },
-    "out_port": {
-      "out0": "char"
-    }
-  },
-  "make": {
-      "arguments": [
-        {
-          "name": "mask",
-          "dtype": "int",
-          "default": ""
+    "namespace": [
+        "gr",
+        "digital"
+    ],
+    "class": "additive_scrambler_bb",
+    "io_signature": {
+        "input": {
+            "signature": "make",
+            "min_streams": "1",
+            "max_streams": "1",
+            "sizeof_stream_item": "sizeof(unsigned char)"
         },
-        {
-          "name": "seed",
-          "dtype": "int",
-          "default": ""
-        },
-        {
-          "name": "len",
-          "dtype": "int",
-          "default": ""
-        },
-        {
-          "name": "count",
-          "dtype": "int",
-          "default": "0"
-        },
-        {
-          "name": "bits_per_byte",
-          "dtype": "int",
-          "default": "1"
-        },
-        {
-          "name": "reset_tag_key",
-          "dtype": "string",
-          "default": ""
+        "output": {
+            "signature": "make",
+            "min_streams": "1",
+            "max_streams": "1",
+            "sizeof_stream_item": "sizeof(unsigned char)"
         }
-      ]
     },
-  "properties": [
-    {
-      "name": "bits_per_byte",
-      "dtype": "int",
-      "read_only": true
+    "make": {
+        "arguments": [
+            {
+                "name": "mask",
+                "dtype": "int",
+                "default": ""
+            },
+            {
+                "name": "seed",
+                "dtype": "int",
+                "default": ""
+            },
+            {
+                "name": "len",
+                "dtype": "int",
+                "default": ""
+            },
+            {
+                "name": "count",
+                "dtype": "int",
+                "default": "0"
+            },
+            {
+                "name": "bits_per_byte",
+                "dtype": "int",
+                "default": "1"
+            },
+            {
+                "name": "reset_tag_key",
+                "dtype": "std::string const &",
+                "default": ""
+            }
+        ]
     },
-    {
-      "name": "count",
-      "dtype": "int",
-      "read_only": true
-    },
-    {
-      "name": "len",
-      "dtype": "int",
-      "read_only": true
-    },
-    {
-      "name": "mask",
-      "dtype": "int",
-      "read_only": true
-    },
-    {
-      "name": "seed",
-      "dtype": "int",
-      "read_only": true
-    }
-  ],
-  "methods": []
+    "methods": [],
+    "properties": [
+        {
+            "name": "mask",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "seed",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "len",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "count",
+            "dtype": "int",
+            "read_only": true
+        },
+        {
+            "name": "bits_per_byte",
+            "dtype": "int",
+            "read_only": true
+        }
+    ],
+    "docstring": []
 }

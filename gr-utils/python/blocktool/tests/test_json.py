@@ -102,34 +102,6 @@ JSON_SCHEME = {
                 }
             }
         },
-        "properties": {
-            "description": "Getters",
-            "type": "array",
-            "uniqueItems": True,
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "minLength": 1
-                    },
-                    "dtype": {
-                        "type": "string",
-                        "minLength": 1
-                    },
-                    "read_only": {
-                        "type": "boolean"
-                    }
-                },
-                "required": ["name"],
-                "dependencies": {
-                    "name": [
-                        "dtype",
-                        "read_only"
-                    ]
-                }
-            }
-        },
         "methods": {
             "description": "Setters",
             "type": "array",
@@ -162,6 +134,38 @@ JSON_SCHEME = {
                 },
                 "required": ["name"]
             }
+        },
+        "properties": {
+            "description": "Getters",
+            "type": "array",
+            "uniqueItems": True,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "dtype": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "read_only": {
+                        "type": "boolean"
+                    }
+                },
+                "required": ["name"],
+                "dependencies": {
+                    "name": [
+                        "dtype",
+                        "read_only"
+                    ]
+                }
+            }
+        },
+        "docstring": {
+            "description": "documentation of the header file",
+            "type": "array"
         }
     },
     "required": [
@@ -169,8 +173,9 @@ JSON_SCHEME = {
         "class",
         "io_signature",
         "make",
+        "methods",
         "properties",
-        "methods"
+        "docstring"
     ]
 }
 
