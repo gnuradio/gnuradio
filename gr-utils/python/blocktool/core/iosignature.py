@@ -67,12 +67,13 @@ def io_signature(io_file):
     _io_sig = list(filter(None, _io_sig))
     io_func = []
     for _io in _io_sig:
-        io_func.append(_io.lstrip().rstrip(' ,:)'))
+        if Constants.MAKE in _io:
+            io_func.append(_io.lstrip().rstrip(' ,:)'))
     for _signature in Constants.SIGNATURE_LIST:
-        if _signature in _io_sig[0] and parsed_io['input']['signature'] is None:
+        if _signature in io_func[0] and parsed_io['input']['signature'] is None:
             parsed_io['input']['signature'] = _signature
             io_func[0] = io_func[0].lstrip(_signature+' (')
-        if _signature in _io_sig[1] and parsed_io['output']['signature'] is None:
+        if _signature in io_func[1] and parsed_io['output']['signature'] is None:
             parsed_io['output']['signature'] = _signature
             io_func[1] = io_func[1].lstrip(_signature+' (')
     io_elements = []
@@ -132,5 +133,4 @@ def io_signature(io_file):
         parsed_io['output']['max_streams'] = io_elements[1]
         parsed_io['output']['sizeof_stream_items'] = io_elements[2]
         del io_elements[0:3]
-
     return parsed_io

@@ -73,12 +73,12 @@ class BlockHeaderParser(BlockTool):
         BlockTool.__init__(self, **kwargs)
         if file_path is None:
             raise BlockToolException(
-                'please specify the file path of the header!')
+                'Expected file path of the header!')
         file_path = os.path.abspath(file_path)
         try:
             open(file_path, 'r')
-        except OSError as file_error:
-            raise file_error
+        except OSError:
+            raise OSError
         self.info['target_file'] = file_path
         self.info['modname'] = os.path.basename(os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
@@ -93,9 +93,9 @@ class BlockHeaderParser(BlockTool):
         BlockTool._validate(self)
         self._validate()
         if self.info['modname'] is None:
-            raise BlockToolException('Please enter correct file path')
+            raise BlockToolException('Enter correct file path')
         if self.info['filename'] is None:
-            raise BlockToolException('Please enter correct file path')
+            raise BlockToolException('Enter correct file path')
         if self.info['modname'].startswith(Constants.GR):
             _module = self.info['modname'].split('-')[-1]
         else:
@@ -106,20 +106,20 @@ class BlockHeaderParser(BlockTool):
                 ', '.join(self.module_types)))
         if not self.info['filename'].endswith('.h'):
             raise BlockToolException(
-                'header files have extension .h only!')
+                'Invalid Header file')
         _target_dir = os.path.join(self.target_dir,
                                    self.info['modname'],
                                    'include',
                                    'gnuradio',
                                    self.info['modname'].split('-')[-1])
         if _target_dir != self.info['target_dir']:
-            raise Exception('public header not in correct directory')
+            raise BlockToolException('Invalid GNU Radio module')
         self.info['impl_file'] = os.path.join(self.info['impl_dir'],
                                               self.info['filename'].split('.')[0]+'_impl.cc')
         try:
             open(self.info['impl_file'], 'r')
-        except OSError as file_error:
-            raise file_error
+        except OSError:
+            raise OSError
 
     def get_header_info(self):
         """
@@ -151,10 +151,10 @@ class BlockHeaderParser(BlockTool):
             self.parsed_data['namespace'] = []
             ns = global_namespace.namespace(gr)
             if ns is None:
-                raise Exception
+                raise BlockToolException
             main_namespace = ns.namespace(module)
             if main_namespace is None:
-                raise Exception
+                raise BlockToolException
             self.parsed_data['namespace'] = [gr, module]
             if main_namespace.declarations:
                 for _namespace in main_namespace.declarations:
@@ -163,8 +163,8 @@ class BlockHeaderParser(BlockTool):
                             main_namespace = _namespace
                             self.parsed_data['namespace'].append(
                                 str(_namespace).split('::')[-1].split(' ')[0])
-        except Exception as exception:
-            raise Exception('Must be a header with block api!\n'+exception)
+        except BlockToolException as exception:
+            raise BlockToolException('Must be a header with block api!\n'+exception)
 
         # class
         try:
@@ -174,16 +174,16 @@ class BlockHeaderParser(BlockTool):
                     main_class = _class
                     self.parsed_data['class'] = str(_class).split('::')[
                         2].split(' ')[0]
-        except Exception as exception:
-            raise Exception('A block header always has a class!\n'+exception)
+        except BlockToolException as exception:
+            raise BlockToolException('A block header always has a class!\n'+exception)
 
         # io_signature
         try:
             self.parsed_data['io_signature'] = {}
             self.parsed_data['io_signature'] = io_signature(
                 self.info['impl_file'])
-        except Exception as exception:
-            raise Exception(
+        except BlockToolException as exception:
+            raise BlockToolException(
                 'A block header always has a io_signature!\n'+exception)
 
         # make
@@ -221,8 +221,8 @@ class BlockHeaderParser(BlockTool):
                                 make_arguments['default'] = "False"
                     self.parsed_data['make']['arguments'].append(
                         make_arguments.copy())
-        except Exception as exception:
-            raise Exception(
+        except BlockToolException as exception:
+            raise BlockToolException(
                 'A block API always has a factory signature!\n'+exception)
 
         # setters
