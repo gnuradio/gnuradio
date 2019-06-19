@@ -180,7 +180,7 @@ namespace gr {
     short int
     wav_read_sample(FILE *fp, int bytes_per_sample)
     {
-      int16_t buf_16bit;
+      int16_t buf_16bit = 0;
 
       if(fread(&buf_16bit, bytes_per_sample, 1, fp) != 1) {
 	return 0;
