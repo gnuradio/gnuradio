@@ -29,8 +29,6 @@ import sys
 import json
 import jsonschema
 
-from jsonschema import validate
-
 
 # Schema to be strictly followed be every output json file
 JSON_SCHEME = {
@@ -57,15 +55,16 @@ JSON_SCHEME = {
             "description": "I/O signature",
             "type": "object",
             "properties": {
-                "in_port": {
+                "input": {
                     "description": "Input ports",
                     "type": "object"
                 },
-                "out_port": {
+                "output": {
                     "description": "Output ports",
                     "type": "object"
                 }
-            }
+            },
+            "required": ["input", "output"]
         },
         "make": {
             "description": "Make function",
