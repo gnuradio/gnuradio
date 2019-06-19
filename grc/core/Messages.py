@@ -26,8 +26,8 @@ MESSENGERS_LIST = list()
 _indent = ''
 
 # Global FlowGraph Error and the file that caused it
-global flowgraph_error
-global flowgraph_error_file
+flowgraph_error = None
+flowgraph_error_file = None
 
 
 def register_messenger(messenger):
