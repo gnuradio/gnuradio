@@ -33,9 +33,9 @@ from blocktool.core.parseheader import BlockHeaderParser
 @click.command('parseheader', short_help=BlockHeaderParser.description)
 @click.argument('file-path', nargs=1)
 @click.option('-j', '--json-confirm', is_flag=True,
-              help="Get a JSON output for the header")
+              help='Get a JSON output for the header')
 @click.option('-y', '--yaml-confirm', is_flag=True,
-              help="Get a YAML output for the header")
+              help='Get a YAML output for the header')
 def cli(**kwargs):
     """
     \b
@@ -43,7 +43,7 @@ def cli(**kwargs):
     """
     self = BlockHeaderParser(**kwargs)
     self.info['cli'] = True
-    click.secho("Header file: " + self.info['filename'], fg='green')
+    click.secho('Header file: ' + self.info['filename'], fg='green')
     get_json_file(self)
     get_yaml_file(self)
     run(self)
@@ -55,15 +55,13 @@ def get_json_file(self):
     """
     header_file = self.info['filename'].split('.')[0]
     block_module = self.info['modname'].split('-')[-1]
-    if self.info['json_confirm'] is False:
+    if not self.info['json_confirm']:
         if click.confirm(click.style(
                 'Do you require a JSON file?', fg='cyan')):
             self.info['json_confirm'] = True
-            click.secho("Generating "+block_module+"_"+header_file +
-                        ".json ...", fg='green')
-    else:
-        click.secho("Generating "+block_module+"_"+header_file +
-                    ".json ...", fg='green')
+    if self.info['json_confirm']:
+        click.secho('Generating '+block_module+'_'+header_file +
+                    '.json ...', fg='green')
 
 
 def get_yaml_file(self):
@@ -72,12 +70,10 @@ def get_yaml_file(self):
     """
     header_file = self.info['filename'].split('.')[0]
     block_module = self.info['modname'].split('-')[-1]
-    if self.info['yaml_confirm'] is False:
+    if not self.info['yaml_confirm']:
         if click.confirm(click.style(
                 'Do you require a YAML file?', fg='cyan')):
             self.info['yaml_confirm'] = True
-            click.secho("Generating "+block_module+"_"+header_file +
-                        ".block.yml ...", fg='green')
-    else:
+    if self.info['yaml_confirm']:
         click.secho("Generating "+block_module+"_"+header_file +
                     ".block.yml ...", fg='green')

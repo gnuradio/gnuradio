@@ -27,7 +27,6 @@ from __future__ import unicode_literals
 import os
 import re
 import codecs
-import itertools
 import logging
 
 import click
@@ -62,10 +61,10 @@ class BlockHeaderParser(BlockTool):
     target_dir = os.path.abspath(os.path.join(current_folder,
                                               '..', '..', '..', '..'))
     for list_dir in os.listdir(target_dir):
-        if list_dir.startswith('gr-'):
+        if list_dir.startswith(Constants.GR):
             list_dir = list_dir.split('-')[-1]
             module_types.append(list_dir)
-    module_types.remove('utils')
+    module_types.remove(Constants.UTILS)
     module_types = tuple(module_types)
     parsed_data = {}
 
@@ -75,20 +74,19 @@ class BlockHeaderParser(BlockTool):
         if file_path is None:
             raise BlockToolException(
                 'please specify the file path of the header!')
-        else:
-            file_path = os.path.abspath(file_path)
-            try:
-                open(file_path, 'r')
-            except OSError as e:
-                raise e
-            self.info['target_file'] = file_path
-            self.info['modname'] = os.path.basename(os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
-            self.info['filename'] = os.path.basename(file_path)
-            self.info['target_dir'] = os.path.dirname(file_path)
-            self.info['impl_dir'] = os.path.abspath(os.path.join(file_path,
-                                                                 '..', '..', '..', '..', 'lib'))
-            self.validate()
+        file_path = os.path.abspath(file_path)
+        try:
+            open(file_path, 'r')
+        except OSError as file_error:
+            raise file_error
+        self.info['target_file'] = file_path
+        self.info['modname'] = os.path.basename(os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
+        self.info['filename'] = os.path.basename(file_path)
+        self.info['target_dir'] = os.path.dirname(file_path)
+        self.info['impl_dir'] = os.path.abspath(os.path.join(file_path,
+                                                             '..', '..', '..', '..', 'lib'))
+        self.validate()
 
     def validate(self):
         """ Override the Blocktool validate function """
@@ -98,13 +96,13 @@ class BlockHeaderParser(BlockTool):
             raise BlockToolException('Please enter correct file path')
         if self.info['filename'] is None:
             raise BlockToolException('Please enter correct file path')
-        if self.info['modname'].startswith('gr-'):
+        if self.info['modname'].startswith(Constants.GR):
             _module = self.info['modname'].split('-')[-1]
         else:
             _module = self.info['modname']
-            self.info['modname'] = 'gr-'+_module
+            self.info['modname'] = Constants.GR+_module
         if _module not in self.module_types:
-            raise BlockToolException("Module must be one of {}.".format(
+            raise BlockToolException('Module must be one of {}.'.format(
                 ', '.join(self.module_types)))
         if not self.info['filename'].endswith('.h'):
             raise BlockToolException(
@@ -115,35 +113,35 @@ class BlockHeaderParser(BlockTool):
                                    'gnuradio',
                                    self.info['modname'].split('-')[-1])
         if _target_dir != self.info['target_dir']:
-            raise Exception("public header not in correct directory")
+            raise Exception('public header not in correct directory')
         self.info['impl_file'] = os.path.join(self.info['impl_dir'],
                                               self.info['filename'].split('.')[0]+'_impl.cc')
         try:
             open(self.info['impl_file'], 'r')
-        except OSError as e:
-            raise e
+        except OSError as file_error:
+            raise file_error
 
     def get_header_info(self):
         """
         PyGCCXML header code parser
         magic happens here!
-        : returns the parsed header data in python dict
-        : return dict keys: namespace, class, io_signature, make,
-                       properties, methods
-        : Can be used as an CLI command or an extenal API
+        # : returns the parsed header data in python dict
+        # : return dict keys: namespace, class, io_signature, make,
+        #                properties, methods
+        # : Can be used as an CLI command or an extenal API
         """
         if self.info['cli']:
             if not self.info['yaml_confirm'] and not self.info['json_confirm']:
-                click.secho("Won't do the hardwork unnecessarily!!", fg='blue')
+                click.secho('hardwork is unnecessary!!', fg='blue')
                 exit(1)
 
-        gr = self.info['modname'].split("-")[0]
-        module = self.info['modname'].split("-")[-1]
+        gr = self.info['modname'].split('-')[0]
+        module = self.info['modname'].split('-')[-1]
         generator_path, generator_name = utils.find_xml_generator()
         xml_generator_config = parser.xml_generator_configuration_t(
             xml_generator_path=generator_path,
             xml_generator=generator_name,
-            compiler="gcc")
+            compiler='gcc')
         decls = parser.parse(
             [self.info['target_file']], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
@@ -154,40 +152,39 @@ class BlockHeaderParser(BlockTool):
             ns = global_namespace.namespace(gr)
             if ns is None:
                 raise Exception
-            else:
-                main_namespace = ns.namespace(module)
-                if main_namespace is None:
-                    raise Exception
-                else:
-                    self.parsed_data['namespace'] = [gr, module]
-                if main_namespace.declarations:
-                    for _namespace in main_namespace.declarations:
-                        if(isinstance(_namespace, declarations.namespace_t)):
-                            if Constants.KERNEL not in str(_namespace):
-                                main_namespace = _namespace
-                                self.parsed_data['namespace'].append(
-                                    str(_namespace).split('::')[-1].split(' ')[0])
-        except Exception as e:
-            raise Exception("Must be a header with block api!\n"+e)
+            main_namespace = ns.namespace(module)
+            if main_namespace is None:
+                raise Exception
+            self.parsed_data['namespace'] = [gr, module]
+            if main_namespace.declarations:
+                for _namespace in main_namespace.declarations:
+                    if isinstance(_namespace, declarations.namespace_t):
+                        if Constants.KERNEL not in str(_namespace):
+                            main_namespace = _namespace
+                            self.parsed_data['namespace'].append(
+                                str(_namespace).split('::')[-1].split(' ')[0])
+        except Exception as exception:
+            raise Exception('Must be a header with block api!\n'+exception)
 
         # class
         try:
-            self.parsed_data['class'] = ""
+            self.parsed_data['class'] = ''
             for _class in main_namespace.declarations:
                 if isinstance(_class, declarations.class_t):
                     main_class = _class
                     self.parsed_data['class'] = str(_class).split('::')[
                         2].split(' ')[0]
-        except Exception as e:
-            raise e
+        except Exception as exception:
+            raise Exception('A block header always has a class!\n'+exception)
 
         # io_signature
         try:
             self.parsed_data['io_signature'] = {}
             self.parsed_data['io_signature'] = io_signature(
                 self.info['impl_file'])
-        except:
-            self.parsed_data['io_signature'] = {}
+        except Exception as exception:
+            raise Exception(
+                'A block header always has a io_signature!\n'+exception)
 
         # make
         try:
@@ -224,8 +221,9 @@ class BlockHeaderParser(BlockTool):
                                 make_arguments['default'] = "False"
                     self.parsed_data['make']['arguments'].append(
                         make_arguments.copy())
-        except:
-            raise Exception('A block API always has a factory signature')
+        except Exception as exception:
+            raise Exception(
+                'A block API always has a factory signature!\n'+exception)
 
         # setters
         try:
@@ -240,7 +238,7 @@ class BlockHeaderParser(BlockTool):
                     if str(setter.name).startswith('set_') and setter.arguments:
                         setter_args = {
                             "name": str(setter.name),
-                            "arguments type": []
+                            "arguments_type": []
                         }
                         for argument in setter.arguments:
                             args = {
@@ -248,7 +246,7 @@ class BlockHeaderParser(BlockTool):
                                 "dtype": str(argument.decl_type)
                             }
                             getter_arguments.append(args['name'])
-                            setter_args['arguments type'].append(args.copy())
+                            setter_args['arguments_type'].append(args.copy())
                         self.parsed_data['methods'].append(setter_args.copy())
         except:
             self.parsed_data['methods'] = []
@@ -266,10 +264,10 @@ class BlockHeaderParser(BlockTool):
                         getter_args = {
                             "name": str(getter.name),
                             "dtype": str(getter.return_type),
-                            "read_only": False
+                            "read_only": True
                         }
                         if getter_args['name'] in getter_arguments:
-                            getter_args["read_only"] = True
+                            getter_args["read_only"] = False
                         self.parsed_data['properties'].append(
                             getter_args.copy())
         except:
@@ -285,13 +283,12 @@ class BlockHeaderParser(BlockTool):
         except:
             self.parsed_data['docstring'] = []
 
-        print(self.parsed_data)
         if self.info['cli']:
             if self.info['yaml_confirm']:
                 yaml_generator(self.info['yaml_confirm'])
 
             if self.info['json_confirm']:
-                json_generator(self.info['json_confirm'])
+                json_generator(self.parsed_data, self.info)
         return self.parsed_data
 
     def run(self):

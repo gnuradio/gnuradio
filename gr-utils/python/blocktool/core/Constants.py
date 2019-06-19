@@ -23,10 +23,14 @@
 # Kernel Namespace
 KERNEL = 'kernel'
 
-# I/O Signature
+# I/O Signature (Symbols and constants)
 IO_SIGNATURE = 'io_signature::'
 SIGNATURE_LIST = ['makev', 'make3', 'make2', 'make']
 MAKE = 'make'
 MAKE2 = 'make2'
 MAKE3 = 'make3'
 MAKEV = 'makev'
+
+# Symbols and constants required for parsing
+GR = 'gr-'
+UTILS = 'utils'

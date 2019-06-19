@@ -24,9 +24,17 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import os
+import json
 
-def json_generator(dict_data):
+
+def json_generator(parsed_data, header_data):
     """
     Generate JSON file for the block header
     """
-    print("JSON will be generated!")
+    header_file = header_data['filename'].split('.')[0]
+    block_module = header_data['modname'].split('-')[-1]
+    json_file = os.path.join('.', block_module+'_'+header_file + '.json')
+    with open(json_file, 'w') as _file:
+        json.dump(parsed_data, _file, indent=4)
+    _file.close()
