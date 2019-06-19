@@ -41,16 +41,16 @@ class monitor(object):
             gr.prefs().singleton().set_bool("PerfCounters","export",True)
 
     def start(self):
-        print("monitor::endpoints() = %s" % (gr.rpcmanager_get().endpoints()))
         try:
+            print("monitor::endpoints() = %s" % (gr.rpcmanager_get().endpoints()))
             ep = gr.rpcmanager_get().endpoints()[0]
             cmd = [self.tool, re.search(r"-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1), re.search(r"-p (\d+)", ep).group(1)]
             print("running: %s"%(str(cmd)))
             self.proc = subprocess.Popen(cmd)
             self.started = True
-        except (ValueError, OSError):
+        except:
             self.proc = None
-            print("failed to to start ControlPort Monitor on specified port")
+            print("Failed to to connect to ControlPort. Please make sure that you have Thrift installed and check your firewall rules.")
 
     def stop(self):
         if(self.proc):
