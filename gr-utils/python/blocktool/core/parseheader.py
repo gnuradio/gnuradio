@@ -27,6 +27,7 @@ from __future__ import unicode_literals
 import os
 import re
 import codecs
+import itertools
 import logging
 
 import click
@@ -38,6 +39,8 @@ from pygccxml import utils
 from blocktool.core.base import BlockToolException, BlockTool
 from blocktool.core.makeyaml import yaml_generator
 from blocktool.core.makejson import json_generator
+from blocktool.core.iosignature import io_signature
+from blocktool.core import Constants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -83,6 +86,8 @@ class BlockHeaderParser(BlockTool):
                 os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
             self.info['filename'] = os.path.basename(file_path)
             self.info['target_dir'] = os.path.dirname(file_path)
+            self.info['impl_dir'] = os.path.abspath(os.path.join(file_path,
+                                                                 '..', '..', '..', '..', 'lib'))
             self.validate()
 
     def validate(self):
@@ -111,6 +116,12 @@ class BlockHeaderParser(BlockTool):
                                    self.info['modname'].split('-')[-1])
         if _target_dir != self.info['target_dir']:
             raise Exception("public header not in correct directory")
+        self.info['impl_file'] = os.path.join(self.info['impl_dir'],
+                                              self.info['filename'].split('.')[0]+'_impl.cc')
+        try:
+            open(self.info['impl_file'], 'r')
+        except OSError as e:
+            raise e
 
     def get_header_info(self):
         """
@@ -152,7 +163,7 @@ class BlockHeaderParser(BlockTool):
                 if main_namespace.declarations:
                     for _namespace in main_namespace.declarations:
                         if(isinstance(_namespace, declarations.namespace_t)):
-                            if 'kernel' not in str(_namespace):
+                            if Constants.KERNEL not in str(_namespace):
                                 main_namespace = _namespace
                                 self.parsed_data['namespace'].append(
                                     str(_namespace).split('::')[-1].split(' ')[0])
@@ -167,11 +178,16 @@ class BlockHeaderParser(BlockTool):
                     main_class = _class
                     self.parsed_data['class'] = str(_class).split('::')[
                         2].split(' ')[0]
-        except:
-            pass
+        except Exception as e:
+            raise e
 
         # io_signature
-        # Underway
+        try:
+            self.parsed_data['io_signature'] = {}
+            self.parsed_data['io_signature'] = io_signature(
+                self.info['impl_file'])
+        except:
+            self.parsed_data['io_signature'] = {}
 
         # make
         try:
@@ -209,8 +225,7 @@ class BlockHeaderParser(BlockTool):
                     self.parsed_data['make']['arguments'].append(
                         make_arguments.copy())
         except:
-            self.parsed_data['make'] = {}
-            self.parsed_data['make']['arguments'] = []
+            raise Exception('A block API always has a factory signature')
 
         # setters
         try:
