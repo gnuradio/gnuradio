@@ -886,18 +886,6 @@ class MForm(Qt.QWidget):
 
 class MyApp(object):
     def __init__(self, args):
-        p = gr.prefs()
-        cp_on = p.get_bool("ControlPort", "on", False)
-        cp_edges = p.get_bool("ControlPort", "edges_list", False)
-        pcs_on = p.get_bool("PerfCounters", "on", False)
-        pcs_exported = p.get_bool("PerfCounters", "export", False)
-        if(not (pcs_on and cp_on and pcs_exported and cp_edges)):
-            print("Configuration has not turned on all of the appropriate ControlPort features:")
-            print("\t[ControlPort] on = {0}".format(cp_on))
-            print("\t[ControlPort] edges_list = {0}".format(cp_edges))
-            print("\t[PerfCounters] on = {0}".format(pcs_on))
-            print("\t[PerfCounters] export = {0}".format(pcs_exported))
-            sys.exit(1)
 
         parser = ArgumentParser(description="GNU Radio Performance Monitor")
         parser.add_argument("host", nargs="?", default="localhost", help="host name or IP")
@@ -910,7 +898,11 @@ class MyApp(object):
         try:
             GNURadioControlPortClient(args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec_)
         except:
-            print("Control Port failed to connect.")
+            print("ControlPort failed to connect. Check the config of your endpoint.")
+            print("\t[ControlPort] on = True")
+            print("\t[ControlPort] edges_list = True")
+            print("\t[PerfCounters] on = True")
+            print("\t[PerfCounters] export = True")
             sys.exit(1)
 
     def run(self, client):
