@@ -103,13 +103,7 @@ class test_python_message_passing(gr_unittest.TestCase):
         self.assertEqual('in_port' in pmt.to_python(msg_cons.message_ports_in()), True)
 
         # Run to verify message passing
-        self.tb.start()
-
-        # Wait for all messages to be sent
-        while msg_gen.msg_ctr < num_msgs:
-            time.sleep(0.5)
-        self.tb.stop()
-        self.tb.wait()
+        self.tb.run()
 
         # Verify that the message consumer got all the messages
         self.assertEqual(num_msgs, len(msg_cons.msg_list))
