@@ -35,10 +35,10 @@ class monitor(object):
 
         # setup export prefs
         gr.prefs().singleton().set_bool("ControlPort","on",True)
+        gr.prefs().singleton().set_bool("PerfCounters","on",True)
+        gr.prefs().singleton().set_bool("PerfCounters","export",True)
         if(tool == "gr-perf-monitorx"):
             gr.prefs().singleton().set_bool("ControlPort","edges_list",True)
-            gr.prefs().singleton().set_bool("PerfCounters","on",True)
-            gr.prefs().singleton().set_bool("PerfCounters","export",True)
 
     def start(self):
         try:

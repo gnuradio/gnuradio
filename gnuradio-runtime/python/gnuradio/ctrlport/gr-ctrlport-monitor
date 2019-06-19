@@ -752,7 +752,10 @@ class MyApp(object):
         try:
             GNURadioControlPortClient(args.host, args.port, 'thrift', self.run, Qt.QApplication(sys.argv).exec_)
         except:
-            print("Control Port failed to connect.")
+            print("ControlPort failed to connect. Check the config of your endpoint.")
+            print("\t[ControlPort] on = True")
+            print("\t[PerfCounters] on = True")
+            print("\t[PerfCounters] export = True")
             sys.exit(1)
 
     def run(self, client):
