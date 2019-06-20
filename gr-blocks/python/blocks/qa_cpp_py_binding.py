@@ -155,11 +155,10 @@ class test_cpp_py_binding(gr_unittest.TestCase):
         ep = gr.rpcmanager_get().endpoints()[0]
         hostname = re.search(r"-h (\S+|\d+\.\d+\.\d+\.\d+)", ep).group(1)
         portnum = re.search(r"-p (\d+)", ep).group(1)
-        argv = [None, hostname, portnum]
 
         # Initialize a simple ControlPort client from endpoint
         from gnuradio.ctrlport.GNURadioControlPortClient import GNURadioControlPortClient
-        radiosys = GNURadioControlPortClient(argv=argv, rpcmethod='thrift')
+        radiosys = GNURadioControlPortClient(hostname, portnum, rpcmethod='thrift')
         radio = radiosys.client
 
         # Get all exported knobs
