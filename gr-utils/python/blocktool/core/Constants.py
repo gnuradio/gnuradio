@@ -34,3 +34,6 @@ MAKEV = 'makev'
 # Symbols and constants required for parsing
 GR = 'gr-'
 UTILS = 'utils'
+OPEN_BRACKET = '('
+CLOSE_BRACKET = ')'
+STRIP_SYMBOLS = ' ,:)'

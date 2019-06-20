@@ -164,7 +164,8 @@ class BlockHeaderParser(BlockTool):
                             self.parsed_data['namespace'].append(
                                 str(_namespace).split('::')[-1].split(' ')[0])
         except BlockToolException as exception:
-            raise BlockToolException('Must be a header with block api!\n'+exception)
+            raise BlockToolException(
+                'Must be a header with block api!\n'+exception)
 
         # class
         try:
@@ -175,7 +176,8 @@ class BlockHeaderParser(BlockTool):
                     self.parsed_data['class'] = str(_class).split('::')[
                         2].split(' ')[0]
         except BlockToolException as exception:
-            raise BlockToolException('A block header always has a class!\n'+exception)
+            raise BlockToolException(
+                'A block header always has a class!\n'+exception)
 
         # io_signature
         try:
@@ -293,5 +295,4 @@ class BlockHeaderParser(BlockTool):
 
     def run(self):
         """ Run, run, run. """
-        self.validate()
         self.get_header_info()

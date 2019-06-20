@@ -115,25 +115,25 @@ class TestBlocktoolCore(unittest.TestCase):
         valid_factory_arg = True
         if test_obj['make']['arguments']:
             for arguments in test_obj['make']['arguments']:
-                if arguments['name'] is "" or arguments['dtype'] is "":
+                if not arguments['name'] or not arguments['dtype']:
                     valid_factory_arg = False
         self.assertTrue(valid_factory_arg)
         # test for methods
         valid_method = True
         if test_obj['methods']:
             for arguments in test_obj['methods']:
-                if arguments['name'] is "":
+                if not arguments['name']:
                     valid_method = False
                 if arguments['arguments_type']:
                     for args in arguments['arguments_type']:
-                        if args['name'] is "" or args['dtype'] is "":
+                        if not args['name'] or not args['dtype']:
                             valid_method = False
         self.assertTrue(valid_method)
         # test for properties
         valid_properties = True
         if test_obj['properties']:
             for arguments in test_obj['properties']:
-                if arguments['name'] is "" or arguments['dtype'] is "":
+                if not arguments['name'] or not arguments['dtype']:
                     valid_properties = False
         self.assertTrue(valid_properties)
         # Run the whole dict through JSON SCHEMA

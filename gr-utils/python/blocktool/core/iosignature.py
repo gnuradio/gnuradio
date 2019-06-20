@@ -46,12 +46,12 @@ def io_signature(io_file):
             "signature": None
         }
     }
-    with open(io_file, 'r') as _impl:
+    with open(io_file, 'r') as impl:
         lines = []
-        for line in _impl:
+        for line in impl:
             if Constants.IO_SIGNATURE in line:
                 lines.append(line)
-    _impl.close()
+    impl.close()
     if len(lines) > 2:
         lines = lines[0:2]
     _io_sig = []
@@ -68,14 +68,14 @@ def io_signature(io_file):
     io_func = []
     for _io in _io_sig:
         if Constants.MAKE in _io:
-            io_func.append(_io.lstrip().rstrip(' ,:)'))
-    for _signature in Constants.SIGNATURE_LIST:
-        if _signature in io_func[0] and parsed_io['input']['signature'] is None:
-            parsed_io['input']['signature'] = _signature
-            io_func[0] = io_func[0].lstrip(_signature+' (')
-        if _signature in io_func[1] and parsed_io['output']['signature'] is None:
-            parsed_io['output']['signature'] = _signature
-            io_func[1] = io_func[1].lstrip(_signature+' (')
+            io_func.append(_io.lstrip().rstrip(Constants.STRIP_SYMBOLS))
+    for signature in Constants.SIGNATURE_LIST:
+        if signature in io_func[0] and parsed_io['input']['signature'] is None:
+            parsed_io['input']['signature'] = signature
+            io_func[0] = io_func[0].lstrip(signature+' (')
+        if signature in io_func[1] and parsed_io['output']['signature'] is None:
+            parsed_io['output']['signature'] = signature
+            io_func[1] = io_func[1].lstrip(signature+' (')
     io_elements = []
     for _io in io_func:
         _io = _io.split(',')
@@ -83,9 +83,12 @@ def io_signature(io_file):
     io_elements = list(itertools.chain.from_iterable(io_elements))
     for index, _io in enumerate(io_elements):
         _io = _io.lstrip(' (').rstrip(' )')
-        if '(' in _io:
-            _io = _io + ')'
+        if Constants.OPEN_BRACKET in _io:
+            _io = _io + Constants.CLOSE_BRACKET
         io_elements[index] = _io
+
+    # Because of any possible combination of I/O signature and different number
+    # of arguments, manual if else loop is required
     if parsed_io['input']['signature'] is Constants.MAKE:
         parsed_io['input']['min_streams'] = io_elements[0]
         parsed_io['input']['max_streams'] = io_elements[1]

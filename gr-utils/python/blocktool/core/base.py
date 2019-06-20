@@ -42,7 +42,7 @@ class BlockTool(object):
     description = None
 
     def __init__(self, module_name=None, file_name=None, target_dir=None,
-                 target_file=None, impl_dir=None, impl_file=None, 
+                 target_file=None, impl_dir=None, impl_file=None,
                  yaml_confirm=False, json_confirm=False, **kwargs):
         """ __init__ """
         self.info = {}

@@ -24,7 +24,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import os
 import sys
 import json
 import jsonschema
@@ -182,14 +181,14 @@ JSON_SCHEME = {
 def is_valid():
     """ Validate json file """
 
-    with open(sys.argv[1], 'r') as f:
-        data = json.load(f)
+    with open(sys.argv[1], 'r') as json_file:
+        data = json.load(json_file)
     try:
         print("Validating...")
         jsonschema.validate(data, JSON_SCHEME)
-    except jsonschema.ValidationError as ve:
+    except jsonschema.ValidationError as exception:
         print("Record JSON file # {}: NOT OK".format(sys.argv[1]))
-        raise Exception(ve+"\n")
+        raise Exception(exception+"\n")
     else:
         print("Record JSON file # {}: OK".format(sys.argv[1]))
 
