@@ -109,10 +109,9 @@ Currently, ControlPort only supports the Apache Thrift backend.
 
 \li thrift       (>= 0.9.2)   https://thrift.apache.org/
 
-To have nice formula formatting in doxygen, you'll need LaTeX; for python docs, sphinx:
+To have nice formula formatting in doxygen, you'll need LaTeX:
 
 \li latex        (>= 2.0)     http://www.latex-project.org/
-\li sphinx       (>= 1.2.2)   http://www.sphinx-doc.org/
 
 \section build_gr_cmake Building GNU Radio
 
