@@ -21,14 +21,12 @@
 # Setup dependencies
 ########################################################################
 find_package(Doxygen)
-find_package(Sphinx)
 
 ########################################################################
 # Register component
 ########################################################################
 include(GrComponent)
 GR_REGISTER_COMPONENT("doxygen" ENABLE_DOXYGEN DOXYGEN_FOUND)
-GR_REGISTER_COMPONENT("sphinx"  ENABLE_SPHINX  SPHINX_FOUND)
 
 ########################################################################
 # Begin conditional configuration
@@ -42,17 +40,3 @@ add_subdirectory(doxygen)
 add_subdirectory(exploring-gnuradio)
 
 endif(ENABLE_DOXYGEN)
-
-
-########################################################################
-# Begin conditional configuration
-########################################################################
-if(ENABLE_SPHINX)
-
-
-########################################################################
-# Add subdirectories
-########################################################################
-add_subdirectory(sphinx)
-
-endif(ENABLE_SPHINX)
