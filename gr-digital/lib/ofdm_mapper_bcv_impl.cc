@@ -59,7 +59,8 @@ namespace gr {
 	d_bit_offset(0),
 	d_pending_flag(0),
 	d_resid(0),
-	d_nresid(0)
+	d_nresid(0),
+	d_rnd_sym(gr::random(1765399812, 0, constellation.size()))
     {
       GR_LOG_WARN(d_logger, "The gr::digital::ofdm_mapper_bcv block has been deprecated.");
 
@@ -134,7 +135,7 @@ namespace gr {
 
     int ofdm_mapper_bcv_impl::randsym()
     {
-      return (rand() % d_constellation.size());
+      return (d_rnd_sym.ran_int());
     }
 
     int
