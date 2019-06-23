@@ -21,12 +21,14 @@
  */
 
 #include <cstdlib>
+#include <cstdint>
 #include <cstdio>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <stdexcept>
 #include <cmath>
+#include <gnuradio/random.h>
 #include <gnuradio/trellis/quicksort_index.h>
 #include <gnuradio/trellis/interleaver.h>
 
@@ -107,12 +109,11 @@ namespace gr {
       d_INTER.resize(d_K);
       d_DEINTER.resize(d_K);
 
-      if(seed>=0)
-	srand((unsigned int)seed);
+      gr::random rnd_int(seed, 0, INT_MAX);
       std::vector<int> tmp(d_K);
       for(int i=0;i<d_K;i++) {
 	d_INTER[i]=i;
-	tmp[i] = rand();
+	tmp[i] = rnd_int.ran_int();
       }
       quicksort_index <int> (tmp,d_INTER,0,d_K-1);
 
