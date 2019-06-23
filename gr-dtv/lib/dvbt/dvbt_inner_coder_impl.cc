@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2015,2016 Free Software Foundation, Inc.
+ * Copyright 2015,2016,2019 Free Software Foundation, Inc.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -158,11 +158,6 @@ namespace gr {
 
       // Set output items multiple of 4
       set_output_multiple(4);
-
-      // Set relative rate out/in
-      assert((d_noutput * d_k * d_m) % (d_ninput * 8 * d_n) == 0);
-      set_relative_rate((uint64_t)(d_ninput * 8 * d_n),
-                        (uint64_t)(d_noutput * d_k * d_m));
 
       // calculate in and out block sizes
       d_in_bs = (d_k * d_m) / 2;
