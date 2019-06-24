@@ -43,7 +43,7 @@ def cli(**kwargs):
     """
     self = BlockHeaderParser(**kwargs)
     self.info['cli'] = True
-    click.secho('Header file: ' + self.info['filename'], fg='green')
+    click.secho('Header file: {}'.format(self.info['filename']), fg='green')
     get_json_file(self)
     get_yaml_file(self)
     run(self)
@@ -60,8 +60,8 @@ def get_json_file(self):
                 'Do you require a JSON file?', fg='cyan')):
             self.info['json_confirm'] = True
     if self.info['json_confirm']:
-        click.secho('Generating '+block_module+'_'+header_file +
-                    '.json ...', fg='green')
+        click.secho('Generating {}_{}.json'.format(
+            block_module, header_file), fg='green')
 
 
 def get_yaml_file(self):
@@ -75,5 +75,5 @@ def get_yaml_file(self):
                 'Do you require a YAML file?', fg='cyan')):
             self.info['yaml_confirm'] = True
     if self.info['yaml_confirm']:
-        click.secho("Generating "+block_module+"_"+header_file +
-                    ".block.yml ...", fg='green')
+        click.secho('Generating {}_{}.yml'.format(
+            block_module, header_file), fg='green')

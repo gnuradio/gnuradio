@@ -188,7 +188,7 @@ def is_valid():
         jsonschema.validate(data, JSON_SCHEME)
     except jsonschema.ValidationError as exception:
         print("Record JSON file # {}: NOT OK".format(sys.argv[1]))
-        raise Exception(exception+"\n")
+        raise Exception(exception)
     else:
         print("Record JSON file # {}: OK".format(sys.argv[1]))
 

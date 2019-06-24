@@ -165,7 +165,7 @@ class BlockHeaderParser(BlockTool):
                                 str(_namespace).split('::')[-1].split(' ')[0])
         except BlockToolException as exception:
             raise BlockToolException(
-                'Must be a header with block api!\n'+exception)
+                'Must be a header with block api!\n{}'.format(exception))
 
         # class
         try:
@@ -177,7 +177,7 @@ class BlockHeaderParser(BlockTool):
                         2].split(' ')[0]
         except BlockToolException as exception:
             raise BlockToolException(
-                'A block header always has a class!\n'+exception)
+                'A block header always has a class!\n{}'.format(exception))
 
         # io_signature
         try:
@@ -186,7 +186,7 @@ class BlockHeaderParser(BlockTool):
                 self.info['impl_file'])
         except BlockToolException as exception:
             raise BlockToolException(
-                'A block header always has a io_signature!\n'+exception)
+                'A block header always has a io_signature!\n{}'.format(exception))
 
         # make
         try:
@@ -211,12 +211,12 @@ class BlockHeaderParser(BlockTool):
                                 "dtype": str(arg.decl_type),
                                 "default": ""
                             }
-                            if re.findall(r"[-+]?\d*\.\d+|\d+", _arg):
+                            if re.findall(r'[-+]?\d*\.\d+|\d+', _arg):
                                 make_arguments['default'] = re.findall(
-                                    r"[-+]?\d*\.\d+|\d+", _arg)[0]
+                                    r'[-+]?\d*\.\d+|\d+', _arg)[0]
                             elif re.findall(r'\"(.+?)\"', _arg):
                                 make_arguments['default'] = re.findall(
-                                    r"[-+]?\d*\.\d+|\d+", _arg)[0]
+                                    r'\"(.+?)\"', _arg)[0]
                             elif "true" in _arg:
                                 make_arguments['default'] = "True"
                             elif "false" in _arg:
@@ -225,7 +225,7 @@ class BlockHeaderParser(BlockTool):
                         make_arguments.copy())
         except BlockToolException as exception:
             raise BlockToolException(
-                'A block API always has a factory signature!\n'+exception)
+                'A block API always has a factory signature!\n{}'.format(exception))
 
         # setters
         try:
