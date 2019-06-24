@@ -735,6 +735,7 @@ class Application(Gtk.Application):
             main.update_pages()
 
         elif action == Actions.FIND_BLOCKS:
+            flow_graph.unselect()
             main.update_panel_visibility(main.BLOCKS, True)
             main.btwin.search_entry.show()
             main.btwin.search_entry.grab_focus()
