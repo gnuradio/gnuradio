@@ -287,10 +287,10 @@ class BlockHeaderParser(BlockTool):
 
         if self.info['cli']:
             if self.info['yaml_confirm']:
-                yaml_generator(self.info['yaml_confirm'])
-
+                yaml_generator(self.parsed_data, self.info)
             if self.info['json_confirm']:
                 json_generator(self.parsed_data, self.info)
+
         return self.parsed_data
 
     def run(self):
