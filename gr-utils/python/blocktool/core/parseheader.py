@@ -86,6 +86,8 @@ class BlockHeaderParser(BlockTool):
         self.info['target_dir'] = os.path.dirname(file_path)
         self.info['impl_dir'] = os.path.abspath(os.path.join(file_path,
                                                              '..', '..', '..', '..', 'lib'))
+        self.info['impl_file'] = os.path.join(self.info['impl_dir'],
+                                              self.info['filename'].split('.')[0]+'_impl.cc')
         self.validate()
 
     def validate(self):
@@ -114,8 +116,6 @@ class BlockHeaderParser(BlockTool):
                                    self.info['modname'].split('-')[-1])
         if _target_dir != self.info['target_dir']:
             raise BlockToolException('Invalid GNU Radio module')
-        self.info['impl_file'] = os.path.join(self.info['impl_dir'],
-                                              self.info['filename'].split('.')[0]+'_impl.cc')
         try:
             open(self.info['impl_file'], 'r')
         except OSError:

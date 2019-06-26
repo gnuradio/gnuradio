@@ -25,13 +25,13 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
-import click
 import logging
+import click
 
 from blocktool.cli.base import run
 from blocktool.core.parseheader import BlockHeaderParser
 
-logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 @click.command('parsedir', short_help='Parses complete header directory')
@@ -53,12 +53,14 @@ def parse_directory(**kwargs):
     if not os.path.isdir(dir_path):
         raise OSError
     list_header = []
+    dir_name = os.path.basename(dir_path)
     for _header in os.listdir(dir_path):
         if _header.endswith('.h') and os.path.isfile(os.path.join(dir_path, _header)):
             list_header.append(os.path.join(dir_path, _header))
     list_header = sorted(list_header)
-    for header in list_header:
-        kwargs['file_path'] = header
+    for header_path in list_header:
+        kwargs['file_path'] = header_path
+        header = os.path.basename(header_path)
         try:
             self = BlockHeaderParser(**kwargs)
             self.info['cli'] = True
@@ -67,4 +69,8 @@ def parse_directory(**kwargs):
             run(self)
             click.secho('Parsing successful: {}'.format(header), fg='green')
         except:
+            logging.basicConfig(level=logging.DEBUG,
+                                filename=os.path.join('.', dir_name+'_log.out'))
+            logging.exception(
+                'Log for Exception raised for the header: {}\n'.format(header))
             click.secho('Parsing unsuccessful: {}'.format(header), fg='yellow')

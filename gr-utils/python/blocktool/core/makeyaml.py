@@ -69,14 +69,15 @@ def yaml_generator(parsed_data, header_data):
                   ('make', '{}.{}({})'.format(block, header, ', '.join(params_list)))
                   ]
 
-    if parsed_data['methods']:                  
+    if parsed_data['methods']:
         list_callbacks = []
         for param in parsed_data['methods']:
             arguments = []
             for args in param['arguments_type']:
                 arguments.append(args['name'])
             arg_list = ['${'+s+'}' for s in arguments if arguments]
-            list_callbacks.append(param['name']+'({})'.format(', '.join(arg_list)))
+            list_callbacks.append(
+                param['name']+'({})'.format(', '.join(arg_list)))
         callback_key = ('callbacks')
         callbacks = (callback_key, tuple(list_callbacks))
         _templates.append(callbacks)
