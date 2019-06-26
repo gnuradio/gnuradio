@@ -59,5 +59,9 @@ if(UNIX AND HAVE_XDG_UTILS)
     install(
         PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/grc_setup_freedesktop
         DESTINATION ${GR_PKG_LIBEXEC_DIR}
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+    )
+    install (
+        CODE "execute_process(COMMAND ${CMAKE_INSTALL_PREFIX}/${GR_PKG_LIBEXEC_DIR}/grc_setup_freedesktop install)" 
     )
 endif(UNIX AND HAVE_XDG_UTILS)
