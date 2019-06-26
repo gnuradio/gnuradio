@@ -72,10 +72,13 @@ class MainWindow(Gtk.ApplicationWindow):
         self.add(vbox)
 
         icon_theme = Gtk.IconTheme.get_default()
-        icon = icon_theme.lookup_icon("gnuradio-grc", 48, 0)
+        icon = icon_theme.load_icon("gnuradio-grc", 48, 0)
         if not icon:
-            # Set window icon
+            # Set default window icon
             self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
+        else :
+            # Use gnuradio icon
+            self.set_icon(icon)
 
         # Create the menu bar and toolbar
         generate_modes = platform.get_generate_options()
