@@ -80,7 +80,7 @@ Abbreviated instructions are duplicated below.
 
 2. Checkout the latest code:
     ```
-    $ git clone https://github.com/gnuradio/gnuradio.git
+    $ git clone --recursive https://github.com/gnuradio/gnuradio.git
     ```
 
 3. Build with CMake:

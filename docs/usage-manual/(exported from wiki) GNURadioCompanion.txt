@@ -1,0 +1,437 @@
+<page>
+    <title>GNURadioCompanion</title>
+    <ns>0</ns>
+    <id>47</id>
+    <revision>
+      <id>4311</id>
+      <parentid>4310</parentid>
+      <timestamp>2018-06-26T19:59:29Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <comment>/* Special Thanks */</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="22088">= GNU Radio Companion =
+
+GNU Radio Companion (GRC) is a graphical tool for creating signal flow graphs and generating flow-graph source code. There is a [[WorkingGroups|GNU Radio Companion Working Group]] handling the development.
+
+== New Features ==
+
+What has changed in GRC since the stable 0.70 release?
+
+* Bundled - GRC is now bundled with the gnuradio source. If all dependencies are met, grc will be installed with gnuradio. *See the Installation and Execution section.
+
+* Desktop Integration - GRC can be fully integrated into a desktop environment that supports freedesktop standards (courtesy of xdg-utils): icons, mime type, and menu items
+
+* Code Generation - GRC no longer uses a single executable to load a *.grc.xml file and dynamically build the flow graph. Rather, GRC uses Cheetah templates to generate the python source code for the flow graph. GRC can generate source code for WX GUI and non-GUI flow graphs as well as hierarchical blocks.
+
+* Documentation - GRC can extract documentation for GNU Radio blocks directly from the doxygen-generated xml files. You will need to configure your gnuradio installation with doxygen support to use this feature.
+
+* Variables - The variable editor window of past releases has been replaced with variable blocks. Variable blocks show up in the flow graph and act like any other block, except that they have no IO ports. The variable block maps a unique id (variable name) to a particular value. GRC also has several graphical variable blocks that allow one to create WX GUI flow graphs with graphical controls using sliders, text boxes, buttons, drop downs, and radio buttons.
+
+* Block Definitions - Every block in GRC has a corresponding xml file that contains parameters, IO ports, and a template for code generation. The id key and file name of each xml file matches up exactly with the name of the GNU Radio block to ensure future portability. GRC validates all blocks definitions upon execution, and will exit with error if any definitions fail the validation.
+
+* File Format - Given that the variables and block definitions have changed, the internal structure of the saved flow graph files has also changed. Fortunately, GRC can automatically convert older saved flow graph files to the new format. Unfortunately, the conversion cannot always be 100%.
+
+* Block Manipulation - Ever wish that you could take a block out of your transmit/receive chain, but not delete it? Blocks now have an enabled/disabled state. By default, a block is enabled. When disabled, a block is grayed out in the flow graph and will be ignored by the flow graph validator and by the source code generator. In addition, blocks may be cut, copied, and pasted within flow graphs and into other flow graphs.
+
+* Hierarchical Blocks - GRC can create hierarchical blocks out of the built-in blocks. *See the section on hierarchical blocks.
+
+== Requirements ==
+
+=== GRC Requirements ===
+
+Most (if not all) of these requirements can be found in the package manager of you linux distribution.
+
+* [Python 2.5 (or above) http://www.python.org/download/]
+
+* [Python-LXML 2.0 (or above) http://codespeak.net/lxml/installation.html]
+
+* [Cheetah Template Engine 2.0 (or above) http://www.cheetahtemplate.org/download.html]
+
+* [Python-GTK 2.10 (or above) http://www.pygtk.org/downloads.html]
+
+=== GNU Radio Requirements ===
+
+GRC is bundled with the current gnuradio trunk and will be included in the 3.2 release. I recommend configuring your GNU Radio installation with wx-python, usrp, and audio support. However, any configuration will work (see note). Follow the [http://gnuradio.org/trac/wiki/BuildGuide build-guide]
+
+Note: GRC will let you generate flow graphs with components that are not included in your local install. For example, you can generate a flow graph with a usrp source, but the code will error when executed unless GNU Radio is configured with usrp support.
+
+== Installation ==
+
+=== Installing GRC ===
+
+GRC is bundled with gnuradio, so following the [[InstallingGR|installation guide]] should be enough to install GRC. However, GRC will not be installed if you were missing any of the required components. Install any missing components and re-run configure/install:
+
+<pre>
+cmake ..
+make
+sudo make install
+</pre>
+GRC should appear in the list of configured components; if not, read the configure verbose for errors.
+
+=== Installing Documentation ===
+
+To view the blocks' documentation from inside GRC, install doxygen and configure gnuradio with doxygen support.
+
+=== Installing Icons, Mime Type, and Menu Items ===
+
+If you have an operating system that supports the freedesktop.org standards (Gnome, KDE, XFCE), then you may install the icons, mime type, and menu items bundled with GRC. After installing GRC, run the following command:
+
+<pre>
+cd /libexec/gnuradio/
+sudo ./grc_setup_freedesktop install
+</pre>
+
+== Execution ==
+
+GRC installs several executable python files into your system's path.
+
+=== Executing the Flow Graph Editor ===
+
+Open a terminal and enter the following:
+
+<pre>
+gnuradio-companion
+</pre>
+
+== Usage Tips ==
+
+* Add a block: double click on a block in the block selection window.
+
+* Connect blocks: click on the port of one block, then click on the port of another block.
+
+* Remove a connection: click on the connection, press delete, or drag the connection to remove.
+
+* Edit block parameters: double click on a block in the flow graph.
+
+* Select a block, hit up/down for quick type change.
+
+* For more short cuts, see the hot keys in the menu.
+
+* Flow graphs that are completely simulation (without audio or usrp blocks) will consume 100% CPU when executed, and the GUI elements will be unresponsive. These flow graphs must include a Misc->Throttle block to throttle the rate of the streaming data.
+
+== Variables ==
+
+Variables map symbolic names to values. In GRC, a variable can define a global constant or, a variable can be used in conjunction with a GUI to control a running flow graph.
+
+=== Variable Block ===
+
+The variable block is the most basic way to use a variable in GRC. The ID parameter of the variable block is the "symbolic name". The symbolic name must be alpha-numeric (underscores allowed) and begin with a letter. To use the variable, simply enter the symbolic name into a parameter of another block.
+
+=== Variable Controls ===
+
+Certain blocks have callback methods that allow their parameters to be changed while executing flow graph. Variable controls in GRC use variables in combination with callback methods to modify these parameters. If a parameter has a callback method, the parameter will be underlined in the block-properties dialog. The variable slider, variable text box, and the variable chooser block provide graphical widgets such as sliders, text boxes, radio buttons, and drop downs as variable controls. In addition, the variable sink block takes samples from a gnuradio stream and writes the samples to a variable.
+
+=== String Evaluation ===
+
+String parameters have a two-phase evaluation. First, GRC evaluates the parameter as-is. If the parameter does not evaluate to a string data type or the evaluation fails, then it is understood that the parameter had implied quotation. In this case, GRC will evaluate the parameter again with quotation marks; which will return a string with the exact code that was typed into the parameter window.
+
+To use a variable inside a string simply type the name of the variable into the parameter: ''my_var''. If the variable is not a string, cast the variable with python's str function: ''str(my_var)''. Standard python string functionality applies: ''"My Var = " + str(my_var)''.
+
+*Note: String parameter types also include the file open and file save types.
+
+== Filter Design ==
+
+Many blocks in gnuradio that take an array of complex or real taps as a parameter. GNU Radio provides a package to generate all kinds of filter and window taps. See the [http://gnuradio.org/doc/doxygen/classgr+firdes.html firdes package] from the gnuradio documentation.
+
+=== Firdes Taps Generators ===
+
+* low_pass(gain, samp_rate, cutoff_freq, width, [window], [beta])
+
+* high_pass(gain, samp_rate, cutoff_freq, width, [window], [beta])
+
+* band_pass(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width, [window], [beta])
+
+* complex_band_pass(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width, [window], [beta])
+
+* band_reject(gain, samp_rate, low_cutoff_freq, high_cutoff_freq, width, [window], [beta])
+
+* gaussian(gain, spb, bt, int ntaps)
+
+* hilbert(int ntaps, window, beta)
+
+* root_raised_cosine(gain, samp_rate, symbol_rate, alpha, int ntaps)
+
+* window(window, int ntaps, beta)
+
+=== Firdes Window Types ===
+
+* WIN_HAMMING
+
+* WIN_HANN
+
+* WIN_BLACKMAN
+
+* WIN_RECTANGULAR
+
+* WIN_KAISER
+
+=== Firdes Notes ===
+
+For the pass band functions, window defaults to the Hamming window. The beta parameter defaults to 6.76, and only applies to the Kaiser window.
+
+=== Firdes Usage Example ===
+
+Create a new "import" block, and enter the following for the import parameter:
+
+<pre>from gnuradio.filter import firdes</pre>
+Note: Most blocks with a taps parameter automatically import the firdes module. You only need to use the import block when firdes will not evaluate.
+
+Enter the following into the taps parameter of a filter block:
+
+<pre>
+firdes.low_pass(1.0, samp_rate, 1000, 100, firdes.WIN_HAMMING)
+</pre>
+=== Use Taps from a File ===
+
+Suppose that you have an array of filter taps stored in a file that you would like to use inside GRC:
+
+Create a new "import" block, and enter the following for the import parameter:
+
+<pre>
+import numpy
+</pre>
+Enter the following into the taps parameter of a filter block:
+
+<pre>
+numpy.fromfile('taps file path', numpy.complex64).tolist()
+</pre>
+This will read an entire binary file and parse every 64 bytes into a complex number. Use numpy.float32 for real taps. See the numpy.fromfile help for more advanced usage:
+
+<pre>
+Help on built-in function fromfile in numpy:
+
+numpy.fromfile = fromfile(...)
+    fromfile(file=, dtype=float, count=-1, sep=_) -> array.
+
+    Required arguments:
+        file -- open file object or string containing file name.
+
+    Keyword arguments:
+        dtype -- type and order of the returned array (default float)
+        count -- number of items to input (default all)
+        sep -- separater between items if file is a text file (default "")
+
+    Return an array of the given data type from a text or binary file. The
+    'file' argument can be an open file or a string with the name of a file to
+    read from.  If 'count' == -1 the entire file is read, otherwise count is the
+    number of items of the given type to read in.  If 'sep' is "" it means to
+    read binary data from the file using the specified dtype, otherwise it gives
+    the separator between elements in a text file. The 'dtype' value is also
+    used to determine the size and order of the items in binary files.
+
+</pre>
+
+== Grid Positioning ==
+
+GRC offers several graphical sinks and graphical controls for creating wx-gui flow graphs. (scope sink, fft sink, number sink, waterfall sink, constellation sink, slider control, and chooser control) Each of these graphical elements have a grid position parameter for precise positioning.
+
+A grid position parameter is a list of 4 integers of the form (row, column, row span, column span). The row and column specify the position of the upper-left corner of the graphical element. The smallest position, the (0, 0) position, specifies the upper-left corner of the grid.
+
+If left blank, the grid parameter specifies that the graphical element will be automatically stacked into a vertical sizer. The vertical sizer is positioned directly above the grid sizer. If you do not want any elements to be added to the vertical sizer, leave no grid parameters blank.
+
+The row and column span specify the stretch, or the number of rows and columns that the graphical element can occupy. The row span specifies the number of rows down from the row positon, and the column span specifies the number of columns right of the column position. Therefore, the span must be at least (1, 1) to occupy the minimum of 1 grid cell.
+
+=== Example ===
+
+The user wishes to place a slider, centered directly above a graphical sink. The slider will be positioned at the 2nd column of the top row and with a column span of 2. The sink will be positioned on the 2nd row, and with a row span of 2 and a column span of 4. Notice the grid parameters below, and the resulting gui layout:
+
+'''The Elements:'''
+
+'''''' '''Slider Control: (0, 1, 1, 2)'''
+
+'''''' Graphical Sink: (1, 0, 2, 4)
+
+'''The Resulting GUI:'''
+
+{|
+|
+
+| 0,0
+|
+
+| '''0,1'''
+|
+
+| '''0,2'''
+|
+
+| 0,3
+|
+
+|-
+|
+
+| 1,0
+|
+
+| 1,1
+|
+
+| 1,2
+|
+
+| 1,3
+|
+
+|-
+|
+
+| 2,0
+|
+
+| 2,1
+|
+
+| 2,2
+|
+
+| 2,3
+|
+
+|}
+
+== Hierarchical Blocks ==
+
+GRC can create hierarchical blocks out of the built-in blocks. Hierarchical blocks can be instantiated inside of other grc flow graphs. The python code generated from a hierarchical block can itself be used in non-GRC flow graphs. Four important blocks are used in the creation of a hierarchical block: The options block, parameter blocks, and the pad source and pad sink.
+
+=== The Options Block ===
+
+In order to make a hierarchical block, the parameters in the options block must be set properly. The id of the options block sets the module name, and must be unique among the entire library of blocks (built-in and custom). The title parameter sets the display name for the block. The generate options must be set to "Hier Block". The category parameter sets the category for the new block. This category can be an existing category in the block selection window or a new category. Categories may be nested by specifying a name with slashes, ex: Custom/Filters. To put blocks into the root category, specify a single slash "/" (a blank category will hide your block).
+
+=== Parameter Blocks ===
+
+Parameter blocks specify variables in your hierarchical block that should be configurable in the top level block. Parameter blocks work much like variable blocks with a few exceptions: Parameters blocks cannot depend on variable blocks or other parameter blocks. Parameter blocks have a label parameter for display purposes. Parameter blocks take the place of a variable block, do not try to create a variable block with the same id as your parameter block.
+
+=== Pad Source and Sink Blocks ===
+
+The pad source and sink blocks create inputs and outputs for the hierarchical block. The pad blocks have configurable data types, vector lengths, and number of ports. A flow graph can have at most, one pad source, and one pad sink. A hierarchical block may have one pad sink and no pad source or no pad sink and one pad source, but it must have at least one pad block.
+
+=== Creating and Instantiating ===
+
+* Start with a blank slate and create a new (empty) flow graph.
+
+* Setup the options block as described above, with the id, title, generate options, and category.
+
+* Add parameter blocks for all variables you wish to configure/control outside of the block.
+
+* Create at most one pad source and one pad sink to match the IO type and connect them.
+
+* When finished, click the generate button, and close/reopen GRC.
+
+* The hierarchical block will appear in the block selection window.
+
+* Add the hierarchical block to a flow graph as your would any other block.
+
+=== Notes ===
+
+* After making changes to your hierarchical block, make sure to regenerate, and reopen GRC before usage.
+
+* The ID parameter of the block must be unique. If two blocks share the same ID, the last one to be generated will overwrite the other.
+
+* Custom hierarchical blocks may instantiate other custom hierarchical blocks. Just don't have a block instantiate itself!
+
+== Adding Custom Blocks ==
+
+Every block in GRC corresponds to an XML file that describes the block's parameters, inputs, outputs, and other attributes. Adding a custom block into GRC is simply a matter of creating one of these XML block definition files. A few caveats:
+
+* The block should be accessible from the python path. Meaning that the block can be accessed via an import statement.
+* The block follows the block diagram model: it has parameters, inputs, and outputs. If the block requires some kind of listening thread, or special callback methods to move the data (as in the blks2 packet stuff), it cannot be used in GRC (unless this "special" functionality can be encapsulated into a block that is block-diagram-safe).
+* If GRC is missing a block definition for a block that is currently in the trunk, or one of the block definitions is missing functionality, please mail the list. The block definitions in the GRC trunk must stay in sync with the actual GNU Radio blocks.
+
+=== Creating the XML Block Definition ===
+
+The best way to learn how to create the xml file is to learn by example. See the block definitions (source:grc/blocks) packaged with GRC, and read through a few files. Essentially, all block definitions are structured as follows:
+
+<pre>
+    My Block Name
+    my_package_my_block_ff
+        Filters
+    from gnuradio import my_package
+    my_package.my_block_ff($param1, $param2)
+        set_param1($param1)
+    
+        Parameter 1
+        param1
+        real
+    
+    
+        Parameter 2
+        param2
+        1
+        int
+    
+    
+        in
+        float
+                part
+    
+    
+        out
+        float
+    
+        
+        out
+        float
+</pre>
+
+* The example above will make a block with 2 parameters, 1 input, and 2 outputs.
+* The ordering of the tags is important, if tags are not ordered properly, the block will fail validation. See [https://github.com/gnuradio/gnuradio/blob/master/grc/core/block.dtd block.dtd] for specifics.
+* The '''name''' tags dictate the label text for the block, parameters, and ports. 
+* The '''key''' tags are unique identifiers, they may not contain spaces. The block key must be globally unique among all blocks in GRC. The parameter keys must be unique only within the block.
+* The '''category''' tag is a unix-style path that represents the location of the block inside the block selection window. The path can be a new category (Custom), or represent a sub-category (Filters/Custom). To put a block into the root category, just use a single slash (/) for the root path.
+* The '''import''' tag (there can be multiple) must be a valid python import statement to the module containing your block.
+* The '''make''' tag contains the code necessary to construct your block. This code is essentially a cheetah template nested inside an xml tag. Upon code generation, the template performs a text substitution on the "$" parameters. For more advanced capabilities, see the [http://cheetahtemplate.org/users_guide/index.html cheetah template documentation.] 
+* The '''callback''' tag registers a set-method from your custom block. Once the set-method is registered, the set-method can be called at runtime when a variable is changed. There can be any number of '''callback''' tags, one for each set-method of your block. Or no '''callback''' tags if this is not applicable. 
+* For the '''param''' tags, the commonly used values for the '''type''' tags are: complex, real, int, complex_vector, real_vector, int_vector, string, and raw. The ''raw'' type allows any value to be used without performing type checking. The ''real'' type should be used for single and double precision floating point numbers. The ''int'' type should be used for longs, ints, shorts, and chars.
+* The hide tag controls how the parameter is displayed in GRC. It's either none, part (show in the prop dialog, not in the block on the canvas) or all.
+* The '''sink''' tag represents an input port, and the '''source''' tag represents an output port. The allowed values for the '''type''' tags are: complex, float, int, short, and byte. For ports with a vector length, specify a '''vlen''' tag after the '''type''' tag.
+* In case you want to create a block definition as done for the FECAPI, the '''key''' tag has to start with '''variable_''' in order to work correctly in GRC.
+
+=== Some Example Definitions ===
+
+* Simple Example: "Complex to Real" source:[https://github.com/gnuradio/gnuradio/blob/master/gr-blocks/grc/blocks_complex_to_real.xml|gr-blocks/grc/blocks_complex_to_real.xml]
+* Multiple Callbacks: "Costas Loop" source:[https://github.com/gnuradio/gnuradio/blob/master/gr-digital/grc/digital_costas_loop_cc.xml|gr-digital/grc/digital_costas_loop_cc.xml]
+* Vlen Example: "Throttle" source:[https://github.com/gnuradio/gnuradio/blob/master/gr-digital/grc/blocks_throttle.xml|gr-digital/grc/blocks_throttle.xml]
+* Advanced Make: "FFT" source:[https://github.com/gnuradio/gnuradio/blob/master/gr-fft/grc/fft_fft_vxx.xml|gr-fft/grc/fft_fft_vxx.xml]
+
+=== Installing the XML Block Definition ===
+
+There are many methods to tell grc about your new xml file. Choose one of the following methods...
+
+==== Method 1: Default Hier Block Location ====
+
+Create the _'''.xml_ file inside'''<sub>/.grc_gnuradio/* where</sub> is your home directory. If the directory does not exist, create it: ''mkdir ~/.grc_gnuradio/''
+
+==== Method 2: Configuration File ====
+
+Create or edit '''~/.gnuradio/config.conf''' and add the following lines:
+
+<pre>[grc]
+local_blocks_path=/path/to/my/blocks</pre>
+The local_blocks_path can contain multiple paths separated by colons: local_blocks_path=/path/to/blocks1:/path/to/blocks2
+
+==== Method 3: Environment Variable ====
+
+Set the '''GRC_BLOCKS_PATH''' environment variable to a path that contains your custom block wrapper. The GRC_BLOCKS_PATH can contain multiple paths separated by colons: GRC_BLOCKS_PATH=/path/to/blocks1:/path/to/blocks2
+
+== Special Thanks ==
+
+* '''[http://www.cer.jhu.edu/| CER Technology Fellowship]:''' initial funding
+* '''[http://www.ece.jhu.edu/~cooper/| A. Brinton Cooper]:''' starting the project
+* '''Patrick Mulligan:''' starting the project
+* '''William R. Kenan Jr. Fund:''' usrp & computers
+* '''Patrick Strasser:''' the GRC icon
+
+== Screen Shots ==
+
+[http://www.joshknows.com/grc#screenshots Screen Shots]
+
+Feel free to submit your own screen shots or flow graphs.</text>
+      <sha1>m9jzkey4r3k9dc2qhm3u4qpz4gbegaf</sha1>
+    </revision>
+  </page>
+</mediawiki>

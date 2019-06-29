@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013,2014 Free Software Foundation, Inc.
+ * Copyright 2013,2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -99,7 +99,11 @@ namespace gr {
 
             // receive data request
             zmq::message_t request;
+#if USE_NEW_CPPZMQ_SEND_RECV
+            d_socket->recv(request);
+#else
             d_socket->recv(&request);
+#endif
 
             int req_output_items = *(static_cast<int*>(request.data()));
             if(req_output_items != 1)

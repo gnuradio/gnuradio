@@ -1,5 +1,6 @@
 id: variable_repetition_encoder_def
 label: Repetition Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: ndim

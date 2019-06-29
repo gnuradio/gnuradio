@@ -99,11 +99,12 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
-    coordinate: [32, 180.0]
+    coordinate: [15, 213]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_1
@@ -117,11 +118,12 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
+    phase: '0'
     samp_rate: samp_rate
     type: float
     waveform: analog.GR_COS_WAVE
   states:
-    coordinate: [32, 444.0]
+    coordinate: [21, 504]
     rotation: 0
     state: enabled
 - name: blocks_add_xx_0
@@ -332,7 +334,7 @@ blocks:
     ymax: '2'
     ymin: '-2'
   states:
-    coordinate: [960, 121]
+    coordinate: [991, 87]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -409,7 +411,7 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [960, 228.0]
+    coordinate: [991, 246]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_1
@@ -486,7 +488,7 @@ blocks:
     ymax: '10'
     ymin: '-140'
   states:
-    coordinate: [968, 500.0]
+    coordinate: [968, 540]
     rotation: 0
     state: enabled
 - name: qtgui_histogram_sink_x_0
@@ -570,7 +572,7 @@ blocks:
     xmax: '1'
     xmin: '-1'
   states:
-    coordinate: [968, 628.0]
+    coordinate: [968, 715]
     rotation: 0
     state: enabled
 - name: qtgui_time_raster_sink_x_0
@@ -624,7 +626,7 @@ blocks:
     zmax: '1'
     zmin: '-1'
   states:
-    coordinate: [968, 564.0]
+    coordinate: [968, 644]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -718,7 +720,7 @@ blocks:
     ymin: '-1'
     yunit: '""'
   states:
-    coordinate: [960, 60.0]
+    coordinate: [991, 27]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0_0
@@ -870,7 +872,7 @@ blocks:
     update_time: '0.50'
     wintype: firdes.WIN_BLACKMAN_hARRIS
   states:
-    coordinate: [960, 164.0]
+    coordinate: [991, 138]
     rotation: 0
     state: enabled
 - name: qtgui_waterfall_sink_x_1
@@ -972,15 +974,15 @@ connections:
 - [blocks_add_xx_1, '0', blocks_throttle_1, '0']
 - [blocks_stream_to_tagged_stream_0, '0', blocks_tagged_stream_to_pdu_0, '0']
 - [blocks_stream_to_tagged_stream_1, '0', blocks_tagged_stream_to_pdu_1, '0']
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_const_sink_x_0, in0]
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_freq_sink_x_0, in0]
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_time_sink_x_0, in0]
-- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_waterfall_sink_x_0, in0]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_freq_sink_x_1, in0]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_histogram_sink_x_0, in0]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_time_raster_sink_x_0, in0]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_time_sink_x_0_0, in0]
-- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_waterfall_sink_x_1, in0]
+- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_const_sink_x_0, in]
+- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_freq_sink_x_0, in]
+- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_time_sink_x_0, in]
+- [blocks_tagged_stream_to_pdu_0, pdus, qtgui_waterfall_sink_x_0, in]
+- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_freq_sink_x_1, in]
+- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_histogram_sink_x_0, in]
+- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_time_raster_sink_x_0, in]
+- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_time_sink_x_0_0, in]
+- [blocks_tagged_stream_to_pdu_1, pdus, qtgui_waterfall_sink_x_1, in]
 - [blocks_throttle_0, '0', blocks_stream_to_tagged_stream_0, '0']
 - [blocks_throttle_1, '0', blocks_stream_to_tagged_stream_1, '0']
 

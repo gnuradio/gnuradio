@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2013,2014 Free Software Foundation, Inc.
+ * Copyright 2013,2014,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio.
  *
@@ -24,7 +24,7 @@
 #define INCLUDED_ZEROMQ_PULL_MSG_SOURCE_IMPL_H
 
 #include <gnuradio/zeromq/pull_msg_source.h>
-#include <zmq.hpp>
+#include "zmq_common_impl.h"
 
 namespace gr {
   namespace zeromq {

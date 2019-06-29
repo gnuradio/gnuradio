@@ -1,6 +1,6 @@
 id: variable_band_reject_filter_taps
 label: Band-reject Filter Taps
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: gain

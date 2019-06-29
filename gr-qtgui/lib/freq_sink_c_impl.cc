@@ -59,7 +59,9 @@ namespace gr {
       : sync_block("freq_sink_c",
                    io_signature::make(0, nconnections, sizeof(gr_complex)),
                    io_signature::make(0, 0, 0)),
-	d_fftsize(fftsize), d_fftavg(1.0),
+	d_fftsize(fftsize),
+	d_fft_shift(fftsize),
+	d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
   d_center_freq(fc), d_bandwidth(bw), d_name(name),
   d_nconnections(nconnections),
@@ -103,11 +105,6 @@ namespace gr {
                                    volk_get_alignment());
       memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
-      d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
-      d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
-                                     volk_get_alignment());
-
-
       d_index = 0;
       // save the last "connection" for the PDU memory
       for(int i = 0; i < d_nconnections; i++) {
@@ -147,7 +144,6 @@ namespace gr {
       }
       delete d_fft;
       volk_free(d_fbuf);
-      volk_free(d_tmpbuf);
 
       delete d_argv;
     }
@@ -503,10 +499,7 @@ namespace gr {
       volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
                                                    size, 1.0, size);
 
-      // Perform shift operation
-      memcpy(d_tmpbuf, &data_out[0], sizeof(float)*(d_tmpbuflen + 1));
-      memcpy(&data_out[0], &data_out[size - d_tmpbuflen], sizeof(float)*(d_tmpbuflen));
-      memcpy(&data_out[d_tmpbuflen], d_tmpbuf, sizeof(float)*(d_tmpbuflen + 1));
+      d_fft_shift.shift(data_out, size);
     }
 
     bool
@@ -577,10 +570,7 @@ namespace gr {
                                      volk_get_alignment());
 	memset(d_fbuf, 0, d_fftsize*sizeof(float));
 
-	volk_free(d_tmpbuf);
-        d_tmpbuflen = (unsigned int)(floor(d_fftsize/2.0));
-        d_tmpbuf = (float*)volk_malloc(sizeof(float)*(d_tmpbuflen + 1),
-                                       volk_get_alignment());
+	d_fft_shift.resize(d_fftsize);
 
         d_last_time = 0;
 

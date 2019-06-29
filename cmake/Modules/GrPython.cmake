@@ -54,10 +54,20 @@ set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter")
 set(QA_PYTHON_EXECUTABLE ${QA_PYTHON_EXECUTABLE} CACHE FILEPATH "python interpreter for QA tests")
 
 add_library(Python::Python INTERFACE IMPORTED)
-set_target_properties(Python::Python PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS}"
-  INTERFACE_LINK_LIBRARIES "${PYTHON_LIBRARIES}"
-  )
+# Need to handle special cases where both debug and release
+# libraries are available (in form of debug;A;optimized;B) in PYTHON_LIBRARIES
+if(PYTHON_LIBRARY_DEBUG AND PYTHON_LIBRARY_RELEASE)
+    set_target_properties(Python::Python PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "$<$<NOT:$<CONFIG:Debug>>:${PYTHON_LIBRARY_RELEASE}>;$<$<CONFIG:Debug>:${PYTHON_LIBRARY_DEBUG}>"
+      )
+else()
+    set_target_properties(Python::Python PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${PYTHON_LIBRARIES}"
+      )
+endif()
+
 
 ########################################################################
 # Check for the existence of a python module:

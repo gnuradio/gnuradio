@@ -25,6 +25,10 @@ import sys
 MESSENGERS_LIST = list()
 _indent = ''
 
+# Global FlowGraph Error and the file that caused it
+flowgraph_error = None
+flowgraph_error_file = None
+
 
 def register_messenger(messenger):
     """

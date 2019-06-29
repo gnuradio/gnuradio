@@ -1,15 +1,20 @@
-# Copyright (C) 2017 Free Software Foundation, Inc.
-#
-# Permission is granted to copy, distribute and/or modify this document
-# under the terms of the GNU Free Documentation License, Version 1.3
-# or any later version published by the Free Software Foundation;
-# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-# A copy of the license is included in the section entitled "GNU
-# Free Documentation License".
-
-/*! \page page_operating_fg Handling flow graphs
-
-\section flowgraph Operating a Flowgraph
+<page>
+    <title>Handling Flowgraphs</title>
+    <ns>0</ns>
+    <id>3480</id>
+    <revision>
+      <id>4291</id>
+      <parentid>4290</parentid>
+      <timestamp>2018-06-26T19:41:49Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <minor/>
+      <comment>/* Reconfiguring Flowgraphs */</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="10039">== Operating a Flowgraph ==
 
 The basic data structure in GNU Radio is the flowgraph, which
 represents the connections of the blocks through which a continuous
@@ -29,29 +34,27 @@ gr_top_block, instantiate the blocks, connect the blocks together, and
 then start the gr_top_block. The following program shows how this is
 done. A single source and sink are used with a FIR filter between
 them.
-
-\code
+<syntaxhighlight lang="python">
     from gnuradio import gr, blocks, filter, analog
-
+ 
     class my_topblock(gr.top_block):
         def __init__(self):
             gr.top_block.__init__(self)
-
+ 
             amp = 1
             taps = filter.firdes.low_pass(1, 1, 0.1, 0.01)
-
+ 
             self.src = analog.noise_source_c(analog.GR_GAUSSIAN, amp)
             self.flt = filter.fir_filter_ccf(1, taps)
             self.snk = blocks.null_sink(gr.sizeof_gr_complex)
-
+ 
             self.connect(self.src, self.flt, self.snk)
-
+ 
     if __name__ == "__main__":
         tb = my_topblock()
         tb.start()
         tb.wait()
-\endcode
-
+</syntaxhighlight>
 The 'tb.start()' starts the data flowing through the flowgraph while
 the 'tb.wait()' is the equivalent of a thread's 'join' operation and
 blocks until the gr_top_block is done.
@@ -60,8 +63,7 @@ An alternative to using the 'start' and 'wait' methods, a 'run' method is
 also provided for convenience that is a blocking start call;
 equivalent to the above 'start' followed by a 'wait.'
 
-
-\subsection latency Latency and Throughput
+=== Latency and Throughput ===
 
 By default, GNU Radio runs a scheduler that attempts to optimize
 throughput. Using a dynamic scheduler, blocks in a flowgraph pass
@@ -89,12 +91,10 @@ scheduler, and so reduce the overall efficiency of the application.
 To set the maximum number of output items, we pass a value into the
 'start' or 'run' method of the gr_top_block:
 
-\code
      tb.start(1000)
      tb.wait()
 or
      tb.run(1000)
-\endcode
 
 Using this method, we place a global restriction on the size of items
 to all blocks. Each block, though, has the ability to overwrite this
@@ -103,10 +103,8 @@ individual block will overwrite the global setting. For example, in
 the following code, the global setting is 1000 items max, except for
 the FIR filter, which can receive up to 2000 items.
 
-\code
      tb.flt.set_max_noutput_items(2000)
      tb.run(1000)
-\endcode
 
 In some situations, you might actually want to restrict the size of
 the buffer itself. This can help to prevent a buffer who is blocked
@@ -119,16 +117,14 @@ used without a full understanding of this concept as explained below.
 
 To set the output buffer size of a block, you simply call:
 
-\code
      tb.blk0.set_max_output_buffer(2000)
      tb.blk1.set_max_output_buffer(1, 2000)
      tb.start()
      print tb.blk1.max_output_buffer(0)
      print tb.blk1.max_output_buffer(1)
-\endcode
 
 In the above example, all ports of blk0 are set to a buffer size of
-2000 in _items_ (not bytes), and blk1 only sets the size for output
+2000 in ''items'' (not bytes), and blk1 only sets the size for output
 port 1, any and all other ports use the default. The third and fourth
 lines just print out the buffer sizes for ports 0 and 1 of blk1. This
 is done after start() is called because the values are updated based
@@ -158,8 +154,7 @@ When calling max_output_buffer(port) after the flowgraph is
 started, you will get how many items were actually allocated in the
 buffer, which may be different than what was initially specified.
 
-
-\section reconfigure Reconfiguring Flowgraphs
+== Reconfiguring Flowgraphs ==
 
 It is possible to reconfigure the flowgraph at runtime. The
 reconfiguration is meant for changes in the flowgraph structure, not
@@ -175,50 +170,48 @@ The following example code shows a graph that first adds two
 gr::analog::noise_source_c blocks and then replaces the
 gr::blocks::add_cc block with a gr::blocks::sub_cc block to then
 subtract the sources.
-
-\code
-from gnuradio import gr, analog, blocks
-import time
-
-class mytb(gr.top_block):
-    def __init__(self):
-        gr.top_block.__init__(self)
-
-        self.src0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
-        self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
-        self.add  = blocks.add_cc()
-        self.sub  = blocks.sub_cc()
-        self.head = blocks.head(gr.sizeof_gr_complex, 1000000)
-        self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
-
-        self.connect(self.src0, (self.add,0))
-        self.connect(self.src1, (self.add,1))
-        self.connect(self.add, self.head)
-        self.connect(self.head, self.snk)
-
-def main():
-    tb = mytb()
-    tb.start()
-    time.sleep(0.01)
-
-    # Stop flowgraph and disconnect the add block
-    tb.lock()
-    tb.disconnect(tb.add, tb.head)
-    tb.disconnect(tb.src0, (tb.add,0))
-    tb.disconnect(tb.src1, (tb.add,1))
-
-    # Connect the sub block and restart
-    tb.connect(tb.sub, tb.head)
-    tb.connect(tb.src0, (tb.sub,0))
-    tb.connect(tb.src1, (tb.sub,1))
-    tb.unlock()
-
-    tb.wait()
-
-if __name__ == "__main__":
-    main()
-\endcode
-
+<syntaxhighlight lang="python">
+ from gnuradio import gr, analog, blocks
+ import time
+ 
+ class mytb(gr.top_block):
+     def __init__(self):
+         gr.top_block.__init__(self)
+ 
+         self.src0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+         self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+         self.add  = blocks.add_cc()
+         self.sub  = blocks.sub_cc()
+         self.head = blocks.head(gr.sizeof_gr_complex, 1000000)
+         self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
+ 
+         self.connect(self.src0, (self.add,0))
+         self.connect(self.src1, (self.add,1))
+         self.connect(self.add, self.head)
+         self.connect(self.head, self.snk) 
+ 
+ def main():
+     tb = mytb()
+     tb.start()
+     time.sleep(0.01) 
+ 
+     # Stop flowgraph and disconnect the add block
+     tb.lock()
+     tb.disconnect(tb.add, tb.head)
+     tb.disconnect(tb.src0, (tb.add,0))
+     tb.disconnect(tb.src1, (tb.add,1))
+ 
+     # Connect the sub block and restart
+     tb.connect(tb.sub, tb.head)
+     tb.connect(tb.src0, (tb.sub,0))
+     tb.connect(tb.src1, (tb.sub,1))
+     tb.unlock()
+ 
+     tb.wait()
+ 
+ if __name__ == "__main__":
+     main()
+</syntaxhighlight>
 During reconfiguration, the maximum noutput_items value can be changed
 either globally using the 'set_max_noutput_items(m)' on the gr_top_block
 object or locally using the 'set_max_noutput_items(m)' on any given
@@ -230,58 +223,57 @@ global value.
 
 The following example expands the previous example but sets and resets
 the max noutput_items both locally and globally.
-
-\code
-from gnuradio import gr, analog, blocks
-import time
-
-class mytb(gr.top_block):
-    def __init__(self):
-        gr.top_block.__init__(self)
-
-        self.src0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
-        self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
-        self.add  = blocks.add_cc()
-        self.sub  = blocks.sub_cc()
-        self.head = blocks.head(gr.sizeof_gr_complex, 1000000)
-        self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
-
-        self.connect(self.src0, (self.add,0))
-        self.connect(self.src1, (self.add,1))
-        self.connect(self.add, self.head)
-        self.connect(self.head, self.snk)
-
-def main():
-    # Start the gr_top_block after setting some max noutput_items.
-    tb = mytb()
-    tb.src1.set_max_noutput_items(2000)
-    tb.start(100)
-    time.sleep(0.01)
-
-    # Stop flowgraph and disconnect the add block
-    tb.lock()
-
-    tb.disconnect(tb.add, tb.head)
-    tb.disconnect(tb.src0, (tb.add,0))
-    tb.disconnect(tb.src1, (tb.add,1))
-
-    # Connect the sub block
-    tb.connect(tb.sub, tb.head)
-    tb.connect(tb.src0, (tb.sub,0))
-    tb.connect(tb.src1, (tb.sub,1))
-
-    # Set new max_noutput_items for the gr_top_block
-    # and unset the local value for src1
-    tb.set_max_noutput_items(1000)
-    tb.src1.unset_max_noutput_items()
-    tb.unlock()
-
-    tb.wait()
-
-if __name__ == "__main__":
-    main()
-\endcode
-
-
-*/
-
+<syntaxhighlight lang="python">
+ from gnuradio import gr, analog, blocks
+ import time
+ 
+ class mytb(gr.top_block):
+     def __init__(self):
+         gr.top_block.__init__(self)
+ 
+         self.src0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+         self.src1 = analog.noise_source_c(analog.GR_GAUSSIAN, 1)
+         self.add  = blocks.add_cc()
+         self.sub  = blocks.sub_cc()
+         self.head = blocks.head(gr.sizeof_gr_complex, 1000000)
+         self.snk  = blocks.file_sink(gr.sizeof_gr_complex, "output.32fc")
+ 
+         self.connect(self.src0, (self.add,0))
+         self.connect(self.src1, (self.add,1))
+         self.connect(self.add, self.head)
+         self.connect(self.head, self.snk)
+ 
+ def main():
+     # Start the gr_top_block after setting some max noutput_items.
+     tb = mytb()
+     tb.src1.set_max_noutput_items(2000)
+     tb.start(100)
+     time.sleep(0.01)
+ 
+     # Stop flowgraph and disconnect the add block
+     tb.lock()
+ 
+     tb.disconnect(tb.add, tb.head)
+     tb.disconnect(tb.src0, (tb.add,0))
+     tb.disconnect(tb.src1, (tb.add,1))
+ 
+     # Connect the sub block
+     tb.connect(tb.sub, tb.head)
+     tb.connect(tb.src0, (tb.sub,0))
+     tb.connect(tb.src1, (tb.sub,1))
+ 
+     # Set new max_noutput_items for the gr_top_block
+     # and unset the local value for src1
+     tb.set_max_noutput_items(1000)
+     tb.src1.unset_max_noutput_items()
+     tb.unlock()
+ 
+     tb.wait()
+ 
+ if __name__ == "__main__":
+     main()
+</syntaxhighlight></text>
+      <sha1>3arcnnd2d65pytajld93l8nvlqplnps</sha1>
+    </revision>
+  </page>
+</mediawiki>

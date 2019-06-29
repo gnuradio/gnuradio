@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2012,2015 Free Software Foundation, Inc.
+ * Copyright 2012,2015,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -27,6 +27,7 @@
 
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
+#include <gnuradio/fft/fft_shift.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/freqdisplayform.h>
 
@@ -39,7 +40,7 @@ namespace gr {
       void initialize();
 
       int d_fftsize;
-      int d_tmpbuflen;
+      fft::fft_shift<float> d_fft_shift;
       float d_fftavg;
       filter::firdes::win_type d_wintype;
       std::vector<float> d_window;
@@ -59,7 +60,6 @@ namespace gr {
       std::vector<double*> d_magbufs;
       double* d_pdu_magbuf;
       float *d_fbuf;
-      float *d_tmpbuf;
 
       int d_argc;
       char *d_argv;

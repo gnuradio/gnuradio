@@ -19,9 +19,9 @@ from __future__ import unicode_literals
 # Boston, MA 02110-1301, USA.
 #
 
-from PyQt4 import QtGui, QtCore, Qt
+from PyQt5 import QtWidgets, QtCore, Qt
 
-class BandGraphicsView(QtGui.QGraphicsView):
+class BandGraphicsView(QtWidgets.QGraphicsView):
     def resizeEvent(self, event):
         self.setAlignment(Qt.Qt.AlignCenter)
         self.fitInView(self.scene().itemsBoundingRect(), QtCore.Qt.KeepAspectRatio)

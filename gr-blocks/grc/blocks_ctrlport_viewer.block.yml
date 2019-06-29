@@ -5,8 +5,8 @@ flags: [ python ]
 parameters:
 -   id: en
     label: Enabled
-    dtype: enum
-    options: ['True', 'False']
+    dtype: bool
+    default: 'True'
 
 templates:
     imports: from gnuradio.ctrlport.monitor import *
