@@ -177,6 +177,9 @@ class Platform(Element):
                 except Exception as error:
                     logger.exception('Error while loading %s', file_path)
                     logger.exception(error)
+                    Messages.flowgraph_error = error
+                    Messages.flowgraph_error_file = file_path
+                    continue
 
         for key, block in six.iteritems(self.blocks):
             category = self._block_categories.get(key, block.category)

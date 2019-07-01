@@ -67,16 +67,15 @@ namespace gr {
     std::vector<std::string> fnames;
 
     fs::path dir = prefsdir();
-    if(!fs::is_directory(dir))
-      return fnames;
-
-    fs::directory_iterator diritr(dir);
-    while(diritr != fs::directory_iterator()) {
-      fs::path p = *diritr++;
-      if(p.extension() == ".conf")
-        fnames.push_back(p.string());
+    if(fs::is_directory(dir)) {
+      fs::directory_iterator diritr(dir);
+      while(diritr != fs::directory_iterator()) {
+        fs::path p = *diritr++;
+        if(p.extension() == ".conf")
+          fnames.push_back(p.string());
+      }
+      std::sort(fnames.begin(), fnames.end());
     }
-    std::sort(fnames.begin(), fnames.end());
 
     // Find if there is a ~/.gnuradio/config.conf file and add this to
     // the end of the file list to override any preferences in the

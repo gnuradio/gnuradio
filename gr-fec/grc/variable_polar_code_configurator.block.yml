@@ -1,5 +1,6 @@
 id: variable_polar_code_configurator
 label: POLAR code Configurator
+flags: [ show_id ]
 
 parameters:
 -   id: channel

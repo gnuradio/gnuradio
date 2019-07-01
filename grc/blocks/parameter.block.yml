@@ -1,6 +1,6 @@
 id: parameter
 label: Parameter
-flags: [ python, cpp ]
+flags: [ show_id, python, cpp ]
 
 parameters:
 -   id: label

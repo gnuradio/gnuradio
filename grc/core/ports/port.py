@@ -55,6 +55,7 @@ class Port(Element):
             number = str(len(busses)) + '#' + str(len(bus_structure[bus_index]))
             label = dtype + number
 
+
         self.name = self._base_name = label
 
         self.domain = domain

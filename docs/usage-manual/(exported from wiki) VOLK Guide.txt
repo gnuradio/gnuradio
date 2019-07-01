@@ -1,20 +1,24 @@
-# Copyright (C) 2017 Free Software Foundation, Inc.
-#
-# Permission is granted to copy, distribute and/or modify this document
-# under the terms of the GNU Free Documentation License, Version 1.3
-# or any later version published by the Free Software Foundation;
-# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-# A copy of the license is included in the section entitled "GNU
-# Free Documentation License".
-
-/*! \page volk_guide Instructions for using VOLK in GNU Radio
+<page>
+    <title>VOLK Guide</title>
+    <ns>0</ns>
+    <id>3491</id>
+    <revision>
+      <id>4296</id>
+      <parentid>4232</parentid>
+      <timestamp>2018-06-26T19:57:30Z</timestamp>
+      <contributor>
+        <username>777arc</username>
+        <id>632</id>
+      </contributor>
+      <comment>/* Calling VOLK kernels in Work() */</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve" bytes="6023">== Introduction ==
 
 Note: Many blocks have already been converted to use VOLK in their calls, so
 they can also serve as examples. See the
 gr::blocks::complex_to_<type>.h files for examples of various blocks
 that make use of VOLK.
-
-\section volk_intro Introduction
 
 VOLK is the Vector-Optimized Library of Kernels. It is a library that
 contains kernels of hand-written SIMD code for different mathematical
@@ -38,23 +42,19 @@ multiplication of a vector of floating point numbers (each item in the
 vector is multiplied by the same value). This kernel has the following
 proto-kernels that are defined for 'generic,' 'avx,' 'sse,' and 'neon'
 
-\code
     void volk_32f_s32f_multiply_32f_a_generic
     void volk_32f_s32f_multiply_32f_a_sse
     void volk_32f_s32f_multiply_32f_a_avx
     void volk_32f_s32f_multiply_32f_a_neon
-\endcode
 
 These proto-kernels means that on platforms with AVX support, VOLK can
 select this option or the SSE option, depending on which is faster. If
 all else fails, VOLK can fall back on the generic proto-kernel, which
 will always work.
 
-See <a
-href="http://libvolk.org</a> for details on the VOLK naming scheme.
+See [http://libvolk.org libvolk.org] for details on the VOLK naming scheme.
 
-
-\section volk_alignment Setting and Using Memory Alignment Information
+== Setting and Using Memory Alignment Information ==
 
 For VOLK to work as best as possible, we want to use memory-aligned
 SIMD calls, which means we have to have some way of knowing and
@@ -62,11 +62,9 @@ controlling the alignment of the buffers passed to gr_block's work
 function. We set the alignment requirement for SIMD aligned memory
 calls with:
 
-\code
   const int alignment_multiple =
     volk_get_alignment() / output_item_size;
   set_alignment(std::max(1,alignment_multiple));
-\endcode
 
 The VOLK function 'volk_get_alignment' provides the alignment of the
 the machine architecture. We then base the alignment on the number of
@@ -88,8 +86,7 @@ indicate as much so that the block can then decide what best to
 do. The next section discusses the use of the aligned/unaligned
 information in a gr_block's work function.
 
-
-\section volk_work Calling VOLK kernels in Work()
+== Calling VOLK kernels in Work() ==
 
 The buffers passed to work/general_work in a gr_block are not
 guaranteed to be aligned, but they will mostly be aligned whenever
@@ -100,26 +97,24 @@ buffer alignments and call the correct version of the kernel for
 us. From the user-level view of VOLK, calling the dispatcher allows us
 to ignore the concept of aligned versus unaligned. This looks like:
 
-\code
-int
-gr_some_block::work (int noutput_items,
-		     gr_vector_const_void_star &input_items,
-		     gr_vector_void_star &output_items)
-{
-  const float *in = (const float *) input_items[0];
-  float *out = (float *) output_items[0];
+<syntaxhighlight lang="cpp">
+ int
+ gr_some_block::work (int noutput_items,
+                      gr_vector_const_void_star &input_items,
+                      gr_vector_void_star &output_items)
+ {
+   const float *in = (const float *) input_items[0];
+   float *out = (float *) output_items[0];
+ 
+   // Call the dispatcher to check alignment and call the _a or _u
+   // version of the kernel.
+   volk_32f_something_32f(out, in, noutput_items);
+ 
+   return noutput_items;
+ }
+</syntaxhighlight>
 
-  // Call the dispatcher to check alignment and call the _a or _u
-  // version of the kernel.
-  volk_32f_something_32f(out, in, noutput_items);
-
-  return noutput_items;
-}
-\endcode
-
-
-
-\section volk_tuning Tuning VOLK Performance
+== Tuning VOLK Performance ==
 
 VOLK comes with a profiler that will build a config file for the best
 SIMD architecture for your processor. Run volk_profile that is
@@ -129,7 +124,7 @@ will write to $HOME/.volk/volk_config the best architecture for the
 VOLK function. This file is read when using a function to know the
 best version of the function to execute.
 
-\subsection volk_hand_tuning Hand-Tuning Performance
+=== Hand-Tuning Performance ===
 
 If you know a particular architecture works best for your processor,
 you can specify the particular architecture to use in the VOLK
@@ -137,9 +132,7 @@ preferences file: $HOME/.volk/volk_config
 
 The file looks like:
 
-\code
-    volk_<FUNCTION_NAME> <ARCHITECTURE>
-\endcode
+ volk_<FUNCTION_NAME> <ARCHITECTURE>
 
 Where the "FUNCTION_NAME" is the particular function that you want to
 over-ride the default value and "ARCHITECTURE" is the VOLK SIMD
@@ -148,13 +141,13 @@ example, the following config file tells VOLK to use SSE3 for the
 aligned and unaligned versions of a function that multiplies two
 complex streams together.
 
-\code
-    volk_32fc_x2_multiply_32fc_a sse3
-    volk_32fc_x2_multiply_32fc_u sse3
-\endcode
+ volk_32fc_x2_multiply_32fc_a sse3
+ volk_32fc_x2_multiply_32fc_u sse3
 
-\b Tip: if benchmarking GNU Radio blocks, it can be useful to have a
+'''Tip:''' If benchmarking GNU Radio blocks, it can be useful to have a
 volk_config file that sets all architectures to 'generic' as a way to
-test the vectorized versus non-vectorized implementations.
-
-*/
+test the vectorized versus non-vectorized implementations.</text>
+      <sha1>l1efbbjitjppeec1a99mjnlyimos14e</sha1>
+    </revision>
+  </page>
+</mediawiki>

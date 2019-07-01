@@ -60,7 +60,9 @@ namespace gr {
       : sync_block("waterfall_sink_c",
                    io_signature::make(0, nconnections, sizeof(gr_complex)),
                    io_signature::make(0, 0, 0)),
-	d_fftsize(fftsize), d_fftavg(1.0),
+	d_fftsize(fftsize),
+	d_fft_shift(fftsize),
+	d_fftavg(1.0),
 	d_wintype((filter::firdes::win_type)(wintype)),
     d_center_freq(fc),
     d_bandwidth(bw),
@@ -116,7 +118,7 @@ namespace gr {
       // setup bw input port
       message_port_register_in(d_port_bw);
       set_msg_handler(d_port_bw,
-                      boost::bind(&waterfall_sink_c_impl::handle_set_bw, this, _1));   
+                      boost::bind(&waterfall_sink_c_impl::handle_set_bw, this, _1));
 
       // setup output message port to post frequency when display is
       // double-clicked
@@ -405,13 +407,7 @@ namespace gr {
       volk_32fc_s32f_x2_power_spectral_density_32f(data_out, d_fft->get_outbuf(),
                                                    size, 1.0, size);
 
-      // Perform shift operation
-      unsigned int len = (unsigned int)(floor(size/2.0));
-      float *tmp = (float*)malloc(sizeof(float)*len);
-      memcpy(tmp, &data_out[0], sizeof(float)*len);
-      memcpy(&data_out[0], &data_out[len], sizeof(float)*(size - len));
-      memcpy(&data_out[size - len], tmp, sizeof(float)*len);
-      free(tmp);
+      d_fft_shift.shift(data_out, size);
     }
 
     void
@@ -485,6 +481,8 @@ namespace gr {
         delete d_fft;
         d_fft = new fft::fft_complex(d_fftsize, true);
 
+	d_fft_shift.resize(d_fftsize);
+
         volk_free(d_fbuf);
         d_fbuf = (float*)volk_malloc(d_fftsize*sizeof(float),
                                      volk_get_alignment());
@@ -529,7 +527,7 @@ namespace gr {
                                     new SetFreqEvent(d_center_freq, d_bandwidth));
         }
       }
-    }        
+    }
 
     void
     waterfall_sink_c_impl::set_time_per_fft(double t)

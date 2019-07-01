@@ -1,7 +1,7 @@
 id: variable_constellation_rect
 label: Constellation Rect. Object
 category: Modulators
-flags: [ python ]
+flags: [ show_id, python ]
 
 parameters:
 -   id: sym_map

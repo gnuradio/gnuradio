@@ -1,6 +1,6 @@
 id: variable_tag_object
 label: Tag Object
-flags: [ python ]
+flags: [ show_id, python ]
 
 parameters:
 -   id: offset

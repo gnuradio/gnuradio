@@ -1,6 +1,6 @@
 id: variable_high_pass_filter_taps
 label: High-pass Filter Taps
-flags: [ python ]
+flags: [ show_id, python ]
 
 parameters:
 -   id: gain

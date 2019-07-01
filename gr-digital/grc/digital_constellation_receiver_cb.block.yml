@@ -18,9 +18,7 @@ parameters:
 -   id: showports
     label: Show Msg Ports
     dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['Yes', 'No']
+    default: 'False'
     hide: part
 
 inputs:
@@ -29,11 +27,11 @@ inputs:
 -   domain: message
     id: set_constellation
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 -   domain: message
     id: rotate_phase
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 outputs:
 -   domain: stream

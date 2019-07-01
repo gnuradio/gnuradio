@@ -1,5 +1,6 @@
 id: variable_polar_encoder_def
 label: POLAR Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: is_packed

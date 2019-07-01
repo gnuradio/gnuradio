@@ -99,15 +99,15 @@ the .cc file for ALSA, OSS, and PortAudio:
 
 \code
     #ifdef ALSA_FOUND
-            d_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
+            s_registry.push_back(register_source(REG_PRIO_HIGH, "alsa", alsa_source_fcn));
     #endif /* ALSA_FOUND */
 
     #ifdef OSS_FOUND
-            d_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
+            s_registry.push_back(register_source(REG_PRIO_LOW, "oss", oss_source_fcn));
     #endif /* OSS_FOUND */
 
     #ifdef PORTAUDIO_FOUND
-            d_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
+            s_registry.push_back(register_source(REG_PRIO_MED, "portaudio", portaudio_source_fcn));
     #endif /* PORTAUDIO_FOUND */
 \endcode
 
