@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015-2016 Free Software Foundation, Inc.
+ * Copyright 2015-2016,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -295,13 +295,6 @@ std::vector<std::string>
 usrp_block_impl::get_mboard_sensor_names(size_t mboard)
 {
   return _dev->get_mboard_sensor_names(mboard);
-}
-
-void
-usrp_block_impl::set_clock_config(const ::uhd::clock_config_t &clock_config,
-                                 size_t mboard)
-{
-  return _dev->set_clock_config(clock_config, mboard);
 }
 
 void

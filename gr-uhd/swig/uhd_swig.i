@@ -109,8 +109,6 @@
 
 %include <uhd/types/stream_cmd.hpp>
 
-%include <uhd/types/clock_config.hpp>
-
 %include <uhd/types/metadata.hpp>
 
 %template(device_addr_vector_t) std::vector<uhd::device_addr_t>;
