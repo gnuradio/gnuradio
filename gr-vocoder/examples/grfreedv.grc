@@ -4,7 +4,7 @@ options:
     category: Custom
     cmake_opt: ''
     comment: ''
-    copyright: '2016,2019 Free Software Foundation, Inc.'
+    copyright: 2016,2019 Free Software Foundation, Inc.
     description: A FreeDV Modulator
     gen_cmake: 'On'
     gen_linking: dynamic
@@ -67,7 +67,7 @@ blocks:
     ok_to_block: 'True'
     samp_rate: samp_rate
   states:
-    coordinate: [792, 316.0]
+    coordinate: [1152, 220.0]
     rotation: 0
     state: enabled
 - name: audio_source_0
@@ -76,16 +76,16 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    device_name: hw:2,0
+    device_name: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     num_outputs: '1'
     ok_to_block: 'True'
     samp_rate: '48000'
   states:
-    coordinate: [16, 325]
+    coordinate: [8, 300.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_float_to_short_0
   id: blocks_float_to_short
   parameters:
@@ -97,7 +97,7 @@ blocks:
     scale: '32768'
     vlen: '1'
   states:
-    coordinate: [256, 228]
+    coordinate: [456, 220.0]
     rotation: 0
     state: enabled
 - name: blocks_short_to_float_0
@@ -111,7 +111,7 @@ blocks:
     scale: '32768'
     vlen: '1'
   states:
-    coordinate: [736, 228]
+    coordinate: [1008, 220.0]
     rotation: 0
     state: enabled
 - name: blocks_wavfile_source_0
@@ -126,9 +126,9 @@ blocks:
     nchan: '1'
     repeat: 'True'
   states:
-    coordinate: [24, 221]
+    coordinate: [120, 164.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: rational_resampler_xxx_0
   id: rational_resampler_xxx
   parameters:
@@ -143,9 +143,9 @@ blocks:
     taps: ''
     type: fff
   states:
-    coordinate: [216, 303]
+    coordinate: [232, 276.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: vocoder_freedv_rx_ss_0
   id: vocoder_freedv_rx_ss
   parameters:
@@ -159,7 +159,7 @@ blocks:
     squelch_enable: 'True'
     squelch_thresh: squelch
   states:
-    coordinate: [568, 92.0]
+    coordinate: [816, 196.0]
     rotation: 0
     state: enabled
 - name: vocoder_freedv_tx_ss_0
@@ -176,7 +176,7 @@ blocks:
     tx_bpf_val: 'True'
     txt_msg: '''GNU Radio'''
   states:
-    coordinate: [360, 84.0]
+    coordinate: [608, 188.0]
     rotation: 0
     state: enabled
 
