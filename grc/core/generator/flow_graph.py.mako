@@ -190,18 +190,18 @@ gr.io_signaturev(${len(io_sigs)}, ${len(io_sigs)}, [${', '.join(size_strs)}])\
         % if blk_make:
         ${ indent(blk_make.strip('\n')) }
         % endif
-##         % if 'alias' in blk.params and blk.params['alias'].get_evaluated():
-##         (self.${blk.name}).set_block_alias("${blk.params['alias'].get_evaluated()}")
-##         % endif
-##         % if 'affinity' in blk.params and blk.params['affinity'].get_evaluated():
-##         (self.${blk.name}).set_processor_affinity(${blk.params['affinity'].get_evaluated()})
-##         % endif
-##         % if len(blk.sources) > 0 and 'minoutbuf' in blk.params and int(blk.params['minoutbuf'].get_evaluated()) > 0:
-##         (self.${blk.name}).set_min_output_buffer(${blk.params['minoutbuf'].get_evaluated()})
-##         % endif
-##         % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
-##         (self.${blk.name}).set_max_output_buffer(${blk.params['maxoutbuf'].get_evaluated()})
-##         % endif
+        % if 'alias' in blk.params and blk.params['alias'].get_evaluated():
+        self.${blk.name}.set_block_alias("${blk.params['alias'].get_evaluated()}")
+        % endif
+        % if 'affinity' in blk.params and blk.params['affinity'].get_evaluated():
+        self.${blk.name}.set_processor_affinity(${blk.params['affinity'].get_evaluated()})
+        % endif
+        % if len(blk.sources) > 0 and 'minoutbuf' in blk.params and int(blk.params['minoutbuf'].get_evaluated()) > 0:
+        self.${blk.name}.set_min_output_buffer(${blk.params['minoutbuf'].get_evaluated()})
+        % endif
+        % if len(blk.sources) > 0 and 'maxoutbuf' in blk.params and int(blk.params['maxoutbuf'].get_evaluated()) > 0:
+        self.${blk.name}.set_max_output_buffer(${blk.params['maxoutbuf'].get_evaluated()})
+        % endif
         % endfor
 
 ##########################################################
