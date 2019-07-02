@@ -36,8 +36,6 @@ from pygccxml import declarations
 from pygccxml import utils
 
 from blocktool.core.base import BlockToolException, BlockTool
-from blocktool.core.makeyaml import yaml_generator
-from blocktool.core.makejson import json_generator
 from blocktool.core.iosignature import io_signature
 from blocktool.core import Constants
 
@@ -130,11 +128,6 @@ class BlockHeaderParser(BlockTool):
         #                properties, methods
         # : Can be used as an CLI command or an extenal API
         """
-        if self.info['cli']:
-            if not self.info['yaml_confirm'] and not self.info['json_confirm']:
-                click.secho('hardwork is unnecessary!!', fg='blue')
-                exit(1)
-
         gr = self.info['modname'].split('-')[0]
         module = self.info['modname'].split('-')[-1]
         generator_path, generator_name = utils.find_xml_generator()
@@ -284,12 +277,6 @@ class BlockHeaderParser(BlockTool):
             header_file.close()
         except:
             self.parsed_data['docstring'] = []
-
-        if self.info['cli']:
-            if self.info['yaml_confirm']:
-                yaml_generator(self.parsed_data, self.info)
-            if self.info['json_confirm']:
-                json_generator(self.parsed_data, self.info)
 
         return self.parsed_data
 

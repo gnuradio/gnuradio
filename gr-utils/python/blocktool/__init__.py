@@ -20,3 +20,4 @@
 #
 
 from .core.parseheader import BlockHeaderParser
+from .core.outputschema import PARSED_OUTPUT_SCHEME

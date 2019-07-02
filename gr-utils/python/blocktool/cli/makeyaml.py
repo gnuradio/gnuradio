@@ -27,11 +27,15 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 import os
+import click
 import yaml
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except:
     from yaml import Loader, Dumper
+
+from blocktool.cli.base import run
+from blocktool.core.parseheader import BlockHeaderParser
 
 ## setup dumper for dumping OrderedDict ##
 _MAPPING_TAG = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
@@ -51,27 +55,44 @@ Dumper.add_representer(OrderedDict, dict_representer)
 Loader.add_constructor(_MAPPING_TAG, dict_constructor)
 
 
-def yaml_generator(parsed_data, header_data):
+@click.command('makeyaml', short_help='Generate a YAML file from a block header')
+@click.argument('file-path', nargs=1)
+def cli(**kwargs):
+    """
+    \b
+    Get parsed output for a header file from GNU Radio module
+    """
+    self = BlockHeaderParser(**kwargs)
+    self.info['cli'] = True
+    self.info['yaml_confirm'] = True
+    click.secho('Header file: {}'.format(self.info['filename']), fg='green')
+    run(self)
+    yaml_generator(self)
+
+
+def yaml_generator(self):
     """
     Generate YAML file from the block header file
     """
-    header = header_data['filename'].split('.')[0]
-    block = header_data['modname'].split('-')[-1]
-    yml_file = os.path.join('.', block+'_'+header + '.yml')
+    header = self.info['filename'].split('.')[0]
+    block = self.info['modname'].split('-')[-1]
+    click.secho('Successfully generated {}_{}.yml'.format(
+        block, header), fg='green')
+    yml_file = os.path.join('.', block+'_'+header+'.yml')
     _header = (('id', '{}_{}'.format(block, header)),
                ('label', header.split('_')[0].upper()),
                ('category', '[{}]'.format(block.capitalize())),
                ('flags', '[python]')
                )
     params_list = [
-        '${'+s['name']+'}' for s in parsed_data['properties'] if parsed_data['properties']]
+        '${'+s['name']+'}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
     _templates = [('imports', 'from gnuradio import {}'.format(block)),
                   ('make', '{}.{}({})'.format(block, header, ', '.join(params_list)))
                   ]
 
-    if parsed_data['methods']:
+    if self.parsed_data['methods']:
         list_callbacks = []
-        for param in parsed_data['methods']:
+        for param in self.parsed_data['methods']:
             arguments = []
             for args in param['arguments_type']:
                 arguments.append(args['name'])
@@ -93,7 +114,7 @@ def yaml_generator(parsed_data, header_data):
     data['templates'] = templates
 
     parameters = []
-    for param in parsed_data['properties']:
+    for param in self.parsed_data['properties']:
         parameter = OrderedDict()
         parameter['id'] = param['name']
         parameter['label'] = param['name'].capitalize()
@@ -103,11 +124,11 @@ def yaml_generator(parsed_data, header_data):
     if parameters:
         data['parameters'] = parameters
 
-    data['input'] = parsed_data['io_signature']['input']
-    data['output'] = parsed_data['io_signature']['output']
+    data['input'] = self.parsed_data['io_signature']['input']
+    data['output'] = self.parsed_data['io_signature']['output']
 
-    if parsed_data['docstring'] is not None:
-        data['documentation'] = parsed_data['docstring']
+    if self.parsed_data['docstring'] is not None:
+        data['documentation'] = self.parsed_data['docstring']
     data['file_format'] = 1
 
     with open(yml_file, 'w') as yml:

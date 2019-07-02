@@ -18,24 +18,22 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" CLI module for the tool """
+""" Module to generate JSON file from the parsed data """
 
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import os
+import json
 import click
 
 from blocktool.cli.base import run
 from blocktool.core.parseheader import BlockHeaderParser
 
 
-@click.command('parseheader', short_help=BlockHeaderParser.description)
+@click.command('makejson', short_help='Generate a JSON file from a block header')
 @click.argument('file-path', nargs=1)
-@click.option('-j', '--json-confirm', is_flag=True,
-              help='Get a JSON output for the header')
-@click.option('-y', '--yaml-confirm', is_flag=True,
-              help='Get a YAML output for the header')
 def cli(**kwargs):
     """
     \b
@@ -43,37 +41,21 @@ def cli(**kwargs):
     """
     self = BlockHeaderParser(**kwargs)
     self.info['cli'] = True
+    self.info['json_confirm'] = True
     click.secho('Header file: {}'.format(self.info['filename']), fg='green')
-    get_json_file(self)
-    get_yaml_file(self)
     run(self)
+    json_generator(self)
 
 
-def get_json_file(self):
+def json_generator(self):
     """
-    Get confirmation for the JSON file output
-    """
-    header_file = self.info['filename'].split('.')[0]
-    block_module = self.info['modname'].split('-')[-1]
-    if not self.info['json_confirm']:
-        if click.confirm(click.style(
-                'Do you require a JSON file?', fg='cyan')):
-            self.info['json_confirm'] = True
-    if self.info['json_confirm']:
-        click.secho('Generating {}_{}.json'.format(
-            block_module, header_file), fg='green')
-
-
-def get_yaml_file(self):
-    """
-    Get confirmation for the YAML file output
+    Generate JSON file for the block header
     """
     header_file = self.info['filename'].split('.')[0]
     block_module = self.info['modname'].split('-')[-1]
-    if not self.info['yaml_confirm']:
-        if click.confirm(click.style(
-                'Do you require a YAML file?', fg='cyan')):
-            self.info['yaml_confirm'] = True
-    if self.info['yaml_confirm']:
-        click.secho('Generating {}_{}.yml'.format(
-            block_module, header_file), fg='green')
+    click.secho('Successfully generated {}_{}.json'.format(
+        block_module, header_file), fg='green')
+    json_file = os.path.join('.', block_module+'_'+header_file + '.json')
+    with open(json_file, 'w') as _file:
+        json.dump(self.parsed_data, _file, indent=4)
+    _file.close()

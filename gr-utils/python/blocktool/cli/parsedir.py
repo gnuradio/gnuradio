@@ -30,11 +30,13 @@ import click
 
 from blocktool.cli.base import run
 from blocktool.core.parseheader import BlockHeaderParser
+from blocktool.cli.makejson import json_generator
+from blocktool.cli.makeyaml import yaml_generator
 
 LOGGER = logging.getLogger(__name__)
 
 
-@click.command('parsedir', short_help='Parses complete header directory')
+@click.command('parsedir', short_help='Parses a complete header directory to generate both YAML and JSON file output')
 @click.argument('dir-path', nargs=1)
 def cli(**kwargs):
     """
@@ -67,7 +69,8 @@ def parse_directory(**kwargs):
             self.info['yaml_confirm'] = True
             self.info['json_confirm'] = True
             run(self)
-            click.secho('Parsing successful: {}'.format(header), fg='green')
+            yaml_generator(self)
+            json_generator(self)
         except:
             logging.basicConfig(level=logging.DEBUG,
                                 filename=os.path.join('.', dir_name+'_log.out'))
