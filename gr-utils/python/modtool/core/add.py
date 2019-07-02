@@ -161,8 +161,8 @@ class ModToolAdd(ModTool):
             return
         try:
             append_re_line_sequence(self._file['cmlib'],
-                                    '\$\{CMAKE_CURRENT_SOURCE_DIR\}/qa_%s.cc.*\n' % self.info['modname'],
-                                    '    ${CMAKE_CURRENT_SOURCE_DIR}/qa_%s.cc' % self.info['blockname'])
+                                    'list\(APPEND test_{}_sources.*\n'.format(self.info['modname']),
+                                    'qa_{}.cc'.format(self.info['blockname']))
             append_re_line_sequence(self._file['qalib'],
                                     '#include.*\n',
                                     '#include "{}"'.format(fname_qa_h))
