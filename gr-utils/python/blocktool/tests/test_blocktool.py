@@ -52,7 +52,7 @@ from jsonschema import validate
 from blocktool.core.parseheader import BlockHeaderParser
 from blocktool.core.base import BlockToolException
 from blocktool.core import Constants
-from blocktool.tests.test_json_file import JSON_SCHEME
+from blocktool.core.outputschema import PARSED_OUTPUT_SCHEME
 
 
 class TestBlocktoolCore(unittest.TestCase):
@@ -139,7 +139,7 @@ class TestBlocktoolCore(unittest.TestCase):
         # Run the whole dict through JSON SCHEMA
         valid_schema = False
         try:
-            validate(instance=test_obj, schema=JSON_SCHEME)
+            validate(instance=test_obj, schema=PARSED_OUTPUT_SCHEME)
             valid_schema = True
         except BlockToolException:
             raise BlockToolException
