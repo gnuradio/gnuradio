@@ -153,58 +153,30 @@ templates:
             ${'$'}{len_tag_name},
             ${'%'} endif
         )
-        % for m in range(max_mboards):
-        ${'%'} if context.get('num_mboards')() > ${m}:
-        ${'%'} if context.get('sd_spec${m}')():
-        self.${'$'}{id}.set_subdev_spec(${'$'}{${'sd_spec' + str(m)}}, ${m})
-        ${'%'} endif
-        ${'%'} if context.get('time_source${m}')():
-        self.${'$'}{id}.set_time_source(${'$'}{${'time_source' + str(m)}}, ${m})
-        ${'%'} endif
-        ${'%'} if context.get('clock_source${m}')():
-        self.${'$'}{id}.set_clock_source(${'$'}{${'clock_source' + str(m)}}, ${m})
-        ${'%'} endif
-        ${'%'} endif
-        % endfor
-        % for n in range(max_nchan):
-        ${'%'} if context.get('nchan')() > ${n}:
-        self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
-        % if sourk == 'source':
-        ${'%'} if context.get('rx_agc${n}')() == 'Enabled':
-        self.${'$'}{id}.set_rx_agc(True, ${n})
-        ${'%'} elif context.get('rx_agc${n}')() == 'Disabled':
-        self.${'$'}{id}.set_rx_agc(False, ${n})
-        ${'%'} endif
-        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
-        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
-        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
-        ${'%'} else:
-        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
-        ${'%'} endif
-        ${'%'} endif
-        % else:
-        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
-        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
-        ${'%'} else:
-        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
-        ${'%'} endif
-        % endif
-        ${'%'} if context.get('ant${n}')():
-        self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
-        ${'%'} endif
-        ${'%'} if context.get('bw${n}')():
-        self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
-        ${'%'} endif
-        ${'%'} if context.get('show_lo_controls')():
-        self.${'$'}{id}.set_lo_source(${'$'}{${'lo_source' + str(n)}}, uhd.ALL_LOS, ${n})
-        self.${'$'}{id}.set_lo_export_enabled(${'$'}{${'lo_export' + str(n)}}, uhd.ALL_LOS, ${n})
-        ${'%'} endif
-        ${'%'} endif
-        % endfor
         ${'%'} if clock_rate():
         self.${'$'}{id}.set_clock_rate(${'$'}{clock_rate}, uhd.ALL_MBOARDS)
         ${'%'} endif
+        
+        % for m in range(max_mboards):
+        ${'%'} if context.get('num_mboards')() > ${m}:
+        ########################################################################
+        ${'%'} if context.get('clock_source${m}')():
+        self.${'$'}{id}.set_clock_source(${'$'}{${'clock_source' + str(m)}}, ${m})
+        ${'%'} endif
+        ########################################################################
+        ${'%'} if context.get('time_source${m}')():
+        self.${'$'}{id}.set_time_source(${'$'}{${'time_source' + str(m)}}, ${m})
+        ${'%'} endif
+        ########################################################################
+        ${'%'} if context.get('sd_spec${m}')():
+        self.${'$'}{id}.set_subdev_spec(${'$'}{${'sd_spec' + str(m)}}, ${m})
+        ${'%'} endif
+        ########################################################################
+        ${'%'} endif
+        % endfor  # for m in range(max_mboards)
+        
         self.${'$'}{id}.set_samp_rate(${'$'}{samp_rate})
+        
         ${'%'} if sync == 'sync':
         self.${'$'}{id}.set_time_unknown_pps(uhd.time_spec())
         ${'%'} elif sync == 'pc_clock':
@@ -212,6 +184,51 @@ templates:
         ${'%'} else:
         # No synchronization enforced.
         ${'%'} endif
+        
+        % for n in range(max_nchan):
+        ${'%'} if context.get('nchan')() > ${n}:
+        self.${'$'}{id}.set_center_freq(${'$'}{${'center_freq' + str(n)}}, ${n})
+        ${'%'} if context.get('rx_agc${n}')() != 'Enabled':
+        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
+        ${'%'} endif  # if rx_agc${n} != 'Enabled'
+        
+        ${'%'} if context.get('ant${n}')():
+        self.${'$'}{id}.set_antenna(${'$'}{${'ant' + str(n)}}, ${n})
+        ${'%'} endif
+        ${'%'} if context.get('bw${n}')():
+        self.${'$'}{id}.set_bandwidth(${'$'}{${'bw' + str(n)}}, ${n})
+        ${'%'} endif
+        
+        % if sourk == 'source':
+        ${'%'} if context.get('rx_agc${n}')() == 'Enabled':
+        self.${'$'}{id}.set_rx_agc(True, ${n})
+        ${'%'} elif context.get('rx_agc${n}')() == 'Disabled':
+        self.${'$'}{id}.set_rx_agc(False, ${n})
+        ${'%'} endif
+        ${'%'} if context.get('dc_offs_enb${n}')():
+        self.${'$'}{id}.set_auto_dc_offset(${'$'}{${'dc_offs_enb' + str(n)}}, ${n})
+        ${'%'} endif
+        ${'%'} if context.get('iq_imbal_enb${n}')():
+        self.${'$'}{id}.set_auto_iq_balance(${'$'}{${'iq_imbal_enb' + str(n)}}, ${n})
+        ${'%'} endif
+        % else:
+        ${'%'} if bool(eval(context.get('norm_gain' + '${n}')())):
+        self.${'$'}{id}.set_normalized_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} else:
+        self.${'$'}{id}.set_gain(${'$'}{${'gain' + str(n)}}, ${n})
+        ${'%'} endif
+        % endif  # if sourk == 'source'
+        
+        ${'%'} if context.get('show_lo_controls')():
+        self.${'$'}{id}.set_lo_source(${'$'}{${'lo_source' + str(n)}}, uhd.ALL_LOS, ${n})
+        self.${'$'}{id}.set_lo_export_enabled(${'$'}{${'lo_export' + str(n)}}, uhd.ALL_LOS, ${n})
+        ${'%'} endif
+        ${'%'} endif  # nchan > n
+        % endfor  # for n in range(max_nchan)
     callbacks:
     -   set_samp_rate(${'$'}{samp_rate})
     % for n in range(max_nchan):
