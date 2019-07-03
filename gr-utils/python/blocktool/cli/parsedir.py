@@ -65,9 +65,9 @@ def parse_directory(**kwargs):
         header = os.path.basename(header_path)
         try:
             self = BlockHeaderParser(**kwargs)
-            self.info['cli'] = True
-            self.info['yaml_confirm'] = True
-            self.info['json_confirm'] = True
+            self.cli = True
+            self.yaml_confirm = True
+            self.json_confirm = True
             run(self)
             yaml_generator(self)
             json_generator(self)

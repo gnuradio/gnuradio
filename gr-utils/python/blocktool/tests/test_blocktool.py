@@ -51,7 +51,7 @@ from jsonschema import validate
 from blocktool.core.parseheader import BlockHeaderParser
 from blocktool.core.base import BlockToolException
 from blocktool.core import Constants
-from blocktool.core.outputschema import PARSED_OUTPUT_SCHEME
+from blocktool.core.outputschema import RESULT_SCHEMA
 
 
 class TestBlocktoolCore(unittest.TestCase):
@@ -96,33 +96,33 @@ class TestBlocktoolCore(unittest.TestCase):
         # test for none type file_path
         test_dict['file_path'] = None
         with self.assertRaises(TypeError):
-            BlockHeaderParser(**test_dict).run
+            BlockHeaderParser(**test_dict).run()
         # test for non-existent header
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.test_dir, 'sample.h'))
         with self.assertRaises(OSError):
-            BlockHeaderParser(**test_dict).run
+            BlockHeaderParser(**test_dict).run()
         # test for valid header file
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.test_dir, 'CMakeLists.txt'))
         if not os.path.basename(test_dict['file_path']).endswith('.h'):
             with self.assertRaises(BlockToolException):
-                BlockHeaderParser(**test_dict).run
+                BlockHeaderParser(**test_dict).run()
         # test for invalid header module
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.current_folder, '../../../../gr-utils/python/blocktool/__init__.py'))
         with self.assertRaises(BlockToolException):
-            BlockHeaderParser(**test_dict).run
+            BlockHeaderParser(**test_dict).run()
         # test for invalid header file path
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.impl_dir, 'agc.h'))
         with self.assertRaises(OSError):
-            BlockHeaderParser(**test_dict).run
+            BlockHeaderParser(**test_dict).run()
         # test for non-existent impl file
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.test_dir, 'agc.h'))
         with self.assertRaises(OSError):
-            BlockHeaderParser(**test_dict).run
+            BlockHeaderParser(**test_dict).run()
 
         # test for returned parsed data
         # test for parser run
@@ -176,7 +176,7 @@ class TestBlocktoolCore(unittest.TestCase):
         # Run the whole dict through JSON SCHEMA
         valid_schema = False
         try:
-            validate(instance=test_obj, schema=PARSED_OUTPUT_SCHEME)
+            validate(instance=test_obj, schema=RESULT_SCHEMA)
             valid_schema = True
         except BlockToolException:
             raise BlockToolException

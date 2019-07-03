@@ -21,7 +21,7 @@
 """ Schema to be strictly followed be parsed header output """
 
 
-PARSED_OUTPUT_SCHEME = {
+RESULT_SCHEMA = {
     "title": "JSON SCHEMA TO BE FOLLOWED BY BLOCK HEADER PARSING TOOL",
     "description": "Schema designed for the header file parsed python dict output",
     "type": "object",

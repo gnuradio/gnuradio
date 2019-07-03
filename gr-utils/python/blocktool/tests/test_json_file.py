@@ -28,7 +28,7 @@ import sys
 import json
 import jsonschema
 
-from blocktool.core.outputschema import PARSED_OUTPUT_SCHEME
+from blocktool.core.outputschema import RESULT_SCHEMA
 
 
 def is_valid():
@@ -38,7 +38,7 @@ def is_valid():
         data = json.load(json_file)
     try:
         print("Validating...")
-        jsonschema.validate(data, PARSED_OUTPUT_SCHEME)
+        jsonschema.validate(data, RESULT_SCHEMA)
     except jsonschema.ValidationError as exception:
         print("Record JSON file # {}: NOT OK".format(sys.argv[1]))
         raise Exception(exception)

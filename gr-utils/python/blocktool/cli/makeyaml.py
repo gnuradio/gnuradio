@@ -63,9 +63,9 @@ def cli(**kwargs):
     Get parsed output for a header file from GNU Radio module
     """
     self = BlockHeaderParser(**kwargs)
-    self.info['cli'] = True
-    self.info['yaml_confirm'] = True
-    click.secho('Header file: {}'.format(self.info['filename']), fg='green')
+    self.cli = True
+    self.yaml_confirm = True
+    click.secho('Header file: {}'.format(self.filename), fg='green')
     run(self)
     yaml_generator(self)
 
@@ -74,15 +74,17 @@ def yaml_generator(self):
     """
     Generate YAML file from the block header file
     """
-    header = self.info['filename'].split('.')[0]
-    block = self.info['modname'].split('-')[-1]
+    header = self.filename.split('.')[0]
+    block = self.modname.split('-')[-1]
     click.secho('Successfully generated {}_{}.yml'.format(
         block, header), fg='green')
+    label = header.split('_')
+    del label[-1]
     yml_file = os.path.join('.', block+'_'+header+'.yml')
     _header = (('id', '{}_{}'.format(block, header)),
-               ('label', header.split('_')[0].upper()),
+               ('label', ' '.join(label).upper()),
                ('category', '[{}]'.format(block.capitalize())),
-               ('flags', '[python]')
+               ('flags', '[python, cpp]')
                )
     params_list = [
         '${'+s['name']+'}' for s in self.parsed_data['properties'] if self.parsed_data['properties']]
@@ -126,6 +128,33 @@ def yaml_generator(self):
 
     data['input'] = self.parsed_data['io_signature']['input']
     data['output'] = self.parsed_data['io_signature']['output']
+
+    _cpp_templates = [('includes', '#include <gnuradio/{}/{}>'.format(block, self.filename)),
+                  ('declartions', '{}::{}::sptr ${{id}}'.format(block, header)),
+                  ('make', 'this->${{id}} = {}::{}::make({})'.format(block, header, ', '.join(params_list)))
+                  ]
+
+    if self.parsed_data['methods']:
+        list_callbacks = []
+        for param in self.parsed_data['methods']:
+            arguments = []
+            for args in param['arguments_type']:
+                arguments.append(args['name'])
+            arg_list = ['${'+s+'}' for s in arguments if arguments]
+            list_callbacks.append(
+                param['name']+'({})'.format(', '.join(arg_list)))
+        callback_key = ('callbacks')
+        callbacks = (callback_key, tuple(list_callbacks))
+        _cpp_templates.append(callbacks)
+
+    link = ('link', 'gnuradio-{}'.format(block))
+    _cpp_templates.append(link)
+    _cpp_templates = tuple(_cpp_templates)
+
+    cpp_templates = OrderedDict()
+    for tag, value in _cpp_templates:
+        cpp_templates[tag] = value
+    data['cpp_templates'] = cpp_templates
 
     if self.parsed_data['docstring'] is not None:
         data['documentation'] = self.parsed_data['docstring']

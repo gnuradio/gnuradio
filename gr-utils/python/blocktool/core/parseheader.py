@@ -29,11 +29,7 @@ import re
 import codecs
 import logging
 
-import click
-
-from pygccxml import parser
-from pygccxml import declarations
-from pygccxml import utils
+from pygccxml import parser, declarations, utils
 
 from blocktool.core.base import BlockToolException, BlockTool
 from blocktool.core.iosignature import io_signature
@@ -69,48 +65,41 @@ class BlockHeaderParser(BlockTool):
     def __init__(self, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
-        try:
-            open(file_path, 'r')
-        except TypeError:
-            raise TypeError
+        open(file_path, 'r')
         file_path = os.path.abspath(file_path)
-        self.info['target_file'] = file_path
-        self.info['modname'] = os.path.basename(os.path.dirname(
+        self.target_file = file_path
+        self.modname = os.path.basename(os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
-        self.info['filename'] = os.path.basename(file_path)
-        self.info['target_dir'] = os.path.dirname(file_path)
-        self.info['impl_dir'] = os.path.abspath(os.path.join(file_path,
+        self.filename = os.path.basename(file_path)
+        self.targetdir = os.path.dirname(file_path)
+        self.impldir = os.path.abspath(os.path.join(file_path,
                                                              '..', '..', '..', '..', 'lib'))
-        self.info['impl_file'] = os.path.join(self.info['impl_dir'],
-                                              self.info['filename'].split('.')[0]+'_impl.cc')
+        self.impl_file = os.path.join(self.impldir,
+                                              self.filename.split('.')[0]+'_impl.cc')
         self.validate()
 
     def validate(self):
         """ Override the Blocktool validate function """
         BlockTool._validate(self)
-        self._validate()
-        if self.info['modname'].startswith(Constants.GR):
-            _module = self.info['modname'].split('-')[-1]
+        if self.modname.startswith(Constants.GR):
+            _module = self.modname.split('-')[-1]
         else:
-            _module = self.info['modname']
-            self.info['modname'] = Constants.GR+_module
+            _module = self.modname
+            self.modname = Constants.GR+_module
         if _module not in self.module_types:
             raise BlockToolException('Module must be one of {}.'.format(
                 ', '.join(self.module_types)))
-        if not self.info['filename'].endswith('.h'):
+        if not self.filename.endswith('.h'):
             raise BlockToolException(
                 'Invalid header file')
         _target_dir = os.path.join(self.target_dir,
-                                   self.info['modname'],
+                                   self.modname,
                                    'include',
                                    'gnuradio',
-                                   self.info['modname'].split('-')[-1])
-        if _target_dir != self.info['target_dir']:
+                                   self.modname.split('-')[-1])
+        if _target_dir != self.targetdir:
             raise BlockToolException('Invalid GNU Radio module')
-        try:
-            open(self.info['impl_file'], 'r')
-        except OSError:
-            raise OSError
+        open(self.impl_file, 'r')
 
     def get_header_info(self):
         """
@@ -121,15 +110,15 @@ class BlockHeaderParser(BlockTool):
         #                properties, methods
         # : Can be used as an CLI command or an extenal API
         """
-        gr = self.info['modname'].split('-')[0]
-        module = self.info['modname'].split('-')[-1]
+        gr = self.modname.split('-')[0]
+        module = self.modname.split('-')[-1]
         generator_path, generator_name = utils.find_xml_generator()
         xml_generator_config = parser.xml_generator_configuration_t(
             xml_generator_path=generator_path,
             xml_generator=generator_name,
             compiler='gcc')
         decls = parser.parse(
-            [self.info['target_file']], xml_generator_config)
+            [self.target_file], xml_generator_config)
         global_namespace = declarations.get_global_namespace(decls)
 
         # namespace
@@ -169,7 +158,7 @@ class BlockHeaderParser(BlockTool):
         try:
             self.parsed_data['io_signature'] = {}
             self.parsed_data['io_signature'] = io_signature(
-                self.info['impl_file'])
+                self.impl_file)
         except BlockToolException as exception:
             raise BlockToolException(
                 'A block header always has a io_signature!\n{}'.format(exception))
@@ -183,7 +172,7 @@ class BlockHeaderParser(BlockTool):
             query_make = query_m & declarations.access_type_matcher_t('public')
             make_func = main_class.member_functions(function=query_make,
                                                     allow_empty=True,
-                                                    header_file=self.info['target_file'])
+                                                    header_file=self.target_file)
             criteria = declarations.calldef_matcher(name='make')
             _make_fun = declarations.matcher.get_single(criteria, main_class)
             _make_fun = str(_make_fun).split(
@@ -219,7 +208,7 @@ class BlockHeaderParser(BlockTool):
             query_methods = declarations.access_type_matcher_t('public')
             setters = main_class.member_functions(function=query_methods,
                                                   allow_empty=True,
-                                                  header_file=self.info['target_file'])
+                                                  header_file=self.target_file)
             getter_arguments = []
             if setters:
                 for setter in setters:
@@ -236,8 +225,10 @@ class BlockHeaderParser(BlockTool):
                             getter_arguments.append(args['name'])
                             setter_args['arguments_type'].append(args.copy())
                         self.parsed_data['methods'].append(setter_args.copy())
-        except:
-            self.parsed_data['methods'] = []
+            else:
+                self.parsed_data['methods'] = []
+        except BlockToolException as exception:
+            raise exception
 
         # getters
         try:
@@ -245,7 +236,7 @@ class BlockHeaderParser(BlockTool):
             query_properties = declarations.access_type_matcher_t('public')
             getters = main_class.member_functions(function=query_properties,
                                                   allow_empty=True,
-                                                  header_file=self.info['target_file'])
+                                                  header_file=self.target_file)
             if getters:
                 for getter in getters:
                     if not getter.arguments or getter.has_const:
@@ -258,12 +249,14 @@ class BlockHeaderParser(BlockTool):
                             getter_args["read_only"] = False
                         self.parsed_data['properties'].append(
                             getter_args.copy())
-        except:
-            self.parsed_data['properties'] = []
+            else:
+                self.parsed_data['properties'] = []
+        except BlockToolException as exception:
+            raise exception
 
         # documentation
         try:
-            header_file = codecs.open(self.info['target_file'], 'r', 'cp932')
+            header_file = codecs.open(self.target_file, 'r', 'cp932')
             self.parsed_data['docstring'] = re.compile(
                 r'//.*?$|/\*.*?\*/', re.DOTALL | re.MULTILINE).findall(
                     header_file.read())[2:]

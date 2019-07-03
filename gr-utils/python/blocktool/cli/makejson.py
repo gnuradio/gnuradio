@@ -40,9 +40,9 @@ def cli(**kwargs):
     Get parsed output for a header file from GNU Radio module
     """
     self = BlockHeaderParser(**kwargs)
-    self.info['cli'] = True
-    self.info['json_confirm'] = True
-    click.secho('Header file: {}'.format(self.info['filename']), fg='green')
+    self.cli = True
+    self.json_confirm = True
+    click.secho('Header file: {}'.format(self.filename), fg='green')
     run(self)
     json_generator(self)
 
@@ -51,11 +51,10 @@ def json_generator(self):
     """
     Generate JSON file for the block header
     """
-    header_file = self.info['filename'].split('.')[0]
-    block_module = self.info['modname'].split('-')[-1]
+    header_file = self.filename.split('.')[0]
+    block_module = self.modname.split('-')[-1]
     click.secho('Successfully generated {}_{}.json'.format(
         block_module, header_file), fg='green')
     json_file = os.path.join('.', block_module+'_'+header_file + '.json')
     with open(json_file, 'w') as _file:
         json.dump(self.parsed_data, _file, indent=4)
-    _file.close()

@@ -51,7 +51,6 @@ def io_signature(io_file):
         for line in impl:
             if Constants.IO_SIGNATURE in line:
                 lines.append(line)
-    impl.close()
     if len(lines) > 2:
         lines = lines[0:2]
     _io_sig = []
