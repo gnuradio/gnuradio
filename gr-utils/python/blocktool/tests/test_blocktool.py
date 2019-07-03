@@ -18,14 +18,13 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 #
-""" The file for testing the gr-blocktool scripts """
+""" unittest for gr-blocktool api """
 
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import os
-import sys
 import unittest
 import warnings
 try:
@@ -57,10 +56,16 @@ from blocktool.core.outputschema import PARSED_OUTPUT_SCHEME
 
 class TestBlocktoolCore(unittest.TestCase):
     """ The Tests for blocktool core """
-    target_file = os.path.abspath(sys.argv[1])
 
     def __init__(self, *args, **kwargs):
         super(TestBlocktoolCore, self).__init__(*args, **kwargs)
+        self.current_folder = os.path.abspath(os.path.dirname(__file__))
+        self.test_dir = os.path.abspath(os.path.join(
+            self.current_folder, '../../../../gr-analog/include/gnuradio/analog'))
+        self.target_file = os.path.abspath(
+            os.path.join(self.test_dir, 'agc2_cc.h'))
+        self.impl_dir = os.path.abspath(os.path.join(self.current_folder,
+                                                     '../../../../gr-analog/lib'))
         self.modname = os.path.basename(os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.dirname(self.target_file)))))
         self.gr = self.modname.split('-')[0]
@@ -83,13 +88,45 @@ class TestBlocktoolCore(unittest.TestCase):
         """
         try:
             warnings.simplefilter("ignore", ResourceWarning)
-        except (NameError):
+        except NameError:
             pass
+
+        # test for all the Blocktool Exceptions
         test_dict = {}
-        # test for parser run
-        # Exceptions already in the core API
-        test_dict['file_path'] = self.target_file
+        # test for none type file_path
+        test_dict['file_path'] = None
+        with self.assertRaises(TypeError):
+            BlockHeaderParser(**test_dict).run
+        # test for non-existent header
+        test_dict['file_path'] = os.path.abspath(
+            os.path.join(self.test_dir, 'sample.h'))
+        with self.assertRaises(OSError):
+            BlockHeaderParser(**test_dict).run
+        # test for valid header file
+        test_dict['file_path'] = os.path.abspath(
+            os.path.join(self.test_dir, 'CMakeLists.txt'))
+        if not os.path.basename(test_dict['file_path']).endswith('.h'):
+            with self.assertRaises(BlockToolException):
+                BlockHeaderParser(**test_dict).run
+        # test for invalid header module
+        test_dict['file_path'] = os.path.abspath(
+            os.path.join(self.current_folder, '../../../../gr-utils/python/blocktool/__init__.py'))
+        with self.assertRaises(BlockToolException):
+            BlockHeaderParser(**test_dict).run
+        # test for invalid header file path
+        test_dict['file_path'] = os.path.abspath(
+            os.path.join(self.impl_dir, 'agc.h'))
+        with self.assertRaises(OSError):
+            BlockHeaderParser(**test_dict).run
+        # test for non-existent impl file
+        test_dict['file_path'] = os.path.abspath(
+            os.path.join(self.test_dir, 'agc.h'))
+        with self.assertRaises(OSError):
+            BlockHeaderParser(**test_dict).run
+
         # test for returned parsed data
+        # test for parser run
+        test_dict['file_path'] = self.target_file
         test_obj = BlockHeaderParser(**test_dict).get_header_info()
         # test for namespace
         self.assertTrue(test_obj['namespace'][0] == self.gr)
@@ -147,5 +184,4 @@ class TestBlocktoolCore(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    TestBlocktoolCore.target_file = sys.argv.pop()
     unittest.main()

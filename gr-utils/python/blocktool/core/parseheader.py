@@ -69,14 +69,11 @@ class BlockHeaderParser(BlockTool):
     def __init__(self, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
-        if file_path is None:
-            raise BlockToolException(
-                'Expected file path of the header!')
-        file_path = os.path.abspath(file_path)
         try:
             open(file_path, 'r')
-        except OSError:
-            raise OSError
+        except TypeError:
+            raise TypeError
+        file_path = os.path.abspath(file_path)
         self.info['target_file'] = file_path
         self.info['modname'] = os.path.basename(os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
@@ -92,10 +89,6 @@ class BlockHeaderParser(BlockTool):
         """ Override the Blocktool validate function """
         BlockTool._validate(self)
         self._validate()
-        if self.info['modname'] is None:
-            raise BlockToolException('Enter correct file path')
-        if self.info['filename'] is None:
-            raise BlockToolException('Enter correct file path')
         if self.info['modname'].startswith(Constants.GR):
             _module = self.info['modname'].split('-')[-1]
         else:
@@ -106,7 +99,7 @@ class BlockHeaderParser(BlockTool):
                 ', '.join(self.module_types)))
         if not self.info['filename'].endswith('.h'):
             raise BlockToolException(
-                'Invalid Header file')
+                'Invalid header file')
         _target_dir = os.path.join(self.target_dir,
                                    self.info['modname'],
                                    'include',
@@ -147,7 +140,7 @@ class BlockHeaderParser(BlockTool):
                 raise BlockToolException
             main_namespace = ns.namespace(module)
             if main_namespace is None:
-                raise BlockToolException
+                raise BlockToolException('namespace cannot be none')
             self.parsed_data['namespace'] = [gr, module]
             if main_namespace.declarations:
                 for _namespace in main_namespace.declarations:
