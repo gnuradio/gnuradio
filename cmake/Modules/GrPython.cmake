@@ -137,7 +137,7 @@ function(GR_UNIQUE_TARGET desc)
     file(RELATIVE_PATH reldir ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
     execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "import re, hashlib
 unique = hashlib.md5(b'${reldir}${ARGN}').hexdigest()[:5]
-print(re.sub('\\W', '_', '${desc} ${reldir} ' + unique))"
+print(re.sub('\\W', '_', r'${desc} ${reldir} ' + unique))"
     OUTPUT_VARIABLE _target OUTPUT_STRIP_TRAILING_WHITESPACE)
     add_custom_target(${_target} ALL DEPENDS ${ARGN})
 endfunction(GR_UNIQUE_TARGET)
@@ -308,7 +308,7 @@ function(GR_PYTHON_INSTALL)
             add_custom_command(
                 OUTPUT ${pyexefile} DEPENDS ${pyfile}
                 COMMAND ${PYTHON_EXECUTABLE} -c
-                "import re; R=re.compile('^\#!.*$\\n',flags=re.MULTILINE); open('${pyexefile}','w').write('\#!${pyexe_native}\\n'+R.sub('',open('${pyfile}','r').read()))"
+                "import re; R=re.compile('^\#!.*$\\n',flags=re.MULTILINE); open(r'${pyexefile}','w').write(r'\#!${pyexe_native}'+'\\n'+R.sub('',open(r'${pyfile}','r').read()))"
                 COMMENT "Shebangin ${pyfile_name}"
                 VERBATIM
             )
