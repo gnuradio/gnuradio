@@ -91,23 +91,13 @@ class Block(Element):
         if 'cpp' in self.flags:
             self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++
 
-        try:  
-            self._bus_structure_source = self.params['bus_structure_source'].value or ''
-        except:
-            self._bus_structure_source = ''
-        try:
-            self._bus_structure_sink = self.params['bus_structure_sink'].value or ''
-        except:
-            self._bus_structure_sink =  ''
-            
-
         self.current_bus_structure = {'source': '', 'sink': ''}
 
     def get_bus_structure(self, direction):
         if direction == 'source':
-            bus_structure = self._bus_structure_source
+            bus_structure = self.bus_structure_source
         else:
-            bus_structure = self._bus_structure_sink
+            bus_structure = self.bus_structure_sink
 
         if not bus_structure:
             return ''  # TODO: Don't like empty strings. should change this to None eventually
@@ -355,6 +345,24 @@ class Block(Element):
     def bus_source(self, value):
         """Sets the Toggle Bus Source state for the block."""
         self.states['bus_source'] = value
+
+    @property
+    def bus_structure_source(self):
+        """Gets the block's current source bus structure."""
+        try:  
+            bus_structure = self.params['bus_structure_source'].value or None
+        except:
+            bus_structure = None
+        return bus_structure
+
+    @property
+    def bus_structure_sink(self):
+        """Gets the block's current source bus structure."""
+        try:  
+            bus_structure = self.params['bus_structure_sink'].value or None
+        except:
+            bus_structure = None
+        return bus_structure
 
     # endregion
 
