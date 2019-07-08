@@ -182,11 +182,13 @@ class Block(Element):
                 self.current_bus_structure[direc] = struct
 
                 # Hide ports that are not part of the bus structure
-                #FIXME: just hides them all for now
-                for port in ports:
-                    if (port.stored_hidden_state is None):
-                        port.stored_hidden_state = port.hidden
-                        port.hidden = True
+                #TODO: Blocks where it is desired to only have a subset 
+                # of ports included in the bus still has some issues
+                for idx, port in enumerate(ports):
+                    if any([idx in bus for bus in self.current_bus_structure[direc]]):
+                        if (port.stored_hidden_state is None):
+                            port.stored_hidden_state = port.hidden
+                            port.hidden = True
 
                 # Add the Bus Ports to the list of ports
                 for i in range(len(struct)):
@@ -626,7 +628,7 @@ class Block(Element):
 
         struct = [range(len(ports))]
         # struct = list(range(len(ports)))
-        #FIXME for more complicated port structures, this code is needed but not working yet
+        #TODO for more complicated port structures, this code is needed but not working yet
         if any([p.multiplicity for p in ports]):
             structlet = []
             last = 0

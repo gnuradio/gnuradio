@@ -32,6 +32,78 @@ options:
     state: enabled
 
 blocks:
+- name: esno_0
+  id: variable
+  parameters:
+    comment: ''
+    value: 'numpy.arange(0, 8, .5) '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 139]
+    rotation: 0
+    state: enabled
+- name: framebits
+  id: variable
+  parameters:
+    comment: ''
+    value: '4096'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [112, 75]
+    rotation: 0
+    state: enabled
+- name: k
+  id: variable
+  parameters:
+    comment: ''
+    value: '7'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 379]
+    rotation: 0
+    state: enabled
+- name: polys
+  id: variable
+  parameters:
+    comment: ''
+    value: '[79, 109]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 379]
+    rotation: 0
+    state: enabled
+- name: rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 315]
+    rotation: 0
+    state: enabled
+- name: samp_rate_0
+  id: variable
+  parameters:
+    comment: ''
+    value: '35000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 75]
+    rotation: 0
+    state: enabled
 - name: dec_cc
   id: variable_cc_decoder_def
   parameters:
@@ -219,78 +291,7 @@ blocks:
     coordinate: [776, 467]
     rotation: 0
     state: enabled
-- name: esno_0
-  id: variable
-  parameters:
-    comment: ''
-    value: 'numpy.arange(0, 8, .5) '
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [8, 139]
-    rotation: 0
-    state: enabled
-- name: framebits
-  id: variable
-  parameters:
-    comment: ''
-    value: '4096'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [112, 75]
-    rotation: 0
-    state: enabled
-- name: k
-  id: variable
-  parameters:
-    comment: ''
-    value: '7'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [8, 379]
-    rotation: 0
-    state: enabled
-- name: polys
-  id: variable
-  parameters:
-    comment: ''
-    value: '[79, 109]'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [80, 379]
-    rotation: 0
-    state: enabled
-- name: rate
-  id: variable
-  parameters:
-    comment: ''
-    value: '2'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [8, 315]
-    rotation: 0
-    state: enabled
-- name: samp_rate_0
-  id: variable
-  parameters:
-    comment: ''
-    value: '35000000'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [8, 75]
-    rotation: 0
-    state: enabled
+
 - name: fec_bercurve_generator_0
   id: fec_bercurve_generator
   parameters:
