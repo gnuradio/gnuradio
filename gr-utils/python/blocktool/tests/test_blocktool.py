@@ -59,17 +59,10 @@ class TestBlocktoolCore(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestBlocktoolCore, self).__init__(*args, **kwargs)
-        self.current_folder = os.path.abspath(os.path.dirname(__file__))
-        self.test_dir = os.path.abspath(os.path.join(
-            self.current_folder, '../../../../gr-analog/include/gnuradio/analog'))
-        self.target_file = os.path.abspath(
-            os.path.join(self.test_dir, 'agc2_cc.h'))
-        self.impl_dir = os.path.abspath(os.path.join(self.current_folder,
-                                                     '../../../../gr-analog/lib'))
-        self.modname = os.path.basename(os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.dirname(self.target_file)))))
-        self.gr = self.modname.split('-')[0]
-        self.module = self.modname.split('-')[-1]
+        self.module = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                   '../../../../gr-analog'))
+        self.test_dir = os.path.abspath(os.path.join(self.module,
+                                                     'include/gnuradio/analog'))
 
     def is_int(self, number):
         """
@@ -81,84 +74,84 @@ class TestBlocktoolCore(unittest.TestCase):
         except ValueError:
             return False
 
-    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not working, skipping whole unittest')
-    def test_block_parser(self):
-        """
-        Tests for the block parser API
-        """
+    @classmethod
+    def setUpClass(cls):
+        """ create a temporary Blocktool object """
         try:
             warnings.simplefilter("ignore", ResourceWarning)
         except NameError:
             pass
+        test_path = {}
+        target_file = os.path.abspath(os.path.join(os.path.dirname(
+            __file__), '../../../../gr-analog/include/gnuradio/analog', 'agc2_cc.h'))
+        test_path['file_path'] = target_file
+        cls.test_obj = BlockHeaderParser(**test_path).get_header_info()
 
-        # test for all the Blocktool Exceptions
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_blocktool_exceptions(self):
+        """
+        tests for blocktool exceptions
+        """
+        # test for non-existent header or invalid headers
         test_dict = {}
-        # test for none type file_path
-        test_dict['file_path'] = None
-        with self.assertRaises(TypeError):
-            BlockHeaderParser(**test_dict).run()
-        # test for non-existent header
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.test_dir, 'sample.h'))
-        with self.assertRaises(OSError):
+        with self.assertRaises(BlockToolException):
             BlockHeaderParser(**test_dict).run()
-        # test for valid header file
+        # test for invalid header file
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.test_dir, 'CMakeLists.txt'))
         if not os.path.basename(test_dict['file_path']).endswith('.h'):
             with self.assertRaises(BlockToolException):
                 BlockHeaderParser(**test_dict).run()
-        # test for invalid header module
-        test_dict['file_path'] = os.path.abspath(
-            os.path.join(self.current_folder, '../../../../gr-utils/python/blocktool/__init__.py'))
-        with self.assertRaises(BlockToolException):
-            BlockHeaderParser(**test_dict).run()
-        # test for invalid header file path
-        test_dict['file_path'] = os.path.abspath(
-            os.path.join(self.impl_dir, 'agc.h'))
-        with self.assertRaises(OSError):
-            BlockHeaderParser(**test_dict).run()
         # test for non-existent impl file
         test_dict['file_path'] = os.path.abspath(
             os.path.join(self.test_dir, 'agc.h'))
-        with self.assertRaises(OSError):
+        with self.assertRaises(BlockToolException):
             BlockHeaderParser(**test_dict).run()
 
-        # test for returned parsed data
-        # test for parser run
-        test_dict['file_path'] = self.target_file
-        test_obj = BlockHeaderParser(**test_dict).get_header_info()
-        # test for namespace
-        self.assertTrue(test_obj['namespace'][0] == self.gr)
-        self.assertTrue(test_obj['namespace'][1] == self.module)
-        # test for class
-        self.assertTrue(test_obj['class'])
-        # test for io_signature
-        input_signature = test_obj['io_signature']['input']['signature']
-        output_signature = test_obj['io_signature']['output']['signature']
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_namespace(self):
+        """ test for header namespace """
+        module_name = os.path.basename(self.module)
+        self.assertTrue(self.test_obj['namespace'][0] == 'gr')
+        self.assertTrue(self.test_obj['namespace']
+                        [1] == module_name.split('-')[-1])
+
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_io_signature(self):
+        """ test for io_signature """
+        input_signature = self.test_obj['io_signature']['input']['signature']
+        output_signature = self.test_obj['io_signature']['output']['signature']
         valid_signature = False
         if input_signature and output_signature in Constants.SIGNATURE_LIST:
             valid_signature = True
         self.assertTrue(valid_signature)
         valid_io_stream = False
-        input_max = test_obj['io_signature']['input']['max_streams']
-        input_min = test_obj['io_signature']['input']['min_streams']
-        output_max = test_obj['io_signature']['output']['max_streams']
-        output_min = test_obj['io_signature']['output']['min_streams']
+        input_max = self.test_obj['io_signature']['input']['max_streams']
+        input_min = self.test_obj['io_signature']['input']['min_streams']
+        output_max = self.test_obj['io_signature']['output']['max_streams']
+        output_min = self.test_obj['io_signature']['output']['min_streams']
         if self.is_int(input_max) and self.is_int(input_min) and self.is_int(output_max) and self.is_int(output_min):
             valid_io_stream = True
         self.assertTrue(valid_io_stream)
-        # test for factory_signature
+
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not founf, skipping this unittest')
+    def test_factory_signature(self):
+        """ test for factory signature in the header """
         valid_factory_arg = True
-        if test_obj['make']['arguments']:
-            for arguments in test_obj['make']['arguments']:
+        if self.test_obj['make']['arguments']:
+            for arguments in self.test_obj['make']['arguments']:
                 if not arguments['name'] or not arguments['dtype']:
                     valid_factory_arg = False
         self.assertTrue(valid_factory_arg)
-        # test for methods
+
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_methods(self):
+        """ test for methods """
         valid_method = True
-        if test_obj['methods']:
-            for arguments in test_obj['methods']:
+        if self.test_obj['methods']:
+            for arguments in self.test_obj['methods']:
                 if not arguments['name']:
                     valid_method = False
                 if arguments['arguments_type']:
@@ -166,17 +159,23 @@ class TestBlocktoolCore(unittest.TestCase):
                         if not args['name'] or not args['dtype']:
                             valid_method = False
         self.assertTrue(valid_method)
-        # test for properties
+
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_properties(self):
+        """ test for properties """
         valid_properties = True
-        if test_obj['properties']:
-            for arguments in test_obj['properties']:
+        if self.test_obj['properties']:
+            for arguments in self.test_obj['properties']:
                 if not arguments['name'] or not arguments['dtype']:
                     valid_properties = False
         self.assertTrue(valid_properties)
-        # Run the whole dict through JSON SCHEMA
+
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_result_format(self):
+        """ test for parsed blocktool output format """
         valid_schema = False
         try:
-            validate(instance=test_obj, schema=RESULT_SCHEMA)
+            validate(instance=self.test_obj, schema=RESULT_SCHEMA)
             valid_schema = True
         except BlockToolException:
             raise BlockToolException

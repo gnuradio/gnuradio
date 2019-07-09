@@ -65,7 +65,7 @@ class BlockHeaderParser(BlockTool):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         if not os.path.isfile(file_path):
-            raise BlockToolException('Invalid header file path!')
+            raise BlockToolException('Header file does not exist')
         file_path = os.path.abspath(file_path)
         self.target_file = file_path
         self.modname = os.path.basename(os.path.dirname(
@@ -95,17 +95,17 @@ class BlockHeaderParser(BlockTool):
                 ', '.join(self.module_types)))
         if not self.filename.endswith('.h'):
             raise BlockToolException(
-                'Invalid header file')
+                'Cannot parse a non-header file')
         if not os.path.isfile(self.impl_file):
             raise BlockToolException(
-                'Implementation of the header file not found')
+                'Implementation file of the header not found')
         _target_dir = os.path.join(self.module,
                                    'include',
                                    'gnuradio',
                                    self.modname.split('-')[-1])
         if _target_dir != self.targetdir:
             raise BlockToolException(
-                'Block header must be present in the include sub-directory of the specified module')
+                'Block header must be present in the include sub-directory of the module {}'.format(self.modname))
 
     def get_header_info(self):
         """
@@ -144,9 +144,9 @@ class BlockHeaderParser(BlockTool):
                             main_namespace = _namespace
                             self.parsed_data['namespace'].append(
                                 str(_namespace).split('::')[-1].split(' ')[0])
-        except BlockToolException as exception:
+        except RuntimeError:
             raise BlockToolException(
-                'Must be a header with block api!\n{}'.format(exception))
+                'Invalid namespace format in the block header file')
 
         # class
         try:
@@ -156,18 +156,18 @@ class BlockHeaderParser(BlockTool):
                     main_class = _class
                     self.parsed_data['class'] = str(_class).split('::')[
                         2].split(' ')[0]
-        except BlockToolException as exception:
+        except RuntimeError:
             raise BlockToolException(
-                'A block header always has a class!\n{}'.format(exception))
+                'Block header namespace {} must consist of a valid class instance'.format(module))
 
         # io_signature
         try:
             self.parsed_data['io_signature'] = {}
             self.parsed_data['io_signature'] = io_signature(
                 self.impl_file)
-        except BlockToolException as exception:
+        except RuntimeError:
             raise BlockToolException(
-                'A block header always has a io_signature!\n{}'.format(exception))
+                'Implementation file of the block header {} must have a valid I/O signature'.format(self.impl_file))
 
         # make
         try:
@@ -204,9 +204,9 @@ class BlockHeaderParser(BlockTool):
                                 make_arguments['default'] = "False"
                     self.parsed_data['make']['arguments'].append(
                         make_arguments.copy())
-        except BlockToolException as exception:
+        except RuntimeError:
             raise BlockToolException(
-                'A block API always has a factory signature!\n{}'.format(exception))
+                'Class instance {} must have a valid factory signature'.format(self.parsed_data['class']))
 
         # setters
         try:
@@ -233,8 +233,8 @@ class BlockHeaderParser(BlockTool):
                         self.parsed_data['methods'].append(setter_args.copy())
             else:
                 self.parsed_data['methods'] = []
-        except BlockToolException as exception:
-            raise exception
+        except RuntimeError:
+            self.parsed_data['methods'] = []
 
         # getters
         try:
@@ -257,8 +257,8 @@ class BlockHeaderParser(BlockTool):
                             getter_args.copy())
             else:
                 self.parsed_data['properties'] = []
-        except BlockToolException as exception:
-            raise exception
+        except RuntimeError:
+            self.parsed_data['properties'] = []
 
         # documentation
         try:
