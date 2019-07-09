@@ -47,14 +47,13 @@ class BlockHeaderParser(BlockTool):
                        properties, methods
     : Can be used as an CLI command or an extenal API
     """
-    name = 'Parse Header'
+    name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
     module_types = []
-    header_list = []
     current_folder = os.path.abspath(os.path.dirname(__file__))
-    target_dir = os.path.abspath(os.path.join(current_folder,
-                                              '..', '..', '..', '..'))
-    for list_dir in os.listdir(target_dir):
+    main_dir = os.path.abspath(os.path.join(current_folder,
+                                            '..', '..', '..', '..'))
+    for list_dir in os.listdir(main_dir):
         if list_dir.startswith(Constants.GR):
             list_dir = list_dir.split('-')[-1]
             module_types.append(list_dir)
@@ -65,17 +64,22 @@ class BlockHeaderParser(BlockTool):
     def __init__(self, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
-        open(file_path, 'r')
+        if not os.path.isfile(file_path):
+            raise BlockToolException('Invalid header file path!')
         file_path = os.path.abspath(file_path)
         self.target_file = file_path
         self.modname = os.path.basename(os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
+        self.module = os.path.abspath(
+            os.path.join(self.main_dir, self.modname))
         self.filename = os.path.basename(file_path)
         self.targetdir = os.path.dirname(file_path)
-        self.impldir = os.path.abspath(os.path.join(file_path,
-                                                             '..', '..', '..', '..', 'lib'))
+        for dirs in os.scandir(self.module):
+            if dirs.is_dir():
+                if dirs.path.endswith('lib'):
+                    self.impldir = dirs.path
         self.impl_file = os.path.join(self.impldir,
-                                              self.filename.split('.')[0]+'_impl.cc')
+                                      self.filename.split('.')[0]+'_impl.cc')
         self.validate()
 
     def validate(self):
@@ -92,14 +96,16 @@ class BlockHeaderParser(BlockTool):
         if not self.filename.endswith('.h'):
             raise BlockToolException(
                 'Invalid header file')
-        _target_dir = os.path.join(self.target_dir,
-                                   self.modname,
+        if not os.path.isfile(self.impl_file):
+            raise BlockToolException(
+                'Implementation of the header file not found')
+        _target_dir = os.path.join(self.module,
                                    'include',
                                    'gnuradio',
                                    self.modname.split('-')[-1])
         if _target_dir != self.targetdir:
-            raise BlockToolException('Invalid GNU Radio module')
-        open(self.impl_file, 'r')
+            raise BlockToolException(
+                'Block header must be present in the include sub-directory of the specified module')
 
     def get_header_info(self):
         """

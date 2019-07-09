@@ -42,7 +42,7 @@ class BlockTool(object):
     description = None
 
     def __init__(self, modname=None, filename=None, targetdir=None,
-                 target_file=None, impldir=None, impl_file=None,
+                 target_file=None, module= None, impldir=None, impl_file=None,
                  yaml_confirm=False, json_confirm=False, **kwargs):
         """ __init__ """
         setup_cli_logger(LOGGER)

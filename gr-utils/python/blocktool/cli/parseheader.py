@@ -205,19 +205,26 @@ def parse_directory(**kwargs):
         if _header.endswith('.h') and os.path.isfile(os.path.join(dir_path, _header)):
             list_header.append(os.path.join(dir_path, _header))
     list_header = sorted(list_header)
-    for header_path in list_header:
-        kwargs['file_path'] = header_path
-        header = os.path.basename(header_path)
-        try:
-            self = BlockHeaderParser(**kwargs)
-            self.yaml_confirm = True
-            self.json_confirm = True
-            run(self)
-            yaml_generator(self)
-            json_generator(self)
-        except:
-            logging.basicConfig(level=logging.DEBUG,
-                                filename=os.path.join('.', dir_name+'_log.out'))
-            logging.exception(
-                'Log for Exception raised for the header: {}\n'.format(header))
-            click.secho('Parsing unsuccessful: {}'.format(header), fg='yellow')
+    if list_header:
+        click.secho(
+            'Header directory: gr-{}'.format(os.path.basename(dir_path)), fg='green')
+        for header_path in list_header:
+            kwargs['file_path'] = header_path
+            header = os.path.basename(header_path)
+            try:
+                self = BlockHeaderParser(**kwargs)
+                self.yaml_confirm = True
+                self.json_confirm = True
+                run(self)
+                yaml_generator(self)
+                json_generator(self)
+            except:
+                logging.basicConfig(level=logging.DEBUG,
+                                    filename=os.path.join('.', dir_name+'_log.out'))
+                logging.exception(
+                    'Log for Exception raised for the header: {}\n'.format(header))
+                click.secho('Parsing unsuccessful: {}'.format(
+                    header), fg='yellow')
+    else:
+        raise BlockToolException(
+            'Invalid directory path! No header found to be parsed')
