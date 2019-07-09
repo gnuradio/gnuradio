@@ -427,7 +427,7 @@ class FlowGraph(Element):
                 block.rewrite()      # Make ports visible
                 # Flowgraph errors depending on disabled blocks are not displayed
                 # in the error dialog box
-                # So put a messsage into the Property window of the dummy block
+                # So put a message into the Property window of the dummy block
                 block.add_error_message('Block id "{}" not found.'.format(block.key))
 
         self.rewrite()  # global rewrite

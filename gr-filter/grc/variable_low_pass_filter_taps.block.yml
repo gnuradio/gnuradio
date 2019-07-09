@@ -47,6 +47,6 @@ cpp_templates:
 documentation: |-
     This variable is a convenience wrapper around a call to firdes.low_pass(...).
 
-        The beta paramater only applies to the Kaiser window.
+        The beta parameter only applies to the Kaiser window.
 
 file_format: 1

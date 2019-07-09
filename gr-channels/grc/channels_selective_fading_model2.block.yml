@@ -86,7 +86,7 @@ documentation: |-
        Compact Rayleigh and Rician fading simulator based on random walk processes
        A. Alimohammad S.F. Fard B.F. Cockburn C. Schlegel
        26th November 2008
-        (Alogrithm III)
+        (Algorithm III)
         ( with a novel addition of time delay tap random walk )
 
       The frequency selective extension of the block roughly implements

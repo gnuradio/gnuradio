@@ -23,5 +23,5 @@
 from gnuradio.filter import filter_design
 import sys
 
-# Call filter desgin main function
+# Call filter design main function
 filter_design.main(sys.argv)

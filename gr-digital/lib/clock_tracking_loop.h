@@ -31,7 +31,7 @@ namespace gr {
      *
      * \details
      * This class implements most of a second order symbol clock
-     * tracking loop and is inteded to act as a parent class to blocks
+     * tracking loop and is intended to act as a parent class to blocks
      * which need a symbol clock tracking loop to determine the optimal
      * instant to sample a received symbol from an input sample
      * stream (i.e. *_clock_recovery* and *_clock_sync* blocks).

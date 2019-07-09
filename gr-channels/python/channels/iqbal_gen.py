@@ -42,7 +42,7 @@ class iqbal_gen(gr.hier_block2):
                                        |
                                        +--X2
 
-                        X1--|Multply: 10**(mag/20)|--{R}--| Float 2 |--- Output
+                        X1--|Multiply: 10**(mag/20)|--{R}--| Float 2 |--- Output
                         X2---------------------------{I}--| Complex |
 
         (ASCII ART monospace viewing)

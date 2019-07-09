@@ -46,6 +46,6 @@ documentation: |-
     Please note some peculiarities below:
                 - poisson does not care about your std
                 - gaussian operates as expected
-                - uniform is actually of the range (mean-std, mean+std) - thus we are lieing and it is not actually an std here
+                - uniform is actually of the range (mean-std, mean+std) - thus we are lying and it is not actually an std here
 
 file_format: 1

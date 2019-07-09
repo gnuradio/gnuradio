@@ -301,7 +301,7 @@ namespace gr {
       printf("Set string was:%s\n", set.c_str());
     }
 
-    /*! \brief destrcutor stops watch thread before exits */
+    /*! \brief destructor stops watch thread before exits */
     ~logger_config() {
       stop_watch();
     }

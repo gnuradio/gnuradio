@@ -48,7 +48,7 @@ Fix VL-SNR framing.
 
 ### Digital
 
-Enable update rate in block_recovery_mm blocks to keep tags close to the the proper clock-recovered sample time. Tag offsets will still be off between calls to work, but each work call updates the tag rate.
+Enable update rate in block_recovery_mm blocks to keep tags close to the proper clock-recovered sample time. Tag offsets will still be off between calls to work, but each work call updates the tag rate.
 
 ### Analog
 

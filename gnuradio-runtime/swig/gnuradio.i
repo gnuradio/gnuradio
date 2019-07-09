@@ -75,7 +75,7 @@
 %include <gnuradio/high_res_timer.h>
 
 ////////////////////////////////////////////////////////////////////////
-// Python 2/3 compatibilty
+// Python 2/3 compatibility
 
 %begin %{
 #define SWIG_PYTHON_2_UNICODE

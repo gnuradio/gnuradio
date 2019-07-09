@@ -55,7 +55,7 @@ namespace gr {
                        msg_queue::sptr msgq);
 
       /*!
-       * Convert a raw asynchronous message to an asynchronous metatdata object.
+       * Convert a raw asynchronous message to an asynchronous metadata object.
        * \return The asynchronous metadata object.
        */
       static ::uhd::async_metadata_t
