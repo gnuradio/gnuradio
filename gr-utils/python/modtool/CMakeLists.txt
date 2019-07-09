@@ -21,13 +21,22 @@ include(GrPython)
 
 GR_PYTHON_CHECK_MODULE_RAW(
   "click"
-  "import click; import click_plugins"
+  "import click"
   CLICK_FOUND
+  )
+
+GR_PYTHON_CHECK_MODULE_RAW(
+  "click-plugins"
+  "import click_plugins"
+  CLICK_PLUGINS_FOUND
   )
 
 if(NOT CMAKE_CROSSCOMPILING)
   if(NOT CLICK_FOUND)
     message(FATAL_ERROR "Python module click is required for gr-modtool")
+  endif()
+  if(NOT CLICK_PLUGINS_FOUND)
+    message(FATAL_ERROR "Python module click-plugins is required for gr-modtool")
   endif()
 endif()
 
