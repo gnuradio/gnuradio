@@ -549,7 +549,7 @@ namespace gr {
     std::vector<std::vector<std::complex<float> > >
     usrp_source_impl::finite_acquisition_v(const size_t nsamps)
     {
-      //kludgy way to ensure rx streamer exsists
+      //kludgy way to ensure rx streamer exists
       if(!_rx_stream) {
         this->start();
         this->stop();

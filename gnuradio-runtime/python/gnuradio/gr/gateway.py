@@ -95,7 +95,7 @@ class py_io_signature(object):
         """
         Args:
 
-        min_ports (int): mininum number of connected ports.
+        min_ports (int): minimum number of connected ports.
 
         max_ports (int): maximum number of connected ports. -1 indicates
         no limit.

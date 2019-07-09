@@ -34,7 +34,7 @@ def setup_parser():
                       default='BEC')
     parser.add_argument("-b", "--blocksize", type=int, dest="block_size",
                       help="specify block size of polar code (default=16)", default=16)
-    parser.add_argument("-s", "--desgin-snr", type=float, dest="design_snr",
+    parser.add_argument("-s", "--design-snr", type=float, dest="design_snr",
                       help="specify design SNR of polar code (default=0.0)", default=0.0)
     parser.add_argument("-k", "--mu", type=int,
                       help="specify block size of polar code (default=2)", default=2)

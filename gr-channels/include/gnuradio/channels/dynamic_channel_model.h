@@ -39,7 +39,7 @@ namespace gr {
      * be used to help evaluate, design, and test various signals,
      * waveforms, and algorithms.
      *
-     * This model allows the user to set up an AWGN noise cource, a
+     * This model allows the user to set up an AWGN noise source, a
      * random walk process to simulate carrier frequency drift, a random
      * walk process to simulate sample rate offset drive, and a frequency
      * selective fading channel response that is either Rayleigh or Ricean

@@ -44,7 +44,7 @@ class _top_block_waiter(threading.Thread):
     thread), we create a separate thread that does the blocking wait,
     and then use the thread that called wait to do a slow poll of an
     event queue.  That thread, which is executing "wait" below is
-    interruptable, and if it sees a KeyboardInterrupt, executes a stop
+    interruptible, and if it sees a KeyboardInterrupt, executes a stop
     on the top_block, then goes back to waiting for it to complete.
     This ensures that the unlocked wait that was in progress (in the
     _top_block_waiter thread) can complete, release its mutex and back
@@ -52,7 +52,7 @@ class _top_block_waiter(threading.Thread):
     things occur like leaving the USRP transmitter sending a carrier.
 
     See also top_block.wait (below), which uses this class to implement
-    the interruptable wait.
+    the interruptible wait.
     """
     def __init__(self, tb):
         threading.Thread.__init__(self)

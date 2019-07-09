@@ -24,7 +24,7 @@ def get_real_name(block_definition):
 
 def rewrite_cmakelists(block_definition):
     """
-    Remove gengen template invokations from CMakeLists.txt
+    Remove gengen template invocations from CMakeLists.txt
     """
     with open(
             os.path.join(block_definition.get("path"), "CMakeLists.txt"),

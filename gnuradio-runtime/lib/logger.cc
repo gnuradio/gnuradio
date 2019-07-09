@@ -92,7 +92,7 @@ namespace gr {
     }
   }
 
-  // Method to load the confifuration.  It only loads if the filename
+  // Method to load the configuration.  It only loads if the filename
   // or watch has changed
   void
   logger_config::load_config(std::string filename,unsigned int watch_period)

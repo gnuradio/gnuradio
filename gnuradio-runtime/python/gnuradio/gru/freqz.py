@@ -120,7 +120,7 @@ class poly1d(object):
     p[k] is the coefficient on the kth power of x (backwards from
          sequencing the coefficient array.
 
-    polynomials can be added, substracted, multiplied and divided (returns
+    polynomials can be added, subtracted, multiplied and divided (returns
          quotient and remainder).
     asarray(p) will also give the coefficient array, so polynomials can
          be used in all functions that accept arrays.

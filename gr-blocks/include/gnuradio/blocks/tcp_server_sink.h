@@ -30,7 +30,7 @@ namespace gr {
   namespace blocks {
 
     /*!
-     * \brief Send stream trought an TCP socket.
+     * \brief Send stream through a TCP socket.
      * \ingroup networking_tools_blk
      *
      * \details

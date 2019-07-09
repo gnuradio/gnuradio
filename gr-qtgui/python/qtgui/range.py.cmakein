@@ -120,7 +120,7 @@ class RangeWidget(QtWidgets.QWidget):
             self.notifyChanged = slot
 
         def changed(self, value):
-            """ Handles maping the value to the right range before calling the slot. """
+            """ Handles mapping the value to the right range before calling the slot. """
             val = self.range.map_range(value)
             self.notifyChanged(self.rangeType(val))
 

@@ -36,6 +36,6 @@ templates:
     make: fec.decoder(${decoder}, ${itype.size}, ${otype.size})
 
 documentation: |-
-    This is a GNU Radio adaptor for any FEC decoder following the generic_decoder API in the fec module. Input and output are flexible to accomodate decoders that, say, modulate their encoded results into complex or float types.
+    This is a GNU Radio adaptor for any FEC decoder following the generic_decoder API in the fec module. Input and output are flexible to accommodate decoders that, say, modulate their encoded results into complex or float types.
 
 file_format: 1

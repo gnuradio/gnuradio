@@ -37,7 +37,7 @@ tested_mod_codes = (mod_codes.NO_CODE, mod_codes.GRAY_CODE)
 # Second item is a dictionary of arguments for function with lists of
 # possible values.
 # Third item is whether differential encoding should be tested.
-# Fourth item is the name of the argument to constructor that specifices
+# Fourth item is the name of the argument to constructor that specifies
 # whether differential encoding is used.
 
 def twod_constell():
