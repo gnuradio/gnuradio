@@ -419,7 +419,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             x, y = selected_block.coordinate
             min_x, min_y = min(min_x, x), min(min_y, y)
             max_x, max_y = max(max_x, x), max(max_y, y)
-        #calculate center point of slected blocks
+        #calculate center point of selected blocks
         ctr_x, ctr_y = (max_x + min_x)/2, (max_y + min_y)/2
         #rotate the blocks around the center point
         for selected_block in self.selected_blocks():

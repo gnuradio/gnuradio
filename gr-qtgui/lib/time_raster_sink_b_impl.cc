@@ -146,7 +146,7 @@ namespace gr {
       // Create time raster plot; as a bit input, we expect to see 1's
       // and 0's from each stream, so we set the maximum intensity
       // (zmax) to the number of connections so after adding the
-      // streams, the max will the the max of 1's from all streams.
+      // streams, the max will be the max of 1's from all streams.
       int numplots = (d_nconnections > 0) ? d_nconnections : 1;
       d_main_gui = new TimeRasterDisplayForm(numplots,
 					     d_samp_rate,

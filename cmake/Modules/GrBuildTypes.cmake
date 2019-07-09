@@ -50,7 +50,7 @@ list(APPEND AVAIL_BUILDTYPES
 # known build types in AVAIL_BUILDTYPES. If the build type is found,
 # the function exits immediately. If nothing is found by the end of
 # checking all available build types, we exit with an error and list
-# the avialable build types.
+# the available build types.
 ########################################################################
 function(GR_CHECK_BUILD_TYPE settype)
   STRING(TOUPPER ${settype} _settype)

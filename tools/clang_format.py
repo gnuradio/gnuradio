@@ -69,7 +69,7 @@ def callo(args):
 
 class ClangFormat(object):
     """Class encapsulates finding a suitable copy of clang-format,
-    and linting/formating an individual file
+    and linting/formatting an individual file
     """
 
     def __init__(self, path):

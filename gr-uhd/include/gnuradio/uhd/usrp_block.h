@@ -122,7 +122,7 @@ namespace gr {
       ) = 0;
 
       /*!
-       * Tune the the selected channel to the desired center frequency.
+       * Tune the selected channel to the desired center frequency.
        *
        * This is a wrapper around set_center_freq() so that in this case,
        * the user can pass a single frequency in the call instead of

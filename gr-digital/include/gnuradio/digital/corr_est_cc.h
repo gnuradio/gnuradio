@@ -71,7 +71,7 @@ namespace gr {
      * know where the actual sync word symbols are located relative to
      * "corr_start", given that some modulations have pulses with
      * intentional ISI.  The user should manually examine the primary
-     * output and the "corr_start" tag postition to determine the
+     * output and the "corr_start" tag position to determine the
      * required tag delay settings for the particular modulation,
      * sync word, and downstream blocks used.
      *
