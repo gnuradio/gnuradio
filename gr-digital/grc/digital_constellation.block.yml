@@ -39,7 +39,8 @@ parameters:
     dtype: raw
     default: None
     hide: ${ ('part' if str(soft_dec_lut) == 'None' else 'none') }
-value: ${ digital.constellation_calcdist(const_points, sym_map, rot_sym, dims) if (str(type) == "calcdist") else digital.constellation_type}
+value: ${ digital.constellation_calcdist(const_points, sym_map, rot_sym, dims) if (str(type) == "calcdist") else getattr(digital,'constellation_'+str(type))()  }
+
 
 templates:
     imports: from gnuradio import digital
