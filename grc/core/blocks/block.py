@@ -77,7 +77,7 @@ class Block(Element):
             (data['id'], param_factory(parent=self, **data))
             for data in self.parameters_data
         )
-        if self.key == 'options' or self.is_variable:
+        if self.key == 'options':
             self.params['id'].hide = 'part'
 
         self.sinks = [port_factory(parent=self, **params) for params in self.inputs_data]

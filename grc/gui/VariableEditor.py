@@ -191,7 +191,7 @@ class VariableEditor(Gtk.VBox):
                 self.set_tooltip_text(error_message[-1])
             else:
                 # Evaluate and show the value (if it is a variable)
-                if block.key == "variable":
+                if block.is_variable:
                     evaluated = str(block.params['value'].evaluate())
                     self.set_tooltip_text(evaluated)
         # Always set the text value.

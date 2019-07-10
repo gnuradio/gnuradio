@@ -124,7 +124,7 @@ of code.
 
 GNU Radio has integrated versatile, easy to use testing facilities. Please refer to
 
-https://wiki.gnuradio.org/index.php/Coding_guide_impl#Unit-testing
+https://wiki.gnuradio.org/index.php/Coding_guide_impl#Unit_testing
 
 
 * Standard command line options

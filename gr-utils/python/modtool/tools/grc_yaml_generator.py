@@ -55,11 +55,11 @@ class GRCYAMLGenerator(object):
     """ Create and write the YAML bindings for a GRC block. """
     def __init__(self, modname=None, blockname=None, doc=None, params=None, iosig=None):
         """docstring for __init__"""
-        params_list = ['$'+s['key'] for s in params if s['in_constructor']]
+        params_list = ['${'+s['key']+'}' for s in params if s['in_constructor']]
         # Can't make a dict 'cause order matters
         self._header = (('id', '{}_{}'.format(modname, blockname)),
-                        ('label', blockname.replace('_', ' ').capitalize()),
-                        ('category', '[{}]'.format(modname.upper()))
+                        ('label', blockname.replace('_', ' ')),
+                        ('category', '[{}]'.format(modname.capitalize()))
                        )
         self._templates = (('imports', 'import {}'.format(modname)),
                            ('make', '{}.{}({})'.format(modname, blockname, ', '.join(params_list)))

@@ -74,8 +74,11 @@ class MainWindow(Gtk.ApplicationWindow):
         icon_theme = Gtk.IconTheme.get_default()
         icon = icon_theme.lookup_icon("gnuradio-grc", 48, 0)
         if not icon:
-            # Set window icon
+            # Set default window icon
             self.set_icon_from_file(os.path.dirname(os.path.abspath(__file__)) + "/icon.png")
+        else :
+            # Use gnuradio icon
+            self.set_icon(icon.load_icon())
 
         # Create the menu bar and toolbar
         generate_modes = platform.get_generate_options()
@@ -260,6 +263,13 @@ class MainWindow(Gtk.ApplicationWindow):
                 flow_graph=flow_graph,
                 file_path=file_path,
             )
+            if getattr(Messages, 'flowgraph_error') is not None:
+                Messages.send(
+                    ">>> Check: {}\n>>> FlowGraph Error: {}\n".format(
+                        str(Messages.flowgraph_error_file),
+                        str(Messages.flowgraph_error)
+                    )
+                )
             if file_path: Messages.send_end_load()
         except Exception as e: #return on failure
             Messages.send_fail_load(e)

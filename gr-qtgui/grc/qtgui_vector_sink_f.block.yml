@@ -95,9 +95,7 @@ parameters:
 -   id: showports
     label: Show Msg Ports
     dtype: bool
-    default: 'True'
-    options: ['False', 'True']
-    option_labels: ['Yes', 'No']
+    default: 'False'
     hide: part
 -   id: label1
     label: Line 1 Label
@@ -289,7 +287,7 @@ outputs:
 -   domain: message
     id: xval
     optional: true
-    hide: ${ showports }
+    hide: ${ not showports }
 
 templates:
     imports: |-

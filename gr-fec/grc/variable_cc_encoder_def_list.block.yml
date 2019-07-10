@@ -1,5 +1,6 @@
 id: variable_cc_encoder_def
 label: CC Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: ndim

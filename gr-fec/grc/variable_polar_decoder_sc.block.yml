@@ -1,5 +1,6 @@
 id: variable_polar_decoder_sc_def
 label: POLAR Decoder SC Definition
+flags: [ show_id ]
 
 parameters:
 -   id: ndim

@@ -273,7 +273,7 @@ def show_about(parent, config):
     try:
         ad.set_logo(Gtk.IconTheme().load_icon('gnuradio-grc', 64, 0))
     except GLib.Error:
-        log.debug("Failed to set window logo")
+        Messages.send("Failed to set window logo\n")
 
     #ad.set_comments("")
     ad.set_copyright(config.license.splitlines()[0])

@@ -56,6 +56,8 @@ public:
   ~rpcextractor_base() {;}
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg) {
+    (void) which_port;
+    (void) msg;
     throw std::runtime_error("rpcextractor_base: no post defined for this data type.\n");
   }
 
@@ -74,6 +76,8 @@ public:
   ~rpcextractor_base() {;}
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg) {
+    (void) which_port;
+    (void) msg;
     throw std::runtime_error("rpcextractor_base: no post defined for this data type.\n");
   }
 
@@ -204,6 +208,8 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
+    (void) msg;
     (rpcextractor_base<T,void>::_source->*rpcextractor_base<T,void>::_func)();
   }
 };
@@ -221,6 +227,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,char>::_source->*rpcextractor_base<T,char>::_func)
       (static_cast<char>(pmt::to_long(msg)));
   }
@@ -239,6 +246,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,short>::_source->*rpcextractor_base<T,short>::_func)
       (static_cast<short>(pmt::to_long(msg)));
   }
@@ -257,6 +265,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,double>::_source->*rpcextractor_base<T,double>::_func)
       (pmt::to_double(msg));
   }
@@ -275,6 +284,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,float>::_source->*rpcextractor_base<T,float>::_func)
       (pmt::to_double(msg));
   }
@@ -293,6 +303,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,long>::_source->*rpcextractor_base<T,long>::_func)
       (pmt::to_long(msg));
   }
@@ -311,6 +322,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,int>::_source->*rpcextractor_base<T,int>::_func)
       (pmt::to_long(msg));
   }
@@ -329,6 +341,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,bool>::_source->*rpcextractor_base<T,bool>::_func)
       (pmt::to_bool(msg));
   }
@@ -348,6 +361,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     std::complex<float> k = static_cast<std::complex<float> >(pmt::to_complex(msg));
     (rpcextractor_base<T,std::complex<float> >::
      _source->*rpcextractor_base<T,std::complex<float> >::_func)(k);
@@ -368,6 +382,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,std::complex<double> >::
      _source->*rpcextractor_base<T,std::complex<double> >::_func)(pmt::to_complex(msg));
   }
@@ -387,6 +402,7 @@ public:
 
   void post(pmt::pmt_t which_port, pmt::pmt_t msg)
   {
+    (void) which_port;
     (rpcextractor_base<T,std::string>::
      _source->*rpcextractor_base<T,std::string>::_func)(pmt::symbol_to_string(msg));
   }

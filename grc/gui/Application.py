@@ -719,7 +719,7 @@ class Application(Gtk.Application):
         elif action == Actions.FLOW_GRAPH_KILL:
             if page.process:
                 try:
-                    page.process.kill()
+                    page.process.terminate()
                 except OSError:
                     print("could not terminate process: %d" % page.process.pid)
 
@@ -735,6 +735,7 @@ class Application(Gtk.Application):
             main.update_pages()
 
         elif action == Actions.FIND_BLOCKS:
+            flow_graph.unselect()
             main.update_panel_visibility(main.BLOCKS, True)
             main.btwin.search_entry.show()
             main.btwin.search_entry.grab_focus()

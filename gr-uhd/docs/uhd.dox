@@ -142,10 +142,9 @@ A typical option parser setup for a UHD device looks like
 To use these options to create a UHD source object:
 
 \code
+    stream_args = uhd.stream_args()
     self.u = uhd.usrp_source(device_addr=options.args,
-                             io_type=uhd.io_type.COMPLEX_FLOAT32,
-                             num_channels=1)
-
+                             stream_args)
     self.u.set_samp_rate(options.samp_rate)
 
     # if no gain was specified, use the mid-point in dB

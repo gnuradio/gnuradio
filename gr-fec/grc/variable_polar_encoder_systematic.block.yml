@@ -1,5 +1,6 @@
 id: variable_polar_encoder_systematic_def
 label: systematic POLAR Encoder Definition
+flags: [ show_id ]
 
 parameters:
 -   id: ndim
