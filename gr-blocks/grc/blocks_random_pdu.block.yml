@@ -34,6 +34,6 @@ templates:
     imports: |-
         from gnuradio import blocks
         import pmt
-    make: blocks.random_pdu(${minsize}, ${maxsize}, chr(${mask}), ${length_modulo})
+    make: blocks.random_pdu(${minsize}, ${maxsize}, ${mask}, ${length_modulo})
 
 file_format: 1
