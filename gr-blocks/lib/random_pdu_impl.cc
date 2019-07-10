@@ -32,12 +32,12 @@ namespace gr {
   namespace blocks {
 
     random_pdu::sptr
-    random_pdu::make(int min_items, int max_items, char byte_mask, int length_modulo)
+    random_pdu::make(int min_items, int max_items, unsigned char byte_mask, int length_modulo)
     {
       return gnuradio::get_initial_sptr(new random_pdu_impl(min_items, max_items, byte_mask, length_modulo));
     }
 
-    random_pdu_impl::random_pdu_impl(int min_items, int max_items, char byte_mask, int length_modulo)
+    random_pdu_impl::random_pdu_impl(int min_items, int max_items, unsigned char byte_mask, int length_modulo)
       :	block("random_pdu",
 		 io_signature::make (0, 0, 0),
 		 io_signature::make (0, 0, 0)),
