@@ -22,6 +22,8 @@
 ########################################################################
 install(FILES
     api.h
+    clock_config.hpp
+    io_type.hpp
     usrp_block.h
     usrp_source.h
     usrp_sink.h

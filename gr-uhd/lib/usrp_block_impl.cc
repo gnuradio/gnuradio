@@ -21,6 +21,7 @@
  */
 
 #include "usrp_block_impl.h"
+#include <uhd/version.hpp>
 #include <boost/make_shared.hpp>
 
 using namespace gr::uhd;
@@ -306,7 +307,34 @@ void
 usrp_block_impl::set_clock_config(const ::uhd::clock_config_t &clock_config,
                                  size_t mboard)
 {
-  return _dev->set_clock_config(clock_config, mboard);
+#if UHD_VERSION < 4000000
+  _dev->set_clock_config(clock_config, mboard);
+#else
+  //set the reference source...
+  std::string clock_source;
+  switch(clock_config.ref_source)
+  {
+    case ::uhd::clock_config_t::REF_INT: clock_source = "internal"; break;
+    case ::uhd::clock_config_t::REF_SMA: clock_source = "external"; break;
+    case ::uhd::clock_config_t::REF_MIMO: clock_source = "mimo"; break;
+    default: clock_source = "unknown";
+  }
+  _dev->set_clock_source(clock_source, mboard);
+
+  //set the time source
+  std::string time_source;
+  switch(clock_config.pps_source)
+  {
+    case ::uhd::clock_config_t::PPS_INT: time_source = "internal"; break;
+    case ::uhd::clock_config_t::PPS_SMA: time_source = "external"; break;
+    case ::uhd::clock_config_t::PPS_MIMO: time_source = "mimo"; break;
+    default: time_source = "unknown";
+  }
+  if (time_source == "external" and clock_config.pps_polarity == ::uhd::clock_config_t::PPS_NEG) {
+    time_source = "_external_";
+  }
+  _dev->set_time_source(time_source, mboard);
+#endif
 }
 
 void
