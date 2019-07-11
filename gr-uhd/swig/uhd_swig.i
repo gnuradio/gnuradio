@@ -79,7 +79,7 @@
 
 %include <uhd/types/device_addr.hpp>
 
-%include <uhd/types/io_type.hpp>
+%include "gnuradio/uhd/io_type.hpp"
 
 %template(range_vector_t) std::vector<uhd::range_t>; //define before range
 %include <uhd/types/ranges.hpp>
@@ -87,8 +87,6 @@
 %include <uhd/types/tune_request.hpp>
 
 %include <uhd/types/tune_result.hpp>
-
-%include <uhd/types/io_type.hpp>
 
 %include <uhd/types/time_spec.hpp>
 
@@ -113,7 +111,7 @@
 
 %include <uhd/types/stream_cmd.hpp>
 
-%include <uhd/types/clock_config.hpp>
+%include "gnuradio/uhd/clock_config.hpp"
 
 %include <uhd/types/metadata.hpp>
 

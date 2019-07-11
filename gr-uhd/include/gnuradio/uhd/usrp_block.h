@@ -27,6 +27,11 @@
 #include <gnuradio/sync_block.h>
 #include <uhd/usrp/multi_usrp.hpp>
 
+// This needs to come after multi_usrp.hpp, because we want to use the UHD
+// version of clock_config if it exists:
+#include <gnuradio/uhd/clock_config.hpp>
+#include <gnuradio/uhd/io_type.hpp>
+
 namespace gr {
   namespace uhd {
 
