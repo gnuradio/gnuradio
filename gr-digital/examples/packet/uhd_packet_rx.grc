@@ -482,7 +482,7 @@
     </param>
     <param>
       <key>framebits</key>
-      <value>8000</value>
+      <value>hdr_format.header_nbits()</value>
     </param>
     <param>
       <key>_coordinate</key>
