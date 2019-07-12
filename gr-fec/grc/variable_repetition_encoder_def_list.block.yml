@@ -37,7 +37,7 @@ templates:
         ${rep})), range(0,${dim1})))
         % else:
         self.${id} = ${id} = list(map((lambda \
-        b: map((lambda a: fec.repetition_encoder_make(${framebits}, ${rep})), range(0,${dim2}))),\
+        b: list(map((lambda a: fec.repetition_encoder_make(${framebits}, ${rep})), range(0,${dim2})))),\
         range(0,${dim1})))
         % endif
 
