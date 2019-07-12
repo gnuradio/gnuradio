@@ -36,8 +36,8 @@ templates:
         self.${id} = ${id} = list(map((lambda a: fec.ldpc_par_mtrx_encoder_make_H(${H})),\
         range(0,${dim1})))
         % else:
-        self.${id} = ${id} = list(map((lambda b: map((lambda\
-        a: fec.ldpc_par_mtrx_encoder_make_H(${H})), range(0,${dim2}))), range(0,${dim1})))\
+        self.${id} = ${id} = list(map((lambda b: list( map((lambda \
+        a: fec.ldpc_par_mtrx_encoder_make_H(${H})), range(0,${dim2})))), range(0,${dim1})))\
         % endif
 
 documentation: |-

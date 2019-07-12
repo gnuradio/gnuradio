@@ -38,13 +38,13 @@ templates:
         self.${id} = ${id} = fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(),\
         ${max_iterations})
         % elif int(ndim)==1:
-        self.${id} = ${id} = list(map((lambda\
+        self.${id} = ${id} = list(map((lambda \
         a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), ${max_iterations})),\
         range(0,${dim1})))
         % else:
-        self.${id} = ${id} = list(map((lambda b: map((lambda\
+        self.${id} = ${id} = list(map((lambda b: list(map((lambda \
         a: fec.ldpc_bit_flip_decoder.make(${matrix_object}.get_base_sptr(), ${max_iterations})),\
-        range(0,${dim2}))), range(0,${dim1})))
+        range(0,${dim2})))), range(0,${dim1})))
         % endif
 
 documentation: |-
