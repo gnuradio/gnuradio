@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2015 Free Software Foundation, Inc.
+ * Copyright 2015,2019 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -484,16 +484,6 @@ namespace gr {
       virtual void set_user_register(const uint8_t addr,
                                      const uint32_t data,
                                      size_t mboard = 0) = 0;
-
-      /*!
-       * Set the clock configuration.
-       *
-       * DEPRECATED for set_time/clock_source.
-       * \param clock_config the new configuration
-       * \param mboard the motherboard index 0 to M-1
-       */
-      virtual void set_clock_config(const ::uhd::clock_config_t &clock_config,
-                                    size_t mboard = 0) = 0;
 
       /*!
        * Set the time source for the USRP device.
