@@ -2,6 +2,10 @@ options:
   parameters:
     author: Johannes Demel
     category: Custom
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
@@ -10,13 +14,19 @@ options:
     max_nouts: '0'
     output_language: python
     placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
     run: 'True'
     run_command: '{python} -u {filename}'
     run_options: prompt
     sizing_mode: fixed
+    thread_safe_setters: ''
     title: polar code BER curve generator
     window_size: 1920,1080
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [10, 10]
     rotation: 0
     state: enabled
@@ -25,14 +35,19 @@ blocks:
 - name: block_size
   id: variable
   parameters:
+    comment: ''
     value: '1024'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [304, 35]
     rotation: 0
     state: enabled
 - name: dec_cc
   id: variable_cc_decoder_def
   parameters:
+    comment: ''
     dim1: len(esno)
     dim2: '1'
     framebits: frame_size
@@ -46,12 +61,16 @@ blocks:
     state_start: '0'
     value: '"ok"'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1368, 395]
     rotation: 0
     state: enabled
 - name: enc_cc
   id: variable_cc_encoder_def
   parameters:
+    comment: ''
     dim1: len(esno)
     dim2: '1'
     framebits: frame_size
@@ -63,46 +82,69 @@ blocks:
     rate: rate
     state_start: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1368, 187]
     rotation: 0
     state: enabled
 - name: esno
   id: variable
   parameters:
+    comment: ''
     value: numpy.arange(-1, 4, 0.5)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [704, 19]
     rotation: 0
     state: enabled
 - name: frame_size
   id: variable
   parameters:
-    value: block_size // 2
+    comment: ''
+    value: int(block_size / 2)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1440, 51]
     rotation: 0
     state: enabled
 - name: k
   id: variable
   parameters:
+    comment: ''
     value: '7'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1368, 115]
     rotation: 0
     state: enabled
 - name: list_size
   id: variable
   parameters:
+    comment: ''
     value: '8'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [536, 171]
     rotation: 0
     state: enabled
 - name: n_info_bits
   id: variable
   parameters:
-    value: block_size // 2
+    comment: ''
+    value: int( block_size / 2 )
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [424, 35]
     rotation: 0
     state: enabled
@@ -111,10 +153,14 @@ blocks:
   parameters:
     block_size: block_size
     channel: polar.CHANNEL_TYPE_BEC
+    comment: ''
     design_snr: '0.0'
     mu: '32'
     num_info_bits: n_info_bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [328, 107]
     rotation: 0
     state: enabled
@@ -122,6 +168,7 @@ blocks:
   id: variable_polar_decoder_sc_def
   parameters:
     block_size: block_size
+    comment: ''
     dim1: len(esno)
     dim2: '1'
     frozen_bit_positions: polar_config['positions']
@@ -129,6 +176,9 @@ blocks:
     ndim: '2'
     num_info_bits: n_info_bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 419]
     rotation: 0
     state: enabled
@@ -136,6 +186,7 @@ blocks:
   id: variable_polar_encoder_def
   parameters:
     block_size: block_size
+    comment: ''
     dim1: len(esno)
     dim2: '1'
     frozen_bit_positions: polar_config['positions']
@@ -144,6 +195,9 @@ blocks:
     ndim: '2'
     num_info_bits: n_info_bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 251]
     rotation: 0
     state: enabled
@@ -151,6 +205,7 @@ blocks:
   id: variable_polar_encoder_def
   parameters:
     block_size: block_size
+    comment: ''
     dim1: len(esno)
     dim2: '1'
     frozen_bit_positions: polar_config['positions']
@@ -159,6 +214,9 @@ blocks:
     ndim: '2'
     num_info_bits: n_info_bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [456, 243]
     rotation: 0
     state: enabled
@@ -166,6 +224,7 @@ blocks:
   id: variable_polar_decoder_sc_list_def
   parameters:
     block_size: block_size
+    comment: ''
     dim1: len(esno)
     dim2: '1'
     frozen_bit_positions: polar_config['positions']
@@ -174,36 +233,54 @@ blocks:
     ndim: '2'
     num_info_bits: n_info_bits
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [456, 411]
     rotation: 0
     state: enabled
 - name: polys
   id: variable
   parameters:
+    comment: ''
     value: '[79, 109]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1440, 115]
     rotation: 0
     state: enabled
 - name: rate
   id: variable
   parameters:
+    comment: ''
     value: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1368, 51]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
+    comment: ''
     value: 350e3
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [16, 107]
     rotation: 0
     state: enabled
 - name: polar_curve_gen_sc
   id: fec_bercurve_generator
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     decoder_list: polar_decoder
     encoder_list: polar_encoder
     esno: esno
@@ -214,12 +291,18 @@ blocks:
     seed: '0'
     threadtype: '"none"'
   states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
     coordinate: [808, 123]
     rotation: 0
     state: enabled
 - name: polar_curve_gen_scld
   id: fec_bercurve_generator
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     decoder_list: polar_scld
     encoder_list: polar_encoder_scld
     esno: esno
@@ -230,12 +313,18 @@ blocks:
     seed: '0'
     threadtype: '"none"'
   states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
     coordinate: [808, 227]
     rotation: 0
     state: enabled
 - name: polar_curve_gen_scld_0
   id: fec_bercurve_generator
   parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
     decoder_list: dec_cc
     encoder_list: enc_cc
     esno: esno
@@ -246,12 +335,17 @@ blocks:
     seed: '0'
     threadtype: '"capillary"'
   states:
+    bus_sink: false
+    bus_source: true
+    bus_structure: null
     coordinate: [808, 331]
     rotation: 0
     state: enabled
 - name: qtgui_bercurve_sink_0
   id: qtgui_bercurve_sink
   parameters:
+    affinity: ''
+    alias: ''
     alpha1: '1.0'
     alpha10: '1.0'
     alpha2: '1.0'
@@ -264,6 +358,8 @@ blocks:
     alpha9: '1.0'
     berlimit: '-7.0'
     berminerrors: '100'
+    bus_structure_sink: list(map(lambda b:list(map(lambda a:b * len(esno) * 2 + a,
+      range(len(esno)*2))), range(num_curves)))
     color1: '"blue"'
     color10: '"blue"'
     color2: '"red"'
@@ -274,11 +370,20 @@ blocks:
     color7: '"yellow"'
     color8: '"dark red"'
     color9: '"dark green"'
+    comment: ''
     curvenames: '[''POLAR decoder'', ''POLAR decoder list'', ''CC'']'
     esno: esno
+    gui_hint: ''
     label1: POLAR decoder
+    label10: ''
     label2: POLAR list decoder
     label3: CC convolutional
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
     marker1: '0'
     marker10: '0'
     marker2: '0'
@@ -314,10 +419,17 @@ blocks:
     ymax: '0'
     ymin: '-10'
   states:
+    bus_sink: true
+    bus_source: false
+    bus_structure: null
     coordinate: [1176, 146]
     rotation: 0
     state: enabled
-connections: []
+
+connections:
+- [polar_curve_gen_sc, '20', qtgui_bercurve_sink_0, '60']
+- [polar_curve_gen_scld, '20', qtgui_bercurve_sink_0, '61']
+- [polar_curve_gen_scld_0, '20', qtgui_bercurve_sink_0, '62']
 
 metadata:
   file_format: 1

@@ -44,9 +44,9 @@ templates:
         ${num_info_bits}, ${frozen_bit_positions}, ${frozen_bit_values})), range(0,\
         ${dim1})))
         % else:
-        self.${id} = ${id} = list(map((lambda b: map((lambda a:\
+        self.${id} = ${id} = list(map((lambda b: list(map((lambda a: \
         fec.polar_decoder_sc.make(${block_size}, ${num_info_bits}, ${frozen_bit_positions},\
-        ${frozen_bit_values})), range(0, ${dim2}))), range(0, ${dim1})))
+        ${frozen_bit_values})), range(0, ${dim2})))), range(0, ${dim1})))
         % endif
 
 file_format: 1
