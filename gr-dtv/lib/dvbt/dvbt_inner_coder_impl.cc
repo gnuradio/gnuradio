@@ -159,10 +159,6 @@ namespace gr {
       // Set output items multiple of 4
       set_output_multiple(4);
 
-      // Set relative rate out/in
-      assert((d_noutput * d_k * d_m) % (d_ninput * 8 * d_n) == 0);
-      set_relative_rate((float)(d_ninput * 8 * d_n) / (float)d_noutput * d_k * d_m);
-
       // calculate in and out block sizes
       d_in_bs = (d_k * d_m) / 2;
       d_out_bs = 4 * d_n;
