@@ -146,7 +146,7 @@ blocks:
     comment: ''
     dim1: '1'
     dim2: '1'
-    framebits: '8000'
+    framebits: hdr_format.header_nbits()
     ndim: '0'
     value: '"ok"'
   states:
