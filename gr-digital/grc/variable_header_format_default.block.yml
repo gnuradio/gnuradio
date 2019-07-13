@@ -15,7 +15,12 @@ parameters:
     label: Payload Bits per Symbol
     dtype: int
     default: 1
-value: ${ digital.header_format_default(access_code, threshold, bps) }
+-   id: value
+    label: Resulting access code
+    dtype: string
+    default: 'digital.header_format_default(access_code, threshold, bps)'
+    hide: 'all'
+value: ${ value }
 
 templates:
     imports: from gnuradio import digital
