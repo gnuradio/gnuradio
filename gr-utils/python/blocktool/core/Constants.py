@@ -31,6 +31,10 @@ MAKE2 = 'make2'
 MAKE3 = 'make3'
 MAKEV = 'makev'
 
+# message ports id
+MESSAGE_INPUT = 'message_port_register_in'
+MESSAGE_OUTPUT = 'message_port_register_out'
+
 # Symbols and constants required for parsing
 GR = 'gr-'
 UTILS = 'utils'

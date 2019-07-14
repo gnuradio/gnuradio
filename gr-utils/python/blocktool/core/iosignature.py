@@ -24,6 +24,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import re
 import itertools
 import logging
 import string
@@ -33,7 +34,7 @@ from blocktool.core import Constants
 LOGGER = logging.getLogger(__name__)
 
 
-def io_signature(io_file):
+def io_signature(impl_file):
     """
     function to generate the io_signature of the block
     : returns the io parmaters
@@ -46,15 +47,15 @@ def io_signature(io_file):
             "signature": None
         }
     }
-    with open(io_file, 'r') as impl:
-        lines = []
+    with open(impl_file, 'r') as impl:
+        io_lines = []
         for line in impl:
             if Constants.IO_SIGNATURE in line:
-                lines.append(line)
-    if len(lines) > 2:
-        lines = lines[0:2]
+                io_lines.append(line)
+    if len(io_lines) > 2:
+        io_lines = io_lines[0:2]
     _io_sig = []
-    for line in lines:
+    for line in io_lines:
         if Constants.IO_SIGNATURE in line:
             line = line.lstrip().rstrip().split(Constants.IO_SIGNATURE)
             _io_sig.append(line)
@@ -136,3 +137,45 @@ def io_signature(io_file):
         parsed_io['output']['sizeof_stream_items'] = io_elements[2]
         del io_elements[0:3]
     return parsed_io
+
+
+def message_port(impl_file):
+    """
+    parses message ports from implementation file
+    """
+    with open(impl_file, 'r') as impl:
+        _input = []
+        _output = []
+        for line in impl:
+            if Constants.MESSAGE_INPUT in line:
+                _input.append(line)
+            if Constants.MESSAGE_OUTPUT in line:
+                _output.append(line)
+
+    input_port = []
+    output_port = []
+    if _input:
+        for port in _input:
+            port = port.lstrip().rstrip().strip(Constants.MESSAGE_INPUT)
+            pattern = port.find('\"')
+            if pattern != -1:
+                if re.findall(r'"([^"]*)"', port)[0]:
+                    input_port.append(re.findall(r'"([^"]*)"', port)[0])
+            else:
+                input_port.append(port[port.find('(')+1:port.rfind(')')])
+                _temp_port = ''.join(map(str, input_port))
+                input_port.clear()
+                input_port.append(_temp_port)
+
+    if _output:
+        for port in _output:
+            port = port.lstrip().rstrip().strip(Constants.MESSAGE_OUTPUT)
+            pattern = port.find('\"')
+            if pattern != -1:
+                if re.findall(r'"([^"]*)"', port)[0]:
+                    output_port.append(re.findall(r'"([^"]*)"', port)[0])
+            else:
+                output_port.append(port[port.find('(')+1:port.rfind(')')])
+                _temp_port = ''.join(map(str, output_port))
+                output_port.clear()
+                output_port.append(_temp_port)
