@@ -101,7 +101,7 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
 if(ENABLE_GRC)
 
 ########################################################################
-# Create and install the grc conf file
+# Create and install the grc and grc-docs conf file
 ########################################################################
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
@@ -129,6 +129,16 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
+    DESTINATION ${GR_PREFSDIR}
+)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/00-grc-docs.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
     DESTINATION ${GR_PREFSDIR}
 )
 
