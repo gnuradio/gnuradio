@@ -23,10 +23,10 @@ endif()
 set(__INCLUDED_GR_VERSION_CMAKE TRUE)
 
 #eventually, replace version.sh and fill in the variables below
-set(MAJOR_VERSION ${VERSION_INFO_MAJOR_VERSION})
-set(API_COMPAT    ${VERSION_INFO_API_COMPAT})
-set(MINOR_VERSION ${VERSION_INFO_MINOR_VERSION})
-set(MAINT_VERSION ${VERSION_INFO_MAINT_VERSION})
+set(MAJOR_VERSION ${VERSION_MAJOR})
+set(API_COMPAT    ${VERSION_API})
+set(MINOR_VERSION ${VERSION_ABI})
+set(MAINT_VERSION ${VERSION_PATCH})
 
 ########################################################################
 # Extract the version string from git describe.
