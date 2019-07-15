@@ -68,6 +68,9 @@ set(MSVC_MIN_VERSION "1800")
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Set wiki block docs url prefix used in grc-docs.conf (block name gets appended to end of this string)
+set(GRC_DOCS_URL_PREFIX "https://wiki.gnuradio.org/index.php/")
+
 ########################################################################
 # Configure CMake policies
 ########################################################################
