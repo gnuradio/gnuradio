@@ -32,7 +32,7 @@ import logging
 from pygccxml import parser, declarations, utils
 
 from blocktool.core.base import BlockToolException, BlockTool
-from blocktool.core.iosignature import io_signature
+from blocktool.core.iosignature import io_signature, message_port
 from blocktool.core import Constants
 
 LOGGER = logging.getLogger(__name__)
@@ -65,13 +65,14 @@ class BlockHeaderParser(BlockTool):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         if not os.path.isfile(file_path):
-            raise BlockToolException('Header file does not exist')
+            raise BlockToolException('file does not exist')
         file_path = os.path.abspath(file_path)
         self.target_file = file_path
-        self.modname = os.path.basename(os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.dirname(file_path)))))
-        self.module = os.path.abspath(
-            os.path.join(self.main_dir, self.modname))
+        self.module = self.target_file
+        for dirs in self.module:
+            if not os.path.basename(self.module).startswith(Constants.GR):
+                self.module = os.path.abspath(os.path.join(self.module, os.pardir))
+        self.modname = os.path.basename(self.module)
         self.filename = os.path.basename(file_path)
         self.targetdir = os.path.dirname(file_path)
         for dirs in os.scandir(self.module):
@@ -85,11 +86,7 @@ class BlockHeaderParser(BlockTool):
     def validate(self):
         """ Override the Blocktool validate function """
         BlockTool._validate(self)
-        if self.modname.startswith(Constants.GR):
-            _module = self.modname.split('-')[-1]
-        else:
-            _module = self.modname
-            self.modname = Constants.GR+_module
+        _module = self.modname.split('-')[-1]
         if _module not in self.module_types:
             raise BlockToolException('Module must be one of {}.'.format(
                 ', '.join(self.module_types)))
@@ -99,13 +96,6 @@ class BlockHeaderParser(BlockTool):
         if not os.path.isfile(self.impl_file):
             raise BlockToolException(
                 'Implementation file of the header not found')
-        _target_dir = os.path.join(self.module,
-                                   'include',
-                                   'gnuradio',
-                                   self.modname.split('-')[-1])
-        if _target_dir != self.targetdir:
-            raise BlockToolException(
-                'Block header must be present in the include sub-directory of the module {}'.format(self.modname))
 
     def get_header_info(self):
         """
@@ -165,9 +155,20 @@ class BlockHeaderParser(BlockTool):
             self.parsed_data['io_signature'] = {}
             self.parsed_data['io_signature'] = io_signature(
                 self.impl_file)
-        except RuntimeError:
+        except:
             raise BlockToolException(
                 'Implementation file of the block header {} must have a valid I/O signature'.format(self.impl_file))
+
+        # message_port
+        try:
+            self.parsed_data['message_port'] = {}
+            self.parsed_data['message_port'] = message_port(
+                self.impl_file)
+        except:
+            self.parsed_data['message_port'] = {
+                "input": [],
+                "output": []
+            }
 
         # make
         try:

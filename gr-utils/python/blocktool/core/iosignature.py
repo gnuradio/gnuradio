@@ -143,6 +143,10 @@ def message_port(impl_file):
     """
     parses message ports from implementation file
     """
+    parsed_message_port = {
+        "input": [],
+        "output": []
+    }
     with open(impl_file, 'r') as impl:
         _input = []
         _output = []
@@ -179,3 +183,20 @@ def message_port(impl_file):
                 _temp_port = ''.join(map(str, output_port))
                 output_port.clear()
                 output_port.append(_temp_port)
+
+    if input_port:
+        for port in input_port:
+            _ids = {
+                "id": port
+            }
+            parsed_message_port['input'].append(
+                _ids.copy())
+
+    if output_port:
+        for port in output_port:
+            _ids = {
+                "id": port
+            }
+            parsed_message_port['output'].append(
+                _ids.copy())
+    return parsed_message_port

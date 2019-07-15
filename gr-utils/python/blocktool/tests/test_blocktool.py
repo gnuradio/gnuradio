@@ -136,6 +136,24 @@ class TestBlocktoolCore(unittest.TestCase):
             valid_io_stream = True
         self.assertTrue(valid_io_stream)
 
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
+    def test_message_port(self):
+        """ test for message ports """
+        input_port = self.test_obj['message_port']['input']
+        output_port = self.test_obj['message_port']['output']
+        valid_input_message_port = True
+        valid_output_message_port = True
+        if input_port:
+            for port in input_port:
+                if not port['id']:
+                    valid_input_message_port = False
+        if output_port:
+            for port in output_port:
+                if not port['id']:
+                    valid_output_message_port = False
+        self.assertTrue(valid_input_message_port)
+        self.assertTrue(valid_output_message_port)
+
     @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not founf, skipping this unittest')
     def test_factory_signature(self):
         """ test for factory signature in the header """
