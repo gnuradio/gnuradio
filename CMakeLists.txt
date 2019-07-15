@@ -47,10 +47,10 @@ SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
-SET(VERSION_INFO_MAJOR_VERSION 3)
-SET(VERSION_INFO_API_COMPAT    8)
-SET(VERSION_INFO_MINOR_VERSION git)
-SET(VERSION_INFO_MAINT_VERSION 0)
+SET(VERSION_MAJOR 3)
+SET(VERSION_API   8)
+SET(VERSION_ABI   git)
+SET(VERSION_PATCH 0)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
