@@ -396,8 +396,8 @@ class ${blockname}(${parenttype}):
         ${parenttype}.__init__(self,
 % if blocktype == 'hier':
             "${blockname}",
-            "gr.io_signature(${inputsig})",  # Input signature
-            "gr.io_signature(${outputsig})") # Output signature
+            gr.io_signature(${inputsig}),  # Input signature
+            gr.io_signature(${outputsig})) # Output signature
 
             # Define blocks and connect them
             self.connect()
