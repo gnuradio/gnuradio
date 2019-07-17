@@ -802,8 +802,8 @@ class Application(Gtk.Application):
 
         Actions.BLOCK_CREATE_HIER.set_enabled(bool(selected_blocks))
         Actions.OPEN_HIER.set_enabled(bool(selected_blocks))
-        #Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
-        #Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
+        Actions.BUSSIFY_SOURCES.set_enabled(bool(selected_blocks))
+        Actions.BUSSIFY_SINKS.set_enabled(bool(selected_blocks))
         Actions.RELOAD_BLOCKS.enable()
         Actions.FIND_BLOCKS.enable()
 

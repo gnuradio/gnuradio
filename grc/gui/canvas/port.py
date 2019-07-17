@@ -124,17 +124,18 @@ class Port(CorePort, Drawable):
         label_width, label_height = self.label_layout.get_size()
 
         self.width = 2 * Constants.PORT_LABEL_PADDING + label_width / Pango.SCALE
-        self.height = 2 * Constants.PORT_LABEL_PADDING + label_height / Pango.SCALE
+        self.height = (2 * Constants.PORT_LABEL_PADDING + label_height*(3 if self.dtype == 'bus' else 1) ) / Pango.SCALE
         self._label_layout_offsets = [0, Constants.PORT_LABEL_PADDING]
-        # if self.dtype == 'bus':
-        #     self.height += Constants.PORT_EXTRA_BUS_HEIGHT
-        #     self._label_layout_offsets[1] += Constants.PORT_EXTRA_BUS_HEIGHT / 2
+
         self.height += self.height % 2  # uneven height
 
     def draw(self, cr):
         """
         Draw the socket with a label.
         """
+        if self.hidden:
+            return
+
         border_color = self._border_color
         cr.set_line_width(self._line_width_factor * cr.get_line_width())
         cr.translate(*self.coordinate)
