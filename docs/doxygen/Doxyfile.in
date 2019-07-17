@@ -151,8 +151,6 @@ STRIP_FROM_INC_PATH    = @CMAKE_SOURCE_DIR@/gnuradio-runtime/include \
                          @CMAKE_BINARY_DIR@/gr-blocks/include \
                          @CMAKE_SOURCE_DIR@/gr-channels/include \
                          @CMAKE_BINARY_DIR@/gr-channels/include \
-                         @CMAKE_SOURCE_DIR@/gr-comedi/include \
-                         @CMAKE_BINARY_DIR@/gr-comedi/include \
                          @CMAKE_SOURCE_DIR@/gr-digital/include \
                          @CMAKE_BINARY_DIR@/gr-digital/include \
                          @CMAKE_SOURCE_DIR@/gr-dtv/include \
@@ -760,8 +758,6 @@ EXCLUDE                = @abs_top_srcdir@/volk \
                          @abs_top_builddir@/gr-blocks/lib \
                          @abs_top_srcdir@/gr-channels/lib \
                          @abs_top_builddir@/gr-channels/lib \
-                         @abs_top_srcdir@/gr-comedi/lib \
-                         @abs_top_builddir@/gr-comedi/lib \
                          @abs_top_srcdir@/gr-digital/lib \
                          @abs_top_builddir@/gr-digital/lib \
                          @abs_top_srcdir@/gr-dtv/lib \

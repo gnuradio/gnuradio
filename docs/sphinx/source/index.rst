@@ -10,7 +10,6 @@ gnuradio
    blocks_analog <analog_blocks>
    blocks_blocks <blocks_blocks>
    blocks_channels <channels_blocks>
-   blocks_comedi <comedi_blocks>
    blocks_digital <digital_blocks>
    blocks_dtv <dtv_blocks>
    blocks_fec <fec_blocks>
