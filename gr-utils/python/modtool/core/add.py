@@ -67,6 +67,8 @@ class ModToolAdd(ModTool):
             raise ModToolException('Programming language not specified.')
         if self.info['lang'] not in self.language_candidates:
             raise ModToolException('Invalid programming language.')
+        if self.info['blocktype'] == 'tagged_stream' and self.info['lang'] == 'python':
+            raise ModToolException('Tagged Stream Blocks for Python currently unsupported')            
         if self.info['blockname'] is None:
             raise ModToolException('Blockname not specified.')
         if not re.match('^[a-zA-Z0-9_]+$', self.info['blockname']):
@@ -127,10 +129,10 @@ class ModToolAdd(ModTool):
 
     def run(self):
         """ Go, go, go. """
-        # This portion will be covered by the CLI
-        if not self.cli:
-            self.validate()
-            self.assign()
+
+        # Some validation covered by the CLI - validate all parameters here
+        self.validate()
+        self.assign()
 
         has_swig = (
                 self.info['lang'] == 'cpp'
