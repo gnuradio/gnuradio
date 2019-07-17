@@ -91,7 +91,6 @@ set(GR_COMPONENTS
   digital
   dtv
   audio
-  comedi
   channels
   qtgui
   trellis
