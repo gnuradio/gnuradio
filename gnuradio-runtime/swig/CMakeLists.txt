@@ -62,7 +62,7 @@ GR_SWIG_MAKE(runtime_swig runtime_swig.i)
 install(
   TARGETS runtime_swig
   EXPORT runtime_swig-export
-  DESTINATION ${GR_PYTHON_RELATIVE}/gnuradio/gr
+  DESTINATION ${GR_PYTHON_DIR}/gnuradio/gr
   )
 
 include(GrPython)
