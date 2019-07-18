@@ -22,6 +22,13 @@ if(DEFINED __INCLUDED_GR_TEST_CMAKE)
 endif()
 set(__INCLUDED_GR_TEST_CMAKE TRUE)
 
+function (GR_CONVERT_QUOTED_STRING path_str quoted_path)
+    file(TO_NATIVE_PATH "${path_str}" path_str)
+    string(CONCAT path_str "\"" ${path_str} "\"")
+    string(REPLACE "\\ " " " path_str ${path_str})
+    set(${quoted_path} "${path_str}" PARENT_SCOPE)
+endfunction()
+
 ########################################################################
 # Add a unit test and setup the environment for a unit test.
 # Takes the same arguments as the ADD_TEST function.
@@ -59,8 +66,11 @@ function(GR_ADD_TEST test_name)
         endforeach(pydir)
     endif(WIN32)
 
-    file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR} srcdir)
-    file(TO_NATIVE_PATH "${GR_TEST_LIBRARY_DIRS}" libpath) #ok to use on dir list?
+    GR_CONVERT_QUOTED_STRING("${CMAKE_CURRENT_BINARY_DIR}" bindir)
+    GR_CONVERT_QUOTED_STRING("${CMAKE_CURRENT_SOURCE_DIR}" srcdir)
+    GR_CONVERT_QUOTED_STRING("${GR_TEST_LIBRARY_DIRS}" libpath)
+    #GR_CONVERT_QUOTED_STRING("${GR_TEST_PYTHON_DIRS}" pypath)
+    # Keep the original path conversion for pypath - the above commented line breaks CI tests
     file(TO_NATIVE_PATH "${GR_TEST_PYTHON_DIRS}" pypath) #ok to use on dir list?
 
     set(environs "VOLK_GENERIC=1" "GR_DONT_LOAD_PREFS=1" "srcdir=${srcdir}"
@@ -79,7 +89,7 @@ function(GR_ADD_TEST test_name)
             set(LD_PATH_VAR "DYLD_LIBRARY_PATH")
         endif()
 
-        set(binpath "${CMAKE_CURRENT_BINARY_DIR}:$PATH")
+        set(binpath "${bindir}:$PATH")
         list(APPEND libpath "$${LD_PATH_VAR}")
         list(APPEND pypath "$PYTHONPATH")
 
