@@ -31,9 +31,9 @@ import logging
 
 from pygccxml import parser, declarations, utils
 
-from blocktool.core.base import BlockToolException, BlockTool
-from blocktool.core.iosignature import io_signature, message_port
-from blocktool.core import Constants
+from ..core.base import BlockToolException, BlockTool
+from ..core.iosignature import io_signature, message_port
+from ..core import Constants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -49,21 +49,11 @@ class BlockHeaderParser(BlockTool):
     """
     name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
-    module_types = []
-    current_folder = os.path.abspath(os.path.dirname(__file__))
-    main_dir = os.path.abspath(os.path.join(current_folder,
-                                            '..', '..', '..', '..'))
-    for list_dir in os.listdir(main_dir):
-        if list_dir.startswith(Constants.GR):
-            list_dir = list_dir.split('-')[-1]
-            module_types.append(list_dir)
-    module_types.remove(Constants.UTILS)
-    module_types = tuple(module_types)
-    parsed_data = {}
 
     def __init__(self, file_path=None, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
+        self.parsed_data = {}
         if not os.path.isfile(file_path):
             raise BlockToolException('file does not exist')
         file_path = os.path.abspath(file_path)
@@ -86,10 +76,6 @@ class BlockHeaderParser(BlockTool):
     def validate(self):
         """ Override the Blocktool validate function """
         BlockTool._validate(self)
-        _module = self.modname.split('-')[-1]
-        if _module not in self.module_types:
-            raise BlockToolException('Module must be one of {}.'.format(
-                ', '.join(self.module_types)))
         if not self.filename.endswith('.h'):
             raise BlockToolException(
                 'Cannot parse a non-header file')

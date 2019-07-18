@@ -29,7 +29,7 @@ import itertools
 import logging
 import string
 
-from blocktool.core import Constants
+from ..core import Constants
 
 LOGGER = logging.getLogger(__name__)
 

@@ -24,12 +24,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import logging
-
-from blocktool.cli.base import setup_cli_logger
-
-LOGGER = logging.getLogger('gnuradio.blocktool')
-
 
 class BlockToolException(Exception):
     """ Standard exception for blocktool classes. """
@@ -45,7 +39,7 @@ class BlockTool(object):
                  target_file=None, module= None, impldir=None, impl_file=None,
                  yaml_confirm=False, json_confirm=False, **kwargs):
         """ __init__ """
-        setup_cli_logger(LOGGER)
+        pass
 
     def _validate(self):
         """ Validates the arguments """
