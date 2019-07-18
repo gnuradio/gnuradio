@@ -27,17 +27,20 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 import os
+import sys
 import json
 import logging
-import click
 import yaml
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except:
     from yaml import Loader, Dumper
 
-from blocktool.cli.base import run, BlockToolException
-from blocktool.core.parseheader import BlockHeaderParser
+import click
+from click import ClickException
+
+from ..cli.base import BlockToolException, run
+from ..core.parseheader import BlockHeaderParser
 
 LOGGER = logging.getLogger(__name__)
 
@@ -64,7 +67,7 @@ Loader.add_constructor(_MAPPING_TAG, dict_constructor)
 @click.argument('file-path', nargs=1)
 @click.option('-yaml', '--yaml-confirm', is_flag=True,
               help='If given, a YAML file alongside a JSON will also be generated')
-def cli(**kwargs):
+def parseheader(**kwargs):
     """
     \b
     Get parsed output for a header file from GNU Radio module
@@ -227,4 +230,4 @@ def parse_directory(**kwargs):
                     header), fg='yellow')
     else:
         raise BlockToolException(
-            'Invalid directory path! No header found to be parsed')
+            'Invalid directory! No header found to be parsed')

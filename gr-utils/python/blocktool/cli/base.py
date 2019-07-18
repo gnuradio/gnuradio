@@ -1,3 +1,4 @@
+#
 # Copyright 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -16,12 +17,27 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+#
+""" Base class for blocktool cli """
 
-include(GrPython)
+import sys
+import click
+from click import ClickException
 
-GR_PYTHON_INSTALL(FILES
-    __init__.py
-    base.py
-    parseheader.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool/cli
-)
+
+class BlockToolException(ClickException):
+    """ Exception class for enhanced CLI interface """
+
+    def show(self, file=None):
+        """ displays the colored message """
+        click.secho('BlockToolException: {}'.format(
+            self.format_message()), fg='red')
+
+
+def run(module):
+    """Call the run function of the core modules."""
+    try:
+        module.run()
+    except BlockToolException as err:
+        click.echo(err, file=sys.stderr)
+        exit(1)

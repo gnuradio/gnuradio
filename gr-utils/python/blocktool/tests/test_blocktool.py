@@ -48,10 +48,10 @@ except:
 
 from jsonschema import validate
 
-from blocktool.core.parseheader import BlockHeaderParser
+from blocktool import BlockHeaderParser
 from blocktool.core.base import BlockToolException
 from blocktool.core import Constants
-from blocktool.core.outputschema import RESULT_SCHEMA
+from blocktool import RESULT_SCHEMA
 
 
 class TestBlocktoolCore(unittest.TestCase):

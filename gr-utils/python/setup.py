@@ -1,3 +1,4 @@
+#
 # Copyright 2019 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
@@ -16,12 +17,16 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
+#
+""" Setup module for blocktool to be integrated with modtool """
 
-include(GrPython)
+from setuptools import setup
 
-GR_PYTHON_INSTALL(FILES
-    __init__.py
-    base.py
-    parseheader.py
-    DESTINATION ${GR_PYTHON_DIR}/gnuradio/blocktool/cli
+
+setup(
+    packages=['blocktool', 'blocktool.cli', 'blocktool.core'],
+    entry_points='''
+        [gnuradio.modtool.cli.plugins]
+        cmd=blocktool.cli.parseheader:parseheader
+    '''
 )

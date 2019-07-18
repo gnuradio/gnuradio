@@ -61,7 +61,8 @@ class BlockHeaderParser(BlockTool):
         self.module = self.target_file
         for dirs in self.module:
             if not os.path.basename(self.module).startswith(Constants.GR):
-                self.module = os.path.abspath(os.path.join(self.module, os.pardir))
+                self.module = os.path.abspath(
+                    os.path.join(self.module, os.pardir))
         self.modname = os.path.basename(self.module)
         self.filename = os.path.basename(file_path)
         self.targetdir = os.path.dirname(file_path)

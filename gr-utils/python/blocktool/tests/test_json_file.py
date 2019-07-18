@@ -28,7 +28,7 @@ import sys
 import json
 import jsonschema
 
-from blocktool.core.outputschema import RESULT_SCHEMA
+from blocktool import RESULT_SCHEMA
 
 
 def is_valid():
