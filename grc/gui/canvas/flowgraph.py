@@ -280,6 +280,13 @@ class FlowGraph(CoreFlowgraph, Drawable):
             block_key = block_n.get('id')
             if block_key == 'options':
                 continue
+
+            block_name = block_n.get('name')
+            # Verify whether a block with this name exists before adding it
+            if block_name in (blk.name for blk in self.blocks):
+                block_name = self._get_unique_id(block_name)
+                block_n['name'] = block_name
+
             block = self.new_block(block_key)
             if not block:
                 continue  # unknown block was pasted (e.g. dummy block)
@@ -290,8 +297,7 @@ class FlowGraph(CoreFlowgraph, Drawable):
             # move block to offset coordinate
             block.move((x_off, y_off))
 
-            if block.params['id'].value in (blk.name for blk in self.blocks):
-                block.params['id'].value = self._get_unique_id(block_key)
+            #TODO: prevent block from being pasted directly on top of another block
 
         # update before creating connections
         self.update()
