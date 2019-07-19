@@ -91,7 +91,7 @@ class Block(Element):
         if 'cpp' in self.flags:
             self.orig_cpp_templates = self.cpp_templates # The original template, in case we have to edit it when transpiling to C++         
 
-        self.current_bus_structure = {'source': '', 'sink': ''}
+        self.current_bus_structure = {'source': None, 'sink': None}
 
     def get_bus_structure(self, direction):
         if direction == 'source':
@@ -100,13 +100,13 @@ class Block(Element):
             bus_structure = self.bus_structure_sink
 
         if not bus_structure:
-            return ''  # TODO: Don't like empty strings. should change this to None eventually
+            return None
 
         try:
             clean_bus_structure = self.evaluate(bus_structure)
             return clean_bus_structure
         except:
-            return ''
+            return None
 
 
     # region Rewrite_and_Validation
@@ -147,12 +147,10 @@ class Block(Element):
             if direc == 'source':
                 ports = self.sources
                 ports_gui = self.filter_bus_port(self.sources)
-                bus_structure = self.get_bus_structure('source')
                 bus_state = self.bus_source
             else:
                 ports = self.sinks
-                ports_gui = self.filter_bus_port(self.sinks)
-                bus_structure = self.get_bus_structure('sink')  
+                ports_gui = self.filter_bus_port(self.sinks)  
                 bus_state = self.bus_sink
 
             # Remove the bus ports

@@ -48,12 +48,15 @@ class Port(Element):
         if not label:
             label = id if not id.isdigit() else {'sink': 'in', 'source': 'out'}[direction]
         if dtype == 'bus':
-            #TODO - add some error checking in here
+            # Look for existing busses to give proper index
             busses = [p for p in self.parent.ports() if p._dir == self._dir and p.dtype == 'bus']
             bus_structure = self.parent.current_bus_structure[self._dir]
             bus_index = len(busses)
-            number = str(len(busses)) + '#' + str(len(bus_structure[bus_index]))
-            label = dtype + number
+            if len(bus_structure) > bus_index: 
+                number = str(len(busses)) + '#' + str(len(bus_structure[bus_index]))
+                label = dtype + number
+            else:
+                raise ValueError('Could not initialize bus port due to incompatible bus structure')
 
         self.name = self._base_name = label
 
