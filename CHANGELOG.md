@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Older Logs can be found in `docs/RELEASE-NOTES-*`.
 
+## [3.8.0.0-rc2] - 2019-07-20
+
+This is the second release candidate for GNU Radio 3.8.
+
+### Fixed
+#### Project Scope
+- Last minute patch lead to SWIG libraries not getting installed into the right Python paths
+#### gr-utils
+- `gr_modtool`: Paths with spaces in them used to break
+
+### Changed
+#### GRC
+- Copy & Paste behaviour now like on 3.7: appending numbers to block IDs only on conflicts
+
 ## [3.8.0.0-rc1] - 2019-07-17
 
 This is the release candidate for GNU Radio 3.8.
