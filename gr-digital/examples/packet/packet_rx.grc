@@ -24,6 +24,9 @@ options:
     title: ''
     window_size: ''
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 11]
     rotation: 0
     state: enabled
@@ -35,6 +38,9 @@ blocks:
     comment: ''
     value: mark_delays[sps]
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 436.0]
     rotation: 0
     state: enabled
@@ -44,6 +50,9 @@ blocks:
     comment: "Tag Marking Delay for \nCorr Est block, indexed\nby sps.\n\nFound empirically."
     value: '[0, 0, 34, 56, 87, 119]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [32, 500.0]
     rotation: 0
     state: enabled
@@ -55,6 +64,9 @@ blocks:
     mod: rxmod
     taps: '[1]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [744, 484.0]
     rotation: 0
     state: enabled
@@ -64,6 +76,9 @@ blocks:
     comment: ''
     value: '32'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 91]
     rotation: 0
     state: enabled
@@ -73,6 +88,9 @@ blocks:
     comment: ''
     value: preamble_select[int(1.0/hdr_dec.rate())]
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 692.0]
     rotation: 0
     state: enabled
@@ -84,6 +102,9 @@ blocks:
       FEC is Dummy'
     value: '[0xac, 0xdd, 0xa4, 0xe2, 0xf2, 0x8c, 0x20, 0xfc]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 580.0]
     rotation: 0
     state: enabled
@@ -96,6 +117,9 @@ blocks:
     value: '[0xe3, 0x8f, 0xc0, 0xfc, 0x7f, 0xc7, 0xe3, 0x81, 0xc0, 0xff, 0x80, 0x38,
       0xff, 0xf0, 0x38, 0xe0, 0x0f, 0xc0, 0x03, 0x80, 0x00, 0xff, 0xff, 0xc0]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [728, 580.0]
     rotation: 0
     state: enabled
@@ -105,6 +129,9 @@ blocks:
     comment: ''
     value: '{1: preamble_dummy, 3: preamble_rep}'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 692.0]
     rotation: 0
     state: enabled
@@ -114,6 +141,9 @@ blocks:
     comment: ''
     value: digital.generic_mod(hdr_const, False, sps, True, eb, False, False)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [560, 516.0]
     rotation: 0
     state: enabled
@@ -128,6 +158,9 @@ blocks:
     tagname: '"amp_est"'
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [376, 316.0]
     rotation: 0
     state: enabled
@@ -144,6 +177,9 @@ blocks:
     type: float
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1320, 496.0]
     rotation: 180
     state: enabled
@@ -158,6 +194,9 @@ blocks:
     tag: '"payload symbols"'
     type: float
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1200, 580.0]
     rotation: 0
     state: enabled
@@ -171,6 +210,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1440, 356.0]
     rotation: 0
     state: enabled
@@ -184,6 +226,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1424, 196.0]
     rotation: 0
     state: enabled
@@ -201,6 +246,9 @@ blocks:
     threshold: '0.999'
     threshold_method: digital.THRESHOLD_ABSOLUTE
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [144, 308.0]
     rotation: 0
     state: enabled
@@ -216,6 +264,9 @@ blocks:
     use_snr: 'False'
     w: 6.28/200.0
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1232, 200.0]
     rotation: 0
     state: enabled
@@ -231,6 +282,9 @@ blocks:
     use_snr: 'False'
     w: 6.28/200.0
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1232, 360.0]
     rotation: 0
     state: enabled
@@ -244,6 +298,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1680, 580.0]
     rotation: 0
     state: enabled
@@ -267,6 +324,9 @@ blocks:
     trigger_tag_key: '"time_est"'
     type: complex
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [856, 244.0]
     rotation: 0
     state: enabled
@@ -287,6 +347,9 @@ blocks:
     taps: psf_taps
     type: ccf
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [568, 276.0]
     rotation: 0
     state: enabled
@@ -300,6 +363,9 @@ blocks:
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [856, 140.0]
     rotation: 180
     state: enabled
@@ -314,6 +380,9 @@ blocks:
     type: eng_float
     value: '0.35'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1408, 11]
     rotation: 0
     state: enabled
@@ -330,6 +399,9 @@ blocks:
     packed: 'True'
     rev_pack: 'False'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1440, 572.0]
     rotation: 0
     state: enabled
@@ -345,6 +417,9 @@ blocks:
     minoutbuf: '0'
     otype: byte
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1424, 140.0]
     rotation: 180
     state: enabled
@@ -360,6 +435,9 @@ blocks:
     value: digital.constellation_calcdist((digital.psk_2()[0]), (digital.psk_2()[1]),
       2, 1).base()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [544, 11]
     rotation: 0
     state: enabled
@@ -374,6 +452,9 @@ blocks:
     type: ''
     value: ' fec.dummy_decoder.make(8000)'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [192, 11]
     rotation: 0
     state: enabled
@@ -389,6 +470,9 @@ blocks:
     value: digital.header_format_default(digital.packet_utils.default_access_code,
       0)
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [904, 11]
     rotation: 0
     state: enabled
@@ -404,6 +488,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1840, 580.0]
     rotation: 0
     state: enabled
@@ -419,6 +506,9 @@ blocks:
     type: message
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1680, 628.0]
     rotation: 0
     state: enabled
@@ -434,6 +524,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1024, 196.0]
     rotation: 180
     state: enabled
@@ -449,6 +542,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1024, 420.0]
     rotation: 180
     state: enabled
@@ -464,6 +560,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1456, 308.0]
     rotation: 0
     state: enabled
@@ -479,6 +578,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [664, 220.0]
     rotation: 180
     state: enabled
@@ -494,6 +596,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [232, 420.0]
     rotation: 180
     state: enabled
@@ -511,6 +616,9 @@ blocks:
     type: complex
     vlen: '1'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [8, 340.0]
     rotation: 0
     state: enabled
@@ -526,6 +634,9 @@ blocks:
     value: digital.constellation_calcdist((digital.psk_2()[0]), (digital.psk_2()[1]),
       2, 1).base()
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [720, 11]
     rotation: 0
     state: enabled
@@ -540,6 +651,9 @@ blocks:
     type: ''
     value: ' fec.dummy_decoder.make(8000)'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [368, 11]
     rotation: 0
     state: enabled
@@ -554,6 +668,9 @@ blocks:
     type: ''
     value: '[0,]'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1256, 11]
     rotation: 0
     state: enabled
@@ -568,6 +685,9 @@ blocks:
     type: eng_float
     value: '2'
   states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
     coordinate: [1096, 11]
     rotation: 0
     state: enabled
@@ -584,7 +704,7 @@ connections:
 - [digital_costas_loop_cc_0_0, '0', digital_constellation_soft_decoder_cf_0_0, '0']
 - [digital_costas_loop_cc_0_0_0, '0', digital_constellation_soft_decoder_cf_0, '0']
 - [digital_costas_loop_cc_0_0_0, '0', pad_sink_3_0, '0']
-- [digital_crc32_async_bb_0, out, pad_sink_0, in0]
+- [digital_crc32_async_bb_0, out, pad_sink_0, in]
 - [digital_header_payload_demux_0, '0', digital_costas_loop_cc_0_0, '0']
 - [digital_header_payload_demux_0, '0', pad_sink_2, '0']
 - [digital_header_payload_demux_0, '1', digital_costas_loop_cc_0_0_0, '0']
@@ -593,7 +713,7 @@ connections:
 - [digital_pfb_clock_sync_xxx_0, '0', pad_sink_5, '0']
 - [digital_protocol_parser_b_0, info, digital_header_payload_demux_0, header_data]
 - [fec_async_decoder_0, out, digital_crc32_async_bb_0, in]
-- [fec_async_decoder_0, out, pad_sink_1, in0]
+- [fec_async_decoder_0, out, pad_sink_1, in]
 - [fec_generic_decoder_0, '0', digital_protocol_parser_b_0, '0']
 - [pad_source_0, '0', digital_corr_est_cc_0, '0']
 
