@@ -29,29 +29,31 @@ class CppTopBlockGenerator(TopBlockGenerator):
 
     def __init__(self, flow_graph, file_path):
         """
-        Initialize the top block generator object.
+        Initialize the C++ top block generator object.
 
         Args:
             flow_graph: the flow graph object
-            file_path: the path to write the file to
+            file_path: the path where we want to create
+                a new directory with C++ files
         """
 
         self._flow_graph = FlowGraphProxy(flow_graph)
         self._generate_options = self._flow_graph.get_option('generate_options')
 
         self._mode = TOP_BLOCK_FILE_MODE
-        dirname = os.path.dirname(file_path)
         # Handle the case where the directory is read-only
         # In this case, use the system's temp directory
-        if not os.access(dirname, os.W_OK):
-            dirname = tempfile.gettempdir()
+        if not os.access(file_path, os.W_OK):
+            file_path = tempfile.gettempdir()
 
+        # When generating C++ code, we create a new directory
+        # (file_path) and generate the files inside that directory
         filename = self._flow_graph.get_option('id')
-        self.file_path = os.path.join(dirname, filename)
-        self._dirname = dirname
+        self.file_path = os.path.join(file_path, filename)
+        self._dirname = file_path
 
     def write(self):
-        """generate output and write it to files"""
+        """create directory, generate output and write it to files"""
         self._warnings()
 
         fg = self._flow_graph
