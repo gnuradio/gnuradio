@@ -232,7 +232,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             make = block.cpp_templates.render('make')
             declarations = block.cpp_templates.render('declarations')
             if translations:
-                translations = yaml.load(translations)
+                translations = yaml.safe_load(translations)
             else:
                 translations = {}
             translations.update(
