@@ -53,4 +53,17 @@ cpp_templates:
         True: true
         False: false
 
+documentation: |-
+    This will either pass the input unchanged or block it, depending on
+    whether its envelope is over a certain threshold. The envelope is calculated
+    by taking the squared magnitude of the signal and lowpassing it with a
+    single pole IIR filter (with the specified alpha).
+
+    The ramp parameter specifies the attack / release time, in samples.
+    A sinusodial ramp is used to progressively mute / unmute the input.
+    If ramp is set to 0, input is muted / unmuted without a ramp.
+
+    If the gate parameter is true no output will be produced when
+    in muted state, instead of producing zeros (the default).
+
 file_format: 1
