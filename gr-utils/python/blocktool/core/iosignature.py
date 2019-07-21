@@ -186,17 +186,9 @@ def message_port(impl_file):
 
     if input_port:
         for port in input_port:
-            _ids = {
-                "id": port
-            }
-            parsed_message_port['input'].append(
-                _ids.copy())
+            parsed_message_port['input'].append(port)
 
     if output_port:
         for port in output_port:
-            _ids = {
-                "id": port
-            }
-            parsed_message_port['output'].append(
-                _ids.copy())
+            parsed_message_port['output'].append(port)
     return parsed_message_port

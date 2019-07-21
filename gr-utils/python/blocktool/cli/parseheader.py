@@ -41,6 +41,7 @@ from click import ClickException
 
 from ..cli.base import BlockToolException, run
 from ..core.parseheader import BlockHeaderParser
+from ..core import Constants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -157,8 +158,65 @@ def yaml_generator(self):
     if parameters:
         data['parameters'] = parameters
 
-    data['input'] = self.parsed_data['io_signature']['input']
-    data['output'] = self.parsed_data['io_signature']['output']
+    input_signature = []
+    max_input_port = self.parsed_data['io_signature']['input']['max_streams']
+    i_sig = self.parsed_data['io_signature']['input']['signature']
+    for port in range(0, int(max_input_port)):
+        input_sig = OrderedDict()
+        if i_sig is Constants.MAKE:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item']
+        elif i_sig is Constants.MAKE2:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item' +
+                                                                           str(port+1)]
+        elif i_sig is Constants.MAKE3:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_item' +
+                                                                           str(port+1)]
+        elif i_sig is Constants.MAKEV:
+            input_sig['domain'] = 'stream'
+            input_sig['dtype'] = self.parsed_data['io_signature']['input']['sizeof_stream_items']
+        input_signature.append(input_sig)
+
+    if self.parsed_data['message_port']['input']:
+        for _input in self.parsed_data['message_port']['input']:
+            m_input_sig = OrderedDict()
+            m_input_sig['domain'] = 'message'
+            m_input_sig['id'] = _input
+            input_signature.append(m_input_sig)
+    if input_signature:
+        data['inputs'] = input_signature
+
+    output_signature = []
+    max_output_port = self.parsed_data['io_signature']['output']['max_streams']
+    o_sig = self.parsed_data['io_signature']['output']['signature']
+    for port in range(0, int(max_output_port)):
+        output_sig = OrderedDict()
+        if o_sig is Constants.MAKE:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item']
+        elif o_sig is Constants.MAKE2:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item' +
+                                                                             str(port+1)]
+        elif o_sig is Constants.MAKE3:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_item' +
+                                                                             str(port+1)]
+        elif o_sig is Constants.MAKEV:
+            output_sig['domain'] = 'stream'
+            output_sig['dtype'] = self.parsed_data['io_signature']['output']['sizeof_stream_items']
+        output_signature.append(output_sig)
+
+    if self.parsed_data['message_port']['output']:
+        for _output in self.parsed_data['message_port']['output']:
+            m_output_sig = OrderedDict()
+            m_output_sig['domain'] = 'message'
+            m_output_sig['id'] = _input
+            output_signature.append(m_output_sig)
+    if output_signature:
+        data['outputs'] = output_signature
 
     _cpp_templates = [('includes', '#include <gnuradio/{}/{}>'.format(block, self.filename)),
                       ('declartions', '{}::{}::sptr ${{id}}'.format(block, header)),

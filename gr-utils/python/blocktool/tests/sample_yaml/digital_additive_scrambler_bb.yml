@@ -26,16 +26,12 @@ parameters:
   label: Bits_per_byte
   dtype: int
   read_only: true
-input:
-  max_streams: '1'
-  min_streams: '1'
-  signature: make
-  sizeof_stream_item: sizeof(unsigned char)
-output:
-  max_streams: '1'
-  min_streams: '1'
-  signature: make
-  sizeof_stream_item: sizeof(unsigned char)
+inputs:
+- domain: stream
+  dtype: sizeof(unsigned char)
+outputs:
+- domain: stream
+  dtype: sizeof(unsigned char)
 cpp_templates:
   includes: '#include <gnuradio/digital/additive_scrambler_bb.h>'
   declartions: digital::additive_scrambler_bb::sptr ${id}
