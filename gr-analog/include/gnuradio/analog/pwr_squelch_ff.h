@@ -49,7 +49,8 @@ public:
      *
      * \param db threshold (in dB) for power squelch
      * \param alpha Gain of averaging filter. Defaults to 0.0001.
-     * \param ramp sets response characteristic. Defaults to 0.
+     * \param ramp attack / release time in samples; a sinusodial ramp
+     *             is used. set to 0 to disable.
      * \param gate if true, no output if no squelch tone.
      *             if false, output 0's if no squelch tone (default).
      *

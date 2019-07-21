@@ -51,7 +51,8 @@ public:
      * \param freq frequency value to use as the squelch tone.
      * \param level threshold level for the squelch tone.
      * \param len length of the frequency filters.
-     * \param ramp sets response characteristic.
+     * \param ramp attack / release time in samples; a sinusodial ramp
+     *             is used. set to 0 to disable.
      * \param gate if true, no output if no squelch tone.
      *             if false, output 0's if no squelch tone.
      */
