@@ -82,7 +82,7 @@ namespace gr {
 
       // work() should only be called if the current PDU fits entirely
       // into the output buffer.
-      assert(noutput_items >= d_curr_len);
+      assert(noutput_items >= 0 && (unsigned int) noutput_items >= d_curr_len);
 
       // Copy vector output
       size_t nout = d_curr_len;
