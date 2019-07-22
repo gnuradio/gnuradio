@@ -27,7 +27,6 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 import os
-import sys
 import json
 import logging
 import yaml
@@ -37,9 +36,8 @@ except:
     from yaml import Loader, Dumper
 
 import click
-from click import ClickException
 
-from ..cli.base import BlockToolException, run
+from ..cli.base import BlockToolException, run_blocktool
 from ..core.parseheader import BlockHeaderParser
 from ..core import Constants
 
@@ -67,19 +65,22 @@ Loader.add_constructor(_MAPPING_TAG, dict_constructor)
                short_help='Generate the parsed output for the header file or directory in a specified format')
 @click.argument('file-path', nargs=1)
 @click.option('-yaml', '--yaml-confirm', is_flag=True,
-              help='If given, a YAML file alongside a JSON will also be generated')
-def parseheader(**kwargs):
+              help='If given, a YAML *file* alongside printed JSON response will be generated')
+@click.option('-f', '--file-confirm', is_flag=True,
+              help='If given, file with default name in both JSON and YAML format will be generated')
+def cli(**kwargs):
     """
     \b
     Get parsed output for a header file from GNU Radio module
     """
+    kwargs['modtool'] = False
     if os.path.isfile(kwargs['file_path']):
         self = BlockHeaderParser(**kwargs)
         self.cli = True
         self.json_confirm = True
+        run_blocktool(self)
         click.secho('Header file: {}'.format(self.filename), fg='green')
-        run(self)
-        json_generator(self)
+        json_generator(self, **kwargs)
         if kwargs['yaml_confirm']:
             self.yaml_confirm = True
             yaml_generator(self)
@@ -89,17 +90,22 @@ def parseheader(**kwargs):
         raise BlockToolException('Invalid file or directory path.')
 
 
-def json_generator(self):
+def json_generator(self, **kwargs):
     """
     Generate JSON file for the block header
     """
-    header_file = self.filename.split('.')[0]
-    block_module = self.modname.split('-')[-1]
-    click.secho('Successfully generated {}_{}.json'.format(
-        block_module, header_file), fg='green')
-    json_file = os.path.join('.', block_module+'_'+header_file + '.json')
-    with open(json_file, 'w') as _file:
-        json.dump(self.parsed_data, _file, indent=4)
+    header = self.filename.split('.')[0]
+    block = self.modname.split('-')[-1]
+    if kwargs['file_confirm']:
+        click.secho('Successfully generated {}_{}.json'.format(
+            block, header), fg='green')
+        json_file = os.path.join('.', block+'_'+header + '.json')
+        with open(json_file, 'w') as _file:
+            json.dump(self.parsed_data, _file, indent=4)
+    else:
+        print(json.dumps(self.parsed_data, indent=4))
+        click.secho('Successfully parsed header file {}'.format(
+            self.filename), fg='green')
 
 
 def yaml_generator(self):
@@ -213,7 +219,7 @@ def yaml_generator(self):
         for _output in self.parsed_data['message_port']['output']:
             m_output_sig = OrderedDict()
             m_output_sig['domain'] = 'message'
-            m_output_sig['id'] = _input
+            m_output_sig['id'] = _output
             output_signature.append(m_output_sig)
     if output_signature:
         data['outputs'] = output_signature
@@ -258,6 +264,7 @@ def parse_directory(**kwargs):
     """
     Get parsed json and yaml output for complete header directory
     """
+    kwargs['file_confirm'] = True
     dir_path = kwargs['file_path']
     dir_path = os.path.abspath(dir_path)
     list_header = []
@@ -276,9 +283,10 @@ def parse_directory(**kwargs):
                 self = BlockHeaderParser(**kwargs)
                 self.yaml_confirm = True
                 self.json_confirm = True
-                run(self)
+                run_blocktool(self)
                 yaml_generator(self)
-                json_generator(self)
+                if not kwargs['modtool']:
+                    json_generator(self, **kwargs)
             except:
                 logging.basicConfig(level=logging.DEBUG,
                                     filename=os.path.join('.', dir_name+'_log.out'))

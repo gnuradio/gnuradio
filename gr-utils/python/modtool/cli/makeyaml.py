@@ -57,8 +57,8 @@ def cli(**kwargs):
         if os.path.isfile(kwargs['file_path']):
             self = BlockHeaderParser(**kwargs)
             self.cli = True
-            click.secho('Header file: {}'.format(self.filename), fg='green')
             run_blocktool(self)
+            click.secho('Header file: {}'.format(self.filename), fg='green')
             self.yaml_confirm = True
             yaml_generator(self)
         elif os.path.isdir(kwargs['file_path']):

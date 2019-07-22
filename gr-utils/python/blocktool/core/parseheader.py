@@ -58,21 +58,27 @@ class BlockHeaderParser(BlockTool):
             raise BlockToolException('file does not exist')
         file_path = os.path.abspath(file_path)
         self.target_file = file_path
+        self.initialize()
+        self.validate()
+
+    def initialize(self):
+        """
+        initialize all the required API variables
+        """
         self.module = self.target_file
         for dirs in self.module:
             if not os.path.basename(self.module).startswith(Constants.GR):
                 self.module = os.path.abspath(
                     os.path.join(self.module, os.pardir))
         self.modname = os.path.basename(self.module)
-        self.filename = os.path.basename(file_path)
-        self.targetdir = os.path.dirname(file_path)
+        self.filename = os.path.basename(self.target_file)
+        self.targetdir = os.path.dirname(self.target_file)
         for dirs in os.scandir(self.module):
             if dirs.is_dir():
                 if dirs.path.endswith('lib'):
                     self.impldir = dirs.path
         self.impl_file = os.path.join(self.impldir,
                                       self.filename.split('.')[0]+'_impl.cc')
-        self.validate()
 
     def validate(self):
         """ Override the Blocktool validate function """
@@ -260,6 +266,6 @@ class BlockHeaderParser(BlockTool):
 
         return self.parsed_data
 
-    def run(self):
+    def run_blocktool(self):
         """ Run, run, run. """
         self.get_header_info()
