@@ -47,10 +47,10 @@ SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 message(STATUS "Build type set to ${CMAKE_BUILD_TYPE}.")
 
 # Set the version information here
-SET(VERSION_INFO_MAJOR_VERSION 3)
-SET(VERSION_INFO_API_COMPAT    8)
-SET(VERSION_INFO_MINOR_VERSION git)
-SET(VERSION_INFO_MAINT_VERSION 0)
+SET(VERSION_MAJOR 3)
+SET(VERSION_API   8)
+SET(VERSION_ABI   0)
+SET(VERSION_PATCH 0-rc2)
 include(GrVersion) #setup version info
 
 # Minimum dependency versions for central dependencies:
@@ -58,8 +58,8 @@ set(GR_BOOST_MIN_VERSION "1.53")
 set(GR_SWIG_MIN_VERSION "3.0.8")
 set(GR_CMAKE_MIN_VERSION "3.5.1")
 set(GR_MAKO_MIN_VERSION "0.4.2")
-set(GR_PYTHON_MIN_VERSION "2.7")
-set(GR_PYTHON3_MIN_VERSION "3.6")
+set(GR_PYTHON_MIN_VERSION "2.7.6")
+set(GR_PYTHON3_MIN_VERSION "3.6.5")
 set(GCC_MIN_VERSION "4.8.4")
 set(CLANG_MIN_VERSION "3.4.0")
 set(APPLECLANG_MIN_VERSION "500")
@@ -67,6 +67,9 @@ set(MSVC_MIN_VERSION "1800")
 
 # Enable generation of compile_commands.json for code completion engines
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Set wiki block docs url prefix used in grc-docs.conf (block name gets appended to end of this string)
+set(GRC_DOCS_URL_PREFIX "https://wiki.gnuradio.org/index.php/")
 
 ########################################################################
 # Configure CMake policies
@@ -492,7 +495,6 @@ add_subdirectory(gr-analog)
 add_subdirectory(gr-digital)
 add_subdirectory(gr-dtv)
 add_subdirectory(gr-audio)
-add_subdirectory(gr-comedi)
 add_subdirectory(gr-channels)
 add_subdirectory(gr-qtgui)
 add_subdirectory(gr-trellis)

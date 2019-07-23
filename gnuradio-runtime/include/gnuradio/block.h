@@ -177,7 +177,7 @@ namespace gr {
      *
      * WORK_CALLED_PRODUCE is used where not all outputs produce the
      * same number of items. general_work must call produce() for each
-     * output to indicate the numer of items actually produced.
+     * output to indicate the number of items actually produced.
      *
      * WORK_DONE indicates that no more data will be produced by this block.
      *

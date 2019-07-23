@@ -98,6 +98,6 @@ documentation: |-
 
     Sample rate, cutoff frequency, and transition width are in Hertz.
 
-    The beta paramater only applies to the Kaiser window.
+    The beta parameter only applies to the Kaiser window.
 
 file_format: 1

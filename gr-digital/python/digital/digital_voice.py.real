@@ -51,7 +51,7 @@ AIR_FRAME_SIZE = 70
 
 class digital_voice_tx(gr.hier_block):
     """
-    Hierarchical block for digital voice tranmission.
+    Hierarchical block for digital voice transmission.
 
     The input is 8kS/sec floating point audio in the range [-1,+1]
     The output is 256kS/sec GMSK modulated complex baseband signal in the range [-1,+1].

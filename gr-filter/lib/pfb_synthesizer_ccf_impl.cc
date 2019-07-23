@@ -103,7 +103,7 @@ namespace gr {
     void
     pfb_synthesizer_ccf_impl::set_taps1(const std::vector<float> &taps)
     {
-      // In this partitioning, we do a normal polyphase paritioning by
+      // In this partitioning, we do a normal polyphase partitioning by
       // deinterleaving the taps into each filter:
       //
       // Prototype filter: [t0, t1, t2, t3, t4, t5, t6]

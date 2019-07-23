@@ -41,7 +41,7 @@ parameters:
     default: dynamic
     options: [dynamic, static]
     option_labels: [ Dynamic, Static ]
-    hide: ${ ('part' if output_language == 'cpp' else 'all') }
+    hide: 'all'
 -   id: gen_cmake
     label: Generate CMakeLists.txt
     dtype: enum

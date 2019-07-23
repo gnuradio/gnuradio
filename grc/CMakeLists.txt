@@ -25,9 +25,9 @@ include(GrPython)
 message(STATUS "")
 
 GR_PYTHON_CHECK_MODULE_RAW(
-    "python2 >= 2.7.6 or python3 >= 3.4.0"
+    "python2 >= 2.7.6 or python3 >= 3.6.5"
     "import sys; \
-     requirement = (3, 4, 0) if sys.version_info.major >= 3 else (2, 7, 6); \
+     requirement = (3, 6, 6) if sys.version_info.major >= 3 else (2, 7, 6); \
      assert sys.version_info[:3] >= requirement"
     PYTHON_MIN_VER_FOUND
 )
@@ -101,7 +101,7 @@ GR_REGISTER_COMPONENT("gnuradio-companion" ENABLE_GRC
 if(ENABLE_GRC)
 
 ########################################################################
-# Create and install the grc conf file
+# Create and install the grc and grc-docs conf file
 ########################################################################
 file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX}/${GRC_BLOCKS_DIR} blocksdir)
 if(CMAKE_INSTALL_PREFIX STREQUAL "/usr")
@@ -129,6 +129,16 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/grc.conf
+    DESTINATION ${GR_PREFSDIR}
+)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/00-grc-docs.conf.in
+    ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
+@ONLY)
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/00-grc-docs.conf
     DESTINATION ${GR_PREFSDIR}
 )
 

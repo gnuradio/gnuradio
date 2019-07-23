@@ -25,8 +25,8 @@ systems on gnuradio.org
 Not all dependencies are required for all components, and not all
 components are required for a given installation. The list of required
 components is determined by what the user requires from GNU Radio. If,
-for example, you do not use any Comedi-based hardware, do not worry
-about building gr-comedi.
+for example, you do not use any UHD-based hardware, do not worry
+about building gr-uhd.
 
 Before trying to build these from source, please try your system's
 installation tool (apt-get, pkg_install, YaST, yum, urpmi, etc.)
@@ -102,9 +102,6 @@ audio-osx and audio-windows to be either satisfied or built.
 \subsection dep_gr_video_sdl gr-video-sdl: PAL and NTSC display (rarely used)
 \li SDL	        (>= 1.2.0)   http://www.libsdl.org/download-1.2.php
 
-\subsection dep_gr_comedi gr-comedi: Comedi hardware interface (only if you know what this is)
-\li comedilib   (>= 0.8.1)   http://www.comedi.org/
-
 \ref page_ctrlport may use various backends to perform the RPC
 process, and each is its own dependency.
 
@@ -156,7 +153,7 @@ built or installed.
 
 The -DENABLE_DEFAULT=False can be used to disable all
 components. Individual components can then be selectively turned back
-on. For example, just buidling the VOLK library can be
+on. For example, just building the VOLK library can be
 done with this:
 
 \code

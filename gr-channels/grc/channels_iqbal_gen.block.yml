@@ -56,7 +56,7 @@ documentation: |-
                                                                  |
                                                                  +--X2
 
-                        X1--|Multply: 10**(mag/20)|--{R}--| Float 2     |--- Output
+                        X1--|Multiply: 10**(mag/20)|--{R}--| Float 2     |--- Output
                         X2--------------------------------------------{I}--| Complex |
 
     (ASCII ART adjusted for GRC viewing)

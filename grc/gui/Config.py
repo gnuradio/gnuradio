@@ -97,6 +97,10 @@ class Config(CoreConfig):
         return self._gr_prefs.get_string('grc', 'xterm_executable', 'xterm')
 
     @property
+    def wiki_block_docs_url_prefix(self):
+        return self._gr_prefs.get_string('grc-docs', 'wiki_block_docs_url_prefix', '')
+
+    @property
     def default_canvas_size(self):
         try:  # ugly, but matches current code style
             raw = self._gr_prefs.get_string('grc', 'canvas_default_size', '1280, 1024')

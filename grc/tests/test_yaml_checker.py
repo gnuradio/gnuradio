@@ -74,7 +74,7 @@ def test_extra_keys():
 
 def test_checker():
     checker = Validator(BLOCK_SCHEME)
-    data = yaml.load(BLOCK1)
+    data = yaml.safe_load(BLOCK1)
     passed = checker.run(data)
     if not passed:
         print()

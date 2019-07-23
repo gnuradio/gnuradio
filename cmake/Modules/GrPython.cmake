@@ -121,6 +121,19 @@ endif()
 file(TO_CMAKE_PATH ${GR_PYTHON_DIR} GR_PYTHON_DIR)
 
 ########################################################################
+# Sets the python relative installation directory GR_PYTHON_RELATIVE
+########################################################################
+if(NOT DEFINED GR_PYTHON_RELATIVE)
+execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "
+from distutils import sysconfig as sc
+print(sc.get_python_lib(prefix='', plat_specific=True))
+"
+  OUTPUT_VARIABLE GR_PYTHON_RELATIVE  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+endif()
+
+
+########################################################################
 # Create an always-built target with a unique name
 # Usage: GR_UNIQUE_TARGET(<description> <dependencies list>)
 ########################################################################

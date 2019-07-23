@@ -188,7 +188,7 @@ def calc_soft_dec(sample, constel, symbols, npwr=1):
     If known, the noise power of the received sample may be passed in
     to this function as npwr.
 
-    This is an incredibly costly algorthm because it must calculate
+    This is an incredibly costly algorithm because it must calculate
     the Euclidean distance between the sample and all points in the
     constellation to build up its probability
     calculations. Conversely, it should work for any given

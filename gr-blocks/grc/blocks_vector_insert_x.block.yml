@@ -45,6 +45,6 @@ documentation: |-
     Periodicity, the length of the periodicity at which the vector should be inserted at the output.
             (i.e. one vector for every N output items)
 
-            Offset sepcifies where in the cycle period we should begin at.
+            Offset specifies where in the cycle period we should begin at.
 
 file_format: 1

@@ -33,7 +33,7 @@ namespace gr {
      *
      * \details
      * This class implements a second order control loop and is
-     * inteded to act as a parent class to blocks which need a control
+     * intended to act as a parent class to blocks which need a control
      * loop (e.g., gr::digital::costas_loop_cc,
      * gr::analog::pll_refout_cc, etc.). It takes in a loop bandwidth
      * as well as a max and min frequency and provides the functions
@@ -326,7 +326,7 @@ namespace gr {
     /*!
      * A look-up table (LUT) tanh calcuation. This function returns an
      * estimate to tanh(x) based on a 256-point LUT between -2 and
-     * 2. If x < -2, it returns -1; if > 2, it retursn 1.
+     * 2. If x < -2, it returns -1; if > 2, it returns 1.
      *
      * This LUT form of the tanh is "hidden" in this code because it
      * is likely too coarse an estimate for any real uses of a

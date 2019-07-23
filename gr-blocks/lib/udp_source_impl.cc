@@ -186,7 +186,7 @@ namespace gr {
 
       // Use async receive_from to get data from UDP buffer and wait
       // on a conditional signal before proceeding. We use this
-      // because the conditional wait is interruptable while a
+      // because the conditional wait is interruptible while a
       // synchronous receive_from is not.
       boost::unique_lock<boost::mutex> lock(d_udp_mutex);
 

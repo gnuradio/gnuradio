@@ -1452,7 +1452,7 @@ public:
    * \brief Adds the ability to pass a message over ControlPort.
    *
    * \details
-   * This makes any message handler function avialable over
+   * This makes any message handler function available over
    * ControlPort. Since message handlers always take in a single PMT
    * message input, this interface provides a very generic way of
    * setting values in a block in a flowgraph.

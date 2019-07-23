@@ -176,7 +176,7 @@ class SaveScreenShot(SaveFileDialog):
         Dialogs.MessageDialogWrapper(
             self.parent,
             Gtk.MessageType.ERROR, Gtk.ButtonsType.CLOSE, 'Can not Save!',
-            'File Extention of <b>{filename}</b> not supported!'.format(filename=Utils.encode(filename)),
+            'File Extension of <b>{filename}</b> not supported!'.format(filename=Utils.encode(filename)),
         ).run_and_destroy()
 
     def run(self):
