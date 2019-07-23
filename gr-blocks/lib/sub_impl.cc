@@ -40,7 +40,7 @@ namespace gr {
 
     template <>
     sub_impl<float>::sub_impl(size_t vlen)
-      : sync_block("@sub_ff",
+      : sync_block("sub_ff",
                    io_signature::make(1, -1, sizeof(float)*vlen),
                    io_signature::make(1,  1, sizeof(float)*vlen)),
       d_vlen(vlen)
