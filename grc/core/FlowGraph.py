@@ -223,8 +223,11 @@ class FlowGraph(Element):
         # Load variables
         for variable_block in self.get_variables():
             try:
+                variable_block.rewrite()
                 value = eval(variable_block.value, namespace, variable_block.namespace)
                 namespace[variable_block.name] = value
+            except TypeError: #Type Errors may happen, but that desn't matter as they are displayed in the gui
+                pass
             except Exception:
                 log.exception('Failed to evaluate variable block {0}'.format(variable_block.name), exc_info=True)
                 pass
