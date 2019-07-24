@@ -137,6 +137,8 @@ class ModToolRemove(ModTool):
                         may contain references to the globbed files
         cmakeedit_func - If the CMakeLists.txt needs special editing, use this
         """
+        if self.cli:
+            from ..cli import cli_input
         # 1. Create a filtered list
         files = []
         for g in globs:
@@ -155,7 +157,7 @@ class ModToolRemove(ModTool):
         yes = self.info['yes']
         for f in files_filt:
             b = os.path.basename(f)
-            if not yes:
+            if not yes and self.cli:
                 ans = cli_input("Really delete {}? [Y/n/a/q]: ".format(f)).lower().strip()
                 if ans == 'a':
                     yes = True
