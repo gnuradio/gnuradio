@@ -5,8 +5,8 @@
 
 options:
   parameters:
-    id: 'top_block'
-    title: 'top_block'
+    id: 'default'
+    title: 'Not titled yet'
   states:
     coordinate:
     - 8
