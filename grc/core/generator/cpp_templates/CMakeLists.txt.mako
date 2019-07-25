@@ -13,7 +13,6 @@
 
 <%
 class_name = flow_graph.get_option('id')
-cmake_opt_list = flow_graph.get_option('cmake_opt').split(";")
 %>\
 
 cmake_minimum_required(VERSION 3.8)
@@ -37,9 +36,9 @@ add_definitions(${'$'}{Qt5Widgets_DEFINITIONS})
 set(CMAKE_AUTOMOC TRUE)
 % endif
 
-% if cmake_opt_list != ['']:
-% for opt in cmake_opt_list:
-set(${opt.split("=")[0].strip()} ${opt.split("=")[1].strip()})
+% if cmake_tuples:
+% for key, val in cmake_tuples:
+set(${key} ${val})
 % endfor
 % endif
 

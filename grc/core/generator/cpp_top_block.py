@@ -155,6 +155,15 @@ class CppTopBlockGenerator(TopBlockGenerator):
         filename = 'CMakeLists.txt'
         file_path = os.path.join(self.file_path, filename)
 
+        cmake_tuples = []
+        cmake_opt = self._flow_graph.get_option("cmake_opt")
+        cmake_opt = " " + cmake_opt # To make sure we get rid of the "-D"s when splitting
+
+        for opt_string in cmake_opt.split(" -D"):
+            opt_string = opt_string.strip()
+            if opt_string:
+                cmake_tuples.append(tuple(opt_string.split("=")))
+
         output = []
 
         flow_graph_code = cmake_template.render(
@@ -164,6 +173,7 @@ class CppTopBlockGenerator(TopBlockGenerator):
             callbacks=self._callbacks(),
             connections=self._connections(),
             links=self._links(),
+            cmake_tuples=cmake_tuples,
             **self.namespace
         )
         # strip trailing white-space
