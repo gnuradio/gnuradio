@@ -25,6 +25,7 @@ import os
 import subprocess
 
 from gi.repository import Gtk, Gio, GLib, GObject
+from getpass import getuser
 
 from . import Constants, Dialogs, Actions, Executor, FileDialogs, Utils, Bars
 
@@ -596,6 +597,7 @@ class Application(Gtk.Application):
             args = (GLib.Variant('s', 'qt_gui'),)
             flow_graph = main.current_page.flow_graph
             flow_graph._options_block.params['generate_options'].set_value(str(args[0])[1:-1])
+            flow_graph._options_block.params['author'].set_value(getuser())
             flow_graph_update(flow_graph)
         elif action == Actions.FLOW_GRAPH_NEW_TYPE:
             main.new_page()
@@ -637,7 +639,13 @@ class Application(Gtk.Application):
                     page.saved = False
         elif action == Actions.FLOW_GRAPH_SAVE_AS:
             file_path = FileDialogs.SaveFlowGraph(main, page.file_path).run()
+
             if file_path is not None:
+                if flow_graph._options_block.params['id'].get_value() == 'default':
+                    file_name = os.path.basename(file_path).replace(".grc", "")
+                    flow_graph._options_block.params['id'].set_value(file_name)
+                    flow_graph_update(flow_graph)
+
                 page.file_path = os.path.abspath(file_path)
                 try:
                     self.platform.save_flow_graph(page.file_path, flow_graph)
