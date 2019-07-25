@@ -104,11 +104,6 @@ class TestBlocktoolCore(unittest.TestCase):
         if not os.path.basename(test_dict['file_path']).endswith('.h'):
             with self.assertRaises(BlockToolException):
                 BlockHeaderParser(**test_dict).run_blocktool()
-        # test for non-existent impl file
-        test_dict['file_path'] = os.path.abspath(
-            os.path.join(self.test_dir, 'agc.h'))
-        with self.assertRaises(BlockToolException):
-            BlockHeaderParser(**test_dict).run_blocktool()
 
     @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
     def test_namespace(self):

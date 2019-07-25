@@ -33,6 +33,7 @@ from pygccxml import parser, declarations, utils
 
 from ..core.base import BlockToolException, BlockTool
 from ..core.iosignature import io_signature, message_port
+from ..core.comments import read_comments, add_comments, exist_comments
 from ..core import Constants
 
 LOGGER = logging.getLogger(__name__)
@@ -86,9 +87,6 @@ class BlockHeaderParser(BlockTool):
         if not self.filename.endswith('.h'):
             raise BlockToolException(
                 'Cannot parse a non-header file')
-        if not os.path.isfile(self.impl_file):
-            raise BlockToolException(
-                'Implementation file of the header not found')
 
     def get_header_info(self):
         """
@@ -143,25 +141,28 @@ class BlockHeaderParser(BlockTool):
             raise BlockToolException(
                 'Block header namespace {} must consist of a valid class instance'.format(module))
 
-        # io_signature
-        try:
-            self.parsed_data['io_signature'] = {}
+        # io_signature, message_ports
+        self.parsed_data['io_signature'] = {}
+        self.parsed_data['message_port'] = {}
+        if os.path.isfile(self.impl_file) and exist_comments(self):
             self.parsed_data['io_signature'] = io_signature(
                 self.impl_file)
-        except:
-            raise BlockToolException(
-                'Implementation file of the block header {} must have a valid I/O signature'.format(self.impl_file))
-
-        # message_port
-        try:
-            self.parsed_data['message_port'] = {}
             self.parsed_data['message_port'] = message_port(
                 self.impl_file)
-        except:
-            self.parsed_data['message_port'] = {
+        elif os.path.isfile(self.impl_file) and not exist_comments(self):
+            self.parsed_data['io_signature'] = io_signature(
+                self.impl_file)
+            self.parsed_data['message_port'] = message_port(
+                self.impl_file)
+            add_comments(self)
+        elif not os.path.isfile(self.impl_file) and exist_comments(self):
+            read_comments(self)
+        else:
+            self.parsed_data['io_signature'] = {
                 "input": [],
                 "output": []
             }
+            self.parsed_data['message_port'] = self.parsed_data['io_signature']
 
         # make
         try:

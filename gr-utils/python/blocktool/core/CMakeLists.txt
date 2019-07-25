@@ -22,6 +22,7 @@ include(GrPython)
 GR_PYTHON_INSTALL(FILES
     __init__.py
     base.py
+    comments.py
     parseheader.py
     iosignature.py
     outputschema.py
