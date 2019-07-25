@@ -170,6 +170,7 @@ LINE_PARAMS = """
             or (type == "msg_complex")) and (not type == "msg_float")
         else 'all')
         }}
+    category: Config
 -   id: width{i}
     label: Line {i} Width
     default: 1
@@ -180,9 +181,12 @@ LINE_PARAMS = """
             or (type == "msg_complex")) and (not type == "msg_float")
         else 'all')
         }}
+    category: Config
 -   id: color{i}
     label: Line {i} Color
-    dtype: string
+    dtype: enum
+    options: ['blue', 'red', 'green', 'black', 'cyan', 'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
+    option_labels: ['Blue', 'Red', 'Green', 'Black', 'Cyan', 'Magenta', 'Yellow', 'Dark Red', 'Dark Green', 'Dark Blue']
     default: '{i_color}'
     base_key: color1
     hide: ${{ ('part' if (
@@ -191,9 +195,12 @@ LINE_PARAMS = """
             or (type == "msg_complex")) and (not type == "msg_float")
         else 'all')
         }}
+    category: Config
 -   id: style{i}
     label: Line {i} Style
-    dtype: int
+    dtype: enum
+    options: ['1','2','3','4','5','0']
+    option_labels: ['Solid','Dash','Dots','Dash-Dot','Dash-Dot-Dot']
     default: 1
     base_key: style1
     hide: ${{ ('part' if (
@@ -202,10 +209,13 @@ LINE_PARAMS = """
             or (type == "msg_complex")) and (not type == "msg_float")
         else 'all')
         }}
+    category: Config
 -   id: marker{i}
     label: Line {i} Marker
-    dtype: int
-    default: 1
+    dtype: enum
+    options: ['-1','0','1','2','3','4','5','6','7','8','9']
+    option_labels: ['None','Circle','Rectangle','Diamond','Triangle','Down Triangle','Left Triangle','Right Triangle','Cross','X-Cross']
+    default: -1
     base_key: marker1
     hide: ${{ ('part' if (
             int(nconnections) >= {i}
@@ -213,6 +223,7 @@ LINE_PARAMS = """
             or (type == "msg_complex")) and (not type == "msg_float")
         else 'all')
         }}
+    category: Config
 -   id: alpha{i}
     label: Line {i} Alpha
     dtype: real
@@ -224,6 +235,7 @@ LINE_PARAMS = """
             or (type == "msg_complex")) and (not type == "msg_float")
         else 'all')
         }}
+    category: Config
 """
 
 EVERYTHING_AFTER_PARAMS = """
@@ -280,8 +292,8 @@ templates:
             ${label6}, ${label7}, ${label8}, ${label9}, ${label10}]
         widths = [${width1}, ${width2}, ${width3}, ${width4}, ${width5},
             ${width6}, ${width7}, ${width8}, ${width9}, ${width10}]
-        colors = [${color1}, ${color2}, ${color3}, ${color4}, ${color5},
-            ${color6}, ${color7}, ${color8}, ${color9}, ${color10}]
+        colors = ['${color1}', '${color2}', '${color3}', '${color4}', '${color5}',
+            '${color6}', '${color7}', '${color8}', '${color9}', '${color10}']
         alphas = [${alpha1}, ${alpha2}, ${alpha3}, ${alpha4}, ${alpha5},
             ${alpha6}, ${alpha7}, ${alpha8}, ${alpha9}, ${alpha10}]
         styles = [${style1}, ${style2}, ${style3}, ${style4}, ${style5},
@@ -330,7 +342,7 @@ def make_yml():
     """Return the YML file as a string"""
     default_colors = [
         'blue', 'red', 'green', 'black', 'cyan', 'magenta', 'yellow',
-        'dark red', 'dark green', 'Dark Blue'
+        'dark red', 'dark green', 'dark blue'
     ]
     line_params_1 = LINE_PARAMS.format(i=1, i_cplx=1, i_color=default_colors[0])
     line_params_1 = re.sub(r'    base_key:.*\n', '', line_params_1)
@@ -338,7 +350,7 @@ def make_yml():
         LINE_PARAMS.format(
             i=i,
             i_cplx=int(math.ceil(float(i)/2)),
-            i_color=default_colors[i % len(default_colors)],
+            i_color=default_colors[(i-1) % len(default_colors)],
         )
         for i in range(2, 11)
     ])
