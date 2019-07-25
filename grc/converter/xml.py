@@ -72,9 +72,9 @@ def load_stdlib(filename, document_type_def=None):
 
     version_info = {}
     for body in re.findall(r'<\?(.*?)\?>', data):
-        element = etree.fromstring('<' + body + '/>')
-        if element.tag == 'grc':
-            version_info.update(element.attrib)
+        inst = etree.fromstring('<' + body + '/>')
+        if inst.tag == 'grc':
+            version_info.update(inst.attrib)
 
     return element, version_info
 
