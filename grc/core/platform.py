@@ -328,6 +328,7 @@ class Platform(Element):
         @throws exception if the validation fails
         """
         filename = filename or self.config.default_flow_graph
+        is_xml = False
         with open(filename, encoding='utf-8') as fp:
             is_xml = '<flow_graph>' in fp.read(100)
             fp.seek(0)
@@ -336,10 +337,11 @@ class Platform(Element):
                 data = yaml.safe_load(fp)
                 validator = schema_checker.Validator(schema_checker.FLOW_GRAPH_SCHEME)
                 validator.run(data)
-            else:
-                Messages.send('>>> Converting from XML\n')
-                from ..converter.flow_graph import from_xml
-                data = from_xml(fp)
+
+        if is_xml:
+            Messages.send('>>> Converting from XML\n')
+            from ..converter.flow_graph import from_xml
+            data = from_xml(filename)
 
         return data
 
