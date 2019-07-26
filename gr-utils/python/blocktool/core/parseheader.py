@@ -200,8 +200,8 @@ class BlockHeaderParser(BlockTool):
                     self.parsed_data['make']['arguments'].append(
                         make_arguments.copy())
         except RuntimeError:
-            raise BlockToolException(
-                'Class instance {} must have a valid factory signature'.format(self.parsed_data['class']))
+            self.parsed_data['make'] = {}
+            self.parsed_data['make']['arguments'] = []
 
         # setters
         try:
@@ -257,11 +257,17 @@ class BlockHeaderParser(BlockTool):
 
         # documentation
         try:
+            _index = None
             header_file = codecs.open(self.target_file, 'r', 'cp932')
             self.parsed_data['docstring'] = re.compile(
                 r'//.*?$|/\*.*?\*/', re.DOTALL | re.MULTILINE).findall(
                     header_file.read())[2:]
             header_file.close()
+            for doc in self.parsed_data['docstring']:
+                if Constants.BLOCKTOOL in doc:
+                    _index = self.parsed_data['docstring'].index(doc)
+            if _index is not None:
+                self.parsed_data['docstring'] = self.parsed_data['docstring'][: _index]
         except:
             self.parsed_data['docstring'] = []
 

@@ -24,8 +24,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import re
-
 from ..core import Constants
 
 
@@ -34,7 +32,7 @@ def strip_symbols(line):
     helper function to strip symbols
     from blocktool comment syntax
     """
-    return line.split(':').lstrip().rstrip()
+    return line.split(':')[-1].lstrip().rstrip()
 
 
 def exist_comments(self):
@@ -50,10 +48,7 @@ def exist_comments(self):
         for line in lines:
             if Constants.BLOCKTOOL in line:
                 _index = lines.index(line)
-    if _index is not None:
-        return True
-    else:
-        return False
+    return bool(_index)
 
 
 def read_comments(self):
@@ -61,6 +56,18 @@ def read_comments(self):
     function to read special blocktool comments
     in the public header
     """
+    self.parsed_data['io_signature'] = {
+        "input": {
+            "signature": None
+        },
+        "output": {
+            "signature": None
+        }
+    }
+    self.parsed_data['message_port'] = {
+        "input": [],
+        "output": []
+    }
     parsed_io = self.parsed_data['io_signature']
     message_port = self.parsed_data['message_port']
     special_comments = []
@@ -85,18 +92,18 @@ def read_comments(self):
                 parsed_io['input']['max_streams'] = strip_symbols(comment)
             if Constants.INPUT_MIN in comment:
                 parsed_io['input']['min_streams'] = strip_symbols(comment)
-            if parsed_io['input']['signature'] is Constants.MAKE:
+            if parsed_io['input']['signature'] is Constants.MAKE and not None:
                 if Constants.INPUT_MAKE_SIZE in comment:
                     parsed_io['input']['sizeof_stream_item'] = strip_symbols(
                         comment)
-            elif parsed_io['input']['signature'] is Constants.MAKE2:
+            elif parsed_io['input']['signature'] is Constants.MAKE2 and not None:
                 if Constants.INPUT_MAKE_SIZE1 in comment:
                     parsed_io['input']['sizeof_stream_item1'] = strip_symbols(
                         comment)
                 if Constants.INPUT_MAKE_SIZE2 in comment:
                     parsed_io['input']['sizeof_stream_item2'] = strip_symbols(
                         comment)
-            elif parsed_io['input']['signature'] is Constants.MAKE3:
+            elif parsed_io['input']['signature'] is Constants.MAKE3 and not None:
                 if Constants.INPUT_MAKE_SIZE1 in comment:
                     parsed_io['input']['sizeof_stream_item1'] = strip_symbols(
                         comment)
@@ -106,9 +113,9 @@ def read_comments(self):
                 if Constants.INPUT_MAKE_SIZE3 in comment:
                     parsed_io['input']['sizeof_stream_item3'] = strip_symbols(
                         comment)
-            elif parsed_io['input']['signature'] is Constants.MAKEV:
-                if Constants.INPUT_MAKE_SIZE in comment:
-                    parsed_io['input']['sizeof_stream_item'] = strip_symbols(
+            elif parsed_io['input']['signature'] is Constants.MAKEV and not None:
+                if Constants.INPUT_MAKEV_SIZE in comment:
+                    parsed_io['input']['sizeof_stream_items'] = strip_symbols(
                         comment)
 
             if Constants.OUTPUT_SIG in comment:
@@ -117,7 +124,7 @@ def read_comments(self):
                 parsed_io['output']['max_streams'] = strip_symbols(comment)
             if Constants.OUTPUT_MIN in comment:
                 parsed_io['output']['min_streams'] = strip_symbols(comment)
-            if parsed_io['output']['signature'] is Constants.MAKE:
+            if parsed_io['output']['signature'] is Constants.MAKE and not None:
                 if Constants.OUTPUT_MAKE_SIZE in comment:
                     parsed_io['output']['sizeof_stream_item'] = strip_symbols(
                         comment)
@@ -128,7 +135,7 @@ def read_comments(self):
                 if Constants.OUTPUT_MAKE_SIZE2 in comment:
                     parsed_io['output']['sizeof_stream_item2'] = strip_symbols(
                         comment)
-            elif parsed_io['output']['signature'] is Constants.MAKE3:
+            elif parsed_io['output']['signature'] is Constants.MAKE3 and not None:
                 if Constants.OUTPUT_MAKE_SIZE1 in comment:
                     parsed_io['output']['sizeof_stream_item1'] = strip_symbols(
                         comment)
@@ -138,17 +145,17 @@ def read_comments(self):
                 if Constants.OUTPUT_MAKE_SIZE3 in comment:
                     parsed_io['output']['sizeof_stream_item3'] = strip_symbols(
                         comment)
-            elif parsed_io['output']['signature'] is Constants.MAKEV:
-                if Constants.OUTPUT_MAKE_SIZE in comment:
-                    parsed_io['output']['sizeof_stream_item'] = strip_symbols(
+            elif parsed_io['output']['signature'] is Constants.MAKEV and not None:
+                if Constants.OUTPUT_MAKEV_SIZE in comment:
+                    parsed_io['output']['sizeof_stream_items'] = strip_symbols(
                         comment)
 
             if Constants.MESSAGE_INPUT in comment:
-                message_port['input'] = strip_symbols(comment).split(', ')
-            if message_port['output']:
-                message_port['output'] = strip_symbols(comment).split(', ')
-    else:
-        print('test2')
+                if strip_symbols(comment):
+                    message_port['input'] = strip_symbols(comment).split(', ')
+            if Constants.MESSAGE_OUTPUT in comment:
+                if strip_symbols(comment):
+                    message_port['output'] = strip_symbols(comment).split(', ')
 
 
 def add_comments(self):
@@ -167,6 +174,7 @@ def add_comments(self):
                 _index = lines.index(line)
     if _index is None:
         with open(self.target_file, 'a') as header:
+            header.write('\n')
             header.write('/* '+Constants.BLOCKTOOL + '\n')
             header.write('input_signature: ' +
                          parsed_io['input']['signature'] + '\n')
@@ -191,7 +199,7 @@ def add_comments(self):
                              parsed_io['input']['sizeof_stream_item3'] + '\n')
             elif parsed_io['input']['signature'] is Constants.MAKEV:
                 header.write('input_sizeof_stream_item: ' +
-                             parsed_io['input']['sizeof_stream_item'] + '\n')
+                             parsed_io['input']['sizeof_stream_items'] + '\n')
             header.write('output_signature: ' +
                          parsed_io['output']['signature'] + '\n')
             header.write('output_min_streams: ' +
@@ -215,7 +223,7 @@ def add_comments(self):
                              parsed_io['output']['sizeof_stream_item3'] + '\n')
             elif parsed_io['output']['signature'] is Constants.MAKEV:
                 header.write('output_sizeof_stream_item: ' +
-                             parsed_io['output']['sizeof_stream_item'] + '\n')
+                             parsed_io['output']['sizeof_stream_items'] + '\n')
 
             if message_port['input']:
                 header.write('message_input: ' +
@@ -228,5 +236,3 @@ def add_comments(self):
             else:
                 header.write('message_output: ' + '\n')
             header.write(Constants.END_BLOCKTOOL + '*/' + '\n')
-    else:
-        print('test2')

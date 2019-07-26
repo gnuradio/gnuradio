@@ -114,11 +114,9 @@ def yaml_generator(self):
     """
     header = self.filename.split('.')[0]
     block = self.modname.split('-')[-1]
-    click.secho('Successfully generated {}_{}.yml'.format(
-        block, header), fg='green')
     label = header.split('_')
     del label[-1]
-    yml_file = os.path.join('.', block+'_'+header+'.yml')
+    yml_file = os.path.join('.', block+'_'+header+'.block.yml')
     _header = (('id', '{}_{}'.format(block, header)),
                ('label', ' '.join(label).upper()),
                ('category', '[{}]'.format(block.capitalize())),
@@ -225,7 +223,7 @@ def yaml_generator(self):
         data['outputs'] = output_signature
 
     _cpp_templates = [('includes', '#include <gnuradio/{}/{}>'.format(block, self.filename)),
-                      ('declartions', '{}::{}::sptr ${{id}}'.format(block, header)),
+                      ('declarations', '{}::{}::sptr ${{id}}'.format(block, header)),
                       ('make', 'this->${{id}} = {}::{}::make({})'.format(
                           block, header, ', '.join(params_list)))
                       ]
@@ -258,6 +256,8 @@ def yaml_generator(self):
 
     with open(yml_file, 'w') as yml:
         yaml.dump(data, yml, Dumper=Dumper, default_flow_style=False)
+    click.secho('Successfully generated {}_{}.block.yml'.format(
+        block, header), fg='green')
 
 
 def parse_directory(**kwargs):
