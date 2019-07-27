@@ -49,9 +49,9 @@ class FlowGraph(Element):
             the flow graph object
         """
         Element.__init__(self, parent)
-        self._options_block = self.parent_platform.make_block(self, 'options')
+        self.options_block = self.parent_platform.make_block(self, 'options')
 
-        self.blocks = [self._options_block]
+        self.blocks = [self.options_block]
         self.connections = set()
 
         self._eval_cache = {}
@@ -149,7 +149,7 @@ class FlowGraph(Element):
         Returns:
             the value held by that param
         """
-        return self._options_block.params[key].get_evaluated()
+        return self.options_block.params[key].get_evaluated()
 
     def get_run_command(self, file_path, split=False):
         run_command = self.get_option('run_command')
@@ -264,7 +264,7 @@ class FlowGraph(Element):
             the new block or None if not found
         """
         if block_id == 'options':
-            return self._options_block
+            return self.options_block
         try:
             block = self.parent_platform.make_block(self, block_id, **kwargs)
             self.blocks.append(block)
@@ -303,7 +303,7 @@ class FlowGraph(Element):
         If the element is a block, remove its connections.
         If the element is a connection, just remove the connection.
         """
-        if element is self._options_block:
+        if element is self.options_block:
             return
 
         if element.is_port:
@@ -332,9 +332,9 @@ class FlowGraph(Element):
             return not b.is_variable, b.name  # todo: vars still first ?!?
 
         data = collections.OrderedDict()
-        data['options'] = self._options_block.export_data()
+        data['options'] = self.options_block.export_data()
         data['blocks'] = [b.export_data() for b in sorted(self.blocks, key=block_order)
-                          if b is not self._options_block]
+                          if b is not self.options_block]
         data['connections'] = sorted(c.export_data() for c in self.connections)
         data['metadata'] = {'file_format': FLOW_GRAPH_FILE_FORMAT_VERSION}
         return data
@@ -342,7 +342,7 @@ class FlowGraph(Element):
     def _build_depending_hier_block(self, block_id):
         # we're before the initial fg update(), so no evaluated values!
         # --> use raw value instead
-        path_param = self._options_block.params['hier_block_src_path']
+        path_param = self.options_block.params['hier_block_src_path']
         file_path = self.parent_platform.find_file_in_paths(
             filename=block_id + '.grc',
             paths=path_param.get_value(),
@@ -368,8 +368,8 @@ class FlowGraph(Element):
         file_format = data['metadata']['file_format']
 
         # build the blocks
-        self._options_block.import_data(name='', **data.get('options', {}))
-        self.blocks.append(self._options_block)
+        self.options_block.import_data(name='', **data.get('options', {}))
+        self.blocks.append(self.options_block)
 
         for block_data in data.get('blocks', []):
             block_id = block_data['id']
