@@ -6,7 +6,7 @@ parameters:
 -   id: access_code
     label: Access Code
     dtype: string
-    default: '0'
+    default: digital.packet_utils.default_access_code
 -   id: threshold
     label: Threshold
     dtype: int
@@ -20,11 +20,11 @@ value: ${ digital.header_format_default(access_code, threshold, bps) }
 templates:
     imports: from gnuradio import digital
     var_make: |-
-        % if int(eval(access_code))==0:
-        self.${id} = ${id} = digital.header_format_default(digital.packet_utils.default_access_code,\
+        % if access_code.isdigit():
+        self.${id} = ${id} = digital.header_format_default(${access_code},\
         ${threshold}, ${bps})
         % else:
-        self.${id} = ${id} = digital.header_format_default(${access_code},\
+        self.${id} = ${id} = digital.header_format_default(digital.packet_utils.default_access_code,\
         ${threshold}, ${bps})
         % endif
 
@@ -32,13 +32,13 @@ cpp_templates:
     includes: ['#include <gnuradio/digital/header_format_default.h>']
     declarations: 'digital::header_format_default::sptr ${id};'
     var_make: |-
-        % if int(eval(access_code))==0:
-        this->${id} = ${id} = digital::header_format_default(digital.packet_utils.default_access_code,\
-        ${threshold}, ${bps});
-        % else:
+        % if access_code.isdigit():
         this->${id} = ${id} = digital::header_format_default(${access_code},\
         ${threshold}, ${bps});
-        % endif
+        % else:
+        this->${id} = ${id} = digital::header_format_default(digital.packet_utils.default_access_code,\
+        ${threshold}, ${bps});
+        % endif  
     link: ['gnuradio-digital']
 
 file_format: 1
