@@ -289,7 +289,7 @@ class fm_preemph(gr.hier_block2):
         # That isn't what users are going to expect, so adjust with a
         # gain, g, so that H(z = 1) = 1.0 for 0 dB gain at DC.
         w_0dB = 2.0 * math.pi * 0.0
-        g =        abs(1.0 - p1 * cmath.rect(1.0 / -w_0dB)) \
+        g =        abs(1.0 - p1 * cmath.rect(1.0, -w_0dB)) \
             / (b0 * abs(1.0 - z1 * cmath.rect(1.0, -w_0dB)))
 
         btaps = [ g * b0 * 1.0, g * b0 * -z1 ]
