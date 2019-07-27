@@ -20,16 +20,18 @@
 from argparse import Namespace
 from os import path
 import tempfile
-import subprocess
 
-from .test_compiler import *
+from grc.compiler import main
 
-def test_cpp():
-    test_compiler('test_cpp.grc')
-    if not os.path.exists('test_cpp/build'):
-        os.makedirs('directory')
-    return_code = subprocess.Popen('cmake ..', cwd='./build/')
-    assert(return_code == 0)
-    return_code = subprocess.Popen('make', cwd='./build/')
-    assert(return_code == 0)
+def test_cpp(capsys):
+    args = Namespace(
+        output=tempfile.gettempdir(),
+        user_lib_dir=False,
+        grc_files=[path.join(path.dirname(__file__), 'resources', 'test_cpp.grc')],
+        run=True
+    )
 
+    main(args)
+
+    out, err = capsys.readouterr()
+    assert not err
