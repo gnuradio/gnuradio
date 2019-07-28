@@ -34,7 +34,7 @@ namespace gr {
     class pull_source_impl : public pull_source, public base_source_impl
     {
     public:
-      pull_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      pull_source_impl(size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, bool watch_end_tag);
 
       int work(int noutput_items,
                gr_vector_const_void_star &input_items,

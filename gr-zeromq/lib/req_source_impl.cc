@@ -42,7 +42,7 @@ namespace gr {
       : gr::sync_block("req_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
-        base_source_impl(ZMQ_REQ, itemsize, vlen, address, timeout, pass_tags, hwm),
+        base_source_impl(ZMQ_REQ, itemsize, vlen, address, timeout, pass_tags, hwm, false),
         d_req_pending(false)
     {
       /* All is delegated */

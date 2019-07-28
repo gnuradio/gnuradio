@@ -42,7 +42,7 @@ namespace gr {
       : gr::sync_block("sub_source",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, itemsize * vlen)),
-        base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm)
+        base_source_impl(ZMQ_SUB, itemsize, vlen, address, timeout, pass_tags, hwm, false)
     {
       /* Subscribe */
       d_socket->setsockopt(ZMQ_SUBSCRIBE, "", 0);

@@ -51,9 +51,10 @@ namespace gr {
        * \param timeout  Receive timeout in milliseconds, default is 100ms, 1us increments.
        * \param pass_tags Whether source will look for and deserialize tags.
        * \param hwm High Watermark to configure the socket to (-1 => zmq's default)
+       * \param watch_end_tag Whether to end with WORK_DONE after writing an item tagged "end" to output
        */
       static sptr make(size_t itemsize, size_t vlen, char *address,
-                       int timeout=100, bool pass_tags=false, int hwm=-1);
+                       int timeout=100, bool pass_tags=false, int hwm=-1, bool watch_end_tag=false);
 
       /*!
        * \brief Return a std::string of ZMQ_LAST_ENDPOINT from the underlying ZMQ socket.

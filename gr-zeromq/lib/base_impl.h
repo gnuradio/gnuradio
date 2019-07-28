@@ -56,7 +56,7 @@ namespace gr {
     class base_source_impl : public base_impl
     {
     public:
-      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm);
+      base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, bool watch_end_tag);
 
     protected:
       zmq::message_t d_msg;
@@ -67,6 +67,12 @@ namespace gr {
       bool has_pending();
       int  flush_pending(void *out_buf, const int out_nitems, const uint64_t out_offset);
       bool load_message(bool wait);
+      bool work_done();
+
+    private:
+      bool d_watch_end_tag;
+      bool d_terminate;
+      uint64_t d_end_offset;
     };
 
   } // namespace zeromq

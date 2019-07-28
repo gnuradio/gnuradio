@@ -29,6 +29,13 @@ parameters:
     default: 'False'
     options: ['True', 'False']
     option_labels: ['Yes', 'No']
+-   id: watch_end_tag
+    label: Watch End Tag
+    dtype: enum
+    default: 'False'
+    options: ['True', 'False']
+    option_labels: ['Yes', 'No']
+    hide: ${ ('all' if str(pass_tags) == 'False' else 'none') }
 -   id: hwm
     label: High Watermark
     dtype: int
@@ -43,6 +50,6 @@ outputs:
 templates:
     imports: from gnuradio import zeromq
     make: zeromq.pull_source(${type.itemsize}, ${vlen}, ${address}, ${timeout}, ${pass_tags},
-        ${hwm})
+        ${hwm}, ${watch_end_tag})
 
 file_format: 1

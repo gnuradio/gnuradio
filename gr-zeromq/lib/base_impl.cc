@@ -115,9 +115,9 @@ namespace gr {
       return in_nitems;
     }
 
-    base_source_impl::base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm)
+    base_source_impl::base_source_impl(int type, size_t itemsize, size_t vlen, char *address, int timeout, bool pass_tags, int hwm, bool watch_end_tag)
         : base_impl(type, itemsize, vlen, timeout, pass_tags),
-          d_consumed_bytes(0), d_consumed_items(0)
+          d_consumed_bytes(0), d_consumed_items(0), d_watch_end_tag(watch_end_tag), d_terminate(false), d_end_offset(-1)
     {
       /* Set high watermark */
       if (hwm >= 0) {
@@ -175,8 +175,14 @@ namespace gr {
       zmq::pollitem_t items[] = { { static_cast<void *>(*d_socket), 0, ZMQ_POLLIN, 0 } };
       zmq::poll(&items[0], 1, wait ? d_timeout : 0);
 
-      if (!(items[0].revents & ZMQ_POLLIN))
+      if (!(items[0].revents & ZMQ_POLLIN)) {
+        if (nitems_written(0) > d_end_offset) {
+          /* turn the termination flag on, if all items beyond the ending one have been written */
+          /* the ending item is the one that is tagged with an "end" key */
+          d_terminate = true;
+        }
         return false;
+      }
 
       /* Is this the start or continuation of a multi-part message? */
       int64_t more = 0;
@@ -206,6 +212,12 @@ namespace gr {
 
         /* Fixup the tags offset to be relative to the start of this message */
         for (unsigned int i=0; i<d_tags.size(); i++) {
+          if (d_watch_end_tag && pmt::symbol_to_string(d_tags[i].key) == "end") {
+            /* if we encounter an end tag, save its position, */
+            /* so we can return WORK_DONE after writing that tagged item to output */
+            d_end_offset = d_tags[i].offset;
+          }
+
           d_tags[i].offset -= rcv_offset;
         }
       }
@@ -220,6 +232,19 @@ namespace gr {
 
       /* We got one ! */
       return true;
+    }
+
+    /**
+     * @brief      this function is a helper to decide whether to return WORK_DONE in the work function, 
+     *             if requested.
+     *
+     * @return     returns true if all items before and including the ending item has been written to output.
+     *             the ending item is the one that is tagged with an "end" key.
+     */
+    bool
+    base_source_impl::work_done()
+    {
+      return d_terminate;
     }
 
   } /* namespace zeromq */
