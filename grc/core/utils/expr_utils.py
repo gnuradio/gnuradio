@@ -81,7 +81,7 @@ def sort_objects2(objects, id_getter, expr_getter, check_circular=True):
 
     def dependent_ids(obj):
         deps = dependencies(expr_getter(obj))
-        return [id_ if id_ in deps else None for id_ in known_ids]
+        return [id_ if id_ in deps else '' for id_ in known_ids]
 
     objects = sorted(objects, key=dependent_ids)
 
