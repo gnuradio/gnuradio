@@ -17,29 +17,6 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-include(GrPython)
-
-GR_PYTHON_CHECK_MODULE_RAW(
-  "click"
-  "import click"
-  CLICK_FOUND
-  )
-
-GR_PYTHON_CHECK_MODULE_RAW(
-  "click-plugins"
-  "import click_plugins"
-  CLICK_PLUGINS_FOUND
-  )
-
-if(NOT CMAKE_CROSSCOMPILING)
-  if(NOT CLICK_FOUND)
-    message(FATAL_ERROR "Python module click is required for gr-modtool")
-  endif()
-  if(NOT CLICK_PLUGINS_FOUND)
-    message(FATAL_ERROR "Python module click-plugins is required for gr-modtool")
-  endif()
-endif()
-
 GR_PYTHON_INSTALL(FILES
     __init__.py
     DESTINATION ${GR_PYTHON_DIR}/gnuradio/modtool
