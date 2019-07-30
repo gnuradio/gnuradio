@@ -1,6 +1,6 @@
 id: variable_file_filter_taps
 label: Filter Taps Loader
-flags: [ python ]
+flags: [show_id, python ]
 
 parameters:
 -   id: file
@@ -11,12 +11,12 @@ parameters:
     dtype: bool
     default: False
 
+value: ${filter.file_taps_loader(file, verbose).get_taps()}
+
 templates:
     imports: from gnuradio import filter
     var_make: |-
-        self.${id} = ${id} = filter.file_taps_loader($file, $verbose).get_taps()
-    var_value: |-
-        filter.file_taps_loader($file, $verbose).get_taps()
+        self.${id} = ${id} = filter.file_taps_loader(${file}, ${verbose}).get_taps()
 
 documentation: |-
   This block maps filter taps created with gr_filter_design to a variable.
