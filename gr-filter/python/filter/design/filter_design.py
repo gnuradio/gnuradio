@@ -1980,9 +1980,10 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.mfilterCoeff.setText(fcoeff)
 
     def action_save_dialog(self):
-        filename = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        file_dialog_output = QtGui.QFileDialog.getSaveFileName(self, "Save CSV Filter File", ".", "")
+        filename = file_dialog_output[0]
         try:
-            handle = open(filename, "wb")
+            handle = open(filename, "w")
         except IOError:
             reply = QtGui.QMessageBox.information(self, 'File Name',
                                                   ("Could not save to file: %s" % filename),
@@ -2006,12 +2007,13 @@ class gr_plot_filter(QtGui.QMainWindow):
         handle.close()
 
     def action_open_dialog(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
-        if(len(filename) == 0):
+        file_dialog_output = QtGui.QFileDialog.getOpenFileName(self, "Open CSV Filter File", ".", "")
+        if(len(file_dialog_output) == 0):
             return
-
+        # file_dialog_output returns tuple of (filename, file filter)
+        filename = file_dialog_output[0]
         try:
-            handle = open(filename, "rb")
+            handle = open(filename, "r")
         except IOError:
             reply = QtGui.QMessageBox.information(self, 'File Name',
                                                   ("Could not open file: %s" % filename),
