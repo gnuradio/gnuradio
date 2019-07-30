@@ -151,7 +151,6 @@ class Platform(Element):
 
         with Cache(Constants.CACHE_FILE) as cache:
             for file_path in self._iter_files_in_block_path(path):
-                data = cache.get_or_load(file_path)
 
                 if file_path.endswith('.block.yml'):
                     loader = self.load_block_description
@@ -167,6 +166,7 @@ class Platform(Element):
 
                 try:
                     checker = schema_checker.Validator(scheme)
+                    data = cache.get_or_load(file_path)
                     passed = checker.run(data)
                     for msg in checker.messages:
                         logger.warning('{:<40s} {}'.format(os.path.basename(file_path), msg))
