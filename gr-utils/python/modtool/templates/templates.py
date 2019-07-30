@@ -550,11 +550,11 @@ templates:
   imports: import ${modname}
   make: ${modname}.${blockname}(${strip_arg_types_grc(arglist)})
 
-<!-- Make one 'parameters' list entry for every Parameter you want settable from the GUI.
-     Sub-entries of dictionary:
-     * id (makes the value accessible as \$keyname, e.g. in the make entry)
-     * label
-     * dtype -->
+#  Make one 'parameters' list entry for every Parameter you want settable from the GUI.
+#     Sub-entries of dictionary:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label
+#     * dtype 
 parameters:
 - id: ...
   label: ...
@@ -563,26 +563,26 @@ parameters:
   label: ...
   dtype: ...
 
-<!-- Make one 'inputs' list entry per input. Sub-entries of dictionary:
-     * label (an identifier for the GUI)
-     * domain
-     * dtype
-     * vlen
-     * optional (set to 1 for optional inputs) -->
+#  Make one 'inputs' list entry per input. Sub-entries of dictionary:
+#      * label (an identifier for the GUI)
+#      * domain
+#      * dtype
+#      * vlen
+#      * optional (set to 1 for optional inputs) 
 inputs:
 - label: ...
   domain: ...
   dtype: ...
   vlen: ...
 
-<!-- Make one 'outputs' list entry per output. Sub-entries of dictionary:
-     * label (an identifier for the GUI)
-     * dtype
-     * vlen
-     * optional (set to 1 for optional inputs) -->
+#  Make one 'outputs' list entry per output. Sub-entries of dictionary:
+#      * label (an identifier for the GUI)
+#      * dtype
+#      * vlen
+#      * optional (set to 1 for optional inputs) 
 - label: ...
   domain: ...
-  dtype: !-- e.g. int, float, complex, byte, short, xxx_vector, ...--
+  dtype: ... #!-- e.g. int, float, complex, byte, short, xxx_vector, ...--
 
 file_format: 1
 '''
