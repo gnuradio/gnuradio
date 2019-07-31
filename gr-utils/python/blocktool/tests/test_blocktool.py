@@ -149,7 +149,7 @@ class TestBlocktoolCore(unittest.TestCase):
         self.assertTrue(valid_input_message_port)
         self.assertTrue(valid_output_message_port)
 
-    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not founf, skipping this unittest')
+    @unittest.skipIf(SKIP_BLOCK_TEST, 'pygccxml not found, skipping this unittest')
     def test_factory_signature(self):
         """ test for factory signature in the header """
         valid_factory_arg = True

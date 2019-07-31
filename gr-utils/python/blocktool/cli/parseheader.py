@@ -66,6 +66,8 @@ Loader.add_constructor(_MAPPING_TAG, dict_constructor)
 @click.argument('file-path', nargs=1)
 @click.option('-yaml', '--yaml-confirm', is_flag=True,
               help='If given, a YAML *file* alongside printed JSON response will be generated')
+@click.option('-c', '--blocktool-comments', is_flag=True,
+              help='blocktool helper comments will be added in the header file')
 @click.option('-f', '--file-confirm', is_flag=True,
               help='If given, file with default name in both JSON and YAML format will be generated')
 def cli(**kwargs):

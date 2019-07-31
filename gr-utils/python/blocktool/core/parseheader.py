@@ -51,10 +51,11 @@ class BlockHeaderParser(BlockTool):
     name = 'Block Parse Header'
     description = 'Create a parsed output from a block header file'
 
-    def __init__(self, file_path=None, **kwargs):
+    def __init__(self, file_path=None, blocktool_comments = False, **kwargs):
         """ __init__ """
         BlockTool.__init__(self, **kwargs)
         self.parsed_data = {}
+        self.addcomments = blocktool_comments
         if not os.path.isfile(file_path):
             raise BlockToolException('file does not exist')
         file_path = os.path.abspath(file_path)
@@ -149,12 +150,14 @@ class BlockHeaderParser(BlockTool):
                 self.impl_file)
             self.parsed_data['message_port'] = message_port(
                 self.impl_file)
+            read_comments(self)
         elif os.path.isfile(self.impl_file) and not exist_comments(self):
             self.parsed_data['io_signature'] = io_signature(
                 self.impl_file)
             self.parsed_data['message_port'] = message_port(
                 self.impl_file)
-            add_comments(self)
+            if self.addcomments:
+                add_comments(self)
         elif not os.path.isfile(self.impl_file) and exist_comments(self):
             read_comments(self)
         else:
@@ -226,8 +229,6 @@ class BlockHeaderParser(BlockTool):
                             getter_arguments.append(args['name'])
                             setter_args['arguments_type'].append(args.copy())
                         self.parsed_data['methods'].append(setter_args.copy())
-            else:
-                self.parsed_data['methods'] = []
         except RuntimeError:
             self.parsed_data['methods'] = []
 
@@ -250,8 +251,6 @@ class BlockHeaderParser(BlockTool):
                             getter_args["read_only"] = False
                         self.parsed_data['properties'].append(
                             getter_args.copy())
-            else:
-                self.parsed_data['properties'] = []
         except RuntimeError:
             self.parsed_data['properties'] = []
 

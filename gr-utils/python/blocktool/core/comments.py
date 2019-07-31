@@ -24,6 +24,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import warnings
+
 from ..core import Constants
 
 
@@ -51,11 +53,32 @@ def exist_comments(self):
     return bool(_index)
 
 
+def validate_message_port(self, message_ports, suppress_input, suppress_output):
+    """
+    function to solve conflicts if any in the
+    *message_port* comments and the implementation information
+    """
+    if message_ports['input'] != self.parsed_data['message_port']['input']:
+        if not suppress_input:
+            warnings.warn(
+                'Conflict in values input message port Id. Add ! at the start of the key-value line to mandatory use the comment value.')
+            self.parsed_data['message_port']['input'] = message_ports['input']
+    if message_ports['output'] != self.parsed_data['message_port']['output']:
+        if not suppress_output:
+            warnings.warn(
+                'Conflict in values output message port Id. Add ! at the start of the key-value line to mandatory use the comment value.')
+            self.parsed_data['message_port']['output'] = message_ports['output']
+
+
 def read_comments(self):
     """
     function to read special blocktool comments
     in the public header
     """
+    temp_parsed_data = {}
+    if self.parsed_data['io_signature'] or self.parsed_data['message_port']:
+        temp_parsed_data['io_signature'] = self.parsed_data['io_signature']
+        temp_parsed_data['message_port'] = self.parsed_data['message_port']
     self.parsed_data['io_signature'] = {
         "input": {
             "signature": None
@@ -68,6 +91,8 @@ def read_comments(self):
         "input": [],
         "output": []
     }
+    _suppress_input = False
+    _suppress_output = False
     parsed_io = self.parsed_data['io_signature']
     message_port = self.parsed_data['message_port']
     special_comments = []
@@ -150,12 +175,19 @@ def read_comments(self):
                     parsed_io['output']['sizeof_stream_items'] = strip_symbols(
                         comment)
 
-            if Constants.MESSAGE_INPUT in comment:
+            if Constants.INPUT_PORT in comment:
+                if Constants.EXCLAMATION in comment:
+                    _suppress_input = True
                 if strip_symbols(comment):
                     message_port['input'] = strip_symbols(comment).split(', ')
-            if Constants.MESSAGE_OUTPUT in comment:
+            if Constants.OUTPUT_PORT in comment:
+                if Constants.EXCLAMATION in comment:
+                    _suppress_output = True
                 if strip_symbols(comment):
                     message_port['output'] = strip_symbols(comment).split(', ')
+    validate_message_port(
+        self, temp_parsed_data['message_port'], _suppress_input, _suppress_output)
+    self.parsed_data['io_signature'] = temp_parsed_data['io_signature']
 
 
 def add_comments(self):

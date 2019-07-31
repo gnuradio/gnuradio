@@ -42,6 +42,7 @@ UTILS = 'utils'
 OPEN_BRACKET = '('
 CLOSE_BRACKET = ')'
 STRIP_SYMBOLS = ' ,:)'
+EXCLAMATION = '!'
 
 # Blocktool special comments
 BLOCKTOOL = '! BlockTool'
