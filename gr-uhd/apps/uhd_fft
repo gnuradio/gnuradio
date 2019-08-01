@@ -82,7 +82,9 @@ class uhd_fft(UHDApp, gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
         self.settings = Qt.QSettings("GNU Radio", "uhd_fft")
-        self.restoreGeometry(self.settings.value("geometry"))
+        geo_settings = self.settings.value("geometry")
+        if geo_settings:
+            self.restoreGeometry(self.settings.value("geometry"))
 
         ##################################################
         # Parameters
