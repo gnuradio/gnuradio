@@ -119,7 +119,12 @@ class DrawingArea(Gtk.DrawingArea):
         """
         Forward button click information to the flow graph.
         """
-        self.grab_focus()
+        # The following line causes the canvas to reset position to 0,0
+        #  when changing focus from the console or block search back to 
+        #  the canvas
+        #  Removing this line leaves the canvas alone when focus changes
+        # self.grab_focus()
+
         self.ctrl_mask = event.get_state() & Gdk.ModifierType.CONTROL_MASK
         self.mod1_mask = event.get_state() & Gdk.ModifierType.MOD1_MASK
         self.button_state[event.button] = True
