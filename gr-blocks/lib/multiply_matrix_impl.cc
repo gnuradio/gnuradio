@@ -102,7 +102,7 @@ namespace gr {
             return;
           }
           for (size_t k = 0; k < pmt::length(row); k++) {
-            new_A[i][k] = pmt::to_double(pmt::is_vector(row) ? pmt::vector_ref(row, k) : pmt::tuple_ref(row, k));
+            new_A[i][k] = pmt::to_complex(pmt::is_vector(row) ? pmt::vector_ref(row, k) : pmt::tuple_ref(row, k));
           }
         } else if (pmt::is_c32vector(row)) {
           size_t row_len = 0;
