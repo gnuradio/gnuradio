@@ -154,5 +154,5 @@ endif(MSVC)
 
 
 if(BUILD_SHARED_LIBS)
-  GR_LIBRARY_FOO(gnuradio-qtgui QWT Qt5Widgets FFTW3f)
+  GR_LIBRARY_FOO(gnuradio-qtgui Qwt Qt5Widgets FFTW3f)
 endif()
