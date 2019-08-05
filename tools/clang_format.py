@@ -50,8 +50,8 @@ if __name__ == "__main__" and __package__ is None:
 #
 
 # Expected version of clang-format
-CLANG_FORMAT_VERSION = "4.0.1"
-CLANG_FORMAT_SHORT_VERSION = "4.0"
+CLANG_FORMAT_VERSION = "6.0.1"
+CLANG_FORMAT_SHORT_VERSION = "6.0"
 
 # Name of clang-format as a binary
 CLANG_FORMAT_PROGNAME = "clang-format"
