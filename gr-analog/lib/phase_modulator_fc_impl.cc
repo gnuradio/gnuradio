@@ -30,44 +30,40 @@
 #include <math.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    phase_modulator_fc::sptr
-    phase_modulator_fc::make(double sensitivity)
-    {
-      return gnuradio::get_initial_sptr
-	(new phase_modulator_fc_impl(sensitivity));
+phase_modulator_fc::sptr phase_modulator_fc::make(double sensitivity)
+{
+    return gnuradio::get_initial_sptr(new phase_modulator_fc_impl(sensitivity));
+}
+
+phase_modulator_fc_impl::phase_modulator_fc_impl(double sensitivity)
+    : sync_block("phase_modulator_fc",
+                 io_signature::make(1, 1, sizeof(float)),
+                 io_signature::make(1, 1, sizeof(gr_complex))),
+      d_sensitivity(sensitivity),
+      d_phase(0)
+{
+}
+
+phase_modulator_fc_impl::~phase_modulator_fc_impl() {}
+
+int phase_modulator_fc_impl::work(int noutput_items,
+                                  gr_vector_const_void_star& input_items,
+                                  gr_vector_void_star& output_items)
+{
+    const float* in = (const float*)input_items[0];
+    gr_complex* out = (gr_complex*)output_items[0];
+
+    for (int i = 0; i < noutput_items; i++) {
+        d_phase = d_sensitivity * in[i];
+        float oi, oq;
+        gr::sincosf(d_phase, &oq, &oi);
+        out[i] = gr_complex(oi, oq);
     }
 
-    phase_modulator_fc_impl::phase_modulator_fc_impl(double sensitivity)
-      : sync_block("phase_modulator_fc",
-		      io_signature::make(1, 1, sizeof(float)),
-		      io_signature::make(1, 1, sizeof(gr_complex))),
-	d_sensitivity(sensitivity), d_phase(0)
-    {
-    }
+    return noutput_items;
+}
 
-    phase_modulator_fc_impl::~phase_modulator_fc_impl()
-    {
-    }
-
-    int
-    phase_modulator_fc_impl::work(int noutput_items,
-				  gr_vector_const_void_star &input_items,
-				  gr_vector_void_star &output_items)
-    {
-      const float *in = (const float*)input_items[0];
-      gr_complex *out = (gr_complex*)output_items[0];
-
-      for(int i = 0; i < noutput_items; i++) {
-	d_phase = d_sensitivity * in[i];
-	float oi, oq;
-	gr::sincosf(d_phase, &oq, &oi);
-	out[i] = gr_complex(oi, oq);
-      }
-
-      return noutput_items;
-    }
-
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */

@@ -27,23 +27,23 @@
 #include <gnuradio/blocks/integrate.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-class BLOCKS_API integrate_impl  : public  integrate<T>
-    {
-      int d_decim;
-      unsigned int d_vlen;
+template <class T>
+class BLOCKS_API integrate_impl : public integrate<T>
+{
+    int d_decim;
+    unsigned int d_vlen;
 
-    public:
-      integrate_impl (int decim, unsigned int vlen);
+public:
+    integrate_impl(int decim, unsigned int vlen);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INTEGRATE_IMPL_H */

@@ -29,28 +29,27 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief output = ~input
-     * \ingroup boolean_operators_blk
-     *
-     * bitwise boolean not of input streams.
-     */
-template<class T>
-    class BLOCKS_API not_blk : virtual public sync_block
-    {
-    public:
+/*!
+ * \brief output = ~input
+ * \ingroup boolean_operators_blk
+ *
+ * bitwise boolean not of input streams.
+ */
+template <class T>
+class BLOCKS_API not_blk : virtual public sync_block
+{
+public:
+    typedef boost::shared_ptr<not_blk<T>> sptr;
 
-      typedef boost::shared_ptr< not_blk<T> > sptr;
-
-      static sptr make(size_t vlen=1);
-    };
+    static sptr make(size_t vlen = 1);
+};
 
 typedef not_blk<std::uint8_t> not_bb;
 typedef not_blk<std::int16_t> not_ss;
 typedef not_blk<std::int32_t> not_ii;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* NOT_BLK_H */

@@ -23,10 +23,10 @@
 #ifndef CONSTELLATION_DISPLAY_PLOT_H
 #define CONSTELLATION_DISPLAY_PLOT_H
 
+#include <gnuradio/qtgui/DisplayPlot.h>
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <gnuradio/qtgui/DisplayPlot.h>
 
 /*!
  * \brief QWidget for displaying constellaton (I&Q) plots.
@@ -34,41 +34,40 @@
  */
 class ConstellationDisplayPlot : public DisplayPlot
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  ConstellationDisplayPlot(int nplots, QWidget*);
-  virtual ~ConstellationDisplayPlot();
+    ConstellationDisplayPlot(int nplots, QWidget*);
+    virtual ~ConstellationDisplayPlot();
 
-  void plotNewData(const std::vector<double*> realDataPoints,
-		   const std::vector<double*> imagDataPoints,
-		   const int64_t numDataPoints,
-		   const double timeInterval);
+    void plotNewData(const std::vector<double*> realDataPoints,
+                     const std::vector<double*> imagDataPoints,
+                     const int64_t numDataPoints,
+                     const double timeInterval);
 
-  // Old method to be removed
-  void plotNewData(const double* realDataPoints,
-		   const double* imagDataPoints,
-		   const int64_t numDataPoints,
-		   const double timeInterval);
+    // Old method to be removed
+    void plotNewData(const double* realDataPoints,
+                     const double* imagDataPoints,
+                     const int64_t numDataPoints,
+                     const double timeInterval);
 
-  void replot();
+    void replot();
 
-  void set_xaxis(double min, double max);
-  void set_yaxis(double min, double max);
-  void set_axis(double xmin, double xmax,
-		double ymin, double ymax);
-  void set_pen_size(int size);
+    void set_xaxis(double min, double max);
+    void set_yaxis(double min, double max);
+    void set_axis(double xmin, double xmax, double ymin, double ymax);
+    void set_pen_size(int size);
 
 public slots:
-  void setAutoScale(bool state);
+    void setAutoScale(bool state);
 
 private:
-  void _autoScale(double bottom, double top);
+    void _autoScale(double bottom, double top);
 
-  std::vector<double*> d_real_data;
-  std::vector<double*> d_imag_data;
+    std::vector<double*> d_real_data;
+    std::vector<double*> d_imag_data;
 
-  int64_t d_pen_size;
+    int64_t d_pen_size;
 };
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_H */

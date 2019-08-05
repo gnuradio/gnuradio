@@ -20,61 +20,61 @@
  */
 
 #include <gnuradio/sys_paths.h>
-#include <cstdlib> //getenv
 #include <cstdio>  //P_tmpdir (maybe)
+#include <cstdlib> //getenv
 
 #include <boost/filesystem/path.hpp>
 
 namespace gr {
 
-  const char *tmp_path()
-  {
-    const char *path;
+const char* tmp_path()
+{
+    const char* path;
 
-    //first case, try TMP environment variable
+    // first case, try TMP environment variable
     path = getenv("TMP");
-    if(path)
-      return path;
+    if (path)
+        return path;
 
-    //second case, try P_tmpdir when its defined
-    #ifdef P_tmpdir
-    if(P_tmpdir)
-      return P_tmpdir;
-    #endif /*P_tmpdir*/
+// second case, try P_tmpdir when its defined
+#ifdef P_tmpdir
+    if (P_tmpdir)
+        return P_tmpdir;
+#endif /*P_tmpdir*/
 
-    //fall-through case, nothing worked
+    // fall-through case, nothing worked
     return "/tmp";
-  }
+}
 
-  const char *appdata_path()
-  {
-    const char *path;
+const char* appdata_path()
+{
+    const char* path;
 
-    //first case, try HOME environment variable (unix)
+    // first case, try HOME environment variable (unix)
     path = getenv("HOME");
-    if(path)
-      return path;
+    if (path)
+        return path;
 
-    //second case, try APPDATA environment variable (windows)
+    // second case, try APPDATA environment variable (windows)
     path = getenv("APPDATA");
-    if(path)
-      return path;
+    if (path)
+        return path;
 
-    //fall-through case, nothing worked
+    // fall-through case, nothing worked
     return tmp_path();
-  }
+}
 
-  std::string __userconf_path()
-  {
+std::string __userconf_path()
+{
     boost::filesystem::path p(appdata_path());
     p = p / ".gnuradio";
     return p.string();
-  }
+}
 
-  const char *userconf_path()
-  {
+const char* userconf_path()
+{
     static std::string p(__userconf_path());
     return p.c_str();
-  }
+}
 
-}  /* namespace gr */
+} /* namespace gr */

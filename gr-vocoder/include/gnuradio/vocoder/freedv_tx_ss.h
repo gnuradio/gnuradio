@@ -23,38 +23,40 @@
 #ifndef INCLUDED_VOCODER_FREEDV_TX_H
 #define INCLUDED_VOCODER_FREEDV_TX_H
 
+#include <gnuradio/sync_block.h>
 #include <gnuradio/vocoder/api.h>
 #include <gnuradio/vocoder/freedv_api.h>
-#include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
+
+/*!
+ * \brief FreeDV modulator
+ * \ingroup audio_blk
+ *
+ * Input: Speech (audio) signal as 16-bit shorts, sampling rate 8 kHz.
+ *
+ * Output: Signal (audio) as 16-bit shorts, sampling rate 8 kHz.
+ *
+ */
+class VOCODER_API freedv_tx_ss : virtual public gr::sync_block
+{
+public:
+    typedef boost::shared_ptr<freedv_tx_ss> sptr;
 
     /*!
-     * \brief FreeDV modulator
-     * \ingroup audio_blk
+     * \brief Make FreeDV Modem modulator block.
      *
-     * Input: Speech (audio) signal as 16-bit shorts, sampling rate 8 kHz.
-     *
-     * Output: Signal (audio) as 16-bit shorts, sampling rate 8 kHz.
-     *
+     * \param mode Operating Mode designation
+     * \param msg_txt Low Rate message text (callsign, location)
+     * \param interleave_frames FreeDV 700D mode number of frames to average error
      */
-    class VOCODER_API freedv_tx_ss : virtual public gr::sync_block
-    {
-    public:
-      typedef boost::shared_ptr<freedv_tx_ss> sptr;
+    static sptr make(int mode = freedv_api::MODE_1600,
+                     const std::string msg_txt = "GNU Radio",
+                     int interleave_frames = 1);
+};
 
-      /*!
-       * \brief Make FreeDV Modem modulator block.
-       *
-       * \param mode Operating Mode designation
-       * \param msg_txt Low Rate message text (callsign, location)
-       * \param interleave_frames FreeDV 700D mode number of frames to average error
-       */
-      static sptr make(int mode=freedv_api::MODE_1600,const std::string msg_txt="GNU Radio",int interleave_frames=1);
-    };
-
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_FREEDV_TX_H */

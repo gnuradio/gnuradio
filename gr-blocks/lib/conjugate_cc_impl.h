@@ -26,19 +26,19 @@
 #include <gnuradio/blocks/conjugate_cc.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API conjugate_cc_impl : public conjugate_cc
-    {
-    public:
-      conjugate_cc_impl();
+class BLOCKS_API conjugate_cc_impl : public conjugate_cc
+{
+public:
+    conjugate_cc_impl();
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_CONJUGATE_CC_IMPL_H */

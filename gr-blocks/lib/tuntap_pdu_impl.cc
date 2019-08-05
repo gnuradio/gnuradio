@@ -25,158 +25,155 @@
 #endif
 
 #include "tuntap_pdu_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/pdu.h>
+#include <gnuradio/io_signature.h>
 #include <boost/format.hpp>
 
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-#include <sys/ioctl.h>
 #include <arpa/inet.h>
 #include <linux/if.h>
+#include <sys/ioctl.h>
 #endif
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    tuntap_pdu::sptr
-    tuntap_pdu::make(std::string dev, int MTU, bool istunflag)
-    {
+tuntap_pdu::sptr tuntap_pdu::make(std::string dev, int MTU, bool istunflag)
+{
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-      return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU, istunflag));
+    return gnuradio::get_initial_sptr(new tuntap_pdu_impl(dev, MTU, istunflag));
 #else
-      throw std::runtime_error("tuntap_pdu not implemented on this platform");
+    throw std::runtime_error("tuntap_pdu not implemented on this platform");
 #endif
-    }
+}
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-    tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
-      :	block("tuntap_pdu",
-		 io_signature::make (0, 0, 0),
-		 io_signature::make (0, 0, 0)),
-	stream_pdu_base(istunflag ? MTU : MTU + 14),
-	d_dev(dev),
-	d_istunflag(istunflag)
-    {
-      // make the tuntap
-      char dev_cstr[1024];
-      memset(dev_cstr, 0x00, 1024);
-      strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr), dev.size()));
+tuntap_pdu_impl::tuntap_pdu_impl(std::string dev, int MTU, bool istunflag)
+    : block("tuntap_pdu", io_signature::make(0, 0, 0), io_signature::make(0, 0, 0)),
+      stream_pdu_base(istunflag ? MTU : MTU + 14),
+      d_dev(dev),
+      d_istunflag(istunflag)
+{
+    // make the tuntap
+    char dev_cstr[1024];
+    memset(dev_cstr, 0x00, 1024);
+    strncpy(dev_cstr, dev.c_str(), std::min(sizeof(dev_cstr), dev.size()));
 
-      bool istun = d_istunflag;
-      if(istun){
-	d_fd = tun_alloc(dev_cstr, (IFF_TUN | IFF_NO_PI));
-      } else {
-	d_fd = tun_alloc(dev_cstr, (IFF_TAP | IFF_NO_PI));
-      }
-
-      if (d_fd <= 0)
-        throw std::runtime_error("gr::tuntap_pdu::make: tun_alloc failed (are you running as root?)");
-
-      int err = set_mtu(dev_cstr, MTU);
-      if(err < 0)
-        std::cerr << boost::format(
-          "gr::tuntap_pdu: failed to set MTU to %d.\n"
-          "You should use ifconfig to set the MTU. E.g.,\n"
-          "  $ sudo ifconfig %s mtu %d\n"
-          ) % MTU % dev % MTU << std::endl;
-
-      std::cout << boost::format(
-	"Allocated virtual ethernet interface: %s\n"
-        "You must now use ifconfig to set its IP address. E.g.,\n"
-        "  $ sudo ifconfig %s 192.168.200.1\n"
-        "Be sure to use a different address in the same subnet for each machine.\n"
-        ) % dev % dev << std::endl;
-
-      // set up output message port
-      message_port_register_out(pdu::pdu_port_id());
-      start_rxthread(this, pdu::pdu_port_id());
-
-      // set up input message port
-      message_port_register_in(pdu::pdu_port_id());
-      set_msg_handler(pdu::pdu_port_id(), boost::bind(&tuntap_pdu_impl::send, this, _1));
+    bool istun = d_istunflag;
+    if (istun) {
+        d_fd = tun_alloc(dev_cstr, (IFF_TUN | IFF_NO_PI));
+    } else {
+        d_fd = tun_alloc(dev_cstr, (IFF_TAP | IFF_NO_PI));
     }
 
-    int
-    tuntap_pdu_impl::tun_alloc(char *dev, int flags)
-    {
-      struct ifreq ifr;
-      int fd, err;
-      const char *clonedev = "/dev/net/tun";
+    if (d_fd <= 0)
+        throw std::runtime_error(
+            "gr::tuntap_pdu::make: tun_alloc failed (are you running as root?)");
 
-      /* Arguments taken by the function:
-       *
-       * char *dev: the name of an interface (or '\0'). MUST have enough
-       *   space to hold the interface name if '\0' is passed
-       * int flags: interface flags (eg, IFF_TUN etc.)
-       */
+    int err = set_mtu(dev_cstr, MTU);
+    if (err < 0)
+        std::cerr << boost::format("gr::tuntap_pdu: failed to set MTU to %d.\n"
+                                   "You should use ifconfig to set the MTU. E.g.,\n"
+                                   "  $ sudo ifconfig %s mtu %d\n") %
+                         MTU % dev % MTU
+                  << std::endl;
 
-      /* open the clone device */
-      if ((fd = open(clonedev, O_RDWR)) < 0)
+    std::cout << boost::format("Allocated virtual ethernet interface: %s\n"
+                               "You must now use ifconfig to set its IP address. E.g.,\n"
+                               "  $ sudo ifconfig %s 192.168.200.1\n"
+                               "Be sure to use a different address in the same subnet "
+                               "for each machine.\n") %
+                     dev % dev
+              << std::endl;
+
+    // set up output message port
+    message_port_register_out(pdu::pdu_port_id());
+    start_rxthread(this, pdu::pdu_port_id());
+
+    // set up input message port
+    message_port_register_in(pdu::pdu_port_id());
+    set_msg_handler(pdu::pdu_port_id(), boost::bind(&tuntap_pdu_impl::send, this, _1));
+}
+
+int tuntap_pdu_impl::tun_alloc(char* dev, int flags)
+{
+    struct ifreq ifr;
+    int fd, err;
+    const char* clonedev = "/dev/net/tun";
+
+    /* Arguments taken by the function:
+     *
+     * char *dev: the name of an interface (or '\0'). MUST have enough
+     *   space to hold the interface name if '\0' is passed
+     * int flags: interface flags (eg, IFF_TUN etc.)
+     */
+
+    /* open the clone device */
+    if ((fd = open(clonedev, O_RDWR)) < 0)
         return fd;
 
-      /* preparation of the struct ifr, of type "struct ifreq" */
-      memset(&ifr, 0, sizeof(ifr));
+    /* preparation of the struct ifr, of type "struct ifreq" */
+    memset(&ifr, 0, sizeof(ifr));
 
-      ifr.ifr_flags = flags;   /* IFF_TUN or IFF_TAP, plus maybe IFF_NO_PI */
+    ifr.ifr_flags = flags; /* IFF_TUN or IFF_TAP, plus maybe IFF_NO_PI */
 
-      /* if a device name was specified, put it in the structure; otherwise,
-       * the kernel will try to allocate the "next" device of the
-       * specified type
-       */
-      if (*dev)
+    /* if a device name was specified, put it in the structure; otherwise,
+     * the kernel will try to allocate the "next" device of the
+     * specified type
+     */
+    if (*dev)
         strncpy(ifr.ifr_name, dev, IFNAMSIZ - 1);
 
-      /* try to create the device */
-      if ((err = ioctl(fd, TUNSETIFF, (void *) &ifr)) < 0) {
+    /* try to create the device */
+    if ((err = ioctl(fd, TUNSETIFF, (void*)&ifr)) < 0) {
         close(fd);
         return err;
-      }
-
-      /* if the operation was successful, write back the name of the
-       * interface to the variable "dev", so the caller can know
-       * it. Note that the caller MUST reserve space in *dev (see calling
-       * code below)
-       */
-      strcpy(dev, ifr.ifr_name);
-
-      /* this is the special file descriptor that the caller will use to talk
-       * with the virtual interface
-       */
-      return fd;
     }
 
-    int
-    tuntap_pdu_impl::set_mtu(const char *dev, int MTU)
-    {
-      struct ifreq ifr;
-      int sfd, err;
+    /* if the operation was successful, write back the name of the
+     * interface to the variable "dev", so the caller can know
+     * it. Note that the caller MUST reserve space in *dev (see calling
+     * code below)
+     */
+    strcpy(dev, ifr.ifr_name);
 
-      /* MTU must be set by passing a socket fd to ioctl;
-       * create an arbitrary socket for this purpose
-       */
-      if ((sfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
-          return sfd;
+    /* this is the special file descriptor that the caller will use to talk
+     * with the virtual interface
+     */
+    return fd;
+}
 
-      /* preparation of the struct ifr, of type "struct ifreq" */
-      memset(&ifr, 0, sizeof(ifr));
-      strncpy(ifr.ifr_name, dev, IFNAMSIZ);
-      ifr.ifr_addr.sa_family = AF_INET; /* address family */
-      ifr.ifr_mtu = MTU;
+int tuntap_pdu_impl::set_mtu(const char* dev, int MTU)
+{
+    struct ifreq ifr;
+    int sfd, err;
 
-      /* try to set MTU */
-      if ((err = ioctl(sfd, SIOCSIFMTU, (void *) &ifr)) < 0) {
-          close(sfd);
-          return err;
-      }
+    /* MTU must be set by passing a socket fd to ioctl;
+     * create an arbitrary socket for this purpose
+     */
+    if ((sfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+        return sfd;
 
-      close(sfd);
-      return MTU;
+    /* preparation of the struct ifr, of type "struct ifreq" */
+    memset(&ifr, 0, sizeof(ifr));
+    strncpy(ifr.ifr_name, dev, IFNAMSIZ);
+    ifr.ifr_addr.sa_family = AF_INET; /* address family */
+    ifr.ifr_mtu = MTU;
+
+    /* try to set MTU */
+    if ((err = ioctl(sfd, SIOCSIFMTU, (void*)&ifr)) < 0) {
+        close(sfd);
+        return err;
     }
+
+    close(sfd);
+    return MTU;
+}
 #endif
 
-  } /* namespace blocks */
-}/* namespace gr */
+} /* namespace blocks */
+} /* namespace gr */

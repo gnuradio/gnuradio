@@ -26,34 +26,34 @@
 #include <gnuradio/blocks/burst_tagger.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class burst_tagger_impl : public burst_tagger
-    {
-    private:
-      size_t     d_itemsize;
-      bool       d_state;
-      pmt::pmt_t d_true_key;
-      pmt::pmt_t d_true_value;
+class burst_tagger_impl : public burst_tagger
+{
+private:
+    size_t d_itemsize;
+    bool d_state;
+    pmt::pmt_t d_true_key;
+    pmt::pmt_t d_true_value;
 
-      pmt::pmt_t d_false_key;
-      pmt::pmt_t d_false_value;
+    pmt::pmt_t d_false_key;
+    pmt::pmt_t d_false_value;
 
-      pmt::pmt_t d_id;
+    pmt::pmt_t d_id;
 
-    public:
-      burst_tagger_impl(size_t itemsize);
-      ~burst_tagger_impl();
+public:
+    burst_tagger_impl(size_t itemsize);
+    ~burst_tagger_impl();
 
-      void set_true_tag(const std::string &key, bool value);
-      void set_false_tag(const std::string &key, bool value);
+    void set_true_tag(const std::string& key, bool value);
+    void set_false_tag(const std::string& key, bool value);
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_BURST_TAGGER_IMPL_H */

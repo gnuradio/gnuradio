@@ -27,26 +27,26 @@
 #include <gnuradio/blocks/multiply_const.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class BLOCKS_API multiply_const_impl : public  multiply_const<T>
-    {
-      T d_k;
-      size_t d_vlen;
+template <class T>
+class BLOCKS_API multiply_const_impl : public multiply_const<T>
+{
+    T d_k;
+    size_t d_vlen;
 
-    public:
-      multiply_const_impl (T k, size_t vlen);
+public:
+    multiply_const_impl(T k, size_t vlen);
 
-      T k() const { return d_k; }
-      void set_k(T k) { d_k = k; }
+    T k() const { return d_k; }
+    void set_k(T k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* MULTIPLY_CONST_IMPL_H */

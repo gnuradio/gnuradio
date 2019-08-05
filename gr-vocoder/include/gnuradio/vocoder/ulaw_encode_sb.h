@@ -23,29 +23,29 @@
 #ifndef INCLUDED_VOCODER_ULAW_ENCODER_SB_H
 #define INCLUDED_VOCODER_ULAW_ENCODER_SB_H
 
-#include <gnuradio/vocoder/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/vocoder/api.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
+
+/*!
+ * \brief This block performs g.711 ulaw audio encoding.
+ * \ingroup audio_blk
+ */
+class VOCODER_API ulaw_encode_sb : virtual public sync_block
+{
+public:
+    // gr::vocoder::ulaw_encode_sb::sptr
+    typedef boost::shared_ptr<ulaw_encode_sb> sptr;
 
     /*!
-     * \brief This block performs g.711 ulaw audio encoding.
-     * \ingroup audio_blk
+     * \brief Make ulaw encoder block.
      */
-    class VOCODER_API ulaw_encode_sb : virtual public sync_block
-    {
-    public:
-      // gr::vocoder::ulaw_encode_sb::sptr
-      typedef boost::shared_ptr<ulaw_encode_sb> sptr;
+    static sptr make();
+};
 
-      /*!
-       * \brief Make ulaw encoder block.
-       */
-      static sptr make();
-    };
-
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_ULAW_ENCODE_SB_H */

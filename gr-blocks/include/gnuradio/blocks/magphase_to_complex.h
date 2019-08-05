@@ -27,27 +27,27 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief two floats in (mag and phase), complex out
+ * \ingroup type_converters_blk
+ */
+class BLOCKS_API magphase_to_complex : virtual public sync_block
+{
+public:
+    // gr::blocks::magphase_to_complex_ff::sptr
+    typedef boost::shared_ptr<magphase_to_complex> sptr;
 
     /*!
-     * \brief two floats in (mag and phase), complex out
-     * \ingroup type_converters_blk
+     * Build a mag and phase to complex block.
+     *
+     * \param vlen vector len (default 1)
      */
-    class BLOCKS_API magphase_to_complex : virtual public sync_block
-    {
-    public:
-      // gr::blocks::magphase_to_complex_ff::sptr
-      typedef boost::shared_ptr<magphase_to_complex> sptr;
+    static sptr make(size_t vlen = 1);
+};
 
-      /*!
-       * Build a mag and phase to complex block.
-       *
-       * \param vlen vector len (default 1)
-       */
-      static sptr make(size_t vlen=1);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_MAGPHASE_TO_COMPLEX_H */

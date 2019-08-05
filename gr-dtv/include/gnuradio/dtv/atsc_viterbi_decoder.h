@@ -27,33 +27,32 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace dtv {
+namespace dtv {
+
+/*!
+ * \brief ATSC Viterbi Decoder
+ *
+ * \ingroup dtv_atsc
+ */
+class DTV_API atsc_viterbi_decoder : virtual public gr::sync_block
+{
+public:
+    // gr::dtv::atsc_viterbi_decoder::sptr
+    typedef boost::shared_ptr<atsc_viterbi_decoder> sptr;
 
     /*!
-     * \brief ATSC Viterbi Decoder
-     *
-     * \ingroup dtv_atsc
+     * \brief Make a new instance of gr::dtv::atsc_viterbi_decoder.
      */
-    class DTV_API atsc_viterbi_decoder : virtual public gr::sync_block
-    {
-    public:
+    static sptr make();
 
-      // gr::dtv::atsc_viterbi_decoder::sptr
-      typedef boost::shared_ptr<atsc_viterbi_decoder> sptr;
+    /*!
+     * For each decoder, returns the current best state of the
+     * decoding metrics.
+     */
+    virtual std::vector<float> decoder_metrics() const = 0;
+};
 
-      /*!
-       * \brief Make a new instance of gr::dtv::atsc_viterbi_decoder.
-       */
-      static sptr make();
-
-      /*!
-       * For each decoder, returns the current best state of the
-       * decoding metrics.
-       */
-      virtual std::vector<float> decoder_metrics() const = 0;
-    };
-
-  } /* namespace dtv */
+} /* namespace dtv */
 } /* namespace gr */
 
 #endif /* INCLUDED_DTV_ATSC_VITERBI_DECODER_H */

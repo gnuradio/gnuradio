@@ -27,10 +27,10 @@
 
 namespace gr {
 
-  /*!
-   * \brief return the page size in bytes
-   */
-  GR_RUNTIME_API int pagesize();
+/*!
+ * \brief return the page size in bytes
+ */
+GR_RUNTIME_API int pagesize();
 
 } /* namespace gr */
 

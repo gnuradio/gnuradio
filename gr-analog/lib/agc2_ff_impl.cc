@@ -28,41 +28,37 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    agc2_ff::sptr
-    agc2_ff::make(float attack_rate, float decay_rate,
-		  float reference, float gain)
-    {
-      return gnuradio::get_initial_sptr
-	(new agc2_ff_impl(attack_rate, decay_rate,
-			  reference, gain));
-    }
+agc2_ff::sptr
+agc2_ff::make(float attack_rate, float decay_rate, float reference, float gain)
+{
+    return gnuradio::get_initial_sptr(
+        new agc2_ff_impl(attack_rate, decay_rate, reference, gain));
+}
 
-    agc2_ff_impl::~agc2_ff_impl()
-    {
-    }
+agc2_ff_impl::~agc2_ff_impl() {}
 
-    agc2_ff_impl::agc2_ff_impl(float attack_rate, float decay_rate,
-			       float reference, float gain)
+agc2_ff_impl::agc2_ff_impl(float attack_rate,
+                           float decay_rate,
+                           float reference,
+                           float gain)
     : sync_block("agc2_ff",
                  io_signature::make(1, 1, sizeof(float)),
                  io_signature::make(1, 1, sizeof(float))),
-      kernel::agc2_ff(attack_rate, decay_rate,
-                      reference, gain, 65536)
-    {
-    }
+      kernel::agc2_ff(attack_rate, decay_rate, reference, gain, 65536)
+{
+}
 
-    int
-    agc2_ff_impl::work(int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
-    {
-      const float *in = (const float*)input_items[0];
-      float *out = (float*)output_items[0];
-      scaleN(out, in, noutput_items);
-      return noutput_items;
-    }
+int agc2_ff_impl::work(int noutput_items,
+                       gr_vector_const_void_star& input_items,
+                       gr_vector_void_star& output_items)
+{
+    const float* in = (const float*)input_items[0];
+    float* out = (float*)output_items[0];
+    scaleN(out, in, noutput_items);
+    return noutput_items;
+}
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */

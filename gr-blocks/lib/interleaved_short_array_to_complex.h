@@ -31,6 +31,7 @@
  * the shorts contains real, imaginary, real, imaginary...
  * nsamples is the number of shorts; it must be even.
  */
-BLOCKS_API void interleaved_short_array_to_complex (const short *in, gr_complex *out, int nsamples);
+BLOCKS_API void
+interleaved_short_array_to_complex(const short* in, gr_complex* out, int nsamples);
 
 #endif /* INCLUDED_INTERLEAVED_SHORT_ARRAY_TO_COMPLEX_H */

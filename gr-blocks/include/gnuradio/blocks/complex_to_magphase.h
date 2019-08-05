@@ -27,31 +27,31 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Convert a stream of gr_complex to magnitude and phase (both floats)
+ * \ingroup type_converters_blk
+ *
+ * \details
+ * output[0] is the magnitude
+ * output[1] is the phase (in radians)
+ */
+class BLOCKS_API complex_to_magphase : virtual public sync_block
+{
+public:
+    // gr::blocks::complex_to_magphase_ff::sptr
+    typedef boost::shared_ptr<complex_to_magphase> sptr;
 
     /*!
-     * \brief Convert a stream of gr_complex to magnitude and phase (both floats)
-     * \ingroup type_converters_blk
+     * Build a complex to magnitude and phase block.
      *
-     * \details
-     * output[0] is the magnitude
-     * output[1] is the phase (in radians)
+     * \param vlen vector len (default 1)
      */
-    class BLOCKS_API complex_to_magphase : virtual public sync_block
-    {
-    public:
-      // gr::blocks::complex_to_magphase_ff::sptr
-      typedef boost::shared_ptr<complex_to_magphase> sptr;
+    static sptr make(size_t vlen = 1);
+};
 
-      /*!
-       * Build a complex to magnitude and phase block.
-       *
-       * \param vlen vector len (default 1)
-       */
-      static sptr make(size_t vlen=1);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_COMPLEX_TO_MAGPHASE_H */

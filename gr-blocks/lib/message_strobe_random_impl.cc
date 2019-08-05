@@ -26,98 +26,114 @@
 
 #include "message_strobe_random_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdexcept>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    message_strobe_random::sptr
-    message_strobe_random::make(pmt::pmt_t msg, message_strobe_random_distribution_t dist, float mean_ms, float std_ms)
-    {
-      return gnuradio::get_initial_sptr
-        (new message_strobe_random_impl(msg, dist, mean_ms, std_ms));
+message_strobe_random::sptr
+message_strobe_random::make(pmt::pmt_t msg,
+                            message_strobe_random_distribution_t dist,
+                            float mean_ms,
+                            float std_ms)
+{
+    return gnuradio::get_initial_sptr(
+        new message_strobe_random_impl(msg, dist, mean_ms, std_ms));
+}
+
+
+message_strobe_random_impl::message_strobe_random_impl(
+    pmt::pmt_t msg,
+    message_strobe_random_distribution_t dist,
+    float mean_ms,
+    float std_ms)
+    : block("message_strobe_random",
+            io_signature::make(0, 0, 0),
+            io_signature::make(0, 0, 0)),
+      d_finished(false),
+      d_mean_ms(mean_ms),
+      d_std_ms(std_ms),
+      d_dist(dist),
+      d_msg(msg),
+      d_rng(),
+      d_port(pmt::mp("strobe"))
+{
+    // allocate RNGs
+    update_dist();
+
+    // set up ports
+    message_port_register_out(d_port);
+    d_thread = boost::shared_ptr<gr::thread::thread>(
+        new gr::thread::thread(boost::bind(&message_strobe_random_impl::run, this)));
+
+    message_port_register_in(pmt::mp("set_msg"));
+    set_msg_handler(pmt::mp("set_msg"),
+                    boost::bind(&message_strobe_random_impl::set_msg, this, _1));
+}
+
+long message_strobe_random_impl::next_delay()
+{
+    switch (d_dist) {
+    case STROBE_POISSON:
+        // return d_variate_poisson->operator()();
+        return static_cast<long>(d_variate_poisson->operator()());
+    case STROBE_GAUSSIAN:
+        return static_cast<long>(d_variate_normal->operator()());
+    case STROBE_UNIFORM:
+        return static_cast<long>(d_variate_uniform->operator()());
+    default:
+        throw std::runtime_error(
+            "message_strobe_random_impl::d_distribution is very unhappy with you");
     }
+}
+
+void message_strobe_random_impl::update_dist()
+{
+    boost::poisson_distribution<> pd(d_mean_ms);
+    d_variate_poisson = boost::shared_ptr<
+        boost::variate_generator<boost::mt19937, boost::poisson_distribution<>>>(
+        new boost::variate_generator<boost::mt19937, boost::poisson_distribution<>>(d_rng,
+                                                                                    pd));
+
+    boost::normal_distribution<> nd(d_mean_ms, d_std_ms);
+    d_variate_normal = boost::shared_ptr<
+        boost::variate_generator<boost::mt19937, boost::normal_distribution<>>>(
+        new boost::variate_generator<boost::mt19937, boost::normal_distribution<>>(d_rng,
+                                                                                   nd));
+
+    boost::uniform_real<> ud(d_mean_ms - d_std_ms, d_mean_ms + d_std_ms);
+    d_variate_uniform = boost::shared_ptr<
+        boost::variate_generator<boost::mt19937, boost::uniform_real<>>>(
+        new boost::variate_generator<boost::mt19937, boost::uniform_real<>>(d_rng, ud));
+}
 
 
-    message_strobe_random_impl::message_strobe_random_impl(pmt::pmt_t msg, message_strobe_random_distribution_t dist, float mean_ms, float std_ms)
-      : block("message_strobe_random",
-                 io_signature::make(0, 0, 0),
-                 io_signature::make(0, 0, 0)),
-        d_finished(false),
-        d_mean_ms(mean_ms),
-        d_std_ms(std_ms),
-        d_dist(dist),
-        d_msg(msg),
-        d_rng(),
-        d_port(pmt::mp("strobe"))
-    {
-      // allocate RNGs
-      update_dist();
+message_strobe_random_impl::~message_strobe_random_impl()
+{
+    d_finished = true;
+    d_thread->interrupt();
+    d_thread->join();
+}
 
-      // set up ports
-      message_port_register_out(d_port);
-      d_thread = boost::shared_ptr<gr::thread::thread>
-        (new gr::thread::thread(boost::bind(&message_strobe_random_impl::run, this)));
-
-      message_port_register_in(pmt::mp("set_msg"));
-      set_msg_handler(pmt::mp("set_msg"),
-                      boost::bind(&message_strobe_random_impl::set_msg, this, _1));
-    }
-
-    long message_strobe_random_impl::next_delay(){
-        switch(d_dist){
-            case STROBE_POISSON:
-                //return d_variate_poisson->operator()();
-                return static_cast<long>(d_variate_poisson->operator()());
-            case STROBE_GAUSSIAN:
-                return static_cast<long>(d_variate_normal->operator()());
-            case STROBE_UNIFORM:
-                return static_cast<long>(d_variate_uniform->operator()());
-            default:
-                throw std::runtime_error("message_strobe_random_impl::d_distribution is very unhappy with you");
-        }
-    }
-
-    void message_strobe_random_impl::update_dist(){
-        boost::poisson_distribution<> pd(d_mean_ms);
-        d_variate_poisson = boost::shared_ptr< boost::variate_generator<boost::mt19937, boost::poisson_distribution<> > > (
-                new boost::variate_generator <boost::mt19937, boost::poisson_distribution<> >(d_rng,pd) );
-
-        boost::normal_distribution<> nd(d_mean_ms, d_std_ms);
-        d_variate_normal = boost::shared_ptr< boost::variate_generator<boost::mt19937, boost::normal_distribution<> > > (
-                new boost::variate_generator <boost::mt19937, boost::normal_distribution<> >(d_rng,nd) );
-
-        boost::uniform_real<> ud(d_mean_ms-d_std_ms, d_mean_ms+d_std_ms);
-        d_variate_uniform = boost::shared_ptr< boost::variate_generator<boost::mt19937, boost::uniform_real<> > > (
-                new boost::variate_generator <boost::mt19937, boost::uniform_real<> >(d_rng,ud) );
-    }
-
-
-    message_strobe_random_impl::~message_strobe_random_impl()
-    {
-      d_finished = true;
-      d_thread->interrupt();
-      d_thread->join();
-    }
-
-    void message_strobe_random_impl::run()
-    {
-      while(!d_finished) {
-        boost::this_thread::sleep(boost::posix_time::milliseconds(std::max(0L, next_delay())));
-        if(d_finished) {
-          return;
+void message_strobe_random_impl::run()
+{
+    while (!d_finished) {
+        boost::this_thread::sleep(
+            boost::posix_time::milliseconds(std::max(0L, next_delay())));
+        if (d_finished) {
+            return;
         }
 
         message_port_pub(d_port, d_msg);
-      }
     }
+}
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */

@@ -17,32 +17,32 @@
 
 #include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
-#include <boost/utility.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #include <boost/function.hpp>
+#include <boost/thread/shared_mutex.hpp>
+#include <boost/utility.hpp>
 
 namespace gr {
-  namespace thread {
+namespace thread {
 
-    class GR_RUNTIME_API thread_group : public boost::noncopyable
-    {
-    public:
-      thread_group();
-      ~thread_group();
+class GR_RUNTIME_API thread_group : public boost::noncopyable
+{
+public:
+    thread_group();
+    ~thread_group();
 
-      boost::thread* create_thread(const boost::function0<void>& threadfunc);
-      void add_thread(boost::thread* thrd);
-      void remove_thread(boost::thread* thrd);
-      void join_all();
-      void interrupt_all();
-      size_t size() const;
+    boost::thread* create_thread(const boost::function0<void>& threadfunc);
+    void add_thread(boost::thread* thrd);
+    void remove_thread(boost::thread* thrd);
+    void join_all();
+    void interrupt_all();
+    size_t size() const;
 
-    private:
-      std::list<boost::thread*> m_threads;
-      mutable boost::shared_mutex m_mutex;
-    };
+private:
+    std::list<boost::thread*> m_threads;
+    mutable boost::shared_mutex m_mutex;
+};
 
-  } /* namespace thread */
+} /* namespace thread */
 } /* namespace gr */
 
 #endif /* INCLUDED_THREAD_GROUP_H */

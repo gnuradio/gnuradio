@@ -23,39 +23,39 @@
 #ifndef INCLUDED_STREAM_PDU_BASE_H
 #define INCLUDED_STREAM_PDU_BASE_H
 
-#include <gnuradio/thread/thread.h>
 #include <gnuradio/basic_block.h>
+#include <gnuradio/thread/thread.h>
 #include <pmt/pmt.h>
 
 class basic_block;
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class stream_pdu_base
-    {
-    public:
-      stream_pdu_base(int MTU=10000);
-      ~stream_pdu_base();
+class stream_pdu_base
+{
+public:
+    stream_pdu_base(int MTU = 10000);
+    ~stream_pdu_base();
 
-    protected:
-      int d_fd;
-      bool d_started;
-      bool d_finished;
-      std::vector<uint8_t> d_rxbuf;
-      gr::thread::thread d_thread;
+protected:
+    int d_fd;
+    bool d_started;
+    bool d_finished;
+    std::vector<uint8_t> d_rxbuf;
+    gr::thread::thread d_thread;
 
-      pmt::pmt_t d_port;
-      basic_block *d_blk;
+    pmt::pmt_t d_port;
+    basic_block* d_blk;
 
-      void run();
-      void send(pmt::pmt_t msg);
-      bool wait_ready();
-      void start_rxthread(basic_block *blk, pmt::pmt_t rxport);
-      void stop_rxthread();
-    };
+    void run();
+    void send(pmt::pmt_t msg);
+    bool wait_ready();
+    void start_rxthread(basic_block* blk, pmt::pmt_t rxport);
+    void stop_rxthread();
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_STREAM_PDU_BASE_H */

@@ -26,64 +26,62 @@
 #include <gnuradio/audio/source.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/thread/thread.h>
-#include <string>
 #include <portaudio.h>
 #include <stdexcept>
+#include <string>
 
 namespace gr {
-  namespace audio {
+namespace audio {
 
-    PaStreamCallback portaudio_source_callback;
+PaStreamCallback portaudio_source_callback;
 
-    /*!
-     * \brief Audio source using PORTAUDIO
-     * \ingroup audio_blk
-     *
-     * Input samples must be in the range [-1,1].
-     */
-    class portaudio_source : public source
-    {
-      friend PaStreamCallback portaudio_source_callback;
+/*!
+ * \brief Audio source using PORTAUDIO
+ * \ingroup audio_blk
+ *
+ * Input samples must be in the range [-1,1].
+ */
+class portaudio_source : public source
+{
+    friend PaStreamCallback portaudio_source_callback;
 
-      unsigned int d_sampling_rate;
-      std::string  d_device_name;
-      bool         d_ok_to_block;
-      bool         d_verbose;
+    unsigned int d_sampling_rate;
+    std::string d_device_name;
+    bool d_ok_to_block;
+    bool d_verbose;
 
-      unsigned int d_portaudio_buffer_size_frames; // number of frames in a portaudio buffer
+    unsigned int d_portaudio_buffer_size_frames; // number of frames in a portaudio buffer
 
-      PaStream           *d_stream;
-      PaStreamParameters  d_input_parameters;
+    PaStream* d_stream;
+    PaStreamParameters d_input_parameters;
 
-      gr::buffer_sptr        d_writer;  // buffer used between work and callback
-      gr::buffer_reader_sptr d_reader;
+    gr::buffer_sptr d_writer; // buffer used between work and callback
+    gr::buffer_reader_sptr d_reader;
 
-      gr::thread::mutex              d_ringbuffer_mutex;
-      gr::thread::condition_variable d_ringbuffer_cond;
-      bool                      d_ringbuffer_ready;
+    gr::thread::mutex d_ringbuffer_mutex;
+    gr::thread::condition_variable d_ringbuffer_cond;
+    bool d_ringbuffer_ready;
 
-      // random stats
-      int d_noverruns;  // count of overruns
+    // random stats
+    int d_noverruns; // count of overruns
 
-      void output_error_msg(const char *msg, int err);
-      void bail(const char *msg, int err);
-      void create_ringbuffer();
+    void output_error_msg(const char* msg, int err);
+    void bail(const char* msg, int err);
+    void create_ringbuffer();
 
-    public:
-      portaudio_source(int sampling_rate,
-                       const std::string device_name,
-                       bool ok_to_block);
+public:
+    portaudio_source(int sampling_rate, const std::string device_name, bool ok_to_block);
 
-      ~portaudio_source();
+    ~portaudio_source();
 
-      bool check_topology(int ninputs, int noutputs);
+    bool check_topology(int ninputs, int noutputs);
 
-      int work(int ninput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int ninput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace audio */
+} /* namespace audio */
 } /* namespace gr */
 
 #endif /* INCLUDED_AUDIO_PORTAUDIO_SOURCE_H */

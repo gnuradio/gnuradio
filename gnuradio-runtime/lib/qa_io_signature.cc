@@ -28,18 +28,15 @@
 #include <boost/test/unit_test.hpp>
 #include <stdexcept>
 
-BOOST_AUTO_TEST_CASE(t0) {
-    gr::io_signature::make(1, 1, sizeof(int));
+BOOST_AUTO_TEST_CASE(t0) { gr::io_signature::make(1, 1, sizeof(int)); }
+
+BOOST_AUTO_TEST_CASE(t1)
+{
+    BOOST_REQUIRE_THROW(gr::io_signature::make(3, 1, sizeof(int)), std::invalid_argument);
 }
 
-BOOST_AUTO_TEST_CASE(t1) {
-    BOOST_REQUIRE_THROW(
-        gr::io_signature::make(3, 1, sizeof(int)),
-        std::invalid_argument
-    );
-}
-
-BOOST_AUTO_TEST_CASE(t2) {
+BOOST_AUTO_TEST_CASE(t2)
+{
     gr::io_signature::sptr p =
         gr::io_signature::make(3, gr::io_signature::IO_INFINITE, sizeof(int));
 
@@ -47,7 +44,8 @@ BOOST_AUTO_TEST_CASE(t2) {
     BOOST_CHECK_EQUAL(p->sizeof_stream_item(0), (int)sizeof(int));
 }
 
-BOOST_AUTO_TEST_CASE(t3) {
+BOOST_AUTO_TEST_CASE(t3)
+{
     gr::io_signature::sptr p = gr::io_signature::make3(0, 5, 1, 2, 3);
 
     BOOST_CHECK_EQUAL(p->min_streams(), 0);

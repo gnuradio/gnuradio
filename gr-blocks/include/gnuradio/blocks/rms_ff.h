@@ -27,28 +27,28 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief RMS average power
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API rms_ff : virtual public sync_block
+{
+public:
+    // gr::blocks::rms_ff::sptr
+    typedef boost::shared_ptr<rms_ff> sptr;
 
     /*!
-     * \brief RMS average power
-     * \ingroup math_operators_blk
+     * \brief Make an RMS calc. block.
+     * \param alpha gain for running average filter.
      */
-    class BLOCKS_API rms_ff : virtual public sync_block
-    {
-    public:
-      // gr::blocks::rms_ff::sptr
-      typedef boost::shared_ptr<rms_ff> sptr;
+    static sptr make(double alpha = 0.0001);
 
-      /*!
-       * \brief Make an RMS calc. block.
-       * \param alpha gain for running average filter.
-       */
-      static sptr make(double alpha = 0.0001);
+    virtual void set_alpha(double alpha) = 0;
+};
 
-      virtual void set_alpha(double alpha) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_RMS_FF_H */

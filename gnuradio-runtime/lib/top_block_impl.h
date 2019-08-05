@@ -23,27 +23,27 @@
 #ifndef INCLUDED_GR_TOP_BLOCK_IMPL_H
 #define INCLUDED_GR_TOP_BLOCK_IMPL_H
 
-#include <gnuradio/api.h>
 #include "scheduler.h"
+#include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
 
-  /*!
-   *\brief Abstract implementation details of top_block
-   * \ingroup internal
-   *
-   * The actual implementation of top_block. Separate class allows
-   * decoupling of changes from dependent classes.
-   */
-  class GR_RUNTIME_API top_block_impl
-  {
-  public:
-    top_block_impl(top_block *owner);
+/*!
+ *\brief Abstract implementation details of top_block
+ * \ingroup internal
+ *
+ * The actual implementation of top_block. Separate class allows
+ * decoupling of changes from dependent classes.
+ */
+class GR_RUNTIME_API top_block_impl
+{
+public:
+    top_block_impl(top_block* owner);
     ~top_block_impl();
 
     // Create and start scheduler threads
-    void start(int max_noutput_items=100000000);
+    void start(int max_noutput_items = 100000000);
 
     // Signal scheduler threads to stop
     void stop();
@@ -72,24 +72,24 @@ namespace gr {
     // Set the maximum number of noutput_items in the flowgraph
     void set_max_noutput_items(int nmax);
 
-  protected:
+protected:
     enum tb_state { IDLE, RUNNING };
 
-    top_block *d_owner;
+    top_block* d_owner;
     flat_flowgraph_sptr d_ffg;
     scheduler_sptr d_scheduler;
 
-    gr::thread::mutex d_mutex;    // protects d_state and d_lock_count
+    gr::thread::mutex d_mutex; // protects d_state and d_lock_count
     tb_state d_state;
     int d_lock_count;
     bool d_retry_wait;
     boost::condition_variable d_lock_cond;
     int d_max_noutput_items;
 
-  private:
+private:
     void restart();
     void wait_for_jobs();
-  };
+};
 
 } /* namespace gr */
 

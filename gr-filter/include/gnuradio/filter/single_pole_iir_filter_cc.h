@@ -21,59 +21,59 @@
  */
 
 #ifndef INCLUDED_SINGLE_POLE_IIR_FILTER_CC_H
-#define	INCLUDED_SINGLE_POLE_IIR_FILTER_CC_H
+#define INCLUDED_SINGLE_POLE_IIR_FILTER_CC_H
 
 #include <gnuradio/filter/api.h>
 #include <gnuradio/filter/single_pole_iir.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    /*!
-     * \brief  single pole IIR filter with complex input, complex output
-     * \ingroup filter_blk
-     *
-     * \details
-     * The input and output satisfy a difference equation of the form
-     \htmlonly
-     \f{
-     y[n] - (1-alpha) y[n-1] = alpha x[n]
-     \f}
-     \endhtmlonly
+/*!
+ * \brief  single pole IIR filter with complex input, complex output
+ * \ingroup filter_blk
+ *
+ * \details
+ * The input and output satisfy a difference equation of the form
+ \htmlonly
+ \f{
+ y[n] - (1-alpha) y[n-1] = alpha x[n]
+ \f}
+ \endhtmlonly
 
-     \xmlonly
-     y[n] - (1-alpha) y[n-1] = alpha x[n]
-     \endxmlonly
+ \xmlonly
+ y[n] - (1-alpha) y[n-1] = alpha x[n]
+ \endxmlonly
 
-     * with the corresponding rational system function
-     \htmlonly
-     \f{
-     H(z) = \frac{alpha}{1 - (1-alpha) z^{-1}}
-     \f}
-     \endhtmlonly
+ * with the corresponding rational system function
+ \htmlonly
+ \f{
+ H(z) = \frac{alpha}{1 - (1-alpha) z^{-1}}
+ \f}
+ \endhtmlonly
 
-     \xmlonly
-     H(z) = \ frac{alpha}{1 - (1-alpha) z^{-1}}
-     \endxmlonly
+ \xmlonly
+ H(z) = \ frac{alpha}{1 - (1-alpha) z^{-1}}
+ \endxmlonly
 
-     * Note that some texts define the system function with a + in the
-     * denominator. If you're using that convention, you'll need to
-     * negate the feedback tap.
-     */
-    class FILTER_API single_pole_iir_filter_cc : virtual public sync_block
-    {
-    public:
-      // gr::filter::single_pole_iir_filter_cc::sptr
-      typedef boost::shared_ptr<single_pole_iir_filter_cc> sptr;
+ * Note that some texts define the system function with a + in the
+ * denominator. If you're using that convention, you'll need to
+ * negate the feedback tap.
+ */
+class FILTER_API single_pole_iir_filter_cc : virtual public sync_block
+{
+public:
+    // gr::filter::single_pole_iir_filter_cc::sptr
+    typedef boost::shared_ptr<single_pole_iir_filter_cc> sptr;
 
-      static sptr make(double alpha, unsigned int vlen=1);
+    static sptr make(double alpha, unsigned int vlen = 1);
 
-      virtual void set_taps(double alpha) = 0;
-    };
+    virtual void set_taps(double alpha) = 0;
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_SINGLE_POLE_IIR_FILTER_CC_H */

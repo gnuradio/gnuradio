@@ -26,69 +26,63 @@
 
 #include "file_descriptor_sink_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdexcept>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
+#include <stdexcept>
 
 #ifdef HAVE_IO_H
 #include <io.h>
 #endif
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    file_descriptor_sink::sptr
-    file_descriptor_sink::make(size_t itemsize, int fd)
-    {
-      return gnuradio::get_initial_sptr
-        (new file_descriptor_sink_impl(itemsize, fd));
-    }
+file_descriptor_sink::sptr file_descriptor_sink::make(size_t itemsize, int fd)
+{
+    return gnuradio::get_initial_sptr(new file_descriptor_sink_impl(itemsize, fd));
+}
 
-    file_descriptor_sink_impl::file_descriptor_sink_impl(size_t itemsize, int fd)
-  : sync_block("file_descriptor_sink",
-                  io_signature::make(1, 1, itemsize),
-                  io_signature::make(0, 0, 0)),
-    d_itemsize(itemsize), d_fd(fd)
-    {
-    }
+file_descriptor_sink_impl::file_descriptor_sink_impl(size_t itemsize, int fd)
+    : sync_block("file_descriptor_sink",
+                 io_signature::make(1, 1, itemsize),
+                 io_signature::make(0, 0, 0)),
+      d_itemsize(itemsize),
+      d_fd(fd)
+{
+}
 
-    file_descriptor_sink_impl::~file_descriptor_sink_impl()
-    {
-      close(d_fd);
-    }
+file_descriptor_sink_impl::~file_descriptor_sink_impl() { close(d_fd); }
 
-    int
-    file_descriptor_sink_impl::work(int noutput_items,
-                                    gr_vector_const_void_star &input_items,
-                                    gr_vector_void_star &output_items)
-    {
-      char *inbuf = (char*)input_items[0];
-      unsigned long byte_size = noutput_items * d_itemsize;
+int file_descriptor_sink_impl::work(int noutput_items,
+                                    gr_vector_const_void_star& input_items,
+                                    gr_vector_void_star& output_items)
+{
+    char* inbuf = (char*)input_items[0];
+    unsigned long byte_size = noutput_items * d_itemsize;
 
-      while(byte_size > 0) {
+    while (byte_size > 0) {
         ssize_t r;
 
         r = write(d_fd, inbuf, byte_size);
-        if(r == -1) {
-         if(errno == EINTR)
-           continue;
-         else {
-           perror("file_descriptor_sink");
-           return -1;    // indicate we're done
-         }
+        if (r == -1) {
+            if (errno == EINTR)
+                continue;
+            else {
+                perror("file_descriptor_sink");
+                return -1; // indicate we're done
+            }
+        } else {
+            byte_size -= r;
+            inbuf += r;
         }
-        else {
-          byte_size -= r;
-          inbuf += r;
-        }
-      }
-
-      return noutput_items;
     }
 
-  } /* namespace blocks */
+    return noutput_items;
+}
+
+} /* namespace blocks */
 } /* namespace gr */

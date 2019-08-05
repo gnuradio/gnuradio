@@ -26,25 +26,25 @@
 #include <gnuradio/blocks/multiply_const_v.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template <class T>
-    class BLOCKS_API multiply_const_v_impl : public multiply_const_v<T>
-    {
-      std::vector<T> d_k;
+template <class T>
+class BLOCKS_API multiply_const_v_impl : public multiply_const_v<T>
+{
+    std::vector<T> d_k;
 
-    public:
-      multiply_const_v_impl(std::vector<T> k);
+public:
+    multiply_const_v_impl(std::vector<T> k);
 
-      std::vector<T> k() const { return d_k; }
-      void set_k(std::vector<T> k) { d_k = k; }
+    std::vector<T> k() const { return d_k; }
+    void set_k(std::vector<T> k) { d_k = k; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* MULTIPLY_CONST_V_IMPL_H */

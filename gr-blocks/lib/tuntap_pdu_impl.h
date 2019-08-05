@@ -23,31 +23,31 @@
 #ifndef INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
 #define INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H
 
-#include <gnuradio/blocks/tuntap_pdu.h>
 #include "stream_pdu_base.h"
+#include <gnuradio/blocks/tuntap_pdu.h>
 
 #if (defined(linux) || defined(__linux) || defined(__linux__))
 #include <linux/if_tun.h>
 #endif
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class tuntap_pdu_impl : public tuntap_pdu, public stream_pdu_base
-    {
+class tuntap_pdu_impl : public tuntap_pdu, public stream_pdu_base
+{
 #if (defined(linux) || defined(__linux) || defined(__linux__))
-    private:
-      std::string d_dev;
-      bool d_istunflag;
-      int tun_alloc(char *dev, int flags);
-      int set_mtu(const char *dev, int MTU);
+private:
+    std::string d_dev;
+    bool d_istunflag;
+    int tun_alloc(char* dev, int flags);
+    int set_mtu(const char* dev, int MTU);
 
-    public:
-      tuntap_pdu_impl(std::string dev, int MTU, bool istunflag);
+public:
+    tuntap_pdu_impl(std::string dev, int MTU, bool istunflag);
 #endif
-    };
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_TUNTAP_PDU_IMPL_H */

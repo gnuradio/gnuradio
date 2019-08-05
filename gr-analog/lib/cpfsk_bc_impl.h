@@ -24,31 +24,31 @@
 #include <gnuradio/analog/cpfsk_bc.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class cpfsk_bc_impl : public cpfsk_bc
-    {
-    private:
-      int   d_samples_per_sym;	// Samples per symbol, square pulse
-      float d_freq;		// Modulation index*pi/samples_per_sym
-      float d_ampl;		// Output amplitude
-      float d_phase;		// Current phase
+class cpfsk_bc_impl : public cpfsk_bc
+{
+private:
+    int d_samples_per_sym; // Samples per symbol, square pulse
+    float d_freq;          // Modulation index*pi/samples_per_sym
+    float d_ampl;          // Output amplitude
+    float d_phase;         // Current phase
 
-    public:
-      cpfsk_bc_impl(float k, float ampl, int samples_per_sym);
-      ~cpfsk_bc_impl();
+public:
+    cpfsk_bc_impl(float k, float ampl, int samples_per_sym);
+    ~cpfsk_bc_impl();
 
-      void set_amplitude(float amplitude) { d_ampl = amplitude; }
-      float amplitude() { return d_ampl; }
-      float freq() { return d_freq; }
-      float phase() { return d_phase; }
+    void set_amplitude(float amplitude) { d_ampl = amplitude; }
+    float amplitude() { return d_ampl; }
+    float freq() { return d_freq; }
+    float phase() { return d_phase; }
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_CPFSK_BC_IMPL_H */

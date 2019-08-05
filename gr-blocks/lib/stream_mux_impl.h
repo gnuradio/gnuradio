@@ -26,28 +26,28 @@
 #include <gnuradio/blocks/stream_mux.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API stream_mux_impl : public stream_mux
-    {
-    private:
-      size_t d_itemsize;
-      unsigned int d_stream;    // index of currently selected stream
-      int d_residual;           // number if items left to put into current stream
-      gr_vector_int d_lengths;  // number if items to pack per stream
+class BLOCKS_API stream_mux_impl : public stream_mux
+{
+private:
+    size_t d_itemsize;
+    unsigned int d_stream;   // index of currently selected stream
+    int d_residual;          // number if items left to put into current stream
+    gr_vector_int d_lengths; // number if items to pack per stream
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
 
-    public:
-      stream_mux_impl(size_t itemsize, const std::vector<int> &lengths);
+public:
+    stream_mux_impl(size_t itemsize, const std::vector<int>& lengths);
 
-      int general_work(int noutput_items,
-		       gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
-    };
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_STREAM_MUX_IMPL_H */

@@ -28,39 +28,40 @@
 #include <stddef.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class tag_debug_impl : public tag_debug
-    {
-    private:
-      std::string d_name;
-      std::vector<tag_t> d_tags;
-      std::vector<tag_t>::iterator d_tags_itr;
-      bool d_display;
-      pmt::pmt_t d_filter;
-      gr::thread::mutex d_mutex;
+class tag_debug_impl : public tag_debug
+{
+private:
+    std::string d_name;
+    std::vector<tag_t> d_tags;
+    std::vector<tag_t>::iterator d_tags_itr;
+    bool d_display;
+    pmt::pmt_t d_filter;
+    gr::thread::mutex d_mutex;
 
-    public:
-      tag_debug_impl(size_t sizeof_stream_item, const std::string &name,
-                     const std::string &key_filter="");
-      ~tag_debug_impl();
+public:
+    tag_debug_impl(size_t sizeof_stream_item,
+                   const std::string& name,
+                   const std::string& key_filter = "");
+    ~tag_debug_impl();
 
-      void setup_rpc();
+    void setup_rpc();
 
-      std::vector<tag_t> current_tags();
-      int num_tags();
+    std::vector<tag_t> current_tags();
+    int num_tags();
 
-      void set_display(bool d);
+    void set_display(bool d);
 
-      void set_key_filter(const std::string &key_filter);
-      std::string key_filter() const;
+    void set_key_filter(const std::string& key_filter);
+    std::string key_filter() const;
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_TAG_DEBUG_IMPL_H */

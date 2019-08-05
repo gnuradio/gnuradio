@@ -27,28 +27,28 @@
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Complex rotator
+ * \ingroup math_operators_blk
+ */
+class BLOCKS_API rotator_cc : virtual public sync_block
+{
+public:
+    // gr::blocks::rotator_cc::sptr
+    typedef boost::shared_ptr<rotator_cc> sptr;
 
     /*!
-     * \brief Complex rotator
-     * \ingroup math_operators_blk
+     * \brief Make an complex rotator block
+     * \param phase_inc rotational velocity
      */
-    class BLOCKS_API rotator_cc : virtual public sync_block
-    {
-    public:
-      // gr::blocks::rotator_cc::sptr
-      typedef boost::shared_ptr<rotator_cc> sptr;
+    static sptr make(double phase_inc = 0.0);
 
-      /*!
-       * \brief Make an complex rotator block
-       * \param phase_inc rotational velocity
-       */
-      static sptr make(double phase_inc = 0.0);
+    virtual void set_phase_inc(double phase_inc) = 0;
+};
 
-      virtual void set_phase_inc(double phase_inc) = 0;
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_ROTATOR_CC_H */

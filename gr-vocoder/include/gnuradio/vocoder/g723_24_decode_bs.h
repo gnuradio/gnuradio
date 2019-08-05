@@ -23,29 +23,29 @@
 #ifndef INCLUDED_VOCODER_G723_24_DECODE_BS_H
 #define INCLUDED_VOCODER_G723_24_DECODE_BS_H
 
-#include <gnuradio/vocoder/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/vocoder/api.h>
 
 namespace gr {
-  namespace vocoder {
+namespace vocoder {
+
+/*!
+ * \brief This block performs g723_24 audio decoding.
+ * \ingroup audio_blk
+ */
+class VOCODER_API g723_24_decode_bs : virtual public sync_block
+{
+public:
+    // gr::vocoder::g723_24_decode_bs::sptr
+    typedef boost::shared_ptr<g723_24_decode_bs> sptr;
 
     /*!
-     * \brief This block performs g723_24 audio decoding.
-     * \ingroup audio_blk
+     * \brief Make G722_24 decoder block.
      */
-    class VOCODER_API g723_24_decode_bs : virtual public sync_block
-    {
-    public:
-      // gr::vocoder::g723_24_decode_bs::sptr
-      typedef boost::shared_ptr<g723_24_decode_bs> sptr;
+    static sptr make();
+};
 
-      /*!
-       * \brief Make G722_24 decoder block.
-       */
-      static sptr make();
-    };
-
-  } /* namespace vocoder */
+} /* namespace vocoder */
 } /* namespace gr */
 
 #endif /* INCLUDED_VOCODER_G723_24_DECODE_BS_H */

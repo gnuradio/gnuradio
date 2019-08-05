@@ -26,21 +26,21 @@
 #include <gnuradio/blocks/api.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    //! return number of set bits in the low  8 bits of x
-    BLOCKS_API unsigned int count_bits8(unsigned int x);
+//! return number of set bits in the low  8 bits of x
+BLOCKS_API unsigned int count_bits8(unsigned int x);
 
-    //! return number of set bits in the low 16 bits of x
-    BLOCKS_API unsigned int count_bits16(unsigned int x);
+//! return number of set bits in the low 16 bits of x
+BLOCKS_API unsigned int count_bits16(unsigned int x);
 
-    //! return number of set bits in the low 32 bits of x
-    BLOCKS_API unsigned int count_bits32(unsigned int x);
+//! return number of set bits in the low 32 bits of x
+BLOCKS_API unsigned int count_bits32(unsigned int x);
 
-    //! return number of set bits in a 64-bit word
-    BLOCKS_API unsigned int count_bits64(unsigned long long int x);
+//! return number of set bits in a 64-bit word
+BLOCKS_API unsigned int count_bits64(unsigned long long int x);
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* _GR_COUNT_BITS_H_ */

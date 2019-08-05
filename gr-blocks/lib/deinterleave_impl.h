@@ -26,31 +26,30 @@
 #include <gnuradio/blocks/deinterleave.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class BLOCKS_API deinterleave_impl : public deinterleave
-    {
+class BLOCKS_API deinterleave_impl : public deinterleave
+{
 
-      size_t d_itemsize;
-      unsigned int d_blocksize;
-      unsigned int d_current_output;
-      unsigned int d_noutputs;
-      unsigned int d_size_bytes; // block size in bytes
+    size_t d_itemsize;
+    unsigned int d_blocksize;
+    unsigned int d_current_output;
+    unsigned int d_noutputs;
+    unsigned int d_size_bytes; // block size in bytes
 
-    public:
-      deinterleave_impl(size_t itemsize, unsigned int blocksize);
+public:
+    deinterleave_impl(size_t itemsize, unsigned int blocksize);
 
-      void forecast(int noutput_items, gr_vector_int &ninput_items_required);
-      bool check_topology(int ninputs, int noutputs);
+    void forecast(int noutput_items, gr_vector_int& ninput_items_required);
+    bool check_topology(int ninputs, int noutputs);
 
-      int general_work(int noutput_items,
-                       gr_vector_int& ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items);
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 

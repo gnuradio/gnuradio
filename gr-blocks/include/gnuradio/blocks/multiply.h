@@ -29,31 +29,30 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief output = prod (input_0, input_1, ...)
-     * \ingroup math_operators_blk
-     *
-     * \details
-     * Multiply across all input streams.
-     */
-template<class T>
-    class BLOCKS_API multiply : virtual public sync_block
-    {
-    public:
+/*!
+ * \brief output = prod (input_0, input_1, ...)
+ * \ingroup math_operators_blk
+ *
+ * \details
+ * Multiply across all input streams.
+ */
+template <class T>
+class BLOCKS_API multiply : virtual public sync_block
+{
+public:
+    // gr::blocks::multiply::sptr
+    typedef boost::shared_ptr<multiply<T>> sptr;
 
-      // gr::blocks::multiply::sptr
-      typedef boost::shared_ptr< multiply<T> > sptr;
-
-      static sptr make(size_t vlen=1);
-    };
+    static sptr make(size_t vlen = 1);
+};
 
 typedef multiply<std::int16_t> multiply_ss;
 typedef multiply<std::int32_t> multiply_ii;
 typedef multiply<float> multiply_ff;
 typedef multiply<gr_complex> multiply_cc;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* MULTIPLY_H */

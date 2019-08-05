@@ -26,36 +26,36 @@
 #include <gnuradio/blocks/probe_rate.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class probe_rate_impl : public probe_rate
-    {
-    private:
-      double d_alpha, d_beta, d_avg;
-      double d_min_update_time;
-      boost::posix_time::ptime d_last_update;
-      uint64_t d_lastthru;
-      void setup_rpc();
+class probe_rate_impl : public probe_rate
+{
+private:
+    double d_alpha, d_beta, d_avg;
+    double d_min_update_time;
+    boost::posix_time::ptime d_last_update;
+    uint64_t d_lastthru;
+    void setup_rpc();
 
-      const pmt::pmt_t d_port;
-      const pmt::pmt_t d_dict_avg, d_dict_now;
+    const pmt::pmt_t d_port;
+    const pmt::pmt_t d_dict_avg, d_dict_now;
 
-    public:
-      probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha = 0.0001);
-      ~probe_rate_impl();
-      void set_alpha(double alpha);
-      double rate();
-      double timesincelast();
-      bool start();
-      bool stop();
+public:
+    probe_rate_impl(size_t itemsize, double update_rate_ms, double alpha = 0.0001);
+    ~probe_rate_impl();
+    void set_alpha(double alpha);
+    double rate();
+    double timesincelast();
+    bool start();
+    bool stop();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-    }; // end class
+}; // end class
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif

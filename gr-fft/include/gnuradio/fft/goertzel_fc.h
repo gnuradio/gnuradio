@@ -27,31 +27,30 @@
 #include <gnuradio/sync_decimator.h>
 
 namespace gr {
-  namespace fft {
+namespace fft {
 
-    /*!
-     * \brief Goertzel single-bin DFT calculation.
-     * \ingroup fourier_analysis_blk
-     */
-    class FFT_API goertzel_fc : virtual public sync_decimator
-    {
-    public:
+/*!
+ * \brief Goertzel single-bin DFT calculation.
+ * \ingroup fourier_analysis_blk
+ */
+class FFT_API goertzel_fc : virtual public sync_decimator
+{
+public:
+    // gr::fft::goertzel_fc::sptr
+    typedef boost::shared_ptr<goertzel_fc> sptr;
 
-      // gr::fft::goertzel_fc::sptr
-      typedef boost::shared_ptr<goertzel_fc> sptr;
+    static sptr make(int rate, int len, float freq);
 
-      static sptr make(int rate, int len, float freq);
+    virtual void set_freq(float freq) = 0;
 
-      virtual void set_freq (float freq) = 0;
+    virtual void set_rate(int rate) = 0;
 
-      virtual void set_rate (int rate) = 0;
+    virtual float freq() = 0;
 
-      virtual float freq() = 0;
+    virtual int rate() = 0;
+};
 
-      virtual int rate() = 0;
-    };
-
-  } /* namespace fft */
+} /* namespace fft */
 } /* namespace gr */
 
 #endif /* INCLUDED_FFT_GOERTZEL_FC_H */

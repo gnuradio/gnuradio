@@ -23,32 +23,31 @@
 #ifndef INCLUDED_BLOCKS_PATTERNED_INTERLEAVER_H
 #define INCLUDED_BLOCKS_PATTERNED_INTERLEAVER_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Interleave items based on the provided vector \p pattern.
+ * \ingroup stream_operators_blk
+ */
+class BLOCKS_API patterned_interleaver : virtual public block
+{
+public:
+    typedef boost::shared_ptr<patterned_interleaver> sptr;
 
     /*!
-     * \brief Interleave items based on the provided vector \p pattern.
-     * \ingroup stream_operators_blk
+     * Make a patterned interleaver block.
+     *
+     * \param itemsize stream itemsize
+     * \param pattern vector that represents the interleaving pattern
      */
-    class BLOCKS_API patterned_interleaver : virtual public block
-    {
-    public:
-      typedef boost::shared_ptr<patterned_interleaver> sptr;
+    static sptr make(size_t itemsize, std::vector<int> pattern);
+};
 
-      /*!
-       * Make a patterned interleaver block.
-       *
-       * \param itemsize stream itemsize
-       * \param pattern vector that represents the interleaving pattern
-       */
-      static sptr make(size_t itemsize, std::vector<int> pattern);
-    };
-
-  }
-}
+} // namespace blocks
+} // namespace gr
 
 #endif /* INCLUDED_BLOCKS_PATTERNED_INTERLEAVER_H */
-

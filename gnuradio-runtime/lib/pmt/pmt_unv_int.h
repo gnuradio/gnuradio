@@ -25,32 +25,32 @@
 
 #include "pmt_int.h"
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
-namespace pmt{
+namespace pmt {
 ////////////////////////////////////////////////////////////////////////////
 //                           pmt_u8vector
 ////////////////////////////////////////////////////////////////////////////
 class PMT_API pmt_u8vector : public pmt_uniform_vector
 {
-  std::vector< uint8_t >	d_v;
+    std::vector<uint8_t> d_v;
 
 public:
-  pmt_u8vector(size_t k, uint8_t fill);
-  pmt_u8vector(size_t k, const uint8_t *data);
-  // ~pmt_u8vector();
+    pmt_u8vector(size_t k, uint8_t fill);
+    pmt_u8vector(size_t k, const uint8_t* data);
+    // ~pmt_u8vector();
 
-  bool is_u8vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(uint8_t); }
-  uint8_t ref(size_t k) const;
-  void set(size_t k, uint8_t x);
-  const uint8_t *elements(size_t &len);
-  uint8_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_u8vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(uint8_t); }
+    uint8_t ref(size_t k) const;
+    void set(size_t k, uint8_t x);
+    const uint8_t* elements(size_t& len);
+    uint8_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -59,23 +59,23 @@ public:
 
 class pmt_s8vector : public pmt_uniform_vector
 {
-  std::vector< int8_t >	d_v;
+    std::vector<int8_t> d_v;
 
 public:
-  pmt_s8vector(size_t k, int8_t fill);
-  pmt_s8vector(size_t k, const int8_t *data);
-  // ~pmt_s8vector();
+    pmt_s8vector(size_t k, int8_t fill);
+    pmt_s8vector(size_t k, const int8_t* data);
+    // ~pmt_s8vector();
 
-  bool is_s8vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(int8_t); }
-  int8_t ref(size_t k) const;
-  void set(size_t k, int8_t x);
-  const int8_t *elements(size_t &len);
-  int8_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_s8vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(int8_t); }
+    int8_t ref(size_t k) const;
+    void set(size_t k, int8_t x);
+    const int8_t* elements(size_t& len);
+    int8_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -84,23 +84,23 @@ public:
 
 class pmt_u16vector : public pmt_uniform_vector
 {
-  std::vector< uint16_t >	d_v;
+    std::vector<uint16_t> d_v;
 
 public:
-  pmt_u16vector(size_t k, uint16_t fill);
-  pmt_u16vector(size_t k, const uint16_t *data);
-  // ~pmt_u16vector();
+    pmt_u16vector(size_t k, uint16_t fill);
+    pmt_u16vector(size_t k, const uint16_t* data);
+    // ~pmt_u16vector();
 
-  bool is_u16vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(uint16_t); }
-  uint16_t ref(size_t k) const;
-  void set(size_t k, uint16_t x);
-  const uint16_t *elements(size_t &len);
-  uint16_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_u16vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(uint16_t); }
+    uint16_t ref(size_t k) const;
+    void set(size_t k, uint16_t x);
+    const uint16_t* elements(size_t& len);
+    uint16_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -109,23 +109,23 @@ public:
 
 class pmt_s16vector : public pmt_uniform_vector
 {
-  std::vector< int16_t >	d_v;
+    std::vector<int16_t> d_v;
 
 public:
-  pmt_s16vector(size_t k, int16_t fill);
-  pmt_s16vector(size_t k, const int16_t *data);
-  // ~pmt_s16vector();
+    pmt_s16vector(size_t k, int16_t fill);
+    pmt_s16vector(size_t k, const int16_t* data);
+    // ~pmt_s16vector();
 
-  bool is_s16vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(int16_t); }
-  int16_t ref(size_t k) const;
-  void set(size_t k, int16_t x);
-  const int16_t *elements(size_t &len);
-  int16_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_s16vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(int16_t); }
+    int16_t ref(size_t k) const;
+    void set(size_t k, int16_t x);
+    const int16_t* elements(size_t& len);
+    int16_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -134,23 +134,23 @@ public:
 
 class pmt_u32vector : public pmt_uniform_vector
 {
-  std::vector< uint32_t >	d_v;
+    std::vector<uint32_t> d_v;
 
 public:
-  pmt_u32vector(size_t k, uint32_t fill);
-  pmt_u32vector(size_t k, const uint32_t *data);
-  // ~pmt_u32vector();
+    pmt_u32vector(size_t k, uint32_t fill);
+    pmt_u32vector(size_t k, const uint32_t* data);
+    // ~pmt_u32vector();
 
-  bool is_u32vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(uint32_t); }
-  uint32_t ref(size_t k) const;
-  void set(size_t k, uint32_t x);
-  const uint32_t *elements(size_t &len);
-  uint32_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_u32vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(uint32_t); }
+    uint32_t ref(size_t k) const;
+    void set(size_t k, uint32_t x);
+    const uint32_t* elements(size_t& len);
+    uint32_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -159,23 +159,23 @@ public:
 
 class pmt_s32vector : public pmt_uniform_vector
 {
-  std::vector< int32_t >	d_v;
+    std::vector<int32_t> d_v;
 
 public:
-  pmt_s32vector(size_t k, int32_t fill);
-  pmt_s32vector(size_t k, const int32_t *data);
-  // ~pmt_s32vector();
+    pmt_s32vector(size_t k, int32_t fill);
+    pmt_s32vector(size_t k, const int32_t* data);
+    // ~pmt_s32vector();
 
-  bool is_s32vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(int32_t); }
-  int32_t ref(size_t k) const;
-  void set(size_t k, int32_t x);
-  const int32_t *elements(size_t &len);
-  int32_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_s32vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(int32_t); }
+    int32_t ref(size_t k) const;
+    void set(size_t k, int32_t x);
+    const int32_t* elements(size_t& len);
+    int32_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -184,23 +184,23 @@ public:
 
 class pmt_u64vector : public pmt_uniform_vector
 {
-  std::vector< uint64_t >	d_v;
+    std::vector<uint64_t> d_v;
 
 public:
-  pmt_u64vector(size_t k, uint64_t fill);
-  pmt_u64vector(size_t k, const uint64_t *data);
-  // ~pmt_u64vector();
+    pmt_u64vector(size_t k, uint64_t fill);
+    pmt_u64vector(size_t k, const uint64_t* data);
+    // ~pmt_u64vector();
 
-  bool is_u64vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(uint64_t); }
-  uint64_t ref(size_t k) const;
-  void set(size_t k, uint64_t x);
-  const uint64_t *elements(size_t &len);
-  uint64_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_u64vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(uint64_t); }
+    uint64_t ref(size_t k) const;
+    void set(size_t k, uint64_t x);
+    const uint64_t* elements(size_t& len);
+    uint64_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -209,23 +209,23 @@ public:
 
 class pmt_s64vector : public pmt_uniform_vector
 {
-  std::vector< int64_t >	d_v;
+    std::vector<int64_t> d_v;
 
 public:
-  pmt_s64vector(size_t k, int64_t fill);
-  pmt_s64vector(size_t k, const int64_t *data);
-  // ~pmt_s64vector();
+    pmt_s64vector(size_t k, int64_t fill);
+    pmt_s64vector(size_t k, const int64_t* data);
+    // ~pmt_s64vector();
 
-  bool is_s64vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(int64_t); }
-  int64_t ref(size_t k) const;
-  void set(size_t k, int64_t x);
-  const int64_t *elements(size_t &len);
-  int64_t *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_s64vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(int64_t); }
+    int64_t ref(size_t k) const;
+    void set(size_t k, int64_t x);
+    const int64_t* elements(size_t& len);
+    int64_t* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -234,23 +234,23 @@ public:
 
 class pmt_f32vector : public pmt_uniform_vector
 {
-  std::vector< float >	d_v;
+    std::vector<float> d_v;
 
 public:
-  pmt_f32vector(size_t k, float fill);
-  pmt_f32vector(size_t k, const float *data);
-  // ~pmt_f32vector();
+    pmt_f32vector(size_t k, float fill);
+    pmt_f32vector(size_t k, const float* data);
+    // ~pmt_f32vector();
 
-  bool is_f32vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(float); }
-  float ref(size_t k) const;
-  void set(size_t k, float x);
-  const float *elements(size_t &len);
-  float *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_f32vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(float); }
+    float ref(size_t k) const;
+    void set(size_t k, float x);
+    const float* elements(size_t& len);
+    float* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -259,23 +259,23 @@ public:
 
 class pmt_f64vector : public pmt_uniform_vector
 {
-  std::vector< double >	d_v;
+    std::vector<double> d_v;
 
 public:
-  pmt_f64vector(size_t k, double fill);
-  pmt_f64vector(size_t k, const double *data);
-  // ~pmt_f64vector();
+    pmt_f64vector(size_t k, double fill);
+    pmt_f64vector(size_t k, const double* data);
+    // ~pmt_f64vector();
 
-  bool is_f64vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(double); }
-  double ref(size_t k) const;
-  void set(size_t k, double x);
-  const double *elements(size_t &len);
-  double *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_f64vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(double); }
+    double ref(size_t k) const;
+    void set(size_t k, double x);
+    const double* elements(size_t& len);
+    double* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -284,23 +284,23 @@ public:
 
 class pmt_c32vector : public pmt_uniform_vector
 {
-  std::vector< std::complex<float> >	d_v;
+    std::vector<std::complex<float>> d_v;
 
 public:
-  pmt_c32vector(size_t k, std::complex<float> fill);
-  pmt_c32vector(size_t k, const std::complex<float> *data);
-  // ~pmt_c32vector();
+    pmt_c32vector(size_t k, std::complex<float> fill);
+    pmt_c32vector(size_t k, const std::complex<float>* data);
+    // ~pmt_c32vector();
 
-  bool is_c32vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(std::complex<float>); }
-  std::complex<float> ref(size_t k) const;
-  void set(size_t k, std::complex<float> x);
-  const std::complex<float> *elements(size_t &len);
-  std::complex<float> *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_c32vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(std::complex<float>); }
+    std::complex<float> ref(size_t k) const;
+    void set(size_t k, std::complex<float> x);
+    const std::complex<float>* elements(size_t& len);
+    std::complex<float>* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -309,23 +309,23 @@ public:
 
 class pmt_c64vector : public pmt_uniform_vector
 {
-  std::vector< std::complex<double> >	d_v;
+    std::vector<std::complex<double>> d_v;
 
 public:
-  pmt_c64vector(size_t k, std::complex<double> fill);
-  pmt_c64vector(size_t k, const std::complex<double> *data);
-  // ~pmt_c64vector();
+    pmt_c64vector(size_t k, std::complex<double> fill);
+    pmt_c64vector(size_t k, const std::complex<double>* data);
+    // ~pmt_c64vector();
 
-  bool is_c64vector() const { return true; }
-  size_t length() const { return d_v.size(); }
-  size_t itemsize() const { return sizeof(std::complex<double>); }
-  std::complex<double> ref(size_t k) const;
-  void set(size_t k, std::complex<double> x);
-  const std::complex<double> *elements(size_t &len);
-  std::complex<double> *writable_elements(size_t &len);
-  const void *uniform_elements(size_t &len);
-  void *uniform_writable_elements(size_t &len);
-  virtual const std::string string_ref(size_t k) const;
+    bool is_c64vector() const { return true; }
+    size_t length() const { return d_v.size(); }
+    size_t itemsize() const { return sizeof(std::complex<double>); }
+    std::complex<double> ref(size_t k) const;
+    void set(size_t k, std::complex<double> x);
+    const std::complex<double>* elements(size_t& len);
+    std::complex<double>* writable_elements(size_t& len);
+    const void* uniform_elements(size_t& len);
+    void* uniform_writable_elements(size_t& len);
+    virtual const std::string string_ref(size_t k) const;
 };
 } /* namespace pmt */
 #endif

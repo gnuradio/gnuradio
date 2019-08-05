@@ -27,68 +27,68 @@
 #include <gnuradio/blocks/lfsr_32k.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    class check_lfsr_32k_s_impl : public check_lfsr_32k_s
-    {
-    private:
-      enum state {
-        SEARCHING,	// searching for synchronization
+class check_lfsr_32k_s_impl : public check_lfsr_32k_s
+{
+private:
+    enum state {
+        SEARCHING, // searching for synchronization
         MATCH0,
         MATCH1,
         MATCH2,
-        LOCKED		// is locked
-      };
+        LOCKED // is locked
+    };
 
-      state d_state;
-      unsigned int d_history;  // bitmask of decisions
+    state d_state;
+    unsigned int d_history; // bitmask of decisions
 
-      long d_ntotal;     // total number of shorts
-      long d_nright;     // # of correct shorts
-      long d_runlength;  // # of correct shorts in a row
+    long d_ntotal;    // total number of shorts
+    long d_nright;    // # of correct shorts
+    long d_runlength; // # of correct shorts in a row
 
-      static const int BUFSIZE = 2048 - 1;  // ensure pattern isn't packet aligned
-      int d_index;
-      unsigned short d_buffer[BUFSIZE];
+    static const int BUFSIZE = 2048 - 1; // ensure pattern isn't packet aligned
+    int d_index;
+    unsigned short d_buffer[BUFSIZE];
 
-      void enter_SEARCHING();
-      void enter_MATCH0();
-      void enter_MATCH1();
-      void enter_MATCH2();
-      void enter_LOCKED();
+    void enter_SEARCHING();
+    void enter_MATCH0();
+    void enter_MATCH1();
+    void enter_MATCH2();
+    void enter_LOCKED();
 
-      void right()
-      {
+    void right()
+    {
         d_history = (d_history << 1) | 0x1;
         d_nright++;
         d_runlength++;
-      }
+    }
 
-      void wrong()
-      {
+    void wrong()
+    {
         d_history = (d_history << 1) | 0x0;
         d_runlength = 0;
-      }
+    }
 
-      bool right_three_times() { return (d_history & 0x7) == 0x7; }
-      bool wrong_three_times() { return (d_history & 0x7) == 0x0; }
+    bool right_three_times() { return (d_history & 0x7) == 0x7; }
+    bool wrong_three_times() { return (d_history & 0x7) == 0x0; }
 
-      void log_error(unsigned short expected, unsigned short actual);
+    void log_error(unsigned short expected, unsigned short actual);
 
-    public:
-      check_lfsr_32k_s_impl();
-      ~check_lfsr_32k_s_impl();
+public:
+    check_lfsr_32k_s_impl();
+    ~check_lfsr_32k_s_impl();
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
 
-      long ntotal() const { return d_ntotal; }
-      long nright() const { return d_nright; }
-      long runlength() const { return d_runlength; }
-    };
+    long ntotal() const { return d_ntotal; }
+    long nright() const { return d_nright; }
+    long runlength() const { return d_runlength; }
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_GR_CHECK_LFSR_32K_S_IMPL_H */

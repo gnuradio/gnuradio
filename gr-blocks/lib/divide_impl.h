@@ -27,22 +27,22 @@
 #include <gnuradio/blocks/divide.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-template<class T>
-    class BLOCKS_API divide_impl  : public  divide<T>
-    {
-      size_t d_vlen;
+template <class T>
+class BLOCKS_API divide_impl : public divide<T>
+{
+    size_t d_vlen;
 
-    public:
-      divide_impl (size_t vlen);
+public:
+    divide_impl(size_t vlen);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* DIVIDE_IMPL_H */

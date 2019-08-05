@@ -23,31 +23,31 @@
 #ifndef PROBE_SIGNAL_V_IMPL_H
 #define PROBE_SIGNAL_V_IMPL_H
 
-#include <vector>
 #include <gnuradio/blocks/probe_signal_v.h>
+#include <vector>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    template <class T>
-    class probe_signal_v_impl : public probe_signal_v<T>
-    {
-    private:
-      std::vector<T> d_level;
-      size_t d_size;
+template <class T>
+class probe_signal_v_impl : public probe_signal_v<T>
+{
+private:
+    std::vector<T> d_level;
+    size_t d_size;
 
-    public:
-      probe_signal_v_impl(size_t size);
-      ~probe_signal_v_impl();
+public:
+    probe_signal_v_impl(size_t size);
+    ~probe_signal_v_impl();
 
-      std::vector<T> level() const { return d_level; }
+    std::vector<T> level() const { return d_level; }
 
-      int work(int noutput_items,
-               gr_vector_const_void_star &input_items,
-               gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* PROBE_SIGNAL_V_IMPL_H */

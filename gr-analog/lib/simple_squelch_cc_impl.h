@@ -27,33 +27,33 @@
 #include <gnuradio/filter/single_pole_iir.h>
 
 namespace gr {
-  namespace analog {
+namespace analog {
 
-    class simple_squelch_cc_impl : public simple_squelch_cc
-    {
-    private:
-      double d_threshold;
-      bool d_unmuted;
-      filter::single_pole_iir<double,double,double> d_iir;
+class simple_squelch_cc_impl : public simple_squelch_cc
+{
+private:
+    double d_threshold;
+    bool d_unmuted;
+    filter::single_pole_iir<double, double, double> d_iir;
 
-    public:
-      simple_squelch_cc_impl(double threshold_db, double alpha);
-      ~simple_squelch_cc_impl();
+public:
+    simple_squelch_cc_impl(double threshold_db, double alpha);
+    ~simple_squelch_cc_impl();
 
-      bool unmuted() const { return d_unmuted; }
+    bool unmuted() const { return d_unmuted; }
 
-      void set_alpha(double alpha);
-      void set_threshold(double decibels);
+    void set_alpha(double alpha);
+    void set_threshold(double decibels);
 
-      double threshold() const;
-      std::vector<float> squelch_range() const;
+    double threshold() const;
+    std::vector<float> squelch_range() const;
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace analog */
+} /* namespace analog */
 } /* namespace gr */
 
 #endif /* INCLUDED_ANALOG_SIMPLE_SQUELCH_CC_IMPL_H */

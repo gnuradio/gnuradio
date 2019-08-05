@@ -26,28 +26,36 @@
 typedef float INPUT_DATATYPE;
 typedef unsigned char OUTPUT_DATATYPE;
 
+#include <gnuradio/fec/decoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/decoder.h>
 #include <vector>
 
 namespace gr {
- namespace fec {
+namespace fec {
 
 
 #define MAXLOG 1e7
 
-class FEC_API tpc_decoder : public generic_decoder {
-    //private constructor
-    tpc_decoder (std::vector<int> row_polys, std::vector<int> col_polys, int krow, int kcol, int bval, int qval, int max_iter, int decoder_type);
+class FEC_API tpc_decoder : public generic_decoder
+{
+    // private constructor
+    tpc_decoder(std::vector<int> row_polys,
+                std::vector<int> col_polys,
+                int krow,
+                int kcol,
+                int bval,
+                int qval,
+                int max_iter,
+                int decoder_type);
 
-    //plug into the generic fec api
+    // plug into the generic fec api
     int get_history();
-	float get_shift();
-	int get_input_item_size();
-	int get_output_item_size();
-	const char* get_conversion();
-    void generic_work(void *inBuffer, void *outbuffer);
+    float get_shift();
+    int get_input_item_size();
+    int get_output_item_size();
+    const char* get_conversion();
+    void generic_work(void* inBuffer, void* outbuffer);
     int get_output_size();
     int get_input_size();
 
@@ -65,11 +73,11 @@ class FEC_API tpc_decoder : public generic_decoder {
 
     // store the state transitions & outputs
     int rowNumStates;
-    std::vector< std::vector<int> > rowOutputs;
-    std::vector< std::vector<int> > rowNextStates;
+    std::vector<std::vector<int>> rowOutputs;
+    std::vector<std::vector<int>> rowNextStates;
     int colNumStates;
-    std::vector< std::vector<int> > colOutputs;
-    std::vector< std::vector<int> > colNextStates;
+    std::vector<std::vector<int>> colOutputs;
+    std::vector<std::vector<int>> colNextStates;
 
     int rowEncoder_K;
     int rowEncoder_n;
@@ -88,8 +96,8 @@ class FEC_API tpc_decoder : public generic_decoder {
     // memory allocated for processing
     int inputSizeWithPad;
 
-    std::vector< std::vector<float> > channel_llr;
-    std::vector< std::vector<float> > Z;
+    std::vector<std::vector<float>> channel_llr;
+    std::vector<std::vector<float>> Z;
     std::vector<float> extrinsic_info;
     std::vector<float> input_u_rows;
     std::vector<float> input_u_cols;
@@ -106,11 +114,11 @@ class FEC_API tpc_decoder : public generic_decoder {
 
     bool earlyExit;
 
-    FILE *fp;
+    FILE* fp;
 
     // soft input soft output decoding
     int mm_row, max_states_row, num_symbols_row;
-    std::vector< std::vector<float> > beta_row;
+    std::vector<std::vector<float>> beta_row;
     std::vector<float> alpha_prime_row;
     std::vector<float> alpha_row;
     std::vector<float> metric_c_row;
@@ -120,7 +128,7 @@ class FEC_API tpc_decoder : public generic_decoder {
     void siso_decode_row();
 
     int mm_col, max_states_col, num_symbols_col;
-    std::vector< std::vector<float> > beta_col;
+    std::vector<std::vector<float>> beta_col;
     std::vector<float> alpha_prime_col;
     std::vector<float> alpha_col;
     std::vector<float> metric_c_col;
@@ -141,16 +149,24 @@ class FEC_API tpc_decoder : public generic_decoder {
     float log_map_lut_correction(const float delta1, const float delta2);
     float log_map_cfunction_correction(const float delta1, const float delta2);
 
-    template <typename T> static int sgn(T val);
+    template <typename T>
+    static int sgn(T val);
 
- public:
-    static generic_decoder::sptr make (std::vector<int> row_poly, std::vector<int> col_poly, int krow, int kcol, int bval, int qval, int max_iter, int decoder_type);
-    ~tpc_decoder ();
-    double rate() { return (1.0*get_output_size() / get_input_size()); }
-    bool set_frame_size(unsigned int frame_size){ return false; }
+public:
+    static generic_decoder::sptr make(std::vector<int> row_poly,
+                                      std::vector<int> col_poly,
+                                      int krow,
+                                      int kcol,
+                                      int bval,
+                                      int qval,
+                                      int max_iter,
+                                      int decoder_type);
+    ~tpc_decoder();
+    double rate() { return (1.0 * get_output_size() / get_input_size()); }
+    bool set_frame_size(unsigned int frame_size) { return false; }
 };
 
-}
-}
+} // namespace fec
+} // namespace gr
 
 #endif /* INCLUDED_TPC_DECODER_H */

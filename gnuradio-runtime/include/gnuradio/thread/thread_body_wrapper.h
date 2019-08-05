@@ -28,45 +28,39 @@
 #include <iostream>
 
 namespace gr {
-  namespace thread {
+namespace thread {
 
-  GR_RUNTIME_API void mask_signals();
+GR_RUNTIME_API void mask_signals();
 
-    template <class F>
-    class thread_body_wrapper
+template <class F>
+class thread_body_wrapper
+{
+private:
+    F d_f;
+    std::string d_name;
+
+public:
+    explicit thread_body_wrapper(F f, const std::string& name = "") : d_f(f), d_name(name)
     {
-    private:
-      F d_f;
-      std::string d_name;
+    }
 
-    public:
-      explicit thread_body_wrapper(F f, const std::string &name="")
-        : d_f(f), d_name(name) {}
-
-      void operator()()
-      {
+    void operator()()
+    {
         mask_signals();
 
         try {
-          d_f();
-        }
-        catch(boost::thread_interrupted const &)
-          {
-          }
-        catch(std::exception const &e)
-          {
-            std::cerr << "thread[" << d_name << "]: "
-                      << e.what() << std::endl;
-          }
-        catch(...)
-          {
+            d_f();
+        } catch (boost::thread_interrupted const&) {
+        } catch (std::exception const& e) {
+            std::cerr << "thread[" << d_name << "]: " << e.what() << std::endl;
+        } catch (...) {
             std::cerr << "thread[" << d_name << "]: "
                       << "caught unrecognized exception\n";
-          }
-      }
-    };
+        }
+    }
+};
 
-  } /* namespace thread */
+} /* namespace thread */
 } /* namespace gr */
 
 #endif /* INCLUDED_THREAD_BODY_WRAPPER_H */

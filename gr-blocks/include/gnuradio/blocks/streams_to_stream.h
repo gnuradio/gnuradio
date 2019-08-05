@@ -27,32 +27,32 @@
 #include <gnuradio/sync_interpolator.h>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
+
+/*!
+ * \brief Convert N streams of 1 item into a 1 stream of N items
+ * \ingroup stream_operators_blk
+ *
+ * \details
+ * Convert N streams of 1 item into 1 stream of N items.
+ * Repeat ad infinitum.
+ */
+class BLOCKS_API streams_to_stream : virtual public sync_interpolator
+{
+public:
+    // gr::blocks::streams_to_stream::sptr
+    typedef boost::shared_ptr<streams_to_stream> sptr;
 
     /*!
-     * \brief Convert N streams of 1 item into a 1 stream of N items
-     * \ingroup stream_operators_blk
+     * Make a streams-to-stream block.
      *
-     * \details
-     * Convert N streams of 1 item into 1 stream of N items.
-     * Repeat ad infinitum.
+     * \param itemsize the item size of the stream
+     * \param nstreams number of streams to combine
      */
-    class BLOCKS_API streams_to_stream : virtual public sync_interpolator
-    {
-    public:
-      // gr::blocks::streams_to_stream::sptr
-      typedef boost::shared_ptr<streams_to_stream> sptr;
+    static sptr make(size_t itemsize, size_t nstreams);
+};
 
-      /*!
-       * Make a streams-to-stream block.
-       *
-       * \param itemsize the item size of the stream
-       * \param nstreams number of streams to combine
-       */
-      static sptr make(size_t itemsize, size_t nstreams);
-    };
-
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* INCLUDED_BLOCKS_STREAMS_TO_STREAM_H */

@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
- /* -----------------------------------------------------------------
+/* -----------------------------------------------------------------
  *
  * This class handles sparse matrices specified in alist-format.
  * For details about alist format please visit the link below.
@@ -34,28 +34,27 @@
 #ifndef ALIST_H
 #define ALIST_H
 
-#include <iostream>
+#include <gnuradio/fec/api.h>
+#include <stdlib.h>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <vector>
-#include <stdlib.h>
-#include <gnuradio/fec/api.h>
 
 class FEC_API alist
 {
-  public:
-
+public:
     //! Default Constructor
     alist() : data_ok(false) {}
 
     //! Constructor which loads alist class from an alist-file
-    alist(const char * fname);
+    alist(const char* fname);
 
     //! Read alist data from a file
-    void read(const char * fname);
+    void read(const char* fname);
 
     //! Write alist data to a file
-    void write(const char * fname) const;
+    void write(const char* fname) const;
 
     //! Returns N, the number of variable nodes
     int get_N();
@@ -64,10 +63,10 @@ class FEC_API alist
     int get_M();
 
     //! Return the m_list variable
-    std::vector< std::vector<int> > get_mlist();
+    std::vector<std::vector<int>> get_mlist();
 
     //! Returns the n_list variable
-    std::vector< std::vector<int> > get_nlist();
+    std::vector<std::vector<int>> get_nlist();
 
     //! Returns the num_mlist variable
     std::vector<int> get_num_mlist();
@@ -88,9 +87,9 @@ class FEC_API alist
     void print_mlist_i(int i);
 
     //! Returns the corresponding H matrix
-    std::vector<std::vector<char> > get_matrix();
+    std::vector<std::vector<char>> get_matrix();
 
-  protected:
+protected:
     //! A variable indicating if data has been read from alist-file
     bool data_ok;
 
@@ -113,9 +112,9 @@ class FEC_API alist
     std::vector<int> num_mlist;
 
     //! List of integer coordinates along each rows with non-zero entries
-    std::vector< std::vector<int> > mlist;
+    std::vector<std::vector<int>> mlist;
 
     //! List of integer coordinates along each column with non-zero entries
-    std::vector< std::vector<int> > nlist;
+    std::vector<std::vector<int>> nlist;
 };
 #endif // ifndef ALIST_H

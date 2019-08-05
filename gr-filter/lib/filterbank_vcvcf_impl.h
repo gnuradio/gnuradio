@@ -21,37 +21,37 @@
  */
 
 #ifndef INCLUDED_FILTER_FILTERBANK_VCVCF_IMPL_H
-#define	INCLUDED_FILTER_FILTERBANK_VCVCF_IMPL_H
+#define INCLUDED_FILTER_FILTERBANK_VCVCF_IMPL_H
 
-#include <gnuradio/filter/filterbank_vcvcf.h>
 #include <gnuradio/filter/filterbank.h>
+#include <gnuradio/filter/filterbank_vcvcf.h>
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class FILTER_API filterbank_vcvcf_impl : public filterbank_vcvcf, kernel::filterbank
-    {
-    private:
-      bool d_updated;
-      gr::thread::mutex d_mutex; // mutex to protect set/work access
+class FILTER_API filterbank_vcvcf_impl : public filterbank_vcvcf, kernel::filterbank
+{
+private:
+    bool d_updated;
+    gr::thread::mutex d_mutex; // mutex to protect set/work access
 
-    public:
-      filterbank_vcvcf_impl(const std::vector<std::vector<float> > &taps);
-      ~filterbank_vcvcf_impl();
+public:
+    filterbank_vcvcf_impl(const std::vector<std::vector<float>>& taps);
+    ~filterbank_vcvcf_impl();
 
-      void set_taps(const std::vector<std::vector<float> > &taps);
-      void print_taps();
-      std::vector<std::vector<float> > taps() const;
+    void set_taps(const std::vector<std::vector<float>>& taps);
+    void print_taps();
+    std::vector<std::vector<float>> taps() const;
 
-      int general_work(int noutput_items,
-           gr_vector_int &ninput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items);
-    };
+    int general_work(int noutput_items,
+                     gr_vector_int& ninput_items,
+                     gr_vector_const_void_star& input_items,
+                     gr_vector_void_star& output_items);
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif

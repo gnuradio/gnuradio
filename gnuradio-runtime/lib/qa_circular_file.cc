@@ -25,43 +25,42 @@
 #endif
 
 #include "circular_file.h"
-#include <boost/test/unit_test.hpp>
 #include <unistd.h>
+#include <boost/test/unit_test.hpp>
 
-static const char *test_file = "qa_gr_circular_file.data";
+static const char* test_file = "qa_gr_circular_file.data";
 static const int BUFFER_SIZE = 8192;
 static const int NWRITE = 8192 * 9 / 8;
 
-BOOST_AUTO_TEST_CASE(t1) {
+BOOST_AUTO_TEST_CASE(t1)
+{
 #ifdef HAVE_MMAP
-  gr::circular_file *cf_writer;
-  gr::circular_file *cf_reader;
+    gr::circular_file* cf_writer;
+    gr::circular_file* cf_reader;
 
-  // write the data...
-  cf_writer = new gr::circular_file(test_file, true,
-                                    BUFFER_SIZE * sizeof(short));
+    // write the data...
+    cf_writer = new gr::circular_file(test_file, true, BUFFER_SIZE * sizeof(short));
 
-  short sd;
-  for(int i = 0; i < NWRITE; i++) {
-    sd = i;
-    cf_writer->write(&sd, sizeof (sd));
-  }
+    short sd;
+    for (int i = 0; i < NWRITE; i++) {
+        sd = i;
+        cf_writer->write(&sd, sizeof(sd));
+    }
 
-  delete cf_writer;
+    delete cf_writer;
 
-  // now read it back...
-  cf_reader = new gr::circular_file(test_file);
-  for(int i = 0; i < BUFFER_SIZE; i++) {
-    int n = cf_reader->read (&sd, sizeof(sd));
-    BOOST_CHECK_EQUAL((int) sizeof (sd), n);
-    BOOST_CHECK_EQUAL(NWRITE - BUFFER_SIZE + i, (int)sd);
-  }
+    // now read it back...
+    cf_reader = new gr::circular_file(test_file);
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        int n = cf_reader->read(&sd, sizeof(sd));
+        BOOST_CHECK_EQUAL((int)sizeof(sd), n);
+        BOOST_CHECK_EQUAL(NWRITE - BUFFER_SIZE + i, (int)sd);
+    }
 
-  int n = cf_reader->read(&sd, sizeof(sd));
-  BOOST_CHECK_EQUAL(0, n);
+    int n = cf_reader->read(&sd, sizeof(sd));
+    BOOST_CHECK_EQUAL(0, n);
 
-  delete cf_reader;
-  unlink(test_file);
+    delete cf_reader;
+    unlink(test_file);
 #endif // HAVE_MMAP
 }
-

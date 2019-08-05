@@ -21,35 +21,35 @@
  */
 
 #ifndef INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
-#define	INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
+#define INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H
 
 #include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/filter/single_pole_iir_filter_cc.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/gr_complex.h>
+#include <gnuradio/sync_block.h>
 #include <stdexcept>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class FILTER_API single_pole_iir_filter_cc_impl : public single_pole_iir_filter_cc
-    {
-    private:
-      unsigned int d_vlen;
-      std::vector<single_pole_iir<gr_complex,gr_complex,double> > d_iir;
+class FILTER_API single_pole_iir_filter_cc_impl : public single_pole_iir_filter_cc
+{
+private:
+    unsigned int d_vlen;
+    std::vector<single_pole_iir<gr_complex, gr_complex, double>> d_iir;
 
-    public:
-      single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen);
-      ~single_pole_iir_filter_cc_impl();
+public:
+    single_pole_iir_filter_cc_impl(double alpha, unsigned int vlen);
+    ~single_pole_iir_filter_cc_impl();
 
-      void set_taps(double alpha);
+    void set_taps(double alpha);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_SINGLE_POLE_IIR_FILTER_CC_IMPL_H */

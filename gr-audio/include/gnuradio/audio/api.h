@@ -25,9 +25,9 @@
 #include <gnuradio/attributes.h>
 
 #ifdef gnuradio_audio_EXPORTS
-#  define GR_AUDIO_API __GR_ATTR_EXPORT
+#define GR_AUDIO_API __GR_ATTR_EXPORT
 #else
-#  define GR_AUDIO_API __GR_ATTR_IMPORT
+#define GR_AUDIO_API __GR_ATTR_IMPORT
 #endif
 
 #endif /* INCLUDED_GR_AUDIO_API_H */

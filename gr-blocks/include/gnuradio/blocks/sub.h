@@ -29,31 +29,30 @@
 #include <cstdint>
 
 namespace gr {
-  namespace blocks {
+namespace blocks {
 
-    /*!
-     * \brief output = input_0 -  input_1 - ...)
-     * \ingroup math_operators_blk
-     *
-     * \details
-     * Subtract across all input streams.
-     */
-template<class T>
-    class BLOCKS_API sub : virtual public sync_block
-    {
-    public:
+/*!
+ * \brief output = input_0 -  input_1 - ...)
+ * \ingroup math_operators_blk
+ *
+ * \details
+ * Subtract across all input streams.
+ */
+template <class T>
+class BLOCKS_API sub : virtual public sync_block
+{
+public:
+    // gr::blocks::sub::sptr
+    typedef boost::shared_ptr<sub<T>> sptr;
 
-      // gr::blocks::sub::sptr
-      typedef boost::shared_ptr< sub<T> > sptr;
-
-      static sptr make(size_t vlen=1);
-    };
+    static sptr make(size_t vlen = 1);
+};
 
 typedef sub<std::int16_t> sub_ss;
 typedef sub<std::int32_t> sub_ii;
 typedef sub<gr_complex> sub_cc;
 typedef sub<float> sub_ff;
-  } /* namespace blocks */
+} /* namespace blocks */
 } /* namespace gr */
 
 #endif /* SUB_H */

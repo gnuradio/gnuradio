@@ -28,29 +28,29 @@
 #include <gnuradio/io_signature.h>
 
 namespace gr {
-  namespace filter {
+namespace filter {
 
-    class FILTER_API filter_delay_fc_impl : public filter_delay_fc
-    {
-    private:
-      unsigned int d_delay;
-      kernel::fir_filter_fff *d_fir;
-      std::vector<float> d_taps;
-      bool d_update;
+class FILTER_API filter_delay_fc_impl : public filter_delay_fc
+{
+private:
+    unsigned int d_delay;
+    kernel::fir_filter_fff* d_fir;
+    std::vector<float> d_taps;
+    bool d_update;
 
-    public:
-      filter_delay_fc_impl(const std::vector<float> &taps);
-      ~filter_delay_fc_impl();
+public:
+    filter_delay_fc_impl(const std::vector<float>& taps);
+    ~filter_delay_fc_impl();
 
-      std::vector<float> taps();
-      void set_taps(const std::vector<float> &taps);
+    std::vector<float> taps();
+    void set_taps(const std::vector<float>& taps);
 
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
-    };
+    int work(int noutput_items,
+             gr_vector_const_void_star& input_items,
+             gr_vector_void_star& output_items);
+};
 
-  } /* namespace filter */
+} /* namespace filter */
 } /* namespace gr */
 
 #endif /* INCLUDED_FILTER_FILTER_DELAY_FC_IMPL_H */

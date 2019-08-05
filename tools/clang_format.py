@@ -777,6 +777,7 @@ def format_func(args):
             files = get_files_to_check_working_tree()
         else:
             files = get_files_to_check()
+        print(files)
         _format_files(args.clang_format, files)
     else:
         _reformat_branch(args.clang_format, *args.branch)
