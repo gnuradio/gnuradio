@@ -309,12 +309,20 @@ endif(ENABLE_PERFORMANCE_COUNTERS)
 ########################################################################
 # Variables replaced when configuring the package config files
 ########################################################################
-file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}"           prefix)
-file(TO_NATIVE_PATH "\${prefix}"                        exec_prefix)
-file(TO_NATIVE_PATH "\${exec_prefix}/${GR_LIBRARY_DIR}" libdir)
-file(TO_NATIVE_PATH "\${prefix}/${GR_INCLUDE_DIR}"      includedir)
-file(TO_NATIVE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
-file(TO_NATIVE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
+file(TO_CMAKE_PATH "${CMAKE_INSTALL_PREFIX}"           prefix)
+file(TO_CMAKE_PATH "\${prefix}"                        exec_prefix)
+file(TO_CMAKE_PATH "\${exec_prefix}/${GR_LIBRARY_DIR}" libdir)
+file(TO_CMAKE_PATH "\${prefix}/${GR_INCLUDE_DIR}"      includedir)
+file(TO_CMAKE_PATH "${SYSCONFDIR}"                     SYSCONFDIR)
+file(TO_CMAKE_PATH "${GR_PREFSDIR}"                    GR_PREFSDIR)
+
+if(WIN32)
+    file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_RUNTIME_DIR}" "${prefix}")
+else(WIN32)
+    file(RELATIVE_PATH prefix_relative_to_lib "${prefix}/${GR_LIBRARY_DIR}" "${prefix}")
+endif(WIN32)
+file(RELATIVE_PATH SYSCONFDIR_relative_to_prefix "${prefix}" "${SYSCONFDIR}")
+file(RELATIVE_PATH GR_PREFSDIR_relative_to_prefix "${prefix}" "${GR_PREFSDIR}")
 
 ########################################################################
 # On Apple only, set install name and use rpath correctly, if not already set
