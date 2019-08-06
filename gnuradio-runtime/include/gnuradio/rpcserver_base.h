@@ -23,6 +23,7 @@
 #ifndef RPCSERVER_BASE_H
 #define RPCSERVER_BASE_H
 
+#include <memory>
 #include <gnuradio/rpccallbackregister_base.h>
 
 class rpcserver_base : public virtual callbackregister_base
@@ -42,7 +43,7 @@ public:
 
   virtual void setCurPrivLevel(const priv_lvl_t priv) { cur_priv = priv; }
 
-  typedef boost::shared_ptr<rpcserver_base> rpcserver_base_sptr;
+  typedef std::shared_ptr<rpcserver_base> rpcserver_base_sptr;
 protected:
   priv_lvl_t cur_priv;
 

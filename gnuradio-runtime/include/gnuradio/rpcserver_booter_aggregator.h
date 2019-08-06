@@ -26,7 +26,6 @@
 #include <gnuradio/api.h>
 #include <gnuradio/rpcserver_booter_base.h>
 #include <gnuradio/rpcserver_aggregator.h>
-#include <boost/shared_ptr.hpp>
 #include <string>
 
 class rpcserver_server;
@@ -50,7 +49,7 @@ class GR_RUNTIME_API rpcserver_booter_aggregator :
 
 private:
   std::string d_type;
-  boost::shared_ptr<rpcserver_aggregator> server;
+  std::shared_ptr<rpcserver_aggregator> server;
 };
 
 #endif /* RPCSERVER_BOOTER_AGGREGATOR */

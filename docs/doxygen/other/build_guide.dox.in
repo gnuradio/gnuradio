@@ -107,7 +107,7 @@ process, and each is its own dependency.
 
 Currently, ControlPort only supports the Apache Thrift backend.
 
-\li thrift       (>= 0.9.2)   https://thrift.apache.org/
+\li thrift       (>= 0.11.0)   https://thrift.apache.org/
 
 To have nice formula formatting in doxygen, you'll need LaTeX; for python docs, sphinx:
 
