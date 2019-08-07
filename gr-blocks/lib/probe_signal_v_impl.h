@@ -23,8 +23,8 @@
 #ifndef PROBE_SIGNAL_V_IMPL_H
 #define PROBE_SIGNAL_V_IMPL_H
 
-#include <vector>
 #include <gnuradio/blocks/probe_signal_v.h>
+#include <vector>
 
 namespace gr {
 namespace blocks {

@@ -186,7 +186,7 @@ class ClangFormat(object):
 
         # Update the file with clang-format
         formatted = not subprocess.call(
-            [self.path, "--style=file", "-i", file_name , "-sort-includes=false"])
+            [self.path, "--style=file", "-i", file_name])
 
         # Version 3.8 generates files like foo.cpp~RF83372177.TMP when it formats foo.cpp
         # on Windows, we must clean these up

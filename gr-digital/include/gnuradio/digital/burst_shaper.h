@@ -23,8 +23,8 @@
 #ifndef BURST_SHAPER_H
 #define BURST_SHAPER_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

@@ -25,8 +25,8 @@
 #define MOVING_AVERAGE_IMPL_H
 
 #include <gnuradio/blocks/moving_average.h>
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 namespace gr {
 namespace blocks {

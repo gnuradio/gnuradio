@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <cstdio>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <stdexcept>
-#include <cmath>
-#include <stdlib.h>
 #include <gnuradio/trellis/base.h>
 #include <gnuradio/trellis/fsm.h>
+#include <stdlib.h>
+#include <cmath>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 
 namespace gr {
 namespace trellis {

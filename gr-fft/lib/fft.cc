@@ -21,10 +21,10 @@
  */
 
 #include <gnuradio/fft/fft.h>
-#include <gnuradio/sys_paths.h>
 #include <gnuradio/gr_complex.h>
-#include <volk/volk.h>
+#include <gnuradio/sys_paths.h>
 #include <fftw3.h>
+#include <volk/volk.h>
 
 #ifdef _WIN32 // http://www.fftw.org/install/windows.html#DLLwisdom
 static void my_fftw_write_char(char c, void* f) { fputc(c, (FILE*)f); }
@@ -44,9 +44,9 @@ static int my_fftw_read_char(void* f) { return fgetc((FILE*)f); }
 #define O_NONBLOCK 0
 #endif //_WIN32
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include <cassert>
 #include <stdexcept>
 

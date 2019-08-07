@@ -25,12 +25,12 @@
 
 #include <gnuradio/qtgui/TimeDomainDisplayPlot.h>
 
-#include <qwt_scale_draw.h>
 #include <qwt_legend.h>
+#include <qwt_scale_draw.h>
+#include <volk/volk.h>
 #include <QColor>
 #include <cmath>
 #include <iostream>
-#include <volk/volk.h>
 
 class TimePrecisionClass
 {

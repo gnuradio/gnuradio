@@ -25,9 +25,9 @@
 #endif
 
 #include "atsc_fs_checker_impl.h"
-#include "atsc_types.h"
-#include "atsc_syminfo_impl.h"
 #include "atsc_pnXXX_impl.h"
+#include "atsc_syminfo_impl.h"
+#include "atsc_types.h"
 #include "gnuradio/dtv/atsc_consts.h"
 #include <gnuradio/io_signature.h>
 

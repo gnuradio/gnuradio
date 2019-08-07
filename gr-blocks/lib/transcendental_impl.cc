@@ -22,10 +22,10 @@
 
 #include "transcendental_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
-#include <complex> //complex math
 #include <cmath>   //real math
+#include <complex> //complex math
 #include <map>
+#include <stdexcept>
 
 namespace gr {
 namespace blocks {

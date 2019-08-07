@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_OFDM_CHANEST_VCVC_H
 #define INCLUDED_DIGITAL_OFDM_CHANEST_VCVC_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/digital/api.h>
 
 namespace gr {
 namespace digital {

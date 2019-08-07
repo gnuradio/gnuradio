@@ -26,11 +26,11 @@
 
 #include <gnuradio/fxpt_nco.h>
 #include <gnuradio/nco.h>
-#include <boost/test/unit_test.hpp>
-#include <iostream>
+#include <math.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <math.h>
+#include <boost/test/unit_test.hpp>
+#include <iostream>
 
 static const float SIN_COS_TOLERANCE = 1e-5;
 

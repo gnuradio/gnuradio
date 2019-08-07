@@ -22,9 +22,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "atsc_randomizer_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
+#include <gnuradio/io_signature.h>
 
 namespace gr {
 namespace dtv {

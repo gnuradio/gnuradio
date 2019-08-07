@@ -24,14 +24,14 @@
 #include "config.h"
 #endif
 
+#include "corr_est_cc_impl.h"
+#include <gnuradio/filter/firdes.h>
+#include <gnuradio/filter/pfb_arb_resampler.h>
 #include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include "corr_est_cc_impl.h"
 #include <volk/volk.h>
 #include <boost/format.hpp>
 #include <boost/math/special_functions/round.hpp>
-#include <gnuradio/filter/pfb_arb_resampler.h>
-#include <gnuradio/filter/firdes.h>
 
 namespace gr {
 namespace digital {

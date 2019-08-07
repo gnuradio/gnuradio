@@ -30,9 +30,9 @@
 #include <gnuradio/logger.h>
 #include <gnuradio/prefs.h>
 #include <volk/volk.h>
+#include <boost/format.hpp>
 #include <iostream>
 #include <map>
-#include <boost/format.hpp>
 
 namespace gr {
 

@@ -22,8 +22,8 @@
 
 #include <gnuradio/qtgui/constellationdisplayform.h>
 
-#include <cmath>
 #include <QMessageBox>
+#include <cmath>
 #include <iostream>
 
 ConstellationDisplayForm::ConstellationDisplayForm(int nplots, QWidget* parent)

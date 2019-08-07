@@ -21,10 +21,10 @@
 #ifndef INCLUDED_ldpc_G_matrix_impl_H
 #define INCLUDED_ldpc_G_matrix_impl_H
 
-#include <gsl/gsl_randist.h>
-#include <gsl/gsl_permutation.h>
-#include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_permutation.h>
+#include <gsl/gsl_randist.h>
 
 #include "fec_mtrx_impl.h"
 #include <gnuradio/fec/ldpc_G_matrix.h>

@@ -26,9 +26,9 @@
 
 #include "test.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
-#include <iostream>
 #include <string.h>
+#include <iostream>
+#include <stdexcept>
 
 namespace gr {
 

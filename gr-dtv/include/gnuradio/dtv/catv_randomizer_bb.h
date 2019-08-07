@@ -22,8 +22,8 @@
 #define INCLUDED_DTV_CATV_RANDOMIZER_BB_H
 
 #include <gnuradio/dtv/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/dtv/catv_config.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace dtv {

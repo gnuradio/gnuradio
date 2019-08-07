@@ -22,12 +22,12 @@
 
 #include <gnuradio/qtgui/plot_waterfall.h>
 
-#include <qimage.h>
-#include <qpen.h>
-#include <qpainter.h>
+#include "qwt_color_map.h"
 #include "qwt_painter.h"
 #include "qwt_scale_map.h"
-#include "qwt_color_map.h"
+#include <qimage.h>
+#include <qpainter.h>
+#include <qpen.h>
 
 #if QWT_VERSION < 0x060000
 #include "qwt_double_interval.h"

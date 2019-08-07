@@ -22,8 +22,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include "dvbt_bit_inner_deinterleaver_impl.h"
+#include <gnuradio/io_signature.h>
 
 #define MAX_MODULATION_ORDER 6
 #define INTERLEAVER_BLOCK_SIZE 126

@@ -23,16 +23,16 @@
 #ifndef INCLUDED_CHANNELS_SELECTIVE_FADING_MODEL2_IMPL_H
 #define INCLUDED_CHANNELS_SELECTIVE_FADING_MODEL2_IMPL_H
 
-#include <gnuradio/sync_block.h>
-#include <gnuradio/channels/selective_fading_model2.h>
 #include "flat_fader_impl.h"
+#include <gnuradio/channels/selective_fading_model2.h>
+#include <gnuradio/sync_block.h>
 
 //#include <iostream>
 #include <boost/format.hpp>
 #include <boost/random.hpp>
 
-#include <gnuradio/fxpt.h>
 #include "sincostable.h"
+#include <gnuradio/fxpt.h>
 
 namespace gr {
 namespace channels {

@@ -24,8 +24,8 @@
 #define INCLUDED_GR_FRAMER_SINK_1_H
 
 #include <gnuradio/digital/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/msg_queue.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace digital {

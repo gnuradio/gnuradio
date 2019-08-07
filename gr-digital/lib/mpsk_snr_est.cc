@@ -25,8 +25,8 @@
 #endif
 
 #include <gnuradio/digital/mpsk_snr_est.h>
-#include <stdexcept>
 #include <cstdio>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

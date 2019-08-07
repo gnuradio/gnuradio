@@ -24,8 +24,8 @@
 #ifndef INCLUDED_FILTER_PFB_CHANNELIZER_CCF_H
 #define INCLUDED_FILTER_PFB_CHANNELIZER_CCF_H
 
-#include <gnuradio/filter/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/filter/api.h>
 
 namespace gr {
 namespace filter {

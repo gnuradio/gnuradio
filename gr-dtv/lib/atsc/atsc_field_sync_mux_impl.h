@@ -21,9 +21,9 @@
 #ifndef INCLUDED_DTV_ATSC_FIELD_SYNC_MUX_IMPL_H
 #define INCLUDED_DTV_ATSC_FIELD_SYNC_MUX_IMPL_H
 
-#include <gnuradio/dtv/atsc_field_sync_mux.h>
 #include "atsc_pnXXX_impl.h"
 #include "atsc_types.h"
+#include <gnuradio/dtv/atsc_field_sync_mux.h>
 
 namespace gr {
 namespace dtv {

@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H
 #define INCLUDED_DIGITAL_CONSTELLATION_DECODER_CB_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/constellation.h>
-#include <gnuradio/block.h>
 
 namespace gr {
 namespace digital {

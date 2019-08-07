@@ -23,11 +23,11 @@
 #endif
 
 #include "dvbt_reference_signals_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/expj.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
-#include <complex>
 #include <algorithm>
+#include <complex>
 
 namespace gr {
 namespace dtv {

@@ -23,8 +23,8 @@
 #define INCLUDED_DIGITAL_PACKET_HEADERPARSER_B_H
 
 #include <gnuradio/digital/api.h>
-#include <gnuradio/sync_block.h>
 #include <gnuradio/digital/packet_header_default.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace digital {

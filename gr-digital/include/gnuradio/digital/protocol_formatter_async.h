@@ -24,9 +24,9 @@
 #ifndef INCLUDED_DIGITAL_PROTOCOL_FORMATTER_ASYNC_H
 #define INCLUDED_DIGITAL_PROTOCOL_FORMATTER_ASYNC_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/header_format_base.h>
-#include <gnuradio/block.h>
 
 namespace gr {
 namespace digital {

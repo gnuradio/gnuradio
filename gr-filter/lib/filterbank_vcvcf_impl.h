@@ -23,8 +23,8 @@
 #ifndef INCLUDED_FILTER_FILTERBANK_VCVCF_IMPL_H
 #define INCLUDED_FILTER_FILTERBANK_VCVCF_IMPL_H
 
-#include <gnuradio/filter/filterbank_vcvcf.h>
 #include <gnuradio/filter/filterbank.h>
+#include <gnuradio/filter/filterbank_vcvcf.h>
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/thread/thread.h>
 

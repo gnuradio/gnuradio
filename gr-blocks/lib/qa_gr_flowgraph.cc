@@ -24,10 +24,10 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/flowgraph.h>
 #include <gnuradio/blocks/nop.h>
-#include <gnuradio/blocks/null_source.h>
 #include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/flowgraph.h>
 #include <boost/test/unit_test.hpp>
 
 namespace gr {

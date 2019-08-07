@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_CPMMOD_BC_H
 #define INCLUDED_DIGITAL_CPMMOD_BC_H
 
+#include <gnuradio/analog/cpm.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/hier_block2.h>
-#include <gnuradio/analog/cpm.h>
 
 namespace gr {
 namespace digital {

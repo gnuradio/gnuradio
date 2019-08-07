@@ -23,10 +23,10 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/msg_accepter.h>
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/hier_block2.h>
+#include <gnuradio/msg_accepter.h>
 #include <stdexcept>
 
 namespace gr {

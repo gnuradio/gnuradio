@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_VITERBI_DECODER_IMPL_H
 #define INCLUDED_DTV_DVBT_VITERBI_DECODER_IMPL_H
 
-#include <gnuradio/dtv/dvbt_viterbi_decoder.h>
 #include "dvbt_configure.h"
+#include <gnuradio/dtv/dvbt_viterbi_decoder.h>
 
 #ifdef DTV_SSE2
 #include <xmmintrin.h>

@@ -25,8 +25,8 @@
 #endif
 
 #include "circular_file.h"
-#include <boost/test/unit_test.hpp>
 #include <unistd.h>
+#include <boost/test/unit_test.hpp>
 
 static const char* test_file = "qa_gr_circular_file.data";
 static const int BUFFER_SIZE = 8192;

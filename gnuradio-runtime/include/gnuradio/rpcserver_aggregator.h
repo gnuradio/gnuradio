@@ -23,10 +23,10 @@
 #ifndef RPCSERVER_AGGREGATOR_H
 #define RPCSERVER_AGGREGATOR_H
 
-#include <vector>
-#include <string>
-#include <gnuradio/rpcserver_base.h>
 #include <gnuradio/rpcmanager_base.h>
+#include <gnuradio/rpcserver_base.h>
+#include <string>
+#include <vector>
 
 class rpcserver_aggregator : public virtual rpcserver_base
 {

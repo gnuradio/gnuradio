@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gnuradio/rpcserver_thrift.h>
 #include <gnuradio/rpcserver_booter_thrift.h>
+#include <gnuradio/rpcserver_thrift.h>
 
 #include <boost/asio/ip/host_name.hpp>
 

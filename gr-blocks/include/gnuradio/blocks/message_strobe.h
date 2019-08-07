@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_MESSAGE_STROBE_H
 #define INCLUDED_GR_MESSAGE_STROBE_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
 namespace blocks {

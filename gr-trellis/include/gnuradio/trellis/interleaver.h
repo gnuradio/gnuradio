@@ -24,8 +24,8 @@
 #define INCLUDED_TRELLIS_INTERLEAVER_H
 
 #include <gnuradio/trellis/api.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace gr {
 namespace trellis {

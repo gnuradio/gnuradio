@@ -23,11 +23,11 @@
 #ifndef VITERBI_COMBINED_H
 #define VITERBI_COMBINED_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/trellis/api.h>
-#include <gnuradio/trellis/fsm.h>
 #include <gnuradio/trellis/calc_metric.h>
 #include <gnuradio/trellis/core_algorithms.h>
-#include <gnuradio/block.h>
+#include <gnuradio/trellis/fsm.h>
 #include <cstdint>
 
 namespace gr {

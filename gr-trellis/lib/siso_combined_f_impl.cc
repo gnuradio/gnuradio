@@ -26,9 +26,9 @@
 
 #include "siso_combined_f_impl.h"
 #include <gnuradio/io_signature.h>
-#include <stdexcept>
 #include <assert.h>
 #include <iostream>
+#include <stdexcept>
 
 namespace gr {
 namespace trellis {
@@ -252,7 +252,7 @@ int siso_combined_f_impl::general_work(int noutput_items,
                                     &(in1[n * d_K * d_FSM.I()]),
                                     &(in2[n * d_K * d_D]),
                                     &(out[n * d_K * multiple]) //,
-                                    // d_alpha,d_beta
+                                                               // d_alpha,d_beta
             );
         }
     }

@@ -24,8 +24,8 @@
 #define INCLUDED_DIGITAL_LFSR_H
 
 #include <gnuradio/digital/api.h>
-#include <stdexcept>
 #include <stdint.h>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

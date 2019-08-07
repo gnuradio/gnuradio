@@ -23,10 +23,10 @@
 #ifndef INCLUDED_DTV_ATSC_VITERBI_DECODER_IMPL_H
 #define INCLUDED_DTV_ATSC_VITERBI_DECODER_IMPL_H
 
-#include <gnuradio/dtv/atsc_viterbi_decoder.h>
-#include <gnuradio/dtv/atsc_consts.h>
-#include "atsc_syminfo_impl.h"
 #include "atsc_interleaver_fifo.h"
+#include "atsc_syminfo_impl.h"
+#include <gnuradio/dtv/atsc_consts.h>
+#include <gnuradio/dtv/atsc_viterbi_decoder.h>
 
 #define USE_SIMPLE_SLICER 0
 #define NCODERS 12

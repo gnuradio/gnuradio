@@ -22,9 +22,9 @@
 #include "config.h"
 #endif
 
-#include <stdio.h>
 #include "atsc_trellis_encoder_impl.h"
 #include "gnuradio/dtv/atsc_consts.h"
+#include <stdio.h>
 
 namespace gr {
 namespace dtv {

@@ -21,9 +21,9 @@
 #ifndef INCLUDED_DTV_ATSC_TRELLIS_ENCODER_IMPL_H
 #define INCLUDED_DTV_ATSC_TRELLIS_ENCODER_IMPL_H
 
-#include <gnuradio/dtv/atsc_trellis_encoder.h>
 #include "atsc_basic_trellis_encoder.h"
 #include "atsc_types.h"
+#include <gnuradio/dtv/atsc_trellis_encoder.h>
 
 namespace gr {
 namespace dtv {

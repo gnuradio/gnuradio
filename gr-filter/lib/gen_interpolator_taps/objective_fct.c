@@ -24,9 +24,9 @@
  * generate MMSE FIR interpolation table values
  */
 
-#include <math.h>
 #include <assert.h>
 #include <gsl/gsl_integration.h>
+#include <math.h>
 
 #define MU 0.5 /* the MU for which we're computing coeffs */
 

@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_DVBT_DEMAP_IMPL_H
 #define INCLUDED_DTV_DVBT_DVBT_DEMAP_IMPL_H
 
-#include <gnuradio/dtv/dvbt_demap.h>
 #include "dvbt_configure.h"
+#include <gnuradio/dtv/dvbt_demap.h>
 
 namespace gr {
 namespace dtv {

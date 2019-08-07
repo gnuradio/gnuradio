@@ -26,14 +26,14 @@
 
 #include "file_descriptor_source_impl.h"
 #include <gnuradio/io_signature.h>
-#include <cstdio>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <stdexcept>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
+#include <stdexcept>
 
 #ifdef HAVE_IO_H
 #include <io.h>

@@ -23,9 +23,9 @@
 #ifndef INCLUDED_GR_UHD_AMSG_SOURCE_H
 #define INCLUDED_GR_UHD_AMSG_SOURCE_H
 
-#include <uhd/usrp/multi_usrp.hpp>
-#include <gnuradio/uhd/api.h>
 #include <gnuradio/msg_queue.h>
+#include <gnuradio/uhd/api.h>
+#include <uhd/usrp/multi_usrp.hpp>
 
 namespace gr {
 namespace uhd {

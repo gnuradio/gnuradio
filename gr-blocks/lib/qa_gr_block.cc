@@ -70,10 +70,10 @@ BOOST_AUTO_TEST_CASE(t1)
     BOOST_REQUIRE_EQUAL(0, dst2->output_signature()->max_streams());
 }
 
-#include <gnuradio/top_block.h>
-#include <gnuradio/buffer.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/blocks/nop.h>
+#include <gnuradio/buffer.h>
+#include <gnuradio/top_block.h>
 
 BOOST_AUTO_TEST_CASE(t2)
 {

@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/vco.h>
 #include <gnuradio/fxpt_vco.h>
 #include <gnuradio/math.h>
+#include <gnuradio/vco.h>
 
 #include <sys/time.h>
 #include <unistd.h>

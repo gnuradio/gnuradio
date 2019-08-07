@@ -23,13 +23,13 @@
 #ifndef WATERFALL_DISPLAY_PLOT_H
 #define WATERFALL_DISPLAY_PLOT_H
 
+#include <gnuradio/high_res_timer.h>
+#include <gnuradio/qtgui/DisplayPlot.h>
+#include <gnuradio/qtgui/waterfallGlobalData.h>
+#include <qwt_plot_spectrogram.h>
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <qwt_plot_spectrogram.h>
-#include <gnuradio/qtgui/DisplayPlot.h>
-#include <gnuradio/qtgui/waterfallGlobalData.h>
-#include <gnuradio/high_res_timer.h>
 
 #if QWT_VERSION < 0x060000
 #include <gnuradio/qtgui/plot_waterfall.h>

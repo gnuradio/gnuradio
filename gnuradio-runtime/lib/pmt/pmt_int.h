@@ -23,9 +23,9 @@
 #define INCLUDED_PMT_INT_H
 
 #include <pmt/pmt.h>
+#include <boost/atomic.hpp>
 #include <boost/utility.hpp>
 #include <boost/version.hpp>
-#include <boost/atomic.hpp>
 
 /*
  * EVERYTHING IN THIS FILE IS PRIVATE TO THE IMPLEMENTATION!

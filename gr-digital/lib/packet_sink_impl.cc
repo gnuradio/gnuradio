@@ -25,15 +25,15 @@
 #endif
 
 #include "packet_sink_impl.h"
-#include <gnuradio/io_signature.h>
-#include <cstdio>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdexcept>
 #include <gnuradio/blocks/count_bits.h>
+#include <gnuradio/io_signature.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cstdio>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

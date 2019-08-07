@@ -24,9 +24,9 @@
 #define INCLUDED_GR_BIN_STATISTICS_F_H
 
 #include <gnuradio/blocks/api.h>
-#include <gnuradio/sync_block.h>
-#include <gnuradio/msg_queue.h>
 #include <gnuradio/feval.h>
+#include <gnuradio/msg_queue.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace blocks {

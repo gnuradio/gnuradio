@@ -22,8 +22,8 @@
 #ifndef INCLUDED_TAGGED_STREAM_ALIGN_H
 #define INCLUDED_TAGGED_STREAM_ALIGN_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
 namespace blocks {

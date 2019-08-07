@@ -23,9 +23,9 @@
 #ifndef ENCODER_H
 #define ENCODER_H
 
+#include <gnuradio/sync_block.h>
 #include <gnuradio/trellis/api.h>
 #include <gnuradio/trellis/fsm.h>
-#include <gnuradio/sync_block.h>
 #include <cstdint>
 
 namespace gr {

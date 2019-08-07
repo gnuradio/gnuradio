@@ -23,20 +23,20 @@
 #ifndef FORM_MENUS_H
 #define FORM_MENUS_H
 
+#include <QtGui/QDoubleValidator>
+#include <QtGui/QIntValidator>
+#include <QtGui/QtGui>
 #include <stdexcept>
 #include <vector>
-#include <QtGui/QtGui>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
 
 #if QT_VERSION >= 0x050000
 #include <QtWidgets/QtWidgets>
 #endif
 
-#include <qwt_symbol.h>
 #include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/qtgui_types.h>
 #include <gnuradio/qtgui/trigger_mode.h>
+#include <qwt_symbol.h>
 
 class LineColorMenu : public QMenu
 {

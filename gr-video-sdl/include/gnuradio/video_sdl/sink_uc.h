@@ -23,8 +23,8 @@
 #ifndef INCLUDED_VIDEO_SDL_SINK_UC_H
 #define INCLUDED_VIDEO_SDL_SINK_UC_H
 
-#include <gnuradio/video_sdl/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/video_sdl/api.h>
 
 namespace gr {
 namespace video_sdl {

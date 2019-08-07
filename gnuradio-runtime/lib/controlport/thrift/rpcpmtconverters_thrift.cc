@@ -19,10 +19,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <boost/assign/ptr_map_inserter.hpp>
-#include <gnuradio/rpcpmtconverters_thrift.h>
-#include <gnuradio/gr_complex.h>
 #include "thrift/gnuradio_types.h"
+#include <gnuradio/gr_complex.h>
+#include <gnuradio/rpcpmtconverters_thrift.h>
+#include <boost/assign/ptr_map_inserter.hpp>
 #include <iostream>
 
 GNURadio::Knob rpcpmtconverter::from_pmt(const pmt::pmt_t& knob)

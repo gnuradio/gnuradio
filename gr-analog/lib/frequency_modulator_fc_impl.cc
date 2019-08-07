@@ -25,8 +25,8 @@
 #endif
 
 #include "frequency_modulator_fc_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/fxpt.h>
+#include <gnuradio/io_signature.h>
 #include <gnuradio/math.h>
 #include <cmath>
 

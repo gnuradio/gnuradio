@@ -23,8 +23,8 @@
 #ifndef INCLUDED_WAVELET_SQUASH_FF_H
 #define INCLUDED_WAVELET_SQUASH_FF_H
 
-#include <gnuradio/wavelet/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/wavelet/api.h>
 
 namespace gr {
 namespace wavelet {

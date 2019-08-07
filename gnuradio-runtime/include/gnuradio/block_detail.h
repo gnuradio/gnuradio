@@ -24,10 +24,10 @@
 #define INCLUDED_GR_RUNTIME_BLOCK_DETAIL_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/runtime_types.h>
-#include <gnuradio/tpb_detail.h>
-#include <gnuradio/tags.h>
 #include <gnuradio/high_res_timer.h>
+#include <gnuradio/runtime_types.h>
+#include <gnuradio/tags.h>
+#include <gnuradio/tpb_detail.h>
 #include <stdexcept>
 
 namespace gr {

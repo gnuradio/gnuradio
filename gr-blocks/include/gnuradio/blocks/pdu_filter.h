@@ -23,8 +23,8 @@
 #ifndef INCLUDED_BLOCKS_PDU_FILTER_H
 #define INCLUDED_BLOCKS_PDU_FILTER_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 
 namespace gr {
 namespace blocks {

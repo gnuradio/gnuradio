@@ -23,8 +23,8 @@
 #ifndef INCLUDED_ZEROMQ_PUB_SINK_H
 #define INCLUDED_ZEROMQ_PUB_SINK_H
 
-#include <gnuradio/zeromq/api.h>
 #include <gnuradio/sync_block.h>
+#include <gnuradio/zeromq/api.h>
 
 namespace gr {
 namespace zeromq {

@@ -27,8 +27,8 @@
 #include <gnuradio/analog/cpm.h>
 #include <gnuradio/math.h>
 
-#include <cmath>
 #include <cfloat>
+#include <cmath>
 
 namespace gr {
 namespace analog {

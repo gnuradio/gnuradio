@@ -20,8 +20,8 @@
  */
 
 #include <gnuradio/sys_paths.h>
-#include <cstdlib> //getenv
 #include <cstdio>  //P_tmpdir (maybe)
+#include <cstdlib> //getenv
 
 #include <boost/filesystem/path.hpp>
 

@@ -23,9 +23,9 @@
 #ifndef INCLUDED_FEC_CCSDS_ENCODER_IMPL_H
 #define INCLUDED_FEC_CCSDS_ENCODER_IMPL_H
 
+#include <gnuradio/fec/ccsds_encoder.h>
 #include <map>
 #include <string>
-#include <gnuradio/fec/ccsds_encoder.h>
 
 namespace gr {
 namespace fec {

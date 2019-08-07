@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
+#include "hdlc_framer_pb_impl.h"
 #include <gnuradio/io_signature.h>
 #include <gnuradio/tags.h>
-#include "hdlc_framer_pb_impl.h"
 #include <iostream>
 
 namespace gr {

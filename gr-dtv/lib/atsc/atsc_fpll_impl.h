@@ -23,10 +23,10 @@
 #ifndef INCLUDED_DTV_ATSC_FPLL_IMPL_H
 #define INCLUDED_DTV_ATSC_FPLL_IMPL_H
 
-#include <gnuradio/dtv/atsc_fpll.h>
-#include <gnuradio/nco.h>
-#include <gnuradio/filter/single_pole_iir.h>
 #include <gnuradio/analog/agc.h>
+#include <gnuradio/dtv/atsc_fpll.h>
+#include <gnuradio/filter/single_pole_iir.h>
+#include <gnuradio/nco.h>
 #include <stdio.h>
 
 namespace gr {

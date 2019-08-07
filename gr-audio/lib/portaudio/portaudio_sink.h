@@ -25,9 +25,9 @@
 #include <gnuradio/audio/sink.h>
 #include <gnuradio/buffer.h>
 #include <gnuradio/thread/thread.h>
-#include <string>
 #include <portaudio.h>
 #include <stdexcept>
+#include <string>
 //#include <gri_logger.h>
 
 namespace gr {

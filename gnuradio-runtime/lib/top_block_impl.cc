@@ -24,17 +24,17 @@
 #include "config.h"
 #endif
 
-#include "top_block_impl.h"
 #include "flat_flowgraph.h"
 #include "scheduler_tpb.h"
-#include <gnuradio/top_block.h>
+#include "top_block_impl.h"
 #include <gnuradio/prefs.h>
+#include <gnuradio/top_block.h>
 
-#include <stdexcept>
-#include <iostream>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <stdlib.h>
+#include <iostream>
+#include <stdexcept>
 
 namespace gr {
 

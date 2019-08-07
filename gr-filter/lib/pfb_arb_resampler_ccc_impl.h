@@ -24,8 +24,8 @@
 #ifndef INCLUDED_PFB_ARB_RESAMPLER_CCC_IMPL_H
 #define INCLUDED_PFB_ARB_RESAMPLER_CCC_IMPL_H
 
-#include <gnuradio/filter/pfb_arb_resampler_ccc.h>
 #include <gnuradio/filter/pfb_arb_resampler.h>
+#include <gnuradio/filter/pfb_arb_resampler_ccc.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {

@@ -23,10 +23,10 @@
 #ifndef PROBE_SIGNAL_V_H
 #define PROBE_SIGNAL_V_H
 
-#include <vector>
 #include <gnuradio/blocks/api.h>
 #include <gnuradio/sync_block.h>
 #include <cstdint>
+#include <vector>
 
 namespace gr {
 namespace blocks {

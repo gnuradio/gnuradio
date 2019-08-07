@@ -22,10 +22,10 @@
 
 #include <gnuradio/qtgui/freqdisplayform.h>
 
-#include <cmath>
+#include <gnuradio/qtgui/freqcontrolpanel.h>
 #include <QMessageBox>
 #include <QSpacerItem>
-#include <gnuradio/qtgui/freqcontrolpanel.h>
+#include <cmath>
 #include <iostream>
 
 FreqDisplayForm::FreqDisplayForm(int nplots, QWidget* parent)

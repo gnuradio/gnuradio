@@ -25,8 +25,8 @@
 
 #include <gnuradio/qtgui/histogram_sink_f.h>
 
-#include <gnuradio/qtgui/histogramdisplayform.h>
 #include <gnuradio/high_res_timer.h>
+#include <gnuradio/qtgui/histogramdisplayform.h>
 
 namespace gr {
 namespace qtgui {

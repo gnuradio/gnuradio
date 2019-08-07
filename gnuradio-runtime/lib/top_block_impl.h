@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_TOP_BLOCK_IMPL_H
 #define INCLUDED_GR_TOP_BLOCK_IMPL_H
 
-#include <gnuradio/api.h>
 #include "scheduler.h"
+#include <gnuradio/api.h>
 #include <gnuradio/thread/thread.h>
 
 namespace gr {

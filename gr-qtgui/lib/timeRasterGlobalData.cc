@@ -25,8 +25,8 @@
 
 #include <gnuradio/qtgui/timeRasterGlobalData.h>
 
-#include <cstdio>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
 
 TimeRasterData::TimeRasterData(const double rows, const double cols)

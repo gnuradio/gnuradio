@@ -25,9 +25,9 @@
 
 #include <gnuradio/qtgui/waterfall_sink_c.h>
 
-#include <gnuradio/filter/firdes.h>
 #include <gnuradio/fft/fft.h>
 #include <gnuradio/fft/fft_shift.h>
+#include <gnuradio/filter/firdes.h>
 #include <gnuradio/high_res_timer.h>
 #include <gnuradio/qtgui/waterfalldisplayform.h>
 

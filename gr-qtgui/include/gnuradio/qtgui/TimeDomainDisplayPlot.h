@@ -23,11 +23,11 @@
 #ifndef TIME_DOMAIN_DISPLAY_PLOT_H
 #define TIME_DOMAIN_DISPLAY_PLOT_H
 
+#include <gnuradio/qtgui/DisplayPlot.h>
+#include <gnuradio/tags.h>
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
-#include <gnuradio/qtgui/DisplayPlot.h>
-#include <gnuradio/tags.h>
 
 /*!
  * \brief QWidget for displaying time domain plots.

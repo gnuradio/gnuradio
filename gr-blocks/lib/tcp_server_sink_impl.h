@@ -25,8 +25,8 @@
 
 #include <gnuradio/blocks/tcp_server_sink.h>
 #include <boost/asio.hpp>
-#include <set>
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <set>
 
 namespace gr {
 namespace blocks {

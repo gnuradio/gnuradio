@@ -20,12 +20,12 @@
  */
 
 #include "audio_registry.h"
-#include <boost/foreach.hpp>
-#include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
+#include <gnuradio/prefs.h>
+#include <boost/foreach.hpp>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
-#include <iostream>
 
 namespace gr {
 namespace audio {

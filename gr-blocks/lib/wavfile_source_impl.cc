@@ -25,10 +25,10 @@
 #endif
 
 #include "wavfile_source_impl.h"
-#include <gnuradio/io_signature.h>
 #include <gnuradio/blocks/wavfile.h>
-#include <sys/types.h>
+#include <gnuradio/io_signature.h>
 #include <fcntl.h>
+#include <sys/types.h>
 #include <stdexcept>
 
 // win32 (mingw/msvc) specific

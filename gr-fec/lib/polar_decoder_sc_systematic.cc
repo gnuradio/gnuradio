@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/fec/polar_decoder_sc_systematic.h>
+#include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
 namespace gr {

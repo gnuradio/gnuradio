@@ -23,9 +23,9 @@
 #ifndef INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 #define INCLUDED_VOCODER_CODEC2_DECODE_PS_H
 
+#include <gnuradio/sync_interpolator.h>
 #include <gnuradio/vocoder/api.h>
 #include <gnuradio/vocoder/codec2.h>
-#include <gnuradio/sync_interpolator.h>
 
 namespace gr {
 namespace vocoder {

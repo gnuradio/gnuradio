@@ -22,9 +22,9 @@
 #ifndef INCLUDED_DIGITAL_HEADER_FORMAT_OFDM_H
 #define INCLUDED_DIGITAL_HEADER_FORMAT_OFDM_H
 
-#include <pmt/pmt.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/header_format_crc.h>
+#include <pmt/pmt.h>
 #include <boost/crc.hpp>
 
 namespace gr {

@@ -23,12 +23,12 @@
 #define INCLUDED_THREAD_H
 
 #include <gnuradio/api.h>
-#include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/barrier.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread/barrier.hpp>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread.hpp>
 #include <vector>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)

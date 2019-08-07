@@ -23,9 +23,9 @@
 #ifndef INCLUDED_VOCODER_FREEDV_TX_H
 #define INCLUDED_VOCODER_FREEDV_TX_H
 
+#include <gnuradio/sync_block.h>
 #include <gnuradio/vocoder/api.h>
 #include <gnuradio/vocoder/freedv_api.h>
-#include <gnuradio/sync_block.h>
 
 namespace gr {
 namespace vocoder {

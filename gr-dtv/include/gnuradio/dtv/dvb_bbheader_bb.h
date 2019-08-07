@@ -21,11 +21,11 @@
 #ifndef INCLUDED_DTV_DVB_BBHEADER_BB_H
 #define INCLUDED_DTV_DVB_BBHEADER_BB_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/dtv/api.h>
 #include <gnuradio/dtv/dvb_config.h>
-#include <gnuradio/dtv/dvbt2_config.h>
 #include <gnuradio/dtv/dvbs2_config.h>
-#include <gnuradio/block.h>
+#include <gnuradio/dtv/dvbt2_config.h>
 
 namespace gr {
 namespace dtv {

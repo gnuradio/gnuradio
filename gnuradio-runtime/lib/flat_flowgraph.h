@@ -24,8 +24,8 @@
 #define INCLUDED_GR_RUNTIME_FLAT_FLOWGRAPH_H
 
 #include <gnuradio/api.h>
-#include <gnuradio/flowgraph.h>
 #include <gnuradio/block.h>
+#include <gnuradio/flowgraph.h>
 #include <gnuradio/logger.h>
 
 namespace gr {

@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVB_BCH_BB_IMPL_H
 #define INCLUDED_DTV_DVB_BCH_BB_IMPL_H
 
-#include <gnuradio/dtv/dvb_bch_bb.h>
 #include "dvb_defines.h"
+#include <gnuradio/dtv/dvb_bch_bb.h>
 #include <bitset>
 
 #define MAX_BCH_PARITY_BITS 192

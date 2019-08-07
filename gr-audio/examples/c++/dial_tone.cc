@@ -37,9 +37,9 @@
  */
 
 // Include header files for each block used in flowgraph
-#include <gnuradio/top_block.h>
 #include <gnuradio/analog/sig_source.h>
 #include <gnuradio/audio/sink.h>
+#include <gnuradio/top_block.h>
 
 using namespace gr;
 

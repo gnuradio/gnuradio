@@ -23,8 +23,8 @@
 #ifndef GR_VMCIRCBUF_MMAP_TMPFILE_H
 #define GR_VMCIRCBUF_MMAP_TMPFILE_H
 
-#include <gnuradio/api.h>
 #include "vmcircbuf.h"
+#include <gnuradio/api.h>
 
 namespace gr {
 

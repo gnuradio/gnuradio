@@ -26,8 +26,8 @@
 
 #include <gnuradio/filter/fft_filter.h>
 #include <volk/volk.h>
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 namespace gr {
 namespace filter {

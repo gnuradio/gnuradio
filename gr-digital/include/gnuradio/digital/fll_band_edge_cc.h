@@ -23,9 +23,9 @@
 #ifndef INCLUDED_DIGITAL_FLL_BAND_EDGE_CC_H
 #define INCLUDED_DIGITAL_FLL_BAND_EDGE_CC_H
 
+#include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/sync_block.h>
-#include <gnuradio/blocks/control_loop.h>
 
 namespace gr {
 namespace digital {

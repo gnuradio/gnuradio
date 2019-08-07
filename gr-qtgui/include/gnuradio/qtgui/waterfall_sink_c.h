@@ -27,10 +27,10 @@
 #include <Python.h>
 #endif
 
+#include <gnuradio/filter/firdes.h>
 #include <gnuradio/qtgui/api.h>
 #include <gnuradio/sync_block.h>
 #include <qapplication.h>
-#include <gnuradio/filter/firdes.h>
 
 namespace gr {
 namespace qtgui {

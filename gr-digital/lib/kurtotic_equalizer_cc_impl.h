@@ -26,8 +26,8 @@
 #include <gnuradio/digital/kurtotic_equalizer_cc.h>
 #include <gnuradio/filter/fir_filter.h>
 #include <gnuradio/math.h>
-#include <stdexcept>
 #include <complex>
+#include <stdexcept>
 
 namespace gr {
 namespace digital {

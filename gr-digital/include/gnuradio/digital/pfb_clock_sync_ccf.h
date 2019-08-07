@@ -24,9 +24,9 @@
 #ifndef INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_H
 #define INCLUDED_DIGITAL_PFB_CLOCK_SYNC_CCF_H
 
+#include <gnuradio/block.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/filter/fir_filter.h>
-#include <gnuradio/block.h>
 
 namespace gr {
 namespace digital {

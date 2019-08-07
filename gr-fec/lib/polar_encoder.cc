@@ -24,11 +24,11 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
 #include <gnuradio/fec/polar_encoder.h>
+#include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 #include <cmath>
 #include <stdexcept>
-#include <volk/volk.h>
 
 #include <gnuradio/blocks/pack_k_bits.h>
 #include <gnuradio/blocks/unpack_k_bits.h>

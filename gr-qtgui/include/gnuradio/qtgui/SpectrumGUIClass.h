@@ -23,12 +23,12 @@
 #ifndef SPECTRUM_GUI_CLASS_HPP
 #define SPECTRUM_GUI_CLASS_HPP
 
+#include <gnuradio/qtgui/spectrumUpdateEvents.h>
 #include <gnuradio/thread/thread.h>
-#include <qwidget.h>
 #include <qapplication.h>
 #include <qlabel.h>
 #include <qslider.h>
-#include <gnuradio/qtgui/spectrumUpdateEvents.h>
+#include <qwidget.h>
 
 class SpectrumDisplayForm;
 #include <gnuradio/qtgui/spectrumdisplayform.h>
@@ -36,8 +36,8 @@ class SpectrumDisplayForm;
 #include <cmath>
 
 #include <complex>
-#include <vector>
 #include <string>
+#include <vector>
 
 /*!
  * \brief QWidget class for controlling plotting.

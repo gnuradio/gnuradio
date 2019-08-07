@@ -23,8 +23,8 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/digital/packet_header_ofdm.h>
 #include <gnuradio/digital/lfsr.h>
+#include <gnuradio/digital/packet_header_ofdm.h>
 
 namespace gr {
 namespace digital {

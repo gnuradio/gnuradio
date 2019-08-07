@@ -24,8 +24,8 @@
 #define INCLUDED_GR_VECTOR_MAP_H
 
 #include <gnuradio/blocks/api.h>
-#include <vector>
 #include <gnuradio/sync_block.h>
+#include <vector>
 
 namespace gr {
 namespace blocks {

@@ -23,14 +23,13 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include <algorithm>
+#include "vmcircbuf.h"
 #include <gnuradio/buffer.h>
 #include <gnuradio/math.h>
-#include "vmcircbuf.h"
-#include <stdexcept>
-#include <iostream>
 #include <assert.h>
 #include <algorithm>
+#include <iostream>
+#include <stdexcept>
 
 // the following header is deprecated as of Boost 1.66.0, and the
 // other API was introduced in Boost 1.58.0. Since we still support

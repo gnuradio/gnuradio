@@ -25,8 +25,8 @@
 #endif
 
 #include "wavelet_ff_impl.h"
-#include <stdexcept>
 #include <gnuradio/io_signature.h>
+#include <stdexcept>
 
 #include <stdio.h>
 

@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DTV_ATSC_FS_CHECKER_IMPL_H
 #define INCLUDED_DTV_ATSC_FS_CHECKER_IMPL_H
 
-#include <gnuradio/dtv/atsc_fs_checker.h>
 #include "atsc_syminfo_impl.h"
+#include <gnuradio/dtv/atsc_fs_checker.h>
 
 namespace gr {
 namespace dtv {

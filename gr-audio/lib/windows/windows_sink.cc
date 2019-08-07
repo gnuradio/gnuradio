@@ -27,17 +27,17 @@
 #include "../audio_registry.h"
 #include "windows_sink.h"
 #include <gnuradio/io_signature.h>
-#include <gnuradio/prefs.h>
 #include <gnuradio/logger.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <gnuradio/prefs.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
 
 namespace gr {
 namespace audio {

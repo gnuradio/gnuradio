@@ -23,10 +23,10 @@
 #ifndef INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_H
 #define INCLUDED_DIGITAL_CONSTELLATION_RECEIVER_CB_H
 
+#include <gnuradio/block.h>
+#include <gnuradio/blocks/control_loop.h>
 #include <gnuradio/digital/api.h>
 #include <gnuradio/digital/constellation.h>
-#include <gnuradio/blocks/control_loop.h>
-#include <gnuradio/block.h>
 
 namespace gr {
 namespace digital {

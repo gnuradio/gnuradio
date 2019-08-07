@@ -23,9 +23,9 @@
 #ifndef INCLUDED_FILTER_FIR_FILTER_H
 #define INCLUDED_FILTER_FIR_FILTER_H
 
-#include <cstdint>
 #include <gnuradio/filter/api.h>
 #include <gnuradio/gr_complex.h>
+#include <cstdint>
 #include <vector>
 
 namespace gr {

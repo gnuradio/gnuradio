@@ -25,13 +25,13 @@
 #endif
 
 #include <gnuradio/block.h>
-#include <gnuradio/top_block.h>
-#include <gnuradio/blocks/null_source.h>
-#include <gnuradio/blocks/null_sink.h>
-#include <gnuradio/blocks/head.h>
-#include <gnuradio/blocks/annotator_alltoall.h>
 #include <gnuradio/blocks/annotator_1to1.h>
+#include <gnuradio/blocks/annotator_alltoall.h>
+#include <gnuradio/blocks/head.h>
 #include <gnuradio/blocks/keep_one_in_n.h>
+#include <gnuradio/blocks/null_sink.h>
+#include <gnuradio/blocks/null_source.h>
+#include <gnuradio/top_block.h>
 #include <boost/test/unit_test.hpp>
 
 

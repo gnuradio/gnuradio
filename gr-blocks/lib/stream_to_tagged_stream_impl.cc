@@ -24,9 +24,9 @@
 #include "config.h"
 #endif
 
-#include <cstring>
-#include <gnuradio/io_signature.h>
 #include "stream_to_tagged_stream_impl.h"
+#include <gnuradio/io_signature.h>
+#include <cstring>
 
 namespace gr {
 namespace blocks {

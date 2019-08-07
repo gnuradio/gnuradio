@@ -23,12 +23,12 @@
 #ifndef TIMERASTER_GLOBAL_DATA_HPP
 #define TIMERASTER_GLOBAL_DATA_HPP
 
-#include <qwt_raster_data.h>
 #include <inttypes.h>
+#include <qwt_raster_data.h>
 
 #if QWT_VERSION >= 0x060000
-#include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #include <qwt_compat.h>
+#include <qwt_point_3d.h> // doesn't seem necessary, but is...
 #endif
 
 class TimeRasterData : public QwtRasterData

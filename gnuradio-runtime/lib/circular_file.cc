@@ -31,17 +31,17 @@
 #include <sys/mman.h>
 #endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <assert.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#include <algorithm>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #ifdef HAVE_IO_H
 #include <io.h>

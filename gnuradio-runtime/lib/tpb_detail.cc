@@ -23,10 +23,10 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/tpb_detail.h>
 #include <gnuradio/block.h>
 #include <gnuradio/block_detail.h>
 #include <gnuradio/buffer.h>
+#include <gnuradio/tpb_detail.h>
 
 namespace gr {
 

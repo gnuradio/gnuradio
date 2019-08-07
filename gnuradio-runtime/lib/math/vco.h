@@ -23,12 +23,12 @@
 #ifndef _GR_VCO_H_
 #define _GR_VCO_H_
 
-#include <gnuradio/sincos.h>
 #include <gnuradio/gr_complex.h>
 #include <gnuradio/math.h>
+#include <gnuradio/sincos.h>
 
-#include <vector>
 #include <cmath>
+#include <vector>
 
 namespace gr {
 

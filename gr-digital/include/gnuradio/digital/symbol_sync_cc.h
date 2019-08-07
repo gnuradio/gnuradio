@@ -23,11 +23,11 @@
 #ifndef INCLUDED_DIGITAL_SYMBOL_SYNC_CC_H
 #define INCLUDED_DIGITAL_SYMBOL_SYNC_CC_H
 
-#include <gnuradio/digital/api.h>
 #include <gnuradio/block.h>
-#include <gnuradio/digital/timing_error_detector_type.h>
+#include <gnuradio/digital/api.h>
 #include <gnuradio/digital/constellation.h>
 #include <gnuradio/digital/interpolating_resampler_type.h>
+#include <gnuradio/digital/timing_error_detector_type.h>
 
 namespace gr {
 namespace digital {

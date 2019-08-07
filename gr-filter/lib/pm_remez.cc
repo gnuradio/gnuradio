@@ -42,8 +42,8 @@
 #endif
 
 #include <gnuradio/filter/pm_remez.h>
-#include <cmath>
 #include <assert.h>
+#include <cmath>
 #include <iostream>
 
 #ifndef LOCAL_BUFFER

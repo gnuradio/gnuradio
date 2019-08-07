@@ -24,9 +24,9 @@
 #define INCLUDED_FFT_WINDOW_H
 
 #include <gnuradio/fft/api.h>
-#include <vector>
-#include <cmath>
 #include <gnuradio/gr_complex.h>
+#include <cmath>
+#include <vector>
 
 namespace gr {
 namespace fft {

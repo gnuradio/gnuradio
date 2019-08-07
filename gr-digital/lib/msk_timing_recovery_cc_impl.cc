@@ -24,10 +24,10 @@
 #include "config.h"
 #endif
 
-#include <gnuradio/io_signature.h>
-#include <gnuradio/math.h>
 #include "msk_timing_recovery_cc_impl.h"
 #include <gnuradio/filter/firdes.h>
+#include <gnuradio/io_signature.h>
+#include <gnuradio/math.h>
 
 namespace gr {
 namespace digital {

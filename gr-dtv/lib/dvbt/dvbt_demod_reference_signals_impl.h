@@ -21,8 +21,8 @@
 #ifndef INCLUDED_DTV_DVBT_DEMOD_REFERENCE_SIGNALS_IMPL_H
 #define INCLUDED_DTV_DVBT_DEMOD_REFERENCE_SIGNALS_IMPL_H
 
-#include <gnuradio/dtv/dvbt_demod_reference_signals.h>
 #include "dvbt_reference_signals_impl.h"
+#include <gnuradio/dtv/dvbt_demod_reference_signals.h>
 
 namespace gr {
 namespace dtv {

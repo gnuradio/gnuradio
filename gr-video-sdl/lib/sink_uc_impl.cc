@@ -26,14 +26,14 @@
 
 #include "sink_uc_impl.h"
 #include <gnuradio/io_signature.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <iostream>
 #include <stdexcept>
-#include <string.h>
 
 
 namespace gr {

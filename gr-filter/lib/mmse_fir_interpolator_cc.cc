@@ -24,8 +24,8 @@
 #include <config.h>
 #endif
 
-#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <gnuradio/filter/interpolator_taps.h>
+#include <gnuradio/filter/mmse_fir_interpolator_cc.h>
 #include <stdexcept>
 
 namespace gr {

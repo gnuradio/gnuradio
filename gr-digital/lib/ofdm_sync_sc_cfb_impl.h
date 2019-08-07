@@ -23,8 +23,8 @@
 #ifndef INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
 #define INCLUDED_DIGITAL_OFDM_SYNC_SC_CFB_IMPL_H
 
-#include <gnuradio/digital/ofdm_sync_sc_cfb.h>
 #include <gnuradio/blocks/plateau_detector_fb.h>
+#include <gnuradio/digital/ofdm_sync_sc_cfb.h>
 
 namespace gr {
 namespace digital {

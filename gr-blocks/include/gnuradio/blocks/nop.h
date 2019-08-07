@@ -23,8 +23,8 @@
 #ifndef INCLUDED_GR_NOP_H
 #define INCLUDED_GR_NOP_H
 
-#include <gnuradio/blocks/api.h>
 #include <gnuradio/block.h>
+#include <gnuradio/blocks/api.h>
 #include <stddef.h> // size_t
 
 namespace gr {

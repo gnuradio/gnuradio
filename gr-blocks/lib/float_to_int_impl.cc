@@ -24,8 +24,8 @@
 #include "config.h"
 #endif
 
-#include "float_to_int_impl.h"
 #include "float_array_to_int.h"
+#include "float_to_int_impl.h"
 #include <gnuradio/io_signature.h>
 #include <volk/volk.h>
 
